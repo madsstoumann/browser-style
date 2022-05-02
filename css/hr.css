@@ -1,0 +1,24 @@
+:where(hr) {
+	--hr-bg: var(--gray-6, initial);
+	--hr-h: 1px;
+	border: 0;
+	background-color: var(--hr-bg);
+	height: var(--hr-h);
+	margin-block: 2ch;
+}
+
+:where(hr[data-modifier]) {
+	background-color: transparent;
+}
+
+:where(hr[data-modifier="dashed"]){
+	border-block-end: var(--hr-h) dashed var(--hr-bg);
+}
+
+:where(hr[data-modifier="dotted"]){
+	border-block-end: var(--hr-h) dotted var(--hr-bg);
+}
+
+:where(hr[data-modifier="gradient"]){
+	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
+}
