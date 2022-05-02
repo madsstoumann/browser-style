@@ -1,0 +1,75 @@
+:where(meter) {
+	--meter-bdrs: .25em;
+	--meter-custom-bg:linear-gradient(90deg, 
+		#4691e2 20%,
+		#0cb764 0 40%,
+		#febf18 0 60%,
+		#fc8711 0 80%,
+		#cc1100 0 100%
+	);
+	--meter-label-fz: 80%;
+	border: 0;	
+	border-radius: var(--meter-bdrs);
+	height: var(--meter-height, 1.2em);
+	margin: unset;
+	min-inline-size: var(--meter-mis, 10em);
+	padding: unset;
+	position: relative;
+	/* width: 100%; */
+
+	/* -webkit-appearance: none;
+  appearance: none; */
+}
+
+:where(meter)::-webkit-meter-bar {
+	background: var(--gray-2);
+	border: 0;
+	border-radius: var(--meter-bdrs);
+}
+
+:where(meter)::-webkit-meter-inner-element {
+	background: deppink;
+	border-radius: 3rem;
+	-webkit-appearance: none;
+}
+
+:where(meter)::-webkit-meter-even-less-good-value {
+	background: var(--color-danger);
+}
+:where(meter)::-webkit-meter-suboptimum-value {
+	background: var(--color-warning);
+}
+:where(meter)::-webkit-meter-optimum-value {
+	background: var(--color-success);
+}
+
+
+/* labels */
+/* :where(meter[data-left-label], :where(meter[data-right-label] {
+	margin-block-start: 1em;
+} */
+:where(meter[data-left-label])::after,
+:where(meter[data-left-label])::before {
+	font-size: var(--meter-label-fz);
+	inset-block-end: 100%;
+	position: absolute;
+}
+
+:where(meter[data-left-label])::before {
+  content: attr(data-left-label);
+}
+
+:where(meter[data-right-label])::after {
+  content: attr(data-right-label);
+  inset-inline-end: 0;
+}
+
+meter[data-modifier="custom"] {
+	--meter-mis: 100%;
+}
+
+meter[data-modifier="custom"]::-webkit-meter-optimum-value {
+  background-image: var(--meter-custom-bg);
+  background-size: 100% 100%;
+	width: 100% !important;
+}

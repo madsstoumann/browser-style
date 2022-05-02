@@ -1,0 +1,4 @@
+:where(main) {
+	margin-inline: var(--main-mi, auto);
+	max-inline-size: var(--main-mxis, initial);
+}

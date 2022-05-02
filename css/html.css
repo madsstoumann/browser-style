@@ -1,0 +1,37 @@
+:where(html) {
+	display: grid;
+	min-block-size: 100%;
+	scrollbar-color: var(--scrollbar-thumb-c, initial) var(--scrollbar-bgc, initial);
+	scrollbar-width: var(--scrollbar-w-firefox, var(--scrollbar-w, initial));
+	text-rendering: optimizeLegibility;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-text-size-adjust: 100%;
+}
+
+/* scroll */
+html::-webkit-scrollbar {
+  height: var(--scrollbar-w, initial);
+	width: var(--scrollbar-w, initial);
+}
+html::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-c, initial);
+  border: var(--scrollbar-bdw, initial) solid var(--scrollbar-bgc, initial);
+  border-radius: var(--scrollbar-bdrs, initial);
+}
+html::-webkit-scrollbar-track {
+  background: var(--scrollbar-bgc, initial);
+}
+
+@-moz-document url-prefix() {
+  html {
+		/* Hack for scrollbar-width in Firefox, does not accept width in units */
+		--scrollbar-w-firefox: thin;
+  }
+}
+
+/* selection */
+::selection {
+	background-color: var(--selection-bgc, initial);
+	color: var(--selection-c, initial);
+	-webkit-text-fill-color: var(--selection-c, initial);
+}

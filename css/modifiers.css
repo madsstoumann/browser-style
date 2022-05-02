@@ -1,0 +1,23 @@
+[data-modifier="gradient-text"] {
+  --bg-size: 400%;
+  --color-one: hsl(15 90% 55%);
+  --color-two: hsl(40 95% 55%);
+  /* font-size: clamp(3rem, 25vmin, 8rem); */
+  background: linear-gradient(
+                90deg,
+                var(--color-one),
+                var(--color-two),
+                var(--color-one)
+              ) 0 0 / var(--bg-size) 100%;
+  /* animation: move-bg 8s infinite linear; */
+  color: transparent;
+  background-clip: text;
+	-webkit-background-clip: text;
+	
+}
+
+@keyframes move-bg {
+  to {
+    background-position: var(--bg-size) 0;
+  }
+}

@@ -1,0 +1,6 @@
+:where(mark) {
+	background-color: var(--mark-bgc, hsl(60, 80%, 80%));
+	color: var(--mark-c, var(--text-c));
+	padding-block: 0.25ch;
+	padding-inline: .5ch;
+}

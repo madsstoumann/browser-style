@@ -1,0 +1,44 @@
+:where(progress) {
+	--progress-bar-bg: var(--accent-color, initial);
+	--progress-bdrs: 0.25em;
+	--progress-bg: var(--gray-2, initial);
+	--progress-indeterminate: var(--progress-bg) linear-gradient(to right, var(--progress-bar-bg) 33%, var(--progress-bg) 33%) center left/150% 150% no-repeat;
+
+	background: var(--progress-bg);
+	border: 0;	
+	border-radius: var(--progress-bdrs);
+	height: var(--progress-height, .5em);
+	min-inline-size: var(--progress-mis, 10em);
+}
+
+:where(progress)::-webkit-progress-bar {
+	background: 0 0;
+	border-radius: var(--progress-bdrs);
+}
+
+:where(progress)::-moz-progress-bar {
+	/* In Firefox, it's not possible to set the background-track-color */
+	background-color: var(--progress-bar-bg);
+	border-radius: var(--progress-bdrs);
+}
+
+:where(progress[value])::-webkit-progress-value {
+	background-color: var(--progress-bar-bg);
+	border-radius: var(--progress-bdrs);
+}
+
+/* if `max`and `value` are not set, the progress bar will be indeterminate */
+:where(progress:indeterminate) {
+	animation: progress 1.2s linear infinite;
+	background: var(--progress-indeterminate);
+}
+
+:where(progress:indeterminate)::-moz-progress-bar {
+	animation: progress 1.2s linear infinite;
+	background: var(--progress-indeterminate);
+}
+
+@keyframes progress {
+	0% { background-position: 200% 0; }
+	100% { background-position: -200% 0; }
+}

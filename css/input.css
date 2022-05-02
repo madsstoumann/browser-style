@@ -1,0 +1,9 @@
+:where(input) {
+	accent-color: var(--accent-color);
+}
+
+/* patterns */
+label abbr {
+	color: var(--required-color);
+}
+label input { display: block; }

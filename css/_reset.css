@@ -1,0 +1,40 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+/* FOCUS */
+:focus {
+	outline: var(--outline-color) var(--outline-style) var(--outline-width);
+	outline-offset: var(--outline-offset);
+}
+
+/* Sets a max outline-width on smaller controls */
+:focus :is(a, button, input, textarea) {
+	--outline-width: max(2px, 0.08em);
+}
+
+img,
+picture {
+  display: block;
+	max-width: 100%;
+}
+
+input, select, textarea {
+	/* --selection-bgc: orange; */
+	font-size: 1rem; /* IOS */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :focus {
+		transition: outline-offset .2s ease-out;
+  }
+}
+
+@media (prefers-reduced-data: reduce) {
+	:root :is(iframe, img, video) {
+		display: none; /* OR: SKELETON */
+	}
+}
+

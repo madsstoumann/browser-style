@@ -1,0 +1,68 @@
+:root {
+	--hue: 220;
+	--saturation: 90%;
+	--lightness: 50%;
+
+	/* SIZES, ALERT RED, CONFIRM GREEN, INFO BLUE
+	transition-times
+	*/
+	--accent-color: hsl(var(--hue), var(--saturation), var(--lightness));
+	--accent-text-color: hsl(var(--hue), var(--saturation), 99%);
+
+	
+	--gray-0: #f8f9fa;
+	--gray-1: #f1f3f5;
+	--gray-2: #e9ecef;
+	--gray-3: #dee2e6;
+	--gray-4: #ced4da;
+	--gray-5: #adb5bd;
+	--gray-6: #868e96;
+	--gray-7: #495057;
+	--gray-8: #343a40;
+	--gray-9: #212529;
+
+	--color-warning: #ffc107;
+	--color-danger: #dc3545;
+	--color-success: #28a745;
+
+
+	--required-color: maroon;
+
+	--secondary-color: hsl(var(--hue), 15%, 30%);
+	--secondary-text-color: hsl(var(--hue), 15%, 95%);
+
+	--body-fz: 19px;
+	--body-lh: 1.5;
+
+	--input-bdrs: .5rem;
+	--input-bdw: 2px;
+	--input-pb: 1.25ch;
+	--input-pi: 2.5ch;
+
+	--outline-color: var(--accent-color);
+	--outline-offset: 3px;
+	--outline-style: solid;
+	--outline-width: thin;
+
+	--scrollbar-bdrs: 1.5em;
+	--scrollbar-bdw: 0.2em;
+	--scrollbar-bgc: hsl(200, 0%, 95%);
+	--scrollbar-w: .9em;
+	--scrollbar-thumb-c: hsl(200, 0%, 72%);
+
+	--selection-bgc: hsl(330, 75%, 50%);
+	--selection-c: hsl(330, 75%, 99%);
+
+	--main-mxis: 920px;
+
+	--text-c: hsl(0, 0%, 5%);
+
+
+	  /* Animation/Transition Duration */
+		--animdur-200: 200ms;
+		--animdur-300: 300ms;
+		--animdur-400: 400ms;
+		--animdur-700: 700ms;
+		--animdur-1000: 1000ms
+		--animdur-1500: 1500ms
+}

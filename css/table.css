@@ -1,0 +1,14 @@
+:where(td, th) {
+	padding-block: var(--td-pb, .5ch);
+	padding-inline: var(--td-pi, 1ch);
+}
+
+:where(table) {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+}
+
+:where(table[data-modifier~="zebrarow"] tr:nth-of-type(odd) td) {
+	background-color: var(--td-bg, var(--gray-1));
+}

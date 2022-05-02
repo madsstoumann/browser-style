@@ -1,0 +1,33 @@
+:where(a) {
+	align-items: center;
+	background: 
+		linear-gradient(currentColor 0 0) 
+		bottom /var(--d, 0) 1px 
+		no-repeat;
+	color: var(--a-c, var(--accent-color, initial));
+	display: inline-flex;
+	text-decoration: var(--a-td, none);
+	text-decoration-skip-ink: auto;
+	transition: var(--animdur-300, 0.3s) ease-in-out;
+}
+@media (hover: hover) {
+  a:hover {
+  	--d: 100%;
+	}
+}
+
+/*
+Other options:
+
+:any-link
+:link
+:visited
+:local-link
+
+Target specific link-types:
+:where(a[href^="mailto:"]) { email }
+:where(a[href^="tel"]) { phone }
+:where(a[download]) { download }
+:where(a[target="_blank"]) { new window }
+
+*/

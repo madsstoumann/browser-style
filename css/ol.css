@@ -1,0 +1,36 @@
+:where(ol:not([type])) {
+	counter-reset: ol;
+	list-style: none;
+}
+
+:where(ol:not([type]) li) {
+	counter-increment: ol;
+}
+
+:where(ol:not([type]) li)::before {
+	color: var(--ol-li-c, inherit);
+	content: counters(ol, '.') '. ';
+	font-weight: var(--ol-li-fw, 600);
+}
+
+/* Modifiers */
+:where(ol[data-modifier~="custom"]) {
+	padding: unset;
+}
+
+:where(ol[data-modifier~="custom"]) li::before {
+	--ol-li-sz: 1.5em;
+	aspect-ratio: 1;
+	background-color: var(--ol-li-bg, var(--gray-2));
+	content: counter(ol);
+	display: inline-grid;
+	font-size: var(--ol-li-fz, 90%);
+	height: var(--ol-li-sz);
+	margin-inline: 1ch .85ch;
+	place-content: center;
+	width: var(--ol-li-sz);
+}
+
+:where(ol[data-modifier~="circle"]) li::before { 
+	border-radius: 50%;
+}

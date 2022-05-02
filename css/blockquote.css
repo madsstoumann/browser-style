@@ -1,0 +1,17 @@
+:where(blockquote) {
+	background-color: #f9f9f9;
+	border-inline-start: 5px solid var(--accent-color);
+	font-size: var(--blockquote-fz, 1.4em);
+	margin: unset;
+	padding-block: 1ch;
+	padding-inline: 2ch;
+}
+
+:where(cite) {
+	display: block;
+	font-size: var(--cite-fz, 0.8em);
+}
+
+:where(cite)::before {
+	content: '— ';
+}
