@@ -1,6 +1,6 @@
-@import '_icons.css';
-@import '_reset.css';
-@import '_theme.css';
+@import '@icons.css';
+@import '@reset.css';
+@import '@theme.css';
 
 @import 'html.css';
 @import 'body.css';
@@ -19,10 +19,8 @@
 @import 'progress.css';
 @import 'table.css';
 
-
-
 @import 'text.css';
 
 /* extras	*/
-@import 'modifiers.css';
+@import '@modifiers.css';
 
