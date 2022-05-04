@@ -1,0 +1,26 @@
+:where(details[data-bs="toggletip"]) {
+	display: inline;
+	position: relative;
+}
+:where(details[data-bs="toggletip"] summary) {
+text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: hotpink;
+}
+:where(details[data-bs="toggletip"][open] summary + *) {
+	position: absolute;
+	z-index: 1;
+	background: tomato;
+}
+
+:where(details[data-bs] summary) {
+	list-style-type: none;
+	padding-block: 1ch;
+}
+
+summary::-webkit-details-marker {
+	display: none;
+}
+:where(details[data-bs="faq"]) {
+	border-block-end: 1px solid var(--gray-4);
+}

@@ -1,6 +1,7 @@
 :where(td, th) {
 	padding-block: var(--td-pb, .5ch);
 	padding-inline: var(--td-pi, 1ch);
+	text-align: start;
 }
 
 :where(table) {
@@ -9,6 +10,10 @@
 	width: 100%;
 }
 
-:where(table[data-modifier~="zebrarow"] tr:nth-of-type(odd) td) {
+:where(table[data-bs~="zebrarow"] tr:nth-of-type(odd) td) {
 	background-color: var(--td-bg, var(--gray-1));
 }
+
+[data-col-1] tr > *:nth-of-type(1) { display: var(--cd1, table-cell); text-align: var(--ca1, initial); width: var(--cw1, initial); }
+
+[data-col-3~="end"] tr > *:nth-of-type(3) {text-align: end; }

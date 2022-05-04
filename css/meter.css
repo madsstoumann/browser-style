@@ -64,11 +64,11 @@
   inset-inline-end: 0;
 }
 
-meter[data-modifier="custom"] {
+meter[data-bs="custom"] {
 	--meter-mis: 100%;
 }
 
-meter[data-modifier="custom"]::-webkit-meter-optimum-value {
+meter[data-bs="custom"]::-webkit-meter-optimum-value {
   background-image: var(--meter-custom-bg);
   background-size: 100% 100%;
 	width: 100% !important;

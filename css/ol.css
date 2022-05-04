@@ -14,11 +14,11 @@
 }
 
 /* Modifiers */
-:where(ol[data-modifier~="custom"]) {
+:where(ol[data-bs~="custom"]) {
 	padding: unset;
 }
 
-:where(ol[data-modifier~="custom"]) li::before {
+:where(ol[data-bs~="custom"]) li::before {
 	--ol-li-sz: 1.5em;
 	aspect-ratio: 1;
 	background-color: var(--ol-li-bg, var(--gray-2));
@@ -31,6 +31,6 @@
 	width: var(--ol-li-sz);
 }
 
-:where(ol[data-modifier~="circle"]) li::before { 
+:where(ol[data-bs~="circle"]) li::before { 
 	border-radius: 50%;
 }

@@ -6,9 +6,11 @@
 	--ico-external: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22 26h-16v-16h9l4-4h-17v24h24v-17l-4 4v9z"></path><path d="M32 0h-13l5 5-15 15 3 3 15-15 5 5v-13z"></path></svg>');
 	--ico-download: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M5 14l11 11 11-11h-7v-12h-8v12z"></path><path d="M28 16v12h-24v-12h-4v13c0 1.65 1.35 3 3 3h26c1.65 0 3-1.35 3-3v-13h-4z"></path>></svg>');
 	--ico-phone: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M23 0h-14c-1.65 0-3 1.35-3 3v26c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-26c0-1.65-1.35-3-3-3zM12 1.5h8v1h-8v-1zM16 30c-1.105 0-2-0.895-2-2s0.895-2 2-2 2 0.895 2 2-0.895 2-2 2zM24 24h-16v-20h16v20z"></path></svg>'); */
+
+	/* --icon-sms: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1" /><line x1="12" y1="12" x2="12" y2="12.01" /><line x1="8" y1="12" x2="8" y2="12.01" /><line x1="16" y1="12" x2="16" y2="12.01" /></svg>'); */
 }
 
-[data-icon] {
+svg[aria-hidden="true"][role="img"] {
 	stroke-width: 1.5;
 	stroke: currentColor;
 	fill: none;
@@ -17,4 +19,146 @@
 	stroke-linecap: round;
 	stroke-linejoin: round;
 	width: 1.25em;
+}
+
+/*
+For further documentation about CSS Icons, see this pen:
+https://codepen.io/stoumann/pen/eYzPVqe
+*/
+
+[data-icon] {
+	--animdur: .3s;
+  --loading-animdur: 0.8s;
+	--animtf: ease-in;
+	--bdw: 2px;
+  --bdrs: 50%;
+  --bgc: transparent;
+	--c: currentcolor;
+  --dots-bgc: silver;
+  --dots-size: 0.5rem;
+  --icon-size: 1rem;
+	--size: 2.5rem;
+
+	align-items: center;
+  cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+}
+[data-icon] i {
+  align-items: center;
+  background-color: var(--bgc);
+  border-radius: var(--bdrs);
+  box-sizing: border-box;
+  display: inline-flex;
+  height: var(--size);
+  justify-content: center;
+  position: relative;
+  transition: background-color var(--animdur) var(--animtf);
+  width: var(--size);
+}
+[data-icon] i::after,
+[data-icon] i::before {
+  transform-origin: 50% 50%;
+	transition: all var(--animdur) var(--animtf);
+}
+
+[data-icon*="down"] i::after,
+[data-icon*="right"] i::after {
+  background: transparent;
+	border-color: var(--c);
+	border-style: solid;
+  box-sizing: border-box;
+	content: '';
+	display: inline-block;
+	height: var(--icon-size) ;
+	margin: 0;
+  position: relative;
+	width: var(--icon-size);
+}
+[data-icon*="down"] i::after {
+	border-width: 0 var(--bdw) var(--bdw) 0;
+  top: calc(0px - (var(--icon-size) / 4));
+  transform: rotate(45deg);
+}
+[data-icon*="right"] i::after {
+	border-width: var(--bdw) var(--bdw) 0 0;
+  right: calc((var(--icon-size) / 4));
+  top: 0;
+	transform: rotate(45deg);
+}
+
+[data-icon*="equals"] i::after,
+[data-icon*="equals"] i::before,
+[data-icon*="cross"] i::after,
+[data-icon*="cross"] i::before,
+[data-icon*="menu"] i,
+[data-icon*="menu"] i::after,
+[data-icon*="menu"] i::before,
+[data-icon*="plus"] i::after,
+[data-icon*="plus"] i::before {
+  /* Width need to be the diagonal of the down-arrow side-length (--size): sqrt(2) * --size. */
+	--w: calc(var(--icon-size) * 1.4142135623730950488016887242097);
+	background: var(--c);
+	content: '';
+	height: var(--bdw);
+	position: absolute;
+	width: var(--w);
+}
+[data-icon*="cross"] i::before,
+[data-icon*="plus"] i::before {
+	transform: rotate(90deg);
+}
+[data-icon*="equals"] i {
+  --m: 4px;
+}
+[data-icon*="equals"] i::after {
+  transform: translateY(var(--m));
+}
+[data-icon*="equals"] i::before {
+  transform: translateY(calc(0px - var(--m)));
+}
+
+
+/* STATE */
+[open] > summary > [data-icon*="cross"] i::after {
+	transform: rotate(45deg);
+}
+[open] > summary > [data-icon*="cross"] i::before {
+  transform: rotate(135deg);
+}
+[open] > summary > [data-icon*="down"] i::after {
+  top: var(--bdw);
+	transform: rotate(45deg) scale(-1) ;
+}
+[open] > summary > [data-icon*="right"] i::after {
+  right: 0;
+  top: calc(0px - (var(--icon-size) / 4));
+	transform: rotate(135deg);
+}
+[open] > summary > [data-icon*="plus"] i::after {
+	transform: rotate(180deg);
+}
+[open] > summary > [data-icon*="plus"] i::before {
+	transform: rotate(-0deg);
+}
+
+[open] > summary > [data-icon*="equals"] i::after { transform: rotate(-45deg); }
+[open] > summary > [data-icon*="equals"] i::before { transform: rotate(45deg); }
+
+
+/* RTL: inset-block-end fails */
+[dir="rtl"] [data-icon*="right"] i::after {
+	left: calc((var(--icon-size) / 4));
+}
+
+/* MODIFIERS */
+[data-icon*="outline"] i {
+  border: var(--bdw) solid var(--c);
+}
+[data-icon*="fill"] {
+  --bgc: hsl(195, 10%, 30%);
+  --c: hsl(195, 10%, 95%);
+}
+[data-icon*="square"] {
+  --bdrs: 5px;
 }

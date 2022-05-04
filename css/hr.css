@@ -7,18 +7,18 @@
 	margin-block: 2ch;
 }
 
-:where(hr[data-modifier]) {
+:where(hr[data-bs]) {
 	background-color: transparent;
 }
 
-:where(hr[data-modifier="dashed"]){
+:where(hr[data-bs="dashed"]){
 	border-block-end: var(--hr-h) dashed var(--hr-bg);
 }
 
-:where(hr[data-modifier="dotted"]){
+:where(hr[data-bs="dotted"]){
 	border-block-end: var(--hr-h) dotted var(--hr-bg);
 }
 
-:where(hr[data-modifier="gradient"]){
+:where(hr[data-bs="gradient"]){
 	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
 }

@@ -1,4 +1,4 @@
-[data-modifier="gradient-text"] {
+[data-bs="gradient-text"] {
   --bg-size: 400%;
   --color-one: hsl(15 90% 55%);
   --color-two: hsl(40 95% 55%);
