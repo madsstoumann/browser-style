@@ -12,9 +12,23 @@
 		.row {
 			display: grid;
 			gap: 1.5ch;
-			grid-template-columns: repeat(3, 1fr);
+			/* grid-template-columns: repeat(1, 1fr); */
+			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 			justify-items: left;
 		}
+		html {
+			--col-gap: clamp(0.75rem, 0.3929rem + 1.1429vw, 1.25rem);
+			--row-gap: 2ch;
+	/* accent-color: var(--accent-color);
+	background: var(--background);
+	background-attachment: var(--background-attachment);
+	background-size: var(--background-size);
+	color: var(--text-color);
+	caret-color: var(--caret-color);
+	scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
+	scrollbar-width: var(--scroll-width-ff, var(--scroll-width)); */
+}
+
 	</style>
 </head>
 <body>
@@ -81,6 +95,7 @@
 			</p>
 		</section>
 
+		<hr />
 		<section id="blockquote">
 			<h2>&lt;blockquote&gt;</h2>
 			<blockquote>
@@ -95,6 +110,7 @@
 			</blockquote>
 		</section>
 
+		<hr />
 		<section id="button">
 			<h2>&lt;button&gt;</h2>
 			<div class="row">
@@ -110,13 +126,14 @@
 			</div>
 		</section>
 
+		<hr />
 		<section id="code">
 			<h2>&lt;code&gt;</h2>
 			<div>
 				<code>&lt;a target="_blank" rel="noreferrer noopener"&gt</code>
 			</div>
 		</section>
-
+ 
 		<hr />
 		<section id="details">
 			<h2>&lt;details&gt;</h2>
@@ -185,7 +202,7 @@
 			<h6>The quick brown fox jumps over the lazy dog</h6>
 		</div>
 
-		<!-- <section id="input-checkbox">
+		<section id="input-checkbox">
 			<h2>&lt;input type="checkbox"&gt;</h2>
 			
 			<div>
@@ -209,7 +226,7 @@
 			<div>
 				<input type="range">
 			</div>
-		</section> -->
+		</section>
 
 		<hr />
 		<section id="meter">
@@ -225,7 +242,6 @@
 			<hr />
 		</section>
 
-		<!-- <hr /> -->
 		<section id="meter">
 			<h2>&lt;meter&gt;</h2>
 			<meter low="0" high="100" max="100" value="50" data-bs="custom" data-left-label="Underweight" data-right-label="Obese"></meter>
@@ -309,33 +325,73 @@
 		<hr />
 		<section id="table">
 			<h2>&lt;table&gt;</h2>
-			<p>Use <code>data-bs="zebrarow"</code> to use zebra-styling</p>
+			
+			<div data-bs="overflow-scroll">
+				<table>
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
 
-			<table data-col-3="end">
-				<thead>
-					<tr><th>Name</th><th>Known As</th><th>Year</th></tr>
-				</thead>
-				<tbody>
-					<tr><td>Bruce Wayne</td><td>Batman</td><td>1939</td></tr>
-					<tr><td>Clark Kent</td><td>Superman</td><td>1938</td></tr>
-					<tr><td>Tony Stark</td><td>Iron Man</td><td>1963</td></tr>
-					<tr><td>Peter Parker</td><td>Spider-Man</td><td>1962</td></tr>
-					<tr><td>Matt Murdock</td><td>Daredevil</td><td>1964</td></tr>
-				</tbody>
-			</table>
+			<p>With <code>data-bs="border collapse"</code></p>
 
-			<table data-bs="zebrarow">
-				<thead>
-					<tr><th>Name</th><th>Known As</th><th>Year</th></tr>
-				</thead>
-				<tbody>
-					<tr><td>Bruce Wayne</td><td>Batman</td><td>1939</td></tr>
-					<tr><td>Clark Kent</td><td>Superman</td><td>1938</td></tr>
-					<tr><td>Tony Stark</td><td>Iron Man</td><td>1963</td></tr>
-					<tr><td>Peter Parker</td><td>Spider-Man</td><td>1962</td></tr>
-					<tr><td>Matt Murdock</td><td>Daredevil</td><td>1964</td></tr>
-				</tbody>
-			</table>
+			<div data-bs="overflow-scroll">
+				<table data-bs="border collapse">
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<p>With <code>data-bs="full border collapse zebrarow"</code></p>
+
+			<div data-bs="overflow-scroll">
+				<table data-bs="full border collapse zebrarow">
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<p>With <code>data-bs="full border collapse zebracol"</code> and <code>data-col-3="center" data-col-4="end"</code></p>
+
+			<div data-bs="overflow-scroll">
+				<table data-bs="full border collapse zebracol" data-col-3="center" data-col-4="end">
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
+
 		</section>
 
 		<hr />
@@ -346,7 +402,7 @@
 			</div>
 		</section>
 
-		<section id="pattern-label">
+		<!-- <section id="pattern-label">
 			<h2>&lt;label&gt;</h2>
 
 
@@ -356,7 +412,7 @@
 			</label>
 			<input type="text" id="name" required>
 				<span>Error</span>
-		</div>
+		</div> -->
 
 		</section>
 

@@ -1,5 +1,9 @@
-:where(h1) {
+:where(h1, .h1) {
 	font-size: var(--h1-fz, clamp(2rem, 0.75rem + 4vw, 3.75rem));
 	font-weight: var(--h1-fw, 900);
 	line-height: var(--h1-lh, 1.1);
+}
+
+:where(h2, .h2) {
+	font-size: var(--h2-fz, clamp(1.5rem, 0.7857rem + 2.2857vw, 2.5rem));
 }

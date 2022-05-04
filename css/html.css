@@ -1,5 +1,5 @@
 :where(html) {
-	display: grid;
+	/* display: grid; */
 	min-block-size: 100%;
 	scrollbar-color: var(--scrollbar-thumb-c, initial) var(--scrollbar-bgc, initial);
 	scrollbar-width: var(--scrollbar-w-firefox, var(--scrollbar-w, initial));

@@ -18,9 +18,13 @@ text-decoration-line: underline;
 	padding-block: 1ch;
 }
 
-summary::-webkit-details-marker {
+:where(details[data-bs] summary)::-webkit-details-marker {
 	display: none;
 }
+
 :where(details[data-bs="faq"]) {
 	border-block-end: 1px solid var(--gray-4);
+}
+:where(details[data-bs="faq"] summary) {
+	font-weight: 500;
 }

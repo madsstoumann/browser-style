@@ -55,7 +55,7 @@
 	--selection-bgc: hsl(330, 75%, 50%);
 	--selection-c: hsl(330, 75%, 99%);
 
-	--main-mxis: 920px;
+	--main-mxis: 1200px;
 
 	--text-c: hsl(0, 0%, 5%);
 
@@ -67,4 +67,9 @@
 		--animdur-700: 700ms;
 		--animdur-1000: 1000ms
 		--animdur-1500: 1500ms
+}
+
+:where([data-bs="overflow-scroll"]) {
+	max-inline-size: 100%;
+	overflow: auto;
 }
