@@ -7,8 +7,6 @@
 }
 
 :where(td, th) {
-	background-color: var(--td-bgc, initial);
-	border: var(--td-bdw, 0px) var(--td-bds, solid) var(--td-bdc, var(--gray-5));
 	padding-block: var(--td-pb, .5ch);
 	padding-inline: var(--td-pi, 1ch);
 	overflow: hidden;
@@ -17,10 +15,27 @@
 	white-space: nowrap;
 }
 
+:where(td) {
+	background-color: var(--td-bgc, initial);
+	border-color: var(--td-bdc, var(--gray-5));
+	border-style: var(--td-bds, solid);
+	border-width: var(--td-bdw, 0px);
+}
+
+:where(th) {
+	background-color: var(--th-bgc, initial);
+	border-color: var(--th-bdc, var(--gray-9));
+	border-style: var(--th-bds, solid);
+	border-width: var(--th-bdw, 0px);
+	font-weight: var(--th-fw, 700);
+}
+
 /* modifiers */
 :where(table[data-bs~="border"]) td { --td-bdw: 1px; }
+:where(table[data-bs~="borderbelow"]) td { --td-bdw: 0 0 1px 0; }
 :where(table[data-bs~="collapse"]) { --table-bdcl: collapse; }
 :where(table[data-bs~="full"]) { --table-w: 99.9%; }
+:where(table[data-bs~="thborderbelow"]) th { --th-bdw: 0 0 2px 0; }
 :where(table[data-bs~="zebracol"] td:nth-of-type(odd)) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
 :where(table[data-bs~="zebrarow"] tr:nth-of-type(odd) td) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
 
