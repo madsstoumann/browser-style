@@ -5,6 +5,7 @@
 
 :where(label abbr) {
 	color: var(--required-color);
+	margin-inline: 0.5ch 1ch;
 }
 
 :where(label > input) {
