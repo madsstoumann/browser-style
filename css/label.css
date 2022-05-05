@@ -1,0 +1,13 @@
+:where(label) {
+	font-size: var(--label-fz, initial);
+	width: var(--label-w, 100%);
+}
+
+:where(label abbr) {
+	color: var(--required-color);
+}
+
+:where(label > input) {
+	display: block;
+	margin-block-start: .25em;
+}

@@ -36,9 +36,12 @@
 	--body-fz: 19px;
 	--body-lh: 1.5;
 
-	--input-bdrs: .5rem;
-	--input-bdw: 2px;
-	--input-pb: 1.25ch;
+	--input-bdc: var(--gray-5);
+	--input-bdrs: 4px;
+	--input-bds: solid;
+	--input-bdw: 1px;
+	--input-fz: 1rem;
+	--input-pb: .75em;
 	--input-pi: 2.5ch;
 
 	--outline-color: var(--accent-color);

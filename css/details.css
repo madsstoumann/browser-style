@@ -21,6 +21,9 @@ text-decoration-line: underline;
 :where(details[data-bs] summary)::-webkit-details-marker {
 	display: none;
 }
+:where(details[data-bs] summary)::marker {
+	display: none;
+}
 
 :where(details[data-bs="faq"]) {
 	border-block-end: 1px solid var(--gray-4);
