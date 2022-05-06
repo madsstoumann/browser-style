@@ -1,6 +1,7 @@
 :where(html) {
   --ico-arrdwn: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 11l-2-2-14 14-14-14-2 2 16 16 16-16z"></path></svg>');
-  --icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="black"></path></svg>');
+  /* --icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="black"></path></svg>'); */
+	--icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
   --ico-cross: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.957 3.457l-1.414-1.414-4.543 4.543-4.543-4.543-1.414 1.414 4.543 4.543-4.543 4.543 1.414 1.414 4.543-4.543 4.543 4.543 1.414-1.414-4.543-4.543z" fill="white"></path></svg>');
 	/* --ico-email: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30 4h-28c-1.1 0-2 0.9-2 2v20c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-20c0-1.1-0.9-2-2-2zM28 8v1.438l-12 7.071-12-7.071v-1.438h24zM4 24v-11.080l12 7.071 12-7.071v11.080h-24z"></path></svg>');
 	--ico-external: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M22 26h-16v-16h9l4-4h-17v24h24v-17l-4 4v9z"></path><path d="M32 0h-13l5 5-15 15 3 3 15-15 5 5v-13z"></path></svg>');

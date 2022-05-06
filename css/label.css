@@ -12,7 +12,7 @@
 	display: block;
 }
 
-:where(label > input) {
+:where(label > input:not([type="checkbox"])) {
 	display: block;
 	margin-block-start: .25em;
 }
