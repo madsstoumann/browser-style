@@ -11,11 +11,10 @@
 	border: 0;	
 	border-radius: var(--meter-bdrs);
 	height: var(--meter-height, 1.2em);
-	margin: unset;
+	margin-block: var(--meter-mb, 1em);
 	min-inline-size: var(--meter-mis, 10em);
-	padding: unset;
 	position: relative;
-	/* width: 100%; */
+	width: var(--meter-w, 100%);
 
 	/* -webkit-appearance: none;
   appearance: none; */
@@ -45,18 +44,23 @@
 
 
 /* labels */
-/* :where(meter[data-left-label], :where(meter[data-right-label] {
+/* :where(meter[aria-label], :where(meter[data-right-label] {
 	margin-block-start: 1em;
 } */
-:where(meter[data-left-label])::after,
-:where(meter[data-left-label])::before {
+
+/* :where(meter[aria-label]) {
+	margin-block-start: 1em;
+} */
+
+:where(meter[aria-label])::after,
+:where(meter[aria-label])::before {
 	font-size: var(--meter-label-fz);
 	inset-block-end: 100%;
 	position: absolute;
 }
 
-:where(meter[data-left-label])::before {
-  content: attr(data-left-label);
+:where(meter[aria-label])::before {
+  content: attr(aria-label);
 }
 
 :where(meter[data-right-label])::after {
@@ -69,7 +73,7 @@ meter[data-bs="custom"] {
 }
 
 meter[data-bs="custom"]::-webkit-meter-optimum-value {
-  background-image: var(--meter-custom-bg);
+  background-image: var(--meter-custom-bg, none);
   background-size: 100% 100%;
 	width: 100% !important;
 }

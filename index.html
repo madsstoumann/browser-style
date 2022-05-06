@@ -119,20 +119,12 @@
 				<button type="reset">Reset Button</button>
 
 				<button type="button" data-bs="outline">Outline Button</button>
-				<button type="submit" data-bs="outline">Submit</button>
-				<button type="reset" data-bs="outline">Reset</button>
+				<button type="submit" data-bs="outline">Outline Submit</button>
+				<button type="reset" data-bs="outline">Outline Reset</button>
 
 				<button type="button" disabled>Disabled Button</button>
 				<button type="submit" disabled>Disabled Submit</button>
 				<button type="reset" disabled>Disabled Reset</button>
-			</div>
-		</section>
-
-		<hr />
-		<section id="code">
-			<h2>&lt;code&gt;</h2>
-			<div>
-				<code>&lt;a target="_blank" rel="noreferrer noopener"&gt</code>
 			</div>
 		</section>
  
@@ -181,6 +173,14 @@
 		</section>
 
 		<hr />
+		<section id="dialog">
+			<h2>&lt;dialog&gt;</h2>
+			<div>
+				<dialog>CONTENT HERE</dialog>
+			</div>
+		</section>
+
+		<hr />
 		<section id="dl">
 			<h2>&lt;dl&gt;</h2>
 			<dl>
@@ -205,10 +205,57 @@
 		</div>
 
 		<hr />
+		<section id="hr">
+			<h2>&lt;hr&gt;</h2>
+			<p>Add <code>data-bs</code> with one of the following values: </p>
+			<p><code>dashed</code></p>
+			<hr data-bs="dashed" />
+			<p><code>dotted</code></p>
+			<hr data-bs="dotted" />
+			<p><code>fade</code></p>
+			<hr data-bs="fade" />
+			<p><strong>Default example:</strong></p>
+			<hr />
+		</section>
+
+
+		<section id="img">
+			<h2>&lt;img&gt;</h2>
+			<div class="row">
+				<figure>
+					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
+					<figcaption>Default, no set aspect ratio</figcaption>
+				</figure>
+				<figure>
+					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square" />
+					<figcaption><code>data-bs="square"</code></figcaption>
+				</figure>
+				<figure>
+					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="widescreen" />
+					<figcaption><code>data-bs="widescreen"</code></figcaption>
+				</figure>
+			</div>
+			<div class="row">
+				<figure>
+					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
+					<figcaption>Default, no set aspect ratio or position</figcaption>
+				</figure>
+				<figure>
+					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square top-right" />
+					<figcaption><code>data-bs="square top-right"</code></figcaption>
+				</figure>
+				<figure>
+					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square bottom-left" />
+					<figcaption><code>data-bs="aquare bottom-left"</code></figcaption>
+				</figure>
+			</div>
+		</section>
+
+		<hr />
 		<section id="input">
 			<h2>&lt;input&gt;</h2>
 			<div class="row">
-						<label>Color<abbr title="Required field">*</abbr>
+				<label>Color
 					<input type="color" value="#0eaaaa">
 				</label>
 
@@ -338,6 +385,18 @@
 			</div>
 		</section>
 
+		<hr />
+		<section id="input-pattern">
+			<h2>input patterns</h2>
+			<p><strong>Example:</strong> label &gt; abbr + small (&gt; samp) + input (with <code>pattern</code> and <code>required</code>)</p>
+			<div class="row">
+				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
+					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required>
+				</label>
+			</div>
+		</section>
+
 		<!-- <section id="input-checkbox">
 			<h2>&lt;input type="checkbox"&gt;</h2>
 			
@@ -366,33 +425,27 @@
 			</div>
 		</section> -->
 
-		
+		<hr />
+		<section id="menu">
+			<h2>&lt;menu wip&gt;</h2>
+			<menu role="menu">
+				<li role="none"><button role="menuitem">Action 1</button></li>
+				<li role="none"><button role="menuitem">Action 2</button></li>
+				<li role="none"><button role="menuitem">Action 3</button></li>
+				
+			</menu>
+		</section>
 
 		<hr />
 		<section id="meter">
-			<h2>&lt;hr&gt;</h2>
-			<p>Add <code>data-bs</code> with one of the following values: </p>
-			<p><code>dashed</code></p>
-			<hr data-bs="dashed" />
-			<p><code>dotted</code></p>
-			<hr data-bs="dotted" />
-			<p><code>gradient</code></p>
-			<hr data-bs="gradient" />
-			<p><strong>Default example:</strong></p>
-			<hr />
-		</section>
+			<h2>&lt;meter wip&gt;</h2>
+			<meter low="0" high="100" max="100" value="50" data-bs="custom" aria-label="Underweight" data-right-label="Obese"></meter>
 
-		<section id="meter">
-			<h2>&lt;meter&gt;</h2>
-			<meter low="0" high="100" max="100" value="50" data-bs="custom" data-left-label="Underweight" data-right-label="Obese"></meter>
-
-			<p>
-				<meter min="0" max="100" value="30" low="25" high="20" optimum="20" data-left-label="Danger"></meter>
-			</p>
-
-			<meter min="0" max="100" value="60" low="25" high="50" optimum="50"></meter>
-			<meter min="0" max="100" value="90" low="25" high="50" optimum="80"></meter> 
-			
+			<div class="row">
+				<meter min="0" max="100" value="30" low="25" high="20" optimum="20" aria-label="even-less-good-value"></meter>
+				<meter min="0" max="100" value="60" low="25" high="50" optimum="50" aria-label="suboptimum-value"></meter>
+				<meter min="0" max="100" value="90" low="25" high="50" optimum="80" aria-label="optimum-value"></meter> 
+			</div>
 		</section>
 
 		<hr />
@@ -535,10 +588,42 @@
 		</section>
 
 		<hr />
+		<section id="ul">
+			<h2>&lt;ul&gt;</h2>
+			<ul>
+				<li>Item 1</li>
+				<li>Item 2</li>
+				<li>Item 3</li>
+			</ul>
+		</section>
+
+		<hr />
 		<section id="text">
 			<h2>text</h2>
 			<div class="row">
-				<mark>Highlight</mark>
+				<p><strong>&lt;a&gt;:</strong> <a href="#">Link</a></p>
+				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation">Abbr.</abbr></p>
+				<p><strong>&lt;b&gt;:</strong> <b>Bring Attention</b></p>
+				<p><strong>&lt;code&gt;:</strong> <code>arr.forEach(item => ...</code></p>
+				<p><strong>&lt;del&gt;:</strong> <del>Deleted</del></p>
+				<p><strong>&lt;dfn&gt;:</strong> <dfn>Definition</dfn></p>
+				<p><strong>&lt;em&gt;:</strong> <em>Italic</em></p>
+				<p><strong>&lt;i&gt;:</strong> <em>Idiomatic Text</em></p>
+				<p><strong>&lt;ins&gt;:</strong> <ins>Inserted</ins></p>
+				<p><strong>&lt;kbd&gt;:</strong> <kbd>C</kbd> <kbd>O</kbd> <kbd>D</kbd> <kbd>E</kbd></p>
+				<p><strong>&lt;mark&gt;:</strong> <mark>Highlight</mark></p>
+				<p><strong>&lt;s&gt;:</strong> <s>Strikethrough</s></p>
+				<p><strong>&lt;samp&gt;:</strong> <samp>Sample Output</sample></p>
+				<p><strong>&lt;small&gt;:</strong> <small>Small</small></p>
+				<p><strong>&lt;strong&gt;:</strong> <strong>Bold</strong></p>
+				<p><strong>&lt;sub&gt;:</strong> Text<sub>Sub</sub></p>
+				<p><strong>&lt;sup&gt;:</strong> Text<sup>Sup</sup></p>
+				<p><strong>&lt;u&gt;:</strong> <u>Underline</u></p>
+				<p><strong>&lt;var&gt;:</strong> <var>Variable</var></p>
+				<p><strong>&lt;wbr&gt;:</strong> Fernstraßen<wbr>bau<wbr>privat<wbr>finanzierungs<wbr>gesetz</p>
+				
+				
+				
 			</div>
 		</section>
 

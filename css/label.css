@@ -3,9 +3,13 @@
 	width: var(--label-w, 100%);
 }
 
-:where(label abbr) {
+:where(label > abbr) {
 	color: var(--required-color);
-	margin-inline: 0.5ch 1ch;
+	margin-inline: 0.125ch 1ch;
+}
+
+:where(label small) {
+	display: block;
 }
 
 :where(label > input) {

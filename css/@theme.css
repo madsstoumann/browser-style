@@ -23,7 +23,7 @@
 
 	--color-warning: #ffc107;
 	--color-danger: #dc3545;
-	--color-success: #28a745;
+	--color-success: hsl(134, 61%, 30%);
 
 
 	--required-color: maroon;
@@ -42,7 +42,7 @@
 	--input-bdw: 1px;
 	--input-fz: 1rem;
 	--input-pb: .75em;
-	--input-pi: 2.5ch;
+	--input-pi: 2ch;
 
 	--outline-color: var(--accent-color);
 	--outline-offset: 3px;
@@ -75,4 +75,15 @@
 :where([data-bs="overflow-scroll"]) {
 	max-inline-size: 100%;
 	overflow: auto;
+}
+
+:where(html) {
+  --ratio-square: 1;
+  --ratio-landscape: 4/3;
+  --ratio-photo: 3/2;
+  --ratio-portrait: 3/4;
+  --ratio-widescreen: 16/9;
+  --ratio-ultrawide: 18/5;
+  --ratio-universal: 2/1;
+  --ratio-golden: 1.6180/1;
 }

@@ -1,4 +1,4 @@
-:where(button) {
+:where(button:not([role="menuitem"])) {
 	background-color: var(--button-bgc, var(--accent-color, initial));
 	border-radius: var(--button-bdrs, var(--input-bdrs, initial));
 	border-color: var(--button-bdc, transparent);
@@ -10,10 +10,7 @@
 	padding-block: var(--button-pb, 1.25ch);
 	padding-inline: var(--button-pi, 2.5ch);
 }
-:where(button[disabled]) {
-	--button-bgc: hsl(var(--hue), var(--saturation), 80%);
-	cursor: not-allowed;
-}
+
 :where(button[type="reset"]) {
 	--button-bgc: transparent;
 	--button-bdw: 0;

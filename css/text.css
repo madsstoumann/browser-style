@@ -1,6 +1,67 @@
+/* abbr */
+:where(abbr[title]) {
+	cursor: var(--abbr-cur, help);
+	text-decoration: var(--abbr-td, dotted underline);
+	text-underline-offset: var(--abbr-tdo, 3px);
+}
+
+/* code */
+:where(code),
+:where(var) {
+	font-family: var(--code-ff, ui-monospace, monospace);
+	font-size: var(--code-fs, 0.9em);
+	padding-block: var(--code-pb, 0.05em);
+	padding-inline: var(--code-pi, 0.3em);
+}
+
+:where(code) {
+	background-color: var(--code-bgc, var(--gray-2));
+	color: var(--code-c, var(--text-c, initial));
+}
+
+/* dfn */
+:where(dfn)	{
+	font-style: var(--dfn-fs, normal);
+	text-decoration: var(--dfn-td, var(--gray-5) double underline);
+	text-underline-offset: var(--dfn-tdo, 2px);
+}
+
+/* del */
+:where(del)	{
+	color: var(--del-c, var(--color-danger, initial));
+}
+
+/* ins */
+:where(ins)	{
+	color: var(--ins-c, var(--color-success, initial));
+}
+
+/* kbd */
+:where(kbd) {
+	background-color: var(--kbd-bgc, var(--gray-2));
+	border-radius: var(--kbd-bdrs, 3px);
+	border: var(--kbd-bd, 1px solid var(--gray-5));
+	box-shadow: var(--kbd-bxsh, 0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #ffffff);
+	display: inline-block;
+	font-family: var(--kbd-ff, ui-sans-serif, system-ui, sans-serif);
+	font-size: var(--kbd-fz, small);
+	font-weight: var(--kbd-fw, 500);
+	margin-inline: .125em;
+	padding: var(--kbd-p, 0.1em 0.6em);
+	text-shadow: var(--kbd-txsh, 0 1px 0 #fff);
+}
+
+/* mark */
 :where(mark) {
 	background-color: var(--mark-bgc, hsl(60, 80%, 80%));
 	color: var(--mark-c, var(--text-c));
 	padding-block: 0.25ch;
 	padding-inline: .5ch;
+}
+
+/* var */
+:where(var) {
+	background-color: var(--var-bgc, var(--gray-9));
+	color: var(--var-c, var(--color-warning));
+	font-style: var(--var-fs, normal);
 }

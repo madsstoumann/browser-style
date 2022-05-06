@@ -1,8 +1,0 @@
-:where(code) {
-	background-color: var(--code-bgc, var(--gray-2));
-	color: var(--code-c, var(--text-c, initial));
-	font-family: var(--code-ff, ui-monospace, monospace);
-	font-size: var(--code-fs, 0.9em);
-	padding-block: var(--code-pb, 0.05em);
-	padding-inline: var(--code-pi, 0.3em);
-}

@@ -22,7 +22,15 @@
 	padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos));
 }
 
+/* disabled */
+:where(button:disabled, input:disabled, select:disabled, textarea:disabled) {
+	filter: grayscale(1);
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
 /* specific types */
+:where(input[type="color"]) { padding-inline: var(--input-pb); }
 :where(input[type="color"])::-webkit-color-swatch-wrapper { padding: 0; }
 :where(input[type="color"])::-webkit-color-swatch { border-radius: var(--input-bdrs); }
 :where(input[type="date"]),
@@ -67,9 +75,8 @@
 	-webkit-mask-image: var(--icon-reset);
 }
 
-/* disabled */
-:where(input:disabled) {
-	filter: grayscale(1);
-	opacity: 0.4;
-	cursor: not-allowed;
+/* validation */
+input:required:not(:focus-visible):not(:placeholder-shown):invalid {
+	border-color: var(--color-danger);
+	box-shadow: var(--color-danger) 0 0 1px 1px inset;
 }

@@ -19,6 +19,6 @@
 	border-block-end: var(--hr-h) dotted var(--hr-bg);
 }
 
-:where(hr[data-bs="gradient"]){
+:where(hr[data-bs="fade"]){
 	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
 }

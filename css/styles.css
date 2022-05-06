@@ -8,14 +8,16 @@
 @import 'a.css';
 @import 'blockquote.css';
 @import 'button.css';
-@import 'code.css';
 @import 'details.css';
 @import 'dl.css';
+@import 'figure.css';
 @import 'h1-h6.css';
 @import 'hr.css';
+@import 'img.css';
 @import 'input.css';
 @import 'label.css';
 @import 'main.css';
+@import 'menu.css';
 @import 'meter.css';
 @import 'ol.css';
 @import 'progress.css';
