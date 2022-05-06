@@ -70,7 +70,8 @@ https://codepen.io/stoumann/pen/eYzPVqe
 [data-icon] i::after,
 [data-icon] i::before {
   transform-origin: 50% 50%;
-	transition: all var(--animdur) var(--animtf);
+	/* transition: all var(--animdur) var(--animtf); */
+	transition: all 3s linear;
 }
 
 [data-icon*="down"] i::after,

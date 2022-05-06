@@ -1,7 +1,8 @@
 /* abbr */
 :where(abbr[title]) {
 	cursor: var(--abbr-cur, help);
-	text-decoration: var(--abbr-td, dotted underline);
+	text-decoration-line: var(--abbr-tds, underline);
+	text-decoration-style: var(--abbr-tds, dotted);
 	text-underline-offset: var(--abbr-tdo, 3px);
 }
 
@@ -22,7 +23,8 @@
 /* dfn */
 :where(dfn)	{
 	font-style: var(--dfn-fs, normal);
-	text-decoration: var(--dfn-td, var(--gray-5) double underline);
+	text-decoration-line: var(--dfn-tds, underline);
+	text-decoration-style: var(--dfn-tds, double);
 	text-underline-offset: var(--dfn-tdo, 2px);
 }
 
@@ -57,6 +59,11 @@
 	color: var(--mark-c, var(--text-c));
 	padding-block: 0.25ch;
 	padding-inline: .5ch;
+}
+
+/* sample */
+:where(sample) {
+	color: var(--sample-c, inherit);
 }
 
 /* var */
