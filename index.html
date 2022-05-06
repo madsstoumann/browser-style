@@ -8,28 +8,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Browser default styles">
 	<link rel="stylesheet" href="css/styles.css">
-	<style>
-		.row {
-			display: grid;
-			gap: 1.5ch;
-			/* grid-template-columns: repeat(1, 1fr); */
-			grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-			justify-items: left;
-		}
-		html {
-			--col-gap: clamp(0.75rem, 0.3929rem + 1.1429vw, 1.25rem);
-			--row-gap: 2ch;
-	/* accent-color: var(--accent-color);
-	background: var(--background);
-	background-attachment: var(--background-attachment);
-	background-size: var(--background-size);
-	color: var(--text-color);
-	caret-color: var(--caret-color);
-	scrollbar-color: var(--scrollbar-color) var(--scrollbar-background);
-	scrollbar-width: var(--scroll-width-ff, var(--scroll-width)); */
-}
-
-	</style>
+	<meta http-equiv="Content-Security-Policy" content="
+		default-src;
+		script-src 'self' 'unsafe-inline';
+		style-src 'self';
+		img-src 'self' picsum.photos *.picsum.photos *.ytimg.com *.vimeocdn.com data:;
+		font-src;
+		connect-src 'self';
+		media-src 'self';
+		object-src 'none';
+		child-src;
+		frame-src *.youtube-nocookie.com *.youtube.com *.vimeo.com;
+		form-action;
+		base-uri;
+		manifest-src 'self';
+	">
 </head>
 <body>
 	<main>
@@ -218,13 +211,31 @@
 			<hr />
 		</section>
 
+		<section id="iframe">
+			<h2>&lt;iframe&gt;</h2>
+			<div class="row">
+				<figure data-bs="widescreen">
+					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" title="YouTube Video"></iframe>
+					<figcaption>YouTube <code>data-bs="widescreen"</code></figcaption>
+				</figure>
+				<figure data-bs="square">
+					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" title="YouTube Video"></iframe>
+					<figcaption>YouTube <code>data-bs="square"</code></figcaption>
+				</figure>
+				<figure data-bs="widescreen">
+					<iframe src="https://player.vimeo.com/video/232524527" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" title="Vimeo Video"></iframe>
+					<figcaption>Vimeo <code>data-bs="widescreen"</code></figcaption>
+				</figure>
+			</div>
+		</section>
 
+		<hr />
 		<section id="img">
 			<h2>&lt;img&gt;</h2>
 			<div class="row">
 				<figure>
 					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
-					<figcaption>Default, no set aspect ratio</figcaption>
+					<figcaption>Default, no set aspect-ratio</figcaption>
 				</figure>
 				<figure data-bs="square">
 					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
@@ -238,7 +249,7 @@
 			<div class="row">
 				<figure>
 					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
-					<figcaption>Default, no set aspect ratio or position</figcaption>
+					<figcaption>Default, no set aspect-ratio or object-position</figcaption>
 				</figure>
 				<figure data-bs="square top-right">
 					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
@@ -425,7 +436,7 @@
 			</div>
 		</section> -->
 
-		<hr />
+		<!-- <hr />
 		<section id="menu">
 			<h2>&lt;menu wip&gt;</h2>
 			<menu role="menu">
@@ -434,7 +445,7 @@
 				<li role="none"><button role="menuitem">Action 3</button></li>
 				
 			</menu>
-		</section>
+		</section> -->
 
 		<hr />
 		<section id="meter">

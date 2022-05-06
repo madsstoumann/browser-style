@@ -13,7 +13,6 @@
 @import 'figure.css';
 @import 'h1-h6.css';
 @import 'hr.css';
-@import 'img.css';
 @import 'input.css';
 @import 'label.css';
 @import 'main.css';
@@ -27,4 +26,17 @@
 
 /* extras	*/
 @import '@modifiers.css';
+
+/* FIX CLEANUP! */
+.row {
+	display: grid;
+	gap: 1.5ch;
+	/* grid-template-columns: repeat(1, 1fr); */
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	justify-items: left;
+}
+html {
+	--col-gap: clamp(0.75rem, 0.3929rem + 1.1429vw, 1.25rem);
+	--row-gap: 2ch;
+}
 
