@@ -226,12 +226,12 @@
 					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption>Default, no set aspect ratio</figcaption>
 				</figure>
-				<figure>
-					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square" />
+				<figure data-bs="square">
+					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption><code>data-bs="square"</code></figcaption>
 				</figure>
-				<figure>
-					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="widescreen" />
+				<figure data-bs="widescreen">
+					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 			</div>
@@ -240,13 +240,13 @@
 					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption>Default, no set aspect ratio or position</figcaption>
 				</figure>
-				<figure>
-					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square top-right" />
+				<figure data-bs="square top-right">
+					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption><code>data-bs="square top-right"</code></figcaption>
 				</figure>
-				<figure>
-					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" data-bs="square bottom-left" />
-					<figcaption><code>data-bs="aquare bottom-left"</code></figcaption>
+				<figure data-bs="square bottom-left">
+					<img src="https://picsum.photos/id/1001/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
+					<figcaption><code>data-bs="square bottom-left"</code></figcaption>
 				</figure>
 			</div>
 		</section>
@@ -627,17 +627,24 @@
 			</div>
 		</section>
 
-		<!-- <section id="pattern-label">
-			<h2>&lt;label&gt;</h2>
+		<section id="video">
+			<h2>&lt;video&gt;</h2>
+			<div class="row">
+				<figure data-bs="widescreen">
+					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted></video>
+					<figcaption><code>data-bs="widescreen"</code></figcaption>
+				</figure>
 
+				<figure data-bs="square">
+					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted></video>
+					<figcaption><code>data-bs="square"</code></figcaption>
+				</figure>
 
-			<div>
-			<label for="name">
-				<strong>Label</strong><abbr title="Required">*</abbr>
-			</label>
-			<input type="text" id="name" required>
-				<span>Error</span>
-		</div> -->
+				<figure data-bs="portrait">
+					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted></video>
+					<figcaption><code>data-bs="portrait"</code></figcaption>
+				</figure>
+			</div>
 
 		</section>
 

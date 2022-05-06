@@ -1,10 +1,20 @@
-img[data-bs] {
+:where(figure[data-bs]) {
 	aspect-ratio: var(--asr, none);
-	object-fit: cover;
-	/* object-position does not work with custom properties, otherwise, set ob-x and ob-y; */
+	inline-size: 100%;
+	position: relative;
 }
 
+:where(figure[data-bs] figcaption) {
+	
+}
+
+:where(figure[data-bs] img, figure[data-bs] video) {
+	block-size: 100%;
+	inline-size: 100%;
+	object-fit: cover;
+}
 	/* [data-ratio] > iframe, [data-ratio] > img, [data-ratio] > video { aspect-ratio: inherit; object-fit: cover; } */
+
 [data-bs~="square"] { --asr: var(--ratio-square); }
 [data-bs~="landscape"] { --asr: var(--ratio-landscape); }
 [data-bs~="portrait"] { --asr: var(--ratio-portrait); }
@@ -14,14 +24,14 @@ img[data-bs] {
 [data-bs~="golden"] { --asr: var(--ratio-golden); }
 
 /* object position */
-[data-bs~="top-left"] { object-position: 0% 0%; }
-[data-bs~="top-center"] { object-position: 50% 0%; }
-[data-bs~="top-right"] { object-position: 100% 0%; }
+[data-bs~="top-left"] img { object-position: 0% 0%; }
+[data-bs~="top-center"] img { object-position: 50% 0%; }
+[data-bs~="top-right"] img { object-position: 100% 0%; }
 
-[data-bs~="center-left"] { object-position: 0% 50%; }
-[data-bs~="center-center"] { object-position: 50% 50%; }
-[data-bs~="center-right"] { object-position: 100% 50%; }
+[data-bs~="center-left"] img { object-position: 0% 50%; }
+[data-bs~="center-center"] img { object-position: 50% 50%; }
+[data-bs~="center-right"] img { object-position: 100% 50%; }
 
-[data-bs~="bottom-left"] { object-position: 0% 100%; }
-[data-bs~="bottom-center"] { object-position: 50% 100%; }
-[data-bs~="bottom-right"] { object-position: 100% 100%; }
+[data-bs~="bottom-left"] img { object-position: 0% 100%; }
+[data-bs~="bottom-center"] img { object-position: 50% 100%; }
+[data-bs~="bottom-right"] img { object-position: 100% 100%; }
