@@ -275,6 +275,16 @@
 					<input type="checkbox" role="switch">Switch
 				</label>
 
+				<fieldset role="radiogroup" aria-orientation="vertical">
+					<legend>Choose <code>aria-orientation="vertical"</code></legend>
+					<label>
+						<input type="radio" name="radio-2" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-2" value="2">Option 2
+					</label>
+				</fieldset>
+
 				<fieldset role="radiogroup">
 					<legend>Choose an option</legend>
 					<label>
@@ -282,16 +292,6 @@
 					</label>
 					<label>
 						<input type="radio" name="radio" value="2">Option 2
-					</label>
-				</fieldset>
-
-				<fieldset role="radiogroup" aria-orientation="vertical">
-					<legend>aria-orientation="vertical"</legend>
-					<label>
-						<input type="radio" name="radio-2" value="1" checked>Option 1
-					</label>
-					<label>
-						<input type="radio" name="radio-2" value="2">Option 2
 					</label>
 				</fieldset>
 
@@ -477,7 +477,7 @@
 			<div class="row">
 				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
-					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required input-mode="numeric">
+					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required inputmode="numeric">
 				</label>
 			</div>
 		</section>

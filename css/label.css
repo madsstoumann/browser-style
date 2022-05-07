@@ -3,6 +3,10 @@
 	width: var(--label-w, 100%);
 }
 
+:where(fieldset[role="radiogroup"]) {
+	gap: .5em;
+}
+
 :where(fieldset[role="radiogroup"] label) {
 	align-items: center;
 	display: flex;
