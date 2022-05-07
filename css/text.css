@@ -9,9 +9,10 @@
 /* code */
 :where(code),
 :where(var) {
+	display: inline-block;
 	font-family: var(--code-ff, ui-monospace, monospace);
 	font-size: var(--code-fs, 0.9em);
-	padding-block: var(--code-pb, 0.05em);
+	padding-block: var(--code-pb, 0 .0125em);
 	padding-inline: var(--code-pi, 0.3em);
 }
 
@@ -48,8 +49,9 @@
 	font-family: var(--kbd-ff, ui-sans-serif, system-ui, sans-serif);
 	font-size: var(--kbd-fz, small);
 	font-weight: var(--kbd-fw, 500);
+	line-height: var(--kbd-lh, 1.3);
 	margin-inline: .125em;
-	padding: var(--kbd-p, 0.1em 0.6em);
+	padding: var(--kbd-p, 0.1em 0.5em 0);
 	text-shadow: var(--kbd-txsh, 0 1px 0 #fff);
 }
 
@@ -59,11 +61,6 @@
 	color: var(--mark-c, var(--text-c));
 	padding-block: 0.25ch;
 	padding-inline: .5ch;
-}
-
-/* sample */
-:where(sample) {
-	color: var(--sample-c, inherit);
 }
 
 /* var */

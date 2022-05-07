@@ -1,6 +1,11 @@
-:where(label) {
+:where(label, fieldset[role="radiogroup"]) {
 	font-size: var(--label-fz, initial);
 	width: var(--label-w, 100%);
+}
+
+:where(fieldset[role="radiogroup"] label) {
+	align-items: center;
+	display: flex;
 }
 
 :where(label > abbr) {
@@ -12,7 +17,11 @@
 	display: block;
 }
 
-:where(label > input:not([type="checkbox"])) {
-	display: block;
+:where(label > input, label > select, label > textarea) {
+	/* display: block; */
 	margin-block-start: .25em;
+}
+
+:where(label > input[type="file"]) {
+	display: block;
 }

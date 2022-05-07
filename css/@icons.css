@@ -1,5 +1,5 @@
 :where(html) {
-  --ico-arrdwn: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 11l-2-2-14 14-14-14-2 2 16 16 16-16z"></path></svg>');
+  --icon-arrdwn: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M32 11l-2-2-14 14-14-14-2 2 16 16 16-16z"></path></svg>');
   /* --icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="black"></path></svg>'); */
 	--icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
   --ico-cross: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.957 3.457l-1.414-1.414-4.543 4.543-4.543-4.543-1.414 1.414 4.543 4.543-4.543 4.543 1.414 1.414 4.543-4.543 4.543 4.543 1.414-1.414-4.543-4.543z" fill="white"></path></svg>');
@@ -70,8 +70,7 @@ https://codepen.io/stoumann/pen/eYzPVqe
 [data-icon] i::after,
 [data-icon] i::before {
   transform-origin: 50% 50%;
-	/* transition: all var(--animdur) var(--animtf); */
-	transition: all 3s linear;
+	transition: all var(--animdur) var(--animtf);
 }
 
 [data-icon*="down"] i::after,
@@ -140,7 +139,7 @@ https://codepen.io/stoumann/pen/eYzPVqe
 }
 [open] > summary > [data-icon*="down"] i::after {
   top: var(--bdw);
-	transform: rotate(45deg) scale(-1) ;
+	transform: rotate(45deg) scale(-1);
 }
 [open] > summary > [data-icon*="right"] i::after {
   right: 0;

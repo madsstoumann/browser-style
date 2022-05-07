@@ -18,6 +18,11 @@ text-decoration-line: underline;
 	padding-block: 1ch;
 }
 
+:where(details[data-bs] summary:focus-visible) {
+	--outline-width: 0;
+	background: var(--gray-1);
+}
+
 :where(details[data-bs] summary)::-webkit-details-marker {
 	display: none;
 }

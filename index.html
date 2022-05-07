@@ -7,6 +7,7 @@
 	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Browser default styles">
+	<meta name="format-detection" content="telephone=no">
 	<link rel="stylesheet" href="css/styles.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		default-src;
@@ -266,8 +267,36 @@
 		<section id="input">
 			<h2>&lt;input&gt;</h2>
 			<div class="row">
+				<label>
+					<input type="checkbox">Accept terms and conditions
+				</label>
+				
+				<label>
+					<input type="checkbox" role="switch">Switch
+				</label>
+
+				<fieldset role="radiogroup">
+					<legend>Choose an option</legend>
+					<label>
+						<input type="radio" name="radio" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<fieldset role="radiogroup" aria-orientation="vertical">
+					<legend>aria-orientation="vertical"</legend>
+					<label>
+						<input type="radio" name="radio-2" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-2" value="2">Option 2
+					</label>
+				</fieldset>
+
 				<label>Color
-					<input type="color" value="#0eaaaa">
+					<input type="color" value="#0d59f2">
 				</label>
 
 				<label>Date
@@ -305,6 +334,17 @@
 				<label>Search
 					<input type="search">
 				</label>
+				
+				<label>
+					Search with <code>datalist</code>
+					<input
+						autocomplete="off"
+						autocorrect="off"
+						list="datalist"
+						minlength="3"
+						spellcheck="false"
+						type="search">
+				</label>
 
 				<label>Telephone
 					<input type="tel">
@@ -326,8 +366,41 @@
 					<input type="week">
 				</label>
 
+				<label>Select
+					<select>
+						<option disabled value="" selected>Choose one</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+				</label>
+
+				<label>Textarea
+					<textarea></textarea>
+				</label>
+
+				<label>Textarea <code>rows="4"</code>
+					<textarea rows="4"></textarea>
+				</label>
 			</div>
 		</section>
+
+		<datalist id="datalist">
+			<option value="Apple"> Apple</option>
+			<option value="Pear">Pear</option>
+			<option value="Peach"> Peach</option>
+			<option value="Cherry"> Cherry </option>
+			<option value="Bean">Bean</option>
+			<option value="Pea">Pea</option>
+			<option value="Coconut"> Coconut</option>
+			<option value="Raspberry">Raspberry</option>
+			<option value="Blackberry">Blackberry</option>
+			<option value="Strawberry">Strawberry</option>
+			<option value="Breadfruit">Breadfruit</option>
+			<option value="Pineapple">Pineapple</option>
+			<option value="Mulberry">Mulberry</option>
+			<option value="Jackfruit">Jackfruit</option>
+		</datalist>
 
 		<hr />
 		<section id="input-disabled">
@@ -397,29 +470,19 @@
 		</section>
 
 		<hr />
+		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode -->
 		<section id="input-pattern">
 			<h2>input patterns</h2>
 			<p><strong>Example:</strong> label &gt; abbr + small (&gt; samp) + input (with <code>pattern</code> and <code>required</code>)</p>
 			<div class="row">
 				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
-					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required>
+					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required input-mode="numeric">
 				</label>
 			</div>
 		</section>
 
-		<section id="input-checkbox">
-			<h2>&lt;input type="checkbox"&gt;</h2>
-			
-			<div class="row">
-				<label>
-					<input type="checkbox">Accept terms and conditions
-				</label>
-				<label>
-					<input type="checkbox" role="switch">Switch
-				</label>
-			</div>
-		</section>
+
 
 	
 <!-- 
@@ -608,6 +671,10 @@
 		<hr />
 		<section id="text">
 			<h2>text</h2>
+			<p>
+				When you write <code>code</code> in <del>Notepad</del> <ins>VS Code</ins>, you typically press <kbd>Ctrl</kbd> + <kbd>N</kbd> to start a <em>new project</em>, then open a <var>terminal</var> where you type <samp>git pull</samp>. 
+				<abbr title="Visual Studio Code" data-tooltip="Visual Studio Code">VS Code</abbr> has quickly become the <mark>most popular text editor for web developers</mark>. That's a <strong>bold</strong> statement.
+			</p>
 			<div class="row">
 				<p><strong>&lt;a&gt;:</strong> <a href="#">Link</a></p>
 				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation">Abbr.</abbr></p>

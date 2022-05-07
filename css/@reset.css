@@ -5,14 +5,17 @@
 }
 
 /* FOCUS */
-:focus {
+:focus-visible {
 	outline: var(--outline-color) var(--outline-style) var(--outline-width);
 	outline-offset: var(--outline-offset);
 }
 
 /* Sets a max outline-width on smaller controls */
-:focus :is(a, button, input, textarea) {
+:focus-visible :is(a, button, input, textarea) {
 	--outline-width: max(2px, 0.08em);
+}
+:focus:not(:focus-visible) {
+	outline: none;
 }
 
 img,

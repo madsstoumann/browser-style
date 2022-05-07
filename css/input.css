@@ -1,8 +1,10 @@
 @import 'input.range.css';
+
 :where(input) { accent-color: var(--accent-color); }
-:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"])) {
+:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), select, textarea) {
 	--input-icon-pos: 0.75em;
 	--input-icon-w: 1.5em;
+
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -29,9 +31,23 @@
 	cursor: not-allowed;
 }
 
+/* fieldset for radio-buttons */
+:where(fieldset[role="radiogroup"]) {
+	border: 0;
+	display: flex;
+	margin: unset;
+	padding: unset;
+}
+/* fieldset for radio-buttons */
+:where(fieldset[role="radiogroup"][aria-orientation="vertical"]) {
+	flex-direction: column;
+}
+
 /* specific types */
-:where(input[type="checkbox"]) {
+:where(input[type="checkbox"], input[type="radio"]) {
+	--input-bdw: 2px;
 	--input-checkbox-sz: 1.5em;
+
 	-webkit-appearance: none;
 	appearance: none;
 	block-size: var(--input-checkbox-sz);
@@ -45,6 +61,13 @@
 	margin-inline-end: .75em;
 	vertical-align: middle;
 }
+
+:where(input[type="radio"]) { border-radius: 50%; }
+:where(input[type="radio"]:checked) {
+	--input-bdw: .45em;
+	border-color: var(--accent-color);
+}
+
 :where(input[type="checkbox"]:not([role="switch"]):checked) {
 	background: var(--accent-color) var(--icon-check) center center / .75em no-repeat;
 	border-color: var(--accent-color);
@@ -92,6 +115,15 @@
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
 :where(input[type="url"]) { --input-bgi: var(--icon-url); }
 :where(input[type="week"]) { --input-bgi: var(--icon-week); }
+:where(select) { --input-bgi: var(--icon-arrdwn); }
+:where(textarea) {
+	--textarea-sz: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
+	min-block-size: var(--textarea-sz);
+	resize: vertical;
+}
+:where(textarea[rows="4"]) {
+	min-block-size: calc(2 * var(--textarea-sz));
+}
 
 /* date, datetime-local, month, week  */
 :where(input)::-webkit-calendar-picker-indicator {
