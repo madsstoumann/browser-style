@@ -1,0 +1,22 @@
+/* fieldset for radio-buttons */
+:where(fieldset[role="radiogroup"]) {
+	border: 0;
+	display: flex;
+	gap: calc(var(--input-gap) / 2);
+	margin: unset;
+	padding: unset;
+	padding-block-start: var(--input-gap);
+}
+
+:where(fieldset[role="radiogroup"] label) {
+	align-items: center;
+	display: flex;
+}
+
+:where(fieldset[aria-orientation="vertical"]) {
+	flex-direction: column;
+}
+
+:where(fieldset[role="radiogroup"][aria-orientation="vertical"] label) {
+	/* align-items: end; */
+}

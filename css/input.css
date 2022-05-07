@@ -31,18 +31,6 @@
 	cursor: not-allowed;
 }
 
-/* fieldset for radio-buttons */
-:where(fieldset[role="radiogroup"]) {
-	border: 0;
-	display: flex;
-	margin: unset;
-	padding: unset;
-}
-/* fieldset for radio-buttons */
-:where(fieldset[role="radiogroup"][aria-orientation="vertical"]) {
-	flex-direction: column;
-}
-
 /* specific types */
 :where(input[type="checkbox"], input[type="radio"]) {
 	--input-bdw: 2px;
@@ -59,6 +47,7 @@
 	inline-size: var(--input-checkbox-sz);
 	margin-block-start: -0.125em;
 	margin-inline-end: .75em;
+	transition: all .2s ease-in-out;
 	vertical-align: middle;
 }
 
@@ -84,6 +73,7 @@
 	inline-size: calc(1.8 * var(--input-switch-sz));
 	position: relative;
 }
+
 :where(input[type="checkbox"][role="switch"])::before {
 	aspect-ratio: 1;
 	display: block;
@@ -92,7 +82,7 @@
 	background-color: var(--input-switch-c, #fff);
 	content: "";
 	position: absolute;
-	transition: margin .1s ease-in-out;
+	transition: all .2s ease-in-out;
 }
 
 :where(input[type="checkbox"][role="switch"]:checked) {
@@ -101,6 +91,7 @@
 }
 :where(input[type="checkbox"][role="switch"]:checked)::before {
 	inset-inline-end: 0;
+
 }
 
 :where(input[type="color"]) { padding-inline: var(--input-pb); }
