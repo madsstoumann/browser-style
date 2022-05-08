@@ -276,7 +276,7 @@
 				</label>
 
 				<fieldset role="radiogroup" aria-orientation="vertical">
-					<legend>Choose <code>aria-orientation="vertical"</code></legend>
+					<legend>With <code>aria-orientation="vertical"</code></legend>
 					<label>
 						<input type="radio" name="radio-2" value="1" checked>Option 1
 					</label>
@@ -299,6 +299,10 @@
 					<input type="color" value="#0d59f2">
 				</label>
 
+				<label>Color with <code>list</code>
+					<input type="color" value="#0d59f2" list="colors">
+				</label>
+
 				<label>Date
 					<input type="date">
 				</label>
@@ -308,7 +312,7 @@
 				</label>
 
 				<label>Email
-					<input type="email">
+					<input type="email" data-bs="icon">
 				</label>
 
 				<label>File
@@ -324,22 +328,27 @@
 				</label>
 
 				<label>Password
-					<input type="password" data-lpignore="true">
+					<input type="password" data-lpignore="true" data-bs="icon">
 				</label>
 
 				<label>Range
-					<input type="range" min="50" max="150" value="75">
+					<input type="range">
 				</label>
+
+				<!-- <label>Range with ticks
+					<input type="range" list="range">
+				</label> -->
 
 				<label>Search
 					<input type="search">
 				</label>
 				
 				<label>
-					Search with <code>datalist</code>
+					Search with <code>list</code> and <code>data-bs="icon start"</code>
 					<input
 						autocomplete="off"
 						autocorrect="off"
+						data-bs="icon start"
 						list="datalist"
 						minlength="3"
 						spellcheck="false"
@@ -347,7 +356,7 @@
 				</label>
 
 				<label>Telephone
-					<input type="tel">
+					<input type="tel" data-bs="icon">
 				</label>
 
 				<label>Text
@@ -358,8 +367,12 @@
 					<input type="time">
 				</label>
 
+				<label>Time with <code>list</code>
+					<input type="time" list="time">
+				</label>
+
 				<label>Url
-					<input type="url">
+					<input type="url" data-bs="icon">
 				</label>
 
 				<label>Week
@@ -385,6 +398,15 @@
 			</div>
 		</section>
 
+		<!-- datalists -->
+		<datalist id="colors">
+			<option value="#3d7af5">
+			<option value="#0d59f2">
+			<option value="#0a47c2">
+			<option value="#083691">
+			<option value="#052461">
+		</datalist>
+
 		<datalist id="datalist">
 			<option value="Apple"> Apple</option>
 			<option value="Pear">Pear</option>
@@ -402,6 +424,20 @@
 			<option value="Jackfruit">Jackfruit</option>
 		</datalist>
 
+		<datalist id="range">
+			<option value="0">
+			<option value="25">
+			<option value="50">
+			<option value="100">
+		</datalist>
+
+		<datalist id="time">
+			<option value="12:00">
+			<option value="13:00">
+			<option value="14:00">
+		</datalist>
+	
+
 		<hr />
 		<section id="input-disabled">
 			<h2>&lt;input disabled&gt;</h2>
@@ -418,53 +454,7 @@
 					<input type="datetime-local" disabled>
 				</label>
 
-				<label>Email
-					<input type="email" disabled>
-				</label>
-
-				<label>File
-					<input type="file" multiple disabled>
-				</label>
-
-				<label>Month
-					<input type="month" disabled>
-				</label>
-
-				<label>Number
-					<input type="number" disabled>
-				</label>
-
-				<label>Password
-					<input type="password" data-lpignore="true" disabled>
-				</label>
-
-				<label>Range
-					<input type="range" disabled>
-				</label>
-
-				<label>Search
-					<input type="search" disabled>
-				</label>
-
-				<label>Telephone
-					<input type="tel" disabled>
-				</label>
-
-				<label>Text
-					<input type="text" placeholder="Placeholder text" disabled>
-				</label>
-
-				<label>Time
-					<input type="time" disabled>
-				</label>
-
-				<label>Url
-					<input type="url" disabled>
-				</label>
-
-				<label>Week
-					<input type="week" disabled>
-				</label>
+			
 
 			</div>
 		</section>

@@ -2,7 +2,7 @@
 :where(fieldset[role="radiogroup"]) {
 	border: 0;
 	display: flex;
-	gap: calc(var(--input-gap) / 2);
+	gap: var(--input-gap);
 	margin: unset;
 	padding: unset;
 	padding-block-start: var(--input-gap);
