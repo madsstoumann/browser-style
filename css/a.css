@@ -15,6 +15,57 @@
   	--d: 100%;
 	}
 }
+
+:where(a[href*=":"], a[download], a[target="_blank"])::after {
+	background: currentColor;
+	content: "";
+	display: inline-block;
+	margin-inline-start: .25em;
+	height: 1.25em;
+	width: 1.25em;
+}
+/* schemes: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler */
+
+:where(a[href*="bitcoin"])::after {
+	mask-image: var(--icon-bitcoin);
+	-webkit-mask-image: var(--icon-bitcoin);
+}
+:where(a[href*="ftp"])::after {
+	mask-image: var(--icon-ftp);
+	-webkit-mask-image: var(--icon-ftp);
+}
+:where(a[href*="mailto"])::after {
+	mask-image: var(--icon-email);
+	-webkit-mask-image: var(--icon-email);
+}
+:where(a[href*="skype"])::after {
+	mask-image: var(--icon-skype);
+	-webkit-mask-image: var(--icon-skype);
+}
+:where(a[href*="sms"])::after {
+	mask-image: var(--icon-message);
+	-webkit-mask-image: var(--icon-message);
+}
+:where(a[href*="tel"])::after {
+	mask-image: var(--icon-phone);
+	-webkit-mask-image: var(--icon-phone);
+}
+:where(a[href*="webcal"])::after {
+	mask-image: var(--icon-date);
+	-webkit-mask-image: var(--icon-date);
+}
+
+:where(a[download])::after {
+	mask-image: var(--icon-download);
+	-webkit-mask-image: var(--icon-download);
+}
+
+
+:where(a[target="_blank"])::after {
+	mask-image: var(--icon-external);
+	-webkit-mask-image: var(--icon-external);
+}
+
 /*
 Other options:
 
@@ -22,11 +73,6 @@ Other options:
 :link
 :visited
 :local-link
-
-Target specific link-types:
-:where(a[href^="mailto:"]) { email }
-:where(a[href^="tel"]) { phone }
-:where(a[download]) { download }
-:where(a[target="_blank"]) { new window }
+:target
 
 */

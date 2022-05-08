@@ -116,13 +116,14 @@
 :where(input[type="datetime-local"]) { --input-bgi: var(--icon-date); }
 :where(input[type="email"][data-bs~="icon"]) { --input-bgi: var(--icon-email); }
 :where(input[type="month"]) { --input-bgi: var(--icon-month); }
+:where(input[type="number"][data-bs~="icon"]) { --input-bgi: var(--icon-number); }
 :where(input[type="password"][data-bs~="icon"]) { --input-bgi: var(--icon-password); }
 :where(input[type="search"][data-bs~="icon"]) { --input-bgi: var(--icon-search); }
 :where(input[type="tel"][data-bs~="icon"]) { --input-bgi: var(--icon-phone); }
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
 :where(input[type="url"][data-bs~="icon"]) { --input-bgi: var(--icon-url); }
 :where(input[type="week"]) { --input-bgi: var(--icon-week); }
-:where(select) { --input-bgi: var(--icon-arrdwn); }
+:where(select) { --input-bgi: var(--icon-chevron-down); }
 :where(textarea) {
 	--textarea-sz: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	min-block-size: var(--textarea-sz);
