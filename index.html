@@ -236,23 +236,42 @@
 					<input type="checkbox" role="switch">Switch
 				</label>
 
-				<fieldset role="radiogroup" aria-orientation="vertical">
-					<legend>With <code>aria-orientation="vertical"</code></legend>
-					<label>
-						<input type="radio" name="radio-2" value="1" checked>Option 1
-					</label>
-					<label>
-						<input type="radio" name="radio-2" value="2">Option 2
-					</label>
-				</fieldset>
-
 				<fieldset role="radiogroup">
-					<legend>Choose an option</legend>
 					<label>
 						<input type="radio" name="radio" value="1" checked>Option 1
 					</label>
 					<label>
 						<input type="radio" name="radio" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<fieldset role="group">
+					<legend>With <code>role="group"</code></legend>
+					<label>
+						<input type="checkbox" checked>Accept terms and conditions
+					</label>
+					<label>
+						<input type="checkbox">Accept terms and conditions
+					</label>
+				</fieldset>
+
+				<fieldset role="group">
+					<legend>With <code>role="group"</code></legend>
+					<label>
+						<input type="checkbox" role="switch" checked>Switch
+					</label>
+					<label>
+						<input type="checkbox" role="switch">Switch
+					</label>
+				</fieldset>
+
+				<fieldset role="radiogroup" aria-orientation="vertical">
+					<legend>With <code>role="radiogroup"</code></legend>
+					<label>
+						<input type="radio" name="radio-2" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-2" value="2">Option 2
 					</label>
 				</fieldset>
 
@@ -296,12 +315,12 @@
 					<input type="range">
 				</label>
 
-				<!-- <label>Range with ticks
-					<input type="range" list="range">
-				</label> -->
+				<label data-bs="ruler">Range with ticks
+					<input type="range">
+				</label>
 
 				<label>Search
-					<input type="search">
+					<input type="search" data-bs="icon start">
 				</label>
 				
 				<label>

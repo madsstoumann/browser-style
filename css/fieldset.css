@@ -1,22 +1,14 @@
-/* fieldset for radio-buttons */
-:where(fieldset[role="radiogroup"]) {
+/* fieldset for checkboxes or radio-buttons */
+:where(fieldset[role*="group"]) {
 	border: 0;
 	display: flex;
 	gap: var(--input-gap);
 	margin: unset;
-	padding: unset;
-	padding-block-start: var(--input-gap);
+	padding: unset;	
 }
 
-:where(fieldset[role="radiogroup"] label) {
-	align-items: center;
-	display: flex;
-}
-
-:where(fieldset[aria-orientation="vertical"]) {
+:where(fieldset[aria-orientation="vertical"], fieldset[role="group"]) {
 	flex-direction: column;
-}
-
-:where(fieldset[role="radiogroup"][aria-orientation="vertical"] label) {
-	/* align-items: end; */
+	gap: calc(2 * var(--input-gap));
+	padding-block-start: calc(2 * var(--input-gap));
 }

@@ -1,112 +1,81 @@
 @import 'input.range.css';
 
-:where(input) { accent-color: var(--accent-color); }
-:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), select, textarea) {
-	--input-icon-pos: 0.75em;
-	--input-icon-w: 1.5em;
-
+:where(input, select) {
+	accent-color: var(--accent-color);
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+}
+
+:where(input:not([type="file"]):not([type="range"]), select, textarea) {
+	--input-trs: .2s cubic-bezier(.1, 0, .9, 1);
+	border-color: var(--input-bdc);
+	border-radius: var(--input-bdrs);
+	border-style: var(--input-bds);
+	border-width: var(--input-bdw);
+}
+
+:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), select, textarea) {
+	--input-icon-pos: var(--input-pi);
+	--input-icon-w: 1.5em;
 	background-color: var(--input-bgc, #fff0);
 	background-image: var(--input-bgi, none);
 	background-position: center right var(--input-icon-pos);
 	background-size: var(--input-icon-w) auto;
 	background-repeat: no-repeat;
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
-	border-color: var(--input-bdc);
-	border-radius: var(--input-bdrs);
-	border-style: var(--input-bds);
-	border-width: var(--input-bdw);
 	inline-size: var(--input-w, 100%);
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
 	position: relative;
 }
 
-/* disabled */
+/* Disabled */
 :where(button:disabled, input:disabled, select:disabled, textarea:disabled) {
 	filter: grayscale(1);
 	opacity: 0.4;
 	cursor: not-allowed;
 }
 
-/* specific types */
+/* Specific Types */
 :where(input[type="checkbox"], input[type="radio"]) {
 	--input-bdw: 2px;
-	--input-checkbox-sz: 1.5em;
-
-	-webkit-appearance: none;
-	appearance: none;
-	block-size: var(--input-checkbox-sz);
-	border-color: var(--input-bdc);
-	border-radius: var(--input-bdrs);
-	border-style: var(--input-bds);
-	border-width: var(--input-bdw);
+	--input-h: 1.5em;
+	block-size: var(--input-h);
 	cursor: pointer;
-	inline-size: var(--input-checkbox-sz);
+	inline-size: var(--input-h);
 	margin-block-start: -0.125em;
-	margin-inline-end: .75em;
-	transition: all .2s ease-in-out;
-	vertical-align: middle;
+	margin-inline-end: var(--input-pi);
+	vertical-align: text-top;
 }
-
-:where(input[type="radio"]) { border-radius: 50%; }
-:where(input[type="radio"]:checked) {
-	--input-bdw: .45em;
-	border-color: var(--accent-color);
-}
-
 :where(input[type="checkbox"]:not([role="switch"]):checked) {
-	background: var(--accent-color) var(--icon-check) center center / .75em no-repeat;
+	background: var(--accent-color) var(--icon-check) center center no-repeat;
+	background-size: 1em;
 	border-color: var(--accent-color);
 }
-
-/* checkbox: switch */
 :where(input[type="checkbox"][role="switch"]) {
-	--input-bdw: 2px;
-	--input-switch-sz: 1.5em;
 	background-color: var(--input-switch-bgc, var(--gray-5));
-	block-size: var(--input-switch-sz);
-	border-radius: var(--input-switch-sz);
-	border: var(--input-bdw) solid var(--input-bdc);
-	inline-size: calc(1.8 * var(--input-switch-sz));
+	border-radius: var(--input-h);
+	inline-size: calc(1.8 * var(--input-h));
 	position: relative;
 }
-
 :where(input[type="checkbox"][role="switch"])::before {
 	aspect-ratio: 1;
-	display: block;
-	inline-size: calc(var(--input-switch-sz) - (var(--input-bdw) * 2));
-	border-radius: 50%;
 	background-color: var(--input-switch-c, #fff);
+	border-radius: 50%;
 	content: "";
-	position: absolute;
-	transition: all .2s ease-in-out;
+	display: block;
+	inline-size: calc(var(--input-h) - (var(--input-bdw) * 2));
+	transition: margin var(--input-trs);
 }
-
 :where(input[type="checkbox"][role="switch"]:checked) {
 	background-color: var(--accent-color);
 	border-color: var(--accent-color);
 }
 :where(input[type="checkbox"][role="switch"]:checked)::before {
-	inset-inline-end: 0;
+	margin-inline-start: calc(var(--input-h) - (var(--input-bdw) * 2) / 0.9);
+	
 }
-
-/* icons */
-:where(input[data-bs~="icon"]),
-:where(input[type="date"]),
-:where(input[type="datetime-local"]),
-:where(input[type="month"]),
-:where(input[type="time"]),
-:where(input[type="week"]),
-:where(select) { padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos)); }
-:where(input[data-bs~="start"]) {
-	background-position: center left var(--input-icon-pos);
-	padding-inline-end: var(--input-pi);
-	padding-inline-start: calc(var(--input-icon-w) + var(--input-icon-pos) + var(--input-pi));
-}
-
 :where(input[type="color"]) { padding-inline: var(--input-pb); }
 :where(input[type="color"])::-webkit-color-swatch-wrapper { padding: 0; }
 :where(input[type="color"])::-webkit-color-swatch { border-radius: var(--input-bdrs); }
@@ -116,6 +85,11 @@
 :where(input[type="month"]) { --input-bgi: var(--icon-month); }
 :where(input[type="number"][data-bs~="icon"]) { --input-bgi: var(--icon-number); }
 :where(input[type="password"][data-bs~="icon"]) { --input-bgi: var(--icon-password); }
+:where(input[type="radio"]) { border-radius: 50%; }
+:where(input[type="radio"]:checked) {
+	--input-bdw: var(--input-radio-bdw, .45em);
+	border-color: var(--accent-color);
+}
 :where(input[type="search"][data-bs~="icon"]) { --input-bgi: var(--icon-search); }
 :where(input[type="tel"][data-bs~="icon"]) { --input-bgi: var(--icon-phone); }
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
@@ -127,22 +101,22 @@
 	min-block-size: var(--textarea-sz);
 	resize: vertical;
 }
-:where(textarea[rows="4"]) {
-	min-block-size: calc(2 * var(--textarea-sz));
+:where(textarea[rows="4"]) { min-block-size: calc(2 * var(--textarea-sz)); }
+
+/* Icons */
+:where(input[data-bs~="icon"]),
+:where(input[type="date"]),
+:where(input[type="datetime-local"]),
+:where(input[type="month"]),
+:where(input[type="time"]),
+:where(input[type="week"]),
+:where(select) { padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos)); }
+:where(input[data-bs~="start"]) {
+	background-position: center left var(--input-icon-pos);
+	padding-inline: calc(var(--input-icon-w) + var(--input-icon-pos) + var(--input-pi)) var(--input-pi);
 }
 
-/* :where(input[type=file])::-webkit-file-upload-button {
-	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
-	border-radius: var(--button-bdrs, var(--input-bdrs, initial));
-	border-color: var(--button-bdc, transparent);
-	border-style: var(--button-bds, solid);
-	border-width: var(--button-bdw, var(--input-bdw, initial));
-	font-size: var(--input-fz, inherit);
-	font-weight: var(--button-fw, 400);
-	padding-block: var(--input-pb);
-	padding-inline: var(--input-pi);
-} */
-
+/* Style/Hide shadowDOM elements */
 
 /* date, datetime-local, month, week  */
 :where(input:not([type="search"]))::-webkit-calendar-picker-indicator {
@@ -152,7 +126,7 @@
 	margin: var(--input-icon-pos) calc(var(--input-icon-w) * -1);
 }
 
-/* file button */
+/* File Button */
 :where(input[type=file])::file-selector-button {
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	border-radius: var(--button-bdrs, var(--input-bdrs, initial));
@@ -165,14 +139,14 @@
 	padding-inline: var(--input-pi);
 }
 
-/* datalist dropdown */
+/* Datalist dropdown-button */
 :where(input[type="search"])::-webkit-list-button,
 :where(input[type="search"])::-webkit-calendar-picker-indicator {
 	background-color: #9e9e9e;
 	block-size: var(--input-icon-w);
 	inline-size: var(--input-icon-w);
 	margin-block: 0;
-	margin-inline: 0 -1em;
+	margin-inline: 0 -0.75em;
 	mask-image: var(--icon-chevron-down);
 	mask-repeat: no-repeat;
 	-webkit-mask-repeat: no-repeat;
@@ -180,10 +154,7 @@
 	-webkit-mask-image: var(--icon-chevron-down);
 }
 
-
-
-
-/* search reset-button */
+/* Search reset-button */
 :where(input[type="search"])::-webkit-search-cancel-button {
 	background-color: currentColor;
 	block-size: var(--input-icon-w);
@@ -196,12 +167,12 @@
 	-webkit-mask-image: var(--icon-reset);
 }
 
-/* search reset-button AND datalist */
+/* Combination: Search reset-button AND datalist dropdown-button */
 :where(input[type="search"][list])::-webkit-search-cancel-button {
 	right: 2.5em;
 }
 
-/* validation */
+/* Validation Patterns */
 input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 	border-color: var(--color-danger);
 	box-shadow: var(--color-danger) 0 0 1px 1px inset;
@@ -210,7 +181,7 @@ input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 /* Target Safari */
 @supports (background: -webkit-named-image(i)) {
 	:where(input[type="search"])::-webkit-list-button {
-		margin-inline: 0 -0.5em;
+		margin-inline: 0;
 }
 
 /* Target Mobile Safari */

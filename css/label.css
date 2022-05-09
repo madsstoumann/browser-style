@@ -1,12 +1,7 @@
-:where(label, fieldset[role="radiogroup"]) {
+:where(label, fieldset[role*="group"]) {
 	font-size: var(--label-fz, initial);
 	width: var(--label-w, 100%);
 }
-
-/* label:has(input[type="checkbox"]) {
-	align-items: center;
-	display: flex;
-} */
 
 :where(label > abbr) {
 	color: var(--required-color);
@@ -17,10 +12,37 @@
 	display: block;
 }
 
-:where(label > input, label > select, label > textarea) {
+:where(label > input:not([type="checkbox"]):not([type="radio"]), label > select, label > textarea) {
 	margin-block-start: var(--input-gap);
 }
 
 :where(label > input[type="file"]) {
 	display: block;
+}
+
+/* Ticks for range */
+/* TODO: look at blok-build or bloks */
+:where(label[data-bs*="ruler"]) { position: relative; }
+:where(label[data-bs*="ruler"])::after {
+  --ruler-unit: 1px;
+  --ruler-x: 10;
+
+  --ruler1-bdw: 1px;
+  --ruler1-c: #000;
+  --ruler1-h: 8px;
+  --ruler1-space: 5;
+
+  background-image: linear-gradient(90deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0);
+  background-position: 0 0;
+  background-repeat: repeat-x;
+  background-size: calc(var(--ruler-unit) * var(--ruler1-space) * var(--ruler-x)) var(--ruler1-h);
+
+	content: "";
+	display: block;
+	block-size: 100%;
+	inset-block-start: 3em;
+	inset-inline-start: 0;
+	position: absolute;
+	width: 100%;
+	z-index: -1;
 }

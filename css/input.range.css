@@ -12,6 +12,7 @@
 	background: #fff0;
 	color: var(--input-range-c, var(--accent-color, inherit));
 	font-size: 1.5rem;
+	margin-inline: 0;
 	overflow: hidden;
 	width: var(--input-range-w, 100%);
 }

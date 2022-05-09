@@ -43,7 +43,7 @@
 	--input-fz: 1rem;
 	--input-gap: 0.25em;
 	--input-pb: .75em;
-	--input-pi: 2ch;
+	--input-pi: .75em;
 
 	--outline-color: var(--accent-color);
 	--outline-offset: 3px;
