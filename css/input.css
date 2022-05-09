@@ -100,9 +100,7 @@
 :where(input[type="month"]),
 :where(input[type="time"]),
 :where(input[type="week"]),
-:where(select) {
-	padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos));
-}
+:where(select) { padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos)); }
 :where(input[data-bs~="start"]) {
 	background-position: center left var(--input-icon-pos);
 	padding-inline-end: var(--input-pi);
@@ -123,7 +121,7 @@
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
 :where(input[type="url"][data-bs~="icon"]) { --input-bgi: var(--icon-url); }
 :where(input[type="week"]) { --input-bgi: var(--icon-week); }
-:where(select) { --input-bgi: var(--icon-chevron-down); }
+:where(select) { --input-bgi: var(--icon-chevron-down); color: currentColor; }
 :where(textarea) {
 	--textarea-sz: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	min-block-size: var(--textarea-sz);
@@ -133,16 +131,7 @@
 	min-block-size: calc(2 * var(--textarea-sz));
 }
 
-/* date, datetime-local, month, week  */
-:where(input)::-webkit-calendar-picker-indicator {
-	opacity: 0;
-	block-size: var(--input-icon-w);
-	inline-size: var(--input-icon-w);
-	margin: var(--input-icon-pos) calc(var(--input-icon-w) * -1);
-}
-
-/* file button */
-:where(input[type=file])::-webkit-file-upload-button {
+/* :where(input[type=file])::-webkit-file-upload-button {
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	border-radius: var(--button-bdrs, var(--input-bdrs, initial));
 	border-color: var(--button-bdc, transparent);
@@ -152,8 +141,18 @@
 	font-weight: var(--button-fw, 400);
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
+} */
+
+
+/* date, datetime-local, month, week  */
+:where(input:not([type="search"]))::-webkit-calendar-picker-indicator {
+	opacity: 0;
+	block-size: var(--input-icon-w);
+	inline-size: var(--input-icon-w);
+	margin: var(--input-icon-pos) calc(var(--input-icon-w) * -1);
 }
 
+/* file button */
 :where(input[type=file])::file-selector-button {
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	border-radius: var(--button-bdrs, var(--input-bdrs, initial));
@@ -166,10 +165,23 @@
 	padding-inline: var(--input-pi);
 }
 
-/* datalist */
-:where(input[list]::-webkit-list-button) {
-	display: none;
+/* datalist dropdown */
+:where(input[type="search"])::-webkit-list-button,
+:where(input[type="search"])::-webkit-calendar-picker-indicator {
+	background-color: #9e9e9e;
+	block-size: var(--input-icon-w);
+	inline-size: var(--input-icon-w);
+	margin-block: 0;
+	margin-inline: 0 -1em;
+	mask-image: var(--icon-chevron-down);
+	mask-repeat: no-repeat;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-appearance: none;
+	-webkit-mask-image: var(--icon-chevron-down);
 }
+
+
+
 
 /* search reset-button */
 :where(input[type="search"])::-webkit-search-cancel-button {
@@ -184,8 +196,26 @@
 	-webkit-mask-image: var(--icon-reset);
 }
 
+/* search reset-button AND datalist */
+:where(input[type="search"][list])::-webkit-search-cancel-button {
+	right: 2.5em;
+}
+
 /* validation */
 input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 	border-color: var(--color-danger);
 	box-shadow: var(--color-danger) 0 0 1px 1px inset;
+}
+
+/* Target Safari */
+@supports (background: -webkit-named-image(i)) {
+	:where(input[type="search"])::-webkit-list-button {
+		margin-inline: 0 -0.5em;
+}
+
+/* Target Mobile Safari */
+@supports (-webkit-touch-callout: none) {
+	:where(input[type="search"])::-webkit-list-button {
+		margin-inline-end: -1em;
+	}
 }

@@ -15,11 +15,15 @@
 	position: relative;
 }
 
-:where(figure[data-bs] iframe, figure[data-bs] img, figure[data-bs] video) {
-	/* aspect-ratio: inherit; */
+:where(figure[data-bs] img, figure[data-bs] video) {
 	block-size: 100%;
 	inline-size: 100%;
 	object-fit: cover;
+}
+
+:where(figure[data-bs] iframe) {
+	block-size: 100%;
+	inline-size: 100%;
 }
 
 /* aspect-ratio */
