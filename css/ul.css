@@ -1,5 +1,8 @@
-:where(ul[data-bs="check"]) { list-style-type: ' ✓ '; }
-:where(ul[data-bs="cross"]) { list-style-type: ' ✕ '; }
-:where(ul[data-bs="fisheye"]) { list-style-type: ' ⦿ '; }
-:where(ul[data-bs="square"]) { list-style-type: square; }
-:where(ul[data-bs="triangle"]) { list-style-type: disclosure-closed; }
+:where(ul[data-bs~="check"]) { list-style-type: ' ✓ '; }
+:where(ul[data-bs~="cross"]) { list-style-type: ' ✕ '; }
+:where(ul[data-bs~="fisheye"]) { list-style-type: ' ⦿ '; }
+:where(ul[data-bs~="square"]) { list-style-type: square; }
+:where(ul[data-bs~="triangle"]) { list-style-type: disclosure-closed; }
+
+:where(ul[data-bs~="danger"] li)::marker { color: var(--color-danger); }
+:where(ul[data-bs~="success"] li)::marker { color: var(--color-success); }
