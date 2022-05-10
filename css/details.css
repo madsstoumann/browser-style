@@ -1,38 +1,77 @@
-:where(details[data-bs="toggletip"]) {
-	display: inline;
-	position: relative;
-}
-:where(details[data-bs="toggletip"] summary) {
-text-decoration-line: underline;
-  text-decoration-style: wavy;
-  text-decoration-color: hotpink;
-}
-:where(details[data-bs="toggletip"][open] summary + *) {
-	position: absolute;
-	z-index: 1;
-	background: tomato;
-}
-
-:where(details[data-bs] summary) {
-	list-style-type: none;
-	padding-block: 1ch;
-}
+:where(details[data-bs] summary) { list-style-type: none; }
+:where(details[data-bs] summary)::-webkit-details-marker { display: none; }
+:where(details[data-bs] summary)::marker { display: none; }
 
 :where(details[data-bs] summary:focus-visible) {
 	--outline-width: 0;
 	background: var(--gray-1);
 }
 
-:where(details[data-bs] summary)::-webkit-details-marker {
-	display: none;
+/* Toggle Tip */
+:where(details[data-bs="toggletip"]) {
+	cursor: help;
+	display: inline;
+	position: relative;
 }
-:where(details[data-bs] summary)::marker {
-	display: none;
+:where(details[data-bs="toggletip"] summary) {
+	border-block-end: 2px dotted var(--accent-color);
 }
 
-:where(details[data-bs="faq"]) {
-	border-block-end: 1px solid var(--gray-4);
+:where(details[data-bs="toggletip"][open] summary)::before {
+	background: rgba(0, 0, 0, .2);
+  content: "";
+  display: block;
+  inset: 0;
+  position: fixed;
+	z-index: 0;
 }
-:where(details[data-bs="faq"] summary) {
+
+:where(details[data-bs="toggletip"][open] summary + *) {
+	background-color: var(--toggletip-bgc, #fff);
+	border-radius: var(--toggletip-bdrs, .25em);
+	box-shadow: var(--toggletip-bxsh, 0 0 .25em rgba(0, 0, 0, .125));
+  font-size: var(--toggletip-fz, 80%);
+  margin: 0;
+  padding-block: var(--toggletip-pb, 1.25ch);
+  padding-inline: var(--toggletip-pi, 1.5ch 2ch);
+  position: absolute;
+  width: var(--toggletip-w, 12rem);
+  z-index: 1;
+}
+
+/* FAQ */
+:where(details[data-bs~="faq"]) { border-block-end: 1px solid var(--gray-4); }
+:where(details[data-bs~="faq"] summary) {
+	display: flex;
 	font-weight: 500;
+	justify-content: space-between;
+	padding-block: 1ch;
+}
+
+:where(details[data-bs~="faq"] summary)::after {
+	background-image: var(--faq-icon);
+
+--input-icon-pos: var(--input-pi);
+--input-icon-w: 2em;
+
+background-position: center right;
+background-size: var(--input-icon-w) auto;
+background-repeat: no-repeat;
+content: "";
+width: 2em;
+height: 2em;
+transition: transform .2s ease-in-out;
+}
+
+:where(details[data-bs~="down"] summary) { --faq-icon: var(--icon-chevron-down); }
+:where(details[data-bs~="down"][open] > summary)::after { transform: rotate(180deg); }
+
+:where(details[data-bs~="plus"] summary) { --faq-icon: var(--icon-plus); }
+:where(details[data-bs~="plus"][open] > summary)::after { --faq-icon: var(--icon-minus); }
+
+:where(details[data-bs~="right"] summary) { --faq-icon: var(--icon-chevron-right); }
+:where(details[data-bs~="right"][open] > summary)::after { transform: rotate(90deg); }
+
+:where(details[data-bs~="faq"][open] summary + *) {
+	padding-block-end: 2ch;
 }

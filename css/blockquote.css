@@ -1,5 +1,5 @@
 :where(blockquote) {
-	background-color: #f9f9f9;
+	background-color: var(--blockquote-bgc, var(--gray-1));
 	border-inline-start: 5px solid var(--accent-color);
 	font-size: var(--blockquote-fz, 1.4em);
 	margin: unset;

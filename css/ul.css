@@ -1,0 +1,7 @@
+:where(ul[data-bs="square"]) {
+	list-style-type: square;
+}
+
+:where(ul[data-bs="triangle"]) {
+	list-style-type: disclosure-closed;
+}

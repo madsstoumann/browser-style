@@ -3,3 +3,24 @@
 	margin: unset;
 	padding: unset;
 }
+
+:where(menu[role="menu"][aria-orientation="horizontal"]) {
+	display: flex;
+	/* gap: 10px; */
+}
+
+:where(menu[role="menu"] [role="menuitem"]) {
+	background-color: var(--menuitem-bgc, #fff);
+	box-shadow: var(--menuitem-shadow, 0 0 0 1px rgba(0, 0, 0, 0.1));
+	border: 0;
+	
+	font-size: 1rem;
+	padding: 2ch;
+}
+
+
+@media (hover: hover) {
+	:where(menu[role="menu"] [role="menuitem"]:hover) {
+		background-color: var(--gray-1);
+	}
+}

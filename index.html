@@ -31,7 +31,7 @@
 		<h1>browser.style</h1>
 		<p>Default styles for browsers, using semantic HTML with <code>aria</code>-roles, and a single attribute — <code>data-bs</code> — for modifiers and variations.</p>
 		<p>All styles are using <code>:where</code> to remove specificity, and expose <code>Custom Properties</code> for easy customization.</p>
-
+		<p>Icons by the amazing <a href="https://tablericons.com/" target="_blank" rel="noreferrer noopener">Tabler Icons</a></p>
 		<hr />
 		<section id="a">
 			<h2>&lt;a&gt;: The Anchor element</h2>
@@ -54,8 +54,13 @@
 		<section id="address">
 			<h2>&lt;address&gt;: The Contact Address element</h2>
 			<address>
-				<a href="mailto:jim@rock.com">jim@rock.com</a><br>
-				<a href="tel:+13115552368">(311) 555-2368</a>
+				You can contact us at <a href="//browser.style">browser.style</a><br>
+				If you see any bugs, please <a href="mailto:info@browser.style">contact us</a>
+				<p><em>You may also want to visit us:</em></p>
+				Company Name<br>
+				555 Company Avenue<br>
+				Beverly Hills, CA 90210<br>
+				USA
 			</address>
 		</section>
 
@@ -96,44 +101,93 @@
 		<section id="details">
 			<h2>&lt;details&gt;: The Details disclosure element</h2>
 
-			<p><strong>FAQ</strong></p>
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq"</code></p>
 
-			<details data-bs="faq">
-				<summary>
-					<span data-icon="down fill">Accordion Item 1<i></i></span>
-				</summary>
+			<details data-bs="faq right">
+				<summary>Accordion Item 1</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq">
-				<summary>
-					<span data-icon="right fill">Accordion Item 2<i></i></span>
-				</summary>
+			<details data-bs="faq right">
+				<summary>Accordion Item 2</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq">
-				<summary>
-					<span data-icon="plus">Accordion Item 3<i></i></span>
-				</summary>
-				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
-			</details>
-			<details data-bs="faq">
-				<summary>
-					<span data-icon="cross">Accordion Item 4<i></i></span>
-				</summary>
-				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
-			</details>
-			<details data-bs="faq">
-				<summary>
-					<span data-icon="equals">Accordion Item 5<i></i></span>
-				</summary>
+			<details data-bs="faq right">
+				<summary>Accordion Item 3</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
 
-			<p><strong>Toggle Tips</strong></p>
-			Lorem ipsum dolor sit amet <details data-bs="toggletip">
-				<summary>consectetur adipisicing elit</summary>
-				<div>Internet</div>
-			</details> consectetur adipisicing elit. Voluptates non laudantium cupiditate minus alias laboriosam labore porro quod aliquid voluptatem!
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq plus"</code></p>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 1</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 2</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 3</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq down"</code></p>
+			<details data-bs="faq down">
+				<summary>Accordion Item 1</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq down">
+				<summary>Accordion Item 2</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq down">
+				<summary>Accordion Item 3</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+
+			<p><strong>Example, Toggle Tips: <code>data-bs="toggletip"</code></strong></p>
+			
+			<details data-bs="toggletip">
+				<summary>
+					<span>Internet protocol suite</span>
+				</summary>
+				<div>
+					The Internet protocol suite is the conceptual model and set of communications protocols used on the Internet and similar computer networks. It is commonly known as TCP/IP because the original protocols in the suite are the Transmission Control Protocol (TCP) and the Internet Protocol (IP).
+				</div>
+			</details>
+			 to link devices worldwide. It is a <em>network of networks</em> that consists of private, public, academic, business, and government networks of local to global scope, linked by a broad array of electronic, 
+			 <details data-bs="toggletip">
+				<summary><span>wireless</span></summary>
+				<div>
+					Wireless communication, or sometimes simply wireless, is the transfer of information or power between two or more points that are not connected by an electrical conductor. The most common wireless technologies use radio waves.
+			</div>
+			</details>, 
+			 and optical networking technologies. The Internet carries an extensive range of information resources and services, such as the inter-linked 
+			 <details data-bs="toggletip">
+				<summary><span>hypertext</span></summary>
+				<div>
+					Hypertext is text displayed on a computer display or other electronic devices with references (hyperlinks) to other text that the reader can immediately access, or where text can be revealed progressively at multiple levels of detail.
+				</div>
+			</details> 
+			 documents and applications of the 
+			 <details data-bs="toggletip">
+				<summary><span>World Wide Web (WWW)</span></summary>
+				<div>
+					The World Wide Web (abbreviated WWW or the Web) is an information space where documents and other web resources are identified by Uniform Resource Locators (URLs), interlinked by hypertext links, and can be accessed via the Internet. English scientist Tim Berners-Lee invented the World Wide Web in 1989.
+				</div>
+			</details>, 
+			<details data-bs="toggletip">
+				<summary><span>electronic mail</span></summary>
+				<div>
+					Electronic mail (email) is a method of exchanging messages between people using electronics. Email first entered substantial use in the 1960s and by the mid-1970s had taken the form now recognized as email. Email operates across computer networks, which today is primarily the Internet.
+				</div>
+			</details>, telephony, and 
+			<details data-bs="toggletip">
+				<summary><span>file sharing</span></summary>
+				<div>
+					File sharing is the practice of distributing or providing access to digital media, such as computer programs, multimedia (audio, images and video), documents or electronic books. File sharing may be achieved in a number of ways.
+				</div>
+			</details>
+
 		</section>
 
 		<hr />
@@ -175,7 +229,7 @@
 
 		<hr />
 		<section id="hr">
-			<h2>&lt;hr&gt;The Thematic Break element</h2>
+			<h2>&lt;hr&gt;: The Thematic Break element</h2>
 			<p>Add <code>data-bs</code> with one of the following values: </p>
 			<p><code>dashed</code></p>
 			<hr data-bs="dashed" />
@@ -187,7 +241,6 @@
 			<hr />
 		</section>
 
-		<hr />
 		<section id="iframe">
 			<h2>&lt;iframe&gt;: The Inline Frame element</h2>
 			<div class="row">
@@ -242,6 +295,7 @@
 		<hr />
 		<section id="input">
 			<h2>&lt;input&gt;: The Form Input element</h2>
+			<p>The examples use a simple pattern, with the <code>&lt;input&gt;</code> wrapped in a <code>&lt;label&gt;</code>. Use <a href="https://css-tricks.com/everything-you-ever-wanted-to-know-about-inputmode/" target="_blank" rel="noreferrer noopener">inputmode</a> to force a mobile device to use a specific virtual keyboard.</p>
 			<div class="row">
 				<label>
 					<input type="checkbox">Accept terms and conditions
@@ -452,9 +506,6 @@
 				<label>Datetime Local
 					<input type="datetime-local" disabled>
 				</label>
-
-			
-
 			</div>
 		</section>
 
@@ -462,7 +513,7 @@
 		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode -->
 		<section id="input-pattern">
 			<h2>input patterns</h2>
-			<p><strong>Example:</strong>Validate when user leave field</p>
+			<p><strong>Example: </strong>Validate when user leave field</p>
 			<div class="row">
 				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
@@ -479,7 +530,13 @@
 				<li role="none"><button role="menuitem">Action 1</button></li>
 				<li role="none"><button role="menuitem">Action 2</button></li>
 				<li role="none"><button role="menuitem">Action 3</button></li>
-				
+			</menu>
+
+			<p>With <code>aria-orientation="horizontal"</code></p>
+			<menu role="menu" aria-orientation="horizontal">
+				<li role="none"><button role="menuitem">Action 1</button></li>
+				<li role="none"><button role="menuitem">Action 2</button></li>
+				<li role="none"><button role="menuitem">Action 3</button></li>
 			</menu>
 		</section>
 
@@ -643,6 +700,18 @@
 				<li>Item 2</li>
 				<li>Item 3</li>
 			</ul>
+			<p>With <code>data-bs="square"</code></p>
+			<ul data-bs="square">
+				<li>Item 1</li>
+				<li>Item 2</li>
+				<li>Item 3</li>
+			</ul>
+			<p>With <code>data-bs="triangle"</code></p>
+			<ul data-bs="triangle">
+				<li>Item 1</li>
+				<li>Item 2</li>
+				<li>Item 3</li>
+			</ul>
 		</section>
 
 		<hr />
@@ -672,9 +741,6 @@
 				<p><strong>&lt;u&gt;:</strong> <u>Underline</u></p>
 				<p><strong>&lt;var&gt;:</strong> <var>Variable</var></p>
 				<p><strong>&lt;wbr&gt;:</strong> Fernstraßen<wbr>bau<wbr>privat<wbr>finanzierungs<wbr>gesetz</p>
-				
-				
-				
 			</div>
 		</section>
 
