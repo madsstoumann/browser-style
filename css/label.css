@@ -21,28 +21,36 @@
 }
 
 /* Ticks for range */
-/* TODO: look at blok-build or bloks */
-:where(label[data-bs*="ruler"]) { position: relative; }
-:where(label[data-bs*="ruler"])::after {
-  --ruler-unit: 1px;
-  --ruler-x: 10;
-
-  --ruler1-bdw: 1px;
-  --ruler1-c: #000;
-  --ruler1-h: 8px;
-  --ruler1-space: 5;
-
-  background-image: linear-gradient(90deg, var(--ruler1-c) 0 var(--ruler1-bdw), transparent 0);
-  background-position: 0 0;
-  background-repeat: repeat-x;
-  background-size: calc(var(--ruler-unit) * var(--ruler1-space) * var(--ruler-x)) var(--ruler1-h);
-
+:where(label[data-bs*="ticks"]) {
+	--ticks-bdw: 1px;
+	--ticks-c: var(--ticks-bdc, var(--input-bdc));
+	--ticks-count: 6;
+	--ticks-h: 10px;
+	position: relative;
+}
+:where(label[data-bs*="ticks"])::after {
+	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));
+	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
+	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 50%;
+	background-repeat: repeat-x;
+	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
 	content: "";
 	display: block;
 	block-size: 100%;
-	inset-block-start: 3em;
+	inset-block-start: 50%;
 	inset-inline-start: 0;
 	position: absolute;
 	width: 100%;
 	z-index: -1;
 }
+
+:where(label[data-bs*="3-ticks"]) { --ticks-count: 2; }
+:where(label[data-bs*="4-ticks"]) { --ticks-count: 3; }
+:where(label[data-bs*="5-ticks"]) { --ticks-count: 4; }
+:where(label[data-bs*="6-ticks"]) { --ticks-count: 5; }
+:where(label[data-bs*="7-ticks"]) { --ticks-count: 6; }
+:where(label[data-bs*="8-ticks"]) { --ticks-count: 7; }
+:where(label[data-bs*="9-ticks"]) { --ticks-count: 8; }
+:where(label[data-bs*="10-ticks"]) { --ticks-count: 9; }
+:where(label[data-bs*="11-ticks"]) { --ticks-count: 10; }
+:where(label[data-bs*="12-ticks"]) { --ticks-count: 11; }

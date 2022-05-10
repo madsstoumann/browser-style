@@ -4,9 +4,9 @@
 	--brightness-down: 80%;
 	--brightness-hover: 180%;
 	--clip-edges: 0.125em;
-	--thumb-height: 1.125em;
+	--thumb-height: var(--input-thumb-h, 1.25em);
 	--track-color: rgba(0, 0, 0, 0.2);
-	--track-height: 0.125em;
+	--track-height: var(--input-track-h, 0.125em);
 
 	appearance: none;
 	background: #fff0;

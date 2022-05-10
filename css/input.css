@@ -187,6 +187,6 @@ input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 /* Target Mobile Safari */
 @supports (-webkit-touch-callout: none) {
 	:where(input[type="search"])::-webkit-list-button {
-		margin-inline-end: -1em;
+		margin-inline-end: -.5em;
 	}
 }

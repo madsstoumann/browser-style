@@ -29,9 +29,12 @@
 	<main>
 
 		<h1>browser.style</h1>
+		<p>Default styles for browsers, using semantic HTML with <code>aria</code>-roles, and a single attribute — <code>data-bs</code> — for modifiers and variations.</p>
+		<p>All styles are using <code>:where</code> to remove specificity, and expose <code>Custom Properties</code> for easy customization.</p>
 
+		<hr />
 		<section id="a">
-			<h2>&lt;a&gt;</h2>
+			<h2>&lt;a&gt;: The Anchor element</h2>
 			<div class="row">
 				<a href="#">Regular link</a>
 				<a href="mailto:me@me.com">Email link</a>
@@ -44,15 +47,21 @@
 				<a href="#" download="filename.txt">Download link</a>
 				<a href="#" target="_blank" rel="noreferrer noopener">Open in new window</a>
 			</div>
-			<p>
-				Lorem ipsum dolor <a href="#">sit amet consectetur</a> adipisicing elit. Placeat repellendus consequatur assumenda quaerat, 
-				<a href="#" target="_blank" rel="noreferrer noopener">eligendi vitae corrupti</a> sapiente minus quos quisquam.
-			</p>
+			<p>The list of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler#permitted_schemes" target="_blank" rel="noreferrer noopener">Permitted schemes</a> is very long. Icons have only been added to the most common types.</p>
+		</section>
+
+		<hr />
+		<section id="address">
+			<h2>&lt;address&gt;: The Contact Address element</h2>
+			<address>
+				<a href="mailto:jim@rock.com">jim@rock.com</a><br>
+				<a href="tel:+13115552368">(311) 555-2368</a>
+			</address>
 		</section>
 
 		<hr />
 		<section id="blockquote">
-			<h2>&lt;blockquote&gt;</h2>
+			<h2>&lt;blockquote&gt;: The Block Quotation element</h2>
 			<blockquote>
 				Say My Name
 			</blockquote>
@@ -67,7 +76,7 @@
 
 		<hr />
 		<section id="button">
-			<h2>&lt;button&gt;</h2>
+			<h2>&lt;button&gt;: The Button element</h2>
 			<div class="row">
 				<button type="button">Normal Button</button>
 				<button type="submit">Submit Button</button>
@@ -85,7 +94,7 @@
  
 		<hr />
 		<section id="details">
-			<h2>&lt;details&gt;</h2>
+			<h2>&lt;details&gt;: The Details disclosure element</h2>
 
 			<p><strong>FAQ</strong></p>
 
@@ -129,7 +138,7 @@
 
 		<hr />
 		<section id="dialog">
-			<h2>&lt;dialog&gt;</h2>
+			<h2>&lt;dialog&gt;: The Dialog element</h2>
 			<div>
 				<dialog>CONTENT HERE</dialog>
 			</div>
@@ -137,7 +146,7 @@
 
 		<hr />
 		<section id="dl">
-			<h2>&lt;dl&gt;</h2>
+			<h2>&lt;dl&gt;: The Description List element</h2>
 			<dl>
 				<dt>Chrome</dt>
 				<dd>Google's browser</dd>
@@ -149,9 +158,14 @@
 		</section>
 
 		<hr />
-		<div id="h1">
-			<h2>&lt;h1&gt; &mdash; &lt;h6&gt;</h2>
-			<h1 data-bs="gradient-text">The quick brown fox jumps over the lazy dog</h1>
+		<section id="fieldset">
+			<h2>&lt;fieldset&gt;: The Field Set element</h2>
+		</section>
+
+		<hr />
+		<div id="headings">
+			<h2>&lt;h1&gt;&ndash;&lt;h6&gt;: The HTML Section Heading elements</h2>
+			<h1>The quick brown fox jumps over the lazy dog</h1>
 			<h2>The quick brown fox jumps over the lazy dog</h2>
 			<h3>The quick brown fox jumps over the lazy dog</h3>
 			<h4>The quick brown fox jumps over the lazy dog</h4>
@@ -161,7 +175,7 @@
 
 		<hr />
 		<section id="hr">
-			<h2>&lt;hr&gt;</h2>
+			<h2>&lt;hr&gt;The Thematic Break element</h2>
 			<p>Add <code>data-bs</code> with one of the following values: </p>
 			<p><code>dashed</code></p>
 			<hr data-bs="dashed" />
@@ -173,8 +187,9 @@
 			<hr />
 		</section>
 
+		<hr />
 		<section id="iframe">
-			<h2>&lt;iframe&gt;</h2>
+			<h2>&lt;iframe&gt;: The Inline Frame element</h2>
 			<div class="row">
 				<figure data-bs="widescreen">
 					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
@@ -193,7 +208,7 @@
 
 		<hr />
 		<section id="img">
-			<h2>&lt;img&gt;</h2>
+			<h2>&lt;img&gt;: The Image Embed element</h2>
 			<div class="row">
 				<figure>
 					<img src="https://picsum.photos/id/237/600/400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
@@ -226,7 +241,7 @@
 
 		<hr />
 		<section id="input">
-			<h2>&lt;input&gt;</h2>
+			<h2>&lt;input&gt;: The Form Input element</h2>
 			<div class="row">
 				<label>
 					<input type="checkbox">Accept terms and conditions
@@ -315,8 +330,12 @@
 					<input type="range">
 				</label>
 
-				<label data-bs="ruler">Range with ticks
+				<label data-bs="ticks">Range with <code>data-bs="ticks"</code>
 					<input type="range">
+				</label>
+
+				<label data-bs="5-ticks">Range <code>step="25"</code> and <code>data-bs="5-ticks"</code>
+					<input type="range" step="25">
 				</label>
 
 				<label>Search
@@ -443,7 +462,7 @@
 		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode -->
 		<section id="input-pattern">
 			<h2>input patterns</h2>
-			<p><strong>Example:</strong> label &gt; abbr + small (&gt; samp) + input (with <code>pattern</code> and <code>required</code>)</p>
+			<p><strong>Example:</strong>Validate when user leave field</p>
 			<div class="row">
 				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
@@ -453,32 +472,20 @@
 		</section>
 
 
-
-	
-<!-- 
-		<section id="input-radio">
-			<h2>&lt;input type="radio"&gt;</h2>
-			<div>
-				<label>
-					<input type="radio">
-				</label>
-			</div>
-		</section> -->
-
-		<!-- <hr />
+		<hr />
 		<section id="menu">
-			<h2>&lt;menu wip&gt;</h2>
+			<h2>&lt;menu&gt;: The Menu element</h2>
 			<menu role="menu">
 				<li role="none"><button role="menuitem">Action 1</button></li>
 				<li role="none"><button role="menuitem">Action 2</button></li>
 				<li role="none"><button role="menuitem">Action 3</button></li>
 				
 			</menu>
-		</section> -->
+		</section>
 
 		<hr />
 		<section id="meter">
-			<h2>&lt;meter wip&gt;</h2>
+			<h2>&lt;meter&gt;: The HTML Meter element</h2>
 
 			<div class="row">
 				<meter min="0" max="100" value="30" low="25" high="20" optimum="20" aria-label="even-less-good-value"></meter>
@@ -491,7 +498,7 @@
 
 		<hr />
 		<section id="ol">
-			<h2>&lt;ol&gt;</h2>
+			<h2>&lt;ol&gt;: The Ordered List element</h2>
 			<p>The <code>type</code>-attribute can be set to <code>a</code> or <code>A</code> for letters, <code>i</code> or <code>I</code> for roman numerals, or <code>1</code> for numbers. <br />Custom counters are used, when <code>type</code> is not present</p>
 
 			<p><strong>Example: Table of content</strong></p>
@@ -549,7 +556,7 @@
 
 		<hr />
 		<section id="progress">
-			<h2>&lt;progress&gt;</h2>
+			<h2>&lt;progress&gt;: The Progress Indicator element</h2>
 			<p><strong>Example with</strong> <code>value</code> <strong>and</strong> <code>max</code></p>
 			<progress value="40" max="100"></progress>
 			<p><strong>Example with no attributes: </strong> <code>::indeterminate</code></p>
@@ -558,7 +565,7 @@
 
 		<hr />
 		<section id="table">
-			<h2>&lt;table&gt;</h2>
+			<h2>&lt;table&gt;: The Table element</h2>
 			
 			<div data-bs="overflow-scroll">
 				<table>
@@ -630,7 +637,7 @@
 
 		<hr />
 		<section id="ul">
-			<h2>&lt;ul&gt;</h2>
+			<h2>&lt;ul&gt;: The Unordered List element</h2>
 			<ul>
 				<li>Item 1</li>
 				<li>Item 2</li>
@@ -640,13 +647,12 @@
 
 		<hr />
 		<section id="text">
-			<h2>text</h2>
+			<h2>text: Inline text elements</h2>
 			<p>
 				When you write <code>code</code> in <del>Notepad</del> <ins>VS Code</ins>, you typically press <kbd>Ctrl</kbd> + <kbd>N</kbd> to start a <em>new project</em>, then open a <var>terminal</var> where you type <samp>git pull</samp>. 
 				<abbr title="Visual Studio Code" data-tooltip="Visual Studio Code">VS Code</abbr> has quickly become the <mark>most popular text editor for web developers</mark>. That's a <strong>bold</strong> statement.
 			</p>
 			<div class="row">
-				<p><strong>&lt;a&gt;:</strong> <a href="#">Link</a></p>
 				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation">Abbr.</abbr></p>
 				<p><strong>&lt;b&gt;:</strong> <b>Bring Attention</b></p>
 				<p><strong>&lt;code&gt;:</strong> <code>arr.forEach(item => ...</code></p>
@@ -672,8 +678,9 @@
 			</div>
 		</section>
 
+		<hr />
 		<section id="video">
-			<h2>&lt;video&gt;</h2>
+			<h2>&lt;video&gt;: The Video Embed element</h2>
 			<div class="row">
 				<figure data-bs="widescreen">
 					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted loading="lazy"></video>
@@ -690,9 +697,14 @@
 					<figcaption><code>data-bs="portrait"</code></figcaption>
 				</figure>
 			</div>
-
 		</section>
 
+		<hr />
+		<section id="modifiers">
+			<h2>modifiers</h2>
+			<p><strong>gradient-text</strong></p>
+			<h1 data-bs="gradient-text">The quick brown fox jumps over the lazy dog</h1>
+		</section>
 	</main>
 </body>
 </html>

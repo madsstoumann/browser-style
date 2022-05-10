@@ -44,6 +44,8 @@
 	--input-gap: 0.25em;
 	--input-pb: .75em;
 	--input-pi: .75em;
+	--input-thumb-h: 1.25em;
+	--input-track-h: 0.125em;
 
 	--outline-color: var(--accent-color);
 	--outline-offset: 3px;
@@ -62,6 +64,7 @@
 	--main-mxis: 1200px;
 
 	--text-c: hsl(0, 0%, 5%);
+	--ticks-bdc: var(--gray-7);
 
 
 	  /* Animation/Transition Duration */

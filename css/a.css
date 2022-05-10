@@ -11,9 +11,7 @@
 	transition: var(--animdur-300, 0.3s) ease-in-out;
 }
 @media (hover: hover) {
-  a:hover {
-  	--d: 100%;
-	}
+	a:hover { --d: 100%; }
 }
 
 :where(a[href*=":"], a[download], a[target="_blank"])::after {
@@ -24,33 +22,32 @@
 	height: 1.25em;
 	width: 1.25em;
 }
-/* schemes: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler */
 
-:where(a[href*="bitcoin"])::after {
+:where(a[href^="bitcoin"])::after {
 	mask-image: var(--icon-bitcoin);
 	-webkit-mask-image: var(--icon-bitcoin);
 }
-:where(a[href*="ftp"])::after {
+:where(a[href^="ftp"])::after {
 	mask-image: var(--icon-ftp);
 	-webkit-mask-image: var(--icon-ftp);
 }
-:where(a[href*="mailto"])::after {
+:where(a[href^="mailto"])::after {
 	mask-image: var(--icon-email);
 	-webkit-mask-image: var(--icon-email);
 }
-:where(a[href*="skype"])::after {
+:where(a[href^="skype"])::after {
 	mask-image: var(--icon-skype);
 	-webkit-mask-image: var(--icon-skype);
 }
-:where(a[href*="sms"])::after {
+:where(a[href^="sms"])::after {
 	mask-image: var(--icon-message);
 	-webkit-mask-image: var(--icon-message);
 }
-:where(a[href*="tel"])::after {
+:where(a[href^="tel"])::after {
 	mask-image: var(--icon-phone);
 	-webkit-mask-image: var(--icon-phone);
 }
-:where(a[href*="webcal"])::after {
+:where(a[href^="webcal"])::after {
 	mask-image: var(--icon-date);
 	-webkit-mask-image: var(--icon-date);
 }
@@ -59,7 +56,6 @@
 	mask-image: var(--icon-download);
 	-webkit-mask-image: var(--icon-download);
 }
-
 
 :where(a[target="_blank"])::after {
 	mask-image: var(--icon-external);
