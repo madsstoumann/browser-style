@@ -178,6 +178,16 @@ input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 	box-shadow: var(--color-danger) 0 0 1px 1px inset;
 }
 
+input[data-bs~="live"]:required:not(:placeholder-shown):invalid {
+	--input-bgi: var(--icon-alert);
+	border-color: var(--color-danger);
+	box-shadow: var(--color-danger) 0 0 1px 1px inset;
+}
+
+input[data-bs~="valid"]:required:not(:placeholder-shown):valid {
+	--input-bgi: var(--icon-checkmark);
+}
+
 /* Target Safari */
 @supports (background: -webkit-named-image(i)) {
 	:where(input[type="search"])::-webkit-list-button {

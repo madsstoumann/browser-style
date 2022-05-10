@@ -21,7 +21,7 @@
 	--button-c: var(--secondary-text-color, initial);
 }
 /* modifiers */
-:where(button[data-bs~="outline"]) {
+:where(button[data-bs~="outline"]:not([type="reset"])) {
 	--button-bdc: var(--button-bgc, var(--accent-color, initial));
 	--button-bdw: var(--button-bdw, 1px);
 	--button-c: hsl(var(--hue), var(--saturation), var(--lightness));

@@ -6,18 +6,18 @@
 	padding: 0;
 }
 
-:where(menu[role="menu"][aria-orientation="horizontal"]) { display: flex; }
-
 :where(menu[role="menu"] [role="menuitem"]) {
 	background-color: var(--menuitem-bgc, #fff0);
 	border-color: var(--menu-bdc);
 	border-width: 0;
+	color: currentColor;
 	font-size: 1rem;
 	inline-size: 100%;
 	margin: 0;
 	padding: var(--menu-item-p, 2ch);
 }
 
+:where(menu[role="menu"][aria-orientation="horizontal"]) { display: flex; }
 :where(menu[role="menu"]:not([aria-orientation="horizontal"]) > li:not(:last-child) [role="menuitem"]) { border-block-end-width: 1px; }
 :where(menu[role="menu"][aria-orientation="horizontal"] > li:not(:last-child) [role="menuitem"]) { border-inline-end-width: 1px; }
 

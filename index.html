@@ -191,11 +191,16 @@
 		</section>
 
 		<hr />
-		<section id="dialog">
+		<section>
 			<h2>&lt;dialog&gt;: The Dialog element</h2>
-			<div>
-				<dialog>CONTENT HERE</dialog>
-			</div>
+			<p>It requires JavaScript to open a dialog, example <code>dialog.open=true</code></p>
+			<p><button type="button" onclick="dialog.open=true">Open Dialog</button></p>
+			<dialog id="dialog">
+				<h3>This is a dialog!</p>
+				<form method="dialog">
+					<button type="submit">OK</button>
+				</form>
+			</dialog>
 		</section>
 
 		<hr />
@@ -513,12 +518,27 @@
 		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode -->
 		<section id="input-pattern">
 			<h2>input patterns</h2>
-			<p><strong>Example: </strong>Validate when user leave field</p>
+			<p><strong>Examples: </strong>Live validation, show checkmark when valid, validate when leaving field:</p>
+
 			<div class="row">
+				<label>First Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Minimum 4 chars. Example: <samp>Steven</samp></small>
+					<input type="text"  minlength="4" placeholder=" " pattern="\S+.*" required data-bs="live">
+				</label>
+
+				<label>Last Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Minimum 4 chars. Example: <samp>Singh</samp></small>
+					<input type="text"  minlength="4" placeholder=" " pattern="\S+.*" required data-bs="valid">
+				</label>
+
 				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
 					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required inputmode="numeric">
 				</label>
+
+
+
+
 			</div>
 		</section>
 
@@ -526,6 +546,7 @@
 		<hr />
 		<section id="menu">
 			<h2>&lt;menu&gt;: The Menu element</h2>
+			<p>Default, as context-menu:</p>
 			<menu role="menu">
 				<li role="none"><button role="menuitem">Action 1</button></li>
 				<li role="none"><button role="menuitem">Action 2</button></li>
@@ -535,9 +556,8 @@
 			<p>With <code>aria-orientation="horizontal"</code></p>
 			<menu role="menu" aria-orientation="horizontal">
 				<li role="none"><button role="menuitem">Primary</button></li>
-				<li role="none"><button role="menuitem">Social</button></li>
-				<li role="none"><button role="menuitem">Promotions</button></li>
-				<li role="none"><button role="menuitem">Updates</button></li>
+				<li role="none"><button role="menuitem">Secondary</button></li>
+				<li role="none"><button role="menuitem">Tertiary</button></li>
 			</menu>
 		</section>
 
