@@ -1,26 +1,28 @@
 :where(menu[role="menu"]) {
+	box-shadow: var(--menuitem-shadow, 0 0 0 1px var(--menu-bdc));
+	inline-size: max-content;
 	list-style-type: none;
-	margin: unset;
-	padding: unset;
+	margin: 0;
+	padding: 0;
 }
 
-:where(menu[role="menu"][aria-orientation="horizontal"]) {
-	display: flex;
-	/* gap: 10px; */
-}
+:where(menu[role="menu"][aria-orientation="horizontal"]) { display: flex; }
 
 :where(menu[role="menu"] [role="menuitem"]) {
-	background-color: var(--menuitem-bgc, #fff);
-	box-shadow: var(--menuitem-shadow, 0 0 0 1px rgba(0, 0, 0, 0.1));
-	border: 0;
-	
+	background-color: var(--menuitem-bgc, #fff0);
+	border-color: var(--menu-bdc);
+	border-width: 0;
 	font-size: 1rem;
-	padding: 2ch;
+	inline-size: 100%;
+	margin: 0;
+	padding: var(--menu-item-p, 2ch);
 }
 
+:where(menu[role="menu"]:not([aria-orientation="horizontal"]) > li:not(:last-child) [role="menuitem"]) { border-block-end-width: 1px; }
+:where(menu[role="menu"][aria-orientation="horizontal"] > li:not(:last-child) [role="menuitem"]) { border-inline-end-width: 1px; }
 
 @media (hover: hover) {
 	:where(menu[role="menu"] [role="menuitem"]:hover) {
-		background-color: var(--gray-1);
+		background-color: var(--menu-item-hover-bgc, var(--gray-1));
 	}
 }

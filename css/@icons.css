@@ -3,8 +3,10 @@
   /* --ico-cross: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.957 3.457l-1.414-1.414-4.543 4.543-4.543-4.543-1.414 1.414 4.543 4.543-4.543 4.543 1.414 1.414 4.543-4.543 4.543 4.543 1.414-1.414-4.543-4.543z" fill="white"></path></svg>'); */
 
 	--icon-bitcoin: url('../svg/bitcoin.svg');
+	--icon-checkmark: url('../svg/check.svg');
 	--icon-chevron-down: url('../svg/chevron-down.svg');
 	--icon-chevron-right: url('../svg/chevron-right.svg');
+	--icon-cross: url('../svg/cross.svg');
 	--icon-date: url('../svg/calendar.svg');
 	--icon-download: url('../svg/download.svg');
 	--icon-email: url('../svg/email.svg');

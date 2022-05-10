@@ -47,6 +47,8 @@
 	--input-thumb-h: 1.25em;
 	--input-track-h: 0.125em;
 
+	--menu-bdc: var(--input-bdc);
+
 	--outline-color: var(--accent-color);
 	--outline-offset: 3px;
 	--outline-style: solid;
