@@ -14,13 +14,13 @@
 		default-src;
 		script-src 'self';
 		style-src 'self';
-		img-src 'self' picsum.photos *.picsum.photos *.ytimg.com *.vimeocdn.com data:;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com *.vimeocdn.com data:;
 		font-src;
 		connect-src 'self';
 		media-src 'self';
 		object-src 'none';
 		child-src;
-		frame-src *.youtube-nocookie.com *.youtube.com *.vimeo.com;
+		frame-src www.youtube-nocookie.com player.vimeo.com;
 		form-action;
 		base-uri;
 		manifest-src 'self';
@@ -248,7 +248,7 @@
 			<hr />
 		</section>
 
-		<!-- <section id="iframe">
+		<section id="iframe">
 			<h2>&lt;iframe&gt;: The Inline Frame element</h2>
 			<div class="row">
 				<figure data-bs="widescreen">
@@ -264,7 +264,7 @@
 					<figcaption>Vimeo <code>data-bs="widescreen"</code></figcaption>
 				</figure>
 			</div>
-		</section> -->
+		</section>
 
 		<hr />
 		<section id="img">
