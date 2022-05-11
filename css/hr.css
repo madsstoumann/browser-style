@@ -1,24 +1,15 @@
 :where(hr) {
-	--hr-bg: var(--gray-6, initial);
+	--hr-bg: var(--gray-6, currentColor);
 	--hr-h: 1px;
-	border: 0;
-	background-color: var(--hr-bg);
+	border-color: var(--hr-bg);
+	border-style: var(--hr-bds, solid);
+	border-width: var(--hr-bdw, 0 0 var(--hr-h) 0);
 	height: var(--hr-h);
-	margin-block: 2ch;
+	margin-block: var(--hr-mb, 2ch);
 }
 
-:where(hr[data-bs]) {
-	background-color: transparent;
-}
-
-:where(hr[data-bs="dashed"]){
-	border-block-end: var(--hr-h) dashed var(--hr-bg);
-}
-
-:where(hr[data-bs="dotted"]){
-	border-block-end: var(--hr-h) dotted var(--hr-bg);
-}
-
-:where(hr[data-bs="fade"]){
+:where(hr[data-bs="dashed"]) { --hr-bds: dashed; }
+:where(hr[data-bs="dotted"]) { --hr-bds: dotted; }
+:where(hr[data-bs="fade"]) {
 	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
 }
