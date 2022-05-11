@@ -39,7 +39,7 @@
 	--box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
 		100vmax currentColor;
 
-	background: linear-gradient(currentColor 0 0) scroll no-repeat left center /
+	background: linear-gradient(currentColor 0 0, currentColor 0 0) scroll no-repeat left center /
 		50% calc(var(--track-height) + 1px);
 	background-color: currentColor;
 	border-radius: var(--thumb-width, var(--thumb-height));
@@ -69,7 +69,7 @@
 }
 
 :where(input[type="range"])::-webkit-slider-runnable-track {
-	background: linear-gradient(var(--track-color) 0 0) scroll no-repeat center /
+	background: linear-gradient(var(--track-color) 0 0, var(--track-color) 0 0) scroll no-repeat center /
 		100% calc(var(--track-height) + 1px);
 }
 
