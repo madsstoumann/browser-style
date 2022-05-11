@@ -11,5 +11,6 @@
 :where(hr[data-bs="dashed"]) { --hr-bds: dashed; }
 :where(hr[data-bs="dotted"]) { --hr-bds: dotted; }
 :where(hr[data-bs="fade"]) {
+	--hr-bdw: 0;
 	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
 }
