@@ -63,6 +63,14 @@
 	padding-inline: .5ch;
 }
 
+/* time */
+:where(time) {
+	font-weight: var(--time-fw, 700);
+}
+:where(time > span) {
+	font-variant-numeric: ordinal;
+}
+
 /* var */
 :where(var) {
 	background-color: var(--var-bgc, var(--gray-9));
