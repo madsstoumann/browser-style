@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="css/styles.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		default-src;
-		script-src 'self' 'unsafe-inline';
+		script-src 'self';
 		style-src 'self';
 		img-src 'self' picsum.photos *.picsum.photos *.ytimg.com *.vimeocdn.com data:;
 		font-src;
@@ -21,6 +21,7 @@
 		object-src 'none';
 		child-src;
 		frame-src *.youtube-nocookie.com *.youtube.com *.vimeo.com;
+		frame-ancestors;
 		form-action;
 		base-uri;
 		manifest-src 'self';
