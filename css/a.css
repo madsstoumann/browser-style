@@ -1,15 +1,17 @@
 :where(a) {
 	align-items: center;
-	color: var(--a-c, var(--accent-color, currentColor));
+	background: 
+		linear-gradient(currentColor 0 0, currentColor 0 0) 
+		bottom /var(--d, 0) 2px 
+		no-repeat;
+	color: var(--a-c, var(--accent-color, initial));
 	display: inline-flex;
-	text-decoration: none;
-	text-underline-offset: 3px;
+	text-decoration: var(--a-td, none);
+	text-decoration-skip-ink: auto;
+	transition: .3s ease-in-out;
 }
 @media (hover: hover) {
-	:where(a):hover {
-		text-decoration: underline;
-		text-decoration-thickness: 2px;
-	}
+	a:hover { --d: 100%; }
 }
 
 :where(a[href*=":"], a[download], a[target="_blank"])::after {
