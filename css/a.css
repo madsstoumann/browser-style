@@ -1,74 +1,35 @@
 :where(a) {
 	align-items: center;
-	background: 
-		linear-gradient(currentColor 0 0) 
-		bottom /var(--d, 0) 1px 
-		no-repeat;
-	color: var(--a-c, var(--accent-color, initial));
+	color: var(--a-c, var(--accent-color, currentColor));
 	display: inline-flex;
-	text-decoration: var(--a-td, none);
-	text-decoration-skip-ink: auto;
-	transition: var(--animdur-300, 0.3s) ease-in-out;
+	text-decoration: none;
+	text-underline-offset: 3px;
 }
 @media (hover: hover) {
-	a:hover { --d: 100%; }
+	:where(a):hover {
+		text-decoration: underline;
+		text-decoration-thickness: 2px;
+	}
 }
 
 :where(a[href*=":"], a[download], a[target="_blank"])::after {
-	background: currentColor;
+	--a-msi: none;
+	background-color: currentColor;
+	block-size: 1.25em;
 	content: "";
 	display: inline-block;
+	inline-size: 1.25em;
 	margin-inline-start: .25em;
-	height: 1.25em;
-	width: 1.25em;
+	mask-image: var(--a-msi);
+	-webkit-mask-image: var(--a-msi);
 }
 
-:where(a[href^="bitcoin"])::after {
-	mask-image: var(--icon-bitcoin);
-	-webkit-mask-image: var(--icon-bitcoin);
-}
-:where(a[href^="ftp"])::after {
-	mask-image: var(--icon-ftp);
-	-webkit-mask-image: var(--icon-ftp);
-}
-:where(a[href^="mailto"])::after {
-	mask-image: var(--icon-email);
-	-webkit-mask-image: var(--icon-email);
-}
-:where(a[href^="skype"])::after {
-	mask-image: var(--icon-skype);
-	-webkit-mask-image: var(--icon-skype);
-}
-:where(a[href^="sms"])::after {
-	mask-image: var(--icon-message);
-	-webkit-mask-image: var(--icon-message);
-}
-:where(a[href^="tel"])::after {
-	mask-image: var(--icon-phone);
-	-webkit-mask-image: var(--icon-phone);
-}
-:where(a[href^="webcal"])::after {
-	mask-image: var(--icon-date);
-	-webkit-mask-image: var(--icon-date);
-}
-
-:where(a[download])::after {
-	mask-image: var(--icon-download);
-	-webkit-mask-image: var(--icon-download);
-}
-
-:where(a[target="_blank"])::after {
-	mask-image: var(--icon-external);
-	-webkit-mask-image: var(--icon-external);
-}
-
-/*
-Other options:
-
-:any-link
-:link
-:visited
-:local-link
-:target
-
-*/
+:where(a[href^="bitcoin"])::after { --a-msi: var(--icon-bitcoin); }
+:where(a[href^="ftp"])::after { --a-msi: var(--icon-ftp); }
+:where(a[href^="mailto"])::after { --a-msi: var(--icon-email); }
+:where(a[href^="skype"])::after { --a-msi: var(--icon-skype); }
+:where(a[href^="sms"])::after { --a-msi: var(--icon-message); }
+:where(a[href^="tel"])::after { --a-msi: var(--icon-phone); }
+:where(a[href^="webcal"])::after { --a-msi: var(--icon-date); }
+:where(a[download])::after { --a-msi: var(--icon-download); }
+:where(a[target="_blank"])::after { --a-msi: var(--icon-external); }

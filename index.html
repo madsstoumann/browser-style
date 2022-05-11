@@ -21,7 +21,6 @@
 		object-src 'none';
 		child-src;
 		frame-src *.youtube-nocookie.com *.youtube.com *.vimeo.com;
-		frame-ancestors;
 		form-action;
 		base-uri;
 		manifest-src 'self';
@@ -197,7 +196,7 @@
 		<section>
 			<h2>&lt;dialog&gt;: The Dialog element</h2>
 			<p>It requires JavaScript to open a dialog, example <code>dialog.open=true</code></p>
-			<p><button type="button" onclick="dialog.open=true">Open Dialog</button></p>
+			<p><button type="button" id="dialogOpen">Open Dialog</button></p>
 			<dialog id="dialog">
 				<h3>This is a dialog!</p>
 				<form method="dialog">
@@ -887,5 +886,6 @@
 			<h1 data-bs="gradient-text">The quick brown fox jumps over the lazy dog</h1>
 		</section>
 	</main>
+	<script src="main.js" async defer></script>
 </body>
 </html>

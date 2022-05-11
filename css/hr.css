@@ -1,7 +1,7 @@
 :where(hr) {
-	--hr-bg: var(--gray-6, currentColor);
+	--hr-c: var(--gray-6, currentColor);
 	--hr-h: 1px;
-	border-color: var(--hr-bg);
+	border-color: var(--hr-c);
 	border-style: var(--hr-bds, solid);
 	border-width: var(--hr-bdw, 0 0 var(--hr-h) 0);
 	height: var(--hr-h);
@@ -12,5 +12,5 @@
 :where(hr[data-bs="dotted"]) { --hr-bds: dotted; }
 :where(hr[data-bs="fade"]) {
 	--hr-bdw: 0;
-	background-image: linear-gradient(to right, transparent, var(--hr-bg), transparent);
+	background-image: linear-gradient(to right, transparent, var(--hr-c), transparent);
 }
