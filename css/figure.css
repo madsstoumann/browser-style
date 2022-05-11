@@ -10,7 +10,7 @@
 
 /* if data-bs is present, add aspect-ratio and object-position */
 :where(figure[data-bs]) {
-	aspect-ratio: var(--asr, none);
+	aspect-ratio: var(--asr, auto);
 	inline-size: 100%;
 	position: relative;
 }
