@@ -818,7 +818,7 @@
 
 		<hr />
 		<section id="text">
-			<h2>text: Inline text elements</h2>
+			<h2>Inline text semantics</h2>
 			<p>
 				When you write <code>code</code> in <del>Notepad</del> <ins>VS Code</ins>, you typically press <kbd>Ctrl</kbd> + <kbd>N</kbd> to start a <em>new project</em>, then open a <var>terminal</var> where you type <samp>git pull</samp>. 
 				<abbr title="Visual Studio Code" data-tooltip="Visual Studio Code">VS Code</abbr> has quickly become the <mark>most popular text editor for web developers</mark>. That's a <strong>bold</strong> statement.
@@ -849,19 +849,20 @@
 		<hr />
 		<section id="video">
 			<h2>&lt;video&gt;: The Video Embed element</h2>
+			<p>To autoplay a video, remove <code>controls</code> and add <code>autoplay playsinline loop muted</code>.</p>
 			<div class="row">
 				<figure data-bs="widescreen">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 
 				<figure data-bs="square">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
 					<figcaption><code>data-bs="square"</code></figcaption>
 				</figure>
 
 				<figure data-bs="portrait">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" autoplay playsinline loop muted loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
 					<figcaption><code>data-bs="portrait"</code></figcaption>
 				</figure>
 			</div>
