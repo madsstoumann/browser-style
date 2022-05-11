@@ -14,7 +14,7 @@
 	position: relative;
 }
 :where(details[data-bs="toggletip"] summary) {
-	border-block-end: 2px dotted var(--accent-color);
+	border-block-end: 2px dotted currentColor;
 }
 
 :where(details[data-bs="toggletip"][open] summary)::before {

@@ -1,0 +1,8 @@
+:where(pre) {
+	background-color: var(--gray-8);
+	color: #fff;
+	overflow-x: auto;
+	padding: 1ch;
+	tab-size: 2;
+}
+pre > code { background: transparent; color: inherit; }
