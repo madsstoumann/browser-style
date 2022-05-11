@@ -1,0 +1,26 @@
+{
+  "name": "browser.style",
+  "description": "Cross-Browser Default Styles",
+  "background_color": "hsl(220, 90%, 50%)",
+  "categories": ["business", "productivity"],
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+	"id": "/",
+  "lang": "en-US",
+  "orientation": "any",
+  "short_name": "browser.style",
+  "start_url": "/",
+  "theme_color": "hsl(220, 90%, 50%)",
+  "url": "browser.style"
+}
