@@ -27,7 +27,6 @@
 }
 
 :where(meter)::-webkit-meter-inner-element {
-	background: deppink;
 	border-radius: 3rem;
 	-webkit-appearance: none;
 }

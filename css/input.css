@@ -60,7 +60,7 @@
 	position: relative;
 }
 :where(input[type="checkbox"][role="switch"])::before {
-	aspect-ratio: 1;
+	aspect-ratio: 1 / 1;
 	background-color: var(--input-switch-c, #fff);
 	border-radius: 50%;
 	content: "";

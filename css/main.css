@@ -1,5 +1,5 @@
 :where(main) {
 	margin-inline: var(--main-mi, auto);
 	max-inline-size: var(--main-mxis, initial);
-	padding-inline: var(--main-pis, var(--col-gap, initial));
+	padding-inline: var(--main-pi, var(--col-gap));
 }

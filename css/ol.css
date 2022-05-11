@@ -20,7 +20,7 @@
 
 :where(ol[data-bs~="custom"]) li::before {
 	--ol-li-sz: 1.5em;
-	aspect-ratio: 1;
+	aspect-ratio: 1 / 1;
 	background-color: var(--ol-li-bg, var(--gray-2));
 	content: counter(ol);
 	display: inline-grid;

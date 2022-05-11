@@ -74,8 +74,8 @@
 		--animdur-300: 300ms;
 		--animdur-400: 400ms;
 		--animdur-700: 700ms;
-		--animdur-1000: 1000ms
-		--animdur-1500: 1500ms
+		--animdur-1000: 1000ms;
+		--animdur-1500: 1500ms;
 }
 
 :where([data-bs="overflow-scroll"]) {
