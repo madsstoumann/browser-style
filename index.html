@@ -19,7 +19,6 @@
 		connect-src 'self';
 		media-src 'self';
 		object-src 'none';
-		child-src;
 		frame-src www.youtube-nocookie.com player.vimeo.com;
 		form-action;
 		base-uri;
@@ -43,8 +42,8 @@
 				<a href="tel:88776655">Phone link</a>
 				<a href="sms:+4520701433">Send me an SMS</a>
 				<a href="skype:echo123?call">Skype Call</a>
-				<a href="ftp:xxx">File Transfer Protocol</a>
-				<a href="webcal:xxx">Webcal Link</a>
+				<a href="ftp://xxx">File Transfer Protocol</a>
+				<a href="webcal://xxx">Webcal Link</a>
 				<a href="bitcoin:xxx">Bitcoin Link</a>
 				<a href="#" download="filename.txt">Download link</a>
 				<a href="#" target="_blank" rel="noreferrer noopener">Open in new window</a>
@@ -198,7 +197,7 @@
 			<p>It requires JavaScript to open a dialog, example <code>dialog.open=true</code></p>
 			<p><button type="button" id="dialogOpen">Open Dialog</button></p>
 			<dialog id="dialog">
-				<h3>This is a dialog!</p>
+				<h3>This is a dialog!</h3>
 				<form method="dialog">
 					<button type="submit">OK</button>
 				</form>
@@ -252,15 +251,15 @@
 			<h2>&lt;iframe&gt;: The Inline Frame element</h2>
 			<div class="row">
 				<figure data-bs="widescreen">
-					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
+					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
 					<figcaption>YouTube <code>data-bs="widescreen"</code></figcaption>
 				</figure>
 				<figure data-bs="square">
-					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
+					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
 					<figcaption>YouTube <code>data-bs="square"</code></figcaption>
 				</figure>
 				<figure data-bs="widescreen">
-					<iframe src="https://player.vimeo.com/video/232524527" frameborder="0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="Vimeo Video"></iframe>
+					<iframe src="https://player.vimeo.com/video/232524527" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="Vimeo Video"></iframe>
 					<figcaption>Vimeo <code>data-bs="widescreen"</code></figcaption>
 				</figure>
 			</div>
@@ -407,7 +406,6 @@
 					Search with <code>list</code>
 					<input
 						autocomplete="off"
-						autocorrect="off"
 						data-bs="icon start"
 						list="datalist"
 						minlength="3"
@@ -565,7 +563,7 @@
 			<h2>&lt;meter&gt;: The HTML Meter element</h2>
 
 			<div class="row">
-				<meter min="0" max="100" value="30" low="25" high="20" optimum="20" aria-label="even-less-good-value"></meter>
+				<meter min="0" max="100" value="30" low="40" high="50" optimum="90" aria-label="even-less-good-value"></meter>
 				<meter min="0" max="100" value="60" low="25" high="50" optimum="50" aria-label="suboptimum-value"></meter>
 				<meter min="0" max="100" value="90" low="25" high="50" optimum="80" aria-label="optimum-value"></meter> 
 			</div>
@@ -845,7 +843,7 @@
 				<p><strong>&lt;kbd&gt;:</strong> <kbd>C</kbd> <kbd>O</kbd> <kbd>D</kbd> <kbd>E</kbd></p>
 				<p><strong>&lt;mark&gt;:</strong> <mark>Highlight</mark></p>
 				<p><strong>&lt;s&gt;:</strong> <s>Strikethrough</s></p>
-				<p><strong>&lt;samp&gt;:</strong> <samp>Sample Output</sample></p>
+				<p><strong>&lt;samp&gt;:</strong> <samp>Sample Output</samp></p>
 				<p><strong>&lt;small&gt;:</strong> <small>Small</small></p>
 				<p><strong>&lt;strong&gt;:</strong> <strong>Bold</strong></p>
 				<p><strong>&lt;sub&gt;:</strong> Text<sub>Sub</sub></p>
@@ -863,17 +861,17 @@
 			<p>To autoplay a video, remove <code>controls</code> and add <code>autoplay playsinline loop muted</code>.</p>
 			<div class="row">
 				<figure data-bs="widescreen">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 
 				<figure data-bs="square">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
 					<figcaption><code>data-bs="square"</code></figcaption>
 				</figure>
 
 				<figure data-bs="portrait">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls loading="lazy"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
 					<figcaption><code>data-bs="portrait"</code></figcaption>
 				</figure>
 			</div>
