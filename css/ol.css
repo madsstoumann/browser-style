@@ -1,11 +1,10 @@
 :where(ol:not([type])) {
 	counter-reset: ol;
 	list-style: none;
+	padding-inline-start: var(--ol-pis, 1.5em);
 }
 
-:where(ol:not([type]) li) {
-	counter-increment: ol;
-}
+:where(ol:not([type]) li) { counter-increment: ol; }
 
 :where(ol:not([type]) li)::before {
 	color: var(--ol-li-c, inherit);
@@ -14,23 +13,19 @@
 }
 
 /* Modifiers */
-:where(ol[data-bs~="custom"]) {
-	padding: unset;
-}
+:where(ol[data-bs~="custom"]) { padding: unset; }
 
 :where(ol[data-bs~="custom"]) li::before {
 	--ol-li-sz: 1.5em;
 	aspect-ratio: 1 / 1;
-	background-color: var(--ol-li-bg, var(--gray-2));
+	background-color: var(--ol-li-bg);
 	content: counter(ol);
 	display: inline-grid;
 	font-size: var(--ol-li-fz, 90%);
 	height: var(--ol-li-sz);
-	margin-inline: 1ch .85ch;
+	margin-inline: var(--ol-li-mi, 1ch .85ch);
 	place-content: center;
 	width: var(--ol-li-sz);
 }
 
-:where(ol[data-bs~="circle"]) li::before { 
-	border-radius: 50%;
-}
+:where(ol[data-bs~="circle"]) li::before {  border-radius: 50%; }

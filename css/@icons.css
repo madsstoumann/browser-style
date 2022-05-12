@@ -1,12 +1,13 @@
 :where(html) {
 	--icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
-  /* --ico-cross: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M13.957 3.457l-1.414-1.414-4.543 4.543-4.543-4.543-1.414 1.414 4.543 4.543-4.543 4.543 1.414 1.414 4.543-4.543 4.543 4.543 1.414-1.414-4.543-4.543z" fill="white"></path></svg>'); */
+	--icon-reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
 
 	--icon-alert: url('../svg/alert-circle.svg');
 	--icon-bitcoin: url('../svg/bitcoin.svg');
 	--icon-checkmark: url('../svg/check.svg');
 	--icon-chevron-down: url('../svg/chevron-down.svg');
 	--icon-chevron-right: url('../svg/chevron-right.svg');
+	--icon-chevron-up: url('../svg/chevron-up.svg');
 	--icon-cross: url('../svg/cross.svg');
 	--icon-date: url('../svg/calendar.svg');
 	--icon-download: url('../svg/download.svg');
@@ -25,17 +26,4 @@
 	--icon-time: url('../svg/time.svg');
 	--icon-url: url('../svg/link.svg');
 	--icon-week: url('../svg/week.svg');
-
-	--icon-reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
-}	
-
-/* svg[aria-hidden="true"][role="img"] {
-	stroke-width: 1.5;
-	stroke: currentColor;
-	fill: none;
-	height: 1.25em;
-	margin-inline-start: .2em;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	width: 1.25em;
-} */
+}

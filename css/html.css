@@ -1,7 +1,6 @@
 :where(html) {
-	/* display: grid; */
 	min-block-size: 100%;
-	scrollbar-color: var(--scrollbar-thumb-c, gray) var(--scrollbar-bgc, gray);
+	scrollbar-color: var(--scrollbar-thumb-c) var(--scrollbar-bgc);
 	scrollbar-width: var(--scrollbar-w-firefox, var(--scrollbar-w, initial));
 	text-rendering: optimizeLegibility;
 	-webkit-tap-highlight-color: transparent;

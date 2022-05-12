@@ -1,14 +1,12 @@
-:where(figure) {
-	margin: var(--figure-m, unset);
-}
+:where(figure) { margin: var(--figure-m, unset); }
 
 :where(figcaption) {
-	color: var(--figcaption-color, var(--gray-7));
+	color: var(--figcaption-c);
 	font-size: var(--figcaption-fz, 80%);
 	margin-block: var(--figcaption-mb, 1ch);
 }
 
-/* if data-bs is present, add aspect-ratio and object-position */
+/* if data-bs is present, add aspect-ratio / object-position */
 :where(figure[data-bs]) {
 	aspect-ratio: var(--asr, auto);
 	inline-size: 100%;

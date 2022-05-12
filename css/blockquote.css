@@ -1,10 +1,13 @@
 :where(blockquote) {
-	background-color: var(--blockquote-bgc, var(--gray-1));
-	border-inline-start: 5px solid var(--accent-color);
+	background-color: var(--blockquote-bgc);
+	border-color: var(--blockquote-bdc);
+	border-style:var(--blockquote-bds, solid);
+	border-width: var(--blockquote-bdw, 0 0 0 8px);
+	color: var(--blockquote-c);
 	font-size: var(--blockquote-fz, 1.4em);
 	margin: unset;
-	padding-block: 1ch;
-	padding-inline: 2ch;
+	padding-block: var(--blockquote-pb, 1ch);
+	padding-inline: var(--blockquote-pb, 2ch);
 }
 
 :where(cite) {
@@ -12,6 +15,4 @@
 	font-size: var(--cite-fz, 0.8em);
 }
 
-:where(cite)::before {
-	content: '— ';
-}
+:where(cite)::before { content: '— '; }

@@ -1,10 +1,11 @@
 :where(a) {
+	--a-icon-sz: 1.25em;
 	align-items: center;
 	background: 
 		linear-gradient(currentColor 0 0, currentColor 0 0) 
 		bottom /var(--d, 0) 2px 
 		no-repeat;
-	color: var(--a-c, var(--accent-color, initial));
+	color: var(--a-c);
 	display: inline-flex;
 	text-decoration: var(--a-td, none);
 	text-decoration-skip-ink: auto;
@@ -17,10 +18,10 @@
 :where(a[href*=":"], a[download], a[target="_blank"])::after {
 	--a-msi: none;
 	background-color: currentColor;
-	block-size: 1.25em;
+	block-size: var(--a-icon-sz);
 	content: "";
 	display: inline-block;
-	inline-size: 1.25em;
+	inline-size: var(--a-icon-sz);
 	margin-inline-start: .25em;
 	mask-image: var(--a-msi);
 	-webkit-mask-image: var(--a-msi);

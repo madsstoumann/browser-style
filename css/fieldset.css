@@ -1,13 +1,25 @@
-/* fieldset for checkboxes or radio-buttons */
-:where(fieldset[role*="group"]) {
-	border: 0;
+:where(fieldset) {
+	border-color: var(--input-bdc);
+	border-radius: var(--input-bdrs);
+	border-style: var(--input-bds);
+	border-width: var(--input-bdw);
 	display: flex;
 	gap: var(--input-gap);
+	inline-size: 100%;
 	margin: unset;
-	padding: unset;	
+	padding-block: var(--input-pb);
+	padding-inline: var(--input-pi);
 }
 
-:where(fieldset[aria-orientation="vertical"], fieldset[role="group"]) {
+:where(legend) {
+	inline-size: max-content;
+}
+:where(fieldset[data-bs~="nogroup"]) {
+	border: 0;
+	padding: unset;
+}
+
+:where(fieldset[data-bs~="vertical"]) {
 	flex-direction: column;
 	gap: calc(2 * var(--input-gap));
 	padding-block-start: calc(2 * var(--input-gap));

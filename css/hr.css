@@ -1,5 +1,4 @@
 :where(hr) {
-	--hr-c: var(--gray-6, currentColor);
 	--hr-h: 1px;
 	border-color: var(--hr-c);
 	border-style: var(--hr-bds, solid);

@@ -22,7 +22,7 @@
 		media-src 'self';
 		object-src 'none';
 		require-trusted-types-for 'script';
-		script-src 'self';
+		script-src 'self' 'unsafe-inline';
 		style-src 'self';
 	">
 	<link rel="manifest" href="site.webmanifest">
@@ -102,6 +102,11 @@
 		<hr />
 		<section id="details">
 			<h2>&lt;details&gt;: The Details disclosure element</h2>
+
+			<details>
+				<summary>Browser default</summary>
+				<div>Lorem ipsum dolor</div>
+			</details>
 
 			<p><strong>Example, FAQ: </strong><code>data-bs="faq"</code></p>
 
@@ -221,6 +226,68 @@
 		<hr />
 		<section id="fieldset">
 			<h2>&lt;fieldset&gt;: The Field Set element</h2>
+
+			<div class="row">
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="checkbox" checked>Accept terms and conditions
+					</label>
+					<label>
+						<input type="checkbox">Accept terms and conditions
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="checkbox" role="switch" checked>Switch
+					</label>
+					<label>
+						<input type="checkbox" role="switch">Switch
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="radio" name="radio-2" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-2" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="checkbox" checked>Accept terms and conditions
+					</label>
+					<label>
+						<input type="checkbox">Accept terms and conditions
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="checkbox" role="switch" checked>Switch
+					</label>
+					<label>
+						<input type="checkbox" role="switch">Switch
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="radio" name="radio-3" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-3" value="2">Option 2
+					</label>
+				</fieldset>
+			</div>
 		</section>
 
 		<hr />
@@ -312,42 +379,12 @@
 					<input type="checkbox" role="switch">Switch
 				</label>
 
-				<fieldset role="radiogroup">
+				<fieldset data-bs="nogroup">
 					<label>
 						<input type="radio" name="radio" value="1" checked>Option 1
 					</label>
 					<label>
 						<input type="radio" name="radio" value="2">Option 2
-					</label>
-				</fieldset>
-
-				<fieldset role="group">
-					<legend>With <code>role="group"</code></legend>
-					<label>
-						<input type="checkbox" checked>Accept terms and conditions
-					</label>
-					<label>
-						<input type="checkbox">Accept terms and conditions
-					</label>
-				</fieldset>
-
-				<fieldset role="group">
-					<legend>With <code>role="group"</code></legend>
-					<label>
-						<input type="checkbox" role="switch" checked>Switch
-					</label>
-					<label>
-						<input type="checkbox" role="switch">Switch
-					</label>
-				</fieldset>
-
-				<fieldset role="radiogroup" aria-orientation="vertical">
-					<legend>With <code>role="radiogroup"</code></legend>
-					<label>
-						<input type="radio" name="radio-2" value="1" checked>Option 1
-					</label>
-					<label>
-						<input type="radio" name="radio-2" value="2">Option 2
 					</label>
 				</fieldset>
 
@@ -445,6 +482,17 @@
 						<option value="2">Two</option>
 						<option value="3">Three</option>
 					</select>
+				</label>
+
+				<label>Custom Select <code>&lt;details&gt;</code>
+					<details data-bs="select">
+						<summary>Choose one</summary>
+						<ul>
+							<li>Custom Option 1</li>
+							<li>Custom Option 2</li>
+							<li>Custom Option 3</li>
+						</ul>
+					</details>
 				</label>
 
 				<label>Textarea
@@ -862,17 +910,17 @@
 			<p>To autoplay a video, remove <code>controls</code> and add <code>autoplay playsinline loop muted</code>.</p>
 			<div class="row">
 				<figure data-bs="widescreen">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 
 				<figure data-bs="square">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
 					<figcaption><code>data-bs="square"</code></figcaption>
 				</figure>
 
 				<figure data-bs="portrait">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none"></video>
+					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
 					<figcaption><code>data-bs="portrait"</code></figcaption>
 				</figure>
 			</div>

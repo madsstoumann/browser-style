@@ -1,5 +1,6 @@
 :where(address) {
-	background-color: var(--address-bgc, var(--gray-1));
+	background-color: var(--address-bgc);
+	color: var(--address-c);
 	font-style: var(--address-fs, normal);
 	padding-block: var(--address-pb, 1em);
 	padding-inline: var(--address-pi, 1em);

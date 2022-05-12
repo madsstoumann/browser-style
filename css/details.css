@@ -1,11 +1,52 @@
+/* TODO! WORK-IN-PROGRESS */
 :where(details[data-bs] summary) { list-style-type: none; }
 :where(details[data-bs] summary)::-webkit-details-marker { display: none; }
 :where(details[data-bs] summary)::marker { display: none; }
 
-:where(details[data-bs] summary:focus-visible) {
-	--outline-width: 0;
-	background: var(--gray-1);
+/* Custom Select */
+:where(details[data-bs~="select"]) { position: relative; }
+:where(details[data-bs~="select"] > summary + *) {
+	background-color: var(--input-bgc);
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: var(--input-bdc);
+	border-end-start-radius: var(--input-bdrs);
+	border-end-end-radius: var(--input-bdrs);
+	inset-block-start: 100%;
+	inset-inline-start: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
 }
+:where(details[data-bs~="select"] > summary + * > *) {
+	border-block-start: 1px solid var(--input-bdc);
+	padding-block: var(--input-pb);
+	padding-inline: var(--input-pi);
+}
+details[data-bs~="select"][open] > summary {
+	--input-bgi: var(--icon-chevron-up); 
+	border-block-end-width: 0;
+	border-end-start-radius: 0;
+	border-end-end-radius: 0;
+}
+:where(details[data-bs~="select"][open] summary)::before  {
+	background: rgba(0, 0, 0, 0);
+  content: "";
+  display: block;
+  inset: 0;
+  position: fixed;
+	z-index: 0;
+}
+
+@media (hover: hover) {
+	:where(details[data-bs~="select"] > summary + * > *:hover) {
+		background-color: var(--menu-item-hover-bgc, var(--gray-1));
+	}
+}
+
 
 /* Toggle Tip */
 :where(details[data-bs="toggletip"]) {
@@ -13,10 +54,10 @@
 	display: inline;
 	position: relative;
 }
+
 :where(details[data-bs="toggletip"] summary) {
 	border-block-end: 2px dotted currentColor;
 }
-
 :where(details[data-bs="toggletip"][open] summary)::before {
 	background: rgba(0, 0, 0, .2);
   content: "";
@@ -42,6 +83,7 @@
 /* FAQ */
 :where(details[data-bs~="faq"]) { border-block-end: 1px solid var(--gray-4); }
 :where(details[data-bs~="faq"] summary) {
+	align-items: center;
 	display: flex;
 	font-weight: 500;
 	justify-content: space-between;
@@ -52,13 +94,17 @@
 	--input-icon-pos: var(--input-pi);
 	--input-icon-w: 2em;
 
-	background-color: currentColor;
+	background-color: var(--gray-7);
 	block-size: var(--input-icon-w);
 	content: "";
 	inline-size: var(--input-icon-w);
 	-webkit-mask: var(--faq-icon) center right / var(--input-icon-w) auto no-repeat;
 	mask: var(--faq-icon) center right / var(--input-icon-w) auto no-repeat;
 	transition: transform .2s ease-in-out;
+}
+:where(details[data-bs~="faq"] summary:focus-visible) {
+	--outline-width: 0;
+	background: var(--gray-1);
 }
 
 :where(details[data-bs~="down"] summary) { --faq-icon: var(--icon-chevron-down); }

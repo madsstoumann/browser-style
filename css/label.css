@@ -1,4 +1,4 @@
-:where(label, fieldset[role*="group"]) {
+:where(label, fieldset) {
 	font-size: var(--label-fz, initial);
 	width: var(--label-w, 100%);
 }
@@ -8,17 +8,13 @@
 	margin-inline: 0.125ch 1ch;
 }
 
-:where(label small) {
-	display: block;
-}
+:where(label small) { display: block; }
 
-:where(label > input:not([type="checkbox"]):not([type="radio"]), label > select, label > textarea) {
+:where(label > input:not([type="checkbox"]):not([type="radio"]), label > details[data-bs~="select"], label > select, label > textarea) {
 	margin-block-start: var(--input-gap);
 }
 
-:where(label > input[type="file"]) {
-	display: block;
-}
+:where(label > input[type="file"]) { display: block; }
 
 /* Ticks for range */
 :where(label[data-bs*="ticks"]) {
@@ -28,6 +24,7 @@
 	--ticks-h: 10px;
 	position: relative;
 }
+/* TODO! FIX, WHEN LABEL TEXT BREAKS TO 2 LINES */
 :where(label[data-bs*="ticks"])::after {
 	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));
 	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
@@ -37,10 +34,10 @@
 	content: "";
 	display: block;
 	block-size: 100%;
+	inline-size: 100%;
 	inset-block-start: 50%;
 	inset-inline-start: 0;
 	position: absolute;
-	width: 100%;
 	z-index: -1;
 }
 

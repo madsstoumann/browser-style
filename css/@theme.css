@@ -6,7 +6,10 @@
 	/* SIZES, ALERT RED, CONFIRM GREEN, INFO BLUE
 	transition-times
 	*/
+
+
 	--accent-color: hsl(var(--hue), var(--saturation), var(--lightness));
+	--accent-color-hover: hsl(var(--hue), var(--saturation), 40%);
 	--accent-text-color: hsl(var(--hue), var(--saturation), 99%);
 
 	
@@ -29,7 +32,40 @@
 	--required-color: maroon;
 
 	--secondary-color: hsl(var(--hue), 15%, 30%);
+	--secondary-color-hover: hsl(var(--hue), 15%, 20%);
 	--secondary-text-color: hsl(var(--hue), 15%, 95%);
+
+	/* Colors */
+	--a-c: var(--accent-color);
+	--address-bgc: var(--gray-1);
+	--address-c: inherit;
+	--blockquote-bdc: var(--accent-color);
+	--blockquote-bgc: var(--gray-1);
+	--blockquote-c: inherit;
+	--button-bgc: var(--accent-color);
+	--button-bgc-hover: var(--accent-color-hover);
+	--button-c: var(--accent-text-color);
+	--code-bgc: var(--gray-2);
+	--code-c: var(--text-c);
+	--del-c: var(--color-danger);
+	--figcaption-c: var(--gray-7);
+	--hr-c: var(--gray-6);
+	--ins-c: var(--color-success);
+	--kbd-bgc: var(--gray-2);
+	--kbd-c: inherit;
+	--mark-bgc: hsl(60, 80%, 80%);
+	--mark-c: var(--text-c);
+	--menu-bdc: var(--input-bdc);
+	--menu-item-bgc: #fff0;
+	--menu-item-hover-bgc: var(--gray-1);
+	--ol-li-bg: var(--gray-2);
+	--pre-bgc: var(--gray-8);
+	--pre-c: #FFF;
+	--progress-bgc: var(--gray-2);
+	--progress-bar-bgc: var(--accent-color);
+	--var-bgc: var(--gray-9);
+	--var-c: var(--color-warning);
+
 
 
 	
@@ -40,6 +76,7 @@
 	--input-bdrs: 4px;
 	--input-bds: solid;
 	--input-bdw: 1px;
+	--input-bgc: #FFF;
 	--input-fz: 1rem;
 	--input-gap: 0.25em;
 	--input-pb: .75em;
@@ -47,7 +84,6 @@
 	--input-thumb-h: 1.25em;
 	--input-track-h: 0.125em;
 
-	--menu-bdc: var(--input-bdc);
 
 	--outline-color: var(--accent-color);
 	--outline-offset: 3px;

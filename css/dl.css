@@ -1,3 +1,6 @@
+:where(dd) {
+	margin-inline-start: var(--dd-mis, 1.5em);
+}
 :where(dt) {
-	font-weight: 700;
+	font-weight: var(--dt-fw, 700);
 }

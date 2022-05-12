@@ -1,3 +1,4 @@
+/* TODO! WORK-IN-PROGRESS */
 :where(meter) {
 	--meter-bdrs: .25em;
 	--meter-custom-bg:linear-gradient(90deg, 
@@ -15,9 +16,6 @@
 	min-inline-size: var(--meter-mis, 10em);
 	position: relative;
 	width: var(--meter-w, 100%);
-
-	/* -webkit-appearance: none;
-  appearance: none; */
 }
 
 :where(meter)::-webkit-meter-bar {
@@ -40,16 +38,6 @@
 :where(meter)::-webkit-meter-optimum-value {
 	background: var(--color-success);
 }
-
-
-/* labels */
-/* :where(meter[aria-label], :where(meter[data-right-label] {
-	margin-block-start: 1em;
-} */
-
-/* :where(meter[aria-label]) {
-	margin-block-start: 1em;
-} */
 
 :where(meter[aria-label])::after,
 :where(meter[aria-label])::before {

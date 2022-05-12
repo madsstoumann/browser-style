@@ -1,8 +1,10 @@
 :where(pre) {
-	background-color: var(--gray-8);
-	color: #fff;
+	background-color: var(--pre-bgc);
+	color: var(--pre-c);
 	overflow-x: auto;
-	padding: 1ch;
-	tab-size: 2;
+	padding-block: var(--pre-pb, 1ch);
+	padding-inline: var(--pre-pi, 1ch);
+	tab-size: var(--pre-tbz, 2);
 }
+
 pre > code { background: transparent; color: inherit; }

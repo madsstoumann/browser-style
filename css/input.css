@@ -7,7 +7,7 @@
 	appearance: none;
 }
 
-:where(input:not([type="file"]):not([type="range"]), select, textarea) {
+:where(input:not([type="file"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
 	--input-trs: .2s cubic-bezier(.1, 0, .9, 1);
 	border-color: var(--input-bdc);
 	border-radius: var(--input-bdrs);
@@ -15,10 +15,10 @@
 	border-width: var(--input-bdw);
 }
 
-:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), select, textarea) {
+:where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
 	--input-icon-pos: var(--input-pi);
 	--input-icon-w: 1.5em;
-	background-color: var(--input-bgc, #fff0);
+	background-color: var(--input-bgc);
 	background-image: var(--input-bgi, none);
 	background-position: center right var(--input-icon-pos);
 	background-size: var(--input-icon-w) auto;
@@ -94,7 +94,7 @@
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
 :where(input[type="url"][data-bs~="icon"]) { --input-bgi: var(--icon-url); }
 :where(input[type="week"]) { --input-bgi: var(--icon-week); }
-:where(select) { --input-bgi: var(--icon-chevron-down); color: currentColor; }
+:where(select, details[data-bs~="select"] summary) { --input-bgi: var(--icon-chevron-down); color: currentColor; }
 :where(textarea) {
 	--textarea-sz: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	min-block-size: var(--textarea-sz);
