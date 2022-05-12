@@ -11,18 +11,19 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 	<link rel="stylesheet" href="css/styles.css">
 	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
 		default-src;
-		script-src 'self';
-		style-src 'self';
-		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com *.vimeocdn.com data:;
-		font-src;
 		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube-nocookie.com player.vimeo.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com *.vimeocdn.com data:;
+		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		frame-src www.youtube-nocookie.com player.vimeo.com;
-		form-action;
-		base-uri;
-		manifest-src 'self';
+		require-trusted-types-for 'script';
+		script-src 'self';
+		style-src 'self';
 	">
 	<link rel="manifest" href="site.webmanifest">
 </head>
