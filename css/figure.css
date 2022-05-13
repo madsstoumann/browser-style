@@ -25,6 +25,12 @@
 	inline-size: 100%;
 }
 
+:where(figure:not([data-bs]) img[width]) {
+	aspect-ratio: attr(width) / attr(height);
+	height: auto;
+  width: 100%;
+}
+
 /* aspect-ratio */
 [data-bs~="square"] { --asr: var(--ratio-square); }
 [data-bs~="landscape"] { --asr: var(--ratio-landscape); }
