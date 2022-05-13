@@ -2,7 +2,8 @@
 	background-color: var(--blockquote-bgc);
 	border-color: var(--blockquote-bdc);
 	border-style:var(--blockquote-bds, solid);
-	border-width: var(--blockquote-bdw, 0 0 0 8px);
+	border-width: 0;
+	border-inline-start-width: var(--blockquote-bdw, 8px);
 	color: var(--blockquote-c);
 	font-size: var(--blockquote-fz, 1.4em);
 	margin: unset;
