@@ -32,9 +32,8 @@
 	<main>
 
 		<h1>browser.style</h1>
-		<p>Default styles for browsers, using semantic HTML with <code>aria</code>-roles, and a single attribute — <code>data-bs</code> — for modifiers and variations.<br />No JavaScript required.</p>
-		<p>All styles are using <code>:where</code> to remove specificity, and expose <code>Custom Properties</code> for easy customization.</p>
-		<p>Icons by the amazing <a href="https://tablericons.com/" target="_blank" rel="noreferrer noopener">Tabler Icons</a></p>
+		<p>Beautiful cross-browser-styles. Semantic HTML. No JavaScript required.</p>
+		<p>Download and info at <a href="https://github.com/madsstoumann/browser-style" target="_blank" rel="noreferrer noopener">GitHub Repo</a></p>
 		<hr />
 		<section id="a">
 			<h2>&lt;a&gt;: The Anchor element</h2>
@@ -341,6 +340,8 @@
 		<hr />
 		<section id="img">
 			<h2>&lt;img&gt;: The Image Embed element</h2>
+			<p>For images, set <code>width</code> and <code>height</code>, but wrap them in a <code>figure</code>-tag with aspect-ratio defined in <code>data-bs</code>.</p>
+
 			<div class="row">
 				<figure>
 					<img src="https://picsum.photos/id/237/600/400" width="600" height="400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
@@ -355,6 +356,7 @@
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 			</div>
+			<p><code>object-position</code> can be defined in <code>data-bs</code> as well:</p>
 			<div class="row">
 				<figure>
 					<img src="https://picsum.photos/id/1001/600/400" width="600" height="400" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
