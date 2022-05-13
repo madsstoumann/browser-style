@@ -16,13 +16,13 @@
 		connect-src 'self';
 		font-src;
 		form-action;
-		frame-src www.youtube-nocookie.com player.vimeo.com;
-		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com *.vimeocdn.com data:;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		script-src 'self' 'sha256-4sNwvmWshEzqW5S25HVAak+QIUCkjYSbAaQ7Ieh/EDA=' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
-		style-src 'self';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'sha256-zGutAkW/6q1r8uR50tTPbFplxtBTvDjhu0oQPGZqU8A=';
 	">
 	<link rel="manifest" href="site.webmanifest">
 	<!-- 	require-trusted-types-for 'script'; -->
@@ -317,18 +317,22 @@
 
 		<section id="iframe">
 			<h2>&lt;iframe&gt;: The Inline Frame element</h2>
+			<p>To control <code>aspect-ratio</code> for iframes and images, wrap them in a <code>&lt;figure&gt;</code>-tag. 
+			In these examples, <a href="https://github.com/justinribeiro/lite-youtube" target="_blank" rel="noopener noreferrer">lite-youtube</a> is used for YouTube-videos, for better performance.</p>
 			<div class="row">
-				<figure data-bs="widescreen">
-					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
-					<figcaption>YouTube <code>data-bs="widescreen"</code></figcaption>
-				</figure>
 				<figure data-bs="square">
-					<iframe src="https://www.youtube-nocookie.com/embed/GNuG-5m4Ud0" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="YouTube Video"></iframe>
+					<lite-youtube videoid="u9GRAliBrM8"></lite-youtube>
 					<figcaption>YouTube <code>data-bs="square"</code></figcaption>
 				</figure>
+
 				<figure data-bs="widescreen">
-					<iframe src="https://player.vimeo.com/video/232524527" tabindex="-1" allow="autoplay; encrypted-media" allowfullscreen="allowfullscreen" loading="lazy" title="Vimeo Video"></iframe>
-					<figcaption>Vimeo <code>data-bs="widescreen"</code></figcaption>
+					<lite-youtube videoid="5b4YcLB4DVI"></lite-youtube>
+					<figcaption>YouTube <code>data-bs="widescreen"</code></figcaption>
+				</figure>
+
+				<figure data-bs="portrait">
+					<lite-youtube videoid="CUwg_JoNHpo"></lite-youtube>
+					<figcaption>YouTube <code>data-bs="portrait"</code></figcaption>
 				</figure>
 			</div>
 		</section>
@@ -933,6 +937,7 @@
 			<h1 data-bs="gradient-text">The quick brown fox jumps over the lazy dog</h1>
 		</section>
 	</main>
-	<script src="main.js" async defer></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.3.1/lite-youtube.js" defer></script>
+	<script src="main.js" defer></script>
 </body>
 </html>

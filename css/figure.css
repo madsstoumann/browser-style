@@ -14,12 +14,13 @@
 }
 
 :where(figure[data-bs] img, figure[data-bs] video) {
+	aspect-ratio: inherit;
 	block-size: 100%;
 	inline-size: 100%;
 	object-fit: cover;
 }
 
-:where(figure[data-bs] iframe) {
+:where(figure[data-bs] iframe, figure[data-bs] lite-youtube) {
 	block-size: 100%;
 	inline-size: 100%;
 }
