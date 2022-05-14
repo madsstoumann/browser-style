@@ -23,9 +23,10 @@
 		media-src 'self';
 		object-src 'none';
 		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
-		style-src 'self' 'sha256-zGutAkW/6q1r8uR50tTPbFplxtBTvDjhu0oQPGZqU8A=';
+		style-src 'self' 'unsafe-inline';
 	">
 	<link rel="manifest" href="site.webmanifest">
+	<!-- style-src 'sha256-zGutAkW/6q1r8uR50tTPbFplxtBTvDjhu0oQPGZqU8A=' -->
 	<!-- 	require-trusted-types-for 'script'; -->
 </head>
 <body>
@@ -726,9 +727,24 @@
 		<section id="progress">
 			<h2>&lt;progress&gt;: The Progress Indicator element</h2>
 			<p><strong>Example with</strong> <code>value</code> <strong>and</strong> <code>max</code></p>
-			<progress value="40" max="100"></progress>
+			<progress value="40" max="100">40%</progress>
+			<p>With <code>data-bs="fade"</code></p>
+			<progress value="50" max="100" data-bs="fade">50%</progress>
+			<p>With <code>data-bs="ticks"</code> and <code>style="--v:6"</code></p>
+			<progress value="60" max="100" data-bs="ticks" style="--v:6">60%</progress>
 			<p><strong>Example with no attributes: </strong> <code>::indeterminate</code></p>
-			<progress></progress>
+			<progress>Loading</progress>
+			<p><strong>Circular progress:</strong> <code>data-bs="circle"</code> and <code>style="--v:65%"</code></p>
+			<progress value="65" max="100" data-bs="circle" style="--v:65%;"></progress>
+			<p>In <code>&lt;label data-bs="progress-circle" aria-label="65%"&gt;</code></p>
+			<div class="row">
+				<label aria-label="65%" data-bs="progress-circle">
+					<progress value="65" max="100" data-bs="circle" style="--v:65%;"></progress>
+				</label>
+				<label aria-label="45%" data-bs="progress-circle">
+					<progress value="45" max="100" data-bs="circle" style="--v:45%;--progress-bar-bgc:var(--gray-6)"></progress>
+				</label>
+			</div>
 		</section>
 
 		<hr />
