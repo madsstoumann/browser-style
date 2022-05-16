@@ -66,16 +66,10 @@
 :where(menu[data-bs="tab-bar"] [data-bs="active"] ) { --menu-item-c: var(--accent-color); }
 
 
-/* :where(menu[role="menu"][aria-orientation="horizontal"]) { display: flex; }
-:where(menu[role="menu"]:not([aria-orientation="horizontal"]) > li:not(:last-child) [role="menuitem"]) { border-block-end-width: var(--input-bdw); }
-:where(menu[role="menu"][aria-orientation="horizontal"] > li:not(:last-child) [role="menuitem"]) { border-inline-end-width: var(--input-bdw); } */
-
 @media (hover: hover) {
 	:where(menu li):hover {
 		background-color: var(--menu-item-hover-bgc);
 		color: var(--menu-item-hover-c);
 	}
-	:where(menu li[data-bs="active"]):hover {
-		color: var(--accent-color);
-	}
+	:where(menu li[data-bs="active"]):hover { color: var(--accent-color); }
 }
