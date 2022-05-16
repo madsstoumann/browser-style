@@ -1,0 +1,19 @@
+main { padding-block-end: 2ch; }
+meter {
+	--meter-custom-bg:linear-gradient(90deg, 
+	#4691e2 20%,
+	#0cb764 0 40%,
+	#febf18 0 60%,
+	#fc8711 0 80%,
+	#cc1100 0 100%);
+}
+.row {
+	display: grid;
+	gap: 1.5ch;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	justify-items: left;
+}
+.row-full {
+	display: grid;
+	gap: 1.5ch;
+}

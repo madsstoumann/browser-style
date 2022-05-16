@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>browser.style: video</title>
+	<title>browser.style: modifiers</title>
 	<meta charset="UTF-8">
 	<link rel="preload" href="css/styles.css" as="style">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="browser.style: video">
+	<meta name="description" content="browser.style: modifiers">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
 	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 	<link rel="stylesheet" href="css/styles.css">
-	<link rel="stylesheet" href="css/figure.css">
+	<link rel="stylesheet" href="css/@modifiers.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -30,29 +30,13 @@
 </head>
 <body>
 	<main>
-
-		<h1>browser.style</h1>
+		<h1>browser.style: modifiers</h1>
 		<a href="/">Back to table of contents</a>
 		<hr />
-		<section>
-			<h2>&lt;video&gt;: The Video Embed element</h2>
-			<p>To autoplay a video, remove <code>controls</code> and add <code>autoplay playsinline loop muted</code>.</p>
-			<div class="row">
-				<figure data-bs="widescreen">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
-					<figcaption><code>data-bs="widescreen"</code></figcaption>
-				</figure>
-
-				<figure data-bs="square">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
-					<figcaption><code>data-bs="square"</code></figcaption>
-				</figure>
-
-				<figure data-bs="portrait">
-					<video src="demo/pexels-kei-scampa-6114303.mp4" controls preload="none" poster="demo/poster.jpg"></video>
-					<figcaption><code>data-bs="portrait"</code></figcaption>
-				</figure>
-			</div>
+		<section id="modifiers">
+			<h2>modifiers</h2>
+			<p><strong>gradient-text</strong></p>
+			<h1 data-bs="gradient-text">The quick brown fox jumps over the lazy dog</h1>
 		</section>
 	</main>
 </body>

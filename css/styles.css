@@ -1,63 +1,14 @@
 @import '@icons.css';
 @import '@reset.css';
 @import '@theme.css';
+@import '@demo.css';
 
 @import 'html.css';
 @import 'body.css';
-
 @import 'a.css';
-@import 'address.css';
-@import 'blockquote.css';
 @import 'button.css';
-@import 'details.css';
-@import 'dl.css';
-@import 'fieldset.css';
-@import 'figure.css';
 @import 'h1-h6.css';
 @import 'hr.css';
-@import 'iframe.css';
-@import 'input.css';
 @import 'label.css';
 @import 'main.css';
-@import 'menu.css';
-@import 'meter.css';
-@import 'ol.css';
-@import 'pre.css';
-@import 'progress.css';
-@import 'table.css';
-
 @import 'text.css';
-@import 'ul.css';
-
-/* extras	*/
-@import '@modifiers.css';
-
-/* FIX! DEMO  CLEANUP! */
-meter {
-	--meter-custom-bg:linear-gradient(90deg, 
-	#4691e2 20%,
-	#0cb764 0 40%,
-	#febf18 0 60%,
-	#fc8711 0 80%,
-	#cc1100 0 100%);
-}
-.row {
-	display: grid;
-	gap: 1.5ch;
-	/* grid-template-columns: repeat(1, 1fr); */
-	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-	justify-items: left;
-}
-.row-full {
-	display: grid;
-	gap: 1.5ch;
-}
-
-html {
-	--col-gap: clamp(0.75rem, 0.3929rem + 1.1429vw, 1.25rem);
-	--row-gap: 1.5ch;
-}
-
-main {
-	padding-block-end: 2ch;
-}

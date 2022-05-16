@@ -1,10 +1,11 @@
 @import 'input.range.css';
 
-:where(input, select) {
+:where(input, select, textarea) {
 	accent-color: var(--accent-color);
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+	font-size: var(--input-fz, 1rem);
 }
 
 :where(input:not([type="file"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
@@ -28,13 +29,6 @@
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
 	position: relative;
-}
-
-/* Disabled */
-:where(button:disabled, input:disabled, select:disabled, textarea:disabled) {
-	filter: grayscale(1);
-	opacity: 0.4;
-	cursor: not-allowed;
 }
 
 /* Specific Types */

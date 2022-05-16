@@ -26,7 +26,7 @@
 }
 
 :where(figure:not([data-bs]) img[width]) {
-	/* TODO! aspect-ratio: attr(width) / attr(height); */
+	/* aspect-ratio: attr(width) / attr(height); */
 	height: auto;
   width: 100%;
 }
