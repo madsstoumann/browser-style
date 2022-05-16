@@ -36,15 +36,28 @@
 /* Context Menu */
 :where(menu[data-bs="context"]) {
 	--menu-bdrs: .25em;
-	--menu-item-bdrs: .25rem;
 	--menu-bgc: var(--gray-1);
-	--menu-item-fz: 0.875rem;
 	--menu-fxd: column;
 	--menu-gap: .25em;
+	--menu-item-bdrs: .25rem;
+	--menu-item-fz: 0.875rem;
 	--menu-item-hover-bgc: var(--accent-color);
 	--menu-item-hover-c: var(--accent-text-color);
 	--menu-item-p: .25rem .5rem;
 	--menu-p: .5em;
+}
+
+/* List */
+:where(menu[data-bs="list"]) {
+	--menu-fxd: column;
+	--menu-gap: 0;
+	--menu-item-p: .75em .25em;
+}
+:where(menu[data-bs="list"] [role="menuitem"]) {
+	--icon-mi: 0 1em;
+	--icon-sz: 1.5em;
+	align-items: center;
+	display: flex
 }
 
 /* Tabs */
@@ -63,8 +76,7 @@
 	--menu-item-fz: .75rem;
 	--menu-item-p: .75em 1.5em;	
 }
-:where(menu[data-bs="tab-bar"] [data-bs="active"] ) { --menu-item-c: var(--accent-color); }
-
+:where(menu[data-bs] [data-bs="active"] ) { --menu-item-c: var(--accent-color); }
 
 @media (hover: hover) {
 	:where(menu li):hover {
