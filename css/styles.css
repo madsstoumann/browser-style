@@ -58,3 +58,6 @@ html {
 	--row-gap: 1.5ch;
 }
 
+main {
+	padding-block-end: 2ch;
+}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: details</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: details">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>&lt;details&gt;: The Details disclosure element</h2>
+
+			<details>
+				<summary>Browser default</summary>
+				<div>Lorem ipsum dolor</div>
+			</details>
+
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq"</code></p>
+
+			<details data-bs="faq right">
+				<summary>Accordion Item 1</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq right">
+				<summary>Accordion Item 2</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq right">
+				<summary>Accordion Item 3</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq plus"</code></p>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 1</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 2</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq plus">
+				<summary>Accordion Item 3</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq down"</code></p>
+			<details data-bs="faq down">
+				<summary>Accordion Item 1</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq down">
+				<summary>Accordion Item 2</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+			<details data-bs="faq down">
+				<summary>Accordion Item 3</summary>
+				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
+			</details>
+
+			<p><strong>Example, Toggle Tips: <code>data-bs="toggletip"</code></strong></p>
+			
+			<details data-bs="toggletip">
+				<summary>
+					<span>Internet protocol suite</span>
+				</summary>
+				<div>
+					The Internet protocol suite is the conceptual model and set of communications protocols used on the Internet and similar computer networks. It is commonly known as TCP/IP because the original protocols in the suite are the Transmission Control Protocol (TCP) and the Internet Protocol (IP).
+				</div>
+			</details>
+			 to link devices worldwide. It is a <em>network of networks</em> that consists of private, public, academic, business, and government networks of local to global scope, linked by a broad array of electronic, 
+			 <details data-bs="toggletip">
+				<summary><span>wireless</span></summary>
+				<div>
+					Wireless communication, or sometimes simply wireless, is the transfer of information or power between two or more points that are not connected by an electrical conductor. The most common wireless technologies use radio waves.
+			</div>
+			</details>, 
+			 and optical networking technologies. The Internet carries an extensive range of information resources and services, such as the inter-linked 
+			 <details data-bs="toggletip">
+				<summary><span>hypertext</span></summary>
+				<div>
+					Hypertext is text displayed on a computer display or other electronic devices with references (hyperlinks) to other text that the reader can immediately access, or where text can be revealed progressively at multiple levels of detail.
+				</div>
+			</details> 
+			 documents and applications of the 
+			 <details data-bs="toggletip">
+				<summary><span>World Wide Web (WWW)</span></summary>
+				<div>
+					The World Wide Web (abbreviated WWW or the Web) is an information space where documents and other web resources are identified by Uniform Resource Locators (URLs), interlinked by hypertext links, and can be accessed via the Internet. English scientist Tim Berners-Lee invented the World Wide Web in 1989.
+				</div>
+			</details>, 
+			<details data-bs="toggletip">
+				<summary><span>electronic mail</span></summary>
+				<div>
+					Electronic mail (email) is a method of exchanging messages between people using electronics. Email first entered substantial use in the 1960s and by the mid-1970s had taken the form now recognized as email. Email operates across computer networks, which today is primarily the Internet.
+				</div>
+			</details>, telephony, and 
+			<details data-bs="toggletip">
+				<summary><span>file sharing</span></summary>
+				<div>
+					File sharing is the practice of distributing or providing access to digital media, such as computer programs, multimedia (audio, images and video), documents or electronic books. File sharing may be achieved in a number of ways.
+				</div>
+			</details>
+
+		</section>
+	</main>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: form elements</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form element">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section id="fieldset">
+			<h2>&lt;fieldset&gt;: The Field Set element</h2>
+
+			<div class="row">
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="checkbox" checked>Accept terms and conditions
+					</label>
+					<label>
+						<input type="checkbox">Accept terms and conditions
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="checkbox" role="switch" checked>Switch
+					</label>
+					<label>
+						<input type="checkbox" role="switch">Switch
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical">
+					<legend>With <code>data-bs="vertical"</code></legend>
+					<label>
+						<input type="radio" name="radio-2" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-2" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="checkbox" checked>Accept terms and conditions
+					</label>
+					<label>
+						<input type="checkbox">Accept terms and conditions
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="checkbox" role="switch" checked>Switch
+					</label>
+					<label>
+						<input type="checkbox" role="switch">Switch
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="vertical nogroup">
+					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+					<label>
+						<input type="radio" name="radio-3" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio-3" value="2">Option 2
+					</label>
+				</fieldset>
+			</div>
+		</section>
+
+		<hr />
+		<section id="input">
+			<h2>&lt;input&gt;: The Form Input element</h2>
+			<p>The examples use a simple pattern, with the <code>&lt;input&gt;</code> wrapped in a <code>&lt;label&gt;</code>. Use <a href="https://css-tricks.com/everything-you-ever-wanted-to-know-about-inputmode/" target="_blank" rel="noreferrer noopener">inputmode</a> to force a mobile device to use a specific virtual keyboard.</p>
+			<div class="row">
+				<label>
+					<input type="checkbox">Accept terms and conditions
+				</label>
+				
+				<label>
+					<input type="checkbox" role="switch">Switch
+				</label>
+
+				<fieldset data-bs="nogroup">
+					<label>
+						<input type="radio" name="radio" value="1" checked>Option 1
+					</label>
+					<label>
+						<input type="radio" name="radio" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<label>Color
+					<input type="color" value="#0d59f2">
+				</label>
+
+				<label>Color with <code>list</code>
+					<input type="color" value="#0d59f2" list="colors">
+				</label>
+
+				<label>Date
+					<input type="date">
+				</label>
+
+				<label>Datetime Local
+					<input type="datetime-local">
+				</label>
+
+				<label>Email
+					<input type="email" data-bs="icon">
+				</label>
+
+				<label>File
+					<input type="file" multiple>
+				</label>
+
+				<label>Month
+					<input type="month">
+				</label>
+
+				<label>Number
+					<input type="number" data-bs="icon">
+				</label>
+
+				<label>Password
+					<input type="password" data-lpignore="true" data-bs="icon">
+				</label>
+
+				<label>Range
+					<input type="range">
+				</label>
+
+				<label data-bs="ticks">Range with <code>data-bs="ticks"</code>
+					<input type="range">
+				</label>
+
+				<label data-bs="5-ticks"><code>step="25" data-bs="5-ticks"</code>
+					<input type="range" step="25">
+				</label>
+
+				<label>Search
+					<input type="search" data-bs="icon start">
+				</label>
+				
+				<label>
+					Search with <code>list</code>
+					<input
+						autocomplete="off"
+						data-bs="icon start"
+						list="datalist"
+						minlength="3"
+						spellcheck="false"
+						type="search">
+				</label>
+
+				<label>Telephone
+					<input type="tel" data-bs="icon">
+				</label>
+
+				<label>Text
+					<input type="text" placeholder="Placeholder text">
+				</label>
+
+				<label>Time
+					<input type="time">
+				</label>
+
+				<label>Time with <code>list</code>
+					<input type="time" list="time">
+				</label>
+
+				<label>Url
+					<input type="url" data-bs="icon">
+				</label>
+
+				<label>Week
+					<input type="week">
+				</label>
+
+				<label>Select
+					<select>
+						<option disabled value="" selected>Choose one</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+				</label>
+
+				<div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
+					<details data-bs="select">
+						<summary>Choose one</summary>
+						<ul>
+							<li>Custom Option 1</li>
+							<li>Custom Option 2</li>
+							<li>Custom Option 3</li>
+						</ul>
+					</details>
+				</div>
+
+				<label>Textarea
+					<textarea></textarea>
+				</label>
+
+				<label>Textarea <code>rows="4"</code>
+					<textarea rows="4"></textarea>
+				</label>
+			</div>
+			<p><small>*) Not functional with selection &mdash; only for showing expand/collapse functionality.</small></p>
+		</section>
+
+		<!-- datalists -->
+		<datalist id="colors">
+			<option value="#3d7af5">
+			<option value="#0d59f2">
+			<option value="#0a47c2">
+			<option value="#083691">
+			<option value="#052461">
+		</datalist>
+
+		<datalist id="datalist">
+			<option value="Apple"> Apple</option>
+			<option value="Pear">Pear</option>
+			<option value="Peach"> Peach</option>
+			<option value="Cherry"> Cherry </option>
+			<option value="Bean">Bean</option>
+			<option value="Pea">Pea</option>
+			<option value="Coconut"> Coconut</option>
+			<option value="Raspberry">Raspberry</option>
+			<option value="Blackberry">Blackberry</option>
+			<option value="Strawberry">Strawberry</option>
+			<option value="Breadfruit">Breadfruit</option>
+			<option value="Pineapple">Pineapple</option>
+			<option value="Mulberry">Mulberry</option>
+			<option value="Jackfruit">Jackfruit</option>
+		</datalist>
+
+		<datalist id="range">
+			<option value="0">
+			<option value="25">
+			<option value="50">
+			<option value="100">
+		</datalist>
+
+		<datalist id="time">
+			<option value="12:00">
+			<option value="13:00">
+			<option value="14:00">
+		</datalist>
+	
+
+		<hr />
+		<section id="input-disabled">
+			<h2>&lt;input disabled&gt;</h2>
+			<div class="row">
+				<label>Color
+					<input type="color" value="#0eaaaa" disabled>
+				</label>
+
+				<label>Date
+					<input type="date" disabled>
+				</label>
+
+				<label>Datetime Local
+					<input type="datetime-local" disabled>
+				</label>
+			</div>
+		</section>
+
+		<hr />
+		<section id="input-pattern">
+			<h2>input patterns</h2>
+			<p><strong>Examples: </strong>Live validation, show checkmark when valid, validate when leaving field:</p>
+
+			<div class="row">
+				<label>First Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Minimum 4 chars. Example: <samp>Steven</samp></small>
+					<input type="text"  minlength="4" placeholder=" " pattern="\S+.*" required data-bs="live">
+				</label>
+
+				<label>Last Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Minimum 4 chars. Example: <samp>Singh</samp></small>
+					<input type="text"  minlength="4" placeholder=" " pattern="\S+.*" required data-bs="valid">
+				</label>
+
+				<label>Social ID<abbr title="Required field" data-tooltip="Required field">*</abbr>
+					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
+					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required inputmode="numeric">
+				</label>
+
+			</div>
+		</section>
+
+	</main>
+</body>
+</html>
