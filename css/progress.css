@@ -1,7 +1,6 @@
 :where(progress) {
 	--progress-bdrs: 0.25em;
-	--progress-indeterminate: var(--progress-bgc) linear-gradient(to right, var(--progress-bar-bgc) 33%, var(--progress-bgc) 33%) center left/150% 150% no-repeat;
-
+	--progress-stripes-bgsz: 10px 10px;
 	background-color: var(--progress-bgc);
 	block-size: var(--progress-h, .5em);
 	border: 0;
@@ -9,32 +8,35 @@
 	inline-size: var(--progress-w, 100%);
 	position: relative;
 }
-
-:where(progress)::-webkit-progress-bar {
-	background: 0 0;
-	border-radius: var(--progress-bdrs);
-}
-
 :where(progress)::-moz-progress-bar {
 	/* In Firefox, it's not possible to set the background-track-color */
 	background-color: var(--progress-bar-bgc);
 	border-radius: var(--progress-bdrs);
 }
-
+:where(progress)::-webkit-progress-bar { background: transparent; }
 :where(progress[value])::-webkit-progress-value {
 	background-color: var(--progress-bar-bgc);
 	border-radius: var(--progress-bdrs);
 }
 
-/* if `max`and `value` are not set, the progress bar will be indeterminate */
-:where(progress:indeterminate) {
+/* Indeterminate: if `max`and `value` are not set, the progress bar will be indeterminate */
+:where(progress:not([max]):indeterminate) {
 	animation: progress 1.6s linear infinite;
 	background: var(--progress-indeterminate);
 }
-
-:where(progress:indeterminate)::-moz-progress-bar {
+:where(progress:not([max]):indeterminate)::-moz-progress-bar {
 	animation: progress 1.6s linear infinite;
 	background: var(--progress-indeterminate);
+}
+:where(progress[max]:indeterminate) {
+	background-color: var(--progress-indeterminate-bgc);
+	background-image: var(--progress-stripes);
+	background-size: var(--progress-stripes-bgsz);
+}
+:where(progress[max]:indeterminate)::-moz-progress-bar {
+	background-color: var(--progress-indeterminate-bgc);
+	background-image: var(--progress-stripes);
+	background-size: var(--progress-stripes-bgsz);
 }
 
 /* Circle */
@@ -43,14 +45,12 @@
 	--progress-circle-sz: var(--progress-label-sz, 8rem);
 	--progress-circle-stroke: .75rem;
 	--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--progress-circle-stroke)), #FFF calc(100% - var(--progress-circle-stroke)));
-
 	background-image: conic-gradient(var(--progress-bar-bgc) 0%, var(--progress-bar-bgc) var(--v) 0, var(--progress-bgc) var(--v));
 	block-size: var(--progress-circle-sz);
 	inline-size: var(--progress-circle-sz);
 	mask: var(--_mask);
 	-webkit-mask: var(--_mask);
 }
-
 :where(label[data-bs~="progress-circle"]) {
 	--progress-label-sz: 8rem;
 	position: relative;
@@ -66,7 +66,6 @@
 	inset-inline-start: 50%;
 	transform: translate(-50%, -50%);
 }
-
 :where(progress[value][data-bs~="circle"])::-webkit-progress-value { display: none;	}
 :where(progress[value][data-bs~="circle"])::-webkit-progress-bar { display: none; }
 :where(progress[value][data-bs~="circle"])::-moz-progress-bar { display: none; opacity: 0; }
@@ -76,6 +75,20 @@
 	background-color: transparent;
 	background-image: linear-gradient(to right, transparent, var(--progress-bar-bgc) 100%);
 }
+:where(progress[value][data-bs~="fade"])::-moz-progress-bar {
+	background-color: transparent;
+	background-image: linear-gradient(to right, transparent, var(--progress-bar-bgc) 100%);
+}
+
+/* Stripes */
+:where(progress[value][data-bs~="stripes"])::-webkit-progress-value {
+	background-image: var(--progress-stripes);
+	background-size: var(--progress-stripes-bgsz);
+}
+:where(progress[value][data-bs~="stripes"])::-moz-progress-bar {
+	background-image: var(--progress-stripes);
+	background-size: var(--progress-stripes-bgsz);
+}
 
 /* Ticks */
 :where(progress[data-bs~="ticks"]) {
@@ -84,11 +97,15 @@
 	--ticks-c: #fff;
 	--ticks-count: var(--v, 0);
 	--ticks-h: var(--progress-h, 1em);
+	--ticks-unit: calc((100% + var(--ticks-bdw)) / var(--ticks-count));
 	position: relative;
 }
-
 :where(progress[value][data-bs~="ticks"])::-webkit-progress-value { 
-	--ticks-unit: calc((100% + var(--ticks-bdw)) / var(--ticks-count));
+	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
+	background-repeat: repeat-x;
+	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
+}
+:where(progress[value][data-bs~="ticks"])::-moz-progress-bar { 
 	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
 	background-repeat: repeat-x;
 	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);

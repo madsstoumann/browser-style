@@ -1,10 +1,10 @@
 :where(a) {
 	--a-icon-sz: 1.25em;
 	align-items: center;
-	background: 
+	background: var(--a-bgc,
 		linear-gradient(currentColor 0 0, currentColor 0 0) 
 		bottom /var(--d, 0) 2px 
-		no-repeat;
+		no-repeat);
 	color: var(--a-c);
 	display: inline-flex;
 	text-decoration: var(--a-td, none);

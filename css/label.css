@@ -1,20 +1,35 @@
-:where(label, fieldset) {
+:where(label, fieldset, [data-bs~="label"]) {
 	font-size: var(--label-fz, initial);
 	width: var(--label-w, 100%);
 }
-
 :where(label > abbr) {
 	color: var(--required-color);
 	margin-inline: 0.125ch 1ch;
 }
-
 :where(label small) { display: block; }
-
-:where(label > input:not([type="checkbox"]):not([type="radio"]), label > details[data-bs~="select"], label > select, label > textarea) {
+:where(label > input:not([type="checkbox"]):not([type="radio"]), [data-bs~="label"] > details[data-bs~="select"], label > select, label > textarea) {
 	margin-block-start: var(--input-gap);
 }
-
 :where(label > input[type="file"]) { display: block; }
+
+/* Pseudo Labels */
+:where(label[data-left-label]),
+:where(label[data-right-label]) {
+	padding-block-end: 1.5em;
+	position: relative;
+}
+:where(label[data-left-label])::before,
+:where(label[data-right-label])::after {
+	font-size: var(--label-pesudo-fz, 80%);
+	inset-block-end: 0;
+	position: absolute;
+}
+:where(label[data-left-label])::before { content: attr(data-left-label); }
+:where(label[data-right-label])::after {
+  content: attr(data-right-label);
+  inset-inline-end: 0;
+}
+
 
 /* Ticks for range */
 :where(label[data-bs*="ticks"]) {

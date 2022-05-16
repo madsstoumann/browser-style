@@ -1,66 +1,26 @@
-/* TODO! WORK-IN-PROGRESS */
 :where(meter) {
-	--meter-bdrs: .25em;
-	--meter-custom-bg:linear-gradient(90deg, 
-		#4691e2 20%,
-		#0cb764 0 40%,
-		#febf18 0 60%,
-		#fc8711 0 80%,
-		#cc1100 0 100%
-	);
-	--meter-label-fz: 80%;
+	background: var(--meter-bgc);
 	border: 0;	
-	border-radius: var(--meter-bdrs);
-	height: var(--meter-height, 1.2em);
-	margin-block: var(--meter-mb, 1em);
+	border-radius: var(--meter-bdrs, 1rem);
+	height: var(--meter-height, 0.6em);
 	min-inline-size: var(--meter-mis, 10em);
 	position: relative;
 	width: var(--meter-w, 100%);
 }
-
-:where(meter)::-webkit-meter-bar {
-	background: var(--gray-2);
-	border: 0;
-	border-radius: var(--meter-bdrs);
-}
-
+:where(meter):-moz-meter-bar { border: 0; }
+:where(meter)::-webkit-meter-bar { border: 0; }
 :where(meter)::-webkit-meter-inner-element {
-	border-radius: 3rem;
+	display: block;
 	-webkit-appearance: none;
 }
+:where(meter)::-webkit-meter-even-less-good-value { background: var(--color-danger); border-radius: inherit; }
+:where(meter):-moz-meter-sub-sub-optimum::-moz-meter-bar { background: var(--color-danger); border-radius: inherit; }
+:where(meter)::-webkit-meter-suboptimum-value { background: var(--color-warning); border-radius: inherit; }
+:where(meter):-moz-meter-sub-optimum::-moz-meter-bar { background: var(--color-warning); border-radius: inherit; }
+:where(meter)::-webkit-meter-optimum-value { background: var(--color-success); border-radius: inherit; }
+:where(meter):-moz-meter-optimum::-moz-meter-bar { background: var(--color-success); border-radius: inherit; }
 
-:where(meter)::-webkit-meter-even-less-good-value {
-	background: var(--color-danger);
-}
-:where(meter)::-webkit-meter-suboptimum-value {
-	background: var(--color-warning);
-}
-:where(meter)::-webkit-meter-optimum-value {
-	background: var(--color-success);
-}
-
-:where(meter[aria-label])::after,
-:where(meter[aria-label])::before {
-	font-size: var(--meter-label-fz);
-	inset-block-end: 100%;
-	position: absolute;
-}
-
-:where(meter[aria-label])::before {
-  content: attr(aria-label);
-}
-
-:where(meter[data-right-label])::after {
-  content: attr(data-right-label);
-  inset-inline-end: 0;
-}
-
-meter[data-bs="custom"] {
-	--meter-mis: 100%;
-}
-
-meter[data-bs="custom"]::-webkit-meter-optimum-value {
-  background-image: var(--meter-custom-bg, none);
-  background-size: 100% 100%;
-	width: 100% !important;
-}
+/* Custom Meter */
+meter[data-bs="custom"] { --meter-mis: 100%; }
+meter[data-bs="custom"][value="100"]::-webkit-meter-optimum-value { background-image: var(--meter-custom-bg, none); }
+meter[data-bs="custom"][value="100"]:-moz-meter-optimum::-moz-meter-bar { background-image: var(--meter-custom-bg, none); }

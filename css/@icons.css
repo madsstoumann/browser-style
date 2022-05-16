@@ -27,3 +27,22 @@
 	--icon-url: url('../svg/link.svg');
 	--icon-week: url('../svg/week.svg');
 }
+
+:where([data-icon~="after"])::after,
+:where([data-icon~="before"])::before {
+	--icon-sz: 2em;
+	background-color: currentColor;
+	block-size: var(--icon-sz);
+	content: "";
+	display: var(--icon-d, inline-block);
+	inline-size: var(--icon-sz);
+	margin-block: var(--icon-mb, 0);
+	margin-inline: var(--icon-mi, .25em);
+	mask-image: var(--icon-msi);
+	-webkit-mask-image: var(--icon-msi);
+}
+:where([data-icon~="block"]) {
+	--icon-d: block;
+	--icon-mb: .35em;
+	--icon-mi: auto;
+}

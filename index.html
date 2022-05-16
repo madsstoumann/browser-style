@@ -353,7 +353,7 @@
 					<figcaption><code>data-bs="square"</code></figcaption>
 				</figure>
 				<figure data-bs="widescreen">
-					<img src="https://picsum.photos/id/237/600/400" width="600" height="337.5" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
+					<img src="https://picsum.photos/id/237/600/400" width="600" height="337" loading="lazy" decoding="async" alt="Cute black dog, looking into the camera" />
 					<figcaption><code>data-bs="widescreen"</code></figcaption>
 				</figure>
 			</div>
@@ -492,7 +492,7 @@
 					</select>
 				</label>
 
-				<label>Custom Select <code>&lt;details&gt;</code>
+				<div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
 					<details data-bs="select">
 						<summary>Choose one</summary>
 						<ul>
@@ -501,7 +501,7 @@
 							<li>Custom Option 3</li>
 						</ul>
 					</details>
-				</label>
+				</div>
 
 				<label>Textarea
 					<textarea></textarea>
@@ -511,6 +511,7 @@
 					<textarea rows="4"></textarea>
 				</label>
 			</div>
+			<p><small>*) Not functional with selection &mdash; only for showing expand/collapse functionality.</small></p>
 		</section>
 
 		<!-- datalists -->
@@ -572,7 +573,6 @@
 		</section>
 
 		<hr />
-		<!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inputmode -->
 		<section id="input-pattern">
 			<h2>input patterns</h2>
 			<p><strong>Examples: </strong>Live validation, show checkmark when valid, validate when leaving field:</p>
@@ -600,32 +600,59 @@
 		<hr />
 		<section id="menu">
 			<h2>&lt;menu&gt;: The Menu element</h2>
-			<p>Default, as context-menu:</p>
+
 			<menu role="menu">
 				<li role="none"><button role="menuitem">Action 1</button></li>
 				<li role="none"><button role="menuitem">Action 2</button></li>
 				<li role="none"><button role="menuitem">Action 3</button></li>
 			</menu>
 
-			<p>With <code>aria-orientation="horizontal"</code></p>
-			<menu role="menu" aria-orientation="horizontal">
-				<li role="none"><button role="menuitem">Primary</button></li>
+			<p>With <code>data-bs="context"</code></p>
+			<menu role="menu" data-bs="context">
+				<li role="none"><button role="menuitem">New Folder</button><small>⌥ N</small></li>
+				<li role="none"><button role="menuitem">Print</button><small>⌘ P</small></li>
+				<li role="none"><button role="menuitem">Save</button><small>⌘ S</small></li>
+			</menu>
+
+			<p>With <code>data-bs="tabs"</code></p>
+			<menu role="menu" data-bs="tabs">
+				<li role="none" data-bs="active"><button role="menuitem">Primary</button></li>
 				<li role="none"><button role="menuitem">Secondary</button></li>
 				<li role="none"><button role="menuitem">Tertiary</button></li>
 			</menu>
+
+			<p>With <code>data-bs="tab-bar"</code></p>
+			<menu role="menu" data-bs="tab-bar">
+				<li role="none"><button role="menuitem" data-icon="block before" style="--icon-msi:var(--icon-search);">Primary</button></li>
+				<li role="none" data-bs="active"><button role="menuitem" data-icon="block before" style="--icon-msi:var(--icon-email);">Secondary</button></li>
+				<li role="none"><button role="menuitem" data-icon="block before" style="--icon-msi:var(--icon-date);">Tertiary</button></li>
+			</menu>
+
 		</section>
 
 		<hr />
 		<section id="meter">
 			<h2>&lt;meter&gt;: The HTML Meter element</h2>
-
 			<div class="row">
-				<meter min="0" max="100" value="30" low="40" high="50" optimum="90" aria-label="even-less-good-value"></meter>
-				<meter min="0" max="100" value="60" low="25" high="50" optimum="50" aria-label="suboptimum-value"></meter>
-				<meter min="0" max="100" value="90" low="25" high="50" optimum="80" aria-label="optimum-value"></meter> 
+				<label>
+					even-less-good-value
+					<meter min="0" max="100" value="30" low="40" high="50" optimum="90"></meter>
+				</label>
+				<label>
+					suboptimum-value
+					<meter min="0" max="100" value="60" low="25" high="50" optimum="50"></meter>
+				</label>
+				<label>optimum-value
+					<meter min="0" max="100" value="90" low="25" high="50" optimum="80"></meter> 
+				</label>
 			</div>
-			<p><strong>Custom:</strong></p>
-			<meter low="0" high="100" max="100" value="50" data-bs="custom" aria-label="Underweight" data-right-label="Obese"></meter>
+			<div class="row-full">
+				<p><strong>Custom meter</strong>. Set <code>value="100"</code> and <code>data-bs="custom"</code></p>
+				<label data-left-label="Underweight" data-right-label="Obese">
+					BMI
+					<meter low="0" high="100" max="100" value="100" data-bs="custom"></meter>
+				</label>
+			</div>
 		</section>
 
 		<hr />
@@ -728,21 +755,25 @@
 			<h2>&lt;progress&gt;: The Progress Indicator element</h2>
 			<p><strong>Example with</strong> <code>value</code> <strong>and</strong> <code>max</code></p>
 			<progress value="40" max="100">40%</progress>
+			<p>With <code>data-bs="stripes"</code></p>
+			<progress value="45" max="100" data-bs="stripes">45%</progress>
 			<p>With <code>data-bs="fade"</code></p>
 			<progress value="50" max="100" data-bs="fade">50%</progress>
 			<p>With <code>data-bs="ticks"</code> and <code>style="--v:6"</code></p>
 			<progress value="60" max="100" data-bs="ticks" style="--v:6">60%</progress>
-			<p><strong>Example with no attributes: </strong> <code>::indeterminate</code></p>
+			<p>With <strong>no</strong> attributes:  <code>::indeterminate</code></p>
 			<progress>Loading</progress>
+			<p>With <strong>no</strong> attributes <strong>and </strong> <code>max</code></p>
+			<progress max="100">Loading</progress>
 			<p><strong>Circular progress:</strong> <code>data-bs="circle"</code> and <code>style="--v:65%"</code></p>
 			<progress value="65" max="100" data-bs="circle" style="--v:65%;"></progress>
-			<p>In <code>&lt;label data-bs="progress-circle" aria-label="65%"&gt;</code></p>
+			<p>Wrapped in <code>&lt;label data-bs="progress-circle" aria-label="65%"&gt;</code></p>
 			<div class="row">
 				<label aria-label="65%" data-bs="progress-circle">
-					<progress value="65" max="100" data-bs="circle" style="--v:65%;"></progress>
+					<progress value="65" max="100" data-bs="circle" style="--v:65%;">65%</progress>
 				</label>
 				<label aria-label="45%" data-bs="progress-circle">
-					<progress value="45" max="100" data-bs="circle" style="--v:45%;--progress-bar-bgc:var(--gray-6)"></progress>
+					<progress value="45" max="100" data-bs="circle" style="--v:45%;--progress-bar-bgc:var(--gray-6)">45%</progress>
 				</label>
 			</div>
 		</section>
@@ -957,7 +988,7 @@
 		</section>
 	</main>
 	<!-- https://www.srihash.org/ -->
-	<script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.3.1/lite-youtube.min.js" integrity="sha384-fdj8DgKHHJP6i0//c1CyUgOUYLl20PCNcUPvQckIBAgpsBaAs5vldUoCESo6g+DS" crossorigin="anonymous" defer></script>
+	<script type="module" src="https://cdn.jsdelivr.net/npm/@justinribeiro/lite-youtube@1.3.1/lite-youtube.min.js" integrity="sha384-fdj8DgKHHJP6i0//c1CyUgOUYLl20PCNcUPvQckIBAgpsBaAs5vldUoCESo6g+DS" crossorigin="anonymous"></script>
 	<script src="main.js" defer></script>
 </body>
 </html>

@@ -55,14 +55,23 @@
 	--kbd-c: inherit;
 	--mark-bgc: hsl(60, 80%, 80%);
 	--mark-c: var(--text-c);
+
 	--menu-bdc: var(--input-bdc);
+	--menu-bgc: #fff0;
+	--menu-item-bdc: var(--input-bdc);
 	--menu-item-bgc: #fff0;
 	--menu-item-hover-bgc: var(--gray-1);
+	--menu-item-hover-c: initial;
+	
+	--meter-bgc: var(--gray-2);
 	--ol-li-bg: var(--gray-2);
 	--pre-bgc: var(--gray-8);
 	--pre-c: #FFF;
-	--progress-bgc: var(--gray-2);
 	--progress-bar-bgc: var(--accent-color);
+	--progress-bgc: var(--gray-2);
+	--progress-indeterminate: var(--progress-bgc) linear-gradient(to right, var(--progress-bar-bgc) 33%, var(--progress-bgc) 33%) center left/150% 150% no-repeat;
+	--progress-indeterminate-bgc: var(--gray-5);
+	--progress-stripes: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
 	--var-bgc: var(--gray-9);
 	--var-c: var(--color-warning);
 

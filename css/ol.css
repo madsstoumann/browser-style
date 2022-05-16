@@ -3,9 +3,7 @@
 	list-style: none;
 	padding-inline-start: var(--ol-pis, 1.5em);
 }
-
 :where(ol:not([type]) li) { counter-increment: ol; }
-
 :where(ol:not([type]) li)::before {
 	color: var(--ol-li-c, inherit);
 	content: counters(ol, '.') '. ';
@@ -13,8 +11,8 @@
 }
 
 /* Modifiers */
+:where(ol[data-bs~="circle"]) li::before { border-radius: 50%; }
 :where(ol[data-bs~="custom"]) { padding: unset; }
-
 :where(ol[data-bs~="custom"]) li::before {
 	--ol-li-sz: 1.5em;
 	aspect-ratio: 1 / 1;
@@ -27,5 +25,3 @@
 	place-content: center;
 	width: var(--ol-li-sz);
 }
-
-:where(ol[data-bs~="circle"]) li::before {  border-radius: 50%; }
