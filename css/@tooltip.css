@@ -1,0 +1,45 @@
+:where([data-tooltip]) {
+	--tooltip-bg: var(--gray-9);
+	--tooltip-arrow-h: 0.5em;
+	--tooltip-arrow-w: 1em;
+	--tooltip-offset: -0.75ch;
+	cursor: help;
+	display: inline-block;
+	position: relative;
+}
+:where([data-tooltip])::before {
+	background: var(--tooltip-bg);
+	border-radius: var(--tooltip-bdrs, .25em);
+	content: attr(data-tooltip);
+	color: var(--tooltip-c, #fff);
+	display: inline-block;
+	font-size: var(--tooltip-fz, 80%);
+	inset-block-end: 100%;
+	inset-inline-start: 50%;
+	opacity: 0;
+	padding: var(--tooltip-p, .25em .75em);
+	position: absolute;
+	transform: translate(-50%, 1em);
+	transition: all .2s ease-in-out;
+	white-space: nowrap;
+}
+:where([data-tooltip])::after {
+	background: var(--tooltip-bg);
+	clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+	content: "";
+	display: inline-block;
+	height: var(--tooltip-arrow-h);
+	inset-block-start: 0;
+	inset-inline-start: 50%;
+	opacity: 0;
+	position: absolute;
+	transform: translate(-50%, var(--tooltip-offset));
+	width: var(--tooltip-arrow-w);
+}
+@media (hover: hover) {
+	:where([data-tooltip]:hover)::after,
+	:where([data-tooltip]:hover)::before  {
+		opacity: 1;
+		transform: translate(-50%, var(--tooltip-offset));
+	}
+}
