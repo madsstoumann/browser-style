@@ -49,6 +49,7 @@
 	--button-c: var(--accent-text-color);
 	--code-bgc: var(--gray-2);
 	--code-c: var(--text-c);
+	--dl-table-bdc: var(--gray-6);
 	--del-c: var(--color-danger);
 	--figcaption-c: var(--gray-7);
 	--hr-c: var(--gray-6);

@@ -1,6 +1,6 @@
 /* Based on: https://codepen.io/ShadowShahriar/pen/zYPPYrQ */
 
-:where(input[type="range"]) {
+:where(input[type="range"]:not([orient="vertical"])) {
 	--brightness-down: 80%;
 	--brightness-hover: 180%;
 	--clip-edges: 0.125em;
@@ -16,6 +16,10 @@
 	margin-inline: 0;
 	overflow: hidden;
 	width: var(--input-range-w, 100%);
+}
+
+input[type="range"][orient="vertical"] {
+	-webkit-appearance: slider-vertical;
 }
 
 :where(input[type="range"]:active) { cursor: grabbing; }

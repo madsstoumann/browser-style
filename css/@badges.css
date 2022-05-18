@@ -1,5 +1,6 @@
 [data-badge] {
-	--badge-outset: 0; 
+	--badge-offset: 0;
+	--badge-sz: 2em;
 	position: relative;
 }
 [data-badge~="after"]::after,
@@ -8,25 +9,53 @@
 	border-color: var(--badge-bdc, #FFF);
 	border-style: solid;
 	border-width: var(--badge-bw, 1px);
-	border-radius: var(--badge-bdrs, 50%);
+	border-radius: var(--badge-bdrs, 0.5em);
 	color: var(--badge-c);
 	content: attr(data-badge-text);
 	font-size: var(--badge-fz, 12px);
-	inset-block-start: var(--badge-ibs, var(--badge-outset));
-	inset-block-end: var(--badge-ibe, auto);
-	inset-inline-start: var(--badge-iis, auto);
-	inset-inline-end: var(--badge-iie, var(--badge-outset));
 	padding-block: var(--badge-pb, 0.25em);
 	padding-inline: var(--badge-pi, 0.5em);
-	position: absolute;
 }
 
+[data-badge~="after"]::after,
+[data-badge~="before"]::before {
+	inset-block-start: var(--badge-ibs, var(--badge-offset));
+	inset-inline-end: var(--badge-iie, var(--badge-offset));
+}
 
-[data-badge~="green"] { --badge-bg: var(--color-success); --badge-c: #fff; }
-[data-badge~="red"] { --badge-bg: var(--color-danger); --badge-c: #fff; }
+/* [data-badge~="before"]:before {
+	inset-block-start: var(--badge-ibs, var(--badge-offset));
+	inset-inline-start: var(--badge-iie, var(--badge-offset));
+} */
 
-[data-badge~="inset"] { --badge-outset: .25rem; }
-[data-badge~="outset"] { --badge-outset: -.75rem; }
+[data-badge~="circle"]::after{
+	--badge-bdrs: calc(var(--badge-sz) / 2);
+	
+	
+	display: grid;
+	block-size: var(--badge-sz);
+	place-content: center;
+	position: absolute;
+	inline-size: var(--badge-sz);
+}
+
+[data-badge~="danger"] { --badge-bg: var(--color-danger); }
+[data-badge~="secondary"] { --badge-bg: var(--secondary-color); }
+[data-badge~="success"] { --badge-bg: var(--color-success); }
+[data-badge~="warning"] { --badge-bg: var(--color-warning); --badge-c: #222; }
+
+
+/* [data-badge~="inset"], [data-badge~="outset"] { position: absolute; } */
+
+[data-badge~="inset"] { --badge-offset: .25rem; }
+[data-badge~="outset"] { --badge-offset: calc(0px - (var(--badge-sz) / 2.25)); }
+
+
+
+
+
+
+
 
 
 [data-after-text],

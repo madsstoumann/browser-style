@@ -36,25 +36,23 @@
 		<hr />
 		<section>
 			<h2>badges</h2>
-			<p>With <code>data-badge="red circle after"</code> with <code>data-badge-text="5"</code></p>
+			<p>With <code>data-badge="circle after"</code> and <code>data-badge-text="5"</code></p>
 
 			<menu role="menu" data-bs="tab-bar">
-				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-search);">Primary</button></li>
-				<li role="none" data-bs="active"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-email);">Secondary</button></li>
+				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-message);"data-badge="success circle after" data-badge-text="33">Primary</button></li>
+				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-email);" data-badge="danger circle after" data-badge-text="15">Secondary</button></li>
 				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-date);" data-badge="circle after" data-badge-text="5">Tertiary</button></li>
 			</menu>
 
-
+			<p>With ...</p>
 			<div class="row">
-				<button type="button" data-badge="red inset circle after" data-badge-text="5">Normal Button</button>
-				<button type="submit" data-badge="red outset circle after" data-badge-text="5">Submit Button</button>
+				<button type="button" data-badge="warning outset circle after" data-badge-text="5">Normal Button</button>
+				<button type="submit" data-badge="danger outset circle after" data-badge-text="25">Submit Button</button>
 				<button type="reset">Reset Button</button>
 
 
 
-				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
-				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
-				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
+				<h3 data-badge="secondary after" data-badge-text="new">This is a headline</h3>
 			</div>
 		</section>
 	</main>
