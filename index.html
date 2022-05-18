@@ -7,9 +7,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="browser.style: iframe">
 	<meta name="format-detection" content="telephone=no">
+
+	<meta name="theme-color" content="#0d59f2" media="(prefers-color-scheme: light)">
+	<meta name="theme-color" content="#872e4e" media="(prefers-color-scheme: dark)">
+
 	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
 	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
 	<link rel="stylesheet" href="css/styles.css">
 	<link rel="stylesheet" href="css/@tooltip.css">
 	<link rel="stylesheet" href="css/address.css">
@@ -67,6 +72,7 @@
 			<li><a href="#ul">&lt;ul&gt;</a></li>
 			<li><a href="/video.html">&lt;video&gt;</a></li>
 			<li><a href="#text">Inline text semantics</a></li>
+			<li><a href="/badges.html">Badges</a></li>
 			<li><a href="/modifiers.html">Modifiers</a></li>
 			<li><a href="/patterns.html">Patterns</a></li>
 		</ol>
@@ -76,17 +82,23 @@
 			<h2>&lt;a&gt;: The Anchor element</h2>
 			<div class="row">
 				<a href="#">Regular link</a>
-				<a href="mailto:me@me.com">Email link</a>
-				<a href="tel:88776655">Phone link</a>
-				<a href="sms:+4520701433">Send me an SMS</a>
-				<a href="skype:echo123?call">Skype Call</a>
-				<a href="ftp://xxx">File Transfer Protocol</a>
-				<a href="webcal://xxx">Webcal Link</a>
-				<a href="bitcoin:xxx">Bitcoin Link</a>
-				<a href="#" download="filename.txt">Download link</a>
-				<a href="#" target="_blank" rel="noreferrer noopener">Open in new window</a>
+				<a href="mailto:me@me.com" data-icon="after">Email link</a>
+				<a href="tel:88776655" data-icon="after">Phone link</a>
+				<a href="sms:+4520701433" data-icon="after">Send me an SMS</a>
+				<a href="skype:echo123?call" data-icon="after">Skype Call</a>
+				<a href="ftp://xxx" data-icon="after">File Transfer Protocol</a>
+				<a href="webcal://xxx" data-icon="after">Webcal Link</a>
+				<a href="bitcoin:xxx" data-icon="after">Bitcoin Link</a>
+				<a href="#" download="filename.txt" data-icon="after">Download link</a>
+				<a href="#" target="_blank" rel="noreferrer noopener" data-icon="after">Open in new window</a>
 			</div>
-			<p>The list of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler#permitted_schemes" target="_blank" rel="noreferrer noopener">Permitted schemes</a> is very long. Icons have only been added to the most common types.</p>
+			<p>The list of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler#permitted_schemes" target="_blank" rel="noreferrer noopener" data-icon="after">Permitted schemes</a> is very long. Icons have only been added to the most common types.</p>
+			<p>The links above use <code>data-icon="after"</code>, whereas the links below use <code>data-icon="before"</code>:</p>
+			<div class="row">
+				<a href="tel:88776655" data-icon="before">Phone link</a>
+				<a href="sms:+4520701433" data-icon="before">Send me an SMS</a>
+				<a href="skype:echo123?call" data-icon="before">Skype Call</a>
+			</div>
 		</section>
 
 		<hr />
@@ -133,6 +145,30 @@
 				<button type="button" disabled>Disabled Button</button>
 				<button type="submit" disabled>Disabled Submit</button>
 				<button type="reset" disabled>Disabled Reset</button>
+
+				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
+				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
+				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
+			</div>
+
+			<p>A <code>&lt;button&gt;</code> inherits it's <code>font-size</code> from the parent-container, in this case set to <code>11px</code>:</p>
+
+			<div class="row" style="font-size:11px;">
+				<button type="button">Normal Button</button>
+				<button type="submit">Submit Button</button>
+				<button type="reset">Reset Button</button>
+
+				<button type="button" data-bs="outline">Outline Button</button>
+				<button type="submit" data-bs="outline">Outline Submit</button>
+				<button type="reset" data-bs="outline">Outline Reset</button>
+
+				<button type="button" disabled>Disabled Button</button>
+				<button type="submit" disabled>Disabled Submit</button>
+				<button type="reset" disabled>Disabled Reset</button>
+
+				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
+				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
+				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
 			</div>
 		</section>
  

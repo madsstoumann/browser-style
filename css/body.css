@@ -1,4 +1,5 @@
 :where(body) {
+	background: var(--body-bg, #FFF);
 	font-family: var(--body-ff, ui-sans-serif, system-ui, sans-serif);
 	font-size: var(--body-fz, 1rem);
 	line-height: var(--body-lh, 1.5);

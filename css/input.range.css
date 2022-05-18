@@ -1,10 +1,11 @@
-/* https://codepen.io/ShadowShahriar/pen/zYPPYrQ */
+/* Based on: https://codepen.io/ShadowShahriar/pen/zYPPYrQ */
 
 :where(input[type="range"]) {
 	--brightness-down: 80%;
 	--brightness-hover: 180%;
 	--clip-edges: 0.125em;
 	--thumb-height: var(--input-thumb-h, 1.25em);
+	--thumb-width: var(--input-thumb-h, 1.25em);
 	--track-color: rgba(0, 0, 0, 0.2);
 	--track-height: var(--input-track-h, 0.125em);
 
@@ -17,9 +18,7 @@
 	width: var(--input-range-w, 100%);
 }
 
-:where(input[type="range"]:active) {
-	cursor: grabbing;
-}
+:where(input[type="range"]:active) { cursor: grabbing; }
 
 /* === WebKit specific styles === */
 :where(input[type="range"]),
@@ -55,17 +54,18 @@
 		var(--clip-further) var(--clip-further)
 	);
 	filter: brightness(100%);
-	width: var(--thumb-width, var(--thumb-height));
+	width: var(--thumb-width);
 }
+:where(input[type="range"]:dir(rtl))::-webkit-slider-thumb { --box-fill: none; }
 
 :where(input[type="range"]:hover)::-webkit-slider-thumb {
-	filter: brightness(var(--brightness-hover));
 	cursor: grab;
+	filter: brightness(var(--brightness-hover));
 }
 
 :where(input[type="range"]:active)::-webkit-slider-thumb {
-	filter: brightness(var(--brightness-down));
 	cursor: grabbing;
+	filter: brightness(var(--brightness-down));
 }
 
 :where(input[type="range"])::-webkit-slider-runnable-track {
@@ -91,10 +91,11 @@
 
 :where(input[type="range"])::-moz-range-thumb {
 	background: currentColor;
-	border: 0;
-	width: var(--thumb-width, var(--thumb-height));
 	border-radius: var(--thumb-width, var(--thumb-height));
+	border: 0;
 	cursor: grab;
+	height: var(--thumb-height);
+	width: var(--thumb-height);
 }
 
 :where(input[type="range"]:active)::-moz-range-thumb {
@@ -102,8 +103,8 @@
 }
 
 :where(input[type="range"])::-moz-range-track {
-	width: 100%;
 	background: var(--track-color);
+	width: 100%;
 }
 
 :where(input[type="range"])::-moz-range-progress {
@@ -114,8 +115,8 @@
 
 :where(input[type="range"])::-moz-range-track,
 :where(input[type="range"])::-moz-range-progress {
-	height: calc(var(--track-height) + 1px);
 	border-radius: var(--track-height);
+	height: calc(var(--track-height) + 1px);
 }
 
 :where(input[type="range"])::-moz-range-thumb,

@@ -39,6 +39,8 @@
 	--a-c: var(--accent-color);
 	--address-bgc: var(--gray-1);
 	--address-c: inherit;
+	--badge-bg: var(--accent-color);
+	--badge-c: var(--accent-text-color);
 	--blockquote-bdc: var(--accent-color);
 	--blockquote-bgc: var(--gray-1);
 	--blockquote-c: inherit;

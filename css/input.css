@@ -7,6 +7,7 @@
 	appearance: none;
 	font-size: var(--input-fz, 1rem);
 }
+:where(input, select, summary, textarea):dir(rtl) { --icon-dir-pos: center left; }
 
 :where(input:not([type="file"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
 	--input-trs: .2s cubic-bezier(.1, 0, .9, 1);
@@ -17,11 +18,12 @@
 }
 
 :where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
+	--icon-dir-pos: center right;
 	--input-icon-pos: var(--input-pi);
 	--input-icon-w: 1.5em;
 	background-color: var(--input-bgc);
 	background-image: var(--input-bgi, none);
-	background-position: center right var(--input-icon-pos);
+	background-position: var(--icon-dir-pos) var(--input-icon-pos);
 	background-size: var(--input-icon-w) auto;
 	background-repeat: no-repeat;
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
@@ -105,7 +107,7 @@
 :where(input[type="week"]),
 :where(select) { padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos)); }
 :where(input[data-bs~="start"]) {
-	background-position: center left var(--input-icon-pos);
+	background-position: var(--icon-dir-pos) var(--input-icon-pos);
 	padding-inline: calc(var(--input-icon-w) + var(--input-icon-pos) + var(--input-pi)) var(--input-pi);
 }
 
@@ -155,14 +157,14 @@
 	margin: 0;
 	mask-image: var(--icon-reset);
 	position: absolute;
-	right: 0.75em;
+	inset-inline-end: 0.75em;
 	-webkit-appearance: none;
 	-webkit-mask-image: var(--icon-reset);
 }
 
 /* Combination: Search reset-button AND datalist dropdown-button */
 :where(input[type="search"][list])::-webkit-search-cancel-button {
-	right: 2.5em;
+	inset-inline-end: 2.5em;
 }
 
 /* Validation Patterns */

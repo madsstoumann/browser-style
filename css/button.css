@@ -1,14 +1,16 @@
 :where(button:not([role="menuitem"])) {
+	align-items: center;
 	background-color: var(--button-bgc);
 	border-radius: var(--button-bdrs, var(--input-bdrs));
 	border-color: var(--button-bdc, transparent);
 	border-style: var(--button-bds, solid);
 	border-width: var(--button-bdw, var(--input-bdw));
 	color: var(--button-c);
+	display: var(--menu-d, inline-flex);
 	font-size: var(--button-fz, inherit);
 	font-weight: var(--button-fw, 400);
 	padding-block: var(--button-pb, 1.25ch);
-	padding-inline: var(--button-pi, 2.5ch);
+	padding-inline: var(--button-pi, 2.25ch);
 	text-underline-offset: var(--button-tuo, 4px);
 	transition: background-color 0.2s ease-in-out;
 }

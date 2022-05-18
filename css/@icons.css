@@ -31,17 +31,23 @@
 :where([data-icon~="after"])::after,
 :where([data-icon~="before"])::before {
 	background-color: currentColor;
-	block-size: var(--icon-sz, 2em);
+	block-size: var(--icon-sz, 1.25em);
 	content: "";
 	display: var(--icon-d, inline-block);
-	inline-size: var(--icon-sz, 2em);
+	inline-size: var(--icon-sz, 1.25em);
 	margin-block: var(--icon-mb, 0);
-	margin-inline: var(--icon-mi, .25em);
-	mask-image: var(--icon-msi);
-	-webkit-mask-image: var(--icon-msi);
+	margin-inline-start: var(--icon-mis, 0);
+	margin-inline-end: var(--icon-mie, 0);
+	mask-image: var(--icon);
+	-webkit-mask-image: var(--icon);
 }
-:where([data-icon~="block"]) {
+:where([data-icon~="after"])::after { --icon-mis: .75ch; }
+:where([data-icon~="before"])::before { --icon-mie: .75ch; }
+:where([data-icon~="block"])::after,
+:where([data-icon~="block"])::before {
 	--icon-d: block;
 	--icon-mb: .35em;
-	--icon-mi: auto;
+	--icon-mie: auto;
+	--icon-mis: auto;
+	--icon-sz: 2em;
 }

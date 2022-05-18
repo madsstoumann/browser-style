@@ -3,7 +3,7 @@
 	align-items: center;
 	background: var(--a-bgc,
 		linear-gradient(currentColor 0 0, currentColor 0 0) 
-		bottom /var(--d, 0) 2px 
+		bottom / var(--d, 0) 2px 
 		no-repeat);
 	color: var(--a-c);
 	display: inline-flex;
@@ -11,28 +11,17 @@
 	text-decoration-skip-ink: auto;
 	transition: .3s ease-in-out;
 }
-@media (hover: hover) {
-	a:hover { --d: 100%; }
-}
 
-:where(a[href*=":"], a[download], a[target="_blank"])::after {
-	--a-msi: none;
-	background-color: currentColor;
-	block-size: var(--a-icon-sz);
-	content: "";
-	display: inline-block;
-	inline-size: var(--a-icon-sz);
-	margin-inline-start: .25em;
-	mask-image: var(--a-msi);
-	-webkit-mask-image: var(--a-msi);
-}
+@media (hover: hover) { a:hover { --d: 100%; } }
 
-:where(a[href^="bitcoin"])::after { --a-msi: var(--icon-bitcoin); }
-:where(a[href^="ftp"])::after { --a-msi: var(--icon-ftp); }
-:where(a[href^="mailto"])::after { --a-msi: var(--icon-email); }
-:where(a[href^="skype"])::after { --a-msi: var(--icon-skype); }
-:where(a[href^="sms"])::after { --a-msi: var(--icon-message); }
-:where(a[href^="tel"])::after { --a-msi: var(--icon-phone); }
-:where(a[href^="webcal"])::after { --a-msi: var(--icon-date); }
-:where(a[download])::after { --a-msi: var(--icon-download); }
-:where(a[target="_blank"])::after { --a-msi: var(--icon-external); }
+:where(a[data-icon="after"])::after { --icon-mis: .125em; }
+:where(a[data-icon="before"])::before { --icon-mie: .125em; }
+:where(a[href^="bitcoin"]) { --icon: var(--icon-bitcoin); }
+:where(a[href^="ftp"]) { --icon: var(--icon-ftp); }
+:where(a[href^="mailto"]) { --icon: var(--icon-email); }
+:where(a[href^="skype"]) { --icon: var(--icon-skype); }
+:where(a[href^="sms"]) { --icon: var(--icon-message); }
+:where(a[href^="tel"]) { --icon: var(--icon-phone); }
+:where(a[href^="webcal"]) { --icon: var(--icon-date); }
+:where(a[download]) { --icon: var(--icon-download); }
+:where(a[target="_blank"]) { --icon: var(--icon-external); }
