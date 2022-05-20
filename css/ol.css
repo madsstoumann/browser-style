@@ -9,6 +9,7 @@
 	content: counters(ol, '.') '. ';
 	font-weight: var(--ol-li-fw, 600);
 }
+:where(ol li a) { line-height: 2; } /* Ensure tap-target-size is large enough for links */
 
 /* Modifiers */
 :where(ol[data-bs~="circle"]) li::before { border-radius: 50%; }
