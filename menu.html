@@ -37,11 +37,13 @@
 		<section>
 			<h2>&lt;menu&gt;: The Menu element</h2>
 
-			<menu role="menu">
-				<li role="none" data-bs="active"><button role="menuitem">Action 1</button></li>
-				<li role="none"><button role="menuitem">Action 2</button></li>
-				<li role="none"><button role="menuitem">Action 3</button></li>
-			</menu>
+			<div data-bs="overflow-scroll">
+				<menu role="menu">
+					<li role="none" data-bs="active"><button role="menuitem">Action 1</button></li>
+					<li role="none"><button role="menuitem">Action 2</button></li>
+					<li role="none"><button role="menuitem">Action 3</button></li>
+				</menu>
+			</div>
 
 			<p>With <code>data-bs="context"</code></p>
 			<menu role="menu" data-bs="context">
@@ -60,11 +62,13 @@
 			</div>
 
 			<p>With <code>data-bs="tab-bar"</code></p>
-			<menu role="menu" data-bs="tab-bar">
-				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-search);">Primary</button></li>
-				<li role="none" data-bs="active"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-email);">Secondary</button></li>
-				<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-date);">Tertiary</button></li>
-			</menu>
+			<div data-bs="overflow-scroll">
+				<menu role="menu" data-bs="tab-bar">
+					<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-search);">Primary</button></li>
+					<li role="none" data-bs="active"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-email);">Secondary</button></li>
+					<li role="none"><button role="menuitem" data-icon="block before" style="--icon:var(--icon-date);">Tertiary</button></li>
+				</menu>
+			</div>
 
 			<p>With <code>data-bs="list"</code></p>
 			<menu role="menu" data-bs="list">

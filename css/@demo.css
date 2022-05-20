@@ -1,3 +1,6 @@
+html, body {
+	overscroll-behavior: none;
+}
 main { padding-block-end: 2ch; }
 meter {
 	--meter-custom-bg:linear-gradient(90deg, 
@@ -16,5 +19,4 @@ meter {
 
 .row-full {
 	display: grid;
-	/* gap: 1.5ch; */
 }

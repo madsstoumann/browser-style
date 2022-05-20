@@ -17,6 +17,7 @@
 	color: var(--input-range-c, var(--accent-color, inherit));
 	font-size: 1.5rem;
 	margin-inline: 0;
+	overscroll-behavior: contain;
 	overflow: hidden;
 	touch-action: manipulation;
 	width: var(--input-range-w, 100%);

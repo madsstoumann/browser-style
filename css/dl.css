@@ -5,6 +5,8 @@
 	display: grid;
 	grid-template-columns: 1fr 2fr;
 }
+
+/* MODIFIERS */
 :where(dl[data-bs="table"] :is(dd,dt)) {
 	--dd-mis: 0;
 	border-block-end: var(--dl-table-bdw, 1px) solid var(--dl-table-bdc);

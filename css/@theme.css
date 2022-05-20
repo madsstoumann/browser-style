@@ -129,16 +129,11 @@
 :where([data-bs="overflow-scroll"]) {
 	max-inline-size: 100%;
 	overflow: auto;
-	position: relative;
 }
-:where([data-bs="overflow-scroll"]) >* {
-	background-image: linear-gradient(to right, transparent 75%, rgba(155, 255, 255, 1) 100%);
+/* :where([data-bs="overflow-scroll"]) >* {
+	background-image: linear-gradient(to right, transparent 75%, rgba(0, 0, 0, 1) 100%);
   background-attachment: fixed;
-	/* content: "";
-	inset: 0;
-  position: absolute;
-	transform: translateZ(0); */
-}
+} */
 
 
 :where(html) {
