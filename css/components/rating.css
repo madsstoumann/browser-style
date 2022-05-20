@@ -1,0 +1,36 @@
+[dir="rtl"] .bs-rating { --dir: left; }
+.bs-rating {
+	--input-range-w: calc(var(--symbolcount) * var(--symbolsize));
+	--thumb-height: var(--symbolsize);
+	--thumb-width: var(--symbolsize);
+	--track-height: var(--symbolsize);
+	--track-range: transparent;
+
+	--dir: right;
+	--fill: gold;
+	--fillbg: rgba(100, 100, 100, 0.15);
+	--symbol: var(--icon-star);
+	--symbolcount: 5;
+	--symbolsize: 3rem;
+
+	--_bgi: linear-gradient(to var(--dir), var(--fill) 0 var(--_x), var(--fillbg) 0 var(--_x));
+	--_mask: repeat left center/var(--symbolsize) var(--symbol);
+	--_x: calc(100% * (var(--value) / var(--symbolcount)));
+}
+.bs-rating::-moz-range-track {
+	background: var(--_bgi);
+	mask: var(--_mask);
+}
+.bs-rating::-webkit-slider-runnable-track {
+	background: var(--_bgi);
+	mask: var(--_mask);
+	-webkit-mask: var(--_mask);
+}
+.bs-rating::-moz-range-thumb { opacity: 0; }
+.bs-rating::-webkit-slider-thumb { opacity: 0; }
+
+/* MODIFIERS: */
+.bs-rating--hearts {
+	--symbol: var(--icon-heart);
+	--fill: #C8102E;
+}

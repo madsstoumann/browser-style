@@ -16,5 +16,5 @@ meter {
 
 .row-full {
 	display: grid;
-	gap: 1.5ch;
+	/* gap: 1.5ch; */
 }
