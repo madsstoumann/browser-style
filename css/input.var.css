@@ -1,0 +1,34 @@
+:where(label[data-bs~="floating"]) {
+	margin-block-end: 2ch;
+	position: relative;
+}
+
+:where(label[data-bs~="floating"] :is(small, span)) {
+	color: var(--placeholder-color);
+	pointer-events: none;
+	position: absolute;
+	transition: all .125s ease-in;
+}
+
+:where(label[data-bs~="floating"] > small) {
+	--icon:var(--icon-info);
+	display: flex;
+	margin-top: .25rem;
+	opacity: 0;
+	place-content: center;
+}
+
+:where(label[data-bs~="floating"] > span) {
+	display: inline-flex;
+	inset-inline-start: 0;
+	transform: translate(16px, 12px);
+}
+
+:where(label[data-bs~="floating"] :is(input, select, textarea)) { padding-block-start: calc(2 * var(--input-pb)); }
+:where(label[data-bs~="floating"] :is(input, select, textarea))::placeholder { color: transparent; }
+
+:where(label[data-bs~="floating"]):focus-within small { opacity: 1; }
+:where(label[data-bs~="floating"] :is(input, select, textarea):not(:placeholder-shown) + span),
+:where(label[data-bs~="floating"]):focus-within span {
+	transform: scale(0.75) translate(.25rem, .125rem);
+}

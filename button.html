@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: dummy</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: dummy">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>&lt;button&gt;: The Button element</h2>
+			<div class="row">
+				<button type="button">Normal Button</button>
+				<button type="submit">Submit Button</button>
+				<button type="reset">Reset Button</button>
+
+				<button type="button" data-bs="outline">Outline Button</button>
+				<button type="submit" data-bs="outline">Outline Submit</button>
+				<button type="reset" data-bs="outline">Outline Reset</button>
+
+				<button type="button" disabled>Disabled Button</button>
+				<button type="submit" disabled>Disabled Submit</button>
+				<button type="reset" disabled>Disabled Reset</button>
+
+				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
+				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
+				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
+			</div>
+
+			<p>Button only. Add <code>data-icon="center"</code> &mdash; and <code>aria-label</code> instead of inner text:</p>
+
+			<div class="row">
+				<button type="button" data-icon="center" style="--icon:var(--icon-download);" aria-label="Text"></button>
+				<button type="submit" data-icon="center" style="--icon:var(--icon-email);" aria-label="Text"></button>
+				<button type="reset" data-icon="center" style="--icon:var(--icon-cross);" aria-label="Text"></button>
+
+				<button type="button" data-bs="outline" data-icon="center" style="--icon:var(--icon-download);" aria-label="Text"></button>
+				<button type="submit" data-bs="outline" data-icon="center" style="--icon:var(--icon-email);" aria-label="Text"></button>
+				<button type="reset" data-bs="outline" data-icon="center" style="--icon:var(--icon-cross);" aria-label="Text"></button>
+			</div>
+
+			<p>A <code>&lt;button&gt;</code> inherits it's <code>font-size</code> from the parent-container, in this case set to <code>11px</code>:</p>
+
+			<div class="row" style="font-size:11px;">
+				<button type="button">Normal Button</button>
+				<button type="submit">Submit Button</button>
+				<button type="reset">Reset Button</button>
+
+				<button type="button" data-bs="outline">Outline Button</button>
+				<button type="submit" data-bs="outline">Outline Submit</button>
+				<button type="reset" data-bs="outline">Outline Reset</button>
+
+				<button type="button" disabled>Disabled Button</button>
+				<button type="submit" disabled>Disabled Submit</button>
+				<button type="reset" disabled>Disabled Reset</button>
+
+				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
+				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
+				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
+			</div>
+		</section>
+	</main>
+</body>
+</html>

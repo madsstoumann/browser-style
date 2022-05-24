@@ -1,6 +1,6 @@
 /* Based on: https://codepen.io/ShadowShahriar/pen/zYPPYrQ */
 
-:where(input[type="range"]:not([orient="vertical"])) {
+:where(input[type="range"]) {
 	--brightness-down: 80%;
 	--brightness-hover: 180%;
 	--box-fill: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0 100vmax currentColor;
@@ -14,6 +14,7 @@
 
 	appearance: none;
 	background: #fff0;
+	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	color: var(--input-range-c, var(--accent-color, inherit));
 	font-size: 1.5rem;
 	margin-inline: 0;
@@ -23,15 +24,14 @@
 	width: var(--input-range-w, 100%);
 }
 
-/* TODO! */
-input[type="range"][orient="vertical"] {
-	-webkit-appearance: slider-vertical;
+input[type="range"][data-bs="vertical-range"] {
+	transform: rotate(-90deg);
+	width: calc(100% - 3rem);
 }
 
 :where(input[type="range"]:active) { cursor: grabbing; }
 
 /* === WebKit specific styles === */
-:where(input[type="range"]),
 :where(input[type="range"])::-webkit-slider-runnable-track,
 :where(input[type="range"])::-webkit-slider-thumb {
 	-webkit-appearance: none;

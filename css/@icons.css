@@ -2,7 +2,7 @@
 	--icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
 	--icon-reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
 
-	--icon-alert: url('../svg/alert-circle.svg');
+	--icon-alert: url('../svg/alert-triangle.svg');
 	--icon-bitcoin: url('../svg/bitcoin.svg');
 	--icon-checkmark: url('../svg/check.svg');
 	--icon-chevron-down: url('../svg/chevron-down.svg');
@@ -14,6 +14,7 @@
 	--icon-email: url('../svg/email.svg');
 	--icon-external: url('../svg/external-link.svg');
 	--icon-ftp: url('../svg/file-download.svg');
+	--icon-info: url('../svg/info.svg');
 	--icon-message: url('../svg/message.svg');
 	--icon-minus: url('../svg/minus.svg');
 	--icon-month: url('../svg/week.svg');
@@ -23,6 +24,7 @@
 	--icon-plus: url('../svg/plus.svg');
 	--icon-search: url('../svg/search.svg');
 	--icon-skype: url('../svg/skype.svg');
+	--icon-text: url('../svg/text.svg');
 	--icon-time: url('../svg/time.svg');
 	--icon-url: url('../svg/link.svg');
 	--icon-week: url('../svg/week.svg');
@@ -33,6 +35,7 @@
 }
 
 :where([data-icon~="after"])::after,
+:where([data-icon~="center"])::after,
 :where([data-icon~="before"])::before {
 	background-color: currentColor;
 	block-size: var(--icon-sz, 1.25em);
@@ -46,6 +49,7 @@
 	-webkit-mask-image: var(--icon);
 }
 :where([data-icon~="after"])::after { --icon-mis: .75ch; }
+:where([data-icon~="center"])::after { --icon-mie: auto; --icon-mis: auto; }
 :where([data-icon~="before"])::before { --icon-mie: .75ch; }
 :where([data-icon~="block"])::after,
 :where([data-icon~="block"])::before {

@@ -28,6 +28,8 @@
 	background-repeat: no-repeat;
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	inline-size: var(--input-w, 100%);
+	margin-block: var(--input-mb, 0);
+	margin-inline: var(--input-mi, 0);
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
 	position: relative;
@@ -87,6 +89,7 @@
 }
 :where(input[type="search"][data-bs~="icon"]) { --input-bgi: var(--icon-search); }
 :where(input[type="tel"][data-bs~="icon"]) { --input-bgi: var(--icon-phone); }
+:where(input[type="text"][data-bs~="icon"]) { --input-bgi: var(--icon-text); }
 :where(input[type="time"]) { --input-bgi: var(--icon-time); }
 :where(input[type="url"][data-bs~="icon"]) { --input-bgi: var(--icon-url); }
 :where(input[type="week"]) { --input-bgi: var(--icon-week); }
@@ -111,7 +114,7 @@
 	padding-inline: calc(var(--input-icon-w) + var(--input-icon-pos) + var(--input-pi)) var(--input-pi);
 }
 
-/* Style/Hide shadowDOM elements */
+/* Style/Hide browser-specific shadowDOM elements */
 
 /* date, datetime-local, month, week  */
 :where(input:not([type="search"]))::-webkit-calendar-picker-indicator {
@@ -169,14 +172,21 @@
 
 /* Validation Patterns */
 input:required:not(:focus-visible):not(:placeholder-shown):invalid {
-	border-color: var(--color-danger);
-	box-shadow: var(--color-danger) 0 0 1px 1px inset;
+	--input-bdc: var(--color-danger);
+	--input-bgc: var(--input-invalid);
 }
 
 input[data-bs~="live"]:required:not(:placeholder-shown):invalid {
+	--input-bdc: var(--color-danger);
+	--input-bgc: var(--input-invalid);
 	--input-bgi: var(--icon-alert);
-	border-color: var(--color-danger);
-	box-shadow: var(--color-danger) 0 0 1px 1px inset;
+}
+
+input[data-bs~="live"]:required:not(:placeholder-shown):invalid ~ :is(span, small),
+input:required:not(:focus-visible):not(:placeholder-shown):invalid ~ :is(span, small) {
+	--icon: var(--icon-alert);
+	color: var(--color-danger);
+	opacity: 1;
 }
 
 input[data-bs~="valid"]:required:not(:placeholder-shown):valid {

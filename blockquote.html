@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: blockquote</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: blockquote">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/blockquote.css">
+	<link rel="stylesheet" href="css/blockquote.var.css">
+	<link rel="stylesheet" href="css/figure.css">
+	<link rel="stylesheet" href="css/components/avatar.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>&lt;blockquote&gt;: The Block Quotation element</h2>
+			<blockquote>
+				Say My Name
+			</blockquote>
+			<p>
+				<strong>Example with </strong> <code>&lt;q&gt;</code> <strong>and</strong> <code>&lt;cite&gt;</code>
+			</p>
+			<blockquote>
+				<q>Say My Name</q>
+				<cite>Heisenberg</cite>
+			</blockquote>
+			<h3>Variants</h3>
+			<p>
+				With <a href="avatar.html">Avatar</a> component:
+			</p>
+			<blockquote>
+				<figure class="bs-avatar">
+					<img src="/demo/avatar1.webp" width="100" height="100" alt="Avatar of unknown person" loading="lazy" decoding="async" />
+				</figure>
+				<q>What a great, life-changing product</q>
+					<cite>Eileen, Florida</cite>
+			</blockquote>
+			<p>
+				With <code>data-bs="big-quote breaker"</code>
+			</p>
+			<blockquote data-bs="big-quote breaker">
+				<q>I have a theory that you can make any sentence seem profound by writing the name of a dead philosopher at the end of it</q>
+				<cite>Plato</cite>
+			</blockquote>
+			<p>
+				With <code>data-bs="centered line breaker"</code>
+			</p>
+			<blockquote data-bs="centered line breaker">
+				<q>I have a theory that you can make any sentence seem profound by writing the name of a dead philosopher at the end of it</q>
+				<cite>Plato</cite>
+			</blockquote>
+		</section>
+	</main>
+</body>
+</html>

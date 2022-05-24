@@ -12,28 +12,35 @@
 	padding-block: var(--button-pb, 1.25ch);
 	padding-inline: var(--button-pi, 2.25ch);
 	text-underline-offset: var(--button-tuo, 4px);
-	transition: background-color 0.2s ease-in-out;
+	transition: background-color 0.3s ease-in-out;
 }
 
 :where(button[type="reset"]) {
 	--button-bgc: transparent;
-	--button-bdw: 0;
-	--button-c: var(--text-c);	 
+	--button-c: var(--text-c);
+	--outline-color: var(--button-c);
 }
 
 :where(button[type="submit"]) {
 	--button-bgc: var(--secondary-color);
 	--button-bgc-hover: var(--secondary-color-hover);
 	--button-c: var(--secondary-text-color);
+	--outline-color: var(--button-bgc);
 }
 
-/* Modifiers */
-:where(button[data-bs~="outline"]:not([type="reset"])) {
+/* Variations */
+:where(button[data-icon~="center"]) {
+	aspect-ratio: 1 / 1;
+	--button-bdrs: 50%;
+	--button-pi: 0;
+}
+:where(button[type="reset"][data-icon~="center"]) { --button-bgc: var(--gray-1); }
+
+:where(button[data-bs~="outline"]) {
 	--button-bdc: var(--button-bgc);
-	--button-c: var(--button-bgc);
 	background-color: transparent;
 }
-
+:where(button[type="button"][data-bs~="outline"]) { --button-c: var(--button-bgc); }
 :where(button[type="submit"][data-bs~="outline"]) { --button-c: var(--secondary-color); }
 
 @media (hover: hover) {

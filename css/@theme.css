@@ -91,6 +91,7 @@
 	--input-bgc: #FFF;
 	--input-fz: 1rem;
 	--input-gap: 0.25em;
+	--input-invalid: #fff2f4;
 	--input-pb: .75em;
 	--input-pi: .75em;
 	--input-thumb-h: 1.25em;
@@ -101,6 +102,8 @@
 	--outline-offset: 3px;
 	--outline-style: solid;
 	--outline-width: thin;
+
+	--placeholder-color: var(--gray-6);
 
 	--scrollbar-bdrs: 1.5em;
 	--scrollbar-bdw: 0.2em;
@@ -130,11 +133,19 @@
 	max-inline-size: 100%;
 	overflow: auto;
 }
+
 /* :where([data-bs="overflow-scroll"]) >* {
 	background-image: linear-gradient(to right, transparent 75%, rgba(0, 0, 0, 1) 100%);
   background-attachment: fixed;
 } */
 
+:where([data-bs~="text-overflow"]) {
+	display: block;
+	max-inline-size: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
 :where(html) {
   --ratio-square: 1;
@@ -146,3 +157,5 @@
   --ratio-universal: 2/1;
   --ratio-golden: 1.6180/1;
 }
+
+

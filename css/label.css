@@ -30,30 +30,17 @@
   inset-inline-end: 0;
 }
 
-
 /* Ticks for range */
 :where(label[data-bs*="ticks"]) {
 	--ticks-bdw: 1px;
 	--ticks-c: var(--ticks-bdc, var(--input-bdc));
 	--ticks-count: 6;
 	--ticks-h: 10px;
-	position: relative;
-}
-/* TODO! FIX, WHEN LABEL TEXT BREAKS TO 2 LINES */
-:where(label[data-bs*="ticks"])::after {
 	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));
 	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
-	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 50%;
+	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 100%;
 	background-repeat: repeat-x;
 	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
-	content: "";
-	display: block;
-	block-size: 100%;
-	inline-size: 100%;
-	inset-block-start: 50%;
-	inset-inline-start: 0;
-	position: absolute;
-	z-index: -1;
 }
 
 :where(label[data-bs*="3-ticks"]) { --ticks-count: 2; }
@@ -66,3 +53,11 @@
 :where(label[data-bs*="10-ticks"]) { --ticks-count: 9; }
 :where(label[data-bs*="11-ticks"]) { --ticks-count: 10; }
 :where(label[data-bs*="12-ticks"]) { --ticks-count: 11; }
+
+/* Vertical range */
+:where(label[data-bs~="vertical-range"]) { 
+	aspect-ratio: 1 / 1;
+	display: grid;
+	grid-template-rows: min-content 1fr min-content;
+	place-items: center;
+}

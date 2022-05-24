@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="css/details.css">
 	<link rel="stylesheet" href="css/fieldset.css">
 	<link rel="stylesheet" href="css/input.css">
+	<link rel="stylesheet" href="css/input.var.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -36,6 +37,7 @@
 
 		<h1>browser.style</h1>
 		<a href="/">Back to table of contents</a>
+
 		<hr />
 		<section id="fieldset">
 			<h2>&lt;fieldset&gt;: The Field Set element</h2>
@@ -165,11 +167,11 @@
 					<input type="range">
 				</label>
 
-				<label data-bs="ticks">Range with <code>data-bs="ticks"</code>
+				<label data-bs="ticks"><span data-bs="text-overflow">Range with <code>data-bs="ticks"</code> and a longer name that'll overflow</span>
 					<input type="range">
 				</label>
 
-				<label data-bs="5-ticks"><code>step="25" data-bs="5-ticks"</code>
+				<label data-bs="5-ticks"><span data-bs="text-overflow"><code>step="25" data-bs="5-ticks"</code></span>
 					<input type="range" step="25">
 				</label>
 
@@ -302,14 +304,14 @@
 		</section>
 
 		<hr />
-		<section id="input-pattern">
-			<h2>input patterns</h2>
+		<section id="validation">
+			<h2>validation patterns</h2>
 			<p><strong>Examples: </strong>Live validation, show checkmark when valid, validate when leaving field:</p>
 
 			<div class="row">
 				<label>First Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
 					<small>Minimum 4 chars. Example: <samp>Steven</samp></small>
-					<input type="text"  minlength="4" placeholder=" " pattern="\S+.*" required data-bs="live">
+					<input type="text" minlength="4" placeholder=" " pattern="\S+.*" required data-bs="live">
 				</label>
 
 				<label>Last Name<abbr title="Required field" data-tooltip="Required field">*</abbr>
@@ -326,13 +328,41 @@
 		</section>
 
 		<hr />
-		<section id="input-range-vertical">
-			<h2>vertical range</h2>
-			<p>Using the unofficial <code>orient="vertical"</code>-attribute (work-in-progress):</p>
+		<section id="input-variations">
+			<h2>variations</h2>
+			<p>With <code>data-bs="floating"</code> on the wrapping <code>&lt;label&gt;</code> and a different element-order:</p>
 
 			<div class="row">
-				<label>
-					<input type="range" orient="vertical">
+				<label data-bs="floating">
+					<input type="text" placeholder="Firstname" minlength="4" required data-bs="live">
+					<span>Firstname</span>
+					<small data-icon="before">Please type at least 4 letters</small>
+				</label>
+
+				<label data-bs="floating">
+					<input type="text" placeholder="Lastname" minlength="4" required data-bs="valid">
+					<span>Lastname</span>
+					<small data-icon="before">Please type at least 4 letters</small>
+				</label>
+
+				<label data-bs="floating">
+					<input type="text" placeholder="Address" minlength="4" required>
+					<span>Address</span>
+					<small data-icon="before">Please type at least 4 letters</small>
+				</label>
+			</div>
+		</section>
+
+		<hr />
+		<section id="input-range-vertical">
+			<h2>vertical range</h2>
+			<p>With <code>data-bs="vertical-range"</code> on both <code>&lt;label&gt;</code> and <code>&lt;input&gt;</code></p>
+
+			<div class="row">
+				<label data-bs="vertical-range">
+					<small>Max</small>
+					<input type="range" data-bs="vertical-range">
+					<small>Min</small>
 				</label>
 			</div>
 		</section>

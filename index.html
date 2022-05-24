@@ -18,7 +18,6 @@
 	<link rel="stylesheet" href="css/styles.css">
 	<link rel="stylesheet" href="css/@tooltip.css">
 	<link rel="stylesheet" href="css/address.css">
-	<link rel="stylesheet" href="css/blockquote.css">
 	<link rel="stylesheet" href="css/dl.css">
 	<link rel="stylesheet" href="css/meter.css">
 	<link rel="stylesheet" href="css/ol.css">
@@ -52,8 +51,8 @@
 		<ol>
 			<li><a href="#a">&lt;a&gt;</a></li>
 			<li><a href="#address">&lt;address&gt;</a></li>
-			<li><a href="#blockquote">&lt;blockquote&gt;</a></li>
-			<li><a href="#button">&lt;button&gt;</a></li>
+			<li><a href="/blockquote.html">&lt;blockquote&gt;</a></li>
+			<li><a href="/button.html">&lt;button&gt;</a></li>
 			<li><a href="/details.html">&lt;details&gt;</a></li>
 			<li><a href="#dialogtag">&lt;dialog&gt;</a></li>
 			<li><a href="#dl">&lt;dl&gt;</a></li>
@@ -122,77 +121,6 @@
 			</address>
 		</section>
 
-		<hr />
-		<section id="blockquote">
-			<h2>&lt;blockquote&gt;: The Block Quotation element</h2>
-			<blockquote>
-				Say My Name
-			</blockquote>
-			<p>
-				<strong>Example with </strong> <code>&lt;q&gt;</code> <strong>and</strong> <code>&lt;cite&gt;</code>
-			</p>
-			<blockquote>
-				<q>Say My Name</q>
-				<cite>Heisenberg</cite>
-			</blockquote>
-			<p>
-				With <code>data-bs="breaker big-quote"</code>
-			</p>
-			<blockquote data-bs="break bigquote">
-				<q>I have a theory that you can make any sentence seem profound by writing the name of a dead philosopher at the end of it</q>
-				<cite>Plato</cite>
-			</blockquote>
-			<p>
-				With <code>data-bs="breaker center lines"</code>
-			</p>
-			<blockquote data-bs="break center line">
-				<q>I have a theory that you can make any sentence seem profound by writing the name of a dead philosopher at the end of it</q>
-				<cite>Plato</cite>
-			</blockquote>
-		</section>
-
-		<hr />
-		<section id="button">
-			<h2>&lt;button&gt;: The Button element</h2>
-			<div class="row">
-				<button type="button">Normal Button</button>
-				<button type="submit">Submit Button</button>
-				<button type="reset">Reset Button</button>
-
-				<button type="button" data-bs="outline">Outline Button</button>
-				<button type="submit" data-bs="outline">Outline Submit</button>
-				<button type="reset" data-bs="outline">Outline Reset</button>
-
-				<button type="button" disabled>Disabled Button</button>
-				<button type="submit" disabled>Disabled Submit</button>
-				<button type="reset" disabled>Disabled Reset</button>
-
-				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
-				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
-				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
-			</div>
-
-			<p>A <code>&lt;button&gt;</code> inherits it's <code>font-size</code> from the parent-container, in this case set to <code>11px</code>:</p>
-
-			<div class="row" style="font-size:11px;">
-				<button type="button">Normal Button</button>
-				<button type="submit">Submit Button</button>
-				<button type="reset">Reset Button</button>
-
-				<button type="button" data-bs="outline">Outline Button</button>
-				<button type="submit" data-bs="outline">Outline Submit</button>
-				<button type="reset" data-bs="outline">Outline Reset</button>
-
-				<button type="button" disabled>Disabled Button</button>
-				<button type="submit" disabled>Disabled Submit</button>
-				<button type="reset" disabled>Disabled Reset</button>
-
-				<button type="button" data-icon="after" style="--icon:var(--icon-download);">Icon After</button>
-				<button type="submit" data-icon="before" style="--icon:var(--icon-email);">Icon Before</button>
-				<button type="reset" data-icon="after" style="--icon:var(--icon-reset);">Reset Button</button>
-			</div>
-		</section>
- 
 		<hr />
 		<section id="dialogtag">
 			<h2>&lt;dialog&gt;: The Dialog element</h2>
