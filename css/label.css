@@ -38,7 +38,7 @@
 	--ticks-h: 10px;
 	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));
 	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
-	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 100%;
+	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 85%;
 	background-repeat: repeat-x;
 	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
 }
