@@ -28,8 +28,6 @@
 	background-repeat: no-repeat;
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	inline-size: var(--input-w, 100%);
-	margin-block: var(--input-mb, 0);
-	margin-inline: var(--input-mi, 0);
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
 	position: relative;

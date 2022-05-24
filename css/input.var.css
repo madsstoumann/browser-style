@@ -21,7 +21,7 @@
 :where(label[data-bs~="floating"] > span) {
 	display: inline-flex;
 	inset-inline-start: 0;
-	transform: translate(16px, 12px);
+	transform: translate(1rem, 1rem);
 }
 
 :where(label[data-bs~="floating"] :is(input, select, textarea)) { padding-block-start: calc(2 * var(--input-pb)); }
@@ -30,5 +30,5 @@
 :where(label[data-bs~="floating"]):focus-within small { opacity: 1; }
 :where(label[data-bs~="floating"] :is(input, select, textarea):not(:placeholder-shown) + span),
 :where(label[data-bs~="floating"]):focus-within span {
-	transform: scale(0.75) translate(.25rem, .125rem);
+	transform: scale(0.75) translate(.25rem, .25rem);
 }
