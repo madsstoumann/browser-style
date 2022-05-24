@@ -3,7 +3,6 @@
 	--icon-reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
 
 	--icon-alert: url('../svg/alert-triangle.svg');
-	--icon-bitcoin: url('../svg/bitcoin.svg');
 	--icon-checkmark: url('../svg/check.svg');
 	--icon-chevron-down: url('../svg/chevron-down.svg');
 	--icon-chevron-right: url('../svg/chevron-right.svg');

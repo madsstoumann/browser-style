@@ -16,7 +16,6 @@
 
 :where(a[data-icon="after"])::after { --icon-mis: .125em; }
 :where(a[data-icon="before"])::before { --icon-mie: .125em; }
-:where(a[href^="bitcoin"]) { --icon: var(--icon-bitcoin); }
 :where(a[href^="ftp"]) { --icon: var(--icon-ftp); }
 :where(a[href^="mailto"]) { --icon: var(--icon-email); }
 :where(a[href^="skype"]) { --icon: var(--icon-skype); }
