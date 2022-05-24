@@ -11,7 +11,23 @@
 }
 :where(ol li a) { line-height: 2; } /* Ensure tap-target-size is large enough for links */
 
-/* Modifiers */
+/* Variants */
+:where(ol[data-bs~="breadcrumb"]) {
+
+	--ol-pis: 0;
+	align-items: center;
+	display: flex;
+	gap: 1ch;
+	white-space: nowrap;
+}
+:where(ol[data-bs~="breadcrumb"]) li { 
+	align-items: center;
+	display: flex;
+}
+
+:where(ol[data-bs~="breadcrumb"]) li::before { --icon: var(--icon-chevron-right); }
+:where(ol[data-bs~="breadcrumb"]) li:first-of-type::before { --icon: var(--icon-home); }
+
 :where(ol[data-bs~="circle"]) li::before { border-radius: 50%; }
 :where(ol[data-bs~="custom"]) { padding: unset; }
 :where(ol[data-bs~="custom"]) li::before {

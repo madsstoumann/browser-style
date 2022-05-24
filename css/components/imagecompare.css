@@ -1,4 +1,5 @@
 .bs-imagecompare > :is(img, input) {
+	block-size: 100%;
 	inset: 0;
 	position: absolute;
 }

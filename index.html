@@ -64,7 +64,7 @@
 			<li><a href="/form.html#input">&lt;input&gt;</a></li>
 			<li><a href="/menu.html">&lt;menu&gt;</a></li>
 			<li><a href="#meter">&lt;meter&gt;</a></li>
-			<li><a href="#ol">&lt;ol&gt;</a></li>
+			<li><a href="/ol.html">&lt;ol&gt;</a></li>
 			<li><a href="#pre">&lt;pre&gt;</a></li>
 			<li><a href="/progress.html">&lt;progress&gt;</a></li>
 			<li><a href="/table.html">&lt;table&gt;</a></li>
@@ -76,7 +76,8 @@
 		<strong>Components</strong>
 		<ol>
 			<li><a href="/avatar.html">Avatar</a></li>
-			<li><a href="/badges.html">Badges</a></li>
+			<li><a href="/badges.html">Badges (in progress)</a></li>
+			<li><a href="/ol.html#breadcrumb">Breadcrumb</a></li>
 			<li><a href="/imagecompare.html">Image Compare</a></li>
 			<li><a href="/rating.html">Rating</a></li>
 			
@@ -206,93 +207,6 @@
 					BMI
 					<meter low="0" high="100" max="100" value="100" data-bs="custom"></meter>
 				</label>
-			</div>
-		</section>
-
-		<hr />
-		<section id="ol">
-			<h2>&lt;ol&gt;: The Ordered List element</h2>
-			<p>The <code>type</code>-attribute can be set to <code>a</code> or <code>A</code> for letters, <code>i</code> or <code>I</code> for roman numerals, or <code>1</code> for numbers. <br />Custom counters are used, when <code>type</code> is not present</p>
-
-			<p><strong>Example: Table of content</strong></p>
-			<ol>
-				<li>Welcome to web school!</li>
-				<li>HTML
-					<ol>
-						<li>What are tags anyway?</li>
-						<li>The truth about DOM</li>
-					</ol>
-				</li>
-				<li>CSS
-					<ol>
-						<li>Wallpaper of the Web</li>
-						<li>Box Model Mayhem
-							<ol>
-								<li>Padding</li>
-								<li>Border</li>
-								<li>Margin</li>
-							</ol>
-						</li>
-						<li>Specificity as a service</li>
-					</ol>
-				</li>
-			</ol>
-
-			<div class="row">
-				<div>
-					<p><strong>Example: </strong><code>type="i"</code></p>
-					<ol type="i">
-						<li>Vanilla</li>
-						<li>Strawberry</li>
-						<li>Chocolate</li>
-					</ol>
-				</div>
-
-				<div>
-					<p><strong>Example: </strong><code>type="I" start="4"</code></p>
-					<ol type="I" start="4">
-						<li>Banana</li>
-						<li>Blueberry</li>
-						<li>Raspberry</li>
-					</ol>
-				</div>
-
-				<div>
-					<p><strong>Example: </strong><code>type="a"</code></p>
-					<ol type="a">
-						<li>Banana</li>
-						<li>Blueberry</li>
-						<li>Raspberry</li>
-					</ol>
-				</div>
-
-				<div>
-					<p><strong>Example: </strong><code>type="A" start="12"</code></p>
-					<ol type="A" start="12">
-						<li>Banana</li>
-						<li>Blueberry</li>
-						<li>Raspberry</li>
-					</ol>
-				</div>
-
-				<div>
-					<p><strong>Example: </strong><code>data-bs="custom"</code></p>
-					<ol data-bs="custom">
-						<li>First item</li>
-						<li>Second item</li>
-						<li>Third item</li>
-					</ol>
-				</div>
-		
-				<div>
-					<p><strong>Example: </strong><code>data-bs="custom circle"</code></p>
-					<ol data-bs="custom circle">
-						<li>First item</li>
-						<li>Second item</li>
-						<li>Third item</li>
-					</ol>
-				</div>
-
 			</div>
 		</section>
 
