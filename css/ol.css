@@ -13,7 +13,6 @@
 
 /* Variants */
 :where(ol[data-bs~="breadcrumb"]) {
-
 	--ol-pis: 0;
 	align-items: center;
 	display: flex;
@@ -24,7 +23,6 @@
 	align-items: center;
 	display: flex;
 }
-
 :where(ol[data-bs~="breadcrumb"]) li::before { --icon: var(--icon-chevron-right); }
 :where(ol[data-bs~="breadcrumb"]) li:first-of-type::before { --icon: var(--icon-home); }
 

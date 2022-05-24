@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: ul</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: ul">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/ul.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>&lt;ul&gt;: The Unordered List element</h2>
+			<div class="row">
+				<div>
+					<p>Default style</p>
+					<ul>
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="square"</code></p>
+					<ul data-bs="square">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="triangle"</code></p>
+					<ul data-bs="triangle">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="fisheye"</code></p>
+					<ul data-bs="fisheye">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="check"</code></p>
+					<ul data-bs="check">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="cross"</code></p>
+					<ul data-bs="cross">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+			</div>
+
+			<p>Using the <code>::marker</code>-pseudo-selector, list-items can be colored. Built-in colors are <code>success</code> and <code>danger</code></p>
+
+			<div class="row">
+				<div>
+					<p>With <code>data-bs="check success"</code></p>
+					<ul data-bs="check success">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+				<div>
+					<p>With <code>data-bs="cross danger"</code></p>
+					<ul data-bs="cross danger">
+						<li>Item 1</li>
+						<li>Item 2</li>
+						<li>Item 3</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+	</main>
+</body>
+</html>

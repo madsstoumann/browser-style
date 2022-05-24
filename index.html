@@ -22,8 +22,6 @@
 	<link rel="stylesheet" href="css/meter.css">
 	<link rel="stylesheet" href="css/ol.css">
 	<link rel="stylesheet" href="css/pre.css">
-	<link rel="stylesheet" href="css/ul.css">
-
 
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
@@ -68,7 +66,7 @@
 			<li><a href="#pre">&lt;pre&gt;</a></li>
 			<li><a href="/progress.html">&lt;progress&gt;</a></li>
 			<li><a href="/table.html">&lt;table&gt;</a></li>
-			<li><a href="#ul">&lt;ul&gt;</a></li>
+			<li><a href="/ul.html">&lt;ul&gt;</a></li>
 			<li><a href="/video.html">&lt;video&gt;</a></li>
 			<li><a href="#text">Inline text semantics</a></li>
 			<li><a href="/modifiers.html">Modifiers</a></li>
@@ -216,83 +214,6 @@
 			<pre><code>function helloWorld() {
 	return "Hello World!";
 }</code></pre>
-		</section>
-
-		<hr />
-		<section id="ul">
-			<h2>&lt;ul&gt;: The Unordered List element</h2>
-			<div class="row">
-				<div>
-					<p>Default style</p>
-					<ul>
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="square"</code></p>
-					<ul data-bs="square">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="triangle"</code></p>
-					<ul data-bs="triangle">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="fisheye"</code></p>
-					<ul data-bs="fisheye">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="check"</code></p>
-					<ul data-bs="check">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="cross"</code></p>
-					<ul data-bs="cross">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-			</div>
-
-			<p>Using the <code>::marker</code>-pseudo-selector, list-items can be colored. Built-in colors are <code>success</code> and <code>danger</code></p>
-
-			<div class="row">
-				<div>
-					<p>With <code>data-bs="check success"</code></p>
-					<ul data-bs="check success">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-				<div>
-					<p>With <code>data-bs="cross danger"</code></p>
-					<ul data-bs="cross danger">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
-			</div>
-
 		</section>
 
 		<hr />
