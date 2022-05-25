@@ -1,0 +1,1 @@
+dialogOpen.addEventListener('click', () => dialog.open = true);

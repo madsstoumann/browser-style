@@ -3,17 +3,16 @@
 <head>
 	<title>browser.style: rating</title>
 	<meta charset="UTF-8">
-	<link rel="preload" href="css/styles.css" as="style">
+	<link rel="preload" href="/css/styles.css" as="style">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="browser.style: rating">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
-	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
-	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-	<link rel="stylesheet" href="css/styles.css">
-	
-	<link rel="stylesheet" href="css/input.range.css">
-	<link rel="stylesheet" href="css/components/rating.css">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/input.range.css">
+	<link rel="stylesheet" href="/css/components/rating.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -28,7 +27,7 @@
 		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
 		style-src 'self' 'unsafe-inline';
 	">
-	<link rel="manifest" href="site.webmanifest">
+	<link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
 	<main>
@@ -45,6 +44,7 @@
 			<input type="range" max="5" step="0.25" value="2.25" class="bs-rating bs-rating--hearts" name="value" data-scope="self" aria-label="Rating from 1 to 5">
 		</section>
 	</main>
-	<script src="main.js" defer></script>
+	<script src="/main.js" defer></script>
+	<script src="/js/app.js" defer></script>
 </body>
 </html>

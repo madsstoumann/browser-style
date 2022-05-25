@@ -13,16 +13,9 @@
 
 	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
 	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
-	<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
-	<link rel="stylesheet" href="css/styles.css">
-	<link rel="stylesheet" href="css/@tooltip.css">
-	<link rel="stylesheet" href="css/address.css">
-	<link rel="stylesheet" href="css/dl.css">
-	<link rel="stylesheet" href="css/meter.css">
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">	
 	<link rel="stylesheet" href="css/ol.css">
-	<link rel="stylesheet" href="css/pre.css">
-
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -42,211 +35,71 @@
 <body>
 	<main>
 		<h1>browser.style</h1>
-		<p>Beautiful cross-browser-styles. Semantic HTML. No JavaScript required.</p>
+		<p>Beautiful cross-browser-styles. Semantic HTML. No JavaScript required, except for a few components.</p>
 		<p>Download and info at <a href="https://github.com/madsstoumann/browser-style" target="_blank" rel="noreferrer noopener">GitHub Repo</a></p>
 		<hr />
 		<strong>Tags</strong>
 		<ol>
-			<li><a href="#a">&lt;a&gt;</a></li>
-			<li><a href="#address">&lt;address&gt;</a></li>
-			<li><a href="/blockquote.html">&lt;blockquote&gt;</a></li>
-			<li><a href="/button.html">&lt;button&gt;</a></li>
-			<li><a href="/details.html">&lt;details&gt;</a></li>
-			<li><a href="#dialogtag">&lt;dialog&gt;</a></li>
-			<li><a href="#dl">&lt;dl&gt;</a></li>
-			<li><a href="/form.html#fieldset">&lt;fieldset&gt;</a></li>
-			<li><a href="#headings">&lt;h1-h6&gt;</a></li>
-			<li><a href="#hr">&lt;hr&gt;</a></li>	
-			<li><a href="/iframe.html">&lt;iframe&gt;</a></li>
-			<li><a href="/img.html">&lt;img&gt;</a></li>
-			<li><a href="/form.html#input">&lt;input&gt;</a></li>
-			<li><a href="/menu.html">&lt;menu&gt;</a></li>
-			<li><a href="#meter">&lt;meter&gt;</a></li>
-			<li><a href="/ol.html">&lt;ol&gt;</a></li>
-			<li><a href="#pre">&lt;pre&gt;</a></li>
-			<li><a href="/progress.html">&lt;progress&gt;</a></li>
-			<li><a href="/table.html">&lt;table&gt;</a></li>
-			<li><a href="/ul.html">&lt;ul&gt;</a></li>
-			<li><a href="/video.html">&lt;video&gt;</a></li>
-			<li><a href="#text">Inline text semantics</a></li>
-			<li><a href="/modifiers.html">Modifiers</a></li>
+			<li><a href="tags/a.html">&lt;a&gt;</a></li>
+			<li><a href="tags/text.html">&lt;abbr&gt;</a></li>
+			<li><a href="tags/address.html">&lt;address&gt;</a></li>
+			<li><a href="tags/text.html">&lt;b&gt;</a></li>
+			<li><a href="tags/blockquote.html">&lt;blockquote&gt;</a></li>
+			<li><a href="tags/button.html">&lt;button&gt;</a></li>
+			<li><a href="tags/text.html">&lt;code&gt;</a></li>
+			<li><a href="tags/form.html">&lt;datalist&gt;</a></li>
+			<li><a href="tags/text.html">&lt;del&gt;</a></li>
+			<li><a href="tags/details.html">&lt;details&gt;</a></li>
+			<li><a href="tags/text.html">&lt;dfn&gt;</a></li>
+			<li><a href="tags/dialog.html">&lt;dialog&gt;</a></li>
+			<li><a href="tags/dl.html">&lt;dl&gt;</a></li>
+			<li><a href="tags/text.html">&lt;em&gt;</a></li>
+			<li><a href="tags/form.html">&lt;fieldset&gt;</a></li>
+			<li><a href="tags/headings.html">&lt;h1-h6&gt;</a></li>
+			<li><a href="tags/hr.html">&lt;hr&gt;</a></li>
+			<li><a href="tags/text.html">&lt;i&gt;</a></li>
+			<li><a href="tags/iframe.html">&lt;iframe&gt;</a></li>
+			<li><a href="tags/img.html">&lt;img&gt;</a></li>
+			<li><a href="tags/text.html">&lt;ins&gt;</a></li>
+			<li><a href="tags/form.html">&lt;input&gt;</a></li>
+			<li><a href="tags/text.html">&lt;kbd&gt;</a></li>
+			<li><a href="tags/text.html">&lt;mark&gt;</a></li>
+			<li><a href="tags/menu.html">&lt;menu&gt;</a></li>
+			<li><a href="tags/meter.html">&lt;meter&gt;</a></li>
+			<li><a href="tags/ol.html">&lt;ol&gt;</a></li>
+			<li><a href="tags/pre.html">&lt;pre&gt;</a></li>
+			<li><a href="tags/progress.html">&lt;progress&gt;</a></li>
+			<li><a href="tags/text.html">&lt;s&gt;</a></li>
+			<li><a href="tags/text.html">&lt;samp&gt;</a></li>
+			<li><a href="tags/form.html">&lt;select&gt;</a></li>
+			<li><a href="tags/text.html">&lt;small&gt;</a></li>
+			<li><a href="tags/text.html">&lt;strong&gt;</a></li>
+			<li><a href="tags/text.html">&lt;sub&gt;</a></li>
+			<li><a href="tags/text.html">&lt;sup&gt;</a></li>
+			<li><a href="tags/table.html">&lt;table&gt;</a></li>
+			<li><a href="tags/form.html">&lt;textarea&gt;</a></li>
+			<li><a href="tags/text.html">&lt;time&gt;</a></li>
+			<li><a href="tags/text.html">&lt;u&gt;</a></li>
+			<li><a href="tags/ul.html">&lt;ul&gt;</a></li>
+			<li><a href="tags/text.html">&lt;var&gt;</a></li>
+			<li><a href="tags/video.html">&lt;video&gt;</a></li>
+			<li><a href="tags/text.html">&lt;wbr&gt;</a></li>
 		</ol>
-		<strong>Components</strong>
+		<strong>Components</strong>  (in progress)
 		<ol>
-			<li><a href="/avatar.html">Avatar</a></li>
-			<li><a href="/badges.html">Badges (in progress)</a></li>
-			<li><a href="/ol.html#breadcrumb">Breadcrumb</a></li>
-			<li><a href="/imagecompare.html">Image Compare</a></li>
-			<li><a href="/rating.html">Rating</a></li>
-			
+			<li><a href="components/avatar.html">Avatar</a></li>
+			<li><a href="components/badges.html">Badges</a></li>
+			<li><a href="tags/ol.html#breadcrumb">Breadcrumb</a></li>
+			<li><a href="components/card.html">Card</a></li>
+			<li><a href="components/imagecompare.html">Image Compare</a></li>
+			<li><a href="components/rating.html">Rating</a></li>
+		</ol>
+		<strong>Modifiers</strong>
+		<ol>
+			<li><a href="/modifiers.html">Modifiers</a></li>
 			<!-- <li><a href="/patterns.html">Patterns</a></li> -->
 		</ol>
-
-		<hr />
-		<section id="a">
-			<h2>&lt;a&gt;: The Anchor element</h2>
-			<div class="row">
-				<a href="#">Regular link</a>
-				<a href="mailto:me@me.com" data-icon="after">Email link</a>
-				<a href="tel:88776655" data-icon="after">Phone link</a>
-				<a href="sms:+4520701433" data-icon="after">Send me an SMS</a>
-				<a href="skype:echo123?call" data-icon="after">Skype Call</a>
-				<a href="ftp://xxx" data-icon="after">File Transfer Protocol</a>
-				<a href="webcal://xxx" data-icon="after">Webcal Link</a>
-				<a href="#" download="filename.txt" data-icon="after">Download link</a>
-				<a href="#" target="_blank" rel="noreferrer noopener" data-icon="after">Open in new window</a>
-			</div>
-			<p>The list of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler#permitted_schemes" target="_blank" rel="noreferrer noopener" data-icon="after">Permitted schemes</a> is very long. Icons have only been added to the most common types.</p>
-			<p>The links above use <code>data-icon="after"</code>, whereas the links below use <code>data-icon="before"</code></p>
-			<div class="row">
-				<a href="tel:88776655" data-icon="before">Phone link</a>
-				<a href="sms:+4520701433" data-icon="before">Send me an SMS</a>
-				<a href="skype:echo123?call" data-icon="before">Skype Call</a>
-			</div>
-		</section>
-
-		<hr />
-		<section id="address">
-			<h2>&lt;address&gt;: The Contact Address element</h2>
-			<address>
-				You can contact us at <a href="//browser.style">browser.style</a><br>
-				If you see any bugs, please <a href="mailto:info@browser.style">contact us</a>
-				<p><em>You may also want to visit us:</em></p>
-				Company Name<br>
-				555 Company Avenue<br>
-				Beverly Hills, CA 90210<br>
-				USA
-			</address>
-		</section>
-
-		<hr />
-		<section id="dialogtag">
-			<h2>&lt;dialog&gt;: The Dialog element</h2>
-			<p>It requires JavaScript to open a dialog, example <code>dialog.open=true</code></p>
-			<p><button type="button" id="dialogOpen">Open Dialog</button></p>
-			<dialog id="dialog">
-				<h3>This is a dialog!</h3>
-				<form method="dialog">
-					<button type="submit">OK</button>
-				</form>
-			</dialog>
-		</section>
-
-		<hr />
-		<section id="dl">
-			<h2>&lt;dl&gt;: The Description List element</h2>
-			<dl>
-				<dt>Chrome</dt>
-				<dd>Google Chrome is a cross-platform web browser developed by Google.</dd>
-				<dt>Edge</dt>
-				<dd>Microsoft Edge is a cross-platform web browser created and developed by Microsoft. </dd>
-				<dt>Firefox</dt>
-				<dd>Firefox is a free and open-source web browser developed by the Mozilla Foundation  and hundreds of volunteers.</dd>
-				<dt>Safari</dt>
-				<dd>Safari is a graphical web browser developed by Apple. It is primarily based on open-source software, and mainly WebKit.</dd>
-			</dl>
-			<hr data-bs="dashed" />
-			<p>With <code>data-bs="table"</code></p>
-			<dl data-bs="table">
-				<dt>Chrome</dt>
-				<dd>Google Chrome is a cross-platform web browser developed by Google.</dd>
-				<dt>Edge</dt>
-				<dd>Microsoft Edge is a cross-platform web browser created and developed by Microsoft. </dd>
-				<dt>Firefox</dt>
-				<dd>Firefox is a free and open-source web browser developed by the Mozilla Foundation  and hundreds of volunteers.</dd>
-				<dt>Safari</dt>
-				<dd>Safari is a graphical web browser developed by Apple. It is primarily based on open-source software, and mainly WebKit.</dd>
-			</dl>
-		</section>
-
-		<div id="headings">
-			<h2>&lt;h1&gt;&ndash;&lt;h6&gt;: The HTML Section Heading elements</h2>
-			<h1>The quick brown fox jumps over the lazy dog</h1>
-			<h2>The quick brown fox jumps over the lazy dog</h2>
-			<h3>The quick brown fox jumps over the lazy dog</h3>
-			<h4>The quick brown fox jumps over the lazy dog</h4>
-			<h5>The quick brown fox jumps over the lazy dog</h5>
-			<h6>The quick brown fox jumps over the lazy dog</h6>
-		</div>
-
-		<hr />
-		<section id="hr">
-			<h2>&lt;hr&gt;: The Thematic Break element</h2>
-			<p>Add <code>data-bs</code> with one of the following values: </p>
-			<p><code>dashed</code></p>
-			<hr data-bs="dashed" />
-			<p><code>dotted</code></p>
-			<hr data-bs="dotted" />
-			<p><code>fade</code></p>
-			<hr data-bs="fade" />
-			<p><strong>Default example:</strong></p>
-			<hr />
-		</section>
-
-		<section id="meter">
-			<h2>&lt;meter&gt;: The HTML Meter element</h2>
-			<div class="row">
-				<label>
-					even-less-good-value
-					<meter min="0" max="100" value="30" low="40" high="50" optimum="90"></meter>
-				</label>
-				<label>
-					suboptimum-value
-					<meter min="0" max="100" value="60" low="25" high="50" optimum="50"></meter>
-				</label>
-				<label>optimum-value
-					<meter min="0" max="100" value="90" low="25" high="50" optimum="80"></meter> 
-				</label>
-			</div>
-			<div class="row-full">
-				<p><strong>Custom meter</strong>. Set <code>value="100"</code> and <code>data-bs="custom"</code></p>
-				<label data-left-label="Underweight" data-right-label="Obese">
-					BMI
-					<meter low="0" high="100" max="100" value="100" data-bs="custom"></meter>
-				</label>
-			</div>
-		</section>
-
-		<hr />
-		<section id="pre">
-			<h2>&lt;pre&gt;: The Preformatted Text element</h2>
-			<pre><code>function helloWorld() {
-	return "Hello World!";
-}</code></pre>
-		</section>
-
-		<hr />
-		<section id="text">
-			<h2>Inline text semantics</h2>
-			<p>
-				When you write <code>code</code> in <del>Notepad</del> <ins>VS Code</ins>, you typically press <kbd>Ctrl</kbd> + <kbd>N</kbd> to start a <em>new project</em>, then open a <var>terminal</var> where you type <samp>git pull</samp>. 
-				<abbr title="Visual Studio Code" data-tooltip="Visual Studio Code">VS Code</abbr> has quickly become the <mark>most popular text editor for web developers</mark>. That's a <strong>bold</strong> statement.
-			</p>
-			<div class="row">
-				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation">Abbr.</abbr></p>
-				<p><strong>&lt;b&gt;:</strong> <b>Bring Attention</b></p>
-				<p><strong>&lt;code&gt;:</strong> <code>arr.forEach(item => ...</code></p>
-				<p><strong>&lt;del&gt;:</strong> <del>Deleted</del></p>
-				<p><strong>&lt;dfn&gt;:</strong> <dfn>Definition</dfn></p>
-				<p><strong>&lt;em&gt;:</strong> <em>Emphasized</em></p>
-				<p><strong>&lt;i&gt;:</strong> <em>Idiomatic Text</em></p>
-				<p><strong>&lt;ins&gt;:</strong> <ins>Inserted</ins></p>
-				<p><strong>&lt;kbd&gt;:</strong> <kbd>C</kbd> <kbd>O</kbd> <kbd>D</kbd> <kbd>E</kbd></p>
-				<p><strong>&lt;mark&gt;:</strong> <mark>Highlight</mark></p>
-				<p><strong>&lt;s&gt;:</strong> <s>Strikethrough</s></p>
-				<p><strong>&lt;samp&gt;:</strong> <samp>Sample Output</samp></p>
-				<p><strong>&lt;small&gt;:</strong> <small>Small</small></p>
-				<p><strong>&lt;strong&gt;:</strong> <strong>Bold</strong></p>
-				<p><strong>&lt;sub&gt;:</strong> Text<sub>Sub</sub></p>
-				<p><strong>&lt;sup&gt;:</strong> Text<sup>Sup</sup></p>
-				<p><strong>&lt;time&gt;:</strong> Start at <time datetime="2022-12-31">December <span>31st</span></time>.<br>Wrap a number in a <code>span</code>-tag, to use ordinal number-formatting.</p>
-				<p><strong>&lt;u&gt;:</strong> <u>Underline</u></p>
-				<p><strong>&lt;var&gt;:</strong> <var>Variable</var></p>
-				<p><strong>&lt;wbr&gt;:</strong> Fernstraßen<wbr>bau<wbr>privat<wbr>finanzierungs<wbr>gesetz</p>
-			</div>
-		</section>
 	</main>
-	<!-- https://www.srihash.org/ -->
 	<script src="main.js" defer></script>
 </body>
 </html>
