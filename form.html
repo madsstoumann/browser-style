@@ -16,6 +16,7 @@
 	<link rel="stylesheet" href="css/fieldset.css">
 	<link rel="stylesheet" href="css/input.css">
 	<link rel="stylesheet" href="css/input.var.css">
+	<link rel="stylesheet" href="css/pre.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -79,7 +80,7 @@
 						<input type="checkbox" checked>Accept terms and conditions
 					</label>
 					<label>
-						<input type="checkbox">Accept terms and conditions
+						<input type="checkbox" id="jsIndeterminate">Accept terms and conditions
 					</label>
 				</fieldset>
 
@@ -96,7 +97,7 @@
 				<fieldset data-bs="vertical nogroup">
 					<legend>With <code>data-bs="vertical nogroup"</code></legend>
 					<label>
-						<input type="radio" name="radio-3" value="1" checked>Option 1
+						<input type="radio" name="radio-3" value="1" >Option 1
 					</label>
 					<label>
 						<input type="radio" name="radio-3" value="2">Option 2
@@ -104,6 +105,9 @@
 				</fieldset>
 			</div>
 		</section>
+
+		<p>Some elements have <code>:indeterminate</code> styles. For checkboxes, this has to be set in JavaScript:</p>
+		<pre><code>elm.indeterminate = true;</code></pre>
 
 		<hr />
 		<section id="input">
@@ -366,7 +370,7 @@
 				</label>
 			</div>
 		</section>
-
+		<script src="js/form.js" defer></script>
 	</main>
 </body>
 </html>

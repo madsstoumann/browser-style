@@ -85,6 +85,9 @@
 	--input-bdw: var(--input-radio-bdw, .45em);
 	border-color: var(--accent-color);
 }
+:where(input:indeterminate) {
+	background: var(--gray-1) var(--icon-minus) center center no-repeat;
+}
 :where(input[type="search"][data-bs~="icon"]) { --input-bgi: var(--icon-search); }
 :where(input[type="tel"][data-bs~="icon"]) { --input-bgi: var(--icon-phone); }
 :where(input[type="text"][data-bs~="icon"]) { --input-bgi: var(--icon-text); }
