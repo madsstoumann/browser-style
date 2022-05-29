@@ -35,23 +35,29 @@
 		<hr />
 		<section>
 			<h2>&lt;details&gt;: The Details disclosure element</h2>
-
+			<p>Default: Block element, with <code>data-icon="start"</code></p>
 			<details>
-				<summary>Browser default</summary>
+				<summary data-icon="start">Read some details</summary>
 				<div>Lorem ipsum dolor</div>
 			</details>
 
-			<p><strong>Example, FAQ: </strong><code>data-bs="faq"</code></p>
+			<p>With <code>data-bs="inline"</code> and <code>data-icon="end"</code></p>
+			<details data-bs="inline">
+				<summary data-icon="end">Read some more details</summary>
+				<div>Lorem ipsum dolor</div>
+			</details>
 
-			<details data-bs="faq right">
-				<summary>Accordion Item 1</summary>
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq down"</code></p>
+
+			<details data-bs="faq down">
+				<summary data-icon="after">Accordion Item 1</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq right">
+			<details data-bs="faq down">
 				<summary>Accordion Item 2</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq right">
+			<details data-bs="faq down">
 				<summary>Accordion Item 3</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
@@ -70,22 +76,22 @@
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
 
-			<p><strong>Example, FAQ: </strong><code>data-bs="faq down"</code></p>
-			<details data-bs="faq down">
+			<p><strong>Example, FAQ: </strong><code>data-bs="faq right"</code></p>
+			<details data-bs="faq right">
 				<summary>Accordion Item 1</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq down">
+			<details data-bs="faq right">
 				<summary>Accordion Item 2</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
-			<details data-bs="faq down">
+			<details data-bs="faq right">
 				<summary>Accordion Item 3</summary>
 				<div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Temporibus non explicabo error quis magnam aperiam pariatur omnis mollitia aut officiis eligendi saepe obcaecati ullam, similique hic maxime possimus facilis eaque deleniti. Ad magnam, tempora similique repellendus, quibusdam odit, atque laboriosam officiis non maxime magni quas ut distinctio sunt quos expedita.</div>
 			</details>
 
-			<p><strong>Example, Toggle Tips: <code>data-bs="toggletip"</code></strong></p>
-			<details data-bs="toggletip">
+			<p><strong>Example, Toggle Tips: <code>data-bs="inline tip overlay"</code></strong></p>
+			<details data-bs="inline tip overlay">
 				<summary>
 					<span>Internet protocol suite</span>
 				</summary>
@@ -94,33 +100,33 @@
 				</div>
 			</details>
 			 to link devices worldwide. It is a <em>network of networks</em> that consists of private, public, academic, business, and government networks of local to global scope, linked by a broad array of electronic, 
-			 <details data-bs="toggletip">
+			 <details data-bs="inline tip overlay">
 				<summary><span>wireless</span></summary>
 				<div>
 					Wireless communication, or sometimes simply wireless, is the transfer of information or power between two or more points that are not connected by an electrical conductor. The most common wireless technologies use radio waves.
 			</div>
 			</details>, 
 			 and optical networking technologies. The Internet carries an extensive range of information resources and services, such as the inter-linked 
-			 <details data-bs="toggletip">
+			 <details data-bs="inline tip overlay">
 				<summary><span>hypertext</span></summary>
 				<div>
 					Hypertext is text displayed on a computer display or other electronic devices with references (hyperlinks) to other text that the reader can immediately access, or where text can be revealed progressively at multiple levels of detail.
 				</div>
 			</details> 
 			 documents and applications of the 
-			 <details data-bs="toggletip">
+			 <details data-bs="inline tip overlay">
 				<summary><span>World Wide Web (WWW)</span></summary>
 				<div>
 					The World Wide Web (abbreviated WWW or the Web) is an information space where documents and other web resources are identified by Uniform Resource Locators (URLs), interlinked by hypertext links, and can be accessed via the Internet. English scientist Tim Berners-Lee invented the World Wide Web in 1989.
 				</div>
 			</details>, 
-			<details data-bs="toggletip">
+			<details data-bs="inline tip overlay">
 				<summary><span>electronic mail</span></summary>
 				<div>
 					Electronic mail (email) is a method of exchanging messages between people using electronics. Email first entered substantial use in the 1960s and by the mid-1970s had taken the form now recognized as email. Email operates across computer networks, which today is primarily the Internet.
 				</div>
 			</details>, telephony, and 
-			<details data-bs="toggletip">
+			<details data-bs="inline tip overlay">
 				<summary><span>file sharing</span></summary>
 				<div>
 					File sharing is the practice of distributing or providing access to digital media, such as computer programs, multimedia (audio, images and video), documents or electronic books. File sharing may be achieved in a number of ways.

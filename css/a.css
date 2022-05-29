@@ -1,5 +1,5 @@
 :where(a) {
-	--a-icon-sz: 1.25em;
+	--icon-sz: 1.25em;
 	align-items: center;
 	background: var(--a-bgc,
 		linear-gradient(currentColor 0 0, currentColor 0 0) 
@@ -13,7 +13,6 @@
 }
 
 @media (hover: hover) { a:hover { --d: 100%; } }
-
 :where(a[data-icon="after"])::after { --icon-mis: .125em; }
 :where(a[data-icon="before"])::before { --icon-mie: .125em; }
 :where(a[href^="ftp"]) { --icon: var(--icon-ftp); }

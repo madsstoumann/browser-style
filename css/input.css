@@ -8,10 +8,6 @@
 	font-size: var(--input-fz, 1rem);
 }
 
-:where(input, select, summary, textarea):dir(rtl) { --icon-dir-pos: center left; }
-/* :where(input[data-bs~="start"]) { --icon-dir-pos: center left; } */
-:where(input[data-bs~="start"]):dir(rtl) { --icon-dir-pos: center right; }
-
 :where(input:not([type="file"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
 	--input-trs: .2s cubic-bezier(.1, 0, .9, 1);
 	border-color: var(--input-bdc);
@@ -21,20 +17,18 @@
 }
 
 :where(input:not([type="checkbox"]):not([type="file"]):not([type="radio"]):not([type="range"]), details[data-bs~="select"] summary, select, textarea) {
-	--icon-dir-pos: center right;
-	--input-icon-pos: var(--input-pi);
-	--input-icon-w: 1.5em;
+	--icon-mie: .75em;
+	--icon-mis: 1ch;
+	--icon-sz: 1.5em;
 	background-color: var(--input-bgc);
-	background-image: var(--input-bgi, none);
-	background-position: var(--icon-dir-pos) var(--input-icon-pos);
-	background-size: var(--input-icon-w) auto;
-	background-repeat: no-repeat;
 	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	inline-size: var(--input-w, 100%);
 	padding-block: var(--input-pb);
 	padding-inline: var(--input-pi);
 	position: relative;
 }
+
+:where(input:indeterminate) { background: var(--gray-1) var(--icon-minus) center center no-repeat; }
 
 /* Specific Types */
 :where(input[type="checkbox"], input[type="radio"]) {
@@ -77,27 +71,11 @@
 :where(input[type="color"]) { padding-inline: var(--input-pb); }
 :where(input[type="color"])::-webkit-color-swatch-wrapper { padding: 0; }
 :where(input[type="color"])::-webkit-color-swatch { border-radius: var(--input-bdrs); }
-:where(input[type="date"]),
-:where(input[type="datetime-local"]) { --input-bgi: var(--icon-date); }
-:where(input[type="email"][data-bs~="icon"]) { --input-bgi: var(--icon-email); }
-:where(input[type="month"]) { --input-bgi: var(--icon-month); }
-:where(input[type="number"][data-bs~="icon"]) { --input-bgi: var(--icon-number); }
-:where(input[type="password"][data-bs~="icon"]) { --input-bgi: var(--icon-password); }
 :where(input[type="radio"]) { border-radius: 50%; }
 :where(input[type="radio"]:checked) {
 	--input-bdw: var(--input-radio-bdw, .45em);
 	border-color: var(--accent-color);
 }
-:where(input:indeterminate) {
-	background: var(--gray-1) var(--icon-minus) center center no-repeat;
-}
-:where(input[type="search"][data-bs~="icon"]) { --input-bgi: var(--icon-search); }
-:where(input[type="tel"][data-bs~="icon"]) { --input-bgi: var(--icon-phone); }
-:where(input[type="text"][data-bs~="icon"]) { --input-bgi: var(--icon-text); }
-:where(input[type="time"]) { --input-bgi: var(--icon-time); }
-:where(input[type="url"][data-bs~="icon"]) { --input-bgi: var(--icon-url); }
-:where(input[type="week"]) { --input-bgi: var(--icon-week); }
-:where(select, details[data-bs~="select"] summary) { --input-bgi: var(--icon-chevron-down); color: currentColor; }
 :where(textarea) {
 	--textarea-sz: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
 	min-block-size: var(--textarea-sz);
@@ -105,28 +83,20 @@
 }
 :where(textarea[rows="4"]) { min-block-size: calc(2 * var(--textarea-sz)); }
 
+/* Select */
+:where(select) { --icon: var(--icon-chevron-down); }
+
 /* Icons */
-:where(input[data-bs~="icon"]),
-:where(input[type="date"]),
-:where(input[type="datetime-local"]),
-:where(input[type="month"]),
-:where(input[type="time"]),
-:where(input[type="week"]),
-:where(select) { padding-inline-end: calc(var(--input-icon-w) + var(--input-icon-pos)); }
-:where(input[data-bs~="start"]) {
-	--icon-dir-pos: center left;
-	background-position: var(--icon-dir-pos) var(--input-icon-pos);
-	padding-inline: calc(var(--input-icon-w) + var(--input-icon-pos) + var(--input-pi)) var(--input-pi);
-}
+:where(input[data-icon~="end"]) { padding-inline-end: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
+:where(input[data-icon~="start"]) { padding-inline-start: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
 
 /* Style/Hide browser-specific shadowDOM elements */
-
 /* date, datetime-local, month, week  */
 :where(input:not([type="search"]))::-webkit-calendar-picker-indicator {
 	opacity: 0;
-	block-size: var(--input-icon-w);
-	inline-size: var(--input-icon-w);
-	margin: var(--input-icon-pos) calc(var(--input-icon-w) * -1);
+	block-size: var(--icon-sz);
+	inline-size: var(--icon-sz);
+	margin: calc(var(--icon-sz) * -1);
 }
 
 /* File Button */
@@ -146,8 +116,8 @@
 :where(input[type="search"])::-webkit-list-button,
 :where(input[type="search"])::-webkit-calendar-picker-indicator {
 	background-color: #9e9e9e;
-	block-size: var(--input-icon-w);
-	inline-size: var(--input-icon-w);
+	block-size: var(--icon-sz);
+	inline-size: var(--icon-sz);
 	margin-block: 0;
 	margin-inline: 0 -0.75em;
 	mask-image: var(--icon-chevron-down);
@@ -160,8 +130,8 @@
 /* Search reset-button */
 :where(input[type="search"])::-webkit-search-cancel-button {
 	background-color: currentColor;
-	block-size: var(--input-icon-w);
-	inline-size: var(--input-icon-w);
+	block-size: var(--icon-sz);
+	inline-size: var(--icon-sz);
 	margin: 0;
 	mask-image: var(--icon-reset);
 	position: absolute;
@@ -171,9 +141,7 @@
 }
 
 /* Combination: Search reset-button AND datalist dropdown-button */
-:where(input[type="search"][list])::-webkit-search-cancel-button {
-	inset-inline-end: 2.5em;
-}
+:where(input[type="search"][list])::-webkit-search-cancel-button { inset-inline-end: 2.5em; }
 
 /* Validation Patterns */
 input:required:not(:focus-visible):not(:placeholder-shown):invalid {
@@ -184,7 +152,7 @@ input:required:not(:focus-visible):not(:placeholder-shown):invalid {
 input[data-bs~="live"]:required:not(:placeholder-shown):invalid {
 	--input-bdc: var(--color-danger);
 	--input-bgc: var(--input-invalid);
-	--input-bgi: var(--icon-alert);
+	--icon: var(--icon-alert);
 }
 
 input[data-bs~="live"]:required:not(:placeholder-shown):invalid ~ :is(span, small),
@@ -194,9 +162,7 @@ input:required:not(:focus-visible):not(:placeholder-shown):invalid ~ :is(span, s
 	opacity: 1;
 }
 
-input[data-bs~="valid"]:required:not(:placeholder-shown):valid {
-	--input-bgi: var(--icon-checkmark);
-}
+input[data-bs~="valid"]:required:not(:placeholder-shown):valid { --icon: var(--icon-checkmark); }
 
 /* Target Safari */
 @media not all and (min-resolution:.001dpcm) {

@@ -26,9 +26,42 @@
 }
 
 :where(figure:not([data-bs]) img[width]) {
-	/* aspect-ratio: attr(width) / attr(height); */
 	height: auto;
   width: 100%;
+
+	/* TDOO! UPDATE */
+
+	/*
+	:where(figure, picture) {
+	aspect-ratio: var(--asr, auto);
+	inline-size: 100%;
+	margin: var(--figure-m, unset);
+	position: relative;
+}
+
+:where(figcaption) {
+	color: var(--figcaption-c);
+	font-size: var(--figcaption-fz, 80%);
+	margin-block: var(--figcaption-mb, 1ch);
+}
+
+:where(:is(figure, picture) :is(div, img, video)) {
+	aspect-ratio: inherit;
+	block-size: 100%;
+	inline-size: 100%;
+	object-fit: cover;
+}
+
+:where(figure :is(iframe, lite-youtube)) {
+	block-size: 100%;
+	inline-size: 100%;
+}
+
+:where(figure img[width]) {
+	height: auto;
+  width: 100%;
+}
+	*/
 }
 
 /* aspect-ratio */

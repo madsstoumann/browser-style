@@ -11,7 +11,8 @@
 }
 
 :where(label[data-bs~="floating"] > small) {
-	--icon:var(--icon-info);
+	--icon: var(--icon-info);
+	--icon-sz: 1.35em;
 	display: flex;
 	margin-top: .25rem;
 	opacity: 0;

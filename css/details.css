@@ -1,10 +1,49 @@
-/* TODO! WORK-IN-PROGRESS */
-:where(details[data-bs] summary) { list-style-type: none; }
-:where(details[data-bs] summary)::-webkit-details-marker { display: none; }
-:where(details[data-bs] summary)::marker { display: none; }
+:where(details) {
+	--icon: var(--icon-triangle-right);
+	--_icon-open: var(--icon-triangle-down); 
+	--icon-mie: 0;
+	--icon-sz: 1.5em;
+	position: relative;
+}
+:where(summary) { 
+	align-items: center;
+	display: flex;
+	font-weight: var(--summary-fw, 500);
+	justify-content: var(--summary-jc, space-between);
+	list-style-type: none;
+}
+:where(summary)::-webkit-details-marker { display: none; }
+:where(summary)::marker { display: none; }
+:where(details[open] summary) { --icon: var(--_icon-open); }
+:where(details[open] summary + *) { padding-block-end: 2ch; }
+:where(summary[data-icon~="start"]) { padding-inline-start: var(--icon-sz); }
+:where(details[data-bs~="inline"]) { display: inline-flex;  }
+:where(details[data-bs~="inline"] summary[data-icon~="end"]) { padding-inline-end: var(--icon-sz); }
 
-/* Custom Select */
-:where(details[data-bs~="select"]) { position: relative; }
+:where(details[data-bs~="overlay"][open] summary)::before {
+	background: var(--_overlay-bgc, transparent);
+  content: "";
+  display: block;
+  inset: 0;
+  position: fixed;
+	z-index: 0;
+}
+
+/* Variants */
+:where(details[data-bs~="down"]) { --icon: var(--icon-chevron-down); --_icon-open: var(--icon-chevron-up); }
+
+/* FAQ */
+:where(details[data-bs~="faq"]) { --icon-sz: 2em; border-block-end: 1px solid var(--gray-4); }
+:where(details[data-bs~="faq"] summary) { padding-block: 1ch; }
+:where(details[data-bs~="faq"] summary:focus-visible) {
+	--outline-width: 0;
+	background-color: var(--gray-1);
+}
+:where(details[data-bs~="plus"]) { --icon: var(--icon-plus); --_icon-open: var(--icon-minus); }
+:where(details[data-bs~="right"]) { --icon: var(--icon-chevron-right); --_icon-open: var(--icon-chevron-down); }
+
+/* Custom Select, requires `<input>`-styles */
+:where(details[data-bs~="select"] summary) { --icon: var(--icon-chevron-down); }
 :where(details[data-bs~="select"] > summary + *) {
 	background-color: var(--input-bgc);
 	border-width: 0 1px 1px 1px;
@@ -27,95 +66,34 @@
 	padding-inline: var(--input-pi);
 }
 details[data-bs~="select"][open] > summary {
-	--input-bgi: var(--icon-chevron-up); 
+	--icon: var(--icon-chevron-up); 
 	border-block-end-width: 0;
 	border-end-start-radius: 0;
 	border-end-end-radius: 0;
 }
-:where(details[data-bs~="select"][open] summary)::before  {
-	background: rgba(0, 0, 0, 0);
-  content: "";
-  display: block;
-  inset: 0;
-  position: fixed;
-	z-index: 0;
-}
-
 @media (hover: hover) {
 	:where(details[data-bs~="select"] > summary + * > *:hover) {
 		background-color: var(--menu-item-hover-bgc, var(--gray-1));
 	}
 }
 
-
 /* Toggle Tip */
-:where(details[data-bs="toggletip"]) {
+:where(details[data-bs~="tip"]) {
+	--icon: unset;
+	--_icon-open: unset;
+	--_overlay-bgc: rgba(0, 0, 0, .2);
 	cursor: help;
-	display: inline;
-	position: relative;
 }
-
-:where(details[data-bs="toggletip"] summary) {
-	border-block-end: 2px dotted currentColor;
-}
-:where(details[data-bs="toggletip"][open] summary)::before {
-	background: rgba(0, 0, 0, .2);
-  content: "";
-  display: block;
-  inset: 0;
-  position: fixed;
-	z-index: 0;
-}
-
-:where(details[data-bs="toggletip"][open] summary + *) {
-	background-color: var(--toggletip-bgc, #fff);
-	border-radius: var(--toggletip-bdrs, .25em);
-	box-shadow: var(--toggletip-bxsh, 0 0 .25em rgba(0, 0, 0, .125));
-  font-size: var(--toggletip-fz, 80%);
+:where(details[data-bs~="tip"] summary) { border-block-end: 2px dotted currentColor; }
+:where(details[data-bs~="tip"][open] summary + *) {
+	background-color: var(--tip-bgc, #fff);
+	border-radius: var(--tip-bdrs, .25em);
+	box-shadow: var(--tip-bxsh, 0 0 .25em rgba(0, 0, 0, .125));
+  font-size: var(--tip-fz, 80%);
   margin: 0;
-  padding-block: var(--toggletip-pb, 1.25ch);
-  padding-inline: var(--toggletip-pi, 1.5ch 2ch);
+  padding-block: var(--tip-pb, 1.25ch);
+  padding-inline: var(--tip-pi, 1.5ch 2ch);
   position: absolute;
-  width: var(--toggletip-w, 12rem);
+  width: var(--tip-w, 12rem);
   z-index: 1;
-}
-
-/* FAQ */
-:where(details[data-bs~="faq"]) { border-block-end: 1px solid var(--gray-4); }
-:where(details[data-bs~="faq"] summary) {
-	align-items: center;
-	display: flex;
-	font-weight: 500;
-	justify-content: space-between;
-	padding-block: 1ch;
-}
-
-:where(details[data-bs~="faq"] summary)::after {
-	--input-icon-pos: var(--input-pi);
-	--input-icon-w: 2em;
-
-	background-color: var(--gray-7);
-	block-size: var(--input-icon-w);
-	content: "";
-	inline-size: var(--input-icon-w);
-	-webkit-mask: var(--faq-icon) center right / var(--input-icon-w) auto no-repeat;
-	mask: var(--faq-icon) center right / var(--input-icon-w) auto no-repeat;
-	transition: transform .2s ease-in-out;
-}
-:where(details[data-bs~="faq"] summary:focus-visible) {
-	--outline-width: 0;
-	background: var(--gray-1);
-}
-
-:where(details[data-bs~="down"] summary) { --faq-icon: var(--icon-chevron-down); }
-:where(details[data-bs~="down"][open] > summary)::after { transform: rotate(180deg); }
-
-:where(details[data-bs~="plus"] summary) { --faq-icon: var(--icon-plus); }
-:where(details[data-bs~="plus"][open] > summary)::after { --faq-icon: var(--icon-minus); }
-
-:where(details[data-bs~="right"] summary) { --faq-icon: var(--icon-chevron-right); }
-:where(details[data-bs~="right"][open] > summary)::after { transform: rotate(90deg); }
-
-:where(details[data-bs~="faq"][open] summary + *) {
-	padding-block-end: 2ch;
 }

@@ -21,6 +21,8 @@
 	--icon-number: url('../svg/numbers.svg');
 	--icon-password: url('../svg/lock.svg');
 	--icon-phone: url('../svg/phone.svg');
+	--icon-triangle-down: url('../svg/triangle-down.svg');
+	--icon-triangle-right: url('../svg/triangle-right.svg');
 	--icon-plus: url('../svg/plus.svg');
 	--icon-search: url('../svg/search.svg');
 	--icon-skype: url('../svg/skype.svg');
@@ -34,23 +36,55 @@
 	--icon-star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
 }
 
+[data-icon~="icon-chevron-down"] { --icon: var(--icon-chevron-down); }
+[data-icon~="icon-date"] { --icon: var(--icon-date); }
+[data-icon~="icon-email"] { --icon: var(--icon-email); }
+[data-icon~="icon-month"] { --icon: var(--icon-month); }
+[data-icon~="icon-number"] { --icon: var(--icon-number); }
+[data-icon~="icon-password"] { --icon: var(--icon-password); }
+[data-icon~="icon-phone"] { --icon: var(--icon-phone); }
+[data-icon~="icon-search"] { --icon: var(--icon-search); }
+[data-icon~="icon-text"] { --icon: var(--icon-text); }
+[data-icon~="icon-time"] { --icon: var(--icon-time); }
+[data-icon~="icon-week"] { --icon: var(--icon-week); }
+[data-icon~="icon-url"] { --icon: var(--icon-url); }
+
+/* Icon as `background-image`, either `start`or `end`*/
+:where([data-icon~="end"], [data-icon~="start"], input:required, select, summary) {
+	background-image: var(--icon, none);
+	background-size: var(--icon-sz) auto;
+	background-repeat: no-repeat;
+}
+/* TODO: CLEAN UP, are all selectors nessecary? */
+:where([data-icon~="end"], input:required, select, summary), :where([data-icon~="start"]):dir(rtl) { background-position: center right var(--icon-mie); }
+:where([data-icon~="start"]), :where([data-icon~="end"]):dir(rtl) { background-position: center left var(--icon-mie); }
+
+/* Icon as pseudo element `::after` or `::before`, using `mask-image` */
 :where([data-icon~="after"])::after,
-:where([data-icon~="center"])::after,
 :where([data-icon~="before"])::before {
 	background-color: currentColor;
-	block-size: var(--icon-sz, 1.25em);
+	block-size: var(--icon-sz);
 	content: "";
 	display: var(--icon-d, inline-block);
-	inline-size: var(--icon-sz, 1.25em);
+	inline-size: var(--icon-sz);
 	margin-block: var(--icon-mb, 0);
 	margin-inline-start: var(--icon-mis, 0);
 	margin-inline-end: var(--icon-mie, 0);
+
 	mask-image: var(--icon);
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: var(--icon-msz, 100%);
+
 	-webkit-mask-image: var(--icon);
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: var(--icon-msz, 100%);
 }
 :where([data-icon~="after"])::after { --icon-mis: .75ch; }
-:where([data-icon~="center"])::after { --icon-mie: auto; --icon-mis: auto; }
 :where([data-icon~="before"])::before { --icon-mie: .75ch; }
+:where([data-icon~="center"])::after,
+:where([data-icon~="center"])::before { --icon-mie: auto; --icon-mis: auto; }
 :where([data-icon~="block"])::after,
 :where([data-icon~="block"])::before {
 	--icon-d: block;
