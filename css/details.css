@@ -1,6 +1,6 @@
 :where(details) {
-	--icon: var(--icon-triangle-right);
-	--_icon-open: var(--icon-triangle-down); 
+	--icon: var(--icon-tri-right);
+	--_icon-open: var(--icon-tri-down); 
 	--icon-mie: 0;
 	--icon-sz: 1.5em;
 	position: relative;
