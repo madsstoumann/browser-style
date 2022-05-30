@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>icon</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="/css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: icon">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/input.css">
+	<link rel="stylesheet" href="/css/menu.css">
+	<link rel="stylesheet" href="/css/ul.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>Icon</h2>
+			<p>
+				Icons can be used everywhere, using the <code>data-icon</code>-attribute.<br />
+				Depending on specific keywords, you can control the icon's position, and whether the icon should be a pseudo-element, a <code>background-image</code> or rendered inline.
+			</p>
+			<hr />
+			<p><code>data-icon="before"</code> and <code>data-icon="after"</code> creates pseudo-elements with <code>mask-image</code>:</p>
+
+			<div class="row">
+				<button type="button" data-icon="after icon-phone">Icon After</button>
+				<button type="submit" data-icon="before icon-email">Icon Before</button>
+				<button type="reset" data-icon="after icon-reset">Reset Button</button>
+			</div>
+
+			<div class="row">
+				<a href="mailto:me@me.com" data-icon="after">Email link</a>
+				<a href="tel:88776655" data-icon="after">Phone link</a>
+				<a href="sms:+4520701433" data-icon="before">Send me an SMS</a>
+			</div>
+
+			<hr />
+			<p><code>data-icon="center"</code> sets the inline margin to <code>auto</code> and can be used in <strong>combination</strong> with <em>after</em> or <em>before</em>, as in <code>data-icon="after center"</code>:</p>
+
+			<div class="row">
+				<button type="button" data-icon="after center icon-phone" aria-label="Icon Center"></button>
+				<button type="submit" data-icon="after center icon-email" aria-label="Icon Center"></button>
+				<button type="reset" data-icon="after center icon-cross scale-lg" aria-label="Icon Center"></button>
+			</div>
+
+			<hr />
+			<p><code>data-icon="block"</code> sets the icon-pseudo-element to <code>display:block</code> and can be used in <strong>combination</strong> with <em>after</em> or <em>before</em>, as in <code>data-icon="block before"</code>:</p>
+
+			<div data-bs="overflow-scroll">
+				<menu role="menu" data-bs="tab-bar">
+					<li role="none"><button role="menuitem" data-icon="lg block before icon-search">Primary</button></li>
+					<li role="none" data-bs="active"><button role="menuitem" data-icon="lg block before icon-email">Secondary</button></li>
+					<li role="none"><button role="menuitem" data-icon="lg block before icon-date">Tertiary</button></li>
+				</menu>
+			</div>
+
+			<p>Example with <code>data-icon="block after"</code>:</p>
+
+			<div data-bs="overflow-scroll">
+				<menu role="menu" data-bs="tab-bar">
+					<li role="none"><button role="menuitem" data-icon="lg block after icon-search">Primary</button></li>
+					<li role="none" data-bs="active"><button role="menuitem" data-icon="lg block after icon-email">Secondary</button></li>
+					<li role="none"><button role="menuitem" data-icon="lg block after icon-date">Tertiary</button></li>
+				</menu>
+			</div>
+
+			<hr />
+			<p><code>data-icon="start"</code> and <code>data-icon="end"</code> adds the icon as a <code>background-image</code>, positioned <em>center left</em>, when using <code>data-icon="start"</code>, and <em>center right</em>, when using <code>data-icon="end"</code>.</p>
+
+			<div class="row">
+				<label>Search
+					<input type="search" data-icon="icon-search start">
+				</label>
+
+				<label>Telephone
+					<input type="tel" data-icon="icon-phone end">
+				</label>
+
+				<label>Text
+					<input type="text" placeholder="Placeholder text" data-icon="icon-text end">
+				</label>
+			</div>
+
+			<hr />
+			<p><code>data-icon="inline"</code> wraps an inline <em>svg</em>-file</p>
+
+			<div data-icon="inline">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="#9e9e9e" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<rect x="3" y="5" width="18" height="14" rx="2" />
+					<polyline points="3 7 12 13 21 7" />
+				</svg>
+			</div>
+
+			<p>Example with <code>data-icon="inline"</code> and <code>&lt;img&gt;</code>:</p>
+
+			<div data-icon="inline">
+				<img src="/svg/email.svg" alt="Email icon" />
+			</div>
+
+			<p>You can also use <code>&lt;object data="/path-to-svg"&gt;"</code>.</p>
+
+			<hr />
+			<h3>Icon sizes</h3>
+			<p>The default icon-size is <code>1.5em</code>, but this is updated through the CSS prop <code>--icon-sz</code> for the various combinations.<br />
+				Additionally, the following <em>size keywords</em> can set the size, as in <code>data-icon="sm"</code>:
+
+			<ul>
+				<li>xs</li>
+				<li>sm</li>
+				<li>md</li>
+				<li>lg</li>
+				<li>xl</li>
+				<li>xxl</li>
+			</ul>
+
+			<div data-icon="inline xs"><img src="/svg/email.svg" alt="Email icon" /></div>
+			<div data-icon="inline sm"><img src="/svg/email.svg" alt="Email icon" /></div>
+			<div data-icon="inline md"><img src="/svg/email.svg" alt="Email icon" /></div>
+			<div data-icon="inline lg"><img src="/svg/email.svg" alt="Email icon" /></div>
+			<div data-icon="inline xl"><img src="/svg/email.svg" alt="Email icon" /></div>
+			<div data-icon="inline xxl"><img src="/svg/email.svg" alt="Email icon" /></div>
+
+			<p>You can also <code>transform:scale</code> icons, using the <code>scale-</code> prefix, eg. <code>data-icon="scale-xs"</code></p>
+
+			<div class="icon-scale">
+				<div data-icon="inline scale-xs"><img src="/svg/email.svg" alt="Email icon" /></div>
+				<div data-icon="inline scale-sm"><img src="/svg/email.svg" alt="Email icon" /></div>
+				<div data-icon="inline scale-md"><img src="/svg/email.svg" alt="Email icon" /></div>
+				<div data-icon="inline scale-lg"><img src="/svg/email.svg" alt="Email icon" /></div>
+				<div data-icon="inline scale-xl"><img src="/svg/email.svg" alt="Email icon" /></div>
+				<div data-icon="inline scale-xxl"><img src="/svg/email.svg" alt="Email icon" /></div>
+			</div>
+
+			<p>Using <em>scale</em> prevents the parent-element from growing/shrinking, as shown here:</p>
+
+			<div class="row">
+				<button type="button" data-icon="after center icon-email" aria-label="Icon Center"></button>
+				<button type="button" data-icon="scale-lg after center icon-email" aria-label="Icon Center"></button>
+				<button type="button" data-icon="scale-xl after center icon-email" aria-label="Icon Center"></button>
+			</div>
+
+			<hr />
+			<h3>Icon keywords</h3>
+			<ul data-bs="flex">
+				<li data-icon="before icon-up">icon-up</li>
+				<li data-icon="before icon-down">icon-down</li>
+				<li data-icon="before icon-left">icon-left</li>
+				<li data-icon="before icon-right">icon-right</li>
+				<li data-icon="before icon-alert">icon-alert</li>
+				<li data-icon="before icon-checkmark">icon-checkmark</li>
+				<li data-icon="before icon-cross">icon-cross</li>
+				<li data-icon="before icon-date">icon-date</li>
+				<li data-icon="before icon-download">icon-download</li>
+				<li data-icon="before icon-email">icon-email</li>
+				<li data-icon="before icon-external">icon-external</li>
+				<li data-icon="before icon-heart">icon-heart</li>
+				<li data-icon="before icon-home">icon-home</li>
+				<li data-icon="before icon-info">icon-info</li>
+				<li data-icon="before icon-message">icon-message</li>
+				<li data-icon="before icon-minus">icon-minus</li>
+				<li data-icon="before icon-month">icon-month</li>
+				<li data-icon="before icon-number">icon-number</li>
+				<li data-icon="before icon-password">icon-password</li>
+				<li data-icon="before icon-phone">icon-phone</li>
+				<li data-icon="before icon-plus">icon-plus</li>
+				<li data-icon="before icon-reset">icon-reset</li>
+				<li data-icon="before icon-search">icon-search</li>
+				<li data-icon="before icon-star">icon-star</li>
+				<li data-icon="before icon-text">icon-text</li>
+				<li data-icon="before icon-time">icon-time</li>
+				<li data-icon="before icon-tri-down">icon-tri-down</li>
+				<li data-icon="before icon-tri-right">icon-tri-right</li>
+				<li data-icon="before icon-week">icon-week</li>
+				<li data-icon="before icon-url">icon-url</li>
+			</ul>
+
+		</section>
+	</main>
+	<script src="/main.js" defer></script>
+</body>
+</html>

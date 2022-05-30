@@ -42,7 +42,7 @@
 	vertical-align: text-top;
 }
 :where(input[type="checkbox"]:not([role="switch"]):checked) {
-	background: var(--accent-color) var(--icon-check) center center no-repeat;
+	background: var(--accent-color) var(--icon-checkbox) center center no-repeat;
 	background-size: 1em;
 	border-color: var(--accent-color);
 }

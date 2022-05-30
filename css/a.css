@@ -15,9 +15,7 @@
 @media (hover: hover) { a:hover { --d: 100%; } }
 :where(a[data-icon="after"])::after { --icon-mis: .125em; }
 :where(a[data-icon="before"])::before { --icon-mie: .125em; }
-:where(a[href^="ftp"]) { --icon: var(--icon-ftp); }
 :where(a[href^="mailto"]) { --icon: var(--icon-email); }
-:where(a[href^="skype"]) { --icon: var(--icon-skype); }
 :where(a[href^="sms"]) { --icon: var(--icon-message); }
 :where(a[href^="tel"]) { --icon: var(--icon-phone); }
 :where(a[href^="webcal"]) { --icon: var(--icon-date); }

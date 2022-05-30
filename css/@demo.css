@@ -10,11 +10,30 @@ meter {
 	#fc8711 0 80%,
 	#cc1100 0 100%);
 }
+.icon-scale {
+	display: grid;
+	gap: 1em;
+	row-gap: 4ch;
+	grid-template-columns:  repeat(auto-fill, minmax(100px, 1fr));
+	margin-block: 5ch;	
+}
+.icon-scale [data-icon] {
+	aspect-ratio: 1 / 1;
+	background-color: var(--gray-1);
+	border: 1px dotted var(--gray-4);
+	width: 100%:
+}
+
 .row {
+	align-items: start;
 	display: grid;
 	gap: 1.5ch;
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 	justify-items: left;
+}
+
+.row + .row {
+	margin-top: 2ch;
 }
 
 .row-full {

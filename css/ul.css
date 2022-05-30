@@ -1,6 +1,8 @@
 :where(ul[data-bs~="check"]) { list-style-type: ' ✓ '; }
 :where(ul[data-bs~="cross"]) { list-style-type: ' ✕ '; }
 :where(ul[data-bs~="fisheye"]) { list-style-type: ' ⦿ '; }
+:where(ul[data-bs~="flex"]) { list-style-type: none; padding-inline: unset; }
+:where(ul[data-bs~="flex"] li) { display: flex; }
 :where(ul[data-bs~="square"]) { list-style-type: square; }
 :where(ul[data-bs~="triangle"]) { list-style-type: disclosure-closed; }
 
