@@ -72,9 +72,8 @@
 	background-size: var(--icon-sz, 1.5em) auto;
 	background-repeat: no-repeat;
 }
-/* TODO: CLEAN UP, are all selectors nessecary? */
-:where([data-icon~="end"], select, summary), :where([data-icon~="start"]):dir(rtl) { background-position: center right var(--icon-mie); }
-:where([data-icon~="start"]), :where([data-icon~="end"]):dir(rtl) { background-position: center left var(--icon-mie); }
+:where([data-icon~="end"], select, summary), :where([dir="rtl"] [data-icon~="start"]) { background-position: center right var(--icon-mie); }
+:where([data-icon~="start"]), :where([dir="rtl"] [data-icon~="end"]) { background-position: center left var(--icon-mie); }
 
 /* Icon as pseudo element `::after` or `::before`, using `mask-image` */
 :where([data-icon~="after"])::after,
