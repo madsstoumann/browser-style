@@ -1,0 +1,1 @@
+// exampleportal.activate()

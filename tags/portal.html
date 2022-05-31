@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>&lt;portal&gt;</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="/css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: portal">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/portal.css">
+	<link rel="stylesheet" href="/css/pre.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src 'self' www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1>browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>&lt;portal&gt;: The Portal element</h2>
+			<p>
+				Go to <strong>chrome://flags</strong> and chose <em>Enable</em> under <strong>Enable Portals</strong><br />
+				If you're using a CSP, add <code>'self'</code> under <code>frame-src</code><br />
+				For more information on usage, <a href="https://github.com/WICG/portals" rel="noopener noreferrer" target="_blank" data-icon="after">see the spec</a>.
+			</p>
+
+			<div class="row">
+				<portal id="exampleportal1" src="/components/avatar.html"></portal>
+				<portal id="exampleportal2" src="/components/imagecompare.html"></portal>
+				<portal id="exampleportal3" src="/components/rating.html"></portal>
+			</div>
+
+			<p>Dummy-code, using the animation API to transition to the portal:</p>
+			<pre><code>document.querySelectorAll('portal').forEach(portal => portal.addEventListener('click', event => {
+	event.preventDefault();
+	portal.style = 'position: fixed; inset: 0; block-size: 1vw; inline-size: 1vh; overflow: hidden;';
+	portal.animate([
+		{
+			height: '100vh',
+			width: '100vw'
+		}], 
+		{
+			duration: 500,
+			fill: 'forwards'
+		}).finished;
+		setTimeout(() => { portal.activate() }, 600);
+}));</code></pre>
+		</section>
+	</main>
+	<script src="/main.js" defer></script>
+	<script src="/assets/js/portal.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+:where(portal) {
+	border-color: var(--portal-bdc, var(--gray-6));
+	border-style: var(--portal-bds, dotted);
+	border-width: var(--portal-bdw, 1px);
+	block-size: var(--portal-h, 30rem);
+	inline-size: var(--portal-w, 100%);
+}
