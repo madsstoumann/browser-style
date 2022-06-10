@@ -83,7 +83,9 @@
 	min-block-size: var(--textarea-sz);
 	resize: vertical;
 }
-:where(textarea[rows="4"]) { min-block-size: calc(2 * var(--textarea-sz)); }
+:where(textarea[rows="2"]) { min-block-size: calc(2 * var(--_h)); }
+:where(textarea[rows="3"]) { min-block-size: calc(3 * var(--_h)); }
+:where(textarea[rows="4"]) { min-block-size: calc(4 * var(--_h)); }
 
 /* Select */
 :where(select:not([size])) { --icon: var(--icon-chevron-down); }
@@ -104,12 +106,13 @@
 	z-index: 1;
 }
 :where(option) { padding-block-start: 1em; }
+:where(option:checked) { --icon: var(--icon-checkmark); background-color: var(--gray-1); }
 :where(option:not(:last-of-type)) { border-block-end: 1px solid var(--input-bdc); }
 /* :where(option[selected]) { background-color: var(--accent-color); color: var(--accent-text-color); } */
 
 /* Icons */
-:where(input[data-icon~="end"]) { padding-inline-end: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
-:where(input[data-icon~="start"]) { padding-inline-start: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
+:where([data-icon~="end"]) { padding-inline-end: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
+:where([data-icon~="start"]) { padding-inline-start: calc(var(--icon-sz) + calc(var(--icon-mie) + var(--icon-mis))); }
 
 /* Style/Hide browser-specific shadowDOM elements */
 /* date, datetime-local, month, week  */
