@@ -1,20 +1,18 @@
 :where(fieldset) {
-	border-color: var(--input-bdc);
-	border-radius: var(--input-bdrs);
-	border-style: var(--input-bds);
-	border-width: var(--input-bdw);
+	border-color: var(--fieldset-bdc, var(--input-bdc));
+	border-radius: var(--fieldset-bdrs, var(--input-bdrs));
+	border-style: var(--fieldset-bds, var(--input-bds));
+	border-width: var(--fieldset-bdw, var(--input-bdw));
 	display: flex;
-	gap: var(--input-gap);
+	gap: var(--fieldset-gap, var(--input-gap));
 	inline-size: 100%;
 	margin: unset;
-	padding-block: var(--input-pb);
-	padding-inline: var(--input-pi);
+	padding-block: var(--fieldset-pb, var(--input-pb));
+	padding-inline: var(--fieldset-pi, var(--input-pi));
 }
 
-:where(legend) {
-	inline-size: max-content;
-}
-:where(fieldset[data-bs~="nogroup"]) {
+:where(legend) { inline-size: max-content; }
+:where(fieldset[data-bs~="no-border"]) {
 	border: 0;
 	padding: unset;
 }
@@ -24,3 +22,35 @@
 	gap: calc(2 * var(--input-gap));
 	padding-block-start: calc(2 * var(--input-gap));
 }
+
+
+:where(fieldset[data-bs*="button-group"]) {
+	--fieldset-bdc: var(--accent-color);
+	--fieldset-bdw: 2px;
+	--fieldset-gap: 0px;
+	--fieldset-pb: 0px;
+	--fieldset-pi: 0px;
+	position: relative;
+}
+:where(fieldset[data-bs*="button-group"] label:not(:last-of-type) > span) {
+	border-inline-end: var(--button-group-bdi, var(--fieldset-bdw) var(--fieldset-bds, solid) var(--fieldset-bdc));
+}
+:where(fieldset[data-bs*="button-group"] span) {
+	border-radius: inherit;
+	display: inline-flex;
+	inline-size: 100%;
+	justify-content: center;
+	padding-block: var(--button-group-pb, calc(var(--input-pb) - (var(--fieldset-bdw) / 2)));
+}
+:where(fieldset[data-bs*="button-group"] [type="radio"]:checked + span) {
+	background: var(--accent-color);
+	color: var(--accent-text-color);
+}
+:where(fieldset[data-bs~="button-group-toggle"]) {
+	--button-group-bdi: 0px;
+	--button-group-pb: .33em;
+	--fieldset-bdrs: 2.5em;
+	--fieldset-pb: 3px;
+	--fieldset-pi: 3px;
+}
+:where(fieldset[data-bs*="button-group-toggle"] label) { border-radius: inherit; }

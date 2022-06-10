@@ -20,7 +20,8 @@
 	object-fit: cover;
 }
 
-:where(figure[data-bs] iframe, figure[data-bs] lite-youtube) {
+/* FIX: MOVE ASPECT-RATIO to @ratio.css */
+:where(figure[data-bs] iframe, figure[data-bs] lite-youtube, you-tube) {
 	block-size: 100%;
 	inline-size: 100%;
 }

@@ -35,7 +35,7 @@
 		<hr />
 		<section>
 			<h2>&lt;ol&gt;: The Ordered List element</h2>
-			<p>The <code>type</code>-attribute can be set to <code>a</code> or <code>A</code> for letters, <code>i</code> or <code>I</code> for roman numerals, or <code>1</code> for numbers. <br />Custom counters are used, when <code>type</code> is not present</p>
+			<p>The <code>type</code>-attribute can be set to <code>a</code> or <code>A</code> for letters, <code>i</code> or <code>I</code> for roman numerals, or <code>1</code> for numbers. <br />custom-numbers counters are used, when <code>type</code> is not present</p>
 			<p><strong>Example: Table of content</strong></p>
 			<ol>
 				<li>Welcome to web school!</li>
@@ -97,37 +97,67 @@
 
 			<hr />
 			<h3>Variants</h3>
-			<div class="row">
-				<div>
-					<p>With <code>data-bs="custom"</code></p>
-					<ol data-bs="custom">
-						<li>First item</li>
-						<li>Second item</li>
-						<li>Third item</li>
-					</ol>
-				</div>	
-				<div>
-					<p>With <code>data-bs="custom circle"</code></p>
-					<ol data-bs="custom circle">
-						<li>First item</li>
-						<li>Second item</li>
-						<li>Third item</li>
-					</ol>
-				</div>
+			<div>
+				<p>With <code>data-bs="custom-numbers"</code></p>
+				<ol data-bs="custom-numbers">
+					<li>First item</li>
+					<li>Second item</li>
+					<li>Third item</li>
+				</ol>
+			</div>	
+			<div>
+				<p>With <code>data-bs="custom-numbers-circle"</code></p>
+				<ol data-bs="custom-numbers-circle">
+					<li>First item</li>
+					<li>Second item</li>
+					<li>Third item</li>
+				</ol>
 			</div>
 			<hr />
-			<p id="breadcrumb">With <code>data-bs="breadcrumb overflow-scroll"</code></p>
-			<ol itemscope itemtype="https://schema.org/BreadcrumbList" data-bs="breadcrumb overflow-scroll">
-				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before">
+			<div>
+				<h3 id="stepindicator">Step Indicators</h3>
+				<ol data-bs="custom-numbers horizontal overflow-scroll">
+					<li data-bs="active-bold">First item</li>
+					<li>Second item</li>
+					<li>Third item</li>
+				</ol>
+				<ol data-bs="custom-numbers-circle horizontal overflow-scroll">
+					<li>First item</li>
+					<li data-bs="active-bold">Second item</li>
+					<li>Third item</li>
+				</ol>
+				<ol data-bs="custom-numbers-circle horizontal line-between overflow-scroll">
+					<li data-bs="active">First item</li>
+					<li data-bs="active">Second item</li>
+					<li>Third item</li>
+					<li>Fourth item</li>
+				</ol>
+				<ol data-bs="custom-numbers-circle line-between overflow-scroll">
+					<li data-bs="active">First item</li>
+					<li data-bs="active">Second item</li>
+					<li>Third item</li>
+					<li>Fourth item</li>
+				</ol>
+				<ol data-bs="custom-numbers-circle line-between overflow-scroll">
+					<li data-bs="active completed"><s>First item</s></li>
+					<li data-bs="active completed"><s>Second item</s></li>
+					<li data-bs="active">Third item</li>
+					<li>Fourth item</li>
+				</ol>
+			</div>
+			<hr />
+			<h3 id="breadcrumb">Breadcrumbs</h3>
+			<ol itemscope itemtype="https://schema.org/BreadcrumbList" data-bs="horizontal overflow-scroll">
+				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before icon-home">
 					<a itemprop="item" href="https://example.com/books"><span itemprop="name">Books</span>
 					</a>
 					<meta itemprop="position" content="1" />
 				</li>
-				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before">
+				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before icon-right">
 					<a itemscope itemtype="https://schema.org/WebPage" itemprop="item" itemid="https://example.com/books/sciencefiction" href="https://example.com/books/sciencefiction"><span itemprop="name">Science Fiction</span></a>
 					<meta itemprop="position" content="2" />
 				</li>
-				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before">
+				<li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" data-icon="before icon-right">
 					<span itemprop="name">Award winners</span>
 					<meta itemprop="position" content="3" />
 				</li>

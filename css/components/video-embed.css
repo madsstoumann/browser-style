@@ -1,0 +1,24 @@
+:where(vimeo-embed, youtube-embed) {
+	background-color: var(--video-embed-bgc, #000);
+	border-radius: var(--video-embed-bdrs, 0);
+	display: grid;
+}
+:where(:is(vimeo-embed, youtube-embed) button) {
+	--button-bdrs: 14%;
+	--button-bgc: #F00;
+	--button-h: 46px;
+	--button-op: 0.8;
+	--button-w: 70px;
+	position: absolute;
+	place-self: center;
+	transition: all .2s ease-in;
+}
+:where(:is(vimeo-embed, youtube-embed) button)::before {
+	aspect-ratio: 1;
+	background: #FFF;
+	block-size: 1.5em;
+	clip-path: polygon(20% 0%, 20% 100%, 100% 50%);
+	content: '';
+}
+:where(vimeo-embed button) { --button-bgc: #00adef; }
+:where(:is(vimeo-embed, youtube-embed):hover button) { --button-op: 1; }

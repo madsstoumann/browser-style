@@ -1,5 +1,6 @@
 :where(label, fieldset, [data-bs~="label"]) {
 	font-size: var(--label-fz, initial);
+	position: relative;
 	width: var(--label-w, 100%);
 }
 :where(label > abbr) {

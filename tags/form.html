@@ -72,8 +72,8 @@
 					</label>
 				</fieldset>
 
-				<fieldset data-bs="vertical nogroup">
-					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+				<fieldset data-bs="vertical no-border">
+					<legend>With <code>data-bs="vertical no-border"</code></legend>
 					<label>
 						<input type="checkbox" checked>Accept terms and conditions
 					</label>
@@ -82,8 +82,8 @@
 					</label>
 				</fieldset>
 
-				<fieldset data-bs="vertical nogroup">
-					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+				<fieldset data-bs="vertical no-border">
+					<legend>With <code>data-bs="vertical no-border"</code></legend>
 					<label>
 						<input type="checkbox" role="switch" checked>Switch
 					</label>
@@ -92,13 +92,49 @@
 					</label>
 				</fieldset>
 
-				<fieldset data-bs="vertical nogroup">
-					<legend>With <code>data-bs="vertical nogroup"</code></legend>
+				<fieldset data-bs="vertical no-border">
+					<legend>With <code>data-bs="vertical no-border"</code></legend>
 					<label>
 						<input type="radio" name="radio-3" value="1" >Option 1
 					</label>
 					<label>
 						<input type="radio" name="radio-3" value="2">Option 2
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="button-group">
+					<label>
+						<input type="radio" name="radio-4" value="1" data-bs="sr-only"><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-4" value="2" data-bs="sr-only"><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-4" value="3" data-bs="sr-only" checked><span>Auto</span>
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="button-group">
+					<label>
+						<input type="radio" name="radio-5" value="1" data-bs="sr-only"><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-5" value="2" data-bs="sr-only"><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-5" value="3" data-bs="sr-only" checked><span>Auto</span>
+					</label>
+				</fieldset>
+
+				<fieldset data-bs="button-group-toggle">
+					<label>
+						<input type="radio" name="radio-6" value="1" data-bs="sr-only"><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-6" value="2" data-bs="sr-only"><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-6" value="3" data-bs="sr-only" checked><span>Auto</span>
 					</label>
 				</fieldset>
 			</div>
@@ -120,7 +156,7 @@
 					<input type="checkbox" role="switch">Switch
 				</label>
 
-				<fieldset data-bs="nogroup">
+				<fieldset data-bs="no-border">
 					<label>
 						<input type="radio" name="radio" value="1" checked>Option 1
 					</label>
@@ -225,7 +261,29 @@
 					</select>
 				</label>
 
-				<div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
+				<label>Select with <code>size</code>
+					<select size="3" style="--_sz:3">
+						<option value="1">One</option>
+						<option value="2" selected>Two</option>
+						<option value="3">Three</option>
+					</select>
+				</label>
+
+				<label>Select <code>is="custom"</code>*)
+					<select is="custom">
+						<option disabled value="" selected>Choose one</option>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+						<option value="4">Four</option>
+						<option value="5">Five</option>
+						<option value="6">Six</option>
+					</select>
+				</label>
+
+
+
+				<!-- <div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
 					<details data-bs="select overlay">
 						<summary data-icon="end">Choose one</summary>
 						<ul>
@@ -234,17 +292,17 @@
 							<li>Custom Option 3</li>
 						</ul>
 					</details>
-				</div>
+				</div> -->
 
 				<label>Textarea
 					<textarea></textarea>
 				</label>
 
-				<label>Textarea <code>rows="4"</code>
+				<!-- <label>Textarea <code>rows="4"</code>
 					<textarea rows="4"></textarea>
-				</label>
+				</label> -->
 			</div>
-			<p><small>*) Not functional with selection &mdash; only for showing expand/collapse functionality.</small></p>
+			<p><small>*) Requires a small JavaScript to toggle the <code>size</code>-attribute and more.</small></p>
 		</section>
 
 		<!-- datalists -->
@@ -285,7 +343,6 @@
 			<option value="13:00">
 			<option value="14:00">
 		</datalist>
-	
 
 		<hr />
 		<section id="input-disabled">

@@ -1,1 +1,4 @@
-:where(iframe) { border: 0; }
+:where(iframe) {
+	border: 0;
+	border-radius: inherit;
+}

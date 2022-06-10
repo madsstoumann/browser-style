@@ -1,0 +1,20 @@
+:where([data-ratio]) {
+	aspect-ratio: var(--asr, auto);
+	inline-size: 100%;
+	/* position: relative; */
+}
+
+:where([data-ratio] > :is(iframe, img, video)) {
+	aspect-ratio: inherit;
+	block-size: 100%;
+	inline-size: 100%;
+	object-fit: cover;
+}
+
+[data-ratio~="square"] { --asr: var(--ratio-square); }
+[data-ratio~="landscape"] { --asr: var(--ratio-landscape); }
+[data-ratio~="portrait"] { --asr: var(--ratio-portrait); }
+[data-ratio~="widescreen"] { --asr: var(--ratio-widescreen); }
+[data-ratio~="ultrawide"] { --asr: var(--ratio-ultrawide); }
+[data-ratio~="universal"] { --asr: var(--ratio-universal); }
+[data-ratio~="golden"] { --asr: var(--ratio-golden); }

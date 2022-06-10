@@ -97,8 +97,8 @@
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: var(--icon-msz, 100%);
 }
-:where([data-icon~="after"])::after { --icon-mis: .75ch; }
-:where([data-icon~="before"])::before { --icon-mie: .75ch; }
+:where([data-icon~="after"]) { --icon-mis: .75ch; }
+:where([data-icon~="before"]) { --icon-mie: .75ch; }
 :where([data-icon~="center"])::after,
 :where([data-icon~="center"])::before { --icon-mie: auto; --icon-mis: auto; }
 :where([data-icon~="block"])::after,
