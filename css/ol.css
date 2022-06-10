@@ -55,7 +55,7 @@
 	--_h: 100%;
 	--_l: calc((var(--ol-li-sz) - var(--_w) ) / 2 );
 	--_t: var(--ol-li-sz);
-	--_w: 3px;
+	--_w: 2px;
 	--ol-li-lh: 3;
 }
 :where(ol[data-bs*="line-between"][data-bs*="horizontal"] li) {
