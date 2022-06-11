@@ -252,6 +252,25 @@
 					<input type="week" data-icon="icon-week end">
 				</label>
 
+				<!-- <div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
+					<details data-bs="select overlay">
+						<summary data-icon="end">Choose one</summary>
+						<ul>
+							<li>Custom Option 1</li>
+							<li>Custom Option 2</li>
+							<li>Custom Option 3</li>
+						</ul>
+					</details>
+				</div> -->
+
+
+			</div>
+		</section>
+
+		<hr />
+		<section id="select">
+			<h2>&lt;select&gt;: The HTML Select element</h2>
+			<div class="row">
 				<label>Select
 					<select>
 						<option disabled value="" selected>Choose one</option>
@@ -261,7 +280,7 @@
 					</select>
 				</label>
 
-				<label>Select with <code>size</code>
+				<label>With <code>size</code> and <code>data-icon="end"</code>
 					<select size="3" style="--_sz:3">
 						<option value="1" data-icon="end">One</option>
 						<option value="2" data-icon="end" selected>Two</option>
@@ -269,11 +288,32 @@
 					</select>
 				</label>
 
-				<label>Select with <code>size</code> and <code>multiple</code>
+				<label>With <code>data-icon="start"</code>
+					<select size="3"  style="--_sz:3">
+						<option value="1" data-icon="start">One</option>
+						<option value="2" data-icon="start" selected>Two</option>
+						<option value="3" data-icon="start">Three</option>
+					</select>
+				</label>
+
+				<label>With <code>size</code> and <code>multiple</code>
 					<select size="3" multiple style="--_sz:3">
 						<option value="1" data-icon="end" selected>One</option>
 						<option value="2" data-icon="end" selected>Two</option>
 						<option value="3" data-icon="end">Three</option>
+					</select>
+				</label>
+
+				<label>With <code>optgroup</code> and <code>size</code>
+					<select size="6" multiple style="--_sz:6">
+						<optgroup label="Primary">
+							<option value="1" data-icon="end" selected>One</option>
+							<option value="2" data-icon="end">Two</option>
+						</optgroup>
+						<optgroup label="Secondary">
+							<option value="3" data-icon="end">Three</option>
+							<option value="4" data-icon="end" selected>Four</option>
+						</optgroup>
 					</select>
 				</label>
 
@@ -288,20 +328,14 @@
 						<option value="6" data-icon="end">Six</option>
 					</select>
 				</label>
+			</div>
+			<p><small>*) Requires a small JavaScript to toggle the <code>size</code>-attribute and more.</small></p>
+		</section>
 
-
-
-				<!-- <div data-bs="label">Custom Select *) <code>&lt;details&gt;</code>
-					<details data-bs="select overlay">
-						<summary data-icon="end">Choose one</summary>
-						<ul>
-							<li>Custom Option 1</li>
-							<li>Custom Option 2</li>
-							<li>Custom Option 3</li>
-						</ul>
-					</details>
-				</div> -->
-
+		<hr />
+		<section id="textarea">
+			<h2>&lt;textarea&gt;: The Textarea element</h2>
+			<div class="row">
 				<label>Textarea
 					<textarea></textarea>
 				</label>
@@ -313,8 +347,11 @@
 				<label>Textarea <code>rows="3"</code>
 					<textarea rows="3"></textarea>
 				</label>
+
+				<!-- <label>Textarea <code>wrap="hard"</code>
+					<textarea cols="20" wrap="hard"></textarea>
+				</label> -->
 			</div>
-			<p><small>*) Requires a small JavaScript to toggle the <code>size</code>-attribute and more.</small></p>
 		</section>
 
 		<!-- datalists -->
