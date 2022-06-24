@@ -7,13 +7,7 @@
 }
 
 @keyframes blink {
-	0% {
-		visibility: hidden;
-	}
-	50% {
-		visibility: hidden;
-	}
-	100% {
-		visibility: visible;
-	}
+	0% { visibility: hidden; }
+	50% { visibility: hidden; }
+	100% { visibility: visible; }
 }

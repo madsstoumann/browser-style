@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="en-US" dir="ltr" data-bs="dark-modes">
 <head>
 	<title>form elements</title>
 	<meta charset="UTF-8">
@@ -35,7 +35,10 @@
 </head>
 <body>
 	<main>
-		<h1>browser.style</h1>
+		<!-- <img src="/svg/colormode.svg" class="color-mode" id="colorMode"> -->
+
+
+		<h1 class="bs-header">browser.style</h1>
 		<a href="/">Back to table of contents</a>
 		<hr />
 		<section id="fieldset">
@@ -104,13 +107,13 @@
 
 				<fieldset data-bs="button-group">
 					<label>
-						<input type="radio" name="radio-4" value="1" data-bs="sr-only"><span>Light</span>
+						<input type="radio" name="radio-4" value="1" data-bs="sr-only" checked><span>Light</span>
 					</label>
 					<label>
 						<input type="radio" name="radio-4" value="2" data-bs="sr-only"><span>Dark</span>
 					</label>
 					<label>
-						<input type="radio" name="radio-4" value="3" data-bs="sr-only" checked><span>Auto</span>
+						<input type="radio" name="radio-4" value="3" data-bs="sr-only"><span>Auto</span>
 					</label>
 				</fieldset>
 
@@ -119,10 +122,10 @@
 						<input type="radio" name="radio-5" value="1" data-bs="sr-only"><span data-icon="before icon-phone">Phone</span>
 					</label>
 					<label>
-						<input type="radio" name="radio-5" value="2" data-bs="sr-only"><span data-icon="before icon-message">SMS</span>
+						<input type="radio" name="radio-5" value="2" data-bs="sr-only" checked><span data-icon="before icon-message">SMS</span>
 					</label>
 					<label>
-						<input type="radio" name="radio-5" value="3" data-bs="sr-only" checked><span data-icon="before icon-email">Email</span>
+						<input type="radio" name="radio-5" value="3" data-bs="sr-only"><span data-icon="before icon-email">Email</span>
 					</label>
 				</fieldset>
 
@@ -166,11 +169,11 @@
 				</fieldset>
 
 				<label>Color
-					<input type="color" value="#0d59f2">
+					<input type="color" value="#737B8C">
 				</label>
 
 				<label>Color with <code>list</code>
-					<input type="color" value="#0d59f2" list="colors">
+					<input type="color" value="#737B8C" list="colors">
 				</label>
 
 				<label>Date
@@ -185,8 +188,24 @@
 					<input type="email" data-icon="icon-email end">
 				</label>
 
+				<label>Email with <code>list</code> and <code>multiple</code>
+					<input type="email" data-icon="icon-email end" list="email" multiple>
+				</label>
+
 				<label>File
+					<input type="file">
+				</label>
+
+				<label>With <code>multiple</code>
 					<input type="file" multiple>
+				</label>
+
+				<label>With <code>capture="user"</code>
+					<input type="file" capture="user" accept="video/*" aria-label="Take a selfie">
+				</label>
+
+				<label>With <code>capture="environment"</code>
+					<input type="file" capture="environment" accept="video/*" aria-label="Take a photo">
 				</label>
 
 				<label>Month
@@ -241,7 +260,7 @@
 				</label>
 
 				<label>Time with <code>list</code>
-					<input type="time" list="time" data-icon="time end">
+					<input type="time" list="time" data-icon="icon-time end">
 				</label>
 
 				<label>Url
@@ -317,7 +336,7 @@
 					</select>
 				</label>
 
-				<label>Select <code>is="custom"</code>*)
+				<!-- <label>Select <code>is="custom"</code>*)
 					<select is="custom">
 						<option disabled value="" selected>Choose one</option>
 						<option value="1" data-icon="end">One</option>
@@ -327,7 +346,7 @@
 						<option value="5" data-icon="end">Five</option>
 						<option value="6" data-icon="end">Six</option>
 					</select>
-				</label>
+				</label> -->
 			</div>
 			<p><small>*) Requires a small JavaScript to toggle the <code>size</code>-attribute and more.</small></p>
 		</section>
@@ -378,6 +397,14 @@
 			<option value="Pineapple">Pineapple</option>
 			<option value="Mulberry">Mulberry</option>
 			<option value="Jackfruit">Jackfruit</option>
+		</datalist>
+
+		<datalist id="email">
+			<option value="jbond007@mi6.defence.gov.uk">
+			<option value="jbourne@unknown.net">
+			<option value="nfury@shield.org">
+			<option value="tony@starkindustries.com">
+			<option value="hulk@grrrrrrrr.arg">
 		</datalist>
 
 		<datalist id="range">
@@ -431,7 +458,6 @@
 					<small>Your personal ID. Example: <samp>230805-2355</samp></small>
 					<input type="text" placeholder="230805-2355" pattern="[0-9]{6}-[0-9]{4}" required inputmode="numeric">
 				</label>
-
 			</div>
 		</section>
 

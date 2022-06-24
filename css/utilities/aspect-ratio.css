@@ -1,7 +1,6 @@
 :where([data-ratio]) {
 	aspect-ratio: var(--asr, auto);
 	inline-size: 100%;
-	/* position: relative; */
 }
 
 :where([data-ratio] > :is(iframe, img, video)) {

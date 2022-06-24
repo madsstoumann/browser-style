@@ -8,7 +8,6 @@
 	--thumb-height: var(--input-thumb-h, 1.25em);
 	--thumb-width: var(--input-thumb-h, 1.25em);
 	--thumb-radius: var(--thumb-width, var(--thumb-height)); /*calc((var(--thumb-height) * 0.5) - 1px);*/
-	--track-color: rgba(0, 0, 0, 0.2);
 	--track-height: var(--input-track-h, 0.125em);
 	--track-range: currentColor;
 
@@ -64,7 +63,7 @@ input[type="range"][data-bs="vertical-range"] {
 }
 :where(input[type="range"]:dir(rtl))::-webkit-slider-thumb { --box-fill: none; }
 :where(input[type="range"])::-webkit-slider-runnable-track {
-	background: linear-gradient(var(--track-color) 0 0, var(--track-color) 0 0) scroll no-repeat center / 100% calc(var(--track-height) + 1px);
+	background: linear-gradient(var(--input-track-c) 0 0, var(--input-track-c) 0 0) scroll no-repeat center / 100% calc(var(--track-height) + 1px);
 }
 
 :where(input[type="range"]:active)::-webkit-slider-thumb {
@@ -92,7 +91,7 @@ input[type="range"][data-bs="vertical-range"] {
 	width: var(--thumb-width);
 }
 :where(input[type="range"])::-moz-range-track {
-	background: var(--track-color);
+	background: var(--input-track-c);
 	height: var(--track-height);
 	width: 100%;
 }

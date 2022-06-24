@@ -1,17 +1,2 @@
 :where(dd) { margin-inline-start: var(--dd-mis, 1.5em); }
 :where(dt) { font-weight: var(--dt-fw, 700); }
-
-:where(dl[data-bs="table"]) {
-	display: grid;
-	grid-template-columns: 1fr 2fr;
-}
-
-/* MODIFIERS */
-:where(dl[data-bs="table"] :is(dd,dt)) {
-	--dd-mis: 0;
-	border-block-end: var(--dl-table-bdw, 1px) solid var(--dl-table-bdc);
-	padding-block: var(--dd-table-pb, .75ch);
-}
-:where(dl[data-bs="table"] :is(dd,dt):first-of-type) {
-	border-block-start: var(--dl-table-bdw, 1px) solid var(--dl-table-bdc);
-}

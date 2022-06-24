@@ -67,12 +67,12 @@
 [data-icon~="icon-url"] { --icon: var(--icon-url); }
 
 /* Icon as `background-image`, either `start`or `end`*/
-:where([data-icon~="end"], [data-icon~="start"], input:required, select, summary) {
+:where([data-icon~="end"], [data-icon~="start"], input:required, select) {
 	background-image: var(--icon, none);
 	background-size: var(--icon-sz, 1.5em) auto;
 	background-repeat: no-repeat;
 }
-:where([data-icon~="end"], select, summary), :where([dir="rtl"] [data-icon~="start"]) { background-position: center right var(--icon-mie); }
+:where([data-icon~="end"], select), :where([dir="rtl"] [data-icon~="start"]) { background-position: center right var(--icon-mie); }
 :where([data-icon~="start"]), :where([dir="rtl"] [data-icon~="end"]) { background-position: center left var(--icon-mie); }
 
 /* Icon as pseudo element `::after` or `::before`, using `mask-image` */

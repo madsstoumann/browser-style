@@ -1,4 +1,5 @@
 :where(label, fieldset, [data-bs~="label"]) {
+	color: var(--label-c, inherit);
 	font-size: var(--label-fz, initial);
 	position: relative;
 	width: var(--label-w, 100%);
@@ -34,7 +35,7 @@
 /* Ticks for range */
 :where(label[data-bs*="ticks"]) {
 	--ticks-bdw: 1px;
-	--ticks-c: var(--ticks-bdc, var(--input-bdc));
+	--ticks-c: var(--input-bdc);
 	--ticks-count: 6;
 	--ticks-h: 10px;
 	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));

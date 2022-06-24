@@ -17,8 +17,9 @@
 :where(details[open] summary) { --icon: var(--_icon-open); }
 :where(details[open] summary + *) { padding-block-end: 2ch; }
 :where(summary[data-icon~="start"]) { padding-inline-start: var(--icon-sz); }
+
 :where(details[data-bs~="inline"]) { display: inline-flex;  }
-:where(details[data-bs~="inline"] summary[data-icon~="end"]) { padding-inline-end: var(--icon-sz); }
+/* :where(details[data-bs~="inline"] summary[data-icon~="end"]) { padding-inline-end: var(--icon-sz); } */
 
 :where(details[data-bs~="overlay"][open] summary)::before {
 	background: var(--_overlay-bgc, transparent);

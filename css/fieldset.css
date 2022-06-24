@@ -1,4 +1,5 @@
 :where(fieldset) {
+	background: var(--fieldset-bg, var(--input-bgc)); 
 	border-color: var(--fieldset-bdc, var(--input-bdc));
 	border-radius: var(--fieldset-bdrs, var(--input-bdrs));
 	border-style: var(--fieldset-bds, var(--input-bds));
@@ -13,6 +14,7 @@
 
 :where(legend) { inline-size: max-content; }
 :where(fieldset[data-bs~="no-border"]) {
+	--fieldset-bg: transparent;
 	border: 0;
 	padding: unset;
 }
@@ -30,6 +32,7 @@
 	--fieldset-gap: 0px;
 	--fieldset-pb: 0px;
 	--fieldset-pi: 0px;
+	background-color: var(--input-bgc);
 	position: relative;
 }
 :where(fieldset[data-bs*="button-group"] label:not(:last-of-type) > span) {
