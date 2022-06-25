@@ -10,7 +10,7 @@
 	*/
 
 
-	--accent-color: hsl(var(--hue), var(--saturation), var(--lightness));
+	--accent-color: hsl(220, 90%, 50%);
 	--accent-color-hover: hsl(var(--hue), var(--saturation), 40%);
 	--accent-text-color: hsl(var(--hue), var(--saturation), 99%);
 
@@ -30,14 +30,13 @@
 	--color-danger: hsl(354, 70%, 54%);
 	--color-success: hsl(134, 61%, 30%);
 
-
 	--required-color: maroon;
 
 	--secondary-color: hsl(var(--hue), 15%, 30%);
 	--secondary-color-hover: hsl(var(--hue), 15%, 20%);
 	--secondary-text-color: hsl(var(--hue), 15%, 95%);
 
-	/* Colors */
+	/* TAGS: Colors */
 	--a-c: var(--accent-color);
 	--address-bgc: var(--gray-1);
 	--address-c: inherit;
@@ -60,15 +59,16 @@
 	--kbd-c: inherit;
 	--mark-bgc: hsl(60, 80%, 80%);
 	--mark-c: var(--text-c);
-
 	--menu-bdc: var(--input-bdc);
 	--menu-bgc: #fff0;
 	--menu-item-bdc: var(--input-bdc);
 	--menu-item-bgc: #fff0;
 	--menu-item-hover-bgc: var(--gray-1);
 	--menu-item-hover-c: initial;
-	
 	--meter-bgc: var(--gray-2);
+	--meter-evenless-bgc: var(--color-warning);
+	--meter-optimum-bgc: var(--color-success);
+	--meter-suboptimum-bgc: var(--color-danger);
 	--ol-li-bg: var(--gray-2);
 	--pre-bgc: var(--gray-8);
 	--pre-c: #FFF;
@@ -92,7 +92,9 @@
 	--input-bgc: white;
 	--input-fz: 1rem;
 	--input-gap: 0.25em;
-	--input-invalid: hsl(351, 100%, 97%);
+	--input-invalid-bdc: var(--color-danger);
+	--input-invalid-bgc: hsl(351, 100%, 97%);
+	--input-invalid-c: var(--color-danger);
 	--input-pb: .75em;
 	--input-pi: .75em;
 	--input-thumb-h: 1.25em;
@@ -144,16 +146,24 @@
 	--body-bg: hsl(220, 10%, 10%);
 	--body-c: hsl(220, 10%, 95%);
 	--blockquote-bgc: var(--gray-7);
-	--color-danger: hsl(354, 50%, 70%);
 	--input-bdc: hsl(220, 10%, 75%);
 	--input-bgc: hsl(220, 10%, 15%);
-	--input-invalid: hsl(351, 15%, 15%);
+	--input-invalid-bdc: hsl(354, 50%, 70%);
+	--input-invalid-bgc: hsl(351, 15%, 15%);
+	--input-invalid-c: hsl(354, 50%, 70%);
 	--input-switch-bgc: hsl(210, 11%, 50%);
 	--input-track-c: hsl(220, 10%, 75%);
 	--kbd-c: #000;
-	/* --ol-li-custom-c: #000; */
+	--marquee-bgc: var(--gray-8);
+	--menu-context-bgc: var(--gray-8);
+	--menu-item-hover-bgc: var(--gray-8);
+	--ol-li-bg: var(--gray-8);
 	--optgroup-bgc: var(--gray-8);
 	--option-checked-bgc: var(--gray-7);
+	--table-zebra-bg: var(--gray-8);
+	--tip-bgc: var(--gray-9);
+
+	--select-icon: var(--icon-chevron-down-white);
 }
 
 

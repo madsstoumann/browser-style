@@ -10,8 +10,6 @@
 	--thumb-height: 100%;
 	--thumb-radius: 0px;
 	--thumb-width: 1rem;
-	--track-color: transparent;
-	--track-height: 100%;
-	--track-range: transparent;
+	--input-track-c: transparent;
 	inset-block-start: -2px;
 }

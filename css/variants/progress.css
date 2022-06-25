@@ -1,43 +1,3 @@
-:where(progress) {
-	--progress-bdrs: 0.25em;
-	--progress-stripes-bgsz: 10px 10px;
-	background-color: var(--progress-bgc);
-	block-size: var(--progress-h, .5em);
-	border: 0;
-	border-radius: var(--progress-bdrs);
-	inline-size: var(--progress-w, 100%);
-	position: relative;
-}
-:where(progress)::-moz-progress-bar {
-	/* In Firefox, it's not possible to set the background-track-color */
-	background-color: var(--progress-bar-bgc);
-	border-radius: var(--progress-bdrs);
-}
-:where(progress)::-webkit-progress-bar { background: transparent; }
-:where(progress[value])::-webkit-progress-value {
-	background-color: var(--progress-bar-bgc);
-	border-radius: var(--progress-bdrs);
-}
-
-/* Indeterminate: if `max`and `value` are not set, the progress bar will be indeterminate */
-:where(progress:not([max]):indeterminate) {
-	animation: progress 1.6s linear infinite;
-	background: var(--progress-indeterminate);
-}
-:where(progress:not([max]):indeterminate)::-moz-progress-bar {
-	animation: progress 1.6s linear infinite;
-	background: var(--progress-indeterminate);
-}
-:where(progress[max]:indeterminate) {
-	background-color: var(--progress-indeterminate-bgc);
-	background-image: var(--progress-stripes);
-	background-size: var(--progress-stripes-bgsz);
-}
-:where(progress[max]:indeterminate)::-moz-progress-bar {
-	background-color: var(--progress-indeterminate-bgc);
-	background-image: var(--progress-stripes);
-	background-size: var(--progress-stripes-bgsz);
-}
 
 /* Circle */
 :where(progress[data-bs~="circle"]) {
@@ -111,8 +71,3 @@
 	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
 }
 
-/* Indeterminate Animation */
-@keyframes progress {
-	0% { background-position: 200% 0; }
-	100% { background-position: -200% 0; }
-}

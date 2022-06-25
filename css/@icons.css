@@ -3,6 +3,7 @@
 	--icon-checkmark: url('/svg/check.svg');
 	--icon-chevron-up: url('/svg/chevron-up.svg');
 	--icon-chevron-down: url('/svg/chevron-down.svg');
+	--icon-chevron-down-white: url('/svg/chevron-down-white.svg'); /* needed when used as a background-image in ´dark mode´ */
 	--icon-chevron-left: url('/svg/chevron-left.svg');
 	--icon-chevron-right: url('/svg/chevron-right.svg');
 	--icon-cross: url('/svg/cross.svg');

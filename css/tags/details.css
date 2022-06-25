@@ -1,0 +1,20 @@
+:where(details) {
+	--icon: var(--icon-tri-right);
+	--_icon-open: var(--icon-tri-down); 
+	--icon-mie: 0;
+	--icon-sz: 1.5em;
+	position: relative;
+}
+
+:where(summary) { font-weight: var(--summary-fw, 500); }
+
+:where(details[data-bs] summary, summary[data-bs]) {
+	align-items: center;
+	display: flex;
+	justify-content: var(--summary-jc, space-between);
+	list-style-type: none;
+} 
+
+:where(details[data-bs] summary, summary[data-bs])::-webkit-details-marker { display: none; }
+:where(details[open] summary) { --icon: var(--_icon-open); }
+:where(details[open] summary + *) { padding-block-end: var(--details-panel-pbe, 2ch); }

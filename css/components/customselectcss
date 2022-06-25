@@ -10,3 +10,39 @@
 	position: absolute;
 	z-index: 1;
 }
+
+
+/* Custom Select, requires `<input>`-styles */
+:where(details[data-bs~="select"] summary) { --icon: var(--icon-chevron-down); }
+:where(details[data-bs~="select"] > summary + *) {
+	background-color: var(--input-bgc);
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: var(--input-bdc);
+	border-end-start-radius: var(--input-bdrs);
+	border-end-end-radius: var(--input-bdrs);
+	inset-block-start: 100%;
+	inset-inline-start: 0;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+}
+:where(details[data-bs~="select"] > summary + * > *) {
+	border-block-start: 1px solid var(--input-bdc);
+	padding-block: var(--input-pb);
+	padding-inline: var(--input-pi);
+}
+details[data-bs~="select"][open] > summary {
+	--icon: var(--icon-chevron-up); 
+	border-block-end-width: 0;
+	border-end-start-radius: 0;
+	border-end-end-radius: 0;
+}
+@media (hover: hover) {
+	:where(details[data-bs~="select"] > summary + * > *:hover) {
+		background-color: var(--menu-item-hover-bgc, var(--gray-1));
+	}
+}

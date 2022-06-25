@@ -1,0 +1,26 @@
+:where(fieldset) {
+	background: var(--fieldset-bg, var(--input-bgc)); 
+	border-color: var(--fieldset-bdc, var(--input-bdc));
+	border-radius: var(--fieldset-bdrs, var(--input-bdrs));
+	border-style: var(--fieldset-bds, var(--input-bds));
+	border-width: var(--fieldset-bdw, var(--input-bdw));
+	display: flex;
+	gap: var(--fieldset-gap, var(--input-gap));
+	inline-size: 100%;
+	margin: unset;
+	padding-block: var(--fieldset-pb, var(--input-pb));
+	padding-inline: var(--fieldset-pi, var(--input-pi));
+}
+
+:where(legend) { inline-size: max-content; }
+:where(fieldset[data-bs~="no-border"]) {
+	--fieldset-bg: transparent;
+	border: 0;
+	padding: unset;
+}
+
+:where(fieldset[data-bs~="vertical"]) {
+	flex-direction: column;
+	gap: calc(2 * var(--input-gap));
+	padding-block-start: calc(2 * var(--input-gap));
+}

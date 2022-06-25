@@ -1,31 +1,3 @@
-:where(fieldset) {
-	background: var(--fieldset-bg, var(--input-bgc)); 
-	border-color: var(--fieldset-bdc, var(--input-bdc));
-	border-radius: var(--fieldset-bdrs, var(--input-bdrs));
-	border-style: var(--fieldset-bds, var(--input-bds));
-	border-width: var(--fieldset-bdw, var(--input-bdw));
-	display: flex;
-	gap: var(--fieldset-gap, var(--input-gap));
-	inline-size: 100%;
-	margin: unset;
-	padding-block: var(--fieldset-pb, var(--input-pb));
-	padding-inline: var(--fieldset-pi, var(--input-pi));
-}
-
-:where(legend) { inline-size: max-content; }
-:where(fieldset[data-bs~="no-border"]) {
-	--fieldset-bg: transparent;
-	border: 0;
-	padding: unset;
-}
-
-:where(fieldset[data-bs~="vertical"]) {
-	flex-direction: column;
-	gap: calc(2 * var(--input-gap));
-	padding-block-start: calc(2 * var(--input-gap));
-}
-
-
 :where(fieldset[data-bs*="button-group"]) {
 	--fieldset-bdc: var(--accent-color);
 	--fieldset-bdw: 2px;
@@ -57,3 +29,30 @@
 	--fieldset-pi: 3px;
 }
 :where(fieldset[data-bs*="button-group-toggle"] label) { border-radius: inherit; }
+
+/* Image Group */
+:where(fieldset[data-bs*="image-group"] ){
+	display: flex;
+	gap: 1ch;
+}
+:where(fieldset[data-bs*="image-group"] span) {
+	aspect-ratio: 1 / 1;
+	border: 1px solid var(--input-bdc);
+	display: grid;
+	text-align: center;
+}
+:where(fieldset[data-bs*="image-group"] strong) {
+	font-size: 14px;
+	font-weight: 500;
+	margin-block: .25em;
+}
+
+:where(fieldset[data-bs*="image-group"] img) {
+	margin-inline: 1em;
+	pointer-events: none;
+	user-select: none;
+}
+:where(fieldset[data-bs*="image-group"] input:checked + span) {
+	border: 1px solid var(--accent-color);
+	box-shadow: 0 0 0 2px var(--accent-color);
+}

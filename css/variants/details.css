@@ -1,0 +1,59 @@
+:where(details[data-bs~="border-below"]) {
+	--icon-sz: 2em;
+	border-block-end: 1px solid var(--gray-4);
+}
+
+:where(details[data-bs~="border-below"] summary) { padding-block: 1ch; }
+
+:where(details[data-bs~="border-below"] summary:focus-visible) {
+	--outline-width: 0;
+	background-color: var(--gray-1);
+}
+
+:where(details[data-bs~="chevron-down"]) {
+	--icon: var(--icon-chevron-down);
+	--_icon-open: var(--icon-chevron-up);
+}
+
+:where(details[data-bs~="chevron-right"]) {
+	--icon: var(--icon-chevron-right);
+	--_icon-open: var(--icon-chevron-down);
+}
+
+:where(details[data-bs~="inline"]) { display: inline-flex;  }
+
+:where(details[data-bs~="overlay"][open] summary)::before {
+	background: var(--_overlay-bgc, transparent);
+  content: "";
+  display: block;
+  inset: 0;
+  position: fixed;
+	z-index: 0;
+}
+
+:where(details[data-bs~="plus"]) {
+	--icon: var(--icon-plus);
+	--_icon-open: var(--icon-minus);
+}
+
+where(details[data-bs~="toggle-tip"]) {
+	--icon: unset;
+	--_icon-open: unset;
+	--_overlay-bgc: rgba(0, 0, 0, .2);
+	cursor: help;
+	user-select: none;
+}
+:where(details[data-bs~="toggle-tip"] summary) { border-block-end: 2px dotted currentColor; }
+:where(details[data-bs~="toggle-tip"][open] summary + *) {
+	background-color: var(--tip-bgc, #fff);
+	border-radius: var(--tip-bdrs, .25em);
+	box-shadow: var(--tip-bxsh, 0 0 .25em rgba(0, 0, 0, .125));
+	color: var(--tip-c, inherit);
+  font-size: var(--tip-fz, 80%);
+  margin: 0;
+  padding-block: var(--tip-pb, 1.25ch);
+  padding-inline: var(--tip-pi, 1.5ch 2ch);
+  position: absolute;
+  width: var(--tip-w, 12rem);
+  z-index: 1;
+}

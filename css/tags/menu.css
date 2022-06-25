@@ -34,53 +34,6 @@
 	font-size: inherit;
 }
 
-/* Context Menu */
-:where(menu[data-bs="context"]) {
-	--menu-bdrs: .25em;
-	--menu-bgc: var(--gray-1);
-	--menu-fxd: column;
-	--menu-gap: .25em;
-	--menu-item-bdrs: .25rem;
-	--menu-item-fz: 0.875rem;
-	--menu-item-hover-bgc: var(--accent-color);
-	--menu-item-hover-c: var(--accent-text-color);
-	--menu-item-pb: .25rem;
-	--menu-item-pi: .5rem;
-	--menu-p: .5em;
-}
-
-/* List */
-:where(menu[data-bs="list"]) {
-	--menu-fxd: column;
-	--menu-gap: 0;
-	--menu-item-pb: .75em;
-	--menu-item-pi: .25em;
-}
-:where(menu[data-bs="list"] [role="menuitem"]) {
-	--icon-mi: 0 1em;
-	--icon-sz: 1.5em;
-	align-items: center;
-	display: flex
-}
-
-/* Tabs */
-:where(menu[data-bs="tabs"]) {
-	--menu-gap: 0;
-	--menu-item-bdc: var(--gray-2);
-	--menu-item-bdw: 0 0 5px 0;
-	--menu-item-pb: .75em;
-	--menu-item-pi: 1.5em;
-}
-:where(menu[data-bs="tabs"] a) { --a-bgc: none; --a-c: initial; }
-:where(menu[data-bs="tabs"] [data-bs="active"] ) { --menu-item-bdc: var(--accent-color); }
-
-/* Tab bar */
-:where(menu[data-bs="tab-bar"]) {
-	--menu-gap: 0;
-	--menu-item-fz: .75rem;
-	--menu-item-pb: .75em;
-	--menu-item-pi: 1.5em;
-}
 :where(menu [data-bs="active"] ) { --menu-item-c: var(--accent-color); }
 
 @media (hover: hover) {

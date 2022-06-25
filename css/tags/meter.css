@@ -13,12 +13,12 @@
 	display: block;
 	-webkit-appearance: none;
 }
-:where(meter)::-webkit-meter-even-less-good-value { background: var(--color-danger); border-radius: inherit; }
-:where(meter):-moz-meter-sub-sub-optimum::-moz-meter-bar { background: var(--color-danger); border-radius: inherit; }
-:where(meter)::-webkit-meter-suboptimum-value { background: var(--color-warning); border-radius: inherit; }
-:where(meter):-moz-meter-sub-optimum::-moz-meter-bar { background: var(--color-warning); border-radius: inherit; }
-:where(meter)::-webkit-meter-optimum-value { background: var(--color-success); border-radius: inherit; }
-:where(meter):-moz-meter-optimum::-moz-meter-bar { background: var(--color-success); border-radius: inherit; }
+:where(meter)::-webkit-meter-even-less-good-value { background: var(--meter-evenless-bgc); border-radius: inherit; }
+:where(meter):-moz-meter-sub-sub-optimum::-moz-meter-bar { background: var(--meter-evenless-bgc); border-radius: inherit; }
+:where(meter)::-webkit-meter-suboptimum-value { background: var(--meter-suboptimum-bgc); border-radius: inherit; }
+:where(meter):-moz-meter-sub-optimum::-moz-meter-bar { background: var(--meter-suboptimum-bgc); border-radius: inherit; }
+:where(meter)::-webkit-meter-optimum-value { background: var(--meter-optimum-bgc); border-radius: inherit; }
+:where(meter):-moz-meter-optimum::-moz-meter-bar { background: var(--meter-optimum-bgc); border-radius: inherit; }
 
 /* Custom Meter */
 meter[data-bs="custom"] { --meter-mis: 100%; }

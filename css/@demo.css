@@ -40,11 +40,12 @@ meter {
 }
 
 [data-bs~="dark-mode"] { --dark-mode: 1; }
-.bs-header { display: flex; }
-.bs-header button { --button-bgc: transparent; }
+.bs-header { display: flex; justify-content: space-between; }
+.bs-header button { --button-bgc: transparent; --button-h: unset; --button-pb: 0px; --button-pi: 0px; }
 .bs-header svg {
+	block-size: 2.5em;
 	filter: invert(var(--dark-mode));
-	inline-size: 3rem;
+	inline-size: 2.5em;
 	transform: rotate(calc(var(--dark-mode) * 180deg));
   transition: all .6s ease;
 }

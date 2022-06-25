@@ -171,7 +171,7 @@
 :where([type="search"][list])::-webkit-search-cancel-button { inset-inline-end: 2.5em; }
 
 /* <select>, <optgroup>, <option> */
-:where(select:not([size])) { --icon: var(--icon-chevron-down); }
+:where(select:not([size])) { --icon: var(--select-icon, var(--icon-chevron-down)); }
 :where(select[size]) {
 	block-size: calc(var(--_sz, 1) * var(--_h));
 	overflow: hidden;
@@ -208,20 +208,20 @@
 
 /* Validation Patterns */
 input:required:not(:focus-visible):not(:placeholder-shown):invalid {
-	--input-bdc: var(--color-danger);
-	--input-bgc: var(--input-invalid);
+	--input-bdc: var(--input-invalid-bdc);
+	--input-bgc: var(--input-invalid-bgc);
 }
 
 input[data-bs~="live"]:required:not(:placeholder-shown):invalid {
-	--input-bdc: var(--color-danger);
-	--input-bgc: var(--input-invalid);
+	--input-bdc: var(--input-invalid-bdc);
+	--input-bgc: var(--input-invalid-bgc);
 	--icon: var(--icon-alert);
 }
 
 input[data-bs~="live"]:required:not(:placeholder-shown):invalid ~ :is(span, small),
 input:required:not(:focus-visible):not(:placeholder-shown):invalid ~ :is(span, small) {
 	--icon: var(--icon-alert);
-	color: var(--color-danger);
+	color: var(--input-invalid-c);
 	opacity: 1;
 }
 

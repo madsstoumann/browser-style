@@ -11,7 +11,7 @@
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
-	<link rel="stylesheet" href="/css/meter.css">
+	<link rel="stylesheet" href="/css/tags/meter.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -23,7 +23,7 @@
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
 		style-src 'self' 'unsafe-inline';
 	">
 	<link rel="manifest" href="/site.webmanifest">
@@ -48,6 +48,8 @@
 					<meter min="0" max="100" value="90" low="25" high="50" optimum="80"></meter> 
 				</label>
 			</div>
+			<hr data-bs="dashed">
+			<h2>Variants</h2>
 			<div class="row-full">
 				<p><strong>Custom meter</strong>. Set <code>value="100"</code> and <code>data-bs="custom"</code></p>
 				<label data-left-label="Underweight" data-right-label="Obese">

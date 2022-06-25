@@ -12,11 +12,11 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
 	<link rel="stylesheet" href="/css/@tooltip.css">
-	<link rel="stylesheet" href="/css/details.css">
-	<link rel="stylesheet" href="/css/fieldset.css">
-	<link rel="stylesheet" href="/css/input.css">
-	<link rel="stylesheet" href="/css/input.var.css">
-	<link rel="stylesheet" href="/css/pre.css">
+	<link rel="stylesheet" href="/css/tags/fieldset.css">
+	<link rel="stylesheet" href="/css/variants/fieldset.css">
+	<link rel="stylesheet" href="/css/tags/input.css">
+	<link rel="stylesheet" href="/css/variants/input.css">
+	<link rel="stylesheet" href="/css/tags/pre.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -28,7 +28,7 @@
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
 		style-src 'self' 'unsafe-inline';
 	">
 	<link rel="manifest" href="/site.webmanifest">
@@ -104,7 +104,13 @@
 						<input type="radio" name="radio-3" value="2">Option 2
 					</label>
 				</fieldset>
-
+			</div>
+			<p>Some elements have <code>:indeterminate</code> styles. For checkboxes, this has to be set in JavaScript:</p>
+			<pre><code>elm.indeterminate = true;</code></pre>
+			<hr data-bs="dashed">
+			<h2>Variants</h2>
+			<h3>button-group</h3>
+			<div class="row">
 				<fieldset data-bs="button-group">
 					<label>
 						<input type="radio" name="radio-4" value="1" data-bs="sr-only" checked><span>Light</span>
@@ -128,7 +134,9 @@
 						<input type="radio" name="radio-5" value="3" data-bs="sr-only"><span data-icon="before icon-email">Email</span>
 					</label>
 				</fieldset>
-
+</div>
+<h3>button-group-toggle</h3>
+			<div class="row">
 				<fieldset data-bs="button-group-toggle">
 					<label>
 						<input type="radio" name="radio-6" value="1" data-bs="sr-only"><span>Light</span>
@@ -141,10 +149,35 @@
 					</label>
 				</fieldset>
 			</div>
+			<h3>image-group</h3>
+			<div class="row">
+				<fieldset data-bs="image-group no-border">
+					<label>
+						<input type="radio" name="radio-7" value="1" data-bs="sr-only" checked>
+						<span>
+							<img src="/demo/bike.svg" loading="lazy" alt="Bike" />
+							<strong>Bicycle</strong>
+						</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-7" value="2" data-bs="sr-only">
+						<span>
+							<img src="/demo/car.svg" loading="lazy" alt=""Car />
+							<strong>Car</strong>
+						</span>
+					</label>
+					<label>
+						<input type="radio" name="radio-7" value="3" data-bs="sr-only">
+						<span>
+							<img src="/demo/bus.svg" loading="lazy" alt="Bus" />
+							<strong>Bus</strong>
+						</span>
+					</label>
+				</fieldset>
+			</div>
 		</section>
 
-		<p>Some elements have <code>:indeterminate</code> styles. For checkboxes, this has to be set in JavaScript:</p>
-		<pre><code>elm.indeterminate = true;</code></pre>
+
 
 		<hr />
 		<section id="input">

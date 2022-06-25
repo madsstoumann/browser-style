@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>browser.style: dummy</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: dummy">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/@tags.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1 class="bs-header">browser.style: tags</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+
+		<section>
+			<h2>&lt;a&gt;: The Anchor element</h2>
+			<div class="row">
+				<a href="#">Regular link</a>
+				<a href="#" target="_blank" rel="noreferrer noopener" data-icon="after">Open in new window</a>
+				<a href="mailto:me@me.com" data-icon="after">Email link</a>
+				<a href="tel:88776655" data-icon="after">Phone link</a>
+				<a href="sms:+4520701433" data-icon="after">Send me an SMS</a>
+				<a href="webcal://xxx" data-icon="after">Webcal Link</a>
+				<a href="#" download="filename.txt" data-icon="after">Download link</a>
+			</div>
+		</section>
+
+		<section>
+			<h2>&lt;address&gt;: The Contact Address element</h2>
+			<address>
+				You can contact us at <a href="//browser.style">browser.style</a><br>
+				If you see any bugs, please <a href="mailto:info@browser.style">contact us</a>
+				<p><em>You may also want to visit us:</em></p>
+				Company Name<br>
+				555 Company Avenue<br>
+				Beverly Hills, CA 90210<br>
+				USA
+			</address>
+		</section>
+
+		<section>
+			<h2>&lt;blockquote&gt;: The Block Quotation element</h2>
+			<blockquote>
+				Say My Name
+			</blockquote>
+			<p>
+				<strong>Example with </strong> <code>&lt;q&gt;</code> <strong>and</strong> <code>&lt;cite&gt;</code>
+			</p>
+			<blockquote>
+				<q>Say My Name</q>
+				<cite>Heisenberg</cite>
+			</blockquote>
+		</section>
+
+		<section>
+			<h2>&lt;details&gt;: The Details disclosure element</h2>
+
+			<p>Default: Block element, with marker before</p>
+			<details>
+				<summary>Read some details</summary>
+				<div>Lorem ipsum dolor</div>
+			</details>
+		</section>
+
+		<section>
+			<h2>&lt;dl&gt;: The Description List element</h2>
+			<dl>
+				<dt>Chrome</dt>
+				<dd>Google Chrome is a cross-platform web browser developed by Google.</dd>
+				<dt>Edge</dt>
+				<dd>Microsoft Edge is a cross-platform web browser created and developed by Microsoft. </dd>
+				<dt>Firefox</dt>
+				<dd>Firefox is a free and open-source web browser developed by the Mozilla Foundation  and hundreds of volunteers.</dd>
+				<dt>Safari</dt>
+				<dd>Safari is a graphical web browser developed by Apple. It is primarily based on open-source software, and mainly WebKit.</dd>
+			</dl>
+		</section>
+
+		<script src="main.js" defer></script>
+	</main>
+</body>
+</html>

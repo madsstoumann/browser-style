@@ -11,7 +11,7 @@
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
-	<link rel="stylesheet" href="/css/ul.css">
+	<link rel="stylesheet" href="/css/tags/ul.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -23,7 +23,7 @@
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		script-src 'self' cdn.jsdelivr.net 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
 		style-src 'self' 'unsafe-inline';
 	">
 	<link rel="manifest" href="/site.webmanifest">
@@ -35,15 +35,20 @@
 		<hr />
 		<section>
 			<h2>&lt;ul&gt;: The Unordered List element</h2>
+
+			<div>
+				<p>Default style</p>
+				<ul>
+					<li>Item 1</li>
+					<li>Item 2</li>
+					<li>Item 3</li>
+				</ul>
+			</div>
+
+			<hr data-bs="dashed">
+			<h2>Variants</h2>
+
 			<div class="row">
-				<div>
-					<p>Default style</p>
-					<ul>
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
-					</ul>
-				</div>
 				<div>
 					<p>With <code>data-bs="square"</code></p>
 					<ul data-bs="square">
