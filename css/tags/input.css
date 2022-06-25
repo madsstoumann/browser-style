@@ -132,7 +132,7 @@
 	place-content: center;
 	position: absolute;
 }
-:where([capture="environment"])::file-selector-button { background-image: url('/svg/camera.svg');}
+:where([capture="environment"])::before { background-image: url('/svg/camera.svg'); }
 
 /* <input type="radio"> */
 :where([type="radio"]) { border-radius: 50%; }
