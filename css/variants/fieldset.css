@@ -30,14 +30,17 @@
 }
 :where(fieldset[data-bs*="button-group-toggle"] label) { border-radius: inherit; }
 
+
+/* TODO! */
 /* Image Group */
-:where(fieldset[data-bs*="image-group"] ){
+:where(fieldset[data-bs*="image-group"] ) {
 	display: flex;
 	gap: 1ch;
 }
 :where(fieldset[data-bs*="image-group"] span) {
 	aspect-ratio: 1 / 1;
 	border: 1px solid var(--input-bdc);
+	border-radius: var(--input-bdrs);
 	display: grid;
 	text-align: center;
 }
@@ -46,7 +49,6 @@
 	font-weight: 500;
 	margin-block: .25em;
 }
-
 :where(fieldset[data-bs*="image-group"] img) {
 	margin-inline: 1em;
 	pointer-events: none;

@@ -78,7 +78,8 @@
 	border-color: var(--accent-color);
 }
 :where([type="checkbox"][role="switch"]:checked)::before {
-	margin-inline-start: calc(var(--input-h) - (var(--input-bdw) * 2) / 0.9);
+	/* TODO! */
+	margin-inline-start: calc(var(--input-h) - (var(--input-bdw) * 2) / 0.75);
 }
 
 /* <input type="color"> */
@@ -96,6 +97,7 @@
 
 /* <input type="file"> */
 :where([type=file])::file-selector-button {
+	-webkit-appearance: none;
 	background-color: var(--file-button-bgc);
 	block-size: var(--_h);
 	border-radius:  var(--input-bdrs) 0 0 var(--input-bdrs);
@@ -172,29 +174,33 @@
 
 /* <select>, <optgroup>, <option> */
 :where(select:not([size])) { --icon: var(--select-icon, var(--icon-chevron-down)); }
-:where(select[size]) {
-	block-size: calc(var(--_sz, 1) * var(--_h));
-	overflow: hidden;
-	padding: 0;
-}
-:where(optgroup) { font-style: normal; }
-:where(optgroup)::before { 
-	background-color: var(--optgroup-bgc);
-	color: var(--optgroup-c);
-	content: attr(label);
-	display: block;
-	height: var(--_h);
-	padding: 1em var(--input-pi);
-}
-:where(option) { padding-block-start: 1em; }
-:where(option:not(:last-of-type)) { border-block-end: var(--input-bdw) solid var(--input-bdc); }
-:where(option:checked) {
-	--icon: var(--icon-checkmark);
-	background-color: var(--option-checked-bgc);
-}
-:where(optgroup > option)::before { display: none; }
-:where(optgroup option:first-of-type) { margin-block-start: -1.25em }
-:where(optgroup option:not(:checked)) { background-color: var(--input-bgc); }
+
+/* Target non-Safari only */
+/* @supports (contain: paint) { */
+	:where(select[size]) {
+		block-size: calc(var(--_sz, 1) * var(--_h));
+		overflow: hidden;
+		padding: 0;
+	}
+	:where(optgroup) { font-style: normal; }
+	:where(optgroup)::before { 
+		background-color: var(--optgroup-bgc);
+		color: var(--optgroup-c);
+		content: attr(label);
+		display: block;
+		height: var(--_h);
+		padding: 1em var(--input-pi);
+	}
+	:where(option) { padding-block-start: 1em; }
+	:where(option:not(:last-of-type)) { border-block-end: var(--input-bdw) solid var(--input-bdc); }
+	:where(option:checked) {
+		--icon: var(--icon-checkmark);
+		background-color: var(--option-checked-bgc);
+	}
+	:where(optgroup > option)::before { display: none; }
+	:where(optgroup option:first-of-type) { margin-block-start: -1.25em }
+	:where(optgroup option:not(:checked)) { background-color: var(--input-bgc); }
+/* } */
 
 /* <textarea> */
 :where(textarea) { resize: vertical; }
@@ -245,6 +251,9 @@ input[data-bs~="valid"]:required:not(:placeholder-shown):valid { --icon: var(--i
 		:where(input[type="search"])::-webkit-list-button {
 			margin-inline: 0;
 		}
+		:where(select[size]) {
+			block-size: auto;
+		}
 	}
 }
 
@@ -252,5 +261,12 @@ input[data-bs~="valid"]:required:not(:placeholder-shown):valid { --icon: var(--i
 @supports (-webkit-touch-callout: none) {
 	:where(input[type="search"])::-webkit-list-button {
 		margin-inline-end: -.5em;
+	}
+
+	:where(select[size]) {
+		--icon: var(--select-icon, var(--icon-chevron-down));
+		block-size: var(--_h);
+		overflow: hidden;
+		padding: var(--input-pi);
 	}
 }

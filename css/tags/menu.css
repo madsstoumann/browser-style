@@ -14,32 +14,36 @@
 }
 :where(menu) li {
 	align-items: center;
+	aspect-ratio: var(--menu-item-asr, none);
 	background-color: var(--menu-item-bgc);
 	border-color: var(--menu-item-bdc);
 	border-radius: var(--menu-item-bdrs, 0);
 	border-style: var(--menu-item-bds, solid);
 	border-width: var(--menu-item-bdw, 0);
 	color: var(--menu-item-c);
-	display: flex;
+	display: var(--menu-item-d, flex);
 	font-size: var(--menu-item-fz, 1rem);
 	justify-content: var(--menu-item-jc, space-between);
 	margin: var(--menu-item-m, 0);
+	min-inline-size: var(--menu-item-mis, auto);
 	padding-block: var(--menu-item-pb, 1ch);
 	padding-inline: var(--menu-item-pi, 1ch);
+	text-align: var(--menu-item-tal, initial);
 }
 :where(menu[role="menu"] [role="menuitem"]) {
 	background-color: transparent;
 	border: 0;
 	color: inherit;
+	flex: var(--menu-item-fx, initial);
 	font-size: inherit;
 }
 
-:where(menu [data-bs="active"] ) { --menu-item-c: var(--accent-color); }
+:where(menu [data-bs="active"] ) { --menu-item-c: var(--accent-color-text); }
 
 @media (hover: hover) {
 	:where(menu li):hover {
 		background-color: var(--menu-item-hover-bgc);
 		color: var(--menu-item-hover-c);
 	}
-	:where(menu li[data-bs="active"]):hover { color: var(--accent-color); }
+	:where(menu li[data-bs="active"]):hover { color: var(--accent-color-text); }
 }

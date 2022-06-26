@@ -37,18 +37,21 @@
 
 /* kbd */
 :where(kbd) {
+	align-items: center;
 	background-color: var(--kbd-bgc);
 	border-radius: var(--kbd-bdrs, 3px);
 	border: var(--kbd-bd, 1px solid var(--gray-5));
 	box-shadow: var(--kbd-bxsh, 0px 1px 0px rgba(0,0,0,0.2), inset 0px 0px 0px 2px #fff);
 	color: var(--kbd-c);
-	display: inline-block;
+	display: inline-flex;
 	font-family: var(--kbd-ff, ui-sans-serif, system-ui, sans-serif);
 	font-size: var(--kbd-fz, small);
 	font-weight: var(--kbd-fw, 500);
+	inset-block-start: -0.125em;
 	line-height: var(--kbd-lh, 1.3);
 	margin-inline: var(--kbd-mi, .125em);
-	padding: var(--kbd-p, 0.1em 0.5em 0);
+	padding: var(--kbd-p, 0 .5em);
+	position: relative;
 	text-shadow: var(--kbd-txsh, 0 1px 0 #fff);
 }
 

@@ -11,6 +11,7 @@
 
 
 	--accent-color: hsl(220, 90%, 50%);
+	--accent-color-text: hsl(220, 90%, 50%);
 	--accent-color-hover: hsl(var(--hue), var(--saturation), 40%);
 	--accent-text-color: hsl(var(--hue), var(--saturation), 99%);
 
@@ -37,7 +38,7 @@
 	--secondary-text-color: hsl(var(--hue), 15%, 95%);
 
 	/* TAGS: Colors */
-	--a-c: var(--accent-color);
+	--a-c: var(--accent-color-text);
 	--address-bgc: var(--gray-1);
 	--address-c: inherit;
 	--badge-bg: var(--accent-color);
@@ -141,7 +142,8 @@
 }
 
 :where([data-bs~="dark-mode"]) {
-	--accent-color: hsl(220, 40%, 50%);
+	--accent-color: hsl(220, 40%, 55%);
+	--accent-color-text: hsl(220deg 100% 82%);
 	--address-bgc: var(--gray-9);
 	--body-bg: hsl(220, 10%, 10%);
 	--body-c: hsl(220, 10%, 95%);
@@ -156,7 +158,9 @@
 	--kbd-c: #000;
 	--marquee-bgc: var(--gray-8);
 	--menu-context-bgc: var(--gray-8);
-	--menu-item-hover-bgc: var(--gray-8);
+	--menu-item-hover-bgc: var(--gray-7);
+	--menu-list-button-bgc: var(--gray-8);
+	--menu-tab-bar-bgc: var(--gray-9);
 	--ol-li-bg: var(--gray-8);
 	--optgroup-bgc: var(--gray-8);
 	--option-checked-bgc: var(--gray-7);

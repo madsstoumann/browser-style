@@ -35,12 +35,12 @@
 }
 
 /* Variations */
-:where(button[data-icon~="center"]) {
+/* :where(button[data-icon~="center"]) {
 	aspect-ratio: 1 / 1;
 	--button-bdrs: 50%;
 	--button-pi: 0;
 	width: calc((2 * var(--button-pb, 1.25ch)) + calc(2 * var(--button-bdw, var(--input-bdw))) +  (var(--button-lh, 1.5) * var(--button-fz, 1rem)));
-}
+} */
 :where(button[type="reset"][data-icon~="center"]) { --button-bgc: var(--gray-1); }
 
 :where(button[data-bs~="outline"]) {
