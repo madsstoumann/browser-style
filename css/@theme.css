@@ -81,9 +81,10 @@
 	--var-bgc: var(--gray-9);
 	--var-c: var(--color-warning);
 
-
+	--body-bg: #FFF;
 	--body-fz: 19px;
 	--body-lh: 1.5;
+	--shadow-color: rgba(34,34,34, 0.35);
 
 	/* Form Elements */
 	--input-bdc: var(--gray-5);
@@ -132,7 +133,7 @@
 	--ticks-bdc: var(--gray-7);
 
 
-	  /* Animation/Transition Duration */
+		/* Animation/Transition Duration */
 		--animdur-200: 200ms;
 		--animdur-300: 300ms;
 		--animdur-400: 400ms;
@@ -168,18 +169,26 @@
 	--tip-bgc: var(--gray-9);
 
 	--select-icon: var(--icon-chevron-down-white);
+	--shadow-color: rgba(200,200,200, 0.5);
 }
 
 
 :where([data-bs~="overflow-scroll"]) {
+	--shadow-size: 0.75em;
+	background:
+		linear-gradient(to right, var(--body-bg), var(--body-bg), #0000 calc(var(--shadow-size) * 2)),
+		radial-gradient(farthest-side at 0 50%, var(--shadow-color), #0000),
+		linear-gradient(to left, var(--body-bg), var(--body-bg), #0000 calc(var(--shadow-size) * 2)),
+		radial-gradient(farthest-side at 100% 50%, var(--shadow-color), #0000) 100%;
+ 	background-color: var(--body-bg);
+	background-repeat: no-repeat;
+	background-attachment: local, scroll, local, scroll;
+	background-size: 100% 100%, var(--shadow-size) 100%, 100% 100%, var(--shadow-size) 100%;
+	block-size: 100%;
 	max-inline-size: 100%;
-	overflow: auto;
+	overflow-x: auto;
 }
 
-/* :where([data-bs="overflow-scroll"]) >* {
-	background-image: linear-gradient(to right, transparent 75%, rgba(0, 0, 0, 1) 100%);
-  background-attachment: fixed;
-} */
 
 :where([data-bs~="text-overflow"]) {
 	display: block;
@@ -190,14 +199,14 @@
 }
 
 :where(html) {
-  --ratio-square: 1;
-  --ratio-landscape: 4/3;
-  --ratio-photo: 3/2;
-  --ratio-portrait: 3/4;
-  --ratio-widescreen: 16/9;
-  --ratio-ultrawide: 18/5;
-  --ratio-universal: 2/1;
-  --ratio-golden: 1.6180/1;
+	--ratio-square: 1;
+	--ratio-landscape: 4/3;
+	--ratio-photo: 3/2;
+	--ratio-portrait: 3/4;
+	--ratio-widescreen: 16/9;
+	--ratio-ultrawide: 18/5;
+	--ratio-universal: 2/1;
+	--ratio-golden: 1.6180/1;
 }
 
 

@@ -40,9 +40,10 @@
 	--menu-item-asr: 1 / 1;
 	--menu-item-bdrs: 50%;
 	--menu-item-fx: 1;
-	--menu-item-pb: 0.5em;
-	--menu-item-pi: 0.5em;
+	--menu-item-pb: 0.75em;
+	--menu-item-pi: 0.75em;
 	--menu-item-tal: center;
+	--menu-menuitem-p: 0px;
 }
 .menu-list-icon [data-bs="active"] { box-shadow: 0 0 0 2px var(--accent-color-text); }
 
@@ -59,9 +60,15 @@
 	--icon-sz: 2em;
 	--menu-bdrs: .25em;
 	--menu-bgc: var(--menu-tab-bar-bgc, var(--gray-2));
+	--menu-d: flex;
 	--menu-gap: 0;
 	--menu-item-fz: .75rem;
 	--menu-item-pb: .25em .5em;
-	--menu-item-pi: 1em;
+	--menu-is: 100%;
+	--menu-mas: 100%;
 	overflow: hidden;
+}
+.menu-tab-bar li {
+	flex: 1;
+	justify-content: center;
 }

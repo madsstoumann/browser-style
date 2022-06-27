@@ -7,9 +7,11 @@
 	display: var(--menu-d, inline-flex);
 	flex-direction: var(--menu-fxd, row);
 	gap: var(--menu-gap, 1em);
-	inline-size: var(--menu-mxc, max-content);
+	inline-size: var(--menu-is, max-content);
+	justify-content: var(--menu-jc, normal);
 	list-style-type: none;
 	margin: var(--menu-m, 0);
+	max-inline-size: var(--menu-mas, auto);
 	padding: var(--menu-p, 0);
 }
 :where(menu) li {
@@ -36,6 +38,7 @@
 	color: inherit;
 	flex: var(--menu-item-fx, initial);
 	font-size: inherit;
+	padding: var(--menu-menuitem-p, auto);
 }
 
 :where(menu [data-bs="active"] ) { --menu-item-c: var(--accent-color-text); }
