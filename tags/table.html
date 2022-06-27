@@ -55,9 +55,9 @@
 			<hr data-bs="dashed">
 			<h2>Variants</h2>
 
-			<p>With <code>data-bs="borderbelow collapse thborderbelow"</code></p>
+			<p>With <code>class="table-border"</code></p>
 			<div data-bs="overflow-scroll">
-				<table data-bs="borderbelow collapse thborderbelow">
+				<table class="table-border">
 					<thead>
 						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 					</thead>
@@ -71,9 +71,9 @@
 				</table>
 			</div>
 
-			<p>With <code>data-bs="full collapse zebrarow"</code></p>
+			<p>With <code>class="table-zebracol-even"</code></p>
 			<div data-bs="overflow-scroll">
-				<table data-bs="full collapse zebrarow">
+				<table class="table-zebracol-even">
 					<thead>
 						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 					</thead>
@@ -87,9 +87,41 @@
 				</table>
 			</div>
 
-			<p>With <code>data-bs="full border collapse zebracol"</code> <strong>and</strong> <code>data-col-3="center" data-col-4="end"</code></p>
+			<p>With <code>class="table-zebracol-odd"</code></p>
 			<div data-bs="overflow-scroll">
-				<table data-bs="full border collapse zebracol" data-col-3="center" data-col-4="end">
+				<table class="table-zebracol-odd">
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<p>With <code>class="table-zebrarow"</code></p>
+			<div data-bs="overflow-scroll">
+				<table class="table-zebrarow">
+					<thead>
+						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+					</thead>
+					<tbody>
+						<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+						<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+						<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+						<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+						<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					</tbody>
+				</table>
+			</div>
+
+			<p>With <code>class="table-border table-zebracol-even"</code> <strong>and</strong> <code>data-col-2="center" data-col-4="end"</code></p>
+			<div data-bs="overflow-scroll">
+				<table class="table-border table-zebracol-even" data-col-2="center" data-col-4="end">
 					<thead>
 						<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 					</thead>

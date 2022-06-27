@@ -1,7 +1,17 @@
-:where(table[data-bs~="border"]) td { --td-bdw: 1px; }
+/* :where(table[data-bs~="border"]) td { --td-bdw: 1px; }
 :where(table[data-bs~="borderbelow"]) td { --td-bdw: 0 0 1px 0; }
 :where(table[data-bs~="collapse"]) { --table-bdcl: collapse; }
 :where(table[data-bs~="full"]) { --table-w: 99.9%; }
-:where(table[data-bs~="thborderbelow"]) th { --th-bdw: 0 0 2px 0; }
-:where(table[data-bs~="zebracol"] td:nth-of-type(odd)) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
-:where(table[data-bs~="zebrarow"] tr:nth-of-type(odd) td) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
+:where(table[data-bs~="thborderbelow"]) th { --th-bdw: 0 0 2px 0; } */
+
+.table-border {  --table-bdcl: collapse;}
+.table-border :is(td, th) {
+	--th-bdw: 1px;
+	--td-bdw: 1px;
+
+}
+
+
+.table-zebracol-even td:nth-of-type(even) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
+.table-zebracol-odd td:nth-of-type(odd) { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }
+.table-zebrarow tr:nth-of-type(even) td { --td-bgc: var(--table-zebra-bg, var(--gray-1)); }

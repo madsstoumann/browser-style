@@ -2,13 +2,14 @@
 	border: 1px solid transparent; /* HACK */
 	border-collapse: var(--table-bdcl, separate);
 	border-spacing: var(--table-bdsp, 0);
+	inline-size: var(--table-w, auto);
 	table-layout: var(--table-tbl, auto);
-	width: var(--table-w, auto);
 }
 
 :where(td, th) {
-	padding-block: var(--td-pb, .5ch);
-	padding-inline: var(--td-pi, 1ch);
+	font-size: var(--table-td-fz, 0.875rem);
+	padding-block: var(--td-pb, .75em);
+	padding-inline: var(--td-pi, 1.5em);
 	overflow: hidden;
 	text-align: var(--td-tal, start);
 	text-overflow: ellipsis;
@@ -17,17 +18,20 @@
 
 :where(td) {
 	background-color: var(--td-bgc, initial);
-	border-color: var(--td-bdc, var(--gray-5));
+	border-color: var(--td-bdc, var(--input-bdc));
 	border-style: var(--td-bds, solid);
-	border-width: var(--td-bdw, 0px);
+	border-width: var(--td-bdw, 0px 0px 1px 0px);
+	
 }
 
 :where(th) {
-	background-color: var(--th-bgc, initial);
-	border-color: var(--th-bdc, var(--gray-9));
+	background-color: var(--th-bgc, var(--gray-1));
+	border-color: var(--th-bdc, var(--input-bdc));
 	border-style: var(--th-bds, solid);
-	border-width: var(--th-bdw, 0px);
-	font-weight: var(--th-fw, 700);
+	border-width: var(--th-bdw, 0px 0px 1px 0px);
+	color: var(--th-c, var(--gray-7));
+	font-size: var(--table-th-fz, 0.875rem);
+	font-weight: var(--th-fw, 500);
 }
 
 /* Column-alignment, if you need to support more than 8 columns, add more */

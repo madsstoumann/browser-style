@@ -166,6 +166,8 @@
 	--optgroup-bgc: var(--gray-8);
 	--option-checked-bgc: var(--gray-7);
 	--table-zebra-bg: var(--gray-8);
+	--th-bgc: var(--gray-8);
+	--th-c: var(--gray-5);
 	--tip-bgc: var(--gray-9);
 
 	--select-icon: var(--icon-chevron-down-white);
