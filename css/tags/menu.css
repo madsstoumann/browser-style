@@ -18,6 +18,7 @@
 	align-items: center;
 	aspect-ratio: var(--menu-item-asr, none);
 	background-color: var(--menu-item-bgc);
+	block-size: var(--menu-item-h, auto);
 	border-color: var(--menu-item-bdc);
 	border-radius: var(--menu-item-bdrs, 0);
 	border-style: var(--menu-item-bds, solid);
@@ -25,6 +26,7 @@
 	color: var(--menu-item-c);
 	display: var(--menu-item-d, flex);
 	font-size: var(--menu-item-fz, 1rem);
+	inline-size: var(--menu-item-w, auto);
 	justify-content: var(--menu-item-jc, space-between);
 	margin: var(--menu-item-m, 0);
 	min-inline-size: var(--menu-item-mis, auto);

@@ -174,7 +174,7 @@
 
 
 :where([data-bs~="overflow-scroll"]) {
-	--shadow-size: 0.75em;
+	--shadow-size: 0.85em;
 	background:
 		linear-gradient(to right, var(--body-bg), var(--body-bg), #0000 calc(var(--shadow-size) * 2)),
 		radial-gradient(farthest-side at 0 50%, var(--shadow-color), #0000),

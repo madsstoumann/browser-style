@@ -40,10 +40,12 @@
 	--menu-item-asr: 1 / 1;
 	--menu-item-bdrs: 50%;
 	--menu-item-fx: 1;
+	--menu-item-h: 3em;
 	--menu-item-pb: 0.75em;
 	--menu-item-pi: 0.75em;
 	--menu-item-tal: center;
 	--menu-menuitem-p: 0px;
+	--menu-item-w: 3em;
 }
 .menu-list-icon [data-bs="active"] { box-shadow: 0 0 0 2px var(--accent-color-text); }
 
