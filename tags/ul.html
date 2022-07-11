@@ -3,7 +3,7 @@
 <head>
 	<title>&lt;ul&gt;</title>
 	<meta charset="UTF-8">
-	<link rel="preload" href="css/styles.css" as="style">
+	<link rel="preload" href="/css/styles.css" as="style">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="browser.style: ul">
 	<meta name="format-detection" content="telephone=no">
@@ -12,6 +12,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
 	<link rel="stylesheet" href="/css/tags/ul.css">
+	<link rel="stylesheet" href="/css/variants/ol-ul.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -47,43 +48,89 @@
 
 			<hr data-bs="dashed">
 			<h2>Variants</h2>
+			<h3>Custom classes</h3>
+			<div class="row">
+				<ul class="list-custom">
+					<li class="li-circle">li-circle</li>
+					<li class="li-circle li-bullseye">li-circle, li-bullseye</li>
+					<li class="li-circle li-checked">li-circle, li-checked</li>
+					<li class="li-circle li-outline">li-circle, li-outline</li>
 
+					<li class="li-circle li-active">li-circle, li-active</li>
+					<li class="li-circle li-active li-bullseye">li-circle, li-active, li-bullseye</li>
+					<li class="li-circle li-active li-checked">li-circle, li-active, li-checked</li>
+					<li class="li-circle li-active li-outline">li-circle, li-active, li-outline</li>
+
+					<li class="li-circle li-dark">li-circle, li-dark</li>
+					<li class="li-circle li-dark li-bullseye">li-circle, li-dark, li-bullseye</li>
+					<li class="li-circle li-dark li-checked">li-circle, li-dark, li-checked</li>
+					<li class="li-circle li-dark li-outline">li-circle, li-dark, li-outline</li>
+				</ul>
+
+				<ul class="list-custom">
+					<li class="li-square">li-square</li>
+					<li class="li-square li-bullseye">li-square, li-bullseye</li>
+					<li class="li-square li-checked">li-square, li-checked</li>
+					<li class="li-square li-outline">li-square, li-outline</li>
+				
+					<li class="li-square li-active">li-square, li-active</li>
+					<li class="li-square li-active li-bullseye">li-square, li-active, li-bullseye</li>
+					<li class="li-square li-active li-checked">li-square, li-active, li-checked</li>
+					<li class="li-square li-active li-outline">li-square, li-active, li-outline</li>
+				
+					<li class="li-square li-dark">li-square, li-dark</li>
+					<li class="li-square li-dark li-bullseye">li-square, li-dark, li-bullseye</li>
+					<li class="li-square li-dark li-checked">li-square, li-dark, li-checked</li>
+					<li class="li-square li-dark li-outline">li-square, li-dark, li-outline</li>
+				</ul>
+
+				<ul class="list-custom">
+					<li class="li-circle li-scale-xs">li-circle, li-scale-xs</li>
+					<li class="li-circle li-scale-sm">li-circle, li-scale-sm</li>
+					<li class="li-circle li-scale-md">li-circle, li-scale-md</li>
+					<li class="li-circle">li-circle</li>
+					<li class="li-square li-scale-xs">li-square, li-scale-xs</li>
+					<li class="li-square li-scale-sm">li-square, li-scale-sm</li>
+					<li class="li-square li-scale-md">li-square, li-scale-md</li>
+					<li class="li-square">li-square</li>
+				</ul>
+			</div>
 			<div class="row">
 				<div>
-					<p>With <code>data-bs="square"</code></p>
-					<ul data-bs="square">
+					<p>With <code>classs="ul-type-square"</code></p>
+					<ul class="ul-type-square">
 						<li>Item 1</li>
 						<li>Item 2</li>
 						<li>Item 3</li>
 					</ul>
 				</div>
 				<div>
-					<p>With <code>data-bs="triangle"</code></p>
-					<ul data-bs="triangle">
+					<p>With <code>classs="ul-type-triangle"</code></p>
+					<ul class="ul-type-triangle">
 						<li>Item 1</li>
 						<li>Item 2</li>
 						<li>Item 3</li>
 					</ul>
 				</div>
 				<div>
-					<p>With <code>data-bs="fisheye"</code></p>
-					<ul data-bs="fisheye">
+					<p>With <code>class="ul-type-fisheye"</code></p>
+					<ul class="ul-type-fisheye">
 						<li>Item 1</li>
 						<li>Item 2</li>
 						<li>Item 3</li>
 					</ul>
 				</div>
 				<div>
-					<p>With <code>data-bs="check"</code></p>
-					<ul data-bs="check">
+					<p>With <code>classs="ul-type-check"</code></p>
+					<ul class="ul-type-check">
 						<li>Item 1</li>
 						<li>Item 2</li>
 						<li>Item 3</li>
 					</ul>
 				</div>
 				<div>
-					<p>With <code>data-bs="cross"</code></p>
-					<ul data-bs="cross">
+					<p>With <code>classs="ul-type-cross"</code></p>
+					<ul class="ul-type-cross">
 						<li>Item 1</li>
 						<li>Item 2</li>
 						<li>Item 3</li>
@@ -91,22 +138,69 @@
 				</div>
 			</div>
 
-			<p>Using the <code>::marker</code>-pseudo-selector, list-items can be colored. Built-in colors are <code>success</code> and <code>danger</code></p>
 			<div class="row">
 				<div>
-					<p>With <code>data-bs="check success"</code></p>
-					<ul data-bs="check success">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
+					<p>With <code>class="ul-tree"</code></p>
+					<ul class="ul-tree">
+						<li>
+							Item 1
+							<ul>
+								<li>
+									Item 1-1
+									<ul>
+										<li>Item 1-1-1</li>
+										<li>Item 1-1-2</li>
+										<li>Item 1-1-3</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>
+							Item 2
+							<ul>
+								<li>Item 2-1</li>
+								<li>Item 2-2</li>
+								<li>Item 2-3</li>
+							</ul>
+						</li>
+						<li>
+							Item 3
+							<ul>
+								<li>Item 3-1</li>
+								<li>Item 3-2</li>
+								<li>Item 3-3</li>
+							</ul>
+						</li>
+						<li>
+							Item 4
+							<ul>
+								<li>Item 4-1</li>
+								<li>Item 4-2</li>
+								<li>Item 4-3</li>
+							</ul>
+						</li>
+						<li>
+							Item 5
+							<ul>
+								<li>Item 5-1</li>
+								<li>Item 5-2</li>
+								<li>Item 5-3</li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 				<div>
-					<p>With <code>data-bs="cross danger"</code></p>
-					<ul data-bs="cross danger">
-						<li>Item 1</li>
-						<li>Item 2</li>
-						<li>Item 3</li>
+					<p>With <code>class="ul-flex"</code></p>
+					<ul class="ul-flex">
+						<li data-icon="before icon-up">icon-up</li>
+						<li data-icon="before icon-down">icon-down</li>
+						<li data-icon="before icon-left">icon-left</li>
+						<li data-icon="before icon-right">icon-right</li>
+						<li data-icon="before icon-alert">icon-alert</li>
+						<li data-icon="before icon-checkmark">icon-checkmark</li>
+						<li data-icon="before icon-cross">icon-cross</li>
+						<li data-icon="before icon-date">icon-date</li>
+						<li data-icon="before icon-download">icon-download</li>
 					</ul>
 				</div>
 			</div>

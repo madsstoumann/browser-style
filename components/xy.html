@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>avatar</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="/css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: avatar">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/tags/figure.css">
+	<link rel="stylesheet" href="/css/components/xy.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=' 'sha256-2jY9g+KqYuOjgcoSE6vkPfC9C05xfRSWaVgubwNGajs=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<style>
+		/* DEMO: Show X and Y counters below pad */
+		[data-blok="xypad"]::before {
+			display: inline-block;
+			font-size: small;
+			inset-inline-end: 0;
+			inset-block-end: -2rem;
+			position: absolute;
+		} 
+		[data-blok="xypad"]::before {
+			content: "x:" counter(x) " – y:" counter(y);
+			counter-reset: x var(--x)  y var(--y);
+		}
+	</style>
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr />
+		<section>
+			<h2>xy</h2>
+			<fieldset data-blok="xypad">
+				<button type="button" name="xyPoint" aria-label="point in cartesian coordinate system"></button>
+			</fieldset>
+		</section>
+	</main>
+	<script src="/main.js" defer></script>
+	<script type="module">
+		import xy from'/assets/js/xy.js';
+		const elm = document.querySelector(`[data-blok="xypad"]`);
+		elm.addEventListener('xytoggle', (e) => { console.log('toggle') });
+		elm.addEventListener('xymove', (e) => {
+			const obj = e.detail;
+			elm.style.setProperty('--x', parseInt(obj.x, 10));
+			elm.style.setProperty('--y', parseInt(obj.y, 10));
+		});
+		xy(elm);
+	</script>
+</body>
+</html>

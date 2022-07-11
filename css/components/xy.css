@@ -1,0 +1,64 @@
+/**
+ * xypad.css
+ * @version 1.0.02
+ * @summary 03-09-2021
+ * @author Mads Stoumann
+ * @description xy-pad
+ */
+ [data-blok="xypad"] {
+	--xy-aspr: 1;
+	--xy-bgc: hsl(200, 25%, 85%);
+	--xy-maw: 25rem;
+	--xy-point-bdc: hsl(200, 35%, 70%);
+	--xy-point-bdc-inner: var(--xy-bgc);
+	--xy-point-bdc--active: hsl(200, 35%, 60%);
+	--xy-point-bdrs: 50%;
+	--xy-point-bdw: 0.5rem;
+	--xy-point-bgc: hsl(200, 35%, 85%);
+	--xy-point-bgc--active: hsla(200, 35%, 65%, 0.5);
+	--xy-point-bxsh-w: .25rem;
+	--xy-point-w: 4rem;
+
+	aspect-ratio: var(--xy-aspr);
+	background-color: var(--xy-bgc);
+	border: 0;
+	direction: ltr; /* even when `dir="rtl"`, cartesian coordinates should be `ltr` */
+	margin: 0;
+	max-width: var(--xy-maw);
+	padding: 0;
+	position: relative;
+	touch-action: none;
+	width: 100%;
+}
+[data-blok="xypad"] [name="xyPoint"] {
+	background-color: var(--xy-point-bgc);
+	block-size: var(--xy-point-w);
+	border: var(--xy-point-bdw) solid var(--xy-point-bdc);
+	border-radius: var(--xy-point-bdrs);
+	inline-size: var(--xy-point-w);
+	outline: none;
+	pointer-events: none;
+	touch-action: none;
+	transform: translate3d(calc(1px * var(--tx)), calc(1px * var(--ty)), 0);
+	user-select: none;
+}
+/*
+=======
+ STATE
+=======
+*/
+[data-blok="xypad"] [name="xyPoint"]:focus-visible {
+	box-shadow: 0 0 0 var(--xy-point-bxsh-w) var(--xy-point-bdc-inner), 0 0 0 calc(2 * var(--xy-point-bxsh-w)) var(--xy-point-bdc--active);
+}
+[data-blok="xypad"][data-active="1"] [name="xyPoint"] {
+	--xy-point-bdc: var(--xy-point-bdc--active);
+	--xy-point-bgc: var(--xy-point-bgc--active);
+}
+/* Support for browsers, that do not support `aspect-ratio` */
+/* @supports not (aspect-ratio: 1) {
+	[data-blok="xypad"]:after {
+		content: "";
+		display: block;
+		padding-bottom: calc(100% - var(--xy-point-w));
+	}
+} */

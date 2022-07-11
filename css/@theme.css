@@ -70,7 +70,15 @@
 	--meter-evenless-bgc: var(--color-warning);
 	--meter-optimum-bgc: var(--color-success);
 	--meter-suboptimum-bgc: var(--color-danger);
-	--ol-li-bg: var(--gray-2);
+
+	--li-bf-bdc: var(--gray-5);
+	--li-bf-bgc: var(--gray-3);
+	--li-dark-bf-bgc: var(--gray-7);
+	--li-dark-bf-c: #FFF;
+
+	--li-icon-light: var(--icon-check-light);
+	--li-icon-dark: var(--icon-check-dark);
+
 	--pre-bgc: var(--gray-8);
 	--pre-c: #FFF;
 	--progress-bar-bgc: var(--accent-color);
@@ -157,12 +165,14 @@
 	--input-switch-bgc: hsl(210, 11%, 50%);
 	--input-track-c: hsl(220, 10%, 75%);
 	--kbd-c: #000;
+	--li-bf-bgc: var(--gray-8);
+	--li-icon-dark: var(--icon-check-light);
 	--marquee-bgc: var(--gray-8);
 	--menu-context-bgc: var(--gray-8);
 	--menu-item-hover-bgc: var(--gray-7);
 	--menu-list-button-bgc: var(--gray-8);
 	--menu-tab-bar-bgc: var(--gray-9);
-	--ol-li-bg: var(--gray-8);
+	
 	--optgroup-bgc: var(--gray-8);
 	--option-checked-bgc: var(--gray-7);
 	--table-zebra-bg: var(--gray-8);

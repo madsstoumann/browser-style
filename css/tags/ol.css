@@ -1,19 +1,26 @@
+@import 'li.css';
+
 :where(ol:not([type])) {
 	counter-reset: ol;
 	list-style: none;
-	padding-inline-start: var(--ol-pis, 1.5em);
+	margin-block-start: var(--list-mbs, 1em);
+  margin-block-end: var(--list-mbe, 1em);
+	padding-inline-start: var(--list-pis, 1.5em);
 }
+
+:where(ol ol) {
+	--list-mbe: 0;
+	--list-mbs: 0;
+}
+
+:where(ol:not([type]) li) { counter-increment: ol; }
 
 :where(ol:not([type]) li) {
-	counter-increment: ol;
-	line-height: var(--ol-li-lh, inherit);
-	position: relative;
+	--li-bf-cnt: counters(ol, '.') '. ';
+	--li-bf-fw: 600;
 }
 
-:where(ol:not([type]) li)::before {
-	color: var(--ol-li-c, inherit);
-	content: counters(ol, '.') '. ';
-	font-weight: var(--ol-li-fw, 600);
-}
+:where(ol:not([class]) li) { --li-bf-bgc: transparent; }
 
-:where(ol li a) { line-height: 2; } /* Ensure tap-target-size is large enough for links */
+/* Ensure tap-target-size is large enough for links */
+:where(ol li a) { line-height: 2; } 

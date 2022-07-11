@@ -6,6 +6,10 @@
 	text-underline-offset: var(--abbr-tdo, 3px);
 }
 
+:where(b) {
+	font-weight: var(--b-fw, 500);
+}
+
 /* code */
 :where(code),
 :where(var) {

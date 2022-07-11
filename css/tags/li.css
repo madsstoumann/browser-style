@@ -1,0 +1,30 @@
+:where(li) {
+	align-items: var(--li-ai, normal);
+	display: var(--li-d, list-item);
+	line-height: var(--li-lh, inherit);
+	max-inline-size: var(--li-mas, none);
+	min-inline-size: var(--li-mis, none);
+	place-content: var(--li-plc, normal);
+	position: relative;
+}
+
+:where(li)::before {
+	aspect-ratio: 1 / 1;
+	background-color: var(--li-bf-bgc);
+	border-color: var(--li-bf-bdc, currentColor);
+	border-radius: var(--li-bf-bdrs, 0);
+	border-style: solid;
+	border-width: var(--li-bf-bdw, 0px);
+	block-size: var(--li-bf-sz, inherit);
+	box-shadow: var(--li-bf-bxsh, none);
+	color: var(--li-bf-c, currentColor);
+	content: var(--li-bf-cnt, none);
+	display: var(--li-bf-d, inline);
+	font-size: var(--li-bf-fz);
+	font-weight: var(--li-bf-fw, inherit);
+	inline-size: var(--li-bf-sz, inherit);
+	margin-inline: var(--li-bf-mi, initial);
+	place-content: center;
+	position: relative;
+	z-index: 1;
+}

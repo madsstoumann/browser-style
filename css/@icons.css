@@ -32,7 +32,8 @@
 	--icon-week: url('/svg/week.svg');
 
 	/* Used for checkboxes (white fill): */
-	--icon-checkbox: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
+	--icon-check-dark: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="black"></path></svg>');
+	--icon-check-light: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z" fill="white"></path></svg>');
 }
 
 /* Icon Keywords */
@@ -77,8 +78,8 @@
 :where([data-icon~="start"]), :where([dir="rtl"] [data-icon~="end"]) { background-position: center left var(--icon-mie); }
 
 /* Icon as pseudo element `::after` or `::before`, using `mask-image` */
-:where([data-icon~="after"])::after,
-:where([data-icon~="before"])::before {
+[data-icon~="after"]::after,
+[data-icon~="before"]::before {
 	background-color: currentColor;
 	block-size: var(--icon-sz, 1.5em);
 	content: "";
@@ -98,12 +99,12 @@
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-size: var(--icon-msz, 100%);
 }
-:where([data-icon~="after"]) { --icon-mis: .75ch; }
-:where([data-icon~="before"]) { --icon-mie: .75ch; }
-:where([data-icon~="center"])::after,
-:where([data-icon~="center"])::before { --icon-mie: auto; --icon-mis: auto; }
-:where([data-icon~="block"])::after,
-:where([data-icon~="block"])::before {
+[data-icon~="after"] { --icon-mis: .75ch; }
+[data-icon~="before"] { --icon-mie: .75ch; }
+[data-icon~="center"]::after,
+[data-icon~="center"]::before { --icon-mie: auto; --icon-mis: auto; }
+[data-icon~="block"]::after,
+[data-icon~="block"]::before {
 	--icon-d: block;
 	--icon-mb: .35em;
 	--icon-mie: auto;
@@ -112,7 +113,7 @@
 }
 
 /* Icon as a wrapper for a svg */
-:where([data-icon~="inline"]) {
+[data-icon~="inline"] {
 	display: inline-block;
 	block-size: var(--icon-sz, 1.5em);
 	inline-size: var(--icon-sz, 1.5em);

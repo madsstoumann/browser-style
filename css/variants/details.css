@@ -23,7 +23,7 @@
 :where(details[data-bs~="inline"]) { display: inline-flex;  }
 
 :where(details[data-bs~="overlay"][open] summary)::before {
-	background: var(--_overlay-bgc, transparent);
+	background: var(--_overlay-bgc, rgba(0,0,0,.15));
   content: "";
   display: block;
   inset: 0;
@@ -56,4 +56,45 @@ where(details[data-bs~="toggle-tip"]) {
   position: absolute;
   width: var(--tip-w, 12rem);
   z-index: 1;
+}
+
+/* .details-drawer[open] .details-drawer-panel {
+	transform: translateX(0);
+} */
+
+.details-drawer[data-panel-side="bottom"] {
+	--_bz: 300px;
+	--_iz: 100vw;
+	--_ibe: 0;
+	--_ibs: auto;
+	--_trf: translateY(100vh);
+}
+
+.details-drawer[data-panel-side="left"] {
+	--_ibe: auto;
+	--_iis: 0;
+	--_trf: translateX(-100vw)
+}
+
+.details-drawer[data-panel-side="top"] {
+	--_bz: 300px;
+	--_iz: 100vw;
+	--_ibe: auto;
+	--_iis: 0;
+	--_trf: translateY(-100vh);
+}
+
+.details-drawer-panel {
+	background: tomato;
+	block-size: var(--_bz, 100vh);
+	inline-size: var(--_iz, 25vw);
+	position: fixed;
+	inset-block-start: var(--_ibs, 0);
+	inset-block-end: var(--_ibe, auto);
+	inset-inline-start: var(--_iis, auto);
+	inset-inline-end: var(--_iie, 0);
+	opacity: .25;
+	padding: 2ch;
+	transform: var(--_trf, translateX(100vw));
+	transition: all .3s ease-in;
 }
