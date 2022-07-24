@@ -1,64 +1,63 @@
 /**
- * xypad.css
- * @version 1.0.02
- * @summary 03-09-2021
+ * xy.css
+ * @version 1.0.03
+ * @summary 07-17-2022
  * @author Mads Stoumann
- * @description xy-pad
+ * @description xy
  */
- [data-blok="xypad"] {
-	--xy-aspr: 1;
-	--xy-bgc: hsl(200, 25%, 85%);
-	--xy-maw: 25rem;
-	--xy-point-bdc: hsl(200, 35%, 70%);
-	--xy-point-bdc-inner: var(--xy-bgc);
-	--xy-point-bdc--active: hsl(200, 35%, 60%);
-	--xy-point-bdrs: 50%;
-	--xy-point-bdw: 0.5rem;
-	--xy-point-bgc: hsl(200, 35%, 85%);
-	--xy-point-bgc--active: hsla(200, 35%, 65%, 0.5);
-	--xy-point-bxsh-w: .25rem;
-	--xy-point-w: 4rem;
-
-	aspect-ratio: var(--xy-aspr);
+ [data-bs*="xy"] {
+	aspect-ratio: var(--xy-asr, 1);
 	background-color: var(--xy-bgc);
 	border: 0;
 	direction: ltr; /* even when `dir="rtl"`, cartesian coordinates should be `ltr` */
 	margin: 0;
-	max-width: var(--xy-maw);
+	max-width: var(--xy-maw, 24rem);
 	padding: 0;
 	position: relative;
 	touch-action: none;
 	width: 100%;
 }
-[data-blok="xypad"] [name="xyPoint"] {
+[data-bs*="xy"] [name="xyPoint"] {
+	aspect-ratio: 1 / 1;
 	background-color: var(--xy-point-bgc);
-	block-size: var(--xy-point-w);
-	border: var(--xy-point-bdw) solid var(--xy-point-bdc);
-	border-radius: var(--xy-point-bdrs);
-	inline-size: var(--xy-point-w);
+	border: var(--xy-point-bdw, 0.5rem) solid var(--xy-point-bdc);
+	border-radius: var(--xy-point-bdrs, 50%);
+	inline-size: var(--xy-point-sz, 4rem);
 	outline: none;
+	padding: 0;
 	pointer-events: none;
+	position: relative;
 	touch-action: none;
 	transform: translate3d(calc(1px * var(--tx)), calc(1px * var(--ty)), 0);
 	user-select: none;
+}
+[data-bs="xy-snap"] {
+	--xy-grid-clg: 1px;
+	--xy-grid-bgc: transparent;
+	--xy-grid-gap-bgc: var(--gray-4);
+	--xy-point-bdrs: 0;
+	--xy-point-bgc: transparent;
+	--xy-point-sz: calc(100% / var(--xy-grid-x));
+
+	--_wx: calc( (100% - (((var(--xy-grid-x, 1) - 1) * var(--xy-grid-clg)))) / var(--xy-grid-x, 1) );
+	--_wy: calc( (100% - (((var(--xy-grid-y, 1) - 1) * var(--xy-grid-clg)))) / var(--xy-grid-y, 1) );
+
+	background-image: repeating-linear-gradient(to right,
+		var(--xy-grid-bgc), var(--xy-grid-bgc) var(--_wx),
+		var(--xy-grid-gap-bgc) var(--_wx), var(--xy-grid-gap-bgc) calc(var(--_wx) + var(--xy-grid-clg) ) ),
+		repeating-linear-gradient(to bottom,
+		var(--xy-grid-bgc), var(--xy-grid-bgc) var(--_wy),
+		var(--xy-grid-gap-bgc) var(--_wy), var(--xy-grid-gap-bgc) calc(var(--_wy) + var(--xy-grid-clg) ) );
 }
 /*
 =======
  STATE
 =======
 */
-[data-blok="xypad"] [name="xyPoint"]:focus-visible {
-	box-shadow: 0 0 0 var(--xy-point-bxsh-w) var(--xy-point-bdc-inner), 0 0 0 calc(2 * var(--xy-point-bxsh-w)) var(--xy-point-bdc--active);
+[data-bs*="xy"] [name="xyPoint"]:focus-visible {
+	box-shadow: 0 0 0 var(--xy-point-bxsh-w, .25rem) var(--xy-point-bdc-inner), 0 0 0 calc(2 * var(--xy-point-bxsh-w, .25rem)) var(--xy-point-bdc--active);
 }
-[data-blok="xypad"][data-active="1"] [name="xyPoint"] {
+[data-bs*="xy"][data-active="1"] [name="xyPoint"] {
 	--xy-point-bdc: var(--xy-point-bdc--active);
 	--xy-point-bgc: var(--xy-point-bgc--active);
 }
-/* Support for browsers, that do not support `aspect-ratio` */
-/* @supports not (aspect-ratio: 1) {
-	[data-blok="xypad"]:after {
-		content: "";
-		display: block;
-		padding-bottom: calc(100% - var(--xy-point-w));
-	}
-} */

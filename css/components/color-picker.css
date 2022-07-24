@@ -1,0 +1,146 @@
+/**
+ * color-picker.css
+ * @version 1.0.05
+ * @summary 03-09-2021
+ * @author Mads Stoumann
+ * @description color-picker
+ */
+ [data-bs*="color-picker"] {
+	--cp-bdrs: 1.25rem;
+	--cp-bgc: var(--gray-7);
+	--cp-gap: 0.6rem;
+	--cp-prev-bs: 5rem; 
+
+	--hue: 0;
+	--s: 100%;
+	--l: 50%;
+	--a: 1;
+
+	background-color: var(--cp-bgc);
+	border: 0;
+	border-radius: var(--cp-bdrs);
+	padding: var(--cp-gap);
+	max-width: var(--cp-maw, 25rem);
+	width: 100%;
+}
+[name="cpBackground"] {
+	--x: calc(var(--xy-point-sz) / 2);
+	/* --xy-point-bdc: #FFF; */
+	/* --xy-point-bdc--active: #FFF; */
+	--xy-point-bdw: 2px;
+	--xy-point-sz: 2rem;
+	--xy-bgc: hsl(var(--hue), 100%, 50%);
+	--xy-point-bgc: transparent;
+	--xy-point-bgc--active: transparent;
+
+	border-radius: calc(var(--cp-bdrs) - (var(--cp-gap) / 2));
+	margin-block-end: var(--cp-gap);
+}
+[name="cpColorCodes"] {
+	color: white;
+	border: 0;
+	font-family: ui-monospace, monospace;
+	font-size: small;
+	padding: 0;
+	user-select: none;
+}
+[name="cpColorCodes"] output {
+	display: block;
+}
+[name="cpControls"] {
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+[name="cpPreview"] {
+	background-color: hsla(var(--hue), var(--s), var(--l), var(--a));
+	block-size: var(--cp-prev-bs);
+	border-radius: calc(var(--cp-bdrs) - var(--cp-gap));
+	display: block;
+	margin-block-end: var(--cp-gap);
+}
+
+
+.saturation {
+	background-image: linear-gradient(to bottom, transparent var(--x), transparent var(--x), hsl(var(--hue), 0%, 0%) calc(100% - var(--x)), hsl(var(--hue), 0%, 0%) calc(100% - var(--x)));
+}
+.brightness {
+	background-image: linear-gradient(to right, hsl(var(--hue), 100%, 100%) var(--x), hsl(var(--hue), 100%, 100%) var(--x), transparent calc(100% - var(--x)), transparent calc(100% - var(--x)));
+	
+}
+.saturation, .brightness {
+	border-radius: inherit;
+	block-size: 100%;
+	inline-size: 100%;
+	position: absolute;
+}
+
+
+
+[name="cpAlpha"],
+[name="cpHue"] {
+	--rn-thumb-bdc: white;
+	--rn-thumb-bgc: transparent;
+	--rn-thumb-bdw: 2px;
+	--rn-thumb-h: 1.5rem;
+	--rn-thumb-w: 1.5rem;
+	--rn-bdrs: .25rem;
+	--rn-w: 100%;
+	margin-block-end: var(--cp-gap);
+}
+[name="cpAlpha"] {
+	--rn-bgi: linear-gradient(to right, transparent, hsl(var(--hue), var(--s), var(--l))), url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="5" height="5" fill="grey" /><rect x="5" y="5" width="5" height="5" fill="grey" /><rect x="5" y="0" width="5" height="5" fill="white" /><rect x="0" y="5" width="5" height="5" fill="white" /></svg>');
+	--rn-bgp: 0 0;	
+	--rn-bgr: repeat;
+	--rn-bgsz: cover, 0.75rem 0.75rem;
+}
+[name="cpHue"] {
+	--input-thumb-bg: transparent;
+	--input-thumb-bxsh: inset 0 0 0 2px white, inset 0 0 0 3px darkslategrey;
+	--input-track-bg: linear-gradient(to right,
+		hsl(0, 100%, 50%), 
+		hsl(30, 100%, 50%), 
+		hsl(60, 100%, 50%),
+		hsl(90, 100%, 50%),
+		hsl(120, 100%, 50%),
+		hsl(150, 100%, 50%),
+		hsl(180, 100%, 50%),
+		hsl(210, 100%, 50%),
+		hsl(240, 100%, 50%),
+		hsl(270, 100%, 50%),
+		hsl(300, 100%, 50%),
+		hsl(330, 100%, 50%));
+}
+
+/* MICRO */
+[data-blok="color-picker-micro"] {
+	--cp-gap: 0.5rem;
+}
+[data-blok="color-picker-micro"] [name="cpControls"] {
+	display: grid;
+	gap: var(--cp-gap);
+	grid-template-columns: 1fr 2fr;
+}
+[data-blok="color-picker-micro"] [name="cpControls"] * {
+	margin-block-end: 0;
+}
+[data-blok="color-picker-micro"] [name="cpColorCodes"] {
+	display: none;
+}
+[data-blok="color-picker-micro"] [name="cpPreview"] {
+	grid-row: 1 / span 2;
+	height: 100%;
+}
+[data-blok="color-picker-micro"] [name="cpBackground"] {
+	--xy-aspr: 2 / 1;
+}
+
+/* MEDIA QUERY */
+
+[name="cpPreview"]:hover {
+	background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M18.984 21v-14.016h-10.969v14.016h10.969zM18.984 5.016q0.797 0 1.406 0.586t0.609 1.383v14.016q0 0.797-0.609 1.406t-1.406 0.609h-10.969q-0.797 0-1.406-0.609t-0.609-1.406v-14.016q0-0.797 0.609-1.383t1.406-0.586h10.969zM15.984 0.984v2.016h-12v14.016h-1.969v-14.016q0-0.797 0.586-1.406t1.383-0.609h12z"></path></svg>');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: var(--cp-ico-w, 2rem);
+	content: "";
+}

@@ -15,6 +15,7 @@
 	--accent-color-hover: hsl(var(--hue), var(--saturation), 40%);
 	--accent-text-color: hsl(var(--hue), var(--saturation), 99%);
 
+	--transparent: url('data:image/svg+xml;utf8,<svg preserveAspectRatio="none" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="5" height="5" fill="grey" /><rect x="5" y="5" width="5" height="5" fill="grey" /></svg>');
 	
 	--gray-0: #f8f9fa;
 	--gray-1: #f1f3f5;
@@ -31,6 +32,9 @@
 	--color-danger: hsl(354, 70%, 54%);
 	--color-success: hsl(134, 61%, 30%);
 
+
+	--_h: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + (var(--input-bdw) * 2));
+	
 	--required-color: maroon;
 
 	--secondary-color: hsl(var(--hue), 15%, 30%);
@@ -107,6 +111,7 @@
 	--input-invalid-c: var(--color-danger);
 	--input-pb: .75em;
 	--input-pi: .75em;
+	
 	--input-thumb-h: 1.25em;
 	--input-track-h: 0.125em;
 	--input-track-c: rgba(0, 0, 0, 0.2);
@@ -141,6 +146,13 @@
 	--ticks-bdc: var(--gray-7);
 
 
+	--xy-bgc: var(--gray-2);
+	--xy-point-bdc: var(--gray-6);
+	--xy-point-bdc-inner: var(--xy-bgc);
+	--xy-point-bdc--active: var(--gray-7);
+	--xy-point-bgc: var(--gray-4);
+	--xy-point-bgc--active: var(--gray-5);
+
 		/* Animation/Transition Duration */
 		--animdur-200: 200ms;
 		--animdur-300: 300ms;
@@ -152,7 +164,7 @@
 
 :where([data-bs~="dark-mode"]) {
 	--accent-color: hsl(220, 40%, 55%);
-	--accent-color-text: hsl(220deg 100% 82%);
+	--accent-color-text: hsl(220, 100%, 82%);
 	--address-bgc: var(--gray-9);
 	--body-bg: hsl(220, 10%, 10%);
 	--body-c: hsl(220, 10%, 95%);

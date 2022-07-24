@@ -1,0 +1,55 @@
+.bs-colorswatch {
+	--_cols: 10;
+	--_gap: 2px;
+	--_msz: 85%;
+	--_scl: calc(1 + (var(--_cols) / 3 / 10));
+	display: grid;
+	gap: var(--_gap);
+	grid-template-columns: repeat(var(--_cols), 1fr);
+}
+.bs-colorswatch label {
+	aspect-ratio: 1 / 1;
+	background-color: var(--_bgc);
+	border-radius: var(--_bdrs, 0);
+	color: var(--_c);
+	position: relative;
+	transition: transform .2s ease-in-out; 
+}
+.bs-colorswatch label:focus-within,
+.bs-colorswatch label:hover {
+	box-shadow: inset 0 0 0 .1em currentColor;
+	transform: scale(var(--_scl));
+	z-index: 1;
+}
+.bs-colorswatch input:checked + span {
+	background-color: currentColor;
+	block-size: 100%;
+	display: block;
+	mask-image: var(--icon-checkmark);
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: var(--_msz);
+	-webkit-mask-image: var(--icon-checkmark);
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: var(--_msz);
+}
+.bs-colorswatch legend {
+	grid-column: 1 / var(--_cols);
+	margin-block-end: .25em; /* TODO! */
+}
+
+[style*="--_bgc:transparent"] {
+  background-image: var(--transparent);
+  background-position: 0 0;
+  background-size: .7em;
+}
+
+/* Variants */
+.bs-colorswatch-round {
+	--_bdrs: 50%;
+	--_gap: .5em;
+}
+.bs-colorswatch-nogap {
+	--_gap: 0;
+}

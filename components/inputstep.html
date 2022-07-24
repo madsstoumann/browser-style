@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="en-US" dir="ltr" data-bs="dark-modes">
 <head>
-	<title>browser.style: imagecompare</title>
+	<title>input-step</title>
 	<meta charset="UTF-8">
 	<link rel="preload" href="/css/styles.css" as="style">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="browser.style: imagecompare">
+	<meta name="description" content="browser.style: form elements">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
-	<link rel="stylesheet" href="/css/tags/figure.css">
-	<link rel="stylesheet" href="/css/tags/input.range.css">
-	<link rel="stylesheet" href="/css/components/imagecompare.css">
+	<link rel="stylesheet" href="/css/tags/fieldset.css">
+	<link rel="stylesheet" href="/css/tags/input.css">
+	<link rel="stylesheet" href="/css/components/inputstep.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
@@ -32,25 +32,40 @@
 </head>
 <body>
 	<main>
-
 		<h1 class="bs-header">browser.style</h1>
 		<a href="/">Back to table of contents</a>
 		<hr />
 		<section>
-			<h2>Image Compare</h2>
-			<p>Requires <code>figure</code> and <code>input[type="range"]</code> as well as a small JavaScript (190 bytes) that updates a <code>CSS Custom Property</code></p>
+			<h2>input-step</h2>
 
-			<figure class="bs-imagecompare" data-bs="widescreen">
-				<img src="/demo/color.jpeg" width="1000" height="563" alt="Color Image for Comparison" loading="lazy" decoding="async" />
-				<img src="/demo/bw.jpeg" width="1000" height="563" alt="Black and White Image for Comparison" loading="lazy" decoding="async" />
-				<input type="range" min="0" max="100" name="value" value="50" data-scope="parent" data-unit="%" aria-label="Slider for comparing two images" />
-			</figure>
+			<div class="row">
 
-			<small>&copy; Photo by Karley Saagi, Pexels</small>
+				<label>Regular number
+					<input type="number" min="0" max="10">
+				</label>
 
+				<label data-bs="inputstep" class="bs-inputstep">
+					<span>Numeric step</span>
+					<button type="button">-</button>
+					<input type="number" min="0" max="10" value="2">
+					<button type="button">+</button>
+				</label>
+
+				<fieldset class="bs-pagination" data-bs="no-border">
+					<legend>Pagination</legend>
+					<button type="button" name="first">|&lt;</button>
+					<button type="button" name="prev">&lt;</button>
+					<label aria-label="Current page">
+						<input type="number" min="1" max="50" value="1">
+						<!-- <output>50</output> -->
+					</label>
+					<button type="button" name="next">&gt;</button>
+					<button type="button" name="last">&gt;|</button>
+				</fieldset>
+
+			</div>
 		</section>
 	</main>
 	<script src="/main.js" defer></script>
-	<script src="/js/app.js" defer></script>
 </body>
 </html>

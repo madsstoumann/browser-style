@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>avatar</title>
+	<title>xy</title>
 	<meta charset="UTF-8">
 	<link rel="preload" href="/css/styles.css" as="style">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -11,7 +11,6 @@
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 	<link rel="stylesheet" href="/css/styles.css">
-	<link rel="stylesheet" href="/css/tags/figure.css">
 	<link rel="stylesheet" href="/css/components/xy.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
@@ -24,22 +23,21 @@
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
-		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=' 'sha256-2jY9g+KqYuOjgcoSE6vkPfC9C05xfRSWaVgubwNGajs=';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=' 'sha256-fP1BFj7nNQwxgwW0loVRqPvKMNkkJv4l0anVUF4iElU=';
 		style-src 'self' 'unsafe-inline';
 	">
 	<style>
-		/* DEMO: Show X and Y counters below pad */
-		[data-blok="xypad"]::before {
-			display: inline-block;
-			font-size: small;
-			inset-inline-end: 0;
-			inset-block-end: -2rem;
-			position: absolute;
-		} 
-		[data-blok="xypad"]::before {
-			content: "x:" counter(x) " – y:" counter(y);
-			counter-reset: x var(--x)  y var(--y);
-		}
+	[data-bs*="xy"] legend {
+		font-size: small;
+		inline-size: 100%;
+		inset-block-start: -2em;
+		position: absolute;
+		text-align: end;
+		user-select: none;
+	}
+	.xy-toggle {
+		box-shadow: 0 0 0 4px var(--gray-7);
+	}
 	</style>
 	<link rel="manifest" href="/site.webmanifest">
 </head>
@@ -51,22 +49,37 @@
 		<hr />
 		<section>
 			<h2>xy</h2>
-			<fieldset data-blok="xypad">
-				<button type="button" name="xyPoint" aria-label="point in cartesian coordinate system"></button>
+			<fieldset data-bs="xy">
+				<legend></legend>
+				<button type="button" name="xyPoint" aria-label="Point in cartesian coordinate system"></button>
+			</fieldset>
+
+			<h2>xy - snap-to-grid</h2>
+			<fieldset data-bs="xy-snap">
+				<legend></legend>
+				<button type="button" name="xyPoint" aria-label="Point in cartesian coordinate system"></button>
 			</fieldset>
 		</section>
 	</main>
 	<script src="/main.js" defer></script>
 	<script type="module">
 		import xy from'/assets/js/xy.js';
-		const elm = document.querySelector(`[data-blok="xypad"]`);
-		elm.addEventListener('xytoggle', (e) => { console.log('toggle') });
+
+		const elm = document.querySelector(`[data-bs="xy"]`);
+		elm.addEventListener('xytoggle', () => { elm.classList.toggle('xy-toggle') });
 		elm.addEventListener('xymove', (e) => {
 			const obj = e.detail;
-			elm.style.setProperty('--x', parseInt(obj.x, 10));
-			elm.style.setProperty('--y', parseInt(obj.y, 10));
+			elm.firstElementChild.textContent = `x:${obj.x.toFixed(3)} y:${obj.y.toFixed(3)}`;
 		});
 		xy(elm);
+
+		const snap = document.querySelector(`[data-bs="xy-snap"]`);
+		snap.addEventListener('xytoggle', () => { snap.classList.toggle('xy-toggle') });
+		snap.addEventListener('xymove', (e) => {
+			const obj = e.detail;
+			snap.firstElementChild.textContent = `cell:${parseInt(obj.gx,10)} row:${parseInt(obj.gy, 10)}`;
+		});
+		xy(snap, { gridX: 6, gridY: 6, x: 0, y: 100});
 	</script>
 </body>
 </html>

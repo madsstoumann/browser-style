@@ -1,0 +1,59 @@
+.bs-timeslot {
+	display: flex;
+	flex-direction: column;
+	gap: .5em;
+}
+.bs-timeslot fieldset {
+	--fieldset-bdc: var(--gray-3);
+}
+.bs-timeslot fieldset:has(input:checked) {
+	background-color: var(--gray-1);
+	
+}
+.bs-timeslot fieldset:has(input:checked) input:not(:checked) + time { 
+	background-color: #FFF;
+}
+.bs-timeslot fieldset:has(input:checked) legend {
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
+}
+
+.bs-timeslot legend {
+	background-color: var(--gray-3);
+	border-radius: var(--input-bdrs);
+	color: var(--gray-9);
+	font-size: small;
+	display: grid;
+	line-height: 1.1;
+	padding: .25em .5em;
+}
+.bs-timeslot legend > span {
+	display: block;
+	font-size: x-large;
+	text-align: center;
+}
+
+.bs-timeslot time {
+	background-color: var(--gray-1);
+	border: 1px solid var(--gray-3);
+	display: block;
+	padding: .5em;
+	text-align: center;
+	user-select: none;
+}
+.bs-timeslot label:focus-within { 
+	box-shadow: 0 0 0 2px var(--accent-color);
+}
+.bs-timeslot input:checked + time {
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
+	/* box-shadow: 0 0 0 2px var(--gray-9); */
+}
+.bs-timeslot input:disabled + time {
+	color: var(--gray-6);
+	text-decoration: line-through;
+}
+
+@media (min-width: 800px) { 
+	.bs-timeslot { flex-direction: row; }
+}

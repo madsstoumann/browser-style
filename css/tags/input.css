@@ -6,10 +6,9 @@
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	
 	font-family: inherit;
 	font-size: var(--input-fz, 1rem);
-	inline-size: 100%;
+	/* inline-size: 100%; */
 	max-inline-size: 100%;
 }
 

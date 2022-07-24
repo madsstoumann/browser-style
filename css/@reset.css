@@ -38,7 +38,8 @@ picture {
 }
 
 /* Screen Reader Only */
-[data-bs="sr-only"] { 
+/* TODO! */
+[data-bs="sr-only"], .sr-only { 
 	clip: rect(0 0 0 0);
 	clip-path: inset(50%);
 	height: 1px;

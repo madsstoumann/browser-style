@@ -6,7 +6,7 @@
 .bs-imagecompare img:first-of-type { clip-path: polygon(0% 0%, var(--value) 0%, var(--value) 100%, 0% 100%); }
 .bs-imagecompare img:last-of-type { clip-path: polygon(100% 0%, var(--value) 0%, var(--value) 100%, 100% 100%); }
 .bs-imagecompare input {
-	--box-fill: transparent;
+	--input-thumb-bxsh: transparent;
 	--thumb-height: 100%;
 	--thumb-radius: 0px;
 	--thumb-width: 1rem;
