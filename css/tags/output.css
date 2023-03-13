@@ -1,0 +1,69 @@
+/* === Range Output === */
+[data-bs*="range-output-"] {
+	font-size: var(--output-fsz, x-small);
+	position: absolute;
+	transform: translateY(-.66em);
+}
+[data-bs*="range-output-"][data-bs*="-fill"] {
+	background: var(--output-bg, var(--color-accent));
+	border-radius: var(--output-bdrs, 2px);
+	color: var(--output-c, var(--color-accent-text));
+	padding: var(--output-p, 1px 3px);
+	transform: translateY(-1em);
+}
+[data-bs*="range-output-above"],
+[data-bs*="range-output-below"] {
+	--_rng: calc((var(--max, 100) - var(--min, 0)));
+	--_unt: calc(100 / var(--_rng));
+	--_rnu: calc((100% - var(--input-range-thumb-is)) / 100);
+	--_pos: calc((var(--v) - var(--min)) * var(--_unt));
+	--_dff: calc((var(--output-is) - var(--input-range-thumb-is)) / 2);
+	--output-is: 4em;
+	isolation: isolate;
+	inline-size: var(--output-is);
+	inset-inline-start: calc(var(--_pos) * var(--_rnu) - var(--_dff));
+	text-align: center;
+	z-index: 1;
+}
+[data-bs*="range-output-below"] {
+	inset-block-end: 0;
+	transform: translateY(.25em);
+}
+[data-bs*="range-output-below"][data-bs*="-fill"] {
+	transform: translateY(.5em);
+}
+/* Triangle Above or Below Output */
+[data-bs*="range-output-above"]::after,
+[data-bs*="range-output-below"]::after {
+	background-color: inherit;
+	block-size: .5em;
+	content: '';
+	display: block;
+	inline-size: 1em;
+	inset-inline-start: 50%;
+	position: absolute;
+	transform: translateX(-50%);
+}
+[data-bs*="range-output-above"]::after {
+	clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+	inset-block-start: calc(100% - 1px);
+}
+[data-bs*="range-output-below"]::after {
+	clip-path: polygon(0% 100%, 100% 100%, 50% 0%);
+	inset-block-end: calc(100% - 1px);
+}
+[dir="rtl"] span[data-bs*="output-above"]::after,
+[dir="rtl"] span[data-bs*="output-below"]::after {
+	transform: translateX(50%);
+}
+[type="range"]:hover + [data-bs*="range-output-"][data-bs*="-fill"] {
+	filter: brightness(var(--input-range-brgt-hover));
+}
+span[data-bs*="range-output-end"] { inset-inline-end: 0; }
+span[data-bs*="range-output-start"] { inset-inline-start: 0; }
+
+/* === Gap Label for Ranges === */
+[data-bs~="range-gap"] {
+	display: block;
+	margin-block-end: calc(3 * var(--input-gap, .25em));
+}

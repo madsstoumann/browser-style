@@ -1,0 +1,18 @@
+.bs-avatar {
+	--figcaption-c: var(--gray-6);
+	display: inline-grid;
+	place-items: center;
+}
+.bs-avatar >*:first-child {
+	--avatar-size: clamp(3rem, 1.5714rem + 4.5714vw, 5rem);
+	background-color: var(--avatar-bgc, var(--gray-8));
+	block-size: var(--avatar-size);
+	border: var(--avatar-bdw, 2px) solid var(--avatar-bdc, #FFF);
+	border-radius: var(--avatar-bdrs, 50%);
+	color: var(--avatar-c, #FFF);
+	display: grid;
+	font-size: 140%;
+	inline-size: var(--avatar-size);
+	place-content: center;
+}
+.bs-avatar-stack .bs-avatar:not(:first-child) { margin-inline-start: var(--avatar-mis, -1em); }

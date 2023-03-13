@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" data-bs="dark-modes">
+<head>
+	<title>numeric group</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="/css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form elements">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/tags/fieldset.css">
+	<link rel="stylesheet" href="/css/tags/input.css">
+	<link rel="stylesheet" href="input-spinner.css">
+	<!-- <meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	"> -->
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr>
+		<section>
+			<h2>input spinner</h2>
+
+			<div class="row">
+
+				<fieldset class="bs-inputspinner" data-bs="no-border">
+					<legend>Numeric step</legend>
+					<button type="button" name="nprev" data-icon="after center icon-minus" aria-label="Previous"></button>
+					<label aria-label="Current number">
+						<input type="number" min="0" max="10" step="1" value="1">
+					</label>
+					<button type="button" name="nnext" data-icon="after center icon-plus" aria-label="Next"></button>
+				</fieldset>
+
+				<fieldset class="bs-inputspinner" data-bs="no-border cycle">
+					<legend>Numeric cycle</legend>
+					<button type="button" name="nprev" data-icon="after center icon-minus" aria-label="Previous"></button>
+					<label aria-label="Current number">
+						<input type="number" min="1" max="10" step="1" value="1">
+					</label>
+					<button type="button" name="nnext" data-icon="after center icon-plus" aria-label="Next"></button>
+				</fieldset>
+
+				<fieldset class="bs-inputspinner" data-bs="no-border">
+					<legend>Pagination</legend>
+					<button type="button" name="nfirst" data-icon="after center icon-first" aria-label="First"></button>
+					<button type="button" name="nprev" data-icon="after center icon-left" aria-label="Previous"></button>
+					<label aria-label="Current page">
+						<input type="number" min="1" max="50" step="1" value="1">
+					</label>
+					<button type="button" name="nnext" data-icon="after center icon-right" aria-label="Next"></button>
+					<button type="button" name="nlast" data-icon="after center icon-last" aria-label="Last"></button>
+				</fieldset>
+
+				<fieldset class="bs-inputspinner bs-inputspinner-nav" data-bs="no-border">
+					<legend>Hidden number</legend>
+					<button type="button" name="nprev" data-icon="before icon-left">Previous</button>
+					<label aria-label="Current number">
+						<input type="number" min="1" max="10" step="1" value="1" class="sr-only">
+					</label>
+					<button type="button" name="nnext" data-icon="after icon-right">Next</button>
+				</fieldset>
+
+			</div>
+		</section>
+	</main>
+	<script src="/main.js" defer></script>
+	<script>
+
+		/* For demo */
+		document.querySelectorAll('.bs-inputspinner').forEach(group => {
+			numericGroup(group)
+			group.addEventListener('number', (event) => console.log(event.detail))
+		});
+
+		/* Numeric Group */
+		function numericGroup(group) {
+			let input;
+			const cycle = group.dataset.bs.includes('cycle');
+			const emit = () => group.dispatchEvent(new CustomEvent('number', { detail: input.value }));
+			const min = () => input.value = input.min;
+			const max = () => input.value = input.max;
+			[...group.elements].forEach(elm => {
+				if (elm.nodeName === 'INPUT') {
+					input = elm;
+					elm.addEventListener('input', () => {
+						if (input.value-0 > input.max) max();
+						if (input.value-0 < input.min) min();
+						emit()
+					});
+				} else {
+					elm.addEventListener('click', () => { 
+						if (elm.name === 'nfirst') min();
+						if (elm.name === 'nlast') max();
+						if (elm.name === 'nnext') cycle && input.value === input.max ? min() : input.stepUp();
+						if (elm.name === 'nprev') cycle && input.value === input.min ? max() : input.stepDown();
+						emit(); 
+					})
+				}
+			})
+		}
+
+		// 250 bytes gzipped
+		// function numericGroup(e){let n;const t=()=>e.dispatchEvent(new CustomEvent("number",{detail:n.value}));[...e.elements].forEach((e=>{"INPUT"===e.nodeName?(n=e,e.addEventListener("input",(()=>t()))):e.addEventListener("click",(()=>{"nfirst"===e.name&&(n.value=n.min),"nlast"===e.name&&(n.value=n.max),"nnext"===e.name&&n.stepUp(),"nprev"===e.name&&n.stepDown(),t()}))}))}
+
+		// 268 bytes - With input min/max check
+		// function numericGroup(e){let n;const a=()=>e.dispatchEvent(new CustomEvent("number",{detail:n.value}));[...e.elements].forEach((e=>{"INPUT"===e.nodeName?(n=e,e.addEventListener("input",(()=>{n.value-0>n.max&&(n.value=n.max),n.value-0<n.min&&(n.value=n.min),a()}))):e.addEventListener("click",(()=>{"nfirst"===e.name&&(n.value=n.min),"nlast"===e.name&&(n.value=n.max),"nnext"===e.name&&n.stepUp(),"nprev"===e.name&&n.stepDown(),a()}))}))}
+	</script>
+</body>
+</html>

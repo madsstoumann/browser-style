@@ -1,21 +1,83 @@
-:where(label, fieldset, [data-bs~="label"]) {
-	color: var(--label-c, inherit);
-	font-size: var(--label-fz, initial);
-	position: relative;
-	width: var(--label-w, 100%);
+/* For other controls, like <fieldset> to behave like a label (dual-range and more) */
+[data-bs~="label"] {
+  color: var(--label-c, inherit);
+  display: var(--label-d, inline);
+  font-size: var(--label-fsz, initial);
+  position: relative;
+  inline-size: var(--label-is, auto);
 }
-:where(label > abbr) {
+
+/* Has checkbox- or radio-input */
+label:has(input[type="checkbox"], input[type="radio"]) {
+	--label-d: grid;
+	--label-gap: var(--input-pi);
+  --label-gtc: min-content 1fr;
+}
+label:has([type="checkbox"]) [type="checkbox"],
+label:has([type="radio"]) [type="radio"] { align-self: baseline; }
+
+/* Icon Toggle */
+label[data-bs~="icon-toggle"] :is(input:checked +*, input:not(:checked) +*+*) {
+	display: none;
+}
+label[data-bs~="icon-toggle"] :is(input:not(:checked) +*, input:checked +*+*) {
+	display: flex;
+}
+
+/* Labels for range (min, max) */
+label[data-bs~="range-labels"]::before,
+label[data-bs~="range-labels"]::after {
+	color: var(--color-gray-6);
+	font-size: 10px;
+	inset-block-end: 0;
+	position: absolute;
+	
+}
+label[data-bs~="range-labels"]::before {
+	content: attr(data-min);
+	inset-inline-start: 0;
+} 
+label[data-bs~="range-labels"]::after {
+	content: attr(data-max);
+	inset-inline-end: 0;
+}
+
+/* Ticks for range */
+:where(label[data-bs*="ticks"]) {
+	--ticks-bdw: 1px;
+	--ticks-c: var(--color-border);
+	--ticks-count: 10;
+	--ticks-bs: 12px;
+	--ticks-unit: calc((100% - var(--input-range-thumb-bs) + var(--ticks-bdw)) / var(--ticks-count));
+	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
+	background-position: calc(var(--input-range-thumb-bs) / 2 - var(--ticks-bdw)) 77%;
+	background-repeat: repeat-x;
+	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-bs) / 2);
+}
+
+:where(label[data-bs*="3-ticks"]) { --ticks-count: 2; }
+:where(label[data-bs*="4-ticks"]) { --ticks-count: 3; }
+:where(label[data-bs*="5-ticks"]) { --ticks-count: 4; }
+:where(label[data-bs*="6-ticks"]) { --ticks-count: 5; }
+:where(label[data-bs*="7-ticks"]) { --ticks-count: 6; }
+:where(label[data-bs*="8-ticks"]) { --ticks-count: 7; }
+:where(label[data-bs*="9-ticks"]) { --ticks-count: 8; }
+:where(label[data-bs*="10-ticks"]) { --ticks-count: 9; }
+:where(label[data-bs*="11-ticks"]) { --ticks-count: 10; }
+:where(label[data-bs*="12-ticks"]) { --ticks-count: 11; }
+
+/* :where(label > abbr) {
 	color: var(--required-color);
 	margin-inline: 0.125ch 1ch;
 }
 :where(label small) { display: block; }
 :where(label > input:not([type="checkbox"]):not([type="radio"]), [data-bs~="label"] > details[data-bs~="select"], label > select, label > textarea) {
 	margin-block-start: var(--input-gap);
-}
-:where(label > input[type="file"]) { display: block; }
+} */
+/* :where(label > input[type="file"]) { display: block; } */
 
 /* Pseudo Labels */
-:where(label[data-left-label]),
+/* :where(label[data-left-label]),
 :where(label[data-right-label]) {
 	padding-block-end: 1.5em;
 	position: relative;
@@ -30,36 +92,4 @@
 :where(label[data-right-label])::after {
   content: attr(data-right-label);
   inset-inline-end: 0;
-}
-
-/* Ticks for range */
-:where(label[data-bs*="ticks"]) {
-	--ticks-bdw: 1px;
-	--ticks-c: var(--input-bdc);
-	--ticks-count: 6;
-	--ticks-h: 10px;
-	--ticks-unit: calc((100% - var(--input-thumb-h) + var(--ticks-bdw)) / var(--ticks-count));
-	background-image: linear-gradient(90deg, var(--ticks-c) 0 var(--ticks-bdw), transparent 0 var(--ticks-unit));
-	background-position: calc(var(--input-thumb-h) / 2 - var(--ticks-bdw)) 85%;
-	background-repeat: repeat-x;
-	background-size: calc(var(--ticks-unit) - (var(--ticks-bdw) / var(--ticks-count))) calc(var(--ticks-h) / 2);
-}
-
-:where(label[data-bs*="3-ticks"]) { --ticks-count: 2; }
-:where(label[data-bs*="4-ticks"]) { --ticks-count: 3; }
-:where(label[data-bs*="5-ticks"]) { --ticks-count: 4; }
-:where(label[data-bs*="6-ticks"]) { --ticks-count: 5; }
-:where(label[data-bs*="7-ticks"]) { --ticks-count: 6; }
-:where(label[data-bs*="8-ticks"]) { --ticks-count: 7; }
-:where(label[data-bs*="9-ticks"]) { --ticks-count: 8; }
-:where(label[data-bs*="10-ticks"]) { --ticks-count: 9; }
-:where(label[data-bs*="11-ticks"]) { --ticks-count: 10; }
-:where(label[data-bs*="12-ticks"]) { --ticks-count: 11; }
-
-/* Vertical range */
-:where(label[data-bs~="vertical-range"]) { 
-	aspect-ratio: 1 / 1;
-	display: grid;
-	grid-template-rows: min-content 1fr min-content;
-	place-items: center;
-}
+} */

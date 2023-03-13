@@ -43,12 +43,12 @@
 
 	/* TAGS: Colors */
 	--a-c: var(--accent-color-text);
-	--address-bgc: var(--gray-1);
+	--address-bg: var(--gray-1);
 	--address-c: inherit;
 	--badge-bg: var(--accent-color);
 	--badge-c: var(--accent-text-color);
 	--blockquote-bdc: var(--accent-color);
-	--blockquote-bgc: var(--gray-1);
+	--blockquote-bg: var(--gray-1);
 	--blockquote-c: inherit;
 	--button-bgc: var(--accent-color);
 	--button-bgc-hover: var(--accent-color-hover);
@@ -163,12 +163,13 @@
 }
 
 :where([data-bs~="dark-mode"]) {
+	--a-visited-c: tomato;
 	--accent-color: hsl(220, 40%, 55%);
 	--accent-color-text: hsl(220, 100%, 82%);
-	--address-bgc: var(--gray-9);
+	--address-bg: var(--gray-9);
 	--body-bg: hsl(220, 10%, 10%);
 	--body-c: hsl(220, 10%, 95%);
-	--blockquote-bgc: var(--gray-7);
+	--blockquote-bg: var(--gray-7);
 	--input-bdc: hsl(220, 10%, 75%);
 	--input-bgc: hsl(220, 10%, 15%);
 	--input-invalid-bdc: hsl(354, 50%, 70%);

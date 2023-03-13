@@ -1,9 +1,12 @@
-:where(figure) { margin: var(--figure-m, unset); }
+:where(figure) {
+	display: var(--figure-d, block);
+	margin: var(--figure-m, unset);
+}
 
 :where(figcaption) {
 	color: var(--figcaption-c);
 	font-size: var(--figcaption-fz, 80%);
-	margin-block: var(--figcaption-mb, 1ch);
+	/* margin-block: var(--figcaption-mb, 1ch); */
 }
 
 /* if data-bs is present, add aspect-ratio / object-position */

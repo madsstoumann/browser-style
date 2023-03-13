@@ -1,0 +1,49 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "compat-api/css": [
+      "default",
+      {
+        "ignore": [
+          "user-select",
+          "aspect-ratio",
+          "block-size: var(--dialog-bs, fit-content)",
+          "inline-size: var(--dialog-is, fit-content)",
+          "list-style-type: var(--summary-list--open, disclosure-open)",
+          "list-style-type: var(--summary-list--close, disclosure-closed)",
+          "-webkit-tap-highlight-color",
+          "scrollbar-color",
+          "scrollbar-gutter",
+          "scrollbar-width",
+          "text-decoration-skip-ink",
+          "text-decoration-thickness",
+          "text-underline-offset",
+          "translate",
+          "appearance",
+          "appearance: auto",
+          "accent-color",
+          "overscroll-behavior"
+        ]
+      }
+    ],
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "img[loading]",
+          "iframe[allow]",
+          "meta[name=theme-color]",
+          "dialog"
+        ]
+      }
+    ],
+    "no-inline-styles": "off"
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not ios_saf <= 14.8"
+  ]
+}

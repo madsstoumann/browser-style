@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>text semantics</title>
 	<meta charset="UTF-8">
-	<link rel="preload" href="/css/styles.css" as="style">
+	<title>text semantics</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="browser.style: text semantics">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
 	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
-	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/main.css">
 	<link rel="stylesheet" href="/css/@tooltip.css">
 	<meta http-equiv="Content-Security-Policy" content="
 		base-uri;
@@ -32,7 +31,7 @@
 	<main>
 		<h1 class="bs-header">browser.style</h1>
 		<a href="/">Back to table of contents</a>
-		<hr />
+		<hr>
 		<section id="text">
 			<h2>Inline text semantics</h2>
 			<p>
@@ -40,7 +39,7 @@
 				<abbr title="Visual Studio Code" data-tooltip="Visual Studio Code">VS Code</abbr> has quickly become the <mark>most popular text editor for web developers</mark>. That's a <strong>bold</strong> statement.
 			</p>
 			<div class="row">
-				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation">Abbr.</abbr></p>
+				<p><strong>&lt;abbr&gt;:</strong> <abbr title="Abbreviation" data-tooltip="Abbreviation (⇧⌥⌘O)">Abbr.</abbr></p>
 				<p><strong>&lt;b&gt;:</strong> <b>Bring Attention</b></p>
 				<p><strong>&lt;code&gt;:</strong> <code>arr.forEach(item => ...</code></p>
 				<p><strong>&lt;del&gt;:</strong> <del>Deleted</del></p>
@@ -56,7 +55,7 @@
 				<p><strong>&lt;strong&gt;:</strong> <strong>Bold</strong></p>
 				<p><strong>&lt;sub&gt;:</strong> Text<sub>Sub</sub></p>
 				<p><strong>&lt;sup&gt;:</strong> Text<sup>Sup</sup></p>
-				<p><strong>&lt;time&gt;:</strong> Start at <time datetime="2022-12-31">December <span>31st</span></time>.<br>Wrap a number in a <code>span</code>-tag, to use ordinal number-formatting.</p>
+				<p><strong>&lt;time&gt;:</strong> Start at <time datetime="2022-12-31">December <i>31st</i></time>.<br>Wrap a number in a <code>i</code>-tag within, to use ordinal number-formatting.</p>
 				<p><strong>&lt;u&gt;:</strong> <u>Underline</u></p>
 				<p><strong>&lt;var&gt;:</strong> <var>Variable</var></p>
 				<p><strong>&lt;wbr&gt;:</strong> Fernstraßen<wbr>bau<wbr>privat<wbr>finanzierungs<wbr>gesetz</p>

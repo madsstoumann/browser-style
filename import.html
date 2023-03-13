@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Import</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: input range">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="/css/tags/output.css">
+	<link rel="stylesheet" href="/css/variants/fieldset.css">
+	<link rel="stylesheet" href="/css/variants/input.range.css">
+</head>
+<body>
+<textarea id="app" rows="10" style="--input-bs: auto;"></textarea>
+<button type="button" onclick="importHTML()">Import HTML</button>
+<p><pre><code id="code"></code></pre></p>
+<script>
+
+	/* getAttributeNames()  */
+
+
+function fragmentFromString(strHTML) {
+	const range = new Range();
+  const fragment = range.createContextualFragment(strHTML);
+	return fragment.childNodes.length ? fragment.childNodes[0] : null;
+}
+
+function importHTML() {
+	const fragment = fragmentFromString(app.value);
+	let obj = iterateFragment(fragment);
+	code.innerText = JSON.stringify(obj);
+}
+
+function getAttributes(node) {
+	return node.getAttributeNames().map(attr => { return { name: attr, value: (node.getAttribute(attr) || attr) }})
+}
+
+function iterateFragment(node) {
+	const obj = { tag: node.tagName.toLowerCase(), children: [], text: '' }
+	if (node.getAttributeNames()) {
+		obj.attributes = getAttributes(node);
+	}
+	node.childNodes.forEach(child => {
+		if (child.nodeType === Node.TEXT_NODE) { 
+			obj.text+= child.textContent.replace(/[\r\n\t]/gm, '');
+		}
+		else {
+			obj.children.push(iterateFragment(child));
+		}
+	})
+	if (obj.children.length === 0) delete obj.children;
+	if (!obj.text) delete obj.text;
+	return obj;
+}
+
+	/*
+
+<label data-bs="range-labels ticks">
+	<span data-bs="range-gap">TEXT</span>
+		<input type="range" min="25" max="175" value="130" data-scope="next" data-output="" data-output-unit="px">
+	<span data-bs="range-output-above-fill"><strong>HELLO</strong></span>
+</label>
+
+
+	*/
+</script>
+
+</body>
+</html>

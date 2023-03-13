@@ -1,0 +1,10 @@
+video {
+	--video-play-bgc: red;
+	--video-play-bgsz: 40px;
+	--video-play-bs: 3.5rem;
+	--video-play-is: 3.5rem;
+	--video-ibs: 50%;
+	--video-iis: 50%;
+	--video-play-p: fixed;
+	--video-tra: -50% -50%;
+}

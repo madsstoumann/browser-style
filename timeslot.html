@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>timeslot</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: avatar">
+
+	<style>
+:root {
+	--accent-color: hsl(190, 40%, 35%);
+	--accent-text-color: hsl(190, 40%, 95%);
+	--bdrs: .33em;
+	--bdw: 1px;
+	--gap: .5em;
+	--gray-1: #f1f3f5;
+	--gray-3: #dee2e6;
+	--gray-6: #868e96;
+	--gray-9: #212529;
+}
+.timeslot, .timeslot fieldset {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap);
+}
+.timeslot fieldset {
+	border: var(--bdw) solid var(--gray-6);
+	border-radius: var(--bdrs);
+	padding: var(--gap);
+}
+.timeslot fieldset:has(input:checked) {
+	background-color: var(--gray-1);
+}
+.timeslot fieldset:has(input:checked) input:not(:checked) + time { 
+	background-color: #FFF;
+}
+.timeslot fieldset:has(input:checked) legend {
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
+}
+.timeslot legend {
+	background-color: var(--gray-3);
+	border-radius: var(--bdrs);
+	color: var(--gray-9);
+	font-size: small;
+	display: grid;
+	line-height: 1.1;
+	padding: calc(var(--gap) / 2) var(--gap);
+}
+.timeslot legend > span {
+	display: block;
+	font-size: x-large;
+	text-align: center;
+}
+.timeslot time {
+	background-color: var(--gray-1);
+	border: var(--bdw) solid var(--gray-3);
+	border-radius: calc(var(--bdrs) - calc(2 * var(--bdw)));
+	display: block;
+	padding: var(--gap);
+	text-align: center;
+	user-select: none;
+}
+.timeslot label:focus-within { 
+	box-shadow: 0 0 0 2px var(--accent-color);
+}
+.timeslot input:checked + time {
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
+}
+.timeslot input:disabled + time {
+	color: var(--gray-6);
+	text-decoration: line-through;
+}
+[data-sr] { 
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+@media (min-width: 800px) { 
+	.timeslot { flex-direction: row; }
+}
+body {
+	font-family: ui-sans-serif, system-ui, snas-serif;
+	padding: 2ch;
+}
+mark {
+	background-color: hsl(190, 40%, 85%);
+}
+	</style>
+</head>
+<body>
+	<main>
+
+<h1>timeslot-picker</h1>
+<div class="timeslot">
+	<fieldset>
+		<legend>WED <span>4</span></legend>
+		<label><input type="radio" name="timeslot" value="1" data-sr/><time datetime="2023-01-04T16:00">4:00pm</time></label>
+		<label><input type="radio" name="timeslot" value="2" data-sr/><time datetime="2023-01-04T18:00">6:00pm</time></label>
+	</fieldset>
+	<fieldset>
+		<legend>THU <span>5</span></legend>
+		<label><input type="radio" name="timeslot" value="3" data-sr/><time datetime="2023-01-05T09:00">9:00am</time></label>
+		<label><input type="radio" name="timeslot" value="4" data-sr/><time datetime="2023-01-05109:00">10:00am</time></label>
+		<label><input type="radio" name="timeslot" value="5" data-sr checked /><time datetime="2023-01-05T11:00">11:00am</time></label>
+		<label><input type="radio" name="timeslot" value="6" data-sr/><time datetime="2023-01-05T12:00">12:00am</time></label>
+		<label><input type="radio" name="timeslot" value="7" disabled data-sr/><time datetime="2023-01-05T13:00">01:00pm</time></label>
+	</fieldset>
+	<fieldset>
+		<legend>FRI <span>6</span></legend>
+		<label><input type="radio" name="timeslot" value="8" data-sr/><time datetime="2023-01-06T16:00">4:00pm</time></label>
+		<label><input type="radio" name="timeslot" value="9" data-sr/><time datetime="2023-01-04T18:00">6:00pm</time></label>
+	</fieldset>
+	<fieldset>
+		<legend>SAT <span>7</span></legend>
+		<label><input type="radio" name="timeslot" value="10" data-sr/><time datetime="2023-01-07T10:00">10:00am</time></label>
+		<label><input type="radio" name="timeslot" value="11" data-sr/><time datetime="2023-01-07T15:00">3:00pm</time></label>
+		<label><input type="radio" name="timeslot" value="12" data-sr/><time datetime="2023-01-07T16:00">4:00pm</time></label>
+	</fieldset>
+	<fieldset>
+		<legend>SUN <span>8</span></legend>
+		<label><input type="radio" name="timeslot" value="13" data-sr/><time datetime="2023-01-08T18:00">6:00pm</time></label>
+	</fieldset>
+	<fieldset>
+		<legend>MON <span>9</span></legend>
+		<label><input type="radio" name="timeslot" value="14" data-sr disabled /><time datetime="2023-01-09T16:00">4:00pm</time></label>
+		<label><input type="radio" name="timeslot" value="15" data-sr/><time datetime="2023-01-09T18:00">6:00pm</time></label>
+	</fieldset>
+</div>
+<p><small>Use &lt;time datetime&gt; and &lt;fieldset&gt;-groups with radio-buttons, with <mark>:has</mark> to highlight group with inner selection</small></p>
+	</main>
+</body>
+</html>

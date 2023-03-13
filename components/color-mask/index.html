@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>color-compare</title>
+	<meta charset="UTF-8">
+	<link rel="preload" href="/css/styles.css" as="style">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: avatar">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/css/styles.css">
+	<link rel="stylesheet" href="/css/tags/fieldset.css">
+
+	<!-- <meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	"> -->
+
+	<!--
+		https://www.pexels.com/da-dk/foto/mode-person-model-blondine-1304647/
+		https://remove.bg
+		https://ezgif.com/jpg-to-web
+	
+	-->
+	<link rel="manifest" href="/site.webmanifest">
+	<style>
+		.bs-colorcompare {
+			--h: 168;
+			--s: 40%;
+			--l: 65%;
+			--_bg: linear-gradient(15deg, hsl(calc(var(--h) + 180), calc(var(--s) - 20%), var(--l)), hsl(calc(var(--h) + 180), var(--s), calc(var(--l) - 20%)));
+			background: var(--_bg);
+			border: 1px solid var(--input-bdc);
+			/* filter: blur(1px); */
+			margin: 0;
+			position: relative;
+			/* width: 600px; */
+		}
+
+		.bs-colorcompare div {
+			background-color: hsl(var(--h), var(--s), var(--l));
+			inset: 0;
+			mask-image: url('/demo/tshirt-bg.svg');
+			mask-position: center;
+			mask-repeat: no-repeat;
+			mask-size: 100%;
+			-webkit-mask-image: url('/demo/tshirt-bg.svg');
+			-webkit-mask-position: center;
+			-webkit-mask-repeat: no-repeat;
+			-webkit-mask-size: 100%;
+			mix-blend-mode: multiply;
+			position: absolute;
+		}
+
+
+
+
+	</style>
+</head>
+<body>
+	<main>
+<!-- -->
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr>
+		<section>
+			<h2>image-mask</h2>
+
+			<div class="row">
+				<figure class="bs-colorcompare">
+					<img src="/demo/tshirt-bg.webp" alt="Image of a guy in a t-shirt" />
+					<div></div>
+				</figure>
+
+				<figure class="bs-colorcompare" style="--h:100;">
+					<img src="/demo/tshirt-bg.webp" alt="Image of a guy in a t-shirt" />
+					<div></div>
+				</figure>
+
+				<figure class="bs-colorcompare" style="--h:360">
+					<img src="/demo/tshirt-bg.webp" alt="Image of a guy in a t-shirt" />
+					<div></div>
+				</figure>
+			</div>
+
+		</section>
+	</main>
+	<script src="/main.js" defer></script>
+
+	<!-- <script type="module">
+		import colorSwatch from'/assets/js/color-swatch.js';
+		const elements = document.querySelectorAll('.bs-colorswatch');
+		elements.forEach(elm => {
+			colorSwatch(elm, elm.dataset);
+			elm.addEventListener('swatchSelect', (evt) => {
+				app.style.setProperty('--_c1', evt.detail.color); 
+			})
+		});
+	</script> -->
+</body>
+</html>

@@ -1,0 +1,138 @@
+:where(kal-el) {
+	--kalel-day-hover-bgc: hsl(0, 0%, 90%);
+	font-family: ui-sans-serif, system-ui, snas-serif;
+	inline-size: 100%;
+}
+/* weekdays */
+kal-el abbr {
+	text-decoration: none;
+}
+/* month */
+kal-el > time {
+	display: var(--kalel-month-d, inline);
+	font-size: var(--kalel-month-fz, inherit);
+	font-weight: var(--kalel-month-fw, 700);
+	text-align: var(--kalel-month-tal, initial);
+}
+/* year */
+kal-el i {
+	display: var(--kalel-year-d, inline);
+	font-style: normal;
+	font-weight: var(--kalel-year-fw, 100);
+}
+/* grid */
+kal-el :is(ol, ul) {
+	display: grid;
+	font-size: var(--kalel-fz, small);
+	grid-row-gap: var(--kalel-row-gap, .33em);
+	grid-template-columns: var(--kalel-gtc, repeat(7, 1fr));
+	list-style: none;
+	margin: unset;
+	padding: unset;
+	position: relative;
+}
+/* days */
+kal-el :is(ol, ul) :is(abbr, time) {
+	background-color: var(--kalel-day-bg, none);
+	block-size: var(--kalel-day-h, 2em);
+	border-radius: var(--kalel-day-bdrs, 50%);
+	color: var(--kalel-day-c, inherit);
+	display: var(--kalel-day-d, inline-block);
+	font-size: var(--kalel-day-fz, inherit);
+	font-weight: var(--kalel-day-fw, 400);
+	inline-size: var(--kalel-day-w, 2em);
+	line-height: var(--kalel-day-lh, 2em);
+	margin-block: var(--kalel-day-mb, 0 var(--kalel-row-gap, .33em));
+	text-align: var(--kalel-day-tal, center);
+	user-select: none;
+}
+/* day hover */
+:where(kal-el ol time):hover {
+	background: var(--kalel-day-hover-bgc);
+}
+/* day wrappers */
+kal-el :is(ol, ul) li {
+	border-color: var(--kalel-li-bdc, hsl(0, 0%, 80%));
+	border-style: var(--kalel-li-bds, solid);
+	border-width: var(--kalel-li-bdw, 0 0 1px 0);
+	grid-column: var(--kalel-li-gc, initial);
+	text-align: var(--kalel-li-tal, end); 
+}
+/* weekdays wrapper */
+kal-el ul {
+	margin-block-end: var(--kalel-row-gap, .33em);
+}
+
+[data-day="1"] { background: var(--kalel-day-1-bg, #0000); }
+[data-day="2"] { background: var(--kalel-day-2-bg, #0000); }
+[data-day="3"] { background: var(--kalel-day-3-bg, #0000); }
+[data-day="4"] { background: var(--kalel-day-4-bg, #0000); }
+[data-day="5"] { background: var(--kalel-day-5-bg, #0000); }
+[data-day="6"] { background: var(--kalel-day-6-bg, #0000); }
+[data-day="7"] { background: var(--kalel-day-7-bg, #0000); }
+
+[data-firstday="1"] [data-day="1"]:first-child { --kalel-li-gc: 1 / 2; }
+[data-firstday="1"] [data-day="2"]:first-child { --kalel-li-gc: 1 / 3; }
+[data-firstday="1"] [data-day="3"]:first-child { --kalel-li-gc: 1 / 4; }
+[data-firstday="1"] [data-day="4"]:first-child { --kalel-li-gc: 1 / 5; }
+[data-firstday="1"] [data-day="5"]:first-child { --kalel-li-gc: 1 / 6; }
+[data-firstday="1"] [data-day="6"]:first-child { --kalel-li-gc: 1 / 7; }
+[data-firstday="1"] [data-day="7"]:first-child { --kalel-li-gc: 1 / 8; }
+
+[data-firstday="6"] [data-day="1"]:first-child { --kalel-li-gc: 1 / 4; }
+[data-firstday="6"] [data-day="2"]:first-child { --kalel-li-gc: 1 / 5; }
+[data-firstday="6"] [data-day="3"]:first-child { --kalel-li-gc: 1 / 6; }
+[data-firstday="6"] [data-day="4"]:first-child { --kalel-li-gc: 1 / 7; }
+[data-firstday="6"] [data-day="5"]:first-child { --kalel-li-gc: 1 / 8; }
+[data-firstday="6"] [data-day="6"]:first-child { --kalel-li-gc: 1 / 1; }
+[data-firstday="6"] [data-day="7"]:first-child { --kalel-li-gc: 1 / 3; }
+
+[data-firstday="7"] [data-day="1"]:first-child { --kalel-li-gc: 1 / 3; }
+[data-firstday="7"] [data-day="2"]:first-child { --kalel-li-gc: 1 / 4; }
+[data-firstday="7"] [data-day="3"]:first-child { --kalel-li-gc: 1 / 5; }
+[data-firstday="7"] [data-day="4"]:first-child { --kalel-li-gc: 1 / 6; }
+[data-firstday="7"] [data-day="5"]:first-child { --kalel-li-gc: 1 / 7; }
+[data-firstday="7"] [data-day="6"]:first-child { --kalel-li-gc: 1 / 8; }
+[data-firstday="7"] [data-day="7"]:first-child { --kalel-li-gc: 1 / 2; }
+
+[data-today] {
+	--kalel-day-bdrs: 50%;
+	--kalel-day-bg: hsl(0, 86%, 40%);
+	--kalel-day-hover-bgc: hsl(0, 86%, 70%);
+	--kalel-day-c: #FFF;
+}
+
+[data-weekend]:not([data-today]) { --kalel-day-c: var(--kalel-weekend-c, hsl(0, 86%, 46%)); }
+
+[data-weeknumber]::before {
+	color: var(--kalel-weeknumber-c, hsl(0, 0%, 50%));
+	display: var(--kalel-weeknumber-d, inline-block);
+	content: attr(data-weeknumber);
+	position: absolute;
+	font-size: var(--kalel-weeknumber-fz, xx-small);
+	inset-inline-start: 0;
+}
+
+jor-el {
+	background: var(--jorel-bg, none);
+	display: var(--jorel-d, grid);
+	gap: var(--jorel-gap, 2.5rem);
+	grid-template-columns: var(--jorel-gtc, repeat(auto-fill, minmax(320px, 1fr)));
+	padding: var(--jorel-p, 0);
+}
+
+
+/* FOR DEMO */
+body {
+	font-family: ui-sans-serif, system-ui, snas-serif;
+	padding: 3ch;
+}
+
+label {
+	background-color: hsl(0, 0%, 90%);
+	display: flex;
+	font-size: small;
+	gap: 1ch;
+	margin-block-end: 1em;
+	padding: .5em 1em;
+}

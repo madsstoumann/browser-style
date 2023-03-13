@@ -1,5 +1,5 @@
 :where([data-tooltip]) {
-	--tooltip-bg: var(--gray-9);
+	--tooltip-bg: var(--color-gray-9);
 	--tooltip-arrow-h: 0.5em;
 	--tooltip-arrow-w: 1em;
 	--tooltip-offset: -0.75ch;

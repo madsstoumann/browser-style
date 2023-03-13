@@ -102,7 +102,7 @@ export default function colorSwatch(app, config) {
 		#0F172A #1E293B #334155 #475569 #64748B #94A3B8 #CBD5E1 #E2E8F0 #F1F5F9 #F8FAFC'.split(' ');
 
 	const groups = { apple, flatui, html, material, metro, standard, tailwind };
-	const colors = (settings.colors||'standard').split(' ');
+	const colors = (settings.colors||' ').split(' ');
 	const array = colors.length === 1 ? groups[colors[0]] : colors;
 
 	function brightness(elm) {

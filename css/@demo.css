@@ -39,9 +39,15 @@ meter {
 	display: grid;
 }
 
+.row-2-col {
+	display: flex;
+	gap: 1ch;
+	width: 100%;
+}
+
 [data-bs~="dark-mode"] { --dark-mode: 1; }
 .bs-header { display: flex; justify-content: space-between; }
-.bs-header button { --button-bgc: transparent; --button-h: unset; --button-pb: 0px; --button-pi: 0px; }
+.bs-header button { --button-bg: transparent; --button-bdw: 0px; --button-pab: 0px; --button-pi: 0px; --_hover-bg: transparent; --_hover-bdc: transparent; --button-bxsh-sz: 0px; }
 .bs-header svg {
 	block-size: 2.5em;
 	filter: invert(var(--dark-mode));

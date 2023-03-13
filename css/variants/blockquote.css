@@ -1,30 +1,29 @@
-:where(blockquote[data-bs~="big-quote"]) q::before {
-	color: var(--gray-3);
+blockquote[data-bs~="big-quote"] q::before {
+	color: var(--color-gray-3);
 	content: '“'; 
 	font-family: ui-serif, serif;
 	display: block;
 	font-size: clamp(5rem, -0.3571rem + 17.1429vw, 12.5rem);
 	inset-block-start: -.33em;
-	inset-inline-start: -.44em;
+	inset-inline-start: -.55em;
 	position: absolute;	
-	z-index: -1;
 }
 
-:where(blockquote[data-bs~="breaker"]) {
-	--blockquote-bgc: transparent;
-	--blockquote-bdiw: 0;
+blockquote[data-bs~="breaker"] {
+	--blockquote-bg: transparent;
+	--blockquote-biw: 0;
 	--blockquote-pi: 0;
-	margin-inline: auto;
+	--blockquote-mi: auto;
 	max-inline-size: max(60%, 320px);
 	position: relative;
 }
 
-:where(blockquote[data-bs~="centered"]) {
+blockquote[data-bs~="line"] {
 	text-align: center;
 }
 
-:where(blockquote[data-bs~="line"])::after,
-:where(blockquote[data-bs~="line"])::before {
+blockquote[data-bs~="line"]::after,
+blockquote[data-bs~="line"]::before {
 	background-color: var(--blockquote-bdc);
 	content: '';
 	display: block;

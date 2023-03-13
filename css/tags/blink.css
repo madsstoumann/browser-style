@@ -2,7 +2,7 @@
 	animation: 1.5s linear infinite blink;
 	background-color: var(--blink-bgc, var(--secondary-color));
 	color: var(--blink-c, var(--secondary-text-color));
-	padding-block: var(--blink-pb, .75ch);
+	padding-block: var(--blink-pab, .75ch);
 	padding-inline: var(--blink-pi, 1.5ch);
 }
 

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>input: number</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form elements">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="/css/variants/fieldset.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr>
+		<h2>&lt;input type="number&gt;</h2>
+		<div class="row">
+
+			<label>Number
+				<input type="number">
+			</label>
+
+			<label>With icon
+				<input type="number" data-icon="icon-number end">
+			</label>
+
+			<fieldset data-bs="input-spinner">
+				<legend>Numeric spinner</legend>
+				<button type="button" name="nprev" data-icon="after center icon-minus" aria-label="Previous"></button>
+				<label aria-label="Current number">
+					<input type="number" min="0" max="10" step="1" value="1" class="input-no-spinner">
+				</label>
+				<button type="button" name="nnext" data-icon="after center icon-plus" aria-label="Next"></button>
+			</fieldset>
+
+			<fieldset data-bs="input-spinner">
+				<legend>Inifinity spinner</legend>
+				<button type="button" name="nprev" data-icon="after center icon-minus" aria-label="Previous"></button>
+				<label aria-label="Current number">
+					<input type="number" min="0" max="10" step="1" value="1" class="input-no-spinner">
+				</label>
+				<button type="button" name="nnext" data-icon="after center icon-plus" aria-label="Next"></button>
+			</fieldset>
+
+			<fieldset data-bs="input-spinner no-border">
+				<legend>Pagination</legend>
+				<button type="button" name="nfirst" data-icon="after center icon-first" aria-label="First"></button>
+				<button type="button" name="nprev" data-icon="after center icon-left" aria-label="Previous"></button>
+				<label aria-label="Current page">
+					<input type="number" min="1" max="50" step="1" value="1">
+				</label>
+				<button type="button" name="nnext" data-icon="after center icon-right" aria-label="Next"></button>
+				<button type="button" name="nlast" data-icon="after center icon-last" aria-label="Last"></button>
+			</fieldset>
+
+		</div>
+	</main>
+	<script src="/main.js" defer></script>
+	<script src="/js/form.js" defer></script>
+</body>
+</html>

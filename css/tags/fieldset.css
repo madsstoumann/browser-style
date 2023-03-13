@@ -1,12 +1,12 @@
-:where(fieldset) {
+/* :where(fieldset) {
 	background: var(--fieldset-bg, var(--input-bgc)); 
 	border-color: var(--fieldset-bdc, var(--input-bdc));
 	border-radius: var(--fieldset-bdrs, var(--input-bdrs));
 	border-style: var(--fieldset-bds, var(--input-bds));
 	border-width: var(--fieldset-bdw, var(--input-bdw));
-	display: flex;
+	display: var(--fieldset-d, flex);
 	gap: var(--fieldset-gap, var(--input-gap));
-	inline-size: 100%;
+	inline-size: var(--fieldset-w, 100%);
 	margin: unset;
 	padding-block: var(--fieldset-pb, var(--input-pb));
 	padding-inline: var(--fieldset-pi, var(--input-pi));
@@ -23,4 +23,4 @@
 	flex-direction: column;
 	gap: calc(2 * var(--input-gap));
 	padding-block-start: calc(2 * var(--input-gap));
-}
+} */

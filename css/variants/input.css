@@ -1,4 +1,4 @@
-:where(label[data-bs~="floating"]) {
+/* :where(label[data-bs~="floating"]) {
 	margin-block-end: 2ch;
 	position: relative;
 }
@@ -32,4 +32,4 @@
 :where(label[data-bs~="floating"] :is(input, select, textarea):not(:placeholder-shown) + span),
 :where(label[data-bs~="floating"]):focus-within span {
 	transform: scale(0.75) translate(.25rem, .25rem);
-}
+} */

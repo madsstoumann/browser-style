@@ -1,110 +1,128 @@
 /* Based on: https://codepen.io/ShadowShahriar/pen/zYPPYrQ */
-
 :where(input[type="range"]) {
-	--brightness-down: 80%;
-	--brightness-hover: 180%;
-	--clip-edges: 0.125em;
-
-	--input-thumb-bxsh: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0 100vmax currentColor;
-	--thumb-height: var(--input-thumb-h, 1.25em);
-	--thumb-width: var(--input-thumb-h, 1.25em);
-	--thumb-radius: var(--thumb-width, var(--thumb-height)); /*calc((var(--thumb-height) * 0.5) - 1px);*/
-	--track-height: var(--input-track-h, 0.125em);
-	
-	--track-range: currentColor;
-
+	--_bxsh: var(--input-range-thumb-bxsh, calc(-100vmax - var(--input-range-thumb-is)) 0 0 100vmax var(--input-range-track-lower));
+	--_bxsh--focus: inset 0 0 0 3px hsla(200, 0%, 100%, 0.5);
 	appearance: none;
 	background: #fff0;
-	block-size: calc(var(--input-fz) * var(--body-lh) + var(--input-pb) * 2 + var(--input-bdw) * 2);
-	color: var(--input-range-c, var(--accent-color, inherit));
-	font-size: 1.5rem;
 	margin-inline: 0;
 	overscroll-behavior: contain;
 	overflow: hidden;
 	touch-action: manipulation;
-	width: var(--input-range-w, 100%);
 }
-
-input[type="range"][data-bs="vertical-range"] {
-	transform: rotate(-90deg);
-	width: calc(100% - 3rem);
-}
-
-:where(input[type="range"]:active) { cursor: grabbing; }
+:where(input[type="range"]:active) { cursor: ew-resize; }
 
 /* === WebKit specific styles === */
 :where(input[type="range"])::-webkit-slider-runnable-track,
 :where(input[type="range"])::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	height: var(--thumb-height);
+	appearance: none;
+	block-size: var(--input-range-thumb-bs);
 	position: relative;
 	transition: all ease 100ms;
 }
-
 :where(input[type="range"])::-webkit-slider-thumb {
-	--clip-top: calc((var(--thumb-height) - var(--track-height)) * 0.5 - 0.5px);
-	--clip-bottom: calc(var(--thumb-height) - var(--clip-top));
-	--clip-further: calc(100% + 1px);
-	background-image: var(--input-thumb-bgi, linear-gradient(currentColor 0 0, currentColor 0 0) scroll no-repeat left center /
-		50% calc(var(--track-height) + 1px));
-	background-color: var(--input-thumb-bg, currentColor);
-	border-radius: var(--thumb-radius);
-	box-shadow: var(--input-thumb-bxsh);
-	clip-path: polygon(
-		100% -1px,
-		var(--clip-edges) -1px,
-		0 var(--clip-top),
-		-100vmax var(--clip-top),
-		-100vmax var(--clip-bottom),
-		0 var(--clip-bottom),
-		var(--clip-edges) 100%,
-		var(--clip-further) var(--clip-further)
-	);
+	--_clip-top: calc( ((var(--input-range-thumb-is) - var(--input-range-track-bs) - 1px) / 2));
+	--_clip-bottom: calc(var(--input-range-thumb-is) - var(--_clip-top));
+	--_clip-radius: calc(var(--input-range-thumb-bdrs) / 10);
+
+	background: var(--input-range-thumb-bg);
+	block-size: var(--input-range-thumb-bs);
+	border: var(--input-range-thumb-bd, none);
+	border-radius: var(--input-range-thumb-bdrs);
+	box-shadow: var(--_bxsh);
+	clip-path: var(--input-range-thumb-clp, polygon(
+		100% 0%,
+		var(--_clip-radius) 0%,
+		0% var(--_clip-top),
+		-100vmax var(--_clip-top),
+		-100vmax var(--_clip-bottom),
+		0% var(--_clip-bottom),
+		var(--_clip-radius) 100%,
+		100% 100%
+	));
 	filter: brightness(100%);
-	width: var(--thumb-width);
+	inline-size: var(--input-range-thumb-is);
+	pointer-events: var(--input-range-thumb-pe, auto);
 }
 :where(input[type="range"]:dir(rtl))::-webkit-slider-thumb { --input-thumb-bxsh: none; }
 :where(input[type="range"])::-webkit-slider-runnable-track {
-	background: var(--input-track-bg, linear-gradient(var(--input-track-c) 0 0, var(--input-track-c) 0 0) scroll no-repeat center / 100% calc(var(--track-height) + 1px));
+	background: var(--input-range-track-bg, linear-gradient(var(--input-range-track-upper) 0 0, var(--input-range-track-upper) 0 0) scroll no-repeat center / 100% calc(var(--input-range-track-bs) + 1px));
+	background-position: var(--input-range-track-bgp, 50%);
+	background-repeat: var(--input-range-track-bgr, no-repeat);
+	background-size: var(--input-range-track-bgsz, 100% calc(var(--input-range-track-bs) + 1px));
+	border-radius: var(--input-range-track-bdrs, 0);
+	
 }
-
 :where(input[type="range"]:active)::-webkit-slider-thumb {
-	cursor: grabbing;
-	filter: brightness(var(--brightness-down));
+	cursor: ew-resize;
+	filter: brightness(var(--input-range-brgt-down));
 }
 :where(input[type="range"]:disabled)::-webkit-slider-thumb { cursor: not-allowed; }
 :where(input[type="range"]:hover)::-webkit-slider-thumb {
-	cursor: grab;
-	filter: brightness(var(--brightness-hover));
+	cursor: ew-resize;
+	filter: brightness(var(--input-range-brgt-hover));
 }
 
 /* === Firefox specific styles === */
 :where(input[type="range"])::-moz-range-progress {
 	appearance: none;
-	background: var(--input-progress-bg, currentColor);
+	background: var(--input-range-progress-bg, var(--input-range-track-lower));
+	block-size: var(--input-range-track-bs);
 	transition-delay: 30ms;
 }
 :where(input[type="range"])::-moz-range-thumb {
-	background: var(--input-thumb-bg, currentColor);
-	border-radius: var(--thumb-radius);
-	border: 0;
+	background: var(--input-range-thumb-bg);
+	block-size: var(--input-range-thumb-bs);
+	border-radius: var(--input-range-thumb-bdrs);
+	border: var(--input-range-thumb-bd, 0);
 	cursor: grab;
-	height: var(--thumb-height);
-	width: var(--thumb-width);
+	inline-size: var(--input-range-thumb-is);
+	pointer-events: auto;
 }
 :where(input[type="range"])::-moz-range-track {
-	background: var(--input-track-bg, var(--input-track-c));
-	height: var(--track-height);
-	width: 100%;
+	block-size: var(--input-range-track-bs);
+	background: var(--input-range-track-bg, linear-gradient(var(--input-range-track-upper) 0 0, var(--input-range-track-upper) 0 0) scroll no-repeat center / 100% calc(var(--input-range-track-bs) + 1px));
+	background-position: var(--input-range-track-bgp, 50%);
+	background-repeat: var(--input-range-track-bgr, no-repeat);
+	background-size: var(--input-range-track-bgsz, 100% calc(var(--input-range-track-bs) + 1px));
+	border-radius: var(--input-range-track-bdrs, 0);
+	inline-size: 100%;
 }
-
-:where(input[type="range"]:active)::-moz-range-thumb { cursor: grabbing; }
+:where(input[type="range"]:active)::-moz-range-thumb { cursor: ew-resize; }
 :where(input[type="range"]:active)::-moz-range-thumb,
 :where(input[type="range"]:active)::-moz-range-progress {
-	filter: brightness(var(--brightness-down));
+	filter: brightness(var(--input-range-brgt-down));
 }
 :where(input[type="range"]:disabled)::-moz-range-thumb { cursor: not-allowed; }
 :where(input[type="range"]:hover)::-moz-range-thumb,
 :where(input[type="range"]:hover)::-moz-range-progress {
-	filter: brightness(var(--brightness-hover));
+	filter: brightness(var(--input-range-brgt-hover));
+}
+
+/* === Right-to-left === */
+:where([dir="rtl"] input[type="range"])  {
+	--_bxsh: var(--input-range-thumb-bxsh, calc(100vmax + var(--input-range-thumb-is)) 0 0 100vmax var(--input-range-track-lower));
+}
+:where([dir="rtl"] input[type="range"])::-webkit-slider-thumb {
+	--input-range-thumb-clp: polygon(
+		0% 0%,
+		calc(var(--input-range-thumb-is) - var(--_clip-radius)) 0%,
+		var(--input-range-thumb-is) var(--_clip-top),
+		100vmax var(--_clip-top),
+		100vmax var(--_clip-bottom),
+		var(--input-range-thumb-is) var(--_clip-bottom),
+		calc(var(--input-range-thumb-is) - var(--_clip-radius)) var(--input-range-thumb-is),
+		0% var(--input-range-thumb-is)
+	);
+}
+
+/* === Focus === */
+:where(input[type="range"]):focus-visible {
+	--outline-color: var(--color-border);
+	--outline-style: dotted;
+	--outline-offset: 2px;
+	--outline-width: 1px;
+}
+:where(input[type="range"]):focus-visible::-webkit-slider-thumb {
+	box-shadow: var(--_bxsh), var(--_bxsh--focus);
 }

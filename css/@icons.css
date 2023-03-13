@@ -11,9 +11,11 @@
 	--icon-download: url('/svg/download.svg');
 	--icon-email: url('/svg/email.svg');
 	--icon-external: url('/svg/external-link.svg');
+	--icon-first: url('/svg/arrow-bar-to-left.svg');
 	--icon-heart: url('/svg/heart.svg');
 	--icon-home: url('/svg/home.svg');
 	--icon-info: url('/svg/info.svg');
+	--icon-last: url('/svg/arrow-bar-to-right.svg');
 	--icon-message: url('/svg/message.svg');
 	--icon-minus: url('/svg/minus.svg');
 	--icon-month: url('/svg/week.svg');
@@ -48,9 +50,11 @@
 [data-icon~="icon-download"] { --icon: var(--icon-download); }
 [data-icon~="icon-email"] { --icon: var(--icon-email); }
 [data-icon~="icon-external"] { --icon: var(--icon-external); }
+[data-icon~="icon-first"] { --icon: var(--icon-first); }
 [data-icon~="icon-heart"] { --icon: var(--icon-heart); }
 [data-icon~="icon-home"] { --icon: var(--icon-home); }
 [data-icon~="icon-info"] { --icon: var(--icon-info); }
+[data-icon~="icon-last"] { --icon: var(--icon-last); }
 [data-icon~="icon-message"] { --icon: var(--icon-message); }
 [data-icon~="icon-minus"] { --icon: var(--icon-minus); }
 [data-icon~="icon-month"] { --icon: var(--icon-month); }

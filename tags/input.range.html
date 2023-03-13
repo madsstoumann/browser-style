@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr" data-bs="dark-modes">
+<head>
+	<meta charset="UTF-8">
+	<title>Input Range</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: input range">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="/css/tags/output.css">
+	<link rel="stylesheet" href="/css/variants/fieldset.css">
+	<link rel="stylesheet" href="/css/variants/input.range.css">
+
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr>
+		<h2>&lt;input type="range"&gt;</h2>
+
+		<div class="row">
+
+			<label>Range
+				<input type="range">
+			</label>
+
+			<label><code>data-bs="secondary"</code>
+				<input type="range" data-bs="secondary">
+			</label>
+
+			<label><code>data-bs="ternary"</code>
+				<input type="range" data-bs="ternary">
+			</label>
+
+			<label><code>data-bs="small"</code>
+				<input type="range" data-bs="small">
+			</label>
+
+			<label><code>data-bs="small secondary"</code>
+				<input type="range" data-bs="small secondary">
+			</label>
+
+			<label><code>data-bs="small ternary"</code>
+				<input type="range" data-bs="small ternary">
+			</label>
+
+		</div>
+		<h3>Output and ticks</h3>
+		<div class="row">
+
+			<label data-bs="ticks"><span data-bs="text-overflow"><code>step="10" data-bs="ticks"</code></span>
+				<input type="range" step="10">
+			</label>
+
+			<label data-bs="5-ticks"><span data-bs="text-overflow"><code>step="25" data-bs="5-ticks"</code></span>
+				<input type="range" step="25">
+			</label>
+
+			<label data-bs="ticks range-labels"><span><code>data-bs="range-labels ticks"</code></span>
+				<input type="range" min="0" max="100">
+			</label>
+
+			<label>
+				<span data-bs="range-gap"><code>data-bs="range-output-start"</code> <var>JS</var></span>
+				<input type="range" data-scope="next" data-output data-output-unit="%">
+				<span data-bs="range-output-start"></span>
+			</label>
+
+			<label data-bs="range-labels">
+				<span data-bs="range-gap"><code>data-bs="range-output-end"</code> <var>JS</var></span>
+				<input type="range" data-scope="next" data-output data-output-unit="px" >
+				<span data-bs="range-output-end"></span>
+			</label>
+
+			<label data-bs="range-labels ticks">
+				<span data-bs="range-gap"><code>data-bs="range-output-above"</code> <var>JS</var></span>
+				<input type="range" min="25" max="175" value="130" data-scope="next" data-output data-output-unit="px" >
+				<span data-bs="range-output-above"></span>
+			</label>
+
+			<label data-bs="ternary">
+				<span data-bs="range-gap"><code>data-bs="range-output-start-fill"</code> <var>JS</var></span>
+				<input type="range" data-scope="next" data-output data-output-unit="%" >
+				<span data-bs="range-output-start-fill"></span>
+			</label>
+
+			<label data-bs="secondary range-labels">
+				<span data-bs="range-gap"><code>data-bs="secondary output-end-fill"</code> <var>JS</var></span>
+				<input type="range" data-scope="next" data-output data-output-unit="$" >
+				<span data-bs="range-output-end-fill"></span>
+			</label>
+
+			<label data-bs="range-labels ticks">
+				<span data-bs="range-gap"><code>data-bs="range-output-above-fill"</code> <var>JS</var></span>
+				<input type="range" min="25" max="175" value="130" data-scope="next" data-output data-output-unit="px" >
+				<span data-bs="range-output-above-fill"></span>
+			</label>
+
+			<label>
+				<span data-bs="range-gap"><code>data-bs="range-output-below"</code> <var>JS</var></span>
+				<input type="range" min="25" max="175" value="130" data-scope="next" data-output data-output-unit="px" >
+				<span data-bs="range-output-below"></span>
+			</label>
+
+			<label data-bs="range-labels ticks">
+				<span data-bs="range-gap"><code>data-bs="range-output-below-fill"</code> <var>JS</var></span>
+				<input type="range" min="25" max="175" value="130" data-scope="next" data-output data-output-unit="px" >
+				<span data-bs="range-output-below-fill"></span>
+			</label>
+
+
+		</div>
+		<h3>Dual ranges</h3>
+
+		<div class="row">
+			<fieldset data-bs="label dual-range no-border">
+				<legend data-bs="range-gap"><var>JS</var> Dual-range</legend>
+				<label><input type="range" value="25" data-scope="fieldset" data-key="v1"></label>
+				<label><input type="range" value="75" data-scope="fieldset" data-key="v2"></label>
+			</fieldset>
+
+			<fieldset data-bs="label secondary dual-range no-border">
+				<legend data-bs="range-gap"><var>JS</var> With <code>data-bs="secondary"</code></legend>
+				<label>
+					<input type="range" value="25" data-key="v1" data-scope="fieldset" data-output="next">
+					<span data-bs="range-output-above-fill"></span>
+				</label>
+				<label>
+					<input type="range" value="75"  data-key="v2" data-scope="fieldset" data-output="next">
+					<span data-bs="range-output-below-fill"></span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="label ternary dual-range no-border">
+				<legend data-bs="range-gap"><var>JS</var> With <code>data-bs="ternary"</code></legend>
+				<label>
+					<input type="range" value="25" data-key="v1" data-scope="fieldset">
+				</label>
+				<label>
+					<input type="range" value="75" data-key="v2" data-scope="fieldset">
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>Masked ranges</h3>
+		<div class="row">
+			<label><code>data-bs="rating-stars"</code>
+				<input type="range" max="5" step="0.5" value="3" data-bs="rating" aria-label="Rating from 1 to 5" data-scope>
+			</label>
+
+			<label><span><code>data-bs="rating-hearts"</code></span>
+				<input type="range" max="5" step="0.5" value="3" data-bs="rating-hearts" aria-label="Rating from 1 to 5" data-scope>
+			</label>
+
+			<label><code>data-bs="rating-thumb"</code>
+				<input type="range" max="5" step="0.5" value="3" data-bs="rating-thumb" aria-label="Rating from 1 to 5" data-scope>
+			</label>
+		</div>
+
+
+		<h3>Circular ranges</h3>
+
+		<div class="row">
+
+			<div class="row-2-col">
+				<label data-bs="small circular-range">
+					<input type="range" value="25" data-scope="parent" data-output="next" data-output-unit="%">
+					<strong data-bs="range-output-attr" data-output-value></strong>
+					<span data-bs="range-output"></span>
+				</label>
+
+				<label data-bs="small circular-range">
+					<input type="range" value="33" data-scope="parent" data-output="next" data-output-unit="%">
+					<strong data-bs="range-output-attr" data-output-value></strong>
+					<span data-bs="range-output"></span>
+					
+				</label>
+			</div>
+
+			<label data-bs="secondary circular-range">
+				<input type="range" value="18" min="0" max="50" data-scope="parent" data-output="next" data-output-unit="°">
+				<strong data-bs="range-output-attr" data-output-value>Temperature 0-50°</strong>
+				<span data-bs="range-output"></span>
+			</label>
+
+			<label data-bs="ternary large circular-range">
+				<input type="range" value="75" data-scope="parent" data-output="next" data-output-unit="%">
+				<strong data-bs="range-output-attr" data-output-value>Energy compsumption</strong>
+				<span data-bs="range-output"></span>
+			</label>
+		</div>
+
+
+		<h3>Other ranges</h3>
+
+		<div class="row">
+
+			<div>
+				<label><code>data-bs="hue"</code>
+					<input type="range" data-bs="hue">
+				</label>
+
+				<label><code>data-bs="transparent"</code>
+					<input type="range" data-bs="transparent">
+				</label>
+			</div>
+
+			<fieldset data-bs="hsl label">
+				<legend><var>JS</var> Color Group</legend>
+				<label>
+					Hue
+					<input type="range" data-bs="hue" max="360" value="200" data-key="v1" data-scope="fieldset" data-output="next">
+					<span data-bs="range-output-above-fill"></span>
+				</label>
+				<label>
+					Saturation
+					<input type="range" data-bs="saturation" value="50" data-key="v2" data-scope="fieldset" data-output="next">
+					<span data-bs="range-output-above-fill"></span>
+				</label>
+				<label>
+					Lightness
+					<input type="range" data-bs="lightness" value="85" data-key="v3" data-scope="fieldset" data-output="next">
+					<span data-bs="range-output-above-fill"></span>
+				</label>
+			</fieldset>
+
+			<label data-bs="large circular-range hue">
+				<input type="range" value="225" min="0" max="360" data-scope="parent" data-output="next" data-output-unit="°">
+				<strong data-bs="range-output-attr" data-output-value>Hue</strong>
+				<span data-bs="range-output"></span>
+			</label>
+
+		</div>
+
+		<h3>Image compare</h3>
+		<fieldset data-bs="image-compare" data-ratio="widescreen">
+			<img src="/demo/color.jpeg" width="1000" height="563" alt="Color Image for Comparison" loading="lazy" decoding="async">
+			<img src="/demo/bw.jpeg" width="1000" height="563" alt="Black and White Image for Comparison" loading="lazy" decoding="async">
+			<label aria-label="Slide to compare two images">
+				<input type="range" value="50" aria-label="Slider for comparing two images" data-scope="fieldset" data-key="v1">
+			</label>
+		</fieldset>
+
+		<h3>Color compare</h3>
+		<fieldset data-bs="color-compare" style="--_mask:url('/demo/colors-base.webp');" data-ratio="widescreen">
+			<label aria-label="First color"><input type="color" value="#EC7322" data-scope="fieldset" data-key="_c1"></label>
+			<label aria-label="Second color"><input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2"></label>
+			<img src="/demo/colors-base.webp" alt="Image of a car" loading="lazy" decoding="async">
+			<div></div>
+			<label aria-label="Slide to compare two colors against an image">
+				<input type="range" value="50" data-scope="fieldset" data-key="v1">
+			</label>
+		</fieldset>
+
+	</main>
+	<script src="/main.js" defer></script>
+	<script src="/js/form.js" defer></script>
+</body>
+</html>

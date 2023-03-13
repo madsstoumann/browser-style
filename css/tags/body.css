@@ -1,8 +1,0 @@
-:where(body) {
-	background: var(--body-bg, #FFF);
-	color: var(--body-c, #222);
-	font-family: var(--body-ff, ui-sans-serif, system-ui, sans-serif);
-	font-size: var(--body-fz, 1rem);
-	line-height: var(--body-lh, 1.5);
-	margin: var(--body-m, unset);
-}

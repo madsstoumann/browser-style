@@ -1,0 +1,42 @@
+.confetti {
+	--jorel-bg: hsl(43deg 43% 92%);
+	--jorel-cc: 12;
+	--jorel-gap-cnt: calc(var(--jorel-cc) - 1);
+	--jorel-gap-w: calc(var(--jorel-gap-cnt) * var(--jorel-gap));
+	--jorel-gap: 4px;
+	--jorel-gtc: repeat(auto-fill, minmax(max(var(--jorel-item-miw), var(--jorel-item-maw)), 1fr));
+	--jorel-item-maw: calc((100% - var(--jorel-gap-w)) / var(--jorel-cc));
+	--jorel-item-miw: 90px;
+	--jorel-p: calc(2 * var(--jorel-gap));
+}
+.confetti kal-el {
+	--kalel-day-1-bg: hsl(199deg 99% 37%);
+	--kalel-day-2-bg: hsl(330deg 87% 39%);
+	--kalel-day-3-bg: hsl(105deg 45% 47%);
+	--kalel-day-4-bg: hsl(250deg 41% 31%);
+	--kalel-day-5-bg: hsl(19deg 83% 53%);
+	--kalel-day-6-bg: hsl(189deg 99% 33%);
+	--kalel-day-7-bg: hsl(50deg 94% 51%);
+	--kalel-day-bdrs: 0;
+	--kalel-day-hover-bgc: #0000;
+	--kalel-day-c: rgba(255, 255, 255, 0);
+	--kalel-day-fz: 3em;
+	--kalel-day-h: none;
+	--kalel-day-lh: 1;
+	--kalel-day-w: 100%;
+	--kalel-gtc: 1fr;
+	--kalel-li-gc: 1 / 1;
+	--kalel-month-fz: .625em;
+	--kalel-month-d: block;
+	--kalel-month-tal: center;
+	--kalel-weeknumber-d: none;
+	--kalel-year-d: none;
+	flex: 1;
+	
+}
+.confetti kal-el :is(i, ul) { display: none; }
+.confetti > kal-el time {  margin-block-end: var(--jorel-gap); }
+.confetti > kal-el time {  font-weight: 200; }
+.confetti > kal-el > time {  font-weight: 700; }
+.confetti [data-weekend] { --kalel-day-c: rgba(255, 255, 255, .9); }
+.confetti [data-today] time {font-weight: 700; }

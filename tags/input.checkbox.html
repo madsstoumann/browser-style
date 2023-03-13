@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>input: checkbox &amp; radio</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form elements">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/main.css">
+	<link rel="stylesheet" href="/css/variants/fieldset.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1 class="bs-header">browser.style</h1>
+		<a href="/">Back to table of contents</a>
+		<hr>
+		<h2>&lt;input type="checkbox"&gt;</h2>
+		<div class="row">
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Default checkbox</legend>
+				<label>
+					<input type="checkbox" checked>Accept terms and conditions
+				</label>
+				<label>
+					<input type="checkbox">Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="secondary"</code></legend>
+				<label>
+					<input type="checkbox" data-bs="secondary" checked>Accept terms and conditions
+				</label>
+				<label>
+					<input type="checkbox" data-bs="secondary">Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="ternary"</code></legend>
+				<label>
+					<input type="checkbox" data-bs="ternary" checked>Accept terms and conditions
+				</label>
+				<label>
+					<input type="checkbox" data-bs="ternary">Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="no-border vertical">
+				<legend>With <code>role="switch"</code></legend>
+				<label>
+					<input type="checkbox" role="switch" checked>Switch
+				</label>
+				<label>
+					<input type="checkbox" role="switch">Switch
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="no-border vertical">
+				<legend>With <code>data-bs="secondary"</code></legend>
+				<label>
+					<input type="checkbox" role="switch" checked data-bs="secondary">Switch
+				</label>
+				<label>
+					<input type="checkbox" role="switch" data-bs="secondary">Switch
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="no-border vertical">
+				<legend>With <code>data-bs="ternary"</code></legend>
+				<label>
+					<input type="checkbox" role="switch" checked data-bs="ternary">Switch
+				</label>
+				<label>
+					<input type="checkbox" role="switch" data-bs="ternary">Switch
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="radio"</code></legend>
+				<label>
+					<input type="checkbox" checked data-bs="radio">Accept terms and conditions
+				</label>
+				<label>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="radio secondary"</code></legend>
+				<label>
+					<input type="checkbox" data-bs="radio secondary" checked>Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="radio ternary"</code></legend>
+				<label>
+					<input type="checkbox" data-bs="radio ternary" checked>Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Default checkbox — :indeterminate</legend>
+				<label>
+					<input type="checkbox" name="indeterminate">Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Secondary checkbox — :indeterminate</legend>
+				<label>
+					<input type="checkbox" name="indeterminate" data-bs="secondary">Accept terms and conditions
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Ternary checkbox — :indeterminate</legend>
+				<label>
+					<input type="checkbox" name="indeterminate" data-bs="ternary">Accept terms and conditions
+				</label>
+			</fieldset>
+
+		</div>
+		<hr>
+		<h2>&lt;input type="radio"&gt;</h2>
+		<div class="row">
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Default radio-button</legend>
+				<label>
+					<input type="radio" name="radio-1" value="1" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radio-1" value="2">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="secondary"</code></legend>
+				<label>
+					<input type="radio" name="radio-2" value="1" data-bs="secondary" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radio-2" value="2" data-bs="secondary">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="ternary"</code></legend>
+				<label>
+					<input type="radio" name="radio-3" value="1" data-bs="ternary" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radio-3" value="2" data-bs="ternary">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="macos"</code></legend>
+				<label>
+					<input type="radio" name="macos-1" value="1" checked data-bs="macos">Option 1
+				</label>
+				<label>
+					<input type="radio" name="macos-1" value="2" data-bs="macos">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="macos secondary"</code></legend>
+				<label>
+					<input type="radio" name="macos-2" value="1" data-bs="macos secondary" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="macos-2" value="2" data-bs="macos secondary">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="macos ternary"</code></legend>
+				<label>
+					<input type="radio" name="macos-3" value="1" data-bs="macos ternary" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="macos-3" value="2" data-bs="macos ternary">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="checkbox"</code></legend>
+				<label>
+					<input type="radio" name="radiocheck-1" value="1" data-bs="checkbox" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radiocheck-1" value="2" data-bs="checkbox">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="secondary checkbox"</code></legend>
+				<label>
+					<input type="radio" name="radiocheck-2" value="1" data-bs="secondary checkbox" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radiocheck-2" value="2" data-bs="secondary checkbox">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="ternary checkbox"</code></legend>
+				<label>
+					<input type="radio" name="radiocheck-3" value="1" data-bs="ternary checkbox" checked>Option 1
+				</label>
+				<label>
+					<input type="radio" name="radiocheck-3" value="2" data-bs="ternary checkbox">Option 2
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend>Radio-button — :indeterminate</legend>
+				<label>
+					<input type="radio" name="radio-in-1" value="1">Option 1
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="secondary</code></legend>
+				<label>
+					<input type="radio" name="radio-in-1" value="1" data-bs="secondary">Option 1
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical no-border">
+				<legend><code>data-bs="ternary</code></legend>
+				<label>
+					<input type="radio" name="radio-in-1" value="1" data-bs="ternary">Option 1
+				</label>
+			</fieldset>
+
+		</div>
+		<p>Some elements have <code>:indeterminate</code> styles. For checkboxes, this has to be set in JavaScript:</p>
+		<pre><code>elm.indeterminate = true;</code></pre>
+
+		<hr data-bs="dashed">
+		<h2>Variants</h2>
+		<h3>button-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="button-group">
+				<label>
+					<input type="radio" name="buttongroup-1" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-1" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-1" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="secondary button-group">
+				<label>
+					<input type="radio" name="buttongroup-2" value="1" data-sr><span data-icon="after icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-2" value="2" data-sr checked><span data-icon="after icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-2" value="3" data-sr><span data-icon="after icon-email">Email</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="primary button-group">
+				<label>
+					<input type="radio" name="buttongroup-3" value="1" data-sr><span data-icon="before icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-3" value="2" data-sr><span data-icon="before icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-3" value="3" data-sr checked><span data-icon="before icon-email">Email</span>
+				</label>
+			</fieldset>
+
+		</div>
+		<h3>small button-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="small button-group">
+				<label>
+					<input type="radio" name="buttongroup-4" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-4" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-4" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="small secondary button-group">
+				<label>
+					<input type="radio" name="buttongroup-5" value="1" data-sr><span data-icon="after icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-5" value="2" data-sr checked><span data-icon="after icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-5" value="3" data-sr><span data-icon="after icon-email">Email</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="small primary button-group">
+				<label>
+					<input type="radio" name="buttongroup-6" value="1" data-sr><span data-icon="before icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-6" value="2" data-sr><span data-icon="before icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-6" value="3" data-sr checked><span data-icon="before icon-email">Email</span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>rounded button-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="rounded button-group">
+				<label>
+					<input type="radio" name="togglegroup-1" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-1" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-1" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="rounded secondary button-group">
+				<label>
+					<input type="radio" name="togglegroup-2" value="1" data-sr><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-2" value="2" data-sr checked><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-2" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="rounded primary button-group">
+				<label>
+					<input type="radio" name="togglegroup-3" value="1" data-sr><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-3" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-3" value="3" data-sr checked><span>Auto</span>
+				</label>
+			</fieldset>
+
+		</div>
+		<h3>rounded small button-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="rounded small button-group">
+				<label>
+					<input type="radio" name="togglegroup-4" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-4" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-4" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="rounded small secondary button-group">
+				<label>
+					<input type="radio" name="togglegroup-5" value="1" data-sr><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-5" value="2" data-sr checked><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-5" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="rounded small primary button-group">
+				<label>
+					<input type="radio" name="togglegroup-6" value="1" data-sr><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-6" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-6" value="3" data-sr checked><span>Auto</span>
+				</label>
+			</fieldset>
+
+		</div>
+		<h3>inline button-group</h3>
+		<div class="row">
+			<fieldset data-bs="inline button-group">
+				<label>
+					<input type="radio" name="icongroup-1" value="1" data-sr checked title="SMS"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-1" value="2" data-sr title="Message"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-1" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="inline secondary button-group">
+				<label>
+					<input type="radio" name="icongroup-2" value="1" data-sr title="Phone"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-2" value="2" data-sr checked title="SMS"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-2" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="inline primary button-group">
+				<label>
+					<input type="radio" name="icongroup-3" value="1" data-sr title="Phone"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-3" value="2" data-sr title="SMS"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-3" value="3" data-sr checked title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>inline button-group (checkbox)</h3>
+		<div class="row">
+			<fieldset data-bs="inline button-group">
+				<label>
+					<input type="checkbox" name="icongroup-4" value="1" data-sr checked title="SMS"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-4" value="2" data-sr title="Message"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-4" value="3" data-sr checked title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="inline secondary button-group">
+				<label>
+					<input type="checkbox" name="icongroup-5" value="1" data-sr title="Phone"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-5" value="2" data-sr checked title="SMS"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-5" value="3" data-sr checked title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="inline primary button-group">
+				<label>
+					<input type="checkbox" name="icongroup-6" value="1" data-sr title="Phone" checked><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-6" value="2" data-sr title="SMS" checked><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-6" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>small inline button-grop — rounded, checkbox</h3>
+		<div class="row">
+			<fieldset data-bs="small inline button-group">
+				<label>
+					<input type="radio" name="icongroup-7" value="1" data-sr checked title="SMS"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-7" value="2" data-sr title="Message"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-7" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="small rounded inline secondary button-group">
+				<label>
+					<input type="radio" name="icongroup-8" value="1" data-sr checked title="Phone"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-8" value="2" data-sr title="SMS"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="icongroup-8" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+			
+			<fieldset data-bs="small inline primary button-group">
+				<label>
+					<input type="checkbox" name="icongroup-9" value="1" data-sr checked title="Phone"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-9" value="2" data-sr title="SMS"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="checkbox" name="icongroup-9" value="3" data-sr checked title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>inline button-group + <code>icon-toggle</code></h3>
+		<div class="row">
+			<fieldset data-bs="inline button-group">
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons">
+					<span data-icon="center after icon-phone"></span>
+					<span data-icon="center after icon-email"></span>
+				</label>
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons">
+					<span data-icon="center after icon-star"></span>
+					<span data-icon="center after icon-heart"></span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="inline secondary button-group">
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons">
+					<span data-icon="center after icon-phone"></span>
+					<span data-icon="center after icon-email"></span>
+				</label>
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons" checked>
+					<span data-icon="center after icon-star"></span>
+					<span data-icon="center after icon-heart"></span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="inline primary button-group">
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons" checked>
+					<span data-icon="center after icon-phone"></span>
+					<span data-icon="center after icon-email"></span>
+				</label>
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons">
+					<span data-icon="center after icon-star"></span>
+					<span data-icon="center after icon-heart"></span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>split button-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="split secondary button-group">
+				<label>
+					<input type="radio" name="split-1" value="1" data-sr><span data-icon="before icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="split-1" value="2" data-sr><span data-icon="before icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="split-1" value="3" data-sr checked><span data-icon="before icon-email">Email</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="split inline button-group">
+				<label>
+					<input type="radio" name="split-2" value="1" data-sr checked title="SMS"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="split-2" value="2" data-sr title="Message"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="split-2" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="rounded split primary button-group">
+				<label>
+					<input type="radio" name="togglegroup-3a" value="1" data-sr><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-3a" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="togglegroup-3a" value="3" data-sr checked><span>Auto</span>
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>split inline button-group tags</h3>
+		<div class="row">
+
+			<fieldset data-bs="split primary inline button-group tags">
+				<label>
+					<input type="checkbox" value="1" data-sr checked><span data-icon="after icon-cross">Light</span>
+				</label>
+				<label>
+					<input type="checkbox" value="2" data-sr checked><span data-icon="after icon-cross">Ipsum Dolor</span>
+				</label>
+				<label>
+					<input type="checkbox" value="3" data-sr checked><span data-icon="after icon-cross">Lorem ipsum</span>
+				</label>
+				<label>
+					<input type="checkbox" value="4" data-sr checked><span data-icon="after icon-cross"> Tempore enim molestias</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="small split secondary inline button-group tags">
+				<label>
+					<input type="checkbox" value="1" data-sr checked><span data-icon="after icon-cross">Light</span>
+				</label>
+				<label>
+					<input type="checkbox" value="2" data-sr checked><span data-icon="after icon-cross">Ipsum Dolor</span>
+				</label>
+				<label>
+					<input type="checkbox" value="3" data-sr checked><span data-icon="after icon-cross">Lorem ipsum</span>
+				</label>
+				<label>
+					<input type="checkbox" value="4" data-sr checked><span data-icon="after icon-cross"> Tempore enim molestias</span>
+				</label>
+			</fieldset>
+
+
+		
+		</div>
+
+		<h3>vertical button-group, with variants</h3>
+		<div class="row">
+
+			<fieldset data-bs="vertical button-group">
+				<label>
+					<input type="radio" name="buttongroup-7" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-7" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-7" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical start inline secondary button-group">
+				<label>
+					<input type="radio" name="buttongroup-8" value="1" data-sr><span data-icon="after icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-8" value="2" data-sr checked><span data-icon="after icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-8" value="3" data-sr><span data-icon="after icon-email">Email</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical inline secondary button-group">
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons">
+					<span data-icon="center after icon-phone"></span>
+					<span data-icon="center after icon-email"></span>
+				</label>
+				<label data-bs="icon-toggle">
+					<input type="checkbox" name="icongtoggle-1" value="1" data-sr title="Toggle Icons" checked>
+					<span data-icon="center after icon-star"></span>
+					<span data-icon="center after icon-heart"></span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>split vertical button-group, with variants</h3>
+		<div class="row">
+
+			<fieldset data-bs="split vertical button-group">
+				<label>
+					<input type="radio" name="buttongroup-9" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-9" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="buttongroup-9" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="vertical split inline start secondary button-group">
+				<label>
+					<input type="radio" name="split-3" value="1" data-sr><span data-icon="before icon-phone">Phone</span>
+				</label>
+				<label>
+					<input type="radio" name="split-3" value="2" data-sr><span data-icon="before icon-message">SMS</span>
+				</label>
+				<label>
+					<input type="radio" name="split-3" value="3" data-sr checked><span data-icon="before icon-email">Email</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="split vertical inline button-group">
+				<label>
+					<input type="radio" name="split-4" value="1" data-sr checked title="SMS"><span data-icon="center after icon-phone"></span>
+				</label>
+				<label>
+					<input type="radio" name="split-4" value="2" data-sr title="Message"><span data-icon="center after icon-message"></span>
+				</label>
+				<label>
+					<input type="radio" name="split-4" value="3" data-sr title="Email"><span data-icon="center after icon-email"></span>
+				</label>
+			</fieldset>
+		</div>
+
+		<hr data-bs="dotted" />
+		<h2>Tabs</h2>
+
+		<h3>tab-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="tab-group">
+				<label>
+					<input type="radio" name="tab-group-1" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-1" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-1" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="secondary tab-group">
+				<label>
+					<input type="radio" name="tab-group-2" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-2" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-2" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="primary tab-group">
+				<label>
+					<input type="radio" name="tab-group-3" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-3" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-3" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>small tab-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="small tab-group">
+				<label>
+					<input type="radio" name="tab-group-4" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-4" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-4" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="small secondary tab-group">
+				<label>
+					<input type="radio" name="tab-group-5" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-5" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-5" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="small primary tab-group">
+				<label>
+					<input type="radio" name="tab-group-6" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-6" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-6" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>tab-line-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="tab-line-group">
+				<label>
+					<input type="radio" name="tab-group-7" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-7" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-7" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="secondary tab-line-group">
+				<label>
+					<input type="radio" name="tab-group-8" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-8" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-8" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="primary tab-line-group">
+				<label>
+					<input type="radio" name="tab-group-9" value="1" data-sr checked><span>Light</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-9" value="2" data-sr><span>Dark</span>
+				</label>
+				<label>
+					<input type="radio" name="tab-group-9" value="3" data-sr><span>Auto</span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>Tabs with panels</h3>
+		<p>Requires JavaScript. Any button or tab-group can control tab-panels. Add a wrapper around a group with <code>data-bs="tabs"</code> as well as a sibling-element with the same amount of childnodes as the group.</p>
+
+		<div class="row">
+
+			<div data-bs="tabs">
+				<fieldset data-bs="tab-group">
+					<label>
+						<input type="radio" name="tabgroup-1" value="1" data-sr checked><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-1" value="2" data-sr><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-1" value="3" data-sr><span>Auto</span>
+					</label>
+				</fieldset>
+
+				<div data-bs="tab-panels">
+					<div hidden>Tabpanel 1 content &hellip;</div>
+					<div hidden>Tabpanel 2 content &hellip;</div>
+					<div hidden>Tabpanel 3 content &hellip;</div>
+				</div>
+			</div>
+
+			<div data-bs="tabs">
+				<fieldset data-bs="secondary tab-group">
+					<label>
+						<input type="radio" name="tabgroup-2" value="1" data-sr><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-2" value="2" data-sr checked><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-2" value="3" data-sr><span>Auto</span>
+					</label>
+				</fieldset>
+
+				<div data-bs="tab-panels">
+					<div hidden>Tabpanel 1 content &hellip;</div>
+					<div hidden>Tabpanel 2 content &hellip;</div>
+					<div hidden>Tabpanel 3 content &hellip;</div>
+				</div>
+			</div>
+
+			<div data-bs="tabs">
+				<fieldset data-bs="primary button-group">
+					<label>
+						<input type="radio" name="tabgroup-3" value="1" data-sr><span>Light</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-3" value="2" data-sr><span>Dark</span>
+					</label>
+					<label>
+						<input type="radio" name="tabgroup-3" value="3" data-sr checked><span>Auto</span>
+					</label>
+				</fieldset>
+
+				<div data-bs="tab-panels">
+					<div hidden>Tabpanel 1 content &hellip;</div>
+					<div hidden>Tabpanel 2 content &hellip;</div>
+					<div hidden>Tabpanel 3 content &hellip;</div>
+				</div>
+			</div>
+
+		</div>
+
+		<hr data-bs="dotted">
+		<h2>Image</h2>
+		<h3>image-group</h3>
+		<div class="row">
+
+			<fieldset data-bs="auto split image-group">
+				<label>
+					<input type="radio" name="imagegroup-1" value="1" data-sr checked>
+					<span>
+						<img src="/demo/bike.svg" loading="lazy" alt="Bike">
+					</span>
+					<span>I bicycle to work</span>
+				</label>
+				<label>
+					<input type="radio" name="imagegroup-1" value="2" data-sr>
+					<span>
+						<img src="/demo/car.svg" loading="lazy" alt="Car">
+					</span>
+					<span>I take my car to work</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="auto split secondary image-group">
+				<label>
+					<input type="radio" name="imagegroup-2" value="1" data-sr>
+					<span>
+						<span data-bs="image-mask" style="--_mask: url('/demo/bike.svg')"></span>
+					</span>
+					<span>Bicycle</span>
+				</label>
+				<label>
+					<input type="radio" name="imagegroup-2" value="2" data-sr checked>
+					<span>
+						<span data-bs="image-mask" style="--_mask: url('/demo/car.svg')"></span>
+					</span>
+					<span>Car</span>
+				</label>
+			</fieldset>
+
+			<fieldset data-bs="auto split primary image-group">
+				<label>
+					<input type="radio" name="imagegroup-3" value="1" data-sr checked>
+					<span>
+						<span data-bs="image-mask" style="--_mask: url('/demo/bike.svg')"></span>
+					</span>
+					<span>Bicycle</span>
+				</label>
+				<label>
+					<input type="radio" name="imagegroup-3" value="2" data-sr>
+					<span>
+						<span data-bs="image-mask" style="--_mask: url('/demo/car.svg')"></span>
+					</span>
+					<span>Car</span>
+				</label>
+			</fieldset>
+
+		</div>
+
+		<h3>image-group-grid</h3>
+		<div class="row">
+
+			<fieldset data-bs="auto split image-group">
+				<label>
+					<input type="checkbox" value="1" checked>
+					<span>
+						<img src="/demo/avatar1.webp" loading="lazy" alt="Person">
+					</span>
+				</label>
+				<label>
+					<input type="checkbox" value="2">
+					<span>
+						<img src="/demo/avatar2.webp" loading="lazy" alt="Person">
+					</span>
+				</label>
+			</fieldset>
+		</div>
+
+		<h3>column-group</h3>
+		<!-- <div class="row"> -->
+			<fieldset data-bs="auto split offer-group">
+				<label>
+					<input type="radio" name="og1" value="1" data-bs="secondary checkbox" checked>
+					<span>
+						<strong>iPhone 14 mini</strong>
+						<span>5.4-inch display</span>
+						<span>
+							<strong>$29.12</strong>
+							<span>/mo</span>
+						</span>
+					</span>
+				</label>
+
+				<label>
+					<input type="radio" name="og1" value="2" data-bs="secondary checkbox" >
+					<span>
+						<strong>iPhone 14 mini</strong>
+						<span>5.4-inch display</span>
+						<span>
+							<strong>$29.12</strong>
+							<span>/mo</span>
+						</span>
+					</span>
+				</label>
+
+				<label>
+					<input type="radio" name="og1" value="3" data-bs="secondary checkbox" >
+					<span>
+						<strong>iPhone 14 mini</strong>
+						<span>5.4-inch display</span>
+						<span>
+							<strong>$29.12</strong>
+							<span>/mo</span>
+						</span>
+					</span>
+				</label>
+			</fieldset>
+		<!-- </div> -->
+
+		<h3>column-group</h3>
+		<fieldset data-bs="auto split column-group">
+			<label>
+				<input type="radio" name="cg1" value="1" data-sr checked>
+				<span>
+					<strong>Free</strong>
+					<span>The basics for individuals and organizations</span>
+					<span>
+						<strong>$0</strong>
+						<sup>user/mo</sup>
+					</span>
+				</span>
+			</label>
+
+			<label>
+				<input type="radio" name="cg1" value="2" data-sr>
+				<span>
+					<strong>Team</strong>
+					<span>Advanced collaboration for individuals and organizations</span>
+					<span>
+						<strong>$80</strong>
+						<sup>user/mo</sup>
+					</span>
+				</span>
+			</label>
+
+			<label>
+				<input type="radio" name="cg1" value="3" data-sr>
+				<span>
+					<strong>Enterprise</strong>
+					<span>Security, compliance, and flexible deployment</span>
+					<span>
+						<strong>$160</strong>
+						<sup>user/mo</sup>
+					</span>
+				</span>
+			</label>
+
+		</fieldset>
+
+		<h3>column-group outline</h3>
+
+		<h3>text-group</h3>
+		<div class="row">
+
+		</div>
+	</main>
+	<script src="/main.js" defer></script>
+	<script src="/js/form.js" defer></script>
+</body>
+</html>

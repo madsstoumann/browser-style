@@ -4,9 +4,9 @@
 }
 :where(dl[data-bs="table"] :is(dd,dt)) {
 	--dd-mis: 0;
-	border-block-end: var(--dl-table-bdw, 1px) solid var(--dl-table-bdc);
+	border-block-end: 1px solid var(--color-gray-6);
 	padding-block: var(--dd-table-pb, .75ch);
 }
 :where(dl[data-bs="table"] :is(dd,dt):first-of-type) {
-	border-block-start: var(--dl-table-bdw, 1px) solid var(--dl-table-bdc);
+	border-block-start: 1px solid var(--color-gray-6);
 }
