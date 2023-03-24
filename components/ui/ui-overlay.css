@@ -1,0 +1,78 @@
+:where(ui-overlay *:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)) {
+	all: unset;
+	display: revert;
+}
+ui-overlay *,
+ui-overlay *::before,
+ui-overlay *::after {
+    box-sizing: border-box;
+}
+
+ui-overlay {
+	--ui-bdrs: 1.4375rem;
+	--ui-bxsh-lg: 0px 10px 60px rgba(0, 0, 0, 0.25);
+	--ui-cs: auto;
+
+	--ui-c-skobeloff: hsl(190.43, 100%, 22.55%); /*#005F73*/
+	--ui-c-viridian: hsl(181.29, 87.5%, 31.37%); /*#0A9396*/
+	--ui-c-pearl: hsl(159.68, 40.79%, 70.2%); /*#94D2BD*/
+	--ui-c-carnelian: hsl(5.38, 81.25%, 37.65%); /*#AE2012*/
+	--ui-c-mahogany: hsl(19.24, 96.84%, 37.25%); /*#BB3E03*/
+	--ui-c-orange: hsl(39.08, 100%, 46.67%); /*#EE9B00*/
+	--ui-c-cybergrape: hsl(262.91, 30.73%, 35.1%); /*#533E75*/
+	--ui-c-warmgray: hsl(0, 0%, 40%); /*#666666*/
+
+	--ui-dock-bg: hsla(0, 0%, 100%, 0.77);
+	--ui-dock-bs: 5rem;
+	--ui-dock-gap: 2ch;
+	--ui-gap: 1rem;
+	--ui-icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='grey' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+	--ui-panel-bg: hsla(0, 0%, 100%, 0.94);
+	--ui-panel-c: hsl(0, 0%, 10%);
+	--ui-panel-gap: 10px;
+	--ui-panel-is: 320px;
+	--ui-panel-mbs: 135px;
+	--ui-panel-full: calc(100dvh - (var(--ui-gap) * 2) - (var(--ui-dock-bs) * var(--ui-dock-v)) - (var(--ui-gap) * var(--ui-dock-v)));
+	--ui-panel-right: calc(100% - var(--ui-panel-is) - var(--ui-gap));
+	--ui-panel-x: var(--ui-panel-right);
+	--ui-panel-y: var(--ui-gap);
+
+	--ui-dock-v: 0;
+	
+	--ui-trsdu: 0.5s;
+	--ui-trstf: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+	color: var(--ui-panel-c);
+	container-name: ui-overlay;
+	font-family: ui-sans-serif, system-ui, sans-serif;
+	inset: 0;
+	isolation: isolate;
+	position: fixed;
+}
+
+/* === DARK MODE === */
+/* Use System Dark Mode if available. If forced, set `--ui-cs` to higher specificity */
+@media (prefers-color-scheme: dark) { ui-overlay { --ui-cs: dark; } }
+@media (prefers-color-scheme: light) { ui-overlay { --ui-cs: light; } }
+@container style(--ui-cs: dark) {
+	ui-overlay :is(ui-dock, ui-panel) {
+		--ui-dock-bg: hsla(0, 0%, 0%, 0.77);
+		--ui-panel-bg: hsla(0, 0%, 10%, 0.97);
+		--ui-panel-c: hsla(0, 0%, 100%, 0.87);
+		--ui-input-bg: hsla(0, 0%, 100%, 0.1);
+		--ui-resize-bg: hsla(0, 0%, 100%, 0.6);
+		--ui-tabgroup-selected-bg: hsla(0, 0%, 100%, 0.1);
+	}
+}
+
+/* === SCREEN-READER === */
+[data-sr] { 
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}

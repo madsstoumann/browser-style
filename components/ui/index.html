@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>UI Panel</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: ui panel">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+
+	<link rel="stylesheet" href="ui-overlay.css">
+	<link rel="stylesheet" href="ui-dock.css">
+	<link rel="stylesheet" href="ui-grid.css">
+	<link rel="stylesheet" href="ui-icon.css">
+	<link rel="stylesheet" href="ui-panel.css">
+	<link rel="stylesheet" href="ui-tabgroup.css">
+
+	<style>
+		body {
+			background: gainsboro url('/demo/demo-bg.jpg') no-repeat center center fixed;
+			height: 200dvh;
+		}
+		/* STATE */
+		ui-overlay:has(#ui_dock_toggle:checked) { --ui-dock-v: 1; }
+		#ui_dock_toggle:checked ~ ui-dock { --ui-dock-ib: var(--ui-gap); }
+		#ui_panel_layout:not(:checked) ~ ui-panel[grabbable] { display: none; }
+		#ui_panel_tree:checked ~ ui-panel[panel="tree"] { --ui-panel-x: var(--ui-gap); }
+		#ui_panel_seo:checked ~ ui-panel[panel="seo"] { --ui-panel-x: var(--ui-gap); }
+		#ui_panel_history:checked ~ ui-panel[panel="history"] { --ui-panel-x: var(--ui-gap); }
+		#ui_panel_releases:checked ~ ui-panel[panel="releases"] { --ui-panel-x: var(--ui-gap); }
+		#ui_panel_comments:checked ~ ui-panel[panel="comments"] { --ui-panel-x: var(--ui-panel-right); }
+		#ui_panel_tasks:checked ~ ui-panel[panel="tasks"] { --ui-panel-x: var(--ui-panel-right); }
+		#ui_panel_layout:checked ~ ui-panel[panel="layout"] { --ui-panel-x: var(--ui-panel-right); }
+		#ui_panel_settings:checked ~ ui-panel[panel="settings"] { --ui-panel-y: 50%; }
+	</style>
+</head>
+<body>
+
+	<ui-overlay>
+		<!-- STATE -->
+		<input type="checkbox" id="ui_dock_toggle" data-sr checked>
+		<input type="radio" name="ui-panel" id="ui_panel_none" value="0" data-sr checked>
+		<input type="radio" name="ui-panel" id="ui_panel_tree" value="1" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_seo" value="2" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_history" value="3" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_releases" value="5" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_comments" value="5" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_tasks" value="6" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_layout" value="7" data-sr>
+		<input type="radio" name="ui-panel" id="ui_panel_settings" value="8" data-sr>
+
+		<ui-panel panel="layout" grabbable resizable>
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Layout</strong>
+				<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+
+			<ui-tabgroup>
+				<label>
+					<input type="radio" name="tab" value="1" checked data-sr>
+					<ui-icon color="transparent" size="xs" iconsize="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-grid"></use></svg>
+					</ui-icon>
+				</label>
+				<label>
+					<input type="radio" name="tab" value="2" data-sr>
+					<ui-icon color="transparent" size="xs" iconsize="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-paint"></use></svg>
+					</ui-icon>
+				</label>
+				<label>
+					<input type="radio" name="tab" value="3" data-sr>
+					<ui-icon color="transparent" size="xs" iconsize="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-resize"></use></svg>
+					</ui-icon>
+				</label>
+				<label>
+					<input type="radio" name="tab" value="4" data-sr>
+					<ui-icon color="transparent" size="xs" iconsize="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-chat"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-tabgroup>
+
+			<ui-panel-content>
+				<strong>Categories</strong>
+				<ui-grid>
+					<div>
+						<ui-icon color="skobeloff" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-columns"></use></svg>
+						</ui-icon>
+						<small>Column</small>	
+					</div>
+					<div>
+						<ui-icon color="viridian" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-grid"></use></svg>
+						</ui-icon>
+						<small>Grid</small>
+					</div>
+					<div>
+						<ui-icon color="pearl" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-layout"></use></svg>
+						</ui-icon>
+						<small>Asymetric</small>
+					</div>
+					<div>
+						<ui-icon color="carnelian" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-slider-hor"></use></svg>
+						</ui-icon>
+						<small>Slider</small>
+					</div>
+					<div>
+						<ui-icon color="mahogany" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-slider-ver"></use></svg>
+						</ui-icon>
+						<small>Story</small>
+					</div>
+					<div>
+						<ui-icon color="orange" size="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-mosaic"></use></svg>
+						</ui-icon>
+						<small>Mosaic</small>
+					</div>
+				</ui-grid>
+
+			</ui-panel-content>
+			<ui-resize-handle></ui-resize-handle>
+		</ui-panel>
+
+		<ui-panel panel="tree" position="left">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Treemap</strong>
+				<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</labe>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="seo" position="left">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>SEO</strong>
+				<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="history" position="left">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>History</strong>
+								<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="releases" position="left">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Releases</strong>
+								<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="comments" position="right">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Comments</strong>
+								<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="tasks" position="right">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Tasks</strong>
+								<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<p>CONTENT</p>
+			</ui-panel-content>
+		</ui-panel>
+
+		<ui-panel panel="settings" position="bottom">
+			<ui-panel-header>
+				<button type="button" aria-label="previous" disabled>&lt;</button>
+				<strong>Settings</strong>
+				<label for="ui_panel_none" aria-label="close">
+					<ui-icon color="warmgray">
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-panel-header>
+			<ui-panel-nav>
+				<input type="search" placeholder="Search">
+			</ui-panel-nav>
+			<ui-panel-content>
+				<ui-tabgroup>
+					<label>
+						<input type="radio" name="ui-cs" value="light" data-sr data-scope="ui-overlay">
+						<ui-icon color="transparent" size="xs" iconsize="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-day"></use></svg>
+						</ui-icon>
+						<small>light</small>
+					</label>
+					<label>
+						<input type="radio" name="ui-cs" value="" checked data-sr data-scope="ui-overlay">
+						<ui-icon color="transparent" size="xs" iconsize="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-brightness"></use></svg>
+						</ui-icon>
+						<small>auto</small>
+					</label>
+					<label>
+						<input type="radio" name="ui-cs" value="dark" data-sr data-scope="ui-overlay">
+						<ui-icon color="transparent" size="xs" iconsize="xl">
+							<svg><use xlink:href="ui-icons.svg#icon-night"></use></svg>
+						</ui-icon>
+						<small>dark</small>
+					</label>
+				</ui-tabgroup>
+			</ui-panel-content>
+		</ui-panel>
+	
+		<ui-dock-toggle>
+			<label for="ui_dock_toggle" aria-label="open"></label>
+		</ui-dock-toggle>
+		
+		<ui-dock>
+			<label for="ui_panel_tree">
+				<ui-icon color="skobeloff" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-tree"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_seo">
+				<ui-icon color="viridian" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-seo"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_history">
+				<ui-icon color="pearl" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-history"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_releases">
+				<ui-icon color="orange" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-box"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_dock_toggle">
+				<ui-icon color="skobeloff" size="xl" scale="lg" invert>
+					<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_comments">
+				<ui-icon color="mahogany" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-chat"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_tasks">
+				<ui-icon color="carnelian" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-tasks"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_layout">
+				<ui-icon color="cybergrape" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-worldshare"></use></svg>
+				</ui-icon>
+			</label>
+			<label for="ui_panel_settings">
+				<ui-icon color="warmgray" size="xl">
+					<svg><use xlink:href="ui-icons.svg#icon-settings"></use></svg>
+				</ui-icon>
+			</label>
+		</ui-dock>
+
+	</ui-overlay>
+	<script>
+
+
+UIPanel(document.querySelector("ui-panel[grabbable]"));
+
+
+function UIPanel(panel, settings = { minHeight: '135px' }) {
+	const dragArea = panel.querySelector("ui-panel-header")
+	const resizeHandle = panel.querySelector("ui-resize-handle")
+	let x, y, cx, cy, ry, rcy
+
+	if (dragArea) {
+		dragArea.addEventListener('pointerdown', dragDown);
+		dragArea.addEventListener('dblclick', () => {
+			const bs = panel.style.getPropertyValue('--ui-panel-bs')
+			panel.style.setProperty('--ui-panel-bs', bs === 'auto' ? settings.minHeight : 'auto')
+		})
+	}
+	if (resizeHandle) {
+		resizeHandle.addEventListener('pointerdown', resizeDown)
+	}
+	function dragDown(e) {
+		cx = e.clientX
+		cy = e.clientY
+		document.addEventListener('pointerup', dragUp)
+		document.addEventListener('pointermove', dragMove)
+	}
+	function dragMove(e) {
+		e.preventDefault()
+		x = cx - e.clientX
+		y = cy - e.clientY
+		cx = e.clientX
+		cy = e.clientY
+		panel.style.setProperty('--ui-panel-x', (panel.offsetLeft - x) + "px")
+		panel.style.setProperty('--ui-panel-y',  (panel.offsetTop - y) + "px")
+	}
+	function dragUp() {
+		document.removeEventListener('pointerup', dragUp)
+		document.removeEventListener('pointermove', dragMove)
+	}
+	function resizeDown(e) {
+		rcy = e.clientY
+		document.addEventListener('pointerup', resizeUp);
+		document.addEventListener('pointermove', resizeMove)
+	}
+	function resizeMove(e) {
+		e.preventDefault();
+		ry = rcy - e.clientY
+		rcy = e.clientY
+		panel.style.setProperty('--ui-panel-bs', (panel.offsetHeight - ry) + "px")
+	}
+	function resizeUp() {
+		document.removeEventListener('pointerup', resizeUp)
+		document.removeEventListener('pointermove', resizeMove)
+	}
+}
+
+/* Set CSS Custom Props */
+
+document.querySelectorAll('[data-scope]').forEach(input => {
+	input.addEventListener('input', () => set(input))
+})
+
+function set(input) {
+	const key = input.dataset.key || input.name
+	const node = scope(input, input.dataset.scope)
+	if (key && node) { 
+		const value = input.value + (input.dataset.unit || '')
+		if (value) {
+			node.style.setProperty(key.startsWith('--') ? key : '--' + key, value)
+		}
+		else {
+			node.style.removeProperty(key.startsWith('--') ? key : '--' + key)
+		}
+		
+	}
+}
+function scope(input, scope) {
+	switch (scope) {
+		case 'fieldset': return input.closest('fieldset')
+		case 'form': return input.form
+		case 'next': return input.nextElementSibling
+		case 'parent': return input.parentNode
+		case 'prev': return input.previousElementSibling
+		case 'root': return document.documentElement
+		default: return scope?.length ? document.querySelector(scope) : input
+	}
+}
+
+
+	</script>
+</body>
+</html>

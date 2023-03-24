@@ -1,0 +1,46 @@
+ui-tabgroup {
+	align-items: center;
+	background: var(--ui-tabgroup-bg, rgba(118, 118, 128, 0.12));
+	border-radius: var(--ui-tabgroup-bdrs, 0.5rem);
+	display: flex;
+	justify-content: space-between;
+	padding: var(--ui-tabgroup-p, .25rem);
+	user-select: none;
+}
+ui-tabgroup label {
+	border-radius: calc(var(--ui-tabgroup-bdrs, .5rem) - (var(--ui-tabgroup-p, .25rem) / 2));
+	display: grid;
+	flex: 1;
+	grid-row-gap: var(--ui-tabgroup-grg, 2px);
+	padding: var(--ui-tabgroup-item-p, .33rem .5rem);
+	place-content: center;
+	position: relative;
+	text-align: center;
+	transition: all var(--ui-trsdu) var(--ui-trstf);
+}
+ui-tabgroup label::before {
+	background: var(--ui-tabgroup-line, hsla(240, 6%, 25%, 0.36));
+	content: "";
+	display: block;
+	width: 1px;
+	height: 60%;
+	position: absolute;
+	top: 20%;
+}
+ui-tabgroup label:has(:checked) {
+	background: var(--ui-tabgroup-selected-bg, #fff);
+	box-shadow: var(--ui-tabgroup-selected-bxsh, 0px 3px 8px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04));
+}
+ui-tabgroup label:first-of-type::before,
+ui-tabgroup label:has(:checked)::before,
+ui-tabgroup label:has(:checked) + label::before { display: none; }
+
+ui-tabgroup label {
+	font-size: var(--ui-tabgroup-item-fz, 0.6875rem);
+}
+/* === HOVER === */
+@media (hover: hover) {
+	ui-tabgroup label:not(:has(:checked)):hover {
+		background: var(--ui-tabgroup-hover-bg, hsla(240, 2%, 65%, 0.12));
+	}
+}

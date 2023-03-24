@@ -1,0 +1,32 @@
+ui-dock {
+	align-items: center;
+	backdrop-filter: blur(5px);
+	background-color: var(--ui-dock-bg);
+	block-size: var(--ui-dock-bs);
+	border-radius: var(--ui-bdrs);
+	display: flex;
+	gap: var(--ui-dock-gap);
+	inset-block-end: var(--ui-dock-ib, -100%);
+	inset-inline: var(--ui-gap);
+	justify-content: center;
+	position: fixed;
+	transition: all var(--ui-trsdu) var(--ui-trstf);
+}
+
+
+
+ui-dock-toggle {
+	display: grid;
+	inset-block-end: var(--ui-gap);
+	place-content: center;
+	position: fixed;
+	width: 100%;
+}
+ui-dock-toggle label { 
+	aspect-ratio: 1;
+	background: #76A897;
+	border-radius: 65% 10% 65% 50%;
+	border: 2px solid white;
+	display: block;
+	inline-size: 5rem;
+}
