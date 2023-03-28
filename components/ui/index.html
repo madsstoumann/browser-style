@@ -27,10 +27,10 @@
 		/* STATE */
 		ui-overlay:has(#ui_dock_toggle:checked) { --ui-dock-v: 1; }
 
-		@media (min-width: 500px) {
+		@media (min-width: 600px) {
 			#ui_dock_toggle:checked ~ ui-dock { --ui-dock-ib: var(--ui-gap); }
 			#ui_panel_layout:not(:checked) ~ ui-panel[grabbable] { display: none; }
-			
+
 			#ui_panel_tree:checked ~ ui-panel[panel="tree"] { --ui-panel-x: var(--ui-gap); }
 			#ui_panel_seo:checked ~ ui-panel[panel="seo"] { --ui-panel-x: var(--ui-gap); }
 			#ui_panel_history:checked ~ ui-panel[panel="history"] { --ui-panel-x: var(--ui-gap); }

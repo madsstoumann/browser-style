@@ -19,23 +19,26 @@
 }
 
 /* === PANEL POSITION === */
-ui-panel[grabbable] {
-	--ui-panel-x: 110%;
-}
-ui-panel[position] {
+:where(ui-panel[position]) {
 	transition: all var(--ui-trsdu) var(--ui-trstf);
 }
-ui-panel[position="bottom"] {
-	--ui-panel-x: calc(50% - (var(--ui-panel-is) / 2));
-	--ui-panel-y: 100%;
-}
-ui-panel[position="left"] {
-	--ui-panel-bs: var(--ui-panel-full);
-	--ui-panel-x: -110%;
-}
-ui-panel[position="right"] {
-	--ui-panel-bs: calc(100dvh - (var(--ui-gap) * 2) - (var(--ui-dock-bs) * var(--ui-dock-v)) - (var(--ui-gap) * var(--ui-dock-v)));
-	--ui-panel-x: 110%;
+@media (min-width: 600px) {
+	:where(ui-panel[grabbable]) {
+		--ui-panel-x: 110%;
+	}
+
+	:where(ui-panel[position="bottom"]) {
+		--ui-panel-x: calc(50% - (var(--ui-panel-is) / 2));
+		--ui-panel-y: 100%;
+	}
+	:where(ui-panel[position="left"]) {
+		--ui-panel-bs: var(--ui-panel-full);
+		--ui-panel-x: -110%;
+	}
+	:where(ui-panel[position="right"]) {
+		--ui-panel-bs: calc(100dvh - (var(--ui-gap) * 2) - (var(--ui-dock-bs) * var(--ui-dock-v)) - (var(--ui-gap) * var(--ui-dock-v)));
+		--ui-panel-x: 110%;
+	}
 }
 
 /* === PANEL CONTENT === */

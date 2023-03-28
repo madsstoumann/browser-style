@@ -43,6 +43,7 @@ ui-dock-toggle label {
 	inline-size: 5rem;
 }
 
+/* TODO !!! */
 @media (max-width: 500px) {
 	ui-dock {
 		border-radius: 0;
@@ -54,13 +55,19 @@ ui-dock-toggle label {
 		display: none;
 	}
 	ui-panel {
-		border-radius: 0;
-		inline-size: 100vw;
+		--ui-panel-bs: var(--ui-panel-full);
 		
-		/* inset: 0 0 var(--ui-dock-bs) 0; */
+		border-radius: 0;
+		box-shadow: none;
+		inline-size: 100vw;
 	}
 
-	#ui_panel_tree:checked ~ ui-panel[panel="tree"] {
-		--ui-panel-bs: calc(100dvh - var(--ui-dock-bs));
-		--ui-panel-x: 0; --ui-panel-y: 0; box-shadow: none; background: white; }
+	#ui_panel_tree:checked ~ ui-panel[panel="tree"] { --ui-panel-x: 0; }
+	#ui_panel_seo:checked ~ ui-panel[panel="seo"] { --ui-panel-x: 0; }
+	#ui_panel_history:checked ~ ui-panel[panel="history"] { --ui-panel-x: 0; }
+	#ui_panel_releases:checked ~ ui-panel[panel="releases"] { --ui-panel-x: 0; }
+	#ui_panel_comments:checked ~ ui-panel[panel="comments"] { --ui-panel-x: 0; }
+	#ui_panel_tasks:checked ~ ui-panel[panel="tasks"] { --ui-panel-x: 0; }
+	#ui_panel_layout:checked ~ ui-panel[panel="layout"] { --ui-panel-x: 0; }
+	#ui_panel_settings:checked ~ ui-panel[panel="settings"] { --ui-panel-x: 0; }
 }
