@@ -1,0 +1,56 @@
+ui-button {
+	align-items: center;
+	background: var(--ui-button-bg, var(--ui-c-warmgray));
+	border-radius: 3em;
+	color: color-mix(in srgb, var(--ui-button-bg, var(--ui-c-warmgray)), #FFF 90%);
+	cursor: pointer;
+	display: flex;
+	font-size: 0.8125rem;
+	letter-spacing: -0.078px;
+	gap: .5em;
+	padding: 1em 2em;
+	transition: all .16s ease-in;
+}
+
+ui-button:has(ui-icon) {
+	padding-inline-end: 1rem; /* hack, should be `var(--ui-icon-is)` */
+}
+
+ui-button ui-icon {
+	--ui-icon-bg: transparent;
+	--ui-icon-c: currentColor;
+}
+
+/* === COLORS === */
+ui-button[color~="carnelian"] { --ui-button-bg: var(--ui-c-carnelian); }
+ui-button[color~="cybergrape"] { --ui-button-bg: var(--ui-c-cybergrape); }
+ui-button[color~="mahogany"] { --ui-button-bg: var(--ui-c-mahogany); }
+ui-button[color~="orange"] { --ui-button-bg: var(--ui-c-orange); }
+ui-button[color~="pearl"] { --ui-button-bg: var(--ui-c-pearl); }
+ui-button[color~="skobeloff"] { --ui-button-bg: var(--ui-c-skobeloff); }
+ui-button[color~="viridian"] { --ui-button-bg: var(--ui-c-viridian); }
+ui-button[color~="transparent"] { --ui-button-bg: transparent; }
+ui-button[color~="warmgray"] { --ui-button-bg: var(--ui-c-warmgray); }
+
+/* === HOVER === */
+@media (hover: hover) {
+	ui-button:hover {
+		background-color: color-mix(in srgb, var(--ui-button-bg), #000 40%);
+	}
+	ui-button:hover ui-icon, ui-button ui-icon:hover {
+		background: transparent;
+		color: currentColor;
+	}
+}
+
+/* === DARK MODE === */
+@container style(--ui-cs: dark) {
+	ui-button {
+		/* Optimally, we'd deduct saturation from the color, but that's not possible in CSS yet: hsl(from var(--ui-icon-c), calc(s - 30%), l) */
+		background: color-mix(in srgb, var(--ui-button-bg), #000 20%);
+		color: color-mix(in srgb, var(--ui-button-bg), #FFF 60%);
+	}
+	ui-button ui-icon {
+		background: transparent;
+	}
+}

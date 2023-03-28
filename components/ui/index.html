@@ -11,6 +11,8 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 
 	<link rel="stylesheet" href="ui-overlay.css">
+	<link rel="stylesheet" href="ui-button.css">
+	<link rel="stylesheet" href="ui-button-group.css">
 	<link rel="stylesheet" href="ui-dock.css">
 	<link rel="stylesheet" href="ui-grid.css">
 	<link rel="stylesheet" href="ui-icon.css">
@@ -24,16 +26,20 @@
 		}
 		/* STATE */
 		ui-overlay:has(#ui_dock_toggle:checked) { --ui-dock-v: 1; }
-		#ui_dock_toggle:checked ~ ui-dock { --ui-dock-ib: var(--ui-gap); }
-		#ui_panel_layout:not(:checked) ~ ui-panel[grabbable] { display: none; }
-		#ui_panel_tree:checked ~ ui-panel[panel="tree"] { --ui-panel-x: var(--ui-gap); }
-		#ui_panel_seo:checked ~ ui-panel[panel="seo"] { --ui-panel-x: var(--ui-gap); }
-		#ui_panel_history:checked ~ ui-panel[panel="history"] { --ui-panel-x: var(--ui-gap); }
-		#ui_panel_releases:checked ~ ui-panel[panel="releases"] { --ui-panel-x: var(--ui-gap); }
-		#ui_panel_comments:checked ~ ui-panel[panel="comments"] { --ui-panel-x: var(--ui-panel-right); }
-		#ui_panel_tasks:checked ~ ui-panel[panel="tasks"] { --ui-panel-x: var(--ui-panel-right); }
-		#ui_panel_layout:checked ~ ui-panel[panel="layout"] { --ui-panel-x: var(--ui-panel-right); }
-		#ui_panel_settings:checked ~ ui-panel[panel="settings"] { --ui-panel-y: 50%; }
+
+		@media (min-width: 500px) {
+			#ui_dock_toggle:checked ~ ui-dock { --ui-dock-ib: var(--ui-gap); }
+			#ui_panel_layout:not(:checked) ~ ui-panel[grabbable] { display: none; }
+			
+			#ui_panel_tree:checked ~ ui-panel[panel="tree"] { --ui-panel-x: var(--ui-gap); }
+			#ui_panel_seo:checked ~ ui-panel[panel="seo"] { --ui-panel-x: var(--ui-gap); }
+			#ui_panel_history:checked ~ ui-panel[panel="history"] { --ui-panel-x: var(--ui-gap); }
+			#ui_panel_releases:checked ~ ui-panel[panel="releases"] { --ui-panel-x: var(--ui-gap); }
+			#ui_panel_comments:checked ~ ui-panel[panel="comments"] { --ui-panel-x: var(--ui-panel-right); }
+			#ui_panel_tasks:checked ~ ui-panel[panel="tasks"] { --ui-panel-x: var(--ui-panel-right); }
+			#ui_panel_layout:checked ~ ui-panel[panel="layout"] { --ui-panel-x: var(--ui-panel-right); }
+			#ui_panel_settings:checked ~ ui-panel[panel="settings"] { --ui-panel-y: 50%; }
+		}
 	</style>
 </head>
 <body>
@@ -163,7 +169,7 @@
 				</label>
 			</ui-panel-header>
 			<ui-panel-nav>
-				<input type="search" placeholder="Search">
+				
 			</ui-panel-nav>
 			<ui-panel-content>
 				<p>CONTENT</p>
@@ -253,7 +259,7 @@
 				</label>
 			</ui-panel-header>
 			<ui-panel-nav>
-				<input type="search" placeholder="Search">
+				
 			</ui-panel-nav>
 			<ui-panel-content>
 				<ui-tabgroup>
@@ -282,56 +288,82 @@
 			</ui-panel-content>
 		</ui-panel>
 	
+		<!-- DOCK -->
 		<ui-dock-toggle>
 			<label for="ui_dock_toggle" aria-label="open"></label>
 		</ui-dock-toggle>
 		
 		<ui-dock>
-			<label for="ui_panel_tree">
-				<ui-icon color="skobeloff" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-tree"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_seo">
-				<ui-icon color="viridian" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-seo"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_history">
-				<ui-icon color="pearl" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-history"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_releases">
-				<ui-icon color="orange" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-box"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_dock_toggle">
-				<ui-icon color="skobeloff" size="xl" scale="lg" invert>
-					<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_comments">
-				<ui-icon color="mahogany" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-chat"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_tasks">
-				<ui-icon color="carnelian" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-tasks"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_layout">
-				<ui-icon color="cybergrape" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-worldshare"></use></svg>
-				</ui-icon>
-			</label>
-			<label for="ui_panel_settings">
-				<ui-icon color="warmgray" size="xl">
-					<svg><use xlink:href="ui-icons.svg#icon-settings"></use></svg>
-				</ui-icon>
-			</label>
+			<ui-dock-group>
+				<ui-button-group>
+					<button type="button" aria-label="undo">
+						<ui-icon color="transparent" size="sm">
+							<svg><use xlink:href="ui-icons.svg#icon-undo"></use></svg>
+						</ui-icon>
+					</button>
+					<button type="button" aria-label="redo">
+						<ui-icon color="transparent" size="sm">
+							<svg><use xlink:href="ui-icons.svg#icon-redo"></use></svg>
+						</ui-icon>
+					</button>
+				</ui-button-group>
+			</ui-dock-group>
+
+			<ui-dock-group>
+				<label for="ui_panel_tree">
+					<ui-icon color="skobeloff" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-tree"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_seo">
+					<ui-icon color="viridian" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-seo"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_history">
+					<ui-icon color="pearl" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-history"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_releases">
+					<ui-icon color="orange" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-box"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_dock_toggle">
+					<ui-icon color="skobeloff" size="xl" scale="lg" invert>
+						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_comments">
+					<ui-icon color="mahogany" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-chat"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_tasks">
+					<ui-icon color="carnelian" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-tasks"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_layout">
+					<ui-icon color="cybergrape" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-worldshare"></use></svg>
+					</ui-icon>
+				</label>
+				<label for="ui_panel_settings">
+					<ui-icon color="warmgray" size="xl">
+						<svg><use xlink:href="ui-icons.svg#icon-settings"></use></svg>
+					</ui-icon>
+				</label>
+			</ui-dock-group>
+
+			<ui-dock-group>
+				<ui-button is="button" type="button" color="viridian">Publish
+					<ui-icon size="xs">
+						<svg><use xlink:href="ui-icons.svg#icon-publish"></use></svg>
+					</ui-icon>
+				</ui-button>
+			</ui-dock-group>
 		</ui-dock>
 
 	</ui-overlay>

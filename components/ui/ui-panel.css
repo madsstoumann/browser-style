@@ -1,4 +1,4 @@
-ui-panel {
+:where(ui-panel) {
 	background: var(--ui-panel-bg, #FFF);
 	backdrop-filter: blur(5px);
 	block-size: var(--ui-panel-bs, auto);

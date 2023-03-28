@@ -1,0 +1,33 @@
+ui-button-group {
+	--ui-buttongroup-bg: hsla(0, 0%, 100%, 0.95);
+	--ui-buttongroup-bdrs: 50px;
+	background: var(--ui-buttongroup-bg);
+	border-radius: var(--ui-buttongroup-bdrs);
+	box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
+	display: flex;
+}
+ui-button-group button {
+	padding: 0.25rem;
+}
+ui-button-group button:first-of-type {
+	border-radius: var(--ui-buttongroup-bdrs) 0 0 var(--ui-buttongroup-bdrs);
+	border-inline-end: 1px solid color-mix(in srgb, var(--ui-buttongroup-bg), 10% black);
+	
+}
+ui-button-group button:last-of-type {
+	border-radius: 0 var(--ui-buttongroup-bdrs) var(--ui-buttongroup-bdrs) 0;
+}
+
+/* === HOVER === */
+@media (hover: hover) {
+	ui-button-group button:hover {
+		background-color: color-mix(in srgb, var(--ui-buttongroup-bg), #000 10%);
+	}
+}
+
+/* === DARK MODE === */
+@container style(--ui-cs: dark) {
+	ui-button-group {
+		--ui-buttongroup-bg: hsla(0, 0%, 70%, 0.95)
+	}
+}

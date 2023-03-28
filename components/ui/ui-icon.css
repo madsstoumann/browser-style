@@ -13,13 +13,13 @@ ui-icon {
 
 ui-icon svg {
 	fill: none;
-	max-block-size: var(--ui-iconsize, 75%);
-	max-inline-size: var(--ui-iconsize, 75%);
+	max-block-size: var(--ui-iconsize, 65%);
+	max-inline-size: var(--ui-iconsize, 65%);
 	place-self: center;
 	stroke: currentColor;
 	stroke-linecap: round;
 	stroke-linejoin: round;
-	stroke-width: var(--ui-stroke-w, 1);
+	stroke-width: var(--ui-stroke-w, 1.25);
 }
 
 ui-icon[invert] {
@@ -39,7 +39,7 @@ ui-icon[color~="transparent"] { --ui-icon-bg: transparent; }
 ui-icon[color~="warmgray"] { --ui-icon-c: var(--ui-c-warmgray); }
 
 /* === SIZES === */
-ui-icon[size~="xs"] { --ui-icon-is: 1rem; --ui-stroke-w: 2; }
+ui-icon[size~="xs"] { --ui-icon-is: 1.15rem; --ui-stroke-w: 2; }
 ui-icon[size~="sm"] { --ui-icon-is: 1.5rem; }
 ui-icon[size~="md"] { --ui-icon-is: 1.875rem; }
 ui-icon[size~="lg"] { --ui-icon-is: 2.5rem; }
@@ -52,12 +52,12 @@ ui-icon[iconsize~="xl"] { --ui-iconsize: 100%; }
 
 /* === HOVER === */
 @media (hover: hover) {
-	ui-icon:not([invert]):hover {
+	:where(ui-icon:not([invert])):hover {
 		background-color: var(--ui-icon-c);
 		color: color-mix(in srgb, var(--ui-icon-c), #FFF 80%);
 	}
 
-	ui-icon[invert]:hover {
+	:where(ui-icon[invert]):hover {
 		background-color: color-mix(in srgb, var(--ui-icon-c), #000 40%);
 	}
 
@@ -71,9 +71,9 @@ ui-icon[iconsize~="xl"] { --ui-iconsize: 100%; }
 
 /* === DARK MODE === */
 @container style(--ui-cs: dark) {
-	[data-ui-icon] {
+	ui-icon {
 		/* Optimally, we'd deduct saturation from the color, but that's not possible in CSS yet: hsl(from var(--ui-icon-c), calc(s - 30%), l) */
-		background: color-mix(in srgb, var(--ui-icon-c), #000 50%);
-		color: color-mix(in srgb, var(--ui-icon-c), #FFF 20%);
+		background: color-mix(in srgb, var(--ui-icon-c), #000 20%);
+		color: color-mix(in srgb, var(--ui-icon-c), #FFF 60%);
 	}
 }

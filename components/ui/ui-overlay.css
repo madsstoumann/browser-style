@@ -5,7 +5,7 @@
 ui-overlay *,
 ui-overlay *::before,
 ui-overlay *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 ui-overlay {
@@ -27,15 +27,16 @@ ui-overlay {
 	--ui-dock-gap: 2ch;
 	--ui-gap: 1rem;
 	--ui-icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='grey' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-search'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+	
 	--ui-panel-bg: hsla(0, 0%, 100%, 0.94);
 	--ui-panel-c: hsl(0, 0%, 10%);
 	--ui-panel-gap: 10px;
 	--ui-panel-is: 320px;
 	--ui-panel-mbs: 135px;
-	--ui-panel-full: calc(100dvh - (var(--ui-gap) * 2) - (var(--ui-dock-bs) * var(--ui-dock-v)) - (var(--ui-gap) * var(--ui-dock-v)));
+	--ui-panel-full: calc(100dvh - var(--ui-dock-bs));
 	--ui-panel-right: calc(100% - var(--ui-panel-is) - var(--ui-gap));
 	--ui-panel-x: var(--ui-panel-right);
-	--ui-panel-y: var(--ui-gap);
+	--ui-panel-y: 0;
 
 	--ui-dock-v: 0;
 	
@@ -50,16 +51,26 @@ ui-overlay {
 	position: fixed;
 }
 
+/* === RESPONSIVE === */
+@media (min-width: 600px) {
+	ui-overlay {
+		--ui-panel-full: calc(100dvh - (var(--ui-gap) * 2) - (var(--ui-dock-bs) * var(--ui-dock-v)) - (var(--ui-gap) * var(--ui-dock-v)));
+		--ui-panel-y: var(--ui-gap);
+	}
+}
+
 /* === DARK MODE === */
 /* Use System Dark Mode if available. If forced, set `--ui-cs` to higher specificity */
 @media (prefers-color-scheme: dark) { ui-overlay { --ui-cs: dark; } }
 @media (prefers-color-scheme: light) { ui-overlay { --ui-cs: light; } }
 @container style(--ui-cs: dark) {
 	ui-overlay :is(ui-dock, ui-panel) {
+
+
 		--ui-dock-bg: hsla(0, 0%, 0%, 0.77);
+		--ui-input-bg: hsla(0, 0%, 100%, 0.1);
 		--ui-panel-bg: hsla(0, 0%, 10%, 0.97);
 		--ui-panel-c: hsla(0, 0%, 100%, 0.87);
-		--ui-input-bg: hsla(0, 0%, 100%, 0.1);
 		--ui-resize-bg: hsla(0, 0%, 100%, 0.6);
 		--ui-tabgroup-selected-bg: hsla(0, 0%, 100%, 0.1);
 	}
