@@ -11,4 +11,8 @@
 	--color-gray-9: #212529;
 
 	--icon-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z"></path></svg>');
+
+	--form-bdrs: 0.25rem;
+	--form-bdw: 1px;
+	--form-bdc: var(--color-gray-4);
 }

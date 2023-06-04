@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>Color Compare</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form elements">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/@browser.style.props.css">
+	<link rel="stylesheet" href="/@browser.style.demo.css">
+	<link rel="stylesheet" href="index.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=' 'sha256-BPf0a5hoe/lgU7vkGw0SP1I5lOEqfg057BFUfEsEr9g=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+	<main>
+		<h1>color-compare</h1>
+		<p>Compare two colors of a masked image</p>
+
+		<fieldset data-uic="color-compare">
+			<img src="/demo/colors-base.webp" alt="Image of a car" loading="lazy" decoding="async">
+			<label aria-label="Slide to compare two colors against an image">
+				<input type="range" value="50" name="_x" data-scope="fieldset" data-unit="%">
+			</label>
+			<label aria-label="First color">
+				<input type="color" value="#DCAEE5" data-scope="fieldset" data-key="_c1">
+			</label>
+			<label aria-label="Second color">
+				<input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2">
+			</label>
+		</fieldset>
+
+	</main>
+
+	<script type="module">
+		import { property } from '/assets/js/property.mjs'
+		const compare = document.querySelector('[data-uic="color-compare"]')
+		compare.addEventListener('input', event => property(event.target))
+		Array.from(compare.elements).forEach(element => property(element))
+	</script>
+</body>
+</html>
