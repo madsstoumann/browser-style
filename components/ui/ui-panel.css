@@ -1,11 +1,11 @@
 :where(ui-panel) {
-	background: var(--ui-panel-bg, #FFF);
+	background: var(--ui-panel-bg, var(--ui-c-panel, #FFF));
 	backdrop-filter: blur(5px);
 	block-size: var(--ui-panel-bs, auto);
 	border-radius: var(--ui-bdrs);
 	box-shadow: var(--ui-bxsh-lg);
 	box-sizing: border-box;
-	color: var(--ui-panel-c, currentColor);
+	color: var(--ui-panel-c, var(--ui-c-text, currentColor));
 	display: grid;
 	grid-row-gap: var(--ui-panel-gap);
 	grid-template-rows: min-content min-content 1fr min-content;
@@ -47,16 +47,17 @@ ui-panel-content {
 	display: grid;
 	grid-row-gap: 1rem;
 	overflow-x: hidden;
-	overflow-y: auto;
-	scrollbar-gutter: stable;
+	overflow-y: auto; /* overlay */
+	scrollbar-gutter: auto; /* stable */
 }
 
 ui-panel-content > strong {
-	color: var(--ui-panel-headline-c, hsla(240, 2%, 55%, 1));
+	color: var(--ui-panel-headline-c, var(--ui-c-text-gray, CanvasText));
 	font-size: var(--ui-panel-headline-fz, 0.8125rem);
 	font-weight: 500;
 	text-transform: uppercase;
 }
+
 /* --- SCROLL-BAR --- */
 ui-panel-content::-webkit-scrollbar {
 	width: 9px;
@@ -90,7 +91,7 @@ ui-panel-header [disabled] {
 
 /* === SEARCH === */
 ui-panel [type="search"] {
-	background: var(--ui-input-bg, hsla(240, 3%, 93%, 1)) var(--ui-icon-search) no-repeat .5rem center;
+	background: var(--ui-c-input-bg, Field) var(--ui-icon-search) no-repeat .5rem center;
 	background-size: 1rem;
 	border: none;
 	border-radius: 0.625rem;
@@ -110,7 +111,7 @@ ui-resize-handle {
 	display: block;
 }
 ui-resize-handle::after {
-	background: var(--ui-resize-bg, hsla(0, 0%, 11.76%, 0.5));
+	background: var(--ui-resize-bg, var(--ui-c-text-gray, CanvasText));
 	border-radius: 1em;
 	content: "";
 	display: block;

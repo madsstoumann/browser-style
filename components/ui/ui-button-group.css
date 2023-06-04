@@ -11,7 +11,7 @@ ui-button-group button {
 }
 ui-button-group button:first-of-type {
 	border-radius: var(--ui-buttongroup-bdrs) 0 0 var(--ui-buttongroup-bdrs);
-	border-inline-end: 1px solid color-mix(in srgb, var(--ui-buttongroup-bg), 10% black);
+	border-inline-end: 1px solid color-mix(in srgb, var(--ui-buttongroup-bg), 5% CanvasText);
 	
 }
 ui-button-group button:last-of-type {

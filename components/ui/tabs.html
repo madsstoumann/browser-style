@@ -8,7 +8,7 @@
 
 		/* === UI-TABS === */
 		ui-tabs {
-			--tab-accent-c: hsl(220, 15%, 85%); /* rgb(99, 102, 241) */
+			--tab-accent: rgb(11, 87, 208); /* rgb(99, 102, 241) */
 			--tab-bdc: hsl(220, 15%, 90%);
 			/* hsl(220, 15%, 85%) */
 			--tab-gce: 4;
@@ -45,10 +45,10 @@
 			display: block;
 		}
 		ui-tablist label:has(input:checked) {
-			background: var(--tab-item-bg-selected, );
+			background: var(--tab-item-bg-selected, inherit);
 			box-shadow: var(--tab-item-bxsh-selected, none);
-			border-block-end: var(--tab-item-bdw) solid var(--tab-item-bdc, hsl(240, 3%, 12%));
-			color: var(--tab-item-c-selected, currentColor);
+			border-block-end: var(--tab-item-bdw) solid var(--tab-item-bdc, var(--tab-accent));
+			color: var(--tab-item-c-selected, var(--tab-accent, currentColor));
 		}
 		ui-tablist label:not(:has(input:checked)):hover {
 			--tab-item-bg: hsl(240, 3%, 95%);
@@ -86,10 +86,17 @@
 
 
 
-
-
-
 		/* === VARIATIONS === */
+		.tab-pills {
+			--tab-gce: 6;
+			--tab-gap: 1ch;
+			/* --tab-item-bg: hsl(240, 5%, 95%); */
+			--tab-item-bdrs: .5rem;
+			--tab-item-bdw: 0;
+			--tab-item-bg-selected: color-mix(in srgb, var(--tab-accent), white 80%);
+		}
+
+
 		.tab-bar {
 			--tab-gce: 5;
 			--tab-gap: 1ch;
@@ -129,6 +136,7 @@
 	</style>
 </head>
 <body>
+	<h2>Full-width tabs with underline</h2>
 	<ui-tabs>
 		<ui-tablist role="tablist">
 			<label role="tab">
@@ -136,28 +144,62 @@
 				Tab 1
 			</label>
 			<ui-tabpanel role="tabpanel">
-				<p><strong>Tab 1</strong> Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias mollitia at debitis eius saepe libero provident nostrum vero. Dicta rem explicabo saepe distinctio officia nisi, perferendis dolor sequi natus pariatur laboriosam eius cumque fugiat assumenda, nam, facere placeat iure. Unde neque officia iure. Ea nostrum repudiandae non natus excepturi ducimus facilis dolor fuga cum quibusdam necessitatibus corporis perferendis modi, doloremque fugit totam deserunt suscipit! Tenetur totam, itaque iste illo nobis saepe aspernatur asperiores exercitationem magnam dicta commodi assumenda deserunt aliquid ducimus nisi, amet, nemo perspiciatis natus cupiditate. Reprehenderit, numquam mollitia doloribus aperiam rem dicta id. Minima nisi beatae nobis. Ipsa?</p>
+				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta aliquam quos voluptatibus ratione facere? Aut, fugit magni eligendi ex sit ab quasi porro voluptates asperiores!</p>
 			</ui-tabpanel>
 			<label role="tab">
 				<input type="radio" name="tabs" data-sr aria-roledescription="tab">
 				Tab 2
 			</label>
 			<ui-tabpanel role="tabpanel">
-				<p>Tab 2 content<br>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptate, autem?</p>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere porro quos sint reiciendis sapiente. Modi natus omnis praesentium. Sunt iure dignissimos illum explicabo repellendus. Officia.</p>
 			</ui-tabpanel>
 			<label role="tab">
 				<input type="radio" name="tabs" data-sr aria-roledescription="tab">
 				Tab 3
 			</label>
 			<ui-tabpanel role="tabpanel">
-				<p>Tab 3 content</p>
+				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis praesentium beatae, eveniet qui vero tempora ipsa aut id numquam fugit repudiandae nihil ea culpa accusamus adipisci nostrum in dolor vitae.</p>
 			</ui-tabpanel>
 			<label role="tab">
 				<input type="radio" name="tabs" data-sr aria-roledescription="tab">
 				Tab 4
 			</label>
 			<ui-tabpanel role="tabpanel">
-				<p>Tab 4 content</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda nobis suscipit animi rem laudantium non provident eum mollitia ad! Autem ipsam corrupti quis ex fugit magnam sint libero fuga doloribus atque voluptas, est assumenda quam alias? Accusantium porro praesentium aut.</p>
+			</ui-tabpanel>
+		</ui-tablist>
+	</ui-tabs>
+
+	<h2>Tabs in pills</h2>
+	<ui-tabs>
+		<ui-tablist role="tablist" class="tab-pills">
+			<label role="tab">
+				<input type="radio" name="pills" checked data-sr aria-roledescription="tab">
+				Tab 1
+			</label>
+			<ui-tabpanel role="tabpanel">
+				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta aliquam quos voluptatibus ratione facere? Aut, fugit magni eligendi ex sit ab quasi porro voluptates asperiores!</p>
+			</ui-tabpanel>
+			<label role="tab">
+				<input type="radio" name="pills" data-sr aria-roledescription="tab">
+				Tab 2
+			</label>
+			<ui-tabpanel role="tabpanel">
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere porro quos sint reiciendis sapiente. Modi natus omnis praesentium. Sunt iure dignissimos illum explicabo repellendus. Officia.</p>
+			</ui-tabpanel>
+			<label role="tab">
+				<input type="radio" name="pills" data-sr aria-roledescription="tab">
+				Tab 3
+			</label>
+			<ui-tabpanel role="tabpanel">
+				<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis praesentium beatae, eveniet qui vero tempora ipsa aut id numquam fugit repudiandae nihil ea culpa accusamus adipisci nostrum in dolor vitae.</p>
+			</ui-tabpanel>
+			<label role="tab">
+				<input type="radio" name="pills" data-sr aria-roledescription="tab">
+				Tab 4
+			</label>
+			<ui-tabpanel role="tabpanel">
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda nobis suscipit animi rem laudantium non provident eum mollitia ad! Autem ipsam corrupti quis ex fugit magnam sint libero fuga doloribus atque voluptas, est assumenda quam alias? Accusantium porro praesentium aut.</p>
 			</ui-tabpanel>
 		</ui-tablist>
 	</ui-tabs>

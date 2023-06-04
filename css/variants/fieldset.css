@@ -247,6 +247,14 @@ fieldset[data-bs*="-group"] :focus-visible + span {
 	--_bxshsz: .1875em;
 }
 
+.test {
+	--_dot-bg: #EEE;
+	--_dot-bg-checked: crimson;
+	--_dot-sz: 10px;
+	--_gap: 12px;
+}
+
+
 
 
 

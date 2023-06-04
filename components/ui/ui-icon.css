@@ -19,7 +19,7 @@ ui-icon svg {
 	stroke: currentColor;
 	stroke-linecap: round;
 	stroke-linejoin: round;
-	stroke-width: var(--ui-stroke-w, 1.25);
+	stroke-width: var(--ui-stroke-w, 1.45);
 }
 
 ui-icon[invert] {
@@ -39,11 +39,12 @@ ui-icon[color~="transparent"] { --ui-icon-bg: transparent; }
 ui-icon[color~="warmgray"] { --ui-icon-c: var(--ui-c-warmgray); }
 
 /* === SIZES === */
-ui-icon[size~="xs"] { --ui-icon-is: 1.15rem; --ui-stroke-w: 2; }
+ui-icon[size~="xs"] { --ui-icon-is: 1.15rem; --ui-stroke-w: 1.6; }
 ui-icon[size~="sm"] { --ui-icon-is: 1.5rem; }
 ui-icon[size~="md"] { --ui-icon-is: 1.875rem; }
 ui-icon[size~="lg"] { --ui-icon-is: 2.5rem; }
 ui-icon[size~="xl"] { --ui-icon-is: 3.5rem; }
+ui-icon[size~="xxl"] { --ui-icon-is: 4rem; }
 ui-icon[iconsize~="xs"] { --ui-iconsize: 40%; }
 ui-icon[iconsize~="sm"] { --ui-iconsize: 55%; }
 ui-icon[iconsize~="md"] { --ui-iconsize: 70%; }

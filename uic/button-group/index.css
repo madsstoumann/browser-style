@@ -1,0 +1,60 @@
+/**
+ * Button Group
+ * @param {color}  --_accent - accent color
+ * @param {length} --_bdrs - border-radius
+ * @param {length} --_bdw - border-width
+ * @param {string} --_gaf - grid-auto-flow
+ * @param {length} --_lbl-bdrs - label border-radius
+ * @param {color}  --_lbl-c - label color
+ * @param {color}  --_lbl-c-dm - label color in dark mode
+ * @param {color}  --_lbl-c-checked - label color when checked
+ * @param {length  --_lbl-gap - label gap
+ * @param {length} --_lbl-p - label padding
+ * @param {length} --_p - padding
+ * @description Button Group
+ */
+:where(fieldset[data-uic~="button-group"]) {
+	--_accent: var(--color-gray-7);
+	--_accent-dm: var(--color-gray-5);
+	--_bdrs: 2em;
+	--_bdw: 0.125em;
+
+	border: var(--_bdw)	solid var(--_accent);
+	border-radius: var(--_bdrs);
+	display: inline-grid;
+	grid-auto-columns: minmax(0, 1fr);
+	grid-auto-flow: var(--_gaf, column);
+	inline-size: fit-content;
+	margin: 0;
+	padding: var(--_p, .1875em);
+
+	& input {
+		appearance: none;
+		margin: 0;
+	}
+
+	& label {
+		align-items: center;
+		border-radius: var(--_lbl-bdrs, calc(var(--_bdrs) - var(--_bdw)));
+		color: var(--_lbl-c, inherit);
+		display: flex;
+		gap: var(--_lbl-gap, .5ch);
+		justify-content: center;
+		padding: var(--_lbl-p, 1ch 2.25ch);
+		text-align: center;
+		user-select: none;
+
+		&:has(input:checked) {
+			background: var(--_accent);
+			color: var(--_lbl-c-checked, var(--color-gray-0));
+		}
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:is(fieldset[data-uic~="button-group"]) {
+		--_accent: var(--_accent-dm);
+		--_lbl-c: var(--_lbl-c-dm, inherit);
+		--_lbl-c-checked: var(--_lbl-c-checked-dm, var(--color-gray-9));
+	}
+}

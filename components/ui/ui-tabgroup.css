@@ -1,6 +1,6 @@
 ui-tabgroup {
 	align-items: center;
-	background: var(--ui-tabgroup-bg, rgba(118, 118, 128, 0.12));
+	background: var(--ui-tabgroup-bg, var(--ui-c-input-bg, Field));
 	border-radius: var(--ui-tabgroup-bdrs, 0.5rem);
 	display: flex;
 	justify-content: space-between;
@@ -19,7 +19,7 @@ ui-tabgroup label {
 	transition: all var(--ui-trsdu) var(--ui-trstf);
 }
 ui-tabgroup label::before {
-	background: var(--ui-tabgroup-line, hsla(240, 6%, 25%, 0.36));
+	background: var(--ui-tabgroup-line, var(--ui-c-line, FieldText));
 	content: "";
 	display: block;
 	width: 1px;
@@ -28,7 +28,7 @@ ui-tabgroup label::before {
 	top: 20%;
 }
 ui-tabgroup label:has(:checked) {
-	background: var(--ui-tabgroup-selected-bg, #fff);
+	background: var(--ui-tabgroup-selected-bg, var(--ui-c-panel, #FFF));
 	box-shadow: var(--ui-tabgroup-selected-bxsh, 0px 3px 8px rgba(0, 0, 0, 0.12), 0px 3px 1px rgba(0, 0, 0, 0.04));
 }
 ui-tabgroup label:first-of-type::before,

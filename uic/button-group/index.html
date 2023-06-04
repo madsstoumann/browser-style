@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>Button Group</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="browser.style: form elements">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="icon" type="image/png" href="/favicon.ico" sizes="any">
+	<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+	<link rel="stylesheet" href="/@browser.style.props.css">
+	<link rel="stylesheet" href="/@browser.style.demo.css">
+	<link rel="stylesheet" href="index.css">
+	<meta http-equiv="Content-Security-Policy" content="
+		base-uri;
+		default-src;
+		connect-src 'self';
+		font-src;
+		form-action;
+		frame-src www.youtube.com;
+		img-src 'self' picsum.photos *.picsum.photos i.ytimg.com data:;
+		manifest-src 'self';
+		media-src 'self';
+		object-src 'none';
+		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
+		style-src 'self' 'unsafe-inline';
+	">
+	<link rel="manifest" href="/site.webmanifest">
+	<style>
+		.primary {
+			--_accent: hsl(220, 90%, 50%);
+			--_accent-dm: hsl(220, 50%, 60%);
+			--_lbl-c: var(--_accent);
+			--_lbl-c-dm: var(--_accent);
+			/* --_gaf: row; */
+			
+		}
+		.custom {
+			--_bdrs: 0px;
+			--_bdw: max(1px, 0.0625em);
+			--_p: 0;
+			& label:not(:first-child) {
+				border-inline-start: var(--_bdw) solid var(--_accent);
+			}
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<h1>button-group</h1>
+
+		<p>A group of radio-buttons, presented as buttons in a group</p>
+
+		<fieldset data-uic="button-group">
+			<label>
+				<input type="radio" name="button-group" value="1" checked>
+				Light mode
+			</label>
+			<label>
+				<input type="radio" name="button-group" value="2">
+				Dark mode
+			</label>
+			<label>
+				<input type="radio" name="button-group" value="3">
+				Auto
+				<!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" stroke-width="0" fill="currentColor"></path>
+			 </svg> -->
+			</label>
+		</fieldset>
+
+	</main>
+
+</body>
+</html>

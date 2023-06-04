@@ -26,6 +26,7 @@
 		}
 		/* STATE */
 		ui-overlay:has(#ui_dock_toggle:checked) { --ui-dock-v: 1; }
+		#ui_dock_toggle:checked ~ ui-dock-toggle { opacity: 0; }
 
 		@media (min-width: 600px) {
 			#ui_dock_toggle:checked ~ ui-dock { --ui-dock-ib: var(--ui-gap); }
@@ -234,7 +235,7 @@
 			<ui-panel-header>
 				<button type="button" aria-label="previous" disabled>&lt;</button>
 				<strong>Tasks</strong>
-								<label for="ui_panel_none" aria-label="close">
+				<label for="ui_panel_none" aria-label="close">
 					<ui-icon color="warmgray">
 						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
 					</ui-icon>
@@ -259,7 +260,6 @@
 				</label>
 			</ui-panel-header>
 			<ui-panel-nav>
-				
 			</ui-panel-nav>
 			<ui-panel-content>
 				<ui-tabgroup>
@@ -331,7 +331,7 @@
 					</ui-icon>
 				</label>
 				<label for="ui_dock_toggle">
-					<ui-icon color="skobeloff" size="xl" scale="lg" invert>
+					<ui-icon color="skobeloff" size="xxl" scale="md" invert>
 						<svg><use xlink:href="ui-icons.svg#icon-close"></use></svg>
 					</ui-icon>
 				</label>
@@ -359,7 +359,7 @@
 
 			<ui-dock-group>
 				<ui-button is="button" type="button" color="viridian">Publish
-					<ui-icon size="xs">
+					<ui-icon size="xs" iconsize="xl">
 						<svg><use xlink:href="ui-icons.svg#icon-publish"></use></svg>
 					</ui-icon>
 				</ui-button>

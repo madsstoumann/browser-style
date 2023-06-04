@@ -89,7 +89,7 @@ html::-webkit-scrollbar-thumb {
 	color: var(--body-c, canvastext);
 	color-scheme: var(--body-cs, light dark);
 	display: var(--body-d, block);
-	font-family: var(--body-ff, ui-serif, serif);
+	font-family: var(--body-ff, ui-sans-serif, system-ui, sans-serif);
 	font-size: var(--body-fsz, 1em);
 	line-height: var(--body-lh, 1.2);
 	margin-block: var(--body-mab, 8px);

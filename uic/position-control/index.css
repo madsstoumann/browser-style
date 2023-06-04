@@ -1,0 +1,48 @@
+/**
+ * Position Control
+ * @param {color}  --_dot-bg - background color of the dots
+ * @param {color}  --_dot-bg-checked - background color of the checked dot
+ * @param {color}  --_dot-bg-focus - outline color of the focused dot
+ * @param {color}  --_dot-bg-dm - background color of the dots in dark mode
+ * @param {color}  --_dot-bg-dm-checked - background color of the checked dot in dark mode
+ * @param {length} --_dot-sz - size of a dot
+ * @param {length} --_gap - gap between the dots
+ * @description 3x3 grid of radio-buttons
+ */
+:where(fieldset[data-uic~="position-control"]) {
+	--_dot-sz: 1em;
+
+	border: none;
+	display: inline-grid;
+	gap: var(--_gap, calc(var(--_dot-sz) / 2));
+	grid-template-columns: repeat(3, 1fr);
+	inline-size: fit-content;
+	margin: 0;
+	padding: 0;
+
+	& input {
+		appearance: none;
+		background: var(--_dot-bg, var(--color-gray-3));
+		block-size: var(--_dot-sz);
+		border-radius: 50%;
+		inline-size: var(--_dot-sz);
+		margin: 0;
+
+		&:checked {
+			--_dot-bg: var(--_dot-bg-checked, var(--color-gray-7));
+		}
+		&:focus-visible {
+			outline-color: var(--_dot-bg-focus, var(--color-gray-5));
+		}
+	}
+	& label {
+		display: contents;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:is(fieldset[data-uic~="position-control"]) {
+		--_dot-bg: var(--_dot-bg-dm, var(--color-gray-7));
+		--_dot-bg-checked: var(--_dot-bg-dm-checked, var(--color-gray-2));
+	}
+}
