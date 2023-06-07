@@ -1,10 +1,11 @@
 /**
  * Color Compare
- * @param {image}   --_bdw - border width
  * @param {color}   --_bdc - border color
+ * @param {image}   --_bdw - border width
  * @param {length}  --_bdrs - border radius
- * @param {length}  --_c-bdrs - border radius of color-input
- * @param {length}  --_c-width - width of color-input
+ * @param {string}  --_color-as - align-self of color-input (start or end)
+ * @param {length}  --_color-bdrs - border radius of color-input
+ * @param {length}  --_color-w - width of color-input
  * @param {image}   --_mask - mask image
  * @param {color}   --_thumb-bg - color of range-thumb
  * @param {length}  --_thumb-w - width of range-thumb
@@ -12,7 +13,7 @@
  */
 
  :where(fieldset[data-uic~="color-compare"]) {
-	--_mask:url('/demo/colors-base.webp');
+	--_mask: url('https://assets.stoumann.dk/img/colors-base.webp');
 
 	border: var(--_bdw, var(--form-bdw)) solid var(--_bdc, var(--form-bdc));
 	border-radius: var(--_bdrs, var(--form-bdrs));
@@ -31,6 +32,7 @@
 	& img { width: 100%; }
 
 	& input[type=color] {
+		align-self: var(--color-as, start);
 		background: transparent;
 		border: 0;
 		margin: 1cqi;

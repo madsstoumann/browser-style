@@ -15,4 +15,7 @@
 	--form-bdrs: 0.25rem;
 	--form-bdw: 1px;
 	--form-bdc: var(--color-gray-4);
+
+	--color-accent: #007bff;
+	--color-accent-text: #fff;
 }

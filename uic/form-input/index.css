@@ -28,7 +28,7 @@ gap
 input padding 
  */
 
-:where(input[type=checkbox]) {
+/* :where(input[type=checkbox]) {
 	--_mask: var(--icon-check) no-repeat center / 75%;
 	--_sz: 4em;
 
@@ -54,7 +54,44 @@ input padding
 			position: absolute;
 		}
 	}
+} */
+
+:where(label:has([type=checkbox])) {
+	align-items: center;
+	display: inline-flex;
 }
+
+/* === switch === */
+:where(input[role=switch]) {
+	--_p: 2px;
+	--_w: 3em;
+	appearance: none;
+	aspect-ratio: 1.8 / 1;
+	background: var(--_bg, var(--color-gray-5));
+	border-radius: var(--_w);
+	box-sizing: border-box;
+	margin: 0;
+	padding: var(--_p);
+	transition: all .2s linear;
+	width: var(--_w);
+
+	&::after {
+		aspect-ratio: 1 / 1;
+		background: var(--_circle-bg, hsla(0, 0%, 100%, 0.95));
+		border-radius: 50%;
+		content: "";
+		display: block;
+		height: 100%;
+		transition: inherit;
+	}
+	&:checked {
+		background: var(--_bg-c, var(--color-accent));
+		&::after {
+			translate: calc(var(--_w) - 100% - (2 * var(--_p))) 0;
+		}
+	}
+}
+
 
 @media (prefers-color-scheme: dark) {
 	/* :is(fieldset[data-uic~="button-group"]) {
