@@ -2,7 +2,7 @@
 <html lang="en-US" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title>Form Inputs</title>
+	<title>OTP</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="browser.style: form elements">
 	<meta name="format-detection" content="telephone=no">
@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="/@browser.style.props.css">
 	<link rel="stylesheet" href="/@browser.style.demo.css">
 	<link rel="stylesheet" href="index.css">
-	<meta http-equiv="Content-Security-Policy" content="
+	<!-- <meta http-equiv="Content-Security-Policy" content="
 		base-uri;
 		default-src;
 		connect-src 'self';
@@ -25,36 +25,33 @@
 		object-src 'none';
 		script-src 'self' 'sha256-vvt4KWwuNr51XfE5m+hzeNEGhiOfZzG97ccfqGsPwvE=';
 		style-src 'self' 'unsafe-inline';
-	">
+	"> -->
 	<link rel="manifest" href="/site.webmanifest">
 	<style>
-		.custom {
 
-		}
 	</style>
 </head>
 <body>
-	<main>
-		<h1>form-input</h1>
+<main>
+	<h1>one-time-password</h1>
 
-		<p>A 3&times;3 grid of radio-buttons</p>
+	<label>
+		<span>Paste code here</span><br><br>
+		<input
+			autofocus
+			type="text"
+			autocomplete="one-time-code"
+			inputmode="numeric"
+			maxlength="6"
+			pattern="\d{6}"
+			data-uic="otp">
+	</label>
 
-		<h2>Checkbox</h2>
-			<label>
-				<input type="checkbox">
-				I'm a checkbox
-			</label>
+</main>
 
-			<label>
-				<input type="checkbox" role="switch">
-				I'm a checkbox
-			</label>
-
-			<p>https://developer.mozilla.org/en-US/docs/Web/API/Popover_API</p>
-			<button popovertarget="mypopover">Toggle the popover</button>
-			<div id="mypopover" popover>Popover content</div>
-
-	</main>
-
+<script>
+	const input = document.querySelector('[data-uic="otp"]');
+	input.addEventListener('input', () => input.style.setProperty('--_otp-digit-pos', input.selectionStart))
+</script>
 </body>
 </html>

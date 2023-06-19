@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Iframe Resize</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="browser.style: form elements">
+  <meta name="format-detection" content="telephone=no">  
+  <meta http-equiv="Content-Security-Policy" content="
+    base-uri;
+    default-src;
+    connect-src 'self';
+    font-src;
+    form-action;
+    frame-src 'self';
+    img-src 'self' picsum.photos *.picsum.photos data:;
+    manifest-src 'self';
+    media-src 'self';
+    object-src 'none';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline';
+  ">
+  <style>
+    h2 { font-size: 2em; font-weight: 600; }
+    section { display: grid; gap: 1ch; }
+    @media (min-width: 600px) {
+      section { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+  <main>
+    <h1>Hello World!</h1>
+    <section>
+      <div class="card">
+        <img src="https://picsum.photos/seed/picsum/200/300" alt="Random image from picsum.photos">
+        <h2 data-pf>Headline with pf</h2>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatum et minus animi inventore! Nostrum perferendis vel, eos molestiae accusantium laboriosam provident voluptas odit minus maiores.</p>
+        <a href="https://dr.dk">Read more</a>
+      </div>
+      <div class="card">
+        <img src="https://picsum.photos/seed/picsum/200/300" alt="Random image from picsum.photos" data-pf>
+        <h2>Headline</h2>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatum et minus animi inventore! Nostrum perferendis vel, eos molestiae accusantium laboriosam provident voluptas odit minus maiores.</p>
+      </div>
+      <div class="card">
+        <img src="https://picsum.photos/seed/picsum/200/300" alt="Random image from picsum.photos">
+        <h2>Headline</h2>
+        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatum et minus animi inventore! Nostrum perferendis vel, eos molestiae accusantium laboriosam provident voluptas odit minus maiores.</p>
+      </div>
+    </section>
+  </main>
+
+
+<script type="module">
+if (window.location === window.parent.location) {
+  const selector = `h1,h2,h3,h4,img`
+  const CSS = `[data-ui=dialog]{background:#EEE;border:0;font-family:sans-serif;height:100dvh;inset:0;position:fixed;width:100vw;z-index:2147483647;}[data-ui=iframe]{aspect-ratio:9/19;background-color:white;border:0;border-radius:.5em;box-shadow:0 0 5px 1px #CCC;inline-size:375px;margin:2ch;padding:1em;resize:both;}[data-ui=group]{border:1px solid #CCC;display:flex;margin:2ch;& label{display:flex;gap:1ch;padding:1ch;&:has(input:checked){color:crimson;}}}`
+  const CSSframe = `body.nope * { pointer-events: none; } [data-pf] { pointer-events: all; } [data-pf]:hover { outline: 3px solid crimson; }}`
+  const nodeListToObject=(t,e)=>{const o={};return t.querySelectorAll(e).forEach((t=>{o[t.dataset.ui]=t})),o};
+  const strToFragment=t=>{const e=document.createElement("template");return e.innerHTML=t,e.content};
+  const F = new DocumentFragment();
+  F.append(strToFragment(`
+  <style>${CSS}</style>
+  <dialog open data-ui="dialog">
+    <fieldset data-ui="group"><label><input type="radio" name="pfbp" value="375" checked>Mobile</label><label><input type="radio" name="pfbp" value="768">Tablet</label><label><input type="radio" name="pfbp" value="1200">Desktop</label></fieldset>
+    <iframe src="${window.location.href}" data-ui="iframe" sandbox="allow-scripts allow-forms allow-same-origin allow-pointer-lock allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe><br>
+    <label><input type="checkbox" data-ui="toggle">Disable pointer-events</label>
+  </dialog>`));
+  const elements = nodeListToObject(F, '[data-ui]');
+  elements.toggle.addEventListener('change', e => {
+    elements.iframe.contentDocument.body.classList.toggle('nope', e.target.checked)
+  })
+  elements.dialog.addEventListener('input', e => elements.iframe.style.inlineSize = e.target.value + 'px')
+  elements.iframe.addEventListener('load', e => {
+    const frameCSS = document.createElement("style");
+    frameCSS.textContent = CSSframe;
+    elements.iframe.contentDocument.head.append(frameCSS);
+    elements.iframe.contentDocument.querySelectorAll(selector).forEach(el => {
+      el.dataset.pf = "{}"
+    })
+  })
+  document.body.appendChild(F);
+  let active = null;
+  elements.iframe.contentWindow.addEventListener('click', e => {
+    console.log(e.target);
+  })
+}
+
+</script>
+<!--
+  https://blog.adrgautier.co/how-to-inject-css-into-an-iframe
+  
+  Preview Boolean / STATE / Communication between parent/frame
+  Only interact with OUR elements, not the rest of the page (outlines, created from script)
+  Remove pointer-events from page, except for data-pf and nested data-pf
+  Content Sync between main page and iframe
+  Communication bus between main page and iframe with events
+
+  Problems:
+  Content Security Policy directive: "frame-ancestors"
+  Content Security Policy directive: "frame-src 'none'"
+
+ "frame-src" etc. should be 'self' or url-preview-environment
+-->
+</body>
+</html>

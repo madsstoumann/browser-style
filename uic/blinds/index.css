@@ -1,0 +1,92 @@
+/**
+ * Blinds
+ * @param {color}  --blinds-bg - background-color of first item (+ --_bg2-6)
+ * @param {length} --blinds-bdrs - border-radius of first and last article
+ * @param {color}  --blinds-c - color of items (+ --_c2-6)
+ * @param {length} --blinds-pb - padding-bottom of articles
+ * @param {length} --blinds-pi - padding-inline of articles
+ * @param {length} --blinds-heading-fz - font-size of headings
+ * @description - A vertical list of articles, where the first article is visible and the rest are hidden. Clicking on an article will reveal it.
+ */
+:where([data-uic~="blinds"]) {
+	--blinds-bg: var(--color-gray-9);
+	--blinds-c: var(--color-gray-1);
+	--blinds-pb: 1ch;
+	--blinds-pi: 2ch;
+
+	container-type: inline-size;
+
+	& ul {
+		all: unset;
+		border-radius: var(--blinds-bdrs, 0.5em);
+		display: grid;
+
+		& li {
+			--_bg: var(--blinds-bg);
+			--_c: var(--blinds-c);
+			background: var(--_bg);
+			color: var(--_c);
+			list-style: none;
+			padding: var(--blinds-pb) var(--blinds-pi);
+
+			&:nth-of-type(2) {
+				--_bg: var(--_bg2, color-mix(in srgb, var(--blinds-bg) 90%, #FFF));
+				--_c: var(--_c2, var(--blinds-c));
+			}
+			&:nth-of-type(3) { 
+				--_bg: var(--_bg3, color-mix(in srgb, var(--blinds-bg) 80%, #FFF));
+				--_c: var(--_c3, var(--blinds-c));
+			}
+			&:nth-of-type(4) {
+				--_bg: var(--_bg4, color-mix(in srgb, var(--blinds-bg) 70%, #FFF));
+				--_c: var(--_c4, var(--blinds-c));
+			}
+			&:nth-of-type(5) {
+				--_bg: var(--_bg5, color-mix(in srgb, var(--blinds-bg) 60%, #FFF));
+				--_c: var(--_c5, var(--blinds-c));
+			}
+			&:nth-of-type(6) {
+				--_bg: var(--_bg6, color-mix(in srgb, var(--blinds-bg) 50%, #FFF));
+				--_c: var(--_c6, var(--blinds-c));
+			}
+
+			&:first-of-type {
+				border-start-start-radius: inherit;
+				border-start-end-radius: inherit;
+			}
+			&:last-of-type {
+				border-end-start-radius: inherit;
+				border-end-end-radius: inherit;
+			}
+			& [role=heading] {
+				color: inherit;
+				display: block;
+				font-size: var(--blinds-heading-fz, 1.6em);
+				text-decoration: none;
+				-webkit-tap-highlight-color: transparent;
+			}
+			&:not(:target) {
+				& [role=heading] {
+					block-size: 100%;
+					& + * { display: none; }
+				}
+			}
+		}
+		@container (min-width: 700px) { 
+			grid-auto-flow: column;
+			& li:not(:target) {
+				box-shadow: -0.25em 0 1em -0.5em rgba(0,0,0,0.5);
+				padding: var(--blinds-pi) var(--blinds-pb);
+				writing-mode: vertical-lr;
+			}
+			& li:first-of-type:target {
+				border-start-end-radius: 0;
+				border-end-start-radius: inherit;
+			}
+			& li:last-of-type:target {
+				border-start-end-radius: inherit;
+				border-end-start-radius: 0;
+			}
+		}
+	}
+}

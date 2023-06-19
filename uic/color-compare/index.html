@@ -31,9 +31,12 @@
 <body>
 	<main>
 		<h1>color-compare</h1>
-		<p>Compare two colors of a masked image</p>
 
-		<fieldset data-uic="color-compare">
+    <p>
+			<small>Pick two colors, and drag the gray slider to compare. </small>
+		</p>
+
+		<fieldset data-uic="color-compare" style="--cc-mask:url('https://assets.stoumann.dk/img/colors-base.webp');">
 			<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy" decoding="async">
 			<label aria-label="Slide to compare two colors against an image">
 				<input type="range" value="50" name="_x" data-scope="fieldset" data-unit="%">
@@ -45,7 +48,8 @@
 				<input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2">
 			</label>
 		</fieldset>
-	</main>
+
+  </main>
 
 	<script type="module">
 		import { property } from '/assets/js/property.mjs'

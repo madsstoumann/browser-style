@@ -1,0 +1,35 @@
+
+  <!-- <style>
+    [data-ui=dialog] {
+      background: #EEE;
+      border: 0;
+      height: 100dvh;
+      inset:0;
+      position: fixed;
+      width: 100vw;
+      z-index: 2147483647;
+    }
+    [data-ui=iframe] {
+      aspect-ratio: 9 / 19;
+      background-color: white;
+      border: 0;
+      border-radius: .5em;
+      box-shadow: 0 0 5px 1px #CCC;
+      inline-size: 375px;
+      margin: 2ch;
+      padding: 1em;
+      resize: both;
+    }
+    [data-ui=group] {
+      border: 1px solid #CCC;
+      display: flex;
+      margin: 2ch;
+      & label {
+        display: block;
+        padding: 1ch;
+        &:has(input:checked) {
+          color: crimson;
+        }
+      }
+    }
+  </style> -->

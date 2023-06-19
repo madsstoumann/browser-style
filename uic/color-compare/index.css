@@ -1,22 +1,20 @@
 /**
  * Color Compare
- * @param {color}   --_bdc - border color
- * @param {image}   --_bdw - border width
- * @param {length}  --_bdrs - border radius
- * @param {string}  --_color-as - align-self of color-input (start or end)
- * @param {length}  --_color-bdrs - border radius of color-input
- * @param {length}  --_color-w - width of color-input
- * @param {image}   --_mask - mask image
- * @param {color}   --_thumb-bg - color of range-thumb
- * @param {length}  --_thumb-w - width of range-thumb
+ * @param {color}   --cc-bdc - border color
+ * @param {length}   --cc-bdw - border width
+ * @param {length}  --cc-bdrs - border radius
+ * @param {string}  --cc-color-as - align-self of color-input (start or end)
+ * @param {length}  --cc-color-bdrs - border radius of color-input
+ * @param {length}  --cc-color-w - width of color-input
+ * @param {image}   --cc-mask - mask image
+ * @param {color}   --cc-thumb-bg - color of range-thumb
+ * @param {length}  --cc-thumb-w - width of range-thumb
  * @description Compare two colors against a masked image
  */
 
  :where(fieldset[data-uic~="color-compare"]) {
-	--_mask: url('https://assets.stoumann.dk/img/colors-base.webp');
-
-	border: var(--_bdw, var(--form-bdw)) solid var(--_bdc, var(--form-bdc));
-	border-radius: var(--_bdrs, var(--form-bdrs));
+	border: var(--cc-bdw, var(--form-bdw)) solid var(--cc-bdc, var(--form-bdc));
+	border-radius: var(--cc-bdrs, var(--form-bdrs));
 	container-type: inline-size;
 	display: grid;
 	margin: 0;
@@ -32,17 +30,19 @@
 	& img { width: 100%; }
 
 	& input[type=color] {
-		align-self: var(--color-as, start);
+		align-self: var(--cc-color-as, start);
 		background: transparent;
 		border: 0;
+		border-radius: var(--cc-bdrs);
+		height: var(--cc-color-w, min(10cqi, 5em));
 		margin: 1cqi;
 		padding: 0;
-		width: var(--_color-w, min(20cqi, 10em));
+		width: var(--cc-color-w, min(10cqi, 5em));
 
 		&::-webkit-color-swatch,
 		&::-webkit-color-swatch-wrapper {
 			border: 0;
-			border-radius: var(--_color-bdrs, var(--form-bdrs));
+			border-radius: var(--cc-color-bdrs, 50%);
 			padding: 0;
 		}
 	}
@@ -57,8 +57,8 @@
 			background-image: linear-gradient(to right, var(--_c1) 0 var(--_x), var(--_c2) 0 var(--_x));
 			content: "";
 			inset: 0;
-			-webkit-mask: var(--_mask) no-repeat center / cover;
-			mask: var(--_mask) no-repeat center / cover;
+			-webkit-mask: var(--cc-mask) no-repeat center / cover;
+			mask: var(--cc-mask) no-repeat center / cover;
 			mix-blend-mode: multiply;
 			position: absolute;
 		}
@@ -70,11 +70,11 @@
 		&::-webkit-slider-thumb {
 			-webkit-appearance: none;
 			appearance: none;
-			background: var(--_thumb-bg, var(--form-bdc));
+			background: var(--cc-thumb-bg, var(--form-bdc));
 			cursor: ew-resize;
 			height: 100%;
 			position: relative;
-			width: var(--_thumb-w, min(3cqi, 1.25em));
+			width: var(--cc-thumb-w, min(3cqi, 1.25em));
 		}
 	}
 

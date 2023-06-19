@@ -1,0 +1,36 @@
+:where([data-uic~="otp"]) {
+	--otp-bdc: var(--color-gray-6);
+	--otp-bdw: 2px;
+	--otp-digits: 6;
+	--otp-ls: 2ch;
+	--otp-gap: 1.25;
+
+	--_otp-b: var(--otp-bdw), #0000 90deg,var(--otp-bdc) 0;
+	--_otp-bgsz: calc(var(--otp-ls) + 1ch);
+	--_otp-digit-pos: 0;
+	--_otp-mask: repeating-linear-gradient(90deg,
+		#000  0 var(--_otp-w), 
+		#0000 0 var(--_otp-bgsz))
+		0/calc(100% - var(--otp-ls)/2) 100% no-repeat;
+	--_otp-w: calc(var(--otp-gap) * var(--otp-ls));
+
+	all: unset;
+	background: 
+		conic-gradient(from  90deg at var(--otp-bdw) var(--_otp-b)),
+		conic-gradient(from -90deg at right calc(var(--otp-bdw) + ((var(--otp-ls) - 1ch) / 2)) bottom var(--_otp-b)),
+		linear-gradient(90deg, var(--otp-bg, var(--color-gray-5)) var(--_otp-w), transparent 0),
+		linear-gradient(90deg, var(--otp-bg, var(--color-gray-1)) var(--_otp-w), transparent 0);
+	background-position: 0 0, 0 0, calc(var(--_otp-digit-pos) * var(--_otp-bgsz)) 0, 0 0;
+	background-repeat: repeat-x, repeat-x, no-repeat, repeat-x;
+	background-size: var(--_otp-bgsz) 100%;
+	caret-color: var(--otp-cc, var(--color-gray-9));
+	clip-path: inset(0% calc(var(--otp-ls) / 2) 0% 0%);
+	font-family: ui-monospace, monospace;
+	font-size: var(--otp-fz, 2.5em);
+	inline-size: calc(var(--otp-digits) * var(--_otp-bgsz));
+	letter-spacing: var(--otp-ls);
+	-webkit-mask: var(--_otp-mask);
+	mask: var(--_otp-mask);
+	padding-block: var(--otp-pb, 1ch);
+	padding-inline-start: calc(((var(--otp-ls) - 1ch) / 2) * var(--otp-gap));
+}

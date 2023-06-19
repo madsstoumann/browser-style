@@ -1,0 +1,53 @@
+/**
+ * Avatar
+ * @param {length}  --avatar-bdw - Avatar border width
+ * @param {color}   --avatar-bdc - Avatar border color
+ * @param {length}  --avatar-bdrs - Avatar border radius
+ * @param {color}   --avatar-bg - Avatar background color
+ * @param {filter}  --avatar-fil - Avatar filter
+ * @param {length}  --avatar-sz - Avatar size
+ * @description - Avatar component
+ */
+:where([data-uic~=avatar]) { 
+	aspect-ratio: 1 / 1;
+	background: var(--avatar-bg, var(--color-gray-5));
+	block-size: var(--avatar-sz, 4rem);
+	border: var(--avatar-bdw, 1px) solid var(--avatar-bdc, var(--color-gray-1));
+	border-radius: var(--avatar-bdrs, 50%);
+	container-type: inline-size;
+	font-size: calc(var(--avatar-sz, 4rem) * 0.33);
+	position: relative;
+
+	& abbr {
+		display: grid;
+		place-content: center;
+		text-decoration: none;
+		user-select: none;
+	}
+	& abbr, & img {
+		inline-size: 100%;
+		inset: 0;
+		position: absolute;
+	}
+	& img {
+		border-radius: inherit;
+		filter: var(--avatar-fil, none);
+		pointer-events: none;
+	}
+}
+
+/**
+ * Avatar Group
+ * @param {length}  --avatar-group-gap - Avatar group gap
+ * @param {length}  --avatar-group-ovl - Avatar group overlap (negative value)
+ * @description - Avatar component
+ */
+:where([data-uic~=avatar-group]) {
+	all: unset;
+	display: flex;
+	gap: var(--avatar-group-gap, 0);
+	inline-size: fit-content;
+	& [data-uic~=avatar]:not(:first-of-type) {
+		margin-inline-start: var(--avatar-group-ovl, -.75em);
+	}
+} 

@@ -1,0 +1,36 @@
+/**
+ * Map-to-SVG
+ * @param {color}  --map-stroke - Stroke color
+ * @param {length} --map-stroke-width - Stroke width
+ * @param {color}  --map-shape-fill - Fill color
+ * @description Converta a `<map>` element to an SVG image
+ */
+ :where([data-uic~="map"]) {
+	position: relative;
+
+	/* If global reset is not used, uncomment the following: */
+	/* & :is(figure, li, ul) { all: unset; } */
+
+	& img {
+		block-size: auto;
+		inline-size: 100%;
+	}
+	& li:not(:target) {
+		display: none;
+	}
+	& svg {
+		inset: 0;
+		position: absolute;
+		& a:hover > :is(circle, polygon, rect) {
+			stroke-width: var(--map-stroke-width, 2px);
+		}
+		& :is(circle, polygon, rect) {
+			fill: var(--map-shape-fill, transparent);
+			stroke: var(--map-stroke, currentColor);
+			stroke-align: inset;
+			stroke-width: 0;
+			transition: stroke-width .5s ease-in;
+			vector-effect: non-scaling-stroke;
+		}
+	}
+}
