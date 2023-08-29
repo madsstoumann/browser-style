@@ -2,6 +2,8 @@
 node_modules/
 dist/
 _tmp/
+_v1/
+_v2/
 
 # local env files
 .env.local
