@@ -22,7 +22,7 @@
 		font-src;
 		form-action;
 		frame-src;
-		img-src 'self' placekitten.com data:;
+		img-src 'self' placekitten.com *.stoumann.dk data:;
 		manifest-src 'self';
 		media-src 'self';
 		object-src 'none';
@@ -31,7 +31,10 @@
 	">
 	<link rel="manifest" href="/site.webmanifest">
 	<style>
-
+		[value="3"] {
+			--chat-start-bg: hsl(240, 5%, 42%);
+			--chat-start-c: hsl(240, 5%, 92%);
+		}
 	</style>
 </head>
 <body>
@@ -45,7 +48,7 @@
 					<li>
 						<div data-uic="avatar">
 							<abbr title="Kim Cronos">KC</abbr>
-							<img src="/demo/avatar1.webp" alt="Unknown Person" loading="lazy">
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
 						</div>
 						<div data-uic="chat-entry">
 							Hey <a href="#name">@Mads</a>, can you please help me with building the UI for a chat application? 🙂
@@ -63,7 +66,7 @@
 						</li>
 						<li>
 							<div data-uic="chat-entry">
-								First you need an ordered list, &lt;ol&gt;, with the <code>data-uic="chat"</code> attribute. Then you add the entries as &lt;li&gt;-tags.
+								First you need an ordered list, &lt;ol&gt;. Then you add the entries as &lt;li&gt;-tags.
 								<time datetime="2023-06-09T10:02:00">Read </time>
 							</div>
 						</li>
@@ -72,6 +75,10 @@
 			<li value="1">
 				<ol>
 					<li>
+						<div data-uic="avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
 						<div data-uic="chat-entry">
 							How do I know who is who?
 							<time datetime="2023-06-09T10:02:00">Read </time>
@@ -83,7 +90,7 @@
 					<ol>
 						<li>
 							<div data-uic="chat-entry">
-								You add a <code>value</code>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second: you.
+								You add a <code>value</code>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second. You can even add more people if you want to.
 							</div>
 						</li>
 					</ol>
@@ -91,6 +98,10 @@
 			<li value="1">
 				<ol>
 					<li>
+						<div data-uic="avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
 						<div data-uic="chat-entry">
 							Example, please!? 🥰
 							<time datetime="2023-06-09T10:02:00">Read </time>
@@ -103,7 +114,7 @@
 					<ol>
 						<li>
 							<div data-uic="chat-entry">
-								Sure thing! Sorry about the delay. It's <code>&lt;li value="1"&gt;First person&lt;li&gt;</code> and <code>&lt;li value="2"&gt;Second person&lt;li&gt;</code>
+								Sure thing! It's <code>&lt;li value="1"&gt;First person&lt;li&gt;</code> and <code>&lt;li value="2"&gt;Second person&lt;li&gt;</code>
 							</div>
 						</li>
 					</ol>
@@ -111,6 +122,10 @@
 			<li value="1">
 				<ol>
 					<li>
+						<div data-uic="avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
 						<div data-uic="chat-entry">
 							How come you're using this structure?
 							<time datetime="2023-06-09T10:02:00">Read </time>
@@ -128,12 +143,12 @@
 					</li>
 				</ol>
 			</li>
-			<li value="1">
+			<li value="3">
 				<time datetime="2023-06-02T02:20:00"></time>
 				<ol>
 					<li>
 						<div data-uic="chat-entry">
-							It's me again!
+							Hi! It's Greg here!
 							<time datetime="2023-06-09T10:02:00">Read </time>
 						</div>
 					</li>
@@ -149,18 +164,63 @@
 				<ol>
 					<li>
 						<div data-uic="chat-entry">
-							Of course! 😊 The styles are set to <code>ltr</code> by default, but you can change it to <code>rtl</code> if you want to.
+							Hi Greg! Of course! 😊 The styles are set to <code>ltr</code> by default, but you can change it to <code>rtl</code> if you want to.
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="3">
+				<time datetime="2023-06-02T02:20:00"></time>
+				<ol>
+					<li>
+						<div data-uic="chat-entry">
+							Where's my Avatar?
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+				<ol>
+					<li>
+						<div data-uic="chat-entry">
+							Ah, sorry, Greg — it's here!
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="3">
+				<ol>
+					<li>
+						<div data-uic="avatar">
+							<abbr title="Greg Geertsen">GG</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar6.webp" alt="Unknown Person" loading="lazy">
+						</div>
+						<div data-uic="chat-entry">
+							Thank you! How about a beer later? 🍺
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+				<ol>
+					<li>
+						<div data-uic="chat-entry">
+							Always! 🍻
 						</div>
 					</li>
 				</ol>
 			</li>
 			<li value="1">
-				<time datetime="2023-06-05T02:20:00"></time>
+				<time datetime="2023-07-03T02:20:00"></time>
 				<ol>
 					<li>
+						<div data-uic="avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
 						<div data-uic="chat-entry">
 							Greg mentioned some site with free images of kittens — do you know that?
-							<time datetime="2023-06-09T10:02:00">Read </time>
+							<time datetime="2023-07-02T10:02:00">Read </time>
 						</div>
 					</li>
 				</ol>

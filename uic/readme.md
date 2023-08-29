@@ -28,7 +28,7 @@ details / ui-details
 dialog
 dl
 dock (with popover)
-faeout (mask)
+fadeout (mask)
 faq (autocollapse, ui-details, state-icons)
 file (drop + preview, capture user/environment)
 filetree (ul)
