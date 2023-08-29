@@ -1,0 +1,33 @@
+:where(.ui-step) {
+	all: unset;
+	align-items: center;
+	counter-reset: ol;
+	display: grid;
+	grid-auto-flow: column;
+	gap: var(--ui-step-gap, 2ch);
+	justify-content: start;
+	& li {
+		counter-increment: ol;
+		list-style-type: none;
+		&::before {
+			aspect-ratio: 1 / 1;
+			background-color: var(--GrayCanvas);
+			border-radius: 50%;
+			content: counter(ol);
+			display: inline-grid;
+			font-size: larger;
+			font-weight: 500;
+			margin-inline-end: .66ch;
+			place-content: center;
+			width: 1.75em;			
+		}
+		&.--active {
+			font-weight: 700;
+			&::before {
+				background-color: var(--AccentColor);
+				color: var(--AccentColorText);
+			}
+		}
+	}
+	&.--vertical { grid-auto-flow: row; }
+}

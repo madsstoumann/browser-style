@@ -1,0 +1,28 @@
+.ui-file-list {
+	--ui-file-list-img-sz: 4em;
+	all: unset;
+	border-radius: var(--input-bdrs);
+	font-size: smaller;
+	&:has(li) { border: 1px solid var(--ButtonBorder); }
+	& img {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--input-bdrs);
+		height: var(--ui-file-list-img-sz);
+		object-fit: contain;
+		width: var(--ui-file-list-img-sz);
+		margin-block: .5ch;
+	}
+	& li {
+		align-items: center;
+		display: flex;
+		gap: 1ch;
+		padding: 0.5ch 1ch;
+		&:not(:last-of-type) { border-bottom: 1px solid var(--ButtonBorder); }
+		&:hover {
+			background: var(--ButtonFace);
+			cursor: pointer;
+			text-decoration: line-through;
+		}
+		& >* { pointer-events: none; }
+	}
+}

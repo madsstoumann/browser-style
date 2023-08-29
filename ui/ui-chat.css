@@ -1,0 +1,82 @@
+.ui-chat {
+  --chat-start-bg: var(--ButtonFace);
+  --chat-start-c: inherit;
+  --chat-end-bg: var(--AccentColor);
+  --chat-end-c: var(--AccentColorText);
+  --chat-time-c: var(--color-gray-7);
+
+  /* Private consts */
+  --_chat-tail: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" viewBox="0 0 13 13"> <path d="M.556 12.718c5.2.8 10.334-2.063 12-3.897-1.718-4.096-7-9.362-7-8.603 0 10.5-6 11.897-5 12.5Z"/></svg>');
+  --_chat-tail-offset: .5em;
+  --_chat-tail-sz: 20px;
+  --ui-chat-gap: .33em;
+
+  display: grid;
+  max-inline-size: var(--ui-chat-mis, 30em);
+  margin-inline: var(--ui-chat-mi, auto);
+  padding: 0;
+  row-gap: calc(2 * var(--ui-chat-gap));
+
+  & li {
+    display: grid;
+    row-gap: var(--ui-chat-gap);
+    & li {
+      display: flex;
+      &:has(.ui-avatar) { gap: calc(2 * var(--ui-chat-gap)); }
+      & .ui-avatar { place-self: end; }
+    }
+    & ol {
+      display: grid;
+      max-inline-size: 80%;
+      padding: 0;
+      row-gap: var(--ui-chat-gap);
+      & li:not(:last-of-type) .ui-chat-entry::after {
+        display: none;
+      }
+    }
+    & time {
+      display: block;
+      font-size: var(--ui-chat-time-fz, small);
+    }
+    & > time { text-align: center; }
+
+    &[value="1"]:dir(rtl) { --_chat-tail-trsf: scaleX(-1); }
+    &[value="2"] {
+      --_chat-bg: var(--chat-end-bg);
+      --_chat-c: var(--chat-end-c);
+      --_chat-tail-ii: auto calc(0px - var(--_chat-tail-offset));
+      & li, & ol { justify-self: end; }
+      & .ui-avatar { order: 2; }
+      &:dir(ltr) { --_chat-tail-trsf: scaleX(-1);}
+    }
+  }
+}
+/* Chat entry */
+.ui-chat-entry {
+  background: var(--_chat-bg, var(--chat-start-bg));
+  border-radius: var(--_chat-entry-bdrs, 18px);
+  color: var(--_chat-c, var(--chat-start-c));
+  font-size: var(--_chat-entry-fz, inherit);
+  line-height: var(--_chat-entry-lh, 1.3);
+  padding: var(--_chat-entry-p, .75em 1em);
+  position: relative;
+
+  /* tail */
+  &::after {
+    background: inherit;
+    bottom: .15em;
+    content: "";
+    display: block;
+    height: var(--_chat-tail-sz);
+    inset-inline: var(--_chat-tail-ii, calc(0px - var(--_chat-tail-offset)) auto);
+    -webkit-mask: var(--_chat-tail) no-repeat;
+    mask: var(--_chat-tail) no-repeat;
+    position: absolute;
+    transform: var(--_chat-tail-trsf, none);
+    width: var(--_chat-tail-sz);
+  }
+  & time {
+    margin-block-start: var(--_chat-entry-time-mbs, var(--ui-chat-gap));
+    text-align: end;
+  }
+}

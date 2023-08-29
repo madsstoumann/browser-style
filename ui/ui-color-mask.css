@@ -1,0 +1,31 @@
+.ui-color-mask {
+	--ui-color-mask-url: url('https://assets.stoumann.dk/img/tshirt.webp') no-repeat center / contain;
+  all: unset;
+  display: grid;
+  gap: .33em;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	& input {
+		border: 0;
+		grid-area: 1 / 1;
+		height: 100%;
+		mask: var(--ui-color-mask-url);
+		-webkit-mask: var(--ui-color-mask-url);
+	}
+	& label {
+  	background-color: var(--GrayCanvas);
+		border-radius: var(--input-bdrs);
+  	display: grid;
+		&::after {
+			aspect-ratio: var(--ui-color-mask-asr, 1 / 1);
+			background: var(--ui-color-mask-url);
+			content: '';
+			display: block;
+			grid-area: 1 / 1;
+			mix-blend-mode: multiply;
+			pointer-events: none;
+		}
+	}
+	& legend {
+		padding-block-end: var(--label-rg);
+	}
+}

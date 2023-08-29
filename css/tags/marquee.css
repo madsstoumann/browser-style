@@ -1,4 +1,0 @@
-:where(marquee) {
-	background-color: var(--marquee-bgc, var(--gray-2));
-	padding-block: var(--marquee-pab, .5em);
-}

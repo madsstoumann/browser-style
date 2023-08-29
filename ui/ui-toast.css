@@ -1,0 +1,27 @@
+:where(.ui-toast) {
+	--button-bg: transparent;
+	--button-p: .5ch;
+	--hover-bg: transparent;
+	align-items: center;
+	background: var(--ui-toast-bg, var(--GrayCanvas));
+	border: 0;
+	display: none;
+	font-size: smaller;
+	gap: 1ch;
+	justify-content: space-between;
+	padding: 1ch 2ch;
+
+	&:popover-open {
+		display: flex;
+		position: fixed;
+		inset-block: auto 1em;
+		inset-inline: auto 1em;
+	}
+	/* Fallback for browsers that don't support :popover-open. Requires JavaScript. */
+	&.popover-open {
+		display: flex;
+		position: fixed;
+		inset-block: auto 1em;
+		inset-inline: auto 1em;
+	}
+}

@@ -1,0 +1,74 @@
+:where(.ui-timeline) {
+	--ui-timeline-bdw: 2px;
+	--ui-timeline-dot-sz: 1em;
+	--ui-timeline-dot-gap: 1.5ch;
+	--ui-timeline-pi: 1.5ch;
+	all: unset;
+	display: grid;
+	font-size: smaller;
+	gap: var(--ui-timeline-gap, 2ch);
+	grid-auto-flow: column;
+	& li {
+		align-content: start;
+		border-radius: var(--input-bdrs);
+		display: grid;
+		gap: var(--ui-timeline-item-gap, 1ch);
+		list-style: none;
+		margin-block-start: calc(var(--ui-timeline-dot-gap) + var(--ui-timeline-dot-sz));
+		padding: var(--ui-timeline-pb, var(--ui-timeline-pi)) var(--ui-timeline-pi);
+		position: relative;
+		& a {
+			--VisitedText: currentColor;
+			color: currentColor;
+		}
+		& >* { margin: 0; }
+		&::after {
+			border-radius: 50%;
+			border: var(--ui-timeline-bdw) solid var(--AccentColor);
+			content: "";
+			display: block;
+			height: var(--ui-timeline-dot-sz);
+			inset-block-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
+			inset-inline-start: var(--ui-timeline-pi);
+			position: absolute;
+			width: var(--ui-timeline-dot-sz);
+		}
+		&:not(:last-of-type)::before {
+			--_l: calc(0px - var(--ui-timeline-dot-gap) - (var(--ui-timeline-dot-sz) / 2) - (var(--ui-timeline-bdw) / 2));
+			--_w: calc(100% + var(--ui-timeline-bdw));
+			background-color: var(--AccentColor);
+			content: "";
+			display: block;
+			height: var(--ui-timeline-bdw);
+			inset-block-start: var(--_l);
+			inset-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-pi));
+			position: absolute;
+			width: var(--_w);
+		}
+		&.--accent {
+			&::after {
+				--_sz: calc(var(--ui-timeline-dot-sz) / 3);
+				background-color: var(--AccentColor);
+				box-shadow: 0 0 0 calc(var(--_sz) - var(--ui-timeline-bdw)) Canvas, 0 0 0 var(--_sz) var(--AccentColor);
+			}
+		}
+	}
+	&.--vertical {
+		grid-auto-flow: row;
+		& li {
+			border-block-end: 1px solid var(--GrayCanvas);
+			margin-block-start: 0;
+			margin-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-dot-gap));
+			&::after {
+				inset-block-start: 0;
+				inset-inline-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
+			}
+			&::before {
+				height: calc(var(--_w) + var(--ui-timeline-bdw));
+				inset-block-start: var(--ui-timeline-dot-sz);
+				inset-inline-start: var(--_l);
+				width: var(--ui-timeline-bdw);
+			}
+		}
+	}
+}

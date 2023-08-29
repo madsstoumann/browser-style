@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Components</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<link rel="stylesheet" href="browser.style.css">
+	<link rel="stylesheet" href="browser.style.ui.css">
+</head>
+<body>
+	<h1>Components</h1>
+
+	<h2>Accordion</h2>
+	<ul class="ui-accordion js-list-target">
+    <li id="item1" class="--open">
+      <a href="#item1"><strong>How do I reset my password?</strong><ui-icon type="chevron down"></ui-icon></a>
+      <div>
+        <p>To reset your password, go to the login page and click on the "Forgot Password" link. You will be prompted to enter your email address associated with your account. Follow the instructions sent to your email to reset your password securely. If you encounter any issues, feel free to contact our support team for assistance.</p>
+      </div>
+    </li>
+    <li id="item2">
+      <a href="#item2"><strong>How long does shipping take?</strong><ui-icon type="chevron down"></ui-icon></a>
+      <div>
+        <p>The shipping time depends on various factors such as your location, the shipping method chosen, and the availability of the product. Generally, we aim to process and ship orders within 1-2 business days. Once your order is shipped, the estimated delivery time can range from 2 to 7 business days. Please note that these are just estimates, and actual delivery times may vary. You can track your order using the provided tracking number.</p>
+      </div>
+    </li>
+    <li id="item3">
+      <a href="#item3"><strong>What payment methods do you accept?</strong><ui-icon type="chevron down"></ui-icon></a>
+      <div>
+        <p>We accept a variety of payment methods to provide convenience and flexibility to our customers. Currently, we accept major credit cards such as Visa, Mastercard, and American Express. Additionally, we also support payment through PayPal, Apple Pay, and Google Pay. Rest assured, all transactions are processed securely to protect your financial information.</p>
+      </div>
+    </li>
+    <li id="item4">
+      <a href="#item4"><strong>How can I contact customer support?</strong><ui-icon type="chevron down"></ui-icon></a>
+      <div>
+        <p>Our customer support team is here to assist you with any questions or concerns you may have. You can reach us by phone, email, or live chat. Our phone number and email address are available on the "Contact Us" page of our website. If you prefer live chat, you can find the chat widget on the bottom right corner of our website. Our dedicated support representatives are available during business hours to provide prompt assistance.</p>
+      </div>
+    </li>
+  </ul>
+
+	<h2>Analog Clock</h2>
+	<div class="ui-analog-clock">
+		<i>12</i>
+		<i>1</i>
+		<i>2</i>
+		<i>3</i>
+		<i>4</i>
+		<i>5</i>
+		<i>6</i>
+		<i>7</i>
+		<i>8</i>
+		<i>9</i>
+		<i>10</i>
+		<i>11</i>
+		<b></b>
+		<b></b>
+		<b></b>
+	</div>
+
+	<h2>Avatar</h2>
+	<div class="ui-avatar">
+		<abbr title="Kim Cronos">KC</abbr>
+		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+	</div>
+
+	<h2>Avatar List</h2>
+	<ul class="ui-avatar-list">
+		<li class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</li>
+		<li class="ui-avatar">
+			<abbr title="Greg Hanson">GH</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</li>
+		<li class="ui-avatar">
+			<abbr title="John Doe">JD</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
+		</li>
+		<li class="ui-avatar">
+			<abbr title="Linda Payne">LP</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</li>
+	</ul>
+
+	<h2>Badge</h2>
+	Use with modifiers, <code>--inline</code> and <code>--tra25-25</code> to fine-adjust position, and with <code>--text</code> if using with text.
+	<p>
+		<div class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<b class="ui-badge --success-bg --tra25-25">99</b>
+		</div>
+	</p>
+	<p><button type="button">Button with badge<b class="ui-badge --info-bg">5</b></button></p>
+	<p><span class="ui-chip">Chip with badge<b class="ui-badge --error-bg --tra25-25">4</b></span></p>
+	<p><span class="ui-chip --info">Light badge<b class="ui-badge --error --tra25-25">4</b></span></p>
+	<p><span class="ui-chip">Inline badge<b class="ui-badge --info --inline">4</b></span></p>
+	<p><span class="ui-chip">With text<b class="ui-badge --success-bg --tra25-25 --text">new</b></span></p>
+
+	<h2>Blinds</h2>
+	<div class="ui-blinds">
+		<ul class="js-list-target">
+			<li id="aboutus" class="--open">
+				<a href="#aboutus">About Us</a>
+				<p>
+					At Acme Software, we are dedicated to providing exceptional solutions for all your needs. With years of industry experience, we pride ourselves on delivering innovative and reliable products and services to our valued customers. Our team of experts is committed to exceeding expectations and building long-lasting relationships. We strive to stay at the forefront of technological advancements, ensuring that we consistently meet the evolving demands of our clients. Trust Acme Software for unmatched quality, expertise, and customer satisfaction.
+				</p>
+			</li>
+			<li id="ourproducts">
+				<a href="#ourproducts">Our Products</a>
+				<p>
+					Acme Software offers a diverse range of high-quality products designed to cater to your specific requirements. From cutting-edge electronics to innovative home appliances, we have it all. Our extensive product catalog includes the latest models from renowned brands, carefully selected to deliver exceptional performance and durability. Whether you're searching for state-of-the-art gadgets or reliable everyday essentials, our products are designed to enhance your lifestyle and provide unparalleled value.
+				</p>
+			</li>
+			<li id="ourservices">
+				<a href="#ourservices">Our Services</a>
+				<p>
+					At Acme Software, we go beyond just products. Our comprehensive range of services is tailored to meet your unique needs and provide you with a seamless experience. From expert installation and maintenance to prompt repairs and dedicated customer support, we are here to assist you every step of the way. Our highly skilled technicians and knowledgeable staff ensure that you receive personalized attention and the highest level of service. Count on us to deliver reliable solutions that maximize the performance and longevity of your purchases.
+				</p>
+			</li>
+			<li id="ourclients">
+				<a href="#ourclients">Our Clients</a>
+				<p>
+					Over the years, we have had the privilege of serving a diverse clientele that spans various industries and sectors. From small businesses to large corporations, we have established strong partnerships with clients who trust us to deliver exceptional products and services. Our client base includes leading organizations and individuals who value our commitment to quality, reliability, and customer satisfaction. We take pride in the long-term relationships we have built and look forward to continuing to exceed the expectations of our esteemed clients.
+				</p>
+			</li>
+			<li id="testimonials">
+				<a href="#testimonials">Testimonials</a>
+				<p>
+					At Acme Software, we are committed to providing exceptional products and services to our valued customers. We take pride in the relationships we have built and the positive feedback we have received from our clients. Here's what some of our satisfied customers have to say about their experience with us.
+				</p>
+			</li>
+			<li id="contactus">
+				<a href="#contactus">Contact Us</a>
+				<p>
+					We are always here to assist you. If you have any questions, comments, or inquiries, please don't hesitate to reach out to us. Our friendly and knowledgeable customer service team is available to provide prompt assistance and address any concerns you may have. You can contact us via phone, email, or by visiting our conveniently located store. We value your feedback and appreciate the opportunity to serve you better. Get in touch with us today and experience the exceptional service and support that sets Acme Software apart.
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<h2>Breadcrumbs</h2>
+	<ol class="ui-breadcrumbs">
+		<li >
+			<a href="https://example.com/books">Books</a>
+		</li>
+		<li>
+			<a href="https://example.com/books/sciencefiction">Science Fiction</a>
+		</li>
+		<li>
+			Award winners
+		</li>
+	</ol>
+
+	<p>With <code>--ui-breadcrumbs-marker</code> set to "/"</p>
+	<ol class="ui-breadcrumbs" style="--ui-breadcrumbs-marker:'/';">
+		<li >
+			<a href="/">Home</a>
+		</li>
+		<li>
+			<a href="/categories">Categories</a>
+		</li>
+		<li>
+			Books
+		</li>
+	</ol>
+
+	<h2>Card</h2>
+	<article class="ui-card" style="max-inline-size: 300px;">
+		<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
+		<small>News</small>
+		<h3>Card Title</h3>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
+		<a href="#">Read more</a>
+	</article>
+
+	<h2>Carousel</h2>
+	<p>Use with modifier-classes <code>--nav-inside</code> or <code>--nav-outside</code>.</p>
+	<div class="ui-carousel">
+		<div class="ui-scroll">
+			<div>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card witha longer Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+			</div>
+
+			<div>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card witha longer Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+				<article class="ui-card">
+					<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180">
+					<small>News</small>
+					<h3>Card Title</h3>
+					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+					<a href="#">Read more</a>
+				</article>
+			</div>
+		</div>
+
+		<nav>
+			<button data-action="prev">
+				<ui-icon type="chevron left"></ui-icon>
+			</button>
+			<ol>
+				<li></li>
+				<li></li>
+			</ol>
+			</fieldset>
+			<button data-action="next">
+				<ui-icon type="chevron right"></ui-icon>
+			</button>
+		</nav>
+	</div>
+
+	<h2>Chat</h2>
+	<ol class="ui-chat">
+		<li value="1">
+			<time datetime="2023-05-29T02:20:00"></time>
+			<ol>
+				<li>
+					<div class="ui-avatar">
+						<abbr title="Kim Cronos">KC</abbr>
+						<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+					</div>
+					<div class="ui-chat-entry">
+						Hey <a href="#name">@Mads</a>, can you please help me with building the UI for a chat application? 🙂
+						<time datetime="2023-06-09T10:02:00">Read </time>
+					</div>
+				</li>
+			</ol>
+		</li>
+		<li value="2">
+				<ol>
+					<li>
+						<div class="ui-chat-entry">
+							I sure can! 👍
+						</div>
+					</li>
+					<li>
+						<div class="ui-chat-entry">
+							First you need an ordered list, &lt;ol&gt;. Then you add the entries as &lt;li&gt;-tags.
+							<time datetime="2023-06-09T10:02:00">Read </time>
+						</div>
+					</li>
+				</ol>
+		</li>
+		<li value="1">
+			<ol>
+				<li>
+					<div class="ui-avatar">
+						<abbr title="Kim Cronos">KC</abbr>
+						<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+					</div>
+					<div class="ui-chat-entry">
+						How do I know who is who?
+						<time datetime="2023-06-09T10:02:00">Read </time>
+					</div>
+				</li>
+			</ol>
+		</li>
+		<li value="2">
+				<ol>
+					<li>
+						<div class="ui-chat-entry">
+							You add a <code>value</code>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second. You can even add more people if you want to.
+						</div>
+					</li>
+				</ol>
+		</li>
+	</ol>
+
+	<h2>Chip</h2>
+	<span class="ui-chip">Default chip</span>
+	<span class="ui-chip --error">No Connection ❖</span>
+	<span class="ui-chip --success">All services up ✓</span>
+	<span class="ui-chip --warning">Warning: Low ☀</span>
+	<span class="ui-chip --info">Premium User ★</span>
+
+	<h2>Countdown</h2>
+	<time datetime="2024-12-31" class="ui-countdown"></time>
+
+	<h3>Expired Countdown</h3>
+	<time datetime="2020-12-31" class="ui-countdown"></time>
+
+	<h2>Digital Clock</h2>
+	<time class="ui-digital-clock"></time>
+
+	<h2>Slider</h2>
+	<p>Use with modifier-classes <code>--nav-inside</code> or <code>--nav-outside</code>.</p>
+	<div class="ui-slider --nav-inside">
+		<div class="ui-scroll">
+			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
+		</div>
+		<nav>
+			<button data-action="prev">
+				<ui-icon type="chevron left"></ui-icon>
+			</button>
+			<ol>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+			<button data-action="next">
+				<ui-icon type="chevron right"></ui-icon>
+			</button>
+		</nav>
+	</div>
+
+	<h2>Step</h2>
+	<ol class="ui-step">
+		<li>First item</li>
+		<li class="--active">Second item</li>
+		<li>Third item</li>
+		<li>Fourth item</li>
+	</ol>
+
+	<p>With <code>--vertical</code>-modifier:</p>
+	<ol class="ui-step --vertical">
+		<li>First item</li>
+		<li class="--active">Second item</li>
+		<li>Third item</li>
+		<li>Fourth item</li>
+	</ol>
+
+	<h2>Syntax Highlight — CSS</h2>
+	<p>Used here with modifiers <code>--osx</code> and <code>--dark</code></p>
+	<ul class="ui-syntax-css --osx --dark">
+		<li>
+			<h3>body</h3>
+			<dl>
+				<dt>accent-color</dt>
+				<dd><var>AccentColor</var></dd>
+				<dt>background-color</dt>
+				<dd>Canvas</dd>
+				<dt>color</dt>
+				<dd><var>ColorGray-80</var></dd>
+				<dt>color-scheme</dt>
+				<dd>light dark</dd>
+				<dt>font-family</dt>
+				<dd><var>ff-sans</var></dd>
+				<dt>font-size</dt>
+				<dd>clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem)</dd>
+				<dt>line-height</dt>
+				<dd>1.5</dd>
+				<dt>margin-inline</dt>
+				<dd>auto</dd>
+				<dt>max-inline-size</dt>
+				<dd>70ch</dd>
+				<dt>padding-inline</dt>
+				<dd>2ch</dd>
+			</dl>
+		</li>
+		<li>
+			<h3>img</h3>
+			<dl>
+				<dt>height</dt>
+				<dd>auto</dd>
+				<dt>max-width</dt>
+				<dd>100%</dd>
+			</dl>
+		</li>
+		<li>
+			<h3>td</h3>
+			<dl>
+				<dt>border</dt>
+				<dd>1px solid</dd>
+				<dt>font-size</dt>
+				<dd>smaller</dd>
+				<dt>padding</dt>
+				<dd>1ch</dd>
+			</dl>
+		</li>
+	</ul>
+
+	<h2>Tabs</h2>
+	<p>Used here with modifier <code>--auto</code>. Default tab-scroll-behavior is <code>smooth</code>.</p>
+	<div class="ui-tabs">
+		<nav role="tablist">
+			<a href="#tab-panel-1" id="tab-1" aria-selected="true" aria-controls="tab-panel-1" role="tab">The very first tab</a>
+			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
+			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
+		</nav>
+		<div class="ui-scroll --auto">
+			<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
+				<h3>Welcome to the Tab 1!</h3>
+				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
+				<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="lazy">
+			</div>
+			<div id="tab-panel-2" role="tabpanel" aria-labelledby="tab-2">
+				<h3>Greetings from Tab 2!</h3>
+				<p>Here, you'll find a wide range of exciting content to keep you entertained. From news and updates to interesting articles and videos, there's something for everyone. Dive in, stay curious, and discover new perspectives. Let this tab be your gateway to endless inspiration and knowledge.</p>
+				<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy">
+			</div>
+			<div id="tab-panel-3" role="tabpanel" aria-labelledby="tab-3">
+				<h3>Step into Tab 3 &hellip;</h3>
+				<p>&hellip; your virtual playground! Unleash your creativity, embark on adventures, and let your imagination run wild. From interactive games and puzzles to artistic challenges and contests, there's never a dull moment here. Join our vibrant community, make new friends, and let the fun begin. Get ready for an unforgettable experience!</p>	
+				<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy">
+			</div>
+		</div>
+	</div>
+
+	<h2>Tags</h2>
+	<label class="ui-tag"><input type="checkbox" data-sr>Arc</label>
+	<label class="ui-tag"><input type="checkbox" data-sr>Brave</label>
+	<label class="ui-tag"><input type="checkbox" data-sr checked>Chrome</label>
+	<label class="ui-tag"><input type="checkbox" data-sr>Edge</label>
+	<label class="ui-tag"><input type="checkbox" data-sr>Firefox</label>
+	<label class="ui-tag"><input type="checkbox" data-sr checked>Safari</label>
+
+	<h2>Timeline</h2>
+	<ul class="ui-timeline">
+		<li class="--accent">
+			<small>32 mins ago</small>
+			<h3>Someone, somewhere, did something stupid</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+			<a href="#none">Read more</a>
+		</li>
+		<li>
+			<small>36 mins ago</small>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? </p>
+			<a href="#none">Read more</a>
+		</li>
+		<li class="--accent-20">
+			<small>58 mins ago</small>
+			<h3>Someone, somewhere, did something great</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+			<a href="#none">Read more</a>
+		</li>
+		<li>
+			<small>1 day ago</small>
+			<h3>The world needs more LEGO</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum!</p>
+			<a href="#none">Read more</a>
+		</li>
+	</ul>
+
+	<h3>Vertical Timeline</h3>
+	<ul class="ui-timeline --vertical">
+		<li class="--accent">
+			<small>32 mins ago</small>
+			<h3>Someone, somewhere, did something stupid</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+			<a href="#none">Read more</a>
+		</li>
+		<li>
+			<small>36 mins ago</small>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? </p>
+			<a href="#none">Read more</a>
+		</li>
+		<li class="--success">
+			<small>58 mins ago</small>
+			<h3>Someone, somewhere, did something great</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+			<a href="#none">Read more</a>
+		</li>
+		<li class="--accent-20">
+			<small>1 day ago</small>
+			<h3>The world needs more LEGO</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum!</p>
+			<a href="#none">Read more</a>
+		</li>
+	</ul>
+
+	<h2>Toasts</h2>
+	<p>
+		<button popovertarget="toast-info">Info</button>
+		<div id="toast-info" popover class="ui-toast --info">
+			<span>I am a popover with more information.</span>
+			<button popovertarget="toast-info" popovertargetaction="hide">
+				<ui-icon type="cross"></ui-icon>
+			</button>
+		</div>
+	</p>
+	<p>
+		<button popovertarget="toast-success">Success</button>
+		<div id="toast-success" popover class="ui-toast --success">
+			<span>I am a popover with more information.</span>
+			<button popovertarget="toast-success" popovertargetaction="hide">
+				<ui-icon type="cross"></ui-icon>
+			</button>
+		</div>
+	</p>
+	<p>
+		<button popovertarget="toast-warning">Warning</button>
+		<div id="toast-warning" popover class="ui-toast --warning">
+			<span>I am a popover with more information.</span>
+			<button popovertarget="toast-warning" popovertargetaction="hide">
+				<ui-icon type="cross"></ui-icon>
+			</button>
+		</div>
+	</p>
+	<p>
+		<button popovertarget="toast-error">Error</button>
+		<div id="toast-error" popover class="ui-toast --error">
+			<span>I am a popover with more information.</span>
+			<button popovertarget="toast-error" popovertargetaction="hide">
+				<ui-icon type="cross"></ui-icon>
+			</button>
+		</div>
+	</p>
+
+	<h2>Video Embed</h2>
+	<h3>--youtube</h3>
+	<div class="ui-embed --youtube">
+		<img loading="lazy" src="https://i.ytimg.com/vi/5b4YcLB4DVI/hqdefault.jpg" alt="Video Description">
+		<iframe allow="autoplay" src="" data-src="https://www.youtube.com/embed/5b4YcLB4DVI?autoplay=1"></iframe>
+		<button aria-label="Play video"></button>
+	</div>
+
+	<h3>--vimeo</h3>
+	<div class="ui-embed --vimeo">
+		<img loading="lazy" src="https://vumbnail.com/70591644.jpg" alt="Video Description">
+		<iframe allow="autoplay" src="" data-src="https://player.vimeo.com/video/70591644?autoplay=1"></iframe>
+		<button aria-label="Play video"></button>
+	</div>
+
+	<script src="browser.style.js"></script>
+</body>
+</html>	

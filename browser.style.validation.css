@@ -1,0 +1,7 @@
+*:required:not(:placeholder-shown):invalid {
+  background-color: color-mix(in srgb, var(--ColorError), #FFF 90%);
+  border-color: var(--ColorError);
+}
+label:has(*:required:not(:placeholder-shown):invalid) {
+  color: var(--ColorError);
+}

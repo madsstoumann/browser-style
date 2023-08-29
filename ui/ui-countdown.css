@@ -1,0 +1,23 @@
+.ui-countdown {
+  --ui-countdown-gap: 1ch;
+  background-color: var(--GrayCanvas);
+  border-radius: var(--input-bdrs);
+  display: inline-flex;
+  gap: var(--ui-countdown-gap);
+  padding: var(--ui-countdown-p, var(--ui-countdown-gap));
+	& small { line-height: 1; }
+	& span {
+		background-color: var(--ButtonFace);
+		border-radius: inherit;
+		display: grid;
+		padding: inherit;
+		text-align: center;
+	}
+	&.--expired {
+		& span:not(:first-of-type) {
+			opacity: .25;
+			text-decoration: line-through;
+		}
+	}
+	& strong { font-size: larger; }
+}

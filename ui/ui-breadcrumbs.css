@@ -1,0 +1,23 @@
+:where(.ui-breadcrumbs) {
+	--_c: color-mix(in srgb, currentColor, Canvas 50%);
+	all: unset;
+	align-items: center;
+	display: flex;
+	gap: var(--ui-breadcrumbs-gap, 1ch);
+	& a {
+		color: var(--_c);
+		text-decoration: none;
+		text-underline-offset: .5em;
+		&:visited { color: var(--_c); }
+		&:hover { text-decoration: underline; }
+	}
+	& li {
+		list-style-position: inside;
+		&:first-of-type { list-style-type: none; }
+		&:not(:first-of-type)::marker {
+			content: var(--ui-breadcrumbs-marker, "›");
+			font-size: var(--ui-breadcrumbs-fs, 1.25em);
+		}
+		&:not(:last-of-type)::marker { color: var(--_c); }
+	}
+}

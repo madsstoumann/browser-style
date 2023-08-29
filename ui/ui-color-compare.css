@@ -1,0 +1,70 @@
+.ui-color-compare {
+	--ui-color-compare-mask: url('https://assets.stoumann.dk/img/colors-base.webp');
+	--ui-color-compare-color-w: min(9cqi, 5em);
+	--ui-color-compare-thumb-w: min(3cqi, 1.25em);
+	all: unset;
+	container-type: inline-size;
+	direction: ltr;
+	display: grid;
+
+	& * {
+		grid-area: 1 / 1;
+		position: relative;
+	}
+	& img {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--input-bdrs);
+		width: 100%;
+	}
+	& [type=color] {
+		align-self: start;
+		background: transparent;
+		border: 0;
+		border-radius: 50%;
+		height: var(--ui-color-compare-color-w);
+		margin: 1cqi;
+		padding: 0;
+		width: var(--ui-color-compare-color-w);
+		&::-webkit-color-swatch,
+		&::-webkit-color-swatch-wrapper {
+			border: 0;
+			border-radius: inherit;
+		}
+		&::-moz-color-swatch {
+			border: 0;
+			border-radius: 50%;
+		}
+	}
+	& [type=range] {
+		background: transparent;
+		height: 100%;
+		margin: 0;
+		touch-action: none;
+		&::-webkit-slider-runnable-track { height: 100%; }
+		&::-webkit-slider-thumb {
+			background-color: var(--ButtonBorder);
+			border-radius: 0;
+			cursor: ew-resize;
+			height: 100%;
+			width: var(--ui-color-compare-thumb-w);
+		}
+		&::-moz-range-thumb {
+			background-color: var(--ButtonBorder);
+			border-radius: 0;
+			cursor: ew-resize;
+			height: 100%;
+			width: var(--ui-color-compare-thumb-w);
+		}
+	}
+	& label {
+		display: contents;
+		&:has(input[type=color]):last-of-type input { justify-self: end; }
+	}
+	& span { /* Place <span></span> _before_ <input type=range> */
+		background-image: linear-gradient(to right, var(--_c1) 0 var(--value), var(--_c2) 0 var(--value));
+		-webkit-mask: var(--ui-color-compare-mask) no-repeat center / cover;
+		mask: var(--ui-color-compare-mask) no-repeat center / cover;
+		mix-blend-mode: multiply;
+	}
+	& legend { padding-block-end: var(--label-rg); }
+}

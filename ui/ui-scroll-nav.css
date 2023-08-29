@@ -1,0 +1,58 @@
+:has(.ui-scroll) {
+	--ui-scroll-nav-gap: 2ch;
+	& nav {
+		display: grid;
+		gap: var(--ui-scroll-gap);
+		grid-auto-flow: column;
+		justify-content: center;
+		margin-block: var(--ui-scroll-gap);
+		& ol {
+			--_sz: .5em;
+			all: unset;
+			align-content: center;
+			display: grid;
+			gap: calc(var(--_sz) / 2);
+			grid-auto-flow: column;
+			& li {
+				all: unset;
+				background-color: var(--GrayCanvas);
+				border-radius: 50%;
+				height: var(--_sz);
+				width: var(--_sz);
+				&[aria-selected=true] { background-color: var(--ButtonBorder); }
+			}
+		}
+	}
+	&.--nav-inside {
+		& .ui-scroll, & nav { grid-area: 1 / 1; }
+		& nav {
+			justify-content: space-between;
+			height: 100%;
+			padding-inline: var(--ui-scroll-nav-gap);
+			width: 100%;
+			& button { align-self: center; }
+		}
+	}
+	&.--nav-outside {
+		gap: var(--ui-scroll-nav-gap);
+		& .ui-scroll, & ol {
+			grid-column: 2;
+			grid-row: 1;
+		}
+		& nav {
+			display: contents;
+			& button {
+				grid-row: 1;
+				place-self: center;
+				&:first-of-type { grid-column: 1; }
+			}
+		}
+	}
+	&.--nav-inside,
+	&.--nav-outside { 
+		& ol {
+			margin-block-end: var(--ui-scroll-nav-gap);
+			place-self: end center;
+		}
+	}
+}

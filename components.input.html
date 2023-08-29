@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Input Components</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<link rel="stylesheet" href="browser.style.css">
+	<link rel="stylesheet" href="browser.style.ui.css">
+</head>
+<body>
+	<h1>Input Components</h1>
+	<form>
+		<fieldset>
+			<legend>Input Components</legend>
+
+			<fieldset class="ui-button-group ">
+				<legend>Button Group</legend>
+				<label class="ui-button">
+					<input type="radio" name="button-group" value="1" data-sr checked>
+					Light mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group" data-sr value="2">
+					Dark mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group" data-sr value="3">
+					Auto
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-button-group --rounded">
+				<legend>Button Group Rounded</legend>
+				<label class="ui-button">
+					<input type="radio" name="button-group-rounded" value="1" data-sr checked>
+					Light mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group-rounded" data-sr value="2">
+					Dark mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group-rounded" data-sr value="3">
+					Auto
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-button-group --border">
+				<legend>Button Group Border</legend>
+				<label class="ui-button">
+					<input type="radio" name="button-group-border" value="1" data-sr checked>
+					Light mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group-border" data-sr value="2">
+					Dark mode
+				</label>
+				<label class="ui-button">
+					<input type="radio" name="button-group-border" data-sr value="3">
+					Auto
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-color-compare">
+				<legend>Color Compare</legend>
+				<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy">
+				<label aria-label="Slide to compare two colors against an image">
+					<span></span>
+					<input type="range" value="50" data-key="value" data-scope="fieldset" data-unit="%" autocomplete="off">
+				</label>
+				<label aria-label="First color">
+					<input type="color" value="#DCAEE5" data-scope="fieldset" data-key="_c1" autocomplete="off">
+				</label>
+				<label aria-label="Second color">
+					<input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2" autocomplete="off">
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-color-mask">
+				<legend>Color Mask</legend>
+				<label aria-label="First T-shirt Color">
+					<input type="color" value="#e54341" list="red">
+				</label>
+				<label aria-label="Second T-shirt Color">
+					<input type="color" value="#b5c4a2" list="lightgreen">
+				</label>
+				<label aria-label="Third T-shirt Color">
+					<input type="color" value="#626066" list="gray">
+				</label>
+				<label aria-label="Fourth T-shirt Color">
+					<input type="color" value="#68b1df" list="blue">
+				</label>
+			
+				<!-- DATALISTS -->
+				<datalist id="red">
+					<option value="#e54341">
+					<option value="#bc2623">
+					<option value="#f4a9a7">
+				</datalist>
+			
+				<datalist id="lightgreen">
+					<option value="#b5c4a2">
+					<option value="#a3b18a">
+					<option value="#d1d9c9">
+				</datalist>
+			
+				<datalist id="gray">
+					<option value="#626066">
+					<option value="#4d4d4f">
+					<option value="#a6a6a8">
+				</datalist>
+			
+				<datalist id="darkgreen">
+					<option value="#3d5f57">
+					<option value="#2e4a42">
+					<option value="#0a8360">
+				</datalist>
+			
+				<datalist id="blue">
+					<option value="#68b1df">
+					<option value="#3a8ac1">
+					<option value="#a6d2e0">
+				</datalist>
+			</fieldset>
+
+			<fieldset class="ui-color-swatch">
+				<legend>Color Swatch</legend>
+				<label aria-label="dusty blue">
+					<input type="radio" name="colorswatch" value="#BA2F30" style="--_bg:#53739a;">
+				</label>
+				<label aria-label="dusty green">
+					<input type="radio" name="colorswatch" value="#3D9354" style="--_bg:#689d76;">
+				</label>
+				<label aria-label="dusty purple">
+					<input type="radio" name="colorswatch" value="#FEA330" style="--_bg:#863d8b;" checked>
+				</label>
+			</fieldset>
+
+			<label>File — Removeable
+				<input type="file" multiple>
+			</label>
+
+			<fieldset class="ui-image-compare">
+				<legend>Image Compare</legend>
+				<img src="https://assets.stoumann.dk/img/color.jpg" alt="First Image for Comparison" loading="lazy" decoding="async">
+				<img src="https://assets.stoumann.dk/img/bw.jpg" alt="Second Image for Comparison" loading="lazy" decoding="async">
+				<label aria-label="Slide to compare two images">
+					<input type="range" value="50" aria-label="Slider for comparing two images" data-key="value" data-scope="fieldset" data-unit="%">
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-image-select">
+				<legend>Image Select</legend>
+				<label>
+					<img src="https://source.unsplash.com/random/100x100?sig=0" alt="Random image">
+					<input type="checkbox" name="image-select" value="0" checked>
+				</label>
+				<label>
+					<img src="https://source.unsplash.com/random/100x100?sig=1" alt="Random image">
+					<input type="checkbox" name="image-select" value="1" checked>
+				</label>
+				<label>
+					<img src="https://source.unsplash.com/random/100x100?sig=2" alt="Random image">
+					<input type="checkbox" name="image-select" value="2">
+				</label>
+				<label>
+					<img src="https://source.unsplash.com/random/100x100?sig=3" alt="Random image">
+					<input type="checkbox" name="image-select" value="3">
+				</label>
+			</fieldset>
+
+			<fieldset name="gender">
+				<legend>Indeterminate Group</legend>
+				<label>
+					<input type="radio" name="gender" value="1">
+					Female
+				</label>
+				<label>
+					<input type="radio" name="gender" value="2">
+					Male
+				</label>
+				<label>
+					<input type="radio" name="gender" value="3">
+					Prefer not to say
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-mood">
+				<legend>Mood Selector — Happy or Not?</legend>
+				<label>
+					<input name="mood" type="radio" value="1">
+				</label>
+				<label>
+					<input name="mood" type="radio" value="2">
+				</label>
+				<label>
+					<input name="mood" type="radio" value="3">
+				</label>
+				<label>
+					<input name="mood" type="radio" value="4">
+				</label>
+			</fieldset>
+
+			<label>
+				One Time Code
+				<input
+					type="text"
+					autocomplete="one-time-code"
+					inputmode="numeric"
+					maxlength="6"
+					pattern="\d{6}"
+					class="ui-onetimecode">
+			</label>
+
+			<fieldset class="ui-position">
+				<legend>Position Control</legend>
+				<label aria-label="top left">
+					<input type="radio" name="position" value="tl">
+				</label>
+				<label aria-label="top center">
+					<input type="radio" name="position" value="tc">
+				</label>
+				<label aria-label="top right">
+					<input type="radio" name="position" value="tr">
+				</label>
+				<label aria-label="center left">
+					<input type="radio" name="position" value="cl">
+				</label>
+				<label aria-label="center center">
+					<input type="radio" name="position" value="cc" checked>
+				</label>
+				<label aria-label="center right">
+					<input type="radio" name="position" value="cr">
+				</label>
+				<label aria-label="bottom left">
+					<input type="radio" name="position" value="bl">
+				</label>
+				<label aria-label="bottom center">
+					<input type="radio" name="position" value="bc">
+				</label>
+				<label aria-label="bottom right">
+					<input type="radio" name="position" value="br">
+				</label>
+			</fieldset>
+
+			<fieldset class="ui-pagination">
+				<legend>Pagination</legend>
+				<button type="button"><ui-icon type="chevron left fisrt"></ui-icon></button>
+				<button type="button"><ui-icon type="chevron left"></ui-icon></button>
+				<label>
+					<input type="number">
+				</label>
+				<button type="button"><ui-icon type="chevron right"></ui-icon></button>
+				<button type="button"><ui-icon type="chevron right last"></ui-icon></button>
+			</fieldset>
+
+			<label>
+				Progress — Circular
+				<progress value="40" max="100" class="ui-progress-circular" style="--value:40%;"></progress>
+			</label>
+
+			<label>Range with fill
+				<input type="range" data-key="value" data-unit="%">
+			</label>
+
+			<label>Range — Circular
+				<span class="ui-range-circular">
+					<input type="range" value="25" data-key="value" data-scope="parent">
+					<output></output>
+				</span>
+			</label>
+
+			<label>Rating
+				<input type="range" data-key="value" max="5" step="0.5" value="2" class="ui-rating">
+			</label>
+
+			<label>Rating — Heart
+				<input type="range" data-key="value" min="1" max="5" step="1" value="3" class="ui-rating --heart">
+			</label>
+
+			<label>Rating — Like
+				<input type="range" data-key="value" min="1" max="5" step="1" value="1" class="ui-rating --like">
+			</label>
+
+			<fieldset class="ui-spinner">
+				<legend>Spinner</legend>
+				<button type="button"><ui-icon type="minus"></ui-icon></button>
+				<label>
+					<input type="number">
+				</label>
+				<button type="button"><ui-icon type="plus"></ui-icon></button>
+			</fieldset>
+
+			<fieldset class="ui-timeslot">
+				<legend>Timeslot</legend>
+				<fieldset>
+					<legend>WED <span>4</span></legend>
+					<label><input type="radio" name="timeslot" value="1" data-sr /><time datetime="2023-01-04T16:00">4:00pm</time></label>
+					<label><input type="radio" name="timeslot" value="2" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+				</fieldset>
+				<fieldset>
+					<legend>THU <span>5</span></legend>
+					<label><input type="radio" name="timeslot" value="3" data-sr /><time datetime="2023-01-05T09:00">9:00am</time></label>
+					<label><input type="radio" name="timeslot" value="4" data-sr /><time datetime="2023-01-05109:00">10:00am</time></label>
+					<label><input type="radio" name="timeslot" value="5" data-sr checked /><time datetime="2023-01-05T11:00">11:00am</time></label>
+					<label><input type="radio" name="timeslot" value="6" data-sr /><time datetime="2023-01-05T12:00">12:00am</time></label>
+					<label><input type="radio" name="timeslot" value="7" disabled data-sr /><time datetime="2023-01-05T13:00">01:00pm</time></label>
+				</fieldset>
+				<fieldset>
+					<legend>FRI <span>6</span></legend>
+					<label><input type="radio" name="timeslot" value="8" data-sr /><time datetime="2023-01-06T16:00">4:00pm</time></label>
+					<label><input type="radio" name="timeslot" value="9" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+				</fieldset>
+				<fieldset>
+					<legend>SAT <span>7</span></legend>
+					<label><input type="radio" name="timeslot" value="10" data-sr /><time datetime="2023-01-07T10:00">10:00am</time></label>
+					<label><input type="radio" name="timeslot" value="11" data-sr /><time datetime="2023-01-07T15:00">3:00pm</time></label>
+					<label><input type="radio" name="timeslot" value="12" data-sr /><time datetime="2023-01-07T16:00">4:00pm</time></label>
+				</fieldset>
+				<fieldset>
+					<legend>SUN <span>8</span></legend>
+					<label><input type="radio" name="timeslot" value="13" data-sr /><time datetime="2023-01-08T18:00">6:00pm</time></label>
+				</fieldset>
+				<fieldset>
+					<legend>MON <span>9</span></legend>
+					<label><input type="radio" name="timeslot" value="14" data-sr disabled /><time datetime="2023-01-09T16:00">4:00pm</time></label>
+					<label><input type="radio" name="timeslot" value="15" data-sr /><time datetime="2023-01-09T18:00">6:00pm</time></label>
+				</fieldset>
+			</fieldset>
+
+			<fieldset class="ui-transfer-list">
+				<legend>Transfer List</legend>
+				<label>
+					Left
+					<select multiple size="3" name="start">
+						<option value="1">Option One</option>
+						<option value="2">Option Two</option>
+						<option value="3">Option Three</option>
+					</select>
+				</label>
+				<nav>
+					<button type="button" name="fromStart" aria-label="Move selected items to the second list">
+						<ui-icon type="chevron right"></ui-icon>
+					</button>
+					<button type="button" name="fromEnd" aria-label="Move selected items to the first list">
+						<ui-icon type="chevron left"></ui-icon>
+					</button>
+				</nav>
+				<label>
+					Right
+					<select multiple size="3" name="end">
+						<option value="4">Option Four</option>
+						<option value="5">Option Five</option>
+						<option value="6">Option Six</option>
+					</select>
+				</label>
+			</fieldset>
+		</fieldset>
+	</form>
+	<script src="browser.style.js"></script>
+</body>
+</html>	

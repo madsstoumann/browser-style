@@ -1,0 +1,91 @@
+.ui-mood {
+	all: unset;
+	display: grid;
+	gap: .33em;
+	grid-template-columns: repeat(4, 1fr);
+
+	& input {
+		aspect-ratio: 1;
+		background: var(--_bg);
+		border: 0;
+		container-type: inline-size;
+		display: grid;
+		grid-template-rows: 1fr 1fr;
+		height: 100%;
+		overflow: hidden;
+		padding-inline: 25%;
+		row-gap: 10%;
+		scale: .9;
+		transition: scale .2s linear;
+		width: 100%;
+		&:checked {
+			box-shadow: 0 0 0 .25em color-mix(in srgb, var(--_bg), #000 30%);
+			scale: 1;
+		}
+		&:hover { scale: .95; }
+		&::before {
+			align-self: end;
+			aspect-ratio: 1 / 1.1;
+			background: var(--_bg);
+			border-radius: 50%;
+			box-shadow: var(--_bxsh, 0 0 0 0), -35cqi 0 0 0 #000, 35cqi 0 0 0 #000;
+			content: "";
+			justify-self: center;
+			transition: box-shadow .2s linear;
+			width: 30cqi;
+		}
+		&::after {
+			background: inherit;
+			border-radius: var(--_bdrs, 100% / 100%);
+			box-shadow: var(--_x, 0) var(--_y, 12cqi) 0 0 #000;
+			content: "";
+			height: 35cqi;
+			rotate: var(--_r, 0);
+			transition: rotate .2s linear;
+			translate: var(--_trs, 0 -12cqi);
+		}
+	}
+	& label {
+		display: contents;
+		&:nth-of-type(1) input {
+			--_bg: #4DA665;
+			--_r: -12deg;
+			--_x: 5cqi;
+			--_bxsh: -35cqi 35cqi 0 0 var(--_bg), 35cqi 35cqi 0 0 var(--_bg); 
+			&:checked, &:hover {
+				--_bxsh: -35cqi 15cqi 0 0 var(--_bg), 35cqi 15cqi 0 0 var(--_bg);
+				--_r: -17.5deg;
+			}
+		}
+		&:nth-of-type(2) input {
+			--_bg: #A4CC9F;
+			--_bxsh: -35cqi 35cqi 0 0 var(--_bg), 35cqi 35cqi 0 0 var(--_bg);
+			&:checked, &:hover {
+				--_bxsh: -35cqi 25cqi 0 0 var(--_bg), 35cqi 25cqi 0 0 var(--_bg);
+				--_r: 8deg;
+			}
+		}
+		&:nth-of-type(3) input {
+			--_bg: #E4A2A3;
+			--_trs: 0 18cqi;
+			--_y: -12cqi;
+			--_bxsh: -30cqi 35cqi 0 0 var(--_bg), 30cqi 35cqi 0 0 var(--_bg);
+			&:checked, &:hover {
+				--_bxsh: -30cqi 20cqi 0 0 var(--_bg), 30cqi 20cqi 0 0 var(--_bg);
+				--_r: -5deg;
+			}
+		}
+		&:nth-of-type(4) input {
+			--_bg: #D25969;
+			--_r: 10deg;
+			--_trs: 0 18cqi;
+			--_y: -12cqi;
+			--_bxsh: -35cqi -35cqi 0 0 var(--_bg), 35cqi -35cqi 0 0 var(--_bg);
+			&:checked, &:hover {
+				--_bxsh: -30cqi -15cqi 0 0 var(--_bg), 30cqi -15cqi 0 0 var(--_bg);
+				--_r: 15deg;
+			}
+		}
+	}
+	& legend { padding-block-end: var(--label-rg); }
+}

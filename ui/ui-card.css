@@ -1,0 +1,23 @@
+.ui-card {
+	--ui-card-p: 1rem;
+	background: var(--ui-card-bg, var(--GrayCanvas));
+	border-radius: var(--input-bdrs);
+	display: grid;
+	grid-row: 1 / 6;
+	grid-template-rows: subgrid;
+	row-gap: var(--ui-card-rg, .5em);
+	& >* {
+		margin: unset;
+		&:not(img) {
+			padding-inline: var(--ui-card-p);
+		}
+		&:last-child {
+			padding-block-end: var(--ui-card-p);
+		}
+	}
+	& img {
+		border-start-start-radius: inherit;
+		border-start-end-radius: inherit;
+		width: 100%;
+	}
+}

@@ -1,0 +1,33 @@
+:where(.ui-embed) {
+	aspect-ratio: var(--ui-embed-asr, 16 / 9);
+	background-color: crimson;
+	border-radius: var(--input-bdrs);
+	display: grid;
+	& >* { grid-area: 1 / 1; }
+	& button {
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		place-self: center;
+		&::before {
+			aspect-ratio: 1 / 1;
+			background: #FFF;
+			block-size: var(--ui-embed-icon-sz, 1.5em);
+			clip-path: polygon(20% 0%, 20% 100%, 100% 50%);
+			content: "";
+			place-self: center;
+		}
+	}
+	& iframe, & img {
+		aspect-ratio: inherit;
+		border: 0;
+		border-radius: inherit;
+		height: 100%;	
+		object-fit: cover;	
+		width: 100%;
+		&:not([src=""]) + button {
+			display: none;
+		}
+	}
+	&.--youtube { --button-bg: #F00; }
+	&.--vimeo { --button-bg: #00adef; }
+}

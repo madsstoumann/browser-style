@@ -1,0 +1,13 @@
+@import url('ui-scroll-nav.css');
+
+.ui-scroll {
+	display: flex;
+	gap: var(--ui-scroll-gap, 0%);
+	overflow-y: hidden;
+	scroll-behavior: smooth;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar { display: none; }
+	&.--auto { scroll-behavior: auto; }
+}

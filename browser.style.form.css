@@ -1,0 +1,307 @@
+:root {
+  --button-p: 1ch 2.5ch;
+  --fieldset-rg: 1ch; /* .5rlh */
+  --input-bdrs: .25em;
+  --input-bdw: 1px;
+  --input-bs: calc(1em + (2 * var(--input-pb)) + (2 * var(--input-bdw)));
+  --input-fz: 1rem;
+  --input-pb: .66em;
+  --input-pi: 1.25ch;
+  --input-check-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z"></path></svg>');
+  --input-check-sz: 1.25rem; /* Size of Checkbox and Radio */
+  --input-range-h: .5em; /* Height of Range */
+  --input-thumb-sz: 1.5rem; /* Size of Range-Thumb */
+  --label-fz: smaller;
+  --label-rg: .25ch; 
+  --meter-progress-bs: .6em; /* Height of meter and progress */
+}
+:where(button, fieldset, input, select, textarea, .ui-button), [type=file]::file-selector-button {
+  border: var(--input-bdw) solid var(--ButtonBorder);
+  border-radius: var(--input-bdrs);
+  font-family: var(--ff-form, inherit);
+  &::placeholder { color: var(--GrayText); }
+}
+:where(button, .ui-button), [type=file]::file-selector-button {
+  /* --hover-bg: color-mix(in srgb, var(--ButtonFace), #000 10%); */
+  background-color: var(--button-bg, var(--ButtonFace));
+  border-color: transparent;
+  color: var(--button-c, inherit);
+  display: inline-grid;
+  line-height: normal;
+  padding: var(--button-p);
+  place-content: center;
+  user-select: none;
+  &[disabled] {
+    background-color: var(--GrayCanvas);
+    color: var(--GrayText);
+    cursor: not-allowed;
+  }
+}
+:where(button, label, legend, .ui-button) {
+  font-size: var(--label-fz);
+  font-weight: 500;
+}
+:where(fieldset) {
+  display: grid;
+  margin: 0;
+  row-gap: var(--fieldset-rg);
+}
+:where(input:not([type=checkbox], [type=file], [type=radio], [type=range]), option, select:not([size]), textarea) {
+  block-size: var(--input-bs);
+  font-size: var(--input-fz);
+  padding: var(--input-pb) var(--input-pi);
+}
+:where([type=checkbox], [type=radio], [type=range]) {
+  appearance: none;
+  height: var(--input-check-sz);
+  margin: 0;
+  width: var(--input-check-sz);
+  &:checked { border-color: var(--AccentColor); }
+}
+:where([type=checkbox]:checked) { 
+  background: var(--AccentColor) var(--input-check-icon) no-repeat 48% / 75%;
+}
+:where([type=checkbox][role=switch]) {
+  --_bg: var(--ButtonBorder);
+  aspect-ratio: 1.8 / 1;
+  background: var(--_bg);
+  border: 0;
+  border-radius: var(--input-check-sz);
+  display: flex;
+  width: auto;
+  &::after {
+    aspect-ratio: 1 / 1;
+    background: #FFF;
+    border-radius: 50%;
+    border: 2px solid var(--_bg);
+    box-sizing: border-box;
+    content: "";
+    display: block;
+    height: 100%;
+    transition: inherit;
+  }
+  &:checked {
+    --_bg: var(--AccentColor);
+    justify-content: end;
+  }
+}
+:where([type=color]) {
+  block-size: var(--input-bs);
+  padding: 0;
+  width: 100%;
+  &::-webkit-color-swatch,
+  &::-webkit-color-swatch-wrapper {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+  }
+}
+:where([type=date], [type=datetime-local], [type=month], [type=time], select) {
+  --mixin-input-icon: false;
+  appearance: none;
+  &::-webkit-datetime-edit-fields-wrapper {
+    color: var(--GrayText);
+  }
+}
+[type=file]::file-selector-button, [type=submit] {
+  --button-bg: var(--AccentColor);
+  --button-c: var(--AccentColorText);
+}
+:where([type=file]) {
+  border: 0;
+  &::file-selector-button {
+    margin-inline-end: 1.5ch;
+  }
+}
+:where([type=radio]) {
+  border-radius: 50%;
+  &:checked {
+    background-color: var(--AccentColor);
+    box-shadow: inset 0 0 0 .2rem var(--AccentColorText);
+  }
+}
+:where([type=range]) {
+  background-color: var(--ButtonFace);
+  border: 0;
+  border-radius: var(--input-range-h);
+  background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--value, 0), var(--ButtonFace) 0 var(--value)); /* JS to set `--value` in % */
+  height: var(--input-range-h);
+  margin-block: calc((var(--input-thumb-sz) - var(--input-range-h)) / 2);
+  width: 100%;
+  &:dir(rtl) { --_dir: left; }
+  &::-webkit-slider-thumb {
+    appearance: none;
+    background: var(--AccentColor);
+    border-radius: 50%;
+    height: var(--input-thumb-sz);
+    width: var(--input-thumb-sz);
+  }
+  &::-moz-range-thumb {
+    appearance: none;
+    background: var(--AccentColor);
+    border-radius: 50%;
+    border: 0;
+    height: var(--input-thumb-sz);
+    width: var(--input-thumb-sz);
+  }
+}
+:where(label) {
+  align-content: start;
+  display: grid;
+  row-gap: var(--label-rg);
+}
+:where(label:has([type=checkbox], [type=radio])) {
+  align-items: center;
+  column-gap: 1ch;
+  grid-template-columns: min-content 1fr;
+}
+:where(label:has(input[disabled])) {
+  color: var(--GrayText);
+}
+:where(legend) { white-space: nowrap; }
+:where(meter, progress) {
+  border: 0;
+  block-size: var(--meter-progress-bs);
+  border-radius: calc(2 * var(--meter-progress-bs));
+  width: 100%;
+}
+:where(meter) {
+  background: var(--ButtonBorder);
+  &::-webkit-meter-bar {
+    background: var(--ButtonBorder);
+    border: 0;
+    border-radius: inherit;
+  }
+  &::-webkit-meter-inner-element {
+    border-radius: inherit;
+    display: block;
+    -webkit-appearance: none;
+  }
+  &::-webkit-meter-even-less-good-value {
+    background: var(--ColorError);
+    border-radius: inherit;
+  }
+  &::-webkit-meter-suboptimum-value {
+    background: var(--ColorWarning);
+    border-radius: inherit;
+  }
+  &::-webkit-meter-optimum-value {
+    background: var(--ColorSuccess);
+    border-radius: inherit;
+  }
+  &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: var(--ColorError);
+    border-radius: inherit;
+  }
+  &:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: var(--ColorWarning);
+    border-radius: inherit;
+  }
+  &:-moz-meter-optimum::-moz-meter-bar {
+    background: var(--ColorSuccess);
+    border-radius: inherit;
+  }
+}
+:where(progress) {
+  background-color: var(--ButtonBorder);
+  display: grid;
+  &::-webkit-progress-bar {
+    background: transparent;
+    border-radius: inherit;
+  }
+  &::-webkit-progress-inner-element {
+    border-radius: inherit;
+  }
+  &::-webkit-progress-value {
+    background: var(--AccentColor);
+    border-radius: inherit;
+  }
+  &:indeterminate {
+    background-image: linear-gradient(45deg,
+      rgba(255, 255, 255, .15) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, .15) 50%,
+      rgba(255, 255, 255, .15) 75%,
+      transparent 75%,
+      transparent);
+    background-size: 10px 10px;
+  }
+  &:indeterminate::-moz-progress-bar {
+    width: 20%;
+  }
+  &::-moz-progress-bar {
+    background-color: var(--AccentColor);
+    border-radius: inherit;
+  }
+}
+:where(select[size]) {
+  --mixin-background-icon: true;
+  --icon: url('/assets/svg/check.svg');
+  block-size: auto;
+  overflow: hidden;
+  & option {
+    &:checked { background-color: var(--GrayCanvas); }
+    &:not(:last-of-type) {
+      border-block-end: var(--input-bdw) solid var(--ButtonBorder);
+    }
+  }
+}
+:where(textarea) {
+  min-block-size: calc(2 * var(--input-bs));
+  resize: vertical;
+}
+
+/* Media Queries */
+@media (hover: hover) {
+  :where(button, .ui-button, [type=submit]) {
+    transition: background .2s ease-in-out;
+    &:hover {
+      background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
+      color: var(--hover-c, var(--button-c, inherit));
+    }
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  progress:indeterminate::after {
+    animation: progress 1.2s linear alternate infinite;
+    background-color: var(--AccentColor);
+    border-radius: inherit;
+    content: "";
+    height: var(--meter-progress-bs);
+    width: 20%;
+  }
+  progress:indeterminate::-moz-progress-bar {
+    animation: progress 1.2s linear alternate infinite;
+  }
+}
+
+/* Keyframes */
+@keyframes progress { 100% { translate: 400%; } }
+
+/* Mixins */
+@container style(--mixin-background-icon: true) {
+  *:is(input, option:checked, select, textarea) {
+    background-image: var(--icon);
+    background-position: calc(100% - 1.25ch) center;
+    background-repeat: no-repeat;
+    background-size: var(--icon-size, 1.25em);
+    &:dir(rtl) {
+      background-position: 1.25ch center;
+    }
+  }
+}
+@container style(--mixin-input-icon: true) {
+  *::-webkit-calendar-picker-indicator {
+    background: var(--icon-color, currentColor);
+    height: var(--icon-size, 1em);
+    mask: var(--icon) no-repeat center;
+    -webkit-mask: var(--icon) no-repeat center;
+    width: var(--icon-size, 1em);
+  }
+}
+@container style(--mixin-input-icon: false) {
+  *::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+}

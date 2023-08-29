@@ -1,0 +1,32 @@
+.ui-rating {
+	--_bgi: linear-gradient(to var(--dir, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
+	--_mask: repeat left center/var(--input-bs) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
+	--_x: calc(100% * (var(--value, 3) / var(--_max, 5)));
+
+	background: none;
+	block-size: var(--input-bs);
+	inline-size: calc(var(--input-bs) * var(--_max, 5));
+
+	&.--heart {
+		--ui-rating-symbol: url('/assets/svg/heart.svg');
+		--ui-rating-c: #C8102E;
+	}
+	&.--like {
+		--ui-rating-symbol: url('/assets/svg/thumb.svg');
+		--ui-rating-c: #007bff;
+	}
+
+	&::-webkit-slider-runnable-track {
+		background: var(--_bgi);
+		mask: var(--_mask);
+		-webkit-mask: var(--_mask);
+	}
+	&::-webkit-slider-thumb { opacity: 0; }
+	&::-moz-range-progress { opacity: 0; }
+	&::-moz-range-thumb { opacity: 0; }
+	&::-moz-range-track {
+		background: var(--_bgi);
+		height: 100%;
+		mask: var(--_mask);
+	}
+}

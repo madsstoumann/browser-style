@@ -1,0 +1,19 @@
+.ui-progress-circular {
+	--meter-progress-bs: 10em;
+	--progress-bdw: 1em;
+	--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--progress-bdw)), #FFF calc(100% - var(--progress-bdw)));
+
+	background: conic-gradient(
+		var(--AccentColor) 0%,
+		var(--AccentColor) var(--value) 0,
+		var(--ButtonBorder) var(--value)
+	);
+	border-radius: 50%;
+	content: '';
+	mask: var(--_mask);
+	-webkit-mask: var(--_mask);
+	width: var(--meter-progress-bs);
+
+	&::-webkit-progress-inner-element { display: none; }
+	&::-moz-progress-bar { opacity: 0; }
+}

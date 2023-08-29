@@ -1,0 +1,28 @@
+	/* requires ui-scroll.css */
+.ui-tabs {
+	& [role=tab] {
+		border-block-end: var(--ui-tabs-bdw, 3px) solid transparent;
+		color: currentColor;
+		font-weight: 500;
+		padding-block-end: .5ch;
+		text-decoration: none;
+		&[aria-selected=true] { border-color: var(--AccentColor); }
+		&:hover:not([aria-selected=true]) { border-color: var(--ButtonBorder); }
+	}
+	& [role=tablist] {
+		gap: var(--ui-tabs-gap, 3ch);
+		justify-content: start;
+	}
+	& [role=tabpanel] {
+		background: var(--GrayCanvas);
+		border-radius: var(--input-bdrs);
+		flex: 0 0 100%;
+		margin: var(--ui-tabs-panel-m, 2ch 0 0);
+		padding: var(--ui-tabs-panel-p, 1ch 2ch);
+		scroll-snap-align: start;
+		& img {
+			border-radius: inherit;
+			width: 100%;
+		}
+	}
+}

@@ -1,0 +1,41 @@
+.ui-image-compare { 
+	--ui-image-compare-thumb-w: min(3cqi, 1.25em);
+	all: unset;
+	direction: ltr;
+	display: grid;
+	& * { grid-area: 1 / 1; }
+	& img {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--input-bdrs);
+		pointer-events: none;
+		&:first-of-type { clip-path: polygon(0% 0%, var(--value) 0%, var(--value) 100%, 0% 100%); }
+		&:last-of-type { clip-path: polygon(100% 0%, var(--value) 0%, var(--value) 100%, 100% 100%); } 
+	}
+	& input {
+		background: none;
+		height: 100%;
+		isolation: isolate;
+		margin: 0;
+		touch-action: none;
+		&::-webkit-slider-runnable-track,
+		&::-webkit-slider-thumb {
+			height: 100%;
+		}
+		&::-webkit-slider-thumb {
+			background-color: var(--ButtonBorder);
+			border-radius: 0;
+			cursor: ew-resize;
+			width: var(--ui-image-compare-thumb-w);
+		}
+		&::-moz-range-progress { opacity: 0; }
+		&::-moz-range-thumb {
+			background-color: var(--ButtonBorder);
+			border-radius: 0;
+			cursor: ew-resize;
+			height: 100%;
+			width: var(--ui-image-compare-thumb-w);
+		}
+	}
+	& label { display: contents; }
+	& legend { padding-block-end: var(--label-rg); }
+}

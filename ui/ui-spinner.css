@@ -1,0 +1,14 @@
+.ui-pagination,
+.ui-spinner {
+	all: unset;
+	display: grid;
+	gap: .5em;
+	grid-auto-flow: column;
+	& input {
+		text-align: center;
+		&::-webkit-inner-spin-button {
+			appearance: none;
+		}
+	}
+	& legend { padding-block-end: var(--label-rg); }
+}

@@ -1,0 +1,9 @@
+.ui-digital-clock {
+	background-color: var(--GrayCanvas);
+	border-radius: var(--input-bdrs);
+	display: inline-block;
+	font-size: var(--ui-digital-clock-fs, larger);
+	font-variant-numeric: tabular-nums;
+	font-weight: var(--ui-digital-clock-fw, 700);
+	padding: var(--ui-digital-clock-p, 1ch 2ch);
+}

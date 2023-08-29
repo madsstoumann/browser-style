@@ -1,0 +1,32 @@
+.ui-accordion {
+	all: unset;
+	& > li {
+		border-block-end: 1px solid var(--ButtonBorder);
+		padding-block: 1.5ch;
+		list-style: none;
+		& > a {
+			color: inherit;
+			align-items: center;
+			display: flex;
+			justify-content: space-between;
+			font-size: larger;
+			text-decoration: none;
+			& strong {
+				font-weight: 500;
+				pointer-events: none;
+			}
+		}
+		& > div {
+			display: grid;
+			grid-template-rows: 0fr;
+			transition: grid-template-rows var(--_trsdu, .3s) var(--_trstf, ease-in);
+			& > * { overflow: hidden; }
+		}
+		&:is(:target, .--open) > div { grid-template-rows: 1fr; }
+		&:not(:target):not(.--open) > div {
+			transition-duration: var(--_trsdu-close, .15s);
+			transition-timing-function: var(--_trstf-close, ease-out); 
+			& > * { margin: 0; padding: 0; }
+		}
+	}
+}

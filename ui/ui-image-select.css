@@ -1,0 +1,27 @@
+.ui-image-select {
+	border: 0;
+	display: grid;
+	gap: .33em;
+	grid-template-columns: repeat(auto-fit, minmax(var(--ui-image-select-sz, 140px), 1fr));
+	padding-inline: 0;
+
+	& label {
+		grid-template-columns: 1fr;;
+
+		& img, & input { grid-area: 1 / 1; }
+		& img {
+			aspect-ratio: 1 / 1;
+			border-radius: var(--input-bdrs);
+			object-fit: cover;
+			pointer-events: none;
+			width: 100%;
+		}
+		& input {
+			border-radius: 50%;
+			place-self: end;
+			margin-block-end: 1ch;
+			margin-inline-end: 1ch;
+			&:not(:checked) { opacity: 0; }
+		}
+	}
+}
