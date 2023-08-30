@@ -142,6 +142,14 @@ function uiEmbed(button) {
   })
 }
 
+/* uiGallery */
+function uiGallery(grid) {
+  const random = (min, max) => Math.random() * (max - min) + min
+  grid.innerHTML = Array.from({length: 15}, (_, index) => 
+  `<img src="https://source.unsplash.com/random/200x200?sig=${index}" style="--gc:${
+    Math.floor(random(1, 4))};--gr:${Math.floor(random(1, 4))};" />`).join('')
+}
+
 /* uiTabs */
 function uiTabs(node) {
   const panels = [...node.querySelectorAll('[role=tabpanel]')]
@@ -377,3 +385,5 @@ document.querySelectorAll('.ui-countdown').forEach(element => uiCountDown(elemen
 document.querySelectorAll('.ui-digital-clock').forEach(element => uiDigitalClock(element))
 
 document.querySelectorAll('.ui-embed button').forEach(button => uiEmbed(button))
+
+document.querySelectorAll('.ui-gallery').forEach(grid => uiGallery(grid))

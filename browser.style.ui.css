@@ -16,6 +16,7 @@
 @import url('/ui/ui-digital-clock.css');
 @import url('/ui/ui-embed.css');
 @import url('/ui/ui-file-list.css');
+@import url('/ui/ui-gallery.css');
 @import url('/ui/ui-image-compare.css');
 @import url('/ui/ui-image-select.css');
 @import url('/ui/ui-mood.css');
@@ -24,6 +25,7 @@
 @import url('/ui/ui-progress-circular.css');
 @import url('/ui/ui-range-circular.css');
 @import url('/ui/ui-rating.css');
+@import url('/ui/ui-reaction.css');
 @import url('/ui/ui-scroll.css');
 @import url('/ui/ui-slider.css');
 @import url('/ui/ui-spinner.css');

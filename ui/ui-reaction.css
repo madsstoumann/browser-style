@@ -1,0 +1,19 @@
+.ui-reaction {
+	position: relative;
+
+}
+
+.ui-reaction-list {
+	/* all: unset; */
+	bottom: calc(anchor(top));
+	border: 1px solid var(--ButtonBorder);
+	border-radius: 2em;
+	font-size: x-large;
+	left: anchor(left);
+	margin-block: 1ch;
+	padding: 0 1ch;
+	/* translate: -50% 0; */
+	user-select: none;
+	/* position: absolute; */
+	/* top: 0; */
+}
