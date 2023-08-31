@@ -1,4 +1,4 @@
-:where(.ui-embed) {
+:where(.ui-video-embed) {
 	aspect-ratio: var(--ui-embed-asr, 16 / 9);
 	background-color: crimson;
 	border-radius: var(--input-bdrs);

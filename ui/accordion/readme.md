@@ -1,0 +1,3 @@
+# Accordion
+
+Requires `listTarget.js`

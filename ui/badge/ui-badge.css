@@ -29,5 +29,12 @@
 		translate: 25% -25%;
 		&:dir(rtl) { translate: -25% -25%; }
 	}
+	&.--bottom-right {
+		inset-block: auto 0;
+		translate: 0 0;
+	}
+	&.--top-right {
+		translate: 0 0;
+	}
 }
 *:has(.ui-badge) { position: relative; }

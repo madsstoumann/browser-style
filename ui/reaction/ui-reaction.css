@@ -1,0 +1,39 @@
+.ui-reaction {
+	all: unset;
+
+}
+
+.ui-reaction-list {
+	bottom: calc(anchor(top));
+	border: 1px solid var(--ButtonBorder);
+	border-radius: 3em;
+	display: none;
+	font-size: x-large;
+	left: anchor(left);
+	margin-block: 1ch;
+	overflow: hidden;
+	margin: 0;
+	padding: .25ch;
+	user-select: none;
+
+	& button {
+		--button-bg: none;
+		--button-p: 0;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		display: grid;
+		gap: 0;
+		place-content: center;
+		text-align: center;
+		width: 2em;
+
+		&:hover {
+			background-color: var(--GrayCanvas);
+			/* scale: 1.4; */
+		}
+	}
+	&:popover-open,
+	&.popover-open {
+		display: flex;
+	}
+}

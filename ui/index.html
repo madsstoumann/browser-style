@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Components</title>
+	<title>UI</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<link rel="stylesheet" href="browser.style.css">
-	<link rel="stylesheet" href="browser.style.ui.css">
+	<link rel="stylesheet" href="../browser.style.css">
+	<link rel="stylesheet" href="../browser.style.ui.css">
 </head>
 <body>
-	<h1>Components</h1>
+	<h1>UI: Components</h1>
 
 	<h2>Accordion</h2>
-	<ul class="ui-accordion js-list-target">
+	<ul class="ui-accordion">
     <li id="item1" class="--open">
       <a href="#item1"><strong>How do I reset my password?</strong><ui-icon type="chevron down"></ui-icon></a>
       <div>
@@ -85,14 +85,24 @@
 	</ul>
 
 	<h2>Badge</h2>
-	Use with modifiers, <code>--inline</code> and <code>--tra25-25</code> to fine-adjust position, and with <code>--text</code> if using with text.
+	Use with modifiers, <code>--inline</code>, <code>--bottom-right</code> and <code>--top-right</code> to fine-adjust position.<br>
+	Use <code>--text</code> if text only.
 	<p>
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<b class="ui-badge --success-bg --tra25-25">99</b>
+			<b class="ui-badge --success-bg --top-right">99</b>
 		</div>
 	</p>
+	<p>
+		<div class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<b class="ui-badge --info-bg --bottom-right">👍</b>
+		</div>
+	</p>
+
+	
 	<p><button type="button">Button with badge<b class="ui-badge --info-bg">5</b></button></p>
 	<p><span class="ui-chip">Chip with badge<b class="ui-badge --error-bg --tra25-25">4</b></span></p>
 	<p><span class="ui-chip --info">Light badge<b class="ui-badge --error --tra25-25">4</b></span></p>
@@ -101,7 +111,7 @@
 
 	<h2>Blinds</h2>
 	<div class="ui-blinds">
-		<ul class="js-list-target">
+		<ul>
 			<li id="aboutus" class="--open">
 				<a href="#aboutus">About Us</a>
 				<p>
@@ -166,6 +176,55 @@
 			Books
 		</li>
 	</ol>
+
+	<h2>Button Group</h2>
+	<fieldset class="ui-button-group ">
+		<legend>Button Group</legend>
+		<label class="ui-button">
+			<input type="radio" name="button-group" value="1" data-sr checked>
+			Light mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group" data-sr value="2">
+			Dark mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group" data-sr value="3">
+			Auto
+		</label>
+	</fieldset>
+	<br>
+	<fieldset class="ui-button-group --rounded">
+		<legend>Button Group Rounded</legend>
+		<label class="ui-button">
+			<input type="radio" name="button-group-rounded" value="1" data-sr checked>
+			Light mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-rounded" data-sr value="2">
+			Dark mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-rounded" data-sr value="3">
+			Auto
+		</label>
+	</fieldset>
+	<br>
+	<fieldset class="ui-button-group --border">
+		<legend>Button Group Border</legend>
+		<label class="ui-button">
+			<input type="radio" name="button-group-border" value="1" data-sr checked>
+			Light mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-border" data-sr value="2">
+			Dark mode
+		</label>
+		<label class="ui-button">
+			<input type="radio" name="button-group-border" data-sr value="3">
+			Auto
+		</label>
+	</fieldset>
 
 	<h2>Card</h2>
 	<article class="ui-card" style="max-inline-size: 300px;">
@@ -308,30 +367,292 @@
 	<span class="ui-chip --warning">Warning: Low ☀</span>
 	<span class="ui-chip --info">Premium User ★</span>
 
+	<h2>Color Compare</h2>
+	<fieldset class="ui-color-compare">
+		<legend>Color Compare</legend>
+		<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy">
+		<label aria-label="Slide to compare two colors against an image">
+			<span></span>
+			<input type="range" value="50" data-key="value" data-scope="fieldset" data-unit="%" autocomplete="off">
+		</label>
+		<label aria-label="First color">
+			<input type="color" value="#DCAEE5" data-scope="fieldset" data-key="_c1" autocomplete="off">
+		</label>
+		<label aria-label="Second color">
+			<input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2" autocomplete="off">
+		</label>
+	</fieldset>
+
+	<h2>Color Mask</h2>
+	<fieldset class="ui-color-mask">
+		<legend>Color Mask</legend>
+		<label aria-label="First T-shirt Color">
+			<input type="color" value="#e54341" list="red">
+		</label>
+		<label aria-label="Second T-shirt Color">
+			<input type="color" value="#b5c4a2" list="lightgreen">
+		</label>
+		<label aria-label="Third T-shirt Color">
+			<input type="color" value="#626066" list="gray">
+		</label>
+		<label aria-label="Fourth T-shirt Color">
+			<input type="color" value="#68b1df" list="blue">
+		</label>
+	
+		<!-- DATALISTS -->
+		<datalist id="red">
+			<option value="#e54341">
+			<option value="#bc2623">
+			<option value="#f4a9a7">
+		</datalist>
+	
+		<datalist id="lightgreen">
+			<option value="#b5c4a2">
+			<option value="#a3b18a">
+			<option value="#d1d9c9">
+		</datalist>
+	
+		<datalist id="gray">
+			<option value="#626066">
+			<option value="#4d4d4f">
+			<option value="#a6a6a8">
+		</datalist>
+	
+		<datalist id="darkgreen">
+			<option value="#3d5f57">
+			<option value="#2e4a42">
+			<option value="#0a8360">
+		</datalist>
+	
+		<datalist id="blue">
+			<option value="#68b1df">
+			<option value="#3a8ac1">
+			<option value="#a6d2e0">
+		</datalist>
+	</fieldset>
+
+	<h2>Color Swatch</h2>
+	<fieldset class="ui-color-swatch">
+		<legend>Color Swatch</legend>
+		<label aria-label="dusty blue">
+			<input type="radio" name="colorswatch" value="#BA2F30" style="--_bg:#53739a;">
+		</label>
+		<label aria-label="dusty green">
+			<input type="radio" name="colorswatch" value="#3D9354" style="--_bg:#689d76;">
+		</label>
+		<label aria-label="dusty purple">
+			<input type="radio" name="colorswatch" value="#FEA330" style="--_bg:#863d8b;" checked>
+		</label>
+	</fieldset>
+
 	<h2>Countdown</h2>
-	<time datetime="2024-12-31" class="ui-countdown"></time>
+	<!-- <time datetime="2024-12-31" class="ui-countdown"></time> -->
 
 	<h3>Expired Countdown</h3>
 	<time datetime="2020-12-31" class="ui-countdown"></time>
 
 	<h2>Digital Clock</h2>
-	<time class="ui-digital-clock"></time>
+	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
+	<ol class="ui-digital-clock">
+		<li></li>
+		<li></li>
+		<li></li>
+	</ol>
+
+	<h2>File List</h2>
+	<label>File — Removeable
+		<input type="file" multiple>
+	</label>
 
 	<h2>Gallery</h2>
-	<!-- TODO: Params: Image List etc. -->
-	<figure class="ui-gallery"></figure>
+	<figure class="ui-gallery">
+		<img src="https://source.unsplash.com/random/200x200?sig=0" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=1" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=2" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=3" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=4" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=5" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=6" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=7" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=8" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=9" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=10" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=11" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=12" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=13" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=14" alt="Random Image">
+		<img src="https://source.unsplash.com/random/200x200?sig=15" alt="Random Image">
+	</figure>
+
+	<h2>Image Compare</h2>
+	<fieldset class="ui-image-compare">
+		<legend>Image Compare</legend>
+		<img src="https://assets.stoumann.dk/img/color.jpg" alt="First Image for Comparison" loading="lazy" decoding="async">
+		<img src="https://assets.stoumann.dk/img/bw.jpg" alt="Second Image for Comparison" loading="lazy" decoding="async">
+		<label aria-label="Slide to compare two images">
+			<input type="range" value="50" aria-label="Slider for comparing two images" data-key="value" data-scope="fieldset" data-unit="%">
+		</label>
+	</fieldset>
+
+	<h2>Image Select</h2>
+	<fieldset class="ui-image-select">
+		<legend>Image Select</legend>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=0" alt="Random image">
+			<input type="checkbox" name="image-select" value="0" checked>
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=1" alt="Random image">
+			<input type="checkbox" name="image-select" value="1" checked>
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=2" alt="Random image">
+			<input type="checkbox" name="image-select" value="2">
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=3" alt="Random image">
+			<input type="checkbox" name="image-select" value="3">
+		</label>
+	</fieldset>
+
+	<h2>Indeterminate</h2>
+	<fieldset name="gender">
+		<legend>Indeterminate Group</legend>
+		<label>
+			<input type="radio" name="gender" value="1">
+			Female
+		</label>
+		<label>
+			<input type="radio" name="gender" value="2">
+			Male
+		</label>
+		<label>
+			<input type="radio" name="gender" value="3">
+			Prefer not to say
+		</label>
+	</fieldset>
+
+	<h2>Mood</h2>
+	<fieldset class="ui-mood">
+		<legend>Mood Selector — Happy or Not?</legend>
+		<label>
+			<input name="mood" type="radio" value="1">
+		</label>
+		<label>
+			<input name="mood" type="radio" value="2">
+		</label>
+		<label>
+			<input name="mood" type="radio" value="3">
+		</label>
+		<label>
+			<input name="mood" type="radio" value="4">
+		</label>
+	</fieldset>
+
+	<h2>One Time Code</h2>
+	<label>
+		One Time Code
+		<input
+			type="text"
+			autocomplete="one-time-code"
+			inputmode="numeric"
+			maxlength="6"
+			pattern="\d{6}"
+			class="ui-onetimecode">
+	</label>
+
+	<h2>Pagination</h2>
+	<fieldset class="ui-pagination">
+		<legend>Pagination</legend>
+		<button type="button"><ui-icon type="chevron left fisrt"></ui-icon></button>
+		<button type="button"><ui-icon type="chevron left"></ui-icon></button>
+		<label>
+			<input type="number">
+		</label>
+		<button type="button"><ui-icon type="chevron right"></ui-icon></button>
+		<button type="button"><ui-icon type="chevron right last"></ui-icon></button>
+	</fieldset>
+
+	<h2>Position</h2>
+	<fieldset class="ui-position">
+		<legend>Position Control</legend>
+		<label aria-label="top left">
+			<input type="radio" name="position" value="tl">
+		</label>
+		<label aria-label="top center">
+			<input type="radio" name="position" value="tc">
+		</label>
+		<label aria-label="top right">
+			<input type="radio" name="position" value="tr">
+		</label>
+		<label aria-label="center left">
+			<input type="radio" name="position" value="cl">
+		</label>
+		<label aria-label="center center">
+			<input type="radio" name="position" value="cc" checked>
+		</label>
+		<label aria-label="center right">
+			<input type="radio" name="position" value="cr">
+		</label>
+		<label aria-label="bottom left">
+			<input type="radio" name="position" value="bl">
+		</label>
+		<label aria-label="bottom center">
+			<input type="radio" name="position" value="bc">
+		</label>
+		<label aria-label="bottom right">
+			<input type="radio" name="position" value="br">
+		</label>
+	</fieldset>
+
+	<h2>Progress — Circular</h2>
+	<label>
+		Progress — Circular
+		<progress value="40" max="100" class="ui-progress-circular" style="--value:40%;"></progress>
+	</label>
+
+	<h2>Range</h2>
+	<label>Range with fill
+		<input type="range" data-key="value" data-unit="%">
+	</label>
+
+	<label>Range — Circular
+		<span class="ui-range-circular">
+			<input type="range" value="25" data-key="value" data-scope="parent">
+			<output></output>
+		</span>
+	</label>
+
+	<h2>Ratings</h2>
+	<label>Rating
+		<input type="range" data-key="value" max="5" step="0.5" value="2" class="ui-rating">
+	</label>
+
+	<label>Rating — Heart
+		<input type="range" data-key="value" min="1" max="5" step="1" value="3" class="ui-rating --heart">
+	</label>
+
+	<label>Rating — Like
+		<input type="range" data-key="value" min="1" max="5" step="1" value="1" class="ui-rating --like">
+	</label>
 
 	<h2>Reaction</h2>
-	<button type="button" class="ui-reaction" id="reaction" popovertarget="reaction-list">
-		<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-			<path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
-		 </svg>
-
-	</button>
-	<figure id="reaction-list" popover class="ui-reaction-list" anchor="reaction">
-		👍 😍 😂 😮 😢 😡
-	</figure>	
-
+	<fieldset class="ui-reaction">
+		<legend>Pick a reaction</legend>
+		<button type="button" id="reaction" popovertarget="reaction-list">
+			<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
+			</svg>
+		</button>
+		<nav id="reaction-list" anchor="reaction" popover class="ui-reaction-list">
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="👍">👍</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="😍">😍</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="😂">😂</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="😮">😮</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="😢">😢</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="😡">😡</button>
+		</nav>
+	</fieldset>
 
 	<h2>Slider</h2>
 	<p>Use with modifier-classes <code>--nav-inside</code> or <code>--nav-outside</code>.</p>
@@ -355,6 +676,16 @@
 			</button>
 		</nav>
 	</div>
+
+	<h2>Spinner</h2>
+	<fieldset class="ui-spinner">
+		<legend>Spinner</legend>
+		<button type="button"><ui-icon type="minus"></ui-icon></button>
+		<label>
+			<input type="number">
+		</label>
+		<button type="button"><ui-icon type="plus"></ui-icon></button>
+	</fieldset>
 
 	<h2>Step</h2>
 	<ol class="ui-step">
@@ -511,6 +842,44 @@
 		</li>
 	</ul>
 
+	<h2>Timeslot</h2>
+	<fieldset class="ui-timeslot">
+		<legend>Timeslot</legend>
+		<fieldset>
+			<legend>WED <span>4</span></legend>
+			<label><input type="radio" name="timeslot" value="1" data-sr /><time datetime="2023-01-04T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="2" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+		</fieldset>
+		<fieldset>
+			<legend>THU <span>5</span></legend>
+			<label><input type="radio" name="timeslot" value="3" data-sr /><time datetime="2023-01-05T09:00">9:00am</time></label>
+			<label><input type="radio" name="timeslot" value="4" data-sr /><time datetime="2023-01-05109:00">10:00am</time></label>
+			<label><input type="radio" name="timeslot" value="5" data-sr checked /><time datetime="2023-01-05T11:00">11:00am</time></label>
+			<label><input type="radio" name="timeslot" value="6" data-sr /><time datetime="2023-01-05T12:00">12:00am</time></label>
+			<label><input type="radio" name="timeslot" value="7" disabled data-sr /><time datetime="2023-01-05T13:00">01:00pm</time></label>
+		</fieldset>
+		<fieldset>
+			<legend>FRI <span>6</span></legend>
+			<label><input type="radio" name="timeslot" value="8" data-sr /><time datetime="2023-01-06T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="9" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+		</fieldset>
+		<fieldset>
+			<legend>SAT <span>7</span></legend>
+			<label><input type="radio" name="timeslot" value="10" data-sr /><time datetime="2023-01-07T10:00">10:00am</time></label>
+			<label><input type="radio" name="timeslot" value="11" data-sr /><time datetime="2023-01-07T15:00">3:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="12" data-sr /><time datetime="2023-01-07T16:00">4:00pm</time></label>
+		</fieldset>
+		<fieldset>
+			<legend>SUN <span>8</span></legend>
+			<label><input type="radio" name="timeslot" value="13" data-sr /><time datetime="2023-01-08T18:00">6:00pm</time></label>
+		</fieldset>
+		<fieldset>
+			<legend>MON <span>9</span></legend>
+			<label><input type="radio" name="timeslot" value="14" data-sr disabled /><time datetime="2023-01-09T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="15" data-sr /><time datetime="2023-01-09T18:00">6:00pm</time></label>
+		</fieldset>
+	</fieldset>
+
 	<h2>Toasts</h2>
 	<p>
 		<button popovertarget="toast-info">Info</button>
@@ -549,21 +918,82 @@
 		</div>
 	</p>
 
+	<h2>Transfer List</h2>
+	<fieldset class="ui-transfer-list">
+		<label>
+			Left
+			<select multiple size="3" name="start">
+				<option value="1">Option One</option>
+				<option value="2">Option Two</option>
+				<option value="3">Option Three</option>
+			</select>
+		</label>
+		<nav>
+			<button type="button" name="fromStart" aria-label="Move selected items to the second list">
+				<ui-icon type="chevron right"></ui-icon>
+			</button>
+			<button type="button" name="fromEnd" aria-label="Move selected items to the first list">
+				<ui-icon type="chevron left"></ui-icon>
+			</button>
+		</nav>
+		<label>
+			Right
+			<select multiple size="3" name="end">
+				<option value="4">Option Four</option>
+				<option value="5">Option Five</option>
+				<option value="6">Option Six</option>
+			</select>
+		</label>
+	</fieldset>
+
 	<h2>Video Embed</h2>
 	<h3>--youtube</h3>
-	<div class="ui-embed --youtube">
+	<div class="ui-video-embed --youtube">
 		<img loading="lazy" src="https://i.ytimg.com/vi/5b4YcLB4DVI/hqdefault.jpg" alt="Video Description">
 		<iframe allow="autoplay" src="" data-src="https://www.youtube.com/embed/5b4YcLB4DVI?autoplay=1"></iframe>
 		<button aria-label="Play video"></button>
 	</div>
 
 	<h3>--vimeo</h3>
-	<div class="ui-embed --vimeo">
+	<div class="ui-video-embed --vimeo">
 		<img loading="lazy" src="https://vumbnail.com/70591644.jpg" alt="Video Description">
 		<iframe allow="autoplay" src="" data-src="https://player.vimeo.com/video/70591644?autoplay=1"></iframe>
 		<button aria-label="Play video"></button>
 	</div>
 
-	<script src="browser.style.js"></script>
+	<h2>World Map</h2>
+
+	<script type="module">
+		import { common, init } from './../assets/js/common.js';
+		import listTarget from './../assets/js/listTarget.js';
+		import uiAnalogClock from './analog-clock/uiAnalogClock.js';
+		import uiCarousel from './carousel/uiCarousel.js';
+		import uiChat from './chat/uiChat.js';
+		import uiCountdown from './countdown/uiCountdown.js';
+		import uiDigitalClock from './digital-clock/uiDigitalClock.js';
+		import uiFileList from './file-list/uiFileList.js';
+		import uiGallery from './gallery/uiGallery.js';
+		import uiReaction from './reaction/uiReaction.js';
+		import uiRangeCircular from './range-circular/uiRangeCircular.js';
+		import uiTabs from './tabs/uiTabs.js';
+		import uiTransferList from './transfer-list/uiTransferList.js';
+		import uiVideoEmbed from './video-embed/uiVideoEmbed.js';
+
+		common();
+
+		init('.ui-accordion, .ui-blinds > ul', listTarget);
+		init('.ui-analog-clock', uiAnalogClock);
+		init('.ui-carousel, .ui-slider', uiCarousel);
+		init('.ui-chat', uiChat);
+		init('.ui-countdown', uiCountdown);
+		init('.ui-digital-clock', uiDigitalClock);
+		init('[type=file][multiple]', uiFileList);
+		init('.ui-gallery', uiGallery);
+		init('.ui-range-circular', uiRangeCircular);
+		init('.ui-reaction', uiReaction);
+		init('.ui-tabs', uiTabs);
+		init('.ui-transfer-list', uiTransferList);
+		init('.ui-video-embed', uiVideoEmbed);
+	</script>
 </body>
 </html>	

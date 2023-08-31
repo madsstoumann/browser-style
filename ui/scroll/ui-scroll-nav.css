@@ -1,6 +1,6 @@
 :has(.ui-scroll) {
 	--ui-scroll-nav-gap: 2ch;
-	& nav {
+	& > nav {
 		display: grid;
 		gap: var(--ui-scroll-gap);
 		grid-auto-flow: column;

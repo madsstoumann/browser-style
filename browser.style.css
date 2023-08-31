@@ -1,5 +1,5 @@
 @import url('browser.style.form.css');
-@import url('ui/ui-icon.css');
+@import url('ui/icon/ui-icon.css');
 
 :root {
   --AccentColor: hsl(211, 100%, 50%);
