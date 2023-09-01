@@ -446,10 +446,13 @@
 	</fieldset>
 
 	<h2>Countdown</h2>
-	<!-- <time datetime="2024-12-31" class="ui-countdown"></time> -->
-
-	<h3>Expired Countdown</h3>
-	<time datetime="2020-12-31" class="ui-countdown"></time>
+	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
+	<ol class="ui-countdown" data-time="2024-01-01">
+		<li data-label="day"></li>
+		<li data-label="hour"></li>
+		<li data-label="minutes"></li>
+		<li data-label="seconds"></li>
+	</ol>
 
 	<h2>Digital Clock</h2>
 	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
@@ -564,13 +567,13 @@
 	<h2>Pagination</h2>
 	<fieldset class="ui-pagination">
 		<legend>Pagination</legend>
-		<button type="button"><ui-icon type="chevron left fisrt"></ui-icon></button>
-		<button type="button"><ui-icon type="chevron left"></ui-icon></button>
+		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
+		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
 		<label>
-			<input type="number">
+			<input type="number" value="5" min="1" max="25">
 		</label>
-		<button type="button"><ui-icon type="chevron right"></ui-icon></button>
-		<button type="button"><ui-icon type="chevron right last"></ui-icon></button>
+		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
+		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
 	</fieldset>
 
 	<h2>Position</h2>
@@ -680,11 +683,11 @@
 	<h2>Spinner</h2>
 	<fieldset class="ui-spinner">
 		<legend>Spinner</legend>
-		<button type="button"><ui-icon type="minus"></ui-icon></button>
+		<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
 		<label>
-			<input type="number">
+			<input type="number" value="10" min="0" max="20">
 		</label>
-		<button type="button"><ui-icon type="plus"></ui-icon></button>
+		<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
 	</fieldset>
 
 	<h2>Step</h2>
@@ -975,6 +978,7 @@
 		import uiGallery from './gallery/uiGallery.js';
 		import uiReaction from './reaction/uiReaction.js';
 		import uiRangeCircular from './range-circular/uiRangeCircular.js';
+		import uiSpinner from './spinner/uiSpinner.js';
 		import uiTabs from './tabs/uiTabs.js';
 		import uiTransferList from './transfer-list/uiTransferList.js';
 		import uiVideoEmbed from './video-embed/uiVideoEmbed.js';
@@ -991,6 +995,7 @@
 		init('.ui-gallery', uiGallery);
 		init('.ui-range-circular', uiRangeCircular);
 		init('.ui-reaction', uiReaction);
+		init('.ui-spinner, .ui-pagination', uiSpinner);
 		init('.ui-tabs', uiTabs);
 		init('.ui-transfer-list', uiTransferList);
 		init('.ui-video-embed', uiVideoEmbed);

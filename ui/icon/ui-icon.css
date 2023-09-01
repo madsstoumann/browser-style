@@ -88,6 +88,15 @@ ui-icon[type~=up] { rotate: -90deg; }
 ui-icon[type~=upleft] { rotate: -45deg; }
 ui-icon[type~=upright] { rotate: -135deg; }
 
+/* First, Last */
+ui-icon[type*=first]::before,
+ui-icon[type*=last]::before {
+	background: currentColor;
+	height: 1em;
+	translate: 1em calc(0px - var(--icon-bdw));
+	width: var(--icon-bdw);
+}
+
 /* Margin */
 ui-icon[margin=start] { --_mis: 1ch; }
 ui-icon[margin=start-auto] { --_mis: auto; }

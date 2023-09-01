@@ -4,6 +4,7 @@
 	display: grid;
 	gap: .5em;
 	grid-auto-flow: column;
+	justify-content: start;
 	& input {
 		text-align: center;
 		&::-webkit-inner-spin-button {

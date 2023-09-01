@@ -1,26 +1,34 @@
-export default function uiCountdown(node) {
-  const locale = node.lang || document.documentElement.getAttribute('lang') || 'en-US';
-  const endTime = new Date(node.getAttribute('datetime')).getTime();
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
-  const zero = new Intl.NumberFormat(locale).format(0);
+export default function uiCountdown(node, locale = 'en-US') {
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+  const setDelay = (name, delay) => {
+    node.style.setProperty(`--delay-${name}`, `${delay}s`);
+  }
+  const setLabel = (type) => {
+    const parts = rtf.formatToParts(3, type)
+     return parts.at(parts.length -1)?.value
+  }
 
-  const getRemainingTime = (endTime, currentTime = new Date().getTime()) => endTime - currentTime;
-  const showTime = () => {
-    const remainingTime = getRemainingTime(endTime);
-    if (remainingTime < 0) node.classList.add('--expired');
-    node.innerHTML = 
-      timePart(Math.floor(remainingTime / (24 * 60 * 60 * 1000)), 'day') +
-      timePart(Math.floor((remainingTime / (60 * 60 * 1000)) % 24), 'hour') +
-      timePart(Math.floor((remainingTime / (60 * 1000)) % 60), 'minute') +
-      timePart(Math.floor((remainingTime / 1000) % 60), 'second');
-    if (remainingTime >= 1000) requestAnimationFrame(showTime);
-  }
-  const timePart = (part, type) => {
-    const parts = rtf.formatToParts(part === 0 ? 2 : part, type);
-    if (parts && parts.length === 3) parts.shift();
-    const [unit, label] = parts; 
-    return `<span><strong>${part === 0 ? zero : unit.value}</strong><small>${label.value}</small></span>`
-  }
-  /* use with .padStart(2,'0') ? */
-  requestAnimationFrame(showTime);
+  const end = new Date(node.getAttribute('data-time')).getTime();
+  const remaining = end - Date.now();
+
+  const DAY = 86400;
+  const HOUR = 3600;
+
+  const seconds = Math.floor((remaining / 1000) % 60);
+  const days = Math.floor(remaining / (DAY * 1000));
+   const hours = Math.floor((remaining / (HOUR * 1000)) % 24);
+  const minutes = Math.floor((remaining / (60 * 1000)) % 60);
+
+  const SECONDS = -Math.abs(60 - seconds)
+  const MINUTES = -Math.abs(HOUR - (minutes * 60) - (60 - 1) - SECONDS);
+  const HOURS =  -Math.abs(DAY - (hours * HOUR) + MINUTES);
+
+  [...node.children].forEach((child, index) => {
+    child.textContent = setLabel(child.dataset.label)
+  })
+  
+  setDelay('days', -Math.abs(31536000 - (days * DAY) + HOURS));
+  setDelay('hours', HOURS);
+  setDelay('minutes', MINUTES);
+  setDelay('seconds', SECONDS);
 }
