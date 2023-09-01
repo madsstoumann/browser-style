@@ -1,4 +1,4 @@
-.ui-timeslot {
+:where(.ui-timeslot) {
 	all: unset;
 	display: grid;
 	gap: .33em;
@@ -21,6 +21,7 @@
 			user-select: none;
 			&:has(input:checked) {
 				background-color: var(--AccentColor);
+				border-color: var(--AccentColor);
 				color: var(--AccentColorText);
 			}
 		}
@@ -33,7 +34,7 @@
 			white-space: nowrap;
 		}
 		&:has(input:checked) {
-			background-color: var(--GrayCanvas);
+			background-color: var(--ColorAccent-20);
 			& legend {
 				background-color: var(--AccentColor);
 				color: var(--AccentColorText);

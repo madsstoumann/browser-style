@@ -1,0 +1,16 @@
+:where(.ui-worldmap) {
+	aspect-ratio: 950 / 620;
+	border: 1px solid var(--ButtonBorder);
+	border-radius: var(--input-bdrs);
+	/* height: fit-content; */
+	margin: 0;
+	& svg {
+		aspect-ratio: inherit;
+		border-radius: inherit;
+		fill: var(--ButtonFace);
+		width: 100%;
+		
+		& g:hover path,
+		& path[id]:hover { fill: var(--AccentColor); }
+	}
+}
