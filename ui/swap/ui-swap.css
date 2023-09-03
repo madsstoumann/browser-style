@@ -1,0 +1,9 @@
+:where(.ui-swap) {
+	grid-template-columns: 1fr;
+	inline-size: fit-content;
+	& img { background: transparent; }
+	& input {
+		&:checked + *, & + * + * { display: none; }
+		&:checked + * + * { display: block; }
+	}
+}

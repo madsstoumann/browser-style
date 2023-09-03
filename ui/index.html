@@ -226,6 +226,30 @@
 		</label>
 	</fieldset>
 
+	<h2>Calculator</h2>
+	<form class="ui-calculator">
+		<input name="display" placeholder="0" value="" disabled>
+		<button type="reset">C</button>
+		<button type="button" value="±">&plusmn;</button>
+		<button type="button" value="%">&percnt;</button>
+		<button type="button" value="/">&divide;</button>
+		<button type="button" value="7">7</button>
+		<button type="button" value="8">8</button>
+		<button type="button" value="9">9</button>
+		<button type="button" value="*">&times;</button>
+		<button type="button" value="4">4</button>
+		<button type="button" value="5">5</button>
+		<button type="button" value="6">6</button>
+		<button type="button" value="-">-</button>
+		<button type="button" value="1">1</button>
+		<button type="button" value="2">2</button>
+		<button type="button" value="3">3</button>
+		<button type="button" value="+">+</button>
+		<button type="button" value="0">0</button>
+		<button type="button" value=".">,</button>
+		<button type="submit" value="=">=</button>
+	</form>
+
 	<h2>Card</h2>
 	<article class="ui-card" style="max-inline-size: 300px;">
 		<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
@@ -462,6 +486,8 @@
 		<li></li>
 	</ol>
 
+	<h2>Drawer</h2>
+
 	<h2>File List</h2>
 	<label>File — Removeable
 		<input type="file" multiple>
@@ -535,6 +561,17 @@
 		</label>
 	</fieldset>
 
+	<h2>Input Button</h2>
+	<fieldset class="ui-input-button">
+		<legend>Input button</legend>
+		<label>
+			<input type="text">
+		</label>
+		<button type="button">Button</button>
+	</fieldset>
+
+	<h2>OpenStreetMap</h2>
+
 	<h2>Mood</h2>
 	<fieldset class="ui-mood">
 		<legend>Mood Selector — Happy or Not?</legend>
@@ -574,6 +611,22 @@
 		</label>
 		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
 		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
+	</fieldset>
+
+	<h2>Password Strength</h2>
+	<p>This component requires the quite large <strong>zxcvbn</strong>-library, so it's on <a href="/ui/password-strength">it's own page</a></p>
+
+	<h2>Password Toggle</h2>
+	<fieldset class="ui-input-button">
+		<legend>Toggle to see password</legend>
+		<label>
+			<input type="password">
+		</label>
+		<label class="ui-swap ui-button">
+			<input type="checkbox" data-sr>
+			<img src="/assets/svg/lock.svg" alt="Lock">
+			<img src="/assets/svg/eye.svg" alt="View">
+		</label>
 	</fieldset>
 
 	<h2>Position</h2>
@@ -705,6 +758,23 @@
 		<li>Third item</li>
 		<li>Fourth item</li>
 	</ol>
+
+	<h2>Swap</h2>
+	<p>Swaps an image or icon to another on click.</p>
+
+	<h3>Button with icon</h3>
+	<label class="ui-swap ui-button --toggle --lg">
+		<input type="checkbox" data-sr>
+		<img src="/assets/svg/lock.svg" alt="Lock">
+		<img src="/assets/svg/eye.svg" alt="View">
+	</label>
+
+	<h3>Image</h3>
+	<label class="ui-swap">
+		<input type="checkbox" data-sr>
+		<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
+		<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180">
+	</label>
 
 	<h2>Syntax Highlight — CSS</h2>
 	<p>Used here with modifiers <code>--osx</code> and <code>--dark</code></p>
@@ -973,12 +1043,14 @@
 		import { common, init } from './../assets/js/common.js';
 		import listTarget from './../assets/js/listTarget.js';
 		import uiAnalogClock from './analog-clock/uiAnalogClock.js';
+		import uiCalculator from './calculator/uiCalculator.js';
 		import uiCarousel from './carousel/uiCarousel.js';
 		import uiChat from './chat/uiChat.js';
 		import uiCountdown from './countdown/uiCountdown.js';
 		import uiDigitalClock from './digital-clock/uiDigitalClock.js';
 		import uiFileList from './file-list/uiFileList.js';
 		import uiGallery from './gallery/uiGallery.js';
+		import uiPasswordToggle from './password-toggle/uiPasswordToggle.js';
 		import uiReaction from './reaction/uiReaction.js';
 		import uiRangeCircular from './range-circular/uiRangeCircular.js';
 		import uiSpinner from './spinner/uiSpinner.js';
@@ -990,12 +1062,14 @@
 
 		init('.ui-accordion, .ui-blinds > ul', listTarget);
 		init('.ui-analog-clock', uiAnalogClock);
+		init('.ui-calculator', uiCalculator);
 		init('.ui-carousel, .ui-slider', uiCarousel);
 		init('.ui-chat', uiChat);
 		init('.ui-countdown', uiCountdown);
 		init('.ui-digital-clock', uiDigitalClock);
 		init('[type=file][multiple]', uiFileList);
 		init('.ui-gallery', uiGallery);
+		init('.ui-input-button:has([type=password])', uiPasswordToggle);
 		init('.ui-range-circular', uiRangeCircular);
 		init('.ui-reaction', uiReaction);
 		init('.ui-spinner, .ui-pagination', uiSpinner);

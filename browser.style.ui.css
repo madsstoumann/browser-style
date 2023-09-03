@@ -5,6 +5,7 @@
 @import url('/ui/blinds/ui-blinds.css');
 @import url('/ui/breadcrumbs/ui-breadcrumbs.css');
 @import url('/ui/button-group/ui-button-group.css');
+@import url('/ui/calculator/ui-calculator.css');
 @import url('/ui/card/ui-card.css');
 @import url('/ui/carousel/ui-carousel.css');
 @import url('/ui/chat/ui-chat.css');
@@ -18,8 +19,10 @@
 @import url('/ui/gallery/ui-gallery.css');
 @import url('/ui/image-compare/ui-image-compare.css');
 @import url('/ui/image-select/ui-image-select.css');
+@import url('/ui/input-button/ui-input-button.css');
 @import url('/ui/mood/ui-mood.css');
 @import url('/ui/onetimecode/ui-onetimecode.css');
+@import url('/ui/password-strength/ui-password-strength.css');
 @import url('/ui/position/ui-position.css');
 @import url('/ui/progress-circular/ui-progress-circular.css');
 @import url('/ui/range-circular/ui-range-circular.css');
@@ -29,6 +32,7 @@
 @import url('/ui/slider/ui-slider.css');
 @import url('/ui/spinner/ui-spinner.css');
 @import url('/ui/step/ui-step.css');
+@import url('/ui/swap/ui-swap.css');
 @import url('/ui/syntax/ui-syntax.css');
 @import url('/ui/timeline/ui-timeline.css');
 @import url('/ui/timeslot/ui-timeslot.css');

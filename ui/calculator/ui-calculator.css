@@ -1,0 +1,49 @@
+:where(.ui-calculator) {
+  background-color: #535353;
+  border-radius: var(--input-bdrs);
+  border: 1px solid #535353;
+  color: #fbfbfb;
+  display: grid;
+  grid-gap: 1px;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+  width: 15rem;
+  & button, & input {
+		/* all: unset; */
+		--button-p: 0;
+    border: 0;
+		border-radius: 0;
+    color: inherit;
+    font-family: ui-sans-serif, system-ui;
+  }
+  & input {
+    background-color: inherit;
+    block-size: 4rem;
+    font-size: 3rem;
+    font-weight: 200;
+    grid-column: 1 / span 4;
+    padding-inline: .25em;
+    text-align: right;
+    &::placeholder { color: currentColor; }
+  }
+  & button {
+    aspect-ratio: 1.2 / 1;
+    background-color: #7D7D7D;
+    font-size: 1.33em;
+    font-weight: 400;
+    outline: 0;
+    &:focus-visible { background-color: #B1B1B1; }
+    &[value="0"] {
+      aspect-ratio: 2.42 / 1;
+      grid-column: span 2;
+    }
+    &:nth-child(-n+4) {
+      background-color: #646464;
+      &:focus-visible { background-color: #7D7D7D; }
+    }
+    &:nth-of-type(4n+4), &:last-child {
+      background-color: #F3A23C;
+      &:focus-visible { background-color: #C1812D; }
+    }
+  }
+}

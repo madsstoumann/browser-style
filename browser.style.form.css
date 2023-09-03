@@ -22,7 +22,6 @@
   &::placeholder { color: var(--GrayText); }
 }
 :where(button, .ui-button), [type=file]::file-selector-button {
-  /* --hover-bg: color-mix(in srgb, var(--ButtonFace), #000 10%); */
   background-color: var(--button-bg, var(--ButtonFace));
   border-color: transparent;
   color: var(--button-c, inherit);
@@ -36,6 +35,8 @@
     color: var(--GrayText);
     cursor: not-allowed;
   }
+  &.--square { --button-p: 1ch; }
+  &.--toggle { --button-p: 0; }
 }
 :where(button, label, legend, .ui-button) {
   font-size: var(--label-fz);
