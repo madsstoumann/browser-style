@@ -13,13 +13,16 @@
 @import url('/ui/color-compare/ui-color-compare.css');
 @import url('/ui/color-mask/ui-color-mask.css');
 @import url('/ui/color-swatch/ui-color-swatch.css');
+@import url('/ui/config-group/ui-config-group.css');
 @import url('/ui/countdown/ui-countdown.css');
 @import url('/ui/digital-clock/ui-digital-clock.css');
+@import url('/ui/drawer/ui-drawer.css');
 @import url('/ui/file-list/ui-file-list.css');
 @import url('/ui/gallery/ui-gallery.css');
 @import url('/ui/image-compare/ui-image-compare.css');
 @import url('/ui/image-select/ui-image-select.css');
 @import url('/ui/input-button/ui-input-button.css');
+@import url('/ui/map/ui-map.css');
 @import url('/ui/mood/ui-mood.css');
 @import url('/ui/onetimecode/ui-onetimecode.css');
 @import url('/ui/password-strength/ui-password-strength.css');

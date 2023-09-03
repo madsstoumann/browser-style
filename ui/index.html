@@ -478,6 +478,20 @@
 		<li data-label="seconds"></li>
 	</ol>
 
+	<h2 id="config-group">Config Group</h2>
+	<fieldset class="ui-config-group">
+		<legend>Config Group</legend>
+		<label>
+			<input type="radio" name="config-group" value="1" data-sr checked>
+			<strong>8 GB memory</strong>
+			<span>+$0</span>
+		</label>
+		<label>
+			<input type="radio" name="config-group" data-sr value="2">
+			<strong>16 GB memory</strong>
+			<span>+$100</span>
+	</fieldset>
+
 	<h2>Digital Clock</h2>
 	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
 	<ol class="ui-digital-clock">
@@ -486,7 +500,20 @@
 		<li></li>
 	</ol>
 
-	<h2>Drawer</h2>
+	<h2 id="drawer">Drawer</h2>
+	<details class="ui-drawer">
+		<summary>Open drawer from left</summary>
+		<div class="--left">
+			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odio eos non aliquam porro rem quisquam vero officiis, impedit repellendus harum vel saepe fugiat quaerat blanditiis autem error eaque iure soluta illo molestias distinctio quia consectetur, rerum asperiores? Cupiditate magnam fuga autem, laboriosam pariatur, quidem saepe dolore voluptatem rerum totam praesentium!
+		</div>
+	</details>
+
+	<details class="ui-drawer">
+		<summary>Open drawer to the right</summary>
+		<div class="--right">
+			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odio eos non aliquam porro rem quisquam vero officiis, impedit repellendus harum vel saepe fugiat quaerat blanditiis autem error eaque iure soluta illo molestias distinctio quia consectetur, rerum asperiores? Cupiditate magnam fuga autem, laboriosam pariatur, quidem saepe dolore voluptatem rerum totam praesentium!
+		</div>
+	</details>
 
 	<h2>File List</h2>
 	<label>File — Removeable
@@ -570,7 +597,9 @@
 		<button type="button">Button</button>
 	</fieldset>
 
-	<h2>OpenStreetMap</h2>
+	<h2>Map</h2>
+	<p>Go to <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.</p>
+	<iframe class="ui-map" src="https://www.openstreetmap.org/export/embed.html?bbox=12.567951679229738%2C55.67832546115546%2C12.569088935852053%2C55.679883132870415&amp;layer=mapnik&amp;marker=55.679104304766774%2C12.568520307540894"></iframe>
 
 	<h2>Mood</h2>
 	<fieldset class="ui-mood">
@@ -607,16 +636,21 @@
 		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
 		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
 		<label>
-			<input type="number" value="5" min="1" max="25">
+			<input type="number" value="5" min="1" max="25" autocomplete="off">
 		</label>
 		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
 		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
 	</fieldset>
 
 	<h2>Password Strength</h2>
-	<p>This component requires the quite large <strong>zxcvbn</strong>-library, so it's on <a href="/ui/password-strength">it's own page</a></p>
+	<p>This component requires the quite large <strong>zxcvbn</strong>-library to work <code>oninput</code>, so it's on <a href="/ui/password-strength">it's own page</a></p>
+	<label style="--strength:3;">
+		Password
+		<input type="password" class="ui-password-strength">
+		<span></span>
+		</label>
 
-	<h2>Password Toggle</h2>
+	<h2 id="password-toggle">Password Toggle</h2>
 	<fieldset class="ui-input-button">
 		<legend>Toggle to see password</legend>
 		<label>
@@ -760,14 +794,7 @@
 	</ol>
 
 	<h2>Swap</h2>
-	<p>Swaps an image or icon to another on click.</p>
-
-	<h3>Button with icon</h3>
-	<label class="ui-swap ui-button --toggle --lg">
-		<input type="checkbox" data-sr>
-		<img src="/assets/svg/lock.svg" alt="Lock">
-		<img src="/assets/svg/eye.svg" alt="View">
-	</label>
+	<p>Swaps an image or icon to another on click. See <a href="#password-toggle">Password Toggle</a></p>
 
 	<h3>Image</h3>
 	<label class="ui-swap">
@@ -1075,7 +1102,7 @@
 		init('.ui-spinner, .ui-pagination', uiSpinner);
 		init('.ui-tabs', uiTabs);
 		init('.ui-transfer-list', uiTransferList);
-		init('.ui-video-embed', uiVideoEmbed);
+		init('.ui-video-embed button', uiVideoEmbed);
 	</script>
 </body>
 </html>	

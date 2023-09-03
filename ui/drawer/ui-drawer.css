@@ -1,0 +1,33 @@
+:where(.ui-drawer) {
+	--ui-drawer-width: 33vw;
+	cursor: pointer;
+	& summary {
+		&::marker { content: none; }
+		& + * {
+			background: var(--ui-drawer-bg, var(--GrayCanvas));
+			block-size: 100vh;
+			inline-size: var(--ui-drawer-width);
+			padding: var(--ui-drawer-p, 1ch);
+			position: fixed;
+			transition: translate .2s ease-in;
+			z-index: var(--ui-drawer-z, 1);
+			&.--left {
+				inset : 0 auto auto 0;
+				translate: calc(1vw - var(--ui-drawer-width)) 0;
+			}
+			&.--right {
+				inset: 0 0 auto auto;
+				translate: calc(var(--ui-drawer-width) + 1vw) 0;
+			}
+		}
+	}
+	&[open] summary {
+		&::after {
+			background: rgba(0, 0, 0, .33);
+			content: "";
+			inset: 0;
+			position: fixed;
+		}
+		& + * { translate: 0 0; }
+	}
+}
