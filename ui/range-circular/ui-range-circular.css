@@ -25,11 +25,11 @@
 		&::-webkit-slider-thumb { display: none; }
 		&::-moz-range-thumb { opacity: 0; }
 	}
-	& input, & output {
+	& input, & span {
 		grid-column: 1 / -1;
 		grid-row: 1 / -1;
 	}
-	& output {
+	& span {
 		height: 100%;
 		pointer-events: none;
 		rotate: calc(90deg + (var(--_rad)) * var(--value));

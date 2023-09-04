@@ -87,22 +87,17 @@
 	<h2>Badge</h2>
 	Use with modifiers, <code>--inline</code>, <code>--bottom-right</code> and <code>--top-right</code> to fine-adjust position.<br>
 	Use <code>--text</code> if text only.
-	<p>
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 			<b class="ui-badge --success-bg --top-right">99</b>
 		</div>
-	</p>
-	<p>
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 			<b class="ui-badge --info-bg --bottom-right">👍</b>
 		</div>
-	</p>
 
-	
 	<p><button type="button">Button with badge<b class="ui-badge --info-bg">5</b></button></p>
 	<p><span class="ui-chip">Chip with badge<b class="ui-badge --error-bg --tra25-25">4</b></span></p>
 	<p><span class="ui-chip --info">Light badge<b class="ui-badge --error --tra25-25">4</b></span></p>
@@ -290,7 +285,6 @@
 				<li></li>
 				<li></li>
 			</ol>
-			</fieldset>
 			<button data-action="next">
 				<ui-icon type="chevron right"></ui-icon>
 			</button>
@@ -460,6 +454,7 @@
 			<input type="radio" name="config-group" data-sr value="2">
 			<strong>16 GB memory</strong>
 			<span>+$100</span>
+		</label>
 	</fieldset>
 
 	<h2>Digital Clock</h2>
@@ -542,6 +537,7 @@
 	</fieldset>
 
 	<h2>Indeterminate</h2>
+	<p>Allows for de-selecting a selected radio-button, thus returning to the <code>:indeterminate</code>-state.</p>
 	<fieldset name="gender">
 		<legend>Indeterminate Group</legend>
 		<label>
@@ -623,12 +619,12 @@
 	</fieldset>
 
 	<h2>Password Strength</h2>
-	<p>This component requires the quite large <strong>zxcvbn</strong>-library to work <code>oninput</code>, so it's on <a href="/ui/password-strength">it's own page</a></p>
+	<p>The "live" version of this component requires the quite large <strong>zxcvbn</strong>-library to work, so it has <a href="/ui/password-strength">it's own page</a></p>
 	<label style="--strength:3;">
 		Password
 		<input type="password" class="ui-password-strength">
 		<span></span>
-		</label>
+	</label>
 
 	<h2 id="password-toggle">Password Toggle</h2>
 	<fieldset class="ui-input-button">
@@ -689,7 +685,7 @@
 	<label>Range — Circular
 		<span class="ui-range-circular">
 			<input type="range" value="25" data-key="value" data-scope="parent">
-			<output></output>
+			<span></span>
 		</span>
 	</label>
 
@@ -774,7 +770,7 @@
 	</ol>
 
 	<h2>Swap</h2>
-	<p>Swaps an image or icon to another on click. See <a href="#password-toggle">Password Toggle</a></p>
+	<p>Swaps an image/icon or piece of content to something else on-click. <br>Example: <a href="#password-toggle">Password Toggle</a></p>
 
 	<h3>Image</h3>
 	<label class="ui-swap">
@@ -927,76 +923,68 @@
 		<legend>Timeslot</legend>
 		<fieldset>
 			<legend>WED <span>4</span></legend>
-			<label><input type="radio" name="timeslot" value="1" data-sr /><time datetime="2023-01-04T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot" value="2" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="1" data-sr><time datetime="2023-01-04T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="2" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
 		</fieldset>
 		<fieldset>
 			<legend>THU <span>5</span></legend>
-			<label><input type="radio" name="timeslot" value="3" data-sr /><time datetime="2023-01-05T09:00">9:00am</time></label>
-			<label><input type="radio" name="timeslot" value="4" data-sr /><time datetime="2023-01-05109:00">10:00am</time></label>
-			<label><input type="radio" name="timeslot" value="5" data-sr checked /><time datetime="2023-01-05T11:00">11:00am</time></label>
-			<label><input type="radio" name="timeslot" value="6" data-sr /><time datetime="2023-01-05T12:00">12:00am</time></label>
-			<label><input type="radio" name="timeslot" value="7" disabled data-sr /><time datetime="2023-01-05T13:00">01:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="3" data-sr><time datetime="2023-01-05T09:00">9:00am</time></label>
+			<label><input type="radio" name="timeslot" value="4" data-sr><time datetime="2023-01-05T09:00">10:00am</time></label>
+			<label><input type="radio" name="timeslot" value="5" data-sr checked><time datetime="2023-01-05T11:00">11:00am</time></label>
+			<label><input type="radio" name="timeslot" value="6" data-sr><time datetime="2023-01-05T12:00">12:00am</time></label>
+			<label><input type="radio" name="timeslot" value="7" disabled data-sr><time datetime="2023-01-05T13:00">01:00pm</time></label>
 		</fieldset>
 		<fieldset>
 			<legend>FRI <span>6</span></legend>
-			<label><input type="radio" name="timeslot" value="8" data-sr /><time datetime="2023-01-06T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot" value="9" data-sr /><time datetime="2023-01-04T18:00">6:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="8" data-sr><time datetime="2023-01-06T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="9" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
 		</fieldset>
 		<fieldset>
 			<legend>SAT <span>7</span></legend>
-			<label><input type="radio" name="timeslot" value="10" data-sr /><time datetime="2023-01-07T10:00">10:00am</time></label>
-			<label><input type="radio" name="timeslot" value="11" data-sr /><time datetime="2023-01-07T15:00">3:00pm</time></label>
-			<label><input type="radio" name="timeslot" value="12" data-sr /><time datetime="2023-01-07T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="10" data-sr><time datetime="2023-01-07T10:00">10:00am</time></label>
+			<label><input type="radio" name="timeslot" value="11" data-sr><time datetime="2023-01-07T15:00">3:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="12" data-sr><time datetime="2023-01-07T16:00">4:00pm</time></label>
 		</fieldset>
 		<fieldset>
 			<legend>SUN <span>8</span></legend>
-			<label><input type="radio" name="timeslot" value="13" data-sr /><time datetime="2023-01-08T18:00">6:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="13" data-sr><time datetime="2023-01-08T18:00">6:00pm</time></label>
 		</fieldset>
 		<fieldset>
 			<legend>MON <span>9</span></legend>
-			<label><input type="radio" name="timeslot" value="14" data-sr disabled /><time datetime="2023-01-09T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot" value="15" data-sr /><time datetime="2023-01-09T18:00">6:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="14" data-sr disabled><time datetime="2023-01-09T16:00">4:00pm</time></label>
+			<label><input type="radio" name="timeslot" value="15" data-sr><time datetime="2023-01-09T18:00">6:00pm</time></label>
 		</fieldset>
 	</fieldset>
 
 	<h2>Toasts</h2>
-	<p>
-		<button popovertarget="toast-info">Info</button>
-		<div id="toast-info" popover class="ui-toast --info">
-			<span>I am a popover with more information.</span>
-			<button popovertarget="toast-info" popovertargetaction="hide">
-				<ui-icon type="cross"></ui-icon>
-			</button>
-		</div>
-	</p>
-	<p>
-		<button popovertarget="toast-success">Success</button>
-		<div id="toast-success" popover class="ui-toast --success">
-			<span>I am a popover with more information.</span>
-			<button popovertarget="toast-success" popovertargetaction="hide">
-				<ui-icon type="cross"></ui-icon>
-			</button>
-		</div>
-	</p>
-	<p>
-		<button popovertarget="toast-warning">Warning</button>
-		<div id="toast-warning" popover class="ui-toast --warning">
-			<span>I am a popover with more information.</span>
-			<button popovertarget="toast-warning" popovertargetaction="hide">
-				<ui-icon type="cross"></ui-icon>
-			</button>
-		</div>
-	</p>
-	<p>
-		<button popovertarget="toast-error">Error</button>
-		<div id="toast-error" popover class="ui-toast --error">
-			<span>I am a popover with more information.</span>
-			<button popovertarget="toast-error" popovertargetaction="hide">
-				<ui-icon type="cross"></ui-icon>
-			</button>
-		</div>
-	</p>
+	<button popovertarget="toast-info">Info</button>
+	<div id="toast-info" popover class="ui-toast --info">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-info" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-success">Success</button>
+	<div id="toast-success" popover class="ui-toast --success">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-success" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-warning">Warning</button>
+	<div id="toast-warning" popover class="ui-toast --warning">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-warning" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-error">Error</button>
+	<div id="toast-error" popover class="ui-toast --error">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-error" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
 
 	<h2>Transfer List</h2>
 	<fieldset class="ui-transfer-list">
