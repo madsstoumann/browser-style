@@ -112,7 +112,7 @@
 	<h2>Blinds</h2>
 	<div class="ui-blinds">
 		<ul>
-			<li id="aboutus" class="--open">
+			<li id="aboutus">
 				<a href="#aboutus">About Us</a>
 				<p>
 					At Acme Software, we are dedicated to providing exceptional solutions for all your needs. With years of industry experience, we pride ourselves on delivering innovative and reliable products and services to our valued customers. Our team of experts is committed to exceeding expectations and building long-lasting relationships. We strive to stay at the forefront of technological advancements, ensuring that we consistently meet the evolving demands of our clients. Trust Acme Software for unmatched quality, expertise, and customer satisfaction.
@@ -177,9 +177,11 @@
 		</li>
 	</ol>
 
-	<h2>Button Group</h2>
-	<fieldset class="ui-button-group ">
-		<legend>Button Group</legend>
+	<h2 id="button-group">Button Group</h2>
+	See all variants <a href="/ui/button-group" target="_blank" rel="noopener noreferrer">here</a>.
+
+	<fieldset class="ui-button-group --border --rounded">
+		<legend>Button Group Label</legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group" value="1" data-sr checked>
 			Light mode
@@ -190,38 +192,6 @@
 		</label>
 		<label class="ui-button">
 			<input type="radio" name="button-group" data-sr value="3">
-			Auto
-		</label>
-	</fieldset>
-	<br>
-	<fieldset class="ui-button-group --rounded">
-		<legend>Button Group Rounded</legend>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rounded" value="1" data-sr checked>
-			Light mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rounded" data-sr value="2">
-			Dark mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rounded" data-sr value="3">
-			Auto
-		</label>
-	</fieldset>
-	<br>
-	<fieldset class="ui-button-group --border">
-		<legend>Button Group Border</legend>
-		<label class="ui-button">
-			<input type="radio" name="button-group-border" value="1" data-sr checked>
-			Light mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-border" data-sr value="2">
-			Dark mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-border" data-sr value="3">
 			Auto
 		</label>
 	</fieldset>
@@ -598,8 +568,18 @@
 	</fieldset>
 
 	<h2>Map</h2>
-	<p>Go to <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.</p>
+	<p>Go to <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.<br>Optionally, click "Add Marker", and drag it to the correct place.</p>
+	
+	<p>Next, use the <code>latituide</code> and <code>langitude</code> in the URL to create links for
+		<a href="https://developer.apple.com/library/archive/featuredarticles/iPhoneURLScheme_Reference/MapLinks/MapLinks.html" target="_blank" rel="noopener noreferrer">Apple Maps</a> and
+		<a href="https://developers.google.com/maps/documentation/urls/get-started" target="_blank" rel="noopener noreferrer">Google Maps</a>
+	</p>
+	
 	<iframe class="ui-map" src="https://www.openstreetmap.org/export/embed.html?bbox=12.567951679229738%2C55.67832546115546%2C12.569088935852053%2C55.679883132870415&amp;layer=mapnik&amp;marker=55.679104304766774%2C12.568520307540894"></iframe>
+	<small>
+		Find directions with <a href="http://maps.apple.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Apple Maps</a> or
+		<a href="http://maps.google.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Google Maps</a>
+	</small>
 
 	<h2>Mood</h2>
 	<fieldset class="ui-mood">

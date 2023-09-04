@@ -60,6 +60,7 @@
 		--_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
 
 		display: grid;
+		font-style: normal;
 		height: var(--ui-analog-clock-num-sz);
 		left: var(--_x);
 		place-content: center;
