@@ -1,0 +1,21 @@
+:where(.ui-feature-compare) {
+	& :is(h1, h2, h3, h4) {
+		border-block-end: 1px solid var(--ButtonBorder);
+		padding-block-end: 1ch;
+	}
+}
+:where(.ui-feature-compare-group) {
+	display: grid;
+	gap: 2ch;
+	grid-auto-columns: 1fr;
+	grid-auto-flow: column;
+	& >* {
+		display: grid;
+		font-size: smaller;
+		grid-row: span var(--items, 3);
+		grid-template-rows: subgrid;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+}
