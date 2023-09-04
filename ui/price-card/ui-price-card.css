@@ -1,0 +1,9 @@
+:where(.ui-price-card) {
+	background: var(--GrayCanvas);
+	border-radius: var(--input-bdrs);
+	padding: 1ch 2ch;
+	width: fit-content;
+	&.--selected {
+		
+	}
+}

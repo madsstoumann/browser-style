@@ -25,10 +25,6 @@
 		line-height: 1;
 		padding: .33ch .66ch;
 	}
-	&.--tra25-25 {
-		translate: 25% -25%;
-		&:dir(rtl) { translate: -25% -25%; }
-	}
 	&.--bottom-right {
 		inset-block: auto 0;
 		translate: 0 0;

@@ -5,5 +5,5 @@
 	display: inline-flex;
 	font-size: smaller;
 	margin: var(--ui-chip-m, .5ch 0);
-	padding: var(--ui-chip-p, 1ch 3ch);
+	padding: var(--ui-chip-p, .5ch 2.25ch);
 }
