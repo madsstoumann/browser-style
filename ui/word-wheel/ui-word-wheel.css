@@ -1,0 +1,14 @@
+:where(.ui-word-wheel) {
+	all: unset;
+	aspect-ratio: 1;
+	background-color: crimson;
+	display: grid;
+	place-content: center;
+	& li {
+		all: unset;
+		grid-area: 1 / 1;
+		
+		rotate: var(--_deg);
+  	transform-origin: 100% 50%;
+	}
+}

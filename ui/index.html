@@ -532,6 +532,49 @@
 		<input type="file" multiple>
 	</label>
 
+	<h2 id="file-tree">File Tree</h2>
+	<ul class="ui-file-tree">
+		<li>Item 1
+			<ul>
+				<li>Item 1-1
+					<ul>
+						<li>Item 1-1-1</li>
+						<li>Item 1-1-2</li>
+						<li>Item 1-1-3</li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li>Item 2
+			<ul>
+				<li>Item 2-1</li>
+				<li>Item 2-2</li>
+				<li>Item 2-3</li>
+			</ul>
+		</li>
+		<li>Item 3
+			<ul>
+				<li>Item 3-1</li>
+				<li>Item 3-2</li>
+				<li>Item 3-3</li>
+			</ul>
+		</li>
+		<li>Item 4
+			<ul>
+				<li>Item 4-1</li>
+				<li>Item 4-2</li>
+				<li>Item 4-3</li>
+			</ul>
+		</li>
+		<li>Item 5
+			<ul>
+				<li>Item 5-1</li>
+				<li>Item 5-2</li>
+				<li>Item 5-3</li>
+			</ul>
+		</li>
+	</ul>
+
 	<h2>Gallery</h2>
 	<figure class="ui-gallery">
 		<img src="https://source.unsplash.com/random/200x200?sig=0" alt="Random Image">
@@ -1085,6 +1128,38 @@
 		<button aria-label="Play video"></button>
 	</div>
 
+	<h2 id="word-wheel">Word Wheel</h2>
+	<ul class="ui-word-wheel">
+		<li>silence</li>
+		<li>sound</li>
+		<li>storytelling</li>
+		<li>surprise</li>
+		<li>symbolism</li>
+		<li>synchronocity</li>
+		<li>synergy</li>
+		<li>wholeness</li>
+		<li>witnessing</li>
+		<li>art</li>
+		<li>clearing</li>
+		<li>connectedness</li>
+		<li>discernment</li>
+		<li>facing darkness</li>
+		<li>healing</li>
+		<li>intuition</li>
+		<li>listening</li>
+		<li>love</li>
+		<li>movement</li>
+		<li>music</li>
+		<li>mystery</li>
+		<li>non-attachment</li>
+		<li>non-judgment</li>
+		<li>not knowing</li>
+		<li>quickening</li>
+		<li>re-membering</li>
+		<li>sensing</li>
+		<li>service</li>   
+	</ul>
+
 	<h2>World Map</h2>
 	<figure class="ui-worldmap">
 		<img src="/assets/svg/worldmap.svg" alt="Worldmap" data-replace-svg>
@@ -1108,6 +1183,7 @@
 		import uiTabs from './tabs/uiTabs.js';
 		import uiTransferList from './transfer-list/uiTransferList.js';
 		import uiVideoEmbed from './video-embed/uiVideoEmbed.js';
+		import uiWordWheel from './word-wheel/uiWordWheel.js';
 
 		common();
 
@@ -1127,6 +1203,7 @@
 		init('.ui-tabs', uiTabs);
 		init('.ui-transfer-list', uiTransferList);
 		init('.ui-video-embed button', uiVideoEmbed);
+		init('.ui-word-wheel', uiWordWheel);
 	</script>
 </body>
 </html>	

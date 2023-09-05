@@ -1,0 +1,38 @@
+:where(.ui-file-tree) {
+	--ui-file-tree-bds: solid;
+	--ui-file-tree-bdw: 1px;
+	--ui-file-tree-gap: .75em;
+	font-size: var(--ui-file-tree-fs, smaller);
+	margin: 0;
+	padding: 0;
+	& li {
+		list-style: none;
+		margin-inline-start: var(--ui-file-tree-gap);
+		padding-inline-start: var(--ui-file-tree-gap);
+		position: relative;
+		&::before {
+			block-size: 100%;
+			border-inline-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
+			content: " ";
+			inline-size: var(--ui-file-tree-bdw);
+			inset-block-start: 0;
+			inset-inline-start: calc(0px - var(--ui-file-tree-gap));
+			position: absolute;
+		}
+		&:last-of-type::before { block-size: .75em; }
+		&::after {
+			border-block-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
+			inset-block-start: .75em;
+			block-size: var(--ui-file-tree-bdw);
+			content: "";
+			inline-size: var(--ui-file-tree-gap);
+			inset-inline-start: calc(0px - var(--ui-file-tree-gap));
+			position: absolute;
+		}
+	}
+	& ul {
+		margin: 0;
+		padding-block: 0; 
+		padding-inline: var(--ui-file-tree-gap) 0;
+	}
+}

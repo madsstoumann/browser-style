@@ -1,7 +1,6 @@
 Accordion — `<details>` and `<ul>`
 Analog Clock
-Avatar
-Avatar List
+Avatar, Avatar List
 Badge
 Blinds
 Breadcrumbs — custom `::marker`, icons
@@ -21,6 +20,7 @@ Digital Clock
 Drawer
 Feature Compare
 File List
+FileTree
 Gallery
 Icon (CSS)
 Image Compare
@@ -58,7 +58,6 @@ AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
-FileTree
 Footer
 Menu
 Share (API)

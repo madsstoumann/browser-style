@@ -20,6 +20,7 @@
 @import url('/ui/drawer/ui-drawer.css');
 @import url('/ui/feature-compare/ui-feature-compare.css');
 @import url('/ui/file-list/ui-file-list.css');
+@import url('/ui/file-tree/ui-file-tree.css');
 @import url('/ui/gallery/ui-gallery.css');
 @import url('/ui/image-compare/ui-image-compare.css');
 @import url('/ui/image-select/ui-image-select.css');
@@ -47,6 +48,7 @@
 @import url('/ui/toast/ui-toast.css');
 @import url('/ui/transfer-list/ui-transfer-list.css');
 @import url('/ui/video-embed/ui-video-embed.css');
+@import url('/ui/word-wheel/ui-word-wheel.css');
 @import url('/ui/worldmap/ui-worldmap.css');
 
 /*
