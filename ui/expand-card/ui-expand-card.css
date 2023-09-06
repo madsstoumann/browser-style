@@ -1,0 +1,3 @@
+:where(.ui-expand-card) {
+	background: var(--GrayCanvas);
+}

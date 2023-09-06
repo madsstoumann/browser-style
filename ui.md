@@ -63,7 +63,7 @@ AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
-ExpandCard (https://www.apple.com/ipados/ipados-17-preview/)
+Expand Card (https://www.apple.com/ipados/ipados-17-preview/)
 Footer
 Locale Switcher (Choose country, Continue)
 Menu
