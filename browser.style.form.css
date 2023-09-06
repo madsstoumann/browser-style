@@ -36,6 +36,15 @@
     cursor: not-allowed;
   }
   &.--icon { --button-p: 1ch; }
+  &.--outline {
+    /* --hover-bg: currentColor; */
+    background: transparent;
+    border-color: currentColor;
+    /* &:hover {
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    } */
+  }
   &.--round { border-radius: 50%; }
   &.--toggle { --button-p: 0; }
 }

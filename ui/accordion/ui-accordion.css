@@ -4,6 +4,7 @@
 		border-block-end: 1px solid var(--ButtonBorder);
 		padding-block: 1.5ch;
 		list-style: none;
+		transition: background .2s ease-in-out;
 		& > a {
 			color: inherit;
 			align-items: center;
@@ -27,6 +28,9 @@
 			transition-duration: var(--_trsdu-close, .15s);
 			transition-timing-function: var(--_trstf-close, ease-out); 
 			& > * { margin: 0; padding: 0; }
+		}
+		@media (hover: hover) {
+			&:hover { background: var(--GrayHover); }
 		}
 	}
 }

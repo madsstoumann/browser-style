@@ -8,8 +8,9 @@
   --ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
   --CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
   --GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
-  --GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
-  --GrayMedium: color-mix(in srgb, CanvasText 65%, Canvas 35%);  
+  /* --GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
+  --GrayMedium: color-mix(in srgb, CanvasText 65%, Canvas 35%);   */
+  --GrayHover: linear-gradient(90deg, transparent, color-mix(in oklab, Canvas 98%, CanvasText 2%), transparent);
   --GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%);
   --LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
   --Mark: color-mix(in oklab, Mark 60%, Canvas 40%);

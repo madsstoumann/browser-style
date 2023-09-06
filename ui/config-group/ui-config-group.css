@@ -9,7 +9,11 @@
 		grid-template-columns: repeat(2, auto);
 		justify-content:space-between;
 		padding: 1ch 2ch;
+		transition: background .2s ease-in-out;
 		&:has(:checked) { border-color: var(--AccentColor); }
+		@media (hover: hover) {
+			&:hover { background: var(--GrayHover); }
+		}
 	}
 	& legend { margin-block-end: var(--label-rg); }
 }

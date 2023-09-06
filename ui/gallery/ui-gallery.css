@@ -16,5 +16,9 @@
     grid-row: span var(--gr, 1);
     inline-size: 100%;
     object-fit: cover;
+    transition: filter .2s ease-in-out;
+    @media (hover: hover) {
+			&:hover { filter: sepia(0.7) }
+		}
   }
 }

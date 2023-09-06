@@ -1,6 +1,7 @@
 Accordion — `<details>` and `<ul>`
 Analog Clock
-Avatar, Avatar List
+Avatar
+Avatar List
 Badge
 Blinds
 Breadcrumbs — custom `::marker`, icons

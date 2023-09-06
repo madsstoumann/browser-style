@@ -1,12 +1,12 @@
 .ui-color-compare {
 	--ui-color-compare-mask: url('https://assets.stoumann.dk/img/colors-base.webp');
 	--ui-color-compare-color-w: min(9cqi, 5em);
+	--ui-color-compare-thumb-c: var(--ButtonBorder);
 	--ui-color-compare-thumb-w: min(3cqi, 1.25em);
 	all: unset;
 	container-type: inline-size;
 	direction: ltr;
 	display: grid;
-
 	& * {
 		grid-area: 1 / 1;
 		position: relative;
@@ -42,17 +42,19 @@
 		touch-action: none;
 		&::-webkit-slider-runnable-track { height: 100%; }
 		&::-webkit-slider-thumb {
-			background-color: var(--ButtonBorder);
+			background-color: var(--ui-color-compare-thumb-c);
 			border-radius: 0;
 			cursor: ew-resize;
 			height: 100%;
+			transition: background-color .2s ease-in-out;
 			width: var(--ui-color-compare-thumb-w);
 		}
 		&::-moz-range-thumb {
-			background-color: var(--ButtonBorder);
+			background-color: var(--ui-color-compare-thumb-c);
 			border-radius: 0;
 			cursor: ew-resize;
 			height: 100%;
+			transition: background-color .2s ease-in-out;
 			width: var(--ui-color-compare-thumb-w);
 		}
 	}
@@ -67,4 +69,7 @@
 		mix-blend-mode: multiply;
 	}
 	& legend { padding-block-end: var(--label-rg); }
+	@media (hover: hover) {
+		&:hover { --ui-color-compare-thumb-c: var(--AccentColor); }
+	}
 }

@@ -1,5 +1,5 @@
 /* requires ui-scroll.css */
-.ui-carousel {
+:where(.ui-carousel) {
 	--button-p: 1ch;
 	--ui-scroll-gap: 2ch;
 	container-type: inline-size;

@@ -8,7 +8,6 @@
   container-type: inline-size;
 	display: grid;
 	place-content: center;
-
   & abbr {
 		font-size: 33cqi;
 		place-self: center;
@@ -22,6 +21,7 @@
   & img {
     border-radius: inherit;
     pointer-events: none;
+    transition: scale .2s ease-in-out;
   }
 }
 .ui-avatar-list {
@@ -30,4 +30,7 @@
 	& > *:not(:first-child) {
 		margin-inline-start: var(--ui-avatar-mis, -1cqi);
 	}
+  @media (hover: hover) {
+    & .ui-avatar:hover img { scale: 1.1; }
+  }
 }
