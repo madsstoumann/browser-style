@@ -1,0 +1,5 @@
+:where(.ui-share) {
+	& a {
+		color: currentColor;
+	}
+}

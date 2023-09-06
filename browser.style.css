@@ -121,6 +121,8 @@
   padding: 1ch;
 }
 
+[hidden] { display: none; }
+
 /* Screen Reader Only */
 [data-sr] {
   border: 0;
@@ -173,6 +175,7 @@
     --ColorWarning: hsl(33, 69%, 59%);
   }
 }
+
 
 /* Modifiers */
 .--dark { color-scheme: dark; }

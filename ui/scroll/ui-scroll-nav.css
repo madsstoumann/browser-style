@@ -1,4 +1,4 @@
-:has(.ui-scroll) {
+:where(.ui-carousel, .ui-slider) {
 	--ui-scroll-nav-gap: 2ch;
 	& > nav {
 		display: grid;

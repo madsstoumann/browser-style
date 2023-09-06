@@ -35,7 +35,8 @@
     color: var(--GrayText);
     cursor: not-allowed;
   }
-  &.--square { --button-p: 1ch; }
+  &.--icon { --button-p: 1ch; }
+  &.--round { border-radius: 50%; }
   &.--toggle { --button-p: 0; }
 }
 :where(button, label, legend, .ui-button) {
