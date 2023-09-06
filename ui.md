@@ -30,6 +30,7 @@ Input Button
 Map
 Meter
 Mood
+Notification
 One Time Code
 Password Strength
 Password Toggle
@@ -41,6 +42,7 @@ Range — With and without `lower-fill`
 Range — Circular
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
+Share
 Slider
 Spinner
 Step — Horizontal and vertical
@@ -64,8 +66,6 @@ ExpandCard (https://www.apple.com/ipados/ipados-17-preview/)
 Footer
 Locale Switcher (Choose country, Continue)
 Menu
-Notification (https://uxplanet.org/notification-banners-for-building-trust-factor-in-enterprise-ux-c73e35de83e2)
-Share (API)
 Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)
 Weather Forecast (https://rapidapi.com/blog/access-global-weather-data-with-these-weather-apis/)
 ---
