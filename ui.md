@@ -28,6 +28,7 @@ Image Select
 Indeterminate
 Input Button
 Map
+Meter
 Mood
 One Time Code
 Password Strength
@@ -36,7 +37,7 @@ Position
 Price Card
 Progress
 Progress — Circular
-Range — With and without `fill`
+Range — With and without `lower-fill`
 Range — Circular
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
@@ -52,18 +53,21 @@ Timeslot
 Toasts
 Transfer List
 Video Embed — YouTube and Vimeo
+Word Wheel
 World Map
 ---
 AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
+ExpandCard (https://www.apple.com/ipados/ipados-17-preview/)
 Footer
+Locale Switcher (Choose country, Continue)
 Menu
+Notification Banner (https://uxplanet.org/notification-banners-for-building-trust-factor-in-enterprise-ux-c73e35de83e2)
 Share (API)
 Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)
-Weather Forecast
-Word Wheel
+Weather Forecast (https://rapidapi.com/blog/access-global-weather-data-with-these-weather-apis/)
 ---
 address
 alert, confirm, prompt
