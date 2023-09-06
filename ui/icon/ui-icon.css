@@ -121,6 +121,9 @@ ui-icon[size*=xl] { --icon-fz: 140%; }
 :is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
 :is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
 
+/* <input type="checkbox"> + <ui-icon> */
+:checked + ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+
 /* Stroke */
 ui-icon[stroke*=xs] { --icon-bdw: 1px; }
 ui-icon[stroke*=md] { --icon-bdw: 3px; }

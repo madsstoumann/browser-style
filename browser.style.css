@@ -187,7 +187,7 @@
   background-color: var(--AccentColor);
   color: var(--AccentColorText);
 }
-.--accent-20 {
+.--accent-light {
   --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
   background-color: var(--ColorAccent-20);
   color: var(--CanvasText);
@@ -196,6 +196,11 @@
 	--hover-bg: color-mix(in srgb, var(--ColorError), Canvas 60%);
 	background-color: color-mix(in srgb, var(--ColorError), Canvas 80%);
 	color: var(--ColorError);
+}
+.--gray-light {
+  --hover-bg: color-mix(in srgb, var(--GrayCanvas), CanvasText 20%);
+  background-color: var(--GrayCanvas);
+  color: var(--CanvasText);
 }
 .--info {
 	--hover-bg: color-mix(in srgb, var(--ColorInfo), Canvas 60%);

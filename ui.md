@@ -19,6 +19,7 @@ Config Group
 Custom Color
 Digital Clock
 Drawer
+Expand Card
 Feature Compare
 File List
 FileTree
@@ -63,7 +64,6 @@ AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
-Expand Card (https://www.apple.com/ipados/ipados-17-preview/)
 Footer
 Locale Switcher (Choose country, Continue)
 Menu

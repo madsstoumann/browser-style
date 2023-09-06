@@ -1,3 +1,26 @@
 :where(.ui-expand-card) {
-	background: var(--GrayCanvas);
+	--ui-expand-card-gap: 2ch;
+	border-radius: var(--ui-expand-card-bdrs, 2ch);
+	display: grid;
+	position: relative;
+	& section {
+		/* background: var(--GrayCanvas); */
+		border-radius: inherit;
+		grid-area: 1 / -1;
+		padding: var(--ui-expand-card-gap);
+		transition: opacity .2s ease-in-out;
+		&:last-of-type {
+			/* background: var(--AccentColor); */
+			opacity: 0;
+		}
+	}
+	& .ui-button {
+		position: absolute;
+		inset-block: auto var(--ui-expand-card-gap);
+		inset-inline: auto var(--ui-expand-card-gap);
+	}
+	&:has(:checked) {
+		& section:first-of-type { opacity: 0; }
+		& section:last-of-type { opacity: 1; }
+	}
 }
