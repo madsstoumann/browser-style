@@ -1,0 +1,13 @@
+:where(.ui-notification, .ui-toast) {
+	--button-bg: transparent;
+	--button-p: .5ch;
+	--hover-bg: transparent;
+	align-items: center;
+	background: var(--ui-notification-bg, var(--GrayCanvas));
+	border: 0;
+	display: flex;
+	font-size: smaller;
+	gap: 1ch;
+	justify-content: space-between;
+	padding: 1ch 2ch;
+}

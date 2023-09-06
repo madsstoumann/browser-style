@@ -64,7 +64,7 @@ ExpandCard (https://www.apple.com/ipados/ipados-17-preview/)
 Footer
 Locale Switcher (Choose country, Continue)
 Menu
-Notification Banner (https://uxplanet.org/notification-banners-for-building-trust-factor-in-enterprise-ux-c73e35de83e2)
+Notification (https://uxplanet.org/notification-banners-for-building-trust-factor-in-enterprise-ux-c73e35de83e2)
 Share (API)
 Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)
 Weather Forecast (https://rapidapi.com/blog/access-global-weather-data-with-these-weather-apis/)
