@@ -4,13 +4,11 @@
 	display: grid;
 	position: relative;
 	& section {
-		/* background: var(--GrayCanvas); */
 		border-radius: inherit;
 		grid-area: 1 / -1;
 		padding: var(--ui-expand-card-gap);
 		transition: opacity .2s ease-in-out;
 		&:last-of-type {
-			/* background: var(--AccentColor); */
 			opacity: 0;
 		}
 	}

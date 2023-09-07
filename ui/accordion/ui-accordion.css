@@ -1,4 +1,4 @@
-.ui-accordion {
+ul.ui-accordion {
 	all: unset;
 	& > li {
 		border-block-end: 1px solid var(--ButtonBorder);
@@ -20,7 +20,7 @@
 		& > div {
 			display: grid;
 			grid-template-rows: 0fr;
-			transition: grid-template-rows var(--_trsdu, .3s) var(--_trstf, ease-in);
+			transition: grid-template-rows 0.25s cubic-bezier(.4, 0, .2, 1);
 			& > * { overflow: hidden; }
 		}
 		&:is(:target, .--open) > div { grid-template-rows: 1fr; }
@@ -31,6 +31,29 @@
 		}
 		@media (hover: hover) {
 			&:hover { background: var(--GrayHover); }
+		}
+	}
+}
+
+details.ui-accordion {
+	& summary {
+		align-items: center;
+		border-block-end: 1px solid var(--ButtonBorder);
+		color: inherit;
+		display: flex;
+		font-size: larger;
+		font-weight: 500;
+		justify-content: space-between;
+		padding-block: 1.5ch;
+		text-decoration: none;
+		transition: background .2s ease-in-out;
+	}
+	&:not([open]) summary:hover { background: var(--GrayHover); }
+	&[open] summary { 
+		border: 0; 
+		& + div {
+			border-block-end: 1px solid var(--ButtonBorder);
+			padding-block: 0 1.5ch;
 		}
 	}
 }
