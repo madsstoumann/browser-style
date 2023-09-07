@@ -17,6 +17,7 @@ Color Swatch
 Countdown
 Config Group
 Custom Color
+Details / `<ui-details>`
 Digital Clock
 Drawer
 Expand Card
@@ -78,7 +79,7 @@ circular-menu / arc (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws
 color-picker
 dark-mode toggle
 day-planner
-details / ui-details
+
 dialog
 dock (with popover)
 fadeout (mask)

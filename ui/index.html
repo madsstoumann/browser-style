@@ -462,6 +462,18 @@
 		<input type="color" class="ui-custom-color" value="#007BFF">
 	</label>
 
+	<h2 id="details">Details</h2>
+	Custom element, <code>&lt;ui-details&gt;</code>
+
+	<ui-details>
+    <ui-summary>Veggie Menu<ui-icon type="chevron down"></ui-icon></ui-summary>
+    <ui-expand>
+      <div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
+      </div>
+    </ui-expand>
+  </ui-details>
+
 	<h2>Digital Clock</h2>
 	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
 	<ol class="ui-digital-clock">
@@ -1304,6 +1316,7 @@
 		import uiCarousel from './carousel/uiCarousel.js';
 		import uiChat from './chat/uiChat.js';
 		import uiCountdown from './countdown/uiCountdown.js';
+		import uiDetails from './details/uiDetails.js';
 		import uiDigitalClock from './digital-clock/uiDigitalClock.js';
 		import uiFileList from './file-list/uiFileList.js';
 		import uiGallery from './gallery/uiGallery.js';
@@ -1325,6 +1338,7 @@
 		init('.ui-carousel, .ui-slider', uiCarousel);
 		init('.ui-chat', uiChat);
 		init('.ui-countdown', uiCountdown);
+		init('ui-details', uiDetails);
 		init('.ui-digital-clock', uiDigitalClock);
 		init('[type=file][multiple]', uiFileList);
 		init('.ui-gallery', uiGallery);
