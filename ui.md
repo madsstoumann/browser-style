@@ -5,6 +5,7 @@ Avatar List
 Badge
 Blinds
 Breadcrumbs — custom `::marker`, icons
+Button
 Button Group
 Calculator
 Card
@@ -45,6 +46,7 @@ Range — With and without `lower-fill`
 Range — Circular
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
+Scroll Navigation
 Share
 Slider
 Spinner
@@ -58,6 +60,7 @@ Timeslot
 Toasts
 Transfer List
 Video Embed — YouTube and Vimeo
+Word Replace
 Word Wheel
 World Map
 ---

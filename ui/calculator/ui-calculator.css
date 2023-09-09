@@ -1,4 +1,6 @@
 :where(.ui-calculator) {
+  --GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
+  --GrayMedium: color-mix(in srgb, CanvasText 65%, Canvas 35%);  
   background-color: var(--GrayDark);
   border-radius: var(--input-bdrs);
   border: 1px solid var(--GrayDark);

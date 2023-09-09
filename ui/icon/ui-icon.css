@@ -88,14 +88,25 @@ ui-icon[type~=up] { rotate: -90deg; }
 ui-icon[type~=upleft] { rotate: -45deg; }
 ui-icon[type~=upright] { rotate: -135deg; }
 
-/* First, Last */
-ui-icon[type*=first]::before,
-ui-icon[type*=last]::before {
+/* Play, Pause, Stop, First, Last */
+ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop] {
 	background: currentColor;
-	height: 1em;
-	translate: 1em calc(0px - var(--icon-bdw));
-	width: var(--icon-bdw);
+	border-radius: 0;
 }
+ui-icon[type*=pause] { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
+ui-icon[type*=play] { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
+ui-icon[type*=stop] { clip-path: inset(0 0 0 0 round 1px); }
+ui-icon[type*=first],
+ui-icon[type*=last] {
+	translate: .22em 0;
+	&::before {
+		background: currentColor;
+		height: 1em;
+		translate: .88em calc(0px - var(--icon-bdw));
+		width: var(--icon-bdw);
+	}
+}
+ui-icon[type*=last] { translate: -.22em 0; }
 
 /* Margin */
 ui-icon[margin=start] { --_mis: 1ch; }

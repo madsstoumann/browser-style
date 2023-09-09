@@ -1,5 +1,6 @@
 @import url('browser.style.form.css');
 @import url('ui/icon/ui-icon.css');
+@import url('browser.style.layout.css');
 
 :root {
   --AccentColor: hsl(211, 100%, 50%);
@@ -8,8 +9,6 @@
   --ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
   --CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
   --GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
-  /* --GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
-  --GrayMedium: color-mix(in srgb, CanvasText 65%, Canvas 35%);   */
   --GrayHover: linear-gradient(90deg, transparent, color-mix(in oklab, Canvas 98%, CanvasText 2%), transparent);
   --GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%);
   --LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
@@ -182,8 +181,9 @@
 .--dark { color-scheme: dark; }
 .--light { color-scheme: light; }
 
-.--accent {
+:where(.--accent) {
   --hover-bg: color-mix(in srgb, var(--AccentColor), var(--CanvasText) 20%);
+  --hover-c: var(--AccentColorText);
   background-color: var(--AccentColor);
   color: var(--AccentColorText);
 }
@@ -191,6 +191,11 @@
   --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
   background-color: var(--ColorAccent-20);
   color: var(--CanvasText);
+}
+.--black {
+  --hover-bg: color-mix(in srgb, CanvasText, Canvas 25%);
+  background-color: var(--CanvasText);
+  color: Canvas;
 }
 .--error {
 	--hover-bg: color-mix(in srgb, var(--ColorError), Canvas 60%);
@@ -224,6 +229,13 @@
 .--error-bg, .--info-bg, .--success-bg, .--warning-bg { color: #FFF; }
 
 /* TODO! */
+.--xxsmall { font-size: xx-small; }
+.--xsmall { font-size: x-small; }
+.--small { font-size: small; }
+.--medium { font-size: medium; }
+.--large { font-size: large; }
+.--xlarge { font-size: x-large; }
+.--xxlarge { font-size: xx-large; }
 /* .--sm { width: 1em; }
 .--md { width: 2em; }
 .--lg { width: 3em; }

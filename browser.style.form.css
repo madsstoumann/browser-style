@@ -22,34 +22,38 @@
   &::placeholder { color: var(--GrayText); }
 }
 :where(button, .ui-button), [type=file]::file-selector-button {
+  align-items: center;
   background-color: var(--button-bg, var(--ButtonFace));
   border-color: transparent;
   color: var(--button-c, inherit);
   display: inline-grid;
+  gap: 1ch;
+  grid-auto-flow: column;
   line-height: normal;
   padding: var(--button-p);
   place-content: center;
   user-select: none;
-  &[disabled] {
-    background-color: var(--GrayCanvas);
-    color: var(--GrayText);
+  &:where([disabled], .--disabled) {
     cursor: not-allowed;
+    opacity: .33;
   }
   &.--icon {
     --button-p: 1ch;
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* used from label */
+    height: auto;
   }
   &.--outline {
-    /* --hover-bg: currentColor; */
-    background: transparent;
-    border-color: currentColor;
-    /* &:hover {
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    } */
+    &:not(:hover) {
+      background: transparent;
+      border-color: currentColor;
+      &.--accent { color: var(--AccentColor); } 
+      &.--black { color: var(--CanvasText); }
+    }
+    &.--icon { border-width: 2px; }
   }
-  /* &.--round { border-radius: 50%; } */
+  &.--rounded { border-radius: 3em; }
   &.--toggle { --button-p: 0; }
 }
 :where(button, label, legend, .ui-button) {
@@ -269,12 +273,13 @@
 
 /* Media Queries */
 @media (hover: hover) {
-  :where(button, .ui-button, [type=submit]) {
-    transition: background .2s ease-in-out;
+  :is(button, .ui-button) {
+    transition: all .2s ease-in-out;
     &:hover {
       background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
-      color: var(--hover-c, var(--button-c, inherit));
+      /* color: var(--hover-c, var(--button-c, currentColor)); */
     }
+    &.--outline:hover { border-color: currentColor; }
   }
 }
 @media (prefers-reduced-motion: no-preference) {

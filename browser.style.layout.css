@@ -1,0 +1,8 @@
+/* FOR DEMO ONLY */
+:where(.ly-flex-wrap) {
+	align-items: start;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5ch;
+}
+h2 a { color: inherit; --VisitedText: currentColor; }

@@ -10,6 +10,7 @@
 		&:hover:not([aria-selected=true]) { border-color: var(--ButtonBorder); }
 	}
 	& [role=tablist] {
+		display: flex;
 		gap: var(--ui-tabs-gap, 3ch);
 		justify-content: start;
 	}
