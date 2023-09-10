@@ -16,7 +16,7 @@
   --MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
   --VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
 
-  --ColorAccent-20: color-mix(in srgb, var(--AccentColor), Canvas 80%);
+  --ColorAccentLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
   --ColorInfo: hsl(210, 60%, 46%);
   --ColorError: hsl(360, 60%, 46%);
   --ColorSuccess: hsl(136, 41%, 41%);
@@ -181,15 +181,16 @@
 .--dark { color-scheme: dark; }
 .--light { color-scheme: light; }
 
+/* Colors */
 :where(.--accent) {
+  --_bg: var(--AccentColor);
   --hover-bg: color-mix(in srgb, var(--AccentColor), var(--CanvasText) 20%);
-  --hover-c: var(--AccentColorText);
-  background-color: var(--AccentColor);
+  background-color: var(--_bg);
   color: var(--AccentColorText);
 }
 .--accent-light {
   --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
-  background-color: var(--ColorAccent-20);
+  background-color: var(--ColorAccentLight);
   color: var(--CanvasText);
 }
 .--black {
@@ -213,6 +214,7 @@
 	color: var(--ColorInfo);
 }
 .--success {
+  --_bg: var(--ColorSuccess);
 	--hover-bg: color-mix(in srgb, var(--ColorSuccess), Canvas 60%);
 	background-color: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
 	color: var(--ColorSuccess);

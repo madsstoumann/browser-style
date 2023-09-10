@@ -1,16 +1,11 @@
 :where(.ui-word-replace) {
-	--ui-word-replace-speed: 1s;
-	--ui-word-replace-words: 4;
-	/* container-type: inline-size; */
 	display: flex;
 	flex-wrap: wrap;
-	font-size: 64px;
-	font-weight: 900;
+	font-size: var(--ui-word-replace-fs, 4rem);
+	font-weight: var(--ui-word-replace-fw, 900);
 	column-gap: .5ch;
-	
-	letter-spacing: -0.576px;
-	line-height: 68px;
-
+	letter-spacing: var(--ui-word-replace-ls, -0.03em);
+	line-height: var(--ui-word-replace-lh, 1.0625);
 	& div {
 		clip-path: inset(2px 0 0 0);
 		height: calc(1lh + 2px);
@@ -22,44 +17,32 @@
 		display: grid;
 		& li { list-style: none; }
 	}
-
 	&.--spin li {
 		animation:
-			spin-word calc(var(--ui-word-replace-speed) * var(--ui-word-replace-words))
-			var(--_delay, 0s) cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+			spin-word calc(var(--_speed, 1s) * var(--_length, 1))
+			calc(var(--_speed, 1s) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
 		grid-area: 1 / -1;
 		translate: 0 1lh;
 	}
 	&.--step li {
 		animation:
-			step-word calc(var(--ui-word-replace-speed) * var(--ui-word-replace-words))
-			steps(var(--ui-word-replace-words), jump-none) infinite;
+			step-word calc(var(--_speed, 1s) * var(--_length, 1))
+			steps(var(--_length, 1), jump-none) infinite;
 	}
 }
 @keyframes spin-word {
-	7.14285% {
+	12.5% {
 		opacity: 1;
 		translate: 0; 
 	}
-	28.571% { 
+	25% { 
 		opacity: 0;
 		translate: 0 -1lh;
 	}
 	100% { 
 		opacity: 0;
 	}
-
 }
-
-/* @keyframes spin-word {
-	50% { 
-		opacity: 1;
-		translate: 0; }
-	100% { 
-		opacity: 0;
-		translate: 0 -1lh;
-	}
-} */
 @keyframes step-word {
-	to { translate: 0 calc((-1lh * var(--ui-word-replace-words)) + 1lh); }
+	to { translate: 0 calc((-1lh * var(--_length)) + 1lh); }
 }

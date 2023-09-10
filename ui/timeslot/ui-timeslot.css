@@ -34,7 +34,7 @@
 			white-space: nowrap;
 		}
 		&:has(input:checked) {
-			background-color: var(--ColorAccent-20);
+			background-color: var(--ColorAccentLight);
 			& legend {
 				background-color: var(--AccentColor);
 				color: var(--AccentColorText);

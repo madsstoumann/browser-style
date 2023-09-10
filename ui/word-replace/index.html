@@ -13,17 +13,17 @@
 
 	<h2>Word Replace</h2>
 	<p>With <code>--spin</code>-modifier:</p>
-	<div class="ui-word-replace --spin">
+	<div class="ui-word-replace --spin" style="--_speed:2s;">
 		<span>Bring back</span>
 		<div>
-			<ul style="--ui-word-replace-speed:2s;--ui-word-replace-words:7;">
-				<li style="--_delay:0s">simplicity</li>
-				<li style="--_delay:2s">sanity</li>
-				<li style="--_delay:4s">stability</li>
-				<li style="--_delay:6s">serenity</li>
-				<li style="--_delay:8s">solidarity</li>
-				<li style="--_delay:10s">significance</li>
-				<li style="--_delay:12s">synthpop</li>
+			<ul>
+				<li>simplicity</li>
+				<li>sanity</li>
+				<li>stability</li>
+				<li>serenity</li>
+				<li>solidarity</li>
+				<li>significance</li>
+				<li>synthpop</li>
 			</ul>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 	<div class="ui-word-replace --step">
 		<span>Bring back</span>
 		<div>
-			<ul style="--ui-word-replace-words:7;">
+			<ul>
 				<li>simplicity</li>
 				<li>sanity</li>
 				<li>stability</li>
@@ -46,9 +46,10 @@
 
 <script type="module">
 		import { common, init } from './../../assets/js/common.js';
+		import uiWordReplace from './uiWordReplace.js';
 
 		common();
-		// init('ul.ui-accordion', listTarget);
+		init('.ui-word-replace', uiWordReplace);
 	</script>
 </body>
 </html>

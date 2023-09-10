@@ -37,6 +37,9 @@
     cursor: not-allowed;
     opacity: .33;
   }
+  &:focus-visible {
+    outline-offset: .3em;
+  }
   &.--icon {
     --button-p: 1ch;
     aspect-ratio: 1 / 1;
@@ -277,9 +280,13 @@
     transition: all .2s ease-in-out;
     &:hover {
       background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
+      box-shadow: color-mix(in srgb, var(--_bg, rgba(174, 181, 188)), transparent 75%) 0px 0px 0px .25em;
       /* color: var(--hover-c, var(--button-c, currentColor)); */
     }
-    &.--outline:hover { border-color: currentColor; }
+    &.--outline:hover {
+      /* background-color: currentColor; */
+      border-color: currentColor;
+    }
   }
 }
 @media (prefers-reduced-motion: no-preference) {
