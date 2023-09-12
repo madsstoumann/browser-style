@@ -485,6 +485,45 @@
 		<li></li>
 	</ol>
 
+	<h2>Dock</h2>
+	<ul class="ui-dock">
+		<li class="--open">
+			<a href="#home">
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
+					<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
+					<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
+				</svg>
+			</a>
+		</li>
+		<li>
+			<a href="#search">
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+					<path d="M21 21l-6 -6"></path>
+				</svg>
+			</a>
+		</li>
+		<li>
+			<a href="#following">
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
+					<path d="M16 19h6"></path>
+					<path d="M19 16v6"></path>
+					<path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path>
+				</svg>
+			</a>
+		</li>
+		<li>
+			<a href="#settings">
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
+					<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
+				</svg>
+			</a>
+		</li>
+	</ul>
+
 	<h2 id="drawer">Drawer</h2>
 	<details class="ui-drawer">
 		<summary>Open drawer from left</summary>
@@ -1316,7 +1355,7 @@
 
 		common();
 
-		init('.ui-accordion, .ui-blinds > ul', listTarget);
+		init('.ui-accordion, .ui-blinds > ul, .ui-dock', listTarget);
 		init('.ui-analog-clock', uiAnalogClock);
 		init('.ui-calculator', uiCalculator);
 		init('.ui-carousel, .ui-slider', uiCarousel);
