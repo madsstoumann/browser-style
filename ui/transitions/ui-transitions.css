@@ -1,0 +1,123 @@
+/**
+ * Transition Module
+ * @version 1.0.36
+ * @summary 12-09-2023
+ * @author Mads Stoumann
+ * @description Using micro-transition-classes to handle transitions, timing-functions, delays and duration.
+ * Credits to AOS: https://michalsnik.github.io/aos/ and Open Props: https://open-props.style/
+
+ * Abbreviations:
+ * .trs-:   transition-name
+ * .trsde-: transition-delay
+ * .trsdu-: transition-duration
+ * .trstf-: transition-timing-function (easing)
+
+ * To trigger a transition, add the class `trs` to the element.
+ * You should only add the class to the *outermost* element with a `trs-`, children will be animated automatically.
+*/
+
+@import 'https://unpkg.com/open-props@1.4.14/src/props.easing.css';
+
+:where([class*="trs-"]) {
+	--_dg: 100deg;
+	--_tx: 55px;
+	--_ty: 110px;
+	--_zi: 0.6;
+	--_zo: 1.2;
+}
+
+:is([class*="trs-"].trs) {
+	opacity: 1;
+	transform: translateZ(0) scale(1);
+	transition: all var(--_du, 400ms) var(--_de, 0ms) var(--_tf, var(--ease-1, ease));
+}
+
+:is(.trs [class*="trs-"]) {
+	opacity: 1;
+	transform: translateZ(0);
+	transition-timing-function: var(--_tf, ease-in-out);
+	transition-delay: var(--_de, 0ms);
+	transition-duration: var(--_du, 400ms);
+}
+
+/* TRANSITIONS */
+
+/* Fade */
+.trs-fdd { opacity: 0; transform: translate3d(0px, calc(-1 * var(--_ty)), 0); }
+.trs-fdl { opacity: 0; transform: translate3d(calc(-1 * var(--_tx)), calc(-1 * var(--_ty)), 0); }
+.trs-fdr { opacity: 0; transform: translate3d(var(--_tx), calc(-1 * var(--_ty)), 0); }
+.trs-fal { opacity: 0; transform: translate3d(calc(-1 * var(--_tx)), 0px, 0); }
+.trs-far { opacity: 0; transform: translate3d(var(--_tx), 0px, 0); }
+.trs-fau { opacity: 0; transform: translate3d(0px, var(--_ty), 0); }
+.trs-ful { opacity: 0; transform: translate3d(calc(-1 * var(--_tx)), var(--_ty), 0); }
+.trs-fur { opacity: 0; transform: translate3d(var(--_tx), var(--_ty), 0); }
+
+/* Flip */
+.trs-fld { backface-visibility: hidden; transform: perspective(2500px) rotateX(var(--_dg)); }
+.trs-fll { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(0deg - var(--_dg))); }
+.trs-flr { backface-visibility: hidden; transform: perspective(2500px) rotateY(var(--_dg)); }
+.trs-flu { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))); }
+
+/* Zoom */
+.trs-zoi { opacity: 0; transform: scale(var(--_zi)); }
+.trs-zod { opacity: 0; transform: translate3d(0px, calc(-1 * var(--_ty)), 0) scale(var(--_zi)); }
+.trs-ziu { opacity: 0; transform: translate3d(0px, var(--_ty), 0) scale(var(--_zi)); }
+.trs-zoo { opacity: 0; transform: scale(var(--_zo)) ; }
+
+/* DELAYS */
+.trsde-0 { --_de: 0ms; }
+.trsde-25 { --_de: 25ms; }
+.trsde-50 { --_de: 50ms; }
+.trsde-75 { --_de: 75ms; }
+.trsde-100 { --_de: 100ms; }
+.trsde-150 { --_de: 150ms; }
+.trsde-250 { --_de: 250ms; }
+.trsde-500 { --_de: 500ms; }
+.trsde-750 { --_de: 750ms; }
+.trsde-1000  { --_de: 1000ms; }
+.trsde-1500  { --_de: 1500ms; }
+.trsde-2000 { --_de: 2000ms; }
+
+/* DURATIONS */
+.trsdu-100 { --_du: 100ms; }
+.trsdu-200 { --_du: 200ms; }
+.trsdu-300 { --_du: 300ms; }
+.trsdu-400 { --_du: 400ms; }
+.trsdu-500 { --_du: 500ms; }
+.trsdu-750 { --_du: 750ms; }
+.trsdu-1000 { --_du: 1000ms; }
+.trsdu-1500 { --_du: 1500ms; }
+.trsdu-2000 { --_du: 2000ms; }
+
+/* TIMING FUNCTIONS */
+.trstf-eas-1 { --_tf: var(--ease-1); }
+.trstf-eas-2 { --_tf: var(--ease-2); }
+.trstf-eas-3 { --_tf: var(--ease-3); }
+.trstf-eas-4 { --_tf: var(--ease-4); }
+.trstf-eas-5 { --_tf: var(--ease-5); }
+.trstf-eai-1 { --_tf: var(--ease-in-1); }
+.trstf-eai-2 { --_tf: var(--ease-in-2); }
+.trstf-eai-3 { --_tf: var(--ease-in-3); }
+.trstf-eai-4 { --_tf: var(--ease-in-4); }
+.trstf-eai-5 { --_tf: var(--ease-in-5); }
+.trstf-eao-1 { --_tf: var(--ease-out-1); }
+.trstf-eao-2 { --_tf: var(--ease-out-2); }
+.trstf-eao-3 { --_tf: var(--ease-out-3); }
+.trstf-eao-4 { --_tf: var(--ease-out-4); }
+.trstf-eao-5 { --_tf: var(--ease-out-5); }
+.trstf-eio-1 { --_tf: var(--ease-in-out-1); }
+.trstf-eio-2 { --_tf: var(--ease-in-out-2); }
+.trstf-eio-3 { --_tf: var(--ease-in-out-3); }
+.trstf-eio-4 { --_tf: var(--ease-in-out-4); }
+.trstf-eio-5 { --_tf: var(--ease-in-out-5); }
+.trstf-eel-1 { --_tf: var(--ease-elastic-1); }
+.trstf-eel-2 { --_tf: var(--ease-elastic-2); }
+.trstf-eel-3 { --_tf: var(--ease-elastic-3); }
+.trstf-eel-4 { --_tf: var(--ease-elastic-4); }
+.trstf-eel-5 { --_tf: var(--ease-elastic-5); }
+.trstf-esq-1 { --_tf: var(--ease-squish-1); }
+.trstf-esq-2 { --_tf: var(--ease-squish-2); }
+.trstf-esq-3 { --_tf: var(--easing-squish-3); }
+.trstf-esq-4 { --_tf: var(--easing-squish-4); }
+.trstf-esq-5 { --_tf: var(--easing-squish-5); }
+.trstf-lin { --_tf: linear; }

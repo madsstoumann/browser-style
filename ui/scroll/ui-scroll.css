@@ -10,4 +10,8 @@
 	-ms-overflow-style: none;
 	&::-webkit-scrollbar { display: none; }
 	&.--auto { scroll-behavior: auto; }
+	& > * {
+		flex: 0 0 100%;
+		scroll-snap-align: start;
+	}
 }

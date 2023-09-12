@@ -9,7 +9,6 @@
 		border-radius: inherit;
 		& >* {
 			border-radius: inherit;
-			flex: 0 0 100%;
 		}
 	}
 }

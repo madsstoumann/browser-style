@@ -15,6 +15,7 @@ export default function uiCarousel(node) {
     prev.disabled = (index === 0)
     next.disabled = (index === pages.length - 1)
     dots.forEach((dot, i) => dot.ariaSelected = i === index)
+    pages.forEach((elm, current) => elm.classList.toggle('--active', index === current) )
   }
   next.addEventListener('click', () => {
     index++; if (index >= pages.length) index = 0;
