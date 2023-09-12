@@ -20,6 +20,7 @@ Config Group
 Custom Color
 Details / `<ui-details>`
 Digital Clock
+Dock
 Drawer
 Expand Card
 Feature Compare

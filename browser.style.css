@@ -16,7 +16,7 @@
   --MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
   --VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
 
-  --ColorAccentLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
+  --AccentColorLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
   --ColorInfo: hsl(210, 60%, 46%);
   --ColorError: hsl(360, 60%, 46%);
   --ColorSuccess: hsl(136, 41%, 41%);
@@ -190,7 +190,7 @@
 }
 .--accent-light {
   --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
-  background-color: var(--ColorAccentLight);
+  background-color: var(--AccentColorLight);
   color: var(--CanvasText);
 }
 .--black {

@@ -2,12 +2,16 @@
 	--ui-timeline-bdw: 2px;
 	--ui-timeline-dot-sz: 1em;
 	--ui-timeline-dot-gap: 1.5ch;
+	--ui-timeline-gap: 2ch;
 	--ui-timeline-pi: 1.5ch;
 	all: unset;
 	display: grid;
 	font-size: smaller;
-	gap: var(--ui-timeline-gap, 2ch);
+	gap: var(--ui-timeline-gap);
 	grid-auto-flow: column;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+	&::-webkit-scrollbar { display: none; }
 	& li {
 		align-content: start;
 		border-radius: var(--input-bdrs);
@@ -52,6 +56,14 @@
 				box-shadow: 0 0 0 calc(var(--_sz) - var(--ui-timeline-bdw)) Canvas, 0 0 0 var(--_sz) var(--AccentColor);
 			}
 		}
+	}
+	&.--horizontal {
+		grid-auto-columns: calc(50% - (var(--ui-timeline-gap) / 2));
+		overflow-x: auto;
+		padding-block-start: .33em;
+		scroll-behavior: smooth;
+		scroll-snap-points-x: repeat(100%);
+		scroll-snap-type: x mandatory;
 	}
 	&.--vertical {
 		grid-auto-flow: row;
