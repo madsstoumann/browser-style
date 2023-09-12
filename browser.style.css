@@ -22,6 +22,9 @@
   --ColorSuccess: hsl(136, 41%, 41%);
   --ColorWarning: hsl(33, 99%, 59%);
 
+  --Shade-20: color-mix(in srgb, CanvasText, transparent 80%);
+  --Shade-30: color-mix(in srgb, CanvasText, transparent 70%);
+
   --ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
   --ff-form: ui-sans-serif, system-ui;
   --ff-headers: inherit;
