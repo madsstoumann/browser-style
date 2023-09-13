@@ -1,0 +1,16 @@
+:where(.ui-progress-timer) {
+	background: var(--GrayCanvas);
+	height: .33em;
+	width: 100%;
+	& > * {
+		background-color: var(--AccentColor);
+		height: 100%;
+		width: 100%;
+		scale: 0 1;
+		transform-origin: 0% 0%;
+		animation: progressTimer 5s linear infinite;
+	}
+}
+@keyframes progressTimer {
+	to { scale: 1 1; }
+}

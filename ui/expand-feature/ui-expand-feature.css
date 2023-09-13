@@ -1,0 +1,70 @@
+:where(.-ui-expand-feature) {
+	--ui-expand-feature-bdrs: 25px;
+	--ui-expand-feature-ibs: 3em;
+	--ui-expand-feature-ii: 1em;
+	--ui-expand-feature-p: 2ch;
+	
+	&::backdrop { /* Bug: Doesn't support background set with var(--) */
+		background-color: color-mix(in srgb, CanvasText, transparent 48%);
+		backdrop-filter: blur(20px);
+	}
+	&:popover-open {
+		@starting-style {
+			opacity: 0;
+			translate: 0 100vh;
+		}
+		align-content: start;
+		background: Canvas;
+		border-radius: var(--ui-expand-feature-bdrs) var(--ui-expand-feature-bdrs) 0 0;
+		border: 0;
+		display: grid;
+		height: calc(100vh - var(--ui-expand-feature-ibs));
+		inset-block: var(--ui-expand-feature-ibs) 0;
+		inset-inline: var(--ui-expand-feature-ii);
+		opacity: 1;
+		padding: var(--ui-expand-feature-p);
+		position: fixed;
+		transition: all .4s cubic-bezier(.4, 0, .2, 1);
+		translate: 0;
+		width: calc(100vw - var(--ui-expand-feature-ii) * 2);
+
+		& [popovertargetaction="hide"] {
+			place-self: start end;
+		}
+		& article {
+			padding-inline: var(--ui-expand-feature-p);
+		}
+	}
+	&.popover-open {
+		/* Fallback for browsers that don't support :popover-open. Requires JavaScript. */
+	}
+}
+.ui-expand-feature-trigger {
+	--button-p: .75ch;
+	--hover-bg: var(--GrayCanvas);
+	gap: 0;
+	& span {
+		clip-path: inset(50%);
+		height: 1px;
+		opacity: 0;
+		transition: all .2s ease-in;
+		width: 1px;
+	}
+	& ui-icon {
+		transition: all .2s ease-in;
+	}
+	&:focus-visible,		
+	&:hover {
+		--button-p: .75ch .75ch .75ch 2.5ch;
+		gap: 1ch;
+		& span {
+			clip-path: none;
+			height: auto;
+			opacity: 1;
+			width: max-content;
+		}
+		& ui-icon {
+			rotate: 180deg;
+		}
+	}
+}

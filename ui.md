@@ -23,6 +23,7 @@ Digital Clock
 Dock
 Drawer
 Expand Card
+Expand Feature
 Feature Compare
 File List
 FileTree
@@ -43,6 +44,7 @@ Position
 Price Card
 Progress
 Progress — Circular
+Progress Timer
 Range — With and without `lower-fill`
 Range — Circular
 Rating — Star, Heart and Thumb
@@ -70,7 +72,6 @@ AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
-Expand Feature
 Footer
 Locale Switcher (Choose country, Continue)
 Menu

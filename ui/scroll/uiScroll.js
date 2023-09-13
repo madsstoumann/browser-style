@@ -1,5 +1,6 @@
 export default function uiScroll(scroll, settings = {}) {
   const config = Object.assign({
+    scrollAutoPlay: 0,
     scrollNav: 'ui-scroll-nav',
     scrollNext: `<ui-icon type="chevron right"></ui-icon>`,
     scrollPrev: `<ui-icon type="chevron left"></ui-icon>`,
@@ -35,13 +36,20 @@ export default function uiScroll(scroll, settings = {}) {
     updateUI()
   })
   scrollToPage(0, 'auto')
+
+  if (config.scrollAutoPlay) {
+    setInterval(() => {
+      index++; if (index >= length) index = 0
+      scrollToPage(index)
+    }, parseInt(config.scrollAutoPlay, 10))
+  }
 }
 
 function uiScrollNav(node, items, config = {}) { 
   const nav = node.nextElementSibling || document.createElement('nav')
+  const dots = nav.querySelector('ol') || document.createElement('ol')
   const next = nav.querySelector('[data-action=next]') || document.createElement('button')
   const prev = nav.querySelector('[data-action=prev]') || document.createElement('button')
-  let dots = nav.querySelector('ol') || document.createElement('ol')
 
   if (!nav.children.length) {
     dots.innerHTML = `<li></li>`.repeat(items)

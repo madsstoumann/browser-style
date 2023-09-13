@@ -21,6 +21,7 @@
 @import url('/ui/dock/ui-dock.css');
 @import url('/ui/drawer/ui-drawer.css');
 @import url('/ui/expand-card/ui-expand-card.css');
+@import url('/ui/expand-feature/ui-expand-feature.css');
 @import url('/ui/feature-compare/ui-feature-compare.css');
 @import url('/ui/file-list/ui-file-list.css');
 @import url('/ui/file-tree/ui-file-tree.css');
@@ -35,6 +36,7 @@
 @import url('/ui/password-strength/ui-password-strength.css');
 @import url('/ui/position/ui-position.css');
 @import url('/ui/progress-circular/ui-progress-circular.css');
+@import url('/ui/progress-timer/ui-progress-timer.css');
 @import url('/ui/price-card/ui-price-card.css');
 @import url('/ui/range-circular/ui-range-circular.css');
 @import url('/ui/rating/ui-rating.css');
