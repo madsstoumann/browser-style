@@ -60,6 +60,7 @@ Timeline — Horizontal and vertical
 Timeslot
 Toasts
 Transfer List
+Transition
 Video Embed — YouTube and Vimeo
 Word Replace
 Word Wheel
@@ -69,6 +70,7 @@ AutoComplete
 Calendar
 Color Grid
 Data Table (Resizable Columns, Search etc.)
+Expand Feature
 Footer
 Locale Switcher (Choose country, Continue)
 Menu

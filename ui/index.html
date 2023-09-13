@@ -280,7 +280,7 @@
 			</div>
 		</div>
 
-		<nav>
+		<nav class="ui-scroll-nav">
 			<button data-action="prev">
 				<ui-icon type="chevron left"></ui-icon>
 			</button>
@@ -1006,25 +1006,12 @@
 
 	<h2>Slider</h2>
 	<p>Use with modifier-classes <code>--nav-inside</code> or <code>--nav-outside</code>.</p>
-	<div class="ui-slider --nav-inside">
-		<div class="ui-scroll">
+	<div class="ui-slider">
+		<div class="ui-scroll" data-scroll-nav-modifier="--nav-inside">
 			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
 			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
 			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
 		</div>
-		<nav>
-			<button data-action="prev">
-				<ui-icon type="chevron left"></ui-icon>
-			</button>
-			<ol>
-				<li></li>
-				<li></li>
-				<li></li>
-			</ol>
-			<button data-action="next">
-				<ui-icon type="chevron right"></ui-icon>
-			</button>
-		</nav>
 	</div>
 
 	<h2>Spinner</h2>
@@ -1121,7 +1108,7 @@
 			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
 			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
 		</nav>
-		<div class="ui-scroll --auto">
+		<div class="ui-scroll --auto" data-scroll-nav="">
 			<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
 				<h3>Welcome to the Tab 1!</h3>
 				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
@@ -1336,7 +1323,6 @@
 		import listTarget from './../assets/js/listTarget.js';
 		import uiAnalogClock from './analog-clock/uiAnalogClock.js';
 		import uiCalculator from './calculator/uiCalculator.js';
-		import uiCarousel from './carousel/uiCarousel.js';
 		import uiChat from './chat/uiChat.js';
 		import uiCountdown from './countdown/uiCountdown.js';
 		import uiDetails from './details/uiDetails.js';
@@ -1346,6 +1332,7 @@
 		import uiPasswordToggle from './password-toggle/uiPasswordToggle.js';
 		import uiReaction from './reaction/uiReaction.js';
 		import uiRangeCircular from './range-circular/uiRangeCircular.js';
+		import uiScroll from './scroll/uiScroll.js';
 		import uiShare from './share/uiShare.js';
 		import uiSpinner from './spinner/uiSpinner.js';
 		import uiTabs from './tabs/uiTabs.js';
@@ -1358,7 +1345,7 @@
 		init('.ui-accordion, .ui-blinds > ul, .ui-dock', listTarget);
 		init('.ui-analog-clock', uiAnalogClock);
 		init('.ui-calculator', uiCalculator);
-		init('.ui-carousel, .ui-slider', uiCarousel);
+		init('.ui-scroll', uiScroll);
 		init('.ui-chat', uiChat);
 		init('.ui-countdown', uiCountdown);
 		init('ui-details', uiDetails);

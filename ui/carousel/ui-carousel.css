@@ -3,11 +3,8 @@
 	--button-p: 1ch;
 	--ui-scroll-gap: 2ch;
 	container-type: inline-size;
-	direction: ltr;
-	display: grid;
 	& .ui-scroll >* {
 		display: grid;
-		flex: 0 0 100%;
 		gap: var(--ui-scroll-gap);
 		grid-auto-flow: column;
 		grid-template-columns: repeat(auto-fit, minmax(10ch, 1fr));

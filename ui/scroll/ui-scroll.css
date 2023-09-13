@@ -3,6 +3,7 @@
 .ui-scroll {
 	display: flex;
 	gap: var(--ui-scroll-gap, 0%);
+	grid-area: 1 / 1; 
 	overflow-y: hidden;
 	scroll-behavior: smooth;
 	scroll-snap-type: x mandatory;
@@ -14,4 +15,18 @@
 		flex: 0 0 100%;
 		scroll-snap-align: start;
 	}
+}
+/* outer wrapper: */
+*:has(> .ui-scroll + .ui-scroll-nav) {
+	display: grid;
+	direction: ltr;
+}
+/* change grid-layout, if nav is outside: */
+.ui-scroll:has(+ .--nav-outside) {
+	grid-column: 2;
+	grid-row: 1;
+}
+/* change outer wrapper gap, if nav is outside: */
+*:has(> .ui-scroll + .--nav-outside) {
+	gap: var(--ui-slider-gap);
 }
