@@ -2,11 +2,13 @@
 	position: relative;
 	&[data-progress-time="3000"] { --ui-progress-timer-duration: 3s; }
 	&[data-progress-time="5000"] { --ui-progress-timer-duration: 5s; }
-	&[data-progress-time="10000"] { --ui-progress-timer-duration: 10s; }
+	&[data-progress-time="7000"] { --ui-progress-timer-duration: 7s; }
+	&[data-progress-time="9000"] { --ui-progress-timer-duration: 9s; }
 	&::before, &::after {
 		content: '';
 		display: block;
 		height: var(--ui-progress-timer-h, .35em);
+		inset-block: var(--ui-progress-timer-ib, 0 auto);
 		position: absolute;
 		width: 100%;
 	}
@@ -18,6 +20,7 @@
 		scale: 0 1;
 		transform-origin: 0% 0%;
 	}
+	&.--bottom { --ui-progress-timer-ib: auto 0; }
 }
 @keyframes progressTimer {
 	to { scale: 1 1; }
