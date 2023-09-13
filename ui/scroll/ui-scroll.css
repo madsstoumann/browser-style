@@ -28,5 +28,5 @@
 }
 /* change outer wrapper gap, if nav is outside: */
 *:has(> .ui-scroll + .--nav-outside) {
-	gap: var(--ui-slider-gap);
+	gap: var(--ui-scroll-gap);
 }

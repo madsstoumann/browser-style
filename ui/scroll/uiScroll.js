@@ -3,8 +3,10 @@ export default function uiScroll(scroll, settings = {}) {
     scrollActive: '--active',
     scrollAutoPlay: 0,
     scrollNav: 'ui-scroll-nav',
-    scrollNext: `<ui-icon type="chevron right"></ui-icon>`,
-    scrollPrev: `<ui-icon type="chevron left"></ui-icon>`,
+    scrollNext: '--icon',
+    scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
+    scrollPrev: '--icon',
+    scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
   }, settings, scroll.dataset)
   if (!config.scrollNav) return
   const pages = [...scroll.querySelectorAll('& >*')]
@@ -54,8 +56,10 @@ function uiScrollNav(node, items, config = {}) {
 
   if (!nav.children.length) {
     dots.innerHTML = `<li></li>`.repeat(items)
-    next.innerHTML = config.scrollNext
-    prev.innerHTML = config.scrollPrev
+    next.classList.add(config.scrollNext)
+    next.innerHTML = config.scrollNextInner
+    prev.classList.add(config.scrollPrev)
+    prev.innerHTML = config.scrollPrevInner
     nav.classList.add(config.scrollNav)
     if (config.scrollNavModifier) nav.classList.add(config.scrollNavModifier)
     nav.append(prev, dots, next)

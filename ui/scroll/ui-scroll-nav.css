@@ -47,7 +47,8 @@
 		}
 	}
 	&.--nav-inside,
-	&.--nav-outside { 
+	&.--nav-outside {
+		margin-block: 0;
 		& ol {
 			margin-block-end: var(--ui-scroll-nav-gap);
 			place-self: end center;
