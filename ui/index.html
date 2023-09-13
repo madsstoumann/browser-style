@@ -803,8 +803,8 @@
 		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
 	</fieldset>
 
-	<h2>Password Strength</h2>
-	<p>The "live" version of this component requires the quite large <strong>zxcvbn</strong>-library to work, so it has <a href="/ui/password-strength">it's own page</a></p>
+	<h2 id="password-strength"><a href="/ui/password-strength/" target="_blank" rel="noopener noreferrer">Password Strength</a></h2>
+	<p>The "live" version of this component requires the quite large <strong>zxcvbn</strong>-library to work, so view the detail-page for this component.</p>
 	<label style="--strength:3;">
 		Password
 		<input type="password" class="ui-password-strength">
@@ -1271,7 +1271,7 @@
 	<div class="ui-word-replace --step">
 		<span>Bring back</span>
 		<div>
-			<ul style="--ui-word-replace-words:7;">
+			<ul>
 				<li>simplicity</li>
 				<li>sanity</li>
 				<li>stability</li>
@@ -1340,6 +1340,7 @@
 		import uiTabs from './tabs/uiTabs.js';
 		import uiTransferList from './transfer-list/uiTransferList.js';
 		import uiVideoEmbed from './video-embed/uiVideoEmbed.js';
+		import uiWordReplace from './word-replace/uiWordReplace.js';
 		import uiWordWheel from './word-wheel/uiWordWheel.js';
 
 		common();
@@ -1362,6 +1363,7 @@
 		init('.ui-tabs', uiTabs);
 		init('.ui-transfer-list', uiTransferList);
 		init('.ui-video-embed button', uiVideoEmbed);
+		init('.ui-word-replace', uiWordReplace);
 		init('.ui-word-wheel', uiWordWheel);
 	</script>
 </body>

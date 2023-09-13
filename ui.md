@@ -44,7 +44,7 @@ Position
 Price Card
 Progress
 Progress — Circular
-Progress Timer
+Progress Timer (Slider)
 Range — With and without `lower-fill`
 Range — Circular
 Rating — Star, Heart and Thumb
