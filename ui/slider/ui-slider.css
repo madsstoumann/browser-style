@@ -2,11 +2,6 @@
 .ui-slider {
 	--button-p: 1ch;
 	--ui-slider-gap: 2ch;
-	border-radius: var(--input-bdrs);
-	& .ui-scroll {
-		border-radius: inherit;
-		& >* {
-			border-radius: inherit;
-		}
-	}
+	clip-path: inset(0 0 0 0 round var(--input-bdrs));
+	& img { pointer-events: none; }
 }

@@ -1,5 +1,6 @@
 export default function uiScroll(scroll, settings = {}) {
   const config = Object.assign({
+    scrollActive: '--active',
     scrollAutoPlay: 0,
     scrollNav: 'ui-scroll-nav',
     scrollNext: `<ui-icon type="chevron right"></ui-icon>`,
@@ -21,7 +22,7 @@ export default function uiScroll(scroll, settings = {}) {
     prev.disabled = (index === 0)
     next.disabled = (index === length - 1)
     dots.forEach((dot, i) => dot.ariaSelected = i === index)
-    pages.forEach((elm, current) => elm.classList.toggle('--active', index === current) )
+    pages.forEach((elm, current) => elm.classList.toggle(config.scrollActive, index === current) )
   }
   next.addEventListener('click', () => {
     index++; if (index >= length) index = 0
