@@ -1,0 +1,44 @@
+.hover-box-border {
+	overflow: hidden;
+	position: relative;
+	&::after {
+		background: rgba(0, 0, 0, 0.05);
+		border: 1px solid #FFF;
+		box-shadow: 0 0 0 16px rgba(0, 0, 0, 0.2);
+		content: "";
+		inset: 16px;
+		opacity: 0;
+		pointer-events: none;
+		position: absolute;
+		scale: 1.4;
+		transition: opacity .35s ease, scale .35s ease;
+	}
+	&:hover::after {
+		opacity: 1;
+		scale: 1;
+	}
+}
+.hover-flare {
+	--_bg: rgba(255, 255, 255, 0.45);
+	&::after,
+	&::before {
+		content: '';
+		height: 100%;
+		inset: 0;
+		margin: auto;
+		position: absolute;
+		transition: all .5s linear;
+		width: 100%;
+		z-index: 1;
+	}
+	&:hover {
+		&::after {
+			background-color: var(--_bg);
+			height: 0;
+		}
+		&::before {
+			background-color: var(--_bg);
+			width: 0;
+		}
+	}
+}

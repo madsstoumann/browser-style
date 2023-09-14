@@ -64,7 +64,6 @@ Timeline — Horizontal and vertical
 Timeslot
 Toasts
 Transfer List
-Transition
 Video Embed — YouTube and Vimeo
 Word Replace
 Word Wheel
@@ -119,3 +118,8 @@ xy
 
 http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/index.html
 http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/
+
+FX
+Animations
+Hover
+Transition
