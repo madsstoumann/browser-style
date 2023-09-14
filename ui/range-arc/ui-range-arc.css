@@ -1,0 +1,22 @@
+:where(.ui-range-arc) {
+	--ui-range-arc-bdw: 5cqi;
+	container-type: inline-size;
+	& span {
+		--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+		--_mask: radial-gradient(circle at 50% 100%, transparent calc(50cqi - var(--ui-range-arc-bdw)), #000 0 100%);
+		aspect-ratio: 2 / 1;
+		background: conic-gradient(from 270deg at 50% 100%, var(--AccentColor) 0deg var(--_d), var(--GrayCanvas) 0 var(--_d));
+		border-radius: 100cqi 100cqi 0 0;
+		mask: var(--_mask);
+		-webkit-mask: var(--_mask);
+	}
+	&::after {
+		counter-reset: val var(--value);
+		content: counter(val) "%";
+		font-size: 10cqi;
+		font-weight: 700;
+		position: absolute;
+		inset: 75% auto auto 50%;
+		translate: -50% -75%;
+	}
+}

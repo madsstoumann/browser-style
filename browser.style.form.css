@@ -143,10 +143,11 @@
   }
 }
 :where([type=range]) {
+  --_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
   background-color: var(--ButtonFace);
   border: 0;
   border-radius: var(--input-range-h);
-  background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--value, 0), var(--ButtonFace) 0 var(--value)); /* JS to set `--value` in % */
+  background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x)); /* JS to set `--value` in % */
   height: var(--input-range-h);
   margin-block: calc((var(--input-thumb-sz) - var(--input-range-h)) / 2);
   width: 100%;

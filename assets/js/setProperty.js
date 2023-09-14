@@ -1,8 +1,8 @@
-export default function setProperty(input) {
-  const key = input.dataset.key || input.name
+export default function setProperty(input, attr) {
+  const key = attr ? attr : input.dataset.key || input.name
   const node = scope(input, input.dataset.scope)
   if (key && node) { 
-    const value = input.value + (input.dataset.unit || '')
+    const value = attr ? input[attr] : input.value + (input.dataset.unit || '')
     node.style.setProperty(key.startsWith('--') ? key : '--' + key, value)
   }
 }

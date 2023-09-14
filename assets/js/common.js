@@ -9,6 +9,8 @@ export function init(node, func) {
 export function common() {
 	init('[data-key]', (input) => {
 		input.addEventListener('input', () => setProperty(input))
+		if (input.min) setProperty(input, 'min')
+		if (input.max) setProperty(input, 'max')
 		setProperty(input)
 	})
 	init('fieldset[name]', (group) => indeterminate(group))
