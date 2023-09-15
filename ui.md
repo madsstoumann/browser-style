@@ -49,6 +49,7 @@ Range — With and without `lower-fill`
 Range — Arc
 Range — Circular
 Range — Gauge
+Range — Mask
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
 Scroll Navigation
