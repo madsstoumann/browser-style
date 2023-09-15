@@ -1,27 +1,30 @@
 .ui-range-circular {
-	--input-bs: 12em;
+	/* --input-bs: 12em; */
+	
 	--_mask: radial-gradient(circle farthest-side at center, transparent calc(100% - var(--input-thumb-sz) - 1px), var(--AccentColor) calc(100% - var(--input-thumb-sz)));
 	--_rad: calc(360deg / (var(--max, 100) - var(--min, 0)));
 
 	display: grid;
 	place-items: center;
+	max-inline-size: 320px;
 	rotate: -90deg;
 	touch-action: none;
-	width: fit-content;
+	width: 100%;
 
 	& input {
+		aspect-ratio: 1 / 1;
 		background: conic-gradient(
 			var(--AccentColor) calc(1% * var(--value)),
-			var(--ButtonBorder) calc(1% * var(--value))
+			var(--ButtonFace) calc(1% * var(--value))
 		);
 		border-radius: 50%;
-		height: var(--input-bs);
+		height: 100%;
 		margin: 0;
 		-webkit-mask: var(--_mask);
 		mask: var(--_mask);
 		pointer-events: none;
 		rotate: 90deg;
-		width: var(--input-bs);
+		width: 100%;
 		&::-webkit-slider-thumb { display: none; }
 		&::-moz-range-thumb { opacity: 0; }
 	}
