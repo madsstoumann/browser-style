@@ -1,32 +1,55 @@
 :where(.ui-range-gauge) {
-	--ui-range-gauge-bdw: 5cqi;
+	--ui-range-gauge-bdw: var(--input-thumb-sz, 1.5rem);
+	--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+	--_u: calc(360deg / (var(--max, 100) - var(--min, 0)));
+
 	container-type: inline-size;
+	max-inline-size: 320px;
+	touch-action: none;
+
 	& span {
-		--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
-		--_u: calc(180deg / (var(--max, 100) - var(--min, 0)));
-		--_mask: 
-    repeating-conic-gradient(
-      from 270deg at 50% 100%,
-      #000 0 calc(var(--_u) / 2),
-      transparent 0 var(--_u)),
+		--_mask:
 		radial-gradient(
 			circle at 50% 100%, 
-			#000 calc(50cqi - var(--ui-range-gauge-bdw)),
-			transparent 0 100%);
-
+			#0000 calc(50cqi - var(--ui-range-gauge-bdw)), #000 0 100%),
+		repeating-conic-gradient(
+			from 270deg at 50% 100%,
+			#000 0 calc(var(--_u) / 2),
+			transparent 0 var(--_u));
 		aspect-ratio: 2 / 1;
-		background: conic-gradient(from 270deg at 50% 100%, var(--AccentColor) 0deg var(--_d), var(--GrayCanvas) 0 var(--_d));
+		background: 
+			conic-gradient(from 270deg at 50% 100%, var(--AccentColor) 0deg var(--_d), var(--ButtonFace) 0 var(--_d));
 		border-radius: 100cqi 100cqi 0 0;
 		mask: var(--_mask);
 		-webkit-mask: var(--_mask);
+		mask-composite: intersect;
+		-webkit-mask-composite: source-out;
 	}
-	&::after {
+	&::before {
 		counter-reset: val var(--value);
 		content: counter(val) "%";
-		font-size: 10cqi;
+		font-size: 200%;
 		font-weight: 700;
+		translate: 0 1em;
+		place-self: center;
 		position: absolute;
-		inset: 75% auto auto 50%;
-		translate: -50% -75%;
+	}
+	&::after {
+		--_mask: radial-gradient(circle at 90% 50%, transparent 0 3.5%, white 3.5%);
+		background: var(--ButtonFace);
+		border-radius: 0 10em 10em 0;
+		bottom: calc(var(--ui-range-gauge-bdw) / 2);
+		clip-path: polygon(0% 50%, 100% 0%, 100% 100%, 0% 50%);
+		content: "";
+		display: block;
+		height: var(--ui-range-gauge-bdw);
+		left: var(--ui-range-gauge-bdw);
+		mask: var(--_mask);
+		-webkit-mask: var(--_mask);
+		position: absolute;
+		rotate: var(--_d);
+		transform-origin: 100% 50%;
+		width: calc(50% - var(--ui-range-gauge-bdw));
+		z-index: -1;
 	}
 }
