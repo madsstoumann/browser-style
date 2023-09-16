@@ -1,0 +1,11 @@
+:where(.ui-readline) {
+	animation-timeline: scroll(root);
+	animation: fullwidth linear;
+	background: var(--AccentColor);
+	height: var(--ui-readline-h, .5rem);
+	isolation: isolate;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 0;
+}

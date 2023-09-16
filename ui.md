@@ -52,6 +52,7 @@ Range — Gauge
 Range — Mask
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
+Readline
 Scroll Navigation
 Share
 Slider

@@ -1,4 +1,4 @@
-.hover-box-border {
+.hv-box-border {
 	overflow: hidden;
 	position: relative;
 	&::after {
@@ -18,7 +18,8 @@
 		scale: 1;
 	}
 }
-.hover-flare {
+.hv-brightness:hover img { filter: brightness(1.05); }
+.hv-flare {
 	--_bg: rgba(255, 255, 255, 0.45);
 	&::after,
 	&::before {
@@ -41,4 +42,13 @@
 			width: 0;
 		}
 	}
+}
+.hv-push:hover { animation: push .3s linear; }
+.hv-scale-img {
+	overflow: hidden;
+	& img { transition: all .5s ease;}
+	&:hover img { scale: 1.1; }
+}
+.hv-wobble:hover {
+	animation: wobble 1s ease-in-out;
 }
