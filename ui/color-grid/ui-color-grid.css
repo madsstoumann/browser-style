@@ -1,0 +1,21 @@
+/* requires ui-color-input */
+:where(.ui-color-grid) {
+	all: unset;
+	display: grid;
+	gap: 0;
+	grid-template-columns: repeat(var(--ui-color-grid-cols, 10), 1fr);
+	width: fit-content;
+	& input { border-radius: 0; }
+	& label { display: contents; }
+	& legend {
+		padding-block-end: var(--label-rg);
+		text-transform: capitalize;
+	}
+	/* modifiers */
+	&.--apple { --ui-color-grid-cols: 12; }
+	&.--flatui { --ui-color-grid-cols: 5; }
+	&.--html { --ui-color-grid-cols: 12; }
+	&.--material { --ui-color-grid-cols: 10; }
+	&.--metro { --ui-color-grid-cols: 5; }
+	&.--tailwind { --ui-color-grid-cols: 10; }
+}

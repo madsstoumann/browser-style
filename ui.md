@@ -13,6 +13,7 @@ Carousel
 Chat
 Chip
 Color Compare
+Color Grid
 Color Mask
 Color Swatch
 Countdown
@@ -73,7 +74,7 @@ World Map
 ---
 AutoComplete
 Calendar
-Color Grid
+
 Data Table (Resizable Columns, Search etc.)
 Footer
 Locale Switcher (Choose country, Continue)

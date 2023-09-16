@@ -1,43 +1,6 @@
+/* requires ui-color-input */
 .ui-color-swatch {
 	all: unset;
-	& input {
-		/* --mixin-icon-after: true; */ /* Enable when conditions below are met */
-		--AccentColor: #0000;
-		--icon: url('/assets/svg/check.svg');
-		--icon-c: #0000;
-		--icon-mi: 0;
-		--icon-sz: 1.8em;
-		--input-check-sz: 2.5em;
-
-		background-color: var(--_bg);
-		box-shadow: none;
-		display: inline-grid;
-		place-content: center;
-
-		&:checked { --icon-c: #FFF; }
-
-		/* This section below can be removed, when @container style()-queries are supported in all major browsers */
-		&::after {
-			align-self: center;
-			background: var(--icon-c, currentColor);
-			content: "";
-			display: inline-block;
-			height: var(--icon-sz, 1em);
-			margin-inline: var(--icon-mi, .25ch 0);
-			mask: var(--icon) no-repeat center;
-			-webkit-mask: var(--icon) no-repeat center;
-			scale: var(--icon-flip, 1);
-			width: var(--icon-sz, 1em);
-		}
-		/* End section/remove */
-	}
 	& label { display: contents; }
 	& legend { padding-block-end: var(--label-rg); }
-}
-
-/* `--icon-c` below can replace the value inside `input:checked` above, when `color-contrast()` is supported in all major browsers */
-@supports(color:color-contrast(red vs tan, lime)) {
-	.ui-color-swatch input:checked {
-		--icon-c: color-contrast(var(--_bg) vs #FFF, #000);
-	}
 }

@@ -3,7 +3,6 @@
 	container-type: inline-size;
 	max-inline-size: 320px;
 	touch-action: none;
-
 	& span {
 		--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
 		--_mask: radial-gradient(circle at 50% 100%, transparent calc(50cqi - var(--ui-range-arc-bdw)), #000 0 100%);
@@ -18,7 +17,7 @@
 		content: counter(val) "%";
 		font-size: 200%;
 		font-weight: 700;
-		translate: 0 1em;
+		translate: 0 .5em;
 		place-self: center;
 		position: absolute;
 	}
