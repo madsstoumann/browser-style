@@ -1,4 +1,4 @@
-:where(.ui-readline) {
+:where(.ui-reading-progress) {
 	animation-timeline: scroll(root);
 	animation: fullwidth linear;
 	background: var(--AccentColor);
