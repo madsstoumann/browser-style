@@ -51,7 +51,7 @@ Range — Arc
 Range — Circular
 Range — Gauge
 Range — Mask
-Range - Muliple
+Range - MinMax
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
 Reading Progress
