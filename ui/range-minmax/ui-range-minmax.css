@@ -1,4 +1,4 @@
-:where(.ui-range-multiple) {
+:where(.ui-range-minmax) {
 	all: unset;
 	display: grid;
 	padding-bottom: 1em;
