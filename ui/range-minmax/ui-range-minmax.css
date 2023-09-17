@@ -21,7 +21,7 @@
 		pointer-events: none;
 		&:first-of-type span::before {
 			counter-reset: v1 var(--v1);
-			content: counter(v1) "%";
+			content: counter(v1) attr(data-unit);
 		}
 		&:last-of-type {
 			& input { background: none; }
@@ -29,7 +29,7 @@
 				place-self: end;
 				&::before {
 					counter-reset: v2 var(--v2);
-					content: counter(v2) "%";
+					content: counter(v2) attr(data-unit);
 				}
 			}
 		} 	
