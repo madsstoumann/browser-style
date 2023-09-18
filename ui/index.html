@@ -436,15 +436,14 @@
     </ui-expand>
   </ui-details>
 
-	<h2>Digital Clock</h2>
-	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
+	<h2 id="digital-clock"><a href="/ui/digital-clock/">Digital Clock</a></h2>
 	<ol class="ui-digital-clock">
 		<li></li>
 		<li></li>
 		<li></li>
 	</ol>
 
-	<h2>Dock</h2>
+	<h2 id="dock"><a href="/ui/dock/">Dock</a></h2>
 	<ul class="ui-dock">
 		<li class="--open">
 			<a href="#home">
@@ -483,20 +482,19 @@
 		</li>
 	</ul>
 
-	<h2 id="drawer">Drawer</h2>
-	<details class="ui-drawer">
-		<summary>Open drawer from left</summary>
-		<div class="--left">
-			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odio eos non aliquam porro rem quisquam vero officiis, impedit repellendus harum vel saepe fugiat quaerat blanditiis autem error eaque iure soluta illo molestias distinctio quia consectetur, rerum asperiores? Cupiditate magnam fuga autem, laboriosam pariatur, quidem saepe dolore voluptatem rerum totam praesentium!
+	<h2 id="drawer"><a href="/ui/drawer/">Drawer</a></h2>
+	<button popovertarget="drawer-left" class="ui-button">
+		<span>Open drawer from left</span>
+	</button>
+	<div id="drawer-left" popover class="ui-drawer --left">
+		<button popovertarget="drawer-left" popovertargetaction="hide" class="--icon">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+		<div>
+			<h2>This is a headline for a drawer</h2>
+			<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae praesentium animi illum? Dicta ipsum dolorem sequi reprehenderit doloremque at ducimus laudantium officiis ad doloribus officia odio quam quaerat, amet mollitia, inventore architecto nisi voluptatum reiciendis dolor quidem harum temporibus a blanditiis! Optio, nostrum explicabo odio placeat et reprehenderit voluptatibus esse?</span>
 		</div>
-	</details>
-
-	<details class="ui-drawer">
-		<summary>Open drawer to the right</summary>
-		<div class="--right">
-			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Odio eos non aliquam porro rem quisquam vero officiis, impedit repellendus harum vel saepe fugiat quaerat blanditiis autem error eaque iure soluta illo molestias distinctio quia consectetur, rerum asperiores? Cupiditate magnam fuga autem, laboriosam pariatur, quidem saepe dolore voluptatem rerum totam praesentium!
-		</div>
-	</details>
+	</div>
 
 	<h2 id="expand-card">Expand Card</h2>
 	<article class="ui-expand-card">
