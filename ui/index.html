@@ -499,7 +499,6 @@
 	</details>
 
 	<h2 id="expand-card">Expand Card</h2>
-
 	<article class="ui-expand-card">
 		<section class=" --gray-light">
 			<h3>Expand Card</h3>
@@ -515,11 +514,22 @@
 		</label>
 	</article>
 
-	<h2 id="expand-feature"><a href="/ui/expand-feature/" rel="noopener noreferrer" target="_blank">Expand Feature</a></h2>
+	<h2 id="expand-feature"><a href="/ui/expand-feature/">Expand Feature</a></h2>
+	<button popovertarget="expand-feature-example" class="ui-expand-feature-trigger --gray-light --rounded">
+		<span>Click to read more</span>
+		<i class="ui-button --icon --accent"><ui-icon type="plus-cross"></ui-icon></i>
+	</button>
+	<div id="expand-feature-example" popover class="ui-expand-feature">
+		<button popovertarget="expand-feature-example" popovertargetaction="hide" class="--icon">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+		<article>
+			<h2>This is a headline for a feature</h2>
+			<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae praesentium animi illum? Dicta ipsum dolorem sequi reprehenderit doloremque at ducimus laudantium officiis ad doloribus officia odio quam quaerat, amet mollitia, inventore architecto nisi voluptatum reiciendis dolor quidem harum temporibus a blanditiis! Optio, nostrum explicabo odio placeat et reprehenderit voluptatibus esse?</span>
+		</article>
+	</div>
 
-	<h2 id="feature-compare">Feature Compare</h2>
-	<p>For each feature-compare-group, add a custom property, <code>--items</code>.<br>This will help CSS subgrid to align items.</p>
-
+	<h2 id="feature-compare"><a href="/ui/feature-compare/">Feature Compare</a></h2>
 	<section class="ui-feature-compare">
 		<h3>Overview</h3>
 		<div class="ui-feature-compare-group">
@@ -530,27 +540,6 @@
 			</ul>
 			<ul>
 				<li><strong>15,3"</strong><br>Liquid Retina-screen<sup>9</sup></li>
-				<li><strong>8-core</strong><br>CPU</li>
-				<li><strong>10-core</strong><br>GPU</li>
-			</ul>
-		</div>
-
-		<h3>Compute</h3>
-		<div class="ui-feature-compare-group">
-			<ul>
-				<li><strong>System on Chip (SoC) M2 Max chip</strong><br>
-					12-core CPU with 8 performance cores and 4 efficiency cores
-					Up to 38-core GPU
-					16-core Neural Engine
-					400GB/s memory bandwidth</li>
-				<li><strong>8-core</strong><br>CPU</li>
-				<li><strong>10-core</strong><br>GPU</li>
-			</ul>
-			<ul>
-				<li><strong>System on Chip (SoC) M2 Ultra chip</strong><br>24-core CPU with 16 performance cores and 8 efficiency cores
-					Up to 76-core GPU
-					32-core Neural Engine
-					800GB/s memory bandwidth<br>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellendus nemo iure a aspernatur earum accusamus.</li>
 				<li><strong>8-core</strong><br>CPU</li>
 				<li><strong>10-core</strong><br>GPU</li>
 			</ul>

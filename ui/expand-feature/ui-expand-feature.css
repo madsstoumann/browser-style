@@ -1,4 +1,4 @@
-:where(.-ui-expand-feature) {
+:where(.ui-expand-feature) {
 	--ui-expand-feature-bdrs: 25px;
 	--ui-expand-feature-ibs: 3em;
 	--ui-expand-feature-ii: 1em;
@@ -35,36 +35,8 @@
 			padding-inline: var(--ui-expand-feature-p);
 		}
 	}
-	&.popover-open {
-		/* Fallback for browsers that don't support :popover-open. Requires JavaScript. */
-	}
 }
 .ui-expand-feature-trigger {
-	--button-p: .75ch;
+	--button-p: .75ch .75ch .75ch 2.5ch;
 	--hover-bg: var(--GrayCanvas);
-	gap: 0;
-	& span {
-		clip-path: inset(50%);
-		height: 1px;
-		opacity: 0;
-		transition: all .2s ease-in;
-		width: 1px;
-	}
-	& ui-icon {
-		transition: all .2s ease-in;
-	}
-	&:focus-visible,		
-	&:hover {
-		--button-p: .75ch .75ch .75ch 2.5ch;
-		gap: 1ch;
-		& span {
-			clip-path: none;
-			height: auto;
-			opacity: 1;
-			width: max-content;
-		}
-		& ui-icon {
-			rotate: 180deg;
-		}
-	}
 }
