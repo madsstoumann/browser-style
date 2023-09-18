@@ -1,6 +1,6 @@
 :where(.ui-icon) {
 	stroke-width: var(--icon-sw, 1.25);
-	stroke: #FFF;
+	stroke: currentColor;
 	fill: none;
 	height: var(--icon-sz, 100%);
 	stroke-linecap: round;

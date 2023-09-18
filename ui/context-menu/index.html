@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Context Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-context-menu.css">
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+	<h2>Context Menu</h2>
+	<p>Using the <code>popover API</code> to display a context-menu.</p>
+	<button type="button" id="context-menu-toggle" popovertarget="context-menu">
+		Open Menu
+	</button>
+	<ul id="context-menu" popover anchor="context-menu-toggle" class="ui-context-menu">
+		<li tabindex="0">Add item
+			<svg viewBox="0 0 24 24" class="ui-icon">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+				<path d="M16 19h6"></path>
+				<path d="M19 16v6"></path>
+			</svg>
+		</li>
+		<li tabindex="0">Edit item
+			<svg viewBox="0 0 24 24" class="ui-icon">
+				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+				<path d="M13.5 6.5l4 4"></path>
+		 </svg>
+		</li>
+		<li tabindex="0">Delete item
+			<svg viewBox="0 0 24 24" class="ui-icon">
+				<path d="M4 7l16 0"></path>
+				<path d="M10 11l0 6"></path>
+				<path d="M14 11l0 6"></path>
+				<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+				<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+		 	</svg>
+		</li>
+	</ul>
+
+</body>
+</html>

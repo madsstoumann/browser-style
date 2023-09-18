@@ -23,8 +23,10 @@
 		padding: .5em;
 		position: relative;
 		width: var(--ui-dock-item-sz);
+		& a { color: inherit; }
 		&.--open {
 			background: var(--AccentColor);
+			color: var(--AccentColorText);
 			&::after {
 				background-color: var(--CanvasText);
 				border-radius: 50%;

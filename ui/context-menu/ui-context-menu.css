@@ -1,0 +1,29 @@
+:where(.ui-context-menu) {
+  bottom: calc(anchor(top));
+  left: anchor(center);
+  translate: -50% 0%;
+	--icon-sz: 1.5rem;
+	&:popover-open {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--input-bdrs);
+		display: grid;
+		padding: 0;
+		& li {
+			align-items: center;
+			display: flex;
+			gap: 2ch;
+			justify-content: space-between;
+			padding: .5ch 1ch;
+			&:not(:last-child) {
+				border-bottom: 1px solid var(--ButtonBorder);
+			}
+			&:focus-visible,
+			&:hover {
+				background: var(--AccentColor);
+				color: var(--AccentColorText);
+				outline: none;
+			}
+		}
+	}
+
+}
