@@ -10,7 +10,7 @@ export default function uiScroll(scroll, settings = {}) {
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
   }, settings, scroll.dataset)
   const items = [...scroll.querySelectorAll('& >*')]
-  if (!items) return
+  if (!items || !config.scrollNav) return
   let index = 0, itemsPerPage = 1, pages = 1
   const [dots, next, prev] = uiScrollNav(scroll, pages, config)
 
