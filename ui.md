@@ -75,7 +75,6 @@ World Map
 ---
 AutoComplete
 Calendar
-
 Data Table (Resizable Columns, Search etc.)
 Footer
 Locale Switcher (Choose country, Continue)
