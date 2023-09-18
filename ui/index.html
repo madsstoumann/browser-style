@@ -5,13 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../browser.style.css">
 	<link rel="stylesheet" href="../browser.style.ui.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2><a href="/ui/accordion/" rel="noopener noreferrer" target="_blank">Accordion</a></h2>
+	<h2 id="accordion"><a href="/ui/accordion/">Accordion</a></h2>
 	<ul class="ui-accordion">
     <li id="item1" class="--open">
       <a href="#item1"><strong>How do I reset my password?</strong><ui-icon type="chevron down"></ui-icon></a>
@@ -39,7 +40,7 @@
     </li>
   </ul>
 
-	<h2>Analog Clock</h2>
+	<h2 id="analog-clock"><a href="/ui/analog-clock/">Analog Clock</a></h2>
 	<div class="ui-analog-clock">
 		<i>12</i>
 		<i>1</i>
@@ -58,13 +59,13 @@
 		<b></b>
 	</div>
 
-	<h2>Avatar</h2>
+	<h2 id="avatar"><a href="/ui/avatar/">Avatar</a></h2>
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 	</div>
 
-	<h2>Avatar List</h2>
+	<h2 id="avatar-list"><a href="/ui/avatar/">Avatar List</a></h2>
 	<ul class="ui-avatar-list">
 		<li class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
@@ -84,27 +85,11 @@
 		</li>
 	</ul>
 
-	<h2>Badge</h2>
-	Use with modifiers, <code>--inline</code>, <code>--bottom-right</code> and <code>--top-right</code> to fine-adjust position.<br>
-	Use <code>--text</code> if text only.
-		<div class="ui-avatar">
-			<abbr title="Kim Cronos">KC</abbr>
-			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<b class="ui-badge --success-bg --top-right">99</b>
-		</div>
-		<div class="ui-avatar">
-			<abbr title="Kim Cronos">KC</abbr>
-			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
-			<b class="ui-badge --info-bg --bottom-right">👍</b>
-		</div>
-
+	<h2 id="badge"><a href="/ui/badge/">Badge</a></h2>
 	<p><button type="button">Button with badge<b class="ui-badge --info-bg">5</b></button></p>
 	<p><span class="ui-chip">Chip with badge<b class="ui-badge --error-bg">4</b></span></p>
-	<p><span class="ui-chip --info">Light badge<b class="ui-badge --error">4</b></span></p>
-	<p><span class="ui-chip">Inline badge<b class="ui-badge --info --inline">4</b></span></p>
-	<p><span class="ui-chip">With text<b class="ui-badge --success-bg --text">new</b></span></p>
 
-	<h2>Blinds</h2>
+	<h2 id="blinds"><a href="/ui/blinds/">Blinds</a></h2>
 	<div class="ui-blinds">
 		<ul>
 			<li id="aboutus">
@@ -146,7 +131,7 @@
 		</ul>
 	</div>
 
-	<h2>Breadcrumbs</h2>
+	<h2 id="breadcrumbs"><a href="/ui/breadcrumbs/">Breadcrumbs</a></h2>
 	<ol class="ui-breadcrumbs">
 		<li >
 			<a href="https://example.com/books">Books</a>
@@ -159,25 +144,12 @@
 		</li>
 	</ol>
 
-	<p>With <code>--ui-breadcrumbs-marker</code> set to "/"</p>
-	<ol class="ui-breadcrumbs" style="--ui-breadcrumbs-marker:'/';">
-		<li >
-			<a href="/">Home</a>
-		</li>
-		<li>
-			<a href="/categories">Categories</a>
-		</li>
-		<li>
-			Books
-		</li>
-	</ol>
-
-	<h2 id="button"><a href="/ui/button/" target="_blank" rel="noopener noreferrer">Button</a></h2>
+	<h2 id="button"><a href="/ui/button/">Button</a></h2>
 	<button type="button">Button</button>
 	<button type="button" disabled>Disabled</button>
 	<button type="submit">Submit</button>
 
-	<h2 id="button-group"><a href="/ui/button-group/" target="_blank" rel="noopener noreferrer">Button Group</a></h2>
+	<h2 id="button-group"><a href="/ui/button-group/">Button Group</a></h2>
 	<fieldset class="ui-button-group --border --rounded">
 		<legend>Button Group Label</legend>
 		<label class="ui-button">
@@ -194,7 +166,7 @@
 		</label>
 	</fieldset>
 
-	<h2>Calculator</h2>
+	<h2 id="calculator"><a href="/ui/calculator/">Calculator</a></h2>
 	<form class="ui-calculator">
 		<input name="display" placeholder="0" value="" disabled>
 		<button type="reset">C</button>
@@ -218,7 +190,7 @@
 		<button type="submit" value="=">=</button>
 	</form>
 
-	<h2>Card</h2>
+	<h2 id="card"><a href="/ui/card/">Card</a></h2>
 	<article class="ui-card" style="max-inline-size: 300px;">
 		<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
 		<small>News</small>
@@ -227,8 +199,7 @@
 		<a href="#">Read more</a>
 	</article>
 
-	<h2>Carousel</h2>
-	<p>Use with modifier-classes <code>--nav-inside</code> or <code>--nav-outside</code>.</p>
+	<h2 id="carousel"><a href="/ui/carousel/">Carousel</a></h2>
 	<div class="ui-carousel">
 		<div class="ui-scroll">
 			<div>
@@ -294,7 +265,7 @@
 		</nav>
 	</div>
 
-	<h2>Chat</h2>
+	<h2 id="chat"><a href="/ui/chat/">Chat</a></h2>
 	<ol class="ui-chat">
 		<li value="1">
 			<time datetime="2023-05-29T02:20:00"></time>
@@ -326,39 +297,16 @@
 					</li>
 				</ol>
 		</li>
-		<li value="1">
-			<ol>
-				<li>
-					<div class="ui-avatar">
-						<abbr title="Kim Cronos">KC</abbr>
-						<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
-					</div>
-					<div class="ui-chat-entry">
-						How do I know who is who?
-						<time datetime="2023-06-09T10:02:00">Read </time>
-					</div>
-				</li>
-			</ol>
-		</li>
-		<li value="2">
-				<ol>
-					<li>
-						<div class="ui-chat-entry">
-							You add a <code>value</code>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second. You can even add more people if you want to.
-						</div>
-					</li>
-				</ol>
-		</li>
 	</ol>
 
-	<h2>Chip</h2>
+	<h2 id="chip"><a href="/ui/chip">Chip</a></h2>
 	<span class="ui-chip">Default chip</span>
 	<span class="ui-chip --error">No Connection ❖</span>
 	<span class="ui-chip --success">All services up ✓</span>
 	<span class="ui-chip --warning">Warning: Low ☀</span>
 	<span class="ui-chip --info">Premium User ★</span>
 
-	<h2>Color Compare</h2>
+	<h2 id="color-compare"><a href="/ui/color-compare/">Color Compare</a></h2>
 	<fieldset class="ui-color-compare">
 		<legend>Color Compare</legend>
 		<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy">
@@ -374,13 +322,13 @@
 		</label>
 	</fieldset>
 
-	<h2 id="color-grid"><a href="/ui/color-grid/" rel="noopener noreferrer" target="_blank">Color Grid</a></h2>
+	<h2 id="color-grid"><a href="/ui/color-grid/">Color Grid</a></h2>
 	<fieldset class="ui-color-grid --standard">
 		<legend>standard</legend>
 		<label><input type="radio" name="standard" value="		#000000" class="ui-color-input" style="--_bg:		#000000;" checked=""></label><label><input type="radio" name="standard" value="#434343" class="ui-color-input" style="--_bg:#434343;"></label><label><input type="radio" name="standard" value="#656666" class="ui-color-input" style="--_bg:#656666;"></label><label><input type="radio" name="standard" value="#999999" class="ui-color-input" style="--_bg:#999999;"></label><label><input type="radio" name="standard" value="#B7B7B7" class="ui-color-input" style="--_bg:#B7B7B7;"></label><label><input type="radio" name="standard" value="#CCCDCD" class="ui-color-input" style="--_bg:#CCCDCD;"></label><label><input type="radio" name="standard" value="#D7D8D8" class="ui-color-input" style="--_bg:#D7D8D8;"></label><label><input type="radio" name="standard" value="#EEEEEF" class="ui-color-input" style="--_bg:#EEEEEF;"></label><label><input type="radio" name="standard" value="#F3F3F3" class="ui-color-input" style="--_bg:#F3F3F3;"></label><label><input type="radio" name="standard" value="#FFFFFF" class="ui-color-input" style="--_bg:#FFFFFF;"></label><label><input type="radio" name="standard" value="		#94000B" class="ui-color-input" style="--_bg:		#94000B;"></label><label><input type="radio" name="standard" value="#F8001A" class="ui-color-input" style="--_bg:#F8001A;"></label><label><input type="radio" name="standard" value="#F99922" class="ui-color-input" style="--_bg:#F99922;"></label><label><input type="radio" name="standard" value="#FBFF2F" class="ui-color-input" style="--_bg:#FBFF2F;"></label><label><input type="radio" name="standard" value="#2AFF24" class="ui-color-input" style="--_bg:#2AFF24;"></label><label><input type="radio" name="standard" value="#45FFFE" class="ui-color-input" style="--_bg:#45FFFE;"></label><label><input type="radio" name="standard" value="#5880E6" class="ui-color-input" style="--_bg:#5880E6;"></label><label><input type="radio" name="standard" value="#3600FC" class="ui-color-input" style="--_bg:#3600FC;"></label><label><input type="radio" name="standard" value="#9D00FC" class="ui-color-input" style="--_bg:#9D00FC;"></label><label><input type="radio" name="standard" value="#FC01FD" class="ui-color-input" style="--_bg:#FC01FD;"></label><label><input type="radio" name="standard" value="		#E4B7B0" class="ui-color-input" style="--_bg:		#E4B7B0;"></label><label><input type="radio" name="standard" value="#F2CBCC" class="ui-color-input" style="--_bg:#F2CBCC;"></label><label><input type="radio" name="standard" value="#FAE5CE" class="ui-color-input" style="--_bg:#FAE5CE;"></label><label><input type="radio" name="standard" value="#FDF3CD" class="ui-color-input" style="--_bg:#FDF3CD;"></label><label><input type="radio" name="standard" value="#DAEBD5" class="ui-color-input" style="--_bg:#DAEBD5;"></label><label><input type="radio" name="standard" value="#D1E0E3" class="ui-color-input" style="--_bg:#D1E0E3;"></label><label><input type="radio" name="standard" value="#CBD9F7" class="ui-color-input" style="--_bg:#CBD9F7;"></label><label><input type="radio" name="standard" value="#D2E1F3" class="ui-color-input" style="--_bg:#D2E1F3;"></label><label><input type="radio" name="standard" value="#D9D1E8" class="ui-color-input" style="--_bg:#D9D1E8;"></label><label><input type="radio" name="standard" value="#E9D0DC" class="ui-color-input" style="--_bg:#E9D0DC;"></label><label><input type="radio" name="standard" value="		#D97C6D" class="ui-color-input" style="--_bg:		#D97C6D;"></label><label><input type="radio" name="standard" value="#E7979A" class="ui-color-input" style="--_bg:#E7979A;"></label><label><input type="radio" name="standard" value="#F5CC9E" class="ui-color-input" style="--_bg:#F5CC9E;"></label><label><input type="radio" name="standard" value="#FCE79C" class="ui-color-input" style="--_bg:#FCE79C;"></label><label><input type="radio" name="standard" value="#B6D9A9" class="ui-color-input" style="--_bg:#B6D9A9;"></label><label><input type="radio" name="standard" value="#A4C4C8" class="ui-color-input" style="--_bg:#A4C4C8;"></label><label><input type="radio" name="standard" value="#A8C0F3" class="ui-color-input" style="--_bg:#A8C0F3;"></label><label><input type="radio" name="standard" value="#A3C5E7" class="ui-color-input" style="--_bg:#A3C5E7;"></label><label><input type="radio" name="standard" value="#B5A4D5" class="ui-color-input" style="--_bg:#B5A4D5;"></label><label><input type="radio" name="standard" value="#D3A4BD" class="ui-color-input" style="--_bg:#D3A4BD;"></label><label><input type="radio" name="standard" value="		#C73B2C" class="ui-color-input" style="--_bg:		#C73B2C;"></label><label><input type="radio" name="standard" value="#DB6268" class="ui-color-input" style="--_bg:#DB6268;"></label><label><input type="radio" name="standard" value="#F1B370" class="ui-color-input" style="--_bg:#F1B370;"></label><label><input type="radio" name="standard" value="#FBDB6E" class="ui-color-input" style="--_bg:#FBDB6E;"></label><label><input type="radio" name="standard" value="#94C77F" class="ui-color-input" style="--_bg:#94C77F;"></label><label><input type="radio" name="standard" value="#7AA5AE" class="ui-color-input" style="--_bg:#7AA5AE;"></label><label><input type="radio" name="standard" value="#769AE9" class="ui-color-input" style="--_bg:#769AE9;"></label><label><input type="radio" name="standard" value="#77A6DA" class="ui-color-input" style="--_bg:#77A6DA;"></label><label><input type="radio" name="standard" value="#9077C1" class="ui-color-input" style="--_bg:#9077C1;"></label><label><input type="radio" name="standard" value="#C077A0" class="ui-color-input" style="--_bg:#C077A0;"></label><label><input type="radio" name="standard" value="		#A1100E" class="ui-color-input" style="--_bg:		#A1100E;"></label><label><input type="radio" name="standard" value="#C60013" class="ui-color-input" style="--_bg:#C60013;"></label><label><input type="radio" name="standard" value="#E19140" class="ui-color-input" style="--_bg:#E19140;"></label><label><input type="radio" name="standard" value="#EDC43F" class="ui-color-input" style="--_bg:#EDC43F;"></label><label><input type="radio" name="standard" value="#6BAB52" class="ui-color-input" style="--_bg:#6BAB52;"></label><label><input type="radio" name="standard" value="#4B818D" class="ui-color-input" style="--_bg:#4B818D;"></label><label><input type="radio" name="standard" value="#4B72D6" class="ui-color-input" style="--_bg:#4B72D6;"></label><label><input type="radio" name="standard" value="#4A82C4" class="ui-color-input" style="--_bg:#4A82C4;"></label><label><input type="radio" name="standard" value="#6A46A5" class="ui-color-input" style="--_bg:#6A46A5;"></label><label><input type="radio" name="standard" value="#A34879" class="ui-color-input" style="--_bg:#A34879;"></label><label><input type="radio" name="standard" value="		#811B13" class="ui-color-input" style="--_bg:		#811B13;"></label><label><input type="radio" name="standard" value="#95000B" class="ui-color-input" style="--_bg:#95000B;"></label><label><input type="radio" name="standard" value="#B05E17" class="ui-color-input" style="--_bg:#B05E17;"></label><label><input type="radio" name="standard" value="#BB921A" class="ui-color-input" style="--_bg:#BB921A;"></label><label><input type="radio" name="standard" value="#3A7921" class="ui-color-input" style="--_bg:#3A7921;"></label><label><input type="radio" name="standard" value="#1C4F5B" class="ui-color-input" style="--_bg:#1C4F5B;"></label><label><input type="radio" name="standard" value="#2F4BCA" class="ui-color-input" style="--_bg:#2F4BCA;"></label><label><input type="radio" name="standard" value="#214F92" class="ui-color-input" style="--_bg:#214F92;"></label><label><input type="radio" name="standard" value="#380D74" class="ui-color-input" style="--_bg:#380D74;"></label><label><input type="radio" name="standard" value="#711147" class="ui-color-input" style="--_bg:#711147;"></label><label><input type="radio" name="standard" value="		#580A04" class="ui-color-input" style="--_bg:		#580A04;"></label><label><input type="radio" name="standard" value="#630005" class="ui-color-input" style="--_bg:#630005;"></label><label><input type="radio" name="standard" value="#753F0D" class="ui-color-input" style="--_bg:#753F0D;"></label><label><input type="radio" name="standard" value="#7C610E" class="ui-color-input" style="--_bg:#7C610E;"></label><label><input type="radio" name="standard" value="#285016" class="ui-color-input" style="--_bg:#285016;"></label><label><input type="radio" name="standard" value="#12343D" class="ui-color-input" style="--_bg:#12343D;"></label><label><input type="radio" name="standard" value="#284185" class="ui-color-input" style="--_bg:#284185;"></label><label><input type="radio" name="standard" value="#143562" class="ui-color-input" style="--_bg:#143562;"></label><label><input type="radio" name="standard" value="#220A4C" class="ui-color-input" style="--_bg:#220A4C;"></label><label><input type="radio" name="standard" value="#4A0B30" class="ui-color-input" style="--_bg:#4A0B30;"></label>
 	</fieldset>
 
-	<h2>Color Mask</h2>
+	<h2 id="color-mask"><a href="/ui/color-mask">Color Mask</a></h2>
 	<fieldset class="ui-color-mask">
 		<legend>Color Mask</legend>
 		<label aria-label="First T-shirt Color">
@@ -428,7 +376,7 @@
 		</datalist>
 	</fieldset>
 
-	<h2>Color Swatch</h2>
+	<h2 id="color-swatch"><a href="/ui/color-swatch">Color Swatch</a></h2>
 	<fieldset class="ui-color-swatch">
 		<legend>Color Swatch</legend>
 		<label aria-label="dusty blue">
@@ -448,16 +396,7 @@
 		</label>
 	</fieldset>
 
-	<h2>Countdown</h2>
-	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
-	<ol class="ui-countdown" data-time="2024-01-01">
-		<li data-label="day"></li>
-		<li data-label="hour"></li>
-		<li data-label="minutes"></li>
-		<li data-label="seconds"></li>
-	</ol>
-
-	<h2 id="config-group">Config Group</h2>
+	<h2 id="config-group"><a href="/ui/config-group">Config Group</a></h2>
 	<fieldset class="ui-config-group">
 		<legend>Config Group</legend>
 		<label>
@@ -472,7 +411,15 @@
 		</label>
 	</fieldset>
 
-	<h2 id="custom-color">Custom Color</h2>
+	<h2 id="countdown"><a href="/ui/countdown/">Countdown</a></h2>
+	<ol class="ui-countdown" data-time="2024-01-01">
+		<li data-label="day"></li>
+		<li data-label="hour"></li>
+		<li data-label="minutes"></li>
+		<li data-label="seconds"></li>
+	</ol>
+
+	<h2 id="custom-color"><a href="/ui/custom-color">Custom Color</a></h2>
 	<label>
 		<input type="color" class="ui-custom-color" value="#007BFF">
 	</label>

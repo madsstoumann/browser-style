@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Color Swatch</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-color-swatch.css">
+	<link rel="stylesheet" href="../color-input/ui-color-input.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Color Swatch</h2>
+	<fieldset class="ui-color-swatch">
+		<legend>Color Swatch</legend>
+		<label aria-label="dusty blue">
+			<input type="radio" name="colorswatch" value="#BA2F30" style="--_bg:#53739a;" class="ui-color-input">
+		</label>
+		<label aria-label="dusty green">
+			<input type="radio" name="colorswatch" value="#3D9354" style="--_bg:#689d76;" class="ui-color-input">
+		</label>
+		<label aria-label="dusty purple">
+			<input type="radio" name="colorswatch" value="#FEA330" style="--_bg:#863d8b;" checked class="ui-color-input">
+		</label>
+		<label aria-label="gradient">
+			<input type="radio" name="colorswatch" value="" style="--_bg:linear-gradient(135deg, crimson, orange);--_c:#000;" class="ui-color-input">
+		</label>
+		<label aria-label="gradient">
+			<input type="radio" name="colorswatch" value="" style="--_bg:linear-gradient(60deg, lightgreen, lightpink);--_c:#FFF;" class="ui-color-input">
+		</label>
+	</fieldset>
+</body>
+</html>

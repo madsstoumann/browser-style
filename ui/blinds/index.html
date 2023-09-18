@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Blinds</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-blinds.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Blinds</h2>
+	<div class="ui-blinds">
+		<ul>
+			<li id="aboutus">
+				<a href="#aboutus">About Us</a>
+				<p>
+					At Acme Software, we are dedicated to providing exceptional solutions for all your needs. With years of industry experience, we pride ourselves on delivering innovative and reliable products and services to our valued customers. Our team of experts is committed to exceeding expectations and building long-lasting relationships. We strive to stay at the forefront of technological advancements, ensuring that we consistently meet the evolving demands of our clients. Trust Acme Software for unmatched quality, expertise, and customer satisfaction.
+				</p>
+			</li>
+			<li id="ourproducts">
+				<a href="#ourproducts">Our Products</a>
+				<p>
+					Acme Software offers a diverse range of high-quality products designed to cater to your specific requirements. From cutting-edge electronics to innovative home appliances, we have it all. Our extensive product catalog includes the latest models from renowned brands, carefully selected to deliver exceptional performance and durability. Whether you're searching for state-of-the-art gadgets or reliable everyday essentials, our products are designed to enhance your lifestyle and provide unparalleled value.
+				</p>
+			</li>
+			<li id="ourservices">
+				<a href="#ourservices">Our Services</a>
+				<p>
+					At Acme Software, we go beyond just products. Our comprehensive range of services is tailored to meet your unique needs and provide you with a seamless experience. From expert installation and maintenance to prompt repairs and dedicated customer support, we are here to assist you every step of the way. Our highly skilled technicians and knowledgeable staff ensure that you receive personalized attention and the highest level of service. Count on us to deliver reliable solutions that maximize the performance and longevity of your purchases.
+				</p>
+			</li>
+			<li id="ourclients">
+				<a href="#ourclients">Our Clients</a>
+				<p>
+					Over the years, we have had the privilege of serving a diverse clientele that spans various industries and sectors. From small businesses to large corporations, we have established strong partnerships with clients who trust us to deliver exceptional products and services. Our client base includes leading organizations and individuals who value our commitment to quality, reliability, and customer satisfaction. We take pride in the long-term relationships we have built and look forward to continuing to exceed the expectations of our esteemed clients.
+				</p>
+			</li>
+			<li id="testimonials">
+				<a href="#testimonials">Testimonials</a>
+				<p>
+					At Acme Software, we are committed to providing exceptional products and services to our valued customers. We take pride in the relationships we have built and the positive feedback we have received from our clients. Here's what some of our satisfied customers have to say about their experience with us.
+				</p>
+			</li>
+			<li id="contactus">
+				<a href="#contactus">Contact Us</a>
+				<p>
+					We are always here to assist you. If you have any questions, comments, or inquiries, please don't hesitate to reach out to us. Our friendly and knowledgeable customer service team is available to provide prompt assistance and address any concerns you may have. You can contact us via phone, email, or by visiting our conveniently located store. We value your feedback and appreciate the opportunity to serve you better. Get in touch with us today and experience the exceptional service and support that sets Acme Software apart.
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import listTarget from './../../assets/js/listTarget.js';
+
+		common();
+		init('.ui-blinds ul', listTarget);
+	</script>
+</body>
+</html>

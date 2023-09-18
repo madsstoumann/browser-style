@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Breadcrumbs</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-breadcrumbs.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Breadcrumbs</h2>
+	<ol class="ui-breadcrumbs">
+		<li >
+			<a href="https://example.com/books">Books</a>
+		</li>
+		<li>
+			<a href="https://example.com/books/sciencefiction">Science Fiction</a>
+		</li>
+		<li>
+			Award winners
+		</li>
+	</ol>
+
+	<p>With <code>--ui-breadcrumbs-marker</code> set to "/"</p>
+	<ol class="ui-breadcrumbs" style="--ui-breadcrumbs-marker:'/';">
+		<li >
+			<a href="/">Home</a>
+		</li>
+		<li>
+			<a href="/categories">Categories</a>
+		</li>
+		<li>
+			Books
+		</li>
+	</ol>
+
+</body>
+</html>

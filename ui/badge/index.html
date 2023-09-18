@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Badge</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-badge.css">
+	<!-- Below required for demo -->
+	<link rel="stylesheet" href="../avatar/ui-avatar.css">
+	<link rel="stylesheet" href="../chip/ui-chip.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Badge</h2>
+	Use with modifiers, <code>--inline</code>, <code>--bottom-right</code> and <code>--top-right</code> to fine-adjust position.<br>
+	Use <code>--text</code> if text only.
+		<div class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<b class="ui-badge --success-bg --top-right">99</b>
+		</div>
+		<div class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			<b class="ui-badge --info-bg --bottom-right">👍</b>
+		</div>
+
+	<p><button type="button">Button with badge<b class="ui-badge --info-bg">5</b></button></p>
+	<p><span class="ui-chip">Chip with badge<b class="ui-badge --error-bg">4</b></span></p>
+	<p><span class="ui-chip --info">Light badge<b class="ui-badge --error">4</b></span></p>
+	<p><span class="ui-chip">Inline badge<b class="ui-badge --info --inline">4</b></span></p>
+	<p><span class="ui-chip">With text<b class="ui-badge --success-bg --text">new</b></span></p>
+
+</body>
+</html>
