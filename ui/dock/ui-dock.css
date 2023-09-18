@@ -16,7 +16,7 @@
 	width: fit-content;
 
 	& li {
-		background: var(--ButtonBorder);
+		background: var(--ButtonFace);
 		border-radius: var(--ui-dock-item-bdrs);
 		height: var(--ui-dock-item-sz);
 		list-style: none;

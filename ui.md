@@ -16,8 +16,9 @@ Color Compare
 Color Grid
 Color Mask
 Color Swatch
-Countdown
 Config Group
+ContextMenu
+Countdown
 Custom Color
 Details / `<ui-details>`
 Digital Clock
@@ -75,7 +76,7 @@ World Map
 ---
 AutoComplete
 Calendar
-ContextMenu (w/wo speech/tail)
+
 Data Table (Resizable Columns, Search etc.)
 Footer
 Locale Switcher (Choose country, Continue)

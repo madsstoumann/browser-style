@@ -4,6 +4,9 @@
 	&.--right { --_trl: calc(var(--ui-drawer-w) + 1vw) 0; --_ins: 0 0 auto auto; }
 	&.--top { --_trl: 0 calc(1vh - 100vh); height: auto; --ui-drawer-w: 100vw; }
 	&.--bottom { --_trl: 0 calc(100vh - 1vh); height: auto; --_ins: auto auto 0 0; --ui-drawer-w: 100vw; }
+
+	transition: all .4s cubic-bezier(.4, 0, .2, 1);
+	
 	&::backdrop { /* Bug: Doesn't support background set with var(--) */
 		background-color: color-mix(in srgb, CanvasText, transparent 48%);
 		backdrop-filter: blur(20px);
@@ -23,7 +26,6 @@
 		opacity: 1;
 		padding: var(--ui-drawer-p, 1ch 2ch);
 		position: fixed;
-		transition: all .4s cubic-bezier(.4, 0, .2, 1);
 		translate: 0 0;
 		width: var(--ui-drawer-w);
 		& [popovertargetaction="hide"] { place-self: start end; }
