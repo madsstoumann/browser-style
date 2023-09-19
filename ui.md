@@ -32,6 +32,7 @@ FileTree
 Gallery
 Icon (CSS)
 Image Compare
+Image Gallery
 Image Select
 Indeterminate
 Input Button

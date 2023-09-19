@@ -14,11 +14,14 @@
 		grid-auto-flow: column;
 		& li {
 			all: unset;
-			background-color: var(--GrayCanvas);
+			background-color: var(--AccentColorText);
 			border-radius: 50%;
 			height: var(--_sz);
 			width: var(--_sz);
-			&[aria-selected=true] { background-color: var(--ButtonBorder); }
+			&[aria-selected=true] {
+				background-color: var(--AccentColor);
+				box-shadow: 0 0 0 2px var(--AccentColorText);
+			}
 		}
 	}
 	&.--nav-inside {
@@ -54,4 +57,5 @@
 			place-self: end center;
 		}
 	}
+	&.--no-dots ol { opacity: 0; }
 }

@@ -1,0 +1,35 @@
+:where(.ui-image-gallery) {
+	--ui-image-gallery-thumb-gap: 1ch;
+	--ui-image-gallery-thumb-w: 110px;
+
+	background: var(--GrayCanvas);
+	container-type: inline-size;
+	display: grid;
+	& img {
+		object-fit: cover;
+		pointer-events: none;
+	}
+	& [role=tablist] {
+		align-content: start;
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: 1fr;
+		overflow: auto;
+		padding: var(--ui-image-gallery-thumb-gap);
+		gap: var(--ui-image-gallery-thumb-gap);
+		& img {
+			height: 100%;
+			min-width: var(--ui-image-gallery-thumb-w);
+		}
+		& [role="tab"] { border: 2px solid transparent; }
+		& [aria-selected="true"] { border-color: var(--AccentColor); }
+	}
+	@media (min-width: 600px) {
+		grid-template-columns: calc(var(--ui-image-gallery-thumb-w) + (2 * var(--ui-image-gallery-thumb-gap))) 1fr;
+		& [role=tablist] {
+			grid-auto-flow: row;
+			overflow-x: hidden;
+			& img { min-width: auto; }
+		}
+	}
+}

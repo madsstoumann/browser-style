@@ -9,29 +9,28 @@ export default function uiScroll(scroll, settings = {}) {
     scrollPrev: '--icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
     scrollResizeThreshold: 25,
+    scrollTabs: '',
   }, settings, scroll.dataset)
   
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
 
   const [dots, next, prev] = scrollNav(scroll)
-  const tabs = scroll.parentNode.querySelectorAll('[role=tab]')
+  const tabs = config.scrollTabs && scroll.closest(config.scrollTabs)?.querySelectorAll('[role=tab]') || []
   let index, inlineSize, itemsPerPage, pages
 
   /* Methods */
-  function scrollNav() { 
+  function scrollNav() {
     const nav = scroll.nextElementSibling || document.createElement('nav')
     const dots = nav.querySelector('ol') || document.createElement('ol')
     const next = nav.querySelector('[data-action=next]') || document.createElement('button')
     const prev = nav.querySelector('[data-action=prev]') || document.createElement('button')
-  
     if (!nav.children.length) {
       next.classList.add(config.scrollNext)
       next.innerHTML = config.scrollNextInner
       prev.classList.add(config.scrollPrev)
       prev.innerHTML = config.scrollPrevInner
-      nav.classList.add(config.scrollNav)
-      if (config.scrollNavModifier) nav.classList.add(config.scrollNavModifier)
+      config.scrollNav.split(' ').forEach(className => nav.classList.add(className))
       nav.append(prev, dots, next)
       scroll.after(nav)
     }
@@ -58,7 +57,12 @@ export default function uiScroll(scroll, settings = {}) {
     next.disabled = (index === pages - 1)
     Array.from(dots.children).forEach((dot, current) => dot.ariaSelected = index === current)
     items.forEach((elm, current) => elm.classList.toggle(config.scrollActive, index === current) )
-    tabs.forEach((tab, current) => tab.ariaSelected = index === current)
+    if (tabs.length) {
+      tabs.forEach((tab, current) => {
+        tab.ariaSelected = index === current
+        if (index === current) tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+      })
+    }
   }
 
   /* Event Listeners */

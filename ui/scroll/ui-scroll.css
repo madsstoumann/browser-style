@@ -15,7 +15,6 @@
 		flex: 0 0 100%;
 		scroll-snap-align: start;
 	}
-	&.--no-dots + .ui-scroll-nav ol { opacity: 0; }
 }
 /* outer wrapper: */
 *:has(> .ui-scroll + .ui-scroll-nav) {
