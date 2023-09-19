@@ -108,6 +108,7 @@ export default function uiScroll(scroll, settings = {}) {
     }
   })
   resizeObserver.observe(scroll)
+
   updateData() 
   scrollToPage(0)
 }
