@@ -10,7 +10,7 @@
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 	&::-webkit-scrollbar { display: none; }
-	&.--auto { scroll-behavior: auto; }
+	&[data-scroll-behavior] { scroll-behavior: auto; }
 	& > * {
 		flex: 0 0 100%;
 		scroll-snap-align: start;
@@ -30,4 +30,8 @@
 /* change outer wrapper gap, if nav is outside: */
 *:has(> .ui-scroll + .--nav-outside) {
 	gap: var(--ui-scroll-gap);
+}
+/* hide navigation for tabs */
+.ui-scroll[data-scroll-nav="--nav-tabs"] + .--nav-tabs {
+	display: none;
 }

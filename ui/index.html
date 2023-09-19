@@ -1116,15 +1116,14 @@
 		</li>
 	</ul>
 
-	<h2>Tabs</h2>
-	<p>Used here with modifier <code>--auto</code>. Default tab-scroll-behavior is <code>smooth</code>.</p>
+	<h2 id="tabs"><a href="/ui/tabs/">Tabs</a></h2>
 	<div class="ui-tabs">
 		<nav role="tablist">
-			<a href="#tab-panel-1" id="tab-1" aria-selected="true" aria-controls="tab-panel-1" role="tab">The very first tab</a>
+			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
 			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
 			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
 		</nav>
-		<div class="ui-scroll --auto" data-scroll-nav="">
+		<div class="ui-scroll" data-scroll-nav="--nav-tabs" data-scroll-behavior="auto">
 			<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
 				<h3>Welcome to the Tab 1!</h3>
 				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
@@ -1353,7 +1352,6 @@
 		import uiScroll from './scroll/uiScroll.js';
 		import uiShare from './share/uiShare.js';
 		import uiSpinner from './spinner/uiSpinner.js';
-		import uiTabs from './tabs/uiTabs.js';
 		import uiTransferList from './transfer-list/uiTransferList.js';
 		import uiVideoEmbed from './video-embed/uiVideoEmbed.js';
 		import uiWordReplace from './word-replace/uiWordReplace.js';
@@ -1376,7 +1374,6 @@
 		init('.ui-reaction', uiReaction);
 		init('.ui-share', uiShare);
 		init('.ui-spinner, .ui-pagination', uiSpinner);
-		init('.ui-tabs', uiTabs);
 		init('.ui-transfer-list', uiTransferList);
 		init('.ui-video-embed button', uiVideoEmbed);
 		init('.ui-word-replace', uiWordReplace);
