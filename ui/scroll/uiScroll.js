@@ -1,4 +1,3 @@
-import throttle from './../../assets/js/throttle.js'
 export default function uiScroll(scroll, settings = {}) {
   const config = Object.assign({
     scrollActive: '--active',
@@ -9,7 +8,7 @@ export default function uiScroll(scroll, settings = {}) {
     scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
     scrollPrev: '--icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
-    scrollResizeThreshold: 10,
+    scrollResizeThreshold: 25,
   }, settings, scroll.dataset)
   
   const items = [...scroll.querySelectorAll('& >*')]
