@@ -4,6 +4,7 @@
 	clip-path: inset(0 0 0 0 round var(--input-bdrs));
 	& img {
 		pointer-events: none;
+		user-select: none;
 		width: var(--_w);
 	}
 }
