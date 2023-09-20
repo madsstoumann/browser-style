@@ -47,9 +47,10 @@ export default function uiScroll(scroll, settings = {}) {
   function updateData() {
     index = 0
     inlineSize = scroll.offsetWidth
-    itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth)
+    itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth) || 1
     pages = Math.ceil(items.length / itemsPerPage)
     dots.innerHTML = `<li></li>`.repeat(pages)
+    scroll.classList.toggle('--single-page', pages === 1)
   }
 
   function updateUI(index) {

@@ -1,6 +1,7 @@
+@import url('ui-scroll-cols.css');
 @import url('ui-scroll-nav.css');
 
-.ui-scroll {
+:where(.ui-scroll) {
 	display: flex;
 	gap: var(--ui-scroll-gap, 0%);
 	grid-area: 1 / 1; 
@@ -12,7 +13,8 @@
 	&::-webkit-scrollbar { display: none; }
 	&[data-scroll-behavior] { scroll-behavior: auto; }
 	& > * {
-		flex: 0 0 100%;
+		--_w: calc((100% / var(--ui-scroll-cols, 1)) - (((var(--ui-scroll-cols, 1) - 1) / var(--ui-scroll-cols, 1)) * var(--ui-scroll-gap, 0%)));
+		flex: 0 0 var(--_w);
 		scroll-snap-align: start;
 	}
 }
@@ -32,5 +34,9 @@
 }
 /* hide navigation for tabs */
 .ui-scroll[data-scroll-nav="--nav-tabs"] + .--nav-tabs {
+	display: none;
+}
+/* hide navigation when single page */
+.--single-page + .ui-scroll-nav {
 	display: none;
 }
