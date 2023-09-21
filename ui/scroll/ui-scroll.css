@@ -18,6 +18,7 @@
 		scroll-snap-align: start;
 	}
 	&.--preview { --ui-scroll-preview: 80%; }
+	&:focus-visible + nav { opacity: 1; }
 }
 /* Outer Wrapper: */
 *:has(> .ui-scroll + .ui-scroll-nav) {

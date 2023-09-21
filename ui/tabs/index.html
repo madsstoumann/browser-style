@@ -16,7 +16,7 @@
 	<h2>Tabs</h2>
 	<p>Used here with modifier <code>data-scroll-behavior="auto"</code>.<br>Default behavior is <code>smooth</code>.</p>
 	<div class="ui-tabs">
-		<nav role="tablist">
+		<nav role="tablist" class="--hide-scrollbar">
 			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
 			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
 			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
@@ -36,6 +36,24 @@
 				<h3>Step into Tab 3 &hellip;</h3>
 				<p>&hellip; your virtual playground! Unleash your creativity, embark on adventures, and let your imagination run wild. From interactive games and puzzles to artistic challenges and contests, there's never a dull moment here. Join our vibrant community, make new friends, and let the fun begin. Get ready for an unforgettable experience!</p>	
 				<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy">
+			</div>
+		</div>
+	</div>
+
+	<p>Width <code>--group</code> modifier</p>
+	<div class="ui-tabs --group">
+		<nav role="tablist" class="--hide-scrollbar">
+			<a href="#tab-panel-4" id="tab-4" aria-controls="tab-panel-4" role="tab">Custom Settings</a>
+			<a href="#tab-panel-5" id="tab-5" aria-controls="tab-panel-5" role="tab">Configuration</a>
+		</nav>
+		<div class="ui-scroll" data-scroll-nav="--hidden" data-scroll-behavior="auto" data-scroll-tabs=".ui-tabs">
+			<div id="tab-panel-4" role="tabpanel" aria-labelledby="tab-4">
+				<h3>Custom Settings</h3>
+				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
+			</div>
+			<div id="tab-panel-5" role="tabpanel" aria-labelledby="tab-5">
+				<h3>Configuration</h3>
+				<p>Here, you'll find a wide range of exciting content to keep you entertained. From news and updates to interesting articles and videos, there's something for everyone. Dive in, stay curious, and discover new perspectives. Let this tab be your gateway to endless inspiration and knowledge.</p>
 			</div>
 		</div>
 	</div>

@@ -184,6 +184,10 @@
 /* Modifiers */
 .--dark { color-scheme: dark; }
 .--light { color-scheme: light; }
+.--hide-scrollbar {
+	scrollbar-width: none;
+	&::-webkit-scrollbar { display: none; }
+}
 
 /* Colors */
 :where(.--accent) {

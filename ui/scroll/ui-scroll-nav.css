@@ -29,7 +29,7 @@
 		justify-content: space-between;
 		height: 100%;
 		padding-inline: var(--ui-scroll-nav-gap);
-		pointer-events: none;
+		/* pointer-events: none; */
 		width: 100%;
 		& button {
 			align-self: center;
@@ -59,4 +59,12 @@
 	}
 	&.--no-buttons button { visibility: hidden; }
 	&.--no-dots ol { visibility: hidden; }
+
+	@media (hover: hover) {
+		&.--hover {
+			opacity: 0;
+			transition: opacity .2s ease-in;
+			&:hover { opacity: 1; }
+		}
+	}
 }
