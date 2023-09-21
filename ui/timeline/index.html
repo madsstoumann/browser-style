@@ -5,42 +5,48 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
-	<link rel="stylesheet" href="../../browser.style.ui.css">
+  <link rel="stylesheet" href="ui-timeline.css">
+	<link rel="stylesheet" href="../scroll/ui-scroll.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Timeline</h2>
-	<p>With <code>--horizontal</code> modifier</p>
-	<ul class="ui-timeline --horizontal">
-		<li class="--accent">
-			<small>32 mins ago</small>
-			<h3>Someone, somewhere, did something stupid</h3>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
-			<a href="#none">Read more</a>
-		</li>
-		<li>
-			<small>36 mins ago</small>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? </p>
-			<a href="#none">Read more</a>
-		</li>
-		<li class="--accent-light">
-			<small>58 mins ago</small>
-			<h3>Someone, somewhere, did something great</h3>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
-			<a href="#none">Read more</a>
-		</li>
-		<li>
-			<small>1 day ago</small>
-			<h3>The world needs more LEGO</h3>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum!</p>
-			<a href="#none">Read more</a>
-		</li>
-	</ul>
+	<p>Horizontal: With outer wrapper, and <code>ui-scroll</code> modifier</p>
 
-	<p>With <code>--vertical</code> modifier</p>
-	<ul class="ui-timeline --vertical">
+	<div class="ui-timeline">
+		<ul class="ui-scroll --md-cols-2">
+			<li class="--accent">
+				<small>32 mins ago</small>
+				<h3>Someone, somewhere, did something stupid</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+				<a href="#none">Read more</a>
+			</li>
+			<li>
+				<small>36 mins ago</small>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? </p>
+				<a href="#none">Read more</a>
+			</li>
+			<li class="--accent-light">
+				<small>58 mins ago</small>
+				<h3>Someone, somewhere, did something great</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum! Eius nulla tempora pariatur temporibus.</p>
+				<a href="#none">Read more</a>
+			</li>
+			<li>
+				<small>1 day ago</small>
+				<h3>The world needs more LEGO</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias, ab? Sequi dolorem aspernatur ad earum!</p>
+				<a href="#none">Read more</a>
+			</li>
+		</ul>
+	</div>
+
+	<p>Vertical: Class set directly on <code>&ltul&gt;</code></p>
+
+	<ul class="ui-timeline">
 		<li class="--accent">
 			<small>32 mins ago</small>
 			<h3>Someone, somewhere, did something stupid</h3>
@@ -65,5 +71,13 @@
 			<a href="#none">Read more</a>
 		</li>
 	</ul>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiScroll from './../scroll/uiScroll.js';
+		common();
+		init('.ui-scroll', uiScroll);
+	</script>
+
 </body>
 </html>
