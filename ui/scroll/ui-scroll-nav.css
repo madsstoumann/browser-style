@@ -6,25 +6,25 @@
 	justify-content: center;
 	margin-block: var(--ui-scroll-gap);
 	& ol {
-		--_sz: .5em;
 		all: unset;
 		align-content: center;
 		display: grid;
-		gap: calc(var(--_sz) / 2);
+		gap: var(--ui-scroll-dot-gap, .6em);
 		grid-auto-flow: column;
 		& li {
 			all: unset;
 			background-color: var(--AccentColorText);
 			border-radius: 50%;
-			height: var(--_sz);
-			width: var(--_sz);
+			height: var(--ui-scroll-dot-h, .5em);
+			width: var(--ui-scroll-dot-w, .5em);
 			&[aria-selected=true] {
 				background-color: var(--AccentColor);
 				box-shadow: 0 0 0 2px var(--AccentColorText);
 			}
 		}
 	}
-	&.--nav-inside {
+	&.--hidden { display: none; }
+	&.--inside {
 		grid-area: 1 / 1;
 		justify-content: space-between;
 		height: 100%;
@@ -36,7 +36,7 @@
 			pointer-events: auto;
 		}
 	}
-	&.--nav-outside {
+	&.--outside {
 		display: contents;
 		gap: var(--ui-scroll-nav-gap);
 		& button {
@@ -49,13 +49,14 @@
 			grid-row: 1;
 		}
 	}
-	&.--nav-inside,
-	&.--nav-outside {
+	&.--inside,
+	&.--outside {
 		margin-block: 0;
 		& ol {
 			margin-block-end: var(--ui-scroll-nav-gap);
 			place-self: end center;
 		}
 	}
-	&.--no-dots ol { opacity: 0; }
+	&.--no-buttons button { visibility: hidden; }
+	&.--no-dots ol { visibility: hidden; }
 }

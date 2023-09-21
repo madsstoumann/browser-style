@@ -13,30 +13,26 @@
 	&::-webkit-scrollbar { display: none; }
 	&[data-scroll-behavior] { scroll-behavior: auto; }
 	& > * {
-		--_w: calc((100% / var(--ui-scroll-cols, 1)) - (((var(--ui-scroll-cols, 1) - 1) / var(--ui-scroll-cols, 1)) * var(--ui-scroll-gap, 0%)));
+		--_w: calc((var(--ui-scroll-preview, 100%) / var(--ui-scroll-cols, 1)) - (((var(--ui-scroll-cols, 1) - 1) / var(--ui-scroll-cols, 1)) * var(--ui-scroll-gap, 0%)));
 		flex: 0 0 var(--_w);
 		scroll-snap-align: start;
 	}
+	&.--preview { --ui-scroll-preview: 80%; }
 }
-/* outer wrapper: */
+/* Outer Wrapper: */
 *:has(> .ui-scroll + .ui-scroll-nav) {
 	display: grid;
 	direction: ltr;
 }
-/* change grid-layout, if nav is outside: */
-.ui-scroll:has(+ .--nav-outside) {
+/* Change grid-layout, if NAV is outside: */
+.ui-scroll:has(+ .--outside) {
 	grid-column: 2;
 	grid-row: 1;
 }
-/* change outer wrapper gap, if nav is outside: */
-*:has(> .ui-scroll + .--nav-outside) {
+/* Change Outer Wrapper-gap, if NAV is outside: */
+*:has(> .ui-scroll + .--outside) {
 	gap: var(--ui-scroll-gap);
 }
-/* hide navigation for tabs */
-.ui-scroll[data-scroll-nav="--nav-tabs"] + .--nav-tabs {
-	display: none;
-}
-/* hide navigation when single page */
-.--single-page + .ui-scroll-nav {
+.ui-scroll[data-scroll-nav="--hidden"] + nav {
 	display: none;
 }

@@ -15,7 +15,7 @@ export default function uiScroll(scroll, settings = {}) {
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
 
-  const [dots, next, prev] = scrollNav(scroll)
+  const [dots, nav, next, prev] = scrollNav(scroll)
   const tabs = config.scrollTabs && scroll.closest(config.scrollTabs)?.querySelectorAll('[role=tab]') || []
   let index, inlineSize, itemsPerPage, pages
 
@@ -34,7 +34,7 @@ export default function uiScroll(scroll, settings = {}) {
       nav.append(prev, dots, next)
       scroll.after(nav)
     }
-    return [dots, next, prev]
+    return [dots, nav, next, prev]
   }
 
   function scrollToPage(index, behavior = config.scrollBehavior) {
@@ -50,7 +50,7 @@ export default function uiScroll(scroll, settings = {}) {
     itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth) || 1
     pages = Math.ceil(items.length / itemsPerPage)
     dots.innerHTML = `<li></li>`.repeat(pages)
-    scroll.classList.toggle('--single-page', pages === 1)
+    nav.classList.toggle('--hidden', pages === 1)
   }
 
   function updateUI(index) {

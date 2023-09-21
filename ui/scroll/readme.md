@@ -47,3 +47,16 @@ When a `dataset` is used, use kebab-style:
   data-scroll-auto-play="3000"
   data-scroll-behavior="auto">
 ```
+
+### CSS Mofifiers
+
+- `--hidden`
+- `--inside`
+- `--no-buttons`
+- `--no-dots`
+- `--outside`
+
+---
+
+- `--hover`
+- `--preview`
