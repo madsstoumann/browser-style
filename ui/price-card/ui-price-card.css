@@ -3,7 +3,6 @@
 	border-radius: var(--ui-price-card-bdrs, 2ch);
 	display: grid;
 	padding: 1.5ch 2ch;
-
 	& button {
 		justify-self: center;
 		margin-block-end: 1ch;
@@ -23,11 +22,7 @@
 	}
 	& .ui-chip { justify-self: start; }
 }
-/* TODO: Outline button hover-bg */
-/* TODO: Options for column-width, breaks */
-:where(.ui-column) {
-	container-type: inline-size;
-	display: grid;
-	gap: var(--ui-column-gap, 2ch);
-	grid-auto-flow: column;
+/* Requies ui-scroll.css */
+:where(.ui-price-card__wrapper) {
+	--ui-scroll-gap: 2ch;
 }

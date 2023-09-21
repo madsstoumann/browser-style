@@ -859,71 +859,73 @@
 		</label>
 	</fieldset>
 
-	<h2>Price Card</h2>
-	<div class="ui-column">
-		<article class="ui-price-card --info">
-			<span class="ui-chip --info-bg">Team</span>
-			<h2>$249 / <small>Monthly</small></h2>
-			<ul>
-				<li>5 Content Providers</li>
-				<li>3 Sites</li>
-				<li>10 Users</li>
-				<li>25 Components</li>
-				<li>Layout Designer</li>
-				<li>Content Designer</li>
-				<li>Deep Links &amp; Navigation</li>
-				<li>Comments</li>
-				<li class="--disabled">Tasks Management</li>
-				<li class="--disabled">AI Companion</li>
-				<li class="--disabled">Sign off &amp; Approval</li>
-				<li class="--disabled">SEO &amp; Accessibility Analysis</li>
-				<li class="--disabled">Compliance &amp; Governance</li>
-				<li class="--disabled">AI Text Analysis</li>
-			</ul>
-			<button type="button" class="--outline">Contact Sales</button>
-		</article>
-		<article class="ui-price-card --accent">
-			<span class="ui-chip --accent-light">Professional</span>
-			<h2>$799 / <small>Monthly</small></h2>
-			<ul>
-				<li>5 Content Providers</li>
-				<li>3 Sites</li>
-				<li>10 Users</li>
-				<li>25 Components</li>
-				<li>Layout Designer</li>
-				<li>Content Designer</li>
-				<li>Deep Links &amp; Navigation</li>
-				<li>Comments</li>
-				<li>Tasks Management</li>
-				<li>AI Companion</li>
-				<li class="--disabled">Sign off &amp; Approval</li>
-				<li class="--disabled">SEO &amp; Accessibility Analysis</li>
-				<li class="--disabled">Compliance &amp; Governance</li>
-				<li class="--disabled">AI Text Analysis</li>
-			</ul>
-			<button type="button" class="--outline">Contact Sales</button>
-		</article>
-		<article class="ui-price-card --info">
-			<span class="ui-chip --info-bg">Enterprise</span>
-			<h2>$999 / <small>Monthly</small></h2>
-			<ul>
-				<li>5 Content Providers</li>
-				<li>3 Sites</li>
-				<li>10 Users</li>
-				<li>25 Components</li>
-				<li>Layout Designer</li>
-				<li>Content Designer</li>
-				<li>Deep Links &amp; Navigation</li>
-				<li>Comments</li>
-				<li>Tasks Management</li>
-				<li>AI Companion</li>
-				<li>Sign off &amp; Approval</li>
-				<li>SEO &amp; Accessibility Analysis</li>
-				<li>Compliance &amp; Governance</li>
-				<li>AI Text Analysis</li>
-			</ul>
-			<button type="button" class="--outline">Contact Sales</button>
-		</article>
+	<h2 id="price-card"><a href="/ui/price-card">Price Card</a></h2>
+	<div class="ui-price-card__wrapper">
+		<div class="ui-scroll --sm-cols-2 --md-cols-3" data-scroll-nav="ui-scroll-nav --inside --hover --no-dots">
+			<article class="ui-price-card --info">
+				<span class="ui-chip --info-bg">Team</span>
+				<h2>$249 / <small>Monthly</small></h2>
+				<ul>
+					<li>5 Content Providers</li>
+					<li>3 Sites</li>
+					<li>10 Users</li>
+					<li>25 Components</li>
+					<li>Layout Designer</li>
+					<li>Content Designer</li>
+					<li>Deep Links &amp; Navigation</li>
+					<li>Comments</li>
+					<li class="--disabled">Tasks Management</li>
+					<li class="--disabled">AI Companion</li>
+					<li class="--disabled">Sign off &amp; Approval</li>
+					<li class="--disabled">SEO &amp; Accessibility Analysis</li>
+					<li class="--disabled">Compliance &amp; Governance</li>
+					<li class="--disabled">AI Text Analysis</li>
+				</ul>
+				<button type="button" class="--outline">Contact Sales</button>
+			</article>
+			<article class="ui-price-card --accent">
+				<span class="ui-chip --accent-light">Professional</span>
+				<h2>$799 / <small>Monthly</small></h2>
+				<ul>
+					<li>5 Content Providers</li>
+					<li>3 Sites</li>
+					<li>10 Users</li>
+					<li>25 Components</li>
+					<li>Layout Designer</li>
+					<li>Content Designer</li>
+					<li>Deep Links &amp; Navigation</li>
+					<li>Comments</li>
+					<li>Tasks Management</li>
+					<li>AI Companion</li>
+					<li class="--disabled">Sign off &amp; Approval</li>
+					<li class="--disabled">SEO &amp; Accessibility Analysis</li>
+					<li class="--disabled">Compliance &amp; Governance</li>
+					<li class="--disabled">AI Text Analysis</li>
+				</ul>
+				<button type="button" class="--outline">Contact Sales</button>
+			</article>
+			<article class="ui-price-card --info">
+				<span class="ui-chip --info-bg">Enterprise</span>
+				<h2>$999 / <small>Monthly</small></h2>
+				<ul>
+					<li>5 Content Providers</li>
+					<li>3 Sites</li>
+					<li>10 Users</li>
+					<li>25 Components</li>
+					<li>Layout Designer</li>
+					<li>Content Designer</li>
+					<li>Deep Links &amp; Navigation</li>
+					<li>Comments</li>
+					<li>Tasks Management</li>
+					<li>AI Companion</li>
+					<li>Sign off &amp; Approval</li>
+					<li>SEO &amp; Accessibility Analysis</li>
+					<li>Compliance &amp; Governance</li>
+					<li>AI Text Analysis</li>
+				</ul>
+				<button type="button" class="--outline">Contact Sales</button>
+			</article>
+		</div>
 	</div>
 
 	<h2>Progress — Circular</h2>
@@ -1143,7 +1145,7 @@
 
 	<h2 id="tabs"><a href="/ui/tabs/">Tabs</a></h2>
 	<div class="ui-tabs">
-		<nav role="tablist">
+		<nav role="tablist" class="--hide-scrollbar">
 			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
 			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
 			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
