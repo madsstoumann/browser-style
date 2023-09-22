@@ -8,7 +8,7 @@ Breadcrumbs — custom `::marker`, icons
 Button
 Button Group
 Calculator
-Card
+Card // TODO! Container query, horizontal layout
 Carousel
 Chat
 Chip
@@ -16,6 +16,7 @@ Color Compare
 Color Grid
 Color Mask
 Color Swatch
+Column
 Config Group
 ContextMenu
 Countdown
@@ -41,6 +42,7 @@ Meter
 Mood
 Notification
 One Time Code
+Pagination
 Password Strength
 Password Toggle
 Position
@@ -57,7 +59,7 @@ Range - MinMax
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
 Reading Progress
-Scroll Navigation
+Scroll + Navigation
 Share
 Slider
 Spinner
@@ -65,7 +67,7 @@ Step — Horizontal and vertical
 Swap
 Syntax Highlight — CSS
 Tabs
-Tags
+Tag
 Timeline — Horizontal and vertical
 Timeslot
 Toasts

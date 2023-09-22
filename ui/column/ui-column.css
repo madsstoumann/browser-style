@@ -1,0 +1,9 @@
+@import url('ui-column-cols.css');
+@import url('ui-column-span.css');
+
+:where(.ui-column) {
+	column-gap: var(--ui-column-cg, 1em);
+	display: grid;
+	grid-template-columns: repeat(var(--ui-column-cols, 1), 1fr);
+	row-gap: var(--ui-column-rg, 1em);
+}

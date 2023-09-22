@@ -1,6 +1,5 @@
-@import url('ui-scroll-cols.css');
+/* Can be use with ui-column-cols.css */
 @import url('ui-scroll-nav.css');
-
 :where(.ui-scroll) {
 	display: flex;
 	gap: var(--ui-scroll-gap, 0%);
@@ -13,7 +12,7 @@
 	&::-webkit-scrollbar { display: none; }
 	&[data-scroll-behavior] { scroll-behavior: auto; }
 	& > * {
-		--_w: calc((var(--ui-scroll-preview, 100%) / var(--ui-scroll-cols, 1)) - (((var(--ui-scroll-cols, 1) - 1) / var(--ui-scroll-cols, 1)) * var(--ui-scroll-gap, 0%)));
+		--_w: calc((var(--ui-scroll-preview, 100%) / var(--ui-column-cols, 1)) - (((var(--ui-column-cols, 1) - 1) / var(--ui-column-cols, 1)) * var(--ui-scroll-gap, 0%)));
 		flex: 0 0 var(--_w);
 		scroll-snap-align: start;
 	}
