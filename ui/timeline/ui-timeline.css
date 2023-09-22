@@ -40,6 +40,7 @@
 			inset-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-pi));
 			position: absolute;
 			width: var(--_w);
+			/* width: calc(100% - var(--ui-timeline-pi) - var(--ui-timeline-dot-sz)); */
 		}
 		&.--accent {
 			&::after { background: var(--AccentColor); }

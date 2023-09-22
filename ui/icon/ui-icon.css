@@ -133,8 +133,13 @@ ui-icon[size*=xl] { --icon-fz: 140%; }
 :is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
 :is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
 
-/* <input type="checkbox"> + <ui-icon> */
+/* [type="checkbox"] + <ui-icon> */
 :checked + ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+:checked + ui-icon[type*=menu] {
+	gap: 0;
+	&::before { box-shadow: none; rotate: -45deg; }
+	&::after { rotate: 45deg; }
+}
 
 /* Stroke */
 ui-icon[stroke*=xs] { --icon-bdw: 1px; }

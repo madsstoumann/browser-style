@@ -38,6 +38,7 @@ Image Select
 Indeterminate
 Input Button
 Map
+Menu
 Meter
 Mood
 Notification
@@ -84,7 +85,6 @@ Calendar
 Data Table (Resizable Columns, Search etc.)
 Footer
 Locale Switcher (Choose country, Continue)
-Menu
 Search, input + `<search>`
 Product Card (with image gallery)
 Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)

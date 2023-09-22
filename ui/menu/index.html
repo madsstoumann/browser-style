@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-menu.css">
+	<style>
+		/* For demo */
+		body { margin-block: 0; padding: 0; }
+		main { padding-inline: 2ch; }
+	</style>
+</head>
+<body>
+
+	<header class="ui-menu">
+		<a href="/" class="menu-home">LOGO</a>
+		<label aria-label="Toggle flyout menu">
+			<input type="checkbox" data-sr>
+			<ui-icon type="burger-menu" size="xl"></ui-icon>
+		</label>
+		<div class="ui-menu-flyout">
+			<nav>
+				<details>
+					<summary>Products</summary>
+					<div>LINKS HERE</div>
+				</details>
+				<a href="#">Deals</a>
+				<a href="#">News</a>
+				<a href="#">Support</a>
+				<a href="#">Company</a>
+			</nav>
+			<nav>
+				<a href="#">Search</a>
+				<a href="#">Cart</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<h1>UI: Components</h1>
+		<h2>Menu</h2>
+		<p>With modifier <code>--stretch</code></p>
+	</main>
+</body>
+</html>

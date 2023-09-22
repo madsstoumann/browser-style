@@ -1,0 +1,90 @@
+:where(.ui-menu) {
+	--VisitedText: currentColor;
+	--ui-menu-pb: .75em;
+	--ui-menu-pi: 1.5em;
+
+	align-items: center;
+	background: var(--ui-menu-bg, var(--GrayCanvas));
+	color: var(--ui-menu-c, var(--CanvasText));
+	display: flex;
+	font-size: var(--ui-menu-fs, smaller);
+	justify-content: space-between;
+	margin-inline: auto;
+	max-inline-size: var(--ui-menu-desktop-w, 1200px);
+	padding:
+		var(--ui-menu-pb)
+		calc(env(safe-area-inset-right) + var(--ui-menu-pi))
+		var(--ui-menu-pb)
+		calc(env(safe-area-inset-left) + var(--ui-menu-pi));
+		position: relative;
+	& a {
+		color: currentColor;
+		text-decoration: none;
+	}
+	& label:has(:checked)::after { 
+		background: rgba(0,0,0,.25);
+		content: "";
+		inset: 0;
+		position: fixed;
+	 }
+	& summary { cursor: pointer; display: block; }
+	&:has(input:checked) .ui-menu-flyout { translate: 0; }
+
+	& .ui-menu-flyout {
+		background: var(--ui-menu-flyout-bg, inherit);
+		color: var(--ui-menu-flyout-c, inherit);
+		display: flex;
+		flex-direction: column;
+		inset: 0 calc(100vw - var(--ui-mobile-w, 80vw)) 0 0;
+		justify-content: space-between;
+		padding: var(--ui-menu-flyout-p, 4ch 2ch 2ch);
+		position: fixed;
+		transition: translate .2s cubic-bezier(.4, 0, .2, 1);
+		translate: -100vw 0;
+		& nav {
+			display: flex;
+			flex: 1;
+			flex-direction: var(--ui-menu-dir, column);
+			gap: var(--ui-menu-mobile-gap, 1em);
+			&:last-of-type { justify-content: end; }
+		}
+	}
+	@media (min-width: 768px) {
+		& .ui-menu-flyout {
+			--ui-menu-dir: row;
+			display: contents;
+			color: inherit;
+			font-size: revert;
+			& nav {
+				flex: unset;
+				gap: var(--ui-menu-desktop-gap, 2.5em);
+			}
+		}
+		& details {
+			& summary + * {
+				background: Canvas;
+				box-shadow: var(--ui-menu-panel-bxsh, 0px 6px 15px rgba(0, 0, 0, 0.12));
+				left: 0;
+				padding: var(--ui-menu-pb) var(--ui-menu-pi);
+				position: absolute;
+				top: 100%;
+				width: 100%;
+			}
+		}
+		& > label:has([type=checkbox]) { display: none; }
+		/* &.--stretch {
+			border-image: conic-gradient(var(--ui-menu-bg, var(--GrayCanvas)) 0 0) fill 0//100vw;
+			clip-path: polygon(-100vw 0, 100vw 0, 100vw 100%, -100vw 100%);
+		} */
+	}
+}
+
+/* === Prevent Scrolling, when flyout is visible === */
+@media (max-width: 767px) {
+	body:has(.ui-menu):has(input:checked) {
+		overflow: hidden;
+	}
+}
+@media(hover: hover) {
+	/* .ui-menu a:hover { color: var(--ui-menu-a-h-c, hsl(240, 0%, 100%)); } */
+}
