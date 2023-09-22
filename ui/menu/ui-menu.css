@@ -72,10 +72,19 @@
 			}
 		}
 		& > label:has([type=checkbox]) { display: none; }
-		/* &.--stretch {
-			border-image: conic-gradient(var(--ui-menu-bg, var(--GrayCanvas)) 0 0) fill 0//100vw;
-			clip-path: polygon(-100vw 0, 100vw 0, 100vw 100%, -100vw 100%);
-		} */
+		&.--stretch::before {
+			background: inherit;
+			/* https://css-tip.com/stanled-background-full-screen/ */
+			/* border-image: conic-gradient(var(--ui-menu-bg, var(--GrayCanvas)) 0 0) fill 0//100vw; */
+			/* clip-path: polygon(-100vw 0, 100vw 0, 100vw 100%, -100vw 100%); */
+			content: "";
+			height: 100%;
+			left: 0;
+			top: 0;
+			position: absolute;
+			width: 100vw;
+			z-index: -1;
+		}
 	}
 }
 
