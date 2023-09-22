@@ -8,10 +8,10 @@ export default function uiScroll(scroll, settings = {}) {
     scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
     scrollPrev: '--icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
-    scrollResizeThreshold: 25,
+    scrollResizeThreshold: 75,
     scrollTabs: '',
   }, settings, scroll.dataset)
-  
+
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
 
@@ -37,10 +37,12 @@ export default function uiScroll(scroll, settings = {}) {
     return [dots, nav, next, prev]
   }
 
-  function scrollToPage(index, behavior = config.scrollBehavior) {
-    items[index * itemsPerPage].scrollIntoView({
-      behavior, block: 'nearest', inline: 'start'
-    })
+  function scrollToPage(index, behavior = config.scrollBehavior, scrollIntoView = true) {
+    if (scrollIntoView) {
+      items[index * itemsPerPage].scrollIntoView({
+        behavior, block: 'nearest', inline: 'start'
+      })
+    }
     updateUI(index)
   }
 
@@ -92,14 +94,6 @@ export default function uiScroll(scroll, settings = {}) {
     })
   })
 
-  /* Auto Play */
-  if (config.scrollAutoPlay) {
-    setInterval(() => {
-      index++; if (index >= pages) index = 0
-      scrollToPage(index)
-    }, parseInt(config.scrollAutoPlay, 10))
-  }
-
   /* Resize Observer / Init */
   const resizeObserver = new ResizeObserver((entries) => {
     const entryInlineSize = Math.floor(entries[0].contentBoxSize[0].inlineSize)
@@ -110,6 +104,22 @@ export default function uiScroll(scroll, settings = {}) {
   })
   resizeObserver.observe(scroll)
 
-  updateData() 
-  scrollToPage(0)
+  updateData()
+
+  /* Set initial tab from location.hash, using #![ID] */
+  if (config.scrollTabs && location.hash) {
+    const id = location.hash.replace('#!', '')
+    const tabIndex = items.findIndex(item => item.getAttribute('id') === id)
+    if (tabIndex > -1) index = tabIndex
+  }
+
+  scrollToPage(index, 'auto', false)
+
+  /* Auto Play */
+  if (config.scrollAutoPlay) {
+    setInterval(() => {
+      index++; if (index >= pages) index = 0
+      scrollToPage(index)
+    }, parseInt(config.scrollAutoPlay, 10))
+  }
 }
