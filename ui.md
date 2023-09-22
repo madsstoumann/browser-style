@@ -76,6 +76,7 @@ Video Embed — YouTube and Vimeo
 Word Replace
 Word Wheel
 World Map
+XY
 ---
 AutoComplete
 Calendar
@@ -84,6 +85,7 @@ Data Table (Resizable Columns, Search etc.)
 Footer
 Locale Switcher (Choose country, Continue)
 Menu
+Search, input + `<search>`
 Product Card (with image gallery)
 Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)
 Weather Forecast (https://rapidapi.com/blog/access-global-weather-data-with-these-weather-apis/)
@@ -118,7 +120,7 @@ textarea (with quill, resize)
 toggle-tips
 tour (http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/tour/index.html)
 under-line gradient
-xy
+
 
 http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/index.html
 http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/

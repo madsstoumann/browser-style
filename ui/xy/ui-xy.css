@@ -1,0 +1,60 @@
+:where(.ui-xy) {
+	all: unset;
+	aspect-ratio: 1 / 1;
+	background-color: var(--GrayCanvas);
+	border-radius: var(--input-bdrs);
+	direction: ltr;
+	position: relative;
+	touch-action: none;
+	width: 100%;
+
+	& [name="xyPoint"] {
+		aspect-ratio: 1 / 1;
+		background-color: var(--ButtonFace);
+		border: var(---ui-xy-point-bdw, 0.5rem) solid var(--ButtonBorder);
+		border-radius: var(--ui-xy-point-bdrs, 50%);
+		inline-size: var(--ui-xy-point-sz, 4rem);
+		outline: none;
+		padding: 0;
+		pointer-events: none;
+		position: relative;
+		touch-action: none;
+		transform: translate3d(calc(1px * var(--tx)), calc(1px * var(--ty)), 0);
+		transition: none;
+		user-select: none;
+		&:focus-visible {
+			background: var(--AccentColorLight);
+			border-color: var(--AccentColor);
+		}
+	}
+
+	&.--snap {
+		--xy-grid-clg: 1px;
+		--xy-grid-bgc: transparent;
+		--xy-grid-gap-bgc: var(--ButtonFace);
+		--xy-point-bdrs: 0;
+		--xy-point-bgc: transparent;
+		--ui-xy-point-sz: calc(100% / var(--xy-grid-x));
+
+		--_wx: calc( (100% - (((var(--xy-grid-x, 1) - 1) * var(--xy-grid-clg)))) / var(--xy-grid-x, 1) );
+		--_wy: calc( (100% - (((var(--xy-grid-y, 1) - 1) * var(--xy-grid-clg)))) / var(--xy-grid-y, 1) );
+
+		background-image: repeating-linear-gradient(to right,
+			var(--xy-grid-bgc), var(--xy-grid-bgc) var(--_wx),
+			var(--xy-grid-gap-bgc) var(--_wx), var(--xy-grid-gap-bgc) calc(var(--_wx) + var(--xy-grid-clg) ) ),
+			repeating-linear-gradient(to bottom,
+			var(--xy-grid-bgc), var(--xy-grid-bgc) var(--_wy),
+			var(--xy-grid-gap-bgc) var(--_wy), var(--xy-grid-gap-bgc) calc(var(--_wy) + var(--xy-grid-clg) ) );
+	}
+}
+
+/*
+=======
+ STATE
+=======
+*/
+/* .ui-xy [name="xyPoint"]
+.ui-xy [data-active="1"] [name="xyPoint"] {
+	--xy-point-bdc: var(--xy-point-bdc--active);
+	--xy-point-bgc: var(--xy-point-bgc--active);
+} */

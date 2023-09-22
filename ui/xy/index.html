@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-xy.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>XY</h2>
+
+	<fieldset class="ui-xy --snap" data-grid-x="6" data-grid-y="6">
+		<legend></legend>
+		<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
+	</fieldset>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiXY from './../xy/uiXY.js';
+
+		common();
+		init('.ui-xy', uiXY);
+
+		/* Listen for XY events */
+		const elm = document.querySelector('.ui-xy');
+		// elm.addEventListener('xytoggle', () => { elm.classList.toggle('xy-toggle') });
+
+		elm.addEventListener('xymove', event => {
+			const obj = event.detail;
+			// console.log(obj)
+			// elm.firstElementChild.textContent = `x:${obj.x.toFixed(3)} y:${obj.y.toFixed(3)}`;
+		});
+	</script>
+</body>
+</html>
