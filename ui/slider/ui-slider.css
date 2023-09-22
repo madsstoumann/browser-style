@@ -2,6 +2,7 @@
 .ui-slider {
 	--ui-scroll-gap: 2ch;
 	& img {
+		object-fit: cover;
 		pointer-events: none;
 		user-select: none;
 		width: var(--_w);

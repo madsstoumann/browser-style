@@ -8,12 +8,16 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
   <link rel="stylesheet" href="ui-column.css">
+	<!-- For demo, not a dependency -->
+	<link rel="stylesheet" href="../scroll/ui-scroll.css">
 	<style>
+		/* For demo */
 		div { 
 			border: 2px solid var(--ButtonBorder);
 			min-height: 10rem;
 			padding: 1em;
 		}
+		[data-scroll-nav] { padding: 0; }
 	</style>
 </head>
 <body>
@@ -22,22 +26,36 @@
 	<h2>Column</h2>
 	<p>Column is a set of micro-classes controlling columns, gaps and spans in a grid.</p>
 
-	<section class="ui-column --md-cols-3">
+	<section class="ui-column --md-c-3">
 		<div class="--error"></div>
-		<div class="ui-column --md-span-2 --md-cols-3 --error">
+		<div class="ui-column --md-gcs-2 --md-c-3 --error">
 			<div class="--warning"></div>
-			<div class="ui-column --md-span-2 --xs-cols-1 --warning">
+			<div class="ui-column --md-gcs-2 --xs-c-1 --warning">
 				<div class="--success"></div>
-				<div class="ui-column --md-cols-2 --success">
+				<div class="ui-column --md-c-2 --success">
 					<div class="--accent-light"></div>
 					<div class="--accent-light"></div>
 				</div>
 			</div>
 		</div>
-		<div class="--md-row-2 --warning"></div>
+		<div class="--md-grs-2 --warning">
+			<div class="ui-scroll --xs-c-1" data-scroll-nav="ui-scroll-nav --inside">
+				<img src="https://source.unsplash.com/random/225x300?sig=10" alt="Random image" width="225" height="300">
+				<img src="https://source.unsplash.com/random/225x300?sig=11" alt="Random image" width="225" height="300">
+				<img src="https://source.unsplash.com/random/225x300?sig=12" alt="Random image" width="225" height="300">
+			</div>
+		</div>
 		<div class="--accent-light"></div>
 		<div class="--accent-light"></div>
-		<div class="--md-span-2 --warning"></div>
+		<div class="--md-gcs-2 --warning"></div>
 	</section>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiScroll from './../scroll/uiScroll.js';
+
+		common();
+		init('.ui-scroll', uiScroll);
+	</script>
 </body>
 </html>
