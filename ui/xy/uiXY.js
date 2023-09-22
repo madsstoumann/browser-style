@@ -1,10 +1,11 @@
 /**
  * xy
- * @version 1.0.10
- * @summary 07-20-2022
+ * @version 1.0.11
+ * @summary 09-22-2023
  * @author Mads Stoumann
  * @description XY Controller
 */
+import datasetWithTypes from './../../assets/js/datasetWithTypes.js';
 export default function uiXY(elm, config) {
 	const settings = Object.assign({
 		eventScope: elm,
@@ -18,7 +19,7 @@ export default function uiXY(elm, config) {
 		shift: 10,
 		x: 50,
 		y: 50 
-	}, config || elm.dataset);
+	}, config, datasetWithTypes(elm.dataset));
 
 	let active = false, areaX, areaY, maxX, maxY, pointsize, ratioX, ratioY, snapX, snapY, xCurrent, yCurrent, x = settings.x, y = settings.y;
 	const difX = settings.maxX - settings.minX;

@@ -14,12 +14,19 @@
 
 	<h2>XY</h2>
 
-	<fieldset class="ui-xy --snap" data-grid-x="6" data-grid-y="6">
+	<fieldset class="ui-xy">
 		<legend></legend>
 		<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
 	</fieldset>
 
-	<script type="module">
+	<p>With <code>--snap</code> modifier and <code>data-grid="6"</code>:</p>
+
+	<fieldset class="ui-xy --snap" data-grid-x="6" data-grid-y="6" data-x="0" data-y="100">
+		<legend></legend>
+		<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
+	</fieldset>
+
+<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		import uiXY from './../xy/uiXY.js';
 
@@ -27,14 +34,10 @@
 		init('.ui-xy', uiXY);
 
 		/* Listen for XY events */
-		const elm = document.querySelector('.ui-xy');
-		// elm.addEventListener('xytoggle', () => { elm.classList.toggle('xy-toggle') });
-
-		elm.addEventListener('xymove', event => {
-			const obj = event.detail;
-			// console.log(obj)
-			// elm.firstElementChild.textContent = `x:${obj.x.toFixed(3)} y:${obj.y.toFixed(3)}`;
-		});
+		document.querySelectorAll('.ui-xy').forEach(XY => {
+			XY.addEventListener('xytoggle', (event) => { console.log('toggle') })
+			XY.addEventListener('xymove', event => { console.log(event.detail) })
+		})
 	</script>
 </body>
 </html>
