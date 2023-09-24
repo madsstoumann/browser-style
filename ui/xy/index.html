@@ -13,22 +13,24 @@
 	<h1>UI: Components</h1>
 
 	<h2>XY</h2>
+	<p>Regular, and with <code>--snap</code> modifier and <code>data-grid="6"</code>:</p>
+	<div class="ui-column --md-c-2">
 
-	<fieldset class="ui-xy">
-		<legend></legend>
-		<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
-	</fieldset>
+		<fieldset class="ui-xy">
+			<legend></legend>
+			<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
+		</fieldset>
 
-	<p>With <code>--snap</code> modifier and <code>data-grid="6"</code>:</p>
+		<fieldset class="ui-xy --snap" data-grid-x="6" data-grid-y="6" data-x="0" data-y="100">
+			<legend></legend>
+			<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
+		</fieldset>
 
-	<fieldset class="ui-xy --snap" data-grid-x="6" data-grid-y="6" data-x="0" data-y="100">
-		<legend></legend>
-		<button type="button" name="xyPoint" aria-label="Point in a Cartesian Coordinate System"></button>
-	</fieldset>
-
+	</div>
+	
 <script type="module">
 		import { common, init } from './../../assets/js/common.js';
-		import uiXY from './../xy/uiXY.js';
+		import uiXY from './uiXY.js';
 
 		common();
 		init('.ui-xy', uiXY);

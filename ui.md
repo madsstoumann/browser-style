@@ -79,47 +79,55 @@ Word Wheel
 World Map
 XY
 ---
-AutoComplete
+Alert, Confirm, Prompt
+AutoComplete / Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
+Blockquote (with variants) https://browser.style/tags/blockquote.html
 Calendar
-
-Data Table (Resizable Columns, Search etc.)
+Color Picker
+Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
+Description List (TABLE + https://web.dev/creative-list-styling/)
+Dialog
+Divider (https://browser.style/tags/hr.html)
 Footer
-Locale Switcher (Choose country, Continue)
-Search, input + `<search>`
+Gradient Text (+ --animate)
+Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
+Placeholder (https://semantic-ui.com/elements/placeholder.html)
 Product Card (with image gallery)
-Weather (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/weather/)
-Weather Forecast (https://rapidapi.com/blog/access-global-weather-data-with-these-weather-apis/)
+Search, input + `<search>`
+Table (Resizable Columns, Pagination, Search etc.)
+ToggleTip
+Toolbar (https://browser.style/tags/menu.html)
+ToolTip
+Underline
+Weather (with data-forecast="1")
+
 ---
+
+
 address
-alert, confirm, prompt
 blink
-bmi-calculator
+bmi-calculator (https://codepen.io/stoumann/pen/LYRdmVY)
 circular-menu / arc (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/circular/)
-color-picker
 dark-mode toggle
 day-planner
-dialog
 fadeout (mask)
--faq (autocollapse, ui-details, state-icons)
 -flip-card (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/flip/)
-gradient-text
 headings (text-trim etc.)
 inline text semantics (abbr, code etc.)
 input (with :user-valid/invalid etc.)
-line-overflow (https://codepen.io/stoumann/pen/RwwMPZW)
+
 list/grid (http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/listgrid/index.html)
+Locale Switcher (Choose country, Continue)
 marquee
 menu-list / button / icon
 menu-tab / tab-bar
-mega-menu (ui-details)
 offer-group (radio-button)
 info-click (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/imagemap/)
 product-variant-select (radio-button)
 select / custom-select
 textarea (with quill, resize)
-toggle-tips
 tour (http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/tour/index.html)
-under-line gradient
+
 
 
 http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/index.html
