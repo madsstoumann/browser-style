@@ -33,7 +33,7 @@
 		inset: 0;
 		position: fixed;
 	 }
-	& summary {
+	& :is(summary, ui-summary) {
 		cursor: pointer;
 		gap: 1ch;
 		justify-content: space-between;
@@ -73,16 +73,19 @@
 			background: Canvas;
 			box-shadow: var(--ui-menu-panel-bxsh); 
 			left: 0;
-			max-height: var(--ui-menu-panel-mah);
 			position: absolute;
 			top: 100%;
 			width: 100%;
 			& > :is(.ui-menu-panel, ui-panel) {
 				margin-inline: auto;
-				padding: var(--ui-menu-pb) var(--ui-menu-pi);
+				max-height: var(--ui-menu-panel-mah);
+				padding-inline: var(--ui-menu-pi);
+				width: 100%;
+				& > * { padding-block: var(--ui-menu-pb); }
 			}
 		}
 		& > label:has([type=checkbox]) { display: none; }
+
 		/* Modifier: Stretch to edge-of-screen */
 		&.--stretch {
 			& :is(summary, ui-summary) + :is(.ui-menu-expand, ui-expand) {

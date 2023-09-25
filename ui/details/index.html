@@ -16,13 +16,23 @@
 	<p>Custom element, <code>&lt;ui-details&gt;</code>, to replace regular <code>&lt;details&gt;</code>-tags, when animations and finer control is needed.</p>
 
 	<ui-details>
-    <ui-summary>More info</ui-summary>
-    <ui-expand>
-      <div>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
-      </div>
-    </ui-expand>
-  </ui-details>
+		<ui-summary><span>More info</span><ui-icon type="chevron right" size="md"></ui-icon></ui-summary>
+		<ui-expand>
+			<ui-panel>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
+			</ui-panel>
+		</ui-expand>
+	</ui-details>
+
+	<br>
+	<ui-details>
+		<ui-summary><ui-icon type="triangle right" size="md"></ui-icon>More info</ui-summary>
+		<ui-expand>
+			<ui-panel>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
+			</ui-p>
+		</ui-expand>
+	</ui-details>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

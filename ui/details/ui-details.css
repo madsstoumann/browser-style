@@ -3,17 +3,16 @@
   & ui-expand {
     display: grid;
     grid-template-rows: 0fr;
-    transition: grid-template-rows 0.25s cubic-bezier(.4, 0, .2, 1);
-    & >* { overflow: hidden; }
+    transition: grid-template-rows 0.25s cubic-bezier(.2, 0, .2, 1);
   }
+  & ui-panel { overflow: hidden; }
   & ui-summary {
+    align-items: center;
     cursor: pointer;
-    display: grid;
+    display: flex;
     gap: 1ch;
-    grid-auto-columns: max-content;
-    grid-auto-flow: column;
+    text-box-trim: both;
     user-select: none;
     &[aria-expanded="true"] + ui-expand { grid-template-rows: 1fr; }
-    &[aria-expanded="false"] + ui-expand >* { margin: 0; padding: 0; }
   }
 }

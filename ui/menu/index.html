@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
 	<link rel="stylesheet" href="ui-menu.css">
+	<link rel="stylesheet" href="../details/ui-details.css">
 	<style>
 		/* For demo */
 		body { margin-block: 0; padding: 0; }
@@ -24,12 +25,12 @@
 		</label>
 		<div class="ui-menu-flyout">
 			<nav>
-				<details>
-					<summary>Products<ui-icon type="chevron down"></ui-icon></summary>
-					<div class="ui-menu-expand">
+				<ui-details autocollapse>
+					<ui-summary>Products<ui-icon type="chevron down"></ui-icon></ui-summary>
+					<ui-expand>
 
 						<!-- INNER PANEL-->
-						<div class="ui-menu-panel ui-column --md-c-3">
+						<ui-panel class="ui-column --md-c-3">
 							<nav>
 								<strong>Category 1</strong><br>
 								<a href="#">Subcategory 1</a><br>
@@ -57,11 +58,47 @@
 								<a href="#">Subcategory 5</a><br>
 								<a href="#">Subcategory 6</a><br>
 							</nav>
-						</div>
+						</ui-panel>
 
-					</div>
-				</details>
-				<a href="#">Deals</a>
+					</ui-expand>
+				</ui-details>
+				<ui-details autocollapse>
+					<ui-summary>Categories<ui-icon type="chevron down"></ui-icon></ui-summary>
+					<ui-expand>
+
+						<!-- INNER PANEL-->
+						<ui-panel class="ui-column --md-c-3">
+							<nav>
+								<strong>Category 1</strong><br>
+								<a href="#">Subcategory 1</a><br>
+								<a href="#">Subcategory 2</a><br>
+								<a href="#">Subcategory 3</a><br>
+								<a href="#">Subcategory 4</a><br>
+								<a href="#">Subcategory 5</a><br>
+								<a href="#">Subcategory 6</a><br>
+							</nav>
+							<nav>
+								<strong>Category 2</strong><br>
+								<a href="#">Subcategory 1</a><br>
+								<a href="#">Subcategory 2</a><br>
+								<a href="#">Subcategory 3</a><br>
+								<a href="#">Subcategory 4</a><br>
+								<a href="#">Subcategory 5</a><br>
+								<a href="#">Subcategory 6</a><br>
+							</nav>
+							<nav>
+								<strong>Category 3</strong><br>
+								<a href="#">Subcategory 1</a><br>
+								<a href="#">Subcategory 2</a><br>
+								<a href="#">Subcategory 3</a><br>
+								<a href="#">Subcategory 4</a><br>
+								<a href="#">Subcategory 5</a><br>
+								<a href="#">Subcategory 6</a><br>
+							</nav>
+						</ui-panel>
+
+					</ui-expand>
+				</ui-details>
 				<a href="#">News</a>
 				<a href="#">Support</a>
 				<a href="#">Company</a>
@@ -76,7 +113,16 @@
 	<main>
 		<h1>UI: Components</h1>
 		<h2>Menu</h2>
-		<p>With modifier <code>--stretch</code></p>
+		<p>Used here with modifier <code>--stretch</code>. The menu works <strong>without</strong> JavaScript, if using <code>&lt;details&gt;</code>-tags for dropdown-panels.</p>
+		<p>For a better user-experienece (click-outside, keyboard-navigation, auto-collapse), use custom element <code>&lt;ui-details&gt;</code> with a small script.</p>
 	</main>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiMenu from './uiMenu.js';
+
+		common();
+		init('.ui-menu', uiMenu);
+	</script>
 </body>
 </html>
