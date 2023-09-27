@@ -271,6 +271,7 @@
   }
 }
 :where(textarea) {
+  form-sizing: normal;
   min-block-size: calc(2 * var(--input-bs));
   resize: vertical;
 }

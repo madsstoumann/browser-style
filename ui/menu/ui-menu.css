@@ -46,6 +46,7 @@
 		flex-direction: column;
 		inset: 0 calc(100vw - var(--ui-mobile-w, 80vw)) 0 0;
 		justify-content: space-between;
+		overflow-y: auto;
 		padding: var(--ui-menu-flyout-p, 4ch 2ch 2ch);
 		position: fixed;
 		transition: translate .2s cubic-bezier(.4, 0, .2, 1);
@@ -65,6 +66,7 @@
 			color: inherit;
 			font-size: revert;
 			& > nav {
+				align-items: center;
 				flex: unset;
 				gap: var(--ui-menu-desktop-gap, 2.5em);
 			}

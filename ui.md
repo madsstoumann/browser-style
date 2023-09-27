@@ -23,6 +23,7 @@ Countdown
 Custom Color
 Details / `<ui-details>`
 Digital Clock
+Divider
 Dock
 Drawer
 Expand Card
@@ -72,6 +73,7 @@ Tag
 Timeline — Horizontal and vertical
 Timeslot
 Toasts
+Tooltip
 Transfer List
 Video Embed — YouTube and Vimeo
 Word Replace
@@ -87,7 +89,6 @@ Color Picker
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
 Description List (TABLE + https://web.dev/creative-list-styling/)
 Dialog
-Divider (https://browser.style/tags/hr.html)
 Footer
 Gradient Text (+ --animate)
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
@@ -97,7 +98,7 @@ Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
 ToggleTip
 Toolbar (https://browser.style/tags/menu.html)
-ToolTip
+
 Underline
 Weather (with data-forecast="1")
 
