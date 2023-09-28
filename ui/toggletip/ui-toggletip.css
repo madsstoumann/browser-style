@@ -1,0 +1,18 @@
+:where(.ui-toggletip-link) {
+	all: unset;
+	position: relative;
+	text-decoration: .075em dotted underline;
+	text-underline-offset: .25em;
+}
+:where(.ui-toggletip) {
+	background-color: var(--CanvasText);
+	border-radius: .5em;
+	color: Canvas;
+	font-size: smaller;
+	left: anchor(center);
+	max-width: 18em;
+	padding: 1ch 2ch;
+	top: anchor(bottom);
+	translate: -50% 0%;
+	&:popover-open { display: grid; }
+}

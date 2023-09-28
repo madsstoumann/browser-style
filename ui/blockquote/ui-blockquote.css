@@ -1,0 +1,61 @@
+:where(.ui-blockquote) {
+	margin-inline: auto;
+	position: relative;
+	& cite {
+		display: block;
+		margin-block-start: 1ch;
+		&::before { content: '— '; }
+	}
+	&.--bigquote {
+		border: 0;
+		padding-inline-start: 5rem;
+		&::before {
+			color: var(--GrayCanvas);
+			content: '“';
+			display: block;
+			font-family: ui-serif, serif;
+			font-size: 10rem;
+			inset-block-start: 0;
+			inset-inline-start: 0;
+			line-height: 0.5;
+			position: absolute;
+		}
+	}
+	&.--breaker {
+		border: 0;
+		padding: 0;
+		max-width: 320px;
+		text-align: center;
+		&::after,
+		&::before {
+			background-color: var(--ButtonBorder);
+			content: '';
+			display: block;
+			height: 1px;
+			margin: 3ch auto;
+			width: 75%;
+		}
+	}
+	&.--code {
+		border: 0;
+		padding-inline: 6ch;
+		text-align: center;
+			&::before, &::after {
+				color: var(--GrayCanvas);
+				font-size: 8rem;
+				line-height: 0.5;
+				
+				position: absolute;
+				top: 0;
+			}
+			&::before {
+				content: '{';
+				inset-inline-start: 0;
+				padding-inline-end: .5ch;
+			}
+			&::after {
+				content: '}';
+				inset-inline-end: 0;
+				padding-inline-start: .5ch; }
+	}
+}

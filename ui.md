@@ -4,6 +4,7 @@ Avatar
 Avatar List
 Badge
 Blinds
+Blockquote
 Breadcrumbs — custom `::marker`, icons
 Button
 Button Group
@@ -73,6 +74,7 @@ Tag
 Timeline — Horizontal and vertical
 Timeslot
 Toasts
+ToggleTip
 Tooltip
 Transfer List
 Video Embed — YouTube and Vimeo
@@ -83,7 +85,6 @@ XY
 ---
 Alert, Confirm, Prompt
 AutoComplete / Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
-Blockquote (with variants) https://browser.style/tags/blockquote.html
 Calendar
 Color Picker
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
@@ -96,7 +97,7 @@ Placeholder (https://semantic-ui.com/elements/placeholder.html)
 Product Card (with image gallery)
 Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
-ToggleTip
+
 Toolbar (https://browser.style/tags/menu.html)
 
 Underline
