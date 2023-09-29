@@ -1,5 +1,5 @@
 :where(.ui-slideshow) {
-	--ui-slideshow-items: 10; /* Set from JS on main wrapper = number of child-nodes */
+	--ui-slideshow-items: 10; /* Set this from JS on the main wrapper = number of child-nodes */
 	--ui-slideshow-animdur: 2s;
 
 	aspect-ratio: 16 / 9;
@@ -41,6 +41,8 @@
 		opacity: 0;
 		place-self: center;
 		z-index: calc(var(--ui-slideshow-items) + 1);
+		&:has(input:checked),
+		&:has(input:focus-visible) { opacity: 1; }
 	}
 	&:hover label { opacity: 1; }
 }
