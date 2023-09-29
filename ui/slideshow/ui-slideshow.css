@@ -1,42 +1,52 @@
 :where(.ui-slideshow) {
-	--ui-slideshow-items: 5;
-	--ui-slideshow-animdur: 3s;
-	/* --_animps: paused; */
+	--ui-slideshow-items: 10; /* Set from JS on main wrapper = number of child-nodes */
+	--ui-slideshow-animdur: 2s;
+
 	aspect-ratio: 16 / 9;
 	container-type: inline-size;
 	display: grid;
-
 	& figure {
-		all: unset;
-		aspect-ratio: inherit;
 		animation:
-			slideshow calc(var(--ui-slideshow-animdur) * var(--ui-slideshow-items))
-			calc(var(--ui-slideshow-animdur) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+			calc(var(--ui-slideshow-items, 1) * var(--ui-slideshow-animdur)) linear
+			calc((var(--_index, 0) * var(--ui-slideshow-animdur)))
+			infinite normal  var(--_animps, running) slideshow;
+		aspect-ratio: inherit;
 		display: grid;
 		grid-area: 1 / -1;
+		margin: 0;
 		opacity: 0;
-		& figcaption, & img { grid-area: 1 / -1; }
-		& figcaption {
-			color: hsla(0 100% 100% / .8);
-			font-size: 5cqi;
-			font-weight: 900;
-			margin: .4ch 1ch;
-			place-self: start end;
-			text-transform: uppercase;
-			&.--end-center { place-self: end center; }
-			&.--end-end { place-self: end end; }
-			&.--end-start { place-self: end start; }
-			&.--start-center { place-self: start center; }
-			&.--start-start { place-self: start start; }
-		}
-		& img {
-			aspect-ratio: inherit;
-			object-fit: cover;
-			width: 100%;
-		}
+		z-index: 0;
 	}
+	& figcaption, & img, & label { grid-area: 1 / -1; }
+	& figcaption {
+		color: hsla(0 100% 100% / .8);
+		font-size: 8cqi;
+		font-weight: 900;
+		margin: .33ch .99ch;
+		place-self: start end;
+		text-transform: uppercase;
+		&.--end-center { place-self: end center; }
+		&.--end-end { place-self: end end; }
+		&.--end-start { place-self: end start; }
+		&.--start-center { place-self: start center; }
+		&.--start-start { place-self: start start; }
+	}
+	& img { 
+		aspect-ratio: inherit;
+		object-fit: cover;
+		width: 100%;	
+	}
+	&:has(input:checked) { --_animps: paused; }
+	& label {
+		opacity: 0;
+		place-self: center;
+		z-index: calc(var(--ui-slideshow-items) + 1);
+	}
+	&:hover label { opacity: 1; }
 }
 @keyframes slideshow {
-	12.5%, 25% { opacity: 1; }
-	0%, 50% { opacity: 0; }
+	0.1% { opacity: 0; z-index: calc(0 + var(--ui-slideshow-items, 1)); }
+	5% { opacity: 1 }
+	50% { opacity: 1 }
+	100% { opacity: 0; z-index: 0; }
 }

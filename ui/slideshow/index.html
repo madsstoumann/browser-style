@@ -8,64 +8,60 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
 	<link rel="stylesheet" href="ui-slideshow.css">
+	<link rel="stylesheet" href="../swap/ui-swap.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Slideshow</h2>
 
-	
 	<div class="ui-slideshow">
-
 		<figure style="--_index:0;">
 			<img src="https://assets.stoumann.dk/img/movie/01.jpg" />
 			<figcaption>Holiday Memories</figcaption>
 		</figure>
-
 		<figure style="--_index:1;">
 			<img src="https://assets.stoumann.dk/img/movie/02.jpg" />
 			<figcaption class="--end-start">Rocky Beach</figcaption>
 		</figure>
-
 		<figure style="--_index:2;">
 			<img src="https://assets.stoumann.dk/img/movie/03.jpg" />
 			<figcaption class="--end-center">Opal Lake </figcaption>
 		</figure>
-
 		<figure style="--_index:3;">
 			<img src="https://assets.stoumann.dk/img/movie/04.jpg" />
 			<figcaption class="--end-end">Melsted</figcaption>
 		</figure>
-
 		<figure style="--_index:4;">
 			<img src="https://assets.stoumann.dk/img/movie/05.jpg" />
 			<figcaption class="--end-start">Bigfoot</figcaption>
 		</figure>
-
-		<!-- <figure style="--_index:5;">
+		<figure style="--_index:5;">
 			<img src="https://assets.stoumann.dk/img/movie/06.jpg" />
-			<figcaption data-caption="top left">Hammer Lake<div>Opal Lake</div></figcaption>
+			<figcaption class="top left">Hammer Lake</figcaption>
 		</figure>
-
 		<figure style="--_index:6;">
 			<img src="https://assets.stoumann.dk/img/movie/07.jpg" />
-			<figcaption data-caption="bottom left">Wild Garlic</figcaption>
+			<figcaption class="--start-start">Wild Garlic</figcaption>
 		</figure>
-
 		<figure style="--_index:7;">
 			<img src="https://assets.stoumann.dk/img/movie/08.jpg" />
-			<figcaption data-caption="top right">Wall Of Rock</figcaption>
+			<figcaption class="--end-start">Wall Of Rock</figcaption>
 		</figure>
-
 		<figure style="--_index:8;">
 			<img src="https://assets.stoumann.dk/img/movie/09.jpg" />
-			<figcaption data-caption="bottom left">Coastal Path<div>Gudhjem</div></figcaption>
+			<figcaption class="--end-end">Coastal Path</figcaption>
 		</figure>
-
 		<figure style="--_index:9;">
 			<img src="https://assets.stoumann.dk/img/movie/10.jpg" />
-			<figcaption data-caption="bottom left">Sunset At Bokul<div>Gudhjem</div></figcaption>
-		</figure> -->
+			<figcaption class="--end-start">Sunset At Bokul</figcaption>
+		</figure>
+
+		<label class="ui-swap ui-button --icon">
+			<input type="checkbox" data-sr>
+			<ui-icon type="pause"></ui-icon>
+			<ui-icon type="play"></ui-icon>
+		</label>
 	</div>
 
 </body>
