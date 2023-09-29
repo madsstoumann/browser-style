@@ -62,6 +62,7 @@ Range - MinMax
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
 Reading Progress
+Resize Panel
 Scroll + Navigation
 Share
 Slider
@@ -95,6 +96,7 @@ Footer
 Gradient Text (+ --animate)
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
 Placeholder (https://semantic-ui.com/elements/placeholder.html)
+
 Product Card (with image gallery)
 Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
