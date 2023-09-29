@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
 	<link rel="stylesheet" href="ui-menu.css">
+	<link rel="stylesheet" href="../details/ui-details.css">
 	<style>
 		/* For demo */
 		body { margin-block: 0; padding: 0; }
@@ -17,23 +18,19 @@
 <body>
 
 	<header class="ui-menu --stretch">
-		<a href="/" class="ui-menu-label">LOGO</a>
+		<a href="/" class="menu-home">LOGO</a>
 		<label aria-label="Toggle flyout menu">
 			<input type="checkbox" data-sr>
 			<ui-icon type="burger-menu" size="xl"></ui-icon>
 		</label>
 		<div class="ui-menu-flyout">
 			<nav>
-					<label class="ui-menu-overlay">
-						<input type="radio" name="menu" id="menu-overlay" data-sr checked>
-					</label>
-					
-					<label class="ui-menu-label">
-						<input type="radio" name="menu" data-sr>
-						Products<ui-icon type="chevron down"></ui-icon>
-					</label>
-					<div class="ui-menu-expand">
-						<div class="ui-menu-panel ui-column --md-c-3">
+				<ui-details autocollapse>
+					<ui-summary class="ui-menu-label">Products<ui-icon type="chevron down"></ui-icon></ui-summary>
+					<ui-expand>
+
+						<!-- INNER PANEL-->
+						<ui-panel class="ui-column --md-c-3">
 							<nav>
 								<strong>Category 1</strong><br>
 								<a href="#">Subcategory 1</a><br>
@@ -61,17 +58,18 @@
 								<a href="#">Subcategory 5</a><br>
 								<a href="#">Subcategory 6</a><br>
 							</nav>
-						</div>
-					</div>
-				
-					<label class="ui-menu-label">
-						<input type="radio" name="menu" data-sr>
-						Shop<ui-icon type="chevron down"></ui-icon>
-					</label>
-					<div class="ui-menu-expand">
-						<div class="ui-menu-panel ui-column --md-c-3">
+						</ui-panel>
+
+					</ui-expand>
+				</ui-details>
+				<ui-details autocollapse>
+					<ui-summary class="ui-menu-label">Categories<ui-icon type="chevron down"></ui-icon></ui-summary>
+					<ui-expand>
+
+						<!-- INNER PANEL-->
+						<ui-panel class="ui-column --md-c-3">
 							<nav>
-								<strong>Shop 1</strong><br>
+								<strong>Category 1</strong><br>
 								<a href="#">Subcategory 1</a><br>
 								<a href="#">Subcategory 2</a><br>
 								<a href="#">Subcategory 3</a><br>
@@ -80,7 +78,7 @@
 								<a href="#">Subcategory 6</a><br>
 							</nav>
 							<nav>
-								<strong>Shop 2</strong><br>
+								<strong>Category 2</strong><br>
 								<a href="#">Subcategory 1</a><br>
 								<a href="#">Subcategory 2</a><br>
 								<a href="#">Subcategory 3</a><br>
@@ -97,16 +95,17 @@
 								<a href="#">Subcategory 5</a><br>
 								<a href="#">Subcategory 6</a><br>
 							</nav>
-						</div>
-					</div>
-			
-				<a href="#news" class="ui-menu-label">News</a>
-				<a href="#support" class="ui-menu-label">Support</a>
-				<a href="#company" class="ui-menu-label">Company</a>
+						</ui-panel>
+
+					</ui-expand>
+				</ui-details>
+				<a href="#">News</a>
+				<a href="#">Support</a>
+				<a href="#">Company</a>
 			</nav>
 			<nav>
-				<a href="#search" class="ui-menu-label">Search</a>
-				<a href="#cart" class="ui-menu-label">Cart</a>
+				<a href="#">Search</a>
+				<a href="#">Cart</a>
 			</nav>
 		</div>
 	</header>
@@ -118,5 +117,12 @@
 		<p>For a better user-experienece (click-outside, keyboard-navigation, auto-collapse), use custom element <code>&lt;ui-details&gt;</code> with a small script.</p>
 	</main>
 
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiMenu from './uiMenu.js';
+
+		common();
+		init('.ui-menu', uiMenu);
+	</script>
 </body>
 </html>

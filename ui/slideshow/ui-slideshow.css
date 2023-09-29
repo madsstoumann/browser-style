@@ -1,0 +1,42 @@
+:where(.ui-slideshow) {
+	--ui-slideshow-items: 5;
+	--ui-slideshow-animdur: 3s;
+	/* --_animps: paused; */
+	aspect-ratio: 16 / 9;
+	container-type: inline-size;
+	display: grid;
+
+	& figure {
+		all: unset;
+		aspect-ratio: inherit;
+		animation:
+			slideshow calc(var(--ui-slideshow-animdur) * var(--ui-slideshow-items))
+			calc(var(--ui-slideshow-animdur) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
+		display: grid;
+		grid-area: 1 / -1;
+		opacity: 0;
+		& figcaption, & img { grid-area: 1 / -1; }
+		& figcaption {
+			color: hsla(0 100% 100% / .8);
+			font-size: 5cqi;
+			font-weight: 900;
+			margin: .4ch 1ch;
+			place-self: start end;
+			text-transform: uppercase;
+			&.--end-center { place-self: end center; }
+			&.--end-end { place-self: end end; }
+			&.--end-start { place-self: end start; }
+			&.--start-center { place-self: start center; }
+			&.--start-start { place-self: start start; }
+		}
+		& img {
+			aspect-ratio: inherit;
+			object-fit: cover;
+			width: 100%;
+		}
+	}
+}
+@keyframes slideshow {
+	12.5%, 25% { opacity: 1; }
+	0%, 50% { opacity: 0; }
+}
