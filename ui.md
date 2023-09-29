@@ -65,6 +65,7 @@ Reading Progress
 Scroll + Navigation
 Share
 Slider
+Slideshow
 Spinner
 Step — Horizontal and vertical
 Swap
