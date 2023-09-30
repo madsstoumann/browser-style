@@ -1,0 +1,23 @@
+:where(dl) {
+	--ui-decription-list-gap: 2ch;
+	&.--card {
+		& dd, & dt {
+			background-color: var(--GrayCanvas);
+			padding-inline: var(--ui-decription-list-gap);
+		}
+		& dd {
+			margin: 0 0 var(--ui-decription-list-gap) 0;
+			padding-block: 0 var(--ui-decription-list-gap);
+		}
+		& dt { padding-block: var(--ui-decription-list-gap) 0; }
+	}
+	&.--table {
+		display: grid;
+  	grid-template-columns: 1fr 2fr;
+		& :is(dd,dt) {
+			border-block-end: 1px solid var(--ButtonBorder);
+			margin: 0;
+			padding-block: var(--ui-decription-list-gap);
+		}
+	}
+}

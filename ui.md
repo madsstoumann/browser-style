@@ -22,6 +22,7 @@ Config Group
 ContextMenu
 Countdown
 Custom Color
+Description List
 Details / `<ui-details>`
 Digital Clock
 Divider
@@ -92,7 +93,7 @@ AutoComplete / Combobox (https://dev.to/madsstoumann/building-a-minimal-autosugg
 Calendar
 Color Picker
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
-Description List (TABLE + https://web.dev/creative-list-styling/)
+
 Dialog
 Footer
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
