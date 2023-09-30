@@ -2,18 +2,16 @@
 	background: linear-gradient(
 	var(--ui-gradient-dir, 90deg),
 	var(--ui-gradient, var(--AccentColor), var(--AccentColorLight), var(--AccentColor))) repeat-x 
-	0% var(--ui-gradient-bgpy, 95%) / 
+	0% var(--ui-gradient-bgpy, 90%) / 
 	var(--ui-gradient-bgsz-x, 150%) var(--ui-gradient-bgsz-y, 10%);
 	display: inline; /* for multiline-underline */
-	&.--grow {
-		--ui-gradient-bgpy: 85%;
-		--ui-gradient-bgsz-x: 100%;
-		background-image: linear-gradient(181deg, var(--ui-gradient) 50%, transparent 54%, transparent 100%);
-	}
+	&.--grow,
 	&.--shrink {
 		--ui-gradient-bgpy: 85%;
-		background-image: linear-gradient(179deg, var(--ui-gradient) 50%, transparent 54%, transparent 100%);
+		--ui-gradient-bgsz-x: 100%;
+		background-image: linear-gradient(var(--ui-gradient-dir, 181deg), var(--ui-gradient) 50%, transparent 54%, transparent 100%);
 	}
+	&.--shrink { --ui-gradient-dir: 179deg; }
 	&.--thin {
 		--ui-gradient-bgpy: 85%;
 		--ui-gradient-bgsz-y: 5%;

@@ -80,6 +80,7 @@ Toasts
 ToggleTip
 Tooltip
 Transfer List
+Underline
 Video Embed — YouTube and Vimeo
 Word Replace
 Word Wheel
@@ -103,7 +104,7 @@ Table (Resizable Columns, Pagination, Search etc.)
 
 Toolbar (https://browser.style/tags/menu.html)
 
-Underline (https://codepen.io/TheCSSKing/pen/VwwRzgg)
+
 Weather (with data-forecast="1")
 
 ---
