@@ -33,6 +33,7 @@ Feature Compare
 File List
 FileTree
 Gallery
+Gradient Text
 Icon (CSS)
 Image Compare
 Image Gallery
@@ -93,7 +94,6 @@ Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/mad
 Description List (TABLE + https://web.dev/creative-list-styling/)
 Dialog
 Footer
-Gradient Text (+ --animate)
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
 Placeholder (https://semantic-ui.com/elements/placeholder.html)
 
@@ -103,7 +103,7 @@ Table (Resizable Columns, Pagination, Search etc.)
 
 Toolbar (https://browser.style/tags/menu.html)
 
-Underline
+Underline (https://codepen.io/TheCSSKing/pen/VwwRzgg)
 Weather (with data-forecast="1")
 
 ---

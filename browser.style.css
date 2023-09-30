@@ -193,7 +193,25 @@
 	&::-webkit-scrollbar { display: none; }
 }
 
-/* Colors */
+/* TODO! MOVE TO Colors */
+
+.--blue-green {
+  --ui-gradient: #0077ff, #00e7df, #0077ff;
+  &:is(.--grow, .--shrink) { --ui-gradient: #0077ff, #0077ff; }
+}
+.--rainbow {
+  --ui-gradient-bgsz-x: 120%;
+  --ui-gradient: #ff3e41, #ff8a43, #ffeb7f, #00c9a7, #007ea7, #ff3e41;
+}
+.--red-orange {
+  --ui-gradient: #ff1834, #ffc900, #ff1834;
+  &:is(.--grow, .--shrink) { --ui-gradient: #ff1834, #ff1834; }
+}
+.--violet-pink {
+  --ui-gradient: #7f00de, #ff007e, #7f00de;
+}
+
+
 :where(.--accent) {
   --_bg: var(--AccentColor);
   --hover-bg: color-mix(in srgb, var(--AccentColor), var(--CanvasText) 20%);
@@ -243,6 +261,14 @@
 .--error-bg, .--info-bg, .--success-bg, .--warning-bg { color: #FFF; }
 
 /* TODO! */
+.h0 {
+  font-size: 5em;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  margin: 0;
+  text-wrap: pretty;
+}
 .--xxsmall { font-size: xx-small; }
 .--xsmall { font-size: x-small; }
 .--small { font-size: small; }

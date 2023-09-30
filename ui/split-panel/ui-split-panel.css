@@ -1,4 +1,4 @@
-:where(.ui-resize) {
+:where(.ui-split-panel) {
 	--ui-resize-pb: 1.25ch;
 	--ui-resize-pi: 2ch;
 	--ui-resize-thumb-c: var(--ButtonBorder);
