@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Dialog</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-dialog.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Dialog</h2>
+	<button type="button" onclick="dialog.open=true">Open Dialog</button>
+
+	<dialog id="dialog" class="ui-dialog">
+		<header>
+			<strong>Please refresh your browser!</strong>
+		</header>
+		<p>Some more text here &hellip;</p>
+		<form method="dialog">
+			<nav>
+				<!-- <button type="reset">Cancel</button> -->
+				<button type="submit">OK</button>
+			</nav>
+		</form>
+	</dialog>
+
+</body>
+</html>

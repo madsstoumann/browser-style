@@ -24,6 +24,7 @@ Countdown
 Custom Color
 Description List
 Details / `<ui-details>`
+Dialog
 Digital Clock
 Divider
 Dock
@@ -64,17 +65,18 @@ Range - MinMax
 Rating — Star, Heart and Thumb
 Reaction / Reaction List
 Reading Progress
-Resize Panel
 Scroll + Navigation
 Share
 Slider
 Slideshow
 Spinner
+Split Panel
 Step — Horizontal and vertical
 Swap
 Syntax Highlight — CSS
 Tabs
 Tag
+Testimonial
 Timeline — Horizontal and vertical
 Timeslot
 Toasts
@@ -94,12 +96,11 @@ Calendar
 Color Picker
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
 
-Dialog
+
 Footer
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
 Placeholder (https://semantic-ui.com/elements/placeholder.html)
-
-Product Card (with image gallery)
+Product Card (with image gallery) (LEGO)
 Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
 

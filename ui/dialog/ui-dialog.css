@@ -1,0 +1,20 @@
+:where(.ui-dialog) {
+	--ui-dialog-gap: 1em;
+	background-color: Canvas;
+	border: 0;
+	border-radius: var(--input-bdrs);
+  box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
+	color: var(--CanvasText);
+	gap: var(--ui-dialog-gap);
+	padding: var(--ui-dialog-gap);
+	width: fit-content;
+	&[open] { display: grid; }
+	& >* { margin: 0; }
+	& header { font-size: larger; }
+	& nav {
+		display: flex;
+		gap: var(--ui-dialog-gap);
+		justify-content: flex-end;
+		
+	}
+}
