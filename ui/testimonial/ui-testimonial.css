@@ -1,40 +1,48 @@
 :where(.ui-testimonial) {
-	--accent: #ec4899; --deg: 90deg; --fs: 2.5cqi;
+	--ui-testimonial-accent: #ec4899;
+
 	all: unset;
-	background: linear-gradient(var(--deg), var(--accent), #000 50%);
-	clip-path: inset(0 0 0 0 round 1.5em);
+	background: linear-gradient(var(--_deg, 90deg), var(--ui-testimonial-accent), #000 50%);
+	clip-path: inset(0 0 0 0 round var(--ui-testimonial-bdrs, 1.5em));
 	color: #FFF;
 	container-type: inline-size;
 	display: grid;
-	font-size: var(--fs);
 	line-height: 1.2;
-	&:dir(rtl) { --deg: -90deg; }
+	&:dir(rtl) { --_deg: -90deg; }
+
 	& cite {
-		font: normal 600 80%/1.4 system-ui;
+		font: normal 600 75%/1.4 var(--ff-body);
 		& small {
-			color: var(--accent);
+			color: var(--ui-testimonial-accent);
 			font-weight: 400;
 		}
 	}
+
 	& div {
+		--_fs: 6cqi;
 		display: grid;
-		gap: var(--fs);
+		font-size: var(--_fs);
+		gap: var(--_fs);
 		grid-area: 1 / -1;
-		padding-block: var(--fs);
-		padding-inline: 0 calc(2 * var(--fs));
-		place-self: center; 
+		padding: calc(2 * var(--_fs));
+		place-self: center;
+		text-align: center;
 	}
+
 	& img {
-		--fade: linear-gradient(var(--deg), #000, #0000);
+		--_fade: linear-gradient(var(--_deg, 90deg), #000, #0000);
 		filter: saturate(0);
 		grid-area: 1 / -1;
-		mask: var(--fade) no-repeat;
-		-webkit-mask: var(--fade) no-repeat;
+		mask: var(--_fade) no-repeat;
+		-webkit-mask: var(--_fade) no-repeat;
 		mix-blend-mode: multiply;
 	}
-	& q { letter-spacing: -0.025cqi; }
 
 	@container (width > 20rem) {
-		& div { grid-area: 2 / 2 / -1; }
+		& div {
+			--_fs: 3cqi;
+			grid-area: 2 / 2 / -1;
+			text-align: start;
+		}
 	}
 }
