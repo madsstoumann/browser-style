@@ -53,6 +53,7 @@ Password Strength
 Password Toggle
 Position
 Price Card
+Product Card
 Progress
 Progress — Circular
 Progress Timer (Slider)
@@ -74,6 +75,7 @@ Split Panel
 Step — Horizontal and vertical
 Swap
 Syntax Highlight — CSS
+Table Grid
 Tabs
 Tag
 Testimonial
@@ -91,16 +93,14 @@ World Map
 XY
 ---
 Alert, Confirm, Prompt
-AutoComplete / Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
+Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
 Calendar
 Color Picker
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
-
-
 Footer
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
 Placeholder (https://semantic-ui.com/elements/placeholder.html)
-Product Card (with image gallery) (LEGO)
+
 Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
 

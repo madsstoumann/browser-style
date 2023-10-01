@@ -1,0 +1,28 @@
+@import url('../chip/ui-chip.css');
+@import url('../scroll/ui-scroll.css');
+@import url('../scroll/ui-scrollbar.css');
+@import url('../swap/ui-swap.css');
+
+:where(.ui-product-card) {
+	color: var(--CanvasText);
+	display: grid;
+	max-width: 20rem;
+	position: relative;
+	& article {
+		& > * { margin: 0; }
+		display: grid;
+		gap: 1.5ch;
+		padding: 2ch;
+	}
+	& figure, & nav {
+		grid-area: 1 / -1;
+		margin: 0;
+	}
+	& nav {
+		align-items: start;
+		display: flex;
+		height: fit-content;
+		justify-content: space-between;
+		padding: 1ch;
+	}
+}

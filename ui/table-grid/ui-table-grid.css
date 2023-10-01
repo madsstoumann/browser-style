@@ -1,0 +1,8 @@
+:where(.ui-table-grid) {
+	--ui-table-grid-bdw: 1px;
+	background: var(--ui-table-grid-bdc, var(--ButtonBorder));
+	display: grid;
+	gap: var(--ui-table-grid-bdw);
+	padding: var(--ui-table-grid-bdw);
+	& >* { background: Canvas; }
+}
