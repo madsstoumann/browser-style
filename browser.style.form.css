@@ -176,13 +176,17 @@
 :where(label[data-output], label[style*="--output"]) {
   position: relative;
   &::after {
-    counter-reset: output var(--output);
-    content: counter(output) attr(data-output);
+    content: attr(data-output);
     font-size: small;
     inset-inline: auto 0;
     position: absolute;
   }
 }
+:where(label[style*="--output"])::after {
+  counter-reset: output var(--output);
+  content: counter(output);
+}
+
 :where(label:has([type=checkbox], [type=radio])) {
   align-items: center;
   column-gap: 1ch;

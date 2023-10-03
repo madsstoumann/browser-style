@@ -1,0 +1,23 @@
+:where(.ui-bmi) {
+	& fieldset {
+		all: unset;
+		clip-path: inset(0 0 0 0 round var(--input-bdrs));
+		color: #222;
+		width: 100%;
+		& label {
+			grid-template-columns: 1fr;
+			padding: 1ch 2ch;
+			&:nth-child(1) { background-color: #4691e2; }
+			&:nth-child(2) { background-color: #0cb764; }
+			&:nth-child(3) { background-color: #febf18; }
+			&:nth-child(4) { background-color: #fc8711; }
+			&:nth-child(5) { background-color: #ff6455; }
+			&:nth-child(6) { background-color: #cc1100; }
+			& p {
+				display: none;
+				margin: 0;
+			}
+			&:has(:checked) p { display: block; }
+		}
+	}
+}

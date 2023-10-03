@@ -11,21 +11,24 @@ export default function initProperties(input) {
   const keys = input.dataset.key.split(',') || [input.name]
   const scopes = input.dataset.scope?.split(',') || [input.dataset.scope || 'self']
   const types = input.dataset.type?.split(',') || ['property']
+  const units = input.dataset.unit?.split(',') || ['']
   keys.forEach((item, index) => {
     let key = item || input.name
     const node = scope(input, scopes[index])
+    const unit = units[index] || ''
 
     if (key && node) { 
       if (types[index] === 'property') {
         key = key.startsWith('--') ? key : '--' + key
-        setProperty(node, key, value(input))
+        
+        setProperty(node, key, input.value + unit)
         if (input.hasAttribute('min')) setProperty(node, '--min', input.min)
         if (input.hasAttribute('max')) setProperty(node, '--max', input.max)
-        input.addEventListener('input', () => setProperty(node, key, value(input)) )
+        input.addEventListener('input', () => setProperty(node, key, input.value + unit) )
       }
       else {
-        node.setAttribute(key, value(input))
-        input.addEventListener('input', () => node.setAttribute(key, value(input)) )
+        node.setAttribute(key, input.value + unit)
+        input.addEventListener('input', () => node.setAttribute(key, input.value + unit) )
       }
     }
   })
