@@ -6,7 +6,6 @@
 	width: var(--meter-progress-bs);
 
 	&::after {
-		color: var(--ButtonBorder);
 		counter-reset: val var(--value);
 		content: counter(val) "%";
 		font-size: 200%;

@@ -7,7 +7,4 @@ export default function uiBMI(form) {
 		form.elements.bmigroup.value = index;
 	})
 	form.dispatchEvent(new Event('input'))
-	
-  // this.g[index].checked = true;
-  
 }

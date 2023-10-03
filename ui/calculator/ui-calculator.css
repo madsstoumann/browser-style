@@ -28,6 +28,7 @@
     &::placeholder { color: currentColor; }
   }
   & button {
+    --_bg: transparent;
     aspect-ratio: 1.2 / 1;
     background-color: var(--ButtonFace);
     color: var(--CanvasText);
@@ -45,9 +46,9 @@
       &:focus-visible { background-color: var(--GrayDark); }
     }
     &:nth-of-type(4n+4), &:last-child {
-      background-color: var(--AccentColor);
+      background-color: var(--ColorWarning);
       color: Canvas;
-      &:focus-visible { background-color: color-mix(in srgb, var(--AccentColor), #000 20%); }
+      &:focus-visible { background-color: color-mix(in srgb, var(--ColorWarning), #000 20%); }
     }
   }
 }

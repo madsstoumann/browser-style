@@ -11,6 +11,17 @@
 	touch-action: none;
 	width: 100%;
 
+	&::after {
+		counter-reset: val var(--value);
+		content: counter(val) "%";
+		font-size: 200%;
+		font-weight: 700;
+		margin-top: 1.25ch;
+		place-self: center;
+		position: absolute;
+		rotate: 90deg;
+	}
+
 	& input {
 		aspect-ratio: 1 / 1;
 		background: conic-gradient(

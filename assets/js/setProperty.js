@@ -35,8 +35,6 @@ export default function initProperties(input) {
 }
 
 const setProperty = (node, key, value) => node.style.setProperty(key, value)
-const value = (input) => input.value + (input.dataset.unit || '')
-
 
 function scope(input, scope) {
   switch (scope) {

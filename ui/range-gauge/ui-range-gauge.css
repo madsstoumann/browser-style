@@ -27,7 +27,6 @@
 		-webkit-mask-composite: source-out;
 	}
 	&::before {
-		color: var(--ButtonBorder);
 		counter-reset: val var(--value);
 		content: counter(val) "%";
 		font-size: 200%;
