@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>BMI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<!-- <link rel="stylesheet" href="ui-bmi.css"> -->
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>BMI Calculator</h2>
+
+	<form class="ui-bmi">
+		<label data-output="cm">Height
+			<input type="range" name="height" min="150" max="230" step="1" value="180" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" />
+		</label>
+		<label data-output="75">Weight
+			<input type="range" name="weight" min="35" max="200" step="1" value="75" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" />
+		</label>
+		<h2>Your BMI Is: <output name="result"></output></h2>
+		
+		<!-- <fieldset readonly>
+			<input type="radio" id="bmi-g0" name="g" />
+			<label for="bmi-g0">Underweight</label>
+			<div class="c-bmi__group-text">The WHO regards a BMI of less than 18.5 as underweight and may indicate malnutrition, an eating disorder, or other health problems.</div>
+			<input type="radio" id="bmi-g1" name="g" checked />
+			<label for="bmi-g1">Normal</label>
+			<div class="c-bmi__group-text">A BMI between 18.5 and 25 is considered normal and healthy. </div>
+			<input type="radio" id="bmi-g2" name="g" />
+			<label for="bmi-g2">Pre-obesity</label>
+			<div class="c-bmi__group-text">People who fall into this category may be at risk of developing obesity.<br />This was earlier classified as "overweight".</div>
+			<input type="radio" id="bmi-g3" name="g" />
+			<label for="bmi-g3">Obese I</label>
+			<div class="c-bmi__group-text">People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</div>
+			<input type="radio" id="bmi-g4" name="g" />
+			<label for="bmi-g4">Obese II</label>
+			<div class="c-bmi__group-text">People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</div>
+			<input type="radio" id="bmi-g5" name="g" />
+			<label for="bmi-g5">Obese III</label>
+			<div class="c-bmi__group-text">People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</div>
+		</fieldset> -->
+	</form>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		// import uiBMI from './uiBMI.js';
+
+		common();
+		// init('.ui-bmi', uiBMI);
+	</script>
+</body>
+</html>

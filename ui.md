@@ -5,6 +5,7 @@ Avatar List
 Badge
 Blinds
 Blockquote
+BMI Calculator
 Breadcrumbs — custom `::marker`, icons
 Button
 Button Group
@@ -100,13 +101,9 @@ Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/mad
 Footer
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
 Placeholder (https://semantic-ui.com/elements/placeholder.html)
-
 Search, input + `<search>`
 Table (Resizable Columns, Pagination, Search etc.)
-
 Toolbar (https://browser.style/tags/menu.html)
-
-
 Weather (with data-forecast="1")
 
 ---
@@ -114,7 +111,7 @@ Weather (with data-forecast="1")
 
 address
 blink
-bmi-calculator (https://codepen.io/stoumann/pen/LYRdmVY)
+
 circular-menu / arc (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/circular/)
 dark-mode toggle
 day-planner
