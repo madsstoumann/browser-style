@@ -1,16 +1,16 @@
 .ui-file-list {
 	--ui-file-list-img-sz: 4em;
-	all: unset;
 	border-radius: var(--input-bdrs);
 	font-size: smaller;
-	&:has(li) { border: 1px solid var(--ButtonBorder); }
+	margin-block: 2ch;
+	padding: 0;
 	& img {
-		border: 1px solid var(--ButtonBorder);
 		border-radius: var(--input-bdrs);
+		border: 1px solid var(--ButtonBorder);
 		height: var(--ui-file-list-img-sz);
+		margin-block: .5ch;
 		object-fit: contain;
 		width: var(--ui-file-list-img-sz);
-		margin-block: .5ch;
 	}
 	& li {
 		align-items: center;

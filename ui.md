@@ -1,4 +1,4 @@
-Accordion — `<details>` and `<ul>`
+Accordion
 Analog Clock
 Avatar
 Avatar List
@@ -6,7 +6,7 @@ Badge
 Blinds
 Blockquote
 BMI Calculator
-Breadcrumbs — custom `::marker`, icons
+Breadcrumbs
 Button
 Button Group
 Calculator
@@ -24,7 +24,7 @@ ContextMenu
 Countdown
 Custom Color
 Description List
-Details / `<ui-details>`
+Details
 Dialog
 Digital Clock
 Divider
@@ -37,7 +37,7 @@ File List
 FileTree
 Gallery
 Gradient Text
-Icon (CSS)
+Icon
 Image Compare
 Image Gallery
 Image Select
@@ -73,7 +73,7 @@ Slider
 Slideshow
 Spinner
 Split Panel
-Step — Horizontal and vertical
+Step
 Swap
 Syntax Highlight — CSS
 Table Grid
@@ -93,16 +93,21 @@ Word Wheel
 World Map
 XY
 ---
-Alert, Confirm, Prompt
-Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
+Alert
+Autocomplete
 Calendar
 Color Picker
+Combobox (https://dev.to/madsstoumann/building-a-minimal-autosuggest-4big)
+Confirm
 Dark Mode toggler (icon from browser.style + input:checked?) (https://dev.to/madsstoumann/dark-mode-in-3-lines-of-css-and-other-adventures-1ljj)
 Footer
+Marquee (https://browser.style/tags/marquee.html)
 Overflow (https://codepen.io/stoumann/pen/RwwMPZW)
-Placeholder (https://semantic-ui.com/elements/placeholder.html)
-Search, input + `<search>`
+Prompt
+Skeleton (https://semantic-ui.com/elements/placeholder.html)
+Tab Bar
 Table (Resizable Columns, Pagination, Search etc.)
+Text Edit (textarea with quill)
 Toolbar (https://browser.style/tags/menu.html)
 Weather (with data-forecast="1")
 
@@ -111,9 +116,8 @@ Weather (with data-forecast="1")
 
 address
 blink
-
+-Search, input + `<search>`
 circular-menu / arc (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/circular/)
-dark-mode toggle
 day-planner
 fadeout (mask)
 -flip-card (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/flip/)
@@ -124,15 +128,12 @@ input (with :user-valid/invalid etc.)
 list/grid (http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/listgrid/index.html)
 Locale Switcher (Choose country, Continue)
 marquee
-menu-list / button / icon
-menu-tab / tab-bar
 offer-group (radio-button)
 info-click (http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/imagemap/)
 product-variant-select (radio-button)
 select / custom-select
 textarea (with quill, resize)
 tour (http://blocks3.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/tour/index.html)
-
 
 
 http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/index.html

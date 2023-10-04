@@ -2,6 +2,7 @@
 	--ui-dock-gap: .66em;
 	--ui-dock-item-bdrs: .75em;
 	--ui-dock-item-sz: 3em;
+	--VisitedText: currentColor;
 
 	all: unset;
 	backdrop-filter: blur(10px);

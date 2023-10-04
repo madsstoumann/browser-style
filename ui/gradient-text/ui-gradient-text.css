@@ -9,7 +9,7 @@
 
 	&.--animate {
 		--ui-gradient-bgsz: 300%;
-		animation: move-bg 10s infinite alternate linear;
+		animation: move-bg var(--ui-gradient-animdur, 5s) var(--ui-gradient-animic, infinite) alternate linear;
 	}
 }
 @keyframes move-bg {
