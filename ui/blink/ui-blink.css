@@ -1,0 +1,12 @@
+:where(.ui-blink) {
+	background: var(--AccentColor);
+	color: var(--AccentColorText);
+	padding: 1ch 2ch;
+	width: fit-content;
+	& span {
+		animation: blink var(--ui-blink-animdur, 2s) infinite;
+	}
+}
+@keyframes blink {
+	50% { opacity: 0; }
+}
