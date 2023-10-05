@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Toast</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="../notification/ui-notification.css">
+	<link rel="stylesheet" href="ui-toast.css">
+	
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Toast</h2>
+
+	<button popovertarget="toast-info">Info</button>
+	<div id="toast-info" popover class="ui-toast --info">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-info" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-success">Success</button>
+	<div id="toast-success" popover class="ui-toast --success">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-success" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-warning">Warning</button>
+	<div id="toast-warning" popover class="ui-toast --warning">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-warning" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+	<button popovertarget="toast-error">Error</button>
+	<div id="toast-error" popover class="ui-toast --error">
+		<span>I am a popover with more information.</span>
+		<button popovertarget="toast-error" popovertargetaction="hide">
+			<ui-icon type="cross"></ui-icon>
+		</button>
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Password Toggl</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="../input-button/ui-input-button.css">
+	<link rel="stylesheet" href="../swap/ui-swap.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Password Toggle</h2>
+	<fieldset class="ui-input-button ui-password-toggle">
+		<legend>Toggle to see password</legend>
+		<label>
+			<input type="password">
+		</label>
+		<label class="ui-swap ui-button">
+			<input type="checkbox" data-sr>
+			<img src="/assets/svg/lock.svg" alt="Lock">
+			<img src="/assets/svg/eye.svg" alt="View">
+		</label>
+	</fieldset>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiPasswordToggl from './uiPasswordToggle.js';
+		common();
+		init('.ui-password-toggle', uiPasswordToggl);
+	</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+:where(.ui-marquee) {
+	background-color: var(--GrayCanvas);
+	border-radius: var(--input-bdrs);
+	display: flex;
+	overflow: hidden;
+	padding: 2ch 0;
+	& span {
+		animation: scroll var(--ui-marquee-animdur, 20s) linear infinite;
+		display: flex;
+		flex-shrink: 0;
+		width: 100%;
+		translate: 100% 0;
+		user-select: none;
+		white-space: nowrap;
+	}
+	& input:checked + span {
+		animation-play-state: paused;
+	}
+	&:has(input:focus-visible) {
+		outline: 1px solid var(--ButtonBorder);
+	}
+}
+@keyframes scroll {
+	from { translate: 100% 0;}
+	to { translate: -100% 0; }
+}

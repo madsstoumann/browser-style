@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Transfer List</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-transfer-list.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Transfer List</h2>
+
+	<fieldset class="ui-transfer-list">
+		<label>
+			Left
+			<select multiple size="3" name="start">
+				<option value="1">Option One</option>
+				<option value="2">Option Two</option>
+				<option value="3">Option Three</option>
+			</select>
+		</label>
+		<nav>
+			<button type="button" name="fromStart" aria-label="Move selected items to the second list">
+				<ui-icon type="chevron right"></ui-icon>
+			</button>
+			<button type="button" name="fromEnd" aria-label="Move selected items to the first list">
+				<ui-icon type="chevron left"></ui-icon>
+			</button>
+		</nav>
+		<label>
+			Right
+			<select multiple size="3" name="end">
+				<option value="4">Option Four</option>
+				<option value="5">Option Five</option>
+				<option value="6">Option Six</option>
+			</select>
+		</label>
+	</fieldset>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiTransferList from './uiTransferList.js';
+		common();
+		init('.ui-transfer-list', uiTransferList);
+	</script>
+</body>
+</html>
