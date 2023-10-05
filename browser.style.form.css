@@ -168,6 +168,22 @@
     width: var(--input-thumb-sz);
   }
 }
+:where([type=search]) {
+  &::-webkit-search-cancel-button {
+    --reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
+    background-color: currentColor;
+    display: block;
+    height: 1rem;
+    mask-image: var(--reset);
+    width: 1rem;
+    -webkit-appearance: none;
+    -webkit-mask-image: var(--reset);
+  }
+}
+[list]::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
 :where(label) {
   align-content: start;
   display: grid;
