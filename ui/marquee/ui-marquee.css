@@ -8,10 +8,10 @@
 		animation: scroll var(--ui-marquee-animdur, 20s) linear infinite;
 		display: flex;
 		flex-shrink: 0;
-		width: 100%;
 		translate: 100% 0;
 		user-select: none;
 		white-space: nowrap;
+		width: 100%;
 	}
 	& input:checked + span {
 		animation-play-state: paused;
@@ -22,5 +22,5 @@
 }
 @keyframes scroll {
 	from { translate: 100% 0;}
-	to { translate: -100% 0; }
+	to { translate: -200% 0; }
 }
