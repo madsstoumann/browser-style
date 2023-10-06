@@ -338,8 +338,11 @@
 /* Keyframes */
 @keyframes progress { 100% { translate: 400%; } }
 
+
+/* TODO! CLEAN UP BELOW */
+
 /* Mixins */
-@container style(--mixin-background-icon: true) {
+/* @container style(--mixin-background-icon: true) { */
   *:is(input, option:checked, select, textarea) {
     background-image: var(--icon);
     background-position: calc(100% - 1.25ch) center;
@@ -349,7 +352,7 @@
       background-position: 1.25ch center;
     }
   }
-}
+/* } */
 @container style(--mixin-input-icon: true) {
   *::-webkit-calendar-picker-indicator {
     background: var(--icon-color, currentColor);
@@ -364,3 +367,23 @@
     opacity: 0;
   }
 }
+
+/* Background Icons */
+label:has(input:not([type=checkbox],[type=color],[type=radio],[type=range])) {
+	--mixin-background-icon: true;
+}
+label:has(select:not([size])) {
+  --mixin-background-icon: true;
+  --icon: url('/assets/svg/chevron-down.svg');
+}
+label:has([type=email]) { --icon: url('/assets/svg/email.svg'); }
+label:has([type=datetime-local]) { --icon: url('/assets/svg/calendar.svg'); }
+label:has([type=month]) { --icon: url('/assets/svg/week.svg'); }
+label:has([type=number]) { --icon: url('/assets/svg/numbers.svg'); }
+label:has([type=password]) { --icon: url('/assets/svg/lock.svg'); }
+label:has([type=search]) { --icon: url('/assets/svg/search.svg'); }
+label:has([type=tel]) {  --icon: url('/assets/svg/phone.svg'); }
+label:has([type=time]) { --icon: url('/assets/svg/time.svg'); }
+label:has([type=url]) { --icon: url('/assets/svg/link.svg'); }
+
+[type=search]:focus-visible { --icon: none; }

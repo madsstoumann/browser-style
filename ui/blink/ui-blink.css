@@ -6,6 +6,13 @@
 	& span {
 		animation: blink var(--ui-blink-animdur, 2s) infinite;
 	}
+	& input:checked + span {
+		animation-play-state: paused;
+		opacity: 1;
+	}
+	&:has(input:focus-visible) {
+		outline: 1px solid var(--ButtonBorder);
+	}
 }
 @keyframes blink {
 	50% { opacity: 0; }
