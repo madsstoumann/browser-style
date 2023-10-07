@@ -20,7 +20,7 @@
 		}
 		&:focus-visible:not(:checked),
 		&:hover:not(:checked):not(:disabled) {
-			--ui-cinema-seat-bg: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
+			background: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
 		}
 		&:focus-visible:checked {
 			outline: 2px solid color-mix(in srgb, var(--ColorSuccess), Canvas 40%);

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Flight</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-flight.css">
+	<link rel="stylesheet" href="../color-key/ui-color-key.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Flight</h2>
+	<p>To hide a seat, remove <code>value</code>. For reserved/sold seats, add <code>disabled</code> (dark gray).<br>For unselectable/unavailable seats, add <code>inert</code> (light gray).</p>
+
+	<ul class="ui-color-key">
+		<li style="--ui-color-key:var(--ColorWarning)">Front</li>
+		<li style="--ui-color-key:var(--AccentColor)">Standard</li>
+		<li style="--ui-color-key:var(--VisitedText)">Legroom</li>
+		<li style="--ui-color-key:var(--ColorError)">Sale</li>
+	</ul>
+
+	<br>
+
+	<fieldset class="ui-flight">
+		<legend>Chose your seat/s</legend>
+		<ol>
+			<li class="--front">
+				<label><input type="checkbox" value="1A" disabled></label>
+				<label><input type="checkbox" value="1B" disabled></label>
+				<label><input type="checkbox" value="1C"></label>
+				<label><input type="checkbox" value="1D"></label>
+				<label><input type="checkbox" value="1E"></label>
+				<label><input type="checkbox" value="1F"></label>
+			</li>
+			<li class="--front">
+				<label><input type="checkbox" value="2A"></label>
+				<label><input type="checkbox" value="2B"></label>
+				<label><input type="checkbox" value="2C"></label>
+				<label><input type="checkbox" value="2D"></label>
+				<label><input type="checkbox" value="2E"></label>
+				<label><input type="checkbox" value="2F"></label>
+			</li>
+			<li class="--front">
+				<label><input type="checkbox" value="3A"></label>
+				<label><input type="checkbox" value="3B"></label>
+				<label><input type="checkbox" value="3C"></label>
+				<label><input type="checkbox" value="3D"></label>
+				<label><input type="checkbox" value="3E"></label>
+				<label><input type="checkbox" value="3F"></label>
+			</li>
+			<li class="--front">
+				<label><input type="checkbox" value="4A"></label>
+				<label><input type="checkbox" value="4B"></label>
+				<label><input type="checkbox" value="4C"></label>
+				<label><input type="checkbox" value="4D"></label>
+				<label><input type="checkbox" value="4E"></label>
+				<label><input type="checkbox" value="4F"></label>
+			</li>
+			<li class="--front">
+				<label><input type="checkbox" value="5A"></label>
+				<label><input type="checkbox" value="5B"></label>
+				<label><input type="checkbox" value="5C"></label>
+				<label><input type="checkbox" value="5D"></label>
+				<label><input type="checkbox" value="5E"></label>
+				<label><input type="checkbox" value="5F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="6A" inert></label>
+				<label><input type="checkbox" value="6B"></label>
+				<label><input type="checkbox" value="6C"></label>
+				<label><input type="checkbox" value="6D" disabled></label>
+				<label><input type="checkbox" value="6E" disabled></label>
+				<label><input type="checkbox" value="6F" inert></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="7A"></label>
+				<label><input type="checkbox" value="7B"></label>
+				<label><input type="checkbox" value="7C"></label>
+				<label><input type="checkbox" value="7D"></label>
+				<label><input type="checkbox" value="7E"></label>
+				<label><input type="checkbox" value="7F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="8A"></label>
+				<label><input type="checkbox" value="8B"></label>
+				<label><input type="checkbox" value="8C"></label>
+				<label><input type="checkbox" value="8D"></label>
+				<label><input type="checkbox" value="8E"></label>
+				<label><input type="checkbox" value="8F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="9A"></label>
+				<label><input type="checkbox" value="9B"></label>
+				<label><input type="checkbox" value="9C"></label>
+				<label><input type="checkbox" value="9D"></label>
+				<label><input type="checkbox" value="9E"></label>
+				<label><input type="checkbox" value="9F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="10A"></label>
+				<label><input type="checkbox" value="10B"></label>
+				<label><input type="checkbox" value="10C"></label>
+				<label><input type="checkbox" value="10D"></label>
+				<label><input type="checkbox" value="10E"></label>
+				<label><input type="checkbox" value="10F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="11A"></label>
+				<label><input type="checkbox" value="11B"></label>
+				<label><input type="checkbox" value="11C"></label>
+				<label><input type="checkbox" value="11D"></label>
+				<label><input type="checkbox" value="11E"></label>
+				<label><input type="checkbox" value="11F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="12A"></label>
+				<label><input type="checkbox" value="12B"></label>
+				<label><input type="checkbox" value="12C"></label>
+				<label><input type="checkbox" value="12D"></label>
+				<label><input type="checkbox" value="12E"></label>
+				<label><input type="checkbox" value="12F"></label>
+			</li>
+			<li class="--standard">
+				<label><input type="checkbox" value="13A"></label>
+				<label><input type="checkbox" value="13B"></label>
+				<label><input type="checkbox" value="13C"></label>
+				<label><input type="checkbox" value="13D"></label>
+				<label><input type="checkbox" value="13E"></label>
+				<label><input type="checkbox" value="13F"></label>
+			<li class="--standard">
+				<label><input type="checkbox" value="14A"></label>
+				<label><input type="checkbox" value="14B"></label>
+				<label><input type="checkbox" value="14C"></label>
+				<label><input type="checkbox" value="14D"></label>
+				<label><input type="checkbox" value="14E"></label>
+				<label><input type="checkbox" value="14F"></label>
+			</li>
+			<li class="--legroom">
+				<label><input type="checkbox" value="15A"></label>
+				<label><input type="checkbox" value="15B"></label>
+				<label><input type="checkbox" value="15C"></label>
+				<label><input type="checkbox" value="15D"></label>
+				<label><input type="checkbox" value="15E"></label>
+				<label><input type="checkbox" value="15F"></label>
+			</li>
+			<li class="--legroom">
+				<label><input type="checkbox" value="16A"></label>
+				<label><input type="checkbox" value="16B"></label>
+				<label><input type="checkbox" value="16C"></label>
+				<label><input type="checkbox" value="16D"></label>
+				<label><input type="checkbox" value="16E"></label>
+				<label><input type="checkbox" value="16F"></label>
+			</li>
+			<li class="--sale">
+				<label><input type="checkbox" value="17A"></label>
+				<label><input type="checkbox" value="17B"></label>
+				<label><input type="checkbox" value="17C"></label>
+				<label><input type="checkbox" value="17D"></label>
+				<label><input type="checkbox" value="17E"></label>
+				<label><input type="checkbox" value="17F"></label>
+			</li>
+			<li class="--sale">
+				<label><input type="checkbox" value="18A"></label>
+				<label><input type="checkbox" value="18B"></label>
+				<label><input type="checkbox" value="18C"></label>
+				<label><input type="checkbox" value="18D"></label>
+				<label><input type="checkbox" value="18E"></label>
+				<label><input type="checkbox" value="18F"></label>
+			</li>
+			<li class="--sale">
+				<label><input type="checkbox" value="19A"></label>
+				<label><input type="checkbox" value="19B"></label>
+				<label><input type="checkbox" value="19C"></label>
+				<label><input type="checkbox" value="19D"></label>
+				<label><input type="checkbox" value="19E"></label>
+				<label><input type="checkbox" value="19F"></label>
+			</li>
+			<li class="--sale">
+				<label><input type="checkbox" value="20A"></label>
+				<label><input type="checkbox" value="20B"></label>
+				<label><input type="checkbox" value="20C"></label>
+				<label><input type="checkbox" value="20D"></label>
+				<label><input type="checkbox" value="20E"></label>
+				<label><input type="checkbox" value="20F"></label>
+			</li>
+		</ol>
+	</fieldset>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+:where(.ui-flight) {
+	all: unset;
+	& input {
+		--_bdc: color-mix(in srgb, var(--ui-flight-seat-bg), #000 30%);
+		all: unset;
+		aspect-ratio: 1 / .9;
+		background: var(--ui-flight-seat-bg);
+		border-bottom: .25em solid var(--_bdc);
+		border-radius: .5em .5em .15em .15em;		
+		display: block;
+		width: 2em;
+		&:checked { 
+			--ui-flight-seat-bg: var(--ColorSuccess); 
+			border-color: var(--_bdc);
+		}
+		&:disabled { --ui-flight-seat-bg: var(--ButtonBorder); }
+		&:is([value=""], :not([value])) {
+			opacity: 0;
+			pointer-events: none;
+		}
+		&:focus-visible:not(:checked),
+		&:hover:not(:checked):not(:disabled) {
+			background: color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 80%);
+		}
+		&:focus-visible:checked {
+			outline: 2px solid color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 40%);
+		}
+		&[inert] { --ui-flight-seat-bg: var(--GrayCanvas); }
+	}
+	& label {
+		display: contents;
+		/* Control Aisle/s Numbering */
+		&:nth-of-type(3) input {
+			margin-inline-end: 3ch;
+			position: relative;
+			&::after {
+				content: counter(row);
+				display: block;
+				font-size: small;
+				padding-inline: 1ch;
+				position: absolute;
+				left: 100%;
+				text-align: center;
+				top: 50%;
+				translate: 0 -50%;
+				width: 5ch;
+			}
+		}
+	}
+	& li {
+		align-items: center;
+		counter-increment: row;
+		display: grid;
+		gap: 1ch;
+		grid-auto-flow: column;
+
+		&.--front { --ui-flight-seat-bg: var(--ColorWarning); }
+		&.--legroom { --ui-flight-seat-bg: var(--VisitedText);}
+		&.--sale { --ui-flight-seat-bg: var(--ColorError); }
+		&.--standard { --ui-flight-seat-bg: var(--AccentColor); }
+	}
+	& ol {
+		counter-reset: row;
+		display: grid;
+		gap: 1ch;
+		padding: 0;
+	}
+}
