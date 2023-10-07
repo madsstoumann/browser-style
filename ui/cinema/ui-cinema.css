@@ -1,25 +1,31 @@
 :where(.ui-cinema) {
 	all: unset;
 	& input {
+		--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
 		all: unset;
-		aspect-ratio: 1 / 1;
-		background: var(--GrayCanvas);
-		border-radius: .5em .5em .15em .15em;
+		aspect-ratio: 1 / .9;
+		background: var(--ui-cinema-seat-bg, var(--GrayCanvas));
+		border-bottom: .25em solid var(--_bdc);
+		border-radius: .5em .5em .15em .15em;		
 		display: block;
 		width: 2em;
-		&:checked { background: var(--ColorSuccess); }
-		&:disabled { background: var(--ColorError); }
+		&:checked { 
+			--ui-cinema-seat-bg: var(--ColorSuccess); 
+			border-color: var(--_bdc);
+		}
+		&:disabled { --ui-cinema-seat-bg: var(--ColorError); }
 		&:is([value=""], :not([value])) {
 			opacity: 0;
 			pointer-events: none;
 		}
 		&:focus-visible:not(:checked),
-		&:hover:not(:checked) {
-			background: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
+		&:hover:not(:checked):not(:disabled) {
+			--ui-cinema-seat-bg: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
 		}
 		&:focus-visible:checked {
 			outline: 2px solid color-mix(in srgb, var(--ColorSuccess), Canvas 40%);
 		}
+		&[inert] { --ui-cinema-seat-bg: var(--ButtonBorder); }
 	}
 	& label { display: contents; }
 	& li {
