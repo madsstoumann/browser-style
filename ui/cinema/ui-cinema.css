@@ -1,0 +1,44 @@
+:where(.ui-cinema) {
+	all: unset;
+	& input {
+		all: unset;
+		aspect-ratio: 1 / 1;
+		background: var(--GrayCanvas);
+		border-radius: .5em .5em .15em .15em;
+		display: block;
+		width: 2em;
+		&:checked { background: var(--ColorSuccess); }
+		&:disabled { background: var(--ColorError); }
+		&:is([value=""], :not([value])) {
+			opacity: 0;
+			pointer-events: none;
+		}
+		&:focus-visible:not(:checked),
+		&:hover:not(:checked) {
+			background: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
+		}
+		&:focus-visible:checked {
+			outline: 2px solid color-mix(in srgb, var(--ColorSuccess), Canvas 40%);
+		}
+	}
+	& label { display: contents; }
+	& li {
+		align-items: center;
+		counter-increment: row;
+		display: grid;
+		gap: 1ch;
+		grid-auto-flow: column;
+		&::before,
+		&::after {
+			content: counter(row);
+			font-size: small;
+			padding-inline: 1ch;
+		}
+	}
+	& ol {
+		counter-reset: row;
+		display: grid;
+		gap: 1ch;
+		padding: 0;
+	}
+}
