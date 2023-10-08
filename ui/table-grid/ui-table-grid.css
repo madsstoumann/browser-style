@@ -4,5 +4,7 @@
 	display: grid;
 	gap: var(--ui-table-grid-bdw);
 	padding: var(--ui-table-grid-bdw);
-	& >* { background: Canvas; }
+	& >* {
+		background: Canvas;
+	 }
 }

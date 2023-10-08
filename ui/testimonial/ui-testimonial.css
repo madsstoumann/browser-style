@@ -45,4 +45,11 @@
 			text-align: start;
 		}
 	}
+
+	&.--vertical {
+		--_deg: 180deg;
+		& > * {
+			grid-area: unset;
+		}
+	}
 }

@@ -8,21 +8,33 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="../../browser.style.css">
 	<link rel="stylesheet" href="ui-table-grid.css">
+	
 	<!-- For demo -->
 	<link rel="stylesheet" href="../product-card/ui-product-card.css">
+	<link rel="stylesheet" href="../testimonial/ui-testimonial.css">
+	<style>
+		.ui-testimonial {
+			--ui-testimonial-accent: var(--ButtonBorder);
+			--ui-testimonial-bdrs: 0;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Table Grid</h2>
+	<p>A grid controlled by <a href="/ui/column">Column</a>, styled as a table — here with <a href="/ui/product-card">Product Card</a> and <a href="/ui/testimonial">Testimonial</a>.</p>
 
-	<section class="ui-table-grid ui-column --sm-c-2 --md-c-3 --lg-c-4">
+	<section class="ui-table-grid ui-column --sm-c-2 --md-c-3 --xl-c-4">
 
 		<div class="ui-product-card">
 			<figure class="ui-scroll ui-scrollbar">
 				<img src="https://source.unsplash.com/random/320x200?sig=0" alt="Random image" width="320" height="200">
 				<img src="https://source.unsplash.com/random/320x200?sig=1" alt="Random image" width="320" height="200">
 			</figure>
+			<nav>
+				<span class="ui-chip --error">Last chance</span>
+			</nav>
 			<article>
 				<h3>This is a product</h3>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
@@ -30,15 +42,28 @@
 					<small><s>$199.00</s></small><br>
 					<strong>$99.00</strong>
 				</p>
-				<button type="button">Add to cart</button>
+				<button type="button" class="--accent">Add to cart</button>
 			</article>
 		</div>
+
+		<blockquote class="ui-testimonial --vertical">
+			<img src="https://picsum.photos/300/300" alt="" width="300" height="300">
+			<div>
+				<q>You must be the change you wish to see in the world</q>
+				<cite>Mahatma Gandhi<br>
+					<small>Nonviolent resistance</small>
+				</cite>
+			</div>
+		</blockquote>
 
 		<div class="ui-product-card">
 			<figure class="ui-scroll ui-scrollbar">
 				<img src="https://source.unsplash.com/random/320x200?sig=2" alt="Random image" width="320" height="200">
 				<img src="https://source.unsplash.com/random/320x200?sig=3" alt="Random image" width="320" height="200">
 			</figure>
+			<nav>
+				<span class="ui-chip --success">New</span>
+			</nav>
 			<article>
 				<h3>This is a product</h3>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
@@ -46,11 +71,11 @@
 					<small><s>$199.00</s></small><br>
 					<strong>$99.00</strong>
 				</p>
-				<button type="button">Add to cart</button>
+				<button type="button">Pre-order</button>
 			</article>
 		</div>
 
-		<div></div>
+		
 
 	</section>
 
