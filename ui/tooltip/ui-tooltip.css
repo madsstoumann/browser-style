@@ -1,5 +1,5 @@
 :where([data-tooltip]) {
-	--ui-tooltip-bg: var(--CanvasText);
+	--ui-tooltip-bg: color-mix(in oklab, Canvas 40%, CanvasText 60%);;
 	--ui-tooltip-triangle-h: 0%;
 
 	position: relative;

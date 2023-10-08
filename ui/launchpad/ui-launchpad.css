@@ -1,0 +1,48 @@
+:where(.ui-launchpad) {
+	--ui-launchpad-triangle-h: 1.5em;
+	background-color: var(--GrayCanvas);
+	border-radius: var(--ui-launchpad-bdrs, 2ch);
+	/* box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent); */
+	color: Canvas;	
+	font-size: smaller;
+	gap: var(--ui-launchpad-gap, 3ch);
+	grid-template-columns: repeat(3, 1fr);
+	left: anchor(center);
+	list-style: none;
+	margin: 0;
+	overflow: visible;
+	padding: var(--ui-launchpad-gap, 3ch);
+	bottom: anchor(top);
+	translate: -50% calc(0% - var(--ui-launchpad-triangle-h));
+	&:popover-open { display: grid; }
+
+	&::after {
+		background: inherit;
+		/* clip-path: polygon(50% 0%, 100% 100%, 0% 100%); */
+		clip-path: polygon(50% 100%, 100% 0%, 0% 0%);
+		content: "";
+		display: inline-block;
+		height: var(--ui-launchpad-triangle-h);
+		inset-block: 100% auto;
+		inset-inline: 50% auto;
+		position: absolute;
+		translate: -50% 0;
+		transition: all .2s ease-in-out;
+		width: calc(2 * var(--ui-launchpad-triangle-h));
+	}
+
+	& li {
+		aspect-ratio: 1 / 1;
+		display: grid;
+		place-content: center;
+		&::before { /* tooltip */
+			z-index: 1;
+		}
+	}
+}
+:where(.ui-launchpad-link) {
+	bottom: 1ch;
+	left: 50%;
+	position: fixed;
+	/* translate: -50% 0; */
+}

@@ -1,7 +1,9 @@
 :where(.ui-blink) {
+	all: unset;
 	background: var(--AccentColor);
 	color: var(--AccentColorText);
 	padding: 1ch 2ch;
+	user-select: none;
 	width: fit-content;
 	& span {
 		animation: blink var(--ui-blink-animdur, 2s) infinite;

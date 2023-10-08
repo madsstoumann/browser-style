@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Launchpad</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="ui-launchpad.css">
+	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Launchpad</h2>
+	<p>lorem<br>lorem<br>lorem<br>lorem</p>
+	<button popovertarget="launchpad" id="launchpad-link" class="ui-launchpad-link --icon">
+		<svg width="24" height="24" viewBox="0 0 24 24" class="ui-icon">
+			<path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
+			<path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
+			<path d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
+			<path d="M14 7l6 0"></path>
+			<path d="M17 4l0 6"></path>
+	 </svg>
+	</button>
+
+	<ul id="launchpad" popover anchor="launchpad-link"  class="ui-launchpad">
+		<li data-tooltip="Calendar">
+			<img src="../../assets/svg/calendar.svg" alt="" width="48" height="48">
+		</li>
+		<li data-tooltip="Email">
+			<img src="../../assets/svg/email.svg" alt="" width="48" height="48">
+		</li>
+		<li data-tooltip="Link">
+			<img src="../../assets/svg/link.svg" alt="" width="48" height="48">
+		</li>
+		<li data-tooltip="Lock">
+			<img src="../../assets/svg/lock.svg" alt="" width="48" height="48">
+		</li>
+		<li  data-tooltip="Chat">
+			<img src="../../assets/svg/message.svg" alt="" width="48" height="48">
+		</li>
+		<li  data-tooltip="Calculator">
+			<img src="../../assets/svg/numbers.svg" alt="" width="48" height="48">
+		</li>
+		<li  data-tooltip="Phone">
+			<img src="../../assets/svg/phone.svg" alt="" width="48" height="48">
+		</li>
+		<li  data-tooltip="Clock">
+			<img src="../../assets/svg/time.svg" alt="" width="48" height="48">
+		</li>
+		<li  data-tooltip="Week Planner">
+			<img src="../../assets/svg/week.svg" alt="" width="48" height="48">
+		</li>
+	</ul>
+
+</body>
+</html>
