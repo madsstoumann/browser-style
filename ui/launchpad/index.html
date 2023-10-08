@@ -9,13 +9,26 @@
 	<link rel="stylesheet" href="../../browser.style.css">
 	<link rel="stylesheet" href="ui-launchpad.css">
 	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
+	<style>
+		/* For this demo only */
+		body {
+			display: grid;
+			& > * { margin-bottom: 0;}
+		}
+		button {
+			bottom: 1ch;
+			place-self: end center;
+			position: fixed;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Launchpad</h2>
-	<p>lorem<br>lorem<br>lorem<br>lorem</p>
-	<button popovertarget="launchpad" id="launchpad-link" class="ui-launchpad-link --icon">
+	<p>A mix between a context-menu and a toggletip.</p>
+
+	<button popovertarget="launchpad" id="launchpad-link" class="--icon">
 		<svg width="24" height="24" viewBox="0 0 24 24" class="ui-icon">
 			<path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
 			<path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"></path>
@@ -26,31 +39,31 @@
 	</button>
 
 	<ul id="launchpad" popover anchor="launchpad-link"  class="ui-launchpad">
-		<li data-tooltip="Calendar">
+		<li data-tooltip="Calendar" tabindex="0">
 			<img src="../../assets/svg/calendar.svg" alt="" width="48" height="48">
 		</li>
-		<li data-tooltip="Email">
+		<li data-tooltip="Email" tabindex="0">
 			<img src="../../assets/svg/email.svg" alt="" width="48" height="48">
 		</li>
-		<li data-tooltip="Link">
+		<li data-tooltip="Link" tabindex="0">
 			<img src="../../assets/svg/link.svg" alt="" width="48" height="48">
 		</li>
-		<li data-tooltip="Lock">
+		<li data-tooltip="Lock" tabindex="0">
 			<img src="../../assets/svg/lock.svg" alt="" width="48" height="48">
 		</li>
-		<li  data-tooltip="Chat">
+		<li  data-tooltip="Chat" tabindex="0">
 			<img src="../../assets/svg/message.svg" alt="" width="48" height="48">
 		</li>
-		<li  data-tooltip="Calculator">
+		<li  data-tooltip="Calculator" tabindex="0">
 			<img src="../../assets/svg/numbers.svg" alt="" width="48" height="48">
 		</li>
-		<li  data-tooltip="Phone">
+		<li  data-tooltip="Phone" tabindex="0">
 			<img src="../../assets/svg/phone.svg" alt="" width="48" height="48">
 		</li>
-		<li  data-tooltip="Clock">
+		<li  data-tooltip="Clock" tabindex="0">
 			<img src="../../assets/svg/time.svg" alt="" width="48" height="48">
 		</li>
-		<li  data-tooltip="Week Planner">
+		<li  data-tooltip="Week Planner" tabindex="0">
 			<img src="../../assets/svg/week.svg" alt="" width="48" height="48">
 		</li>
 	</ul>

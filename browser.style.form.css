@@ -342,8 +342,8 @@
 /* TODO! CLEAN UP BELOW */
 
 /* Mixins */
-/* @container style(--mixin-background-icon: true) { */
-  *:is(input, option:checked, select, textarea) {
+@container style(--mixin-background-icon: true) {
+  :is(input, option:checked, select, textarea) {
     background-image: var(--icon);
     background-position: calc(100% - 1.25ch) center;
     background-repeat: no-repeat;
@@ -352,7 +352,7 @@
       background-position: 1.25ch center;
     }
   }
-/* } */
+}
 @container style(--mixin-input-icon: true) {
   *::-webkit-calendar-picker-indicator {
     background: var(--icon-color, currentColor);
