@@ -3,6 +3,7 @@
 	background-color: var(--GrayCanvas);
 	border-radius: var(--ui-color-key-bdrs, 5ch);
 	display: grid;
+	font-family: var(--ui-color-key-ff, var(--ff-form));
 	gap: 2ch;
 	grid-auto-flow: column;
 	padding: 1ch 2ch;

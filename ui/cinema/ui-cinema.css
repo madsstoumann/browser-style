@@ -2,13 +2,15 @@
 	all: unset;
 	& input {
 		--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
-		all: unset;
+		--input-check-sz: 2.25em;
 		aspect-ratio: 1 / .9;
-		background: var(--ui-cinema-seat-bg, var(--GrayCanvas));
-		border-bottom: .25em solid var(--_bdc);
-		border-radius: .5em .5em .15em .15em;		
-		display: block;
-		width: 2em;
+		background-color: var(--ui-cinema-seat-bg, var(--GrayCanvas));
+		background-position: 50% 65%;
+		background-size: 65%;
+		border-color: var(--_bdc);
+		border-radius: .5em .5em .15em .15em;
+		border-width: 0 0 .25em 0;
+
 		&:checked { 
 			--ui-cinema-seat-bg: var(--ColorSuccess); 
 			border-color: var(--_bdc);

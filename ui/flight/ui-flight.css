@@ -2,13 +2,14 @@
 	all: unset;
 	& input {
 		--_bdc: color-mix(in srgb, var(--ui-flight-seat-bg), #000 30%);
-		all: unset;
+		--input-check-sz: 2em;
 		aspect-ratio: 1 / .9;
-		background: var(--ui-flight-seat-bg);
-		border-bottom: .25em solid var(--_bdc);
-		border-radius: .5em .5em .15em .15em;		
-		display: block;
-		width: 2em;
+		background-color: var(--ui-flight-seat-bg);
+		background-position: 50% 65%;
+		background-size: 65%;
+		border-color: var(--_bdc);
+		border-radius: .5em .5em .15em .15em;
+		border-width: 0 0 .25em 0;
 		&:checked { 
 			--ui-flight-seat-bg: var(--ColorSuccess); 
 			border-color: var(--_bdc);
@@ -31,7 +32,7 @@
 		display: contents;
 		/* Control Aisle/s Numbering */
 		&:nth-of-type(3) input {
-			margin-inline-end: 3ch;
+			margin-inline-end: 3.5ch;
 			position: relative;
 			&::after {
 				content: counter(row);
@@ -55,7 +56,10 @@
 		grid-auto-flow: column;
 
 		&.--front { --ui-flight-seat-bg: var(--ColorWarning); }
-		&.--legroom { --ui-flight-seat-bg: var(--VisitedText);}
+		&.--legroom {
+			--ui-flight-seat-bg: var(--VisitedText);
+			margin-block-start: .5em;
+		}
 		&.--sale { --ui-flight-seat-bg: var(--ColorError); }
 		&.--standard { --ui-flight-seat-bg: var(--AccentColor); }
 	}
