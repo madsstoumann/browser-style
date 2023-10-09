@@ -20,6 +20,14 @@
 		outline: 1px solid var(--ButtonBorder);
 	}
 }
+:where(.ui-blink-marquee) {
+	border: 0;
+	gap: 0;
+	padding: 0;
+	& .ui-blink { border-radius: var(--input-bdrs) var(--input-bdrs) 0 0; }
+	& .ui-marquee { border-radius-start-start: 0; }
+
+}
 @keyframes scroll {
 	from { translate: 100% 0;}
 	to { translate: -200% 0; }

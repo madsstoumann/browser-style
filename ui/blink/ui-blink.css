@@ -2,7 +2,8 @@
 	all: unset;
 	background: var(--AccentColor);
 	color: var(--AccentColorText);
-	padding: 1ch 2ch;
+	font-size: smaller;
+	padding: .33ch 1ch;
 	user-select: none;
 	width: fit-content;
 	& span {
