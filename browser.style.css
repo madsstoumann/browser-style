@@ -14,6 +14,7 @@
   --ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
   --ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
   --CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
+  --DarkGray: color-mix(in oklab, Canvas 40%, CanvasText 60%);
   --GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
   --GrayHover: linear-gradient(90deg, transparent, color-mix(in oklab, Canvas 98%, CanvasText 2%), transparent);
   --GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%);

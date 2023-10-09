@@ -1,5 +1,5 @@
 :where([data-tooltip]) {
-	--ui-tooltip-bg: color-mix(in oklab, Canvas 40%, CanvasText 60%);;
+	--ui-tooltip-bg: var(--DarkGray);
 	--ui-tooltip-triangle-h: 0%;
 
 	position: relative;
@@ -35,7 +35,7 @@
 			content: "";
 			display: inline-block;
 			height: var(--ui-tooltip-triangle-h);
-			inset-block: 100% auto;
+			inset-block: calc(100% - 2px) auto;
 			inset-inline: 50% auto;
 			opacity: 0;
 			position: absolute;
@@ -47,7 +47,7 @@
 	}
 	&[data-tooltip-ui*=top][data-tooltip-ui*=triangle]::after { 
 		clip-path: polygon(50% 100%, 100% 0%, 0% 0%);
-		inset-block: auto 100%;
+		inset-block: auto calc(100% - 2px);
 	}
 	&[data-tooltip-ui*=underline] { 
 		text-decoration: .0625em dotted underline;
