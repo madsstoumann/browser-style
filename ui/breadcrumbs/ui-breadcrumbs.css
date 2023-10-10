@@ -1,11 +1,12 @@
 :where(.ui-breadcrumbs) {
 	--_c: color-mix(in srgb, currentColor, Canvas 50%);
 	all: unset;
-	align-items: center;
+	align-items: var(--ui-breadcrumbs-ai, baseline);
 	display: flex;
 	gap: var(--ui-breadcrumbs-gap, 1ch);
 	& a {
 		color: var(--_c);
+		display: inline;
 		text-decoration: none;
 		text-underline-offset: .5em;
 		&:visited { color: var(--_c); }

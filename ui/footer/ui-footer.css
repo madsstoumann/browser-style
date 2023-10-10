@@ -1,0 +1,22 @@
+:where(.ui-footer) {
+	--ui-column-cg: var(--ui-footer-gap);
+	--ui-footer-gap: 3ch;
+	--VisitedText: currentColor;
+	background: var(--ui-footer-bg, var(--GrayCanvas));
+	font-size: var(--ui-footer-fs, small);
+	padding: calc(var(--ui-footer-gap) / 2) var(--ui-footer-gap);
+	& div:has(span) {
+		display: flex;
+		justify-content: space-between;
+	}
+	& :is(h2, h3, h4, h5, h6) {
+		margin-block: 1ch .5ch;
+	}
+	& nav {
+		padding-block-end: calc(var(--ui-footer-gap) / 2);
+		& a {
+			display: block;
+			text-decoration: none;
+		}
+	}
+}
