@@ -1,0 +1,32 @@
+@import '../swap/ui-swap.css';
+:where(.ui-overflow) {
+	& div {
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: var(--ui-overflow-lines, 3);
+		display: -webkit-box;  
+		line-clamp: var(--ui-overflow-lines, 3); 
+		overflow: hidden;
+		position: relative;
+		&::after {
+			background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, .9));
+			content: "";
+			display: block;
+			inset: 0;
+			position: absolute;
+		}
+	}
+	& label {
+		all: unset;
+		color: var(--ui-overflow-label-c, var(--LinkText));
+		cursor: pointer;
+	}
+	&:has(:checked) div {
+		-webkit-line-clamp: initial;
+		&::after {
+			background: none;
+		}
+	}
+	&.--5-lines { --ui-overflow-lines: 5; }
+	&.--10-lines { --ui-overflow-lines: 10; }
+	&.--15-lines { --ui-overflow-lines: 15; }
+}
