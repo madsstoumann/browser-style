@@ -1,0 +1,46 @@
+:where(.ui-live) {
+	background: var(--AccentColorLight);
+	overflow: hidden;
+	width: fit-content;
+	& span {
+		align-items: center;
+		animation: slide 5s infinite linear;
+		background: var(--AccentColor);
+		color: var(--AccentColorText);
+		display: flex;
+		font-weight: 500;
+		gap: 1ch;
+		padding: 0.25ch 1.5ch;
+		& i {
+			--_g: no-repeat radial-gradient(circle closest-side, currentColor 90%, #0000);
+			animation: dots 1.5s infinite linear;
+			aspect-ratio: 4 / 1;
+			background: 
+				var(--_g) 0%   50%,
+				var(--_g) 50%  50%,
+				var(--_g) 100% 50%;
+			background-size: calc(100%/3) 100%;
+			display: block;
+			width: 1.4em;
+		}
+	}
+}
+@keyframes slide { 
+	70%  {
+		opacity: 1;
+		translate: 0 0
+	}
+	80%	{ translate: -100% 0 }
+	81%	{
+		opacity: 0;
+		translate: 100% 0
+	}
+	82% { opacity: 1 }
+	90% { translate: 100% 0 }
+	100% { translate: 0 0 }
+}
+@keyframes dots { /* cssloaders.com */
+	33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
+	50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
+	66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+}
