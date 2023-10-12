@@ -1,0 +1,22 @@
+body:has([name=colorscheme][value=dark]:checked) {
+	color-scheme: dark;
+}
+body:has([name=colorscheme][value=light]:checked) {
+	color-scheme: light;
+}
+
+/* button group */
+:is(.ui-button-group.ui-dark-mode) {
+	--AccentColor: var(--DarkGray);
+	width: fit-content;
+}
+
+/* checkbox */
+:where(label.ui-dark-mode) {
+	grid-template-columns: 1fr;
+	& input:checked + svg { rotate: 180deg; }
+	& svg {
+		transition: all .6s ease;
+		width: var(--ui-dark-mode-svg-w, 3em);
+	}
+}
