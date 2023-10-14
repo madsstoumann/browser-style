@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <title>HTML</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <main>
+    <h1>This is HTML and Tailwind&hellip;</h1>
+    <p>In the beginning, Tim Berners-Lee created <abbr title="Hyper Text Markup Language">HTML</abbr>. He was a British computer scientist working at CERN, the European Organization for Nuclear Research. In 1989, he proposed a new way to share information over the internet using a system of hypertext documents. These documents would be linked together using <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a" target="_blank" rel="noopener noreferrer">hyperlinks</a>, and they could be displayed in a web browser.</p>
+    <p>Berners-Lee called his system the World Wide Web, and he wrote the first version of HTML to create web pages. HTML is a markup language, which means that it uses tags to describe the structure and content of a web page. The tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of the page.</p>
+
+    <figure>
+      <img src="https://picsum.photos/id/9/600/360" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360">
+      <figcaption><em>You won't find a computer today without at least one browser installed.</em></figcaption>
+    </figure>
+
+    <p>The first version of HTML was very simple, but it quickly evolved to support more complex features. In 1993, Berners-Lee released version 1.0 of HTML, which included support for tables, forms, and images. In 1995, version 2.0 of HTML was released, which added support for frames, cascading style sheets (CSS), and JavaScript.</p>
+
+    <table>
+      <caption>Differences between HTML 1 and HTML 2</caption>
+      <tbody><tr><th>Feature</th><th>HTML 1</th><th>HTML 2</th></tr><tr><td>Tags</td><td>A limited number of tags, such as &lt;b&gt;, &lt;i&gt;, and &lt;p&gt;</td><td>A wider range of tags, such as &lt;table&gt;, &lt;form&gt;, and &lt;img&gt;</td></tr><tr><td>Formatting</td><td>Limited formatting options, such as font size and color</td><td>More formatting options, such as background colors and images</td></tr><tr><td>Links</td><td>Links were supported, but they were limited to text links</td><td>Links could be used to point to any type of content, such as images, videos, and other web pages</td></tr><tr><td>Images</td><td>Images were supported, but they were limited to GIF and JPEG formats</td><td>Images could be used in a wider range of formats, such as PNG, SVG, and BMP</td></tr><tr><td>Tables</td><td>Tables were not supported</td><td>Tables were supported, and they could be used to create complex layouts</td></tr><tr><td>Forms</td><td>Forms were not supported</td><td>Forms were supported, and they could be used to collect user input</td></tr><tr><td>JavaScript</td><td>Not supported</td><td>Supported, but limited in scope</td></tr></tbody>
+    </table>
+
+    <p>HTML has continued to evolve over the years, and the latest version, HTML5, was released in 2014. HTML5 includes support for many new features, such as video, audio, and geolocation. It also makes it easier to create responsive web pages that look good on all devices.</p>
+    <p>HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today. It is used to create web pages for businesses, organizations, and individuals all over the world. HTML is a powerful tool that can be used to create anything from simple static pages to complex interactive applications.</p>
+
+    <hr>
+    <h2>Glossary of HTML terms</h2>
+    <dl>
+      <dt>Tags</dt> <dd>The basic building blocks of HTML. Tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of a web page.</dd>
+      <dt>Elements</dt> <dd>A group of tags that work together to create a specific type of content, such as a heading, a paragraph, or a list.</dd>
+      <dt>Attributes</dt> <dd>Additional information that can be added to tags to customize their behavior. For example, the href attribute can be used to specify the URL of a link.</dd>
+      <dt>Entities</dt> <dd>Special characters that can be used to represent non-text characters, such as copyright symbols and mathematical symbols.</dd>
+    </dl>
+
+    <hr>
+    <h2>Coding HTML</h2>
+    <p>HTML tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of the page.</p>
+    <p>For example, the following code will create a simple web page with the text "Hello, world!" in the center of the page:</p>
+
+  <pre>
+    <code>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+      &lt;head&gt;
+      &lt;title&gt;Hello, world!&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;h1&gt;Hello, world!&lt;/h1&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+    </code>
+  </pre>
+
+    Note, that tags like <del>&lt;center&gt;</del> and <del>&lt;big&gt;</del> have been replaced with <ins>CSS</ins>.<br>
+    It's possible to have <sup>superscript</sup> as well as <sub>subscript</sub>
+
+    <p>
+      In a code-editor like <em>VS Code</em>, you can create a new HTML-document using the
+      <kbd>Ctrl+N</kbd> keyboard shortcut.
+    </p>
+
+    <!-- <p>A <dfn id="#">validator</dfn> is a program that checks for syntax errors in code or documents.</p> -->
+
+    <hr>
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>What is HTML?</summary>
+      <div>HTML stands for HyperText Markup Language. It is a markup language used to create web pages. HTML uses tags to define the structure and content of a web page.</div>
+    </details>
+
+    <details>
+      <summary>What are the basic tags in HTML?</summary>
+      <div>
+        <h3>The basic tags in HTML are:</h3>
+        <ul>
+          <li><strong>&lt;html&gt;</strong> — This tag defines the beginning of an HTML document.</li>
+          <li><strong>&lt;head&gt;</strong> — This tag defines the head of an HTML document.</li>
+          <li><strong>&lt;title&gt;</strong> — This tag defines the title of an HTML document.</li>
+          <li><strong>&lt;body&gt;</strong> — This tag defines the body of an HTML document.</li>
+          <li><strong>&lt;h1&gt;</strong> — This tag defines a heading.</li>
+          <li><strong>&lt;p&gt;</strong> — This tag defines a paragraph.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>What are some of the benefits of using HTML?</summary>
+      <div>HTML is easy to learn, versatile, open source, and supported by all major web browsers.</div>
+    </details>
+
+    <details>
+      <summary>What is the difference between HTML and CSS?</summary>
+      <div>HTML is a markup language used to create web pages. CSS is a style sheet language used to define the appearance of a web page.</div>
+    </details>
+
+    <hr>
+    <h2>HTML Forms</h2>
+
+    <form>
+      <fieldset>
+        <legend>Sign up</legend>
+        <p>
+          <label>Input<br>
+            <input placeholder="John Doe">
+          </label>
+        </p>
+        <p>
+          <label>Disabled Input<br>
+            <input placeholder="John Doe" disabled>
+          </label>
+        </p>
+        <p>
+          <label>Color<br>
+            <input type="color" value="#3FDEAF">
+          </label>
+        </p>
+        <p>
+          <label>Date<br>
+            <input type="date">
+          </label>
+        </p>
+        <p>
+          <label>Date Time<br>
+            <input type="datetime-local">
+          </label>
+        </p>
+        <p>
+          <label>Email<br>
+            <input type="email">
+          </label>
+        </p>
+        <p>
+          <label>File<br>
+            <input type="file">
+          </label>
+        </p>
+        <p>
+          <label>Month<br>
+            <input type="month">
+          </label>
+        </p>
+        <p>
+          <label>Number<br>
+            <input type="number">
+          </label>
+        </p>
+        <p>
+          <label>Password<br>
+            <input type="password">
+          </label>
+        </p>
+        <p>
+          <label>Range<br>
+            <input type="range">
+          </label>
+        </p>
+        <p>
+          <label>Search<br>
+            <input type="search">
+          </label>
+        </p>
+        <p>
+          <label>Tel<br>
+            <input type="tel">
+          </label>
+        </p>
+        <p>
+          <label>Time<br>
+            <input type="time">
+          </label>
+        </p>
+        <p>
+          <label>Url<br>
+            <input type="url">
+          </label>
+        </p>
+        <p>
+          <label>
+            Select<br>
+            <select>
+              <option selected disabled>Select an option</option>
+              <option value="1">Select another option</option>
+            </select>
+          </label>
+        </p>
+        <p>
+          <label>
+            Select Multiple<br>
+            <select multiple size="3">
+              <option value="1">Option One</option>
+              <option value="2" selected>Option Two</option>
+              <option value="3">Option Three</option>
+            </select>
+          </label>
+        </p>
+        <label>
+          Textarea<br>
+          <textarea></textarea>
+        </label>
+        <fieldset>
+          <legend>Gender</legend>
+          <label>
+            <input type="radio" name="gender" value="1">
+            Female
+          </label>
+          <label>
+            <input type="radio" name="gender" value="2">
+            Male
+          </label>
+          <label>
+            <input type="radio" name="gender" value="3" checked>
+            Prefer not to say
+          </label>
+        </fieldset>
+        <p>
+          <label>
+            <input type="checkbox" checked>
+            Accept terms and conditions
+          </label>
+        </p>
+        <p>
+          <label>
+            Meter: optimum<br>
+            <meter min="0" max="100" value="90" low="25" high="50" optimum="80"></meter>
+          </label>
+        </p>
+        <p>
+          <label>
+            Progress<br>
+            <progress value="40" max="100"></progress>
+          </label>
+        </p>
+      </fieldset>
+      <p>
+        <button type="reset">Reset</button>
+        <button type="submit">Submit</button>
+      </p>
+    </form>
+
+    <form>
+      <fieldset>
+        <legend>Patterns</legend>
+        <label>
+          <span>Input <abbr title="Required field">*</abbr></span>
+          <small>Minimum 3 chars. Example: <samp>John</samp></small>
+          <input type="text" minlength="4" placeholder=" " pattern="\S+.*" required>
+        </label>
+      </fieldset>
+    </form>
+    
+    <hr>
+    <h2>Multimedia</h2>
+    <audio controls src="/assets/accept.mp3"></audio>
+    <p>
+      <video controls>
+        <source src="/assets/river.mp4" type="video/mp4">
+      </video>
+    </p>
+
+    <hr>
+    <h2>Quotes on HTML</h2>
+    <blockquote>
+      <q>HTML is the lingua franca of the web. It is the language that allows us to create and share information in a way that is accessible to everyone.</q>
+      <p>—<cite>Tim Berners-Lee</cite></p>
+    </blockquote>
+    <hr>
+    <blockquote>
+      <q>HTML is a tool for creativity. It allows us to express ourselves in new and innovative ways. It is a language that is constantly evolving, and it is exciting to see what the future holds for HTML.</q>
+      <p>—<cite>Tim Berners-Lee</cite></p>
+    </blockquote>
+    <hr>
+
+    <h2>Here are some of the benefits of using HTML:</h2>
+
+    <ol type="I">
+      <li>HTML is easy to learn. <mark>Even if you have no programming experience, you can learn the basics of HTML in a few hours.</mark></li>
+      <li>HTML is versatile. It can be used to create a wide variety of web pages, from simple static pages to complex interactive applications.</li>
+      <li>HTML is open source. It is freely available to everyone, and there is a large community of developers who can help you with your HTML projects.</li>
+      <li>HTML is supported by all major web browsers. This means that your web pages will look the same on any device, regardless of the browser that is used to view them.</li>
+      <li>If you are interested in creating web pages, then HTML is a great place to start. It is a powerful and versatile language that can be used to create anything you can imagine.</li>
+    </ol>
+
+    <hr>
+    <h3><code>&lt;address&gt;</code></h3>
+    <p>Contact the author of this page:</p>
+
+    <address>
+      <a href="mailto:jim@rock.com">jim@rock.com</a><br>
+      <a href="tel:+13115552368">(311) 555-2368</a>
+    </address>
+
+  </main>
+</body>
+</html>	

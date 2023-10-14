@@ -1,0 +1,148 @@
+:root {
+  --AccentColor: hsl(211, 100%, 50%);
+  --AccentColorText: hsl(211, 100%, 95%);
+  --ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
+  --ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
+  --CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
+  --GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
+  --LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
+  --Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
+  --MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
+  --VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
+
+  --ColorInfo: hsl(210, 60%, 46%);
+  --ColorError: hsl(360, 60%, 46%);
+  --ColorSuccess: hsl(136, 41%, 41%);
+  --ColorWarning: hsl(33, 99%, 59%);
+
+  --ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+  --ff-form: ui-sans-serif, system-ui;
+  --ff-headers: inherit;
+  --ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  
+  --input-bdrs: .25em;
+  --input-bdw: 1px;
+  --input-check-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z"></path></svg>');
+  --input-check-sz: 1.25rem; /* Size of Checkbox and Radio */
+  --input-pb: .66em;
+  --input-pi: 1.25ch;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+:where(body) {
+  accent-color: var(--AccentColor);
+  background-color: Canvas;
+  color: var(--CanvasText);
+  color-scheme: light dark;
+  font-family: var(--ff-body);
+  font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
+  line-height: 1.5;
+  margin-inline: auto;
+  max-inline-size: 85ch;
+  padding-inline: 2ch;
+  text-rendering: optimizeLegibility;
+}
+:where(a) {
+  color: var(--LinkText);
+  -webkit-tap-highlight-color: transparent;
+  &:visited { color: var(--VisitedText); }
+}
+:where(abbr) {
+  cursor: help;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+:where(audio) {
+	&::-webkit-media-controls-panel {
+		background: var(--GrayCanvas);
+	}
+}
+:where(blockquote) {
+  border-inline-start: .75ch solid var(--ButtonFace);
+  padding-inline-start: 2ch;
+}
+:where(blockquote, dl, figure, h1, ol, p, pre, ul) {
+  margin-block: 1rlh;
+}
+:where(button){
+  padding: var(--button-p, 1ch 2.5ch);
+  &[type=submit] {
+    background-color: var(--AccentColor);
+    border-color: var(--AccentColor);
+    color: var(--AccentColorText);
+  }
+}
+:where(button, label, legend) { font-weight: 500; }
+:where(caption) {
+  caption-side: bottom;
+  font-size: smaller;
+  font-style: italic;
+  margin-block: 1rlh;
+}
+:where(del) { color: var(--ColorError); }
+:where(dfn) {
+  text-decoration: underline;
+  text-decoration-style: double;
+}
+:where(dt) { font-weight: 700; }
+:where(button, fieldset, input, select, textarea) {
+  border: var(--input-bdw) solid var(--ButtonBorder);
+  border-radius: var(--input-bdrs);
+}
+:where(figcaption) { font-size: smaller; }
+:where(h1, h2, h3, h4) {
+  font-family: var(--ff-headers);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+:where(h2) { margin-block: .75rlh; }
+:where(hr) {
+  border: solid var(--ButtonBorder);
+  border-width: 1px 0 0;
+  margin-block: .5rlh;
+}
+:where(img) {
+  background-color: var(--GrayCanvas);
+  height: auto;
+  max-width: 100%;
+}
+:where(input, select, textarea) {
+  font-family: var(--ff-form);
+  font-size: var(--input-fz, 1rem);
+}
+:where(input, option, select:not([multiple]), textarea) {
+  padding: var(--input-pb) var(--input-pi);
+}
+:where(ins) { color: var(--ColorSuccess) }
+:where(kbd) {
+  background-color: var(--ButtonFace);
+  font-size: smaller;
+  padding: .33ch .66ch;
+}
+:where(mark) {
+  background-color: var(--Mark);
+  color: var(--MarkText);
+}
+:where(pre) { overflow: auto; }
+:where(pre, tr:nth-of-type(even)) {
+  background-color: var(--ButtonFace);
+}
+:where(table) { border-collapse: collapse; }
+:where(td) {
+  border: 1px solid;
+  font-size: smaller;
+  padding: 1ch;
+}
+[hidden] { display: none; }
+
+/* Dark Mode: */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --AccentColor: hsl(211, 60%, 50%);
+    --ColorInfo: hsl(210, 30%, 46%);
+    --ColorError: hsl(360, 40%, 56%);
+    --ColorSuccess: hsl(136, 21%, 51%);
+    --ColorWarning: hsl(33, 69%, 59%);
+  }
+}
