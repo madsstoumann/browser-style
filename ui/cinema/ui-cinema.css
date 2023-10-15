@@ -1,8 +1,9 @@
+@import '../color-key/ui-color-key.css';
 :where(.ui-cinema) {
 	all: unset;
 	& input {
 		--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
-		--input-check-sz: 2.25em;
+		--input-check-sz: 2em;
 		aspect-ratio: 1 / .9;
 		background-color: var(--ui-cinema-seat-bg, var(--GrayCanvas));
 		background-position: 50% 65%;

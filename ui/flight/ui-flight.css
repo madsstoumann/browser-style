@@ -1,3 +1,4 @@
+@import '../color-key/ui-color-key.css';
 :where(.ui-flight) {
 	all: unset;
 	& input {

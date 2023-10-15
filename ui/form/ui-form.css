@@ -1,0 +1,36 @@
+:where(.ui-form) {
+	--fieldset-rg: 1ch;
+	& fieldset {
+		display: grid;
+		margin: 0;
+		row-gap: var(--fieldset-rg);
+	}
+	& nav {
+		display: grid;
+		gap: var(--fieldset-rg);
+		grid-auto-flow: column;
+		justify-content: end;
+		margin-block-start: var(--fieldset-rg);
+	}
+	& [type=date],
+	& [type=datetime-local],
+	& [type=month],
+	& [type=time] {
+		appearance: none;
+		&::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); }
+		&::-webkit-calendar-picker-indicator { opacity: 0; }
+	}
+	& [type=email] { --icon: url('/assets/svg/email.svg'); }
+	& [type=datetime-local] { --icon: url('/assets/svg/calendar.svg'); }
+	& [type=month] { --icon: url('/assets/svg/week.svg'); }
+	& [type=number] { --icon: url('/assets/svg/numbers.svg'); }
+	& [type=password] { --icon: url('/assets/svg/lock.svg'); }
+	& [type=search] {
+		--icon: url('/assets/svg/search.svg');
+		&:focus-visible { --icon: none; }
+	}
+	& [type=tel] {  --icon: url('/assets/svg/phone.svg'); }
+	& [type=time] { --icon: url('/assets/svg/time.svg'); }
+	& [type=url] { --icon: url('/assets/svg/link.svg'); }
+	
+}

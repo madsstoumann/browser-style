@@ -1,3 +1,4 @@
+@import '../icon/ui-icon.css';
 :where(.ui-drawer) {
 	--ui-drawer-w: 33vw;
 	&.--left { --_trl: calc(1vw - var(--ui-drawer-w)) 0; }

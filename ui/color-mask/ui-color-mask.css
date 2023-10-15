@@ -10,6 +10,7 @@
 		height: 100%;
 		mask: var(--ui-color-mask-url);
 		-webkit-mask: var(--ui-color-mask-url);
+		width: 100%;
 	}
 	& label {
   	background-color: var(--GrayCanvas);

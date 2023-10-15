@@ -1,0 +1,5 @@
+:where(.ui-fieldset) {
+  display: grid;
+  margin: 0;
+  row-gap: var(--fieldset-rg, 1ch);
+}

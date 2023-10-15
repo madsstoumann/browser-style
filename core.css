@@ -1,57 +1,61 @@
 :root {
-  --AccentColor: hsl(211, 100%, 50%);
-  --AccentColorText: hsl(211, 100%, 95%);
-  --ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
-  --ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
-  --CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
-  --GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
-  --LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
-  --Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
-  --MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
-  --VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
+	--AccentColor: hsl(211, 100%, 50%);
+	--AccentColorText: hsl(211, 100%, 95%);
+	--ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
+	--ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
+	--CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
+	--DarkGray: color-mix(in oklab, Canvas 40%, CanvasText 60%);
+	--GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
+	--GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%);
+	--LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
+	--Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
+	--MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
+	--VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
 
-  --ColorInfo: hsl(210, 60%, 46%);
-  --ColorError: hsl(360, 60%, 46%);
-  --ColorSuccess: hsl(136, 41%, 41%);
-  --ColorWarning: hsl(33, 99%, 59%);
+	--ColorInfo: hsl(210, 60%, 46%);
+	--ColorError: hsl(360, 60%, 46%);
+	--ColorSuccess: hsl(136, 41%, 41%);
+	--ColorWarning: hsl(33, 99%, 59%);
 
-  --ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-  --ff-form: ui-sans-serif, system-ui;
-  --ff-headers: inherit;
-  --ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-  
-  --input-bdrs: .25em;
-  --input-bdw: 1px;
-  --input-check-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill="white" d="M14 2.5l-8.5 8.5-3.5-3.5-1.5 1.5 5 5 10-10z"></path></svg>');
-  --input-check-sz: 1.25rem; /* Size of Checkbox and Radio */
-  --input-pb: .66em;
-  --input-pi: 1.25ch;
+	--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+	--ff-form: ui-sans-serif, system-ui;
+	--ff-headers: inherit;
+	--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	
+	--input-bdrs: .25em;
+	--input-bdw: 1px;
+	--input-bs: calc(1.2em + (2 * var(--input-pb)) + (2 * var(--input-bdw))); /* (1em * 1.2) (line-height) */
+	--input-check-sz: 1.25rem;
+	--input-pb: .66em;
+	--input-pi: 1.25ch;
+	--input-range-h: .5em;
+	--input-thumb-sz: 1.5rem;
+	--label-rg: .25em;
 }
-*, *::before, *::after {
-  box-sizing: border-box;
-}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none; }
 :where(body) {
-  accent-color: var(--AccentColor);
-  background-color: Canvas;
-  color: var(--CanvasText);
-  color-scheme: light dark;
-  font-family: var(--ff-body);
-  font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
-  line-height: 1.5;
-  margin-inline: auto;
-  max-inline-size: 85ch;
-  padding-inline: 2ch;
-  text-rendering: optimizeLegibility;
+	accent-color: var(--AccentColor);
+	background-color: Canvas;
+	color: var(--CanvasText);
+	color-scheme: light dark;
+	font-family: var(--ff-body);
+	font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
+	line-height: 1.5;
+	margin-inline: auto;
+	max-inline-size: 85ch;
+	padding-inline: 2ch;
+	text-rendering: optimizeLegibility;
 }
 :where(a) {
-  color: var(--LinkText);
-  -webkit-tap-highlight-color: transparent;
-  &:visited { color: var(--VisitedText); }
+	color: var(--LinkText);
+	-webkit-tap-highlight-color: transparent;
+	&:visited { color: var(--VisitedText); }
 }
 :where(abbr) {
-  cursor: help;
-  text-decoration: underline;
-  text-decoration-style: dotted;
+	cursor: help;
+	text-decoration: underline;
+	text-decoration-style: dotted;
 }
 :where(audio) {
 	&::-webkit-media-controls-panel {
@@ -59,90 +63,295 @@
 	}
 }
 :where(blockquote) {
-  border-inline-start: .75ch solid var(--ButtonFace);
-  padding-inline-start: 2ch;
+	border-inline-start: .75ch solid var(--ButtonFace);
+	padding-inline-start: 2ch;
 }
 :where(blockquote, dl, figure, h1, ol, p, pre, ul) {
-  margin-block: 1rlh;
+	margin-block: 1rlh;
 }
-:where(button){
-  padding: var(--button-p, 1ch 2.5ch);
-  &[type=submit] {
-    background-color: var(--AccentColor);
-    border-color: var(--AccentColor);
-    color: var(--AccentColorText);
-  }
-}
-:where(button, label, legend) { font-weight: 500; }
 :where(caption) {
-  caption-side: bottom;
-  font-size: smaller;
-  font-style: italic;
-  margin-block: 1rlh;
+	caption-side: bottom;
+	font-size: smaller;
+	font-style: italic;
+	margin-block: 1rlh;
 }
 :where(del) { color: var(--ColorError); }
 :where(dfn) {
-  text-decoration: underline;
-  text-decoration-style: double;
+	text-decoration: underline;
+	text-decoration-style: double;
 }
 :where(dt) { font-weight: 700; }
-:where(button, fieldset, input, select, textarea) {
-  border: var(--input-bdw) solid var(--ButtonBorder);
-  border-radius: var(--input-bdrs);
-}
 :where(figcaption) { font-size: smaller; }
 :where(h1, h2, h3, h4) {
-  font-family: var(--ff-headers);
-  line-height: 1.3;
-  text-wrap: balance;
+	font-family: var(--ff-headers);
+	line-height: 1.3;
+	text-wrap: balance;
 }
 :where(h2) { margin-block: .75rlh; }
 :where(hr) {
-  border: solid var(--ButtonBorder);
-  border-width: 1px 0 0;
-  margin-block: .5rlh;
+	border: solid var(--ButtonBorder);
+	border-width: 1px 0 0;
+	margin-block: .5rlh;
 }
 :where(img) {
-  background-color: var(--GrayCanvas);
-  height: auto;
-  max-width: 100%;
-}
-:where(input, select, textarea) {
-  font-family: var(--ff-form);
-  font-size: var(--input-fz, 1rem);
-}
-:where(input, option, select:not([multiple]), textarea) {
-  padding: var(--input-pb) var(--input-pi);
+	background-color: var(--GrayCanvas);
+	height: auto;
+	max-width: 100%;
 }
 :where(ins) { color: var(--ColorSuccess) }
 :where(kbd) {
-  background-color: var(--ButtonFace);
-  font-size: smaller;
-  padding: .33ch .66ch;
+	background-color: var(--ButtonFace);
+	font-size: smaller;
+	padding: .33ch .66ch;
 }
 :where(mark) {
-  background-color: var(--Mark);
-  color: var(--MarkText);
+	background-color: var(--Mark);
+	color: var(--MarkText);
 }
 :where(pre) { overflow: auto; }
 :where(pre, tr:nth-of-type(even)) {
-  background-color: var(--ButtonFace);
+	background-color: var(--ButtonFace);
 }
 :where(table) { border-collapse: collapse; }
 :where(td) {
-  border: 1px solid;
-  font-size: smaller;
-  padding: 1ch;
+	border: 1px solid;
+	font-size: smaller;
+	padding: 1ch;
 }
-[hidden] { display: none; }
-
+/* form elements */
+:where(button, .ui-button, fieldset, input, select, textarea), [type=file]::file-selector-button {
+	border: var(--input-bdw) solid var(--ButtonBorder);
+	border-radius: var(--input-bdrs);
+	&::placeholder { color: var(--GrayText); }
+}
+:where(button, .ui-button), [type=file]::file-selector-button {
+	background-color: var(--button-bg, var(--ButtonFace));
+	border-color: var(--button-bdc, transparent);
+	color: var(--button-c, inherit);
+	display: inline-grid;
+	font-weight: 500;
+	gap: 1ch;
+	grid-auto-flow: column;
+	line-height: normal;
+	padding: var(--button-p, 1ch 2.5ch);
+	place-content: center;
+	user-select: none;
+	&:where([disabled], .--disabled) {
+		cursor: not-allowed;
+		opacity: .33;
+	}
+	&:focus-visible {
+		outline-offset: .3em;
+	}
+	&.--icon {
+		--button-p: 1ch;
+		aspect-ratio: 1 / 1;
+		border-radius: 50%;
+		grid-template-columns: 1fr;
+		height: auto;
+	}
+	&.--outline {
+		&:not(:hover) {
+			background: transparent;
+			border-color: currentColor;
+			&.--accent { color: var(--AccentColor); } 
+			&.--black { color: var(--CanvasText); }
+		}
+		&.--icon { border-width: 2px; }
+	}
+	&.--rounded { border-radius: 3em; }
+	&.--toggle { --button-p: 0; }
+}
+:where(button, .ui-button, input, select, textarea) {
+	font-family: var(--ff-form);
+	font-size: var(--input-fz, 1rem);
+}
+:where(input:not([type=checkbox], [type=file], [type=radio], [type=range]), option, select:not([size]), textarea) {
+	block-size: var(--input-bs);
+	padding: var(--input-pb) var(--input-pi);
+}
+:where(input:not([type=color],[type=range]), option:checked, select, textarea) {
+	background-image: var(--icon);
+	background-position: calc(100% - 1.25ch) center;
+	background-repeat: no-repeat;
+	background-size: var(--icon-size, 1.25em);
+	&:dir(rtl) { background-position: 1.25ch center; }
+}
+:where([type=checkbox], [type=radio]) {
+	appearance: none;
+	height: var(--input-check-sz);
+	margin: 0;
+	width: var(--input-check-sz);
+	&:checked { border-color: var(--AccentColor); }
+}
+:where([type=checkbox]:checked) { 
+	background: var(--AccentColor) url('/assets/svg/check-white.svg') no-repeat 48% / 75%;
+}
+:where([type=checkbox][role=switch]) {
+	aspect-ratio: 1.8 / 1;
+	background: var(--ButtonBorder);
+	border: 0;
+	border-radius: var(--input-check-sz);
+	display: flex;
+	width: auto;
+	&::after {
+		aspect-ratio: 1 / 1;
+		background: #FFF;
+		border-radius: 50%;
+		border: 2px solid var(--ButtonBorder);
+		box-sizing: border-box;
+		content: "";
+		display: block;
+		height: 100%;
+		transition: inherit;
+	}
+	&:checked {
+		--ButtonBorder: var(--AccentColor);
+		justify-content: end;
+	}
+}
+:where([type=color]) {
+	padding: 0;
+	width: 100%;
+	&::-webkit-color-swatch,
+	&::-webkit-color-swatch-wrapper {
+		border: 0;
+		border-radius: 0;
+		padding: 0;
+		width: 100%;
+	}
+}
+[type=file]::file-selector-button, [type=submit] {
+	--button-bg: var(--AccentColor);
+	--button-c: var(--AccentColorText);
+}
+:where([type=file]) {
+	border: 0;
+	&::file-selector-button { margin-inline-end: 1.5ch; }
+}
+:where([type=radio]) {
+	border-radius: 50%;
+	&:checked {
+		background-color: var(--AccentColor);
+		box-shadow: inset 0 0 0 .2rem var(--AccentColorText);
+	}
+}
+:where([type=range]) {
+	/* JS to set `--value` in % */
+	--_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+	background-color: var(--ButtonFace);
+	border: 0;
+	border-radius: var(--input-range-h);
+	background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
+	height: var(--input-range-h);
+	margin-block: calc((var(--input-thumb-sz) - var(--input-range-h)) / 2);
+	&:dir(rtl) { --_dir: left; }
+	&::-webkit-slider-thumb {
+		appearance: none;
+		background: var(--AccentColor);
+		border-radius: 50%;
+		height: var(--input-thumb-sz);
+		width: var(--input-thumb-sz);
+	}
+	&::-moz-range-thumb {
+		appearance: none;
+		background: var(--AccentColor);
+		border-radius: 50%;
+		border: 0;
+		height: var(--input-thumb-sz);
+		width: var(--input-thumb-sz);
+	}
+}
+:where([type=range], option, select) { appearance: none; }
+:where([type=search]) {
+	&::-webkit-search-cancel-button {
+		--icon: url('/assets/svg/reset.svg');
+		background-color: currentColor;
+		display: block;
+		height: 1em;
+		mask-image: var(--icon);
+		width: 1em;
+		-webkit-appearance: none;
+		-webkit-mask-image: var(--icon);
+	}
+}
+[list]::-webkit-calendar-picker-indicator {
+	display: none !important;
+}
+:where(label, legend) {
+	font-size: var(--label-fs, smaller);
+	font-weight: 500;
+}
+:where(label:not(:has([type=checkbox], [type=radio]))) {
+	align-content: start;
+	display: grid;
+	row-gap: var(--label-rg);
+}
+:where(label:has([type=checkbox], [type=radio])) {
+	align-items: center;
+	column-gap: 1ch;
+	display: grid;
+	grid-template-columns: min-content 1fr;
+}
+:where(label:has(input[disabled])) { color: var(--GrayText); }
+:where(label[data-output], label[style*="--output"]) {
+	position: relative;
+	&::after {
+		content: attr(data-output);
+		font-size: small;
+		inset-inline: auto 0;
+		position: absolute;
+	}
+}
+:where(label[style*="--output"])::after {
+	counter-reset: output var(--output);
+	content: counter(output);
+}
+:where(legend) { white-space: nowrap; }
+:where(option) {
+	&:checked {
+		--icon: url('/assets/svg/check.svg');
+		background-color: var(--GrayCanvas);
+	}
+	&:not(:last-of-type) {
+		border-block-end: var(--input-bdw) solid var(--ButtonBorder);
+	}
+}
+:where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
+:where(textarea) {
+	form-sizing: normal;
+	min-block-size: var(--input-bs);
+	resize: vertical;
+}
+/* Screen Reader Only */
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0); 
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap; 
+	width: 1px;
+}
+/* Media Queries */
+@media (hover: hover) {
+	:is(button, .ui-button) {
+		transition: all .2s ease-in-out;
+		&:hover {
+			background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
+			box-shadow: color-mix(in srgb, var(--_bg, rgba(174, 181, 188)), transparent 75%) 0px 0px 0px .25em;
+		}
+		&.--outline:hover { border-color: currentColor; }
+	}
+}
 /* Dark Mode: */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --AccentColor: hsl(211, 60%, 50%);
-    --ColorInfo: hsl(210, 30%, 46%);
-    --ColorError: hsl(360, 40%, 56%);
-    --ColorSuccess: hsl(136, 21%, 51%);
-    --ColorWarning: hsl(33, 69%, 59%);
-  }
+	:root {
+		--AccentColor: hsl(211, 60%, 50%);
+		--ColorInfo: hsl(210, 30%, 46%);
+		--ColorError: hsl(360, 40%, 56%);
+		--ColorSuccess: hsl(136, 21%, 51%);
+		--ColorWarning: hsl(33, 69%, 59%);
+	}
 }

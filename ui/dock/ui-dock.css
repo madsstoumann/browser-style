@@ -4,6 +4,9 @@
 	--ui-dock-item-sz: 3em;
 	--VisitedText: currentColor;
 
+	--Shade-20: color-mix(in srgb, CanvasText, transparent 80%);
+  --Shade-30: color-mix(in srgb, CanvasText, transparent 70%);
+
 	all: unset;
 	backdrop-filter: blur(10px);
 	background-color: var(--ui-dock-bg, color-mix(in srgb, Canvas, transparent 45%));

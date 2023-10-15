@@ -1,5 +1,5 @@
 :where(.ui-footer) {
-	--ui-column-cg: var(--ui-footer-gap);
+	--ui-grid-cg: var(--ui-footer-gap);
 	--ui-footer-gap: 3ch;
 	--VisitedText: currentColor;
 	background: var(--ui-footer-bg, var(--GrayCanvas));
