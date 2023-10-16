@@ -241,7 +241,7 @@
 	&::-webkit-color-swatch,
 	&::-webkit-color-swatch-wrapper {
 		border: 0;
-		border-radius: 0;
+		border-radius: inherit;
 		padding: 0;
 		width: 100%;
 	}
@@ -367,10 +367,14 @@
 		--ColorWarning: hsl(33, 69%, 59%);
 	}
 }
+
 /* Modifiers */
+
+/* Color Scheme */
 .--dark { color-scheme: dark; }
 .--light { color-scheme: light; }
 
+/* Font Sizes */
 .--xxsmall { font-size: xx-small; }
 .--xsmall { font-size: x-small; }
 .--small { font-size: small; }

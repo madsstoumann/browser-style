@@ -3,7 +3,7 @@
   aspect-ratio: 1 / 1;
   background: var(--ButtonFace);
   block-size: var(--ui-avatar-sz, 4em);
-  border: var(--ui-avatar-bdw, 2px) solid var(--ButtonBorder);
+  border: var(--ui-avatar-bdw, 2px) solid var(--GrayCanvas);
   border-radius: var(--ui-avatar-bdrs, 50%);
   container-type: inline-size;
 	display: grid;

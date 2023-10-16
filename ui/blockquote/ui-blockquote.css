@@ -10,7 +10,7 @@
 		border: 0;
 		padding-inline-start: 5rem;
 		&::before {
-			color: var(--GrayCanvas);
+			color: var(--ButtonFace);
 			content: '“';
 			display: block;
 			font-family: ui-serif, serif;
@@ -41,10 +41,9 @@
 		padding-inline: 6ch;
 		text-align: center;
 			&::before, &::after {
-				color: var(--GrayCanvas);
+				color: var(--ButtonFace);
 				font-size: 8rem;
 				line-height: 0.5;
-				
 				position: absolute;
 				top: 0;
 			}
