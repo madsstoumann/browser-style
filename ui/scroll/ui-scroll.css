@@ -36,3 +36,8 @@
 .ui-scroll[data-scroll-nav="--hidden"] + nav {
 	display: none;
 }
+/* Modifier: */
+.--hide-scrollbar {
+	scrollbar-width: none;
+	&::-webkit-scrollbar { display: none; }
+}

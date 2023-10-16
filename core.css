@@ -370,10 +370,7 @@
 /* Modifiers */
 .--dark { color-scheme: dark; }
 .--light { color-scheme: light; }
-.--hide-scrollbar {
-	scrollbar-width: none;
-	&::-webkit-scrollbar { display: none; }
-}
+
 .--xxsmall { font-size: xx-small; }
 .--xsmall { font-size: x-small; }
 .--small { font-size: small; }

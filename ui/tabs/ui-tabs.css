@@ -43,7 +43,7 @@
 		--ui-tabs-tab-fs: smaller;
 		--ui-tabs-gap: 0;
 		--ui-tabs-jc: space-between;
-		--ui-tabs-p: .33em;
+		--ui-tabs-p: .25em;
 		--ui-tabs-tab-p: .5ch 1ch;
 		--ui-tabs-w: fit-content;
 		& [aria-selected=false] + [aria-selected=false] {
