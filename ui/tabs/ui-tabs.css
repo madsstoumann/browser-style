@@ -1,4 +1,4 @@
-	/* Requires ui-scroll.css */
+@import '../scroll/ui-scroll.css';
 .ui-tabs {
 	& [role=tab] {
 		background: var(--ui-tabs-tab-bg, inherit);
