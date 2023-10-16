@@ -1,3 +1,4 @@
+@import '../icon/ui-icon.css';
 :where(.ui-notification, .ui-toast) {
 	--button-bg: transparent;
 	--button-p: .5ch;

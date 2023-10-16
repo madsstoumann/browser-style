@@ -6,7 +6,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="../../browser.style.css">
+	<link rel="stylesheet" href="/core.css">
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+	<style>
+		/* For this demo-page only */
+		p {
+			align-items: start;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1ch;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -19,75 +29,75 @@
 	<button type="submit">Submit</button>
 
 	<h3>Colors</h3>
-	<p class="ly-flex-wrap">
-		<button type="button" class="--accent --rounded">Accent</button>
-		<button type="button" class="--accent-light --rounded">Accent Light</button>
-		<button type="button" class="--accent --rounded --disabled">Accent Disabled</button>
-		<button type="button" class="--accent-light --rounded --disabled">Accent Light Disabled</button>
-		<button type="button" class="--success-bg --rounded">Success Bg</button>
-		<button type="button" class="--success --rounded">Success</button>
-		<button type="button" class="--warning-bg --rounded">Warning Bg</button>
-		<button type="button" class="--warning --rounded">Warning</button>
-		<button type="button" class="--error-bg --rounded">Error Bg</button>
-		<button type="button" class="--error --rounded">Error</button>
-		<button type="button" class="--info-bg --rounded">Info Bg</button>
-		<button type="button" class="--info --rounded">Info</button>
-		<button type="button" class="--black --rounded">Black</button>
-		<button type="button" class="--gray-light --rounded">Gray Light</button>
+	<p>
+		<button type="button" class="bg-accent --rounded">Accent</button>
+		<button type="button" class="bg-accent-light --rounded">Accent Light</button>
+		<button type="button" class="bg-accent --rounded --disabled">Accent Disabled</button>
+		<button type="button" class="bg-accent-light --rounded --disabled">Accent Light Disabled</button>
+		<button type="button" class="bg-success --rounded">Success Bg</button>
+		<button type="button" class="bg-success-light --rounded">Success</button>
+		<button type="button" class="bg-warning --rounded">Warning Bg</button>
+		<button type="button" class="bg-warning-light --rounded">Warning</button>
+		<button type="button" class="bg-error --rounded">Error Bg</button>
+		<button type="button" class="bg-error-light --rounded">Error</button>
+		<button type="button" class="bg-info --rounded">Info Bg</button>
+		<button type="button" class="bg-info-light --rounded">Info</button>
+		<button type="button" class="bg-black --rounded">Black</button>
+		<button type="button" class="bg-gray-light --rounded">Gray Light</button>
 	</p>
 
 	<h3>Outlines</h3>
-	<p class="ly-flex-wrap">
-		<button type="button" class="--accent --rounded --outline">Accent</button>
-		<button type="button" class="--success --rounded --outline">Success</button>
-		<button type="button" class="--warning --rounded --outline">Warning</button>
-		<button type="button" class="--error --rounded --outline">Error</button>
-		<button type="button" class="--info --rounded --outline">Info</button>
-		<button type="button" class="--black --rounded --outline">Black</button>
+	<p>
+		<button type="button" class="bg-accent --rounded --outline">Accent</button>
+		<button type="button" class="bg-success-light --rounded --outline">Success</button>
+		<button type="button" class="bg-warning-light --rounded --outline">Warning</button>
+		<button type="button" class="bg-error-light --rounded --outline">Error</button>
+		<button type="button" class="bg-info-light --rounded --outline">Info</button>
+		<button type="button" class="bg-black --rounded --outline">Black</button>
 	</p>
 
 	<h3>Sizes</h3>
-	<p class="ly-flex-wrap">
-		<button type="button" class="--accent --rounded --xxsmall">xxsmall</button>
-		<button type="button" class="--accent --rounded --xsmall">xsmall</button>
-		<button type="button" class="--accent --rounded --small">small</button>
-		<button type="button" class="--accent --rounded">default</button>
-		<button type="button" class="--accent --rounded --large">large</button>
-		<button type="button" class="--accent --rounded --xlarge">xlarge</button>
-		<button type="button" class="--accent --rounded --xxlarge">xxlarge</button>
+	<p>
+		<button type="button" class="bg-accent --rounded --xxsmall">xxsmall</button>
+		<button type="button" class="bg-accent --rounded --xsmall">xsmall</button>
+		<button type="button" class="bg-accent --rounded --small">small</button>
+		<button type="button" class="bg-accent --rounded">default</button>
+		<button type="button" class="bg-accent --rounded --large">large</button>
+		<button type="button" class="bg-accent --rounded --xlarge">xlarge</button>
+		<button type="button" class="bg-accent --rounded --xxlarge">xxlarge</button>
 	</p>
 
 	<h3>Icon</h3>
-	<p class="ly-flex-wrap">
-		<button type="button" class="--accent --rounded">Add to order<ui-icon type="plus"></ui-icon></button>
+	<p>
+		<button type="button" class="bg-accent --rounded">Add to order<ui-icon type="plus"></ui-icon></button>
 	</p>
-	<p class="ly-flex-wrap">
-		<button type="button" class="--accent --icon"><ui-icon type="plus"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="minus"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="cross"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron left"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron down"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron up"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow left"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow down"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow up"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow upleft"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow upright"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow downleft"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="arrow downright"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="check"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="burger-menu"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="veggie-menu"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="kebab"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="meatball"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="grid"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="stop"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="pause"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="play"></ui-icon></button>
-		<button type="button" class="--accent --icon"><ui-icon type="chevron last"></ui-icon></button>
+	<p>
+		<button type="button" class="bg-accent --icon"><ui-icon type="plus"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="minus"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="cross"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron left"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron down"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron up"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow left"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow down"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow up"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow upleft"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow upright"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow downleft"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="arrow downright"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="check"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="burger-menu"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="veggie-menu"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="kebab"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="meatball"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="grid"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron left first"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="stop"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="pause"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="play"></ui-icon></button>
+		<button type="button" class="bg-accent --icon"><ui-icon type="chevron last"></ui-icon></button>
 	</p>
 </body>
 </html>

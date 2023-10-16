@@ -6,7 +6,7 @@
 
 /* TODO! Needed? */
 @import url('fx/animations.css');
-@import url('browser.style.layout.css');
+/* @import url('browser.style.layout.css'); */
 
 :root {
   --AccentColor: hsl(211, 100%, 50%);

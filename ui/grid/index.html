@@ -6,11 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="../../core.css">
+	<link rel="stylesheet" href="/core.css">
   <link rel="stylesheet" href="ui-grid.css">
 
 	<!-- For demo, not a dependency -->
+	<link rel="stylesheet" href="../icon/ui-icon.css">
 	<link rel="stylesheet" href="../scroll/ui-scroll.css">
+
 	<style>
 		/* For demo */
 		div { 
@@ -28,27 +30,27 @@
 	<p>Column is a set of micro-classes controlling columns, gaps and spans in a grid.</p>
 
 	<section class="ui-grid --md-c-3">
-		<div class="--error"></div>
-		<div class="ui-grid --md-gcs-2 --md-c-3 --error">
-			<div class="--warning"></div>
-			<div class="ui-grid --md-gcs-2 --xs-c-1 --warning">
-				<div class="--success"></div>
-				<div class="ui-grid --md-c-2 --success">
-					<div class="--accent-light"></div>
-					<div class="--accent-light"></div>
+		<div class="bg-error-light"></div>
+		<div class="ui-grid --md-gcs-2 --md-c-3 bg-error-light">
+			<div class="bg-warning-light"></div>
+			<div class="ui-grid --md-gcs-2 --xs-c-1 bg-warning-light">
+				<div class="bg-success-light"></div>
+				<div class="ui-grid --md-c-2 bg-success-light">
+					<div class="bg-accent-light"></div>
+					<div class="bg-accent-light"></div>
 				</div>
 			</div>
 		</div>
-		<div class="--md-grs-2 --warning">
+		<div class="--md-grs-2">
 			<div class="ui-scroll --xs-c-1" data-scroll-nav="ui-scroll-nav --inside">
 				<img src="https://source.unsplash.com/random/225x300?sig=10" alt="Random image" width="225" height="300">
 				<img src="https://source.unsplash.com/random/225x300?sig=11" alt="Random image" width="225" height="300">
 				<img src="https://source.unsplash.com/random/225x300?sig=12" alt="Random image" width="225" height="300">
 			</div>
 		</div>
-		<div class="--accent-light"></div>
-		<div class="--accent-light"></div>
-		<div class="--md-gcs-2 --warning"></div>
+		<div class="bg-accent-light"></div>
+		<div class="bg-accent-light"></div>
+		<div class="--md-gcs-2 bg-warning-light"></div>
 	</section>
 
 	<script type="module">

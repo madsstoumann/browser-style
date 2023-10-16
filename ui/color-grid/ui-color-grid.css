@@ -1,4 +1,4 @@
-/* requires ui-color-input */
+@import '../color-input/ui-color-input.css';
 :where(.ui-color-grid) {
 	all: unset;
 	display: grid;

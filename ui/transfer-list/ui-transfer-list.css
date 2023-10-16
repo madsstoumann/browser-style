@@ -1,3 +1,4 @@
+@import '../icon/ui-icon.css';
 :where(.ui-transfer-list) {
   --icon-flip: 1;
   all: unset;

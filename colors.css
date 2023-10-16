@@ -1,0 +1,64 @@
+.--blue-green {
+  --ui-gradient: #0077ff, #00e7df, #0077ff;
+  &:is(.--grow, .--shrink) { --ui-gradient: #0077ff, #0077ff; }
+}
+.--rainbow {
+  --ui-gradient-bgsz-x: 120%;
+  --ui-gradient: #ff3e41, #ff8a43, #ffeb7f, #00c9a7, #007ea7, #ff3e41;
+}
+.--red-orange {
+  --ui-gradient: #ff1834, #ffc900, #ff1834;
+  &:is(.--grow, .--shrink) { --ui-gradient: #ff1834, #ff1834; }
+}
+.--violet-pink {
+  --ui-gradient: #7f00de, #ff007e, #7f00de;
+}
+
+ 
+.bg-accent, input[type=file]::file-selector-button, [type=submit] {
+  --_bg: var(--AccentColor);
+  --hover-bg: color-mix(in srgb, var(--AccentColor), var(--CanvasText) 20%);
+  background-color: var(--_bg);
+  color: var(--AccentColorText);
+}
+.bg-accent-light {
+  --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
+  background-color: var(--AccentColorLight);
+  color: var(--CanvasText);
+}
+.bg-black {
+  --hover-bg: color-mix(in srgb, CanvasText, Canvas 25%);
+  background-color: var(--CanvasText);
+  color: Canvas;
+}
+.bg-error { background-color: var(--ColorError); }
+.bg-error-light {
+	--hover-bg: color-mix(in srgb, var(--ColorError), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorError), Canvas 80%);
+	color: var(--ColorError);
+}
+.bg-gray-light {
+  --hover-bg: color-mix(in srgb, var(--GrayCanvas), CanvasText 20%);
+  background-color: var(--GrayCanvas);
+  color: var(--CanvasText);
+}
+.bg-info { background-color: var(--ColorInfo); }
+.bg-info-light {
+	--hover-bg: color-mix(in srgb, var(--ColorInfo), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorInfo), Canvas 80%);
+	color: var(--ColorInfo);
+}
+.bg-success { background-color: var(--ColorSuccess); }
+.bg-success-light {
+  --_bg: var(--ColorSuccess);
+	--hover-bg: color-mix(in srgb, var(--ColorSuccess), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
+	color: var(--ColorSuccess);
+}
+.bg-warning { background-color: var(--ColorWarning); }
+.bg-warning-light {
+	--hover-bg: color-mix(in srgb, var(--ColorWarning), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorWarning), Canvas 80%);
+	color: var(--ColorWarning);
+}
+.bg-error, .bg-info, .bg-success, .bg-warning { color: #FFF; }

@@ -6,12 +6,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
   <meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="../../core.css">
+	<link rel="stylesheet" href="/core.css">
   <link rel="stylesheet" href="ui-price-card.css">
-	<!-- dependencies -->
+
+	<!-- Optional Dependencies -->
 	<link rel="stylesheet" href="../chip/ui-chip.css">
 	<link rel="stylesheet" href="../scroll/ui-scroll.css">
-	<link rel="stylesheet" href="../column/ui-grid-cols.css">
+	<link rel="stylesheet" href="../grid/ui-grid-cols.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -19,8 +20,8 @@
 	<h2>Price Card</h2>
 	<div class="ui-price-card__wrapper">
 		<div class="ui-scroll --sm-c-2 --md-c-3" data-scroll-nav="ui-scroll-nav --inside --hover --no-dots">
-			<article class="ui-price-card --info">
-				<span class="ui-chip --info-bg">Team</span>
+			<article class="ui-price-card">
+				<span class="ui-chip bg-info">Team</span>
 				<h2>$249 / <small>Monthly</small></h2>
 				<ul>
 					<li>5 Content Providers</li>
@@ -40,8 +41,8 @@
 				</ul>
 				<button type="button" class="--outline">Contact Sales</button>
 			</article>
-			<article class="ui-price-card --accent">
-				<span class="ui-chip --accent-light">Professional</span>
+			<article class="ui-price-card bg-accent">
+				<span class="ui-chip bg-accent-light">Professional</span>
 				<h2>$799 / <small>Monthly</small></h2>
 				<ul>
 					<li>5 Content Providers</li>
@@ -61,8 +62,8 @@
 				</ul>
 				<button type="button" class="--outline">Contact Sales</button>
 			</article>
-			<article class="ui-price-card --info">
-				<span class="ui-chip --info-bg">Enterprise</span>
+			<article class="ui-price-card">
+				<span class="ui-chip bg-info">Enterprise</span>
 				<h2>$999 / <small>Monthly</small></h2>
 				<ul>
 					<li>5 Content Providers</li>

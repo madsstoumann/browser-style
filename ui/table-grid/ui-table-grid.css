@@ -1,3 +1,4 @@
+@import '../grid/ui-grid.css';
 :where(.ui-table-grid) {
 	--ui-table-grid-bdw: 1px;
 	background: var(--ui-table-grid-bdc, var(--ButtonBorder));

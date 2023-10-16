@@ -1,3 +1,4 @@
+@import '../icon/ui-icon-svg.css';
 :where(.ui-dock) {
 	--ui-dock-gap: .66em;
 	--ui-dock-item-bdrs: .75em;

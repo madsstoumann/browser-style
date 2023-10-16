@@ -15,7 +15,7 @@
 			border-radius: 50%;
 			content: counter(ol);
 			display: inline-grid;
-			font-size: larger;
+			font-size: 1.1em;
 			font-weight: 500;
 			margin-inline-end: .66ch;
 			place-content: center;

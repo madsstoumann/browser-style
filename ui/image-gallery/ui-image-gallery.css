@@ -1,3 +1,5 @@
+@import '../icon/ui-icon.css';
+@import '../scroll/ui-scroll.css';
 :where(.ui-image-gallery) {
 	--ui-image-gallery-thumb-gap: 1ch;
 	--ui-image-gallery-thumb-w: 110px;

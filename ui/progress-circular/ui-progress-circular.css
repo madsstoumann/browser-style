@@ -21,6 +21,7 @@
 			var(--ButtonBorder) calc(1% * var(--value))
 		);
 		border-radius: 50%;
+		height: var(--meter-progress-bs);
 		mask: var(--_mask);
 		-webkit-mask: var(--_mask);
 		&::-webkit-progress-inner-element { display: none; }

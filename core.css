@@ -1,6 +1,9 @@
+@import 'colors.css';
 :root {
+  /* System Colors */
 	--AccentColor: hsl(211, 100%, 50%);
 	--AccentColorText: hsl(211, 100%, 95%);
+	--AccentColorLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
 	--ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
 	--ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
 	--CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
@@ -12,16 +15,20 @@
 	--MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
 	--VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
 
+  /* Additional Colors */
 	--ColorInfo: hsl(210, 60%, 46%);
 	--ColorError: hsl(360, 60%, 46%);
 	--ColorSuccess: hsl(136, 41%, 41%);
 	--ColorWarning: hsl(33, 99%, 59%);
 
+  /* Fonts */
 	--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
 	--ff-form: ui-sans-serif, system-ui;
 	--ff-headers: inherit;
 	--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-	
+
+  /* Form Elements */
+  --fieldset-rg: 1ch;
 	--input-bdrs: .25em;
 	--input-bdw: 1px;
 	--input-bs: calc(1.2em + (2 * var(--input-pb)) + (2 * var(--input-bdw))); /* (1em * 1.2) (line-height) */
@@ -32,8 +39,20 @@
 	--input-thumb-sz: 1.5rem;
 	--label-rg: .25em;
 }
+/* Global */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none; }
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0); 
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap; 
+	width: 1px;
+}
+
 :where(body) {
 	accent-color: var(--AccentColor);
 	background-color: Canvas;
@@ -125,6 +144,7 @@
 	&::placeholder { color: var(--GrayText); }
 }
 :where(button, .ui-button), [type=file]::file-selector-button {
+	align-items: center;
 	background-color: var(--button-bg, var(--ButtonFace));
 	border-color: var(--button-bdc, transparent);
 	color: var(--button-c, inherit);
@@ -165,6 +185,11 @@
 :where(button, .ui-button, input, select, textarea) {
 	font-family: var(--ff-form);
 	font-size: var(--input-fz, 1rem);
+}
+:where(fieldset) {
+  display: grid;
+  margin: 0;
+  row-gap: var(--fieldset-rg);
 }
 :where(input:not([type=checkbox], [type=file], [type=radio], [type=range]), option, select:not([size]), textarea) {
 	block-size: var(--input-bs);
@@ -220,10 +245,6 @@
 		padding: 0;
 		width: 100%;
 	}
-}
-[type=file]::file-selector-button, [type=submit] {
-	--button-bg: var(--AccentColor);
-	--button-c: var(--AccentColorText);
 }
 :where([type=file]) {
 	border: 0;
@@ -317,23 +338,14 @@
 		border-block-end: var(--input-bdw) solid var(--ButtonBorder);
 	}
 }
+:where(select) { overflow: hidden; }
 :where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
 :where(textarea) {
 	form-sizing: normal;
 	min-block-size: var(--input-bs);
 	resize: vertical;
 }
-/* Screen Reader Only */
-[data-sr] {
-	border: 0;
-	clip: rect(0 0 0 0); 
-	clip-path: inset(50%);
-	height: 1px;
-	overflow: hidden;
-	position: absolute;
-	white-space: nowrap; 
-	width: 1px;
-}
+
 /* Media Queries */
 @media (hover: hover) {
 	:is(button, .ui-button) {
@@ -355,3 +367,17 @@
 		--ColorWarning: hsl(33, 69%, 59%);
 	}
 }
+/* Modifiers */
+.--dark { color-scheme: dark; }
+.--light { color-scheme: light; }
+.--hide-scrollbar {
+	scrollbar-width: none;
+	&::-webkit-scrollbar { display: none; }
+}
+.--xxsmall { font-size: xx-small; }
+.--xsmall { font-size: x-small; }
+.--small { font-size: small; }
+.--medium { font-size: medium; }
+.--large { font-size: large; }
+.--xlarge { font-size: x-large; }
+.--xxlarge { font-size: xx-large; }

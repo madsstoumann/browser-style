@@ -1,10 +1,4 @@
 :where(.ui-form) {
-	--fieldset-rg: 1ch;
-	& fieldset {
-		display: grid;
-		margin: 0;
-		row-gap: var(--fieldset-rg);
-	}
 	& nav {
 		display: grid;
 		gap: var(--fieldset-rg);

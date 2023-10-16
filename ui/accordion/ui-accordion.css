@@ -1,3 +1,4 @@
+@import '../icon/ui-icon.css';
 ul.ui-accordion {
 	all: unset;
 	& > li {
