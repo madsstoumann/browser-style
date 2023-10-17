@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Draggable</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/core.css">
+	<link rel="stylesheet" href="ui-draggable.css">
+	<link rel="stylesheet" href="../context-menu/ui-context-menu.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Draggable List</h2>
+	<ul class="ui-draggable">
+		<li draggable="true">
+			<ui-icon type="drag"></ui-icon>
+			This is item number 1
+			<button type="button" id="context-menu-toggle-1" popovertarget="context-menu-1" class="--icon --transparent">
+				<ui-icon type="kebab"></ui-icon>
+			</button>
+			<ul id="context-menu-1" popover anchor="context-menu-toggle-1" class="ui-context-menu">
+				<li tabindex="0">1 — Add item</li>
+				<li tabindex="0">1 — Edit item</li>
+				<li tabindex="0">1 — Delete item</li>
+			</ul>
+		</li>
+		<li draggable="true">
+			<ui-icon type="drag"></ui-icon>
+			This is item number 2
+			<button type="button" id="context-menu-toggle-2" popovertarget="context-menu-2" class="--icon --transparent">
+				<ui-icon type="kebab"></ui-icon>
+			</button>
+			<ul id="context-menu-2" popover anchor="context-menu-toggle-2" class="ui-context-menu">
+				<li tabindex="0">2 — Add item</li>
+				<li tabindex="0">2 — Edit item</li>
+				<li tabindex="0">2 — Delete item</li>
+			</ul>
+		</li>
+		<li draggable="true">
+			<ui-icon type="drag"></ui-icon>
+			This is item number 3
+			<button type="button" id="context-menu-toggle-3" popovertarget="context-menu-3" class="--icon --transparent">
+				<ui-icon type="kebab"></ui-icon>
+			</button>
+			<ul id="context-menu-3" popover anchor="context-menu-toggle-3" class="ui-context-menu">
+				<li tabindex="0">3 — Add item</li>
+				<li tabindex="0">3 — Edit item</li>
+				<li tabindex="0">3 — Delete item</li>
+			</ul>
+		</li>
+	</ul>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiDraggable from './uiDraggable.js';
+
+		common();
+		init('.ui-draggable', uiDraggable);
+	</script>
+</body>
+</html>

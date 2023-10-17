@@ -1,0 +1,23 @@
+@import '../icon/ui-icon.css';
+:where(.ui-draggable) {
+	all: unset;
+	& li {
+		align-items: center;
+		border-block-end: 1px solid var(--ButtonBorder);
+		display: flex;
+		gap: 1em;
+		list-style: none;
+		padding: 1ch 0;
+		pointer-events: none;
+		& > ui-icon {
+			color: var(--GrayText);
+			cursor: move;
+			pointer-events: all;
+		}
+		& [popovertarget] {
+			margin-inline-start: auto;
+			pointer-events: all;
+		}
+		&.--dragging { opacity: .5; }
+	}
+}

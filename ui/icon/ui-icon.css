@@ -61,11 +61,17 @@ ui-icon[type*=chevron]::after {
 }
 
 /* Grid, Kebab, Meatball, Menu */
-ui-icon:is([type=grid],[type=kebab],[type=meatball])::after {
+ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
 	background: currentColor;
 	border-radius: 50%;
 	height: .2em;
 	width: .2em;
+}
+ui-icon[type=drag]::after {
+	box-shadow: 
+		-.3em -.3em 0, 0 -.3em 0,
+		-.3em 0 0,
+		-.3em .3em 0, 0 .3em 0;
 }
 ui-icon[type=grid]::after {
 	box-shadow: 
