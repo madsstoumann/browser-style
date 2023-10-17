@@ -2,7 +2,6 @@
 :where(.ui-notification, .ui-toast) {
 	--button-bg: transparent;
 	--button-p: .5ch;
-	--hover-bg: transparent;
 	align-items: center;
 	background: var(--ui-notification-bg, var(--GrayCanvas));
 	border: 0;

@@ -39,5 +39,5 @@
 }
 .ui-expand-feature-trigger {
 	--button-p: .75ch .75ch .75ch 2.5ch;
-	--hover-bg: var(--GrayCanvas);
+	/* --hover-bg: var(--GrayCanvas); */
 }

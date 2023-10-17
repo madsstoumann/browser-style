@@ -7,14 +7,14 @@
 	grid-auto-flow: column;
 	& label {
 		--button-bg: transparent;
-		--hover-bg: var(--GrayCanvas);
+		/* --hover-bg: var(--GrayCanvas); */
 		align-content: center;
 		grid-template-columns: 1fr;
 		text-align: center;
 		&:has(input:checked) {
 			--button-bg: var(--AccentColor);
 			--button-c: var(--AccentColorText);
-			--hover-bg: unset;
+			/* --hover-bg: unset; */
 		}
 	}
 	& legend { padding-block-end: var(--label-rg); }
