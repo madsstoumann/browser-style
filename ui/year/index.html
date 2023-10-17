@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Year</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/core.css">
+	<link rel="stylesheet" href="../calendar/ui-calendar.css">
+	<link rel="stylesheet" href="../grid/ui-grid.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Year</h2>
+	<div class="ui-calendar-wrapper ui-grid --sm-c-2 --sm-cg-4 --sm-rg-4 --md-c-3 --md-cg-5 --md-rg-5" data-year="true"></div>
+
+	<script type="module">
+		import { init } from './../../assets/js/common.js';
+		import uiCalendar from '../calendar/uiCalendar.js';
+		init('.ui-calendar-wrapper', uiCalendar);
+	</script>
+</body>
+</html>

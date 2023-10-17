@@ -1,4 +1,5 @@
 @import url('ui-grid-cols.css');
+@import url('ui-grid-gap.css');
 @import url('ui-grid-span.css');
 
 :where(.ui-grid) {
