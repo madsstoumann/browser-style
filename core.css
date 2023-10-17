@@ -1,4 +1,3 @@
-@import 'colors.css';
 :root {
   /* System Colors */
 	--AccentColor: hsl(211, 100%, 50%);
@@ -39,6 +38,16 @@
 	--input-thumb-sz: 1.5rem;
 	--label-rg: .25em;
 }
+@media (prefers-color-scheme: dark) {
+	:root {
+		--AccentColor: hsl(211, 60%, 50%);
+		--ColorInfo: hsl(210, 30%, 46%);
+		--ColorError: hsl(360, 40%, 56%);
+		--ColorSuccess: hsl(136, 21%, 51%);
+		--ColorWarning: hsl(33, 69%, 59%);
+	}
+}
+
 /* Global */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none; }
@@ -53,6 +62,7 @@
 	width: 1px;
 }
 
+/* Elements */
 :where(body) {
 	accent-color: var(--AccentColor);
 	background-color: Canvas;
@@ -137,7 +147,8 @@
 	font-size: smaller;
 	padding: 1ch;
 }
-/* form elements */
+
+/* Form Elements */
 :where(button, .ui-button, fieldset, input, select, textarea), [type=file]::file-selector-button {
 	border: var(--input-bdw) solid var(--ButtonBorder);
 	border-radius: var(--input-bdrs);
@@ -155,13 +166,16 @@
 	line-height: normal;
 	padding: var(--button-p, 1ch 2.5ch);
 	place-content: center;
+	transition: all .2s ease-in-out;
 	user-select: none;
 	&:where([disabled], .--disabled) {
 		cursor: not-allowed;
 		opacity: .33;
 	}
-	&:focus-visible {
-		outline-offset: .3em;
+	&:focus-visible { outline-offset: .3em; }
+	&:hover {
+		background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
+		box-shadow: color-mix(in srgb, var(--_bg, rgba(174, 181, 188)), transparent 75%) 0px 0px 0px .25em;
 	}
 	&.--icon {
 		--button-p: 1ch;
@@ -171,11 +185,10 @@
 		height: auto;
 	}
 	&.--outline {
+		&:hover { border-color: currentColor; }
 		&:not(:hover) {
 			background: transparent;
 			border-color: currentColor;
-			&.--accent { color: var(--AccentColor); } 
-			&.--black { color: var(--CanvasText); }
 		}
 		&.--icon { border-width: 2px; }
 	}
@@ -184,7 +197,7 @@
 }
 :where(button, .ui-button, input, select, textarea) {
 	font-family: var(--ff-form);
-	font-size: var(--input-fz, 1rem);
+	font-size: var(--input-fs, 1rem);
 }
 :where(fieldset) {
   display: grid;
@@ -258,7 +271,6 @@
 	}
 }
 :where([type=range]) {
-	/* JS to set `--value` in % */
 	--_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
 	background-color: var(--ButtonFace);
 	border: 0;
@@ -346,29 +358,11 @@
 	resize: vertical;
 }
 
-/* Media Queries */
-@media (hover: hover) {
-	:is(button, .ui-button) {
-		transition: all .2s ease-in-out;
-		&:hover {
-			background-color: var(--hover-bg, color-mix(in srgb, var(--button-bg, var(--ButtonFace)), #000 20%));
-			box-shadow: color-mix(in srgb, var(--_bg, rgba(174, 181, 188)), transparent 75%) 0px 0px 0px .25em;
-		}
-		&.--outline:hover { border-color: currentColor; }
-	}
-}
-/* Dark Mode: */
-@media (prefers-color-scheme: dark) {
-	:root {
-		--AccentColor: hsl(211, 60%, 50%);
-		--ColorInfo: hsl(210, 30%, 46%);
-		--ColorError: hsl(360, 40%, 56%);
-		--ColorSuccess: hsl(136, 21%, 51%);
-		--ColorWarning: hsl(33, 69%, 59%);
-	}
-}
-
-/* Modifiers */
+/*
+-----------------
+ Utility Classes 
+-----------------
+*/
 
 /* Color Scheme */
 .--dark { color-scheme: dark; }
@@ -382,3 +376,66 @@
 .--large { font-size: large; }
 .--xlarge { font-size: x-large; }
 .--xxlarge { font-size: xx-large; }
+
+.--blue-green {
+  --ui-gradient: #0077ff, #00e7df, #0077ff;
+  &:is(.--grow, .--shrink) { --ui-gradient: #0077ff, #0077ff; }
+}
+.--rainbow {
+  --ui-gradient-bgsz-x: 120%;
+  --ui-gradient: #ff3e41, #ff8a43, #ffeb7f, #00c9a7, #007ea7, #ff3e41;
+}
+.--red-orange {
+  --ui-gradient: #ff1834, #ffc900, #ff1834;
+  &:is(.--grow, .--shrink) { --ui-gradient: #ff1834, #ff1834; }
+}
+.--violet-pink {
+  --ui-gradient: #7f00de, #ff007e, #7f00de;
+}
+.bg-accent, input[type=file]::file-selector-button, [type=submit] {
+  --_bg: var(--AccentColor);
+  --hover-bg: color-mix(in srgb, var(--AccentColor), var(--CanvasText) 20%);
+  background-color: var(--_bg);
+  color: var(--AccentColorText);
+}
+.bg-accent-light {
+  --hover-bg: color-mix(in srgb, var(--AccentColor), Canvas 60%);
+  background-color: var(--AccentColorLight);
+  color: var(--CanvasText);
+}
+.bg-black {
+  --hover-bg: color-mix(in srgb, CanvasText, Canvas 25%);
+  background-color: var(--CanvasText);
+  color: Canvas;
+}
+.bg-error { background-color: var(--ColorError); }
+.bg-error-light {
+	--hover-bg: color-mix(in srgb, var(--ColorError), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorError), Canvas 80%);
+	color: var(--ColorError);
+}
+.bg-gray-light {
+  --hover-bg: color-mix(in srgb, var(--GrayCanvas), CanvasText 20%);
+  background-color: var(--GrayCanvas);
+  color: var(--CanvasText);
+}
+.bg-info { background-color: var(--ColorInfo); }
+.bg-info-light {
+	--hover-bg: color-mix(in srgb, var(--ColorInfo), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorInfo), Canvas 80%);
+	color: var(--ColorInfo);
+}
+.bg-success { background-color: var(--ColorSuccess); }
+.bg-success-light {
+  --_bg: var(--ColorSuccess);
+	--hover-bg: color-mix(in srgb, var(--ColorSuccess), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
+	color: var(--ColorSuccess);
+}
+.bg-warning { background-color: var(--ColorWarning); }
+.bg-warning-light {
+	--hover-bg: color-mix(in srgb, var(--ColorWarning), Canvas 60%);
+	background-color: color-mix(in srgb, var(--ColorWarning), Canvas 80%);
+	color: var(--ColorWarning);
+}
+.bg-error, .bg-info, .bg-success, .bg-warning { color: #FFF; }
