@@ -23,6 +23,7 @@
 		align-items: start;
 		display: flex;
 		height: fit-content;
+		isolation: isolate;
 		justify-content: space-between;
 		padding: 1ch;
 	}

@@ -1,29 +1,42 @@
 @import '../icon/ui-icon.css';
 :where(.ui-context-menu) {
-  bottom: calc(anchor(top));
-  left: anchor(center);
-  translate: -50% 0%;
-	--icon-sz: 1.5rem;
-	&:popover-open {
-		border: 1px solid var(--ButtonBorder);
-		border-radius: var(--input-bdrs);
-		display: grid;
-		padding: 0;
-		& li {
-			align-items: center;
-			display: flex;
-			gap: 2ch;
-			justify-content: space-between;
-			padding: .5ch 1ch;
-			&:not(:last-child) {
-				border-bottom: 1px solid var(--ButtonBorder);
-			}
-			&:focus-visible,
-			&:hover {
-				background: var(--AccentColor);
-				color: var(--AccentColorText);
-				outline: none;
-			}
+  --icon-sz: 1.5rem;
+	border: 1px solid var(--ButtonBorder);
+	border-radius: var(--input-bdrs);
+	bottom: anchor(top);
+	list-style-type: none;
+	margin-block: 0;  
+	padding: 0;
+	width: fit-content;
+	& li {
+		align-items: center;
+		display: flex;
+		gap: 2ch;
+		justify-content: space-between;
+		padding: .5ch 1ch;
+		pointer-events: all;
+		white-space: nowrap;
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--ButtonBorder);
 		}
+		&:focus-visible,
+		&:hover {
+			background: var(--AccentColor);
+			color: var(--AccentColorText);
+			outline: none;
+		}
+	}
+	&.--bottom {
+		top: anchor(bottom);
+	}
+	&.--center {
+		left: anchor(center);
+		translate: -50% 0%;
+	}
+	&.--left {
+		left: anchor(left);
+	}
+	&.--right {
+		right: anchor(right);
 	}
 }

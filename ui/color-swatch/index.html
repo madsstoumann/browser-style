@@ -31,5 +31,11 @@
 			<input type="radio" name="colorswatch" value="" style="--_bg:linear-gradient(60deg, lightgreen, lightpink);--_c:#FFF;" class="ui-color-input">
 		</label>
 	</fieldset>
+
+	<script type="module">
+		import { init } from './../../assets/js/common.js';
+		import uiColorInput from './../color-input/uiColorInput.js';
+		init('.ui-color-input', uiColorInput);
+	</script>
 </body>
 </html>

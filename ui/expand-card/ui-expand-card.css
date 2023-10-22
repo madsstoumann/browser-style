@@ -29,8 +29,7 @@
 	}
 	&:has(:checked) {
 		& section:first-of-type { opacity: 0; }
-		& section:last-of-type {
-			opacity: 1;
+		& section:last-of-type { opacity: 1;
 			& > * { opacity: 1; translate: 0; }
 		}
 	}

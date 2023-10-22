@@ -1,5 +1,7 @@
 :where(.ui-button-group) {
-	--button-group-bdw: 2px;
+	--ui-button-group-bg: var(--AccentColor);
+	--ui-button-group-c: var(--AccentColorText);
+	--ui-button-group-bdw: 2px;
 	all: unset;
 	column-gap: .25em;
 	display: grid;
@@ -7,21 +9,24 @@
 	grid-auto-flow: column;
 	& label {
 		--button-bg: transparent;
-		/* --hover-bg: var(--GrayCanvas); */
 		align-content: center;
 		grid-template-columns: 1fr;
 		text-align: center;
 		&:has(input:checked) {
-			--button-bg: var(--AccentColor);
-			--button-c: var(--AccentColorText);
-			/* --hover-bg: unset; */
+			--button-bg: var(--ui-button-group-bg);
+			--button-c: var(--ui-button-group-c);
+		}
+		&:not(:has(:checked)):hover {
+			--button-bg: var(--ui-button-group-bg);
+			--button-hover-bxsh: none;
+			--button-hover-mix: Canvas 90%;
 		}
 	}
 	& legend { padding-block-end: var(--label-rg); }
  	&.--border {
 		column-gap: 0;
 		& label {
-			border: var(--button-group-bdw) solid var(--AccentColor);
+			border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
 			border-radius: var(--input-bdrs);
 			&:not(:first-of-type) {
 				border-start-start-radius: 0;
@@ -39,16 +44,15 @@
 			&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
 			&:has(:checked) {
 				background-color: transparent;
-				color: initial;
+				color: inherit;
+				&:hover { background: transparent; }
 				& + label {
-					border-inline-start: var(--button-group-bdw) solid var(--AccentColor);
+					border-inline-start: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
 				}
 			}
 		}
 	}
 	&.--rounded {
-		& label {
-			border-radius: var(--ui-button-group-bdrs, 3em);
-		}
+		& label { border-radius: var(--ui-button-group-bdrs, 3em); }
 	}
 }

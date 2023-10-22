@@ -1,9 +1,9 @@
+/* Not using `::marker` because it's not supported in Safari */
 :where(.ui-breadcrumbs) {
 	--_c: color-mix(in srgb, currentColor, Canvas 50%);
 	all: unset;
 	align-items: var(--ui-breadcrumbs-ai, baseline);
 	display: flex;
-	gap: var(--ui-breadcrumbs-gap, 1ch);
 	& a {
 		color: var(--_c);
 		display: inline;
@@ -13,12 +13,12 @@
 		&:hover { text-decoration: underline; }
 	}
 	& li {
-		list-style-position: inside;
-		&:first-of-type { list-style-type: none; }
-		&:not(:first-of-type)::marker {
+		list-style-type: none;
+		&:not(:last-of-type)::after {
 			content: var(--ui-breadcrumbs-marker, "›");
 			font-size: var(--ui-breadcrumbs-fs, 1.25em);
+			margin-inline: var(--ui-breadcrumbs-gap, .25ch .5ch);
 		}
-		&:not(:last-of-type)::marker { color: var(--_c); }
+		&:not(:last-of-type)::after { color: var(--_c); }
 	}
 }

@@ -43,6 +43,9 @@
     &::before { content: "var(--"; }
     &::after { content: ")"; }
   }
+  &.--dark {
+    color-scheme: dark;
+  }
   &.--osx {
     &::before {
       aspect-ratio: 1;

@@ -8,7 +8,6 @@
 	gap: var(--ui-dialog-gap);
 	padding: calc(2 * var(--ui-dialog-gap));
 	width: fit-content;
-	&[open] { display: grid; }
 	& >* { margin: 0; }
 	& fieldset { all: unset; }
 	& header, & legend { font-size: larger; }

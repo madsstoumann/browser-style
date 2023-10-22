@@ -1,22 +1,11 @@
+@import "../icon/ui-icon.css";
 :where(.ui-video-embed) {
 	aspect-ratio: var(--ui-embed-asr, 16 / 9);
-	background-color: crimson;
 	border-radius: var(--input-bdrs);
+	color: #FFF;
 	display: grid;
 	& >* { grid-area: 1 / 1; }
-	& button {
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-		place-self: center;
-		&::before {
-			aspect-ratio: 1 / 1;
-			background: #FFF;
-			block-size: var(--ui-embed-icon-sz, 1.5em);
-			clip-path: polygon(20% 0%, 20% 100%, 100% 50%);
-			content: "";
-			place-self: center;
-		}
-	}
+	& button { place-self: center; }
 	& iframe, & img {
 		aspect-ratio: inherit;
 		border: 0;

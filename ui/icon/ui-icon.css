@@ -15,7 +15,8 @@ ui-icon {
 	font-size: var(--icon-fz);
 	grid-template-rows: 0;
 	height: 1em;
-	margin-inline: var(--_mis, 0) var(--_mie, 0);
+	margin-block: var(--_mb, 0) ;
+	margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
 	place-content: center;
 	transition: var(--icon-trs);
 	width: 1em;
@@ -122,6 +123,9 @@ ui-icon[margin=start] { --_mis: 1ch; }
 ui-icon[margin=start-auto] { --_mis: auto; }
 ui-icon[margin=end] { --_mie: 1ch; }
 ui-icon[margin=end-auto] { --_mie: auto; }
+ui-icon[margin=md] { --_mb: 1ch; --_mi: 1ch; }
+ui-icon[margin=lg] { --_mb: 1.5ch; --_mi: 1.5ch; }
+ui-icon[margin=xl] { --_mb: 2ch; --_mi: 2ch; }
 
 /* Size */
 ui-icon[size*=xs] { --icon-fz: 50%; }

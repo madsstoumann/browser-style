@@ -1,6 +1,6 @@
 :where(.ui-color-input) {
 	--input-check-sz: 2.5em;
-	--_contrast: color-contrast(var(--_c, var(--_bg)) vs #FFF, #000);
+	/* --_c: color-contrast(var(--_bg) vs #FFF, #000); */
 	--_mask: url('/assets/svg/check.svg') no-repeat 48% / 75%;
 
 	background: var(--_bg);
@@ -12,7 +12,7 @@
 		background: var(--_bg);
 		box-shadow: none;
 		&::after {
-			background-color: var(--_contrast);
+			background-color: var(--_c);
 			content: '';
 			inset: 0;
 			mask: var(--_mask);
@@ -21,7 +21,7 @@
 		}
 	}
 	&:focus-visible {
-		box-shadow: inset 0 0 0 2px var(--_contrast);
+		box-shadow: inset 0 0 0 2px var(--_c);
 		outline: none;
 	}
 }

@@ -41,6 +41,7 @@ details.ui-accordion {
 		align-items: center;
 		border-block-end: 1px solid var(--ButtonBorder);
 		color: inherit;
+		cursor: pointer;
 		display: flex;
 		font-size: larger;
 		font-weight: 500;
@@ -48,6 +49,7 @@ details.ui-accordion {
 		padding-block: 1.5ch;
 		text-decoration: none;
 		transition: background .2s ease-in-out;
+		&::-webkit-details-marker { display: none; }
 	}
 	&:not([open]) summary:hover { background: var(--GrayHover); }
 	&[open] summary { 

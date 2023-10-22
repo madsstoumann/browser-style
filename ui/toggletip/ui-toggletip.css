@@ -1,7 +1,9 @@
 :where(.ui-toggletip-link) {
 	all: unset;
 	position: relative;
-	text-decoration: .075em dotted underline;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-width: .075em;
 	text-underline-offset: .25em;
 }
 :where(.ui-toggletip) {
@@ -14,5 +16,4 @@
 	padding: 1ch 2ch;
 	top: anchor(bottom);
 	translate: -50% 0%;
-	&:popover-open { display: grid; }
 }

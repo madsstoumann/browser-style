@@ -1,19 +1,23 @@
 :where(.ui-launchpad) {
-	--ui-launchpad-triangle-h: 1.5em;
-	background-color: Canvas;
-	border-radius: var(--ui-launchpad-bdrs, 2ch);
-	bottom: anchor(top);
-	box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
-	color: Canvas;	
-	font-size: smaller;
-	gap: var(--ui-launchpad-gap, 3ch);
-	grid-template-columns: repeat(3, 1fr);
-	left: anchor(center);
-	list-style: none;
-	margin: 0;
-	overflow: visible;
-	padding: var(--ui-launchpad-gap, 3ch);
-	translate: -50% calc(0% - var(--ui-launchpad-triangle-h));
+	&:popover-open { /* Hack for Safari, should not be within :popover-open */
+		--ui-launchpad-triangle-h: 1.5em;
+		aspect-ratio: 1;
+		background-color: Canvas;
+		border-radius: var(--ui-launchpad-bdrs, 2ch);
+		box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
+		color: Canvas;
+		display: grid;
+		font-size: smaller;
+		gap: var(--ui-launchpad-gap, 3ch);
+		grid-template-columns: repeat(3, 1fr);
+		list-style: none;
+		margin: 0;
+		overflow: visible;
+		padding: var(--ui-launchpad-gap, 3ch);
+		translate: -50% calc(0% - var(--ui-launchpad-triangle-h));
+		width: fit-content;
+	}
+	/* &:popover-open { display: grid; } */
 	&::after {
 		background: inherit;
 		clip-path: polygon(50% 100%, 100% 0%, 0% 0%);
@@ -26,14 +30,24 @@
 		translate: -50% 0;
 		width: calc(2 * var(--ui-launchpad-triangle-h));
 	}
-	&:popover-open { display: grid; }
 	& li {
 		aspect-ratio: 1 / 1;
 		cursor: pointer;
 		display: grid;
 		place-content: center;
-		/* tooltip */
+
+		/* Tooltip */
 		&::before {  z-index: 1; }
 		& img { background: none; }
+	}
+
+	@supports (top: anchor(top)) {
+		bottom: anchor(top);
+		left: anchor(center);
+	}
+	@supports not (top: anchor(top)) {
+		bottom: var(--ui-dock-bottom, 4em);
+		left: 50%;
+		top: auto;
 	}
 }

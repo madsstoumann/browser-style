@@ -16,6 +16,7 @@
 	<div id="app"></div>
 
 	<script type="module">
+		/* For rendering demo */
 		import { standard, apple, flatui, html, material, metro, tailwind } from './colors.js';
 		import uiColorGrid from './uiColorGrid.js';
 		app.outerHTML = [
@@ -27,6 +28,11 @@
 			{ name: 'metro', colors: metro },
 			{ name: 'tailwind', colors: tailwind }
 		].map(group => uiColorGrid(group.name, group.colors)).join('<br>');
+
+		/* For after render */
+		import { init } from './../../assets/js/common.js';
+		import uiColorInput from './../color-input/uiColorInput.js';
+		init('.ui-color-input', uiColorInput);
 	</script>
 </body>
 </html>

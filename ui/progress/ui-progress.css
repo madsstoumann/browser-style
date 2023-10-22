@@ -36,7 +36,7 @@
 		border-radius: inherit;
 	}
 }
-@media (prefers-reduced-motion: no-preference) {
+/* @media (prefers-reduced-motion: no-preference) { */
 	progress:indeterminate::after {
 		animation: progress 1.2s linear alternate infinite;
 		background-color: var(--AccentColor);
@@ -48,5 +48,5 @@
 	progress:indeterminate::-moz-progress-bar {
 		animation: progress 1.2s linear alternate infinite;
 	}
-}
+/* } */
 @keyframes progress { 100% { translate: 400%; } }
