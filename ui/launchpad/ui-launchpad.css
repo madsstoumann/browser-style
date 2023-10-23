@@ -46,8 +46,8 @@
 		left: anchor(center);
 	}
 	@supports not (top: anchor(top)) {
-		bottom: var(--ui-dock-bottom, 4em);
-		left: 50%;
-		top: auto;
+		&[data-anchor*="bottom\:top"] { top: calc(var(--anchor-top) - var(--popover-height)); }
+		&[data-anchor*="left\:center"] { left: calc(var(--anchor-left) + (var(--anchor-width) / 2)); }
+
 	}
 }
