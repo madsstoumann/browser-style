@@ -1,3 +1,4 @@
+@import "../anchor/anchor.css";
 :where(.ui-launchpad) {
 	&:popover-open { /* Hack for Safari, should not be within :popover-open */
 		--ui-launchpad-triangle-h: 1.5em;
@@ -39,15 +40,5 @@
 		/* Tooltip */
 		&::before {  z-index: 1; }
 		& img { background: none; }
-	}
-
-	@supports (top: anchor(top)) {
-		bottom: anchor(top);
-		left: anchor(center);
-	}
-	@supports not (top: anchor(top)) {
-		&[data-anchor*="bottom\:top"] { top: calc(var(--anchor-top) - var(--popover-height)); }
-		&[data-anchor*="left\:center"] { left: calc(var(--anchor-left) + (var(--anchor-width) / 2)); }
-
 	}
 }

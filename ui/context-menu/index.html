@@ -16,7 +16,7 @@
 	<button type="button" id="context-menu-toggle" popovertarget="context-menu">
 		Open Menu
 	</button>
-	<ul id="context-menu" popover anchor="context-menu-toggle" class="ui-context-menu --bottom --left">
+	<ul id="context-menu" popover anchor="context-menu-toggle" class="ui-context-menu" data-anchor="top:bottom left:left">
 		<li tabindex="0">Add item
 			<svg viewBox="0 0 24 24" class="ui-icon">
 				<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
@@ -42,6 +42,9 @@
 		</li>
 	</ul>
 
-	<!-- <script src="/assets/js/popover.iife.min.js"></script> -->
+	<script type="module">
+		import anchor from '/assets/js/anchor.js';
+		anchor();
+	</script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-@import '../icon/ui-icon.css';
+@import "../anchor/anchor.css";
+@import "../icon/ui-icon.css";
 :where(.ui-context-menu) {
   --icon-sz: 1.5rem;
 	border: 1px solid var(--ButtonBorder);
@@ -25,18 +26,5 @@
 			color: var(--AccentColorText);
 			outline: none;
 		}
-	}
-	&.--bottom {
-		top: anchor(bottom);
-	}
-	&.--center {
-		left: anchor(center);
-		translate: -50% 0%;
-	}
-	&.--left {
-		left: anchor(left);
-	}
-	&.--right {
-		right: anchor(right);
 	}
 }

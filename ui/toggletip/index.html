@@ -15,10 +15,14 @@
 	<h2>Toggletip</h2>
 
 	You can <button popovertarget="toggletip" id="toggletip-link" class="ui-toggletip-link">read more</button> about this feature.
-	<div id="toggletip" popover anchor="toggletip-link"  class="ui-toggletip">
+	<div id="toggletip" popover anchor="toggletip-link" class="ui-toggletip" data-anchor="top:bottom left:left">
 		HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.
 		<a href="#">Read more</a>
 	</div>
 
+	<script type="module">
+		import anchor from '/assets/js/anchor.js';
+		anchor();
+	</script>
 </body>
 </html>

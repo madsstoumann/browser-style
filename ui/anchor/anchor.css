@@ -1,0 +1,12 @@
+@supports (top: anchor(top)) {
+	[data-anchor*="bottom\:top"] { bottom: anchor(top); }
+	[data-anchor*="left\:center"] { left: anchor(center); }
+	[data-anchor*="left\:left"] { left: anchor(left); }
+	[data-anchor*="top\:bottom"] { top: anchor(bottom); }
+}
+@supports not (top: anchor(top)) {
+	[data-anchor*="bottom\:top"] { top: calc(var(--anchor-top) - var(--popover-height)); bottom: unset; }
+	[data-anchor*="left\:center"] { left: calc(var(--anchor-left) + (var(--anchor-width) / 2)); }
+	[data-anchor*="left\:left"] { left: var(--anchor-left); right: unset; }
+	[data-anchor*="top\:bottom"] { top: calc(var(--anchor-top) + var(--anchor-height)); bottom: unset; } 
+}
