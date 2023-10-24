@@ -4,40 +4,41 @@
 	--ui-expand-feature-ibs: 3em;
 	--ui-expand-feature-ii: 1em;
 	--ui-expand-feature-p: 2ch;
-	
+
+	align-content: start;
+	background: Canvas;
+	border-radius: var(--ui-expand-feature-bdrs) var(--ui-expand-feature-bdrs) 0 0;
+	border: 0;
+	height: calc(100vh - var(--ui-expand-feature-ibs));
+	inset-block: var(--ui-expand-feature-ibs) 0;
+	inset-inline: var(--ui-expand-feature-ii);
+	opacity: 1;
+	padding: var(--ui-expand-feature-p);
+	transition: 
+		translate 0.4s cubic-bezier(.4, 0, .2, 1), 
+		overlay 0.4s ease-out allow-discrete, 
+		display 0.4s ease-out allow-discrete; /* exit state */
+  translate: 0 100vh;
+	width: calc(100vw - var(--ui-expand-feature-ii) * 2);
+	& article {
+		padding-inline: var(--ui-expand-feature-p);
+	}
+	& [popovertargetaction="hide"] {
+		place-self: start end;
+	}
 	&::backdrop { /* Bug: Doesn't support background set with var(--) */
 		background-color: color-mix(in srgb, CanvasText, transparent 48%);
 		backdrop-filter: blur(20px);
 	}
 	&:popover-open {
-		@starting-style {
+		@starting-style { /* before open state */
 			opacity: 0;
 			translate: 0 100vh;
 		}
-		align-content: start;
-		background: Canvas;
-		border-radius: var(--ui-expand-feature-bdrs) var(--ui-expand-feature-bdrs) 0 0;
-		border: 0;
 		display: grid;
-		height: calc(100vh - var(--ui-expand-feature-ibs));
-		inset-block: var(--ui-expand-feature-ibs) 0;
-		inset-inline: var(--ui-expand-feature-ii);
-		opacity: 1;
-		padding: var(--ui-expand-feature-p);
-		position: fixed;
-		transition: all .4s cubic-bezier(.4, 0, .2, 1);
-		translate: 0;
-		width: calc(100vw - var(--ui-expand-feature-ii) * 2);
-
-		& [popovertargetaction="hide"] {
-			place-self: start end;
-		}
-		& article {
-			padding-inline: var(--ui-expand-feature-p);
-		}
+		translate: 0 0; /* open state */
 	}
 }
 .ui-expand-feature-trigger {
 	--button-p: .75ch .75ch .75ch 2.5ch;
-	/* --hover-bg: var(--GrayCanvas); */
 }

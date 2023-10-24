@@ -3,15 +3,10 @@
 _Tested in/with:_
 - C = Chrome
 - D = Dark Mode
-- F = Firefox 
-- S = Safari
+- F = Firefox Nightly (with `popover`-flag)
+- S = Safari 17 (or Technology Preview)
 
 ---
-
-**NOTE:** Components using the `Popover API` need `@starting-style`-transitions.
-
-
- **NOTE:** Firefox Nightly need to enable the popover-flag in `about:config`.
 
  **NOTE:** Range-sliders with predefined values have a refresh-issue in Safari, initial value not set (<span>)
 
