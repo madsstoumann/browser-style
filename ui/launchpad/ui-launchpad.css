@@ -1,4 +1,4 @@
-@import "../anchor/anchor.css";
+@import "../anchor/ui-anchor.css";
 :where(.ui-launchpad) {
 	--ui-launchpad-triangle-h: 1.5em;
 	aspect-ratio: 1;

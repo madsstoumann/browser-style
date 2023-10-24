@@ -1,4 +1,4 @@
-export default function anchor() {
+export default function uiAnchor() {
 	if (!("anchorName" in document.documentElement.style)) {
 		document.querySelectorAll('[anchor]').forEach(popover => {
 			const anchor = document.getElementById(popover.getAttribute('anchor'));

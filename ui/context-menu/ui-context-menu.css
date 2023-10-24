@@ -1,4 +1,4 @@
-@import "../anchor/anchor.css";
+@import "../anchor/ui-anchor.css";
 @import "../icon/ui-icon.css";
 :where(.ui-context-menu) {
   --icon-sz: 1.5rem;
