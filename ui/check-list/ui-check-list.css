@@ -1,10 +1,15 @@
 :where(.ui-check-list) {
+	--ui-check-list-gap: .5ch;
 	all: unset;
 	display: grid;
-	gap: .5ch;
+	gap: var(--ui-check-list-gap);
+	width: fit-content;
 	& li {
 		align-items: center;
+		border-block-end: 1px solid var(--ButtonBorder);
 		display: flex;
 		gap: 2ch;
+		justify-content: space-between;
+		padding-block: var(--ui-check-list-gap);
 	}
 }
