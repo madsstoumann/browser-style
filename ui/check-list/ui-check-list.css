@@ -1,0 +1,10 @@
+:where(.ui-check-list) {
+	all: unset;
+	display: grid;
+	gap: .5ch;
+	& li {
+		align-items: center;
+		display: flex;
+		gap: 2ch;
+	}
+}
