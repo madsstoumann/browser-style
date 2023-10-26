@@ -92,10 +92,10 @@
 }
 :where([type=checkbox]) { 
 	&.--round {
-		--_bgsz: 50% / 65%;
+		--input-check-bgsz: 50% / 65%;
 		border-radius: 50%;
 	}
-	&:checked { background: var(--AccentColor) url('/assets/svg/check-white.svg') no-repeat var(--_bgsz, 48% / 75%); }
+	&:checked { background: var(--AccentColor) url('/assets/svg/check-white.svg') no-repeat var(--input-check-bgsz, 48% / 75%); }
 }
 :where([type=checkbox][role=switch]) {
 	aspect-ratio: 1.8 / 1;

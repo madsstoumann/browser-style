@@ -3,16 +3,17 @@
 	all: unset;
 	& input {
 		--_bdc: color-mix(in srgb, var(--ui-flight-seat-bg), #000 30%);
+		--input-check-bgsz: 50%/55%;
 		--input-check-sz: 2em;
 		aspect-ratio: 1 / .9;
 		background-color: var(--ui-flight-seat-bg);
-		background-position: 50% 65%;
-		background-size: 65%;
+
 		border-color: var(--_bdc);
 		border-radius: .5em .5em .15em .15em;
 		border-width: 0 0 .25em 0;
 		&:checked { 
-			--ui-flight-seat-bg: var(--ColorSuccess); 
+			--ui-flight-seat-bg: var(--ColorSuccess);
+			--AccentColor: var(--ui-flight-seat-bg);
 			border-color: var(--_bdc);
 		}
 		&:disabled { --ui-flight-seat-bg: var(--ButtonBorder); }
