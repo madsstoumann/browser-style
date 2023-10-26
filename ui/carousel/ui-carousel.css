@@ -1,4 +1,5 @@
-/* requires ui-scroll.css */
+@import '../icon/ui-icon.css';
+@import '../scroll/ui-scroll.css';
 :where(.ui-carousel) {
 	--ui-scroll-gap: 2ch;
 	container-type: inline-size;

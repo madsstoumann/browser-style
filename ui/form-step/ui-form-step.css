@@ -1,0 +1,14 @@
+@import '../icon/ui-icon.css';
+@import '../scroll/ui-scroll.css';
+:where(.ui-form-step) {
+	--ui-scroll-ga: unset;
+	--ui-scroll-gap: 2ch;
+	--ui-scroll-nav-jc: space-between;
+	/* display: block !important; */
+	padding-inline: 1ch;
+	& fieldset {
+		margin-block: 2ch 0ch;
+		/* margin-inline: 1px; */
+	}
+	& .ui-scroll { grid-area: unset; }
+}

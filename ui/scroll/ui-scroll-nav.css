@@ -3,7 +3,7 @@
 	display: grid;
 	gap: var(--ui-scroll-gap);
 	grid-auto-flow: column;
-	justify-content: center;
+	justify-content: var(--ui-scroll-nav-jc, center);
 	margin-block: var(--ui-scroll-gap);
 	& ol {
 		all: unset;

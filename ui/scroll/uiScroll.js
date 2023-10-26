@@ -28,8 +28,10 @@ export default function uiScroll(scroll, settings = {}) {
     if (!nav.children.length) {
       next.classList.add(config.scrollNext)
       next.innerHTML = config.scrollNextInner
+      next.type = 'button'
       prev.classList.add(config.scrollPrev)
       prev.innerHTML = config.scrollPrevInner
+      prev.type = 'button'
       config.scrollNav.split(' ').forEach(className => nav.classList.add(className))
       nav.append(prev, dots, next)
       scroll.after(nav)

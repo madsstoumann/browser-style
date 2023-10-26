@@ -8,44 +8,63 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../context-menu/ui-context-menu.css">
+
+	<!-- For demo -->
+	<link rel="stylesheet" href="../grid/ui-grid.css">
+	<style>
+		nav { margin-block-end: 8em; text-align: center;}
+		[popover] { display: block; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 	<h2>Anchor</h2>
-	<p>Helper-styles and JavaScript for Popover API <code></code>anchor()</code>-positioning</p>
+	<p>Helper-styles and JavaScript for Popover API <code></code>anchor()</code>-positioning.<br>
+		This demo is currently <strong>Chrome Only</strong></strong></p>
+	<nav>
+		<button type="button" id="context-menu-toggle" popovertarget="context-menu">
+			Anchor
+		</button>
+		<ul id="context-menu" popover anchor="context-menu-toggle" class="ui-context-menu" data-anchor="top:bottom left:left">
+			<li tabindex="0">Popover here</li>
+			<li tabindex="0">List item</li>
+			<li tabindex="0">List item</li>
+		</ul>
+	</nav>
+	<form id="app" class="ui-grid --sm-c-2">
+		<fieldset>
+			<legend>Horizontal</legend>
+			<label><input name="horizontal" value="left:center" type="radio">left:center</label>
+			<label><input name="horizontal" value="left:left" type="radio" checked>left:left</label>
+			<label><input name="horizontal" value="left:right" type="radio">left:right</label>
+			<label><input name="horizontal" value="right:center" type="radio">right:center</label>
+			<label><input name="horizontal" value="right:left" type="radio">right:left</label>
+			<label><input name="horizontal" value="right:right" type="radio">right:right</label>
+		</fieldset>
+		<fieldset>
+			<legend>Vertical</legend>
+			<label><input name="vertical" value="bottom:center" type="radio">bottom:center</label>
+			<label><input name="vertical" value="bottom:bottom" type="radio">bottom:bottom</label>
+			<label><input name="vertical" value="bottom:top" type="radio">bottom:top</label>
+			<label><input name="vertical" value="top:center" type="radio">top:center</label>
+			<label><input name="vertical" value="top:bottom" type="radio" checked>top:bottom</label>
+			<label><input name="vertical" value="top:top" type="radio">top:top</label>
+		</fieldset>
+	</form>
 
-	<h3>Horizontal</h3>
-	<ul>
-		<li><strong>left:center</strong>. Left side of popover aligns with horizonatl center of anchor.</li>
-		<li>left:left</li>
-		<li>left:right</li>
-		<li>right:center</li>
-		<li>right:left</li>
-		<li>right:right</li>
-	</ul>
-
-	<h3>Vertical</h3>
-	<ul>
-		<li><strong>bottom:center</strong>. Bottom side of popover aligns with vertical center of anchor.</li>
-		<li>bottom:bottom</li>
-		<li>bottom:top</li>
-		<li>top:center</li>
-		<li>top:bottom</li>
-		<li>top:top</li>
-	</ul>
-
-	<button type="button" id="context-menu-toggle" popovertarget="context-menu">
-		Open Menu
-	</button>
-	<ul id="context-menu" popover anchor="context-menu-toggle" class="ui-context-menu" data-anchor="top:bottom left:left">
-		<li tabindex="0">Add item</li>
-		<li tabindex="0">Edit item</li>
-		<li tabindex="0">Delete item</li>
-	</ul>
 
 	<script type="module">
 		import uiAnchor from '../anchor/uiAnchor.js';
 		uiAnchor();
+
+		const app = document.getElementById('app');
+		const popover = document.querySelector('[popover]');
+
+		app.addEventListener('input', () => {
+			const horizontal = app.horizontal.value;
+			const vertical = app.vertical.value;
+			popover.dataset.anchor = `${vertical} ${horizontal}`;
+		});
 	</script>
 </body>
 </html>
