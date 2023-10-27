@@ -1,0 +1,36 @@
+{
+  "badInput": {
+    "all": "Please enter a valid value"
+  },
+  "patternMismatch": {
+    "all": "Please match the requested format"
+  },
+  "rangeOverflow": {
+    "all": "Value must be less than or equal to {max}"
+  },
+  "rangeUnderflow": {
+    "all": "Value must be greater than or equal to {min}"
+  },
+  "stepMismatch": {
+    "all": "Please enter a valid value, dividable by {step}"
+  },
+  "tooLong": { 
+    "all": "Please shorten this text to {maxlength} characters or less"
+  },
+  "tooShort": {
+    "all": "Please lenghten this text to min. {minlength} characters or more"
+  },
+  "typeMismatch": {
+    "date": "Please enter a date",
+    "email": "Please enter a valid email address",
+    "url": "Please enter a URL"
+  },
+  "valueMissing": {
+    "all": "Please fill in this field",
+    "checkbox": "Please tick this box",
+    "file": "Please select a file",
+    "radio": "Please select one of these options",
+    "select-one": "Please select an item in the list",
+    "select-multiple": "Please select an item in the list"
+  }
+}

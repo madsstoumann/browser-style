@@ -14,6 +14,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Form Step</h2>
+	<p>Build using <a href="/ui/step">Step</a>, <a href="/ui/form">Form</a>, <a href="/ui/scroll">Scroll</a> and <a href="/ui/validate">Validate</a></p>
 
 	<form class="ui-form-step">
 		<ol role="tablist" class="ui-step --hide-scrollbar">
@@ -30,31 +31,38 @@
 			data-scroll-next-inner="Next"
 			data-scroll-prev-inner="Previous">
 
-			<fieldset id="form-step-1" role="tabpanel" aria-labelledby="form-1">
+			<fieldset id="form-step-1" aria-labelledby="form-1">
 				<legend>Delivery Address</legend>
-				<label>Firstname
-					<input type="text" name="firstname" placeholder="Your first name">
+				<label>
+					<span>
+						Firstname<abbr title="Required">*</abbr>
+						<small>Must be at least 2 chars</small>
+					</span>
+					<input type="text" name="firstname" placeholder="Your first name" required>
 				</label>
-				<label>Lastname
-					<input type="text" name="lastname" placeholder="Your last name">
+				<label><span>Lastname<abbr title="Required">*</abbr></span>
+					<input type="text" name="lastname" placeholder="Your last name" required>
+				</label>
 			</fieldset>
 
-			<fieldset id="form-step-2" role="tabpanel" aria-labelledby="form-2">
+			<fieldset id="form-step-2" aria-labelledby="form-2">
 				<legend>Invoice Address</legend>
 				<label>Firstname
 					<input type="text" name="firstname" placeholder="Your first name">
 				</label>
 				<label>Lastname
 					<input type="text" name="lastname" placeholder="Your last name">
+				</label>
 			</fieldset>
 
-			<fieldset id="form-step-3" role="tabpanel" aria-labelledby="form-3">
+			<fieldset id="form-step-3" aria-labelledby="form-3">
 				<legend>Finalize</legend>
 				<label>Firstname
 					<input type="text" name="firstname" placeholder="Your first name">
 				</label>
 				<label>Lastname
 					<input type="text" name="lastname" placeholder="Your last name">
+				</label>
 			</fieldset>
 
 		</div>

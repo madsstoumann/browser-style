@@ -186,6 +186,15 @@
 :where(label, legend) {
 	font-size: var(--label-fs, smaller);
 	font-weight: 500;
+	& abbr { /* Required */
+		color: var(--ColorError);
+		margin-inline: .25ch 1ch;
+		text-decoration: none;
+	}
+	& small { /* Hints */
+		color: var(--GrayText);
+		font-weight: 400;
+	}
 }
 :where(label:not(:has([type=checkbox], [type=radio]))) {
 	align-content: start;

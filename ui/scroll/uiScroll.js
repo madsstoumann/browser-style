@@ -4,8 +4,10 @@ export default function uiScroll(scroll, settings = {}) {
     scrollAutoPlay: 0,
     scrollBehavior: 'smooth',
     scrollNav: 'ui-scroll-nav',
+    scrollNextCallback: null,
     scrollNext: '--icon',
     scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
+    scrollPrevCallback: null,
     scrollPrev: '--icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
     scrollResizeThreshold: 75,
@@ -61,7 +63,10 @@ export default function uiScroll(scroll, settings = {}) {
     prev.disabled = (index === 0)
     next.disabled = (index === pages - 1)
     Array.from(dots.children).forEach((dot, current) => dot.ariaSelected = index === current)
-    items.forEach((elm, current) => elm.classList.toggle(config.scrollActive, index === current) )
+    items.forEach((elm, current) => {
+      elm.classList.toggle(config.scrollActive, index === current)
+      elm.inert = index !== current
+    })
     if (tabs.length) {
       tabs.forEach((tab, current) => {
         tab.ariaSelected = index === current
@@ -119,9 +124,18 @@ export default function uiScroll(scroll, settings = {}) {
 
   /* Auto Play */
   if (config.scrollAutoPlay) {
-    setInterval(() => {
-      index++; if (index >= pages) index = 0
-      scrollToPage(index)
-    }, parseInt(config.scrollAutoPlay, 10))
+    let intervalId = null
+    const IO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          intervalId = setInterval(() => {
+            index++; if (index >= pages) index = 0
+            scrollToPage(index)
+          }, parseInt(config.scrollAutoPlay, 10))
+        }
+        else clearInterval(intervalId)
+      })
+    }, { threshold: 0.5 })
+    IO.observe(scroll)
   }
 }

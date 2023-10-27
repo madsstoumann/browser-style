@@ -1,0 +1,36 @@
+{
+  "badInput": {
+    "all": "Angiv en gyldig værdi"
+  },
+  "patternMismatch": {
+    "all": "Find et match til det anmodede format"
+  },
+  "rangeOverflow": {
+    "all": "Værdien skal være mindre end eller lig med {max}"
+  },
+  "rangeUnderflow": {
+    "all": "Værdien skal være større end eller lig med {min}"
+  },
+  "stepMismatch": {
+    "all": "Angiv en gyldig værdi, der kan divideres med {step}"
+  },
+  "tooLong": { 
+    "all": "Forkort denne tekst til {maxlength} eller færre tegn"
+  },
+  "tooShort": {
+    "all": "Forlæng denne tekst til {minlength} eller flere tegn"
+  },
+  "typeMismatch": {
+    "date": "Angiv en dato",
+    "email": "Angiv en gyldig email adresse",
+    "url": "Angiv en webadresse"
+  },
+  "valueMissing": {
+    "all": "Udfyld venligst dette felt",
+    "checkbox": "Markér dette felt, hvis du vil fortsætte",
+    "file": "Vælg en fil",
+    "radio": "Vælg en af disse muligheder",
+    "select-one": "Vælg et punkt på listen",
+    "select-multiple": "Vælg et punkt på listen"
+  }
+}
