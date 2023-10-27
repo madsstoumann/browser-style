@@ -51,6 +51,9 @@ ui-icon[type*=arrow]::before {
 	width: calc(1em - var(--icon-bdw));
 	translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
 }
+ui-icon[type*=arrow]:dir(rtl)::before {
+	translate: calc(var(--_bdwh) + var(--icon-bdw)) calc((.5em * cos(45deg)) - var(--_bdwh))
+}
 ui-icon[type=check]::after {
 	border-width: 0 var(--icon-bdw) var(--icon-bdw) 0;
 	height: calc(1em * cos(22.5deg));
@@ -96,6 +99,7 @@ ui-icon:is([type*=cross],[type*=plus])::after,
 ui-icon[type~=up] { rotate: -90deg; }
 ui-icon[type~=upleft] { rotate: -45deg; }
 ui-icon[type~=upright] { rotate: -135deg; }
+ui-icon[type~=right]:dir(rtl) { rotate: -180deg; }
 
 /* Play, Pause, Stop, First, Last */
 ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop], ui-icon[type*=triangle] {
@@ -146,6 +150,7 @@ ui-icon[size*=xl] { --icon-fz: 140%; }
 :is([open], .--open) >* >ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
 :is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
 :is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
+:is([open], .--open) >* >ui-icon[type~=right]:dir(rtl) { rotate: -270deg; }
 
 /* [type="checkbox"] + <ui-icon> */
 :checked + ui-icon[type~=down] { scale: -1; }
