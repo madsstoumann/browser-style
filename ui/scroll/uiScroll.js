@@ -21,7 +21,7 @@ export default function uiScroll(scroll, settings = {}) {
   const tabs = config.scrollTabs && scroll.closest(config.scrollTabs)?.querySelectorAll('[role=tab]') || []
   let index, inlineSize, itemsPerPage, pages
 
-  /* Methods */
+  /* Create navigation */
   function scrollNav() {
     const nav = scroll.nextElementSibling || document.createElement('nav')
     const dots = nav.querySelector('ol') || document.createElement('ol')
@@ -55,7 +55,7 @@ export default function uiScroll(scroll, settings = {}) {
     inlineSize = scroll.offsetWidth
     itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth) || 1
     pages = Math.ceil(items.length / itemsPerPage)
-    dots.innerHTML = `<li></li>`.repeat(pages)
+    dots.innerHTML = Array.from({length: pages}).map((_, index) => `<li data-index="${index}"></li>`).join('')
     nav.classList.toggle('--hidden', pages === 1)
   }
 
@@ -63,10 +63,6 @@ export default function uiScroll(scroll, settings = {}) {
     prev.disabled = (index === 0)
     next.disabled = (index === pages - 1)
     Array.from(dots.children).forEach((dot, current) => dot.ariaSelected = index === current)
-    items.forEach((elm, current) => {
-      elm.classList.toggle(config.scrollActive, index === current)
-      elm.inert = index !== current
-    })
     if (tabs.length) {
       tabs.forEach((tab, current) => {
         tab.ariaSelected = index === current
@@ -76,23 +72,24 @@ export default function uiScroll(scroll, settings = {}) {
   }
 
   /* Event Listeners */
+  dots.addEventListener('click', event => {
+    const index = parseInt(event.target.dataset.index, 10)
+    if (index > -1) scrollToPage(index)
+  })
   next.addEventListener('click', () => {
     index++; if (index >= pages) index = 0
     scrollToPage(index)
   })
-
   prev.addEventListener('click', () => {
     index--; if (index < 0) index = pages - 1
     scrollToPage(index)
   })
-
   scroll.addEventListener('scrollend', e => {
     const endOfScroll = scroll.scrollLeft + scroll.offsetWidth >= scroll.scrollWidth
     if (endOfScroll) index = pages - 1
     else index = Math.round(scroll.scrollLeft / scroll.offsetWidth)
     updateUI(index)
   })
-
   tabs.forEach(tab => {
     tab.addEventListener('click', event => {
       event.preventDefault()
@@ -101,7 +98,15 @@ export default function uiScroll(scroll, settings = {}) {
     })
   })
 
-  /* Resize Observer / Init */
+  /* Observers / Init */
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle(config.scrollActive, entry.isIntersecting)
+      entry.target.inert = !entry.isIntersecting
+    })
+  })
+  items.forEach(item => intersectionObserver.observe(item))
+
   const resizeObserver = new ResizeObserver((entries) => {
     const entryInlineSize = Math.floor(entries[0].contentBoxSize[0].inlineSize)
     if (Math.abs(entryInlineSize - inlineSize) > parseInt(config.scrollResizeThreshold, 10)) {
@@ -120,12 +125,10 @@ export default function uiScroll(scroll, settings = {}) {
     if (tabIndex > -1) index = tabIndex
   }
 
-  scrollToPage(index, 'auto', false)
-
   /* Auto Play */
   if (config.scrollAutoPlay) {
     let intervalId = null
-    const IO = new IntersectionObserver((entries) => {
+    const autoPlay = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           intervalId = setInterval(() => {
@@ -136,6 +139,8 @@ export default function uiScroll(scroll, settings = {}) {
         else clearInterval(intervalId)
       })
     }, { threshold: 0.5 })
-    IO.observe(scroll)
+    autoPlay.observe(scroll)
   }
+
+  scrollToPage(index, 'auto', false)
 }

@@ -11,6 +11,7 @@
 		display: grid;
 		gap: var(--ui-scroll-dot-gap, .6em);
 		grid-auto-flow: column;
+		pointer-events: all;
 		& li {
 			all: unset;
 			background-color: var(--AccentColorText);
