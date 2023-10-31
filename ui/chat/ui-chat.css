@@ -7,7 +7,7 @@
 
   /* Private consts */
   --_chat-tail: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" viewBox="0 0 13 13"> <path d="M.556 12.718c5.2.8 10.334-2.063 12-3.897-1.718-4.096-7-9.362-7-8.603 0 10.5-6 11.897-5 12.5Z"/></svg>');
-  --_chat-tail-offset: .5em;
+  --_chat-tail-offset: .4em;
   --_chat-tail-sz: 20px;
   --ui-chat-gap: .33em;
 

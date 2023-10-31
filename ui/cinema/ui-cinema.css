@@ -1,6 +1,7 @@
 @import '../color-key/ui-color-key.css';
 :where(.ui-cinema) {
 	all: unset;
+	direction: ltr;
 	& input {
 		--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
 		--input-check-bgsz: 50%/55%;

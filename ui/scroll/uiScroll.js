@@ -15,7 +15,7 @@ export default function uiScroll(scroll, args = {}) {
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
     scrollResizeThreshold: 75,
     scrollTabs: '',
-  },  (typeof args === 'object') ? args : datasetWithTypes(scroll.dataset || {}))
+  }, (typeof args === 'object') ? args : datasetWithTypes(scroll.dataset || {}))
 
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
