@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI</title>
+	<title>Slider</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
@@ -12,12 +12,12 @@
 	<link rel="stylesheet" href="../icon/ui-icon.css">
 	<link rel="stylesheet" href="../scroll/ui-scroll.css">
 	<link rel="stylesheet" href="../grid/ui-grid-cols.css">
+	<link rel="stylesheet" href="../progress-timer/ui-progress-timer.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Slider</h2>
-	<p>With modifier-class <code>--nav-inside</code>:</p>
 
 	<div class="ui-slider">
 		<div class="ui-scroll">
@@ -27,7 +27,16 @@
 		</div>
 	</div>
 
-	<p>With modifier-class <code>--inside</code> and <code>--rounded</code>:</p>
+	<p>With <code>data-scroll-infinite="true"</code>:</p>
+	<div class="ui-slider">
+		<div class="ui-scroll" data-scroll-infinite="true">
+			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<p>With <code>data-scroll-nav="ui-scroll-nav --inside"</code> and class <code>--rounded</code>:</p>
 
 	<div class="ui-slider --rounded">
 		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside">
@@ -37,7 +46,7 @@
 		</div>
 	</div>
 
-	<p>With modifier-class <code>--outside</code>:</p>
+	<p>With <code>data-scroll-nav="ui-scroll-nav --outside"</code>:</p>
 
 	<div class="ui-slider">
 		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --outside">
@@ -47,7 +56,7 @@
 		</div>
 	</div>
 
-	<p>With modifier-class <code>--inside --no-dots</code> and <code>--sm-c-2 --md-c-3 --rounded</code>:</p>
+	<p>With <code>data-scroll-nav="ui-scroll-nav --inside --no-dots"</code>, <a href="/ui/grid/">Grid</a> and class <code>--rounded</code>:</p>
 
 	<div class="ui-slider --rounded">
 		<div class="ui-scroll --sm-c-2 --md-c-3" data-scroll-nav="ui-scroll-nav --inside --no-dots">
@@ -61,8 +70,8 @@
 
 	<p>With <code>ui-progress-timer</code> and <code>data-scroll-auto-play</code>:</p>
 
-	<div class="ui-slider ui-progress-timer" data-progress-time="7000">
-		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside" data-scroll-auto-play="7000">
+	<div class="ui-slider ui-progress-timer" data-progress-time="3000">
+		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside" data-scroll-auto-play="3000">
 			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
 			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
 			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">

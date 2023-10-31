@@ -1,23 +1,27 @@
-export default function uiScroll(scroll, settings = {}) {
+import datasetWithTypes from './../../assets/js/datasetWithTypes.js';
+export default function uiScroll(scroll, args = {}) {
   const config = Object.assign({
     scrollActive: '--active',
     scrollAutoPlay: 0,
+    scrollAutoPlaying: '--playing',
     scrollBehavior: 'smooth',
+    scrollHidden: '--hidden',
+    scrollInfinite: false,
     scrollNav: 'ui-scroll-nav',
-    scrollNextCallback: null,
+    scrollNavCallback: null,
     scrollNext: '--icon',
     scrollNextInner: `<ui-icon type="chevron right"></ui-icon>`,
-    scrollPrevCallback: null,
     scrollPrev: '--icon',
     scrollPrevInner: `<ui-icon type="chevron left"></ui-icon>`,
     scrollResizeThreshold: 75,
     scrollTabs: '',
-  }, settings, scroll.dataset)
+  },  (typeof args === 'object') ? args : datasetWithTypes(scroll.dataset || {}))
 
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
 
   const [dots, nav, next, prev] = scrollNav(scroll)
+  const callback = config.scrollNavCallback ? (typeof window[config.scrollNavCallback] === 'function') ? window[config.scrollNavCallback] : () => true : () => true
   const tabs = config.scrollTabs && scroll.closest(config.scrollTabs)?.querySelectorAll('[role=tab]') || []
   let index, inlineSize, itemsPerPage, pages
 
@@ -56,12 +60,14 @@ export default function uiScroll(scroll, settings = {}) {
     itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth) || 1
     pages = Math.ceil(items.length / itemsPerPage)
     dots.innerHTML = Array.from({length: pages}).map((_, index) => `<li data-index="${index}"></li>`).join('')
-    nav.classList.toggle('--hidden', pages === 1)
+    nav.classList.toggle(config.scrollHidden, pages === 1) /* Hide scroll navigation if only one page */
   }
 
   function updateUI(index) {
-    prev.disabled = (index === 0)
-    next.disabled = (index === pages - 1)
+    if (!config.scrollInfinite) {
+      prev.disabled = (index === 0)
+      next.disabled = (index === pages - 1)
+    }
     Array.from(dots.children).forEach((dot, current) => dot.ariaSelected = index === current)
     if (tabs.length) {
       tabs.forEach((tab, current) => {
@@ -78,7 +84,7 @@ export default function uiScroll(scroll, settings = {}) {
   })
   next.addEventListener('click', () => {
     index++; if (index >= pages) index = 0
-    scrollToPage(index)
+    if (callback()) scrollToPage(index)
   })
   prev.addEventListener('click', () => {
     index--; if (index < 0) index = pages - 1
@@ -130,6 +136,7 @@ export default function uiScroll(scroll, settings = {}) {
     let intervalId = null
     const autoPlay = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        scroll.classList.toggle(config.scrollAutoPlaying, entry.isIntersecting)
         if (entry.isIntersecting) {
           intervalId = setInterval(() => {
             index++; if (index >= pages) index = 0
@@ -141,6 +148,5 @@ export default function uiScroll(scroll, settings = {}) {
     }, { threshold: 0.5 })
     autoPlay.observe(scroll)
   }
-
   scrollToPage(index, 'auto', false)
 }

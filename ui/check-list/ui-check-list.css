@@ -1,8 +1,6 @@
 :where(.ui-check-list) {
-	--ui-check-list-gap: .5ch;
 	all: unset;
 	display: grid;
-	gap: var(--ui-check-list-gap);
 	width: fit-content;
 	& li {
 		align-items: center;
@@ -10,6 +8,10 @@
 		display: flex;
 		gap: 2ch;
 		justify-content: space-between;
-		padding-block: var(--ui-check-list-gap);
+		padding: var(--ui-check-list-p, .5ch);
+		user-select: none;
+		&:hover {
+			background-color: var(--GrayCanvas);
+		}
 	}
 }

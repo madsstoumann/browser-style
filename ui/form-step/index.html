@@ -14,7 +14,8 @@
 	<h1>UI: Components</h1>
 
 	<h2>Form Step</h2>
-	<p>Build using <a href="/ui/step">Step</a>, <a href="/ui/form">Form</a>, <a href="/ui/scroll">Scroll</a> and <a href="/ui/validate">Validate</a></p>
+	<strong>work-in-progress</strong><br>
+	<p>Built with <a href="/ui/step">Step</a>, <a href="/ui/form">Form</a>, <a href="/ui/scroll">Scroll</a> and <a href="/ui/validate">Validate</a></p>
 
 	<form class="ui-form-step">
 		<ol role="tablist" class="ui-step --hide-scrollbar">
@@ -23,9 +24,10 @@
 			<li><a href="#form-step-3" id="form-3" aria-controls="form-step-3" role="tab">Finalize</a></li>
 		</ol>
 
-		<div class="ui-scroll"
+		<div class="ui-scroll --nav-only"
 			data-scroll-behavior="auto"
 			data-scroll-tabs=".ui-form-step"
+			data-scroll-nav-callback="validate"
 			data-scroll-next="bg-accent"
 			data-scroll-prev="bg-gray"
 			data-scroll-next-inner="Next"
@@ -69,6 +71,12 @@
 	</form>
 
 	<script type="module">
+		window.validate = () => {
+			const fieldset = event.target.parentNode.parentNode.querySelector('fieldset.--active')
+			console.log(fieldset)
+			// return true
+		}
+
 		import { common, init } from './../../assets/js/common.js';
 		import uiScroll from './../scroll/uiScroll.js';
 		common();
