@@ -12,7 +12,16 @@ _Tested in/with:_
 
 ---
 
-### Accordion (C-D-F-S)
+### Accordion
+
+**Browsers:**
+- Chome
+- Firefox
+- Safari
+
+**Supports:**
+- Dark Mode
+- Right-to-left
 
 ---
 
@@ -93,6 +102,10 @@ _Firefox not refreshing groups correctly_
 ---
 
 ### Chat (C-D-F-S)
+
+---
+
+### Check-List (C-D-F-S)
 
 ---
 
