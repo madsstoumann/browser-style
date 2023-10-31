@@ -61,6 +61,7 @@
 		&.--icon { border-width: 2px; }
 	}
 	&.--rounded { border-radius: 3em; }
+	&.--end { justify-self: end; }
 	&.--start { justify-self: start; }
 	&.--toggle { --button-p: 0; }
 	&.--transparent { background: transparent; }
