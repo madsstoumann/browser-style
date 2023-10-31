@@ -90,7 +90,7 @@
 	width: var(--input-check-sz);
 	&:checked { border-color: var(--AccentColor); }
 }
-:where([type=checkbox]) { 
+:where([type=checkbox]:not([role=switch])) { 
 	&.--round {
 		--input-check-bgsz: 50% / 65%;
 		border-radius: 50%;

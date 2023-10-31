@@ -8,6 +8,8 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-avatar.css">
+
+	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -18,22 +20,26 @@
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 	</div>
 
+	<p>Without image, using <code>abbr</code>-tag:</p>
+
+	<div class="ui-avatar">
+		<abbr title="Kim Cronos">KC</abbr>
+		<!-- <img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy"> -->
+	</div>
+
 	<h2>Avatar List</h2>
+	<p>Wrapped in a list, using <code>data-tooltip</code> instead of <code>abbr</code>-tag:</p>
 	<ul class="ui-avatar-list">
-		<li class="ui-avatar">
-			<abbr title="Kim Cronos">KC</abbr>
+		<li class="ui-avatar" data-tooltip="Kim Cronos">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 		</li>
-		<li class="ui-avatar">
-			<abbr title="Greg Hanson">GH</abbr>
+		<li class="ui-avatar" data-tooltip="Greg Hanson">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
 		</li>
-		<li class="ui-avatar">
-			<abbr title="John Doe">JD</abbr>
+		<li class="ui-avatar" data-tooltip="John Doe">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
 		</li>
-		<li class="ui-avatar">
-			<abbr title="Linda Payne">LP</abbr>
+		<li class="ui-avatar" data-tooltip="Linda Payne">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
 		</li>
 	</ul>

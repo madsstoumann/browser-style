@@ -92,6 +92,12 @@
 	font-style: italic;
 	margin-block: 1rlh;
 }
+:where(code) {
+	background-color: var(--GrayCanvas);
+	font-family: var(--ff-mono);
+	font-size: 80%;
+	padding: .165ch .33ch;
+}
 :where(del) { color: var(--ColorError); }
 :where(dfn) {
 	text-decoration: underline;
@@ -111,7 +117,7 @@
 	margin-block: .5rlh;
 }
 :where(img) {
-	background-color: var(--GrayCanvas);
+	font-style: italic;
 	height: auto;
 	max-width: 100%;
 }
@@ -127,7 +133,7 @@
 }
 :where(pre) { overflow: auto; }
 :where(pre, tr:nth-of-type(even)) {
-	background-color: var(--ButtonFace);
+	background-color: var(--GrayCanvas);
 }
 :where(table) { border-collapse: collapse; }
 :where(td) {
