@@ -1,26 +1,22 @@
-.ui-card {
+:where(.ui-card) {
 	--ui-card-p: 1rem;
-	--ui-card-rg: .5em;
+	--ui-card-rg: .66em;
 	background: var(--ui-card-bg, var(--GrayCanvas));
 	clip-path: inset(0 0 0 0 round var(--input-bdrs));
 	display: grid;
-	grid-row: 1 / 6;
-	grid-template-rows: subgrid;
 	row-gap: var(--ui-card-rg);
+	& img { width: 100%; }
 	& >* {
 		margin: unset;
-		&:not(img) { padding-inline: var(--ui-card-p); }
-		&:last-child { padding-block-end: var(--ui-card-p); }
+		&:not(button, .ui-button, img) { padding-inline: var(--ui-card-p); }
+		&:last-child { margin-block-end: var(--ui-card-p); }
 	}
-	/* Modifiers */
+	& :is(button, .ui-button) { margin-inline: var(--ui-card-p); }
 	&.--end:not(.--inline) {
-		padding-block-start: var(--ui-card-p);
-		& img {
-			margin-block-start: calc(0em - var(--ui-card-rg));
-			order: 1;
-		}
+		& img { order: 1; }
+		& >*:last-child { margin-block-end: calc(var(--ui-card-p) - var(--ui-card-rg)); }
 	}
-	&.--inline img {
+	&:is(.--end, .--inline) img {
 		height: 100%;
 		object-fit: cover;
 		& + * { padding-block-start: var(--ui-card-p); }
@@ -34,5 +30,9 @@
 		grid-template-columns: 1fr fit-content(var(--ui-card-img-w, 40%));
 		& >*:not(img) { grid-column: 1; }
 		& img { grid-area: 1 / 2 / 6 / 3; }
+	}
+	.--subgrid & {
+		grid-row: 1 / 6;
+		grid-template-rows: subgrid;
 	}
 }

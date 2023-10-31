@@ -32,6 +32,7 @@
 	line-height: normal;
 	padding: var(--button-p, 1ch 2.5ch);
 	place-content: center;
+	text-decoration: none;
 	transition: all .2s ease-in-out;
 	user-select: none;
 	&:where([disabled], .--disabled) {
@@ -60,6 +61,7 @@
 		&.--icon { border-width: 2px; }
 	}
 	&.--rounded { border-radius: 3em; }
+	&.--start { justify-self: start; }
 	&.--toggle { --button-p: 0; }
 	&.--transparent { background: transparent; }
 }
