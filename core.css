@@ -136,8 +136,8 @@
 	background-color: var(--GrayCanvas);
 }
 :where(table) { border-collapse: collapse; }
-:where(td) {
-	border: 1px solid;
+:where(td) { border: 1px solid; }
+:where(td, th) {
 	font-size: smaller;
 	padding: 1ch;
 }

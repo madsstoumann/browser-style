@@ -7,7 +7,6 @@
 :where(.ui-product-card) {
 	color: var(--CanvasText);
 	display: grid;
-	max-width: 20rem;
 	position: relative;
 	& article {
 		& > * { margin: 0; }

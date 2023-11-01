@@ -1,0 +1,37 @@
+:where(.ui-table) {
+	& td { border-color: var(--ButtonBorder); }
+	& th {
+		border: 1px solid var(--ButtonBorder);
+		font-weight: 600;
+		text-align: start;
+	}
+	& :is(td, th) { padding: var(--ui-table-p, 1ch 2ch); }
+	& tr { background: none; }
+	&.--block-border :is(td, th) { border-width: 0 0 1px 0; }
+	&.--no-border :is(td, th) { border: 0; }
+	&.--zebracol-even :is(td, th):nth-of-type(even),
+	&.--zebracol-odd :is(td, th):nth-of-type(odd),
+	&.--zebrarow-even tr:nth-of-type(even) td,
+	&:is(.--header-bg, .--zebrarow-even) th,
+	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--GrayCanvas); }
+
+	/* Column-alignment, if you need to support more than 8 columns, add more */
+	&[data-col-1~="center"] tr > *:nth-of-type(1),
+	&[data-col-2~="center"] tr > *:nth-of-type(2),
+	&[data-col-3~="center"] tr > *:nth-of-type(3),
+	&[data-col-4~="center"] tr > *:nth-of-type(4),
+	&[data-col-5~="center"] tr > *:nth-of-type(5),
+	&[data-col-6~="center"] tr > *:nth-of-type(6),
+	&[data-col-7~="center"] tr > *:nth-of-type(7),  
+	&[data-col-8~="center"] tr > *:nth-of-type(8) { text-align: center; }
+
+	&[data-col-1~="end"] tr > *:nth-of-type(1),
+	&[data-col-2~="end"] tr > *:nth-of-type(2),
+	&[data-col-3~="end"] tr > *:nth-of-type(3),
+	&[data-col-4~="end"] tr > *:nth-of-type(4),
+	&[data-col-5~="end"] tr > *:nth-of-type(5),
+	&[data-col-6~="end"] tr > *:nth-of-type(6),
+	&[data-col-7~="end"] tr > *:nth-of-type(7)
+	&[data-col-8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+}
+

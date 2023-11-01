@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Table</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-table.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Table</h2>
+
+	<table class="ui-table">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--block-border</code> and <code>--header-bg</code></p>
+
+	<table class="ui-table --block-border --header-bg">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebracol-even</code></p>
+
+	<table class="ui-table --zebracol-even">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebracol-odd</code></p>
+
+	<table class="ui-table --zebracol-odd">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-even</code></p>
+
+	<table class="ui-table --zebrarow-even">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-odd</code></p>
+
+	<table class="ui-table --zebrarow-odd">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-even</code> and <code>--no-border</code></p>
+
+	<table class="ui-table --zebrarow-even --no-border">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--block-border</code> <strong>and</strong> <code>data-col-2="center" data-col-4="end"</code></p>
+
+	<table class="ui-table --block-border" data-col-2="center" data-col-4="end">
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+</body>
+</html>
