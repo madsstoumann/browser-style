@@ -7,7 +7,10 @@
 	grid-auto-flow: column;
 	gap: var(--ui-step-gap, 2ch);
 	justify-content: start;
-	& a { text-decoration: none; }
+	& a {
+		color: inherit;
+		text-decoration: none;
+	}
 	& li {
 		counter-increment: ol;
 		list-style-type: none;
