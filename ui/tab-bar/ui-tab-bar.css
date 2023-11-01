@@ -1,0 +1,18 @@
+@import url('../icon/ui-icon.css');
+:where(.ui-tab-bar) {
+	all: unset;
+	border-radius: var(--input-bdrs);
+	display: flex;
+	font-size: smaller;
+	justify-content: space-between;
+	padding: var(--ui-tab-bar-p, 1ch 3ch);
+	& label {
+		--icon-sz: 2em;
+		gap: .5ch;
+		grid-template-columns: 1fr;
+		justify-items: center;
+		user-select: none;
+		&:has(:checked) { color: var(--AccentColor); }
+		&:not(:has(:checked)):hover { color: var(--GrayText); }
+	}
+}
