@@ -1,0 +1,22 @@
+@import url('../icon/ui-icon.css');
+:where(.ui-menu-list) {
+	all: unset;
+	display: grid;
+	gap: 1ch;
+	& li {
+		--icon-sz: 1.5em;
+		align-items: center;
+		border-radius: 2em;
+		display: flex;
+		gap: 1ch;
+		padding: var(--ui-menu-list-p, .5ch 2.5ch .5ch 1.5ch);
+		user-select: none;
+		width: fit-content;
+		&:hover { background-color: var(--GrayCanvas); }
+		&.--active { 
+			background-color: var(--AccentColor);
+			color: var(--AccentColorText);
+		}
+	}
+	&.--icon-only li { padding: unset; }
+}
