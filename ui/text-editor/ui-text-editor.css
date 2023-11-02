@@ -2,6 +2,7 @@
 :where(.ui-text-editor) {
 	display: grid;
 	row-gap: 2ch;
+	& label:has([hidden]) { display: none; }
 	& textarea {
 		color-scheme: dark;
 		font-family: var(--ff-mono);

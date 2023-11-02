@@ -237,7 +237,7 @@
 :where(select) { background: transparent; overflow: hidden; }
 :where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
 :where(textarea) {
-	form-sizing: normal;
+	form-sizing: auto;
 	min-block-size: var(--input-bs);
 	resize: vertical;
 }
