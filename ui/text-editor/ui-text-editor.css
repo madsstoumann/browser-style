@@ -1,0 +1,10 @@
+@import "../toolbar/ui-toolbar.css";
+:where(.ui-text-editor) {
+	display: grid;
+	row-gap: 2ch;
+	& textarea {
+		color-scheme: dark;
+		font-family: var(--ff-mono);
+		font-size: small;
+	}
+}

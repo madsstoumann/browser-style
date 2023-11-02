@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Text Editor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-text-editor.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Text Editor</h2>
+	<p>Using <a href="/ui/toolbar">Toolbar</a></p>
+<!--
+	backColor,foreColor| 
+	fontName,fontSize|
+-->
+	<div class="ui-text-editor">
+		<nav class="ui-toolbar"
+			data-command-list="bold,italic,underline,strikeThrough|subscript,superscript|insertOrderedList,insertUnorderedList,insertHorizontalRule,insertImage|justifyLeft,justifyCenter,justifyRight,justifyFull|createLink|removeFormat,code">
+		</nav>
+		<div contenteditable="true">
+			Go on, try pasting some content into this editable paragraph and see what happens!
+		</div>
+		<textarea hidden></textarea>
+	</div>
+
+	<script type="module">
+		import { commands } from './commands.js';
+		import { init } from './../../assets/js/common.js';
+		import uiTextEditor from './uiTextEditor.js';
+		init('.ui-text-editor', uiTextEditor);
+	</script>
+</body>
+</html>

@@ -8,7 +8,6 @@
 	container-type: inline-size;
 	display: grid;
 	line-height: 1.2;
-	&:dir(rtl) { --_deg: -90deg; }
 
 	& cite {
 		font: normal 600 75%/1.4 var(--ff-body);
@@ -52,4 +51,5 @@
 			grid-area: unset;
 		}
 	}
+	&:dir(rtl) { --_deg: -90deg; }
 }

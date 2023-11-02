@@ -23,6 +23,7 @@
 			height: 100%;
 		}
 		&::-webkit-slider-thumb {
+			appearance: none;
 			background-color: var(--ui-image-compare-thumb-c);
 			border-radius: 0;
 			cursor: ew-resize;
