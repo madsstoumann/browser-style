@@ -13,7 +13,6 @@
 	place-content: center;
 	position: absolute;
 	translate: 50% -50%;
-	&:dir(rtl) { translate: -50% -50%; }
 	&.--inline {
 		margin-inline-start: 0.6ch;
 		position: static;
@@ -32,5 +31,6 @@
 	&.--top-right {
 		translate: 0 0;
 	}
+	&:dir(rtl) { translate: -50% -50%; }
 }
 *:has(.ui-badge) { position: relative; }

@@ -17,6 +17,7 @@
 	background-size: var(--_otp-bgsz) 100%;
 	caret-color: var(--otp-cc, var(--color-gray-9));
 	clip-path: inset(0% calc(var(--otp-ls) / 2) 0% 0%);
+	direction: ltr;
 	font-family: ui-monospace, monospace;
 	font-size: var(--otp-fz, 1.25em);
 	inline-size: calc(var(--otp-digits) * var(--_otp-bgsz));

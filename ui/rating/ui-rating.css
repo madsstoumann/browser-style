@@ -1,5 +1,5 @@
 .ui-rating {
-	--_bgi: linear-gradient(to var(--dir, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
+	--_bgi: linear-gradient(to var(--_dir, right), var(--ui-rating-c, gold) 0 var(--_x), var(--ui-rating-bg, var(--ButtonFace)) 0 var(--_x));
 	--_mask: repeat left center/var(--input-bs) var(--ui-rating-symbol, url('/assets/svg/star.svg'));
 	--_x: calc(100% * (var(--value, 3) / var(--_max, 5)));
 

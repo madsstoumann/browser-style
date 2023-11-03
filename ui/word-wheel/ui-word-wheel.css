@@ -2,6 +2,7 @@
 	all: unset;
 	aspect-ratio: 1;
 	container-type: inline-size;
+	direction: ltr;
 	display: grid;
 	place-content: center;
 	& li {

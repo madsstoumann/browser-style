@@ -1,5 +1,6 @@
 :where(progress) {
 	--ui-progress-bs: .6em;
+	--ui-progress-anim: progress 1.2s linear alternate infinite;
 	background-color: var(--ButtonBorder);
 	block-size: var(--ui-progress-bs);
 	border: 0;
@@ -36,17 +37,22 @@
 		border-radius: inherit;
 	}
 }
-/* @media (prefers-reduced-motion: no-preference) { */
+@media (prefers-reduced-motion: no-preference) {
 	progress:indeterminate::after {
-		animation: progress 1.2s linear alternate infinite;
+		animation: var(--ui-progress-anim);
 		background-color: var(--AccentColor);
 		border-radius: inherit;
 		content: "";
 		height: var(--ui-progress-bs);
 		width: 20%;
+		
 	}
 	progress:indeterminate::-moz-progress-bar {
-		animation: progress 1.2s linear alternate infinite;
+		animation: var(--ui-progress-anim);
 	}
-/* } */
+	[dir=rtl] progress { 
+		--ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
+	 }
+}
 @keyframes progress { 100% { translate: 400%; } }
+@keyframes progress-rtl { 100% { translate: -400%; } }

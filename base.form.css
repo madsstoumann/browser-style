@@ -153,7 +153,6 @@
 	background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
 	height: var(--input-range-h);
 	margin-block: calc((var(--input-thumb-sz) - var(--input-range-h)) / 2);
-	&:dir(rtl) { --_dir: left; }
 	&::-webkit-slider-thumb {
 		appearance: none;
 		background: var(--AccentColor);

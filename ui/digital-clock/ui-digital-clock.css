@@ -18,6 +18,7 @@
 	all: unset;
 	background-color: var(--GrayCanvas);
 	border-radius: var(--input-bdrs);
+	direction: ltr;
 	display: grid;
 	font-size: var(--ui-digital-clock-fs, larger);
 	font-variant-numeric: tabular-nums;

@@ -38,6 +38,7 @@
 
 /* Global */
 *, *::before, *::after { box-sizing: border-box; }
+[dir=rtl] body { --_dir: left; } /* for gradients */
 [hidden] { display: none; }
 [data-sr] {
 	border: 0;

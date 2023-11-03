@@ -1,4 +1,4 @@
-.ui-chat {
+:where(.ui-chat) {
   --chat-start-bg: var(--ButtonFace);
   --chat-start-c: inherit;
   --chat-end-bg: var(--AccentColor);
@@ -40,14 +40,13 @@
     }
     & > time { text-align: center; }
 
-    &[value="1"]:dir(rtl) { --_chat-tail-trsf: scaleX(-1); }
     &[value="2"] {
       --_chat-bg: var(--chat-end-bg);
       --_chat-c: var(--chat-end-c);
       --_chat-tail-ii: auto calc(0px - var(--_chat-tail-offset));
+      --_chat-tail-trsf: scaleX(-1);
       & li, & ol { justify-self: end; }
       & .ui-avatar { order: 2; }
-      &:dir(ltr) { --_chat-tail-trsf: scaleX(-1);}
     }
   }
 }
@@ -79,4 +78,10 @@
     margin-block-start: var(--_chat-entry-time-mbs, var(--ui-chat-gap));
     text-align: end;
   }
+}
+
+/* rtl, placed at the end because :dir(rtl) doesn't work everywhere */
+[dir=rtl] .ui-chat {
+  & li[value="1"] { --_chat-tail-trsf: scaleX(-1); }
+  & li[value="2"] { --_chat-tail-trsf: scaleX(1); }
 }

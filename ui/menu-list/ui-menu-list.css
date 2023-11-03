@@ -9,7 +9,8 @@
 		border-radius: 2em;
 		display: flex;
 		gap: 1ch;
-		padding: var(--ui-menu-list-p, .5ch 2.5ch .5ch 1.5ch);
+		padding-block: var(--ui-menu-list-pb, .5ch);
+		padding-inline: var(--ui-menu-list-pi, 1.5ch 2.5ch);
 		user-select: none;
 		width: fit-content;
 		&:hover { background-color: var(--GrayCanvas); }
