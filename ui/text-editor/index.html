@@ -14,22 +14,10 @@
 
 	<h2>Text Editor</h2>
 	<p>Minimal text-editor, using <code>execCommand</code> and <a href="/ui/toolbar">Toolbar</a></p>
-<!--
-	backColor,foreColor| 
-	fontName,fontSize|
--->
-	<div class="ui-text-editor">
-		<nav class="ui-toolbar"
-			data-command-list="bold,italic,underline,strikeThrough|subscript,superscript|insertOrderedList,insertUnorderedList,insertHorizontalRule,insertImage|justifyLeft,justifyCenter,justifyRight,justifyFull|createLink|removeFormat,code">
-		</nav>
-		<div contenteditable="true">Go on, try pasting some content into this editable paragraph and see what happens!</div>
-		<label>Code
-			<textarea hidden></textarea>
-		</label>
-	</div>
+
+	<div class="ui-text-editor"></div>
 
 	<script type="module">
-		import { commands } from './commands.js';
 		import { init } from './../../assets/js/common.js';
 		import uiTextEditor from './uiTextEditor.js';
 		init('.ui-text-editor', uiTextEditor);

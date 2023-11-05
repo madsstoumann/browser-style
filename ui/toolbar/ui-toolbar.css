@@ -1,5 +1,6 @@
 @import "../icon/ui-icon-svg.css";
 :where(.ui-toolbar) {
+	--ui-toolbar-bdrs: .25em;
 	--ui-toolbar-bdw: 1px;
 	--button-bg: Canvas;
 	--button-p: .5ch;
@@ -13,9 +14,17 @@
 	& fieldset {
 		all: unset;
 		background: var(--ButtonBorder);
+		border-radius: var(--ui-toolbar-bdrs);
 		display: inline-flex;
 		gap: var(--ui-toolbar-bdw);
 		padding: var(--ui-toolbar-bdw);
+		position: relative;
+		& button {
+			&:first-of-type { border-radius: var(--ui-toolbar-bdrs) 0 0 var(--ui-toolbar-bdrs); }
+			&:last-of-type { border-radius: 0 var(--ui-toolbar-bdrs) var(--ui-toolbar-bdrs) 0; }
+			&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }
+		}
+		& input { top: 100%; }
 	}
 	& svg { pointer-events: none; }
 }

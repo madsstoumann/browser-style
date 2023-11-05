@@ -4,6 +4,7 @@
 	row-gap: 2ch;
 	& label:has([hidden]) { display: none; }
 	& textarea {
+		block-size: auto;
 		color-scheme: dark;
 		font-family: var(--ff-mono);
 		font-size: small;
