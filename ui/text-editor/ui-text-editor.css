@@ -9,4 +9,9 @@
 		font-family: var(--ff-mono);
 		font-size: small;
 	}
+	[contenteditable]:focus-visible {
+		outline-color: var(--ButtonBorder);
+		outline-offset: 1ch;
+		outline-style: dotted;
+	}
 }

@@ -28,14 +28,12 @@ export const commands = [
 	},
 	{
 		command: 'fontName',
-		icon: `M4 20l3 0",M14 20l7 0",M6.9 15l6.9 0",M10.2 6.3l5.8 13.7",M5 20l6 -16l2 0l7 16`,
-		options: 'serif|sans-serif|monospace|cursive|fantasy',
+		options: 'Times;serif|Arial;sans-serif|Monopsace;monospace|Cursive;cursive',
 		key: 'fn',
 	},
 	{
 		command: 'fontSize',
-		icon: `M3 7v-2h13v2,M10 5v14,M12 19h-4,M15 13v-1h6v1,M18 12v7,M17 19h2`,
-		options: '1|2|3|4|5|6|7',
+		options: 'xx-small;1|x-small;2|small;3|medium;4|large;5|x-large;6|xx-large;7',
 		key: 'fs',
 	},
 	{
@@ -43,6 +41,12 @@ export const commands = [
 		icon: `M9 15v-7a3 3 0 0 1 6 0v7,M9 11h6,M5 19h14`,
 		inputType: 'color',
 		key: 'fc',
+	},
+	{
+		command: 'formatBlock',
+		icon: `M6 15h15,M21 19h-15,M15 11h6,M21 7h-6,M9 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2,M3 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2`,
+		key: 'blockquote',
+		value: 'BLOCKQUOTE',
 	},
 	{
 		command: 'formatBlock',
@@ -112,6 +116,11 @@ export const commands = [
 		key: 'ul',
 	},
 	{
+		command: 'insertVideo',
+		icon: `M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z,M8 4l0 16,M16 4l0 16,M4 8l4 0,M4 16l4 0,M4 12l16 0,M16 8l4 0,M16 16l4 0`,
+		key: 'video',
+	},
+	{
 		command: 'italic',
 		icon: `M11 5l6 0,M7 19l6 0,M14 5l-4 14`,
 		key: 'i',
@@ -135,6 +144,11 @@ export const commands = [
 		command: 'justifyRight',
 		icon: `M4 6l16 0,M10 12l10 0,M6 18l14 0`,
 		key: 'right',
+	},
+	{
+		command: 'markdown',
+		icon: `M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z,M7 15v-6l2 2l2 -2v6,M14 13l2 2l2 -2m-2 2v-6`,
+		key: 'markdown',
 	},
 	{
 		command: 'outdent',

@@ -1,36 +1,47 @@
 import { commands } from './commands.js';
+import htmlToMarkdown from './htmlToMarkdown.js';
 export default function uiTextEditor(node, args) {
 	const settings = Object.assign({
-		editableClass: 'ui-editable',
+		editableClass: '',
 		editableText: 'Type here...',
 		htmlClass: '',
 		htmlLabel: 'HTML',
 		htmlToggle: true,
 		inputTypes: 'deleteByContent,deleteByCut,deleteByDrag,deleteContentBackward,deleteContentForward,deleteEntireSoftLine,deleteHardLineBackward,deleteHardLineForward,deleteSoftLineBackward,deleteSoftLineForward,deleteWordBackward,deleteWordForward,formatBackColor,formatBold,formatFontColor,formatFontName,formatIndent,formatItalic,formatJustifyCenter,formatJustifyFull,formatJustifyLeft,formatJustifyRight,formatOutdent,formatRemove,formatSetBlockTextDirection,formatSetInlineTextDirection,formatStrikethrough,formatSubscript,formatSuperscript,formatUnderline,historyRedo,historyUndo,insertCompositionText,insertFromComposition,insertFromDrop,insertFromPaste,insertFromYank,insertHorizontalRule,insertLineBreak,insertLink,insertOrderedList,insertParagraph,insertReplacementText,insertText,insertTranspose,insertUnorderedList',
 		toolbarClass: 'ui-toolbar',
-		toolbarItems: 'h1,h2,h3,h4,h5,h6|bgc|fc,fn,fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,hr,img|left,center,right,justify|link,unlink|remove,html'
+		toolbarItems: 'h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img,video|left,center,right,justify|link,unlink|remove|html|markdown'
 	}, (typeof args === 'object') ? args : node.dataset || {})
 
 	const editable = document.createElement('div');
 	editable.className = settings.editableClass;
 	editable.contentEditable = true;
-	editable.textContent = settings.editableText;
 
+	if (node.innerHTML.trim().length) {
+		editable.innerHTML = node.innerHTML;
+		node.innerHTML = '';
+	}
+	else {
+		editable.textContent = settings.editableText;
+	}
+
+	const html = document.createElement('textarea');
 	const inputTypes = settings?.inputTypes.split(',') || [];
 	const toolbarItems = settings?.toolbarItems.split('|') || [];
 
 	const renderCommand = obj => 
-		`<button type="button" id="${obj.id}" data-command="${
+		`<button type="button" data-command="${
 			obj.inputType ||obj.command}"${
 			obj.prompt ? ` data-prompt="${obj.prompt}"` :''}${
 			obj.value ? ` data-value="${obj.value}"` :''}>${
 			obj.icon ? renderIcon(obj.icon) : ''}
 		</button>`
 	
-	const renderIcon = (data) => `<svg viewBox="0 0 24 24" class="ui-icon">${data.split(',').map(path => `<path d="${path}"></path>`)}</svg>`
-	const renderInput = obj => `<input type="${obj.inputType}" oninput="document.execCommand('${obj.command}', true, this.value)" data-sr>`
-	const renderSelect = obj => `<select onchange="document.execCommand('${obj.command}', true, this.value)">${obj.options.split('|').map(option => `<option value="${option}">${option}</option>`)}</select>`
-	//`<ul id="${obj.command}" popover anchor="${obj.id}">${obj.options.split('|').map(item => `<li>${item}</li>`).join('')}</ul>`
+	const renderIcon = paths => `<svg viewBox="0 0 24 24" class="ui-icon">${paths.split(',').map(path => `<path d="${path}"></path>`)}</svg>`
+	const renderInput = obj => obj.inputType ? `<input type="${obj.inputType}" oninput="document.execCommand('${obj.command}', true, this.value)" data-sr>`:''
+	const renderSelect = obj => `<select onchange="document.execCommand('${obj.command}', true, this.value)">${
+		obj.options.split('|').map(option => { const [label, value] = option.split(';');
+		 return `<option value="${value}">${label}</option>`})
+		}</select>`
 
 	if (toolbarItems.length) {
 
@@ -43,12 +54,7 @@ export default function uiTextEditor(node, args) {
 			.split(",")
 			.map(entry => {
 				const obj = commands.find((item) => item.key === entry) || {}
-				obj.id = crypto.randomUUID()
-				return `${renderCommand(obj)}
-				${obj.inputType ? renderInput(obj): ''}
-				${obj.options ? renderSelect(obj) : ''}
-					
-					`
+				return obj.options ? renderSelect(obj) : renderCommand(obj) + renderInput(obj)
 				
 			}).join('')}
 		</fieldset>`).join('')
@@ -57,19 +63,23 @@ export default function uiTextEditor(node, args) {
 			const node = e.target
 			const data = node.dataset
 				switch (data.command) {
-					case 'html': {
-						html.hidden = !html.hidden
-						editable.contentEditable = html.hidden
-						html.hidden ? editable.innerHTML = html.value : html.value = editable.innerHTML
-					}
-					break;
 					case 'color': {
 						if ("showPicker" in HTMLInputElement.prototype) {
 							node.nextElementSibling.showPicker()
 						}
 					}
 					break;
-				default: {
+					case 'html': {
+						html.hidden = !html.hidden
+						editable.contentEditable = html.hidden
+						html.hidden ? editable.innerHTML = html.value : html.value = editable.innerHTML
+					}
+					break;
+					case 'markdown': {
+						console.log(htmlToMarkdown(editable.innerHTML))
+					}
+					break;
+					default: {
 					document.execCommand(data.command, true, data.prompt ? prompt(data.prompt) : data.value || null)
 				}
 			}
@@ -85,9 +95,8 @@ export default function uiTextEditor(node, args) {
 	})
 
 	if (settings.htmlToggle) {
-		const html = document.createElement('textarea');
 		html.className = settings.htmlClass;
-		html.hidden = true;	
+		html.hidden = true;
 		node.append(html)
 
 		html.addEventListener('input', () => {

@@ -233,7 +233,7 @@
 		border-block-end: var(--input-bdw) solid var(--ButtonBorder);
 	}
 }
-:where(select) { background: transparent; overflow: hidden; }
+:where(select) { background-color: transparent; overflow: hidden; }
 :where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
 :where(textarea) {
 	form-sizing: auto;

@@ -1,8 +1,67 @@
 # Text Editor
 
 ## Toolbar
+The configuration-object expects a key, `toolbarItems` with value set to a comma-separated list of keys. By default, _all_ keys are added. To create groups withing the toolbar, add a pipe `|` character.
 
+Example:
+```js
+{
+  toolbarItems: 'bold, italic'
+}
+```
 
+This can also be set as a `data-attribute` on the tag:
+
+```html
+  <div class="ui-text-editor"
+    data-toolbar-items="bold,italic">
+    ...
+  </div>
+```
+---
+
+### List of commands
+
+| Command | Key | Description |
+|---|---|---|
+| backColor | bgc | Change the background color of the selected text. |
+| bold | b | Make the selected text bold. |
+| copy | copy | Copy the selected text. |
+| createLink | link | Create a hyperlink to the specified URL. |
+| cut | cut | Cut the selected text. |
+| fontName | fn | Change the font family of the selected text. |
+| fontSize | fs | Change the font size of the selected text. |
+| foreColor | fc | Change the font color of the selected text. |
+| formatBlock | blockquote | Format the selected text as a blockquote. |
+| formatBlock | h1 | Format the selected text as a heading 1. |
+| formatBlock | h2 | Format the selected text as a heading 2. |
+| formatBlock | h3 | Format the selected text as a heading 3. |
+| formatBlock | h4 | Format the selected text as a heading 4. |
+| formatBlock | h5 | Format the selected text as a heading 5. |
+| formatBlock | h6 | Format the selected text as a heading 6. |
+| html | html | Insert HTML code into the editor. |
+| indent | indent | Indent the selected text. |
+| insertHorizontalRule | hr | Insert a horizontal rule into the editor. |
+| insertImage | img | Insert an image into the editor. |
+| insertOrderedList | ol | Insert an ordered list into the editor. |
+| insertUnorderedList | ul | Insert an unordered list into the editor. |
+| insertVideo | video | Insert a video into the editor. |
+| italic | i | Make the selected text italic. |
+| justifyCenter | center | Center the selected text. |
+| justifyFull | justify | Justify the selected text. |
+| justifyLeft | left | Align the selected text to the left. |
+| justifyRight | right | Align the selected text to the right. |
+| markdown | markdown | Convert the selected text to Markdown. |
+| outdent | outdent | Outdent the selected text. |
+| paste | paste | Paste the copied or cut text. |
+| redo | redo | Redo the last undone action. |
+| removeFormat | remove | Remove all formatting from the selected text. |
+| strikeThrough | s | Strikethrough the selected text. |
+| subscript | sub | Subscript the selected text. |
+| superscript | sup | Superscript the selected text. |
+| underline | u | Underline the selected text. |
+| unlink | unlink | Remove the hyperlink from the selected text. |
+| undo | undo | Undo the last done action. |
 
 ## Allowed event.inputType
 The configuration-object expects a key, `inputTypes` with value set to a comma-separated list of allowed events. By default, _all_ events are allowed.
@@ -27,7 +86,7 @@ This can also be set as a `data-attribute` on the tag:
 ### List of types:
 
 | inputType | Description |
-|---|---|
+| --------- | ------------|
 | deleteByContent | Deletes the content specified by the range. |
 | deleteByCut | Deletes the content specified by the range and cuts it to the clipboard. |
 | deleteByDrag | Deletes the content specified by the range and drags it to the specified location. |

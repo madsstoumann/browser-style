@@ -9,7 +9,7 @@
 
 	display: flex;
 	flex-wrap: wrap;
-	gap: var(--ui-toolbar-group-gap, 2ch);
+	gap: var(--ui-toolbar-group-gap, 1ch);
 
 	& fieldset {
 		all: unset;
@@ -19,12 +19,21 @@
 		gap: var(--ui-toolbar-bdw);
 		padding: var(--ui-toolbar-bdw);
 		position: relative;
-		& button {
+		& :is(button, select) {
 			&:first-of-type { border-radius: var(--ui-toolbar-bdrs) 0 0 var(--ui-toolbar-bdrs); }
 			&:last-of-type { border-radius: 0 var(--ui-toolbar-bdrs) var(--ui-toolbar-bdrs) 0; }
 			&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }
+			&:focus-visible {
+				background-color: var(--GrayCanvas);
+				outline: none;
+			}
 		}
 		& input { top: 100%; }
+		& select {
+			background-color: Canvas;
+			border: 0;
+			padding-inline-end: 4ch;
+		}
 	}
 	& svg { pointer-events: none; }
 }
