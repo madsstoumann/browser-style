@@ -8,12 +8,11 @@
 	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../grid/ui-grid.css">
+
+	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
 	<style>
-	.--asr-1\:1 { aspect-ratio: 1/1;  }
-	.--asr-2\:1 { aspect-ratio: 2/1;  }
 
 	.ui-bento {
-		--ui-grid-cols: 2;
 		--ui-grid-cg: clamp(0.25rem, 0.0714rem + 0.5714vw, 0.5rem);
 		--ui-grid-rg: var(--ui-grid-cg);
 		list-style: none;
@@ -27,13 +26,16 @@
 			place-content: center;
 			text-align: center;
 			width: 100%;
+			& >* {
+				display: grid;
+				font-family: system-ui;
+				font-size: 15cqi;
+				gap: 2cqi;
+				line-height: 1;
+				padding: 1ch;
+				& small { font-size: 70%; }
+			}
 		}
-		@media (min-width: 768px) { --ui-grid-cols: 7; }
-	}
-	.ui-bento-text {
-		display: grid;
-		font-size: 20cqi;
-		line-height: 1.1;
 	}
 
 	</style>
@@ -44,28 +46,82 @@
 	<h2>Bento</h2>
 	<p>Work-in-progress</p>
 
-	<ul class="ui-grid ui-bento">
-		<li class="--asr-1:1">1</li>
-		<li class="">2</li>
-		<li class="--asr-2:1 --xs-gcs-2 --md-gcs-1">3</li>
-		<li class="--asr-2:1 --md-gcs-2">4</li>
-		<li class="--asr-2:1 --md-gcs-2">5</li>
-
-		<li class="--md-gcs-2">6</li>
-		<li class="--asr-1:1 --md-gcs-3 --md-grs-2">
-			<div class="ui-bento-text">
-				Up to <strong>96 GB</strong> <small>memory</small>
-			</div>
+	<ul class="ui-grid --xs-c-2 --md-c-7 ui-bento">
+		<li>
+			<span>Work It</span>
 		</li>
-		<li class="">8</li>
-		<li class="">9</li>
-
-		<li class="">10</li>
-		<li class="">11</li>
-		<li class="--md-gcs-2">12</li>
-
-		<li class="--md-gcs-4">13</li>
-		<li class="--asr-2:1 --xs-gcs-2 --md-gcs-3">14</li>
+		<li>
+			<span>
+				Make It
+			</span>
+		</li>
+		<li class="--xs-gcs-2 --md-gcs-1">
+			<span>
+				Do It <strong class="ui-gradient-text --blue-green">Makes Us</strong>
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span class="ui-gradient-text --violet-pink">
+				Harder
+				Better
+				Faster
+				Stronger</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				More than <strong class="ui-gradient-text --blue-green">Hour Hour</strong> <small>Never</small>
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				Over <strong class="ui-gradient-text --blue-green">67 billion</strong> <small>neurons</small>
+			</span>
+		</li>
+		<li class="--md-gcs-3 --md-grs-2">
+			<span>
+				Ever <strong class="ui-gradient-text --violet-pink">After Work</strong> <small>Is Over</small>
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">40%</strong> Harder Better
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">40%</strong> Faster Stronger
+			</span>
+		</li>
+		<li>
+			<span>
+				<small>16-core</small>
+				<strong class="ui-gradient-text --blue-green">Neural Engine</strong>
+				<small>15.8 trillion ops/s</small>
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">Do It</strong>
+				Faster
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				<strong class="ui-gradient-text --blue-green">96GB</strong>
+				<small>Faster Better Stronger</small>
+			</span>
+		</li>
+		<li class="--md-gcs-4">
+			<span>
+				<small>Work It Harder</small>
+				<strong class="ui-gradient-text --violet-pink">Make It Better</strong>
+			</span>
+		</li>
+		<li class="--xs-gcs-2 --md-gcs-3">
+			<span>Do It
+				<strong class="ui-gradient-text --violet-pink">Faster</strong> <small>Makes Us Stronger</small>
+			</span>
+		</li>
 	</ul>
 
 </body>
