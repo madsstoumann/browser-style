@@ -14,8 +14,9 @@
 	<main id="app"></main>
 
 	<script type="module">
-		import { markdownToHtml } from './markdownToHtml.js';
-		const src = `# drawdown
+		// import { markdownToHtml } from './markdownToHtml.js';
+    import { markdownToHtml } from './markdown.js';
+		const src = `# Markdown to HTML
 
 ---
 
@@ -23,25 +24,34 @@ Tiny but reliable Markdown to HTML conversion in JavaScript
 
 Supported Markdown features:
 
-#### Headings
 
-
-# another header
+## Header H2
+### Header H3
+#### Header H4
+##### Header H5
+###### Header H6
 
 Inline styles such as **bold**, *italic*, ***both***, __underline__, ~~strikethrough~~, \`monospace\`, --subscript--, and ^^superscript^^.
 
-> Block quotes, including
-> > nested block quotes.
+> Block quotes
 
 
-    Indented code blocks
+\`\`\`
+const code = {
+  block: 'of code'
+};
+\`\`\`
 
+==Some highlighted text==
+
+Ordered lists
 1. Numbered lists
-  - Unordered lists
-  - Nested in other lists
-    a. Lettered lists are an extension to the spec.
-    b. They may be useful for legal documents.
 2. Another entry in my numbered list.
+
+Unordered lists
+- List Item 1
+- List Item 2
+
 
 | Table1 | Table2 | Table3 |
 | ------ | ------ | ------ |
@@ -49,11 +59,12 @@ Inline styles such as **bold**, *italic*, ***both***, __underline__, ~~strikethr
 | Cell 4 | Cell 5 | Cell 6 |
 | Cell 7 | Cell 8 | Cell 9 |
 
+
 [Links](https://github.com/adamvleggett/drawdown)
 
 Images:
 
-![Images](https://img.icons8.com/ios/452/stack-of-photos.png)
+![Image Alt Text](https://img.icons8.com/ios/452/stack-of-photos.png)
 
 ---
 
@@ -74,67 +85,7 @@ These are the supported features:
 - Subscript
 - Horizontal rule
 - Tables
-
-Unsupported Markdown features at this time:
-
-- Line blocks
-- Definition lists
-- Footnotes
-- Twitter/Facebook/YouTube embed
-- Inline math equations
-
-To use:
-
-    element.innerHTML = markdown(text);`;
-
-		function MD(src) {
-  // Create a regular expression to match markdown headings
-  const headingRegex = /^#+\s+(.*)$/gm;
-
-  // Create a regular expression to match markdown links
-  const linkRegex = /((!?)\[(.*?)\]\((.*?)( ".*")?\)|\\([\\`*_{}\[\]()#+\-.!~]))/g;
-
-  // Create a regular expression to match markdown images
-  const imageRegex = /!\[(.*?)\]\((.*?)( ".*")?\)/g;
-
-  // Create a regular expression to match markdown code blocks
-  const codeBlockRegex = /\n`(.*?)\n([^]*?)\n`/gm;
-
-  // Create a regular expression to match markdown list items
-  const listItemRegex = /\n( *)-(.*)/gm;
-
-  // Convert markdown headings to HTML
-  src = src.replace(headingRegex, function(match, headingText) {
-    return '<h1>' + headingText + '</h1>';
-  });
-
-  // Convert markdown links to HTML
-  src = src.replace(linkRegex, function(match, p1, p2, p3, p4, p5, p6) {
-    if (p2) {
-      return '<img src="' + p4 + '" alt="' + p3 + '">';
-    } else {
-      return '<a href="' + p4 + '">' + p3 + '</a>';
-    }
-  });
-
-  // Convert markdown images to HTML
-  src = src.replace(imageRegex, function(match, p1, p2, p3) {
-    return '<img src="' + p2 + '" alt="' + p1 + '">';
-  });
-
-  // Convert markdown code blocks to HTML
-  src = src.replace(codeBlockRegex, function(match, language, codeText) {
-    return '<pre><code>' + codeText + '</code></pre>';
-  });
-
-  // Convert markdown list items to HTML
-  src = src.replace(listItemRegex, function(match, p1, p2) {
-    return '<li>' + p2 + '</li>';
-  });
-
-  // Return the converted HTML
-  return src;
-}
+`;
 
 		app.innerHTML = markdownToHtml(src)
 	</script>

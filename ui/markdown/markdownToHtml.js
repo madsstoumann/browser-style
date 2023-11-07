@@ -58,9 +58,9 @@ export function markdownToHtml(src) {
 		: '';
 		return si + '\uf8ff'
 	})
-
+	// console.log(src)
 	// Table
-	replace(/\n(( *\|.*?\| *\n)+)/g, (_, table) => {
+	replace(/\n(( *\|.*?\| *\n)+)/g, (_, table) => { 
 		const sep = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
 		return '\n' + node('table',
 			table.replace(/.*\n/g, (row, ri) => {
