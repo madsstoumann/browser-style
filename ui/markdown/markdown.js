@@ -60,7 +60,8 @@ const html = {
 	table: { re: /((\|.*\|\n)+)/gs, fn: (_match, table) => {
 		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
 		return `<table>${
-			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' : `<tr>${
+			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :
+			`<tr>${
 				row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? separator && !rowIndex ? `<th>${cell}</th>` : `<td>${cell}</td>` : '')
 			}</tr>`)
 		}</table>`
