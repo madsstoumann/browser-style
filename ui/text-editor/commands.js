@@ -146,11 +146,6 @@ export const commands = [
 		key: 'right',
 	},
 	{
-		command: 'markdown',
-		icon: `M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z,M7 15v-6l2 2l2 -2v6,M14 13l2 2l2 -2m-2 2v-6`,
-		key: 'markdown',
-	},
-	{
 		command: 'outdent',
 		icon: `M20 6l-7 0,M20 12l-9 0,M20 18l-7 0,M8 8l-4 4l4 4`,
 		key: 'outdent',

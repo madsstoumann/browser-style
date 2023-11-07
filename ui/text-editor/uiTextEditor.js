@@ -1,5 +1,4 @@
 import { commands } from './commands.js';
-import htmlToMarkdown from './htmlToMarkdown.js';
 export default function uiTextEditor(node, args) {
 	const settings = Object.assign({
 		editableClass: '',
@@ -9,7 +8,7 @@ export default function uiTextEditor(node, args) {
 		htmlToggle: true,
 		inputTypes: 'deleteByContent,deleteByCut,deleteByDrag,deleteContentBackward,deleteContentForward,deleteEntireSoftLine,deleteHardLineBackward,deleteHardLineForward,deleteSoftLineBackward,deleteSoftLineForward,deleteWordBackward,deleteWordForward,formatBackColor,formatBold,formatFontColor,formatFontName,formatIndent,formatItalic,formatJustifyCenter,formatJustifyFull,formatJustifyLeft,formatJustifyRight,formatOutdent,formatRemove,formatSetBlockTextDirection,formatSetInlineTextDirection,formatStrikethrough,formatSubscript,formatSuperscript,formatUnderline,historyRedo,historyUndo,insertCompositionText,insertFromComposition,insertFromDrop,insertFromPaste,insertFromYank,insertHorizontalRule,insertLineBreak,insertLink,insertOrderedList,insertParagraph,insertReplacementText,insertText,insertTranspose,insertUnorderedList',
 		toolbarClass: 'ui-toolbar',
-		toolbarItems: 'h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img,video|left,center,right,justify|link,unlink|remove|html|markdown'
+		toolbarItems: 'h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img,video|left,center,right,justify|link,unlink|remove|html'
 	}, (typeof args === 'object') ? args : node.dataset || {})
 
 	const editable = document.createElement('div');
@@ -73,10 +72,6 @@ export default function uiTextEditor(node, args) {
 						html.hidden = !html.hidden
 						editable.contentEditable = html.hidden
 						html.hidden ? editable.innerHTML = html.value : html.value = editable.innerHTML
-					}
-					break;
-					case 'markdown': {
-						console.log(htmlToMarkdown(editable.innerHTML))
 					}
 					break;
 					default: {
