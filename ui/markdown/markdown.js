@@ -1,4 +1,4 @@
-export default function htmlToMarkdown(html) {
+export function htmlToMarkdown(html) {
 	const parser = new DOMParser();
 	const doc = parser.parseFromString(html, 'text/html');
 	Object.keys(markdown).forEach(tag => {
@@ -22,7 +22,7 @@ const markdown = {
 	b: (node) => `**${node.innerHTML}**`,
 	blockquote: (node) => `> ${node.innerHTML.replace(/\r|\n/g, '\r\n> ')}\r\n`,
 	br: () => `  \r\n`,
-	code: (node) => `\`\`${node.innerHTML.replace(/\r|\n/g, '').replace(/^\s*(.*)\s*$/, '$1')}\`\``,
+	code: (node) => `\`${node.innerHTML.replace(/\r|\n/g, '').replace(/^\s*(.*)\s*$/, '$1')}\``,
 	del: (node) => `---${node.innerHTML}---`,
 	h1: (node) => `# ${node.innerHTML}\r\n`,
 	h2: (node) => `## ${node.innerHTML}\r\n`,
@@ -32,15 +32,16 @@ const markdown = {
 	h6: (node) => `###### ${node.innerHTML}\r\n`,
 	hr: () => `---\r\n`,
 	i: (node) => `*${node.innerHTML}*`,
-	img: (node) => `![alt text](${node.src})`,
-	ol: (node) => node.children.map((li, index) => `${index}. ${li.innerHTML}\r\n`).join(''),
+	img: (node) => `![${node.alt}](${node.src})`,
+	mark: (node) => `==${node.innerHTML}==`,
+	// ol: (node) => node.children.map((li, index) => `${index}. ${li.innerHTML}\r\n`).join(''),
 	p: (node) => `\r\n\r\n${node.innerHTML}\r\n\r\n`,
-	pre: (node) => `\r\n${node.innerHTML}\r\n`,
-	s: (node) => `---${node.innerHTML}---`,
+	pre: (node) => `\r\n\`\`\`\r\n${node.innerHTML}\r\n\`\`\`\r\n`,
+	s: (node) => `~~${node.innerHTML}~~`,
 	sub: (node) => `<sub>${node.innerHTML}</sub>`,
 	sup: (node) => `<sup>${node.innerHTML}</sup>`,
 	u: (node) => `__${node.innerHTML}__`,
-	ul: (node) => node.children.map(li => ` - ${li.innerHTML}\r\n`).join('')
+	// ul: (node) => node.children.map(li => ` - ${li.innerHTML}\r\n`).join('')
 }
 
 /* Markdown to HTML */

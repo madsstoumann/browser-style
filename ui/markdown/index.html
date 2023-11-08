@@ -7,23 +7,32 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
-	
+	<style>textarea { --input-bs: 10rem; }</style>
 </head>
 <body>
+	<h1>UI: Components</h1>
 
-	<main id="app"></main>
-
-	<script type="module">
-		// import { markdownToHtml } from './markdownToHtml.js';
-    import { markdownToHtml } from './markdown.js';
-		const src = `# Markdown to HTML
+	<h2>Markdown</h2>
+	<p>Two minimal scripts, <code>markdownToHtml</code> and <code>htmlToMarkdown</code>, to convert to and from markdown/html.</p>
+	<form id="app" class="ui-markdown">
+		<fieldset>
+			<fieldset>
+				<legend>Conversion Type</legend>
+				<label>
+					<input type="radio" name="conversion"	value="markdown" checked>Markdown to HTML
+				</label>
+				<label>
+					<input type="radio" name="conversion" value="html">HTML to Markdown
+			</fieldset>
+			<label>Input
+				<textarea id="input" rows="10" cols="80">
+# Markdown to HTML
 
 ---
 
-Tiny but reliable Markdown to HTML conversion in JavaScript
+Tiny Markdown-to-HTML conversion in JavaScript
 
 Supported Markdown features:
-
 
 ## Header H2
 ### Header H3
@@ -31,16 +40,15 @@ Supported Markdown features:
 ##### Header H5
 ###### Header H6
 
-Inline styles such as **bold**, *italic*, ***both***, __underline__, ~~strikethrough~~, \`monospace\`, --subscript--, and ^^superscript^^.
+Inline styles such as **bold**, *italic*, ***both***, __underline__, ~~strikethrough~~, `monospace`, --subscript--, and ^^superscript^^.
 
 > Block quotes
 
-
-\`\`\`
+```
 const code = {
-  block: 'of code'
+	block: 'of code'
 };
-\`\`\`
+```
 
 ==Some highlighted text==
 
@@ -77,7 +85,7 @@ These are the supported features:
 - Links
 - Images
 - Headings
-- Lists (including lettered lists)
+- Lists
 - Bold
 - Italic
 - Strikethrough
@@ -85,9 +93,35 @@ These are the supported features:
 - Subscript
 - Horizontal rule
 - Tables
-`;
+			</textarea>
+		</label>
+		<label>Output
+			<textarea id="output"></textarea>
+		</label>
+		</fieldset><br>
+	<button type="reset">Output &gt; Input</button>
+	<button type="submit">Convert</button>
+</form>
+<main id="content"></main>
 
-		app.innerHTML = markdownToHtml(src)
+	<script type="module">
+		// import { markdownToHtml } from './markdownToHtml.js';
+		// content.innerHTML = markdownToHtml(src)
+		import { htmlToMarkdown, markdownToHtml } from './markdown.js';
+		app.addEventListener('submit', (event) => {
+			event.preventDefault();
+			if (app.elements.conversion.value === 'markdown') {
+				output.value = markdownToHtml(app.elements.input.value);
+				content.innerHTML = output.value;
+			} else {
+				output.value = htmlToMarkdown(app.elements.input.value);
+				content.innerHTML = '';
+			}
+		})
+		app.addEventListener('reset', (event) => {
+			event.preventDefault();
+			input.value = output.value;
+		})
 	</script>
 </body>
 </html>
