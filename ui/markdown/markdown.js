@@ -34,14 +34,19 @@ const markdown = {
 	i: (node) => `*${node.innerHTML}*`,
 	img: (node) => `![${node.alt}](${node.src})`,
 	mark: (node) => `==${node.innerHTML}==`,
-	// ol: (node) => node.children.map((li, index) => `${index}. ${li.innerHTML}\r\n`).join(''),
-	p: (node) => `\r\n\r\n${node.innerHTML}\r\n\r\n`,
+	ol: (node) => [...node.querySelectorAll('li')].map((li, index) => `\r\n${index}. ${li.innerHTML}`).join(''),
 	pre: (node) => `\r\n\`\`\`\r\n${node.innerHTML}\r\n\`\`\`\r\n`,
 	s: (node) => `~~${node.innerHTML}~~`,
 	sub: (node) => `<sub>${node.innerHTML}</sub>`,
 	sup: (node) => `<sup>${node.innerHTML}</sup>`,
+	table: (node) => [...node.querySelectorAll('tr')].map((row, index) => {
+		const rowContent = `|${[...row.cells].map(td => td.textContent).join('|')}|`
+		const separator = `|${[ ...Array(row.cells.length).keys() ].map(() => '---').join('|')}|`
+		return index === 1 ? separator + '\r\n' + rowContent : rowContent }
+	).join('\r\n'),
 	u: (node) => `__${node.innerHTML}__`,
-	// ul: (node) => node.children.map(li => ` - ${li.innerHTML}\r\n`).join('')
+	ul: (node) => [...node.querySelectorAll('li')].map((li) => `\r\n - ${li.innerHTML}`).join(''),
+	p: (node) => `\r\n\r\n${node.innerHTML}\r\n\r\n`,
 }
 
 /* Markdown to HTML */
