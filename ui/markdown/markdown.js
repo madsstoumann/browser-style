@@ -10,9 +10,8 @@ export function htmlToMarkdown(html) {
 }
 
 export function markdownToHtml(str) {
-	Object.keys(html).forEach(entry => {
-		/* TODO: Handle empty tags */
-		str = str.replaceAll(html[entry].re, html[entry].fn || `<${entry}>$1</${entry}>`)
+	Object.keys(html).forEach(tag => {
+		str = str.replaceAll(html[tag].re, html[tag].fn || ((_match, text) => text ? `<${tag}>${text}</${tag}>`:''))
 	})
 	return str
 }
@@ -25,12 +24,12 @@ const markdown = {
 	br: () => `  \r\n`,
 	code: (node) => `\`${node.innerHTML.replace(/\r|\n/g, '').replace(/^\s*(.*)\s*$/, '$1')}\``,
 	del: (node) => `---${node.innerHTML}---`,
-	h1: (node) => `# ${node.innerHTML}\r\n`,
-	h2: (node) => `## ${node.innerHTML}\r\n`,
-	h3: (node) => `### ${node.innerHTML}\r\n`,
-	h4: (node) => `#### ${node.innerHTML}\r\n`,
-	h5: (node) => `##### ${node.innerHTML}\r\n`,
-	h6: (node) => `###### ${node.innerHTML}\r\n`,
+	h1: (node) => `# ${node.innerHTML}`,
+	h2: (node) => `## ${node.innerHTML}`,
+	h3: (node) => `### ${node.innerHTML}`,
+	h4: (node) => `#### ${node.innerHTML}`,
+	h5: (node) => `##### ${node.innerHTML}`,
+	h6: (node) => `###### ${node.innerHTML}`,
 	hr: () => `\r\n---\r\n`,
 	i: (node) => `*${node.innerHTML}*`,
 	img: (node) => `![${node.alt}](${node.src})`,
@@ -54,23 +53,20 @@ const markdown = {
 const html = {
 	img: { re: /!\[(.*)\]\((.*)\)/gi, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
 	a: { re: /\[(.*)\]\((.*)\)/gi, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
-
 	bi: { re: /\*\*\*(.*?)\*\*\*/gi, fn: (_match, text) => `<b><i>${text}</i></b>` },
 	b: { re: /\*\*(.*?)\*\*/gi },
 	i: { re: /\*(.*?)\*/gi },
-
 	blockquote: { re: /\n>(.*)/gi },
 	br: { re: /(  \n)/gi, fn: () => `<br>` },
-	pre: { re: /```\n(.*)\n```/gis, fn: (_match, text) => `<pre>${text}</pre>` },
+	pre: { re: /```\n(.*)\n```/gis, fn: (_match, text) => `<pre>${text}</pre>\r\n` },
 	code: { re: /`(.*)`/gi },
-
-	/* H1-H6 */
-	h: { re: /(?=^|>|\n)([>\s]*?)(#{1,6}) (.*?)( #*)? *(?=\n|$)/gi, fn: (_match, _0, tag, text) => `<h${tag.length}>${text}</h${tag.length}>` },
-
+	h: { /* H1-H6 */
+		re: /(?=^|>|\n)([>\s]*?)(#{1,6}) (.*?)( #*)? *(?=\n|$)/gi,
+		fn: (_match, _0, tag, text) => `\r\n<h${tag.length}>${text}</h${tag.length}>\r\n`
+	},
 	mark: { re: /==(.*)==/gi },
 	sup: { re: /\^\^(.*)\^\^/gi },
 	s: { re: /\~\~(.*)\~\~/gi },
-
 	table: { re: /((\|.*\|\n)+)/gs, fn: (_match, table) => {
 		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
 		return `<table>${
@@ -78,16 +74,16 @@ const html = {
 			`<tr>${
 				row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? separator && !rowIndex ? `<th>${cell}</th>` : `<td>${cell}</td>` : '')
 			}</tr>`)
-		}</table>`
+		}</table>\r\n`
 	}},
-
-	hr: { re: /---/gi, fn: () => `<hr>` },
+	hr: { re: /---/gi, fn: () => `<hr>\r\n` },
 	sub: { re: /--(.*)--/gi },
-
 	u: { re: /__(.*)__/gi },
 	em: { re: /_(.*?)_/gi },
-
-	list: { re: /\n( *)(?:[*\-+]|((\d+)|([a-z])|[A-Z])[.)]) +([^]*?)(?=(\n|$){2})/g, fn: (_match, _, isOL) => isOL ? `\r\n<ol>${_match}\r\n</ol>` : `\r\n<ul>${_match}\r\n</ul>` },
+	list: {
+		re: /\n( *)(?:[*\-+]|((\d+)|([a-z])|[A-Z])[.)]) +([^]*?)(?=(\n|$){2})/g,
+		fn: (_match, _, isOL) => isOL ? `\r\n<ol>${_match}\r\n</ol>\r\n` : `\r\n<ul>${_match}\r\n</ul>\r\n`
+	},
 	ol: { re: /(\d+)\.\s(.*)/gi, fn: (_match, index, text) => `<li value="${index}">${text}</li>` },
 	ul: { re: /\-\s(.*)/gi, fn: (_match, text) => `<li>${text}</li>` },
 	p: { re: /\n\n(.*?)\n\n/gi },
