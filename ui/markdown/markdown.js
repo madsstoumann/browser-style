@@ -58,7 +58,7 @@ const html = {
 	i: { re: /\*(.*?)\*/gi },
 	blockquote: { re: /\n>(.*)/gi },
 	br: { re: /(  \n)/gi, fn: () => `<br>` },
-	pre: { re: /```\n(.*)\n```/gis, fn: (_match, text) => `<pre>${text}</pre>\r\n` },
+	pre: { re: /\n((```|~~~).*\n?([^]*?)\n?\2|((    .*?\n)+))/g, fn: (_match, _g0, _g1, text) => `<pre>${text}</pre>\r\n` },
 	code: { re: /`(.*)`/gi },
 	h: { /* H1-H6 */
 		re: /(?=^|>|\n)([>\s]*?)(#{1,6}) (.*?)( #*)? *(?=\n|$)/gi,
@@ -84,7 +84,7 @@ const html = {
 		re: /\n( *)(?:[*\-+]|((\d+)|([a-z])|[A-Z])[.)]) +([^]*?)(?=(\n|$){2})/g,
 		fn: (_match, _, isOL) => isOL ? `\r\n<ol>${_match}\r\n</ol>\r\n` : `\r\n<ul>${_match}\r\n</ul>\r\n`
 	},
-	ol: { re: /(\d+)\.\s(.*)/gi, fn: (_match, index, text) => `<li value="${index}">${text}</li>` },
+	ol: { re: /(^\d+)\.\s(.*)/gm, fn: (_match, index, text) => `<li value="${index}">${text}</li>` },
 	ul: { re: /\-\s(.*)/gi, fn: (_match, text) => `<li>${text}</li>` },
 	p: { re: /\n\n(.*?)\n\n/gi },
 }
