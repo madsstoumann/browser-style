@@ -6,7 +6,8 @@ export function htmlToMarkdown(html) {
 			node.innerHTML = markdown[tag](node)
 		})
 	})
-	return doc.body.textContent.replace(/\t+/g, '').trim()
+	return doc.body.textContent.trim()
+	//.replace(/\t+/g, '')
 }
 
 export function markdownToHtml(str) {
@@ -58,16 +59,19 @@ const html = {
 	i: { re: /\*(.*?)\*/gi },
 	blockquote: { re: /\n>(.*)/gi },
 	br: { re: /(  \n)/gi, fn: () => `<br>` },
-	pre: { re: /\n((```|~~~).*\n?([^]*?)\n?\2|((    .*?\n)+))/g, fn: (_match, _g0, _g1, text) => `<pre>${text}</pre>\r\n` },
-	code: { re: /`(.*)`/gi },
-	h: { /* H1-H6 */
-		re: /(?=^|>|\n)([>\s]*?)(#{1,6}) (.*?)( #*)? *(?=\n|$)/gi,
-		fn: (_match, _0, tag, text) => `\r\n<h${tag.length}>${text}</h${tag.length}>\r\n`
+	pre: {
+		re: /\n((```|~~~).*\n?([^]*?)\n?\2|((    .*?\n)+))/g,
+		fn: (_match, _g0, _g1, text) => `<pre>${text.replace(/\</g, '&lt;').replace(/>/g, '&gt;')}</pre>\r\n`
+	},
+	code: { re: /`(.*?)`/gi },
+	h: {
+		re: /(^#{1,6}) (.*)\n/gm,
+		fn: (_match, tag, text) => `<h${tag.length}>${text}</h${tag.length}>\r\n`
 	},
 	mark: { re: /==(.*)==/gi },
 	sup: { re: /\^\^(.*)\^\^/gi },
 	s: { re: /\~\~(.*)\~\~/gi },
-	table: { re: /((\|.*\|\n)+)/gs, fn: (_match, table) => {
+	table: { re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
 		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
 		return `<table>${
 			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :

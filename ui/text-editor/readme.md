@@ -1,7 +1,7 @@
 # Text Editor
 
 ## Toolbar
-The configuration-object expects a key, `toolbarItems` with value set to a comma-separated list of keys. By default, _all_ keys are added. To create groups withing the toolbar, add a pipe `|` character.
+The configuration-object expects a key, `toolbarItems` with value set to a comma-separated list of keys. By default, _all_ keys are added. To create groups withing the toolbar, add a `&#124;`-character.
 
 Example:
 ```js
@@ -18,12 +18,13 @@ This can also be set as a `data-attribute` on the tag:
     ...
   </div>
 ```
+
 ---
 
 ### List of commands
 
 | Command | Key | Description |
-|---|---|---|
+| ------- | --- | ----------- |
 | backColor | bgc | Change the background color of the selected text. |
 | bold | b | Make the selected text bold. |
 | copy | copy | Copy the selected text. |
@@ -133,3 +134,4 @@ This can also be set as a `data-attribute` on the tag:
 | insertText | Inserts the specified text at the current cursor position. |
 | insertTranspose | Transposes the two characters before and after the cursor. |
 | insertUnorderedList | Inserts an unordered list at the current cursor position. |
+

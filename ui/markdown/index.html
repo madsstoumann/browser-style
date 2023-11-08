@@ -56,14 +56,15 @@ const code = {
 ==Some highlighted text==
 
 Ordered lists
-1. Numbered lists
-2. Another entry in my numbered list.
+1. The first item
+2. The second item
 
 Unordered lists
 - List Item 1
 - List Item 2
+- List Item 3
 
-| Table1 | Table2 | Table3 |
+| Head 1 | Head 2 | Head 3 |
 | ------ | ------ | ------ |
 | Cell 1 | Cell 2 | Cell 3 |
 | Cell 4 | Cell 5 | Cell 6 |
@@ -85,14 +86,12 @@ Images
 			<textarea id="output"></textarea>
 		</label>
 		</fieldset><br>
-	<button type="reset">Output &gt; Input</button>
+	<button type="reset">Output &gt;&gt; Input</button>
 	<button type="submit">Convert</button>
 </form>
 <main id="content"></main>
 
 	<script type="module">
-		// import { markdownToHtml } from './markdownToHtml.js';
-		// content.innerHTML = markdownToHtml(src)
 		import { htmlToMarkdown, markdownToHtml } from './markdown.js';
 		app.addEventListener('submit', (event) => {
 			event.preventDefault();
