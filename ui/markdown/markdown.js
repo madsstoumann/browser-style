@@ -7,7 +7,6 @@ export function htmlToMarkdown(html) {
 		})
 	})
 	return doc.body.textContent.trim()
-	//.replace(/\t+/g, '')
 }
 
 export function markdownToHtml(str) {
@@ -17,37 +16,39 @@ export function markdownToHtml(str) {
 	return str
 }
 
+const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`;
+
 /* HTML to Markdown */
 const markdown = {
-	a: (node) => `[${node.innerHTML}](${node.href})`,
-	b: (node) => `**${node.innerHTML}**`,
-	blockquote: (node) => `\r\n> ${node.innerHTML.replace(/\r|\n/g, '\r\n> ')}\r\n`,
+	a: n => `[${n.innerHTML}](${n.href})`,
+	b: n => H('**', n),
+	blockquote: n => H('\r\n> ', n, '\r\n'),
 	br: () => `  \r\n`,
-	code: (node) => `\`${node.innerHTML.replace(/\r|\n/g, '').replace(/^\s*(.*)\s*$/, '$1')}\``,
-	del: (node) => `---${node.innerHTML}---`,
-	h1: (node) => `# ${node.innerHTML}`,
-	h2: (node) => `## ${node.innerHTML}`,
-	h3: (node) => `### ${node.innerHTML}`,
-	h4: (node) => `#### ${node.innerHTML}`,
-	h5: (node) => `##### ${node.innerHTML}`,
-	h6: (node) => `###### ${node.innerHTML}`,
+	code: n => H('`', n),
+	del: n => H('---', n),
+	h1: n => H('# ', n, 0),
+	h2: n => H('## ', n, 0),
+	h3: n => H('### ', n, 0),
+	h4: n => H('#### ', n, 0),
+	h5: n => H('##### ', n, 0),
+	h6: n => H('###### ', n, 0),
 	hr: () => `\r\n---\r\n`,
-	i: (node) => `*${node.innerHTML}*`,
-	img: (node) => `![${node.alt}](${node.src})`,
-	mark: (node) => `==${node.innerHTML}==`,
-	ol: (node) => `\r\n${[...node.querySelectorAll('li')].map((li, index) => `\r\n${index+1}. ${li.innerHTML}`).join('')}\r\n`,
-	pre: (node) => `\r\n\`\`\`\r\n${node.innerHTML}\r\n\`\`\`\r\n`,
-	s: (node) => `~~${node.innerHTML}~~`,
-	sub: (node) => `--${node.innerHTML}--`,
-	sup: (node) => `^^${node.innerHTML}^^`,
-	table: (node) => `${[...node.querySelectorAll('tr')].map((row, index) => {
+	i: n => H('*', n),
+	img: n => `![${n.alt}](${n.src})`,
+	mark: n => H('==', n),
+	ol: n => `\r\n${[...n.querySelectorAll('li')].map((li, index) => `\r\n${index+1}. ${li.innerHTML}`).join('')}\r\n`,
+	p: n => H('\r\n\r\n', n),
+	pre: n => H('\r\n```\r\n', n),
+	s: n => H('~~', n),
+	sub: n => H('--', n),
+	sup: n => H('^^', n),
+	table: n => `${[...n.querySelectorAll('tr')].map((row, index) => {
 		const rowContent = `|${[...row.cells].map(td => td.textContent).join('|')}|`
 		const separator = `|${[ ...Array(row.cells.length).keys() ].map(() => '---').join('|')}|`
 		return index === 1 ? separator + '\r\n' + rowContent : rowContent }
 	).join('\r\n')}\r\n`,
-	u: (node) => `__${node.innerHTML}__`,
-	ul: (node) => `\r\n${[...node.querySelectorAll('li')].map((li) => `\r\n - ${li.innerHTML}`).join('')}\r\n`,
-	p: (node) => `\r\n\r\n${node.innerHTML}\r\n\r\n`,
+	u: n => H('__', n),
+	ul: n => `\r\n${[...n.querySelectorAll('li')].map((li) => H('\r\n - ', li, 0)).join('')}\r\n`
 }
 
 /* Markdown to HTML */
@@ -80,6 +81,7 @@ const html = {
 			}</tr>`)
 		}</table>\r\n`
 	}},
+	del: { re: /---(.*)---/gi },
 	hr: { re: /---/gi, fn: () => `<hr>\r\n` },
 	sub: { re: /--(.*)--/gi },
 	u: { re: /__(.*)__/gi },
