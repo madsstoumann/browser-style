@@ -94,6 +94,7 @@ const html = {
 	em: { re: /_(.*?)_/gi },
 	list: {
 		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
+			/* TODO!: nested lists */
 			const tag = parseInt(list.charAt(0)) > 0 ? 'ol' : 'ul'
 			return `<${tag}>${
 				list.replace(/^[\t0-9-+*]+[ .](.*)\n/gm, (_match, text) => {
