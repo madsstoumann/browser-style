@@ -99,12 +99,12 @@ const html = {
 
 			const data = list.trim().split('\n').map((li) => {
 				const length = li.length
-				const tabs = li.replace(/\t/g, '').length
-				const type = parseInt(list.charAt(0)) > 0 ? 'ol' : 'ul'
+				const tabs = li.replace(/\t/g, '')
+				const type = parseInt(tabs.charAt(0)) > 0 ? 'ol' : 'ul'
 
 				return {
 					type,
-					level: length - tabs,
+					level: length - tabs.length,
 					text: li.replace(/^([\t]+)?[\d\*\+-][. ]/gm, '').trim()
 				} 
 			})
