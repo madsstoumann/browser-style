@@ -59,6 +59,34 @@ const markdown = {
 /* Markdown to HTML */
 const T = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const html = {
+	list: {
+		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
+			const tree = list.trim().split('\n').reduce((result, li) => {
+				const length = li.length
+				const tabs = li.replace(/\t/g, '')
+				const type = parseInt(tabs.charAt(0)) > 0 ? 'ol' : 'ul'
+				const level = length - tabs.length
+				const text = li.replace(/^([\t]+)?[\d\*\+-][. ]/gm, '').trim()
+
+				if (level === 0) {
+					const last = result.at(-1)
+					const item = { text, nested: [] }
+					if (last && last.type === type) {
+						last.children.push(item)
+					} else {
+						result.push({
+							type,
+							children: [item]
+						})
+					}
+					return result
+				}
+				addItem(result.at(-1), level, type, text)
+				return result
+			}, [])
+			return generateList(tree[0]).outerHTML
+		}
+	},
 	img: { re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
 	a: { re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
 	bi: { re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
@@ -93,33 +121,6 @@ const html = {
 	sub: { re: /--(.*)--/g },
 	u: { re: /__(.*)__/g },
 	em: { re: /_(.*?)_/g },
-	list: {
-		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
-			const tree = list.trim().split('\n').reduce((result, li) => {
-				const length = li.length
-				const tabs = li.replace(/\t/g, '')
-				const type = parseInt(tabs.charAt(0)) > 0 ? 'ol' : 'ul'
-				const level = length - tabs.length
-				const text = li.replace(/^([\t]+)?[\d\*\+-][. ]/gm, '').trim()
 
-				if (level === 0) {
-					const last = result.at(-1)
-					const item = { text, nested: [] }
-					if (last && last.type === type) {
-						last.children.push(item)
-					} else {
-						result.push({
-							type,
-							children: [item]
-						})
-					}
-					return result
-				}
-				addItem(result.at(-1), level, type, text)
-				return result
-			}, [])
-			return generateList(tree[0]).outerHTML
-		}
-	},
 	p: { re: /\n\n(.*?)\n\n/g },
 }
