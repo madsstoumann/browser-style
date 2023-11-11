@@ -1,3 +1,4 @@
+import { addItem, generateList } from './markdown.helpers.js'
 export function htmlToMarkdown(html) {
 	const parser = new DOMParser();
 	const doc = parser.parseFromString(html, 'text/html');
@@ -94,43 +95,31 @@ const html = {
 	em: { re: /_(.*?)_/g },
 	list: {
 		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
-			const data = list.trim().split('\n').map((li, index) => {
+			const tree = list.trim().split('\n').reduce((result, li) => {
 				const length = li.length
 				const tabs = li.replace(/\t/g, '')
 				const type = parseInt(tabs.charAt(0)) > 0 ? 'ol' : 'ul'
 				const level = length - tabs.length
 				const text = li.replace(/^([\t]+)?[\d\*\+-][. ]/gm, '').trim()
-				return { index, level, text, type }
-			})
-			const root = []
-			data.forEach((item, index) => {
-				item.parent = item.level > 0 ? data.slice(0, index).findLastIndex(entry => entry.level < item.level) || 0 : index === 0 ? -1 : 0
-				if (item.level < 1) root.push(item)
-				else {
-					if (!data[item.parent].children) data[item.parent].children = []
-					data[item.parent].children.push(item)
+
+				if (level === 0) {
+					const last = result.at(-1)
+					const item = { text, nested: [] }
+					if (last && last.type === type) {
+						last.children.push(item)
+					} else {
+						result.push({
+							type,
+							children: [item]
+						})
+					}
+					return result
 				}
-			})
-			return generateList(root).outerHTML
+				addItem(result.at(-1), level, type, text)
+				return result
+			}, [])
+			return generateList(tree[0]).outerHTML
 		}
 	},
 	p: { re: /\n\n(.*?)\n\n/g },
-}
-
-function generateList(listItems) {
-	const listElement = document.createElement(listItems[0].type);
-	generateListItems(listItems, listElement);
-	return listElement;
-}
-function generateListItems(listItems, parentElement) {
-	for (const listItem of listItems) {
-		const listItemElement = document.createElement('li');
-		listItemElement.textContent = listItem.text;
-		parentElement.appendChild(listItemElement);
-		if (listItem.children) {
-			const childListElement = document.createElement(listItem.type);
-			listItemElement.appendChild(childListElement);
-			generateListItems(listItem.children, childListElement);
-		}
-	}
 }
