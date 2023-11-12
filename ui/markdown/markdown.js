@@ -1,4 +1,4 @@
-import { addItem, generateList } from './markdown.helpers.js'
+import { addItem, generateList, liquid } from './markdown.helpers.js'
 export function htmlToMarkdown(html) {
 	const parser = new DOMParser();
 	const doc = parser.parseFromString(html, 'text/html');
@@ -99,7 +99,7 @@ const html = {
 	}},
 	img: { re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
 	a: { re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
-
+	liquid: { re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => liquid(tag, text) },
 	bi: { re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
 	b: { re: /\*\*(.*?)\*\*/g },
 	i: { re: /\*(.*?)\*/g },

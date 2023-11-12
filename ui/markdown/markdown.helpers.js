@@ -17,7 +17,6 @@ export function generateList(list) {
   generateListItems(list.children, listElement);
   return listElement;
 }
-
 function generateListItems(listItems, parentElement) {
   for (const listItem of listItems) {
     const listItemElement = document.createElement('li');
@@ -27,4 +26,14 @@ function generateListItems(listItems, parentElement) {
     	listItemElement.appendChild(generateList(list))
     })
   }
+}
+export function liquid(tag, text) {
+	switch (tag) {
+		case 'codepen':
+			return `<iframe height="600" src="https://codepen.io/${text.replace('/pen/', '/embed/')}?height=600&amp;default-tab=result&amp;embed-version=2" scrolling="no" frameborder="no" allowtransparency="true" loading="lazy" style="width: 100%;"></iframe>`
+		case 'jsfiddle':
+			return `<iframe width="100%" height="300" src="https://jsfiddle.net/${text}/embedded/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>`
+		case 'youtube':
+			return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${text}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`
+	}
 }
