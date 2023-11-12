@@ -87,8 +87,19 @@ const html = {
 			return generateList(tree[0]).outerHTML
 		}
 	},
+	table: { re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
+		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
+		return `<table>${
+			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :
+			`<tr>${
+				row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? 
+				separator && !rowIndex ? `<th>${cell}</th>` : `<td>${cell}</td>` : '')
+			}</tr>`)
+		}</table>\r\n`
+	}},
 	img: { re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
 	a: { re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
+
 	bi: { re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
 	b: { re: /\*\*(.*?)\*\*/g },
 	i: { re: /\*(.*?)\*/g },
@@ -106,16 +117,7 @@ const html = {
 	mark: { re: /==(.*)==/g },
 	sup: { re: /\^\^(.*)\^\^/g },
 	s: { re: /\~\~(.*)\~\~/g },
-	table: { re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
-		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
-		return `<table>${
-			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :
-			`<tr>${
-				row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? 
-				separator && !rowIndex ? `<th>${cell}</th>` : `<td>${cell}</td>` : '')
-			}</tr>`)
-		}</table>\r\n`
-	}},
+
 	del: { re: /---(.*)---/g },
 	hr: { re: /---/g, fn: () => `<hr>\r\n` },
 	sub: { re: /--(.*)--/g },
