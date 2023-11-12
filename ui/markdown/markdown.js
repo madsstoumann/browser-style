@@ -84,7 +84,7 @@ const html = {
 				addItem(result.at(-1), level, type, text)
 				return result
 			}, [])
-			return generateList(tree[0]).outerHTML
+			return `${generateList(tree[0]).outerHTML}\r\n`
 		}
 	},
 	table: { re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
