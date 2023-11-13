@@ -1,4 +1,8 @@
-import { addItem, generateList, liquid } from './markdown.helpers.js'
+/**
+ * @function htmlToMarkdown
+ * @description Transforms HTML to Markdown
+ * @param {String} html
+ */
 export function htmlToMarkdown(html) {
 	const parser = new DOMParser();
 	const doc = parser.parseFromString(html, 'text/html');
@@ -11,6 +15,11 @@ export function htmlToMarkdown(html) {
 	return doc.body.textContent.trim()
 }
 
+/**
+ * @function markdownToHtml
+ * @description Transforms a Markdown-string to HTML
+ * @param {String} str
+ */
 export function markdownToHtml(str) {
 	Object.keys(html).forEach(tag => {
 		try { str = str.replaceAll(html[tag].re, html[tag].fn || ((_match, text) => text ? `<${tag}>${text}</${tag}>`:'')) } 
@@ -20,7 +29,6 @@ export function markdownToHtml(str) {
 }
 
 /* HTML to Markdown */
-const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`
 const markdown = {
 	a: n => `[${n.innerHTML}](${n.href})`,
 	b: n => H('**', n),
@@ -47,6 +55,7 @@ const markdown = {
 	style: n => ``,
 	sub: n => H('--', n),
 	sup: n => H('^^', n),
+	/* TODO! read dataset of table and create alignment-separator */
 	table: n => `${[...n.querySelectorAll('tr')].map((row, index) => {
 		const rowContent = `|${[...row.cells].map(td => td.textContent).join('|')}|`
 		const separator = `|${[ ...Array(row.cells.length).keys() ].map(() => '---').join('|')}|`
@@ -57,7 +66,6 @@ const markdown = {
 }
 
 /* Markdown to HTML */
-const T = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const html = {
 	list: {
 		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
@@ -89,7 +97,15 @@ const html = {
 	},
 	table: { re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
 		const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
-		return `<table>${
+		const align = separator?.split('|').slice(1, -1).map((str, index) => {
+			const col = str.trim()
+			if (col.startsWith(':') && col.endsWith(':')) return `data-c${index + 1}="center"`
+			if (col.startsWith(':')) return `data-c${index + 1}="start"`
+			if (col.endsWith(':')) return `data-c${index + 1}="end"`
+			return `data-c${index + 1}="start"`
+		}).join(' ') || ''
+
+		return `<table ${align}>${
 			table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :
 			`<tr>${
 				row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? 
@@ -99,15 +115,17 @@ const html = {
 	}},
 	img: { re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
 	a: { re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
-	liquid: { re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => liquid(tag, text) },
+	liquid: { re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => liquidTag(tag, text) },
 	bi: { re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
 	b: { re: /\*\*(.*?)\*\*/g },
 	i: { re: /\*(.*?)\*/g },
 	blockquote: { re: /\n>(.*)/g },
 	br: { re: /(  \n)/g, fn: () => `<br>` },
 	pre: {
-		re: /\n((```|~~~).*\n?([^]*?)\n?\2|((    .*?\n)+))/g,
-		fn: (_match, _g0, _g1, text) => `<pre>${T(text)}</pre>\r\n`
+		re: /\n((```|~~~)(.*)\n?([^]*?)\n?\2|((    .*?\n)+))/g,
+		fn: (_match, _g0, _g1, lang, text) => {
+			return `<pre${lang ? ` class="highlight ${lang}"`:''}>${T(text)}</pre>\r\n`
+		}
 	},
 	code: { re: /`(.*?)`/g, fn: (_match, text) => `<code>${T(text)}</code>` },
 	h: {
@@ -125,4 +143,49 @@ const html = {
 	em: { re: /_(.*?)_/g },
 
 	p: { re: /\n\n(.*?)\n\n/g },
+}
+
+/* Helpers */
+
+const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`
+const T = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+function addItem(list, level, type, text) {
+	if (level === 0) {
+		if (list.type === type) list.children.push({ text, nested: [] })
+		return
+	}
+	const listItem = list.children.at(-1)
+	const nestedList = listItem.nested.at(-1)
+	if (!nestedList || level === 1 && nestedList.type !== type) 
+		listItem.nested.push({
+			type,
+			children: [],
+		})
+	addItem(listItem.nested.at(-1), level - 1, type, text)
+}
+function generateList(list) {
+  const listElement = document.createElement(list.type);
+  generateListItems(list.children, listElement);
+  return listElement;
+}
+function generateListItems(listItems, parentElement) {
+  for (const listItem of listItems) {
+    const listItemElement = document.createElement('li');
+    listItemElement.textContent = listItem.text;
+    parentElement.appendChild(listItemElement);
+    listItem.nested.forEach(list => {
+    	listItemElement.appendChild(generateList(list))
+    })
+  }
+}
+function liquidTag(tag, text) {
+	switch (tag) {
+		case 'codepen':
+			return `<iframe height="600" src="https://codepen.io/${text.replace('/pen/', '/embed/')}?height=600&amp;default-tab=result&amp;embed-version=2" scrolling="no" frameborder="no" allowtransparency="true" loading="lazy" style="width: 100%;"></iframe>\r\n`
+		case 'jsfiddle':
+			return `<iframe width="100%" height="300" src="https://jsfiddle.net/${text}/embedded/" allowfullscreen="allowfullscreen" allowpaymentrequest frameborder="0"></iframe>\r\n`
+		case 'youtube':
+			return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${text}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\r\n`
+	}
 }

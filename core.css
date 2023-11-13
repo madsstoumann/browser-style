@@ -136,7 +136,27 @@
 :where(pre, tr:nth-of-type(even)) {
 	background-color: var(--GrayCanvas);
 }
-:where(table) { border-collapse: collapse; }
+:where(table) {
+	border-collapse: collapse;
+	/* Column-alignment, if you need to support more than 8 columns, add more */
+	&[data-c1~="center"] tr > *:nth-of-type(1),
+	&[data-c2~="center"] tr > *:nth-of-type(2),
+	&[data-c3~="center"] tr > *:nth-of-type(3),
+	&[data-c4~="center"] tr > *:nth-of-type(4),
+	&[data-c5~="center"] tr > *:nth-of-type(5),
+	&[data-c6~="center"] tr > *:nth-of-type(6),
+	&[data-c7~="center"] tr > *:nth-of-type(7),  
+	&[data-c8~="center"] tr > *:nth-of-type(8) { text-align: center; }
+
+	&[data-c1~="end"] tr > *:nth-of-type(1),
+	&[data-c2~="end"] tr > *:nth-of-type(2),
+	&[data-c3~="end"] tr > *:nth-of-type(3),
+	&[data-c4~="end"] tr > *:nth-of-type(4),
+	&[data-c5~="end"] tr > *:nth-of-type(5),
+	&[data-c6~="end"] tr > *:nth-of-type(6),
+	&[data-c7~="end"] tr > *:nth-of-type(7)
+	&[data-c8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+}
 :where(td) { border: 1px solid; }
 :where(td, th) {
 	font-size: smaller;
