@@ -156,7 +156,7 @@ node.style.setProperty(`--delay-seconds`, `${seconds}s`);
 
 Now, we have a **working digital CSS clock** — compare it with the other methods here:
 
-{% codepen stoumann/pen/eYbJaqV %}
+{% codepen https://codepen.io/stoumann/pen/eYbJaqV %}
 
 If you inspect the markup in Dev Tools, you'll see that the CSS-version isn't re-writing DOM-content.
 
@@ -166,7 +166,7 @@ If you inspect the markup in Dev Tools, you'll see that the CSS-version isn't re
 
 After this, I decided to revisit an old Codepen of mine, a multilanguage countdown, and make a CSS-only-version:
 
-{% codepen stoumann/pen/yLGJPZK %}
+{% codepen https://codepen.io/stoumann/pen/yLGJPZK %}
 
 You can play around with the `locale` in the JS-code, if you want it in another language:
 
@@ -205,7 +205,7 @@ document.addEventListener('visibilitychange', () => {
 
 As a bonus – here's an analog clock, I did a while ago:
 
-{% codepen stoumann/pen/wvxOQKo %}
+{% codepen https://codepen.io/stoumann/pen/wvxOQKo %}
 
 ---
 
