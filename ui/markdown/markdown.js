@@ -2,6 +2,7 @@
  * @function htmlToMarkdown
  * @description Transforms HTML to Markdown
  * @param {String} html
+ * @returns {String} html
  */
 export function htmlToMarkdown(html) {
 	const obj = {
@@ -55,6 +56,7 @@ export function htmlToMarkdown(html) {
  * @function markdownToHtml
  * @description Transforms a Markdown-string to HTML
  * @param {String} str
+ * @returns {String} str
  */
 export function markdownToHtml(str) {
 	const arr = [
@@ -81,12 +83,13 @@ export function markdownToHtml(str) {
 						}
 						return result
 					}
-					addItem(result.at(-1), level, type, text)
+					A(result.at(-1), level, type, text)
 					return result
 				}, [])
-				return `${generateList(tree[0]).outerHTML}\r\n`
+				return `${G(tree[0]).outerHTML}\r\n`
 			}
 		},
+
 		/* <table> */
 		{ re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
 			const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
@@ -108,28 +111,33 @@ export function markdownToHtml(str) {
 			}</table>\r\n`
 		}},
 		{ re: /\n>(.*)/g, tg: 'blockquote' },
+
 		/* <pre> */
 		{
 			re: /\n((```|~~~)(.*)\n?([^]*?)\n?\2|((    .*?\n)+))/g,
 			fn: (_match, _g0, _g1, lang, text) => {
-				return `<pre${lang ? ` class="highlight ${lang}"`:''}>${removeTags(text)}</pre>\r\n`
+				return `<pre${lang ? ` class="highlight ${lang}"`:''}>${R(text)}</pre>\r\n`
 			}
 		},
+
 		/* <h1>-<h6> */
 		{
 			re: /(^#{1,6}) (.*)\n/gm,
 			fn: (_match, tag, text) => `<h${tag.length}>${text}</h${tag.length}>\r\n`
 		},
+
 		/* <img> */
 		{ re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
+
 		/* <a> */
 		{ re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
 
+		/* inline semantic elements */
 		{ re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
 		{ re: /\*\*(.*?)\*\*/g, tg: 'strong' },
 		{ re: /\*(.*?)\*/g, tg: 'em' },
 		{ re: /(  \n)/g, fn: () => `<br>` },
-		{ re: /`(.*?)`/g, fn: (_match, text) => `<code>${removeTags(text)}</code>` },
+		{ re: /`(.*?)`/g, fn: (_match, text) => `<code>${R(text)}</code>` },
 		{ re: /==(.*)==/g, tg: 'mark' },
 		{ re: /\^\^(.*)\^\^/g, tg: 'sup' },
 		{ re: /\~\~(.*)\~\~/g, tg: 's' },
@@ -138,8 +146,12 @@ export function markdownToHtml(str) {
 		{ re: /--(.*)--/g, tg: 'sub' },
 		{ re: /__(.*)__/g, tg: 'u' },
 		{ re: /_(.*?)_/g, tg: 'em' },
+
+		/* <p> */
 		{ re: /\n\n(.*?)\n\n/g, tg: 'p' },
-		{ re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => liquidTag(tag, text) },
+
+		/* <iframe>: liquid tags */
+		{ re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => L(tag, text) },
 	]
 
 	arr.forEach(obj => {
@@ -155,9 +167,16 @@ export function markdownToHtml(str) {
 ---------
 */
 
-const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`
-
-const addItem = (list, level, type, text) => {
+/**
+ * @function A
+ * @description Adds an item to a list
+ * @param {Node} list
+ * @param {String} level
+ * @param {String} type [ol|ul]
+ * @param {String} text
+ * @returns {String}
+ */
+const A = (list, level, type, text) => {
 	if (level === 0) {
 		if (list.type === type) list.children.push({ text, nested: [] })
 		return
@@ -169,24 +188,55 @@ const addItem = (list, level, type, text) => {
 			type,
 			children: [],
 		})
-	addItem(listItem.nested.at(-1), level - 1, type, text)
+	A(listItem.nested.at(-1), level - 1, type, text)
 }
-const generateList = (list) => {
+
+/**
+ * @function G
+ * @description Generates a list
+ * @param {Node} list
+ */
+const G = (list) => {
   const listElement = document.createElement(list.type);
-  generateListItems(list.children, listElement);
+  GL(list.children, listElement);
   return listElement;
 }
-const generateListItems = (listItems, parentElement) => {
+
+/**
+ * @function GL
+ * @description Generates list-items
+ * @param {NodeList} listItems
+ * @param {Node} parentElement
+ */
+const GL = (listItems, parentElement) => {
   for (const listItem of listItems) {
     const listItemElement = document.createElement('li');
     listItemElement.textContent = listItem.text;
     parentElement.appendChild(listItemElement);
     listItem.nested.forEach(list => {
-    	listItemElement.appendChild(generateList(list))
+    	listItemElement.appendChild(G(list))
     })
   }
 }
-const liquidTag = (tag, text) => {
+
+/**
+ * @function H
+ * @description Wraps a (markdown) prefix and optional suffi around a node. If suffix exists and equals `0`, it will be ignored
+ * @param {String} prefix
+ * @param {Node} node
+ * @param {String} suffix [optional, defaults to `prefix`]
+ * @returns {String}
+ */
+const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`
+
+/**
+ * @function L
+ * @description Based on Jekylls Liquid tags. Format is: {% tag text %}
+ * @param {String} tag
+ * @param {String} text
+ * @returns {String} iframe
+ */
+const L = (tag, text) => {
 	let allow = '', w = `100%`, h, src;
 	switch (tag) {
 		case 'codepen':
@@ -201,9 +251,16 @@ const liquidTag = (tag, text) => {
 			allow = 'autoplay; encrypted-media; picture-in-picture'
 			w = `560`
 			h = `315`
-			src = `www.youtube.com/embed/${text}`
+			src = `youtube.com/embed/${text}`
 			break;
 		}
 	return `<iframe width="${w}" height="${h}" src="https://${src}" loading="lazy"${allow ? ` allow="${allow}"`:''} allowfullscreen></iframe>\r\n`
 }
-const removeTags = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+/**
+ * @function R
+ * @description Replaces HTML-tags in a string with &lt; and &gt;
+ * @param {String} s
+ * @returns {String} s
+ */
+const R = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
