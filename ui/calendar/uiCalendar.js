@@ -18,10 +18,10 @@ export default function uiCalendar(node, args = {}) {
 		const numOfDays = new Date(year, month + 1, 0).getDate();
 		const renderToday = (year === config.today.year) && (month === config.today.month);
 
-		return `<div class="${config.class}" data-firstday="${config.info.firstDay}">
+		return `<div class="${config.class}">
 			<time datetime="${year}-${(pad(month))}">${new Intl.DateTimeFormat(locale, { month: 'long'}).format(date)} <i>${year}</i></time>
 			<ul>${weekdays(config.info.firstDay,locale).map(name => `<li><abbr title="${name.long}">${name.short}</abbr></li>`).join('')}</ul>
-			<ol>
+			<ol data-firstday="${config.info.firstDay}">
 			${[...Array(numOfDays).keys()].map(i => {
 				const cur = new Date(year, month, i + 1);
 				let day = cur.getDay(); if (day === 0) day = 7;
