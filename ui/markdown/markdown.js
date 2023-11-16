@@ -5,51 +5,86 @@
  * @returns {String} html
  */
 export function htmlToMarkdown(html) {
-	const obj = {
-		a: n => `[${n.innerHTML}](${n.href})`,
-		b: n => H('**', n),
-		blockquote: n => H('\r\n> ', n, '\r\n'),
-		br: () => `  \r\n`,
-		code: n => H('`', n),
-		del: n => H('---', n),
-		em: n => H('*', n),
-		h1: n => H('# ', n, 0),
-		h2: n => H('## ', n, 0),
-		h3: n => H('### ', n, 0),
-		h4: n => H('#### ', n, 0),
-		h5: n => H('##### ', n, 0),
-		h6: n => H('###### ', n, 0),
-		hr: () => `\r\n---\r\n`,
-		i: n => H('*', n),
-		img: n => `![${n.alt}](${n.src})`,
-		mark: n => H('==', n),
-		ol: n => `\r\n${[...n.querySelectorAll('li')].map((li, index) => `\r\n${index+1}. ${li.innerHTML}`).join('')}\r\n`,
-		p: n => H('\r\n\r\n', n),
-		pre: n => H('\r\n```\r\n', n),
-		s: n => H('~~', n),
-		strong: n => H('**', n),
-		style: n => ``,
-		sub: n => H('--', n),
-		sup: n => H('^^', n),
-		/* TODO! read dataset of table and create alignment-separator */
-		table: n => `${[...n.querySelectorAll('tr')].map((row, index) => {
-			const rowContent = `|${[...row.cells].map(td => td.textContent).join('|')}|`
-			const separator = `|${[ ...Array(row.cells.length).keys() ].map(() => '---').join('|')}|`
-			return index === 1 ? separator + '\r\n' + rowContent : rowContent }
-		).join('\r\n')}\r\n`,
-		u: n => H('__', n),
-		ul: n => `\r\n${[...n.querySelectorAll('li')].map((li) => H('\r\n - ', li, 0)).join('')}\r\n`
-	}
-
-	const parser = new DOMParser();
-	const doc = parser.parseFromString(html, 'text/html');
-	Object.keys(obj).forEach(tag => {
-		[...doc.body.getElementsByTagName(tag)].forEach(node => {
-			try { node.innerHTML = obj[tag](node) } 
-			catch (err) { console.log(err) }
+	const parser = new DOMParser()
+	const doc = parser.parseFromString(html, 'text/html')
+	Object.keys(objHTML).forEach((tag) => {
+		;[...doc.body.getElementsByTagName(tag)].forEach((node) => {
+			try {
+				node.innerHTML = objHTML[tag](node)
+			} catch (err) {
+				console.log(err)
+			}
 		})
 	})
 	return doc.body.textContent.trim()
+}
+
+/**
+ * @function addHtmlRule
+ * @description Adds a rule to the objHTML-object
+ * @param {Object} rule
+ */
+export function addHtmlRule(rule) {
+	objHTML[rule.tag] = rule.fn
+}
+
+/**
+ * @function remHtmlRule
+ * @description Removes a rule from the objHTML-object
+ * @param {String} tag
+ */
+export function remHtmlRule(tag) {
+	delete objHTML[tag]
+}
+
+/**
+ * @const objHTML
+ * @description Object with HTML-tags as keys and Markdown-functions as values
+ */
+const objHTML = {
+	a: (n) => `[${n.innerHTML}](${n.href})`,
+	b: (n) => md('**', n),
+	blockquote: (n) => md('\r\n> ', n, '\r\n'),
+	br: () => `  \r\n`,
+	code: (n) => md('`', n),
+	del: (n) => md('---', n),
+	em: (n) => md('*', n),
+	h1: (n) => md('# ', n, 0),
+	h2: (n) => md('## ', n, 0),
+	h3: (n) => md('### ', n, 0),
+	h4: (n) => md('#### ', n, 0),
+	h5: (n) => md('##### ', n, 0),
+	h6: (n) => md('###### ', n, 0),
+	hr: () => `\r\n---\r\n`,
+	i: (n) => md('*', n),
+	iframe: (n) => `{% ${n.dataset.tag} ${n.dataset.text} %}`,
+	img: (n) => `![${n.alt}](${n.src})`,
+	mark: (n) => md('==', n),
+	ol: (n) => list(n),
+	p: (n) => md('\r\n\n\n', n),
+	pre: (n) => md('\r\n```\r\n', n),
+	s: (n) => md('~~', n),
+	strong: (n) => md('**', n),
+	style: () => ``,
+	sub: (n) => md('--', n),
+	sup: (n) => md('^^', n),
+	table: (n) =>
+		`${[...n.querySelectorAll('tr')]
+			.map((row, index) => {
+				const rowContent = `|${[...row.cells]
+					.map((td) => td.textContent)
+					.join('|')}|`
+				const separator = `|${[...Array(row.cells.length).keys()]
+					.map((index) => {
+						const align = n.getAttribute(`data-c${index + 1}`) || 'start'
+						return align === 'start' ? '---' : align === 'end' ? '---:' : ':---:'
+					})
+					.join('|')}|`
+				return index === 1 ? separator + '\r\n' + rowContent : rowContent
+			})
+			.join('\r\n')}\r\n\n`,
+	u: (n) => md('__', n),
+	ul: (n) => list(n)
 }
 
 /**
@@ -59,16 +94,58 @@ export function htmlToMarkdown(html) {
  * @returns {String} str
  */
 export function markdownToHtml(str) {
-	const arr = [
-		/* <ol> || <ul> */
-		{
-			re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm, fn: (list) => {
-				const tree = list.trim().split('\n').reduce((result, li) => {
+	objMarkdown.forEach((obj) => {
+		try {
+			str = str.replaceAll(
+				obj.re,
+				obj.fn ||
+					((_match, text) => (text ? `<${obj.tg}>${text}</${obj.tg}>` : ''))
+			)
+		} catch (err) {
+			console.log(err)
+		}
+	})
+	return str
+}
+
+/**
+ * @function addMdRule
+ * @description Adds a rule to the objMarkdown-array
+ * @param {Object} rule
+ * @param {Number} index [optional, defaults to `0`]
+ */
+export function addMdRule(rule, index) {
+	objMarkdown.splice(index, 0, rule)
+}
+
+/**
+ * @function remMdRule
+ * @description Removes a rule from the objMarkdown-array
+ * @param {String} id
+ */
+export function remMdRule(id) {
+	const index = objMarkdown.findIndex((obj) => obj.id === id)
+	if (index > -1) objMarkdown.splice(index, 1)
+}
+
+/**
+ * @const objMarkdown
+ * @description Array with Markdown-rules
+ */
+const objMarkdown = [
+	{
+		id: 'list',
+		re: /^[0-9-+*]+[ .][\s\S]*?\n{2}/gm,
+		fn: (list) => {
+			const tree = list
+				.trim()
+				.split('\n')
+				.reduce((result, li) => {
 					const length = li.length
 					const tabs = li.replace(/\t/g, '')
 					const type = parseInt(tabs.charAt(0)) > 0 ? 'ol' : 'ul'
 					const level = length - tabs.length
-					const text = li.replace(/^([\t]+)?[\d\*\+-][. ]/gm, '').trim()
+					const text = li.replace(/^([\t]+)?[\d*+-][. ]/gm, '').trim()
 
 					if (level === 0) {
 						const last = result.at(-1)
@@ -78,88 +155,99 @@ export function markdownToHtml(str) {
 						} else {
 							result.push({
 								type,
-								children: [item]
+								children: [item],
 							})
 						}
 						return result
 					}
-					A(result.at(-1), level, type, text)
+					addItem(result.at(-1), level, type, text)
 					return result
 				}, [])
-				return `${G(tree[0]).outerHTML}\r\n`
-			}
+			return `${genList(tree[0]).outerHTML}\r\n`
 		},
+	},
+	{
+		id: 'table',
+		re: /((\|.*?\|\n)+)/gs,
+		fn: (_match, table) => {
+			const separator = table.match(/^.*\n( *\|( *:?-+:?-+:? *\|)* *\n|)/)[1]
+			const align =
+				separator
+					?.split('|')
+					.slice(1, -1)
+					.map((str, index) => {
+						const c = str.trim()
+						const a =
+							c.at(0) === ':' && c.at(-1) === ':'
+								? 'center'
+								: c.at(0) === ':'
+								? 'start'
+								: c.at(-1) === ':'
+								? 'end'
+								: 'start'
+						return ` data-c${index + 1}="${a}"`
+					})
+					.join(' ') || ''
 
-		/* <table> */
-		{ re: /((\|.*?\|\n)+)/gs, fn: (_match, table) => {
-			const separator = table.match(/^.*\n( *\|( *\:?-+\:?-+\:? *\|)* *\n|)/)[1];
-			const align = separator?.split('|').slice(1, -1).map((str, index) => {
-				const c = str.trim()
-				const a = c.at(0) === ':' && c.at(-1) === ':' ? 'center'
-				: c.at(0) === ':' ? 'start'
-				: c.at(-1) === ':' ? 'end'
-				: 'start';
-				return ` data-c${index + 1}="${a}"`
-			}).join(' ') || ''
-
-			return `<table${align}>${
-				table.replace(/.*\n/g, (row, rowIndex) => row === separator ? '' :
-				`<tr>${
-					row.replace(/\||(.*?[^\\])\|/g, (_match, cell, cellIndex) => cellIndex ? 
-					separator && !rowIndex ? `<th>${cell}</th>` : `<td>${cell}</td>` : '')
-				}</tr>`)
-			}</table>\r\n`
-		}},
-		{ re: /\n>(.*)/g, tg: 'blockquote' },
-
-		/* <pre> */
-		{
-			re: /\n((```|~~~)(.*)\n?([^]*?)\n?\2|((    .*?\n)+))/g,
-			fn: (_match, _g0, _g1, lang, text) => {
-				return `<pre${lang ? ` class="highlight ${lang}"`:''}>${R(text)}</pre>\r\n`
-			}
+			return `<table${align}>${table.replace(/.*\n/g, (row, rowIndex) =>
+				row === separator
+					? ''
+					: `<tr>${row.replace(
+							/\||(.*?[^\\])\|/g,
+							(_match, cell, cellIndex) =>
+								cellIndex
+									? separator && !rowIndex
+										? `<th>${cell}</th>`
+										: `<td>${cell}</td>`
+									: ''
+						)}</tr>`
+			)}</table>\r\n`
 		},
-
-		/* <h1>-<h6> */
-		{
-			re: /(^#{1,6}) (.*)\n/gm,
-			fn: (_match, tag, text) => `<h${tag.length}>${text}</h${tag.length}>\r\n`
+	},
+	{ re: /\n>(.*)/g, tg: 'blockquote' },
+	{
+		id: 'pre',
+		re: /\n((```|~~~)(.*)\n?([^]*?)\n?\2|(( {4}.*?\n)+))/g,
+		fn: (_match, _g0, _g1, lang, text) => {
+			return `<pre${lang ? ` class="highlight ${lang}"` : ''}>${rpTags(
+				text
+			)}</pre>\r\n`
 		},
-
-		/* <img> */
-		{ re: /!\[(.*)\]\((.*)\)/g, fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n` },
-
-		/* <a> */
-		{ re: /\[(.*)\]\((.*)\)/g, fn: (_match, title, href) => `<a href="${href}">${title}</a>` },
-
-		/* inline semantic elements */
-		{ re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>` },
-		{ re: /\*\*(.*?)\*\*/g, tg: 'strong' },
-		{ re: /\*(.*?)\*/g, tg: 'em' },
-		{ re: /(  \n)/g, fn: () => `<br>` },
-		{ re: /`(.*?)`/g, fn: (_match, text) => `<code>${R(text)}</code>` },
-		{ re: /==(.*)==/g, tg: 'mark' },
-		{ re: /\^\^(.*)\^\^/g, tg: 'sup' },
-		{ re: /\~\~(.*)\~\~/g, tg: 's' },
-		{ re: /---(.*)---/g, tg: 'del' },
-		{ re: /---/g, fn: () => `<hr>\r\n` },
-		{ re: /--(.*)--/g, tg: 'sub' },
-		{ re: /__(.*)__/g, tg: 'u' },
-		{ re: /_(.*?)_/g, tg: 'em' },
-
-		/* <p> */
-		{ re: /\n\n(.*?)\n\n/g, tg: 'p' },
-
-		/* <iframe>: liquid tags */
-		{ re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => L(tag, text) },
-	]
-
-	arr.forEach(obj => {
-		try { str = str.replaceAll(obj.re, obj.fn || ((_match, text) => text ? `<${obj.tg}>${text}</${obj.tg}>`:'')) } 
-		catch (err) { console.log(err) }
-	})
-	return str
-}
+	},
+	{
+		id: 'headings',
+		re: /(^#{1,6}) (.*)\n/gm,
+		fn: (_match, tag, text) => `<h${tag.length}>${text}</h${tag.length}>\r\n`,
+	},
+	{
+		id: 'img',
+		re: /!\[(.*)\]\((.*)\)/g,
+		fn: (_match, alt, src) => `\r\n<img src="${src}" alt="${alt}">\r\n`,
+	},
+	{
+		id: 'a',
+		re: /\[(.*)\]\((.*)\)/g,
+		fn: (_match, title, href) => `<a href="${href}">${title}</a>`,
+	},
+	{ 
+		id: 'bolditalic',
+		re: /\*\*\*(.*?)\*\*\*/g, fn: (_match, text) => `<b><i>${text}</i></b>`
+	},
+	{ id: 'strong', re: /\*\*(.*?)\*\*/g, tg: 'strong' },
+	{ id: 'i', re: /\*(.*?)\*/g, tg: 'i' },
+	{ id: 'br', re: /( {2}\n)/g, fn: () => `<br>` },
+	{ id: 'code', re: /`(.*?)`/g, fn: (_match, text) => `<code>${rpTags(text)}</code>` },
+	{ id: 'mark', re: /==(.*)==/g, tg: 'mark' },
+	{ id: 'sup', re: /\^\^(.*)\^\^/g, tg: 'sup' },
+	{ id: 's', re: /~~(.*)~~/g, tg: 's' },
+	{ id: 'del', re: /---(.*)---/g, tg: 'del' },
+	{ id: 'hr', re: /---/g, fn: () => `<hr>\r\n` },
+	{ id: 'sub', re: /--(.*)--/g, tg: 'sub' },
+	{ id: 'u', re: /__(.*)__/g, tg: 'u' },
+	{ id: 'em', re: /_(.*?)_/g, tg: 'em' },
+	{ id: 'p', re: /\n\n(.*?)\n\n/g, tg: 'p' },
+	{ id: 'iframe', re: /{% (.*)\s(.*) %}/gm, fn: (_match, tag, text) => iframe(tag, text) },
+]
 
 /*
 ---------
@@ -168,7 +256,7 @@ export function markdownToHtml(str) {
 */
 
 /**
- * @function A
+ * @function addItem
  * @description Adds an item to a list
  * @param {Node} list
  * @param {String} level
@@ -176,91 +264,118 @@ export function markdownToHtml(str) {
  * @param {String} text
  * @returns {String}
  */
-const A = (list, level, type, text) => {
+const addItem = (list, level, type, text) => {
 	if (level === 0) {
 		if (list.type === type) list.children.push({ text, nested: [] })
 		return
 	}
 	const listItem = list.children.at(-1)
 	const nestedList = listItem.nested.at(-1)
-	if (!nestedList || level === 1 && nestedList.type !== type) 
+	if (!nestedList || (level === 1 && nestedList.type !== type))
 		listItem.nested.push({
 			type,
 			children: [],
 		})
-	A(listItem.nested.at(-1), level - 1, type, text)
+	addItem(listItem.nested.at(-1), level - 1, type, text)
 }
 
 /**
- * @function G
+ * @function genList
  * @description Generates a list
  * @param {Node} list
  */
-const G = (list) => {
-  const listElement = document.createElement(list.type);
-  GL(list.children, listElement);
-  return listElement;
+const genList = (list) => {
+	const listElement = document.createElement(list.type)
+	genListItems(list.children, listElement)
+	return listElement
 }
 
 /**
- * @function GL
+ * @function genListItems
  * @description Generates list-items
  * @param {NodeList} listItems
  * @param {Node} parentElement
  */
-const GL = (listItems, parentElement) => {
-  for (const listItem of listItems) {
-    const listItemElement = document.createElement('li');
-    listItemElement.textContent = listItem.text;
-    parentElement.appendChild(listItemElement);
-    listItem.nested.forEach(list => {
-    	listItemElement.appendChild(G(list))
-    })
-  }
+const genListItems = (listItems, parentElement) => {
+	for (const listItem of listItems) {
+		const listItemElement = document.createElement('li')
+		listItemElement.textContent = listItem.text
+		parentElement.appendChild(listItemElement)
+		listItem.nested.forEach((list) => {
+			listItemElement.appendChild(genList(list))
+		})
+	}
 }
 
 /**
- * @function H
- * @description Wraps a (markdown) prefix and optional suffi around a node. If suffix exists and equals `0`, it will be ignored
- * @param {String} prefix
- * @param {Node} node
- * @param {String} suffix [optional, defaults to `prefix`]
- * @returns {String}
- */
-const H = (prefix, node, suffix) => `${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix }`
-
-/**
- * @function L
- * @description Based on Jekylls Liquid tags. Format is: {% tag text %}
+ * @function iframe
+ * @description Based on Jekylls Liquid tags. Format is: {% tag text %}, example: {% youtube WK5fHV3Bm6M %}
  * @param {String} tag
  * @param {String} text
  * @returns {String} iframe
  */
-const L = (tag, text) => {
-	let allow = '', w = `100%`, h, src;
+const iframe = (tag, text) => {
+	let allow = '',
+		w = `100%`,
+		h,
+		src
 	switch (tag) {
 		case 'codepen':
 			h = `600`
-			src = `codepen.io/${text.replace('/pen/', '/embed/')}?height=${h}&amp;default-tab=result&amp;embed-version=2`
-			break;
+			src = `codepen.io/${text.replace(
+				'/pen/',
+				'/embed/'
+			)}?height=${h}&amp;default-tab=result&amp;embed-version=2`
+			break
 		case 'jsfiddle':
 			h = `300`
 			src = `jsfiddle.net/${text}/embedded/`
-			break;
+			break
 		case 'youtube':
 			allow = 'autoplay; encrypted-media; picture-in-picture'
 			w = `560`
 			h = `315`
 			src = `youtube.com/embed/${text}`
-			break;
-		}
-	return `<iframe width="${w}" height="${h}" src="https://${src}" loading="lazy"${allow ? ` allow="${allow}"`:''} allowfullscreen></iframe>\r\n`
+			break
+	}
+	return `<iframe width="${w}" height="${h}" src="https://${src}" loading="lazy"${
+		allow ? ` allow="${allow}"` : ''
+	} allowfullscreen data-tag="${tag}" data-text="${text}"></iframe>\r\n`
 }
 
 /**
- * @function R
+ * @function list
+ * @description Generates a list
+ * @param {Node} olul
+ * @param {Number} level [optional, defaults to `0`]
+ */
+function list(olul, level = 0) {
+	return `\r\n${[...olul.children]
+		.map((li, index) => {
+			const prefix =
+				olul.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `;
+			return li.children.length ? 
+				'' /*`\r\n${list(li, level + 1)}` */ : 
+				`${'\t'.repeat(level)}${prefix}${li.innerHTML}\r\n`
+		})
+		.join('')}\r\n`;
+}
+
+/**
+ * @function md
+ * @description Wraps a (markdown) prefix and optional suffix around a node. If suffix exists and equals `0`, it will be ignored
+ * @param {String} prefix
+ * @param {Node} node
+ * @param {String} suffix [optional, defaults to `prefix`]
+ * @returns {String}
+ */
+const md = (prefix, node, suffix) =>
+	`${prefix}${node.innerHTML}${suffix === 0 ? '' : suffix || prefix}`
+
+/**
+ * @function rpTags
  * @description Replaces HTML-tags in a string with &lt; and &gt;
  * @param {String} s
  * @returns {String} s
  */
-const R = s => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+const rpTags = (s) => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
