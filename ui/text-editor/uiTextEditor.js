@@ -91,6 +91,9 @@ export default function uiTextEditor(node, args) {
 		}
 	})
 
+	// const bgColor = window.getComputedStyle(editable).backgroundColor
+	// console.log('bgColor', bgColor)
+
 	editable.addEventListener('keydown', () => {
 		// const selection = window.getSelection()
 		// const node = selection.baseNode.parentNode
@@ -100,6 +103,8 @@ export default function uiTextEditor(node, args) {
 
 		// const list = document.queryCommandState("insertOrderedList");
 		// console.log('list', list)
+		// const backColor = document.queryCommandValue("backColor");
+		// console.log('backColor', backColor !== bgColor)
 	})
 
 	if (settings.htmlToggle) {
