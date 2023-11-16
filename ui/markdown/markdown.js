@@ -8,7 +8,8 @@ export function htmlToMarkdown(html) {
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
   Object.keys(objHTML).forEach((tag) => {
-    ;[...doc.body.getElementsByTagName(tag)].forEach((node) => {
+    const selector = tag === 'ol' ? ':not(li)>ol' : tag === 'ul' ? ':not(li)>ul' : tag
+    ;[...doc.body.querySelectorAll(selector)].forEach((node) => {
       try {
         node.innerHTML = objHTML[tag](node)
       } catch (err) {
@@ -60,8 +61,7 @@ const objHTML = {
   iframe: (n) => `{% ${n.dataset.tag} ${n.dataset.text} %}`,
   img: (n) => `![${n.alt}](${n.src})`,
   mark: (n) => md('==', n),
-  ol: (n) => olul(n),
-  p: (n) => md('\r\n\n\n', n),
+  ol: (n) => list(n),
   pre: (n) => md('\r\n```\r\n', n),
   s: (n) => md('~~', n),
   strong: (n) => md('**', n),
@@ -88,7 +88,8 @@ const objHTML = {
       })
       .join('\r\n')}\r\n\n`,
   u: (n) => md('__', n),
-  ul: (n) => olul(n),
+  ul: (n) => list(n),
+  p: (n) => md('\r\n\n\n', n),
 }
 
 /**
@@ -355,19 +356,17 @@ const iframe = (tag, text) => {
 }
 
 /**
- * @function olul
+ * @function list
  * @description Generates a list
- * @param {Node} list
+ * @param {Node} olul
  * @param {Number} level [optional, defaults to `0`]
  */
-function olul(list, level = 0) {
-  return `\r\n${[...list.children]
+function list(olul, level = 0) {
+  return `\r\n${[...olul.children]
     .map((li, index) => {
-      const prefix =
-        list.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `
-      return li.children.length
-        ? `\r\n${olul(li, level + 1)}`
-        : `${'\t'.repeat(level)}${prefix}${li.innerHTML}\r\n`
+      const prefix = olul.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `
+      return `${'\t'.repeat(level)}${prefix}${li.innerHTML}\r\n` +
+      (li.children.length ? `${list(li, level + 1)}` : '')
     })
     .join('')}\r\n`
 }
