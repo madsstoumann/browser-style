@@ -20,6 +20,7 @@
 		padding: var(--ui-toolbar-bdw);
 		position: relative;
 		& :is(button, select) {
+			&.--active { color: var(--AccentColor); }
 			&:first-of-type { border-radius: var(--ui-toolbar-bdrs) 0 0 var(--ui-toolbar-bdrs); }
 			&:last-of-type { border-radius: 0 var(--ui-toolbar-bdrs) var(--ui-toolbar-bdrs) 0; }
 			&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }

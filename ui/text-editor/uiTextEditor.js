@@ -15,6 +15,8 @@ export default function uiTextEditor(node, args) {
 	editable.className = settings.editableClass;
 	editable.contentEditable = true;
 
+	const toolbar = document.createElement('form');
+
 	if (node.innerHTML.trim().length) {
 		editable.innerHTML = node.innerHTML;
 		node.innerHTML = '';
@@ -28,7 +30,7 @@ export default function uiTextEditor(node, args) {
 	const toolbarItems = settings?.toolbarItems.split('|') || [];
 
 	const renderCommand = obj => 
-		`<button type="button" data-command="${
+		`<button type="button" name="${obj.command}" data-command="${
 			obj.inputType ||obj.command}"${
 			obj.prompt ? ` data-prompt="${obj.prompt}"` :''}${
 			obj.value ? ` data-value="${obj.value}"` :''}>${
@@ -44,7 +46,7 @@ export default function uiTextEditor(node, args) {
 
 	if (toolbarItems.length) {
 
-		const toolbar = document.createElement('nav');
+		
 		toolbar.className = settings.toolbarClass;
 		node.append(toolbar)
 
@@ -88,6 +90,12 @@ export default function uiTextEditor(node, args) {
 			return
 		}
 	})
+
+	// editable.addEventListener('keydown', () => {
+	// 	const selection = window.getSelection()
+	// 	const node = selection.baseNode.parentNode
+	// 	toolbar.elements.bold.classList.toggle('--active', node.tagName === 'B')
+	// })
 
 	if (settings.htmlToggle) {
 		html.className = settings.htmlClass;
