@@ -91,11 +91,16 @@ export default function uiTextEditor(node, args) {
 		}
 	})
 
-	// editable.addEventListener('keydown', () => {
-	// 	const selection = window.getSelection()
-	// 	const node = selection.baseNode.parentNode
-	// 	toolbar.elements.bold.classList.toggle('--active', node.tagName === 'B')
-	// })
+	editable.addEventListener('keydown', () => {
+		// const selection = window.getSelection()
+		// const node = selection.baseNode.parentNode
+		// toolbar.elements.bold.classList.toggle('--active', node.tagName === 'B')
+		// const bold = document.queryCommandState("bold");
+		// console.log('bold', bold)
+
+		// const list = document.queryCommandState("insertOrderedList");
+		// console.log('list', list)
+	})
 
 	if (settings.htmlToggle) {
 		html.className = settings.htmlClass;
