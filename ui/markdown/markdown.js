@@ -60,7 +60,7 @@ const objHTML = {
 	iframe: (n) => `{% ${n.dataset.tag} ${n.dataset.text} %}`,
 	img: (n) => `![${n.alt}](${n.src})`,
 	mark: (n) => md('==', n),
-	ol: (n) => list(n),
+	ol: (n) => olul(n),
 	p: (n) => md('\r\n\n\n', n),
 	pre: (n) => md('\r\n```\r\n', n),
 	s: (n) => md('~~', n),
@@ -84,7 +84,7 @@ const objHTML = {
 			})
 			.join('\r\n')}\r\n\n`,
 	u: (n) => md('__', n),
-	ul: (n) => list(n)
+	ul: (n) => olul(n)
 }
 
 /**
@@ -344,18 +344,18 @@ const iframe = (tag, text) => {
 }
 
 /**
- * @function list
+ * @function olul
  * @description Generates a list
- * @param {Node} olul
+ * @param {Node} list
  * @param {Number} level [optional, defaults to `0`]
  */
-function list(olul, level = 0) {
-	return `\r\n${[...olul.children]
+function olul(list, level = 0) {
+	return `\r\n${[...list.children]
 		.map((li, index) => {
 			const prefix =
-				olul.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `;
+				list.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `;
 			return li.children.length ? 
-				'' /*`\r\n${list(li, level + 1)}` */ : 
+				`\r\n${olul(li, level + 1)}` : 
 				`${'\t'.repeat(level)}${prefix}${li.innerHTML}\r\n`
 		})
 		.join('')}\r\n`;
