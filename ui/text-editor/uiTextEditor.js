@@ -57,11 +57,15 @@ export default function uiTextEditor(node, args) {
 
 		/* Highlight toolbar buttons, based on caret-position / selection */
 		const highlight = commands.filter(command => command.highlight).map(command => command.command)
+		const highlightToggle = (command, node) => {
+			const isActive = document.queryCommandState(command)
+			node.classList.toggle(settings.toolbarItemActive, isActive)
+		}
+
 		editable.addEventListener('keydown', () => {
 			[...toolbar.elements].forEach(item => {
 				if (highlight.includes(item.dataset.command)) {
-					const isActive = document.queryCommandState(item.dataset.command)
-					item.classList.toggle(settings.toolbarItemActive, isActive)
+					highlightToggle(item.dataset.command, item)
 				}
 			})
 		})
@@ -70,7 +74,12 @@ export default function uiTextEditor(node, args) {
 			const node = e.target
 			const rule = commands.find(item => item.key === node.name)
 			if (!rule) return
-			rule && rule.fn ? rule.fn(node) : document.execCommand(rule.command, true, null)
+			if (rule && rule.fn) {
+				rule.fn(node)
+			} else {
+				document.execCommand(rule.command, true, null)
+				highlightToggle(rule.command, node)
+			}
 		})
 	}
 
