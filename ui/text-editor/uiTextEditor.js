@@ -5,17 +5,17 @@ export default function uiTextEditor(node, args) {
 		editableText: 'Type here...',
 		htmlClass: '',
 		htmlLabel: 'HTML',
-		htmlToggle: true,
-		inputTypes: 'deleteByContent,deleteByCut,deleteByDrag,deleteContentBackward,deleteContentForward,deleteEntireSoftLine,deleteHardLineBackward,deleteHardLineForward,deleteSoftLineBackward,deleteSoftLineForward,deleteWordBackward,deleteWordForward,formatBackColor,formatBold,formatFontColor,formatFontName,formatIndent,formatItalic,formatJustifyCenter,formatJustifyFull,formatJustifyLeft,formatJustifyRight,formatOutdent,formatRemove,formatSetBlockTextDirection,formatSetInlineTextDirection,formatStrikethrough,formatSubscript,formatSuperscript,formatUnderline,historyRedo,historyUndo,insertCompositionText,insertFromComposition,insertFromDrop,insertFromPaste,insertFromYank,insertHorizontalRule,insertLineBreak,insertLink,insertOrderedList,insertParagraph,insertReplacementText,insertText,insertTranspose,insertUnorderedList',
+		htmlToggle: false,
+		inputTypes: 'formatBold,formatItalic,formatUnderline',
 		toolbarClass: 'ui-toolbar',
-		toolbarItems: 'h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img,video|left,center,right,justify|link,unlink|remove|html'
+		toolbarInactive: '--inactive',
+		toolbarItemActive: '--active',
+		toolbarItems: 'b,i,u'
 	}, (typeof args === 'object') ? args : node.dataset || {})
 
 	const editable = document.createElement('div');
 	editable.className = settings.editableClass;
 	editable.contentEditable = true;
-
-	const toolbar = document.createElement('form');
 
 	if (node.innerHTML.trim().length) {
 		editable.innerHTML = node.innerHTML;
@@ -25,15 +25,13 @@ export default function uiTextEditor(node, args) {
 		editable.textContent = settings.editableText;
 	}
 
-	const html = document.createElement('textarea');
 	const inputTypes = settings?.inputTypes.split(',') || [];
 	const toolbarItems = settings?.toolbarItems.split('|') || [];
+	const toolbar = document.createElement('form');
 
 	const renderCommand = obj => 
-		`<button type="button" name="${obj.command}" data-command="${
-			obj.inputType ||obj.command}"${
-			obj.prompt ? ` data-prompt="${obj.prompt}"` :''}${
-			obj.value ? ` data-value="${obj.value}"` :''}>${
+		`<button type="button" name="${obj.key}"${
+			obj.highlight ? ` data-command="${obj.command}"` :''}>${
 			obj.icon ? renderIcon(obj.icon) : ''}
 		</button>`
 	
@@ -45,8 +43,6 @@ export default function uiTextEditor(node, args) {
 		}</select>`
 
 	if (toolbarItems.length) {
-
-		
 		toolbar.className = settings.toolbarClass;
 		node.append(toolbar)
 
@@ -56,30 +52,25 @@ export default function uiTextEditor(node, args) {
 			.map(entry => {
 				const obj = commands.find((item) => item.key === entry) || {}
 				return obj.options ? renderSelect(obj) : renderCommand(obj) + renderInput(obj)
-				
 			}).join('')}
 		</fieldset>`).join('')
 
+		/* Highlight toolbar buttons, based on caret-position / selection */
+		const highlight = commands.filter(command => command.highlight).map(command => command.command)
+		editable.addEventListener('keydown', () => {
+			[...toolbar.elements].forEach(item => {
+				if (highlight.includes(item.dataset.command)) {
+					const isActive = document.queryCommandState(item.dataset.command)
+					item.classList.toggle(settings.toolbarItemActive, isActive)
+				}
+			})
+		})
+
 		toolbar.addEventListener('click', e => {
 			const node = e.target
-			const data = node.dataset
-				switch (data.command) {
-					case 'color': {
-						if ("showPicker" in HTMLInputElement.prototype) {
-							node.nextElementSibling.showPicker()
-						}
-					}
-					break;
-					case 'html': {
-						html.hidden = !html.hidden
-						editable.contentEditable = html.hidden
-						html.hidden ? editable.innerHTML = html.value : html.value = editable.innerHTML
-					}
-					break;
-					default: {
-					document.execCommand(data.command, true, data.prompt ? prompt(data.prompt) : data.value || null)
-				}
-			}
+			const rule = commands.find(item => item.key === node.name)
+			if (!rule) return
+			rule && rule.fn ? rule.fn(node) : document.execCommand(rule.command, true, null)
 		})
 	}
 
@@ -91,23 +82,8 @@ export default function uiTextEditor(node, args) {
 		}
 	})
 
-	// const bgColor = window.getComputedStyle(editable).backgroundColor
-	// console.log('bgColor', bgColor)
-
-	editable.addEventListener('keydown', () => {
-		// const selection = window.getSelection()
-		// const node = selection.baseNode.parentNode
-		// toolbar.elements.bold.classList.toggle('--active', node.tagName === 'B')
-		// const bold = document.queryCommandState("bold");
-		// console.log('bold', bold)
-
-		// const list = document.queryCommandState("insertOrderedList");
-		// console.log('list', list)
-		// const backColor = document.queryCommandValue("backColor");
-		// console.log('backColor', backColor !== bgColor)
-	})
-
 	if (settings.htmlToggle) {
+		const html = document.createElement('textarea');
 		html.className = settings.htmlClass;
 		html.hidden = true;
 		node.append(html)
@@ -115,5 +91,16 @@ export default function uiTextEditor(node, args) {
 		html.addEventListener('input', () => {
 			editable.innerHTML = html.value
 		})
+
+		const htmlToggle = toolbar?.elements?.html
+		if (htmlToggle) {
+			htmlToggle.addEventListener('click', () => {
+				html.hidden = !html.hidden
+				editable.contentEditable = html.hidden
+				html.hidden ? editable.innerHTML = html.value : html.value = editable.innerHTML
+				htmlToggle.classList.toggle(settings.toolbarItemActive, !html.hidden)
+				toolbar.classList.toggle(settings.toolbarInactive, !html.hidden)
+			})
+		}
 	}
 }

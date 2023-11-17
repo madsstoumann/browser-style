@@ -15,3 +15,9 @@
 		outline-style: dotted;
 	}
 }
+.ui-toolbar.--inactive {
+	& fieldset > *:not([name="html"]) { 
+		opacity: .5;
+		pointer-events: none;
+	}
+}
