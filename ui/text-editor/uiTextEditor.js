@@ -6,6 +6,7 @@ export default function uiTextEditor(node, args) {
 		htmlClass: '',
 		htmlLabel: 'HTML',
 		htmlToggle: false,
+		htmlToggleName: 'html',
 		inputTypes: 'formatBold,formatItalic,formatUnderline',
 		toolbarClass: 'ui-toolbar',
 		toolbarInactive: '--inactive',
@@ -31,6 +32,7 @@ export default function uiTextEditor(node, args) {
 
 	const renderCommand = obj => 
 		`<button type="button" name="${obj.key}"${
+			obj.title ? ` title="${obj.title}"` : ''}${
 			obj.highlight ? ` data-command="${obj.command}"` :''}>${
 			obj.icon ? renderIcon(obj.icon) : ''}
 		</button>`
@@ -58,6 +60,7 @@ export default function uiTextEditor(node, args) {
 		/* Highlight toolbar buttons, based on caret-position / selection */
 		const highlight = commands.filter(command => command.highlight).map(command => command.command)
 		const highlightToggle = (command, node) => {
+			if (node.name === settings.htmlToggleName) return
 			const isActive = document.queryCommandState(command)
 			node.classList.toggle(settings.toolbarItemActive, isActive)
 		}

@@ -8,6 +8,7 @@
 		color-scheme: dark;
 		font-family: var(--ff-mono);
 		font-size: small;
+		min-block-size: 10rem;
 	}
 	[contenteditable]:focus-visible {
 		outline-color: var(--ButtonBorder);
