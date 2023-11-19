@@ -61,7 +61,7 @@ const objHTML = {
   iframe: (n) => `{% ${n.dataset.tag} ${n.dataset.text} %}`,
   img: (n) => `![${n.alt}](${n.src})`,
   mark: (n) => md('==', n),
-  ol: (n) => list(n),
+  ol: (n) => `${list(n)}\r\n`,
   pre: (n) => md('\r\n```\r\n', n),
   s: (n) => md('~~', n),
   strong: (n) => md('**', n),
@@ -88,7 +88,7 @@ const objHTML = {
       })
       .join('\r\n')}\r\n\n`,
   u: (n) => md('__', n),
-  ul: (n) => list(n),
+  ul: (n) => `${list(n)}\r\n`,
   p: (n) => md('\r\n\n\n', n),
 }
 
@@ -362,13 +362,18 @@ const iframe = (tag, text) => {
  * @param {Number} level [optional, defaults to `0`]
  */
 function list(olul, level = 0) {
-  return `\r\n${[...olul.children]
-    .map((li, index) => {
-      const prefix = olul.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `
-      return `${'\t'.repeat(level)}${prefix}${li.innerHTML}\r\n` +
-      (li.children.length ? `${list(li, level + 1)}` : '')
-    })
-    .join('')}\r\n`
+  return `${[...olul.children].map((li, index) => {
+    return [...li.childNodes].map((node) => {
+      if (node.tagName === 'OL' || node.tagName === 'UL') {
+        return list(node, level + 1)
+      }
+      else {
+        const content = node.textContent.trim()
+        const prefix = olul.tagName === 'UL' ? '- ' : `${li.start ? li.start : index + 1}. `
+        return content ? `\r\n${'\t'.repeat(level)}${prefix}${content}` : ''
+      }
+    }).join('')
+  }).join('')}`
 }
 
 /**
