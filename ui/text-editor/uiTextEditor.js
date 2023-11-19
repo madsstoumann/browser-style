@@ -61,14 +61,16 @@ export default function uiTextEditor(node, args) {
 			const isActive = document.queryCommandState(command)
 			node.classList.toggle(settings.toolbarItemActive, isActive)
 		}
-
-		editable.addEventListener('keydown', () => {
+		const highlightToolbar = () => {
 			[...toolbar.elements].forEach(item => {
 				if (highlight.includes(item.dataset.command)) {
 					highlightToggle(item.dataset.command, item)
 				}
 			})
-		})
+		}
+
+		editable.addEventListener('click', () => highlightToolbar())
+		editable.addEventListener('keydown', () => highlightToolbar())
 
 		toolbar.addEventListener('click', e => {
 			const node = e.target
