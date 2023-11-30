@@ -105,10 +105,10 @@ export default function uiScroll(scroll, args = {}) {
   const intersectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!tabs.length) {
-      if (entry.isIntersecting) {
-        index = Math.floor(items.findIndex(item => item === entry.target) / itemsPerPage)
-        updateUI(index)
-      }
+        if (entry.isIntersecting) {
+          index = Math.floor(items.findIndex(item => item === entry.target) / itemsPerPage)
+          updateUI(index)
+        }
       }
       entry.target.classList.toggle(config.scrollActive, entry.isIntersecting)
       entry.target.inert = !entry.isIntersecting
