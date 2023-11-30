@@ -63,6 +63,7 @@ export default function uiScroll(scroll, args = {}) {
     itemsPerPage = Math.floor(inlineSize / items[0].offsetWidth) || 1
     pages = Math.ceil(items.length / itemsPerPage)
     dots.innerHTML = Array.from({length: pages}).map((_, index) => `<li data-index="${index}"></li>`).join('')
+    items.forEach((item, index) => { item.style.scrollSnapAlign = index % itemsPerPage === 0 ? 'start' : 'none' })
     nav.classList.toggle(config.scrollHidden, pages === 1) /* Hide scroll navigation if only one page */
   }
 
