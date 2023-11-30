@@ -17,6 +17,9 @@ export default function uiScroll(scroll, args = {}) {
     scrollTabs: '',
   }, (typeof args === 'object') ? args : datasetWithTypes(scroll.dataset || {}))
 
+  if (scroll.hasAttribute('data-scroll-enabled')) return
+  scroll.dataset.scrollEnabled = true
+
   const items = [...scroll.querySelectorAll('& >*')]
   if (!items || !config.scrollNav) return
 
@@ -90,12 +93,6 @@ export default function uiScroll(scroll, args = {}) {
     index--; if (index < 0) index = pages - 1
     scrollToPage(index)
   })
-  scroll.addEventListener('scrollend', e => {
-    const endOfScroll = scroll.scrollLeft + scroll.offsetWidth >= scroll.scrollWidth
-    if (endOfScroll) index = pages - 1
-    else index = Math.round(scroll.scrollLeft / scroll.offsetWidth)
-    updateUI(index)
-  })
   tabs.forEach(tab => {
     tab.addEventListener('click', event => {
       event.preventDefault()
@@ -107,6 +104,12 @@ export default function uiScroll(scroll, args = {}) {
   /* Observers / Init */
   const intersectionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
+      if (!tabs.length) {
+      if (entry.isIntersecting) {
+        index = Math.floor(items.findIndex(item => item === entry.target) / itemsPerPage)
+        updateUI(index)
+      }
+      }
       entry.target.classList.toggle(config.scrollActive, entry.isIntersecting)
       entry.target.inert = !entry.isIntersecting
     })
