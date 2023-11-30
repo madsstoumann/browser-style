@@ -2,7 +2,7 @@
 @import url('ui-scroll-nav.css');
 :where(.ui-scroll) {
 	display: flex;
-	gap: var(--ui-scroll-gap, 0%);
+	gap: var(--ui-scroll-gap, 1ch);
 	grid-area: 1 / 1; 
 	overflow-y: hidden;
 	scroll-behavior: smooth;
