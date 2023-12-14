@@ -84,7 +84,7 @@
 	background-position: calc(100% - 1.25ch) center;
 	background-repeat: no-repeat;
 	background-size: var(--icon-size, 1.25em);
-	&:dir(rtl) { background-position: 1.25ch center; }
+	[dir=rtl] & { background-position: 1.25ch center; }
 }
 :where([type=checkbox], [type=radio]) {
 	appearance: none;

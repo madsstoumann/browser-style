@@ -47,7 +47,7 @@
 	}
 	&[data-tooltip-ui*=top][data-tooltip-ui*=triangle]::after { 
 		clip-path: polygon(50% 100%, 100% 0%, 0% 0%);
-		inset-block: auto calc(100% - 2px);
+		inset-block: auto calc(100% - 1px);
 	}
 	&[data-tooltip-ui*=underline] { 
 		text-decoration: .0625em dotted underline;

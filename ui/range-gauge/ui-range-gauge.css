@@ -8,6 +8,13 @@
 	max-inline-size: 320px;
 	touch-action: none;
 
+	&[dir=rtl], [dir=rtl] & {
+		& span { scale: -1 1; }
+		&::after {
+			--_d: calc(180deg * (var(--max, 100) - var(--value)) / (var(--max, 100) - var(--min, 0)));
+		}
+	}
+
 	& span {
 		--_mask:
 		radial-gradient(

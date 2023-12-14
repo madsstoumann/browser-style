@@ -11,6 +11,7 @@
 		border-radius: 100cqi 100cqi 0 0;
 		mask: var(--_mask);
 		-webkit-mask: var(--_mask);
+		[dir=rtl] & { scale: -1 1; }
 	}
 	&::after {
 		counter-reset: val var(--value);
