@@ -9,6 +9,10 @@
 		background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
 		mask: var(--ui-range-mask);
 		-webkit-mask: var(--ui-range-mask);
+		[dir=rtl] & {
+			--_dir: right;
+			scale: -1 1;
+		}
 	}
 	&.--text::after {
 		color: #FFF;

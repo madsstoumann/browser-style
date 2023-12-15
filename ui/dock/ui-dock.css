@@ -13,6 +13,7 @@
 	background-color: var(--ui-dock-bg, color-mix(in srgb, Canvas, transparent 45%));
 	border-radius: calc(var(--ui-dock-item-bdrs) + var(--ui-dock-gap));
 	box-shadow: 0 0 20px -5px var(--Shade-30), 0 0 12px -7px var(--Shade-20);
+	direction: ltr;
 	display: grid;
 	gap: var(--ui-dock-gap);
 	grid-auto-flow: column;

@@ -7,45 +7,14 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="../grid/ui-grid.css">
-
+	<link rel="stylesheet" href="ui-bento.css">
 	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
-	<style>
-
-	.ui-bento {
-		--ui-grid-cg: clamp(0.25rem, 0.0714rem + 0.5714vw, 0.5rem);
-		--ui-grid-rg: var(--ui-grid-cg);
-		list-style: none;
-		padding: 0;
-		& li {
-			background-color: var(--GrayCanvas);
-			border-radius: clamp(0.25rem, -0.2857rem + 1.7143vw, 1rem);
-			color: CanvasText;
-			container-type: inline-size;
-			display: grid;
-			height: 100%;
-			place-content: center;
-			text-align: center;
-			width: 100%;
-			& >* {
-				display: grid;
-				font-family: system-ui;
-				font-size: 15cqi;
-				gap: 2cqi;
-				line-height: 1;
-				padding: 1ch;
-				& small { font-size: 70%; }
-			}
-		}
-	}
-
-	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Bento</h2>
-	<p>Small extension using <a href="/ui/grid">grid</a> for a bento-design</p>
+	<p>Small extension using <a href="/ui/grid">grid</a> for a bento-design.</p>
 
 	<ul class="ui-grid --xs-c-2 --md-c-7 ui-bento">
 		<li>

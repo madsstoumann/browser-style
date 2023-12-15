@@ -25,6 +25,21 @@
 		<input type="range" data-key="value" data-scope="parent" value="25">
 	</label>
 
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<label class="ui-range-mask">Range with mask
+			<span></span>
+			<input type="range" data-key="value" data-scope="parent" value="75">
+		</label>
+	
+		<h3>With <code>--text</code>-modifier and custom mask</h3>
+		<label class="ui-range-mask --text" style="--ui-range-mask:url('/assets/svg/range-mask-chart.svg');">Range with mask
+			<span></span>
+			<input type="range" data-key="value" data-scope="parent" value="25">
+		</label>	
+	</div>
+
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		common();

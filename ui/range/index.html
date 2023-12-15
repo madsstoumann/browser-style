@@ -18,13 +18,23 @@
 	</label>
 
 	<p>With output</p>
-	TODO: Show various output options
-
-	<h2>With dir=rtl</h2>
-
-	<label dir="rtl">Range with fill
-		<input type="range" data-key="value">
+	<label data-output="$">Minimum Price
+		<input type="range" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",$" />
 	</label>
+
+	<br>
+	<h2>With right-to-left</h2>
+
+	<div dir="rtl">
+		<label>Range with fill
+			<input type="range" data-key="value">
+		</label>
+
+		<p>With output</p>
+		<label data-output="$">Minimum Price
+			<input type="range" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",$" />
+		</label>
+	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

@@ -3,4 +3,5 @@
 	all: unset;
 	& label { display: contents; }
 	& legend { padding-block-end: var(--label-rg); }
+	[dir=rtl] & input { background-position: unset;}
 }

@@ -24,6 +24,7 @@
   all: unset;
   background: var(--GrayCanvas);
   border-radius: var(--input-bdrs);
+  direction: ltr;
   display: grid;
   font-variant-numeric: tabular-nums;
 	gap: var(--ui-countdown-gap);

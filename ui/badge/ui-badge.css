@@ -31,6 +31,6 @@
 	&.--top-right {
 		translate: 0 0;
 	}
-	&:dir(rtl) { translate: -50% -50%; }
+	&:dir(rtl) { translate: -50% 0; }
 }
 *:has(.ui-badge) { position: relative; }

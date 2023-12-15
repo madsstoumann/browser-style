@@ -6,43 +6,61 @@
 	column-gap: .5ch;
 	letter-spacing: var(--ui-word-replace-ls, -0.03em);
 	line-height: var(--ui-word-replace-lh, 1.0625);
-	& div {
-		clip-path: inset(2px 0 0 0);
-		height: calc(1lh + 2px);
-		overflow: hidden;
-	}
-	& ul {
-		all: unset;
-		color: var(--AccentColor);
-		display: grid;
-		& li { list-style: none; }
-	}
-	&.--spin li {
-		animation:
-			spin-word calc(var(--_speed, 1s) * var(--_length, 1))
-			calc(var(--_speed, 1s) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite;
-		grid-area: 1 / -1;
-		translate: 0 1lh;
-	}
-	&.--step li {
-		animation:
-			step-word calc(var(--_speed, 1s) * var(--_length, 1))
-			steps(var(--_length, 1), jump-none) infinite;
-	}
+  & div {
+    clip-path: inset(2px 0 0 0);
+    height: calc(1lh + 2px);
+    overflow: hidden;
+  }
+  & span {
+    background: linear-gradient(90deg, var(--AccentColor), transparent) repeat-x 0% 90% / 150% 10%;
+  }
+  & ul {
+    all: unset;
+    color: var(--AccentColor);
+    display: grid;
+    & li {
+      animation: var(--anim, spin calc(var(--_speed, 2s) * var(--_length, 7))
+      calc(var(--_speed, 2s) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite);
+      grid-area: 1 / 1;
+      list-style: none;
+      overflow: hidden;
+    }
+  }
+  &.--spin-down li {
+    --_translate: 0 1lh;
+    translate: 0 -1lh;
+  }
+  &.--spin-left li {
+    --_translate: -100% 0;
+    translate: 100% 0;
+  }
+  &.--spin-right li {
+    --_translate: 100% 0;
+    translate: -100% 0;
+  }
+  &.--spin-up li {
+    --_translate: 0 -1lh;
+    translate: 0 1lh;
+  }
+  &.--step li {
+    animation:
+      step-word calc(var(--_speed, 2s) * var(--_length, 7))
+      steps(var(--_length, 7), jump-none) infinite;
+    grid-area: initial;
+  }
 }
-@keyframes spin-word {
-	12.5% {
-		opacity: 1;
-		translate: 0; 
-	}
-	25% { 
-		opacity: 0;
-		translate: 0 -1lh;
-	}
-	100% { 
-		opacity: 0;
-	}
+
+@keyframes spin {
+  12.5% {
+    opacity: 1;
+    translate: 0; 
+  }
+  25% { 
+    opacity: 0;
+    translate: var(--_translate, 0 0);
+  }
+  100% { opacity: 0; }
 }
 @keyframes step-word {
-	to { translate: 0 calc((-1lh * var(--_length)) + 1lh); }
+  to { translate: 0 calc((-1lh * var(--_length, 7)) + 1lh); }
 }

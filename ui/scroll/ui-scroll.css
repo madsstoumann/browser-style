@@ -22,7 +22,6 @@
 /* Outer Wrapper: */
 *:has(> .ui-scroll + .ui-scroll-nav) {
 	display: grid;
-	direction: ltr;
 }
 /* Change grid-layout, if NAV is outside: */
 .ui-scroll:has(+ .--outside) {

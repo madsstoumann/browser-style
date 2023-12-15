@@ -6,5 +6,4 @@
   display: grid;
   grid-template-columns: 1fr min-content 1fr;
   & nav { align-self: center; }
-  & ui-icon:dir(rtl) { scale: -1; }
 }

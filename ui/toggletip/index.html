@@ -20,6 +20,15 @@
 		<a href="#">Read more</a>
 	</div>
 
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		You can <button popovertarget="toggletip-rtl" id="toggletip-link-rtl" class="ui-toggletip-link">read more</button> about this feature.
+		<div id="toggletip-rtl" popover anchor="toggletip-link-rtl" class="ui-toggletip" data-anchor="top:bottom right:right">
+			HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.
+			<a href="#">Read more</a>
+		</div>
+	</div>
+
 	<script type="module">
 		import uiAnchor from '../anchor/uiAnchor.js';
 		uiAnchor();
