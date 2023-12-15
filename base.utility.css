@@ -4,18 +4,38 @@
 -----------------
 */
 
+/* Aspect Ratio */
+.ar-auto { aspect-ratio: auto; }
+.ar-golden { aspect-ratio: 1.6180 / 1; }
+.ar-landscape { aspect-ratio: 4 / 3; }
+.ar-photo { aspect-ratio: 3 / 2; }
+.ar-portrait { aspect-ratio: 3 / 4; }
+.ar-square { aspect-ratio: 1 / 1; }
+.ar-ultrawide { aspect-ratio: 18 / 5; }
+.ar-universal { aspect-ratio: 2 / 1; }
+.ar-widescreen { aspect-ratio: 16 / 9; }
+.ar-10-1 { aspect-ratio: 10 / 1; }
+
+/* Border Radius */
+.bdrs-xs { border-radius: 0.125rem; }
+.bdrs-sm { border-radius: 0.25rem; }
+.bdrs-md { border-radius: 0.5rem; }
+.bdrs-lg { border-radius: 1rem; }
+.bdrs-xl { border-radius: 2rem; }
+.bdrs-circle { border-radius: 50%; }
+
 /* Color Scheme */
-.--darkmode { color-scheme: dark; }
-.--lightmode { color-scheme: light; }
+.cs-dark { color-scheme: dark; }
+.cs-light { color-scheme: light; }
 
 /* Font Sizes */
-.--xxsmall { font-size: xx-small; }
-.--xsmall { font-size: x-small; }
-.--small { font-size: small; }
-.--medium { font-size: medium; }
-.--large { font-size: large; }
-.--xlarge { font-size: x-large; }
-.--xxlarge { font-size: xx-large; }
+.fs-xxs { font-size: xx-small; }
+.fs-xs { font-size: x-small; }
+.fs-sm { font-size: small; }
+.fs-md { font-size: medium; }
+.fs-lg { font-size: large; }
+.fs-xl { font-size: x-large; }
+.fs-xxl { font-size: xx-large; }
 
 /* Gradients */
 .--blue-green {

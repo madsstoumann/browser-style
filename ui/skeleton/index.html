@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+	<link rel="stylesheet" href="ui-skeleton.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Skeleton</h2>
+	<p>Build a skeleton using <a href="/ui/grid">grid</a> and <code>aspect-ratio</code> and <code>border-radius</code> utility-classes.</p>
+	<div class="ui-grid --md-c-2 --sm-cg-5">
+
+		<div class="ui-skeleton ui-grid --xs-c-1">
+			<samp class="ar-10-1 bdrs-md"></samp>
+			<samp class="ar-widescreen bdrs-md"></samp>
+			<div class="ui-grid --xs-c-2">
+				<samp class="ar-ultrawide bdrs-md"></samp>
+			</div>
+		</div>
+
+		<div class="ui-skeleton ui-grid --xs-c-1">
+			<div class="ui-grid --xs-c-4">
+				<samp class="ar-square bdrs-circle"></samp>
+				<div class="ui-grid --xs-c-1 --xs-gcs-3">
+					<samp class="ar-10-1 bdrs-md"></samp>
+					<samp class="ar-10-1 bdrs-sm"></samp>
+				</div>
+			</div>
+			<samp class="ar-widescreen bdrs-md"></samp>
+		</div>
+
+	</div>
+</body>
+</html>

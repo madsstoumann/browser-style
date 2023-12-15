@@ -1,0 +1,8 @@
+:where(.ui-skeleton) {
+	place-content: start;
+	& samp {
+		background-color: var(--GrayCanvas);
+		display: block;
+		width: 100%;
+	}
+}
