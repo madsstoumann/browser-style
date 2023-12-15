@@ -9,12 +9,12 @@
 .ar-golden { aspect-ratio: 1.6180 / 1; }
 .ar-landscape { aspect-ratio: 4 / 3; }
 .ar-photo { aspect-ratio: 3 / 2; }
+.ar-panorama { aspect-ratio: 10 / 1; }
 .ar-portrait { aspect-ratio: 3 / 4; }
 .ar-square { aspect-ratio: 1 / 1; }
 .ar-ultrawide { aspect-ratio: 18 / 5; }
 .ar-universal { aspect-ratio: 2 / 1; }
 .ar-widescreen { aspect-ratio: 16 / 9; }
-.ar-10-1 { aspect-ratio: 10 / 1; }
 
 /* Border Radius */
 .bdrs-xs { border-radius: 0.125rem; }
