@@ -31,9 +31,9 @@
 }
 @keyframes scroll {
 	from { translate: 100% 0;}
-	to { translate: -200% 0; }
+	to { translate: var(--_x, -100%) 0; }
 }
 @keyframes scroll-rtl {
-	from { translate: -100% 0;}
-	to { translate: 200% 0; }
+	from { translate: var(--_x, -100%) 0;}
+	to { translate: 100% 0; }
 }

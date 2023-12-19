@@ -37,5 +37,14 @@
 			</span>
 		</label>
 	</fieldset>
+
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiMarquee from './uiMarquee.js';
+
+		common();
+		init('.ui-marquee span', uiMarquee);
+	</script>
 </body>
 </html>
