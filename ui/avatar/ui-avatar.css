@@ -1,10 +1,11 @@
 .ui-avatar { 
 	all: unset;
 	aspect-ratio: 1 / 1;
-	background: var(--ButtonFace);
+	background: var(--ui-avatar-bg, var(--ButtonFace));
 	block-size: var(--ui-avatar-sz, 4em);
 	border: var(--ui-avatar-bdw, 2px) solid var(--GrayCanvas);
 	border-radius: var(--ui-avatar-bdrs, 50%);
+	color: var(--ui-avatar-c, inherit);
 	container-type: inline-size;
 	display: grid;
 	place-content: center;

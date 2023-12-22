@@ -8,7 +8,6 @@
 	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-avatar.css">
-
 	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
 </head>
 <body>
@@ -24,7 +23,6 @@
 
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
-		<!-- <img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy"> -->
 	</div>
 
 	<h2>Avatar List</h2>
@@ -43,6 +41,29 @@
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
 		</li>
 	</ul>
+
+	<h2>Avatar Color</h2>
+	<p>Using <code>strToColor</code> to automatically set a unique background-color</p>
+	<ul class="ui-avatar-list">
+		<li class="ui-avatar">
+			<abbr title="Kim Cronos">KC</abbr>
+		</li>
+		<li class="ui-avatar">
+			<abbr title="Greg Hanson">GH</abbr>
+		</li>
+		<li class="ui-avatar">
+			<abbr title="John Doe">JD</abbr>
+		</li>
+		<li class="ui-avatar">
+			<abbr title="Lars Poulsen">LP</abbr>
+		</li>
+	</ul>
+
+	<script type="module">
+		import { init } from './../../assets/js/common.js';
+		import uiAvatar from './uiAvatar.js';
+		init('.ui-avatar:has(abbr)', uiAvatar);
+	</script>
 
 </body>
 </html>
