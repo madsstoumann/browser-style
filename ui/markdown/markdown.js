@@ -226,6 +226,28 @@ const arrMarkdown = [
 	},
 ]
 
+/**
+ * @function addRule
+ * @description Adds a rule to the arrHTML/arrMarkdown-arrays
+ * @param {Array} arr
+ * @param {Object} rule
+ * @param {Number} index [optional, defaults to `0`]
+ */
+export function addRule(arr, rule, index = 0) {
+	arr.splice(index, 0, rule)
+}
+
+/**
+ * @function remRule
+ * @description Removes a rule from the arrHTML/arrMarkdown-arrays
+ * @param {Array} arr
+ * @param {String} id
+ */
+export function remRule(id) {
+	const index = arr.findIndex((obj) => obj.id === id)
+	if (index > -1) arr.splice(index, 1)
+}
+
 /*
 ---------
  Helpers
@@ -359,46 +381,3 @@ const md = (prefix, node, suffix) =>
  * @returns {String} s
  */
 const rpTags = (s) => s.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
-
-
-
-
-/**
- * @function addHtmlRule
- * @description Adds a rule to the objHTML-object
- * @param {Object} rule
- */
-export function addHtmlRule(rule) {
-	objHTML[rule.tag] = rule.fn
-}
-
-/**
- * @function remHtmlRule
- * @description Removes a rule from the objHTML-object
- * @param {String} tag
- */
-export function remHtmlRule(tag) {
-	delete objHTML[tag]
-}
-
-
-/**
- * @function addMdRule
- * @description Adds a rule to the arrMarkdown-array
- * @param {Object} rule
- * @param {Number} index [optional, defaults to `0`]
- */
-export function addMdRule(rule, index) {
-	arrMarkdown.splice(index, 0, rule)
-}
-
-/**
- * @function remMdRule
- * @description Removes a rule from the arrMarkdown-array
- * @param {String} id
- */
-export function remMdRule(id) {
-	const index = arrMarkdown.findIndex((obj) => obj.id === id)
-	if (index > -1) arrMarkdown.splice(index, 1)
-}
