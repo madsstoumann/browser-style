@@ -27,7 +27,6 @@
 }
 .ui-avatar-list {
 	--ui-tooltip-fs: x-small;
-	
 	all: unset;
 	display: flex;
 	& > *:not(:first-child) {
