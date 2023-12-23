@@ -37,7 +37,7 @@
 .fs-xl { font-size: x-large; }
 .fs-xxl { font-size: xx-large; }
 
-/* Gradients */
+/* TODO: NEW NAME-classes Gradients */
 .--blue-green {
 	--ui-gradient: #0077ff, #00e7df, #0077ff;
 	&:is(.--grow, .--shrink) { --ui-gradient: #0077ff, #0077ff; }
