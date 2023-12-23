@@ -157,6 +157,7 @@
 		appearance: none;
 		background: var(--AccentColor);
 		border-radius: 50%;
+		box-shadow: none;
 		height: var(--input-thumb-sz);
 		width: var(--input-thumb-sz);
 	}
@@ -171,6 +172,7 @@
 }
 :where([type=range], option, select) { appearance: none; }
 :where([type=search]) {
+	background-color: inherit;
 	&::-webkit-search-cancel-button {
 		--icon: url('/assets/svg/reset.svg');
 		background-color: currentColor;
@@ -233,7 +235,12 @@
 		border-block-end: var(--input-bdw) solid var(--ButtonBorder);
 	}
 }
-:where(select) { background-color: transparent; overflow: hidden; }
+:where(select) {
+	background-color: transparent;
+	color: inherit;
+	overflow: hidden;
+	&[multiple] { min-block-size: var(--input-bs); }
+}
 :where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
 :where(textarea) {
 	form-sizing: auto;
@@ -247,6 +254,7 @@
 & [type=month],
 & [type=time] {
 	appearance: none;
+	background-color: inherit;
 	&::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); }
 	&::-webkit-calendar-picker-indicator { opacity: 0; }
 }

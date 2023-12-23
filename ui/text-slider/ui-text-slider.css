@@ -1,0 +1,9 @@
+/* requires ui-scroll.css */
+@import url("../icon/ui-icon.css");
+.ui-text-slider {
+	--ui-scroll-gap: 2ch;
+	& .ui-scroll > * {
+		align-self: center;
+		text-align: center;
+	}
+}
