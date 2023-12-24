@@ -1,12 +1,12 @@
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host {
-		background: hsl(0, 0%, 90%);
+		background: var(--GrayCanvas);
 		border-radius: 0.5ch;
 		padding: 1ch 2ch;
 	}
 	code {
-		color: hsl(0, 0%, 60%);
+		color: var(--DarkGray);
 		font-size: smaller;
 	}
 `)
@@ -21,7 +21,7 @@ export default class uiLocation extends HTMLElement {
 		try {
 			const data = await (await fetch(`https://ipinfo.io/json?token=${token}`)).json();
 			this.shadowRoot.innerHTML = `
-				<strong>${geolabel}</strong> ${data.city ? `${data.city}, ${data.region}, ${data.country}` : error}.
+				<strong>${geolabel}</strong> ${data.city ? `${data.city}, ${data.region}, ${data.country}` : error || 'Location not available'}.
 				<strong>${iplabel}</strong> <code>${data.ip || error}</code>`
 		} catch (err) {
 			this.shadowRoot.innerHTML = `<strong>${error}</strong>`
