@@ -13,15 +13,15 @@
 	<h1>UI: Components</h1>
 
 	<h2>Reaction</h2>
-	<p>work-in-progress</p>
+	<p>Using <code>popover-API</code> to toggle a list of reactions.</p>
 	<fieldset class="ui-reaction">
 		<legend>Pick a reaction</legend>
-		<button type="button" id="reaction" popovertarget="reaction-list" class="--icon">
+		<button type="button" id="reaction" popovertarget="reaction-list" class="ui-reaction-trigger --icon">
 			<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
 				<path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
 			</svg>
 		</button>
-		<nav id="reaction-list" anchor="reaction" popover class="ui-reaction-list">
+		<nav id="reaction-list" anchor="reaction" popover class="ui-reaction-list" data-anchor="top:bottom left:left">
 			<button popovertarget="reaction-list" popovertargetaction="hide" value="👍">👍</button>
 			<button popovertarget="reaction-list" popovertargetaction="hide" value="😍">😍</button>
 			<button popovertarget="reaction-list" popovertargetaction="hide" value="😂">😂</button>
@@ -32,8 +32,11 @@
 	</fieldset>
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
+		import uiAnchor from '../anchor/uiAnchor.js';
 		import uiReaction from './uiReaction.js';
 		common();
+
+		uiAnchor();
 		init('.ui-reaction', uiReaction);
 	</script>
 </body>
