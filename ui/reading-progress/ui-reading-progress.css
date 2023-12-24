@@ -7,7 +7,7 @@
 	left: 0;
 	position: fixed;
 	top: 0;
-	width: 0;
+	width: var(--scroll-p);
 }
 @keyframes fullwidth {
 	to { width: 100%; }

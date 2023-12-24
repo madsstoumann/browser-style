@@ -18,7 +18,11 @@
 
 	<h2>Reading Progress</h2>
 	<p>Scroll down &hellip; </p>
-	<div class="ui-reading-progress" style="animation-timeline: scroll(root);"></div>
+	<div class="ui-reading-progress"></div>
 
+	<script type="module">
+		import { addDocumentScroll } from './../../assets/js/scroll.js';
+		addDocumentScroll();
+	</script>
 </body>
 </html>
