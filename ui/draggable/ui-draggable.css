@@ -9,13 +9,10 @@
 		list-style: none;
 		padding: 1ch 0;
 		pointer-events: none;
+		touch-action: none;
 		& > ui-icon {
 			color: var(--GrayText);
 			cursor: move;
-			pointer-events: all;
-		}
-		& [popovertarget] {
-			margin-inline-start: auto;
 			pointer-events: all;
 		}
 		&.--dragging { opacity: .5; }

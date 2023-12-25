@@ -1,0 +1,67 @@
+:where(.ui-table-resize) {
+	position: relative;
+	& table {
+		table-layout: fixed;
+		width: 100%;
+	}
+	& td, & th {
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	& input[type=range] {
+		--_bgc: color-mix(in srgb, CanvasText 10%, transparent 90%);
+		--_bgi: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M15.5 8l-4.5 4.5v-3.5h-6v3.5l-4.5-4.5 4.5-4.5v3.5h6v-3.5l4.5 4.5z"></path></svg>');
+		--_w: 2rem;
+
+		height: 1px;
+		margin: 0;
+		outline: none;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		&::-webkit-slider-thumb {
+			background-color: transparent;
+			background-position: 50% 0;
+			background-repeat: no-repeat;
+			background-size: 80%;
+			border: 0;
+			border-radius: 0;
+			cursor: ew-resize;
+			height: var(--_h);  
+			width: var(--_w);
+		}
+		&:focus-visible::-webkit-slider-thumb {
+			background-color: var(--_bgc);
+			background-image: var(--_bgi);
+			border-radius: 0;
+			outline: 2px solid var(--ButtonBorder);
+		}
+		&::-webkit-slider-runnable-track {
+			background: transparent;
+			height: 1px;
+		}
+		&::-moz-range-thumb {
+			background-color: transparent;
+			background-position: 50% 0;
+			background-repeat: no-repeat;
+			background-size: 80%;
+			border: 0;
+			border-radius: 0;
+			cursor: ew-resize;
+			height: var(--_h);  
+			width: var(--_w);
+		}
+		&:focus-visible::-moz-range-thumb {
+			background-color: var(--_bgc);
+			background-image: var(--_bgi);
+			border-radius: 0;
+			outline: 2px solid var(--ButtonBorder);
+		}
+		@-moz-document url-prefix() {
+			& {
+				top: calc(var(--_h) / 2);
+			}
+		}
+	}
+}

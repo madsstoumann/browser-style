@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Table</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="./../table/ui-table.css">
+	<link rel="stylesheet" href="./ui-table-resize.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Table</h2>
+	<p>Adds an <code>&lt;input type="range"&gt;</code> per column, allowing to adjust column-widths with pointer or keyboard (arrow-keys).</p>
+
+	<div class="ui-table-resize">
+		<table class="ui-table">
+			<thead>
+				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<script type="module">
+		import { init } from './../../assets/js/common.js';
+		import uiTableResize from './uiTableResize.js';
+		init('.ui-table-resize', uiTableResize);
+	</script>
+
+</body>
+</html>
