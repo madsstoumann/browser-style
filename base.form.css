@@ -99,6 +99,10 @@
 		border-radius: 50%;
 	}
 	&:checked { background: var(--AccentColor) url('/assets/svg/check-white.svg') no-repeat var(--input-check-bgsz, 48% / 75%); }
+	&:indeterminate {
+		--ButtonBorder: var(--AccentColor);
+		background: var(--AccentColor) url('/assets/svg/minus-white.svg') no-repeat var(--input-check-bgsz, 48% / 75%);
+	}
 }
 :where([type=checkbox][role=switch]) {
 	aspect-ratio: 1.8 / 1;

@@ -8,15 +8,15 @@
 	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="./../table/ui-table.css">
-	<link rel="stylesheet" href="./ui-table-resize.css">
+	<link rel="stylesheet" href="./ui-datagrid.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Table Resize</h2>
-	<p>Adds an <code>&lt;input type="range"&gt;</code> per column, allowing to adjust column-widths with pointer or keyboard (arrow-keys).</p>
-
-	<div class="ui-table-resize">
+	<h2>Data Grid</h2>
+	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
+	<p>With <code>hover="cell column row"</code>:</p>
+	<ui-datagrid hover="cell column row">
 		<table class="ui-table">
 			<thead>
 				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -29,13 +29,26 @@
 				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
 			</tbody>
 		</table>
-	</div>
+	</ui-datagrid>
 
-	<script type="module">
-		import { init } from './../../assets/js/common.js';
-		import uiTableResize from './uiTableResize.js';
-		init('.ui-table-resize', uiTableResize);
-	</script>
+	<br>
+	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
+	<ui-datagrid
+		density="normal"
+		editable
+		hover="cell column row"
+		itemsperpage="10"
+		navigable
+		page="0"
+		resizable
+		searchterm="indo"
+		selectable
+		sortable
+		src="./table.json">
+		<fieldset><table class="ui-table"></table></fieldset>
+	</ui-datagrid>
+
+	<script type="module" src="uiDataGrid.js"></script>
 
 </body>
 </html>
