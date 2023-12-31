@@ -17,6 +17,7 @@
 	--DarkGray: hsl(0, 0%, 40%);
 	--GrayCanvas: hsl(0, 0%, 95%);
 	--GrayText: hsl(0, 0%, 60%);
+	--LightText: hsl(0, 0%, 95%);
 
 	--LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
 	--Mark: color-mix(in oklab, Mark 60%, Canvas 40%);

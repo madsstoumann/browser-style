@@ -14,7 +14,10 @@
 
 	<h2>Table</h2>
 
-	<table class="ui-table">
+	<p>With <code>--hover-all</code></p>
+
+	<table class="ui-table --hover-all">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -27,9 +30,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--block-border</code> and <code>--header-bg</code></p>
+	<p>With <code>--rounded</code>, <code>--hover-col</code> and <code>--hover-td</code></p>
 
-	<table class="ui-table --block-border --header-bg">
+	<table class="ui-table --rounded --hover-col --hover-td">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -42,9 +46,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--zebracol-even</code></p>
+	<p>With <code>--split-cols</code>, <code>--thead-dark</code>, <code>--hover-tr</code> and <code>--hover-td</code></p>
 
-	<table class="ui-table --zebracol-even">
+	<table class="ui-table --split-cols --hover-tr --hover-td --thead-dark">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -57,9 +62,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--zebracol-odd</code></p>
+	<p>With <code>--rounded</code> added as well.</p>
 
-	<table class="ui-table --zebracol-odd">
+	<table class="ui-table --split-cols --hover-tr --hover-td --thead-dark --rounded">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -72,9 +78,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--zebrarow-even</code></p>
+	<p>With <code>--split-rows</code>, <code>--thead-light</code>, <code>--hover-tr</code> and <code>--hover-td-outline</code></code></p>
 
-	<table class="ui-table --zebrarow-even">
+	<table class="ui-table --split-rows --thead-light --hover-tr --hover-td-outline">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -87,9 +94,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--zebrarow-odd</code></p>
+	<p>With <code>--rounded</code> added as well.</p>
 
-	<table class="ui-table --zebrarow-odd">
+	<table class="ui-table --split-rows --thead-light --hover-tr --hover-td-outline --rounded">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -102,9 +110,10 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--zebrarow-even</code> and <code>--no-border</code></p>
+	<p>With <code>--block-border</code>, <code>--thead-light</code> and <code>--hover-tr</code></p>
 
-	<table class="ui-table --zebrarow-even --no-border">
+	<table class="ui-table --block-border --thead-light --hover-tr">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
@@ -117,9 +126,91 @@
 		</tbody>
 	</table>
 
-	<p>With <code>--block-border</code> <strong>and</strong> <code>data-col-2="center" data-col-4="end"</code></p>
+	<p>With <code>--zebracol-even</code> and <code>--hover-tr-outline</code></p>
 
-	<table class="ui-table --block-border" data-c2="center" data-c4="end">
+	<table class="ui-table --zebracol-even --hover-tr-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebracol-odd</code> and <code>--hover-col-outline</code>.<br>
+	This requires <code>border-collpase: collapse</code> and will not work with split cols or rows.</p>
+
+	<table class="ui-table --zebracol-odd --hover-col-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-even</code> and <code>--hover-td-outline</code></p>
+
+	<table class="ui-table --zebrarow-even --hover-td-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-odd</code> and <code>--hover-col-outline</code></p>
+
+	<table class="ui-table --zebrarow-odd --hover-col-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--zebrarow-even</code>, <code>--no-border</code> and <code>--hover-tr-outline</code></p>
+
+	<table class="ui-table --zebrarow-even --no-border --hover-tr-outline">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+		</tbody>
+	</table>
+
+	<p>With <code>--block-border</code>, <code>--hover-col</code> <strong>and</strong> column-alignment:<br> <code>data-col-2="center" data-col-4="end"</code></p>
+
+	<table class="ui-table --block-border --hover-col" data-c2="center" data-c4="end">
+		<colgroup><col><col><col><col></colgroup>
 		<thead>
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>

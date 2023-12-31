@@ -1,17 +1,145 @@
 :where(.ui-table) {
-	& td { border-color: var(--ButtonBorder); }
+	--ui-table-bdrs: 0;
+	--ui-table-bdw: 1px;
+	--ui-table-td-hover: var(--DarkGray);
+	--ui-table-col-hover: var(--GrayCanvas);
+	--ui-table-tr-hover: var(--GrayCanvas);
+	--ui-table-outline-bdc: var(--DarkGray);
+	--ui-table-outline-bdw: 2px;
+
+	border-collapse: separate;
+	border-spacing: var(--ui-table-bdsp-x, 0) var(--ui-table-bdsp-y, 0);
+	& :is(td, th) {
+		border-block-width: var(--ui-table-bdw) 0;
+		border-color: var(--ui-table-bdc, var(--ButtonBorder));
+		border-inline-width: var(--ui-table-bdw) 0;
+		border-style: solid;
+		padding: var(--ui-table-p, 1ch 2ch);
+		&:last-of-type { border-inline-end-width: var(--ui-table-bdw); }
+	}
 	& th {
-		border: 1px solid var(--ButtonBorder);
 		font-weight: 600;
 		text-align: start;
+		&:first-of-type { border-top-left-radius: var(--ui-table-bdrs); }
+		&:last-of-type { border-top-right-radius: var(--ui-table-bdrs); }
 	}
-	& :is(td, th) { padding: var(--ui-table-p, 1ch 2ch); }
-	& tr { background: none; }
-	&.--block-border :is(td, th) { border-width: 0 0 1px 0; }
+	& tr {
+		background: none;
+		&:last-of-type {
+			& td {
+				border-block-end-width: var(--ui-table-bdw);
+				&:first-of-type { border-bottom-left-radius: var(--ui-table-bdrs); }
+				&:last-of-type { border-bottom-right-radius: var(--ui-table-bdrs); }
+			}
+		}
+	}
+
+	/* Modifiers */
+	&.--block-border :is(td, th) { border-width: 0 0 var(--ui-table-bdw) 0; }
 	&.--no-border :is(td, th) { border: 0; }
+	&.--rounded { --ui-table-bdrs: .5em; }
+	&.--split-cols {
+		--ui-table-bdsp-x: 2ch;
+		margin-inline: calc(0px - var(--ui-table-bdsp-x));
+		& :is(td, th) { border-inline-width: var(--ui-table-bdw) }
+		&.--rounded {
+			& tr:first-of-type th {
+				border-top-left-radius: var(--ui-table-bdrs);
+				border-top-right-radius: var(--ui-table-bdrs);
+			}
+			& tr:last-of-type td {
+				border-bottom-left-radius: var(--ui-table-bdrs);
+				border-bottom-right-radius: var(--ui-table-bdrs);
+			}
+		}
+	}
+	&.--split-rows {
+		--ui-table-bdsp-y: 1.5ch;
+		margin-block: calc(0px - var(--ui-table-bdsp-y));
+		& :is(td, th) { border-block-width: var(--ui-table-bdw) }
+		&.--rounded {
+			& :is(td,th):first-child {
+				border-top-left-radius: var(--ui-table-bdrs);
+				border-bottom-left-radius: var(--ui-table-bdrs);
+			}
+			& :is(td,th):last-child {
+				border-top-right-radius: var(--ui-table-bdrs);
+				border-bottom-right-radius: var(--ui-table-bdrs);
+			}
+			
+		}
+	}
+	&.--thead-dark th {
+		--ui-table-bdc: var(--DarkGray);
+		background-color: var(--DarkGray);
+		color: var(--LightText);
+	}
 	&.--zebracol-even :is(td, th):nth-of-type(even),
 	&.--zebracol-odd :is(td, th):nth-of-type(odd),
 	&.--zebrarow-even tr:nth-of-type(even) td,
-	&:is(.--header-bg, .--zebrarow-even) th,
-	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--GrayCanvas); }
+	&:is(.--thead-light, .--zebrarow-even) th,
+	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--GrayCanvas)); }
+
+	/* Hover */
+	&.--hover-all,
+	&.--hover-col,
+	&.--hover-col-outline {
+		&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
+		&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
+		&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
+		&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) col:nth-child(4),
+		&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) col:nth-child(5),
+		&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) col:nth-child(6),
+		&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) col:nth-child(7),
+		&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
+		&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) {
+			background-color: var(--ui-table-col-hover);
+			.--hover-col-outline & {
+				--ui-table-bdc: var(--ui-table-outline-bdc);
+				background: initial;
+			}
+		}
+	}
+	&.--hover-col-outline {
+		border-collapse: collapse;
+		border-spacing: 0;
+		& col { border: var(--ui-table-outline-bdw) solid var(--ui-table-bdc); }
+	}
+	&.--hover-all,
+	&.--hover-td {
+		td:is(:focus,:focus-visible,:hover) {
+			--ui-table-bdc: var(--ui-table-td-hover);
+			background-color: var(--ui-table-td-hover);
+			color: Canvas;
+			outline: 0;
+		}
+	}
+	&.--hover-td-outline {
+		& td:is(:focus-visible,:hover) {
+			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
+			outline-offset: calc(0px - var(--ui-table-bdw));
+		}
+	}
+	&.--hover-all,
+	&.--hover-th-outline {
+		& th:is(:focus-visible,:hover) {
+			cursor: pointer;
+			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
+			outline-offset: calc(0px - var(--ui-table-bdw));
+			user-select: none;
+		}
+	}
+	&.--hover-all,
+	&.--hover-tr {
+		tr:has(td:is(:focus-visible,:hover)) {
+			background-color: var(--ui-table-tr-hover);
+			&.--hover-td & td:not(:is(:focus-visible,:hover)) { background-color: var(--ui-table-td-hover); }
+		}
+	}
+	&.--hover-tr-outline {
+		& tr:has(td):hover {
+			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
+			outline-offset: calc(0px - var(--ui-table-bdw));
+		}
+	}
 }

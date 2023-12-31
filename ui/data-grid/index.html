@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Table</title>
+	<title>Data Grid</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
@@ -16,8 +16,14 @@
 	<h2>Data Grid</h2>
 	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
 	<p>With <code>hover="cell column row"</code>:</p>
-	<ui-datagrid hover="cell column row">
-		<table class="ui-table">
+	<ui-datagrid
+		hover="cell column row"
+		itemsperpage="20"
+		navigable
+		searchterm=""
+		sortindex="-1"
+		sortorder="0">
+		<table class="ui-table --rounded --header-light">
 			<thead>
 				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 			</thead>
@@ -27,6 +33,17 @@
 				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
 				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
 				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
+				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+				<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+				<tr><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
+				<tr><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
+				<tr><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+				<tr><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+				<tr><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
 			</tbody>
 		</table>
 	</ui-datagrid>
@@ -41,9 +58,10 @@
 		navigable
 		page="0"
 		resizable
-		searchterm="indo"
+		searchterm=""
 		selectable
-		sortable
+		sortindex="-1"
+		sortorder="0"
 		src="./table.json">
 		<fieldset><table class="ui-table"></table></fieldset>
 	</ui-datagrid>
