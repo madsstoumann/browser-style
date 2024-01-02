@@ -3,35 +3,12 @@
 
 	& table { width: 100%; }
 
-	&[density=compact] table {
+	/* &[density=compact] table {
 		--input-check-sz: 1em;
 		font-size: smaller;
 		& :is(td, th) { padding: 0.5ch 1ch; }
-	}
+	} */
 
-	/* Hover */
-	&[hover~=cell] {
-		td:is(:focus,:focus-visible,:hover) {
-			background-color: var(--DarkGray);
-			color: Canvas;
-			outline: 0;
-		}
-	}
-	&[hover~=column] {
-		table:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
-		table:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
-		table:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
-		table:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) col:nth-child(4),
-		table:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) col:nth-child(5),
-		table:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) col:nth-child(6),
-		table:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) col:nth-child(7),
-		table:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
-		table:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) { background-color: var(--GrayCanvas); }
-	}
-	&[hover~=row] {
-		table tr:has(td:is(:focus-visible,:hover)) td:not(:is(:focus-visible,:hover)) { background-color: var(--GrayCanvas); }
-	}
-	
 	/* Selectable */
 	&[selectable] {
 		& fieldset { display: contents; }
@@ -39,6 +16,7 @@
 			& label {
 				font-size: inherit;
 				font-weight: inherit;
+				grid-template-columns: min-content;
 			}
 			& tr:has(td):has([type=checkbox]):hover {
 				cursor: pointer;
@@ -54,7 +32,7 @@
 
 	/* Sorting */
 	&[sortorder] {
-		& th {
+		& th[tabindex] {
 			white-space: nowrap; 
 			&::after {
 				background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
@@ -64,11 +42,6 @@
 				margin-inline-start: 1ch;
 				width: .7em;
 				height: 1em;
-			}
-			&:is(:focus-visible,:hover) {
-				cursor: pointer;
-				outline: 2px solid var(--DarkGray);
-				outline-offset: -1px;
 			}
 		}
 	}

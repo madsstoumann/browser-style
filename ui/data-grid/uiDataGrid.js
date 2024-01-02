@@ -204,8 +204,9 @@ export default class uiDataGrid extends HTMLElement {
 		this.table.tBodies[0].innerHTML = this.paginate(data).map(row => {
 			const mapped = row.map((cell, index) => {
 				const td = regex ? cell.replaceAll(regex, match => `<mark>${match}</mark>`) : cell;
-				const content = (this.options.selectable && index === 0) ? `<label><input type="checkbox">${td}</label>` : td;
-				return `<td${this.options.navigable ? ` tabindex="-1"`: ''}>${content}</td>`;
+				const TD = `<td${this.options.navigable ? ` tabindex="-1"`: ''}>${td}</td>`
+				const content = (this.options.selectable && index === 0) ? `<td><label><input type="checkbox"></label></td>${TD}` : TD;
+				return content;
 			}).join('')
 			return `<tr>${mapped}</tr>`
 		}).join('')
@@ -215,8 +216,8 @@ export default class uiDataGrid extends HTMLElement {
 	renderTHead() {
 		this.table.tHead.innerHTML = `<tr>${this.state.thead.map((cell, index) => {
 			const th = cell.label || cell
-			const content = (this.options.selectable && index === 0) ? `<label><input type="checkbox" data-toggle>${th}</label>` : th;
-			return `<th tabindex="0">${content}</th>`
+			const content = (this.options.selectable && index === 0) ? `<th><label><input type="checkbox" data-toggle></label></th><th tabindex="0">${th}</th>` : `<th tabindex="0">${th}</th>`;
+			return content
 		}).join('')}</tr>`;
 
 		[...this.table.tHead.rows].forEach(row => [...row.cells].forEach((cell, index) => {

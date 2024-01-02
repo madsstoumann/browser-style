@@ -1,9 +1,10 @@
 :where(.ui-table) {
 	--ui-table-bdrs: 0;
 	--ui-table-bdw: 1px;
+	--ui-table-col-hover: var(--ButtonFace);
 	--ui-table-td-hover: var(--DarkGray);
-	--ui-table-col-hover: var(--GrayCanvas);
-	--ui-table-tr-hover: var(--GrayCanvas);
+	--ui-table-th-dark: var(--DarkGray);
+	--ui-table-tr-hover: var(--ButtonFace);
 	--ui-table-outline-bdc: var(--DarkGray);
 	--ui-table-outline-bdw: 2px;
 
@@ -52,6 +53,9 @@
 				border-bottom-right-radius: var(--ui-table-bdrs);
 			}
 		}
+		&.--th-dark th {
+			--ui-table-bdc: var(--ui-table-th-dark);
+		}
 	}
 	&.--split-rows {
 		--ui-table-bdsp-y: 1.5ch;
@@ -66,18 +70,19 @@
 				border-top-right-radius: var(--ui-table-bdrs);
 				border-bottom-right-radius: var(--ui-table-bdrs);
 			}
-			
 		}
 	}
-	&.--thead-dark th {
-		--ui-table-bdc: var(--DarkGray);
-		background-color: var(--DarkGray);
-		color: var(--LightText);
+	&.--th-dark th {
+		background-color: var(--ui-table-th-dark);
+		border-block-color: var(--ui-table-th-dark);
+		color: Canvas;
+		&:first-of-type { border-inline-start-color: var(--ui-table-th-dark); }
+		&:last-of-type { border-inline-end-color: var(--ui-table-th-dark); }
 	}
 	&.--zebracol-even :is(td, th):nth-of-type(even),
 	&.--zebracol-odd :is(td, th):nth-of-type(odd),
 	&.--zebrarow-even tr:nth-of-type(even) td,
-	&:is(.--thead-light, .--zebrarow-even) th,
+	&:is(.--th-light, .--zebrarow-even) th,
 	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--GrayCanvas)); }
 
 	/* Hover */
