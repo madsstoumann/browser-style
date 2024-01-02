@@ -1,45 +1,44 @@
 :where(ui-datagrid) {
 	display: block;
-
 	& table { width: 100%; }
-
-	/* &[density=compact] table {
-		--input-check-sz: 1em;
-		font-size: smaller;
-		& :is(td, th) { padding: 0.5ch 1ch; }
-	} */
 
 	/* Selectable */
 	&[selectable] {
 		& fieldset { display: contents; }
 		& table {
-			& label {
-				font-size: inherit;
-				font-weight: inherit;
-				grid-template-columns: min-content;
-			}
-			& tr:has(td):has([type=checkbox]):hover {
-				cursor: pointer;
-				outline: 2px solid var(--DarkGray);
-				outline-offset: -1px;
-			}
-			& tr:has(td):has([type=checkbox]:not(:checked)):hover {
-				background-color: var(--GrayCanvas);
+			& label { display: contents; }
+			& :is(td, th):has(label) {
+				padding-block-end: 0;
+				pointer-events: none;
+				text-align: center;
+				vertical-align: middle;
+				& input {
+					pointer-events: all;
+				}
 			}
 			& tr:has(td):has(:checked) { background-color: var(--AccentColorLight); }
 		}
 	}
 
+	& tr[aria-selected] td {
+		--ui-table-td-hover: var(--AccentColor);
+		background-color: var(--AccentColorLight);
+	}
+
 	/* Sorting */
 	&[sortorder] {
-		& th[tabindex] {
-			white-space: nowrap; 
+		& th[tabindex] span {
+			align-items: center;
+			display: flex;
+			gap: .5ch;
+			justify-content: space-between;
+			pointer-events: none;
+			white-space: nowrap;
 			&::after {
 				background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
 				clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
 				content: "";
 				display: inline-block;
-				margin-inline-start: 1ch;
 				width: .7em;
 				height: 1em;
 			}

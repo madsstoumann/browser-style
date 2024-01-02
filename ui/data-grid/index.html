@@ -18,7 +18,7 @@
 	<p>With <code>hover="cell column row"</code>:</p>
 	<ui-datagrid
 		hover="cell column row"
-		itemsperpage="20"
+		itemsperpage="-1"
 		navigable
 		searchterm=""
 		sortindex="-1"
@@ -55,15 +55,15 @@
 		editable
 		hover="cell column row"
 		itemsperpage="10"
-		navigable
+		
 		page="0"
-		resizable
+		
 		searchterm=""
-		selectable
+		
 		sortindex="-1"
 		sortorder="0"
 		src="./table.json">
-		<fieldset><table class="ui-table --th-dark --hover-all"></table></fieldset>
+		<table class="ui-table --compacts --rounded --th-light --hover-all --hover-tr-outline"></table>
 	</ui-datagrid>
 
 	<script type="module" src="uiDataGrid.js"></script>
