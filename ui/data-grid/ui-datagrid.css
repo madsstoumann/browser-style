@@ -1,10 +1,39 @@
 :where(ui-datagrid) {
 	display: block;
-	& table { width: 100%; }
+	
+	& [type=search] { margin-block-end: 1ch; }
+	
+	& fieldset {
+		all: unset;
+		display: flex;
+		font-size: smaller;
+		gap: 3ch;
+		margin-block: 1ch;
+		justify-content: end;
+
+		& label { all: unset; }
+		& :is(input, select) {
+			all: unset;
+			font-weight: 500;
+			line-height: 1;
+			text-align: center;
+			user-select: none;
+			&::-webkit-inner-spin-button { opacity: 1; }
+			&:is(:focus,:focus-visible) { border-block-end: 1px dotted; } 
+		}
+	}
+	& table {
+		width: 100%;
+		& td[contenteditable]:is(:focus,:focus-visible) {
+			background: Canvas;
+			color: CanvasText;
+			outline: 2px solid var(--AccentColor);
+			outline-offset: -2px;
+		}
+	}
 
 	/* Selectable */
 	&[selectable] {
-		& fieldset { display: contents; }
 		& table {
 			& label { display: contents; }
 			& :is(td, th):has(label) {
@@ -26,7 +55,7 @@
 	}
 
 	/* Sorting */
-	&[sortorder] {
+	/* &[sortorder] { */
 		& th[tabindex] span {
 			align-items: center;
 			display: flex;
@@ -43,7 +72,7 @@
 				height: 1em;
 			}
 		}
-	}
+	/* } */
 	&[sortorder="1"] { --_deg: 0deg; }
 	&[sortindex="0"] th:nth-child(1),
 	&[sortindex="1"] th:nth-child(2),

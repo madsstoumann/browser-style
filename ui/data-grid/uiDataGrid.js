@@ -10,19 +10,22 @@ export default class uiDataGrid extends HTMLElement {
 
 		this.options = {
 			editable: this.hasAttribute('editable') || false,
-			locale: this.getAttribute('locale') || 'en-US',
-			selectable: this.hasAttribute('selectable') || false,
-			src: this.getAttribute('src') || '',
+			locale: this.getAttribute('lang') || document.documentElement.lang || 'en-US',
+			searchable: this.hasAttribute('searchable') || false,
+			selectable: this.hasAttribute('selectable') || false
 		}
 
 		this.state = {
 			cellIndex: 0,
 			cols: 0,
-			itemsPerPage: 1,
+			editing: false,
+			itemsPerPage: 10,
 			page: 0,
 			pages: 0,
+			pageItems: 0,
 			rowIndex: 0,
 			rows: 0,
+			selected: [],
 			sortIndex: -1,
 			sortOrder: 0,
 			tbody: [],
@@ -31,47 +34,39 @@ export default class uiDataGrid extends HTMLElement {
 	}
 
 	async connectedCallback() {
-		this.table = this.querySelector('table')
-		
-		if (!this.table) {
-			this.table = document.createElement('table')
-			this.appendChild(this.table)
-		}
-		if (!this.table.tHead) {
-			this.table.appendChild(document.createElement('thead'))
-		}
-		if (!this.table.tBodies.length) {
-			this.table.appendChild(document.createElement('tbody'))
-		}
+		this.table = this.querySelector('table') || (() => {
+			const table = document.createElement('table')
+			this.appendChild(table)
+			return table
+		})()
+
+		if (!this.table.tHead) this.table.appendChild(document.createElement('thead'))
+		if (!this.table.tBodies.length) this.table.appendChild(document.createElement('tbody'))
 		this.colgroup = document.createElement('colgroup')
 		this.table.appendChild(this.colgroup)
 
-		if (!this.options.src) {
-			this.state = Object.assign(this.state, this.arrayFromTable(this.table))
-			console.log(this.state)
-			this.renderTable()
+		this.pagination = document.createElement('fieldset')
+		this.appendChild(this.pagination)
+
+		if (this.options.searchable && !this.search) {
+			this.search = document.createElement('input')
+			this.search.setAttribute('type', 'search')
+			this.search.setAttribute('placeholder', 'Search')
+			this.search.setAttribute('value', this.getAttribute('searchterm') || '');
+
+			['input', 'search'].forEach(str => {
+				this.search.addEventListener(str, event => {
+					this.setAttribute('searchterm', event.target.value)
+				})
+			})
+			this.insertAdjacentElement('afterbegin', this.search)
 		}
 
-		// console.log(this.state)
-
-
-
-		// if (this.fieldset) {
-
-		// 	this.fieldset.addEventListener('change', event => {
-		// 		const { target } = event;
-		// 		const inputs = Array.from(this.fieldset.querySelectorAll('input:not([data-toggle])'));
-		// 		const toggle = this.fieldset.querySelector('[data-toggle]');
-
-		// 		if (target === toggle) {
-		// 			inputs.forEach(input => input.checked = toggle.checked);
-		// 		} else {
-		// 			const allChecked = inputs.every(input => input.checked);
-		// 			toggle.checked = allChecked;
-		// 			toggle.indeterminate = !allChecked && inputs.some(input => input.checked);
-		// 		}
-		// 	})
-		// }
+		if (!this.getAttribute('src')) {
+			this.state = Object.assign(this.state, this.dataFromTable(this.table))
+			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.rows
+			this.renderTable()
+		}
 
 		/* Events */
 		this.table.addEventListener('click', (event) => {
@@ -91,40 +86,42 @@ export default class uiDataGrid extends HTMLElement {
 					if (node.nodeName === 'TH') {
 						event.preventDefault();
 						const index = node.cellIndex
-						if (index !== undefined) this.setAttribute('sortindex', this.options.selectable ? index - 1 : index);
+						if (index !== undefined) this.setAttribute('sortindex', index);
 					}
 					if (node.nodeName === 'TD') {
-						if (event.shiftKey) {
+						if (this.options.selectable && event.shiftKey) {
 							node.parentNode.toggleAttribute('aria-selected')
 						}
 					}
 					break;
 				case 'a':
-					if (event.ctrlKey || event.metaKey) {
+					if (this.options.selectable && (event.ctrlKey || event.metaKey)) {
 						event.preventDefault();
 						Array.from(this.table.tBodies[0].rows).forEach(row => row.setAttribute('aria-selected', 'true'))
 					}
 					break;
 				case 'i':
-					if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
+					if (this.options.selectable && (event.ctrlKey || event.metaKey) && event.shiftKey) {
 						event.preventDefault();
 						Array.from(this.table.tBodies[0].rows).forEach(row => row.toggleAttribute('aria-selected'))
 					}
 				case 'ArrowDown':
-					this.state.rowIndex = Math.min(this.state.rowIndex + 1, this.state.itemsPerPage)
+					this.state.rowIndex = Math.min(this.state.rowIndex + 1, this.state.pageItems)
 					break;
 				case 'ArrowUp':
 					this.state.rowIndex = Math.max(this.state.rowIndex - 1, 0)
 					break;
 				case 'ArrowRight':
+					if (this.state.editing) break;
 					this.state.cellIndex = Math.min(this.state.cellIndex + 1, this.state.cols - 1)
 					break;
 				case 'ArrowLeft':
+					if (this.state.editing) break;
 					this.state.cellIndex = Math.max(this.state.cellIndex - 1, 0)
 					break;
 				case 'End':
 					if (!event.shiftKey) this.state.cellIndex = this.state.cols - 1
-					if ((event.ctrlKey || event.metaKey) || event.shiftKey) this.state.rowIndex = this.state.itemsPerPage
+					if ((event.ctrlKey || event.metaKey) || event.shiftKey) this.state.rowIndex = this.state.pageItems
 					break;
 				case 'Home':
 					if (!event.shiftKey) this.state.cellIndex = 0
@@ -136,8 +133,33 @@ export default class uiDataGrid extends HTMLElement {
 				case 'PageUp':
 					this.prevPage()
 					break;
+				case 'F2':
+					this.state.editing = !this.state.editing
+					node.toggleAttribute('contenteditable', this.state.editing)
+					if (this.state.editing) {
+						window.getSelection().selectAllChildren(node)
+        		window.getSelection().collapseToEnd()
+					}
+					break;
+				case 'Escape': break;
+				case 'Tab':
+					if (this.state.editing) {
+						event.preventDefault()
+						this.state.editing = false
+						node.toggleAttribute('contenteditable', this.state.editing)
+					}
+					break;
 				}
+				
 			this.setActive()
+		})
+
+		this.pagination.addEventListener('input', (event) => {
+			const input = event.target
+			if (input.name === 'itemsperpage') this.setAttribute('itemsperpage', parseInt(event.target.value, 10))
+			if (input.name === 'page') {
+				this.setAttribute('page', parseInt(event.target.value, 10) - 1)
+			}
 		})
 	}
 
@@ -151,15 +173,20 @@ export default class uiDataGrid extends HTMLElement {
 		}
 		if (name === 'page') {
 			this.state.page = parseInt(newValue, 10);
-			if (oldValue && oldValue !== newValue) this.renderTBody()
+			if (oldValue && (oldValue !== newValue)) {
+				this.dispatchEvent(new CustomEvent('pagechange', { detail: this.state }))
+				this.renderTBody()
+			}
 		}
 		if (name === 'searchterm') {
-			this.setAttribute('page', 0)
-			this.renderTBody()
+			if (newValue !== oldValue) {
+				this.setAttribute('page', 0)
+				this.renderTBody()
+			}
 		}
 		if (name === 'src') { this.fetchData(newValue).then(data => {
 			this.state = Object.assign(this.state, data)
-			this.renderTable() 
+			this.renderTable()
 			}) 
 		}
 		if (name === 'sortindex') {
@@ -169,13 +196,17 @@ export default class uiDataGrid extends HTMLElement {
 		}
 		if (name === 'sortorder') {
 			this.state.sortOrder = parseInt(newValue, 10)
+			// if (newValue !== oldValue) this.renderTBody()
 		}
   }
 
 	/* Methods */
-	// camelCase = str => str.split(' ').map((e,i) => i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()).join('')
+	camelCase = str => str.split(' ').map((e,i) => i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()).join('')
 	colGroup = () => this.colgroup.innerHTML = `<col>`.repeat(this.state.cols)
-	nextPage = () => this.setAttribute('page', Math.min(this.state.page + 1, this.state.pages))
+	nextPage = () => {
+		this.state.rowIndex = 1
+		this.setAttribute('page', Math.min(this.state.page + 1, this.state.pages - 1))
+	}
 	pages = (items, itemsPerPage) => Math.ceil(items / itemsPerPage)
 	prevPage = () => this.setAttribute('page', Math.max(this.state.page - 1, 0))
 	paginate = data => data.slice(this.state.page * this.state.itemsPerPage, this.state.page * this.state.itemsPerPage + this.state.itemsPerPage)
@@ -188,14 +219,41 @@ export default class uiDataGrid extends HTMLElement {
 
 	async fetchData(url) {
 		const data = await (await fetch(url)).json();
-		const thead = data.shift()
 		return {
-			cols: thead.length,
-			pages: this.pages(data.length, this.state.itemsPerPage),
-			rows: data.length,
-			tbody: data,
-			thead
+			cols: data.thead.length,
+			pages: this.pages(data.tbody.length, this.state.itemsPerPage),
+			rows: data.tbody.length,
+			tbody: data.tbody,
+			thead: data.thead
 		}
+	}
+
+	renderPagination() {
+		const { page, pages, items, itemsPerPage, pageItems } = this.state;
+		const start = page === pages - 1 ? page * itemsPerPage + 1 : page * pageItems + 1;
+		const end = Math.min((page + 1) * itemsPerPage, items);
+		const size = [
+			{ val: 5 },
+			{ val: 10 },
+			{ val: 20 },
+			{ val: 50 },
+			{ val: 100 },
+			{ val: items, key: 'All' },
+		]
+
+		this.pagination.innerHTML = `
+				<label>Page Size: <select name="itemsperpage">${size
+					.map((obj) => {
+						if (obj.val > items) return;
+						return `<option${
+							obj.val === this.state.itemsPerPage ? ` selected` : ''
+						} value="${obj.val}">${obj.key || obj.val}</option>`
+					})
+					.join('')}</select></label>
+				<output>${start}&ndash;${end} of ${items}</output>
+				<label>Page <input type="number" name="page" min="1" max="${
+					this.state.pages
+				}" value="${page + 1}"> of ${pages}</label>`
 	}
 
 	renderTable() {
@@ -210,83 +268,77 @@ export default class uiDataGrid extends HTMLElement {
 		const method = this.getAttribute('searchfilter') || 'includes';
 		const searchterm = this.getAttribute('searchterm')?.toLowerCase();
 		const data = searchterm
-			? this.state.tbody.filter((row) =>
-					row.some(
-						(cell) =>
-							typeof cell === 'string' && cell.toLowerCase()[method](searchterm),
-					),
-				)
+			? this.state.tbody.filter((row) => Object.values(row).some(cell => cell.toString().toLowerCase()[method](searchterm)))
 			: this.state.tbody;
 		const regex = searchterm ? new RegExp(searchterm, 'gi') : null;
 	
 		/* Optional: Sort Data */
 		if (this.state.sortIndex > -1) {
 			data.sort(
-				(a, b) =>
-					typeof a[this.state.sortIndex] === 'string' &&
-					a[this.state.sortIndex].localeCompare(
-						b[this.state.sortIndex],
-						this.options.locale,
-						{ sensitivity: 'variant' },
-					),
-			);
-			if (this.state.sortOrder === 1) data.reverse();
+				(a, b) => {
+					const A = Object.values(a)[this.state.sortIndex]
+					const B = Object.values(b)[this.state.sortIndex]
+					return typeof A === 'string' ? A.localeCompare(B, this.options.locale, { sensitivity: 'variant' }) : A - B
+				});
+			if (this.state.sortOrder === 1) data.reverse()
 		}
-	
-		this.table.tBodies[0].innerHTML = this.paginate(data)
+
+		const page = this.paginate(data)
+		this.state.pageItems = page.length
+		this.state.items = data.length
+		this.state.pages = this.pages(data.length, this.state.itemsPerPage)
+
+		this.table.tBodies[0].innerHTML = page
 			.map((row) => {
-				const mapped = row
-					.map(cell => {
-						return`<td tabindex="-1">${
+				const mapped = Object.values(row)
+					.map((cell, index) => {
+						if (this.state.thead[index].hidden) return
+						return `<td tabindex="-1">${
 							regex
-								? cell.replaceAll(regex, (match) => `<mark>${match}</mark>`)
+								? cell.toString().replaceAll(regex, (match) => `<mark>${match}</mark>`)
 								: cell
 						}</td>`;
 					})
 					.join('');
-				return `<tr>${mapped}</tr>`;
+				return `<tr${row.id ? ` data-row-id="${row.id}"`:''}>${mapped}</tr>`;
 			})
 			.join('');
-		// console.log(this.state);
+
+		console.log(this.state)
+		this.renderPagination()
 	}
 
 	renderTHead() {
 		this.table.tHead.innerHTML = `<tr>${this.state.thead
 			.map((cell, index) => {
-				return `<th tabindex="${index === 0 ? 0 : -1}"><span>${cell.label || cell}</span></th>`
+				return cell.hidden ? '': `<th tabindex="${index === 0 ? 0 : -1}"><span>${cell.label || cell}</span></th>`
 			})
 			.join('')}</tr>`;
 	}
 
-	arrayFromTable(table) {
-		const thead = [...table.tHead.rows[0].cells].map(cell => cell.textContent)
-		const tbody = [...table.tBodies[0].rows].map(row => [...row.cells].map(cell => cell.textContent))
-		return {
-			cols: table.tHead.rows[0].cells.length,
-			pages: Math.floor(tbody.length / this.state.itemsPerPage),
-			rows: tbody.length,
-			thead, 
-			tbody
+	dataFromTable(table) {
+		try {
+			const thead = [...table.tHead.rows[0].cells].map(cell => { return { field: this.camelCase(cell.textContent), label: cell.textContent } })
+			const tbody = [...table.tBodies[0].rows].map((row, index) => {
+				const obj = { id: index + 1 };
+				[...row.cells].forEach((cell, index) => {
+						const field = thead[index].field
+						obj[field] = cell.textContent
+				});
+				return obj
+			});
+			thead.unshift({ field: 'id', label: 'ID', hidden: false });
+			return {
+				cols: thead.length,
+				pages: Math.floor(tbody.length / this.state.itemsPerPage),
+				rows: tbody.length,
+				tbody,
+				thead
+			}
+		}
+		catch (error) {
+			console.error(error)
 		}
 	}
-
-	// stateFromTable(table) {
-	// 	const thead = [...table.tHead.rows[0].cells].map(cell => { return { field: this.camelCase(cell.textContent), label: cell.textContent } })
-	// 	const tbody = [...table.tBodies[0].rows].map(row => {
-	// 		const obj = {};
-	// 		[...row.cells].forEach((cell, index) => {
-	// 				const field = thead[index].field
-	// 				obj[field] = cell.textContent
-	// 		});
-	// 		return obj
-	// 	})
-	// 	return {
-	// 		cols: table.tHead.rows[0].cells.length,
-	// 		pages: Math.floor(tbody.length / this.state.itemsPerPage),
-	// 		rows: table.tBodies[0].rows.length,
-	// 		tbody,
-	// 		thead
-	// 	}
-	// }
 }
 customElements.define("ui-datagrid", uiDataGrid);

@@ -15,14 +15,8 @@
 
 	<h2>Data Grid</h2>
 	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
-	<p>With <code>hover="cell column row"</code>:</p>
-	<ui-datagrid
-		hover="cell column row"
-		itemsperpage="-1"
-		navigable
-		searchterm=""
-		sortindex="-1"
-		sortorder="0">
+
+	<ui-datagrid searchable>
 		<table class="ui-table --rounded --th-light --hover-all">
 			<thead>
 				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -51,22 +45,24 @@
 	<br>
 	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
 	<ui-datagrid
-		density="normal"
 		editable
-		hover="cell column row"
 		itemsperpage="10"
-		
-		page="0"
-		
-		searchterm=""
-		
-		sortindex="-1"
+		searchable
+		searchterm="indo"
+		selectable
+		sortindex="0"
 		sortorder="0"
-		src="./table.json">
+		src="./data.json">
 		<table class="ui-table --compacts --rounded --th-light --hover-all --hover-tr-outline"></table>
 	</ui-datagrid>
 
 	<script type="module" src="uiDataGrid.js"></script>
+
+	<script>
+		const uiDataGrid = document.querySelector('ui-datagrid[src]');
+
+		uiDataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
+	</script>
 
 </body>
 </html>

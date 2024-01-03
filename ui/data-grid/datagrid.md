@@ -1,3 +1,43 @@
+## Attributes
+
+
+editable
+itemsperpage
+page
+searchable
+searchterm
+selectable
+sortindex
+sortorder
+src
+
+## Events
+cellValueChanged
+pagechange
+rowSelected
+sortingChanged
+
+
+## State
+
+
+| Key          | Initial Value | Description |
+|--------------|---------------| ----------- |
+| cellIndex    | 0             | Column index of selected Cell |
+| cols         | 0             | Number of columns |
+| itemsPerPage | 10            | Items Per Page |
+| page         | 0             | Current Page |
+| pages        | 0             | Total number of pages |
+| pageItems    | 0             | Items for *current* page |
+| rowIndex     | 0             | Row Index of Active Cell |
+| rows         | 0             | Total amount of rows in dataset |
+| selected     | []            | Array of selected rows |
+| sortIndex    | -1            | Column index of field to sort by |
+| sortOrder    | 0             | 0: Ascending, 1: Descending |
+| tbody        | []            | Array of Objects: Table Data |
+| thead        | []            | Array of Column Definitions |
+
+
 ## Keyboard Navigation
 
 - `Right Arrow`: Moves focus one cell to the right. If focus is on the right-most cell in the row, focus does not move.
