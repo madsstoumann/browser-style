@@ -3316,15 +3316,18 @@
     },
     {
       "field": "email",
-      "label": "Email"
+      "label": "Email",
+      "uid": true
     },
     {
       "field": "gender",
-      "label": "Gender"
+      "label": "Gender",
+      "hidden": true
     },
     {
       "field": "city",
-      "label": "City"
+      "label": "City",
+      "hidden": true
     },
     {
       "field": "country",

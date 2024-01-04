@@ -1,5 +1,6 @@
 :where(ui-datagrid) {
 	display: block;
+	/* overflow: auto; */
 	
 	& [type=search] { margin-block-end: 1ch; }
 	
@@ -30,6 +31,17 @@
 			outline: 2px solid var(--AccentColor);
 			outline-offset: -2px;
 		}
+
+		& th[data-uid] {
+			text-decoration: underline;
+			text-decoration-style: dotted;
+			/* & span::before {
+				content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"/><path d="M15 9h.01"/></svg>');
+				display: block;
+				height: 1em;
+				width: 1em;
+			} */
+		}
 	}
 
 	/* Selectable */
@@ -53,6 +65,7 @@
 		--ui-table-td-hover: var(--AccentColor);
 		background-color: var(--AccentColorLight);
 	}
+	
 
 	/* Sorting */
 	/* &[sortorder] { */
@@ -60,7 +73,7 @@
 			align-items: center;
 			display: flex;
 			gap: .5ch;
-			justify-content: space-between;
+			/* justify-content: space-between; */
 			pointer-events: none;
 			white-space: nowrap;
 			&::after {
@@ -68,19 +81,20 @@
 				clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
 				content: "";
 				display: inline-block;
+				margin-inline-start: auto;
 				width: .7em;
 				height: 1em;
 			}
 		}
 	/* } */
 	&[sortorder="1"] { --_deg: 0deg; }
-	&[sortindex="0"] th:nth-child(1),
-	&[sortindex="1"] th:nth-child(2),
-	&[sortindex="2"] th:nth-child(3),
-	&[sortindex="3"] th:nth-child(4),
-	&[sortindex="4"] th:nth-child(5),
-	&[sortindex="5"] th:nth-child(6),
-	&[sortindex="6"] th:nth-child(7),
-	&[sortindex="7"] th:nth-child(8),
-	&[sortindex="8"] th:nth-child(9) { --_index: currentColor; }
+	&[sortindex="0"] [data-sort-index="0"],
+	&[sortindex="1"] [data-sort-index="1"],
+	&[sortindex="2"] [data-sort-index="2"],
+	&[sortindex="3"] [data-sort-index="3"],
+	&[sortindex="4"] [data-sort-index="4"],
+	&[sortindex="5"] [data-sort-index="5"],
+	&[sortindex="6"] [data-sort-index="6"],
+	&[sortindex="7"] [data-sort-index="7"],
+	&[sortindex="8"] [data-sort-index="8"] { --_index: currentColor; }
 }

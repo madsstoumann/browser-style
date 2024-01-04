@@ -16,28 +16,28 @@
 	<h2>Data Grid</h2>
 	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
 
-	<ui-datagrid searchable>
+	<ui-datagrid debug searchable lang="da-DK">
 		<table class="ui-table --rounded --th-light --hover-all">
 			<thead>
-				<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+				<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 			</thead>
 			<tbody>
-				<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-				<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-				<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-				<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-				<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-				<tr><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
-				<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
-				<tr><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
-				<tr><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
-				<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
-				<tr><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
-				<tr><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
-				<tr><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
-				<tr><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
-				<tr><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
-				<tr><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+				<tr><td>1</td><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td>2</td><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td>3</td><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td>4</td><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td>5</td><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+				<tr><td>6</td><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
+				<tr><td>7</td><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr><td>8</td><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+				<tr><td>9</td><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+				<tr><td>10</td><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr><td>11</td><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+				<tr><td>12</td><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
+				<tr><td>13</td><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
+				<tr><td>14</td><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+				<tr><td>15</td><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+				<tr><td>16</td><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
 			</tbody>
 		</table>
 	</ui-datagrid>
@@ -45,24 +45,25 @@
 	<br>
 	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
 	<ui-datagrid
+		debug
 		editable
 		itemsperpage="10"
+		page="0"
 		searchable
 		searchterm="indo"
 		selectable
 		sortindex="0"
-		sortorder="0"
+		sortorder="1"
 		src="./data.json">
 		<table class="ui-table --compacts --rounded --th-light --hover-all --hover-tr-outline"></table>
 	</ui-datagrid>
 
 	<script type="module" src="uiDataGrid.js"></script>
 
-	<script>
+	<!-- <script>
 		const uiDataGrid = document.querySelector('ui-datagrid[src]');
-
 		uiDataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
-	</script>
+	</script> -->
 
 </body>
 </html>
