@@ -146,9 +146,14 @@ Used to specify the column-index holding the `id`, if using an existing `<table>
 - pagechange
 - rowSelected
 - sortchange
+- copy
 
 ### Recieving
 - appendData
+- clearSelection
+- getSelected
+- exportExcel
+- exportJSON
 
 
 ## State

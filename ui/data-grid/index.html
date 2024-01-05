@@ -16,7 +16,14 @@
 	<h2>Data Grid</h2>
 	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
 
-	<ui-datagrid debug searchable lang="da-DK">
+	<ui-datagrid
+		debug
+		editable
+		lang="da"
+		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","size":"Rækker per side"}}'
+		itemsperpage="5"
+		page="0"
+		searchable>
 		<table class="ui-table --rounded --th-light --hover-all">
 			<thead>
 				<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -45,7 +52,6 @@
 	<br>
 	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
 	<ui-datagrid
-		debug
 		editable
 		itemsperpage="10"
 		page="0"
@@ -55,7 +61,7 @@
 		sortindex="0"
 		sortorder="1"
 		src="./data.json">
-		<table class="ui-table --compacts --rounded --th-light --hover-all --hover-tr-outline"></table>
+		<table class="ui-table --rounded --th-light --hover-all --hover-tr-outline"></table>
 	</ui-datagrid>
 
 	<script type="module" src="uiDataGrid.js"></script>

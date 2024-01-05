@@ -3,28 +3,92 @@
 	/* overflow: auto; */
 	
 	& [type=search] { margin-block-end: 1ch; }
-	
+
+	& form {
+		align-items: center;
+		display: grid;
+		font-size: smaller;
+		grid-auto-flow: column;
+		/* justify-content: space-between; */
+		margin-block: 1ch;
+		& fieldset {
+			all: unset;
+			align-items: center;
+			display: flex;
+			gap: 1ch;
+			
+			&[name=navigation] {
+				gap: 3ch;
+				justify-self: end;
+			}
+			
+			& button {
+				--button-p: .25ch 1ch;
+				font-size: small;
+			}
+		}
+	}
 	& fieldset {
-		all: unset;
+		/* all: unset;
+		align-items: center;
 		display: flex;
 		font-size: smaller;
 		gap: 3ch;
 		margin-block: 1ch;
-		justify-content: end;
+		justify-content: end; */
 
 		& label { all: unset; }
+		
 		& :is(input, select) {
 			all: unset;
+			border-block-end: 1px transparent; 
+			font-size: inherit;
+			/* all: unset;
 			font-weight: 500;
 			line-height: 1;
 			text-align: center;
-			user-select: none;
+			user-select: none; */
 			&::-webkit-inner-spin-button { opacity: 1; }
 			&:is(:focus,:focus-visible) { border-block-end: 1px dotted; } 
 		}
 	}
 	& table {
 		width: 100%;
+		/* & td:first-of-type {
+			padding-inline-start: 3ch;
+			position: relative;
+			&::before {
+				background: var(--GrayCanvas);
+				content: '';
+				position: absolute;
+				top: 1px;
+				bottom: 1px;
+				
+				width: 2ch;
+				left: 0;
+			}
+			
+	
+		}	
+		
+		& tr[aria-selected] td:first-of-type::before {
+			background: var(--AccentColor);
+		}	 */
+
+		& td { cursor: default; position: relative; }
+		& th { cursor: pointer; }
+		& td[data-old-value]::after {
+			border-radius: 50%;
+			content: "";
+			display: block;
+			width: .33em;
+			height: .33em;
+			background: var(--ColorWarning);
+			position: absolute;
+			right: 0.25em;
+			top: .25em;
+		}
+
 		& td[contenteditable]:is(:focus,:focus-visible) {
 			background: Canvas;
 			color: CanvasText;
