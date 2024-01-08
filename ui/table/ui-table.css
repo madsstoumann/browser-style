@@ -100,15 +100,15 @@
 	&.--hover-all,
 	&.--hover-col,
 	&.--hover-col-outline {
-		&:has(:is(td,th):nth-child(1):is(:focus,:focus-visible,:hover)) col:nth-child(1),
-		&:has(:is(td,th):nth-child(2):is(:focus,:focus-visible,:hover)) col:nth-child(2),
-		&:has(:is(td,th):nth-child(3):is(:focus,:focus-visible,:hover)) col:nth-child(3),
-		&:has(:is(td,th):nth-child(4):is(:focus,:focus-visible,:hover)) col:nth-child(4),
-		&:has(:is(td,th):nth-child(5):is(:focus,:focus-visible,:hover)) col:nth-child(5),
-		&:has(:is(td,th):nth-child(6):is(:focus,:focus-visible,:hover)) col:nth-child(6),
-		&:has(:is(td,th):nth-child(7):is(:focus,:focus-visible,:hover)) col:nth-child(7),
-		&:has(:is(td,th):nth-child(8):is(:focus,:focus-visible,:hover)) col:nth-child(8),
-		&:has(:is(td,th):nth-child(9):is(:focus,:focus-visible,:hover)) col:nth-child(9) {
+		&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
+		&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
+		&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
+		&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) col:nth-child(4),
+		&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) col:nth-child(5),
+		&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) col:nth-child(6),
+		&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) col:nth-child(7),
+		&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
+		&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) {
 			background-color: var(--ui-table-col-hover);
 			.--hover-col-outline & {
 				--ui-table-bdc: var(--ui-table-outline-bdc);
@@ -123,7 +123,7 @@
 	}
 	&.--hover-all,
 	&.--hover-td {
-		td:is(:focus,:focus-visible,:hover) {
+		td:is(:focus-visible,:hover) {
 			--ui-table-bdc: var(--ui-table-td-hover);
 			background-color: var(--ui-table-td-hover);
 			color: Canvas;
@@ -131,17 +131,17 @@
 		}
 	}
 	&.--hover-td-outline {
-		& td:is(:focus,:focus-visible,:hover) {
+		& td:is(:focus-visible,:hover) {
 			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
 			outline-offset: calc(0px - var(--ui-table-bdw));
 		}
 	}
 	&.--hover-all,
 	&.--hover-th-outline {
-		& th:is(:focus,:focus-visible,:hover) {
+		& th:is(:focus-visible,:hover) {
 			cursor: pointer;
 			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
-			outline-offset: calc(0px - var(--ui-table-bdw));
+			outline-offset: calc(0px - var(--ui-table-outline-bdw));
 			user-select: none;
 			.--th-dark & {
 				--ui-table-outline-bdc: var(--GrayCanvas);
@@ -151,7 +151,7 @@
 	}
 	&.--hover-all,
 	&.--hover-tr {
-		tr:has(td:is(:focus,:focus-visible,:hover)) {
+		tr:has(td:is(:focus-visible,:hover)) {
 			background-color: var(--ui-table-tr-hover);
 			&.--hover-td & td:not(:is(:focus-visible,:hover)) { background-color: var(--ui-table-td-hover); }
 		}
@@ -159,7 +159,7 @@
 	&.--hover-tr-outline {
 		& tr:has(td):hover {
 			outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
-			outline-offset: calc(0px - var(--ui-table-bdw));
+			outline-offset: calc(0px - var(--ui-table-outline-bdw));
 		}
 	}
 }

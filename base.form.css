@@ -269,6 +269,7 @@
 & [type=password] { --icon: url('/assets/svg/lock.svg'); }
 & [type=search] {
 	--icon: url('/assets/svg/search.svg');
+	&:not(:placeholder-shown),
 	&:focus-visible { --icon: none; }
 }
 & [type=tel] {  --icon: url('/assets/svg/phone.svg'); }

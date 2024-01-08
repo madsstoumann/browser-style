@@ -1,162 +1,477 @@
-# table
-The table component 
+# ui-datagrid
 
----
+`<ui-datagrid>` is a Custom Element, you can wrap around an existing `<table>`, or fill with data through the `data` or `src`-attributes.
 
-## Structure
-
-A table should contain a `data-blok="table"`-attribute, a `<thead>`-tag with a single row (`<tr>`) of `<th>`-cells, and a single `<tbody>`-tag with rows (`<tr>`) of `<td>`-cells:
+With an existing `<table>`:
 
 ```html
-<table data-blok="table">
-  <thead></thead>
-  <tbody></tbody>
+<ui-datagrid
+  itemsperpage="20"
+  searchable>
+  <table>
+    <thead>...</thead>
+    <tbody>...</tbody>
+  </table>
+</ui-datagrid>
+```
+
+With `src`:
+
+```html
+<ui-datagrid
+  itemsperpage="20"
+  searchable
+  src="https://endpoint.com/">
+</ui-datagrid>
+```
+
+With `src` **and** some default `<table>`-styles:
+
+```html
+<ui-datagrid
+  itemsperpage="20"
+  searchable
+  src="https://endpoint.com/">
+  <table
+    class="my-table-classes">
+  </table>
+</ui-datagrid>
+```
+
+From JavaScript:
+
+```js
+const grid = document.createElement('ui-datagrid');
+grid.setAttribute('itemsperpage', 20);
+grid.setAttribute('searchable', '');
+grid.setAttribute('src', 'https://endpoint.com');
+document.body.append(grid);
+```
+
+With `data` as attribute:
+
+```html
+<ui-datagrid
+  data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'>
+  ...
+</ui-datagrid>
+```
+
+From JavaScript:
+
+```js
+const data = {
+  thead: [...],
+  tbody: [...]
+}
+
+const grid = document.createElement('ui-datagrid');
+grid.setAttribute('data', JSON.stringify(data));
+document.body.append(grid);
+```
+
+## Table Data
+If you're using an existing, inline `<table>` as data-source, you need to structure it with `<thead>` and `<tbody>`-tags. To keep it simple, `colspan` and `rowspan` -attributes are **not** allowed, and you can only use `<th>`-tags within `<tr>`’s in `<thead>` — and `<td>`-tags within `<tr>`s in `<tbody>`:
+
+```html
+<table>
+  <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Bruce</td>
+      <td>Wayne</td>
+    </tr>
+  </tbody>
 </table>
 ```
 
-The `table` should be wrapped in an element with a `data-blok="table-inner"`-attribute.  
-The outer element is necessary for overflow-scrolling, but can be omitted if not needed.
-
-```html
-<div data-blok="table-inner">
-  <table data-blok="table">...</table>
-</div>
-```
-
-If pagination, search, sorting or row-density is used, add an *additional* outer wrapper:
-
-```html
-<div data-blok="table-outer">
-  <div data-blok="table-inner">
-  <table data-blok="table">...</table>
-</div>
-```
-
-The **outermost** element should contain a `data-table-param`-attribute:
-
-```html
-<div data-blok="table-outer" data-table-param="PARAMETERS">
-  ...
-</div>
-```
-
 ---
 
-## Parameters
-Parameters are added as space-separated entries in the `data-table-param`-attribute.
+If you're using an **external** `src`, the endpoint must return an object with two properties, `tbody` and `thead`:
 
-- `bdrscol`. Adds `border-radius` to columns (need col-spacing).
-- `bdrsrow`. Adds `border-radius` to rows (need row-spacing).
-- `bdrstable`. Adds `border-radius` to “table”: first and last cells of first and last rows.
-- `density`. Adds density-control to table.
-- `editable`. Allow table to be edited.
-- `exportcsv`. Export table-data to CSV.
-- `exportjson`. Export table-data to JSON.
-- `headborder`. `<thead>` uses same borders as `<tbody>`.
-- `hideempty`. Hides empty cells.
-- `hovercell`. Adds hover to `<tbody>`-cells.
-- `hovercol`. Adds hover to `<tbody>`-columns.
-- `hoverrow`. Adds hover to `<tbody>`-rows.
-- `noinlineborder`. Hides inline borders from columns, keeps first and last.
-- `resizable`. JavaScript-hook for making columns resizable.
-- `searchable`. JavaScript-hook for making the table searchable.
-- `selectable`. JavaScript-hook for making rows selectable. Wrapper-element should be a `<form>`.
-- `sortable`. JavaScript-hook for making columns sortable.
-- `stickycol`. Makes first column sticky.
-- `stickyrow`. Makes `<thead>` sticky.
-- `zebracol`. Adds zebra-styling to columns.
-- `zebrarow`. Adds zebra-styling to rows.
-
-*Example:*
-```html
-<div data-blok="table-outer" data-table-param="zebrarow stickyrow">
-  ...
-</div>
-```
-
----
-
-## Alignment, Display and Width
-
-Each column has three *CSS Custom Properties*, to control `display`, `text-align` and `width`:
-
-- `--cd[INDEX]`. Display, defaults to `table-cell`.
-- `--ca[INDEX]`. Text-align, defaults to `inital`.
-- `--cw[INDEX]`. Width. Defaults to `initial`.
-
-The propeties should be set/modified on the `<table>` or outermost element.
-
-```css
-.your-table {
-  --cd1: none; /* first column will not be displayed */
-  --ca4: right; /* fourth column will have text aligned right */
-  --cw2: 50%; /* second column will be 50% wide */
+```json
+{
+  "tbody": [...],
+  "thead": [...]
 }
 ```
 
 ---
 
-## Column Groups
+If you're using the `data`-attribute, the stringified object should return the same type of object as above, with two properties, `tbody` and `thead`:
 
-On manual tables, add `<colgroup>` and `<col>`-tags immediately after the `<table>`-opening tag, if you want to style columns. Example, on a table with **four** columns:
-
-```html
-<table data-blok="table>
-  <colgroup>
-    <col>
-    <col>
-    <col>
-    <col>
-  </colgroup>
-  <thead>...</thead>
-  <tbody>...</tbody>
-</table>
-```
-
-*Example: Highlight all cells in second column:*
-
-```html
-<colgroup>
-  <col>
-  <col style="background-color: deeppink;">
-  <col>
-  <col>
-</colgroup>
-```
-
-Colgroups are added automatically on *dynamic tables*. To style these, use `nth()`-selectors.
-
-*Example:*
-
-```css
-colgroup col:nth-of-type(2) {
-  background-color: deeppink;
+```json
+{
+  "tbody": [...],
+  "thead": [...]
 }
 ```
 
+### Column Definitions
+
+`thead` is an array of objects with column definitions:
+
+```json
+{
+  "thead": [
+    {
+      "field": "id",
+      "formatter": "bold",
+      "hidden": true,
+      "label": "ID",
+      "type": "number",
+      "uid": true,
+    },
+    {
+      "field": "firstname",
+      "label": "First Name"
+    },
+  ]
+}
+```
+`formatter` is optional, and refers to a cell formatting-method in the `formatters`-object. More on this [below](#formatters).
+
+`hidden` is optional, and `false` by default.
+
+`type` is "string" by default, and only required if you want to be able to sort the column by `number`.
+
+`uid` is also optional — and only required, if `editable` is used.
+
 ---
 
-## Dynamic Tables
-`data-table-fetch`
+If you're using an inline `<table>`, you can set these extra, optional properties as attributes:
+
+```html
+<tr>
+  <th
+    data-uid
+    data-formatter="bold"
+    data-type="number"
+    hidden>
+    ID
+  </th>
+  <th>
+    First Name†
+  </th>
+</tr>
+```
+
+†) When using an inline `<table>`, headers are automatically converted to `camelCase`:
+
+```json
+{
+  "field": "firstname",
+  "label": "First Name"
+},
+```
+
+### Row Data
+
+`tbody` consists of objects with a property for each column:
+
+```json
+{
+  "tbody": [
+    {
+      "id": "1",
+      "firstname": "Bruce",
+      "lastname": "Wayne",
+    }
+  ]
+}
+```
+
+When using an inline `<table>`, this is simply like the markup in the beginning of this section, with one caveat:
+
+If a column is `hidden`, each row for this column needs to be `hidden` as well:
+
+```html
+<thead>
+  <tr>
+    <th
+      data-uid
+      hidden>
+      ID
+    </th>
+    <th>First Name</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td hidden>1</td>
+    <td>Bruce</td>
+  </tr>
+</tbody>
+
+```
+
+## Attributes
+
+`<ui-datagrid>` can be configured through a bunch of attributes:
+
+### editable
+Boolean attribute. If present, the grid is editable — but **only** if at least one column has `"uid": true`
 
 ---
 
-## Utility Classes
+### itemsperpage
+Numeric. Indicates the number of items on a page. If omitted, pagination is **not** used.
 
-### `tbl--check`
-Utility-class for setting a table-cell to a checkmark, often used in comparison-tables.
+---
 
-```html
-<td><span class="tbl--check">✓</span></td>
+### searchable
+Boolean attribute. If present, an `<input type="search">` is added _before_ the table, allowing for basic filtering.
+
+> **NOTE:** See `searchterm` and `searchfilter` below.
+
+---
+
+### selectable
+Boolean attribute. Allows selection of rows.
+
+---
+
+### src
+String. The URL of an endpoint API, returning an object with `thead` and `tbody`-data.
+
+---
+
+## Additional Attributes
+The following attributes are mostly set by code, but can be set in HTML to preload the grid with specific settings. Attributes like `data`, `i18n` and `formatters` are objects. 
+
+`data` and `i18n` can be set as stringified objects in attributes, whereas `formatters` can only be set in code.
+
+### data
+Object. See example at the beginning of this document.
+
+---
+
+### debug
+Boolean attribute. Log events and errors to console.
+
+---
+
+### formatters
+Object. By default, cells are using a formatter, that simply returns the content. Thus you can, in principle, use HTML in the json with row data:
+
+```json
+"firstname": "<u>Bruce</u>",
 ```
 
-If CSS does not load/fails, the unicode checkmark will be used.
+A better approach is to use custom formatters, specified in the `formatters`-object:
 
-### `tbl--cross`
-Utility-class for setting a table-cell to a cross, often used in comparison-tables.
-
-```html
-<td><span class="tbl--cross">×</span></td>
+```js
+const formatters = {
+  bold: (value) => `<strong>${value}</strong>`,
+  email: (value) => `<a href="mailto:${value}">${value}</a>`,
+  ...
+}
 ```
 
-If CSS does not load/fails, the unicode multiplication-x will be used.
+Then, in the column definitions-object (`thead`), add the name of the formatter for a column:
+
+```json
+{
+  "thead": [
+    {
+      "field": "email",
+      "formatter": "email",
+      "label": "Email address"
+    }
+  ]
+}
+```
+
+`formatters` can **only** be set from script:
+
+```js
+grid.formatters = formatters;
+```
+
+---
+
+### i18n
+Object. To use `<ui-datagrid>` in a specific language, you can set an `i18n` (internationalization)-object for the current `lang`. 
+
+You need an object with these properties, replacing `en` with your language-code :
+
+```js
+const i18n = {
+  en: {
+    all: 'All',
+    of: 'of',
+    next: 'Next',
+    noResult: 'No result',
+    page: 'Page',
+    prev: 'Previous',
+    selected: 'selected',
+    size: 'Page Size',
+  }
+}
+```
+
+Set it from JavaScript:
+
+```js
+grid.setAttribute('i18n', JSON.stringify(i18n))
+```
+
+You can also set it as an attribute:
+
+```html
+<ui-datagrid
+  i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","size":"Rækker per side"}}'>
+  ...
+</ui-datagrid>
+```
+
+Note the **single apostrophe** wrapping the attribute. This is necessary to encode the JSON correctly (in double quotes).
+
+> **IMPORTANT:** If you set the `i18n`-attribute to another lang than `en`, you **must** set that lang as an attribute on `<ui-datagrid>` or on the `<html>`-element:
+
+```html
+<ui-datagrid lang="fr">...</ui-datagrid>
+```
+
+---
+
+### lang
+Standard HTML-attribute. If no `lang`-attribute is present, the code will look for the attribute on the `<html>`-tag, othwerise fallback to "en" (see i18n-section above).
+
+---
+
+### page
+Numeric. Indicates the current page in a paginated result. This attribute is updated from the internal code, when changing pages — but can be set as an attribute in HTML to preload the grid on a specific page.
+
+---
+
+### pagesize
+Array of numbers. Used for the "Page Size"-dropdown. A value corresponding to `itemsperpage` **must** exist in this array.
+
+---
+
+### searchfilter
+String. Determines the way, search is applied. Used internally with the value "includes" by default.
+
+Valid values are:
+
+- "equals"
+- "endsWith"
+- "notEquals"
+- "startsWith"
+
+---
+
+### searchterm
+String. Used internally, when a user types something in the search-field. Can be set as an attribute in HTML to preload the grid with a specific searchterm.
+
+---
+
+### sortindex
+Numeric. The column-index used for sorting (starting from `0` zero). Set by code, but can be set as an attribute in HTML to preload the grid with a specific column sorted.
+
+---
+
+### sortorder
+Numeric. Sort Ascending (`0` zero) or Descending (`1` one)
+
+---
+
+### tableclass
+String. If the grid is added from JavaScript, you can add style-classes to the internal `<table>`-element as a space-delimited string:
+
+`my-table-class is-dark zebra-rows`
+
+---
+
+_Example:_
+
+Load grid with pre-filled searchterm, first column sorted descending, showing second page of results:
+
+```html
+<ui-datagrid
+  itemsperpage="5"
+  page="1"
+  sortindex="0"
+  sortorder="1"
+  searchterm="batman">
+</ui-datagrid>
+```
+
+## Navigation
+
+The grid can be navigated by keyboard, using the [W3C standard for grids](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), with some additions:
+
+| Key Combination | Action |
+| --- | --- |
+| `Right Arrow` | Moves focus one cell to the right. If focus is on the right-most cell in the row, focus does not move. |
+| `Left Arrow` | Moves focus one cell to the left. If focus is on the left-most cell in the row, focus does not move. |
+| `Down Arrow` | Moves focus one cell down. If focus is on the bottom cell in the column, focus does not move. |
+| `Up Arrow` | Moves focus one cell up. If focus is on the top cell in the column, focus does not move. |
+| `Page Down` | Moves focus down an author-determined number of rows, typically scrolling so the bottom row in the currently visible set of rows becomes one of the first visible rows. If focus is in the last row of the grid, focus does not move. |
+| `Page Up` | Moves focus up an author-determined number of rows, typically scrolling so the top row in the currently visible set of rows becomes one of the last visible rows. If focus is in the first row of the grid, focus does not move. |
+| `Home` | Moves focus to the first cell in the row that contains focus. |
+| `End` | Moves focus to the last cell in the row that contains focus. |
+| `Command/Control + Home` | Moves focus to the first cell in the first row. |
+| `Command/Control + End` | Moves focus to the last cell in the last row. |
+| `Shift + Home` | Moves focus to the first row in the column that contains focus. |
+| `Shift + End` | Moves focus to the last row in the column that contains focus. |
+
+### Headers cells only
+
+| Key Combination | Action |
+| --- | --- |
+| `Space` | Sorts column. |
+| `Shift + Arrow Left` | Resize column: shrink. |
+| `Shift + Arrow Right` | Resize column: expand. |
+
+### Row cells only
+
+| Key Combination | Action |
+| --- | --- |
+| `Shift + Space` | Selects current row |
+| `Command/Control + a` | Selects all visible cells |
+| `Command/Control + Shift + i` | Inverts selection |
+
+## Events
+
+### Emitting
+- cellValueChanged
+- pagechange
+- rowSelected
+- sortchange
+- copy
+
+### Recieving
+- appendData
+- clearSelection
+- getSelected
+- exportExcel
+- exportJSON
+
+
+## State
+This is an internal object. If you enable `debug`, this object is written to the console on each render of `<tbody>`.
+
+| Key          | Initial Value | Description |
+|--------------|---------------| ----------- |
+| cellIndex    | 0             | Column index of selected Cell |
+| cols         | 0             | Number of columns |
+| itemsPerPage | 10            | Items Per Page |
+| page         | 0             | Current Page |
+| pages        | 0             | Total number of pages |
+| pageItems    | 0             | Items for *current* page |
+| rowIndex     | 0             | Row Index of Active Cell |
+| rows         | 0             | Total amount of rows in dataset |
+| selected     | []            | Array of selected rows |
+| sortIndex    | -1            | Column index of field to sort by |
+| sortOrder    | 0             | 0: Ascending, 1: Descending |
+| tbody        | []            | Array of Objects: Table Data |
+| thead        | []            | Array of Column Definitions |
+
+

@@ -3,11 +3,12 @@
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
  * @version 1.0.0
+ * @summary 08-01-2024
  * @class
  * @extends {HTMLElement}
  */
 export default class uiDataGrid extends HTMLElement {
-	static observedAttributes = ['itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder', 'src'];
+	static observedAttributes = ['data', 'itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder', 'src'];
 	constructor() {
 		super();
 
@@ -16,6 +17,7 @@ export default class uiDataGrid extends HTMLElement {
 				all: 'All',
 				of: 'of',
 				next: 'Next',
+				noResult: 'No results',
 				page: 'Page',
 				prev: 'Previous',
 				selected: 'selected',
@@ -61,6 +63,11 @@ export default class uiDataGrid extends HTMLElement {
 			this.appendChild(table);
 			return table;
 		})();
+
+		if (this.hasAttribute('tableclass')) {
+			const classes = this.getAttribute('tableclass').split(' ')
+			this.table.classList.add(...classes)
+		}
 
 		if (!this.table.tHead) this.table.appendChild(document.createElement('thead'));
 		if (!this.table.tBodies.length) this.table.appendChild(document.createElement('tbody'));
@@ -280,6 +287,12 @@ export default class uiDataGrid extends HTMLElement {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		this.console(`attr: ${name}=${newValue} (${oldValue})`, '#046');
 
+		if (name === 'data') {
+			const data = JSON.parse(newValue);
+			this.state = Object.assign(this.state, this.parseData(data));
+			this.renderTable();
+		}
+
 		if (name === 'itemsperpage') {
 			this.state.itemsPerPage = parseInt(newValue, 10);
 			if (this.state.itemsPerPage === -1) this.state.itemsPerPage = this.state.rows;
@@ -320,6 +333,7 @@ export default class uiDataGrid extends HTMLElement {
 	}
 
 	/* Methods */
+
 	camelCase = str => str.split(' ').map((e,i) => i ? e.charAt(0).toUpperCase() + e.slice(1).toLowerCase() : e.toLowerCase()).join('');
 	colGroup = () => this.colgroup.innerHTML = `<col>`.repeat(this.state.cols);
 	console = (str, bg = '#000') => { if (this.options.debug) console.log(`%c${str}`, `background:${bg};color:#FFF;padding:0.5ch 1ch;`); }
@@ -329,16 +343,7 @@ export default class uiDataGrid extends HTMLElement {
 	}
 	async fetchData(url) {
 		const data = await (await fetch(url)).json();
-		if (!data.thead || !data.tbody) throw new Error('Invalid JSON format');
-		let hidden = 0;
-		data.thead.forEach(cell => { if (cell.hidden) hidden++ });
-		return {
-			cols: data.thead.length - hidden,
-			pages: this.pages(data.tbody.length, this.state.itemsPerPage),
-			rows: data.tbody.length,
-			tbody: data.tbody,
-			thead: data.thead
-		}
+		return this.parseData(data);
 	}
 	editBegin() {
 		if (!this.options.editable || !this.active) return;
@@ -384,6 +389,18 @@ export default class uiDataGrid extends HTMLElement {
 	next = () => {
 		this.state.rowIndex = 1;
 		this.setAttribute('page', Math.min(this.state.page + 1, this.state.pages - 1));
+	}
+	parseData = (data) => {
+		if (!data.thead || !data.tbody) throw new Error('Invalid JSON format');
+		let hidden = 0;
+		data.thead.forEach(cell => { if (cell.hidden) hidden++ });
+		return {
+			cols: data.thead.length - hidden,
+			pages: this.pages(data.tbody.length, this.state.itemsPerPage),
+			rows: data.tbody.length,
+			tbody: data.tbody,
+			thead: data.thead
+		}
 	}
 	pages = (items, itemsPerPage) => Math.ceil(items / itemsPerPage);
 	prev = () => this.setAttribute('page', Math.max(this.state.page - 1, 0));
@@ -472,7 +489,7 @@ export default class uiDataGrid extends HTMLElement {
 
 		/* If no data, exit early */
 		if (!data.length) {
-			this.table.tBodies[0].innerHTML = `<tr><td colspan="${this.state.cols}">No results found</td></tr>`
+			this.table.tBodies[0].innerHTML = `<tr><td colspan="${this.state.cols}">${this.t('noResult')}</td></tr>`
 			this.updateNavigation()
 			return
 		}
@@ -488,10 +505,14 @@ export default class uiDataGrid extends HTMLElement {
 				const mapped = Object.values(row)
 					.map((cell, index) => {
 						if (this.state.thead[index].hidden) return
+
+						const formatMethod = this.state.thead[index].formatter;
+						const formatter = this.formatters && this.formatters[formatMethod] || ((value) => value);
+
 						return `<td tabindex="-1">${
-							regex
+							formatter(regex
 								? cell.toString().replaceAll(regex, (match) => `<mark>${match}</mark>`)
-								: cell
+								: cell)
 						}</td>`;
 					})
 					.join('');

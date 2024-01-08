@@ -17,7 +17,6 @@
 	<p>Web Component: <code>&lt;ui-datagrid&gt;</code>. Can be wrapped around an existing <code>&lt;table&gt;</code>, or fetch external data via a <code>src</code>-attribute.</p>
 
 	<ui-datagrid
-		debug
 		editable
 		lang="da"
 		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","size":"Rækker per side"}}'
@@ -51,6 +50,7 @@
 
 	<br>
 	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
+
 	<ui-datagrid
 		editable
 		itemsperpage="10"
@@ -64,12 +64,113 @@
 		<table class="ui-table --rounded --th-light --hover-all --hover-tr-outline"></table>
 	</ui-datagrid>
 
+	<br>
+	<hr>
+
+	<p>With data set in the <code>data</code>-attribute as JSON:</p>
+
+	<ui-datagrid
+		data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
+		tableclass="ui-table --rounded --th-light --hover-all"
+		></ui-datagrid>
+	</ui-datagrid>
+
+	<br>
+	<hr>
+
+	<p>Created from JavaScript with <code>document.createElement('ui-datagrid')</code> and a custom <code>formatters</code>-object.</p>
+
 	<script type="module" src="uiDataGrid.js"></script>
 
-	<!-- <script>
-		const uiDataGrid = document.querySelector('ui-datagrid[src]');
+	<script>
+		const uiDataGrid = document.createElement('ui-datagrid');
+		uiDataGrid.setAttribute('src', './data.json');
+
+		const formatters = {
+			bold: (value) => `<strong>${value}</strong>`,
+			email: (value) => `<a href="mailto:${value}" tabindex="-1">${value}</a>`,
+			semibold: (value) => `<b>${value}</b>`,
+			gray: (value) => `<span class="dg-gray">${value}</span>`,
+		}
+
+		const i18n = {
+			fr: {
+				all: 'Tous',
+				of: 'de',
+				next: 'Suivant',
+				noResult: 'Aucun résultat',
+				page: 'Page',
+				prev: 'Précédent',
+				selected: 'sélectionné',
+				size: 'Lignes par page',
+			}
+		}
+
+		uiDataGrid.formatters = formatters;
+		uiDataGrid.setAttribute('i18n', JSON.stringify(i18n));
+		uiDataGrid.setAttribute('itemsperpage', 5);
+		uiDataGrid.setAttribute('lang', 'fr');
+		uiDataGrid.setAttribute('page', 0);
+		uiDataGrid.setAttribute('searchable', '');
+		uiDataGrid.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
+		document.body.append(uiDataGrid);
+		
 		uiDataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
-	</script> -->
+
+		/* ------------------------------ */
+
+		const data = {
+  "tbody": [
+    {
+      "id": "1",
+      "firstName": "Bruce",
+      "lastName": "Wayne",
+      "knownAs": "Batman",
+      "place": "Gotham City"
+    },
+    {
+      "id": "2",
+      "firstName": "Clark",
+      "lastName": "Kent",
+      "knownAs": "Superman",
+      "place": "Metropolis"
+    }
+  ],
+  "thead": [
+    {
+      "field": "id",
+      "hidden": true,
+      "label": "ID",
+      "uid": true
+    },
+    {
+      "field": "firstName",
+      "hidden": false,
+      "label": "First Name",
+      "uid": false
+    },
+    {
+      "field": "lastName",
+      "hidden": false,
+      "label": "Last Name",
+      "uid": false
+    },
+    {
+      "field": "knownAs",
+      "hidden": false,
+      "label": "Known As",
+      "uid": false
+    },
+    {
+      "field": "place",
+      "hidden": false,
+      "label": "Place",
+      "uid": false
+    }
+  ]
+}
+		
+	</script>
 
 </body>
 </html>

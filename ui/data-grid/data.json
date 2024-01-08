@@ -3312,12 +3312,14 @@
     },
     {
       "field": "lastname",
-      "label": "Last Name"
+      "label": "Last Name",
+      "formatter": "gray"
     },
     {
       "field": "email",
       "label": "Email",
-      "uid": true
+      "uid": true,
+      "formatter": "email"
     },
     {
       "field": "gender",
@@ -3327,7 +3329,7 @@
     {
       "field": "city",
       "label": "City",
-      "hidden": true
+      "formatter": "semibold"
     },
     {
       "field": "country",

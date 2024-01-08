@@ -4,12 +4,16 @@
 	
 	& [type=search] { margin-block-end: 1ch; }
 
+	/* Formatters */
+	& b { font-weight: 500; }
+	& .dg-gray { color: var(--GrayText); }
+	
+
 	& form {
 		align-items: center;
 		display: grid;
 		font-size: smaller;
 		grid-auto-flow: column;
-		/* justify-content: space-between; */
 		margin-block: 1ch;
 		& fieldset {
 			all: unset;
@@ -26,54 +30,20 @@
 				--button-p: .25ch 1ch;
 				font-size: small;
 			}
-		}
-	}
-	& fieldset {
-		/* all: unset;
-		align-items: center;
-		display: flex;
-		font-size: smaller;
-		gap: 3ch;
-		margin-block: 1ch;
-		justify-content: end; */
-
-		& label { all: unset; }
+			& label { all: unset; }
 		
-		& :is(input, select) {
-			all: unset;
-			border-block-end: 1px transparent; 
-			font-size: inherit;
-			/* all: unset;
-			font-weight: 500;
-			line-height: 1;
-			text-align: center;
-			user-select: none; */
-			&::-webkit-inner-spin-button { opacity: 1; }
-			&:is(:focus,:focus-visible) { border-block-end: 1px dotted; } 
+			& :is(input, select) {
+				all: unset;
+				border-block-end: 1px transparent; 
+				font-size: inherit;
+				&::-webkit-inner-spin-button { opacity: 1; }
+				&:is(:focus,:focus-visible) { border-block-end: 1px dotted; } 
+			}
 		}
 	}
+
 	& table {
 		width: 100%;
-		/* & td:first-of-type {
-			padding-inline-start: 3ch;
-			position: relative;
-			&::before {
-				background: var(--GrayCanvas);
-				content: '';
-				position: absolute;
-				top: 1px;
-				bottom: 1px;
-				
-				width: 2ch;
-				left: 0;
-			}
-			
-	
-		}	
-		
-		& tr[aria-selected] td:first-of-type::before {
-			background: var(--AccentColor);
-		}	 */
 
 		& td { cursor: default; position: relative; }
 		& th { cursor: pointer; }
@@ -99,12 +69,6 @@
 		& th[data-uid] {
 			text-decoration: underline;
 			text-decoration-style: dotted;
-			/* & span::before {
-				content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0z"/><path d="M15 9h.01"/></svg>');
-				display: block;
-				height: 1em;
-				width: 1em;
-			} */
 		}
 	}
 
@@ -129,28 +93,24 @@
 		--ui-table-td-hover: var(--AccentColor);
 		background-color: var(--AccentColorLight);
 	}
-	
 
 	/* Sorting */
-	/* &[sortorder] { */
-		& th[tabindex] span {
-			align-items: center;
-			display: flex;
-			gap: .5ch;
-			/* justify-content: space-between; */
-			pointer-events: none;
-			white-space: nowrap;
-			&::after {
-				background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
-				clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
-				content: "";
-				display: inline-block;
-				margin-inline-start: auto;
-				width: .7em;
-				height: 1em;
-			}
+	& th[tabindex] span {
+		align-items: center;
+		display: flex;
+		gap: .5ch;
+		pointer-events: none;
+		white-space: nowrap;
+		&::after {
+			background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
+			clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
+			content: "";
+			display: inline-block;
+			margin-inline-start: auto;
+			width: .7em;
+			height: 1em;
 		}
-	/* } */
+	}
 	&[sortorder="1"] { --_deg: 0deg; }
 	&[sortindex="0"] [data-sort-index="0"],
 	&[sortindex="1"] [data-sort-index="1"],
