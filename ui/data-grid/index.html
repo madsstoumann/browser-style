@@ -19,7 +19,7 @@
 	<ui-datagrid
 		editable
 		lang="da"
-		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","size":"Rækker per side"}}'
+		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
 		itemsperpage="5"
 		page="0"
 		searchable>
@@ -52,9 +52,12 @@
 	<p>With <code>itemsperpage="10"</code>, <code>selectable</code> and <code>searchterm="indo"</code></p>
 
 	<ui-datagrid
+		density
 		editable
+		exportable
 		itemsperpage="10"
 		page="0"
+		printable
 		searchable
 		searchterm="indo"
 		selectable
@@ -67,12 +70,11 @@
 	<br>
 	<hr>
 
-	<p>With data set in the <code>data</code>-attribute as JSON:</p>
+	<p>With data set as JSON in the <code>src</code>-attribute:</p>
 
 	<ui-datagrid
-		data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
-		tableclass="ui-table --rounded --th-light --hover-all"
-		></ui-datagrid>
+		src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
+		tableclass="ui-table --rounded --th-light --hover-all">
 	</ui-datagrid>
 
 	<br>
@@ -102,7 +104,7 @@
 				page: 'Page',
 				prev: 'Précédent',
 				selected: 'sélectionné',
-				size: 'Lignes par page',
+				rowsPerPage: 'Lignes',
 			}
 		}
 
@@ -117,59 +119,7 @@
 		
 		uiDataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
 
-		/* ------------------------------ */
 
-		const data = {
-  "tbody": [
-    {
-      "id": "1",
-      "firstName": "Bruce",
-      "lastName": "Wayne",
-      "knownAs": "Batman",
-      "place": "Gotham City"
-    },
-    {
-      "id": "2",
-      "firstName": "Clark",
-      "lastName": "Kent",
-      "knownAs": "Superman",
-      "place": "Metropolis"
-    }
-  ],
-  "thead": [
-    {
-      "field": "id",
-      "hidden": true,
-      "label": "ID",
-      "uid": true
-    },
-    {
-      "field": "firstName",
-      "hidden": false,
-      "label": "First Name",
-      "uid": false
-    },
-    {
-      "field": "lastName",
-      "hidden": false,
-      "label": "Last Name",
-      "uid": false
-    },
-    {
-      "field": "knownAs",
-      "hidden": false,
-      "label": "Known As",
-      "uid": false
-    },
-    {
-      "field": "place",
-      "hidden": false,
-      "label": "Place",
-      "uid": false
-    }
-  ]
-}
-		
 	</script>
 
 </body>

@@ -48,11 +48,11 @@ grid.setAttribute('src', 'https://endpoint.com');
 document.body.append(grid);
 ```
 
-With `data` as attribute:
+With `src` containing JSON, as attribute:
 
 ```html
 <ui-datagrid
-  data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'>
+  src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'>
   ...
 </ui-datagrid>
 ```
@@ -60,13 +60,13 @@ With `data` as attribute:
 From JavaScript:
 
 ```js
-const data = {
+const obj = {
   thead: [...],
   tbody: [...]
 }
 
 const grid = document.createElement('ui-datagrid');
-grid.setAttribute('data', JSON.stringify(data));
+grid.setAttribute('src', JSON.stringify(obj));
 document.body.append(grid);
 ```
 
@@ -238,16 +238,14 @@ Boolean attribute. Allows selection of rows.
 
 ### src
 String. The URL of an endpoint API, returning an object with `thead` and `tbody`-data.
+`src` can also be a stringified object (json), see example at beginning of this document.
 
 ---
 
 ## Additional Attributes
-The following attributes are mostly set by code, but can be set in HTML to preload the grid with specific settings. Attributes like `data`, `i18n` and `formatters` are objects. 
+The following attributes are mostly set by code, but can be set in HTML to preload the grid with specific settings. Attributes like `i18n` and `formatters` are objects. 
 
-`data` and `i18n` can be set as stringified objects in attributes, whereas `formatters` can only be set in code.
-
-### data
-Object. See example at the beginning of this document.
+ `i18n` can be set as stringified objects in attributes, whereas `formatters` can only be set in code.
 
 ---
 
