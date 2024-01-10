@@ -2,7 +2,28 @@
 	display: block;
 	/* overflow: auto; */
 	
-	& [type=search] { margin-block-end: 1ch; }
+	/* & [type=search] { margin-block-end: 1ch; } */
+
+&[searchable] {
+	fieldset[name="search"] {
+		all: unset;
+		align-items: end;
+		display: flex;
+		gap: 1ch;
+		justify-content: space-between;
+		margin-block: 1ch;
+
+		& select {
+			background-position: calc(100% - .125ch) center;
+			block-size: unset;
+			border: 0;
+			color: var(--GrayText);
+			font-family: inherit;
+			font-size: inherit;
+			padding: .125ch 2ch .125ch .5ch;
+		}
+	}
+}
 
 	/* Formatters */
 	& b { font-weight: 500; }
