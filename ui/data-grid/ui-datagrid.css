@@ -1,3 +1,4 @@
+@import "../icon/ui-icon-svg.css";
 :where(ui-datagrid) {
 	display: block;
 	
@@ -9,6 +10,8 @@
 
 		& button {
 			--button-p: 0;
+			--icon-sz: 24px;
+			--icon-sw: 1.5;
 			font-size: small;
 			&:is([name=csv], [name=json]) {
 				--button-p: 0 1ch;

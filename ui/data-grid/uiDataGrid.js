@@ -1,11 +1,9 @@
-import { Icons } from './icons.js';
-import tablerIcon from './tablerIcon.js';
-import printElements from './printElements.js';
+import printElements from '../../assets/js/printElements.js';
 /**
  * uiDataGrid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.04
+ * @version 1.0.05
  * @summary 11-01-2024
  * @class
  * @extends {HTMLElement}
@@ -70,6 +68,17 @@ export default class uiDataGrid extends HTMLElement {
 		if (this.options.debug) console.table(this.options, ['editable', 'locale', 'searchable', 'selectable']);
 		if (!this.options.i18n[this.options.locale]) this.options.locale = 'en';
 
+		const icons = {
+			chevronLeft: 'M15 6l-6 6l6 6',
+			chevronLeftPipe: 'M7 6v12, M18 6l-6 6l6 6',
+			chevronRight: 'M9 6l6 6l-6 6',
+			chevronRightPipe: 'M7 6l6 6l-6 6,M18 6v12',
+			csv: 'M10 15a1 1 0 0 0 1 1h2a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1h-2a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1,M17 8l2 8l2 -8,M7 10a2 2 0 1 0 -4 0v4a2 2 0 1 0 4 0',
+			density: 'M4 6h16,M4 10h16,M4 14h16,M4 18h16',
+			json: 'M20 16v-8l3 8v-8,M15 8a2 2 0 0 1 2 2v4a2 2 0 1 1 -4 0v-4a2 2 0 0 1 2 -2z,M1 8h3v6.5a1.5 1.5 0 0 1 -3 0v-.5,M7 15a1 1 0 0 0 1 1h1a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1h-1a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1h1a1 1 0 0 1 1 1',
+			printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2,M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4,M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z'
+		}
+
 		/* Create elements / references to elements */
 		this.table = this.querySelector('table') || (() => {
 			const table = document.createElement('table');
@@ -99,10 +108,10 @@ export default class uiDataGrid extends HTMLElement {
 		</fieldset>
 
 		<fieldset name="actions">
-			${this.options.printable ? `<button type="button" name="print">${tablerIcon(Icons.printer)}</button>` : ''}
-			${this.options.density ? `<button type="button" name="density">${tablerIcon(Icons.densitySmall)}</button>` : ''}
-			${this.options.exportable ? `<button type="button" name="csv">${tablerIcon(Icons.csv)}</button>` : ''}
-			${this.options.exportable ? `<button type="button" name="json">${tablerIcon(Icons.json)}</button>` : ''}
+			${this.options.printable ? `<button type="button" name="print">${this.renderIcon(icons.printer)}</button>` : ''}
+			${this.options.density ? `<button type="button" name="density">${this.renderIcon(icons.density)}</button>` : ''}
+			${this.options.exportable ? `<button type="button" name="csv">${this.renderIcon(icons.csv)}</button>` : ''}
+			${this.options.exportable ? `<button type="button" name="json">${this.renderIcon(icons.json)}</button>` : ''}
 		</fieldset>
 
 		<fieldset name="navigation">
@@ -123,20 +132,20 @@ export default class uiDataGrid extends HTMLElement {
 		</small>
 			<fieldset>
 				<button type="button" name="first" title="${this.t('first')}">
-					${tablerIcon(Icons.chevronLeftPipe)}
+					${this.renderIcon(icons.chevronLeftPipe)}
 				</button>
 				<button type="button" name="stepdown" title="${this.t('prev')}">
-					${tablerIcon(Icons.chevronLeft)}
+					${this.renderIcon(icons.chevronLeft)}
 				</button>
 				<label title="${this.t('page')}">
 					<input type="number" name="page" min="1" size="1">
 				</label>
 				${this.t('of')}<output name="pages"></output>
 				<button type="button" name="stepup" title="${this.t('next')}">
-					${tablerIcon(Icons.chevronRight)}
+					${this.renderIcon(icons.chevronRight)}
 				</button>
 				<button type="button" name="last" title="${this.t('last')}">
-					${tablerIcon(Icons.chevronRightPipe)}
+					${this.renderIcon(icons.chevronRightPipe)}
 				</button>
 			</fieldset>
 		</fieldset>`;
@@ -805,6 +814,10 @@ export default class uiDataGrid extends HTMLElement {
 		} catch (error) {
 			this.console(`Error printing: ${error}`, '#F00');
 		}
+	}
+
+	renderIcon(paths) {
+		return `<svg viewBox="0 0 24 24" class="ui-icon">${paths.split(',').map(path => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
 
 	/**
