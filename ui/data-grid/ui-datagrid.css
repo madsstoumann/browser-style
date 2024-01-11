@@ -1,34 +1,65 @@
 :where(ui-datagrid) {
 	display: block;
-	/* overflow: auto; */
 	
-	/* & [type=search] { margin-block-end: 1ch; } */
-
-&[searchable] {
-	fieldset[name="search"] {
+	& fieldset {
 		all: unset;
-		align-items: end;
+		align-items: center;
 		display: flex;
-		gap: 1ch;
-		justify-content: space-between;
-		margin-block: 1ch;
+		gap: .75ch;
+
+		& button {
+			--button-p: 0;
+			font-size: small;
+			&:is([name=csv], [name=json]) {
+				--button-p: 0 1ch;
+			}
+		}
+
+		& [type=number] {
+			all: unset;
+			&::-webkit-inner-spin-button { display: none; }
+			&[size="1"] { width: 1ch; }
+			&[size="2"] { width: 2ch; }
+			&[size="3"] { width: 3ch; }
+			&[size="4"] { width: 4ch; }
+		}
+
+		& label { all: unset; line-height: 1; }
 
 		& select {
 			background-position: calc(100% - .125ch) center;
 			block-size: unset;
-			border: 0;
 			color: var(--GrayText);
 			font-family: inherit;
 			font-size: inherit;
 			padding: .125ch 2ch .125ch .5ch;
 		}
-	}
-}
 
-	/* Formatters */
-	& b { font-weight: 500; }
-	& .dg-gray { color: var(--GrayText); }
-	
+		& small { line-height: 1; }
+
+		&[name=navigation] {
+			gap: 3ch;
+			justify-self: end;
+		}
+
+		&[name="search"] {
+			align-items: end;
+			justify-content: space-between;
+			margin-block: 1ch;
+			& select {
+				border: 0;
+				font-size: small;
+				line-height: 1;
+			}
+		}
+
+		& [name="searchterm"] {
+			--icon: url(/assets/svg/filter.svg);
+			block-size: auto;
+			font-family: inherit;
+			padding: .66ch 1.2ch;
+		}
+	}
 
 	& form {
 		align-items: center;
@@ -36,129 +67,97 @@
 		font-size: smaller;
 		grid-auto-flow: column;
 		margin-block: 1ch;
-		& fieldset {
-			all: unset;
-			align-items: center;
-			display: flex;
-			gap: .75ch;
-
-			&[name=actions] {
-				
-				& :is([name=csv], [name=json]) {
-					--button-p: 0 1ch;
-					/* color: var(--GrayText); */
-				}
-			}
-			
-			&[name=navigation] {
-				gap: 3ch;
-				justify-self: end;
-			}
-			
-			& button {
-				--button-p: 0;
-				font-size: small;
-			}
-			
-			& label { all: unset; }
-			& small { line-height: 1;}
-		
-			& :is(input) {
-				all: unset;
-				border-block-end: 1px transparent; 
-				font-size: inherit;
-				&::-webkit-inner-spin-button { display: none; }
-				&:is(:focus,:focus-visible) { border-block-end: 1px dotted; }
-
-				&[size="1"] { width: 1ch; }
-				&[size="2"] { width: 2ch; }
-				&[size="3"] { width: 3ch; }
-				&[size="4"] { width: 4ch; }
-			}
-			& select {
-				background-position: calc(100% - .125ch) center;
-				block-size: unset;
-				font-family: inherit;
-				font-size: inherit;
-				padding: .125ch 2ch .125ch .5ch;
-			}
-		}
 	}
-
-	&:has(table.--compact) form [name=density] {
-		background: var(--DarkGray);
-		color: Canvas;
-	 }
 
 	& table {
 		width: 100%;
 
-		& td { cursor: default; position: relative; }
-		& th { cursor: pointer; }
-		& td[data-old-value]::after {
-			border-radius: 50%;
-			content: "";
-			display: block;
-			width: .33em;
-			height: .33em;
-			background: var(--ColorWarning);
-			position: absolute;
-			right: 0.25em;
-			top: .25em;
+		& label { display: contents; }
+
+		& td {
+			cursor: default;
+			position: relative;
+
+			/* Editable */
+			&[contenteditable]:is(:focus,:focus-visible) {
+				background: Canvas;
+				color: CanvasText;
+				outline: 2px solid var(--AccentColor);
+				outline-offset: -2px;
+			}
+
+			/* Value changed */
+			&[data-old-value]::after {
+				background: var(--ColorWarning);
+				border-radius: 50%;
+				content: "";
+				display: block;
+				height: .33em;
+				inset-block-start: .25em;
+				inset-inline-end: 0.25em;
+				position: absolute;
+				width: .33em;
+			}
 		}
 
-		& td[contenteditable]:is(:focus,:focus-visible) {
-			background: Canvas;
-			color: CanvasText;
-			outline: 2px solid var(--AccentColor);
-			outline-offset: -2px;
-		}
-
-		/* & th[data-uid] {
-			text-decoration: underline;
-			text-decoration-style: dotted;
-		} */
-	}
-
-	/* Selectable */
-	&[selectable] {
-		& table {
-			& label { display: contents; }
-			& :is(td, th):has(label) {
-				padding-block-end: 0;
+		& th {
+			cursor: pointer;
+			/* Sort indicators */
+			&[tabindex] span {
+				align-items: center;
+				display: flex;
+				gap: .5ch;
 				pointer-events: none;
-				text-align: center;
-				vertical-align: middle;
-				& input {
-					pointer-events: all;
+				white-space: nowrap;
+				&::after {
+					background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
+					clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
+					content: "";
+					display: inline-block;
+					margin-inline-start: auto;
+					width: .7em;
+					height: 1em;
 				}
 			}
-			& tr:has(td):has(:checked) { background-color: var(--AccentColorLight); }
 		}
+
+		/* Selectable */
+		& :is(td, th):has([type=checkbox]) {
+			padding-block-end: 0;
+			pointer-events: none;
+			text-align: center;
+			vertical-align: middle;
+			& input { pointer-events: all; }
+		}
+
+		& tr[aria-selected] td {
+			--ui-table-td-hover: var(--AccentColor);
+			background-color: var(--AccentColorLight);
+		}
+
+		/* Printable */
+		@media print {
+			& :is(td, th) {
+				background: none !important;
+				border: 0;
+				font-family: 'Arial', 'Helvetica', sans-serif;
+				font-size: 10pt;
+				& > * {
+					background: inherit;
+					&::after { content: none !important; }
+				}
+				&:has([type=checkbox]) { display: none; }
+		 	}
+	 	}
 	}
 
-	& tr[aria-selected] td {
-		--ui-table-td-hover: var(--AccentColor);
-		background-color: var(--AccentColorLight);
-	}
+	/* Density */
+	&:has(table.--compact) [name=density] {
+		background: var(--DarkGray);
+		color: Canvas;
+	 }
 
-	/* Sorting */
-	& th[tabindex] span {
-		align-items: center;
-		display: flex;
-		gap: .5ch;
-		pointer-events: none;
-		white-space: nowrap;
-		&::after {
-			background-image: linear-gradient(var(--_deg, 180deg), var(--_index, var(--ButtonBorder)) 0 50%, var(--ButtonBorder) 50%);
-			clip-path: polygon(100% 40%, 50% 0%, 0% 40%, 100% 40%, 100% 60%, 0% 60%, 50% 100%, 100% 60%);
-			content: "";
-			display: inline-block;
-			margin-inline-start: auto;
-			width: .7em;
-			height: 1em;
-		}
-	}
+	/* Sort */
 	&[sortorder="1"] { --_deg: 0deg; }
 	&[sortindex="0"] [data-sort-index="0"],
 	&[sortindex="1"] [data-sort-index="1"],
@@ -169,6 +168,17 @@
 	&[sortindex="6"] [data-sort-index="6"],
 	&[sortindex="7"] [data-sort-index="7"],
 	&[sortindex="8"] [data-sort-index="8"] { --_index: currentColor; }
+
+	/* Right-to-left */
+	[dir=rtl] & {
+		& [name=navigation] svg {
+			scale: -1 1;
+		}
+		& select {
+			background-position: .125ch center;
+			padding: .125ch .5ch .125ch 2ch;
+		}
+	}
 }
 
 @media print {
@@ -182,19 +192,4 @@
 			border: none !important;
 			box-shadow: none !important;
 	}
-}
-
-@media print {
- table {
-	& :is(td, th) {
-		background: none !important;
-		border: 0;
-		font-family: 'Arial', 'Helvetica', sans-serif;
-		font-size: 10pt;
-		& > * {
-		 background: inherit;
-		 &::after { content: none !important; }
-		}
-	}	
-}
 }

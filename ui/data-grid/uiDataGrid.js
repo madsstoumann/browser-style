@@ -5,8 +5,8 @@ import printElements from './printElements.js';
  * uiDataGrid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 10-01-2024
+ * @version 1.0.04
+ * @summary 11-01-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -29,10 +29,9 @@ export default class uiDataGrid extends HTMLElement {
 				page: 'Page',
 				prev: 'Previous',
 				rowsPerPage: 'Rows',
-				search: 'Search',
+				search: 'Filter Columns',
 				selected: 'selected',
 				startsWith: 'Starts with',
-				
 			}
 		},
 
@@ -184,11 +183,11 @@ export default class uiDataGrid extends HTMLElement {
 		if (this.options.exportable) {
 			this.form.elements.csv.addEventListener('click', () => {
 				const csv = this.exportCSV();
-				if (csv) this.downloadExport(csv, 'export.csv');
+				if (csv) this.downloadFile(csv, 'export.csv');
 			})
 			this.form.elements.json.addEventListener('click', () => {
 				const json = JSON.stringify(this.state.tbody, null, 2);
-				if (json) this.downloadExport(json, 'export.json', 'application/json;charset=utf-8;');
+				if (json) this.downloadFile(json, 'export.json', 'application/json;charset=utf-8;');
 			})
 		}
 		if (this.options.density) this.form.elements.density.addEventListener('click', () => { this.table.classList.toggle('--compact')});
@@ -527,7 +526,7 @@ export default class uiDataGrid extends HTMLElement {
 	 * @param {string} filename - The desired filename for the downloaded file.
 	 * @param {string} mimeType ['text/csv'] - The MIME type of the downloaded file.
 	 */
-	downloadExport(content, filename, mimeType = 'text/csv;charset=utf-8;') {
+	downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
 		try {
 			const blob = new Blob([content], { type: mimeType });
 			const link = document.createElement('a');
@@ -611,7 +610,6 @@ export default class uiDataGrid extends HTMLElement {
 			// Extract headers and rows
 			const headers = this.state.thead.map(cell => cell.label).join(',');
 			const rows = this.state.tbody.map(row => Object.values(row).join(','));
-
 			// Combine headers and rows to form CSV string
 			return `${headers}\r\n${rows.join('\r\n')}`;
 		} catch (error) {
@@ -816,8 +814,15 @@ export default class uiDataGrid extends HTMLElement {
 			)
 			: this.state.tbody;
 
-			/* Create a regular expression from `searchterm` */
-			const regex = searchterm ? new RegExp(searchterm, 'gi') : null;
+			/* Create a regular expression from `searchterm` and `searchmethod` */
+			const searchMethods = {
+				end: `${searchterm}\\b`,
+				equals: `^${searchterm}$`,
+				includes: searchterm,
+				start: `^\\b${searchterm}`
+			};
+			
+			const regex = searchterm ? new RegExp(searchMethods[method], 'gi') : null;
 
 			/* Sort data, if `sortIndex` is greater than -1 */
 			if (this.state.sortIndex > -1) {
