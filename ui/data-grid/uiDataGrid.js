@@ -816,6 +816,9 @@ export default class uiDataGrid extends HTMLElement {
 		}
 	}
 
+	/**
+	 * Renders an SVG icon based on a comma-separated list of SVG path data.
+	 */
 	renderIcon(paths) {
 		return `<svg viewBox="0 0 24 24" class="ui-icon">${paths.split(',').map(path => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
