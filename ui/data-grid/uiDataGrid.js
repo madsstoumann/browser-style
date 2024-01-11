@@ -344,11 +344,11 @@ export default class uiDataGrid extends HTMLElement {
 
 			const handleTabKey = () => {
 				/* TODO! */
-				if (this.state.editing) {
-					event.preventDefault();
-					this.state.editing = false;
-					node.toggleAttribute('contenteditable', this.state.editing);
-				}
+				// if (this.state.editing) {
+				// 	event.preventDefault();
+				// 	this.state.editing = false;
+				// 	node.toggleAttribute('contenteditable', this.state.editing);
+				// }
 			}
 
 			switch(event.key) {
@@ -376,6 +376,34 @@ export default class uiDataGrid extends HTMLElement {
 			if (input.name === 'itemsperpage') this.setAttribute('itemsperpage', parseInt(event.target.value, 10));
 			if (input.name === 'page') this.setAttribute('page', parseInt(event.target.value, 10) - 1);
 		})
+
+		/*
+		==============
+		Receive Events
+		==============
+		*/
+		this.addEventListener('dg:clearselected', () => {
+			this.state.selected.clear();
+			this.renderTBody();
+			if (this.toggle) {
+				this.toggle.checked = false;
+				this.toggle.indeterminate = false;
+			}
+			this.dispatch('dg:selected', {detail: []});
+		});
+
+		this.addEventListener('dg:getrow', () => {
+			const node = this.active;
+			if (node) {
+				const obj = this.getObj(node);
+				this.dispatch('dg:row', {detail: obj});
+			}
+		});
+
+		this.addEventListener('dg:getselected', () => {
+			const selected = [...this.state.selected].map(key => this.state.tbody.find(row => row[this.state.thead.find(cell => cell.uid).field] === key));
+			this.dispatch('dg:selected', {detail: selected});
+		});
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -956,6 +984,8 @@ export default class uiDataGrid extends HTMLElement {
 			if (this.toggle) {
 				this.toggle.indeterminate = this.state.selected.size > 0 && this.state.selected.size < this.state.pageItems;
 			}
+
+			this.dispatch('selection', this.state.selected);
 		} catch (error) {
 			this.console(`Error selecting rows: ${error}`, '#F00');
 		}

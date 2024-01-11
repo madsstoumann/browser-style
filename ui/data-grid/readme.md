@@ -1,6 +1,6 @@
 # ui-datagrid
 
-`<ui-datagrid>` is a Custom Element, you can wrap around an existing `<table>`, or fill with data through the `data` or `src`-attributes.
+`<ui-datagrid>` is a Custom Element, you can wrap around an existing `<table>`, or fill with data through the `src`-attribute, using either a stringified object or a URL to an endpoint.
 
 With an existing `<table>`:
 
@@ -227,7 +227,7 @@ Numeric. Indicates the number of items on a page. If omitted, pagination is **no
 ### searchable
 Boolean attribute. If present, an `<input type="search">` is added _before_ the table, allowing for basic filtering.
 
-> **NOTE:** See `searchterm` and `searchfilter` below.
+> **NOTE:** See `searchterm` and `searchmethod` below.
 
 ---
 
@@ -251,6 +251,16 @@ The following attributes are mostly set by code, but can be set in HTML to prelo
 
 ### debug
 Boolean attribute. Log events and errors to console.
+
+---
+
+### density
+Boolean attribute. Adds a density-buttons tot the actions-part of the bottom navigation, allowing to toggle between a compact and expanded state.
+
+---
+
+### exportable
+Boolean attribute. Adds `CSV` and `JSON`-export-buttons tot the actions-part of the bottom navigation.
 
 ---
 
@@ -302,13 +312,20 @@ You need an object with these properties, replacing `en` with your language-code
 const i18n = {
   en: {
     all: 'All',
-    of: 'of',
+    endsWith: 'Ends with',
+    equals: 'Equals',
+    first: 'First',
+    includes: 'Includes',
+    last: 'Last',
     next: 'Next',
-    noResult: 'No result',
+    noResult: 'No results',
+    of: 'of',
     page: 'Page',
     prev: 'Previous',
+    rowsPerPage: 'Rows',
+    search: 'Filter Columns',
     selected: 'selected',
-    size: 'Page Size',
+    startsWith: 'Starts with',
   }
 }
 ```
@@ -349,19 +366,26 @@ Numeric. Indicates the current page in a paginated result. This attribute is upd
 ---
 
 ### pagesize
-Array of numbers. Used for the "Page Size"-dropdown. A value corresponding to `itemsperpage` **must** exist in this array.
+Array of numbers. Used for the "Page Size"-dropdown. 
+
+A value corresponding to `itemsperpage` **must** exist in this array.
 
 ---
 
-### searchfilter
-String. Determines the way, search is applied. Used internally with the value "includes" by default.
+### printable
+Boolean attribute. Adds a print-button to the actions-part of the navigation and allows `CTRL + P` to be used to trigger it. Prints the active table.
+
+---
+
+### searchmethod
+String. Determines the way, search/filtering is applied. Used internally with the value "includes" by default.
 
 Valid values are:
 
+- "end"
 - "equals"
-- "endsWith"
-- "notEquals"
-- "startsWith"
+- "includes"
+- "start"
 
 ---
 
@@ -401,7 +425,11 @@ Load grid with pre-filled searchterm, first column sorted descending, showing se
 </ui-datagrid>
 ```
 
-## Navigation
+---
+
+## Keyboard Shortcuts
+
+### Navigation
 
 The grid can be navigated by keyboard, using the [W3C standard for grids](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), with some additions:
 
@@ -415,16 +443,21 @@ The grid can be navigated by keyboard, using the [W3C standard for grids](https:
 | `Page Up` | Moves focus up an author-determined number of rows, typically scrolling so the top row in the currently visible set of rows becomes one of the last visible rows. If focus is in the first row of the grid, focus does not move. |
 | `Home` | Moves focus to the first cell in the row that contains focus. |
 | `End` | Moves focus to the last cell in the row that contains focus. |
-| `Command/Control + Home` | Moves focus to the first cell in the first row. |
-| `Command/Control + End` | Moves focus to the last cell in the last row. |
+| `Cmd/Ctrl + Home` | Moves focus to the first cell in the first row. |
+| `Cmd/Ctrl + End` | Moves focus to the last cell in the last row. |
 | `Shift + Home` | Moves focus to the first row in the column that contains focus. |
 | `Shift + End` | Moves focus to the last row in the column that contains focus. |
+
+### Print
+| Key Combination | Action |
+| --- | --- |
+| `Cmd/Ctrl + p` | If `printable` is set, printing can be triggered with this. |
 
 ### Headers cells only
 
 | Key Combination | Action |
 | --- | --- |
-| `Space` | Sorts column. |
+| `Space` | Sorts column — or, if table is `selectable` — the first column toggles row-selection |
 | `Shift + Arrow Left` | Resize column: shrink. |
 | `Shift + Arrow Right` | Resize column: expand. |
 
@@ -432,44 +465,39 @@ The grid can be navigated by keyboard, using the [W3C standard for grids](https:
 
 | Key Combination | Action |
 | --- | --- |
-| `Shift + Space` | Selects current row |
-| `Command/Control + a` | Selects all visible cells |
-| `Command/Control + Shift + i` | Inverts selection |
+| `Space` | If table is `selectable` — toggles row-selection in first column |
+| `Shift + Space` | Toggles selection of current row |
+| `Cmd/Ctrl + a` | Selects all visible cells |
+| `Cmd/Ctrl + Shift + i` | Inverts selection |
 
-## Events
+---
 
-### Emitting
-- cellValueChanged
-- pagechange
-- rowSelected
-- sortchange
-- copy
+## Events: Emitting
 
-### Recieving
-- appendData
-- clearSelection
-- getSelected
-- exportExcel
-- exportJSON
+### dg:cellchange
+Triggered when a cell has been edited.
 
+### dg:pagechange
+Triggered when a page change occurs.
 
-## State
-This is an internal object. If you enable `debug`, this object is written to the console on each render of `<tbody>`.
+### dg:row
+Returns the current/active row, triggered from `dg:getrow`.
 
-| Key          | Initial Value | Description |
-|--------------|---------------| ----------- |
-| cellIndex    | 0             | Column index of selected Cell |
-| cols         | 0             | Number of columns |
-| itemsPerPage | 10            | Items Per Page |
-| page         | 0             | Current Page |
-| pages        | 0             | Total number of pages |
-| pageItems    | 0             | Items for *current* page |
-| rowIndex     | 0             | Row Index of Active Cell |
-| rows         | 0             | Total amount of rows in dataset |
-| selected     | []            | Array of selected rows |
-| sortIndex    | -1            | Column index of field to sort by |
-| sortOrder    | 0             | 0: Ascending, 1: Descending |
-| tbody        | []            | Array of Objects: Table Data |
-| thead        | []            | Array of Column Definitions |
+### dg:selected
+Returns an array of selected objects, triggered from `dg:getselected`.
 
+### dg:selection
+Triggered when a selection occurs.
 
+## Events: Recieving
+
+### dg:appenddata
+
+### dg:clearselected
+Clears selection and emits `dg:selected`.
+
+### dg:getrow
+Emits `dg:selected`.
+
+### dg:getselected
+Emits `dg:selected`.
