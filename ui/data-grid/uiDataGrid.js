@@ -199,6 +199,7 @@ export default class uiDataGrid extends HTMLElement {
 			})
 			this.form.elements.searchmethod.addEventListener('change', event => {
 				this.setAttribute('searchmethod', event.target.value)
+				this.renderTBody()
 			})
 		}
 
@@ -405,6 +406,12 @@ export default class uiDataGrid extends HTMLElement {
 			this.dispatch('dg:selected', {detail: selected});
 		});
 	}
+
+	/*
+	========================
+	Detect attribute changes
+	========================
+	*/
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;

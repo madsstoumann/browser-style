@@ -255,7 +255,7 @@ Boolean attribute. Log events and errors to console.
 ---
 
 ### density
-Boolean attribute. Adds a density-buttons tot the actions-part of the bottom navigation, allowing to toggle between a compact and expanded state.
+Boolean attribute. Adds a density-button to the actions-part of the bottom navigation, allowing to toggle between a compact and expanded state.
 
 ---
 
