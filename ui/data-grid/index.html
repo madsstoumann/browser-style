@@ -20,7 +20,8 @@
 
 	<h2>Data Grid</h2>
 	<p><code>&lt;ui-datagrid&gt;</code> is a custom element, you can wrap around an existing <code>&lt;table&gt;</code>, or fill with data using the <code>src</code>-attribute. The latter can be either a stringified object or an endpoint.</p>
-	<p>With data from an endpoint set in <code>src</code>, and most features enabled:</p>
+	<hr>
+	<p>Example with data from an endpoint set in <code>src</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
 
 	<ui-datagrid
 		debug
@@ -31,60 +32,57 @@
 		page="0"
 		printable
 		searchable
-		searchmethod=""
-		searchterm=""
 		selectable
-		sortindex="-1"
-		sortorder="1"
-		src="./data.json">
-		<table class="ui-table --rounded --th-light --hover-all --hover-tr-outline"></table>
-	</ui-datagrid>
-
-	<br>
-	<p>Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>-object:</p>
-
-	<ui-datagrid
-	editable
-	lang="da"
-	i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
-	itemsperpage="5"
-	page="0">
-	<table class="ui-table --rounded --th-light --hover-all">
-		<thead>
-			<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr><td hidden>1</td><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-			<tr><td hidden>2</td><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-			<tr><td hidden>3</td><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-			<tr><td hidden>4</td><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-			<tr><td hidden>5</td><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-			<tr><td hidden>6</td><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
-			<tr><td hidden>7</td><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
-			<tr><td hidden>8</td><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
-			<tr><td hidden>9</td><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
-			<tr><td hidden>10</td><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
-			<tr><td hidden>11</td><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
-			<tr><td hidden>12</td><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
-			<tr><td hidden>13</td><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
-			<tr><td hidden>14</td><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
-			<tr><td hidden>15</td><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
-			<tr><td hidden>16</td><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
-		</tbody>
-	</table>
-</ui-datagrid>
-
-	<p>With data set as JSON in the <code>src</code>-attribute:</p>
-
-	<ui-datagrid
-		src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
-		tableclass="ui-table --rounded --th-light --hover-all">
+		src="./data.json"
+		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
 	</ui-datagrid>
 
 	<br>
 	<hr>
+	<p>Example: Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
 
-	<p>Created from JavaScript with <code>document.createElement('ui-datagrid')</code> and a custom <code>formatters</code>-object.</p>
+	<ui-datagrid
+		editable
+		lang="da"
+		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
+		itemsperpage="5"
+		page="0">
+		<table class="ui-table --rounded --th-light --hover-all">
+			<thead>
+				<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+			</thead>
+			<tbody>
+				<tr><td hidden>1</td><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+				<tr><td hidden>2</td><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+				<tr><td hidden>3</td><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+				<tr><td hidden>4</td><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+				<tr><td hidden>5</td><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+				<tr><td hidden>6</td><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
+				<tr><td hidden>7</td><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+				<tr><td hidden>8</td><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+				<tr><td hidden>9</td><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+				<tr><td hidden>10</td><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+				<tr><td hidden>11</td><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+				<tr><td hidden>12</td><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
+				<tr><td hidden>13</td><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
+				<tr><td hidden>14</td><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+				<tr><td hidden>15</td><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+				<tr><td hidden>16</td><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+			</tbody>
+		</table>
+	</ui-datagrid>
+
+	<!-- <p>With data set as JSON in the <code>src</code>-attribute:</p>
+
+	<ui-datagrid
+		src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
+		tableclass="ui-table --rounded --th-light --hover-all">
+	</ui-datagrid> -->
+
+	<br>
+	<hr>
+
+	<p>Example: Created from JavaScript with <code>document.createElement('ui-datagrid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects.</p>
 
 	<script type="module" src="uiDataGrid.js"></script>
 
@@ -101,14 +99,21 @@
 
 		const i18n = {
 			fr: {
-				all: 'Tous',
-				of: 'de',
+				all: 'Tout',
+				endsWith: 'Se termine par',
+				equals: 'Égale',
+				first: 'Premier',
+				includes: 'Comprend',
+				last: 'Dernier',
 				next: 'Suivant',
 				noResult: 'Aucun résultat',
+				of: 'de',
 				page: 'Page',
 				prev: 'Précédent',
-				selected: 'sélectionné',
-				rowsPerPage: 'Lignes',
+				rowsPerPage: 'Lignes par page',
+				search: 'Filtrer les colonnes',
+				selected: 'sélectionnés',
+				startsWith: 'Commence par',
 			}
 		}
 

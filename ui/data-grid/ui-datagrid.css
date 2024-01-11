@@ -29,7 +29,6 @@
 		& select {
 			background-position: calc(100% - .125ch) center;
 			block-size: unset;
-			color: var(--GrayText);
 			font-family: inherit;
 			font-size: inherit;
 			padding: .125ch 2ch .125ch .5ch;
@@ -48,6 +47,7 @@
 			margin-block: 1ch;
 			& select {
 				border: 0;
+				color: var(--GrayText);
 				font-size: small;
 				line-height: 1;
 			}
