@@ -491,7 +491,8 @@ Triggered when a selection occurs.
 
 ## Events: Recieving
 
-### dg:appenddata
+### dg:append
+Emit this event with a `detail`-object containing an array of items to add to `tbody`-array.
 
 ### dg:clearselected
 Clears selection and emits `dg:selected`.

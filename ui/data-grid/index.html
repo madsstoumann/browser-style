@@ -42,9 +42,10 @@
 	<h2>Event Playground</h2>
 	<p>See the <code>console</code></p>
 
-	<button id="getrow" type="button">Get Row</button>
-	<button id="getselected" type="button">Get Selected</button>
-	<button id="clearselected" type="button">Clear Selected</button>
+	<button id="getrow" type="button">dg:getrow</button>
+	<button id="getselected" type="button">dg:getselected</button>
+	<button id="clearselected" type="button">dg:clearselected</button>
+	<button id="append" type="button">dg:append</button>
 
 	<br>
 	<hr>
@@ -120,6 +121,30 @@
 		const clearSelected = document.getElementById('clearselected');
 		clearSelected.addEventListener('click', () => {
 			grid.dispatchEvent(new CustomEvent('dg:clearselected'));
+		 });
+
+		 const dataToAppend = [
+				{
+					firstname: "Ugo",
+					lastname: "Quaisse",
+					email: "ugo@quaisse.fr",
+					gender: "Male",
+					city: "Paris",
+					country: "France"
+				},
+				{
+					firstname: "Steven",
+					lastname: "Singh",
+					email: "steven@singh.dk",
+					gender: "Male",
+					city: "Copenhagen",
+					country: "Denmark"
+				}
+			];
+
+		const append = document.getElementById('append');
+		append.addEventListener('click', () => {
+			grid.dispatchEvent(new CustomEvent('dg:append', { detail: dataToAppend }));
 		 });
 
 	</script>

@@ -383,6 +383,15 @@ export default class uiDataGrid extends HTMLElement {
 		Receive Events
 		==============
 		*/
+		this.addEventListener('dg:append', (event) => {
+			const { detail } = event;
+			this.state.tbody.push(...detail);
+			const rows = this.state.tbody.length;
+			this.state.pages = Math.floor(rows / this.state.itemsPerPage);
+			this.state.rows = rows;
+			this.renderTBody();
+		});
+
 		this.addEventListener('dg:clearselected', () => {
 			this.state.selected.clear();
 			this.renderTBody();
