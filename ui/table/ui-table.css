@@ -46,10 +46,10 @@
 		font-size: 13px;
 		font-weight: 400;
 		& td { color: CanvasText; white-space: nowrap; }
-		&.--rounded { --ui-table-bdrs: .25em; }
+		&.--rounded { --ui-table-bdrs: .2rem; }
 	}
 	&.--no-border :is(td, th) { border: 0; }
-	&.--rounded { --ui-table-bdrs: .5em; }
+	&.--rounded { --ui-table-bdrs: .33rem; }
 	&.--split-cols {
 		--ui-table-bdsp-x: 2ch;
 		margin-inline: calc(0px - var(--ui-table-bdsp-x));
@@ -62,16 +62,6 @@
 		--ui-table-bdsp-y: 1.5ch;
 		margin-block: calc(0px - var(--ui-table-bdsp-y));
 		& :is(td, th) { border-block-width: var(--ui-table-bdw) }
-		&.--rounded {
-			& :is(td,th):first-child {
-				border-top-left-radius: var(--ui-table-bdrs);
-				border-bottom-left-radius: var(--ui-table-bdrs);
-			}
-			& :is(td,th):last-child {
-				border-top-right-radius: var(--ui-table-bdrs);
-				border-bottom-right-radius: var(--ui-table-bdrs);
-			}
-		}
 	}
 	&.--th-dark th {
 		background-color: var(--ui-table-th-dark);

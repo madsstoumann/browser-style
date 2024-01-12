@@ -1,6 +1,11 @@
 @import "../icon/ui-icon-svg.css";
 :where(ui-datagrid) {
+	container-type: inline-size;
 	display: block;
+
+	& > div {
+		overflow-x: auto;
+	}
 	
 	& fieldset {
 		all: unset;
@@ -152,6 +157,43 @@
 				&:has([type=checkbox]) { display: none; }
 		 	}
 	 	}
+	}
+
+	/* RWD */
+	@container (max-width: 600px) {
+		& > div {
+			border: 1px solid var(--ButtonBorder);
+			border-radius: .33rem;
+			& table {
+				& tr:last-of-type td { border-block-end-width: 0; }
+				& tr:first-of-type th { border-block-start-width: 0; }
+				& :is(td,th):first-of-type { border-inline-start-width: 0; }
+				& :is(td,th):last-of-type { border-inline-end-width: 0; }
+			}
+		}
+		& [name=actions] { display: none; }
+		& fieldset[name=navigation] {
+			justify-content: space-between;
+			justify-self: unset;
+			& small { display: none; }
+		}
+		& form { gap: 1ch; grid-auto-flow: row; }
+
+		/* Sticky First Col */
+		&[stickycol] table {
+			& :is(td,th):first-of-type {
+				border-inline-end-width: 1px;
+				inset-inline-start: 0;
+				position: sticky;
+				z-index: 1;
+			}
+			& :is(td):first-of-type {
+				background-color: Canvas;
+			}
+			& :is(td,th):nth-of-type(2) {
+				border-inline-start-width: 0;
+			}
+		}
 	}
 
 	/* Density */

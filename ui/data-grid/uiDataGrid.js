@@ -80,9 +80,12 @@ export default class uiDataGrid extends HTMLElement {
 		}
 
 		/* Create elements / references to elements */
+		this.wrapper = document.createElement('div');
+		this.appendChild(this.wrapper);
+
 		this.table = this.querySelector('table') || (() => {
 			const table = document.createElement('table');
-			this.appendChild(table);
+			this.wrapper.appendChild(table);
 			return table;
 		})();
 

@@ -35,6 +35,7 @@
 		searchable
 		selectable
 		src="./data.json"
+		stickycol
 		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
 	</ui-datagrid>
 
@@ -57,29 +58,31 @@
 		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
 		itemsperpage="5"
 		page="0">
-		<table class="ui-table --rounded --th-light --hover-all">
-			<thead>
-				<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-			</thead>
-			<tbody>
-				<tr><td hidden>1</td><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
-				<tr><td hidden>2</td><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
-				<tr><td hidden>3</td><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
-				<tr><td hidden>4</td><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
-				<tr><td hidden>5</td><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
-				<tr><td hidden>6</td><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
-				<tr><td hidden>7</td><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
-				<tr><td hidden>8</td><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
-				<tr><td hidden>9</td><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
-				<tr><td hidden>10</td><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
-				<tr><td hidden>11</td><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
-				<tr><td hidden>12</td><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
-				<tr><td hidden>13</td><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
-				<tr><td hidden>14</td><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
-				<tr><td hidden>15</td><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
-				<tr><td hidden>16</td><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
-			</tbody>
-		</table>
+		<div>
+			<table class="ui-table --rounded --th-light --hover-all">
+				<thead>
+					<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+				</thead>
+				<tbody>
+					<tr><td hidden>1</td><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City</td></tr>
+					<tr><td hidden>2</td><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis</td></tr>
+					<tr><td hidden>3</td><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu</td></tr>
+					<tr><td hidden>4</td><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City</td></tr>
+					<tr><td hidden>5</td><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City</td></tr>
+					<tr><td hidden>6</td><td>Steve</td><td>Rogers</td><td>Captain America</td><td>Washington, D.C.</td></tr>
+					<tr><td hidden>7</td><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Themyscira</td></tr>
+					<tr><td hidden>8</td><td>Arthur</td><td>Curry</td><td>Aquaman</td><td>Atlantis</td></tr>
+					<tr><td hidden>9</td><td>Natasha</td><td>Romanoff</td><td>Black Widow</td><td>Moscow</td></tr>
+					<tr><td hidden>10</td><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City</td></tr>
+					<tr><td hidden>11</td><td>Hal</td><td>Jordan</td><td>Green Lantern</td><td>Coast City</td></tr>
+					<tr><td hidden>12</td><td>Wanda</td><td>Maximoff</td><td>Scarlet Witch</td><td>Transia</td></tr>
+					<tr><td hidden>13</td><td>Bruce</td><td>Banner</td><td>Hulk</td><td>Gamma Base</td></tr>
+					<tr><td hidden>14</td><td>Scott</td><td>Lang</td><td>Ant-Man</td><td>San Francisco</td></tr>
+					<tr><td hidden>15</td><td>Carol</td><td>Danvers</td><td>Captain Marvel</td><td>Harmony Grove</td></tr>
+					<tr><td hidden>16</td><td>T&apos;Challa</td><td>Challa</td><td>Black Panther</td><td>Wakanda</td></tr>
+				</tbody>
+			</table>
+		</div>
 	</ui-datagrid>
 
 	<!-- <p>With data set as JSON in the <code>src</code>-attribute:</p>
