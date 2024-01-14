@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Radial Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-radial-menu.css">
+	<link rel="stylesheet" href="../grid/ui-grid.css">
+	<style>
+		/* For demo only */
+		.--bubbles {
+			& > *:not(.ui-radial-menu-toggle) {
+				&:nth-of-type(1) { --ui-radial-menu-item-w: 110px; }
+				&:nth-of-type(2) { --ui-radial-menu-item-w: 80px; }
+				&:nth-of-type(3) { --ui-radial-menu-item-w: 100px; }
+				&:nth-of-type(4) { --ui-radial-menu-item-w: 60px; }
+				&:nth-of-type(5) { --ui-radial-menu-item-w: 140px; }
+				&:nth-of-type(6) { --ui-radial-menu-item-w: 60px;  }
+				&:nth-of-type(7) { --ui-radial-menu-item-w: 120px; }
+				&:nth-of-type(8) { --ui-radial-menu-item-w: 80px; }
+			}
+		}
+		.--larger {
+			& > *:not(.ui-radial-menu-toggle) {
+				--ui-radial-menu-item-w: 95px; 
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Radial Menu</h2>
+<!--
+http://blocks.stoumann.dk.s3-website.eu-central-1.amazonaws.com/feature/circular/
+	https://una.im/radial-menu/
+
+-->
+<div class="ui-grid --sm-c-2">
+	<div>
+		<h3>Full Circle</h3>
+		<p>With <code>--items:12</code> and 12 items:</p>
+		<nav class="ui-radial-menu" style="--items:12;">
+			<a href="#1"></a>
+			<a href="#2"></a>
+			<a href="#3"></a>
+			<a href="#4"></a>
+			<a href="#5"></a>
+			<a href="#6"></a>
+			<a href="#7"></a>
+			<a href="#8"></a>
+			<a href="#9"></a>
+			<a href="#10"></a>
+			<a href="#11"></a>
+			<a href="#12"></a>
+			<label class="ui-radial-menu-toggle bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross" size="xxl"></ui-icon>
+			</label>
+		</nav>
+	</div>
+
+	<div>
+		<h3>Half Circle</h3>
+		<p>With <code>items:12</code> and 7 items:</p>
+		<nav class="ui-radial-menu" style="--items:12;">
+			<a href="#1"></a>
+			<a href="#2"></a>
+			<a href="#3"></a>
+			<a href="#4"></a>
+			<a href="#5"></a>	
+			<a href="#6"></a>
+			<a href="#7"></a>
+			<label class="ui-radial-menu-toggle bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross" size="xxl"></ui-icon>
+			</label>
+		</nav>
+	</div>
+
+	<div>
+		<h3>Larger Item Size</h3>
+		<p>With custom modifier <code>--larger</code> and 8 items:</p>
+		<nav class="ui-radial-menu --larger" style="--items:8;">
+			<a href="#1"></a>
+			<a href="#2"></a>
+			<a href="#3"></a>
+			<a href="#4"></a>
+			<a href="#5"></a>
+			<a href="#6"></a>
+			<a href="#7"></a>
+			<a href="#8"></a>
+
+			<label class="ui-radial-menu-toggle bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross" size="xxl"></ui-icon>
+			</label>
+		</nav>
+	</div>
+
+	<div>
+		<h3>Bubbles</h3>
+		<p>With custom modifier, <code>--bubbles</code> and 8 items:</p>
+		<nav class="ui-radial-menu --bubbles" style="--items:8;">
+			<a href="#1" class="bg-accent --light"></a>
+			<a href="#2" class="bg-success --light"></a>
+			<a href="#3" class="bg-warning"></a>
+			<a href="#4" class="bg-warning --light"></a>
+			<a href="#5" class="bg-error"></a>	
+			<a href="#6" class="bg-error --light"></a>
+			<a href="#7" class="bg-success"></a>
+			<a href="#8" class="bg-accent"></a>
+			<label class="ui-radial-menu-toggle bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross" size="xxl"></ui-icon>
+			</label>
+		</nav>
+	</div>
+</div>
+
+</body>
+</html>

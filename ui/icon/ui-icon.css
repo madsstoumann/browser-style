@@ -135,6 +135,7 @@ ui-icon[size*=sm] { --icon-fz: 60%; }
 ui-icon[size*=md] { --icon-fz: 80%; }
 ui-icon[size*=lg] { --icon-fz: 120%; }
 ui-icon[size*=xl] { --icon-fz: 140%; }
+ui-icon[size*=xxl] { --icon-fz: 200%; }
 
 /* State */
 :is([open], .--open) >* >ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }

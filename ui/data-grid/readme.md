@@ -120,6 +120,7 @@ If you're using the `data`-attribute, the stringified object should return the s
 {
   "thead": [
     {
+      "edit": false,
       "field": "id",
       "formatter": "bold",
       "hidden": true,
@@ -134,6 +135,8 @@ If you're using the `data`-attribute, the stringified object should return the s
   ]
 }
 ```
+`edit` is `true` by default, if `editable` is set as an attribute.
+
 `formatter` is optional, and refers to a cell formatting-method in the `formatters`-object. More on this [below](#formatters).
 
 `hidden` is optional, and `false` by default.
@@ -150,6 +153,7 @@ If you're using an inline `<table>`, you can set these extra, optional propertie
 <tr>
   <th
     data-uid
+    data-edit="false"
     data-formatter="bold"
     data-type="number"
     hidden>
@@ -401,6 +405,11 @@ Numeric. The column-index used for sorting (starting from `0` zero). Set by code
 
 ### sortorder
 Numeric. Sort Ascending (`0` zero) or Descending (`1` one)
+
+---
+
+### stickycol
+...
 
 ---
 
