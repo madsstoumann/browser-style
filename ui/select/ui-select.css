@@ -1,0 +1,14 @@
+@import "../anchor/ui-anchor.css";
+:where(ui-select) {
+  display: inline-flex;
+	& button {
+    --button-bg: transparent;
+    --button-p: 0 calc(2 * var(--input-pi)) 0 0;
+  }
+  /* ui-datalist {
+    
+  } */
+  ui-option {
+    display: flex;
+  }
+}

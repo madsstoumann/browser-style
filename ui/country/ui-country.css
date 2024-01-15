@@ -1,0 +1,24 @@
+:where(.ui-country) {
+	width: var(--ui-country-w, 4em);
+	&.--circle,
+	&.--square {
+		aspect-ratio: 1;
+		
+		object-fit: cover;
+	}
+	&.--circle,
+	&.--rounded,
+	&.--square {
+		border: 1px solid var(--ButtonBorder);
+	}
+	&.--circle {
+		border-radius: 50%;
+	}
+	&.--rounded, &.--square {
+		
+		border-radius: .25em;
+		/* clip-path: inset(1px 1px 1px 1px round .25em); */
+	}
+
+	
+}

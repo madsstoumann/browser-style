@@ -15,7 +15,7 @@
 	--input-thumb-sz: 1.5rem;
 	--label-rg: .25em;
 }
-:where(button, .ui-button, fieldset, input, select, textarea), [type=file]::file-selector-button {
+:where(button, .ui-button, fieldset, input, select, textarea, ui-select), [type=file]::file-selector-button {
 	border: var(--input-bdw) solid var(--ButtonBorder);
 	border-radius: var(--input-bdrs);
 	&::placeholder { color: var(--GrayText); }
@@ -66,7 +66,7 @@
 	&.--toggle { --button-p: 0; }
 	&.--transparent { background: transparent; }
 }
-:where(button, .ui-button, input, select, textarea) {
+:where(button, .ui-button, input, select, textarea, ui-select) {
 	font-family: var(--ff-form);
 	font-size: var(--input-fs, 1rem);
 }
@@ -75,11 +75,11 @@
 	margin: 0;
 	row-gap: var(--fieldset-rg);
 }
-:where(input:not([type=checkbox], [type=file], [type=radio], [type=range]), option, select:not([size]), textarea) {
+:where(input:not([type=checkbox], [type=file], [type=radio], [type=range]), option, select:not([size]), textarea, ui-select) {
 	block-size: var(--input-bs);
 	padding: var(--input-pb) var(--input-pi);
 }
-:where(input:not([type=color],[type=range]), option:checked, select, textarea) {
+:where(input:not([type=color],[type=range]), option:checked, select, textarea, ui-select) {
 	background-image: var(--icon);
 	background-position: calc(100% - 1.25ch) center;
 	background-repeat: no-repeat;
@@ -245,7 +245,9 @@
 	overflow: hidden;
 	&[multiple] { min-block-size: var(--input-bs); }
 }
-:where(select:not([multiple],[size])) { --icon: url('/assets/svg/chevron-down.svg'); }
+:where(select:not([multiple],[size]), ui-select) {
+	--icon: url('/assets/svg/chevron-down.svg');
+}
 :where(textarea) {
 	form-sizing: auto;
 	min-block-size: var(--input-bs);

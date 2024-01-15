@@ -8,7 +8,7 @@ export default function uiAnchor() {
 				setPopoverRect(popover)
 				/* Event listeners */
 				popover.addEventListener("beforetoggle", (event) => {
-					if (event.newState === 'open') setRect(popover, anchor)
+					if (event.newState === 'open') setAnchorRect(popover, anchor)
 				})
 				popover.addEventListener("toggle", (event) => {
 					if (event.newState === 'open') setPopoverRect(popover)
