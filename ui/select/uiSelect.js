@@ -4,104 +4,80 @@ import uiAnchor from './../anchor/uiAnchor.js';
  * Custom <select>-element, until stylable selects are implemented in browsers.
  * @author Mads Stoumann
  * @version 1.0.00
- * @summary 14-01-2024
+ * @summary 17-01-2024
  * @class
  * @extends {HTMLElement}
  */
 export default class uiSelect extends HTMLElement {
-  /**
-   * Creates an instance of uiSelect.
-   * @memberof uiSelect
-   */
-  constructor() {
-    super();
-  }
+	constructor() {
+		super();
+	}
 
-  /**
-   * Called when the element is added to the document.
-   * @memberof uiSelect
-   */
-  connectedCallback() {
-    this.initializeElements();
-    this.addEventListeners();
-    this.setDefaultOption();
-		uiAnchor()
-  }
+	connectedCallback() {
+		try {
+			const id =
+				crypto.getRandomValues(new Uint32Array(1))[0] ||
+				Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+			const selected = this.querySelector('option[selected]') || this.querySelector('option');
 
-  /**
-   * Initializes the button and list elements.
-   * @private
-   * @memberof uiSelect
-   */
-  initializeElements() {
-    this.button = this.querySelector('button');
-    const id = this.button.id || `b${this.generateRandomId()}`;
-    this.button.id = id;
-    this.button.setAttribute('popovertarget', `p${id}`);
+			const str = this.innerHTML
+				.replace(
+					/<datalist/g,
+					`<ui-datalist id="l${id}" popover anchor="b${id}" data-anchor="top:bottom left:left"`
+				)
+				.replace(/<\/datalist/g, `</ui-datalist`)
+				.replace(/type="select"/g, `type="button" id="b${id}" popovertarget="l${id}"`)
+				.replace(/<selectedoption>/g, `<selectedoption>${selected && selected.innerHTML}`)
+				.replace(/<option/g, `<ui-option tabindex="0"`)
+				.replace(/<\/option/g, '</ui-option');
+			this.innerHTML = str;
 
-    const list = this.querySelector('ui-datalist');
-    list.id = `p${id}`;
-    list.setAttribute('popover', '');
-    list.setAttribute('anchor', id);
-		list.dataset.anchor = `top:bottom left:left`;
-    this.list = list;
-  }
+			this.button = this.querySelector('button[popovertarget]');
+			this.list = this.querySelector('ui-datalist');
 
-  /**
-   * Adds event listeners for the list.
-   * @private
-   * @memberof uiSelect
-   */
-  addEventListeners() {
-    this.list.addEventListener('click', (e) => {
-      const option = e.target.closest('ui-option');
-      if (option) {
-        this.setOption(option);
-        this.list.hidePopover();
-      }
-    });
-  }
+			if (!this.button || !this.list) {
+				throw new Error('Button or Datalist not found.');
+			}
 
-  /**
-   * Sets the default selected option.
-   * @private
-   * @memberof uiSelect
-   */
-  setDefaultOption() {
-    this.selected =
-      this.list.querySelector('ui-option[selected]') ||
-      this.list.querySelector('ui-option');
-    this.setOption(this.selected);
-  }
+			uiAnchor();
 
-  /**
-   * Sets the selected option in the button.
-   * @param {HTMLElement} option - The selected option.
-   * @memberof uiSelect
-   */
-  setOption(option) {
-    if (option) {
-      this.button.innerHTML = option.innerHTML;
-      this.button.value = option.value;
-    }
-  }
+			this.list.addEventListener('click', (e) => this.setOption(e.target));
+			this.addEventListener('keydown', (e) => {
+				const focusedElement = document.activeElement;
+				const optionHasFocus = focusedElement && focusedElement.parentNode === this.list;
 
-  /**
-   * Generates a random id using crypto API.
-   * @private
-   * @returns {number} - The generated random id.
-   * @memberof uiSelect
-   */
-  generateRandomId() {
-    try {
-      const idArray = new Uint32Array(1);
-      window.crypto.getRandomValues(idArray);
-      return idArray[0];
-    } catch (error) {
-      console.error('Error generating random id:', error.message);
-      return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-    }
-  }
+				if (e.key === 'Enter' && optionHasFocus) this.setOption(focusedElement);
+				if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+					this.list.showPopover();
+					if (optionHasFocus) {
+						const currentIndex = Array.from(this.list.children).indexOf(focusedElement);
+						const nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
+						if (nextIndex >= 0 && nextIndex < this.list.children.length) {
+							this.list.children[nextIndex].focus();
+						}
+					} else {
+						this.list.children[0].focus();
+					}
+				}
+			});
+		} catch (error) {
+			console.error('Error in uiSelect:', error.message);
+		}
+	}
+
+	setOption = (option) => {
+		try {
+			if (option) {
+				this.button.firstElementChild.innerHTML = option.innerHTML;
+				this.button.value = option.getAttribute('value');
+				setTimeout(() => {
+					this.list.hidePopover();
+				}, 10);
+			}
+		} catch (error) {
+			console.error('Error in setOption:', error.message);
+		}
+	};
 }
 
 customElements.define('ui-select', uiSelect);

@@ -13,17 +13,19 @@
 	<h1>UI: Components</h1>
 
 	<h2>Select</h2>
+	<p>Small polyfill / custom element for the new stylable <code>&lt;select&gt;</code>-standard, using a fallback with <code>popover API</code>:</p>
 
 	<ui-select>
 		<button type="select"><selectedoption></selectedoption></button>
-		<ui-datalist>
-			<ui-option value="1"><img src='https://placehold.it/30x30/0000FF' alt=''>This is option 1</ui-option>
-			<ui-option value="2" selected><img src='https://placehold.it/30x30/FF00FF' alt=''>This is option 2</ui-option>
-		</ui-datalist>
-	 </ui-select>
+		<datalist>
+			<option value="Sweden"><img src="/assets/flags/swe.svg" alt="SE" height="15" width="30">This is Sweden</option>
+			<option value="Denmark" selected><img src="/assets/flags/dnk.svg" alt="DK" height="15" width="30">This is Denmark</option>
+		</datalist>
+	</ui-select>
 
 	<script type="module">
 		import uiSelect from './uiSelect.js';
 	</script>
+
 </body>
 </html>
