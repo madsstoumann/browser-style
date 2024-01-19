@@ -96,6 +96,7 @@
 			position: relative;
 			&::after {
 				border-inline: var(--ui-table-outline-bdw) solid transparent;
+				border-radius: inherit;
 				content: '';
 				inset: calc(0px - var(--ui-table-bdw)) 0 0 0;
 				position: absolute;
