@@ -70,16 +70,15 @@
 		&:first-of-type { border-inline-start-color: var(--ui-table-th-dark); }
 		&:last-of-type { border-inline-end-color: var(--ui-table-th-dark); }
 	}
-	&.--zebracol-even :is(td, th):nth-of-type(even),
-	&.--zebracol-odd :is(td, th):nth-of-type(odd),
+	&.--zebracol-even col:nth-of-type(even),
+	&.--zebracol-odd col:nth-of-type(odd),
 	&.--zebrarow-even tr:nth-of-type(even) td,
 	&:is(.--th-light, .--zebrarow-even) th,
 	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--GrayCanvas)); }
 
 	/* Hover */
 	&.--hover-all,
-	&.--hover-col,
-	&.--hover-col-outline {
+	&.--hover-col {
 		&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) col:nth-child(1),
 		&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) col:nth-child(2),
 		&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) col:nth-child(3),
@@ -90,16 +89,34 @@
 		&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) col:nth-child(8),
 		&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) col:nth-child(9) {
 			background-color: var(--ui-table-col-hover);
-			.--hover-col-outline & {
-				--ui-table-bdc: var(--ui-table-outline-bdc);
-				background: initial;
-			}
 		}
 	}
 	&.--hover-col-outline {
-		border-collapse: collapse;
-		border-spacing: 0;
-		& col { border: var(--ui-table-outline-bdw) solid var(--ui-table-bdc); }
+		& :is(td,th) {
+			position: relative;
+			&::after {
+				border-inline: var(--ui-table-outline-bdw) solid transparent;
+				content: '';
+				inset: calc(0px - var(--ui-table-bdw)) 0 0 0;
+				position: absolute;
+			}
+		}
+		& tr:first-of-type th::after { border-block-start: var(--ui-table-outline-bdw) solid transparent; }
+		& tr:last-of-type td::after { border-block-end: var(--ui-table-outline-bdw) solid transparent; }
+
+		&:has(:is(td,th):nth-child(1):is(:focus-visible,:hover)) :is(td,th):nth-child(1),
+		&:has(:is(td,th):nth-child(2):is(:focus-visible,:hover)) :is(td,th):nth-child(2),
+		&:has(:is(td,th):nth-child(3):is(:focus-visible,:hover)) :is(td,th):nth-child(3),
+		&:has(:is(td,th):nth-child(4):is(:focus-visible,:hover)) :is(td,th):nth-child(4),
+		&:has(:is(td,th):nth-child(5):is(:focus-visible,:hover)) :is(td,th):nth-child(5),
+		&:has(:is(td,th):nth-child(6):is(:focus-visible,:hover)) :is(td,th):nth-child(6),
+		&:has(:is(td,th):nth-child(7):is(:focus-visible,:hover)) :is(td,th):nth-child(7),
+		&:has(:is(td,th):nth-child(8):is(:focus-visible,:hover)) :is(td,th):nth-child(8),
+		&:has(:is(td,th):nth-child(9):is(:focus-visible,:hover)) :is(td,th):nth-child(9) {
+			&::after {
+				border-color: var(--ui-table-outline-bdc);
+			}
+		}
 	}
 	&.--hover-all,
 	&.--hover-td {
