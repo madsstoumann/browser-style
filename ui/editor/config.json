@@ -1,0 +1,247 @@
+{
+	"elements": [
+		{
+			"name": "Components",
+			"items": [
+				{
+					"key": "accordion",
+					"name": "Accordion",
+					"description": "A collapsible accordion component. Use this to create a list of questions and answers.",
+					"template": "%3Cdetails%20class%3D%22ui-accordion%22%20name%3D%22accordion%22%3E%0A%3Csummary%3EHow%20do%20I%20reset%20my%20password%3F%3Cui-icon%20type%3D%22plus-minus%22%3E%3C%2Fui-icon%3E%3C%2Fsummary%3E%0A%3Cdiv%3E%0ATo%20reset%20your%20password%2C%20go%20to%20the%20login%20page%20and%20click%20on%20the%20%22Forgot%20Password%22%20link.%20You%20will%20be%20prompted%20to%20enter%20your%20email%20address%20associated%20with%20your%20account.%20Follow%20the%20instructions%20sent%20to%20your%20email%20to%20reset%20your%20password%20securely.%20If%20you%20encounter%20any%20issues%2C%20feel%20free%20to%20contact%20our%20support%20team%20for%20assistance.%0A%3C%2Fdiv%3E%0A%3C%2Fdetails%3E"
+				},
+				{
+					"key": "card",
+					"name": "Card",
+					"description": "A card component. Use this to create a card with an image, title, and description.",
+					"template": "<div>Card</div>",
+					"config": {
+						"fields": [
+							{
+								"name": "title",
+								"type": "text",
+								"label": "Title"
+							},
+							{
+								"name": "description",
+								"type": "textarea",
+								"label": "Description"
+							},
+							{
+								"name": "image",
+								"type": "image",
+								"label": "Image"
+							}
+						]
+					}
+
+				}
+			]
+		},
+		{
+			"name": "Layouts",
+			"items": [
+				{
+					"key": "3col",
+					"name": "3-Column Grid",
+					"template": "<section><div>1</div><div>2</div><div>3</div></section>"
+				},
+				{
+					"key": "1colslider",
+					"name": "Slider",
+					"template": "<outer-section>HELLO</outer-section>"
+
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"items": [
+				{
+					"key": "img",
+					"description": "HTML Image element",
+					"name": "Image",
+					"template": "<img src=\"https://via.placeholder.com/150\" alt=\"Placeholder Image\" width=\"\" height=\"\">",
+					"config": [
+						{
+							"name": "src",
+							"type": "text",
+							"label": "Source"
+						},
+						{
+							"name": "alt",
+							"type": "text",
+							"label": "Alt Text"
+						},
+						{
+							"name": "width",
+							"type": "number",
+							"label": "Width"
+						},
+						{
+							"name": "height",
+							"type": "number",
+							"label": "Height"
+						}
+					]
+				},
+				{
+					"key": "h1",
+					"description": "HTML Section Heading element",
+					"name": "H1",
+					"template": "<h1>Headline</h1>"
+				},
+				{
+					"key": "h2",
+					"name": "H2",
+					"template": "<h2>Headline</h2>"
+
+				}
+			]
+		}
+	],
+
+	"styles": [
+			{
+				"name": "Spacing",
+				"items": [
+					{
+						"name": "Margin",
+						"items": [
+							{
+								"name": "Top",
+								"items": [
+									{
+										"name": "Margin Top",
+										"prefix": "mt-",
+										"range": [0, 3],
+										"ui": "range"
+									},
+									{
+										"name": "Margin Right",
+										"prefix": "mr-",
+										"range": [0, 3],
+										"ui": "range"
+									}
+								]
+							},
+							{
+								"name": "Margin Bottom",
+								"prefix": "mb-",
+								"ui": "range",
+								"values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96]
+							},
+							{
+								"name": "Margin Left",
+								"prefix": "ml-",
+								"range": [0, 3],
+								"ui": "range"
+							}
+						]
+					},
+					{
+						"name": "Padding",
+						"items": [
+							{
+								"name": "Padding Top",
+								"prefix": "pt",
+								"range": [0, 3],
+								"ui": "range"
+							},
+							{
+								"name": "Padding Right",
+								"prefix": "pr",
+								"range": [0, 3],
+								"ui": "range"
+							},
+							{
+								"name": "Padding Bottom",
+								"prefix": "pb",
+								"range": [0, 3],
+								"ui": "range",
+								"value": 2
+							},
+							{
+								"name": "Padding Left",
+								"prefix": "pl",
+								"range": [0, 3],
+								"ui": "range"
+							}
+						]
+					}
+
+				]
+			},
+			{
+				"name": "Colors",
+				"items": [
+					{
+						"name": "Background Color",
+						"ui": "color",
+						"values": [
+							{
+								"name": "Primary",
+								"prefix": "bg",
+								"value": "bg-primary",
+								"color": "hsl(190, 50%, 50%)"
+							},
+							{
+								"name": "Secondary",
+								"prefix": "bg",
+								"value": "bg-secondary",
+								"color": "hsl(0, 50%, 50%)"
+							},
+							{
+								"name": "Tertiary",
+								"prefix": "bg",
+								"value": "bg-tertiary",
+								"color": "hsl(30, 50%, 50%)"
+							},
+							{
+								"name": "Quaternary",
+								"prefix": "bg",
+								"value": "bg-quaternary",
+								"color": "hsl(60, 50%, 50%)"
+							},
+							{
+								"name": "Quinary",
+								"prefix": "bg",
+								"value": "bg-quinary",
+								"color": "linear-gradient(45deg, purple, rebeccapurple, hotpink)"
+							},
+							{
+								"name": "Senary",
+								"prefix": "bg",
+								"value": "bg-senary",
+								"color": "hsl(120, 50%, 50%)"
+							},
+							{
+								"name": "Septenary",
+								"prefix": "bg",
+								"value": "bg-septenary",
+								"color": "hsl(150, 50%, 50%)"
+							},
+							{
+								"name": "Octonary",
+								"prefix": "bg",
+								"value": "bg-octonary",
+								"color": "hsl(180, 50%, 50%)"
+							},
+							{
+								"name": "Nonary",
+								"prefix": "bg",
+								"value": "bg-nonary",
+								"color": "hsl(210, 50%, 50%)"
+							},
+							{
+								"name": "Denary",
+								"prefix": "bg",
+								"value": "bg-denary",
+								"color": "hsl(240, 50%, 50%)"
+							}
+							
+						]
+					}
+				]
+			}
+		]
+	}

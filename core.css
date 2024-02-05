@@ -106,7 +106,7 @@
 	margin-block: 1rlh;
 }
 :where(caption) {
-	caption-side: bottom;
+	/* caption-side: bottom; */
 	font-size: smaller;
 	font-style: italic;
 	margin-block: 1rlh;

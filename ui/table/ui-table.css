@@ -57,6 +57,14 @@
 		&.--th-dark th {
 			--ui-table-bdc: var(--ui-table-th-dark);
 		}
+		&.--rounded {
+			& tr:first-of-type th {
+				border-radius: var(--ui-table-bdrs) var(--ui-table-bdrs) 0 0
+			}
+			& tr:last-of-type td {
+				border-radius: 0 0 var(--ui-table-bdrs) var(--ui-table-bdrs)
+			}
+		}
 	}
 	&.--split-rows {
 		--ui-table-bdsp-y: 1.5ch;
