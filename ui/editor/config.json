@@ -14,26 +14,23 @@
 					"name": "Card",
 					"description": "A card component. Use this to create a card with an image, title, and description.",
 					"template": "<div>Card</div>",
-					"config": {
-						"fields": [
+					"config": [
 							{
-								"name": "title",
+								"key": "title",
 								"type": "text",
 								"label": "Title"
 							},
 							{
-								"name": "description",
+								"key": "description",
 								"type": "textarea",
 								"label": "Description"
 							},
 							{
-								"name": "image",
-								"type": "image",
+								"key": "image",
+								"type": "text",
 								"label": "Image"
 							}
 						]
-					}
-
 				}
 			]
 		},
@@ -58,29 +55,33 @@
 			"items": [
 				{
 					"key": "img",
-					"description": "HTML Image element",
+					"description": "HTML Image element. Set the source, alt text, width, and height in configuration below.",
 					"name": "Image",
-					"template": "<img src=\"https://via.placeholder.com/150\" alt=\"Placeholder Image\" width=\"\" height=\"\">",
+					"template": "<img src=\"{{src}}{{width}}x{{height}}\" alt=\"{{alt}}\" width=\"{{width}}\" height=\"{{height}}\">",
 					"config": [
 						{
-							"name": "src",
+							"key": "src",
+							"type": "url",
+							"label": "Source",
+							"value": "https://source.unsplash.com/random/"
+						},
+						{
+							"key": "alt",
 							"type": "text",
-							"label": "Source"
+							"label": "Alt Text",
+							"value": "Placeholder Image"
 						},
 						{
-							"name": "alt",
-							"type": "text",
-							"label": "Alt Text"
-						},
-						{
-							"name": "width",
+							"key": "width",
 							"type": "number",
-							"label": "Width"
+							"label": "Width",
+							"value": 300
 						},
 						{
-							"name": "height",
+							"key": "height",
 							"type": "number",
-							"label": "Height"
+							"label": "Height",
+							"value": 200
 						}
 					]
 				},

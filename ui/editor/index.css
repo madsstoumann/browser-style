@@ -76,7 +76,8 @@
 	}
 }
 /* DETAILS/SUMMARY */
-details:has(fieldset:empty) { display: none; }
+/* details:has(fieldset:empty) { display: none; } */
+fieldset:empty { display: none; }
 details[open] > summary {
 	background: var(--uie-summary-bg, var(--uie-gray-5));
 	border-color: transparent;
@@ -140,6 +141,13 @@ svg {
 }
 
 /* PARTS */
+
+[part=component-configure] {
+	& input { display: block; width: 100%; }
+	& label { grid-column: span 12; }
+}
+
+
 [part=editor] {
 	align-content: start;
 	background: Canvas;
@@ -204,7 +212,7 @@ svg {
 
 /* UI ELEMENTS */
 
-input:is([type=text], [type=search]) {
+input:is([type=text], [type="number"], [type="url"], [type=search]) {
 	border: 1px solid var(--uie-gray-15);
 	border-radius: 3px;
 	padding: var(--uie-gap);
@@ -226,7 +234,7 @@ input:is([type=text], [type=search]) {
 [part=components] {
 	gap: var(--uie-gap);
 	& button {
-		grid-column: span 6;
+		grid-column: 7 / span 6;
 		text-align: center;
 		&:focus-visible { outline: 0; }
 		&[value=""] { display: none; }
@@ -413,9 +421,9 @@ label:has([type=search]) {
 
 
 
-:host::part(tabgroup) {
+[part=tabgroup] {
 	--uie-gtc: 1fr;
-	background: var(--uie-gray-5);
+	background: var(--uie-gray-10);
 	border-radius: 7px;
 	display: grid;
 	gap: var(--uie-gap);
@@ -425,6 +433,7 @@ label:has([type=search]) {
 	place-content: center;
 	
 }
+[part=tabgroup][name="breakpoints"] { background: var(--uie-gray-5); }
 [part=tabgroup] label {
 	border-radius: 5px;
 	display: grid;

@@ -6,8 +6,8 @@ import stylesheet from './index.css' assert { type: 'css' };
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 05-02-2024
+ * @version 1.0.04
+ * @summary 06-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -26,6 +26,12 @@ class uiEditor extends HTMLElement {
 			components: ['M3 12l3 3l3 -3l-3 -3z', 'M15 12l3 3l3 -3l-3 -3z', 'M9 6l3 3l3 -3l-3 -3z', 'M9 18l3 3l3 -3l-3 -3z'],
 			copy: ['M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z', 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'],
 			cut: ['M7 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M9.15 14.85l8.85 -10.85', 'M6 4l8.85 10.85'],
+			deviceLG: ['M3 19l18 0', 'M5 6m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z'],
+			deviceMD: ['M5 4a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-16z', 'M11 17a1 1 0 1 0 2 0a1 1 0 0 0 -2 0'],
+			deviceOff: ['M13 9a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v8m-1 3h-6a1 1 0 0 1 -1 -1v-6', 'M18 8v-3a1 1 0 0 0 -1 -1h-9m-4 0a1 1 0 0 0 -1 1v12a1 1 0 0 0 1 1h9', 'M16 9h2', 'M3 3l18 18'],
+			deviceSM: ['M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14z', 'M11 4h2', 'M12 17v.01'],
+			deviceXL: ['M3 4a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-12z', 'M3 13h18', 'M8 21h8', 'M10 17l-.5 4', 'M14 17l.5 4'],
+			deviceXXL: ['M11.5 17h-7.5a1 1 0 0 1 -1 -1v-12a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v9', 'M3 13h18', 'M8 21h3.5', 'M10 17l-.5 4', 'M20 21l2 -2l-2 -2', 'M17 17l-2 2l2 2'],
 			down: ['M6 6h6a3 3 0 0 1 3 3v10l-4 -4m8 0l-4 4'],
 			edit: ['M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4', 'M13.5 6.5l4 4'],
 			first: ['M10 12l10 0', 'M10 12l4 4', 'M10 12l4 -4', 'M4 4l0 16'],
@@ -52,6 +58,14 @@ class uiEditor extends HTMLElement {
 		* @type {Object.<string, string[]>}
 		*/
 		this.groups = {
+			breakpoints: [
+				{ icon: 'deviceOff', label: { title:'off' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '', checked: true }},
+				{ icon: 'deviceSM', label: { title:'sm' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
+				{ icon: 'deviceMD', label: { title:'md' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
+				{ icon: 'deviceLG', label: { title:'lg' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
+				{ icon: 'deviceXL', label: { title:'xl' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
+				{ icon: 'deviceXXL', label: { title:'xxl' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
+			],
 			dom: [
 				{ click: 'dom-copy', icon: 'copy', title: 'Copy  ⌘C' },
 				{ click: 'dom-cut', icon: 'cut', title: 'Cut ⌘X' },
@@ -86,10 +100,10 @@ class uiEditor extends HTMLElement {
 				{ text:'Grid size', label: { class:'uie-range' }, input: { name:'grid-size', type:'range', min:10, max:100, step:10, value:20, 'data-property': '--uie-grid-sz', 'data-unit': 'px' } }
 			],
 			tabs: [
-				{ icon: 'style', input: { 'data-sr':'', name:'tool', type:'radio', value: 1, checked: true }},
-				{ icon: 'edit', input: { 'data-sr':'', name:'tool', type:'radio', value: 2 }},
-				{ icon: 'components', input: {'data-sr':'', name:'tool', type:'radio', value: 3 }},
-				{ icon: 'settings', input: { 'data-sr':'', name:'tool', type:'radio',  value: 4 }},
+				{ icon: 'style', label: { title:'Styles' }, input: { 'data-sr':'', name:'tool', type:'radio', value: 1, checked: true }},
+				{ icon: 'edit', label: { title:'Content' },  input: { 'data-sr':'', name:'tool', type:'radio', value: 2 }},
+				{ icon: 'components', label: { title:'Elements' },  input: {'data-sr':'', name:'tool', type:'radio', value: 3 }},
+				{ icon: 'settings', label: { title:'Settings' }, input: { 'data-sr':'', name:'tool', type:'radio',  value: 4 }},
 			]
 		}
 
@@ -118,6 +132,8 @@ class uiEditor extends HTMLElement {
 		shadow.appendChild(template.content.cloneNode(true));
 
 		// Initialize references to important elements within the shadow DOM.
+		this.componentConfig = shadow.querySelector(`[part=form-config]`);
+		this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
 		this.componentSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part=title]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
@@ -125,6 +141,8 @@ class uiEditor extends HTMLElement {
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.toggle = shadow.querySelector(`[part=toggle] input`);
 		this.tool = shadow.querySelector(`[part=tool]`);
+
+		if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
 		/* Events */
 		this.addAccessKeys();
@@ -136,21 +154,19 @@ class uiEditor extends HTMLElement {
 		this.editor.addEventListener('beforetoggle', this.onToggle)
 		this.editor.addEventListener('input', this.onInput);
 		if (this.componentSearch) {
-			this.componentSearch.addEventListener('input', this.onSearch.bind(this));
-			this.componentSearch.addEventListener('search', () => this.resetComponentInfo({}));
+			this.componentSearch.addEventListener('input', this.onSearch);
+			this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
 		}
 
-		/* Observe changes to the active element's dimensions. Element is added/removed in `this.onToggle` */
-		// this.resizeObserver = new ResizeObserver((entries) => {
-			// for (const entry of entries) {
-				// if (entry.contentBoxSize) {
-					// console.log(`resizeObserver: ${entry.contentBoxSize[0].inlineSize} x ${entry.contentBoxSize[0].blockSize}`);
-					// TODO Detect change, compare initial size
-					// const rect = this.active.getBoundingClientRect();
-					// this.setOutline(rect);
-					// this.setFrameValues(this.active, rect);
-				// }}
-		// });
+		/* Observe changes to the active element's dimensions. Element is added/removed in `setActive` */
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.contentBoxSize) {
+					const rect = entry.target.getBoundingClientRect();
+					this.setOutline(rect);
+					this.setFrameValues(entry.target, rect);
+				}}
+		});
 	}
 
 	/**
@@ -204,20 +220,22 @@ class uiEditor extends HTMLElement {
 			if (!(this.active instanceof HTMLElement)) {
 				throw new TypeError('Active element must be an HTML element.');
 			}
-
+	
 			const addClassElement = this.editor.elements.addclass;
 			const addClassValue = addClassElement.value.trim();
-
+	
 			if (addClassValue && this.active) {
 				const { classes, removed } = this.getClasses(this.active);
-
-				if (removed.length) {
-					if (removed.includes(addClassValue)) {
-						throw new Error('Class to be added is already present in the removed classes.');
+	
+				const classesToAdd = addClassValue.split(/\s+/);
+	
+				for (const classToAdd of classesToAdd) {
+					if (removed.includes(classToAdd)) {
+						throw new Error(`Class "${classToAdd}" is already present in the removed classes.`);
 					}
 				}
-
-				this.active.classList.add(addClassValue);
+	
+				this.active.classList.add(...classesToAdd);
 				this.updateClassList();
 				addClassElement.value = '';
 			}
@@ -295,92 +313,11 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Configures a component based on its key.
-	 * @param {string} key - The key of the component to configure.
+	 * Applies an action to the editor based on the specified action and target element.
+	 * @param {string} action - The action to perform ('copy', 'cut', 'first', 'insert', 'last', 'next', 'paste', 'prev', 'replace').
+	 * @param {HTMLElement} element - The target element for the action.
+	 * @throws {Error} - Throws an error if the action is not supported.
 	 */
-	configureComponent(key) {
-		const component = this.findComponentByKey(key);
-		if (component) {
-			console.log('configure')
-		}
-	
-	}
-
-	/**
-	* Dispatches a custom event with the specified name and detail.
-	*
-	* @param {string} name - The name of the custom event.
-	* @param {any} detail - The data to be associated with the custom event.
-	* @throws {Error} Will throw an error if the event could not be dispatched.
-	*/
-	dispatch(name, detail) {
-		this.dispatchEvent(new CustomEvent(name, { detail }));
-		console.log(name, detail)
-	}
-
-	/**
-	* Performs a specified action on a DOM element.
-	* @param {string} action - The action to perform. Can be 'copy', 'cut', 'paste', 'replace', 'first', 'last', 'next', or 'prev'.
-	* @param {HTMLElement} [element=this.active] - The element to perform the action on. Defaults to the currently active element.
-	* @throws {Error} Will throw an error if an unsupported action is provided.
-	*/
-	domAction(action, element = this.active) {
-		try {
-			const storeAction = (stack, reverseStack, action, element) => {
-				stack.push({ action, element: element.cloneNode(true) });
-				// Clear the redo stack when a new action is performed
-				reverseStack.length = 0;
-			};
-	
-			const undo = (stack, reverseStack) => {
-				const lastAction = stack.pop();
-				if (lastAction) {
-					const obj = { action: lastAction.action, element: element.cloneNode(true) }
-					reverseStack.push(obj);
-					this.dispatch('undo', obj);
-// this.applyAction(lastAction.action, lastAction.element);
-				}
-			};
-	
-			const redo = (stack, reverseStack) => {
-				const lastUndoneAction = reverseStack.pop();
-				if (lastUndoneAction) {
-					const obj = { action: lastUndoneAction.action, element: element.cloneNode(true) }
-					stack.push(obj);
-					this.dispatch('redo', obj);
-// this.applyAction(lastUndoneAction.action, lastUndoneAction.element);
-				}
-			};
-
-			switch (action) {
-				case 'cut':
-				case 'first':
-				case 'last':
-				case 'next':
-				case 'paste':
-				case 'prev':
-				case 'replace':
-					storeAction(this.undoStack, this.redoStack, action, element);
-					this.applyAction(action, element);
-					break;
-				case 'copy':
-				case 'insert':
-					this.applyAction(action, element);
-					break;
-				case 'undo':
-					undo(this.undoStack, this.redoStack);
-					break;
-				case 'redo':
-					redo(this.undoStack, this.redoStack);
-					break;
-				default:
-					throw new Error(`Unsupported action: ${action}`);
-			}
-		} catch (error) {
-			console.error('An error occurred in domAction:', error);
-		}
-	}
-
 	applyAction(action, element) {
 		switch (action) {
 			case 'copy':
@@ -404,7 +341,7 @@ class uiEditor extends HTMLElement {
 				if (element) {
 					const component = this.config.elements.flatMap(group => group.items).find(obj => obj.key === element);
 					if (component && component.template) {
-						const template = decodeURIComponent(component.template);
+						const template = this.renderTemplateFromString(component.template, component.config ? component.config : {});
 						this.active.insertAdjacentHTML('beforeend', template);
 						this.setActive(this.active);
 					}
@@ -450,6 +387,83 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	* Dispatches a custom event with the specified name and detail.
+	*
+	* @param {string} name - The name of the custom event.
+	* @param {any} detail - The data to be associated with the custom event.
+	* @throws {Error} Will throw an error if the event could not be dispatched.
+	*/
+	dispatch(name, detail) {
+		this.dispatchEvent(new CustomEvent(name, { detail }));
+		console.log(name, detail)
+	}
+
+	/**
+	* Performs a specified action on a DOM element.
+	* @param {string} action - The action to perform. Can be 'copy', 'cut', 'paste', 'replace', 'first', 'last', 'next', or 'prev'.
+	* @param {HTMLElement} [element=this.active] - The element to perform the action on. Defaults to the currently active element.
+	* @throws {Error} Will throw an error if an unsupported action is provided.
+	*/
+	domAction(action, element = this.active) {
+		try {
+			const storeAction = (stack, reverseStack, action, element) => {
+				stack.push({ action, element: element.cloneNode(true) });
+				// Clear the redo stack when a new action is performed
+				reverseStack.length = 0;
+			};
+	
+			const undo = (stack, reverseStack) => {
+				const lastAction = stack.pop();
+				if (lastAction) {
+					const obj = { action: lastAction.action, element: element.cloneNode(true) }
+					reverseStack.push(obj);
+					this.dispatch('undo', obj);
+// TODO: Apply action
+// this.applyAction(lastAction.action, lastAction.element);
+				}
+			};
+	
+			const redo = (stack, reverseStack) => {
+				const lastUndoneAction = reverseStack.pop();
+				if (lastUndoneAction) {
+					const obj = { action: lastUndoneAction.action, element: element.cloneNode(true) }
+					stack.push(obj);
+					this.dispatch('redo', obj);
+// TODO: Apply action
+// this.applyAction(lastUndoneAction.action, lastUndoneAction.element);
+				}
+			};
+
+			switch (action) {
+				case 'cut':
+				case 'first':
+				case 'last':
+				case 'next':
+				case 'paste':
+				case 'prev':
+				case 'replace':
+					storeAction(this.undoStack, this.redoStack, action, element);
+					this.applyAction(action, element);
+					break;
+				case 'copy':
+				case 'insert':
+					this.applyAction(action, element);
+					break;
+				case 'undo':
+					undo(this.undoStack, this.redoStack);
+					break;
+				case 'redo':
+					redo(this.undoStack, this.redoStack);
+					break;
+				default:
+					throw new Error(`Unsupported action: ${action}`);
+			}
+		} catch (error) {
+			console.error('An error occurred in domAction:', error);
+		}
+	}
+
+	/**
 	* Finds a component by its key from the configuration.
 	* @param {string} key - The key of the component to find.
 	* @returns {Object} - The found component object.
@@ -484,7 +498,7 @@ class uiEditor extends HTMLElement {
 	 * @returns {string} - SVG markup for the specified icon.
 	 */
 	icon = (name) => {
-		return `<svg viewBox="0 0 24 24">${this.icons[name].map(path => `<path d="${path}"/>`).join('')}</svg>`;
+		return this.icons[name] ? `<svg viewBox="0 0 24 24">${this.icons[name].map(path => `<path d="${path}"/>`).join('')}</svg>` : '';
 	}
 
 	/**
@@ -517,7 +531,6 @@ class uiEditor extends HTMLElement {
 				switch (cmd) {
 					case 'add-class': this.addClass(); break;
 					case 'close': this.editor.hidePopover(); break;
-					case 'cnf-component': this.configureComponent(target.value); break;
 					case 'colorscheme': this.editor.classList.toggle('uie-colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
 					case 'dom-cut': this.domAction('cut'); break;
@@ -550,26 +563,41 @@ class uiEditor extends HTMLElement {
 	* Handles the input event, updating properties based on user input.
 	* @param {InputEvent} e - The input event.
 	*/
-	onInput = (e) => {
-		const node = e.target;
+	onInput = (event) => {
+		const node = event.target;
 		let value = node.value;
 
+		/* Handle component configuration-updates */
+		if (node.form === this.componentConfig) {
+			const key = node.dataset.key;
+			if (!key) return;
+			const component = this.findComponentByKey(key);
+			if (component) {
+				const property = component.config.find(obj => obj.key === node.dataset.prop);
+				if (property) property.value = value;
+			}
+			return;
+		}
+
+		/* Handle style-updates */
 		if (node.form === this.formStyles) {
+			const breakpoint = this.editor.elements.breakpoint.value || '';
+
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
 
 			if (node.hasAttribute('data-prefix')) {
 				/* Remove any classes matching the prefix */
-				value = node.dataset.prefix + value;
+				value = breakpoint + node.dataset.prefix + value;
 
 				const { classes, removed } = this.getClasses(this.active);
 
 				classes.forEach(className => {
-					if (className.startsWith(node.dataset.prefix)) {
+					if (className.startsWith(breakpoint + node.dataset.prefix)) {
 						this.active.classList.remove(className);
 					}
 				})
 				removed.forEach(className => {
-					if (className.startsWith(node.dataset.prefix)) {
+					if (className.startsWith(breakpoint + node.dataset.prefix)) {
 						this.active.dataset.removed = this.active.dataset.removed.replace(className, '');
 					}
 				})
@@ -593,6 +621,9 @@ class uiEditor extends HTMLElement {
 		}
 
 		switch(node.name) {
+			/* Update the selected styles in the editor when breakpoint change */
+			case 'breakpoint': this.updateStyles(); break;
+			/* Enable/Disable CSS class for `this.active` */
 			case 'classname':
 				if (!node.checked) {
 					this.active.classList.remove(value);
@@ -603,6 +634,7 @@ class uiEditor extends HTMLElement {
 					this.active.dataset.removed = this.active.dataset.removed.replace(value, '');
 				}
 				break;
+			/* Active Tool */
 			case 'tool':
 				[...this.tool.children].forEach((child, index) => child.hidden = index !== value - 1);
 				break;
@@ -614,13 +646,13 @@ class uiEditor extends HTMLElement {
 	 * @param {KeyboardEvent} e - The keydown event.
 	 * @returns {void}
 	 */
-	onKeyDown = (e) => {
-		const isCtrlPressed = e.ctrlKey || e.metaKey;
+	onKeyDown = (event) => {
+		const isCtrlPressed = event.ctrlKey || event.metaKey;
 		const keyBindings = {
 			'c': () => this.domAction('copy'),
 			'v': () => {
 				if (this.copy) {
-					e.shiftKey ? this.domAction('replace') : this.domAction('paste');
+					event.shiftKey ? this.domAction('replace') : this.domAction('paste');
 				}
 			},
 			'arrowup': () => this.navigate('parentNode'),
@@ -632,12 +664,12 @@ class uiEditor extends HTMLElement {
 			'pageup': () => this.domAction('prev'),
 			'pagedown': () => this.domAction('next'),
 			'x': () => this.domAction('cut'),
-			'z': () => e.shiftKey ? this.domAction('redo') : this.domAction('undo'),
+			'z': () => event.shiftKey ? this.domAction('redo') : this.domAction('undo'),
 		};
 
-		const actionFunction = keyBindings[e.key.toLowerCase()];
+		const actionFunction = keyBindings[event.key.toLowerCase()];
 		if (actionFunction && isCtrlPressed) {
-			e.preventDefault();
+			event.preventDefault();
 			actionFunction();
 		}
 	}
@@ -646,10 +678,10 @@ class uiEditor extends HTMLElement {
 	 * Handle the 'pointermove' event: hover elements behind editor-overlay
 	 * @param {PointerEvent} e - The pointer event.
 	 */
-	onMove = (e) => {
+	onMove = (event) => {
 		if (this.getAttribute('editor') === 'true') return;
 		try {
-			const element = document.elementsFromPoint(e.clientX, e.clientY)[1];
+			const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
 			if (element !== this.hovered) {
 				if (this.hovered) delete this.hovered.dataset.hover;
 				this.hovered = element;
@@ -662,7 +694,7 @@ class uiEditor extends HTMLElement {
 	 * Handles the 'input' event on the component search input.
 	 * @param {Event} event - The input event.
 	 */
-	onSearch(event) { 
+	onSearch = (event) => { 
 		if (event.inputType == "insertReplacementText" || event.inputType == null) {
 			const value = event.target.value;
 			if (value) {
@@ -670,7 +702,7 @@ class uiEditor extends HTMLElement {
 				const match = options.find(option => option.value === value);
 				if (match) {
 					const component = this.findComponentByKey(match.dataset.componentKey);
-					this.resetComponentInfo(component);
+					this.setComponentInfo(component);
 				}
 			}
 			return;
@@ -682,17 +714,15 @@ class uiEditor extends HTMLElement {
 	* Handles actions before the popover is toggled open or closed.
 	* @param {CustomEvent} e - The "beforetoggle" event.
 	*/
-	onToggle = (e) => {
-		if (e.newState === 'open') {
+	onToggle = (event) => {
+		if (event.newState === 'open') {
 			if (!this.active) return;
 			this.setAttribute('editor', 'true');
 			if (this.hovered) delete this.hovered.dataset.hover;
-// this.resizeObserver.observe(this.active);
 			setTimeout(() => this.editor.elements.close.focus(), 0);
 		} else {
 			this.setAttribute('editor', 'false');
-// this.resizeObserver.unobserve(this.active);
-			this.setOutline({height:0,width:0,x:-9999,y:-9999});
+			this.setOutline({ height:0, width:0, x:-9999, y:-9999 });
 			setTimeout(() => this.active.focus(), 0);
 		}
 	}
@@ -711,9 +741,9 @@ class uiEditor extends HTMLElement {
 					).join('')}</optgroup>`
 				).join('')}</datalist>
 				<output name="component-info"></output>
-				<button type="button" data-click="cnf-component" name="component-configure" value="">Configure</button>
 				<button type="button" data-click="dom-insert" name="component-insert" value="">Insert component</button>`
-			), true);
+			), true) +
+		this.renderUIGroup('Configure Component', this.renderUIFieldset('component-configure', ''), true, 'configure-component');
 	}
 
 	/**
@@ -799,10 +829,11 @@ class uiEditor extends HTMLElement {
 
 			<div class="uie-tabs" part="tool">
 				<div class="uie-tab">
+				${this.renderUIFieldset('breakpoints', this.groups.breakpoints.map(obj => this.renderUIInput(obj)).join(''), 'tabgroup')}
 					${this.renderUIGroup('Classlist',
 						this.renderUIFieldset('classlist','') +
 						this.renderUIFieldset('classname', 
-							this.renderUIInput({ input: { type:'text', name:'addclass', placeholder:'Add class' }}) +
+							this.renderUIInput({ input: { type:'text', name:'addclass', placeholder:'Add class(es)' }}) +
 							this.renderUIButton({ click:'add-class', icon:'listadd' })
 						), true, 'styles0')}
 					${this.config?.styles ? this.config.styles.map(obj => this.renderUIConfigStyles(obj, 0, 'styles')).join('') : ''}
@@ -831,7 +862,16 @@ class uiEditor extends HTMLElement {
 
 		</form>
 		<form id="styles${this.id}" part="form-styles"></form>
+		<form id="config${this.id}" part="form-config"></form>
 		${this.renderUIInput({ label: { part:'toggle' }, input: { checked:this.getAttribute('open') === 'true' ? '' : '_REMOVE_', 'data-click':'toggle', type:'checkbox' }})}`;
+	}
+
+	renderTemplateFromString(template, config = {}) {
+		if (!template) return '';
+		return decodeURIComponent(template).replace(/\{\{(\w+)\}\}/g, (match, key) => {
+			const configItem = config.find(item => item.key === key);
+			return configItem !== undefined ? configItem.value : match;
+		});
 	}
 
 	/**
@@ -928,16 +968,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Resets the component info in the editor.
-	 * @param {Object} obj - The object containing the component details.
-	 */
-	resetComponentInfo(obj) {
-		this.editor.elements['component-configure'].value = obj.config && obj.key || '';
-		this.editor.elements['component-info'].value = obj.description || '';
-		this.editor.elements['component-insert'].value = obj.key || '';	
-	}
-
-	/**
 	* Sets the active HTML element, updating associated values and visual indicators.
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
@@ -945,12 +975,14 @@ class uiEditor extends HTMLElement {
 		if (!node) return;
 		if (this.contains(node)) return;
 		try {
-			const rect = node.getBoundingClientRect();
+			if (this.active) {
+				this.resizeObserver.unobserve(this.active);
+			}
 			this.active = node;
-			this.setFrameValues(node, rect);
-			this.setOutline(rect);
+			this.resizeObserver.observe(node);
 			this.updateClassList();
 
+			// TODO:
 			this.editor.elements['uie-html'].value = node.innerHTML;
 			if (this.config && this.config.hasOwnProperty('styles')) { this.updateStyles(); }
 		}
@@ -960,30 +992,64 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Sets the dimensions and tag information of an HTML element in the editor.
-	* If dimensions are not provided, retrieves the dimensions using getBoundingClientRect.
-	* @param {HTMLElement} node - The HTML element.
-	* @param {DOMRect} [dimensions] - The dimensions of the element (optional).
-	*/
-	setFrameValues(node, dimensions) {
-		const E = this.editor.elements;
-		const rect = dimensions ? dimensions : node.getBoundingClientRect();
-		E.h.value = rect.height.toFixed(2);
-		E.w.value = rect.width.toFixed(2);
-		E.x.value = rect.x.toFixed(2);
-		E.y.value = rect.y.toFixed(2);
-		E.tag.value = node.tagName;
-		E.parent.value = node.parentNode.tagName || 'ROOT';
+	 * Resets the component info in the editor.
+	 * @param {Object} obj - The object containing the component details.
+	 */
+	setComponentInfo(obj) {
+		this.editor.elements['component-info'].value = obj.description || '';
+		this.editor.elements['component-insert'].value = obj.key || '';
+		this.componentConfigure.hidden = !obj.config;
+
+		if (obj.config) {
+			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
+				const { key, label, ...input} = prop;
+				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `config${this.id}` } };
+				return this.renderUIInput(config);
+			}).join('');
+		}
 	}
+
 	/**
-	* Sets the dimensions and CSS styles of the outline-element
-	* @param {DOMRect} rect - The dimensions of the active element.
-	*/
+	 * Sets the dimensions and tag information of an HTML element in the editor.
+	 * If dimensions are not provided, retrieves the dimensions using getBoundingClientRect.
+	 * @param {HTMLElement} node - The HTML element.
+	 * @param {DOMRect} [dimensions] - The dimensions of the element (optional).
+	 * @throws {TypeError} - Throws an error if the provided node is not an HTML element.
+	 */
+	setFrameValues(node, dimensions) {
+		try {
+			if (!(node instanceof HTMLElement)) {
+				throw new TypeError('Parameter "node" must be an HTML element.');
+			}
+			const E = this.editor.elements;
+			const rect = dimensions ? dimensions : node.getBoundingClientRect();
+			E.h.value = rect.height.toFixed(2);
+			E.w.value = rect.width.toFixed(2);
+			E.x.value = rect.x.toFixed(2);
+			E.y.value = rect.y.toFixed(2);
+			E.tag.value = node.tagName;
+			E.parent.value = node.parentNode.tagName || 'ROOT';
+		} catch (error) {
+			console.error('An error occurred while setting frame values:', error.message);
+			throw error;
+		}
+	}
+
+	/**
+	 * Sets the dimensions and CSS styles of the outline-element.
+	 * @param {DOMRect} rect - The dimensions of the active element.
+	 * @throws {TypeError} - Throws an error if the provided rect object is not valid.
+	 */
 	setOutline(rect) {
-		this.outline.classList.remove('uie-copy');
-		this.outline.style.cssText = `height: ${
-			rect.height}px; width: ${rect.width}px; top: ${
-			rect.y + window.scrollY}px; left: ${rect.x}px;`;
+		try {
+			this.outline.classList.remove('uie-copy');
+			this.outline.style.cssText = `height: ${
+				rect.height}px; width: ${rect.width}px; top: ${
+				rect.y + window.scrollY}px; left: ${rect.x}px;`;
+		} catch (error) {
+			console.error('An error occurred while setting outline:', error.message);
+			throw error;
+		}
 	}
 
 	/**
@@ -1000,7 +1066,7 @@ class uiEditor extends HTMLElement {
 	updateStyles() {
 		// const { classes, _removed } = this.getClasses(this.active);
 		// if (!classes.length) return;
-		// this.formStyles.reset();
+		this.formStyles.reset();
 		// const outputs = this.editor.querySelectorAll('[data-value]');
 		// if (outputs) {
 		// 	outputs.forEach(output => {
