@@ -103,22 +103,24 @@
 
 	"styles": [
 			{
-				"name": "Spacing",
+				"label": "Spacing",
 				"items": [
 					{
-						"name": "Margin",
+						"label": "Margin",
 						"items": [
 							{
-								"name": "Top",
+								"label": "Top",
 								"items": [
 									{
-										"name": "Margin Top",
+										"label": "Margin Top",
+										"name": "mt",
 										"prefix": "mt-",
 										"range": [0, 3],
 										"ui": "range"
 									},
 									{
-										"name": "Margin Right",
+										"label": "Margin Right",
+										"name": "mr",
 										"prefix": "mr-",
 										"range": [0, 3],
 										"ui": "range"
@@ -126,13 +128,16 @@
 								]
 							},
 							{
-								"name": "Margin Bottom",
+								"label": "Margin Bottom",
+								"name": "mb",
 								"prefix": "mb-",
 								"ui": "range",
+								"value": 2,
 								"values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96]
 							},
 							{
-								"name": "Margin Left",
+								"label": "Margin Left",
+								"name": "ml",
 								"prefix": "ml-",
 								"range": [0, 3],
 								"ui": "range"
@@ -140,29 +145,33 @@
 						]
 					},
 					{
-						"name": "Padding",
+						"label": "Padding",
 						"items": [
 							{
-								"name": "Padding Top",
+								"label": "Padding Top",
+								"name": "pt",
 								"prefix": "pt",
 								"range": [0, 3],
 								"ui": "range"
 							},
 							{
-								"name": "Padding Right",
+								"label": "Padding Right",
+								"name": "pr",
 								"prefix": "pr",
 								"range": [0, 3],
 								"ui": "range"
 							},
 							{
-								"name": "Padding Bottom",
+								"label": "Padding Bottom",
+								"name": "pb",
 								"prefix": "pb",
 								"range": [0, 3],
 								"ui": "range",
 								"value": 2
 							},
 							{
-								"name": "Padding Left",
+								"label": "Padding Left",
+								"name": "pl",
 								"prefix": "pl",
 								"range": [0, 3],
 								"ui": "range"
@@ -173,73 +182,200 @@
 				]
 			},
 			{
-				"name": "Colors",
+				"label": "Typography",
 				"items": [
 					{
-						"name": "Background Color",
-						"ui": "color",
-						"values": [
+						"label": "Font Size",
+						"items": [
 							{
-								"name": "Primary",
-								"prefix": "bg",
-								"value": "bg-primary",
-								"color": "hsl(190, 50%, 50%)"
-							},
+								"label": "",
+								"name": "fs",
+								"prefix": "fs-",
+								"ui": "radio group",
+								"value": "md",
+								"values": [
+									{
+										"label": "xs",
+										"value": "xs"
+									},
+									{
+										"label": "sm",
+										"value": "sm"
+									},
+									{
+										"label": "md",
+										"value": "md"
+									},
+									{
+										"label": "lg",
+										"value": "lg"
+									},
+									{
+										"label": "xl",
+										"value": "xl"
+									},
+									{
+										"label": "xxl",
+										"value": "xxl"
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Font Family",
+						"items": [
 							{
-								"name": "Secondary",
-								"prefix": "bg",
-								"value": "bg-secondary",
-								"color": "hsl(0, 50%, 50%)"
-							},
-							{
-								"name": "Tertiary",
-								"prefix": "bg",
-								"value": "bg-tertiary",
-								"color": "hsl(30, 50%, 50%)"
-							},
-							{
-								"name": "Quaternary",
-								"prefix": "bg",
-								"value": "bg-quaternary",
-								"color": "hsl(60, 50%, 50%)"
-							},
-							{
-								"name": "Quinary",
-								"prefix": "bg",
-								"value": "bg-quinary",
-								"color": "linear-gradient(45deg, purple, rebeccapurple, hotpink)"
-							},
-							{
-								"name": "Senary",
-								"prefix": "bg",
-								"value": "bg-senary",
-								"color": "hsl(120, 50%, 50%)"
-							},
-							{
-								"name": "Septenary",
-								"prefix": "bg",
-								"value": "bg-septenary",
-								"color": "hsl(150, 50%, 50%)"
-							},
-							{
-								"name": "Octonary",
-								"prefix": "bg",
-								"value": "bg-octonary",
-								"color": "hsl(180, 50%, 50%)"
-							},
-							{
-								"name": "Nonary",
-								"prefix": "bg",
-								"value": "bg-nonary",
-								"color": "hsl(210, 50%, 50%)"
-							},
-							{
-								"name": "Denary",
-								"prefix": "bg",
-								"value": "bg-denary",
-								"color": "hsl(240, 50%, 50%)"
+								"label": "",
+								"name": "ff",
+								"prefix": "ff-",
+								"ui": "radio font",
+								"value": "sans-serif",
+								"values": [
+									{
+										"label": "Sans-Serif",
+										"value": "sans-serif",
+										"display": "sans-serif"
+									},
+									{
+										"label": "Serif",
+										"value": "serif",
+										"display": "serif"
+									},
+									{
+										"label": "Monospace",
+										"value": "monospace",
+										"display": "monospace"
+									},
+									{
+										"label": "Cursive",
+										"value": "cursive",
+										"display": "cursive"
+									},
+									{
+										"label": "Fantasy",
+										"value": "fantasy",
+										"display": "fantasy"
+									},
+									{
+										"label": "System",
+										"value": "system",
+										"display": "system-ui"
+									}
+								]
 							}
 							
+						]
+					}
+				
+				]
+			},
+			{
+				"label": "Colors",
+				"items": [
+					{
+						"label": "Background Color",
+						"items": [
+							{
+								"label": "",
+								"name": "bg",
+								"ui": "radio swatch",
+								"value": "bg-primary",
+								"values": [
+								{
+									"label": "Primary",
+									"prefix": "bg",
+									"value": "bg-primary",
+									"display": "hsl(190, 50%, 50%)"
+								},
+								{
+									"label": "Secondary",
+									"prefix": "bg",
+									"value": "bg-secondary",
+									"display": "hsl(0, 50%, 50%)"
+								},
+								{
+									"label": "Tertiary",
+									"prefix": "bg",
+									"value": "bg-tertiary",
+									"display": "hsl(30, 50%, 50%)"
+								},
+								{
+									"label": "Quaternary",
+									"prefix": "bg",
+									"value": "bg-quaternary",
+									"display": "hsl(60, 50%, 50%)"
+								},
+								{
+									"label": "Quinary",
+									"prefix": "bg",
+									"value": "bg-quinary",
+									"display": "linear-gradient(45deg, purple, rebeccapurple, hotpink)"
+								},
+								{
+									"label": "Senary",
+									"prefix": "bg",
+									"value": "bg-senary",
+									"display": "hsl(120, 50%, 50%)"
+								},
+								{
+									"label": "Septenary",
+									"prefix": "bg",
+									"value": "bg-septenary",
+									"display": "hsl(150, 50%, 50%)"
+								},
+								{
+									"label": "Octonary",
+									"prefix": "bg",
+									"value": "bg-octonary",
+									"display": "hsl(180, 50%, 50%)"
+								},
+								{
+									"label": "Nonary",
+									"prefix": "bg",
+									"value": "bg-nonary",
+									"display": "hsl(210, 50%, 50%)"
+								},
+								{
+									"label": "Denary",
+									"prefix": "bg",
+									"value": "bg-denary",
+									"display": "hsl(240, 50%, 50%)"
+								}
+								]
+							}
+						]
+					},
+					{
+						"label": "Text Color",
+						"items": [
+							{
+								"label": "",
+								"name": "text",
+								"prefix": "text-",
+								"ui": "radio swatch",
+								"value": "text-secondary",
+								"values": [
+									{
+										"label": "Primary",
+										"prefix": "text",
+										"value": "text-primary",
+										"display": "hsl(190, 50%, 50%)"
+									},
+									{
+										"label": "Secondary",
+										"prefix": "text",
+										"value": "text-secondary",
+										"display": "hsl(0, 50%, 50%)"
+									},
+									{
+										"label": "Tertiary",
+										"prefix": "text",
+										"value": "text-tertiary",
+										"display": "hsl(30, 50%, 50%)"
+									}
+								]
+							}
 						]
 					}
 				]

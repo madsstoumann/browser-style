@@ -59,12 +59,12 @@ class uiEditor extends HTMLElement {
 		*/
 		this.groups = {
 			breakpoints: [
-				{ icon: 'deviceOff', label: { title:'off' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '', checked: true }},
-				{ icon: 'deviceSM', label: { title:'sm' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
-				{ icon: 'deviceMD', label: { title:'md' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
-				{ icon: 'deviceLG', label: { title:'lg' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
-				{ icon: 'deviceXL', label: { title:'xl' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
-				{ icon: 'deviceXXL', label: { title:'xxl' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
+				{ icon: 'deviceOff', label: { title:'off ⇧⌘1' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '', checked: true }},
+				{ icon: 'deviceSM', label: { title:'sm ⇧⌘2' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
+				{ icon: 'deviceMD', label: { title:'md ⇧⌘3' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
+				{ icon: 'deviceLG', label: { title:'lg ⇧⌘4' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
+				{ icon: 'deviceXL', label: { title:'xl ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
+				{ icon: 'deviceXXL', label: { title:'xxl ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
 			],
 			dom: [
 				{ click: 'dom-copy', icon: 'copy', title: 'Copy  ⌘C' },
@@ -100,10 +100,10 @@ class uiEditor extends HTMLElement {
 				{ text:'Grid size', label: { class:'uie-range' }, input: { name:'grid-size', type:'range', min:10, max:100, step:10, value:20, 'data-property': '--uie-grid-sz', 'data-unit': 'px' } }
 			],
 			tabs: [
-				{ icon: 'style', label: { title:'Styles' }, input: { 'data-sr':'', name:'tool', type:'radio', value: 1, checked: true }},
-				{ icon: 'edit', label: { title:'Content' },  input: { 'data-sr':'', name:'tool', type:'radio', value: 2 }},
-				{ icon: 'components', label: { title:'Elements' },  input: {'data-sr':'', name:'tool', type:'radio', value: 3 }},
-				{ icon: 'settings', label: { title:'Settings' }, input: { 'data-sr':'', name:'tool', type:'radio',  value: 4 }},
+				{ icon: 'style', label: { title:'Styles ⌘1' }, input: { 'data-sr':'', name:'tool', type:'radio', value: 1, checked: true }},
+				{ icon: 'edit', label: { title:'Content ⌘2' },  input: { 'data-sr':'', name:'tool', type:'radio', value: 2 }},
+				{ icon: 'components', label: { title:'Elements ⌘3' },  input: {'data-sr':'', name:'tool', type:'radio', value: 3 }},
+				{ icon: 'settings', label: { title:'Settings ⌘4' }, input: { 'data-sr':'', name:'tool', type:'radio',  value: 4 }},
 			]
 		}
 
@@ -636,6 +636,7 @@ class uiEditor extends HTMLElement {
 				break;
 			/* Active Tool */
 			case 'tool':
+				console.log('here');
 				[...this.tool.children].forEach((child, index) => child.hidden = index !== value - 1);
 				break;
 		}
@@ -665,6 +666,12 @@ class uiEditor extends HTMLElement {
 			'pagedown': () => this.domAction('next'),
 			'x': () => this.domAction('cut'),
 			'z': () => event.shiftKey ? this.domAction('redo') : this.domAction('undo'),
+			'1': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 0) : this.selectGroup(this.editor.elements.tool, 0),
+			'2': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 1) : this.selectGroup(this.editor.elements.tool, 1),
+			'3': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 2) : this.selectGroup(this.editor.elements.tool, 2),
+			'4': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 3) : this.selectGroup(this.editor.elements.tool, 3),
+			'5': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 4) : null,
+			'6': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 5) : null,
 		};
 
 		const actionFunction = keyBindings[event.key.toLowerCase()];
@@ -754,16 +761,12 @@ class uiEditor extends HTMLElement {
 	* @returns {string} - The rendered HTML string.
 	*/
 	renderUIConfigStyles(obj, level = 0, group = '') {
-		if (obj.items && Array.isArray(obj.items) && obj.items.every(item => !item.items)) {
-			// If none of the objects within "items" have a key called "items", render a fieldset
-			const fieldsetItems = obj.items.map(item => this.renderUIItem(item)).join('');
-			return this.renderUIGroup(obj.name, this.renderUIFieldset(obj.name, fieldsetItems, group + level, level), false, group + level, level);
-		} else if (obj.items) {
+		if (obj.items) {
 			// If there are "items" and at least one of them has a key called "items", render a group
-			return this.renderUIGroup(obj.name, obj.items.map(item => this.renderUIConfigStyles(item, level + 1, group)).join(''), false, group + level, level);
+			return this.renderUIGroup(obj.label, obj.items.map(item => this.renderUIConfigStyles(item, level + 1, group)).join(''), false, group + level, level);
 		} else {
 			// If it's not a group, render a fieldset
-			return this.renderUIFieldset(obj.name, this.renderUIItem(obj), group + level, level);
+			return this.renderUIFieldset(obj.label, this.renderUIItem(obj), group + level, level);
 		}
 	}
 
@@ -773,40 +776,50 @@ class uiEditor extends HTMLElement {
 	* @returns {string} - The rendered HTML string for the item.
 	*/
 	renderUIItem(item) {
-		/* TODO!  */
+		if (!item.ui) return;
+
 		const obj = {
 			input: {
-				form: 'styles' + this.id
+				form: 'styles' + this.id,
+				name: item.name,
 			},
 			label: {},
-			text: item.name,
 		}
-		if (item.color) {
-			obj.input.type = 'radio';
-			obj.input.style = `--_bg:${item.color}`;
-			obj.input.value = item.value || '#000000';
-			obj.label.class = 'uie-swatch';
-			obj.text = '';
-			obj.textAfter = item.name
-		}
-		if (item.range) {
-			obj.input.type = 'range';
-			obj.input.min = item.range.at(0);
-			obj.input.max = item.range.at(1);
-			obj.input.step = 1;
-			obj.input.value = item.value || 0;
-			obj.input['data-prefix'] = item.prefix;
-			obj.label.class = 'uie-range';
-		}
-		if (item.values) {
-			obj.input.type = 'range';
-			obj.input.min = item.values.at(0);
-			obj.input.max = item.values.length-1;
-			obj.input.step = 1;
-			obj.input.value = item.value || 0;
-			obj.input['data-prefix'] = item.prefix;
-			obj.input['data-values'] = item.values.join(',');
-			obj.label.class = 'uie-range';
+
+		if (item.prefix) obj.input['data-prefix'] = item.prefix;
+
+		switch (item.ui) {
+			case 'radio':
+			case 'radio font':
+			case 'radio group':
+			case 'radio swatch': {
+				return item.values.map(entry => {
+					obj.input.type = 'radio';
+					obj.input.value = entry.value || '';
+					obj.label.class = item.ui;
+					obj.textAfter = entry.label;
+
+					(item.value && (entry.value === item.value)) ? obj.input.checked = '' : delete obj.input.checked;
+					(item.ui === 'radio group') ? obj.input['data-sr'] = '' : '';
+					if (entry.display) obj.label.style = `--_v:${entry.display}`;
+					return this.renderUIInput(obj)
+				}).join('');
+			}
+			break;
+			case 'range': {
+				const array = item.range || item.values || [0, 100];
+				const min = item.values ? 0 : array.at(0);
+				const max = item.values ? array.length-1 : array.at(-1);
+				obj.input.type = 'range';
+				obj.input.min = min;
+				obj.input.max = max;
+				obj.input.step = item.step || 1;
+				obj.input.value = item.value || 0;
+				if (item.values) obj.input['data-values'] = item.values.join(',');
+				obj.label.class = 'uie-range';
+				obj.text = item.label;
+			}
+			break;
 		}
 		return this.renderUIInput(obj);
 	}
@@ -965,6 +978,11 @@ class uiEditor extends HTMLElement {
 				return value ? `${key}="${value}"`: key }).join(' ')
 			}></textarea>
 		</label>`;
+	}
+
+	selectGroup(group, index, focus = true) {
+		group[index].click();
+		if (focus) group[index].focus()
 	}
 
 	/**
