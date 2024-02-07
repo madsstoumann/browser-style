@@ -6,8 +6,8 @@ import stylesheet from './index.css' assert { type: 'css' };
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.04
- * @summary 06-02-2024
+ * @version 1.0.052
+ * @summary 07-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -25,6 +25,7 @@ class uiEditor extends HTMLElement {
 			colorscheme: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
 			components: ['M3 12l3 3l3 -3l-3 -3z', 'M15 12l3 3l3 -3l-3 -3z', 'M9 6l3 3l3 -3l-3 -3z', 'M9 18l3 3l3 -3l-3 -3z'],
 			copy: ['M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z', 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1'],
+			copyplus: ['M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z', 'M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1', 'M11 14h6', 'M14 11v6'],
 			cut: ['M7 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M17 17m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0', 'M9.15 14.85l8.85 -10.85', 'M6 4l8.85 10.85'],
 			deviceLG: ['M3 19l18 0', 'M5 6m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z'],
 			deviceMD: ['M5 4a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-16z', 'M11 17a1 1 0 1 0 2 0a1 1 0 0 0 -2 0'],
@@ -49,8 +50,18 @@ class uiEditor extends HTMLElement {
 			save: ['M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2', 'M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0', 'M14 4l0 4l-6 0l0 -4'],
 			settings: ['M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z', 'M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0'],
 			style: ['M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25', 'M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'],
+			styleoff: ['M15 15h-1a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25a9 9 0 0 1 -6.372 -15.356', 'M8 4c1.236 -.623 2.569 -1 4 -1c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828a4.516 4.516 0 0 1 -1.127 .73', 'M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', 'M3 3l18 18'],
 			undo: ['M9 14l-4 -4l4 -4', 'M5 10h11a4 4 0 1 1 0 8h-1'],
 			up: ['M18 18h-6a3 3 0 0 1 -3 -3v-10l-4 4m8 0l-4 -4'],
+		}
+
+		this.controls = {
+			addClass: { input: { type:'text', name:'addclass', placeholder:'Add class(es)' }},
+			addClassButton: { 'data-click':'cls-add', icon:'listadd' },
+			closeButton: { click:'close', icon:'close', name:'close', part:'close', title:'Close Editor' },
+			colorScheme: { 'data-click':'colorscheme', icon:'colorscheme', part:'colorscheme', title:'Toggle Color Scheme' },
+			htmlCode: { text: 'HTML', label: { class: 'uie-textarea' }, textarea: { name: 'uie-html' } },
+			htmlSync: { 'data-click': 'sync', icon: 'refresh', name: 'uie-sync', title: 'Sync content' }
 		}
 
 		/**
@@ -66,15 +77,19 @@ class uiEditor extends HTMLElement {
 				{ icon: 'deviceXL', label: { title:'xl ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
 				{ icon: 'deviceXXL', label: { title:'xxl ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
 			],
+			classActions: [
+				{ 'data-click':'cls-copy', icon:'copyplus', title:'Copy enabled classes' },
+				{ 'data-click':'cls-rem', icon:'styleoff', title:'Remove disabled classes' }
+			],
 			dom: [
-				{ click: 'dom-copy', icon: 'copy', title: 'Copy  ⌘C' },
-				{ click: 'dom-cut', icon: 'cut', title: 'Cut ⌘X' },
-				{ click: 'dom-paste', icon: 'paste', title: 'Paste into ⌘V'},
-				{ click: 'dom-replace', icon: 'replace', title: 'Replace with ⇧⌘V' },
-				{ click: 'dom-first', icon: 'first', title: 'Move first ⌘↖' },
-				{ click: 'dom-prev', icon: 'leftbar', title: 'Move previous ⌘⇞' },
-				{ click: 'dom-next', icon: 'rightbar', title: 'Move next ⌘⇟' },
-				{ click: 'dom-last', icon: 'last', title: 'Move last ⌘↘' },
+				{ 'data-click': 'dom-copy', icon: 'copy', title: 'Copy  ⌘C' },
+				{ 'data-click': 'dom-cut', icon: 'cut', title: 'Cut ⌘X' },
+				{ 'data-click': 'dom-paste', icon: 'paste', title: 'Paste into ⌘V'},
+				{ 'data-click': 'dom-replace', icon: 'replace', title: 'Replace with ⇧⌘V' },
+				{ 'data-click': 'dom-first', icon: 'first', title: 'Move first ⌘↖' },
+				{ 'data-click': 'dom-prev', icon: 'leftbar', title: 'Move previous ⌘⇞' },
+				{ 'data-click': 'dom-next', icon: 'rightbar', title: 'Move next ⌘⇟' },
+				{ 'data-click': 'dom-last', icon: 'last', title: 'Move last ⌘↘' },
 			],
 			frame: [
 				{ name: 'x', label: 'X', value: 0 },
@@ -85,14 +100,14 @@ class uiEditor extends HTMLElement {
 				{ name: 'parent', label: 'P' },
 			],
 			navigation: [
-				{ click: 'nav-up', icon: 'up', title: 'Parent ⌘↑' },
-				{ click: 'nav-down', icon: 'down', title: 'Child ⌘↓' },
-				{ click: 'nav-left', icon: 'left', title: 'Previous Sibling ⌘←' },
-				{ click: 'nav-right', icon: 'right', title: 'Next Sibling ⌘→' },
-				{ click: 'nav-first', icon: 'first', title: 'First Child ⇧⌘←' },
-				{ click: 'nav-last', icon: 'last', title: 'Last Child ⇧⌘→' },
-				{ click: 'dom-undo', icon: 'undo', title: 'Undo  ⌘Z', class: 'uie-secondary'},
-				{ click: 'dom-redo', icon: 'redo', title: 'Redo ⇧⌘Z', class: 'uie-secondary'},
+				{ 'data-click': 'nav-up', icon: 'up', title: 'Parent ⌘↑' },
+				{ 'data-click': 'nav-down', icon: 'down', title: 'Child ⌘↓' },
+				{ 'data-click': 'nav-left', icon: 'left', title: 'Previous Sibling ⌘←' },
+				{ 'data-click': 'nav-right', icon: 'right', title: 'Next Sibling ⌘→' },
+				{ 'data-click': 'nav-first', icon: 'first', title: 'First Child ⇧⌘←' },
+				{ 'data-click': 'nav-last', icon: 'last', title: 'Last Child ⇧⌘→' },
+				{ 'data-click': 'dom-undo', icon: 'undo', title: 'Undo  ⌘Z', class: 'uie-secondary'},
+				{ 'data-click': 'dom-redo', icon: 'redo', title: 'Redo ⇧⌘Z', class: 'uie-secondary'},
 			],
 			settings: [
 				{ textAfter:'Show grid', label: { class:'uie-switch' }, input: { name:'grid-toggle', type:'checkbox', 'data-property': '--uie-grid-visible' } },
@@ -387,6 +402,23 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Copies the classList of the active element as a string to the clipboard.
+	 * @throws {Error} Throws an error if the Clipboard API is not supported or if there is an issue copying to the clipboard.
+	 */
+	copyClasses() {
+		try {
+			if (!navigator.clipboard) {
+				throw new Error('Clipboard API is not supported in this browser.');
+			}
+			const classes = Array.from(this.active.classList).join(' ');
+			navigator.clipboard.writeText(classes);
+		} catch (error) {
+			console.error('Error in copyClasses:', error.message);
+			throw error;
+		}
+	}
+
+	/**
 	* Dispatches a custom event with the specified name and detail.
 	*
 	* @param {string} name - The name of the custom event.
@@ -529,7 +561,9 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					case 'add-class': this.addClass(); break;
+					case 'cls-add': this.addClass(); break;
+					case 'cls-copy': this.copyClasses(); break;
+					case 'cls-rem': this.remClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
 					case 'colorscheme': this.editor.classList.toggle('uie-colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
@@ -636,7 +670,6 @@ class uiEditor extends HTMLElement {
 				break;
 			/* Active Tool */
 			case 'tool':
-				console.log('here');
 				[...this.tool.children].forEach((child, index) => child.hidden = index !== value - 1);
 				break;
 		}
@@ -648,13 +681,19 @@ class uiEditor extends HTMLElement {
 	 * @returns {void}
 	 */
 	onKeyDown = (event) => {
+		const select = (index) => {
+			const name = event.shiftKey ? 'breakpoint' : 'tool';
+			const group = this.editor.elements[name][index];
+			if (group) {
+				group.click();
+				group.focus()
+			}
+		}
 		const isCtrlPressed = event.ctrlKey || event.metaKey;
 		const keyBindings = {
-			'c': () => this.domAction('copy'),
+			'c': () => event.shiftKey && this.domAction('copy'),
 			'v': () => {
-				if (this.copy) {
-					event.shiftKey ? this.domAction('replace') : this.domAction('paste');
-				}
+				this.copy && (event.shiftKey ? this.domAction('paste') : (event.altKey ? this.domAction('replace') : null));
 			},
 			'arrowup': () => this.navigate('parentNode'),
 			'arrowdown': () => this.navigate('firstElementChild'),
@@ -666,12 +705,12 @@ class uiEditor extends HTMLElement {
 			'pagedown': () => this.domAction('next'),
 			'x': () => this.domAction('cut'),
 			'z': () => event.shiftKey ? this.domAction('redo') : this.domAction('undo'),
-			'1': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 0) : this.selectGroup(this.editor.elements.tool, 0),
-			'2': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 1) : this.selectGroup(this.editor.elements.tool, 1),
-			'3': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 2) : this.selectGroup(this.editor.elements.tool, 2),
-			'4': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 3) : this.selectGroup(this.editor.elements.tool, 3),
-			'5': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 4) : null,
-			'6': () => event.shiftKey ? this.selectGroup(this.editor.elements.breakpoint, 5) : null,
+			'1': () => select(0),
+			'2': () => select(1),
+			'3': () => select(2),
+			'4': () => select(3),
+			'5': () => select(4),
+			'6': () => select(5),
 		};
 
 		const actionFunction = keyBindings[event.key.toLowerCase()];
@@ -732,6 +771,17 @@ class uiEditor extends HTMLElement {
 			this.setOutline({ height:0, width:0, x:-9999, y:-9999 });
 			setTimeout(() => this.active.focus(), 0);
 		}
+	}
+
+	/**
+	* Removes the element's data-removed attribute and updates the class list display.
+	*/
+	remClasses() {
+		try {
+			delete this.active.dataset.removed;
+			this.updateClassList();
+		}
+		catch (error) { console.error('An error occurred while removing classes:', error.message); }
 	}
 
 	/**
@@ -828,35 +878,40 @@ class uiEditor extends HTMLElement {
 	* Renders the template for the editor, added to the shadowDOM
 	* @returns {string} - The generated markup.
 	*/
+
 	renderTemplate() {
-		return `
+    return `
 		<div part="outline" style="left:-9999px;top:-9999px"></div>
 		<form id="e${this.id}" part="editor" popover>
 			<header part="header">
-				${this.renderUIButton({ click:'colorscheme', icon:'colorscheme', part:'colorscheme', title:'Toggle Color Scheme' })}
+				${this.renderUIButton(this.controls.colorScheme)}
 				<h1 part="title">Editor</h1>
-				${this.renderUIButton({ click:'close', icon:'close', name:'close', part:'close', title:'Close Editor' })}
+				${this.renderUIButton(this.controls.closeButton)}
 			</header>
 
 			${this.renderUIFieldset('tools', this.groups.tabs.map(obj => this.renderUIInput(obj)).join(''), 'tabgroup')}
 
 			<div class="uie-tabs" part="tool">
 				<div class="uie-tab">
-				${this.renderUIFieldset('breakpoints', this.groups.breakpoints.map(obj => this.renderUIInput(obj)).join(''), 'tabgroup')}
+					${this.renderUIFieldset('breakpoints', this.groups.breakpoints.map(obj => this.renderUIInput(obj)).join(''), 'tabgroup')}
 					${this.renderUIGroup('Classlist',
-						this.renderUIFieldset('classlist','') +
-						this.renderUIFieldset('classname', 
-							this.renderUIInput({ input: { type:'text', name:'addclass', placeholder:'Add class(es)' }}) +
-							this.renderUIButton({ click:'add-class', icon:'listadd' })
-						), true, 'styles0')}
+						this.renderUIFieldset('classlist', '') +
+						this.renderUIFieldset('classname',
+							this.renderUIInput(this.controls.addClass) +
+							this.renderUIButton(this.controls.addClassButton)
+						) +
+						this.renderUIFieldset('classclean', this.groups.classActions.map(obj => this.renderUIButton(obj)).join('')),
+						true, 'styles0'
+					)}
 					${this.config?.styles ? this.config.styles.map(obj => this.renderUIConfigStyles(obj, 0, 'styles')).join('') : ''}
 				</div>
 				<div class="uie-tab" hidden>
 					${this.renderUIGroup('Code',
 						this.renderUIFieldset('HTML',
-							this.renderUITextArea({ text:'HTML', label: { class:'uie-textarea' }, textarea: { name:'uie-html' }}) +
-							this.renderUIButton({ click:'sync', icon:'refresh', name:'uie-sync', title:'Sync content' })
-						,'actions'), false)}
+							this.renderUITextArea(this.controls.htmlCode) +
+							this.renderUIButton(this.controls.htmlSync)
+						), false
+					)}
 				</div>
 				<div class="uie-tab" hidden>
 					${this.renderUIGroup('Selected Element', this.renderUIFieldset('selected_element', this.groups.dom.map(obj => this.renderUIButton(obj)).join('')), true, 'selected_element')}
@@ -867,20 +922,28 @@ class uiEditor extends HTMLElement {
 				</div>
 			</div>
 
-			${this.renderUIGroup('Frame', 
+			${this.renderUIGroup('Frame',
 				this.renderUIFieldset('frame', this.groups.frame.map(obj => this.renderUIOutput(obj)).join('')) +
-				this.renderUIFieldset('navigation', this.groups.navigation.map(obj => this.renderUIButton(obj)).join('')), 
-				false)
-			}
+				this.renderUIFieldset('navigation', this.groups.navigation.map(obj => this.renderUIButton(obj)).join('')),
+				false
+			)}
 
 		</form>
 		<form id="styles${this.id}" part="form-styles"></form>
 		<form id="config${this.id}" part="form-config"></form>
-		${this.renderUIInput({ label: { part:'toggle' }, input: { checked:this.getAttribute('open') === 'true' ? '' : '_REMOVE_', 'data-click':'toggle', type:'checkbox' }})}`;
+		${this.renderUIInput({ label: { part: 'toggle' }, input: { 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
+		`;
 	}
 
+	/**
+ 	* Renders a template string by replacing placeholders with values from the provided configuration.
+	* @param {string} template - The template string with placeholders in the format {{key}}.
+	* @param {Array} config - An array of objects with key-value pairs to replace the placeholders in the template.
+	* @returns {string} The rendered template string.
+	*/
 	renderTemplateFromString(template, config = {}) {
 		if (!template) return '';
+		/* Replaces placeholders in the template with values from the configuration. */
 		return decodeURIComponent(template).replace(/\{\{(\w+)\}\}/g, (match, key) => {
 			const configItem = config.find(item => item.key === key);
 			return configItem !== undefined ? configItem.value : match;
@@ -893,16 +956,11 @@ class uiEditor extends HTMLElement {
 	* @returns {string} - The rendered HTML for the button element.
 	*/
 	renderUIButton(obj) {
-		return `
-		<button type="button"${
-			obj.class ? ` class="${obj.class}"`:''}${
-			obj.click ? ` data-click="${obj.click}"`:''}${
-			obj.name ? ` name="${obj.name}"`:''}${
-			obj.part ? ` part="${obj.part}"`:''}${
-			obj.title ? ` title="${obj.title}"`:''}${
-			obj.value ? ` value="${obj.value}"`:''}>${
-			obj.icon ? this.icon(obj.icon) : obj.title}
-		</button>`;
+		let attributes = '';
+		for (const [key, value] of Object.entries(obj)) {
+			if (key !== 'icon') attributes += value ? ` ${key}="${value}"` : '';
+		}
+		return `<button type="button"${attributes}>${obj.icon ? this.icon(obj.icon) : obj.title}</button>`;
 	}
 
 	/**
@@ -947,7 +1005,7 @@ class uiEditor extends HTMLElement {
 			${obj.text ? `<span>${obj.text}</span>` : ''}
 			<input ${obj.input && Object.entries(obj.input).map(property => {
 				const [key, value] = property;
-				return value === '_REMOVE_' ? '' : value || value === 0 ? `${key}="${value}"`: key }).join(' ')
+				return value || value === 0 ? `${key}="${value}"`: key }).join(' ')
 			}>${
 			obj.icon ? this.icon(obj.icon) : ''}
 			${obj.textAfter ? `<span>${obj.textAfter}</span>` : ''}
@@ -967,6 +1025,11 @@ class uiEditor extends HTMLElement {
 		</label>`;
 	}
 
+	/**
+	* Renders a textarea element based on the provided details.
+	* @param {Object} obj - The object containing output details.
+	* @returns {string} - The rendered HTML for the output element.
+	*/
 	renderUITextArea(obj) {
 		return `
 		<label ${obj.label && Object.entries(obj.label).map(property => {
@@ -978,11 +1041,6 @@ class uiEditor extends HTMLElement {
 				return value ? `${key}="${value}"`: key }).join(' ')
 			}></textarea>
 		</label>`;
-	}
-
-	selectGroup(group, index, focus = true) {
-		group[index].click();
-		if (focus) group[index].focus()
 	}
 
 	/**

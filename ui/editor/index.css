@@ -179,11 +179,14 @@ svg {
 	padding: var(--uie-gap);
 	place-content: center;
 }
+
+[part=classclean],
 [part=navigation] {
 	--uie-gtc: repeat(8, 1fr);
 	gap: var(--uie-gap);
 	padding-block-start: 0;
 }
+
 [part=outline] {
 	border: var(--uie-a-bdw, 2px) var(--uie-a-bds, dashed) var(--ui-csss-a-bdc, #f09);
 	position: absolute;
@@ -370,7 +373,6 @@ label:has([type=search]) {
 	}
 	/* Variants */
 	&.font span { font-family: var(--_v); }
-	/* &.group span { grid-column: span 12; } */
 	&.swatch {
 		& input {
 			aspect-ratio: 1.8/1;
