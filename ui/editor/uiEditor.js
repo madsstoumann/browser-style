@@ -45,6 +45,7 @@ class uiEditor extends HTMLElement {
 			redo: ['M15 14l4 -4l-4 -4', 'M19 10h-11a4 4 0 1 0 0 8h1'],
 			refresh: ['M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4', 'M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4'],
 			replace: ['M3 3m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z', 'M15 15m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z', 'M21 11v-3a2 2 0 0 0 -2 -2h-6l3 3m0 -6l-3 3', 'M3 13v3a2 2 0 0 0 2 2h6l-3 -3m0 6l3 -3'],
+			revert: ['M9 14l-4 -4l4 -4', 'M5 10h11a4 4 0 1 1 0 8h-1'],
 			right: ['M5 12l14 0', 'M13 18l6 -6', 'M13 6l6 6'],
 			rightbar: ['M20 12l-10 0', 'M20 12l-4 4', 'M20 12l-4 -4', 'M4 4l0 16'],
 			save: ['M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2', 'M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0', 'M14 4l0 4l-6 0l0 -4'],
@@ -57,7 +58,7 @@ class uiEditor extends HTMLElement {
 
 		this.controls = {
 			addClass: { input: { type:'text', name:'addclass', placeholder:'Add class(es)' }},
-			addClassButton: { 'data-click':'cls-add', icon:'listadd' },
+			addClassButton: { 'data-click':'cls-add', icon:'listadd', title: 'Add to classlist' },
 			closeButton: { click:'close', icon:'close', name:'close', part:'close', title:'Close Editor' },
 			colorScheme: { 'data-click':'colorscheme', icon:'colorscheme', part:'colorscheme', title:'Toggle Color Scheme' },
 			htmlCode: { text: 'HTML', label: { class: 'uie-textarea' }, textarea: { name: 'uie-html' } },
@@ -71,15 +72,16 @@ class uiEditor extends HTMLElement {
 		this.groups = {
 			breakpoints: [
 				{ icon: 'deviceOff', label: { title:'off ⇧⌘1' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '', checked: true }},
-				{ icon: 'deviceSM', label: { title:'sm ⇧⌘2' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
-				{ icon: 'deviceMD', label: { title:'md ⇧⌘3' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
-				{ icon: 'deviceLG', label: { title:'lg ⇧⌘4' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
-				{ icon: 'deviceXL', label: { title:'xl ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
-				{ icon: 'deviceXXL', label: { title:'xxl ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
+				{ icon: 'deviceSM', label: { title:'sm:640 ⇧⌘2' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
+				{ icon: 'deviceMD', label: { title:'md:768 ⇧⌘3' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
+				{ icon: 'deviceLG', label: { title:'lg:1024 ⇧⌘4' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
+				{ icon: 'deviceXL', label: { title:'xl:1280 ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
+				{ icon: 'deviceXXL', label: { title:'xxl:1536 ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
 			],
 			classActions: [
 				{ 'data-click':'cls-copy', icon:'copyplus', title:'Copy enabled classes' },
-				{ 'data-click':'cls-rem', icon:'styleoff', title:'Remove disabled classes' }
+				{ 'data-click':'cls-rem', icon:'styleoff', title:'Remove disabled classes' },
+				{ 'data-click':'cls-revert', icon:'revert', title:'Revert to original state' }
 			],
 			dom: [
 				{ 'data-click': 'dom-copy', icon: 'copy', title: 'Copy  ⌘C' },
@@ -138,7 +140,9 @@ class uiEditor extends HTMLElement {
 			}
 			catch (error) { console.error(`Error fetching config: ${error}`); }
 		}
+
 		this.id = crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+		this.breakpoints = this.groups.breakpoints.map(breakpoint => breakpoint.input.value);
 
 		const shadow = this.attachShadow({ mode: 'open' })
 		const template = document.createElement('template');
@@ -410,8 +414,7 @@ class uiEditor extends HTMLElement {
 			if (!navigator.clipboard) {
 				throw new Error('Clipboard API is not supported in this browser.');
 			}
-			const classes = Array.from(this.active.classList).join(' ');
-			navigator.clipboard.writeText(classes);
+			navigator.clipboard.writeText(this.active.className);
 		} catch (error) {
 			console.error('Error in copyClasses:', error.message);
 			throw error;
@@ -564,6 +567,7 @@ class uiEditor extends HTMLElement {
 					case 'cls-add': this.addClass(); break;
 					case 'cls-copy': this.copyClasses(); break;
 					case 'cls-rem': this.remClasses(); break;
+					case 'cls-revert': this.revertClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
 					case 'colorscheme': this.editor.classList.toggle('uie-colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
@@ -601,7 +605,7 @@ class uiEditor extends HTMLElement {
 		const node = event.target;
 		let value = node.value;
 
-		/* Handle component configuration-updates */
+		/* === COMPONENT CONFIGURATION === */
 		if (node.form === this.componentConfig) {
 			const key = node.dataset.key;
 			if (!key) return;
@@ -613,16 +617,30 @@ class uiEditor extends HTMLElement {
 			return;
 		}
 
-		/* Handle style-updates */
+		/* === STYLE UPDATES === */
 		if (node.form === this.formStyles) {
 			const breakpoint = this.editor.elements.breakpoint.value || '';
 
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
 
+			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {
-				/* Remove any classes matching the prefix */
-				value = breakpoint + node.dataset.prefix + value;
 
+				/* Set breakpoint label/s */
+				const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
+				if (bp) {
+					if (node.type === 'radio') {
+						const fieldset = node.closest('fieldset');
+						if (fieldset) {
+							const vars = fieldset.querySelectorAll(`var[data-bp="${breakpoint}"]:not(:empty)`);
+							vars.forEach(label => label.textContent = '');
+						}
+					}
+					bp.textContent = node.type === 'radio' ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
+				}
+
+				/* Update value to set */
+				value = breakpoint + node.dataset.prefix + value;
 				const { classes, removed } = this.getClasses(this.active);
 
 				classes.forEach(className => {
@@ -639,8 +657,10 @@ class uiEditor extends HTMLElement {
 				this.active.classList.add(value);
 				this.updateClassList();
 			}
+			return;
 		}
 
+		/* === APP LOGIC === */
 		if (node.type === 'range' && node.previousElementSibling) {
 			node.previousElementSibling.dataset.value = value;
 		}
@@ -686,14 +706,17 @@ class uiEditor extends HTMLElement {
 			const group = this.editor.elements[name][index];
 			if (group) {
 				group.click();
-				group.focus()
+				group.focus();
 			}
-		}
+		};
+
 		const isCtrlPressed = event.ctrlKey || event.metaKey;
 		const keyBindings = {
 			'c': () => event.shiftKey && this.domAction('copy'),
 			'v': () => {
-				this.copy && (event.shiftKey ? this.domAction('paste') : (event.altKey ? this.domAction('replace') : null));
+				if (this.copy && (event.shiftKey ? this.domAction('paste') : (event.altKey ? this.domAction('replace') : null))) {
+					return; // Skip preventDefault for Ctrl+V
+				}
 			},
 			'arrowup': () => this.navigate('parentNode'),
 			'arrowdown': () => this.navigate('firstElementChild'),
@@ -715,10 +738,12 @@ class uiEditor extends HTMLElement {
 
 		const actionFunction = keyBindings[event.key.toLowerCase()];
 		if (actionFunction && isCtrlPressed) {
-			event.preventDefault();
+			if (!(event.key.toLowerCase() === 'c' || event.key.toLowerCase() === 'v')) {
+				event.preventDefault();
+			}
 			actionFunction();
 		}
-	}
+	};
 
 	/**
 	 * Handle the 'pointermove' event: hover elements behind editor-overlay
@@ -785,6 +810,14 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Returns a <code>-tag with each breakpoint as a <var>-tag within.
+	 * @returns string
+	 */
+	renderUIBreakpoints() {
+		return `<code>${this.breakpoints.map(bp => `<var data-bp="${bp}"></var>`).join('')}</code>`;
+	}
+
+	/**
 	* Renders content from `this.config.elements` into the editor.
 	*/
 	renderUIConfigElements() {
@@ -844,6 +877,7 @@ class uiEditor extends HTMLElement {
 			case 'radio group':
 			case 'radio swatch': {
 				return item.values.map(entry => {
+					obj.breakpoints = true;
 					obj.input.type = 'radio';
 					obj.input.value = entry.value || '';
 					obj.label.class = item.ui;
@@ -860,6 +894,7 @@ class uiEditor extends HTMLElement {
 				const array = item.range || item.values || [0, 100];
 				const min = item.values ? 0 : array.at(0);
 				const max = item.values ? array.length-1 : array.at(-1);
+				obj.breakpoints = true;
 				obj.input.type = 'range';
 				obj.input.min = min;
 				obj.input.max = max;
@@ -880,7 +915,7 @@ class uiEditor extends HTMLElement {
 	*/
 
 	renderTemplate() {
-    return `
+		return `
 		<div part="outline" style="left:-9999px;top:-9999px"></div>
 		<form id="e${this.id}" part="editor" popover>
 			<header part="header">
@@ -1002,13 +1037,13 @@ class uiEditor extends HTMLElement {
 		<label ${obj.label && Object.entries(obj.label).map(property => {
 			const [key, value] = property;
 			return value ? `${key}="${value}"`: key }).join(' ') || ''}>
-			${obj.text ? `<span>${obj.text}</span>` : ''}
+			${obj.text ? `<span>${obj.text}${obj.breakpoints ? this.renderUIBreakpoints():''}</span>` : ''}
 			<input ${obj.input && Object.entries(obj.input).map(property => {
 				const [key, value] = property;
 				return value || value === 0 ? `${key}="${value}"`: key }).join(' ')
 			}>${
 			obj.icon ? this.icon(obj.icon) : ''}
-			${obj.textAfter ? `<span>${obj.textAfter}</span>` : ''}
+			${obj.textAfter ? `<span>${obj.textAfter}${obj.breakpoints ? this.renderUIBreakpoints():''}</span>` : ''}
 		</label>`;
 	}
 
@@ -1044,6 +1079,17 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	* Reverts the active element's classList to its original state.
+	*/
+	revertClasses() {
+		try {
+			this.active.className = this.active.dataset.classes;
+			this.updateClassList();
+		}
+		catch (error) { console.error('An error occurred while reverting classes:', error.message); }
+	}
+
+	/**
 	* Sets the active HTML element, updating associated values and visual indicators.
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
@@ -1055,10 +1101,11 @@ class uiEditor extends HTMLElement {
 				this.resizeObserver.unobserve(this.active);
 			}
 			this.active = node;
+			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 			this.updateClassList();
 
-			// TODO:
+			// TODO: EDITING
 			this.editor.elements['uie-html'].value = node.innerHTML;
 			if (this.config && this.config.hasOwnProperty('styles')) { this.updateStyles(); }
 		}

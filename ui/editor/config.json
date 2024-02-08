@@ -279,67 +279,68 @@
 							{
 								"label": "",
 								"name": "bg",
+								"prefix": "bg-",
 								"ui": "radio swatch",
-								"value": "bg-primary",
+								"value": "primary",
 								"values": [
 								{
 									"label": "Primary",
 									"prefix": "bg",
-									"value": "bg-primary",
+									"value": "primary",
 									"display": "hsl(190, 50%, 50%)"
 								},
 								{
 									"label": "Secondary",
 									"prefix": "bg",
-									"value": "bg-secondary",
+									"value": "secondary",
 									"display": "hsl(0, 50%, 50%)"
 								},
 								{
 									"label": "Tertiary",
 									"prefix": "bg",
-									"value": "bg-tertiary",
+									"value": "tertiary",
 									"display": "hsl(30, 50%, 50%)"
 								},
 								{
 									"label": "Quaternary",
 									"prefix": "bg",
-									"value": "bg-quaternary",
+									"value": "quaternary",
 									"display": "hsl(60, 50%, 50%)"
 								},
 								{
 									"label": "Quinary",
 									"prefix": "bg",
-									"value": "bg-quinary",
+									"value": "quinary",
 									"display": "linear-gradient(45deg, purple, rebeccapurple, hotpink)"
 								},
 								{
 									"label": "Senary",
 									"prefix": "bg",
-									"value": "bg-senary",
+									"value": "senary",
 									"display": "hsl(120, 50%, 50%)"
 								},
 								{
 									"label": "Septenary",
 									"prefix": "bg",
-									"value": "bg-septenary",
+									"value": "septenary",
 									"display": "hsl(150, 50%, 50%)"
 								},
 								{
 									"label": "Octonary",
 									"prefix": "bg",
-									"value": "bg-octonary",
+									"value": "octonary",
 									"display": "hsl(180, 50%, 50%)"
 								},
 								{
 									"label": "Nonary",
 									"prefix": "bg",
-									"value": "bg-nonary",
+									"value": "nonary",
 									"display": "hsl(210, 50%, 50%)"
 								},
 								{
 									"label": "Denary",
 									"prefix": "bg",
-									"value": "bg-denary",
+									"value": "denary",
 									"display": "hsl(240, 50%, 50%)"
 								}
 								]
@@ -354,24 +355,24 @@
 								"name": "text",
 								"prefix": "text-",
 								"ui": "radio swatch",
-								"value": "text-secondary",
+								"value": "secondary",
 								"values": [
 									{
 										"label": "Primary",
 										"prefix": "text",
-										"value": "text-primary",
+										"value": "primary",
 										"display": "hsl(190, 50%, 50%)"
 									},
 									{
 										"label": "Secondary",
 										"prefix": "text",
-										"value": "text-secondary",
+										"value": "secondary",
 										"display": "hsl(0, 50%, 50%)"
 									},
 									{
 										"label": "Tertiary",
 										"prefix": "text",
-										"value": "text-tertiary",
+										"value": "tertiary",
 										"display": "hsl(30, 50%, 50%)"
 									}
 								]
