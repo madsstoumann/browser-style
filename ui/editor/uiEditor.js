@@ -6,8 +6,8 @@ import stylesheet from './index.css' assert { type: 'css' };
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.052
- * @summary 07-02-2024
+ * @version 1.0.053
+ * @summary 08-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -162,6 +162,7 @@ class uiEditor extends HTMLElement {
 		this.tool = shadow.querySelector(`[part=tool]`);
 
 		if (this.componentConfigure ) this.componentConfigure.hidden = true;
+		this.breakpoints.shift();
 
 		/* Events */
 		this.addAccessKeys();
@@ -495,6 +496,31 @@ class uiEditor extends HTMLElement {
 			}
 		} catch (error) {
 			console.error('An error occurred in domAction:', error);
+		}
+	}
+
+	/**
+	 * Filters an array of class names based on the specified breakpoint.
+	 * @param {string[]} classList - Array of class names.
+	 * @param {string} breakpoint - The breakpoint to filter classes by.
+	 * @returns {string[]} - Filtered array of class names.
+	 * @throws {Error} Throws an error if an invalid breakpoint is specified.
+	 */
+	filterClassesByBreakpoint(classList, breakpoint) {
+		try {
+			if (!breakpoint) {
+				// Return classes without any of the specified prefixes
+				return classList.filter(className => !this.breakpoints.some(prefix => className.startsWith(prefix)));
+			} else if (this.breakpoints.includes(breakpoint)) {
+				// Filter classes based on the selected breakpoint
+				return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
+			} else {
+				throw new Error('Invalid breakpoint specified');
+			}
+		} catch (error) {
+				console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
+				// If an error occurs, return the original class list
+				return classList;
 		}
 	}
 
@@ -1185,21 +1211,44 @@ class uiEditor extends HTMLElement {
 			removed.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, type:'checkbox' }})).join('\n');
 	}
 
-
+	/**
+	 * Update styles based on the active class and breakpoint.
+	 */
 	updateStyles() {
-		// const { classes, _removed } = this.getClasses(this.active);
-		// if (!classes.length) return;
-		this.formStyles.reset();
-		// const outputs = this.editor.querySelectorAll('[data-value]');
-		// if (outputs) {
-		// 	outputs.forEach(output => {
-		// 		const value = output.nextElementSibling.value;
-		// 		output.dataset.value = value;
-		// 	});
-		// }
-		// console.log(outputs)
-		// console.log('updateStyles', classes);
+		try {
+			const classes = this.active.className.split(' ');
+			if (!classes.length) return;
+
+			this.formStyles.reset();
+			const breakpoint = this.editor.elements.breakpoint.value || '';
+			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
+
+			if (filteredClasses.length) {
+				filteredClasses.forEach(cls => {
+					const [prefix, value] = cls.replace(breakpoint, '').split('-');
+					if (prefix) {
+						const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}-`) || null;
+						if (input) {
+							if (input.dataset.values) {
+								const selected = input.dataset.values.split(',').findIndex(item => item === value);
+								input.value = selected;
+							} else if (input.type === 'radio') {
+								this.formStyles.elements[input.name].value = value;
+							} else {
+								input.value = value;
+							}
+						}
+					}
+				});
+			}
+
+			//TODO! Update breakpoint-labels
+
+		} catch (error) {
+			console.error(`Error in updateStyles: ${error.message}`);
+		}
 	}
+
 }
 
 customElements.define('ui-editor', uiEditor);
