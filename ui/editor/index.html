@@ -16,7 +16,7 @@
 	<style>
 		/* For demo */
 		body {
-			min-height: 200dvh;
+			/* min-height: 200dvh; */
 		}
 		div { 
 			border: 2px solid var(--ButtonBorder);
@@ -60,10 +60,15 @@
 			</div>
 		</div>
 		<div class="bg-accent --light" tabindex="0"></div>
-		<div class="bg-accent --light mt-2 mb-48" tabindex="0"></div>
+		<div class="bg-accent --light mt-2 mb-48 sm:mb-2 lg:mb-6" tabindex="0"></div>
 		<div class="--md-gcs-2 bg-warning --light" tabindex="0"></div>
 	</section>
 
+
+	<ui-editor open="true" config="config.json" openkey="." togglekey=","></ui-editor>
+
 	<script src="uiEditor.js" type="module"></script>
+
+
 </body>
 </html>

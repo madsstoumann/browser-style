@@ -281,7 +281,7 @@
 								"name": "bg",
 								"prefix": "bg-",
 								"ui": "radio swatch",
-								"value": "primary",
+								"value": "tertiary",
 								"values": [
 								{
 									"label": "Primary",

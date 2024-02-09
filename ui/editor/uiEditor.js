@@ -6,8 +6,8 @@ import stylesheet from './index.css' assert { type: 'css' };
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.053
- * @summary 08-02-2024
+ * @version 1.0.054
+ * @summary 09-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -15,6 +15,10 @@ class uiEditor extends HTMLElement {
 	static observedAttributes = ['open'];
 	constructor() {
 		super();
+
+		this.settings = {
+			framed: this.hasAttribute('framed'),
+		}
 
 		/**
 		* * Object containing SVG path data for icons.
@@ -72,11 +76,11 @@ class uiEditor extends HTMLElement {
 		this.groups = {
 			breakpoints: [
 				{ icon: 'deviceOff', label: { title:'off ⇧⌘1' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '', checked: true }},
-				{ icon: 'deviceSM', label: { title:'sm:640 ⇧⌘2' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'sm:' }},
-				{ icon: 'deviceMD', label: { title:'md:768 ⇧⌘3' }, input: {'data-sr':'', name:'breakpoint', type:'radio', value: 'md:' }},
-				{ icon: 'deviceLG', label: { title:'lg:1024 ⇧⌘4' }, input: { 'data-sr':'', name:'breakpoint', type:'radio',  value: 'lg:' }},
-				{ icon: 'deviceXL', label: { title:'xl:1280 ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: 'xl:' }},
-				{ icon: 'deviceXXL', label: { title:'xxl:1536 ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', type:'radio', value: '2xl:' }},
+				{ icon: 'deviceSM', label: { title:'sm:640 ⇧⌘2' }, input: { 'data-sr':'', name:'breakpoint', 'data-dimensions': '360x640', type:'radio', value: 'sm:' }},
+				{ icon: 'deviceMD', label: { title:'md:768 ⇧⌘3' }, input: {'data-sr':'', name:'breakpoint', 'data-dimensions': '768x1024', type:'radio', value: 'md:' }},
+				{ icon: 'deviceLG', label: { title:'lg:1024 ⇧⌘4' }, input: { 'data-sr':'', name:'breakpoint', 'data-dimensions': '1024x1280', type:'radio',  value: 'lg:' }},
+				{ icon: 'deviceXL', label: { title:'xl:1280 ⇧⌘5' }, input: { 'data-sr':'', name:'breakpoint', 'data-dimensions': '1280x1280', type:'radio', value: 'xl:' }},
+				{ icon: 'deviceXXL', label: { title:'xxl:1536 ⇧⌘6' }, input: { 'data-sr':'', name:'breakpoint', 'data-dimensions': '1536x1280', type:'radio', value: '2xl:' }},
 			],
 			classActions: [
 				{ 'data-click':'cls-copy', icon:'copyplus', title:'Copy enabled classes' },
@@ -133,6 +137,12 @@ class uiEditor extends HTMLElement {
 	* Initializes the shadow DOM, sets up event listeners, and performs necessary setup.
 	*/
 	async connectedCallback() {
+		if (window.location !== window.parent.location) {
+			console.log("The page is in an iFrame");
+			// this.style.cssText = 'background: rgba(0,0,0,.25);inset: 0;position: fixed;';
+			return;
+		}
+
 		if (this.getAttribute('config')) {
 			try {
 				const response = await fetch(this.getAttribute('config'));
@@ -141,7 +151,7 @@ class uiEditor extends HTMLElement {
 			catch (error) { console.error(`Error fetching config: ${error}`); }
 		}
 
-		this.id = crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+		this.id = `uie${this.uuid()}`
 		this.breakpoints = this.groups.breakpoints.map(breakpoint => breakpoint.input.value);
 
 		const shadow = this.attachShadow({ mode: 'open' })
@@ -156,6 +166,8 @@ class uiEditor extends HTMLElement {
 		this.componentSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part=title]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
+		this.iframe = this.settings.framed ? shadow.querySelector(`[part=iframe]`) : null;
+		this.formFrame = this.settings.framed ? shadow.querySelector(`[part=form-frame]`) : null;
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.toggle = shadow.querySelector(`[part=toggle] input`);
@@ -169,9 +181,20 @@ class uiEditor extends HTMLElement {
 		this.addDocumentScroll();
 		this.addEventListener('click', this.onClick);
 		this.addEventListener('keydown', this.onKeyDown)
-		this.addEventListener('pointermove', this.onMove);
-		this.addDraggable(this.draghandle, this.editor);
-		this.editor.addEventListener('beforetoggle', this.onToggle)
+
+		if (this.settings.framed) {
+			this.formFrame.addEventListener('input', this.onFrameInput);
+			this.iframe.contentWindow.addEventListener('click', event => {
+				const node = event.composedPath().shift();
+				console.log(node, node.getBoundingClientRect());
+			})
+		}
+		else {
+			this.addEventListener('pointermove', this.onMove);
+			this.addDraggable(this.draghandle, this.editor);
+			this.editor.addEventListener('beforetoggle', this.onToggle)
+		}
+
 		this.editor.addEventListener('input', this.onInput);
 		if (this.componentSearch) {
 			this.componentSearch.addEventListener('input', this.onSearch);
@@ -590,12 +613,16 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					case 'cls-add': this.addClass(); break;
+					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
 					case 'cls-copy': this.copyClasses(); break;
 					case 'cls-rem': this.remClasses(); break;
-					case 'cls-revert': this.revertClasses(); break;
+					case 'cls-revert': this.revertClasses(); this.updateFormFromClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
-					case 'colorscheme': this.editor.classList.toggle('uie-colorscheme'); break;
+					case 'colorscheme': {
+						this.editor.classList.toggle('uie-colorscheme');
+						if (this.formFrame) this.formFrame.classList.toggle('uie-colorscheme');
+					}
+					break;
 					case 'dom-copy': this.domAction('copy'); break;
 					case 'dom-cut': this.domAction('cut'); break;
 					case 'dom-first': this.domAction('first'); break;
@@ -620,6 +647,24 @@ class uiEditor extends HTMLElement {
 			}
 		} catch (error) {
 			console.error('Error:', error);
+		}
+	}
+
+	/**
+	* Handles the input event for formFrame, updating properties based on user input.
+	* @param {InputEvent} e - The input event.
+	*/
+	onFrameInput = (event) => {
+		const node = event.target;
+		this.iframe.removeAttribute('style');
+
+		/* === SET FRAME DIMENSIONS === */
+		if (node.dataset.dimensions) {
+			const [width, height] = node.dataset.dimensions.split('x');
+			this.iframe.style.width = `${width}px`;
+			this.iframe.style.height = `${height}px`;
+			this.iframe.style.placeSelf = 'center';
+			this.iframe.style.resize = 'none';
 		}
 	}
 
@@ -651,19 +696,7 @@ class uiEditor extends HTMLElement {
 
 			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {
-
-				/* Set breakpoint label/s */
-				const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
-				if (bp) {
-					if (node.type === 'radio') {
-						const fieldset = node.closest('fieldset');
-						if (fieldset) {
-							const vars = fieldset.querySelectorAll(`var[data-bp="${breakpoint}"]:not(:empty)`);
-							vars.forEach(label => label.textContent = '');
-						}
-					}
-					bp.textContent = node.type === 'radio' ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
-				}
+				this.setBreakpointLabel(node, breakpoint, value);
 
 				/* Update value to set */
 				value = breakpoint + node.dataset.prefix + value;
@@ -702,7 +735,7 @@ class uiEditor extends HTMLElement {
 
 		switch(node.name) {
 			/* Update the selected styles in the editor when breakpoint change */
-			case 'breakpoint': this.updateStyles(); break;
+			case 'breakpoint': this.updateBreakpoint(); break;
 			/* Enable/Disable CSS class for `this.active` */
 			case 'classname':
 				if (!node.checked) {
@@ -713,6 +746,7 @@ class uiEditor extends HTMLElement {
 					this.active.classList.add(value);
 					this.active.dataset.removed = this.active.dataset.removed.replace(value, '');
 				}
+				this.updateFormFromClasses();
 				break;
 			/* Active Tool */
 			case 'tool':
@@ -943,7 +977,7 @@ class uiEditor extends HTMLElement {
 	renderTemplate() {
 		return `
 		<div part="outline" style="left:-9999px;top:-9999px"></div>
-		<form id="e${this.id}" part="editor" popover>
+		<form id="e${this.id}" part="editor"${this.settings.framed ? '': `popover`}>
 			<header part="header">
 				${this.renderUIButton(this.controls.colorScheme)}
 				<h1 part="title">Editor</h1>
@@ -986,12 +1020,18 @@ class uiEditor extends HTMLElement {
 			${this.renderUIGroup('Frame',
 				this.renderUIFieldset('frame', this.groups.frame.map(obj => this.renderUIOutput(obj)).join('')) +
 				this.renderUIFieldset('navigation', this.groups.navigation.map(obj => this.renderUIButton(obj)).join('')),
-				false
+				(this.settings.framed ? true : false)
 			)}
 
 		</form>
 		<form id="styles${this.id}" part="form-styles"></form>
 		<form id="config${this.id}" part="form-config"></form>
+
+		${this.settings.framed ? `<form id="frame${this.id}" part="form-frame">
+			${this.renderUIFieldset('framegroup', this.groups.breakpoints.map(obj => this.renderUIInput(obj)).join(''), 'framegroup')}
+			<iframe src="${window.location.href}" part="iframe" sandbox="allow-scripts allow-forms allow-same-origin allow-pointer-lock allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe>
+		</form>` : ''}
+
 		${this.renderUIInput({ label: { part: 'toggle' }, input: { 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
 		`;
 	}
@@ -1129,14 +1169,29 @@ class uiEditor extends HTMLElement {
 			this.active = node;
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
+
 			this.updateClassList();
+			if (this.config && this.config.hasOwnProperty('styles')) { this.updateFormFromClasses(); }
 
 			// TODO: EDITING
 			this.editor.elements['uie-html'].value = node.innerHTML;
-			if (this.config && this.config.hasOwnProperty('styles')) { this.updateStyles(); }
 		}
 		catch (error) {
 			console.error(error);
+		}
+	}
+
+	setBreakpointLabel(node, breakpoint, value) {
+		const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
+		if (bp) {
+			if (node.type === 'radio') {
+				const fieldset = node.closest('fieldset');
+				if (fieldset) {
+					const vars = fieldset.querySelectorAll(`var[data-bp="${breakpoint}"]:not(:empty)`);
+					vars.forEach(label => label.textContent = '');
+				}
+			}
+			bp.textContent = node.type === 'radio' ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
 		}
 	}
 
@@ -1202,19 +1257,10 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Updates the classlist in the editor based on the active element.
+	 * Updates the form based on the current breakpoint value and filtered classes.
+	 * Uses the provided breakpoint value to filter and update relevant elements.
 	 */
-	updateClassList() {
-		const { classes, removed } = this.getClasses(this.active);
-		this.editor.elements.classlist.innerHTML = 
-			classes.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, checked:'', type:'checkbox' }})).join('\n') +
-			removed.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, type:'checkbox' }})).join('\n');
-	}
-
-	/**
-	 * Update styles based on the active class and breakpoint.
-	 */
-	updateStyles() {
+	updateBreakpoint() {
 		try {
 			const classes = this.active.className.split(' ');
 			if (!classes.length) return;
@@ -1226,37 +1272,86 @@ class uiEditor extends HTMLElement {
 			if (filteredClasses.length) {
 				filteredClasses.forEach(cls => {
 					const [prefix, value] = cls.replace(breakpoint, '').split('-');
-					if (prefix) {
-						const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}-`) || null;
-						if (input) {
-							if (input.dataset.values) {
-								const selected = input.dataset.values.split(',').findIndex(item => item === value);
-								input.value = selected;
-							} else if (input.type === 'radio') {
-								this.formStyles.elements[input.name].value = value;
-							} else {
-								input.value = value;
-							}
-						}
-					}
+					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}-`) || null;
+					this.updateInputElement(input, breakpoint, value);
 				});
 			}
-
-			//TODO! Update breakpoint-labels
-
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
 		}
 	}
 
+	/**
+	 * Updates the classlist in the editor based on the active element.
+	 */
+	updateClassList() {
+		const { classes, removed } = this.getClasses(this.active);
+		this.editor.elements.classlist.innerHTML = 
+			classes.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, checked:'', type:'checkbox' }})).join('\n') +
+			removed.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, type:'checkbox' }})).join('\n');
+	}
+
+	/**
+	 * Updates the form based on the current classes of the active element.
+	 * Uses the current breakpoint value to filter and update relevant elements.
+	 */
+	updateFormFromClasses() {
+		if (!this.active) return;
+
+		this.formStyles.reset();
+		const vars = this.editor.querySelectorAll('var[data-bp]');
+		vars.forEach(varElement => varElement.textContent = '');
+
+		const classes = this.active.className.split(' ');
+		const current = this.editor.elements.breakpoint.value || '';
+
+		classes.forEach(cls => {
+			const match = cls.match(/^(?:(?<breakpoint>[^:\s]+):)?(?<prefix>[^-]+)-(?<value>.+)/);
+
+			if (match) {
+				const breakpoint = match.groups.breakpoint && `${match.groups.breakpoint}:` || '';
+				const prefix = match.groups.prefix || null;
+				const value = match.groups.value || null;
+
+				const input = this.formStyles.elements[prefix] || null;
+				this.updateInputElement(input, breakpoint, value);
+			}
+		});
+	}
+
+	/**
+	 * Updates an individual input element based on the provided parameters.
+	 *
+	 * @param {HTMLElement} input - The input element to be updated.
+	 * @param {string} breakpoint - The breakpoint value.
+	 * @param {string} value - The value to set for the input element.
+	 */
+	updateInputElement(input, breakpoint, value) {
+		if (input) {
+			const bp = input.parentNode?.querySelector(`var[data-bp="${breakpoint}"]`);
+			if (bp) bp.textContent = value;
+
+			if (!breakpoint || breakpoint === this.editor.elements.breakpoint.value) {
+				if (input.dataset?.values) {
+					const selected = input.dataset.values.split(',').findIndex(item => item === value);
+					input.value = selected;
+				} else if (input.type === 'radio') {
+					this.formStyles.elements[input.name].value = value;
+				} else {
+					input.value = value;
+				}
+			}
+		}
+	}
+
+
+
+	/**
+	 * Generates a random identifier.
+	 */
+	uuid() {
+		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+	}
 }
 
 customElements.define('ui-editor', uiEditor);
-
-/* DEMO */
-const editor = document.createElement('ui-editor');
-editor.setAttribute('open', 'true')
-editor.setAttribute('togglekey', ',')
-editor.setAttribute('openkey', '.')
-editor.setAttribute('config', 'config.json')
-document.body.appendChild(editor);
