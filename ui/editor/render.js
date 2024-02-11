@@ -1,4 +1,4 @@
-let globalBreakpoints = {}, globalForm = '', globalIconObject = {};
+let globalBreakpoints = [], globalForm = '', globalIconObject = {};
 
 export function renderAttributes(attributes, blacklist = ['icon']) {
 	return Object.keys(attributes)
@@ -8,10 +8,10 @@ export function renderAttributes(attributes, blacklist = ['icon']) {
 }
 
 export function renderButton(obj, iconObject) {
-	return `<button ${renderAttributes(obj)}>${obj.icon ? renderIcon(obj.icon, iconObject) : obj.title}</button>`;
+	return `<button type="button" ${renderAttributes(obj)}>${obj.icon ? renderIcon(obj.icon, iconObject) : obj.title}</button>`;
 }
 
-export function renderElement(element) {
+export function renderElement(element) { console.log(element)
 	if (globalForm && element.obj) {
 		element.obj.form = globalForm;
 		if (element.obj.input) {
@@ -21,12 +21,14 @@ export function renderElement(element) {
 	switch (element.ui) {
 		case 'button':
 			return renderButton(element.obj);
+		case 'tag':
+		 return renderTag(element)
 		default:
 			return renderInput(element.obj);
 	}
 }
 
-export function renderUIBreakpoints(breakpoints) {
+export function renderBreakpoints(breakpoints) {
 	return globalBreakpoints && `<code>${breakpoints.map(breakpoint => `<var data-bp="${breakpoint}"></var>`).join('')}</code>`;
 }
 
@@ -45,8 +47,8 @@ export function renderGroup(group, level = 0) {
 			<summary>${group.label}
 				<div part="button icon">${renderIcon(group.icon || 'plus')}</div>
 			</summary>
-			${group.fieldsets ? group.fieldsets.map(renderFieldset).join('') : ''}
 			${group.groups ? group.groups.map(subgroup => renderGroup(subgroup, level + 1)).join('') : ''}
+			${group.fieldsets ? group.fieldsets.map(renderFieldset).join('') : ''}
 		</details>
 	`;
 }
@@ -62,21 +64,26 @@ export function renderIcon(name) {
 }
 
 export function renderInput(obj) {
-	const breakpoints = globalBreakpoints && obj.breakpoints ? renderUIBreakpoints(obj.breakpoints) : '';
+	const breakpoints = globalBreakpoints.length ? renderBreakpoints(globalBreakpoints) : '';
 	const icon = obj.icon ? renderIcon(obj.icon) : '';
 	const input = obj.input ? renderAttributes(obj.input) : '';
 	const label = obj.label ? renderAttributes(obj.label) : '';
-	const text = obj.text ? `<span>${obj.text}</span>` : '';
-	const textAfter = obj.textAfter ? `<span>${obj.textAfter}</span>` : '';
+	const text = obj.text ? `<span>${obj.text}${breakpoints}</span>` : '';
+	const textAfter = obj.textAfter ? `<span>${obj.textAfter}}${breakpoints}</span>` : '';
 
 	return `
 		<label ${label}>
-		${text}${breakpoints}
+		${text}
 		<input ${input}>
 		${icon}
 		${textAfter}
 		</label>
 	`;
+}
+
+export function renderTag(obj) {
+	const attributes = obj.attributes ? renderAttributes(obj.attributes) : '';
+	return `<${obj.tag} ${attributes}>${obj.content}</${obj.tag}>`;
 }
 
 export function setBreakpoints(breakpoints) {

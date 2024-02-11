@@ -1,10 +1,12 @@
 // const stylesheet = new CSSStyleSheet()
 // stylesheet.replaceSync(``)
 
-import stylesheet from './index.css' assert { type: 'css' };
+import stylesheet from './styles.css' assert { type: 'css' };
 import { renderAttributes, renderButton, renderElement, renderFieldset, renderGroup, renderIcon, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
+import { findObjectByProperty } from './utils.js';
 import icons from './icons.js';
 import tools from './tools.json' assert { type: 'json' };
+
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
@@ -19,10 +21,13 @@ class uiEditor extends HTMLElement {
 	constructor() {
 		super();
 
+		this.config = [];
 		this.settings = {
+			framesizes: [
+				{ }
+			],
 			responsive: this.hasAttribute('responsive'),
 		}
-
 		this.undoStack = [];
 		this.redoStack = [];
 	}
@@ -43,16 +48,30 @@ class uiEditor extends HTMLElement {
 				const response = await fetch(this.getAttribute('config'));
 				this.config = await response.json();
 			}
-			catch (error) { console.error(`Error fetching config: ${error}`); }
+			catch (error) {
+				console.error(`Error fetching config: ${error}`);
+			}
 		}
 
-		this.id = `uie${this.uuid()}`;
+		this.id = `e${this.uuid()}`;
+		const global = findObjectByProperty(tools, 'key', 'global') || {};
+
+		if (global) {
+			this.global = global;
+			const index = tools.findIndex(tool => tool.key === 'global');
+			if (index !== -1) tools.splice(index, 1);
+			if (this.global.breakpoints) {
+				this.global.breakpoints.shift();
+				setBreakpoints(this.global.breakpoints);
+			}
+		}
+
 		setIconObject(icons);
 		// this.breakpoints = this.groups.breakpoints.map(breakpoint => breakpoint.input.value);
 
 		const shadow = this.attachShadow({ mode: 'open' })
 		const template = document.createElement('template');
-		template.innerHTML = this.renderTemplate(tools);
+		template.innerHTML = this.renderTemplate(tools, this.config);
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.appendChild(template.content.cloneNode(true));
 
@@ -61,12 +80,12 @@ class uiEditor extends HTMLElement {
 		// this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
 		// this.componentSearch = shadow.querySelector(`[part=component-search]`);
 		// this.draghandle = shadow.querySelector(`[part=title]`);
-		// this.editor = shadow.querySelector(`[part=editor]`);
-		// this.iframe = this.settings.framed ? shadow.querySelector(`[part=iframe]`) : null;
+		this.editor = shadow.querySelector(`[part=editor]`);
+		// this.iframe = this.settings.responsive ? shadow.querySelector(`[part=iframe]`) : null;
 		// this.formFrame = this.settings.framed ? shadow.querySelector(`[part=form-frame]`) : null;
 		// this.formStyles = shadow.querySelector(`[part=form-styles]`);
-		// this.outline = shadow.querySelector(`[part=outline]`);
-		// this.toggle = shadow.querySelector(`[part=toggle] input`);
+		this.outline = shadow.querySelector(`[part=outline]`);
+		this.toggle = shadow.querySelector(`[part=toggle]`);
 		// this.tool = shadow.querySelector(`[part=tool]`);
 
 		// if (this.componentConfigure ) this.componentConfigure.hidden = true;
@@ -91,7 +110,7 @@ class uiEditor extends HTMLElement {
 		// 	this.editor.addEventListener('beforetoggle', this.onToggle)
 		// }
 
-		// this.editor.addEventListener('input', this.onInput);
+		this.editor.addEventListener('input', this.onInput);
 		// if (this.componentSearch) {
 		// 	this.componentSearch.addEventListener('input', this.onSearch);
 		// 	this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
@@ -789,42 +808,46 @@ class uiEditor extends HTMLElement {
 	* @returns {string} - The generated markup.
 	*/
 	renderTemplate(tools, config = []) {
-		const findObjectByKey = (key, array) => array.find(item => item.key === key) || null;
+		const renderTool = (tool) => {
+			const configItem = findObjectByProperty(config, 'key', tool.key) || {};
+			setForm(tool.key + this.id);
+			return `
+				<div part="tool">
+					${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
+					${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
+					${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
+				</div>
+			`;
+		};
+
+		const output = tools.map(renderTool).join('');
+		const forms = tools.map(tool => `<form id="${tool.key}${this.id}" part="form-${tool.key}"></form>`).join('');
+
+		const toolbarFields = tools.map(tool => ({
+			ui: 'input',
+			obj: {
+				icon: tool.icon,
+				input: { type: 'radio', name: 'tool', value: tool.name, 'data-sr': '' },
+				label: { title: tool.title }
+			}
+		}));
 		const toolbar = renderFieldset({
 			name: 'tools',
 			part: 'tabgroup',
-			fields: tools.map(tool => ({
-				ui: 'input',
-				obj: {
-					icon: tool.icon,
-					input: { type: 'radio', name: 'tool', value: tool.name, 'data-sr': '' },
-					label: { title: tool.title }
-				}
-			}))
+			fields: toolbarFields,
 		});
-		const output = tools.map(tool => {
-			const configItem = findObjectByKey(tool.key, config) || {};
-			setForm(tool.key);
-			return `
-			<div part="tool">
-				${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
-				${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
-				${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
-			</div>
-		`}).join('');
+
 		return `
-		<div part="outline" style="left:-9999px;top:-9999px"></div>
-		<form id="e${this.id}" part="editor"${this.settings.responsive ? '': ``}>
-			<header part="header">
-				
-				<h1 part="title">Editor</h1>
-				
-			</header>
-			${toolbar}<div part="tools">${output}</div>
-
-		</form>
-
-		${renderInput({ label: { part: 'toggle' }, input: { 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
+			<div part="outline" style="left:-9999px;top:-9999px"></div>
+			<form id="uie${this.id}" part="editor"${this.settings.responsive ? '' : ``}>
+				<header part="header">
+					${this.global.header.map(item => renderElement(item)).join('')}
+				</header>
+				${toolbar}
+				<div part="tools">${output}</div>
+			</form>
+			${forms}
+			${renderInput({ input: { part: 'toggle', 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
 		`;
 	}
 

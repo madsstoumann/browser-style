@@ -1,5 +1,38 @@
 [
   {
+    "key": "global",
+    "breakpoints": ["", "sm:", "md:", "lg:", "xl:", "2xl:"],
+    "header": [
+      {
+        "ui": "button",
+        "obj": {
+          "data-click": "colorscheme",
+          "icon": "colorscheme",
+          "name": "colorscheme",
+          "title": "Toggle Color Scheme"
+        }
+      },
+      {
+        "ui": "tag",
+        "tag": "h1",
+        "content": "Editor",
+        "attributes": {
+          "part": "title"
+        }
+      },
+      {
+        "ui": "button",
+        "obj": { 
+          "data-click": "close", 
+          "icon": "close", 
+          "name": "close", 
+          "part": "close", 
+          "title": "Close Editor"
+        }
+      }
+    ]
+  },
+  {
     "name": "Styles",
 		"key": "styles",
     "icon": "style",

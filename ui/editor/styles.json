@@ -41,10 +41,311 @@
 									}
 								]
 							}
+						],
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Margin Left",
+											"input": {
+												"name": "ml",
+												"min"	: 0,
+												"max"	: 10,
+												"data-prefix": "ml-",
+												"type": "range"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"text": "Margin Right",
+											"input": {
+												"name": "mr",
+												"data-prefix": "mr-",
+												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
+												"type": "range"
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Padding",
+						"groups": [
+							{
+								"label": "Top",
+								"fieldsets": [
+									{
+										"name": "classname",
+										"fields": [
+											{
+												"obj" : {
+													"text": "Padding Top",
+													"input": {
+														"name": "pt",
+														"min"	: 0,
+														"max"	: 10,
+														"data-prefix": "pt-",
+														"type": "range"
+													}
+												}
+											},
+											{
+												"obj" : {
+													"text": "Padding Bottom",
+													"input": {
+														"name": "pb",
+														"data-prefix": "pb-",
+														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
+														"type": "range"
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						],
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Padding Left",
+											"input": {
+												"name": "pl",
+												"min"	: 0,
+												"max"	: 10,
+												"data-prefix": "pl-",
+												"type": "range"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"text": "Padding Right",
+											"input": {
+												"name": "pr",
+												"data-prefix": "pr-",
+												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8],
+												"type": "range"
+											}
+										}
+									}
+									]
+							}
+								
+						]
+
+					}
+				]
+			},
+			{
+				"label": "Typography",
+				"groups": [
+					{
+						"label": "Font Size",
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Font Size",
+											"input": {
+												"name": "fs",
+												"min"	: 0,
+												"max"	: 10,
+												"data-prefix": "fs-",
+												"type": "range"
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Font Weight",
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Font Weight",
+											"input": {
+												"name": "fw",
+												"data-prefix": "fw-",
+												"data-values": ["normal", "bold"],
+												"type": "select"
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Line Height",
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Line Height",
+											"input": {
+												"name": "lh",
+												"min"	: 0,
+												"max"	: 10,
+												"data-prefix": "lh-",
+												"type": "range"
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Letter Spacing",
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Letter Spacing",
+											"input": {
+												"name": "ls",
+												"min"	: 0,
+												"max"	: 10,
+												"data-prefix": "ls-",
+												"type": "range"
+											}
+										}
+									}
+								]
+							}
 						]
 					}
 				]
-			}
+			},
+			{
+				"label": "Colors",
+				"groups": [
+					{
+						"label": "Background",
+						"fieldsets": [
+							{
+								"name": "background",
+								"fields": [
+									{
+										"obj" : {
+											"textAfter": "Primary",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"part": "radio color",
+												"style": "--_v:hsl(190, 50%, 50%)",
+												"type": "radio",
+												"value": "primary"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"textAfter": "Secondary",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"style": "--_v:hsl(0, 50%, 50%)",
+												"type": "radio",
+												"value": "secondary"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"textAfter": "Tertiary",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"style": "--_v:hsl(0, 0%, 50%)",
+												"type": "radio",
+												"value": "tertiary"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"textAfter": "Quaternary",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"style": "--_v:hsl(0, 0%, 0%)",
+												"type": "radio",
+												"value": "quaternary"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"textAfter": "White",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"style": "--_v:hsl(0, 0%, 100%)",
+												"type": "radio",
+												"value": "white"
+											}
+										}
+									},
+									{
+										"obj" : {
+											"textAfter": "Black",
+											"input": {
+												"name": "bg",
+												"data-prefix": "bg-",
+												"style": "--_v:hsl(0, 0%, 0%)",
+												"type": "radio",
+												"value": "black"
+											}
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Text",
+						"fieldsets": [
+							{
+								"name": "classname",
+								"fields": [
+									{
+										"obj" : {
+											"text": "Text Color",
+											"input": {
+												"name": "text",
+												"data-prefix": "text-",
+												"data-values": ["white", "black", "gray", "red", "orange", "yellow", "green", "teal", "blue", "indigo", "purple", "pink"],
+												"type": "select"
+											}
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}	
 		]
 	},
 	{
