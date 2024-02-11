@@ -1,0 +1,265 @@
+[
+  {
+    "name": "Styles",
+		"key": "styles",
+    "icon": "style",
+    "title": "Styles ⌘1",
+    "fieldsets": [
+      {
+        "name": "breakpoints",
+        "fields": [
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceOff",
+              "label": {
+                "title": "off ⇧⌘1"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "type": "radio",
+                "value": "",
+                "checked": ""
+              }
+            }
+          },
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceSM",
+              "label": {
+                "title": "sm:640 ⇧⌘2"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "data-dimensions": "360x640",
+                "type": "radio",
+                "value": "sm:"
+              }
+            }
+          },
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceMD",
+              "label": {
+                "title": "md:768 ⇧⌘3"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "data-dimensions": "768x1024",
+                "type": "radio",
+                "value": "md:"
+              }
+            }
+          },
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceLG",
+              "label": {
+                "title": "lg:1024 ⇧⌘4"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "data-dimensions": "1024x1280",
+                "type": "radio",
+                "value": "lg:"
+              }
+            }
+          },
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceXL",
+              "label": {
+                "title": "xl:1280 ⇧⌘5"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "data-dimensions": "1280x1280",
+                "type": "radio",
+                "value": "xl:"
+              }
+            }
+          },
+          {
+            "ui": "input",
+            "obj": {
+              "icon": "deviceXXL",
+              "label": {
+                "title": "xxl:1536 ⇧⌘6"
+              },
+              "input": {
+                "data-sr": "",
+                "name": "breakpoint",
+                "data-dimensions": "1536x1280",
+                "type": "radio",
+                "value": "2xl:"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "groups": [
+      {
+        "label": "Classlist",
+        "name": "groupclasslist",
+        "open": true,
+        "fieldsets": [
+          {
+            "name": "classlist"
+          },
+          {
+            "name": "classname",
+            "fields": [
+              {
+                "ui": "input",
+                "obj": {
+                  "input": {
+                    "type": "text",
+                    "name": "addclass",
+                    "placeholder": "Add class(es)"
+                  }
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "type": "button",
+                  "data-click": "cls-add",
+                  "icon": "listadd",
+                  "title": "Add to classlist"
+                }
+              }
+            ]
+          },
+          {
+            "name": "classactions",
+            "fields": [
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "cls-copy",
+                  "icon": "copyplus",
+                  "title": "Copy enabled classes"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "cls-rem",
+                  "icon": "styleoff",
+                  "title": "Remove disabled classes"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "cls-revert",
+                  "icon": "revert",
+                  "title": "Revert to original state"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Content",
+		"key": "content",
+    "icon": "edit",
+    "title": "Content ⌘2",
+    "groups": []
+  },
+  {
+    "name": "Elements",
+		"key": "elements",
+    "icon": "components",
+    "title": "Elements ⌘3",
+    "groups": [
+      {
+        "label": "Selected Element",
+        "fieldsets": [
+          {
+            "name": "selectedelement",
+            "fields": [
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-copy",
+                  "icon": "copy",
+                  "title": "Copy  ⌘C"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-cut",
+                  "icon": "cut",
+                  "title": "Cut ⌘X"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-paste",
+                  "icon": "paste",
+                  "title": "Paste into ⌘V"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-replace",
+                  "icon": "replace",
+                  "title": "Replace with ⇧⌘V"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-first",
+                  "icon": "first",
+                  "title": "Move first ⌘↖"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-prev",
+                  "icon": "leftbar",
+                  "title": "Move previous ⌘⇞"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-next",
+                  "icon": "rightbar",
+                  "title": "Move next ⌘⇟"
+                }
+              },
+              {
+                "ui": "button",
+                "obj": {
+                  "data-click": "dom-last",
+                  "icon": "last",
+                  "title": "Move last ⌘↘"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

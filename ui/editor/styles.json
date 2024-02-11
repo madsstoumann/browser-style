@@ -1,0 +1,66 @@
+[
+	{
+		"key": "styles",
+		"groups": [
+			{
+				"label": "Spacing",
+				"groups": [
+					{
+						"label": "Margin",
+						"groups": [
+							{
+								"label": "Top",
+								"fieldsets": [
+									{
+										"name": "classname",
+										"fields": [
+											{
+												"obj" : {
+													"text": "Margin Top",
+													"input": {
+														"name": "mt",
+														"min"	: 0,
+														"max"	: 10,
+														"data-prefix": "mt-",
+														"type": "range"
+													}
+												}
+											},
+											{
+												"obj" : {
+													"text": "Margin Bottom",
+													"input": {
+														"name": "mb",
+														"data-prefix": "mb-",
+														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
+														"type": "range"
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		"key": "content",
+		"groups": [
+			{
+				"label": "Content"
+			}
+		]
+	},
+	{
+		"key": "elements",
+		"groups": [
+			{
+				"label": "Components"
+			}
+		]
+	}
+]

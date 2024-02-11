@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>CSS Editor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="../grid/ui-grid.css">
+
+	<!-- For demo, not a dependency -->
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+	<link rel="stylesheet" href="../scroll/ui-scroll.css">
+
+	<style>
+		/* For demo */
+		body {
+			/* min-height: 200dvh; */
+		}
+		div { 
+			border: 2px solid var(--ButtonBorder);
+			min-height: 10rem;
+			padding: 1em;
+		}
+		[data-scroll-nav] { padding: 0; }
+
+		body:has(ui-editor[open=true]) [data-hover] {
+			outline: 2px solid cornflowerblue;
+			outline-offset: -2px;
+		}
+
+		ui-editor::part(editor) {
+			/* background: crimson; */
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>UI Editor</h2>
+
+	<section class="ui-grid --md-c-3">
+		<div class="bg-error --light" tabindex="0">Hello <b>bold</b> and <i>italic</i></div>
+		<div class="ui-grid --md-gcs-2 --md-c-3 bg-error --light">
+			<div class="bg-warning --light" tabindex="0"></div>
+			<div class="ui-grid --md-gcs-2 --xs-c-1 bg-warning --light">
+				<div class="bg-success --light" tabindex="0"></div>
+				<div class="ui-grid --md-c-2 bg-success --light">
+					<div class="bg-accent --light" tabindex="0">1</div>
+					<div class="bg-accent --light" tabindex="0">2</div>
+				</div>
+			</div>
+		</div>
+		<div class="--md-grs-2">
+			<div class="ui-scroll --xs-c-1" data-scroll-nav="ui-scroll-nav --inside --no-dots" tabindex="0">
+				<img src="https://source.unsplash.com/random/225x300?sig=10" alt="Random image" width="225" height="300">
+				<img src="https://source.unsplash.com/random/225x300?sig=11" alt="Random image" width="225" height="300">
+				<img src="https://source.unsplash.com/random/225x300?sig=12" alt="Random image" width="225" height="300">
+			</div>
+		</div>
+		<div class="bg-accent --light" tabindex="0"></div>
+		<div class="bg-accent --light mt-2 mb-48 sm:mb-2 lg:mb-6" tabindex="0"></div>
+		<div class="--md-gcs-2 bg-warning --light" tabindex="0"></div>
+	</section>
+
+
+	<ui-editor open="true" openkey="." togglekey=","></ui-editor>
+
+	<script src="index.js" type="module"></script>
+
+
+</body>
+</html>
