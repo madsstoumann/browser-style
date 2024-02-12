@@ -1,18 +1,13 @@
-// const stylesheet = new CSSStyleSheet()
-// stylesheet.replaceSync(``)
-
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderAttributes, renderButton, renderElement, renderFieldset, renderGroup, renderIcon, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
-import { findObjectByProperty } from './utils.js';
+import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
+import { addDocumentScroll, addDraggable, findObjectByProperty, uuid } from './utils.js';
 import icons from './icons.js';
-import tools from './tools.json' assert { type: 'json' };
-
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.01
- * @summary 11-02-2024
+ * @version 1.0.02
+ * @summary 12-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -20,14 +15,7 @@ class uiEditor extends HTMLElement {
 	static observedAttributes = ['open'];
 	constructor() {
 		super();
-
-		this.config = [];
-		this.settings = {
-			framesizes: [
-				{ }
-			],
-			responsive: this.hasAttribute('responsive'),
-		}
+		this.responsive = this.hasAttribute('responsive'),
 		this.undoStack = [];
 		this.redoStack = [];
 	}
@@ -39,39 +27,24 @@ class uiEditor extends HTMLElement {
 	async connectedCallback() {
 		if (window.location !== window.parent.location) {
 			console.log("The page is in an iFrame");
-			// this.style.cssText = 'background: rgba(0,0,0,.25);inset: 0;position: fixed;';
+			this.style.cssText = 'background: rgba(0,0,0,.25);inset: 0;position: fixed;';
 			return;
 		}
 
-		if (this.getAttribute('config')) {
-			try {
-				const response = await fetch(this.getAttribute('config'));
-				this.config = await response.json();
-			}
-			catch (error) {
-				console.error(`Error fetching config: ${error}`);
-			}
+		const files = this.getAttribute('files');
+		if (files) {
+			const filenames = files.split(',').map(name => name.trim());
+			this.config = await this.fetchFiles(filenames)
 		}
+		if (!this.config || !this.config.global || !this.config.tools) return;
 
-		this.id = `e${this.uuid()}`;
-		const global = findObjectByProperty(tools, 'key', 'global') || {};
-
-		if (global) {
-			this.global = global;
-			const index = tools.findIndex(tool => tool.key === 'global');
-			if (index !== -1) tools.splice(index, 1);
-			if (this.global.breakpoints) {
-				this.global.breakpoints.shift();
-				setBreakpoints(this.global.breakpoints);
-			}
-		}
-
+		this.uid = uuid();
+		setBreakpoints(this.config.global.breakpoints);
 		setIconObject(icons);
-		// this.breakpoints = this.groups.breakpoints.map(breakpoint => breakpoint.input.value);
 
 		const shadow = this.attachShadow({ mode: 'open' })
 		const template = document.createElement('template');
-		template.innerHTML = this.renderTemplate(tools, this.config);
+		template.innerHTML = this.renderTemplate(this.config.tools, this.config.plugins);
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.appendChild(template.content.cloneNode(true));
 
@@ -79,36 +52,35 @@ class uiEditor extends HTMLElement {
 		// this.componentConfig = shadow.querySelector(`[part=form-config]`);
 		// this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
 		// this.componentSearch = shadow.querySelector(`[part=component-search]`);
-		// this.draghandle = shadow.querySelector(`[part=title]`);
+		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
-		// this.iframe = this.settings.responsive ? shadow.querySelector(`[part=iframe]`) : null;
-		// this.formFrame = this.settings.framed ? shadow.querySelector(`[part=form-frame]`) : null;
-		// this.formStyles = shadow.querySelector(`[part=form-styles]`);
+		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
+		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
+		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
-		// this.tool = shadow.querySelector(`[part=tool]`);
+		this.tools = shadow.querySelector(`[part=tools]`);
 
 		// if (this.componentConfigure ) this.componentConfigure.hidden = true;
-		// this.breakpoints.shift();
 
 		/* Events */
-		// this.addAccessKeys();
-		// this.addDocumentScroll();
-		// this.addEventListener('click', this.onClick);
-		// this.addEventListener('keydown', this.onKeyDown)
+		this.addAccessKeys();
+		addDocumentScroll();
+		this.addEventListener('click', this.onClick);
+		this.addEventListener('keydown', this.onKeyDown)
 
-		// if (this.settings.framed) {
-		// 	this.formFrame.addEventListener('input', this.onFrameInput);
-		// 	this.iframe.contentWindow.addEventListener('click', event => {
-		// 		const node = event.composedPath().shift();
-		// 		console.log(node, node.getBoundingClientRect());
-		// 	})
-		// }
-		// else {
-		// 	this.addEventListener('pointermove', this.onMove);
-		// 	this.addDraggable(this.draghandle, this.editor);
-		// 	this.editor.addEventListener('beforetoggle', this.onToggle)
-		// }
+		if (this.responsive) {
+			this.formFrame.addEventListener('input', this.onFrameInput);
+			this.iframe.contentWindow.addEventListener('click', event => {
+				const node = event.composedPath().shift();
+				console.log(node, node.getBoundingClientRect());
+			})
+		}
+		else {
+			this.addEventListener('pointermove', this.onMove);
+			addDraggable(this.draghandle, this.editor);
+			this.editor.addEventListener('beforetoggle', this.onToggle)
+		}
 
 		this.editor.addEventListener('input', this.onInput);
 		// if (this.componentSearch) {
@@ -116,15 +88,31 @@ class uiEditor extends HTMLElement {
 		// 	this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
 		// }
 
-		// this.resizeObserver = new ResizeObserver((entries) => {
-		// 	for (const entry of entries) {
-		// 		if (entry.contentBoxSize) {
-		// 			const rect = entry.target.getBoundingClientRect();
-		// 			this.setOutline(rect);
-		// 			this.setFrameValues(entry.target, rect);
-		// 		}}
-		// });
+		this.resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.contentBoxSize) {
+					const rect = entry.target.getBoundingClientRect();
+					this.setOutline(rect);
+					this.setFrameValues(entry.target, rect);
+				}}
+		});
 	}
+
+	async fetchFiles(files) {
+		const configs = {};
+		for (const fileName of files) {
+			const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
+				try {
+					const response = await fetch(fileName);
+					const config = await response.json();
+					configs[cleanFileName] = config; // Store the config without the file extension
+			} catch (error) {
+					console.error(`Error fetching ${fileName}: ${error}`);
+			}
+		}
+		return configs;
+	}
+
 
 	/**
 	* Invoked when one of the observed attributes of the custom element is changed.
@@ -200,73 +188,6 @@ class uiEditor extends HTMLElement {
 			console.error('An error occurred while adding a class:', error.message);
 			throw error;
 		}
-	}
-
-	/**
-	* Adds a scroll listener to the window and updates a CSS variable: `--scroll-y`
-	* on the specified node to reflect the current scroll position.
-	* @param {HTMLElement} node - The HTML element to update with scroll position. Defaults to document.body if not provided.
-	*/
-	addDocumentScroll(node = document.body) {
-		let ticking = false;
-		let scrollYcur = 0;
-		let scrollY = 0;
-		window.addEventListener('scroll', () => {
-			scrollY = window.scrollY;
-			if (scrollY < 0) { scrollY = 0; }
-			if (!ticking) {
-				window.requestAnimationFrame(() => {
-					node.style.setProperty('--scroll-y', scrollY);
-					scrollYcur = scrollY;
-					ticking = false;
-				});
-				ticking = true;
-			}
-		})
-	}
-
-	/**
- 	* Makes an HTML element draggable using pointer events.
- 	* @param {HTMLElement} handle - The element that serves as the draggable handle.
- 	* @param {HTMLElement} panel - The element to be dragged.
- 	*/
-	addDraggable(handle, panel, propX = '--uie-x', propY = '--uie-y') {
-		let startX, startY;
-
-		function start(e) {
-			startX = e.clientX;
-			startY = e.clientY;
-			handle.setPointerCapture(e.pointerId);
-			handle.addEventListener('pointermove', move);
-		}
-
-		function end() {
-			handle.removeEventListener('pointermove', move);
-		}
-
-		function move(e) {
-				e.preventDefault();
-
-				const deltaX = startX - e.clientX;
-				const deltaY = startY - e.clientY;
-				startX = e.clientX;
-				startY = e.clientY;
-
-				let newX = panel.offsetLeft - deltaX;
-				let newY = panel.offsetTop - deltaY;
-
-				newX = Math.max(0, Math.min(newX, window.innerWidth - panel.offsetWidth));
-				newY = Math.max(0, Math.min(newY, window.innerHeight - panel.offsetHeight));
-
-				panel.style.setProperty(propX, newX + 'px');
-				panel.style.setProperty(propY, newY + 'px');
-		}
-
-		handle.addEventListener('pointerdown', start);
-		handle.addEventListener('pointerup', end);
-		handle.addEventListener('pointercancel', end);
-		// Prevents default touchstart behavior to avoid conflicts with pointer events.
-		handle.addEventListener('touchstart', (e) => e.preventDefault());
 	}
 
 	/**
@@ -491,15 +412,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Generates an SVG icon with paths from icon{object}[name].
-	 * @param {string} name - The name of the icon.
-	 * @returns {string} - SVG markup for the specified icon.
-	 */
-	icon = (name) => {
-		return this.icons[name] ? `<svg viewBox="0 0 24 24">${this.icons[name].map(path => `<path d="${path}"/>`).join('')}</svg>` : '';
-	}
-
-	/**
 	* Navigates to a sibling or parent element based on the specified property.
 	* Updates the active element accordingly.
 	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
@@ -664,7 +576,7 @@ class uiEditor extends HTMLElement {
 				break;
 			/* Active Tool */
 			case 'tool':
-				[...this.tool.children].forEach((child, index) => child.hidden = index !== value - 1);
+				[...this.tools.children].forEach((child, index) => child.hidden = index !== value - 1);
 				break;
 		}
 	}
@@ -783,70 +695,57 @@ class uiEditor extends HTMLElement {
 		catch (error) { console.error('An error occurred while removing classes:', error.message); }
 	}
 
-
-	/**
-	* Renders content from `this.config.elements` into the editor.
-	*/
-	renderUIConfigElements() {
-		if (!this.config?.elements) return '';
-		return this.renderUIGroup('Components', 
-			this.renderUIFieldset('components', `${this.renderUIInput({ input: { type:'search', list:`components${this.id}`, part:'component-search', placeholder:"Search" }})}
-			<datalist id="components${this.id}">${
-				this.config.elements.map(
-					group => `<optgroup label="${group.name}">${group.items.map(
-						component => `<option value="${component.name}" data-component-key="${component.key}">${group.name}</option>`
-					).join('')}</optgroup>`
-				).join('')}</datalist>
-				<output name="component-info"></output>
-				<button type="button" data-click="dom-insert" name="component-insert" value="">Insert component</button>`
-			), true) +
-		this.renderUIGroup('Configure Component', this.renderUIFieldset('component-configure', ''), true, 'configure-component');
-	}
-
 	/**
 	* Renders the template for the editor, added to the shadowDOM
 	* @returns {string} - The generated markup.
 	*/
-	renderTemplate(tools, config = []) {
-		const renderTool = (tool) => {
-			const configItem = findObjectByProperty(config, 'key', tool.key) || {};
-			setForm(tool.key + this.id);
-			return `
-				<div part="tool">
-					${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
-					${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
-					${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
-				</div>
+	renderTemplate(tools, plugins = []) {
+		let forms = '';
+		let output = '';
+		let toolbarFields = [];
+
+		tools.forEach((tool, index) => {
+			const configItem = findObjectByProperty(plugins, 'key', tool.key) || {};
+			setForm(tool.key + this.uid);
+			forms += `<form id="${tool.key}${this.uid}" part="form-${tool.key}"></form>`;
+			output += `
+			<div part="tool"${index > 0 ? ` hidden`:''}>
+				${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
+				${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
+				${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
+			</div>
 			`;
-		};
+			toolbarFields.push({
+				obj: {
+					icon: tool.icon,
+					input: { type: 'radio', name: 'tool', value: index + 1, 'data-sr': '', ...(index === 0 && { checked: '' }) },
+					label: { title: tool.title }
+				}
+			});
+		});
 
-		const output = tools.map(renderTool).join('');
-		const forms = tools.map(tool => `<form id="${tool.key}${this.id}" part="form-${tool.key}"></form>`).join('');
-
-		const toolbarFields = tools.map(tool => ({
-			ui: 'input',
-			obj: {
-				icon: tool.icon,
-				input: { type: 'radio', name: 'tool', value: tool.name, 'data-sr': '' },
-				label: { title: tool.title }
-			}
-		}));
+		setForm('editor' + this.uid);
 		const toolbar = renderFieldset({
 			name: 'tools',
 			part: 'tabgroup',
-			fields: toolbarFields,
+			fields: toolbarFields
 		});
 
 		return `
 			<div part="outline" style="left:-9999px;top:-9999px"></div>
-			<form id="uie${this.id}" part="editor"${this.settings.responsive ? '' : ``}>
+			<form id="editor${this.uid}" part="editor"${this.responsive ? '' : ' popover'}>
 				<header part="header">
-					${this.global.header.map(item => renderElement(item)).join('')}
+					${this.config.global.header.map(item => renderElement(item)).join('')}
 				</header>
 				${toolbar}
 				<div part="tools">${output}</div>
+				${renderGroup(this.config.global.footer)}
 			</form>
 			${forms}
+			${this.responsive ? `<form id="frames${this.uid}" part="form-frames">
+				${renderFieldset(this.config.global.frames)}
+				<iframe src="${window.location.href}" part="iframe" sandbox="allow-scripts allow-forms allow-same-origin allow-pointer-lock allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe>
+			</form>` : ''}
 			${renderInput({ input: { part: 'toggle', 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
 		`;
 	}
@@ -864,37 +763,6 @@ class uiEditor extends HTMLElement {
 			const configItem = config.find(item => item.key === key);
 			return configItem !== undefined ? configItem.value : match;
 		});
-	}
-
-	/**
-	* Renders a UI output element based on the provided details.
-	* @param {Object} obj - The object containing output details.
-	* @returns {string} - The rendered HTML for the output element.
-	*/
-	renderUIOutput(obj) {
-		return `
-		<label>
-			${obj.label ? `<strong>${obj.label}:</strong>`:''}
-			<output name="${obj.name||''}">${obj.value||''}</output>
-		</label>`;
-	}
-
-	/**
-	* Renders a textarea element based on the provided details.
-	* @param {Object} obj - The object containing output details.
-	* @returns {string} - The rendered HTML for the output element.
-	*/
-	renderUITextArea(obj) {
-		return `
-		<label ${obj.label && Object.entries(obj.label).map(property => {
-			const [key, value] = property;
-			return value ? `${key}="${value}"`: key }).join(' ')}>
-			${obj.text ? `<span>${obj.text}</span>` : ''}
-			<textarea ${obj.textarea && Object.entries(obj.textarea).map(property => {
-				const [key, value] = property;
-				return value ? `${key}="${value}"`: key }).join(' ')
-			}></textarea>
-		</label>`;
 	}
 
 	/**
@@ -927,7 +795,7 @@ class uiEditor extends HTMLElement {
 			if (this.config && this.config.hasOwnProperty('styles')) { this.updateFormFromClasses(); }
 
 			// TODO: EDITING
-			this.editor.elements['uie-html'].value = node.innerHTML;
+			// this.editor.elements['uie-html'].value = node.innerHTML;
 		}
 		catch (error) {
 			console.error(error);
@@ -960,8 +828,8 @@ class uiEditor extends HTMLElement {
 		if (obj.config) {
 			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
 				const { key, label, ...input} = prop;
-				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `config${this.id}` } };
-				return this.renderUIInput(config);
+				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `config${this.uid}` } };
+				return renderInput(config);
 			}).join('');
 		}
 	}
@@ -1040,8 +908,8 @@ class uiEditor extends HTMLElement {
 	updateClassList() {
 		const { classes, removed } = this.getClasses(this.active);
 		this.editor.elements.classlist.innerHTML = 
-			classes.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, checked:'', type:'checkbox' }})).join('\n') +
-			removed.map(value => this.renderUIInput({ textAfter:value, label: { class:'uie-switch' }, input: { name:'classname', value, type:'checkbox' }})).join('\n');
+			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
+			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
 	}
 
 	/**
@@ -1097,12 +965,6 @@ class uiEditor extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Generates a random identifier.
-	 */
-	uuid() {
-		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-	}
 }
 
 customElements.define('ui-editor', uiEditor);

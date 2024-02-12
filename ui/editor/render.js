@@ -11,7 +11,7 @@ export function renderButton(obj, iconObject) {
 	return `<button type="button" ${renderAttributes(obj)}>${obj.icon ? renderIcon(obj.icon, iconObject) : obj.title}</button>`;
 }
 
-export function renderElement(element) { console.log(element)
+export function renderElement(element) {
 	if (globalForm && element.obj) {
 		element.obj.form = globalForm;
 		if (element.obj.input) {
@@ -19,10 +19,9 @@ export function renderElement(element) { console.log(element)
 		}
 	}
 	switch (element.ui) {
-		case 'button':
-			return renderButton(element.obj);
-		case 'tag':
-		 return renderTag(element)
+		case 'button': return renderButton(element.obj);
+		case 'output': return renderOutput(element.text, element.name);
+		case 'tag': return renderTag(element)
 		default:
 			return renderInput(element.obj);
 	}
@@ -33,21 +32,21 @@ export function renderBreakpoints(breakpoints) {
 }
 
 export function renderFieldset(fieldset) {
+	/* ${fieldset.name ? `<legend>${fieldset.name}</legend>` : ''} */
 	return `
-		<fieldset${fieldset.name ? ` name="${fieldset.name}"`:''}${fieldset.part ? ` part="${fieldset.part}"`:''}>
-			${fieldset.name ? `<legend>${fieldset.name}</legend>` : ''}
-			${fieldset.fields ? fieldset.fields.map(renderElement).join('') : ''}
-		</fieldset>
+		<fieldset${fieldset.name ? ` name="${fieldset.name}"`:''}${fieldset.part ? ` part="${fieldset.part}"`:''}>${
+			fieldset.fields ? fieldset.fields.map(renderElement).join('') : ''
+		}</fieldset>
 	`;
 }
 
-export function renderGroup(group, level = 0) {
+export function renderGroup(group) {
 	return `
-		<details${group.open ? ' open':''}${group.name ? ` name="${group.name}"`:''}${group.part ? ` part="${group.part}"`:''} data-level="${level}">
+		<details${group.open ? ' open':''}${group.name ? ` name="${group.name}"`:''}${group.part ? ` part="${group.part}"`:''}>
 			<summary>${group.label}
 				<div part="button icon">${renderIcon(group.icon || 'plus')}</div>
 			</summary>
-			${group.groups ? group.groups.map(subgroup => renderGroup(subgroup, level + 1)).join('') : ''}
+			${group.groups ? group.groups.map(subgroup => renderGroup(subgroup)).join('') : ''}
 			${group.fieldsets ? group.fieldsets.map(renderFieldset).join('') : ''}
 		</details>
 	`;
@@ -69,7 +68,7 @@ export function renderInput(obj) {
 	const input = obj.input ? renderAttributes(obj.input) : '';
 	const label = obj.label ? renderAttributes(obj.label) : '';
 	const text = obj.text ? `<span>${obj.text}${breakpoints}</span>` : '';
-	const textAfter = obj.textAfter ? `<span>${obj.textAfter}}${breakpoints}</span>` : '';
+	const textAfter = obj.textAfter ? `<span>${obj.textAfter}${breakpoints}</span>` : '';
 
 	return `
 		<label ${label}>
@@ -79,6 +78,14 @@ export function renderInput(obj) {
 		${textAfter}
 		</label>
 	`;
+}
+
+export function renderOutput(text, name) {
+	return `
+	<label>
+		<strong>${text}:</strong>
+		<output name="${name}">${text}</output>
+	</label>`;
 }
 
 export function renderTag(obj) {

@@ -1,0 +1,100 @@
+[
+	{
+		"name": "Components",
+		"items": [
+			{
+				"key": "accordion",
+				"name": "Accordion",
+				"description": "A collapsible accordion component. Use this to create a list of questions and answers.",
+				"template": "%3Cdetails%20class%3D%22ui-accordion%22%20name%3D%22accordion%22%3E%0A%3Csummary%3EHow%20do%20I%20reset%20my%20password%3F%3Cui-icon%20type%3D%22plus-minus%22%3E%3C%2Fui-icon%3E%3C%2Fsummary%3E%0A%3Cdiv%3E%0ATo%20reset%20your%20password%2C%20go%20to%20the%20login%20page%20and%20click%20on%20the%20%22Forgot%20Password%22%20link.%20You%20will%20be%20prompted%20to%20enter%20your%20email%20address%20associated%20with%20your%20account.%20Follow%20the%20instructions%20sent%20to%20your%20email%20to%20reset%20your%20password%20securely.%20If%20you%20encounter%20any%20issues%2C%20feel%20free%20to%20contact%20our%20support%20team%20for%20assistance.%0A%3C%2Fdiv%3E%0A%3C%2Fdetails%3E"
+			},
+			{
+				"key": "card",
+				"name": "Card",
+				"description": "A card component. Use this to create a card with an image, title, and description.",
+				"template": "<div>Card</div>",
+				"config": [
+						{
+							"key": "title",
+							"type": "text",
+							"label": "Title"
+						},
+						{
+							"key": "description",
+							"type": "textarea",
+							"label": "Description"
+						},
+						{
+							"key": "image",
+							"type": "text",
+							"label": "Image"
+						}
+					]
+			}
+		]
+	},
+	{
+		"name": "Layouts",
+		"items": [
+			{
+				"key": "3col",
+				"name": "3-Column Grid",
+				"template": "<section><div>1</div><div>2</div><div>3</div></section>"
+			},
+			{
+				"key": "1colslider",
+				"name": "Slider",
+				"template": "<outer-section>HELLO</outer-section>"
+
+			}
+		]
+	},
+	{
+		"name": "Tags",
+		"items": [
+			{
+				"key": "img",
+				"description": "HTML Image element. Set the source, alt text, width, and height in configuration below.",
+				"name": "Image",
+				"template": "<img src=\"{{src}}{{width}}x{{height}}\" alt=\"{{alt}}\" width=\"{{width}}\" height=\"{{height}}\">",
+				"config": [
+					{
+						"key": "src",
+						"type": "url",
+						"label": "Source",
+						"value": "https://source.unsplash.com/random/"
+					},
+					{
+						"key": "alt",
+						"type": "text",
+						"label": "Alt Text",
+						"value": "Placeholder Image"
+					},
+					{
+						"key": "width",
+						"type": "number",
+						"label": "Width",
+						"value": 300
+					},
+					{
+						"key": "height",
+						"type": "number",
+						"label": "Height",
+						"value": 200
+					}
+				]
+			},
+			{
+				"key": "h1",
+				"description": "HTML Section Heading element",
+				"name": "H1",
+				"template": "<h1>Headline</h1>"
+			},
+			{
+				"key": "h2",
+				"name": "H2",
+				"template": "<h2>Headline</h2>"
+			}
+		]
+	}
+]
