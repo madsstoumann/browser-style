@@ -73,7 +73,6 @@
 	inset-inline: var(--uie-x, calc(100% - var(--uie-w) - 16px)) auto;
 	max-height: calc(100dvh - 32px);
 	padding: 0;
-position: absolute;
 	touch-action: none;
 	width: var(--uie-w);
 	&:popover-open { display: grid }
@@ -92,7 +91,6 @@ position: absolute;
 	& [part=close] { display: none; }
 	& [part~=draghandle] { cursor: default; }
 }
-
 :host([open="false"][responsive]) [part=editor],
 :host([open="false"][responsive]) [part=form-frames],
 :host([open="false"][responsive]) [part=outline] {
@@ -102,17 +100,16 @@ position: absolute;
 	display: grid;
 	width: calc(100% - var(--uie-w));
 }
-
 :host([open="true"][responsive]) [part=frame-group] {
 	background: Canvas;
 	border-block-end: 1px solid ButtonFace;
 	color: CanvasText;
 	display: flex;
-	gap: 2em;	
+	gap: 2em;
+	isolation: isolate;
 	justify-content: center;
 }
 [part=frame-group] label:has(:checked) { color: var(--uie-accent); } 
-
 [part~=autocols] {
 	gap: var(--uie-gap);
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
@@ -156,7 +153,7 @@ position: absolute;
 	border: var(--uie-a-bdw, 2px) var(--uie-a-bds, dashed) var(--ui-csss-a-bdc, #f09);
 	position: absolute;
 	pointer-events: none;
-	translate: 0 calc(var(--scroll-y, 0) * -1px);
+	translate: 0 calc((var(--scroll-y, 0) + var(--iframe-scroll-y, 0)) * -1px);
 }
 [part~=title] {
 	font-size: larger;
@@ -422,6 +419,36 @@ label:has([type=range]) {
 		grid-column: span 12;
 		justify-content: space-between;
 	}
+}
+
+/* SWITCH */
+label:has([role=switch]) {
+	display: contents;
+	& input {
+		appearance: none;
+		aspect-ratio: 1.8/1;
+		background: ButtonBorder;
+		border-radius: 16px;
+		block-size: 16px;
+		display: grid;
+		grid-column: span 2;
+		margin: 0px;
+		place-content: center start;
+		padding: 2px;
+		&::after {
+			background: Canvas;
+			border-radius: 50%;
+			content: "";
+			height: 12px;
+			transition: translate 0.2s ease-in-out;
+			width: 12px;
+		}
+		&:checked {
+			background: var(--uie-accent);
+			&::after { translate: 1em 0; }
+		}
+	}
+	& span { font-weight: 500; grid-column: span 10; }
 }
 
 /* === TABGROUP === */

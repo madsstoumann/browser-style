@@ -6,8 +6,8 @@ import icons from './icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.02
- * @summary 12-02-2024
+ * @version 1.0.03
+ * @summary 13-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -27,7 +27,14 @@ class uiEditor extends HTMLElement {
 	async connectedCallback() {
 		if (window.location !== window.parent.location) {
 			console.log("The page is in an iFrame");
-			this.style.cssText = 'background: rgba(0,0,0,.25);inset: 0;position: fixed;';
+			this.style.cssText = 'background:rgba(0,0,0,0);inset:0;position:fixed;';
+			this.addEventListener('pointermove', this.onMove);
+			this.addEventListener('click', (event) => {
+				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
+				if (!element.dataset.uieId) element.dataset.uieId = uuid();
+				window.parent.postMessage({ type: 'iframeClick', targetNode: element.dataset.uieId }, '*');
+			});
+			addDocumentScroll();
 			return;
 		}
 
@@ -69,12 +76,21 @@ class uiEditor extends HTMLElement {
 		this.addEventListener('click', this.onClick);
 		this.addEventListener('keydown', this.onKeyDown)
 
+		/* Handle iframe */
 		if (this.responsive) {
+			document.body.style.pointerEvents = 'none';
 			this.formFrame.addEventListener('input', this.onFrameInput);
-			this.iframe.contentWindow.addEventListener('click', event => {
-				const node = event.composedPath().shift();
-				console.log(node, node.getBoundingClientRect());
-			})
+
+			window.addEventListener('message', event => {
+				if (event.data && event.data.type === 'scroll') {
+					const iframeScrollY = event.data.scrollY;
+					document.documentElement.style.setProperty('--iframe-scroll-y', iframeScrollY);
+				}
+				if (event.data && event.data.type === 'iframeClick') {
+					const node = this.iframe.contentDocument.querySelector(`[data-uie-id="${event.data.targetNode}"]`);
+					if (node) this.setActive(node);
+				}
+			});
 		}
 		else {
 			this.addEventListener('pointermove', this.onMove);
@@ -121,7 +137,7 @@ class uiEditor extends HTMLElement {
 	* @param {*} newValue - The new value of the attribute.
 	*/
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (!newValue || oldValue === newValue) return;
+		if (!newValue || oldValue === newValue || this.iframe) return;
 		switch(name) {
 			case 'open':
 				if (newValue === 'false') { this.editor.hidePopover(); }
@@ -157,36 +173,21 @@ class uiEditor extends HTMLElement {
 
 	/**
 	* Adds a class to the active HTML element's classList and updates the class list display.
-	* @throws {TypeError} - Throws an error if the active element is not an HTML element.
-	* @throws {Error} - Throws an error if the class to be added is already present in the removed classes.
 	*/
 	addClass() {
 		try {
-			if (!(this.active instanceof HTMLElement)) {
-				throw new TypeError('Active element must be an HTML element.');
-			}
-	
-			const addClassElement = this.editor.elements.addclass;
+			const addClassElement = this.formStyles.elements.addclass;
 			const addClassValue = addClassElement.value.trim();
-	
+
 			if (addClassValue && this.active) {
 				const { classes, removed } = this.getClasses(this.active);
-	
 				const classesToAdd = addClassValue.split(/\s+/);
-	
-				for (const classToAdd of classesToAdd) {
-					if (removed.includes(classToAdd)) {
-						throw new Error(`Class "${classToAdd}" is already present in the removed classes.`);
-					}
-				}
-	
 				this.active.classList.add(...classesToAdd);
 				this.updateClassList();
 				addClassElement.value = '';
 			}
 		} catch (error) {
 			console.error('An error occurred while adding a class:', error.message);
-			throw error;
 		}
 	}
 
@@ -398,9 +399,6 @@ class uiEditor extends HTMLElement {
 	 * @throws {TypeError} - Throws an error if the provided node is not an HTML element.
 	 */
 	getClasses(node) {
-		if (!(node instanceof HTMLElement)) {
-			throw new TypeError('Parameter "node" must be an HTML element.');
-		}
 		try {
 			const classes = Array.from(node.classList).filter(className => className.trim() !== '');
 			const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '');
@@ -516,7 +514,7 @@ class uiEditor extends HTMLElement {
 
 		/* === STYLE UPDATES === */
 		if (node.form === this.formStyles) {
-			const breakpoint = this.editor.elements.breakpoint.value || '';
+			const breakpoint = this.formStyles.elements.breakpoint.value || '';
 
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
 
@@ -636,14 +634,17 @@ class uiEditor extends HTMLElement {
 	 * @param {PointerEvent} e - The pointer event.
 	 */
 	onMove = (event) => {
-		if (this.getAttribute('editor') === 'true') return;
+		if (!this.responsive && this.getAttribute('editor') === 'true') return;
 		try {
-			const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
+			if (this.responsive) this.style.pointerEvents = 'none';
+			const elements = document.elementsFromPoint(event.clientX, event.clientY);
+			const element = this.responsive ? elements[0] : elements[1];
 			if (element !== this.hovered) {
 				if (this.hovered) delete this.hovered.dataset.hover;
 				this.hovered = element;
 				this.hovered.dataset.hover = '';
 			}
+			if (this.responsive) this.style.pointerEvents = 'auto';
 		} catch (error) {}
 	}
 
@@ -792,7 +793,7 @@ class uiEditor extends HTMLElement {
 			this.resizeObserver.observe(node);
 
 			this.updateClassList();
-			if (this.config && this.config.hasOwnProperty('styles')) { this.updateFormFromClasses(); }
+			this.updateFormFromClasses();
 
 			// TODO: EDITING
 			// this.editor.elements['uie-html'].value = node.innerHTML;
@@ -839,13 +840,9 @@ class uiEditor extends HTMLElement {
 	 * If dimensions are not provided, retrieves the dimensions using getBoundingClientRect.
 	 * @param {HTMLElement} node - The HTML element.
 	 * @param {DOMRect} [dimensions] - The dimensions of the element (optional).
-	 * @throws {TypeError} - Throws an error if the provided node is not an HTML element.
 	 */
 	setFrameValues(node, dimensions) {
 		try {
-			if (!(node instanceof HTMLElement)) {
-				throw new TypeError('Parameter "node" must be an HTML element.');
-			}
 			const E = this.editor.elements;
 			const rect = dimensions ? dimensions : node.getBoundingClientRect();
 			E.h.value = rect.height.toFixed(2);
@@ -856,24 +853,27 @@ class uiEditor extends HTMLElement {
 			E.parent.value = node.parentNode.tagName || 'ROOT';
 		} catch (error) {
 			console.error('An error occurred while setting frame values:', error.message);
-			throw error;
 		}
 	}
 
 	/**
 	 * Sets the dimensions and CSS styles of the outline-element.
 	 * @param {DOMRect} rect - The dimensions of the active element.
-	 * @throws {TypeError} - Throws an error if the provided rect object is not valid.
 	 */
 	setOutline(rect) {
+		const iframeScrollY = this?.iframe?.contentWindow.scrollY || 0;
+		if (this.iframe) {
+			const iframeRect = this.iframe.getBoundingClientRect();
+			rect.x += iframeRect.x;
+			rect.y += iframeRect.y;
+		}
 		try {
 			this.outline.classList.remove('uie-copy');
 			this.outline.style.cssText = `height: ${
 				rect.height}px; width: ${rect.width}px; top: ${
-				rect.y + window.scrollY}px; left: ${rect.x}px;`;
+				rect.y + window.scrollY + iframeScrollY}px; left: ${rect.x}px;`;
 		} catch (error) {
 			console.error('An error occurred while setting outline:', error.message);
-			throw error;
 		}
 	}
 
@@ -887,7 +887,7 @@ class uiEditor extends HTMLElement {
 			if (!classes.length) return;
 
 			this.formStyles.reset();
-			const breakpoint = this.editor.elements.breakpoint.value || '';
+			const breakpoint = this.formStyles.elements.breakpoint.value || '';
 			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
 
 			if (filteredClasses.length) {
@@ -924,7 +924,7 @@ class uiEditor extends HTMLElement {
 		vars.forEach(varElement => varElement.textContent = '');
 
 		const classes = this.active.className.split(' ');
-		const current = this.editor.elements.breakpoint.value || '';
+		const current = this.formStyles.elements.breakpoint.value || '';
 
 		classes.forEach(cls => {
 			const match = cls.match(/^(?:(?<breakpoint>[^:\s]+):)?(?<prefix>[^-]+)-(?<value>.+)/);
@@ -952,7 +952,7 @@ class uiEditor extends HTMLElement {
 			const bp = input.parentNode?.querySelector(`var[data-bp="${breakpoint}"]`);
 			if (bp) bp.textContent = value;
 
-			if (!breakpoint || breakpoint === this.editor.elements.breakpoint.value) {
+			if (!breakpoint || breakpoint === this.formStyles.elements.breakpoint.value) {
 				if (input.dataset?.values) {
 					const selected = input.dataset.values.split(',').findIndex(item => item === value);
 					input.value = selected;
