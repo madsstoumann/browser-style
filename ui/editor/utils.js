@@ -101,3 +101,16 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
+
+export function setDataUid(element, blacklist = ['ui-editor', 'style', 'script']) {
+	try {
+		if (element && element.nodeType === Node.ELEMENT_NODE && !blacklist.includes(element.tagName.toLowerCase())) {
+			element.dataset.uid = uuid();
+			for (const childNode of element.childNodes) {
+				setDataUid(childNode, blacklist);
+			}
+		}
+	} catch (e) {
+		console.error(e);
+	}
+}

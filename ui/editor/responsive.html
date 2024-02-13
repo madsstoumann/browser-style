@@ -15,23 +15,15 @@
 
 	<style>
 		/* For demo */
-		body {
-			/* min-height: 200dvh; */
-		}
 		div { 
 			border: 2px solid var(--ButtonBorder);
 			min-height: 10rem;
 			padding: 1em;
 		}
 		[data-scroll-nav] { padding: 0; }
-
 		body:has(ui-editor[open=true]) [data-hover] {
 			outline: 2px solid cornflowerblue;
 			outline-offset: -2px;
-		}
-
-		ui-editor::part(editor) {
-			/* background: crimson; */
 		}
 	</style>
 </head>
@@ -65,8 +57,7 @@
 	</section>
 
 
-	<ui-editor open="true" openkey="." togglekey="," responsive files="data/components.json, data/global.json, data/plugins.json, data/tools.json"></ui-editor>
-
+	<ui-editor open="true" openkey="." togglekey="," logo="/favicon.svg" responsive files="data/components.json, data/global.json, data/plugins.json, data/tools.json"></ui-editor>
 	<script src="index.js" type="module"></script>
 
 </body>

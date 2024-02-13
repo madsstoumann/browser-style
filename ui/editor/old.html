@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>CSS Editor</title>
+	<title>OLD</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
@@ -15,15 +15,23 @@
 
 	<style>
 		/* For demo */
+		body {
+			/* min-height: 200dvh; */
+		}
 		div { 
 			border: 2px solid var(--ButtonBorder);
 			min-height: 10rem;
 			padding: 1em;
 		}
 		[data-scroll-nav] { padding: 0; }
+
 		body:has(ui-editor[open=true]) [data-hover] {
 			outline: 2px solid cornflowerblue;
 			outline-offset: -2px;
+		}
+
+		ui-editor::part(editor) {
+			/* background: crimson; */
 		}
 	</style>
 </head>
@@ -57,8 +65,10 @@
 	</section>
 
 
-	<ui-editor open="true" openkey="." togglekey="," logo="/favicon.svg" files="data/components.json, data/global.json, data/plugins.json, data/tools.json"></ui-editor>
-	<script src="index.js" type="module"></script>
+	<ui-editor open="true" config="config.json" openkey="." togglekey=","></ui-editor>
+
+	<script src="uiEditor.js" type="module"></script>
+
 
 </body>
 </html>

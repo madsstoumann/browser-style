@@ -15,6 +15,7 @@ class uiEditor extends HTMLElement {
 	static observedAttributes = ['open'];
 	constructor() {
 		super();
+		this.logo = this.getAttribute('logo') || '';
 		this.responsive = this.hasAttribute('responsive'),
 		this.undoStack = [];
 		this.redoStack = [];
@@ -31,8 +32,8 @@ class uiEditor extends HTMLElement {
 			this.addEventListener('pointermove', this.onMove);
 			this.addEventListener('click', (event) => {
 				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
-				if (!element.dataset.uieId) element.dataset.uieId = uuid();
-				window.parent.postMessage({ type: 'iframeClick', targetNode: element.dataset.uieId }, '*');
+				if (!element.dataset.uieId) element.dataset.uid = uuid();
+				window.parent.postMessage({ type: 'iframeClick', targetNode: element.dataset.uid }, '*');
 			});
 			addDocumentScroll();
 			return;
@@ -43,7 +44,7 @@ class uiEditor extends HTMLElement {
 			const filenames = files.split(',').map(name => name.trim());
 			this.config = await this.fetchFiles(filenames)
 		}
-		if (!this.config || !this.config.global || !this.config.tools) return;
+		if (!this.config || !this.config.global) return;
 
 		this.uid = uuid();
 		setBreakpoints(this.config.global.breakpoints);
@@ -51,7 +52,7 @@ class uiEditor extends HTMLElement {
 
 		const shadow = this.attachShadow({ mode: 'open' })
 		const template = document.createElement('template');
-		template.innerHTML = this.renderTemplate(this.config.tools, this.config.plugins);
+		template.innerHTML = this.renderTemplate();
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.appendChild(template.content.cloneNode(true));
 
@@ -78,16 +79,14 @@ class uiEditor extends HTMLElement {
 
 		/* Handle iframe */
 		if (this.responsive) {
-			document.body.style.pointerEvents = 'none';
 			this.formFrame.addEventListener('input', this.onFrameInput);
-
 			window.addEventListener('message', event => {
 				if (event.data && event.data.type === 'scroll') {
 					const iframeScrollY = event.data.scrollY;
 					document.documentElement.style.setProperty('--iframe-scroll-y', iframeScrollY);
 				}
 				if (event.data && event.data.type === 'iframeClick') {
-					const node = this.iframe.contentDocument.querySelector(`[data-uie-id="${event.data.targetNode}"]`);
+					const node = this.iframe.contentDocument.querySelector(`[data-uid="${event.data.targetNode}"]`);
 					if (node) this.setActive(node);
 				}
 			});
@@ -137,9 +136,14 @@ class uiEditor extends HTMLElement {
 	* @param {*} newValue - The new value of the attribute.
 	*/
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (!newValue || oldValue === newValue || this.iframe) return;
+		if (!newValue || oldValue === newValue) return;
+		
 		switch(name) {
 			case 'open':
+				if (this.iframe) {
+					document.body.style.pointerEvents = (newValue === 'true') ? 'none' : 'auto';
+					return;
+				}
 				if (newValue === 'false') { this.editor.hidePopover(); }
 				break;
 		}
@@ -399,6 +403,7 @@ class uiEditor extends HTMLElement {
 	 * @throws {TypeError} - Throws an error if the provided node is not an HTML element.
 	 */
 	getClasses(node) {
+		if (!node) return;
 		try {
 			const classes = Array.from(node.classList).filter(className => className.trim() !== '');
 			const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '');
@@ -430,7 +435,7 @@ class uiEditor extends HTMLElement {
 			if (target === this) {
 				/* Target is the editor, thus grab element below */
 				this.setActive(document.elementsFromPoint(e.clientX, e.clientY)[1]);
-				this.editor.showPopover();
+				if (!this.responsive) this.editor.showPopover();
 			}
 			else {
 				/* Target is a button/action in the editor */
@@ -700,13 +705,16 @@ class uiEditor extends HTMLElement {
 	* Renders the template for the editor, added to the shadowDOM
 	* @returns {string} - The generated markup.
 	*/
-	renderTemplate(tools, plugins = []) {
+	renderTemplate() {
 		let forms = '';
 		let output = '';
 		let toolbarFields = [];
 
+		const tools = this.config.tools || [];
+		const plugins = this.config.plugins || [];
+
 		tools.forEach((tool, index) => {
-			const configItem = findObjectByProperty(plugins, 'key', tool.key) || {};
+			const configItem = plugins.length && findObjectByProperty(plugins, 'key', tool.key) || {};
 			setForm(tool.key + this.uid);
 			forms += `<form id="${tool.key}${this.uid}" part="form-${tool.key}"></form>`;
 			output += `
@@ -747,7 +755,9 @@ class uiEditor extends HTMLElement {
 				${renderFieldset(this.config.global.frames)}
 				<iframe src="${window.location.href}" part="iframe" sandbox="allow-scripts allow-forms allow-same-origin allow-pointer-lock allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe>
 			</form>` : ''}
-			${renderInput({ input: { part: 'toggle', 'data-click': 'toggle', type: 'checkbox', ...(this.getAttribute('open') === 'true' && { checked: '' }) }})}
+			<label part="toggle">${this.logo ? `<img src="${this.logo}">`:'UI'}
+				<input type="checkbox" data-sr data-click="toggle"${this.getAttribute('open') === 'true' ? ' checked' : ''}>
+			</label>
 		`;
 	}
 
@@ -906,6 +916,7 @@ class uiEditor extends HTMLElement {
 	 * Updates the classlist in the editor based on the active element.
 	 */
 	updateClassList() {
+		if (!this.formStyles || !this.active) return;
 		const { classes, removed } = this.getClasses(this.active);
 		this.editor.elements.classlist.innerHTML = 
 			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
@@ -917,7 +928,7 @@ class uiEditor extends HTMLElement {
 	 * Uses the current breakpoint value to filter and update relevant elements.
 	 */
 	updateFormFromClasses() {
-		if (!this.active) return;
+		if (!this.formStyles || !this.active) return;
 
 		this.formStyles.reset();
 		const vars = this.editor.querySelectorAll('var[data-bp]');
