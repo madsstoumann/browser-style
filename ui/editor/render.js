@@ -12,12 +12,26 @@ export function renderButton(obj, iconObject) {
 }
 
 export function renderElement(element) {
-	if (globalForm && element.obj) {
-		element.obj.form = globalForm;
+	if (element.obj) {
+		if (element.obj.removeForm) {
+				delete element.obj.form;
+		} else {
+				// Use form attribute from the object, or globalForm if it doesn't exist
+				element.obj.form = element.obj.form || globalForm;
+		}
+
 		if (element.obj.input) {
-			element.obj.input.form = globalForm;
+				if (element.obj.input.removeForm) {
+					delete element.obj.input.form;
+				} else {
+					
+					element.obj.input.form = element.obj.input.form || globalForm;
+				}
 		}
 	}
+
+
+
 	switch (element.ui) {
 		case 'button': return renderButton(element.obj);
 		case 'output': return renderOutput(element.text, element.name);
@@ -63,6 +77,7 @@ export function renderIcon(name) {
 }
 
 export function renderInput(obj) {
+	if (obj?.input['data-values']) obj.input.max = obj.input['data-values'].length - 1;
 	const breakpoints = globalBreakpoints.length ? renderBreakpoints(globalBreakpoints) : '';
 	const icon = obj.icon ? renderIcon(obj.icon) : '';
 	const input = obj.input ? renderAttributes(obj.input) : '';

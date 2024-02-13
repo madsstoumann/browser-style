@@ -26,8 +26,8 @@ class uiEditor extends HTMLElement {
 	* Initializes the shadow DOM, sets up event listeners, and performs necessary setup.
 	*/
 	async connectedCallback() {
+		/* Component is loaded from within an `<iframe>` */
 		if (window.location !== window.parent.location) {
-			console.log("The page is in an iFrame");
 			this.style.cssText = 'background:rgba(0,0,0,0);inset:0;position:fixed;';
 			this.addEventListener('pointermove', this.onMove);
 			this.addEventListener('click', (event) => {
@@ -112,22 +112,6 @@ class uiEditor extends HTMLElement {
 				}}
 		});
 	}
-
-	async fetchFiles(files) {
-		const configs = {};
-		for (const fileName of files) {
-			const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
-				try {
-					const response = await fetch(fileName);
-					const config = await response.json();
-					configs[cleanFileName] = config; // Store the config without the file extension
-			} catch (error) {
-					console.error(`Error fetching ${fileName}: ${error}`);
-			}
-		}
-		return configs;
-	}
-
 
 	/**
 	* Invoked when one of the observed attributes of the custom element is changed.
@@ -362,6 +346,21 @@ class uiEditor extends HTMLElement {
 		}
 	}
 
+	async fetchFiles(files) {
+		const configs = {};
+		for (const fileName of files) {
+			const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
+				try {
+					const response = await fetch(fileName);
+					const config = await response.json();
+					configs[cleanFileName] = config; // Store the config without the file extension
+			} catch (error) {
+					console.error(`Error fetching ${fileName}: ${error}`);
+			}
+		}
+		return configs;
+	}
+
 	/**
 	 * Filters an array of class names based on the specified breakpoint.
 	 * @param {string[]} classList - Array of class names.
@@ -373,17 +372,17 @@ class uiEditor extends HTMLElement {
 		try {
 			if (!breakpoint) {
 				// Return classes without any of the specified prefixes
-				return classList.filter(className => !this.breakpoints.some(prefix => className.startsWith(prefix)));
-			} else if (this.breakpoints.includes(breakpoint)) {
+				return classList.filter(className => !this.config.global.breakpoints.some(prefix => className.startsWith(prefix)));
+			} else if (this.config.global.breakpoints.includes(breakpoint)) {
 				// Filter classes based on the selected breakpoint
 				return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
 			} else {
 				throw new Error('Invalid breakpoint specified');
 			}
 		} catch (error) {
-				console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
-				// If an error occurs, return the original class list
-				return classList;
+			console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
+			// If an error occurs, return the original class list
+			return classList;
 		}
 	}
 
@@ -400,7 +399,6 @@ class uiEditor extends HTMLElement {
 	 * Returns the classList of an HTML element and its optional `data-removed` attribute.
 	 * @param {HTMLElement} node - The HTML element.
 	 * @returns {Object} - Object containing the classList and removed classes of the specified element.
-	 * @throws {TypeError} - Throws an error if the provided node is not an HTML element.
 	 */
 	getClasses(node) {
 		if (!node) return;
@@ -410,7 +408,6 @@ class uiEditor extends HTMLElement {
 			return { classes, removed };
 		} catch (error) {
 			console.error('An error occurred while getting classes:', error.message);
-			throw error;
 		}
 	}
 
@@ -447,11 +444,7 @@ class uiEditor extends HTMLElement {
 					case 'cls-rem': this.remClasses(); break;
 					case 'cls-revert': this.revertClasses(); this.updateFormFromClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
-					case 'colorscheme': {
-						this.editor.classList.toggle('uie-colorscheme');
-						if (this.formFrame) this.formFrame.classList.toggle('uie-colorscheme');
-					}
-					break;
+					case 'colorscheme': this.classList.toggle('colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
 					case 'dom-cut': this.domAction('cut'); break;
 					case 'dom-first': this.domAction('first'); break;
@@ -519,7 +512,8 @@ class uiEditor extends HTMLElement {
 
 		/* === STYLE UPDATES === */
 		if (node.form === this.formStyles) {
-			const breakpoint = this.formStyles.elements.breakpoint.value || '';
+
+			const breakpoint = this.editor.elements.breakpoint.value || '';
 
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
 
@@ -897,7 +891,7 @@ class uiEditor extends HTMLElement {
 			if (!classes.length) return;
 
 			this.formStyles.reset();
-			const breakpoint = this.formStyles.elements.breakpoint.value || '';
+			const breakpoint = this.editor.elements.breakpoint.value || '';
 			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
 
 			if (filteredClasses.length) {
@@ -935,7 +929,7 @@ class uiEditor extends HTMLElement {
 		vars.forEach(varElement => varElement.textContent = '');
 
 		const classes = this.active.className.split(' ');
-		const current = this.formStyles.elements.breakpoint.value || '';
+		const current = this.editor.elements.breakpoint.value || '';
 
 		classes.forEach(cls => {
 			const match = cls.match(/^(?:(?<breakpoint>[^:\s]+):)?(?<prefix>[^-]+)-(?<value>.+)/);
@@ -963,7 +957,7 @@ class uiEditor extends HTMLElement {
 			const bp = input.parentNode?.querySelector(`var[data-bp="${breakpoint}"]`);
 			if (bp) bp.textContent = value;
 
-			if (!breakpoint || breakpoint === this.formStyles.elements.breakpoint.value) {
+			if (!breakpoint || breakpoint === this.editor.elements.breakpoint.value) {
 				if (input.dataset?.values) {
 					const selected = input.dataset.values.split(',').findIndex(item => item === value);
 					input.value = selected;

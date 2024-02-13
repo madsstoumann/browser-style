@@ -24,7 +24,8 @@
 														"min"	: 0,
 														"max"	: 10,
 														"data-prefix": "mt-",
-														"type": "range"
+														"type": "range",
+														"value": 0
 													}
 												}
 											},
@@ -35,7 +36,8 @@
 														"name": "mb",
 														"data-prefix": "mb-",
 														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-														"type": "range"
+														"type": "range",
+														"value": 0
 													}
 												}
 											}
@@ -56,7 +58,8 @@
 												"min"	: 0,
 												"max"	: 10,
 												"data-prefix": "ml-",
-												"type": "range"
+												"type": "range",
+												"value": 0
 											}
 										}
 									},
@@ -67,7 +70,8 @@
 												"name": "mr",
 												"data-prefix": "mr-",
 												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-												"type": "range"
+												"type": "range",
+												"value": 0
 											}
 										}
 									}
@@ -93,7 +97,8 @@
 														"min"	: 0,
 														"max"	: 10,
 														"data-prefix": "pt-",
-														"type": "range"
+														"type": "range",
+														"value": 0
 													}
 												}
 											},
@@ -104,7 +109,8 @@
 														"name": "pb",
 														"data-prefix": "pb-",
 														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-														"type": "range"
+														"type": "range",
+														"value": 0
 													}
 												}
 											}
@@ -125,7 +131,8 @@
 												"min"	: 0,
 												"max"	: 10,
 												"data-prefix": "pl-",
-												"type": "range"
+												"type": "range",
+												"value": 0
 											}
 										}
 									},
@@ -136,7 +143,8 @@
 												"name": "pr",
 												"data-prefix": "pr-",
 												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8],
-												"type": "range"
+												"type": "range",
+												"value": 0
 											}
 										}
 									}
@@ -332,7 +340,8 @@
 												"min"	: 0,
 												"max"	: 10,
 												"data-prefix": "lh-",
-												"type": "range"
+												"type": "range",
+												"value": 0
 											}
 										}
 									}
