@@ -69,6 +69,18 @@ export function addDraggable(handle, panel, propX = '--uie-x', propY = '--uie-y'
 	handle.addEventListener('touchstart', (e) => e.preventDefault());
 }
 
+export function debounce(func, delay) {
+  let timeoutId;
+  return function () {
+    const context = this;
+    const args = arguments;
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(context, args);
+    }, delay);
+  };
+}
+
 export function findObjectByProperty(data, propertyName, propertyValue) {
 	if (typeof data !== "object" || data === null) {
 		return null; // Handle non-object or null data

@@ -1,13 +1,13 @@
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
-import { addDocumentScroll, addDraggable, findObjectByProperty, uuid } from './utils.js';
+import { renderDatalist, renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './utils.js';
 import icons from './icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 13-02-2024
+ * @version 1.0.05
+ * @summary 15-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -26,7 +26,7 @@ class uiEditor extends HTMLElement {
 	* Initializes the shadow DOM, sets up event listeners, and performs necessary setup.
 	*/
 	async connectedCallback() {
-		/* Component is loaded from within an `<iframe>` */
+		/* App is loaded from within an `<iframe>` */
 		if (window.location !== window.parent.location) {
 			this.style.cssText = 'background:rgba(0,0,0,0);inset:0;position:fixed;';
 			this.addEventListener('pointermove', this.onMove);
@@ -57,18 +57,18 @@ class uiEditor extends HTMLElement {
 		shadow.appendChild(template.content.cloneNode(true));
 
 		// Initialize references to important elements within the shadow DOM.
-		// this.componentConfig = shadow.querySelector(`[part=form-config]`);
-		// this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
-		// this.componentSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
+		this.search = shadow.querySelector(`[part=component-search]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
+		// this.componentConfig = shadow.querySelector(`[part=form-config]`);
+		// this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
 		// if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
 		/* Events */
@@ -98,11 +98,14 @@ class uiEditor extends HTMLElement {
 		}
 
 		this.editor.addEventListener('input', this.onInput);
-		// if (this.componentSearch) {
-		// 	this.componentSearch.addEventListener('input', this.onSearch);
-		// 	this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
-		// }
+		
+		/* Component search */
+		if (this.search) {
+			this.search.addEventListener('input', this.onSearch);
+			this.search.addEventListener('search', () => this.setComponentInfo({}));
+		}
 
+		/* Detect if active element's contentBoxSize changed */
 		this.resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				if (entry.contentBoxSize) {
@@ -111,6 +114,15 @@ class uiEditor extends HTMLElement {
 					this.setFrameValues(entry.target, rect);
 				}}
 		});
+
+		/* Reposition active outline when window resizes */
+		window.addEventListener('resize', debounce(() => {
+			if (this.active) {
+				const rect = this.active.getBoundingClientRect();
+				this.setOutline(rect);
+				this.setFrameValues(this.active, rect);
+			}
+		}, 300)); 
 	}
 
 	/**
@@ -121,10 +133,10 @@ class uiEditor extends HTMLElement {
 	*/
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!newValue || oldValue === newValue) return;
-		
+
 		switch(name) {
 			case 'open':
-				if (this.iframe) {
+				if (this.iframe) { /* remove pointer events on body (behind app), when iframe exists */
 					document.body.style.pointerEvents = (newValue === 'true') ? 'none' : 'auto';
 					return;
 				}
@@ -206,7 +218,7 @@ class uiEditor extends HTMLElement {
 				break;
 			case 'insert':
 				if (element) {
-					const component = this.config.elements.flatMap(group => group.items).find(obj => obj.key === element);
+					const component = this.config.components.flatMap(group => group.items).find(obj => obj.key === element);
 					if (component && component.template) {
 						const template = this.renderTemplateFromString(component.template, component.config ? component.config : {});
 						this.active.insertAdjacentHTML('beforeend', template);
@@ -265,7 +277,6 @@ class uiEditor extends HTMLElement {
 			navigator.clipboard.writeText(this.active.className);
 		} catch (error) {
 			console.error('Error in copyClasses:', error.message);
-			throw error;
 		}
 	}
 
@@ -274,7 +285,6 @@ class uiEditor extends HTMLElement {
 	*
 	* @param {string} name - The name of the custom event.
 	* @param {any} detail - The data to be associated with the custom event.
-	* @throws {Error} Will throw an error if the event could not be dispatched.
 	*/
 	dispatch(name, detail) {
 		this.dispatchEvent(new CustomEvent(name, { detail }));
@@ -346,16 +356,30 @@ class uiEditor extends HTMLElement {
 		}
 	}
 
+	/**
+	 * Fetches configuration files asynchronously.
+	 *
+	 * @param {string[]} files - An array of file URLs to fetch.
+	 * @returns {Promise<Object>} A promise that resolves to an object containing configuration data.
+	 * @throws {Error} If an error occurs during the fetch operation for any file.
+	 */
 	async fetchFiles(files) {
+		/**
+		 * Object to store configuration data with clean file names.
+		 * @type {Object.<string, Object>}
+		 */
 		const configs = {};
+
 		for (const fileName of files) {
+			// Extracts the clean file name without the file extension.
 			const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
-				try {
-					const response = await fetch(fileName);
-					const config = await response.json();
-					configs[cleanFileName] = config; // Store the config without the file extension
+
+			try {
+				const response = await fetch(fileName);
+				const config = await response.json();
+				configs[cleanFileName] = config;
 			} catch (error) {
-					console.error(`Error fetching ${fileName}: ${error}`);
+				console.error(`Error fetching ${fileName}: ${error}`);
 			}
 		}
 		return configs;
@@ -371,17 +395,14 @@ class uiEditor extends HTMLElement {
 	filterClassesByBreakpoint(classList, breakpoint) {
 		try {
 			if (!breakpoint) {
-				// Return classes without any of the specified prefixes
-				return classList.filter(className => !this.config.global.breakpoints.some(prefix => className.startsWith(prefix)));
+				return classList.filter(className => !this.config.global.breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
 			} else if (this.config.global.breakpoints.includes(breakpoint)) {
-				// Filter classes based on the selected breakpoint
 				return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
 			} else {
 				throw new Error('Invalid breakpoint specified');
 			}
 		} catch (error) {
 			console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
-			// If an error occurs, return the original class list
 			return classList;
 		}
 	}
@@ -392,7 +413,7 @@ class uiEditor extends HTMLElement {
 	* @returns {Object} - The found component object.
 	*/
 	findComponentByKey(key) {
-		return this.config.elements.flatMap(group => group.items).find(obj => obj.key === key);
+		return this.config.components.flatMap(group => group.items).find(obj => obj.key === key);
 	}
 
 	/**
@@ -479,8 +500,7 @@ class uiEditor extends HTMLElement {
 	onFrameInput = (event) => {
 		const node = event.target;
 		this.iframe.removeAttribute('style');
-
-		/* === SET FRAME DIMENSIONS === */
+		/*Set frame dimensions */
 		if (node.dataset.dimensions) {
 			const [width, height] = node.dataset.dimensions.split('x');
 			this.iframe.style.width = `${width}px`;
@@ -522,16 +542,17 @@ class uiEditor extends HTMLElement {
 				this.setBreakpointLabel(node, breakpoint, value);
 
 				/* Update value to set */
-				value = breakpoint + node.dataset.prefix + value;
+				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.global.breakpointsDelimiter}` : '';
+				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.global.prefixDelimiter}${value}`;
 				const { classes, removed } = this.getClasses(this.active);
 
 				classes.forEach(className => {
-					if (className.startsWith(breakpoint + node.dataset.prefix)) {
+					if (className.startsWith(breakpointPrefix + node.dataset.prefix)) {
 						this.active.classList.remove(className);
 					}
 				})
 				removed.forEach(className => {
-					if (className.startsWith(breakpoint + node.dataset.prefix)) {
+					if (className.startsWith(breakpointPrefix + node.dataset.prefix)) {
 						this.active.dataset.removed = this.active.dataset.removed.replace(className, '');
 					}
 				})
@@ -696,7 +717,7 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Renders the template for the editor, added to the shadowDOM
+	* Renders the template for the app.
 	* @returns {string} - The generated markup.
 	*/
 	renderTemplate() {
@@ -709,7 +730,7 @@ class uiEditor extends HTMLElement {
 
 		tools.forEach((tool, index) => {
 			const configItem = plugins.length && findObjectByProperty(plugins, 'key', tool.key) || {};
-			setForm(tool.key + this.uid);
+			setForm(tool.key, this.uid);
 			forms += `<form id="${tool.key}${this.uid}" part="form-${tool.key}"></form>`;
 			output += `
 			<div part="tool"${index > 0 ? ` hidden`:''}>
@@ -727,7 +748,7 @@ class uiEditor extends HTMLElement {
 			});
 		});
 
-		setForm('editor' + this.uid);
+		setForm('editor', this.uid);
 		const toolbar = renderFieldset({
 			name: 'tools',
 			part: 'tabgroup',
@@ -743,6 +764,7 @@ class uiEditor extends HTMLElement {
 				${toolbar}
 				<div part="tools">${output}</div>
 				${renderGroup(this.config.global.footer)}
+				${this.config.components ? renderDatalist(this.config.components, this.uid) : ''}
 			</form>
 			${forms}
 			${this.responsive ? `<form id="frames${this.uid}" part="form-frames">
@@ -796,28 +818,37 @@ class uiEditor extends HTMLElement {
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 
-			this.updateClassList();
-			this.updateFormFromClasses();
+			if (this.formStyles) {
+				this.updateClassList();
+				this.updateFormFromClasses();
+			}
 
-			// TODO: EDITING
-			// this.editor.elements['uie-html'].value = node.innerHTML;
+// TODO: EDITING
+// this.editor.elements['uie-html'].value = node.innerHTML;
 		}
 		catch (error) {
 			console.error(error);
 		}
 	}
 
+	/**
+	 * Sets the label for a breakpoint on a specified node.*
+	 * @param {HTMLElement} node - The HTML element for which the breakpoint label is set.
+	 * @param {string} breakpoint - The breakpoint identifier.
+	 * @param {string} value - The value to set for the breakpoint label.
+	 */
 	setBreakpointLabel(node, breakpoint, value) {
 		const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
+		const isRadio =  node.type === 'radio';
 		if (bp) {
-			if (node.type === 'radio') {
+			if (isRadio) {
 				const fieldset = node.closest('fieldset');
 				if (fieldset) {
 					const vars = fieldset.querySelectorAll(`var[data-bp="${breakpoint}"]:not(:empty)`);
 					vars.forEach(label => label.textContent = '');
 				}
 			}
-			bp.textContent = node.type === 'radio' ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
+			bp.textContent = isRadio ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
 		}
 	}
 
@@ -828,7 +859,7 @@ class uiEditor extends HTMLElement {
 	setComponentInfo(obj) {
 		this.editor.elements['component-info'].value = obj.description || '';
 		this.editor.elements['component-insert'].value = obj.key || '';
-		this.componentConfigure.hidden = !obj.config;
+		this.editor.elements['component-configure'].hidden = !obj.config;
 
 		if (obj.config) {
 			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
@@ -889,18 +920,25 @@ class uiEditor extends HTMLElement {
 		try {
 			const classes = this.active.className.split(' ');
 			if (!classes.length) return;
-
 			this.formStyles.reset();
 			const breakpoint = this.editor.elements.breakpoint.value || '';
 			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
-
 			if (filteredClasses.length) {
 				filteredClasses.forEach(cls => {
-					const [prefix, value] = cls.replace(breakpoint, '').split('-');
-					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}-`) || null;
+					const [prefix, value] = cls.replace(breakpoint+this.config.global.breakpointsDelimiter, '').split(this.config.global.prefixDelimiter);
+					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}`) || null;
 					this.updateInputElement(input, breakpoint, value);
 				});
 			}
+			/* disable breakpoint specific inputs */
+			[...this.formStyles.elements].forEach(input => {
+				if (input.hasAttribute('data-breakpoints')) {
+					input.disabled = input.dataset.breakpoints.split(',').includes(breakpoint) || breakpoint === '' ? false : true;
+					// TODO: To refresh the value of the input if it's disabled, fix for radio inputs
+					if (input.disabled) input.value = 0;
+				}
+		});
+		
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
 		}
@@ -925,20 +963,18 @@ class uiEditor extends HTMLElement {
 		if (!this.formStyles || !this.active) return;
 
 		this.formStyles.reset();
+		const classes = this.active.className.split(' ');
 		const vars = this.editor.querySelectorAll('var[data-bp]');
 		vars.forEach(varElement => varElement.textContent = '');
 
-		const classes = this.active.className.split(' ');
-		const current = this.editor.elements.breakpoint.value || '';
-
 		classes.forEach(cls => {
-			const match = cls.match(/^(?:(?<breakpoint>[^:\s]+):)?(?<prefix>[^-]+)-(?<value>.+)/);
-
+			const match = cls.match(
+				new RegExp(`^(?:(?<breakpoint>[^${this.config.global.breakpointsDelimiter}\\s]+):)?(?<prefix>[^${this.config.global.prefixDelimiter}]+)-(?<value>.+)`)
+			);
 			if (match) {
-				const breakpoint = match.groups.breakpoint && `${match.groups.breakpoint}:` || '';
+				const breakpoint = match.groups.breakpoint && `${match.groups.breakpoint}` || '';
 				const prefix = match.groups.prefix || null;
 				const value = match.groups.value || null;
-
 				const input = this.formStyles.elements[prefix] || null;
 				this.updateInputElement(input, breakpoint, value);
 			}
@@ -969,7 +1005,5 @@ class uiEditor extends HTMLElement {
 			}
 		}
 	}
-
 }
-
 customElements.define('ui-editor', uiEditor);

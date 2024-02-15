@@ -38,7 +38,7 @@
 								"removeForm": true,
 								"name": "breakpoint",
 								"type": "radio",
-								"value": "sm:"
+								"value": "sm"
 							}
 						}
 					},
@@ -54,7 +54,7 @@
 								"removeForm": true,
 								"name": "breakpoint",
 								"type": "radio",
-								"value": "md:"
+								"value": "md"
 							}
 						}
 					},
@@ -70,7 +70,7 @@
 								"removeForm": true,
 								"name": "breakpoint",
 								"type": "radio",
-								"value": "lg:"
+								"value": "lg"
 							}
 						}
 					},
@@ -86,7 +86,7 @@
 								"removeForm": true,
 								"name": "breakpoint",
 								"type": "radio",
-								"value": "xl:"
+								"value": "xl"
 							}
 						}
 					},
@@ -102,7 +102,7 @@
 								"removeForm": true,
 								"name": "breakpoint",
 								"type": "radio",
-								"value": "2xl:"
+								"value": "xxl"
 							}
 						}
 					}
@@ -113,7 +113,8 @@
 			{
 				"label": "Classlist",
 				"name": "style-root",
-				"open": true,
+				"open": false,
+				"part": "appgroup",
 				"fieldsets": [
 					{
 						"name": "classlist"
@@ -262,6 +263,52 @@
 								}
 							}
 						]
+					}
+				]
+			},
+			{
+				"label": "Components",
+				"open": true,
+				"fieldsets": [
+					{
+						"name": "components",
+						"fields": [
+							{
+								"obj" : {
+									"input": {
+										"list": "components{{globalId}}",
+										"part": "component-search",
+										"placeholder": "Find component",
+										"type": "search"
+									}
+								}
+							},
+							{
+								"ui": "output",
+								"name": "component-info",
+								"text": ""
+							},
+							{
+								"ui": "button",
+								"obj": {
+									"data-click": "dom-insert",
+									"removeForm": true,
+									"name": "component-insert",
+									"part": "button primary",
+									"title": "Insert Component",
+									"value": ""
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"label": "Configure Component",
+				"open": true,
+				"fieldsets": [
+					{
+						"name": "component-configure"
 					}
 				]
 			}

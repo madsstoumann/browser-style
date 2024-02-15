@@ -1,546 +1,782 @@
 [
-	{
-		"key": "styles",
-		"groups": [
-			{
-				"label": "Spacing",
-				"name": "style-root",
-				"groups": [
-					{
-						"label": "Margin",
-						"name": "style-spacing",
-						"groups": [
-							{
-								"label": "Top",
-								"fieldsets": [
-									{
-										"name": "classname",
-										"fields": [
-											{
-												"obj" : {
-													"text": "Margin Top",
-													"input": {
-														"name": "mt",
-														"min"	: 0,
-														"max"	: 10,
-														"data-prefix": "mt-",
-														"type": "range",
-														"value": 0
-													}
-												}
-											},
-											{
-												"obj" : {
-													"text": "Margin Bottom",
-													"input": {
-														"name": "mb",
-														"data-prefix": "mb-",
-														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-														"type": "range",
-														"value": 0
-													}
-												}
-											}
-										]
-									}
-								]
-							}
-						],
-						"fieldsets": [
-							{
-								"name": "classname",
-								"fields": [
-									{
-										"obj" : {
-											"text": "Margin Left",
-											"input": {
-												"name": "ml",
-												"min"	: 0,
-												"max"	: 10,
-												"data-prefix": "ml-",
-												"type": "range",
-												"value": 0
-											}
-										}
-									},
-									{
-										"obj" : {
-											"text": "Margin Right",
-											"input": {
-												"name": "mr",
-												"data-prefix": "mr-",
-												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-												"type": "range",
-												"value": 0
-											}
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"label": "Padding",
-						"name": "style-spacing",
-						"groups": [
-							{
-								"label": "Top",
-								"fieldsets": [
-									{
-										"name": "classname",
-										"fields": [
-											{
-												"obj" : {
-													"text": "Padding Top",
-													"input": {
-														"name": "pt",
-														"min"	: 0,
-														"max"	: 10,
-														"data-prefix": "pt-",
-														"type": "range",
-														"value": 0
-													}
-												}
-											},
-											{
-												"obj" : {
-													"text": "Padding Bottom",
-													"input": {
-														"name": "pb",
-														"data-prefix": "pb-",
-														"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96],
-														"type": "range",
-														"value": 0
-													}
-												}
-											}
-										]
-									}
-								]
-							}
-						],
-						"fieldsets": [
-							{
-								"name": "classname",
-								"fields": [
-									{
-										"obj" : {
-											"text": "Padding Left",
-											"input": {
-												"name": "pl",
-												"min"	: 0,
-												"max"	: 10,
-												"data-prefix": "pl-",
-												"type": "range",
-												"value": 0
-											}
-										}
-									},
-									{
-										"obj" : {
-											"text": "Padding Right",
-											"input": {
-												"name": "pr",
-												"data-prefix": "pr-",
-												"data-values": [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8],
-												"type": "range",
-												"value": 0
-											}
-										}
-									}
-									]
-							}
-								
-						]
-
-					}
-				]
-			},
-			{
-				"label": "Typography",
-				"name": "style-root",
-				"groups": [
-					{
-						"label": "Font Size",
-						"fieldsets": [
-							{
-								"name": "classname",
-								"part": "autocols buttongroup",
-								"fields": [
-									{
-										"obj" : {
-											"input": {
-												"name": "fs",
-												"data-prefix": "fs-",
-												"data-sr": "",
-												"type": "radio",
-												"value": "xs"
-											},
-											"text": "xs"
-										}
-									},
-									{
-										"obj" : {
-											"input": {
-												"name": "fs",
-												"data-prefix": "fs-",
-												"data-sr": "",
-												"type": "radio",
-												"value": "sm"
-											},
-											"text": "sm"
-										}
-									},
-									{
-										"obj" : {
-											"input": {
-												"name": "fs",
-												"data-prefix": "fs-",
-												"data-sr": "",
-												"type": "radio",
-												"value": "md"
-											},
-											"text": "md"
-										}
-									},
-									{
-										"obj" : {
-											"input": {
-												"name": "fs",
-												"data-prefix": "fs-",
-												"data-sr": "",
-												"type": "radio",
-												"value": "lg"
-											},
-											"text": "lg"
-										}
-									},
-									{
-										"obj" : {
-											"input": {
-												"name": "fs",
-												"data-prefix": "fs-",
-												"data-sr": "",
-												"type": "radio",
-												"value": "xl"
-											},
-											"text": "xl"
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"label": "Font Family",
-						"fieldsets": [
-							{
-								"name": "classname",
-								"part": "radio font",
-								"fields": [
-									{
-										"obj" : {
-											"textAfter": "Sans-Serif",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "sans-serif"
-											},
-											"label": {
-												"style": "--_v:sans-serif"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Serif",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "serif"
-											},
-											"label": {
-												"style": "--_v:serif"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Monospace",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "monospace"
-											},
-											"label": {
-												"style": "--_v:monospace"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Cursive",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "cursive"
-											},
-											"label": {
-												"style": "--_v:cursive"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Fantasy",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "fantasy"
-											},
-											"label": {
-												"style": "--_v:fantasy"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "System",
-											"input": {
-												"name": "ff",
-												"data-prefix": "ff-",
-												"type": "radio",
-												"value": "system"
-											},
-											"label": {
-												"style": "--_v:system"
-											}
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"label": "Line Height",
-						"fieldsets": [
-							{
-								"name": "classname",
-								"fields": [
-									{
-										"obj" : {
-											"text": "Line Height",
-											"input": {
-												"name": "lh",
-												"min"	: 0,
-												"max"	: 10,
-												"data-prefix": "lh-",
-												"type": "range",
-												"value": 0
-											}
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			},
-			{
-				"label": "Colors",
-				"name": "style-root",
-				"groups": [
-					{
-						"label": "Background",
-						"fieldsets": [
-							{
-								"name": "background",
-								"part": "radio swatch",
-								"fields": [
-									{
-										"obj" : {
-											"textAfter": "Primary",
-											"input": {
-												"checked": "",
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(190, 50%, 50%)",
-												"type": "radio",
-												"value": "primary"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Secondary",
-											"input": {
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(0, 50%, 50%)",
-												"type": "radio",
-												"value": "secondary"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Tertiary",
-											"input": {
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(0, 0%, 50%)",
-												"type": "radio",
-												"value": "tertiary"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Quaternary",
-											"input": {
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(0, 0%, 0%)",
-												"type": "radio",
-												"value": "quaternary"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "White",
-											"input": {
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(0, 0%, 100%)",
-												"type": "radio",
-												"value": "white"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Black",
-											"input": {
-												"name": "bg",
-												"data-prefix": "bg-",
-												"style": "--_v:hsl(0, 0%, 0%)",
-												"type": "radio",
-												"value": "black"
-											}
-										}
-									}
-								]
-							}
-						]
-					},
-					{
-						"label": "Text",
-						"fieldsets": [
-							{
-								"name": "classname",
-								"part": "radio swatch",
-								"fields": [
-									{
-										"obj" : {
-											"textAfter": "Primary",
-											"input": {
-												"checked": "",
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(0, 0%, 0%)",
-												"type": "radio",
-												"value": "primary"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Color1",
-											"input": {
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(30, 50%, 50%)",
-												"type": "radio",
-												"value": "color1"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Color2",
-											"input": {
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(60, 50%, 50%)",
-												"type": "radio",
-												"value": "color2"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Color3",
-											"input": {
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(120, 50%, 50%)",
-												"type": "radio",
-												"value": "color3"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Color4",
-											"input": {
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(150, 50%, 50%)",
-												"type": "radio",
-												"value": "color4"
-											}
-										}
-									},
-									{
-										"obj" : {
-											"textAfter": "Color5",
-											"input": {
-												"name": "tc",
-												"data-prefix": "tc-",
-												"style": "--_v:hsl(180, 50%, 50%)",
-												"type": "radio",
-												"value": "color5"
-											}
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			}	
-		]
-	},
-	{
-		"key": "content",
-		"groups": [
-			{
-				"label": "Content"
-			}
-		]
-	},
-	{
-		"key": "elements",
-		"groups": [
-			{
-				"label": "Components"
-			}
-		]
-	}
+  {
+    "key": "styles",
+    "groups": [
+      {
+        "key": "layout",
+        "label": "Layout",
+        "name": "style-root",
+        "fieldsets": []
+      },
+      {
+        "key": "flexgrid",
+        "label": "Flexbox & Grid",
+        "name": "style-root"
+      },
+      {
+        "key": "spacing",
+        "label": "Spacing",
+        "name": "style-root",
+        "groups": [
+          {
+            "key": "padding",
+            "label": "Padding",
+            "name": "spacing",
+            "fieldsets": [
+              {
+                "name": "padding",
+                "fields": [
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "p",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "p",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Block",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pb",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pb",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Inline",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pi",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pi",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Block Start",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pbs",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pbs",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Block End",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pbe",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pbe",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Inline Start",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pis",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pis",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Padding Inline End",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "pie",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "pie",
+                        "type": "range"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "key": "margin",
+            "label": "Margin",
+            "name": "spacing",
+            "fieldsets": [
+              {
+                "name": "margin",
+                "fields": [
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "m",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "m",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Block",
+                      "input": {
+                        "data-breakpoints": [
+                          "sm",
+                          "lg"
+                        ],
+                        "data-prefix": "mb",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mb",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Inline",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "mi",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mi",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Block Start",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "mbs",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mbs",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Block End",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "mbe",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mbe",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Inline Start",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "mis",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mis",
+                        "type": "range"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "text": "Margin Inline End",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "mie",
+                        "data-values": [
+                          0,
+                          0.5,
+                          1,
+                          1.5,
+                          2,
+                          2.5,
+                          3,
+                          3.5,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8,
+                          9,
+                          10,
+                          11,
+                          12,
+                          14,
+                          16,
+                          20,
+                          24,
+                          28,
+                          32,
+                          36,
+                          40,
+                          44,
+                          48,
+                          52,
+                          56,
+                          60,
+                          64,
+                          72,
+                          80,
+                          96
+                        ],
+                        "name": "mie",
+                        "type": "range"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "sizing",
+        "label": "Sizing",
+        "name": "style-root"
+      },
+      {
+        "key": "typography",
+        "label": "Typography",
+        "name": "style-root",
+        "fieldsets": [
+          {
+            "name": "typography",
+            "fields": [
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "Font Family",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "ff",
+                    "name": "ff",
+                    "type": "radio"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "Font Size",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "fs",
+                    "name": "fs",
+                    "type": "radio"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "backgrounds",
+        "label": "Backgrounds",
+        "name": "style-root",
+        "fieldsets": []
+      },
+      {
+        "key": "borders",
+        "label": "Borders",
+        "name": "style-root",
+        "fieldsets": []
+      },
+      {
+        "key": "effects",
+        "label": "Effects",
+        "name": "style-root"
+      }
+    ]
+  }
 ]

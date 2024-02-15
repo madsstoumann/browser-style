@@ -1,6 +1,8 @@
 {
 	"key": "global",
-	"breakpoints": ["", "sm:", "md:", "lg:", "xl:", "2xl:"],
+	"breakpoints": ["", "sm", "md", "lg", "xl", "xxl"],
+	"breakpointsDelimiter": ":",
+	"prefixDelimiter": "-",
 	"frames": {
 		"part": "frame-group",
 		"fields": [
@@ -68,7 +70,7 @@
 	"footer": {
 		"label": "Frame",
 		"name": "frame-root",
-		"open": true,
+		"part": "appgroup",
 		"fieldsets": [
 			{
 				"name": "frameinfo",

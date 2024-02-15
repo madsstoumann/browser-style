@@ -38,7 +38,6 @@
 	pointer-events: none;
 	position: fixed;
 	z-index: 2147483647;
-
 }
 
 @media (prefers-color-scheme: light) {
@@ -47,7 +46,6 @@
 @media (prefers-color-scheme: dark) {
 	:host(.colorscheme) { color-scheme: light; }
 }
-
 :host([open="true"]) {
 	pointer-events: all;
 }
@@ -57,6 +55,9 @@
 }
 :host([open="true"][responsive]) {
 	--uie-bgc: #E5E5E5;
+}
+.uie-copy {
+	background: repeating-linear-gradient(-45deg,transparent 0 10px,rgba(0,0,0,.1) 0 20px);
 }
 
 /* === PARTS === */
@@ -206,6 +207,14 @@
 		&:focus-visible, &:hover { outline: 1px solid var(--uie-gray-15); }
 	}
 	&:focus-visible, &:hover { background: var(--uie-blue-40); }
+	&[part~=primary] {
+		background: var(--uie-accent);
+		border-color: transparent;
+		color: #fff;
+		grid-column: 7 / span 6;
+		text-align: center;
+		/* &[value=""] { display: none; } */
+	}
 	&[part~=secondary] {
 		background: GrayText;
 		color: #FFF;
@@ -240,6 +249,7 @@
 
 /* === BREAKPOINTS: CODE/VAR LABELS === */
 [data-bp] {
+	align-self: start;
 	background: var(--_bg, var(--uie-bp-0));
 	border-radius: 2px;
 	color: CanvasText;
@@ -295,10 +305,12 @@ summary {
 	justify-content: space-between;
 	padding: var(--uie-gap);
 	user-select: none;
+	/* [part~=appgroup] & { background: color-mix(in srgb, LinkText 3%, var(--uie-gray-10)); } */
 	&:focus-visible, &:hover { background: var(--uie-blue-40); outline: 0; }
 	&::marker { content: ""; }
 	&::-webkit-details-marker { display: none; }
 	& > [part~=icon]:hover { background: var(--uie-blue-20); outline-color: var(--uie-blue-60); }
+	
 }
 
 /* === FIELDSET === */
@@ -327,7 +339,13 @@ input:is([type=text], [type="number"], [type="url"], [type=search]) {
 }
 
 /* === MISC === */
-label { user-select: none; }
+label {
+	user-select: none;
+	&:has([disabled]) { 
+		color: GrayText;
+		/* & input { filter: grayscale(1); opacity: .6; } */
+	}
+}
 legend { display: none; }
 strong { color: GrayText; }
 svg {
@@ -430,7 +448,28 @@ label:has([type=range]) {
 	}
 }
 
-/* SWITCH */
+/* === SEARCH === */
+label:has([type=search]) {
+	display: contents;
+	& input {
+		grid-column: span 12;
+		&::-webkit-calendar-picker-indicator {
+			display: none !important;
+		}
+		&::-webkit-search-cancel-button {
+			--icon: var(--uie-reset);
+			background-color: currentColor;
+			display: block;
+			height: 1em;
+			mask-image: var(--icon);
+			width: 1em;
+			-webkit-appearance: none;
+			-webkit-mask-image: var(--icon);
+		}
+	}
+}
+
+/* === SWITCH === */
 label:has([role=switch]) {
 	display: contents;
 	& input {

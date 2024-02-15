@@ -1,10 +1,26 @@
-let globalBreakpoints = [], globalForm = '', globalIconObject = {};
+let globalBreakpoints = [], globalForm = '', globalIconObject = {}, globalId = 0;
 
-export function renderAttributes(attributes, blacklist = ['icon']) {
+export function renderAttributes(
+	attributes,
+	variableMapping = { globalId },
+	blacklist = ['icon']) {
 	return Object.keys(attributes)
-		.filter(key => !blacklist.includes(key))
-		.map(key => `${key}="${attributes[key]}"`)
-		.join(' ');
+		.filter((key) => !blacklist.includes(key))
+		.map((key) => {
+			let value = attributes[key];
+			if (
+				typeof value === 'string' &&
+				value.includes('{{') &&
+				value.includes('}}')
+			) {
+				const match = value.match(/{{(.*?)}}/);
+				if (match) {
+					const variable = match[1].trim();
+					value = value.replace(`{{${variable}}}`, variableMapping[variable] || '');
+				}
+			}
+			return `${key}="${value}"`;
+		}).join(' ');
 }
 
 export function renderButton(obj, iconObject) {
@@ -14,27 +30,24 @@ export function renderButton(obj, iconObject) {
 export function renderElement(element) {
 	if (element.obj) {
 		if (element.obj.removeForm) {
-				delete element.obj.form;
+			delete element.obj.form;
 		} else {
-				// Use form attribute from the object, or globalForm if it doesn't exist
-				element.obj.form = element.obj.form || globalForm;
+			// Use form attribute from the object, or globalForm if it doesn't exist
+			element.obj.form = element.obj.form || globalForm;
 		}
 
 		if (element.obj.input) {
-				if (element.obj.input.removeForm) {
-					delete element.obj.input.form;
-				} else {
-					
-					element.obj.input.form = element.obj.input.form || globalForm;
-				}
+			if (element.obj.input.removeForm) {
+				delete element.obj.input.form;
+			} else {
+				element.obj.input.form = element.obj.input.form || globalForm;
+			}
 		}
 	}
 
-
-
 	switch (element.ui) {
 		case 'button': return renderButton(element.obj);
-		case 'output': return renderOutput(element.text, element.name);
+		case 'output': return renderOutput(element.name, element.text);
 		case 'tag': return renderTag(element)
 		default:
 			return renderInput(element.obj);
@@ -43,6 +56,16 @@ export function renderElement(element) {
 
 export function renderBreakpoints(breakpoints) {
 	return globalBreakpoints && `<code>${breakpoints.map(breakpoint => `<var data-bp="${breakpoint}"></var>`).join('')}</code>`;
+}
+
+// TODO! Create object, so it's more generic
+export function renderDatalist(array, id) {
+	return `<datalist id="components${id}">${
+		array.map(
+			group => `<optgroup label="${group.name}">${group.items.map(
+				component => `<option value="${component.name}" data-component-key="${component.key}">${group.name}</option>`
+			).join('')}</optgroup>`
+		).join('')}</datalist>`
 }
 
 export function renderFieldset(fieldset) {
@@ -95,10 +118,10 @@ export function renderInput(obj) {
 	`;
 }
 
-export function renderOutput(text, name) {
+export function renderOutput(name, text) {
 	return `
 	<label>
-		<strong>${text}:</strong>
+		${text ? `<strong>${text}:</strong>`: ''}
 		<output name="${name}">${text}</output>
 	</label>`;
 }
@@ -112,8 +135,9 @@ export function setBreakpoints(breakpoints) {
 	globalBreakpoints = breakpoints;
 }
 
-export function setForm(form) {
-	globalForm = form;
+export function setForm(form, id) {
+	globalForm = form+id;
+	globalId = id;
 }
 
 export function setIconObject(icons) {
