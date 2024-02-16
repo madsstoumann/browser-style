@@ -180,6 +180,7 @@
   pointer-events: all;
   position: fixed;
   translate: -50% 0;
+	transition: filter .5s ease-out;
 	width: 4rem;
 	& img { pointer-events: none; }
 	&:has(:checked) { filter: none; }
