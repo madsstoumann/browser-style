@@ -1,13 +1,13 @@
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderDatalist, renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
+import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
 import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './utils.js';
 import icons from './icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.05
- * @summary 15-02-2024
+ * @version 1.0.06
+ * @summary 16-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -28,7 +28,7 @@ class uiEditor extends HTMLElement {
 	async connectedCallback() {
 		/* App is loaded from within an `<iframe>` */
 		if (window.location !== window.parent.location) {
-			this.style.cssText = 'background:rgba(0,0,0,0);inset:0;position:fixed;';
+			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz)';
 			this.addEventListener('pointermove', this.onMove);
 			this.addEventListener('click', (event) => {
 				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
@@ -60,6 +60,8 @@ class uiEditor extends HTMLElement {
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
+		this.formContent = shadow.querySelector(`[part=form-content]`);
+		this.formElements = shadow.querySelector(`[part=form-elements]`);
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
@@ -67,9 +69,8 @@ class uiEditor extends HTMLElement {
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
-		// this.componentConfig = shadow.querySelector(`[part=form-config]`);
-		// this.componentConfigure = shadow.querySelector(`[name=configure-component]`);
-		// if (this.componentConfigure ) this.componentConfigure.hidden = true;
+		this.componentConfigure = shadow.querySelector(`details:has([name=component-configure])`);
+		if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
 		/* Events */
 		this.addAccessKeys();
@@ -122,7 +123,7 @@ class uiEditor extends HTMLElement {
 				this.setOutline(rect);
 				this.setFrameValues(this.active, rect);
 			}
-		}, 300)); 
+		}, 10)); 
 	}
 
 	/**
@@ -483,7 +484,7 @@ class uiEditor extends HTMLElement {
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
-					case 'sync': this.active.innerHTML = this.editor.elements['uie-html'].value; break;
+					case 'sync-html': this.active.innerHTML = this.formContent.elements.htmlcode.value; break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
 					default: break;
 				}
@@ -518,8 +519,8 @@ class uiEditor extends HTMLElement {
 		const node = event.target;
 		let value = node.value;
 
-		/* === COMPONENT CONFIGURATION === */
-		if (node.form === this.componentConfig) {
+		/* === ELEMENTS === */
+		if (node.form === this.formElements) {
 			const key = node.dataset.key;
 			if (!key) return;
 			const component = this.findComponentByKey(key);
@@ -569,10 +570,11 @@ class uiEditor extends HTMLElement {
 		}
 
 		if (node.dataset.property) {
+			const elm = this.iframe ? this.iframe.contentDocument.body : this;
 			if (node.type === 'checkbox') {
-				this.style.setProperty(node.dataset.property, node.checked ? 1 : 0);
+				elm.style.setProperty(node.dataset.property, node.checked ? 1 : 0);
 			} else {
-				this.style.setProperty(node.dataset.property, value + (node.dataset.unit || ''));
+				elm.style.setProperty(node.dataset.property, value + (node.dataset.unit || ''));
 			}
 			return;
 		}
@@ -688,10 +690,10 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Event handler for the "beforetoggle" event of the popover API.
-	* Handles actions before the popover is toggled open or closed.
-	* @param {CustomEvent} e - The "beforetoggle" event.
-	*/
+	 * Event handler for the "beforetoggle" event of the popover API.
+	 * Handles actions before the popover is toggled open or closed.
+	 * @param {CustomEvent} e - The "beforetoggle" event.
+	 */
 	onToggle = (event) => {
 		if (event.newState === 'open') {
 			if (!this.active) return;
@@ -706,8 +708,8 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Removes the element's data-removed attribute and updates the class list display.
-	*/
+	 * Removes the element's data-removed attribute and updates the class list display.
+	 */
 	remClasses() {
 		try {
 			delete this.active.dataset.removed;
@@ -717,9 +719,24 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Renders the template for the app.
-	* @returns {string} - The generated markup.
-	*/
+	 * Renders a list of components as a datalist element.
+	 * @param {Array} array - An array of component groups, each containing a name and an array of items.
+	 * @param {string} id - The identifier to be used in the datalist's id attribute.
+	 * @returns {string} - The HTML representation of the datalist element.
+	 */
+	renderComponentList(array, id) {
+		return `<datalist id="components${id}">${
+			array.map(
+				group => `<optgroup label="${group.name}">${group.items.map(
+					component => `<option value="${component.name}" data-component-key="${component.key}">${group.name}</option>`
+				).join('')}</optgroup>`
+			).join('')}</datalist>`
+	}
+
+	/**
+	 * Renders the template for the app.
+	 * @returns {string} - The generated markup.
+	 */
 	renderTemplate() {
 		let forms = '';
 		let output = '';
@@ -764,7 +781,7 @@ class uiEditor extends HTMLElement {
 				${toolbar}
 				<div part="tools">${output}</div>
 				${renderGroup(this.config.global.footer)}
-				${this.config.components ? renderDatalist(this.config.components, this.uid) : ''}
+				${this.config.components ? this.renderComponentList(this.config.components, this.uid) : ''}
 			</form>
 			${forms}
 			${this.responsive ? `<form id="frames${this.uid}" part="form-frames">
@@ -823,8 +840,9 @@ class uiEditor extends HTMLElement {
 				this.updateFormFromClasses();
 			}
 
-// TODO: EDITING
-// this.editor.elements['uie-html'].value = node.innerHTML;
+			if (this.formContent) {
+				this.formContent.elements.htmlcode.value = node.innerHTML;
+			}
 		}
 		catch (error) {
 			console.error(error);
@@ -859,12 +877,12 @@ class uiEditor extends HTMLElement {
 	setComponentInfo(obj) {
 		this.editor.elements['component-info'].value = obj.description || '';
 		this.editor.elements['component-insert'].value = obj.key || '';
-		this.editor.elements['component-configure'].hidden = !obj.config;
+		this.componentConfigure.hidden = !obj.config;
 
 		if (obj.config) {
 			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
 				const { key, label, ...input} = prop;
-				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `config${this.uid}` } };
+				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `elements${this.uid}` } };
 				return renderInput(config);
 			}).join('');
 		}
@@ -935,7 +953,7 @@ class uiEditor extends HTMLElement {
 				if (input.hasAttribute('data-breakpoints')) {
 					input.disabled = input.dataset.breakpoints.split(',').includes(breakpoint) || breakpoint === '' ? false : true;
 					// TODO: To refresh the value of the input if it's disabled, fix for radio inputs
-					if (input.disabled) input.value = 0;
+					// if (input.disabled) input.value = 0;
 				}
 		});
 		

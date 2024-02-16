@@ -88,7 +88,15 @@
 				"key": "h1",
 				"description": "HTML Section Heading element",
 				"name": "H1",
-				"template": "<h1>Headline</h1>"
+				"template": "<h1>{{h1}}</h1>",
+				"config": [
+					{
+						"key": "h1",
+						"type": "text",
+						"label": "Text",
+						"value": "This is a headline"
+					}
+				]
 			},
 			{
 				"key": "h2",

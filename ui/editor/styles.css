@@ -17,8 +17,7 @@
 	--uie-gray-10: color-mix(in srgb, Canvas, CanvasText 10%);
 	--uie-gray-15: color-mix(in srgb, Canvas, CanvasText 15%);
 
-	--uie-grid-dot-c: #C4C4C4;
-	--uie-grid-dot-w: 1px;
+	--uie-grid-c: rgba(255, 0, 0, .25);
 	--uie-grid-sz: 20px;
 	--uie-grid-visible: 0;
 	
@@ -28,9 +27,8 @@
 	--uie-check: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="3" stroke="%23000" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg>');
 	--uie-reset: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17.016 15.609l-3.609-3.609 3.609-3.609-1.406-1.406-3.609 3.609-3.609-3.609-1.406 1.406 3.609 3.609-3.609 3.609 1.406 1.406 3.609-3.609 3.609 3.609zM12 2.016q4.125 0 7.055 2.93t2.93 7.055-2.93 7.055-7.055 2.93-7.055-2.93-2.93-7.055 2.93-7.055 7.055-2.93z"/></svg>');
 
-	background: var(--uie-bgc, transparent) radial-gradient(var(--uie-grid-dot-c, transparent) calc(var(--uie-grid-visible) * var(--uie-grid-dot-w)), transparent 0);
-	background-size: var(--uie-grid-sz) var(--uie-grid-sz);
-	background-position: calc(0px - var(--uie-grid-sz) / 2) calc(0px - var(--uie-grid-sz) / 2);
+	background: var(--uie-bgc, transparent);
+
 	color-scheme: dark light;
 	font-family: system-ui;
 	inset: 0;
@@ -47,6 +45,8 @@
 	:host(.colorscheme) { color-scheme: light; }
 }
 :host([open="true"]) {
+	background-image: conic-gradient(from 90deg at 1px 1px, #0000 90deg, var(--uie-grid-c) 0);
+	background-size: calc(var(--uie-grid-sz) * var(--uie-grid-visible)) calc(var(--uie-grid-sz) * var(--uie-grid-visible));
 	pointer-events: all;
 }
 :host([open="true"]:not([responsive])) {
@@ -114,6 +114,10 @@
 [part~=autocols] {
 	gap: var(--uie-gap);
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+[part~=autowrap] {
+	gap: var(--uie-gap);
+  grid-template-columns: repeat(6, 1fr);
 }
 [part~=draghandle] {
 	cursor: grab;
@@ -213,7 +217,7 @@
 		color: #fff;
 		grid-column: 7 / span 6;
 		text-align: center;
-		/* &[value=""] { display: none; } */
+		&[value=""] { display: none; }
 	}
 	&[part~=secondary] {
 		background: GrayText;
@@ -270,6 +274,18 @@ code:has([data-bp]) {
 		&:nth-of-type(5) { --_bg: var(--uie-bp-4); }
 		&:nth-of-type(6) { --_bg: var(--uie-bp-5); }
 	}
+}
+
+/* === COMPONENT CONFIGURE === */
+[name=components] { 
+	&:has(button[value=""]) { padding-block-end: 0; }
+}
+[name=component-configure] {
+	& input { display: block; width: 100%; }
+	& label { grid-column: span 12; }
+}
+label:has([name=component-info]) {
+	grid-column: span 12;
 }
 
 /* === DETAILS/SUMMARY === */
@@ -343,7 +359,7 @@ label {
 	user-select: none;
 	&:has([disabled]) { 
 		color: GrayText;
-		/* & input { filter: grayscale(1); opacity: .6; } */
+		& input { filter: grayscale(1); opacity: .5; }
 	}
 }
 legend { display: none; }
@@ -355,6 +371,20 @@ svg {
 	stroke: currentColor;
 	stroke-width: 1.25;
 	width: 24px;
+}
+textarea {
+	border: 1px solid ButtonFace;
+	border-radius: 3px;
+	font-family: ui-monospace, monospace;
+	font-size: inherit;
+	form-sizing: auto;
+	grid-column: span 12;
+	padding: var(--uie-gap);
+	resize: vertical;
+ }
+ label:has(textarea) {
+	display: contents;
+	& span { grid-column: span 12; }
 }
 
 /* === RADIO === */
@@ -389,12 +419,36 @@ svg {
 		justify-content: space-between;
 	}
 	/* Variants */
+	&[part~=colorgrid] {
+		--uie-gtc: repeat(10, 1fr);
+  	clip-path: inset(calc(var(--uie-gap) - 1px));
+		gap: 1px;
+		& input {
+			background: var(--_v);
+			block-size: auto;
+			border: 0;
+			border-radius: 0px;
+			margin: 0;
+			&::after {
+				background: var(--_c, #FFF);
+				mask-size: 70% 100%;
+				-webkit-mask-size: 70% 100%;
+			}
+		}
+		& span { 
+			display: none;
+		}
+	}
 	&[part~=swatch] {
 		& input {
-			aspect-ratio: 1.8/1;
+			aspect-ratio: 2/1;
 			background: var(--_v);
+			border: 0;
 			border-radius: 16px;
 			grid-column: span 2;
+			&::after {
+				background: var(--_c, #FFF);
+			}
 		}
 		& span { 
 			grid-column: 3 / span 10;

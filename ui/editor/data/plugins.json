@@ -6,12 +6,70 @@
         "key": "layout",
         "label": "Layout",
         "name": "style-root",
-        "fieldsets": []
-      },
-      {
-        "key": "flexgrid",
-        "label": "Flexbox & Grid",
-        "name": "style-root"
+        "fieldsets": [
+          {
+            "name": "layout",
+            "fields": [
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "auto",
+                  "input": {
+                    "data-breakpoints": [
+                      ""
+                    ],
+                    "data-prefix": "asr",
+                    "data-sr": "",
+                    "name": "asr",
+                    "type": "radio",
+                    "value": "auto"
+                  },
+                  "label": {
+                    "style": "--_v:auto"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "square",
+                  "input": {
+                    "data-breakpoints": [
+                      ""
+                    ],
+                    "data-prefix": "asr",
+                    "data-sr": "",
+                    "name": "asr",
+                    "type": "radio",
+                    "value": "square"
+                  },
+                  "label": {
+                    "style": "--_v:1/1"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "video",
+                  "input": {
+                    "data-breakpoints": [
+                      ""
+                    ],
+                    "data-prefix": "asr",
+                    "data-sr": "",
+                    "name": "asr",
+                    "type": "radio",
+                    "value": "video"
+                  },
+                  "label": {
+                    "style": "--_v:16/9"
+                  }
+                }
+              }
+            ]
+          }
+        ]
       },
       {
         "key": "spacing",
@@ -70,7 +128,8 @@
                           96
                         ],
                         "name": "p",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -118,7 +177,8 @@
                           96
                         ],
                         "name": "pb",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -166,7 +226,8 @@
                           96
                         ],
                         "name": "pi",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -214,7 +275,8 @@
                           96
                         ],
                         "name": "pbs",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -262,7 +324,8 @@
                           96
                         ],
                         "name": "pbe",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -310,7 +373,8 @@
                           96
                         ],
                         "name": "pis",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -358,7 +422,8 @@
                           96
                         ],
                         "name": "pie",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   }
@@ -418,7 +483,8 @@
                           96
                         ],
                         "name": "m",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -469,7 +535,8 @@
                           96
                         ],
                         "name": "mb",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -517,7 +584,8 @@
                           96
                         ],
                         "name": "mi",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -565,7 +633,8 @@
                           96
                         ],
                         "name": "mbs",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -613,7 +682,8 @@
                           96
                         ],
                         "name": "mbe",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -661,7 +731,8 @@
                           96
                         ],
                         "name": "mis",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   },
@@ -709,7 +780,8 @@
                           96
                         ],
                         "name": "mie",
-                        "type": "range"
+                        "type": "range",
+                        "value": 0
                       }
                     }
                   }
@@ -722,39 +794,635 @@
       {
         "key": "sizing",
         "label": "Sizing",
-        "name": "style-root"
-      },
-      {
-        "key": "typography",
-        "label": "Typography",
         "name": "style-root",
         "fieldsets": [
           {
-            "name": "typography",
+            "name": "sizing",
             "fields": [
               {
                 "obj": {
                   "ui": "input",
-                  "textAfter": "Font Family",
+                  "text": "Height",
                   "input": {
                     "data-breakpoints": [],
-                    "data-prefix": "ff",
-                    "name": "ff",
-                    "type": "radio"
+                    "data-prefix": "h",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "h",
+                    "type": "range",
+                    "value": 0
                   }
                 }
               },
               {
                 "obj": {
                   "ui": "input",
-                  "textAfter": "Font Size",
+                  "text": "Max Height",
                   "input": {
                     "data-breakpoints": [],
-                    "data-prefix": "fs",
-                    "name": "fs",
-                    "type": "radio"
+                    "data-prefix": "max-h",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "max-h",
+                    "type": "range",
+                    "value": 0
                   }
                 }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "text": "Max Width",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "max-w",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "max-w",
+                    "type": "range",
+                    "value": 0
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "text": "Min Height",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "min-h",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "min-h",
+                    "type": "range",
+                    "value": 0
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "text": "Min Width",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "min-w",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "min-w",
+                    "type": "range",
+                    "value": 0
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "text": "Width",
+                  "input": {
+                    "data-breakpoints": [],
+                    "data-prefix": "w",
+                    "data-values": [
+                      0,
+                      0.5,
+                      1,
+                      1.5,
+                      2,
+                      2.5,
+                      3,
+                      3.5,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      14,
+                      16,
+                      20,
+                      24,
+                      28,
+                      32,
+                      36,
+                      40,
+                      44,
+                      48,
+                      52,
+                      56,
+                      60,
+                      64,
+                      72,
+                      80,
+                      96
+                    ],
+                    "name": "w",
+                    "type": "range",
+                    "value": 0
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "key": "typography",
+        "label": "Typography",
+        "name": "style-root",
+        "groups": [
+          {
+            "key": "fontfamily",
+            "label": "Font Family",
+            "name": "typography",
+            "fieldsets": [
+              {
+                "name": "font-family",
+                "part": "radio font",
+                "fields": [
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "sans",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "ff",
+                        "data-sr": "",
+                        "name": "ff",
+                        "type": "radio",
+                        "value": "sans"
+                      },
+                      "label": {
+                        "style": "--_v:ui-sans-serif, system-ui, sans-serif"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "serif",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "ff",
+                        "data-sr": "",
+                        "name": "ff",
+                        "type": "radio",
+                        "value": "serif"
+                      },
+                      "label": {
+                        "style": "--_v:ui-serif, serif"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "mono",
+                      "input": {
+                        "data-breakpoints": [],
+                        "data-prefix": "ff",
+                        "data-sr": "",
+                        "name": "ff",
+                        "type": "radio",
+                        "value": "mono"
+                      },
+                      "label": {
+                        "style": "--_v:ui-monospace, monospace"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "key": "fontsize",
+            "label": "Font Size",
+            "name": "typography",
+            "fieldsets": [
+              {
+                "name": "font-size",
+                "part": "autowrap buttongroup",
+                "fields": [
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "xs",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "xs"
+                      },
+                      "label": {
+                        "style": "--_v:0.75rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "sm",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "sm"
+                      },
+                      "label": {
+                        "style": "--_v:0.875rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "md",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "md"
+                      },
+                      "label": {
+                        "style": "--_v:1rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "lg",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "lg"
+                      },
+                      "label": {
+                        "style": "--_v:1.125rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "xl"
+                      },
+                      "label": {
+                        "style": "--_v:1.25rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "2xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "2xl"
+                      },
+                      "label": {
+                        "style": "--_v:1.5rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "3xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "3xl"
+                      },
+                      "label": {
+                        "style": "--_v:1.875rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "4xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "4xl"
+                      },
+                      "label": {
+                        "style": "--_v:2.25rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "5xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "5xl"
+                      },
+                      "label": {
+                        "style": "--_v:3rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "6xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "6xl"
+                      },
+                      "label": {
+                        "style": "--_v:3.75rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "7xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "7xl"
+                      },
+                      "label": {
+                        "style": "--_v:4.5rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "8xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "8xl"
+                      },
+                      "label": {
+                        "style": "--_v:6rem"
+                      }
+                    }
+                  },
+                  {
+                    "obj": {
+                      "ui": "input",
+                      "textAfter": "9xl",
+                      "input": {
+                        "data-breakpoints": [
+                          "lg"
+                        ],
+                        "data-prefix": "fs",
+                        "data-sr": "",
+                        "name": "fs",
+                        "type": "radio",
+                        "value": "9xl"
+                      },
+                      "label": {
+                        "style": "--_v:8rem"
+                      }
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -764,18 +1432,863 @@
         "key": "backgrounds",
         "label": "Backgrounds",
         "name": "style-root",
-        "fieldsets": []
-      },
-      {
-        "key": "borders",
-        "label": "Borders",
-        "name": "style-root",
-        "fieldsets": []
-      },
-      {
-        "key": "effects",
-        "label": "Effects",
-        "name": "style-root"
+        "fieldsets": [
+          {
+            "part": "radio colorgrid",
+            "fields": [
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-100",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#f5f5f4;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-100"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-200",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#e7e5e4;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-200"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-300",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#d6d3d1;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-300"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-400",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#a8a29e;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-400"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-500",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#78716c;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-500"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-600",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#57534e;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-600"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-700",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#443c3c;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-700"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-800",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#292525;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-800"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-900",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#1c1917;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-900"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "stone-1000",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#0c0a09;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "stone-1000"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-100",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fee2e2;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-100"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-200",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fecccc;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-200"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-300",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fca5a5;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-300"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-400",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#f87171;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-400"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-500",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#ef4444;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-500"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-600",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#dc2626;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-600"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-700",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#b91919;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-700"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-800",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#991b1b;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-800"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-900",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#7f1d1d;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-900"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "red-1000",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#450a0a;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "red-1000"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-100",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fef3c7;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-100"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-200",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fde68a;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-200"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-300",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fcd34d;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-300"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-400",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#fbbf24;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-400"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-500",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#f59e0b;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-500"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-600",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#d97706;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-600"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-700",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#b45309;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-700"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-800",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#92400e;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-800"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-900",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#78350f;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-900"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "amber-1000",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#451a03;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "amber-1000"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-100",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#dcfce7;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-100"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-200",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#bbf7d0;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-200"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-300",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#86efac;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-300"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-400",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#4ade80;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-400"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-500",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#22c55e;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-500"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-600",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#16a34a;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-600"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-700",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#118f3e;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-700"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-800",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#156c36;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-800"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-900",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#14532d;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-900"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "green-1000",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#052e16;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "green-1000"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-100",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#e0f2fe;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-100"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-200",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#bae6fd;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-200"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-300",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#7dd3fc;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-300"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-400",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#38bdf8;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-400"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-500",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#0ea5e9;--_c:#000;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-500"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-600",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#0284c7;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-600"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-700",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#0369a1;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-700"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-800",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#075985;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-800"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-900",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#0c4a6e;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-900"
+                  }
+                }
+              },
+              {
+                "obj": {
+                  "ui": "input",
+                  "textAfter": "sky-1000",
+                  "input": {
+                    "data-breakpoints": [
+                      "sm",
+                      "lg"
+                    ],
+                    "data-prefix": "bg",
+                    "style": "--_v:#082f4e;--_c:#FFF;",
+                    "name": "bg",
+                    "type": "radio",
+                    "value": "sky-1000"
+                  }
+                }
+              }
+            ]
+          }
+        ]
       }
     ]
   }

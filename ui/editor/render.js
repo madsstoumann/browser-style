@@ -31,6 +31,7 @@ export function renderElement(element) {
 	if (element.obj) {
 		if (element.obj.removeForm) {
 			delete element.obj.form;
+			delete element.obj.removeForm;
 		} else {
 			// Use form attribute from the object, or globalForm if it doesn't exist
 			element.obj.form = element.obj.form || globalForm;
@@ -39,6 +40,7 @@ export function renderElement(element) {
 		if (element.obj.input) {
 			if (element.obj.input.removeForm) {
 				delete element.obj.input.form;
+				delete element.obj.input.removeForm;
 			} else {
 				element.obj.input.form = element.obj.input.form || globalForm;
 			}
@@ -49,6 +51,7 @@ export function renderElement(element) {
 		case 'button': return renderButton(element.obj);
 		case 'output': return renderOutput(element.name, element.text);
 		case 'tag': return renderTag(element)
+		case 'textarea': return renderTextarea(element.obj);
 		default:
 			return renderInput(element.obj);
 	}
@@ -56,16 +59,6 @@ export function renderElement(element) {
 
 export function renderBreakpoints(breakpoints) {
 	return globalBreakpoints && `<code>${breakpoints.map(breakpoint => `<var data-bp="${breakpoint}"></var>`).join('')}</code>`;
-}
-
-// TODO! Create object, so it's more generic
-export function renderDatalist(array, id) {
-	return `<datalist id="components${id}">${
-		array.map(
-			group => `<optgroup label="${group.name}">${group.items.map(
-				component => `<option value="${component.name}" data-component-key="${component.key}">${group.name}</option>`
-			).join('')}</optgroup>`
-		).join('')}</datalist>`
 }
 
 export function renderFieldset(fieldset) {
@@ -129,6 +122,21 @@ export function renderOutput(name, text) {
 export function renderTag(obj) {
 	const attributes = obj.attributes ? renderAttributes(obj.attributes) : '';
 	return `<${obj.tag} ${attributes}>${obj.content}</${obj.tag}>`;
+}
+
+export function renderTextarea(obj) {
+	const input = obj.input ? renderAttributes(obj.input) : '';
+	const label = obj.label ? renderAttributes(obj.label) : '';
+	const text = obj.text ? `<span>${obj.text}</span>` : '';
+	const textAfter = obj.textAfter ? `<span>${obj.textAfter}</span>` : '';
+
+	return `
+		<label ${label}>
+		${text}
+		<textarea ${input}>${obj.input.value ? `${obj.input.value}`:''}</textarea>
+		${textAfter}
+		</label>
+	`;
 }
 
 export function setBreakpoints(breakpoints) {

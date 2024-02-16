@@ -70,6 +70,7 @@
 	"footer": {
 		"label": "Frame",
 		"name": "frame-root",
+		"open": true,
 		"part": "appgroup",
 		"fieldsets": [
 			{

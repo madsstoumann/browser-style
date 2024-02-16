@@ -183,7 +183,39 @@
 		"key": "content",
 		"icon": "edit",
 		"title": "Content ⌘2",
-		"groups": []
+		"groups": [
+			{
+				"label": "HTML Code",
+				"fieldsets": [
+					{
+						"name": "htmlcode",
+						"part": "textarea",
+						"fields": [
+							{
+								"ui": "textarea",
+								"obj": {
+									"input": {
+										"name": "htmlcode",
+										"placeholder": "HTML code"
+									},
+									"textAfter": "DANGER: You can overwrite important content here. Syncing will replace the content with the current HTML code."
+								}
+							},
+							{
+								"ui": "button",
+								"obj": {
+									"data-click": "sync-html",
+									"icon": "refresh",
+									"name": "sync-html",
+									"part": "button icon",
+									"title": "Sync HTML"
+								}
+							}
+						]
+					}
+				]
+			}
+		]
 	},
 	{
 		"name": "Elements",
@@ -193,6 +225,7 @@
 		"groups": [
 			{
 				"label": "Selected Element",
+				"open": true,
 				"fieldsets": [
 					{
 						"name": "selectedelement",
@@ -309,6 +342,51 @@
 				"fieldsets": [
 					{
 						"name": "component-configure"
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "Settings",
+		"key": "settings",
+		"icon": "settings",
+		"title": "Settings ⌘4",
+		"groups": [
+			{
+				"label": "Layout Grid",
+				"open": true,
+				"fieldsets": [
+					{
+						"name": "layoutgrid",
+						"fields": [
+							{
+								"obj": {
+									"ui": "input",
+									"textAfter": "Show grid",
+									"input": {
+										"data-property": "--uie-grid-visible",
+										"name": "grid",
+										"role": "switch",
+										"type": "checkbox"
+									}
+								}
+							},
+							{
+								"obj": {
+									"ui": "input",
+									"text": "Grid size",
+									"input": {
+										"data-property": "--uie-grid-sz",
+										"data-unit": "px",
+										"min": 5,
+										"name": "gridsize",
+										"type": "range",
+										"value": 20
+									}
+								}
+							}
+						]
 					}
 				]
 			}
