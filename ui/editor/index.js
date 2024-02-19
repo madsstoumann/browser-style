@@ -6,8 +6,8 @@ import icons from './icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.06
- * @summary 16-02-2024
+ * @version 1.0.07
+ * @summary 17-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -17,8 +17,10 @@ class uiEditor extends HTMLElement {
 		super();
 		this.logo = this.getAttribute('logo') || '';
 		this.responsive = this.hasAttribute('responsive'),
+		this.selectable = this.getAttribute('selectable')?.split(',') || [];
 		this.undoStack = [];
 		this.redoStack = [];
+		console.log(this.selectable)
 	}
 
 	/**
@@ -537,6 +539,9 @@ class uiEditor extends HTMLElement {
 			const breakpoint = this.editor.elements.breakpoint.value || '';
 
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
+
+			//TODO!
+			if (node.hasAttribute('data-part')) {}
 
 			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {

@@ -347,18 +347,7 @@
 			}
 		]
 	},
-	{
-		"name": "Messages",
-		"key": "messages",
-		"icon": "message",
-		"title": "Message ⌘4",
-		"groups": [
-			{
-				"label": "Threads",
-				"fieldsets": []
-			}
-		]
-	},
+
 	{
 		"name": "Settings",
 		"key": "settings",
