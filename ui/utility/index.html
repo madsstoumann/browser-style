@@ -18,7 +18,14 @@
 	<script type="module">
 		import { applyStylesheet, generateClasses } from './utility.js';
 
-const color = (arr = colors) => { return { type: 'color', values: arr.map(({ name, values }) => ({ name, values: values.split(' ') })) }; };
+// const color = (arr = colors) => { return { type: 'color', values: arr.map(({ name, values }) => ({ name, values: values.split(' ') })) }; };
+const color = (selectedNames, colorArray = colors) => {
+    const filteredColors = selectedNames
+        ? colorArray.filter(({ name }) => selectedNames.includes(name))
+        : colorArray;
+
+    return { type: 'color', values: filteredColors.map(({ name, values }) => ({ name, values: values.split(' ') })) };
+};
 const scale = ({ unit = 'rem', values = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 72, 80, 96] } = {}) => ({ unit, type: 'length', values });
 
 const aspectRatio = [
@@ -55,34 +62,33 @@ const breakpoints = [
 ];
 
 const colors = [
-	// { name: 'slate', values: '#f8fafc #f1f5f9 #e2e8f0 #cbd5e1 #94a3b8 #64748b #475569 #334155 #1e293b #0f172a #020617' },
-	// { name: 'gray', values: '#f9fafb #f3f4f6 #e5e7eb #d1d5db #9ca3af #6b7280 #4b5563 #374155 #1f2937 #111827 #030712' },
-	// { name: 'zinc', values: '#fafafa #f4f4f5 #e4e4e7 #d4d4d8 #a1a1aa #71717a #52525b #3f3f46 #27272a #18181b #090b0b' },
-	// { name: 'neutral', values: '#fafafa #f5f5f5 #e5e5e5 #d4d4d4 #a3a3a3 #737373 #525252 #404040 #262626 #171717 #0a0a0a' },
-	{ name: 'stone', values: '#f5f5f4 #e7e5e4 #d6d3d1 #a8a29e #78716c #57534e #443c3c #292525 #1c1917 #0c0a09' }, /* #fafaf9 */
-	{ name: 'red', values: '#fee2e2 #fecccc #fca5a5 #f87171 #ef4444 #dc2626 #b91919 #991b1b #7f1d1d #450a0a' }, /* #fee2e2 */
-	// { name: 'orange', values: '#fff7ed #ffedd5 #fed7aa #fdba74 #fb923c #f97316 #ea580c #c2410c #9a3412 #7c2d12 #431407' },
-	{ name: 'amber', values: '#fef3c7 #fde68a #fcd34d #fbbf24 #f59e0b #d97706 #b45309 #92400e #78350f #451a03' }, /* #fffbeb  */
-	// { name: 'yellow', values: '#fefce8 #fef9c3 #fef088 #fde047 #fac415 #eab308 #ca8a04 #a16207 #854d0e #713f12 #422006' },
-	// { name: 'lime', values: '#f7fee7 #ecfccb #d9f99d #bee664 #a3e635 #84cc16 #65a30d #4d7c0f #3f6214 #365314 #1a2e05' },
-	{ name: 'green', values: '#dcfce7 #bbf7d0 #86efac #4ade80 #22c55e #16a34a #118f3e #156c36 #14532d #052e16' }, /* #f0fdf4  */
-	// { name: 'emerald', values: '#ecfdf5 #d1fae5 #a7f3d0 #6ee7b7 #34d399 #10b981 #059669 #047857 #065f46 #064e3b #022c22' },
-	// { name: 'teal', values: '#f0fdfa #ccfbf1 #99f6e4 #5eead4 #2dd4bf #14b8a6 #0d947f #0e7267 #117a6b #133c3a #042f2e' },
-	// { name: 'cyan', values: '#ecfeff #cffafe #a5f3fc #67e8f9 #22d3ee #06b6d4 #0891b2 #0e7490 #156778 #164e63 #083344' },
-	{ name: 'sky', values: '#e0f2fe #bae6fd #7dd3fc #38bdf8 #0ea5e9 #0284c7 #0369a1 #075985 #0c4a6e #082f4e' }, /* #f0f9ff */
-	// { name: 'blue', values: '#eff6ff #dbeaff #bfc7fc #93c5fd #60a5fa #3c82eb #2563eb #1d4ed8 #1e40af #1e3a8a #172554' },
-	// { name: 'indigo', values: '#eef2ff #e0e7ff #c7d2fe #a5b4fc #8190f7 #6376f1 #4f46e5 #4130e3 #2b2b45 #2b2c59 #1e1e43' },
-	// { name: 'violet', values: '#f5f3ff #ede9fe #ddd6fe #c4b5fd #a787fa #8b5cf6 #7c3aed #6d28d9 #5b21b6 #4d1d9e #2e1b4b' },
-	// { name: 'purple', values: '#faf5ff #f3e8ff #e9d5ff #d8b4fe #c084fc #a855f7 #9333ea #7d21cc #6b1d99 #581d75 #3b065e' },
-	// { name: 'fuchsia', values: '#fdf4ff #fadeff #f5d0fe #f0abfc #e879f9 #d953a7 #c52770 #a61b56 #862539 #701c49 #4a0433' },
-	// { name: 'pink', values: '#fdf2f8 #fce7f3 #fbcee8 #f9a8d4 #f472b6 #ec4899 #db2777 #be185d #9f1239 #832029 #500724' },
-	// { name: 'rose', values: '#fff1f2 #ffe4e6 #fed1d3 #fda4af #fb71a9 #ec4879 #e12948 #be122b #9d1226 #88191e #4c0519' },
-	// { name: 'white', values: '#FFF #FEFEFE' }
+	{ name: 'slate', values: '#f1f5f9 #e2e8f0 #cbd5e1 #94a3b8 #64748b #475569 #334155 #1e293b #0f172a #020617' },
+	{ name: 'gray', values: '#f3f4f6 #e5e7eb #d1d5db #9ca3af #6b7280 #4b5563 #374155 #1f2937 #111827 #030712' },
+	{ name: 'zinc', values: '#f4f4f5 #e4e4e7 #d4d4d8 #a1a1aa #71717a #52525b #3f3f46 #27272a #18181b #090b0b' },
+	{ name: 'neutral', values: '#f5f5f5 #e5e5e5 #d4d4d4 #a3a3a3 #737373 #525252 #404040 #262626 #171717 #0a0a0a' },
+	{ name: 'stone', values: '#f5f5f4 #e7e5e4 #d6d3d1 #a8a29e #78716c #57534e #443c3c #292525 #1c1917 #0c0a09' },
+	{ name: 'red', values: '#fee2e2 #fecccc #fca5a5 #f87171 #ef4444 #dc2626 #b91919 #991b1b #7f1d1d #450a0a' },
+	{ name: 'orange', values: '#ffedd5 #fed7aa #fdba74 #fb923c #f97316 #ea580c #c2410c #9a3412 #7c2d12 #431407' },
+	{ name: 'amber', values: '#fef3c7 #fde68a #fcd34d #fbbf24 #f59e0b #d97706 #b45309 #92400e #78350f #451a03' },
+	{ name: 'yellow', values: '#fef9c3 #fef088 #fde047 #fac415 #eab308 #ca8a04 #a16207 #854d0e #713f12 #422006' },
+	{ name: 'lime', values: '#ecfccb #d9f99d #bee664 #a3e635 #84cc16 #65a30d #4d7c0f #3f6214 #365314 #1a2e05' },
+	{ name: 'green', values: '#dcfce7 #bbf7d0 #86efac #4ade80 #22c55e #16a34a #118f3e #156c36 #14532d #052e16' },
+	{ name: 'emerald', values: '#d1fae5 #a7f3d0 #6ee7b7 #34d399 #10b981 #059669 #047857 #065f46 #064e3b #022c22' },
+	{ name: 'teal', values: '#ccfbf1 #99f6e4 #5eead4 #2dd4bf #14b8a6 #0d947f #0e7267 #117a6b #133c3a #042f2e' },
+	{ name: 'cyan', values: '#cffafe #a5f3fc #67e8f9 #22d3ee #06b6d4 #0891b2 #0e7490 #156778 #164e63 #083344' },
+	{ name: 'sky', values: '#e0f2fe #bae6fd #7dd3fc #38bdf8 #0ea5e9 #0284c7 #0369a1 #075985 #0c4a6e #082f4e' },
+	{ name: 'blue', values: '#dbeaff #bfc7fc #93c5fd #60a5fa #3c82eb #2563eb #1d4ed8 #1e40af #1e3a8a #172554' },
+	{ name: 'indigo', values: '#e0e7ff #c7d2fe #a5b4fc #8190f7 #6376f1 #4f46e5 #4130e3 #2b2b45 #2b2c59 #1e1e43' },
+	{ name: 'violet', values: '#ede9fe #ddd6fe #c4b5fd #a787fa #8b5cf6 #7c3aed #6d28d9 #5b21b6 #4d1d9e #2e1b4b' },
+	{ name: 'purple', values: '#f3e8ff #e9d5ff #d8b4fe #c084fc #a855f7 #9333ea #7d21cc #6b1d99 #581d75 #3b065e' },
+	{ name: 'fuchsia', values: '#fadeff #f5d0fe #f0abfc #e879f9 #d953a7 #c52770 #a61b56 #862539 #701c49 #4a0433' },
+	{ name: 'pink', values: '#fce7f3 #fbcee8 #f9a8d4 #f472b6 #ec4899 #db2777 #be185d #9f1239 #832029 #500724' },
+	{ name: 'rose', values: '#ffe4e6 #fed1d3 #fda4af #fb71a9 #ec4879 #e12948 #be122b #9d1226 #88191e #4c0519' },
 ]
 
 const styles = [
-	{ property: 'aspect-ratio', prefix: 'asr', type: 'string', values: aspectRatio, breakpoints: [''], group: 'layout' },
-	{ property: 'background-color', prefix: 'bg', ...color(), breakpoints: ['sm','lg'], group: 'backgrounds' },
+	{ property: 'aspect-ratio', prefix: 'asr', type: 'string', values: aspectRatio, breakpoints: [], group: 'layout' },
+	{ property: 'background-color', prefix: 'bg', ...color(['stone', 'red', 'amber', 'green', 'sky']), breakpoints: ['sm','lg'], group: 'backgrounds' },
 	// { property: 'color', prefix: 'c', ...color(), breakpoints: []},
 	
 	/* spacing */
@@ -120,18 +126,18 @@ const groups = [
 			{
 				key: 'layout',
 				label: 'Layout',
-				name: 'style-root',
+				name: 'style-utility',
 				fieldsets: []
 			},
 			{
 				key: 'flexgrid',
 				label: 'Flexbox & Grid',
-				name: 'style-root'
+				name: 'style-utility'
 			},
 			{
 				key: 'spacing',
 				label: 'Spacing',
-				name: 'style-root',
+				name: 'style-utility',
 				groups: [
 					{
 						key: 'padding',
@@ -160,12 +166,12 @@ const groups = [
 			{
 				key: 'sizing',
 				label: 'Sizing',
-				name: 'style-root',
+				name: 'style-utility',
 			},
 			{
 				key: 'typography',
 				label: 'Typography',
-				name: 'style-root',
+				name: 'style-utility',
 				groups: [
 					{
 						key: 'fontfamily',
@@ -196,7 +202,7 @@ const groups = [
 			{
 				key: 'backgrounds',
 				label: 'Backgrounds',
-				name: 'style-root',
+				name: 'style-utility',
 				fieldsets: [
 					{
 						part: "radio colorgrid",
@@ -207,18 +213,55 @@ const groups = [
 			{
 				key: 'borders',
 				label: 'Borders',
-				name: 'style-root',
+				name: 'style-utility',
 				fieldsets: []
 			},
 			{
 				key: 'effects',
 				label: 'Effects',
-				name: 'style-root',
+				name: 'style-utility',
+			},
+			{
+				label: 'Headline',
+				name: 'style-part',
+				fieldsets: [
+          {
+            fields: [
+              {
+                obj: {
+                  ui: "input",
+                  textAfter: "Gradient",
+                  input: {
+                    "data-part": "part-headline",
+                    "data-sr": "",
+                    name: "part-headline",
+                    type: "radio",
+                    value: "gradient-headline"
+                  },
+                }
+              },
+							{
+                obj: {
+                  ui: "input",
+                  textAfter: "Radial Gradient",
+                  input: {
+                    "data-part": "part-headline",
+                    "data-sr": "",
+                    name: "part-headline",
+                    type: "radio",
+                    value: "radial-headline"
+                  },
+                }
+              },
+             
+            ]
+          }
+        ]
+
 			}
 		]
 	}
 ];
-
 
 
 

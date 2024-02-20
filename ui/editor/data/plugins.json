@@ -5,7 +5,7 @@
       {
         "key": "layout",
         "label": "Layout",
-        "name": "style-root",
+        "name": "style-utility",
         "fieldsets": [
           {
             "name": "layout",
@@ -15,9 +15,7 @@
                   "ui": "input",
                   "textAfter": "auto",
                   "input": {
-                    "data-breakpoints": [
-                      ""
-                    ],
+                    "data-breakpoints": [],
                     "data-prefix": "asr",
                     "data-sr": "",
                     "name": "asr",
@@ -34,9 +32,7 @@
                   "ui": "input",
                   "textAfter": "square",
                   "input": {
-                    "data-breakpoints": [
-                      ""
-                    ],
+                    "data-breakpoints": [],
                     "data-prefix": "asr",
                     "data-sr": "",
                     "name": "asr",
@@ -53,9 +49,7 @@
                   "ui": "input",
                   "textAfter": "video",
                   "input": {
-                    "data-breakpoints": [
-                      ""
-                    ],
+                    "data-breakpoints": [],
                     "data-prefix": "asr",
                     "data-sr": "",
                     "name": "asr",
@@ -74,7 +68,7 @@
       {
         "key": "spacing",
         "label": "Spacing",
-        "name": "style-root",
+        "name": "style-utility",
         "groups": [
           {
             "key": "padding",
@@ -794,7 +788,7 @@
       {
         "key": "sizing",
         "label": "Sizing",
-        "name": "style-root",
+        "name": "style-utility",
         "fieldsets": [
           {
             "name": "sizing",
@@ -1100,7 +1094,7 @@
       {
         "key": "typography",
         "label": "Typography",
-        "name": "style-root",
+        "name": "style-utility",
         "groups": [
           {
             "key": "fontfamily",
@@ -1431,7 +1425,7 @@
       {
         "key": "backgrounds",
         "label": "Backgrounds",
-        "name": "style-root",
+        "name": "style-utility",
         "fieldsets": [
           {
             "part": "radio colorgrid",

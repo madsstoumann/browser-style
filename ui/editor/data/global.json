@@ -68,116 +68,161 @@
 		}
 	],
 	"footer": {
-		"label": "Frame",
-		"name": "frame-root",
-		"open": true,
-		"part": "appgroup",
 		"fieldsets": [
 			{
-				"name": "frameinfo",
-				"part": "frameinfo",
+				"name": "connectedgroup",
+				"part": "tabgroup",
 				"fields": [
 					{
-						"ui": "output",
-						"name": "x",
-						"text": "X"
+						"ui": "input",
+						"obj": {
+							"icon": "plugConnected",
+							"label": {
+								"title": "Update part for all components with the same type"
+							},
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "connected",
+								"type": "radio",
+								"value": "true",
+								"checked": ""
+							}
+						}
 					},
 					{
-						"ui": "output",
-						"name": "y",
-						"text": "Y"
-					},
-					{
-						"ui": "output",
-						"name": "w",
-						"text": "W"
-					},
-					{
-						"ui": "output",
-						"name": "h",
-						"text": "H"
-					},
-					{
-						"ui": "output",
-						"name": "tag",
-						"text": "E"
-					},
-					{
-						"ui": "output",
-						"name": "parent",
-						"text": "P"
+						"ui": "input",
+						"obj": {
+							"icon": "plugDisconnected",
+							"label": {
+								"title": "Update just this instance"
+							},
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "connected",
+								"type": "radio",
+								"value": "false"
+							}
+						}
 					}
 				]
-			},
+			}
+		],
+		"groups": [
 			{
-				"name": "dom-navigation",
-				"part": "group",
-				"fields": [
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-up",
-							"icon": "up",
-							"title": "Parent ⌘↑"
-						}
+				"label": "Frame",
+				"name": "frame-root",
+				"open": false,
+				"part": "appgroup",
+				"fieldsets": [
+					{
+						"name": "frameinfo",
+						"part": "frameinfo",
+						"fields": [
+							{
+								"ui": "output",
+								"name": "x",
+								"text": "X"
+							},
+							{
+								"ui": "output",
+								"name": "y",
+								"text": "Y"
+							},
+							{
+								"ui": "output",
+								"name": "w",
+								"text": "W"
+							},
+							{
+								"ui": "output",
+								"name": "h",
+								"text": "H"
+							},
+							{
+								"ui": "output",
+								"name": "tag",
+								"text": "E"
+							},
+							{
+								"ui": "output",
+								"name": "parent",
+								"text": "P"
+							}
+						]
 					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-down",
-							"icon": "down",
-							"title": "Child ⌘↓"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-left",
-							"icon": "left",
-							"title": "Previous Sibling ⌘←"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-right",
-							"icon": "right",
-							"title": "Next Sibling ⌘→"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-first",
-							"icon": "first",
-							"title": "First Child ⇧⌘←"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "nav-last",
-							"icon": "last",
-							"title": "Last Child ⇧⌘→"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "dom-undo",
-							"icon": "undo",
-							"part": "secondary",
-							"title": "Undo  ⌘Z"
-						}
-					},
-					{ 
-						"ui": "button",
-						"obj": {
-							"data-click": "dom-redo",
-							"icon": "redo",
-							"part": "secondary",
-							"title": "Redo ⇧⌘Z"
-						}
+					{
+						"name": "dom-navigation",
+						"part": "group",
+						"fields": [
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-up",
+									"icon": "up",
+									"title": "Parent ⇧⌃↑"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-down",
+									"icon": "down",
+									"title": "Child ⇧⌃↓"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-left",
+									"icon": "left",
+									"title": "Previous Sibling ⇧⌃←"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-right",
+									"icon": "right",
+									"title": "Next Sibling ⇧⌃→"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-first",
+									"icon": "first",
+									"title": "First Child ⇧⌘←"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "nav-last",
+									"icon": "last",
+									"title": "Last Child ⇧⌘→"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "dom-undo",
+									"icon": "undo",
+									"part": "secondary",
+									"title": "Undo ⇧⌃z"
+								}
+							},
+							{ 
+								"ui": "button",
+								"obj": {
+									"data-click": "dom-redo",
+									"icon": "redo",
+									"part": "secondary",
+									"title": "Redo ⇧⌃y"
+								}
+							}
+						]
 					}
 				]
 			}

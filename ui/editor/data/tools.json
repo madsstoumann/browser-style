@@ -3,7 +3,7 @@
 		"name": "Styles",
 		"key": "styles",
 		"icon": "style",
-		"title": "Styles ⌘1",
+		"title": "Styles ⇧⌃1",
 		"fieldsets": [
 			{
 				"name": "breakpoints",
@@ -14,7 +14,7 @@
 						"obj": {
 							"icon": "deviceOff",
 							"label": {
-								"title": "off ⇧⌘1"
+								"title": "off"
 							},
 							"input": {
 								"data-sr": "",
@@ -31,7 +31,7 @@
 						"obj": {
 							"icon": "deviceSM",
 							"label": {
-								"title": "sm:640 ⇧⌘2"
+								"title": "sm:640"
 							},
 							"input": {
 								"data-sr": "",
@@ -47,7 +47,7 @@
 						"obj": {
 							"icon": "deviceMD",
 							"label": {
-								"title": "md:768 ⇧⌘3"
+								"title": "md:768"
 							},
 							"input": {
 								"data-sr": "",
@@ -63,7 +63,7 @@
 						"obj": {
 							"icon": "deviceLG",
 							"label": {
-								"title": "lg:1024 ⇧⌘4"
+								"title": "lg:1024"
 							},
 							"input": {
 								"data-sr": "",
@@ -79,7 +79,7 @@
 						"obj": {
 							"icon": "deviceXL",
 							"label": {
-								"title": "xl:1280 ⇧⌘5"
+								"title": "xl:1280"
 							},
 							"input": {
 								"data-sr": "",
@@ -95,7 +95,7 @@
 						"obj": {
 							"icon": "deviceXXL",
 							"label": {
-								"title": "xxl:1536 ⇧⌘6"
+								"title": "xxl:1536"
 							},
 							"input": {
 								"data-sr": "",
@@ -182,7 +182,7 @@
 		"name": "Content",
 		"key": "content",
 		"icon": "edit",
-		"title": "Content ⌘2",
+		"title": "Content ⇧⌃2",
 		"groups": [
 			{
 				"label": "HTML Code",
@@ -221,7 +221,7 @@
 		"name": "Elements",
 		"key": "elements",
 		"icon": "components",
-		"title": "Elements ⌘3",
+		"title": "Elements ⇧⌃3",
 		"groups": [
 			{
 				"label": "Selected Element",
@@ -352,7 +352,7 @@
 		"name": "Settings",
 		"key": "settings",
 		"icon": "settings",
-		"title": "Settings ⌘5",
+		"title": "Settings ⇧⌃4",
 		"groups": [
 			{
 				"label": "Layout Grid",

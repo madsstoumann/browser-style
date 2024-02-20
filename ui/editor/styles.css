@@ -289,6 +289,11 @@ label:has([name=component-info]) {
 	grid-column: span 12;
 }
 
+/* === CONNECTED === */
+[name="connectedgroup"][part~=tabgroup] {
+	background: var(--uie-gray-5);
+}
+
 /* === DETAILS/SUMMARY === */
 details[open] {
 	& > summary {
@@ -360,7 +365,7 @@ label {
 	user-select: none;
 	&:has([disabled]) { 
 		color: GrayText;
-		& input { filter: grayscale(1); opacity: .5; }
+		& input[type=radio] { filter: grayscale(1); opacity: .4; }
 	}
 }
 legend { display: none; }

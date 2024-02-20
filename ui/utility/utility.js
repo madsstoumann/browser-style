@@ -32,7 +32,7 @@ export function generateClassesForBreakpoint(breakpointKey, styles, breakpointDe
 		) {
 
 			const escapedBreakpointKey = breakpointKey ? (breakpointKey+breakpointDelimiter).replace(/\:/g, '\\:') : '';
-			
+
 			if (type === 'color') {
 				values.forEach((item) => {
 					item.values.forEach((value, index) => {

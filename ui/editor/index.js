@@ -6,8 +6,8 @@ import icons from './icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.07
- * @summary 17-02-2024
+ * @version 1.0.08
+ * @summary 20-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -20,7 +20,7 @@ class uiEditor extends HTMLElement {
 		this.selectable = this.getAttribute('selectable')?.split(',') || [];
 		this.undoStack = [];
 		this.redoStack = [];
-		console.log(this.selectable)
+		// console.log(this.selectable)
 	}
 
 	/**
@@ -158,7 +158,7 @@ class uiEditor extends HTMLElement {
 		const toggleKey = this.getAttribute('togglekey');
 		if (openKey || toggleKey) {
 			document.addEventListener('keydown', (e) => {
-				if (e.altKey && e.ctrlKey) {
+				if (e.shiftKey && e.ctrlKey) {
 					if (e.key === openKey) {
 						const open = this.editor.togglePopover();
 						this.toggle.checked = open;
@@ -266,6 +266,14 @@ class uiEditor extends HTMLElement {
 			default:
 				throw new Error(`Unsupported action: ${action}`);
 		}
+	}
+
+	/**
+ 	* Checks if connected parts exist and the editor's connected value is 'true'.
+	* @returns {boolean} - Returns true if connected parts exist and the editor's connected value is 'true', otherwise false.
+	*/
+	connectedPartsExists() {
+		return (this.connectedParts.length > 0) && (this.editor.elements.connected.value === 'true');
 	}
 
 	/**
@@ -427,11 +435,36 @@ class uiEditor extends HTMLElement {
 	getClasses(node) {
 		if (!node) return;
 		try {
-			const classes = Array.from(node.classList).filter(className => className.trim() !== '');
-			const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '');
+			const classes = Array.from(node.classList).filter(className => className.trim() !== '').sort();
+			const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '').sort();
 			return { classes, removed };
 		} catch (error) {
 			console.error('An error occurred while getting classes:', error.message);
+		}
+	}
+
+	/**
+	 * Get connected parts based on the specified node's data attributes.
+	 * @param {HTMLElement} node - The HTML element with data attributes.
+	 * @returns {NodeList} - A list of connected parts or an empty NodeList.
+	 */
+	getConnectedParts(node) {
+		try {
+			this.editor.elements.connectedgroup.style.display = 'none';
+			if (!node || !node.dataset.part) return [];
+			const component = node.closest('[data-component]');
+			if (!component) return [];
+
+			// Query connected parts using a selector
+			const selector = `[data-component~="${component.dataset.component}"] [data-part~="${node.dataset.part}"], [data-component~="${component.dataset.component}"][data-part~="${node.dataset.part}"]`;
+			const connectedParts = document.querySelectorAll(selector);
+			if (connectedParts.length > 1) {
+				this.editor.elements.connectedgroup.style.display = 'grid';
+			}
+			return connectedParts;
+		} catch (error) {
+			console.error(`An error occurred in getConnectedParts: ${error.message}`);
+			return [];
 		}
 	}
 
@@ -480,8 +513,8 @@ class uiEditor extends HTMLElement {
 					case 'dom-redo': this.domAction('redo'); break;
 					case 'dom-replace': this.domAction('replace'); break;
 					case 'dom-undo': this.domAction('undo'); break;
-					case 'nav-down':
-					case 'nav-first': this.navigate('firstElementChild'); break;
+					case 'nav-down': this.navigate('firstElementChild'); break;
+					// case 'nav-first': 
 					case 'nav-last': this.navigate('lastElementChild'); break;
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
@@ -535,13 +568,8 @@ class uiEditor extends HTMLElement {
 
 		/* === STYLE UPDATES === */
 		if (node.form === this.formStyles) {
-
 			const breakpoint = this.editor.elements.breakpoint.value || '';
-
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
-
-			//TODO!
-			if (node.hasAttribute('data-part')) {}
 
 			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {
@@ -550,21 +578,15 @@ class uiEditor extends HTMLElement {
 				/* Update value to set */
 				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.global.breakpointsDelimiter}` : '';
 				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.global.prefixDelimiter}${value}`;
-				const { classes, removed } = this.getClasses(this.active);
 
-				classes.forEach(className => {
-					if (className.startsWith(breakpointPrefix + node.dataset.prefix)) {
-						this.active.classList.remove(className);
-					}
-				})
-				removed.forEach(className => {
-					if (className.startsWith(breakpointPrefix + node.dataset.prefix)) {
-						this.active.dataset.removed = this.active.dataset.removed.replace(className, '');
-					}
-				})
-
-				this.active.classList.add(value);
+				this.setClasses(this.active, value, breakpointPrefix + node.dataset.prefix);
 				this.updateClassList();
+
+				if (this.connectedPartsExists()) {
+					this.connectedParts.forEach(part => {
+						part.className = this.active.className;
+					});
+				}
 			}
 			return;
 		}
@@ -613,45 +635,38 @@ class uiEditor extends HTMLElement {
 	 */
 	onKeyDown = (event) => {
 		const select = (index) => {
-			const name = event.shiftKey ? 'breakpoint' : 'tool';
-			const group = this.editor.elements[name][index];
+			const group = this.editor.elements['tool'][index];
 			if (group) {
 				group.click();
 				group.focus();
 			}
 		};
-
-		const isCtrlPressed = event.ctrlKey || event.metaKey;
 		const keyBindings = {
-			'c': () => event.shiftKey && this.domAction('copy'),
-			'v': () => {
-				if (this.copy && (event.shiftKey ? this.domAction('paste') : (event.altKey ? this.domAction('replace') : null))) {
-					return; // Skip preventDefault for Ctrl+V
-				}
-			},
 			'arrowup': () => this.navigate('parentNode'),
 			'arrowdown': () => this.navigate('firstElementChild'),
 			'arrowleft': () => this.navigate('previousElementSibling'),
 			'arrowright': () => this.navigate('nextElementSibling'),
+			'backspace': () => this.domAction('cut'),
 			'end': () => this.domAction('last'),
 			'home': () => this.domAction('first'),
 			'pageup': () => this.domAction('prev'),
 			'pagedown': () => this.domAction('next'),
+			'c': () => this.domAction('copy'),
+			'r': () => this.domAction('replace'),
+			'v': () => this.domAction('paste'),
 			'x': () => this.domAction('cut'),
-			'z': () => event.shiftKey ? this.domAction('redo') : this.domAction('undo'),
+			'y': () => this.domAction('redo'),
+			'z': () => this.domAction('undo'),
 			'1': () => select(0),
 			'2': () => select(1),
 			'3': () => select(2),
 			'4': () => select(3),
 			'5': () => select(4),
-			'6': () => select(5),
+			'6': () => select(5)
 		};
 
 		const actionFunction = keyBindings[event.key.toLowerCase()];
-		if (actionFunction && isCtrlPressed) {
-			if (!(event.key.toLowerCase() === 'c' || event.key.toLowerCase() === 'v')) {
-				event.preventDefault();
-			}
+		if (actionFunction && event.ctrlKey && event.shiftKey) {
 			actionFunction();
 		}
 	};
@@ -785,7 +800,8 @@ class uiEditor extends HTMLElement {
 				</header>
 				${toolbar}
 				<div part="tools">${output}</div>
-				${renderGroup(this.config.global.footer)}
+				${this.config.global?.footer?.fieldsets ? this.config.global.footer.fieldsets.map(renderFieldset).join(''):''}
+				${this.config.global?.footer?.groups ? this.config.global.footer.groups.map(renderGroup).join(''):''}
 				${this.config.components ? this.renderComponentList(this.config.components, this.uid) : ''}
 			</form>
 			${forms}
@@ -837,6 +853,8 @@ class uiEditor extends HTMLElement {
 				this.resizeObserver.unobserve(this.active);
 			}
 			this.active = node;
+			this.connectedParts = this.getConnectedParts(node);
+
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 
@@ -871,8 +889,30 @@ class uiEditor extends HTMLElement {
 					vars.forEach(label => label.textContent = '');
 				}
 			}
-			bp.textContent = isRadio ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
+			// bp.textContent = isRadio ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
+			bp.textContent = value;
 		}
+	}
+
+	/**
+	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
+	 * @param {HTMLElement} node - The HTML element to set classes on.
+	 * @param {string} value - The new class to be added.
+	 * @param {string} prefix - The prefix used to filter and remove existing classes.
+	 */
+	setClasses(node, value, prefix) {
+		const { classes, removed } = this.getClasses(node);
+		classes.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.classList.remove(className);
+			}
+		})
+		removed.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.dataset.removed = node.dataset.removed.replace(className, '');
+			}
+		})
+		node.classList.add(value);
 	}
 
 	/**
@@ -948,20 +988,26 @@ class uiEditor extends HTMLElement {
 			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
 			if (filteredClasses.length) {
 				filteredClasses.forEach(cls => {
-					const [prefix, value] = cls.replace(breakpoint+this.config.global.breakpointsDelimiter, '').split(this.config.global.prefixDelimiter);
+					const inputString = cls.replace(breakpoint + this.config.global.breakpointsDelimiter, '');
+					const firstDelimiterIndex = inputString.indexOf(this.config.global.prefixDelimiter);
+					const prefix = inputString.substring(0, firstDelimiterIndex);
+					const value = inputString.substring(firstDelimiterIndex + this.config.global.prefixDelimiter.length);
 					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}`) || null;
 					this.updateInputElement(input, breakpoint, value);
 				});
 			}
-			/* disable breakpoint specific inputs */
+			/* Disable breakpoint-specific inputs */
 			[...this.formStyles.elements].forEach(input => {
 				if (input.hasAttribute('data-breakpoints')) {
 					input.disabled = input.dataset.breakpoints.split(',').includes(breakpoint) || breakpoint === '' ? false : true;
-					// TODO: To refresh the value of the input if it's disabled, fix for radio inputs
-					// if (input.disabled) input.value = 0;
+					/* HACK: Force re-paint to update disabled state */
+					setTimeout(() => {
+						input.style.display = 'none';
+						input.offsetHeight; // Trigger a reflow
+						input.style.display = '';
+					}, 0);
 				}
 		});
-		
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
 		}
@@ -970,9 +1016,9 @@ class uiEditor extends HTMLElement {
 	/**
 	 * Updates the classlist in the editor based on the active element.
 	 */
-	updateClassList() {
-		if (!this.formStyles || !this.active) return;
-		const { classes, removed } = this.getClasses(this.active);
+	updateClassList(node = this.active) {
+		if (!this.formStyles || !node) return;
+		const { classes, removed } = this.getClasses(node);
 		this.editor.elements.classlist.innerHTML = 
 			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
 			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
@@ -1013,19 +1059,21 @@ class uiEditor extends HTMLElement {
 	 */
 	updateInputElement(input, breakpoint, value) {
 		if (input) {
-			const bp = input.parentNode?.querySelector(`var[data-bp="${breakpoint}"]`);
-			if (bp) bp.textContent = value;
-
+			let parent = input.parentNode;
 			if (!breakpoint || breakpoint === this.editor.elements.breakpoint.value) {
 				if (input.dataset?.values) {
 					const selected = input.dataset.values.split(',').findIndex(item => item === value);
 					input.value = selected;
 				} else if (input.type === 'radio') {
 					this.formStyles.elements[input.name].value = value;
+					const checkedInput = Array.from(this.formStyles.elements[input.name]).find(radio => radio.value === value);
+					if (checkedInput) parent = checkedInput.parentNode;
 				} else {
 					input.value = value;
 				}
 			}
+			const bp = parent?.querySelector(`var[data-bp="${breakpoint}"]`)
+			if (bp) bp.textContent = value;
 		}
 	}
 }
