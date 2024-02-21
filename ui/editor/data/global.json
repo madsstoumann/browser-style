@@ -63,7 +63,7 @@
 				"icon": "close", 
 				"name": "close", 
 				"part": "close", 
-				"title": "Close Editor"
+				"title": "Close Editor ⎋"
 			}
 		}
 	],
@@ -78,7 +78,7 @@
 						"obj": {
 							"icon": "plugConnected",
 							"label": {
-								"title": "Update part for all components with the same type"
+								"title": "Connected. Updates will affect all components with the same type."
 							},
 							"input": {
 								"data-sr": "",
@@ -95,7 +95,7 @@
 						"obj": {
 							"icon": "plugDisconnected",
 							"label": {
-								"title": "Update just this instance"
+								"title": "Disconnected. Updates affects this instance only."
 							},
 							"input": {
 								"data-sr": "",
@@ -186,22 +186,6 @@
 									"data-click": "nav-right",
 									"icon": "right",
 									"title": "Next Sibling ⇧⌃→"
-								}
-							},
-							{ 
-								"ui": "button",
-								"obj": {
-									"data-click": "nav-first",
-									"icon": "first",
-									"title": "First Child ⇧⌘←"
-								}
-							},
-							{ 
-								"ui": "button",
-								"obj": {
-									"data-click": "nav-last",
-									"icon": "last",
-									"title": "Last Child ⇧⌘→"
 								}
 							},
 							{ 

@@ -236,7 +236,7 @@
 								"obj": {
 									"data-click": "dom-copy",
 									"icon": "copy",
-									"title": "Copy  ⌘C"
+									"title": "Copy ⇧⌃c"
 								}
 							},
 							{
@@ -244,7 +244,7 @@
 								"obj": {
 									"data-click": "dom-cut",
 									"icon": "cut",
-									"title": "Cut ⌘X"
+									"title": "Cut ⇧⌃x"
 								}
 							},
 							{
@@ -252,7 +252,7 @@
 								"obj": {
 									"data-click": "dom-paste",
 									"icon": "paste",
-									"title": "Paste into ⌘V"
+									"title": "Paste into ⇧⌃v"
 								}
 							},
 							{
@@ -260,7 +260,7 @@
 								"obj": {
 									"data-click": "dom-replace",
 									"icon": "replace",
-									"title": "Replace with ⇧⌘V"
+									"title": "Replace with ⇧⌃r"
 								}
 							},
 							{
@@ -268,7 +268,7 @@
 								"obj": {
 									"data-click": "dom-first",
 									"icon": "first",
-									"title": "Move first ⌘↖"
+									"title": "Move first ⇧⌃↖"
 								}
 							},
 							{
@@ -276,7 +276,7 @@
 								"obj": {
 									"data-click": "dom-prev",
 									"icon": "leftbar",
-									"title": "Move previous ⌘⇞"
+									"title": "Move previous ⇧⌃⇞"
 								}
 							},
 							{
@@ -284,7 +284,7 @@
 								"obj": {
 									"data-click": "dom-next",
 									"icon": "rightbar",
-									"title": "Move next ⌘⇟"
+									"title": "Move next ⇧⌃⇟"
 								}
 							},
 							{
@@ -292,7 +292,7 @@
 								"obj": {
 									"data-click": "dom-last",
 									"icon": "last",
-									"title": "Move last ⌘↘"
+									"title": "Move last ⇧⌃↘"
 								}
 							}
 						]

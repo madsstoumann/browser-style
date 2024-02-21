@@ -8,7 +8,7 @@
         "name": "style-utility",
         "fieldsets": [
           {
-            "name": "layout",
+            "part": "buttongroup",
             "fields": [
               {
                 "obj": {
@@ -30,14 +30,14 @@
               {
                 "obj": {
                   "ui": "input",
-                  "textAfter": "square",
+                  "textAfter": "1:1",
                   "input": {
                     "data-breakpoints": [],
                     "data-prefix": "asr",
                     "data-sr": "",
                     "name": "asr",
                     "type": "radio",
-                    "value": "square"
+                    "value": "1:1"
                   },
                   "label": {
                     "style": "--_v:1/1"
@@ -47,14 +47,14 @@
               {
                 "obj": {
                   "ui": "input",
-                  "textAfter": "video",
+                  "textAfter": "16:9",
                   "input": {
                     "data-breakpoints": [],
                     "data-prefix": "asr",
                     "data-sr": "",
                     "name": "asr",
                     "type": "radio",
-                    "value": "video"
+                    "value": "16:9"
                   },
                   "label": {
                     "style": "--_v:16/9"
@@ -224,202 +224,6 @@
                         "value": 0
                       }
                     }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Padding Block Start",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "pbs",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "pbs",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Padding Block End",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "pbe",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "pbe",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Padding Inline Start",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "pis",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "pis",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Padding Inline End",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "pie",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "pie",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
                   }
                 ]
               }
@@ -578,202 +382,6 @@
                           96
                         ],
                         "name": "mi",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Margin Block Start",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "mbs",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "mbs",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Margin Block End",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "mbe",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "mbe",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Margin Inline Start",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "mis",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "mis",
-                        "type": "range",
-                        "value": 0
-                      }
-                    }
-                  },
-                  {
-                    "obj": {
-                      "ui": "input",
-                      "text": "Margin Inline End",
-                      "input": {
-                        "data-breakpoints": [],
-                        "data-prefix": "mie",
-                        "data-values": [
-                          0,
-                          0.5,
-                          1,
-                          1.5,
-                          2,
-                          2.5,
-                          3,
-                          3.5,
-                          4,
-                          5,
-                          6,
-                          7,
-                          8,
-                          9,
-                          10,
-                          11,
-                          12,
-                          14,
-                          16,
-                          20,
-                          24,
-                          28,
-                          32,
-                          36,
-                          40,
-                          44,
-                          48,
-                          52,
-                          56,
-                          60,
-                          64,
-                          72,
-                          80,
-                          96
-                        ],
-                        "name": "mie",
                         "type": "range",
                         "value": 0
                       }
@@ -1110,9 +718,10 @@
                       "ui": "input",
                       "textAfter": "sans",
                       "input": {
-                        "data-breakpoints": [],
+                        "data-breakpoints": [
+                          "lg"
+                        ],
                         "data-prefix": "ff",
-                        "data-sr": "",
                         "name": "ff",
                         "type": "radio",
                         "value": "sans"
@@ -1127,9 +736,10 @@
                       "ui": "input",
                       "textAfter": "serif",
                       "input": {
-                        "data-breakpoints": [],
+                        "data-breakpoints": [
+                          "lg"
+                        ],
                         "data-prefix": "ff",
-                        "data-sr": "",
                         "name": "ff",
                         "type": "radio",
                         "value": "serif"
@@ -1144,9 +754,10 @@
                       "ui": "input",
                       "textAfter": "mono",
                       "input": {
-                        "data-breakpoints": [],
+                        "data-breakpoints": [
+                          "lg"
+                        ],
                         "data-prefix": "ff",
-                        "data-sr": "",
                         "name": "ff",
                         "type": "radio",
                         "value": "mono"
@@ -1167,7 +778,7 @@
             "fieldsets": [
               {
                 "name": "font-size",
-                "part": "autowrap buttongroup",
+                "part": "buttongroup",
                 "fields": [
                   {
                     "obj": {

@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
 </head>
 <body class="bg-orange-700 md:bg-zinc-400 lg:bg-sky-400">
@@ -18,7 +17,6 @@
 	<script type="module">
 		import { applyStylesheet, generateClasses } from './utility.js';
 
-// const color = (arr = colors) => { return { type: 'color', values: arr.map(({ name, values }) => ({ name, values: values.split(' ') })) }; };
 const color = (selectedNames, colorArray = colors) => {
     const filteredColors = selectedNames
         ? colorArray.filter(({ name }) => selectedNames.includes(name))
@@ -30,28 +28,8 @@ const scale = ({ unit = 'rem', values = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6
 
 const aspectRatio = [
 	{ name: 'auto', value: 'auto' },
-	{ name: 'square', value: '1/1' },
-	{ name: 'video', value: '16/9' }
-]
-const fontFamily = [
-	{ name: 'sans', value: 'ui-sans-serif, system-ui, sans-serif' },
-	{ name: 'serif', value: 'ui-serif, serif' },
-	{ name: 'mono', value: 'ui-monospace, monospace' }
-];
-const fontSizes = [
-	{ name: 'xs', value: '0.75rem' },
-	{ name: 'sm', value: '0.875rem' },
-	{ name: 'md', value: '1rem' },
-	{ name: 'lg', value: '1.125rem' },
-	{ name: 'xl', value: '1.25rem' },
-	{ name: '2xl', value: '1.5rem' },
-	{ name: '3xl', value: '1.875rem' },
-	{ name: '4xl', value: '2.25rem' },
-	{ name: '5xl', value: '3rem' },
-	{ name: '6xl', value: '3.75rem' },
-	{ name: '7xl', value: '4.5rem' },
-	{ name: '8xl', value: '6rem' },
-	{ name: '9xl', value: '8rem' }
+	{ name: '1:1', value: '1/1' },
+	{ name: '16:9', value: '16/9' }
 ]
 const breakpoints = [
 	{ key: 'sm', value: 360 },
@@ -59,8 +37,7 @@ const breakpoints = [
 	{ key: 'lg', value: 1024 },
 	{ key: 'xl', value: 1280 },
 	{ key: 'xxl', value: 1536 },
-];
-
+]
 const colors = [
 	{ name: 'slate', values: '#f1f5f9 #e2e8f0 #cbd5e1 #94a3b8 #64748b #475569 #334155 #1e293b #0f172a #020617' },
 	{ name: 'gray', values: '#f3f4f6 #e5e7eb #d1d5db #9ca3af #6b7280 #4b5563 #374155 #1f2937 #111827 #030712' },
@@ -85,9 +62,29 @@ const colors = [
 	{ name: 'pink', values: '#fce7f3 #fbcee8 #f9a8d4 #f472b6 #ec4899 #db2777 #be185d #9f1239 #832029 #500724' },
 	{ name: 'rose', values: '#ffe4e6 #fed1d3 #fda4af #fb71a9 #ec4879 #e12948 #be122b #9d1226 #88191e #4c0519' },
 ]
+const fontFamily = [
+	{ name: 'sans', value: 'ui-sans-serif, system-ui, sans-serif' },
+	{ name: 'serif', value: 'ui-serif, serif' },
+	{ name: 'mono', value: 'ui-monospace, monospace' }
+];
+const fontSizes = [
+	{ name: 'xs', value: '0.75rem' },
+	{ name: 'sm', value: '0.875rem' },
+	{ name: 'md', value: '1rem' },
+	{ name: 'lg', value: '1.125rem' },
+	{ name: 'xl', value: '1.25rem' },
+	{ name: '2xl', value: '1.5rem' },
+	{ name: '3xl', value: '1.875rem' },
+	{ name: '4xl', value: '2.25rem' },
+	{ name: '5xl', value: '3rem' },
+	{ name: '6xl', value: '3.75rem' },
+	{ name: '7xl', value: '4.5rem' },
+	{ name: '8xl', value: '6rem' },
+	{ name: '9xl', value: '8rem' }
+]
 
 const styles = [
-	{ property: 'aspect-ratio', prefix: 'asr', type: 'string', values: aspectRatio, breakpoints: [], group: 'layout' },
+	{ property: 'aspect-ratio', prefix: 'asr', type: 'buttongroup', values: aspectRatio, breakpoints: [], group: 'layout' },
 	{ property: 'background-color', prefix: 'bg', ...color(['stone', 'red', 'amber', 'green', 'sky']), breakpoints: ['sm','lg'], group: 'backgrounds' },
 	// { property: 'color', prefix: 'c', ...color(), breakpoints: []},
 	
@@ -95,18 +92,12 @@ const styles = [
 	{ property: 'margin', prefix: 'm', ...scale(), breakpoints: [], group: 'margin' },
 	{ property: 'margin-block', prefix: 'mb', ...scale(), breakpoints: ['sm', 'lg'], group: 'margin' },
 	{ property: 'margin-inline', prefix: 'mi', ...scale(), breakpoints: [], group: 'margin' },
-	{ property: 'margin-block-start', prefix: 'mbs', ...scale(), breakpoints: [], group: 'margin' },
-	{ property: 'margin-block-end', prefix: 'mbe', ...scale(), breakpoints: [], group: 'margin' },
-	{ property: 'margin-inline-start', prefix: 'mis', ...scale(), breakpoints: [], group: 'margin' },
-	{ property: 'margin-inline-end', prefix: 'mie', ...scale(), breakpoints: [], group: 'margin' },
+
 	{ property: 'padding', prefix: 'p', ...scale(), breakpoints: [], group: 'padding' },
 	{ property: 'padding-block', prefix: 'pb', ...scale(), breakpoints: [], group: 'padding' },
 	{ property: 'padding-inline', prefix: 'pi', ...scale(), breakpoints: [], group: 'padding' },
-	{ property: 'padding-block-start', prefix: 'pbs', ...scale(), breakpoints: [], group: 'padding' },
-	{ property: 'padding-block-end', prefix: 'pbe', ...scale(), breakpoints: [], group: 'padding' },
-	{ property: 'padding-inline-start', prefix: 'pis', ...scale(), breakpoints: [], group: 'padding' },
-	{ property: 'padding-inline-end', prefix: 'pie', ...scale(), breakpoints: [], group: 'padding' },
 
+	/* sizing */
 	{ property: 'height', prefix: 'h', ...scale({ unit: 'em' }), breakpoints: [], group: 'sizing' },
 	{ property: 'max-height', prefix: 'max-h', ...scale(), breakpoints: [], group: 'sizing'},
 	{ property: 'max-width', prefix: 'max-w', ...scale(), breakpoints: [], group: 'sizing'},
@@ -115,8 +106,8 @@ const styles = [
 	{ property: 'width', prefix: 'w', ...scale(), breakpoints: [], group: 'sizing'},
 
 	/* typography */
-	{ property: 'font-family', prefix: 'ff', type: 'string', values: fontFamily, breakpoints: [], group: 'fontfamily' },
-	{ property: 'font-size', prefix: 'fs', type: 'string', values: fontSizes, breakpoints: ['lg'], group: 'fontsize' },
+	{ property: 'font-family', prefix: 'ff', type: 'string', values: fontFamily, breakpoints: ['lg'], group: 'fontfamily' },
+	{ property: 'font-size', prefix: 'fs', type: 'buttongroup', values: fontSizes, breakpoints: ['lg'], group: 'fontsize' },
 ];
 
 const groups = [
@@ -127,7 +118,12 @@ const groups = [
 				key: 'layout',
 				label: 'Layout',
 				name: 'style-utility',
-				fieldsets: []
+				fieldsets: [
+					{
+						part: 'buttongroup',
+						fields: []
+					}
+				]
 			},
 			{
 				key: 'flexgrid',
@@ -192,7 +188,7 @@ const groups = [
 						fieldsets: [
 							{
 								name: 'font-size',
-								part: 'autowrap buttongroup',
+								part: 'buttongroup',
 								fields: []
 							},
 						]
@@ -221,44 +217,45 @@ const groups = [
 				label: 'Effects',
 				name: 'style-utility',
 			},
-			{
-				label: 'Headline',
-				name: 'style-part',
-				fieldsets: [
-          {
-            fields: [
-              {
-                obj: {
-                  ui: "input",
-                  textAfter: "Gradient",
-                  input: {
-                    "data-part": "part-headline",
-                    "data-sr": "",
-                    name: "part-headline",
-                    type: "radio",
-                    value: "gradient-headline"
-                  },
-                }
-              },
-							{
-                obj: {
-                  ui: "input",
-                  textAfter: "Radial Gradient",
-                  input: {
-                    "data-part": "part-headline",
-                    "data-sr": "",
-                    name: "part-headline",
-                    type: "radio",
-                    value: "radial-headline"
-                  },
-                }
-              },
+			// {
+			// 	label: 'Headline',
+			// 	name: 'style-part',
+			// 	fieldsets: [
+      //     {
+			// 			part: 'buttongroup',
+      //       fields: [
+      //         {
+      //           obj: {
+      //             ui: "input",
+      //             textAfter: "Gradient",
+      //             input: {
+      //               "data-part": "part-headline",
+      //               "data-sr": "",
+      //               name: "part-headline",
+      //               type: "radio",
+      //               value: "gradient-headline"
+      //             },
+      //           }
+      //         },
+			// 				{
+      //           obj: {
+      //             ui: "input",
+      //             textAfter: "Radial Gradient",
+      //             input: {
+      //               "data-part": "part-headline",
+      //               "data-sr": "",
+      //               name: "part-headline",
+      //               type: "radio",
+      //               value: "radial-headline"
+      //             },
+      //           }
+      //         },
              
-            ]
-          }
-        ]
+      //       ]
+      //     }
+      //   ]
 
-			}
+			// }
 		]
 	}
 ];
@@ -279,6 +276,9 @@ function generateJSON(styles, groups) {
 				group.fieldsets.push({ name: style.group, fields: [] });
 			}
 			switch (style.type) {
+				case 'buttongroup': 
+					group.fieldsets[0].fields = renderString(style, true);
+					break;
 				case 'length': 
 					group.fieldsets[0].fields.push(renderRange(style));
 					break;
@@ -333,7 +333,7 @@ function renderRange(style) {
 	}};
 }
 
-function renderString(style) {
+function renderString(style, isButtonGroup = false) {
 	return style.values.map(({ name, value }) => {
 		return {
 			obj: {
@@ -342,7 +342,7 @@ function renderString(style) {
 				input: {
 					'data-breakpoints': style.breakpoints,
 					'data-prefix': style.prefix,
-					'data-sr': '',
+					...(isButtonGroup ? { 'data-sr': '' } : null),
 					name: style.prefix,
 					type: 'radio',
 					value: name
@@ -355,15 +355,11 @@ function renderString(style) {
 	});
 }
 function hexToRgb(hex) {
-    // Remove the hash (#) if present
     hex = hex.replace(/^#/, '');
-
-    // Parse the RGB values
     const bigint = parseInt(hex, 16);
     const r = (bigint >> 16) & 255;
     const g = (bigint >> 8) & 255;
     const b = bigint & 255;
-
     return { r, g, b };
 }
 
@@ -372,7 +368,6 @@ function contrast(color) {
 	const brightness = (299 * r + 587 * g + 114 * b) / 1000;
 	return brightness <= 127 ? '#FFF' : '#000';
 }
-
 
 function toTitleCase(inputString) {
 	return inputString

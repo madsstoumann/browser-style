@@ -6,8 +6,8 @@ import icons from './icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.08
- * @summary 20-02-2024
+ * @version 1.0.10
+ * @summary 21-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -17,10 +17,9 @@ class uiEditor extends HTMLElement {
 		super();
 		this.logo = this.getAttribute('logo') || '';
 		this.responsive = this.hasAttribute('responsive'),
-		this.selectable = this.getAttribute('selectable')?.split(',') || [];
+		this.selectable = (this.getAttribute('selectable') || '').split(',').filter(Boolean);
 		this.undoStack = [];
-		this.redoStack = [];
-		// console.log(this.selectable)
+		this.redoStack = [];		
 	}
 
 	/**
@@ -160,6 +159,7 @@ class uiEditor extends HTMLElement {
 			document.addEventListener('keydown', (e) => {
 				if (e.shiftKey && e.ctrlKey) {
 					if (e.key === openKey) {
+						if (!this.isSelectable(document.activeElement)) return;
 						const open = this.editor.togglePopover();
 						this.toggle.checked = open;
 						this.setAttribute('open', open);
@@ -469,6 +469,15 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Checks if a given DOM node is selectable based on the defined criteria.
+	 * @param {HTMLElement} node - The DOM node to check for selectability.
+	 * @returns {boolean} - True if the node is selectable, false otherwise.
+	 */
+	isSelectable(node) {
+		return this.selectable.length === 0 || Object.keys(node.dataset).some(key => this.selectable.includes(key));
+	}
+
+	/**
 	* Navigates to a sibling or parent element based on the specified property.
 	* Updates the active element accordingly.
 	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
@@ -488,8 +497,14 @@ class uiEditor extends HTMLElement {
 			const target = e.composedPath().shift();
 			if (target === this) {
 				/* Target is the editor, thus grab element below */
-				this.setActive(document.elementsFromPoint(e.clientX, e.clientY)[1]);
-				if (!this.responsive) this.editor.showPopover();
+				const elements = document.elementsFromPoint(e.clientX, e.clientY);
+				const element = elements.length > 1 ? elements[1] : null;
+				if (element) {
+					if (this.isSelectable(element)) {
+						this.setActive(element);
+						if (!this.responsive) this.editor.showPopover();
+					}
+				}
 			}
 			else {
 				/* Target is a button/action in the editor */
@@ -514,8 +529,7 @@ class uiEditor extends HTMLElement {
 					case 'dom-replace': this.domAction('replace'); break;
 					case 'dom-undo': this.domAction('undo'); break;
 					case 'nav-down': this.navigate('firstElementChild'); break;
-					// case 'nav-first': 
-					case 'nav-last': this.navigate('lastElementChild'); break;
+					// case 'nav-last': this.navigate('lastElementChild'); break;
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
@@ -679,16 +693,20 @@ class uiEditor extends HTMLElement {
 		if (!this.responsive && this.getAttribute('editor') === 'true') return;
 		try {
 			if (this.responsive) this.style.pointerEvents = 'none';
-			const elements = document.elementsFromPoint(event.clientX, event.clientY);
-			const element = this.responsive ? elements[0] : elements[1];
-			if (element !== this.hovered) {
-				if (this.hovered) delete this.hovered.dataset.hover;
-				this.hovered = element;
-				this.hovered.dataset.hover = '';
-			}
+				const elements = document.elementsFromPoint(event.clientX, event.clientY);
+				const element = this.responsive ? elements[0] : elements[1];
+
+				if (element !== this.hovered) {
+					if (this.hovered) delete this.hovered.dataset.hover;
+					if (this.isSelectable(element)) {
+						this.hovered = element;
+						this.hovered.dataset.hover = '';
+					}
+				}
 			if (this.responsive) this.style.pointerEvents = 'auto';
 		} catch (error) {}
 	}
+
 
 	/**
 	 * Handles the 'input' event on the component search input.
@@ -1044,7 +1062,11 @@ class uiEditor extends HTMLElement {
 				const breakpoint = match.groups.breakpoint && `${match.groups.breakpoint}` || '';
 				const prefix = match.groups.prefix || null;
 				const value = match.groups.value || null;
-				const input = this.formStyles.elements[prefix] || null;
+				const elements = this.formStyles.elements[prefix];
+				// Check if elements is a NodeList and has elements
+				const input = elements instanceof NodeList
+				? Array.from(elements).find(element => element.value === value) || null
+				: elements || null;
 				this.updateInputElement(input, breakpoint, value);
 			}
 		});

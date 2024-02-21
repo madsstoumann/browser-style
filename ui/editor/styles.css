@@ -16,6 +16,7 @@
 	--uie-gray-5: color-mix(in srgb, Canvas, CanvasText 5%);
 	--uie-gray-10: color-mix(in srgb, Canvas, CanvasText 10%);
 	--uie-gray-15: color-mix(in srgb, Canvas, CanvasText 15%);
+	--uie-gray-tp: color-mix(in srgb, GrayText, transparent 80%);
 
 	--uie-grid-c: rgba(255, 0, 0, .25);
 	--uie-grid-sz: 20px;
@@ -111,14 +112,6 @@
 	justify-content: center;
 }
 [part=frame-group] label:has(:checked) { color: var(--uie-accent); } 
-[part~=autocols] {
-	gap: var(--uie-gap);
-  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-}
-[part~=autowrap] {
-	gap: var(--uie-gap);
-  grid-template-columns: repeat(6, 1fr);
-}
 [part~=draghandle] {
 	cursor: grab;
 }
@@ -146,14 +139,12 @@
 	resize: both;
 	width: 100%;
 }
-
 [part=input-icon] {
 	& input { grid-column: span 11; }
 	& label { display: contents; }
 	gap: var(--uie-gap);
 	padding-block-end: 0;
 }
-
 [part=outline] {
 	border: var(--uie-a-bdw, 2px) var(--uie-a-bds, dashed) var(--ui-csss-a-bdc, #f09);
 	position: absolute;
@@ -192,6 +183,7 @@
 		flex: 0 0 100%;
 	}
 }
+[data-click=dom-undo] { grid-column: 7; }
 
 /* === BUTTON === */
 :is(button, [part~=button]) {
@@ -292,6 +284,7 @@ label:has([name=component-info]) {
 /* === CONNECTED === */
 [name="connectedgroup"][part~=tabgroup] {
 	background: var(--uie-gray-5);
+	margin: var(--uie-gap);
 }
 
 /* === DETAILS/SUMMARY === */
@@ -365,7 +358,9 @@ label {
 	user-select: none;
 	&:has([disabled]) { 
 		color: GrayText;
+		text-decoration: line-through;
 		& input[type=radio] { filter: grayscale(1); opacity: .4; }
+		& span { text-decoration: line-through; }
 	}
 }
 legend { display: none; }
@@ -463,16 +458,21 @@ textarea {
 	&[part~=font] span { font-family: var(--_v); }
 }
 [part~=buttongroup] {
+	gap: var(--uie-gap);
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
 	& label {
 		background: var(--uie-gray-5);
 		border-radius: 3px;
-		height: 100%;
+		display: grid;
+		height: 2.5em;
 		padding: 3px;
+		place-content: center;
 		text-align: center;
 		&:has(:checked) {
 			background: var(--uie-accent);
 			color: #FFF;
 		}
+		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
 	}
 	& code {
 		justify-content: center;
@@ -582,6 +582,7 @@ label:has([role=switch]) {
 			box-shadow: var(--uie-bxsh-sm);
 		}
 		&:has(:focus-visible) { background: var(--uie-blue-40) ; }
+		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
 	}
 }
 
