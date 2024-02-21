@@ -84,15 +84,13 @@ const fontSizes = [
 ]
 
 const styles = [
-	{ property: 'aspect-ratio', prefix: 'asr', type: 'buttongroup', values: aspectRatio, breakpoints: [], group: 'layout' },
+	{ property: 'aspect-ratio', prefix: 'asr', type: 'buttongroup', values: aspectRatio, breakpoints: [], group: 'aspect-ratio' },
 	{ property: 'background-color', prefix: 'bg', ...color(['stone', 'red', 'amber', 'green', 'sky']), breakpoints: ['sm','lg'], group: 'backgrounds' },
-	// { property: 'color', prefix: 'c', ...color(), breakpoints: []},
 	
 	/* spacing */
 	{ property: 'margin', prefix: 'm', ...scale(), breakpoints: [], group: 'margin' },
 	{ property: 'margin-block', prefix: 'mb', ...scale(), breakpoints: ['sm', 'lg'], group: 'margin' },
 	{ property: 'margin-inline', prefix: 'mi', ...scale(), breakpoints: [], group: 'margin' },
-
 	{ property: 'padding', prefix: 'p', ...scale(), breakpoints: [], group: 'padding' },
 	{ property: 'padding-block', prefix: 'pb', ...scale(), breakpoints: [], group: 'padding' },
 	{ property: 'padding-inline', prefix: 'pi', ...scale(), breakpoints: [], group: 'padding' },
@@ -118,22 +116,32 @@ const groups = [
 				key: 'layout',
 				label: 'Layout',
 				name: 'style-utility',
-				fieldsets: [
+				part: 'style-part-layout',
+				groups: [
 					{
-						part: 'buttongroup',
-						fields: []
+						key: 'aspect-ratio',
+						label: 'Aspect Ratio',
+						name: 'layout',
+						fieldsets: [
+							{
+								part: 'buttongroup',
+								fields: []
+							}
+						]
 					}
 				]
 			},
 			{
 				key: 'flexgrid',
 				label: 'Flexbox & Grid',
-				name: 'style-utility'
+				name: 'style-utility',
+				part: 'style-part-flexgrid',
 			},
 			{
 				key: 'spacing',
 				label: 'Spacing',
 				name: 'style-utility',
+				part: 'style-part-spacing',
 				groups: [
 					{
 						key: 'padding',
@@ -141,7 +149,6 @@ const groups = [
 						name: 'spacing',
 						fieldsets: [
 							{
-								name: 'padding',
 								fields: []
 							}
 						]
@@ -152,9 +159,8 @@ const groups = [
 						name: 'spacing',
 						fieldsets: [
 						{
-								name: 'margin',
-								fields: []
-							}
+							fields: []
+						}
 						]
 					},
 				]
@@ -163,11 +169,13 @@ const groups = [
 				key: 'sizing',
 				label: 'Sizing',
 				name: 'style-utility',
+				part: 'style-part-sizing',
 			},
 			{
 				key: 'typography',
 				label: 'Typography',
 				name: 'style-utility',
+				part: 'style-part-typography',
 				groups: [
 					{
 						key: 'fontfamily',
@@ -175,7 +183,6 @@ const groups = [
 						name: 'typography',
 						fieldsets: [
 							{
-								name: 'font-family',
 								part: 'radio font',
 								fields: []
 							},
@@ -187,7 +194,6 @@ const groups = [
 						name: 'typography',
 						fieldsets: [
 							{
-								name: 'font-size',
 								part: 'buttongroup',
 								fields: []
 							},
@@ -199,6 +205,7 @@ const groups = [
 				key: 'backgrounds',
 				label: 'Backgrounds',
 				name: 'style-utility',
+				part: 'style-part-backgrounds',
 				fieldsets: [
 					{
 						part: "radio colorgrid",
@@ -216,46 +223,7 @@ const groups = [
 				key: 'effects',
 				label: 'Effects',
 				name: 'style-utility',
-			},
-			// {
-			// 	label: 'Headline',
-			// 	name: 'style-part',
-			// 	fieldsets: [
-      //     {
-			// 			part: 'buttongroup',
-      //       fields: [
-      //         {
-      //           obj: {
-      //             ui: "input",
-      //             textAfter: "Gradient",
-      //             input: {
-      //               "data-part": "part-headline",
-      //               "data-sr": "",
-      //               name: "part-headline",
-      //               type: "radio",
-      //               value: "gradient-headline"
-      //             },
-      //           }
-      //         },
-			// 				{
-      //           obj: {
-      //             ui: "input",
-      //             textAfter: "Radial Gradient",
-      //             input: {
-      //               "data-part": "part-headline",
-      //               "data-sr": "",
-      //               name: "part-headline",
-      //               type: "radio",
-      //               value: "radial-headline"
-      //             },
-      //           }
-      //         },
-             
-      //       ]
-      //     }
-      //   ]
-
-			// }
+			}
 		]
 	}
 ];
@@ -300,8 +268,8 @@ function renderColor(style) {
 		return values.map((color, index) => {
 			const checkColor = contrast(color);
 			return {
-				obj: {
-					ui: 'input',
+				// obj: {
+					// ui: 'input',
 					textAfter: `${name}-${(index+1)*100}`,
 					input: {
 						'data-breakpoints': style.breakpoints,
@@ -312,15 +280,16 @@ function renderColor(style) {
 						value: `${name}-${(index+1)*100}`
 					},
 				}
-			};
+			// };
 		});
 	});
 }
 
 function renderRange(style) {
 	const label = toTitleCase(style.property);
-	return { obj: {
-		ui: 'input',
+	return { 
+		// obj: {
+		// ui: 'input',
 		text: label,
 		input: {
 			'data-breakpoints': style.breakpoints,
@@ -330,14 +299,15 @@ function renderRange(style) {
 			type: 'range',
 			value: 0
 		},
-	}};
+	// }
+};
 }
 
 function renderString(style, isButtonGroup = false) {
 	return style.values.map(({ name, value }) => {
 		return {
-			obj: {
-				ui: 'input',
+			// obj: {
+				// ui: 'input',
 				textAfter: name,
 				input: {
 					'data-breakpoints': style.breakpoints,
@@ -350,7 +320,7 @@ function renderString(style, isButtonGroup = false) {
 				label: {
 					style: `--_v:${value}`,
 				}
-			}
+			// }
 		};
 	});
 }

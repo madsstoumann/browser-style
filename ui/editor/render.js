@@ -24,36 +24,35 @@ export function renderAttributes(
 }
 
 export function renderButton(obj, iconObject) {
-	return `<button type="button" ${renderAttributes(obj)}>${obj.icon ? renderIcon(obj.icon, iconObject) : obj.title}</button>`;
+	return `<button type="button" ${renderAttributes(obj.attr)}>${obj.icon ? renderIcon(obj.icon, iconObject) : obj.attr?.title || ''}</button>`;
 }
 
 export function renderElement(element) {
-	if (element.obj) {
-		if (element.obj.removeForm) {
-			delete element.obj.form;
-			delete element.obj.removeForm;
+	if (element) {
+		if (element.removeForm) {
+			delete element.form;
+			delete element.removeForm;
 		} else {
 			// Use form attribute from the object, or globalForm if it doesn't exist
-			element.obj.form = element.obj.form || globalForm;
+			element.form = element.form || globalForm;
 		}
 
-		if (element.obj.input) {
-			if (element.obj.input.removeForm) {
-				delete element.obj.input.form;
-				delete element.obj.input.removeForm;
+		if (element.input) {
+			if (element.input.removeForm) {
+				delete element.input.form;
+				delete element.input.removeForm;
 			} else {
-				element.obj.input.form = element.obj.input.form || globalForm;
+				element.input.form = element.input.form || globalForm;
 			}
 		}
 	}
 
 	switch (element.ui) {
-		case 'button': return renderButton(element.obj);
+		case 'button': return renderButton(element);
 		case 'output': return renderOutput(element.name, element.text);
 		case 'tag': return renderTag(element)
-		case 'textarea': return renderTextarea(element.obj);
-		default:
-			return renderInput(element.obj);
+		case 'textarea': return renderTextarea(element);
+		default: return renderInput(element);
 	}
 }
 
@@ -120,8 +119,8 @@ export function renderOutput(name, text) {
 }
 
 export function renderTag(obj) {
-	const attributes = obj.attributes ? renderAttributes(obj.attributes) : '';
-	return `<${obj.tag} ${attributes}>${obj.content}</${obj.tag}>`;
+	const attr = obj.attr ? renderAttributes(obj.attr) : '';
+	return `<${obj.tag} ${attr}>${obj.content}</${obj.tag}>`;
 }
 
 export function renderTextarea(obj) {

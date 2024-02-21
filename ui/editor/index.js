@@ -67,6 +67,7 @@ class uiEditor extends HTMLElement {
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.search = shadow.querySelector(`[part=component-search]`);
+		this.styleParts = shadow.querySelectorAll(`[part*=style-part-]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
@@ -795,11 +796,9 @@ class uiEditor extends HTMLElement {
 			</div>
 			`;
 			toolbarFields.push({
-				obj: {
-					icon: tool.icon,
-					input: { type: 'radio', name: 'tool', value: index + 1, 'data-sr': '', ...(index === 0 && { checked: '' }) },
-					label: { title: tool.title }
-				}
+				icon: tool.icon,
+				input: { type: 'radio', name: 'tool', value: index + 1, 'data-sr': '', ...(index === 0 && { checked: '' }) },
+				label: { title: tool.title }
 			});
 		});
 
@@ -875,6 +874,15 @@ class uiEditor extends HTMLElement {
 
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
+
+			const parts = node.dataset.styleParts ? node.dataset.styleParts.split(',') : [];
+			this.styleParts.forEach(element => {
+				if (parts.length === 0) {
+					element.hidden = false;
+				} else {
+					element.hidden = parts.includes(element.getAttribute('part')) ? false : true;
+				}
+			})
 
 			if (this.formStyles) {
 				this.updateClassList();
@@ -1063,7 +1071,7 @@ class uiEditor extends HTMLElement {
 				const prefix = match.groups.prefix || null;
 				const value = match.groups.value || null;
 				const elements = this.formStyles.elements[prefix];
-				// Check if elements is a NodeList and has elements
+				/* If elements is a NodeList, select the element that matches `value` */
 				const input = elements instanceof NodeList
 				? Array.from(elements).find(element => element.value === value) || null
 				: elements || null;

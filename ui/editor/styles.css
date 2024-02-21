@@ -435,6 +435,10 @@ textarea {
 				mask-size: 70% 100%;
 				-webkit-mask-size: 70% 100%;
 			}
+			&:focus-visible {
+				outline: 2px solid var(--_c, #FFF);
+				outline-offset: -2px;
+			}
 		}
 		& span { 
 			display: none;
@@ -472,6 +476,7 @@ textarea {
 			background: var(--uie-accent);
 			color: #FFF;
 		}
+		&:has(:focus-visible) { outline: 2px solid var(--uie-accent); outline-offset: 2px; }
 		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
 	}
 	& code {

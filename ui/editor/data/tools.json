@@ -10,100 +10,82 @@
 				"part": "tabgroup",
 				"fields": [
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceOff",
-							"label": {
-								"title": "off"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "",
-								"checked": ""
-							}
+						"icon": "deviceOff",
+						"label": {
+							"title": "off"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "",
+							"checked": ""
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceSM",
-							"label": {
-								"title": "sm:640"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "sm"
-							}
+						"icon": "deviceSM",
+						"label": {
+							"title": "sm:640"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "sm"
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceMD",
-							"label": {
-								"title": "md:768"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "md"
-							}
+						"icon": "deviceMD",
+						"label": {
+							"title": "md:768"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "md"
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceLG",
-							"label": {
-								"title": "lg:1024"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "lg"
-							}
+						"icon": "deviceLG",
+						"label": {
+							"title": "lg:1024"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "lg"
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceXL",
-							"label": {
-								"title": "xl:1280"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "xl"
-							}
+						"icon": "deviceXL",
+						"label": {
+							"title": "xl:1280"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "xl"
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "deviceXXL",
-							"label": {
-								"title": "xxl:1536"
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "breakpoint",
-								"type": "radio",
-								"value": "xxl"
-							}
+						"icon": "deviceXXL",
+						"label": {
+							"title": "xxl:1536"
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "breakpoint",
+							"type": "radio",
+							"value": "xxl"
 						}
 					}
 				]
@@ -114,7 +96,6 @@
 				"label": "Classlist",
 				"name": "style-root",
 				"open": false,
-				"part": "appgroup",
 				"fieldsets": [
 					{
 						"name": "classlist"
@@ -124,21 +105,17 @@
 						"part": "input-icon",
 						"fields": [
 							{
-								"ui": "input",
-								"obj": {
-									"input": {
-										"type": "text",
-										"name": "addclass",
-										"placeholder": "Add class(es)"
-									}
+								"input": {
+									"type": "text",
+									"name": "addclass",
+									"placeholder": "Add class(es)"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
-									"type": "button",
+								"icon": "listadd",
+								"attr": {
 									"data-click": "cls-add",
-									"icon": "listadd",
 									"title": "Add to classlist"
 								}
 							}
@@ -150,25 +127,25 @@
 						"fields": [
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "copyplus",
+								"attr": {
 									"data-click": "cls-copy",
-									"icon": "copyplus",
 									"title": "Copy enabled classes"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "styleoff",
+								"attr": {
 									"data-click": "cls-rem",
-									"icon": "styleoff",
 									"title": "Remove disabled classes"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "revert",
+								"attr": {
 									"data-click": "cls-revert",
-									"icon": "revert",
 									"title": "Revert to original state"
 								}
 							}
@@ -188,24 +165,21 @@
 				"label": "HTML Code",
 				"fieldsets": [
 					{
-						"name": "htmlcode",
 						"part": "textarea",
 						"fields": [
 							{
 								"ui": "textarea",
-								"obj": {
-									"input": {
-										"name": "htmlcode",
-										"placeholder": "HTML code"
-									},
-									"textAfter": "DANGER: You can overwrite important content here. Syncing will replace the content with the current HTML code."
-								}
+								"input": {
+									"name": "htmlcode",
+									"placeholder": "HTML code"
+								},
+								"textAfter": "DANGER: You can overwrite important content. Syncing will replace the content with the HTML code above."
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "refresh",
+								"attr": {
 									"data-click": "sync-html",
-									"icon": "refresh",
 									"name": "sync-html",
 									"part": "button icon",
 									"title": "Sync HTML"
@@ -233,65 +207,65 @@
 						"fields": [
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "copy",
+								"attr": {
 									"data-click": "dom-copy",
-									"icon": "copy",
 									"title": "Copy ⇧⌃c"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "cut",
+								"attr": {
 									"data-click": "dom-cut",
-									"icon": "cut",
 									"title": "Cut ⇧⌃x"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "paste",
+								"attr": {
 									"data-click": "dom-paste",
-									"icon": "paste",
 									"title": "Paste into ⇧⌃v"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "replace",
+								"attr": {
 									"data-click": "dom-replace",
-									"icon": "replace",
 									"title": "Replace with ⇧⌃r"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "first",
+								"attr": {
 									"data-click": "dom-first",
-									"icon": "first",
 									"title": "Move first ⇧⌃↖"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "leftbar",
+								"attr": {
 									"data-click": "dom-prev",
-									"icon": "leftbar",
 									"title": "Move previous ⇧⌃⇞"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "rightbar",
+								"attr": {
 									"data-click": "dom-next",
-									"icon": "rightbar",
 									"title": "Move next ⇧⌃⇟"
 								}
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"icon": "last",
+								"attr": {
 									"data-click": "dom-last",
-									"icon": "last",
 									"title": "Move last ⇧⌃↘"
 								}
 							}
@@ -307,13 +281,11 @@
 						"name": "components",
 						"fields": [
 							{
-								"obj" : {
-									"input": {
-										"list": "components{{globalId}}",
-										"part": "component-search",
-										"placeholder": "Find component",
-										"type": "search"
-									}
+								"input": {
+									"list": "components{{globalId}}",
+									"part": "component-search",
+									"placeholder": "Find component",
+									"type": "search"
 								}
 							},
 							{
@@ -323,9 +295,9 @@
 							},
 							{
 								"ui": "button",
-								"obj": {
+								"removeForm": true,
+								"attr": {
 									"data-click": "dom-insert",
-									"removeForm": true,
 									"name": "component-insert",
 									"part": "button primary",
 									"title": "Insert Component",
@@ -347,7 +319,6 @@
 			}
 		]
 	},
-
 	{
 		"name": "Settings",
 		"key": "settings",
@@ -362,29 +333,23 @@
 						"name": "layoutgrid",
 						"fields": [
 							{
-								"obj": {
-									"ui": "input",
-									"textAfter": "Show grid",
-									"input": {
-										"data-property": "--uie-grid-visible",
-										"name": "grid",
-										"role": "switch",
-										"type": "checkbox"
-									}
+								"textAfter": "Show grid",
+								"input": {
+									"data-property": "--uie-grid-visible",
+									"name": "grid",
+									"role": "switch",
+									"type": "checkbox"
 								}
 							},
 							{
-								"obj": {
-									"ui": "input",
-									"text": "Grid size",
-									"input": {
-										"data-property": "--uie-grid-sz",
-										"data-unit": "px",
-										"min": 5,
-										"name": "gridsize",
-										"type": "range",
-										"value": 20
-									}
+								"text": "Grid size",
+								"input": {
+									"data-property": "--uie-grid-sz",
+									"data-unit": "px",
+									"min": 5,
+									"name": "gridsize",
+									"type": "range",
+									"value": 20
 								}
 							}
 						]

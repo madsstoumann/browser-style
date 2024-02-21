@@ -1,49 +1,105 @@
 {
 	"key": "global",
-	"breakpoints": ["", "sm", "md", "lg", "xl", "xxl"],
+	"breakpoints": [
+		"",
+		"sm",
+		"md",
+		"lg",
+		"xl",
+		"xxl"
+	],
 	"breakpointsDelimiter": ":",
 	"prefixDelimiter": "-",
 	"frames": {
 		"part": "frame-group",
 		"fields": [
 			{
-				"obj": { 
-					"icon": "deviceOff",
-					"label": { "title": "off ⇧⌘1" },
-					"input": { 
-						"data-dimensions": "",
-						"data-sr": "",
-						"name": "frames",
-						"type": "radio",
-						"value": "",
-						"checked": ""
-					}
+				"icon": "deviceOff",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "",
+					"checked": ""
 				}
 			},
-			
 			{
-				"obj": { "icon": "deviceSM", "label": { "title": "off ⇧⌘1" }, "input": { "data-dimensions": "360x640", "data-sr":"", "name":"frames", "type":"radio", "value": "sm" } }
+				"icon": "deviceSM",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "360x640",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "sm"
+				}
 			},
 			{
-				"obj": { "icon": "deviceMD", "label": { "title": "off ⇧⌘1" }, "input": { "data-dimensions": "768x1024", "data-sr":"", "name":"frames", "type":"radio", "value": "md" } }
+				"icon": "deviceMD",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "768x1024",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "md"
+				}
 			},
 			{
-				"obj": { "icon": "deviceLG", "label": { "title": "off ⇧⌘1" }, "input": { "data-dimensions": "1024x1280", "data-sr":"", "name":"frames", "type":"radio", "value": "lg" } }
+				"icon": "deviceLG",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "1024x1280",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "lg"
+				}
 			},
 			{
-				"obj": { "icon": "deviceXL", "label": { "title": "off ⇧⌘1" }, "input": { "data-dimensions": "1280x1280", "data-sr":"", "name":"frames", "type":"radio", "value": "xl" } }
+				"icon": "deviceXL",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "1280x1280",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "xl"
+				}
 			},
 			{
-				"obj": { "icon": "device2XL", "label": { "title": "off ⇧⌘1" }, "input": { "data-dimensions": "1536x1280", "data-sr":"", "name":"frames", "type":"radio", "value": "2xl" } }
-			}	
+				"icon": "device2XL",
+				"label": {
+					"title": "off ⇧⌘1"
+				},
+				"input": {
+					"data-dimensions": "1536x1280",
+					"data-sr": "",
+					"name": "frames",
+					"type": "radio",
+					"value": "2xl"
+				}
+			}
 		]
 	},
 	"header": [
 		{
 			"ui": "button",
-			"obj": {
+			"icon": "colorscheme",
+			"attr": {
 				"data-click": "colorscheme",
-				"icon": "colorscheme",
 				"name": "colorscheme",
 				"title": "Toggle Color Scheme"
 			}
@@ -52,17 +108,17 @@
 			"ui": "tag",
 			"tag": "h1",
 			"content": "Editor",
-			"attributes": {
+			"attr": {
 				"part": "title draghandle"
 			}
 		},
 		{
 			"ui": "button",
-			"obj": { 
-				"data-click": "close", 
-				"icon": "close", 
-				"name": "close", 
-				"part": "close", 
+			"icon": "close",
+			"attr": {
+				"data-click": "close",
+				"name": "close",
+				"part": "close",
 				"title": "Close Editor ⎋"
 			}
 		}
@@ -74,36 +130,30 @@
 				"part": "tabgroup",
 				"fields": [
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "plugConnected",
-							"label": {
-								"title": "Connected. Updates will affect all components with the same type."
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "connected",
-								"type": "radio",
-								"value": "true",
-								"checked": ""
-							}
+						"icon": "plugConnected",
+						"label": {
+							"title": "Connected. Updates will affect all components with the same type."
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "connected",
+							"type": "radio",
+							"value": "true",
+							"checked": ""
 						}
 					},
 					{
-						"ui": "input",
-						"obj": {
-							"icon": "plugDisconnected",
-							"label": {
-								"title": "Disconnected. Updates affects this instance only."
-							},
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "connected",
-								"type": "radio",
-								"value": "false"
-							}
+						"icon": "plugDisconnected",
+						"label": {
+							"title": "Disconnected. Updates affects this instance only."
+						},
+						"input": {
+							"data-sr": "",
+							"removeForm": true,
+							"name": "connected",
+							"type": "radio",
+							"value": "false"
 						}
 					}
 				]
@@ -114,7 +164,6 @@
 				"label": "Frame",
 				"name": "frame-root",
 				"open": false,
-				"part": "appgroup",
 				"fieldsets": [
 					{
 						"name": "frameinfo",
@@ -156,52 +205,52 @@
 						"name": "dom-navigation",
 						"part": "group",
 						"fields": [
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "up",
+								"attr": {
 									"data-click": "nav-up",
-									"icon": "up",
 									"title": "Parent ⇧⌃↑"
 								}
 							},
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "down",
+								"attr": {
 									"data-click": "nav-down",
-									"icon": "down",
 									"title": "Child ⇧⌃↓"
 								}
 							},
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "left",
+								"attr": {
 									"data-click": "nav-left",
-									"icon": "left",
 									"title": "Previous Sibling ⇧⌃←"
 								}
 							},
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "right",
+								"attr": {
 									"data-click": "nav-right",
-									"icon": "right",
 									"title": "Next Sibling ⇧⌃→"
 								}
 							},
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "undo",
+								"attr": {
 									"data-click": "dom-undo",
-									"icon": "undo",
 									"part": "secondary",
 									"title": "Undo ⇧⌃z"
 								}
 							},
-							{ 
+							{
 								"ui": "button",
-								"obj": {
+								"icon": "redo",
+								"attr": {
 									"data-click": "dom-redo",
-									"icon": "redo",
 									"part": "secondary",
 									"title": "Redo ⇧⌃y"
 								}
