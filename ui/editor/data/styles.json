@@ -1661,7 +1661,7 @@
         ]
       },
       {
-        "label": "Gradient Headlines",
+        "label": "Headlines",
         "name": "styles",
         "part": "unit-headlines",
         "fieldsets": [
@@ -1674,7 +1674,7 @@
                   "data-sr": "",
                   "name": "unit-headlines",
                   "type": "radio",
-                  "value": "my-headline-class"
+                  "value": "custom-class"
                 }
               },
               {
@@ -1683,7 +1683,37 @@
                   "data-sr": "",
                   "name": "unit-headlines",
                   "type": "radio",
-                  "value": "another-class"
+                  "value": "anotherclass"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Headlines Test",
+        "name": "styles",
+        "part": "unit-headline-test",
+        "fieldsets": [
+          {
+            "part": "buttongroup",
+            "fields": [
+              {
+                "textAfter": "Custom Class",
+                "input": {
+                  "data-sr": "",
+                  "name": "unit-headline-test",
+                  "type": "radio",
+                  "value": "custom-class"
+                }
+              },
+              {
+                "textAfter": "Another Class",
+                "input": {
+                  "data-sr": "",
+                  "name": "unit-headline-test",
+                  "type": "radio",
+                  "value": "anotherclass"
                 }
               }
             ]

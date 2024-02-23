@@ -1045,6 +1045,7 @@ class uiEditor extends HTMLElement {
 					const prefix = inputString.substring(0, firstDelimiterIndex);
 					const value = inputString.substring(firstDelimiterIndex + this.config.global.prefixDelimiter.length);
 					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}`) || null;
+					this.updateInput(input, cls);
 					this.updateInputElement(input, breakpoint, value);
 				});
 			}
@@ -1093,28 +1094,53 @@ class uiEditor extends HTMLElement {
 	 */
 	updateFormFromClasses() {
 		if (!this.formStyles || !this.active) return;
-
 		this.formStyles.reset();
-		const classes = this.active.className.split(' ');
 		const vars = this.editor.querySelectorAll('var[data-bp]');
 		vars.forEach(varElement => varElement.textContent = '');
 
-		classes.forEach(cls => {
+		const processClass = (cls) => {
 			const match = cls.match(
 				new RegExp(`^(?:(?<breakpoint>[^${this.config.global.breakpointsDelimiter}\\s]+):)?(?<prefix>[^${this.config.global.prefixDelimiter}]+)-(?<value>.+)`)
 			);
 			if (match) {
-				const breakpoint = match.groups.breakpoint && `${match.groups.breakpoint}` || '';
+				const breakpoint = match.groups.breakpoint || '';
 				const prefix = match.groups.prefix || null;
 				const value = match.groups.value || null;
 				const elements = this.formStyles.elements[prefix];
-				/* If elements is a NodeList, select the element that matches `value` */
 				const input = elements instanceof NodeList
-				? Array.from(elements).find(element => element.value === value) || null
-				: elements || null;
+					? Array.from(elements).find(element => element.value === value) || null
+					: elements || null;
+
+					this.updateInput(input, cls);
 				this.updateInputElement(input, breakpoint, value);
+			} else {
+				Array.from(this.formStyles.elements).forEach(node => {
+					if (node.value === cls) {
+						this.updateNode(node, cls);
+					}
+				});
 			}
-		});
+		};
+
+		const classes = this.active.className.split(' ');
+		classes.forEach(processClass);
+	}
+
+	/**
+	 * Updates the input element with the specified class.
+	 * If the input is not provided and cls is provided, it updates all input elements with the matching class.
+	 *
+	 * @param {HTMLElement} input - The input element to update.
+	 * @param {string} cls - The class to update the input element with.
+	 */
+	updateInput(input, cls) {
+		if (!input && cls) {
+			Array.from(this.formStyles.elements).forEach(node => {
+				if (node.value === cls) {
+					this.updateNode(node, cls);
+				}
+			});
+		}
 	}
 
 	/**
@@ -1142,6 +1168,15 @@ class uiEditor extends HTMLElement {
 			const bp = parent?.querySelector(`var[data-bp="${breakpoint}"]`)
 			if (bp) bp.textContent = value;
 		}
+	}
+
+	/**
+	 * Updates the specified node.
+	 * @param {HTMLElement} node - The node to be updated.
+	 */
+	updateNode(node) {
+		const part = node.closest('[part^="unit-"]:not([hidden])');
+		if (part) node.checked = true;
 	}
 }
 customElements.define('ui-editor', uiEditor);
