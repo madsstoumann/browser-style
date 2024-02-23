@@ -6,8 +6,8 @@ import icons from './icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.10
- * @summary 21-02-2024
+ * @version 1.0.12
+ * @summary 23-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -58,6 +58,7 @@ class uiEditor extends HTMLElement {
 		shadow.appendChild(template.content.cloneNode(true));
 
 		// Initialize references to important elements within the shadow DOM.
+		this.breakpointsFieldset = shadow.querySelector(`[name=breakpoints]`);
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
@@ -66,8 +67,9 @@ class uiEditor extends HTMLElement {
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
+		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
+		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
 		this.search = shadow.querySelector(`[part=component-search]`);
-		this.styleParts = shadow.querySelectorAll(`[part*=style-part-]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
@@ -376,10 +378,6 @@ class uiEditor extends HTMLElement {
 	 * @throws {Error} If an error occurs during the fetch operation for any file.
 	 */
 	async fetchFiles(files) {
-		/**
-		 * Object to store configuration data with clean file names.
-		 * @type {Object.<string, Object>}
-		 */
 		const configs = {};
 
 		for (const fileName of files) {
@@ -588,29 +586,31 @@ class uiEditor extends HTMLElement {
 
 			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {
+				/* Utility-based */
 				this.setBreakpointLabel(node, breakpoint, value);
 
 				/* Update value to set */
 				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.global.breakpointsDelimiter}` : '';
 				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.global.prefixDelimiter}${value}`;
 
-				this.setClasses(this.active, value, breakpointPrefix + node.dataset.prefix);
-				this.updateClassList();
+				this.setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
+			}
+			else {
+				/* Unit-based */
+				this.setUnitClass(this.active, node.name, value);
+			}
 
-				if (this.connectedPartsExists()) {
-					this.connectedParts.forEach(part => {
-						part.className = this.active.className;
-					});
-				}
+			this.updateClassList();
+
+			if (this.connectedPartsExists()) {
+				this.connectedParts.forEach(part => {
+					part.className = this.active.className;
+				});
 			}
 			return;
 		}
 
 		/* === APP LOGIC === */
-		if (node.type === 'range' && node.previousElementSibling) {
-			node.previousElementSibling.dataset.value = value;
-		}
-
 		if (node.dataset.property) {
 			const elm = this.iframe ? this.iframe.contentDocument.body : this;
 			if (node.type === 'checkbox') {
@@ -782,7 +782,11 @@ class uiEditor extends HTMLElement {
 		let toolbarFields = [];
 
 		const tools = this.config.tools || [];
-		const plugins = this.config.plugins || [];
+		const plugins = [
+			...(this.config.styles || []),
+			...(this.config.content || []),
+			...(this.config.elements || [])
+		];
 
 		tools.forEach((tool, index) => {
 			const configItem = plugins.length && findObjectByProperty(plugins, 'key', tool.key) || {};
@@ -875,14 +879,7 @@ class uiEditor extends HTMLElement {
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 
-			const parts = node.dataset.styleParts ? node.dataset.styleParts.split(',') : [];
-			this.styleParts.forEach(element => {
-				if (parts.length === 0) {
-					element.hidden = false;
-				} else {
-					element.hidden = parts.includes(element.getAttribute('part')) ? false : true;
-				}
-			})
+			this.styleParts(node);
 
 			if (this.formStyles) {
 				this.updateClassList();
@@ -915,30 +912,8 @@ class uiEditor extends HTMLElement {
 					vars.forEach(label => label.textContent = '');
 				}
 			}
-			// bp.textContent = isRadio ? breakpoint.replace(/[^a-zA-Z0-9]/g, '') : value;
 			bp.textContent = value;
 		}
-	}
-
-	/**
-	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
-	 * @param {HTMLElement} node - The HTML element to set classes on.
-	 * @param {string} value - The new class to be added.
-	 * @param {string} prefix - The prefix used to filter and remove existing classes.
-	 */
-	setClasses(node, value, prefix) {
-		const { classes, removed } = this.getClasses(node);
-		classes.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.classList.remove(className);
-			}
-		})
-		removed.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.dataset.removed = node.dataset.removed.replace(className, '');
-			}
-		})
-		node.classList.add(value);
 	}
 
 	/**
@@ -999,6 +974,64 @@ class uiEditor extends HTMLElement {
 		} catch (error) {
 			console.error('An error occurred while setting outline:', error.message);
 		}
+	}
+
+		/**
+	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
+	 * @param {HTMLElement} node - The HTML element to set classes on.
+	 * @param {string} value - The new class to be added.
+	 */
+		setUnitClass(node, group, value) {
+			const { classes, removed } = this.getClasses(node);
+			this.formStyles.elements[group].forEach(element => {
+				classes.forEach(className => {
+					if (className.includes(element.value)) {
+						node.classList.remove(className);
+					}
+				});
+				removed.forEach(className => {
+					if (className.includes(element.value)) {
+						node.dataset.removed = node.dataset.removed.replace(className, '');
+					}
+				});
+			});
+			node.classList.add(value);
+		}
+
+	/**
+	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
+	 * @param {HTMLElement} node - The HTML element to set classes on.
+	 * @param {string} value - The new class to be added.
+	 * @param {string} prefix - The prefix used to filter and remove existing classes.
+	 */
+	setUtilityClass(node, value, prefix) {
+		const { classes, removed } = this.getClasses(node);
+		classes.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.classList.remove(className);
+			}
+		})
+		removed.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.dataset.removed = node.dataset.removed.replace(className, '');
+			}
+		})
+		node.classList.add(value);
+	}
+
+	/**
+	 * Sets the visibility of style parts based on the provided node.
+	 * @param {HTMLElement} node - The node to determine the style parts from.
+	 * @returns {void}
+	 */
+	styleParts(node) {
+		const parts = node.dataset.styleParts ? node.dataset.styleParts.split(',') : [];
+		const setHiddenProperty = (element, isPartUnit) => {
+			const partAttribute = element.getAttribute('part');
+			element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
+		};
+		this.partUtility.forEach(element => setHiddenProperty(element, false));
+		this.partUnit.forEach(element => setHiddenProperty(element, true));
 	}
 
 	/**

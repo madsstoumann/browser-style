@@ -5,8 +5,8 @@
       {
         "key": "layout",
         "label": "Layout",
-        "name": "style-utility",
-        "part": "style-part-layout",
+        "name": "styles",
+        "part": "utility-layout",
         "groups": [
           {
             "key": "aspect-ratio",
@@ -67,8 +67,8 @@
       {
         "key": "spacing",
         "label": "Spacing",
-        "name": "style-utility",
-        "part": "style-part-spacing",
+        "name": "styles",
+        "part": "utility-spacing",
         "groups": [
           {
             "key": "padding",
@@ -376,8 +376,8 @@
       {
         "key": "sizing",
         "label": "Sizing",
-        "name": "style-utility",
-        "part": "style-part-sizing",
+        "name": "styles",
+        "part": "utility-sizing",
         "fieldsets": [
           {
             "name": "sizing",
@@ -665,8 +665,8 @@
       {
         "key": "typography",
         "label": "Typography",
-        "name": "style-utility",
-        "part": "style-part-typography",
+        "name": "styles",
+        "part": "utility-typography",
         "groups": [
           {
             "key": "fontfamily",
@@ -950,8 +950,8 @@
       {
         "key": "backgrounds",
         "label": "Backgrounds",
-        "name": "style-utility",
-        "part": "style-part-backgrounds",
+        "name": "styles",
+        "part": "utility-backgrounds",
         "fieldsets": [
           {
             "part": "radio colorgrid",
@@ -1654,6 +1654,36 @@
                   "name": "bg",
                   "type": "radio",
                   "value": "sky-1000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Gradient Headlines",
+        "name": "styles",
+        "part": "unit-headlines",
+        "fieldsets": [
+          {
+            "part": "buttongroup",
+            "fields": [
+              {
+                "textAfter": "Custom Class",
+                "input": {
+                  "data-sr": "",
+                  "name": "unit-headlines",
+                  "type": "radio",
+                  "value": "my-headline-class"
+                }
+              },
+              {
+                "textAfter": "Another Class",
+                "input": {
+                  "data-sr": "",
+                  "name": "unit-headlines",
+                  "type": "radio",
+                  "value": "another-class"
                 }
               }
             ]

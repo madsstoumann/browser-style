@@ -11,8 +11,11 @@
 			{
 				"key": "card",
 				"name": "Card",
-				"description": "A card component. Use this to create a card with an image, title, and description.",
+				"description": "A simple card component with an image, title, and description.",
 				"template": "<div>Card</div>",
+				"model": {
+					
+				},
 				"config": [
 						{
 							"key": "title",

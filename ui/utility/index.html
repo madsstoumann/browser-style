@@ -115,8 +115,8 @@ const groups = [
 			{
 				key: 'layout',
 				label: 'Layout',
-				name: 'style-utility',
-				part: 'style-part-layout',
+				name: 'styles',
+				part: 'utility-layout',
 				groups: [
 					{
 						key: 'aspect-ratio',
@@ -134,14 +134,14 @@ const groups = [
 			{
 				key: 'flexgrid',
 				label: 'Flexbox & Grid',
-				name: 'style-utility',
-				part: 'style-part-flexgrid',
+				name: 'styles',
+				part: 'utility-flexgrid',
 			},
 			{
 				key: 'spacing',
 				label: 'Spacing',
-				name: 'style-utility',
-				part: 'style-part-spacing',
+				name: 'styles',
+				part: 'utility-spacing',
 				groups: [
 					{
 						key: 'padding',
@@ -168,14 +168,14 @@ const groups = [
 			{
 				key: 'sizing',
 				label: 'Sizing',
-				name: 'style-utility',
-				part: 'style-part-sizing',
+				name: 'styles',
+				part: 'utility-sizing',
 			},
 			{
 				key: 'typography',
 				label: 'Typography',
-				name: 'style-utility',
-				part: 'style-part-typography',
+				name: 'styles',
+				part: 'utility-typography',
 				groups: [
 					{
 						key: 'fontfamily',
@@ -204,8 +204,8 @@ const groups = [
 			{
 				key: 'backgrounds',
 				label: 'Backgrounds',
-				name: 'style-utility',
-				part: 'style-part-backgrounds',
+				name: 'styles',
+				part: 'utility-backgrounds',
 				fieldsets: [
 					{
 						part: "radio colorgrid",
@@ -216,14 +216,44 @@ const groups = [
 			{
 				key: 'borders',
 				label: 'Borders',
-				name: 'style-utility',
+				name: 'styles',
 				fieldsets: []
 			},
 			{
 				key: 'effects',
 				label: 'Effects',
-				name: 'style-utility',
-			}
+				name: 'styles',
+			},
+			{
+				label: 'Gradient Headlines',
+				name: 'styles',
+				part: 'unit-headlines',
+				fieldsets: [
+					{
+						part: "buttongroup",
+            fields: [
+              {
+                textAfter: "Custom Class",
+                input: {
+                  "data-sr":"",
+                  name: "unit-headlines",
+                  type: "radio",
+                  value: "my-headline-class"
+                }
+              },
+              {
+                textAfter: "Another Class",
+                input: {
+                  "data-sr": "",
+                  name: "unit-headlines",
+                  type: "radio",
+                  value: "another-class"
+                }
+              }
+            ]
+          }
+				]
+			},
 		]
 	}
 ];
