@@ -319,8 +319,17 @@ summary {
 	display: flex;
 	justify-content: space-between;
 	padding: var(--uie-gap);
+	position: relative;
 	user-select: none;
-	/* [part~=appgroup] & { background: color-mix(in srgb, LinkText 3%, var(--uie-gray-10)); } */
+	[part^=unit-] &::after {
+		background: GrayText;
+		content: "";
+		height: 4px;
+		left: 0;
+		position: absolute;
+		top: 0;
+		width: 4px;
+	}
 	&:focus-visible, &:hover { background: var(--uie-blue-40); outline: 0; }
 	&::marker { content: ""; }
 	&::-webkit-details-marker { display: none; }
