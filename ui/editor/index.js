@@ -586,27 +586,19 @@ class uiEditor extends HTMLElement {
 
 			/* Remove any classes matching the prefix */
 			if (node.hasAttribute('data-prefix')) {
-				/* Utility-based */
 				this.setBreakpointLabel(node, breakpoint, value);
 
 				/* Update value to set */
 				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.global.breakpointsDelimiter}` : '';
 				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.global.prefixDelimiter}${value}`;
-
 				this.setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
 			}
 			else {
-				/* Unit-based */
 				this.setUnitClass(this.active, node.name, value);
 			}
 
 			this.updateClassList();
-
-			if (this.connectedPartsExists()) {
-				this.connectedParts.forEach(part => {
-					part.className = this.active.className;
-				});
-			}
+			this.updateConnectedParts();
 			return;
 		}
 
@@ -634,6 +626,7 @@ class uiEditor extends HTMLElement {
 					this.active.classList.add(value);
 					this.active.dataset.removed = this.active.dataset.removed.replace(value, '');
 				}
+				this.updateConnectedParts()
 				this.updateFormFromClasses();
 				break;
 			/* Active Tool */
@@ -1081,6 +1074,17 @@ class uiEditor extends HTMLElement {
 		this.editor.elements.classlist.innerHTML = 
 			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
 			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
+	}
+
+	/**
+	 * Updates the connected parts by setting their className to the same value as the active part's className.
+	 */
+	updateConnectedParts() {
+		if (this.connectedPartsExists()) {
+			this.connectedParts.forEach(part => {
+				part.className = this.active.className;
+			});
+		}
 	}
 
 	/**
