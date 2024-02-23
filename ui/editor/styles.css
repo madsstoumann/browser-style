@@ -16,6 +16,7 @@
 	--uie-gray-5: color-mix(in srgb, Canvas, CanvasText 5%);
 	--uie-gray-10: color-mix(in srgb, Canvas, CanvasText 10%);
 	--uie-gray-15: color-mix(in srgb, Canvas, CanvasText 15%);
+	--uie-gray-30: color-mix(in srgb, Canvas, CanvasText 30%);
 	--uie-gray-tp: color-mix(in srgb, GrayText, transparent 80%);
 
 	--uie-grid-c: rgba(255, 0, 0, .25);
@@ -321,14 +322,18 @@ summary {
 	padding: var(--uie-gap);
 	position: relative;
 	user-select: none;
-	[part^=unit-] &::after {
-		background: GrayText;
-		content: "";
-		height: 4px;
-		left: 0;
-		position: absolute;
-		top: 0;
-		width: 4px;
+	[part^=unit-] & {
+		padding-inline-start: calc(2 * var(--uie-gap));
+		&::after {
+			background: var(--uie-gray-30);
+			border-radius: 50%;
+			box-shadow: 0 -6px 0 var(--uie-gray-30), 0 6px 0 var(--uie-gray-30);
+			content: "";
+			height: 4px;
+			left: 4px;
+			position: absolute;
+			width: 4px;
+		}
 	}
 	&:focus-visible, &:hover { background: var(--uie-blue-40); outline: 0; }
 	&::marker { content: ""; }
