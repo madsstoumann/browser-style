@@ -1,7 +1,7 @@
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './render.js';
-import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './utils.js';
-import icons from './icons.js';
+import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './js/utils.js';
+import icons from './js/icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
@@ -1023,6 +1023,7 @@ class uiEditor extends HTMLElement {
 			const partAttribute = element.getAttribute('part');
 			element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
 		};
+		this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
 		this.partUtility.forEach(element => setHiddenProperty(element, false));
 		this.partUnit.forEach(element => setHiddenProperty(element, true));
 	}

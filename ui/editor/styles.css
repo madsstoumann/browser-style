@@ -243,6 +243,7 @@
 		&:nth-of-type(5) { --_c: var(--uie-bp-4); }
 		&:nth-of-type(6) { --_c: var(--uie-bp-5); }
 	}
+	&[hidden] { display: none; }
 }
 
 /* === BREAKPOINTS: CODE/VAR LABELS === */
