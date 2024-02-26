@@ -97,11 +97,18 @@
 	"header": [
 		{
 			"ui": "button",
-			"icon": "colorscheme",
+			"icon": "layoutCollapse",
 			"attr": {
-				"data-click": "colorscheme",
-				"name": "colorscheme",
-				"title": "Toggle Color Scheme"
+				"data-click": "layout-collapse",
+				"title": "Collapse all"
+			}
+		},
+		{
+			"ui": "button",
+			"icon": "layoutSidebar",
+			"attr": {
+				"data-click": "layout-init",
+				"title": "Initial position"
 			}
 		},
 		{
@@ -110,6 +117,15 @@
 			"content": "Editor",
 			"attr": {
 				"part": "title draghandle"
+			}
+		},
+		{
+			"ui": "button",
+			"icon": "colorscheme",
+			"attr": {
+				"data-click": "colorscheme",
+				"name": "colorscheme",
+				"title": "Toggle Color Scheme"
 			}
 		},
 		{

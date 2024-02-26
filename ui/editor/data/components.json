@@ -3,29 +3,58 @@
 		"name": "Components",
 		"items": [
 			{
-				"key": "accordion",
-				"name": "Accordion",
-				"description": "A collapsible accordion component. Use this to create a list of questions and answers.",
-				"template": "%3Cdetails%20class%3D%22ui-accordion%22%20name%3D%22accordion%22%3E%0A%3Csummary%3EHow%20do%20I%20reset%20my%20password%3F%3Cui-icon%20type%3D%22plus-minus%22%3E%3C%2Fui-icon%3E%3C%2Fsummary%3E%0A%3Cdiv%3E%0ATo%20reset%20your%20password%2C%20go%20to%20the%20login%20page%20and%20click%20on%20the%20%22Forgot%20Password%22%20link.%20You%20will%20be%20prompted%20to%20enter%20your%20email%20address%20associated%20with%20your%20account.%20Follow%20the%20instructions%20sent%20to%20your%20email%20to%20reset%20your%20password%20securely.%20If%20you%20encounter%20any%20issues%2C%20feel%20free%20to%20contact%20our%20support%20team%20for%20assistance.%0A%3C%2Fdiv%3E%0A%3C%2Fdetails%3E"
-			},
-			{
 				"key": "card",
 				"name": "Card",
 				"description": "A simple card component with an image, title, and description.",
-				"template": "<div>Card</div>",
+
 				"model": {
-					
-				},
-				"config": [
+					"provider": "contentstack",
+					"locale": "en-us",
+					"uid": "{{INSTANCE}}",
+					"_in_progress": true,
+					"text": [
 						{
-							"key": "title",
-							"type": "text",
-							"label": "Title"
+							"heading": {
+								"text": "The truth about Chicken Tikka Masala",
+								"part": "heading",
+								"styles": ["typography", "sizing"]
+							}
 						},
 						{
-							"key": "description",
+							"content": {
+								"html": "<p>Most people think that Chicken Tikka Masala is a traditional Indian dish. However, this is far from the truth about the English national dish...</p>",
+								"part": "content",
+								"parttype": "richtext",
+								"styles": ["backgrounds", "typography", "sizing"]
+							}
+						},
+						{
+							"link": {
+								"url": {
+									"title": "Read More ›",
+									"href": "#"
+								},
+								"part": "link",
+								"styles": ["typography"]
+							}
+						}
+					],
+					"title": "{{TITLE}}"
+				},
+
+				"template": "<div data-component=\"card\"><h2>{{heading}}</h2><p>{{content}}</p></div>",
+				"config": [
+						{
+							"key": "heading",
+							"type": "text",
+							"label": "Title",
+							"value": "Headline"
+						},
+						{
+							"key": "content",
 							"type": "textarea",
-							"label": "Description"
+							"label": "Description",
+							"value": "Text ..."
 						},
 						{
 							"key": "image",

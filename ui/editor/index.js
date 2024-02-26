@@ -1,13 +1,13 @@
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderElement, renderFieldset, renderGroup, renderInput, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { renderElement, renderFieldset, renderGroup, renderInput, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
 import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.12
- * @summary 23-02-2024
+ * @version 1.0.15
+ * @summary 26-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -127,7 +127,7 @@ class uiEditor extends HTMLElement {
 				this.setOutline(rect);
 				this.setFrameValues(this.active, rect);
 			}
-		}, 10)); 
+		}, 10));
 	}
 
 	/**
@@ -269,6 +269,11 @@ class uiEditor extends HTMLElement {
 			default:
 				throw new Error(`Unsupported action: ${action}`);
 		}
+	}
+
+	collapseAll() {
+		const panels = this.editor.querySelectorAll('details[open]');
+		panels.forEach(panel => panel.open = false);
 	}
 
 	/**
@@ -510,6 +515,7 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
+					
 					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
 					case 'cls-copy': this.copyClasses(); break;
 					case 'cls-rem': this.remClasses(); break;
@@ -527,8 +533,9 @@ class uiEditor extends HTMLElement {
 					case 'dom-redo': this.domAction('redo'); break;
 					case 'dom-replace': this.domAction('replace'); break;
 					case 'dom-undo': this.domAction('undo'); break;
+					case 'layout-collapse': this.collapseAll(); break;
+					case 'layout-init': this.editor.removeAttribute('style'); break;
 					case 'nav-down': this.navigate('firstElementChild'); break;
-					// case 'nav-last': this.navigate('lastElementChild'); break;
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
@@ -867,11 +874,14 @@ class uiEditor extends HTMLElement {
 				this.resizeObserver.unobserve(this.active);
 			}
 			this.active = node;
-			this.connectedParts = this.getConnectedParts(node);
 
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 
+			if (this.active.dataset.component) {
+				console.log(this.findComponentByKey(this.active.dataset.component));
+			}
+			this.connectedParts = this.getConnectedParts(node);
 			this.styleParts(node);
 
 			if (this.formStyles) {
@@ -922,7 +932,12 @@ class uiEditor extends HTMLElement {
 			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
 				const { key, label, ...input} = prop;
 				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `elements${this.uid}` } };
-				return renderInput(config);
+				if (input.type === 'textarea') {
+					delete config.input.type;
+					return renderTextarea(config);
+				} else {
+					return renderInput(config);
+				}
 			}).join('');
 		}
 	}
