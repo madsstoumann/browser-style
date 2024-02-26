@@ -271,11 +271,6 @@ class uiEditor extends HTMLElement {
 		}
 	}
 
-	collapseAll() {
-		const panels = this.editor.querySelectorAll('details[open]');
-		panels.forEach(panel => panel.open = false);
-	}
-
 	/**
  	* Checks if connected parts exist and the editor's connected value is 'true'.
 	* @returns {boolean} - Returns true if connected parts exist and the editor's connected value is 'true', otherwise false.
@@ -533,14 +528,13 @@ class uiEditor extends HTMLElement {
 					case 'dom-redo': this.domAction('redo'); break;
 					case 'dom-replace': this.domAction('replace'); break;
 					case 'dom-undo': this.domAction('undo'); break;
-					case 'layout-collapse': this.collapseAll(); break;
-					case 'layout-init': this.editor.removeAttribute('style'); break;
 					case 'nav-down': this.navigate('firstElementChild'); break;
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
 					case 'sync-html': this.active.innerHTML = this.formContent.elements.htmlcode.value; break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
+					case 'ui-reset': this.uiReset(); break;
 					default: break;
 				}
 			}
@@ -1041,6 +1035,15 @@ class uiEditor extends HTMLElement {
 		this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
 		this.partUtility.forEach(element => setHiddenProperty(element, false));
 		this.partUnit.forEach(element => setHiddenProperty(element, true));
+	}
+
+	/**
+	 * Collapses all panels in the editor, removes position coordinates.
+	 */
+	uiReset() {
+		this.editor.removeAttribute('style');
+		const panels = this.editor.querySelectorAll('details[open]');
+		panels.forEach(panel => panel.open = false);
 	}
 
 	/**

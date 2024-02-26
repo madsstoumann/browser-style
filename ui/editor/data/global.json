@@ -97,18 +97,19 @@
 	"header": [
 		{
 			"ui": "button",
-			"icon": "layoutCollapse",
+			"icon": "colorscheme",
 			"attr": {
-				"data-click": "layout-collapse",
-				"title": "Collapse all"
+				"data-click": "colorscheme",
+				"name": "colorscheme",
+				"title": "Toggle Color Scheme"
 			}
 		},
 		{
 			"ui": "button",
-			"icon": "layoutSidebar",
+			"icon": "uiReset",
 			"attr": {
-				"data-click": "layout-init",
-				"title": "Initial position"
+				"data-click": "ui-reset",
+				"title": "Collapse open panels and reset position"
 			}
 		},
 		{
@@ -120,13 +121,9 @@
 			}
 		},
 		{
-			"ui": "button",
-			"icon": "colorscheme",
-			"attr": {
-				"data-click": "colorscheme",
-				"name": "colorscheme",
-				"title": "Toggle Color Scheme"
-			}
+			"ui": "tag",
+			"tag": "b",
+			"content": ""
 		},
 		{
 			"ui": "button",

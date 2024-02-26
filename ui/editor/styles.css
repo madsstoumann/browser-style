@@ -4,7 +4,8 @@
 	--uie-bxsh-sm: 0px 3px 1px 0px color-mix(in srgb, CanvasText, transparent 95%), 0px 3px 8px 0px color-mix(in srgb, CanvasText, transparent 88%);
 
 	--uie-bp-0: var(--uie-gray-10);
-	--uie-bp-1: #D8E9DD;
+	/* --uie-bp-1: #D8E9DD; */
+	--uie-bp-1: #bedac6;
 	--uie-bp-2: #FFD6A5;
 	--uie-bp-3: #FFB3B3;
 	--uie-bp-4: #D4A5FF;
@@ -231,12 +232,18 @@
 		position: relative;
 		&::after {
 			background: var(--_c, transparent);
-				border-radius: 5px;
-				content: "";
-				height: 2px;
-				width: 100%;
-				bottom: 0px;
-				position: absolute;
+			border-radius: 5px;
+			content: "";
+			height: 2px;
+			width: 100%;
+			bottom: 0px;
+			position: absolute;
+		}
+		&:not(:first-of-type):has(:checked) {
+			background: var(--_c);
+			box-shadow: inset 0px 0px 0px 2px color-mix(in srgb, CanvasText, transparent 90%);
+			color: #000;
+			&::after { display: none; }
 		}
 		&:nth-of-type(2) { --_c: var(--uie-bp-1); }
 		&:nth-of-type(3) { --_c: var(--uie-bp-2); }
