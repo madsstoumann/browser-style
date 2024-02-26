@@ -104,6 +104,7 @@
 [part=form-frames] {
 	display: grid;
 	width: calc(100% - var(--uie-w));
+	user-select: none;
 }
 :host([open="true"][responsive]) [part=frame-group] {
 	background: Canvas;

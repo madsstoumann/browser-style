@@ -31,7 +31,6 @@ class uiEditor extends HTMLElement {
 		if (window.location !== window.parent.location) {
 			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz)';
 			this.addEventListener('pointermove', this.onMove);
-			// this.addEventListener('pointermove', (event) => { console.log(event)});
 			this.addEventListener('click', (event) => {
 				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
 				if (!element.dataset.uieId) element.dataset.uid = uuid();
@@ -501,13 +500,14 @@ class uiEditor extends HTMLElement {
 		try {
 			const target = e.composedPath().shift();
 			if (target === this) {
+				if (this.responsive) { return; }
 				/* Target is the editor, thus grab element below */
 				const elements = document.elementsFromPoint(e.clientX, e.clientY);
 				const element = elements.length > 1 ? elements[1] : null;
 				if (element) {
 					if (this.isSelectable(element)) {
 						this.setActive(element);
-						if (!this.responsive) this.editor.showPopover();
+						this.editor.showPopover();
 					}
 				}
 			}
@@ -694,20 +694,21 @@ class uiEditor extends HTMLElement {
 		if (!this.responsive && this.getAttribute('editor') === 'true') return;
 		try {
 			if (this.responsive) this.style.pointerEvents = 'none';
-				const elements = document.elementsFromPoint(event.clientX, event.clientY);
-				const element = this.responsive ? elements[0] : elements[1];
+			const elements = document.elementsFromPoint(event.clientX, event.clientY);
+			const element = this.responsive ? elements[0] : elements[1];
 
-				if (element !== this.hovered) {
-					if (this.hovered) delete this.hovered.dataset.hover;
-					if (this.isSelectable(element)) {
-						this.hovered = element;
-						this.hovered.dataset.hover = '';
-					}
+			if (element !== this.hovered) {
+				if (this.hovered) delete this.hovered.dataset.hover;
+				if (this.isSelectable(element)) {
+					this.hovered = element;
+					this.hovered.dataset.hover = '';
 				}
+			}
+		} catch (error) {
+		} finally {
 			if (this.responsive) this.style.pointerEvents = 'auto';
-		} catch (error) {}
+		}
 	}
-
 
 	/**
 	 * Handles the 'input' event on the component search input.
