@@ -109,6 +109,7 @@
 			"icon": "uiReset",
 			"attr": {
 				"data-click": "ui-reset",
+				"part": "uireset",
 				"title": "Collapse open panels and reset position"
 			}
 		},

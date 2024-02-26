@@ -31,6 +31,7 @@ class uiEditor extends HTMLElement {
 		if (window.location !== window.parent.location) {
 			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz)';
 			this.addEventListener('pointermove', this.onMove);
+			// this.addEventListener('pointermove', (event) => { console.log(event)});
 			this.addEventListener('click', (event) => {
 				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
 				if (!element.dataset.uieId) element.dataset.uid = uuid();
@@ -128,6 +129,11 @@ class uiEditor extends HTMLElement {
 				this.setFrameValues(this.active, rect);
 			}
 		}, 10));
+
+		/* Set initial active, if responsive */
+		if (this.responsive) {
+			this.setActive(this.iframe.contentDocument.body);
+		}
 	}
 
 	/**

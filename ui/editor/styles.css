@@ -92,7 +92,8 @@
 	inset: 0 0 auto auto;
 	max-height: 100dvh;
 	position: absolute;
-	& [part=close] { display: none; }
+	& [part=close], & [part=uireset] { display: none; }
+	& [part=header] { grid-template-columns: min-content 1fr;}
 	& [part~=draghandle] { cursor: default; }
 }
 :host([open="false"][responsive]) [part=editor],
