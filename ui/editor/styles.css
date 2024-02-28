@@ -403,10 +403,11 @@ svg {
 textarea {
 	border: 1px solid ButtonFace;
 	border-radius: 3px;
+	field-sizing: content;
 	font-family: ui-monospace, monospace;
 	font-size: inherit;
-	form-sizing: auto;
 	grid-column: span 12;
+	max-block-size: 20lh;
 	padding: var(--uie-gap);
 	resize: vertical;
  }
@@ -615,6 +616,27 @@ label:has([role=switch]) {
 		}
 		&:has(:focus-visible) { background: var(--uie-blue-40) ; }
 		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
+	}
+}
+
+/* === TOOLBAR === */
+[part~=toolbar] {
+	padding-block-start: 0;
+	button {
+		border-color: var(--uie-gray-15);
+		border-radius: 0;
+		border-style: solid;
+		border-width: 1px 0 1px 1px;
+		display: grid;
+		height: 30px;
+		place-content: center;
+		width: 30px;
+		&:first-of-type { border-radius: 3px 0 0 3px; }
+		&:last-of-type { 
+			border-radius: 0 3px 3px 0;
+			border-right-width: 1px;
+		}
+		&:is(:hover,:focus-visible) { outline: none; }
 	}
 }
 

@@ -6,8 +6,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.15
- * @summary 26-02-2024
+ * @version 1.0.18
+ * @summary 28-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -133,6 +133,18 @@ class uiEditor extends HTMLElement {
 		if (this.responsive) {
 			this.setActive(this.iframe.contentDocument.body);
 		}
+
+		/* Listen for new components */
+		document.body.addEventListener('uiComponentConnected', (event) => {
+			const component = event.detail.component;
+			if (component) {
+				this.initComponent(component);
+			}
+		});
+
+		/* Init Existing components */
+		const components = document.querySelectorAll('ui-component');
+		components.forEach(component => this.initComponent(component));
 	}
 
 	/**
@@ -473,12 +485,52 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Initializes a component.
+	 * @param {HTMLElement} component - The component to initialize.
+	 */
+	initComponent(component) {
+		const key = component.getAttribute('key');
+		if (!key) return; 
+		const obj = this.findComponentByKey(key);
+		if (obj.model) {
+			const element = component.firstElementChild;
+			element.dataset.component = key;
+			this.iterateObject(obj.model, 'uic-part', (key, part) => { 
+				const node = element.querySelector(part[key]);
+				if (node) {
+					node.dataset.part = part[key];
+					node.dataset.styles = part['uic-styles'];
+				}
+			});
+		};
+	}
+
+	/**
 	 * Checks if a given DOM node is selectable based on the defined criteria.
 	 * @param {HTMLElement} node - The DOM node to check for selectability.
 	 * @returns {boolean} - True if the node is selectable, false otherwise.
 	 */
 	isSelectable(node) {
 		return this.selectable.length === 0 || Object.keys(node.dataset).some(key => this.selectable.includes(key));
+	}
+
+	/**
+	 * Recursively iterates over an object and invokes a callback function when a matching key is found.
+	 * @param {Object} obj - The object to iterate over.
+	 * @param {string} searchKey - The key to search for.
+	 * @param {Function} callback - The callback function to invoke when a matching key is found.
+	 * @returns {void}
+	 */
+	iterateObject(obj, searchKey, callback) {
+		for (const key in obj) {
+			if (typeof obj[key] === 'object' && obj[key] !== null) {
+				this.iterateObject(obj[key], searchKey, callback);
+			} else {
+				if (key === searchKey) {
+					callback(key, obj);
+				}
+			}
+		}
 	}
 
 	/**

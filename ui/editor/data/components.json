@@ -8,7 +8,7 @@
 				"description": "A simple card component with an image, title, and description.",
 
 				"model": {
-					"provider": "contentstack",
+					"uic-provider": "contentstack",
 					"locale": "en-us",
 					"uid": "{{INSTANCE}}",
 					"_in_progress": true,
@@ -16,16 +16,16 @@
 						{
 							"heading": {
 								"text": "The truth about Chicken Tikka Masala",
-								"part": "heading",
-								"styles": ["typography", "sizing"]
+								"uic-part": "h3",
+								"uic-styles": ["typography", "sizing"]
 							}
 						},
 						{
 							"content": {
-								"html": "<p>Most people think that Chicken Tikka Masala is a traditional Indian dish. However, this is far from the truth about the English national dish...</p>",
-								"part": "content",
-								"parttype": "richtext",
-								"styles": ["backgrounds", "typography", "sizing"]
+								"html": "<article>Most people think that Chicken Tikka Masala is a traditional Indian dish. However, this is far from the truth about the English national dish...</article>",
+								"uic-part": "article",
+								"uic-styles": ["backgrounds", "typography", "sizing"],
+								"uic-type": "richtext"
 							}
 						},
 						{
@@ -34,15 +34,15 @@
 									"title": "Read More ›",
 									"href": "#"
 								},
-								"part": "link",
-								"styles": ["typography"]
+								"uic-part": "a",
+								"uic-styles": ["typography"]
 							}
 						}
 					],
 					"title": "{{TITLE}}"
 				},
 
-				"template": "<div data-component=\"card\"><h2>{{heading}}</h2><p>{{content}}</p></div>",
+				"template": "<ui-component key=\"card\"><div><h3>{{heading}}</h3><article>{{content}}</article></div></ui-component>",
 				"config": [
 						{
 							"key": "heading",

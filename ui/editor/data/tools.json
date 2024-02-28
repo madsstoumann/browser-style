@@ -160,6 +160,73 @@
 		"key": "content",
 		"icon": "edit",
 		"title": "Content ⇧⌃2",
+		"fieldsets": [
+			{
+				"name": "richtext-toolbar",
+				"part": "toolbar",
+				"fields": [
+					{
+						"ui": "button",
+						"icon": "textBold",
+						"attr": {
+							"data-click": "text-bold",
+							"title": "Toggle bold-text"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "textItalic",
+						"attr": {
+							"data-click": "text-italic",
+							"title": "Toggle italic-text"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "textUnderline",
+						"attr": {
+							"data-click": "text-underline",
+							"title": "Toggle underline-text"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "textStrike",
+						"attr": {
+							"data-click": "text-strike",
+							"title": "Toggle strike-through"
+						}
+					},
+					
+					
+					{
+						"ui": "button",
+						"icon": "textAlignLeft",
+						"attr": {
+							"data-click": "text-left",
+							"title": "Align left"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "textAlignCenter",
+						"attr": {
+							"data-click": "text-center",
+							"title": "Align center"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "textAlignRight",
+						"attr": {
+							"data-click": "text-right",
+							"title": "Align Right"
+						}
+					}
+
+				]
+			}
+		],
 		"groups": [
 			{
 				"label": "HTML Code",
