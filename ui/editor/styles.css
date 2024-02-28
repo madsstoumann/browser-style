@@ -401,11 +401,11 @@ svg {
 	width: 24px;
 }
 textarea {
-	border: 1px solid ButtonFace;
+	border: 1px solid var(--uie-gray-15);
 	border-radius: 3px;
 	field-sizing: content;
-	font-family: ui-monospace, monospace;
-	font-size: inherit;
+	font-family: inherit;
+	font-size: small;
 	grid-column: span 12;
 	max-block-size: 20lh;
 	padding: var(--uie-gap);
