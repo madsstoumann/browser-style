@@ -110,19 +110,81 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 	return null; // Not found
 }
 
+export function getNestedProperty(obj, path) {
+	const keys = path.split('.');
+	let currentObject = obj;
+
+	for (const key of keys) {
+		if (currentObject && key.includes('[')) {
+			const [arrayKey, index] = key.split(/[\[\]]/).filter(Boolean);
+			currentObject = currentObject[arrayKey] && currentObject[arrayKey][parseInt(index, 10)];
+		} else {
+			currentObject = currentObject && currentObject[key];
+		}
+
+		if (currentObject === undefined) {
+			return { foundObject: undefined, keys };
+		}
+	}
+
+	return { foundObject: currentObject, keys };
+}
+
+export function setNestedProperty(obj, keys, value) {
+	let currentObject = obj;
+
+	for (let i = 0; i < keys.length - 1; i++) {
+		const key = keys[i];
+
+		if (key.includes('[')) {
+			const [arrayKey, index] = key.split(/[\[\]]/).filter(Boolean);
+
+			if (!currentObject[arrayKey]) {
+				currentObject[arrayKey] = [];
+			}
+
+			currentObject = currentObject[arrayKey][parseInt(index, 10)];
+		} else {
+			if (!currentObject[key]) {
+				currentObject[key] = {};
+			}
+
+			currentObject = currentObject[key];
+		}
+
+		if (currentObject === undefined) {
+			return;
+		}
+	}
+
+	const lastKey = keys[keys.length - 1];
+
+	if (lastKey.includes('[')) {
+		const [arrayKey, index] = lastKey.split(/[\[\]]/).filter(Boolean);
+
+		if (!currentObject[arrayKey]) {
+			currentObject[arrayKey] = [];
+		}
+
+		currentObject[arrayKey][parseInt(index, 10)] = value;
+	} else {
+		currentObject[lastKey] = value;
+	}
+}
+
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
-export function setDataUid(element, blacklist = ['ui-editor', 'style', 'script']) {
-	try {
-		if (element && element.nodeType === Node.ELEMENT_NODE && !blacklist.includes(element.tagName.toLowerCase())) {
-			element.dataset.uid = uuid();
-			for (const childNode of element.childNodes) {
-				setDataUid(childNode, blacklist);
-			}
-		}
-	} catch (e) {
-		console.error(e);
-	}
-}
+// export function setDataUid(element, blacklist = ['ui-editor', 'style', 'script']) {
+// 	try {
+// 		if (element && element.nodeType === Node.ELEMENT_NODE && !blacklist.includes(element.tagName.toLowerCase())) {
+// 			element.dataset.uid = uuid();
+// 			for (const childNode of element.childNodes) {
+// 				setDataUid(childNode, blacklist);
+// 			}
+// 		}
+// 	} catch (e) {
+// 		console.error(e);
+// 	}
+// }

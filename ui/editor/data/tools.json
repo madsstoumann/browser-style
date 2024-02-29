@@ -197,8 +197,6 @@
 							"title": "Toggle strike-through"
 						}
 					},
-					
-					
 					{
 						"ui": "button",
 						"icon": "textAlignLeft",
@@ -225,34 +223,25 @@
 					}
 
 				]
-			}
-		],
-		"groups": [
+			},
 			{
-				"label": "HTML Code",
-				"fieldsets": [
+				"fields": [
 					{
-						"part": "textarea",
-						"fields": [
-							{
-								"ui": "textarea",
-								"input": {
-									"name": "htmlcode",
-									"placeholder": "HTML code"
-								},
-								"textAfter": "DANGER: You can overwrite important content. Syncing will replace the content with the HTML code above."
-							},
-							{
-								"ui": "button",
-								"icon": "refresh",
-								"attr": {
-									"data-click": "sync-html",
-									"name": "sync-html",
-									"part": "button icon",
-									"title": "Sync HTML"
-								}
-							}
-						]
+						"ui": "tag",
+						"tag": "div",
+						"content": "",
+						"attr": {
+							"contenteditable": "",
+							"part": "richtext"
+						}
+					},
+					{
+						"ui": "button",
+						"icon": "save",
+						"attr": {
+							"data-click": "save-content",
+							"title": "Save Content"
+						}
 					}
 				]
 			}

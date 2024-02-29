@@ -1,13 +1,13 @@
 import stylesheet from './styles.css' assert { type: 'css' };
 import { renderElement, renderFieldset, renderGroup, renderInput, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, uuid } from './js/utils.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, setNestedProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.18
- * @summary 28-02-2024
+ * @version 1.0.19
+ * @summary 29-02-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -69,6 +69,7 @@ class uiEditor extends HTMLElement {
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
 		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
+		this.richtext = shadow.querySelector(`[part=richtext]`);
 		this.search = shadow.querySelector(`[part=component-search]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
@@ -77,8 +78,8 @@ class uiEditor extends HTMLElement {
 		if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
 		/* Events */
-		this.addAccessKeys();
 		addDocumentScroll();
+		this.addAccessKeys();
 		this.addEventListener('click', this.onClick);
 		this.addEventListener('keydown', this.onKeyDown)
 
@@ -103,8 +104,11 @@ class uiEditor extends HTMLElement {
 		}
 
 		this.editor.addEventListener('input', this.onInput);
-		
-		/* Component search */
+
+		if (this.richtext) {
+			this.richtext.addEventListener('input', this.onRichText);
+		}
+
 		if (this.search) {
 			this.search.addEventListener('input', this.onSearch);
 			this.search.addEventListener('search', () => this.setComponentInfo({}));
@@ -129,11 +133,6 @@ class uiEditor extends HTMLElement {
 			}
 		}, 10));
 
-		/* Set initial active, if responsive */
-		if (this.responsive) {
-			this.setActive(this.iframe.contentDocument.body);
-		}
-
 		/* Listen for new components */
 		document.body.addEventListener('uiComponentConnected', (event) => {
 			const component = event.detail.component;
@@ -145,6 +144,11 @@ class uiEditor extends HTMLElement {
 		/* Init Existing components */
 		const components = document.querySelectorAll('ui-component');
 		components.forEach(component => this.initComponent(component));
+
+		/* Set initial active element, if in responsive mode */
+		if (this.responsive) {
+			this.setActive(this.iframe.contentDocument.body);
+		}
 	}
 
 	/**
@@ -489,20 +493,27 @@ class uiEditor extends HTMLElement {
 	 * @param {HTMLElement} component - The component to initialize.
 	 */
 	initComponent(component) {
-		const key = component.getAttribute('key');
-		if (!key) return; 
-		const obj = this.findComponentByKey(key);
-		if (obj.model) {
-			const element = component.firstElementChild;
-			element.dataset.component = key;
-			this.iterateObject(obj.model, 'uic-part', (key, part) => { 
-				const node = element.querySelector(part[key]);
-				if (node) {
-					node.dataset.part = part[key];
-					node.dataset.styles = part['uic-styles'];
-				}
-			});
-		};
+		try {
+			const formatPart = (part) => part.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+			const key = component.getAttribute('key');
+			if (!key) return; 
+			const obj = this.findComponentByKey(key);
+			if (obj.info) {
+				const element = component.firstElementChild;
+				element.dataset.component = key;
+				this.iterateObject(obj.info, 'part', (key, part) => { 
+					const node = element.querySelector(part[key]);
+					if (node) {
+						node.dataset.part = formatPart(part[key]);
+						node.dataset.styles = part['styles'];
+						if (part['key']) node.dataset.modelKey = part['key'];
+						if (part['richtext']) node.dataset.richtext = '';
+					}
+				});
+			}
+		} catch (error) {
+			console.error('Error initializing component:', error);
+		}
 	}
 
 	/**
@@ -568,7 +579,6 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					
 					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
 					case 'cls-copy': this.copyClasses(); break;
 					case 'cls-rem': this.remClasses(); break;
@@ -590,7 +600,7 @@ class uiEditor extends HTMLElement {
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
-					case 'sync-html': this.active.innerHTML = this.formContent.elements.htmlcode.value; break;
+					case 'save-content': this.saveContent(); break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
 					case 'ui-reset': this.uiReset(); break;
 					default: break;
@@ -763,6 +773,20 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Handles the rich text event.
+	 * @param {Event} event - The event object.
+	 */
+	onRichText = (event) => {
+		const node = event.target;
+		if (this.active.hasAttribute('data-richtext')) {
+			this.active.innerHTML = node.innerHTML;
+		} else {
+			this.active.textContent = node.textContent;
+		
+		}
+	}
+
+	/**
 	 * Handles the 'input' event on the component search input.
 	 * @param {Event} event - The input event.
 	 */
@@ -916,6 +940,34 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
+	 * Saves the content of the active component.
+	 */
+	saveContent() {
+		if (this.active.dataset.modelKey) {
+			const parent = this.active.closest('[data-component]');
+			const saveRichText = this.active.hasAttribute('data-richtext');
+			if (parent) {
+				const component = this.findComponentByKey(parent.dataset.component);
+				if (component) {
+					const model = component.model ? JSON.parse(JSON.stringify(component.model)) : undefined;
+					if (model) {
+						// Select all nodes with data-model-key attribute within the parent
+						const nodesWithModelKey = parent.querySelectorAll('[data-model-key]');
+						// Iterate through each node and update the model
+						nodesWithModelKey.forEach(node => {
+							const { foundObject, keys } = getNestedProperty(model, node.dataset.modelKey);
+							if (foundObject !== undefined) {
+								setNestedProperty(model, keys, (saveRichText ? node.innerHTML : node.textContent ) );
+							}
+						});
+						this.dispatch('saveContent', { component: parent.dataset.component, model });
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	* Sets the active HTML element, updating associated values and visual indicators.
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
@@ -943,7 +995,11 @@ class uiEditor extends HTMLElement {
 			}
 
 			if (this.formContent) {
-				this.formContent.elements.htmlcode.value = node.innerHTML;
+				// TODO! Check if model supports richtext, and show/hide toolbar and field accordingly
+				if (this.richtext && this.active.hasAttribute('data-model-key')) {
+					// TODO! Set contenteditable=plaintext-only if not data-richtext
+					this.richtext.innerHTML = node.innerHTML;
+				}
 			}
 		}
 		catch (error) {
@@ -1086,11 +1142,11 @@ class uiEditor extends HTMLElement {
 	 * @returns {void}
 	 */
 	styleParts(node) {
-		const parts = node.dataset.styleParts ? node.dataset.styleParts.split(',') : [];
+		const parts = node.dataset.styles ? node.dataset.styles.split(',') : [];
 		const setHiddenProperty = (element, isPartUnit) => {
 			const partAttribute = element.getAttribute('part');
 			element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
-		};
+		};console.log(parts)
 		this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
 		this.partUtility.forEach(element => setHiddenProperty(element, false));
 		this.partUnit.forEach(element => setHiddenProperty(element, true));

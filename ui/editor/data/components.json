@@ -8,41 +8,59 @@
 				"description": "A simple card component with an image, title, and description.",
 
 				"model": {
-					"uic-provider": "contentstack",
 					"locale": "en-us",
 					"uid": "{{INSTANCE}}",
 					"_in_progress": true,
 					"text": [
 						{
 							"heading": {
-								"text": "The truth about Chicken Tikka Masala",
-								"uic-part": "h3",
-								"uic-styles": ["typography", "sizing"]
+								"text": "HEADING"
 							}
 						},
 						{
 							"content": {
-								"html": "<article>Most people think that Chicken Tikka Masala is a traditional Indian dish. However, this is far from the truth about the English national dish...</article>",
-								"uic-part": "article",
-								"uic-styles": ["backgrounds", "typography", "sizing"],
-								"uic-type": "richtext"
+								"html": "CONTENT"
 							}
 						},
 						{
 							"link": {
 								"url": {
-									"title": "Read More ›",
+									"title": "LINKTITLE",
 									"href": "#"
-								},
-								"uic-part": "a",
-								"uic-styles": ["typography"]
+								}
 							}
 						}
 					],
 					"title": "{{TITLE}}"
 				},
+			
+				"info": {
+					"provider": "contentstack",
+					"parts": [
+						{
+							"key": "text[0].heading.text",
+							"part": "h3",
+							"styles": ["utility-typography", "utility-spacing", "unit-headlines"]
+						},
+						{
+							"key": "text[1].content.html",
+							"part": "article > p:first-of-type",
+							"styles": ["utility-typography"],
+							"richtext": true
+						},
+						{
+							"part": "article",
+							"styles": ["utility-backgrounds", "utility-spacing"]
+						},
+						{
+							"key": "text[2].link.url.title",
+							"part": "a",
+							"styles": ["utility-typography"]
+						}
+					]
+				},
 
-				"template": "<ui-component key=\"card\"><div><h3>{{heading}}</h3><article>{{content}}</article></div></ui-component>",
+				"template": "<ui-component key=\"card\"><div><h3>{{heading}}</h3><article><p>{{content}}</p></article></div></ui-component>",
 				"config": [
 						{
 							"key": "heading",

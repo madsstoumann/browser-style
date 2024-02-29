@@ -541,6 +541,15 @@ label:has([type=range]) {
 	}
 }
 
+/* === RICHTEXT === */
+[part=richtext] {
+	border: 1px solid var(--uie-gray-15);
+	border-radius: 3px;
+	font-size: small;
+	grid-column: span 12;
+	padding: var(--uie-gap);
+}
+
 /* === SEARCH === */
 label:has([type=search]) {
 	display: contents;
