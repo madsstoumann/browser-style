@@ -221,7 +221,6 @@
 							"title": "Align Right"
 						}
 					}
-
 				]
 			},
 			{
@@ -242,6 +241,19 @@
 							"data-click": "save-content",
 							"title": "Save Content"
 						}
+					}
+				]
+			}
+		],
+		"groups": [
+			{
+				"label": "AI Assistant",
+				"fieldsets": [
+					{
+						
+						"fields": [
+						
+						]
 					}
 				]
 			}

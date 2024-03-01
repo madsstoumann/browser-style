@@ -410,6 +410,10 @@ textarea {
 	max-block-size: 20lh;
 	padding: var(--uie-gap);
 	resize: vertical;
+	&:focus-visible { 
+		background: var(--uie-blue-40);
+		outline: 0;
+	}
  }
  label:has(textarea) {
 	display: contents;
@@ -548,6 +552,10 @@ label:has([type=range]) {
 	font-size: small;
 	grid-column: span 12;
 	padding: var(--uie-gap);
+	&:focus-visible { 
+		background: var(--uie-blue-40);
+		outline: 0;
+	}
 }
 
 /* === SEARCH === */
