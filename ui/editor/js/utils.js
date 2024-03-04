@@ -110,6 +110,19 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 	return null; // Not found
 }
 
+export function replacePlaceholder(obj, placeholder, replacement) {
+	if (typeof obj === 'object') {
+		for (let key in obj) {
+			if (obj.hasOwnProperty(key)) {
+				obj[key] = replacePlaceholder(obj[key], placeholder, replacement);
+			}
+		}
+	} else if (typeof obj === 'string') {
+		obj = obj.replace(new RegExp(placeholder, 'g'), replacement);
+	}
+	return obj;
+}
+
 export function getNestedProperty(obj, path) {
 	const keys = path.split('.');
 	let currentObject = obj;

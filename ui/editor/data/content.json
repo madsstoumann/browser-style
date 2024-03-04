@@ -1,14 +1,51 @@
 [
 	{
 		"key": "content",
+		"ai": [
+			{
+				"service": "chatgpt",
+				"url": "https://api.openai.com/v1/chat/completions",
+				"headers"	: {
+					"Authorization": "Bearer {{APIKEY}}",
+					"Content-Type": "application/json"
+				},
+				"body": {
+					"model": "gpt-4",
+					"messages": [
+						{
+							"role": "assistant",
+							"content": "{{PROMPT}}"
+						}
+					]
+				},
+				"result": "choices[0].message.content"
+			}
+		],
 		"groups": [
 			{
 				"label": "AI Assistant",
 				"fieldsets": [
 					{
-						
+						"part": "buttongroup",
 						"fields": [
-						
+							{
+								"ui": "button",
+								"attr": {
+									"data-click": "ai",
+									"data-ai-service": "chatgpt",
+									"data-ai-prompt": "Optimize this content for a website",
+									"title": "Optimize for web"
+								}
+							},
+							{
+								"ui": "button",
+								"attr": {
+									"data-click": "ai",
+									"data-ai-service": "chatgpt",
+									"data-ai-prompt": "Translate to French",
+									"title": "French"
+								}
+							}
 						]
 					}
 				]

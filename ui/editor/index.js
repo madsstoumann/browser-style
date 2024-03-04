@@ -1,6 +1,6 @@
 import stylesheet from './styles.css' assert { type: 'css' };
 import { renderElement, renderFieldset, renderGroup, renderInput, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, setNestedProperty, uuid } from './js/utils.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, replacePlaceholder, setNestedProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
 /**
  * uiEditor
@@ -224,6 +224,43 @@ class uiEditor extends HTMLElement {
 		} catch (error) {
 			console.error('An error occurred while adding a class:', error.message);
 		}
+	}
+
+	/**
+	 * Prompts the user for an API key if necessary and makes a POST request to a specified service URL.
+	 * If a placeholder '{{PROMPT}}' is found in the service body, it will be replaced with the value of the 'node.dataset.aiPrompt' property concatenated with the value of 'this.active.textContent'.
+	 * Handles the response from the service (e.g., converts it to JSON, checks for errors, etc.).
+	 *
+	 * @param {HTMLElement} node - The HTML element associated with the AI service.
+	 * @returns {Promise<void>} - A promise that resolves when the request is completed.
+	 */
+	async aiPrompt(node) {
+		if (!node || !node.dataset.aiService) return;
+		const service = this.config.content[0].ai.find(obj => obj.service === node.dataset.aiService);
+		if (!service.apikey) {
+			const apiKey = window.prompt('Enter your API key:');
+			service.apikey = apiKey;
+			replacePlaceholder(service.headers, '{{APIKEY}}', apiKey);
+			service.headers.Authorization = service.headers.Authorization.replace('{{APIKEY}}', apiKey);
+		}
+
+		if (service.apikey && service.body) {
+			const body = JSON.stringify(replacePlaceholder(service.body, '{{PROMPT}}', `${node.dataset.aiPrompt}:${this.active.textContent}`));
+			try {
+				const response = await fetch(service.url, {
+					method: service.method || 'POST',
+					headers: service.headers,
+					body
+				});
+// service.response = 'json'; 'text'; 'blob'; 'formData'; 'arrayBuffer';
+				const json = await response.json();
+				console.log(json);
+			} catch (error) {
+				console.error('Error:', error);
+			}
+
+		}
+		console.log(service)
 	}
 
 	/**
@@ -587,6 +624,7 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
+					case 'ai': this.aiPrompt(target); break;
 					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
 					case 'cls-copy': this.copyClasses(); break;
 					case 'cls-rem': this.remClasses(); break;
@@ -998,7 +1036,6 @@ class uiEditor extends HTMLElement {
 			}
 
 			if (this.formContent) {
-				console.log(this.active)
 				const textEditor = (this.texteditor && this.active.hasAttribute('data-model-key') && this.active.hasAttribute('data-edit'));
 				if (textEditor) {
 					this.texteditor.setContent(node.innerHTML, this.active.dataset.edit === 'text');
