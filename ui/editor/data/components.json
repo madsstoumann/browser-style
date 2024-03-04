@@ -38,15 +38,16 @@
 					"provider": "contentstack",
 					"parts": [
 						{
+							"edit": "text",
 							"key": "text[0].heading.text",
 							"part": "h3",
 							"styles": ["utility-typography", "utility-spacing", "unit-headlines"]
 						},
 						{
+							"edit": "richtext",
 							"key": "text[1].content.html",
 							"part": "article > p:first-of-type",
-							"styles": ["utility-typography"],
-							"richtext": true
+							"styles": ["utility-typography"]
 						},
 						{
 							"part": "article",

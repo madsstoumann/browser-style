@@ -2,16 +2,18 @@
  * uiRichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.00
- * @summary 01-03-2024
+ * @version 1.0.01
+ * @summary 04-03-2024
  * @class
  * @extends {HTMLElement}
  */
 class uiRichText extends HTMLElement {
+	static observedAttributes = ['plaintext'];
 	constructor() {
 		super();
 		this.inputTypes = this.getAttribute('input-types')?.split(',') || ['deleteByContent', 'deleteByCut', 'deleteByDrag', 'deleteContentBackward', 'deleteContentForward', 'deleteEntireSoftLine', 'deleteHardLineBackward', 'deleteHardLineForward', 'deleteSoftLineBackward', 'deleteSoftLineForward', 'deleteWordBackward', 'deleteWordForward', 'formatBackColor', 'formatBold', 'formatFontColor', 'formatFontName', 'formatIndent', 'formatItalic', 'formatJustifyCenter', 'formatJustifyFull', 'formatJustifyLeft', 'formatJustifyRight', 'formatOutdent', 'formatRemove', 'formatSetBlockTextDirection', 'formatSetInlineTextDirection', 'formatStrikethrough', 'formatSubscript', 'formatSuperscript', 'formatUnderline', 'historyRedo', 'historyUndo', 'insertCompositionText', 'insertFromComposition', 'insertFromDrop', 'insertFromPaste', 'insertFromYank', 'insertHorizontalRule', 'insertLineBreak', 'insertLink', 'insertOrderedList', 'insertParagraph', 'insertReplacementText', 'insertText', 'insertTranspose', 'insertUnorderedList'];
 		this.toolbarItems = this.getAttribute('toolbar')?.split('|') || [];
+		this.plaintextItems = this.getAttribute('plaintext-toolbar')?.split(',') || [];
 		this.customToolbarItems = [];
 	}
 
@@ -24,14 +26,31 @@ class uiRichText extends HTMLElement {
 		this.content = this.querySelector('[contenteditable]');
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
+		this.content.addEventListener('input', () => { this.dispatchEvent(
+			new CustomEvent("ui-richtext-content", {
+				detail: {
+					content: this.plaintext ? this.content.textContent : this.content.innerHTML
+				},
+			})
+		)});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
 		this.customToolbar = shadow.querySelector(`[part=custom]`);
 		this.highlight = this.commands.filter(command => command.highlight).map(command => command.command);
 		this.htmlcode = shadow.querySelector(`[name=htmlcode]`);
+		this.plaintext = false;
 		this.toggle = shadow.querySelector(`[name=html]`);
 		if (this.toggle) this.toggle.addEventListener('click', this.toggleHTML.bind(this));
 		this.toolbar = shadow.querySelector(`[part=toolbar]`);
 		this.toolbar.addEventListener('click', this.handleToolbarClick.bind(this));
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (!newValue || oldValue === newValue) return;
+		if (name === 'plaintext') {
+			this.plaintext = newValue === 'true';
+			this.content.setAttribute('contenteditable', this.plaintext ? 'plaintext-only' : 'true');
+			this.filterToolbar(this.plaintext)
+		}
 	}
 
 	addCustomCommand(customCommand) {
@@ -42,6 +61,13 @@ class uiRichText extends HTMLElement {
 		} else {
 			console.error(`Command with key ${customCommand.key} already exists.`);
 		}
+	}
+
+	filterToolbar() {
+		[...this.toolbar.elements].forEach(item => {
+			item.hidden = (this.plaintext && !this.plaintextItems.includes(item.name));
+			if (!item.hidden && item.parentNode.tagName === 'FIELDSET') item.parentNode.hidden = false;
+		});
 	}
 
 	handleBeforeInput(event) {
@@ -95,7 +121,7 @@ class uiRichText extends HTMLElement {
 	}
 
 	renderTemplate() {
-		return `<form part="toolbar">${this.renderToolbar()}<fieldset part="custom"></fieldset></form><slot></slot><textarea name="htmlcode" hidden></textarea>`;
+		return `<fieldset part="toolbar">${this.renderToolbar()}<fieldset part="custom"></fieldset></fieldset><slot></slot><textarea name="htmlcode" hidden></textarea>`;
 	}
 
 	renderToolbar() {
@@ -105,6 +131,12 @@ class uiRichText extends HTMLElement {
 	renderToolbarItem(entry) {
 		const obj = this.commands.find((item) => item.key === entry) || {};
 		return obj.options ? this.renderSelect(obj) : this.renderCommand(obj) + this.renderInput(obj);
+	}
+
+	setContent(content, plaintextOnly = false) {
+		const stripTags = (input) => input.replace(/<[^>]*>/g, '');
+		this.setAttribute('plaintext', plaintextOnly);
+		this.content[plaintextOnly ? 'textContent' : 'innerHTML'] = plaintextOnly ? stripTags(content) : content;
 	}
 
 	toggleHTML() {
@@ -119,6 +151,7 @@ class uiRichText extends HTMLElement {
 
 		if (this.htmlcode.hidden) {
 			this.content.innerHTML = this.htmlcode.value;
+			this.content.dispatchEvent(new Event('input'));
 		} else {
 			this.htmlcode.value = this.content.innerHTML;
 		}
@@ -332,6 +365,18 @@ class uiRichText extends HTMLElement {
 			title: 'Remove Formatting'
 		},
 		{
+			command: 'save',
+			icon: `M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2,M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0,M14 4l0 4l-6 0l0 -4`,
+			key: 'save',
+			fn: () => {
+				this,this.dispatchEvent(new CustomEvent("ui-richtext-save", {
+					detail: {
+						content: this.plaintext ? this.content.textContent : this.content.innerHTML
+					}
+				}));
+			},
+		},
+		{
 			command: 'strikeThrough',
 			highlight: true,
 			icon: `M5 12l14 0,M16 6.5a4 2 0 0 0 -4 -1.5h-1a3.5 3.5 0 0 0 0 7h2a3.5 3.5 0 0 1 0 7h-1.5a4 2 0 0 1 -4 -1.5`,
@@ -378,21 +423,21 @@ class uiRichText extends HTMLElement {
 
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
+[hidden] { display: none; }
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
 :host {
 	background: Canvas;
 	color: CanvasText;
-	color-scheme: light dark;
+	color-scheme: inherit;
 }
 :host::part(toolbar) {
 	align-items: center;
-	display: flex;
 	flex-wrap: wrap;
-	gap: 1ch;
+	gap: .5em;
 }
 button {
 	all: unset;
-	border: 1px solid GrayText;
+	border: 1px solid color-mix(in srgb, Canvas, CanvasText 30%);
 	display: inline-grid;
 	height: 1.5em;
 	place-content: center;
@@ -406,7 +451,8 @@ fieldset {
 	all: unset;
 	display: flex;
 	& > *:only-child { border-radius: .1875em; }
-	& > *:is(:focus-visible, :hover) { background: ButtonFace; }
+	& fieldset > *:is(:focus-visible, :hover) { background: color-mix(in srgb, Highlight, Canvas 60%); }
+	&:empty { display: none; }
 }
 select {
 	border: 1px solid GrayText;

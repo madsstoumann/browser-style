@@ -1,0 +1,18 @@
+[
+	{
+		"key": "content",
+		"groups": [
+			{
+				"label": "AI Assistant",
+				"fieldsets": [
+					{
+						
+						"fields": [
+						
+						]
+					}
+				]
+			}
+		]
+	}
+]

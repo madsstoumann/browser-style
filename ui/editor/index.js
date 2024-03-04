@@ -6,8 +6,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.19
- * @summary 29-02-2024
+ * @version 1.0.20
+ * @summary 04-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -29,7 +29,7 @@ class uiEditor extends HTMLElement {
 	async connectedCallback() {
 		/* App is loaded from within an `<iframe>` */
 		if (window.location !== window.parent.location) {
-			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz)';
+			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz);';
 			this.addEventListener('pointermove', this.onMove);
 			this.addEventListener('click', (event) => {
 				const element = document.elementsFromPoint(event.clientX, event.clientY)[1];
@@ -69,7 +69,8 @@ class uiEditor extends HTMLElement {
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
 		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
-		this.richtext = shadow.querySelector(`[part=richtext]`);
+		this.texteditor = shadow.querySelector(`[part=texteditor]`);
+		this.texteditorWrapper = shadow.querySelector(`[part=texteditor-wrapper]`);
 		this.search = shadow.querySelector(`[part=component-search]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
@@ -85,6 +86,12 @@ class uiEditor extends HTMLElement {
 
 		/* Handle iframe */
 		if (this.responsive) {
+			this.iframe.onload = () => { /* Load components within iframe */
+				const components = this.iframe.contentWindow.document.querySelectorAll('ui-component');
+				components.forEach(component => this.initComponent(component));
+				this.setAttribute('responsive', 'true');
+			};
+
 			this.formFrame.addEventListener('input', this.onFrameInput);
 			window.addEventListener('message', event => {
 				if (event.data && event.data.type === 'scroll') {
@@ -105,8 +112,9 @@ class uiEditor extends HTMLElement {
 
 		this.editor.addEventListener('input', this.onInput);
 
-		if (this.richtext) {
-			this.richtext.addEventListener('input', this.onRichText);
+		if (this.texteditor) {
+			this.texteditor.addEventListener('ui-richtext-content', this.onTextEdit);
+			this.texteditor.addEventListener('ui-richtext-save', () => this.saveContent());
 		}
 
 		if (this.search) {
@@ -507,7 +515,7 @@ class uiEditor extends HTMLElement {
 						node.dataset.part = formatPart(part[key]);
 						node.dataset.styles = part['styles'];
 						if (part['key']) node.dataset.modelKey = part['key'];
-						if (part['richtext']) node.dataset.richtext = '';
+						if (part['edit']) node.dataset.edit = part['edit'];
 					}
 				});
 			}
@@ -600,7 +608,6 @@ class uiEditor extends HTMLElement {
 					case 'nav-left': this.navigate('previousElementSibling'); break;
 					case 'nav-right': this.navigate('nextElementSibling'); break;
 					case 'nav-up': this.navigate('parentNode'); break;
-					case 'save-content': this.saveContent(); break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
 					case 'ui-reset': this.uiReset(); break;
 					default: break;
@@ -773,20 +780,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Handles the rich text event.
-	 * @param {Event} event - The event object.
-	 */
-	onRichText = (event) => {
-		const node = event.target;
-		if (this.active.hasAttribute('data-richtext')) {
-			this.active.innerHTML = node.innerHTML;
-		} else {
-			this.active.textContent = node.textContent;
-		
-		}
-	}
-
-	/**
 	 * Handles the 'input' event on the component search input.
 	 * @param {Event} event - The input event.
 	 */
@@ -803,6 +796,16 @@ class uiEditor extends HTMLElement {
 			}
 			return;
 		}
+	}
+
+	/**
+	 * Handles the rich text event.
+	 * @param {Event} event - The event object.
+	 */
+	onTextEdit = (event) => {
+		if (!event.detail.content) return;
+		const plaintextOnly = this.active?.dataset?.edit === 'text' || false; 
+		this.active[plaintextOnly ? 'textContent' : 'innerHTML'] = event.detail.content;
 	}
 
 	/**
@@ -945,7 +948,7 @@ class uiEditor extends HTMLElement {
 	saveContent() {
 		if (this.active.dataset.modelKey) {
 			const parent = this.active.closest('[data-component]');
-			const saveRichText = this.active.hasAttribute('data-richtext');
+			const saveRichText = this.active.dataset.edit === 'richtext';
 			if (parent) {
 				const component = this.findComponentByKey(parent.dataset.component);
 				if (component) {
@@ -995,11 +998,12 @@ class uiEditor extends HTMLElement {
 			}
 
 			if (this.formContent) {
-				// TODO! Check if model supports richtext, and show/hide toolbar and field accordingly
-				if (this.richtext && this.active.hasAttribute('data-model-key')) {
-					// TODO! Set contenteditable=plaintext-only if not data-richtext
-					this.richtext.innerHTML = node.innerHTML;
+				console.log(this.active)
+				const textEditor = (this.texteditor && this.active.hasAttribute('data-model-key') && this.active.hasAttribute('data-edit'));
+				if (textEditor) {
+					this.texteditor.setContent(node.innerHTML, this.active.dataset.edit === 'text');
 				}
+				this.texteditor.hidden = !textEditor;
 			}
 		}
 		catch (error) {
@@ -1146,7 +1150,7 @@ class uiEditor extends HTMLElement {
 		const setHiddenProperty = (element, isPartUnit) => {
 			const partAttribute = element.getAttribute('part');
 			element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
-		};console.log(parts)
+		};
 		this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
 		this.partUtility.forEach(element => setHiddenProperty(element, false));
 		this.partUnit.forEach(element => setHiddenProperty(element, true));
