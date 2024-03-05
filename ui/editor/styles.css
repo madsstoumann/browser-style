@@ -180,7 +180,6 @@
 	& input { grid-column: span 11; }
 	& label { display: contents; }
 	gap: var(--uie-gap);
-	padding-block-end: 0;
 }
 [part=outline] {
 	border: var(--uie-a-bdw, 2px) var(--uie-a-bds, dashed) var(--ui-csss-a-bdc, #f09);
@@ -220,6 +219,7 @@
 		flex: 0 0 100%;
 	}
 }
+[name=classactions] { padding-block-start: 0; }
 [data-click=dom-undo] { grid-column: 7; }
 
 /* === BUTTON === */
@@ -318,8 +318,11 @@ code:has([data-bp]) {
 	&:has(button[value=""]) { padding-block-end: 0; }
 }
 [name=component-configure] {
+	grid-column: span 12;
+  padding: 0;
 	& input { display: block; width: 100%; }
 	& label { grid-column: span 12; }
+	&[hidden] { display: none; }
 }
 label:has([name=component-info]) {
 	grid-column: span 12;
@@ -587,10 +590,7 @@ ui-richtext::part(toolbar) { font-size: 1rem; }
 		outline: 0;
 	}
 }
-[part=texteditor-wrapper] {
-	padding-block-start: 0;
-	&[hidden] { display: none; }
-}
+
 ui-richtext [contenteditable] {
 	border: 1px solid var(--uie-gray-15);
 	border-radius: 3px;
@@ -674,7 +674,15 @@ label:has([role=switch]) {
 		}
 		&:has(:focus-visible) { background: var(--uie-blue-40) ; }
 		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
+		&[hidden] { display: none; }
 	}
+}
+
+/* === TAGLIST === */
+[part~=taglist] {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--uie-gap);
 }
 
 /* === TOOLBAR === */

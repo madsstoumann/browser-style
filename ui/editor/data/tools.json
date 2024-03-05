@@ -91,6 +91,45 @@
 				]
 			}
 		],
+		"footer": 
+			{
+				"fieldsets": [
+					{
+						"name": "connectedgroup",
+						"part": "tabgroup",
+						"fields": [
+							{
+								"icon": "plugConnected",
+								"label": {
+									"title": "Connected. Updates will affect all components with the same type."
+								},
+								"input": {
+									"data-sr": "",
+									"removeForm": true,
+									"name": "connected",
+									"type": "radio",
+									"value": "true",
+									"checked": ""
+								}
+							},
+							{
+								"icon": "plugDisconnected",
+								"label": {
+									"title": "Disconnected. Updates affects this instance only."
+								},
+								"input": {
+									"data-sr": "",
+									"removeForm": true,
+									"name": "connected",
+									"type": "radio",
+									"value": "false"
+								}
+							}
+						]
+					}
+				]
+			}
+		,
 		"groups": [
 			{
 				"label": "Classlist",
@@ -160,19 +199,25 @@
 		"key": "content",
 		"icon": "edit",
 		"title": "Content ⇧⌃2",
-		"fieldsets": [
+		"groups": [
 			{
-				"part": "texteditor-wrapper",
-				"fields": [
+				"label": "Edit Content",
+				"name": "content",
+				"open": true,
+				"fieldsets": [
 					{
-						"ui": "tag",
-						"tag": "ui-richtext",
-						"content": "",
-						"attr": {
-							"part": "texteditor",
-							"plaintext-toolbar": "save",
-							"toolbar": "b,i,u,s,sub,sup|ol,ul,blockquote,hr|left,center,right,justify|link,unlink|remove|html|save"
-						}
+						"fields": [
+							{
+								"ui": "tag",
+								"tag": "ui-richtext",
+								"content": "",
+								"attr": {
+									"part": "texteditor",
+									"plaintext-toolbar": "save",
+									"toolbar": "b,i,u,s,sub,sup|ol,ul,blockquote,hr|left,center,right,justify|link,unlink|remove|html|save"
+								}
+							}
+						]
 					}
 				]
 			}
@@ -185,83 +230,8 @@
 		"title": "Elements ⇧⌃3",
 		"groups": [
 			{
-				"label": "Selected Element",
-				"open": true,
-				"fieldsets": [
-					{
-						"name": "selectedelement",
-						"part": "group",
-						"fields": [
-							{
-								"ui": "button",
-								"icon": "copy",
-								"attr": {
-									"data-click": "dom-copy",
-									"title": "Copy ⇧⌃c"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "cut",
-								"attr": {
-									"data-click": "dom-cut",
-									"title": "Cut ⇧⌃x"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "paste",
-								"attr": {
-									"data-click": "dom-paste",
-									"title": "Paste into ⇧⌃v"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "replace",
-								"attr": {
-									"data-click": "dom-replace",
-									"title": "Replace with ⇧⌃r"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "first",
-								"attr": {
-									"data-click": "dom-first",
-									"title": "Move first ⇧⌃↖"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "leftbar",
-								"attr": {
-									"data-click": "dom-prev",
-									"title": "Move previous ⇧⌃⇞"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "rightbar",
-								"attr": {
-									"data-click": "dom-next",
-									"title": "Move next ⇧⌃⇟"
-								}
-							},
-							{
-								"ui": "button",
-								"icon": "last",
-								"attr": {
-									"data-click": "dom-last",
-									"title": "Move last ⇧⌃↘"
-								}
-							}
-						]
-					}
-				]
-			},
-			{
 				"label": "Components",
+				"name": "elements",
 				"open": true,
 				"fieldsets": [
 					{
@@ -281,6 +251,14 @@
 								"text": ""
 							},
 							{
+								"ui": "tag",
+								"tag": "fieldset",
+								"content": "",
+								"attr": {
+									"name": "component-configure"
+								}
+							},
+							{
 								"ui": "button",
 								"removeForm": true,
 								"attr": {
@@ -296,15 +274,147 @@
 				]
 			},
 			{
-				"label": "Configure Component",
-				"open": true,
-				"fieldsets": [
+				"label": "Presets",
+				"name": "elements",
+				"groups": [
 					{
-						"name": "component-configure"
+						"label": "Add",
+						"name": "presets",
+						"fieldsets": [
+							{
+								"part": "input-icon",
+								"fields": [
+									{
+										"input": {
+											"type": "text",
+											"name": "preset-name",
+											"placeholder": "Preset name"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "listadd",
+										"attr": {
+											"data-click": "add-preset",
+											"title": "Add preset"
+										}
+									},
+									{
+										"ui": "textarea",
+										"input": {
+											"type": "textarea",
+											"name": "preset-description",
+											"placeholder": "Optional description"
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Find",
+						"name": "presets",
+						"open": true,
+						"fieldsets": [
+							{
+								"name": "presets",
+								"fields": [
+									{
+										"input": {
+											"list": "presets{{globalId}}",
+											"part": "preset-search",
+											"placeholder": "Find preset",
+											"type": "search"
+										}
+									}
+								]
+							}
+						]
 					}
 				]
 			}
-		]
+		],
+		"footer": {
+			"groups": [
+				{
+					"label": "Layout Organizer",
+					"name": "elements",
+					"open": true,
+					"fieldsets": [
+						{
+							"name": "selectedelement",
+							"part": "group",
+							"fields": [
+								{
+									"ui": "button",
+									"icon": "copy",
+									"attr": {
+										"data-click": "dom-copy",
+										"title": "Copy ⇧⌃c"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "cut",
+									"attr": {
+										"data-click": "dom-cut",
+										"title": "Cut ⇧⌃x"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "paste",
+									"attr": {
+										"data-click": "dom-paste",
+										"title": "Paste into ⇧⌃v"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "replace",
+									"attr": {
+										"data-click": "dom-replace",
+										"title": "Replace with ⇧⌃r"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "first",
+									"attr": {
+										"data-click": "dom-first",
+										"title": "Move first ⇧⌃↖"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "leftbar",
+									"attr": {
+										"data-click": "dom-prev",
+										"title": "Move previous ⇧⌃⇞"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "rightbar",
+									"attr": {
+										"data-click": "dom-next",
+										"title": "Move next ⇧⌃⇟"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "last",
+									"attr": {
+										"data-click": "dom-last",
+										"title": "Move last ⇧⌃↘"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
 	},
 	{
 		"name": "Settings",

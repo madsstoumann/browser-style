@@ -138,41 +138,6 @@
 		}
 	],
 	"footer": {
-		"fieldsets": [
-			{
-				"name": "connectedgroup",
-				"part": "tabgroup",
-				"fields": [
-					{
-						"icon": "plugConnected",
-						"label": {
-							"title": "Connected. Updates will affect all components with the same type."
-						},
-						"input": {
-							"data-sr": "",
-							"removeForm": true,
-							"name": "connected",
-							"type": "radio",
-							"value": "true",
-							"checked": ""
-						}
-					},
-					{
-						"icon": "plugDisconnected",
-						"label": {
-							"title": "Disconnected. Updates affects this instance only."
-						},
-						"input": {
-							"data-sr": "",
-							"removeForm": true,
-							"name": "connected",
-							"type": "radio",
-							"value": "false"
-						}
-					}
-				]
-			}
-		],
 		"groups": [
 			{
 				"label": "Frame",

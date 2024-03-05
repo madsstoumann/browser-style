@@ -6,8 +6,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.20
- * @summary 04-03-2024
+ * @version 1.0.21
+ * @summary 05-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -70,13 +70,17 @@ class uiEditor extends HTMLElement {
 		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
 		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
 		this.texteditor = shadow.querySelector(`[part=texteditor]`);
-		this.texteditorWrapper = shadow.querySelector(`[part=texteditor-wrapper]`);
 		this.search = shadow.querySelector(`[part=component-search]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
-		this.componentConfigure = shadow.querySelector(`details:has([name=component-configure])`);
+		this.componentConfigure = shadow.querySelector(`[name=component-configure]`);
 		if (this.componentConfigure ) this.componentConfigure.hidden = true;
+
+		this.STYLES = this.editor.elements.tool[0];
+		this.CONTENT = this.editor.elements.tool[1];
+		this.ELEMENTS = this.editor.elements.tool[2];
+		this.SETTINGS = this.editor.elements.tool[3];
 
 		/* Events */
 		addDocumentScroll();
@@ -84,7 +88,7 @@ class uiEditor extends HTMLElement {
 		this.addEventListener('click', this.onClick);
 		this.addEventListener('keydown', this.onKeyDown)
 
-		/* Handle iframe */
+		/* Handle iframe, if responsive */
 		if (this.responsive) {
 			this.iframe.onload = () => { /* Load components within iframe */
 				const components = this.iframe.contentWindow.document.querySelectorAll('ui-component');
@@ -230,7 +234,6 @@ class uiEditor extends HTMLElement {
 	 * Prompts the user for an API key if necessary and makes a POST request to a specified service URL.
 	 * If a placeholder '{{PROMPT}}' is found in the service body, it will be replaced with the value of the 'node.dataset.aiPrompt' property concatenated with the value of 'this.active.textContent'.
 	 * Handles the response from the service (e.g., converts it to JSON, checks for errors, etc.).
-	 *
 	 * @param {HTMLElement} node - The HTML element associated with the AI service.
 	 * @returns {Promise<void>} - A promise that resolves when the request is completed.
 	 */
@@ -246,20 +249,21 @@ class uiEditor extends HTMLElement {
 
 		if (service.apikey && service.body) {
 			const body = JSON.stringify(replacePlaceholder(service.body, '{{PROMPT}}', `${node.dataset.aiPrompt}:${this.active.textContent}`));
-			try {
-				const response = await fetch(service.url, {
-					method: service.method || 'POST',
-					headers: service.headers,
-					body
-				});
-// service.response = 'json'; 'text'; 'blob'; 'formData'; 'arrayBuffer';
-				const json = await response.json();
-				console.log(json);
-			} catch (error) {
-				console.error('Error:', error);
-			}
+			// try {
+			// 	const response = await fetch(service.url, {
+			// 		method: service.method || 'POST',
+			// 		headers: service.headers,
+			// 		body
+			// 	});
+
+			// 	const json = await response.json();
+			// 	console.log(json);
+			// } catch (error) {
+			// 	console.error('Error:', error);
+			// }
 
 		}
+		// service.response = 'json'; 'text'; 'blob'; 'formData'; 'arrayBuffer';
 		console.log(service)
 	}
 
@@ -552,7 +556,7 @@ class uiEditor extends HTMLElement {
 						node.dataset.part = formatPart(part[key]);
 						node.dataset.styles = part['styles'];
 						if (part['key']) node.dataset.modelKey = part['key'];
-						if (part['edit']) node.dataset.edit = part['edit'];
+						if (part['content']) node.dataset.content = part['content'];
 					}
 				});
 			}
@@ -842,7 +846,7 @@ class uiEditor extends HTMLElement {
 	 */
 	onTextEdit = (event) => {
 		if (!event.detail.content) return;
-		const plaintextOnly = this.active?.dataset?.edit === 'text' || false; 
+		const plaintextOnly = this.active?.dataset?.content === 'text' || false; 
 		this.active[plaintextOnly ? 'textContent' : 'innerHTML'] = event.detail.content;
 	}
 
@@ -915,6 +919,8 @@ class uiEditor extends HTMLElement {
 				${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
 				${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
 				${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
+				${tool?.footer?.fieldsets ? tool.footer.fieldsets.map(renderFieldset).join('') : ''}
+				${tool?.footer?.groups ? tool.footer.groups.map(renderGroup).join('') : ''}
 			</div>
 			`;
 			toolbarFields.push({
@@ -986,7 +992,7 @@ class uiEditor extends HTMLElement {
 	saveContent() {
 		if (this.active.dataset.modelKey) {
 			const parent = this.active.closest('[data-component]');
-			const saveRichText = this.active.dataset.edit === 'richtext';
+			const saveRichText = this.active.dataset.content === 'richtext';
 			if (parent) {
 				const component = this.findComponentByKey(parent.dataset.component);
 				if (component) {
@@ -1036,9 +1042,17 @@ class uiEditor extends HTMLElement {
 			}
 
 			if (this.formContent) {
-				const textEditor = (this.texteditor && this.active.hasAttribute('data-model-key') && this.active.hasAttribute('data-edit'));
+				const contentValue = this.active.dataset.content;
+				if (!contentValue) {
+					if (this.CONTENT.checked) {
+						this.STYLES.checked = true;
+						this.STYLES.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+					}
+				}
+				this.CONTENT.parentNode.hidden = !contentValue;
+ 				const textEditor = (this.texteditor && (contentValue === 'text' || contentValue === 'richtext'));
 				if (textEditor) {
-					this.texteditor.setContent(node.innerHTML, this.active.dataset.edit === 'text');
+					this.texteditor.setContent(node.innerHTML, contentValue === 'text');
 				}
 				this.texteditor.hidden = !textEditor;
 			}
@@ -1079,7 +1093,7 @@ class uiEditor extends HTMLElement {
 		this.componentConfigure.hidden = !obj.config;
 
 		if (obj.config) {
-			this.editor.elements['component-configure'].innerHTML = obj.config.map(prop => {
+			this.componentConfigure.innerHTML = obj.config.map(prop => {
 				const { key, label, ...input} = prop;
 				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `elements${this.uid}` } };
 				if (input.type === 'textarea') {

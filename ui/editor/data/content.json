@@ -23,10 +23,12 @@
 		],
 		"groups": [
 			{
-				"label": "AI Assistant",
+				"label": "Content Assistant",
+				"name": "content",
+				"open": true,
 				"fieldsets": [
 					{
-						"part": "buttongroup",
+						"part": "taglist",
 						"fields": [
 							{
 								"ui": "button",
@@ -42,8 +44,17 @@
 								"attr": {
 									"data-click": "ai",
 									"data-ai-service": "chatgpt",
+									"data-ai-prompt": "Suggest 5 different titles for this content",
+									"title": "Suggest 5 titles"
+								}
+							},
+							{
+								"ui": "button",
+								"attr": {
+									"data-click": "ai",
+									"data-ai-service": "chatgpt",
 									"data-ai-prompt": "Translate to French",
-									"title": "French"
+									"title": "Translate to French"
 								}
 							}
 						]
