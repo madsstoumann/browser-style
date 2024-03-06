@@ -65,10 +65,15 @@ export function addDraggable(handle, panel, propX = '--uie-x', propY = '--uie-y'
 	handle.addEventListener('pointerdown', start);
 	handle.addEventListener('pointerup', end);
 	handle.addEventListener('pointercancel', end);
-	// Prevents default touchstart behavior to avoid conflicts with pointer events.
 	handle.addEventListener('touchstart', (e) => e.preventDefault());
 }
 
+/**
+ * Debounces a function, ensuring it is only called after a specified delay.
+ * @param {Function} func - The function to be debounced.
+ * @param {number} delay - The delay in milliseconds.
+ * @returns {Function} - The debounced function.
+ */
 export function debounce(func, delay) {
 	let timeoutId;
 	return function () {
@@ -81,18 +86,49 @@ export function debounce(func, delay) {
 	};
 }
 
+/**
+ * Fetches configuration files asynchronously.
+ * @param {string[]} files - An array of file URLs to fetch.
+ * @returns {Promise<Object>} A promise that resolves to an object containing configuration data.
+ * @throws {Error} If an error occurs during the fetch operation for any file.
+ */
+export async function fetchFiles(files) {
+	const configs = {};
+
+	for (const fileName of files) {
+		// Extracts the clean file name without the file extension.
+		const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
+
+		try {
+			const response = await fetch(fileName);
+			const config = await response.json();
+			configs[cleanFileName] = config;
+		} catch (error) {
+			console.error(`Error fetching ${fileName}: ${error}`);
+		}
+	}
+	return configs;
+}
+
+/**
+ * Finds an object in the given data structure that matches the specified property name and value.
+ * @param {Object|Array} data - The data structure to search in.
+ * @param {string} propertyName - The name of the property to match.
+ * @param {*} propertyValue - The value of the property to match.
+ * @returns {Object|null} - The first object found that matches the property name and value, or null if no match is found.
+ */
 export function findObjectByProperty(data, propertyName, propertyValue) {
 	if (typeof data !== "object" || data === null) {
-		return null; // Handle non-object or null data
+		return null;
 	}
 
 	if (data[propertyName] === propertyValue) {
-		return data; // Base case: match found in current object
+		return data;
 	}
 
 	if (Array.isArray(data)) {
 		for (const item of data) {
-			const result = findObjectByProperty(item, propertyName, propertyValue); // Recursive call on each item
+			const result = findObjectByProperty(item, propertyName, propertyValue);
 			if (result) {
 				return result;
 			}
@@ -100,16 +136,58 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 	} else if (typeof data === "object") {
 		for (const key in data) {
 			const value = data[key];
-			const result = findObjectByProperty(value, propertyName, propertyValue); // Recursive call on each value
+			const result = findObjectByProperty(value, propertyName, propertyValue);
 			if (result) {
 				return result;
 			}
 		}
 	}
-
-	return null; // Not found
+	return null;
 }
 
+/**
+ * Returns the classList of an HTML element and its optional `data-removed` attribute.
+ * @param {HTMLElement} node - The HTML element.
+ * @returns {Object} - Object containing the classList and removed classes of the specified element.
+ */
+export function getClasses(node) {
+	if (!node) return;
+	try {
+		const classes = Array.from(node.classList).filter(className => className.trim() !== '').sort();
+		const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '').sort();
+		return { classes, removed };
+	} catch (error) {
+		console.error('An error occurred while getting classes:', error.message);
+	}
+}
+
+/**
+ * Recursively iterates over an object and invokes a callback function when a matching key is found.
+ * @param {Object} obj - The object to iterate over.
+ * @param {string} searchKey - The key to search for.
+ * @param {Function} callback - The callback function to invoke when a matching key is found.
+ * @returns {void}
+ */
+export function iterateObject(obj, searchKey, callback) {
+	for (const key in obj) {
+		if (typeof obj[key] === 'object' && obj[key] !== null) {
+			iterateObject(obj[key], searchKey, callback);
+		} else {
+			if (key === searchKey) {
+				callback(key, obj);
+			}
+		}
+	}
+}
+
+/**
+ * Parses the response and returns the result.
+ * If the response can be parsed as JSON and it is an object with a single property,
+ * the value of that property is returned as an array.
+ * Otherwise, the original response is returned.
+ * @param {string} response - The response to parse.
+ * @returns {Array|string} - The parsed result.
+ */
 export function parseResponse(response) {
 	let result;
 
@@ -138,6 +216,15 @@ export function parseResponse(response) {
 	return result;
 }
 
+/**
+ * Replaces a placeholder with a replacement value in an object or string.
+ * If the input is an object, it recursively replaces placeholders in all its properties.
+ * If the input is a string, it replaces all occurrences of the placeholder with the replacement value.
+ * @param {object|string} obj - The object or string to perform the replacement on.
+ * @param {string} placeholder - The placeholder value to be replaced.
+ * @param {string} replacement - The replacement value.
+ * @returns {object|string} - The object or string with the placeholder replaced.
+ */
 export function replacePlaceholder(obj, placeholder, replacement) {
 	if (typeof obj === 'object') {
 		for (let key in obj) {
@@ -151,6 +238,12 @@ export function replacePlaceholder(obj, placeholder, replacement) {
 	return obj;
 }
 
+/**
+ * Retrieves a nested property from an object based on a given path.
+ * @param {object} obj - The object to retrieve the property from.
+ * @param {string} path - The path to the nested property, using dot notation.
+ * @returns {object} - An object containing the found property and the keys used to access it.
+ */
 export function getNestedProperty(obj, path) {
 	const keys = path.split('.');
 	let currentObject = obj;
@@ -167,10 +260,16 @@ export function getNestedProperty(obj, path) {
 			return { foundObject: undefined, keys };
 		}
 	}
-
 	return { foundObject: currentObject, keys };
 }
 
+/**
+ * Sets a nested property value in an object.
+ *
+ * @param {object} obj - The object to set the property on.
+ * @param {Array<string>} keys - An array of keys representing the nested property path.
+ * @param {*} value - The value to set.
+ */
 export function setNestedProperty(obj, keys, value) {
 	let currentObject = obj;
 
@@ -213,19 +312,10 @@ export function setNestedProperty(obj, keys, value) {
 	}
 }
 
+/**
+ * Generates a unique identifier using the crypto.getRandomValues method or Math.random.
+ * @returns {number} The generated unique identifier.
+ */
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
-
-// export function setDataUid(element, blacklist = ['ui-editor', 'style', 'script']) {
-// 	try {
-// 		if (element && element.nodeType === Node.ELEMENT_NODE && !blacklist.includes(element.tagName.toLowerCase())) {
-// 			element.dataset.uid = uuid();
-// 			for (const childNode of element.childNodes) {
-// 				setDataUid(childNode, blacklist);
-// 			}
-// 		}
-// 	} catch (e) {
-// 		console.error(e);
-// 	}
-// }

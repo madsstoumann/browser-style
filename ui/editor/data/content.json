@@ -83,7 +83,6 @@
 											"data-click": "ai",
 											"data-ai-service": "chatgpt",
 											"data-ai-prompt": "Optimize this content for a website",
-											"data-ai-type": "4",
 											"title": "Optimize for web"
 										}
 									},
@@ -94,7 +93,6 @@
 											"data-ai-suggest": "2",
 											"data-ai-service": "chatgpt",
 											"data-ai-prompt": "Suggest headlin for this content",
-											"data-ai-type": "5",
 											"title": "Suggest headline"
 										}
 									}

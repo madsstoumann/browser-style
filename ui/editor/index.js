@@ -1,10 +1,14 @@
 import stylesheet from './styles.css' assert { type: 'css' };
-import { renderElement, renderFieldset, renderGroup, renderInput, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, parseResponse, replacePlaceholder, setNestedProperty, uuid } from './js/utils.js';
+
+import { aiPrompt, saveContent } from './js/content.js';
+import { copyClasses } from './js/styles.js';
+import { renderComponentList, renderElement, renderFieldset, renderGroup, renderInput, renderTemplateFromString, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { addDocumentScroll, addDraggable, debounce, fetchFiles, findObjectByProperty, getClasses, getNestedProperty, iterateObject, setNestedProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
+
 /**
  * uiEditor
- * Web Component for inspecting and editing HTML elements, toggle classes etc.
+ * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
  * @version 1.0.22
  * @summary 06-03-2024
@@ -27,7 +31,7 @@ class uiEditor extends HTMLElement {
 	* Initializes the shadow DOM, sets up event listeners, and performs necessary setup.
 	*/
 	async connectedCallback() {
-		/* App is loaded from within an `<iframe>` */
+		/* App is loaded from within an `<iframe>`. Set up necessary eventListeners etc., and exit early */
 		if (window.location !== window.parent.location) {
 			this.style.cssText = '--_sz:calc(var(--uie-grid-sz,20px)*var(--uie-grid-visible,0));inset:0;position:fixed;background:#0000 conic-gradient(from 90deg at 1px 1px,#0000 90deg,rgba(255,0,0,.25) 0);background-size:var(--_sz) var(--_sz);';
 			this.addEventListener('pointermove', this.onMove);
@@ -40,15 +44,16 @@ class uiEditor extends HTMLElement {
 			return;
 		}
 
+		/* Fetch config-files */
 		const files = this.getAttribute('files');
 		if (files) {
 			const filenames = files.split(',').map(name => name.trim());
-			this.config = await this.fetchFiles(filenames)
+			this.config = await fetchFiles(filenames)
 		}
 		if (!this.config || !this.config.app) return;
-console.log(this.config);
+
 		this.uid = uuid();
-		setBreakpoints(this.config.app.breakpoints);
+		setBreakpoints(this.config.app.breakpoints); /* Set global breakpoints in external file: render.js */
 		setIconObject(icons);
 
 		const shadow = this.attachShadow({ mode: 'open' })
@@ -59,6 +64,8 @@ console.log(this.config);
 
 		// Initialize references to important elements within the shadow DOM.
 		this.breakpointsFieldset = shadow.querySelector(`[name=breakpoints]`);
+		this.componentConfigure = shadow.querySelector(`[name=component-configure]`);
+		this.componentSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
@@ -70,15 +77,12 @@ console.log(this.config);
 		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
 		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
 		this.texteditor = shadow.querySelector(`[part=texteditor]`);
-		this.search = shadow.querySelector(`[part=component-search]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
-		this.componentConfigure = shadow.querySelector(`[name=component-configure]`);
-		if (this.componentConfigure ) this.componentConfigure.hidden = true;
-
+		/* References to the different tools of the editor */
 		[this.STYLES, this.CONTENT, this.ELEMENTS, this.SETTINGS] = this.editor.elements.tool;
-
+		if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
 		/* Events */
 		addDocumentScroll();
@@ -86,14 +90,13 @@ console.log(this.config);
 		this.addEventListener('click', this.onClick);
 		this.addEventListener('keydown', this.onKeyDown)
 
-		/* Handle iframe, if responsive */
+		/* Handle iframe, if `responsive`-attribute is set */
 		if (this.responsive) {
 			this.iframe.onload = () => { /* Load components within iframe */
 				const components = this.iframe.contentWindow.document.querySelectorAll('ui-component');
 				components.forEach(component => this.initComponent(component));
 				this.setAttribute('responsive', 'true');
-			};
-
+			}
 			this.formFrame.addEventListener('input', this.onFrameInput);
 			window.addEventListener('message', event => {
 				if (event.data && event.data.type === 'scroll') {
@@ -107,21 +110,39 @@ console.log(this.config);
 			});
 		}
 		else {
-			this.addEventListener('pointermove', this.onMove);
 			addDraggable(this.draghandle, this.editor);
+			this.addEventListener('pointermove', this.onMove);
 			this.editor.addEventListener('beforetoggle', this.onToggle)
 		}
 
 		this.editor.addEventListener('input', this.onInput);
 
-		if (this.texteditor) {
-			this.texteditor.addEventListener('ui-richtext-content', this.onTextEdit);
-			this.texteditor.addEventListener('ui-richtext-save', () => this.saveContent());
+		/* Components */
+		if (this.config.components) {
+
+			/* Search for components */
+			if (this.componentSearch) {
+				this.componentSearch.addEventListener('input', this.onSearch);
+				this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
+			}
+
+			/* Listen for new components */
+			document.body.addEventListener('uiComponentConnected', (event) => {
+				const component = event.detail.component;
+				if (component) {
+					this.initComponent(component);
+				}
+			});
+
+			/* Init Existing components */
+			const components = document.querySelectorAll('ui-component');
+			components.forEach(component => this.initComponent(component));
 		}
 
-		if (this.search) {
-			this.search.addEventListener('input', this.onSearch);
-			this.search.addEventListener('search', () => this.setComponentInfo({}));
+		/* Set up texteditor */
+		if (this.texteditor) {
+			this.texteditor.addEventListener('ui-richtext-content', this.onTextEdit);
+			this.texteditor.addEventListener('ui-richtext-save', () => saveContent.call(this));
 		}
 
 		/* Detect if active element's contentBoxSize changed */
@@ -142,21 +163,6 @@ console.log(this.config);
 				this.setFrameValues(this.active, rect);
 			}
 		}, 10));
-
-
-		if (this.config.components) {
-			/* Listen for new components */
-			document.body.addEventListener('uiComponentConnected', (event) => {
-				const component = event.detail.component;
-				if (component) {
-					this.initComponent(component);
-				}
-			});
-
-			/* Init Existing components */
-			const components = document.querySelectorAll('ui-component');
-			components.forEach(component => this.initComponent(component));
-		}
 
 		/* Set initial active element, if in responsive mode */
 		if (this.responsive) {
@@ -212,7 +218,7 @@ console.log(this.config);
 	}
 
 	/**
-	* Adds a class to the active HTML element's classList and updates the class list display.
+	* Adds one or more classes to the active HTML element's classList and updates the class list display.
 	*/
 	addClass() {
 		try {
@@ -220,7 +226,6 @@ console.log(this.config);
 			const addClassValue = addClassElement.value.trim();
 
 			if (addClassValue && this.active) {
-				const { classes, removed } = this.getClasses(this.active);
 				const classesToAdd = addClassValue.split(/\s+/);
 				this.active.classList.add(...classesToAdd);
 				this.updateClassList();
@@ -228,52 +233,6 @@ console.log(this.config);
 			}
 		} catch (error) {
 			console.error('An error occurred while adding a class:', error.message);
-		}
-	}
-
-	/**
-	 * Prompts the user for an API key if necessary and makes a POST request to a specified service URL.
-	 * If a placeholder '{{PROMPT}}' is found in the service body, it will be replaced with the value of the 'node.dataset.aiPrompt' property concatenated with the value of 'this.active.textContent'.
-	 * Handles the response from the service (e.g., converts it to JSON, checks for errors, etc.).
-	 * @param {HTMLElement} node - The HTML element associated with the AI service.
-	 * @returns {Promise<void>} - A promise that resolves when the request is completed.
-	 */
-	async aiPrompt(node) {
-		if (!node || !node.dataset.aiService) return;
-		const service = this.config.content[0].ai.find(obj => obj.service === node.dataset.aiService);
-		if (!service.apikey) {
-			const apiKey = window.prompt('Enter your API key:');
-			service.apikey = apiKey;
-			replacePlaceholder(service.headers, '{{APIKEY}}', apiKey);
-			service.headers.Authorization = service.headers.Authorization.replace('{{APIKEY}}', apiKey);
-		}
-
-		if (service.apikey && service.body) {
-			const suggest = node.dataset.aiSuggest-0 || this.formContent.elements.aisuggest?.valueAsNumber || 1;
-			const prompt = `${node.dataset.aiPrompt || this.formContent.elements.aiprompt.value}${suggest > 1 ? ` (${suggest}). ${service.multiple}`:''}: ${this.active.textContent}`;
-			const body = JSON.stringify(service.body).replace('{{PROMPT}}', prompt);
-			
-			try {
-				this.setAttribute('loader', 'overlay');
-				const response = await fetch(service.url, {
-					method: service.method || 'POST',
-					headers: service.headers,
-					body
-				});
-
-				const json = await response.json();
-				const { foundObject, _keys } = getNestedProperty(json, service.result);
-
-				if (foundObject !== undefined) {
-					const result = parseResponse(foundObject);
-					console.log(result)
-				}
-			} catch (error) {
-				console.error('Error:', error);
-			}
-			finally {
-				this.removeAttribute('loader');
-			}
 		}
 	}
 
@@ -306,7 +265,7 @@ console.log(this.config);
 				if (element) {
 					const component = this.config.components.flatMap(group => group.items).find(obj => obj.key === element);
 					if (component && component.template) {
-						const template = this.renderTemplateFromString(component.template, component.config ? component.config : {});
+						const template = renderTemplateFromString(component.template, component.config ? component.config : {});
 						this.active.insertAdjacentHTML('beforeend', template);
 						this.setActive(this.active);
 					}
@@ -357,21 +316,6 @@ console.log(this.config);
 	*/
 	connectedPartsExists() {
 		return (this.connectedParts.length > 0) && (this.editor.elements.connected.value === 'true');
-	}
-
-	/**
-	 * Copies the classList of the active element as a string to the clipboard.
-	 * @throws {Error} Throws an error if the Clipboard API is not supported or if there is an issue copying to the clipboard.
-	 */
-	copyClasses() {
-		try {
-			if (!navigator.clipboard) {
-				throw new Error('Clipboard API is not supported in this browser.');
-			}
-			navigator.clipboard.writeText(this.active.className);
-		} catch (error) {
-			console.error('Error in copyClasses:', error.message);
-		}
 	}
 
 	/**
@@ -451,28 +395,14 @@ console.log(this.config);
 	}
 
 	/**
-	 * Fetches configuration files asynchronously.
-	 *
-	 * @param {string[]} files - An array of file URLs to fetch.
-	 * @returns {Promise<Object>} A promise that resolves to an object containing configuration data.
-	 * @throws {Error} If an error occurs during the fetch operation for any file.
-	 */
-	async fetchFiles(files) {
-		const configs = {};
-
-		for (const fileName of files) {
-			// Extracts the clean file name without the file extension.
-			const cleanFileName = fileName.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
-
-			try {
-				const response = await fetch(fileName);
-				const config = await response.json();
-				configs[cleanFileName] = config;
-			} catch (error) {
-				console.error(`Error fetching ${fileName}: ${error}`);
-			}
+	* Navigates to a sibling or parent element based on the specified property.
+	* Updates the active element accordingly.
+	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
+	*/
+	domNavigate(property) {
+		if (this.active[property]) {
+			this.setActive(this.active[property]);
 		}
-		return configs;
 	}
 
 	/**
@@ -504,22 +434,6 @@ console.log(this.config);
 	*/
 	findComponentByKey(key) {
 		return this.config.components.flatMap(group => group.items).find(obj => obj.key === key);
-	}
-
-	/**
-	 * Returns the classList of an HTML element and its optional `data-removed` attribute.
-	 * @param {HTMLElement} node - The HTML element.
-	 * @returns {Object} - Object containing the classList and removed classes of the specified element.
-	 */
-	getClasses(node) {
-		if (!node) return;
-		try {
-			const classes = Array.from(node.classList).filter(className => className.trim() !== '').sort();
-			const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '').sort();
-			return { classes, removed };
-		} catch (error) {
-			console.error('An error occurred while getting classes:', error.message);
-		}
 	}
 
 	/**
@@ -560,7 +474,7 @@ console.log(this.config);
 			if (obj.info) {
 				const element = component.firstElementChild;
 				element.dataset.component = key;
-				this.iterateObject(obj.info, 'part', (key, part) => { 
+				iterateObject(obj.info, 'part', (key, part) => { 
 					const node = element.querySelector(part[key]);
 					if (node) {
 						node.dataset.part = formatPart(part[key]);
@@ -584,35 +498,6 @@ console.log(this.config);
 		return this.selectable.length === 0 || Object.keys(node.dataset).some(key => this.selectable.includes(key));
 	}
 
-	/**
-	 * Recursively iterates over an object and invokes a callback function when a matching key is found.
-	 * @param {Object} obj - The object to iterate over.
-	 * @param {string} searchKey - The key to search for.
-	 * @param {Function} callback - The callback function to invoke when a matching key is found.
-	 * @returns {void}
-	 */
-	iterateObject(obj, searchKey, callback) {
-		for (const key in obj) {
-			if (typeof obj[key] === 'object' && obj[key] !== null) {
-				this.iterateObject(obj[key], searchKey, callback);
-			} else {
-				if (key === searchKey) {
-					callback(key, obj);
-				}
-			}
-		}
-	}
-
-	/**
-	* Navigates to a sibling or parent element based on the specified property.
-	* Updates the active element accordingly.
-	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
-	*/
-	navigate(property) {
-		if (this.active[property]) {
-			this.setActive(this.active[property]);
-		}
-	}
 
 	/**
 	* Handles the click event for the editor and its buttons/actions.
@@ -638,9 +523,9 @@ console.log(this.config);
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					case 'ai': this.aiPrompt(target); break;
+					case 'ai': aiPrompt.call(this, target); break;
 					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
-					case 'cls-copy': this.copyClasses(); break;
+					case 'cls-copy': copyClasses(this.active.className); break;
 					case 'cls-rem': this.remClasses(); break;
 					case 'cls-revert': this.revertClasses(); this.updateFormFromClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
@@ -656,10 +541,10 @@ console.log(this.config);
 					case 'dom-redo': this.domAction('redo'); break;
 					case 'dom-replace': this.domAction('replace'); break;
 					case 'dom-undo': this.domAction('undo'); break;
-					case 'nav-down': this.navigate('firstElementChild'); break;
-					case 'nav-left': this.navigate('previousElementSibling'); break;
-					case 'nav-right': this.navigate('nextElementSibling'); break;
-					case 'nav-up': this.navigate('parentNode'); break;
+					case 'nav-down': this.domNavigate('firstElementChild'); break;
+					case 'nav-left': this.domNavigate('previousElementSibling'); break;
+					case 'nav-right': this.domNavigate('nextElementSibling'); break;
+					case 'nav-up': this.domNavigate('parentNode'); break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
 					case 'ui-reset': this.uiReset(); break;
 					default: break;
@@ -778,10 +663,10 @@ console.log(this.config);
 			}
 		};
 		const keyBindings = {
-			'arrowup': () => this.navigate('parentNode'),
-			'arrowdown': () => this.navigate('firstElementChild'),
-			'arrowleft': () => this.navigate('previousElementSibling'),
-			'arrowright': () => this.navigate('nextElementSibling'),
+			'arrowup': () => this.domNavigate('parentNode'),
+			'arrowdown': () => this.domNavigate('firstElementChild'),
+			'arrowleft': () => this.domNavigate('previousElementSibling'),
+			'arrowright': () => this.domNavigate('nextElementSibling'),
 			'backspace': () => this.domAction('cut'),
 			'end': () => this.domAction('last'),
 			'home': () => this.domAction('first'),
@@ -890,21 +775,6 @@ console.log(this.config);
 	}
 
 	/**
-	 * Renders a list of components as a datalist element.
-	 * @param {Array} array - An array of component groups, each containing a name and an array of items.
-	 * @param {string} id - The identifier to be used in the datalist's id attribute.
-	 * @returns {string} - The HTML representation of the datalist element.
-	 */
-	renderComponentList(array, id) {
-		return `<datalist id="components${id}">${
-			array.map(
-				group => `<optgroup label="${group.name}">${group.items.map(
-					component => `<option value="${component.name}" data-component-key="${component.key}">${group.name}</option>`
-				).join('')}</optgroup>`
-			).join('')}</datalist>`
-	}
-
-	/**
 	 * Renders the template for the app.
 	 * @returns {string} - The generated markup.
 	 */
@@ -957,7 +827,7 @@ console.log(this.config);
 				<div part="tools">${output}</div>
 				${this.config.app?.footer?.fieldsets ? this.config.app.footer.fieldsets.map(renderFieldset).join(''):''}
 				${this.config.app?.footer?.groups ? this.config.app.footer.groups.map(renderGroup).join(''):''}
-				${this.config.components ? this.renderComponentList(this.config.components, this.uid) : ''}
+				${this.config.components ? renderComponentList(this.config.components, this.uid) : ''}
 			</form>
 			${forms}
 			${this.responsive ? `<form id="frames${this.uid}" part="form-frames">
@@ -972,21 +842,6 @@ console.log(this.config);
 	}
 
 	/**
- 	* Renders a template string by replacing placeholders with values from the provided configuration.
-	* @param {string} template - The template string with placeholders in the format {{key}}.
-	* @param {Array} config - An array of objects with key-value pairs to replace the placeholders in the template.
-	* @returns {string} The rendered template string.
-	*/
-	renderTemplateFromString(template, config = {}) {
-		if (!template) return '';
-		/* Replaces placeholders in the template with values from the configuration. */
-		return decodeURIComponent(template).replace(/\{\{(\w+)\}\}/g, (match, key) => {
-			const configItem = config.find(item => item.key === key);
-			return configItem !== undefined ? configItem.value : match;
-		});
-	}
-
-	/**
 	* Reverts the active element's classList to its original state.
 	*/
 	revertClasses() {
@@ -995,34 +850,6 @@ console.log(this.config);
 			this.updateClassList();
 		}
 		catch (error) { console.error('An error occurred while reverting classes:', error.message); }
-	}
-
-	/**
-	 * Saves the content of the active component.
-	 */
-	saveContent() {
-		if (this.active.dataset.modelKey) {
-			const parent = this.active.closest('[data-component]');
-			const saveRichText = this.active.dataset.content === 'richtext';
-			if (parent) {
-				const component = this.findComponentByKey(parent.dataset.component);
-				if (component) {
-					const model = component.model ? JSON.parse(JSON.stringify(component.model)) : undefined;
-					if (model) {
-						// Select all nodes with data-model-key attribute within the parent
-						const nodesWithModelKey = parent.querySelectorAll('[data-model-key]');
-						// Iterate through each node and update the model
-						nodesWithModelKey.forEach(node => {
-							const { foundObject, keys } = getNestedProperty(model, node.dataset.modelKey);
-							if (foundObject !== undefined) {
-								setNestedProperty(model, keys, (saveRichText ? node.innerHTML : node.textContent ) );
-							}
-						});
-						this.dispatch('saveContent', { component: parent.dataset.component, model });
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -1165,7 +992,7 @@ console.log(this.config);
 	 * @param {string} value - The new class to be added.
 	 */
 		setUnitClass(node, group, value) {
-			const { classes, removed } = this.getClasses(node);
+			const { classes, removed } = getClasses(node);
 			this.formStyles.elements[group].forEach(element => {
 				classes.forEach(className => {
 					if (className.includes(element.value)) {
@@ -1188,7 +1015,7 @@ console.log(this.config);
 	 * @param {string} prefix - The prefix used to filter and remove existing classes.
 	 */
 	setUtilityClass(node, value, prefix) {
-		const { classes, removed } = this.getClasses(node);
+		const { classes, removed } = getClasses(node);
 		classes.forEach(className => {
 			if (className.startsWith(prefix)) {
 				node.classList.remove(className);
@@ -1273,7 +1100,7 @@ console.log(this.config);
 	 */
 	updateClassList(node = this.active) {
 		if (!this.formStyles || !node) return;
-		const { classes, removed } = this.getClasses(node);
+		const { classes, removed } = getClasses(node);
 		this.editor.elements.classlist.innerHTML = 
 			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
 			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');

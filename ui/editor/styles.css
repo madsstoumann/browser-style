@@ -752,7 +752,7 @@ label:has([role=switch]) {
 [data-ai-type] {
 	background: var(--_bg, var(--uie-gray-5));
 	border-color: color-mix(in srgb, var(--_bg), #000 10%);
-	&:is(:focus-visible, :hover) { background: color-mix(in srgb, var(--_bg), Canvas 75%); }
+	&:is(:focus-visible, :hover) { background: color-mix(in srgb, var(--_bg), Canvas 50%); }
 }
 @media (prefers-color-scheme: light) {
 	:host(.colorscheme) [data-ai-type] {
