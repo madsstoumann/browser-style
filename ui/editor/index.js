@@ -1,13 +1,13 @@
 import stylesheet from './styles.css' assert { type: 'css' };
 import { renderElement, renderFieldset, renderGroup, renderInput, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, replacePlaceholder, setNestedProperty, uuid } from './js/utils.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getNestedProperty, parseResponse, replacePlaceholder, setNestedProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
 /**
  * uiEditor
  * Web Component for inspecting and editing HTML elements, toggle classes etc.
  * @author Mads Stoumann
- * @version 1.0.21
- * @summary 05-03-2024
+ * @version 1.0.22
+ * @summary 06-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -45,10 +45,10 @@ class uiEditor extends HTMLElement {
 			const filenames = files.split(',').map(name => name.trim());
 			this.config = await this.fetchFiles(filenames)
 		}
-		if (!this.config || !this.config.global) return;
-
+		if (!this.config || !this.config.app) return;
+console.log(this.config);
 		this.uid = uuid();
-		setBreakpoints(this.config.global.breakpoints);
+		setBreakpoints(this.config.app.breakpoints);
 		setIconObject(icons);
 
 		const shadow = this.attachShadow({ mode: 'open' })
@@ -77,10 +77,8 @@ class uiEditor extends HTMLElement {
 		this.componentConfigure = shadow.querySelector(`[name=component-configure]`);
 		if (this.componentConfigure ) this.componentConfigure.hidden = true;
 
-		this.STYLES = this.editor.elements.tool[0];
-		this.CONTENT = this.editor.elements.tool[1];
-		this.ELEMENTS = this.editor.elements.tool[2];
-		this.SETTINGS = this.editor.elements.tool[3];
+		[this.STYLES, this.CONTENT, this.ELEMENTS, this.SETTINGS] = this.editor.elements.tool;
+
 
 		/* Events */
 		addDocumentScroll();
@@ -145,17 +143,20 @@ class uiEditor extends HTMLElement {
 			}
 		}, 10));
 
-		/* Listen for new components */
-		document.body.addEventListener('uiComponentConnected', (event) => {
-			const component = event.detail.component;
-			if (component) {
-				this.initComponent(component);
-			}
-		});
 
-		/* Init Existing components */
-		const components = document.querySelectorAll('ui-component');
-		components.forEach(component => this.initComponent(component));
+		if (this.config.components) {
+			/* Listen for new components */
+			document.body.addEventListener('uiComponentConnected', (event) => {
+				const component = event.detail.component;
+				if (component) {
+					this.initComponent(component);
+				}
+			});
+
+			/* Init Existing components */
+			const components = document.querySelectorAll('ui-component');
+			components.forEach(component => this.initComponent(component));
+		}
 
 		/* Set initial active element, if in responsive mode */
 		if (this.responsive) {
@@ -248,23 +249,32 @@ class uiEditor extends HTMLElement {
 		}
 
 		if (service.apikey && service.body) {
-			const body = JSON.stringify(replacePlaceholder(service.body, '{{PROMPT}}', `${node.dataset.aiPrompt}:${this.active.textContent}`));
-			// try {
-			// 	const response = await fetch(service.url, {
-			// 		method: service.method || 'POST',
-			// 		headers: service.headers,
-			// 		body
-			// 	});
+			const suggest = node.dataset.aiSuggest-0 || this.formContent.elements.aisuggest?.valueAsNumber || 1;
+			const prompt = `${node.dataset.aiPrompt || this.formContent.elements.aiprompt.value}${suggest > 1 ? ` (${suggest}). ${service.multiple}`:''}: ${this.active.textContent}`;
+			const body = JSON.stringify(service.body).replace('{{PROMPT}}', prompt);
+			
+			try {
+				this.setAttribute('loader', 'overlay');
+				const response = await fetch(service.url, {
+					method: service.method || 'POST',
+					headers: service.headers,
+					body
+				});
 
-			// 	const json = await response.json();
-			// 	console.log(json);
-			// } catch (error) {
-			// 	console.error('Error:', error);
-			// }
+				const json = await response.json();
+				const { foundObject, _keys } = getNestedProperty(json, service.result);
 
+				if (foundObject !== undefined) {
+					const result = parseResponse(foundObject);
+					console.log(result)
+				}
+			} catch (error) {
+				console.error('Error:', error);
+			}
+			finally {
+				this.removeAttribute('loader');
+			}
 		}
-		// service.response = 'json'; 'text'; 'blob'; 'formData'; 'arrayBuffer';
-		console.log(service)
 	}
 
 	/**
@@ -475,8 +485,8 @@ class uiEditor extends HTMLElement {
 	filterClassesByBreakpoint(classList, breakpoint) {
 		try {
 			if (!breakpoint) {
-				return classList.filter(className => !this.config.global.breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
-			} else if (this.config.global.breakpoints.includes(breakpoint)) {
+				return classList.filter(className => !this.config.app.breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
+			} else if (this.config.app.breakpoints.includes(breakpoint)) {
 				return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
 			} else {
 				throw new Error('Invalid breakpoint specified');
@@ -707,8 +717,8 @@ class uiEditor extends HTMLElement {
 				this.setBreakpointLabel(node, breakpoint, value);
 
 				/* Update value to set */
-				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.global.breakpointsDelimiter}` : '';
-				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.global.prefixDelimiter}${value}`;
+				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.app.breakpointsDelimiter}` : '';
+				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`;
 				this.setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
 			}
 			else {
@@ -903,7 +913,7 @@ class uiEditor extends HTMLElement {
 		let output = '';
 		let toolbarFields = [];
 
-		const tools = this.config.tools || [];
+		const tools = this.config.app.tools || [];
 		const plugins = [
 			...(this.config.styles || []),
 			...(this.config.content || []),
@@ -941,19 +951,20 @@ class uiEditor extends HTMLElement {
 			<div part="outline" style="left:-9999px;top:-9999px"></div>
 			<form id="editor${this.uid}" part="editor"${this.responsive ? '' : ' popover'}>
 				<header part="header">
-					${this.config.global.header.map(item => renderElement(item)).join('')}
+					${this.config.app.header.map(item => renderElement(item)).join('')}
 				</header>
 				${toolbar}
 				<div part="tools">${output}</div>
-				${this.config.global?.footer?.fieldsets ? this.config.global.footer.fieldsets.map(renderFieldset).join(''):''}
-				${this.config.global?.footer?.groups ? this.config.global.footer.groups.map(renderGroup).join(''):''}
+				${this.config.app?.footer?.fieldsets ? this.config.app.footer.fieldsets.map(renderFieldset).join(''):''}
+				${this.config.app?.footer?.groups ? this.config.app.footer.groups.map(renderGroup).join(''):''}
 				${this.config.components ? this.renderComponentList(this.config.components, this.uid) : ''}
 			</form>
 			${forms}
 			${this.responsive ? `<form id="frames${this.uid}" part="form-frames">
-				${renderFieldset(this.config.global.frames)}
+				${renderFieldset(this.config.app.frames)}
 				<iframe src="${window.location.href}" part="iframe" sandbox="allow-scripts allow-forms allow-same-origin allow-pointer-lock allow-presentation allow-popups allow-popups-to-escape-sandbox"></iframe>
 			</form>` : ''}
+			<div part="loader"></div>
 			<label part="toggle">${this.logo ? `<img src="${this.logo}">`:'UI'}
 				<input type="checkbox" data-sr data-click="toggle"${this.getAttribute('open') === 'true' ? ' checked' : ''}>
 			</label>
@@ -1197,14 +1208,16 @@ class uiEditor extends HTMLElement {
 	 * @returns {void}
 	 */
 	styleParts(node) {
-		const parts = node.dataset.styles ? node.dataset.styles.split(',') : [];
-		const setHiddenProperty = (element, isPartUnit) => {
-			const partAttribute = element.getAttribute('part');
-			element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
-		};
-		this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
-		this.partUtility.forEach(element => setHiddenProperty(element, false));
-		this.partUnit.forEach(element => setHiddenProperty(element, true));
+		try {
+			const parts = node.dataset.styles ? node.dataset.styles.split(',') : [];
+			const setHiddenProperty = (element, isPartUnit) => {
+				const partAttribute = element.getAttribute('part');
+				element.hidden = parts.length === 0 ? isPartUnit : !parts.includes(partAttribute);
+			};
+			this.breakpointsFieldset.hidden = parts.length > 0 && !parts.some(part => part.includes('utility'));
+			this.partUtility.forEach(element => setHiddenProperty(element, false));
+			this.partUnit.forEach(element => setHiddenProperty(element, true));
+		} catch {}
 	}
 
 	/**
@@ -1229,10 +1242,10 @@ class uiEditor extends HTMLElement {
 			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
 			if (filteredClasses.length) {
 				filteredClasses.forEach(cls => {
-					const inputString = cls.replace(breakpoint + this.config.global.breakpointsDelimiter, '');
-					const firstDelimiterIndex = inputString.indexOf(this.config.global.prefixDelimiter);
+					const inputString = cls.replace(breakpoint + this.config.app.breakpointsDelimiter, '');
+					const firstDelimiterIndex = inputString.indexOf(this.config.app.prefixDelimiter);
 					const prefix = inputString.substring(0, firstDelimiterIndex);
-					const value = inputString.substring(firstDelimiterIndex + this.config.global.prefixDelimiter.length);
+					const value = inputString.substring(firstDelimiterIndex + this.config.app.prefixDelimiter.length);
 					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}`) || null;
 					this.updateInput(input, cls);
 					this.updateInputElement(input, breakpoint, value);
@@ -1289,7 +1302,7 @@ class uiEditor extends HTMLElement {
 
 		const processClass = (cls) => {
 			const match = cls.match(
-				new RegExp(`^(?:(?<breakpoint>[^${this.config.global.breakpointsDelimiter}\\s]+):)?(?<prefix>[^${this.config.global.prefixDelimiter}]+)-(?<value>.+)`)
+				new RegExp(`^(?:(?<breakpoint>[^${this.config.app.breakpointsDelimiter}\\s]+):)?(?<prefix>[^${this.config.app.prefixDelimiter}]+)-(?<value>.+)`)
 			);
 			if (match) {
 				const breakpoint = match.groups.breakpoint || '';

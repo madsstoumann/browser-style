@@ -18,6 +18,7 @@
 						}
 					]
 				},
+				"multiple": "Return the result as JSON",
 				"result": "choices[0].message.content"
 			}
 		],
@@ -25,37 +26,107 @@
 			{
 				"label": "Content Assistant",
 				"name": "content",
-				"open": true,
-				"fieldsets": [
+				"groups": [
 					{
-						"part": "taglist",
-						"fields": [
+						"label": "Prompts",
+						"name": "prompts",
+						"open": true,
+						"groups": [
 							{
-								"ui": "button",
-								"attr": {
-									"data-click": "ai",
-									"data-ai-service": "chatgpt",
-									"data-ai-prompt": "Optimize this content for a website",
-									"title": "Optimize for web"
-								}
-							},
+								"label": "Translations",
+								"fieldsets": [
+									{
+										"part": "taglist",
+										"fields": [
+											{
+												"ui": "button",
+												"attr": {
+													"data-click": "ai",
+													"data-ai-service": "chatgpt",
+													"data-ai-prompt": "Translate this content to French",
+													"data-ai-type": "1",
+													"title": "French"
+												}
+											},
+											{
+												"ui": "button",
+												"attr": {
+													"data-click": "ai",
+													"data-ai-service": "chatgpt",
+													"data-ai-prompt": "Translate this content to Spanish",
+													"data-ai-type": "2",
+													"title": "Spanish"
+												}
+											},
+											{
+												"ui": "button",
+												"attr": {
+													"data-click": "ai",
+													"data-ai-service": "chatgpt",
+													"data-ai-prompt": "Translate this content to German",
+													"data-ai-type": "3",
+													"title": "German"
+												}
+											}
+										]
+									}
+								]
+							}
+						],
+						"fieldsets": [
 							{
-								"ui": "button",
-								"attr": {
-									"data-click": "ai",
-									"data-ai-service": "chatgpt",
-									"data-ai-prompt": "Suggest 5 different titles for this content",
-									"title": "Suggest 5 titles"
-								}
-							},
+								"part": "taglist",
+								"fields": [
+									{
+										"ui": "button",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-service": "chatgpt",
+											"data-ai-prompt": "Optimize this content for a website",
+											"data-ai-type": "4",
+											"title": "Optimize for web"
+										}
+									},
+									{
+										"ui": "button",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-suggest": "2",
+											"data-ai-service": "chatgpt",
+											"data-ai-prompt": "Suggest headlin for this content",
+											"data-ai-type": "5",
+											"title": "Suggest headline"
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Custom Prompt",
+						"name": "prompts",
+						"fieldsets": [
 							{
-								"ui": "button",
-								"attr": {
-									"data-click": "ai",
-									"data-ai-service": "chatgpt",
-									"data-ai-prompt": "Translate to French",
-									"title": "Translate to French"
-								}
+								"part": "input-icon",
+								"fields": [
+									{
+										"ui": "textarea",
+										"input": {
+											"name": "aiprompt",
+											"placeholder": ""
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "inputAI",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-service": "chatgpt",
+											"data-ai-prompt": "",
+											"title": "Run custom prompt"
+										}
+									}
+								]
 							}
 						]
 					}

@@ -37,11 +37,4 @@ export default {
 		undo: ['M9 14l-4 -4l4 -4', 'M5 10h11a4 4 0 1 1 0 8h-1'],
 		up: ['M18 18h-6a3 3 0 0 1 -3 -3v-10l-4 4m8 0l-4 -4'],
 
-		textBold: ['M7 5h6a3.5 3.5 0 0 1 0 7h-6z','M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7'],
-		textItalic: ['M11 5l6 0,M7 19l6 0','M14 5l-4 14'],
-		textStrike: ['M5 12l14 0','M16 6.5a4 2 0 0 0 -4 -1.5h-1a3.5 3.5 0 0 0 0 7h2a3.5 3.5 0 0 1 0 7h-1.5a4 2 0 0 1 -4 -1.5'],
-		textUnderline: ['M7 5v5a5 5 0 0 0 10 0v-5','M5 19h14'],
-		textAlignLeft: ['M4 6l16 0','M4 12l10 0','M4 18l14 0'],
-		textAlignCenter: ['M4 6l16 0','M8 12l8 0','M6 18l12 0'],
-		textAlignRight: ['M4 6l16 0','M10 12l10 0','M6 18l14 0'],
 	}

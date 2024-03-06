@@ -70,15 +70,15 @@ export function addDraggable(handle, panel, propX = '--uie-x', propY = '--uie-y'
 }
 
 export function debounce(func, delay) {
-  let timeoutId;
-  return function () {
-    const context = this;
-    const args = arguments;
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      func.apply(context, args);
-    }, delay);
-  };
+	let timeoutId;
+	return function () {
+		const context = this;
+		const args = arguments;
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			func.apply(context, args);
+		}, delay);
+	};
 }
 
 export function findObjectByProperty(data, propertyName, propertyValue) {
@@ -108,6 +108,34 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 	}
 
 	return null; // Not found
+}
+
+export function parseResponse(response) {
+	let result;
+
+	try {
+		// Attempt to parse as JSON
+		const parsedObject = JSON.parse(response);
+
+		// Check if it's an object and has a single property
+		if (typeof parsedObject === 'object' && Object.keys(parsedObject).length === 1) {
+			const propertyName = Object.keys(parsedObject)[0];
+			const propertyValue = parsedObject[propertyName];
+
+			// Check if the property value is an array
+			if (Array.isArray(propertyValue)) {
+				result = propertyValue;
+			} else {
+				result = response; // Not an array, keep the original text
+			}
+		} else {
+			result = response; // Not an object with a single property, keep the original text
+		}
+	} catch (error) {
+		result = response; // Parsing as JSON failed, keep the original text
+	}
+
+	return result;
 }
 
 export function replacePlaceholder(obj, placeholder, replacement) {

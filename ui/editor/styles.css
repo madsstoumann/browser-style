@@ -11,6 +11,19 @@
 	--uie-bp-4: #D4A5FF;
 	--uie-bp-5: #A5D8FF;
 
+	--uie-custom-1: #97c9a9;
+	--uie-custom-2: #ffb47b;
+	--uie-custom-3: #ff8f8f;
+	--uie-custom-4: #c6a5ff;
+	--uie-custom-5: #a5cfff;
+
+	/* --uie-custom-1: #6dbb9d;
+	--uie-custom-2: #ffa16b;
+	--uie-custom-3: #ff7c7c;
+	--uie-custom-4: #b08cff;
+	--uie-custom-5: #78b4ff; */
+	
+	
 	--uie-blue-20: color-mix(in srgb, Highlight, Canvas 80%);
 	--uie-blue-40: color-mix(in srgb, Highlight, Canvas 60%);
 	--uie-blue-60: color-mix(in srgb, Highlight, Canvas 40%);
@@ -61,6 +74,35 @@
 }
 .uie-copy {
 	background: repeating-linear-gradient(-45deg,transparent 0 10px,rgba(0,0,0,.1) 0 20px);
+}
+
+/* === LOADER === */
+:host([loader="overlay"]) [part=loader] {
+	background: #0000;
+	inset: 0;
+	position: fixed;
+	z-index: 1;
+	&::after {
+		content: "";
+		left: 50%;
+		position: absolute;
+		top: 50%;
+		translate: -50% -50%;
+		width: 50px;
+		z-index: 1;
+		aspect-ratio: 1;
+		background: var(--AccentColor);
+		border-radius: 50%;
+		padding: 8px;
+		--_m: 
+			conic-gradient(#0000 10%,#000),
+			linear-gradient(#000 0 0) content-box;
+		-webkit-mask: var(--_m);
+						mask: var(--_m);
+		-webkit-mask-composite: source-out;
+						mask-composite: subtract;
+		animation: l3 1s infinite linear;
+	}
 }
 
 /* === PARTS === */
@@ -177,7 +219,7 @@
 	width: 100%;
 }
 [part=input-icon] {
-	& input { grid-column: span 11; }
+	& :is(input, textarea) { grid-column: span 11; }
 	& label { display: contents; }
 	gap: var(--uie-gap);
 }
@@ -705,6 +747,24 @@ label:has([role=switch]) {
 		&:is(:hover,:focus-visible) { outline: none; }
 	}
 }
+
+/* === AI TYPES === */
+[data-ai-type] {
+	background: var(--_bg, var(--uie-gray-5));
+	border-color: color-mix(in srgb, var(--_bg), #000 10%);
+	&:is(:focus-visible, :hover) { background: color-mix(in srgb, var(--_bg), Canvas 75%); }
+}
+@media (prefers-color-scheme: light) {
+	:host(.colorscheme) [data-ai-type] {
+		background: color-mix(in srgb, var(--_bg, var(--uie-gray-5)), Canvas 85%);
+		&:is(:focus-visible, :hover) { background: color-mix(in srgb, var(--_bg), Canvas 25%); }
+	}
+}
+[data-ai-type="1"] { --_bg: var(--uie-custom-1); }
+[data-ai-type="2"] { --_bg: var(--uie-custom-2); }
+[data-ai-type="3"] { --_bg: var(--uie-custom-3); }
+[data-ai-type="4"] { --_bg: var(--uie-custom-4); }
+[data-ai-type="5"] { --_bg: var(--uie-custom-5); }
 
 [data-sr] {
 	border: 0;

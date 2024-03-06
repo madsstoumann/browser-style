@@ -1,0 +1,111 @@
+[
+  {
+    "key": "elements",
+    "groups": [
+			{
+				"label": "Components",
+				"name": "elements",
+				"open": true,
+				"fieldsets": [
+					{
+						"name": "components",
+						"fields": [
+							{
+								"input": {
+									"list": "components{{globalId}}",
+									"part": "component-search",
+									"placeholder": "Find component",
+									"type": "search"
+								}
+							},
+							{
+								"ui": "output",
+								"name": "component-info",
+								"text": ""
+							},
+							{
+								"ui": "tag",
+								"tag": "fieldset",
+								"content": "",
+								"attr": {
+									"name": "component-configure"
+								}
+							},
+							{
+								"ui": "button",
+								"removeForm": true,
+								"attr": {
+									"data-click": "dom-insert",
+									"name": "component-insert",
+									"part": "button primary",
+									"title": "Insert Component",
+									"value": ""
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				"label": "Presets",
+				"name": "elements",
+				"groups": [
+					{
+						"label": "Add",
+						"name": "presets",
+						"fieldsets": [
+							{
+								"part": "input-icon",
+								"fields": [
+									{
+										"input": {
+											"type": "text",
+											"name": "preset-name",
+											"placeholder": "Preset name"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "listadd",
+										"attr": {
+											"data-click": "add-preset",
+											"title": "Add preset"
+										}
+									},
+									{
+										"ui": "textarea",
+										"input": {
+											"type": "textarea",
+											"name": "preset-description",
+											"placeholder": "Optional description"
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Find",
+						"name": "presets",
+						"open": true,
+						"fieldsets": [
+							{
+								"name": "presets",
+								"fields": [
+									{
+										"input": {
+											"list": "presets{{globalId}}",
+											"part": "preset-search",
+											"placeholder": "Find preset",
+											"type": "search"
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+  }
+]
