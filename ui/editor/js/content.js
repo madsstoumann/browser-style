@@ -1,4 +1,16 @@
+import { findComponentByKey } from './components.js';
 import { getNestedProperty, parseResponse, replacePlaceholder, setNestedProperty } from './utils.js';
+
+/**
+ * Handles the text edit event.
+ * @param {Event} event - The text edit event.
+ * @param {HTMLElement} active - The active element.
+ */
+export const onTextEdit = (event, active) => {
+	if (!event.detail.content) return;
+	const plaintextOnly = active?.dataset?.content === 'text' || false;
+	active[plaintextOnly ? 'textContent' : 'innerHTML'] = event.detail.content;
+};
 
 /**
  * Prompts the user for an API key if necessary and makes a POST request to a specified service URL.
@@ -7,7 +19,7 @@ import { getNestedProperty, parseResponse, replacePlaceholder, setNestedProperty
  * @param {HTMLElement} node - The HTML element associated with the AI service.
  * @returns {Promise<void>} - A promise that resolves when the request is completed.
  */
-export async function aiPrompt(node) {
+export async function prompt(node) {
 	if (!node || !node.dataset.aiService) return;
 	const service = this.config.content[0].ai.find(obj => obj.service === node.dataset.aiService);
 	if (!service.apikey) {
@@ -49,27 +61,29 @@ export async function aiPrompt(node) {
 /**
 * Saves the content of the active component.
 */
-export function saveContent() {
- if (this.active.dataset.modelKey) {
-	 const parent = this.active.closest('[data-component]');
-	 const saveRichText = this.active.dataset.content === 'richtext';
-	 if (parent) {
-		 const component = this.findComponentByKey(parent.dataset.component);
-		 if (component) {
-			 const model = component.model ? JSON.parse(JSON.stringify(component.model)) : undefined;
-			 if (model) {
-				 // Select all nodes with data-model-key attribute within the parent
-				 const nodesWithModelKey = parent.querySelectorAll('[data-model-key]');
-				 // Iterate through each node and update the model
-				 nodesWithModelKey.forEach(node => {
-					 const { foundObject, keys } = getNestedProperty(model, node.dataset.modelKey);
-					 if (foundObject !== undefined) {
-						 setNestedProperty(model, keys, (saveRichText ? node.innerHTML : node.textContent ) );
-					 }
-				 });
-				 this.dispatch('saveContent', { component: parent.dataset.component, model });
-			 }
-		 }
-	 }
- }
+export function save(node, components, dispatchCallback) {
+	if (node.dataset.modelKey) {
+		const parent = node.closest('[data-component]');
+		const saveRichText = node.dataset.content === 'richtext';
+		if (parent) {
+			const component = findComponentByKey(parent.dataset.component, components);
+			if (component) {
+				const model = component.model ? JSON.parse(JSON.stringify(component.model)) : undefined;
+				if (model) {
+					// Select all nodes with data-model-key attribute within the parent
+					const nodesWithModelKey = parent.querySelectorAll('[data-model-key]');
+					// Iterate through each node and update the model
+					nodesWithModelKey.forEach(node => {
+						const { foundObject, keys } = getNestedProperty(model, node.dataset.modelKey);
+						if (foundObject !== undefined) {
+							setNestedProperty(model, keys, (saveRichText ? node.innerHTML : node.textContent ) );
+						}
+					});
+					if (typeof dispatchCallback === 'function') {
+						dispatchCallback('saveContent', { component: parent.dataset.component, model });
+					}
+				}
+			}
+		}
+	}
 }

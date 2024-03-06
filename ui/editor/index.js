@@ -1,9 +1,10 @@
 import stylesheet from './styles.css' assert { type: 'css' };
 
-import { aiPrompt, saveContent } from './js/content.js';
-import { copyClasses } from './js/styles.js';
-import { renderComponentList, renderElement, renderFieldset, renderGroup, renderInput, renderTemplateFromString, renderTextarea, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, fetchFiles, findObjectByProperty, getClasses, getNestedProperty, iterateObject, setNestedProperty, uuid } from './js/utils.js';
+import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
+import { onTextEdit, prompt, save } from './js/content.js';
+import { addClass, copyClasses, filterClassesByBreakpoint, remClasses, revertClasses, setUnitClass, setUtilityClass, updateClassList } from './js/styles.js';
+import { renderComponentList, renderElement, renderFieldset, renderGroup, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { addDocumentScroll, addDraggable, debounce, fetchFiles, findObjectByProperty, uuid } from './js/utils.js';
 import icons from './js/icons.js';
 
 /**
@@ -23,7 +24,7 @@ class uiEditor extends HTMLElement {
 		this.responsive = this.hasAttribute('responsive'),
 		this.selectable = (this.getAttribute('selectable') || '').split(',').filter(Boolean);
 		this.undoStack = [];
-		this.redoStack = [];		
+		this.redoStack = [];
 	}
 
 	/**
@@ -64,8 +65,8 @@ class uiEditor extends HTMLElement {
 
 		// Initialize references to important elements within the shadow DOM.
 		this.breakpointsFieldset = shadow.querySelector(`[name=breakpoints]`);
-		this.componentConfigure = shadow.querySelector(`[name=component-configure]`);
-		this.componentSearch = shadow.querySelector(`[part=component-search]`);
+		this.compConfig = shadow.querySelector(`[name=component-configure]`);
+		this.compSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
@@ -82,7 +83,7 @@ class uiEditor extends HTMLElement {
 
 		/* References to the different tools of the editor */
 		[this.STYLES, this.CONTENT, this.ELEMENTS, this.SETTINGS] = this.editor.elements.tool;
-		if (this.componentConfigure ) this.componentConfigure.hidden = true;
+		if (this.compConfig ) this.compConfig.hidden = true;
 
 		/* Events */
 		addDocumentScroll();
@@ -94,8 +95,8 @@ class uiEditor extends HTMLElement {
 		if (this.responsive) {
 			this.iframe.onload = () => { /* Load components within iframe */
 				const components = this.iframe.contentWindow.document.querySelectorAll('ui-component');
-				components.forEach(component => this.initComponent(component));
-				this.setAttribute('responsive', 'true');
+				components.forEach(component => mountComponent(component, this.config.components));
+				this.removeAttribute('loader');
 			}
 			this.formFrame.addEventListener('input', this.onFrameInput);
 			window.addEventListener('message', event => {
@@ -119,30 +120,34 @@ class uiEditor extends HTMLElement {
 
 		/* Components */
 		if (this.config.components) {
+			this.compInfo = this.editor.elements['component-info'];
+			this.compInsert = this.editor.elements['component-insert'];
 
 			/* Search for components */
-			if (this.componentSearch) {
-				this.componentSearch.addEventListener('input', this.onSearch);
-				this.componentSearch.addEventListener('search', () => this.setComponentInfo({}));
+			if (this.compSearch) {
+				this.compSearch.addEventListener('input', event => onComponentSearch(event, this.config, this.compConfig, this.compInfo, this.compInsert, this.uid));
+				this.compSearch.addEventListener('search', () => setComponentInfo({}, this.compConfig, this.compInfo, this.compInsert, this.uid));
 			}
 
 			/* Listen for new components */
 			document.body.addEventListener('uiComponentConnected', (event) => {
 				const component = event.detail.component;
 				if (component) {
-					this.initComponent(component);
+					mountComponent(component, this.config.components);
 				}
 			});
 
 			/* Init Existing components */
 			const components = document.querySelectorAll('ui-component');
-			components.forEach(component => this.initComponent(component));
+			components.forEach(component => mountComponent(component, this.config.components));
 		}
 
 		/* Set up texteditor */
 		if (this.texteditor) {
-			this.texteditor.addEventListener('ui-richtext-content', this.onTextEdit);
-			this.texteditor.addEventListener('ui-richtext-save', () => saveContent.call(this));
+			this.texteditor.addEventListener('ui-richtext-content', event => onTextEdit(event, this.active));
+			this.texteditor.addEventListener('ui-richtext-save', () => save(this.active, this.config.components, (eventType, data) => {
+				this.dispatch(eventType, data);
+			}));
 		}
 
 		/* Detect if active element's contentBoxSize changed */
@@ -214,25 +219,6 @@ class uiEditor extends HTMLElement {
 					}
 				}
 			});
-		}
-	}
-
-	/**
-	* Adds one or more classes to the active HTML element's classList and updates the class list display.
-	*/
-	addClass() {
-		try {
-			const addClassElement = this.formStyles.elements.addclass;
-			const addClassValue = addClassElement.value.trim();
-
-			if (addClassValue && this.active) {
-				const classesToAdd = addClassValue.split(/\s+/);
-				this.active.classList.add(...classesToAdd);
-				this.updateClassList();
-				addClassElement.value = '';
-			}
-		} catch (error) {
-			console.error('An error occurred while adding a class:', error.message);
 		}
 	}
 
@@ -406,90 +392,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Filters an array of class names based on the specified breakpoint.
-	 * @param {string[]} classList - Array of class names.
-	 * @param {string} breakpoint - The breakpoint to filter classes by.
-	 * @returns {string[]} - Filtered array of class names.
-	 * @throws {Error} Throws an error if an invalid breakpoint is specified.
-	 */
-	filterClassesByBreakpoint(classList, breakpoint) {
-		try {
-			if (!breakpoint) {
-				return classList.filter(className => !this.config.app.breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
-			} else if (this.config.app.breakpoints.includes(breakpoint)) {
-				return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
-			} else {
-				throw new Error('Invalid breakpoint specified');
-			}
-		} catch (error) {
-			console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
-			return classList;
-		}
-	}
-
-	/**
-	* Finds a component by its key from the configuration.
-	* @param {string} key - The key of the component to find.
-	* @returns {Object} - The found component object.
-	*/
-	findComponentByKey(key) {
-		return this.config.components.flatMap(group => group.items).find(obj => obj.key === key);
-	}
-
-	/**
-	 * Get connected parts based on the specified node's data attributes.
-	 * @param {HTMLElement} node - The HTML element with data attributes.
-	 * @returns {NodeList} - A list of connected parts or an empty NodeList.
-	 */
-	getConnectedParts(node) {
-		try {
-			this.editor.elements.connectedgroup.style.display = 'none';
-			if (!node || !node.dataset.part) return [];
-			const component = node.closest('[data-component]');
-			if (!component) return [];
-
-			// Query connected parts using a selector
-			const selector = `[data-component~="${component.dataset.component}"] [data-part~="${node.dataset.part}"], [data-component~="${component.dataset.component}"][data-part~="${node.dataset.part}"]`;
-			const connectedParts = document.querySelectorAll(selector);
-			if (connectedParts.length > 1) {
-				this.editor.elements.connectedgroup.style.display = 'grid';
-			}
-			return connectedParts;
-		} catch (error) {
-			console.error(`An error occurred in getConnectedParts: ${error.message}`);
-			return [];
-		}
-	}
-
-	/**
-	 * Initializes a component.
-	 * @param {HTMLElement} component - The component to initialize.
-	 */
-	initComponent(component) {
-		try {
-			const formatPart = (part) => part.replace(/\s+/g, '').replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-			const key = component.getAttribute('key');
-			if (!key) return; 
-			const obj = this.findComponentByKey(key);
-			if (obj.info) {
-				const element = component.firstElementChild;
-				element.dataset.component = key;
-				iterateObject(obj.info, 'part', (key, part) => { 
-					const node = element.querySelector(part[key]);
-					if (node) {
-						node.dataset.part = formatPart(part[key]);
-						node.dataset.styles = part['styles'];
-						if (part['key']) node.dataset.modelKey = part['key'];
-						if (part['content']) node.dataset.content = part['content'];
-					}
-				});
-			}
-		} catch (error) {
-			console.error('Error initializing component:', error);
-		}
-	}
-
-	/**
 	 * Checks if a given DOM node is selectable based on the defined criteria.
 	 * @param {HTMLElement} node - The DOM node to check for selectability.
 	 * @returns {boolean} - True if the node is selectable, false otherwise.
@@ -497,7 +399,6 @@ class uiEditor extends HTMLElement {
 	isSelectable(node) {
 		return this.selectable.length === 0 || Object.keys(node.dataset).some(key => this.selectable.includes(key));
 	}
-
 
 	/**
 	* Handles the click event for the editor and its buttons/actions.
@@ -523,11 +424,11 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					case 'ai': aiPrompt.call(this, target); break;
-					case 'cls-add': this.addClass(); this.updateFormFromClasses(); break;
+					case 'ai': prompt.call(this, target); break;
+					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormFromClasses(); break;
 					case 'cls-copy': copyClasses(this.active.className); break;
-					case 'cls-rem': this.remClasses(); break;
-					case 'cls-revert': this.revertClasses(); this.updateFormFromClasses(); break;
+					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); break;
+					case 'cls-revert': revertClasses(this.active, this.editor.elements.classlist); this.updateFormFromClasses(); break;
 					case 'close': this.editor.hidePopover(); break;
 					case 'colorscheme': this.classList.toggle('colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
@@ -584,7 +485,7 @@ class uiEditor extends HTMLElement {
 		if (node.form === this.formElements) {
 			const key = node.dataset.key;
 			if (!key) return;
-			const component = this.findComponentByKey(key);
+			const component = findComponentByKey(key, this.config.components);
 			if (component) {
 				const property = component.config.find(obj => obj.key === node.dataset.prop);
 				if (property) property.value = value;
@@ -604,13 +505,13 @@ class uiEditor extends HTMLElement {
 				/* Update value to set */
 				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.app.breakpointsDelimiter}` : '';
 				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`;
-				this.setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
+				setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
 			}
 			else {
-				this.setUnitClass(this.active, node.name, value);
+				setUnitClass(this.active, this.formStyles.elements[node.name], value);
 			}
 
-			this.updateClassList();
+			updateClassList(this.active, this.editor.elements.classlist);
 			this.updateConnectedParts();
 			return;
 		}
@@ -717,35 +618,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Handles the 'input' event on the component search input.
-	 * @param {Event} event - The input event.
-	 */
-	onSearch = (event) => { 
-		if (event.inputType == "insertReplacementText" || event.inputType == null) {
-			const value = event.target.value;
-			if (value) {
-				const options = Array.from(event.target.list.options);
-				const match = options.find(option => option.value === value);
-				if (match) {
-					const component = this.findComponentByKey(match.dataset.componentKey);
-					this.setComponentInfo(component);
-				}
-			}
-			return;
-		}
-	}
-
-	/**
-	 * Handles the rich text event.
-	 * @param {Event} event - The event object.
-	 */
-	onTextEdit = (event) => {
-		if (!event.detail.content) return;
-		const plaintextOnly = this.active?.dataset?.content === 'text' || false; 
-		this.active[plaintextOnly ? 'textContent' : 'innerHTML'] = event.detail.content;
-	}
-
-	/**
 	 * Event handler for the "beforetoggle" event of the popover API.
 	 * Handles actions before the popover is toggled open or closed.
 	 * @param {CustomEvent} e - The "beforetoggle" event.
@@ -761,17 +633,6 @@ class uiEditor extends HTMLElement {
 			this.setOutline({ height:0, width:0, x:-9999, y:-9999 });
 			setTimeout(() => this.active.focus(), 0);
 		}
-	}
-
-	/**
-	 * Removes the element's data-removed attribute and updates the class list display.
-	 */
-	remClasses() {
-		try {
-			delete this.active.dataset.removed;
-			this.updateClassList();
-		}
-		catch (error) { console.error('An error occurred while removing classes:', error.message); }
 	}
 
 	/**
@@ -842,17 +703,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	* Reverts the active element's classList to its original state.
-	*/
-	revertClasses() {
-		try {
-			this.active.className = this.active.dataset.classes;
-			this.updateClassList();
-		}
-		catch (error) { console.error('An error occurred while reverting classes:', error.message); }
-	}
-
-	/**
 	* Sets the active HTML element, updating associated values and visual indicators.
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
@@ -868,14 +718,11 @@ class uiEditor extends HTMLElement {
 			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
 			this.resizeObserver.observe(node);
 
-			if (this.active.dataset.component) {
-				console.log(this.findComponentByKey(this.active.dataset.component));
-			}
-			this.connectedParts = this.getConnectedParts(node);
+			this.connectedParts = getConnectedParts(node, this.editor.elements.connectedgroup);
 			this.styleParts(node);
 
 			if (this.formStyles) {
-				this.updateClassList();
+				updateClassList(this.active, this.editor.elements.classlist);
 				this.updateFormFromClasses();
 			}
 
@@ -922,29 +769,6 @@ class uiEditor extends HTMLElement {
 	}
 
 	/**
-	 * Resets the component info in the editor.
-	 * @param {Object} obj - The object containing the component details.
-	 */
-	setComponentInfo(obj) {
-		this.editor.elements['component-info'].value = obj.description || '';
-		this.editor.elements['component-insert'].value = obj.key || '';
-		this.componentConfigure.hidden = !obj.config;
-
-		if (obj.config) {
-			this.componentConfigure.innerHTML = obj.config.map(prop => {
-				const { key, label, ...input} = prop;
-				const config = { text: label, input: { ...input, 'data-key': obj.key, 'data-prop': key, form: `elements${this.uid}` } };
-				if (input.type === 'textarea') {
-					delete config.input.type;
-					return renderTextarea(config);
-				} else {
-					return renderInput(config);
-				}
-			}).join('');
-		}
-	}
-
-	/**
 	 * Sets the dimensions and tag information of an HTML element in the editor.
 	 * If dimensions are not provided, retrieves the dimensions using getBoundingClientRect.
 	 * @param {HTMLElement} node - The HTML element.
@@ -986,49 +810,6 @@ class uiEditor extends HTMLElement {
 		}
 	}
 
-		/**
-	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
-	 * @param {HTMLElement} node - The HTML element to set classes on.
-	 * @param {string} value - The new class to be added.
-	 */
-		setUnitClass(node, group, value) {
-			const { classes, removed } = getClasses(node);
-			this.formStyles.elements[group].forEach(element => {
-				classes.forEach(className => {
-					if (className.includes(element.value)) {
-						node.classList.remove(className);
-					}
-				});
-				removed.forEach(className => {
-					if (className.includes(element.value)) {
-						node.dataset.removed = node.dataset.removed.replace(className, '');
-					}
-				});
-			});
-			node.classList.add(value);
-		}
-
-	/**
-	 * Set classes on a given node, removing classes with a specified prefix and adding a new class.
-	 * @param {HTMLElement} node - The HTML element to set classes on.
-	 * @param {string} value - The new class to be added.
-	 * @param {string} prefix - The prefix used to filter and remove existing classes.
-	 */
-	setUtilityClass(node, value, prefix) {
-		const { classes, removed } = getClasses(node);
-		classes.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.classList.remove(className);
-			}
-		})
-		removed.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.dataset.removed = node.dataset.removed.replace(className, '');
-			}
-		})
-		node.classList.add(value);
-	}
-
 	/**
 	 * Sets the visibility of style parts based on the provided node.
 	 * @param {HTMLElement} node - The node to determine the style parts from.
@@ -1066,7 +847,7 @@ class uiEditor extends HTMLElement {
 			if (!classes.length) return;
 			this.formStyles.reset();
 			const breakpoint = this.editor.elements.breakpoint.value || '';
-			const filteredClasses = this.filterClassesByBreakpoint(classes, breakpoint);
+			const filteredClasses = filterClassesByBreakpoint(classes, breakpoint, this.config.app.breakpoints);
 			if (filteredClasses.length) {
 				filteredClasses.forEach(cls => {
 					const inputString = cls.replace(breakpoint + this.config.app.breakpointsDelimiter, '');
@@ -1093,17 +874,6 @@ class uiEditor extends HTMLElement {
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
 		}
-	}
-
-	/**
-	 * Updates the classlist in the editor based on the active element.
-	 */
-	updateClassList(node = this.active) {
-		if (!this.formStyles || !node) return;
-		const { classes, removed } = getClasses(node);
-		this.editor.elements.classlist.innerHTML = 
-			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
-			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
 	}
 
 	/**
@@ -1158,7 +928,6 @@ class uiEditor extends HTMLElement {
 	/**
 	 * Updates the input element with the specified class.
 	 * If the input is not provided and cls is provided, it updates all input elements with the matching class.
-	 *
 	 * @param {HTMLElement} input - The input element to update.
 	 * @param {string} cls - The class to update the input element with.
 	 */

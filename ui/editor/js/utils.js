@@ -146,22 +146,6 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 }
 
 /**
- * Returns the classList of an HTML element and its optional `data-removed` attribute.
- * @param {HTMLElement} node - The HTML element.
- * @returns {Object} - Object containing the classList and removed classes of the specified element.
- */
-export function getClasses(node) {
-	if (!node) return;
-	try {
-		const classes = Array.from(node.classList).filter(className => className.trim() !== '').sort();
-		const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '').sort();
-		return { classes, removed };
-	} catch (error) {
-		console.error('An error occurred while getting classes:', error.message);
-	}
-}
-
-/**
  * Recursively iterates over an object and invokes a callback function when a matching key is found.
  * @param {Object} obj - The object to iterate over.
  * @param {string} searchKey - The key to search for.

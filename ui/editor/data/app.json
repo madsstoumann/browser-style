@@ -388,7 +388,8 @@
 									"input": {
 										"type": "text",
 										"name": "addclass",
-										"placeholder": "Add class(es)"
+										"placeholder": "Add class(es)",
+										"removeForm": true
 									}
 								},
 								{
