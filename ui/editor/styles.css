@@ -510,6 +510,7 @@ textarea {
 	font-size: small;
 	grid-column: span 12;
 	max-block-size: 20lh;
+	min-block-size: 2lh;
 	padding: var(--uie-gap);
 	resize: vertical;
 	&:focus-visible { 
