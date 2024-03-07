@@ -69,6 +69,16 @@ export function addDraggable(handle, panel, propX = '--uie-x', propY = '--uie-y'
 }
 
 /**
+ * Checks if the given node contains rich text.
+ * @param {HTMLElement} node - The node to check.
+ * @returns {boolean} - Returns true if the node contains rich text, otherwise false.
+ */
+export function containsRichText(node) {
+	// Check if the node has innerHTML and if it contains any HTML tags
+	return node && typeof node.innerHTML === 'string' && /<\/?[a-z][\s\S]*>/i.test(node.innerHTML);
+}
+
+/**
  * Debounces a function, ensuring it is only called after a specified delay.
  * @param {Function} func - The function to be debounced.
  * @param {number} delay - The delay in milliseconds.

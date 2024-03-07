@@ -131,18 +131,22 @@ export function setUnitClass(node, group, value) {
  * @param {string} prefix - The prefix used to filter and remove existing classes.
  */
 export function setUtilityClass(node, value, prefix) {
-	const { classes, removed } = getClasses(node);
-	classes.forEach(className => {
-		if (className.startsWith(prefix)) {
-			node.classList.remove(className);
-		}
-	})
-	removed.forEach(className => {
-		if (className.startsWith(prefix)) {
-			node.dataset.removed = node.dataset.removed.replace(className, '');
-		}
-	})
-	node.classList.add(value);
+	try {
+		const { classes, removed } = getClasses(node);
+		classes.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.classList.remove(className);
+			}
+		});
+		removed.forEach(className => {
+			if (className.startsWith(prefix)) {
+				node.dataset.removed = node.dataset.removed.replace(className, '');
+			}
+		});
+		node.classList.add(value);
+	} catch (error) {
+		console.error('An error occurred while setting utility class:', error.message);
+	}
 }
 
 /**
@@ -153,8 +157,12 @@ export function setUtilityClass(node, value, prefix) {
  */
 export function updateClassList(node, list) {
 	if (!node) return;
-	const { classes, removed } = getClasses(node);
-	list.innerHTML = 
-		classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
-		removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
+	try {
+		const { classes, removed } = getClasses(node);
+		list.innerHTML = 
+			classes.map(value => renderInput({ textAfter:value, input: { name:'classname', value, checked:'', role: 'switch', type:'checkbox' }})).join('\n') +
+			removed.map(value => renderInput({ textAfter:value, input: { name:'classname', value, role: 'switch', type:'checkbox' }})).join('\n');
+	} catch (error) {
+		console.error('An error occurred while updating class list:', error.message);
+	}
 }

@@ -1,7 +1,7 @@
 import stylesheet from './styles.css' assert { type: 'css' };
 
 import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
-import { onTextEdit, prompt, save } from './js/content.js';
+import { aiPrompt, onSave, onTextEdit } from './js/content.js';
 import { addClass, copyClasses, filterClassesByBreakpoint, remClasses, revertClasses, setUnitClass, setUtilityClass, updateClassList } from './js/styles.js';
 import { renderComponentList, renderElement, renderFieldset, renderGroup, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
 import { addDocumentScroll, addDraggable, debounce, fetchFiles, findObjectByProperty, uuid } from './js/utils.js';
@@ -64,6 +64,7 @@ class uiEditor extends HTMLElement {
 		shadow.appendChild(template.content.cloneNode(true));
 
 		// Initialize references to important elements within the shadow DOM.
+		this.aiResult = shadow.querySelector(`[name=airesult]`);
 		this.breakpointsFieldset = shadow.querySelector(`[name=breakpoints]`);
 		this.compConfig = shadow.querySelector(`[name=component-configure]`);
 		this.compSearch = shadow.querySelector(`[part=component-search]`);
@@ -145,9 +146,7 @@ class uiEditor extends HTMLElement {
 		/* Set up texteditor */
 		if (this.texteditor) {
 			this.texteditor.addEventListener('ui-richtext-content', event => onTextEdit(event, this.active));
-			this.texteditor.addEventListener('ui-richtext-save', () => save(this.active, this.config.components, (eventType, data) => {
-				this.dispatch(eventType, data);
-			}));
+			this.texteditor.addEventListener('ui-richtext-save', () => onSave(this.active, this.config.components, this));
 		}
 
 		/* Detect if active element's contentBoxSize changed */
@@ -424,7 +423,14 @@ class uiEditor extends HTMLElement {
 				const cmd = target.dataset.click;
 				if (!cmd) return;
 				switch (cmd) {
-					case 'ai': prompt.call(this, target); break;
+					case 'ai': aiPrompt(
+						{ app : this,
+							content: this.active, 
+							input: this.formContent.elements.aiprompt, 
+							node: target, 
+							result: this.aiResult, 
+							services: this.config.content[0].ai
+						}); break;
 					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormFromClasses(); break;
 					case 'cls-copy': copyClasses(this.active.className); break;
 					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); break;

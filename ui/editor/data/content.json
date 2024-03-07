@@ -18,14 +18,19 @@
 						}
 					]
 				},
-				"multiple": "Return the result as JSON",
-				"result": "choices[0].message.content"
+				"richtext": "Keep the HTML formatting",
+				"resultKey": "choices[0].message.content"
 			}
 		],
 		"groups": [
 			{
 				"label": "Content Assistant",
 				"name": "content",
+				"fieldsets": [
+					{
+						"name": "airesult"
+					}
+				],
 				"groups": [
 					{
 						"label": "Prompts",
@@ -92,7 +97,7 @@
 											"data-click": "ai",
 											"data-ai-suggest": "2",
 											"data-ai-service": "chatgpt",
-											"data-ai-prompt": "Suggest headlin for this content",
+											"data-ai-prompt": "Suggest headline for this content",
 											"title": "Suggest headline"
 										}
 									}

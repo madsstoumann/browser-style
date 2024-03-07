@@ -330,6 +330,72 @@
 							}
 						}
 					]
+				},
+				{
+					"part": "tabgroup small",
+					"fields": [
+						{
+							"text": "dark",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "darkmode",
+								"type": "checkbox",
+								"value": "dark:"
+							}
+						},
+						{
+							"text": "off",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "state",
+								"type": "radio",
+								"value": "",
+								"checked": ""
+							}
+						},
+						{
+							"text": "hover:",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "state",
+								"type": "radio",
+								"value": "hover:"
+							}
+						},
+						{
+							"text": "focus:",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "state",
+								"type": "radio",
+								"value": "focus:"
+							}
+						},
+						{
+							"text": "first:",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "state",
+								"type": "radio",
+								"value": "first:"
+							}
+						},
+						{
+							"text": "last:",
+							"input": {
+								"data-sr": "",
+								"removeForm": true,
+								"name": "state",
+								"type": "radio",
+								"value": "last:"
+							}
+						}
+					]
 				}
 			],
 			"footer": 

@@ -80,5 +80,13 @@
 	<script src="uiComponent.js"></script>
 	<script src="../text-editor/uiRichText.js"></script>
 
+	<script>
+
+		const app = document.querySelector('ui-editor');
+		app.addEventListener('uie-save-content', e => {
+			console.log('uie-save-content', e.detail);
+		});
+	</script>
+
 </body>
 </html>

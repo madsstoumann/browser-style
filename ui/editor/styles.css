@@ -304,7 +304,11 @@
 /* === BREAKPOINTS === */
 [name="breakpoints"][part~=tabgroup] {
 	background: var(--uie-gray-5);
+	border-end-end-radius: 0;
+	border-end-start-radius: 0;
+	margin-block: 0;
 	& label {
+		padding-block: calc(var(--uie-gap) / 3);
 		position: relative;
 		&::after {
 			background: var(--_c, transparent);
@@ -328,6 +332,26 @@
 		&:nth-of-type(6) { --_c: var(--uie-bp-5); }
 	}
 	&[hidden] { display: none; }
+}
+/* STATES: dark:, focus: etc. */
+[part~=tabgroup][part~=small] {
+	border-start-start-radius: 0;
+	border-start-end-radius: 0;
+	font-size: xx-small;
+	gap: 2px;
+	padding: 2px;
+	& label {
+		border-radius: 2px;
+		color: GrayText;
+		padding: 1px;
+		&:first-of-type { border-radius: 1px 2px 2px 5px; }
+		&:last-of-type { border-radius: 2px 1px 5px 2px; }
+		&:has([name=darkmode]:checked) {
+			background-color: var(--AccentColor);
+			color: var(--AccentColorText);
+		}
+		&:has(:checked) { box-shadow: none; }
+	}
 }
 
 /* === BREAKPOINTS: CODE/VAR LABELS === */
@@ -708,7 +732,7 @@ label:has([role=switch]) {
 		display: grid;
 		gap: 2px;
 		place-content: center;
-		padding-block: calc(var(--uie-gap) / 3);
+		padding-block: 1px;
 		text-align: center;
 		&:has(:checked) { 
 			background: Canvas;
@@ -765,6 +789,10 @@ label:has([role=switch]) {
 [data-ai-type="3"] { --_bg: var(--uie-custom-3); }
 [data-ai-type="4"] { --_bg: var(--uie-custom-4); }
 [data-ai-type="5"] { --_bg: var(--uie-custom-5); }
+
+[name=airesult] {
+	grid-template-columns: 1fr;
+}
 
 [data-sr] {
 	border: 0;
