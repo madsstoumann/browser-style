@@ -200,6 +200,7 @@
 [part~=group] {
 	--uie-gtc: repeat(8, 1fr);
   gap: var(--uie-gap);
+	&[name=layoutorganizer] { gap: 4px; }
 }
 [part=header] {
 	display: grid;

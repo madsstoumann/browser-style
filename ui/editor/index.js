@@ -83,7 +83,7 @@ class uiEditor extends HTMLElement {
 		this.tools = shadow.querySelector(`[part=tools]`);
 
 		/* References to the different tools of the editor */
-		[this.STYLES, this.CONTENT, this.ELEMENTS, this.SETTINGS] = this.editor.elements.tool;
+		[this.STYLES, this.CONTENT, this.ELEMENTS, this.ASSETS, this.SETTINGS] = this.editor.elements.tool;
 		if (this.compConfig ) this.compConfig.hidden = true;
 
 		/* Events */
@@ -428,8 +428,8 @@ class uiEditor extends HTMLElement {
 							content: this.active, 
 							input: this.formContent.elements.aiprompt, 
 							node: target, 
-							result: this.aiResult, 
-							services: this.config.content[0].ai
+							result: this.aiResult,
+							services: this.config.app.ai
 						}); break;
 					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormFromClasses(); break;
 					case 'cls-copy': copyClasses(this.active.className); break;
@@ -715,6 +715,10 @@ class uiEditor extends HTMLElement {
 	setActive(node) {
 		if (!node) return;
 		if (this.contains(node)) return;
+		const selectStyles = () => {
+			this.STYLES.checked = true;
+			this.STYLES.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+		}
 		try {
 			if (this.active) {
 				this.resizeObserver.unobserve(this.active);
@@ -732,22 +736,29 @@ class uiEditor extends HTMLElement {
 				this.updateFormFromClasses();
 			}
 
-			if (this.formContent) {
-				const contentValue = this.active.dataset.content;
-				if (!contentValue) {
-					if (this.CONTENT.checked) {
-						this.STYLES.checked = true;
-						this.STYLES.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-					}
-				}
-				this.CONTENT.parentNode.hidden = !contentValue;
- 				const textEditor = (this.texteditor && (contentValue === 'text' || contentValue === 'richtext'));
+			/* === Content === */
+			const contentValue = this.active.dataset.content;
+			this.CONTENT.parentNode.hidden = !contentValue;
+			if (!contentValue && this.CONTENT.checked) selectStyles();
+			
+			if (this.formContent && contentValue) {
+				const textEditor = (this.texteditor && (contentValue === 'text' || contentValue === 'richtext'));
 				if (textEditor) {
 					this.texteditor.setContent(node.innerHTML, contentValue === 'text');
 				}
 				this.texteditor.hidden = !textEditor;
 			}
+
+			/* === Elements */
+			const isAsset = ['IMG', 'VIDEO'].includes(this.active.tagName);
+			this.ELEMENTS.parentNode.hidden = isAsset;
+			if (isAsset && this.ELEMENTS.checked) selectStyles();
+
+			/* === Assets === */
+			this.ASSETS.parentNode.hidden = !isAsset;
+			if (!isAsset && this.ASSETS.checked) selectStyles();
 		}
+
 		catch (error) {
 			console.error(error);
 		}

@@ -1,4 +1,25 @@
 {
+	"ai": [
+		{
+			"service": "chatgpt",
+			"url": "https://api.openai.com/v1/chat/completions",
+			"headers"	: {
+				"Authorization": "Bearer {{APIKEY}}",
+				"Content-Type": "application/json"
+			},
+			"body": {
+				"model": "gpt-4",
+				"messages": [
+					{
+						"role": "assistant",
+						"content": "{{PROMPT}}"
+					}
+				]
+			},
+			"richtext": "Keep the HTML formatting",
+			"resultKey": "choices[0].message.content"
+		}
+	],
 	"breakpoints": [
 		"",
 		"sm",
@@ -142,6 +163,83 @@
 				"label": "Frame",
 				"name": "frame-root",
 				"open": false,
+				"groups": [
+					{
+						"label": "Layout Organizer",
+						"fieldsets": [
+							{
+								"name": "layoutorganizer",
+								"part": "group",
+								"fields": [
+									{
+										"ui": "button",
+										"icon": "copy",
+										"attr": {
+											"data-click": "dom-copy",
+											"title": "Copy ⇧⌃c"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "cut",
+										"attr": {
+											"data-click": "dom-cut",
+											"title": "Cut ⇧⌃x"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "paste",
+										"attr": {
+											"data-click": "dom-paste",
+											"title": "Paste into ⇧⌃v"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "replace",
+										"attr": {
+											"data-click": "dom-replace",
+											"title": "Replace with ⇧⌃r"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "first",
+										"attr": {
+											"data-click": "dom-first",
+											"title": "Move first ⇧⌃↖"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "leftbar",
+										"attr": {
+											"data-click": "dom-prev",
+											"title": "Move previous ⇧⌃⇞"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "rightbar",
+										"attr": {
+											"data-click": "dom-next",
+											"title": "Move next ⇧⌃⇟"
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "last",
+										"attr": {
+											"data-click": "dom-last",
+											"title": "Move last ⇧⌃↘"
+										}
+									}
+								]
+							}
+						]
+					}
+				],
 				"fieldsets": [
 					{
 						"name": "frameinfo",
@@ -535,94 +633,19 @@
 			"name": "Elements",
 			"key": "elements",
 			"icon": "components",
-			"title": "Elements ⇧⌃3",
-			"footer": {
-				"groups": [
-					{
-						"label": "Layout Organizer",
-						"name": "elements",
-						"open": true,
-						"fieldsets": [
-							{
-								"name": "selectedelement",
-								"part": "group",
-								"fields": [
-									{
-										"ui": "button",
-										"icon": "copy",
-										"attr": {
-											"data-click": "dom-copy",
-											"title": "Copy ⇧⌃c"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "cut",
-										"attr": {
-											"data-click": "dom-cut",
-											"title": "Cut ⇧⌃x"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "paste",
-										"attr": {
-											"data-click": "dom-paste",
-											"title": "Paste into ⇧⌃v"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "replace",
-										"attr": {
-											"data-click": "dom-replace",
-											"title": "Replace with ⇧⌃r"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "first",
-										"attr": {
-											"data-click": "dom-first",
-											"title": "Move first ⇧⌃↖"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "leftbar",
-										"attr": {
-											"data-click": "dom-prev",
-											"title": "Move previous ⇧⌃⇞"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "rightbar",
-										"attr": {
-											"data-click": "dom-next",
-											"title": "Move next ⇧⌃⇟"
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "last",
-										"attr": {
-											"data-click": "dom-last",
-											"title": "Move last ⇧⌃↘"
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			}
+			"title": "Elements ⇧⌃3"
+		},
+		{
+			"name": "Assets",
+			"key": "assets",
+			"icon": "photo",
+			"title": "Assets ⇧⌃4"
 		},
 		{
 			"name": "Settings",
 			"key": "settings",
 			"icon": "settings",
-			"title": "Settings ⇧⌃4",
+			"title": "Settings ⇧⌃5",
 			"groups": [
 				{
 					"label": "Layout Grid",

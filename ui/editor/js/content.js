@@ -30,7 +30,7 @@ export const onTextEdit = (event, active) => {
  */
 export async function aiPrompt(options) {
 	const { app, content, input, node, result, services } = options;
-
+console.log(options)
 	try {
 		if (!node || !services || !node.dataset.aiService) return;
 
