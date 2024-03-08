@@ -1,0 +1,281 @@
+[
+	{
+		"key": "assets",
+		"fieldsets": [
+			{
+				"fields": [
+					{
+						"ui": "tag",
+						"tag": "img",
+						"content": "",
+						"attr": {
+							"alt": "Dummy image",
+							"draggable": "false",
+							"part": "asset-image"
+						}
+					}
+				]
+			},
+			{
+				"part": "textgroup",
+				"fields": [
+					{
+						"text": "off",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "unset",
+							"checked": ""
+						}
+					},
+					{
+						"text": "16:9",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "16/9"
+						}
+					},
+					{
+						"text": "4:3",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "4/3"
+						}
+					},
+					{
+						"text": "1:1",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "1/1"
+						}
+					},
+					{
+						"text": "3:2",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "3/2"
+						}
+					},
+					{
+						"text": "9:16",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "9/16"
+						}
+					},
+					{
+						"text": "5:4",
+						"input": {
+							"data-sr": "",
+							"name": "aspect-ratio",
+							"type": "radio",
+							"value": "5/4"
+						}
+					}
+				]
+			},
+			{
+				"part": "textgroup",
+				"fields": [
+					{
+						"text": "off",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "unset",
+							"checked": ""
+						}
+					},
+					{
+						"text": "t:l",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "top left"
+						}
+					},
+					{
+						"text": "t:r",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "top right"
+						}
+					},
+					{
+						"text": "c:l",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "center left"
+						}
+					},
+					{
+						"text": "c:r",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "center right"
+						}
+					},
+					{
+						"text": "b:l",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "bottom left"
+						}
+					},
+					{
+						"text": "b:r",
+						"input": {
+							"data-sr": "",
+							"name": "object-position",
+							"type": "radio",
+							"value": "bottom right"
+						}
+					}
+				]
+			},
+			{
+				"part": "textgroup",
+				"fields": [
+					{
+						"text": "off",
+						"input": {
+							"data-sr": "",
+							"name": "filter",
+							"type": "radio",
+							"value": "unset",
+							"checked": ""
+						}
+					},
+					{
+						"text": "gray",
+						"input": {
+							"data-sr": "",
+							"name": "filter",
+							"type": "radio",
+							"value": "grayscale(1)"
+						}
+					},
+					{
+						"text": "sepia",
+						"input": {
+							"data-sr": "",
+							"name": "filter",
+							"type": "radio",
+							"value": "sepia(1)"
+						}
+					},
+					{
+						"text": "faded",
+						"input": {
+							"data-sr": "",
+							"name": "filter",
+							"type": "radio",
+							"value": "blur(0.2px) brightness(1.1) hue-rotate(5deg) opacity(0.9) saturate(1.3) sepia(0.4)"
+						}
+					},
+					{
+						"text": "painted",
+						"input": {
+							"data-sr": "",
+							"name": "filter",
+							"type": "radio",
+							"value": "brightness(1.3) invert(0.17) saturate(2.6) sepia(0.25)"
+						}
+					}
+				]
+			}
+		],
+		"groups": [
+			{
+				"label": "Image Assistant",
+				"fieldsets": [
+					{
+						"name": "assets-result"
+					}
+				],
+				"groups": [
+					{
+						"label": "Prompts",
+						"name": "assets-prompt",
+						"open": true,
+						"fieldsets": [
+							{
+								"part": "taglist",
+								"fields": [
+									{
+										"ui": "button",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-service": "dalle",
+											"data-ai-prompt": "Remove background",
+											"title": "Remove background"
+										}
+									},
+									{
+										"ui": "button",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-suggest": "2",
+											"data-ai-service": "dalle",
+											"data-ai-prompt": "Suggest headline for this content",
+											"title": "Sharpen"
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Custom Prompt",
+						"name": "assets-prompt",
+						"fieldsets": [
+							{
+								"part": "input-icon",
+								"fields": [
+									{
+										"ui": "textarea",
+										"input": {
+											"name": "aiprompt",
+											"placeholder": ""
+										}
+									},
+									{
+										"ui": "button",
+										"icon": "inputAI",
+										"attr": {
+											"data-click": "ai",
+											"data-ai-service": "dalle",
+											"data-ai-prompt": "",
+											"title": "Run custom prompt"
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]

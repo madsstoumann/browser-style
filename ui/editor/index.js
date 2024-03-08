@@ -11,8 +11,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.22
- * @summary 06-03-2024
+ * @version 1.0.24
+ * @summary 08-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -65,12 +65,14 @@ class uiEditor extends HTMLElement {
 
 		// Initialize references to important elements within the shadow DOM.
 		this.aiResult = shadow.querySelector(`[name=airesult]`);
+		this.assetImage = shadow.querySelector(`[part=asset-image]`);
 		this.breakpointsFieldset = shadow.querySelector(`[name=breakpoints]`);
 		this.compConfig = shadow.querySelector(`[name=component-configure]`);
 		this.compSearch = shadow.querySelector(`[part=component-search]`);
 		this.draghandle = shadow.querySelector(`[part~=draghandle]`);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
+		this.formAssets = shadow.querySelector(`[part=form-assets]`);
 		this.formContent = shadow.querySelector(`[part=form-content]`);
 		this.formElements = shadow.querySelector(`[part=form-elements]`);
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
@@ -522,6 +524,11 @@ class uiEditor extends HTMLElement {
 			return;
 		}
 
+		/* === ASSETS === */
+		if (node.form === this.formAssets) {
+			this.assetImage.style.setProperty(node.name, value);
+		}
+
 		/* === APP LOGIC === */
 		if (node.dataset.property) {
 			const elm = this.iframe ? this.iframe.contentDocument.body : this;
@@ -654,7 +661,8 @@ class uiEditor extends HTMLElement {
 		const plugins = [
 			...(this.config.styles || []),
 			...(this.config.content || []),
-			...(this.config.elements || [])
+			...(this.config.elements || []),
+			...(this.config.assets || [])
 		];
 
 		tools.forEach((tool, index) => {
@@ -665,6 +673,7 @@ class uiEditor extends HTMLElement {
 			<div part="tool"${index > 0 ? ` hidden`:''}>
 				${tool.fieldsets ? tool.fieldsets.map(renderFieldset).join('') : ''}
 				${tool.groups ? tool.groups.map(renderGroup).join('') : ''}
+				${configItem.fieldsets ? configItem.fieldsets.map(renderFieldset).join('') : ''}
 				${configItem.groups ? configItem.groups.map(renderGroup).join('') : ''}
 				${tool?.footer?.fieldsets ? tool.footer.fieldsets.map(renderFieldset).join('') : ''}
 				${tool?.footer?.groups ? tool.footer.groups.map(renderGroup).join('') : ''}
@@ -757,6 +766,7 @@ class uiEditor extends HTMLElement {
 			/* === Assets === */
 			this.ASSETS.parentNode.hidden = !isAsset;
 			if (!isAsset && this.ASSETS.checked) selectStyles();
+			if (isAsset) this.assetImage.src = this.active.src;
 		}
 
 		catch (error) {
