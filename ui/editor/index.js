@@ -383,15 +383,16 @@ class uiEditor extends HTMLElement {
 
 	/**
 	* Navigates to a sibling or parent element based on the specified property.
-	* Updates the active element accordingly.
+	* Updates the active element accordingly. Skips elements with tagName 'UI-COMPONENT'.
 	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
 	*/
 	domNavigate(property) {
+		const component = 'UI-COMPONENT';
 		const element = this.active[property];
 		try {
-			if (element && element.tagName === 'UI-COMPONENT') {
+			if (element && element.tagName === component) {
 				let nextElement = element[property] || element.firstElementChild;
-				while (nextElement && nextElement.tagName === 'UI-COMPONENT') {
+				while (nextElement && nextElement.tagName === component) {
 					nextElement = nextElement[property] || nextElement.firstElementChild;
 				}
 				this.setActive(nextElement);
@@ -399,7 +400,7 @@ class uiEditor extends HTMLElement {
 			else {
 				if (!element) {
 					const parent = this.active.parentNode;
-					const parentIsComponent = parent.tagName === 'UI-COMPONENT';
+					const parentIsComponent = parent.tagName === component;
 
 					if (parentIsComponent && property === 'nextElementSibling') {
 						this.setActive(parent.nextElementSibling);

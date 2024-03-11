@@ -11,7 +11,7 @@ let globalBreakpoints = [], globalForm = '', globalIconObject = {}, globalId = 0
 export function renderAttributes(
 	attributes,
 	variableMapping = { globalId },
-	blacklist = ['icon']) {
+	blacklist = ['icon', 'options']) {
 	return Object.keys(attributes)
 		.filter((key) => !blacklist.includes(key))
 		.map((key) => {
@@ -69,6 +69,7 @@ export function renderElement(element) {
 	switch (element.ui) {
 		case 'button': return renderButton(element);
 		case 'output': return renderOutput(element.name, element.text);
+		case 'select': return renderSelect(element);
 		case 'tag': return renderTag(element)
 		case 'textarea': return renderTextarea(element);
 		default: return renderInput(element);
@@ -182,6 +183,37 @@ export function renderOutput(name, text) {
 		<output name="${name}">${text}</output>
 	</label>`;
 }
+
+export function renderSelect(obj) {
+	const input = obj.input ? renderAttributes(obj.input) : '';
+	const label = obj.label ? renderAttributes(obj.label) : '';
+	const text = obj.text ? `<span>${obj.text}</span>` : '';
+	const textAfter = obj.textAfter ? `<span>${obj.textAfter}</span>` : '';
+
+	const optionsHTML = obj.input.options.map(option => {
+		if (option.group) {
+		// Render <optgroup> for grouped options
+			return `
+				<optgroup label="${option.group.label}">
+					${option.group.options.map(groupOption => `<option value="${groupOption.value}">${groupOption.text}</option>`).join('')}
+				</optgroup>`;
+			} else {
+				// Render regular <option>
+				return `<option value="${option.value}">${option.text}</option>`;
+			}
+	}).join('');
+
+	return `
+		<label ${label}>
+			${text}
+			<select ${input}>
+				${optionsHTML}
+			</select>
+			${textAfter}
+		</label>
+	`;
+}
+
 
 /**
  * Renders a HTML tag with attributes and content.

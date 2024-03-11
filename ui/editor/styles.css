@@ -352,6 +352,7 @@ fieldset:has([part="asset-image"]) {
 		& + [part~=textgroup] {
 			border-radius: 0 0 7px 7px;
 			& label {
+				&:not(:has(:checked)) { background: Canvas; }
 				&:first-of-type { border-radius: 1px 2px 2px 5px; }
 				&:last-of-type { border-radius: 2px 1px 5px 2px; }
 			}
@@ -781,11 +782,12 @@ label:has([role=switch]) {
 		&:has(:checked) { 
 			background: Canvas;
 		}
+		&:has(select[required]:valid),
 		&:has([type=checkbox]:checked) {
 			background-color: var(--AccentColor);
 			color: var(--AccentColorText);
 		}
-
+		& select { all: unset; }
 	}
 }
 
