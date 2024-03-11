@@ -387,8 +387,34 @@ class uiEditor extends HTMLElement {
 	* @param {string} property - The property indicating the type of navigation ('firstElementChild', 'previousElementSibling', 'nextElementSibling', 'parentNode').
 	*/
 	domNavigate(property) {
-		if (this.active[property]) {
-			this.setActive(this.active[property]);
+		const element = this.active[property];
+		try {
+			if (element && element.tagName === 'UI-COMPONENT') {
+				let nextElement = element[property] || element.firstElementChild;
+				while (nextElement && nextElement.tagName === 'UI-COMPONENT') {
+					nextElement = nextElement[property] || nextElement.firstElementChild;
+				}
+				this.setActive(nextElement);
+			}
+			else {
+				if (!element) {
+					const parent = this.active.parentNode;
+					const parentIsComponent = parent.tagName === 'UI-COMPONENT';
+
+					if (parentIsComponent && property === 'nextElementSibling') {
+						this.setActive(parent.nextElementSibling);
+					}
+					else if (parentIsComponent && property === 'previousElementSibling') {
+						this.setActive(parent.previousElementSibling);
+					}
+				}
+				else {
+					this.setActive(element);
+				}
+			}
+		}
+		catch (error) {
+			console.error('An error occurred in domNavigate:', error);
 		}
 	}
 
