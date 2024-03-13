@@ -67,8 +67,8 @@ export function filterClassesByBreakpoint(classList, breakpoint, breakpoints) {
 export function getClasses(node) {
 	if (!node) return;
 	try {
-		const classes = Array.from(node.classList).filter(className => className.trim() !== '').sort();
-		const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '').sort();
+		const classes = Array.from(node.classList).filter(className => className.trim() !== '') //.sort();
+		const removed = Array.from(node.dataset?.removed?.trim().split(/\s+/) || []).filter(className => className.trim() !== '') //.sort();
 		return { classes, removed };
 	} catch (error) {
 		console.error('An error occurred while getting classes:', error.message);

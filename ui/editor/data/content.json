@@ -15,48 +15,6 @@
 						"label": "Prompts",
 						"name": "prompts",
 						"open": true,
-						"groups": [
-							{
-								"label": "Translations",
-								"fieldsets": [
-									{
-										"part": "taglist",
-										"fields": [
-											{
-												"ui": "button",
-												"attr": {
-													"data-click": "ai",
-													"data-ai-service": "chatgpt",
-													"data-ai-prompt": "Translate this content to French",
-													"data-ai-type": "1",
-													"title": "French"
-												}
-											},
-											{
-												"ui": "button",
-												"attr": {
-													"data-click": "ai",
-													"data-ai-service": "chatgpt",
-													"data-ai-prompt": "Translate this content to Spanish",
-													"data-ai-type": "2",
-													"title": "Spanish"
-												}
-											},
-											{
-												"ui": "button",
-												"attr": {
-													"data-click": "ai",
-													"data-ai-service": "chatgpt",
-													"data-ai-prompt": "Translate this content to German",
-													"data-ai-type": "3",
-													"title": "German"
-												}
-											}
-										]
-									}
-								]
-							}
-						],
 						"fieldsets": [
 							{
 								"part": "taglist",

@@ -211,6 +211,9 @@ fieldset:has([part="asset-image"]) {
 	--uie-gtc: 1fr 1fr;
 	font-family: ui-monospace, monospace;
 }
+[part~="full"] { /* Take up all columns in micro-layout */
+	grid-template-columns: 1fr;
+}
 [part~=group] {
 	--uie-gtc: repeat(8, 1fr);
   gap: var(--uie-gap);
@@ -385,6 +388,36 @@ code:has([data-bp]) {
 	}
 }
 
+/* === CHECKBOX === */
+label:has([part="checkbox"]) {
+	display: contents;
+	& input {
+		appearance: none;
+		aspect-ratio: 1/1;
+		block-size: 16px;
+		border-radius: 50%;
+		border: 1px solid ButtonBorder;
+		display: grid;
+		grid-column: span 1;
+		margin: 0px;
+		position: relative;
+		&::after {
+			background: #FFF;
+			content: "";
+			inset: 0;
+			position: absolute;
+			mask: var(--uie-check) no-repeat center / 85% 100%;
+			-webkit-mask: var(--uie-check) no-repeat center / 85% 100%;
+		}
+		&:checked {
+			background: var(--uie-accent);
+			border-color: var(--uie-accent);
+		}
+	}
+	& span { font-weight: 500; grid-column: span 11; }
+	&:has(:checked) span { text-decoration: line-through;}
+}
+
 /* === COMPONENT CONFIGURE === */
 [name=components] { 
 	&:has(button[value=""]) { padding-block-end: 0; }
@@ -527,6 +560,51 @@ textarea {
 	display: contents;
 	& span { grid-column: span 12; }
 }
+
+/* === AVATAR === */
+[part~=avatar] {
+  all: unset;
+  aspect-ratio: 1;
+	background: var(--_bg);
+	block-size: 4em;
+  clip-path: inset(0% 0% round 50%);
+	color: color-contrast(var(--_bg) vs #FFF, #000);
+  display: grid;
+  place-content: center;
+	place-self: end;
+	user-select: none;
+	& * { grid-area: 1/ 1;}
+	& img {
+		height: auto;
+		max-width: 100%;
+	}
+}
+/* === MESSAGES === */
+[part~=messages] {
+	all: unset;
+	display: grid;
+	row-gap: var(--uie-gap);
+	& li {
+		display: flex;
+		gap: var(--uie-gap);
+		& [part~=message] {
+			background: ButtonFace;
+			padding: var(--uie-gap);
+			border-radius: 12px 12px 12px 0;
+			place-self: end;
+		}
+		&[value="1"] {
+			justify-self: end;
+			& [part~=message] {
+				background: var(--uie-accent);
+				border-radius: 12px 12px 0 12px;
+				color: #FFF;
+			}
+			& [part~=avatar] { order: 2; }
+		}
+	}
+}
+
 
 /* === RADIO === */
 [part~=radio] {
@@ -723,6 +801,27 @@ label:has([role=switch]) {
 	& span { font-weight: 500; grid-column: span 10; }
 }
 
+/* === TABS === */
+[part~=tabs] {
+	grid-template-columns: 1fr;
+	padding-block-start: 0;
+	& [part~=tab] {
+		display: none;
+		grid-area: 1/1;
+		& fieldset {
+			padding: 0 0 var(--uie-gap) 0;
+			&:last-of-type { padding-block-end: 0; }
+		}
+	}
+}
+[part~=tabs-control] {
+	&:has([part~=tab-1]:checked) + [part~=tabs] > [part~=tab]:nth-of-type(1),
+	&:has([part~=tab-2]:checked) + [part~=tabs] > [part~=tab]:nth-of-type(2),
+	&:has([part~=tab-3]:checked) + [part~=tabs] > [part~=tab]:nth-of-type(3),
+	&:has([part~=tab-4]:checked) + [part~=tabs] > [part~=tab]:nth-of-type(4) { display: block; }
+}
+
+
 /* === TABGROUP === */
 [part~=tabgroup] {
 	--uie-gtc: 1fr;
@@ -830,8 +929,8 @@ label:has([role=switch]) {
 [data-ai-type="4"] { --_bg: var(--uie-custom-4); }
 [data-ai-type="5"] { --_bg: var(--uie-custom-5); }
 
-[name=airesult] {
-	grid-template-columns: 1fr;
+[name=airesult] {grid-template-columns: 1fr;
+	
 }
 
 [data-sr] {

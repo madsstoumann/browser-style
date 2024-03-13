@@ -156,6 +156,20 @@ export function findObjectByProperty(data, propertyName, propertyValue) {
 }
 
 /**
+ * Calculates the number of days until a given due date.
+ *
+ * @param {string} dueDateString - The due date in string format (e.g., "2022-12-31").
+ * @returns {number} The number of days until the due date.
+ */
+export function getDaysUntilDue(dueDateString) {
+	const dueDate = new Date(dueDateString);
+	const currentDate = new Date();
+	const differenceMs = dueDate - currentDate;
+	const daysUntilDue = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+	return daysUntilDue;
+}
+
+/**
  * Recursively iterates over an object and invokes a callback function when a matching key is found.
  * @param {Object} obj - The object to iterate over.
  * @param {string} searchKey - The key to search for.

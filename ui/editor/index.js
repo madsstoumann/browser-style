@@ -3,16 +3,17 @@ import stylesheet from './styles.css' assert { type: 'css' };
 import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
 import { aiPrompt, onSave, onTextEdit } from './js/content.js';
 import { addClass, copyClasses, filterClassesByBreakpoint, remClasses, revertClasses, setUnitClass, setUtilityClass, updateClassList } from './js/styles.js';
-import { renderComponentList, renderElement, renderFieldset, renderGroup, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
-import { addDocumentScroll, addDraggable, debounce, fetchFiles, findObjectByProperty, uuid } from './js/utils.js';
+import { renderChat, renderComponentList, renderElement, renderFieldset, renderGroup, renderInput, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getDaysUntilDue, uuid } from './js/utils.js';
+import { getXPath, getElementByXPath }	from './js/xpath.js';
 import icons from './js/icons.js';
 
 /**
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.24
- * @summary 08-03-2024
+ * @version 1.0.27
+ * @summary 13-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -45,13 +46,31 @@ class uiEditor extends HTMLElement {
 			return;
 		}
 
-		/* Fetch config-files */
-		const files = this.getAttribute('files');
-		if (files) {
-			const filenames = files.split(',').map(name => name.trim());
-			this.config = await fetchFiles(filenames)
+		/* Fetch config from `files`or endpoints */
+		this.config = {};
+		const acceptedEndpoints = ['app', 'assets', 'clientdata', 'elements', 'components', 'content', 'styles'];
+		const files = this.getAttribute('files').split(',').map(name => {
+			const cleanFileName = name.replace(/^.*\/([^/]+)\.[^/.]+$/, '$1');
+			return { name: cleanFileName, value: name };
+		});
+
+		const endpoints = Array.from(this.attributes)
+			.filter(attr => acceptedEndpoints.includes(attr.name))
+			.map(attr => ({ name: attr.name, value: attr.value }));
+
+		const configs = [...endpoints, ...files];
+		for (const entry of configs) {
+			try {
+				const response = await fetch(entry.value);
+				const config = await response.json();
+				this.config[entry.name] = config;
+			} catch (error) {
+				console.error(`Error fetching ${entry.name}: ${error}`);
+			}
 		}
 		if (!this.config || !this.config.app) return;
+
+console.log(this.config);
 
 		this.uid = uuid();
 		setBreakpoints(this.config.app.breakpoints); /* Set global breakpoints in external file: render.js */
@@ -77,15 +96,17 @@ class uiEditor extends HTMLElement {
 		this.formElements = shadow.querySelector(`[part=form-elements]`);
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
 		this.formStyles = shadow.querySelector(`[part=form-styles]`);
+		this.messages = shadow.querySelector(`[name=messages]`);
 		this.outline = shadow.querySelector(`[part=outline]`);
 		this.partUnit = shadow.querySelectorAll(`[part*=unit-]`);
 		this.partUtility = shadow.querySelectorAll(`[part*=utility-]`);
+		this.tasklist = shadow.querySelector(`[name=tasklist]`);
 		this.texteditor = shadow.querySelector(`[part=texteditor]`);
 		this.toggle = shadow.querySelector(`[part=toggle]`);
 		this.tools = shadow.querySelector(`[part=tools]`);
 
 		/* References to the different tools of the editor */
-		[this.STYLES, this.CONTENT, this.ELEMENTS, this.ASSETS, this.SETTINGS] = this.editor.elements.tool;
+		[this.STYLES, this.CONTENT, this.ELEMENTS, this.ASSETS, this.COLLABORATION] = this.editor.elements.tool;
 		if (this.compConfig ) this.compConfig.hidden = true;
 
 		/* Events */
@@ -619,12 +640,7 @@ class uiEditor extends HTMLElement {
 			'x': () => this.domAction('cut'),
 			'y': () => this.domAction('redo'),
 			'z': () => this.domAction('undo'),
-			'1': () => select(0),
-			'2': () => select(1),
-			'3': () => select(2),
-			'4': () => select(3),
-			'5': () => select(4),
-			'6': () => select(5)
+			'1': () => select(0)
 		};
 
 		const actionFunction = keyBindings[event.key.toLowerCase()];
@@ -751,10 +767,12 @@ class uiEditor extends HTMLElement {
 	setActive(node) {
 		if (!node) return;
 		if (this.contains(node)) return;
+
 		const selectStyles = () => {
 			this.STYLES.checked = true;
 			this.STYLES.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
 		}
+
 		try {
 			if (this.active) {
 				this.resizeObserver.unobserve(this.active);
@@ -794,6 +812,26 @@ class uiEditor extends HTMLElement {
 			this.ASSETS.parentNode.hidden = !isAsset;
 			if (!isAsset && this.ASSETS.checked) selectStyles();
 			if (isAsset) this.assetImage.src = this.active.src;
+
+			/* === Tasks === */
+			if (this.tasklist && this.config?.clientdata?.tasks) {
+				const xpath = getXPath(node);
+				const tasks = this.config.clientdata.tasks.find(msg => msg.xpath === xpath);
+				this.tasklist.innerHTML = tasks?.items ? tasks.items.map(item => {
+					const { completed, dueDate, text } = item.task;
+					const input = { "part": "checkbox", "type": "checkbox" }
+					const label = { "data-days-due": getDaysUntilDue(dueDate) };
+					if (completed) input.checked = true;
+					return renderInput({ "textAfter": text, input, label });
+				}).join('') : '';
+			}
+
+			/* === Messages === */
+			if (this.messages && this.config?.clientdata?.messages) {
+				const xpath = getXPath(node);
+				const messages = this.config.clientdata.messages.find(msg => msg.xpath === xpath);
+				this.messages.innerHTML = messages?.items ? renderChat(Object.assign({ users: this.config.clientdata.users }, messages)) : '';
+			}
 		}
 
 		catch (error) {

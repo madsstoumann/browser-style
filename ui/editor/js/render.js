@@ -171,6 +171,38 @@ export function renderInput(obj) {
 }
 
 /**
+ * Renders the chat based on the provided object.
+ * @param {Object} obj - The object containing chat data.
+ * @param {Array} obj.items - An array of chat items.
+ * @param {Array} obj.users - An array of chat users.
+ * @returns {string} - The rendered chat HTML.
+ */
+export function renderChat(obj) {
+	const abbr = name => {
+		let words = name.split(' '), init = '';
+		if (words.length > 1) { init = words.map(word => word.charAt(0)).join(''); } else { init = name.slice(0, 2); }
+		return init; 
+	};
+	const hex = str => "#" + ("00000" + (Math.abs(str.split('').reduce((hash, char) => char.charCodeAt(0) + ((hash << 5) - hash), 0)) % (1 << 24)).toString(16)).slice(-6).toUpperCase();
+	const avatar = user => `<picture part="avatar" style="--_bg:${hex(user.name)};"><abbr title="${user.name}">${abbr(user.name)}</abbr><img src="${user.imageUrl}" alt="${user.name}"></picture>`;
+
+	const list = obj.items.map(item => {
+		const user = obj.users.find(u => u.id === item.userId);
+		const isCurrentUser = user && user.isCurrentUser;
+		const value = isCurrentUser ? 1 : 0;
+		return `<li${item.time ? ` data-time="${item.time}"`:''} value="${value}">
+			${user ? avatar(user) : ''}
+			<div part="message">
+				${item.message.text}
+				${item.message.readTime ? `<time datetime="${item.message.readTime}"></time>` : ''}
+			</div>
+		</li>`;
+	}).join('');
+	return `<ol part="messages">${list}</ol>`;
+}
+
+
+/**
  * Renders an output element with an optional label.
  * @param {string} name - The name attribute for the output element.
  * @param {string} text - The text to be displayed as the label.
@@ -222,7 +254,10 @@ export function renderSelect(obj) {
  */
 export function renderTag(obj) {
 	const attr = obj.attr ? renderAttributes(obj.attr) : '';
-	return `<${obj.tag} ${attr}>${obj.content}</${obj.tag}>`;
+	return `<${obj.tag} ${attr}>
+		${obj.content}
+		${obj.fieldsets ? obj.fieldsets.map(renderFieldset).join('') : ''}
+	</${obj.tag}>`;
 }
 
 /**

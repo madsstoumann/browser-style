@@ -160,12 +160,12 @@
 	"footer": {
 		"groups": [
 			{
-				"label": "Frame",
-				"name": "frame-root",
+				"label": "Global",
 				"open": false,
 				"groups": [
 					{
-						"label": "Layout Organizer",
+						"label": "Organizer",
+						"name": "global",
 						"fieldsets": [
 							{
 								"name": "layoutorganizer",
@@ -233,6 +233,37 @@
 										"attr": {
 											"data-click": "dom-last",
 											"title": "Move last ⇧⌃↘"
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						"label": "Settings",
+						"name": "global",
+						"fieldsets": [
+							{
+								
+								"fields": [
+									{
+										"textAfter": "Show grid",
+										"input": {
+											"data-property": "--uie-grid-visible",
+											"name": "grid",
+											"role": "switch",
+											"type": "checkbox"
+										}
+									},
+									{
+										"text": "Grid size",
+										"input": {
+											"data-property": "--uie-grid-sz",
+											"data-unit": "px",
+											"min": 5,
+											"name": "gridsize",
+											"type": "range",
+											"value": 20
 										}
 									}
 								]
@@ -619,7 +650,7 @@
 			"name": "Content",
 			"key": "content",
 			"icon": "edit",
-			"title": "Content ⇧⌃2",
+			"title": "Content",
 			"groups": [
 				{
 					"label": "Edit Content",
@@ -648,48 +679,142 @@
 			"name": "Elements",
 			"key": "elements",
 			"icon": "components",
-			"title": "Elements ⇧⌃3"
+			"title": "Elements"
 		},
 		{
 			"name": "Assets",
 			"key": "assets",
 			"icon": "photo",
-			"title": "Assets ⇧⌃4"
+			"title": "Assets"
 		},
 		{
-			"name": "Settings",
-			"key": "settings",
-			"icon": "settings",
-			"title": "Settings ⇧⌃5",
-			"groups": [
+			"name": "Collaboration",
+			"key": "collaboration",
+			"icon": "message",
+			"title": "Collaboration",
+			"fieldsets": [
 				{
-					"label": "Layout Grid",
-					"open": true,
-					"fieldsets": [
+					"part": "textgroup tabs-control",
+					"fields": [
 						{
-							"name": "layoutgrid",
-							"fields": [
+							"text": "tasklist",
+							"input": {
+								"data-sr": "",
+								"name": "collaboration-type",
+								"part": "tab-1",
+								"type": "radio",
+								"value": "tasks",
+								"checked": ""
+							}
+						},
+						{
+							"text": "messages",
+							"input": {
+								"data-sr": "",
+								"name": "collaboration-type",
+								"part": "tab-2",
+								"type": "radio",
+								"value": "messages"
+							}
+						},
+						{
+							"text": "prompts",
+							"input": {
+								"data-sr": "",
+								"name": "collaboration-type",
+								"part": "tab-3",
+								"type": "radio",
+								"value": "prompts"
+							}
+						}
+					]
+				},
+				{
+					"part": "tabs",
+					"fields": [
+						{
+							"ui": "tag",
+							"tag": "div",
+							"content": "",
+							"attr": { "part": "tab" },
+							"fieldsets": [
 								{
-									"textAfter": "Show grid",
-									"input": {
-										"data-property": "--uie-grid-visible",
-										"name": "grid",
-										"role": "switch",
-										"type": "checkbox"
-									}
+									"name": "tasklist"
 								},
 								{
-									"text": "Grid size",
-									"input": {
-										"data-property": "--uie-grid-sz",
-										"data-unit": "px",
-										"min": 5,
-										"name": "gridsize",
-										"type": "range",
-										"value": 20
-									}
+									"part": "input-icon",
+									"fields": [
+										{
+											"input": {
+												"type": "text",
+												"name": "addtask",
+												"placeholder": "Add task",
+												"removeForm": true
+											}
+										},
+										{
+											"ui": "button",
+											"icon": "listadd",
+											"attr": {
+												"data-click": "add-task",
+												"title": "Add task"
+											}
+										}
+									]
+								},
+								{
+									"part": "group",
+									"fields": [
+										{
+											"ui": "button",
+											"icon": "removeTasks",
+											"attr": {
+												"data-click": "remove-tasks",
+												"title": "Remove completed tasks"
+											}
+										}
+									]
 								}
 							]
+						},
+						{
+							"ui": "tag",
+							"tag": "div",
+							"content": "",
+							"attr": { "part": "tab" },
+							"fieldsets": [
+								{
+									"name": "messages",
+									"part": "full"
+								},
+								{
+									"part": "input-icon",
+									"fields": [
+										{
+											"input": {
+												"type": "text",
+												"name": "addmessage",
+												"placeholder": "Add message",
+												"removeForm": true
+											}
+										},
+										{
+											"ui": "button",
+											"icon": "listadd",
+											"attr": {
+												"data-click": "add-message",
+												"title": "Add message"
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"ui": "tag",
+							"tag": "div",
+							"content": "prompts",
+							"attr": { "part": "tab prompts" }
 						}
 					]
 				}
