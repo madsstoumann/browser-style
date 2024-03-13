@@ -105,10 +105,9 @@ export function renderComponentList(array, id) {
  * @param {Object} fieldset - The fieldset object.
  * @returns {string} The rendered fieldset element as a string.
  */
-export function renderFieldset(fieldset, renderLegend = false) {
+export function renderFieldset(fieldset) {
 	return `
 		<fieldset${fieldset.name ? ` name="${fieldset.name}"`:''}${fieldset.part ? ` part="${fieldset.part}"`:''}>${
-			renderLegend && fieldset.name ? `<legend>${fieldset.name}</legend>` : ''}${
 			fieldset.fields ? fieldset.fields.map(renderElement).join('') : ''
 		}</fieldset>
 	`;

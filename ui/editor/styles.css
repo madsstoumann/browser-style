@@ -929,8 +929,9 @@ label:has([role=switch]) {
 [data-ai-type="4"] { --_bg: var(--uie-custom-4); }
 [data-ai-type="5"] { --_bg: var(--uie-custom-5); }
 
-[name=airesult] {grid-template-columns: 1fr;
-	
+[name=airesult] {
+	grid-template-columns: 1fr;
+	&:empty { display: none; }
 }
 
 [data-sr] {

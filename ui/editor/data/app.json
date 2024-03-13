@@ -813,8 +813,36 @@
 						{
 							"ui": "tag",
 							"tag": "div",
-							"content": "prompts",
-							"attr": { "part": "tab prompts" }
+							"content": "",
+							"attr": { "part": "tab" },
+							"fieldsets": [
+								{
+									"name": "prompts",
+									"part": "full"
+								},
+								{
+									"part": "input-icon",
+									"fields": [
+										{
+											"ui": "textarea",
+											"input": {
+												"name": "aiprompt",
+												"placeholder": ""
+											}
+										},
+										{
+											"ui": "button",
+											"icon": "inputAI",
+											"attr": {
+												"data-click": "ai",
+												"data-ai-service": "chatgpt",
+												"data-ai-prompt": "",
+												"title": "Run custom prompt"
+											}
+										}
+									]
+								}
+							]
 						}
 					]
 				}

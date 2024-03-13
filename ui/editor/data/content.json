@@ -7,68 +7,31 @@
 				"name": "content",
 				"fieldsets": [
 					{
-						"name": "airesult"
-					}
-				],
-				"groups": [
-					{
-						"label": "Prompts",
-						"name": "prompts",
-						"open": true,
-						"fieldsets": [
+						"part": "taglist",
+						"fields": [
 							{
-								"part": "taglist",
-								"fields": [
-									{
-										"ui": "button",
-										"attr": {
-											"data-click": "ai",
-											"data-ai-service": "chatgpt",
-											"data-ai-prompt": "Optimize this content for a website",
-											"title": "Optimize for web"
-										}
-									},
-									{
-										"ui": "button",
-										"attr": {
-											"data-click": "ai",
-											"data-ai-suggest": "2",
-											"data-ai-service": "chatgpt",
-											"data-ai-prompt": "Suggest headline for this content",
-											"title": "Suggest headline"
-										}
-									}
-								]
+								"ui": "button",
+								"attr": {
+									"data-click": "ai",
+									"data-ai-service": "chatgpt",
+									"data-ai-prompt": "Optimize this content for a website",
+									"title": "Optimize for web"
+								}
+							},
+							{
+								"ui": "button",
+								"attr": {
+									"data-click": "ai",
+									"data-ai-suggest": "2",
+									"data-ai-service": "chatgpt",
+									"data-ai-prompt": "Suggest headline for this content",
+									"title": "Suggest headline"
+								}
 							}
 						]
 					},
 					{
-						"label": "Custom Prompt",
-						"name": "prompts",
-						"fieldsets": [
-							{
-								"part": "input-icon",
-								"fields": [
-									{
-										"ui": "textarea",
-										"input": {
-											"name": "aiprompt",
-											"placeholder": ""
-										}
-									},
-									{
-										"ui": "button",
-										"icon": "inputAI",
-										"attr": {
-											"data-click": "ai",
-											"data-ai-service": "chatgpt",
-											"data-ai-prompt": "",
-											"title": "Run custom prompt"
-										}
-									}
-								]
-							}
-						]
+						"name": "airesult"
 					}
 				]
 			}
