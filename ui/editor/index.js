@@ -12,8 +12,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.27
- * @summary 13-03-2024
+ * @version 1.0.28
+ * @summary 14-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -537,6 +537,10 @@ console.log(this.config);
 		const node = event.target;
 		let value = node.value;
 
+		if (node.form !== this.editor) {
+			this.dispatch('uie-input', { node });
+		}
+
 		/* === ELEMENTS === */
 		if (node.form === this.formElements) {
 			const key = node.dataset.key;
@@ -692,6 +696,34 @@ console.log(this.config);
 	}
 
 	/**
+	 * Renders the messages and renders them in the UI.
+	 */
+	renderMessages(xPath) {
+		const messages = this.config?.clientdata?.messages;
+		if (this.messages && messages) {
+			const items = messages.find(msg => msg.xpath === xPath)?.items || [];
+			this.messages.innerHTML = items.length ? renderChat(Object.assign({ users: this.config.clientdata.users }, { items })) : '';
+		}
+	}
+
+	/**
+	 * Renders the tasks and updates the tasklist element based on the activeInfo and config.
+	 */
+	renderTasks(xPath) {
+		const tasks = this.config?.clientdata?.tasks;
+		if (this.tasklist && tasks) {
+			const taskItems = tasks.find(msg => msg.xpath === xPath)?.items || [];
+			this.tasklist.innerHTML = taskItems.map(item => {
+				const { completed, dueDate, text } = item.task;
+				const input = { "part": "checkbox", "type": "checkbox" };
+				const label = { "data-days-due": getDaysUntilDue(dueDate) };
+				if (completed) input.checked = true;
+				return renderInput({ "textAfter": text, input, label });
+			}).join('');
+		}
+	}
+
+	/**
 	 * Renders the template for the app.
 	 * @returns {string} - The generated markup.
 	 */
@@ -765,8 +797,7 @@ console.log(this.config);
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
 	setActive(node) {
-		if (!node) return;
-		if (this.contains(node)) return;
+		if (!node || this.active === node || this.contains(node)) return;
 
 		const selectStyles = () => {
 			this.STYLES.checked = true;
@@ -776,64 +807,64 @@ console.log(this.config);
 		try {
 			if (this.active) {
 				this.resizeObserver.unobserve(this.active);
+				this.dispatch('uie-inactive', { info: this.activeInfo });
 			}
+
 			this.active = node;
 
-			if (!this.active.dataset.classes) this.active.dataset.classes = this.active.className;
+			// Observe new node
+			if (!node.dataset.classes) node.dataset.classes = node.className;
 			this.resizeObserver.observe(node);
 
-			this.connectedParts = getConnectedParts(node, this.editor.elements.connectedgroup);
+			// Update activeInfo
+			const { className, dataset: { classes, part, modelKey, content } } = node;
+			this.activeInfo = {
+				classes: className,
+				orgClasses: classes,
+				xPath: getXPath(node),
+				component: part ? {
+					...Object.fromEntries([...node.closest('[data-component]').parentNode.attributes].map(({ name, value }) => [name, value])),
+					part,
+					modelKey,
+					content
+				} : null
+			};
+
+			// Handle content
+			this.CONTENT.parentNode.hidden = !content;
+			if (!content && this.CONTENT.checked) selectStyles();
+			if (this.formContent && content) {
+				const textEditor = this.texteditor && (content === 'text' || content === 'richtext');
+				this.texteditor?.setContent(node.innerHTML, content === 'text');
+				this.texteditor?.toggleAttribute('hidden', !textEditor);
+			}
+
+			// Update connected parts
+			this.connectedParts = getConnectedParts(this.editor.elements.connectedgroup, this.activeInfo?.component?.key, part);
+
+			// Filter styles-options in the editor, if `data-styles` is set
 			this.styleParts(node);
 
+			// Update styles
 			if (this.formStyles) {
 				updateClassList(this.active, this.editor.elements.classlist);
 				this.updateFormFromClasses();
 			}
 
-			/* === Content === */
-			const contentValue = this.active.dataset.content;
-			this.CONTENT.parentNode.hidden = !contentValue;
-			if (!contentValue && this.CONTENT.checked) selectStyles();
-			
-			if (this.formContent && contentValue) {
-				const textEditor = (this.texteditor && (contentValue === 'text' || contentValue === 'richtext'));
-				if (textEditor) {
-					this.texteditor.setContent(node.innerHTML, contentValue === 'text');
-				}
-				this.texteditor.hidden = !textEditor;
-			}
-
-			/* === Elements */
-			const isAsset = ['IMG', 'VIDEO'].includes(this.active.tagName);
+			// Handle elements and assets
+			const isAsset = ['IMG', 'VIDEO'].includes(node.tagName);
 			this.ELEMENTS.parentNode.hidden = isAsset;
 			if (isAsset && this.ELEMENTS.checked) selectStyles();
-
-			/* === Assets === */
 			this.ASSETS.parentNode.hidden = !isAsset;
 			if (!isAsset && this.ASSETS.checked) selectStyles();
-			if (isAsset) this.assetImage.src = this.active.src;
+			if (isAsset) this.assetImage.src = node.src;
 
-			/* === Tasks === */
-			if (this.tasklist && this.config?.clientdata?.tasks) {
-				const xpath = getXPath(node);
-				const tasks = this.config.clientdata.tasks.find(msg => msg.xpath === xpath);
-				this.tasklist.innerHTML = tasks?.items ? tasks.items.map(item => {
-					const { completed, dueDate, text } = item.task;
-					const input = { "part": "checkbox", "type": "checkbox" }
-					const label = { "data-days-due": getDaysUntilDue(dueDate) };
-					if (completed) input.checked = true;
-					return renderInput({ "textAfter": text, input, label });
-				}).join('') : '';
-			}
+			// Render tasks and messages
+			this.renderTasks(this.activeInfo.xPath);
+			this.renderMessages(this.activeInfo.xPath);
 
-			/* === Messages === */
-			if (this.messages && this.config?.clientdata?.messages) {
-				const xpath = getXPath(node);
-				const messages = this.config.clientdata.messages.find(msg => msg.xpath === xpath);
-				this.messages.innerHTML = messages?.items ? renderChat(Object.assign({ users: this.config.clientdata.users }, messages)) : '';
-			}
+			this.dispatch('uie-active', { info: this.activeInfo })
 		}
-
 		catch (error) {
 			console.error(error);
 		}

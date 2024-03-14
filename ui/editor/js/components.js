@@ -15,20 +15,16 @@ export function findComponentByKey(key, arr) {
 
 /**
  * Retrieves the connected parts of a given node within a specific group.
- * @param {HTMLElement} node - The node for which to retrieve connected parts.
+ * @param {String} key - The key for the component to search for.
+ * @param {String} part - The part element to search for.
  * @param {HTMLElement} group - The group element to manipulate based on the connected parts.
  * @returns {NodeList} - A list of connected parts matching the specified criteria.
  */
-export function getConnectedParts(node, group) {
+export function getConnectedParts(group, key, part) {
 	try {
 		group.style.display = 'none';
-		if (!node || !node.dataset.part) return [];
-		const component = node.closest('[data-component]');
-		if (!component) return [];
-
-		// Query connected parts using a selector
-		const selector = `[data-component~="${component.dataset.component}"] [data-part~="${node.dataset.part}"], [data-component~="${component.dataset.component}"][data-part~="${node.dataset.part}"]`;
-		const connectedParts = document.querySelectorAll(selector);
+		if (!key || !part) return [];
+		const connectedParts = document.querySelectorAll(`[data-component~="${key}"] [data-part~="${part}"], [data-component~="${key}"][data-part~="${part}"]`);
 		if (connectedParts.length > 1) {
 			group.style.display = 'grid';
 		}
