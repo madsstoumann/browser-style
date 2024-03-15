@@ -322,7 +322,6 @@ fieldset:has([part="asset-image"]) {
 /* === BREAKPOINTS === */
 [name="breakpoints"][part~=tabgroup] {
 	background: var(--uie-gray-5);
-	
 	& label {
 		padding-block: calc(var(--uie-gap) / 3);
 		position: relative;
@@ -354,12 +353,27 @@ fieldset:has([part="asset-image"]) {
 		margin-block-end: 0;
 		& + [part~=textgroup] {
 			border-radius: 0 0 7px 7px;
+			margin-block-end: 0;
 			& label {
 				&:not(:has(:checked)) { background: Canvas; }
 				&:first-of-type { border-radius: 1px 2px 2px 5px; }
 				&:last-of-type { border-radius: 2px 1px 5px 2px; }
 			}
 		}
+	}
+}
+
+[part*="reset-utility"] {
+	margin-block: 3px;
+	padding-block: 0;
+	& button {
+		border: 0;
+		color: var(--uie-accent);
+		font-size: xx-small;
+		height: auto;
+		margin-block-end: 3px;
+		padding: 0;
+		place-self: end;
 	}
 }
 

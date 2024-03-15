@@ -2,7 +2,7 @@ import stylesheet from './styles.css' assert { type: 'css' };
 
 import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
 import { aiPrompt, onSave, onTextEdit } from './js/content.js';
-import { addClass, copyClasses, filterClassesByBreakpoint, remClasses, revertClasses, setUnitClass, setUtilityClass, updateClassList } from './js/styles.js';
+import { addClass, copyClasses, getClasses, parseUtilityString, remClasses, revertClasses, setUnitClass, updateClassList } from './js/styles.js';
 import { renderChat, renderComponentList, renderElement, renderFieldset, renderGroup, renderInput, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
 import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getDaysUntilDue, uuid } from './js/utils.js';
 import { getXPath, getElementByXPath }	from './js/xpath.js';
@@ -334,7 +334,7 @@ console.log(this.config);
 	*/
 	dispatch(name, detail) {
 		this.dispatchEvent(new CustomEvent(name, { detail }));
-		console.log(name, detail)
+		// console.log(name, detail)
 	}
 
 	/**
@@ -481,10 +481,10 @@ console.log(this.config);
 							result: this.aiResult,
 							services: this.config.app.ai
 						}); break;
-					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormFromClasses(); break;
+					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'cls-copy': copyClasses(this.active.className); break;
 					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); break;
-					case 'cls-revert': revertClasses(this.active, this.editor.elements.classlist); this.updateFormFromClasses(); break;
+					case 'cls-revert': revertClasses(this.active, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'close': this.editor.hidePopover(); break;
 					case 'colorscheme': this.classList.toggle('colorscheme'); break;
 					case 'dom-copy': this.domAction('copy'); break;
@@ -502,6 +502,7 @@ console.log(this.config);
 					case 'nav-left': this.domNavigate('previousElementSibling'); break;
 					case 'nav-right': this.domNavigate('nextElementSibling'); break;
 					case 'nav-up': this.domNavigate('parentNode'); break;
+					case 'reset-utility': this.resetUtility(); break;
 					case 'toggle': this.setAttribute('open', target.checked); break;
 					case 'ui-reset': this.uiReset(); break;
 					default: break;
@@ -555,17 +556,24 @@ console.log(this.config);
 
 		/* === STYLE UPDATES === */
 		if (node.form === this.formStyles) {
-			const breakpoint = this.editor.elements.breakpoint.value || '';
 			if (node.hasAttribute('data-values')) value = node.dataset.values.split(',')[node.valueAsNumber];
 
-			/* Remove any classes matching the prefix */
+			/* node has `data-prefix`, use utility-based styling */
 			if (node.hasAttribute('data-prefix')) {
-				this.setBreakpointLabel(node, breakpoint, value);
+				const utilityObj = {
+					breakpoint: this.editor.elements.breakpoint.value || '',
+					colorscheme: this.editor.elements.colorschemes.value || '',
+					dynamic: this.editor.elements.dynamics.value || '',
+					structural: this.editor.elements.structurals.value || ''
+				};
 
-				/* Update value to set */
-				const breakpointPrefix = breakpoint ? `${breakpoint}${this.config.app.breakpointsDelimiter}` : '';
-				value = `${breakpointPrefix}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`;
-				setUtilityClass(this.active, value, breakpointPrefix + node.dataset.prefix);
+				const colorscheme = utilityObj.colorscheme ? `${utilityObj.colorscheme}${this.config.app.stateDelimiter}` : '';
+				const breakpoint = utilityObj.breakpoint ? `${utilityObj.breakpoint}${this.config.app.stateDelimiter}` : '';
+				const dynamic = utilityObj.dynamic ? `${utilityObj.dynamic}${this.config.app.stateDelimiter}` : '';
+				const structural = utilityObj.structural ? `${utilityObj.structural}${this.config.app.stateDelimiter}` : '';
+
+				this.setUtilityClass(this.active, `${colorscheme}${breakpoint}${dynamic}${structural}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`)
+				this.setBreakpointLabel(node, utilityObj.breakpoint, value);
 			}
 			else {
 				setUnitClass(this.active, this.formStyles.elements[node.name], value);
@@ -594,8 +602,10 @@ console.log(this.config);
 
 		switch(node.name) {
 			/* Update the selected styles in the editor when breakpoint change */
-			case 'breakpoint': this.updateBreakpoint(); break;
-			/* Enable/Disable CSS class for `this.active` */
+			case 'breakpoint':
+			case 'colorschemes':
+			case 'dynamics':
+			case 'structurals': this.updateFormStyles(true); break;
 			case 'classname':
 				if (!node.checked) {
 					this.active.classList.remove(value);
@@ -606,7 +616,7 @@ console.log(this.config);
 					this.active.dataset.removed = this.active.dataset.removed.replace(value, '');
 				}
 				this.updateConnectedParts()
-				this.updateFormFromClasses();
+				this.updateFormStyles();
 				break;
 			/* Active Tool */
 			case 'tool':
@@ -721,6 +731,15 @@ console.log(this.config);
 				return renderInput({ "textAfter": text, input, label });
 			}).join('');
 		}
+	}
+
+	/**
+	 * Resets the utility values in the editor.
+	 */
+	resetUtility() {
+		this.editor.elements.colorschemes.value = '';
+		this.editor.elements.dynamics.value = '';
+		this.editor.elements.structurals.value = '';
 	}
 
 	/**
@@ -848,7 +867,7 @@ console.log(this.config);
 			// Update styles
 			if (this.formStyles) {
 				updateClassList(this.active, this.editor.elements.classlist);
-				this.updateFormFromClasses();
+				this.updateFormStyles();
 			}
 
 			// Handle elements and assets
@@ -878,7 +897,7 @@ console.log(this.config);
 	 */
 	setBreakpointLabel(node, breakpoint, value) {
 		const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
-		const isRadio =  node.type === 'radio';
+		const isRadio = node.type === 'radio';
 		if (bp) {
 			if (isRadio) {
 				const fieldset = node.closest('fieldset');
@@ -934,6 +953,46 @@ console.log(this.config);
 	}
 
 	/**
+	 * Sets the utility class for a given node.
+	 *
+	 * @param {HTMLElement} node - The HTML element to set the utility class on.
+	 * @param {string} value - The utility class value to set.
+	 * @returns {void}
+	 */
+	setUtilityClass(node, value) {
+		const utilityObj = parseUtilityString(value, this.config.app);
+		try {
+			const { classes, removed } = getClasses(node);
+			classes.forEach(className => {
+				const classParsed = parseUtilityString(className, this.config.app);
+				if (
+					classParsed.breakpoint === utilityObj.breakpoint &&
+					classParsed.colorscheme === utilityObj.colorscheme &&
+					classParsed.dynamic === utilityObj.dynamic &&
+					classParsed.structural === utilityObj.structural &&
+					classParsed.prefix === utilityObj.prefix &&
+					classParsed.value !== utilityObj.value
+				) {
+					node.classList.remove(className);
+				}
+			});
+
+			if (!classes.includes(value)) {
+				node.classList.add(value);
+			}
+
+			removed.forEach(className => {
+				if (className === value) {
+					node.dataset.removed = node.dataset.removed.replace(className, '');
+				}
+			});
+
+		} catch (error) {
+			console.error('An error occurred while setting utility class:', error.message);
+		}
+	}
+
+	/**
 	 * Sets the visibility of style parts based on the provided node.
 	 * @param {HTMLElement} node - The node to determine the style parts from.
 	 * @returns {void}
@@ -964,38 +1023,85 @@ console.log(this.config);
 	 * Updates the form based on the current breakpoint value and filtered classes.
 	 * Uses the provided breakpoint value to filter and update relevant elements.
 	 */
-	updateBreakpoint() {
+	updateFormStyles(utility = false) {
 		try {
 			const classes = this.active.className.split(' ');
+			// if (!utility) {
+				this.editor.querySelectorAll('var[data-bp]').forEach(varElement => varElement.textContent = '');
+			// }
 			if (!classes.length) return;
+
+			const utilityObj = {
+				breakpoint: this.editor.elements.breakpoint.value || '',
+				colorscheme: this.editor.elements.colorschemes.value || '',
+				dynamic: this.editor.elements.dynamics.value || '',
+				structural: this.editor.elements.structurals.value || ''
+			};
+
 			this.formStyles.reset();
-			const breakpoint = this.editor.elements.breakpoint.value || '';
-			const filteredClasses = filterClassesByBreakpoint(classes, breakpoint, this.config.app.breakpoints);
-			if (filteredClasses.length) {
-				filteredClasses.forEach(cls => {
-					const inputString = cls.replace(breakpoint + this.config.app.breakpointsDelimiter, '');
-					const firstDelimiterIndex = inputString.indexOf(this.config.app.prefixDelimiter);
-					const prefix = inputString.substring(0, firstDelimiterIndex);
-					const value = inputString.substring(firstDelimiterIndex + this.config.app.prefixDelimiter.length);
-					const input = Array.from(this.formStyles.elements).find(element => element.dataset.prefix === `${prefix}`) || null;
-					this.updateInput(input, cls);
-					this.updateInputElement(input, breakpoint, value);
+			const classObjs = classes.map(className => parseUtilityString(className, this.config.app));
+			const elements = Array.from(this.formStyles.elements);
+
+			// Iterate through classObjs and group by prefix
+			const classObjsByPrefix = {};
+			classObjs.forEach(classObj => {
+				if (classObj.prefix) {
+					classObjsByPrefix[classObj.prefix] = classObjsByPrefix[classObj.prefix] || [];
+					classObjsByPrefix[classObj.prefix].push(classObj);
+				}
+			});
+
+			// Iterate through groups of class objects with the same prefix
+			Object.entries(classObjsByPrefix).forEach(([prefix, classObjsGroup]) => {
+				const obj = classObjsGroup.find(obj => obj.breakpoint === utilityObj.breakpoint);
+				const input = elements.find(element => element.dataset.prefix === prefix);
+				if (obj && input) {
+					this.updateFormField(input, obj.value);
+				}
+				const classObjectsWithPrefix = elements.filter(element => element.dataset.prefix === prefix);
+				classObjectsWithPrefix.forEach(element => {
+					classObjsGroup.forEach(classObj => {
+						this.setBreakpointLabel(element, classObj.breakpoint, classObj.value);
+					});
 				});
-			}
-			/* Disable breakpoint-specific inputs */
+			});
+
+			// Handle updateFormField for class objects without a prefix
+			classObjs.filter(classObj => !classObj.prefix).forEach(classObj => {
+				const input = elements.find(element => element.value === classObj.value);
+				if (input) {
+					this.updateFormField(input, classObj.value);
+				}
+			});
+
+			// Disable breakpoint-specific inputs
 			[...this.formStyles.elements].forEach(input => {
 				if (input.hasAttribute('data-breakpoints')) {
-					input.disabled = input.dataset.breakpoints.split(',').includes(breakpoint) || breakpoint === '' ? false : true;
-					/* HACK: Force re-paint to update disabled state */
+					input.disabled = input.dataset.breakpoints.split(',').includes(utilityObj.breakpoint) || utilityObj.breakpoint === '' ? false : true;
 					setTimeout(() => {
 						input.style.display = 'none';
-						input.offsetHeight; // Trigger a reflow
+						input.offsetHeight;
 						input.style.display = '';
 					}, 0);
 				}
-		});
+			});
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
+		}
+	}
+
+
+	updateFormField(node, value) {
+		if (!node) return;
+		let parent = node.parentNode;
+		if (node.dataset?.values) {
+			node.value = node.dataset.values.split(',').findIndex(item => item === value);
+		} else if (node.type === 'radio') {
+			this.formStyles.elements[node.name].value = value;
+			const checked = Array.from(this.formStyles.elements[node.name]).find(radio => radio.value === value);
+			if (checked) parent = checked.parentNode;
+		} else {
+			node.value = value;
 		}
 	}
 
@@ -1008,96 +1114,6 @@ console.log(this.config);
 				part.className = this.active.className;
 			});
 		}
-	}
-
-	/**
-	 * Updates the form based on the current classes of the active element.
-	 * Uses the current breakpoint value to filter and update relevant elements.
-	 */
-	updateFormFromClasses() {
-		if (!this.formStyles || !this.active) return;
-		this.formStyles.reset();
-		const vars = this.editor.querySelectorAll('var[data-bp]');
-		vars.forEach(varElement => varElement.textContent = '');
-
-		const processClass = (cls) => {
-			const match = cls.match(
-				new RegExp(`^(?:(?<breakpoint>[^${this.config.app.breakpointsDelimiter}\\s]+):)?(?<prefix>[^${this.config.app.prefixDelimiter}]+)-(?<value>.+)`)
-			);
-			if (match) {
-				const breakpoint = match.groups.breakpoint || '';
-				const prefix = match.groups.prefix || null;
-				const value = match.groups.value || null;
-				const elements = this.formStyles.elements[prefix];
-				const input = elements instanceof NodeList
-					? Array.from(elements).find(element => element.value === value) || null
-					: elements || null;
-
-					this.updateInput(input, cls);
-				this.updateInputElement(input, breakpoint, value);
-			} else {
-				Array.from(this.formStyles.elements).forEach(node => {
-					if (node.value === cls) {
-						this.updateNode(node, cls);
-					}
-				});
-			}
-		};
-
-		const classes = this.active.className.split(' ');
-		classes.forEach(processClass);
-	}
-
-	/**
-	 * Updates the input element with the specified class.
-	 * If the input is not provided and cls is provided, it updates all input elements with the matching class.
-	 * @param {HTMLElement} input - The input element to update.
-	 * @param {string} cls - The class to update the input element with.
-	 */
-	updateInput(input, cls) {
-		if (!input && cls) {
-			Array.from(this.formStyles.elements).forEach(node => {
-				if (node.value === cls) {
-					this.updateNode(node, cls);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Updates an individual input element based on the provided parameters.
-	 *
-	 * @param {HTMLElement} input - The input element to be updated.
-	 * @param {string} breakpoint - The breakpoint value.
-	 * @param {string} value - The value to set for the input element.
-	 */
-	updateInputElement(input, breakpoint, value) {
-		if (input) {
-			let parent = input.parentNode;
-			if (!breakpoint || breakpoint === this.editor.elements.breakpoint.value) {
-				if (input.dataset?.values) {
-					const selected = input.dataset.values.split(',').findIndex(item => item === value);
-					input.value = selected;
-				} else if (input.type === 'radio') {
-					this.formStyles.elements[input.name].value = value;
-					const checkedInput = Array.from(this.formStyles.elements[input.name]).find(radio => radio.value === value);
-					if (checkedInput) parent = checkedInput.parentNode;
-				} else {
-					input.value = value;
-				}
-			}
-			const bp = parent?.querySelector(`var[data-bp="${breakpoint}"]`)
-			if (bp) bp.textContent = value;
-		}
-	}
-
-	/**
-	 * Updates the specified node.
-	 * @param {HTMLElement} node - The node to be updated.
-	 */
-	updateNode(node) {
-		const part = node.closest('[part^="unit-"]:not([hidden])');
-		if (part) node.checked = true;
 	}
 }
 customElements.define('ui-editor', uiEditor);

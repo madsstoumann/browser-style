@@ -44,20 +44,20 @@ export function copyClasses(classes) {
  * @param {string[]} breakpoints - The array of available breakpoints.
  * @returns {string[]} - The filtered array of CSS class names.
  */
-export function filterClassesByBreakpoint(classList, breakpoint, breakpoints) {
-	try {
-		if (!breakpoint) {
-			return classList.filter(className => !breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
-		} else if (breakpoints.includes(breakpoint)) {
-			return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
-		} else {
-			throw new Error('Invalid breakpoint specified');
-		}
-	} catch (error) {
-		console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
-		return classList;
-	}
-}
+// export function filterClassesByBreakpoint(classList, breakpoint, breakpoints) {
+// 	try {
+// 		if (!breakpoint) {
+// 			return classList.filter(className => !breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
+// 		} else if (breakpoints.includes(breakpoint)) {
+// 			return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
+// 		} else {
+// 			throw new Error('Invalid breakpoint specified');
+// 		}
+// 	} catch (error) {
+// 		console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
+// 		return classList;
+// 	}
+// }
 
 /**
  * Returns the classList of an HTML element and its optional `data-removed` attribute.
@@ -73,6 +73,67 @@ export function getClasses(node) {
 	} catch (error) {
 		console.error('An error occurred while getting classes:', error.message);
 	}
+}
+
+/**
+ * Parses a utility string based on the provided configuration.
+ *
+ * @param {string} string - The utility string to parse.
+ * @param {object} config - The configuration object containing delimiters and utility options.
+ * @param {string} config.stateDelimiter - The delimiter used to separate different parts of the utility string.
+ * @param {string} config.prefixDelimiter - The delimiter used to separate the prefix and value in the utility string.
+ * @param {string[]} config.colorschemes - An array of available colorschemes.
+ * @param {string[]} config.breakpoints - An array of available breakpoints.
+ * @param {string[]} config.structurals - An array of available structurals.
+ * @param {string[]} config.dynamics - An array of available dynamics.
+ * @returns {object} - An object containing the parsed utility string parts.
+ */
+export function parseUtilityString(string, config) {
+	const { stateDelimiter, prefixDelimiter, colorschemes, breakpoints, structurals, dynamics } = config;
+	const parts = string.split(stateDelimiter);
+
+	let colorscheme = '';
+	let breakpoint = '';
+	let structural = '';
+	let dynamic = '';
+	let prefix = '';
+	let value = '';
+
+	if (parts.length >= 1 && colorschemes.includes(parts[0])) {
+		colorscheme = parts.shift();
+	}
+
+	if (parts.length >= 1 && breakpoints.includes(parts[0])) {
+		breakpoint = parts.shift();
+	}
+
+	if (parts.length >= 1 && structurals.includes(parts[0])) {
+		structural = parts.shift();
+	}
+
+	if (parts.length >= 1 && dynamics.includes(parts[0])) {
+		dynamic = parts.shift();
+	}
+
+	if (parts.length === 1 && !parts[0].includes(prefixDelimiter)) {
+		// If there's only one part and it doesn't contain the prefixDelimiter,
+		// assign it to value and set prefix to an empty string
+		value = parts[0];
+	} else if (parts.length >= 1) {
+		// If there's at least one part, split it using the prefixDelimiter
+		const prefixAndValue = parts[0].split(prefixDelimiter);
+		prefix = prefixAndValue.shift(); // Get the prefix
+		value = prefixAndValue.join(prefixDelimiter); // Get the value
+	}
+
+	return {
+		colorscheme,
+		breakpoint,
+		structural,
+		dynamic,
+		prefix,
+		value
+	};
 }
 
 /**
@@ -122,31 +183,6 @@ export function setUnitClass(node, group, value) {
 		});
 	});
 	node.classList.add(value);
-}
-
-/**
- * Set classes on a given node, removing classes with a specified prefix and adding a new class.
- * @param {HTMLElement} node - The HTML element to set classes on.
- * @param {string} value - The new class to be added.
- * @param {string} prefix - The prefix used to filter and remove existing classes.
- */
-export function setUtilityClass(node, value, prefix) {
-	try {
-		const { classes, removed } = getClasses(node);
-		classes.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.classList.remove(className);
-			}
-		});
-		removed.forEach(className => {
-			if (className.startsWith(prefix)) {
-				node.dataset.removed = node.dataset.removed.replace(className, '');
-			}
-		});
-		node.classList.add(value);
-	} catch (error) {
-		console.error('An error occurred while setting utility class:', error.message);
-	}
 }
 
 /**

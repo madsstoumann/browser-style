@@ -28,8 +28,12 @@
 		"xl",
 		"xxl"
 	],
-	"breakpointsDelimiter": ":",
+	"colorschemes": ["", "dark", "light"],
+	"dynamics": ["", "focus", "focus-visible", "focus-within", "hover", "visited"],
+	"structurals": ["", "autofill", "checked", "default", "disabled", "empty", "enabled", "even", "first", "first-of-type", "in-range", "indeterminate", "invalid", "last", "last-of-type", "odd", "only", "only-of-type", "out-of-range", "placeholder-shown", "read-only", "required", "target", "valid"],
 	"prefixDelimiter": "-",
+	"stateDelimiter": ":",
+
 	"frames": {
 		"part": "frame-group",
 		"fields": [
@@ -464,81 +468,81 @@
 					"part": "textgroup",
 					"fields": [
 						{
-							"text": "dark",
-							"input": {
-								"data-sr": "",
-								"removeForm": true,
-								"name": "darkmode",
-								"type": "checkbox",
-								"value": "dark:"
-							}
-						},
-						{
 							"ui": "select",
 							"input": {
-								"name": "dynamic-states",
+								"name": "colorschemes",
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "off" },
-									{ "value": "active", "text": ":active" },
-									{ "value": "focus", "text": ":focus" },
-									{ "value": "focus-visible", "text": ":focus-visible" },
-									{ "value": "focus-within", "text": ":focus-within" },
-									{ "value": "hover", "text": ":hover" },
-									{ "value": "visited", "text": ":visited" }
+									{ "value": "", "text": "colorscheme ⏷", "break": true },
+									{ "value": "dark", "text": "dark" },
+									{ "value": "light", "text": "light" }
 								]
 							}
 						},
 						{
 							"ui": "select",
 							"input": {
-								"name": "structural-states",
+								"name": "structurals",
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "off" },
-									{
-										"group": {
-											"label": "Structural",
-											"options": [
-												{ "value": "even", "text": ":nth-child(even)" },
-												{ "value": "first-of-type", "text": ":first-of-type" },
-												{ "value": "first", "text": ":first-child" },
-												{ "value": "last-of-type", "text": ":last-of-type" },
-												{ "value": "last", "text": ":last-child" },
-												{ "value": "odd", "text": ":nth-child(odd)" },
-												{ "value": "only-of-type", "text": ":only-of-type" },
-												{ "value": "only", "text": ":only-child" },
-												{ "value": "target", "text": ":target" }
-											]
-										}
-									},
-									{
-										"group": {
-											"label": "States",
-											"options": [
-												{ "value": "autofill", "text": ":autofill" },
-												{ "value": "checked", "text": ":checked" },
-												{ "value": "default", "text": ":default" },
-												{ "value": "disabled", "text": ":disabled" },
-												{ "value": "empty", "text": ":empty" },
-												{ "value": "enabled", "text": ":enabled" },
-												{ "value": "in-range", "text": ":in-range" },
-												{ "value": "indeterminate", "text": ":indeterminate" },
-												{ "value": "invalid", "text": ":invalid" },
-												{ "value": "out-of-range", "text": ":out-of-range" },
-												{ "value": "placeholder-shown", "text": ":placeholder-shown" },
-												{ "value": "read-only", "text": ":read-only" },
-												{ "value": "required", "text": ":required" },
-												{ "value": "valid", "text": ":valid" }
-											]
-										}
-									}
+									{ "value": "", "text": "structural ⏷", "break": true },
+									{ "value": "first", "text": "first-child" },
+									{ "value": "first-of-type", "text": "first-of-type" },
+									{ "value": "last", "text": "last-child" },
+									{ "value": "last-of-type", "text": "last-of-type" },
+									{ "value": "even", "text": "nth-child(even)" },
+									{ "value": "odd", "text": "nth-child(odd)" },
+									{ "value": "only", "text": "only-child" },
+									{ "value": "only-of-type", "text": "only-of-type" },
+									{ "value": "target", "text": "target", "break": true },
+									{ "value": "autofill", "text": "autofill" },
+									{ "value": "default", "text": "default" },
+									{ "value": "disabled", "text": "disabled" },
+									{ "value": "empty", "text": "empty" },
+									{ "value": "enabled", "text": "enabled" },
+									{ "value": "invalid", "text": "invalid" },
+									{ "value": "placeholder-shown", "text": "placeholder-shown" },
+									{ "value": "read-only", "text": "read-only" },
+									{ "value": "required", "text": "required" },
+									{ "value": "valid", "text": "valid", "break": true },
+									{ "value": "checked", "text": "checked" },
+									{ "value": "indeterminate", "text": "indeterminate", "break": true },
+									{ "value": "in-range", "text": "in-range" },
+									{ "value": "out-of-range", "text": "out-of-range" }
+								]
+							}
+						},
+						{
+							"ui": "select",
+							"input": {
+								"name": "dynamics",
+								"removeForm": true,
+								"required": true,
+								"options": [
+									{ "value": "", "text": "dynamic ⏷", "break": true },
+									{ "value": "active", "text": "active" },
+									{ "value": "focus", "text": "focus" },
+									{ "value": "focus-visible", "text": "focus-visible" },
+									{ "value": "focus-within", "text": "focus-within" },
+									{ "value": "hover", "text": "hover" },
+									{ "value": "visited", "text": "visited" }
 								]
 							}
 						}
-						
+					]
+				},
+				{
+					"part": "reset-utility full",
+					"fields": [
+						{
+							"ui": "button",
+							"attr": {
+								"data-click": "reset-utility",
+								"title": "clear states"
+							}
+						}
 					]
 				}
 			],

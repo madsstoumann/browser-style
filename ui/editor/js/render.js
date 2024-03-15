@@ -220,17 +220,17 @@ export function renderSelect(obj) {
 	const label = obj.label ? renderAttributes(obj.label) : '';
 	const text = obj.text ? `<span>${obj.text}</span>` : '';
 	const textAfter = obj.textAfter ? `<span>${obj.textAfter}</span>` : '';
-
+	const hr = (option) => (option.break ? '<hr>' : '');
 	const optionsHTML = obj.input.options.map(option => {
 		if (option.group) {
 		// Render <optgroup> for grouped options
 			return `
 				<optgroup label="${option.group.label}">
-					${option.group.options.map(groupOption => `<option value="${groupOption.value}">${groupOption.text}</option>`).join('')}
+					${option.group.options.map(groupOption => `<option value="${groupOption.value}">${groupOption.text}</option>${hr(groupOption)}`).join('')}
 				</optgroup>`;
 			} else {
 				// Render regular <option>
-				return `<option value="${option.value}">${option.text}</option>`;
+				return `<option value="${option.value}">${option.text}${hr(option)}</option>`;
 			}
 	}).join('');
 
