@@ -474,7 +474,7 @@
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "colorscheme ⏷", "break": true },
+									{ "value": "", "text": "scheme ⏷", "break": true },
 									{ "value": "dark", "text": "dark" },
 									{ "value": "light", "text": "light" }
 								]
@@ -487,7 +487,7 @@
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "structural ⏷", "break": true },
+									{ "value": "", "text": "selector ⏷", "break": true },
 									{ "value": "first", "text": "first-child" },
 									{ "value": "first-of-type", "text": "first-of-type" },
 									{ "value": "last", "text": "last-child" },
@@ -521,7 +521,7 @@
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "dynamic ⏷", "break": true },
+									{ "value": "", "text": "state ⏷", "break": true },
 									{ "value": "active", "text": "active" },
 									{ "value": "focus", "text": "focus" },
 									{ "value": "focus-visible", "text": "focus-visible" },
@@ -540,7 +540,7 @@
 							"ui": "button",
 							"attr": {
 								"data-click": "reset-utility",
-								"title": "clear states"
+								"title": "clear selection"
 							}
 						}
 					]

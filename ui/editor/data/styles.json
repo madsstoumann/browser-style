@@ -3,6 +3,719 @@
     "key": "styles",
     "groups": [
       {
+        "key": "backgrounds",
+        "label": "Backgrounds",
+        "name": "styles",
+        "part": "utility-backgrounds",
+        "fieldsets": [
+          {
+            "part": "radio colorgrid",
+            "fields": [
+              {
+                "textAfter": "stone-100",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#f5f5f4;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-100"
+                }
+              },
+              {
+                "textAfter": "stone-200",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#e7e5e4;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-200"
+                }
+              },
+              {
+                "textAfter": "stone-300",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#d6d3d1;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-300"
+                }
+              },
+              {
+                "textAfter": "stone-400",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#a8a29e;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-400"
+                }
+              },
+              {
+                "textAfter": "stone-500",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#78716c;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-500"
+                }
+              },
+              {
+                "textAfter": "stone-600",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#57534e;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-600"
+                }
+              },
+              {
+                "textAfter": "stone-700",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#443c3c;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-700"
+                }
+              },
+              {
+                "textAfter": "stone-800",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#292525;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-800"
+                }
+              },
+              {
+                "textAfter": "stone-900",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#1c1917;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-900"
+                }
+              },
+              {
+                "textAfter": "stone-1000",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#0c0a09;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "stone-1000"
+                }
+              },
+              {
+                "textAfter": "red-100",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fee2e2;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-100"
+                }
+              },
+              {
+                "textAfter": "red-200",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fecccc;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-200"
+                }
+              },
+              {
+                "textAfter": "red-300",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fca5a5;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-300"
+                }
+              },
+              {
+                "textAfter": "red-400",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#f87171;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-400"
+                }
+              },
+              {
+                "textAfter": "red-500",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#ef4444;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-500"
+                }
+              },
+              {
+                "textAfter": "red-600",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#dc2626;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-600"
+                }
+              },
+              {
+                "textAfter": "red-700",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#b91919;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-700"
+                }
+              },
+              {
+                "textAfter": "red-800",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#991b1b;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-800"
+                }
+              },
+              {
+                "textAfter": "red-900",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#7f1d1d;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-900"
+                }
+              },
+              {
+                "textAfter": "red-1000",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#450a0a;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "red-1000"
+                }
+              },
+              {
+                "textAfter": "amber-100",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fef3c7;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-100"
+                }
+              },
+              {
+                "textAfter": "amber-200",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fde68a;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-200"
+                }
+              },
+              {
+                "textAfter": "amber-300",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fcd34d;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-300"
+                }
+              },
+              {
+                "textAfter": "amber-400",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#fbbf24;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-400"
+                }
+              },
+              {
+                "textAfter": "amber-500",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#f59e0b;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-500"
+                }
+              },
+              {
+                "textAfter": "amber-600",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#d97706;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-600"
+                }
+              },
+              {
+                "textAfter": "amber-700",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#b45309;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-700"
+                }
+              },
+              {
+                "textAfter": "amber-800",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#92400e;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-800"
+                }
+              },
+              {
+                "textAfter": "amber-900",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#78350f;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-900"
+                }
+              },
+              {
+                "textAfter": "amber-1000",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#451a03;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "amber-1000"
+                }
+              },
+              {
+                "textAfter": "green-100",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#dcfce7;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-100"
+                }
+              },
+              {
+                "textAfter": "green-200",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#bbf7d0;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-200"
+                }
+              },
+              {
+                "textAfter": "green-300",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#86efac;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-300"
+                }
+              },
+              {
+                "textAfter": "green-400",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#4ade80;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-400"
+                }
+              },
+              {
+                "textAfter": "green-500",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#22c55e;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-500"
+                }
+              },
+              {
+                "textAfter": "green-600",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#16a34a;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-600"
+                }
+              },
+              {
+                "textAfter": "green-700",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#118f3e;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-700"
+                }
+              },
+              {
+                "textAfter": "green-800",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#156c36;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-800"
+                }
+              },
+              {
+                "textAfter": "green-900",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#14532d;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-900"
+                }
+              },
+              {
+                "textAfter": "green-1000",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#052e16;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "green-1000"
+                }
+              },
+              {
+                "textAfter": "sky-100",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#e0f2fe;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-100"
+                }
+              },
+              {
+                "textAfter": "sky-200",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#bae6fd;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-200"
+                }
+              },
+              {
+                "textAfter": "sky-300",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#7dd3fc;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-300"
+                }
+              },
+              {
+                "textAfter": "sky-400",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#38bdf8;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-400"
+                }
+              },
+              {
+                "textAfter": "sky-500",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#0ea5e9;--_c:#000;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-500"
+                }
+              },
+              {
+                "textAfter": "sky-600",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#0284c7;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-600"
+                }
+              },
+              {
+                "textAfter": "sky-700",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#0369a1;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-700"
+                }
+              },
+              {
+                "textAfter": "sky-800",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#075985;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-800"
+                }
+              },
+              {
+                "textAfter": "sky-900",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#0c4a6e;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-900"
+                }
+              },
+              {
+                "textAfter": "sky-1000",
+                "input": {
+                  "data-breakpoints": [
+                    "sm",
+                    "lg"
+                  ],
+                  "data-prefix": "bg",
+                  "style": "--_v:#082f4e;--_c:#FFF;",
+                  "name": "bg",
+                  "type": "radio",
+                  "value": "sky-1000"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "key": "layout",
         "label": "Layout",
         "name": "styles",
@@ -942,719 +1655,6 @@
                     }
                   }
                 ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "key": "backgrounds",
-        "label": "Backgrounds",
-        "name": "styles",
-        "part": "utility-backgrounds",
-        "fieldsets": [
-          {
-            "part": "radio colorgrid",
-            "fields": [
-              {
-                "textAfter": "stone-100",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#f5f5f4;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-100"
-                }
-              },
-              {
-                "textAfter": "stone-200",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#e7e5e4;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-200"
-                }
-              },
-              {
-                "textAfter": "stone-300",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#d6d3d1;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-300"
-                }
-              },
-              {
-                "textAfter": "stone-400",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#a8a29e;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-400"
-                }
-              },
-              {
-                "textAfter": "stone-500",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#78716c;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-500"
-                }
-              },
-              {
-                "textAfter": "stone-600",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#57534e;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-600"
-                }
-              },
-              {
-                "textAfter": "stone-700",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#443c3c;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-700"
-                }
-              },
-              {
-                "textAfter": "stone-800",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#292525;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-800"
-                }
-              },
-              {
-                "textAfter": "stone-900",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#1c1917;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-900"
-                }
-              },
-              {
-                "textAfter": "stone-1000",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#0c0a09;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "stone-1000"
-                }
-              },
-              {
-                "textAfter": "red-100",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fee2e2;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-100"
-                }
-              },
-              {
-                "textAfter": "red-200",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fecccc;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-200"
-                }
-              },
-              {
-                "textAfter": "red-300",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fca5a5;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-300"
-                }
-              },
-              {
-                "textAfter": "red-400",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#f87171;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-400"
-                }
-              },
-              {
-                "textAfter": "red-500",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#ef4444;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-500"
-                }
-              },
-              {
-                "textAfter": "red-600",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#dc2626;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-600"
-                }
-              },
-              {
-                "textAfter": "red-700",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#b91919;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-700"
-                }
-              },
-              {
-                "textAfter": "red-800",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#991b1b;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-800"
-                }
-              },
-              {
-                "textAfter": "red-900",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#7f1d1d;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-900"
-                }
-              },
-              {
-                "textAfter": "red-1000",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#450a0a;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "red-1000"
-                }
-              },
-              {
-                "textAfter": "amber-100",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fef3c7;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-100"
-                }
-              },
-              {
-                "textAfter": "amber-200",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fde68a;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-200"
-                }
-              },
-              {
-                "textAfter": "amber-300",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fcd34d;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-300"
-                }
-              },
-              {
-                "textAfter": "amber-400",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#fbbf24;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-400"
-                }
-              },
-              {
-                "textAfter": "amber-500",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#f59e0b;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-500"
-                }
-              },
-              {
-                "textAfter": "amber-600",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#d97706;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-600"
-                }
-              },
-              {
-                "textAfter": "amber-700",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#b45309;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-700"
-                }
-              },
-              {
-                "textAfter": "amber-800",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#92400e;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-800"
-                }
-              },
-              {
-                "textAfter": "amber-900",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#78350f;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-900"
-                }
-              },
-              {
-                "textAfter": "amber-1000",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#451a03;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "amber-1000"
-                }
-              },
-              {
-                "textAfter": "green-100",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#dcfce7;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-100"
-                }
-              },
-              {
-                "textAfter": "green-200",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#bbf7d0;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-200"
-                }
-              },
-              {
-                "textAfter": "green-300",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#86efac;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-300"
-                }
-              },
-              {
-                "textAfter": "green-400",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#4ade80;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-400"
-                }
-              },
-              {
-                "textAfter": "green-500",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#22c55e;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-500"
-                }
-              },
-              {
-                "textAfter": "green-600",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#16a34a;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-600"
-                }
-              },
-              {
-                "textAfter": "green-700",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#118f3e;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-700"
-                }
-              },
-              {
-                "textAfter": "green-800",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#156c36;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-800"
-                }
-              },
-              {
-                "textAfter": "green-900",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#14532d;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-900"
-                }
-              },
-              {
-                "textAfter": "green-1000",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#052e16;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "green-1000"
-                }
-              },
-              {
-                "textAfter": "sky-100",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#e0f2fe;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-100"
-                }
-              },
-              {
-                "textAfter": "sky-200",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#bae6fd;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-200"
-                }
-              },
-              {
-                "textAfter": "sky-300",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#7dd3fc;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-300"
-                }
-              },
-              {
-                "textAfter": "sky-400",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#38bdf8;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-400"
-                }
-              },
-              {
-                "textAfter": "sky-500",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#0ea5e9;--_c:#000;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-500"
-                }
-              },
-              {
-                "textAfter": "sky-600",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#0284c7;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-600"
-                }
-              },
-              {
-                "textAfter": "sky-700",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#0369a1;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-700"
-                }
-              },
-              {
-                "textAfter": "sky-800",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#075985;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-800"
-                }
-              },
-              {
-                "textAfter": "sky-900",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#0c4a6e;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-900"
-                }
-              },
-              {
-                "textAfter": "sky-1000",
-                "input": {
-                  "data-breakpoints": [
-                    "sm",
-                    "lg"
-                  ],
-                  "data-prefix": "bg",
-                  "style": "--_v:#082f4e;--_c:#FFF;",
-                  "name": "bg",
-                  "type": "radio",
-                  "value": "sky-1000"
-                }
               }
             ]
           }

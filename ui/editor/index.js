@@ -2,8 +2,8 @@ import stylesheet from './styles.css' assert { type: 'css' };
 
 import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
 import { aiPrompt, onSave, onTextEdit } from './js/content.js';
-import { addClass, copyClasses, getClasses, parseUtilityString, remClasses, revertClasses, setUnitClass, updateClassList } from './js/styles.js';
-import { renderChat, renderComponentList, renderElement, renderFieldset, renderGroup, renderInput, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
+import { addClass, copyClasses, getClasses, parseClassString, remClasses, revertClasses, setUnitClass, updateClassList } from './js/styles.js';
+import { renderChat, renderComponentList, renderElement, renderFieldset, renderGroup, renderIcon, renderInput, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
 import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getDaysUntilDue, uuid } from './js/utils.js';
 import { getXPath, getElementByXPath }	from './js/xpath.js';
 import icons from './js/icons.js';
@@ -12,8 +12,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.28
- * @summary 14-03-2024
+ * @version 1.0.30
+ * @summary 17-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -92,6 +92,7 @@ console.log(this.config);
 		this.editor = shadow.querySelector(`[part=editor]`);
 		this.iframe = this.responsive ? shadow.querySelector(`[part=iframe]`) : null;
 		this.formAssets = shadow.querySelector(`[part=form-assets]`);
+		this.formCollaboration = shadow.querySelector(`[part=form-collaboration]`);
 		this.formContent = shadow.querySelector(`[part=form-content]`);
 		this.formElements = shadow.querySelector(`[part=form-elements]`);
 		this.formFrame = this.responsive ? shadow.querySelector(`[part=form-frames]`) : null;
@@ -191,6 +192,11 @@ console.log(this.config);
 			}
 		}, 10));
 
+		/* Add message-icons for collaboration */
+		if (this.config.clientdata?.messages) {
+			this.renderMessageIcons();
+		}
+
 		/* Set initial active element, if in responsive mode */
 		if (this.responsive) {
 			this.setActive(this.iframe.contentDocument.body);
@@ -228,6 +234,7 @@ console.log(this.config);
 		if (openKey || toggleKey) {
 			document.addEventListener('keydown', (e) => {
 				if (e.shiftKey && e.ctrlKey) {
+					/* open editor with last selected element */
 					if (e.key === openKey) {
 						if (!this.isSelectable(document.activeElement)) return;
 						const open = this.editor.togglePopover();
@@ -235,6 +242,7 @@ console.log(this.config);
 						this.setAttribute('open', open);
 						this.setActive(document.activeElement);
 					}
+					/* toggle editor */
 					if (e.key === toggleKey) {
 						this.toggle.checked = !this.toggle.checked;
 						this.setAttribute('open', this.toggle.checked);
@@ -334,7 +342,7 @@ console.log(this.config);
 	*/
 	dispatch(name, detail) {
 		this.dispatchEvent(new CustomEvent(name, { detail }));
-		// console.log(name, detail)
+		console.log(name, detail)
 	}
 
 	/**
@@ -572,7 +580,7 @@ console.log(this.config);
 				const dynamic = utilityObj.dynamic ? `${utilityObj.dynamic}${this.config.app.stateDelimiter}` : '';
 				const structural = utilityObj.structural ? `${utilityObj.structural}${this.config.app.stateDelimiter}` : '';
 
-				this.setUtilityClass(this.active, `${colorscheme}${breakpoint}${dynamic}${structural}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`)
+				this.setUtilityClass(this.active, `${colorscheme}${breakpoint}${structural}${dynamic}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`)
 				this.setBreakpointLabel(node, utilityObj.breakpoint, value);
 			}
 			else {
@@ -716,6 +724,21 @@ console.log(this.config);
 		}
 	}
 
+	renderMessageIcons() {
+		if (!this.formCollaboration) return;
+		const messages = this.config?.clientdata?.messages;
+		if (messages) {
+			messages.forEach(msg => {
+				const node = getElementByXPath(msg.xpath, this.responsive ? this.iframe.contentDocument: document);
+				if (node) {
+					const rect = node.getBoundingClientRect();
+					const pin = `<div data-xpath="${msg.xpath}" style="--x:${rect.left};--y:${rect.top};">${renderIcon('message', icons)}</div>`;
+					this.formCollaboration.insertAdjacentHTML('afterbegin', pin)
+				}
+			});
+		}
+	}
+
 	/**
 	 * Renders the tasks and updates the tasklist element based on the activeInfo and config.
 	 */
@@ -740,6 +763,7 @@ console.log(this.config);
 		this.editor.elements.colorschemes.value = '';
 		this.editor.elements.dynamics.value = '';
 		this.editor.elements.structurals.value = '';
+		this.updateFormStyles();
 	}
 
 	/**
@@ -756,7 +780,8 @@ console.log(this.config);
 			...(this.config.styles || []),
 			...(this.config.content || []),
 			...(this.config.elements || []),
-			...(this.config.assets || [])
+			...(this.config.assets || []),
+			...(this.config.collaboration || [])
 		];
 
 		tools.forEach((tool, index) => {
@@ -816,7 +841,7 @@ console.log(this.config);
 	* @param {HTMLElement} node - The HTML element to set as active.
 	*/
 	setActive(node) {
-		if (!node || this.active === node || this.contains(node)) return;
+		if (!node || this.contains(node)) return;
 
 		const selectStyles = () => {
 			this.STYLES.checked = true;
@@ -826,6 +851,7 @@ console.log(this.config);
 		try {
 			if (this.active) {
 				this.resizeObserver.unobserve(this.active);
+				this.activeInfo.classes = this.active.className;
 				this.dispatch('uie-inactive', { info: this.activeInfo });
 			}
 
@@ -896,9 +922,9 @@ console.log(this.config);
 	 * @param {string} value - The value to set for the breakpoint label.
 	 */
 	setBreakpointLabel(node, breakpoint, value) {
-		const bp = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
+		const bpLabel = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
 		const isRadio = node.type === 'radio';
-		if (bp) {
+		if (bpLabel) {
 			if (isRadio) {
 				const fieldset = node.closest('fieldset');
 				if (fieldset) {
@@ -906,7 +932,7 @@ console.log(this.config);
 					vars.forEach(label => label.textContent = '');
 				}
 			}
-			bp.textContent = value;
+			bpLabel.textContent = value;
 		}
 	}
 
@@ -960,11 +986,11 @@ console.log(this.config);
 	 * @returns {void}
 	 */
 	setUtilityClass(node, value) {
-		const utilityObj = parseUtilityString(value, this.config.app);
+		const utilityObj = parseClassString(value, this.config.app);
 		try {
 			const { classes, removed } = getClasses(node);
 			classes.forEach(className => {
-				const classParsed = parseUtilityString(className, this.config.app);
+				const classParsed = parseClassString(className, this.config.app);
 				if (
 					classParsed.breakpoint === utilityObj.breakpoint &&
 					classParsed.colorscheme === utilityObj.colorscheme &&
@@ -1020,15 +1046,46 @@ console.log(this.config);
 	}
 
 	/**
-	 * Updates the form based on the current breakpoint value and filtered classes.
-	 * Uses the provided breakpoint value to filter and update relevant elements.
+	 * Updates the connected parts by setting their className to the same value as the active part's className.
+ 	*/
+	 updateConnectedParts() {
+		if (this.connectedPartsExists()) {
+			this.connectedParts.forEach(part => {
+				part.className = this.active.className;
+			});
+		}
+	}
+
+	/**
+	 * Updates the value of a form field based on the provided node and value.
+	 * @param {HTMLElement} node - The form field element to update.
+	 * @param {string} value - The new value for the form field.
 	 */
-	updateFormStyles(utility = false) {
+	updateFormField(node, value) {
+		if (!node) return;
+		let parent = node.parentNode;
+		if (node.dataset?.values) {
+			node.value = node.dataset.values.split(',').findIndex(item => item === value);
+		} else if (node.type === 'radio') {
+			this.formStyles.elements[node.name].value = value;
+			const checked = Array.from(this.formStyles.elements[node.name]).find(radio => radio.value === value);
+			if (checked) parent = checked.parentNode;
+		} else {
+			node.value = value;
+		}
+	}
+
+	/**
+	 * Updates the form styles based on the active class name and utility select option.
+	 * @param {boolean} [utilitySelect=false] - Indicates whether the method was invoked from a utility-select-option (breakpoint, colorscheme etc.) or not.
+	 */
+	updateFormStyles(utilitySelect = false) {
 		try {
 			const classes = this.active.className.split(' ');
-			// if (!utility) {
+			if (!utilitySelect) {
+				/* Clear all breakpoint labels */
 				this.editor.querySelectorAll('var[data-bp]').forEach(varElement => varElement.textContent = '');
-			// }
+			}
 			if (!classes.length) return;
 
 			const utilityObj = {
@@ -1039,7 +1096,7 @@ console.log(this.config);
 			};
 
 			this.formStyles.reset();
-			const classObjs = classes.map(className => parseUtilityString(className, this.config.app));
+			const classObjs = classes.map(className => parseClassString(className, this.config.app));
 			const elements = Array.from(this.formStyles.elements);
 
 			// Iterate through classObjs and group by prefix
@@ -1053,17 +1110,23 @@ console.log(this.config);
 
 			// Iterate through groups of class objects with the same prefix
 			Object.entries(classObjsByPrefix).forEach(([prefix, classObjsGroup]) => {
-				const obj = classObjsGroup.find(obj => obj.breakpoint === utilityObj.breakpoint);
+				const obj = classObjsGroup.find(obj =>
+					obj.breakpoint === utilityObj.breakpoint &&
+					obj.colorscheme === utilityObj.colorscheme &&
+					obj.dynamic === utilityObj.dynamic &&
+					obj.structural === utilityObj.structural
+				);
+
 				const input = elements.find(element => element.dataset.prefix === prefix);
-				if (obj && input) {
-					this.updateFormField(input, obj.value);
+				if (input) {
+					if (obj) this.updateFormField(input, obj.value);
+					if (!utilitySelect) {
+						/* Update all breakpoint-labels for input */
+						classObjsGroup.forEach(obj => {
+							this.setBreakpointLabel(input, obj.breakpoint, obj.value);
+						});
+					}
 				}
-				const classObjectsWithPrefix = elements.filter(element => element.dataset.prefix === prefix);
-				classObjectsWithPrefix.forEach(element => {
-					classObjsGroup.forEach(classObj => {
-						this.setBreakpointLabel(element, classObj.breakpoint, classObj.value);
-					});
-				});
 			});
 
 			// Handle updateFormField for class objects without a prefix
@@ -1087,32 +1150,6 @@ console.log(this.config);
 			});
 		} catch (error) {
 			console.error(`Error in updateStyles: ${error.message}`);
-		}
-	}
-
-
-	updateFormField(node, value) {
-		if (!node) return;
-		let parent = node.parentNode;
-		if (node.dataset?.values) {
-			node.value = node.dataset.values.split(',').findIndex(item => item === value);
-		} else if (node.type === 'radio') {
-			this.formStyles.elements[node.name].value = value;
-			const checked = Array.from(this.formStyles.elements[node.name]).find(radio => radio.value === value);
-			if (checked) parent = checked.parentNode;
-		} else {
-			node.value = value;
-		}
-	}
-
-	/**
-	 * Updates the connected parts by setting their className to the same value as the active part's className.
-	 */
-	updateConnectedParts() {
-		if (this.connectedPartsExists()) {
-			this.connectedParts.forEach(part => {
-				part.className = this.active.className;
-			});
 		}
 	}
 }

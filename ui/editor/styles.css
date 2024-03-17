@@ -144,6 +144,26 @@
 :host([open="false"][responsive]) [part=outline] {
 	display: none;
 }
+/* === COLLOBORATION === */
+:host([open="true"]) [part=form-collaboration] {
+	
+	/* inset: 0; */
+	pointer-events: none;
+	position: absolute;
+}
+[part=form-collaboration] div {
+	background: var(--uie-accent);
+	border-radius: 50%;
+	color: #FFF;
+	display: grid;
+	left: calc((1px * var(--x)) + var(--uie-gap));
+	padding: 6px;
+	place-content: center;
+	position: absolute;
+	top: calc((1px * var(--y)) + var(--uie-gap));
+	translate: 0 calc((var(--scroll-y, 0) + var(--iframe-scroll-y, 0))* -1px);
+}
+
 /* Loading animation */
 /* :host([responsive="loader"])::before {
 	background: rgba(255, 255, 255, .95);
@@ -371,8 +391,7 @@ fieldset:has([part="asset-image"]) {
 		color: var(--uie-accent);
 		font-size: xx-small;
 		height: auto;
-		margin-block-end: 3px;
-		padding: 0;
+		padding: 2px 4px;
 		place-self: end;
 	}
 }
@@ -894,6 +913,7 @@ label:has([role=switch]) {
 		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
 		&:has(:checked) { 
 			background: Canvas;
+			&:has(:focus-visible) { background: var(--uie-blue-40) ; }
 		}
 		&:has(select[required]:valid),
 		&:has([type=checkbox]:checked) {

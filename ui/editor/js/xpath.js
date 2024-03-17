@@ -28,7 +28,7 @@ export function getXPath(element) {
 	return segments.length ? '/' + segments.join('/') : '';
 }
 
-export function getElementByXPath(xpath) {
+export function getElementByXPath(xpath, document) {
 	return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 }
 

@@ -38,28 +38,6 @@ export function copyClasses(classes) {
 }
 
 /**
- * Filters an array of CSS class names based on a specified breakpoint.
- * @param {string[]} classList - The array of CSS class names to filter.
- * @param {string} breakpoint - The breakpoint to filter the class names by.
- * @param {string[]} breakpoints - The array of available breakpoints.
- * @returns {string[]} - The filtered array of CSS class names.
- */
-// export function filterClassesByBreakpoint(classList, breakpoint, breakpoints) {
-// 	try {
-// 		if (!breakpoint) {
-// 			return classList.filter(className => !breakpoints.slice(1).some(prefix => className.startsWith(prefix)));
-// 		} else if (breakpoints.includes(breakpoint)) {
-// 			return classList.filter(className => className === breakpoint || className.startsWith(breakpoint));
-// 		} else {
-// 			throw new Error('Invalid breakpoint specified');
-// 		}
-// 	} catch (error) {
-// 		console.error(`Error in filterClassesByBreakpoint: ${error.message}`);
-// 		return classList;
-// 	}
-// }
-
-/**
  * Returns the classList of an HTML element and its optional `data-removed` attribute.
  * @param {HTMLElement} node - The HTML element.
  * @returns {Object} - Object containing the classList and removed classes of the specified element.
@@ -88,7 +66,7 @@ export function getClasses(node) {
  * @param {string[]} config.dynamics - An array of available dynamics.
  * @returns {object} - An object containing the parsed utility string parts.
  */
-export function parseUtilityString(string, config) {
+export function parseClassString(string, config) {
 	const { stateDelimiter, prefixDelimiter, colorschemes, breakpoints, structurals, dynamics } = config;
 	const parts = string.split(stateDelimiter);
 
