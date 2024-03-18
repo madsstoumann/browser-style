@@ -49,32 +49,34 @@
 			</div>
 		</ui-component>
 			<div class="ui-grid --md-gcs-2 --xs-c-1 bg-warning --light">
-				<div class="bg-success --light" tabindex="0" data-style-parts="unit-headlines,utility-layout">Unit</div>
+				<div class="bg-success --light" tabindex="0" data-styles="unit-headlines,utility-layout" id="testid">Unit</div>
 				<div class="ui-grid --md-c-2 bg-success --light">
 					<div class="bg-accent --light" tabindex="0">1</div>
 					<div class="bg-accent --light" tabindex="0" data-style-parts="unit-headlines,unit-headline-test">2</div>
 				</div>
 			</div>
 		</div>
-		<div class="--md-grs-2">
-			<div class="ui-scroll --xs-c-1" data-scroll-nav="ui-scroll-nav --inside --no-dots" tabindex="0">
-				<img src="https://source.unsplash.com/random/225x300?sig=10" alt="Random image" width="225" height="300" data-style-parts="utility-layout,utility-spacing">
-				<img src="https://source.unsplash.com/random/225x300?sig=11" alt="Random image" width="225" height="300">
-				<img src="https://source.unsplash.com/random/225x300?sig=12" alt="Random image" width="225" height="300">
+		<ui-component>
+			<div class="--md-grs-2">
+				<div class="ui-scroll --xs-c-1" data-scroll-nav="ui-scroll-nav --inside --no-dots" tabindex="0">
+					<img src="https://source.unsplash.com/random/225x300?sig=10" alt="Random image" width="225" height="300" data-styles="utility-layout,utility-spacing">
+					<img src="https://source.unsplash.com/random/225x300?sig=11" alt="Random image" width="225" height="300">
+					<img src="https://source.unsplash.com/random/225x300?sig=12" alt="Random image" width="225" height="300">
+				</div>
 			</div>
-		</div>
-		<div class="bg-accent --light" tabindex="0"></div>
-		<div class="bg-accent --light bg-red-700 sm:bg-green-800 fs-md mb-48 sm:mb-2 lg:mb-6" tabindex="0"></div>
-		<div class="--md-gcs-2 bg-warning --light" tabindex="0">
-		</div>
+			<div class="bg-accent --light" tabindex="0"></div>
+			<div class=" --light bg-red-700 sm:bg-green-800 fs-md mb-1 sm:mb-2 lg:mb-6" tabindex="0"></div>
+			<div class="--md-gcs-2 bg-warning --light" tabindex="0"></div>
+	</ui-component>
 	</section>
 
 	<ui-editor
-	files="data/app.json, data/styles.json, data/content.json, data/elements.json, data/components.json, data/assets.json"
-		loader="overlay"
+		app="data/app.json"
+		files="data/styles.json, data/content.json, data/elements.json, data/components.json, data/assets.json, data/clientdata.json"
 		logo="/favicon.svg"
 		open="true"
 		openkey="."
+		prototype="util,comp"
 		responsive
 		selectable=""
 		togglekey=","></ui-editor>
@@ -82,6 +84,14 @@
 	<script src="index.js" type="module"></script>
 	<script src="uiComponent.js"></script>
 	<script src="../text-editor/uiRichText.js"></script>
+
+	<script>
+
+		const app = document.querySelector('ui-editor');
+		app.addEventListener('uie-save-content', e => {
+			console.log('uie-save-content', e.detail);
+		});
+	</script>
 
 </body>
 </html>

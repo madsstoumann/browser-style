@@ -194,7 +194,7 @@ console.log(this.config);
 
 		/* Add message-icons for collaboration */
 		if (this.config.clientdata?.messages) {
-			this.renderMessageIcons();
+			// this.renderMessageIcons();
 		}
 
 		/* Set initial active element, if in responsive mode */
@@ -1129,11 +1129,16 @@ console.log(this.config);
 				}
 			});
 
-			// Handle updateFormField for class objects without a prefix
-			classObjs.filter(classObj => !classObj.prefix).forEach(classObj => {
-				const input = elements.find(element => element.value === classObj.value);
-				if (input) {
-					this.updateFormField(input, classObj.value);
+			// Handle updateFormField for class objects *without* a prefix, or custom classes containing prefixDelimiter, thus with a split-up-value
+			classObjs.forEach(classObj => {
+				let value = classObj.value;
+				let input = elements.find(element => element.value === value);
+				if (!input && classObj.prefix) {
+					value = `${classObj.prefix}${this.config.app.prefixDelimiter}${classObj.value}`;
+					input = elements.find(element => element.value === value);
+				}
+				if (input && !input.dataset.prefix) {
+					this.updateFormField(input, value);
 				}
 			});
 
