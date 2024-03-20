@@ -595,7 +595,6 @@
 							"name": "classlist"
 						},
 						{
-							"name": "classname",
 							"part": "input-icon",
 							"fields": [
 								{
@@ -626,6 +625,22 @@
 									"attr": {
 										"data-click": "cls-copy",
 										"title": "Copy enabled classes"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "toggleLeft",
+									"attr": {
+										"data-click": "cls-disable-all",
+										"title": "Disable all"
+									}
+								},
+								{
+									"ui": "button",
+									"icon": "toggleRight",
+									"attr": {
+										"data-click": "cls-enable-all",
+										"title": "Enable all"
 									}
 								},
 								{

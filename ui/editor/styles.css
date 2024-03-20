@@ -144,6 +144,10 @@
 :host([open="false"][responsive]) [part=outline] {
 	display: none;
 }
+:host([open="true"][responsive]) [part=toggle] {
+	left: calc(50% - (var(--uie-w) / 2));
+}
+
 /* === COLLOBORATION === */
 :host([open="true"]) [part=form-collaboration] {
 	
@@ -249,6 +253,7 @@ fieldset:has([part="asset-image"]) {
 [part=iframe] {
 	border: 0;
 	border-radius: 5px;
+	box-shadow: 0 0 0 5px #333;
 	height: calc(100dvh - 160px);
 	margin: 16px;
 	max-height: calc(100dvh - 80px);

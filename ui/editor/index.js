@@ -2,7 +2,7 @@ import stylesheet from './styles.css' assert { type: 'css' };
 
 import { findComponentByKey, getConnectedParts, mountComponent, onComponentSearch, setComponentInfo } from './js/components.js';
 import { aiPrompt, onSave, onTextEdit } from './js/content.js';
-import { addClass, copyClasses, getClasses, parseClassString, remClasses, revertClasses, setUnitClass, updateClassList } from './js/styles.js';
+import { addClass, copyClasses, getClasses, parseClassString, remClasses, revertClasses, setUnitClass, toggleClass, toggleClasses, updateClassList } from './js/styles.js';
 import { renderChat, renderComponentList, renderElement, renderFieldset, renderGroup, renderIcon, renderInput, renderTemplateFromString, setBreakpoints, setForm, setIconObject } from './js/render.js';
 import { addDocumentScroll, addDraggable, debounce, findObjectByProperty, getDaysUntilDue, uuid } from './js/utils.js';
 import { getXPath, getElementByXPath }	from './js/xpath.js';
@@ -12,8 +12,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.30
- * @summary 17-03-2024
+ * @version 1.0.31
+ * @summary 20-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -491,6 +491,8 @@ console.log(this.config);
 						}); break;
 					case 'cls-add': addClass(this.active, this.editor.elements.addclass, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'cls-copy': copyClasses(this.active.className); break;
+					case 'cls-disable-all': toggleClasses(this.editor.elements.classname, this.active, false); break;
+					case 'cls-enable-all': toggleClasses(this.editor.elements.classname, this.active, true); break;
 					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); break;
 					case 'cls-revert': revertClasses(this.active, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'close': this.editor.hidePopover(); break;
@@ -615,14 +617,7 @@ console.log(this.config);
 			case 'dynamics':
 			case 'structurals': this.updateFormStyles(true); break;
 			case 'classname':
-				if (!node.checked) {
-					this.active.classList.remove(value);
-					this.active.dataset.removed = `${this.active.dataset.removed || ''} ${value}`;
-				}
-				else {
-					this.active.classList.add(value);
-					this.active.dataset.removed = this.active.dataset.removed.replace(value, '');
-				}
+				toggleClass(this.active, value, node.checked);
 				this.updateConnectedParts()
 				this.updateFormStyles();
 				break;

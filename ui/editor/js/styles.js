@@ -164,6 +164,37 @@ export function setUnitClass(node, group, value) {
 }
 
 /**
+ * Toggles a CSS class on a DOM node based on a boolean value.
+ *
+ * @param {HTMLElement} node - The DOM node to toggle the class on.
+ * @param {string} value - The CSS class name to toggle.
+ * @param {boolean} checked - The boolean value indicating whether to add or remove the class.
+ */
+export function toggleClass(node, value, checked) {
+	if (!checked) {
+		node.classList.remove(value);
+		node.dataset.removed = `${node.dataset.removed || ''} ${value}`;
+	} else {
+		node.classList.add(value);
+		node.dataset.removed = node.dataset.removed.replace(value, '');
+	}
+}
+
+/**
+ * Toggles classes on elements based on the checked state.
+ *
+ * @param {NodeList} elements - The elements to toggle classes on.
+ * @param {Node} node - The node to toggle classes on.
+ * @param {boolean} checked - The checked state to determine whether to add or remove classes.
+ */
+export function toggleClasses(elements, node, checked) {
+	elements.forEach(element => {
+		toggleClass(node, element.value, checked);
+		element.checked = checked;
+	});
+}
+
+/**
  * Updates the class list of a given node and renders the updated class list in the provided HTML element.
  * @param {HTMLElement} node - The node whose class list needs to be updated.
  * @param {HTMLElement} list - The HTML element where the updated class list will be rendered.
