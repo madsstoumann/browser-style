@@ -645,7 +645,7 @@
 								},
 								{
 									"ui": "button",
-									"icon": "styleoff",
+									"icon": "trash",
 									"attr": {
 										"data-click": "cls-rem",
 										"title": "Remove disabled classes"

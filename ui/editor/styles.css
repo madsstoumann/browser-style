@@ -70,7 +70,7 @@
 	outline-offset: calc(0px - var(--uie-bdw, 3px));
 }
 :host([open="true"][responsive]) {
-	--uie-bgc: #E5E5E5;
+	--uie-bgc: var(--uie-gray-15);
 }
 .uie-copy {
 	background: repeating-linear-gradient(-45deg,transparent 0 10px,rgba(0,0,0,.1) 0 20px);
@@ -253,7 +253,7 @@ fieldset:has([part="asset-image"]) {
 [part=iframe] {
 	border: 0;
 	border-radius: 5px;
-	box-shadow: 0 0 0 5px #333;
+	box-shadow: 0 0 0 5px hsl(0, 0%, 50%);
 	height: calc(100dvh - 160px);
 	margin: 16px;
 	max-height: calc(100dvh - 80px);

@@ -188,10 +188,16 @@ export function toggleClass(node, value, checked) {
  * @param {boolean} checked - The checked state to determine whether to add or remove classes.
  */
 export function toggleClasses(elements, node, checked) {
-	elements.forEach(element => {
-		toggleClass(node, element.value, checked);
-		element.checked = checked;
-	});
+	if (elements instanceof NodeList || Array.isArray(elements)) {
+		elements.forEach(element => {
+			toggleClass(node, element.value, checked);
+			element.checked = checked;
+		});
+	} else {
+		// If it's a single element
+		toggleClass(node, elements.value, checked);
+		elements.checked = checked;
+	}
 }
 
 /**
