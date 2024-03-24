@@ -474,9 +474,25 @@
 								"removeForm": true,
 								"required": true,
 								"options": [
-									{ "value": "", "text": "scheme ⏷", "break": true },
+									{ "value": "", "text": "dark", "break": true },
 									{ "value": "dark", "text": "dark" },
 									{ "value": "light", "text": "light" }
+								]
+							}
+						},
+						{
+							"ui": "select",
+							"input": {
+								"name": "breakpointrange",
+								"removeForm": true,
+								"required": true,
+								"options": [
+									{ "value": "", "text": "max ⏷", "break": true },
+									{ "value": "max-sm", "text": "sm" },
+									{ "value": "max-md", "text": "md" },
+									{ "value": "max-lg", "text": "lg" },
+									{ "value": "max-xl", "text": "xl" },
+									{ "value": "max-xxl", "text": "xxl" }
 								]
 							}
 						},

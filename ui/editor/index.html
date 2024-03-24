@@ -27,6 +27,7 @@
 		}
 		ui-component { display: contents; }
 	</style>
+	<script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -64,11 +65,11 @@
 				</div>
 			</div>
 			<div class="bg-accent --light" tabindex="0"></div>
-			<div class="bg-red-700 sm:bg-green-800 fs-md mb-1 sm:mb-2 lg:mb-6" tabindex="0"></div>
+			<div class="bg-accent --light bg-red-700 sm:bg-green-800 fs-md mb-48 sm:mb-2 lg:mb-6" tabindex="0"></div>
 			<div class="--md-gcs-2 bg-warning --light" tabindex="0"></div>
 	</ui-component>
 	</section>
-
+<!-- files="data/styles.json, data/content.json, data/elements.json, data/components.json -->
 	<ui-editor
 		app="data/app.json"
 		files="data/styles.json, data/content.json, data/elements.json, data/components.json, data/assets.json, data/clientdata.json"

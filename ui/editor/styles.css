@@ -3,8 +3,10 @@
 	--uie-accent: hsl(211, 60%, 50%);
 	--uie-bxsh-sm: 0px 3px 1px 0px color-mix(in srgb, CanvasText, transparent 95%), 0px 3px 8px 0px color-mix(in srgb, CanvasText, transparent 88%);
 
-	--uie-bp-0: var(--uie-gray-10);
+	/* --uie-bp-0: var(--uie-gray-10); */
 	/* --uie-bp-1: #D8E9DD; */
+	/* --uie-bp-0: #B3FFD9; */
+	--uie-bp-0: #CEDFF7; 
 	--uie-bp-1: #bedac6;
 	--uie-bp-2: #FFD6A5;
 	--uie-bp-3: #FFB3B3;
@@ -359,12 +361,13 @@ fieldset:has([part="asset-image"]) {
 			bottom: 0px;
 			position: absolute;
 		}
-		&:not(:first-of-type):has(:checked) {
+		&:has(:checked) {
 			background: var(--_c);
 			box-shadow: inset 0px 0px 0px 2px color-mix(in srgb, CanvasText, transparent 90%);
 			color: #000;
 			&::after { display: none; }
 		}
+		&:nth-of-type(1) { --_c: var(--uie-bp-0); }
 		&:nth-of-type(2) { --_c: var(--uie-bp-1); }
 		&:nth-of-type(3) { --_c: var(--uie-bp-2); }
 		&:nth-of-type(4) { --_c: var(--uie-bp-3); }
@@ -375,9 +378,11 @@ fieldset:has([part="asset-image"]) {
 	&:has(+ [part~=textgroup]) {
 		border-end-start-radius: 0;
 		border-end-end-radius: 0;
+		
 		margin-block-end: 0;
 		& + [part~=textgroup] {
 			border-radius: 0 0 7px 7px;
+			grid-template-columns: 1fr 1fr 2fr 2fr;
 			margin-block-end: 0;
 			& label {
 				&:not(:has(:checked)) { background: Canvas; }

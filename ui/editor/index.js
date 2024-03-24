@@ -755,6 +755,7 @@ console.log(this.config);
 	 * Resets the utility values in the editor.
 	 */
 	resetUtility() {
+		this.editor.breakpointrange.value = '';
 		this.editor.elements.colorschemes.value = '';
 		this.editor.elements.dynamics.value = '';
 		this.editor.elements.structurals.value = '';
