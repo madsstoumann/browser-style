@@ -37,7 +37,7 @@
 		"max-xxl"
 	],
 	"colorschemes": ["", "dark"],
-	"dynamics": ["", "focus", "focus-visible", "focus-within", "hover", "visited"],
+	"dynamics": ["", "active", "focus", "focus-visible", "focus-within", "hover", "visited"],
 	"structurals": ["", "autofill", "checked", "default", "disabled", "empty", "enabled", "even", "first", "first-of-type", "in-range", "indeterminate", "invalid", "last", "last-of-type", "odd", "only", "only-of-type", "out-of-range", "placeholder-shown", "read-only", "required", "target", "valid"],
 	"prefixDelimiter": "-",
 	"stateDelimiter": ":",
