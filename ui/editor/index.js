@@ -493,7 +493,7 @@ console.log(this.config);
 					case 'cls-copy': copyClasses(this.active.className); break;
 					case 'cls-disable-all': toggleClasses(this.editor.elements.classname, this.active, false); break;
 					case 'cls-enable-all': toggleClasses(this.editor.elements.classname, this.active, true); break;
-					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); break;
+					case 'cls-rem': remClasses(this.active, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'cls-revert': revertClasses(this.active, this.editor.elements.classlist); this.updateFormStyles(); break;
 					case 'close': this.editor.hidePopover(); break;
 					case 'colorscheme': this.classList.toggle('colorscheme'); break;
@@ -572,17 +572,19 @@ console.log(this.config);
 			if (node.hasAttribute('data-prefix')) {
 				const utilityObj = {
 					breakpoint: this.editor.elements.breakpoint.value || '',
-					colorscheme: this.editor.elements.colorschemes.value || '',
+					breakpointrange: this.editor.elements.breakpointranges.value || '',
+					colorscheme: this.editor.elements.colorschemes.checked && this.editor.elements.colorschemes.value || '',
 					dynamic: this.editor.elements.dynamics.value || '',
 					structural: this.editor.elements.structurals.value || ''
 				};
 
 				const colorscheme = utilityObj.colorscheme ? `${utilityObj.colorscheme}${this.config.app.stateDelimiter}` : '';
 				const breakpoint = utilityObj.breakpoint ? `${utilityObj.breakpoint}${this.config.app.stateDelimiter}` : '';
+				const breakpointrange = utilityObj.breakpointrange ? `${utilityObj.breakpointrange}${this.config.app.stateDelimiter}` : '';
 				const dynamic = utilityObj.dynamic ? `${utilityObj.dynamic}${this.config.app.stateDelimiter}` : '';
 				const structural = utilityObj.structural ? `${utilityObj.structural}${this.config.app.stateDelimiter}` : '';
 
-				this.setUtilityClass(this.active, `${colorscheme}${breakpoint}${structural}${dynamic}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`)
+				this.setUtilityClass(this.active, `${colorscheme}${breakpoint}${breakpointrange}${structural}${dynamic}${node.dataset.prefix}${this.config.app.prefixDelimiter}${value}`)
 				this.setBreakpointLabel(node, utilityObj.breakpoint, value);
 			}
 			else {
@@ -613,6 +615,7 @@ console.log(this.config);
 		switch(node.name) {
 			/* Update the selected styles in the editor when breakpoint change */
 			case 'breakpoint':
+			case 'breakpointranges':
 			case 'colorschemes':
 			case 'dynamics':
 			case 'structurals': this.updateFormStyles(true); break;
@@ -755,8 +758,9 @@ console.log(this.config);
 	 * Resets the utility values in the editor.
 	 */
 	resetUtility() {
-		this.editor.breakpointrange.value = '';
-		this.editor.elements.colorschemes.value = '';
+		this.editor.breakpointranges.value = '';
+		// this.editor.elements.colorschemes.value = '';
+		this.editor.elements.colorschemes.checked = false;
 		this.editor.elements.dynamics.value = '';
 		this.editor.elements.structurals.value = '';
 		this.updateFormStyles();
@@ -983,12 +987,14 @@ console.log(this.config);
 	 */
 	setUtilityClass(node, value) {
 		const utilityObj = parseClassString(value, this.config.app);
+		console.log(utilityObj)
 		try {
 			const { classes, removed } = getClasses(node);
 			classes.forEach(className => {
 				const classParsed = parseClassString(className, this.config.app);
 				if (
 					classParsed.breakpoint === utilityObj.breakpoint &&
+					classParsed.breakpointrange === utilityObj.breakpointrange &&
 					classParsed.colorscheme === utilityObj.colorscheme &&
 					classParsed.dynamic === utilityObj.dynamic &&
 					classParsed.structural === utilityObj.structural &&
@@ -1086,7 +1092,8 @@ console.log(this.config);
 
 			const utilityObj = {
 				breakpoint: this.editor.elements.breakpoint.value || '',
-				colorscheme: this.editor.elements.colorschemes.value || '',
+				breakpointrange: this.editor.elements.breakpointranges.value || '',
+				colorscheme: this.editor.elements.colorschemes.checked && this.editor.elements.colorschemes.value || '',
 				dynamic: this.editor.elements.dynamics.value || '',
 				structural: this.editor.elements.structurals.value || ''
 			};
@@ -1108,6 +1115,7 @@ console.log(this.config);
 			Object.entries(classObjsByPrefix).forEach(([prefix, classObjsGroup]) => {
 				const obj = classObjsGroup.find(obj =>
 					obj.breakpoint === utilityObj.breakpoint &&
+					obj.breakpointrange === utilityObj.breakpointrange &&
 					obj.colorscheme === utilityObj.colorscheme &&
 					obj.dynamic === utilityObj.dynamic &&
 					obj.structural === utilityObj.structural

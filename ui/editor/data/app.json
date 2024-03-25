@@ -28,7 +28,15 @@
 		"xl",
 		"xxl"
 	],
-	"colorschemes": ["", "dark", "light"],
+	"breakpointranges": [
+		"",
+		"max-sm",
+		"max-md",
+		"max-lg",
+		"max-xl",
+		"max-xxl"
+	],
+	"colorschemes": ["", "dark"],
 	"dynamics": ["", "focus", "focus-visible", "focus-within", "hover", "visited"],
 	"structurals": ["", "autofill", "checked", "default", "disabled", "empty", "enabled", "even", "first", "first-of-type", "in-range", "indeterminate", "invalid", "last", "last-of-type", "odd", "only", "only-of-type", "out-of-range", "placeholder-shown", "read-only", "required", "target", "valid"],
 	"prefixDelimiter": "-",
@@ -467,23 +475,21 @@
 				{
 					"part": "textgroup",
 					"fields": [
+
 						{
-							"ui": "select",
+							"text": "dark",
 							"input": {
-								"name": "colorschemes",
+								"data-sr": "",
 								"removeForm": true,
-								"required": true,
-								"options": [
-									{ "value": "", "text": "dark", "break": true },
-									{ "value": "dark", "text": "dark" },
-									{ "value": "light", "text": "light" }
-								]
+								"name": "colorschemes",
+								"type": "checkbox",
+								"value": "dark"
 							}
 						},
 						{
 							"ui": "select",
 							"input": {
-								"name": "breakpointrange",
+								"name": "breakpointranges",
 								"removeForm": true,
 								"required": true,
 								"options": [

@@ -67,11 +67,12 @@ export function getClasses(node) {
  * @returns {object} - An object containing the parsed utility string parts.
  */
 export function parseClassString(string, config) {
-	const { stateDelimiter, prefixDelimiter, colorschemes, breakpoints, structurals, dynamics } = config;
+	const { stateDelimiter, prefixDelimiter, colorschemes, breakpoints, breakpointranges, structurals, dynamics } = config;
 	const parts = string.split(stateDelimiter);
 
 	let colorscheme = '';
 	let breakpoint = '';
+	let breakpointrange = '';
 	let structural = '';
 	let dynamic = '';
 	let prefix = '';
@@ -83,6 +84,10 @@ export function parseClassString(string, config) {
 
 	if (parts.length >= 1 && breakpoints.includes(parts[0])) {
 		breakpoint = parts.shift();
+	}
+
+	if (parts.length >= 1 && breakpointranges.includes(parts[0])) {
+		breakpointrange = parts.shift();
 	}
 
 	if (parts.length >= 1 && structurals.includes(parts[0])) {
@@ -107,6 +112,7 @@ export function parseClassString(string, config) {
 	return {
 		colorscheme,
 		breakpoint,
+		breakpointrange,
 		structural,
 		dynamic,
 		prefix,
