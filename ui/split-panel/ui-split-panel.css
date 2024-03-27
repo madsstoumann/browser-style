@@ -2,13 +2,14 @@
 	--ui-resize-pb: 1.25ch;
 	--ui-resize-pi: 2ch;
 	--ui-resize-thumb-c: var(--ButtonBorder);
-	--ui-resize-thumb-w: min(3cqi, 1.25em);
+	--ui-resize-thumb-w: min(1.5cqi, 1.5em);
 
 	all: unset;
 	aspect-ratio: 16 / 9;
 	border: 3px solid var(--ButtonBorder);
 	border-radius: var(--input-bdrs);
 	display: grid;
+	grid-template-rows: 100%;
 	& * { grid-area: 1 / 1; }
 	& div {
 		--_pi: calc(var(--ui-resize-pi) + (var(--ui-resize-thumb-w) / 2));
@@ -38,6 +39,7 @@
 			appearance: none;
 			background-color: var(--ui-resize-thumb-c);
 			border-radius: 0;
+			clip-path: inset(5% 25% 5% 25% round 50px);
 			cursor: ew-resize;
 			pointer-events: all;
 			width: var(--ui-resize-thumb-w);

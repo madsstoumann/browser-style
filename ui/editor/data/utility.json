@@ -1,0 +1,402 @@
+{
+	"key": "styles",
+	"groups": [
+		{
+			"key": "layout",
+			"label": "Layout",
+			"groups": [
+				{
+					"key": "aspect-ratio",
+					"label": "Aspect Ratio",
+					"prefix": "aspect",
+					"values": ["auto", "square", "video"]
+				},
+				{
+					"key": "container",
+					"label": "Container",
+					"values": ["container"]
+				},
+				{
+					"key": "columns",
+					"label": "Columns",
+					"prefix": "columns",
+					"values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "auto", "3xs", "2xs", "xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl", "5xl", "6xl", "7xl"]
+				},
+				{
+					"key": "break-after",
+					"label": "Break After",
+					"prefix": "break-after",
+					"values": ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "avoid-column"]
+				},
+				{
+					"key": "break-before",
+					"label": "Break Before",
+					"prefix": "break-before",
+					"values": ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "avoid-column"]
+				},
+				{
+					"key": "break-inside",
+					"label": "Break Inside",
+					"prefix": "break-inside",
+					"values": ["auto", "avoid", "avoid-page", "avoid-column"]
+				},
+				{
+					"key": "box-decoration",
+					"label": "Box Decoration Break",
+					"prefix": "box-decoration",
+					"values": ["clone", "slice"]
+				},
+				{
+					"key": "box-sizing",
+					"label": "Box Sizing",
+					"prefix": "box",
+					"values": ["border", "content"]
+				},
+				{
+					"key": "display",
+					"label": "Display",
+					"values": ["block", "inline-block", "inline", "flex", "inline-flex", "table", "inline-table", "table-caption", "table-cell", "table-column", "table-column-group", "table-footer-group", "table-header-group", "table-row-group", "table-row", "flow-root", "grid", "inline-grid", "contents", "list-item", "hidden"]
+				},
+				{
+					"key": "float",
+					"label": "Floats",
+					"prefix": "float",
+					"values": ["start", "end", "left", "right", "none"]
+				},
+				{
+					"key": "clear",
+					"label": "Clear",
+					"prefix": "clear",
+					"values": ["none", "left", "right", "both", "start", "end"]
+				},
+				{
+					"key": "isolation",
+					"label": "Isolation",
+					"values": ["isolation-auto", "isolate"]
+				},
+				{
+					"key": "object-fit",
+					"label": "Object Fit",
+					"values": ["object-contain", "object-cover", "object-fill", "object-none", "object-scale-down"]
+				},
+				{
+					"key": "object-position",
+					"label": "Object Position",
+					"values": ["object-left-top", "object-top", "object-right-top", "object-left", "object-center", "object-right", "object-left-bottom", "object-bottom", "object-right-bottom"]
+				},
+				{
+					"key": "overflow",
+					"label": "Overflow",
+					"prefix": "overflow",
+					"values": ["auto", "hidden", "clip", "visible", "scroll", "x-auto", "y-auto", "x-hidden", "y-hidden", "x-clip", "y-clip", "x-visible", "y-visible", "x-scroll", "y-scroll"]
+				},
+				{
+					"key": "overscroll-behavior",
+					"label": "Overscroll Behavior",
+					"prefix": "overscroll",
+					"values": ["auto", "contain", "none", "x-auto", "y-auto", "x-contain", "y-contain", "x-none", "y-none"]
+				},
+				{
+					"key": "position",
+					"label": "Position",
+					"values": ["static", "relative", "absolute", "fixed", "sticky"]
+				},
+				{
+					"key": "inset",
+					"label": "Inset",
+					"values": ["auto", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+				},
+				{
+					"key": "visibility",
+					"label": "Visibility",
+					"values": ["visible", "invisible", "collapse"]
+				},
+				{
+					"key": "z-index",
+					"label": "Z-Index",
+					"prefix": "z",
+					"values": ["auto", 0, 10, 20, 30, 40, 50]
+				}
+			]
+		},
+		{
+			"key": "flexbox-grid",
+			"label": "Flexbox & Grid",
+			"groups": [
+				{
+					"key": "flex-basis",
+					"label": "Flex Basis",
+					"prefix": "basis",
+					"values": []
+				},
+				{
+					"key": "flex-direction",
+					"label": "Flex Direction",
+					"values": ["flex-col", "flex-col-reverse", "flex-row", "flex-row-reverse"]
+				},
+				{
+					"key": "flex",
+					"label": "Flex Wrap",
+					"values": ["flex-wrap", "flex-wrap-reverse", "flex-nowrap"]
+				},
+				{
+					"key": "flex",
+					"label": "Flex",
+					"values": ["flex-1", "flex-auto", "flex-initial", "flex-none"]
+				},
+				{
+					"key": "flex-grow",
+					"label": "Flex Grow",
+					"prefix": "grow",
+					"values": ["", 0]
+				},
+				{
+					"key": "flex-shrink",
+					"label": "Flex Shrink",
+					"prefix": "shrink",
+					"values": ["", 0]
+				},
+				{
+					"key": "order",
+					"label": "Order",
+					"prefix": "order",
+					"values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "first", "last", "none"]
+				},
+				{
+					"key": "grid-template-columns",
+					"label": "Grid Template Columns",
+					"prefix": "grid-cols",
+					"values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, "none", "subgrid"]
+				},
+				{
+					"key": "grid-column-start-end",
+					"label": "Grid Column Start/End",
+					"prefix": "col",
+					"values": ["auto", "span-1", "span-2", "span-3", "span-4", "span-5", "span-6", "span-7", "span-8", "span-9", "span-10", "span-11", "span-12", "span-full", "start-1", "start-2", "start-3", "start-4", "start-5", "start-6", "start-7", "start-8", "start-9", "start-10", "start-11", "start-12", "start-13", "start-auto", "end-1", "end-2", "end-3", "end-4", "end-5", "end-6", "end-7", "end-8", "end-9", "end-10", "end-11", "end-12", "end-13", "end-auto"]
+				},
+				{
+					"key": "grid-template-rows",
+					"label": "Grid Template Rows",
+					"prefix": "grid-rows",
+					"values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "none", "subgrid"]
+				},
+				{
+					"key": "grid-row-start-end",
+					"label": "Grid Row Start/End",
+					"prefix": "row",
+					"values": ["auto", "span-1", "span-2", "span-3", "span-4", "span-5", "span-6", "span-7", "span-8", "span-9", "span-10", "span-full", "start-1", "start-2", "start-3", "start-4", "start-5", "start-6", "start-7", "start-8", "start-9", "start-10", "start-11", "start-12", "start-13", "start-auto", "end-1", "end-2", "end-3", "end-4", "end-5", "end-6", "end-7", "end-8", "end-9", "end-10", "end-11", "end-12", "end-13", "end-auto"]
+				},
+				{
+					"key": "grid-auto-flow",
+					"label": "Grid Auto Flow",
+					"prefix": "grid-flow",
+					"values": ["row", "col", "dense", "row-dense", "col-dense"]
+				},
+				{
+					"key": "grid-auto-columns",
+					"label": "Grid Auto Columns",
+					"prefix": "auto-cols",
+					"values": ["auto", "min-content", "max-content", "fr"]
+				},
+				{
+					"key": "grid-auto-rows",
+					"label": "Grid Auto Rows",
+					"prefix": "auto-rows",
+					"values": ["auto", "min-content", "max-content", "fr"]
+				},
+				{
+					"key": "gap",
+					"label": "Gap",
+					"prefix": "gap",
+					"values": []
+				},
+				{
+					"key": "justify-content",
+					"label": "Justify Content",
+					"prefix": "justify",
+					"values": ["normal", "start", "end", "center", "between", "around", "evenly", "stretch"]
+				},
+				{
+					"key": "justify-items",
+					"label": "Justify Items",
+					"prefix": "justify-items",
+					"values": ["start", "end", "center", "stretch"]
+				},
+				{
+					"key": "justify-self",
+					"label": "Justify Self",
+					"prefix": "justify-self",
+					"values": ["auto", "start", "end", "center", "stretch"]
+				},
+				{
+					"key": "align-content",
+					"label": "Align Content",
+					"prefix": "content",
+					"values": ["normal", "center", "start", "end", "between", "around", "evenly", "baseline", "stretch"]
+				},
+				{
+					"key": "align-items",
+					"label": "Align Items",
+					"prefix": "items",
+					"values": ["start", "end", "center", "baseline", "stretch"]
+				},
+				{
+					"key": "align-self",
+					"label": "Align Self",
+					"prefix": "self",
+					"values": ["auto", "start", "end", "center", "baseline", "stretch"]
+				},
+				{
+					"key": "place-content",
+					"label": "Place Content",
+					"prefix": "place-content",
+					"values": ["center", "start", "end", "between", "around", "evenly", "baseline", "stretch"]
+				},
+				{
+					"key": "place-items",
+					"label": "Place Items",
+					"prefix": "place-items",
+					"values": ["start", "end", "center", "baseline", "stretch"]
+				},
+				{
+					"key": "place-self",
+					"label": "Place Self",
+					"prefix": "place-self",
+					"values": ["auto", "start", "end", "center", "stretch"]
+				}
+			]
+		},
+		{
+			"key": "spacing",
+			"label": "Spacing",
+			"groups": [
+				{
+					"key": "padding",
+					"label": "Padding"
+				},
+				{
+					"key": "margin",
+					"label": "Margin"
+				},
+				{
+					"key": "space",
+					"label": "Space Between"
+				}
+			]
+		},
+		{
+			"key": "sizing",
+			"label": "Sizing",
+			"groups": [
+				{
+					"key": "width",
+					"label": "Width"
+				},
+				{
+					"key": "min-width",
+					"label": "Min Width"
+				},
+				{
+					"key": "max-width",
+					"label": "Max Width"
+				},
+				{
+					"key": "height",
+					"label": "Height"
+				},
+				{
+					"key": "min-height",
+					"label": "Min Height"
+				},
+				{
+					"key": "max-height",
+					"label": "Max Height"
+				},
+				{
+					"key": "size",
+					"label": "Size"
+				}
+			]
+		},
+		{
+			"key": "typography",
+			"label": "Typography",
+			"groups": [
+				{
+					"key": "font",
+					"label": "Font Family"
+				},
+				{
+					"key": "size",
+					"label": "Font Size"
+				},
+				{
+					"key": "weight",
+					"label": "Font Weight"
+				},
+				{
+					"key": "style",
+					"label": "Font Style"
+				},
+				{
+					"key": "line-height",
+					"label": "Line Height"
+				},
+				{
+					"key": "letter-spacing",
+					"label": "Letter Spacing"
+				},
+				{
+					"key": "align",
+					"label": "Text Align"
+				},
+				{
+					"key": "decoration",
+					"label": "Text Decoration"
+				},
+				{
+					"key": "transform",
+					"label": "Text Transform"
+				},
+				{
+					"key": "overflow",
+					"label": "Text Overflow"
+				},
+				{
+					"key": "whitespace",
+					"label": "White Space"
+				},
+				{
+					"key": "word-break",
+					"label": "Word Break"
+				},
+				{
+					"key": "word-wrap",
+					"label": "Word Wrap"
+				},
+				{
+					"key": "hyphens",
+					"label": "Hyphens"
+				}
+			]
+		},
+		{
+			"key": "color",
+			"label": "Color",
+			"groups": [
+				{
+					"key": "color",
+					"label": "Color"
+				},
+				{
+					"key": "background",
+					"label": "Background"
+				},
+				{
+					"key": "opacity",
+					"label": "Opacity"
+				}
+			]
+		}
+	]
+}
