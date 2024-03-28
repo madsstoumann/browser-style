@@ -276,7 +276,21 @@
 				},
 				{
 					"key": "margin",
-					"label": "Margin"
+					"label": "Margin",
+					"groups": [
+						{
+							"key": "margin",
+							"label": "Margin"
+						},
+						{
+							"key": "margin-block",
+							"label": "Margin Block"
+						},
+						{
+							"key": "margin-inline",
+							"label": "Margin Inline"
+						}
+					]
 				},
 				{
 					"key": "space",

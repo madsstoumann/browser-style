@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>CSS Editor</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<!--<meta name="view-transition" content="same-origin">-->
+	<link rel="stylesheet" href="/base.css">
+	<style>
+		fieldset {
+			--AccentColor: crimson;
+			background: hsl(0, 0%, 97%);
+			border: 1px solid ButtonFace;
+			display: inline-flex;
+			font-size: smaller;
+			gap: 1ch;
+			margin: 1ch;
+			padding: .5ch;
+		}
+		form > ul > li { margin-block-end: 1ch; }
+		label { display: inline-grid; font-weight: 600; }
+		li { list-style: none; }
+		ul { margin-block: 0; }
+	</style>
+</head>
+<body>
+	<form id="app">
+		<button type="submit">Generate styles.json</button>
+	</form>
+
+	<script type="module">
+		import { generateNestedList, go, recreateObjectWithCheckedKeys } from './js/utility.js';
+		
+
+		const data = await go('./data/utility.json','json',{});
+		console.log(data);
+		app.insertAdjacentHTML('afterbegin', generateNestedList(data.groups));
+		app.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const recreatedObject = recreateObjectWithCheckedKeys(app, data.groups);
+			console.log(recreatedObject);
+		});
+	</script>
+
+</body>
+</html>

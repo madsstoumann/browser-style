@@ -12,8 +12,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.31
- * @summary 20-03-2024
+ * @version 1.0.32
+ * @summary 28-03-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -987,7 +987,6 @@ console.log(this.config);
 	 */
 	setUtilityClass(node, value) {
 		const utilityObj = parseClassString(value, this.config.app);
-		console.log(utilityObj)
 		try {
 			const { classes, removed } = getClasses(node);
 			classes.forEach(className => {
@@ -1127,7 +1126,8 @@ console.log(this.config);
 					if (!utilitySelect) {
 						/* Update all breakpoint-labels for input */
 						classObjsGroup.forEach(obj => {
-							this.setBreakpointLabel(input, obj.breakpoint, obj.value);
+							const label = elements.find(element => element.dataset.prefix === prefix && element.value === obj.value);
+							this.setBreakpointLabel(label || input, obj.breakpoint, obj.value);
 						});
 					}
 				}
