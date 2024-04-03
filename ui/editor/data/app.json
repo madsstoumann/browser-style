@@ -28,7 +28,8 @@
 		"xl",
 		"xxl"
 	],
-	"breakpointranges": [
+	"colorschemes": ["", "dark"],
+	"ranges": [
 		"",
 		"max-sm",
 		"max-md",
@@ -36,9 +37,8 @@
 		"max-xl",
 		"max-xxl"
 	],
-	"colorschemes": ["", "dark"],
-	"dynamics": ["", "active", "focus", "focus-visible", "focus-within", "hover", "visited"],
-	"structurals": ["", "autofill", "checked", "default", "disabled", "empty", "enabled", "even", "first", "first-of-type", "in-range", "indeterminate", "invalid", "last", "last-of-type", "odd", "only", "only-of-type", "out-of-range", "placeholder-shown", "read-only", "required", "target", "valid"],
+	"selectors": ["", "autofill", "checked", "default", "disabled", "empty", "enabled", "even", "first", "first-of-type", "in-range", "indeterminate", "invalid", "last", "last-of-type", "odd", "only", "only-of-type", "out-of-range", "placeholder-shown", "read-only", "required", "target", "valid"],
+	"states": ["", "active", "focus", "focus-visible", "focus-within", "hover", "visited"],
 	"prefixDelimiter": "-",
 	"stateDelimiter": ":",
 
@@ -481,7 +481,7 @@
 							"input": {
 								"data-sr": "",
 								"removeForm": true,
-								"name": "colorschemes",
+								"name": "colorscheme",
 								"type": "checkbox",
 								"value": "dark"
 							}
@@ -489,7 +489,7 @@
 						{
 							"ui": "select",
 							"input": {
-								"name": "breakpointranges",
+								"name": "range",
 								"removeForm": true,
 								"required": true,
 								"options": [
@@ -505,7 +505,7 @@
 						{
 							"ui": "select",
 							"input": {
-								"name": "structurals",
+								"name": "selector",
 								"removeForm": true,
 								"required": true,
 								"options": [
@@ -539,7 +539,7 @@
 						{
 							"ui": "select",
 							"input": {
-								"name": "dynamics",
+								"name": "state",
 								"removeForm": true,
 								"required": true,
 								"options": [

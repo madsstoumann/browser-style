@@ -15,12 +15,28 @@
 			display: inline-flex;
 			font-size: smaller;
 			gap: 1ch;
-			margin: 1ch;
 			padding: .5ch;
 		}
-		form > ul > li { margin-block-end: 1ch; }
+		form > ul > li {
+			margin-block-end: 1ch;
+			& ul > li:not(:has(ul)) {
+				display: flex;
+				gap: 1ch;
+				margin-block-end: 1ch;
+			}
+		}
 		label { display: inline-grid; font-weight: 600; }
 		li { list-style: none; }
+		select {
+			background: ButtonFace;
+			block-size: auto;
+			border: 0;
+			border-radius: .25em;
+			display: inline;
+			font-family: inherit;
+			font-size: small;
+			padding: 0 1ch;
+		}
 		ul { margin-block: 0; }
 	</style>
 </head>
@@ -34,12 +50,39 @@
 		
 
 		const data = await go('./data/utility.json','json',{});
-		console.log(data);
-		app.insertAdjacentHTML('afterbegin', generateNestedList(data.groups));
+		app.insertAdjacentHTML('afterbegin', generateNestedList(data));
 		app.addEventListener('submit', async (e) => {
 			e.preventDefault();
-			const recreatedObject = recreateObjectWithCheckedKeys(app, data.groups);
-			console.log(recreatedObject);
+			const recreatedObject = recreateObjectWithCheckedKeys(app, data, 'styles');
+			recreatedObject.key = "styles";
+			console.log([recreatedObject]);
+		});
+
+		app.addEventListener('click', (event) => {
+			if (!event.target?.type === 'checkbox') return;
+			const node = event.target;
+			const fieldset = node.closest('fieldset');
+			const parent = node.closest('li');
+			const list = parent?.querySelector('ul');
+
+			if (!list) { 
+				const grandparent = parent?.closest('ul')?.parentNode;
+				if (grandparent) {
+					const toggle = grandparent.querySelector('label > [type="checkbox"]');
+					const children = grandparent.querySelectorAll(`& > ul > li > label > [type="checkbox"]`);
+					const checked = Array.from(children).some(child => child.checked);
+					toggle.checked = checked;
+
+					if (fieldset && event.shiftKey) {
+						const nodes = grandparent.querySelectorAll(`fieldset > label > [value="${node.value}"]`);
+						nodes.forEach(input => input.checked = node.checked);
+					}
+				}
+			}
+			else {
+				const children = parent?.querySelectorAll(`li > label > [type="checkbox"]`);
+				children.forEach(child => child.checked = node.checked);
+			}
 		});
 	</script>
 

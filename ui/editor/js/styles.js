@@ -67,15 +67,14 @@ export function getClasses(node) {
  * @returns {object} - An object containing the parsed utility string parts.
  */
 export function parseClassString(string, config) {
-	const { stateDelimiter, prefixDelimiter, colorschemes, breakpoints, breakpointranges, structurals, dynamics } = config;
+	const { breakpoints, colorschemes, ranges, selectors, states, stateDelimiter } = config;
 	const parts = string.split(stateDelimiter);
 
-	let colorscheme = '';
 	let breakpoint = '';
-	let breakpointrange = '';
-	let structural = '';
-	let dynamic = '';
-	let prefix = '';
+	let colorscheme = '';
+	let range = '';
+	let selector = '';
+	let state = '';
 	let value = '';
 
 	if (parts.length >= 1 && colorschemes.includes(parts[0])) {
@@ -86,36 +85,26 @@ export function parseClassString(string, config) {
 		breakpoint = parts.shift();
 	}
 
-	if (parts.length >= 1 && breakpointranges.includes(parts[0])) {
-		breakpointrange = parts.shift();
+	if (parts.length >= 1 && ranges.includes(parts[0])) {
+		range = parts.shift();
 	}
 
-	if (parts.length >= 1 && structurals.includes(parts[0])) {
-		structural = parts.shift();
+	if (parts.length >= 1 && selectors.includes(parts[0])) {
+		selector = parts.shift();
 	}
 
-	if (parts.length >= 1 && dynamics.includes(parts[0])) {
-		dynamic = parts.shift();
+	if (parts.length >= 1 && states.includes(parts[0])) {
+		state = parts.shift();
 	}
 
-	if (parts.length === 1 && !parts[0].includes(prefixDelimiter)) {
-		// If there's only one part and it doesn't contain the prefixDelimiter,
-		// assign it to value and set prefix to an empty string
-		value = parts[0];
-	} else if (parts.length >= 1) {
-		// If there's at least one part, split it using the prefixDelimiter
-		const prefixAndValue = parts[0].split(prefixDelimiter);
-		prefix = prefixAndValue.shift(); // Get the prefix
-		value = prefixAndValue.join(prefixDelimiter); // Get the value
-	}
+	value = parts.shift();
 
 	return {
 		colorscheme,
 		breakpoint,
-		breakpointrange,
-		structural,
-		dynamic,
-		prefix,
+		range,
+		selector,
+		state,
 		value
 	};
 }
@@ -144,29 +133,6 @@ export function revertClasses(node, list) {
 		updateClassList(node, list);
 	}
 	catch (error) { console.error('An error occurred while reverting classes:', error.message); }
-}
-
-/**
- * Sets the unit class for a given node by adding or removing CSS classes.
- * @param {HTMLElement} node - The HTML element to modify.
- * @param {Array} group - An array of elements to remove from the node's classes.
- * @param {string} value - The CSS class to add to the node.
- */
-export function setUnitClass(node, group, value) {
-	const { classes, removed } = getClasses(node);
-	group.forEach(element => {
-		classes.forEach(className => {
-			if (className.includes(element.value)) {
-				node.classList.remove(className);
-			}
-		});
-		removed.forEach(className => {
-			if (className.includes(element.value)) {
-				node.dataset.removed = node.dataset.removed.replace(className, '');
-			}
-		});
-	});
-	node.classList.add(value);
 }
 
 /**

@@ -3,9 +3,6 @@
 	--uie-accent: hsl(211, 60%, 50%);
 	--uie-bxsh-sm: 0px 3px 1px 0px color-mix(in srgb, CanvasText, transparent 95%), 0px 3px 8px 0px color-mix(in srgb, CanvasText, transparent 88%);
 
-	/* --uie-bp-0: var(--uie-gray-10); */
-	/* --uie-bp-1: #D8E9DD; */
-	/* --uie-bp-0: #B3FFD9; */
 	--uie-bp-0: #CEDFF7; 
 	--uie-bp-1: #bedac6;
 	--uie-bp-2: #FFD6A5;
@@ -19,13 +16,6 @@
 	--uie-custom-4: #c6a5ff;
 	--uie-custom-5: #a5cfff;
 
-	/* --uie-custom-1: #6dbb9d;
-	--uie-custom-2: #ffa16b;
-	--uie-custom-3: #ff7c7c;
-	--uie-custom-4: #b08cff;
-	--uie-custom-5: #78b4ff; */
-	
-	
 	--uie-blue-20: color-mix(in srgb, Highlight, Canvas 80%);
 	--uie-blue-40: color-mix(in srgb, Highlight, Canvas 60%);
 	--uie-blue-60: color-mix(in srgb, Highlight, Canvas 40%);
@@ -171,34 +161,6 @@
 }
 
 /* Loading animation */
-/* :host([responsive="loader"])::before {
-	background: rgba(255, 255, 255, .95);
-	content: "";
-	inset: 0;
-	position: absolute;
-	z-index: 1;
-}
-:host([responsive="loader"])::after {
-	content: "";
-	left: 50%;
-	position: absolute;
-	top: 50%;
-	translate: -50% -50%;
-	width: 50px;
-	z-index: 1;
-  aspect-ratio: 1;
-  background: var(--AccentColor);
-  border-radius: 50%;
-  padding: 8px;
-  --_m: 
-    conic-gradient(#0000 10%,#000),
-    linear-gradient(#000 0 0) content-box;
-  -webkit-mask: var(--_m);
-          mask: var(--_m);
-  -webkit-mask-composite: source-out;
-          mask-composite: subtract;
-  animation: l3 1s infinite linear;
-} */
 @keyframes l3 {to{transform: rotate(1turn)}}
 
 /* ASSET IMAGE */
@@ -648,111 +610,6 @@ textarea {
 	}
 }
 
-
-/* === RADIO === */
-[part~=radio] {
-	& label { display: contents; }
-	& input {
-		appearance: none;
-		aspect-ratio: 1;
-		block-size: 16px;
-		border: 1px solid ButtonBorder;
-		border-radius: 50%;
-		margin: 0 1ch 0 0;
-		padding: 0;
-		position: relative;
-		&:checked {
-			background: var(--uie-accent);
-			border-color: transparent;
-			&::after {
-				background: #FFF;
-				content: "";
-				inset: 0;
-				position: absolute;
-				mask: var(--uie-check) no-repeat center / 85% 100%;
-				-webkit-mask: var(--uie-check) no-repeat center / 85% 100%;
-			}
-		}
-	}
-	& span { 
-		font-weight: 500;
-		display: flex;
-		grid-column: 2 / span 11;
-		justify-content: space-between;
-	}
-	/* Variants */
-	&[part~=colorgrid] {
-		--uie-gtc: repeat(10, 1fr);
-  	clip-path: inset(calc(var(--uie-gap) - 1px));
-		gap: 1px;
-		& input {
-			background: var(--_v);
-			block-size: auto;
-			border: 0;
-			border-radius: 0px;
-			margin: 0;
-			&::after {
-				background: var(--_c, #FFF);
-				mask-size: 70% 100%;
-				-webkit-mask-size: 70% 100%;
-			}
-			&:focus-visible {
-				outline: 2px solid var(--_c, #FFF);
-				outline-offset: -2px;
-			}
-		}
-		& span { 
-			display: none;
-		}
-	}
-	&[part~=swatch] {
-		& input {
-			aspect-ratio: 2/1;
-			background: var(--_v);
-			border: 0;
-			border-radius: 16px;
-			grid-column: span 2;
-			&::after {
-				background: var(--_c, #FFF);
-			}
-		}
-		& span { 
-			grid-column: 3 / span 10;
-		}
-	}
-	&[part~=font] span { font-family: var(--_v); }
-}
-[part~=buttongroup] {
-	gap: var(--uie-gap);
-  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-	& label {
-		background: var(--uie-gray-5);
-		border-radius: 3px;
-		display: grid;
-		height: 2.5em;
-		padding: 3px;
-		place-content: center;
-		text-align: center;
-		&:has(:checked) {
-			background: var(--uie-accent);
-			color: #FFF;
-		}
-		&:has(:focus-visible) { outline: 2px solid var(--uie-accent); outline-offset: 2px; }
-		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
-	}
-	& code {
-		justify-content: center;
-		& [data-bp] {
-			border-radius: 50%;
-			text-indent: 200%;
-			overflow: hidden;
-			padding: 0;
-			width: 5px;
-			height: 5px;
-		}
-	}
-}
-
 /* === RANGE === */
 label:has([type=range]) {
 	display: contents;
@@ -987,4 +844,126 @@ label:has([role=switch]) {
 	position: absolute;
 	white-space: nowrap; 
 	width: 1px;
+}
+
+
+/* ==================== UI PARTS ==================== */
+
+/* === BUTTON GROUP === */
+[part~=button-group] {
+	gap: var(--uie-gap);
+  grid-template-columns: repeat(auto-fit, minmax(var(--uie-gtcw, 40px), 1fr));
+	& label {
+		background: var(--uie-gray-5);
+		border-radius: 3px;
+		display: grid;
+		height: 2.5em;
+		line-height: 1.1;
+		padding: 3px;
+		place-content: center;
+		text-align: center;
+		&:has(:checked) {
+			background: var(--uie-accent);
+			color: #FFF;
+		}
+		&:has(:focus-visible) { outline: 2px solid var(--uie-accent); outline-offset: 2px; }
+		&:not(:has(:checked)):hover { background: var(--uie-gray-tp); }
+	}
+	& code {
+		justify-content: center;
+		& [data-bp] {
+			border-radius: 50%;
+			height: 5px;
+			overflow: hidden;
+			padding: 0;
+			text-indent: 200%;
+			width: 5px;
+		}
+	}
+	&[part~=col-2] { --uie-gtcw: 75px; }
+	&[part~=col-3] { --uie-gtcw: 60px; }
+	&[part~=col-4] { --uie-gtcw: 45px; }
+}
+
+/* === RADIO-LISTS: COMMON === */
+[part=color-grid],
+[part=color-swatch],
+[part=font-list],
+[part=position],
+[part=radio-list] {
+	& label { display: contents; }
+	& input {
+		appearance: none;
+		aspect-ratio: 1;
+		background: var(--_v, inherit);
+		block-size: 16px;
+		border: 1px solid ButtonBorder;
+		border-radius: 50%;
+		margin: 0 1ch 0 0;
+		padding: 0;
+		position: relative;
+		&:checked {
+			&::after {
+				background: var(--_c, #FFF);
+				content: "";
+				inset: 0;
+				position: absolute;
+				mask: var(--uie-check) no-repeat center / var(--uie-ms, 85%) 100%;
+				-webkit-mask: var(--uie-check) no-repeat center / var(--uie-ms, 85%) 100%;
+			}
+		}
+	}
+	& span { 
+		font-weight: 500;
+		display: flex;
+		grid-column: 2 / span 11;
+		justify-content: space-between;
+	}
+}
+
+/* === COLOR GRID === */
+[part=color-grid],
+[part=position] {
+	clip-path: inset(calc(var(--uie-gap) - 1px));
+	gap: 1px;
+	& input {
+		--uie-ms: 70%;
+		block-size: auto;
+		border: 0;
+		border-radius: 0px;
+		margin: 0;
+		&:focus-visible {
+			outline: 2px solid var(--_c, #FFF);
+			outline-offset: -2px;
+		}
+	}
+	& span { display: none; }
+}
+[part=color-grid] {
+	--uie-gtc: repeat(10, 1fr);
+}
+/* === COLOR SWATCH === */
+[part=color-swatch] {
+	& input {
+		--uie-ms: 70%;
+		block-size: 24px;
+	}	
+}
+
+/* === FONT LIST === */
+[part=font-list] span { font-family: var(--_v); }
+[part=font-list],
+[part=position],
+[part=radio-list] {
+	& input:checked {
+		background: var(--uie-accent);
+		border-color: var(--uie-accent);
+	}
+}
+
+/* === POSITION === */
+[part=position] {
+	--uie-gtc: repeat(3, 1fr);
+	--_v: var(--uie-gray-15);
+	width: 40%;
 }
