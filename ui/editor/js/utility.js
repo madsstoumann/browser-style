@@ -154,8 +154,8 @@ function createUIObject(obj) {
 			});
 		}
 		case "color-grid": {
-			return obj.values.flatMap(({ name, values }) => {
-				return values.split(" ").map((color, index) => {
+			return obj.values.flatMap(({ name, value }) => {
+				return value.split(" ").map((color, index) => {
 					const checkColor = contrast(color);
 					return {
 						textAfter: `${name}-${(index + 1) * 100}`,
@@ -170,17 +170,21 @@ function createUIObject(obj) {
 			});
 		}
 		case "color-swatch": {
-			return obj.values.map(({ name, value }) => {
-				const checkColor = contrast(value);
-				return {
-					textAfter: name,
-					input: {
-						...common,
-						style: `--_v:${value};--_c:${checkColor};`,
-						type: "radio",
-						value: prefix + value
-					}
-				};
+			return obj.values.flatMap(({ name, value }) => {
+				const values = value.split(" ");
+				return values.map((color) => { /* TODO: current, inherit, transparent */
+					const checkColor = contrast(color);
+					const label = values.length > 1 ? color : name;
+					return {
+						textAfter: label,
+						input: {
+							...common,
+							style: `--_v:${color};--_c:${checkColor};`,
+							type: "radio",
+							value: `${prefix}${label}`,
+						},
+					};
+				});
 			});
 		}
 		case "font-list": {
@@ -237,6 +241,22 @@ function createUIObject(obj) {
 				},
 			};
 		}
+		case "select": {
+			return {
+				text: obj.label,
+				ui: "select",
+				input: {
+					...common,
+					value: '',
+					options: obj.values.map((value) => {
+						return {
+							value: value,
+							text: value,
+						};
+					}),
+				},
+			};
+		}
 		case "switch": {
 			return {
 				textAfter: obj.label,
@@ -271,9 +291,11 @@ function generateUIList(prop) {
 		"color-grid",
 		"color-swatch",
 		"font-list",
+		"icon-group",
 		"position",
 		"radio-list",
 		"range",
+		"select",
 		"switch",
 	];
 	const defaultUI = prop.ui ? prop.ui : "list";

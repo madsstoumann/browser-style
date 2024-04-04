@@ -53,6 +53,7 @@ The `ui`-property can be one of the following types:
 - button-group¶ (default)
 - color-grid†
 - color-swatch
+- fieldset
 - font-list‡
 - position§
 - radio-list
@@ -116,8 +117,7 @@ If a `button-group` has a `values` -array with `name/value`-pairs, you can also 
 
 > § Requires **nine** values
 
-
-
+If ui is set to `fieldset`, all the sub-elements will be displayed in a single fieldset.
 
 ## Example:
 

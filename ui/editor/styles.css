@@ -204,7 +204,7 @@ fieldset:has([part="asset-image"]) {
 }
 [part~=group] {
 	--uie-gtc: repeat(8, 1fr);
-  gap: var(--uie-gap);
+	gap: var(--uie-gap);
 	&[name=layoutorganizer] { gap: 4px; }
 }
 [part=header] {
@@ -243,19 +243,19 @@ fieldset:has([part="asset-image"]) {
 	user-select: none;
 }
 [part=toggle] {
-  aspect-ratio: 1;
-  background: Canvas;
-  border-radius: 50%;
-  bottom: 1rem;
+	aspect-ratio: 1;
+	background: Canvas;
+	border-radius: 50%;
+	bottom: 1rem;
 	box-shadow: 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%);
-  display: grid;
+	display: grid;
 	filter: grayscale(1);
-  left: 50%;
-  padding: 1ch;
+	left: 50%;
+	padding: 1ch;
 	place-content: center;
-  pointer-events: all;
-  position: fixed;
-  translate: -50% 0;
+	pointer-events: all;
+	position: fixed;
+	translate: -50% 0;
 	transition: filter .5s ease-out;
 	width: 4rem;
 	& img { pointer-events: none; }
@@ -429,7 +429,7 @@ label:has([part="checkbox"]) {
 }
 [name=component-configure] {
 	grid-column: span 12;
-  padding: 0;
+	padding: 0;
 	& input { display: block; width: 100%; }
 	& label { grid-column: span 12; }
 	&[hidden] { display: none; }
@@ -568,14 +568,14 @@ textarea {
 
 /* === AVATAR === */
 [part~=avatar] {
-  all: unset;
-  aspect-ratio: 1;
+	all: unset;
+	aspect-ratio: 1;
 	background: var(--_bg);
 	block-size: 4em;
-  clip-path: inset(0% 0% round 50%);
+	clip-path: inset(0% 0% round 50%);
 	color: color-contrast(var(--_bg) vs #FFF, #000);
-  display: grid;
-  place-content: center;
+	display: grid;
+	place-content: center;
 	place-self: end;
 	user-select: none;
 	& * { grid-area: 1/ 1;}
@@ -610,26 +610,7 @@ textarea {
 	}
 }
 
-/* === RANGE === */
-label:has([type=range]) {
-	display: contents;
-	& input {
-		accent-color: var(--uie-accent);
-		appearance: none;
-		background: ButtonFace;
-		block-size: 3px;
-		border-radius: 3px;
-		grid-column: span 12;
-		margin-block: 6px;
-		touch-action: none;
-	}
-	& span {
-		display: flex;
-		font-weight: 500;
-		grid-column: span 12;
-		justify-content: space-between;
-	}
-}
+
 
 /* === RICHTEXT === */
 ui-richtext::part(toolbar) { font-size: 1rem; }
@@ -671,40 +652,7 @@ label:has([type=search]) {
 	}
 }
 
-/* === SWITCH === */
-label:has([role=switch]) {
-	display: contents;
-	& input {
-		appearance: none;
-		aspect-ratio: 1.8/1;
-		background: ButtonBorder;
-		border-radius: 16px;
-		block-size: 16px;
-		display: grid;
-		grid-column: span 2;
-		margin: 0px;
-		place-content: center start;
-		padding: 2px;
-		&::after {
-			background: Canvas;
-			border-radius: 50%;
-			content: "";
-			height: 12px;
-			transition: translate 0.2s ease-in-out;
-			width: 12px;
-		}
-		&:checked {
-			background: var(--uie-accent);
-			&::after { translate: 1em 0; }
-		}
-	}
-	& span {
-		display: flex;
-		font-weight: 500;
-		grid-column: span 10;
-		justify-content: space-between;
-	}
-}
+
 
 /* === TABS === */
 [part~=tabs] {
@@ -857,7 +805,7 @@ label:has([role=switch]) {
 /* === BUTTON GROUP === */
 [part~=button-group] {
 	gap: var(--uie-gap);
-  grid-template-columns: repeat(auto-fit, minmax(var(--uie-gtcw, 40px), 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(var(--uie-gtcw, 40px), 1fr));
 	& label {
 		background: var(--uie-gray-5);
 		border-radius: 3px;
@@ -971,4 +919,83 @@ label:has([role=switch]) {
 	--uie-gtc: repeat(3, 1fr);
 	--_v: var(--uie-gray-15);
 	width: 40%;
+}
+
+/* === RANGE === */
+label:has([type=range]) {
+	display: contents;
+	& input {
+		accent-color: var(--uie-accent);
+		appearance: none;
+		background: ButtonFace;
+		block-size: 3px;
+		border-radius: 3px;
+		grid-column: span 12;
+		margin-block: 6px;
+		touch-action: none;
+	}
+	& span {
+		display: flex;
+		font-weight: 500;
+		grid-column: span 12;
+		justify-content: space-between;
+	}
+}
+
+/* === SELECT === */
+[part=select] {
+	& label { grid-column: span 12; }
+	& select {
+		--_icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="%23B3B3B3" fill="none" stroke-linecap="round" stroke-linejoin="round"> <polyline points="6 9 12 15 18 9"/></svg>');
+		appearance: none;
+		background: var(--_icon) no-repeat right 0.5em center/2em;
+		border: 1px solid var(--uie-gray-15);
+		border-radius: 3px;
+		font-size: inherit;
+		grid-column: span 12;
+		padding: var(--uie-gap);
+		padding-inline-end: 2.5em;
+		width: 100%;
+	}
+	& span {
+		display: flex;
+		font-weight: 500;
+		grid-column: span 12;
+		justify-content: space-between;
+	}
+}
+
+/* === SWITCH === */
+label:has([role=switch]) {
+	display: contents;
+	& input {
+		appearance: none;
+		aspect-ratio: 1.8/1;
+		background: ButtonBorder;
+		border-radius: 16px;
+		block-size: 16px;
+		display: grid;
+		grid-column: span 2;
+		margin: 0px;
+		place-content: center start;
+		padding: 2px;
+		&::after {
+			background: Canvas;
+			border-radius: 50%;
+			content: "";
+			height: 12px;
+			transition: translate 0.2s ease-in-out;
+			width: 12px;
+		}
+		&:checked {
+			background: var(--uie-accent);
+			&::after { translate: 1em 0; }
+		}
+	}
+	& span {
+		display: flex;
+		font-weight: 500;
+		grid-column: span 10;
+		justify-content: space-between;
+	}
 }
