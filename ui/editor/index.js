@@ -12,8 +12,8 @@ import icons from './js/icons.js';
  * uiEditor
  * Highly customizable Web Component for CMS and UI development.
  * @author Mads Stoumann
- * @version 1.0.34
- * @summary 03-04-2024
+ * @version 1.0.35
+ * @summary 05-04-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -934,7 +934,7 @@ console.log(this.config);
 	setBreakpointLabel(node, breakpoint, value) {
 		const bpLabel = node.parentNode.querySelector(`var[data-bp="${breakpoint}"]`);
 		const isRadio = node.type === 'radio';
-		let useBreakpointAsLabel = node.type === 'checkbox';
+		let useBreakpointAsLabel = node.type === 'checkbox' || node.type === 'select-one' || node.type === 'select-multiple';
 
 		if (bpLabel) {
 			if (isRadio) {
@@ -963,6 +963,7 @@ console.log(this.config);
 
 		try {
 			const { classes, removed } = getClasses(active);
+			
 			classes.forEach(className => {
 				const classString = `${obj.colorscheme}${obj.breakpoint}${obj.range}${obj.selector}${obj.state}${obj.prefix}`;
 
@@ -974,7 +975,7 @@ console.log(this.config);
 				}
 			});
 
-			if (!classes.includes(value)) {
+			if (value !== '' && !classes.includes(value)) {
 				active.classList.add(value);
 			}
 
@@ -985,7 +986,7 @@ console.log(this.config);
 			});
 
 		} catch (error) {
-			console.error('An error occurred while setting utility class:', error.message);
+			console.error('An error occurred while setting the class:', error.message);
 		}
 	}
 
@@ -1120,7 +1121,17 @@ console.log(this.config);
 
 			classObjs.forEach(classObj => {
 				let value = classObj.value;
-				let input = elements.find(element => element.value === value);
+				// let input = elements.find(element => element.value === value);
+				let input = elements.find(element => {
+					if (element.tagName.toLowerCase() === 'select') {
+						for (let option of element.options) {
+							if (option.value === value) return true;
+						}
+						return false;
+					} else {
+						return element.value === value;
+					}
+				});
 
 				if (!input) {
 					const [prefix, ...rest] = classObj.value.split(config.app.prefixDelimiter);

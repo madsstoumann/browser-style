@@ -510,6 +510,7 @@ fieldset {
 	margin: 0;
 	padding: var(--uie-gap);
 	row-gap: var(--uie-gap);
+	/* row-gap: 4px; */
 	word-break: break-word;
 	&:empty { display: none; }
 }
@@ -953,8 +954,8 @@ label:has([type=range]) {
 		border-radius: 3px;
 		font-size: inherit;
 		grid-column: span 12;
-		padding: var(--uie-gap);
-		padding-inline-end: 2.5em;
+		margin-block-start: 6px;
+		padding: var(--uie-gap) 2.5em var(--uie-gap) var(--uie-gap);
 		width: 100%;
 	}
 	& span {

@@ -216,9 +216,10 @@ export function renderOutput(name, text) {
 }
 
 export function renderSelect(obj) {
+	const breakpoints = globalBreakpoints.length ? renderBreakpoints(globalBreakpoints) : '';
 	const input = obj.input ? renderAttributes(obj.input) : '';
 	const label = obj.label ? renderAttributes(obj.label) : '';
-	const text = obj.text ? `<span>${obj.text}</span>` : '';
+	const text = obj.text ? `<span>${obj.text}${breakpoints}</span>` : '';
 	const textAfter = obj.textAfter ? `<span>${obj.textAfter}</span>` : '';
 	const hr = (option) => (option.break ? '<hr>' : '');
 	const optionsHTML = obj.input.options.map(option => {

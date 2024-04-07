@@ -139,6 +139,9 @@
                       {
                         "textAfter": "Container",
                         "input": {
+                          "data-breakpoints": [
+                            "lg"
+                          ],
                           "name": "container",
                           "role": "switch",
                           "type": "checkbox",
@@ -3476,6 +3479,11 @@
                   {
                     "text": "Margin",
                     "input": {
+                      "data-breakpoints": [
+                        "md",
+                        "lg",
+                        "xl"
+                      ],
                       "name": "margin",
                       "data-prefix": "m",
                       "data-values": [
@@ -3521,6 +3529,11 @@
                   {
                     "text": "Margin Block",
                     "input": {
+                      "data-breakpoints": [
+                        "md",
+                        "lg",
+                        "xl"
+                      ],
                       "name": "margin-block",
                       "data-prefix": "my",
                       "data-values": [
@@ -3566,6 +3579,11 @@
                   {
                     "text": "Margin Inline",
                     "input": {
+                      "data-breakpoints": [
+                        "md",
+                        "lg",
+                        "xl"
+                      ],
                       "name": "margin-inline",
                       "data-prefix": "mx",
                       "data-values": [
@@ -4281,6 +4299,10 @@
                       {
                         "text": "Font Size",
                         "input": {
+                          "data-breakpoints": [
+                            "lg",
+                            "xl"
+                          ],
                           "name": "font-size",
                           "data-prefix": "text",
                           "data-values": [
@@ -6206,6 +6228,13 @@
                   {
                     "textAfter": "slate-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f1f5f9;--_c:#000;",
                       "type": "radio",
@@ -6215,6 +6244,13 @@
                   {
                     "textAfter": "slate-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e2e8f0;--_c:#000;",
                       "type": "radio",
@@ -6224,6 +6260,13 @@
                   {
                     "textAfter": "slate-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#cbd5e1;--_c:#000;",
                       "type": "radio",
@@ -6233,6 +6276,13 @@
                   {
                     "textAfter": "slate-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#94a3b8;--_c:#000;",
                       "type": "radio",
@@ -6242,6 +6292,13 @@
                   {
                     "textAfter": "slate-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#64748b;--_c:#FFF;",
                       "type": "radio",
@@ -6251,6 +6308,13 @@
                   {
                     "textAfter": "slate-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#475569;--_c:#FFF;",
                       "type": "radio",
@@ -6260,6 +6324,13 @@
                   {
                     "textAfter": "slate-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#334155;--_c:#FFF;",
                       "type": "radio",
@@ -6269,6 +6340,13 @@
                   {
                     "textAfter": "slate-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1e293b;--_c:#FFF;",
                       "type": "radio",
@@ -6278,6 +6356,13 @@
                   {
                     "textAfter": "slate-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0f172a;--_c:#FFF;",
                       "type": "radio",
@@ -6287,6 +6372,13 @@
                   {
                     "textAfter": "slate-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#020617;--_c:#FFF;",
                       "type": "radio",
@@ -6296,6 +6388,13 @@
                   {
                     "textAfter": "gray-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f3f4f6;--_c:#000;",
                       "type": "radio",
@@ -6305,6 +6404,13 @@
                   {
                     "textAfter": "gray-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e5e7eb;--_c:#000;",
                       "type": "radio",
@@ -6314,6 +6420,13 @@
                   {
                     "textAfter": "gray-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d1d5db;--_c:#000;",
                       "type": "radio",
@@ -6323,6 +6436,13 @@
                   {
                     "textAfter": "gray-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#9ca3af;--_c:#000;",
                       "type": "radio",
@@ -6332,6 +6452,13 @@
                   {
                     "textAfter": "gray-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#6b7280;--_c:#FFF;",
                       "type": "radio",
@@ -6341,6 +6468,13 @@
                   {
                     "textAfter": "gray-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4b5563;--_c:#FFF;",
                       "type": "radio",
@@ -6350,6 +6484,13 @@
                   {
                     "textAfter": "gray-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#374155;--_c:#FFF;",
                       "type": "radio",
@@ -6359,6 +6500,13 @@
                   {
                     "textAfter": "gray-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1f2937;--_c:#FFF;",
                       "type": "radio",
@@ -6368,6 +6516,13 @@
                   {
                     "textAfter": "gray-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#111827;--_c:#FFF;",
                       "type": "radio",
@@ -6377,6 +6532,13 @@
                   {
                     "textAfter": "gray-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#030712;--_c:#FFF;",
                       "type": "radio",
@@ -6386,6 +6548,13 @@
                   {
                     "textAfter": "zinc-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f4f4f5;--_c:#000;",
                       "type": "radio",
@@ -6395,6 +6564,13 @@
                   {
                     "textAfter": "zinc-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e4e4e7;--_c:#000;",
                       "type": "radio",
@@ -6404,6 +6580,13 @@
                   {
                     "textAfter": "zinc-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d4d4d8;--_c:#000;",
                       "type": "radio",
@@ -6413,6 +6596,13 @@
                   {
                     "textAfter": "zinc-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a1a1aa;--_c:#000;",
                       "type": "radio",
@@ -6422,6 +6612,13 @@
                   {
                     "textAfter": "zinc-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#71717a;--_c:#FFF;",
                       "type": "radio",
@@ -6431,6 +6628,13 @@
                   {
                     "textAfter": "zinc-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#52525b;--_c:#FFF;",
                       "type": "radio",
@@ -6440,6 +6644,13 @@
                   {
                     "textAfter": "zinc-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#3f3f46;--_c:#FFF;",
                       "type": "radio",
@@ -6449,6 +6660,13 @@
                   {
                     "textAfter": "zinc-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#27272a;--_c:#FFF;",
                       "type": "radio",
@@ -6458,6 +6676,13 @@
                   {
                     "textAfter": "zinc-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#18181b;--_c:#FFF;",
                       "type": "radio",
@@ -6467,6 +6692,13 @@
                   {
                     "textAfter": "zinc-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#090b0b;--_c:#FFF;",
                       "type": "radio",
@@ -6476,6 +6708,13 @@
                   {
                     "textAfter": "neutral-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f5f5f5;--_c:#000;",
                       "type": "radio",
@@ -6485,6 +6724,13 @@
                   {
                     "textAfter": "neutral-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e5e5e5;--_c:#000;",
                       "type": "radio",
@@ -6494,6 +6740,13 @@
                   {
                     "textAfter": "neutral-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d4d4d4;--_c:#000;",
                       "type": "radio",
@@ -6503,6 +6756,13 @@
                   {
                     "textAfter": "neutral-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a3a3a3;--_c:#000;",
                       "type": "radio",
@@ -6512,6 +6772,13 @@
                   {
                     "textAfter": "neutral-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#737373;--_c:#FFF;",
                       "type": "radio",
@@ -6521,6 +6788,13 @@
                   {
                     "textAfter": "neutral-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#525252;--_c:#FFF;",
                       "type": "radio",
@@ -6530,6 +6804,13 @@
                   {
                     "textAfter": "neutral-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#404040;--_c:#FFF;",
                       "type": "radio",
@@ -6539,6 +6820,13 @@
                   {
                     "textAfter": "neutral-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#262626;--_c:#FFF;",
                       "type": "radio",
@@ -6548,6 +6836,13 @@
                   {
                     "textAfter": "neutral-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#171717;--_c:#FFF;",
                       "type": "radio",
@@ -6557,6 +6852,13 @@
                   {
                     "textAfter": "neutral-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0a0a0a;--_c:#FFF;",
                       "type": "radio",
@@ -6566,6 +6868,13 @@
                   {
                     "textAfter": "stone-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f5f5f4;--_c:#000;",
                       "type": "radio",
@@ -6575,6 +6884,13 @@
                   {
                     "textAfter": "stone-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e7e5e4;--_c:#000;",
                       "type": "radio",
@@ -6584,6 +6900,13 @@
                   {
                     "textAfter": "stone-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d6d3d1;--_c:#000;",
                       "type": "radio",
@@ -6593,6 +6916,13 @@
                   {
                     "textAfter": "stone-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a8a29e;--_c:#000;",
                       "type": "radio",
@@ -6602,6 +6932,13 @@
                   {
                     "textAfter": "stone-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#78716c;--_c:#FFF;",
                       "type": "radio",
@@ -6611,6 +6948,13 @@
                   {
                     "textAfter": "stone-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#57534e;--_c:#FFF;",
                       "type": "radio",
@@ -6620,6 +6964,13 @@
                   {
                     "textAfter": "stone-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#443c3c;--_c:#FFF;",
                       "type": "radio",
@@ -6629,6 +6980,13 @@
                   {
                     "textAfter": "stone-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#292525;--_c:#FFF;",
                       "type": "radio",
@@ -6638,6 +6996,13 @@
                   {
                     "textAfter": "stone-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1c1917;--_c:#FFF;",
                       "type": "radio",
@@ -6647,6 +7012,13 @@
                   {
                     "textAfter": "stone-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0c0a09;--_c:#FFF;",
                       "type": "radio",
@@ -6656,6 +7028,13 @@
                   {
                     "textAfter": "red-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fee2e2;--_c:#000;",
                       "type": "radio",
@@ -6665,6 +7044,13 @@
                   {
                     "textAfter": "red-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fecccc;--_c:#000;",
                       "type": "radio",
@@ -6674,6 +7060,13 @@
                   {
                     "textAfter": "red-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fca5a5;--_c:#000;",
                       "type": "radio",
@@ -6683,6 +7076,13 @@
                   {
                     "textAfter": "red-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f87171;--_c:#000;",
                       "type": "radio",
@@ -6692,6 +7092,13 @@
                   {
                     "textAfter": "red-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ef4444;--_c:#FFF;",
                       "type": "radio",
@@ -6701,6 +7108,13 @@
                   {
                     "textAfter": "red-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#dc2626;--_c:#FFF;",
                       "type": "radio",
@@ -6710,6 +7124,13 @@
                   {
                     "textAfter": "red-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#b91919;--_c:#FFF;",
                       "type": "radio",
@@ -6719,6 +7140,13 @@
                   {
                     "textAfter": "red-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#991b1b;--_c:#FFF;",
                       "type": "radio",
@@ -6728,6 +7156,13 @@
                   {
                     "textAfter": "red-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#7f1d1d;--_c:#FFF;",
                       "type": "radio",
@@ -6737,6 +7172,13 @@
                   {
                     "textAfter": "red-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#450a0a;--_c:#FFF;",
                       "type": "radio",
@@ -6746,6 +7188,13 @@
                   {
                     "textAfter": "orange-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ffedd5;--_c:#000;",
                       "type": "radio",
@@ -6755,6 +7204,13 @@
                   {
                     "textAfter": "orange-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fed7aa;--_c:#000;",
                       "type": "radio",
@@ -6764,6 +7220,13 @@
                   {
                     "textAfter": "orange-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fdba74;--_c:#000;",
                       "type": "radio",
@@ -6773,6 +7236,13 @@
                   {
                     "textAfter": "orange-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fb923c;--_c:#000;",
                       "type": "radio",
@@ -6782,6 +7252,13 @@
                   {
                     "textAfter": "orange-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f97316;--_c:#000;",
                       "type": "radio",
@@ -6791,6 +7268,13 @@
                   {
                     "textAfter": "orange-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ea580c;--_c:#FFF;",
                       "type": "radio",
@@ -6800,6 +7284,13 @@
                   {
                     "textAfter": "orange-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#c2410c;--_c:#FFF;",
                       "type": "radio",
@@ -6809,6 +7300,13 @@
                   {
                     "textAfter": "orange-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#9a3412;--_c:#FFF;",
                       "type": "radio",
@@ -6818,6 +7316,13 @@
                   {
                     "textAfter": "orange-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#7c2d12;--_c:#FFF;",
                       "type": "radio",
@@ -6827,6 +7332,13 @@
                   {
                     "textAfter": "orange-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#431407;--_c:#FFF;",
                       "type": "radio",
@@ -6836,6 +7348,13 @@
                   {
                     "textAfter": "amber-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fef3c7;--_c:#000;",
                       "type": "radio",
@@ -6845,6 +7364,13 @@
                   {
                     "textAfter": "amber-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fde68a;--_c:#000;",
                       "type": "radio",
@@ -6854,6 +7380,13 @@
                   {
                     "textAfter": "amber-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fcd34d;--_c:#000;",
                       "type": "radio",
@@ -6863,6 +7396,13 @@
                   {
                     "textAfter": "amber-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fbbf24;--_c:#000;",
                       "type": "radio",
@@ -6872,6 +7412,13 @@
                   {
                     "textAfter": "amber-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f59e0b;--_c:#000;",
                       "type": "radio",
@@ -6881,6 +7428,13 @@
                   {
                     "textAfter": "amber-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d97706;--_c:#000;",
                       "type": "radio",
@@ -6890,6 +7444,13 @@
                   {
                     "textAfter": "amber-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#b45309;--_c:#FFF;",
                       "type": "radio",
@@ -6899,6 +7460,13 @@
                   {
                     "textAfter": "amber-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#92400e;--_c:#FFF;",
                       "type": "radio",
@@ -6908,6 +7476,13 @@
                   {
                     "textAfter": "amber-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#78350f;--_c:#FFF;",
                       "type": "radio",
@@ -6917,6 +7492,13 @@
                   {
                     "textAfter": "amber-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#451a03;--_c:#FFF;",
                       "type": "radio",
@@ -6926,6 +7508,13 @@
                   {
                     "textAfter": "yellow-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fef9c3;--_c:#000;",
                       "type": "radio",
@@ -6935,6 +7524,13 @@
                   {
                     "textAfter": "yellow-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fef088;--_c:#000;",
                       "type": "radio",
@@ -6944,6 +7540,13 @@
                   {
                     "textAfter": "yellow-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fde047;--_c:#000;",
                       "type": "radio",
@@ -6953,6 +7556,13 @@
                   {
                     "textAfter": "yellow-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fac415;--_c:#000;",
                       "type": "radio",
@@ -6962,6 +7572,13 @@
                   {
                     "textAfter": "yellow-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#eab308;--_c:#000;",
                       "type": "radio",
@@ -6971,6 +7588,13 @@
                   {
                     "textAfter": "yellow-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ca8a04;--_c:#000;",
                       "type": "radio",
@@ -6980,6 +7604,13 @@
                   {
                     "textAfter": "yellow-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a16207;--_c:#FFF;",
                       "type": "radio",
@@ -6989,6 +7620,13 @@
                   {
                     "textAfter": "yellow-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#854d0e;--_c:#FFF;",
                       "type": "radio",
@@ -6998,6 +7636,13 @@
                   {
                     "textAfter": "yellow-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#713f12;--_c:#FFF;",
                       "type": "radio",
@@ -7007,6 +7652,13 @@
                   {
                     "textAfter": "yellow-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#422006;--_c:#FFF;",
                       "type": "radio",
@@ -7016,6 +7668,13 @@
                   {
                     "textAfter": "lime-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ecfccb;--_c:#000;",
                       "type": "radio",
@@ -7025,6 +7684,13 @@
                   {
                     "textAfter": "lime-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d9f99d;--_c:#000;",
                       "type": "radio",
@@ -7034,6 +7700,13 @@
                   {
                     "textAfter": "lime-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#bee664;--_c:#000;",
                       "type": "radio",
@@ -7043,6 +7716,13 @@
                   {
                     "textAfter": "lime-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a3e635;--_c:#000;",
                       "type": "radio",
@@ -7052,6 +7732,13 @@
                   {
                     "textAfter": "lime-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#84cc16;--_c:#000;",
                       "type": "radio",
@@ -7061,6 +7748,13 @@
                   {
                     "textAfter": "lime-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#65a30d;--_c:#000;",
                       "type": "radio",
@@ -7070,6 +7764,13 @@
                   {
                     "textAfter": "lime-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4d7c0f;--_c:#FFF;",
                       "type": "radio",
@@ -7079,6 +7780,13 @@
                   {
                     "textAfter": "lime-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#3f6214;--_c:#FFF;",
                       "type": "radio",
@@ -7088,6 +7796,13 @@
                   {
                     "textAfter": "lime-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#365314;--_c:#FFF;",
                       "type": "radio",
@@ -7097,6 +7812,13 @@
                   {
                     "textAfter": "lime-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1a2e05;--_c:#FFF;",
                       "type": "radio",
@@ -7106,6 +7828,13 @@
                   {
                     "textAfter": "green-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#dcfce7;--_c:#000;",
                       "type": "radio",
@@ -7115,6 +7844,13 @@
                   {
                     "textAfter": "green-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#bbf7d0;--_c:#000;",
                       "type": "radio",
@@ -7124,6 +7860,13 @@
                   {
                     "textAfter": "green-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#86efac;--_c:#000;",
                       "type": "radio",
@@ -7133,6 +7876,13 @@
                   {
                     "textAfter": "green-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4ade80;--_c:#000;",
                       "type": "radio",
@@ -7142,6 +7892,13 @@
                   {
                     "textAfter": "green-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#22c55e;--_c:#000;",
                       "type": "radio",
@@ -7151,6 +7908,13 @@
                   {
                     "textAfter": "green-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#16a34a;--_c:#FFF;",
                       "type": "radio",
@@ -7160,6 +7924,13 @@
                   {
                     "textAfter": "green-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#118f3e;--_c:#FFF;",
                       "type": "radio",
@@ -7169,6 +7940,13 @@
                   {
                     "textAfter": "green-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#156c36;--_c:#FFF;",
                       "type": "radio",
@@ -7178,6 +7956,13 @@
                   {
                     "textAfter": "green-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#14532d;--_c:#FFF;",
                       "type": "radio",
@@ -7187,6 +7972,13 @@
                   {
                     "textAfter": "green-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#052e16;--_c:#FFF;",
                       "type": "radio",
@@ -7196,6 +7988,13 @@
                   {
                     "textAfter": "emerald-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d1fae5;--_c:#000;",
                       "type": "radio",
@@ -7205,6 +8004,13 @@
                   {
                     "textAfter": "emerald-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a7f3d0;--_c:#000;",
                       "type": "radio",
@@ -7214,6 +8020,13 @@
                   {
                     "textAfter": "emerald-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#6ee7b7;--_c:#000;",
                       "type": "radio",
@@ -7223,6 +8036,13 @@
                   {
                     "textAfter": "emerald-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#34d399;--_c:#000;",
                       "type": "radio",
@@ -7232,6 +8052,13 @@
                   {
                     "textAfter": "emerald-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#10b981;--_c:#000;",
                       "type": "radio",
@@ -7241,6 +8068,13 @@
                   {
                     "textAfter": "emerald-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#059669;--_c:#FFF;",
                       "type": "radio",
@@ -7250,6 +8084,13 @@
                   {
                     "textAfter": "emerald-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#047857;--_c:#FFF;",
                       "type": "radio",
@@ -7259,6 +8100,13 @@
                   {
                     "textAfter": "emerald-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#065f46;--_c:#FFF;",
                       "type": "radio",
@@ -7268,6 +8116,13 @@
                   {
                     "textAfter": "emerald-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#064e3b;--_c:#FFF;",
                       "type": "radio",
@@ -7277,6 +8132,13 @@
                   {
                     "textAfter": "emerald-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#022c22;--_c:#FFF;",
                       "type": "radio",
@@ -7286,6 +8148,13 @@
                   {
                     "textAfter": "teal-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ccfbf1;--_c:#000;",
                       "type": "radio",
@@ -7295,6 +8164,13 @@
                   {
                     "textAfter": "teal-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#99f6e4;--_c:#000;",
                       "type": "radio",
@@ -7304,6 +8180,13 @@
                   {
                     "textAfter": "teal-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#5eead4;--_c:#000;",
                       "type": "radio",
@@ -7313,6 +8196,13 @@
                   {
                     "textAfter": "teal-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#2dd4bf;--_c:#000;",
                       "type": "radio",
@@ -7322,6 +8212,13 @@
                   {
                     "textAfter": "teal-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#14b8a6;--_c:#000;",
                       "type": "radio",
@@ -7331,6 +8228,13 @@
                   {
                     "textAfter": "teal-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0d947f;--_c:#FFF;",
                       "type": "radio",
@@ -7340,6 +8244,13 @@
                   {
                     "textAfter": "teal-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0e7267;--_c:#FFF;",
                       "type": "radio",
@@ -7349,6 +8260,13 @@
                   {
                     "textAfter": "teal-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#117a6b;--_c:#FFF;",
                       "type": "radio",
@@ -7358,6 +8276,13 @@
                   {
                     "textAfter": "teal-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#133c3a;--_c:#FFF;",
                       "type": "radio",
@@ -7367,6 +8292,13 @@
                   {
                     "textAfter": "teal-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#042f2e;--_c:#FFF;",
                       "type": "radio",
@@ -7376,6 +8308,13 @@
                   {
                     "textAfter": "cyan-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#cffafe;--_c:#000;",
                       "type": "radio",
@@ -7385,6 +8324,13 @@
                   {
                     "textAfter": "cyan-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a5f3fc;--_c:#000;",
                       "type": "radio",
@@ -7394,6 +8340,13 @@
                   {
                     "textAfter": "cyan-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#67e8f9;--_c:#000;",
                       "type": "radio",
@@ -7403,6 +8356,13 @@
                   {
                     "textAfter": "cyan-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#22d3ee;--_c:#000;",
                       "type": "radio",
@@ -7412,6 +8372,13 @@
                   {
                     "textAfter": "cyan-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#06b6d4;--_c:#000;",
                       "type": "radio",
@@ -7421,6 +8388,13 @@
                   {
                     "textAfter": "cyan-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0891b2;--_c:#FFF;",
                       "type": "radio",
@@ -7430,6 +8404,13 @@
                   {
                     "textAfter": "cyan-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0e7490;--_c:#FFF;",
                       "type": "radio",
@@ -7439,6 +8420,13 @@
                   {
                     "textAfter": "cyan-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#156778;--_c:#FFF;",
                       "type": "radio",
@@ -7448,6 +8436,13 @@
                   {
                     "textAfter": "cyan-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#164e63;--_c:#FFF;",
                       "type": "radio",
@@ -7457,6 +8452,13 @@
                   {
                     "textAfter": "cyan-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#083344;--_c:#FFF;",
                       "type": "radio",
@@ -7466,6 +8468,13 @@
                   {
                     "textAfter": "sky-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e0f2fe;--_c:#000;",
                       "type": "radio",
@@ -7475,6 +8484,13 @@
                   {
                     "textAfter": "sky-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#bae6fd;--_c:#000;",
                       "type": "radio",
@@ -7484,6 +8500,13 @@
                   {
                     "textAfter": "sky-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#7dd3fc;--_c:#000;",
                       "type": "radio",
@@ -7493,6 +8516,13 @@
                   {
                     "textAfter": "sky-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#38bdf8;--_c:#000;",
                       "type": "radio",
@@ -7502,6 +8532,13 @@
                   {
                     "textAfter": "sky-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0ea5e9;--_c:#000;",
                       "type": "radio",
@@ -7511,6 +8548,13 @@
                   {
                     "textAfter": "sky-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0284c7;--_c:#FFF;",
                       "type": "radio",
@@ -7520,6 +8564,13 @@
                   {
                     "textAfter": "sky-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0369a1;--_c:#FFF;",
                       "type": "radio",
@@ -7529,6 +8580,13 @@
                   {
                     "textAfter": "sky-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#075985;--_c:#FFF;",
                       "type": "radio",
@@ -7538,6 +8596,13 @@
                   {
                     "textAfter": "sky-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#0c4a6e;--_c:#FFF;",
                       "type": "radio",
@@ -7547,6 +8612,13 @@
                   {
                     "textAfter": "sky-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#082f4e;--_c:#FFF;",
                       "type": "radio",
@@ -7556,6 +8628,13 @@
                   {
                     "textAfter": "blue-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#dbeaff;--_c:#000;",
                       "type": "radio",
@@ -7565,6 +8644,13 @@
                   {
                     "textAfter": "blue-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#bfc7fc;--_c:#000;",
                       "type": "radio",
@@ -7574,6 +8660,13 @@
                   {
                     "textAfter": "blue-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#93c5fd;--_c:#000;",
                       "type": "radio",
@@ -7583,6 +8676,13 @@
                   {
                     "textAfter": "blue-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#60a5fa;--_c:#000;",
                       "type": "radio",
@@ -7592,6 +8692,13 @@
                   {
                     "textAfter": "blue-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#3c82eb;--_c:#FFF;",
                       "type": "radio",
@@ -7601,6 +8708,13 @@
                   {
                     "textAfter": "blue-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#2563eb;--_c:#FFF;",
                       "type": "radio",
@@ -7610,6 +8724,13 @@
                   {
                     "textAfter": "blue-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1d4ed8;--_c:#FFF;",
                       "type": "radio",
@@ -7619,6 +8740,13 @@
                   {
                     "textAfter": "blue-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1e40af;--_c:#FFF;",
                       "type": "radio",
@@ -7628,6 +8756,13 @@
                   {
                     "textAfter": "blue-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1e3a8a;--_c:#FFF;",
                       "type": "radio",
@@ -7637,6 +8772,13 @@
                   {
                     "textAfter": "blue-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#172554;--_c:#FFF;",
                       "type": "radio",
@@ -7646,6 +8788,13 @@
                   {
                     "textAfter": "indigo-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e0e7ff;--_c:#000;",
                       "type": "radio",
@@ -7655,6 +8804,13 @@
                   {
                     "textAfter": "indigo-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#c7d2fe;--_c:#000;",
                       "type": "radio",
@@ -7664,6 +8820,13 @@
                   {
                     "textAfter": "indigo-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a5b4fc;--_c:#000;",
                       "type": "radio",
@@ -7673,6 +8836,13 @@
                   {
                     "textAfter": "indigo-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#8190f7;--_c:#000;",
                       "type": "radio",
@@ -7682,6 +8852,13 @@
                   {
                     "textAfter": "indigo-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#6376f1;--_c:#FFF;",
                       "type": "radio",
@@ -7691,6 +8868,13 @@
                   {
                     "textAfter": "indigo-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4f46e5;--_c:#FFF;",
                       "type": "radio",
@@ -7700,6 +8884,13 @@
                   {
                     "textAfter": "indigo-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4130e3;--_c:#FFF;",
                       "type": "radio",
@@ -7709,6 +8900,13 @@
                   {
                     "textAfter": "indigo-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#2b2b45;--_c:#FFF;",
                       "type": "radio",
@@ -7718,6 +8916,13 @@
                   {
                     "textAfter": "indigo-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#2b2c59;--_c:#FFF;",
                       "type": "radio",
@@ -7727,6 +8932,13 @@
                   {
                     "textAfter": "indigo-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#1e1e43;--_c:#FFF;",
                       "type": "radio",
@@ -7736,6 +8948,13 @@
                   {
                     "textAfter": "violet-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ede9fe;--_c:#000;",
                       "type": "radio",
@@ -7745,6 +8964,13 @@
                   {
                     "textAfter": "violet-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ddd6fe;--_c:#000;",
                       "type": "radio",
@@ -7754,6 +8980,13 @@
                   {
                     "textAfter": "violet-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#c4b5fd;--_c:#000;",
                       "type": "radio",
@@ -7763,6 +8996,13 @@
                   {
                     "textAfter": "violet-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a787fa;--_c:#000;",
                       "type": "radio",
@@ -7772,6 +9012,13 @@
                   {
                     "textAfter": "violet-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#8b5cf6;--_c:#FFF;",
                       "type": "radio",
@@ -7781,6 +9028,13 @@
                   {
                     "textAfter": "violet-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#7c3aed;--_c:#FFF;",
                       "type": "radio",
@@ -7790,6 +9044,13 @@
                   {
                     "textAfter": "violet-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#6d28d9;--_c:#FFF;",
                       "type": "radio",
@@ -7799,6 +9060,13 @@
                   {
                     "textAfter": "violet-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#5b21b6;--_c:#FFF;",
                       "type": "radio",
@@ -7808,6 +9076,13 @@
                   {
                     "textAfter": "violet-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4d1d9e;--_c:#FFF;",
                       "type": "radio",
@@ -7817,6 +9092,13 @@
                   {
                     "textAfter": "violet-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#2e1b4b;--_c:#FFF;",
                       "type": "radio",
@@ -7826,6 +9108,13 @@
                   {
                     "textAfter": "purple-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f3e8ff;--_c:#000;",
                       "type": "radio",
@@ -7835,6 +9124,13 @@
                   {
                     "textAfter": "purple-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e9d5ff;--_c:#000;",
                       "type": "radio",
@@ -7844,6 +9140,13 @@
                   {
                     "textAfter": "purple-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d8b4fe;--_c:#000;",
                       "type": "radio",
@@ -7853,6 +9156,13 @@
                   {
                     "textAfter": "purple-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#c084fc;--_c:#000;",
                       "type": "radio",
@@ -7862,6 +9172,13 @@
                   {
                     "textAfter": "purple-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a855f7;--_c:#000;",
                       "type": "radio",
@@ -7871,6 +9188,13 @@
                   {
                     "textAfter": "purple-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#9333ea;--_c:#FFF;",
                       "type": "radio",
@@ -7880,6 +9204,13 @@
                   {
                     "textAfter": "purple-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#7d21cc;--_c:#FFF;",
                       "type": "radio",
@@ -7889,6 +9220,13 @@
                   {
                     "textAfter": "purple-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#6b1d99;--_c:#FFF;",
                       "type": "radio",
@@ -7898,6 +9236,13 @@
                   {
                     "textAfter": "purple-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#581d75;--_c:#FFF;",
                       "type": "radio",
@@ -7907,6 +9252,13 @@
                   {
                     "textAfter": "purple-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#3b065e;--_c:#FFF;",
                       "type": "radio",
@@ -7916,6 +9268,13 @@
                   {
                     "textAfter": "fuchsia-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fadeff;--_c:#000;",
                       "type": "radio",
@@ -7925,6 +9284,13 @@
                   {
                     "textAfter": "fuchsia-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f5d0fe;--_c:#000;",
                       "type": "radio",
@@ -7934,6 +9300,13 @@
                   {
                     "textAfter": "fuchsia-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f0abfc;--_c:#000;",
                       "type": "radio",
@@ -7943,6 +9316,13 @@
                   {
                     "textAfter": "fuchsia-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e879f9;--_c:#000;",
                       "type": "radio",
@@ -7952,6 +9332,13 @@
                   {
                     "textAfter": "fuchsia-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#d953a7;--_c:#000;",
                       "type": "radio",
@@ -7961,6 +9348,13 @@
                   {
                     "textAfter": "fuchsia-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#c52770;--_c:#FFF;",
                       "type": "radio",
@@ -7970,6 +9364,13 @@
                   {
                     "textAfter": "fuchsia-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#a61b56;--_c:#FFF;",
                       "type": "radio",
@@ -7979,6 +9380,13 @@
                   {
                     "textAfter": "fuchsia-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#862539;--_c:#FFF;",
                       "type": "radio",
@@ -7988,6 +9396,13 @@
                   {
                     "textAfter": "fuchsia-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#701c49;--_c:#FFF;",
                       "type": "radio",
@@ -7997,6 +9412,13 @@
                   {
                     "textAfter": "fuchsia-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4a0433;--_c:#FFF;",
                       "type": "radio",
@@ -8006,6 +9428,13 @@
                   {
                     "textAfter": "pink-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fce7f3;--_c:#000;",
                       "type": "radio",
@@ -8015,6 +9444,13 @@
                   {
                     "textAfter": "pink-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fbcee8;--_c:#000;",
                       "type": "radio",
@@ -8024,6 +9460,13 @@
                   {
                     "textAfter": "pink-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f9a8d4;--_c:#000;",
                       "type": "radio",
@@ -8033,6 +9476,13 @@
                   {
                     "textAfter": "pink-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#f472b6;--_c:#000;",
                       "type": "radio",
@@ -8042,6 +9492,13 @@
                   {
                     "textAfter": "pink-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ec4899;--_c:#000;",
                       "type": "radio",
@@ -8051,6 +9508,13 @@
                   {
                     "textAfter": "pink-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#db2777;--_c:#FFF;",
                       "type": "radio",
@@ -8060,6 +9524,13 @@
                   {
                     "textAfter": "pink-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#be185d;--_c:#FFF;",
                       "type": "radio",
@@ -8069,6 +9540,13 @@
                   {
                     "textAfter": "pink-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#9f1239;--_c:#FFF;",
                       "type": "radio",
@@ -8078,6 +9556,13 @@
                   {
                     "textAfter": "pink-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#832029;--_c:#FFF;",
                       "type": "radio",
@@ -8087,6 +9572,13 @@
                   {
                     "textAfter": "pink-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#500724;--_c:#FFF;",
                       "type": "radio",
@@ -8096,6 +9588,13 @@
                   {
                     "textAfter": "rose-100",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ffe4e6;--_c:#000;",
                       "type": "radio",
@@ -8105,6 +9604,13 @@
                   {
                     "textAfter": "rose-200",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fed1d3;--_c:#000;",
                       "type": "radio",
@@ -8114,6 +9620,13 @@
                   {
                     "textAfter": "rose-300",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fda4af;--_c:#000;",
                       "type": "radio",
@@ -8123,6 +9636,13 @@
                   {
                     "textAfter": "rose-400",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#fb71a9;--_c:#000;",
                       "type": "radio",
@@ -8132,6 +9652,13 @@
                   {
                     "textAfter": "rose-500",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#ec4879;--_c:#FFF;",
                       "type": "radio",
@@ -8141,6 +9668,13 @@
                   {
                     "textAfter": "rose-600",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#e12948;--_c:#FFF;",
                       "type": "radio",
@@ -8150,6 +9684,13 @@
                   {
                     "textAfter": "rose-700",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#be122b;--_c:#FFF;",
                       "type": "radio",
@@ -8159,6 +9700,13 @@
                   {
                     "textAfter": "rose-800",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#9d1226;--_c:#FFF;",
                       "type": "radio",
@@ -8168,6 +9716,13 @@
                   {
                     "textAfter": "rose-900",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#88191e;--_c:#FFF;",
                       "type": "radio",
@@ -8177,6 +9732,13 @@
                   {
                     "textAfter": "rose-1000",
                     "input": {
+                      "data-breakpoints": [
+                        "sm",
+                        "md",
+                        "lg",
+                        "xl",
+                        "xxl"
+                      ],
                       "name": "background-color",
                       "style": "--_v:#4c0519;--_c:#FFF;",
                       "type": "radio",
@@ -8247,6 +9809,9 @@
                     "text": "Background Position",
                     "ui": "select",
                     "input": {
+                      "data-breakpoints": [
+                        "lg"
+                      ],
                       "name": "background-position",
                       "value": "",
                       "options": [

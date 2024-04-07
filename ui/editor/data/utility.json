@@ -279,6 +279,7 @@
 			{
 				"key": "gap-group",
 				"label": "Gap",
+				"ui": "fieldset",
 				"groups": [
 					{
 						"key": "column-gap",
@@ -808,7 +809,7 @@
 				"label": "Background Position",
 				"prefix": "bg",
 				"ui": "select",
-				"values": ["bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"]
+				"values": [{ "name": "-- select --", "value": ""}, "bottom", "center", "left", "left-bottom", "left-top", "right", "right-bottom", "right-top", "top"]
 			},
 			{
 				"key": "background-repeat",

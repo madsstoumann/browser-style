@@ -248,10 +248,11 @@ function createUIObject(obj) {
 				input: {
 					...common,
 					value: '',
-					options: obj.values.map((value) => {
+					options: obj.values.map((entry) => {
+						const [name, value] = typeof entry === 'object' ? [entry.name, entry.value] : [entry, entry];
 						return {
 							value: value,
-							text: value,
+							text: name,
 						};
 					}),
 				},
