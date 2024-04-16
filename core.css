@@ -3,21 +3,22 @@
 	--AccentColor: hsl(211, 100%, 50%);
 	--AccentColorText: hsl(211, 100%, 95%);
 	--AccentColorLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
-	/* 
+
 	--ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
 	--ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
 	--CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
 	--DarkGray: color-mix(in oklab, Canvas 40%, CanvasText 60%);
 	--GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
 	--GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%); 
-	*/
+
+	/* 
 	--ButtonBorder: hsl(0, 0%, 80%);
 	--ButtonFace: hsl(0, 0%, 90%);
 	--CanvasText: hsl(0, 0%, 20%);
 	--DarkGray: hsl(0, 0%, 40%);
 	--GrayCanvas: hsl(0, 0%, 95%);
 	--GrayText: hsl(0, 0%, 60%);
-	--LightText: hsl(0, 0%, 95%);
+	*/
 
 	--LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
 	--Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
