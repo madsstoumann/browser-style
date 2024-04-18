@@ -1,27 +1,29 @@
-:where(.ui-color-key) {
-	all: unset;
-	background-color: var(--GrayCanvas);
-	border-radius: var(--ui-color-key-bdrs, 5ch);
-	display: grid;
-	font-family: var(--ui-color-key-ff, var(--ff-form));
-	gap: 2ch;
-	grid-auto-flow: column;
-	padding: 1ch 2ch;
-	width: fit-content;
-	& li {
+@layer bs-component {
+	:where(.ui-color-key) {
+		all: unset;
+		background-color: var(--GrayCanvas);
+		border-radius: var(--ui-color-key-bdrs, 5ch);
 		display: grid;
-		font-size: smaller;
-		gap: 1ch;
+		font-family: var(--ui-color-key-ff, var(--ff-form));
+		gap: 2ch;
 		grid-auto-flow: column;
-		align-items: center;
-		&::before {
-			aspect-ratio: 1 / 1;
-			background-color: var(--ui-color-key, var(--ButtonBorder));
-			border: 1px solid color-mix(in srgb, var(--ui-color-key), #000 15%);
-			border-radius: 50%;
-			content: "";
-			display: block;
-			width: 1em;
+		padding: 1ch 2ch;
+		width: fit-content;
+		& li {
+			display: grid;
+			font-size: smaller;
+			gap: 1ch;
+			grid-auto-flow: column;
+			align-items: center;
+			&::before {
+				aspect-ratio: 1 / 1;
+				background-color: var(--ui-color-key, var(--ButtonBorder));
+				border: 1px solid color-mix(in srgb, var(--ui-color-key), #000 15%);
+				border-radius: 50%;
+				content: "";
+				display: block;
+				width: 1em;
+			}
 		}
 	}
 }

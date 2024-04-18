@@ -1,4 +1,6 @@
-export default function uiCountdown(node, locale = 'en-US') {
+export default function uiCountdown(node) {
+	const locale = node.lang || 'en-US';
+
 	const rtf = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
 	const setDelay = (name, delay) => {
 		node.style.setProperty(`--delay-${name}`, `${delay}s`);

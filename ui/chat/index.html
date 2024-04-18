@@ -5,9 +5,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-chat.css">
+
 	<!-- Below required for demo -->
 	<link rel="stylesheet" href="../avatar/ui-avatar.css">
 </head>
@@ -70,6 +71,126 @@
 				</ol>
 		</li>
 	</ol>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ol class="ui-chat">
+			<li value="1">
+				<time datetime="2023-05-29T02:20:00"></time>
+				<ol>
+					<li>
+						<div class="ui-avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
+						<div class="ui-chat-entry">
+							Hey <a href="#name">@Mads</a>, can you please help me with building the UI for a chat application? 🙂
+							<time datetime="2023-06-09T10:02:00">Read </time>
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+					<ol>
+						<li>
+							<div class="ui-chat-entry">
+								I sure can! 👍
+							</div>
+						</li>
+						<li>
+							<div class="ui-chat-entry">
+								First you need an ordered list, &lt;ol&gt;. Then you add the entries as &lt;li&gt;-tags.
+								<time datetime="2023-06-09T10:02:00">Read </time>
+							</div>
+						</li>
+					</ol>
+			</li>
+			<li value="1">
+				<ol>
+					<li>
+						<div class="ui-avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
+						<div class="ui-chat-entry">
+							How do I know who is who?
+							<time datetime="2023-06-09T10:02:00">Read </time>
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+					<ol>
+						<li>
+							<div class="ui-chat-entry">
+								You add a <em>value</em>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second. You can even add more people if you want to.
+							</div>
+						</li>
+					</ol>
+			</li>
+		</ol>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<ol class="ui-chat">
+			<li value="1">
+				<time datetime="2023-05-29T02:20:00"></time>
+				<ol>
+					<li>
+						<div class="ui-avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
+						<div class="ui-chat-entry">
+							Hey <a href="#name">@Mads</a>, can you please help me with building the UI for a chat application? 🙂
+							<time datetime="2023-06-09T10:02:00">Read </time>
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+					<ol>
+						<li>
+							<div class="ui-chat-entry">
+								I sure can! 👍
+							</div>
+						</li>
+						<li>
+							<div class="ui-chat-entry">
+								First you need an ordered list, &lt;ol&gt;. Then you add the entries as &lt;li&gt;-tags.
+								<time datetime="2023-06-09T10:02:00">Read </time>
+							</div>
+						</li>
+					</ol>
+			</li>
+			<li value="1">
+				<ol>
+					<li>
+						<div class="ui-avatar">
+							<abbr title="Kim Cronos">KC</abbr>
+							<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Unknown Person" loading="lazy">
+						</div>
+						<div class="ui-chat-entry">
+							How do I know who is who?
+							<time datetime="2023-06-09T10:02:00">Read </time>
+						</div>
+					</li>
+				</ol>
+			</li>
+			<li value="2">
+					<ol>
+						<li>
+							<div class="ui-chat-entry">
+								You add a <em>value</em>-attribute to each entry. A value of 1 is the first person (other), a value of 2 is the second. You can even add more people if you want to.
+							</div>
+						</li>
+					</ol>
+			</li>
+		</ol>
+	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
