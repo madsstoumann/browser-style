@@ -1,58 +1,60 @@
-:where(.ui-button-group) {
-	--ui-button-group-bg: var(--AccentColor);
-	--ui-button-group-c: var(--AccentColorText);
-	--ui-button-group-bdw: 2px;
-	all: unset;
-	column-gap: .25em;
-	display: grid;
-	grid-auto-columns: 1fr;
-	grid-auto-flow: column;
-	& label {
-		--button-bg: transparent;
-		align-content: center;
-		grid-template-columns: 1fr;
-		text-align: center;
-		&:has(input:checked) {
-			--button-bg: var(--ui-button-group-bg);
-			--button-c: var(--ui-button-group-c);
-		}
-		&:not(:has(:checked)):hover {
-			--button-bg: var(--ui-button-group-bg);
-			--button-hover-bxsh: none;
-			--button-hover-mix: Canvas 90%;
-		}
-	}
-	& legend { padding-block-end: var(--label-rg); }
- 	&.--border {
-		column-gap: 0;
+@layer bs-component {
+	:where(.ui-button-group) {
+		--ui-button-group-bg: var(--AccentColor);
+		--ui-button-group-c: var(--AccentColorText);
+		--ui-button-group-bdw: 2px;
+		all: unset;
+		column-gap: .25em;
+		display: grid;
+		grid-auto-columns: 1fr;
+		grid-auto-flow: column;
 		& label {
-			border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
-			border-radius: var(--input-bdrs);
-			&:not(:first-of-type) {
-				border-start-start-radius: 0;
-				border-end-start-radius: 0;
+			--button-bg: transparent;
+			align-content: center;
+			grid-template-columns: 1fr;
+			text-align: center;
+			&:has(input:checked) {
+				--button-bg: var(--ui-button-group-bg);
+				--button-c: var(--ui-button-group-c);
 			}
-			&:not(:last-of-type) {
-				border-inline-end: none;
-				border-start-end-radius: 0;
-				border-end-end-radius: 0;
+			&:not(:has(:checked)):hover {
+				--button-bg: var(--ui-button-group-bg);
+				--button-hover-bxsh: none;
+				--button-hover-mix: Canvas 90%;
 			}
 		}
-	}
-	&.--outline {
-		& label {
-			&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
-			&:has(:checked) {
-				background-color: transparent;
-				color: inherit;
-				&:hover { background: transparent; }
-				& + label {
-					border-inline-start: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
+		& legend { padding-block-end: var(--label-rg); }
+		&.--border {
+			column-gap: 0;
+			& label {
+				border: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
+				border-radius: var(--input-bdrs);
+				&:not(:first-of-type) {
+					border-start-start-radius: 0;
+					border-end-start-radius: 0;
+				}
+				&:not(:last-of-type) {
+					border-inline-end: none;
+					border-start-end-radius: 0;
+					border-end-end-radius: 0;
 				}
 			}
 		}
-	}
-	&.--rounded {
-		& label { border-radius: var(--ui-button-group-bdrs, 3em); }
+		&.--outline {
+			& label {
+				&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
+				&:has(:checked) {
+					background-color: transparent;
+					color: inherit;
+					&:hover { background: transparent; }
+					& + label {
+						border-inline-start: var(--ui-button-group-bdw) solid var(--ui-button-group-bg);
+					}
+				}
+			}
+		}
+		&.--rounded {
+			& label { border-radius: var(--ui-button-group-bdrs, 3em); }
+		}
 	}
 }

@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-badge.css">
 
@@ -19,6 +19,27 @@
 	<h2>Badge</h2>
 	Use with modifiers, <code>--inline</code>, <code>--bottom-right</code> and <code>--top-right</code> to fine-adjust position.<br>
 	Use <code>--text</code> if text only.
+
+	<div class="ui-avatar">
+		<abbr title="Kim Cronos">KC</abbr>
+		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		<b class="ui-badge bg-success --top-right">99</b>
+	</div>
+	<div class="ui-avatar">
+		<abbr title="Kim Cronos">KC</abbr>
+		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		<b class="ui-badge bg-info --bottom-right">👍</b>
+	</div>
+
+	<p><button type="button">Button with badge<b class="ui-badge bg-info">5</b></button></p>
+	<p><span class="ui-chip">Chip with badge<b class="ui-badge bg-error">4</b></span></p>
+	<p><span class="ui-chip bg-info --light">Light badge<b class="ui-badge bg-info">4</b></span></p>
+	<p><span class="ui-chip">Inline badge<b class="ui-badge bg-warning --inline">4</b></span></p>
+	<p><span class="ui-chip">With text<b class="ui-badge --text bg-success --light">new</b></span></p>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
 		<div class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
@@ -29,12 +50,14 @@
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 			<b class="ui-badge bg-info --bottom-right">👍</b>
 		</div>
-
-	<p><button type="button">Button with badge<b class="ui-badge bg-info">5</b></button></p>
-	<p><span class="ui-chip">Chip with badge<b class="ui-badge bg-error">4</b></span></p>
-	<p><span class="ui-chip bg-info --light">Light badge<b class="ui-badge bg-info">4</b></span></p>
-	<p><span class="ui-chip">Inline badge<b class="ui-badge bg-warning --inline">4</b></span></p>
-	<p><span class="ui-chip">With text<b class="ui-badge --text bg-success --light">new</b></span></p>
+	
+		<p><button type="button">Button with badge<b class="ui-badge bg-info">5</b></button></p>
+		<p><span class="ui-chip">Chip with badge<b class="ui-badge bg-error">4</b></span></p>
+		<p><span class="ui-chip bg-info --light">Light badge<b class="ui-badge bg-info">4</b></span></p>
+		<p><span class="ui-chip">Inline badge<b class="ui-badge bg-warning --inline">4</b></span></p>
+		<p><span class="ui-chip">With text<b class="ui-badge --text bg-success --light">new</b></span></p>
+	
+	</div>
 
 	<br>
 	<h2>With right-to-left</h2>

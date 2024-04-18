@@ -1,192 +1,194 @@
 @import url('ui-icon-svg.css');
-ui-icon {
-	--icon-bdrs: 50%;
-	--icon-bdw: 2px;
-	--icon-fz: 100%;
-	--icon-trs: .25s cubic-bezier(.4, 0, .2, 1);
+@layer bs-component {
+	:where(ui-icon) {
+		--icon-bdrs: 50%;
+		--icon-bdw: 2px;
+		--icon-fz: 100%;
+		--icon-trs: .25s cubic-bezier(.4, 0, .2, 1);
 
-	/* _private */
-	--_bdwh: calc(var(--icon-bdw) / 2);
-	--_cosh: calc(1em * cos(45deg));
+		/* _private */
+		--_bdwh: calc(var(--icon-bdw) / 2);
+		--_cosh: calc(1em * cos(45deg));
 
-	border-radius: var(--icon-bdrs);
-	box-sizing: border-box;
-	display: inline-grid;
-	font-size: var(--icon-fz);
-	grid-template-rows: 0;
-	height: 1em;
-	margin-block: var(--_mb, 0) ;
-	margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
-	place-content: center;
-	transition: var(--icon-trs);
-	width: 1em;
-}
-ui-icon::before,
-ui-icon::after {
-	box-sizing: border-box;
-	content: "";
-	display: block;
-	transition: var(--icon-trs);
-}
-
-/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
-ui-icon:is([type*=arrow],[type=check],[type*=chevron])::after {
-	border-color: currentColor;
-	border-style: solid;
-	border-width: var(--icon-bdw) var(--icon-bdw) 0 0;
-	height: var(--_cosh);
-	rotate: 45deg;
-	width: var(--_cosh);
-}
-ui-icon:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
-ui-icon:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
-	background-color: currentColor;
-	height: var(--icon-bdw);
-	width: 1em;
-}
-ui-icon[type*=arrow]::after {
-	translate: calc((.25em - var(--icon-bdw)) * cos(45deg));
-}
-ui-icon[type*=arrow]::before {
-	width: calc(1em - var(--icon-bdw));
-	translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
-}
-ui-icon[type=check]::after {
-	border-width: 0 var(--icon-bdw) var(--icon-bdw) 0;
-	height: calc(1em * cos(22.5deg));
-	translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
-	width: calc(var(--_cosh)* 0.6);
-}
-ui-icon[type*=chevron]::after {
-	translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
-}
-
-/* Grid, Kebab, Meatball, Menu */
-ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
-	background: currentColor;
-	border-radius: 50%;
-	height: .2em;
-	width: .2em;
-}
-ui-icon[type=drag] { translate: .2em 0; }
-ui-icon[type=drag]::after {
-	box-shadow: 
-		-.4em -.4em 0, 0 -.4em 0,
-		-.4em 0 0,
-		-.4em .4em 0, 0 .4em 0;
-}
-ui-icon[type=grid]::after {
-	box-shadow: 
-		-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
-		-.3em 0 0, .3em 0 0,
-		-.3em .3em 0, 0 .3em 0, .3em .3em 0;
-}
-ui-icon[type=kebab]::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
-ui-icon[type=meatball]::after { box-shadow: -.3em 0 0, .3em 0 0; }
-ui-icon[type=burger-menu] { gap: .66em; }
-ui-icon[type=burger-menu]::before { box-shadow: 0 .33em 0 currentColor; }
-ui-icon[type=veggie-menu] { gap: .33em; }
-
-/* Angle */
-ui-icon[type~=down] { rotate: 90deg; }
-ui-icon[type=cross], ui-icon[type~=downleft] { rotate: 135deg; }
-ui-icon[type~=downright] { rotate: 45deg; }
-ui-icon[type~=left] { rotate: -180deg; }
-ui-icon:is([type*=cross],[type*=plus])::after,
-ui-icon[type~=up] { rotate: -90deg; }
-ui-icon[type~=upleft] { rotate: -135deg; }
-ui-icon[type~=upright] { rotate: -45deg; }
-
-/* Play, Pause, Stop, First, Last */
-ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop], ui-icon[type*=triangle] {
-	background: currentColor;
-	border-radius: 0;
-}
-ui-icon[type*=pause] { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
-ui-icon[type*=play] { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
-ui-icon[type*=stop] { clip-path: inset(0 0 0 0 round 1px); }
-ui-icon[type*=triangle] { clip-path: polygon(15% 0%,85% 50%,15% 100%);}
-ui-icon[type*=first],
-ui-icon[type*=last] {
-	translate: .22em 0;
-	&::before {
-		background: currentColor;
+		border-radius: var(--icon-bdrs);
+		box-sizing: border-box;
+		display: inline-grid;
+		font-size: var(--icon-fz);
+		grid-template-rows: 0;
 		height: 1em;
-		translate: .88em calc(0px - var(--icon-bdw));
-		width: var(--icon-bdw);
+		margin-block: var(--_mb, 0) ;
+		margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
+		place-content: center;
+		transition: var(--icon-trs);
+		width: 1em;
 	}
-}
-ui-icon[type*=last] { translate: -.22em 0; }
-
-/* Margin */
-ui-icon[margin=start] { --_mis: 1ch; }
-ui-icon[margin=start-auto] { --_mis: auto; }
-ui-icon[margin=end] { --_mie: 1ch; }
-ui-icon[margin=end-auto] { --_mie: auto; }
-ui-icon[margin=xs] { --_mb: .25ch; --_mi: .25ch; }
-ui-icon[margin=sm] { --_mb: .5ch; --_mi: .5ch; }
-ui-icon[margin=md] { --_mb: 1ch; --_mi: 1ch; }
-ui-icon[margin=lg] { --_mb: 1.5ch; --_mi: 1.5ch; }
-ui-icon[margin=xl] { --_mb: 2ch; --_mi: 2ch; }
-
-/* Size */
-ui-icon[size*=xs] { --icon-fz: 50%; }
-ui-icon[size*=sm] { --icon-fz: 60%; }
-ui-icon[size*=md] { --icon-fz: 80%; }
-ui-icon[size*=lg] { --icon-fz: 120%; }
-ui-icon[size*=xl] { --icon-fz: 140%; }
-ui-icon[size*=xxl] { --icon-fz: 200%; }
-
-/* State */
-:is([open], .--open) >* >ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
-:is([open], .--open) >* >ui-icon[type*=menu] { gap: 0; }
-:is([open], .--open) >* >ui-icon[type*=menu]::before { box-shadow: none; rotate: -45deg; }
-:is([open], .--open) >* >ui-icon[type*=menu]::after { rotate: 45deg; }
-:is([open], .--open) >* >ui-icon[type~=down] { scale: -1; }
-:is([open], .--open) >* >ui-icon[type=grid] { rotate: 135deg; }
-:is([open], .--open) >* >ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
-:is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
-:is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
-
-/* [type="checkbox"] + <ui-icon> */
-:checked + ui-icon[type~=down] { scale: -1; }
-:checked + ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
-:checked + ui-icon[type*=menu] {
-	gap: 0;
-	&::before { box-shadow: none; rotate: -45deg; }
-	&::after { rotate: 45deg; }
-}
-
-/* Stroke */
-ui-icon[stroke*=xs] { --icon-bdw: 1px; }
-ui-icon[stroke*=md] { --icon-bdw: 3px; }
-ui-icon[stroke*=lg] { --icon-bdw: 4px; }
-ui-icon[stroke*=xl] { --icon-bdw: 6px; }
-
-/*Dir: rtl*/
-[dir=rtl] ui-icon {
-	&[type~=arrow] {
-		&::before {
-			translate: calc(var(--_bdwh) + var(--icon-bdw)) calc((.5em * cos(45deg)) - var(--_bdwh))
-		}
-		&[type~=left] { translate: -.2em 0; }
-		&[type~=right] { translate: .2em 0; }
-		&[type~=down] { translate: 0 -.2em; }
-		&[type~=downleft] { rotate: 45deg; translate: -.11em -.11em; }
-		&[type~=downright] { rotate: 135deg; translate: .11em -.11em; }
-		&[type~=up] { translate: 0 .2em; }
-		&[type~=upleft] { rotate: -45deg; translate: -.11em .11em; }
-		&[type~=upright] { rotate: -135deg; translate: .11em .11em; }
+	ui-icon::before,
+	ui-icon::after {
+		box-sizing: border-box;
+		content: "";
+		display: block;
+		transition: var(--icon-trs);
 	}
-	&[type*=first] {
-		translate: -.22em 0;
-		&::before { translate: .33em calc(0px - var(--icon-bdw)); }
+
+	/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
+	ui-icon:is([type*=arrow],[type=check],[type*=chevron])::after {
+		border-color: currentColor;
+		border-style: solid;
+		border-width: var(--icon-bdw) var(--icon-bdw) 0 0;
+		height: var(--_cosh);
+		rotate: 45deg;
+		width: var(--_cosh);
 	}
-	&[type*=last] {
+	ui-icon:is([type*=arrow],[type=cross],[type*=menu],[type*=plus])::before,
+	ui-icon:is([type=cross],[type*=menu],[type*=minus],[type*=plus])::after {
+		background-color: currentColor;
+		height: var(--icon-bdw);
+		width: 1em;
+	}
+	ui-icon[type*=arrow]::after {
+		translate: calc((.25em - var(--icon-bdw)) * cos(45deg));
+	}
+	ui-icon[type*=arrow]::before {
+		width: calc(1em - var(--icon-bdw));
+		translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
+	}
+	ui-icon[type=check]::after {
+		border-width: 0 var(--icon-bdw) var(--icon-bdw) 0;
+		height: calc(1em * cos(22.5deg));
+		translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
+		width: calc(var(--_cosh)* 0.6);
+	}
+	ui-icon[type*=chevron]::after {
+		translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
+	}
+
+	/* Grid, Kebab, Meatball, Menu */
+	ui-icon:is([type=drag],[type=grid],[type=kebab],[type=meatball])::after {
+		background: currentColor;
+		border-radius: 50%;
+		height: .2em;
+		width: .2em;
+	}
+	ui-icon[type=drag] { translate: .2em 0; }
+	ui-icon[type=drag]::after {
+		box-shadow: 
+			-.4em -.4em 0, 0 -.4em 0,
+			-.4em 0 0,
+			-.4em .4em 0, 0 .4em 0;
+	}
+	ui-icon[type=grid]::after {
+		box-shadow: 
+			-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
+			-.3em 0 0, .3em 0 0,
+			-.3em .3em 0, 0 .3em 0, .3em .3em 0;
+	}
+	ui-icon[type=kebab]::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
+	ui-icon[type=meatball]::after { box-shadow: -.3em 0 0, .3em 0 0; }
+	ui-icon[type=burger-menu] { gap: .66em; }
+	ui-icon[type=burger-menu]::before { box-shadow: 0 .33em 0 currentColor; }
+	ui-icon[type=veggie-menu] { gap: .33em; }
+
+	/* Angle */
+	ui-icon[type~=down] { rotate: 90deg; }
+	ui-icon[type=cross], ui-icon[type~=downleft] { rotate: 135deg; }
+	ui-icon[type~=downright] { rotate: 45deg; }
+	ui-icon[type~=left] { rotate: -180deg; }
+	ui-icon:is([type*=cross],[type*=plus])::after,
+	ui-icon[type~=up] { rotate: -90deg; }
+	ui-icon[type~=upleft] { rotate: -135deg; }
+	ui-icon[type~=upright] { rotate: -45deg; }
+
+	/* Play, Pause, Stop, First, Last */
+	ui-icon[type*=pause], ui-icon[type*=play], ui-icon[type*=stop], ui-icon[type*=triangle] {
+		background: currentColor;
+		border-radius: 0;
+	}
+	ui-icon[type*=pause] { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
+	ui-icon[type*=play] { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
+	ui-icon[type*=stop] { clip-path: inset(0 0 0 0 round 1px); }
+	ui-icon[type*=triangle] { clip-path: polygon(15% 0%,85% 50%,15% 100%);}
+	ui-icon[type*=first],
+	ui-icon[type*=last] {
 		translate: .22em 0;
-		&::before { translate: .33em calc(0px - var(--icon-bdw)); }
+		&::before {
+			background: currentColor;
+			height: 1em;
+			translate: .88em calc(0px - var(--icon-bdw));
+			width: var(--icon-bdw);
+		}
 	}
- 	&[type~=left] { rotate: 0deg; }
-	&[type~=right] { rotate: -180deg; }
+	ui-icon[type*=last] { translate: -.22em 0; }
+
+	/* Margin */
+	ui-icon[margin=start] { --_mis: 1ch; }
+	ui-icon[margin=start-auto] { --_mis: auto; }
+	ui-icon[margin=end] { --_mie: 1ch; }
+	ui-icon[margin=end-auto] { --_mie: auto; }
+	ui-icon[margin=xs] { --_mb: .25ch; --_mi: .25ch; }
+	ui-icon[margin=sm] { --_mb: .5ch; --_mi: .5ch; }
+	ui-icon[margin=md] { --_mb: 1ch; --_mi: 1ch; }
+	ui-icon[margin=lg] { --_mb: 1.5ch; --_mi: 1.5ch; }
+	ui-icon[margin=xl] { --_mb: 2ch; --_mi: 2ch; }
+
+	/* Size */
+	ui-icon[size*=xs] { --icon-fz: 50%; }
+	ui-icon[size*=sm] { --icon-fz: 60%; }
+	ui-icon[size*=md] { --icon-fz: 80%; }
+	ui-icon[size*=lg] { --icon-fz: 120%; }
+	ui-icon[size*=xl] { --icon-fz: 140%; }
+	ui-icon[size*=xxl] { --icon-fz: 200%; }
+
+	/* State */
+	:is([open], .--open) >* >ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+	:is([open], .--open) >* >ui-icon[type*=menu] { gap: 0; }
+	:is([open], .--open) >* >ui-icon[type*=menu]::before { box-shadow: none; rotate: -45deg; }
+	:is([open], .--open) >* >ui-icon[type*=menu]::after { rotate: 45deg; }
+	:is([open], .--open) >* >ui-icon[type~=down] { scale: -1; }
+	:is([open], .--open) >* >ui-icon[type=grid] { rotate: 135deg; }
+	:is([open], .--open) >* >ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
+	:is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
+	:is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
+
+	/* [type="checkbox"] + <ui-icon> */
+	:checked + ui-icon[type~=down] { scale: -1; }
+	:checked + ui-icon:is([type=kebab],[type=meatball],[type=plus-cross]) { rotate: 45deg; }
+	:checked + ui-icon[type*=menu] {
+		gap: 0;
+		&::before { box-shadow: none; rotate: -45deg; }
+		&::after { rotate: 45deg; }
+	}
+
+	/* Stroke */
+	ui-icon[stroke*=xs] { --icon-bdw: 1px; }
+	ui-icon[stroke*=md] { --icon-bdw: 3px; }
+	ui-icon[stroke*=lg] { --icon-bdw: 4px; }
+	ui-icon[stroke*=xl] { --icon-bdw: 6px; }
+
+	/*Dir: rtl*/
+	[dir=rtl] ui-icon {
+		&[type~=arrow] {
+			&::before {
+				translate: calc(var(--_bdwh) + var(--icon-bdw)) calc((.5em * cos(45deg)) - var(--_bdwh))
+			}
+			&[type~=left] { translate: -.2em 0; }
+			&[type~=right] { translate: .2em 0; }
+			&[type~=down] { translate: 0 -.2em; }
+			&[type~=downleft] { rotate: 45deg; translate: -.11em -.11em; }
+			&[type~=downright] { rotate: 135deg; translate: .11em -.11em; }
+			&[type~=up] { translate: 0 .2em; }
+			&[type~=upleft] { rotate: -45deg; translate: -.11em .11em; }
+			&[type~=upright] { rotate: -135deg; translate: .11em .11em; }
+		}
+		&[type*=first] {
+			translate: -.22em 0;
+			&::before { translate: .33em calc(0px - var(--icon-bdw)); }
+		}
+		&[type*=last] {
+			translate: .22em 0;
+			&::before { translate: .33em calc(0px - var(--icon-bdw)); }
+		}
+		&[type~=left] { rotate: 0deg; }
+		&[type~=right] { rotate: -180deg; }
+	}
+	[dir=rtl] :is([open], .--open) >* >ui-icon[type~=right] { rotate: -270deg; }
 }
-[dir=rtl] :is([open], .--open) >* >ui-icon[type~=right] { rotate: -270deg; }

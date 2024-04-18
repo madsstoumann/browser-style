@@ -1,4 +1,4 @@
-.ui-position {
+:where(.ui-position) {
 	all: unset;
 	display: grid;
 	gap: calc(var(--input-check-sz) / 2);

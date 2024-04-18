@@ -1,86 +1,88 @@
-.ui-analog-clock {
-	--ui-analog-clock-w: 200px;
-	--ui-analog-clock-fs: smaller;
-	--ui-analog-clock-num-sz: 2.5em;
-	--_r: calc((var(--ui-analog-clock-w) - var(--ui-analog-clock-num-sz)) / 2);
+@layer bs-component {
+	:where(.ui-analog-clock) {
+		--ui-analog-clock-w: 200px;
+		--ui-analog-clock-fs: smaller;
+		--ui-analog-clock-num-sz: 2.5em;
+		--_r: calc((var(--ui-analog-clock-w) - var(--ui-analog-clock-num-sz)) / 2);
 
-	background: var(--GrayCanvas);
-	border-radius: 50%;
-	block-size: var(--ui-analog-clock-w);
-	color: var(--CanvasText);
-	display: grid;
-	font-size: var(--ui-analog-clock-fs);
-	font-weight: 500;
-	inline-size: var(--ui-analog-clock-w);
-	place-content: center;
-	position: relative;
-	&::after {
-		aspect-ratio: 1 / 1;
-		background-color: var(--CanvasText);
+		background: var(--GrayCanvas);
 		border-radius: 50%;
-		content: "";
-		display: block;
-		height: 1em;
-		isolation: isolate;
-	}
-	& b {
-		background-color: var(--_bg, currentColor);
-		border-radius: calc(var(--_w) * 2);
-		display: block;
-		height: var(--_h);
-		left: calc((var(--ui-analog-clock-w) - var(--_w)) / 2);
-		position: absolute;
-		top: calc((var(--ui-analog-clock-w) / 2) - var(--_h));
-		transform: rotate(0deg);
-		transform-origin: bottom;
-		width: var(--_w);
-		/* Seconds, Minutes, Hours */
-		&:nth-of-type(3) {
-			--_h: 35%;
-			--_w: .33em;
-			animation: turn 43200s linear infinite;
-			animation-delay: var(--_dh, 0ms);
-		}
-		&:nth-of-type(2) {
-			--_h: 45%;
-			--_w: .33em;
-			animation: turn 3600s steps(60, end) infinite;
-			animation-delay: var(--_dm, 0ms);
-		}
-		&:nth-of-type(1) {
-			--_bg: #ff8c05;
-			--_h: 45%;
-			--_w: .11em;
-			animation: turn 60s linear infinite;
-			animation-delay: var(--_ds, 0ms);
-		}
-	}
-	& i {
-		--_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
-		--_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
-
+		block-size: var(--ui-analog-clock-w);
+		color: var(--CanvasText);
 		display: grid;
-		font-style: normal;
-		height: var(--ui-analog-clock-num-sz);
-		left: var(--_x);
+		font-size: var(--ui-analog-clock-fs);
+		font-weight: 500;
+		inline-size: var(--ui-analog-clock-w);
 		place-content: center;
-		position: absolute;
-		top: var(--_y);
-		width: var(--ui-analog-clock-num-sz);
-		&:nth-child(1) { --_d: 270deg; }
-		&:nth-child(2) { --_d: 300deg; }
-		&:nth-child(3) { --_d: 330deg; }
-		&:nth-child(4) { --_d: 0deg; }
-		&:nth-child(5) { --_d: 30deg; }
-		&:nth-child(6) { --_d: 60deg; }
-		&:nth-child(7) { --_d: 90deg; }
-		&:nth-child(8) { --_d: 120deg; }
-		&:nth-child(9) { --_d: 150deg; }
-		&:nth-child(10) { --_d: 180deg; }
-		&:nth-child(11) { --_d: 210deg; }
-		&:nth-child(12) { --_d: 240deg; }
+		position: relative;
+		&::after {
+			aspect-ratio: 1 / 1;
+			background-color: var(--CanvasText);
+			border-radius: 50%;
+			content: "";
+			display: block;
+			height: 1em;
+			isolation: isolate;
+		}
+		& b {
+			background-color: var(--_bg, currentColor);
+			border-radius: calc(var(--_w) * 2);
+			display: block;
+			height: var(--_h);
+			left: calc((var(--ui-analog-clock-w) - var(--_w)) / 2);
+			position: absolute;
+			top: calc((var(--ui-analog-clock-w) / 2) - var(--_h));
+			transform: rotate(0deg);
+			transform-origin: bottom;
+			width: var(--_w);
+			/* Seconds, Minutes, Hours */
+			&:nth-of-type(3) {
+				--_h: 35%;
+				--_w: .33em;
+				animation: turn 43200s linear infinite;
+				animation-delay: var(--_dh, 0ms);
+			}
+			&:nth-of-type(2) {
+				--_h: 45%;
+				--_w: .33em;
+				animation: turn 3600s steps(60, end) infinite;
+				animation-delay: var(--_dm, 0ms);
+			}
+			&:nth-of-type(1) {
+				--_bg: #ff8c05;
+				--_h: 45%;
+				--_w: .11em;
+				animation: turn 60s linear infinite;
+				animation-delay: var(--_ds, 0ms);
+			}
+		}
+		& i {
+			--_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
+			--_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
+
+			display: grid;
+			font-style: normal;
+			height: var(--ui-analog-clock-num-sz);
+			left: var(--_x);
+			place-content: center;
+			position: absolute;
+			top: var(--_y);
+			width: var(--ui-analog-clock-num-sz);
+			&:nth-child(1) { --_d: 270deg; }
+			&:nth-child(2) { --_d: 300deg; }
+			&:nth-child(3) { --_d: 330deg; }
+			&:nth-child(4) { --_d: 0deg; }
+			&:nth-child(5) { --_d: 30deg; }
+			&:nth-child(6) { --_d: 60deg; }
+			&:nth-child(7) { --_d: 90deg; }
+			&:nth-child(8) { --_d: 120deg; }
+			&:nth-child(9) { --_d: 150deg; }
+			&:nth-child(10) { --_d: 180deg; }
+			&:nth-child(11) { --_d: 210deg; }
+			&:nth-child(12) { --_d: 240deg; }
+		}
 	}
-}
-@keyframes turn {
-	to { transform: rotate(1turn); }
+	@keyframes turn {
+		to { transform: rotate(1turn); }
+	}
 }

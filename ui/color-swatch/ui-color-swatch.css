@@ -1,5 +1,5 @@
 @import '../color-input/ui-color-input.css';
-.ui-color-swatch {
+:where(.ui-color-swatch) {
 	all: unset;
 	& label { display: contents; }
 	& legend { padding-block-end: var(--label-rg); }

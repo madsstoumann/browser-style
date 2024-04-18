@@ -21,7 +21,50 @@
 		<label data-output="75">Weight
 			<input type="range" name="weight" min="35" max="200" step="0.1" value="75" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",kg" />
 		</label>
-		<h2>Your BMI Is: <output name="result"></output></h2>
+		<h3>Your BMI Is: <output name="result"></output></h3>
+		<fieldset readonly>
+			<label>Underweight
+				<input type="radio" name="bmigroup" value="0" data-sr>
+				<p>The WHO regards a BMI of less than 18.5 as underweight and may indicate malnutrition, an eating disorder, or other health problems.</p>
+			</label>
+			<label>
+				Normal
+				<input type="radio" name="bmigroup" value="1" data-sr>
+				<p>A BMI between 18.5 and 25 is considered normal and healthy. </p>
+			</label>
+			<label>
+				Pre-obesity
+				<input type="radio" name="bmigroup" value="2" data-sr>
+				<p>People who fall into this category may be at risk of developing obesity.<br />This was earlier classified as "overweight".</p>
+			</label>
+			<label>
+				Obese I
+				<input type="radio" name="bmigroup" value="3" data-sr>
+				<p>People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</p>
+			</label>
+			<label>
+				Obese II
+				<input type="radio" name="bmigroup" value="4" data-sr>
+				<p>People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</p>
+			</label>
+			<label>
+				Obese III
+				<input type="radio" name="bmigroup" value="5" data-sr>
+				<p>People who have BMI equal or over 30 may have obesity, which is defined as an abnormal or excessive accumulation of fat that may harm health.</p>
+			</label>
+		</fieldset>
+	</form>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<form class="ui-bmi" dir="rtl">
+		<label data-output="cm">Height
+			<input type="range" name="height" min="150" max="230" step=".5" value="180" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",cm" />
+		</label><br>
+		<label data-output="75">Weight
+			<input type="range" name="weight" min="35" max="200" step="0.1" value="75" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",kg" />
+		</label>
+		<h3>Your BMI Is: <output name="result"></output></h3>
 		<fieldset readonly>
 			<label>Underweight
 				<input type="radio" name="bmigroup" value="0" data-sr>

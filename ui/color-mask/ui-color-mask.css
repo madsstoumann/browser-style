@@ -1,4 +1,4 @@
-.ui-color-mask {
+:where(.ui-color-mask) {
 	--ui-color-mask-url: url('https://assets.stoumann.dk/img/tshirt.webp') no-repeat center / contain;
   all: unset;
   display: grid;

@@ -1,4 +1,4 @@
-.ui-color-compare {
+:where(.ui-color-compare) {
 	--ui-color-compare-mask: url('https://assets.stoumann.dk/img/colors-base.webp');
 	--ui-color-compare-color-w: min(9cqi, 5em);
 	--ui-color-compare-thumb-c: var(--ButtonBorder);

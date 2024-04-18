@@ -14,7 +14,7 @@
   inherits: false;
 }
 
-.ui-digital-clock {
+:where(.ui-digital-clock) {
 	all: unset;
 	background-color: var(--GrayCanvas);
 	border-radius: var(--input-bdrs);

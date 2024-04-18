@@ -1,4 +1,4 @@
-.ui-mood {
+:where(.ui-mood) {
 	all: unset;
 	display: grid;
 	gap: .33em;

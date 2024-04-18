@@ -1,22 +1,24 @@
-:where(.ui-icon) {
-	stroke-width: var(--icon-sw, 1.25);
-	stroke: currentColor;
-	fill: none;
-	height: var(--icon-sz, 100%);
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	width: var(--icon-sz, 100%);
+@layer bs-component {
+	:where(.ui-icon) {
+		fill: none;
+		height: var(--icon-sz, 100%);
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		stroke-width: var(--icon-sw, 1.25);
+		stroke: currentColor;
+		width: var(--icon-sz, 100%);
 
-	/* Size */
-	&.--xs-icon { --icon-sz: 45%; }
-	&.--sm-icon { --icon-sz: 60%; }
-	&.--md-icon { --icon-sz: 75%; }
-	&.--lg-icon { --icon-sz: 125%; }
-	&.--xl-icon { --icon-sz: 150%; }
+		/* Size */
+		&.--xs-icon { --icon-sz: 45%; }
+		&.--sm-icon { --icon-sz: 60%; }
+		&.--md-icon { --icon-sz: 75%; }
+		&.--lg-icon { --icon-sz: 125%; }
+		&.--xl-icon { --icon-sz: 150%; }
 
-	/* Stroke */
-	&.--xs-stroke { --icon-sw: 0.5; }
-	&.--md-stroke { --icon-sw: 1; }
-	&.--lg-stroke { --icon-sw: 1.5; }
-	&.--xl-stroke { --icon-sw: 2; }
+		/* Stroke */
+		&.--xs-stroke { --icon-sw: 0.5; }
+		&.--md-stroke { --icon-sw: 1; }
+		&.--lg-stroke { --icon-sw: 1.5; }
+		&.--xl-stroke { --icon-sw: 2; }
+	}
 }

@@ -11,6 +11,7 @@
 		& img, & input { grid-area: 1 / 1; }
 		& img {
 			aspect-ratio: 1 / 1;
+			background-color: var(--GrayCanvas);
 			border-radius: inherit;
 			object-fit: cover;
 			pointer-events: none;

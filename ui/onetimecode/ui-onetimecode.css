@@ -1,4 +1,4 @@
-.ui-onetimecode {
+:where(.ui-onetimecode) {
 	--otp-digits: 6;
 	--otp-ls: 2ch;
 

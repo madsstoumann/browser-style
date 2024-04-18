@@ -1,42 +1,44 @@
-:where(meter) {
-	--ui-meter-bs: .6em;
-	background: var(--ButtonBorder);
-		block-size: var(--ui-meter-bs);
-		border-radius: calc(2 * var(--ui-meter-bs));
-		border: 0;
-		width: 100%;
-  &::-webkit-meter-bar {
-    background: var(--ButtonBorder);
-    border: 0;
-    border-radius: inherit;
-  }
-  &::-webkit-meter-inner-element {
-    border-radius: inherit;
-    display: block;
-    -webkit-appearance: none;
-  }
-  &::-webkit-meter-even-less-good-value {
-    background: var(--ColorError);
-    border-radius: inherit;
-  }
-  &::-webkit-meter-suboptimum-value {
-    background: var(--ColorWarning);
-    border-radius: inherit;
-  }
-  &::-webkit-meter-optimum-value {
-    background: var(--ColorSuccess);
-    border-radius: inherit;
-  }
-  &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
-    background: var(--ColorError);
-    border-radius: inherit;
-  }
-  &:-moz-meter-sub-optimum::-moz-meter-bar {
-    background: var(--ColorWarning);
-    border-radius: inherit;
-  }
-  &:-moz-meter-optimum::-moz-meter-bar {
-    background: var(--ColorSuccess);
-    border-radius: inherit;
-  }
+@layer bs-component {
+	:where(meter) {
+		--ui-meter-bs: .6em;
+		background: var(--ButtonBorder);
+			block-size: var(--ui-meter-bs);
+			border-radius: calc(2 * var(--ui-meter-bs));
+			border: 0;
+			width: 100%;
+		&::-webkit-meter-bar {
+			background: var(--ButtonBorder);
+			border: 0;
+			border-radius: inherit;
+		}
+		&::-webkit-meter-inner-element {
+			border-radius: inherit;
+			display: block;
+			-webkit-appearance: none;
+		}
+		&::-webkit-meter-even-less-good-value {
+			background: var(--ColorError);
+			border-radius: inherit;
+		}
+		&::-webkit-meter-suboptimum-value {
+			background: var(--ColorWarning);
+			border-radius: inherit;
+		}
+		&::-webkit-meter-optimum-value {
+			background: var(--ColorSuccess);
+			border-radius: inherit;
+		}
+		&:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+			background: var(--ColorError);
+			border-radius: inherit;
+		}
+		&:-moz-meter-sub-optimum::-moz-meter-bar {
+			background: var(--ColorWarning);
+			border-radius: inherit;
+		}
+		&:-moz-meter-optimum::-moz-meter-bar {
+			background: var(--ColorSuccess);
+			border-radius: inherit;
+		}
+	}
 }

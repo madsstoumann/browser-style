@@ -1,4 +1,4 @@
-.ui-file-list {
+:where(.ui-file-list) {
 	--ui-file-list-img-sz: 4em;
 	border-radius: var(--input-bdrs);
 	font-size: smaller;

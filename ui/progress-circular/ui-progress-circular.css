@@ -1,4 +1,4 @@
-.ui-progress-circular {
+:where(.ui-progress-circular) {
 	--meter-progress-bs: 10em;
 	--progress-bdw: 1em;
 	--_mask: radial-gradient(circle farthest-side at center, transparent calc(99% - var(--progress-bdw)), #FFF calc(100% - var(--progress-bdw)));

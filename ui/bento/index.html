@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-bento.css">
 	<link rel="stylesheet" href="../gradient-text/ui-gradient-text.css">
@@ -14,7 +14,8 @@
 	<h1>UI: Components</h1>
 
 	<h2>Bento</h2>
-	<p>Small extension using <a href="/ui/grid">grid</a> for a bento-design.</p>
+	<p>Small extension using <a href="/ui/grid">grid</a>, for a bento-design.<br>
+		Middle card is using <code>cs-opposite</code> to display opposite color-scheme.</p>
 
 	<ul class="ui-grid --xs-c-2 --md-c-7 ui-bento">
 		<li>
@@ -47,7 +48,87 @@
 				Over <strong class="ui-gradient-text --blue-green">67 billion</strong> <small>neurons</small>
 			</span>
 		</li>
-		<li class="--md-gcs-3 --md-grs-2">
+		<li class="--md-gcs-3 --md-grs-2 cs-opposite">
+			<span>
+				Ever <strong class="ui-gradient-text --violet-pink">After Work</strong> <small>Is Over</small>
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">40%</strong> Harder Better
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">40%</strong> Faster Stronger
+			</span>
+		</li>
+		<li>
+			<span>
+				<small>16-core</small>
+				<strong class="ui-gradient-text --blue-green">Neural Engine</strong>
+				<small>15.8 trillion ops/s</small>
+			</span>
+		</li>
+		<li>
+			<span>
+				<strong class="ui-gradient-text --blue-green">Do It</strong>
+				Faster
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				<strong class="ui-gradient-text --blue-green">96GB</strong>
+				<small>Faster Better Stronger</small>
+			</span>
+		</li>
+		<li class="--md-gcs-4">
+			<span>
+				<small>Work It Harder</small>
+				<strong class="ui-gradient-text --violet-pink">Make It Better</strong>
+			</span>
+		</li>
+		<li class="--xs-gcs-2 --md-gcs-3">
+			<span>Do It
+				<strong class="ui-gradient-text --violet-pink">Faster</strong> <small>Makes Us Stronger</small>
+			</span>
+		</li>
+	</ul>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<ul class="ui-grid --xs-c-2 --md-c-7 ui-bento" dir="rtl">
+		<li>
+			<span>Work It</span>
+		</li>
+		<li>
+			<span>
+				Make It
+			</span>
+		</li>
+		<li class="--xs-gcs-2 --md-gcs-1">
+			<span>
+				Do It <strong class="ui-gradient-text --blue-green">Makes Us</strong>
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span class="ui-gradient-text --violet-pink">
+				Harder
+				Better
+				Faster
+				Stronger</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				More than <strong class="ui-gradient-text --blue-green">Hour Hour</strong> <small>Never</small>
+			</span>
+		</li>
+		<li class="--md-gcs-2">
+			<span>
+				Over <strong class="ui-gradient-text --blue-green">67 billion</strong> <small>neurons</small>
+			</span>
+		</li>
+		<li class="--md-gcs-3 --md-grs-2 cs-opposite">
 			<span>
 				Ever <strong class="ui-gradient-text --violet-pink">After Work</strong> <small>Is Over</small>
 			</span>
