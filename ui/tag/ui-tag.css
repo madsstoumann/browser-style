@@ -1,5 +1,5 @@
 :where(.ui-tag) {
-	background: var(--ui-tag-bg, var(--GrayCanvas));
+	background: var(--ui-tag-bg, var(--CanvasGray));
 	border-radius: 2em;
 	color: var(--ui-tag-c, var(--CanvasText));
 	display: inline-grid;

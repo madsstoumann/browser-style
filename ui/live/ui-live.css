@@ -1,5 +1,5 @@
 :where(.ui-live) {
-	background: var(--AccentColorLight);
+	background: var(--Highlight);
 	overflow: hidden;
 	width: fit-content;
 	& span {

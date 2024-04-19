@@ -55,7 +55,7 @@
 		display: grid;
 		gap: var(--ui-scroll-gap);
 		& li {
-			border-block-end: 1px solid var(--GrayCanvas);
+			border-block-end: 1px solid var(--CanvasGray);
 			margin-block-start: 0;
 			margin-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-dot-gap));
 			&::after {

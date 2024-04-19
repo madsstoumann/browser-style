@@ -1,7 +1,7 @@
 :where(.ui-underline) {
 	background: linear-gradient(
 	var(--ui-gradient-dir, 90deg),
-	var(--ui-gradient, var(--AccentColor), var(--AccentColorLight), var(--AccentColor))) repeat-x 
+	var(--ui-gradient, var(--AccentColor), var(--Highlight), var(--AccentColor))) repeat-x 
 	0% var(--ui-gradient-bgpy, 90%) / 
 	var(--ui-gradient-bgsz-x, 150%) var(--ui-gradient-bgsz-y, 10%);
 	display: inline; /* for multiline-underline */

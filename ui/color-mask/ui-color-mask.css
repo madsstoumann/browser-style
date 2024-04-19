@@ -16,7 +16,7 @@
 			width: 100%;
 		}
 		& label {
-			background-color: var(--GrayCanvas);
+			background-color: var(--CanvasGray);
 			border-radius: var(--input-bdrs);
 			display: grid;
 			transition: box-shadow .2s ease-in-out;

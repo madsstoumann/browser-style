@@ -1,26 +1,26 @@
 @layer bs-core {
 	:root {
-		--AccentColor: hsl(211, 100%, 50%);
+		--AccentColor: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
 		--AccentColorText: hsl(211, 100%, 95%);
-		--AccentColorLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
-		--ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
-		--ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
-		--CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
-		--DarkGray: color-mix(in oklab, Canvas 40%, CanvasText 60%);
-		--GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
-		--GrayLight: hsl(0, 0%, 97.5%);
-		--GrayMedium: color-mix(in srgb, Canvas 70%, CanvasText 30%);
-		--GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%); 
-		--LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
-		--Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
-		--MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
-		--VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
+		--ButtonBorder: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
+		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+		--ButtonText: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
+		--Canvas: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
+		--CanvasGray: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 10%));
+		--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+		--Field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
+		--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
+		--Highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
+		--LinkText: color-mix(in oklab, #0000EE 50%, #FFF 50%);
+		--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
+		--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
+		--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
 
-		/* Additional Colors */
-		--ColorInfo: hsl(210, 60%, 46%);
-		--ColorError: hsl(360, 60%, 46%);
-		--ColorSuccess: hsl(136, 41%, 41%);
-		--ColorWarning: hsl(33, 99%, 59%);
+		/* Status Colors */
+		--ColorInfo: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
+		--ColorError: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
+		--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+		--ColorWarning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
 
 		/* Fonts */
 		--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
@@ -28,20 +28,10 @@
 		--ff-headers: inherit;
 		--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 	}
-	@media (prefers-color-scheme: dark) {
-		:root {
-			--AccentColor: hsl(211, 60%, 50%);
-			--GrayLight: hsl(0, 0%, 2.5%);
-			--ColorInfo: hsl(210, 30%, 46%);
-			--ColorError: hsl(360, 40%, 56%);
-			--ColorSuccess: hsl(136, 21%, 51%);
-			--ColorWarning: hsl(33, 69%, 59%);
-		}
-	}
 
 	/* Global */
 	*, *::before, *::after { box-sizing: border-box; }
-	[dir=rtl] * { --_dir: left; } /* for gradients */
+	[dir=rtl] * { --_dir: left; } /* for direction-aware gradients */
 	[hidden] { display: none; }
 	[data-sr] {
 		border: 0;
@@ -57,7 +47,7 @@
 	/* Elements */
 	:where(body) {
 		accent-color: var(--AccentColor);
-		background-color: Canvas;
+		background-color: var(--Canvas);
 		color: var(--CanvasText);
 		color-scheme: light dark;
 		font-family: var(--ff-body);
@@ -80,24 +70,23 @@
 	}
 	:where(audio) {
 		&::-webkit-media-controls-panel {
-			background: var(--GrayCanvas);
+			background: var(--CanvasGray);
 		}
 	}
 	:where(blockquote) {
-		border-inline-start: .75ch solid var(--GrayMedium); 
+		border-inline-start: .75ch solid var(--GrayText); 
 		padding-inline-start: 2ch;
 	}
 	:where(blockquote, dl, figure, h1, ol, p, pre, ul) {
 		margin-block: 1rlh;
 	}
 	:where(caption) {
-		/* caption-side: bottom; */
 		font-size: smaller;
 		font-style: italic;
 		margin-block: 1rlh;
 	}
 	:where(code) {
-		background-color: var(--GrayCanvas);
+		background-color: var(--CanvasGray);
 		font-family: var(--ff-mono);
 		font-size: 80%;
 		padding: .165ch .33ch;
@@ -137,11 +126,11 @@
 	}
 	:where(pre) { overflow: auto; }
 	:where(pre, tr:nth-of-type(even)) {
-		background-color: var(--GrayCanvas);
+		background-color: var(--CanvasGray);
 	}
 	:where(table) {
 		border-collapse: collapse;
-		/* Column-alignment, if you need to support more than 8 columns, add more */
+		/* Column-alignment, if you need to support more than 8 columns, add more here: */
 		&[data-c1~="center"] tr > *:nth-of-type(1),
 		&[data-c2~="center"] tr > *:nth-of-type(2),
 		&[data-c3~="center"] tr > *:nth-of-type(3),

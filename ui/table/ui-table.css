@@ -2,10 +2,10 @@
 	--ui-table-bdrs: 0;
 	--ui-table-bdw: 1px;
 	--ui-table-col-hover: var(--ButtonFace);
-	--ui-table-td-hover: var(--DarkGray);
-	--ui-table-th-dark: var(--DarkGray);
+	--ui-table-td-hover: var(--ButtonText);
+	--ui-table-th-dark: var(--ButtonText);
 	--ui-table-tr-hover: var(--ButtonFace);
-	--ui-table-outline-bdc: var(--DarkGray);
+	--ui-table-outline-bdc: var(--ButtonText);
 	--ui-table-outline-bdw: 2px;
 
 	border-collapse: separate;
@@ -82,7 +82,7 @@
 	&.--zebracol-odd col:nth-of-type(odd),
 	&.--zebrarow-even tr:nth-of-type(even) td,
 	&:is(.--th-light, .--zebrarow-even) th,
-	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--GrayCanvas)); }
+	&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
 
 	/* Hover */
 	&.--hover-all,
@@ -150,7 +150,7 @@
 			outline-offset: calc(0px - var(--ui-table-outline-bdw));
 			user-select: none;
 			.--th-dark & {
-				--ui-table-outline-bdc: var(--GrayCanvas);
+				--ui-table-outline-bdc: var(--CanvasGray);
 				outline-offset: calc(0px - (3 * var(--ui-table-outline-bdw)));
 			}
 		}

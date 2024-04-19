@@ -13,7 +13,7 @@
 		position: absolute;
 		width: 100%;
 	}
-	&::before { background: var(--GrayCanvas); }
+	&::before { background: var(--CanvasGray); }
 	&::after {
 		animation: progressTimer var(--ui-progress-timer-duration, 3s) linear infinite;
 		animation-play-state: var(--ui-progress-timer-animps);

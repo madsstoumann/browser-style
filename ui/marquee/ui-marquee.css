@@ -1,5 +1,5 @@
 :where(.ui-marquee) {
-	background-color: var(--GrayCanvas);
+	background-color: var(--CanvasGray);
 	border-radius: var(--input-bdrs);
 	display: flex;
 	overflow: hidden;

@@ -13,7 +13,7 @@
 		padding-inline: var(--ui-menu-list-pi, 1.5ch 2.5ch);
 		user-select: none;
 		width: fit-content;
-		&:hover { background-color: var(--GrayCanvas); }
+		&:hover { background-color: var(--CanvasGray); }
 		&.--active { 
 			background-color: var(--AccentColor);
 			color: var(--AccentColorText);

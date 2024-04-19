@@ -2,7 +2,7 @@
 	:is(.ui-scrollbar) {
 		--ui-scrollbar-bdrs: 0px;
 		--ui-scrollbar-thumb: var(--ButtonBorder);
-		--ui-scrollbar-track: transparent; /* var(--GrayCanvas); */
+		--ui-scrollbar-track: transparent; /* var(--CanvasGray); */
 		--ui-scrollbar-w: .25em;
 
 		padding-block-end: calc(2 * var(--ui-scrollbar-w));

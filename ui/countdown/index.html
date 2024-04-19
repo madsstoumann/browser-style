@@ -13,8 +13,11 @@
 	<h1>UI: Components</h1>
 
 	<h2>Countdown</h2>
-	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
-	<ol class="ui-countdown" data-time="2024-12-31">
+	<p>
+		Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.<br>
+		Specify end-date in <code> data-time</code>-attribute, example: <code>data-time="2024-12-31"</code>.
+	</p>
+	<ol class="ui-countdown">
 		<li data-label="day"></li>
 		<li data-label="hour"></li>
 		<li data-label="minutes"></li>
@@ -34,7 +37,8 @@
 
 	<br>
 	<h2>With right-to-left</h2>
-	<p>And custom language, using <code>lang="ar-AE"</code>.</p>
+	<p>&hellip; and custom language, using <code>lang="ar-AE"</code>.<br>
+		Since this is using <code>@property</code>-animations with <code>&lt;integer&gt;</code> as type, numerals can not be localized.</p>
 	<div dir="rtl">
 		<ol class="ui-countdown" lang="ar-AE">
 			<li data-label="day"></li>

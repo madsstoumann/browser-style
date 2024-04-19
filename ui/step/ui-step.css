@@ -16,7 +16,7 @@
 		list-style-type: none;
 		&::before {
 			aspect-ratio: 1 / 1;
-			background-color: var(--GrayCanvas);
+			background-color: var(--CanvasGray);
 			border-radius: 50%;
 			content: counter(ol);
 			display: inline-grid;

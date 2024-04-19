@@ -16,7 +16,7 @@
 
 :where(.ui-digital-clock) {
 	all: unset;
-	background-color: var(--GrayCanvas);
+	background-color: var(--CanvasGray);
 	border-radius: var(--input-bdrs);
 	direction: ltr;
 	display: grid;

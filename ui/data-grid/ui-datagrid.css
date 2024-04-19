@@ -140,7 +140,7 @@
 
 		& tr[aria-selected] td {
 			--ui-table-td-hover: var(--AccentColor);
-			background-color: var(--AccentColorLight);
+			background-color: var(--Highlight);
 		}
 
 		/* Printable */
@@ -198,7 +198,7 @@
 
 	/* Density */
 	&:has(table.--compact) [name=density] {
-		background: var(--DarkGray);
+		background: var(--ButtonText);
 		color: Canvas;
 	 }
 

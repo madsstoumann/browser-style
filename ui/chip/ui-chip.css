@@ -1,7 +1,7 @@
 @layer bs-component {
 	:where(.ui-chip) {
 		align-items: center;
-		background: var(--ui-chip-bg, var(--GrayCanvas));
+		background: var(--ui-chip-bg, var(--ButtonFace));
 		border-radius: var(--ui-chip-bdrs, 3ch);
 		color: var(--ui-chip-c, var(--CanvasText));
 		display: inline-flex;

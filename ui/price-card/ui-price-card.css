@@ -1,5 +1,5 @@
 :where(.ui-price-card) {
-	background: var(--ui-price-card-bg, var(--GrayCanvas));
+	background: var(--ui-price-card-bg, var(--CanvasGray));
 	border-radius: var(--ui-price-card-bdrs, 2ch);
 	display: grid;
 	padding: 1.5ch 2ch;

@@ -11,7 +11,7 @@
 	all: unset;
 	background: 
 		linear-gradient(90deg, var(--otp-bg-cur, var(--ButtonFace)) var(--_otp-w), transparent 0),
-		linear-gradient(90deg, var(--otp-bg, var(--GrayCanvas)) var(--_otp-w), transparent 0);
+		linear-gradient(90deg, var(--otp-bg, var(--CanvasGray)) var(--_otp-w), transparent 0);
 	background-position: calc(var(--_otp-digit-pos) * var(--_otp-bgsz)) 0, 0 0;
 	background-repeat: no-repeat, repeat-x;
 	background-size: var(--_otp-bgsz) 100%;

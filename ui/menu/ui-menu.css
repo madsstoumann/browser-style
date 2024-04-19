@@ -7,7 +7,7 @@
 	--ui-menu-mobile-gap: .75em;
 
 	align-items: center;
-	background: var(--ui-menu-bg, var(--GrayCanvas));
+	background: var(--ui-menu-bg, var(--CanvasGray));
 	color: var(--ui-menu-c, var(--CanvasText));
 	display: flex;
 	font-size: var(--ui-menu-fs, smaller);

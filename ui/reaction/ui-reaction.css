@@ -25,7 +25,7 @@
 		text-align: center;
 		width: 2em;
 		&:hover {
-			--button-bg: var(--GrayCanvas);
+			--button-bg: var(--CanvasGray);
 			--button-hover-mix: #FFF 0%;
 		}
 	}

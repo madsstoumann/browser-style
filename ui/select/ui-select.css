@@ -26,7 +26,7 @@
 		& ui-option {
 			cursor: default;
 			padding: calc(var(--input-pb) / 2) var(--input-pi);
-			&:hover { background-color: var(--GrayCanvas); }
+			&:hover { background-color: var(--CanvasGray); }
 		}
 	}
 }

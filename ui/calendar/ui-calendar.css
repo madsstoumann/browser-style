@@ -35,7 +35,7 @@
 				grid-column: var(--_gc, initial);
 				text-align: end; 
 				&:not([data-today]) time:hover {
-					background: var(--ui-calendar-day-hover-bgc, var(--GrayCanvas));
+					background: var(--ui-calendar-day-hover-bgc, var(--CanvasGray));
 				}
 			}
 		}

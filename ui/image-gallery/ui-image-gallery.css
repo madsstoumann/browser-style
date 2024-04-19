@@ -5,8 +5,8 @@
 	:where(.ui-image-gallery) {
 		--ui-image-gallery-thumb-gap: 1ch;
 		--ui-image-gallery-thumb-w: 110px;
-		background: var(--GrayCanvas);
-		border: var(--ui-image-gallery-bdw, 1px) solid var(--ui-image-gallery-bdc, var(--GrayMedium));
+		background: var(--CanvasGray);
+		border: var(--ui-image-gallery-bdw, 1px) solid var(--ui-image-gallery-bdc, var(--GrayText));
 		border-radius: var(--ui-image-gallery-bdrs, var(--input-bdrs));
 		container-type: inline-size;
 		display: grid;
@@ -26,7 +26,7 @@
 				height: 100%;
 				min-width: var(--ui-image-gallery-thumb-w);
 			}
-			& [role="tab"] { border: 1px solid var(--ui-image-gallery-bdc, var(--GrayMedium)); }
+			& [role="tab"] { border: 1px solid var(--ui-image-gallery-bdc, var(--GrayText)); }
 			& [aria-selected="true"] {
 				border-color: var(--AccentColor);
 				box-shadow: 0 0 0 1px var(--AccentColor);

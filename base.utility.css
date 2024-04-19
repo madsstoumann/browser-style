@@ -27,25 +27,15 @@
 	/* Color Scheme */
 	.cs-dark { color-scheme: dark; }
 	.cs-light { color-scheme: light; }
-	.cs-opposite { background-color: Canvas; color: var(--CanvasText); }
-
-	/* TODO: FIX COLORS IN DARK/LIGHT FORCED MODE */
+	.cs-opposite {
+		background-color: var(--Canvas);
+		color: var(--CanvasText);
+	}
 	@media (prefers-color-scheme: dark) {
-		.cs-opposite {
-			/* --GrayLight: hsl(0, 0%, 97.5%); */
-			color-scheme: light;
-		}
+		.cs-opposite { color-scheme: light; }
 	}
 	@media (prefers-color-scheme: light) {
-		.cs-opposite {
-			--AccentColor: hsl(211, 60%, 50%);
-			--GrayLight: hsl(0, 0%, 2.5%);
-			--ColorInfo: hsl(210, 30%, 46%);
-			--ColorError: hsl(360, 40%, 56%);
-			--ColorSuccess: hsl(136, 21%, 51%);
-			--ColorWarning: hsl(33, 69%, 59%);
-			color-scheme: dark;
-		}
+		.cs-opposite { color-scheme: dark; }
 	}
 
 	/* Font Sizes */
@@ -86,28 +76,52 @@
 
 	/* Colors */
 	[class*="bg-"] {
-		background-color: var(--button-bg);
-		color: var(--button-c);
+		background: var(--_bg);
+		color: var(--_c, #FFF);
+		&:is(button, .ui-button) {
+			&:not([disabled],.--disabled):is(:focus-visible, :hover) {
+				background: color-mix(in srgb, var(--_bg, var(--ButtonFace)), var(--CanvasText) 25%);
+				box-shadow: color-mix(in srgb, var(--_bg), transparent 75%) 0px 0px 0px .16em;
+				outline-color: var(--_bg);
+				outline-offset: 0.3em;
+				&.--light {
+					background: var(--_bg);
+					color: #FFF;
+				}
+			}
+		}
 		&.--light {
-			background: color-mix(in srgb, var(--button-bg), Canvas 80%);
-			color: var(--button-bg);
-			&:hover { background-color: var(--button-bg); color: #FFF; }
+			background: color-mix(in srgb, var(--_bg), var(--Canvas) 80%);
+			color: var(--_bg);
 		}
 	}
-	.bg-accent, input[type=file]::file-selector-button, [type=submit] {
-		--button-bg: var(--AccentColor);
-		--button-c: var(--AccentColorText);
-		&.--outline { color: var(--AccentColor); &:hover { color: var(--AccentColorText); } }
+	.bg-accent {
+		--_bg: var(--AccentColor);
+		--_c: var(--AccentColorText);
+		&.--outline {
+			background: #0000;
+			color: var(--AccentColor);
+			&:is(:focus-visible, :hover) {
+				background: var(--AccentColor);
+				color: var(--AccentColorText);
+			}
+		}
 	}
-	.bg-black { --button-bg: var(--CanvasText); --button-c: Canvas;
-		&.--outline { color: CanvasText; &:hover { color: Canvas; } }
+	.bg-black {
+		--_bg: var(--CanvasText);
+		--_c: var(--Canvas);
+		&.--outline {
+			background: #0000;
+			color: var(--CanvasText);
+			&:is(:focus-visible, :hover) {
+				background: var(--CanvasText);
+				color: var(--Canvas);
+			}
+		}
 	}
-	.bg-error { --button-bg: var(--ColorError); --button-c: #FFF; }
-	.bg-gray {
-		--button-bg: var(--GrayCanvas); --button-c: var(--CanvasText);
-		&.--outline { color: var(--GrayText); &:hover { color: var(--CanvasText); } }
-	}
-	.bg-info { --button-bg: var(--ColorInfo); --button-c: #FFF; }
-	.bg-success { --button-bg: var(--ColorSuccess); --button-c: #FFF; }
-	.bg-warning { --button-bg: var(--ColorWarning); --button-c: #FFF; }
+	.bg-error { --_bg: var(--ColorError); }
+	.bg-gray { --_bg: var(--CanvasGray); --_c: var(--CanvasText); }
+	.bg-info { --_bg: var(--ColorInfo); }
+	.bg-success { --_bg: var(--ColorSuccess); }
+	.bg-warning { --_bg: var(--ColorWarning); }
 }

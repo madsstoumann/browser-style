@@ -1,7 +1,7 @@
 :where(.ui-gradient-text) {
 	background: linear-gradient(
 		var(--ui-gradient-dir, 90deg),
-		var(--ui-gradient, var(--AccentColor), var(--AccentColorLight), var(--AccentColor))) 0 0 / 
+		var(--ui-gradient, var(--AccentColor), var(--Highlight), var(--AccentColor))) 0 0 / 
 		var(--ui-gradient-bgsz-x, 150%) 100%;
 	background-clip: text;
   -webkit-background-clip: text;

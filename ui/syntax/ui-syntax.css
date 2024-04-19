@@ -3,7 +3,7 @@
   --_selector: cornflowerblue;
   --_value: var(--ColorWarning);
 
-  background: var(--GrayCanvas);
+  background: var(--CanvasGray);
   border-radius: var(--input-bdrs);
   direction: ltr;
   font-family: var(--ff-mono, monospace);

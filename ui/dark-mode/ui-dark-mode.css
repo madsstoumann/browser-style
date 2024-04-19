@@ -7,7 +7,7 @@ body:has([name=colorscheme][value=light]:checked) {
 
 /* button group */
 :is(.ui-button-group.ui-dark-mode) {
-	--AccentColor: var(--DarkGray);
+	--AccentColor: var(--ButtonText);
 	width: fit-content;
 }
 

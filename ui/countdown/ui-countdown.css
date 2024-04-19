@@ -23,7 +23,7 @@
 	:where(.ui-countdown) {
 		--ui-countdown-gap: 1ch;
 		all: unset;
-		background: var(--GrayCanvas);
+		background: var(--CanvasGray);
 		border-radius: var(--input-bdrs);
 		display: grid;
 		font-variant-numeric: tabular-nums;

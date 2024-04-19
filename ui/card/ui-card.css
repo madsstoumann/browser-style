@@ -2,7 +2,7 @@
 	:where(.ui-card) {
 		--ui-card-p: 1rem;
 		--ui-card-rg: .66em;
-		background: var(--ui-card-bg, var(--GrayCanvas));
+		background: var(--ui-card-bg, var(--CanvasGray));
 		clip-path: inset(0 0 0 0 round var(--input-bdrs));
 		display: grid;
 		row-gap: var(--ui-card-rg);

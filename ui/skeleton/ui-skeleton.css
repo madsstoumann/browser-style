@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Flow+Rounded&display=swap');
 :where(.ui-skeleton) {
-	color: var(--GrayCanvas);
+	color: var(--CanvasGray);
 	container-type: inline-size;
 	font-family: 'Flow Rounded', sans-serif;
 	place-content: start;
 	/* Blocks */
 	& samp {
-		background-color: var(--GrayCanvas);
+		background-color: var(--CanvasGray);
 		display: block;
 		overflow: hidden;
 		position: relative;

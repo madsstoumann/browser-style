@@ -5,11 +5,11 @@
 		all: unset;
 		direction: ltr;
 		& input {
-			--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
+			--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--CanvasGray)), #000 30%);
 			--input-check-bgsz: 50%/55%;
 			--input-check-sz: 2em;
 			aspect-ratio: 1 / .9;
-			background-color: var(--ui-cinema-seat-bg, var(--GrayCanvas));
+			background-color: var(--ui-cinema-seat-bg, var(--CanvasGray));
 			border-color: var(--_bdc);
 			border-radius: .5em .5em .15em .15em;
 			border-width: 0 0 .25em 0;

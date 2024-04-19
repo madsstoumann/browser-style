@@ -11,7 +11,7 @@
 			border: 0;
 			padding-inline-start: 5rem;
 			&::before {
-				color: var(--GrayMedium);
+				color: var(--GrayText);
 				content: '“';
 				display: block;
 				font-family: ui-serif, serif;
@@ -29,7 +29,7 @@
 			text-align: center;
 			&::after,
 			&::before {
-				background-color: var(--GrayMedium);
+				background-color: var(--GrayText);
 				content: '';
 				display: block;
 				height: 1px;
@@ -42,7 +42,7 @@
 			padding-inline: 6ch;
 			text-align: center;
 				&::before, &::after {
-					color: var(--GrayMedium);
+					color: var(--GrayText);
 					font-size: 8rem;
 					line-height: 0.5;
 					position: absolute;

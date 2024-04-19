@@ -26,7 +26,7 @@
 			&:last-of-type { border-radius: 0 var(--ui-toolbar-bdrs) var(--ui-toolbar-bdrs) 0; }
 			&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }
 			&:focus-visible {
-				background-color: var(--GrayCanvas);
+				background-color: var(--CanvasGray);
 				outline: none;
 			}
 		}

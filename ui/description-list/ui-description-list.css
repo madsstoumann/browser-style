@@ -2,7 +2,7 @@
 	--ui-decription-list-gap: 2ch;
 	&.--card {
 		& dd, & dt {
-			background-color: var(--GrayCanvas);
+			background-color: var(--CanvasGray);
 			padding-inline: var(--ui-decription-list-gap);
 		}
 		& dd {

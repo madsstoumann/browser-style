@@ -4,7 +4,7 @@
 		aspect-ratio: 1 / 1;
 		background: var(--ui-avatar-bg, var(--ButtonFace));
 		block-size: var(--ui-avatar-sz, 4em);
-		border: var(--ui-avatar-bdw, 2px) solid var(--GrayCanvas);
+		border: var(--ui-avatar-bdw, 2px) solid var(--CanvasGray);
 		border-radius: var(--ui-avatar-bdrs, 50%);
 		color: var(--ui-avatar-c, inherit);
 		container-type: inline-size;

@@ -1,7 +1,7 @@
 @layer bs-component {
 	:where(.ui-color-key) {
 		all: unset;
-		background-color: var(--GrayCanvas);
+		background-color: var(--CanvasGray);
 		border-radius: var(--ui-color-key-bdrs, 5ch);
 		display: grid;
 		font-family: var(--ui-color-key-ff, var(--ff-form));

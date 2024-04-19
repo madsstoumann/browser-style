@@ -3,7 +3,7 @@
 	:where(.ui-accordion) {
 		--ui-accordion-bds: solid;
 		--ui-accordion-bdw: 1px;
-		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--GrayLight) 10% 90%, #0000);
+		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--Field) 10% 90%, #0000);
 		& summary {
 			align-items: center;
 			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);

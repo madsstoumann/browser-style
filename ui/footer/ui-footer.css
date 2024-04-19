@@ -2,7 +2,7 @@
 	--ui-grid-cg: var(--ui-footer-gap);
 	--ui-footer-gap: 3ch;
 	--VisitedText: currentColor;
-	background: var(--ui-footer-bg, var(--GrayCanvas));
+	background: var(--ui-footer-bg, var(--CanvasGray));
 	font-size: var(--ui-footer-fs, small);
 	padding: calc(var(--ui-footer-gap) / 2) var(--ui-footer-gap);
 	& div:has(span) {

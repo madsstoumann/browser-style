@@ -29,7 +29,7 @@
 		&:focus-visible:checked {
 			outline: 2px solid color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 40%);
 		}
-		&[inert] { --ui-flight-seat-bg: var(--GrayCanvas); }
+		&[inert] { --ui-flight-seat-bg: var(--CanvasGray); }
 	}
 	& label {
 		display: contents;

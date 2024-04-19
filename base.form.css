@@ -22,8 +22,11 @@
 		&::placeholder { color: var(--GrayText); }
 	}
 	:where(button, .ui-button), [type=file]::file-selector-button {
+		--button-bg--hover: color-mix(in srgb, var(--button-bg, var(--ButtonFace)), var(--button-hover-mix, var(--CanvasText) 25%));
+		--button-bxsh--hover: color-mix(in srgb, var(--button-bg, var(--ButtonFace)), transparent 75%) 0px 0px 0px .16em;
+		--button-c--hover: var(--button-c, inherit);
 		align-items: center;
-		background-color: var(--button-bg, var(--ButtonFace));
+		background: var(--button-bg, var(--ButtonFace));
 		border-color: var(--button-bdc, transparent);
 		color: var(--button-c, inherit);
 		display: inline-grid;
@@ -40,10 +43,15 @@
 			cursor: not-allowed;
 			opacity: .33;
 		}
-		&:focus-visible { outline-offset: .3em; }
-		&:hover {
-			background-color: color-mix(in srgb, var(--button-bg, var(--ButtonFace)), var(--button-hover-mix, #000 20%));
-			box-shadow: var(--button-hover-bxsh, color-mix(in srgb, var(--button-bg), transparent 75%) 0px 0px 0px .16em);
+		&:focus-visible {
+			outline-color: var(--button-bg, var(--ButtonFace));
+			outline-offset: 0.3em;
+		}
+		&:not([disabled],.--disabled):is(:focus-visible, :hover),
+		&:has(input:focus-visible) {
+			background: var(--button-bg--hover);
+			box-shadow: var(--button-bxsh--hover);
+			color: var(--button-c--hover);
 		}
 		&.--icon {
 			--button-p: 1ch;
@@ -54,10 +62,9 @@
 			height: auto;
 		}
 		&.--outline {
-			&:hover { border-color: currentColor; }
-			&:not(:hover) {
-				background: transparent;
-				border-color: currentColor;
+			&:not(:focus-visible, :hover) {
+				--button-bdc: currentColor;
+				background: #0000;
 			}
 			&.--icon { border-width: 2px; }
 		}
@@ -66,6 +73,17 @@
 		&.--start { justify-self: start; }
 		&.--toggle { --button-p: 0; }
 		&.--transparent { background: transparent; }
+	}
+	:where([type=submit]), input[type=file]::file-selector-button {
+		--button-bg: var(--AccentColor);
+		--button-c: var(--AccentColorText);
+		&.--outline {
+			--button-bg: #0000;
+			--button-c: var(--AccentColor);
+			--button-bg--hover: var(--AccentColor);
+			--button-c--hover: var(--AccentColorText);
+			outline-color: var(--AccentColor);
+		}
 	}
 	:where(button, .ui-button, input, select, textarea) {
 		font-family: var(--ff-form);
@@ -234,7 +252,7 @@
 	:where(option) {
 		&:is(:checked, [selected]) {
 			--icon: url('/assets/svg/check.svg');
-			background-color: var(--GrayCanvas);
+			background-color: var(--CanvasGray);
 		}
 		&:not(:last-of-type) {
 			border-block-end: var(--input-bdw) solid var(--ButtonBorder);

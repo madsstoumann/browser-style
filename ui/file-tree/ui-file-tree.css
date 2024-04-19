@@ -4,7 +4,7 @@
 	--ui-file-tree-bds: solid;
 	--ui-file-tree-bdw: 1px;
 	--ui-file-tree-gap: .75em;
-	color: var(--DarkGray);
+	color: var(--ButtonText);
 	direction: ltr;
 	font-size: var(--ui-file-tree-fs, smaller);
 	margin: 0;

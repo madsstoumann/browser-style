@@ -1,6 +1,6 @@
 @layer bs-component {
 	:where([data-tooltip]) {
-		--ui-tooltip-bg: var(--DarkGray);
+		--ui-tooltip-bg: var(--CanvasText);
 		--ui-tooltip-triangle-h: 0%;
 		position: relative;
 		&::before {

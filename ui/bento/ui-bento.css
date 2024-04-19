@@ -6,7 +6,7 @@
 		list-style: none;
 		padding: 0;
 		& li {
-			background-color: var(--GrayCanvas);
+			background-color: var(--CanvasGray);
 			border-radius: clamp(0.25rem, -0.2857rem + 1.7143vw, 1rem);
 			color: CanvasText;
 			container-type: inline-size;
