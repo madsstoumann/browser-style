@@ -1,14 +1,16 @@
 @layer bs-component {
 	:where(.ui-image-compare) { 
+		--ui-image-compare-bdrs: var(--input-bdrs);
 		--ui-image-compare-thumb-c: var(--ButtonBorder);
 		--ui-image-compare-thumb-w: min(3cqi, 1.25em);
 		all: unset;
+		clip-path: inset(0 0 0 0 round var(--ui-image-compare-bdrs));
 		direction: ltr;
 		display: grid;
 		& * { grid-area: 1 / 1; }
 		& img {
 			border: 1px solid var(--ButtonBorder);
-			border-radius: var(--input-bdrs);
+			border-radius: var(--ui-image-compare-bdrs);
 			pointer-events: none;
 			&:first-of-type { clip-path: polygon(0% 0%, var(--value) 0%, var(--value) 100%, 0% 100%); }
 			&:last-of-type { clip-path: polygon(100% 0%, var(--value) 0%, var(--value) 100%, 100% 100%); } 

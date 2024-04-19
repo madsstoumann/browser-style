@@ -6,7 +6,7 @@
 		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
 		--ButtonText: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
 		--Canvas: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
-		--CanvasGray: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 10%));
+		--CanvasGray: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
 		--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
 		--Field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
 		--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));

@@ -1,25 +1,27 @@
-:where(.ui-dialog) {
-	--ui-dialog-gap: .5em;
-	background-color: Canvas;
-	border: 0;
-	border-radius: var(--input-bdrs);
-  box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
-	color: var(--CanvasText);
-	gap: var(--ui-dialog-gap);
-	padding: calc(2 * var(--ui-dialog-gap));
-	width: fit-content;
-	& >* { margin: 0; }
-	& fieldset { all: unset; }
-	& header, & legend { font-size: larger; }
-	& legend { margin-block-end: var(--ui-dialog-gap); }
-	& nav {
-		display: flex;
+@layer bs-component {
+	:where(.ui-dialog) {
+		--ui-dialog-gap: .5em;
+		background-color: var(--Canvas);
+		border: 0;
+		border-radius: var(--input-bdrs);
+		box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
+		color: var(--CanvasText);
 		gap: var(--ui-dialog-gap);
-		justify-content: flex-end;
-	}
-	& [data-ref=template]:not(:empty) {
-		display: grid;
-		gap: var(--ui-dialog-gap);
-		margin-block-end: calc(2 * var(--ui-dialog-gap));
+		padding: calc(2 * var(--ui-dialog-gap));
+		width: fit-content;
+		& >* { margin: 0; }
+		& fieldset { all: unset; }
+		& header, & legend { font-size: larger; }
+		& legend { margin-block-end: var(--ui-dialog-gap); }
+		& nav {
+			display: flex;
+			gap: var(--ui-dialog-gap);
+			justify-content: flex-end;
+		}
+		& [data-ref=template]:not(:empty) {
+			display: grid;
+			gap: var(--ui-dialog-gap);
+			margin-block-end: calc(2 * var(--ui-dialog-gap));
+		}
 	}
 }

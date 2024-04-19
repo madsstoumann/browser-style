@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-description-list.css">
 </head>
@@ -13,7 +13,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Description List</h2>
-	<p>With <code>--table</code> modifier</p>
+	<p>With <code>--table</code> modifier:</p>
 	<dl class="--table">
 		<dt>Tags</dt> <dd>The basic building blocks of HTML. Tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of a web page.</dd>
 		<dt>Elements</dt> <dd>A group of tags that work together to create a specific type of content, such as a heading, a paragraph, or a list.</dd>
@@ -21,12 +21,45 @@
 		<dt>Entities</dt> <dd>Special characters that can be used to represent non-text characters, such as copyright symbols and mathematical symbols.</dd>
 	</dl>
 
-	<p>With <code>--card</code> modifier</p>
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-1 pi-3">
+		<dl class="--table">
+			<dt>Tags</dt> <dd>The basic building blocks of HTML. Tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of a web page.</dd>
+			<dt>Elements</dt> <dd>A group of tags that work together to create a specific type of content, such as a heading, a paragraph, or a list.</dd>
+			<dt>Attributes</dt> <dd>Additional information that can be added to tags to customize their behavior. For example, the href attribute can be used to specify the URL of a link.</dd>
+			<dt>Entities</dt> <dd>Special characters that can be used to represent non-text characters, such as copyright symbols and mathematical symbols.</dd>
+		</dl>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<dl class="--table">
+			<dt>Tags</dt> <dd>The basic building blocks of HTML. Tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of a web page.</dd>
+			<dt>Elements</dt> <dd>A group of tags that work together to create a specific type of content, such as a heading, a paragraph, or a list.</dd>
+			<dt>Attributes</dt> <dd>Additional information that can be added to tags to customize their behavior. For example, the href attribute can be used to specify the URL of a link.</dd>
+			<dt>Entities</dt> <dd>Special characters that can be used to represent non-text characters, such as copyright symbols and mathematical symbols.</dd>
+		</dl>
+	</div>
+
+	<br>
+	<h2>Variants</h2>
+	<p>With <code>--card</code> modifier:</p>
 	<dl class="--card">
 		<dt>Tags</dt> <dd>The basic building blocks of HTML. Tags are enclosed in angle brackets, and they tell the web browser how to display the text, images, and other elements of a web page.</dd>
 		<dt>Elements</dt> <dd>A group of tags that work together to create a specific type of content, such as a heading, a paragraph, or a list.</dd>
 		<dt>Attributes</dt> <dd>Additional information that can be added to tags to customize their behavior. For example, the href attribute can be used to specify the URL of a link.</dd>
 		<dt>Entities</dt> <dd>Special characters that can be used to represent non-text characters, such as copyright symbols and mathematical symbols.</dd>
+	</dl>
+
+	<br>
+	<p>With <code>--list</code> modifier:</p>
+	<dl class="--list">
+		<dt>Height</dt> <dd>0.44 inch (1.13 cm)</dd>
+		<dt>Width</dt> <dd>11.97 inches (30.41 cm)</dd>
+		<dt>Depth</dt> <dd>8.46 inches (21.5 cm)</dd>
+		<dt>Weight</dt> <dd>2.7 pounds (1.24 kg)</dd>
 	</dl>
 </body>
 </html>

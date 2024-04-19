@@ -13,7 +13,7 @@
 			transition: background .2s ease-in-out;
 			&:has(:checked) { border-color: var(--AccentColor); }
 			@media (hover: hover) {
-				&:hover { background: var(--GrayHover); }
+				&:hover { background: var(--CanvasGray); }
 			}
 		}
 		& legend { margin-block-end: var(--label-rg); }

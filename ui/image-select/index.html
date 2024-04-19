@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-image-select.css">
 </head>
@@ -31,6 +31,52 @@
 		<label>
 			<img src="https://source.unsplash.com/random/100x100?sig=3" alt="Random image">
 			<input type="checkbox" name="image-select" value="3">
+		</label>
+	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<fieldset class="ui-image-select">
+			<legend>Image Select</legend>
+			<label>
+				<img src="https://source.unsplash.com/random/100x100?sig=0" alt="Random image">
+				<input type="checkbox" name="image-select-2" value="0" checked>
+			</label>
+			<label>
+				<img src="https://source.unsplash.com/random/100x100?sig=1" alt="Random image">
+				<input type="checkbox" name="image-select-2" value="1" checked>
+			</label>
+			<label>
+				<img src="https://source.unsplash.com/random/100x100?sig=2" alt="Random image">
+				<input type="checkbox" name="image-select-2" value="2">
+			</label>
+			<label>
+				<img src="https://source.unsplash.com/random/100x100?sig=3" alt="Random image">
+				<input type="checkbox" name="image-select-2" value="3">
+			</label>
+		</fieldset>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<fieldset class="ui-image-select" dir="rtl">
+		<legend>Image Select</legend>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=0" alt="Random image">
+			<input type="checkbox" name="image-select-3" value="0" checked>
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=1" alt="Random image">
+			<input type="checkbox" name="image-select-3" value="1" checked>
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=2" alt="Random image">
+			<input type="checkbox" name="image-select-3" value="2">
+		</label>
+		<label>
+			<img src="https://source.unsplash.com/random/100x100?sig=3" alt="Random image">
+			<input type="checkbox" name="image-select-3" value="3">
 		</label>
 	</fieldset>
 
