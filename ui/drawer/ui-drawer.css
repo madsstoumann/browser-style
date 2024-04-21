@@ -1,5 +1,4 @@
 @import '../icon/ui-icon.css';
-
 @layer bs-component {
 	:where(.ui-drawer) {
 		--ui-drawer-w: 33vw;

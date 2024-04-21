@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../icon/ui-icon.css">
 	<link rel="stylesheet" href="ui-details.css">
@@ -14,7 +14,12 @@
 	<h1>UI: Components</h1>
 
 	<h2>Details</h2>
-	<p>Custom element, <code>&lt;ui-details&gt;</code>, to replace regular <code>&lt;details&gt;</code>-tags, when animations and finer control is needed.</p>
+	<p>
+		Custom element, <code>&lt;ui-details&gt;</code>, to replace regular <code>&lt;details&gt;</code>-tags, when animations and finer control is needed.
+	</p>
+	<p>
+		<strong>Note,</strong> that <a href="/ui/accordion/">Accordion</a> without JavaScript is recommended in most cases.
+	</p>
 
 	<ui-details>
 		<ui-summary><span>More info</span><ui-icon type="chevron right" size="md"></ui-icon></ui-summary>
@@ -32,6 +37,30 @@
 			<ui-panel>
 				Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
 			</ui-p>
+		</ui-expand>
+	</ui-details>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-details>
+			<ui-summary><span>More info</span><ui-icon type="chevron right" size="md"></ui-icon></ui-summary>
+			<ui-expand>
+				<ui-panel>
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
+				</ui-panel>
+			</ui-expand>
+		</ui-details>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<ui-details dir="rtl">
+		<ui-summary><span>More info</span><ui-icon type="chevron right" size="md"></ui-icon></ui-summary>
+		<ui-expand>
+			<ui-panel>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis possimus laudantium, obcaecati placeat corrupti repudiandae mollitia enim facilis ipsa odio!
+			</ui-panel>
 		</ui-expand>
 	</ui-details>
 

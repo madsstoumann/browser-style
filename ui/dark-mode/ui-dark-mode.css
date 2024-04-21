@@ -1,22 +1,24 @@
-body:has([name=colorscheme][value=dark]:checked) {
-	color-scheme: dark;
-}
-body:has([name=colorscheme][value=light]:checked) {
-	color-scheme: light;
-}
+@layer bs-component {
+	body:has([name=colorscheme][value=dark]:checked) {
+		color-scheme: dark;
+	}
+	body:has([name=colorscheme][value=light]:checked) {
+		color-scheme: light;
+	}
 
-/* button group */
-:is(.ui-button-group.ui-dark-mode) {
-	--AccentColor: var(--ButtonText);
-	width: fit-content;
-}
+	/* ui-button-group overrides */
+	:is(.ui-button-group.ui-dark-mode) {
+		--AccentColor: var(--CanvasText);
+		--AccentColorText: var(--Canvas);
+	}
 
-/* checkbox */
-:where(label.ui-dark-mode) {
-	grid-template-columns: 1fr;
-	& input:checked + svg { rotate: 180deg; }
-	& svg {
-		transition: all .6s ease;
-		width: var(--ui-dark-mode-svg-w, 3em);
+	/* checkbox */
+	:where(label.ui-dark-mode) {
+		grid-template-columns: 1fr;
+		& input:checked + svg { rotate: 180deg; }
+		& svg {
+			transition: all .6s ease;
+			width: var(--ui-dark-mode-svg-w, 3em);
+		}
 	}
 }

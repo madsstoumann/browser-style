@@ -1,6 +1,6 @@
 @layer bs-component {
 	:where(.ui-file-tree) {
-		--ui-file-bs: .75em;
+		--ui-file-tree-bs: .75em;
 		--ui-file-tree-bds: solid;
 		--ui-file-tree-bdw: 1px;
 		--ui-file-tree-gap: 1ch;
@@ -23,13 +23,13 @@
 				inset-inline-start: calc(0px - var(--ui-file-tree-gap));
 				position: absolute;
 			}
-			&:last-of-type::before { block-size: var(--ui-file-bs); }
+			&:last-of-type::before { block-size: var(--ui-file-tree-bs); }
 			&::after {
 				block-size: var(--ui-file-tree-bdw);
 				border-block-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
 				content: "";
 				inline-size: calc(2 * var(--ui-file-tree-gap));
-				inset-block-start: var(--ui-file-bs);
+				inset-block-start: var(--ui-file-tree-bs);
 				inset-inline-start: calc(0px - var(--ui-file-tree-gap));
 				position: absolute;
 			}

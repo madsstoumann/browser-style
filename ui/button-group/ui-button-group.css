@@ -2,7 +2,7 @@
 	:where(.ui-button-group) {
 		--ui-button-group-bg: var(--AccentColor);
 		--ui-button-group-c: var(--AccentColorText);
-		--ui-button-group-bdw: 2px;
+		--ui-button-group-bdw: calc(1em / 8);
 		all: unset;
 		column-gap: .25em;
 		display: grid;
@@ -40,6 +40,7 @@
 				}
 			}
 		}
+		&.--inline { display: inline-grid; }
 		&.--outline {
 			& label {
 				&:not(:has(:checked)) { border-color: var(--ButtonBorder); }
