@@ -27,6 +27,13 @@
 			}
 		}
 		&.--no-border { --ui-accordion-bdw: 0; }
+		&.--item {
+			--ui-accordion-bdw: 0;
+			border-radius: 1em;
+			box-shadow: 0em 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+			margin-block-end: 2em;
+			padding-inline: 2.5ch;
+		}
 	}
 
 	ul.ui-accordion {

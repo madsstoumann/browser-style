@@ -3,7 +3,7 @@
 		--ui-badge-sz: 1.5rem;
 		background: var(--ui-badge-bg, var(--CanvasText));
 		border-radius: 50%;
-		border: 1px solid Canvas;
+		border: 1px solid var(--ui-badge-bdc, transparent);
 		color: var(--ui-badge-c, Canvas);
 		display: inline-grid;
 		font-size: var(--ui-badge-fs, .675rem);

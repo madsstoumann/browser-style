@@ -12,7 +12,10 @@
 <body>
 	<h1>UI: Components</h1>
 	<h2>Context Menu</h2>
-	<p>Using the <code>popover API</code> to display a context-menu.</p>
+	<p>
+		A context menu is a menu in a graphical user interface (GUI) that appears upon user interaction.<br>It presents a list of options that are available in the current state, or context of the application.
+	</p>
+
 	<button type="button" id="context-menu-toggle" popovertarget="context-menu">
 		Open Menu
 	</button>
@@ -41,6 +44,72 @@
 		 	</svg>
 		</li>
 	</ul>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<button type="button" id="context-menu-toggle-cs" popovertarget="context-menu-cs">
+			Open Menu
+		</button>
+		<ul id="context-menu-cs" popover anchor="context-menu-toggle-cs" class="ui-context-menu" data-anchor="top:bottom left:left">
+			<li tabindex="0">Add item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+					<path d="M13.5 6.5l4 4"></path>
+					<path d="M16 19h6"></path>
+					<path d="M19 16v6"></path>
+				</svg>
+			</li>
+			<li tabindex="0">Edit item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+					<path d="M13.5 6.5l4 4"></path>
+			 </svg>
+			</li>
+			<li tabindex="0">Delete item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 7l16 0"></path>
+					<path d="M10 11l0 6"></path>
+					<path d="M14 11l0 6"></path>
+					<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+					<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+				 </svg>
+			</li>
+		</ul>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<button type="button" id="context-menu-toggle-rtl" popovertarget="context-menu-rtl">
+			Open Menu
+		</button>
+		<ul id="context-menu-rtl" popover anchor="context-menu-toggle-rtl" class="ui-context-menu" data-anchor="top:bottom left:left">
+			<li tabindex="0">Add item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+					<path d="M13.5 6.5l4 4"></path>
+					<path d="M16 19h6"></path>
+					<path d="M19 16v6"></path>
+				</svg>
+			</li>
+			<li tabindex="0">Edit item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+					<path d="M13.5 6.5l4 4"></path>
+			 </svg>
+			</li>
+			<li tabindex="0">Delete item
+				<svg viewBox="0 0 24 24" class="ui-icon">
+					<path d="M4 7l16 0"></path>
+					<path d="M10 11l0 6"></path>
+					<path d="M14 11l0 6"></path>
+					<path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+					<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+				 </svg>
+			</li>
+		</ul>
+	</div>
 
 	<script type="module">
 		import uiAnchor from '../anchor/uiAnchor.js';

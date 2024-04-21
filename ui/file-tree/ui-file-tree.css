@@ -39,5 +39,9 @@
 			padding-block: 0; 
 			padding-inline: var(--ui-file-tree-gap) 0;
 		}
+		& ui-mask {
+			/* fix: magic numbers */
+			translate: -3px 3px;
+		}
 	}
 }

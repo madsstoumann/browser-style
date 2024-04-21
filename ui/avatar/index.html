@@ -14,6 +14,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Avatar</h2>
+	<p>
+		An avatar is a graphical representation of a user or the user's character. It may take either a two-letter abbreviation or an image. This avatar is built with an <code>abbr</code>-tag and an <code>img</code>-tag.
+	</p>
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
@@ -82,7 +85,7 @@
 
 	<br>
 	<h2>Avatar Color</h2>
-	<p>Using <code>strToRGB</code> under the hood to automatically set a unique background-color, based on the initials: the <code>innerText</code> of the <code>&lt;abbr&gt;</code>-tag.</p>
+	<p>Based on the initials — the <code>innerText</code> of the <code>abbr</code>-tag — a background-color is set using <code>strToRGB</code>.</p>
 	<ul class="ui-avatar-list">
 		<li class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>

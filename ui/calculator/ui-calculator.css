@@ -1,7 +1,7 @@
 @layer bs-component {
 	:where(.ui-calculator) {
 		--GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
-		--GrayText: color-mix(in srgb, CanvasText 65%, Canvas 35%);  
+		--GrayText: color-mix(in srgb, CanvasText 65%, Canvas 35%);
 		background-color: var(--GrayDark);
 		border-radius: var(--input-bdrs);
 		border: 1px solid var(--GrayDark);
@@ -20,7 +20,7 @@
 		& input {
 			background-color: inherit;
 			block-size: 4rem;
-			color: Canvas;
+			color: var(--Canvas);
 			font-size: 3rem;
 			font-weight: 200;
 			grid-column: 1 / span 4;
@@ -36,7 +36,10 @@
 			font-size: 1.33em;
 			font-weight: 400;
 			outline: 0;
-			&:focus-visible { background-color: var(--ButtonBorder); }
+			&:focus-visible {
+				background-color: var(--ButtonBorder);
+				box-shadow: none;
+			}
 			&[value="0"] {
 				aspect-ratio: 2.42 / 1;
 				grid-column: span 2;

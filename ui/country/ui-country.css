@@ -1,26 +1,28 @@
-:where(.ui-country) {
-	width: var(--ui-country-w, 4em);
-	&.--circle,
-	&.--square,
-	&.--wavy {
-		aspect-ratio: 1;
-		object-fit: cover;
-	}
-	&.--circle,
-	&.--rounded,
-	&.--square,
-	&.--wavy {
-		border: 1px solid var(--ButtonBorder);
-	}
-	&.--circle {
-		border-radius: 50%;
-	}
-	&.--rounded, &.--square {
-		border-radius: .25em;
-	}
-	&.--wavy {
-		--_mask: url('/assets/svg/wavy.svg') no-repeat 0% 0%/cover;
-		mask: var(--_mask);
-		-webkit-mask: var(--_mask);
+@layer bs-component {
+	:where(.ui-country) {
+		width: var(--ui-country-w, 4em);
+		&.--circle,
+		&.--square,
+		&.--wavy {
+			aspect-ratio: 1;
+			object-fit: cover;
+		}
+		&.--circle,
+		&.--rounded,
+		&.--square,
+		&.--wavy {
+			border: 1px solid var(--ButtonBorder);
+		}
+		&.--circle {
+			border-radius: 50%;
+		}
+		&.--rounded, &.--square {
+			border-radius: .25em;
+		}
+		&.--wavy {
+			--_mask: url('/assets/svg/wavy.svg') no-repeat 0% 0%/cover;
+			mask: var(--_mask);
+			-webkit-mask: var(--_mask);
+		}
 	}
 }
