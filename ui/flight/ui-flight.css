@@ -1,5 +1,4 @@
 @import '../color-key/ui-color-key.css';
-
 @layer bs-component {
 	:where(.ui-flight) {
 		all: unset;

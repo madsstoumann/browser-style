@@ -13,6 +13,7 @@
 		}
 		& :is(h2, h3, h4, h5, h6) {
 			margin-block: 1ch .5ch;
+			text-wrap: pretty;
 		}
 		& nav {
 			padding-block-end: calc(var(--ui-footer-gap) / 2);
