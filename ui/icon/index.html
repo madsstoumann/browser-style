@@ -22,6 +22,8 @@
 	<h1>UI: Components</h1>
 
 	<h2>Icon</h2>
+	CSS-only icons with a variety of shapes and styles, using custom element <code>&lt;ui-icon&gt;</code>.<br>
+	See <a href="/ui/accordion/">Accordion</a> for examples of state-based icons — on <code>[open]</code> and <code>:checked</code>.
 	<p>
 		<button type="button" class="--icon"><ui-icon type="plus"></ui-icon></button>
 		<button type="button" class="--icon"><ui-icon type="minus"></ui-icon></button>
@@ -117,5 +119,56 @@
 		<button type="button" class="--icon"><ui-icon type="play"></ui-icon></button>
 		<button type="button" class="--icon"><ui-icon type="chevron right last"></ui-icon></button>
 	</p>
+
+	<br>
+	<h2>SVG Icons</h2>
+	When using SVG-based icons, use <code>class="ui-icon"</code> instead of custom element.<br>
+	Use modifiers <code>--[xl,lg,md,sm]-stroke</code> for stroke-widths:
+	<p>
+		<svg viewBox="0 0 24 24" class="ui-icon --xl-stroke --md-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --lg-stroke --md-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --md-stroke --md-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --xs-stroke --md-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+	</p>
+
+	<p>
+		Use modifiers <code>--[xl,lg,md,sm,xs]-icon</code> for sizes:
+	</p>
+
+	<p>
+		<svg viewBox="0 0 24 24" class="ui-icon --xl-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --lg-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --md-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --sm-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+		<svg viewBox="0 0 24 24" class="ui-icon --xs-icon">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+	</p>
+
 </body>
 </html>

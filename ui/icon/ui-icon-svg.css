@@ -1,19 +1,19 @@
 @layer bs-component {
 	:where(.ui-icon) {
 		fill: none;
-		height: var(--icon-sz, 100%);
+		height: var(--icon-sz, 1em);
 		stroke-linecap: round;
 		stroke-linejoin: round;
 		stroke-width: var(--icon-sw, 1.25);
 		stroke: currentColor;
-		width: var(--icon-sz, 100%);
+		width: var(--icon-sz, 1em);
 
 		/* Size */
-		&.--xs-icon { --icon-sz: 45%; }
-		&.--sm-icon { --icon-sz: 60%; }
-		&.--md-icon { --icon-sz: 75%; }
-		&.--lg-icon { --icon-sz: 125%; }
-		&.--xl-icon { --icon-sz: 150%; }
+		&.--xs-icon { --icon-sz: 1em; }
+		&.--sm-icon { --icon-sz: 2em; }
+		&.--md-icon { --icon-sz: 3em; }
+		&.--lg-icon { --icon-sz: 4em; }
+		&.--xl-icon { --icon-sz: 5em; }
 
 		/* Stroke */
 		&.--xs-stroke { --icon-sw: 0.5; }

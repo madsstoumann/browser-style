@@ -3,6 +3,7 @@ stylesheet.replaceSync(`
 	:host {
 		background: var(--CanvasGray);
 		border-radius: 0.5ch;
+		display: block;
 		padding: 1ch 2ch;
 	}
 	code {

@@ -1,17 +1,19 @@
-:where(.ui-gradient-text) {
-	background: linear-gradient(
-		var(--ui-gradient-dir, 90deg),
-		var(--ui-gradient, var(--AccentColor), var(--Highlight), var(--AccentColor))) 0 0 / 
-		var(--ui-gradient-bgsz-x, 150%) 100%;
-	background-clip: text;
-  -webkit-background-clip: text;
-	color: transparent;
+@layer bs-component {
+	:where(.ui-gradient-text) {
+		background: linear-gradient(
+			var(--ui-gradient-dir, 90deg),
+			var(--ui-gradient, var(--AccentColor), var(--Highlight), var(--AccentColor))) 0 0 / 
+			var(--ui-gradient-bgsz-x, 150%) 100%;
+		background-clip: text;
+		-webkit-background-clip: text;
+		color: transparent;
 
-	&.--animate {
-		--ui-gradient-bgsz: 300%;
-		animation: move-bg var(--ui-gradient-animdur, 5s) var(--ui-gradient-animic, infinite) alternate linear;
+		&.--animate {
+			--ui-gradient-bgsz: 300%;
+			animation: move-bg var(--ui-gradient-animdur, 5s) var(--ui-gradient-animic, infinite) alternate linear;
+		}
 	}
-}
-@keyframes move-bg {
-	to { background-position: var(--ui-gradient-bgsz-x, 250%) 0;}
+	@keyframes move-bg {
+		to { background-position: var(--ui-gradient-bgsz-x, 250%) 0;}
+	}
 }
