@@ -18,7 +18,7 @@
 		A rating histogram is a visual representation of the distribution of ratings for a product or service. It shows the number of ratings for each star level, and the percentage of total ratings that each level represents.
 	</p>
 
-	<div class="ui-rating-histogram" id="rating-demo">
+	<div class="ui-rating-histogram" id="app">
 		<label>
 			<input type="range" class="ui-rating" disabled style="--value:3.48;">
 			<span><strong>3.48</strong> <small>11,468 ratings &middot; 1,550 reviews</small></span>
@@ -49,7 +49,7 @@
 	<p>
 		To animate values, set <code>value=0</code> and the actual value in <code>data-value</code>, then use JavaScript to set the value of the progress element.
 	</p>
-	<p><button type="button" id="animate-demo">Animate</button></p>
+	<p><button type="button" id="trigger">Animate</button></p>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
@@ -119,19 +119,9 @@
 		common();
 		init('.ui-rating-histogram', uiRatingHistogram);
 
-		const animateDemo = document.getElementById('animate-demo');
-		const ratingDemo = document.getElementById('rating-demo');
-		animateDemo.addEventListener('click', () => animateIt(ratingDemo));
-
-		function animateIt(node) {
-			const nodes = Array.from(node.querySelectorAll('[data-value]'));
-			if (nodes.length) {
-				nodes.forEach(progress => {
-					progress.value = 0;
-					setTimeout(() => progress.value = Number(progress.dataset.value), 500);
-				});
-			}
-		}
+		const app = document.getElementById('app');
+		const trigger = document.getElementById('trigger');
+		trigger.addEventListener('click', () => uiRatingHistogram(app, 500));
 	</script>
 
 </body>
