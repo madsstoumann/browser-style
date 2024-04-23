@@ -21,10 +21,10 @@
 			background-color: inherit;
 			block-size: 4rem;
 			color: var(--Canvas);
-			font-size: 3rem;
-			font-weight: 200;
+			font-size: 4rem;
+			font-weight: 100;
 			grid-column: 1 / span 4;
-			padding-inline: .25em;
+			padding-inline: .2em;
 			text-align: right;
 			&::placeholder { color: currentColor; }
 		}
@@ -54,6 +54,22 @@
 				color: Canvas;
 				&:focus-visible { background-color: color-mix(in srgb, var(--ColorWarning), #000 20%); }
 			}
+		}
+		&.--rounded {
+			border-radius: 1em;
+			grid-gap: 1ch;
+			padding: 1ch;
+			& button:not([value="0"]) {
+				aspect-ratio: 1 / 1;
+				border-radius: 50%;
+			}
+			& button[value="0"] {
+				aspect-ratio: 2.25 / 1;
+				border-radius: 2em;
+				padding-inline-start: 1ch;
+				place-content: center start;
+			}
+			& input { padding: 0; }
 		}
 	}
 }
