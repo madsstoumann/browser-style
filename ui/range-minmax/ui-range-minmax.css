@@ -1,42 +1,44 @@
-:where(.ui-range-minmax) {
-	all: unset;
-	display: grid;
-	padding-bottom: 1em;
-	& input {
-		grid-area: 1 / -1;
-		&:first-of-type {
-			--_x1: calc(100% * (var(--v1) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
-			--_x2: calc(100% * (var(--v2) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
-			background-image: linear-gradient(to var(--_dir, right), 
-				transparent 0 var(--_x1),
-				var(--AccentColor) var(--_x1, 0),
-				var(--AccentColor) var(--_x2, 0),
-				var(--ButtonFace) 0 var(--_x2));
-		}
-		&::-webkit-slider-thumb { pointer-events: all; }
-		&::-moz-range-thumb { pointer-events: all; }
-	}
-	& label {
-		display: contents;
-		pointer-events: none;
-		&:first-of-type span::before {
-			counter-reset: v1 var(--v1);
-			content: counter(v1) attr(data-unit);
-		}
-		&:last-of-type {
-			& input { background: none; }
-			& span {
-				place-self: end;
-				&::before {
-					counter-reset: v2 var(--v2);
-					content: counter(v2) attr(data-unit);
-				}
+@layer bs-component {
+	:where(.ui-range-minmax) {
+		all: unset;
+		display: grid;
+		padding-bottom: 1em;
+		& input {
+			grid-area: 1 / -1;
+			&:first-of-type {
+				--_x1: calc(100% * (var(--v1) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+				--_x2: calc(100% * (var(--v2) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+				background-image: linear-gradient(to var(--_dir, right), 
+					transparent 0 var(--_x1),
+					var(--AccentColor) var(--_x1, 0),
+					var(--AccentColor) var(--_x2, 0),
+					var(--ButtonFace) 0 var(--_x2));
 			}
-		} 	
-	}
-	& span {
-		font-size: small;
-		grid-area: 1 / -1;
-		translate: 0 1.8em;
+			&::-webkit-slider-thumb { pointer-events: all; }
+			&::-moz-range-thumb { pointer-events: all; }
+		}
+		& label {
+			display: contents;
+			pointer-events: none;
+			&:first-of-type span::before {
+				counter-reset: v1 var(--v1);
+				content: counter(v1) attr(data-unit);
+			}
+			&:last-of-type {
+				& input { background: none; }
+				& span {
+					place-self: end;
+					&::before {
+						counter-reset: v2 var(--v2);
+						content: counter(v2) attr(data-unit);
+					}
+				}
+			} 	
+		}
+		& span {
+			font-size: small;
+			grid-area: 1 / -1;
+			translate: 0 1.8em;
+		}
 	}
 }

@@ -1,61 +1,61 @@
-.ui-range-circular {
-	/* --input-bs: 12em; */
-	
-	--_mask: radial-gradient(circle farthest-side at center, transparent calc(100% - var(--input-thumb-sz) - 1px), var(--AccentColor) calc(100% - var(--input-thumb-sz)));
-	--_rad: calc(360deg / (var(--max, 100) - var(--min, 0)));
+@layer bs-component {
+	:where(.ui-range-circular) {
+		--_mask: radial-gradient(circle farthest-side at center, transparent calc(100% - var(--input-thumb-sz) - 1px), var(--AccentColor) calc(100% - var(--input-thumb-sz)));
+		--_rad: calc(360deg / (var(--max, 100) - var(--min, 0)));
 
-	display: grid;
-	place-items: center;
-	max-inline-size: 320px;
-	rotate: -90deg;
-	touch-action: none;
-	width: 100%;
-
-	&::after {
-		counter-reset: val var(--value);
-		content: counter(val) "%";
-		font-size: 200%;
-		font-weight: 700;
-		margin-top: 1.25ch;
-		place-self: center;
-		position: absolute;
-		rotate: 90deg;
-	}
-
-	& input {
-		aspect-ratio: 1 / 1;
-		background: conic-gradient(
-			var(--AccentColor) calc(1% * var(--value)),
-			var(--ButtonFace) calc(1% * var(--value))
-		);
-		border-radius: 50%;
-		height: 100%;
-		margin: 0;
-		-webkit-mask: var(--_mask);
-		mask: var(--_mask);
-		pointer-events: none;
-		rotate: 90deg;
+		display: grid;
+		place-items: center;
+		max-inline-size: 320px;
+		rotate: -90deg;
+		touch-action: none;
 		width: 100%;
-		&::-webkit-slider-thumb { display: none; }
-		&::-moz-range-thumb { opacity: 0; }
-	}
-	& input, & span {
-		grid-column: 1 / -1;
-		grid-row: 1 / -1;
-	}
-	& span {
-		height: 100%;
-		pointer-events: none;
-		rotate: calc(90deg + (var(--_rad)) * var(--value));
-		width: var(--input-thumb-sz);
-		&::before {
-			aspect-ratio: 1;
-			background-color: var(--AccentColor);
+
+		&::after {
+			counter-reset: val var(--value);
+			content: counter(val) "%";
+			font-size: 200%;
+			font-weight: 700;
+			margin-top: 1.25ch;
+			place-self: center;
+			position: absolute;
+			rotate: 90deg;
+		}
+
+		& input {
+			aspect-ratio: 1 / 1;
+			background: conic-gradient(
+				var(--AccentColor) calc(1% * var(--value)),
+				var(--ButtonFace) calc(1% * var(--value))
+			);
 			border-radius: 50%;
-			box-shadow: 0 0 0 2px Canvas;
-			content: '';
-			display: block;
+			height: 100%;
+			margin: 0;
+			-webkit-mask: var(--_mask);
+			mask: var(--_mask);
+			pointer-events: none;
+			rotate: 90deg;
 			width: 100%;
+			&::-webkit-slider-thumb { display: none; }
+			&::-moz-range-thumb { opacity: 0; }
+		}
+		& input, & span {
+			grid-column: 1 / -1;
+			grid-row: 1 / -1;
+		}
+		& span {
+			height: 100%;
+			pointer-events: none;
+			rotate: calc(90deg + (var(--_rad)) * var(--value));
+			width: var(--input-thumb-sz);
+			&::before {
+				aspect-ratio: 1;
+				background-color: var(--AccentColor);
+				border-radius: 50%;
+				box-shadow: 0 0 0 2px Canvas;
+				content: '';
+				display: block;
+				width: 100%;
+			}
 		}
 	}
 }

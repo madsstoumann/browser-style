@@ -1,45 +1,47 @@
 @import "../anchor/ui-anchor.css";
-.ui-reaction {
-	all: unset;
-}
-.ui-reaction-list {
-	border: 1px solid var(--ButtonBorder);
-	border-radius: 3em;
-	padding: .25ch;
-	user-select: none;
-	transition: 
-		scale 0.4s cubic-bezier(.4, 0, .2, 1), 
-		overlay 0.4s ease-out allow-discrete, 
-		display 0.4s ease-out allow-discrete; /* exit state */
-	transform-origin: 0 0;
+@layer bs-component {
+	:where(.ui-reaction) {
+		all: unset;
+	}
+	.ui-reaction-list {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: 3em;
+		padding: .25ch;
+		user-select: none;
+		transition: 
+			scale 0.4s cubic-bezier(.4, 0, .2, 1), 
+			overlay 0.4s ease-out allow-discrete, 
+			display 0.4s ease-out allow-discrete; /* exit state */
+		transform-origin: 0 0;
 
-	& button {
-		--button-bg: transparent;
-		--button-p: 0;
-		--input-fs: 125%;
-		aspect-ratio: 1 / 1;
-		border-radius: 50%;
-		display: grid;
-		gap: 0;
-		place-content: center;
-		text-align: center;
-		width: 2em;
-		&:hover {
-			--button-bg: var(--CanvasGray);
-			--button-hover-mix: #FFF 0%;
+		& button {
+			--button-bg: transparent;
+			--button-p: 0;
+			--input-fs: 125%;
+			aspect-ratio: 1 / 1;
+			border-radius: 50%;
+			display: grid;
+			gap: 0;
+			place-content: center;
+			text-align: center;
+			width: 2em;
+			&:hover {
+				--button-bg: var(--CanvasGray);
+				--button-hover-mix: #FFF 0%;
+			}
+		}
+		&:popover-open {
+			@starting-style { /* before open state */
+				opacity: 0;
+				scale: 0;
+			}
+			display: flex;
+			scale: 1; /* open state */
 		}
 	}
-	&:popover-open {
-		@starting-style { /* before open state */
-			opacity: 0;
-			scale: 0;
+	.ui-reaction-trigger {
+		& svg text {
+			font-size: 1.5em;
 		}
-		display: flex;
-		scale: 1; /* open state */
-	}
-}
-.ui-reaction-trigger {
-	& svg text {
-		font-size: 1.5em;
 	}
 }
