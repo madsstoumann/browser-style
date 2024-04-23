@@ -1,20 +1,22 @@
-:where(.ui-placeholder) {
-	background: var(--ButtonFace);
-	color: var(--ButtonText);
-	display: block;
-	font-size: small;
-	height: 100%;
-	&.--pixels {
-		--s: 3cqmin;
-		--c: Canvas 0 25%, #0000 0;
-		--p: 0 0/calc(3*var(--s)) calc(2*var(--s));
-		background:
-			repeating-conic-gradient(from 90deg,var(--c), var(--ButtonFace) 0 50%)
-			 0 0/var(--s) var(--s);
-		color: transparent;
-	}
-	&.--stripes {
-		background: repeating-linear-gradient(-45deg, Canvas 0 1cqmin, var(--CanvasGray) 0 2cqmin);
-		color: transparent;
+@layer bs-component {
+	:where(.ui-placeholder) {
+		background: var(--ButtonFace);
+		color: var(--ButtonText);
+		display: block;
+		font-size: small;
+		height: 100%;
+		&.--pixels {
+			--s: 3cqmin;
+			--c: Canvas 0 25%, #0000 0;
+			--p: 0 0/calc(3*var(--s)) calc(2*var(--s));
+			background:
+				repeating-conic-gradient(from 90deg,var(--c), var(--ButtonFace) 0 50%)
+				0 0/var(--s) var(--s);
+			color: transparent;
+		}
+		&.--stripes {
+			background: repeating-linear-gradient(-45deg, Canvas 0 1cqmin, var(--CanvasGray) 0 2cqmin);
+			color: transparent;
+		}
 	}
 }

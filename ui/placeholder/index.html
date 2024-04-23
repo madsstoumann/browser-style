@@ -5,35 +5,60 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="./ui-placeholder.css">
+	<style>
+		/* For this demo */
+		figcaption { margin-block-start: 1em; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Image Placeholder</h2>
-	<p>Background-patterns for images that are either broken or not loaded.</p>
+	<h2>Placeholder</h2>
+	<p>
+		<strong>Placeholder</strong> is a component that provides a background-pattern for images that are either broken or not loaded.
+	</p>
 
 	<figure>
 		<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder">
-		<figcaption><em>Default placeholder</em></figcaption>
+		<figcaption><em>Above: Default placeholder</em></figcaption>
 	</figure>
 
 	<figure>
 		<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder --stripes">
-		<figcaption><em>With <code>--stripes</code> modifier</em></figcaption>
+		<figcaption><em>Above: With <code>--stripes</code> modifier</em></figcaption>
 	</figure>
 
 	<figure>
 		<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder --pixels">
-		<figcaption><em>With <code>--pixels</code> modifier</em></figcaption>
+		<figcaption><em>Above: With <code>--pixels</code> modifier</em></figcaption>
 	</figure>
 
-	<figure>
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3">
+		<figure>
+			<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder">
+			<figcaption><em>Above: Default placeholder</em></figcaption>
+		</figure>
+	
+		<figure>
+			<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder --stripes">
+			<figcaption><em>Above: With <code>--stripes</code> modifier</em></figcaption>
+		</figure>
+	
+		<figure>
+			<img src="" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder --pixels">
+			<figcaption><em>Above: With <code>--pixels</code> modifier</em></figcaption>
+		</figure>
+	</div>
+
+	<!-- <figure>
 		<img src="https://picsum.photos/id/9/600/360" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="600" height="360" class="ui-placeholder">
 		<figcaption><em>You won't find a computer today without at least one browser installed.</em></figcaption>
-	</figure>
+	</figure> -->
 
 </body>
 </html>

@@ -1,16 +1,17 @@
 @import '../icon/ui-icon.css';
-.ui-pagination,
-.ui-spinner {
-	all: unset;
-	display: grid;
-	gap: .5em;
-	grid-auto-flow: column;
-	justify-content: start;
-	& input {
-		text-align: center;
-		&::-webkit-inner-spin-button {
-			appearance: none;
+@layer bs-component {
+	:where(.ui-spinner) {
+		all: unset;
+		display: grid;
+		gap: .5em;
+		grid-auto-flow: column;
+		justify-content: start;
+		& input {
+			text-align: center;
+			&::-webkit-inner-spin-button {
+				appearance: none;
+			}
 		}
+		& legend { padding-block-end: var(--label-rg); }
 	}
-	& legend { padding-block-end: var(--label-rg); }
 }

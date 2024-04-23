@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-overflow.css">
 </head>
@@ -13,7 +13,59 @@
 	<h1>UI: Components</h1>
 
 	<h2>Overflow</h2>
-	<p>Used here with <code>--5-lines</code>-modifier. Default is 3 lines.</p>
+	<p>
+		<strong>Overflow</strong> use CSS <code>lineclamp</code> to clip content that is too big to fit into an area. An <code>&lt;input type=checkbox&gt;</code> is used to toggle visibility.
+	</p>
+	
+
+	<div class="ui-overflow">
+		<div>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+			Viverra maecenas accumsan lacus vel facilisis volutpat. Non diam phasellus vestibulum lorem sed. Ipsum dolor sit amet consectetur adipiscing. Sed viverra ipsum nunc aliquet bibendum enim. Mauris sit amet massa vitae tortor condimentum lacinia. Ac turpis egestas maecenas pharetra convallis posuere morbi leo. Faucibus purus in massa tempor nec. Vitae congue mauris rhoncus aenean vel elit. Et netus et malesuada fames ac turpis egestas integer. Quis blandit turpis cursus in hac. Eu non diam phasellus vestibulum. Lorem donec massa sapien faucibus et molestie ac feugiat. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.
+			Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Pretium lectus quam id leo in vitae turpis massa. Dui ut ornare lectus sit amet. Curabitur vitae nunc sed velit dignissim sodales ut. Urna molestie at elementum eu facilisis sed odio. Erat pellentesque adipiscing commodo elit at imperdiet. Diam phasellus vestibulum lorem sed. Egestas tellus rutrum tellus pellentesque eu tincidunt. Mi quis hendrerit dolor magna eget est lorem ipsum dolor. Tortor posuere ac ut consequat semper viverra nam libero justo. Quisque egestas diam in arcu cursus euismod. Risus nullam eget felis eget nunc lobortis mattis aliquam. Nisi vitae suscipit tellus mauris a. Nibh tortor id aliquet lectus proin nibh.
+		</div>
+		<label class="ui-swap">
+			<input type="checkbox" data-sr>
+			<span>Read more</span>
+			<span>Read less</span>
+		</label>
+	</div>
+
+	<br>
+	<h2>With opposite coor-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<div class="ui-overflow">
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+				Viverra maecenas accumsan lacus vel facilisis volutpat. Non diam phasellus vestibulum lorem sed. Ipsum dolor sit amet consectetur adipiscing. Sed viverra ipsum nunc aliquet bibendum enim. Mauris sit amet massa vitae tortor condimentum lacinia. Ac turpis egestas maecenas pharetra convallis posuere morbi leo. Faucibus purus in massa tempor nec. Vitae congue mauris rhoncus aenean vel elit. Et netus et malesuada fames ac turpis egestas integer. Quis blandit turpis cursus in hac. Eu non diam phasellus vestibulum. Lorem donec massa sapien faucibus et molestie ac feugiat. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.
+				Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Pretium lectus quam id leo in vitae turpis massa. Dui ut ornare lectus sit amet. Curabitur vitae nunc sed velit dignissim sodales ut. Urna molestie at elementum eu facilisis sed odio. Erat pellentesque adipiscing commodo elit at imperdiet. Diam phasellus vestibulum lorem sed. Egestas tellus rutrum tellus pellentesque eu tincidunt. Mi quis hendrerit dolor magna eget est lorem ipsum dolor. Tortor posuere ac ut consequat semper viverra nam libero justo. Quisque egestas diam in arcu cursus euismod. Risus nullam eget felis eget nunc lobortis mattis aliquam. Nisi vitae suscipit tellus mauris a. Nibh tortor id aliquet lectus proin nibh.
+			</div>
+			<label class="ui-swap">
+				<input type="checkbox" data-sr>
+				<span>Read more</span>
+				<span>Read less</span>
+			</label>
+		</div>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div class="ui-overflow" dir="rtl">
+		<div>
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+			Viverra maecenas accumsan lacus vel facilisis volutpat. Non diam phasellus vestibulum lorem sed. Ipsum dolor sit amet consectetur adipiscing. Sed viverra ipsum nunc aliquet bibendum enim. Mauris sit amet massa vitae tortor condimentum lacinia. Ac turpis egestas maecenas pharetra convallis posuere morbi leo. Faucibus purus in massa tempor nec. Vitae congue mauris rhoncus aenean vel elit. Et netus et malesuada fames ac turpis egestas integer. Quis blandit turpis cursus in hac. Eu non diam phasellus vestibulum. Lorem donec massa sapien faucibus et molestie ac feugiat. Est ullamcorper eget nulla facilisi etiam dignissim diam quis.
+			Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Pretium lectus quam id leo in vitae turpis massa. Dui ut ornare lectus sit amet. Curabitur vitae nunc sed velit dignissim sodales ut. Urna molestie at elementum eu facilisis sed odio. Erat pellentesque adipiscing commodo elit at imperdiet. Diam phasellus vestibulum lorem sed. Egestas tellus rutrum tellus pellentesque eu tincidunt. Mi quis hendrerit dolor magna eget est lorem ipsum dolor. Tortor posuere ac ut consequat semper viverra nam libero justo. Quisque egestas diam in arcu cursus euismod. Risus nullam eget felis eget nunc lobortis mattis aliquam. Nisi vitae suscipit tellus mauris a. Nibh tortor id aliquet lectus proin nibh.
+		</div>
+		<label class="ui-swap">
+			<input type="checkbox" data-sr>
+			<span>Read more</span>
+			<span>Read less</span>
+		</label>
+	</div>
+
+	<br>
+	<h2>Variants</h2>
+	<p>Used here with <code>--5-lines</code>-modifier. Default is 3 lines.<br>Other modifiers are <code>--10-lines</code> and <code>--15-lines</code>.</p>
 
 	<div class="ui-overflow --5-lines">
 		<div>
