@@ -184,7 +184,7 @@ stylesheet.replaceSync(`
 	user-select: none;
 }
 :host(:focus-visible)::part(xypoint) {
-	background: var(--Highlight);
+	background: var(--ui-xy-point--focus, var(--Highlight));
 	border-color: var(--AccentColor);
 }
 `)

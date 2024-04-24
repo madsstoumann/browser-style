@@ -20,20 +20,22 @@ class colorPicker extends HTMLElement {
 				<div part="saturation"></div>
 				<x-y x="100" part="xy"></x-y>
 			</figure>
-			<label>
-				<input type="range" min="0" max="360" step="1" value="0" part="hue">
-			</label>
+			<input type="range" min="0" max="360" step="1" value="0" part="hue">
 			<div part="output"></div>`;
 		shadow.innerHTML = template;
 		this.hue = shadow.querySelector('input');
 		this.hue.addEventListener('input', () => {
-			this.style.setProperty('--_hue', this.hue.value);
+			this.style.setProperty('--_h', this.hue.value);
 		});
 		this.xy = shadow.querySelector('x-y');
 		this.xy.addEventListener('xymove', (e) => {
-			this.style.setProperty('--_sat', `${e.detail.x}%`);
-			//this.style.setProperty('--_lgt', `${e.detail.y}%`);
-			//console.log(e.detail);
+			const x = e.detail.x;
+			const y = e.detail.y;
+			const saturation = (y === 100) ? (x === 0) ? 0 : 100 : x;
+			const lightness = (y === 100) ? 50 + (50 * (1 - x / 100)) : y / 2;
+			// console.log(saturation, lightness);
+			this.style.setProperty('--_s', `${saturation}%`);
+			this.style.setProperty('--_l', `${lightness}%`);
 		});
 		this.tabIndex = 0;
 	}
@@ -43,29 +45,25 @@ class colorPicker extends HTMLElement {
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host {
+		--ui-color-picker-bdrs: .75em;
+		--ui-color-picker-bdw: 2px;
 		--ui-xy-bg: #0000;
 		--ui-xy-point-bdw: 2px;
 		--ui-xy-point-bg: #0000;
 		--ui-xy-point-sz: 24px;
-		display: inline-block;
-		width: var(--ui-color-picker-width, 250px);
+		--ui-xy-point--focus: #0000;
+		border: 2px solid #0002;
+		border-radius: var(--ui-color-picker-bdrs);
+		display: grid;
+		width: var(--ui-color-picker-w, 250px);
 	}
 	:host::part(hsl) {
 		aspect-ratio: 1 / 1;
-		background: hsl(var(--_hue, 0), 100%, 50%);
+		background: hsl(var(--_h, 0), 100%, 50%);
+		border-radius: inherit;
 		cursor: move;
 		margin: unset;
 		position: relative;
-	}
-	:host::part(lightness) {
-		background-image: linear-gradient(to right, hsl(var(--_h, 0), 100%, 100%), #0000);
-		inset: 0;
-		position: absolute;
-	}
-	:host::part(saturation) {
-		background-image: linear-gradient(to bottom, #0000, hsl(var(--_h, 0), 0%, 0%));
-		inset: 0;
-		position: absolute;
 	}
 	:host::part(hue) {
 		-webkit-appearance: none;
@@ -84,11 +82,36 @@ stylesheet.replaceSync(`
 			hsl(330, 100%, 50%),
 			hsl(360, 100%, 50%)
 		);
+		margin: 0;
 		width: 100%;
 	}
+	input::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background: #0000;
+		border: 2px solid #FFF;
+		border-radius: 50%;
+		height: 1.25em;
+		width: 1.25em;
+	}
+	:host::part(lightness),
+	:host::part(saturation) {
+		border-start-start-radius: calc(var(--ui-color-picker-bdrs) - var(--ui-color-picker-bdw));
+		border-start-end-radius: calc(var(--ui-color-picker-bdrs) - var(--ui-color-picker-bdw));
+		inset: 0;
+		position: absolute;
+	}
+	:host::part(lightness) {
+		background-image: linear-gradient(to right, hsl(var(--_h, 0), 100%, 100%), #0000);
+	}
+	:host::part(saturation) {
+		background-image: linear-gradient(to bottom, #0000, hsl(var(--_h, 0), 0%, 0%));
+	}
+
 	:host::part(output) {	
-		aspect-ratio: 2 /1;
-		background: hsl(var(--_hue, 0), var(--_sat, 100%), var(--_lgt, 50%));
+		aspect-ratio: 3 /1;
+		background: hsl(var(--_h, 0), var(--_s, 100%), var(--_l, 50%));
+		border-end-start-radius: calc(var(--ui-color-picker-bdrs) - var(--ui-color-picker-bdw));
+		border-end-end-radius: calc(var(--ui-color-picker-bdrs) - var(--ui-color-picker-bdw));
 	}
 	:host::part(xy) {
 		inset: 0;
