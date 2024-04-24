@@ -14,13 +14,13 @@
 			inset-inline: 50% auto;
 			isolation: isolate;
 			opacity: 0;
-			line-height: 1;
+			line-height: 1.1;
 			padding: var(--ui-tooltip-p, .5em .75em);
 			place-content: center;
 			position: absolute;
 			transition: all .2s ease-in-out;
 			translate: -50% 0;
-			white-space: nowrap;
+			white-space: pre-wrap;
 			z-index: 1;
 		}
 		&:focus-visible::before,

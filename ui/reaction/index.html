@@ -24,22 +24,65 @@
 				<path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
 			</svg>
 		</button>
-		<nav id="reaction-list" anchor="reaction" popover class="ui-reaction-list" data-anchor="top:bottom left:left">
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="👍">👍</button>
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="😍">😍</button>
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="😂">😂</button>
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="😮">😮</button>
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="😢">😢</button>
-			<button popovertarget="reaction-list" popovertargetaction="hide" value="😡">😡</button>
+
+		<nav id="reaction-list" anchor="reaction"  class="ui-reaction-list" data-anchor="top:bottom left:left">
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="like" data-tooltip="Like">
+				<img src="assets/like.svg" alt="Like">
+			</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="celebrate" data-tooltip="Celebrate">
+				<img src="assets/celebrate.svg" alt="Celebrate">
+			</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="support" data-tooltip="Support">
+				<img src="assets/support.svg" alt="Support">
+			</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="love" data-tooltip="Love">
+				<img src="assets/love.svg" alt="Love">
+			</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="insightful" data-tooltip="Insightful">
+				<img src="assets/insightful.svg" alt="Insightful">
+			</button>
+			<button popovertarget="reaction-list" popovertargetaction="hide" value="funny" data-tooltip="Funny">
+				<img src="assets/funny.svg" alt="Funny">
+			</button>
 		</nav>
 	</fieldset>
+
+	<br>
+	<fieldset class="ui-reaction">
+		<legend>Pick a reaction</legend>
+		<button type="button" id="reaction" popovertarget="reaction-list" class="ui-reaction-trigger --icon">
+			<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"></path>
+			</svg>
+		</button>
+
+		<nav id="reaction-devto" anchor="reaction" class="ui-reaction-list">
+			<button popovertarget="reaction-devto" popovertargetaction="hide" value="like" data-tooltip="Like" data-reactions="12">
+				<img src="assets/heart.svg" alt="Like">
+			</button>
+			<button popovertarget="reaction-devto" popovertargetaction="hide" value="unicorn" data-tooltip="Unicorn" data-reactions="2">
+				<img src="assets/unicorn.svg" alt="Unicorn">
+			</button>
+			<button popovertarget="reaction-devto" popovertargetaction="hide" value="exploding-head" data-tooltip="Exploding Head" data-reactions="1">
+				<img src="assets/exploding.svg" alt="Exploding Head">
+			</button>
+			<button popovertarget="reaction-devto" popovertargetaction="hide" value="raised-hands" data-tooltip="Raised Hands" data-reactions="5">
+				<img src="assets/hands.svg" alt="Raised Hands">
+			</button>
+			<button popovertarget="reaction-devto" popovertargetaction="hide" value="fire" data-tooltip="Fire" data-reactions="8">
+				<img src="assets/fire.svg" alt="Fire">
+			</button>
+		</nav>
+	</fieldset>
+
+
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
-		import uiAnchor from '../anchor/uiAnchor.js';
+		// import uiAnchor from '../anchor/uiAnchor.js';
 		import uiReaction from './uiReaction.js';
 		common();
 
-		uiAnchor();
+		// uiAnchor();
 		init('.ui-reaction', uiReaction);
 	</script>
 </body>

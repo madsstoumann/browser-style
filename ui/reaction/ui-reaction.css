@@ -1,12 +1,16 @@
-@import "../anchor/ui-anchor.css";
+/* @import "../anchor/ui-anchor.css"; */
+@import "../tooltip/ui-tooltip.css";
 @layer bs-component {
 	:where(.ui-reaction) {
 		all: unset;
 	}
 	.ui-reaction-list {
+		--ui-tooltip-fs: .675rem;
 		border: 1px solid var(--ButtonBorder);
-		border-radius: 3em;
-		padding: .25ch;
+		border-radius: var(--ui-reaction-bdrs, 1.5em);
+		display: flex;
+		font-size: smaller;
+		padding: .25em;
 		user-select: none;
 		transition: 
 			scale 0.4s cubic-bezier(.4, 0, .2, 1), 
@@ -22,12 +26,24 @@
 			border-radius: 50%;
 			display: grid;
 			gap: 0;
+			grid-template-rows: auto 1fr;
 			place-content: center;
 			text-align: center;
 			width: 2em;
+			& img {
+				padding: .25em;
+				transition: scale 0.2s ease-out;
+				width: 100%;
+			}
 			&:hover {
 				--button-bg: var(--CanvasGray);
 				--button-hover-mix: #FFF 0%;
+				& img { scale: 1.3; }
+			}
+			&::after {
+				content: attr(data-reactions);
+				display: block;
+				font-size: x-small;
 			}
 		}
 		&:popover-open {
