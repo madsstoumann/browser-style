@@ -6,6 +6,7 @@
  * @description XY Controller
  */
 export default class xyController extends HTMLElement {
+	static observedAttributes = ['x', 'y'];
 	constructor() {
 		super();
 	}
@@ -52,6 +53,11 @@ export default class xyController extends HTMLElement {
 			this.update();
 		});
 		this.ro.observe(this);
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name === 'x') { this.x = newValue; }
+		if (name === 'y') { this.y = newValue; }
 	}
 
 	keymove(e) {
@@ -173,7 +179,7 @@ stylesheet.replaceSync(`
 :host::part(xypoint) {
 	aspect-ratio: 1 / 1;
 	background-color: var(--ui-xy-point-bg, var(--ButtonFace));
-	border: var(--ui-xy-point-bdw, 0.5rem) solid var(--ButtonBorder);
+	border: var(--ui-xy-point-bdw, 0.5rem) solid var(--ui-xy-point-bdc, var(--ButtonBorder));
 	border-radius: var(--ui-xy-point-bdrs, 50%);
 	inline-size: var(--ui-xy-point-sz, 4rem);
 	outline: none;

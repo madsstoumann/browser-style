@@ -12,9 +12,19 @@
 	<h1>UI: Components</h1>
 
 	<h2>Color Picker</h2>
+	<p>
+		<code>&lt;ui-color-picker&gt;</code> is a custom element that allows users to select a color from a color picker.<br>
+		It use the <a href="/ui/xy/">XY Controller</a>
+	</p>
 
-	<ui-color-picker></ui-color-picker>
+	<ui-color-picker value="#863eb6"></ui-color-picker>
 
 	<script src="index.js" type="module"></script>
+	<script>
+		const colorPicker = document.querySelector('ui-color-picker');
+		colorPicker.addEventListener('change', (event) => {
+			// console.log('change', event.detail);
+		});
+	</script>
 </body>
 </html>
