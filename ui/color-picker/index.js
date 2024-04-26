@@ -11,7 +11,7 @@ class colorPicker extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' }).innerHTML = `
-		<x-y x="100" part="xy"></x-y>
+		<ui-xy x="100" part="xy"></ui-xy>
 		<input type="range" max="360" value="0" part="hue">
 		<input type="range" max="1" step="0.01" value="1" part="alpha">
 		<button type="button" part="output"></div>`;
@@ -25,7 +25,7 @@ class colorPicker extends HTMLElement {
 		this.alpha = this.shadowRoot.querySelector('[part=alpha]');
 		this.hue = this.shadowRoot.querySelector('[part=hue]');
 		this.output = this.shadowRoot.querySelector('[part=output]');
-		this.xy = this.shadowRoot.querySelector('x-y');
+		this.xy = this.shadowRoot.querySelector('[part=xy]');
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {

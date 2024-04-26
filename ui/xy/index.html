@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="/base.css">
 	<style>
 		/* For this demo */
-		x-y { height: 320px; width: 320px; }
+		ui-xy { height: 320px; width: 320px; }
 	</style>
 </head>
 <body>
@@ -17,25 +17,25 @@
 
 	<h2>XY</h2>
 	<p>
-		<strong>XY</strong> is an XY-Controller, using the <code>&lt;x-y&gt;</code> custom HTML element. It can be configured with a bunch of attributes, works with keyboard and mouse, and emits events for <code>xydown</code>, <code>xyup</code>, <code>xymove</code> and <code>xytoggle</code>.
+		<strong>XY</strong> is an XY-Controller, using the <code>&lt;ui-xy&gt;</code> custom HTML element. It can be configured with a bunch of attributes, works with keyboard and mouse, and emits events for <code>xydown</code>, <code>xyup</code>, <code>xymove</code> and <code>xytoggle</code>.
 	</p>
 	<p>
 		Used in <a href="/ui/color-picker">Color Picker</a> and <a href="/ui/pocket-synth">Pocket Synth</a>.
 	</p>
 
-	<x-y x="50" y="50"></x-y>
+	<ui-xy x="50" y="50"></ui-xy>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<x-y x="50" y="50"></x-y>
+		<ui-xy x="50" y="50"></ui-xy>
 	</div>
 
 	<br>
 	<h2>Variants</h2>
-	<p>With <code>grid-x</code> / <code>grid-y</code>-attributes.</p>
+	<p>With <code>grid-x="6"</code> and <code>grid-y="6"</code>.</p>
 
-	<x-y grid-x="6" grid-y="6"></x-y>
+	<ui-xy grid-x="6" grid-y="6"></ui-xy>
 	<script src="index.js" type="module"></script>
 
 	<br>

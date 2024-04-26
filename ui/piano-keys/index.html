@@ -16,29 +16,29 @@
 
 	<h2>Piano Keys</h2>
 	<p>
-		<code>&lt;piano-keys&gt;</code> is a custom element that renders a virtual piano.<br>
+		<code>&lt;ui-piano-keys&gt;</code> is a custom element that renders a virtual piano.<br>
 		Attributes are <code>keys</code>, <code>startnote</code> and <code>label</code>.<br>
 		Default values for those are: 61 keys, C2 as startnote and no label.
 	</p>
 
-	<piano-keys label="Piano 61" id="piano"></piano-keys>
+	<ui-piano-keys label="Piano 61" id="piano"></ui-piano-keys>
 	<p>Events:</p>
 	<pre><code id="code">Press a key &hellip;</code></pre>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<piano-keys label="Piano 61"></piano-keys>
+		<ui-piano-keys label="Piano 61"></ui-piano-keys>
 	</div>
 
 	<br>
 	<h2>Variants</h2>
-	<p>With <code>keys="49"</code></p>
-	<piano-keys keys="49" label="Piano 49"></piano-keys>
+	<p>With <code>keys="49"</code>, <code>chord="0,4,7,11"</code> and <code>chordkey="C5"</code></p>
+	<ui-piano-keys keys="49" label="Piano 49" startnote="C3" chord="0,4,7,11" chordkey="C5"></ui-piano-keys>
 
 	<br>
 	<p>With <code>keys="32"</code> and <code>startnote="A2"</code></p>
-	<piano-keys keys="32" startnote="A2" label="Piano 32"></piano-keys>
+	<ui-piano-keys keys="32" startnote="A2" label="Piano 32"></ui-piano-keys>
 
 	<script src="index.js" type="module"></script>
 	<script>

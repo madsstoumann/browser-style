@@ -6,6 +6,7 @@
  * @description Piano
  */
 class pianoKeys extends HTMLElement {
+	static observedAttributes = ['chord'];
 	constructor() {
 		super();
 		this.notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
@@ -13,16 +14,22 @@ class pianoKeys extends HTMLElement {
 		this.shadowRoot.adoptedStyleSheets = [stylesheet];
 		this.render();
 		this.form = this.shadowRoot.querySelector('form');
+		this.attachEventListeners();
+	}
+
+	attachEventListeners() {
 		this.form.addEventListener('pointerdown', e => {
-			if (e.target.nodeName === 'BUTTON') {
-				this.noteOn(e.target);
-			}
-		})
+			if (e.target.nodeName === 'BUTTON') this.noteOn(e.target);
+		});
 		this.form.addEventListener('pointerup', e => {
-			if (e.target.nodeName === 'BUTTON') {
-				this.noteOff(e.target);
-			}
-		})
+			if (e.target.nodeName === 'BUTTON') this.noteOff(e.target);
+		});
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (name === 'chord' && newValue !== oldValue) {
+			this.updateChord(newValue);
+		}
 	}
 
 	calculateNoteIndex(note) {
@@ -49,46 +56,66 @@ class pianoKeys extends HTMLElement {
 		})
 	}
 
-	getHz(N = 0) {
-		return 440 * Math.pow(2, N / 12);
+	getHz(n) {
+		return 440 * Math.pow(2, n / 12);
 	}
 
-	getNote(N) {
-		const key = N % 12;
-		const note = this.notes[key < 0 ? 12 + key : key];		
-		const octave = Math.ceil(4 + (N / 12)); /* 4 is octave of root, 440 */
-		return {
-			freq: this.getHz(N),
-			midi: N + 69, /* A4 === MIDI note number 69 */
-			note,
-			octave: note === 'B' || note === 'A#' ? octave - 1 : octave
-		}
+	getNote(n) {
+		const key = n % 12;
+		const note = this.notes[key >= 0 ? key : 12 + key];
+		const octave = Math.floor(4 + n / 12);
+		return { freq: this.getHz(n), midi: n + 69, note, octave };
 	}
 
 	noteOn(note) {
-		const key = note.ariaLabel;
-		const freq = note.dataset.freq
-		const midi = note.dataset.midi;
-		this.dispatchEvent(new CustomEvent('noteon', { detail: { key, freq, midi } }));
+		this.triggerNoteEvent('noteon', note);
 	}
 
 	noteOff(note) {
-		const key = note.ariaLabel;
-		const freq = note.dataset.freq
-		const midi = note.dataset.midi;
-		this.dispatchEvent(new CustomEvent('noteoff', { detail: { key, freq, midi } }));
+		this.triggerNoteEvent('noteoff', note);
 	}
 
 	render() {
-		const keys = parseInt(this.getAttribute('keys')) || 61;
-		const startnote = this.getAttribute('startnote') || 'C2';
-		const index = this.calculateNoteIndex(startnote);
-		this.data = this.freqs(index, index + keys);
-		const whiteKeys = this.data.filter(item => !item.note.includes('#')).length;
+		const keys = parseInt(this.getAttribute('keys'), 10) || 61;
+		const startNote = this.getAttribute('startnote') || 'C2';
+		const index = this.calculateNoteIndex(startNote);
+		const data = this.freqs(index, index + keys);
+		const whiteKeys = data.filter(item => !item.note.includes('#')).length;
 		this.style.setProperty('--_gtc', whiteKeys * 3);
-		this.shadowRoot.innerHTML = `<form><strong>${this.getAttribute('label')||''}</strong><fieldset>${
-			this.data.map(item => `<button aria-label="${item.note}${item.octave}" data-freq="${item.freq}" data-midi="${item.midi}" style="--gc:${item.offset}" type="button"></button>`).join('\n')
-		}</fieldset></form>`;
+		this.shadowRoot.innerHTML = `
+			<form>
+				<strong>${this.getAttribute('label') || ''}</strong>
+				<fieldset>${data.map(item => `
+					<button name="${item.note}${item.octave}" data-freq="${
+						item.freq}" data-midi="${
+						item.midi}" style="--gc:${
+						item.offset}" type="button"></button>`
+				).join('')}</fieldset>
+			</form>`;
+	}
+
+	triggerNoteEvent(eventName, note) {
+		const { name, dataset: { freq, midi } } = note;
+		this.dispatchEvent(new CustomEvent(eventName, { detail: { key: name, freq, midi } }));
+	}
+
+	updateChord(chord) {
+		this.form.querySelectorAll('.chord').forEach(element => element.classList.remove('chord'));
+		const offsets = chord.split(',').map(item => parseFloat(item));
+		const key = this.getAttribute('chordkey');
+		if (key) {
+			const elements = Array.from(this.form.elements);
+			const base = elements.findIndex(element => element.name === key);
+			if (base !== -1) {
+				elements[base].classList.add('chord');
+				offsets.forEach(offset => {
+					const index = base + offset;
+					if (index < elements.length) {
+						elements[index].classList.add('chord');
+					}
+				});
+			}
+		}
 	}
 }
 
@@ -120,7 +147,7 @@ stylesheet.replaceSync(`
 		margin-block: var(--ui-piano-keys-mb, .25ch .5ch);
 		text-transform: uppercase;
 	}
-	[aria-label] {
+	[name] {
 		--_hover-bg: linear-gradient(to bottom, #FFF 0%, hsl(0, 0%, 90%) 100%);
 		background-color: #FFF;
 		border: 0;
@@ -132,12 +159,15 @@ stylesheet.replaceSync(`
 			background: var(--_hover-bg);
 		}
 	}
-	[aria-label*="#"] { 
+	[name*="#"] { 
 		--_cspan: 2;
 		--_hover-bg: linear-gradient(to top, #000 0%, hsl(0, 0%, 25%) 100%);
 		--_rspan: 3;
 		background-color: #222;
 		z-index: 1;
 	}
+	.chord {
+		background: var(--ui-piano-keys-chord, var(--AccentColor));
+	}
 `)
-customElements.define('piano-keys', pianoKeys);
+customElements.define('ui-piano-keys', pianoKeys);
