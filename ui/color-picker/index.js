@@ -133,7 +133,7 @@ stylesheet.replaceSync(`
 		border: 2px solid #0002;
 		border-radius: var(--ui-color-picker-bdrs);
 		display: grid;
-		width: var(--ui-color-picker-w, 250px);
+		max-width: var(--ui-color-picker-w, 250px);
 	}
 	:host::part(alpha) {
 		background:

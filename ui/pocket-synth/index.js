@@ -135,7 +135,7 @@ stylesheet.replaceSync(`
 		all: unset;
 		border: var(--ui-pocket-synth-bdw) solid var(--ui-pocket-synth-bdc);
 		display: flex;
-		font-size: small;
+		font-size: x-small;
 		& > * { flex: 1; }
 	}
 	input[type=radio] { 
@@ -147,16 +147,21 @@ stylesheet.replaceSync(`
 		position: absolute;
 		white-space: nowrap;
 		width: 1px;
-		&:checked + * {
-			background: var(--ui-pocket-synth--active-bg, var(--AccentColor, #007bff));
-			color: var(--ui-pocket-synth--active-c, #FFF);
-		}
+		
+	}
+	label {
+		display: grid;
+		place-items: center;
+	}
+	label:has(:checked) {
+		background: var(--ui-pocket-synth--active-bg, var(--AccentColor, #007bff));
+		color: var(--ui-pocket-synth--active-c, #FFF);
 	}
 	svg {
 		fill: none;
-		height: 1em;
+		height: 2em;
 		stroke: currentColor;
-		width: 1em;
+		width: 2em;
 	}
 `)
 customElements.define('ui-pocket-synth', PocketSynth);

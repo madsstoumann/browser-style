@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-slider.css">
 
@@ -18,7 +18,52 @@
 	<h1>UI: Components</h1>
 
 	<h2>Slider</h2>
+	<p>
+		<strong>Slider</strong> cycles through a series of images, allowing users to manually or automatically navigate using arrows or swiping gestures.
+	</p>
 
+	<div class="ui-slider">
+		<div class="ui-scroll">
+			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=13" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=14" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=15" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<div class="ui-slider">
+			<div class="ui-scroll">
+				<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
+				<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
+				<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
+				<img src="https://source.unsplash.com/random/320x180?sig=13" alt="Random image" width="320" height="180">
+				<img src="https://source.unsplash.com/random/320x180?sig=14" alt="Random image" width="320" height="180">
+				<img src="https://source.unsplash.com/random/320x180?sig=15" alt="Random image" width="320" height="180">
+			</div>
+		</div>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div class="ui-slider" dir="rtl">
+		<div class="ui-scroll">
+			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=11" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=12" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=13" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=14" alt="Random image" width="320" height="180">
+			<img src="https://source.unsplash.com/random/320x180?sig=15" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<br>
+	<h2>Variants</h2>
+	<p>With grid-modifiers <code>--sm-c-2</code> and <code>--md-c-3</code></p>
 	<div class="ui-slider">
 		<div class="ui-scroll --sm-c-2 --md-c-3">
 			<img src="https://source.unsplash.com/random/320x180?sig=10" alt="Random image" width="320" height="180">

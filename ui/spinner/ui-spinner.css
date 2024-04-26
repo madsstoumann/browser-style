@@ -6,12 +6,28 @@
 		gap: .5em;
 		grid-auto-flow: column;
 		justify-content: start;
+		
+		& button {
+			font-size: inherit;
+			padding-inline: 1.5ch;
+		}
 		& input {
+			--icon: none;
+			--input-bs: auto;
+			font-size: 120%;
+			padding: .125em .5em;
 			text-align: center;
 			&::-webkit-inner-spin-button {
 				appearance: none;
 			}
 		}
-		& legend { padding-block-end: var(--label-rg); }
+		& label { display: contents; }
+		& legend { 
+			font-size: initial;
+			padding-block-end: var(--label-rg);
+		}
+		&:is(.fs-xs, .fs-sm) ui-icon {
+			--icon-bdw: 1px;
+		}
 	}
 }

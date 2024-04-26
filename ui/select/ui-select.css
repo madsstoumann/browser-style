@@ -1,32 +1,34 @@
 @import "../anchor/ui-anchor.css";
-:where(ui-select) {
-	display: inline-grid;
-	& button {
-		--button-bg: transparent;
-		--button-hover-mix: transparent;
-		background: transparent url('/assets/svg/chevron-down.svg') no-repeat calc(100% - 1.25ch) center/1.25em;
-		block-size: var(--input-bs);
-		border: 1px solid var(--ButtonBorder);
-		padding: var(--input-pb) var(--input-pi);
-		[dir=rtl] & { background-position: 1.25ch center; }
-		& selectedoption { padding-inline-end: 2.5ch; }
-	}
-	& ui-option, & selectedoption {
-		align-items: center;
-		display: flex;
-		gap: 1ch;
-		& > * { pointer-events: none; }
-	}
-	& ui-datalist {
-		border: 1px solid var(--ButtonBorder);
-		border-radius: var(--input-bdrs);
-		inset-block-start: anchor(bottom);
-		inset-inline-start: anchor(left);
-		padding: 0;
-		& ui-option {
-			cursor: default;
-			padding: calc(var(--input-pb) / 2) var(--input-pi);
-			&:hover { background-color: var(--CanvasGray); }
+@layer bs-component {
+	:where(ui-select) {
+		display: inline-grid;
+		& button {
+			--button-bg: transparent;
+			--button-hover-mix: transparent;
+			background: transparent url('/assets/svg/chevron-down.svg') no-repeat calc(100% - 1.25ch) center/1.25em;
+			block-size: var(--input-bs);
+			border: 1px solid var(--ButtonBorder);
+			padding: var(--input-pb) var(--input-pi);
+			[dir=rtl] & { background-position: 1.25ch center; }
+			& selectedoption { padding-inline-end: 2.5ch; }
+		}
+		& ui-option, & selectedoption {
+			align-items: center;
+			display: flex;
+			gap: 1ch;
+			& > * { pointer-events: none; }
+		}
+		& ui-datalist {
+			border: 1px solid var(--ButtonBorder);
+			border-radius: var(--input-bdrs);
+			inset-block-start: anchor(bottom);
+			inset-inline-start: anchor(left);
+			padding: 0;
+			& ui-option {
+				cursor: default;
+				padding: calc(var(--input-pb) / 2) var(--input-pi);
+				&:hover { background-color: var(--CanvasGray); }
+			}
 		}
 	}
 }

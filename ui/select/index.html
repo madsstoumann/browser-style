@@ -5,15 +5,21 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-select.css">
+	<style>
+		pre {
+			line-height: 1.2;
+			padding: 1ch;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Select</h2>
-	<p>Small polyfill / custom element for the new stylable <code>&lt;select&gt;</code>-standard, using a fallback with <code>popover API</code>:</p>
+	<p>Small polyfill / web component for the new stylable <code>&lt;select&gt;</code>-standard, using the <code>popover API</code>.</p>
 
 	<ui-select>
 		<button type="select"><selectedoption></selectedoption></button>
@@ -23,7 +29,55 @@
 		</datalist>
 	</ui-select>
 
-	<script type="module">
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-select>
+			<button type="select"><selectedoption></selectedoption></button>
+			<datalist>
+				<option value="Sweden"><img src="/assets/flags/swe.svg" alt="SE" height="15" width="30">This is Sweden</option>
+				<option value="Denmark" selected><img src="/assets/flags/dnk.svg" alt="DK" height="15" width="30">This is Denmark</option>
+			</datalist>
+		</ui-select>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<ui-select>
+			<button type="select"><selectedoption></selectedoption></button>
+			<datalist>
+				<option value="Sweden"><img src="/assets/flags/swe.svg" alt="SE" height="15" width="30">This is Sweden</option>
+				<option value="Denmark" selected><img src="/assets/flags/dnk.svg" alt="DK" height="15" width="30">This is Denmark</option>
+			</datalist>
+		</ui-select>
+	</div>
+
+	<br>
+	<h2>The new syntax</h2>
+<pre><code>&lt;select&gt;
+  &lt;button&gt;
+    &lt;selectedoption&gt;&lt;/selectedoption&gt;
+  &lt;/button&gt;
+  &lt;datalist&gt;
+   &lt;option&gt;one&lt;/option&gt;
+   &lt;option&gt;two&lt;/option&gt;
+  &lt;/datalist&gt;
+&lt;/select&gt;
+</code></pre>
+
+<br>
+<p>Is turned into:</p>
+<pre><code>&lt;ui-select&gt;
+  &lt;button popovertarget&gt;&lt;/button&gt;
+  &lt;ui-datalist popover&gt;
+    &lt;ui-option&gt;one&lt;/ui-option&gt;
+    &lt;ui-option&gt;two&lt;/ui-option&gt;
+  &lt;/ui-datalist&gt;
+&lt;/ui-select&gt;
+</code></pre>
+
+<script type="module">
 		import uiSelect from './uiSelect.js';
 	</script>
 

@@ -1,14 +1,16 @@
-:where(.ui-reading-progress) {
-	animation-timeline: scroll(root);
-	animation: fullwidth linear;
-	background: var(--AccentColor);
-	height: var(--ui-readline-h, .5rem);
-	isolation: isolate;
-	left: 0;
-	position: fixed;
-	top: 0;
-	width: var(--scroll-p);
-}
-@keyframes fullwidth {
-	to { width: 100%; }
+@layer bs-component {
+	:where(.ui-reading-progress) {
+		animation-timeline: scroll(root);
+		animation: fullwidth linear;
+		background: var(--AccentColor);
+		height: var(--ui-readline-h, .5rem);
+		isolation: isolate;
+		left: 0;
+		position: fixed;
+		top: 0;
+		width: var(--scroll-p);
+	}
+	@keyframes fullwidth {
+		to { width: 100%; }
+	}
 }
