@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-tooltip.css">
 </head>
@@ -13,6 +13,11 @@
 	<h1>UI: Components</h1>
 
 	<h2>Tooltip</h2>
+	<p>
+		A tooltip is a small, floating box that appears to explain a UI element when hovered over or focused on.
+	</p>
+
+	<hr>
 	<p>
 		A tooltip can be <span data-tooltip="Tooltip text"><em>below content</em></span> as well as 
 		<span data-tooltip="Tooltip text" data-tooltip-ui="top"><em>above content</em></span>.
@@ -30,6 +35,28 @@
 		<span data-tooltip="Tooltip text" data-tooltip-ui="help"><em>help cursor</em></span> — or a
 		<span data-tooltip="Tooltip text" data-tooltip-ui="overline underline help"><em>combination</em></span>
 	</p>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<p>
+			A tooltip can be <span data-tooltip="Tooltip text"><em>below content</em></span> as well as 
+			<span data-tooltip="Tooltip text" data-tooltip-ui="top"><em>above content</em></span>.
+		</p>
+
+		<h3>Triangle / Tail</h3>
+		<p>
+			A tooltip can have a <strong>triangle</strong> <span data-tooltip="Tooltip text" data-tooltip-ui="triangle"><em>below content</em></span> as well as 
+			<span data-tooltip="Tooltip text" data-tooltip-ui="top triangle"><em>above content</em></span>.
+		</p>
+
+		<h3>Underline and cursor</h3>
+		<p>
+			A tooltip can have an <span data-tooltip="Tooltip text" data-tooltip-ui="underline"><em>underline</em></span> as well as a 
+			<span data-tooltip="Tooltip text" data-tooltip-ui="help"><em>help cursor</em></span> — or a
+			<span data-tooltip="Tooltip text" data-tooltip-ui="overline underline help"><em>combination</em></span>
+		</p>
+	</div>
 
 	<br>
 	<h2>With right-to-left</h2>

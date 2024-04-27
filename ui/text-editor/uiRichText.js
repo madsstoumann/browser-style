@@ -426,6 +426,7 @@ stylesheet.replaceSync(`
 [hidden] { display: none; }
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
 :host {
+	--ui-richtext-active: var(--Highlight);
 	background: Canvas;
 	color: CanvasText;
 	color-scheme: inherit;
@@ -451,7 +452,7 @@ fieldset {
 	all: unset;
 	display: flex;
 	& > *:only-child { border-radius: .1875em; }
-	& fieldset > *:is(:focus-visible, :hover) { background: color-mix(in srgb, Highlight, Canvas 60%); }
+	& fieldset > *:is(:focus-visible, :hover) { background: var(--ui-richtext-active); }
 	&:empty { display: none; }
 }
 select {
@@ -490,7 +491,7 @@ textarea {
 	width: 1px;
 }
 .--active {
-	background: Highlight;
+	background: var(--ui-richtext-active);
 }
 [disabled] {
 	color: GrayText;

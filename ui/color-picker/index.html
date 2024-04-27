@@ -7,11 +7,19 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
+
+	<!-- Triggering with popover API demo -->
+	<link rel="stylesheet" href="/ui/anchor/ui-anchor.css">
 	<style>
 		pre {
 			font-size: small;
 			line-height: 1.4;
 			padding: 1ch;
+		}
+		#color-picker {
+			background: #0000;
+			border: 0;
+			width: 320px;
 		}
 	</style>
 </head>
@@ -27,7 +35,7 @@
 		In general, it's recommended to use the <strong>native color picker</strong>, as this is a better experience on phones — but this component can be useful for custom designs.
 	</p>
 
-	<ui-color-picker value="#007bff"></ui-color-picker>
+	<ui-color-picker value="#007bff" id="color-picker-event"></ui-color-picker>
 
 	<br>
 	<h2>Event</h2>
@@ -40,18 +48,40 @@
 		<ui-color-picker value="#007bff"></ui-color-picker>
 	</div>
 
+	<br>
+	<h2>Triggering with popover</h2>
+	<p>Click the button to open the color picker in a popover.</p>
+	<button popovertarget="color-picker" id="color-picker-trigger" class="--rounded --icon fs-xxl"></button>
+	<div id="color-picker" popover anchor="color-picker-trigger" data-anchor="bottom:top left:left">
+		<ui-color-picker value="#007bff"></ui-color-picker>
+	</div>
+
 	<script src="index.js" type="module"></script>
+	<script type="module">
+		import uiAnchor from '../anchor/uiAnchor.js';
+		uiAnchor();
+	</script>
 
 	<script>
-		const colorPicker = document.querySelector('ui-color-picker');
+		/* Event */
 		const code = document.querySelector('#code');
-		colorPicker.addEventListener('change', (event) => {
+		const colorPickerEvent = document.querySelector('#color-picker-event');
+		colorPickerEvent.addEventListener('change', (event) => {
 			const color = event.detail;
 			const rgba = `rgba(${color.rgba.r}, ${color.rgba.g}, ${color.rgba.b}, ${color.rgba.a})`;
 			const hsla = `hsla(${color.hsla.h}, ${color.hsla.s}%, ${color.hsla.l}%, ${color.hsla.a})`;
 			const hsva = `hsv(${color.hsva.h}, ${color.hsva.s}, ${color.hsva.v}, ${color.hsva.a})`;
 			const hex = color.hex;
-			code.textContent =`color: {\n  "hex": "${hex}",\n  "rgb": "${rgba}",\n  "hsl": "${hsla}",\n  "hsv": "${hsva}"\n}`;
+			code.textContent =`color: {\n  "hex": "${hex}",\n  "rgba": "${rgba}",\n  "hsla": "${hsla}",\n  "hsva": "${hsva}"\n}`;
+		});
+
+		/* Triggering with popover API */
+		const colorPicker = document.querySelector('#color-picker ui-color-picker');
+		const colorPickerTrigger = document.querySelector('#color-picker-trigger');
+		colorPicker.addEventListener('change', (event) => {
+			const color = event.detail;
+			colorPickerTrigger.style.background = color.hex;
+			colorPickerTrigger.value = color.hex;
 		});
 	</script>
 </body>

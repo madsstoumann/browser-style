@@ -1,72 +1,74 @@
-:where(.ui-timeline) {
-	--ui-scroll-gap: 2ch;
-	--ui-timeline-bdw: 2px;
-	--ui-timeline-dot-sz: 1em;
-	--ui-timeline-dot-gap: 1.5ch;
-	--ui-timeline-pi: 1.5ch;
+@layer bs-component {
+	:where(.ui-timeline) {
+		--ui-scroll-gap: 2ch;
+		--ui-timeline-bdw: 2px;
+		--ui-timeline-dot-sz: 1em;
+		--ui-timeline-dot-gap: 1.5ch;
+		--ui-timeline-pi: 1.5ch;
 
-	& li {
-		align-content: start;
-		border-radius: var(--input-bdrs);
-		display: grid;
-		list-style: none;
-		margin-block-start: calc(var(--ui-timeline-dot-gap) + var(--ui-timeline-dot-sz));
-		padding: var(--ui-timeline-pb, var(--ui-timeline-pi)) var(--ui-timeline-pi);
-		position: relative;
-		& a {
-			--VisitedText: currentColor;
-			color: currentColor;
-		}
-		& >* { margin: 0; }
-		&::after {
-			border-radius: 50%;
-			border: var(--ui-timeline-bdw) solid var(--AccentColor);
-			content: "";
-			display: block;
-			height: var(--ui-timeline-dot-sz);
-			inset-block-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
-			inset-inline-start: var(--ui-timeline-pi);
-			position: absolute;
-			width: var(--ui-timeline-dot-sz);
-		}
-		&:not(:last-of-type)::before {
-			--_l: calc(0px - var(--ui-timeline-dot-gap) - (var(--ui-timeline-dot-sz) / 2) - (var(--ui-timeline-bdw) / 2));
-			--_w: calc(100% + var(--ui-timeline-bdw));
-			background-color: var(--AccentColor);
-			content: "";
-			display: block;
-			height: var(--ui-timeline-bdw);
-			inset-block-start: var(--_l);
-			inset-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-pi));
-			position: absolute;
-			width: var(--_w);
-			/* width: calc(100% - var(--ui-timeline-pi) - var(--ui-timeline-dot-sz)); */
-		}
-		&.--accent {
-			&::after { background: var(--AccentColor); }
-		}
-	}
-	&, & ul {
-		margin: 0;
-		padding: 0;
-	}
-	/* Vertical: class set directly on `<ul>` */
-	&:is(ul) {
-		display: grid;
-		gap: var(--ui-scroll-gap);
 		& li {
-			border-block-end: 1px solid var(--CanvasGray);
-			margin-block-start: 0;
-			margin-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-dot-gap));
+			align-content: start;
+			border-radius: var(--input-bdrs);
+			display: grid;
+			list-style: none;
+			margin-block-start: calc(var(--ui-timeline-dot-gap) + var(--ui-timeline-dot-sz));
+			padding: var(--ui-timeline-pb, var(--ui-timeline-pi)) var(--ui-timeline-pi);
+			position: relative;
+			& a {
+				--VisitedText: currentColor;
+				color: currentColor;
+			}
+			& >* { margin: 0; }
 			&::after {
-				inset-block-start: 0;
-				inset-inline-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
+				border-radius: 50%;
+				border: var(--ui-timeline-bdw) solid var(--AccentColor);
+				content: "";
+				display: block;
+				height: var(--ui-timeline-dot-sz);
+				inset-block-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
+				inset-inline-start: var(--ui-timeline-pi);
+				position: absolute;
+				width: var(--ui-timeline-dot-sz);
 			}
 			&:not(:last-of-type)::before {
-				height: calc(var(--_w) + var(--ui-timeline-bdw));
-				inset-block-start: var(--ui-timeline-dot-sz);
-				inset-inline-start: var(--_l);
-				width: var(--ui-timeline-bdw);
+				--_l: calc(0px - var(--ui-timeline-dot-gap) - (var(--ui-timeline-dot-sz) / 2) - (var(--ui-timeline-bdw) / 2));
+				--_w: calc(100% + var(--ui-timeline-bdw));
+				background-color: var(--AccentColor);
+				content: "";
+				display: block;
+				height: var(--ui-timeline-bdw);
+				inset-block-start: var(--_l);
+				inset-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-pi));
+				position: absolute;
+				width: var(--_w);
+				/* width: calc(100% - var(--ui-timeline-pi) - var(--ui-timeline-dot-sz)); */
+			}
+			&.--accent {
+				&::after { background: var(--AccentColor); }
+			}
+		}
+		&, & ul {
+			margin: 0;
+			padding: 0;
+		}
+		/* Vertical: class set directly on `<ul>` */
+		&:is(ul) {
+			display: grid;
+			gap: var(--ui-scroll-gap);
+			& li {
+				border-block-end: 1px solid var(--CanvasGray);
+				margin-block-start: 0;
+				margin-inline-start: calc(var(--ui-timeline-dot-sz) + var(--ui-timeline-dot-gap));
+				&::after {
+					inset-block-start: 0;
+					inset-inline-start: calc(0px - var(--ui-timeline-dot-sz) - var(--ui-timeline-dot-gap));
+				}
+				&:not(:last-of-type)::before {
+					height: calc(var(--_w) + var(--ui-timeline-bdw));
+					inset-block-start: var(--ui-timeline-dot-sz);
+					inset-inline-start: var(--_l);
+					width: var(--ui-timeline-bdw);
+				}
 			}
 		}
 	}

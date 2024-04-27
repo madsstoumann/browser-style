@@ -1,9 +1,11 @@
 @import '../icon/ui-icon.css';
-:where(.ui-transfer-list) {
-  --icon-flip: 1;
-  all: unset;
-  column-gap: 1ch;
-  display: grid;
-  grid-template-columns: 1fr min-content 1fr;
-  & nav { align-self: center; }
+@layer bs-component {
+  :where(.ui-transfer-list) {
+    --icon-flip: 1;
+    all: unset;
+    column-gap: 1ch;
+    display: grid;
+    grid-template-columns: 1fr min-content 1fr;
+    & nav { align-self: center; }
+  }
 }

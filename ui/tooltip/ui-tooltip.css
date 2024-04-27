@@ -20,7 +20,7 @@
 			position: absolute;
 			transition: all .2s ease-in-out;
 			translate: -50% 0;
-			white-space: pre-wrap;
+			white-space: nowrap;
 			z-index: 1;
 		}
 		&:focus-visible::before,
@@ -28,6 +28,7 @@
 
 		/* Modifiers */
 		&[data-tooltip-ui*=help] { cursor: help; }
+		&[data-tooltip-ui*=wrap]::before { white-space: pre-wrap; }
 		&[data-tooltip-ui*=top]::before { inset-block: auto calc(100% + var(--ui-tooltip-triangle-h)); }
 		&[data-tooltip-ui*=triangle] {
 			--ui-tooltip-triangle-h: .5em;
