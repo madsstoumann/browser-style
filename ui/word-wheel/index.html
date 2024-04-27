@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-word-wheel.css">
 </head>
@@ -13,6 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Word Wheel</h2>
+	<p>
+		<strong>Word Wheel</strong> is a component that displays a list of words in a circular shape. It is used to emphasize the words. The component is the same in opposite color-scheme and right-to-left.
+	</p>
 
 	<ul class="ui-word-wheel">
 		<li>silence</li>
@@ -44,9 +47,43 @@
 		<li>sensing</li>
 		<li>service</li>   
 	</ul>
-	
 
-<script type="module">
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ul class="ui-word-wheel">
+			<li>silence</li>
+			<li>sound</li>
+			<li>storytelling</li>
+			<li>surprise</li>
+			<li>symbolism</li>
+			<li>synchronocity</li>
+			<li>synergy</li>
+			<li>wholeness</li>
+			<li>witnessing</li>
+			<li>art</li>
+			<li>clearing</li>
+			<li>connectedness</li>
+			<li>discernment</li>
+			<li>facing darkness</li>
+			<li>healing</li>
+			<li>intuition</li>
+			<li>listening</li>
+			<li>love</li>
+			<li>movement</li>
+			<li>music</li>
+			<li>mystery</li>
+			<li>non-attachment</li>
+			<li>non-judgment</li>
+			<li>not knowing</li>
+			<li>quickening</li>
+			<li>re-membering</li>
+			<li>sensing</li>
+			<li>service</li>   
+		</ul>
+	</div>
+
+	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		import uiWordWheel from './uiWordWheel.js';
 

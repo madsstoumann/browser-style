@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-underline.css">
 	<style>
@@ -24,6 +24,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Underline</h2>
+	<p>
+		<strong>Underline</strong> is a gradient horizontal line below a text. It is used to emphasize the text.
+	</p>
 
 	<h3 class="h0 ui-underline">The quick brown fox</h3>
 
@@ -50,5 +53,11 @@
 
 	<p>With <code>--grow</code> modifier:</p>
 	<h3 class="h0 ui-underline --red-orange --grow">The quick brown fox</h3>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<h3 class="h0 ui-underline --rainbow">The quick brown fox</h3>
+	</div>
 </body>
 </html>
