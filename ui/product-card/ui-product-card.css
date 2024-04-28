@@ -7,20 +7,21 @@
 
 @layer bs-component {
 	:where(.ui-product-card) {
-		background: var(--ui-product-card-bg, inherit);
-		clip-path: inset(0 0 0 0 round var(--ui-product-card-bdrs, 0));
+		background: var(--ui-product-card-bg, var(--CanvasGray, inherit));
+		clip-path: inset(0 0 0 0 round var(--ui-product-card-bdrs, 1.25em));
 		color: var(--CanvasText);
 		display: grid;
-		position: relative;
+
 		& article {
 			& > * { margin: 0; }
 			display: grid;
 			gap: 1.5ch;
 			padding: 2ch;
 		}
-		& figure, & nav {
+		& figure {
 			grid-area: 1 / -1;
 			margin: 0;
+			position: relative;
 		}
 		& nav {
 			align-items: start;
@@ -29,6 +30,8 @@
 			isolation: isolate;
 			justify-content: space-between;
 			padding: 1ch;
+			position: absolute;
+			width: 100%;
 		}
 	}
 }

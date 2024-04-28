@@ -1,5 +1,7 @@
 @import '../grid/ui-grid.css';
 :where(.ui-table-grid) {
+	--ui-product-card-bdrs: 0;
+	--ui-product-card-bg: inherit;
 	--ui-table-grid-bdw: 2px;
 	background: var(--ui-table-grid-bdc, var(--ButtonBorder));
 	display: grid;
