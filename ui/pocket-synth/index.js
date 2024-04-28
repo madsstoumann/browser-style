@@ -3,7 +3,7 @@ import xyController from '../xy/index.js';
 /**
  * Pocket Synth
  * @version 1.0.00
- * @summary 26-04-2024
+ * @summary 28-04-2024
  * @author Mads Stoumann
  * @description A custom HTML element for synthesizing audio with various filters and oscillators.
  */
@@ -122,21 +122,30 @@ class PocketSynth extends HTMLElement {
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host {
-		--ui-pocket-synth-bdc: var(--ButtonBorder, #CCC);
+		--ui-pocket-synth-bdc: var(--ButtonText, #666);
 		--ui-pocket-synth-bdw: 1px;
+		--ui-xy-bg: var(--ButtonText);
 		--ui-xy-point-bdw: 2px;
 		--ui-xy-point-bg: #0000;
 		--ui-xy-point-sz: 24px;
-
-		display: inline-block;
+		background: var(--ui-pocket-synth-bg, var(--CanvasGray, #F2F2F2));
+		border-radius: 1ch;	
+		display: block;
+		padding: 1ch;
 		width: var(--ui-pocket-synth-w, 250px);
 	}
 	fieldset {
 		all: unset;
 		border: var(--ui-pocket-synth-bdw) solid var(--ui-pocket-synth-bdc);
+		border-radius: .5ch;
 		display: flex;
 		font-size: x-small;
 		& > * { flex: 1; }
+	}
+	form {
+		display: grid;
+		gap: 1ch;
+		margin-block-start: 1ch;
 	}
 	input[type=radio] { 
 		clip: rect(0 0 0 0);
@@ -147,14 +156,28 @@ stylesheet.replaceSync(`
 		position: absolute;
 		white-space: nowrap;
 		width: 1px;
-		
+	}
+	input[type=range] {
+		-webkit-appearance: none;
+		background: var(--ButtonBorder, #CCC);
+		border-radius: 1ch;
+		height: 1ch;
+		width: 100%;
+	}
+	input[type=range]::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		background: var(--ui-pocket-synth-bdc);
+		border-radius: 50%;
+		cursor: pointer;
+		height: 2ch;
+		width: 2ch;
 	}
 	label {
 		display: grid;
 		place-items: center;
 	}
 	label:has(:checked) {
-		background: var(--ui-pocket-synth--active-bg, var(--AccentColor, #007bff));
+		background: var(--ui-pocket-synth--active-bg, var(--ButtonText, #666));
 		color: var(--ui-pocket-synth--active-c, #FFF);
 	}
 	svg {
