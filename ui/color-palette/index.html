@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Color Palette</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-color-palette.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+	<h2>Color Palette</h2>
+	<p>
+		<strong>Color Palette</strong> is an interactive color wheel that allows you to experiment with various color schemes and adjustments. 
+		It includes options for selecting primary, complimentary, and additional specific color tones like shades and tints. 
+		Additionally, you can explore analogous, tetratic, square, and triadic color schemes, each adjustable by degrees of rotation on the color wheel. 
+		You can also apply overlays such as tints and shades.
+	</p>
+
+	<form class="ui-color-palette">
+		<input type="color" value="#00AAFF" class="complimentary">
+		<fieldset>
+			<legend>Main</legend>
+			<label><input type="radio" name="color" data-sr value="all" checked>all</label>
+			<label><input type="radio" name="color" data-sr value="primary">primary</label>
+			<label><input type="radio" name="color" data-sr value="complimentary">complimentary</label>
+			<label><input type="radio" name="color" data-sr value="split">split</label>
+			<label><input type="radio" name="color" data-sr value="shades">shades</label>
+			<label><input type="radio" name="color" data-sr value="tints">tints</label>
+		</fieldset>
+		<fieldset>
+			<legend>Analogous</legend>
+			<label><input type="radio" name="color" data-sr value="an1">0&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an2">30&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an3">60&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an4">90&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an5">120&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an6">150&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an7">180&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an8">210&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an9">240&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an10">270&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an11">300&deg;</label>
+			<label><input type="radio" name="color" data-sr value="an12">330&deg;</label>
+		</fieldset>
+		<fieldset>
+			<legend>Tetratic</legend>
+			<label><input type="radio" name="color" data-sr value="tet1">0&deg;</label>
+			<label><input type="radio" name="color" data-sr value="tet2">30&deg;</label>
+			<label><input type="radio" name="color" data-sr value="tet3">60&deg;</label>
+			<label><input type="radio" name="color" data-sr value="tet4">90&deg;</label>
+			<label><input type="radio" name="color" data-sr value="tet5">120&deg;</label>
+			<label><input type="radio" name="color" data-sr value="tet6">150&deg;</label>
+		</fieldset>
+		<fieldset>
+			<legend>Square</legend>
+			<label><input type="radio" name="color" data-sr value="squ1">0&deg;</label>
+			<label><input type="radio" name="color" data-sr value="squ2">30&deg;</label>
+			<label><input type="radio" name="color" data-sr value="squ3">60&deg;</label>
+		</fieldset>
+		<fieldset>
+			<legend>Triadic</legend>
+			<label><input type="radio" name="color" data-sr value="triad1">0&deg;</label>
+			<label><input type="radio" name="color" data-sr value="triad2">30&deg;</label>
+			<label><input type="radio" name="color" data-sr value="triad3">60&deg;</label>
+			<label><input type="radio" name="color" data-sr value="triad4">90&deg;</label>
+		</fieldset>
+		<fieldset>
+			<legend>Overlay</legend>
+			<label><input type="radio" name="overlay" data-sr value="none">none</label>
+			<label><input type="radio" name="overlay" data-sr value="ovtints" checked>tints</label>
+			<label><input type="radio" name="overlay" data-sr value="ovshades">shades</label>
+		</fieldset>
+	</form>
+
+	<script>
+
+	const color = document.querySelector('input[type="color"]');
+	function hexToHSL(hex) {
+		let r = parseInt(hex.substring(1, 3), 16);
+		let g = parseInt(hex.substring(3, 5), 16);
+		let b = parseInt(hex.substring(5, 7), 16);
+		r /= 255;
+		g /= 255;
+		b /= 255;
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		let h, s, l = (max + min) / 2;
+
+		if (max === min) {
+				h = s = 0;
+		} else {
+				const d = max - min;
+				s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+				switch (max) {
+						case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+						case g: h = (b - r) / d + 2; break;
+						case b: h = (r - g) / d + 4; break;
+				}
+				h /= 6;
+		}
+		return [Math.round(h * 360) + 'deg', Math.round(s * 100) + '%', Math.round(l * 100) + '%'];
+	}
+
+	const form = document.querySelector('.ui-color-palette');
+	color.addEventListener('input', () => {
+		const [h, s, l] = hexToHSL(color.value);
+		form.style.setProperty('--h', h);
+		form.style.setProperty('--s', s);
+		form.style.setProperty('--l', l);
+	});
+
+</script>
+</body>
+</html>
