@@ -1,7 +1,7 @@
 @import '../icon/ui-icon.css';
 @layer bs-component {
 	:where(.ui-drawer) {
-		--ui-drawer-w: 33vw;
+		--ui-drawer-w: 80vw;
 		&.--left { --_trl: calc(1vw - var(--ui-drawer-w)) 0; }
 		&.--right { --_trl: calc(var(--ui-drawer-w) + 1vw) 0; --_ins: 0 0 auto auto; }
 		&.--top { --_trl: 0 calc(1vh - 100vh); height: auto; --ui-drawer-w: 100vw; }

@@ -145,6 +145,7 @@ stylesheet.replaceSync(`
 	}
 	input[type=range] {
 		-webkit-appearance: none;
+		border-radius: 0;
 		margin: 0;
 		width: 100%;
 	}

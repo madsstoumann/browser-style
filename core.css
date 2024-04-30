@@ -15,8 +15,6 @@
 		--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
 		--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
 		--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
-
-		/* Status Colors */
 		--ColorInfo: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
 		--ColorError: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
 		--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
@@ -155,6 +153,7 @@
 		padding: 1ch;
 	}
 
+	/* TMP: DELETE AFTER IOS 17.5 */
 	@supports not (color: light-dark(#000, #FFF)) {
 		:root {
 			--AccentColor: hsl(211, 100%, 50%);
@@ -176,24 +175,6 @@
 			--ColorError: hsl(360, 60%, 46%);
 			--ColorSuccess: hsl(136, 41%, 41%);
 			--ColorWarning: hsl(33, 99%, 59%);
-		}
-		@media (prefers-color-scheme: dark) {
-			:root {
-				--AccentColor: hsl(211, 60%, 50%);
-				--ButtonBorder: hsl(0, 0%, 20%);
-				--ButtonFace: hsl(0, 0%, 40%);
-				--ButtonText: hsl(0, 0%, 60%);
-				--Canvas: hsl(0, 0%, 0%);
-				--CanvasGray: hsl(0, 0%, 15%);
-				--CanvasText: hsl(0, 0%, 85%);
-				--Field: hsl(0, 0%, 2.5%);
-				--GrayText: hsl(0, 0%, 40%);
-				--Highlight: hsl(211, 30%, 20%);
-				--ColorInfo: hsl(210, 30%, 46%);
-				--ColorError: hsl(360, 40%, 56%);
-				--ColorSuccess: hsl(136, 21%, 51%);
-				--ColorWarning: hsl(33, 69%, 59%);
-			}
 		}
 	}
 }

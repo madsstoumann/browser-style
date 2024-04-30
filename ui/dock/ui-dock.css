@@ -2,6 +2,7 @@
 
 @layer bs-component {
 	:where(.ui-dock) {
+		--icon-sz: 2em;
 		--ui-dock-gap: .66em;
 		--ui-dock-item-bdrs: .75em;
 		--ui-dock-item-sz: 3em;

@@ -2,12 +2,17 @@
 
 @layer bs-component {
 	:where(.ui-cinema) {
+		--ui-cinema-seat-gap: 1cqi;
+		--ui-cinema-seat-w: 7.5cqi;
 		all: unset;
+		container-type: inline-size;
 		direction: ltr;
+		display: block;
+		max-inline-size: var(--ui-cinema-mw, 320px);
 		& input {
 			--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--CanvasGray)), #000 30%);
 			--input-check-bgsz: 50%/55%;
-			--input-check-sz: 2em;
+			--input-check-sz: var(--ui-cinema-seat-w);
 			aspect-ratio: 1 / .9;
 			background-color: var(--ui-cinema-seat-bg, var(--CanvasGray));
 			border-color: var(--_bdc);
@@ -39,19 +44,19 @@
 			align-items: center;
 			counter-increment: row;
 			display: grid;
-			gap: 1ch;
+			gap: var(--ui-cinema-seat-gap);
 			grid-auto-flow: column;
 			&::before,
 			&::after {
 				content: counter(row);
 				font-size: small;
-				padding-inline: 1ch;
+				padding-inline: .5cqi;
 			}
 		}
 		& ol {
 			counter-reset: row;
 			display: grid;
-			gap: 1ch;
+			gap: 2cqi;
 			padding: 0;
 		}
 	}

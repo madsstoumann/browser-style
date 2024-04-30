@@ -103,6 +103,7 @@
 		background-position: calc(100% - 1.25ch) center;
 		background-repeat: no-repeat;
 		background-size: var(--icon-size, 1.25em);
+		width: 100%;
 		[dir=rtl] & { background-position: 1.25ch center; }
 	}
 	:where([type=checkbox], [type=radio]) {
@@ -206,7 +207,11 @@
 			-webkit-appearance: none;
 			-webkit-mask-image: var(--icon);
 		}
+		&[autocomplete="off"]::-webkit-contacts-auto-fill-button {
+			visibility: hidden;
+		}
 	}
+	[list]::-webkit-list-button,
 	[list]::-webkit-calendar-picker-indicator {
 		display: none !important;
 	}

@@ -2,19 +2,21 @@
 	:where(.ui-color-key) {
 		all: unset;
 		background-color: var(--CanvasGray);
-		border-radius: var(--ui-color-key-bdrs, 5ch);
+		border-radius: var(--ui-color-key-bdrs, 1em);
 		display: grid;
 		font-family: var(--ui-color-key-ff, var(--ff-form));
-		gap: 2ch;
-		grid-auto-flow: column;
-		padding: 1ch 2ch;
+		column-gap: 1.5ch;
+		grid-auto-flow: row;
+		overflow: hidden;
+		padding: 1ch 1.5ch;
+		row-gap: .25ch;
 		width: fit-content;
 		& li {
-			display: grid;
+			align-items: center;
+			display: flex;
 			font-size: smaller;
 			gap: 1ch;
 			grid-auto-flow: column;
-			align-items: center;
 			&::before {
 				aspect-ratio: 1 / 1;
 				background-color: var(--ui-color-key, var(--ButtonBorder));
