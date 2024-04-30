@@ -30,6 +30,10 @@
 	.cs-opposite {
 		background-color: var(--Canvas);
 		color: var(--CanvasText);
+		@supports not (color: light-dark(#000, #FFF)) {
+			background-color: var(--CanvasText);
+			color: var(--Canvas);
+		}
 	}
 	@media (prefers-color-scheme: dark) {
 		.cs-opposite { color-scheme: light; }
