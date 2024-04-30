@@ -3,14 +3,9 @@
 		--h: 200deg;
 		--s: 100%;
 		--l: 50%;
-		--l2: 90%;
 
 		display: grid;
 		row-gap: 1ch;
-
-		::-webkit-color-swatch {
-			display: none;
-		}
 
 		& fieldset {
 			display: flex;
@@ -37,33 +32,19 @@
 			aspect-ratio: 1;
 			background: 
 			var(--_g, conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0 30deg,
-				hsl(calc(var(--h) + 30deg) var(--s) var(--l)) 0 60deg,
-				hsl(calc(var(--h) + 60deg) var(--s) var(--l)) 0 90deg,
-				hsl(calc(var(--h) + 90deg) var(--s) var(--l)) 0 120deg,
-				hsl(calc(var(--h) + 120deg) var(--s) var(--l)) 0 150deg,
-				hsl(calc(var(--h) + 150deg) var(--s) var(--l)) 0 180deg,
-				hsl(calc(var(--h) + 180deg) var(--s) var(--l)) 0 210deg,
-				hsl(calc(var(--h) + 210deg) var(--s) var(--l)) 0 240deg,
-				hsl(calc(var(--h) + 240deg) var(--s) var(--l)) 0 270deg,
-				hsl(calc(var(--h) + 270deg) var(--s) var(--l)) 0 300deg,
-				hsl(calc(var(--h) + 300deg) var(--s) var(--l)) 0 330deg,
-				hsl(calc(var(--h) + 330deg) var(--s) var(--l)) 0 360deg
-			)),
-			conic-gradient(
-				hsl(var(--h) var(--s) var(--l2)) 0 30deg,
-				hsl(calc(var(--h) + 30deg) var(--s) var(--l2)) 0 60deg,
-				hsl(calc(var(--h) + 60deg) var(--s) var(--l2)) 0 90deg,
-				hsl(calc(var(--h) + 90deg) var(--s) var(--l2)) 0 120deg,
-				hsl(calc(var(--h) + 120deg) var(--s) var(--l2)) 0 150deg,
-				hsl(calc(var(--h) + 150deg) var(--s) var(--l2)) 0 180deg,
-				hsl(calc(var(--h) + 180deg) var(--s) var(--l2)) 0 210deg,
-				hsl(calc(var(--h) + 210deg) var(--s) var(--l2)) 0 240deg,
-				hsl(calc(var(--h) + 240deg) var(--s) var(--l2)) 0 270deg,
-				hsl(calc(var(--h) + 270deg) var(--s) var(--l2)) 0 300deg,
-				hsl(calc(var(--h) + 300deg) var(--s) var(--l2)) 0 330deg,
-				hsl(calc(var(--h) + 330deg) var(--s) var(--l2)) 0 360deg
-			);
+				hsl(var(--h) var(--s) var(--l1, 90%)) 0 30deg,
+				hsl(calc(var(--h) + 30deg) var(--s) var(--l2, 90%)) 0 60deg,
+				hsl(calc(var(--h) + 60deg) var(--s) var(--l3, 90%)) 0 90deg,
+				hsl(calc(var(--h) + 90deg) var(--s) var(--l4, 90%)) 0 120deg,
+				hsl(calc(var(--h) + 120deg) var(--s) var(--l5, 90%)) 0 150deg,
+				hsl(calc(var(--h) + 150deg) var(--s) var(--l6, 90%)) 0 180deg,
+				hsl(calc(var(--h) + 180deg) var(--s) var(--l7, 90%)) 0 210deg,
+				hsl(calc(var(--h) + 210deg) var(--s) var(--l8, 90%)) 0 240deg,
+				hsl(calc(var(--h) + 240deg) var(--s) var(--l9, 90%)) 0 270deg,
+				hsl(calc(var(--h) + 270deg) var(--s) var(--l10, 90%)) 0 300deg,
+				hsl(calc(var(--h) + 300deg) var(--s) var(--l11, 90%)) 0 330deg,
+				hsl(calc(var(--h) + 330deg) var(--s) var(--l12, 90%)) 0 360deg
+			));
 			border-radius: 50%;
 			container-type: inline-size;
 			display: grid;
@@ -73,71 +54,47 @@
 			width: 100%;
 		}
 
-		/* Primary */
-		&:has([value=primary]:checked) {
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0 30deg,
-				#0000 30deg 360deg
-			);
-		}
+		/* === STATES === */
 
-		/* Complimentary */
-		&:has([value=complimentary]:checked) {
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0 30deg,
-				#0000 30deg 180deg,
-				hsl(calc(var(--h) + 180deg) var(--s) var(--l)) 180deg 210deg,
-				#0000 210deg 360deg
-			);
+		 /* All */
+		 &:has([value=all]:checked) {
+			--l1: var(--l);
+			--l2: var(--l);
+			--l3: var(--l);
+			--l4: var(--l);
+			--l5: var(--l);
+			--l6: var(--l);
+			--l7: var(--l);
+			--l8: var(--l);
+			--l9: var(--l);
+			--l10: var(--l);
+			--l11: var(--l);
+			--l12: var(--l);
 		}
 
 		/* Analogous */
-		&:has([value=an1]:checked) { --_a: 0deg; }
-		&:has([value=an2]:checked) { --_a: 30deg; }
-		&:has([value=an3]:checked) { --_a: 60deg; }
-		&:has([value=an4]:checked) { --_a: 90deg; }
-		&:has([value=an5]:checked) { --_a: 120deg; }
-		&:has([value=an6]:checked) { --_a: 150deg; }
-		&:has([value=an7]:checked) { --_a: 180deg; }
-		&:has([value=an8]:checked) { --_a: 210deg; }
-		&:has([value=an9]:checked) { --_a: 240deg; }
-		&:has([value=an10]:checked) { --_a: 270deg; }
+		&:has([value=an1]:checked) { --l1: var(--l); --l2: var(--l); --l3: var(--l); }
+		&:has([value=an2]:checked) { --l2: var(--l); --l3: var(--l); --l4: var(--l); }
+		&:has([value=an3]:checked) { --l3: var(--l); --l4: var(--l); --l5: var(--l);  }
+		&:has([value=an4]:checked) { --l4: var(--l); --l5: var(--l); --l6: var(--l); }
+		&:has([value=an5]:checked) { --l5: var(--l); --l6: var(--l); --l7: var(--l); }
+		&:has([value=an6]:checked) { --l6: var(--l); --l7: var(--l); --l8: var(--l); }
+		&:has([value=an7]:checked) { --l7: var(--l); --l8: var(--l); --l9: var(--l); }
+		&:has([value=an8]:checked) { --l8: var(--l); --l9: var(--l); --l10: var(--l); }
+		&:has([value=an9]:checked) { --l9: var(--l); --l10: var(--l); --l11: var(--l); }
+		&:has([value=an10]:checked) { --l10: var(--l); --l11: var(--l); --l12: var(--l); }
+		&:has([value=an11]:checked) { --l11: var(--l); --l12: var(--l); --l1: var(--l); }
+		&:has([value=an12]:checked) { --l12: var(--l); --l1: var(--l); --l2: var(--l); }
 
-		&:has([value=an1]:checked),
-		&:has([value=an2]:checked),
-		&:has([value=an3]:checked),
-		&:has([value=an4]:checked),
-		&:has([value=an5]:checked),
-		&:has([value=an6]:checked),
-		&:has([value=an7]:checked),
-		&:has([value=an8]:checked),
-		&:has([value=an9]:checked),
-		&:has([value=an10]:checked) {
-			--_g: conic-gradient(
-				#0000 0deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg),
-				hsl(calc(var(--h) + var(--_a) + 30deg) var(--s) var(--l)) calc(var(--_a) + 30deg) calc(var(--_a) + 60deg),
-				hsl(calc(var(--h) + var(--_a) + 60deg) var(--s) var(--l)) calc(var(--_a) + 60deg) calc(var(--_a) + 90deg),
-				#0000 calc(var(--_a) + 90deg) calc(var(--_a) + 270deg)
-			);
+		/* Complimentary */
+		&:has([value=complimentary]:checked) {
+			--l1: var(--l);
+			--l7: var(--l);
 		}
-		&:has([value=an11]:checked) {
-			--_a: 300deg;
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0deg 30deg,
-				#0000 30deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg),
-				hsl(calc(var(--h) + var(--_a) + 30deg) var(--s) var(--l)) var(--_a) calc(var(--_a) + 60deg)
-			);
-		}
-		&:has([value=an12]:checked) {
-			--_a: 330deg;
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0deg 30deg,
-				hsl(calc(var(--h) + 30deg) var(--s) var(--l)) 0deg 60deg,
-				#0000 60deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg)
-			);
+
+		/* Primary */
+		&:has([value=primary]:checked) {
+			--l1: var(--l);
 		}
 
 		/* Shades */
@@ -157,86 +114,26 @@
 				color-mix(in srgb, hsl(var(--h) var(--s) var(--l)), #000 90%) 330deg 360deg
 			);
 		}
-
+	
 		/* Split Complimentary */
 		&:has([value=split]:checked) {
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0 30deg,
-				#0000 30deg 150deg,
-				hsl(calc(var(--h) + 150deg) var(--s) var(--l)) 150deg 180deg,
-				#0000 180deg 210deg,
-				hsl(calc(var(--h) + 210deg) var(--s) var(--l)) 210deg 240deg,
-				#0000 240deg 360deg
-			);
+			--l1: var(--l);
+			--l6: var(--l);
+			--l8: var(--l);
 		}
-
+	
 		/* Square */
-		&:has([value=squ1]:checked) { --_a: 0deg; }
-		&:has([value=squ2]:checked) { --_a: 30deg; }
-		&:has([value=squ3]:checked) { --_a: 60deg; }
-		&:has([value=squ1]:checked),
-		&:has([value=squ2]:checked),
-		&:has([value=squ3]:checked) {
-			--_g: conic-gradient(
-				#0000 0deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg),
-				#0000 calc(var(--_a) + 30deg) calc(var(--_a) + 90deg),
-				hsl(calc(var(--h) + var(--_a) + 90deg) var(--s) var(--l)) calc(var(--_a) + 90deg) calc(var(--_a) + 120deg),
-				#0000 calc(var(--_a) + 120deg) calc(var(--_a) + 180deg),
-				hsl(calc(var(--h) + var(--_a) + 180deg) var(--s) var(--l)) calc(var(--_a) + 180deg) calc(var(--_a) + 210deg),
-				#0000 calc(var(--_a) + 210deg) calc(var(--_a) + 270deg),
-				hsl(calc(var(--h) + var(--_a) + 270deg) var(--s) var(--l)) calc(var(--_a) + 270deg) calc(var(--_a) + 300deg),
-				#0000 calc(var(--_a) + 300deg) calc(var(--_a) + 360deg)
-			);
-		}
+		&:has([value=squ1]:checked) { --l1: var(--l); --l4: var(--l); --l7: var(--l); --l10: var(--l); }
+		&:has([value=squ2]:checked) { --l2: var(--l); --l5: var(--l); --l8: var(--l); --l11: var(--l); }
+		&:has([value=squ3]:checked) { --l3: var(--l); --l6: var(--l); --l9: var(--l); --l12: var(--l); }
 
 		/* Tetratic */
-		&:has([value=tet1]:checked) { --_a: 0deg; }
-		&:has([value=tet2]:checked) { --_a: 30deg; }
-		&:has([value=tet3]:checked) { --_a: 60deg; }
-		&:has([value=tet4]:checked) { --_a: 90deg; }
-		&:has([value=tet5]:checked) { --_a: 120deg; }
-		&:has([value=tet6]:checked) { --_a: 150deg; }
-		&:has([value=tet1]:checked),
-		&:has([value=tet2]:checked),
-		&:has([value=tet3]:checked),
-		&:has([value=tet4]:checked) {
-			--_g: conic-gradient(
-				#0000 0deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg),
-				#0000 calc(var(--_a) + 30deg) calc(var(--_a) + 60deg),
-				hsl(calc(var(--h) + var(--_a) + 60deg) var(--s) var(--l)) calc(var(--_a) + 60deg) calc(var(--_a) + 90deg),
-				#0000 calc(var(--_a) + 90deg) calc(var(--_a) + 180deg),
-				hsl(calc(var(--h) + var(--_a) + 180deg) var(--s) var(--l)) calc(var(--_a) + 180deg) calc(var(--_a) + 210deg),
-				#0000 calc(var(--_a) + 210deg) calc(var(--_a) + 240deg),
-				hsl(calc(var(--h) + var(--_a) + 240deg) var(--s) var(--l)) calc(var(--_a) + 240deg) calc(var(--_a) + 270deg),
-				#0000 calc(var(--_a) + 270deg) calc(var(--_a) + 360deg)
-			);
-		}
-		&:has([value=tet5]:checked) {
-			--_g: conic-gradient(
-				hsl(var(--h) var(--s) var(--l)) 0deg 30deg,
-				#0000 30deg 120deg,
-				hsl(calc(var(--h) + 120deg) var(--s) var(--l)) 120deg 150deg,
-				#0000 150deg 180deg,
-				hsl(calc(var(--h) + 180deg) var(--s) var(--l)) 180deg 210deg,
-				#0000 210deg 300deg,
-				hsl(calc(var(--h) + 300deg) var(--s) var(--l)) 300deg 330deg,
-				#0000 330deg 360deg
-			);
-		}
-		&:has([value=tet6]:checked) {
-			--_g: conic-gradient(
-				#0000 00deg 30deg,
-				hsl(calc(var(--h) + 30deg) var(--s) var(--l)) 30deg 60deg,
-				#0000 60deg 150deg,
-				hsl(calc(var(--h) + 150deg) var(--s) var(--l)) 150deg 180deg,
-				#0000 180deg 210deg,
-				hsl(calc(var(--h) + 210deg) var(--s) var(--l)) 210deg 240deg,
-				#0000 240deg 330deg,
-				hsl(calc(var(--h) + 330deg) var(--s) var(--l)) 330deg 360deg
-			);
-		}
+		&:has([value=tet1]:checked) { --l1: var(--l); --l3: var(--l); --l7: var(--l); --l9: var(--l); }
+		&:has([value=tet2]:checked) { --l2: var(--l); --l4: var(--l); --l8: var(--l); --l10: var(--l); }
+		&:has([value=tet3]:checked) { --l3: var(--l); --l5: var(--l); --l9: var(--l); --l11: var(--l); }
+		&:has([value=tet4]:checked) { --l4: var(--l); --l6: var(--l); --l10: var(--l); --l12: var(--l); }
+		&:has([value=tet5]:checked) { --l5: var(--l); --l7: var(--l); --l11: var(--l); --l1: var(--l); }
+		&:has([value=tet6]:checked) { --l6: var(--l); --l8: var(--l); --l12: var(--l); --l2: var(--l); }
 
 		/* Tints */
 		&:has([value=tints]:checked) {
@@ -256,7 +153,13 @@
 			);
 		}
 
-		/* Overlay */
+		/* Triadic */
+		&:has([value=triad1]:checked) { --l1: var(--l); --l5: var(--l); --l9: var(--l); }
+		&:has([value=triad2]:checked) { --l2: var(--l); --l6: var(--l); --l10: var(--l); }
+		&:has([value=triad3]:checked) { --l3: var(--l); --l7: var(--l); --l11: var(--l); }
+		&:has([value=triad4]:checked) { --l4: var(--l); --l8: var(--l); --l12: var(--l); }
+
+		/* === OVERLAY: Tints, Shades === */
 		&:has([value=ovshades]:checked) { --_o: 0%; }
 		&:has([value=ovtints]:checked) { --_o: 100%; }
 		&:has([value=ovshades]:checked),
@@ -284,24 +187,7 @@
 			}
 		}
 
-		/* Triadic */
-		&:has([value=triad1]:checked),
-		&:has([value=triad2]:checked),
-		&:has([value=triad3]:checked),
-		&:has([value=triad4]:checked) {
-			--_g: conic-gradient(
-				#0000 0deg var(--_a),
-				hsl(calc(var(--h) + var(--_a)) var(--s) var(--l)) var(--_a) calc(var(--_a) + 30deg),
-				#0000 calc(var(--_a) + 30deg) calc(var(--_a) + 120deg),
-				hsl(calc(var(--h) + var(--_a) + 120deg) var(--s) var(--l)) calc(var(--_a) + 120deg) calc(var(--_a) + 150deg),
-				#0000 calc(var(--_a) + 150deg) calc(var(--_a) + 240deg),
-				hsl(calc(var(--h) + var(--_a) + 240deg) var(--s) var(--l)) calc(var(--_a) + 240deg) calc(var(--_a) + 270deg),
-				#0000 calc(var(--_a) + 270deg) calc(var(--_a) + 360deg)
-			);
-		}
-		&:has([value=triad1]:checked) { --_a: 0deg; }
-		&:has([value=triad2]:checked) { --_a: 30deg; }
-		&:has([value=triad3]:checked) { --_a: 60deg; }
-		&:has([value=triad4]:checked) { --_a: 90deg; }
+		& ::-moz-color-swatch { display: none; }
+		& ::-webkit-color-swatch { display: none; }
 	}
 }
