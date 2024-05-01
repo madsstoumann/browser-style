@@ -1,12 +1,3 @@
-// export default function setProperty(input, attr) {
-//   const key = attr ? attr : input.dataset.key || input.name
-//   const node = scope(input, input.dataset.scope)
-//   if (key && node) { 
-//     const value = attr ? input[attr] : input.value + (input.dataset.unit || '')
-//     node.style.setProperty(key.startsWith('--') ? key : '--' + key, value)
-//   }
-// }
-
 export default function initProperties(input) {
   const keys = input.dataset.key.split(',') || [input.name]
   const scopes = input.dataset.scope?.split(',') || [input.dataset.scope || 'self']

@@ -214,6 +214,7 @@
 	[list]::-webkit-list-button,
 	[list]::-webkit-calendar-picker-indicator {
 		display: none !important;
+		opacity: 0 !important;
 	}
 	:where(label, legend) {
 		font-size: var(--label-fs, smaller);

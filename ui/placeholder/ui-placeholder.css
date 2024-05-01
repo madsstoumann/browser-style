@@ -4,7 +4,6 @@
 		color: var(--ButtonText);
 		display: block;
 		font-size: small;
-		height: 100%;
 		&.--pixels {
 			--s: 3cqmin;
 			--c: Canvas 0 25%, #0000 0;
