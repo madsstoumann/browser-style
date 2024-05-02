@@ -1,15 +1,13 @@
 /* requires ui-scroll.css */
-@layer bs-component {
-	.ui-slider {
-		--ui-scroll-gap: 2ch;
-		& img {
-			object-fit: cover;
-			pointer-events: none;
-			user-select: none;
-			width: var(--_w);
-		}
-		&.--rounded, &.--rounded > img {
-			clip-path: inset(0 0 0 0 round var(--input-bdrs));
-		}
+.ui-slider {
+	--ui-scroll-gap: 2ch;
+	& img {
+		object-fit: cover;
+		pointer-events: none;
+		user-select: none;
+		width: var(--_w);
+	}
+	&.--rounded, &.--rounded > img {
+		clip-path: inset(0 0 0 0 round var(--input-bdrs));
 	}
 }

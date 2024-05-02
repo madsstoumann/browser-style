@@ -1,46 +1,43 @@
 @import "../anchor/ui-anchor.css";
 @import "../icon/ui-icon.css";
-
-@layer bs-component {
-	:where(.ui-context-menu) {
-		--icon-sz: 1.5rem;
-		border: 1px solid var(--ButtonBorder);
-		border-radius: var(--input-bdrs);
-		bottom: anchor(top);
-		list-style-type: none;
-		margin-block: 0;
-		opacity: 1;
-		padding: 0;
-		transition: 
-			scale 0.4s cubic-bezier(.4, 0, .2, 1), 
-			overlay 0.4s ease-out allow-discrete, 
-			display 0.4s ease-out allow-discrete; /* exit state */
-		transform-origin: 0 0;
-		width: fit-content;
-		&:popover-open {
-			@starting-style { /* before open state */
-				opacity: 0;
-				scale: 0;
-			}
-			scale: 1; /* open state */
+:where(.ui-context-menu) {
+  --icon-sz: 1.5rem;
+	border: 1px solid var(--ButtonBorder);
+	border-radius: var(--input-bdrs);
+	bottom: anchor(top);
+	list-style-type: none;
+	margin-block: 0;
+	opacity: 1;
+	padding: 0;
+	transition: 
+		scale 0.4s cubic-bezier(.4, 0, .2, 1), 
+		overlay 0.4s ease-out allow-discrete, 
+		display 0.4s ease-out allow-discrete; /* exit state */
+	transform-origin: 0 0;
+	width: fit-content;
+	&:popover-open {
+		@starting-style { /* before open state */
+			opacity: 0;
+			scale: 0;
 		}
-		& li {
-			align-items: center;
-			display: flex;
-			gap: 2ch;
-			justify-content: space-between;
-			padding: .5ch 1ch;
-			pointer-events: all;
-			white-space: nowrap;
-			&:not(:last-child) {
-				border-bottom: 1px solid var(--ButtonBorder);
-			}
-			&:focus-visible,
-			&:hover {
-				background: var(--AccentColor);
-				color: var(--AccentColorText);
-				outline: none;
-			}
+		scale: 1; /* open state */
+	}
+	& li {
+		align-items: center;
+		display: flex;
+		gap: 2ch;
+		justify-content: space-between;
+		padding: .5ch 1ch;
+		pointer-events: all;
+		white-space: nowrap;
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--ButtonBorder);
+		}
+		&:focus-visible,
+		&:hover {
+			background: var(--AccentColor);
+			color: var(--AccentColorText);
+			outline: none;
 		}
 	}
 }

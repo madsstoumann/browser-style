@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-toolbar.css">
 </head>
@@ -13,82 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Toolbar</h2>
-	<p>
-		<strong>Toolbar</strong> allows users to select a command from a toolbar.
-		It's using the <a href="/ui/button">Button</a> component, which can be grouped in <code>&lt;fieldset&gt;</code> elements.
-	</p>
-
+	<p>See <a href="/ui/text-editor">Text Editor</a> for dynamic example, using <code>data-command-list</code></p>
+	
 	<nav class="ui-toolbar">
-		<fieldset>
-			<button type="button" data-command="bold"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"></path>,<path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"></path></svg></button>
-			<button type="button" data-command="italic"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M11 5l6 0"></path>,<path d="M7 19l6 0"></path>,<path d="M14 5l-4 14"></path></svg></button>
-			<button type="button" data-command="underline"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 5v5a5 5 0 0 0 10 0v-5"></path>,<path d="M5 19h14"></path></svg></button>
-			<button type="button" data-command="strikeThrough"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 12l14 0"></path>,<path d="M16 6.5a4 2 0 0 0 -4 -1.5h-1a3.5 3.5 0 0 0 0 7h2a3.5 3.5 0 0 1 0 7h-1.5a4 2 0 0 1 -4 -1.5"></path></svg></button>
-		</fieldset>
-		<fieldset>
-			<button type="button" data-command="subscript"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 7l8 10m-8 0l8 -10"></path>,<path d="M21 20h-4l3.5 -4a1.73 1.73 0 0 0 -3.5 -2"></path></svg></button>
-			<button type="button" data-command="superscript"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 7l8 10m-8 0l8 -10"></path>,<path d="M21 11h-4l3.5 -4a1.73 1.73 0 0 0 -3.5 -2"></path></svg></button>
-		</fieldset>
-		<fieldset>
-			<button type="button" data-command="insertOrderedList"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M11 6h9"></path>,<path d="M11 12h9"></path>,<path d="M12 18h8"></path>,<path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4"></path>,<path d="M6 10v-6l-2 2"></path></svg></button>
-			<button type="button" data-command="insertUnorderedList"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M9 6l11 0"></path>,<path d="M9 12l11 0"></path>,<path d="M9 18l11 0"></path>,<path d="M5 6l0 .01"></path>,<path d="M5 12l0 .01"></path>,<path d="M5 18l0 .01"></path></svg></button>
-			<button type="button" data-command="insertHorizontalRule"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 12l10 0"></path></svg></button>
-			<button type="button" data-command="insertImage" data-prompt="Enter an image URL:"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M15 8h.01"></path>,<path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"></path>,<path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path>,<path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path></svg></button>
-		</fieldset>
-		<fieldset>
-			<button type="button" data-command="justifyLeft"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M4 12l10 0"></path>,<path d="M4 18l14 0"></path></svg></button>
-			<button type="button" data-command="justifyCenter"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M8 12l8 0"></path>,<path d="M6 18l12 0"></path></svg></button>
-			<button type="button" data-command="justifyRight"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M10 12l10 0"></path>,<path d="M6 18l14 0"></path></svg></button>
-			<button type="button" data-command="justifyFull"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M4 12l16 0"></path>,<path d="M4 18l12 0"></path></svg></button>
-		</fieldset>
-		<fieldset>
-			<button type="button" data-command="createLink" data-prompt="Enter a URL:"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M9 15l6 -6"></path>,<path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path>,<path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path></svg></button>
-		</fieldset>
-		<fieldset>
-			<button type="button" data-command="removeFormat"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M17 15l4 4m0 -4l-4 4"></path>,<path d="M7 6v-1h11v1"></path>,<path d="M7 19l4 0"></path>,<path d="M13 5l-4 14"></path></svg></button>
-			<button type="button" data-command="code"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 8l-4 4l4 4"></path>,<path d="M17 8l4 4l-4 4"></path>,<path d="M14 4l-4 16"></path></svg></button>
-		</fieldset>
-	</nav>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<nav class="ui-toolbar">
-			<fieldset>
-				<button type="button" data-command="bold"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"></path>,<path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"></path></svg></button>
-				<button type="button" data-command="italic"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M11 5l6 0"></path>,<path d="M7 19l6 0"></path>,<path d="M14 5l-4 14"></path></svg></button>
-				<button type="button" data-command="underline"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 5v5a5 5 0 0 0 10 0v-5"></path>,<path d="M5 19h14"></path></svg></button>
-				<button type="button" data-command="strikeThrough"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 12l14 0"></path>,<path d="M16 6.5a4 2 0 0 0 -4 -1.5h-1a3.5 3.5 0 0 0 0 7h2a3.5 3.5 0 0 1 0 7h-1.5a4 2 0 0 1 -4 -1.5"></path></svg></button>
-			</fieldset>
-			<fieldset>
-				<button type="button" data-command="subscript"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 7l8 10m-8 0l8 -10"></path>,<path d="M21 20h-4l3.5 -4a1.73 1.73 0 0 0 -3.5 -2"></path></svg></button>
-				<button type="button" data-command="superscript"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M5 7l8 10m-8 0l8 -10"></path>,<path d="M21 11h-4l3.5 -4a1.73 1.73 0 0 0 -3.5 -2"></path></svg></button>
-			</fieldset>
-			<fieldset>
-				<button type="button" data-command="insertOrderedList"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M11 6h9"></path>,<path d="M11 12h9"></path>,<path d="M12 18h8"></path>,<path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4"></path>,<path d="M6 10v-6l-2 2"></path></svg></button>
-				<button type="button" data-command="insertUnorderedList"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M9 6l11 0"></path>,<path d="M9 12l11 0"></path>,<path d="M9 18l11 0"></path>,<path d="M5 6l0 .01"></path>,<path d="M5 12l0 .01"></path>,<path d="M5 18l0 .01"></path></svg></button>
-				<button type="button" data-command="insertHorizontalRule"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 12l10 0"></path></svg></button>
-				<button type="button" data-command="insertImage" data-prompt="Enter an image URL:"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M15 8h.01"></path>,<path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z"></path>,<path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"></path>,<path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"></path></svg></button>
-			</fieldset>
-			<fieldset>
-				<button type="button" data-command="justifyLeft"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M4 12l10 0"></path>,<path d="M4 18l14 0"></path></svg></button>
-				<button type="button" data-command="justifyCenter"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M8 12l8 0"></path>,<path d="M6 18l12 0"></path></svg></button>
-				<button type="button" data-command="justifyRight"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M10 12l10 0"></path>,<path d="M6 18l14 0"></path></svg></button>
-				<button type="button" data-command="justifyFull"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M4 6l16 0"></path>,<path d="M4 12l16 0"></path>,<path d="M4 18l12 0"></path></svg></button>
-			</fieldset>
-			<fieldset>
-				<button type="button" data-command="createLink" data-prompt="Enter a URL:"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M9 15l6 -6"></path>,<path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"></path>,<path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"></path></svg></button>
-			</fieldset>
-			<fieldset>
-				<button type="button" data-command="removeFormat"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M17 15l4 4m0 -4l-4 4"></path>,<path d="M7 6v-1h11v1"></path>,<path d="M7 19l4 0"></path>,<path d="M13 5l-4 14"></path></svg></button>
-				<button type="button" data-command="code"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 8l-4 4l4 4"></path>,<path d="M17 8l4 4l-4 4"></path>,<path d="M14 4l-4 16"></path></svg></button>
-			</fieldset>
-		</nav>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<nav class="ui-toolbar" dir="rtl">
 		<fieldset>
 			<button type="button" data-command="bold"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"></path>,<path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"></path></svg></button>
 			<button type="button" data-command="italic"><svg viewBox="0 0 24 24" class="ui-icon"><path d="M11 5l6 0"></path>,<path d="M7 19l6 0"></path>,<path d="M14 5l-4 14"></path></svg></button>

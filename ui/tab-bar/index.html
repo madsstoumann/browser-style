@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-tab-bar.css">
 	<link rel="stylesheet" href="../badge/ui-badge.css">
@@ -14,9 +14,6 @@
 
 	<h1>UI: Components</h1>
 	<h2>Tab Bar</h2>
-	<p>
-		<strong>Tab Bar</strong> presents a list of tabs, managed through <code>&lt;input type=radio&gt;</code> elements.
-	</p>
 
 	<fieldset class="ui-tab-bar">
 		<label>
@@ -49,54 +46,14 @@
 				<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
 				<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
 		 </svg>
-		 Settings<b class="ui-badge bg-error --top-right">4</b>
+			Settings
 		</label>
 	</fieldset>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-tab-bar">
-			<label>
-				<input type="radio" name="tab-bar" value="1" data-sr checked>
-				<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
-					<path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-					<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-					<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-			 </svg>
-				Home
-			</label>
-			<label>
-				<input type="radio" name="tab-bar" data-sr value="2">
-				<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
-					<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-					<path d="M21 21l-6 -6"></path>
-			 </svg>
-				Search
-			</label>
-			<label>
-				<input type="radio" name="tab-bar" data-sr value="3">
-				<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
-					<path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
-				</svg>
-				Favorites
-			</label>
-			<label>
-				<input type="radio" name="tab-bar" data-sr value="3">
-				<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
-					<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-					<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-			 </svg>
-			 Settings<b class="ui-badge bg-error --top-right">4</b>
-			</label>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<fieldset class="ui-tab-bar" dir="rtl">
+	<p>With <code>bg-gray</code> class and <a href="/ui/badge">Badge</a>:</p>
+	<fieldset class="ui-tab-bar bg-gray">
 		<label>
-			<input type="radio" name="tab-bar" value="1" data-sr checked>
+			<input type="radio" name="tab-bar-bg" value="1" data-sr>
 			<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
 				<path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
 				<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
@@ -105,7 +62,7 @@
 			Home
 		</label>
 		<label>
-			<input type="radio" name="tab-bar" data-sr value="2">
+			<input type="radio" name="tab-bar-bg" data-sr value="2" checked>
 			<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
 				<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
 				<path d="M21 21l-6 -6"></path>
@@ -113,19 +70,19 @@
 			Search
 		</label>
 		<label>
-			<input type="radio" name="tab-bar" data-sr value="3">
+			<input type="radio" name="tab-bar-bg" data-sr value="3">
 			<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
 				<path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
 			</svg>
 			Favorites
 		</label>
 		<label>
-			<input type="radio" name="tab-bar" data-sr value="3">
+			<input type="radio" name="tab-bar-bg" data-sr value="3">
 			<svg class="ui-icon" width="24" height="24" viewBox="0 0 24 24">
 				<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
 				<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
 		 </svg>
-			Settings
+			Settings<b class="ui-badge bg-error --top-right">4</b>
 		</label>
 	</fieldset>
 

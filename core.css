@@ -1,180 +1,183 @@
-@layer bs-core {
+:root {
+	/* System Colors */
+	--AccentColor: hsl(211, 100%, 50%);
+	--AccentColorText: hsl(211, 100%, 95%);
+	--AccentColorLight: color-mix(in srgb, var(--AccentColor), Canvas 80%);
+
+	--ButtonBorder: color-mix(in oklab, Canvas 80%, CanvasText 20%);
+	--ButtonFace: color-mix(in oklab, Canvas 90%, CanvasText 10%);
+	--CanvasText: color-mix(in oklab, CanvasText 80%, Canvas 20%);
+	--DarkGray: color-mix(in oklab, Canvas 40%, CanvasText 60%);
+	--GrayCanvas: color-mix(in oklab, Canvas 95%, CanvasText 5%);
+	--GrayText: color-mix(in oklab, Canvas 60%, CanvasText 40%); 
+
+	/* 
+	--ButtonBorder: hsl(0, 0%, 80%);
+	--ButtonFace: hsl(0, 0%, 90%);
+	--CanvasText: hsl(0, 0%, 20%);
+	--DarkGray: hsl(0, 0%, 40%);
+	--GrayCanvas: hsl(0, 0%, 95%);
+	--GrayText: hsl(0, 0%, 60%);
+	*/
+
+	--LinkText: color-mix(in oklab, LinkText 50%, #FFF 50%);
+	--Mark: color-mix(in oklab, Mark 60%, Canvas 40%);
+	--MarkText: color-mix(in oklab, MarkText 85%, Mark 15%);
+	--VisitedText: color-mix(in oklab, VisitedText 60%, #FFF 40%);
+
+	/* Additional Colors */
+	--ColorInfo: hsl(210, 60%, 46%);
+	--ColorError: hsl(360, 60%, 46%);
+	--ColorSuccess: hsl(136, 41%, 41%);
+	--ColorWarning: hsl(33, 99%, 59%);
+
+	/* Fonts */
+	--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+	--ff-form: ui-sans-serif, system-ui;
+	--ff-headers: inherit;
+	--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+}
+@media (prefers-color-scheme: dark) {
 	:root {
-		--AccentColor: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
-		--AccentColorText: hsl(211, 100%, 95%);
-		--ButtonBorder: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
-		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
-		--ButtonText: light-dark(hsl(0, 0%, 40%), hsl(0, 0%, 60%));
-		--Canvas: light-dark(hsl(0, 0%, 100%), hsl(0, 0%, 0%));
-		--CanvasGray: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
-		--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
-		--Field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
-		--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
-		--Highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
-		--LinkText: color-mix(in oklab, #0000EE 50%, #FFF 50%);
-		--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
-		--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
-		--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
-		--ColorInfo: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
-		--ColorError: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
-		--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
-		--ColorWarning: light-dark(hsl(33, 99%, 59%), hsl(33, 69%, 59%));
+		--AccentColor: hsl(211, 60%, 50%);
 
-		/* Fonts */
-		--ff-body: Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-		--ff-form: ui-sans-serif, system-ui;
-		--ff-headers: inherit;
-		--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-	}
+		--ButtonBorder: hsl(0, 0%, 20%);
+		--ButtonFace: hsl(0, 0%, 10%);
+		--CanvasText: hsl(0, 0%, 80%);
+		--DarkGray: hsl(0, 0%, 60%);
+		--GrayCanvas: hsl(0, 0%, 5%);
+		--GrayText: hsl(0, 0%, 40%);
 
-	/* Global */
-	*, *::before, *::after { box-sizing: border-box; }
-	[dir=rtl] * { --_dir: left; } /* for direction-aware gradients */
-	[hidden] { display: none; }
-	[data-sr] {
-		border: 0;
-		clip: rect(0 0 0 0); 
-		clip-path: inset(50%);
-		height: 1px;
-		overflow: hidden;
-		position: absolute;
-		white-space: nowrap; 
-		width: 1px;
+		--ColorInfo: hsl(210, 30%, 46%);
+		--ColorError: hsl(360, 40%, 56%);
+		--ColorSuccess: hsl(136, 21%, 51%);
+		--ColorWarning: hsl(33, 69%, 59%);
 	}
+}
 
-	/* Elements */
-	:where(body) {
-		accent-color: var(--AccentColor);
-		background-color: var(--Canvas);
-		color: var(--CanvasText);
-		color-scheme: light dark;
-		font-family: var(--ff-body);
-		font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
-		line-height: 1.5;
-		margin-inline: auto;
-		max-inline-size: 85ch;
-		padding-inline: 2ch;
-		text-rendering: optimizeLegibility;
-	}
-	:where(a) {
-		color: var(--LinkText);
-		-webkit-tap-highlight-color: transparent;
-		&:visited { color: var(--VisitedText); }
-	}
-	:where(abbr) {
-		cursor: help;
-		text-decoration: underline;
-		text-decoration-style: dotted;
-	}
-	:where(audio) {
-		&::-webkit-media-controls-panel {
-			background: var(--CanvasGray);
-		}
-	}
-	:where(blockquote) {
-		border-inline-start: .75ch solid var(--GrayText); 
-		padding-inline-start: 2ch;
-	}
-	:where(blockquote, dl, figure, h1, ol, p, pre, ul) {
-		margin-block: 1rlh;
-	}
-	:where(caption) {
-		font-size: smaller;
-		font-style: italic;
-		margin-block: 1rlh;
-	}
-	:where(code) {
-		background-color: var(--CanvasGray);
-		font-family: var(--ff-mono);
-		font-size: 80%;
-		padding: .165ch .33ch;
-	}
-	:where(del) { color: var(--ColorError); }
-	:where(dfn) {
-		text-decoration: underline;
-		text-decoration-style: double;
-	}
-	:where(dt) { font-weight: 700; }
-	:where(figcaption) { font-size: smaller; }
-	:where(h1, h2, h3, h4) {
-		font-family: var(--ff-headers);
-		line-height: 1.3;
-		text-wrap: balance;
-	}
-	:where(h2) { margin-block: .75rlh; }
-	:where(hr) {
-		border: solid var(--ButtonBorder);
-		border-width: 1px 0 0;
-		margin-block: .5rlh;
-	}
-	:where(img) {
-		font-style: italic;
-		height: auto;
-		max-width: 100%;
-	}
-	:where(ins) { color: var(--ColorSuccess) }
-	:where(kbd) {
-		background-color: var(--ButtonFace);
-		font-size: smaller;
-		padding: .33ch .66ch;
-	}
-	:where(mark) {
-		background-color: var(--Mark);
-		color: var(--MarkText);
-	}
-	:where(pre) { overflow: auto; }
-	:where(pre, tr:nth-of-type(even)) {
-		background-color: var(--CanvasGray);
-	}
-	:where(table) {
-		border-collapse: collapse;
-		/* Column-alignment, if you need to support more than 8 columns, add more here: */
-		&[data-c1~="center"] tr > *:nth-of-type(1),
-		&[data-c2~="center"] tr > *:nth-of-type(2),
-		&[data-c3~="center"] tr > *:nth-of-type(3),
-		&[data-c4~="center"] tr > *:nth-of-type(4),
-		&[data-c5~="center"] tr > *:nth-of-type(5),
-		&[data-c6~="center"] tr > *:nth-of-type(6),
-		&[data-c7~="center"] tr > *:nth-of-type(7),  
-		&[data-c8~="center"] tr > *:nth-of-type(8) { text-align: center; }
+/* Global */
+*, *::before, *::after { box-sizing: border-box; }
+[dir=rtl] * { --_dir: left; } /* for gradients */
+[hidden] { display: none; }
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0); 
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap; 
+	width: 1px;
+}
 
-		&[data-c1~="end"] tr > *:nth-of-type(1),
-		&[data-c2~="end"] tr > *:nth-of-type(2),
-		&[data-c3~="end"] tr > *:nth-of-type(3),
-		&[data-c4~="end"] tr > *:nth-of-type(4),
-		&[data-c5~="end"] tr > *:nth-of-type(5),
-		&[data-c6~="end"] tr > *:nth-of-type(6),
-		&[data-c7~="end"] tr > *:nth-of-type(7)
-		&[data-c8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+/* Elements */
+:where(body) {
+	accent-color: var(--AccentColor);
+	background-color: Canvas;
+	color: var(--CanvasText);
+	color-scheme: light dark;
+	font-family: var(--ff-body);
+	font-size: clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem);
+	line-height: 1.5;
+	margin-inline: auto;
+	max-inline-size: 85ch;
+	padding-inline: 2ch;
+	text-rendering: optimizeLegibility;
+}
+:where(a) {
+	color: var(--LinkText);
+	-webkit-tap-highlight-color: transparent;
+	&:visited { color: var(--VisitedText); }
+}
+:where(abbr) {
+	cursor: help;
+	text-decoration: underline;
+	text-decoration-style: dotted;
+}
+:where(audio) {
+	&::-webkit-media-controls-panel {
+		background: var(--GrayCanvas);
 	}
-	:where(td) { border: 1px solid; }
-	:where(td, th) {
-		font-size: smaller;
-		padding: 1ch;
-	}
+}
+:where(blockquote) {
+	border-inline-start: .75ch solid var(--ButtonFace);
+	padding-inline-start: 2ch;
+}
+:where(blockquote, dl, figure, h1, ol, p, pre, ul) {
+	margin-block: 1rlh;
+}
+:where(caption) {
+	/* caption-side: bottom; */
+	font-size: smaller;
+	font-style: italic;
+	margin-block: 1rlh;
+}
+:where(code) {
+	background-color: var(--GrayCanvas);
+	font-family: var(--ff-mono);
+	font-size: 80%;
+	padding: .165ch .33ch;
+}
+:where(del) { color: var(--ColorError); }
+:where(dfn) {
+	text-decoration: underline;
+	text-decoration-style: double;
+}
+:where(dt) { font-weight: 700; }
+:where(figcaption) { font-size: smaller; }
+:where(h1, h2, h3, h4) {
+	font-family: var(--ff-headers);
+	line-height: 1.3;
+	text-wrap: balance;
+}
+:where(h2) { margin-block: .75rlh; }
+:where(hr) {
+	border: solid var(--ButtonBorder);
+	border-width: 1px 0 0;
+	margin-block: .5rlh;
+}
+:where(img) {
+	font-style: italic;
+	height: auto;
+	max-width: 100%;
+}
+:where(ins) { color: var(--ColorSuccess) }
+:where(kbd) {
+	background-color: var(--ButtonFace);
+	font-size: smaller;
+	padding: .33ch .66ch;
+}
+:where(mark) {
+	background-color: var(--Mark);
+	color: var(--MarkText);
+}
+:where(pre) { overflow: auto; }
+:where(pre, tr:nth-of-type(even)) {
+	background-color: var(--GrayCanvas);
+}
+:where(table) {
+	border-collapse: collapse;
+	/* Column-alignment, if you need to support more than 8 columns, add more */
+	&[data-c1~="center"] tr > *:nth-of-type(1),
+	&[data-c2~="center"] tr > *:nth-of-type(2),
+	&[data-c3~="center"] tr > *:nth-of-type(3),
+	&[data-c4~="center"] tr > *:nth-of-type(4),
+	&[data-c5~="center"] tr > *:nth-of-type(5),
+	&[data-c6~="center"] tr > *:nth-of-type(6),
+	&[data-c7~="center"] tr > *:nth-of-type(7),  
+	&[data-c8~="center"] tr > *:nth-of-type(8) { text-align: center; }
 
-	/* TMP: DELETE AFTER IOS 17.5 */
-	@supports not (color: light-dark(#000, #FFF)) {
-		:root {
-			--AccentColor: hsl(211, 100%, 50%);
-			--AccentColorText: hsl(211, 100%, 95%);
-			--ButtonBorder: hsl(0, 0%, 80%);
-			--ButtonFace: hsl(0, 0%, 90%);
-			--ButtonText: hsl(0, 0%, 40%);
-			--Canvas: hsl(0, 0%, 100%);
-			--CanvasGray: hsl(0, 0%, 95%);
-			--CanvasText: hsl(0, 0%, 15%);
-			--Field: hsl(0, 0%, 97.5%);
-			--GrayText: hsl(0, 0%, 60%);
-			--Highlight: hsl(211, 100%, 95%);
-			--LinkText: color-mix(in oklab, #0000EE 50%, #FFF 50%);
-			--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
-			--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
-			--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
-			--ColorInfo: hsl(210, 60%, 46%);
-			--ColorError: hsl(360, 60%, 46%);
-			--ColorSuccess: hsl(136, 41%, 41%);
-			--ColorWarning: hsl(33, 99%, 59%);
-		}
-	}
+	&[data-c1~="end"] tr > *:nth-of-type(1),
+	&[data-c2~="end"] tr > *:nth-of-type(2),
+	&[data-c3~="end"] tr > *:nth-of-type(3),
+	&[data-c4~="end"] tr > *:nth-of-type(4),
+	&[data-c5~="end"] tr > *:nth-of-type(5),
+	&[data-c6~="end"] tr > *:nth-of-type(6),
+	&[data-c7~="end"] tr > *:nth-of-type(7)
+	&[data-c8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+}
+:where(td) { border: 1px solid; }
+:where(td, th) {
+	font-size: smaller;
+	padding: 1ch;
 }

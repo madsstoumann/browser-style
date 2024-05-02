@@ -1,19 +1,17 @@
 @import "../anchor/ui-anchor.css";
-@layer bs-component {
-	:where(.ui-toggletip-link) {
-		all: unset;
-		position: relative;
-		text-decoration-line: underline;
-		text-decoration-style: dotted;
-		text-decoration-width: .075em;
-		text-underline-offset: .25em;
-	}
-	:where(.ui-toggletip) {
-		background-color: var(--CanvasText);
-		border-radius: .5em;
-		color: Canvas;
-		font-size: smaller;
-		max-width: 18em;
-		padding: 1ch 2ch;
-	}
+:where(.ui-toggletip-link) {
+	all: unset;
+	position: relative;
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	text-decoration-width: .075em;
+	text-underline-offset: .25em;
+}
+:where(.ui-toggletip) {
+	background-color: var(--CanvasText);
+	border-radius: .5em;
+	color: Canvas;
+	font-size: smaller;
+	max-width: 18em;
+	padding: 1ch 2ch;
 }

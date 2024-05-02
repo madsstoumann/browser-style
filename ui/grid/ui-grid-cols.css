@@ -1,48 +1,46 @@
 /* Can be used with both ui-grid.css and ui-scroll.css */
-@layer bs-component {
-	.--xs-c-1 { --ui-grid-cols: 1; }
-	.--xs-c-2 { --ui-grid-cols: 2; }
-	.--xs-c-3 { --ui-grid-cols: 3; }
-	.--xs-c-4 { --ui-grid-cols: 4; }
-	.--xs-c-5 { --ui-grid-cols: 5; }
-	.--xs-c-6 { --ui-grid-cols: 6; }
+.--xs-c-1 { --ui-grid-cols: 1; }
+.--xs-c-2 { --ui-grid-cols: 2; }
+.--xs-c-3 { --ui-grid-cols: 3; }
+.--xs-c-4 { --ui-grid-cols: 4; }
+.--xs-c-5 { --ui-grid-cols: 5; }
+.--xs-c-6 { --ui-grid-cols: 6; }
 
-	@media (min-width: 480px) {
-		.--sm-c-1 { --ui-grid-cols: 1; }
-		.--sm-c-2 { --ui-grid-cols: 2; }
-		.--sm-c-3 { --ui-grid-cols: 3; }
-		.--sm-c-4 { --ui-grid-cols: 4; }
-		.--sm-c-5 { --ui-grid-cols: 5; }
-		.--sm-c-6 { --ui-grid-cols: 6; }
-	}
-	@media (min-width: 768px) {
-		.--md-c-1 { --ui-grid-cols: 1; }
-		.--md-c-2 { --ui-grid-cols: 2; }
-		.--md-c-3 { --ui-grid-cols: 3; }
-		.--md-c-4 { --ui-grid-cols: 4; }
-		.--md-c-5 { --ui-grid-cols: 5; }
-		.--md-c-6 { --ui-grid-cols: 6; }
-		.--md-c-7 { --ui-grid-cols: 7; }
-		.--md-c-8 { --ui-grid-cols: 8; }
-	}
-	@media (min-width: 1024px) {
-		.--lg-c-1 { --ui-grid-cols: 1; }
-		.--lg-c-2 { --ui-grid-cols: 2; }
-		.--lg-c-3 { --ui-grid-cols: 3; }
-		.--lg-c-4 { --ui-grid-cols: 4; }
-		.--lg-c-5 { --ui-grid-cols: 5; }
-		.--lg-c-6 { --ui-grid-cols: 6; }
-		.--lg-c-7 { --ui-grid-cols: 7; }
-		.--lg-c-8 { --ui-grid-cols: 8; }
-	}
-	@media (min-width: 1440px) {
-		.--xl-c-1 { --ui-grid-cols: 1; }
-		.--xl-c-2 { --ui-grid-cols: 2; }
-		.--xl-c-3 { --ui-grid-cols: 3; }
-		.--xl-c-4 { --ui-grid-cols: 4; }
-		.--xl-c-5 { --ui-grid-cols: 5; }
-		.--xl-c-6 { --ui-grid-cols: 6; }
-		.--xl-c-7 { --ui-grid-cols: 7; }
-		.--xl-c-8 { --ui-grid-cols: 8; }
-	}
+@media (min-width: 480px) {
+	.--sm-c-1 { --ui-grid-cols: 1; }
+	.--sm-c-2 { --ui-grid-cols: 2; }
+	.--sm-c-3 { --ui-grid-cols: 3; }
+	.--sm-c-4 { --ui-grid-cols: 4; }
+	.--sm-c-5 { --ui-grid-cols: 5; }
+	.--sm-c-6 { --ui-grid-cols: 6; }
+}
+@media (min-width: 768px) {
+	.--md-c-1 { --ui-grid-cols: 1; }
+	.--md-c-2 { --ui-grid-cols: 2; }
+	.--md-c-3 { --ui-grid-cols: 3; }
+	.--md-c-4 { --ui-grid-cols: 4; }
+	.--md-c-5 { --ui-grid-cols: 5; }
+	.--md-c-6 { --ui-grid-cols: 6; }
+	.--md-c-7 { --ui-grid-cols: 7; }
+	.--md-c-8 { --ui-grid-cols: 8; }
+}
+@media (min-width: 1024px) {
+	.--lg-c-1 { --ui-grid-cols: 1; }
+	.--lg-c-2 { --ui-grid-cols: 2; }
+	.--lg-c-3 { --ui-grid-cols: 3; }
+	.--lg-c-4 { --ui-grid-cols: 4; }
+	.--lg-c-5 { --ui-grid-cols: 5; }
+	.--lg-c-6 { --ui-grid-cols: 6; }
+	.--lg-c-7 { --ui-grid-cols: 7; }
+	.--lg-c-8 { --ui-grid-cols: 8; }
+}
+@media (min-width: 1440px) {
+	.--xl-c-1 { --ui-grid-cols: 1; }
+	.--xl-c-2 { --ui-grid-cols: 2; }
+	.--xl-c-3 { --ui-grid-cols: 3; }
+	.--xl-c-4 { --ui-grid-cols: 4; }
+	.--xl-c-5 { --ui-grid-cols: 5; }
+	.--xl-c-6 { --ui-grid-cols: 6; }
+	.--xl-c-7 { --ui-grid-cols: 7; }
+	.--xl-c-8 { --ui-grid-cols: 8; }
 }

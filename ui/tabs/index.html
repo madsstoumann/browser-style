@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-  <meta name="view-transition" content="same-origin">
+  <!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
   <link rel="stylesheet" href="ui-tabs.css">
 </head>
@@ -13,95 +13,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Tabs</h2>
-	<p>
-		<strong>Tabs</strong> groups content into sections accessible via clickable tabs, streamlining navigation and display within a confined space.
-	</p>
-
-	<div class="ui-tabs">
-		<nav role="tablist" class="--hide-scrollbar">
-			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
-			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
-			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
-		</nav>
-		<div class="ui-scroll" data-scroll-nav="--hidden" data-scroll-tabs=".ui-tabs">
-			<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
-				<h3>Welcome to the Tab 1!</h3>
-				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
-				<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-			<div id="tab-panel-2" role="tabpanel" aria-labelledby="tab-2">
-				<h3>Greetings from Tab 2!</h3>
-				<p>Here, you'll find a wide range of exciting content to keep you entertained. From news and updates to interesting articles and videos, there's something for everyone. Dive in, stay curious, and discover new perspectives. Let this tab be your gateway to endless inspiration and knowledge.</p>
-				<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-			<div id="tab-panel-3" role="tabpanel" aria-labelledby="tab-3">
-				<h3>Step into Tab 3 &hellip;</h3>
-				<p>&hellip; your virtual playground! Unleash your creativity, embark on adventures, and let your imagination run wild. From interactive games and puzzles to artistic challenges and contests, there's never a dull moment here. Join our vibrant community, make new friends, and let the fun begin. Get ready for an unforgettable experience!</p>	
-				<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-		</div>
-	</div>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<div class="ui-tabs">
-			<nav role="tablist" class="--hide-scrollbar">
-				<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
-				<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
-				<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
-			</nav>
-			<div class="ui-scroll" data-scroll-nav="--hidden" data-scroll-tabs=".ui-tabs">
-				<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
-					<h3>Welcome to the Tab 1!</h3>
-					<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
-					<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="lazy">
-				</div>
-				<div id="tab-panel-2" role="tabpanel" aria-labelledby="tab-2">
-					<h3>Greetings from Tab 2!</h3>
-					<p>Here, you'll find a wide range of exciting content to keep you entertained. From news and updates to interesting articles and videos, there's something for everyone. Dive in, stay curious, and discover new perspectives. Let this tab be your gateway to endless inspiration and knowledge.</p>
-					<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy">
-				</div>
-				<div id="tab-panel-3" role="tabpanel" aria-labelledby="tab-3">
-					<h3>Step into Tab 3 &hellip;</h3>
-					<p>&hellip; your virtual playground! Unleash your creativity, embark on adventures, and let your imagination run wild. From interactive games and puzzles to artistic challenges and contests, there's never a dull moment here. Join our vibrant community, make new friends, and let the fun begin. Get ready for an unforgettable experience!</p>	
-					<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy">
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div class="ui-tabs" dir="rtl">
-		<nav role="tablist" class="--hide-scrollbar">
-			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
-			<a href="#tab-panel-2" id="tab-2" aria-controls="tab-panel-2" role="tab">The second tab is here</a>
-			<a href="#tab-panel-3" id="tab-3" aria-controls="tab-panel-3" role="tab">And here's the third tab</a>
-		</nav>
-		<div class="ui-scroll" data-scroll-nav="--hidden" data-scroll-tabs=".ui-tabs">
-			<div id="tab-panel-1" role="tabpanel" aria-labelledby="tab-1">
-				<h3>Welcome to the Tab 1!</h3>
-				<p>This is a place where you can explore various topics and engage in meaningful discussions. Feel free to share your thoughts, ask questions, and connect with like-minded individuals. We encourage open and respectful dialogue to foster a positive community. Enjoy your stay!</p>
-				<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-			<div id="tab-panel-2" role="tabpanel" aria-labelledby="tab-2">
-				<h3>Greetings from Tab 2!</h3>
-				<p>Here, you'll find a wide range of exciting content to keep you entertained. From news and updates to interesting articles and videos, there's something for everyone. Dive in, stay curious, and discover new perspectives. Let this tab be your gateway to endless inspiration and knowledge.</p>
-				<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-			<div id="tab-panel-3" role="tabpanel" aria-labelledby="tab-3">
-				<h3>Step into Tab 3 &hellip;</h3>
-				<p>&hellip; your virtual playground! Unleash your creativity, embark on adventures, and let your imagination run wild. From interactive games and puzzles to artistic challenges and contests, there's never a dull moment here. Join our vibrant community, make new friends, and let the fun begin. Get ready for an unforgettable experience!</p>	
-				<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy">
-			</div>
-		</div>
-	</div>
-
-
-	<br>
-	<h2>Variants</h2>
-	<p>With modifier <code>data-scroll-behavior="auto"</code>.</p>
+	<p>Used here with modifier <code>data-scroll-behavior="auto"</code>.<br>Default behavior is <code>smooth</code>.</p>
 	<div class="ui-tabs">
 		<nav role="tablist" class="--hide-scrollbar">
 			<a href="#tab-panel-1" id="tab-1" aria-controls="tab-panel-1" role="tab">The very first tab</a>
@@ -126,6 +38,7 @@
 			</div>
 		</div>
 	</div>
+
 	<p>Width <code>--group</code> modifier</p>
 	<div class="ui-tabs --group">
 		<nav role="tablist" class="--hide-scrollbar">

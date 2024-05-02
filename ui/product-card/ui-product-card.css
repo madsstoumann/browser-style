@@ -1,37 +1,29 @@
 @import url('../chip/ui-chip.css');
 @import url('../icon/ui-icon.css');
-@import url('../placeholder/ui-placeholder.css');
 @import url('../scroll/ui-scroll.css');
 @import url('../scroll/ui-scrollbar.css');
 @import url('../swap/ui-swap.css');
 
-@layer bs-component {
-	:where(.ui-product-card) {
-		background: var(--ui-product-card-bg, var(--CanvasGray, inherit));
-		clip-path: inset(0 0 0 0 round var(--ui-product-card-bdrs, 1.25em));
-		color: var(--CanvasText);
+:where(.ui-product-card) {
+	color: var(--CanvasText);
+	display: grid;
+	position: relative;
+	& article {
+		& > * { margin: 0; }
 		display: grid;
-
-		& article {
-			& > * { margin: 0; }
-			display: grid;
-			gap: 1.5ch;
-			padding: 2ch;
-		}
-		& figure {
-			grid-area: 1 / -1;
-			margin: 0;
-			position: relative;
-		}
-		& nav {
-			align-items: start;
-			display: flex;
-			height: fit-content;
-			isolation: isolate;
-			justify-content: space-between;
-			padding: 1ch;
-			position: absolute;
-			width: 100%;
-		}
+		gap: 1.5ch;
+		padding: 2ch;
+	}
+	& figure, & nav {
+		grid-area: 1 / -1;
+		margin: 0;
+	}
+	& nav {
+		align-items: start;
+		display: flex;
+		height: fit-content;
+		isolation: isolate;
+		justify-content: space-between;
+		padding: 1ch;
 	}
 }

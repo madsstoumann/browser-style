@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 	<link rel="stylesheet" href="ui-skeleton.css">
@@ -15,14 +15,12 @@
 
 	<h2>Skeleton</h2>
 	<p>
-		<strong>Skeleton</strong> is a technique used to provide a placeholder for content that is still loading. It is a visual representation of the layout of a page, showing where elements will be placed and how they will be styled. Skeletons are often used to improve the user experience by reducing the perceived loading time of a page. Skeletons are typically made up of simple shapes and lines that mimic the layout of the final page.
-	</p>
-	<p>
 		Build a skeleton using <a href="/ui/grid">grid</a> and <code>aspect-ratio</code> and <code>border-radius</code> utility-classes.<br>
 		Used here with midifiers <code>--wave</code> and <code>--pulse</code>
 	</p>
 
 	<div class="ui-grid --md-c-2 --sm-cg-5">
+
 		<div class="ui-skeleton ui-grid --xs-c-1 --wave">
 			<samp class="ar-widescreen bdrs-md"></samp>
 			<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus excepturi quaerat, laboriosam nisi repellendus.</span>
@@ -30,6 +28,7 @@
 				<samp class="ar-ultrawide bdrs-md"></samp>
 			</div>
 		</div>
+
 		<div class="ui-skeleton ui-grid --xs-c-1 --pulse">
 			<div class="ui-grid --xs-c-4">
 				<samp class="ar-square bdrs-circle"></samp>
@@ -40,53 +39,7 @@
 			</div>
 			<samp class="ar-widescreen bdrs-md"></samp>
 		</div>
-	</div>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<div class="ui-grid --md-c-2 --sm-cg-5">
-			<div class="ui-skeleton ui-grid --xs-c-1 --wave">
-				<samp class="ar-widescreen bdrs-md"></samp>
-				<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus excepturi quaerat, laboriosam nisi repellendus.</span>
-				<div class="ui-grid --xs-c-2">
-					<samp class="ar-ultrawide bdrs-md"></samp>
-				</div>
-			</div>
-			<div class="ui-skeleton ui-grid --xs-c-1 --pulse">
-				<div class="ui-grid --xs-c-4">
-					<samp class="ar-square bdrs-circle"></samp>
-					<div class="ui-grid --xs-c-1 --xs-gcs-3">
-						<samp class="ar-panorama bdrs-md"></samp>
-						<samp class="ar-panorama bdrs-sm"></samp>
-					</div>
-				</div>
-				<samp class="ar-widescreen bdrs-md"></samp>
-			</div>
-		</div>
 	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div class="ui-grid --md-c-2 --sm-cg-5" dir="rtl">
-		<div class="ui-skeleton ui-grid --xs-c-1 --wave">
-			<samp class="ar-widescreen bdrs-md"></samp>
-			<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus excepturi quaerat, laboriosam nisi repellendus.</span>
-			<div class="ui-grid --xs-c-2">
-				<samp class="ar-ultrawide bdrs-md"></samp>
-			</div>
-		</div>
-		<div class="ui-skeleton ui-grid --xs-c-1 --pulse">
-			<div class="ui-grid --xs-c-4">
-				<samp class="ar-square bdrs-circle"></samp>
-				<div class="ui-grid --xs-c-1 --xs-gcs-3">
-					<samp class="ar-panorama bdrs-md"></samp>
-					<samp class="ar-panorama bdrs-sm"></samp>
-				</div>
-			</div>
-			<samp class="ar-widescreen bdrs-md"></samp>
-		</div>
-	</div>
-	
 </body>
 </html>

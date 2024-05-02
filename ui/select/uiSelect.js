@@ -12,6 +12,7 @@ export default class uiSelect extends HTMLElement {
 	constructor() {
 		super();
 	}
+
 	connectedCallback() {
 		try {
 			const id =
@@ -78,4 +79,5 @@ export default class uiSelect extends HTMLElement {
 		}
 	};
 }
+
 customElements.define('ui-select', uiSelect);

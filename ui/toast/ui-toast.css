@@ -1,20 +1,18 @@
 @import '../notification/ui-notification.css';
-@layer bs-component {
-	:where(.ui-toast) {
-		display: none;
+:where(.ui-toast) {
+	display: none;
 
-		&:popover-open {
-			display: flex;
-			position: fixed;
-			inset-block: auto 1em;
-			inset-inline: auto 1em;
-		}
-		/* Fallback for browsers that don't support :popover-open. Requires JavaScript. */
-		&.popover-open {
-			display: flex;
-			position: fixed;
-			inset-block: auto 1em;
-			inset-inline: auto 1em;
-		}
+	&:popover-open {
+		display: flex;
+		position: fixed;
+		inset-block: auto 1em;
+		inset-inline: auto 1em;
+	}
+	/* Fallback for browsers that don't support :popover-open. Requires JavaScript. */
+	&.popover-open {
+		display: flex;
+		position: fixed;
+		inset-block: auto 1em;
+		inset-inline: auto 1em;
 	}
 }

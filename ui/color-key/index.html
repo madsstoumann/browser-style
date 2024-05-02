@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-color-key.css">
 </head>
@@ -13,10 +13,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Color Key</h2>
-	<p>
-		The Color Key component pairs a color swatch with a label to provide a visual representation and explanation of meanings, such as “[GREEN] Available seats”. 
-	</p>
-	<p>Used in  <a href="/ui/cinema">Cinema</a> and <a href="/ui/flight">Flight</a></p>
+	<p>Helper-component, used in  <a href="/ui/cinema">Cinema</a> and <a href="/ui/flight">Flight</a></p>
 
 	<ul class="ui-color-key">
 		<li style="--ui-color-key:var(--ColorSuccess)">Selected</li>
@@ -26,28 +23,5 @@
 		<li style="--ui-color-key:var(--ColorError)">Sale</li>
 	</ul>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ul class="ui-color-key">
-			<li style="--ui-color-key:var(--ColorSuccess)">Selected</li>
-			<li style="--ui-color-key:var(--ColorWarning)">Front</li>
-			<li style="--ui-color-key:var(--AccentColor)">Standard</li>
-			<li style="--ui-color-key:var(--VisitedText)">Extra Legroom</li>
-			<li style="--ui-color-key:var(--ColorError)">Sale</li>
-		</ul>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<ul class="ui-color-key">
-			<li style="--ui-color-key:var(--ColorSuccess)">Selected</li>
-			<li style="--ui-color-key:var(--ColorWarning)">Front</li>
-			<li style="--ui-color-key:var(--AccentColor)">Standard</li>
-			<li style="--ui-color-key:var(--VisitedText)">Extra Legroom</li>
-			<li style="--ui-color-key:var(--ColorError)">Sale</li>
-		</ul>
-	</div>
 </body>
 </html>

@@ -1,25 +1,23 @@
-@layer bs-component {
-	:where(.ui-divider) {
-		border-style: var(--_bds);
-		&.--content {
-			align-items: center;
-			border: 0;
-			display: flex;
-			gap: 1ch;
-			justify-content: center;
-			&::before, &::after {
-				border-bottom: 1px var(--_bds, solid) var(--ButtonBorder);
-				content: "";
-				flex: 1;
-			}
+:where(.ui-divider) {
+	border-style: var(--_bds);
+	&.--content {
+		align-items: center;
+		border: 0;
+		display: flex;
+		gap: 1ch;
+		justify-content: center;
+		&::before, &::after {
+			border-bottom: 1px var(--_bds, solid) var(--ButtonBorder);
+			content: "";
+			flex: 1;
 		}
-		&.--dashed { --_bds: dashed; }
-		&.--double { --_bds: double; border-top-width: medium; }
-		&.--dotted { --_bds: dotted; }
-		&.--fade {
-			border-width: 0;
-			background: linear-gradient(to right, transparent, var(--ButtonBorder), transparent);
-			height: 1px;
-		}
+	}
+	&.--dashed { --_bds: dashed; }
+	&.--double { --_bds: double; border-top-width: medium; }
+	&.--dotted { --_bds: dotted; }
+	&.--fade {
+		border-width: 0;
+		background: linear-gradient(to right, transparent, var(--ButtonBorder), transparent);
+		height: 1px;
 	}
 }

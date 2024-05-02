@@ -1,30 +1,28 @@
-@layer bs-component {
-	:where(.ui-range-mask) {
-		--ui-range-mask: url('/assets/svg/range-mask-volume.svg');
-		container-type: inline-size;
-		max-inline-size: 320px;
-		touch-action: none;
-		& span {
-			--_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
-			aspect-ratio: var(--ui-range-mask-asr, 3 / 1);
-			background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
-			mask: var(--ui-range-mask);
-			-webkit-mask: var(--ui-range-mask);
-			[dir=rtl] & {
-				--_dir: right;
-				scale: -1 1;
-			}
+:where(.ui-range-mask) {
+	--ui-range-mask: url('/assets/svg/range-mask-volume.svg');
+	container-type: inline-size;
+	max-inline-size: 320px;
+	touch-action: none;
+	& span {
+		--_x: calc(100% * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+		aspect-ratio: var(--ui-range-mask-asr, 3 / 1);
+		background-image: linear-gradient(to var(--_dir, right), var(--AccentColor) var(--_x, 0), var(--ButtonFace) 0 var(--_x));
+		mask: var(--ui-range-mask);
+		-webkit-mask: var(--ui-range-mask);
+		[dir=rtl] & {
+			--_dir: right;
+			scale: -1 1;
 		}
-		&.--text::after {
-			color: #FFF;
-			counter-reset: val var(--value);
-			content: counter(val) "%";
-			font-size: 200%;
-			font-weight: 700;
-			mix-blend-mode: difference;
-			translate: 0 .75em;
-			place-self: center;
-			position: absolute;
-		}
+	}
+	&.--text::after {
+		color: #FFF;
+		counter-reset: val var(--value);
+		content: counter(val) "%";
+		font-size: 200%;
+		font-weight: 700;
+		mix-blend-mode: difference;
+		translate: 0 .75em;
+		place-self: center;
+		position: absolute;
 	}
 }

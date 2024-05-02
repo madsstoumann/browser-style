@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-dock.css">
 </head>
@@ -13,10 +13,6 @@
 	<h1>UI: Components</h1>
 
 	<h2>Dock</h2>
-	<p>
-		<strong>Dock</strong> mimics the MacOS dock, offering quick access to apps and tools.<br>
-		A small dot indicates the current selection.
-	</p>
 	<ul class="ui-dock">
 		<li class="--open">
 			<a href="#home">
@@ -54,90 +50,6 @@
 			</a>
 		</li>
 	</ul>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ul class="ui-dock">
-			<li class="--open">
-				<a href="#home">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-						<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-						<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#search">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-						<path d="M21 21l-6 -6"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#following">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-						<path d="M16 19h6"></path>
-						<path d="M19 16v6"></path>
-						<path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#settings">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-						<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-					</svg>
-				</a>
-			</li>
-		</ul>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<ul class="ui-dock">
-			<li class="--open">
-				<a href="#home">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M5 12l-2 0l9 -9l9 9l-2 0"></path>
-						<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"></path>
-						<path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#search">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
-						<path d="M21 21l-6 -6"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#following">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-						<path d="M16 19h6"></path>
-						<path d="M19 16v6"></path>
-						<path d="M6 21v-2a4 4 0 0 1 4 -4h4"></path>
-					</svg>
-				</a>
-			</li>
-			<li>
-				<a href="#settings">
-					<svg viewBox="0 0 24 24" class="ui-icon">
-						<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"></path>
-						<path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"></path>
-					</svg>
-				</a>
-			</li>
-		</ul>
-	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

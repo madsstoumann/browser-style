@@ -1,7 +1,7 @@
 :where(.ui-xy) {
 	all: unset;
 	aspect-ratio: 1 / 1;
-	background-color: var(--CanvasGray);
+	background-color: var(--GrayCanvas);
 	border-radius: var(--input-bdrs);
 	direction: ltr;
 	position: relative;
@@ -21,7 +21,7 @@
 		transition: none;
 		user-select: none;
 		&:focus-visible {
-			background: var(--Highlight);
+			background: var(--AccentColorLight);
 			border-color: var(--AccentColor);
 		}
 	}

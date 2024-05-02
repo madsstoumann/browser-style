@@ -1,20 +1,18 @@
-@layer bs-component {
-  :where(ui-details) {
-    display: block; 
-    & ui-expand {
-      display: grid;
-      grid-template-rows: 0fr;
-      transition: grid-template-rows 0.25s cubic-bezier(.2, 0, .2, 1);
-    }
-    & ui-panel { overflow: hidden; }
-    & ui-summary {
-      align-items: center;
-      cursor: pointer;
-      display: flex;
-      gap: 1ch;
-      text-box-trim: both;
-      user-select: none;
-      &[aria-expanded="true"] + ui-expand { grid-template-rows: 1fr; }
-    }
+:where(ui-details) {
+  display: block; 
+  & ui-expand {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s cubic-bezier(.2, 0, .2, 1);
+  }
+  & ui-panel { overflow: hidden; }
+  & ui-summary {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 1ch;
+    text-box-trim: both;
+    user-select: none;
+    &[aria-expanded="true"] + ui-expand { grid-template-rows: 1fr; }
   }
 }

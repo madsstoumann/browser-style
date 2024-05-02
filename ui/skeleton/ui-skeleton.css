@@ -1,45 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Flow+Rounded&display=swap');
-@layer bs-component {
-	:where(.ui-skeleton) {
-		color: var(--CanvasGray);
-		container-type: inline-size;
-		font-family: 'Flow Rounded', sans-serif;
-		place-content: start;
-		/* Blocks */
-		& samp {
-			background-color: var(--CanvasGray);
-			display: block;
-			overflow: hidden;
-			position: relative;
-			width: 100%;
-		}
-		/* Text */
-		& span {
-			font-size: 10cqi;
-			line-height: 75%;
-		}
-		&.--pulse {
-			animation: pulse 2s ease-in-out 0.5s infinite;
-		}
-		&.--wave {
-			& samp::after {
-				animation: wave 2s linear 0.5s infinite;
-				background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
-				content: '';
-				filter: blur(10px);
-				inset: 0;
-				position: absolute;
-				translate: -100% 0;
-			}
+:where(.ui-skeleton) {
+	color: var(--GrayCanvas);
+	container-type: inline-size;
+	font-family: 'Flow Rounded', sans-serif;
+	place-content: start;
+	/* Blocks */
+	& samp {
+		background-color: var(--GrayCanvas);
+		display: block;
+		overflow: hidden;
+		position: relative;
+		width: 100%;
+	}
+	/* Text */
+	& span {
+		font-size: 10cqi;
+		line-height: 75%;
+	}
+	&.--pulse {
+		animation: pulse 2s ease-in-out 0.5s infinite;
+	}
+	&.--wave {
+		& samp::after {
+			animation: wave 2s linear 0.5s infinite;
+			background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+			content: '';
+			filter: blur(10px);
+			inset: 0;
+			position: absolute;
+			translate: -100% 0;
 		}
 	}
-	@keyframes pulse {
-		0% { opacity: 1; }
-		50% { opacity: 0.6; }
-		100% { opacity: 1; }
-	}
-	@keyframes wave {
-		0% { translate: -100% 0; }
-		100% { translate: 100% 0; }
-	}
+}
+@keyframes pulse {
+	0% { opacity: 1; }
+	50% { opacity: 0.6; }
+	100% { opacity: 1; }
+}
+@keyframes wave {
+	0% { translate: -100% 0; }
+	100% { translate: 100% 0; }
 }

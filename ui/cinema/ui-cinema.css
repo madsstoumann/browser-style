@@ -1,63 +1,54 @@
 @import '../color-key/ui-color-key.css';
+:where(.ui-cinema) {
+	all: unset;
+	direction: ltr;
+	& input {
+		--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--GrayCanvas)), #000 30%);
+		--input-check-bgsz: 50%/55%;
+		--input-check-sz: 2em;
+		aspect-ratio: 1 / .9;
+		background-color: var(--ui-cinema-seat-bg, var(--GrayCanvas));
+		border-color: var(--_bdc);
+		border-radius: .5em .5em .15em .15em;
+		border-width: 0 0 .25em 0;
 
-@layer bs-component {
-	:where(.ui-cinema) {
-		--ui-cinema-seat-gap: 1cqi;
-		--ui-cinema-seat-w: 7.5cqi;
-		all: unset;
-		container-type: inline-size;
-		direction: ltr;
-		display: block;
-		max-inline-size: var(--ui-cinema-mw, 320px);
-		& input {
-			--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--CanvasGray)), #000 30%);
-			--input-check-bgsz: 50%/55%;
-			--input-check-sz: var(--ui-cinema-seat-w);
-			aspect-ratio: 1 / .9;
-			background-color: var(--ui-cinema-seat-bg, var(--CanvasGray));
+		&:checked { 
+			--ui-cinema-seat-bg: var(--ColorSuccess);
+			--AccentColor: var(--ui-cinema-seat-bg);
 			border-color: var(--_bdc);
-			border-radius: .5em .5em .15em .15em;
-			border-width: 0 0 .25em 0;
-
-			&:checked { 
-				--ui-cinema-seat-bg: var(--ColorSuccess);
-				--AccentColor: var(--ui-cinema-seat-bg);
-				border-color: var(--_bdc);
-			}
-			&:disabled { --ui-cinema-seat-bg: var(--ColorError); }
-			&:is([value=""], :not([value])) {
-				opacity: 0;
-				pointer-events: none;
-			}
-			&:focus-visible:not(:checked),
-			&:hover:not(:checked):not(:disabled) {
-				background: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
-			}
-			&:focus-visible:checked {
-				outline: 2px solid color-mix(in srgb, var(--ColorSuccess), Canvas 40%);
-			}
-			&[inert] { --ui-cinema-seat-bg: var(--ButtonBorder); }
 		}
-		& label { display: contents; }
-		[dir="rtl"] & legend { margin-left: auto; }
-		& li {
-			align-items: center;
-			counter-increment: row;
-			display: grid;
-			gap: var(--ui-cinema-seat-gap);
-			grid-auto-flow: column;
-			&::before,
-			&::after {
-				content: counter(row);
-				font-size: small;
-				padding-inline: .5cqi;
-			}
+		&:disabled { --ui-cinema-seat-bg: var(--ColorError); }
+		&:is([value=""], :not([value])) {
+			opacity: 0;
+			pointer-events: none;
 		}
-		& ol {
-			counter-reset: row;
-			display: grid;
-			gap: 2cqi;
-			padding: 0;
+		&:focus-visible:not(:checked),
+		&:hover:not(:checked):not(:disabled) {
+			background: color-mix(in srgb, var(--ColorSuccess), Canvas 80%);
 		}
+		&:focus-visible:checked {
+			outline: 2px solid color-mix(in srgb, var(--ColorSuccess), Canvas 40%);
+		}
+		&[inert] { --ui-cinema-seat-bg: var(--ButtonBorder); }
+	}
+	& label { display: contents; }
+	& li {
+		align-items: center;
+		counter-increment: row;
+		display: grid;
+		gap: 1ch;
+		grid-auto-flow: column;
+		&::before,
+		&::after {
+			content: counter(row);
+			font-size: small;
+			padding-inline: 1ch;
+		}
+	}
+	& ol {
+		counter-reset: row;
+		display: grid;
+		gap: 1ch;
+		padding: 0;
 	}
 }

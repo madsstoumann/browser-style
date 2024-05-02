@@ -1,24 +1,22 @@
-@layer bs-component {
-	:where(.ui-input-button) {
-		all: unset;
-		align-items: center;
-		display: grid;
-		grid-template-columns: 1fr min-content;
-		& :is(input, textarea) {
-			border-inline-end: 0;
-			border-start-end-radius: 0;
-			border-end-end-radius: 0;
-		}
-		& :is(button, .ui-button) {
-			--button-p: 0 1em;
-			border: var(--input-bdw) solid var(--ButtonBorder);
-			border-start-start-radius: 0;
-			border-end-start-radius: 0;
-			height: 100%;
-			place-content: center;
-			min-width: 4em;
-		}
-		& label { row-gap: 0;}
-		& legend { padding-block-end: var(--label-rg); }
+:where(.ui-input-button) {
+	all: unset;
+	align-items: center;
+	display: grid;
+	grid-template-columns: 1fr min-content;
+	& :is(input, textarea) {
+		border-inline-end: 0;
+		border-start-end-radius: 0;
+		border-end-end-radius: 0;
 	}
+	& :is(button, .ui-button) {
+		--button-p: 0 1em;
+		border: var(--input-bdw) solid var(--ButtonBorder);
+		border-start-start-radius: 0;
+		border-end-start-radius: 0;
+		height: 100%;
+		place-content: center;
+		min-width: 4em;
+	}
+	& label { row-gap: 0;}
+	& legend { padding-block-end: var(--label-rg); }
 }

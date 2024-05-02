@@ -1,40 +1,38 @@
-@layer bs-component {
-	:where(.ui-card) {
-		--ui-card-p: 1rem;
-		--ui-card-rg: .66em;
-		background: var(--ui-card-bg, var(--CanvasGray));
-		clip-path: inset(0 0 0 0 round var(--input-bdrs));
-		display: grid;
-		row-gap: var(--ui-card-rg);
-		& img { width: 100%; }
-		& >* {
-			margin: unset;
-			&:not(button, .ui-button, img) { padding-inline: var(--ui-card-p); }
-			&:last-child { margin-block-end: var(--ui-card-p); }
-		}
-		& :is(button, .ui-button) { margin-inline: var(--ui-card-p); }
-		&.--end:not(.--inline) {
-			& img { order: 1; }
-			& >*:last-child { margin-block-end: calc(var(--ui-card-p) - var(--ui-card-rg)); }
-		}
-		&:is(.--end, .--inline) img {
-			height: 100%;
-			object-fit: cover;
-			& + * { padding-block-start: var(--ui-card-p); }
-		}
-		&.--inline:not(.--end) {
-			grid-template-columns: fit-content(var(--ui-card-img-w, 40%)) 1fr;
-			& >*:not(img) { grid-column: 2; }
-			& img { grid-area: 1 / 1 / 6 / 2; }
-		}
-		&.--inline.--end {
-			grid-template-columns: 1fr fit-content(var(--ui-card-img-w, 40%));
-			& >*:not(img) { grid-column: 1; }
-			& img { grid-area: 1 / 2 / 6 / 3; }
-		}
-		.--subgrid & {
-			grid-row: 1 / 6;
-			grid-template-rows: subgrid;
-		}
+:where(.ui-card) {
+	--ui-card-p: 1rem;
+	--ui-card-rg: .66em;
+	background: var(--ui-card-bg, var(--GrayCanvas));
+	clip-path: inset(0 0 0 0 round var(--input-bdrs));
+	display: grid;
+	row-gap: var(--ui-card-rg);
+	& img { width: 100%; }
+	& >* {
+		margin: unset;
+		&:not(button, .ui-button, img) { padding-inline: var(--ui-card-p); }
+		&:last-child { margin-block-end: var(--ui-card-p); }
+	}
+	& :is(button, .ui-button) { margin-inline: var(--ui-card-p); }
+	&.--end:not(.--inline) {
+		& img { order: 1; }
+		& >*:last-child { margin-block-end: calc(var(--ui-card-p) - var(--ui-card-rg)); }
+	}
+	&:is(.--end, .--inline) img {
+		height: 100%;
+		object-fit: cover;
+		& + * { padding-block-start: var(--ui-card-p); }
+	}
+	&.--inline:not(.--end) {
+		grid-template-columns: fit-content(var(--ui-card-img-w, 40%)) 1fr;
+		& >*:not(img) { grid-column: 2; }
+		& img { grid-area: 1 / 1 / 6 / 2; }
+	}
+	&.--inline.--end {
+		grid-template-columns: 1fr fit-content(var(--ui-card-img-w, 40%));
+		& >*:not(img) { grid-column: 1; }
+		& img { grid-area: 1 / 2 / 6 / 3; }
+	}
+	.--subgrid & {
+		grid-row: 1 / 6;
+		grid-template-rows: subgrid;
 	}
 }

@@ -5,24 +5,14 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-position.css">
-	<style>
-		/* For this demo */
-		img {
-			object-fit: cover;
-			object-position: top left;
-		}
-	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Position</h2>
-	<p>
-		<strong>Position</strong> is a component to control the position an element: top left, top center, top right etc.
-	</p>
 
 	<fieldset class="ui-position">
 		<legend>Position Control</legend>
@@ -54,117 +44,6 @@
 			<input type="radio" name="position" value="br">
 		</label>
 	</fieldset>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-position">
-			<legend>Position Control</legend>
-			<label aria-label="top left">
-				<input type="radio" name="position-cs" value="tl">
-			</label>
-			<label aria-label="top center">
-				<input type="radio" name="position-cs" value="tc">
-			</label>
-			<label aria-label="top right">
-				<input type="radio" name="position-cs" value="tr">
-			</label>
-			<label aria-label="center left">
-				<input type="radio" name="position-cs" value="cl">
-			</label>
-			<label aria-label="center center">
-				<input type="radio" name="position-cs" value="cc" checked>
-			</label>
-			<label aria-label="center right">
-				<input type="radio" name="position-cs" value="cr">
-			</label>
-			<label aria-label="bottom left">
-				<input type="radio" name="position-cs" value="bl">
-			</label>
-			<label aria-label="bottom center">
-				<input type="radio" name="position-cs" value="bc">
-			</label>
-			<label aria-label="bottom right">
-				<input type="radio" name="position-cs" value="br">
-			</label>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<fieldset class="ui-position">
-			<legend>Position Control</legend>
-			<label aria-label="top left">
-				<input type="radio" name="position-rtl" value="tl">
-			</label>
-			<label aria-label="top center">
-				<input type="radio" name="position-rtl" value="tc">
-			</label>
-			<label aria-label="top right">
-				<input type="radio" name="position-rtl" value="tr">
-			</label>
-			<label aria-label="center left">
-				<input type="radio" name="position-rtl" value="cl">
-			</label>
-			<label aria-label="center center">
-				<input type="radio" name="position-rtl" value="cc" checked>
-			</label>
-			<label aria-label="center right">
-				<input type="radio" name="position-rtl" value="cr">
-			</label>
-			<label aria-label="bottom left">
-				<input type="radio" name="position-rtl" value="bl">
-			</label>
-			<label aria-label="bottom center">
-				<input type="radio" name="position-rtl" value="bc">
-			</label>
-			<label aria-label="bottom right">
-				<input type="radio" name="position-rtl" value="br">
-			</label>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>Example</h2>
-	<p>Position image using <code>object-fit:cover</code> and <code>object-position</code></p>
-	<img src="https://picsum.photos/id/9/600/360" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="250" height="250" class="ar-square">
-	<fieldset class="ui-position" id="app">
-		<legend>Position Image</legend>
-		<label aria-label="top left">
-			<input type="radio" name="position-img" value="top left" checked>
-		</label>
-		<label aria-label="top center">
-			<input type="radio" name="position-img" value="top center">
-		</label>
-		<label aria-label="top right">
-			<input type="radio" name="position-img" value="top right">
-		</label>
-		<label aria-label="center left">
-			<input type="radio" name="position-img" value="center left">
-		</label>
-		<label aria-label="center center">
-			<input type="radio" name="position-img" value="center center">
-		</label>
-		<label aria-label="center right">
-			<input type="radio" name="position-img" value="center right">
-		</label>
-		<label aria-label="bottom left">
-			<input type="radio" name="position-img" value="bottom left">
-		</label>
-		<label aria-label="bottom center">
-			<input type="radio" name="position-img" value="bottom center">
-		</label>
-		<label aria-label="bottom right">
-			<input type="radio" name="position-img" value="bottom right">
-		</label>
-	</fieldset>
-	
-	<script>
-		const app = document.getElementById('app');
-		const img = document.querySelector('img');
-		app.addEventListener('change', (e) => img.style.objectPosition = e.target.value);
-	</script>
 
 </body>
 </html>

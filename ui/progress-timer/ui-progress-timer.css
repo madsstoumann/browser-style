@@ -1,32 +1,29 @@
-@layer bs-component {
-	:where(.ui-progress-timer) {
-		--ui-progress-timer-animps: paused;
-		position: relative;
-		&[data-progress-time="3000"] { --ui-progress-timer-duration: 3s; }
-		&[data-progress-time="5000"] { --ui-progress-timer-duration: 5s; }
-		&[data-progress-time="7000"] { --ui-progress-timer-duration: 7s; }
-		&[data-progress-time="9000"] { --ui-progress-timer-duration: 9s; }
-		&::before, &::after {
-			content: '';
-			display: block;
-			height: var(--ui-progress-timer-h, .35em);
-			inset-block: var(--ui-progress-timer-ib, 0 auto);
-			position: absolute;
-			width: 100%;
-		}
-		&::before { background: var(--CanvasGray); }
-		&::after {
-			animation: progressTimer var(--ui-progress-timer-duration, 3s) linear infinite;
-			animation-play-state: var(--ui-progress-timer-animps);
-			background-color: var(--AccentColor);
-			scale: 0 1;
-			transform-origin: 0% 0%;
-		}
-		&.--bottom { --ui-progress-timer-ib: auto 0; }
-		&:has(.--playing) { --ui-progress-timer-animps: running; }
-		[dir=rtl] &::after, &[dir=rtl]::after { transform-origin: 100% 0%; }
+:where(.ui-progress-timer) {
+	--ui-progress-timer-animps: paused;
+	position: relative;
+	&[data-progress-time="3000"] { --ui-progress-timer-duration: 3s; }
+	&[data-progress-time="5000"] { --ui-progress-timer-duration: 5s; }
+	&[data-progress-time="7000"] { --ui-progress-timer-duration: 7s; }
+	&[data-progress-time="9000"] { --ui-progress-timer-duration: 9s; }
+	&::before, &::after {
+		content: '';
+		display: block;
+		height: var(--ui-progress-timer-h, .35em);
+		inset-block: var(--ui-progress-timer-ib, 0 auto);
+		position: absolute;
+		width: 100%;
 	}
-	@keyframes progressTimer {
-		to { scale: 1 1; }
+	&::before { background: var(--GrayCanvas); }
+	&::after {
+		animation: progressTimer var(--ui-progress-timer-duration, 3s) linear infinite;
+		animation-play-state: var(--ui-progress-timer-animps);
+		background-color: var(--AccentColor);
+		scale: 0 1;
+		transform-origin: 0% 0%;
 	}
+	&.--bottom { --ui-progress-timer-ib: auto 0; }
+	&:has(.--playing) { --ui-progress-timer-animps: running; }
+}
+@keyframes progressTimer {
+	to { scale: 1 1; }
 }

@@ -1,36 +1,32 @@
-@layer bs-component {
-	:where(.ui-image-select) {
-		border: 0;
-		display: grid;
-		gap: .33em;
-		grid-template-columns: repeat(auto-fit, minmax(var(--ui-image-select-sz, 140px), 1fr));
-		padding-inline: 0;
-		& label {
-			border-radius: var(--input-bdrs);
-			grid-template-columns: 1fr;
-			overflow: hidden;
-			& img, & input { grid-area: 1 / 1; }
-			& img {
-				aspect-ratio: 1 / 1;
-				background-color: var(--CanvasGray);
-				border-radius: inherit;
-				object-fit: cover;
-				pointer-events: none;
-				user-select: none;
-				transition: scale .2s ease-in-out;
-				width: 100%;
-			}
-			& input {
-				border-radius: 50%;
-				isolation: isolate;
-				place-self: end;
-				margin-block-end: 1ch;
-				margin-inline-end: 1ch;
-				&:not(:checked) { opacity: 0; }
-			}
-			@media (hover: hover) {
-				&:hover img { scale: 1.1; }
-			}
+:where(.ui-image-select) {
+	border: 0;
+	display: grid;
+	gap: .33em;
+	grid-template-columns: repeat(auto-fit, minmax(var(--ui-image-select-sz, 140px), 1fr));
+	padding-inline: 0;
+	& label {
+		border-radius: var(--input-bdrs);
+		grid-template-columns: 1fr;
+		overflow: hidden;
+		& img, & input { grid-area: 1 / 1; }
+		& img {
+			aspect-ratio: 1 / 1;
+			border-radius: inherit;
+			object-fit: cover;
+			pointer-events: none;
+			transition: scale .2s ease-in-out;
+			width: 100%;
+			z-index: -1;
+		}
+		& input {
+			border-radius: 50%;
+			place-self: end;
+			margin-block-end: 1ch;
+			margin-inline-end: 1ch;
+			&:not(:checked) { opacity: 0; }
+		}
+		@media (hover: hover) {
+			&:hover img { scale: 1.1; }
 		}
 	}
 }

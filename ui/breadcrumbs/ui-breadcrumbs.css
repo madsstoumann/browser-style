@@ -1,26 +1,24 @@
 /* Not using `::marker` because it's not supported in Safari */
-@layer bs-component {
-	:where(.ui-breadcrumbs) {
-		--_c: color-mix(in srgb, currentColor, Canvas 45%);
-		all: unset;
-		align-items: var(--ui-breadcrumbs-ai, baseline);
-		display: flex;
-		& a {
-			color: var(--_c);
-			display: inline;
-			text-decoration: none;
-			text-underline-offset: .5em;
-			&:visited { color: var(--_c); }
-			&:hover { text-decoration: underline; }
+:where(.ui-breadcrumbs) {
+	--_c: color-mix(in srgb, currentColor, Canvas 50%);
+	all: unset;
+	align-items: var(--ui-breadcrumbs-ai, baseline);
+	display: flex;
+	& a {
+		color: var(--_c);
+		display: inline;
+		text-decoration: none;
+		text-underline-offset: .5em;
+		&:visited { color: var(--_c); }
+		&:hover { text-decoration: underline; }
+	}
+	& li {
+		list-style-type: none;
+		&:not(:last-of-type)::after {
+			content: var(--ui-breadcrumbs-marker, "›");
+			font-size: var(--ui-breadcrumbs-fs, 1.25em);
+			margin-inline: var(--ui-breadcrumbs-gap, .25ch .5ch);
 		}
-		& li {
-			list-style-type: none;
-			&:not(:last-of-type)::after {
-				content: var(--ui-breadcrumbs-marker, "›");
-				font-size: var(--ui-breadcrumbs-fs, 1.25em);
-				margin-inline: var(--ui-breadcrumbs-gap, .25ch .5ch);
-			}
-			&:not(:last-of-type)::after { color: var(--_c); }
-		}
+		&:not(:last-of-type)::after { color: var(--_c); }
 	}
 }

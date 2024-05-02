@@ -2,11 +2,9 @@
 @import url('ui-grid-gap.css');
 @import url('ui-grid-span.css');
 
-@layer bs-component {
-	:where(.ui-grid) {
-		column-gap: var(--ui-grid-cg, 1em);
-		display: grid;
-		grid-template-columns: repeat(var(--ui-grid-cols, 1), 1fr);
-		row-gap: var(--ui-grid-rg, 1em);
-	}
+:where(.ui-grid) {
+	column-gap: var(--ui-grid-cg, 1em);
+	display: grid;
+	grid-template-columns: repeat(var(--ui-grid-cols, 1), 1fr);
+	row-gap: var(--ui-grid-rg, 1em);
 }

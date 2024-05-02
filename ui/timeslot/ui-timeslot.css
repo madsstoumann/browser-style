@@ -1,50 +1,49 @@
-@layer bs-component {
-	:where(.ui-timeslot) {
-		all: unset;
-		display: grid;
-		gap: .33em;
-		& fieldset {
-			border: 1px solid var(--ButtonBorder);
-			border-radius: var(--input-bdrs);
-			display: flex;
-			flex-direction: column;
-			padding: .33em;
-			row-gap: .33em;
-			& input:disabled + time {
-				text-decoration: line-through;
-			}
-			& label {
-				background-color: Canvas;
-				border: inherit;
-				border-radius: inherit;
-				grid-template-columns: 1fr;
-				padding: .5ch 1ch;
-				user-select: none;
-				&:has(input:checked) {
-					background-color: var(--AccentColor);
-					border-color: var(--AccentColor);
-					color: var(--AccentColorText);
-				}
-			}
-			& legend {
-				background-color: var(--ButtonFace);
-				border-radius: inherit;
-				font-size: small;
-				line-height: 1.1;
-				padding: 1ch;
-				white-space: nowrap;
-			}
+:where(.ui-timeslot) {
+	all: unset;
+	display: grid;
+	gap: .33em;
+	& fieldset {
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--input-bdrs);
+		display: flex;
+		flex-direction: column;
+		padding: .33em;
+		row-gap: .33em;
+		& input:disabled + time {
+			text-decoration: line-through;
+		}
+		& label {
+			background-color: Canvas;
+			border: inherit;
+			border-radius: inherit;
+			grid-template-columns: 1fr;
+			padding: .5ch 1ch;
+			user-select: none;
 			&:has(input:checked) {
-				background-color: var(--Highlight);
-				& legend {
-					background-color: var(--AccentColor);
-					color: var(--AccentColorText);
-				}
+				background-color: var(--AccentColor);
+				border-color: var(--AccentColor);
+				color: var(--AccentColorText);
 			}
 		}
-		& legend { padding-block-end: var(--label-rg); }
+		& legend {
+			background-color: var(--ButtonFace);
+			border-radius: inherit;
+			font-size: small;
+			line-height: 1.1;
+			padding: 1ch;
+			white-space: nowrap;
+		}
+		&:has(input:checked) {
+			background-color: var(--AccentColorLight);
+			& legend {
+				background-color: var(--AccentColor);
+				color: var(--AccentColorText);
+			}
+		}
 	}
-	@media (min-width: 800px) {
-		.ui-timeslot { grid-auto-flow: column; }
-	}
+	& legend { padding-block-end: var(--label-rg); }
 }
+@media (min-width: 800px) {
+	.ui-timeslot { grid-auto-flow: column; }
+}
+/* TODO: HOVER */

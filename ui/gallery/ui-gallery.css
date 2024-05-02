@@ -1,24 +1,24 @@
-@layer bs-component {
-	:where(.ui-gallery) {
-		all: unset;
-		container-type: inline-size;
-		display: grid;
-		gap: .5cqi;
-		grid-auto-flow: dense;
-		grid-template-columns: repeat(auto-fill, minmax(var(--w, 6cqi), 1fr));
-	
-		& img {
-			aspect-ratio: var(--gc) / var(--gr);
-			background-color: oklch(0.75 0.01 80);
-			block-size: 100%;
-			grid-column: span var(--gc);
-			grid-row: span var(--gr, 1);
-			inline-size: 100%;
-			object-fit: cover;
-			transition: filter .2s ease-in-out;
-			@media (hover: hover) {
-				&:hover { filter: sepia(0.7) }
-			}
+.ui-gallery {
+  all: unset;
+
+  /* background-color: var(--bgc, #F2EEE7); */
+  container-type: inline-size;
+  display: grid;
+  gap: .5cqi;
+  grid-auto-flow: dense;
+  grid-template-columns: repeat(auto-fill, minmax(var(--w, 6cqi), 1fr));
+ 
+  & img {
+    aspect-ratio: var(--gc) / var(--gr);
+    background-color: oklch(0.75 0.01 80);
+    block-size: 100%;
+    grid-column: span var(--gc);
+    grid-row: span var(--gr, 1);
+    inline-size: 100%;
+    object-fit: cover;
+    transition: filter .2s ease-in-out;
+    @media (hover: hover) {
+			&:hover { filter: sepia(0.7) }
 		}
-	}
+  }
 }

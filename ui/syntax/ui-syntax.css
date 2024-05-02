@@ -1,63 +1,61 @@
-@layer bs-component {
-	:where(.ui-syntax-css) {
-		--ui-syntax-property: color-mix(in srgb, var(--AccentColor) 60%, #FFF); 
-		--ui-syntax-selector: var(--AccentColor);
-		--ui-syntax-value: var(--ColorWarning);
+.ui-syntax-css {
+  --_property: color-mix(in srgb, HighLight, CanvasText 30%); 
+  --_selector: cornflowerblue;
+  --_value: var(--ColorWarning);
 
-		background: var(--CanvasGray);
-		border-radius: var(--input-bdrs);
-		direction: ltr;
-		font-family: var(--ff-mono, monospace);
-		list-style: none;
-		margin: 0;
-		overflow: auto;
-		padding: 2ch;
-		& * {
-			font-size: 1em;
-			font-style: normal;
-			font-weight: 400;
-			margin: 0;
-			white-space: nowrap;
-		}
-		& dd, & dt { display: inline; }
-		& dd {
-			color: var(--ui-syntax-value);
-			&::after {
-				content: ";\a";
-				white-space: pre;
-			}
-		}
-		& dl { margin: 0 0 0 2ch; }
-		& dt {
-			color: var(--ui-syntax-property);
-			&::after { content: ":"; }
-		}
-		& :is(em, h2, h3, h4, h5, h6, strong) {
-			color: var(--ui-syntax-selector);
-			&::after { content: " {"; }
-		}
-		& li::after {
-			color: var(--ui-syntax-selector);
-			content: "}\a"; white-space: pre;
-		}
-		& var {
-			&::before { content: "var(--"; }
-			&::after { content: ")"; }
-		}
-		&.--dark {
-			color-scheme: dark;
-		}
-		&.--osx {
-			&::before {
-				aspect-ratio: 1;
-				border-radius: 50%;
-				box-shadow: 1.25em 0 0 0 #FEBC2E, 2.5em 0 0 0 #20C338;
-				background-color: #FF5F57;
-				content: "";
-				display: inline-block;
-				margin: -1ch 0 1ch -.75ch;
-				width: .75em;
-			}
-		}
-	}
+  background: var(--GrayCanvas);
+  border-radius: var(--input-bdrs);
+  direction: ltr;
+  font-family: var(--ff-mono, monospace);
+  list-style: none;
+  margin: 0;
+  overflow: auto;
+  padding: 2ch;
+  & * {
+    font-size: 1em;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+    white-space: nowrap;
+  }
+  & dd, & dt { display: inline; }
+  & dd {
+    color: var(--_value);
+    &::after {
+      content: ";\a";
+      white-space: pre;
+    }
+  }
+  & dl { margin: 0 0 0 2ch; }
+  & dt {
+    color: var(--_property);
+    &::after { content: ":"; }
+  }
+  & :is(em, h2, h3, h4, h5, h6, strong) {
+    color: var(--_selector);
+    &::after { content: " {"; }
+  }
+  & li::after {
+    color: var(--_selector);
+    content: "}\a"; white-space: pre;
+  }
+  & var {
+    &::before { content: "var(--"; }
+    &::after { content: ")"; }
+  }
+  &.--dark {
+    color-scheme: dark;
+  }
+  &.--osx {
+    &::before {
+      aspect-ratio: 1;
+      border-radius: 50%;
+      box-shadow: 1.25em 0 0 0 #FEBC2E, 2.5em 0 0 0 #20C338;
+      background-color: #FF5F57;
+      content: "";
+      display: inline-block;
+      margin: -1ch 0 1ch -.75ch;
+      width: .75em;
+    }
+  }
 }

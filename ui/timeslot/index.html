@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-timeslot.css">
 </head>
@@ -13,10 +13,6 @@
 	<h1>UI: Components</h1>
 
 	<h2>Timeslot</h2>
-	<p>
-		<strong>Timeslot</strong> allows users to select a specific time for appointments or events from a set of available slots.
-	</p>
-
 	<fieldset class="ui-timeslot">
 		<legend>Timeslot</legend>
 		<fieldset>
@@ -53,86 +49,5 @@
 			<label><input type="radio" name="timeslot" value="15" data-sr><time datetime="2023-01-09T18:00">6:00pm</time></label>
 		</fieldset>
 	</fieldset>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-timeslot">
-			<legend>Timeslot</legend>
-			<fieldset>
-				<legend>WED <span>4</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="1" data-sr><time datetime="2023-01-04T16:00">4:00pm</time></label>
-				<label><input type="radio" name="timeslot-cs" value="2" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
-			</fieldset>
-			<fieldset>
-				<legend>THU <span>5</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="3" data-sr><time datetime="2023-01-05T09:00">9:00am</time></label>
-				<label><input type="radio" name="timeslot-cs" value="4" data-sr><time datetime="2023-01-05T09:00">10:00am</time></label>
-				<label><input type="radio" name="timeslot-cs" value="5" data-sr checked><time datetime="2023-01-05T11:00">11:00am</time></label>
-				<label><input type="radio" name="timeslot-cs" value="6" data-sr><time datetime="2023-01-05T12:00">12:00am</time></label>
-				<label><input type="radio" name="timeslot-cs" value="7" disabled data-sr><time datetime="2023-01-05T13:00">01:00pm</time></label>
-			</fieldset>
-			<fieldset>
-				<legend>FRI <span>6</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="8" data-sr><time datetime="2023-01-06T16:00">4:00pm</time></label>
-				<label><input type="radio" name="timeslot-cs" value="9" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
-			</fieldset>
-			<fieldset>
-				<legend>SAT <span>7</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="10" data-sr><time datetime="2023-01-07T10:00">10:00am</time></label>
-				<label><input type="radio" name="timeslot-cs" value="11" data-sr><time datetime="2023-01-07T15:00">3:00pm</time></label>
-				<label><input type="radio" name="timeslot-cs" value="12" data-sr><time datetime="2023-01-07T16:00">4:00pm</time></label>
-			</fieldset>
-			<fieldset>
-				<legend>SUN <span>8</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="13" data-sr><time datetime="2023-01-08T18:00">6:00pm</time></label>
-			</fieldset>
-			<fieldset>
-				<legend>MON <span>9</span></legend>
-				<label><input type="radio" name="timeslot-cs" value="14" data-sr disabled><time datetime="2023-01-09T16:00">4:00pm</time></label>
-				<label><input type="radio" name="timeslot-cs" value="15" data-sr><time datetime="2023-01-09T18:00">6:00pm</time></label>
-			</fieldset>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<fieldset class="ui-timeslot" dir="rtl">
-		<legend>Timeslot</legend>
-		<fieldset>
-			<legend>WED <span>4</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="1" data-sr><time datetime="2023-01-04T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="2" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
-		</fieldset>
-		<fieldset>
-			<legend>THU <span>5</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="3" data-sr><time datetime="2023-01-05T09:00">9:00am</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="4" data-sr><time datetime="2023-01-05T09:00">10:00am</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="5" data-sr checked><time datetime="2023-01-05T11:00">11:00am</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="6" data-sr><time datetime="2023-01-05T12:00">12:00am</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="7" disabled data-sr><time datetime="2023-01-05T13:00">01:00pm</time></label>
-		</fieldset>
-		<fieldset>
-			<legend>FRI <span>6</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="8" data-sr><time datetime="2023-01-06T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="9" data-sr><time datetime="2023-01-04T18:00">6:00pm</time></label>
-		</fieldset>
-		<fieldset>
-			<legend>SAT <span>7</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="10" data-sr><time datetime="2023-01-07T10:00">10:00am</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="11" data-sr><time datetime="2023-01-07T15:00">3:00pm</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="12" data-sr><time datetime="2023-01-07T16:00">4:00pm</time></label>
-		</fieldset>
-		<fieldset>
-			<legend>SUN <span>8</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="13" data-sr><time datetime="2023-01-08T18:00">6:00pm</time></label>
-		</fieldset>
-		<fieldset>
-			<legend>MON <span>9</span></legend>
-			<label><input type="radio" name="timeslot-rtl" value="14" data-sr disabled><time datetime="2023-01-09T16:00">4:00pm</time></label>
-			<label><input type="radio" name="timeslot-rtl" value="15" data-sr><time datetime="2023-01-09T18:00">6:00pm</time></label>
-		</fieldset>
-	</fieldset>
-	
 </body>
 </html>

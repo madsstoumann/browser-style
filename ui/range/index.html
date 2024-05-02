@@ -5,16 +5,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Range</h2>
-	<p>
-		The <code>&lt;input type="range"&gt;</code> HTML element represents a control for inputting a number within a specified range, typically displayed as a slider. Users can adjust the value by moving the slider thumb along a track.
-	</p>
 
 	<label>Range with fill
 		<input type="range" data-key="value">
@@ -24,19 +21,6 @@
 	<label data-output="$">Minimum Price
 		<input type="range" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",$" />
 	</label>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<label>Range with fill
-			<input type="range" data-key="value">
-		</label>
-
-		<p>With output</p>
-		<label data-output="$">Minimum Price
-			<input type="range" data-key="value,data-output" data-scope="self,parent" data-type="property,attribute" data-unit=",$" />
-		</label>
-	</div>
 
 	<br>
 	<h2>With right-to-left</h2>

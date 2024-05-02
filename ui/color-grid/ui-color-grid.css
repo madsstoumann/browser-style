@@ -1,39 +1,26 @@
 @import '../color-input/ui-color-input.css';
-
-@layer bs-component {
-	:where(.ui-color-grid) {
-		all: unset;
-		container-type: inline-size;
-		direction: ltr;
-		display: grid;
-		gap: var(--ui-color-grid-gap, 1px);
-		grid-template-columns: repeat(var(--ui-color-grid-cols, 10), 1fr);
-		max-width: var(--ui-color-grid-mw, 320px);
-		& input {
-			border-radius: 0;
-			--input-check-sz: var(--ui-color-grid-input, 10cqi);
-			&:hover {
-				box-shadow: inset 0 0 0 1px var(--_c);
-			}
+:where(.ui-color-grid) {
+	all: unset;
+	display: grid;
+	gap: 0;
+	grid-template-columns: repeat(var(--ui-color-grid-cols, 10), 1fr);
+	width: fit-content;
+	& input {
+		border-radius: 0;
+		&:hover {
+			box-shadow: inset 0 0 0 1px var(--_c);
 		}
-		& label { display: contents; }
-		& legend {
-			padding-block-end: var(--label-rg);
-			text-transform: capitalize;
-		}
-		/* Modifiers */
-		&.--apple,
-		&.--html {
-			--ui-color-grid-cols: 12;
-			--ui-color-grid-input: 8cqi;
-		}
-		&.--flatui,
-		&.--metro {
-			--ui-color-grid-cols: 5;
-			--ui-color-grid-input: 20cqi;
-			--ui-color-grid-mw: 160px;
-		}
-		&.--material,
-		&.--tailwind { --ui-color-grid-cols: 10; }
 	}
+	& label { display: contents; }
+	& legend {
+		padding-block-end: var(--label-rg);
+		text-transform: capitalize;
+	}
+	/* modifiers */
+	&.--apple { --ui-color-grid-cols: 12; }
+	&.--flatui { --ui-color-grid-cols: 5; }
+	&.--html { --ui-color-grid-cols: 12; }
+	&.--material { --ui-color-grid-cols: 10; }
+	&.--metro { --ui-color-grid-cols: 5; }
+	&.--tailwind { --ui-color-grid-cols: 10; }
 }

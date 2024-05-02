@@ -1,73 +1,71 @@
-@layer bs-component {
-	:where(.ui-scroll + .ui-scroll-nav) {
-		--ui-scroll-nav-gap: 2ch;
+:where(.ui-scroll + .ui-scroll-nav) {
+	--ui-scroll-nav-gap: 2ch;
+	display: grid;
+	gap: var(--ui-scroll-gap);
+	grid-auto-flow: column;
+	justify-content: var(--ui-scroll-nav-jc, center);
+	margin-block: var(--ui-scroll-gap);
+	& ol {
+		all: unset;
+		align-content: center;
 		display: grid;
-		gap: var(--ui-scroll-gap);
+		gap: var(--ui-scroll-dot-gap, .6em);
 		grid-auto-flow: column;
-		justify-content: var(--ui-scroll-nav-jc, center);
-		margin-block: var(--ui-scroll-gap);
-		& ol {
+		pointer-events: all;
+		& li {
 			all: unset;
-			align-content: center;
-			display: grid;
-			gap: var(--ui-scroll-dot-gap, .6em);
-			grid-auto-flow: column;
-			pointer-events: all;
-			& li {
-				all: unset;
-				background-color: var(--AccentColorText);
-				border-radius: 50%;
-				height: var(--ui-scroll-dot-h, .5em);
-				width: var(--ui-scroll-dot-w, .5em);
-				&[aria-selected=true] {
-					background-color: var(--AccentColor);
-					box-shadow: 0 0 0 2px var(--AccentColorText);
-				}
+			background-color: var(--AccentColorText);
+			border-radius: 50%;
+			height: var(--ui-scroll-dot-h, .5em);
+			width: var(--ui-scroll-dot-w, .5em);
+			&[aria-selected=true] {
+				background-color: var(--AccentColor);
+				box-shadow: 0 0 0 2px var(--AccentColorText);
 			}
 		}
-		&.--hidden { display: none; }
-		&.--inside {
-			grid-area: 1 / 1;
-			justify-content: space-between;
-			height: 100%;
-			padding-inline: var(--ui-scroll-nav-gap);
-			pointer-events: none;
-			width: 100%;
-			& button {
-				align-self: center;
-				pointer-events: auto;
-			}
+	}
+	&.--hidden { display: none; }
+	&.--inside {
+		grid-area: 1 / 1;
+		justify-content: space-between;
+		height: 100%;
+		padding-inline: var(--ui-scroll-nav-gap);
+		pointer-events: none;
+		width: 100%;
+		& button {
+			align-self: center;
+			pointer-events: auto;
 		}
-		&.--outside {
-			display: contents;
-			gap: var(--ui-scroll-nav-gap);
-			& button {
-				grid-row: 1;
-				place-self: center;
-				&:first-of-type { grid-column: 1; }
-			}
-			& ol {
-				grid-column: 2;
-				grid-row: 1;
-			}
+	}
+	&.--outside {
+		display: contents;
+		gap: var(--ui-scroll-nav-gap);
+		& button {
+			grid-row: 1;
+			place-self: center;
+			&:first-of-type { grid-column: 1; }
 		}
-		&.--inside,
-		&.--outside {
-			margin-block: 0;
-			& ol {
-				margin-block-end: var(--ui-scroll-nav-gap);
-				place-self: end center;
-			}
+		& ol {
+			grid-column: 2;
+			grid-row: 1;
 		}
-		&.--no-buttons button { visibility: hidden; }
-		&.--no-dots ol { visibility: hidden; }
+	}
+	&.--inside,
+	&.--outside {
+		margin-block: 0;
+		& ol {
+			margin-block-end: var(--ui-scroll-nav-gap);
+			place-self: end center;
+		}
+	}
+	&.--no-buttons button { visibility: hidden; }
+	&.--no-dots ol { visibility: hidden; }
 
-		@media (hover: hover) {
-			&.--hover {
-				opacity: 0;
-				transition: opacity .2s ease-in;
-				&:hover { opacity: 1; }
-			}
+	@media (hover: hover) {
+		&.--hover {
+			opacity: 0;
+			transition: opacity .2s ease-in;
+			&:hover { opacity: 1; }
 		}
 	}
 }

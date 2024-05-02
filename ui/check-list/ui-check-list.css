@@ -1,19 +1,17 @@
-@layer bs-component {
-	:where(.ui-check-list) {
-		all: unset;
-		display: grid;
-		width: fit-content;
-		& li {
-			align-items: center;
-			border-block-end: 1px solid var(--ButtonBorder);
-			display: flex;
-			gap: 2ch;
-			justify-content: space-between;
-			padding: var(--ui-check-list-p, .5ch);
-			user-select: none;
-			&:hover {
-				background-color: var(--CanvasGray);
-			}
+:where(.ui-check-list) {
+	all: unset;
+	display: grid;
+	width: fit-content;
+	& li {
+		align-items: center;
+		border-block-end: 1px solid var(--ButtonBorder);
+		display: flex;
+		gap: 2ch;
+		justify-content: space-between;
+		padding: var(--ui-check-list-p, .5ch);
+		user-select: none;
+		&:hover {
+			background-color: var(--GrayCanvas);
 		}
 	}
 }

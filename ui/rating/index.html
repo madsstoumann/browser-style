@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-rating.css">
 </head>
@@ -13,53 +13,18 @@
 	<h1>UI: Components</h1>
 
 	<h2>Rating</h2>
-	<p>
-		<strong>Rating</strong> presents a rating alongside a value, managed through an <code>&lt;input type="range"&gt;</code> HTML element.
-	</p>
 
-	<label>Rating — Stars
+	<label>Rating
 		<input type="range" data-key="value" max="5" step="0.5" value="2" class="ui-rating">
 	</label>
 
-	<label>Rating — Hearts
+	<label>Rating — Heart
 		<input type="range" data-key="value" min="1" max="5" step="1" value="3" class="ui-rating --heart">
 	</label>
 
 	<label>Rating — Like
 		<input type="range" data-key="value" min="1" max="5" step="1" value="1" class="ui-rating --like">
 	</label>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<label>Rating — Stars
-			<input type="range" data-key="value" max="5" step="0.5" value="2" class="ui-rating">
-		</label>
-
-		<label>Rating — Hearts
-			<input type="range" data-key="value" min="1" max="5" step="1" value="3" class="ui-rating --heart">
-		</label>
-
-		<label>Rating — Like
-			<input type="range" data-key="value" min="1" max="5" step="1" value="1" class="ui-rating --like">
-		</label>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<label>Rating — Stars
-			<input type="range" data-key="value" max="5" step="0.5" value="2" class="ui-rating">
-		</label>
-
-		<label>Rating — Hearts
-			<input type="range" data-key="value" min="1" max="5" step="1" value="3" class="ui-rating --heart">
-		</label>
-
-		<label>Rating — Like
-			<input type="range" data-key="value" min="1" max="5" step="1" value="1" class="ui-rating --like">
-		</label>
-	</div>
 
 	<script type="module">
 		import { common, init } from '/assets/js/common.js';

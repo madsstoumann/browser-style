@@ -1,41 +1,39 @@
-@layer bs-component {
-	:where(.ui-marquee) {
-		background-color: var(--CanvasGray);
-		border-radius: var(--input-bdrs);
+:where(.ui-marquee) {
+	background-color: var(--GrayCanvas);
+	border-radius: var(--input-bdrs);
+	display: flex;
+	overflow: hidden;
+	padding: 2ch 0;
+	& span {
+		animation: scroll var(--ui-marquee-animdur, 20s) linear infinite;
 		display: flex;
-		overflow: hidden;
-		padding: 2ch 0;
-		& span {
-			animation: scroll var(--ui-marquee-animdur, 20s) linear infinite;
-			display: flex;
-			flex-shrink: 0;
-			translate: 100% 0;
-			user-select: none;
-			white-space: nowrap;
-			width: 100%;
-			[dir=rtl] & { animation-name: scroll-rtl; }
-		}
-		& input:checked + span {
-			animation-play-state: paused;
-		}
-		&:has(input:focus-visible) {
-			outline: 1px solid var(--ButtonBorder);
-		}
+		flex-shrink: 0;
+		translate: 100% 0;
+		user-select: none;
+		white-space: nowrap;
+		width: 100%;
+		[dir=rtl] & { animation-name: scroll-rtl; }
 	}
-	:where(.ui-blink-marquee) {
-		border: 0;
-		gap: 0;
-		padding: 0;
-		& .ui-blink { border-radius: var(--input-bdrs) var(--input-bdrs) 0 0; }
-		& .ui-marquee { border-radius-start-start: 0; }
+	& input:checked + span {
+		animation-play-state: paused;
+	}
+	&:has(input:focus-visible) {
+		outline: 1px solid var(--ButtonBorder);
+	}
+}
+:where(.ui-blink-marquee) {
+	border: 0;
+	gap: 0;
+	padding: 0;
+	& .ui-blink { border-radius: var(--input-bdrs) var(--input-bdrs) 0 0; }
+	& .ui-marquee { border-radius-start-start: 0; }
 
-	}
-	@keyframes scroll {
-		from { translate: 100% 0;}
-		to { translate: var(--_x, -100%) 0; }
-	}
-	@keyframes scroll-rtl {
-		from { translate: -100% 0;}
-		to { translate: var(--_x, 100%) 0; }
-	}
+}
+@keyframes scroll {
+	from { translate: 100% 0;}
+	to { translate: var(--_x, -100%) 0; }
+}
+@keyframes scroll-rtl {
+	from { translate: var(--_x, -100%) 0;}
+	to { translate: 100% 0; }
 }

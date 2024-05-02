@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-syntax.css">
 </head>
@@ -13,112 +13,8 @@
 	<h1>UI: Components</h1>
 
 	<h2>Syntax Highlight — CSS</h2>
-	<p>
-		<strong>Syntax Highlight</strong> highlights CSS code-snippets, using the <code>&lt;ul&gt;</code> and <code>&lt;li&gt;</code> HTML elements.
-	</p>
-
-	<ul class="ui-syntax-css">
-		<li>
-			<h3>body</h3>
-			<dl>
-				<dt>accent-color</dt>
-				<dd><var>AccentColor</var></dd>
-				<dt>background-color</dt>
-				<dd>Canvas</dd>
-				<dt>color</dt>
-				<dd><var>ColorGray-80</var></dd>
-				<dt>color-scheme</dt>
-				<dd>light dark</dd>
-				<dt>font-family</dt>
-				<dd><var>ff-sans</var></dd>
-				<dt>font-size</dt>
-				<dd>clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem)</dd>
-				<dt>line-height</dt>
-				<dd>1.5</dd>
-				<dt>margin-inline</dt>
-				<dd>auto</dd>
-				<dt>max-inline-size</dt>
-				<dd>70ch</dd>
-				<dt>padding-inline</dt>
-				<dd>2ch</dd>
-			</dl>
-		</li>
-		<li>
-			<h3>img</h3>
-			<dl>
-				<dt>height</dt>
-				<dd>auto</dd>
-				<dt>max-width</dt>
-				<dd>100%</dd>
-			</dl>
-		</li>
-		<li>
-			<h3>td</h3>
-			<dl>
-				<dt>border</dt>
-				<dd>1px solid</dd>
-				<dt>font-size</dt>
-				<dd>smaller</dd>
-				<dt>padding</dt>
-				<dd>1ch</dd>
-			</dl>
-		</li>
-	</ul>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<ul class="ui-syntax-css cs-opposite">
-		<li>
-			<h3>body</h3>
-			<dl>
-				<dt>accent-color</dt>
-				<dd><var>AccentColor</var></dd>
-				<dt>background-color</dt>
-				<dd>Canvas</dd>
-				<dt>color</dt>
-				<dd><var>ColorGray-80</var></dd>
-				<dt>color-scheme</dt>
-				<dd>light dark</dd>
-				<dt>font-family</dt>
-				<dd><var>ff-sans</var></dd>
-				<dt>font-size</dt>
-				<dd>clamp(1rem, 0.8661rem + 0.4286vw, 1.1875rem)</dd>
-				<dt>line-height</dt>
-				<dd>1.5</dd>
-				<dt>margin-inline</dt>
-				<dd>auto</dd>
-				<dt>max-inline-size</dt>
-				<dd>70ch</dd>
-				<dt>padding-inline</dt>
-				<dd>2ch</dd>
-			</dl>
-		</li>
-		<li>
-			<h3>img</h3>
-			<dl>
-				<dt>height</dt>
-				<dd>auto</dd>
-				<dt>max-width</dt>
-				<dd>100%</dd>
-			</dl>
-		</li>
-		<li>
-			<h3>td</h3>
-			<dl>
-				<dt>border</dt>
-				<dd>1px solid</dd>
-				<dt>font-size</dt>
-				<dd>smaller</dd>
-				<dt>padding</dt>
-				<dd>1ch</dd>
-			</dl>
-		</li>
-	</ul>
-
-	<br>
-	<h2>Variant</h2>
-	<p>With <code>--osx</code>-modifier and <code>cs-dark</code></p>
-	<ul class="ui-syntax-css --osx cs-dark">
+	<p>Used here with modifiers <code>--osx</code> and <code>--dark</code></p>
+	<ul class="ui-syntax-css --osx --dark">
 		<li>
 			<h3>body</h3>
 			<dl>

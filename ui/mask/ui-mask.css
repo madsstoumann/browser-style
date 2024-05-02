@@ -1,9 +1,0 @@
-@layer bs-component {
-	:where(ui-mask) {
-		background: var(--ui-mask-bg, currentColor);
-		display: inline-grid;
-		height: var(--ui-mask-h, 1em);
-		mask: var(--_src) no-repeat center / contain;
-		width: var(--ui-mask-w, 1em);
-	}
-}

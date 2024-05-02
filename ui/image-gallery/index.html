@@ -5,9 +5,9 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+  <!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-image-gallery.css">
+  <link rel="stylesheet" href="ui-image-gallery.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -39,61 +39,6 @@
 		</div>
 	</div>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<div class="ui-image-gallery">
-			<nav role="tablist">
-				<a href="#img-panel-1" id="img-1" aria-controls="img-panel-1" role="tab">
-					<img src="https://picsum.photos/id/10/115/75" alt="A random image from picsum.photos">
-				</a>
-				<a href="#img-panel-2" id="img-2" aria-controls="img-panel-2" role="tab">
-					<img src="https://picsum.photos/id/11/115/75" alt="A random image from picsum.photos">
-				</a>
-				<a href="#img-panel-3" id="img-3" aria-controls="img-panel-3" role="tab">
-					<img src="https://picsum.photos/id/120/115/75" alt="A random image from picsum.photos">
-				</a>
-				<a href="#img-panel-4" id="img-4" aria-controls="img-panel-4" role="tab">
-					<img src="https://picsum.photos/id/13/115/75" alt="A random image from picsum.photos">
-				</a>
-			</nav>
-			<div>
-				<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside" data-scroll-tabs=".ui-image-gallery">
-					<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="eager" id="img-panel-1" role="tabpanel" aria-labelledby="img-1">
-					<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-2" role="tabpanel" aria-labelledby="img-2">
-					<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-3" role="tabpanel" aria-labelledby="img-3">
-					<img src="https://picsum.photos/id/13/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-4" role="tabpanel" aria-labelledby="img-4">
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div class="ui-image-gallery" dir="rtl">
-		<nav role="tablist">
-			<a href="#img-panel-1" id="img-1" aria-controls="img-panel-1" role="tab">
-				<img src="https://picsum.photos/id/10/115/75" alt="A random image from picsum.photos">
-			</a>
-			<a href="#img-panel-2" id="img-2" aria-controls="img-panel-2" role="tab">
-				<img src="https://picsum.photos/id/11/115/75" alt="A random image from picsum.photos">
-			</a>
-			<a href="#img-panel-3" id="img-3" aria-controls="img-panel-3" role="tab">
-				<img src="https://picsum.photos/id/120/115/75" alt="A random image from picsum.photos">
-			</a>
-			<a href="#img-panel-4" id="img-4" aria-controls="img-panel-4" role="tab">
-				<img src="https://picsum.photos/id/13/115/75" alt="A random image from picsum.photos">
-			</a>
-		</nav>
-		<div>
-			<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside" data-scroll-tabs=".ui-image-gallery">
-				<img src="https://picsum.photos/id/10/600/285" alt="A random image from picsum.photos" loading="eager" id="img-panel-1" role="tabpanel" aria-labelledby="img-1">
-				<img src="https://picsum.photos/id/11/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-2" role="tabpanel" aria-labelledby="img-2">
-				<img src="https://picsum.photos/id/12/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-3" role="tabpanel" aria-labelledby="img-3">
-				<img src="https://picsum.photos/id/13/600/285" alt="A random image from picsum.photos" loading="lazy" id="img-panel-4" role="tabpanel" aria-labelledby="img-4">
-			</div>
-		</div>
-	</div>
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		import uiScroll from './../scroll/uiScroll.js';

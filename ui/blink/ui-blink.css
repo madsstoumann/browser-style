@@ -1,25 +1,23 @@
-@layer bs-component {
-	:where(.ui-blink) {
-		all: unset;
-		background: var(--AccentColor);
-		color: var(--AccentColorText);
-		cursor: pointer;
-		font-size: smaller;
-		padding: .33ch 1ch;
-		user-select: none;
-		width: fit-content;
-		& span {
-			animation: blink var(--ui-blink-animdur, 2s) infinite;
-		}
-		& input:checked + span {
-			animation-play-state: paused;
-			opacity: 1;
-		}
-		&:has(input:focus-visible) {
-			outline: 1px solid var(--ButtonBorder);
-		}
+:where(.ui-blink) {
+	all: unset;
+	background: var(--AccentColor);
+	color: var(--AccentColorText);
+	cursor: pointer;
+	font-size: smaller;
+	padding: .33ch 1ch;
+	user-select: none;
+	width: fit-content;
+	& span {
+		animation: blink var(--ui-blink-animdur, 2s) infinite;
 	}
-	@keyframes blink {
-		50% { opacity: 0; }
+	& input:checked + span {
+		animation-play-state: paused;
+		opacity: 1;
 	}
+	&:has(input:focus-visible) {
+		outline: 1px solid var(--ButtonBorder);
+	}
+}
+@keyframes blink {
+	50% { opacity: 0; }
 }

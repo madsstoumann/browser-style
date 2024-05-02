@@ -1,50 +1,48 @@
 @import '../icon/ui-icon.css';
-@layer bs-component {
-	:where(.ui-radial-menu) {
-		--ui-radial-menu-item-w: 60px;
+:where(.ui-radial-menu) {
+	--ui-radial-menu-item-w: 60px;
+	aspect-ratio: 1;
+	container-name: inline-size;
+	position: relative;
+
+	& > * {
 		aspect-ratio: 1;
-		container-name: inline-size;
-		position: relative;
+		background-color: var(--ui-radial-menu-item-bg, var(--ButtonFace));
+		border-radius: 50%;
+		inset-block-start: var(--_y, 50%);
+		inset-inline-start: var(--_x, 50%);
+		position: absolute;
+		translate: -50% -50%;
+		transition: all 0.2s calc(var(--_i,0) * 33ms) ease-in-out;
+		width: var(--ui-radial-menu-item-w);
+	}
+	& > *:not(.ui-radial-menu-toggle) {
+		scale: .25;
+		&:nth-of-type(1) { --_i: 0; }
+		&:nth-of-type(2) { --_i: 1; }
+		&:nth-of-type(3) { --_i: 2; }
+		&:nth-of-type(4) { --_i: 3; }
+		&:nth-of-type(5) { --_i: 4; }
+		&:nth-of-type(6) { --_i: 5; }
+		&:nth-of-type(7) { --_i: 6; }
+		&:nth-of-type(8) { --_i: 7; }
+		&:nth-of-type(9) { --_i: 8; }
+		&:nth-of-type(10) { --_i: 9; }
+		&:nth-of-type(11) { --_i: 10; }
+		&:nth-of-type(12) { --_i: 11; }
+	}
 
-		& > * {
-			aspect-ratio: 1;
-			background-color: var(--ui-radial-menu-item-bg, var(--ButtonFace));
-			border-radius: 50%;
-			inset-block-start: var(--_y, 50%);
-			inset-inline-start: var(--_x, 50%);
-			position: absolute;
-			translate: -50% -50%;
-			transition: all 0.2s calc(var(--_i,0) * 33ms) ease-in-out;
-			width: var(--ui-radial-menu-item-w);
-		}
-		& > *:not(.ui-radial-menu-toggle) {
-			scale: .25;
-			&:nth-of-type(1) { --_i: 0; }
-			&:nth-of-type(2) { --_i: 1; }
-			&:nth-of-type(3) { --_i: 2; }
-			&:nth-of-type(4) { --_i: 3; }
-			&:nth-of-type(5) { --_i: 4; }
-			&:nth-of-type(6) { --_i: 5; }
-			&:nth-of-type(7) { --_i: 6; }
-			&:nth-of-type(8) { --_i: 7; }
-			&:nth-of-type(9) { --_i: 8; }
-			&:nth-of-type(10) { --_i: 9; }
-			&:nth-of-type(11) { --_i: 10; }
-			&:nth-of-type(12) { --_i: 11; }
-		}
+	&:has(:checked) > *:not(.ui-radial-menu-toggle) {
+		--_d: calc(360deg / var(--items) * var(--_i));
+		--_r: calc(50% - (var(--ui-radial-menu-item-w) / 2));
+		--_x: calc(var(--_r) + (var(--_r) * cos(180deg + var(--_d))));
+		--_y: calc(var(--_r) + (var(--_r) * sin(180deg + var(--_d))));
+		scale: 1;
+		translate: none;
+	}
 
-		&:has(:checked) > *:not(.ui-radial-menu-toggle) {
-			--_d: calc(360deg / var(--items) * var(--_i));
-			--_r: calc(50% - (var(--ui-radial-menu-item-w) / 2));
-			--_x: calc(var(--_r) + (var(--_r) * cos(180deg + var(--_d))));
-			--_y: calc(var(--_r) + (var(--_r) * sin(180deg + var(--_d))));
-			scale: 1;
-			translate: none;
-		}
-
-		.ui-radial-menu-toggle {
-			grid-template-columns: unset;
-			place-content: center;
-		}
+	.ui-radial-menu-toggle {
+		grid-template-columns: unset;
+		place-content: center;
 	}
 }

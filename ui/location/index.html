@@ -11,31 +11,10 @@
 	<h1>UI: Components</h1>
 
 	<h2>Location</h2>
-	<p>Custom element, <code>&lt;ui-location&gt;</code> using <a href="https://ipinfo.io" target="_blank" rel="noreferrer">ipinfo.io</a> to return user geo-location<br>
+	<p>Custom element, <code>&lt;ui-location&gt;</code> using ipinfo.io to return user geo-location<br>
 	Requires a <code>token</code>.</p>
 
 	<ui-location
-		error="Not available"
-		geolabel="Your location:"
-		iplabel="IP address:"
-		token="">
-	</ui-location>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-location
-			error="Not available"
-			geolabel="Your location:"
-			iplabel="IP address:"
-			token="">
-		</ui-location>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<ui-location
-		dir="rtl"
 		error="Not available"
 		geolabel="Your location:"
 		iplabel="IP address:"

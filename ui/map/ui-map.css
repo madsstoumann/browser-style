@@ -1,8 +1,6 @@
-@layer bs-component {
-	:where(.ui-map) {
-		aspect-ratio: var(--uimap-ar, 19 / 9);
-		border: var(--input-bdw) solid var(--input-bdc);
-		border-radius: var(--input-bdrs);
-		width: 100%;
-	}
+:where(.ui-map) {
+	aspect-ratio: var(--uimap-ar, 19 / 9);
+	border: var(--input-bdw) solid var(--input-bdc);
+	border-radius: var(--input-bdrs);
+	width: 100%;
 }

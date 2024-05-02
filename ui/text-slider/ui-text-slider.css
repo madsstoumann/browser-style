@@ -1,11 +1,9 @@
 /* requires ui-scroll.css */
 @import url("../icon/ui-icon.css");
-@layer bs-component {
-	:where(.ui-text-slider) {
-		--ui-scroll-gap: 2ch;
-		& .ui-scroll > * {
-			align-self: center;
-			text-align: center;
-		}
+.ui-text-slider {
+	--ui-scroll-gap: 2ch;
+	& .ui-scroll > * {
+		align-self: center;
+		text-align: center;
 	}
 }

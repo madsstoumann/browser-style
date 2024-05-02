@@ -1,25 +1,23 @@
 @import "../icon/ui-icon.css";
-@layer bs-component {
-	:where(.ui-video-embed) {
-		aspect-ratio: var(--ui-embed-asr, 16 / 9);
-		border-radius: var(--input-bdrs);
-		color: #FFF;
-		display: grid;
-		& >* { grid-area: 1 / 1; }
-		& button { place-self: center; }
-		& iframe, & img {
-			aspect-ratio: inherit;
-			border: 0;
-			border-radius: inherit;
-			height: 100%;	
-			object-fit: cover;	
-			width: 100%;
-			&[src=""],
-			&:not([src=""]) + button {
-				display: none;
-			}
+:where(.ui-video-embed) {
+	aspect-ratio: var(--ui-embed-asr, 16 / 9);
+	border-radius: var(--input-bdrs);
+	color: #FFF;
+	display: grid;
+	& >* { grid-area: 1 / 1; }
+	& button { place-self: center; }
+	& iframe, & img {
+		aspect-ratio: inherit;
+		border: 0;
+		border-radius: inherit;
+		height: 100%;	
+		object-fit: cover;	
+		width: 100%;
+		&[src=""],
+		&:not([src=""]) + button {
+			display: none;
 		}
-		&.--youtube { --button-bg: #F00; }
-		&.--vimeo { --button-bg: #00adef; }
 	}
+	&.--youtube { --button-bg: #F00; }
+	&.--vimeo { --button-bg: #00adef; }
 }

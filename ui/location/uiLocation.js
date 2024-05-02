@@ -1,13 +1,12 @@
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host {
-		background: var(--CanvasGray);
+		background: var(--GrayCanvas);
 		border-radius: 0.5ch;
-		display: block;
 		padding: 1ch 2ch;
 	}
 	code {
-		color: var(--ButtonText);
+		color: var(--DarkGray);
 		font-size: smaller;
 	}
 `)

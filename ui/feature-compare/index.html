@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-feature-compare.css">
 </head>
@@ -13,12 +13,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Feature Compare</h2>
-	<p>
-		The <strong>Feature Compare</strong> component allows users to compare features of two or more products side by side. Each feature is listed in a separate row, with the corresponding features of the other products in the same row.
-	</p>
-	<p>
-		For each feature-compare-group, add a custom property, <code>--items</code>.<br>This will help CSS <strong>subgrid</strong> to align items.
-	</p>
+	<p>For each feature-compare-group, add a custom property, <code>--items</code>.<br>This will help CSS subgrid to align items.</p>
 
 	<section class="ui-feature-compare">
 		<h3>Overview</h3>
@@ -34,54 +29,28 @@
 				<li><strong>10-core</strong><br>GPU</li>
 			</ul>
 		</div>
-	</section>
-		
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<section class="ui-feature-compare">
-			<h3>Compute</h3>
-			<div class="ui-feature-compare-group">
-				<ul>
-					<li><strong>System on Chip (SoC) M2 Max chip</strong><br>
-						12-core CPU with 8 performance cores and 4 efficiency cores
-						Up to 38-core GPU
-						16-core Neural Engine
-						400GB/s memory bandwidth</li>
-					<li><strong>8-core</strong><br>CPU</li>
-					<li><strong>10-core</strong><br>GPU</li>
-				</ul>
-				<ul>
-					<li><strong>System on Chip (SoC) M2 Ultra chip</strong><br>24-core CPU with 16 performance cores and 8 efficiency cores
-						Up to 76-core GPU
-						32-core Neural Engine
-						800GB/s memory bandwidth<br>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellendus nemo iure a aspernatur earum accusamus.</li>
-					<li><strong>8-core</strong><br>CPU</li>
-					<li><strong>10-core</strong><br>GPU</li>
-				</ul>
-			</div>
-		</section>
-	</div>
 
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<section class="ui-feature-compare">
-			<h3>Overview</h3>
-			<div class="ui-feature-compare-group">
-				<ul>
-					<li><strong>13,6"</strong><br>Liquid Retina-screen<sup>9</sup><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, adipisci!</li>
-					<li><strong>8-core</strong><br>CPU</li>
-					<li><strong>10-core</strong><br>GPU</li>
-				</ul>
-				<ul>
-					<li><strong>15,3"</strong><br>Liquid Retina-screen<sup>9</sup></li>
-					<li><strong>8-core</strong><br>CPU</li>
-					<li><strong>10-core</strong><br>GPU</li>
-				</ul>
-			</div>
-		</section>
-	</div>
+		<h3>Compute</h3>
+		<div class="ui-feature-compare-group">
+			<ul>
+				<li><strong>System on Chip (SoC) M2 Max chip</strong><br>
+					12-core CPU with 8 performance cores and 4 efficiency cores
+					Up to 38-core GPU
+					16-core Neural Engine
+					400GB/s memory bandwidth</li>
+				<li><strong>8-core</strong><br>CPU</li>
+				<li><strong>10-core</strong><br>GPU</li>
+			</ul>
+			<ul>
+				<li><strong>System on Chip (SoC) M2 Ultra chip</strong><br>24-core CPU with 16 performance cores and 8 efficiency cores
+					Up to 76-core GPU
+					32-core Neural Engine
+					800GB/s memory bandwidth<br>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellendus nemo iure a aspernatur earum accusamus.</li>
+				<li><strong>8-core</strong><br>CPU</li>
+				<li><strong>10-core</strong><br>GPU</li>
+			</ul>
+		</div>
+	</section>
 
 </body>
 </html>

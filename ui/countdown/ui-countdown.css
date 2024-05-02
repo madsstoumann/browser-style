@@ -1,93 +1,92 @@
-@layer bs-component {
-	@property --cd-days {
-		syntax: "<integer>";
-		initial-value: 0;
-		inherits: false;
-	}
-	@property --cd-hours {
-		syntax: "<integer>";
-		initial-value: 0;
-		inherits: false;
-	}
-	@property --cd-minutes {
-		syntax: "<integer>";
-		initial-value: 0;
-		inherits: false;
-	}
-	@property --cd-seconds {
-		syntax: "<integer>";
-		initial-value: 0;
-		inherits: false;
-	}
+/* NOTE: Only *ONE* CountDown per page */
+@property --cd-days {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+@property --cd-hours {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+@property --cd-minutes {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+@property --cd-seconds {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+:where(.ui-countdown) {
+	--ui-countdown-gap: 1ch;
+  all: unset;
+  background: var(--GrayCanvas);
+  border-radius: var(--input-bdrs);
+  direction: ltr;
+  display: grid;
+  font-variant-numeric: tabular-nums;
+	gap: var(--ui-countdown-gap);
+  grid-auto-flow: column;
+	inline-size: min-content;
+  padding: var(--ui-countdown-gap);
+  transform: translateZ(0);
+  will-change: transform;
 
-	:where(.ui-countdown) {
-		--ui-countdown-gap: 1ch;
-		all: unset;
-		background: var(--CanvasGray);
-		border-radius: var(--input-bdrs);
-		display: grid;
-		font-variant-numeric: tabular-nums;
-		gap: var(--ui-countdown-gap);
-		grid-auto-flow: column;
-		inline-size: min-content;
-		padding: var(--ui-countdown-gap);
-		transform: translateZ(0);
-		will-change: transform;
+  & li {
+		background-color: var(--ButtonFace);
+    border-radius: inherit;
+    display: grid;
+		font-size: small;
+		font-weight: 300;
+    list-style: none;
+    padding: inherit;
+    text-align: center;
+    &::before {
+      font-size: xx-large;
+      font-weight: 700;
+    }
+    &[data-label=day] {
+      animation: cd-days 31536000s steps(365, jump-none) infinite;
+      animation-delay: var(--delay-days, 0s);
+      counter-reset: days var(--cd-days);
+      &::before { content: counter(days, decimal-leading-zero) '  '; }
+    }
+    &[data-label=hour] {
+      animation: cd-hours 86400s steps(24, jump-none) infinite;
+      animation-delay: var(--delay-hours, 0s);
+      counter-reset: hours var(--cd-hours);
+      &::before { content: counter(hours, decimal-leading-zero) ' '; }
+    }
+    &[data-label=minutes] {
+      animation: cd-minutes 3600s steps(60, jump-none) infinite;
+      animation-delay: var(--delay-minutes, 0s);
+      counter-reset: minutes var(--cd-minutes);
+      &::before { content: counter(minutes, decimal-leading-zero) ' '; }
+    }
+    &[data-label=seconds] {
+      animation: cd-seconds 60s steps(60, jump-none) infinite;
+      animation-delay: var(--delay-seconds, 0s);
+      counter-reset: seconds var(--cd-seconds);
+      &::before { content: counter(seconds, decimal-leading-zero) ' '; }
+    }
+  }
+}
 
-		& li {
-			background-color: var(--ButtonFace);
-			border-radius: inherit;
-			display: grid;
-			font-size: small;
-			font-weight: 300;
-			list-style: none;
-			padding: inherit;
-			text-align: center;
-			&::before {
-				font-size: xx-large;
-				font-weight: 700;
-			}
-			&[data-label=day] {
-				animation: cd-days 31536000s steps(365, jump-none) infinite;
-				animation-delay: var(--delay-days, 0s);
-				counter-reset: days var(--cd-days);
-				&::before { content: counter(days, decimal-leading-zero) '  '; }
-			}
-			&[data-label=hour] {
-				animation: cd-hours 86400s steps(24, jump-none) infinite;
-				animation-delay: var(--delay-hours, 0s);
-				counter-reset: hours var(--cd-hours);
-				&::before { content: counter(hours, decimal-leading-zero) ' '; }
-			}
-			&[data-label=minutes] {
-				animation: cd-minutes 3600s steps(60, jump-none) infinite;
-				animation-delay: var(--delay-minutes, 0s);
-				counter-reset: minutes var(--cd-minutes);
-				&::before { content: counter(minutes, decimal-leading-zero) ' '; }
-			}
-			&[data-label=seconds] {
-				animation: cd-seconds 60s steps(60, jump-none) infinite;
-				animation-delay: var(--delay-seconds, 0s);
-				counter-reset: seconds var(--cd-seconds);
-				&::before { content: counter(seconds, decimal-leading-zero) ' '; }
-			}
-		}
-	}
-
-	@keyframes cd-days {
-		from { --cd-days: 364; }
-		to { --cd-days: 0; } 
-	}
-	@keyframes cd-hours {
-		from { --cd-hours: 23; }
-		to { --cd-hours: 0; } 
-	}
-	@keyframes cd-minutes { 
-		from { --cd-minutes: 59; }
-		to { --cd-minutes: 0; } 
-	}
-	@keyframes cd-seconds { 
-		from { --cd-seconds: 59; }
-		to { --cd-seconds: 0; }
-	}
+@keyframes cd-days {
+  from { --cd-days: 364; }
+  to { --cd-days: 0; } 
+}
+@keyframes cd-hours {
+  from { --cd-hours: 23; }
+  to { --cd-hours: 0; } 
+}
+@keyframes cd-minutes { 
+  from { --cd-minutes: 59; }
+  to { --cd-minutes: 0; } 
+}
+@keyframes cd-seconds { 
+  from { --cd-seconds: 59; }
+  to { --cd-seconds: 0; }
 }

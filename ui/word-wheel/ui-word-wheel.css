@@ -1,26 +1,24 @@
-@layer bs-component {
-	:where(.ui-word-wheel) {
+:where(.ui-word-wheel) {
+	all: unset;
+	aspect-ratio: 1;
+	container-type: inline-size;
+	direction: ltr;
+	display: grid;
+	place-content: center;
+	& li {
 		all: unset;
-		aspect-ratio: 1;
-		container-type: inline-size;
-		direction: ltr;
-		display: grid;
-		place-content: center;
-		& li {
-			all: unset;
-			color: hsl(var(--_deg, var(--ui-word-wheel-first-hue, 0)), 70%, 50%);
-			grid-area: 1 / 1;
-			width: var(--ui-wheel-radius, 40cqi);
-			&:first-of-type {
-				font-size: var(--ui-word-wheel-first-fs, 200%);
-				font-weight: 700;
-				text-align: center;
-			}
-			&:not(:first-of-type) {
-				rotate: var(--_deg);
-				transform-origin: -50% 50%;
-				translate: 100% 0;
-			}
+		color: hsl(var(--_deg, var(--ui-word-wheel-first-hue, 0)), 70%, 50%);
+		grid-area: 1 / 1;
+		width: var(--ui-wheel-radius, 40cqi);
+		&:first-of-type {
+			font-size: var(--ui-word-wheel-first-fs, 200%);
+			font-weight: 700;
+			text-align: center;
+		}
+		&:not(:first-of-type) {
+			rotate: var(--_deg);
+			transform-origin: -50% 50%;
+			translate: 100% 0;
 		}
 	}
 }

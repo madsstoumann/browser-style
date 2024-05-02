@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-button-group.css">
 </head>
@@ -13,11 +13,8 @@
 
 	<h1>UI: Components</h1>
 	<h2>Button Group</h2>
-	<p>
-		A button group is a set of buttons that are visually grouped together. Button groups are used to group related buttons together, making it easier for users to find and interact with them.
-	</p>
-
 	<fieldset class="ui-button-group ">
+		<legend>Button Group</legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group" value="1" data-sr checked>
 			Light mode
@@ -31,10 +28,9 @@
 			Auto
 		</label>
 	</fieldset>
-
 	<br>
-	<p>With <code>--rounded</code></p>
 	<fieldset class="ui-button-group --rounded">
+		<legend>With <code>--rounded</code></legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group-rounded" value="1" data-sr checked>
 			Light mode
@@ -48,10 +44,9 @@
 			Auto
 		</label>
 	</fieldset>
-
 	<br>
-	<p>With <code>--border</code></p>
 	<fieldset class="ui-button-group --border">
+		<legend>With <code>--border</code></legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group-border" value="1" data-sr checked>
 			Light mode
@@ -65,10 +60,9 @@
 			Auto
 		</label>
 	</fieldset>
-
 	<br>
-	<p>With <code>--rounded --border</code></p>
 	<fieldset class="ui-button-group --rounded --border">
+		<legend>With <code>--rounded --border</code></legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group-roundedborder" value="1" data-sr checked>
 			Light mode
@@ -82,10 +76,9 @@
 			Auto
 		</label>
 	</fieldset>
-
 	<br>
-	<p>With <code>--rounded --border --outline</code></p>
 	<fieldset class="ui-button-group --rounded --border --outline">
+		<legend>With <code>--rounded --border --outline</code></legend>
 		<label class="ui-button">
 			<input type="radio" name="button-group-outline" value="1" data-sr checked>
 			Light mode
@@ -96,80 +89,6 @@
 		</label>
 		<label class="ui-button">
 			<input type="radio" name="button-group-outline" data-sr value="3">
-			Auto
-		</label>
-	</fieldset>
-
-	<br>
-	<p>
-		With <code>--inline --rounded --border </code> and <code>fs-sm</code>.<br>
-		<strong>Note,</strong> that the border-width is based on <code>font-size</code>, but can be overwritten using <code>--ui-button-group-bdw</code>.
-	</p>
-	<fieldset class="ui-button-group --inline --rounded --border fs-sm">
-		<label class="ui-button">
-			<input type="radio" name="button-group-outline" value="1" data-sr checked>
-			Light mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-outline" data-sr value="2">
-			Dark mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-outline" data-sr value="3">
-			Auto
-		</label>
-	</fieldset>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-button-group ">
-			<legend>Button Group</legend>
-			<label class="ui-button">
-				<input type="radio" name="button-group-cs" value="1" data-sr checked>
-				Light mode
-			</label>
-			<label class="ui-button">
-				<input type="radio" name="button-group-cs" data-sr value="2">
-				Dark mode
-			</label>
-			<label class="ui-button">
-				<input type="radio" name="button-group-cs" data-sr value="3">
-				Auto
-			</label>
-		</fieldset>
-		<br>
-		<fieldset class="ui-button-group --rounded --border --outline">
-			<legend>With <code>--rounded --border --outline</code></legend>
-			<label class="ui-button">
-				<input type="radio" name="button-group-outline-cs" value="1" data-sr>
-				Light mode
-			</label>
-			<label class="ui-button">
-				<input type="radio" name="button-group-outline-cs" data-sr value="2" checked>
-				Dark mode
-			</label>
-			<label class="ui-button">
-				<input type="radio" name="button-group-outline-cs" data-sr value="3">
-				Auto
-			</label>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<fieldset class="ui-button-group" dir="rtl">
-		<legend>Button Group</legend>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rtl" value="1" data-sr checked>
-			Light mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rtl" data-sr value="2">
-			Dark mode
-		</label>
-		<label class="ui-button">
-			<input type="radio" name="button-group-rtl" data-sr value="3">
 			Auto
 		</label>
 	</fieldset>

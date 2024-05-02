@@ -1,7 +1,5 @@
-@layer bs-component {
-	:where(.ui-share) {
-		& a {
-			color: currentColor;
-		}
+:where(.ui-share) {
+	& a {
+		color: currentColor;
 	}
 }

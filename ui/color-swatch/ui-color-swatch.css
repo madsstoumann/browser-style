@@ -1,10 +1,7 @@
 @import '../color-input/ui-color-input.css';
-
-@layer bs-component {
-	:where(.ui-color-swatch) {
-		all: unset;
-		& label { display: contents; }
-		& legend { padding-block-end: var(--label-rg); }
-		[dir=rtl] & input { background-position: unset;}
-	}
+.ui-color-swatch {
+	all: unset;
+	& label { display: contents; }
+	& legend { padding-block-end: var(--label-rg); }
+	[dir=rtl] & input { background-position: unset;}
 }

@@ -1,21 +1,19 @@
-@layer bs-component {
-	:where(.ui-config-group) {
-		all: unset;
-		display: grid;
-		gap: 1.5ch;
-		& label {
-			border: 2px solid var(--ButtonBorder);
-			border-radius: calc(2 * var(--input-bdrs));
-			font-size: larger;
-			grid-template-columns: repeat(2, auto);
-			justify-content:space-between;
-			padding: 1ch 2ch;
-			transition: background .2s ease-in-out;
-			&:has(:checked) { border-color: var(--AccentColor); }
-			@media (hover: hover) {
-				&:hover { background: var(--CanvasGray); }
-			}
+:where(.ui-config-group) {
+	all: unset;
+	display: grid;
+	gap: 1.5ch;
+	& label {
+		border: 2px solid var(--ButtonBorder);
+		border-radius: calc(2 * var(--input-bdrs));
+		font-size: larger;
+		grid-template-columns: repeat(2, auto);
+		justify-content:space-between;
+		padding: 1ch 2ch;
+		transition: background .2s ease-in-out;
+		&:has(:checked) { border-color: var(--AccentColor); }
+		@media (hover: hover) {
+			&:hover { background: var(--GrayHover); }
 		}
-		& legend { margin-block-end: var(--label-rg); }
 	}
+	& legend { margin-block-end: var(--label-rg); }
 }

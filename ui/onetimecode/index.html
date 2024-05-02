@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-onetimecode.css">
 </head>
@@ -13,14 +13,6 @@
 	<h1>UI: Components</h1>
 
 	<h2>One Time Code</h2>
-	<p>
-		A one-time code is a unique code that is generated for a single use. It is often used as a form of two-factor authentication, where the user must enter the code in addition to their password to access an account or service.
-	</p>
-
-	<p>
-		This version use a single <code>input</code> and a small JavaScript to determine caret-position.
-	</p>
-
 	<label>
 		One Time Code
 		<input
@@ -31,21 +23,6 @@
 			pattern="\d{6}"
 			class="ui-onetimecode">
 	</label>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<label>
-			One Time Code
-			<input
-				type="text"
-				autocomplete="one-time-code"
-				inputmode="numeric"
-				maxlength="6"
-				pattern="\d{6}"
-				class="ui-onetimecode">
-		</label>
-	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

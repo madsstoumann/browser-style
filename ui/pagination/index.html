@@ -5,19 +5,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-pagination.css">
+	<link rel="stylesheet" href="../spinner/ui-spinner.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Pagination</h2>
-	<p>
-		<strong>Pagination</strong> is a control that enables users to navigate through pages of content. It is used to break up content into smaller sections, making it easier to read and navigate.
-	</p>
-
-	<fieldset class="ui-pagination fs-md">
+	<fieldset class="ui-pagination">
 		<legend>Pagination</legend>
 		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
 		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
@@ -27,61 +23,6 @@
 		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
 		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
 	</fieldset>
-
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-pagination fs-md">
-			<legend>Pagination</legend>
-			<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
-			<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
-			<label>
-				<input type="number" value="5" min="1" max="25" autocomplete="off">
-			</label>
-			<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
-			<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<fieldset class="ui-pagination fs-md" dir="rtl">
-		
-		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
-		<label>
-			<input type="number" value="5" min="1" max="25" autocomplete="off">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
-		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
-	</fieldset>
-
-	<br>
-	<h2>Variants</h2>
-	<p>Control size with <code>font-size</code> modifiers: fs-xs, fs-sm, fs-md, fs-lg, fs-xl, fs-xxl.</p>
-
-	<p>With <code>fs-xs</code> modifier:</p>
-	<fieldset class="ui-pagination fs-xs">
-		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
-		<label>
-			<input type="number" value="5" min="1" max="25" autocomplete="off">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
-		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
-	</fieldset>
-
-	<p>With <code>fs-sm</code> modifier:</p>
-	<fieldset class="ui-pagination fs-sm">
-		<button type="button" name="step-first"><ui-icon type="chevron left first"></ui-icon></button>
-		<button type="button" name="step-down"><ui-icon type="chevron left"></ui-icon></button>
-		<label>
-			<input type="number" value="5" min="1" max="25" autocomplete="off">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="chevron right"></ui-icon></button>
-		<button type="button" name="step-last"><ui-icon type="chevron right last"></ui-icon></button>
-	</fieldset>
-
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

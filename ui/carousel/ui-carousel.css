@@ -1,22 +1,20 @@
 @import '../icon/ui-icon.css';
 @import '../scroll/ui-scroll.css';
-@layer bs-component {
-	:where(.ui-carousel) {
-		--ui-scroll-gap: 2ch;
-		container-type: inline-size;
-		& .ui-scroll >* {
-			display: grid;
-			gap: var(--ui-scroll-gap);
-		}
+:where(.ui-carousel) {
+	--ui-scroll-gap: 2ch;
+	container-type: inline-size;
+	& .ui-scroll >* {
+		display: grid;
+		gap: var(--ui-scroll-gap);
 	}
-	@container (max-width: 600px) {
-		.ui-carousel .ui-scroll >* {
-			grid-auto-flow: row;
-			grid-template-columns: unset;
-			& >* {
-				grid-row: unset;
-				grid-template-rows: unset;
-			}
+}
+@container (max-width: 600px) {
+	.ui-carousel .ui-scroll >* {
+		grid-auto-flow: row;
+		grid-template-columns: unset;
+		& >* {
+			grid-row: unset;
+			grid-template-rows: unset;
 		}
 	}
 }

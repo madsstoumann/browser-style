@@ -1,61 +1,58 @@
-@layer bs-component {
-	:where(progress) {
-		--ui-progress-bs: .6em;
-		--ui-progress-anim: progress 1.2s linear alternate infinite;
-		background-color: var(--ButtonBorder);
-		block-size: var(--ui-progress-bs);
-		border: 0;
-		border-radius: calc(2 * var(--ui-progress-bs));
-		display: grid;
-		width: 100%;
-		&::-webkit-progress-bar {
-			background: transparent;
-			border-radius: inherit;
-		}
-		&::-webkit-progress-inner-element {
-			border-radius: inherit;
-		}
-		&::-webkit-progress-value {
-			background: var(--AccentColor);
-			border-radius: inherit;
-			transition: inline-size .33s linear;
-		}
-		&:indeterminate {
-			background-image: linear-gradient(45deg,
-				rgba(255, 255, 255, .15) 25%,
-				transparent 25%,
-				transparent 50%,
-				rgba(255, 255, 255, .15) 50%,
-				rgba(255, 255, 255, .15) 75%,
-				transparent 75%,
-				transparent);
-			background-size: 10px 10px;
-		}
-		&:indeterminate::-moz-progress-bar {
-			width: 20%;
-		}
-		&::-moz-progress-bar {
-			background-color: var(--AccentColor);
-			border-radius: inherit;
-		}
+:where(progress) {
+	--ui-progress-bs: .6em;
+	--ui-progress-anim: progress 1.2s linear alternate infinite;
+	background-color: var(--ButtonBorder);
+	block-size: var(--ui-progress-bs);
+	border: 0;
+	border-radius: calc(2 * var(--ui-progress-bs));
+	display: grid;
+	width: 100%;
+	&::-webkit-progress-bar {
+		background: transparent;
+		border-radius: inherit;
 	}
-	@media (prefers-reduced-motion: no-preference) {
-		progress:indeterminate::after {
-			animation: var(--ui-progress-anim);
-			background-color: var(--AccentColor);
-			border-radius: inherit;
-			content: "";
-			height: var(--ui-progress-bs);
-			width: 20%;
-			
-		}
-		progress:indeterminate::-moz-progress-bar {
-			animation: var(--ui-progress-anim);
-		}
-		[dir=rtl] progress { 
-			--ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
-		}
+	&::-webkit-progress-inner-element {
+		border-radius: inherit;
 	}
-	@keyframes progress { 100% { translate: 400%; } }
-	@keyframes progress-rtl { 100% { translate: -400%; } }
+	&::-webkit-progress-value {
+		background: var(--AccentColor);
+		border-radius: inherit;
+	}
+	&:indeterminate {
+		background-image: linear-gradient(45deg,
+			rgba(255, 255, 255, .15) 25%,
+			transparent 25%,
+			transparent 50%,
+			rgba(255, 255, 255, .15) 50%,
+			rgba(255, 255, 255, .15) 75%,
+			transparent 75%,
+			transparent);
+		background-size: 10px 10px;
+	}
+	&:indeterminate::-moz-progress-bar {
+		width: 20%;
+	}
+	&::-moz-progress-bar {
+		background-color: var(--AccentColor);
+		border-radius: inherit;
+	}
 }
+@media (prefers-reduced-motion: no-preference) {
+	progress:indeterminate::after {
+		animation: var(--ui-progress-anim);
+		background-color: var(--AccentColor);
+		border-radius: inherit;
+		content: "";
+		height: var(--ui-progress-bs);
+		width: 20%;
+		
+	}
+	progress:indeterminate::-moz-progress-bar {
+		animation: var(--ui-progress-anim);
+	}
+	[dir=rtl] progress { 
+		--ui-progress-anim: progress-rtl 1.2s linear alternate infinite;
+	 }
+}
+@keyframes progress { 100% { translate: 400%; } }
+@keyframes progress-rtl { 100% { translate: -400%; } }

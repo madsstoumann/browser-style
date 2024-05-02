@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
+	<!--<meta name="view-transition" content="same-origin">-->
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-range-minmax.css">
 </head>
@@ -13,9 +13,6 @@
 	<h1>UI: Components</h1>
 
 	<h2>Range: MinMax</h2>
-	<p>
-		<strong>Range: MinMax</strong> presents a range with minimum and maximum values, managed through two <code>&lt;input type="range"&gt;</code> HTML elements.
-	</p>
 
 	<fieldset class="ui-range-minmax">
 		<legend>Range with min and max</legend>
@@ -29,42 +26,9 @@
 		</label>
 	</fieldset>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-range-minmax">
-			<legend>Range with min and max</legend>
-			<label>
-				<input type="range" data-key="v1" data-scope="fieldset" value="25">
-				<span data-unit="$"></span>
-			</label>
-			<label>
-				<input type="range" data-key="v2" data-scope="fieldset" value="75">
-				<span data-unit="$"></span>
-			</label>
-		</fieldset>
-	</div>
-
-	<br>
-	<h2>With right-to-left</h2>
-	<div dir="rtl">
-		<fieldset class="ui-range-minmax">
-			<legend>Range with min and max</legend>
-			<label>
-				<input type="range" data-key="v1" data-scope="fieldset" value="25">
-				<span data-unit="$"></span>
-			</label>
-			<label>
-				<input type="range" data-key="v2" data-scope="fieldset" value="75">
-				<span data-unit="$"></span>
-			</label>
-		</fieldset>
-	</div>
-
 	<script type="module">
-		import { init } from './../../assets/js/common.js';
-		import uiRangeMinMax from './uiRangeMinMax.js';
-		init('.ui-range-minmax', uiRangeMinMax);
+		import { common, init } from './../../assets/js/common.js';
+		common();
 	</script>
 </body>
 </html>
