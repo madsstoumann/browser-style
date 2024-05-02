@@ -12,7 +12,8 @@ class uiNumber extends HTMLElement {
 		const end = parseInt(this.getAttribute('end')) || 10;
 		const duration = parseInt(this.getAttribute('duration')) || 5000;
 		const iteration = parseInt(this.getAttribute('iteration')) === -1 ? 'infinite' : parseInt(this.getAttribute('iteration')) || 1;
-		this.attachShadow({ mode: 'open' }).innerHTML = `<span part="number" style="--start:${start};--end:${end};--duration:${duration}ms;--iteration:${iteration}"><span part="suffix">${this.getAttribute('suffix')||''}</span></span>`;
+		const steps = Math.abs(end - start);
+		this.attachShadow({ mode: 'open' }).innerHTML = `<span part="number" style="--start:${start};--end:${end};--duration:${duration}ms;--iteration:${iteration};--timing:steps(${steps});"><span part="suffix">${this.getAttribute('suffix')||''}</span></span>`;
 		this.shadowRoot.adoptedStyleSheets = [stylesheet];
 		try {
 			CSS.registerProperty({
@@ -28,7 +29,7 @@ class uiNumber extends HTMLElement {
 const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host::part(number) {
-		animation: N var(--duration, 5s) var(--timing, linear) var(--fillmode, forwards) var(--iteration, 1) var(--playstate, running);
+		animation: N var(--duration, 5s) var(--ui-number-timing, var(--timing, linear)) var(--fillmode, forwards) var(--iteration, 1) var(--playstate, running);
 		counter-reset: N var(--start, 0);
 	}
 	:host::part(number)::before {
