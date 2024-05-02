@@ -7,11 +7,9 @@
 		text-align: center;
 		& p { margin: 0; }
 		& ui-number {
-			&::part(number) {
-				font-size: 500%;
-				font-variant-numeric: tabular-nums;
-				font-weight: 900;
-			}
+			font-size: 500%;
+			font-variant-numeric: tabular-nums;
+			font-weight: 900;
 			&::part(suffix) {
 				font-size: 75%;
 			}
