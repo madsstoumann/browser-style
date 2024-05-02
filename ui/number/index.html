@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>NumberI</title>
+	<title>Number</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
@@ -116,6 +116,12 @@
 	</div>
 
 	<script src="index.js" type="module"></script>
+
+	<!--
+	<script type="module">
+		class uiNumber extends HTMLElement{constructor(){super();const t=parseInt(this.getAttribute("start"))||0,e=parseInt(this.getAttribute("end"))||10,n=parseInt(this.getAttribute("duration"))||5e3,s=parseInt(this.getAttribute("iteration"))||1,r=Math.abs(e-t),a=this.getAttribute("suffix"),i=new CSSStyleSheet;i.replaceSync("@property --num {syntax:'<integer>';initial-value:0;inherits:false;}"),document.adoptedStyleSheets=[...document.adoptedStyleSheets,i];const u=new CSSStyleSheet;u.replaceSync(`:host::part(number) {--num:${t};animation:N ${n}ms steps(${r}) forwards ${-1===s?"inifinite":s} var(--playstate,running);counter-reset:N var(--num)}:host::part(number)::before{content:counter(N)}@keyframes N {to{--num: ${e}}}`),this.attachShadow({mode:"open"}).innerHTML=`<span part="number">${a?`<span part="suffix">${a}</span>`:""}</span>`,this.shadowRoot.adoptedStyleSheets=[u]}}customElements.define("ui-number",uiNumber);
+	</script>
+	-->
 
 	</div>
 </body>

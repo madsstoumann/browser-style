@@ -11,32 +11,27 @@ class uiNumber extends HTMLElement {
 		const start = parseInt(this.getAttribute('start')) || 0;
 		const end = parseInt(this.getAttribute('end')) || 10;
 		const duration = parseInt(this.getAttribute('duration')) || 5000;
-		const iteration = parseInt(this.getAttribute('iteration')) === -1 ? 'infinite' : parseInt(this.getAttribute('iteration')) || 1;
+		const iteration = parseInt(this.getAttribute('iteration')) || 1;
 		const steps = Math.abs(end - start);
-		this.attachShadow({ mode: 'open' }).innerHTML = `<span part="number" style="--start:${start};--end:${end};--duration:${duration}ms;--iteration:${iteration};--timing:steps(${steps});"><span part="suffix">${this.getAttribute('suffix')||''}</span></span>`;
+		const suffix = this.getAttribute('suffix');
+
+		const adopted = new CSSStyleSheet();
+		adopted.replaceSync(`@property --num { syntax: '<integer>'; initial-value: 0; inherits: false; }`);
+		document.adoptedStyleSheets = [...document.adoptedStyleSheets, adopted];
+
+		const stylesheet = new CSSStyleSheet();
+		stylesheet.replaceSync(`
+			:host::part(number) {
+				--num: ${start};
+				animation: N ${duration}ms steps(${steps}) forwards ${iteration === -1 ? 'inifinite' : iteration} var(--playstate, running);
+				counter-reset: N var(--num);
+			}
+			:host::part(number)::before { content: counter(N); }
+			@keyframes N { to { --num: ${end}; } }
+		`);
+		this.attachShadow({ mode: 'open' }).innerHTML = `
+		<span part="number">${suffix ? `<span part="suffix">${suffix}</span>`:''}</span>`;
 		this.shadowRoot.adoptedStyleSheets = [stylesheet];
-		try {
-			CSS.registerProperty({
-				name: '--start', 
-				syntax: '<integer>', 
-				initialValue: 0, 
-				inherits: false
-			});
-		} catch(e) {}
 	}
 }
-/* === STYLES === */
-const stylesheet = new CSSStyleSheet()
-stylesheet.replaceSync(`
-	:host::part(number) {
-		animation: N var(--duration, 5s) var(--ui-number-timing, var(--timing, linear)) var(--fillmode, forwards) var(--iteration, 1) var(--playstate, running);
-		counter-reset: N var(--start, 0);
-	}
-	:host::part(number)::before {
-		content: counter(N);
-	}
-	@keyframes N {
-		100% { --start: var(--end, 10); }
-	}
-`)
 customElements.define('ui-number', uiNumber);
