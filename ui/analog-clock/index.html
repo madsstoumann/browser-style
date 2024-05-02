@@ -8,6 +8,9 @@
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
   <link rel="stylesheet" href="ui-analog-clock.css">
+	<style>
+		.--roman { font-family: var(--ff-serif); }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -51,6 +54,27 @@
 		<b></b>
 		<b></b>
 	</div>
+
+	<br>
+	<h2>Variant: Roman</h2>
+	<div class="ui-analog-clock --roman">
+		<i>XII</i>
+		<i>I</i>
+		<i>II</i>
+		<i>III</i>
+		<i>IV</i>
+		<i>V</i>
+		<i>VI</i>
+		<i>VII</i>
+		<i>VIII</i>
+		<i>IX</i>
+		<i>X</i>
+		<i>XI</i>
+		<b></b>
+		<b></b>
+		<b></b>
+	</div>
+
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';
 		import uiAnalogClock from './uiAnalogClock.js';
