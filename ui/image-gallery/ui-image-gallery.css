@@ -1,37 +1,44 @@
 @import '../icon/ui-icon.css';
 @import '../scroll/ui-scroll.css';
-:where(.ui-image-gallery) {
-	--ui-image-gallery-thumb-gap: 1ch;
-	--ui-image-gallery-thumb-w: 110px;
 
-	background: var(--GrayCanvas);
-	container-type: inline-size;
-	display: grid;
-	& img {
-		object-fit: cover;
-		pointer-events: none;
-	}
-	& [role=tablist] {
-		align-content: start;
+@layer bs-component {
+	:where(.ui-image-gallery) {
+		--ui-image-gallery-thumb-gap: 1ch;
+		--ui-image-gallery-thumb-w: 110px;
+		background: var(--CanvasGray);
+		border: var(--ui-image-gallery-bdw, 1px) solid var(--ui-image-gallery-bdc, var(--GrayText));
+		border-radius: var(--ui-image-gallery-bdrs, var(--input-bdrs));
+		container-type: inline-size;
 		display: grid;
-		grid-auto-flow: column;
-		grid-auto-columns: 1fr;
-		overflow: auto;
-		padding: var(--ui-image-gallery-thumb-gap);
-		gap: var(--ui-image-gallery-thumb-gap);
 		& img {
-			height: 100%;
-			min-width: var(--ui-image-gallery-thumb-w);
+			object-fit: cover;
+			pointer-events: none;
 		}
-		& [role="tab"] { border: 2px solid transparent; }
-		& [aria-selected="true"] { border-color: var(--AccentColor); }
-	}
-	@media (min-width: 600px) {
-		grid-template-columns: calc(var(--ui-image-gallery-thumb-w) + (2 * var(--ui-image-gallery-thumb-gap))) 1fr;
 		& [role=tablist] {
-			grid-auto-flow: row;
-			overflow-x: hidden;
-			& img { min-width: auto; }
+			align-content: start;
+			display: grid;
+			grid-auto-flow: column;
+			grid-auto-columns: 1fr;
+			overflow: auto;
+			padding: var(--ui-image-gallery-thumb-gap);
+			gap: var(--ui-image-gallery-thumb-gap);
+			& img {
+				height: 100%;
+				min-width: var(--ui-image-gallery-thumb-w);
+			}
+			& [role="tab"] { border: 1px solid var(--ui-image-gallery-bdc, var(--GrayText)); }
+			& [aria-selected="true"] {
+				border-color: var(--AccentColor);
+				box-shadow: 0 0 0 1px var(--AccentColor);
+			}
+		}
+		@media (min-width: 600px) {
+			grid-template-columns: calc(var(--ui-image-gallery-thumb-w) + (2 * var(--ui-image-gallery-thumb-gap))) 1fr;
+			& [role=tablist] {
+				grid-auto-flow: row;
+				overflow-x: hidden;
+				& img { min-width: auto; }
+			}
 		}
 	}
 }

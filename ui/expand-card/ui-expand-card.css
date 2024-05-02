@@ -1,36 +1,39 @@
 @import '../icon/ui-icon.css';
-:where(.ui-expand-card) {
-	--ui-expand-card-gap: 2ch;
-	border-radius: var(--ui-expand-card-bdrs, 2ch);
-	display: grid;
-	position: relative;
-	& section {
-		border-radius: inherit;
+@layer bs-component {
+	:where(.ui-expand-card) {
+		--ui-expand-card-gap: 2ch;
+		border-radius: var(--ui-expand-card-bdrs, 2ch);
 		display: grid;
-		gap: 1ch;
-		grid-area: 1 / -1;
-		padding: var(--ui-expand-card-gap);
-		transition: all .2s ease-in-out;
-		& > * { margin: 0; }
-		&:last-of-type {
-			opacity: 0;
-			transition: opacity .5s ease-in;
-			& > * {
+		position: relative;
+		& section {
+			align-content: start;
+			border-radius: inherit;
+			display: grid;
+			gap: 1ch;
+			grid-area: 1 / -1;
+			padding: var(--ui-expand-card-gap);
+			transition: all .2s ease-in-out;
+			& > * { margin: 0; }
+			&:last-of-type {
 				opacity: 0;
-				translate: 0 -2em;
-				transition: opacity .33s .33s ease-in, translate .33s .33s linear;
+				transition: opacity .5s ease-in;
+				& > * {
+					opacity: 0;
+					translate: 0 -2em;
+					transition: opacity .33s .33s ease-in, translate .33s .33s linear;
+				}
 			}
 		}
-	}
-	& .ui-button {
-		position: absolute;
-		inset-block: auto var(--ui-expand-card-gap);
-		inset-inline: auto var(--ui-expand-card-gap);
-	}
-	&:has(:checked) {
-		& section:first-of-type { opacity: 0; }
-		& section:last-of-type { opacity: 1;
-			& > * { opacity: 1; translate: 0; }
+		& .ui-button {
+			position: absolute;
+			inset-block: auto var(--ui-expand-card-gap);
+			inset-inline: auto var(--ui-expand-card-gap);
+		}
+		&:has(:checked) {
+			& section:first-of-type { opacity: 0; }
+			& section:last-of-type { opacity: 1;
+				& > * { opacity: 1; translate: 0; }
+			}
 		}
 	}
 }

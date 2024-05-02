@@ -1,55 +1,58 @@
-:where(.ui-testimonial) {
-	--ui-testimonial-accent: #ec4899;
+@layer bs-component {
+	:where(.ui-testimonial) {
+		--ui-testimonial-accent: #ec4899;
 
-	all: unset;
-	background: linear-gradient(var(--_deg, 90deg), var(--ui-testimonial-accent), #000 50%);
-	clip-path: inset(0 0 0 0 round var(--ui-testimonial-bdrs, 1.5em));
-	color: #FFF;
-	container-type: inline-size;
-	display: grid;
-	line-height: 1.2;
-
-	& cite {
-		font: normal 600 75%/1.4 var(--ff-body);
-		& small {
-			color: var(--ui-testimonial-accent);
-			font-weight: 400;
-		}
-	}
-
-	& div {
-		--_fs: 6cqi;
+		all: unset;
+		background: linear-gradient(var(--_deg, 90deg), var(--ui-testimonial-accent), #000 50%);
+		clip-path: inset(0 0 0 0 round var(--ui-testimonial-bdrs, 1.5em));
+		color: #FFF;
+		container-type: inline-size;
 		display: grid;
-		font-size: var(--_fs);
-		gap: var(--_fs);
-		grid-area: 1 / -1;
-		padding: calc(2 * var(--_fs));
-		place-self: center;
-		text-align: center;
-	}
+		line-height: 1.2;
 
-	& img {
-		--_fade: linear-gradient(var(--_deg, 90deg), #000, #0000);
-		filter: saturate(0);
-		grid-area: 1 / -1;
-		mask: var(--_fade) no-repeat;
-		-webkit-mask: var(--_fade) no-repeat;
-		mix-blend-mode: multiply;
-	}
+		& cite {
+			font: normal 600 75%/1.4 var(--ff-body);
+			& small {
+				color: var(--ui-testimonial-accent);
+				font-weight: 400;
+			}
+		}
 
-	@container (width > 20rem) {
 		& div {
-			--_fs: 3cqi;
-			grid-area: 2 / 2 / -1;
-			text-align: start;
+			--_fs: 6cqi;
+			display: grid;
+			font-size: var(--_fs);
+			gap: var(--_fs);
+			grid-area: 1 / -1;
+			padding: calc(2 * var(--_fs));
+			place-self: center;
+			text-align: center;
 		}
-	}
 
-	&.--vertical {
-		--_deg: 180deg;
-		& > * {
-			grid-area: unset;
+		& img {
+			--_fade: linear-gradient(var(--_deg, 90deg), #000, #0000);
+			filter: saturate(0);
+			grid-area: 1 / -1;
+			mask: var(--_fade) no-repeat;
+			-webkit-mask: var(--_fade) no-repeat;
+			mix-blend-mode: multiply;
+			width: 100%;
 		}
+
+		@container (width > 20rem) {
+			& div {
+				--_fs: 3cqi;
+				grid-area: 2 / 2 / -1;
+				text-align: start;
+			}
+		}
+
+		&.--vertical {
+			--_deg: 180deg;
+			& > * {
+				grid-area: unset;
+			}
+		}
+		&:dir(rtl) { --_deg: -90deg; }
 	}
-	&:dir(rtl) { --_deg: -90deg; }
 }

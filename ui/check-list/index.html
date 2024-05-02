@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-check-list.css">
 	<link rel="stylesheet" href="../chip/ui-chip.css">
@@ -14,6 +14,10 @@
 	<h1>UI: Components</h1>
 
 	<h2>Check List</h2>
+	<p>
+		A check list is a list of items that can be checked off as they are completed.<br>
+		Built with a <code>ul</code> element containing a series of <code>li</code> elements. Each <code>li</code> element contains a <code>label</code> element with an <code>input</code> element of type <code>checkbox</code> and a <code>span</code> element to display the text of the list item.
+	</p>
 
 	<ul class="ui-check-list">
 		<li>
@@ -38,6 +42,62 @@
 			<span class="ui-chip fs-xs bg-error --light">error</span>
 		</li>
 	</ul>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ul class="ui-check-list">
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="1" class="--round" checked>
+					<span>Check List Item 1</span>
+				</label>
+				<span class="ui-chip fs-xs bg-success --light">new</span>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="2" class="--round">
+					<span>Check List Item 2</span>
+				</label>
+				<span class="ui-chip fs-xs bg-success --light">new</span>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="3" class="--round">
+					<span>Check List Item with a longer name</span>
+				</label>
+				<span class="ui-chip fs-xs bg-error --light">error</span>
+			</li>
+		</ul>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<ul class="ui-check-list">
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="1" class="--round" checked>
+					<span>Check List Item 1</span>
+				</label>
+				<span class="ui-chip fs-xs bg-success --light">new</span>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="2" class="--round">
+					<span>Check List Item 2</span>
+				</label>
+				<span class="ui-chip fs-xs bg-success --light">new</span>
+			</li>
+			<li>
+				<label>
+					<input type="checkbox" name="check-list" value="3" class="--round">
+					<span>Check List Item with a longer name</span>
+				</label>
+				<span class="ui-chip fs-xs bg-error --light">error</span>
+			</li>
+		</ul>
+	</div>
 
 </body>
 </html>

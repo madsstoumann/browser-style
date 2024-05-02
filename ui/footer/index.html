@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-footer.css">
 
@@ -17,9 +17,156 @@
 	<h1>UI: Components</h1>
 
 	<h2>Footer</h2>
+	<p>
+		The <strong>Footer</strong> component is a container for site-wide information, such as navigation, contact details, and copyright information.
+	</p>
 	<p>Used here with <a href="/ui/breadcrumbs/">Breadcrumbs</a> and <a href="/ui/divider">Divider</a>.</p>
 
 	<footer class="ui-footer">
+		<ol class="ui-breadcrumbs">
+			<li>
+				<a href="/">Home</a>
+			</li>
+			<li>
+				<a href="#">Stores</a>
+			</li>
+			<li>
+				Store Locator
+			</li>
+		</ol>
+		<hr class="ui-divider --fade">
+		<nav class="ui-grid --sm-c-2 --md-c-4">
+			<div>
+				<h4>Shop</h4>
+				<a href="">Shop All</a>
+				<a href="">New Arrivals</a>
+				<a href="">Best Sellers</a>
+				<a href="">Sale</a>
+				<br>
+				<h4>Account</h4>
+				<a href="">My Account</a>
+				<a href="">Order Status</a>
+				<a href="">Shipping & Returns</a>
+			</div>
+			<div>
+				<h4>Stores</h4>
+				<a href="">Store Locator</a>
+				<a href="">Events</a>
+				<a href="">Careers</a>
+				<br>
+				<h4>Help</h4>
+				<a href="">Contact Us</a>
+				<a href="">FAQs</a>
+				<a href="">Privacy Policy</a>
+				<a href="">Terms of Service</a>
+			</div>
+			<div>
+				<h4>Company</h4>
+				<a href="">About Us</a>
+				<a href="">Careers</a>
+				<a href="">Press</a>
+				<a href="">Affiliates</a>
+				<a href="">Wholesale</a>
+				<br>
+				<h4>Contact</h4>
+				<a href="">Email Us</a>
+				<a href="">1-800-555-5555</a>
+			</div>
+			<div>
+				<h4>Follow Us</h4>
+				<a href="">Facebook</a>
+				<a href="">Twitter</a>
+				<a href="">Instagram</a>
+				<a href="">Pinterest</a>
+				<a href="">YouTube</a>
+				<br>
+				<h4>Newsletter</h4>
+				<a href="">Sign Up</a>
+				<a href="">Unsubscribe</a>
+			</div>
+		</nav>
+		<hr class="ui-divider --dotted">
+		<div>
+			<span>© 2023 Company Name. All Rights Reserved.</span>
+			<span>Language | Country</span>
+		</div>
+	</footer>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<footer class="ui-footer cs-opposite">
+		<ol class="ui-breadcrumbs">
+			<li>
+				<a href="/">Home</a>
+			</li>
+			<li>
+				<a href="#">Stores</a>
+			</li>
+			<li>
+				Store Locator
+			</li>
+		</ol>
+		<hr class="ui-divider --fade">
+		<nav class="ui-grid --sm-c-2 --md-c-4">
+			<div>
+				<h4>Shop</h4>
+				<a href="">Shop All</a>
+				<a href="">New Arrivals</a>
+				<a href="">Best Sellers</a>
+				<a href="">Sale</a>
+				<br>
+				<h4>Account</h4>
+				<a href="">My Account</a>
+				<a href="">Order Status</a>
+				<a href="">Shipping & Returns</a>
+			</div>
+			<div>
+				<h4>Stores</h4>
+				<a href="">Store Locator</a>
+				<a href="">Events</a>
+				<a href="">Careers</a>
+				<br>
+				<h4>Help</h4>
+				<a href="">Contact Us</a>
+				<a href="">FAQs</a>
+				<a href="">Privacy Policy</a>
+				<a href="">Terms of Service</a>
+			</div>
+			<div>
+				<h4>Company</h4>
+				<a href="">About Us</a>
+				<a href="">Careers</a>
+				<a href="">Press</a>
+				<a href="">Affiliates</a>
+				<a href="">Wholesale</a>
+				<br>
+				<h4>Contact</h4>
+				<a href="">Email Us</a>
+				<a href="">1-800-555-5555</a>
+			</div>
+			<div>
+				<h4>Follow Us</h4>
+				<a href="">Facebook</a>
+				<a href="">Twitter</a>
+				<a href="">Instagram</a>
+				<a href="">Pinterest</a>
+				<a href="">YouTube</a>
+				<br>
+				<h4>Newsletter</h4>
+				<a href="">Sign Up</a>
+				<a href="">Unsubscribe</a>
+			</div>
+		</nav>
+		<hr class="ui-divider --dotted">
+		<div>
+			<span>© 2023 Company Name. All Rights Reserved.</span>
+			<span>Language | Country</span>
+		</div>
+	</footer>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<footer class="ui-footer" dir="rtl">
 		<ol class="ui-breadcrumbs">
 			<li>
 				<a href="/">Home</a>

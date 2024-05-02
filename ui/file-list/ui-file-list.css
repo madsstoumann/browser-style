@@ -1,28 +1,31 @@
-.ui-file-list {
-	--ui-file-list-img-sz: 4em;
-	border-radius: var(--input-bdrs);
-	font-size: smaller;
-	margin-block: 2ch;
-	padding: 0;
-	& img {
+@layer bs-component {
+	:where(.ui-file-list) {
+		--ui-file-list-img-sz: 4em;
 		border-radius: var(--input-bdrs);
-		border: 1px solid var(--ButtonBorder);
-		height: var(--ui-file-list-img-sz);
-		margin-block: .5ch;
-		object-fit: contain;
-		width: var(--ui-file-list-img-sz);
-	}
-	& li {
-		align-items: center;
-		display: flex;
-		gap: 1ch;
-		padding: 0.5ch 1ch;
-		&:not(:last-of-type) { border-bottom: 1px solid var(--ButtonBorder); }
-		&:hover {
-			background: var(--ButtonFace);
-			cursor: pointer;
-			text-decoration: line-through;
+		font-size: smaller;
+		margin: 0;
+		padding: 0;
+		&:not(:empty) { margin-block-start: 2ch; }
+		& img {
+			border-radius: var(--input-bdrs);
+			border: 1px solid var(--ButtonBorder);
+			height: var(--ui-file-list-img-sz);
+			margin-block: .5ch;
+			object-fit: contain;
+			width: var(--ui-file-list-img-sz);
 		}
-		& >* { pointer-events: none; }
+		& li {
+			align-items: center;
+			display: flex;
+			gap: 1ch;
+			padding: 0.5ch 1ch;
+			&:not(:last-of-type) { border-bottom: 1px solid var(--ButtonBorder); }
+			&:hover {
+				background: var(--CanvasGray);
+				cursor: pointer;
+				text-decoration: line-through;
+			}
+			& >* { pointer-events: none; }
+		}
 	}
 }

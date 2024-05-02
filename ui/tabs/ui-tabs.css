@@ -1,58 +1,59 @@
 @import '../scroll/ui-scroll.css';
-.ui-tabs {
-	& [role=tab] {
-		background: var(--ui-tabs-tab-bg, inherit);
-		border-block-end: var(--ui-tabs-bdw, 3px) solid transparent;
-		border-radius: var(--ui-tabs-tab-bdrs, 0);
-		color: currentColor;
-		font-size: var(--ui-tabs-tab-fs, inherit);
-		font-weight: 500;
-		padding: var(--ui-tabs-tab-p, .5ch);
-		text-decoration: none;
-		white-space: nowrap;
-		&[aria-selected=true] { border-color: var(--AccentColor); }
-		&:focus-visible { outline-offset: -2px; }
-		&:hover:not([aria-selected=true]) { border-color: var(--ButtonBorder); }
-	}
-	& [role=tablist] {
-		background: var(--ui-tabs-bg, inherit);
-		border-radius: var(--ui-tabs-bdrs, 0);
-		display: flex;
-		gap: var(--ui-tabs-gap, 3ch);
-		justify-content: var(--ui-tabs-jc, start);
-		overflow-x: auto;
-		padding: var(--ui-tabs-p, initial);
-		width: var(--ui-tabs-w, initial);
-	}
-	& [role=tabpanel] {
-		background: var(--GrayCanvas);
-		border-radius: var(--input-bdrs);
-		flex: 0 0 100%;
-		margin: var(--ui-tabs-panel-m, 2ch 0 0);
-		padding: var(--ui-tabs-panel-p, 1ch 2ch);
-		scroll-snap-align: start;
-		& img {
-			border-radius: inherit;
-			width: 100%;
+@layer bs-component {
+	:where(.ui-tabs) {
+		& [role=tab] {
+			background: var(--ui-tabs-tab-bg, inherit);
+			border-block-end: var(--ui-tabs-bdw, 3px) solid transparent;
+			border-radius: var(--ui-tabs-tab-bdrs, 0);
+			color: currentColor;
+			font-size: var(--ui-tabs-tab-fs, inherit);
+			font-weight: 500;
+			padding: var(--ui-tabs-tab-p, .5ch);
+			text-decoration: none;
+			white-space: nowrap;
+			&[aria-selected=true] { border-color: var(--AccentColor); }
+			&:focus-visible { outline-offset: -2px; }
+			&:hover:not([aria-selected=true]) { border-color: var(--ButtonBorder); }
 		}
-	}
-	&.--group {
-		--ui-tabs-bdrs: calc(var(--input-bdrs) + var(--ui-tabs-p));
-		--ui-tabs-bdw: 0;
-		--ui-tabs-bg: var(--GrayCanvas);
-		--ui-tabs-tab-fs: smaller;
-		--ui-tabs-gap: 0;
-		--ui-tabs-jc: space-between;
-		--ui-tabs-p: .25em;
-		--ui-tabs-tab-p: .5ch 1ch;
-		--ui-tabs-w: fit-content;
-		& [aria-selected=false] + [aria-selected=false] {
-			border-inline-start: 1px solid var(--ButtonBorder);
+		& [role=tablist] {
+			background: var(--ui-tabs-bg, inherit);
+			border-radius: var(--ui-tabs-bdrs, 0);
+			display: flex;
+			gap: var(--ui-tabs-gap, 3ch);
+			justify-content: var(--ui-tabs-jc, start);
+			overflow-x: auto;
+			padding: var(--ui-tabs-p, initial);
+			width: var(--ui-tabs-w, initial);
 		}
-		& [aria-selected=true] {
-			--ui-tabs-tab-bdrs: var(--input-bdrs);
-			--ui-tabs-tab-bg: Canvas;
+		& [role=tabpanel] {
+			background: var(--CanvasGray);
+			border-radius: var(--input-bdrs);
+			flex: 0 0 100%;
+			margin: var(--ui-tabs-panel-m, 2ch 0 0);
+			padding: var(--ui-tabs-panel-p, 1ch 2ch);
+			scroll-snap-align: start;
+			& img {
+				border-radius: inherit;
+				width: 100%;
+			}
+		}
+		&.--group {
+			--ui-tabs-bdrs: calc(var(--input-bdrs) + var(--ui-tabs-p));
+			--ui-tabs-bdw: 0;
+			--ui-tabs-bg: var(--CanvasGray);
+			--ui-tabs-tab-fs: smaller;
+			--ui-tabs-gap: 0;
+			--ui-tabs-jc: space-between;
+			--ui-tabs-p: .25em;
+			--ui-tabs-tab-p: .5ch 1ch;
+			--ui-tabs-w: fit-content;
+			& [aria-selected=false] + [aria-selected=false] {
+				border-inline-start: 1px solid var(--ButtonBorder);
+			}
+			& [aria-selected=true] {
+				--ui-tabs-tab-bdrs: var(--input-bdrs);
+				--ui-tabs-tab-bg: Canvas;
+			}
 		}
 	}
 }
-

@@ -1,13 +1,22 @@
 @import '../icon/ui-icon.css';
-:where(.ui-notification, .ui-toast) {
-	--button-bg: transparent;
-	--button-p: .5ch;
-	align-items: center;
-	background: var(--ui-notification-bg, var(--GrayCanvas));
-	border: 0;
-	display: flex;
-	font-size: smaller;
-	gap: 1ch;
-	justify-content: space-between;
-	padding: 1ch 2ch;
+
+@layer bs-component {
+	:where(.ui-notification, .ui-toast) {
+		--button-bg: transparent;
+		--button-p: .5ch;
+		align-items: center;
+		background: var(--ui-notification-bg, var(--CanvasGray));
+		border: 0;
+		border-radius: var(--input-bdrs);
+		display: flex;
+		font-size: smaller;
+		gap: 1ch;
+		justify-content: space-between;
+		padding-block: 1ch;
+		padding-inline: 2ch 1.25ch;
+		& :is(button, .ui-button) {
+			--button-bg: var(--_bg, var(--ButtonFace));
+			--button-c: var(--_c, #FFF);
+		}
+	}
 }

@@ -1,0 +1,122 @@
+@layer bs-component {
+	:where(.ui-menu) {
+		--VisitedText: currentColor;
+		--ui-menu-pb: .75em;
+		--ui-menu-pi: 1.5em;
+		--ui-menu-panel-bxsh: 0px 6px 15px rgba(0, 0, 0, 0.12);
+		--ui-menu-panel-mah: 40vh;
+
+		align-items: center;
+		background: var(--ui-menu-bg, var(--CanvasGray));
+		color: var(--ui-menu-c, var(--CanvasText));
+		display: flex;
+		font-size: var(--ui-menu-fs, smaller);
+		justify-content: space-between;
+		margin-inline: auto;
+		max-inline-size: var(--ui-menu-desktop-w, 1200px);
+		padding:
+			var(--ui-menu-pb)
+			calc(env(safe-area-inset-right) + var(--ui-menu-pi))
+			var(--ui-menu-pb)
+			calc(env(safe-area-inset-left) + var(--ui-menu-pi));
+			position: relative;
+		& a {
+			color: currentColor;
+			text-decoration: none;
+		}
+		& > label:has([type=checkbox]) {
+			font-size: 1rem;
+			gap: 0;
+		}
+		& > label:has(:checked)::after { 
+			background: rgba(0,0,0,.25);
+			content: "";
+			inset: 0;
+			position: fixed;
+		}
+		& :is(summary, ui-summary) {
+			cursor: pointer;
+			gap: 1ch;
+			justify-content: space-between;
+		}
+		&:has(input:checked) .ui-menu-flyout { translate: 0; }
+		& .ui-menu-flyout {
+			background: var(--ui-menu-flyout-bg, inherit);
+			color: var(--ui-menu-flyout-c, inherit);
+			display: flex;
+			flex-direction: column;
+			inset: 0 calc(100vw - var(--ui-mobile-w, 80vw)) 0 0;
+			justify-content: space-between;
+			overflow-y: auto;
+			padding: var(--ui-menu-flyout-p, 4ch 2ch 2ch);
+			position: fixed;
+			transition: translate .2s cubic-bezier(.4, 0, .2, 1);
+			translate: -100vw 0;
+			& > nav {
+				display: flex;
+				flex: 1;
+				flex-direction: var(--ui-menu-dir, column);
+				gap: var(--ui-menu-mobile-gap, 1em);
+				&:last-of-type { justify-content: end; }
+			}
+		}
+		@media (min-width: 768px) {
+			& .ui-menu-flyout {
+				--ui-menu-dir: row;
+				display: contents;
+				color: inherit;
+				font-size: revert;
+				& > nav {
+					align-items: center;
+					flex: unset;
+					gap: var(--ui-menu-desktop-gap, 2.5em);
+				}
+			}
+			& :is(.ui-menu-label) + :is(.ui-menu-expand, ui-expand) {
+				background: Canvas;
+				box-shadow: var(--ui-menu-panel-bxsh); 
+				left: 0;
+				position: absolute;
+				top: 100%;
+				width: 100%;
+				& > :is(.ui-menu-panel, ui-panel) {
+					margin-inline: auto;
+					max-height: var(--ui-menu-panel-mah);
+					padding-inline: var(--ui-menu-pi);
+					width: 100%;
+					& > * { padding-block: var(--ui-menu-pb); }
+				}
+			}
+			& > label:has([type=checkbox]) { display: none; }
+
+			/* Modifier: Stretch to edge-of-screen */
+			&.--stretch {
+				& :is(.ui-menu-label) + :is(.ui-menu-expand, ui-expand) {
+					box-shadow: none;
+					& > :is(.ui-menu-panel, ui-panel)::before {
+						box-shadow: var(--ui-menu-panel-bxsh); 
+					}
+				}
+				&::before,
+				& :is(summary, ui-summary) + :is(.ui-menu-expand, ui-expand) > :is(.ui-menu-panel, ui-panel)::before {
+					background: inherit;
+					content: "";
+					height: 100%;
+					left: calc(50% - 50vw);
+					overflow: hidden;
+					position: absolute;
+					top: 0;
+					width: 100vw;
+					z-index: -1;
+				}
+			}
+		}
+	}
+
+	/* === Prevent Scrolling, when flyout is visible === */
+	@media (max-width: 767px) {
+		body:has(.ui-menu):has(input:checked) {
+			overflow: hidden;
+		}
+	}
+}

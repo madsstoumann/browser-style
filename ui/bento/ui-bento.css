@@ -1,27 +1,29 @@
 @import url('/ui/grid/ui-grid.css');
-:where(.ui-bento) {
-	--ui-grid-cg: clamp(0.25rem, 0.0714rem + 0.5714vw, 0.5rem);
-	--ui-grid-rg: var(--ui-grid-cg);
-	list-style: none;
-	padding: 0;
-	& li {
-		background-color: var(--GrayCanvas);
-		border-radius: clamp(0.25rem, -0.2857rem + 1.7143vw, 1rem);
-		color: CanvasText;
-		container-type: inline-size;
-		display: grid;
-		height: 100%;
-		place-content: center;
-		text-align: center;
-		width: 100%;
-		& >* {
+@layer bs-component {
+	:where(.ui-bento) {
+		--ui-grid-cg: clamp(0.25rem, 0.0714rem + 0.5714vw, 0.5rem);
+		--ui-grid-rg: var(--ui-grid-cg);
+		list-style: none;
+		padding: 0;
+		& li {
+			background-color: var(--CanvasGray);
+			border-radius: clamp(0.25rem, -0.2857rem + 1.7143vw, 1rem);
+			color: CanvasText;
+			container-type: inline-size;
 			display: grid;
-			font-family: system-ui;
-			font-size: 15cqi;
-			gap: 2cqi;
-			line-height: 1;
-			padding: 1ch;
-			& small { font-size: 70%; }
+			height: 100%;
+			place-content: center;
+			text-align: center;
+			width: 100%;
+			& >* {
+				display: grid;
+				font-family: system-ui;
+				font-size: 15cqi;
+				gap: 2cqi;
+				line-height: 1;
+				padding: 1ch;
+				& small { font-size: 70%; }
+			}
 		}
 	}
 }

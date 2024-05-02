@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-color-swatch.css">
 </head>
@@ -13,6 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Color Swatch</h2>
+	<p>
+		Small component allowing users to choose from a palette of predefined colors displayed as clickable swatches.
+	</p>
 	<fieldset class="ui-color-swatch">
 		<legend>Color Swatch</legend>
 		<label aria-label="dusty blue">
@@ -31,6 +34,52 @@
 			<input type="radio" name="colorswatch" value="" style="--_bg:linear-gradient(60deg, lightgreen, lightpink);--_c:#FFF;" class="ui-color-input">
 		</label>
 	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<fieldset class="ui-color-swatch">
+			<legend>Color Swatch</legend>
+			<label aria-label="dusty blue">
+				<input type="radio" name="colorswatch-cs" value="#BA2F30" style="--_bg:#53739a;" class="ui-color-input">
+			</label>
+			<label aria-label="dusty green">
+				<input type="radio" name="colorswatch-cs" value="#3D9354" style="--_bg:#689d76;" class="ui-color-input">
+			</label>
+			<label aria-label="dusty purple">
+				<input type="radio" name="colorswatch-cs" value="#FEA330" style="--_bg:#863d8b;" checked class="ui-color-input">
+			</label>
+			<label aria-label="gradient">
+				<input type="radio" name="colorswatch-cs" value="" style="--_bg:linear-gradient(135deg, crimson, orange);--_c:#000;" class="ui-color-input">
+			</label>
+			<label aria-label="gradient">
+				<input type="radio" name="colorswatch-cs" value="" style="--_bg:linear-gradient(60deg, lightgreen, lightpink);--_c:#FFF;" class="ui-color-input">
+			</label>
+		</fieldset>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<fieldset class="ui-color-swatch">
+			<legend>Color Swatch</legend>
+			<label aria-label="dusty blue">
+				<input type="radio" name="colorswatch-rtl" value="#BA2F30" style="--_bg:#53739a;" class="ui-color-input">
+			</label>
+			<label aria-label="dusty green">
+				<input type="radio" name="colorswatch-rtl" value="#3D9354" style="--_bg:#689d76;" class="ui-color-input">
+			</label>
+			<label aria-label="dusty purple">
+				<input type="radio" name="colorswatch-rtl" value="#FEA330" style="--_bg:#863d8b;" checked class="ui-color-input">
+			</label>
+			<label aria-label="gradient">
+				<input type="radio" name="colorswatch-rtl" value="" style="--_bg:linear-gradient(135deg, crimson, orange);--_c:#000;" class="ui-color-input">
+			</label>
+			<label aria-label="gradient">
+				<input type="radio" name="colorswatch-rtl" value="" style="--_bg:linear-gradient(60deg, lightgreen, lightpink);--_c:#FFF;" class="ui-color-input">
+			</label>
+		</fieldset>
+	</div>
 
 	<script type="module">
 		import { init } from './../../assets/js/common.js';

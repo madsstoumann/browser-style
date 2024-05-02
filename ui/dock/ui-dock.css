@@ -1,53 +1,56 @@
 @import '../icon/ui-icon-svg.css';
-:where(.ui-dock) {
-	--ui-dock-gap: .66em;
-	--ui-dock-item-bdrs: .75em;
-	--ui-dock-item-sz: 3em;
-	--VisitedText: currentColor;
 
-	--Shade-20: color-mix(in srgb, CanvasText, transparent 80%);
-  --Shade-30: color-mix(in srgb, CanvasText, transparent 70%);
+@layer bs-component {
+	:where(.ui-dock) {
+		--icon-sz: 2em;
+		--ui-dock-gap: .66em;
+		--ui-dock-item-bdrs: .75em;
+		--ui-dock-item-sz: 3em;
+		--VisitedText: currentColor;
 
-	all: unset;
-	backdrop-filter: blur(10px);
-	background-color: var(--ui-dock-bg, color-mix(in srgb, Canvas, transparent 45%));
-	border-radius: calc(var(--ui-dock-item-bdrs) + var(--ui-dock-gap));
-	box-shadow: 0 0 20px -5px var(--Shade-30), 0 0 12px -7px var(--Shade-20);
-	direction: ltr;
-	display: grid;
-	gap: var(--ui-dock-gap);
-	grid-auto-flow: column;
-	padding: var(--ui-dock-gap);
-	place-content: center;
-	width: fit-content;
+		--Shade-20: color-mix(in srgb, CanvasText, transparent 80%);
+		--Shade-30: color-mix(in srgb, CanvasText, transparent 70%);
 
-	& li {
-		background: var(--ButtonFace);
-		border-radius: var(--ui-dock-item-bdrs);
-		height: var(--ui-dock-item-sz);
-		list-style: none;
-		padding: .5em;
-		position: relative;
-		width: var(--ui-dock-item-sz);
-		& a { color: inherit; }
-		&.--open {
-			background: var(--AccentColor);
-			color: var(--AccentColorText);
-			&::after {
-				background-color: var(--CanvasText);
-				border-radius: 50%;
-				bottom: -.5em;
-				content: '';
-				display: block;
-				height: .25em;
-				left: 50%;
-				position: absolute;
-				translate: -50% 0;
-				width: .25em;
+		all: unset;
+		backdrop-filter: blur(10px);
+		background-color: var(--ui-dock-bg, light-dark(var(--Canvas), var(--CanvasGray)));
+		border-radius: calc(var(--ui-dock-item-bdrs) + var(--ui-dock-gap));
+		box-shadow: 0 0 20px -5px var(--Shade-30), 0 0 12px -7px var(--Shade-20);
+		display: grid;
+		gap: var(--ui-dock-gap);
+		grid-auto-flow: column;
+		padding: var(--ui-dock-gap);
+		place-content: center;
+		width: fit-content;
+
+		& li {
+			background: var(--ButtonFace);
+			border-radius: var(--ui-dock-item-bdrs);
+			height: var(--ui-dock-item-sz);
+			list-style: none;
+			padding: .5em;
+			position: relative;
+			width: var(--ui-dock-item-sz);
+			& a { color: inherit; }
+			&.--open {
+				background: var(--AccentColor);
+				color: var(--AccentColorText);
+				&::after {
+					background-color: var(--CanvasText);
+					border-radius: 50%;
+					bottom: -.5em;
+					content: '';
+					display: block;
+					height: .25em;
+					left: 50%;
+					position: absolute;
+					translate: -50% 0;
+					width: .25em;
+				}
 			}
-		}
-		&:hover {
-			box-shadow: 0 0 10px -2.5px rgba(0,0,0,.3), 0 0 6px -3px rgba(0,0,0,.2);
+			&:hover {
+				box-shadow: 0 0 10px -2.5px rgba(0,0,0,.3), 0 0 6px -3px rgba(0,0,0,.2);
+			}
 		}
 	}
 }

@@ -1,14 +1,16 @@
-:where(.ui-tag) {
-	background: var(--ui-tag-bg, var(--GrayCanvas));
-	border-radius: 2em;
-	color: var(--ui-tag-c, var(--CanvasText));
-	display: inline-grid;
-	font-size: smaller;
-	grid-template-columns: 1fr;
-	padding: var(--ui-tag-p, .25ch 1.5ch);
-	user-select: none;
-	&:has(input:checked) {
-		--ui-tag-bg: var(--AccentColor);
-		--ui-tag-c: var(--AccentColorText);
+@layer bs-component {
+	:where(.ui-tag) {
+		background: var(--ui-tag-bg, var(--CanvasGray));
+		border-radius: 2em;
+		color: var(--ui-tag-c, var(--CanvasText));
+		display: inline-grid;
+		font-size: smaller;
+		grid-template-columns: 1fr;
+		padding: var(--ui-tag-p, .25ch 1.5ch);
+		user-select: none;
+		&:has(input:checked) {
+			--ui-tag-bg: var(--AccentColor);
+			--ui-tag-c: var(--AccentColorText);
+		}
 	}
 }

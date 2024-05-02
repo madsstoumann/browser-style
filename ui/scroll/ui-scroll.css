@@ -1,44 +1,47 @@
-/* Can be use with ui-grid-cols.css */
+/* Can be used with ui-grid-cols.css */
 @import url('ui-scroll-nav.css');
-:where(.ui-scroll) {
-	display: flex;
-	gap: var(--ui-scroll-gap, 1ch);
-	grid-area: 1 / 1; 
-	overflow-y: hidden;
-	scroll-behavior: smooth;
-	scroll-snap-type: x mandatory;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-	&::-webkit-scrollbar { display: none; }
-	&[data-scroll-behavior] { scroll-behavior: auto; }
-	& > * {
-		--_w: calc((var(--ui-scroll-preview, 100%) / var(--ui-grid-cols, 1)) - (((var(--ui-grid-cols, 1) - 1) / var(--ui-grid-cols, 1)) * var(--ui-scroll-gap, 0%)));
-		flex: 0 0 var(--_w);
-		scroll-snap-align: start;
+
+@layer bs-component {
+	:where(.ui-scroll) {
+		display: flex;
+		gap: var(--ui-scroll-gap, 1ch);
+		grid-area: 1 / 1; 
+		overflow-y: hidden;
+		scroll-behavior: smooth;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		&::-webkit-scrollbar { display: none; }
+		&[data-scroll-behavior] { scroll-behavior: auto; }
+		& > * {
+			--_w: calc((var(--ui-scroll-preview, 100%) / var(--ui-grid-cols, 1)) - (((var(--ui-grid-cols, 1) - 1) / var(--ui-grid-cols, 1)) * var(--ui-scroll-gap, 0%)));
+			flex: 0 0 var(--_w);
+			scroll-snap-align: start;
+		}
+		&.--preview { --ui-scroll-preview: 80%; }
+		&:focus-visible + nav { opacity: 1; }
 	}
-	&.--preview { --ui-scroll-preview: 80%; }
-	&:focus-visible + nav { opacity: 1; }
+	/* Outer Wrapper: */
+	*:has(> .ui-scroll + .ui-scroll-nav) {
+		display: grid;
+	}
+	/* Change grid-layout, if NAV is outside: */
+	.ui-scroll:has(+ .--outside) {
+		grid-column: 2;
+		grid-row: 1;
+	}
+	/* Change Outer Wrapper-gap, if NAV is outside: */
+	*:has(> .ui-scroll + .--outside) {
+		gap: var(--ui-scroll-gap);
+	}
+	.ui-scroll[data-scroll-nav="--hidden"] + nav {
+		display: none;
+	}
+	/* Modifier: */
+	.--hide-scrollbar {
+		scrollbar-width: none;
+		&::-webkit-scrollbar { display: none; }
+	}
+	/* Only allow navigation through JavaScript: */
+	.--nav-only { overflow-x: hidden; }
 }
-/* Outer Wrapper: */
-*:has(> .ui-scroll + .ui-scroll-nav) {
-	display: grid;
-}
-/* Change grid-layout, if NAV is outside: */
-.ui-scroll:has(+ .--outside) {
-	grid-column: 2;
-	grid-row: 1;
-}
-/* Change Outer Wrapper-gap, if NAV is outside: */
-*:has(> .ui-scroll + .--outside) {
-	gap: var(--ui-scroll-gap);
-}
-.ui-scroll[data-scroll-nav="--hidden"] + nav {
-	display: none;
-}
-/* Modifier: */
-.--hide-scrollbar {
-	scrollbar-width: none;
-	&::-webkit-scrollbar { display: none; }
-}
-/* Only allow navigation through JavaScript: */
-.--nav-only { overflow-x: hidden; }

@@ -1,18 +1,20 @@
-.ui-position {
-	all: unset;
-	display: grid;
-	gap: calc(var(--input-check-sz) / 2);
-	grid-template-columns: repeat(3, var(--input-check-sz));
-	inline-size: fit-content;
+@layer bs-component {
+	:where(.ui-position) {
+		all: unset;
+		display: grid;
+		gap: calc(var(--input-check-sz) / 2);
+		grid-template-columns: repeat(3, var(--input-check-sz));
+		inline-size: fit-content;
 
-	& input {
-		--input-bdw: 0;
-		&:not(:checked) { background-color: var(--ButtonFace); }
-		&:checked { box-shadow: none; }
-	}
-	& label { display: contents; }
-	& legend {
-		grid-column: 1 span 3;
-		padding-block-end: var(--label-rg);
+		& input {
+			--input-bdw: 0;
+			&:not(:checked) { background-color: var(--ButtonFace); }
+			&:checked { box-shadow: none; }
+		}
+		& label { display: contents; }
+		& legend {
+			grid-column: 1 span 3;
+			padding-block-end: var(--label-rg);
+		}
 	}
 }

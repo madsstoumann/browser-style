@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-progress.css">
 </head>
@@ -13,6 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Progress</h2>
+	<p>
+		<strong>Progress</strong> is a component that displays a progress bar. It is used to show the progress of a task or action. The <code>value</code> attribute specifies how much of the task has been completed. The <code>max</code> attribute specifies the total amount of work required to complete the task.
+	</p>
 
 	<fieldset>
 		<p>
@@ -21,12 +24,39 @@
 				<progress value="40" max="100"></progress>
 			</label>
 		</p>
+	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<fieldset class="cs-opposite">
 		<p>
 			<label>
-				Progress, no value
-				<progress max="100"></progress>
+				Progress
+				<progress value="40" max="100"></progress>
 			</label>
 		</p>
 	</fieldset>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<fieldset dir="rtl">
+		<p>
+			<label>
+				Progress
+				<progress value="40" max="100"></progress>
+			</label>
+		</p>
+	</fieldset>
+
+	<br>
+	<h2>Variant: Indeterminate</h2>
+	<fieldset>
+	<p>
+		<label>
+			Progress, no value
+			<progress max="100"></progress>
+		</label>
+	</p>
+</fieldset>
 </body>
 </html>

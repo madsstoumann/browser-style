@@ -1,23 +1,33 @@
-:where(dl) {
-	--ui-decription-list-gap: 2ch;
-	&.--card {
-		& dd, & dt {
-			background-color: var(--GrayCanvas);
-			padding-inline: var(--ui-decription-list-gap);
+@layer bs-component {
+	:where(dl) {
+		--ui-decription-list-gap: 2ch;
+		&.--card {
+			& dd, & dt {
+				background-color: var(--CanvasGray);
+				border-radius: var(--input-bdrs);
+				padding-inline: var(--ui-decription-list-gap);
+			}
+			& dd {
+				margin: 0 0 var(--ui-decription-list-gap) 0;
+				padding-block: 0 var(--ui-decription-list-gap);
+			}
+			& dt { padding-block: var(--ui-decription-list-gap) 0; }
 		}
-		& dd {
-			margin: 0 0 var(--ui-decription-list-gap) 0;
-			padding-block: 0 var(--ui-decription-list-gap);
+		&.--list {
+			display: grid;
+			column-gap: 1ch;
+			grid-template-columns: min-content 1fr;
+			& dd { margin: 0; }
+			& dt::after { content: ":"; }
 		}
-		& dt { padding-block: var(--ui-decription-list-gap) 0; }
-	}
-	&.--table {
-		display: grid;
-  	grid-template-columns: 1fr 2fr;
-		& :is(dd,dt) {
-			border-block-end: 1px solid var(--ButtonBorder);
-			margin: 0;
-			padding-block: var(--ui-decription-list-gap);
+		&.--table {
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			& :is(dd,dt) {
+				border-block-end: 1px solid var(--ButtonBorder);
+				margin: 0;
+				padding-block: var(--ui-decription-list-gap);
+			}
 		}
 	}
 }

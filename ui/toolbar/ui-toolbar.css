@@ -1,41 +1,47 @@
 @import "../icon/ui-icon-svg.css";
-:where(.ui-toolbar) {
-	--ui-toolbar-bdrs: .25em;
-	--ui-toolbar-bdw: 1px;
-	--button-bg: Canvas;
-	--button-p: .5ch;
-	--icon-sz: 1.75em;
-	--input-bdrs: 0;
+@layer bs-component {
+	:where(.ui-toolbar) {
+		--ui-toolbar-bdrs: .25em;
+		--ui-toolbar-bdw: 1px;
+		--button-bg: Canvas;
+		--button-p: .5ch;
+		--icon-sz: 1.75em;
+		--input-bdrs: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--ui-toolbar-group-gap, 1ch);
 
-	direction: ltr;
-	display: flex;
-	flex-wrap: wrap;
-	gap: var(--ui-toolbar-group-gap, 1ch);
-
-	& fieldset {
-		all: unset;
-		background: var(--ButtonBorder);
-		border-radius: var(--ui-toolbar-bdrs);
-		display: inline-flex;
-		gap: var(--ui-toolbar-bdw);
-		padding: var(--ui-toolbar-bdw);
-		position: relative;
-		& :is(button, select) {
-			&.--active { color: var(--AccentColor); }
-			&:first-of-type { border-radius: var(--ui-toolbar-bdrs) 0 0 var(--ui-toolbar-bdrs); }
-			&:last-of-type { border-radius: 0 var(--ui-toolbar-bdrs) var(--ui-toolbar-bdrs) 0; }
-			&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }
-			&:focus-visible {
-				background-color: var(--GrayCanvas);
-				outline: none;
+		& fieldset {
+			all: unset;
+			background: var(--ButtonBorder);
+			border-radius: var(--ui-toolbar-bdrs);
+			display: inline-flex;
+			gap: var(--ui-toolbar-bdw);
+			padding: var(--ui-toolbar-bdw);
+			position: relative;
+			& :is(button, select) {
+				&.--active { color: var(--AccentColor); }
+				&:first-of-type {
+					border-start-start-radius: var(--ui-toolbar-bdrs);
+					border-end-start-radius: var(--ui-toolbar-bdrs);
+				}
+				&:last-of-type {
+					border-start-end-radius: var(--ui-toolbar-bdrs);
+					border-end-end-radius: var(--ui-toolbar-bdrs);
+				}
+				&:only-of-type { border-radius: var(--ui-toolbar-bdrs); }
+				&:focus-visible {
+					background-color: var(--CanvasGray);
+					outline: none;
+				}
+			}
+			& input { top: 100%; }
+			& select {
+				background-color: Canvas;
+				border: 0;
+				padding-inline-end: 4ch;
 			}
 		}
-		& input { top: 100%; }
-		& select {
-			background-color: Canvas;
-			border: 0;
-			padding-inline-end: 4ch;
-		}
+		& svg { pointer-events: none; }
 	}
-	& svg { pointer-events: none; }
 }

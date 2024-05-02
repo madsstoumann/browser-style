@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-avatar.css">
 	<link rel="stylesheet" href="../tooltip/ui-tooltip.css">
@@ -14,6 +14,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Avatar</h2>
+	<p>
+		An avatar is a graphical representation of a user or the user's character. It may take either a two-letter abbreviation or an image. This avatar is built with an <code>abbr</code>-tag and an <code>img</code>-tag.
+	</p>
 	<div class="ui-avatar">
 		<abbr title="Kim Cronos">KC</abbr>
 		<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
@@ -26,24 +29,63 @@
 	</div>
 
 	<h2>Avatar List</h2>
-	<p>Wrapped in a list, using <code>data-tooltip</code> instead of <code>abbr</code>-tag:</p>
+	<p>Wrapped in a list, using <code>data-tooltip</code> instead of <code>abbr</code>-tag.<br>
+		For demo-purposes, <code>tab-index</code> has been added in order to show <code>:focus-visible</code>-styles.
+	</p>
 	<ul class="ui-avatar-list">
-		<li class="ui-avatar" data-tooltip="Kim Cronos">
+		<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
 		</li>
-		<li class="ui-avatar" data-tooltip="Greg Hanson">
+		<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
 		</li>
-		<li class="ui-avatar" data-tooltip="John Doe">
+		<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
 		</li>
-		<li class="ui-avatar" data-tooltip="Linda Payne">
+		<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
 			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
 		</li>
 	</ul>
 
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ul class="ui-avatar-list">
+			<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
+				<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+			</li>
+			<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
+				<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+			</li>
+			<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
+				<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
+			</li>
+			<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
+				<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+			</li>
+		</ul>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<ul class="ui-avatar-list" dir="rtl">
+		<li class="ui-avatar" data-tooltip="Kim Cronos" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar1.webp" alt="Kim Cronos" loading="lazy">
+		</li>
+		<li class="ui-avatar" data-tooltip="Greg Hanson" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar2.webp" alt="Greg Hanson" loading="lazy">
+		</li>
+		<li class="ui-avatar" data-tooltip="John Doe" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar3.webp" alt="Jon Doe" loading="lazy">
+		</li>
+		<li class="ui-avatar" data-tooltip="Linda Payne" tabindex="0">
+			<img src="https://assets.stoumann.dk/img/avatar4.webp" alt="Linda Payne" loading="lazy">
+		</li>
+	</ul>
+
+	<br>
 	<h2>Avatar Color</h2>
-	<p>Using <code>strToRGB</code> under the hood to automatically set a unique background-color</p>
+	<p>Based on the initials — the <code>innerText</code> of the <code>abbr</code>-tag — a background-color is set using <code>strToRGB</code>.</p>
 	<ul class="ui-avatar-list">
 		<li class="ui-avatar">
 			<abbr title="Kim Cronos">KC</abbr>

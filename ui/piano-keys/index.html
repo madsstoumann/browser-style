@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Piano</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<style>
+		pre { padding: 1ch; }
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Piano Keys</h2>
+	<p>
+		<code>&lt;ui-piano-keys&gt;</code> is a custom element that renders a virtual piano.<br>
+		Attributes are <code>keys</code>, <code>startnote</code> and <code>label</code>.<br>
+		Default values for those are: 61 keys, C2 as startnote and no label.
+	</p>
+
+	<ui-piano-keys label="Piano 61" id="piano"></ui-piano-keys>
+	<p>Events:</p>
+	<pre><code id="code">Press a key &hellip;</code></pre>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ui-piano-keys label="Piano 61"></ui-piano-keys>
+	</div>
+
+	<br>
+	<h2>Variants</h2>
+	<p>With <code>keys="49"</code>, <code>chord="C+maj9"</code></code></p>
+	<ui-piano-keys keys="49" label="Chord Visualizer" chord="C+maj9"></ui-piano-keys>
+
+	<br>
+	<p>With <code>keys="32"</code> and <code>startnote="A2"</code></p>
+	<ui-piano-keys keys="32" startnote="A2" label="Piano 32"></ui-piano-keys>
+
+	<script src="index.js" type="module"></script>
+	<script>
+		const piano = document.querySelector('#piano');
+		const code = document.querySelector('#code');
+		piano.addEventListener('noteon', (event) => {
+			code.textContent = `noteon: ${JSON.stringify(event.detail, null, 2)}`;
+		});
+		piano.addEventListener('noteoff', (event) => {
+			code.textContent = `noteoff: ${JSON.stringify(event.detail, null, 2)}`;
+		});
+	</script>
+</body>
+</html>

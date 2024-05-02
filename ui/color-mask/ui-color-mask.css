@@ -1,37 +1,41 @@
-.ui-color-mask {
-	--ui-color-mask-url: url('https://assets.stoumann.dk/img/tshirt.webp') no-repeat center / contain;
-  all: unset;
-  display: grid;
-  gap: .33em;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-	& input {
-		border: 0;
-		grid-area: 1 / 1;
-		height: 100%;
-		mask: var(--ui-color-mask-url);
-		-webkit-mask: var(--ui-color-mask-url);
-		width: 100%;
-	}
-	& label {
-  	background-color: var(--GrayCanvas);
-		border-radius: var(--input-bdrs);
-  	display: grid;
-		transition: box-shadow .2s ease-in-out;
-		&::after {
-			aspect-ratio: var(--ui-color-mask-asr, 1 / 1);
-			background: var(--ui-color-mask-url);
-			content: '';
-			display: block;
+@layer bs-component {
+	:where(.ui-color-mask) {
+		--ui-color-mask-bdc: var(--CanvasText);
+		--ui-color-mask-bdw: 2px;
+		--ui-color-mask-url: url('https://assets.stoumann.dk/img/tshirt.webp') no-repeat center / contain;
+		all: unset;
+		display: grid;
+		gap: .33em;
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		& input {
+			border: 0;
 			grid-area: 1 / 1;
-			mix-blend-mode: multiply;
-			pointer-events: none;
+			height: 100%;
+			mask: var(--ui-color-mask-url);
+			-webkit-mask: var(--ui-color-mask-url);
+			width: 100%;
 		}
-		&:focus-within { outline: 2px solid var(--AccentColor); }
-		@media (hover: hover) {
-			&:hover { box-shadow: inset 0 0 .1em var(--CanvasText); }
+		& label {
+			background-color: var(--CanvasGray);
+			border-radius: var(--input-bdrs);
+			display: grid;
+			transition: box-shadow .2s ease-in-out;
+			&::after {
+				aspect-ratio: var(--ui-color-mask-asr, 1 / 1);
+				background: var(--ui-color-mask-url);
+				content: '';
+				display: block;
+				grid-area: 1 / 1;
+				mix-blend-mode: multiply;
+				pointer-events: none;
+			}
+			&:focus-within { box-shadow: inset 0 0 var(--ui-color-mask-bdw) var(--ui-color-mask-bdc); }
+			@media (hover: hover) {
+				&:hover { box-shadow: inset 0 0 var(--ui-color-mask-bdw) var(--ui-color-mask-bdc); }
+			}
 		}
-	}
-	& legend {
-		padding-block-end: var(--label-rg);
+		& legend {
+			padding-block-end: var(--label-rg);
+		}
 	}
 }

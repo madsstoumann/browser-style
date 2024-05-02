@@ -5,16 +5,34 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-  <!--<meta name="view-transition" content="same-origin">-->
+  <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
   <link rel="stylesheet" href="ui-color-compare.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
+	<p>
+		A component for comparing two colors against an image. The component is built with a <code>fieldset</code> containing an <code>img</code> and two <code>input[type="color"]</code> elements. The <code>input[type="range"]</code> is used to slide between the two colors.
+	</p>
 
 	<h2>Color Compare</h2>
 	<fieldset class="ui-color-compare">
-		<legend>Color Compare</legend>
+		<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy">
+		<label aria-label="Slide to compare two colors against an image">
+			<span></span>
+			<input type="range" value="50" data-key="value" data-scope="fieldset" data-unit="%" autocomplete="off">
+		</label>
+		<label aria-label="First color">
+			<input type="color" value="#DCAEE5" data-scope="fieldset" data-key="_c1" autocomplete="off">
+		</label>
+		<label aria-label="Second color">
+			<input type="color" value="#9285D6" data-scope="fieldset" data-key="_c2" autocomplete="off">
+		</label>
+	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<fieldset class="ui-color-compare cs-opposite">
 		<img src="https://assets.stoumann.dk/img/colors-base.webp" alt="Image of a car" loading="lazy">
 		<label aria-label="Slide to compare two colors against an image">
 			<span></span>

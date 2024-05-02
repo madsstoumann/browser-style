@@ -1,76 +1,78 @@
-.ui-blinds {
-	--ui-blinds-bg: 
-		color-mix(in oklab, var(--AccentColor), #000 40%),
-		color-mix(in oklab, var(--AccentColor), #000 20%),
-		var(--AccentColor),
-		color-mix(in oklab, var(--AccentColor), #FFF 20%),
-		color-mix(in oklab, var(--AccentColor), #FFF 40%),
-		color-mix(in oklab, var(--AccentColor), #FFF 60%);
+@layer bs-component {
+	:where(.ui-blinds) {
+		--ui-blinds-bg: 
+			color-mix(in oklab, var(--AccentColor), #000 40%),
+			color-mix(in oklab, var(--AccentColor), #000 20%),
+			var(--AccentColor),
+			color-mix(in oklab, var(--AccentColor), #FFF 20%),
+			color-mix(in oklab, var(--AccentColor), #FFF 40%),
+			color-mix(in oklab, var(--AccentColor), #FFF 60%);
 
-	--ui-blinds-c:#FFF, #FFF, #FFF, #000, #000, #000;
-	--ui-blinds-items: 6;
-	--ui-blinds-pb: .5em;
-	--ui-blinds-pi: 2ch;
-	--_i: 0;
+		--ui-blinds-c:#FFF, #FFF, #FFF, #000, #000, #000;
+		--ui-blinds-items: 6;
+		--ui-blinds-pb: .5em;
+		--ui-blinds-pi: 2ch;
+		--_i: 0;
 
-	container-type: inline-size;
+		container-type: inline-size;
 
-	& ul {
-		all: unset;
-		clip-path: inset(0% 0% 0% 0% round var(--ui-blinds-bdrs, 0.5em));
-	display: grid;	
+		& ul {
+			all: unset;
+			clip-path: inset(0% 0% 0% 0% round var(--ui-blinds-bdrs, 0.5em));
+		display: grid;	
 
-		& li {
-			background: linear-gradient(
-				var(--ui-blinds-bg)) no-repeat 0 calc(var(--_i) * 100% / 
-				(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
-			list-style: none;
-			padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
-
-			&:nth-of-type(2) { --_i: 1; }
-			&:nth-of-type(3) { --_i: 2; }
-			&:nth-of-type(4) { --_i: 3; }
-			&:nth-of-type(5) { --_i: 4; }
-			&:nth-of-type(6) { --_i: 5; }
-
-			& > * {
+			& li {
 				background: linear-gradient(
-				var(--ui-blinds-c)) no-repeat 0 calc(var(--_i) * 100% / 
-				(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-			}
-			& > a {
-				font-size: var(--ui-blinds-heading-fz, 1.17em);
-				text-decoration: none;
-			}
-			&:not(:target):not(.--open) {
+					var(--ui-blinds-bg)) no-repeat 0 calc(var(--_i) * 100% / 
+					(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
+				list-style: none;
+				padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
+
+				&:nth-of-type(2) { --_i: 1; }
+				&:nth-of-type(3) { --_i: 2; }
+				&:nth-of-type(4) { --_i: 3; }
+				&:nth-of-type(5) { --_i: 4; }
+				&:nth-of-type(6) { --_i: 5; }
+
+				& > * {
+					background: linear-gradient(
+					var(--ui-blinds-c)) no-repeat 0 calc(var(--_i) * 100% / 
+					(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
+					-webkit-background-clip: text;
+					-webkit-text-fill-color: transparent;
+				}
 				& > a {
-					block-size: 100%;
-					display: block;
-					padding-inline: var(--ui-blinds-pb);
-					& + * { display: none; }
+					font-size: var(--ui-blinds-heading-fz, 1.17em);
+					text-decoration: none;
+				}
+				&:not(:target):not(.--open) {
+					& > a {
+						block-size: 100%;
+						display: block;
+						padding-inline: var(--ui-blinds-pb);
+						& + * { display: none; }
+					}
+				}
+			}
+			@container (min-width: 600px) { 
+				grid-auto-flow: column;
+				& li:not(:target):not(.--open) {
+					box-shadow: var(--ui-blinds-bxsh, -0.25em 0 1em -0.5em rgba(0,0,0,0.5));
+					padding: var(--ui-blinds-pb);
+					writing-mode: vertical-lr;
 				}
 			}
 		}
-		@container (min-width: 600px) { 
-			grid-auto-flow: column;
-			& li:not(:target):not(.--open) {
-				box-shadow: var(--ui-blinds-bxsh, -0.25em 0 1em -0.5em rgba(0,0,0,0.5));
-				padding: var(--ui-blinds-pb);
-				writing-mode: vertical-lr;
-			}
-		}
 	}
-}
-@supports (background: -webkit-named-image(i)) {
-	.ui-blinds {
-		--ui-blinds-bg: 
-			oklch(from var(--AccentColor) calc(l - .2) c h),
-			oklch(from var(--AccentColor) calc(l - .1) c h),
-			var(--AccentColor),
-			oklch(from var(--AccentColor) calc(l + .1) c h),
-			oklch(from var(--AccentColor) calc(l + .2) c h),
-			oklch(from var(--AccentColor) calc(l + .3) c h);
+	@supports (background: -webkit-named-image(i)) {
+		.ui-blinds {
+			--ui-blinds-bg: 
+				oklch(from var(--AccentColor) calc(l - .2) c h),
+				oklch(from var(--AccentColor) calc(l - .1) c h),
+				var(--AccentColor),
+				oklch(from var(--AccentColor) calc(l + .1) c h),
+				oklch(from var(--AccentColor) calc(l + .2) c h),
+				oklch(from var(--AccentColor) calc(l + .3) c h);
+		}
 	}
 }

@@ -1,56 +1,47 @@
-:where(.ui-file-tree) {
-	--ui-file-file-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(72 72 72)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg>');
-	--ui-file-folder-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(72 72 72)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19l2.757 -7.351a1 1 0 0 1 .936 -.649h12.307a1 1 0 0 1 .986 1.164l-.996 5.211a2 2 0 0 1 -1.964 1.625h-14.026a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v2"/></svg>');
-	--ui-file-tree-bds: solid;
-	--ui-file-tree-bdw: 1px;
-	--ui-file-tree-gap: .75em;
-	color: var(--DarkGray);
-	direction: ltr;
-	font-size: var(--ui-file-tree-fs, smaller);
-	margin: 0;
-	padding: 0;
-	& li {
-		list-style: none;
-		margin-inline-start: var(--ui-file-tree-gap);
-		padding-inline-start: var(--ui-file-tree-gap);
-		position: relative;
-		&::before {
-			block-size: 100%;
-			border-inline-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
-			content: " ";
-			inline-size: var(--ui-file-tree-bdw);
-			inset-block-start: 0;
-			inset-inline-start: calc(0px - var(--ui-file-tree-gap));
-			position: absolute;
-		}
-		&:last-of-type::before { block-size: .75em; }
-		&::after {
-			block-size: var(--ui-file-tree-bdw);
-			border-block-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
-			content: "";
-			inline-size: var(--ui-file-tree-gap);
-			inset-block-start: .75em;
-			inset-inline-start: calc(0px - var(--ui-file-tree-gap));
-			position: absolute;
-		}
-		&.--file,
-		&.--folder {
-			background-position: 0% 0%;
-			background-repeat: no-repeat;
-			background-size: 1.25em 1.25em;
-			padding-inline-start: calc(2 * var(--ui-file-tree-gap));
-		}
-		&.--file { background-image: var(--ui-file-file-icon); }
-		&.--folder { background-image: var(--ui-file-folder-icon); }
-	}
-	& ul {
+@layer bs-component {
+	:where(.ui-file-tree) {
+		--ui-file-tree-bs: .75em;
+		--ui-file-tree-bds: solid;
+		--ui-file-tree-bdw: 1px;
+		--ui-file-tree-gap: 1ch;
+
+		direction: ltr;
+		font-size: var(--ui-file-tree-fs, smaller);
 		margin: 0;
-		padding-block: 0; 
-		padding-inline: var(--ui-file-tree-gap) 0;
-	}
-	/* TODO! Fix */
-	@media (prefers-color-scheme: dark) {
-		--ui-file-file-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(150 150 150)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg>');
-		--ui-file-folder-icon: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="rgb(150 150 150)" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19l2.757 -7.351a1 1 0 0 1 .936 -.649h12.307a1 1 0 0 1 .986 1.164l-.996 5.211a2 2 0 0 1 -1.964 1.625h-14.026a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v2"/></svg>');
+		padding: 0;
+		& li {
+			list-style: none;
+			margin-inline-start: var(--ui-file-tree-gap);
+			padding-inline-start: calc(2 * var(--ui-file-tree-gap));
+			position: relative;
+			&::before {
+				block-size: 100%;
+				border-inline-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
+				content: " ";
+				inline-size: var(--ui-file-tree-bdw);
+				inset-block-start: 0;
+				inset-inline-start: calc(0px - var(--ui-file-tree-gap));
+				position: absolute;
+			}
+			&:last-of-type::before { block-size: var(--ui-file-tree-bs); }
+			&::after {
+				block-size: var(--ui-file-tree-bdw);
+				border-block-start: var(--ui-file-tree-bdw) var(--ui-file-tree-bds) currentColor;
+				content: "";
+				inline-size: calc(2 * var(--ui-file-tree-gap));
+				inset-block-start: var(--ui-file-tree-bs);
+				inset-inline-start: calc(0px - var(--ui-file-tree-gap));
+				position: absolute;
+			}
+		}
+		& ul {
+			margin: 0;
+			padding-block: 0; 
+			padding-inline: var(--ui-file-tree-gap) 0;
+		}
+		& ui-mask {
+			/* fix: magic numbers */
+			translate: -3px 3px;
+		}
 	}
 }

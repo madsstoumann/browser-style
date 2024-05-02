@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Rating Histogram</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/ui/rating/ui-rating.css">
+	<link rel="stylesheet" href="ui-rating-histogram.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Rating Histogram</h2>
+	<p>
+		A rating histogram is a visual representation of the distribution of ratings for a product or service. It shows the number of ratings for each star level, and the percentage of total ratings that each level represents.
+	</p>
+
+	<div class="ui-rating-histogram" id="app">
+		<label>
+			<input type="range" class="ui-rating" disabled style="--value:3.48;">
+			<span><strong>3.48</strong> <small>11,468 ratings &middot; 1,550 reviews</small></span>
+		</label>
+		<nav>
+			<a href="/#5stars">5 stars</a>
+			<progress data-value="24" value="0" max="100"></progress>
+			<small>2,739 (24%)</small>
+
+			<a href="/#4stars">4 stars</a>
+			<progress data-value="36" value="0" max="100"></progress>
+			<small>4,012 (36%)</small>
+
+			<a href="/#3stars">3 stars</a>
+			<progress data-value="20" value="0" max="100"></progress>
+			<small>2,239 (20%)</small>
+
+			<a href="/#2stars">2 stars</a>
+			<progress data-value="10" value="0" max="100"></progress>
+			<small>1,239 (10%)</small>
+
+			<a href="/#1star">1 star</a>
+			<progress data-value="10" value="0" max="100"></progress>
+			<small>1,239 (10%)</small>
+		</nav>
+	</div>
+
+	<p>
+		To animate values, set <code>value=0</code> and the actual value in <code>data-value</code>, then use JavaScript to set the value of the progress element.
+	</p>
+	<p><button type="button" id="trigger">Animate</button></p>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<div class="ui-rating-histogram">
+			<label>
+				<input type="range" class="ui-rating" disabled style="--value:3.48;">
+				<span><strong>3.48</strong> <small>11,468 ratings &middot; 1,550 reviews</small></span>
+			</label>
+			<nav>
+				<a href="/#5stars">5 stars</a>
+				<progress value="24" max="100"></progress>
+				<small>2,739 (24%)</small>
+	
+				<a href="/#4stars">4 stars</a>
+				<progress value="36" max="100"></progress>
+				<small>4,012 (36%)</small>
+	
+				<a href="/#3stars">3 stars</a>
+				<progress value="20" max="100"></progress>
+				<small>2,239 (20%)</small>
+	
+				<a href="/#2stars">2 stars</a>
+				<progress value="10" max="100"></progress>
+				<small>1,239 (10%)</small>
+	
+				<a href="/#1star">1 star</a>
+				<progress value="10" max="100"></progress>
+				<small>1,239 (10%)</small>
+			</nav>
+		</div>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div class="ui-rating-histogram" dir="rtl">
+		<label>
+			<input type="range" class="ui-rating" disabled style="--value:3.48;">
+			<span><strong>3.48</strong> <small>11,468 ratings &middot; 1,550 reviews</small></span>
+		</label>
+		<nav>
+			<a href="/#5stars">5 stars</a>
+			<progress value="24" max="100"></progress>
+			<small>2,739 (24%)</small>
+
+			<a href="/#4stars">4 stars</a>
+			<progress value="36" max="100"></progress>
+			<small>4,012 (36%)</small>
+
+			<a href="/#3stars">3 stars</a>
+			<progress value="20" max="100"></progress>
+			<small>2,239 (20%)</small>
+
+			<a href="/#2stars">2 stars</a>
+			<progress value="10" max="100"></progress>
+			<small>1,239 (10%)</small>
+
+			<a href="/#1star">1 star</a>
+			<progress value="10" max="100"></progress>
+			<small>1,239 (10%)</small>
+		</nav>
+	</div>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiRatingHistogram from './uiRatingHistogram.js';
+		common();
+		init('.ui-rating-histogram', uiRatingHistogram);
+
+		const app = document.getElementById('app');
+		const trigger = document.getElementById('trigger');
+		trigger.addEventListener('click', () => uiRatingHistogram(app, 500));
+	</script>
+
+</body>
+</html>

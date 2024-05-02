@@ -1,0 +1,31 @@
+@import url('../button-group/ui-button-group.css');
+@import url('../product-card/ui-product-card.css');
+
+@layer bs-component {
+	:where(.ui-product-list-grid) {
+		container-type: inline-size;
+		display: grid;
+		gap: 1.5ch;
+		& .ui-button-group { place-self: start end; }
+		& .ui-product-list-grid-inner {
+			display: grid;
+			gap: 1.5ch;
+		}
+		&:has([value=grid]:checked) .ui-product-list-grid-inner {
+			grid-template-columns: repeat(var(--_gtc, 1), 1fr);
+		}
+		@container (width > 500px) {
+			&:has([value=list]:checked) .ui-product-card {
+				display: flex;
+				& .ui-scrollbar { padding: 0; }
+			}
+			:where(.ui-product-list-grid-inner) { --_gtc: 2; }
+		}
+		@container (width > 750px) {
+			:where(.ui-product-list-grid-inner) { --_gtc: 3; }
+		}
+		@container (width > 1000px) {
+			:where(.ui-product-list-grid-inner) { --_gtc: 4; }
+		}
+	}
+}

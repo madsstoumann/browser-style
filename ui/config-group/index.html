@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-config-group.css">
 </head>
@@ -13,6 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Config Group</h2>
+	<p>
+		A component consisting of a set of mutually exclusive options, typically used in check-out flows or technical configurations.
+	</p>
 	<fieldset class="ui-config-group">
 		<legend>Config Group</legend>
 		<label>
@@ -26,6 +29,42 @@
 			<span>+$100</span>
 		</label>
 	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<fieldset class="ui-config-group">
+			<legend>Config Group</legend>
+			<label>
+				<input type="radio" name="config-group-cs" value="1" data-sr checked>
+				<strong>8 GB memory</strong>
+				<span>+$0</span>
+			</label>
+			<label>
+				<input type="radio" name="config-group-cs" data-sr value="2">
+				<strong>16 GB memory</strong>
+				<span>+$100</span>
+			</label>
+		</fieldset>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<fieldset class="ui-config-group">
+			<legend>Config Group</legend>
+			<label>
+				<input type="radio" name="config-group-rtl" value="1" data-sr checked>
+				<strong>8 GB memory</strong>
+				<span>+$0</span>
+			</label>
+			<label>
+				<input type="radio" name="config-group-rtl" data-sr value="2">
+				<strong>16 GB memory</strong>
+				<span>+$100</span>
+			</label>
+		</fieldset>
+	</div>
 
 </body>
 </html>

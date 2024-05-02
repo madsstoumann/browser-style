@@ -1,65 +1,72 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="zxx" dir="ltr">
 <head>
 	<title>Carousel</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-  <!--<meta name="view-transition" content="same-origin">-->
+  <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-carousel.css">
 
 	<!-- Below required for demo, but not a dependency -->
-	<link rel="stylesheet" href="../card/ui-card.css">
+	<link rel="stylesheet" href="/ui/card/ui-card.css">
+	<link rel="stylesheet" href="/ui/placeholder/ui-placeholder.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Carousel</h2>
-	<p>Used here with <code>--subgrid</code>-modifier, so content-parts align.<br>Add CSS for handling this in the individual sub-components.<br>In this case, the <a href="/ui/card">Card</a>-component.</p>
+	<p>
+		A Carousel is a set of rotating images or text.
+	</p>
+	<p>
+		Used here with <code>--subgrid</code>-modifier, so content-parts align.<br>
+		Add CSS for handling this in the individual sub-components.<br>
+		In this case, the <a href="/ui/card">Card</a>-component is used.
+	</p>
 	<div class="ui-carousel --subgrid">
 		<div class="ui-scroll">
 			<div>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card witha longer Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
 					<a href="#">Read more</a>
 				</article>
 			</div>
-
 			<div>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card witha longer Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
@@ -69,29 +76,139 @@
 		</div>
 	</div>
 
-	
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<div class="ui-carousel --subgrid">
+			<div class="ui-scroll">
+				<div>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card witha longer Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+						<a href="#">Read more</a>
+					</article>
+				</div>
+				<div>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card witha longer Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<div class="ui-carousel --subgrid">
+			<div class="ui-scroll">
+				<div>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card witha longer Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+						<a href="#">Read more</a>
+					</article>
+				</div>
+				<div>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card witha longer Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+					<article class="ui-card">
+						<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+						<small>News</small>
+						<h3>Card Title</h3>
+						<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
+						<a href="#">Read more</a>
+					</article>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+	<h2>Variants</h2>
 	<p>With <code>data-scroll-nav="ui-scroll-nav --nav-outside --no-dots"</code></p>
 
 	<div class="ui-carousel --subgrid">
 		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --outside --no-dots">
 			<div>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=0" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=1" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card witha longer Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=2" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
@@ -101,21 +218,21 @@
 
 			<div>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=3" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=4" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card witha longer Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>
 					<a href="#">Read more</a>
 				</article>
 				<article class="ui-card">
-					<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180">
+					<img src="https://source.unsplash.com/random/320x180?sig=5" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
 					<small>News</small>
 					<h3>Card Title</h3>
 					<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</small>

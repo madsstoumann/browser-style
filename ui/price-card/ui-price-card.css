@@ -1,28 +1,32 @@
-:where(.ui-price-card) {
-	background: var(--ui-price-card-bg, var(--GrayCanvas));
-	border-radius: var(--ui-price-card-bdrs, 2ch);
-	display: grid;
-	padding: 1.5ch 2ch;
-	& button {
-		justify-self: center;
-		margin-block-end: 1ch;
-	}
-	& li {
-		&::marker {
-			content: "✓  ";
-			font-family: ui-sans-serif, system-ui;
-			font-size: smaller;
+@layer bs-component {
+	:where(.ui-price-card) {
+		background: var(--ui-price-card-bg, var(--CanvasGray));
+		border-radius: var(--ui-price-card-bdrs, 2ch);
+		display: grid;
+		padding: 1.5ch 2ch;
+		& button {
+			justify-self: center;
+			margin-block-end: 1ch;
+			--button-bg--hover: none;
+			--button-bxsh--hover: 0 0 0 2px currentColor;
 		}
-		&.--disabled {
-			opacity: .33;
+		& li {
 			&::marker {
-				content: "✕  ";
+				content: "✓  ";
+				font-family: ui-sans-serif, system-ui;
+				font-size: smaller;
+			}
+			&.--disabled {
+				opacity: .33;
+				&::marker {
+					content: "✕  ";
+				}
 			}
 		}
+		& .ui-chip { justify-self: start; }
 	}
-	& .ui-chip { justify-self: start; }
-}
-/* Requies ui-scroll.css */
-:where(.ui-price-card__wrapper) {
-	--ui-scroll-gap: 2ch;
+	/* Requies ui-scroll.css */
+	:where(.ui-price-card__wrapper) {
+		--ui-scroll-gap: 2ch;
+	}
 }

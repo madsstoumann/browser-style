@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-share.css">
 </head>
@@ -13,7 +13,22 @@
 	<h1>UI: Components</h1>
 
 	<h2>Share</h2>
+	<p>The <strong>Share</strong> component enables users to distribute content across social media platforms through clickable icons for each service.</p>
 	<p>If <code>navigator.share</code>-API is supported, you'll see a single share-icon, otherwise a fallback of providers.</p>
+	<p>Define the share icon within a <code>&lt;button&gt;</code>, within any element with a <code>ui-share</code>-class.</p>
+
+	<button type="button" class="--icon">
+		<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+			<path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+			<path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+			<path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+			<path d="M8.7 10.7l6.6 -3.4"></path>
+			<path d="M8.7 13.3l6.6 3.4"></path>
+		</svg>
+	</button>
+
+	<p>After that, provide anchor-links (with SVG-icons) for each fallback-provider.</p>
+
 	<nav class="ui-share">
 		<button type="button" class="--icon">
 			<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -45,6 +60,43 @@
 			</svg>
 		</a>
 	</nav>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<nav class="ui-share">
+			<button type="button" class="--icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+					<path d="M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+					<path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"></path>
+					<path d="M8.7 10.7l6.6 -3.4"></path>
+					<path d="M8.7 13.3l6.6 3.4"></path>
+				</svg>
+			</button>
+			<a href="https://www.facebook.com/share.php?u=" class="ui-button --icon" hidden>
+				<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M18 2a1 1 0 0 1 .993 .883l.007 .117v4a1 1 0 0 1 -.883 .993l-.117 .007h-3v1h3a1 1 0 0 1 .991 1.131l-.02 .112l-1 4a1 1 0 0 1 -.858 .75l-.113 .007h-2v6a1 1 0 0 1 -.883 .993l-.117 .007h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-6h-2a1 1 0 0 1 -.993 -.883l-.007 -.117v-4a1 1 0 0 1 .883 -.993l.117 -.007h2v-1a6 6 0 0 1 5.775 -5.996l.225 -.004h3z" stroke-width="0" fill="currentColor"></path>
+				</svg>
+			</a>
+			<a href="https://www.linkedin.com/shareArticle?mini=true&url=" class="ui-button --icon" hidden>
+				<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+					<path d="M8 11l0 5"></path>
+					<path d="M8 8l0 .01"></path>
+					<path d="M12 16l0 -5"></path>
+					<path d="M16 16v-3a2 2 0 0 0 -4 0"></path>
+				</svg>
+			</a>
+			<a href="https://www.twitter.com/share?url=" class="ui-button --icon" hidden>
+				<svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+					<path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+				</svg>
+			</a>
+		</nav>
+	</div>
+	
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

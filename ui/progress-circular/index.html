@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-progress-circular.css">
 </head>
@@ -13,11 +13,33 @@
 	<h1>UI: Components</h1>
 
 	<h2>Progress — Circular</h2>
+	<p>
+		<strong>Progress — Circular</strong> is a component that displays a circular progress bar. It is used to show the progress of a task or action. The <code>value</code> attribute specifies how much of the task has been completed. The <code>max</code> attribute specifies the total amount of work required to complete the task.
+	</p>
 
 	<label class="ui-progress-circular" style="--value:40;">
 		Progress — Circular
 		<progress value="40" max="100"></progress>
 	</label>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<label class="ui-progress-circular" style="--value:40;">
+			Progress — Circular
+			<progress value="40" max="100"></progress>
+		</label>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<p>Please note that clockwise indicators should not be flipped when the text direction is right-to-left.</p>
+	<div dir="rtl">
+		<label class="ui-progress-circular" style="--value:40;">
+			Progress — Circular
+			<progress value="40" max="100"></progress>
+		</label>
+	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

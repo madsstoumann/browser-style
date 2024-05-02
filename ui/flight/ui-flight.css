@@ -1,75 +1,77 @@
 @import '../color-key/ui-color-key.css';
-:where(.ui-flight) {
-	all: unset;
-	direction: ltr;
-	& input {
-		--_bdc: color-mix(in srgb, var(--ui-flight-seat-bg), #000 30%);
-		--input-check-bgsz: 50%/55%;
-		--input-check-sz: 2em;
-		aspect-ratio: 1 / .9;
-		background-color: var(--ui-flight-seat-bg);
+@layer bs-component {
+	:where(.ui-flight) {
+		all: unset;
+		direction: ltr;
+		& input {
+			--_bdc: color-mix(in srgb, var(--ui-flight-seat-bg), #000 30%);
+			--input-check-bgsz: 50%/55%;
+			--input-check-sz: 2em;
+			aspect-ratio: 1 / .9;
+			background-color: var(--ui-flight-seat-bg);
 
-		border-color: var(--_bdc);
-		border-radius: .5em .5em .15em .15em;
-		border-width: 0 0 .25em 0;
-		&:checked { 
-			--ui-flight-seat-bg: var(--ColorSuccess);
-			--AccentColor: var(--ui-flight-seat-bg);
 			border-color: var(--_bdc);
+			border-radius: .5em .5em .15em .15em;
+			border-width: 0 0 .25em 0;
+			&:checked { 
+				--ui-flight-seat-bg: var(--ColorSuccess);
+				--AccentColor: var(--ui-flight-seat-bg);
+				border-color: var(--_bdc);
+			}
+			&:disabled { --ui-flight-seat-bg: var(--ButtonBorder); }
+			&:is([value=""], :not([value])) {
+				opacity: 0;
+				pointer-events: none;
+			}
+			&:focus-visible:not(:checked),
+			&:hover:not(:checked):not(:disabled) {
+				background: color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 80%);
+			}
+			&:focus-visible:checked {
+				outline: 2px solid color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 40%);
+			}
+			&[inert] { --ui-flight-seat-bg: var(--CanvasGray); }
 		}
-		&:disabled { --ui-flight-seat-bg: var(--ButtonBorder); }
-		&:is([value=""], :not([value])) {
-			opacity: 0;
-			pointer-events: none;
-		}
-		&:focus-visible:not(:checked),
-		&:hover:not(:checked):not(:disabled) {
-			background: color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 80%);
-		}
-		&:focus-visible:checked {
-			outline: 2px solid color-mix(in srgb, var(--ui-flight-seat-bg), Canvas 40%);
-		}
-		&[inert] { --ui-flight-seat-bg: var(--GrayCanvas); }
-	}
-	& label {
-		display: contents;
-		/* Control Aisle/s Numbering */
-		&:nth-of-type(3) input {
-			margin-inline-end: 3.5ch;
-			position: relative;
-			&::after {
-				content: counter(row);
-				display: block;
-				font-size: small;
-				padding-inline: 1ch;
-				position: absolute;
-				left: 100%;
-				text-align: center;
-				top: 50%;
-				translate: 0 -50%;
-				width: 5ch;
+		& label {
+			display: contents;
+			/* Control Aisle/s Numbering */
+			&:nth-of-type(3) input {
+				margin-inline-end: 3.5ch;
+				position: relative;
+				&::after {
+					content: counter(row);
+					display: block;
+					font-size: small;
+					padding-inline: 1ch;
+					position: absolute;
+					left: 100%;
+					text-align: center;
+					top: 50%;
+					translate: 0 -50%;
+					width: 5ch;
+				}
 			}
 		}
-	}
-	& li {
-		align-items: center;
-		counter-increment: row;
-		display: grid;
-		gap: 1ch;
-		grid-auto-flow: column;
+		& li {
+			align-items: center;
+			counter-increment: row;
+			display: grid;
+			gap: 1ch;
+			grid-auto-flow: column;
 
-		&.--front { --ui-flight-seat-bg: var(--ColorWarning); }
-		&.--legroom {
-			--ui-flight-seat-bg: var(--VisitedText);
-			margin-block-start: .5em;
+			&.--front { --ui-flight-seat-bg: var(--ColorWarning); }
+			&.--legroom {
+				--ui-flight-seat-bg: var(--VisitedText);
+				margin-block-start: .5em;
+			}
+			&.--sale { --ui-flight-seat-bg: var(--ColorError); }
+			&.--standard { --ui-flight-seat-bg: var(--AccentColor); }
 		}
-		&.--sale { --ui-flight-seat-bg: var(--ColorError); }
-		&.--standard { --ui-flight-seat-bg: var(--AccentColor); }
-	}
-	& ol {
-		counter-reset: row;
-		display: grid;
-		gap: 1ch;
-		padding: 0;
+		& ol {
+			counter-reset: row;
+			display: grid;
+			gap: 1ch;
+			padding: 0;
+		}
 	}
 }

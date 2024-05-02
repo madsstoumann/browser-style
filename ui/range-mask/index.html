@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-range-mask.css">
 </head>
@@ -13,6 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Range Mask</h2>
+	<p>
+		<strong>Range Mask</strong> presents a range alongside a mask, managed through an <code>&lt;input type="range"&gt;</code> HTML element.
+	</p>
 
 	<label class="ui-range-mask">Range with mask
 		<span></span>
@@ -24,6 +27,21 @@
 		<span></span>
 		<input type="range" data-key="value" data-scope="parent" value="25">
 	</label>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<label class="ui-range-mask">Range with mask
+			<span></span>
+			<input type="range" data-key="value" data-scope="parent" value="75">
+		</label>
+
+		<h3>With <code>--text</code>-modifier and custom mask</h3>
+		<label class="ui-range-mask --text" style="--ui-range-mask:url('/assets/svg/range-mask-chart.svg');">Range with mask
+			<span></span>
+			<input type="range" data-key="value" data-scope="parent" value="25">
+		</label>
+	</div>
 
 	<br>
 	<h2>With right-to-left</h2>

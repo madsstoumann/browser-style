@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-map.css">
 </head>
@@ -13,7 +13,9 @@
 	<h1>UI: Components</h1>
 
 	<h2>Map</h2>
-
+	<p>
+		<code>Map</code> is an iframe with an embedded map from <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>.
+	</p>
 	<p>Go to <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>, locate an address, click Share, and copy the <code>src</code> of the iframe.<br>Optionally, click "Add Marker", and drag it to the correct place.</p>
 	
 	<p>Next, use the <code>latituide</code> and <code>langitude</code> in the URL to create links for
@@ -26,6 +28,16 @@
 		Find directions with <a href="http://maps.apple.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Apple Maps</a> or
 		<a href="http://maps.google.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Google Maps</a>
 	</small>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<iframe class="ui-map" src="https://www.openstreetmap.org/export/embed.html?bbox=12.567951679229738%2C55.67832546115546%2C12.569088935852053%2C55.679883132870415&amp;layer=mapnik&amp;marker=55.679104304766774%2C12.568520307540894"></iframe>
+		<small>
+			Find directions with <a href="http://maps.apple.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Apple Maps</a> or
+			<a href="http://maps.google.com/?ll=55.679104304766774,12.568520307540894&z=18" target="_blank" rel="noopener noreferrer">Google Maps</a>
+		</small>
+	</div>
 
 </body>
 </html>

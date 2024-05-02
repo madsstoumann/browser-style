@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-dark-mode.css">
 	<link rel="stylesheet" href="../button-group/ui-button-group.css">
@@ -14,10 +14,10 @@
 	<h1>UI: Components</h1>
 
 	<h2>Dark Mode</h2>
-	<p>Used here with <a href="/ui/button-group/">Button Group</a>.</p>
+	<p>Methods to toggle between light and dark mode, with an optional auto-mode.</p>
+	<p>Used here with <a href="/ui/button-group/">Button Group</a>:</p>
 
-	<fieldset class="ui-button-group --rounded --border ui-dark-mode">
-		<legend>Toggle color-scheme</legend>
+	<fieldset class="ui-button-group --inline --rounded --border ui-dark-mode">
 		<label class="ui-button">
 			<input type="radio" name="colorscheme" value="light" data-sr>
 			Light mode
@@ -32,17 +32,17 @@
 		</label>
 	</fieldset>
 
-	<p>Single-element toggler</p>
+	<br>
 	<p><strong>NOTE:</strong> On this demo-page, use only one toggler at a time, since they're both using the same <code>name</code>-attribute, and updating the same key in <code>localstorage</code>.</p>
+	<h2>Single-element toggler</h2>
 
-	<label class="ui-dark-mode">
-		<span>Toggle color-scheme</span>
+	<label class="ui-dark-mode" aria-label="Toggle color-scheme">
 		<input type="checkbox" name="colorscheme" value="dark" data-sr>
 		<svg viewBox="0 0 400 400">
-			<circle r="180" cx="200" cy="200" fill="Canvas" stroke="var(--DarkGray)" stroke-width="20"></circle>
-			<path d=" M 200 375 A 175 175 0 0 1 200 25" fill="var(--DarkGray)"></path>
+			<circle r="180" cx="200" cy="200" fill="Canvas" stroke="var(--CanvasText)" stroke-width="20"></circle>
+			<path d=" M 200 375 A 175 175 0 0 1 200 25" fill="var(--CanvasText)"></path>
 			<path d=" M 200 300 A 100 100 0 0 1 200 100" fill="Canvas"></path>
-			<path d=" M 200 100 A 100 100 180 0 1 200 300" fill="var(--DarkGray)"></path>
+			<path d=" M 200 100 A 100 100 180 0 1 200 300" fill="var(--CanvasText)"></path>
 		</svg>
 	</label>
 

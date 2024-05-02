@@ -1,25 +1,27 @@
-:where(.ui-range-arc) {
-	--ui-range-arc-bdw: var(--input-thumb-sz, 1.5rem);
-	container-type: inline-size;
-	max-inline-size: 320px;
-	touch-action: none;
-	& span {
-		--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
-		--_mask: radial-gradient(circle at 50% 100%, transparent calc(50cqi - var(--ui-range-arc-bdw)), #000 0 100%);
-		aspect-ratio: 2 / 1;
-		background: conic-gradient(from 270deg at 50% 100%, var(--AccentColor) 0deg var(--_d), var(--ButtonFace) 0 var(--_d));
-		border-radius: 100cqi 100cqi 0 0;
-		mask: var(--_mask);
-		-webkit-mask: var(--_mask);
-		[dir=rtl] & { scale: -1 1; }
-	}
-	&::after {
-		counter-reset: val var(--value);
-		content: counter(val) "%";
-		font-size: 200%;
-		font-weight: 700;
-		translate: 0 .5em;
-		place-self: center;
-		position: absolute;
+@layer bs-component {
+	:where(.ui-range-arc) {
+		--ui-range-arc-bdw: var(--input-thumb-sz, 1.5rem);
+		container-type: inline-size;
+		max-inline-size: 320px;
+		touch-action: none;
+		& span {
+			--_d: calc(180deg * (var(--value) - var(--min, 0)) / (var(--max, 100) - var(--min, 0)));
+			--_mask: radial-gradient(circle at 50% 100%, transparent calc(50cqi - var(--ui-range-arc-bdw)), #000 0 100%);
+			aspect-ratio: 2 / 1;
+			background: conic-gradient(from 270deg at 50% 100%, var(--AccentColor) 0deg var(--_d), var(--ButtonFace) 0 var(--_d));
+			border-radius: 100cqi 100cqi 0 0;
+			mask: var(--_mask);
+			-webkit-mask: var(--_mask);
+			[dir=rtl] & { scale: -1 1; }
+		}
+		&::after {
+			counter-reset: val var(--value);
+			content: counter(val) "%";
+			font-size: 200%;
+			font-weight: 700;
+			translate: 0 .5em;
+			place-self: center;
+			position: absolute;
+		}
 	}
 }

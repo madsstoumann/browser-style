@@ -1,32 +1,34 @@
-:is(.ui-scrollbar) {
-	--ui-scrollbar-bdrs: 0px;
-	--ui-scrollbar-thumb: var(--ButtonBorder);
-	--ui-scrollbar-track: transparent; /* var(--GrayCanvas); */
-	--ui-scrollbar-w: .25em;
+@layer bs-component {
+	:is(.ui-scrollbar) {
+		--ui-scrollbar-bdrs: 0px;
+		--ui-scrollbar-thumb: var(--ButtonBorder);
+		--ui-scrollbar-track: transparent; /* var(--CanvasGray); */
+		--ui-scrollbar-w: .25em;
 
-	padding-block-end: calc(2 * var(--ui-scrollbar-w));
-	
-	scrollbar-color: var(--ui-scrollbar-thumb) var(--ui-scrollbar-track);
-	scrollbar-gutter: auto;
-	scrollbar-width: thin; /* var(--ui-scrollbar-w); */
-	scroll-behavior: auto;
-	scroll-snap-type: x mandatory;
+		padding-block-end: calc(2 * var(--ui-scrollbar-w));
+		
+		scrollbar-color: var(--ui-scrollbar-thumb) var(--ui-scrollbar-track);
+		scrollbar-gutter: auto;
+		scrollbar-width: thin; /* var(--ui-scrollbar-w); */
+		scroll-behavior: auto;
+		scroll-snap-type: x mandatory;
 
-	&::-webkit-scrollbar {
-		display: revert;
-		height: var(--ui-scrollbar-w);
-		width: var(--ui-scrollbar-w);
-	}
-	&::-webkit-scrollbar-thumb {
-		background: var(--ui-scrollbar-thumb);
-		border-radius: var(--ui-scrollbar-bdrs);
-	}
-	&::-webkit-scrollbar-thumb:window-inactive { background: var(--ui-scrollbar-thumb); }
-	&::-webkit-scrollbar-button { background: var(--section-bg, inherit); }
+		&::-webkit-scrollbar {
+			display: revert;
+			height: var(--ui-scrollbar-w);
+			width: var(--ui-scrollbar-w);
+		}
+		&::-webkit-scrollbar-thumb {
+			background: var(--ui-scrollbar-thumb);
+			border-radius: var(--ui-scrollbar-bdrs);
+		}
+		&::-webkit-scrollbar-thumb:window-inactive { background: var(--ui-scrollbar-thumb); }
+		&::-webkit-scrollbar-button { background: var(--section-bg, inherit); }
 
-	&::-webkit-scrollbar-track {
-		background: var(--ui-scrollbar-track, inherit);
-		border-radius: var(--ui-scrollbar-bdrs);
+		&::-webkit-scrollbar-track {
+			background: var(--ui-scrollbar-track, inherit);
+			border-radius: var(--ui-scrollbar-bdrs);
+		}
+		&::-webkit-scrollbar-track-piece { background: var(--ui-scrollbar-track); }
 	}
-	&::-webkit-scrollbar-track-piece { background: var(--ui-scrollbar-track); }
 }

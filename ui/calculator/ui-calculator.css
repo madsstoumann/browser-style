@@ -1,54 +1,75 @@
-:where(.ui-calculator) {
-  --GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
-  --GrayMedium: color-mix(in srgb, CanvasText 65%, Canvas 35%);  
-  background-color: var(--GrayDark);
-  border-radius: var(--input-bdrs);
-  border: 1px solid var(--GrayDark);
-  color-scheme: light;
-  display: grid;
-  grid-gap: 1px;
-  grid-template-columns: repeat(4, 1fr);
-  overflow: hidden;
-  width: 15rem;
-  & button, & input {
-		--button-p: 0;
-    border: 0;
-		border-radius: 0;
-    font-family: ui-sans-serif, system-ui;
-  }
-  & input {
-    background-color: inherit;
-    block-size: 4rem;
-    color: Canvas;
-    font-size: 3rem;
-    font-weight: 200;
-    grid-column: 1 / span 4;
-    padding-inline: .25em;
-    text-align: right;
-    &::placeholder { color: currentColor; }
-  }
-  & button {
-    --_bg: transparent;
-    aspect-ratio: 1.2 / 1;
-    background-color: var(--ButtonFace);
-    color: var(--CanvasText);
-    font-size: 1.33em;
-    font-weight: 400;
-    outline: 0;
-    &:focus-visible { background-color: var(--ButtonBorder); }
-    &[value="0"] {
-      aspect-ratio: 2.42 / 1;
-      grid-column: span 2;
-    }
-    &:nth-child(-n+4) {
-      background-color: var(--GrayMedium);
-      color: Canvas;
-      &:focus-visible { background-color: var(--GrayDark); }
-    }
-    &:nth-of-type(4n+4), &:last-child {
-      background-color: var(--ColorWarning);
-      color: Canvas;
-      &:focus-visible { background-color: color-mix(in srgb, var(--ColorWarning), #000 20%); }
-    }
-  }
+@layer bs-component {
+	:where(.ui-calculator) {
+		--GrayDark: color-mix(in srgb, CanvasText 80%, Canvas 20%);
+		--GrayText: color-mix(in srgb, CanvasText 65%, Canvas 35%);
+		background-color: var(--GrayDark);
+		border-radius: var(--input-bdrs);
+		border: 1px solid var(--GrayDark);
+		color-scheme: light;
+		display: grid;
+		grid-gap: 1px;
+		grid-template-columns: repeat(4, 1fr);
+		overflow: hidden;
+		width: 15rem;
+		& button, & input {
+			--button-p: 0;
+			border: 0;
+			border-radius: 0;
+			font-family: ui-sans-serif, system-ui;
+		}
+		& input {
+			background-color: inherit;
+			block-size: 4rem;
+			color: var(--Canvas);
+			font-size: 4rem;
+			font-weight: 100;
+			grid-column: 1 / span 4;
+			padding-inline: .2em;
+			text-align: right;
+			&::placeholder { color: currentColor; }
+		}
+		& button {
+			--_bg: transparent;
+			aspect-ratio: 1.2 / 1;
+			background-color: var(--ButtonFace);
+			color: var(--CanvasText);
+			font-size: 1.33em;
+			font-weight: 400;
+			outline: 0;
+			&:focus-visible {
+				background-color: var(--ButtonBorder);
+				box-shadow: none;
+			}
+			&[value="0"] {
+				aspect-ratio: 2.42 / 1;
+				grid-column: span 2;
+			}
+			&:nth-child(-n+4) {
+				background-color: var(--GrayText);
+				color: Canvas;
+				&:focus-visible { background-color: var(--GrayDark); }
+			}
+			&:nth-of-type(4n+4), &:last-child {
+				background-color: var(--ColorWarning);
+				color: Canvas;
+				&:focus-visible { background-color: color-mix(in srgb, var(--ColorWarning), #000 20%); }
+			}
+		}
+		&.--rounded {
+			border-radius: 1em;
+			grid-gap: 1ch;
+			padding: 1ch;
+			& button:not([value="0"]) {
+				aspect-ratio: 1 / 1;
+				border-radius: 50%;
+			}
+			& button[value="0"] {
+				aspect-ratio: 2.25 / 1;
+				border-radius: 2em;
+				padding-inline-start: 1ch;
+				place-content: center start;
+			}
+			& input { padding: 0; }
+		}
+	}
 }

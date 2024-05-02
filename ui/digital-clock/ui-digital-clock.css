@@ -1,67 +1,69 @@
-@property --seconds {
-  syntax: "<integer>";
-  initial-value: 0;
-  inherits: false;
-}
-@property --minutes {
-  syntax: "<integer>";
-  initial-value: 0;
-  inherits: false;
-}
-@property --hours {
-  syntax: "<integer>";
-  initial-value: 0;
-  inherits: false;
-}
+@layer bs-component {
+	@property --seconds {
+		syntax: "<integer>";
+		initial-value: 0;
+		inherits: false;
+	}
+	@property --minutes {
+		syntax: "<integer>";
+		initial-value: 0;
+		inherits: false;
+	}
+	@property --hours {
+		syntax: "<integer>";
+		initial-value: 0;
+		inherits: false;
+	}
 
-.ui-digital-clock {
-	all: unset;
-	background-color: var(--GrayCanvas);
-	border-radius: var(--input-bdrs);
-	direction: ltr;
-	display: grid;
-	font-size: var(--ui-digital-clock-fs, larger);
-	font-variant-numeric: tabular-nums;
-	font-weight: var(--ui-digital-clock-fw, 700);
-	grid-auto-flow: column;
-	inline-size: min-content;
-	padding: var(--ui-digital-clock-p, 1ch 2ch);
+	:where(.ui-digital-clock) {
+		all: unset;
+		background-color: var(--CanvasGray);
+		border-radius: var(--input-bdrs);
+		direction: ltr;
+		display: grid;
+		font-size: var(--ui-digital-clock-fs, larger);
+		font-variant-numeric: tabular-nums;
+		font-weight: var(--ui-digital-clock-fw, 700);
+		grid-auto-flow: column;
+		inline-size: min-content;
+		padding: var(--ui-digital-clock-p, 1ch 2ch);
 
-	& li {
-		list-style: none;
-		white-space: nowrap;
-		&:nth-of-type(1) {
-			animation: hours 86400s steps(24, end) infinite;
-			animation-delay: var(--delay-hours, 0s);
-			counter-reset: hours var(--hours);
-			&::after { content: counter(hours, decimal-leading-zero) ' '; }
-		}
-		&:nth-of-type(2) {
-			animation: minutes 3600s steps(60, end) infinite;
-			animation-delay: var(--delay-minutes, 0s);
-  		counter-reset: minutes var(--minutes);
-			&::before { content: ':'; }
-			&::after { content: counter(minutes, decimal-leading-zero) ' '; }
-		}
-		&:nth-of-type(3) {
-			animation: seconds 60s steps(60, end) infinite;
-			animation-delay: var(--delay-seconds, 0s);
-			counter-reset: seconds var(--seconds);
-			&::before { content: ':'; }
-			&::after { content: counter(seconds, decimal-leading-zero) ' '; }
+		& li {
+			list-style: none;
+			white-space: nowrap;
+			&:nth-of-type(1) {
+				animation: hours 86400s steps(24, end) infinite;
+				animation-delay: var(--delay-hours, 0s);
+				counter-reset: hours var(--hours);
+				&::after { content: counter(hours, decimal-leading-zero) ' '; }
+			}
+			&:nth-of-type(2) {
+				animation: minutes 3600s steps(60, end) infinite;
+				animation-delay: var(--delay-minutes, 0s);
+				counter-reset: minutes var(--minutes);
+				&::before { content: ':'; }
+				&::after { content: counter(minutes, decimal-leading-zero) ' '; }
+			}
+			&:nth-of-type(3) {
+				animation: seconds 60s steps(60, end) infinite;
+				animation-delay: var(--delay-seconds, 0s);
+				counter-reset: seconds var(--seconds);
+				&::before { content: ':'; }
+				&::after { content: counter(seconds, decimal-leading-zero) ' '; }
+			}
 		}
 	}
-}
 
-@keyframes hours {
-	from { --hours: 0; }
-	to { --hours: 24; } 
-}
-@keyframes minutes { 
-	from { --minutes: 0; }
-	to { --minutes: 60; } 
-}
-@keyframes seconds { 
-	from { --seconds: 0;}
-	to { --seconds: 60; }
+	@keyframes hours {
+		from { --hours: 0; }
+		to { --hours: 24; } 
+	}
+	@keyframes minutes { 
+		from { --minutes: 0; }
+		to { --minutes: 60; } 
+	}
+	@keyframes seconds { 
+		from { --seconds: 0;}
+		to { --seconds: 60; }
+	}
 }

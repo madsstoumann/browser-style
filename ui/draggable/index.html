@@ -5,28 +5,22 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-draggable.css">
-	<link rel="stylesheet" href="../context-menu/ui-context-menu.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Draggable List</h2>
+	<p>
+		The <strong>Draggable List</strong> component allows users to reorder items interactively by dragging and dropping them within the list. Each list item includes a drag icon, indicating it can be moved.
+	</p>
 
 	<ul class="ui-draggable">
 		<li draggable="true">
 			<ui-icon type="drag"></ui-icon>
 			This is item number 1
-			<!-- <button type="button" id="context-menu-toggle-1" popovertarget="context-menu-1" class="--icon --transparent">
-				<ui-icon type="kebab"></ui-icon>
-			</button>
-			<ul id="context-menu-1" popover anchor="context-menu-toggle-1" class="ui-context-menu --bottom --right">
-				<li tabindex="0">1 — Add item</li>
-				<li tabindex="0">1 — Edit item</li>
-				<li tabindex="0">1 — Delete item</li>
-			</ul> -->
 		</li>
 		<li draggable="true">
 			<ui-icon type="drag"></ui-icon>
@@ -37,6 +31,44 @@
 			This is item number 3
 		</li>
 	</ul>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<ul class="ui-draggable">
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 1
+			</li>
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 2
+			</li>
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 3
+			</li>
+		</ul>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<ul class="ui-draggable">
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 1
+			</li>
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 2
+			</li>
+			<li draggable="true">
+				<ui-icon type="drag"></ui-icon>
+				This is item number 3
+			</li>
+		</ul>
+	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

@@ -1,62 +1,75 @@
 @import '../icon/ui-icon.css';
-ul.ui-accordion {
-	all: unset;
-	& > li {
-		border-block-end: 1px solid var(--ButtonBorder);
-		padding-block: 1.5ch;
-		list-style: none;
-		transition: background .2s ease-in-out;
-		& > a {
-			color: inherit;
+@layer bs-component {
+	:where(.ui-accordion) {
+		--ui-accordion-bds: solid;
+		--ui-accordion-bdw: 1px;
+		--ui-accordion-bg--hover: linear-gradient(to right, #0000, var(--Field) 10% 90%, #0000);
+		& summary {
 			align-items: center;
+			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
+			color: inherit;
+			cursor: pointer;
 			display: flex;
-			justify-content: space-between;
 			font-size: larger;
+			font-weight: 500;
+			justify-content: space-between;
+			padding-block: 1.5ch;
 			text-decoration: none;
-			& strong {
-				font-weight: 500;
-				pointer-events: none;
+			transition: background .2s ease-in-out;
+			&::-webkit-details-marker { display: none; }
+		}
+		&:not([open]) summary:hover { background: var(--ui-accordion-bg--hover); }
+		&[open] summary { 
+			border: 0; 
+			& + div {
+				border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
+				padding-block: 0 1.5ch;
 			}
 		}
-		& > div {
-			display: grid;
-			grid-template-rows: 0fr;
-			transition: grid-template-rows 0.25s cubic-bezier(.4, 0, .2, 1);
-			& > * { overflow: hidden; }
-		}
-		&:is(:target, .--open) > div { grid-template-rows: 1fr; }
-		&:not(:target):not(.--open) > div {
-			transition-duration: var(--_trsdu-close, .15s);
-			transition-timing-function: var(--_trstf-close, ease-out); 
-			& > * { margin: 0; padding: 0; }
-		}
-		@media (hover: hover) {
-			&:hover { background: var(--GrayHover); }
+		&.--no-border { --ui-accordion-bdw: 0; }
+		&.--item {
+			--ui-accordion-bdw: 0;
+			border-radius: 1em;
+			box-shadow: 0em 1em 4em color-mix(in srgb, CanvasText 10%, transparent);
+			margin-block-end: 2em;
+			padding-inline: 2.5ch;
 		}
 	}
-}
 
-details.ui-accordion {
-	& summary {
-		align-items: center;
-		border-block-end: 1px solid var(--ButtonBorder);
-		color: inherit;
-		cursor: pointer;
-		display: flex;
-		font-size: larger;
-		font-weight: 500;
-		justify-content: space-between;
-		padding-block: 1.5ch;
-		text-decoration: none;
-		transition: background .2s ease-in-out;
-		&::-webkit-details-marker { display: none; }
-	}
-	&:not([open]) summary:hover { background: var(--GrayHover); }
-	&[open] summary { 
-		border: 0; 
-		& + div {
-			border-block-end: 1px solid var(--ButtonBorder);
-			padding-block: 0 1.5ch;
+	ul.ui-accordion {
+		all: unset;
+		& > li {
+			border-block-end: var(--ui-accordion-bdw) var(--ui-accordion-bds) var(--ButtonBorder);
+			padding-block: 1.5ch;
+			list-style: none;
+			transition: background .2s ease-in-out;
+			& > a {
+				color: inherit;
+				align-items: center;
+				display: flex;
+				justify-content: space-between;
+				font-size: larger;
+				text-decoration: none;
+				& strong {
+					font-weight: 500;
+					pointer-events: none;
+				}
+			}
+			& > div {
+				display: grid;
+				grid-template-rows: 0fr;
+				transition: grid-template-rows 0.25s cubic-bezier(.4, 0, .2, 1);
+				& > * { overflow: hidden; }
+			}
+			&:is(:target, .--open) > div { grid-template-rows: 1fr; }
+			&:not(:target):not(.--open) > div {
+				transition-duration: var(--_trsdu-close, .15s);
+				transition-timing-function: var(--_trstf-close, ease-out); 
+				& > * { margin: 0; padding: 0; }
+			}
+			@media (hover: hover) {
+				&:hover { background: var(--ui-accordion-bg--hover); }
+			}
 		}
 	}
 }

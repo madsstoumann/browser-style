@@ -1,0 +1,27 @@
+/* From https://css-generators.com/ribbon-shapes */
+@layer bs-component {
+	:where(.ui-ribbon) {
+		--f: .5em; /* control the folded part */
+		background-color: var(--ui-ribbon-bg, var(--AccentColor));
+		border-image: conic-gradient(#0008 0 0) 51%/var(--f);
+		clip-path: polygon(
+		100% calc(100% - var(--f)),100% 100%,calc(100% - var(--f)) calc(100% - var(--f)),var(--f) calc(100% - var(--f)), 0 100%,0 calc(100% - var(--f)),999px calc(100% - var(--f) - 999px),calc(100% - 999px) calc(100% - var(--f) - 999px));
+		color: var(--ui-ribbon-c, #fff);
+		font-size: var(--ui-ribbon-fs, small);
+		font-weight: var(--ui-ribbon-fw, 700);
+		line-height: 1.6;
+		padding-bottom: var(--f);
+		padding-inline: 1lh;
+		position: absolute;
+		right: 0;
+		top: 0;
+		transform: translate(calc((1 - cos(45deg))*100%), -100%) rotate(45deg);
+		transform-origin: 0% 100%;
+		[dir=rtl] &, &.--left {
+			left: 0;
+			right: unset;
+			transform: translate(calc((cos(45deg) - 1)*100%), -100%) rotate(-45deg);
+			transform-origin: 100% 100%;
+		}
+	}
+}

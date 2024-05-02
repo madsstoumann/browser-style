@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<!--<meta name="view-transition" content="same-origin">-->
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-image-compare.css">
 </head>
@@ -13,8 +13,20 @@
 	<h1>UI: Components</h1>
 
 	<h2>Image Compare</h2>
+	<p>
+		A component for comparing two images. The component is built with a <code>fieldset</code> containing two <code>img</code> elements. An <code>input[type="range"]</code> is used to slide between the two images.
+	</p>
 	<fieldset class="ui-image-compare">
-		<legend>Image Compare</legend>
+		<img src="https://assets.stoumann.dk/img/color.jpg" alt="First Image for Comparison" loading="lazy" decoding="async">
+		<img src="https://assets.stoumann.dk/img/bw.jpg" alt="Second Image for Comparison" loading="lazy" decoding="async">
+		<label aria-label="Slide to compare two images">
+			<input type="range" value="50" aria-label="Slider for comparing two images" data-key="value" data-scope="fieldset" data-unit="%">
+		</label>
+	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<fieldset class="ui-image-compare cs-opposite">
 		<img src="https://assets.stoumann.dk/img/color.jpg" alt="First Image for Comparison" loading="lazy" decoding="async">
 		<img src="https://assets.stoumann.dk/img/bw.jpg" alt="Second Image for Comparison" loading="lazy" decoding="async">
 		<label aria-label="Slide to compare two images">

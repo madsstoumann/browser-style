@@ -1,166 +1,168 @@
-:where(.ui-menu) {
-	--VisitedText: currentColor;
-	--ui-menu-pb: .75em;
-	--ui-menu-pi: 1.5em;
-	--ui-menu-panel-bxsh: 0px 6px 15px rgba(0, 0, 0, 0.12);
-	--ui-menu-panel-mah: none;
-	--ui-menu-mobile-gap: .75em;
+@layer bs-component {
+	:where(.ui-menu) {
+		--VisitedText: currentColor;
+		--ui-menu-pb: .75em;
+		--ui-menu-pi: 1.5em;
+		--ui-menu-panel-bxsh: 0px 6px 15px rgba(0, 0, 0, 0.12);
+		--ui-menu-panel-mah: none;
+		--ui-menu-mobile-gap: .75em;
 
-	align-items: center;
-	background: var(--ui-menu-bg, var(--GrayCanvas));
-	color: var(--ui-menu-c, var(--CanvasText));
-	display: flex;
-	font-size: var(--ui-menu-fs, smaller);
-	justify-content: space-between;
-	margin-inline: auto;
-	max-inline-size: var(--ui-menu-desktop-w, 1200px);
-	padding:
-		var(--ui-menu-pb)
-		calc(env(safe-area-inset-right) + var(--ui-menu-pi))
-		var(--ui-menu-pb)
-		calc(env(safe-area-inset-left) + var(--ui-menu-pi));
-		position: relative;
-	& a {
-		color: currentColor;
-		text-decoration: none;
-	}
-	/* Mobile Panel Toggler */
-	& > label:has([type=checkbox]) {
-		font-size: 1rem;
-		gap: 0;
-	}
-	/* Mobile Panel Overlay */
-	& > label:has([type=checkbox]:checked)::after {
-		background: rgba(0,0,0,.25);
-		content: "";
-		inset: 0;
-		position: fixed;
-	 }
-	 & .ui-menu-expand {
-		display: grid;
-		grid-template-rows: 0fr;
-		transition: grid-template-rows 0.25s cubic-bezier(.2, 0, .2, 1);
-	 }
-	& .ui-menu-label:has(input) {
 		align-items: center;
-		cursor: pointer;
+		background: var(--ui-menu-bg, var(--CanvasGray));
+		color: var(--ui-menu-c, var(--CanvasText));
 		display: flex;
-		font-size: inherit;
-		font-weight: inherit;
-		gap: 1ch;
+		font-size: var(--ui-menu-fs, smaller);
 		justify-content: space-between;
-		&:has(:checked) + .ui-menu-expand { grid-template-rows: 1fr; }
-		&:not(:has(:checked)) { z-index: 1; }
-	}
-	& .ui-menu-overlay { all: unset; }
-	& .ui-menu-panel { overflow: hidden; }
-	&:has([type=checkbox]:checked) .ui-menu-flyout { translate: 0; }
-	& .ui-menu-flyout {
-		background: var(--ui-menu-flyout-bg, inherit);
-		color: var(--ui-menu-flyout-c, inherit);
-		display: flex;
-		flex-direction: column;
-		inset: 0 calc(100vw - var(--ui-mobile-w, 80vw)) 0 0;
-		justify-content: space-between;
-		overflow-x: hidden;
-		overflow-y: auto;
-		padding: var(--ui-menu-flyout-p, 2ch);
-		position: fixed;
-		transition: translate .2s cubic-bezier(.4, 0, .2, 1);
-		translate: -100vw 0;
-		& > nav {
-			display: flex;
-			flex: 1;
-			flex-direction: var(--ui-menu-dir, column);
-			&:last-of-type { justify-content: end; }
+		margin-inline: auto;
+		max-inline-size: var(--ui-menu-desktop-w, 1200px);
+		padding:
+			var(--ui-menu-pb)
+			calc(env(safe-area-inset-right) + var(--ui-menu-pi))
+			var(--ui-menu-pb)
+			calc(env(safe-area-inset-left) + var(--ui-menu-pi));
+			position: relative;
+		& a {
+			color: currentColor;
+			text-decoration: none;
 		}
-	}
-	/* State */
-	&:has([type=radio]:checked) {
-		& .ui-menu-overlay:not(:has(:checked)) {
-			&::after {
-				content: "";
-				height: 100vh;
-				inset: 0;
-				position: fixed;
-				width: 100vw;
-			}
+		/* Mobile Panel Toggler */
+		& > label:has([type=checkbox]) {
+			font-size: 1rem;
+			gap: 0;
 		}
-	}
-
-	@media (max-width: 767px) {
-		& .ui-menu-label {
-			padding-block: var(--ui-menu-mobile-gap);
-			&:has(input) {
-				border-block-end: 1px dotted var(--ButtonBorder);
-			}
-			&:has(:checked) {
-				margin-block-end: var(--ui-menu-mobile-gap);
-			}
-		}
-	}
-
-	@media (min-width: 768px) {
-		& .ui-menu-flyout {
-			--ui-menu-dir: row;
-			display: contents;
-			color: inherit;
-			font-size: revert;
-			& > nav {
-				align-items: center;
-				flex: unset;
-				gap: var(--ui-menu-desktop-gap, 2.5em);
-			}
+		/* Mobile Panel Overlay */
+		& > label:has([type=checkbox]:checked)::after {
+			background: rgba(0,0,0,.25);
+			content: "";
+			inset: 0;
+			position: fixed;
 		}
 		& .ui-menu-expand {
-			background: Canvas var(--_bgi, none) no-repeat center right /auto 100%;
-			box-shadow: var(--ui-menu-panel-bxsh); 
-			left: 0;
-			position: absolute;
-			top: 100%;
-			width: 100%;
-			& > .ui-menu-panel {
-				margin-inline: auto;
-				max-height: var(--ui-menu-panel-mah);
-				padding-inline: var(--ui-menu-pi);
-				width: 100%;
-				& > * { padding-block: var(--ui-menu-pb); }
+			display: grid;
+			grid-template-rows: 0fr;
+			transition: grid-template-rows 0.25s cubic-bezier(.2, 0, .2, 1);
+		}
+		& .ui-menu-label:has(input) {
+			align-items: center;
+			cursor: pointer;
+			display: flex;
+			font-size: inherit;
+			font-weight: inherit;
+			gap: 1ch;
+			justify-content: space-between;
+			&:has(:checked) + .ui-menu-expand { grid-template-rows: 1fr; }
+			&:not(:has(:checked)) { z-index: 1; }
+		}
+		& .ui-menu-overlay { all: unset; }
+		& .ui-menu-panel { overflow: hidden; }
+		&:has([type=checkbox]:checked) .ui-menu-flyout { translate: 0; }
+		& .ui-menu-flyout {
+			background: var(--ui-menu-flyout-bg, inherit);
+			color: var(--ui-menu-flyout-c, inherit);
+			display: flex;
+			flex-direction: column;
+			inset: 0 calc(100vw - var(--ui-mobile-w, 80vw)) 0 0;
+			justify-content: space-between;
+			overflow-x: hidden;
+			overflow-y: auto;
+			padding: var(--ui-menu-flyout-p, 2ch);
+			position: fixed;
+			transition: translate .2s cubic-bezier(.4, 0, .2, 1);
+			translate: -100vw 0;
+			& > nav {
+				display: flex;
+				flex: 1;
+				flex-direction: var(--ui-menu-dir, column);
+				&:last-of-type { justify-content: end; }
 			}
 		}
-		& .ui-menu-label { 
-			border: 0;
-			padding: 0;
-		}
-		/* Hide Mobile Toggle */
-		& > label:has([type=checkbox]) { display: none; }
-
-		/* Modifier: Stretch to edge-of-screen */
-		&.--stretch {
-			& .ui-menu-expand {
-				box-shadow: none;
-				& > :is(.ui-menu-panel, ui-panel)::before {
-					box-shadow: var(--ui-menu-panel-bxsh); 
+		/* State */
+		&:has([type=radio]:checked) {
+			& .ui-menu-overlay:not(:has(:checked)) {
+				&::after {
+					content: "";
+					height: 100vh;
+					inset: 0;
+					position: fixed;
+					width: 100vw;
 				}
 			}
-			&::before,
-			& .ui-menu-panel::before {
-				background: inherit;
-				content: "";
-				height: 100%;
-				left: calc(50% - 50vw);
-				overflow: hidden;
+		}
+
+		@media (max-width: 767px) {
+			& .ui-menu-label {
+				padding-block: var(--ui-menu-mobile-gap);
+				&:has(input) {
+					border-block-end: 1px dotted var(--ButtonBorder);
+				}
+				&:has(:checked) {
+					margin-block-end: var(--ui-menu-mobile-gap);
+				}
+			}
+		}
+
+		@media (min-width: 768px) {
+			& .ui-menu-flyout {
+				--ui-menu-dir: row;
+				display: contents;
+				color: inherit;
+				font-size: revert;
+				& > nav {
+					align-items: center;
+					flex: unset;
+					gap: var(--ui-menu-desktop-gap, 2.5em);
+				}
+			}
+			& .ui-menu-expand {
+				background: Canvas var(--_bgi, none) no-repeat center right /auto 100%;
+				box-shadow: var(--ui-menu-panel-bxsh); 
+				left: 0;
 				position: absolute;
-				top: 0;
-				width: 100vw;
-				z-index: -1;
+				top: 100%;
+				width: 100%;
+				& > .ui-menu-panel {
+					margin-inline: auto;
+					max-height: var(--ui-menu-panel-mah);
+					padding-inline: var(--ui-menu-pi);
+					width: 100%;
+					& > * { padding-block: var(--ui-menu-pb); }
+				}
+			}
+			& .ui-menu-label { 
+				border: 0;
+				padding: 0;
+			}
+			/* Hide Mobile Toggle */
+			& > label:has([type=checkbox]) { display: none; }
+
+			/* Modifier: Stretch to edge-of-screen */
+			&.--stretch {
+				& .ui-menu-expand {
+					box-shadow: none;
+					& > :is(.ui-menu-panel, ui-panel)::before {
+						box-shadow: var(--ui-menu-panel-bxsh); 
+					}
+				}
+				&::before,
+				& .ui-menu-panel::before {
+					background: inherit;
+					content: "";
+					height: 100%;
+					left: calc(50% - 50vw);
+					overflow: hidden;
+					position: absolute;
+					top: 0;
+					width: 100vw;
+					z-index: -1;
+				}
 			}
 		}
 	}
-}
 
-/* === Prevent Scrolling, when flyout is visible === */
-@media (max-width: 767px) {
-	body:has(.ui-menu):has([type=checkbox]:checked) {
-		overflow: hidden;
+	/* === Prevent Scrolling, when flyout is visible === */
+	@media (max-width: 767px) {
+		body:has(.ui-menu):has([type=checkbox]:checked) {
+			overflow: hidden;
+		}
 	}
 }
