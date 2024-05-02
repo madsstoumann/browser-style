@@ -2,7 +2,6 @@ import datasetWithTypes from './../../assets/js/datasetWithTypes.js';
 export default function uiCalendar(node, args = {}) {
 	const today = new Date();
 	const config = Object.assign({
-		class: 'ui-calendar',
 		locale: (node.getAttribute('lang') || document.documentElement.getAttribute('lang') || 'en-US'),
 		today: {
 			day: today.getDate(),
@@ -18,7 +17,7 @@ export default function uiCalendar(node, args = {}) {
 		const numOfDays = new Date(year, month + 1, 0).getDate();
 		const renderToday = (year === config.today.year) && (month === config.today.month);
 
-		return `<div class="${config.class}">
+		return `<ui-calendar>
 			<time datetime="${year}-${(pad(month))}">${new Intl.DateTimeFormat(locale, { month: 'long'}).format(date)} <i>${year}</i></time>
 			<ul>${weekdays(config.info.firstDay,locale).map(name => `<li><abbr title="${name.long}">${name.short}</abbr></li>`).join('')}</ul>
 			<ol data-firstday="${config.info.firstDay}">
@@ -31,7 +30,7 @@ export default function uiCalendar(node, args = {}) {
 				</li>`
 			}).join('')}
 			</ol>
-		</div>`;
+		</ui-calendar>`;
 	}
 
 	const weekdays = (firstDay, locale) => {

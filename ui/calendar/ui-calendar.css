@@ -1,7 +1,8 @@
 @layer bs-component {
-	:where(.ui-calendar) {
+	:where(ui-calendar) {
 		--ui-calendar-day-sz: 2em;
 		--ui-calendar-row-gap: .33em;
+		display: block;
 		max-inline-size: 300px;
 		& abbr { text-decoration: none; }
 		& i { 

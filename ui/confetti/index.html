@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Confetti</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-confetti.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Confetti</h2>
+	<p>
+		<strong>Confetti</strong> is a component that displays a colour-coded calendar for a year. It uses the <a href="/ui/calendar/">Calendar</a> component. Weekends are indicated with <code>•</code>
+	</p>
+
+	<div class="ui-confetti" data-year="true"></div>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<p>&hellip; and <code>lang="zh-Hans-CN-u-nu-hanidec"</code></p>
+	<div class="ui-confetti cs-opposite" data-year="true" lang="zh-Hans-CN-u-nu-hanidec"></div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<p>&hellip; and <code>lang="ar-AE"</code></p>
+	<div class="ui-confetti" data-year="true" lang="ar-AE" dir="rtl"></div>
+
+	<script type="module">
+		import { init } from './../../assets/js/common.js';
+		import uiCalendar from '../calendar/uiCalendar.js';
+		init('.ui-confetti', uiCalendar);
+	</script>
+</body>
+</html>

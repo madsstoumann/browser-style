@@ -1,0 +1,44 @@
+@layer bs-component {
+	:where(.ui-confetti) {
+		background: var(--ui-confetti-bg, light-dark(hsl(43deg 43% 92%), hsl(43deg 10% 10%)));
+		border-radius: var(--ui-confetti-bdrs, .5em);
+		display: grid;
+		font-size: smaller;
+		grid-template-columns: repeat(var(--_cols, 6), 1fr);
+		padding: 0 2ch 2ch;
+		& ol {
+			all: unset;
+			list-style: none;
+		}
+		& time > i, ul { display: none; }
+		& ui-calendar {
+			flex: 1;
+			& > time {
+				display: block;
+				font-size: x-small;
+				font-weight: 900;
+				margin-block: 1.5ch;
+				text-align: center;
+			}
+		}
+		& [data-day] {
+			background: var(--day);
+			color: var(--day-c, #222);
+			display: flex;
+			justify-content: space-between;
+			padding: .25ch 1ch;
+		}
+		& [data-day="1"] { --day: var(--day1, hsl(199deg 99% 37%)); }
+		& [data-day="2"] { --day: var(--day2, hsl(330deg 87% 39%)); --day-c: #fff; }
+		& [data-day="3"] { --day: var(--day3, hsl(105deg 45% 47%)); }
+		& [data-day="4"] { --day: var(--day4, hsl(250deg 41% 31%)); --day-c: #fff; }
+		& [data-day="5"] { --day: var(--day5, hsl(19deg 83% 53%)); }
+		& [data-day="6"] { --day: var(--day6, hsl(189deg 99% 33%)); }
+		& [data-day="7"] { --day: var(--day7, hsl(50deg 94% 51%)); }
+		& [data-weekend]::after {
+			color: inherit;
+			content: "•";
+		}
+		@media (width > 900px) { --_cols: 12; }
+	}
+}
