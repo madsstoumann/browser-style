@@ -1,4 +1,4 @@
-/* @import "../anchor/ui-anchor.css"; */
+@import "../anchor/ui-anchor.css";
 @import "../tooltip/ui-tooltip.css";
 @layer bs-component {
 	:where(.ui-reaction) {
