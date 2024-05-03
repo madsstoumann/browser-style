@@ -18,8 +18,13 @@
 	<h1>UI: Components</h1>
 
 	<h2>Number</h2>
-	<p><code>&lt;ui-number&gt;</code> is a web component for counting numbers. Set <code>start</code>, <code>end</code> and <code>duration</code> (in milliseconds). 
-		Set <code>iteration</code> to <code>-1</code> for <em>infinite</em> or use any positiive integer for a specific amount. Add an optional <code>suffix</code> and target additional CSS Custom Properties through <code>ui-component::part(number)</code></p>
+	<p>
+		<code>&lt;ui-number&gt;</code> is a web component for counting numbers. Set <code>start</code>, <code>end</code> and <code>duration</code> (in milliseconds). 
+		Set <code>iteration</code> to <code>-1</code> for <em>infinite</em> or use any positiive integer for a specific amount. Add an optional <code>suffix</code>. Target styling through <code>ui-component::part(number)</code> and <code>::part(suffix)</code>
+	</p>
+	<p>
+		<code>.ui-number-card</code> is a container for the number and optional text, using <code>animation-timeline</code> to trigger the animation on scroll-entry.
+	</p>
 
 	<section class="ui-grid --sm-c-2 --md-c-3">
 		<h2>The world in numbers</h2>
@@ -93,13 +98,6 @@
 	</section>
 
 	<script src="index.js" type="module"></script>
-
-	<!--
-	<script type="module">
-		class uiNumber extends HTMLElement{constructor(){super();const t=parseInt(this.getAttribute("start"))||0,e=parseInt(this.getAttribute("end"))||10,n=parseInt(this.getAttribute("duration"))||5e3,s=parseInt(this.getAttribute("iteration"))||1,r=Math.abs(e-t),a=this.getAttribute("suffix"),i=new CSSStyleSheet;i.replaceSync("@property --num {syntax:'<integer>';initial-value:0;inherits:false;}"),document.adoptedStyleSheets=[...document.adoptedStyleSheets,i];const u=new CSSStyleSheet;u.replaceSync(`:host::part(number) {--num:${t};animation:N ${n}ms steps(${r}) forwards ${-1===s?"inifinite":s} var(--playstate,running);counter-reset:N var(--num)}:host::part(number)::before{content:counter(N)}@keyframes N {to{--num: ${e}}}`),this.attachShadow({mode:"open"}).innerHTML=`<span part="number">${a?`<span part="suffix">${a}</span>`:""}</span>`,this.shadowRoot.adoptedStyleSheets=[u]}}customElements.define("ui-number",uiNumber);
-	</script>
-	-->
-
 	</div>
 </body>
 </html>
