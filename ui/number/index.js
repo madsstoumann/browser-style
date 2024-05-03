@@ -9,6 +9,7 @@ class uiNumber extends HTMLElement {
 	constructor() {
 		super();
 		if (!uiNumber.adopted) {
+			/* These styles are added once */
 			const adopted = new CSSStyleSheet();
 			adopted.replaceSync(`
 				@property --num { syntax: '<integer>'; initial-value: 0; inherits: false; }
@@ -31,6 +32,11 @@ class uiNumber extends HTMLElement {
 			`--timing: steps(${Math.abs(end - start)})`
 		]
 
+		/*
+		These styles are added for each instance. 
+		If `animation` is moved to `adopted`, it doesn't work in Safari. 
+		If `--num` is set to `var(--end, 10)` in the keyframes, it doesn't work in Firefox.
+		*/
 		const stylesheet = new CSSStyleSheet();
 		stylesheet.replaceSync(`
 			:host::part(number) {
