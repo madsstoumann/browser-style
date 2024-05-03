@@ -10,9 +10,23 @@
 			font-size: 500%;
 			font-variant-numeric: tabular-nums;
 			font-weight: 900;
+			&::part(number) {
+				--playstate: var(--scroll-trigger, running);
+			}
 			&::part(suffix) {
 				font-size: 75%;
 			}
+		}
+	}
+	@keyframes trigger {
+		to { --scroll-trigger: running; }
+	}
+	@supports (animation-timeline: view()) {
+		:where(.ui-number-card) {
+			--scroll-trigger: paused;
+			animation: trigger linear;
+			animation-range: cover;
+			animation-timeline: view();
 		}
 	}
 }

@@ -11,28 +11,7 @@
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 	<style>
 		h2 { grid-column: span var(--ui-grid-cols); }
-		@supports (animation-timeline: view()) {
-			.scroll-trigger {
-				margin-block: 50vh 10vh;
-				& > section {
-					--scroll-trigger: paused;
-					animation: trigger linear;
-					animation-timeline: view();
-					animation-range: entry-crossing 1%;
-				}
-				ui-number::part(number) {
-					--playstate: var(--scroll-trigger);
-				}
-			}
-		}
-		@keyframes trigger {
-			to { --scroll-trigger: running; }
-		}
-		ui-number {
-			font-size: 500%;
-			font-variant-numeric: tabular-nums;
-			font-weight: 900;
-		}
+		.scroll-trigger { margin-block: 50vh; }
 	</style>
 </head>
 <body>
@@ -79,41 +58,39 @@
 	<br>
 	<h2>Animation Timeline Scroll Example</h2>
 	<p>Scroll down for an example on how to trigger the animations on scroll-entry.</p>
-	<div class="scroll-trigger">
-		<section class="ui-grid --sm-c-2 --md-c-3">
-			<h2>The world in numbers</h2>
-	
-			<div class="ui-number-card">
-				<ui-number start="7580" end="8620" duration="2000"></ui-number>
-				<p>Millions of adults have gained literacy skills in the last decade.</p>
-			</div>
-	
-			<div class="ui-number-card">
-				<ui-number start="20" end="29" duration="2000" suffix="%"></ui-number>
-				<p>Percentage of global energy generated from renewable sources has increased significantly.</p>
-			</div>
-	
-			<div class="ui-number-card">
-				<ui-number start="70" end="73" duration="2000"></ui-number>
-				<p>Average global life expectancy has risen by 3 years since 2000.</p>
-			</div>
-	
-			<div class="ui-number-card">
-				<ui-number start="12" end="16" duration="2000" suffix="%"></ui-number>
-				<p>Percentage of Earth's terrestrial and marine areas now protected.</p>
-			</div>
-	
-			<div class="ui-number-card">
-				<ui-number start="2000" end="4700" duration="2000"></ui-number>
-				<p>Millions more people have gained access to the internet over the past 5 years.</p>
-			</div>
-	
-			<div class="ui-number-card">
-				<ui-number start="60" end="70" duration="2000" suffix="%"></ui-number>
-				<p>Percentage of children worldwide enrolled in primary education has increased.</p>
-			</div>
-		</section>
-	</div>
+	<section class="ui-grid --sm-c-2 --md-c-3 scroll-trigger">
+		<h2>The world in numbers</h2>
+
+		<div class="ui-number-card">
+			<ui-number start="7580" end="8620" duration="2000"></ui-number>
+			<p>Millions of adults have gained literacy skills in the last decade.</p>
+		</div>
+
+		<div class="ui-number-card">
+			<ui-number start="20" end="29" duration="2000" suffix="%"></ui-number>
+			<p>Percentage of global energy generated from renewable sources has increased significantly.</p>
+		</div>
+
+		<div class="ui-number-card">
+			<ui-number start="70" end="73" duration="2000"></ui-number>
+			<p>Average global life expectancy has risen by 3 years since 2000.</p>
+		</div>
+
+		<div class="ui-number-card">
+			<ui-number start="12" end="16" duration="2000" suffix="%"></ui-number>
+			<p>Percentage of Earth's terrestrial and marine areas now protected.</p>
+		</div>
+
+		<div class="ui-number-card">
+			<ui-number start="2000" end="4700" duration="2000"></ui-number>
+			<p>Millions more people have gained access to the internet over the past 5 years.</p>
+		</div>
+
+		<div class="ui-number-card">
+			<ui-number start="60" end="70" duration="2000" suffix="%"></ui-number>
+			<p>Percentage of children worldwide enrolled in primary education has increased.</p>
+		</div>
+	</section>
 
 	<script src="index.js" type="module"></script>
 
