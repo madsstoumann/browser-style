@@ -1,5 +1,6 @@
 @layer bs-component {
 	:where(.ui-blinds) {
+		--AccentColor: hsl(211, 100%, 50%); /* TMP Fix for Safari */
 		--ui-blinds-bg: 
 			color-mix(in oklab, var(--AccentColor), #000 40%),
 			color-mix(in oklab, var(--AccentColor), #000 20%),

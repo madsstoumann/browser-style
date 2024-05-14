@@ -27,7 +27,7 @@ class uiNumber extends HTMLElement {
 		const styles = [
 			`--num: ${start}`,
 			`--end: ${end}`,
-			`--duration: ${parseInt(this.getAttribute('duration')) || 5000}ms`,
+			`--duration: ${parseInt(this.getAttribute('duration')) || 2000}ms`,
 			`--iteration: ${iteration === -1 ? 'infinite' : iteration}`,
 			`--timing: steps(${Math.abs(end - start)})`
 		]
