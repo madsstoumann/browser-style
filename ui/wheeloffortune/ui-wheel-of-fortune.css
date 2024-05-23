@@ -3,19 +3,15 @@
 		--_items: 12;
 		all: unset;
 		aspect-ratio: 1 / 1;
-		
-		padding: .5cqi;
 		background: var(--ui-wheel-bg, #4BA);
-		border: 1.5cqi dotted var(--ui-wheel-ticker-c, #FEB);
-		
-
+		border: var(--ui-wheel-bdw, 1.5cqi) dotted var(--ui-wheel-bdc, #FEB);
 		border-radius: 50%;
 		box-sizing: content-box;
 		container-type: inline-size;
 		direction: ltr;
 		display: grid;
+		padding: var(--ui-wheel-p, .33cqi);
 		position: relative;
-		width: 100%;
 		&::after {
 			aspect-ratio: 1/cos(30deg);
 			background: var(--ui-wheel-ticker-c, inherit);
@@ -29,6 +25,8 @@
 		& > * { position: absolute; }
 
 		button {
+			--button-bg: hsla(0, 0%, 100%, .7);
+			--button-bg--hover: hsla(0, 0%, 100%, .9);
 			aspect-ratio: 1 / 1;
 			border-radius: 50%;
 			font-size: 5cqi;
@@ -40,6 +38,7 @@
 			all: unset;
 			clip-path: inset(0 0 0 0 round 50%);
 			display: grid;
+			height: 100cqi;
 			inset: 0;
 			place-content: center start;
 
@@ -51,7 +50,7 @@
 				display: grid;
 				font-size: 5cqi;
 				grid-area: 1 / -1;
-				padding-left: 1ch;
+				padding: var(--ui-wheel-item-p, 0 0 0 2ch);
 				rotate: calc(360deg / var(--_items) * calc(var(--_idx) - 1));
 				transform-origin: center right;
 				user-select: none;
