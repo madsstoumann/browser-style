@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Wheel of Fortune</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-wheel-of-fortune.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Wheel of Fortune</h2>
+
+	<fieldset class="ui-wheel-of-fortune">
+		<ul>
+			<li>$1000</li>
+			<li>$2000</li>
+			<li>$3000</li>
+			<li>$4000</li>
+			<li>$5000</li>
+			<li>$6000</li>
+			<li>$7000</li>
+			<li>$8000</li>
+			<li>$9000</li>
+			<li>$10000</li>
+			<li>$11000</li>
+			<li>$12000</li>
+		</ul>
+		<button type="button">SPIN</button>
+	</fieldset>
+
+</body>
+
+<script type="module">
+	import { init } from './../../assets/js/common.js';
+	import uiWheelOfFortune from './uiWheelOfFortune.js';
+	init('.ui-wheel-of-fortune', uiWheelOfFortune);
+</script>
+</html>
