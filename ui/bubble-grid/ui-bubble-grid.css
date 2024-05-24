@@ -1,0 +1,22 @@
+@layer bs-component {
+	:where(.ui-bubble-grid) {
+		all: unset;
+		display: grid;
+		grid-template-columns: repeat(12, 1fr);
+		grid-template-rows: repeat(12, 1fr);
+		& > * {
+			background: var(--GrayText);
+			border-radius: 50%;
+			object-fit: cover;
+			width: 100%;
+			&:nth-child(1) { grid-area: 1 / 1 / 7 / 7; }
+			&:nth-child(2) { grid-area: 5 / 5 / 11 / 11; }
+			&:nth-child(3) { grid-area: 9 / 3 / 13 / 7; }
+			&:nth-child(4) { grid-area: 3 / 9 / 7 / 13; }
+			&:nth-child(5) { grid-area: 8 / 1 / 11 / 4; }
+			&:nth-child(6) { grid-area: 2 / 8 / 4 / 10; }
+			&:nth-child(7) { grid-area: 10 / 10 / 13 / 13; }
+			&:nth-child(8) { grid-area: 1 / 11 / 3 / 13; }
+		}
+	}
+}
