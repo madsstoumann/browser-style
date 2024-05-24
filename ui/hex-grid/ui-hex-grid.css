@@ -12,10 +12,10 @@
 			object-fit: cover;
 			width: 100%;
 			&:nth-child(1) { grid-area: 1 / 1 / 5 / 5; }
-			&:nth-child(2) { grid-area: 1 / 9 / 5 / 13; }
+			&:nth-child(2) { grid-area: 4 / 3 / 8 / 7; }
 			&:nth-child(3) { grid-area: 1 / 5 / 5 / 9; }
 			&:nth-child(4) { grid-area: 4 / 7 / 8 / 11; }
-			&:nth-child(5) { grid-area: 4 / 3 / 8 / 7; }
+			&:nth-child(5) { grid-area: 1 / 9 / 5 / 13; }
 			&:nth-child(6) { grid-area: 7 / 5 / 11 / 9; }
 			&:nth-child(7) { grid-area: 7 / 1 / 11 / 5; }
 			&:nth-child(8) { grid-area: 7 / 9 / 11 / 13; }
