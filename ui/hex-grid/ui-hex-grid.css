@@ -1,0 +1,24 @@
+@layer bs-component {
+	:where(.ui-hex-grid) {
+		all: unset;
+		display: grid;
+		gap: var(--ui-hex-grid-gap, clamp(.3rem, 1vmin, .9rem));
+		grid-template-columns: repeat(12, 1fr);
+		grid-template-rows: repeat(10, 1fr);
+		& > * {
+			aspect-ratio: cos(30deg);
+			background: var(--GrayText);
+			clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
+			object-fit: cover;
+			width: 100%;
+			&:nth-child(1) { grid-area: 1 / 1 / 5 / 5; }
+			&:nth-child(2) { grid-area: 1 / 9 / 5 / 13; }
+			&:nth-child(3) { grid-area: 1 / 5 / 5 / 9; }
+			&:nth-child(4) { grid-area: 4 / 7 / 8 / 11; }
+			&:nth-child(5) { grid-area: 4 / 3 / 8 / 7; }
+			&:nth-child(6) { grid-area: 7 / 5 / 11 / 9; }
+			&:nth-child(7) { grid-area: 7 / 1 / 11 / 5; }
+			&:nth-child(8) { grid-area: 7 / 9 / 11 / 13; }
+		}
+	}
+}
