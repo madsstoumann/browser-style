@@ -52,12 +52,10 @@
 					background-color: var(--CanvasText);
 					border-radius: 50%;
 					content: "";
-					
 					inset-inline-end: calc(0px - (1 * var(--ui-chronology-bdw)));
 					inset-block-end: calc(0px - (1.5 * var(--ui-chronology-bdw)));
 					position: absolute;
 					width: calc(2 * var(--ui-chronology-bdw));
-					
 				}
 			}
 
@@ -122,15 +120,23 @@
 				i { position: relative; }
 			}
 		}
-
-		h4 {
-			font-weight: 700;
-			margin: 0;
-		}
 		article {
 			align-self: start;
 			margin: 2ch 1ch 0 1ch;
 			line-height: 1.2;
+		}
+		h4 {
+			font-weight: 700;
+			margin-block: .5ch 0;
+		}
+
+		/* Responsive */
+		@media (max-width : 768px) {
+			grid-template-columns: 1fr;
+			ol {
+				grid-template-rows: repeat(3, 1fr);
+				li[value="0"] { display: none; }
+			}
 		}
 	}
 }
