@@ -1,0 +1,29 @@
+@layer bs-component {
+	:where(.ui-pie-chart) {
+		container-type: inline-size;
+		margin: 0;
+		dl {
+			aspect-ratio: 1 / 1;
+			clip-path: inset(0 0 0 0 round 50%);
+			display: grid;
+			width: 100%;
+		}
+		dd {
+			all: unset;
+			align-content: center;
+			background: conic-gradient(
+				from -90deg,
+				var(--c) 0 var(--p),
+				#0000 0 var(--p)
+			);
+			font-size: 4cqi;
+			grid-area: 1 / -1;
+			rotate: var(--d);
+			transform-origin: center;
+			width: 100%;
+		}
+		dt {
+			display: none;
+		}
+	}
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Pie Chart</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-pie-chart.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Pie Chart</h2>
+
+	<figure class="ui-pie-chart">
+		<figcaption>Percentage Of Native English Speakers By Country</figcaption>
+		<dl></dl>
+	</figure>
+
+	<script>
+		const data = [
+			{ key: "United States", value: 67.85, color: "#3AB" },
+			{ key: "United Kingdom", value: 17.70, color: "#F0A" },
+			{ key: "Canada", value: 5.90, color: "#694" },
+			{ key: "Australia", value: 5.01, color: "#A5A" },
+			{ key: "Ireland", value: 1.18, color: "#777" },
+			{ key: "New Zealand", value: 1.18, color: "#BBA" },
+			{ key: "South Africa", value: 1.18, color: "#8DA" }
+		];
+
+		function renderPieChart(data, node) {
+			let currentDegree = 90; // Start at 90 degrees to align with 12 o'clock
+			data.forEach((item, index) => {
+				const dt = document.createElement('dt');
+				dt.textContent = item.key;
+				const dd = document.createElement('dd');
+				dd.textContent = `${item.value}%`;
+				dd.style.setProperty('--d', `${currentDegree.toFixed(2)}deg` );
+				dd.style.setProperty('--p', `${item.value}%`);
+				dd.style.setProperty('--c', item.color);
+				currentDegree += item.value * 3.6;
+				node.appendChild(dt);
+				node.appendChild(dd);
+			});
+		}
+
+		// Render the pie chart
+		renderPieChart(data, document.querySelector('.ui-pie-chart dl'));
+</script>
+
+</body>
+
+
+</html>
