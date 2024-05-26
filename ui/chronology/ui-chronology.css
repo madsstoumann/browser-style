@@ -3,7 +3,8 @@
 		--ui-chronology-bdrs: 50%;
 		--ui-chronology-bdw: 12px;
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+		row-gap: 1ch;
 
 		ol {
 			display: grid;
@@ -26,9 +27,12 @@
 						}
 					}
 				}
-				/* FIRST COLUMN, Hide Top Left Corner */
+				/* FIRST COLUMN ONLY */
 				&:first-of-type {
-					li[value="0"]:first-of-type::before { display: none; }
+					li[value="0"]:first-of-type {
+						&::before { display: none; } /* Hide Top Left Corner */
+						i { grid-column: span 2; } /* Headline */
+					}
 				}
 				/* THIRD COLUMN, FIFTH COLUMN ETC. */
 				&:not(:first-of-type) { 
@@ -96,6 +100,7 @@
 				margin-inline: auto;
 				width: var(--ui-chronology-bdw);
 			}
+
 			&::after { /* Year */
 				align-self: start;
 				background-color: var(--CanvasText);
@@ -109,7 +114,7 @@
 				width: 5ch;
 			}
 
-			&[value="0"] { /* Empty: Connecting lists */
+			&[value="0"] { /* Empty: Connecting lists, Wavy Lines */
 				&::after { content: '';}
 				&::before {
 					background: #0000;
@@ -117,22 +122,33 @@
 					margin: 0;
 					width: calc(50% + (var(--ui-chronology-bdw) / 2));
 				}
-				i { position: relative; }
+				i {
+					color: var(--ui-chronology-headline-c, silver);
+					font-size: clamp(1.5rem, 0.7857rem + 2.2857vw, 2.5rem);
+					font-style: normal;
+					font-weight: 900;
+					letter-spacing: -0.033em;
+					line-height: 1;
+					position: relative;
+					text-transform: uppercase;
+				}
+			}
+
+			article {
+				align-self: start;
+				margin: 2ch 1ch 0 1ch;
+				line-height: 1.2;
+			}
+	
+			h4 {
+				font-weight: 700;
+				margin-block: .5ch 0;
 			}
 		}
-		article {
-			align-self: start;
-			margin: 2ch 1ch 0 1ch;
-			line-height: 1.2;
-		}
-		h4 {
-			font-weight: 700;
-			margin-block: .5ch 0;
-		}
 
-		/* Responsive */
-		@media (max-width : 768px) {
-			grid-template-columns: 1fr;
+		/* RWD */
+		@media (max-width : 600px) {
+			row-gap: 0;
 			ol {
 				grid-template-rows: repeat(3, 1fr);
 				li[value="0"] { display: none; }

@@ -1,0 +1,27 @@
+@layer bs-component {
+	:where(.ui-word-cloud) {
+		all: unset;
+		align-items: center;
+		column-gap: 1ch;
+		container-type: inline-size;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		line-height: 1.1;
+		list-style: none;
+		li { font-size: 2.5cqi; }
+		li:nth-of-type(4n+7) { font-size: 4cqi; }
+		li:nth-of-type(10n+10) {
+			color: var(--AccentColor);
+			font-size: 5cqi;
+			font-weight: 700;
+			letter-spacing: -0.04em;
+			text-transform: uppercase;
+		}
+		li:nth-of-type(5n+1) { color: var(--GrayText); }
+		li:nth-of-type(5n+2) { color: var(--ColorInfo); }
+		li:nth-of-type(5n+3) { color: var(--ColorSuccess); }
+		li:nth-of-type(5n+4) { color: var(--ColorWarning); }
+		li:nth-of-type(10n+11) { color: var(--ColorError); }
+	}
+}
