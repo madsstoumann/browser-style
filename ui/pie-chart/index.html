@@ -21,14 +21,14 @@
 	<h2>Pie Chart</h2>
 
 	<figure class="ui-pie-chart">
-		<figcaption>CSS: Percentage Of Native English Speakers By Country</figcaption>
-		<dl></dl>
+		<figcaption>SVG: Percentage Of Native English Speakers By Country</figcaption>
 	</figure>
 
 	<br>
 
 	<figure class="ui-pie-chart">
-		<figcaption>SVG: Percentage Of Native English Speakers By Country</figcaption>
+		<figcaption>CSS: Percentage Of Native English Speakers By Country</figcaption>
+		<dl></dl>
 	</figure>
 
 	<script>
@@ -99,6 +99,7 @@
 				const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 				path.setAttribute("d", describeArc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle));
 				path.setAttribute("fill", item.color);
+				path.setAttribute("style", `--c:${item.color}`);
 				svg.appendChild(path);
 
 				const middleAngle = currentAngle + (sliceAngle / 2);
@@ -120,8 +121,8 @@
 		}
 
 		// Render the pie charts
-		renderCSSPieChart(data, document.querySelector('.ui-pie-chart dl'));
 		renderSVGPieChart(data, document.querySelector('.ui-pie-chart:not(:has(dl))'));
+		renderCSSPieChart(data, document.querySelector('.ui-pie-chart dl'));
 	</script>
 </body>
 </html>

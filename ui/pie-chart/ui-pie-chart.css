@@ -46,8 +46,17 @@
 		}
 
 		/* SVG */
-		path:hover {
-			/* fill: orange; */
+		svg {
+			overflow: visible;
 		}
+		path:hover {
+			fill: color-mix(in srgb, var(--c) 75%, #FFF);
+			scale: 1.025;
+			stroke: hsla(0, 0%, 100%, .5);
+			stroke-width: 1.025;
+			transform-origin: center;
+			transition: scale .15s ease-in-out;
+		}
+		text { pointer-events: none;}
 	}
 }
