@@ -2,28 +2,52 @@
 	:where(.ui-pie-chart) {
 		container-type: inline-size;
 		margin: 0;
+
 		dl {
 			aspect-ratio: 1 / 1;
 			clip-path: inset(0 0 0 0 round 50%);
+			direction: ltr;
 			display: grid;
+			margin-block: 0;
+			position: relative;
 			width: 100%;
 		}
 		dd {
 			all: unset;
 			align-content: center;
 			background: conic-gradient(
-				from -90deg,
+				from calc(var(--d) - 90deg),
 				var(--c) 0 var(--p),
 				#0000 0 var(--p)
 			);
-			font-size: 4cqi;
+			font-size: 3cqi;
 			grid-area: 1 / -1;
-			rotate: var(--d);
-			transform-origin: center;
-			width: 100%;
+
+			span {
+				--_r: calc(50cqi - 2.5em);
+				--_x: calc(var(--_r) - (var(--_r) * cos(var(--d))));
+				--_y: calc(var(--_r) - (var(--_r) * sin(var(--d))));
+				background: yellow;
+				display: block;
+				position: absolute;
+				top: var(--_y);
+				left: var(--_x);
+				text-align: center;
+				width: 5em;
+			}
 		}
 		dt {
 			display: none;
+		}
+
+		figcaption {
+			font-weight: 700;
+			margin-block-end: 1ch;
+		}
+
+		/* SVG */
+		path:hover {
+			/* fill: orange; */
 		}
 	}
 }

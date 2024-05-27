@@ -8,6 +8,12 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-pie-chart.css">
+	<style>
+		/* For demo */
+		.ui-pie-chart {
+			max-width: 400px;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -15,29 +21,35 @@
 	<h2>Pie Chart</h2>
 
 	<figure class="ui-pie-chart">
-		<figcaption>Percentage Of Native English Speakers By Country</figcaption>
+		<figcaption>CSS: Percentage Of Native English Speakers By Country</figcaption>
 		<dl></dl>
+	</figure>
+
+	<br>
+
+	<figure class="ui-pie-chart">
+		<figcaption>Percentage Of Native English Speakers By Country</figcaption>
 	</figure>
 
 	<script>
 		const data = [
-			{ key: "United States", value: 67.85, color: "#7FB3D5" }, // Soft Blue
-			{ key: "United Kingdom", value: 17.70, color: "#F1948A" }, // Soft Red
-			{ key: "Canada", value: 5.90, color: "#82E0AA" }, // Soft Green
-			{ key: "Australia", value: 5.01, color: "#C39BD3" }, // Soft Purple
-			{ key: "Ireland", value: 1.18, color: "#CCCCCC" }, // Soft Grey
-			{ key: "New Zealand", value: 1.18, color: "#F7DC6F" }, // Soft Yellow
-			{ key: "South Africa", value: 1.18, color: "#76D7C4" } // Soft Teal
+			{ key: "United States", value: 67.85, color: "#7FB3D5" },
+			{ key: "United Kingdom", value: 17.70, color: "#F1948A" },
+			{ key: "Canada", value: 5.90, color: "#82E0AA" },
+			{ key: "Australia", value: 5.01, color: "#C39BD3" },
+			{ key: "Other", value: 1.18 * 3, color: "#CCCCCC" } // Combined Ireland, New Zealand, South Africa
 		];
-
-		function renderPieChart(data, node) {
+	
+		function renderCSSPieChart(data, node) {
 			let currentDegree = 90; // Start at 90 degrees to align with 12 o'clock
 			data.forEach((item, index) => {
 				const dt = document.createElement('dt');
 				dt.textContent = item.key;
 				const dd = document.createElement('dd');
-				dd.textContent = `${item.value}%`;
-				dd.style.setProperty('--d', `${currentDegree.toFixed(2)}deg` );
+				const span = document.createElement('span');
+				span.textContent = `${item.value.toFixed(1)}%`;
+				dd.appendChild(span);
+				dd.style.setProperty('--d', `${currentDegree.toFixed(2)}deg`);
 				dd.style.setProperty('--p', `${item.value}%`);
 				dd.style.setProperty('--c', item.color);
 				currentDegree += item.value * 3.6;
@@ -46,11 +58,70 @@
 			});
 		}
 
-		// Render the pie chart
-		renderPieChart(data, document.querySelector('.ui-pie-chart dl'));
-</script>
+		function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+			var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+	
+			return {
+				x: centerX + (radius * Math.cos(angleInRadians)),
+				y: centerY + (radius * Math.sin(angleInRadians))
+			};
+		}
+	
+		function describeArc(x, y, radius, startAngle, endAngle) {
+			var start = polarToCartesian(x, y, radius, endAngle);
+			var end = polarToCartesian(x, y, radius, startAngle);
+	
+			var largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+	
+			var d = [
+				"M", start.x, start.y, 
+				"A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+				"L", x, y,
+				"Z"
+			].join(" ");
 
+			return d;
+		}
+	
+		function renderSVGPieChart(data, node) {
+			const width = 500;
+			const height = 500;
+			const radius = Math.min(width, height) / 2;
+			const centerX = width / 2;
+			const centerY = height / 2;
+			let currentAngle = 0;
+	
+			const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+			svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+	
+			data.forEach((item) => {
+				const sliceAngle = (item.value / 100) * 360;
+				const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+				path.setAttribute("d", describeArc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle));
+				path.setAttribute("fill", item.color);
+				svg.appendChild(path);
+
+				const middleAngle = currentAngle + (sliceAngle / 2);
+				const labelCoords = polarToCartesian(centerX, centerY, radius * 0.8, middleAngle); // Adjusted to 0.8 to move text closer to the edge
+				const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+				text.setAttribute("x", labelCoords.x);
+				text.setAttribute("y", labelCoords.y);
+				text.setAttribute("text-anchor", "middle");
+				text.setAttribute("dominant-baseline", "middle");
+				text.setAttribute("font-size", "14");
+				text.setAttribute("fill", "#000");
+				text.textContent = `${item.value.toFixed(1)}%`;
+				svg.appendChild(text);
+	
+				currentAngle += sliceAngle;
+			});
+
+			node.appendChild(svg);
+		}
+
+		// Render the pie charts
+		renderCSSPieChart(data, document.querySelector('.ui-pie-chart dl'));
+		renderSVGPieChart(data, document.querySelector('.ui-pie-chart:not(:has(dl))'));
+	</script>
 </body>
-
-
 </html>
