@@ -21,7 +21,6 @@
 				width: 100%;
 			}
 			& input {
-				border-radius: 50%;
 				isolation: isolate;
 				place-self: end;
 				margin-block-end: 1ch;

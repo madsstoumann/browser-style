@@ -1,48 +1,45 @@
 @layer bs-component {
 	:where(.ui-blinds) {
-		--AccentColor: hsl(211, 100%, 50%); /* TMP Fix for Safari */
-		--ui-blinds-bg: 
-			color-mix(in oklab, var(--AccentColor), #000 40%),
-			color-mix(in oklab, var(--AccentColor), #000 20%),
-			var(--AccentColor),
-			color-mix(in oklab, var(--AccentColor), #FFF 20%),
-			color-mix(in oklab, var(--AccentColor), #FFF 40%),
-			color-mix(in oklab, var(--AccentColor), #FFF 60%);
+		--ui-blinds-bg: hsl(211, 100%, 50%); 
+		--ui-blinds-bg-1: color-mix(in oklab, var(--ui-blinds-bg), #000 40%);
+		--ui-blinds-bg-2: color-mix(in oklab, var(--ui-blinds-bg), #000 20%);
+		--ui-blinds-bg-3: var(--ui-blinds-bg);
+		--ui-blinds-bg-4: color-mix(in oklab, var(--ui-blinds-bg), #FFF 20%);
+		--ui-blinds-bg-5: color-mix(in oklab, var(--ui-blinds-bg), #FFF 40%);
+		--ui-blinds-bg-6: color-mix(in oklab, var(--ui-blinds-bg), #FFF 60%);
 
-		--ui-blinds-c:#FFF, #FFF, #FFF, #000, #000, #000;
-		--ui-blinds-items: 6;
+		--ui-blinds-c-1: #FFF;
+		--ui-blinds-c-2: #FFF;
+		--ui-blinds-c-3: #000;
+		--ui-blinds-c-4: #000;
+		--ui-blinds-c-5: #000;
+		--ui-blinds-c-6: #000;
+
 		--ui-blinds-pb: .5em;
 		--ui-blinds-pi: 2ch;
-		--_i: 0;
-
 		container-type: inline-size;
 
 		& ul {
 			all: unset;
 			clip-path: inset(0% 0% 0% 0% round var(--ui-blinds-bdrs, 0.5em));
-		display: grid;	
+			display: grid;
 
 			& li {
-				background: linear-gradient(
-					var(--ui-blinds-bg)) no-repeat 0 calc(var(--_i) * 100% / 
-					(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
+				background: var(--_bg, var(--ui-blinds-bg-1));
+				color: var(--_c, var(--ui-blinds-c-1));
+				/* Use contrast-color() or color-contrast() when working cross-browser */
+				/* color: color-contrast(var(--_bg, var(--ui-blinds-bg-1)) vs #000, #FFF); */
 				list-style: none;
 				padding: var(--ui-blinds-pb) var(--ui-blinds-pi);
 
-				&:nth-of-type(2) { --_i: 1; }
-				&:nth-of-type(3) { --_i: 2; }
-				&:nth-of-type(4) { --_i: 3; }
-				&:nth-of-type(5) { --_i: 4; }
-				&:nth-of-type(6) { --_i: 5; }
+				&:nth-of-type(2) { --_bg: var(--ui-blinds-bg-2); --_c: var(--ui-blinds-c-2); }
+				&:nth-of-type(3) { --_bg: var(--ui-blinds-bg-3); --_c: var(--ui-blinds-c-3); }
+				&:nth-of-type(4) { --_bg: var(--ui-blinds-bg-4); --_c: var(--ui-blinds-c-4); }
+				&:nth-of-type(5) { --_bg: var(--ui-blinds-bg-5); --_c: var(--ui-blinds-c-5); }
+				&:nth-of-type(6) { --_bg: var(--ui-blinds-bg-6); --_c: var(--ui-blinds-c-6); }
 
-				& > * {
-					background: linear-gradient(
-					var(--ui-blinds-c)) no-repeat 0 calc(var(--_i) * 100% / 
-					(var(--ui-blinds-items) - 1)) / 100% calc(1px * infinity);
-					-webkit-background-clip: text;
-					-webkit-text-fill-color: transparent;
-				}
 				& > a {
+					color: inherit;
 					font-size: var(--ui-blinds-heading-fz, 1.17em);
 					text-decoration: none;
 				}
@@ -63,17 +60,6 @@
 					writing-mode: vertical-lr;
 				}
 			}
-		}
-	}
-	@supports (background: -webkit-named-image(i)) {
-		.ui-blinds {
-			--ui-blinds-bg: 
-				oklch(from var(--AccentColor) calc(l - .2) c h),
-				oklch(from var(--AccentColor) calc(l - .1) c h),
-				var(--AccentColor),
-				oklch(from var(--AccentColor) calc(l + .1) c h),
-				oklch(from var(--AccentColor) calc(l + .2) c h),
-				oklch(from var(--AccentColor) calc(l + .3) c h);
 		}
 	}
 }

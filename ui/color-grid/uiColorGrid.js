@@ -1,6 +1,6 @@
 export default function uiColorGrid(group, colors) {
   return `
-	<fieldset class="ui-color-grid --${group}">
+	<fieldset class="ui-color-grid fs-xl --${group}">
 		<legend>${group}</legend>
 		${colors
       .map(

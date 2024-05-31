@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Check Radio</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Checkboxes &amp; Radio Buttons</h2>
+	<p>
+		These are the default checkboxes and radio-buttons. Styled with various modifiers, controlling size, colors and symbols.
+	</p>
+
+	<fieldset>
+		<legend>Checkboxes</legend>
+
+		<label class="fs-xxs">
+			<input type="checkbox" checked>
+			XXS
+		</label>
+		
+		<label class="fs-xs">
+			<input type="checkbox">
+			XS
+		</label>
+		
+		<label class="fs-sm">
+			<input type="checkbox" checked>
+			SM
+		</label>
+		
+		<label class="fs-md">
+			<input type="checkbox">
+			MD
+		</label>
+		
+		<label class="fs-lg">
+			<input type="checkbox" checked>
+			LG
+		</label>
+		
+		<label class="fs-xl">
+			<input type="checkbox">
+			XL
+		</label>
+		
+		<label class="fs-xxl">
+			<input type="checkbox" checked>
+			XXL
+		</label>
+	</fieldset>
+	
+	
+	<h3>With <code>role=switch</code></h3>
+	
+	<fieldset>
+		<legend>Checkboxes as Switches</legend>
+
+		<label class="fs-xxs">
+			<input type="checkbox" role="switch">
+			XXS
+		</label>
+		
+		<label class="fs-xs">
+			<input type="checkbox" role="switch" checked>
+			XS
+		</label>
+		
+		<label class="fs-sm">
+			<input type="checkbox" role="switch">
+			SM
+		</label>
+		
+		<label class="fs-md">
+			<input type="checkbox" role="switch" checked>
+			MD
+		</label>
+		
+		<label class="fs-lg">
+			<input type="checkbox" role="switch">
+			LG
+		</label>
+		
+		<label class="fs-xl">
+			<input type="checkbox" role="switch" checked>
+			XL
+		</label>
+		
+		<label class="fs-xxl">
+			<input type="checkbox" role="switch">
+			XXL
+		</label>
+	</fieldset>
+
+	<h2>Radio Buttons</h2>
+	<fieldset>
+		<legend>Radio Buttons</legend>
+
+		<label class="fs-xxs">
+			<input type="radio" name="gender" value="1">
+			XXS
+		</label>
+		<label class="fs-xs">
+			<input type="radio" name="gender" value="2">
+			XS
+		</label>
+		<label class="fs-sm">
+			<input type="radio" name="gender" value="3" >
+			SM
+		</label>
+		<label class="fs-md">
+			<input type="radio" name="gender" value="4">
+			MD
+		</label>
+		<label class="fs-lg">
+			<input type="radio" name="gender" value="5">
+			LG
+		</label>
+		<label class="fs-xl">
+			<input type="radio" name="gender" value="6">
+			XL
+		</label>
+		<label class="fs-xxl">
+			<input type="radio" name="gender" value="7" checked>
+			XXL
+		</label>
+
+	</fieldset>
+
+	<h2>Variants</h2>
+
+	<fieldset>
+		<legend>Variants</legend>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="--round" checked>
+			<span>With <code>--round</code></span>
+		</label>
+		
+		<label class="fs-lg">
+			<input type="checkbox" class="--square" checked>
+			<span>With <code>--square</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="--cross" checked>
+			<span>With <code>--cross</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="--round --cross" checked>
+			<span>With <code>--round --cross</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="square" value="1" class="--square">
+			<span>Radio with <code>--square</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="radio" name="square" value="2" class="--square" checked>
+			<span>Radio with <code>--square</code></span>
+		</label>
+
+	</fieldset>
+
+	<br>
+
+	<fieldset>
+		<legend>Colors</legend>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-gray" checked>
+			<span>With <code>bg-gray</code></span>
+		</label>
+		
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-error">
+			<span>With <code>bg-error</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-warning">
+			<span>With <code>bg-warning</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-success">
+			<span>With <code>bg-success</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-error --light --cross" checked>
+			<span>With <code>bg-error --light --cross</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-warning --light --square">
+			<span>With <code>bg-warning --light --square</code></span>
+		</label>
+
+		<label class="fs-lg">
+			<input type="checkbox" class="bg-success --light --round">
+			<span>With <code>bg-success --light --round</code></span>
+		</label>
+
+
+	</fieldset>
+
+</body>
+</html>

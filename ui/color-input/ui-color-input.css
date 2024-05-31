@@ -1,29 +1,10 @@
 @layer bs-component {
 	:where(.ui-color-input) {
-		--input-check-sz: 2.5em;
-		--_mask: url('/assets/svg/check.svg') no-repeat 48% / 75%;
+		--input-bdw: 0;
+		--input-check-bg: var(--_bg);
+		--input-check-bga--checked: var(--_c);
 
-		background: var(--_bg);
-		border: 0;
-		display: inline-grid;
-		place-content: center;
-		position: relative;
-		&:checked {
-			background: var(--_bg);
-			box-shadow: none;
-			&::after {
-				background-color: var(--_c);
-				content: '';
-				inset: 0;
-				mask: var(--_mask);
-				-webkit-mask: var(--_mask);
-				position: absolute;
-			}
-		}
-		&:focus-visible {
-			box-shadow: inset 0 0 0 2px var(--_c);
-			outline: none;
-		}
+		box-shadow: none;
 		@supports ( color: color-contrast(red vs blue, green) ) {
 			--_c: color-contrast(var(--_bg) vs #FFF, #000);
 		}

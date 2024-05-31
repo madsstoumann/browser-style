@@ -2,8 +2,8 @@
 	:where(.ui-position) {
 		all: unset;
 		display: grid;
-		gap: calc(var(--input-check-sz) / 2);
-		grid-template-columns: repeat(3, var(--input-check-sz));
+		gap: .33em;
+		grid-template-columns: repeat(3, 1em);
 		inline-size: fit-content;
 
 		& input {

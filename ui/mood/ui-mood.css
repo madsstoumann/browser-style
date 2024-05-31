@@ -39,8 +39,11 @@
 				background: inherit;
 				border-radius: var(--_bdrs, 100% / 100%);
 				box-shadow: var(--_x, 0) var(--_y, 12cqi) 0 0 #000;
+				clip-path: none;
 				content: "";
 				height: 35cqi;
+				mask: none;
+				position: relative;
 				rotate: var(--_r, 0);
 				transition: rotate .2s linear;
 				translate: var(--_trs, 0 -12cqi);

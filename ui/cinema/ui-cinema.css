@@ -11,14 +11,13 @@
 		max-inline-size: var(--ui-cinema-mw, 320px);
 		& input {
 			--_bdc: color-mix(in srgb, var(--ui-cinema-seat-bg, var(--CanvasGray)), #000 30%);
-			--input-check-bgsz: 50%/55%;
-			--input-check-sz: var(--ui-cinema-seat-w);
 			aspect-ratio: 1 / .9;
-			background-color: var(--ui-cinema-seat-bg, var(--CanvasGray));
+			--input-check-bg: var(--ui-cinema-seat-bg, var(--CanvasGray));
 			border-color: var(--_bdc);
-			border-radius: .5em .5em .15em .15em;
-			border-width: 0 0 .25em 0;
-
+			border-radius: .5rem .5rem .15rem .15rem;
+			border-width: 0 0 .25rem 0;
+			font-size: 150%;
+			margin: 0;
 			&:checked { 
 				--ui-cinema-seat-bg: var(--ColorSuccess);
 				--AccentColor: var(--ui-cinema-seat-bg);

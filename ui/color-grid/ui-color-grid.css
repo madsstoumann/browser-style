@@ -9,9 +9,9 @@
 		gap: var(--ui-color-grid-gap, 1px);
 		grid-template-columns: repeat(var(--ui-color-grid-cols, 10), 1fr);
 		max-width: var(--ui-color-grid-mw, 320px);
+		width: max-content;
 		& input {
 			border-radius: 0;
-			--input-check-sz: var(--ui-color-grid-input, 10cqi);
 			&:hover {
 				box-shadow: inset 0 0 0 1px var(--_c);
 			}

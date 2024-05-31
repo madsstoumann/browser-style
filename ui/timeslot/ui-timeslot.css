@@ -13,6 +13,12 @@
 			& input:disabled + time {
 				text-decoration: line-through;
 			}
+			&:focus-within {
+				border-color: var(--AccentColor);
+			}
+			&:hover {
+				background-color: var(--CanvasGray);
+			}
 			& label {
 				background-color: Canvas;
 				border: inherit;
@@ -24,6 +30,9 @@
 					background-color: var(--AccentColor);
 					border-color: var(--AccentColor);
 					color: var(--AccentColorText);
+				}
+				&:hover:not(:has(input:checked)) {
+					background-color: var(--Highlight);
 				}
 			}
 			& legend {

@@ -1,6 +1,7 @@
 export default function uiAnchor() {
-	if (!("anchorName" in document.documentElement.style)) {
-		document.querySelectorAll('[anchor]').forEach(popover => {
+	// if (!("anchorName" in document.documentElement.style)) {
+
+	document.querySelectorAll('[anchor]').forEach(popover => {
 			const anchor = document.getElementById(popover.getAttribute('anchor'));
 			if (anchor) {
 				/* Initial positioning */
@@ -15,7 +16,8 @@ export default function uiAnchor() {
 				})
 			}
 		})
-	}
+
+		// }
 }
 function setAnchorRect(popover, anchor) {
 	const anchorRect = anchor.getBoundingClientRect();

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Entry</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-data-entry.css">
+
+
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+
+	<style>
+
+@layer bs-component {
+	:where(.ui-check-delete) {
+		em {
+			align-items: center;
+			display: flex;
+			font-style: normal;
+			font-weight: 400;
+			justify-content: space-between;
+			margin-inline-end: 1ch;
+			white-space: nowrap;
+		}
+		&:has(input:not(:checked)) {
+			color: var(--GrayText);
+			text-decoration: line-through;
+			input { 
+				background-color: var(--ColorError);
+				--input-check-bdc: var(--ColorError); 
+				--input-check-bga: #FFF; 
+			}
+		}
+	}
+}
+
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Data Entry</h2>
+	<p>
+		A compact, data-entry-friendly form for adding or editing records.
+	</p>
+
+	<form class="ui-data-entry">
+		<fieldset>
+			<legend>Product Details</legend>
+			<label>
+				<span>ID</span>
+				<input type="text" name="id" value="661551">
+			</label>
+			<label>
+				<span>Type</span>
+				<select name="producttype">
+					<option value="1">Book</option>
+					<option value="2">Comic</option>
+					<option value="3">Figure</option>
+					<option value="4">Film</option>
+					<option value="5">Game</option>
+				</select>
+			</label>
+			<label>
+				<span>Title</span>
+				<input type="text" name="productname" value="Foundation">
+			</label>
+			<label>
+				<span>Issue</span>
+				<input type="number" name="issue" value="1">
+			</label>
+			<label>
+				<span>Description</span>
+				<textarea name="description">For twelve thousand years the Galactic Empire has ruled supreme. Now it is dying. But only Hari Seldon, creator of the revolutionary science of psychohistory, can see into the future--to a dark age of ignorance, barbarism, and warfare that will last thirty thousand years. To preserve knowledge and save humankind, Seldon gathers the best minds in the Empire--both scientists and scholars--and brings them to a bleak planet at the edge of the galaxy to serve as a beacon of hope for future generations. He calls his sanctuary the Foundation.</textarea>
+			</label>
+			<label>
+				<span>SKU</span>
+				<input type="text" name="sku" value="9780553803716">
+			</label>
+			<!-- <div class="label">
+				<span>Description</span>
+				<ui-richtext toolbar="h1,h2,h3,h4,h5,h6|b,i,u,s|sub,sup|ol,ul,hr|img|link,unlink">
+					This product is really awesome. Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellendus accusamus quod sed ipsa! Deleniti dolores vel animi. Quidem, doloremque ab. Veritatis eius omnis, voluptatum aliquam ut et quos, placeat mollitia ex magnam natus, beatae similique? Perferendis laboriosam neque distinctio eveniet, aliquid, optio ducimus recusandae, nulla veritatis et dolorem facilis enim.
+				</ui-richtext>
+			</div> -->
+			<label>
+				<span>Published</span>
+				<input type="date" name="published" value="1951-01-01">
+			</label>
+			<label>
+				<span>Searchable</span>
+				<input type="checkbox" name="searchable" checked class="fs-lg">
+			</label>
+		</fieldset>
+
+		<fieldset>
+			<legend>Attributes</legend>
+			<label class="ui-check-delete">
+				<span>Book Author</span>
+				<em>Isaac Asimov<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+			</label>
+			<label class="ui-check-delete">
+				<span>Book Series</span>
+				<em>Foundation<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+			</label>
+			<label class="ui-check-delete">
+				<span>Book Genre</span>
+				<em>Science Fiction<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+			</label>
+		</fieldset>
+		<nav>
+			<button type="button" class="fs-xs"><ui-icon type="plus"></ui-icon>Add attribute</button>
+		</nav>
+
+		<nav>
+			<button type="button" class="bg-error --light fs-xs">Delete</button>
+			<button type="button" class="fs-xs">Duplicate</button>
+			<button type="button" class="bg-success --light fs-xs">Save</button>
+		</nav>
+	</form>
+
+
+			
+	
+	<!-- <script src="https://browser.style/ui/text-editor/uiRichText.js"></script> -->
+</body>
+</html>
