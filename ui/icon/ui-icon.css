@@ -148,6 +148,7 @@
 	:is([open], .--open) >* >ui-icon:is([type=grid],[type=kebab],[type=meatball])::after { box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; }
 	:is([open], .--open) >* >ui-icon[type*=plus-minus]::after { rotate: 0deg; }
 	:is([open], .--open) >* >ui-icon[type~=right] { rotate: 90deg; }
+	
 	/* re-visit */
 	:is([open], .--open) >* * ui-icon[type~=right] { rotate: 90deg; }
 
@@ -192,5 +193,5 @@
 		&[type~=left] { rotate: 0deg; }
 		&[type~=right] { rotate: -180deg; }
 	}
-	[dir=rtl] :is([open], .--open) >* >ui-icon[type~=right] { rotate: -270deg; }
+	[dir=rtl] :is([open], .--open) >* * ui-icon[type~=right] { rotate: -270deg; }
 }

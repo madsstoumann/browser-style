@@ -1,3 +1,4 @@
+@import url('/ui/icon/ui-icon.css');
 @layer bs-component {
 	:where(.ui-data-entry) {
 		--_bdc: var(--ButtonBorder);
@@ -7,7 +8,7 @@
 		--_pi: 1.2ch;
 
 		display: grid;
-		& * { font-size: 1rem; }
+		& *:not(ui-icon) { font-size: 1rem; }
 
 		details + details { margin-block-start: 1ch; }
 
@@ -23,10 +24,8 @@
 			border: 0;
 			border-radius: 0;
 			font-family: inherit;
-			outline: 0;
 			padding-block: var(--_pb);
 			padding-inline: var(--_pi);
-			&:focus-visible { background-color: var(--ButtonFace); }
 			&::-webkit-inner-spin-button{ display: none; }
 		}
 
@@ -74,7 +73,7 @@
 
 		nav {
 			display: flex;
-			gap: var(--ui-data-entry-gap);
+			gap: 1ch;
 			justify-content: end;
 		}
 
@@ -95,6 +94,39 @@
 			resize: vertical;
 		}
 
+		[popovertarget] {
+			anchor-name: var(--_an);
+		}
+
+		[popover] {
+			border: var(--_bdw) solid var(--_bdc);
+			border-radius: var(--_bdrs);
+			inset-block: anchor(bottom) auto;
+			inset-inline: auto anchor(right);
+			min-inline-size: 20rem;
+			padding: 2ch;
+			position-anchor: var(--_pa);
+			text-wrap: nowrap;
+			&::backdrop { background: light-dark(#0002, #000A); }
+			[dir=rtl] & { inset-inline: auto anchor(left); }
+			nav { margin-block-start: 1ch; }
+		}
+
+		/* Focus */
+		:is(button, input:not([type=checkbox], [type=radio]), select, summary, textarea):focus-visible,
+		input[type=date]:focus-within,
+		label:has([type=checkbox], [type=radio]):focus-within {
+			background-color: var(--ButtonFace);
+			outline: 2px solid var(--AccentColor);
+			outline-offset: -1px;
+			& * { outline: none; }
+		}
+		label:has([type=checkbox], [type=radio]):focus-within + label {
+			clip-path: inset(2px 0 0 0);
+		}
+
+		/* TODO! Browser bug: Chrome date/datetime-fields not working with right-to-left */
+		
 		/* === Checklist === */
 		[part=checklist] {
 			em {
@@ -171,19 +203,12 @@
 			background: #0000;
 			color: var(--LinkText);
 			font-size: x-small;
-			padding-inline-end: 0;
+			margin-block-start: .5lh;
+			padding: 0;
 		}
-
-		
 
 		[part=rowgap] {
 			margin-block-end: 1lh;
 		}
-
-		
-			/* ui-richtext {
-				font-size: smaller;
-			} */
-
 	}
 }

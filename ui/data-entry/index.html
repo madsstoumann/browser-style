@@ -8,37 +8,6 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-data-entry.css">
-
-
-	<link rel="stylesheet" href="../icon/ui-icon.css">
-
-	<style>
-
-@layer bs-component {
-	:where(.ui-check-delete) {
-		em {
-			align-items: center;
-			display: flex;
-			/* font-style: normal; */
-			font-weight: 400;
-			justify-content: space-between;
-			margin-inline-end: 1ch;
-			text-wrap: nowrap;
-		}
-		&:has(input:not(:checked)) {
-			background: color-mix(in srgb, var(--ColorError), var(--Canvas) 80%);
-			color: var(--GrayText);
-			text-decoration: line-through;
-			input { 
-				background-color: var(--ColorError);
-				--input-check-bdc: var(--ColorError); 
-				--input-check-bga: #FFF; 
-			}
-		}
-	}
-}
-
-	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -50,7 +19,7 @@
 
 	<form class="ui-data-entry">
 		<fieldset part="rowgap">
-			<legend>Product Details</legend>
+			<legend>Key/Value pairs</legend>
 			<label>
 				<span>ID</span>
 				<input type="text" name="id" value="661551" disabled>
@@ -105,10 +74,14 @@
 				<span>Searchable</span>
 				<input type="checkbox" name="searchable" checked class="fs-lg">
 			</label>
+			<label>
+				<span>Tokenize</span>
+				<input type="checkbox" name="searchable" checked class="fs-lg">
+			</label>
 		</fieldset>
 
 		<fieldset name="attributes" part="checklist">
-			<legend>Attributes</legend>
+			<legend>Checklist</legend>
 			<label>
 				<span>Book Author</span>
 				<em>Isaac Asimov<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
@@ -123,11 +96,32 @@
 			</label>
 		</fieldset>
 		<nav>
-			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add attribute</button>
+			<button type="button" part="micro" popovertarget="add_attribute" style="--_an:--p1;">
+				<ui-icon type="plus"></ui-icon>Add attribute
+			</button>
 		</nav>
 
+		<div id="add_attribute" popover style="--_pa:--p1;">
+			<fieldset>
+				<legend>Add attribute</legend>
+				<label>
+					<span>Attribute Type</span>
+					<select name="attributetype">
+						<option value="1">Book Author</option>
+						<option value="2">Book Series</option>
+						<option value="3">Book Genre</option>
+						<option value="4">Comic Author</option>
+						<option value="5">Comic Series</option>
+					</select>
+				</label>
+				<nav>
+					<button type="button" popovertarget="add_attribute" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
+				</nav>
+			</fieldset>
+		</div>
+
 		<fieldset part="grid"><!-- Each sub-fieldset acts like a table-row -->
-			<legend>Authors</legend>
+			<legend>Grid</legend>
 			<fieldset>
 				<label>
 					<span>First Name</span>
@@ -220,11 +214,38 @@
 			</fieldset>
 		</fieldset>
 		<nav>
-			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add row</button>
+			<button type="button" part="micro" popovertarget="add_grid_row" style="--_an:--p2;">
+				<ui-icon type="plus"></ui-icon>Add grid row
+			</button>
 		</nav>
 
+		<div id="add_grid_row" popover style="--_pa:--p2;">
+			<fieldset>
+				<legend>Add row</legend>
+				<label>
+					<span>Firstname</span>
+					<input type="text" name="add_firstname" value="">
+				</label>
+				<label>
+					<span>Lastname</span>
+					<input type="text" name="add_lastname" value="">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="add_email" value="">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="add_phone" value="">
+				</label>
+				<nav>
+					<button type="button" popovertarget="add_grid_row" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
+				</nav>
+			</fieldset>
+		</div>
+
 		<fieldset name="prices">
-			<legend>Prices</legend>
+			<legend>Details</legend>
 			<details name="currency">
 				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>USD</span><em>24.99</em></summary>
 				<fieldset>
@@ -294,9 +315,25 @@
 				</fieldset>
 			</details>
 		</fieldset>
-		<nav part="rowgap">
-			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add row</button>
+		<nav>
+			<button type="button" part="micro" popovertarget="add_details" style="--_an:--p3;">
+				<ui-icon type="plus"></ui-icon>Add details
+			</button>
 		</nav>
+
+		<div id="add_details" popover style="--_pa:--p3;">
+			<fieldset>
+				<legend>Add details</legend>
+				<label>
+					<span>Discount</span>
+					<input type="checkbox" name="add_discount">
+				</label>
+				
+				<nav>
+					<button type="button" popovertarget="add_details" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
+				</nav>
+			</fieldset>
+		</div>
 
 		<!-- <fieldset name="related">
 			<legend>Related products</legend>
@@ -305,16 +342,13 @@
 		<fieldset name="jobs">
 			<legend>Jobs</legend>
 		</fieldset>	 -->
-
+<br>
 		<nav>
 			<button type="button" class="bg-error --light fs-xs">Delete</button>
 			<button type="button" class="fs-xs">Duplicate</button>
 			<button type="button" class="bg-success --light fs-xs">Save</button>
 		</nav>
 	</form>
-
-
-			
 	
 	<!-- <script src="https://browser.style/ui/text-editor/uiRichText.js"></script> -->
 </body>
