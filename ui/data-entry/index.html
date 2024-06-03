@@ -19,13 +19,14 @@
 		em {
 			align-items: center;
 			display: flex;
-			font-style: normal;
+			/* font-style: normal; */
 			font-weight: 400;
 			justify-content: space-between;
 			margin-inline-end: 1ch;
-			white-space: nowrap;
+			text-wrap: nowrap;
 		}
 		&:has(input:not(:checked)) {
+			background: color-mix(in srgb, var(--ColorError), var(--Canvas) 80%);
 			color: var(--GrayText);
 			text-decoration: line-through;
 			input { 
@@ -48,11 +49,11 @@
 	</p>
 
 	<form class="ui-data-entry">
-		<fieldset>
+		<fieldset part="rowgap">
 			<legend>Product Details</legend>
 			<label>
 				<span>ID</span>
-				<input type="text" name="id" value="661551">
+				<input type="text" name="id" value="661551" disabled>
 			</label>
 			<label>
 				<span>Type</span>
@@ -80,6 +81,16 @@
 				<span>SKU</span>
 				<input type="text" name="sku" value="9780553803716">
 			</label>
+			<label>
+				<span>Vendor</span>
+				<select name="vendor">
+					<option value="1">Penguin Random House</option>
+					<option value="2">HarperCollins</option>
+					<option value="3">Simon & Schuster</option>
+					<option value="4">Macmillan</option>
+					<option value="5">Hachette Livre</option>
+				</select>
+			</label>
 			<!-- <div class="label">
 				<span>Description</span>
 				<ui-richtext toolbar="h1,h2,h3,h4,h5,h6|b,i,u,s|sub,sup|ol,ul,hr|img|link,unlink">
@@ -96,24 +107,204 @@
 			</label>
 		</fieldset>
 
-		<fieldset>
+		<fieldset name="attributes" part="checklist">
 			<legend>Attributes</legend>
-			<label class="ui-check-delete">
+			<label>
 				<span>Book Author</span>
 				<em>Isaac Asimov<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
 			</label>
-			<label class="ui-check-delete">
+			<label>
 				<span>Book Series</span>
 				<em>Foundation<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
 			</label>
-			<label class="ui-check-delete">
+			<label>
 				<span>Book Genre</span>
 				<em>Science Fiction<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
 			</label>
 		</fieldset>
 		<nav>
-			<button type="button" class="fs-xs"><ui-icon type="plus"></ui-icon>Add attribute</button>
+			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add attribute</button>
 		</nav>
+
+		<fieldset part="grid"><!-- Each sub-fieldset acts like a table-row -->
+			<legend>Authors</legend>
+			<fieldset>
+				<label>
+					<span>First Name</span>
+					<input type="text" name="firstname" placeholder="John" value="Thom">
+				</label>
+				<label>
+					<span>Last Name</span>
+					<input type="text" name="lastname" placeholder="Doe" value="Yorke">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="email" placeholder="john@doe.com">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="phone" placeholder="+1 234 567">
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<span>First Name</span>
+					<input type="text" name="firstname" placeholder="John" value="Jonny">
+				</label>
+				<label>
+					<span>Last Name</span>
+					<input type="text" name="lastname" placeholder="Doe" value="Greenwood">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="email" placeholder="john@doe.com">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="phone" placeholder="+1 234 567">
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<span>First Name</span>
+					<input type="text" name="firstname" placeholder="John" value="Colin">
+				</label>
+				<label>
+					<span>Last Name</span>
+					<input type="text" name="lastname" placeholder="Doe" value="Greenwood">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="email" placeholder="john@doe.com">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="phone" placeholder="+1 234 567">
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<span>First Name</span>
+					<input type="text" name="firstname" placeholder="John" value="Ed">
+				</label>
+				<label>
+					<span>Last Name</span>
+					<input type="text" name="lastname" placeholder="Doe" value="O'Brien">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="email" placeholder="john@doe.com">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="phone" placeholder="+1 234 567">
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<span>First Name</span>
+					<input type="text" name="firstname" placeholder="John" value="Philip">
+				</label>
+				<label>
+					<span>Last Name</span>
+					<input type="text" name="lastname" placeholder="Doe" value="Selway">
+				</label>
+				<label>
+					<span>E-mail</span>
+					<input type="email" name="email" placeholder="john@doe.com" value="philip@selway.org">
+				</label>
+				<label>
+					<span>Phone</span>
+					<input type="tel" name="phone" placeholder="+1 234 567">
+				</label>
+			</fieldset>
+		</fieldset>
+		<nav>
+			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add row</button>
+		</nav>
+
+		<fieldset name="prices">
+			<legend>Prices</legend>
+			<details name="currency">
+				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>USD</span><em>24.99</em></summary>
+				<fieldset>
+					<label>
+						<span>Currency</span>
+						<select name="currency">
+							<option value="USD">USD</option>
+							<option value="EUR">EUR</option>
+							<option value="GBP">GBP</option>
+							<option value="JPY">JPY</option>
+						</select>
+					</label>
+					<label>
+						<span>Discount</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>MSRP</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>Valid from</span>
+						<input type="date" name="validfrom" value="2021-01-01">
+					</label>
+					<label>
+						<span>Valid to</span>
+						<input type="date" name="validto" value="">
+					</label>
+					<label>
+						<span>Price</span>
+						<input type="number" name="price" value="24.99">
+					</label>
+				</fieldset>
+			</details>
+			<details name="currency">
+				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>EUR</span><em>20.99</em></summary>
+				<fieldset>
+					<label>
+						<span>Currency</span>
+						<select name="currency">
+							<option value="USD">USD</option>
+							<option value="EUR" selected>EUR</option>
+							<option value="GBP">GBP</option>
+							<option value="JPY">JPY</option>
+						</select>
+					</label>
+					<label>
+						<span>Discount</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>MSRP</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>Valid from</span>
+						<input type="date" name="validfrom" value="2021-01-01">
+					</label>
+					<label>
+						<span>Valid to</span>
+						<input type="date" name="validto" value="">
+					</label>
+					<label>
+						<span>Price</span>
+						<input type="number" name="price" value="20.95">
+					</label>
+				</fieldset>
+			</details>
+		</fieldset>
+		<nav part="rowgap">
+			<button type="button" part="micro"><ui-icon type="plus"></ui-icon>Add row</button>
+		</nav>
+
+		<!-- <fieldset name="related">
+			<legend>Related products</legend>
+		</fieldset>
+
+		<fieldset name="jobs">
+			<legend>Jobs</legend>
+		</fieldset>	 -->
 
 		<nav>
 			<button type="button" class="bg-error --light fs-xs">Delete</button>

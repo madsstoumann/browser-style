@@ -370,7 +370,7 @@
 	& [type=time] {
 		appearance: none;
 		background-color: inherit;
-		&::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); }
+		/* &::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); } */
 		&::-webkit-calendar-picker-indicator { opacity: 0; }
 	}
 	& [type=email] { --icon: url('/assets/svg/email.svg'); }
