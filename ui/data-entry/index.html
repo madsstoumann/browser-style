@@ -36,7 +36,7 @@
 			</label>
 			<label>
 				<span>Title</span>
-				<input type="text" name="productname" value="Foundation">
+				<input type="text" name="productname" value="Foundation" autocomplete="off">
 			</label>
 			<label>
 				<span>Issue</span>
@@ -84,15 +84,15 @@
 			<legend>Checklist</legend>
 			<label>
 				<span>Book Author</span>
-				<em>Isaac Asimov<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+				<em>Isaac Asimov<input type="checkbox" name="attribute" checked class="bg-gray --fs-lg --cross"></em>
 			</label>
 			<label>
 				<span>Book Series</span>
-				<em>Foundation<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+				<em>Foundation<input type="checkbox" name="attribute" checked class="bg-gray --fs-lg --cross"></em>
 			</label>
 			<label>
 				<span>Book Genre</span>
-				<em>Science Fiction<input type="checkbox" name="attribute" checked class="bg-gray --round --cross"></em>
+				<em>Science Fiction<input type="checkbox" name="attribute" checked class="bg-gray --fs-lg --cross"></em>
 			</label>
 		</fieldset>
 		<nav>
@@ -105,7 +105,7 @@
 			<fieldset>
 				<legend>Add attribute</legend>
 				<label>
-					<span>Attribute Type</span>
+					<span>Type</span>
 					<select name="attributetype">
 						<option value="1">Book Author</option>
 						<option value="2">Book Series</option>
@@ -114,8 +114,104 @@
 						<option value="5">Comic Series</option>
 					</select>
 				</label>
+				<label>
+					<span>Value</span>
+					<input type="text" name="attributevalue" value="">
+				</label>
 				<nav>
-					<button type="button" popovertarget="add_attribute" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
+					<button type="button" popovertarget="add_attribute" popovertargetaction="hide" class="--text fs-xs" >Close</button>
+					<button type="button" class="bg-success --light fs-xs" >Add</button>
+				</nav>
+			</fieldset>
+		</div>
+
+		<fieldset name="prices">
+			<legend>Details</legend>
+			<details name="currency">
+				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>USD</span><em>24.99</em></summary>
+				<fieldset>
+					<label>
+						<span>Currency</span>
+						<select name="currency">
+							<option value="USD">USD</option>
+							<option value="EUR">EUR</option>
+							<option value="GBP">GBP</option>
+							<option value="JPY">JPY</option>
+						</select>
+					</label>
+					<label>
+						<span>Discount</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>MSRP</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>Valid from</span>
+						<input type="date" name="validfrom" value="2021-01-01">
+					</label>
+					<label>
+						<span>Valid to</span>
+						<input type="date" name="validto" value="">
+					</label>
+					<label>
+						<span>Price</span>
+						<input type="number" name="price" value="24.99">
+					</label>
+				</fieldset>
+			</details>
+			<details name="currency">
+				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>EUR</span><em>20.99</em></summary>
+				<fieldset>
+					<label>
+						<span>Currency</span>
+						<select name="currency">
+							<option value="USD">USD</option>
+							<option value="EUR" selected>EUR</option>
+							<option value="GBP">GBP</option>
+							<option value="JPY">JPY</option>
+						</select>
+					</label>
+					<label>
+						<span>Discount</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>MSRP</span>
+						<input type="checkbox" name="discount" value="0">
+					</label>
+					<label>
+						<span>Valid from</span>
+						<input type="date" name="validfrom" value="2021-01-01">
+					</label>
+					<label>
+						<span>Valid to</span>
+						<input type="date" name="validto" value="">
+					</label>
+					<label>
+						<span>Price</span>
+						<input type="number" name="price" value="20.95">
+					</label>
+				</fieldset>
+			</details>
+		</fieldset>
+		<nav>
+			<button type="button" part="micro" popovertarget="add_details" style="--_an:--p3;">
+				<ui-icon type="plus"></ui-icon>Add details
+			</button>
+		</nav>
+
+		<div id="add_details" popover style="--_pa:--p3;">
+			<fieldset>
+				<legend>Add details</legend>
+				<label>
+					<span>Discount</span>
+					<input type="checkbox" name="add_discount">
+				</label>
+				
+				<nav>
+					<button type="button" popovertarget="add_details" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
 				</nav>
 			</fieldset>
 		</div>
@@ -243,98 +339,6 @@
 				</nav>
 			</fieldset>
 		</div>
-
-		<fieldset name="prices">
-			<legend>Details</legend>
-			<details name="currency">
-				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>USD</span><em>24.99</em></summary>
-				<fieldset>
-					<label>
-						<span>Currency</span>
-						<select name="currency">
-							<option value="USD">USD</option>
-							<option value="EUR">EUR</option>
-							<option value="GBP">GBP</option>
-							<option value="JPY">JPY</option>
-						</select>
-					</label>
-					<label>
-						<span>Discount</span>
-						<input type="checkbox" name="discount" value="0">
-					</label>
-					<label>
-						<span>MSRP</span>
-						<input type="checkbox" name="discount" value="0">
-					</label>
-					<label>
-						<span>Valid from</span>
-						<input type="date" name="validfrom" value="2021-01-01">
-					</label>
-					<label>
-						<span>Valid to</span>
-						<input type="date" name="validto" value="">
-					</label>
-					<label>
-						<span>Price</span>
-						<input type="number" name="price" value="24.99">
-					</label>
-				</fieldset>
-			</details>
-			<details name="currency">
-				<summary><span><ui-icon type="triangle right" size="md"></ui-icon>EUR</span><em>20.99</em></summary>
-				<fieldset>
-					<label>
-						<span>Currency</span>
-						<select name="currency">
-							<option value="USD">USD</option>
-							<option value="EUR" selected>EUR</option>
-							<option value="GBP">GBP</option>
-							<option value="JPY">JPY</option>
-						</select>
-					</label>
-					<label>
-						<span>Discount</span>
-						<input type="checkbox" name="discount" value="0">
-					</label>
-					<label>
-						<span>MSRP</span>
-						<input type="checkbox" name="discount" value="0">
-					</label>
-					<label>
-						<span>Valid from</span>
-						<input type="date" name="validfrom" value="2021-01-01">
-					</label>
-					<label>
-						<span>Valid to</span>
-						<input type="date" name="validto" value="">
-					</label>
-					<label>
-						<span>Price</span>
-						<input type="number" name="price" value="20.95">
-					</label>
-				</fieldset>
-			</details>
-		</fieldset>
-		<nav>
-			<button type="button" part="micro" popovertarget="add_details" style="--_an:--p3;">
-				<ui-icon type="plus"></ui-icon>Add details
-			</button>
-		</nav>
-
-		<div id="add_details" popover style="--_pa:--p3;">
-			<fieldset>
-				<legend>Add details</legend>
-				<label>
-					<span>Discount</span>
-					<input type="checkbox" name="add_discount">
-				</label>
-				
-				<nav>
-					<button type="button" popovertarget="add_details" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
-				</nav>
-			</fieldset>
-		</div>
-
 		<!-- <fieldset name="related">
 			<legend>Related products</legend>
 		</fieldset>

@@ -70,6 +70,7 @@
 		&.--rounded { border-radius: 3em; }
 		&.--end { justify-self: end; }
 		&.--start { justify-self: start; }
+		&.--text { --button-bg: transparent; --button-c: var(--CanvasText);}
 		&.--toggle { --button-p: 0; }
 		&.--transparent { background: transparent; }
 	}
@@ -371,7 +372,18 @@
 		appearance: none;
 		background-color: inherit;
 		/* &::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); } */
-		&::-webkit-calendar-picker-indicator { opacity: 0; }
+		&::-webkit-calendar-picker-indicator {
+			background: none;
+			border-radius: 50%;
+			outline-offset: 2px;
+			padding-inline-end: 0.25em;
+			/* opacity: 0; */
+		}
+		&::-webkit-datetime-edit-day-field:focus,
+		&::-webkit-datetime-edit-month-field:focus,
+		&::-webkit-datetime-edit-year-field:focus {
+			background: var(--AccentColor);
+		}
 	}
 	& [type=email] { --icon: url('/assets/svg/email.svg'); }
 	& [type=date],
