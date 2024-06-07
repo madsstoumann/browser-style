@@ -49,7 +49,7 @@
 		}
 		[data-lastpass-icon-root] { display: none; }
 
-		label, summary { /* row */
+		label, summary, [part=label] { /* row */
 			align-items: center;
 			border-block-width: 0 var(--_bdw);
 			border-inline-width: var(--_bdw);
@@ -58,7 +58,12 @@
 			display: grid;
 			grid-template-columns: 125px 1fr;
 			user-select: none;
+			span {
+				border-inline-end: var(--_bdw) solid var(--_bdc);
+			}
+		}
 
+		label, summary {
 			&:first-of-type {
 				border-block-start-width: var(--_bdw);
 				border-start-start-radius: var(--_bdrs);
@@ -85,10 +90,6 @@
 				}
 				&::-webkit-details-marker { display: none; }
 			}
-
-			span {
-				border-inline-end: var(--_bdw) solid var(--_bdc);
-			}
 		}
 
 		nav {
@@ -114,6 +115,11 @@
 			resize: vertical;
 		}
 
+		ui-richtext {
+			padding: var(--_pi);
+			&::part(toolbar) { padding-block-end: var(--_pb); }
+		}
+
 		[popover] {
 			border: var(--_bdw) solid var(--_bdc);
 			border-radius: var(--_bdrs);
@@ -136,7 +142,8 @@
 		/* Focus */
 		:is(button, input:not([type=checkbox], [type=radio]), select, summary, textarea):focus-visible,
 		input[type=date]:focus-within,
-		label:has([type=checkbox], [type=radio]):focus-within {
+		label:has([type=checkbox], [type=radio]):focus-within,
+		ui-richtext:focus-within {
 			background-color: var(--ButtonFace);
 			outline: 2px solid var(--AccentColor);
 			outline-offset: -1px;
