@@ -42,10 +42,10 @@
 				<span>Issue</span>
 				<input type="number" name="issue" value="1">
 			</label>
-			<label>
+			<!-- <label>
 				<span>Description</span>
 				<textarea name="description">For twelve thousand years the Galactic Empire has ruled supreme. Now it is dying. But only Hari Seldon, creator of the revolutionary science of psychohistory, can see into the future--to a dark age of ignorance, barbarism, and warfare that will last thirty thousand years. To preserve knowledge and save humankind, Seldon gathers the best minds in the Empire--both scientists and scholars--and brings them to a bleak planet at the edge of the galaxy to serve as a beacon of hope for future generations. He calls his sanctuary the Foundation.</textarea>
-			</label>
+			</label> -->
 			<label>
 				<span>SKU</span>
 				<input type="text" name="sku" value="9780553803716">
@@ -211,12 +211,31 @@
 					<span>Discount</span>
 					<input type="checkbox" name="add_discount">
 				</label>
-				
 				<nav>
 					<button type="button" popovertarget="add_details" popovertargetaction="hide" class="bg-success --light fs-xs" >Add</button>
 				</nav>
 			</fieldset>
 		</div>
+
+		<fieldset part="media rowgap">
+			<legend>Media</legend>
+			<label>
+				<img src="https://source.unsplash.com/random/160x280/?product&1">
+				<span>Random image 1</span>
+				<input type="checkbox" name="media" value="media1" class="fs-lg --cross">
+			</label>
+			<label>
+				<img src="https://source.unsplash.com/random/280x120/?product&2">
+				<span>Random image 2</span>
+				<input type="checkbox" name="media" value="media2" class="fs-lg --cross">
+			</label>
+			<label>
+				<img src="https://source.unsplash.com/random/160x160/?product&3">
+				<span>Random image 3</span>
+				<input type="checkbox" name="media" value="media3" class="fs-lg --cross">
+			</label>
+			
+		</fieldset>
 
 		<fieldset part="grid"><!-- Each sub-fieldset acts like a table-row -->
 			<legend>Grid</legend>
