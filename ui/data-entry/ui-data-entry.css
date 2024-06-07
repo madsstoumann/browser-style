@@ -10,14 +10,33 @@
 		display: grid;
 		& *:not(ui-icon) { font-size: 1rem; }
 
-		details + details { margin-block-start: 1ch; }
-
 		fieldset {
 			border: 0;
 			gap: 0;
 			padding: 0;
 			legend { font-weight: 700; }
+
+			details {
+				label:first-of-type { --_bdrs: 0; }
+				&:first-of-type:not(:last-of-type) {
+					label:last-of-type {
+						--_bdrs: 0;
+						border-block-end-width: 0;
+					}
+				summary {
+					border-block-end-width: 0;
+					border-end-start-radius: 0;
+					border-end-end-radius: 0;
+				}
+			}
+			& + details {
+				summary:first-of-type {
+					border-start-start-radius: 0;
+					border-start-end-radius: 0;
+				}
+			}
 		}
+	}
 		
 		:is(input:not([type=checkbox],[type=radio]), select, textarea) {
 			block-size: 100%;
