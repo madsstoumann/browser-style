@@ -142,7 +142,8 @@
 			outline-offset: -1px;
 			& * { outline: none; }
 		}
-		label:has([type=checkbox], [type=radio]):focus-within + label {
+		label:has([type=checkbox], [type=radio]):focus-within + label,
+		details:focus-within + details {
 			clip-path: inset(2px 0 0 0);
 		}
 
