@@ -5,8 +5,6 @@
 
 		dl {
 			aspect-ratio: 1 / 1;
-			clip-path: inset(0 0 0 0 round 50%);
-			direction: ltr;
 			display: grid;
 			margin-block: 0;
 			position: relative;
@@ -20,35 +18,47 @@
 				var(--c) 0 var(--p),
 				#0000 0 var(--p)
 			);
+			border-radius: 50%;
 			font-size: 3cqi;
 			grid-area: 1 / -1;
 
 			span {
 				--_r: calc(50cqi - 2.5em);
-				--_x: calc(var(--_r) - (var(--_r) * cos(var(--d))));
-				--_y: calc(var(--_r) - (var(--_r) * sin(var(--d))));
-				background: yellow;
-				display: block;
+				--_x: calc(50% + var(--_r) * cos(var(--m) * 1deg));
+				--_y: calc(50% + var(--_r) * sin(var(--m) * 1deg));
+				cursor: help;
+				left: var(--_x);
 				position: absolute;
 				top: var(--_y);
-				left: var(--_x);
 				text-align: center;
-				width: 5em;
+				transform: translate(-50%, -50%);
+
+				&::after {
+					background: #000A;
+					border-radius: .5ch;
+					color: #FFF;
+					content: attr(data-tooltip);
+					left: 0;
+					opacity: 0;
+					padding: .125ch .75ch;
+					position: absolute;
+					text-wrap: nowrap;
+					top: 100%;
+				}
+				&:hover::after {
+					opacity: 1;
+					transition: opacity .15s ease-in-out;
+				}
 			}
 		}
-		dt {
-			display: none;
-		}
-
+		dt { display: none; }
 		figcaption {
 			font-weight: 700;
 			margin-block-end: 1ch;
 		}
 
 		/* SVG */
-		svg {
-			overflow: visible;
-		}
+		svg { overflow: visible; }
 		path:hover {
 			fill: color-mix(in srgb, var(--c) 75%, #FFF);
 			scale: 1.025;
@@ -57,6 +67,6 @@
 			transform-origin: center;
 			transition: scale .15s ease-in-out;
 		}
-		text { pointer-events: none;}
+		text { pointer-events: none; }
 	}
 }
