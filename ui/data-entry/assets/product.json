@@ -1,0 +1,89 @@
+{
+  "id": 190155,
+  "name": "Foundation",
+  "description": "For twelve thousand years the <b>Galactic Empire</b> has ruled supreme. Now it is dying. But only <i>Hari Seldon</i>, creator of the revolutionary science of psychohistory, can see into the future — to a dark age of ignorance, barbarism, and warfare that will last thirty thousand years. To preserve knowledge and save humankind, Seldon gathers the best minds in the Empire — both scientists and scholars — and brings them to a bleak planet at the edge of the galaxy to serve as a beacon of hope for future generations. He calls his sanctuary the <b>Foundation</b>.",
+  "product_type_id": 1,
+  "condition": 1,
+  "published": false,
+  "searchable": true,
+  "sku": "172137",
+  "created_at": "2022-08-11T00:00:00",
+  "last_modified_at": "2024-05-22T13:26:16",
+  "attributes": [
+    {
+      "attr_label": "Isaac Asimov",
+      "attr_type": "Book Author",
+      "attr_value": 1
+    },
+    {
+      "attr_label": "Foundation",
+      "attr_type": "Book Series",
+      "attr_value": 2
+    },
+    {
+      "attr_label": "Science Fiction",
+      "attr_type": "Book Genre",
+      "attr_value": 3
+    }
+  ],
+  "price": [
+    {
+      "price_id": 359414,
+      "currency_code": "USD",
+      "discount": false,
+      "is_msrp": true,
+      "valid_from": "2024-05-22T13:26:24",
+      "value": 19.95
+    },
+    {
+      "price_id": 359415,
+      "currency_code": "DKK",
+      "discount": false,
+      "is_msrp": true,
+      "valid_from": "2024-04-22T13:26:24",
+      "value": 199.50
+    }
+  ],
+  "vendor": {
+    "vendor_id": 1007,
+    "vendor_name": "Penguin Random House"
+  },
+  "channels": [
+    {
+      "channel_name": "Default",
+      "expected_delivery": "2004-11-30T14:17:24",
+      "quantity_in_stock": 1
+    }
+  ],
+  "media": [
+    {
+      "media_id": 190155,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1417900846i/29579.jpg"
+    },
+    {
+      "media_id": 190156,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1558401363i/40793127.jpg"
+    },
+    {
+      "media_id": 190157,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1629666224i/58831139.jpg"
+    }
+  ],
+  "reviews": [
+    {
+      "review_id": 190155,
+      "reviewer": "John Doe",
+      "review_date": "2024-05-22T13:26:24",
+      "review_headline": "This is a great book!"
+    },
+    {
+      "review_id": 190156,
+      "reviewer": "Jane Doe",
+      "review_date": "2024-05-22T13:26:24",
+      "review_headline": "I love this book!"
+    }
+  ]
+}

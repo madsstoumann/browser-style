@@ -1,4 +1,4 @@
-import stylesheet from './main.css' assert { type: 'css' };
+// import stylesheet from './main.css' with { type: 'css' };
 /**
  * app
  * description
@@ -22,7 +22,7 @@ class App extends HTMLElement {
 		const shadow = this.attachShadow({ mode: 'open' })
 		const template = document.createElement('template');
 		//template.innerHTML = this.renderTemplate();
-		shadow.adoptedStyleSheets = [stylesheet];
+		// shadow.adoptedStyleSheets = [stylesheet];
 		shadow.appendChild(template.content.cloneNode(true));
 	}
 

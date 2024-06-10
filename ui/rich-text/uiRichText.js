@@ -2,12 +2,12 @@
  * uiRichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.01
- * @summary 04-03-2024
+ * @version 1.0.02
+ * @summary 10-06-2024
  * @class
  * @extends {HTMLElement}
  */
-class uiRichText extends HTMLElement {
+export class uiRichText extends HTMLElement {
 	static observedAttributes = ['plaintext'];
 	constructor() {
 		super();
@@ -22,12 +22,16 @@ class uiRichText extends HTMLElement {
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.innerHTML = this.renderTemplate();
 
-		this.innerHTML = `<div contenteditable="true" style="outline:none;">${this.innerHTML}</div>`;
+		this.innerHTML = `
+		<div contenteditable="true" style="outline:none;">${this.innerHTML}</div>
+		<input type="hidden" name="${this.getAttribute('name')||'richtext'}" value="${this.innerHTML}">`;
 		this.content = this.querySelector('[contenteditable]');
+		this.input = this.querySelector('input[type=hidden]');
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
-		this.content.addEventListener('input', () => { this.dispatchEvent(
-			new CustomEvent("ui-richtext-content", {
+		this.content.addEventListener('input', () => { 
+			this.input.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
+			this.dispatchEvent(new CustomEvent("ui-richtext-content", {
 				detail: {
 					content: this.plaintext ? this.content.textContent : this.content.innerHTML
 				},
@@ -426,7 +430,8 @@ stylesheet.replaceSync(`
 [hidden] { display: none; }
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
 :host {
-	--ui-richtext-active: var(--Highlight);
+	--ui-richtext-active-bg: var(--Highlight);
+	--ui-richtext-active-c: inherit;
 	background: Canvas;
 	color: CanvasText;
 	color-scheme: inherit;
@@ -452,7 +457,10 @@ fieldset {
 	all: unset;
 	display: flex;
 	& > *:only-child { border-radius: .1875em; }
-	& fieldset > *:is(:focus-visible, :hover) { background: var(--ui-richtext-active); }
+	& fieldset > *:is(:focus-visible, :hover) {
+		background: var(--ui-richtext-active-bg);
+		color: var(--ui-richtext-active-c);
+	}
 	&:empty { display: none; }
 }
 select {
@@ -491,7 +499,8 @@ textarea {
 	width: 1px;
 }
 .--active {
-	background: var(--ui-richtext-active);
+	background: var(--ui-richtext-active-bg);
+	color: var(--ui-richtext-active-c);
 }
 [disabled] {
 	color: GrayText;

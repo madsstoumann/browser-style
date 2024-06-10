@@ -41,6 +41,8 @@ const data = [
 	{ key: "Other", value: 3.54, color: "#CCCCCC" } // Combined Ireland, New Zealand, South Africa
 ];
 
+/* === CSS === */
+
 function renderCSSPieChart(data, node) {
 	let currentDegree = 90;
 	node.innerHTML = data.map((item) => {
@@ -54,6 +56,10 @@ function renderCSSPieChart(data, node) {
 		return html;
 	}).join('');
 }
+
+renderCSSPieChart(data, document.querySelector('.ui-pie-chart dl'));
+
+/* === SVG === */
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 	var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
@@ -117,9 +123,8 @@ function renderSVGPieChart(data, node) {
 	node.appendChild(svg);
 }
 
-// Render the pie charts
 renderSVGPieChart(data, document.querySelector('.ui-pie-chart:not(:has(dl))'));
-renderCSSPieChart(data, document.querySelector('.ui-pie-chart dl'));
+
 
 	</script>
 </body>
