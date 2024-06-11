@@ -252,3 +252,10 @@ When working with arrays, `render` can be extended with a `popover`-object:
   }
 }
 ```
+
+
+---
+
+### Toolbars
+
+A `render`-object can also have a `toolbar`-property. It's an array of buttons, that'll be added after the main render-method.

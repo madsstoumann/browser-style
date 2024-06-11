@@ -16,11 +16,24 @@
 
 	<data-entry
 		action="/submit"
-		data="assets/product.json"
-		schema="assets/product-schema.json"
+		data="data/product.json"
+		schema="data/product-schema.json"
 		class="ui-data-entry">
 	</data-entry>
 
 	<script type="module" src="data-entry.js"></script>
+	
+	<script type="module">
+    import { dataEntry } from './modules/main.js';
+
+    function customUtility(param1, param2) {
+      console.log('Custom utility called with params:', param1, param2);
+     }
+    dataEntry.extendUtilityMethod('customUtility', customUtility);
+		// console.log(dataEntry)
+  </script>
+
+
+	</script>
 </body>
 </html>

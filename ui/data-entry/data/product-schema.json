@@ -195,15 +195,7 @@
 						{ "label": "Label", "name": "attr_label", "type": "text" },
 						{ "label": "Type", "name": "attr_type", "type": "text" },
 						{ "label": "Value", "name": "attr_value", "type": "number" }]
-				},
-				"toolbar": [
-				{
-					"label": "Refresh",
-					"attributes": [
-						{ "class": "bg-success --light fs-xs" }
-					]
 				}
-			]
 			},
 			"items": {
 				"type": "object",

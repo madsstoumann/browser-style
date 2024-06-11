@@ -1,11 +1,12 @@
-import { render } from './render.js';
+import { dataEntry } from './modules/main.js';
+import { bindUtilityEvents } from './modules/utility.js';
 import { uiRichText } from '/ui/rich-text/uiRichText.js';
 /**
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.01
- * @summary 10-06-2024
+ * @version 1.0.02
+ * @summary 11-06-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -55,8 +56,11 @@ class DataEntry extends HTMLElement {
 	}
 
 	renderAll() {
-		const renderMethod = this.schema.renderMethod || 'all';
-		this.form.innerHTML = render.getMethod(renderMethod)(this.data, this.schema, true);
+		dataEntry.data = this.data;
+		dataEntry.schema = this.schema;
+		dataEntry.parent = this;
+		this.form.innerHTML = dataEntry.methods.all(dataEntry.data, dataEntry.schema, true);
+		bindUtilityEvents(this.form);
 	}
 }
 /* Register element/s */
