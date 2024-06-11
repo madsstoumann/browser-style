@@ -1,5 +1,6 @@
 import { createDataEntryInstance } from './modules/factory.js';
 import { bindUtilityEvents } from './modules/utility.js';
+import { validateData } from './modules/validate.js';
 import { uiRichText } from '/ui/rich-text/uiRichText.js';
 /**
  * Data Entry
@@ -33,7 +34,12 @@ class DataEntry extends HTMLElement {
 			this.appendChild(this.form);
 		}
 		if (this.instance.data && this.instance.schema) {
-			this.renderAll();
+			const validationResult = validateData(this.instance.schema, this.instance.data);
+			if (!validationResult.valid) {
+				console.error('Validation errors:', validationResult.errors);
+			} else {
+				this.renderAll();
+			}
 		}
 	}
 
@@ -61,6 +67,6 @@ class DataEntry extends HTMLElement {
 }
 /* Register element/s */
 if (!customElements.get('ui-richtext')) {
-  customElements.define('ui-richtext', uiRichText);
+	customElements.define('ui-richtext', uiRichText);
 }
 customElements.define('data-entry', DataEntry);
