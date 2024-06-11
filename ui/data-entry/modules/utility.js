@@ -1,6 +1,4 @@
-import { dataEntry } from './main.js'; // Import the global dataEntry object
-
-export function addEntry(key, popoverId) {
+export function addArrayEntry(dataEntryInstance, key, popoverId) {
 	// const popover = document.getElementById(popoverId);
 	// const inputs = popover.querySelectorAll('input');
 	// const newEntry = {};
@@ -9,9 +7,9 @@ export function addEntry(key, popoverId) {
 	// 	newEntry[input.name] = input.type === 'number' ? parseInt(input.value, 10) : input.value;
 	// });
 
-	// const data = dataEntry.data;
+	const data = dataEntryInstance.data[key];
 	// const schema = dataEntry.schema;
-console.log(dataEntry.data[key]);
+	console.log(data);
 
 	// if (!data[key]) data[key] = [];
 	// data[key].push(newEntry);
@@ -47,20 +45,16 @@ export const attrs = (attributes = [], additional = []) => {
 /**
  * Binds utility events to elements with data-util attribute.
  * @param {HTMLElement} formContent - The form content element.
+ * @param {Object} dataEntryInstance - The data entry instance object.
  */
-export function bindUtilityEvents(formContent) {
+export function bindUtilityEvents(formContent, dataEntryInstance) {
 	const elements = formContent.querySelectorAll('[data-util]');
 	elements.forEach(element => {
 		const utilFunction = element.dataset.util;
 		const params = element.dataset.params ? JSON.parse(element.dataset.params) : {};
-		if (dataEntry.utils[utilFunction]) {
-			/**
-			 * Event listener for the click event on the element.
-			 * Calls the utility function with the provided parameters.
-			 * @event click
-			 */
+		if (dataEntryInstance.utils[utilFunction]) {
 			element.addEventListener('click', () => {
-				dataEntry.utils[utilFunction](...Object.values(params));
+				dataEntryInstance.utils[utilFunction](dataEntryInstance, ...Object.values(params));
 			});
 		}
 	});

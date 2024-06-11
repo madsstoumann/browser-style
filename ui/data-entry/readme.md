@@ -259,3 +259,20 @@ When working with arrays, `render` can be extended with a `popover`-object:
 ### Toolbars
 
 A `render`-object can also have a `toolbar`-property. It's an array of buttons, that'll be added after the main render-method.
+
+
+Extend
+```html
+<script type="module">
+		document.addEventListener('DOMContentLoaded', () => {
+			document.querySelectorAll('data-entry').forEach(el => {
+				function customUtility(instance, param1, param2) {
+					console.log('Custom utility called with params:', param1, param2);
+					console.log('Instance data:', instance.data);
+				}
+				el.instance.extendUtilityMethod('customUtility', customUtility);
+				console.log(el.instance);
+			});
+		});
+	</script>
+  ```

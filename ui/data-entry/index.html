@@ -7,7 +7,7 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-data-entry.css">
+	<link rel="stylesheet" href="data-entry.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -17,23 +17,9 @@
 	<data-entry
 		action="/submit"
 		data="data/product.json"
-		schema="data/product-schema.json"
-		class="ui-data-entry">
+		schema="data/product-schema.json">
 	</data-entry>
 
-	<script type="module" src="data-entry.js"></script>
-	
-	<script type="module">
-    import { dataEntry } from './modules/main.js';
-
-    function customUtility(param1, param2) {
-      console.log('Custom utility called with params:', param1, param2);
-     }
-    dataEntry.extendUtilityMethod('customUtility', customUtility);
-		// console.log(dataEntry)
-  </script>
-
-
-	</script>
+	<script type="module" src="index.js"></script>
 </body>
 </html>

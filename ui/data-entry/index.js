@@ -1,11 +1,11 @@
-import { dataEntry } from './modules/main.js';
+import { createDataEntryInstance } from './modules/factory.js';
 import { bindUtilityEvents } from './modules/utility.js';
 import { uiRichText } from '/ui/rich-text/uiRichText.js';
 /**
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.02
+ * @version 1.0.03
  * @summary 11-06-2024
  * @class
  * @extends {HTMLElement}
@@ -14,12 +14,11 @@ class DataEntry extends HTMLElement {
 	static observedAttributes = ['data'];
 	constructor() {
 		super();
-		this.data = {};
-		this.schema = {};
 		this.form = document.createElement('form');
 		this.form.method = 'POST';
 		this.form.action = this.getAttribute('action');
 		this.form.part = 'form';
+		this.instance = createDataEntryInstance(this);
 	}
 
 	async connectedCallback() {
@@ -33,7 +32,7 @@ class DataEntry extends HTMLElement {
 		else {
 			this.appendChild(this.form);
 		}
-		if (this.data && this.schema) {
+		if (this.instance.data && this.instance.schema) {
 			this.renderAll();
 		}
 	}
@@ -46,21 +45,18 @@ class DataEntry extends HTMLElement {
 	async fetchData() {
 		const dataUrl = this.getAttribute('data');
 		if (!dataUrl) return;
-		this.data = await (await fetch(dataUrl)).json();
+		this.instance.data = await (await fetch(dataUrl)).json();
 	}
 
 	async fetchSchema() {
 		const schemaUrl = this.getAttribute('schema');
 		if (!schemaUrl) return;
-		this.schema = await (await fetch(schemaUrl)).json();
+		this.instance.schema = await (await fetch(schemaUrl)).json();
 	}
 
 	renderAll() {
-		dataEntry.data = this.data;
-		dataEntry.schema = this.schema;
-		dataEntry.parent = this;
-		this.form.innerHTML = dataEntry.methods.all(dataEntry.data, dataEntry.schema, true);
-		bindUtilityEvents(this.form);
+		this.form.innerHTML = this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true);
+		bindUtilityEvents(this.form, this.instance);
 	}
 }
 /* Register element/s */

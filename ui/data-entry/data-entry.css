@@ -1,6 +1,6 @@
 @import url('/ui/icon/ui-icon.css');
 @layer bs-component {
-	:where(.ui-data-entry) {
+	:where(data-entry) {
 		--_bdc: var(--ButtonBorder);
 		--_bgc: var(--CanvasGray);
 		--_bdrs: var(--input-bdrs);

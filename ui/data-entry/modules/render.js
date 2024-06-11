@@ -1,20 +1,20 @@
 import { attrs, uuid } from './utility.js';
-import { dataEntry } from './main.js';
 
 /**
- * Renders all data entries based on the provided schema.
- * @param {Object} data - The data object containing the values for each entry.
- * @param {Object} schema - The schema object defining the structure and rendering configuration for each entry.
- * @param {boolean} [root=false] - Indicates whether the current rendering is at the root level.
+ * Renders all the data based on the provided schema and instance.
+ * @param {object} data - The data object to be rendered.
+ * @param {object} schema - The schema object that defines the structure of the data.
+ * @param {object} instance - The instance object that provides rendering methods.
+ * @param {boolean} [root=false] - Indicates if it's the root level rendering.
  * @returns {string} - The rendered content.
  */
-export function all(data, schema, root = false) {
+export function all(data, schema, instance, root = false) {
 	let content = Object.entries(schema.properties).map(([key, config]) => {
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method;
-		const renderMethod = dataEntry.getRenderMethod(method);
+		const renderMethod = instance.getRenderMethod(method);
 		const title = config.title || 'LABEL';
-		const toolbar = config?.render?.toolbar ? dataEntry.getRenderMethod('toolbar')(config.render.toolbar) : '';
+		const toolbar = config?.render?.toolbar ? instance.getRenderMethod('toolbar')(config.render.toolbar) : '';
 
 		let options = config?.render?.options || [];
 		if (typeof options === 'string') {
@@ -29,19 +29,19 @@ export function all(data, schema, root = false) {
 		if (config.type === 'array') {
 			if (method) {
 				try {
-					const popoverContent = config.render?.popover ? dataEntry.getRenderMethod('popover')(config.render.popover, key) : '';
-					return renderMethod(title, data[key], attributes, options, config) + popoverContent + toolbar;
+					const popoverContent = config.render?.popover ? instance.getRenderMethod('popover')(config.render.popover, key, instance) : '';
+					return renderMethod(title, data[key], attributes, options, config, instance) + popoverContent + toolbar;
 				} catch {
 					return '';
 				}
 			} else if (config.items) {
-				return data[key].map(item => all(item, config.items)).join('');
+				return data[key].map(item => all(item, config.items, instance)).join('');
 			}
 		}
 
 		if (method) {
 			try {
-				return renderMethod(title, data[key], attributes, options, config);
+				return renderMethod(title, data[key], attributes, options, config, instance);
 			} catch {
 				return '';
 			}
@@ -49,7 +49,7 @@ export function all(data, schema, root = false) {
 		return '';
 	}).join('');
 
-	return root && schema?.render?.toolbar ? content + dataEntry.getRenderMethod('toolbar')(schema.render.toolbar) : content;
+	return root && schema?.render?.toolbar ? content + instance.getRenderMethod('toolbar')(schema.render.toolbar) : content;
 }
 
 /**
@@ -98,11 +98,12 @@ export const checklist = (label, value, attributes, _options, config) => {
  * @param {string} label - The label for the details component.
  * @param {any} value - The value for the details component.
  * @param {object} attributes - The attributes for the details component.
- * @param {object} _options - The options for the details component.
+ * @param {object} _options - The options object (not used in the function).
  * @param {object} config - The configuration object for rendering.
- * @returns {string} A fieldset of details-element/s.
+ * @param {object} instance - The instance object.
+ * @returns {string} The rendered details component.
  */
-export const details = (label, value, attributes, _options, config) => {
+export const details = (label, value, attributes, _options, config, instance) => {
 	/**
 	 * Renders the single `<details>` component.
 	 *
@@ -120,7 +121,7 @@ export const details = (label, value, attributes, _options, config) => {
 					<span part="label">${icon()}${summary}</span>
 					<em part="header">${header}</em>
 				</summary>
-				${all(value, config.items)}
+				${all(value, config.items, instance)}
 			</details>`;
 	};
 
@@ -150,10 +151,11 @@ export const fieldset = (label, attributes, content) => `
  * @param {Object} attributes - The attributes for the grid fieldset.
  * @param {Object} _options - The options for rendering the grid.
  * @param {Object} config - The configuration object for the grid.
+ * @param {object} instance - The instance object.
  * @returns {string} - The rendered grid fieldset.
  */
-export const grid = (label, value, attributes, _options, config) => {
-	return fieldset(label, attributes, value.map(item => `<fieldset>${all(item, config.items)}</fieldset>`).join(''));
+export const grid = (label, value, attributes, _options, config, instance) => {
+	return fieldset(label, attributes, value.map(item => `<fieldset>${all(item, config.items, instance)}</fieldset>`).join(''));
 }
 
 /**
@@ -210,12 +212,13 @@ export const media = (label, value, attributes, _options, config) => {
  * Generates a popover HTML string based on the provided object and key.
  * @param {Object} obj - The object containing popover data.
  * @param {string} key - The key used for rendering the popover.
+ * @param {object} instance - The instance object.
  * @returns {string} - The generated popover HTML string.
  */
-export const popover = (obj, key) => {
-	const formID = `form${uuid()}`;
+export const popover = (obj, key, instance) => {
 	/* Create a form to host the popover-fields */
-	dataEntry.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
+	const formID = `form${uuid()}`;
+	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
 
 	const { id, label, name, items } = obj;
 	const fields = items.map(item => {
@@ -240,7 +243,7 @@ export const popover = (obj, key) => {
 				${fields}
 				<nav part="nav">
 					<button type="button" popovertarget="${id}" popovertargetaction="hide" class="--text fs-xs">Close</button>
-					<button type="button" class="bg-success --light fs-xs" data-util="addEntry" data-params='{"key": "${key}", "id": "${id}"}'>Add</button>
+					<button type="button" class="bg-success --light fs-xs" data-util="addArrayEntry" data-params='{"key": "${key}", "id": "${id}"}'>Add</button>
 				</nav>
 			</fieldset>
 		</div>`;
