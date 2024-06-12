@@ -1,18 +1,19 @@
 import { createDataEntryInstance } from './modules/factory.js';
 import { bindUtilityEvents } from './modules/utility.js';
-import { validateData } from './modules/validate.js';
+import { validateData as defaultValidateData } from './modules/validate.js';
 import { uiRichText } from '/ui/rich-text/uiRichText.js';
 /**
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 11-06-2024
+ * @version 1.0.05
+ * @summary 12-06-2024
  * @class
  * @extends {HTMLElement}
  */
 class DataEntry extends HTMLElement {
-	static observedAttributes = ['data'];
+	static observedAttributes = ['data', 'validation'];
+
 	constructor() {
 		super();
 		this.form = document.createElement('form');
@@ -20,24 +21,38 @@ class DataEntry extends HTMLElement {
 		this.form.action = this.getAttribute('action');
 		this.form.part = 'form';
 		this.instance = createDataEntryInstance(this);
+		this.customValidateData = null;
 	}
 
 	async connectedCallback() {
-		await this.fetchSchema();
-		await this.fetchData();
-
 		if (this.hasAttribute('shadow')) {
 			const shadow = this.attachShadow({ mode: 'open' });
 			shadow.appendChild(this.form);
-		}
-		else {
+		} else {
 			this.appendChild(this.form);
 		}
-		if (this.instance.data && this.instance.schema) {
-			const validationResult = validateData(this.instance.schema, this.instance.data);
-			if (!validationResult.valid) {
-				console.error('Validation errors:', validationResult.errors);
-			} else {
+
+		if (this.jsonData && this.jsonSchema) {
+			this.instance.data = this.jsonData;
+			this.instance.schema = this.jsonSchema;
+			this.renderAll();
+		} else {
+			await this.fetchSchema();
+			await this.fetchData();
+
+			if (this.isEmpty(this.instance.data) || this.isEmpty(this.instance.schema)) {
+				console.warn('Data or schema is empty. Skipping render.');
+				return;
+			}
+
+			if (this.instance.data && this.instance.schema) {
+				if (this.shouldValidate()) {
+					const validationResult = await this.validateData();
+					if (!validationResult.valid) {
+						console.error('Validation errors:', validationResult.errors);
+						return; // Do not render if validation fails
+					}
+				}
 				this.renderAll();
 			}
 		}
@@ -45,7 +60,6 @@ class DataEntry extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!newValue || oldValue === newValue) return;
-		// console.log(`Attribute: ${name} changed from ${oldValue} to ${newValue}`);
 	}
 
 	async fetchData() {
@@ -60,13 +74,53 @@ class DataEntry extends HTMLElement {
 		this.instance.schema = await (await fetch(schemaUrl)).json();
 	}
 
+	isEmpty(obj) {
+		return Object.keys(obj).length === 0;
+	}
+
 	renderAll() {
+		if (this.isEmpty(this.instance.data) || this.isEmpty(this.instance.schema)) {
+			console.warn('Data or schema is empty. Skipping render.');
+			return;
+		}
 		this.form.innerHTML = this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true);
 		bindUtilityEvents(this.form, this.instance);
 	}
+
+	shouldValidate() {
+		return this.getAttribute('validation') === 'true';
+	}
+
+	async validateData() {
+		const validateData = this.customValidateData || defaultValidateData;
+		return validateData(this.instance.schema, this.instance.data);
+	}
+
+	// Setters for jsonData and jsonSchema
+	set jsonData(data) {
+		this._jsonData = data;
+		this.instance.data = data;
+	}
+
+	get jsonData() {
+		return this._jsonData;
+	}
+
+	set jsonSchema(schema) {
+		this._jsonSchema = schema;
+		this.instance.schema = schema;
+	}
+
+	get jsonSchema() {
+		return this._jsonSchema;
+	}
 }
+
 /* Register element/s */
 if (!customElements.get('ui-richtext')) {
 	customElements.define('ui-richtext', uiRichText);
 }
 customElements.define('data-entry', DataEntry);
+
+// Export the DataEntry class so it can be used externally
+export { DataEntry };

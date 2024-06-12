@@ -187,14 +187,54 @@
 					{ "name": "attributes" },
 					{ "part": "checklist" }
 				],
-				"popover": {
+				"entry": {
 					"id": "add_attribute",
 					"label": "Add attribute",
 					"name": "new_attribute",
-					"items": [
-						{ "label": "Label", "name": "attr_label", "type": "text" },
-						{ "label": "Type", "name": "attr_type", "type": "text" },
-						{ "label": "Value", "name": "attr_value", "type": "number" }]
+					"schema": {
+						"type": "object",
+						"properties": {
+							"attr_label": {
+								"title": "Label",
+								"type": "string",
+								"render": {
+									"method": "input",
+									"attributes": [
+										{ "name": "attr_label" },
+										{ "type": "text" },
+										{ "placeholder": "Enter label" },
+										{ "required": "required" }
+									]
+								}
+							},
+							"attr_type": {
+								"title": "Type",
+								"type": "string",
+								"render": {
+									"method": "input",
+									"attributes": [
+										{ "name": "attr_type" },
+										{ "type": "text" },
+										{ "placeholder": "Enter type" },
+										{ "required": "required" }
+									]
+								}
+							},
+							"attr_value": {
+								"title": "Value",
+								"type": "number",
+								"render": {
+									"method": "input",
+									"attributes": [
+										{ "name": "attr_value" },
+										{ "type": "number" },
+										{ "placeholder": "Enter value" },
+										{ "required": "required" }
+									]
+								}
+							}
+						}
+					}
 				}
 			},
 			"items": {
@@ -236,17 +276,10 @@
 			"render": {
 				"method": "details",
 				"summary": "currency_code",
-      	"label": "value",
+				"label": "value",
 				"attributes": [
 					{ "name": "price" }
-				],
-				"popover": {
-					"id": "add_price",
-					"label": "Add price",
-					"name": "new_price",
-					"items": [
-					]
-				}
+				]
 			},
 			"items": {
 				"type": "object",

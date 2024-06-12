@@ -238,7 +238,7 @@ render.extend('custom', customRenderMethod);
 
 ---
 
-### Popovers
+### Entries (Array, popover)
 
 When working with arrays, `render` can be extended with a `popover`-object:
 
@@ -276,3 +276,21 @@ Extend
 		});
 	</script>
   ```
+
+
+  ### Validation
+    <data-entry data="/path/to/data.json" schema="/path/to/schema.json" validation="true"></data-entry>
+  <script type="module">
+    import { DataEntry } from './index.js';
+
+    // Define a custom validation function
+    function customValidate(schema, data) {
+      console.log('Custom validation function called');
+      // Custom validation logic here
+      return { valid: true, errors: [] };
+    }
+
+    // Set the custom validation function on the data-entry element
+    const dataEntry = document.querySelector('data-entry');
+    dataEntry.customValidateData = customValidate;
+  </script>

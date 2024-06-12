@@ -29,8 +29,8 @@ export function all(data, schema, instance, root = false) {
 		if (config.type === 'array') {
 			if (method) {
 				try {
-					const popoverContent = config.render?.popover ? instance.getRenderMethod('popover')(config.render.popover, key, instance) : '';
-					return renderMethod(title, data[key], attributes, options, config, instance) + popoverContent + toolbar;
+					const addEntry = config.render?.entry ? instance.getRenderMethod('entry')(config.render.entry, key, instance) : '';
+					return renderMethod(title, data[key], attributes, options, config, instance) + addEntry + toolbar;
 				} catch {
 					return '';
 				}
@@ -130,6 +130,39 @@ export const details = (label, value, attributes, _options, config, instance) =>
 }
 
 /**
+ * Generates a popover HTML string based on the provided object and key.
+ * @param {Object} obj - The object containing popover data.
+ * @param {string} key - The key used for rendering the popover.
+ * @param {object} instance - The instance object.
+ * @returns {string} - The generated popover HTML string.
+ */
+export const entry = (obj, key, instance) => {
+	/* Create a form to host the entry-fields */
+	const formID = `form${uuid()}`;
+	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
+
+	const { id, label, name, schema } = obj;
+	const fields = all({}, schema, instance);
+
+	return `
+		<nav part="nav">
+			<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
+				${icon('plus')}${label}
+			</button>
+		</nav>
+		<div id="${id}" popover="" style="--_pa:--${id};">
+			<fieldset part="fieldset" name="${name}">
+				<legend part="legend">${label}</legend>
+				${fields}
+				<nav part="nav">
+					<button type="button" popovertarget="${id}" popovertargetaction="hide" class="--text fs-xs">Close</button>
+					<button type="button" class="bg-success --light fs-xs" data-util="addArrayEntry" data-params='{"key": "${key}", "id": "${id}"}'>Add</button>
+				</nav>
+			</fieldset>
+		</div>`;
+};
+
+/**
  * Renders a fieldset element with a legend and content.
  *
  * @param {string} label - The label for the fieldset.
@@ -178,7 +211,7 @@ export const icon = (type = 'triangle right', size = 'md') => `<ui-icon type="${
 export const input = (label, value, attributes = []) => {
 	const checked = attributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
 	const hidden = attributes.some(attr => attr.type === 'hidden');
-	const output = `<input part="input" value="${value}" ${attrs(attributes)}${checked}></input>`;
+	const output = `<input part="input" value="${value||''}" ${attrs(attributes)}${checked}></input>`;
 	return hidden ? output : `<label part="row"><span part="label">${label}</span>${output}</label>`;
 }
 
@@ -206,47 +239,6 @@ export const media = (label, value, attributes, _options, config) => {
 		</label>`;
 	}
 	return fieldset(label, attributes, value.map(item => mediaItem(item, config.items)).join(''))
-};
-
-/**
- * Generates a popover HTML string based on the provided object and key.
- * @param {Object} obj - The object containing popover data.
- * @param {string} key - The key used for rendering the popover.
- * @param {object} instance - The instance object.
- * @returns {string} - The generated popover HTML string.
- */
-export const popover = (obj, key, instance) => {
-	/* Create a form to host the popover-fields */
-	const formID = `form${uuid()}`;
-	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
-
-	const { id, label, name, items } = obj;
-	const fields = items.map(item => {
-		const { label, name, type } = item;
-		return `
-			<label part="row">
-				<span part="label">${label}</span>
-				<input part="input" type="${type}" name="${name}" form="${formID}" required>
-			</label>
-		`;
-	}).join('');
-
-	return `
-		<nav part="nav">
-			<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
-				${icon('plus')}${label}
-			</button>
-		</nav>
-		<div id="${id}" popover="" style="--_pa:--${id};">
-			<fieldset part="fieldset" name="${name}">
-				<legend part="legend">${label}</legend>
-				${fields}
-				<nav part="nav">
-					<button type="button" popovertarget="${id}" popovertargetaction="hide" class="--text fs-xs">Close</button>
-					<button type="button" class="bg-success --light fs-xs" data-util="addArrayEntry" data-params='{"key": "${key}", "id": "${id}"}'>Add</button>
-				</nav>
-			</fieldset>
-		</div>`;
 };
 
 /**

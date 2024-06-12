@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Entry</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="data-entry.css">
+</head>
+<body>
+	<h1>Data Entry Schema</h1>
+
+	<h2>JSON Schema </h2>
+	<textarea id="jsonInput" rows="10" cols="50" placeholder="Paste JSON here"></textarea>
+  <button id="generateSchema">Generate Schema</button>
+  <button id="downloadSchema">Download Schema</button>
+  <button id="copySchema">Copy Schema to Preview</button>
+  <details><summary>Schema</summary><pre id="schema"></pre></details>
+
+  <h2>Data Entry Preview</h2>
+  <textarea id="schemaInput" rows="10" cols="50" placeholder="Paste Schema JSON here"></textarea>
+  <button id="previewDataEntry">Preview Data Entry</button>
+
+  <data-entry id="dataEntryComponent">
+  </data-entry>
+
+  <script type="module">
+    import { generateSchemaFromData } from './modules/schema.js';
+    import { DataEntry } from './index.js'; // Ensure this path is correct
+
+    document.getElementById('generateSchema').addEventListener('click', () => {
+      const jsonInput = document.getElementById('jsonInput').value;
+      try {
+        const data = JSON.parse(jsonInput);
+        const schema = generateSchemaFromData(data);
+        document.getElementById('schema').textContent = JSON.stringify(schema, null, 2);
+      } catch (error) {
+        document.getElementById('schema').textContent = 'Invalid JSON';
+      }
+    });
+
+    document.getElementById('downloadSchema').addEventListener('click', () => {
+      const schema = document.getElementById('schema').textContent;
+      if (!schema) {
+        alert('Generate the schema first');
+        return;
+      }
+      const blob = new Blob([schema], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'schema.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('copySchema').addEventListener('click', () => {
+      const schema = document.getElementById('schema').textContent;
+      if (!schema) {
+        alert('Generate the schema first');
+        return;
+      }
+      document.getElementById('schemaInput').value = schema;
+    });
+
+    document.getElementById('previewDataEntry').addEventListener('click', () => {
+      const dataEntryComponent = document.getElementById('dataEntryComponent');
+      const jsonInput = document.getElementById('jsonInput').value;
+      const schemaInput = document.getElementById('schemaInput').value;
+      try {
+        const data = JSON.parse(jsonInput);
+        const schema = JSON.parse(schemaInput);
+        dataEntryComponent.jsonData = data;
+        dataEntryComponent.jsonSchema = schema;
+        dataEntryComponent.renderAll();
+        // console.log(dataEntryComponent.form, dataEntryComponent.instance);
+      } catch (error) {
+        alert('Invalid JSON for data or schema');
+      }
+    });
+  </script>
+</body>
+</html>
