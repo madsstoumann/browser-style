@@ -401,8 +401,6 @@
 						"type": "string",
 						"property": "src",
 						"render": {
-							"method": "img",
-
 							"attributes": [
 								{ "alt": "none" }
 							]

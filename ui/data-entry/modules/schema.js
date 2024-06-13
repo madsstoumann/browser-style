@@ -1,87 +1,164 @@
-export function generateRenderMethod(type, key) {
-  const baseAttributes = [{ name: key }];
-  if (type === 'string') {
-    // Check if the string is a valid ISO 8601 date
-    const iso8601DateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[\+\-]\d{2}:\d{2})?$/;
-
-    if (iso8601DateRegex.test(key)) {
-      return {
-        method: 'input',
-        attributes: baseAttributes.concat([{ type: 'datetime-local' }, { placeholder: 'Enter date and time' }])
-      };
-    }
-
-    return {
-      method: 'input',
-      attributes: baseAttributes.concat([{ type: 'text' }, { placeholder: `Enter ${key}` }])
-    };
-  }
-
-  if (type === 'number') {
-    return {
-      method: 'input',
-      attributes: baseAttributes.concat([{ type: 'number' }, { placeholder: `Enter ${key}` }])
-    };
-  }
-
-  if (type === 'boolean') {
-    return {
-      method: 'input',
-      attributes: baseAttributes.concat([{ type: 'checkbox' }])
-    };
-  }
-
-  // Add more type handling as needed
-
-  // Default case for unsupported types
-  return {
-    method: 'input',
-    attributes: baseAttributes.concat([{ type: 'text' }, { placeholder: `Enter ${key}` }])
-  };
+function isLikelyUrl(value) {
+	const urlPattern = /^(http|https):\/\/[^\s$.?#].[^\s]*$/;
+	return urlPattern.test(value);
 }
 
-export function generateSchemaFromData(data, schemaId, schemaUri) {
-  const schema = {
-    $schema: schemaUri,
-    $id: schemaId,
-    type: 'object',
-    properties: {},
-    required: [],
-  };
+function isLikelySkuOrId(value) {
+	const noSpaces = !/\s/.test(value);
+	const alphanumeric = /^[a-zA-Z0-9]+$/.test(value);
+	return noSpaces && alphanumeric;
+}
 
-  for (const [key, value] of Object.entries(data)) {
-    const type = typeof value;
-    const render = generateRenderMethod(type, key);
+function isLikelyImageUrl(value) {
+	const imagePattern = /\.(jpeg|jpg|gif|png|svg)$/;
+	return imagePattern.test(value);
+}
 
-    if (type === 'object' && value !== null && !Array.isArray(value)) {
-      schema.properties[key] = {
-        type: 'object',
-        title: key,
-        properties: generateSchemaFromData(value, schemaId, schemaUri).properties,
-        required: Object.keys(value),
-      };
-    } else if (Array.isArray(value)) {
-      schema.properties[key] = {
-        type: 'array',
-        title: key,
-        items: {
-          type: 'object',
-          properties: generateSchemaFromData(value[0] || {}, schemaId, schemaUri).properties,
-        },
-        render: {
-          method: 'entry',
-          attributes: [{ id: `add_${key}` }, { label: `Add ${key}` }, { name: `new_${key}` }],
-        },
-      };
-    } else {
-      schema.properties[key] = {
-        type: 'string', // Always set type to string
-        title: key,
-        render,
-      };
-      schema.required.push(key);
-    }
-  }
+export function generateRenderMethod(type, key, value) {
+	const baseAttributes = [{ name: key }];
+	const iso8601DateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[\+\-]\d{2}:\d{2})?$/;
 
-  return schema;
+	if (type === 'string') {
+		if (iso8601DateRegex.test(value)) {
+			return {
+				method: 'input',
+				attributes: baseAttributes.concat([{ type: 'datetime-local' }, { placeholder: 'Enter date and time' }])
+			};
+		}
+
+		if (isLikelyUrl(value)) {
+			if (isLikelyImageUrl(value)) {
+				return {
+					method: 'img',
+					attributes: baseAttributes.concat([{ alt: 'none' }])
+				};
+			} else {
+				return {
+					method: 'input',
+					attributes: baseAttributes.concat([{ type: 'url' }, { placeholder: 'Enter URL' }])
+				};
+			}
+		}
+
+		if (isLikelySkuOrId(value)) {
+			return {
+				method: 'input',
+				attributes: baseAttributes.concat([{ type: 'text' }, { placeholder: `Enter ${key}` }])
+			};
+		}
+
+		if (value.length >= 100) {
+			return {
+				method: 'richtext',
+				attributes: [{ toolbar: 'h1,h2,h3|b,i,u,s|sub,sup|ol,ul,hr|img|link,unlink' }]
+			};
+		}
+
+		return {
+			method: 'input',
+			attributes: baseAttributes.concat([{ type: 'text' }, { placeholder: `Enter ${key}` }])
+		};
+	}
+
+	if (type === 'number') {
+		return {
+			method: 'input',
+			attributes: baseAttributes.concat([{ type: 'number' }, { placeholder: `Enter ${key}` }])
+		};
+	}
+
+	if (type === 'boolean') {
+		return {
+			method: 'input',
+			attributes: baseAttributes.concat([{ type: 'checkbox' }])
+		};
+	}
+
+	return {
+		method: 'input',
+		attributes: baseAttributes.concat([{ type: 'text' }, { placeholder: `Enter ${key}` }])
+	};
+}
+
+export function generateSchemaFromData(data, schemaId = 'http://example.com/example.json', schemaUri = 'https://json-schema.org/draft/2019-09/schema') {
+	const schema = {
+		$schema: schemaUri,
+		$id: schemaId,
+		type: 'object',
+		default: {},
+		properties: {},
+		required: [],
+	};
+
+	for (const [key, value] of Object.entries(data)) {
+		const type = typeof value;
+		const render = generateRenderMethod(type, key, value);
+
+		if (type === 'object' && value !== null && !Array.isArray(value)) {
+			schema.properties[key] = {
+				type: 'object',
+				title: key,
+				properties: generateSchemaFromData(value).properties,
+				required: Object.keys(value),
+			};
+		} else if (Array.isArray(value)) {
+			const itemSchema = generateSchemaFromData(value[0] || {});
+			const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
+			schema.properties[key] = {
+				type: 'array',
+				title: key,
+				items: {
+					type: 'object',
+					properties: itemSchema.properties,
+					required: Object.keys(itemSchema.properties),
+				},
+				render: {
+					method: isMediaArray ? 'media' : 'array',
+					attributes: [{ part: isMediaArray ? 'media' : 'array' }],
+					entry: {
+						id: `add_${key}`,
+						label: 'Add row',
+						name: '',
+						schema: {
+							type: 'object',
+							properties: generateEntryProperties(value[0])
+						}
+					}
+				},
+			};
+		} else {
+			const propertyObject = {
+				type: 'string', // Always set type to string
+				title: key,
+				render,
+			};
+
+			if (isLikelyImageUrl(value)) {
+				propertyObject.property = 'src';
+			}
+
+			schema.properties[key] = propertyObject;
+			schema.required.push(key);
+		}
+	}
+
+	return schema;
+}
+
+function generateEntryProperties(data) {
+	const properties = {};
+	for (const [key, value] of Object.entries(data)) {
+		const type = typeof value;
+		const render = generateRenderMethod(type, key, value);
+		properties[key] = {
+			title: key,
+			type: type === 'number' ? 'number' : 'string',
+			render: render
+		};
+
+		if (isLikelyImageUrl(value)) {
+			properties[key].property = 'src';
+		}
+	}
+	return properties;
 }

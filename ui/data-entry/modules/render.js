@@ -53,6 +53,21 @@ export function all(data, schema, instance, root = false) {
 }
 
 /**
+ * Renders an array of values as a fieldset.
+ *
+ * @param {string} label - The label for the fieldset.
+ * @param {Array} value - The array of values to render.
+ * @param {Object} attributes - Additional attributes for the fieldset.
+ * @param {Object} options - Options for rendering the array items.
+ * @param {Object} config - Configuration settings.
+ * @param {Object} instance - The current instance.
+ * @returns {string} - The rendered fieldset as a string.
+ */
+export const array = (label, value, attributes, options, config, instance) => {
+	return value.map((item, index) => fieldset(`${label} ${index + 1}`, attributes, all(item, config.items, instance))).join('');
+};
+
+/**
  * Renders a checklist fieldset.
  *
  * @param {string} label - The label for the checklist.
@@ -198,7 +213,7 @@ export const grid = (label, value, attributes, _options, config, instance) => {
  * @param {string} [size='md'] - The size of the icon.
  * @returns {string} The HTML string representing the icon.
  */
-export const icon = (type = 'triangle right', size = 'md') => `<ui-icon type="${type}" size="${size}"></ui-icon>`;
+const icon = (type = 'triangle right', size = 'md') => `<ui-icon type="${type}" size="${size}"></ui-icon>`;
 
 /**
  * Generates an HTML input element with an optional label.
@@ -234,8 +249,8 @@ export const media = (label, value, attributes, _options, config) => {
 		}
 		return `
 		<label part="row">
-			<input part="input" ${attrs(attributes)} value="${value}" checked>
-			<img part="img" src="${src}" alt="${value}">
+			<input part="input" ${attrs(attributes)} value="${value||''}" type="checkbox" checked>
+			<img part="img" src="${src}" alt="${value||''}">
 		</label>`;
 	}
 	return fieldset(label, attributes, value.map(item => mediaItem(item, config.items)).join(''))
