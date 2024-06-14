@@ -11,6 +11,7 @@ export class uiRichText extends HTMLElement {
 	static observedAttributes = ['plaintext'];
 	constructor() {
 		super();
+		this.contentID = `cnt${this.uuid()}`;
 		this.inputTypes = this.getAttribute('input-types')?.split(',') || ['deleteByContent', 'deleteByCut', 'deleteByDrag', 'deleteContentBackward', 'deleteContentForward', 'deleteEntireSoftLine', 'deleteHardLineBackward', 'deleteHardLineForward', 'deleteSoftLineBackward', 'deleteSoftLineForward', 'deleteWordBackward', 'deleteWordForward', 'formatBackColor', 'formatBold', 'formatFontColor', 'formatFontName', 'formatIndent', 'formatItalic', 'formatJustifyCenter', 'formatJustifyFull', 'formatJustifyLeft', 'formatJustifyRight', 'formatOutdent', 'formatRemove', 'formatSetBlockTextDirection', 'formatSetInlineTextDirection', 'formatStrikethrough', 'formatSubscript', 'formatSuperscript', 'formatUnderline', 'historyRedo', 'historyUndo', 'insertCompositionText', 'insertFromComposition', 'insertFromDrop', 'insertFromPaste', 'insertFromYank', 'insertHorizontalRule', 'insertLineBreak', 'insertLink', 'insertOrderedList', 'insertParagraph', 'insertReplacementText', 'insertText', 'insertTranspose', 'insertUnorderedList'];
 		this.toolbarItems = this.getAttribute('toolbar')?.split('|') || [];
 		this.plaintextItems = this.getAttribute('plaintext-toolbar')?.split(',') || [];
@@ -26,6 +27,7 @@ export class uiRichText extends HTMLElement {
 		<div contenteditable="true" style="outline:none;">${this.innerHTML}</div>
 		<input type="hidden" name="${this.getAttribute('name')||'richtext'}" value="${this.innerHTML}">`;
 		this.content = this.querySelector('[contenteditable]');
+		this.content.id = this.contentID;
 		this.input = this.querySelector('input[type=hidden]');
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
@@ -38,6 +40,7 @@ export class uiRichText extends HTMLElement {
 			})
 		)});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
+		
 		this.customToolbar = shadow.querySelector(`[part=custom]`);
 		this.highlight = this.commands.filter(command => command.highlight).map(command => command.command);
 		this.htmlcode = shadow.querySelector(`[name=htmlcode]`);
@@ -124,8 +127,17 @@ export class uiRichText extends HTMLElement {
 		}).join('')}</select>`;
 	}
 
+	// renderSkipToolbar() {
+	// 	return `<a href="#${this.contentID}" part="skip">${this.getAttribute('skip-toolbar')||'Skip to content'}</a>`;
+	// }
+
+	renderSkipToolbar() {
+		return `<button type="button" part="skip" onclick="document.getElementById('${this.contentID}').focus()">${this.getAttribute('skip-toolbar') || 'Skip to content'}</button>`;
+	}
+	
+
 	renderTemplate() {
-		return `<fieldset part="toolbar">${this.renderToolbar()}<fieldset part="custom"></fieldset></fieldset><slot></slot><textarea name="htmlcode" hidden></textarea>`;
+		return `<fieldset part="toolbar">${this.renderSkipToolbar()}${this.renderToolbar()}<fieldset part="custom"></fieldset></fieldset><slot></slot><textarea name="htmlcode" hidden></textarea>`;
 	}
 
 	renderToolbar() {
@@ -159,6 +171,10 @@ export class uiRichText extends HTMLElement {
 		} else {
 			this.htmlcode.value = this.content.innerHTML;
 		}
+	}
+
+	uuid() {
+		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 	}
 
 	/* === DEFAULT COMMANDS === */
@@ -436,10 +452,28 @@ stylesheet.replaceSync(`
 	color: CanvasText;
 	color-scheme: inherit;
 }
+:host::part(skip) {
+	background: color-mix(in oklab, #FF0 60%, Canvas);
+	border: 1px solid CanvasText;
+	font-size: smaller;
+	height: auto;
+	inset-block: -100vh auto;
+	inset-inline: -100vw auto;
+	padding: 1ch;
+	position: absolute;
+	text-decoration: underline;
+	text-wrap: pretty;
+	width: auto;
+}
+:host::part(skip):focus { 
+	inset-block-start: 0;
+	inset-inline-start: 0;
+}
 :host::part(toolbar) {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: .5em;
+	position: relative;
 }
 button {
 	all: unset;
