@@ -143,11 +143,14 @@
 			background-color: var(--_bgc);
 			border-inline-end: var(--_bdw) solid var(--_bdc);
 			column-gap: 1ch;
-			display: flex;
+			display: block;
 			font-weight: 500;
 			height: 100%;
+			overflow: hidden;
 			padding: var(--_pb) var(--_pi);
-			width: 100%;
+			text-overflow: ellipsis;
+			/* width: 100%; */
+			summary & { display: flex;}
 		}
 
 		[part~=legend] {

@@ -6,8 +6,8 @@ import { uiRichText } from '/ui/rich-text/uiRichText.js';
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.05
- * @summary 12-06-2024
+ * @version 1.0.06
+ * @summary 14-06-2024
  * @class
  * @extends {HTMLElement}
  */
