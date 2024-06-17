@@ -161,7 +161,9 @@
 				"attributes": [
 					{ "label": "vendor" },
 					{ "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=" },
-					{ "key": "tekst" }
+					{ "api-key": "adresse.id" },
+					{ "api-value": "tekst" },
+					{ "name": "vendor_id" }
 				]
 			},
 			"required": [

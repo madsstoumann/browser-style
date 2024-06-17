@@ -26,14 +26,16 @@
 	<br>
 	<auto-suggest
 		api="https://jsonplaceholder.typicode.com/albums/?_limit=10&q="
-		key="title"
+		api-key="id"
+		api-value="title"
 		label="JSON placeholder">
 	</auto-suggest>
 
 	<br>
 	<auto-suggest
 		api="https://api.nationalize.io/?name="
-		key="name"
+		api-key="country_id"
+		api-value="name"
 		id="nationalize"
 		label="Nationalize.io">
 	</auto-suggest>
@@ -55,7 +57,7 @@
 			nationalize.setCallback((list, data) => {
 				const country = data.country;
 				list.innerHTML = country.map(obj => 
-					`<option value="${data.name} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-obj='${obj ? JSON.stringify(obj):''}'>`
+					`<option value="${data.name} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj='${obj ? JSON.stringify(obj):''}'>`
 				).join('');
 			});
 		});
