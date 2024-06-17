@@ -1,13 +1,14 @@
 import { createDataEntryInstance } from './modules/factory.js';
 import { bindUtilityEvents } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
-import { uiRichText } from '/ui/rich-text/uiRichText.js';
+import { AutoSuggest } from '/ui/autosuggest/index.js';
+import { RichText } from '/ui/rich-text/richtext.js';
 /**
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.06
- * @summary 14-06-2024
+ * @version 1.0.07
+ * @summary 17-06-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -117,8 +118,11 @@ class DataEntry extends HTMLElement {
 }
 
 /* Register element/s */
-if (!customElements.get('ui-richtext')) {
-	customElements.define('ui-richtext', uiRichText);
+if (!customElements.get('auto-suggest')) {
+	customElements.define('auto-suggest', AutoSuggest);
+}
+if (!customElements.get('rich-text')) {
+	customElements.define('rich-text', RichText);
 }
 customElements.define('data-entry', DataEntry);
 

@@ -1,13 +1,13 @@
 /**
- * uiRichText
+ * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.02
- * @summary 10-06-2024
+ * @version 1.0.03
+ * @summary 17-06-2024
  * @class
  * @extends {HTMLElement}
  */
-export class uiRichText extends HTMLElement {
+export class RichText extends HTMLElement {
 	static observedAttributes = ['plaintext'];
 	constructor() {
 		super();
@@ -541,4 +541,4 @@ textarea {
 	pointer-events: none;
 }
 `)
-customElements.define('ui-richtext', uiRichText);
+customElements.define('rich-text', RichText);

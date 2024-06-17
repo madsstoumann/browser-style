@@ -14,6 +14,12 @@
 
 		/* === PARTS === */
 
+		[part~=autosuggest] {
+			--_bdrs: 0;
+			display: contents;
+			& [part~="row"]:first-of-type { border-block-start-width: 0; }
+		}
+
 		[part~=checklist] {
 			em {
 				align-items: center;
@@ -149,7 +155,6 @@
 			overflow: hidden;
 			padding: var(--_pb) var(--_pi);
 			text-overflow: ellipsis;
-			/* width: 100%; */
 			summary & { display: flex;}
 		}
 

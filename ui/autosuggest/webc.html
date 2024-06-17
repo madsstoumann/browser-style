@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>AutoSuggest</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>AutoSuggest</h2>
+	<p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>datalist</code>. It exposes several events.</p>
+
+	<auto-suggest
+		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+		api-key="adresse.id"
+		api-value="tekst"
+		key="771661"
+		label="Dawa search"
+		value="Hello World">
+	</auto-suggest>
+
+	<br>
+	<auto-suggest
+		api="https://jsonplaceholder.typicode.com/albums/?_limit=10&q="
+		key="title"
+		label="JSON placeholder">
+	</auto-suggest>
+
+	<br>
+	<auto-suggest
+		api="https://api.nationalize.io/?name="
+		key="name"
+		id="nationalize"
+		label="Nationalize.io">
+	</auto-suggest>
+	
+	<script type="module" src="./index.js"></script>
+
+	<script>
+		const suggest = document.querySelectorAll('auto-suggest');
+		suggest.forEach((node) => {
+			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect'].forEach((event) => {
+				node.addEventListener(event, (event) => {
+					console.log(event.type, event.detail ? event.detail : '');
+				});
+			});
+		});
+
+		document.addEventListener('DOMContentLoaded', () => {
+			const nationalize = document.getElementById('nationalize');
+			nationalize.setCallback((list, data) => {
+				const country = data.country;
+				list.innerHTML = country.map(obj => 
+					`<option value="${data.name} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-obj='${obj ? JSON.stringify(obj):''}'>`
+				).join('');
+			});
+		});
+	</script>
+</body>
+</html>

@@ -12,14 +12,14 @@
 	<h1>UI: Components</h1>
 
 	<h2>Rich Text Editor</h2>
-	<p>Minimal <strong>Text Editor</strong>, using the <code>&lt;ui-richtext&gt;</code> web component.</p>
+	<p>Minimal <strong>Text Editor</strong>, using the <code>&lt;rich-text&gt;</code> web component.</p>
 
 	<div class="ui-text-editor"></div>
 
 	<hr>
 	<p>Advanced Text-Editor with <code>data-toolbar-items</code> and <code>data-input-types</code>:</p>
 
-	<ui-richtext
+	<rich-text
 		skip-toolbar="Skip toolbar and go to content"
 		toolbar="h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img|left,center,right,justify|link,unlink|remove|html|save"
 		plaintext-toolbar="save">
@@ -27,12 +27,12 @@
 		<p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
 		<p>The bedding was hardly able to cover it and seemed ready to slide off any moment.</p>
 		<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
-	</ui-richtext>
+	</rich-text>
 
 	<br>
 	<h2>With opposite color-scheme</h2>
 	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ui-richtext
+		<rich-text
 			skip-toolbar="Skip toolbar and go to content"
 			toolbar="h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img|left,center,right,justify|link,unlink|remove|html|save"
 			plaintext-toolbar="save">
@@ -40,12 +40,12 @@
 			<p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
 			<p>The bedding was hardly able to cover it and seemed ready to slide off any moment.</p>
 			<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
-		</ui-richtext>
+		</rich-text>
 	</div>
 
 	<br>
 	<h2>With right-to-left</h2>
-	<ui-richtext
+	<rich-text
 		dir="rtl"
 		skip-toolbar="Skip toolbar and go to content"
 		toolbar="h1,h2,h3,h4,h5,h6|bgc|fc|fn|fs|undo,redo|paste,copy,cut|indent,outdent|b,i,u,s|sub,sup|ol,ul,blockquote,hr|img|left,center,right,justify|link,unlink|remove|html|save"
@@ -54,10 +54,10 @@
 		<p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
 		<p>The bedding was hardly able to cover it and seemed ready to slide off any moment.</p>
 		<p>His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me? " he thought. It wasn't a dream.</p>
-	</ui-richtext>
+	</rich-text>
 
 	<script type="module">
-		import { uiRichText } from './uiRichText.js';
+		import { RichText } from './richtext.js';
 	</script>
 </body>
 </html>

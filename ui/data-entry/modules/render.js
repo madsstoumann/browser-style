@@ -26,7 +26,18 @@ export function all(data, schema, instance, root = false) {
 			}
 		}
 
-		if (config.type === 'array') {
+		if (config.type === 'object') {
+			if (config.render && method) {
+				try {
+					// console.log('RENDERING METHOD', method, title, data[key], attributes, options, config, instance);
+					return renderMethod(title, data[key], attributes, options, config, instance);
+				} catch {
+					return '';
+				}
+			} else {
+				return fieldset(title, attributes, all(data[key], config, instance));
+			}
+		} else if (config.type === 'array') {
 			if (method) {
 				try {
 					const addEntry = config.render?.entry ? instance.getRenderMethod('entry')(config.render.entry, key, instance) : '';
@@ -66,6 +77,11 @@ export function all(data, schema, instance, root = false) {
 export const array = (label, value, attributes, options, config, instance) => {
 	return value.map((item, index) => fieldset(`${label} ${index + 1}`, attributes, all(item, config.items, instance))).join('');
 };
+
+export const autosuggest = (_label, value, attributes, options, config) => {
+	console.log(value);
+	return `<auto-suggest part="autosuggest" ${attrs(attributes)}></auto-suggest>`;
+}
 
 /**
  * Renders a checklist fieldset.
@@ -267,9 +283,9 @@ export const media = (label, value, attributes, _options, config) => {
 export const richtext = (label, value, attributes = []) => `
 	<div part="row">
 		<span part="label">${label}</span>
-		<ui-richtext part="richtext" ${attrs(attributes)}>
+		<rich-text part="richtext" ${attrs(attributes)}>
 			${value}
-		</ui-richtext>
+		</rich-text>
 	</div>`;
 
 /**

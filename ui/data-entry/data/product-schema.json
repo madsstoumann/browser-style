@@ -153,6 +153,46 @@
 				]
 			}
 		},
+		"vendor": {
+			"type": "object",
+			"default": {},
+			"render": {
+				"method": "autosuggest",
+				"attributes": [
+					{ "label": "vendor" },
+					{ "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=" },
+					{ "key": "tekst" }
+				]
+			},
+			"required": [
+				"vendor_id",
+				"vendor_name"
+			],
+			"properties": {
+				"vendor_id": {
+					"type": "integer",
+					"render": {
+						"method": "input",
+						"attributes": [
+							{ "placeholder": "Enter vendor ID" },
+							{ "name": "vendor_id" },
+							{ "type": "number" }
+						]
+					}
+				},
+				"vendor_name": {
+					"type": "string",
+					"render": {
+						"method": "input",
+						"attributes": [
+							{ "placeholder": "Enter vendor name" },
+							{ "name": "vendor_name" },
+							{ "type": "text" }
+						]
+					}
+				}
+			}
+		},
 		"created_at": {
 			"type": "string",
 			"default": "",
@@ -475,43 +515,11 @@
 			}
 		},
 
-		"vendor": {
-			"type": "object",
-			"default": {},
-			"required": [
-				"vendor_id",
-				"vendor_name"
-			],
-			"properties": {
-				"vendor_id": {
-					"type": "integer",
-					"render": {
-						"method": "input",
-						"attributes": [
-							{ "placeholder": "Enter vendor ID" },
-							{ "name": "vendor_id" },
-							{ "type": "number" }
-						]
-					}
-				},
-				"vendor_name": {
-					"type": "string",
-					"render": {
-						"method": "input",
-						"attributes": [
-							{ "placeholder": "Enter vendor name" },
-							{ "name": "vendor_name" },
-							{ "type": "text" }
-						]
-					}
-				}
-			}
-		},
 		"channels": {
 			"type": "array",
 			"default": [],
 			"render": {
-				"method": "renderChannels"
+				"method": "array"
 			},
 			"items": {
 				"type": "object",

@@ -26,6 +26,7 @@
 			data-api-cache="false"
 			data-object-key="tekst"
 			data-limit="true"
+			id="dawaInput"
 			list="dawa"
 			minlength="3"
 			placeholder="park"
@@ -70,6 +71,11 @@
 		import { init } from './../../assets/js/common.js';
 		import uiAutoSuggest from './uiAutoSuggest.js';
 		init('[data-api]', uiAutoSuggest);
+
+		const dawaInput = document.getElementById('dawaInput');
+		dawaInput.addEventListener('autoSuggestSelect', (event) => {
+			console.log(event.detail);
+		});
 
 		/* Custom Example */
 		uiAutoSuggest(document.getElementById('nationalize'), {
