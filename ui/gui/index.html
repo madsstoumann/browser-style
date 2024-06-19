@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>GUI Control</h2>
+	<p>
+		<code>&lt;gui-control&gt;</code> is a custom element that provides a user interface for controlling <em>CSS Custom Properties</em> for a component or app.
+	</p>
+
+	<gui-control label="Toggle Controls" position="top right"></gui-control>
+
+	<script type="module">
+		import { GuiControl } from './index.js';
+		const GUI = document.querySelector('gui-control');
+		
+		GUI.addRange(0, 100, 50, 'Range 1', '--range-1');
+		GUI.addRange(-50, 50, -25, 'Range 2', '--range-2');
+		GUI.addColor('Color', '#FF0000', '--color-1');
+		GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', false, 'light');
+		GUI.addSelect('Select', ['Option 1', 'Option 2', 'Option 3'], 'Option 2', '--select-1');
+		GUI.addReset('Reset');
+	</script>
+</body>
+</html>
