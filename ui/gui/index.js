@@ -29,52 +29,65 @@ export class GuiControl extends HTMLElement {
 			const li = input.closest('li');
 			const output = li.querySelector('output');
 			let value = input.value;
-			if (input.type === 'checkbox') { value = input.checked ? input.value : input.dataset.unchecked; }
-			if (li.hasAttribute('data-value')) li.dataset.value = value;
-			if (output) output.textContent = input.value;
+			if (input.type === 'checkbox') { value = input.checked ? input.value : input.dataset.unchecked || ''; }
+			li.dataset.value = value;
+			if (output) output.textContent = value;
 			this.scope.style.setProperty(input.dataset.property, value);
 		});
 	}
 
-	add(content, value) {
+	add(content, label, value, property) {
 		const li = document.createElement('li');
-		li.innerHTML = content;
-		if (value) li.dataset.value = value;
+		li.innerHTML = label ? `<label>${label}${content}</label>` : content;
+		if (value) {
+			li.dataset.value = value;
+			this.scope.style.setProperty(property, value);
+		}
 		this.list.appendChild(li);
 	}
 
 	addCheckbox(label, value, property, checked, unchecked) {
-		this.add(`
-		<label>${label}
-			<input type="checkbox" value="${value}" data-unchecked="${unchecked||''}" ${checked ? 'checked' : ''} data-property="${property}">
-		</label>`);
-	
+		this.add(
+			`<input type="checkbox" value="${value}" data-unchecked="${unchecked || ''}" ${checked ? 'checked' : ''} data-property="${property}">`,
+			label,
+			checked ? value : unchecked,
+			property
+		);
 	}
 
 	addColor(label, value, property) {
-		this.add(`
-		<label>${label}
-			<input type="color" value="${value}" data-property="${property}">
-		</label>`, value);
+		this.add(
+			`<input type="color" value="${value}" data-property="${property}">`,
+			label,
+			value,
+			property
+		);
 	}
 
-	addRange(min, max, value, label, property) {
-		this.add(`
-		<label>${label}
-			<input type="range" min="${min}" max="${max}" value="${value}" data-property="${property}">
-		</label>
-		<output>${value}</output>`);
+	addRange(label, value, property, min, max) {
+		this.add(
+			`<input type="range" min="${min}" max="${max}" value="${value}" data-property="${property}"><output>${value}</output>`,
+			label,
+			value,
+			property
+		);
 	}
 
 	addReset(label) {
-		this.add(`<button type="reset">${label||'Reset'}</button>`);
+		this.add(
+			`<button type="reset">${label || 'Reset'}</button>`
+		);
 	}
 
-	addSelect(label, options, value, property) {
-		this.add(`<label>${label}<select value="${value}" data-property="${property}">${
-			options.map(option => `<option value="${option}"${option === value ? ' selected' : ''}>${option}</option>`).join('')
-		}</select></label>`)
-	
+	addSelect(label, value, property, options) {
+		this.add(
+			`<select data-property="${property}">${
+				options.map(option => `<option value="${option}"${option === value ? ' selected' : ''}>${option}</option>`).join('')
+			}</select>`,
+			label,
+			value,
+			property
+		);
 	}
 }
 
@@ -113,7 +126,7 @@ li {
 	grid-template-columns: 6em 1fr 3em;
 	padding-block: var(--_gap);
 	padding-inline: calc(2 * var(--_gap)) var(--_gap);
-	&[data-value]::after { 
+	&:has([type=color])::after { 
 		content: attr(data-value);
 		font-size: x-small;
 		grid-area: 1 / 2 / 1 / 4;
@@ -162,6 +175,7 @@ ul {
 	background: var(--_bg);
 	height: 100%;
 	place-self: start;
+	&:checked { --_bg: var(--_c); }
 }
 
 [type=color] {

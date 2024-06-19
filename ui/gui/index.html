@@ -16,17 +16,30 @@
 		<code>&lt;gui-control&gt;</code> is a custom element that provides a user interface for controlling <em>CSS Custom Properties</em> for a component or app.
 	</p>
 
+<pre>
+  &lt;gui-control label="Toggle Controls" position="top right"&gt;
+  &lt;/gui-control&gt;</pre>
+
+	<h2>Usage</h2>
+	<pre>
+  const GUI = document.querySelector('gui-control');
+  GUI.addRange('Range 1', 50, '--range-1', 0, 100);
+  GUI.addRange('Range 2', -25, '--range-2', -50, 50);
+  GUI.addColor('Color', '#FF0000', '--color-1');
+  GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', false, 'light');
+  GUI.addSelect('Select', 'Option 2', '--select-1', [...]);
+  GUI.addReset('Reset');</pre>
+
 	<gui-control label="Toggle Controls" position="top right"></gui-control>
 
 	<script type="module">
 		import { GuiControl } from './index.js';
 		const GUI = document.querySelector('gui-control');
-		
-		GUI.addRange(0, 100, 50, 'Range 1', '--range-1');
-		GUI.addRange(-50, 50, -25, 'Range 2', '--range-2');
+		GUI.addRange('Range 1', 50, '--range-1', 0, 100);
+		GUI.addRange('Range 2', -25, '--range-2', -50, 50);
 		GUI.addColor('Color', '#FF0000', '--color-1');
 		GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', false, 'light');
-		GUI.addSelect('Select', ['Option 1', 'Option 2', 'Option 3'], 'Option 2', '--select-1');
+		GUI.addSelect('Select', 'Option 2', '--select-1', ['Option 1', 'Option 2', 'Option 3']);
 		GUI.addReset('Reset');
 	</script>
 </body>
