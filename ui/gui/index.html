@@ -1,46 +1,112 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>UI</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
+  <title>UI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">
 </head>
 <body>
-	<h1>UI: Components</h1>
+  <h1>UI: Components</h1>
 
-	<h2>GUI Control</h2>
-	<p>
-		<code>&lt;gui-control&gt;</code> is a custom element that provides a user interface for controlling <em>CSS Custom Properties</em> for a component or app.
-	</p>
+  <h2>GUI Control</h2>
+  <p>
+    <code>&lt;gui-control&gt;</code> is a custom element that provides a user interface for controlling <em>CSS Custom Properties</em> for a component or app.
+  </p>
 
 <pre>
-  &lt;gui-control label="Toggle Controls" position="top right"&gt;
+  &lt;gui-control label="Toggle Controls" position="top left"&gt;
   &lt;/gui-control&gt;</pre>
 
-	<h2>Usage</h2>
-	<pre>
+  <h2>Usage</h2>
+  <p>Add the <code>&lt;gui-control&gt;</code>-tag, <a href="https://browser.style/ui/gui/index.js">download and import</a> the script:</p>
+
+  <code>
+    import { GuiControl } from './path/index.js';
+  </code>
+
+  <hr>
+
+  <p>The <code>position</code>-attribute can be set to <code>top left</code>, <code>top right</code>, <code>bottom left</code> or <code>bottom right</code>. The default is <code>top right</code>.</p>
+  <p>A <code>scope</code>-attribute can be set, as in <code>scope="body"</code>. This will set the <em>CSS Custom Properties</em> on the <code>&lt;body&gt;</code>-tag. <code>scope</code> is any valid <code>querySelector</code>. If you don't set a scope, the default scope will be the doument root (the <code>html</code>-tag).</p>
+
+
+  <h2>Methods</h2>
+  <p>All methods are called with <code>label, value, property</code> and then an (optional) object with additional <code>attributes</code>.</p>
+  <p>For <code>&lt;select&gt;</code>, add an object with an <code>options</code>-property, containing an array of <code>key/value</code>-pairs.</p>
+  <p>You can also call <code>GUI.add(content, label, value, property)</code> directly, with <code>content</code> being raw HTML. This will be added to a <code>&lt;li&gt;</code>-tag and appended to the list.</p>
+  <p>There's also a <code>GUI.attrs(attributes)</code>-method that outputs the attributes defined in the <code>attributes</code>-object. Boolean attributes (like <code>checked</code>) should have the same value as the key, like:<br><code>{ checked: 'checked' }</code></p>
+
+  <p><em>Example:</em></p>
+
+  <pre>
+
   const GUI = document.querySelector('gui-control');
-  GUI.addRange('Range 1', 50, '--range-1', 0, 100);
-  GUI.addRange('Range 2', -25, '--range-2', -50, 50);
+
+  GUI.addRange('Range 1', 50, '--range-1');
+
+  GUI.addRange('Range 2', -25, '--range-2',
+    { min: -50, max: 50 }
+  );
+
   GUI.addColor('Color', '#FF0000', '--color-1');
-  GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', false, 'light');
-  GUI.addSelect('Select', 'Option 2', '--select-1', [...]);
-  GUI.addReset('Reset');</pre>
 
-	<gui-control label="Toggle Controls" position="top right"></gui-control>
+  GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1',
+    { checked: 'checked', 'data-unchecked': 'light' }
+  );
 
-	<script type="module">
-		import { GuiControl } from './index.js';
-		const GUI = document.querySelector('gui-control');
-		GUI.addRange('Range 1', 50, '--range-1', 0, 100);
-		GUI.addRange('Range 2', -25, '--range-2', -50, 50);
-		GUI.addColor('Color', '#FF0000', '--color-1');
-		GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', false, 'light');
-		GUI.addSelect('Select', 'Option 2', '--select-1', ['Option 1', 'Option 2', 'Option 3']);
-		GUI.addReset('Reset');
-	</script>
+  GUI.addSelect('Select', 'serif', '--select-1', 
+  { options: [
+    { key: 'sans-serif', value: 'ui-sans-serif, system-ui' }, 
+    { key: 'serif', value: 'ui-serif, serif' },
+    { key: 'monospace', value: 'ui-monospace, monospace' }
+  ]});
+
+  GUI.addReset('Reset');
+
+</pre>
+
+  <h2>Styling With Parts</h2>
+  <p>The <code>&lt;gui-control&gt;</code> element has the following CSS parts:</p>
+
+  <ul>
+    <li>::part(checkbox)</li>
+    <li>::part(color)</li>
+    <li>::part(li)</li>
+    <li>::part(output)</li>
+    <li>::part(range)</li>
+    <li>::part(reset)</li>
+    <li>::part(select)</li>
+    <li>::part(summary)</li>
+    <li>::part(ul)</li>
+  </ul>
+
+  <p><em>Example:</em></p>
+<pre>
+
+  gui-control::part(summary) {
+    background-color: crimson;
+  }
+
+</pre>
+
+  <gui-control scope="body"></gui-control>
+
+  <script type="module">
+    import { GuiControl } from './index.js';
+    const GUI = document.querySelector('gui-control');
+    GUI.addRange('Range 1', 50, '--range-1', { min: 0, max: 100 });
+    GUI.addRange('Range 2', -25, '--range-2', { min: -50, max: 50 });
+    GUI.addColor('Color', '#FF0000', '--color-1');
+    GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', { checked: 'checked', 'data-unchecked': 'light' });
+    GUI.addSelect('Select', 'serif', '--select-1', { options: [
+      { key: 'sans-serif', value: 'ui-sans-serif, system-ui, sans-serif' }, 
+      { key: 'serif', value: 'ui-serif, serif' },
+      { key: 'monospace', value: 'ui-monospace, monospace' }
+    ]});
+    GUI.addReset('Reset');
+  </script>
 </body>
 </html>

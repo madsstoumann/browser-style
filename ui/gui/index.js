@@ -1,7 +1,9 @@
 /**
  * GUI Control
  * description
- * @summary 19-06-2024
+ * @author Mads Stoumann
+ * @version 1.0.01
+ * @summary 20-06-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -14,9 +16,9 @@ export class GuiControl extends HTMLElement {
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.innerHTML = `
 		<details open>
-			<summary>${this.getAttribute('label') || 'Toggle Controls'}</summary>
+			<summary part="summary">${this.getAttribute('label') || 'Toggle Controls'}</summary>
 			<form>
-				<ul></ul>
+				<ul part="ul"></ul>
 			</form>
 		</details>`;
 
@@ -39,55 +41,55 @@ export class GuiControl extends HTMLElement {
 	add(content, label, value, property) {
 		const li = document.createElement('li');
 		li.innerHTML = label ? `<label>${label}${content}</label>` : content;
+		li.setAttribute('part', 'li')
 		if (value) {
-			li.dataset.value = value;
-			this.scope.style.setProperty(property, value);
+				li.dataset.value = value;
+				this.scope.style.setProperty(property, value);
 		}
 		this.list.appendChild(li);
 	}
 
-	addCheckbox(label, value, property, checked, unchecked) {
-		this.add(
-			`<input type="checkbox" value="${value}" data-unchecked="${unchecked || ''}" ${checked ? 'checked' : ''} data-property="${property}">`,
-			label,
-			checked ? value : unchecked,
-			property
-		);
+	addCheckbox(label, value, property, attributes = {}) {
+		this.ext(attributes, value, property);
+		this.add(`<input type="checkbox" part="checkbox" ${this.attrs(attributes)}>`, label, value, property);
 	}
 
-	addColor(label, value, property) {
-		this.add(
-			`<input type="color" value="${value}" data-property="${property}">`,
-			label,
-			value,
-			property
-		);
+	addColor(label, value, property, attributes = {}) {
+		this.ext(attributes, value, property);
+		this.add(`<input type="color" part="color" ${this.attrs(attributes)}>`, label, value, property);
 	}
 
-	addRange(label, value, property, min, max) {
-		this.add(
-			`<input type="range" min="${min}" max="${max}" value="${value}" data-property="${property}"><output>${value}</output>`,
-			label,
-			value,
-			property
-		);
+	addRange(label, value, property, attributes = {}) {
+		this.ext(attributes, value, property);
+		this.add(`<input type="range" part="range" ${this.attrs(attributes)}><output part="output">${value}</output>`, label, value, property);
 	}
 
 	addReset(label) {
-		this.add(
-			`<button type="reset">${label || 'Reset'}</button>`
-		);
+		this.add(`<button type="reset" part="reset">${label || 'Reset'}</button>`);
 	}
 
-	addSelect(label, value, property, options) {
-		this.add(
-			`<select data-property="${property}">${
-				options.map(option => `<option value="${option}"${option === value ? ' selected' : ''}>${option}</option>`).join('')
-			}</select>`,
-			label,
-			value,
-			property
-		);
+	addSelect(label, value, property, attributes = {}) {
+		if (!attributes.options) return;
+		this.ext(attributes, value, property);
+		const options = attributes.options.map(option => 
+			`<option value="${option.value}"${option.key === value ? ' selected' : ''}>${option.key}</option>`
+		).join('');
+		delete attributes.options;
+		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property);
+	}
+
+	attrs(attributes) {
+		return Object.entries(attributes).map(([key, value]) => {
+			if (value === '') return '';
+			if (value === key) return key; // Set boolean attributes
+			return `${key}="${value}"`;
+		}).join(' ');
+	}
+
+	ext(attributes, value, property) {
+		attributes.value = value;
+		attributes['data-property'] = property;
+		return attributes;
 	}
 }
 
@@ -109,6 +111,7 @@ stylesheet.replaceSync(`
 	inset-block: 0 auto;
 	inset-inline: auto 0;
 	position: fixed;
+	touch-action: none;
 }
 :host([position~="bottom"]) { inset-block: auto 0; }
 :host([position~="left"]) { inset-inline: 0 auto; }
@@ -134,8 +137,10 @@ li {
 		text-shadow: 0 0 0.5em var(--_bg);
 		pointer-events: none;
 	}
-	&:has([type=reset]) { --_bdc: #e61d5f; }
-	&:has(select) { --_bdc: #1ed36f;}
+	&:has([type=checkbox]) { --_bdc: #D67C2F; }
+	&:has([type=color]) { --_bdc: #7C2FD6; }
+	&:has([type=reset]) { --_bdc: #D62FA1; }
+	&:has(select) { --_bdc: #2FD67C;}
 }
 output {
 	background: var(--_bg);
@@ -152,6 +157,7 @@ output {
 select {
 	background: var(--_bg);
 	border: 0;
+	border-radius: 0;
 	color: var(--_c);
 	font-family: inherit;
 	font-size: inherit;
@@ -169,15 +175,19 @@ ul {
 }
 
 /* === CONTROLS === */
+:is(button, input, select, summary):focus-visible {
+	outline: 1px solid #FFF;
+}
 [type=checkbox] {
 	all: unset;
 	aspect-ratio: 1;
 	background: var(--_bg);
 	height: 100%;
 	place-self: start;
-	&:checked { --_bg: var(--_c); }
+	&:checked {
+		--_bg: var(--_c) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg>') center / 80%;
+	}
 }
-
 [type=color] {
 	border: 0;
 	grid-area: 1 / 2 / 1 / 4;
@@ -196,20 +206,23 @@ ul {
 [type=range] {
 	appearance: none;
 	background: none;
+	border-radius: 0;
 	cursor: ew-resize;
 	font-size: inherit;
 	height: 100%;
 	margin: 0;
 	overflow: hidden;
+	touch-action: manipulation;
 	&::-webkit-slider-runnable-track { height: 100%; }
 	&::-webkit-slider-thumb {
 		appearance: none;
 		aspect-ratio: 1;
+		background: var(--_c);
 		border-radius: 0;
 		box-shadow: 0 0 0 100% inset var(--_c);
 		border-image: linear-gradient(90deg, var(--_c) 50%, var(--_bg) 0) 0 1 / calc(50% - 100% / 2) 100vw / 0 calc(100vw);
 		height: 100%;
-		width: 0;
+		width: .33em;
 	}
 }
 [type=reset] {
