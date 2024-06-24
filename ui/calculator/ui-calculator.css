@@ -9,7 +9,7 @@
 		display: grid;
 		grid-gap: 1px;
 		grid-template-columns: repeat(4, 1fr);
-		overflow: hidden;
+		overflow: clip;
 		width: 15rem;
 		& button, & input {
 			--button-p: 0;

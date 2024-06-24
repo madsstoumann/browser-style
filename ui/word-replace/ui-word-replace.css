@@ -10,7 +10,7 @@
     & div {
       clip-path: inset(2px 0 0 0);
       height: calc(1lh + 2px);
-      overflow: hidden;
+      overflow: clip;
     }
     & span {
       background: linear-gradient(90deg, var(--AccentColor), transparent) repeat-x 0% 90% / 150% 10%;
@@ -24,7 +24,7 @@
         calc(var(--_speed, 2s) * var(--_index, 0)) cubic-bezier(0.075, 0.82, 0.165, 1) infinite);
         grid-area: 1 / 1;
         list-style: none;
-        overflow: hidden;
+        overflow: clip;
       }
     }
     &.--spin-down li {

@@ -6,7 +6,7 @@
 			-webkit-line-clamp: var(--ui-overflow-lines, 3);
 			display: -webkit-box;  
 			line-clamp: var(--ui-overflow-lines, 3); 
-			overflow: hidden;
+			overflow: clip;
 			position: relative;
 			&::after {
 				background: linear-gradient(to bottom, transparent, Canvas);

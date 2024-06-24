@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/scroll.css">
+
+	<style>
+		main {
+			display: grid;
+			row-gap: 2em;
+		}
+		div:nth-of-type(10n+1) {
+			aspect-ratio: 16 / 9;
+			background: crimson;
+		}
+		div:nth-of-type(10n+2) {
+			aspect-ratio: 4 / 3;
+			background: darkorange;
+		}
+		div:nth-of-type(10n+3) {
+			aspect-ratio: 19 / 9;
+			background: gold;
+		}
+		div:nth-of-type(10n+4) {
+			aspect-ratio: 1 / 1;
+			background: lime;
+		}
+		div:nth-of-type(10n+5) {
+			aspect-ratio: 16 / 10;
+			background: teal;
+		}
+		div:nth-of-type(10n+6) {
+			aspect-ratio: 3 / 2;
+			background: blue;
+		}
+		div:nth-of-type(10n+7) {
+			aspect-ratio: 16 / 9;
+			background: purple;
+		}
+		div:nth-of-type(10n+8) {
+			aspect-ratio: 4 / 3;
+			background: pink;
+		}
+		div:nth-of-type(10n+9) {
+			aspect-ratio: 19 / 9;
+			background: brown;
+		}
+		div:nth-of-type(10n+10) {
+			aspect-ratio: 1 / 1;
+			background: black;
+		}
+
+		div {
+			animation: reveal linear forwards;
+			animation-timeline: view();
+			animation-range: entry 0% entry-crossing 100%;
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Scroll Driven Utilities</h2>
+
+	<main>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+		<div></div>
+	</main>
+
+</body>
+</html>
