@@ -13,118 +13,158 @@
 		body {
 			overflow-x: clip;
 		}
+		img {
+			object-fit: cover;
+			width: 100%;
+			&:nth-of-type(10n+1) {
+				aspect-ratio: 16 / 9;
+				background: crimson;
+			}
+			&:nth-of-type(10n+2) {
+				aspect-ratio: 4 / 3;
+				background: darkorange;
+			}
+			&:nth-of-type(10n+3) {
+				aspect-ratio: 19 / 9;
+				background: gold;
+			}
+			&:nth-of-type(10n+4) {
+				aspect-ratio: 1 / 1;
+				background: lime;
+			}
+			&:nth-of-type(10n+5) {
+				aspect-ratio: 16 / 10;
+				background: teal;
+			}
+			&:nth-of-type(10n+6) {
+				aspect-ratio: 3 / 2;
+				background: blue;
+			}
+			&:nth-of-type(10n+7) {
+				aspect-ratio: 16 / 9;
+				background: purple;
+			}
+			&:nth-of-type(10n+8) {
+				aspect-ratio: 4 / 3;
+				background: pink;
+			}
+			&:nth-of-type(10n+9) {
+				aspect-ratio: 19 / 9;
+				background: brown;
+			}
+			&:nth-of-type(10n+10) {
+				aspect-ratio: 1 / 1;
+				background: black;
+			}
+		}
 		main {
 			display: grid;
 			row-gap: 2em;
 		}
-		div:nth-of-type(10n+1) {
-			aspect-ratio: 16 / 9;
-			background: crimson;
-		}
-		div:nth-of-type(10n+2) {
-			aspect-ratio: 4 / 3;
-			background: darkorange;
-		}
-		div:nth-of-type(10n+3) {
-			aspect-ratio: 19 / 9;
-			background: gold;
-		}
-		div:nth-of-type(10n+4) {
-			aspect-ratio: 1 / 1;
-			background: lime;
-		}
-		div:nth-of-type(10n+5) {
-			aspect-ratio: 16 / 10;
-			background: teal;
-		}
-		div:nth-of-type(10n+6) {
-			aspect-ratio: 3 / 2;
-			background: blue;
-		}
-		div:nth-of-type(10n+7) {
-			aspect-ratio: 16 / 9;
-			background: purple;
-		}
-		div:nth-of-type(10n+8) {
-			aspect-ratio: 4 / 3;
-			background: pink;
-		}
-		div:nth-of-type(10n+9) {
-			aspect-ratio: 19 / 9;
-			background: brown;
-		}
-		div:nth-of-type(10n+10) {
-			aspect-ratio: 1 / 1;
-			background: black;
-		}
+		
 	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 	<h2>Scroll Driven Animation</h2>
-	<p>A collection of scroll-driven animations.</p>
+	<p>A collection of classes for scroll-driven animations. <strong>Chrome only</strong> for now.</p>
+
+	<ul>
+		<li>an-bounce-in</li>
+		<li>an-bounce-in-left</li>
+		<li>an-bounce-in-right</li>
+		<li>an-fade-down</li>
+		<li>an-fade-down-left</li>
+		<li>an-fade-down-right</li>
+		<li>an-fade-in</li>
+		<li>an-fade-left</li>
+		<li>an-fade-out</li>
+		<li>an-fade-right</li>
+		<li>an-fade-up</li>
+		<li>an-fade-up-left</li>
+		<li>an-fade-up-right</li>
+		<li>an-flip-down</li>
+		<li>an-flip-left</li>
+		<li>an-flip-right</li>
+		<li>an-flip-up</li>
+		<li>an-reveal</li>
+		<li>an-reveal-circle</li>
+		<li>an-reveal-polygon</li>
+		<li>an-slide-in</li>
+		<li>an-slide-out</li>
+		<li>an-zoom-in</li>
+		<li>an-zoom-out</li>
+	</ul>
+
+	<p><code>animation-range</code> modifiers:</p>
+
+	<ul>
+		<li>ar-contain</li>
+		<li>ar-cover</li>
+		<li>ar-exit</li>
+	</ul>
 
 	<main>
 		<h2>Scroll Down ↓</h2>
 		<h2 style="margin-block-start: 75vh;">Bounce</h2>
-		<h3>an-bounce-in</h3>
-		<div class="an-bounce-in"></div>
-		<h3>an-bounce-in-left</h3>
-		<div class="an-bounce-in-left"></div>
-		<h3>an-bounce-in-right</h3>
-		<div class="an-bounce-in-right"></div>
+		<h3>an-bounce-in | ar-cover</h3>
+		<img src="https://picsum.photos/id/11/640/360" alt="Random image" class="an-bounce-in ar-cover">
+		<h3>an-bounce-in-left | ar-cover</h3>
+		<img src="https://picsum.photos/id/12/640/360" alt="Random image" class="an-bounce-in-left ar-cover">
+		<h3>an-bounce-in-right | ar-cover</h3>
+		<img src="https://picsum.photos/id/13/640/360" alt="Random image" class="an-bounce-in-right ar-cover">
 
 		<h2>Fade</h2>
-		<h3>an-fade-down</h3>
-		<div class="an-fade-down"></div>
+		<h3>an-fade-down | ar-contain</h3>
+		<img src="https://picsum.photos/id/14/640/360" alt="Random image" class="an-fade-down ar-contain">
 		<h3>an-fade-down-left</h3>
-		<div class="an-fade-down-left"></div>
+		<img src="https://picsum.photos/id/15/640/360" alt="Random image" class="an-fade-down-left">
 		<h3>an-fade-down-right</h3>
-		<div class="an-fade-down-right"></div>
-		<h3>an-fade-in</h3>
-		<div class="an-fade-in"></div>
+		<img src="https://picsum.photos/id/16/640/360" alt="Random image" class="an-fade-down-right">
+		<h3>an-fade-in | ar-contain</h3>
+		<img src="https://picsum.photos/id/17/640/360" alt="Random image" class="an-fade-in ar-contain">
 		<h3>an-fade-left</h3>
-		<div class="an-fade-left"></div>
-		<h3>an-fade-out</h3>
-		<div class="an-fade-out"></div>
+		<img src="https://picsum.photos/id/18/640/360" alt="Random image" class="an-fade-left">
+		<h3>an-fade-out | ar-exit</h3>
+		<img src="https://picsum.photos/id/19/640/360" alt="Random image" class="an-fade-out ar-exit">
 		<h3>an-fade-right</h3>
-		<div class="an-fade-right"></div>
+		<img src="https://picsum.photos/id/20/640/360" alt="Random image" class="an-fade-right">
 		<h3>an-fade-up</h3>
-		<div class="an-fade-up"></div>
-		<h3>an-fade-up-left</h3>
-		<div class="an-fade-up-left"></div>
-		<h3>an-fade-up-right</h3>
-		<div class="an-fade-up-right"></div>
+		<img src="https://picsum.photos/id/21/640/360" alt="Random image" class="an-fade-up">
+		<h3>an-fade-up-left | ar-cover</h3>
+		<img src="https://picsum.photos/id/22/640/360" alt="Random image" class="an-fade-up-left ar-cover">
+		<h3>an-fade-up-right | ar-cover</h3>
+		<img src="https://picsum.photos/id/23/640/360" alt="Random image" class="an-fade-up-right ar-cover">
 		
 		<h2>Flip</h2>
 		<h3>an-flip-down</h3>
-		<div class="an-flip-down"></div>
+		<img src="https://picsum.photos/id/24/640/360" alt="Random image" class="an-flip-down">
 		<h3>an-flip-left</h3>
-		<div class="an-flip-left"></div>
+		<img src="https://picsum.photos/id/25/640/360" alt="Random image" class="an-flip-left">
 		<h3>an-flip-right</h3>
-		<div class="an-flip-right"></div>
+		<img src="https://picsum.photos/id/26/640/360" alt="Random image" class="an-flip-right">
 		<h3>an-flip-up</h3>
-		<div class="an-flip-up"></div>
+		<img src="https://picsum.photos/id/27/640/360" alt="Random image" class="an-flip-up">
 
 		<h2>Reveal</h2>
 		<h3>an-reveal</h3>
-		<div class="an-reveal"></div>
-		<h3>an-reveal-circle</h3>
-		<div class="an-reveal-circle"></div>
-		<h3>an-reveal-polygon</h3>
-		<div class="an-reveal-polygon"></div>
+		<img src="https://picsum.photos/id/28/640/360" alt="Random image" class="an-reveal">
+		<h3>an-reveal-circle | ar-contain</h3>
+		<img src="https://picsum.photos/id/29/640/360" alt="Random image" class="an-reveal-circle ar-contain">
+		<h3>an-reveal-polygon | ar-contain</h3>
+		<img src="https://picsum.photos/id/30/640/360" alt="Random image" class="an-reveal-polygon ar-contain">
 
 		<h2>Slide</h2>
-		<h3>an-slide-in</h3>
-		<div class="an-slide-in"></div>
-		<h3>an-slide-out</h3>
-		<div class="an-slide-out"></div>
+		<h3>an-slide-in | ar-cover</h3>
+		<img src="https://picsum.photos/id/31/640/360" alt="Random image" class="an-slide-in ar-cover">
+		<h3>an-slide-out | ar-exit</h3>
+		<img src="https://picsum.photos/id/32/640/360" alt="Random image" class="an-slide-out ar-exit">
 
 		<h2>Zoom</h2>
-		<h3>an-zoom-in</h3>
-		<div class="an-zoom-in"></div>
-		<h3>an-zoom-out</h3>
-		<div class="an-zoom-out"></div>
+		<h3>an-zoom-in | ar-contain</h3>
+		<img src="https://picsum.photos/id/33/640/360" alt="Random image" class="an-zoom-in ar-contain">
+		<h3>an-zoom-out | ar-contain</h3>
+		<img src="https://picsum.photos/id/34/640/360" alt="Random image" class="an-zoom-out ar-contain"  style="margin-block-end: 100vh;">
 
 	</main>
 

@@ -49,7 +49,7 @@
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-out {
-		0%, 20% { opacity: 1; }
+		0% { opacity: 1; }
 		100% { opacity: 0; }
 	}
 	@keyframes fade-right {
@@ -121,7 +121,9 @@
 		100% { opacity: 1; scale: 1; }
 	}
 
-	/* Classes */
+	/* === CLASSES === */
+
+	/* animation-name */
 	.an-bounce-in { --animn: bounce-in; }
 	.an-bounce-in-left { --animn: bounce-in-left; }
 	.an-bounce-in-right { --animn: bounce-in-right; }
@@ -147,6 +149,11 @@
 	.an-zoom-in { --animn: zoom-in; }
 	.an-zoom-out { --animn: zoom-out; }
 
+	/* animation-range */
+	.ar-contain { --animrs: entry 0%; --animre: contain 50%; }
+	.ar-cover { --animrs: entry 25%; --animre: cover 50%; }
+	.ar-exit { --animrs: exit 0%; --animre: exit 100%; }
+
 	@supports (view-transition-name: none) {	
 		:where([class*="an-"]) {
 			animation:
@@ -154,7 +161,7 @@
 				var(--animtm, linear)
 				var(--animfm, forwards);
 			animation-timeline: var(--animtl, view());
-			animation-range: var(--animrs, entry 0%) var(--animre, entry-crossing 100%);
+			animation-range: var(--animrs, entry 0%) var(--animre, entry 90%);
 		}
 	}
 }
