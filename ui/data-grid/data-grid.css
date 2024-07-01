@@ -1,6 +1,6 @@
 @import "../icon/ui-icon-svg.css";
 @layer bs-component {
-	:where(ui-datagrid) {
+	:where(data-grid) {
 		container-type: inline-size;
 		display: block;
 
@@ -48,6 +48,12 @@
 			&[name=navigation] {
 				gap: 3ch;
 				justify-self: end;
+				label:has(select) {
+					align-items: center;
+					display: flex;
+					gap: .75ch;
+					text-wrap: nowrap;
+				}
 			}
 
 			&[name="search"] {
@@ -73,9 +79,10 @@
 		& form {
 			align-items: center;
 			display: grid;
-			font-size: smaller;
+			font-size: small;
 			grid-auto-flow: column;
 			margin-block: 1ch;
+			& * { font-size: inherit; }
 		}
 
 		& table {

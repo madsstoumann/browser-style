@@ -1,15 +1,15 @@
 import printElements from '../../assets/js/printElements.js';
 /**
- * uiDataGrid
+ * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.05
- * @summary 11-01-2024
+ * @version 1.0.06
+ * @summary 01-07-2024
  * @class
  * @extends {HTMLElement}
  */
-export default class uiDataGrid extends HTMLElement {
-	static observedAttributes = ['itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder', 'src'];
+export default class DataGrid extends HTMLElement {
+	static observedAttributes = ['itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder', 'data'];
 	constructor() {
 		super();
 
@@ -174,8 +174,8 @@ export default class uiDataGrid extends HTMLElement {
 			this.insertAdjacentHTML('afterbegin', search)
 		}
 
-		/* Use inline table, if `src` attribute is not set */
-		if (!this.getAttribute('src')) {
+		/* Use inline table, if `data` attribute is not set */
+		if (!this.getAttribute('data')) {
 			this.state = Object.assign(this.state, this.dataFromTable(this.table))
 			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.rows
 			this.renderTable()
@@ -437,7 +437,7 @@ export default class uiDataGrid extends HTMLElement {
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		this.console(`attr: ${name}=${newValue} (${oldValue})`, '#046');
-
+	
 		if (name === 'itemsperpage') {
 			this.state.itemsPerPage = parseInt(newValue, 10);
 			if (this.state.itemsPerPage === -1) this.state.itemsPerPage = this.state.rows;
@@ -460,11 +460,18 @@ export default class uiDataGrid extends HTMLElement {
 				this.renderTBody();
 			}
 		}
-		if (name === 'src') {
-			this.fetchData(newValue).then(data => {
-				this.state = Object.assign(this.state, data);
+		if (name === 'data') {
+			try {
+				const jsonData = JSON.parse(newValue);
+				this.state = Object.assign(this.state, jsonData);
 				this.renderTable();
-			}) 
+			} catch (e) {
+				// If newValue is not valid JSON, fetch the data
+				this.fetchData(newValue).then(data => {
+					this.state = Object.assign(this.state, data);
+					this.renderTable();
+				});
+			}
 		}
 		if (name === 'sortindex') {
 			this.state.sortIndex = parseInt(newValue, 10);
@@ -1088,4 +1095,4 @@ export default class uiDataGrid extends HTMLElement {
 		}
 	}
 }
-customElements.define("ui-datagrid", uiDataGrid);
+customElements.define("data-grid", DataGrid);

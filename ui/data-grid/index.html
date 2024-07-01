@@ -8,22 +8,22 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="./../table/ui-table.css">
-	<link rel="stylesheet" href="./ui-datagrid.css">
+	<link rel="stylesheet" href="./data-grid.css">
 	<style>
 		/* Demo */
-		ui-datagrid b { font-weight: 500; }
-		ui-datagrid .dg-gray { color: var(--GrayText); }
+		data-grid b { font-weight: 500; }
+		data-grid .bg-gray { color: var(--GrayText); }
 	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Data Grid</h2>
-	<p><code>&lt;ui-datagrid&gt;</code> is a custom element, you can wrap around an existing <code>&lt;table&gt;</code>, or fill with data using the <code>src</code>-attribute. The latter can be either a stringified object or an endpoint.</p>
+	<p><code>&lt;data-grid&gt;</code> is a custom element, you can wrap around an existing <code>&lt;table&gt;</code>, or fill with data using the <code>data</code>-attribute. The latter can be either a stringified object or an endpoint.</p>
 	<hr>
-	<p>Example with data from an endpoint set in <code>src</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
+	<p>Example with data from an endpoint set in <code>data</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
 
-	<ui-datagrid
+	<data-grid
 		debug
 		density
 		editable
@@ -34,10 +34,10 @@
 		printable
 		searchable
 		selectable
-		src="./data.json"
+		data="./data.json"
 		stickycol
 		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
-	</ui-datagrid>
+	</data-grid>
 
 	<br>
 	<h2>Event Playground</h2>
@@ -52,7 +52,7 @@
 	<hr>
 	<p>Example: Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
 
-	<ui-datagrid
+	<data-grid
 		editable
 		lang="da"
 		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
@@ -83,21 +83,21 @@
 				</tbody>
 			</table>
 		</div>
-	</ui-datagrid>
+	</data-grid>
 
-	<!-- <p>With data set as JSON in the <code>src</code>-attribute:</p>
+	<!-- <p>With data set as JSON in the <code>data</code>-attribute:</p>
 
-	<ui-datagrid
-		src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
+	<data-grid
+		data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
 		tableclass="ui-table --rounded --th-light --hover-all">
-	</ui-datagrid> -->
+	</data-grid> -->
 
 	<br>
 	<hr>
 
-	<p>Example: Created from JavaScript with <code>document.createElement('ui-datagrid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects.</p>
+	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects.</p>
 
-	<script type="module" src="uiDataGrid.js"></script>
+	<script type="module" src="index.js"></script>
 
 	<script>
 		/* EVENT PLAYGROUND */
@@ -151,8 +151,8 @@
 	</script>
 
 	<script>
-		const uiDataGrid = document.createElement('ui-datagrid');
-		uiDataGrid.setAttribute('src', './data.json');
+		const DataGrid = document.createElement('data-grid');
+		DataGrid.setAttribute('data', './data.json');
 
 		const formatters = {
 			bold: (value) => `<strong>${value}</strong>`,
@@ -181,16 +181,16 @@
 			}
 		}
 
-		uiDataGrid.formatters = formatters;
-		uiDataGrid.setAttribute('i18n', JSON.stringify(i18n));
-		uiDataGrid.setAttribute('itemsperpage', 5);
-		uiDataGrid.setAttribute('lang', 'fr');
-		uiDataGrid.setAttribute('page', 0);
-		uiDataGrid.setAttribute('searchable', '');
-		uiDataGrid.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
-		document.body.append(uiDataGrid);
+		DataGrid.formatters = formatters;
+		DataGrid.setAttribute('i18n', JSON.stringify(i18n));
+		DataGrid.setAttribute('itemsperpage', 5);
+		DataGrid.setAttribute('lang', 'fr');
+		DataGrid.setAttribute('page', 0);
+		DataGrid.setAttribute('searchable', '');
+		DataGrid.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
+		document.body.append(DataGrid);
 		
-		uiDataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
+		DataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
 
 
 	</script>
