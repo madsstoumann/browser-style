@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Progress Goal</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-progress-goal.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Progress Goal</h2>
+	<p>
+		Displays progress towards a goal using <code>data-progress</code>, <code>data-goal</code> and <code>data-unit</code> attributes.
+	</p>
+
+	<fieldset>
+		<p>
+			<label>
+				Progress
+				<progress value="70" max="100" data-progress="Raised:" data-goal="Goal:" data-unit="€" class="ui-progress-goal"></progress>
+			</label>
+		</p>
+	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<fieldset class="cs-opposite">
+		<p>
+			<label>
+				Progress
+				<progress value="40" max="100" data-unit="%" data-progress="Completed:" data-goal="Total:" class="ui-progress-goal"></progress>
+			</label>
+		</p>
+	</fieldset>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<fieldset dir="rtl">
+		<p>
+			<label>
+				Progress
+				<progress value="40" max="100" data-unit=" units" data-progress="Achieved:" data-goal="Target:" class="ui-progress-goal"></progress>
+			</label>
+		</p>
+	</fieldset>
+</body>
+</html>
