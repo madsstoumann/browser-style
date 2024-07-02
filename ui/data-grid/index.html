@@ -12,7 +12,7 @@
 	<style>
 		/* Demo */
 		data-grid b { font-weight: 500; }
-		data-grid .bg-gray { color: var(--GrayText); }
+		data-grid .c-gray { color: var(--GrayText); }
 	</style>
 </head>
 <body>
@@ -22,6 +22,15 @@
 	<p><code>&lt;data-grid&gt;</code> is a custom element, you can wrap around an existing <code>&lt;table&gt;</code>, or fill with data using the <code>data</code>-attribute. The latter can be either a stringified object or an endpoint.</p>
 	<hr>
 	<p>Example with data from an endpoint set in <code>data</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
+
+	<data-grid 
+		debug
+		id="test"
+		itemsperpage="5"
+		page="0"
+		searchable
+		selectable
+		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline"></data-grid>
 
 	<data-grid
 		debug
@@ -34,7 +43,7 @@
 		printable
 		searchable
 		selectable
-		data="./data.json"
+		data="./data/data.json"
 		stickycol
 		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
 	</data-grid>
@@ -152,13 +161,13 @@
 
 	<script>
 		const DataGrid = document.createElement('data-grid');
-		DataGrid.setAttribute('data', './data.json');
+		DataGrid.setAttribute('data', './data/data.json');
 
 		const formatters = {
 			bold: (value) => `<strong>${value}</strong>`,
 			email: (value) => `<a href="mailto:${value}" tabindex="-1">${value}</a>`,
 			semibold: (value) => `<b>${value}</b>`,
-			gray: (value) => `<span class="dg-gray">${value}</span>`,
+			gray: (value) => `<span class="c-gray">${value}</span>`,
 		}
 
 		const i18n = {
@@ -190,8 +199,57 @@
 		DataGrid.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
 		document.body.append(DataGrid);
 		
+
 		DataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
 
+
+
+document.addEventListener('DOMContentLoaded', () => {
+	const myDataGrid = document.getElementById('test');
+	
+	// Function to simulate fetching data for a specific page
+	function fetchDataForPage(page, itemsPerPage) {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				const start = page * itemsPerPage;
+				const data = Array.from({ length: itemsPerPage }, (_, index) => {
+					const id = start + index + 1;
+					return {
+						name: `User ${id}`,
+						age: Math.floor(Math.random() * 60) + 20,
+						email: `user${id}@example.com`
+					};
+				});
+				resolve(data);
+			}, 500); // Simulate network latency with a timeout
+		});
+	}
+
+	// Set initial data and total
+	myDataGrid.data = [
+		{ name: 'John Doe', age: 30, email: 'john@example.com' },
+		{ name: 'Jane Doe', age: 25, email: 'jane@example.com' },
+		{ name: 'Jim Beam', age: 35, email: 'jim@example.com' },
+		{ name: 'Jack Daniels', age: 40, email: 'jack@example.com' },
+		{ name: 'Johnny Walker', age: 45, email: 'johnny@example.com' }
+	];
+	myDataGrid.setAttribute('items', '15'); // Assuming there are 15 total records
+
+	// Listen for page navigation changes
+	myDataGrid.addEventListener('pagechange', (event) => {
+		const { page, itemsPerPage } = event.detail;
+		console.log(`Page changed to: ${page}`);
+		
+		// Fetch new data based on the new page and items per page
+		fetchDataForPage(page, itemsPerPage).then(newData => {
+			myDataGrid.data = newData;
+		});
+	});
+});
+
+
+
+// console.error(myDataGrid.data);
 
 	</script>
 
