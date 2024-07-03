@@ -72,7 +72,7 @@ export function renderTBody(context) {
 		const { tbody, thead, cols, selected } = context.state;
 		if (!tbody.length) return;
 
-		const data = filterData(context, [...tbody]);
+		let data = filterData(context, [...tbody]);
 		applySorting(context, data);
 
 		if (!data.length) {
@@ -89,6 +89,7 @@ export function renderTBody(context) {
 		}
 
 		const uid = thead.find(cell => cell.uid)?.field;
+		const searchterm = context.getAttribute('searchterm')?.toLowerCase();
 
 		const tbodyHTML = page.map(row => {
 			const rowSelected = selected.has(row[uid]) ? ' aria-selected' : '';
@@ -96,7 +97,8 @@ export function renderTBody(context) {
 				if (thead[index].hidden) return '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
 				const selectable = (context.options.selectable && index === 0) ? `<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
-				return `${selectable}<td tabindex="-1">${formatter(cell)}</td>`;
+				const cellValue = searchterm ? cell.toString().replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cell;
+				return `${selectable}<td tabindex="-1">${formatter(cellValue)}</td>`;
 			}).join('');
 			return `<tr${rowSelected}${uid ? ` data-uid="${row[uid]}"` : ''}>${rowHTML}</tr>`;
 		}).join('');
