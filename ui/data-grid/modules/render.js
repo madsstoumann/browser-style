@@ -82,8 +82,11 @@ export function renderTBody(context) {
 			return;
 		}
 
-		const page = paginate(context, data);
-		Object.assign(context.state, { pageItems: page.length, items: data.length, pages: calculatePages(data.length, context.state.itemsPerPage) });
+		const page = context.dataSet ? data : paginate(context, data);
+
+		if (!context.dataSet) {
+			Object.assign(context.state, { pageItems: page.length, items: data.length, pages: calculatePages(data.length, context.state.itemsPerPage) });
+		}
 
 		const uid = thead.find(cell => cell.uid)?.field;
 

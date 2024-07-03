@@ -77,7 +77,6 @@ export default class DataGrid extends HTMLElement {
 		if (this.options.debug) console.table(this.options, ['editable', 'locale', 'searchable', 'selectable']);
 		if (!this.options.i18n[this.options.locale]) this.options.locale = 'en';
 
-		/* Create elements / references to elements */
 		this.wrapper = document.createElement('div');
 		this.appendChild(this.wrapper);
 		this.table = this.querySelector('table') || this.createTable();
@@ -142,7 +141,7 @@ export default class DataGrid extends HTMLElement {
 			this.state.page = parseInt(newValue, 10);
 			if (render) {
 				this.dispatch('pagechange', this.state);
-				renderTBody(this);
+				if (!this.dataSet) renderTBody(this);
 			}
 		}
 		if (name === 'searchterm') {
@@ -346,7 +345,6 @@ export default class DataGrid extends HTMLElement {
 		if (Array.isArray(newData)) {
 			this.state.tbody = newData;
 
-			// Automatically generate thead based on the keys of the first object
 			if (newData.length > 0) {
 				this.state.thead = Object.keys(newData[0]).map((key) => ({
 					field: key,
@@ -356,17 +354,21 @@ export default class DataGrid extends HTMLElement {
 				}));
 				this.state.cols = this.state.thead.length;
 			} else {
-				// If newData is an empty array, reset thead and cols
 				this.state.thead = [];
 				this.state.cols = 0;
 			}
 
-			// Update other state properties
 			this.state.rows = newData.length;
 			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
 
-			// Re-render the table
-			renderTable(this);
+			if (!this.dataSet) {
+				renderTable(this);
+				this.dataSet = true;
+			}
+			else {
+				renderTBody(this);
+			}
+			
 		} else {
 			consoleLog(`Invalid data format: ${newData}`, '#F00');
 		}
