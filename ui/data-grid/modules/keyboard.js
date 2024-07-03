@@ -1,12 +1,12 @@
 export default function handleKeyboardEvents(event, context) {
 	const { key, ctrlKey, metaKey, shiftKey } = event;
+	const { editable: isEditable, selectable: isSelectable } = context.options;
+	const { cellIndex, cols, editing, pageItems, rowIndex } = context.state;
 	const node = event.target;
-	const isEditable = context.options.editable;
-	const isSelectable = context.options.selectable;
 
 	const handleSpaceKey = () => {
 		if (node.nodeName === 'TH') {
-			if (isSelectable && context.state.cellIndex === 0) {
+			if (isSelectable && cellIndex === 0) {
 				if (context.state.selected.size) {
 					context.selectRows(context.table.tBodies[0].rows, false, true);
 					context.toggle.checked = false;
@@ -23,7 +23,7 @@ export default function handleKeyboardEvents(event, context) {
 			}
 		}
 		if (node.nodeName === 'TD' && isSelectable) {
-			if ((context.state.cellIndex === 0) || shiftKey) {
+			if (cellIndex === 0 || shiftKey) {
 				event.preventDefault();
 				context.selectRows([node.parentNode], true);
 			}
@@ -47,28 +47,28 @@ export default function handleKeyboardEvents(event, context) {
 	const handleArrowKeys = (direction) => {
 		event.preventDefault();
 		if (direction === 'ArrowDown') {
-			context.state.rowIndex = Math.min(context.state.rowIndex + 1, context.state.pageItems);
+			context.state.rowIndex = Math.min(rowIndex + 1, pageItems);
 		} else if (direction === 'ArrowUp') {
-			context.state.rowIndex = Math.max(context.state.rowIndex - 1, 0);
-		} else if (direction === 'ArrowRight' && !context.state.editing) {
+			context.state.rowIndex = Math.max(rowIndex - 1, 0);
+		} else if (direction === 'ArrowRight' && !editing) {
 			if (shiftKey && node.nodeName === 'TH') {
-				return context.resizeColumn(node.cellIndex, 1);
+				return context.resizeColumn(cellIndex, 1);
 			}
-			context.state.cellIndex = Math.min(context.state.cellIndex + 1, context.state.cols - 1);
-		} else if (direction === 'ArrowLeft' && !context.state.editing) {
+			context.state.cellIndex = Math.min(cellIndex + 1, cols - 1);
+		} else if (direction === 'ArrowLeft' && !editing) {
 			if (shiftKey && node.nodeName === 'TH') {
-				return context.resizeColumn(node.cellIndex, -1);
+				return context.resizeColumn(cellIndex, -1);
 			}
-			context.state.cellIndex = Math.max(context.state.cellIndex - 1, 0);
+			context.state.cellIndex = Math.max(cellIndex - 1, 0);
 		}
 	};
 
 	const handleEndKey = () => {
 		if (!shiftKey) {
-			context.state.cellIndex = context.state.cols - 1;
+			context.state.cellIndex = cols - 1;
 		}
 		if (ctrlKey || metaKey || shiftKey) {
-			context.state.rowIndex = context.state.pageItems;
+			context.state.rowIndex = pageItems;
 		}
 	};
 
@@ -102,15 +102,14 @@ export default function handleKeyboardEvents(event, context) {
 	};
 
 	const handleTabKey = () => {
-		// TODO!
-		// if (context.state.editing) {
-		// 	event.preventDefault();
-		// 	context.state.editing = false;
-		// 	node.toggleAttribute('contenteditable', context.state.editing);
-		// }
+		if (context.state.editing) {
+			event.preventDefault();
+			context.state.editing = false;
+			node.toggleAttribute('contenteditable', context.state.editing);
+		}
 	};
 
-	switch (event.key) {
+	switch (key) {
 		case ' ': handleSpaceKey(); break;
 		case 'a': handleAKey(); break;
 		case 'i': handleIKey(); break;
@@ -127,5 +126,5 @@ export default function handleKeyboardEvents(event, context) {
 		case 'Tab': handleTabKey(); break;
 	}
 
-	if (!context.state.editing) context.setActive();
+	if (!editing) context.setActive();
 }

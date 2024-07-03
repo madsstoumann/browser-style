@@ -1,21 +1,28 @@
 import { icons } from './icons.js';
 import { baseTranslate } from './i18n.js';
 
+const bound = (context) => ({
+	translate: (key) => baseTranslate(key, context.options.locale, context.options.i18n),
+	icon: (iconName) => context.renderIcon(iconName)
+});
+
 export function renderForm(context) {
-	const translate = (key) => baseTranslate(key, context.options.locale, context.options.i18n);
+	const { translate, icon } = bound(context);
+
 	return `
-	<fieldset name="selection"><small><output name="selected">0</output> ${translate('selected', context.options.locale, context.options.i18n)}</small></fieldset>
+	<fieldset name="selection"><small><output name="selected">0</output> ${translate('selected')}</small></fieldset>
 	<fieldset name="actions">
-		${context.options.printable ? `<button type="button" name="print">${context.renderIcon(icons.printer)}</button>` : ''}
-		${context.options.density ? `<button type="button" name="density">${context.renderIcon(icons.density)}</button>` : ''}
-		${context.options.exportable ? `<button type="button" name="csv">${context.renderIcon(icons.csv)}</button>` : ''}
-		${context.options.exportable ? `<button type="button" name="json">${context.renderIcon(icons.json)}</button>` : ''}
+		${context.options.printable ? `<button type="button" name="print">${icon(icons.printer)}</button>` : ''}
+		${context.options.density ? `<button type="button" name="density">${icon(icons.density)}</button>` : ''}
+		${context.options.exportable ? `<button type="button" name="csv">${icon(icons.csv)}</button>` : ''}
+		${context.options.exportable ? `<button type="button" name="json">${icon(icons.json)}</button>` : ''}
 	</fieldset>
 	<fieldset name="navigation">${renderNavigation(context)}</fieldset>`;
 }
 
 export function renderNavigation(context) {
-	const translate = (key) => baseTranslate(key, context.options.locale, context.options.i18n);
+	const { translate, icon } = bound(context);
+
 	return `
 	<label>${translate('rowsPerPage')}:
 		<select name="itemsperpage">${context.options.pagesize.map(value => `<option${value === context.state.itemsPerPage ? ` selected` : ''}>${value}</option>`).join('')}</select>
@@ -24,19 +31,20 @@ export function renderNavigation(context) {
 		<output name="start"></output>&ndash;<output name="end"></output> ${translate('of')} <output name="total"></output>
 	</small>
 	<fieldset>
-		<button type="button" name="first" title="${translate('first')}">${context.renderIcon(icons.chevronLeftPipe)}</button>
-		<button type="button" name="stepdown" title="${translate('prev')}">${context.renderIcon(icons.chevronLeft)}</button>
+		<button type="button" name="first" title="${translate('first')}">${icon(icons.chevronLeftPipe)}</button>
+		<button type="button" name="stepdown" title="${translate('prev')}">${icon(icons.chevronLeft)}</button>
 		<label title="${translate('page')}">
 			<input type="number" name="page" min="1" size="1">
 		</label>
 		${translate('of')}<output name="pages"></output>
-		<button type="button" name="stepup" title="${translate('next')}">${context.renderIcon(icons.chevronRight)}</button>
-		<button type="button" name="last" title="${translate('last')}">${context.renderIcon(icons.chevronRightPipe)}</button>
+		<button type="button" name="stepup" title="${translate('next')}">${icon(icons.chevronRight)}</button>
+		<button type="button" name="last" title="${translate('last')}">${icon(icons.chevronRightPipe)}</button>
 	</fieldset>`;
 }
 
 export function renderSearch(context) {
-	const translate = (key) => baseTranslate(key, context.options.locale, context.options.i18n);
+	const { translate } = bound(context);
+
 	return `
 	<fieldset name="search" form="${context.form.id}">
 		<label>
@@ -52,5 +60,3 @@ export function renderSearch(context) {
 		</label>
 	</fieldset>`;
 }
-
-

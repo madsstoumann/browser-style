@@ -24,16 +24,13 @@
 	<p>Example with data from an endpoint set in <code>data</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
 
 	<data-grid 
-		debug
 		id="test"
 		itemsperpage="5"
 		page="0"
 		searchable
-		selectable
 		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline"></data-grid>
 
 	<data-grid
-		debug
 		density
 		editable
 		exportable
@@ -204,6 +201,7 @@
 
 
 
+/****/
 document.addEventListener('DOMContentLoaded', () => {
 	const myDataGrid = document.getElementById('test');
 	
@@ -220,6 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 						email: `user${id}@example.com`
 					};
 				});
+				console.log(`Fetched data for page ${page}:`, data);
 				resolve(data);
 			}, 500); // Simulate network latency with a timeout
 		});
@@ -242,14 +241,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		// Fetch new data based on the new page and items per page
 		fetchDataForPage(page, itemsPerPage).then(newData => {
+			console.log(`Setting new data for page ${page}`);
 			myDataGrid.data = newData;
 		});
 	});
 });
 
-
-
-// console.error(myDataGrid.data);
 
 	</script>
 

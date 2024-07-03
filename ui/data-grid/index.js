@@ -10,8 +10,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.08
- * @summary 02-07-2024
+ * @version 1.0.09
+ * @summary 03-07-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -19,6 +19,8 @@ export default class DataGrid extends HTMLElement {
 	static observedAttributes = ['data', 'items', 'itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder'];
 	constructor() {
 		super();
+
+		this.dataSet = false;
 
 		this.defaultLang = {
 			en: {
@@ -106,12 +108,6 @@ export default class DataGrid extends HTMLElement {
 		attachCustomEventHandlers(this);
 	}
 
-	/*
-	========================
-	Detect attribute changes
-	========================
-	*/
-
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		consoleLog(`attr: ${name}=${newValue} (${oldValue})`, '#046');
@@ -191,12 +187,6 @@ export default class DataGrid extends HTMLElement {
 		return table;
 	}
 
-	/**
-	 * Dispatches a custom event with a specified name and detail.
-	 * @param {string} name - The name of the event.
-	 * @param {*} detail - The detail to be attached to the event.
-	 * @returns {void}
-	 */
 	dispatch(name, detail) {
 		try {
 			consoleLog(`event: ${name}`, '#A0A');
@@ -206,27 +196,16 @@ export default class DataGrid extends HTMLElement {
 		}
 	};
 
-	/**
-	 * Begins the editing process for an active node if it is editable.
-	 * @returns {void}
-	 */
 	editBegin() {
 		try {
-			// Check if editing is allowed and if there's an active node
 			if (!this.options.editable || !this.active) return;
 
 			const node = this.active;
 
-			// Check if the active node is a table cell (TD)
 			if (node.nodeName === 'TD') {
-				// Set the editing state to true and make the cell content editable
 				this.state.editing = true;
 				node.toggleAttribute('contenteditable', this.state.editing);
-
-				// Store the original cell value
 				node.dataset.oldValue = node.textContent;
-
-				// Move the cursor to the end of the cell content
 				window.getSelection().collapseToEnd();
 			}
 		} catch (error) {
@@ -234,40 +213,26 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Ends the editing process for a given node and dispatches a 'cellchange' event if the content has changed.
-	 * @param {Node} node - The node representing the content being edited.
-	 * @returns {void}
-	 */
 	editEnd(node) {
 		try {
-			// Set the editing state to false and make the node non-editable
 			this.state.editing = false;
 			node.toggleAttribute('contenteditable', this.state.editing);
 
-			// Check if the content has changed; if not, remove the old value and return
 			if (node.textContent === node.dataset.oldValue) {
 				delete node.dataset.oldValue;
 				return;
 			}
 
-			// Get the object associated with the node and update its field with the new content
 			const obj = this.getObj(node);
 			const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
 			obj[field] = node.textContent;
 
-			// Dispatch a 'cellchange' event with the updated object
 			this.dispatch('cellchange', obj);
 		} catch (error) {
 			consoleLog(`An error occurred while editing: ${error}`, '#F00');
 		}
 	}
 
-	/**
-	 * Retrieves the object data associated with a particular table-cell (node).
-	 * @param {HTMLElement} node - The node for which object data is to be retrieved.
-	 * @returns {Object|null} The object associated with the node or null if not found.
-	 */
 	getObj = (node) => {
 		try {
 			const uid = this.state.thead.find(cell => cell.uid)?.field;
@@ -279,10 +244,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Moves to the next page and updates the 'page' attribute.
-	 * In case the 'page' attribute is at its maximum value, it won't increment further.
-	 */
 	next = () => {
 		try {
 			this.state.rowIndex = 1;
@@ -292,9 +253,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	* Moves to the previous page by updating the 'page' attribute.
-	*/
 	prev = () => {
 		try {
 			this.setAttribute('page', Math.max(this.state.page - 1, 0));
@@ -303,30 +261,19 @@ export default class DataGrid extends HTMLElement {
 		}
 	};
 
-	/**
-	 * Prints the table using a printElements instance.
-	 */
 	printTable() {
 		try {
-			const printer = new printElements(); // Assuming 'printElements' is the correct class name
+			const printer = new printElements();
 			printer.print([this.table]);
 		} catch (error) {
 			consoleLog(`Error printing: ${error}`, '#F00');
 		}
 	}
 
-	/**
-	 * Renders an SVG icon based on a comma-separated list of SVG path data.
-	 */
 	renderIcon(paths) {
 		return `<svg viewBox="0 0 24 24" class="ui-icon">${paths.split(',').map(path => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
 
-	/**
-	 * Resizes a column by adjusting its width based on the provided value.
-	 * @param {number} index - The index of the column to resize.
-	 * @param {number} value - The value by which to resize the column (positive or negative).
-	 */
 	resizeColumn = (index, value) => {
 		try {
 			const col = this.colgroup.children[index];
@@ -337,11 +284,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	* Toggles selection on rows or sets them as selected based on the provided toggle flag.
-	* @param {HTMLCollectionOf<Element>} rows - The rows to be selected/toggled.
-	* @param {boolean} [toggle=true] - Optional flag to toggle selection (default: true).
-	*/
 	selectRows = (rows, toggle = true, force = false) => {
 		try {
 			Array.from(rows).forEach(row => {
@@ -369,9 +311,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	* Sets the active cell and focuses it for navigation/editing purposes.
-	*/
 	setActive = () => {
 		try {
 			if (this.active) {
@@ -388,12 +327,7 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Translates a given key using the specified locale and i18n options.
-	 *
-	 * @param {string} key - The key to be translated.
-	 * @returns {string} The translated value for the given key.
-	 */
+
 	translate(key) {
 		return baseTranslate(key, this.options.locale, this.options.i18n);
 	}
