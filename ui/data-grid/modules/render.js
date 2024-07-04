@@ -91,12 +91,13 @@ export function renderTBody(context) {
 		const uid = thead.find(cell => cell.uid)?.field;
 		const searchterm = context.getAttribute('searchterm')?.toLowerCase();
 
+		const firstVisibleColumnIndex = thead.findIndex(cell => !cell.hidden);
 		const tbodyHTML = page.map(row => {
 			const rowSelected = selected.has(row[uid]) ? ' aria-selected' : '';
 			const rowHTML = Object.values(row).map((cell, index) => {
 				if (thead[index].hidden) return '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
-				const selectable = (context.options.selectable && index === 0) ? `<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
+				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? `<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
 				const cellValue = searchterm ? cell.toString().replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cell;
 				return `${selectable}<td tabindex="-1">${formatter(cellValue)}</td>`;
 			}).join('');
@@ -104,12 +105,12 @@ export function renderTBody(context) {
 		}).join('');
 
 		context.table.tBodies[0].innerHTML = tbodyHTML;
-		consoleLog(`render: tbody`, '#584', context.options.debug);
+		context.console(`render: tbody`, '#584');
 		if (context.options.debug) console.log(context.state);
 
 		updateNavigation(context);
 	} catch (error) {
-		consoleLog(`Error rendering table body (tbody): ${error}`, '#F00', context.options.debug);
+		context.console(`Error rendering table body (tbody): ${error}`, '#F00');
 	}
 }
 
@@ -117,27 +118,30 @@ export function renderTHead(context) {
 	try {
 		const { thead } = context.state;
 		const { selectable } = context.options;
-		const firstNotHidden = thead.find(cell => !cell.hidden);
+		let firstVisibleColumnFound = false;
 
-		const tableHeaderHTML = `<tr>${thead
-			.map((cell, index) => {
-				if (cell.hidden) return '';
+		const selectableHeader = selectable ? `<th tabindex="0"><label><input type="checkbox" tabindex="-1" data-toggle-all></label></th>` : '';
 
-				const isSelectable = selectable && index === 0;
-				const tabIndex = cell === firstNotHidden ? (isSelectable ? -1 : 0) : -1;
+		const tableHeaderHTML = `<tr>${
+			selectableHeader +
+			thead.map((cell) => {
+				if (cell.hidden) return ''; // Skip hidden columns
+				const tabIndex = !firstVisibleColumnFound ? 0 : -1;
+				firstVisibleColumnFound = true;
 
-				const th = `<th tabindex="${tabIndex}"${cell.uid ? ` data-uid` : ''} data-field="${cell.field}" data-sort-index="${index}"><span>${cell.label || cell}</span></th>`;
-				const content = isSelectable ? `<th tabindex="0"><label><input type="checkbox" tabindex="-1" data-toggle-all></label></th>${th}` : th;
-				return content;
-			})
-			.join('')}</tr>`;
+				return `<th tabindex="${tabIndex}"${cell.uid ? ` data-uid` : ''} data-field="${cell.field}" data-sort-index="${thead.indexOf(cell)}"><span>${cell.label || cell}</span></th>`;
+			}).join('')
+		}</tr>`;
 
 		context.table.tHead.innerHTML = tableHeaderHTML;
-		if (selectable) context.toggle = context.table.querySelector('input[data-toggle-all]');
 
-		consoleLog(`render: thead`, '#56F', context.options.debug);
+		if (selectable) {
+			context.toggle = context.table.querySelector('input[data-toggle-all]');
+		}
+
+		context.console(`render: thead`, '#56F');
 	} catch (error) {
-		consoleLog(`Error rendering table header (thead): ${error}`, '#F00', context.options.debug);
+		context.console(`Error rendering table header (thead): ${error}`, '#F00');
 	}
 }
 

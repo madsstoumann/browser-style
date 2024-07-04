@@ -124,6 +124,14 @@ export default function handleKeyboardEvents(event, context) {
 		case 'PageUp': handlePageKeys(key); break;
 		case 'F2': handleF2Key(); break;
 		case 'Tab': handleTabKey(); break;
+		case 'Enter': 
+		if (shiftKey) {
+			const row = node.closest('tr');
+			if (row && row.dataset.uid) {
+				context.dispatch('dg:rowclick', { detail: { id: row.dataset.uid } });
+			}
+		}
+		break;
 	}
 
 	if (!editing) context.setActive();

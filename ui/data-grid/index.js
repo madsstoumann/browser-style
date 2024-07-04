@@ -10,8 +10,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.09
- * @summary 03-07-2024
+ * @version 1.0.10
+ * @summary 04-07-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -20,6 +20,7 @@ export default class DataGrid extends HTMLElement {
 	constructor() {
 		super();
 
+		this.console = (message, color) => consoleLog(message, color, this.options.debug);
 		this.dataSet = false;
 
 		this.defaultLang = {
@@ -71,15 +72,20 @@ export default class DataGrid extends HTMLElement {
 			tbody: [],
 			thead: [],
 		};
-	}
 
-	async connectedCallback() {
-		if (this.options.debug) console.table(this.options, ['editable', 'locale', 'searchable', 'selectable']);
 		if (!this.options.i18n[this.options.locale]) this.options.locale = 'en';
+		if (this.options.debug) console.table(this.options, ['editable', 'locale', 'searchable', 'selectable']);
 
 		this.wrapper = document.createElement('div');
 		this.appendChild(this.wrapper);
-		this.table = this.querySelector('table') || this.createTable();
+		this.table = this.querySelector('table')
+		
+		if (this.table) {
+			this.state = Object.assign(this.state, dataFromTable(this.table, this.state.itemsPerPage, this.options.selectable));
+		}
+		else {
+			this.table = this.createTable();
+		}
 
 		if (this.hasAttribute('tableclass')) {
 			const classes = this.getAttribute('tableclass').split(' ')
@@ -97,19 +103,20 @@ export default class DataGrid extends HTMLElement {
 			this.insertAdjacentHTML('afterbegin', renderSearch(this))
 		}
 
-		if (!this.getAttribute('data')) {
-			this.state = Object.assign(this.state, dataFromTable(this.table, this.state.itemsPerPage, this.options.selectable));
-			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.rows;
-			renderTable(this);
-		}
-
 		attachEventListeners(this);
 		attachCustomEventHandlers(this);
 	}
 
+	async connectedCallback() {
+		if (!this.getAttribute('data')) {
+			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.rows;
+			renderTable(this);
+		}
+	}
+
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
-		consoleLog(`attr: ${name}=${newValue} (${oldValue})`, '#046');
+		this.console(`attr: ${name}=${newValue} (${oldValue})`, '#046');
 	
 		if (name === 'data') {
 			try {
@@ -140,7 +147,7 @@ export default class DataGrid extends HTMLElement {
 		if (name === 'page') {
 			this.state.page = parseInt(newValue, 10);
 			if (render) {
-				this.dispatch('pagechange', this.state);
+				this.dispatch('dg:pagechange', this.state);
 				if (!this.dataSet) renderTBody(this);
 			}
 		}
@@ -167,6 +174,14 @@ export default class DataGrid extends HTMLElement {
 	=======
 	*/
 
+	applyConfig(config) {
+		if (!config || !config.thead) return;
+		this.state.thead = this.state.thead.map((col) => {
+			const configCol = config.thead.find((c) => c.field === col.field);
+			return configCol ? { ...col, ...configCol } : col;
+		});
+	}
+
 	createColgroup() {
 		const colgroup = document.createElement('colgroup');
 		this.table.insertAdjacentElement('afterbegin', colgroup);
@@ -188,10 +203,10 @@ export default class DataGrid extends HTMLElement {
 
 	dispatch(name, detail) {
 		try {
-			consoleLog(`event: ${name}`, '#A0A');
+			this.console(`event: ${name}`, '#A0A', this.options.debug);
 			this.dispatchEvent(new CustomEvent(name, { detail }));
 		} catch (error) {
-			consoleLog(`Error in dispatch: ${error}`, '#F00');
+			this.console(`Error in dispatch: ${error}`, '#F00');
 		}
 	};
 
@@ -208,7 +223,7 @@ export default class DataGrid extends HTMLElement {
 				window.getSelection().collapseToEnd();
 			}
 		} catch (error) {
-			consoleLog(`An error occurred while beginning edit: ${error}`, '#F00');
+			this.console(`An error occurred while beginning edit: ${error}`, '#F00');
 		}
 	}
 
@@ -226,9 +241,9 @@ export default class DataGrid extends HTMLElement {
 			const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
 			obj[field] = node.textContent;
 
-			this.dispatch('cellchange', obj);
+			this.dispatch('dg:cellchange', obj);
 		} catch (error) {
-			consoleLog(`An error occurred while editing: ${error}`, '#F00');
+			this.console(`An error occurred while editing: ${error}`, '#F00');
 		}
 	}
 
@@ -238,7 +253,7 @@ export default class DataGrid extends HTMLElement {
 			const key = node.parentNode.dataset.uid;
 			return this.state.tbody.find(row => row[uid] === key) || null;
 		} catch (error) {
-			consoleLog(`Error retrieving object data: ${error}`, '#F00');
+			this.console(`Error retrieving object data: ${error}`, '#F00');
 			return null;
 		}
 	}
@@ -248,7 +263,7 @@ export default class DataGrid extends HTMLElement {
 			this.state.rowIndex = 1;
 			this.setAttribute('page', Math.min(this.state.page + 1, this.state.pages - 1));
 		} catch (error) {
-			consoleLog(`Error while moving to the next page: ${error}`, '#F00');
+			this.console(`Error while moving to the next page: ${error}`, '#F00');
 		}
 	}
 
@@ -256,7 +271,7 @@ export default class DataGrid extends HTMLElement {
 		try {
 			this.setAttribute('page', Math.max(this.state.page - 1, 0));
 		} catch (error) {
-			consoleLog(`Error while navigating to previous page: ${error}`, '#F00');
+			this.console(`Error while navigating to previous page: ${error}`, '#F00');
 		}
 	};
 
@@ -265,7 +280,7 @@ export default class DataGrid extends HTMLElement {
 			const printer = new printElements();
 			printer.print([this.table]);
 		} catch (error) {
-			consoleLog(`Error printing: ${error}`, '#F00');
+			this.console(`Error printing: ${error}`, '#F00');
 		}
 	}
 
@@ -279,7 +294,7 @@ export default class DataGrid extends HTMLElement {
 			const width = col.offsetWidth / this.table.offsetWidth * 100;
 			col.style.width = `${width + value}%`;
 		} catch (error) {
-			consoleLog(`Error resizing column: ${error}`, '#F00');
+			this.console(`Error resizing column: ${error}`, '#F00');
 		}
 	}
 
@@ -304,9 +319,9 @@ export default class DataGrid extends HTMLElement {
 				this.toggle.indeterminate = this.state.selected.size > 0 && this.state.selected.size < this.state.pageItems;
 			}
 
-			this.dispatch('selection', this.state.selected);
+			this.dispatch('dg:selection', this.state.selected);
 		} catch (error) {
-			consoleLog(`Error selecting rows: ${error}`, '#F00');
+			this.console(`Error selecting rows: ${error}`, '#F00');
 		}
 	}
 
@@ -322,7 +337,7 @@ export default class DataGrid extends HTMLElement {
 			this.active.setAttribute('tabindex', '0');
 			this.active.focus();
 		} catch (error) {
-			consoleLog(`Error setting active cell: ${error}`, '#F00');
+			this.console(`Error setting active cell: ${error}`, '#F00');
 		}
 	}
 
@@ -336,6 +351,18 @@ export default class DataGrid extends HTMLElement {
 	Getters and Setters
 	===================
 	*/
+	get config() {
+		return this._config;
+	}
+
+	set config(newConfig) {
+		this._config = newConfig;
+		if (this.state.thead.length > 0) {
+			this.applyConfig(newConfig);
+			renderTHead(this);
+			renderTBody(this);
+		}
+	}
 
 	get data() {
 		return this.state.tbody;
@@ -361,6 +388,10 @@ export default class DataGrid extends HTMLElement {
 			this.state.rows = newData.length;
 			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
 
+			if (this.config) {
+				this.applyConfig(this.config);
+			}
+
 			if (!this.dataSet) {
 				renderTable(this);
 				this.dataSet = true;
@@ -370,7 +401,7 @@ export default class DataGrid extends HTMLElement {
 			}
 			
 		} else {
-			consoleLog(`Invalid data format: ${newData}`, '#F00');
+			this.console(`Invalid data format: ${newData}`, '#F00');
 		}
 	}
 }

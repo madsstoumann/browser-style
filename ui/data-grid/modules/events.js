@@ -16,6 +16,7 @@ export function attachCustomEventHandlers(context) {
 
 	context.addEventListener('dg:clearselected', () => {
 		state.selected.clear();
+		context.form.elements.selected.value = 0;
 		renderTBody(context);
 		if (context.toggle) {
 			context.toggle.checked = false;
@@ -109,5 +110,9 @@ function handleTableClick(event, context) {
 				context.selectRows(table.tBodies[0].rows, true, true);
 			}
 		}
+	}
+	const row = node.closest('tr');
+	if (row && row.dataset.uid) {
+		context.dispatch('dg:rowclick', { detail: { id: row.dataset.uid } });
 	}
 }

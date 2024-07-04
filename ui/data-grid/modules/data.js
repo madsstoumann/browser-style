@@ -11,7 +11,6 @@ export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	try {
 		const { thead, hiddenCount } = getTableHead(table);
 		const tbody = getTableBody(table, thead);
-
 		return {
 			cols: (thead.length - hiddenCount) + (selectable ? 1 : 0),
 			pages: calculatePages(tbody.length, itemsPerPage),

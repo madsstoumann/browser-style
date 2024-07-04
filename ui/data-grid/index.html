@@ -23,14 +23,8 @@
 	<hr>
 	<p>Example with data from an endpoint set in <code>data</code>, and most features enabled, including <code>debug</code>, outputting rendering etc. to the <code>console</code>.</p>
 
-	<data-grid 
-		id="test"
-		itemsperpage="5"
-		page="0"
-		searchable
-		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline"></data-grid>
-
 	<data-grid
+		debug
 		density
 		editable
 		exportable
@@ -55,15 +49,17 @@
 	<button id="append" type="button">dg:append</button>
 
 	<br>
+	<br>
+	<h2>More examples</h2>
 	<hr>
-	<p>Example: Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
+	<p>Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
 
 	<data-grid
-		editable
 		lang="da"
 		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
 		itemsperpage="5"
-		page="0">
+		page="0"
+		selectable>
 		<div>
 			<table class="ui-table --rounded --th-light --hover-all">
 				<thead>
@@ -91,29 +87,37 @@
 		</div>
 	</data-grid>
 
-	<!-- <p>With data set as JSON in the <code>data</code>-attribute:</p>
+	<br>
+	<hr>
+	<p>With data set as JSON directly in the <code>data</code>-attribute:</p>
 
 	<data-grid
 		data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
-		tableclass="ui-table --rounded --th-light --hover-all">
-	</data-grid> -->
+		page="0"
+		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
+	</data-grid>
 
 	<br>
 	<hr>
-
+	<p>Example with data being fetched on a <code>dg:pagechange</code>-event, also setting and removing the <code>loading</code>-attribute.</p>
+	<data-grid 
+		id="grid2"
+		itemsperpage="5"
+		page="0"
+		selectable
+		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline"></data-grid>
+	
+	<br>
+	<hr>
 	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects.</p>
-
 	<script type="module" src="index.js"></script>
 
-	<script>
-		/* EVENT PLAYGROUND */
+	<!-- SCRIPT EXAMPLES -->
 
+	<script>
+
+		/* === EVENT PLAYGROUND === */
 		const grid = document.getElementById('grid');
-		grid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
-		grid.addEventListener('cellchange', (e) => { console.log('cellchange', e.detail); });
-		grid.addEventListener('selection', (e) => { console.log('selection', e.detail); });
-		grid.addEventListener('dg:row', (e) => { console.log('Active Row', e.detail); });
-		grid.addEventListener('dg:selected', (e) => { console.log('Selected Rows', e.detail); });
 
 		const getRow = document.getElementById('getrow');
 		getRow.addEventListener('click', () => {
@@ -152,13 +156,66 @@
 		const append = document.getElementById('append');
 		append.addEventListener('click', () => {
 			grid.dispatchEvent(new CustomEvent('dg:append', { detail: dataToAppend }));
-		 });
+		});
 
-	</script>
+		/* === FETCH EXAMPLE === */
+		document.addEventListener('DOMContentLoaded', () => {
+			const grid2 = document.getElementById('grid2');
+		
+			// Function to simulate fetching data for a specific page
+			function fetchDataForPage(page, itemsPerPage) {
+				grid2.setAttribute('loading','');
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						const start = page * itemsPerPage;
+						const data = Array.from({ length: itemsPerPage }, (_, index) => {
+							const id = start + index + 1;
+							return {
+								id,
+								name: `User ${id}`,
+								age: Math.floor(Math.random() * 60) + 20,
+								email: `user${id}@example.com`
+							};
+						});
+						console.log(`Fetched data for page ${page}:`, data);
+						grid2.removeAttribute('loading');
+						resolve(data);
+					}, 1000); // Simulate network latency with a timeout
+				});
+			}
 
-	<script>
-		const DataGrid = document.createElement('data-grid');
-		DataGrid.setAttribute('data', './data/data.json');
+			// Set initial data and total
+			grid2.config = {
+				thead: [
+					{ field: 'id', label: 'ID', uid: true },
+					{ field: 'name', label: 'Name' },
+					{ field: 'age', label: 'Age' },
+					{ field: 'email', label: 'Email', formatter: 'email' }
+				]
+			};
+			grid2.data = [
+				{ id: 1, name: 'John Doe', age: 30, email: 'john@example.com' },
+				{ id: 2, name: 'Jane Doe', age: 25, email: 'jane@example.com' },
+				{ id: 3, name: 'Jim Beam', age: 35, email: 'jim@example.com' },
+				{ id: 4, name: 'Jack Daniels', age: 40, email: 'jack@example.com' },
+				{ id: 5, name: 'Johnny Walker', age: 45, email: 'johnny@example.com' }
+			];
+			grid2.setAttribute('items', '15');
+
+			// Listen for page navigation changes
+			grid2.addEventListener('dg:pagechange', (event) => {
+				const { page, itemsPerPage } = event.detail;
+				fetchDataForPage(page, itemsPerPage).then(newData => {
+					console.log(`Setting new data for page ${page}`);
+					grid2.data = newData;
+				});
+			});
+		});
+
+
+		/* === CREATE WITH JAVASCRIPT === */
+		const grid3 = document.createElement('data-grid');
+		grid3.setAttribute('data', './data/data.json');
 
 		const formatters = {
 			bold: (value) => `<strong>${value}</strong>`,
@@ -187,68 +244,16 @@
 			}
 		}
 
-		DataGrid.formatters = formatters;
-		DataGrid.setAttribute('i18n', JSON.stringify(i18n));
-		DataGrid.setAttribute('itemsperpage', 5);
-		DataGrid.setAttribute('lang', 'fr');
-		DataGrid.setAttribute('page', 0);
-		DataGrid.setAttribute('searchable', '');
-		DataGrid.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
-		document.body.append(DataGrid);
-		
-
-		DataGrid.addEventListener('pagechange', (e) => { console.log('pagechange', e.detail); });
-
-
-
-/****/
-document.addEventListener('DOMContentLoaded', () => {
-	const myDataGrid = document.getElementById('test');
-	
-	// Function to simulate fetching data for a specific page
-	function fetchDataForPage(page, itemsPerPage) {
-		return new Promise((resolve) => {
-			setTimeout(() => {
-				const start = page * itemsPerPage;
-				const data = Array.from({ length: itemsPerPage }, (_, index) => {
-					const id = start + index + 1;
-					return {
-						name: `User ${id}`,
-						age: Math.floor(Math.random() * 60) + 20,
-						email: `user${id}@example.com`
-					};
-				});
-				console.log(`Fetched data for page ${page}:`, data);
-				resolve(data);
-			}, 500); // Simulate network latency with a timeout
-		});
-	}
-
-	// Set initial data and total
-	myDataGrid.data = [
-		{ name: 'John Doe', age: 30, email: 'john@example.com' },
-		{ name: 'Jane Doe', age: 25, email: 'jane@example.com' },
-		{ name: 'Jim Beam', age: 35, email: 'jim@example.com' },
-		{ name: 'Jack Daniels', age: 40, email: 'jack@example.com' },
-		{ name: 'Johnny Walker', age: 45, email: 'johnny@example.com' }
-	];
-	myDataGrid.setAttribute('items', '15'); // Assuming there are 15 total records
-
-	// Listen for page navigation changes
-	myDataGrid.addEventListener('pagechange', (event) => {
-		const { page, itemsPerPage } = event.detail;
-		console.log(`Page changed to: ${page}`);
-		
-		// Fetch new data based on the new page and items per page
-		fetchDataForPage(page, itemsPerPage).then(newData => {
-			console.log(`Setting new data for page ${page}`);
-			myDataGrid.data = newData;
-		});
-	});
-});
-
+		grid3.formatters = formatters;
+		grid3.setAttribute('i18n', JSON.stringify(i18n));
+		grid3.setAttribute('itemsperpage', 5);
+		grid3.setAttribute('lang', 'fr');
+		grid3.setAttribute('page', 0);
+		grid3.setAttribute('searchable', '');
+		grid3.setAttribute('selectable', '');
+		grid3.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
+		document.body.append(grid3);
 
 	</script>
-
 </body>
 </html>
