@@ -125,7 +125,7 @@ export function renderTHead(context) {
 		const tableHeaderHTML = `<tr>${
 			selectableHeader +
 			thead.map((cell) => {
-				if (cell.hidden) return ''; // Skip hidden columns
+				if (cell.hidden) return '';
 				const tabIndex = !firstVisibleColumnFound ? 0 : -1;
 				firstVisibleColumnFound = true;
 
