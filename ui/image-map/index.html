@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Image Map</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-image-map.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Image Map</h2>
+	<p>
+		An image map is a way of defining multiple clickable link areas (hotspots) within a single image. Each hotspot can be defined as a shape (rectangular, circular, or polygonal) and can have a popover tooltip associated with it.		
+	</p>
+
+	<div class="ui-image-map">
+		<img usemap="#primary" src="parrots.jpg" alt="Picture of two parrots" width="350" height="150">
+		<map name="primary">
+			<area shape="circle" coords="75,75,75" href="#p1" alt="Parrot 1">
+			<area shape="circle" coords="275,75,75" href="#p2" alt="Parrot 2">
+		</map>
+	</div>
+	<menu class="ui-image-map-menu">
+		<li id="p1">Parrot 1 is here</li>
+		<li id="p2">Parrot 2 is here!</li>
+	</menu>
+
+	<br>
+
+	<div class="ui-image-map" style="max-width:520px;">
+		<img usemap="#infographic" src="mdn-info.png" alt="MDN infographic" width="260" height="260">
+		<map name="infographic">
+			<area shape="poly" coords="129,0,260,95,129,138" href="#p3" alt="HTTP">
+			<area shape="poly" coords="260,96,209,249,130,138" href="#p4" alt="HTML">
+			<area shape="poly" coords="209,249,49,249,130,139" href="#p5" alt="JavaScript">
+			<area shape="poly" coords="48,249,0,96,129,138" href="#p6" alt="Web APIs"> 
+			<area shape="poly" coords="0,95,128,0,128,137" href="#p7" alt="CSS">
+		</map>
+	</div>
+	<menu class="ui-image-map-menu">
+		<li id="p3">Hyper Text Transport Protocol</li>
+		<li id="p4">Hyper Text Markup Language</li>
+		<li id="p5">ECMA-262, 14th edition</li>
+		<li id="p6">Web APIs are great!</li>
+		<li id="p7">Cascading Style Sheets</li>
+	</menu>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import mapToSvg from './mapToSvg.js';
+		common();
+		init('.ui-image-map', mapToSvg);
+	</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+@layer bs-component {
+ :where(.ui-image-map) {
+		display: grid;
+		img, svg {
+			grid-area: 1 / -1;
+			height: auto;
+			user-drag: none;
+			width: 100%;
+		}
+
+		svg {
+			overflow: visible;
+			& :is(circle, polygon, rect):hover {
+				stroke: var(--image-map-stroke, currentColor);
+			}
+			& :is(circle, polygon, rect) {
+				fill: transparent;
+				stroke: transparent;
+				stroke-align: inset;
+				stroke-width: 3;
+				transition: stroke-width .25s ease-in;
+				vector-effect: non-scaling-stroke;
+			}
+		}
+	}
+	:where(.ui-image-map-menu) {
+		/* li:not(:target) {
+			display: none;
+		} */
+		[popover] {
+			padding: 2ch;
+			text-wrap: nowrap;
+			&::backdrop { background: light-dark(#0002, #000A); }
+		}
+	}
+}
