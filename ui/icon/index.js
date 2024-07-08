@@ -1,8 +1,4 @@
 class UIIcon extends HTMLElement {
-	static get observedAttributes() {
-		return ['type', 'size', 'margin', 'stroke', 'open'];
-	}
-
 	constructor() {
 		super();
 		const shadow = this.attachShadow({ mode: 'open' });
@@ -11,135 +7,165 @@ class UIIcon extends HTMLElement {
 			:host *, :host *::after, :host *::before { box-sizing: border-box; }
 			:host {
 				--_bdrs: 50%;
-				--_bdw: 2px;
+				--_bdw: 0.0625em;
 				--_bdwh: calc(var(--_bdw) / 2);
 				--_cosh: calc(1em * cos(45deg));
-				--_fz: 300%;
+				--_fz: 100%;
 				--_trs: .25s cubic-bezier(.4, 0, .2, 1);
 
-	background: crimson;
-
-				// aspect-ratio: 1 / 1;
+				background: var(--_bg, transparent);
 				border-radius: var(--_bdrs);
-				display: inline-grid;
+				display: grid;
 				font-size: var(--_fz);
 				height: 1em;
-				// margin-block: var(--_mb, 0);
-				// margin-inline: var(--_mi, var(--_mis, 0) var(--_mie, 0));
-				// place-self: start center;
-							
+				padding: var(--_p, 0);
 				transition: var(--_trs);
 				width: 1em;
 			}
-					:host::before,
-					:host::after {
-						box-sizing: border-box;
-						content: "";
-						display: block;
-						grid-area: 1 / 1;
-						place-self: center;
-						transition: var(--_trs);
-					}
+			:host::before,
+			:host::after {
+				box-sizing: border-box;
+				content: "";
+				display: block;
+				grid-area: 1 / 1;
+				place-self: center;
+				transition: var(--_trs);
+			}
 
-					/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
-					:host([type*=arrow])::after,
-					:host([type=check])::after,
-					:host([type*=chevron])::after {
-							border-color: currentColor;
-							border-style: solid;
-							border-width: var(--_bdw) var(--_bdw) 0 0;
-							height: var(--_cosh);
-							rotate: 45deg;
-							width: var(--_cosh);
-					}
-					:host([type*=arrow])::before,
-					:host([type=cross])::before,
-					:host([type*=menu])::before,
-					:host([type*=plus])::before,
-					:host([type=cross])::after,
-					:host([type*=menu])::after,
-					:host([type*=minus])::after,
-					:host([type*=plus])::after {
-							background-color: currentColor;
-							height: var(--_bdw);
-							width: 1em;
-					}
-					:host([type*=arrow])::after {
-							translate: calc((.25em - var(--_bdw)) * cos(45deg));
-					}
-					:host([type*=arrow])::before {
-							width: calc(1em - var(--_bdw));
-							translate: calc(0px - var(--_bdwh)) calc((.5em * cos(45deg)) - var(--_bdwh));
-					}
-					:host([type=check])::after {
-							border-width: 0 var(--_bdw) var(--_bdw) 0;
-							height: calc(1em * cos(22.5deg));
-							translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
-							width: calc(var(--_cosh)* 0.6);
-					}
-					:host([type*=chevron])::after {
-							translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
-					}
+			/* Arrow, Check, Chevron (Common: Cross, Menu, Plus) */
 
-					/* Grid, Kebab, Meatball, Menu */
-					:host([type=drag])::after,
-					:host([type=grid])::after,
-					:host([type=kebab])::after,
-					:host([type=meatball])::after {
-							background: currentColor;
-							border-radius: 50%;
-							height: .2em;
-							width: .2em;
-					}
-					:host([type=drag]) { translate: .2em 0; }
-					:host([type=drag])::after {
-							box-shadow: 
-									-.4em -.4em 0, 0 -.4em 0,
-									-.4em 0 0,
-									-.4em .4em 0, 0 .4em 0;
-					}
-					:host([type=grid])::after {
-							box-shadow: 
-									-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
-									-.3em 0 0, .3em 0 0,
-									-.3em .3em 0, 0 .3em 0, .3em .3em 0;
-					}
-					:host([type=kebab])::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
-					:host([type=meatball])::after { box-shadow: -.3em 0 0, .3em 0 0; }
+			:host([type~=arrow])::after,
+			:host([type~=check])::after,
+			:host([type~=chevron])::after {
+					border-color: currentColor;
+					border-style: solid;
+					border-width: var(--_bdw) var(--_bdw) 0 0;
+					height: var(--_cosh);
+					rotate: 45deg;
+					width: var(--_cosh);
+			}
+			:host([type~=arrow])::before,
+			:host([type~=cross])::before,
+			:host([type*=menu])::before,
+			:host([type~=plus])::before,
+			:host([type~=cross])::after,
+			:host([type*=menu])::after,
+			:host([type~=minus])::after,
+			:host([type~=plus])::after {
+				background-color: currentColor;
+				height: var(--_bdw);
+				width: 1em;
+			}
+
+
+			:host([type=cross])::before {
+				rotate: 45deg;
+			}
+			:host([type=cross])::after {
+				rotate: -45deg;
+			}
+
+
+			:host([type*=arrow])::before {
+				place-self: center start;
+				width: calc(1em - var(--_bdw));
+			}
+			:host([type=check])::after {
+				border-width: 0 var(--_bdw) var(--_bdw) 0;
+				height: calc(1em * cos(22.5deg));
+				translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
+				width: calc(var(--_cosh)* 0.6);
+			}
+			:host([type*=chevron])::after {
+				translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
+			}
+
+			/* Grid, Kebab, Meatball, Menu */
+			:host([type=drag])::after,
+			:host([type=grid])::after,
+			:host([type=kebab])::after,
+			:host([type=meatball])::after {
+					background: currentColor;
+					border-radius: 50%;
+					height: .2em;
+					width: .2em;
+			}
+			:host([type=drag])::after { translate: .2em 0; }
+			:host([type=drag])::after {
+				box-shadow: 
+					-.4em -.4em 0, 0 -.4em 0,
+					-.4em 0 0,
+					-.4em .4em 0, 0 .4em 0;
+			}
+			:host([type=grid])::after {
+				box-shadow: 
+					-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
+					-.3em 0 0, .3em 0 0,
+					-.3em .3em 0, 0 .3em 0, .3em .3em 0;
+			}
+			:host([type=kebab])::after { box-shadow: 0 .3em 0, 0 -.3em 0; }
+			:host([type=meatball])::after { box-shadow: -.3em 0 0, .3em 0 0; }
+
 					:host([type=burger-menu]) { gap: .66em; }
 					:host([type=burger-menu])::before { box-shadow: 0 .33em 0 currentColor; }
 					:host([type=veggie-menu]) { gap: .33em; }
 
 					/* Angle */
 					:host([type~=down]) { rotate: 90deg; }
-					:host([type=cross]), :host([type~=downleft]) { rotate: 135deg; }
-					:host([type~=downright]) { rotate: 45deg; }
+				
+					:host([type~=downleft]) {
+						&::after { rotate: 180deg; }
+						&::before { rotate: 135deg; }
+					}
+					:host([type~=downright]) {
+						&::after { rotate: 90deg; }
+						&::before { rotate: 45deg; }
+					}
+
 					:host([type~=left]) { rotate: -180deg; }
 					:host([type~=up]) { rotate: -90deg; }
-					:host([type~=upleft]) { rotate: -135deg; }
-					:host([type~=upright]) { rotate: -45deg; }
-					:host([type*=cross])::after,
+
+					
+					:host([type~=upleft]) {
+						&::after { rotate: -90deg; }
+						&::before { rotate: -135deg; }
+					}
+					:host([type~=upright]) {
+						&::after { rotate: unset; }
+						&::before { rotate: 135deg; }
+					}
+					
+
+
 					:host([type*=plus])::after { rotate: -90deg; }
 
 					/* Play, Pause, Stop, First, Last */
-					:host([type*=pause]), :host([type*=play]), :host([type*=stop]), :host([type*=triangle]) {
-							background: currentColor;
-							border-radius: 0;
+					// :host([type*=pause]), :host([type*=play]), :host([type*=stop]), :host([type*=triangle]) {
+					// 		background: currentColor;
+					// 		border-radius: 0;
+					// }
+					:host([type*=pause])::after { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
+					:host([type*=play])::after { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
+					:host([type*=stop])::after { clip-path: inset(0 0 0 0 round 1px); }
+					:host([type*=triangle])::after { clip-path: polygon(15% 0%,85% 50%,15% 100%);}
+					
+
+					// :host([type*=first])::after,
+					// :host([type*=last])::after { translate: unset; }
+
+					:host([type*=first])::before,
+					:host([type*=last])::before {
+						background: currentColor;
+						height: 1em;
+							// translate: .88em calc(0px - var(--_bdw));
+						width: var(--_bdw);
 					}
-					:host([type*=pause]) { clip-path: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%); }
-					:host([type*=play]) { clip-path: polygon(16% 0%,15% 100%,100% 50%); }
-					:host([type*=stop]) { clip-path: inset(0 0 0 0 round 1px); }
-					:host([type*=triangle]) { clip-path: polygon(15% 0%,85% 50%,15% 100%);}
-					:host([type*=first]), :host([type*=last]) {
-							translate: .22em 0;
-					}
-					:host([type*=first])::before, :host([type*=last])::before {
-							background: currentColor;
-							height: 1em;
-							translate: .88em calc(0px - var(--_bdw));
-							width: var(--_bdw);
-					}
-					:host([type*=last]) { translate: -.22em 0; }
+
+					:host([type*=first])::before { place-self: start; }
+					// :host([type*=last]) { translate: -.22em 0; }
+
+
+
 
 					/* Margin */
 					:host([margin=start]) { --_mis: 1ch; }
@@ -184,10 +210,11 @@ class UIIcon extends HTMLElement {
 					:checked + :host([type=menu])::after { rotate: 45deg; }
 
 					/* Stroke */
-					:host([stroke*=xs]) { --_bdw: 1px; }
-					:host([stroke*=md]) { --_bdw: 3px; }
-					:host([stroke*=lg]) { --_bdw: 4px; }
-					:host([stroke*=xl]) { --_bdw: 6px; }
+					:host([stroke*=xs]) { --_bdw: 0.003125em; }
+					:host([stroke*=sm]) { --_bdw: 0.0625em; }
+					:host([stroke*=md]) { --_bdw: 0.125em; }
+					:host([stroke*=lg]) { --_bdw: 0.1875em; }
+					:host([stroke*=xl]) { --_bdw: 0.25em; }
 
 					/*Dir: rtl*/
 					[dir=rtl] :host {
@@ -217,20 +244,6 @@ class UIIcon extends HTMLElement {
 			`);
 
 			shadow.adoptedStyleSheets = [stylesheet];
-	}
-
-	attributeChangedCallback(name, oldValue, newValue) {
-			if (oldValue !== newValue) {
-					// this.render();
-			}
-	}
-
-	connectedCallback() {
-			// this.render();
-	}
-
-	render() {
-			// Additional rendering logic can be added here
 	}
 }
 
