@@ -113,6 +113,6 @@ function handleTableClick(event, context) {
 	}
 	const row = node.closest('tr');
 	if (row && row.dataset.uid) {
-		context.dispatch('dg:rowclick', { detail: row.dataset.uid });
+		context.dispatch('dg:rowclick', { id: row.dataset.uid });
 	}
 }
