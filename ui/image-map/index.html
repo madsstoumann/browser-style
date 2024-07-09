@@ -14,9 +14,8 @@
 
 	<h2>Image Map</h2>
 	<p>
-		An image map is a way of defining multiple clickable link areas (hotspots) within a single image. Each hotspot can be defined as a shape (rectangular, circular, or polygonal) and can have a popover tooltip associated with it.		
+		Small script that converts an image map to SVG: <code>circle</code>, <code>polygon</code> and <code>rect</code>  — allowing you to use <code>:hover</code>-states, popovers and more.
 	</p>
-	<p>Hover an area and click to see more info.</p>
 
 	<div class="ui-image-map">
 		<img usemap="#primary" src="parrots.jpg" alt="Picture of two parrots" width="350" height="150">
@@ -25,10 +24,12 @@
 			<area shape="circle" coords="275,75,75" href="#p2" alt="Parrot 2">
 		</map>
 	</div>
+	<!--
 	<menu class="ui-image-map-menu">
 		<li id="p1">Parrot 1 is here</li>
 		<li id="p2">Parrot 2 is here!</li>
 	</menu>
+	-->
 
 	<br>
 
@@ -42,6 +43,7 @@
 			<area shape="poly" coords="0,95,128,0,128,137" href="#p7" alt="CSS">
 		</map>
 	</div>
+	<!--
 	<menu class="ui-image-map-menu">
 		<li id="p3">Hyper Text Transport Protocol</li>
 		<li id="p4">Hyper Text Markup Language</li>
@@ -49,6 +51,7 @@
 		<li id="p6">Web APIs are great!</li>
 		<li id="p7">Cascading Style Sheets</li>
 	</menu>
+	-->
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

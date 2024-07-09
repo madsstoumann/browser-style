@@ -23,14 +23,4 @@
 			}
 		}
 	}
-	:where(.ui-image-map-menu) {
-		/* li:not(:target) {
-			display: none;
-		} */
-		[popover] {
-			padding: 2ch;
-			text-wrap: nowrap;
-			&::backdrop { background: light-dark(#0002, #000A); }
-		}
-	}
 }

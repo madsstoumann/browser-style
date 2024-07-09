@@ -5,17 +5,17 @@ export default function mapToSvg(node) {
 	img.removeAttribute('usemap');
 
 	const areas = [...map.children].map(area => {
+		/* Hook into popover api, by adding this:
 		const id = area.getAttribute('href').replace('#', '');
-
 		const elm = document.getElementById(id);
-		if (elm) {
-			elm.setAttribute('popover', '');
-		}
+		if (elm) elm.setAttribute('popover', '');
 
+		Then add `popovertarget="${id}"` to the shape.
+		*/
 		switch (area.shape) {
 			case 'circle': {
 				const [cx, cy, r] = area.coords.split(',');
-				return `<circle cx="${cx}" cy="${cy}" r="${r}" popovertarget="${id}" />`;
+				return `<circle cx="${cx}" cy="${cy}" r="${r}" />`;
 			}
 			case 'poly': {
 				const points = area.coords.split(',');
@@ -26,24 +26,28 @@ export default function mapToSvg(node) {
 						return `${acc}${cur} `;
 					}
 				}, '').trim();
-				return `<polygon points="${pointsStr}" popovertarget="${id}" />`;
+				return `<polygon points="${pointsStr}" />`;
 			}
 			case 'rect': {
 				const [x, y, width, height] = area.coords.split(',');
-				return `<rect x="${x}" y="${y}" width="${width}" height="${height}" popovertarget="${id}" />`;
+				return `<rect x="${x}" y="${y}" width="${width}" height="${height}" />`;
 			}
 		}
 	}).join('');
 
 	map.outerHTML = `<svg viewBox="0 0 ${img.getAttribute('width') || img.naturalWidth} ${img.getAttribute('height') || img.naturalHeight}">${areas}</svg>`;
 
+/*
+If using popovers, iterate them and invoke with JS:
 	const popovers = node.querySelectorAll('[popovertarget]');
-	popovers.forEach(popover => {
-		popover.addEventListener('click', () => {
-			const target = document.getElementById(popover.getAttribute('popovertarget'));
-			if (target) {
-				target.showPopover();
-			}
+		popovers.forEach(popover => {
+			popover.addEventListener('click', () => {
+				const target = document.getElementById(popover.getAttribute('popovertarget'));
+				if (target) {
+					target.showPopover();
+				}
+			});
 		});
-	});
+	}
+*/
 }
