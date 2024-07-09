@@ -1,0 +1,183 @@
+@layer bs-component {
+	:where(ui-icon) {
+		--_o: 0;
+		--_bdrs: 50%;
+		--_bdw: 0.0625em;
+		--_bdwh: calc(var(--_bdw) / 2);
+		--_cosh: calc(1em * cos(45deg));
+		--_fz: 100%;
+		--_trs: .25s cubic-bezier(.4, 0, .2, 1);
+		--_cpw: calc(100% - (1.5 * var(--_p, 0em)));
+
+		background: var(--_bg, transparent);
+		border-radius: var(--_bdrs);
+		display: grid;
+		font-size: var(--_fz);
+		height: var(--_w, 1em);
+		padding: var(--_p, 0em);
+		transition: var(--_trs);
+		width: var(--_w, 1em);
+
+		&::before,
+		&::after {
+			box-sizing: border-box;
+			content: "";
+			display: block;
+			grid-area: 1 / 1;
+			place-self: center;
+			transition: var(--_trs);
+		}
+		&::before {
+			aspect-ratio: 1 / 1;
+			background: currentColor;
+			width: var(--_bw, 0);
+		}
+
+		/* State */
+		[open] > * > &, :checked + &, &[open] { --_o: 1; }
+
+		&[type~=arrow]::after,
+		&[type~=check]::after,
+		&[type~=chevron]::after {
+			border-color: currentColor;
+			border-style: solid;
+			border-width: var(--_bdw) var(--_bdw) 0 0;
+			height: var(--_cosh);
+			rotate: 45deg;
+			width: var(--_cosh);
+		}
+		&[type~=arrow]::before,
+		&[type~=cross]::before,
+		&[type*=menu]::before,
+		&[type*=plus]::before,
+		&[type~=cross]::after,
+		&[type*=menu]::after,
+		&[type~=minus]::after,
+		&[type*=plus]::after {
+			background-color: currentColor;
+			height: var(--_bdw);
+			width: 1em;
+		}
+		&[type*=arrow]::before {
+			width: calc(1em - var(--_bdw));
+		}
+		&[type=check]::after {
+			border-width: 0 var(--_bdw) var(--_bdw) 0;
+			height: calc(1em * cos(22.5deg));
+			translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
+			width: calc(var(--_cosh) * 0.6);
+		}
+		&[type*=chevron]::after {
+			translate: calc((.25em - var(--_bdwh)) * cos(45deg) * -1) 0;
+		}
+		&[type=cross]::before {
+			rotate: 45deg;
+		}
+		&[type=cross]::after {
+			rotate: -45deg;
+		}
+		&[type*=plus]::after {
+			rotate: -90deg;
+		}
+		&[type=plus-cross] { 
+			&::after { rotate: calc(45deg * var(--_o) + 90deg); }
+			&::before { rotate: calc(45deg * var(--_o)); }
+		}
+		&[type=plus-minus]::after {
+			rotate: calc((90deg * var(--_o)) - 90deg);
+		}
+
+		/* Angles */
+		&[type~=down] { rotate: 90deg; }
+		&[type~=down], &[type~=up] { scale: calc(-2 * var(--_o) + 1) 1; }
+		&[type~=left] { scale: -1; rotate: calc(-90deg * var(--_o)); }
+		&[type~=right] { rotate: calc(90deg * var(--_o)); }
+		&[type~=up] { rotate: -90deg; }
+		&[type~=downleft] {
+			&::after { rotate: 180deg; }
+			&::before { rotate: 135deg; }
+		}
+		&[type~=downright] {
+			&::after { rotate: 90deg; }
+			&::before { rotate: 45deg; }
+		}
+		&[type~=upleft] {
+			&::after { rotate: -90deg; }
+			&::before { rotate: -135deg; }
+		}
+		&[type~=upright] {
+			&::after { rotate: unset; }
+			&::before { rotate: 135deg; }
+		}
+		&[type~=downleft], &[type~=downright], &[type~=upleft], &[type~=upright] { scale: calc(-2 * var(--_o) + 1); }
+
+		/* Grid, Kebab, Meatball */
+		&[type=drag]::before,
+		&[type=grid]::before,
+		&[type=kebab]::before,
+		&[type=meatball]::before {
+			border-radius: 50%;
+			width: .2em;
+		}
+		&[type=drag]::before {
+			box-shadow: 
+			-.4em -.3em 0, 0 -.3em 0,
+			-.4em 0 0,
+			-.4em .3em 0, 0 .3em 0;
+			translate: .2em 0;
+		}
+		&[type=grid] {
+			&::before {
+				box-shadow: 
+				-.3em -.3em 0, 0 -.3em 0, .3em -.3em 0,
+				-.3em 0 0, .3em 0 0,
+				-.3em .3em 0, 0 .3em 0, .3em .3em 0;
+				rotate: calc(135deg * var(--_o));
+			}
+		}
+		&[type=kebab]::before {
+			box-shadow: 0 .3em 0, 0 -.3em 0;
+			rotate: calc(45deg * var(--_o));
+		}
+		&[type=meatball]::before {
+			box-shadow: -.3em 0 0, .3em 0 0;
+			rotate: calc(45deg * var(--_o));
+		}
+		/* [open] > box-shadow: -.3em 0 0, 0 .3em 0, 0 -.3em 0, .3em 0 0; */
+
+		/* Menu */
+		&[type=burger-menu] { --_g: .6em; }
+		&[type=veggie-menu] { --_g: .3em; }
+		&[type=burger-menu]::before { box-shadow: 0 calc(0em - (var(--_g) / 2) * var(--_o) + (var(--_g) / 2)) 0 currentColor; }
+		&[type*=menu]::before { margin-block-end: calc(0em - var(--_g) * var(--_o) + var(--_g)) ; rotate: calc(45deg * var(--_o)); } 
+		&[type*=menu]::after { margin-block-start: calc(0em - var(--_g) * var(--_o) + var(--_g)); rotate: calc(-45deg * var(--_o)); }
+
+		/* Play / Pause / Stop  */
+		&[type=first]::before { --_bw: var(--_cpw); clip-path: polygon(0% 0%, 20% 0%, 20% 50%, 100% 0%, 100% 100%, 20% 50%, 20% 100%, 0% 100%); }
+		&[type=last]::before { --_bw: var(--_cpw); clip-path: polygon(0% 0%, 80% 50%, 80% 0%, 100% 0%, 100% 100%, 80% 100%, 80% 50%, 0% 100%); }
+		&[type=pause]::before { --_bw: var(--_cpw); clip-path: polygon(40% 0%, 0% 0%, 0% 100%, 40% 100%, 40% 0%, 60% 0%, 100% 0%, 100% 100%, 60% 100%, 60% 0%); }
+		&[type=rewind]::before { --_bw: var(--_cpw); clip-path: polygon(0% 50%, 50% 10%, 50% 50%, 100% 10%, 100% 90%, 50% 50%, 50% 90%, 0% 50%); }
+		&[type=forward]::before { --_bw: var(--_cpw); clip-path: polygon(0% 10%, 50% 50%, 50% 10%, 100% 50%, 50% 90%, 50% 50%, 0% 90%); }
+		/* play: polygon(15% 0%, 15% 100%, 100% 50%); */
+		&[type*=play]::before { --_bw: var(--_cpw); clip-path: polygon(15% 0%, 15% 100%, 100% 50%, 100% 50%, 100% 50%, 100% 50%, 100% 50%, 100% 50%, 100% 50%, 100% 50%); }
+
+		&[open]&[type=play-pause]::before { clip-path: polygon(0% 0%, 0% 100%, 40% 100%, 40% 0%, 40% 0%, 60% 0%, 100% 0%, 100% 100%, 60% 100%, 60% 0%); }
+		&[type=stop]::before { --_bw: var(--_cpw); clip-path: inset(0 0 0 0 round 2px); }
+		&[type*=triangle]::before { --_bw: var(--_cpw); clip-path: polygon(25% 0%, 100% 50%, 25% 100%); }
+
+		/* Size */
+		&[size*=xs] { --_fz: 50%; }
+		&[size*=sm] { --_fz: 60%; }
+		&[size*=md] { --_fz: 80%; }
+		&[size*=lg] { --_fz: 120%; }
+		&[size*=xl] { --_fz: 140%; }
+		&[size*=xxl] { --_fz: 200%; }
+
+		/* Stroke */
+		&[stroke*=xs] { --_bdw: 0.003125em; }
+		&[stroke*=sm] { --_bdw: 0.0625em; }
+		&[stroke*=md] { --_bdw: 0.125em; }
+		&[stroke*=lg] { --_bdw: 0.1875em; }
+		&[stroke*=xl] { --_bdw: 0.25em; }
+	}
+}
