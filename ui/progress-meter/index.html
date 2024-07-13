@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Progress Meter</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-progress-meter.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Progress Meter</h2>
+	<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi, eaque.</p>
+
+	<fieldset class="ui-progress-meter">
+		<output data-unit-before="$">0</output>
+		<progress value="500" max="950"></progress>
+		<fieldset>
+			<label>
+				<input type="checkbox" value="250" disabled>
+				<small>$250</small>
+			</label>
+			<label>
+				<input type="checkbox" value="400" disabled>
+				<small>$400</small>
+			</label>
+			<label>
+				<input type="checkbox" value="600" disabled>
+				<small>$600</small>
+			</label>
+			<label>
+				<input type="checkbox" value="950" disabled>
+				<small>$950</small>
+			</label>
+		</fieldset>
+	</fieldset>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiProgressMeter from './uiProgressMeter.js';
+		init('.ui-progress-meter', uiProgressMeter);
+	</script>
+
+</body>
+</html>

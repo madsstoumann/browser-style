@@ -25,6 +25,32 @@
 				}
 			}
 		}
+		&.--control {
+			--ui-scroll-nav-jc: start;
+			background: var(--ui-scroll-nav-bg, var(--CanvasGray));
+			border-radius: var(--ui-scroll-nav-bdrs, 1.5em);
+			column-gap: 1ch;
+			grid-template-columns: min-content 1fr min-content;
+			padding: var(--ui-scroll-nav-p, .5em);
+			ol {
+				grid-column: 2;
+				justify-self: start;
+				&::before {
+					background: linear-gradient(var(--AccentColor),var(--AccentColor)) left no-repeat, var(--Canvas);
+					border-radius: .25em;
+					content: "";
+					width: 3ch;
+				}
+				li[aria-selected=false] {
+					background-color: light-dark(#FFF, hsl(211, 100%, 95%));
+					box-shadow: 0 0 0 2px light-dark(var(--ButtonFace), transparent);
+				 }
+			}
+			&.--playing ol::before {
+				animation: progress var(--duration) linear infinite var(--playstate);
+			}
+			[dir=rtl] & ol::before { scale: -1 1; }
+		}
 		&.--hidden { display: none; }
 		&.--inside {
 			grid-area: 1 / 1;
@@ -62,6 +88,38 @@
 		&.--no-buttons button { visibility: hidden; }
 		&.--no-dots ol { visibility: hidden; }
 
+		&.--progress {
+			grid-template-rows: min-content 1fr;
+			padding-inline: 0;
+			z-index: 500; /* FIX: SAFARI */
+			&::before {
+				background: linear-gradient(var(--AccentColor), var(--AccentColor)) left no-repeat, var(--Canvas);
+				content: "";
+				display: block;
+				grid-area: 1 / 1 / 1 / 4;
+				height: .5em;
+				width: 100%;
+			}
+			[data-action=next] {
+				grid-row: 2;
+				margin-inline-end: var(--ui-scroll-nav-gap);
+			}
+			[data-action=prev] {
+				grid-row: 2;
+				margin-inline-start: var(--ui-scroll-nav-gap);
+			}
+			[data-action=play] {
+				place-self: center;
+			}
+			[data-action=play], ol {
+				grid-area: 2 / 2 / 3 / 3;
+			}
+			&.--playing::before {
+				animation: progress var(--duration) linear infinite var(--playstate);
+			}
+			[dir=rtl] &::before { scale: -1 1; }
+		}
+
 		@media (hover: hover) {
 			&.--hover {
 				opacity: 0;
@@ -69,5 +127,9 @@
 				&:hover { opacity: 1; }
 			}
 		}
+	}
+	@keyframes progress {
+		0% { background-size: 0% 100%; }
+		100% { background-size: 100% 100%; }
 	}
 }

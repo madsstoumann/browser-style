@@ -1,0 +1,67 @@
+@import '../progress/ui-progress.css';
+@layer bs-component {
+	:where(.ui-progress-meter) {
+		--AccentColor: #FFC700;
+		all: unset;
+		display: grid;
+		 grid-template-rows: 1em 1fr;
+		padding-block-end: 1.5em;
+		position: relative;
+		row-gap: .5em;
+
+		fieldset {
+			all: unset;
+			display: flex;
+		}
+		fieldset, progress {
+			grid-area: 2 / 1 / 3 / 1;
+		}
+		input {
+			--input-check-bg: #024FAB;
+			--input-check-bdc: #024FAB;
+			border-radius: 50%;
+			font-size: 200%;
+			&:checked {
+				--input-check-bg: var(--ColorSuccess);
+			}
+		}
+		input:not(:checked) {
+			--icon: url('/assets/svg/gift.svg');
+			--input-check-bga: #FFF;
+			--input-check-mask-size: 75%;
+		}
+		label {
+			grid-template-columns: unset;
+			inset-inline-start: var(--_x);
+			position: absolute;
+			translate: calc(0% - var(--_w, 0%)) 0;
+			small {
+				margin-block-start: .25em;
+			}
+		}
+		output {
+			--_b: 1.25em;
+			--_h: .625em;
+			--_p: 50%;
+			background: var(--AccentColor);
+			border-image: fill 0//var(--_h) conic-gradient(var(--AccentColor) 0 0);
+			border-radius: .5ch;
+			clip-path: polygon(0 100%,0 0,100% 0,100% 100%,
+				min(100%,var(--_p) + var(--_b)/2) 100%,
+				var(--_p) calc(100% + var(--_h)),
+				max(0%  ,var(--_p) - var(--_b)/2) 100%);
+			font-size: smaller;
+			grid-area: 1 / 1;
+			inset-inline-start: var(--_x);
+			padding: 0 .5ch;
+			position: absolute;
+			translate: calc(0% - var(--_w, 0%) / 2) 0;
+		}
+		progress {
+			margin-top: .5em;
+			&::-webkit-progress-value {
+				transition: unset;
+			}
+		}
+	}
+}

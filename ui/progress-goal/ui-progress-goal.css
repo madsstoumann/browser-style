@@ -1,44 +1,47 @@
 @layer bs-component {
 	:where(.ui-progress-goal) {
 		--ui-progress-bs: 2em;
-		align-items: center;
-		background-color: var(--ButtonBorder);
-		block-size: var(--ui-progress-bs);
-		border: 0;
-		border-radius: var(--input-bdrs);
-		display: grid;
-		width: 100%;
-
 		&::before {
 			color: var(--AccentColorText);
 			content: attr(data-progress) " " attr(value) attr(data-unit);
-			grid-area: 1 / 1;
 			isolation: isolate;
 			padding-inline-start: 1ch;
 		}
 		&::after {
 			content: attr(data-goal) " " attr(max) attr(data-unit);
-			grid-area: 1 / 1;
 			isolation: isolate;
 			justify-self: end;
 			padding-inline-end: 1ch;
 		}
 
-		&::-webkit-progress-bar {
-			background: transparent;
-			border-radius: inherit;
+		progress {
+			align-items: center;
+			background-color: var(--ButtonBorder);
+			block-size: var(--ui-progress-bs);
+			border: 0;
+			border-radius: var(--input-bdrs);
+			width: 100%;
+
+			&::-webkit-progress-bar {
+				background: transparent;
+				border-radius: inherit;
+			}
+			&::-webkit-progress-inner-element {
+				border-radius: inherit;
+				grid-area: 1 / 1;
+			}
+			&::-webkit-progress-value {
+				background: var(--AccentColor);
+				border-radius: inherit;
+			}
+			&::-moz-progress-bar {
+				background-color: var(--AccentColor);
+				border-radius: inherit;
+			}
 		}
-		&::-webkit-progress-inner-element {
-			border-radius: inherit;
-			grid-area: 1 / 1;
-		}
-		&::-webkit-progress-value {
-			background: var(--AccentColor);
-			border-radius: inherit;
-		}
-		&::-moz-progress-bar {
-			background-color: var(--AccentColor);
-			border-radius: inherit;
+		&::after, &::before, progress {
+			align-self: center;
+			grid-area: 2 / 1 / 3 / 1;
 		}
 	}
 }

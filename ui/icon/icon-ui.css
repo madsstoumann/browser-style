@@ -55,6 +55,7 @@
 		&[type~=minus]::after,
 		&[type*=plus]::after {
 			background-color: currentColor;
+			/* border-radius: .5em; */
 			height: var(--_bdw);
 			width: 1em;
 		}

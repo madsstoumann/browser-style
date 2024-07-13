@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Slider</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-slider.css">
+
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+	<link rel="stylesheet" href="../scroll/ui-scroll.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Slider Control</h2>
+	<p>
+		Alternate, auto-playing versions of <strong>Slider</strong> with <code>data-scroll-auto-play</code> — and a control panel or progress indicator.
+	</p>
+	<p>With <code>--control</code>:</p>
+	<div class="ui-slider">
+		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --control" data-scroll-auto-play="3000">
+			<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/11/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/12/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/13/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/14/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/15/320/180" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div class="ui-slider" dir="rtl">
+		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --control" data-scroll-auto-play="3000">
+			<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/11/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/12/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/13/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/14/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/15/320/180" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<p>With <code>--inside</code> and <code>--progress</code>:</p>
+	
+	<div class="ui-slider">
+		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside --progress" data-scroll-auto-play="3000">
+			<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/11/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/12/320/180" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div class="ui-slider" dir="rtl">
+		<div class="ui-scroll" data-scroll-nav="ui-scroll-nav --inside --progress" data-scroll-auto-play="3000">
+			<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/11/320/180" alt="Random image" width="320" height="180">
+			<img src="https://picsum.photos/id/12/320/180" alt="Random image" width="320" height="180">
+		</div>
+	</div>
+
+	<script type="module">
+		import { common, init } from './../../assets/js/common.js';
+		import uiScroll from './../scroll/uiScroll.js';
+
+		// const scrollable = document.querySelectorAll('.ui-scroll');
+		// scrollable.forEach((scroll) => {
+		// 	uiScroll(scroll, scroll.dataset);
+		// });
+		// common();
+		init('.ui-scroll', uiScroll);
+	</script>
+
+</body>
+</html>
