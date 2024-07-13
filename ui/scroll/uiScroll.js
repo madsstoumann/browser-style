@@ -21,12 +21,11 @@ export default function uiScroll(scroll, args = {}) {
 
   /* Hack for Chrome issue with smooth scrolling, when there are multiple containers with smooth-scrolling on same page */
   const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-  if (isChrome) {
-    config.scrollBehavior = 'instant';
+  if (isChrome && config.scrollAutoPlay > 0) {
     // Count the number of uiScroll instances
-    const uiScrollInstances = document.querySelectorAll('[data-scroll-enabled]').length;
+    // const uiScrollInstances = document.querySelectorAll('[data-scroll-enabled]').length;
     // If the browser is Chrome and there are multiple instances, set scroll behavior to 'instant'
-    if (uiScrollInstances > 1) config.scrollBehavior = 'instant';
+    // if (uiScrollInstances > 1) config.scrollBehavior = 'instant';
   }
 
   if (scroll.hasAttribute('data-scroll-enabled')) return
@@ -152,17 +151,17 @@ export default function uiScroll(scroll, args = {}) {
   })
 
   /* Observers / Init */
-  // const intersectionObserver = new IntersectionObserver((entries) => {
-  //   entries.forEach(entry => {
-  //     if (entry.isIntersecting) {
-  //       index = Math.floor(items.findIndex(item => item === entry.target) / itemsPerPage)
-  //       updateUI(index)
-  //     }
-  //     entry.target.classList.toggle(config.scrollActive, entry.isIntersecting)
-  //     entry.target.inert = !entry.isIntersecting
-  //   })
-  // })
-  // items.forEach(item => intersectionObserver.observe(item))
+  const intersectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        index = Math.floor(items.findIndex(item => item === entry.target) / itemsPerPage)
+        updateUI(index)
+      }
+      entry.target.classList.toggle(config.scrollActive, entry.isIntersecting)
+      entry.target.inert = !entry.isIntersecting
+    })
+  })
+  items.forEach(item => intersectionObserver.observe(item))
 
   const resizeObserver = new ResizeObserver((entries) => {
     const entryInlineSize = Math.floor(entries[0].contentBoxSize[0].inlineSize)
