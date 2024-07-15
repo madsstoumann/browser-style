@@ -1,6 +1,6 @@
 import { calculatePages, dataFromTable, fetchData } from './modules/data.js';
 import { i18n, baseTranslate } from './modules/i18n.js';
-import { renderTable, renderTBody, updateNavigation } from './modules/render.js';
+import { renderTable, renderTBody, renderTHead, updateNavigation } from './modules/render.js';
 import { capitalize, consoleLog } from './modules/utils.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/form.js';
@@ -398,8 +398,8 @@ export default class DataGrid extends HTMLElement {
 			}
 			else {
 				renderTBody(this);
+				renderTHead(this);
 			}
-			
 		} else {
 			this.console(`Invalid data format: ${newData}`, '#F00');
 		}
