@@ -203,9 +203,10 @@
 		/* Stroke */
 		&[stroke*=xs] { --ui-icon-stroke: 0.003125em; }
 		&[stroke*=sm] { --ui-icon-stroke: 0.0625em; }
-		&[stroke*=md] { --ui-icon-stroke: 0.125em; }
-		&[stroke*=lg] { --ui-icon-stroke: 0.1875em; }
-		&[stroke*=xl] { --ui-icon-stroke: 0.25em; }
+		&[stroke*=md] { --ui-icon-stroke: 0.09375em; }
+		&[stroke*=lg] { --ui-icon-stroke: 0.125em; }
+		&[stroke*=xl] { --ui-icon-stroke: 0.1875em; }
+		&[stroke*=xxl] { --ui-icon-stroke: 0.25em; }
 
 
 		/* Hover */

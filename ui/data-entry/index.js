@@ -12,7 +12,7 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * @class
  * @extends {HTMLElement}
  */
-class DataEntry extends HTMLElement {
+export default class DataEntry extends HTMLElement {
 	static observedAttributes = ['data', 'validation'];
 
 	constructor() {
