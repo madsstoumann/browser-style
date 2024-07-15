@@ -15,15 +15,18 @@
 			place-content: start start;
 		}
 		ui-icon {
-			--_bdrs: 5%;
-			--_bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
-			--_fz: 300%;
-			--_p: .25em;
+			--ui-icon-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+			--ui-icon-bdrs: 5%;
+			--ui-icon-p: .25em;
+			--ui-icon-size: 300%;
+			/* --ui-icon-stroke: 2px; */
+			
 			&[open] {
-				--_bg: gold;
+				--ui-icon-bg: gold;
 			}
 		}
 		body {
+			font-family: system-ui, sans-serif;
 			margin-inline: auto;
 			max-width: 80ch;
 		}
@@ -40,30 +43,30 @@
 
 <p>
 	<ui-icon type="chevron left"></ui-icon>
-	<ui-icon type="chevron right"></ui-icon>
-	<ui-icon type="chevron down"></ui-icon>
-	<ui-icon type="chevron up"></ui-icon>
+	<ui-icon type="chevron right" state="45"></ui-icon>
+	<ui-icon type="chevron down" state="flip-y" hover="rotate-90" focus="scale-1.5"></ui-icon>
+	<ui-icon type="chevron up" state="flip-y"></ui-icon>
 </p>
 
 <p>
 	<ui-icon type="arrow left"></ui-icon>
 	<ui-icon type="arrow right"></ui-icon>
-	<ui-icon type="arrow down"></ui-icon>
-	<ui-icon type="arrow up"></ui-icon>
+	<ui-icon type="arrow down" state="flip-y"></ui-icon>
+	<ui-icon type="arrow up" state="flip-y"></ui-icon>
 </p>
 
 <p>
-	<ui-icon type="arrow upleft"></ui-icon>
-	<ui-icon type="arrow upright"></ui-icon>
-	<ui-icon type="arrow downleft"></ui-icon>
-	<ui-icon type="arrow downright"></ui-icon>
+	<ui-icon type="arrow upleft" state="flip"></ui-icon>
+	<ui-icon type="arrow upright" state="flip"></ui-icon>
+	<ui-icon type="arrow downleft" state="flip"></ui-icon>
+	<ui-icon type="arrow downright" state="flip"></ui-icon>
 </p>
 
 <p>
 	<ui-icon type="triangle left"></ui-icon>
 	<ui-icon type="triangle right"></ui-icon>
-	<ui-icon type="triangle down"></ui-icon>
-	<ui-icon type="triangle up"></ui-icon>
+	<ui-icon type="triangle down" state="flip-y"></ui-icon>
+	<ui-icon type="triangle up" state="flip-y"></ui-icon>
 </p>
 
 <p>
@@ -72,10 +75,10 @@
 </p>
 
 <p>
-	<ui-icon type="drag"></ui-icon>
-	<ui-icon type="grid"></ui-icon>
-	<ui-icon type="kebab"></ui-icon>
-	<ui-icon type="meatball"></ui-icon>
+	<ui-icon type="drag" rounded></ui-icon>
+	<ui-icon type="grid" rounded></ui-icon>
+	<ui-icon type="kebab" rounded></ui-icon>
+	<ui-icon type="meatball" rounded></ui-icon>
 </p>
 
 <p>
@@ -105,6 +108,18 @@
 
 	<!-- Including the Web Component script from an external file -->
 	<!-- <script type="module" src="index.js"></script>-->
+
+	<h2>
+		SVG
+	</h2>
+
+	<ui-icon>
+		<svg viewBox="0 0 24 24">
+			<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+			<path d="M13.5 6.5l4 4"></path>
+		</svg>
+	</ui-icon>
+
 
 	<script>
 		const icons = document.querySelectorAll('ui-icon');

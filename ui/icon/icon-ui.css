@@ -1,22 +1,27 @@
 @layer bs-component {
 	:where(ui-icon) {
-		--_o: 0;
-		--_bdrs: 50%;
-		--_bdw: 0.0625em;
-		--_bdwh: calc(var(--_bdw) / 2);
-		--_cosh: calc(1em * cos(45deg));
-		--_fz: 100%;
-		--_trs: .25s cubic-bezier(.4, 0, .2, 1);
-		--_cpw: calc(100% - (1.5 * var(--_p, 0em)));
+		/* public properties */
+		--ui-icon-size: 100%;
+		--ui-icon-stroke: 0.0625em;
+		--ui-icon-trs: .25s cubic-bezier(.4, 0, .2, 1);
 
-		background: var(--_bg, transparent);
-		border-radius: var(--_bdrs);
+		/* private properties */
+		--_bdwh: calc(var(--ui-icon-stroke) / 2);
+		--_cosh: calc(1em * cos(45deg));
+		--_cpw: calc(100% - (1.5 * var(--ui-icon-p, 0em)));
+
+		--_o: 0; /* open state */
+		--_r: 0; /* rounded */
+
+		background: var(--ui-icon-bg, transparent);
+		border: var(--ui-icon-bdw, 0) solid var(--ui-icon-bdc, currentColor);
+		border-radius: var(--ui-icon-bdrs, 50%);
 		display: grid;
-		font-size: var(--_fz);
-		height: var(--_w, 1em);
-		padding: var(--_p, 0em);
-		transition: var(--_trs);
-		width: var(--_w, 1em);
+		font-size: var(--ui-icon-size);
+		height: 1em;
+		padding: var(--ui-icon-p, 0em);
+		transition: var(--ui-icon-trs);
+		width: 1em;
 
 		&::before,
 		&::after {
@@ -25,7 +30,7 @@
 			display: block;
 			grid-area: 1 / 1;
 			place-self: center;
-			transition: var(--_trs);
+			transition: var(--ui-icon-trs);
 		}
 		&::before {
 			aspect-ratio: 1 / 1;
@@ -35,13 +40,15 @@
 
 		/* State */
 		[open] > * > &, :checked + &, &[open] { --_o: 1; }
+		&[rounded] { --_r: 1; }
 
+		/* Types */
 		&[type~=arrow]::after,
 		&[type~=check]::after,
 		&[type~=chevron]::after {
 			border-color: currentColor;
 			border-style: solid;
-			border-width: var(--_bdw) var(--_bdw) 0 0;
+			border-width: var(--ui-icon-stroke) var(--ui-icon-stroke) 0 0;
 			height: var(--_cosh);
 			rotate: 45deg;
 			width: var(--_cosh);
@@ -55,15 +62,15 @@
 		&[type~=minus]::after,
 		&[type*=plus]::after {
 			background-color: currentColor;
-			/* border-radius: .5em; */
-			height: var(--_bdw);
+			border-radius: calc(var(--_r) * var(--ui-icon-stroke));
+			height: var(--ui-icon-stroke);
 			width: 1em;
 		}
 		&[type*=arrow]::before {
-			width: calc(1em - var(--_bdw));
+			width: calc(1em - var(--ui-icon-stroke));
 		}
 		&[type=check]::after {
-			border-width: 0 var(--_bdw) var(--_bdw) 0;
+			border-width: 0 var(--ui-icon-stroke) var(--ui-icon-stroke) 0;
 			height: calc(1em * cos(22.5deg));
 			translate: 0 calc((.25em - var(--_bdwh)) * cos(45deg) * -1);
 			width: calc(var(--_cosh) * 0.6);
@@ -90,7 +97,7 @@
 
 		/* Angles */
 		&[type~=down] { rotate: 90deg; }
-		&[type~=down], &[type~=up] { scale: calc(-2 * var(--_o) + 1) 1; }
+		/* &[type~=down], &[type~=up] { scale: calc(-2 * var(--_o) + 1) 1; } */
 		&[type~=left] { scale: -1; rotate: calc(-90deg * var(--_o)); }
 		&[type~=right] { rotate: calc(90deg * var(--_o)); }
 		&[type~=up] { rotate: -90deg; }
@@ -110,14 +117,14 @@
 			&::after { rotate: unset; }
 			&::before { rotate: 135deg; }
 		}
-		&[type~=downleft], &[type~=downright], &[type~=upleft], &[type~=upright] { scale: calc(-2 * var(--_o) + 1); }
+		/* &[type~=downleft], &[type~=downright], &[type~=upleft], &[type~=upright] { scale: calc(-2 * var(--_o) + 1); } */
 
 		/* Grid, Kebab, Meatball */
 		&[type=drag]::before,
 		&[type=grid]::before,
 		&[type=kebab]::before,
 		&[type=meatball]::before {
-			border-radius: 50%;
+			border-radius: calc(var(--_r) * 50%);
 			width: .2em;
 		}
 		&[type=drag]::before {
@@ -166,19 +173,46 @@
 		&[type=stop]::before { --_bw: var(--_cpw); clip-path: inset(0 0 0 0 round 2px); }
 		&[type*=triangle]::before { --_bw: var(--_cpw); clip-path: polygon(25% 0%, 100% 50%, 25% 100%); }
 
+		/* SVG: work-in-progress */
+		&:has(svg) {
+			&::before, &::after {
+				display: none;
+			}
+			fill: none;
+			height: 1em;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: calc(var(--ui-icon-stroke) / 2);
+			stroke: currentColor;
+			width: 1em;
+		}
+
+		/* State */
+		&[state=flip]   { scale: calc(-2 * var(--_o) + 1); }
+		&[state=flip-x] { scale: 1 calc(-2 * var(--_o) + 1); }
+		&[state=flip-y] { scale: calc(-2 * var(--_o) + 1) 1; }
+
 		/* Size */
-		&[size*=xs] { --_fz: 50%; }
-		&[size*=sm] { --_fz: 60%; }
-		&[size*=md] { --_fz: 80%; }
-		&[size*=lg] { --_fz: 120%; }
-		&[size*=xl] { --_fz: 140%; }
-		&[size*=xxl] { --_fz: 200%; }
+		&[size*=xs]  { --ui-icon-size: 50%; }
+		&[size*=sm]  { --ui-icon-size: 60%; }
+		&[size*=md]  { --ui-icon-size: 80%; }
+		&[size*=lg]  { --ui-icon-size: 120%; }
+		&[size*=xl]  { --ui-icon-size: 140%; }
+		&[size*=xxl] { --ui-icon-size: 200%; }
 
 		/* Stroke */
-		&[stroke*=xs] { --_bdw: 0.003125em; }
-		&[stroke*=sm] { --_bdw: 0.0625em; }
-		&[stroke*=md] { --_bdw: 0.125em; }
-		&[stroke*=lg] { --_bdw: 0.1875em; }
-		&[stroke*=xl] { --_bdw: 0.25em; }
+		&[stroke*=xs] { --ui-icon-stroke: 0.003125em; }
+		&[stroke*=sm] { --ui-icon-stroke: 0.0625em; }
+		&[stroke*=md] { --ui-icon-stroke: 0.125em; }
+		&[stroke*=lg] { --ui-icon-stroke: 0.1875em; }
+		&[stroke*=xl] { --ui-icon-stroke: 0.25em; }
+
+
+		/* Hover */
+		/* @media (hover: hover) {
+			&[hover~="rotate-90"]:hover::after {
+				translate: 1px;
+			}
+		} */
 	}
 }
