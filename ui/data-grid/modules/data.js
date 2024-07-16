@@ -13,8 +13,8 @@ export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 		const tbody = getTableBody(table, thead);
 		return {
 			cols: (thead.length - hiddenCount) + (selectable ? 1 : 0),
+			items: tbody.length,
 			pages: calculatePages(tbody.length, itemsPerPage),
-			rows: tbody.length,
 			tbody,
 			thead
 		};
@@ -103,8 +103,8 @@ export function parseData(data, context) {
 
 		return {
 			cols: (data.thead.length - hiddenCount) + (context.options.selectable ? 1 : 0),
+			items: data.tbody.length,
 			pages: calculatePages(data.tbody.length, context.state.itemsPerPage),
-			rows: data.tbody.length,
 			tbody: data.tbody,
 			thead: data.thead
 		};

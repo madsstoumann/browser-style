@@ -64,6 +64,7 @@ export default function handleKeyboardEvents(event, context) {
 	};
 
 	const handleEndKey = () => {
+		event.preventDefault();
 		if (!shiftKey) {
 			context.state.cellIndex = cols - 1;
 		}
@@ -73,6 +74,7 @@ export default function handleKeyboardEvents(event, context) {
 	};
 
 	const handleHomeKey = () => {
+		event.preventDefault();
 		if (!shiftKey) {
 			context.state.cellIndex = 0;
 		}
@@ -89,6 +91,7 @@ export default function handleKeyboardEvents(event, context) {
 	};
 
 	const handlePageKeys = (direction) => {
+		event.preventDefault();
 		if (direction === 'PageDown') {
 			context.next();
 		} else if (direction === 'PageUp') {

@@ -1,6 +1,6 @@
 import { calculatePages, dataFromTable, fetchData } from './modules/data.js';
 import { i18n, baseTranslate } from './modules/i18n.js';
-import { renderTable, renderTBody, renderTHead, updateNavigation } from './modules/render.js';
+import { renderTable, renderTBody, renderTHead } from './modules/render.js';
 import { capitalize, consoleLog } from './modules/utils.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/form.js';
@@ -10,8 +10,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.11
- * @summary 15-07-2024
+ * @version 1.0.12
+ * @summary 16-07-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -21,7 +21,7 @@ export default class DataGrid extends HTMLElement {
 		super();
 
 		this.console = (message, color) => consoleLog(message, color, this.options.debug);
-		this.dataSet = false;
+		this.dataInitialized = false;
 
 		this.defaultLang = {
 			en: {
@@ -60,12 +60,12 @@ export default class DataGrid extends HTMLElement {
 			cellIndex: 0,
 			cols: 0,
 			editing: false,
-			itemsPerPage: 10,
+			items: 0, /* total amount of items */
+			itemsPerPage: parseInt(this.getAttribute('itemsperpage'), 10) || 10,
 			page: 0,
 			pages: 0,
-			pageItems: 0,
+			pageItems: 0, /* actual amount of items on the current page */
 			rowIndex: 0,
-			rows: 0,
 			selected: new Set(),
 			sortIndex: -1,
 			sortOrder: 0,
@@ -109,7 +109,7 @@ export default class DataGrid extends HTMLElement {
 
 	async connectedCallback() {
 		if (!this.getAttribute('data')) {
-			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.rows;
+			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.items;
 			renderTable(this);
 		}
 	}
@@ -120,8 +120,8 @@ export default class DataGrid extends HTMLElement {
 	
 		if (name === 'data') {
 			try {
-				const jsonData = JSON.parse(newValue);
-				this.state = Object.assign(this.state, jsonData);
+				const data = JSON.parse(newValue);
+				this.state = Object.assign(this.state, data);
 				renderTable(this);
 			} catch (e) {
 				fetchData(newValue, this).then(data => {
@@ -130,15 +130,11 @@ export default class DataGrid extends HTMLElement {
 				});
 			}
 		}
-		if (name === 'items') {
-			this.state.items = parseInt(newValue, 10);
-			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
-			updateNavigation(this);
-		}
 		if (name === 'itemsperpage') {
 			this.state.itemsPerPage = parseInt(newValue, 10);
-			if (this.state.itemsPerPage === -1) this.state.itemsPerPage = this.state.rows;
+			if (this.state.itemsPerPage === -1) this.state.itemsPerPage = this.state.items;
 			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
+			this.dispatch('dg:itemsperpage', this.state);
 			if (render) {
 				this.setAttribute('page', 0);
 				renderTBody(this);
@@ -148,7 +144,7 @@ export default class DataGrid extends HTMLElement {
 			this.state.page = parseInt(newValue, 10);
 			if (render) {
 				this.dispatch('dg:pagechange', this.state);
-				if (!this.dataSet) renderTBody(this);
+				renderTBody(this);
 			}
 		}
 		if (name === 'searchterm') {
@@ -351,23 +347,6 @@ export default class DataGrid extends HTMLElement {
 	Getters and Setters
 	===================
 	*/
-	get config() {
-		return this._config;
-	}
-
-	set config(newConfig) {
-		this._config = newConfig;
-		if (this.state.thead.length > 0) {
-			this.applyConfig(newConfig);
-			renderTHead(this);
-			renderTBody(this);
-		}
-	}
-
-	get data() {
-		return this.state.tbody;
-	}
-
 	set data(newData) {
 		if (Array.isArray(newData)) {
 			this.state.tbody = newData;
@@ -385,20 +364,19 @@ export default class DataGrid extends HTMLElement {
 				this.state.cols = 0;
 			}
 
-			this.state.rows = newData.length;
-			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
+			this.state.items = this.state.items || newData.length;
+			this.state.pages = this.state.pages || calculatePages(this.state.items, this.state.itemsPerPage);
 
 			if (this.config) {
 				this.applyConfig(this.config);
 			}
 
-			if (!this.dataSet) {
+			if (!this.dataInitialized) {
 				renderTable(this);
-				this.dataSet = true;
+				this.dataInitialized = true;
 			}
 			else {
 				renderTBody(this);
-				renderTHead(this);
 			}
 		} else {
 			this.console(`Invalid data format: ${newData}`, '#F00');

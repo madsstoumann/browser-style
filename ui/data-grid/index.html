@@ -30,6 +30,7 @@
 		exportable
 		id="grid"
 		itemsperpage="10"
+		nowrap
 		page="0"
 		printable
 		searchable
@@ -158,6 +159,14 @@
 			grid.dispatchEvent(new CustomEvent('dg:append', { detail: dataToAppend }));
 		});
 
+		/* === FORMATTERS === */
+		const formatters = {
+			bold: (value) => `<strong>${value}</strong>`,
+			email: (value) => `<a href="mailto:${value}" tabindex="-1">${value}</a>`,
+			semibold: (value) => `<b>${value}</b>`,
+			gray: (value) => `<span class="c-gray">${value}</span>`,
+		}
+
 		/* === FETCH EXAMPLE === */
 		document.addEventListener('DOMContentLoaded', () => {
 			const grid2 = document.getElementById('grid2');
@@ -185,6 +194,7 @@
 			}
 
 			// Set initial data and total
+			grid2.formatters = formatters;
 			grid2.config = {
 				thead: [
 					{ field: 'id', label: 'ID', uid: true },
@@ -193,6 +203,11 @@
 					{ field: 'email', label: 'Email', formatter: 'email' }
 				]
 			};
+
+			// grid2.itemsPerPage = 25;
+			grid2.state.items = 20;
+			grid2.state.pages = 4;
+
 			grid2.data = [
 				{ id: 1, name: 'John Doe', age: 30, email: 'john@example.com' },
 				{ id: 2, name: 'Jane Doe', age: 25, email: 'jane@example.com' },
@@ -200,7 +215,6 @@
 				{ id: 4, name: 'Jack Daniels', age: 40, email: 'jack@example.com' },
 				{ id: 5, name: 'Johnny Walker', age: 45, email: 'johnny@example.com' }
 			];
-			grid2.setAttribute('items', '15');
 
 			// Listen for page navigation changes
 			grid2.addEventListener('dg:pagechange', (event) => {
@@ -210,6 +224,10 @@
 					grid2.data = newData;
 				});
 			});
+			grid2.addEventListener('dg:itemsperpage', (event) => {
+				const { page, itemsPerPage } = event.detail;
+				console.log('Items per page changed:', itemsPerPage);
+			});
 		});
 
 
@@ -217,12 +235,7 @@
 		const grid3 = document.createElement('data-grid');
 		grid3.setAttribute('data', './data/data.json');
 
-		const formatters = {
-			bold: (value) => `<strong>${value}</strong>`,
-			email: (value) => `<a href="mailto:${value}" tabindex="-1">${value}</a>`,
-			semibold: (value) => `<b>${value}</b>`,
-			gray: (value) => `<span class="c-gray">${value}</span>`,
-		}
+
 
 		const i18n = {
 			fr: {

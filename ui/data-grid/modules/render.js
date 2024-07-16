@@ -82,10 +82,14 @@ export function renderTBody(context) {
 			return;
 		}
 
-		const page = context.dataSet ? data : paginate(context, data);
+		const page = context.dataInitialized ? data : paginate(context, data);
 
-		if (!context.dataSet) {
-			Object.assign(context.state, { pageItems: page.length, items: data.length, pages: calculatePages(data.length, context.state.itemsPerPage) });
+		if (!context.dataInitialized) {
+			Object.assign(context.state, {
+				pageItems: page.length,
+				items: context.state.items || data.length,
+				pages: context.state.pages || calculatePages(data.length, context.state.itemsPerPage),
+			});
 		}
 
 		const uid = thead.find(cell => cell.uid)?.field;

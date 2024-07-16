@@ -6,6 +6,7 @@
 		position: relative;
 
 		[hidden] { display: none; }
+		&[nowrap] :is(td,th) { text-wrap: nowrap; }
 
 		& > div {
 			overflow-x: auto;
