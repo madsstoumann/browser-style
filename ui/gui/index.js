@@ -2,12 +2,12 @@
  * GUI Control
  * description
  * @author Mads Stoumann
- * @version 1.0.01
- * @summary 20-06-2024
+ * @version 1.0.02
+ * @summary 19-07-2024
  * @class
  * @extends {HTMLElement}
  */
-export class GuiControl extends HTMLElement {
+export default class GuiControl extends HTMLElement {
 	static observedAttributes = [];
 
 	constructor() {
@@ -35,6 +35,7 @@ export class GuiControl extends HTMLElement {
 			li.dataset.value = value;
 			if (output) output.textContent = value;
 			this.scope.style.setProperty(input.dataset.property, value);
+			this.dispatchEvent(new CustomEvent('gui-input', { detail: { form: this.form, input, value } }));
 		});
 	}
 

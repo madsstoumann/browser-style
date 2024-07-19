@@ -93,7 +93,7 @@
   <gui-control scope="body"></gui-control>
 
   <script type="module">
-    import { GuiControl } from './index.js';
+    import GuiControl from './index.js';
     const GUI = document.querySelector('gui-control');
     GUI.addRange('Range 1', 50, '--range-1', { min: 0, max: 100 });
     GUI.addRange('Range 2', -25, '--range-2', { min: -50, max: 50 });
@@ -105,6 +105,9 @@
       { key: 'monospace', value: 'ui-monospace, monospace' }
     ]});
     GUI.addReset('Reset');
+    GUI.addEventListener('gui-input', e => {
+      console.log(e.detail);
+    });
   </script>
 </body>
 </html>
