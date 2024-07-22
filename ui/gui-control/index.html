@@ -90,24 +90,65 @@
   }
 </pre>
 
-  <gui-control scope="body"></gui-control>
+  <gui-control scope="body" position="top right"></gui-control>
 
   <script type="module">
     import GuiControl from './index.js';
     const GUI = document.querySelector('gui-control');
-    GUI.addRange('Range 1', 50, '--range-1', { min: 0, max: 100 });
-    GUI.addRange('Range 2', -25, '--range-2', { min: -50, max: 50 });
-    GUI.addColor('Color', '#FF0000', '--color-1');
+    GUI.addRange('Range 1', 50, '--range-1', { min: 0, max: 100, name: 'range1' });
+    GUI.addRange('Range 2', -25, '--range-2', { min: -50, max: 50, name: 'range2' });
+    GUI.addColor('Color', '#FF0000', '--color-1', { name: 'color1' });
     GUI.addCheckbox('Checkbox', 'dark', '--checkbox-1', { checked: 'checked', 'data-unchecked': 'light' });
     GUI.addSelect('Select', 'serif', '--select-1', { options: [
       { key: 'sans-serif', value: 'ui-sans-serif, system-ui, sans-serif' }, 
       { key: 'serif', value: 'ui-serif, serif' },
       { key: 'monospace', value: 'ui-monospace, monospace' }
     ]});
-    GUI.addReset('Reset');
-    GUI.addEventListener('gui-input', e => {
-      console.log(e.detail);
+    GUI.addSelect('Preset', '', '', { 
+      options: [
+        { key: 'Preset 1', value: JSON.stringify({ 'range1': 100, 'range2': 0, 'color1': '#00FFAA'}) },
+        { key: 'Preset 2', value: JSON.stringify({ 'range1': 25, 'range2': 25, 'color1': '#FF00AA'}) },
+        { key: 'Preset 3', value: JSON.stringify({ 'range1': 75, 'range2': -25, 'color1': '#FFAA00'}) }
+      ], 
+        defaultOption: 'Select a preset',
+        'data-action': 'preset' 
     });
+    GUI.addSelect('Position', 'Top Right', '', { 
+      options: [
+        { key: 'Top Left', value: 'top left' },
+        { key: 'Top Right', value: 'top right' },
+        { key: 'Bottom Left', value: 'bottom left' },
+        { key: 'Bottom Right', value: 'bottom right' }
+      ], 
+        'data-action': 'position' 
+    });
+    GUI.addButton('Save preset', 'Save new preset?', 'button', { 'data-action': 'save-preset' });
+    GUI.addButton('', 'Reset all?', 'reset', { 'data-action': 'reset' });
+
+    GUI.addEventListener('gui-input', e => {
+      const obj = e.detail;
+      console.log(obj);
+      switch(obj.action) {
+        case 'position':
+          GUI.setAttribute('position', obj.value);
+          break;
+        case 'preset':
+          const preset = JSON.parse(obj.value);
+          for (const [key, value] of Object.entries(preset)) {
+            const input = GUI.form.elements[key];
+            if (input) {
+              if (input.type === 'checkbox') {
+                input.checked = value === input.value;
+              } else {
+                input.value = value;
+              }
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          }
+          break;
+      }
+    });
+
   </script>
 </body>
 </html>

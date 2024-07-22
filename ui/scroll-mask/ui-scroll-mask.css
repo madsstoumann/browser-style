@@ -1,0 +1,19 @@
+@layer bs-component {
+	:where(.ui-scroll-mask) {
+		animation: mask-up both linear, mask-down both linear;
+		animation-timeline: scroll(self);
+		animation-range: 0 1rem;
+		mask: linear-gradient(white, transparent) 50% 0 / 100% 0 no-repeat,
+					linear-gradient(white, white) 50% 50% / 100% 100% no-repeat,
+					linear-gradient(transparent, white) 50% 100% / 100% 100px no-repeat;
+		mask-composite: exclude;
+		overflow-y: scroll;
+	}
+
+	@​keyframes mask-up {
+		to { mask-size: 100% 120px, 100% 100%; }
+	}
+	@keyframes mask-down {
+		to { mask-size: 100% 100px, 100% 100%, 100% 0; }
+	}
+}

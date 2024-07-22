@@ -2,8 +2,8 @@
  * GUI Control
  * description
  * @author Mads Stoumann
- * @version 1.0.02
- * @summary 19-07-2024
+ * @version 1.0.03
+ * @summary 22-07-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -26,6 +26,13 @@ export default class GuiControl extends HTMLElement {
 		this.list = this.shadowRoot.querySelector('ul');
 		this.scope = document.querySelector(this.getAttribute('scope')) || document.documentElement;
 
+		this.form.addEventListener('click', (event) => {
+			const node = event.target;
+			if (node.tagName === 'BUTTON') {
+				this.dispatchEvent(new CustomEvent('gui-input', { detail: { input: node, action: node.dataset.action || '' } }));
+			}
+		});
+
 		this.form.addEventListener('input', (event) => {
 			const input = event.target;
 			const li = input.closest('li');
@@ -35,7 +42,7 @@ export default class GuiControl extends HTMLElement {
 			li.dataset.value = value;
 			if (output) output.textContent = value;
 			this.scope.style.setProperty(input.dataset.property, value);
-			this.dispatchEvent(new CustomEvent('gui-input', { detail: { form: this.form, input, value } }));
+			this.dispatchEvent(new CustomEvent('gui-input', { detail: { input, value, action: input.dataset.action || '' } }));
 		});
 	}
 
@@ -45,9 +52,13 @@ export default class GuiControl extends HTMLElement {
 		li.setAttribute('part', 'li')
 		if (value) {
 				li.dataset.value = value;
-				this.scope.style.setProperty(property, value);
+				if (property) this.scope.style.setProperty(property, value);
 		}
 		this.list.appendChild(li);
+	}
+
+	addButton(label, text, type, attributes = {}) {
+		this.add(`<button type="${type||'button'}" part="${type||'button'}" ${this.attrs(attributes)}>${text}</button>`, label);
 	}
 
 	addCheckbox(label, value, property, attributes = {}) {
@@ -65,15 +76,18 @@ export default class GuiControl extends HTMLElement {
 		this.add(`<input type="range" part="range" ${this.attrs(attributes)}><output part="output">${value}</output>`, label, value, property);
 	}
 
-	addReset(label) {
-		this.add(`<button type="reset" part="reset">${label || 'Reset'}</button>`);
-	}
-
 	addSelect(label, value, property, attributes = {}) {
 		if (!attributes.options) return;
 		this.ext(attributes, value, property);
-		const options = attributes.options.map(option => 
-			`<option value="${option.value}"${option.key === value ? ' selected' : ''}>${option.key}</option>`
+		let options = '';
+
+		if (attributes.defaultOption) {
+			options += `<option selected disabled value="">${attributes.defaultOption}</option>`;
+			delete attributes.defaultOption;
+		}
+
+		options += attributes.options.map(option => 
+			`<option value='${option.value}'${option.key === value ? ' selected' : ''}>${option.key}</option>`
 		).join('');
 		delete attributes.options;
 		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property);
@@ -82,14 +96,14 @@ export default class GuiControl extends HTMLElement {
 	attrs(attributes) {
 		return Object.entries(attributes).map(([key, value]) => {
 			if (value === '') return '';
-			if (value === key) return key; // Set boolean attributes
+			if (value === key) return key;
 			return `${key}="${value}"`;
 		}).join(' ');
 	}
 
 	ext(attributes, value, property) {
 		attributes.value = value;
-		attributes['data-property'] = property;
+		if (property) attributes['data-property'] = property;
 		return attributes;
 	}
 }
@@ -103,12 +117,13 @@ stylesheet.replaceSync(`
 	--_bg: #303030;
 	--_gap: .33em;
 	--_h: 1lh;
+	--_w: 280px;
 
 	background: #2c2c2c;
 	color: #eee;
 	font-family: ui-sans-serif, system-ui;
 	font-size: small;
-	inline-size: fit-content;
+	inline-size: var(--_w);
 	inset-block: 0 auto;
 	inset-inline: auto 0;
 	position: fixed;
@@ -117,6 +132,15 @@ stylesheet.replaceSync(`
 :host([position~="bottom"]) { inset-block: auto 0; }
 :host([position~="left"]) { inset-inline: 0 auto; }
 
+button {
+	background: var(--_bg);
+	border: 1px solid var(--_c);
+	border-radius: 0;
+	color: var(--_c);
+	font-family: inherit;
+	font-size: inherit;	
+	grid-column: span 2;
+}
 label {
 	display: contents;
 	gap: calc(2 * var(--_gap));
