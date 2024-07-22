@@ -8,11 +8,9 @@
  * @extends {HTMLElement}
  */
 export default class GuiControl extends HTMLElement {
-	static observedAttributes = [];
-
 	constructor() {
 		super();
-		const shadow = this.attachShadow({ mode: 'open' })
+		const shadow = this.attachShadow({ mode: 'open' });
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.innerHTML = `
 		<details open>
@@ -27,9 +25,8 @@ export default class GuiControl extends HTMLElement {
 		this.scope = document.querySelector(this.getAttribute('scope')) || document.documentElement;
 
 		this.form.addEventListener('click', (event) => {
-			const node = event.target;
-			if (node.tagName === 'BUTTON') {
-				this.dispatchEvent(new CustomEvent('gui-input', { detail: { input: node, action: node.dataset.action || '' } }));
+			if (event.target.tagName === 'BUTTON') {
+				this.dispatchEvent(new CustomEvent('gui-input', { detail: { input: event.target, action: event.target.dataset.action || '' } }));
 			}
 		});
 
@@ -37,11 +34,13 @@ export default class GuiControl extends HTMLElement {
 			const input = event.target;
 			const li = input.closest('li');
 			const output = li.querySelector('output');
-			let value = input.value;
-			if (input.type === 'checkbox') { value = input.checked ? input.value : input.dataset.unchecked || ''; }
+			let value = input.type === 'checkbox' ? (input.checked ? input.value : input.dataset.unchecked || '') : input.value;
+			
 			li.dataset.value = value;
 			if (output) output.textContent = value;
-			this.scope.style.setProperty(input.dataset.property, value);
+			if (input.dataset.property) {
+				this.scope.style.setProperty(input.dataset.property, value);
+			}
 			this.dispatchEvent(new CustomEvent('gui-input', { detail: { input, value, action: input.dataset.action || '' } }));
 		});
 	}
@@ -49,38 +48,41 @@ export default class GuiControl extends HTMLElement {
 	add(content, label, value, property) {
 		const li = document.createElement('li');
 		li.innerHTML = label ? `<label>${label}${content}</label>` : content;
-		li.setAttribute('part', 'li')
+		li.setAttribute('part', 'li');
 		if (value) {
-				li.dataset.value = value;
-				if (property) this.scope.style.setProperty(property, value);
+			li.dataset.value = value;
+			if (property) this.scope.style.setProperty(property, value);
 		}
 		this.list.appendChild(li);
 	}
 
-	addButton(label, text, type, attributes = {}) {
-		this.add(`<button type="${type||'button'}" part="${type||'button'}" ${this.attrs(attributes)}>${text}</button>`, label);
+	addButton(label, text, type = 'button', attributes = {}) {
+		this.add(`<button type="${type}" part="${type}" ${this.attrs(attributes)}>${text}</button>`, label);
 	}
 
 	addCheckbox(label, value, property, attributes = {}) {
-		this.ext(attributes, value, property);
-		this.add(`<input type="checkbox" part="checkbox" ${this.attrs(attributes)}>`, label, value, property);
+		this.addInput('checkbox', label, value, property, attributes);
 	}
 
 	addColor(label, value, property, attributes = {}) {
-		this.ext(attributes, value, property);
-		this.add(`<input type="color" part="color" ${this.attrs(attributes)}>`, label, value, property);
+		this.addInput('color', label, value, property, attributes);
+	}
+
+	addInput(type, label, value, property, attributes = {}) {
+		this.setValProp(attributes, value, property);
+		this.add(`<input type="${type}" part="${type}" ${this.attrs(attributes)}>`, label, value, property);
 	}
 
 	addRange(label, value, property, attributes = {}) {
-		this.ext(attributes, value, property);
+		this.setValProp(attributes, value, property);
 		this.add(`<input type="range" part="range" ${this.attrs(attributes)}><output part="output">${value}</output>`, label, value, property);
 	}
 
 	addSelect(label, value, property, attributes = {}) {
 		if (!attributes.options) return;
-		this.ext(attributes, value, property);
-		let options = '';
+		this.setValProp(attributes, value, property);
 
+		let options = '';
 		if (attributes.defaultOption) {
 			options += `<option selected disabled value="">${attributes.defaultOption}</option>`;
 			delete attributes.defaultOption;
@@ -90,6 +92,7 @@ export default class GuiControl extends HTMLElement {
 			`<option value='${option.value}'${option.key === value ? ' selected' : ''}>${option.key}</option>`
 		).join('');
 		delete attributes.options;
+
 		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property);
 	}
 
@@ -101,10 +104,9 @@ export default class GuiControl extends HTMLElement {
 		}).join(' ');
 	}
 
-	ext(attributes, value, property) {
-		attributes.value = value;
+	setValProp(attributes, value, property) {
+		if (value) attributes.value = value;
 		if (property) attributes['data-property'] = property;
-		return attributes;
 	}
 }
 
