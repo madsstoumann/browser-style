@@ -96,6 +96,11 @@ export default class GuiControl extends HTMLElement {
 		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property);
 	}
 
+	addTextArea(label, value, property, attributes = {}) {
+		this.setValProp(attributes, value, property);
+		this.add(`<textarea part="textarea" ${this.attrs(attributes)}>${value}</textarea>`, label, value, property);
+	}
+
 	attrs(attributes) {
 		return Object.entries(attributes).map(([key, value]) => {
 			if (value === '') return '';
@@ -168,6 +173,7 @@ li {
 	&:has([type=color]) { --_bdc: #7C2FD6; }
 	&:has([type=reset]) { --_bdc: #D62FA1; }
 	&:has(select) { --_bdc: #2FD67C;}
+	&:has(textarea) { --_bdc: orange; }
 }
 output {
 	background: var(--_bg);
@@ -181,7 +187,7 @@ output {
 	place-content: center;
 	width: 100%;
 }
-select {
+select, textarea {
 	background: var(--_bg);
 	border: 0;
 	border-radius: 0;
@@ -195,6 +201,11 @@ summary {
 	text-align: center;
 	user-select: none;
 }
+textarea {
+	font-size: x-small;
+	min-height: 2em;
+	resize: vertical;
+}
 ul {
 	all: unset;
 	display: grid;
@@ -202,7 +213,7 @@ ul {
 }
 
 /* === CONTROLS === */
-:is(button, input, select, summary):focus-visible {
+:is(button, input, select, summary, textarea):focus-visible {
 	outline: 1px solid #FFF;
 }
 [type=checkbox] {

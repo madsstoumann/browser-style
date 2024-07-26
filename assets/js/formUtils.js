@@ -49,3 +49,24 @@ export function loadStoredForm(form, preset) {
 		}
 	}
 }
+
+export function formDataToObject(formData) {
+	const obj = {};
+	formData.forEach((value, key) => {
+		obj[key] = value;
+	});
+	return obj;
+}
+
+export function mergePresets(existingPresets, defaultPresets) {
+	const presetsMap = new Map();
+	
+	// Add existing presets to the map
+	existingPresets.forEach(preset => presetsMap.set(preset.key, preset));
+
+	// Add default presets, overwriting if the key exists
+	defaultPresets.forEach(preset => presetsMap.set(preset.key, preset));
+
+	// Convert the map back to an array
+	return Array.from(presetsMap.values());
+}
