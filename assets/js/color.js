@@ -1,3 +1,5 @@
+import { interpolate } from './utils.js'
+
 export function brightness(r, g, b) {
 	return (299 * r + 587 * g + 114 * b) / 1000
 }
@@ -59,7 +61,7 @@ function strToHash(str, lshift = 15) {
 	return hash
 }
 
-export function interpolate(start, end, factor) { return start + (end - start) * factor; }
+
 export function interpolateColor(startColor, endColor, factor) {
 	const parseColor = color => color.match(/\w\w/g).map(c => parseInt(c, 16));
 	const toHex = num => num.toString(16).padStart(2, '0');

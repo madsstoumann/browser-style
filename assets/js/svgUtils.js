@@ -19,86 +19,7 @@ export function createLinePath(id, startX, amplitude, lineWidth, frequency, heig
 	return path;
 }
 
-export function createDefs(svg, amplitude, frequency, strokeWidth, height) {
-	const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-
-	for (let i = 0; i < 5; i++) {
-		const pathAmplitude = amplitude + Math.random() * 5;
-		const lineWidth = 2 + Math.random() * 1;
-		const path = createLinePath(`line${i}`, -20, pathAmplitude, lineWidth + strokeWidth, frequency, height);
-		defs.appendChild(path);
-	}
-
-	svg.appendChild(defs);
-}
-
-export function drawWavyLines(svg, lineCount, width, height, startHue, endHue, rotationMax, amplitude, frequency, strokeWidth) {
-	svg.innerHTML = '';
-	createDefs(svg, amplitude, frequency, strokeWidth, height);
-
-	let startX = -20;
-	const xAdd = width / lineCount;
-
-	for (let i = 0; i < lineCount; i++) {
-		const hue = startHue + ((endHue - startHue) * (i / lineCount));
-		const saturation = 40 + Math.random() * 40;
-		const lightness = 30 + Math.random() * 30;
-
-		const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-		use.setAttribute("href", `#line${i % 5}`);
-		use.setAttribute("stroke", `hsl(${hue}, ${saturation}%, ${lightness}%)`);
-		if (rotationMax !== 0) {
-			const rotation = Math.random() * 2 * rotationMax - rotationMax;
-			use.setAttribute("transform", `translate(${startX}, 0) rotate(${rotation}, ${startX + width / 2}, ${height / 2})`);
-		} else {
-			use.setAttribute("transform", `translate(${startX}, 0)`);
-		}
-		svg.appendChild(use);
-
-		const lineWidth = parseFloat(svg.querySelector(`#line${i % 5}`).getAttribute("stroke-width"));
-		startX += lineWidth * 0.8 + xAdd;
-	}
-}
-
-// export function drawMesh(coords, xLines = 10, yLines = 10) {
-// 	const [c1, c2, c3, c4] = coords;
-// 	const lines = [];
-// 	const G = document.createElementNS("http://www.w3.org/2000/svg", "g");
-
-// 	for (let i = 0; i <= xLines; i++) {
-// 		const t = i / xLines;
-// 		const xStart = (1 - t) * c1[0] + t * c2[0];
-// 		const yStart = (1 - t) * c1[1] + t * c2[1];
-// 		const xEnd = (1 - t) * c4[0] + t * c3[0];
-// 		const yEnd = (1 - t) * c4[1] + t * c3[1];
-
-// 		const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-// 		line.setAttribute("x1", xStart);
-// 		line.setAttribute("y1", yStart);
-// 		line.setAttribute("x2", xEnd);
-// 		line.setAttribute("y2", yEnd);
-// 		G.appendChild(line);
-// 	}
-
-// 	for (let i = 0; i <= yLines; i++) {
-// 		const t = i / yLines;
-// 		const xStart = (1 - t) * c1[0] + t * c4[0];
-// 		const yStart = (1 - t) * c1[1] + t * c4[1];
-// 		const xEnd = (1 - t) * c2[0] + t * c3[0];
-// 		const yEnd = (1 - t) * c2[1] + t * c3[1];
-
-// 		const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-// 		line.setAttribute("x1", xStart);
-// 		line.setAttribute("y1", yStart);
-// 		line.setAttribute("x2", xEnd);
-// 		line.setAttribute("y2", yEnd);
-
-// 		G.appendChild(line);
-// 	}
-// 	return G;
-// }
-
-export function drawMeshRect(coords, xLines = 10, yLines = 10, hueStart = 0, hueEnd = 360) {
+export function meshPolygons(coords, xLines = 10, yLines = 10, hueStart = 0, hueEnd = 360) {
 	const [c1, c2, c3, c4] = coords;
 	const G = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
@@ -149,4 +70,35 @@ export function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 			x: centerX + (radius * Math.cos(angleInRadians)),
 			y: centerY + (radius * Math.sin(angleInRadians))
 	};
+}
+
+export function rotatePoint(cx, cy, x, y, angle) {
+	const radians = (Math.PI / 180) * angle;
+	const cos = Math.cos(radians);
+	const sin = Math.sin(radians);
+	const nx = (cos * (x - cx)) - (sin * (y - cy)) + cx;
+	const ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
+	return [nx, ny];
+}
+
+export function scalePoint(cx, cy, x, y, scale) {
+	const dx = x - cx;
+	const dy = y - cy;
+	return [cx + dx * scale, cy + dy * scale];
+}
+
+export function getViewBox(svg) {
+	const viewBox = svg.getAttribute("viewBox");
+	if (!viewBox) {
+			throw new Error("Invalid viewBox value");
+	}
+
+	const values = viewBox.split(' ').map(Number);
+	if (values.length !== 4) {
+			throw new Error("viewBox must have four values: min-x, min-y, width, and height");
+	}
+
+	const [minX, minY, width, height] = values;
+
+	return { width, height };
 }

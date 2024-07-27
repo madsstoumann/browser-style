@@ -1,34 +1,23 @@
-import downloadContent from '/assets/js/downloadContent.js';
-import { storeFormData, updatePresetOptions, loadStoredForm } from '/assets/js/formUtils.js';
+import { handleGuiEvent, init } from '../common.js';
 import { hexToHSL } from '/assets/js/color.js';
-import { drawMeshRect } from '/assets/js/svgUtils.js';
+import { meshPolygons, rotatePoint, scalePoint } from '/assets/js/svgUtils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
-
+const storageKey = 'mesh';
 const svg = document.getElementById('svg');
-const controls = GUI.form.elements;
-const width = svg.getAttribute('width');
-const height = svg.getAttribute('height');
 
 GUI.addRange('Lines X', 10, '', { min: 1, max: 50, value: 10, name: 'xlines' });
 GUI.addRange('Lines Y', 10, '', { min: 1, max: 50, value: 10, name: 'ylines' });
-
 GUI.addRange('Rotation', 0, '', { min: -90, max: 90, name: 'rotation' });
 GUI.addRange('Center X', 50, '', { min: 0, max: 100, name: 'centerx' });
 GUI.addRange('Center Y', 50, '', { min: 0, max: 100, name: 'centery' });
-
 GUI.addRange('Scale', 1, '', { min: 0, max: 5, step: 1, name: 'scale' });
-
-
 GUI.addColor('Start Hue', '#ff0000', '', { name: 'starthue' });
 GUI.addColor('End Hue', '#ff00ff', '', { name: 'endhue' });
-
 GUI.addColor('Stroke', '#FFFFFF', '', { name: 'stroke' });
 GUI.addRange('Width', 0.05, '', { min: 0, max: 3, step: 0.01, name: 'strokewidth' });
-
 GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
-
 GUI.addSelect('Presets', '', '', { 
 	options: [], 
 	defaultOption: 'Select a preset',
@@ -37,74 +26,22 @@ GUI.addSelect('Presets', '', '', {
 });
 GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
 GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
+GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawMesh));
+init(GUI, storageKey, []);
 
-GUI.addEventListener('gui-input', (event) => {
-	const { action, input, value } = event.detail;
+/* === MAIN FUNCTION === */
 
-	switch (action) {
-		case 'download':
-			downloadContent(svg.outerHTML, 'mesh.svg');
-			break;
-
-		case 'save-preset':
-			const keyName = prompt('Please enter a name for this preset:');
-			if (keyName) {
-				storeFormData(GUI.form, keyName, 'mesh');
-				updatePresetOptions(GUI.form.elements.presets, 'mesh');
-			}
-			break;
-
-		case 'load-preset':
-			const preset = JSON.parse(value);
-			loadStoredForm(GUI.form, preset);
-			break;
-
-		default:
-			switch (input.name) {
-				case 'frame':
-					break;
-				case 'stroke':
-					svg.style.stroke = value;
-					break;
-				case 'strokewidth':
-					svg.style.strokeWidth = value;
-					break;
-
-				default:
-					drawMesh(
-						controls.xlines.valueAsNumber,
-						controls.ylines.valueAsNumber,
-						hexToHSL(controls.starthue.value)[0],
-						hexToHSL(controls.endhue.value)[0],
-						controls.rotation.valueAsNumber,
-						controls.scale.valueAsNumber,
-						controls.centerx.valueAsNumber,
-						controls.centery.valueAsNumber
-					);
-			}
-	}
-});
-
-// Load stored presets from local storage
-updatePresetOptions(GUI.form.elements.presets, 'mesh');
-
-function rotatePoint(cx, cy, x, y, angle) {
-	const radians = (Math.PI / 180) * angle;
-	const cos = Math.cos(radians);
-	const sin = Math.sin(radians);
-	const nx = (cos * (x - cx)) - (sin * (y - cy)) + cx;
-	const ny = (sin * (x - cx)) + (cos * (y - cy)) + cy;
-	return [nx, ny];
-}
-
-function scalePoint(cx, cy, x, y, scale) {
-	const dx = x - cx;
-	const dy = y - cy;
-	return [cx + dx * scale, cy + dy * scale];
-}
-
-function drawMesh(xLines, yLines, hueStart, hueEnd, rotation = 0, scale = 1, centerX = 50, centerY = 50) {
+function drawMesh(svg, controls) {
 	svg.innerHTML = '';
+
+	const xLines = controls.xlines.valueAsNumber;
+	const yLines = controls.ylines.valueAsNumber;
+	const startHue = hexToHSL(controls.starthue.value)[0];
+	const endHue = hexToHSL(controls.endhue.value)[0];
+	const rotation = controls.rotation.valueAsNumber;
+	const scale = controls.scale.valueAsNumber;
+	const centerX = controls.centerx.valueAsNumber;
+	const centerY = controls.centery.valueAsNumber;
 
 	let coords1 = [[0, 0], [40, 40], [40, 60], [0, 100]];
 	let coords2 = [[100, 0], [60, 40], [60, 60], [100, 100]];
@@ -133,11 +70,9 @@ function drawMesh(xLines, yLines, hueStart, hueEnd, rotation = 0, scale = 1, cen
 	coords4[2] = coordsCenter[2];
 
 	// Draw the meshes
-	svg.append(drawMeshRect(coords1, xLines, yLines, hueStart, hueEnd));
-	svg.append(drawMeshRect(coords2, xLines, yLines, hueStart, hueEnd));
-	svg.append(drawMeshRect(coords3, xLines, yLines, hueStart, hueEnd));
-	svg.append(drawMeshRect(coords4, xLines, yLines, hueStart, hueEnd));
-	svg.append(drawMeshRect(coordsCenter, xLines, yLines, hueStart, hueEnd));
+	svg.append(meshPolygons(coords1, xLines, yLines, startHue, endHue));
+	svg.append(meshPolygons(coords2, xLines, yLines, startHue, endHue));
+	svg.append(meshPolygons(coords3, xLines, yLines, startHue, endHue));
+	svg.append(meshPolygons(coords4, xLines, yLines, startHue, endHue));
+	svg.append(meshPolygons(coordsCenter, xLines, yLines, startHue, endHue));
 }
-
-drawMesh(controls.xlines.valueAsNumber, controls.ylines.valueAsNumber, hexToHSL(controls.starthue.value)[0], hexToHSL(controls.endhue.value)[0]);

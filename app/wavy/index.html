@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>App: Wavy</title>
+	<title>Wavy</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-	<style>
-		svg {
-			border: 1em ridge var(--frame-c, #f6c6a4);
-			margin-block: 1ch;
-			max-width: 100%;
-		}
-	</style>
+	<link rel="stylesheet" href="../common.css">
 </head>
 <body>
-	<svg xmlns="http://www.w3.org/2000/svg" id="svg" width="800" height="800" style="background:#000;" stroke-linecap="round"></svg>
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" id="svg"></svg>
 	<gui-control label="Controls" scope="svg"></gui-control>
 	<script type="module" src="index.js"></script>
 </body>

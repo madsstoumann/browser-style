@@ -1,9 +1,9 @@
-import downloadContent from '/assets/js/downloadContent.js';
-import { formDataToObject, loadStoredForm, mergePresets, storeFormData, updatePresetOptions } from '/assets/js/formUtils.js';
+import { handleGuiEvent, init } from '../common.js';
+import { interpolate } from '/assets/js/utils.js';
+import { interpolateColor } from '/assets/js/color.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
-const controls = GUI.form.elements;
 const storageKey = 'words';
 const svg = document.getElementById('svg');
 
@@ -21,7 +21,7 @@ GUI.addSelect('Font Family', 'fontfamily', '', {
 	],
 	'name': 'fontfamily'
 });
-GUI.addSelect('Case', '', '', { 
+GUI.addSelect('Case', 'uppercase', '', { 
 	options: [
 		{ key: 'none', value: 'normal' },
 		{ key: 'lowercase', value: 'lowercase' },
@@ -34,9 +34,8 @@ GUI.addRange('Scale', 1, '', { min: 0, max: 1, step: 0.025, name: 'scale' });
 GUI.addTextArea('Words', 'abundance accomplish achievement action adventureaffection ambition appreciation articulate aspirationawesome balance beauty believe blissbrilliant calm carefree celebrate charmcheerful clarity comfort compassion confidencecourage creativity delight determination dignitydream dynamic eager ecstasy eleganceembrace empower enchanting enthusiasm epicexcellent exuberant fabulous faith fantasticflourish fortune freedom friendly fulfillmentgenerous genius genuine glory gracegratitude harmony happiness healing heartwarminghope ideal imagination inspiration integrityjoy jubilant kindness laughter libertylively love magnificent marvelous miraclemotivation noble optimism passion peaceperseverance playful positive prosperity radiantremarkable resilient serenity sincere spectacularstrength success sunshine tranquil triumphvibrant victory wisdom wonderful zest', '', { name: 'words' });
 GUI.addColor('Start Color', '#263773', '', { name: 'startcolor' });
 GUI.addColor('End Color', '#8c9dd9', '', { name: 'endcolor' });
-GUI.addColor('Background', '#EAE8DF', '', { name: 'background' });
+GUI.addColor('Canvas', '#EAE8DF', '', { name: 'canvas' });
 GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
-
 GUI.addSelect('Presets', '', '', { 
 	options: [], 
 	defaultOption: 'Select a preset',
@@ -46,67 +45,20 @@ GUI.addSelect('Presets', '', '', {
 GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
 GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
 
-GUI.addEventListener('gui-input', (event) => {
-	const { action, input, value } = event.detail;
+GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawWords));
+init(GUI, storageKey, []);
 
-	switch (action) {
-		case 'download':
-			downloadContent(svg.outerHTML, `${storageKey}.svg`);
-			break;
-		case 'load-preset':
-			const preset = JSON.parse(value);
-			loadStoredForm(GUI.form, preset);
-			break;
-		case 'save-preset':
-			const keyName = prompt('Please enter a name for this preset:');
-			if (keyName) {
-				storeFormData(GUI.form, keyName, storageKey);
-				updatePresetOptions(GUI.form.elements.presets, storageKey);
-			}
-			break;
-		default:
-			switch (input.name) {
-				case 'background':
-					svg.style.backgroundColor = value;
-					break;
-				case 'fontfamily':
-					svg.style.fontFamily = value;
-					break;
-				case 'frame':
-					break;
-				case 'texttransform':
-					svg.style.textTransform = value;
-					break;
-				default:
-					drawWords(svg, 
-						controls.sizestart.valueAsNumber, 
-						controls.sizeend.valueAsNumber,
-						controls.density.valueAsNumber,
-						controls.startcolor.value,
-						controls.endcolor.value,
-						controls.lines.valueAsNumber,
-						controls.words.value ? controls.words.value.split(/\s+/) : positiveWords,
-						controls.scale.valueAsNumber
-					);
-			}
-	}
-});
+/*=== MAIN FUNCTION ===*/
 
-function drawWords(svg, startFontSize, endFontSize, charDensity, startColor, endColor, lines, words, scale) {
-	const interpolate = (start, end, factor) => start + (end - start) * factor;
-	const interpolateColor = (startColor, endColor, factor) => {
-		const parseColor = color => color.match(/\w\w/g).map(c => parseInt(c, 16));
-		const toHex = num => num.toString(16).padStart(2, '0');
-		
-		const [r1, g1, b1] = parseColor(startColor);
-		const [r2, g2, b2] = parseColor(endColor);
-
-		const r = Math.round(interpolate(r1, r2, factor));
-		const g = Math.round(interpolate(g1, g2, factor));
-		const b = Math.round(interpolate(b1, b2, factor));
-
-		return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-	};
+function drawWords(svg, controls) {
+	const charDensity = controls.density.valueAsNumber;
+	const endColor = controls.endcolor.value;
+	const endFontSize = controls.sizeend.valueAsNumber;
+	const lines = controls.lines.valueAsNumber;
+	const scale = controls.scale.valueAsNumber;
+	const startColor = controls.startcolor.value;
+	const startFontSize = controls.sizestart.valueAsNumber;
+	const words = controls.words.value.split(/\s+/);
 
 	let output = '';
 	let totalFontSize = 0;
@@ -156,30 +108,3 @@ function drawWords(svg, startFontSize, endFontSize, charDensity, startColor, end
 	<g transform="translate(${centerX} ${centerY}) scale(${scale})">${output}</g>`;
 	svg.innerHTML = svgContent;
 }
-
-// Init
-const defaultPresets = [
-	{
-		"key": "Default",
-		"value": {
-			"lines": "25",
-			"sizestart": "1",
-			"sizeend": "12",
-			"density": "4",
-			"fontfamily": "Just Another Hand, cursive",
-			"texttransform": "normal",
-			"scale": "1",
-			"words": "abundance accomplish achievement action adventureaffection ambition appreciation articulate aspirationawesome balance beauty believe blissbrilliant calm carefree celebrate charmcheerful clarity comfort compassion confidencecourage creativity delight determination dignitydream dynamic eager ecstasy eleganceembrace empower enchanting enthusiasm epicexcellent exuberant fabulous faith fantasticflourish fortune freedom friendly fulfillmentgenerous genius genuine glory gracegratitude harmony happiness healing heartwarminghope ideal imagination inspiration integrityjoy jubilant kindness laughter libertylively love magnificent marvelous miraclemotivation noble optimism passion peaceperseverance playful positive prosperity radiantremarkable resilient serenity sincere spectacularstrength success sunshine tranquil triumphvibrant victory wisdom wonderful zest",
-			"startcolor": "#263773",
-			"endcolor": "#8c9dd9",
-			"background": "#eae8df",
-			"frame": "#f6c6a4"
-		}
-	}
-];
-document.addEventListener('DOMContentLoaded', () => {
-	const existingPresets = JSON.parse(localStorage.getItem(storageKey)) || [];
-	localStorage.setItem(storageKey, JSON.stringify(mergePresets(existingPresets, defaultPresets)));
-	updatePresetOptions(GUI.form.elements.presets, storageKey);
-	loadStoredForm(GUI.form, formDataToObject(new FormData(GUI.form)));
-});

@@ -1,0 +1,1 @@
+export function interpolate(start, end, factor) { return start + (end - start) * factor; }
