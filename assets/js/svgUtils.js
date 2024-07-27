@@ -141,3 +141,12 @@ export function drawMeshRect(coords, xLines = 10, yLines = 10, hueStart = 0, hue
 	}
 	return G;
 }
+
+
+export function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+	let angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+	return {
+			x: centerX + (radius * Math.cos(angleInRadians)),
+			y: centerY + (radius * Math.sin(angleInRadians))
+	};
+}

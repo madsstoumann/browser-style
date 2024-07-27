@@ -58,3 +58,18 @@ function strToHash(str, lshift = 15) {
 	}
 	return hash
 }
+
+export function interpolate(start, end, factor) { return start + (end - start) * factor; }
+export function interpolateColor(startColor, endColor, factor) {
+	const parseColor = color => color.match(/\w\w/g).map(c => parseInt(c, 16));
+	const toHex = num => num.toString(16).padStart(2, '0');
+	
+	const [r1, g1, b1] = parseColor(startColor);
+	const [r2, g2, b2] = parseColor(endColor);
+
+	const r = Math.round(interpolate(r1, r2, factor));
+	const g = Math.round(interpolate(g1, g2, factor));
+	const b = Math.round(interpolate(b1, b2, factor));
+
+	return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+};
