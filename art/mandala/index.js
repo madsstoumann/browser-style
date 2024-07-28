@@ -7,16 +7,16 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'mandala';
 const svg = document.getElementById('svg');
 
-GUI.addRange('Circles', 8, '', { min: 2, max: 20, name: 'circles' });
-GUI.addRange('Arcs CW', 60, '', { min: 0, max: 100, name: 'arcscw' });
-GUI.addRange('Arcs CCW', 60, '', { min: 0, max: 100, name: 'arcsccw' });
-GUI.addRange('Radius Min', 5, '', { min: 0, max: 40, name: 'radiusmin' });
-GUI.addRange('Radius Max', 45, '', { min: 10, max: 80, name: 'radiusmax' });
-GUI.addColor('Stroke', '#444444', '', { name: 'stroke' });
-GUI.addRange('Width', 0.15, '', { min: 0, max: 1.4, step: 0.01, name: 'strokewidth' });
-GUI.addColor('Start Color', '#FF3773', '', { name: 'startcolor' });
+GUI.addRange('Circles', 15, '', { min: 2, max: 20, name: 'circles' });
+GUI.addRange('Arcs CW', 48, '', { min: 0, max: 100, name: 'arcscw' });
+GUI.addRange('Arcs CCW', 48, '', { min: 0, max: 100, name: 'arcsccw' });
+GUI.addRange('Radius Min', 2, '', { min: 0, max: 40, name: 'radiusmin' });
+GUI.addRange('Radius Max', 46, '', { min: 10, max: 80, name: 'radiusmax' });
+GUI.addColor('Stroke', '#6c3361', '', { name: 'stroke' });
+GUI.addRange('Width', 0.06, '', { min: 0, max: 1.4, step: 0.01, name: 'strokewidth' });
+GUI.addColor('Start Color', '#ff3773', '', { name: 'startcolor' });
 GUI.addColor('End Color', '#8c9dd9', '', { name: 'endcolor' });
-GUI.addColor('Canvas', '#EAE8DF', '', { name: 'canvas' });
+GUI.addColor('Canvas', '#6c3361', '', { name: 'canvas' });
 GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
 GUI.addSelect('Presets', '', '', { 
 	options: [], 

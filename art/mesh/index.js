@@ -9,14 +9,14 @@ const svg = document.getElementById('svg');
 
 GUI.addRange('Lines X', 10, '', { min: 1, max: 50, value: 10, name: 'xlines' });
 GUI.addRange('Lines Y', 10, '', { min: 1, max: 50, value: 10, name: 'ylines' });
-GUI.addRange('Rotation', 0, '', { min: -90, max: 90, name: 'rotation' });
+GUI.addRange('Rotation', -10, '', { min: -90, max: 90, name: 'rotation' });
 GUI.addRange('Center X', 50, '', { min: 0, max: 100, name: 'centerx' });
 GUI.addRange('Center Y', 50, '', { min: 0, max: 100, name: 'centery' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 5, step: 1, name: 'scale' });
-GUI.addColor('Start Hue', '#ff0000', '', { name: 'starthue' });
-GUI.addColor('End Hue', '#ff00ff', '', { name: 'endhue' });
+GUI.addColor('Start Hue', '#4095bf', '', { name: 'starthue' });
+GUI.addColor('End Hue', '#121c21', '', { name: 'endhue' });
 GUI.addColor('Stroke', '#FFFFFF', '', { name: 'stroke' });
-GUI.addRange('Width', 0.05, '', { min: 0, max: 3, step: 0.01, name: 'strokewidth' });
+GUI.addRange('Width', 0, '', { min: 0, max: 3, step: 0.01, value: 0, name: 'strokewidth' });
 GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
 GUI.addSelect('Presets', '', '', { 
 	options: [], 
