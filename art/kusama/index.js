@@ -1,5 +1,4 @@
-import { handleGuiEvent, init } from '../common.js';
-import { random } from '/assets/js/utils.js';
+import { commonConfig, handleGuiEvent, init } from '../common.js';
 import { getViewBox } from '/assets/js/svgUtils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
@@ -7,20 +6,11 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'kusama';
 const svg = document.getElementById('svg');
 
-GUI.addRange('Dots', 125, '', { min: 25, max: 400, name: 'numdots' });
+GUI.addRange('Dots', 100, '', { min: 25, max: 400, name: 'numdots' });
 GUI.addColor('Color', '#E4473D', '', { name: 'fill' });
-GUI.addRange('Min Radius', 10, '', { min: 1, max: 50, name: 'minradius' });
-GUI.addRange('Max Radius', 150, '', { min: 50, max: 200, name: 'maxradius' });
-GUI.addColor('Canvas', '#FFFFFF', '', { name: 'canvas' });
-GUI.addColor('Frame', '#F6C6A4', '--frame-c', { name: 'frame' });
-GUI.addSelect('Presets', '', '', { 
-	options: [], 
-	defaultOption: 'Select a preset',
-	'data-action': 'load-preset',
-	'name': 'presets'
-});
-GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
-GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
+GUI.addRange('Min Radius', 1, '', { min: 0.1, max: 5, step: 0.1, name: 'minradius' });
+GUI.addRange('Max Radius', 15, '', { min: 5, max: 20, step: 0.1, name: 'maxradius' });
+commonConfig(GUI);
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, kusamaDots));
 init(GUI, storageKey, []);
 

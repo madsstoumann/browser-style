@@ -1,6 +1,6 @@
-import { handleGuiEvent, init } from '../common.js';
+import { commonConfig, handleGuiEvent, init } from '../common.js';
 import { hexToHSL } from '/assets/js/color.js';
-import { meshPolygons, rotatePoint, scalePoint } from '/assets/js/svgUtils.js';
+import { getViewBox, meshPolygons, rotatePoint, scalePoint } from '/assets/js/svgUtils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
@@ -17,62 +17,47 @@ GUI.addColor('Start Hue', '#4095bf', '', { name: 'starthue' });
 GUI.addColor('End Hue', '#121c21', '', { name: 'endhue' });
 GUI.addColor('Stroke', '#FFFFFF', '', { name: 'stroke' });
 GUI.addRange('Width', 0, '', { min: 0, max: 3, step: 0.01, value: 0, name: 'strokewidth' });
-GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
-GUI.addSelect('Presets', '', '', { 
-	options: [], 
-	defaultOption: 'Select a preset',
-	'data-action': 'load-preset',
-	'name': 'presets'
-});
-GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
-GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
+commonConfig(GUI);
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawMesh));
 init(GUI, storageKey, []);
 
 /* === MAIN FUNCTION === */
 
 function drawMesh(svg, controls) {
-	svg.innerHTML = '';
-
+	const { width, height } = getViewBox(svg);
 	const xLines = controls.xlines.valueAsNumber;
 	const yLines = controls.ylines.valueAsNumber;
 	const startHue = hexToHSL(controls.starthue.value)[0];
 	const endHue = hexToHSL(controls.endhue.value)[0];
 	const rotation = controls.rotation.valueAsNumber;
 	const scale = controls.scale.valueAsNumber;
-	const centerX = controls.centerx.valueAsNumber;
-	const centerY = controls.centery.valueAsNumber;
+	const centerX = (controls.centerx.valueAsNumber / 100) * width;
+	const centerY = (controls.centery.valueAsNumber / 100) * height;
 
-	let coords1 = [[0, 0], [40, 40], [40, 60], [0, 100]];
-	let coords2 = [[100, 0], [60, 40], [60, 60], [100, 100]];
-	let coords3 = [[0, 0], [40, 40], [60, 40], [100, 0]];
-	let coords4 = [[0, 100], [40, 60], [60, 60], [100, 100]];
-	let coordsCenter = [[40, 40], [60, 40], [60, 60], [40, 60]];
+	// Adjust coordinates based on the default viewBox dimensions: 0 0 100 100
+	let coords = [
+		[[0, 0], [width * 0.4, height * 0.4], [width * 0.4, height * 0.6], [0, height]],
+		[[width, 0], [width * 0.6, height * 0.4], [width * 0.6, height * 0.6], [width, height]],
+		[[0, 0], [width * 0.4, height * 0.4], [width * 0.6, height * 0.4], [width, 0]],
+		[[0, height], [width * 0.4, height * 0.6], [width * 0.6, height * 0.6], [width, height]],
+		[[width * 0.4, height * 0.4], [width * 0.6, height * 0.4], [width * 0.6, height * 0.6], [width * 0.4, height * 0.6]] // Center
+	];
 
-	if (scale !== 1) {
-		coordsCenter = coordsCenter.map(([x, y]) => scalePoint(centerX, centerY, x, y, scale));
+	if (scale !== 1 || rotation !== 0) {
+		coords[4] = coords[4].map(([x, y]) => {
+			let point = [x, y];
+			if (scale !== 1) point = scalePoint(centerX, centerY, x, y, scale);
+			if (rotation !== 0) point = rotatePoint(centerX, centerY, point[0], point[1], rotation);
+			return point;
+		});
+		coords[0][1] = coords[4][0];
+		coords[0][2] = coords[4][3];
+		coords[1][1] = coords[4][1];
+		coords[1][2] = coords[4][2];
+		coords[2][1] = coords[4][0];
+		coords[2][2] = coords[4][1];
+		coords[3][1] = coords[4][3];
+		coords[3][2] = coords[4][2];
 	}
-
-	if (rotation !== 0) {
-		coordsCenter = coordsCenter.map(([x, y]) => rotatePoint(centerX, centerY, x, y, rotation));
-	}
-
-	coords1[1] = coordsCenter[0];
-	coords1[2] = coordsCenter[3];
-
-	coords2[1] = coordsCenter[1];
-	coords2[2] = coordsCenter[2];
-
-	coords3[1] = coordsCenter[0];
-	coords3[2] = coordsCenter[1];
-
-	coords4[1] = coordsCenter[3];
-	coords4[2] = coordsCenter[2];
-
-	// Draw the meshes
-	svg.append(meshPolygons(coords1, xLines, yLines, startHue, endHue));
-	svg.append(meshPolygons(coords2, xLines, yLines, startHue, endHue));
-	svg.append(meshPolygons(coords3, xLines, yLines, startHue, endHue));
-	svg.append(meshPolygons(coords4, xLines, yLines, startHue, endHue));
-	svg.append(meshPolygons(coordsCenter, xLines, yLines, startHue, endHue));
+	svg.innerHTML = coords.map(c => meshPolygons(c, xLines, yLines, startHue, endHue).outerHTML).join('');
 }

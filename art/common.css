@@ -1,5 +1,5 @@
 svg {
-	aspect-ratio: 1;
+	aspect-ratio: var(--frame-asr, 1 / 1);
 	border: 1em ridge var(--frame-c, #f6c6a4);
 	margin-block: 1ch;
 	max-width: 100%;

@@ -1,4 +1,4 @@
-import { handleGuiEvent, init } from '../common.js';
+import { commonConfig, handleGuiEvent, init } from '../common.js';
 import Delaunay from '/assets/js/delaunay.js';
 import { getViewBox } from '/assets/js/svgUtils.js';
 import { hexToHSL } from '/assets/js/color.js';
@@ -14,16 +14,7 @@ GUI.addColor('Stroke', '#FFFFFF', '', { name: 'stroke' });
 GUI.addRange('Width', 0.1, '', { min: 0, max: 1.4, step: 0.01, name: 'strokewidth' });
 GUI.addColor('Start Color', '#d92926', '', { name: 'startcolor' });
 GUI.addColor('End Color', '#993366', '', { name: 'endcolor' });
-GUI.addColor('Canvas', '#bf4040', '', { name: 'canvas' });
-GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
-GUI.addSelect('Presets', '', '', { 
-	options: [], 
-	defaultOption: 'Select a preset',
-	'data-action': 'load-preset',
-	'name': 'presets'
-});
-GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
-GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
+commonConfig(GUI, '#bf4040');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawTriangles));
 init(GUI, storageKey, []);
 
@@ -31,12 +22,10 @@ init(GUI, storageKey, []);
 
 function drawTriangles(svg, controls) {
 	const { width, height } = getViewBox(svg);
+	const endColor = controls.endcolor.value;
 	const numPoints = controls.numpoints.valueAsNumber;
 	const square = !controls.square.checked;
 	const startColor = controls.startcolor.value;
-	const endColor = controls.endcolor.value;
-
-	// Convert start and end colors to HSL
 	const [h1, s1, l1] = hexToHSL(startColor);
 	const [h2, s2, l2] = hexToHSL(endColor);
 
@@ -66,11 +55,7 @@ function drawTriangles(svg, controls) {
 		const h = h1 + t * (h2 - h1);
 		const s = s1 + t * (s2 - s1);
 		const l = l1 + t * (l2 - l1);
-
-		// const fillColor = hslToHex(h, s, l);
-		const fillColor = `hsl(${h}, ${s}%, ${l}%)`;
-
-		output += `<path d="M${x} ${y} L${a} ${b} L${c} ${d}Z" fill="${fillColor}"></path>`;
+		output += `<path d="M${x} ${y} L${a} ${b} L${c} ${d}Z" fill="hsl(${h}, ${s}%, ${l}%)"></path>`;
 	}
 	svg.innerHTML = output;
 }

@@ -2,8 +2,8 @@
  * GUI Control
  * description
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 22-07-2024
+ * @version 1.0.04
+ * @summary 30-07-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -45,7 +45,7 @@ export default class GuiControl extends HTMLElement {
 		});
 	}
 
-	add(content, label, value, property) {
+	add(content, label, value, property, list = this.list) {
 		const li = document.createElement('li');
 		li.innerHTML = label ? `<label>${label}${content}</label>` : content;
 		li.setAttribute('part', 'li');
@@ -53,32 +53,48 @@ export default class GuiControl extends HTMLElement {
 			li.dataset.value = value;
 			if (property) this.scope.style.setProperty(property, value);
 		}
+		list.appendChild(li);
+	}	
+
+	addButton(label, text, type = 'button', attributes = {}, list = this.list) {
+		this.add(`<button type="${type}" part="${type}" ${this.attrs(attributes)}>${text}</button>`, label, '', '', list);
+	}
+
+	addCheckbox(label, value, property, attributes = {}, list = this.list) {
+		this.addInput('checkbox', label, value, property, attributes, list);
+	}
+
+	addColor(label, value, property, attributes = {}, list = this.list) {
+		this.addInput('color', label, value, property, attributes, list);
+	}
+
+	addGroup(label, content) {
+		const details = document.createElement('details');
+		details.innerHTML = `<summary>${label}</summary><ul part="ul"></ul>`;
+		const ul = details.querySelector('ul');
+		if (Array.isArray(content)) {
+			content.forEach(func => {
+				if (typeof func === 'function') {
+					func.apply(this, [ul]);
+				}
+			});
+		}
+		const li = document.createElement('li');
+		li.appendChild(details);
 		this.list.appendChild(li);
 	}
 
-	addButton(label, text, type = 'button', attributes = {}) {
-		this.add(`<button type="${type}" part="${type}" ${this.attrs(attributes)}>${text}</button>`, label);
-	}
-
-	addCheckbox(label, value, property, attributes = {}) {
-		this.addInput('checkbox', label, value, property, attributes);
-	}
-
-	addColor(label, value, property, attributes = {}) {
-		this.addInput('color', label, value, property, attributes);
-	}
-
-	addInput(type, label, value, property, attributes = {}) {
+	addInput(type, label, value, property, attributes = {}, list = this.list) {
 		this.setValProp(attributes, value, property);
-		this.add(`<input type="${type}" part="${type}" ${this.attrs(attributes)}>`, label, value, property);
+		this.add(`<input type="${type}" part="${type}" ${this.attrs(attributes)}>`, label, value, property, list);
 	}
 
-	addRange(label, value, property, attributes = {}) {
+	addRange(label, value, property, attributes = {}, list = this.list) {
 		this.setValProp(attributes, value, property);
-		this.add(`<input type="range" part="range" ${this.attrs(attributes)}><output part="output">${value}</output>`, label, value, property);
+		this.add(`<input type="range" part="range" ${this.attrs(attributes)}><output part="output">${value}</output>`, label, value, property, list);
 	}
 
-	addSelect(label, value, property, attributes = {}) {
+	addSelect(label, value, property, attributes = {}, list = this.list) {
 		if (!attributes.options) return;
 		this.setValProp(attributes, value, property);
 
@@ -93,12 +109,12 @@ export default class GuiControl extends HTMLElement {
 		).join('');
 		delete attributes.options;
 
-		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property);
+		this.add(`<select ${this.attrs(attributes)} part="select">${options}</select>`, label, value, property, list);
 	}
 
-	addTextArea(label, value, property, attributes = {}) {
+	addTextArea(label, value, property, attributes = {}, list = this.list) {
 		this.setValProp(attributes, value, property);
-		this.add(`<textarea part="textarea" ${this.attrs(attributes)}>${value}</textarea>`, label, value, property);
+		this.add(`<textarea part="textarea" ${this.attrs(attributes)}>${value}</textarea>`, label, value, property, list);
 	}
 
 	attrs(attributes) {
@@ -174,6 +190,32 @@ li {
 	&:has([type=reset]) { --_bdc: #D62FA1; }
 	&:has(select) { --_bdc: #2FD67C;}
 	&:has(textarea) { --_bdc: orange; }
+	&:has(details) {
+		border-color: #fcf05c;
+		padding: 0;
+	}
+	details {
+		grid-column: span 3;
+		&[open] summary::after { rotate: 135deg; }
+	}
+	summary {
+		align-items: center;
+		display: flex;
+		justify-content: space-between;
+		list-style: none;
+		text-align: start;
+		&::after {
+			content: '';
+			border-color: currentColor;
+			border-style: solid;
+			border-width: 1px 1px 0 0;
+			display: block;
+			height: .5em;
+			rotate: 45deg;
+			transition: rotate .2s;	
+			width: .5em;
+		}
+	}
 }
 output {
 	background: var(--_bg);

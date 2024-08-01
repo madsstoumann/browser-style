@@ -1,6 +1,7 @@
-import { handleGuiEvent, init } from '../common.js';
+import { commonConfig, handleGuiEvent, init } from '../common.js';
 import { interpolate } from '/assets/js/utils.js';
 import { interpolateColor } from '/assets/js/color.js';
+import { getViewBox } from '/assets/js/svgUtils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
@@ -34,23 +35,14 @@ GUI.addRange('Scale', 1, '', { min: 0, max: 1, step: 0.025, name: 'scale' });
 GUI.addTextArea('Words', 'abundance accomplish achievement action adventureaffection ambition appreciation articulate aspirationawesome balance beauty believe blissbrilliant calm carefree celebrate charmcheerful clarity comfort compassion confidencecourage creativity delight determination dignitydream dynamic eager ecstasy eleganceembrace empower enchanting enthusiasm epicexcellent exuberant fabulous faith fantasticflourish fortune freedom friendly fulfillmentgenerous genius genuine glory gracegratitude harmony happiness healing heartwarminghope ideal imagination inspiration integrityjoy jubilant kindness laughter libertylively love magnificent marvelous miraclemotivation noble optimism passion peaceperseverance playful positive prosperity radiantremarkable resilient serenity sincere spectacularstrength success sunshine tranquil triumphvibrant victory wisdom wonderful zest', '', { name: 'words' });
 GUI.addColor('Start Color', '#263773', '', { name: 'startcolor' });
 GUI.addColor('End Color', '#8c9dd9', '', { name: 'endcolor' });
-GUI.addColor('Canvas', '#EAE8DF', '', { name: 'canvas' });
-GUI.addColor('Frame', '#f6c6a4', '--frame-c', { name: 'frame' });
-GUI.addSelect('Presets', '', '', { 
-	options: [], 
-	defaultOption: 'Select a preset',
-	'data-action': 'load-preset',
-	'name': 'presets'
-});
-GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' });
-GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' });
-
+commonConfig(GUI, '#EAE8DF');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawWords));
 init(GUI, storageKey, []);
 
 /*=== MAIN FUNCTION ===*/
 
 function drawWords(svg, controls) {
+	const { width, height } = getViewBox(svg);
 	const charDensity = controls.density.valueAsNumber;
 	const endColor = controls.endcolor.value;
 	const endFontSize = controls.sizeend.valueAsNumber;
@@ -62,8 +54,8 @@ function drawWords(svg, controls) {
 
 	let output = '';
 	let totalFontSize = 0;
-	const maxHeight = 100;
-	const textLength = 100;
+	const maxHeight = height;
+	const textLength = width;
 
 	for (let i = 0; i < lines; i++) {
 		const factor = i / (lines - 1);
@@ -97,8 +89,8 @@ function drawWords(svg, controls) {
 		output += textElement;
 	}
 
-	const centerX = (100 - 100 * scale) / 2;
-	const centerY = (100 - 100 * scale) / 2;
+	const centerX = (width - width * scale) / 2;
+	const centerY = (height - height * scale) / 2;
 	const svgContent = `
 	<defs>
 		<style type="text/css">

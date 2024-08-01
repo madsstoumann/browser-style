@@ -52,6 +52,34 @@ function loadStoredForm(form, preset) {
 	}
 }
 
+export function commonConfig(GUI, canvasColor = '#ffffff', frameColor = '#f6c6a4') {
+	GUI.addGroup('Settings & Tools', [
+		(ul) => GUI.addColor('Canvas', canvasColor, '', { name: 'canvas' }, ul),
+		(ul) => GUI.addColor('Frame', frameColor, '--frame-c', { name: 'frame' }, ul),
+		(ul) => GUI.addSelect('Size', '', '', { 
+			options: [
+				{ key: '1:1 (square)', value: '0 0 100 100' },
+				{ key: '1:1.4 (50x70cm, 19.7x27.6in)', value: '0 0 100 140' },
+				{ key: '1:1.33 (60x80cm, 23.6x31.5in)', value: '0 0 100 133' },
+				{ key: '1.33:1 (80x60cm, 31.5x23.6in)', value: '0 0 133 100' },
+				{ key: '1:1.5 (24x36in, 61x91.4cm)', value: '0 0 100 150' },
+				{ key: '1.5:1 (36x24in, 91.4x61cm)', value: '0 0 150 100' },
+				{ key: '1:1.25 (16x20in, 40.6x50.8cm)', value: '0 0 100 125' },
+				{ key: '1.25:1 (20x16in, 50.8x40.6cm)', value: '0 0 125 100' }
+			], 
+			name: 'size'
+		}, ul),
+		(ul) => GUI.addSelect('Presets', '', '', { 
+			options: [], 
+			defaultOption: 'Select a preset',
+			'data-action': 'load-preset',
+			name: 'presets'
+		}, ul),
+		(ul) => GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' }, ul),
+		(ul) => GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' }, ul)
+	]);
+}
+
 export function formDataToObject(formData) {
 	const obj = {};
 	formData.forEach((value, key) => {
@@ -98,6 +126,11 @@ export function handleGuiEvent(event, svg, GUI, storageKey, drawFunction) {
 				case 'linecap':
 					svg.setAttribute('stroke-linecap', value);
 					break;
+				case 'size':
+					const [x, y, width, height] = value.split(' ');
+					svg.style.setProperty('--frame-asr', `${width} / ${height}.`);
+					svg.setAttribute('viewBox', value);
+					drawFunction(svg, GUI.form.elements);
 				case 'stroke':
 					svg.style.stroke = value;
 					break;
