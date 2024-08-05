@@ -29,26 +29,50 @@ function metatronCube(svg, controls) {
 	svg.style.setProperty('stroke', `hsla(${H}, ${S}%, ${L}%, ${strokeOpacity})`);
 	
 	const points = [
-		{ x: 0, y: Math.sqrt(4) * 2 * -radius },
-		{ x: Math.sqrt(3) * 2 * -radius, y: Math.sqrt(4) * -radius },
-		{ x: 0, y: Math.sqrt(4) * -radius },
-		{ x: Math.sqrt(3) * 2 * radius, y: Math.sqrt(4) * -radius },
-		{ x: Math.sqrt(3)  * -radius, y: -radius },
+		{ x: -2 * radius, y: Math.sqrt(3) * 2 * -radius, connect: 1 },
+		{ x: 0, y: Math.sqrt(3) * 2 * -radius },
+		{ x: 2 * radius, y: Math.sqrt(3) * 2 * -radius, connect: 1 },
+		
+		{ x: -3 * radius, y: Math.sqrt(3) * -radius },
+		{ x: -1 * radius, y: Math.sqrt(3) * -radius },
+		{ x: 1 * radius, y: Math.sqrt(3) * -radius },
+		{ x: 3 * radius, y: Math.sqrt(3) * -radius }, 
+		
+		{ x: -4 * radius, y: 0, connect: 1 },
+		{ x: -2 * radius, y: 0 },
 		{ x: 0, y: 0, connect: 1 }, /* center */
-		{ x: Math.sqrt(3) * radius, y: -radius },
-		{ x: Math.sqrt(3) * -radius, y: radius },
-		{ x: Math.sqrt(3) * radius, y: radius },
-		{ x: Math.sqrt(3) * 2 * -radius, y: Math.sqrt(4) * radius },
-		{ x: 0, y: Math.sqrt(4) * radius },
-		{ x: Math.sqrt(3) * 2 * radius, y: Math.sqrt(4) * radius },
-		{ x: 0, y: Math.sqrt(4) * 2 * radius },
+		{ x: 2 * radius, y: 0 },
+		{ x: 4 * radius, y: 0, connect: 1 },
+
+		{ x: -3 * radius, y: Math.sqrt(3) * radius },
+		{ x: -1 * radius, y: Math.sqrt(3) * radius },
+		{ x: 1 * radius, y: Math.sqrt(3) * radius },
+		{ x: 3 * radius, y: Math.sqrt(3) * radius },
+
+		{ x: -2 * radius, y: Math.sqrt(3) * 2 * radius, connect: 1 },
+		{ x: 0, y: Math.sqrt(3) * 2 * radius },
+		{ x: 2 * radius, y: Math.sqrt(3) * 2 * radius, connect: 1 },
 	];
 
+	
+	const connect = points.filter(point => point.connect);
 	const connected = [];
-	for (let i = 0; i < points.length; i++) {
-		for (let j = i + 1; j < points.length; j++) {
-			connected.push({ x1: points[i].x, y1: points[i].y, x2: points[j].x, y2: points[j].y });
+	for (let i = 0; i < connect.length; i++) {
+		for (let j = i + 1; j < connect.length; j++) {
+			connected.push({ x1: connect[i].x, y1: connect[i].y, x2: connect[j].x, y2: connect[j].y });
 		}
+	}
+
+	// Additional connections around the center point
+	const angleIncrement = 30; // 360 / 12 = 30 degrees for each point around the center
+	for (let i = 0; i < 12; i++) {
+		const angle = angleIncrement * i * Math.PI / 180;
+		const x = radius * Math.cos(angle);
+		const y = radius * Math.sin(angle);
+		connected.push({ x1: 0, y1: 0, x2: x, y2: y }); // Connect the new points to the center point
+		connect.forEach(point => {
+			connected.push({ x1: point.x, y1: point.y, x2: x, y2: y });
+		});
 	}
 
 	const circles = points.map(pos => 
