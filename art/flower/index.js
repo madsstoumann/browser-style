@@ -7,10 +7,10 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'flower';
 const svg = document.getElementById('svg');
 
-GUI.addRange('Num Petals', 10, '', { min: 5, max: 30, name: 'petals' });
-GUI.addRange('Num Rings', 2, '', { min: 1, max: 8, name: 'rings' });
+GUI.addRange('Num Petals', 11, '', { min: 5, max: 30, name: 'petals' });
+GUI.addRange('Num Rings', 3, '', { min: 1, max: 8, name: 'rings' });
 GUI.addRange('Petal Height', 15, '', { min: 2, max: 25, step: 0.1, value: 10, name: 'petalheight' });
-GUI.addRange('Petal Width', 5, '', { min: 0, max: 10, step: 0.1, value: 0, name: 'petalwidth' });
+GUI.addRange('Petal Width', 3.5, '', { min: 0, max: 10, step: 0.1, value: 0, name: 'petalwidth' });
 GUI.addColor('Petal Color', '#e6195d', '', { name: 'petalcolor' });
 GUI.addCheckbox('Saturate', '0', '', { 'data-unchecked': '0', name: 'saturate' });
 GUI.addColor('Petal Stroke', '#ffbf00', '', { name: 'stroke' });
