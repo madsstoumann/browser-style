@@ -6,7 +6,7 @@ import GuiControl from '/ui/gui-control/index.js';
 const GUI = document.querySelector('gui-control');
 const storageKey = 'ellipse';
 const svg = document.getElementById('svg');
-GUI.addRange('Spheres', 5, '', { min: 3, max: 21, step: 2, name: 'spheres' });
+GUI.addRange('Ellipses', 5, '', { min: 3, max: 21, step: 2, name: 'ellipses' });
 GUI.addColor('Stroke', '#00FFFF', '', { name: 'stroke' });
 GUI.addRange('Opacity', 0.5, '', { min: 0.01, max: 1, step: 0.01, name: 'strokeopacity' });
 GUI.addRange('Width', 0.25, '', { min: 0.01, max: 1, step: 0.01, name: 'linestrokewidth' });
@@ -19,7 +19,7 @@ init(GUI, storageKey, []);
 
 function ellipse(svg, controls) {
   const { width, height } = getViewBox(svg);
-	const numSpheres = controls.spheres.valueAsNumber;
+	const numEllipses = controls.ellipses.valueAsNumber;
   const scale = controls.scale.valueAsNumber;
   const stroke = controls.stroke.value;
   const strokeOpacity = controls.strokeopacity.valueAsNumber;
@@ -30,7 +30,7 @@ function ellipse(svg, controls) {
 
   svg.innerHTML = `<g transform="translate(${width / 2} ${height / 2}) scale(${scale})">
     <circle cx="0" cy="0" r="50" stroke-width="${strokeWidth}" fill="none"></circle>
-    ${Array.from({ length: numSpheres }).map((_sphere, index) => `<g transform="rotate(${360/numSpheres * index})">
+    ${Array.from({ length: numEllipses }).map((_sphere, index) => `<g transform="rotate(${360/numSpheres * index})">
 			<ellipse cx="0" cy="0" rx="15" ry="50" stroke-width="${strokeWidth}" fill="hsla(${H}, ${S}%, ${L}%, .1)"></ellipse>
 			<line x1="0" y1="-50" x2="0" y2="50" stroke-width="${strokeWidth}"></line>
 		</g>
