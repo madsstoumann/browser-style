@@ -11,8 +11,8 @@ GUI.addRange('Max Circle', 3.5, '', { min: 1, max: 5, step: 0.01, name: 'maxcirc
 GUI.addRange('Angle Step', 36, '', { min: 0, max: 72, step: 0.1, name: 'anglestep' });
 GUI.addRange('Density', 8, '', { min: 1, max: 50, step: 0.1, name: 'density' });
 GUI.addRange('Steps', 20, '', { min: 1, max: 50, step: 0.1, name: 'steps' });
-GUI.addColor('Start Color', '#ff0055', '', { name: 'startcolor' });
-GUI.addColor('End Color', '#00d5ff', '', { name: 'endcolor' });
+GUI.addColor('Start Color', '#ffd500', '', { name: 'startcolor' });
+GUI.addColor('End Color', '#f94306', '', { name: 'endcolor' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 2, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#323f67');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, spiral));

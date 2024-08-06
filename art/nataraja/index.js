@@ -9,8 +9,8 @@ const storageKey = 'natraja';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Columns', 20, '', { min: 1, max: 50, value: 10, name: 'columns' });
-GUI.addRange('Rows', 20, '', { min: 1, max: 50, value: 10, name: 'rows' });
-GUI.addRange('Skew', -35, '', { min: -45, max: 45, name: 'skew' });
+GUI.addRange('Rows', 22, '', { min: 1, max: 50, value: 10, name: 'rows' });
+GUI.addRange('Skew', -45, '', { min: -45, max: 45, name: 'skew' });
 GUI.addColor('Start Hue', '#ff0000', '', { name: 'starthue' });
 GUI.addColor('End Hue', '#ff0080', '', { name: 'endhue' });
 commonConfig(GUI);
