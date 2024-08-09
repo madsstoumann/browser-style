@@ -63,7 +63,7 @@
 			&[name="search"] {
 				align-items: end;
 				justify-content: space-between;
-				margin-block: 1ch;
+				margin-block: 0 1ch;
 				& select {
 					border: 0;
 					color: var(--GrayText);

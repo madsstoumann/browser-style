@@ -55,6 +55,7 @@
 				const schema = generateSchemaFromData(data);
 				schemaInput.value = JSON.stringify(schema, null, 2);
 			} catch (error) {
+				console.log(error);
 				schemaInput.value = 'Invalid JSON';
 			}
 		});

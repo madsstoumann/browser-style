@@ -104,6 +104,14 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 		} else if (Array.isArray(value)) {
 			const itemSchema = generateSchemaFromData(value[0] || {});
 			const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
+			let entryProperties = {};
+
+			try {
+				entryProperties = generateEntryProperties(value[0]);
+			} catch (error) {
+				console.error(`Error generating entry properties for key "${key}":`, error);
+			}
+
 			schema.properties[key] = {
 				type: 'array',
 				title: key,
@@ -121,7 +129,7 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 						name: '',
 						schema: {
 							type: 'object',
-							properties: generateEntryProperties(value[0])
+							properties: entryProperties
 						}
 					}
 				},
