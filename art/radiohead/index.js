@@ -85,8 +85,8 @@ function radiohead(svg, controls) {
     return `<g>${lineContent}</g>`;
   }).join('');
 
-  const centerX = (width - width * scale) / 2;
-  const centerY = (height - height * scale) / 2;
+  const centerX = (width - width * scale) / 2 - (filter ? 2 : 0);
+  const centerY = (height - height * scale) / 2 - (filter ? 2 : 0);
   const svgContent = `
     <defs>
       <style type="text/css">
@@ -97,7 +97,7 @@ function radiohead(svg, controls) {
         <feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="6" />
       </filter>
     </defs>
-    <g transform="translate(${centerX} ${centerY - (filter ? 1 : 0)}) scale(${scale})" filter="${filter ? 'url(#squiggly)' : 'none'}">${output}</g>`;
+    <g transform="translate(${centerX} ${centerY}) scale(${scale})" filter="${filter ? 'url(#squiggly)' : 'none'}">${output}</g>`;
 
   svg.innerHTML = svgContent;
 }
