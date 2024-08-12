@@ -1,6 +1,4 @@
 import { commonConfig, handleGuiEvent, init } from '../common.js';
-// import { interpolate } from '/assets/js/utils.js';
-// import { interpolateColor } from '/assets/js/color.js';
 import { getViewBox } from '/assets/js/svgUtils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
@@ -10,7 +8,7 @@ const svg = document.getElementById('svg');
 
 GUI.addRange('Lines', 15, '', { min: 5, max: 30, name: 'lines' });
 GUI.addTextArea('Words', 'FEAR CONTROL TRUTH LIES HATE TRUST CORRUPT POWER MONEY FAITH JUSTICE CHAOS DREAM LIBERTY WAR PEACE DECEIVE HOPE TERROR LOVE FUTURE VOICE CHANGE REVOLT SILENCE FREEDOM GREED RISE FALL BELIEVE UNITE BREAK BUILD FAKE REAL ANGER JOY DARK LIGHT NOISE QUIET STRENGTH WEAKNESS CONTROL ESCAPE LOST FOUND OPEN CLOSE WIN LOSE FIGHT SUBMIT RULE ANARCHY FREE BOUND PEACEFUL VIOLENT LEADER FOLLOWER EMPTY FULL VICTORY DEFEAT FAITHFUL FAITHLESS KNOWN UNKNOWN SAFE DANGER SILENT LOUD ORDER DISORDER ALIVE DEAD VISION BLIND WISE FOOL RISE DECAY HEAL WOUND DOUBT CERTAINTY VISIBLE HIDDEN STRONG FRAGILE OPEN CLOSE PRESENT ABSENT CONNECTED DETACHED', '', { name: 'words' });
-GUI.addCheckbox('Use filter', '', '', { name: 'filter', checked: 'checked' });
+// GUI.addCheckbox('Use filter', '', '', { name: 'filter', checked: 'checked' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 1, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#1C1D1E');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, radiohead));
@@ -21,7 +19,8 @@ init(GUI, storageKey, []);
 function radiohead(svg, controls) {
   const { width, height } = getViewBox(svg);
   const colors = ['#D0001D', '#0D5436', '#093588', '#FDA223', '#F8551A', '#101624', '#EAEFF0'];
-  const filter = controls.filter.checked;
+  // const filter = controls.filter.checked;
+	const filter = true;
   const lines = controls.lines.valueAsNumber;
   const scale = controls.scale.valueAsNumber;
   const words = controls.words.value.split(/\s+/);
@@ -77,7 +76,7 @@ function radiohead(svg, controls) {
     lineWords.forEach(({ randomWord, rectWidth, bg, c }) => {
       lineContent += `
         <rect x="${centeredXPosition}" y="${rowIndex * maxFontSize}" width="${rectWidth}" height="${maxFontSize}" fill="${bg}" />
-        <text x="${centeredXPosition + 2}" y="${rowIndex * maxFontSize + maxFontSize * 0.85}" font-family="Pangolin" font-size="${maxFontSize}" fill="${c}">${randomWord}</text>
+        <text x="${centeredXPosition + 1.5}" y="${rowIndex * maxFontSize + maxFontSize * 0.85}" font-family="Pangolin" font-size="${maxFontSize}" fill="${c}">${randomWord}</text>
       `;
       centeredXPosition += rectWidth;
     });
@@ -101,4 +100,3 @@ function radiohead(svg, controls) {
 
   svg.innerHTML = svgContent;
 }
-
