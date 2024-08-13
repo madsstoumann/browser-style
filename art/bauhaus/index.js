@@ -60,7 +60,7 @@ function bauhaus(svg, controls) {
 		const circlePosX = positions[Math.floor(Math.random() * positions.length)];
 		const circlePosY = positions[Math.floor(Math.random() * positions.length)];
 		const randomValue = Math.random();
-		const patternChoice = randomValue < 0.7 ? 0 : Math.floor(Math.random() * 5) + 1;
+		const patternChoice = randomValue < 0.5 ? 0 : Math.floor(Math.random() * 8) + 1;
 
 		let pattern;
 		switch (patternChoice) {
@@ -86,6 +86,16 @@ function bauhaus(svg, controls) {
 			case 6:
 				pattern = `<circle cx="${boxWidth / 2}" cy="0" r="${boxWidth / 2}" fill="${fgFill}" />
 									 <circle cx="${boxWidth / 2}" cy="${boxWidth}" r="${boxWidth / 2}" fill="${fgFill}" />`;
+				break;
+			case 7:
+				pattern = `<rect width="${boxWidth / 2}" height="${boxWidth}" fill="${fgFill}" />
+									<circle cx="${boxWidth / 2}" cy="${boxWidth}" r="${boxWidth / 2}" fill="${fgFill}" />;
+									<circle cx="${boxWidth / 2}" cy="0" r="${boxWidth / 2}" fill="${bgFill}" />`;
+				break;
+			case 8:
+				pattern = `<rect width="${boxWidth}" height="${boxWidth / 2}" fill="${fgFill}" />
+									<circle cx="0" cy="${boxWidth / 2}" r="${boxWidth / 2}" fill="${fgFill}" />;
+									<circle cx="${boxWidth}" cy="${boxWidth / 2}" r="${boxWidth / 2}" fill="${bgFill}" />`;
 				break;
 		}
 
