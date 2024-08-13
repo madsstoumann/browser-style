@@ -6,8 +6,7 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'bauhaus';
 const svg = document.getElementById('svg');
 
-// #ad4835
-// '#e9d3b0', bg colors
+// Canvas: #ad4835, #e9d3b0
 
 GUI.addRange('Cols', 4, '', { min: 1, max: 10, name: 'columns' });
 GUI.addRange('Rows', 4, '', { min: 1, max: 10, name: 'rows' });
@@ -19,6 +18,7 @@ GUI.addSelect('Palette', '', '', {
     { key: 'Classic Bauhaus Tones', value: '#A63334 #3E5F8A #F2BF7C #7D807D #E7A95E #4C4B40 #83988E #D9C9A5' },
     { key: 'Dusty Weimar Shades', value: '#8D5A4A #526A82 #C4A981 #6A706E #B5803A #635D52 #A4B3A2 #CFC1A4' },
     { key: 'Industrial Grays', value: '#6B6E70 #4B4F52 #919497 #2D2E30 #A6A8AB #3A3C3F #C1C3C5 #787A7C' },
+		{ key: 'Muted Blue', value: '#4A637D #6E8499 #98A9B5 #2F4A66 #5B7490 #7D92A6 #A3B3C0 #3E5C7A' },
     { key: 'Muted Terracotta', value: '#A2543A #B67F5E #D2A98A #8F6C5A #E8C3A6 #704B3E #C0876C #5A3D31' },
     { key: 'Autumn Modernism', value: '#7F4E2A #9B7042 #C49973 #5D6A5B #A77A4A #8C5B39 #B89675 #6E553C' },
     { key: 'Vintage Pastels', value: '#9A7F6B #A99488 #D1B5AC #82746E #B2A196 #C7B8AE #E3D4CD #746258' },
