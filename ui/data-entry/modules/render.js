@@ -115,7 +115,7 @@ export const checklist = (label, value, attributes, _options, config) => {
 			<label part="row">
 				<span part="label">${type}</span>
 				<em part="header">${label}
-					<input part="input" ${attrs(attributes)} value="${value}">
+					<input part="input" type="checkbox" class="bg-gray --fs-lg --cross" checked ${attrs(attributes)} value="${value}">
 				</em>
 			</label>`;
 	};

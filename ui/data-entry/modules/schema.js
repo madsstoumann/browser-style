@@ -80,7 +80,7 @@ export function generateRenderMethod(type, key, value) {
 	};
 }
 
-export function generateSchemaFromData(data, schemaId = 'http://example.com/example.json', schemaUri = 'https://json-schema.org/draft/2019-09/schema') {
+export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, schemaId = 'http://example.com/example.json', schemaUri = 'https://json-schema.org/draft/2019-09/schema') {
 	const schema = {
 		$schema: schemaUri,
 		$id: schemaId,
@@ -90,6 +90,10 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 		required: [],
 	};
 
+	if (toolbar) {
+		schema.render = { toolbar };
+	}
+
 	for (const [key, value] of Object.entries(data)) {
 		const type = typeof value;
 		const render = generateRenderMethod(type, key, value);
@@ -98,11 +102,11 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 			schema.properties[key] = {
 				type: 'object',
 				title: key,
-				properties: generateSchemaFromData(value).properties,
+				properties: generateSchemaFromData(value, disabledKeys).properties,
 				required: Object.keys(value),
 			};
 		} else if (Array.isArray(value)) {
-			const itemSchema = generateSchemaFromData(value[0] || {});
+			const itemSchema = generateSchemaFromData(value[0] || {}, disabledKeys);
 			const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
 			let entryProperties = {};
 
@@ -114,7 +118,7 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 
 			schema.properties[key] = {
 				type: 'array',
-				title: key,
+				title: toTitleCase(key),
 				items: {
 					type: 'object',
 					properties: itemSchema.properties,
@@ -136,13 +140,19 @@ export function generateSchemaFromData(data, schemaId = 'http://example.com/exam
 			};
 		} else {
 			const propertyObject = {
-				type: 'string', // Always set type to string
-				title: key,
+				type: 'string',
+				title: toTitleCase(key),
 				render,
 			};
 
 			if (isLikelyImageUrl(value)) {
 				propertyObject.property = 'src';
+			}
+
+			// Check if the key is in the disabledKeys array
+			if (disabledKeys.includes(key)) {
+				propertyObject.render.attributes = propertyObject.render.attributes || [];
+				propertyObject.render.attributes.push({ disabled: "disabled" });
 			}
 
 			schema.properties[key] = propertyObject;
@@ -159,7 +169,7 @@ function generateEntryProperties(data) {
 		const type = typeof value;
 		const render = generateRenderMethod(type, key, value);
 		properties[key] = {
-			title: key,
+			title: toTitleCase(key),
 			type: type === 'number' ? 'number' : 'string',
 			render: render
 		};
@@ -169,4 +179,10 @@ function generateEntryProperties(data) {
 		}
 	}
 	return properties;
+}
+
+function toTitleCase(str) {
+	return str.split('_')
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(' ');
 }
