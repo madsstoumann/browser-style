@@ -60,7 +60,7 @@ function bauhaus(svg, controls) {
 		const circlePosX = positions[Math.floor(Math.random() * positions.length)];
 		const circlePosY = positions[Math.floor(Math.random() * positions.length)];
 		const randomValue = Math.random();
-		const patternChoice = randomValue < 0.5 ? 0 : Math.floor(Math.random() * 8) + 1;
+		const patternChoice = randomValue < 0.5 ? 0 : Math.floor(Math.random() * 9) + 1;
 
 		let pattern;
 		switch (patternChoice) {
@@ -97,6 +97,9 @@ function bauhaus(svg, controls) {
 									<circle cx="0" cy="${boxWidth / 2}" r="${boxWidth / 2}" fill="${fgFill}" />;
 									<circle cx="${boxWidth}" cy="${boxWidth / 2}" r="${boxWidth / 2}" fill="${bgFill}" />`;
 				break;
+			case 9:
+				pattern = `<path d="M 0,${boxWidth} A ${boxWidth},${boxWidth} 0 0 1 ${boxWidth},0 A ${boxWidth},${boxWidth} 0 0 1 0,${boxWidth} Z" fill="${fgFill}" />`;
+				break;
 		}
 
 		return `
@@ -106,15 +109,11 @@ function bauhaus(svg, controls) {
 			</g>`;
 	}).join('');
 
-	// Calculate the dimensions of the grid
 	const gridWidth = columns * boxWidth;
 	const gridHeight = rows * boxWidth;
-
-	// Centering translation
 	const translateX = (width - gridWidth) / 2;
 	const translateY = (height - gridHeight) / 2;
 
-	// Apply the centering translation and scale to the entire grid
 	svg.innerHTML = `
 		<defs>
 			<clipPath id="${clipPathId}">
