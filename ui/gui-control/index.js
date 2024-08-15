@@ -68,6 +68,13 @@ export default class GuiControl extends HTMLElement {
 		this.addInput('color', label, value, property, attributes, list);
 	}
 
+	addDataList(name, options, list = this.list) {
+		const datalist = document.createElement('datalist');
+		datalist.id = name;
+		datalist.innerHTML = options.map(option => `<option value="${option.value}">`).join('');
+		list.appendChild(datalist);
+	}
+
 	addGroup(label, content) {
 		const details = document.createElement('details');
 		details.innerHTML = `<summary>${label}</summary><ul part="ul"></ul>`;

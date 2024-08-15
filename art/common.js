@@ -53,19 +53,41 @@ function loadStoredForm(form, preset) {
 }
 
 export function commonConfig(GUI, canvasColor = '#ffffff', frameColor = '#f6c6a4') {
+	const frameColors = [
+		{ name: 'birch', value: '#f6c6a4' },
+		{ name: 'maple', value: '#e1b382' },
+		{ name: 'oak', value: '#d2b48c' },
+		{ name: 'cherry', value: '#d2691e' },
+		{ name: 'walnut', value: '#704214' },
+		{ name: 'rosewood', value: '#65000b' },
+		{ name: 'mahogany', value: '#4a2c2a' },
+		{ name: 'ebony', value: '#0c0b0b' },
+		{ name: 'brass', value: '#b5a642' },
+		{ name: 'bronze', value: '#cd7f32' },
+		{ name: 'silver', value: '#c0c0c0' },
+		{ name: 'aluminum', value: '#a9a9a9' },
+		{ name: 'gunmetal', value: '#2a3439' },
+		{ name: 'black', value: '#000000' },
+		{ name: 'white', value: '#ffffff' }
+	];
+
+	GUI.addDataList('framecolors', frameColors);
 	GUI.addGroup('Settings & Tools', [
 		(ul) => GUI.addColor('Canvas', canvasColor, '', { name: 'canvas' }, ul),
-		(ul) => GUI.addColor('Frame', frameColor, '--frame-c', { name: 'frame' }, ul),
+		(ul) => GUI.addColor('Frame', frameColor, '--frame-c', { name: 'frame', list: 'framecolors' }, ul),
+		(ul) => GUI.addCheckbox('Show frame', '1em', '--frame-bdw', { name: 'showframe', checked: 'checked', 'data-unchecked': '0' }, ul),
+		(ul) => GUI.addCheckbox('Full screen', '', '', { 'data-action': 'full-width' }, ul),
 		(ul) => GUI.addSelect('Size', '', '', { 
 			options: [
 				{ key: '1:1 (square)', value: '0 0 100 100' },
-				{ key: '1:1.4 (50x70cm, 19.7x27.6in)', value: '0 0 100 140' },
+				{ key: '1:1.25 (16x20in, 40.6x50.8cm)', value: '0 0 100 125' },
+				{ key: '1.25:1 (20x16in, 50.8x40.6cm)', value: '0 0 125 100' },
 				{ key: '1:1.33 (60x80cm, 23.6x31.5in)', value: '0 0 100 133' },
 				{ key: '1.33:1 (80x60cm, 31.5x23.6in)', value: '0 0 133 100' },
+				{ key: '1:1.4 (50x70cm, 19.7x27.6in)', value: '0 0 100 140' },
+				{ key: '1.4:1 (70x50cm, 27.6x19.7in)', value: '0 0 140 100' },
 				{ key: '1:1.5 (24x36in, 61x91.4cm)', value: '0 0 100 150' },
 				{ key: '1.5:1 (36x24in, 91.4x61cm)', value: '0 0 150 100' },
-				{ key: '1:1.25 (16x20in, 40.6x50.8cm)', value: '0 0 100 125' },
-				{ key: '1.25:1 (20x16in, 50.8x40.6cm)', value: '0 0 125 100' }
 			], 
 			name: 'size'
 		}, ul),
@@ -78,7 +100,6 @@ export function commonConfig(GUI, canvasColor = '#ffffff', frameColor = '#f6c6a4
 		(ul) => GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' }, ul),
 		(ul) => GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' }, ul)
 	]);
-	// GUI.addButton('', 'Reset / Re-render', 'reset', { 'data-action': 'reset' });
 }
 
 export function formDataToObject(formData) {
@@ -102,6 +123,9 @@ export function handleGuiEvent(event, svg, GUI, storageKey, drawFunction) {
 	switch (action) {
 		case 'download':
 			downloadContent(svg.outerHTML, `${storageKey}.svg`);
+			break;
+		case 'full-width':
+			document.body.classList.toggle('full-width');
 			break;
 		case 'load-preset':
 			const preset = JSON.parse(value);
