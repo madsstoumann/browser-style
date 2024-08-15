@@ -9,11 +9,11 @@ const storageKey = 'wheel';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Rings', 12, '', { min: 1, max: 30, name: 'numrings' });
-GUI.addRange('Rotate Min', 0, '', { min: 1, max: 30, name: 'rotatemin', value: 0 });
-GUI.addRange('Rotate Max', 180, '', { min: 0, max: 360, name: 'rotatemax' });
 GUI.addRange('Strokes', 20, '', { min: 1, max: 50, name: 'strokes' });
-GUI.addColor('Start Hue', '#ff0000', '', { name: 'starthue' });
-GUI.addColor('End Hue', '#0000ff', '', { name: 'endhue' });
+GUI.addColor('Start hue', '#ff0000', '', { name: 'starthue' });
+GUI.addColor('End hue', '#0000ff', '', { name: 'endhue' });
+GUI.addRange('Rotate min.', 0, '', { min: 1, max: 30, name: 'rotatemin', value: 0 });
+GUI.addRange('Rotate max.', 180, '', { min: 0, max: 360, name: 'rotatemax' });
 GUI.addRange('Scale', 0.9, '', { min: 0, max: 2, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#3fa673');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, wheel));

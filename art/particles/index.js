@@ -8,7 +8,7 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'particles';
 const svg = document.getElementById('svg');
 
-GUI.addRange('Dots', 35, '', { min: 1, max: 75, name: 'dots' });
+GUI.addRange('Particles', 35, '', { min: 1, max: 75, name: 'particles' });
 GUI.addRange('Proximity', 50, '', { min: 1, max: 100, name: 'proximity' });
 GUI.addRange('Radius Max', 1.5, '', { min: 1, max: 8, step: 0.01, name: 'radius' });
 GUI.addColor('Color', '#ff0055', '', { name: 'color' });
@@ -22,7 +22,7 @@ init(GUI, storageKey, []);
 function particles(svg, controls) {
 	const { width, height } = getViewBox(svg);
 
-	const dots = controls.dots.valueAsNumber;
+	const particles = controls.particles.valueAsNumber;
 	const proximity = controls.proximity.valueAsNumber;
 	const radius = controls.radius.valueAsNumber;
 	const scale = controls.scale.valueAsNumber;
@@ -36,7 +36,7 @@ function particles(svg, controls) {
 	};
 
 	const [h, s, l] = hexToHSL(controls.color.value);
-	const points = coords(dots, width, height);
+	const points = coords(particles, width, height);
 
 	const elements = points.map(([x, y]) => {
 		const lines = points.map(([x1, y1]) => {

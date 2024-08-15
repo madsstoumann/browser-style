@@ -9,11 +9,11 @@ const svg = document.getElementById('svg');
 
 GUI.addRange('Amount', 90, '', { min: 2, max: 300, value: 90, name: 'amount' });
 GUI.addRange('Rotation', 0, '', { min: 0, max: 35, value: 0, name: 'rotation' });
-GUI.addRange('Stroke', 0, '', { min: 0, max: 10, step: 0.01, value: 0, name: 'pathstrokewidth' });
+GUI.addRange('Line width', 0, '', { min: 0, max: 10, step: 0.01, value: 0, name: 'pathstrokewidth' });
 GUI.addRange('Amplitude', 2, '', { min: 0, max: 25, value: 2, name: 'amplitude' });
 GUI.addRange('Frequency', 0.1, '', { min: 0, max: 0.2, step: 0.001, value: 0.015, name: 'frequency' });
-GUI.addColor('Start Hue', '#ff0000', '', { name: 'starthue' });
-GUI.addColor('End Hue', '#ff00ff', '', { name: 'endhue' });
+GUI.addColor('Start hue', '#ff0000', '', { name: 'starthue' });
+GUI.addColor('End hue', '#ff00ff', '', { name: 'endhue' });
 GUI.addCheckbox('Round cap', 'round', '', { checked: 'checked', 'data-unchecked': 'butt', name: 'linecap' });
 commonConfig(GUI, '#000000');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawWavy));

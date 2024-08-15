@@ -9,11 +9,11 @@ const storageKey = 'ringsdots';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Rings', 12, '', { min: 1, max: 30, name: 'numrings' });
-GUI.addRange('Dots in ring', 7, '', { min: 1, max: 30, name: 'dotsperring' });
-GUI.addRange('Dotsize', 1.2, '', { min: 0.1, max: 3, step: 0.1, name: 'dotsize' });
-GUI.addRange('Spread', 3.6, '', { min: 0.1, max: 5, step: 0.1, name: 'spread' });
-GUI.addCheckbox('Rdm radius', true, '', { name: 'randomradius' });
-GUI.addCheckbox('Rdm dotsize', true, '', { name: 'randomdotsize' });
+GUI.addRange('Dots 1st ring', 7, '', { min: 1, max: 30, name: 'dotsperring' });
+GUI.addRange('Dot size', 1.2, '', { min: 0.1, max: 3, step: 0.1, name: 'dotsize' });
+GUI.addRange('Spread', 3.6, '', { min: 0.1, max: 10, step: 0.1, name: 'spread' });
+GUI.addCheckbox('Rdm. radius', true, '', { name: 'randomradius' });
+GUI.addCheckbox('Rdm. size', true, '', { name: 'randomdotsize' });
 
 GUI.addColor('Fill', '#e0ab85', '', { name: 'fill' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 2, step: 0.025, name: 'scale' });

@@ -8,11 +8,11 @@ const storageKey = 'homagesquare';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Squares', 4, '', { min: 2, max: 20, name: 'squares' });
-GUI.addRange('X Offset', 0, '', { min: -1, max: 1, step: 0.01, name: 'xoffset' });
-GUI.addRange('Y Offset', 0.25, '', { min: -1, max: 1, step: 0.01, name: 'yoffset' });
+GUI.addRange('X offset', 0, '', { min: -1, max: 1, step: 0.01, name: 'xoffset' });
+GUI.addRange('Y offset', 0.25, '', { min: -1, max: 1, step: 0.01, name: 'yoffset' });
 GUI.addRange('Spacing', 1.5, '', { min: 1, max: 3, step: 0.1, name: 'spacing' });
 GUI.addColor('Color', '#ff0055', '', { name: 'color' });
-GUI.addRange('Light Factor', 0.75, '', { min: 0.1, max: 2, step: 0.01, name: 'lightnessfactor' });
+GUI.addRange('Light factor', 0.75, '', { min: 0.1, max: 2, step: 0.01, name: 'lightnessfactor' });
 GUI.addCheckbox('Reverse', '0', '', { name: 'reverse' });
 commonConfig(GUI, '#080828');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, homageSquare));

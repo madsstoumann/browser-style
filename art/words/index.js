@@ -9,10 +9,12 @@ const storageKey = 'words';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Lines', 25, '', { min: 2, max: 50, name: 'lines' });
-GUI.addRange('Size Start', 1, '', { min: 0.1, max: 20, step: 0.1, name: 'sizestart' });
-GUI.addRange('Size End', 12, '', { min: 0.1, max: 20, step: 0.1, name: 'sizeend' });
+GUI.addRange('Size start', 1, '', { min: 0.1, max: 20, step: 0.1, name: 'sizestart' });
+GUI.addRange('Size end', 12, '', { min: 0.1, max: 20, step: 0.1, name: 'sizeend' });
 GUI.addRange('Density', 4, '', { min: 1, max: 6, step: 0.1, name: 'density' });
-GUI.addSelect('Font Family', 'fontfamily', '', { 
+GUI.addColor('Start color', '#263773', '', { name: 'startcolor' });
+GUI.addColor('End color', '#8c9dd9', '', { name: 'endcolor' });
+GUI.addSelect('Font family', 'fontfamily', '', { 
 	options: [
 		{ key: "Just Another Hand", value: "Just Another Hand, cursive" },
 		{ key: 'Antique', value: "Superclarendon, Bookman Old Style, URW Bookman, URW Bookman L, Georgia Pro, Georgia, serif" },
@@ -31,10 +33,8 @@ GUI.addSelect('Case', 'uppercase', '', {
 	],
 	'name': 'texttransform'
 });
-GUI.addRange('Scale', 1, '', { min: 0, max: 1, step: 0.025, name: 'scale' });
 GUI.addTextArea('Words', 'abundance accomplish achievement action adventureaffection ambition appreciation articulate aspirationawesome balance beauty believe blissbrilliant calm carefree celebrate charmcheerful clarity comfort compassion confidencecourage creativity delight determination dignitydream dynamic eager ecstasy eleganceembrace empower enchanting enthusiasm epicexcellent exuberant fabulous faith fantasticflourish fortune freedom friendly fulfillmentgenerous genius genuine glory gracegratitude harmony happiness healing heartwarminghope ideal imagination inspiration integrityjoy jubilant kindness laughter libertylively love magnificent marvelous miraclemotivation noble optimism passion peaceperseverance playful positive prosperity radiantremarkable resilient serenity sincere spectacularstrength success sunshine tranquil triumphvibrant victory wisdom wonderful zest', '', { name: 'words' });
-GUI.addColor('Start Color', '#263773', '', { name: 'startcolor' });
-GUI.addColor('End Color', '#8c9dd9', '', { name: 'endcolor' });
+GUI.addRange('Scale', 1, '', { min: 0, max: 1, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#EAE8DF');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawWords));
 init(GUI, storageKey, []);

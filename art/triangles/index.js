@@ -9,11 +9,12 @@ const storageKey = 'triangles';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Points', 170, '', { min: 3, max: 512, name: 'numpoints' });
+
+GUI.addColor('Line color', '#FFFFFF', '', { name: 'stroke' });
+GUI.addRange('Line width', 0.05, '', { min: 0, max: 1.4, step: 0.01, name: 'strokewidth' });
+GUI.addColor('Start color', '#d92926', '', { name: 'startcolor' });
+GUI.addColor('End color', '#993366', '', { name: 'endcolor' });
 GUI.addCheckbox('Square', '1', '', { 'data-unchecked': '0', name: 'square' });
-GUI.addColor('Stroke', '#FFFFFF', '', { name: 'stroke' });
-GUI.addRange('Width', 0.1, '', { min: 0, max: 1.4, step: 0.01, name: 'strokewidth' });
-GUI.addColor('Start Color', '#d92926', '', { name: 'startcolor' });
-GUI.addColor('End Color', '#993366', '', { name: 'endcolor' });
 commonConfig(GUI, '#bf4040');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, drawTriangles));
 init(GUI, storageKey, []);

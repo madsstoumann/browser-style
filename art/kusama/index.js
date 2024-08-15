@@ -8,8 +8,8 @@ const svg = document.getElementById('svg');
 
 GUI.addRange('Dots', 100, '', { min: 25, max: 400, name: 'numdots' });
 GUI.addColor('Color', '#E4473D', '', { name: 'fill' });
-GUI.addRange('Min Radius', 1, '', { min: 0.1, max: 5, step: 0.1, name: 'minradius' });
-GUI.addRange('Max Radius', 15, '', { min: 5, max: 20, step: 0.1, name: 'maxradius' });
+GUI.addRange('Min. radius', 1, '', { min: 0.1, max: 5, step: 0.1, name: 'minradius' });
+GUI.addRange('Max. radius', 15, '', { min: 5, max: 20, step: 0.1, name: 'maxradius' });
 commonConfig(GUI);
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, kusamaDots));
 init(GUI, storageKey, []);
