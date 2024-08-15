@@ -20,24 +20,19 @@
     {
       "id": 36245,
       "value": "Tintin - Filmalbum (HC)",
-      "attribute_type_id": 5,
       "type": "Comic Series"
     },
     {
       "id": 46662,
       "value": "Dansk album",
-      "attribute_type_id": 6,
       "type": "Comic Type"
     }
   ],
   "categories": [
     {
       "id": 22,
-      "product_type_id": 2,
       "name": "Dansk album",
-      "description": null,
-      "parent_id": null,
-      "order": null
+      "description": null
     }
   ],
   "collections": [],
@@ -45,8 +40,7 @@
     {
       "id": 1,
       "name": "Default",
-      "currency_code": "DKK",
-      "locale": "da-DK"
+      "currency_code": "DKK"
     }
   ],
   "jobs": [],

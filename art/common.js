@@ -78,6 +78,7 @@ export function commonConfig(GUI, canvasColor = '#ffffff', frameColor = '#f6c6a4
 		(ul) => GUI.addButton('Save', 'Save preset', 'button', { 'data-action': 'save-preset' }, ul),
 		(ul) => GUI.addButton('Download', 'Download SVG', 'button', { 'data-action': 'download' }, ul)
 	]);
+	// GUI.addButton('', 'Reset / Re-render', 'reset', { 'data-action': 'reset' });
 }
 
 export function formDataToObject(formData) {
