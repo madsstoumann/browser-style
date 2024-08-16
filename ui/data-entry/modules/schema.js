@@ -95,16 +95,20 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 	}
 
 	for (const [key, value] of Object.entries(data)) {
-		const type = typeof value;
+		let type = typeof value;
 		const render = generateRenderMethod(type, key, value);
 
-		if (type === 'object' && value !== null && !Array.isArray(value)) {
+		if (value === null) {
+			// If the value is null, set type to ["object", "null"]
+			type = ["object", "null"];
+		} else if (type === 'object' && !Array.isArray(value)) {
 			schema.properties[key] = {
 				type: 'object',
 				title: key,
 				properties: generateSchemaFromData(value, disabledKeys).properties,
 				required: Object.keys(value),
 			};
+			continue;
 		} else if (Array.isArray(value)) {
 			const itemSchema = generateSchemaFromData(value[0] || {}, disabledKeys);
 			const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
@@ -138,30 +142,32 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 					}
 				},
 			};
-		} else {
-			const propertyObject = {
-				type: 'string',
-				title: toTitleCase(key),
-				render,
-			};
-
-			if (isLikelyImageUrl(value)) {
-				propertyObject.property = 'src';
-			}
-
-			// Check if the key is in the disabledKeys array
-			if (disabledKeys.includes(key)) {
-				propertyObject.render.attributes = propertyObject.render.attributes || [];
-				propertyObject.render.attributes.push({ disabled: "disabled" });
-			}
-
-			schema.properties[key] = propertyObject;
-			schema.required.push(key);
+			continue;
 		}
+
+		const propertyObject = {
+			type: type, // Use the updated type, which can now be ["object", "null"]
+			title: toTitleCase(key),
+			render,
+		};
+
+		if (isLikelyImageUrl(value)) {
+			propertyObject.property = 'src';
+		}
+
+		// Check if the key is in the disabledKeys array
+		if (disabledKeys.includes(key)) {
+			propertyObject.render.attributes = propertyObject.render.attributes || [];
+			propertyObject.render.attributes.push({ disabled: "disabled" });
+		}
+
+		schema.properties[key] = propertyObject;
+		schema.required.push(key);
 	}
 
 	return schema;
 }
+
 
 function generateEntryProperties(data) {
 	const properties = {};

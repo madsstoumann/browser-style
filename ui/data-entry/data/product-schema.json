@@ -301,10 +301,7 @@
 						"render": {
 							"method": "input",
 							"attributes": [
-								{ "checked": "checked" },
-								{ "name": "attribute" },
-								{ "class": "bg-gray --fs-lg --cross" },
-								{ "type": "checkbox" }
+
 							]
 						}
 					}

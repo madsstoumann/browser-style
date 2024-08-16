@@ -1,11 +1,11 @@
 import { attrs, uuid } from './utility.js';
 
-export function all(data, schema, instance, root = false, namePrefix = '') {
+export function all(data, schema, instance, root = false, pathPrefix = '') {
 	let content = Object.entries(schema.properties).map(([key, config]) => {
 			const attributes = config?.render?.attributes || [];
 			const method = config?.render?.method;
 			const renderMethod = instance.getRenderMethod(method);
-			const title = config.title || 'LABEL';
+			const label = config.title || 'LABEL';
 			const toolbar = config?.render?.toolbar ? instance.getRenderMethod('toolbar')(config.render.toolbar) : '';
 
 			let options = config?.render?.options || [];
@@ -18,38 +18,39 @@ export function all(data, schema, instance, root = false, namePrefix = '') {
 					}
 			}
 
-			const namePath = namePrefix ? `${namePrefix}.${key}` : key;
+			// If pathPrefix is 'DISABLE_PATH', set path to an empty string, thus bypassing dotted path generation
+			const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
+			// Include the type from the schema in the parameters passed to the renderMethod
 			if (config.type === 'object') {
 					if (config.render && method) {
 							try {
-									return renderMethod(title, data[key], attributes, options, config, instance, namePath);
+									return renderMethod({ label, value: data[key], attributes, options, config, instance, path, type: config.type });
 							} catch {
 									return '';
 							}
 					} else {
-							return fieldset(title, attributes, all(data[key], config, instance, false, namePath));
+							return fieldset({ label, content: all(data[key], config, instance, false, path), attributes });
 					}
 			} else if (config.type === 'array') {
 					if (method) {
 							try {
-									const addEntry = config.render?.entry ? instance.getRenderMethod('entry')(config.render.entry, key, instance) : '';
-									return renderMethod(title, data[key], attributes, options, config, instance, namePath) + addEntry + toolbar;
+									const addEntry = config.render?.entry ? instance.getRenderMethod('entry')({ obj: config.render.entry, key, instance }) : '';
+									return renderMethod({ label, value: data[key], attributes, options, config, instance, path, type: config.type }) + addEntry + toolbar;
 							} catch {
 									return '';
 							}
 					} else if (config.items) {
-							// Here is where we ensure namePath is correctly propagated
 							return data[key].map((item, index) => {
-									const itemNamePath = `${namePath}[${index}]`; // This ensures the correct name path
-									return all(item, config.items, instance, false, itemNamePath);
+									const itempath = `${path}[${index}]`;
+									return all(item, config.items, instance, false, itempath);
 							}).join('');
 					}
 			}
 
 			if (method) {
 					try {
-							return renderMethod(title, data[key], attributes, options, config, instance, namePath);
+							return renderMethod({ label, value: data[key], attributes, options, config, instance, path, type: config.type });
 					} catch {
 							return '';
 					}
@@ -60,45 +61,61 @@ export function all(data, schema, instance, root = false, namePrefix = '') {
 	return root && schema?.render?.toolbar ? content + instance.getRenderMethod('toolbar')(schema.render.toolbar) : content;
 }
 
+
 /* ARRAY */
-export const array = (label, value, attributes, options, config, instance, namePath = '') => {
-		return value.map((item, index) => fieldset(`${label} ${index + 1}`, attributes, all(item, config.items, instance, false, `${namePath}[${index}]`))).join('');
+export const array = (params) => {
+		const { attributes, config, instance, label, path = '', value } = params;
+		return value.map((item, index) => fieldset({ label: `${label} ${index + 1}`, content: all(item, config.items, instance, false, path ? `${path}[${index}]` : ''), attributes })).join('');
 };
 
 /* AUTOSUGGEST */
-export const autosuggest = (_label, value, attributes, options, config, _instance, namePath = '') => {
-		return `<auto-suggest part="autosuggest" name="${namePath}" ${attrs(attributes)}></auto-suggest>`;
+export const autosuggest = (params) => {
+		const { attributes, path = '' } = params;
+		return `<auto-suggest part="autosuggest" name="${path}" ${attrs(attributes)}></auto-suggest>`;
 }
 
 /* CHECKLIST */
-export const checklist = (label, value, attributes, _options, config, _instance, namePath = '') => {
+export const checklist = (params) => {
+		const { attributes, config, label, path = '', value } = params;
 
-		const checkitem = (item, config, namePath) => {
-				let attributes, label, type, value;
+		const checkitem = (item, config, path) => {
+				let itemAttributes, itemLabel, itemType, itemValue;
 				for (const [key, prop] of Object.entries(config.properties)) {
-						if (prop.property === 'label') label = item[key];
-						if (prop.property === 'type') type = item[key];
+						if (prop.property === 'label') itemLabel = item[key];
+						if (prop.property === 'type') itemType = item[key];
 						if (prop.property === 'value') {
-								value = item[key];
-								attributes = prop.render.attributes;
+								itemValue = item[key];
+								itemAttributes = prop.render.attributes;
 						}
 				}
+
+				const defaultAttributes = {
+					checked: 'checked',
+					class: 'bg-gray --fs-lg --cross',
+					type: 'checkbox'
+				};
+
 				return `
 						<label part="row">
-								<span part="label">${type}</span>
-								<em part="header">${label}
-										<input part="input" type="checkbox" class="bg-gray --fs-lg --cross" checked ${attrs(attributes, [], namePath)} value="${value}">
+								<span part="label">${itemType}</span>
+								<em part="header">${itemLabel}
+										<input part="input" type="checkbox" checked ${attrs(itemAttributes, defaultAttributes, path)} value="${itemValue}">
 								</em>
 						</label>`;
 		};
 
-		return fieldset(label, attributes, value.map((item, index) => checkitem(item, config.items, `${namePath}[${index}]`)).join(''));
+		return fieldset({
+				label,
+				content: value.map((item, index) => checkitem(item, config.items, path ? `${path}[${index}]` : '')).join(''),
+				attributes
+		});
 }
 
 /* DETAILS */
-export const details = (label, value, attributes, _options, config, instance, namePath = '') => {
+export const details = (params) => {
+		const { attributes = [], config, instance, label, path = '', value } = params;
 
-		const detail = (value, config, namePath) => {
+		const detail = (value, config, path) => {
 				const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
 				const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
 
@@ -108,17 +125,21 @@ export const details = (label, value, attributes, _options, config, instance, na
 										<span part="label">${icon()}${summary}</span>
 										<em part="header">${header}</em>
 								</summary>
-								${all(value, config.items, instance, false, namePath)}
+								${all(value, config.items, instance, false, path)}
 						</details>`;
 		};
 
-		if (!Array.isArray(value)) return detail(value, config, namePath);
-		return fieldset(label, attributes, value.map((item, index) => detail(item, config, `${namePath}[${index}]`)).join(''));
+		if (!Array.isArray(value)) return detail(value, config, path);
+		return fieldset({
+				label,
+				content: value.map((item, index) => detail(item, config, path ? `${path}[${index}]` : '')).join(''),
+				attributes
+		});
 }
 
 /* ENTRY */
-export const entry = (obj, key, instance) => {
-		/* Create a form to host the entry-fields */
+export const entry = (params) => {
+		const { instance, key, obj } = params;
 		const formID = `form${uuid()}`;
 		instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
 
@@ -144,63 +165,82 @@ export const entry = (obj, key, instance) => {
 };
 
 /* FIELDSET */
-export const fieldset = (label, attributes, content) => `
-		<fieldset ${attrs(attributes, [{ part: 'fieldset' }])}>
-				<legend part="legend">${label}</legend>
-				${content}
-		</fieldset>`;
+export const fieldset = (params) => {
+		const { attributes = [], content, label } = params;
+		return `
+				<fieldset ${attrs(attributes, [{ part: 'fieldset' }])}>
+						<legend part="legend">${label}</legend>
+						${content}
+				</fieldset>`;
+};
 
 /* GRID */
-export const grid = (label, value, attributes, _options, config, instance, namePath = '') => {
-		return fieldset(label, attributes, value.map((item, index) => `<fieldset>${all(item, config.items, instance, false, `${namePath}[${index}]`)}</fieldset>`).join(''));
+export const grid = (params) => {
+		const { attributes = [], config, instance, label, path = '', value } = params;
+		return fieldset({
+				label,
+				content: value.map((item, index) => `<fieldset>${all(item, config.items, instance, false, path ? `${path}[${index}]` : '')}</fieldset>`).join(''),
+				attributes
+		});
 }
 
 /* ICON */
 const icon = (type = 'triangle right', size = 'md') => `<ui-icon type="${type}" size="${size}"></ui-icon>`;
 
 /* INPUT */
-export const input = (label, value, attributes, _options, _config, _instance, namePath = '') => {
+export const input = (params) => {
+		const { attributes = [], label, path = '', type = 'string', value } = params;
 		const checked = attributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
 		const hidden = attributes.some(attr => attr.type === 'hidden');
-		const output = `<input part="input" value="${value || ''}" ${attrs(attributes, [], namePath)} ${checked}></input>`;
+		const output = `<input part="input" value="${value || ''}" ${attrs(attributes, [], path)} data-type="${type}" ${checked}></input>`;
 		return hidden ? output : `<label part="row"><span part="label">${label}</span>${output}</label>`;
 }
 
 /* MEDIA */
-export const media = (label, value, attributes, _options, config, namePath = '') => {
-		const mediaItem = (item, config, namePath) => {
-				let attributes, src, value;
+export const media = (params) => {
+		const { attributes = [], config, label, path = '', value } = params;
+
+		const mediaItem = (item, config, path) => {
+				let itemAttributes, src, itemValue;
 				for (const [key, prop] of Object.entries(config.properties)) {
 						if (prop.property === 'src') src = item[key];
 						if (prop.property === 'value') {
-								value = item[key];
-								attributes = prop.render.attributes;
+								itemValue = item[key];
+								itemAttributes = prop.render.attributes;
 						}
 				}
 				return `
 				<label part="row">
-						<input part="input" ${attrs(attributes, [], namePath)} value="${value || ''}" type="checkbox" checked>
-						<img part="img" src="${src}" alt="${value || ''}">
+						<input part="input" ${attrs(itemAttributes, [], path)} value="${itemValue || ''}" type="checkbox" checked>
+						<img part="img" src="${src}" alt="${itemValue || ''}">
 				</label>`;
 		}
-		return fieldset(label, attributes, value.map((item, index) => mediaItem(item, config.items, `${namePath}[${index}]`)).join(''))
+		return fieldset({
+				label,
+				content: value.map((item, index) => mediaItem(item, config.items, path ? `${path}[${index}]` : '')).join(''),
+				attributes
+		});
 };
 
 /* RICHTEXT */
-export const richtext = (label, value, attributes = [], namePath = '') => `
-		<div part="row">
-				<span part="label">${label}</span>
-				<rich-text part="richtext" ${attrs(attributes, [], namePath)}>
-						${value}
-				</rich-text>
-		</div>`;
+export const richtext = (params) => {
+		const { attributes = [], label, path = '', value } = params;
+		return `
+				<div part="row">
+						<span part="label">${label}</span>
+						<rich-text part="richtext" ${attrs(attributes, [], path)}>
+								${value}
+						</rich-text>
+				</div>`;
+};
 
 /* SELECT */
-export const select = (label, value, attributes = [], options = [], namePath = '') => {
+export const select = (params) => {
+		const { attributes = [], label, options = [], path = '', value } = params;
 		return `
 				<label part="row">
 						<span part="label">${label}</span>
-						<select part="select" ${attrs(attributes, [], namePath)}>
+						<select part="select" ${attrs(attributes, [], path)}>
 								${options.map(option => `
 										<option value="${option.value}" ${option.value === value ? 'selected' : ''}>
 												${option.label}
@@ -212,12 +252,15 @@ export const select = (label, value, attributes = [], options = [], namePath = '
 };
 
 /* TEXTAREA */
-export const textarea = (label, value, attributes = [], namePath = '') => `
-		<label part="row">
-				<span part="label">${label}</span>
-				<textarea part="textarea" ${attrs(attributes, [], namePath)}>${value}</textarea>
-		</label>
-`;
+export const textarea = (params) => {
+		const { attributes = [], label, path = '', value } = params;
+		return `
+				<label part="row">
+						<span part="label">${label}</span>
+						<textarea part="textarea" ${attrs(attributes, [], path)}>${value}</textarea>
+				</label>
+		`;
+};
 
 /* TOOLBAR */
 export const toolbar = (config) => {

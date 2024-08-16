@@ -33,6 +33,8 @@ class DataEntry extends HTMLElement {
 			this.appendChild(this.form);
 		}
 
+		this.form.addEventListener('input', (event) => this.syncInstanceData(event));
+
 		if (this.jsonData && this.jsonSchema) {
 			this.instance.data = this.jsonData;
 			this.instance.schema = this.jsonSchema;
@@ -51,7 +53,7 @@ class DataEntry extends HTMLElement {
 					const validationResult = await this.validateData();
 					if (!validationResult.valid) {
 						console.error('Validation errors:', validationResult.errors);
-						return; // Do not render if validation fails
+						return;
 					}
 				}
 				this.renderAll();
@@ -62,6 +64,26 @@ class DataEntry extends HTMLElement {
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!newValue || oldValue === newValue) return;
 	}
+
+	convertValue(value, dataType, inputType, checked) {
+    switch (dataType) {
+        case 'number':
+            return Number(value);
+        case 'boolean':
+            if (inputType === 'checkbox') {
+                return checked; // Use the checked property for checkboxes
+            }
+            return value === 'true' || value === true;
+        case 'object':
+            try {
+                return JSON.parse(value); // Handle objects and arrays
+            } catch {
+                return value;
+            }
+        default:
+            return value; // Default to string if no specific type is provided
+    }
+}
 
 	async fetchData() {
 		const dataUrl = this.getAttribute('data');
@@ -90,6 +112,36 @@ class DataEntry extends HTMLElement {
 
 	shouldValidate() {
 		return this.getAttribute('validation') === 'true';
+	}
+
+	syncInstanceData(event) {
+    const { name, value, type, checked } = event.target;
+    if (!name) return;
+
+    const dataType = event.target.dataset.type; // Get the data type from the data-type attribute
+
+    const path = name.split('.').reduce((acc, key, index, array) => {
+        const match = key.match(/([^\[]+)\[?(\d*)\]?/);
+        const prop = match[1];
+        const idx = match[2];
+
+        if (!acc[prop]) {
+            acc[prop] = idx ? [] : {};
+        }
+
+        if (idx) {
+            acc[prop][idx] = acc[prop][idx] || (array[index + 1] ? {} : this.convertValue(value, dataType, type, checked));
+            return acc[prop][idx];
+        }
+
+        if (index === array.length - 1) {
+            acc[prop] = this.convertValue(value, dataType, type, checked); // Convert value to the correct type
+        }
+
+        return acc[prop];
+    }, this.instance.data);
+
+    console.log('Updated data:', this.instance.data); // For debugging purposes
 	}
 
 	async validateData() {

@@ -47,10 +47,15 @@ export function attrs(attributes, additionalAttributes = [], path = '') {
 
 	// Convert merged object into a string of HTML attributes
 	return Object.entries(merged)
-			.map(([key, value]) => key === value ? `${key}` : `${key}="${value}"`)
+			.map(([key, value]) => {
+					// Handle the case where key and value are both "name"
+					if (key === 'name' && value === 'name') {
+							return `${key}="${value}"`;
+					}
+					return key === value ? `${key}` : `${key}="${value}"`;
+			})
 			.join(' ');
 }
-
 
 /**
  * Binds utility events to elements with data-util attribute.
