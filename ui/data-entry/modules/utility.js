@@ -26,21 +26,31 @@ export function addArrayEntry(dataEntryInstance, key, popoverId) {
  * @param {Array<Object>} additional - Additional attributes to merge.
  * @returns {string} - The string representation of the merged attributes.
  */
-export const attrs = (attributes = [], additional = []) => {
+export function attrs(attributes, additionalAttributes = [], path = '') {
 	const merged = {};
-	attributes.concat(additional).forEach(attr => {
-		Object.entries(attr).forEach(([key, value]) => {
-			if (merged[key]) {
-				merged[key] = `${merged[key]} ${value}`.trim();
-			} else {
-				merged[key] = value;
-			}
-		});
+
+	// Merge attributes and additionalAttributes into one object
+	attributes.concat(additionalAttributes).forEach(attr => {
+			Object.entries(attr).forEach(([key, value]) => {
+					if (merged[key]) {
+							merged[key] = `${merged[key]} ${value}`.trim();
+					} else {
+							merged[key] = value;
+					}
+			});
 	});
+
+	// If path is provided, set or replace the "name" attribute
+	if (path) {
+			merged['name'] = path;
+	}
+
+	// Convert merged object into a string of HTML attributes
 	return Object.entries(merged)
-		.map(([key, value]) => key === value ? `${key}` : `${key}="${value}"`)
-		.join(' ');
-};
+			.map(([key, value]) => key === value ? `${key}` : `${key}="${value}"`)
+			.join(' ');
+}
+
 
 /**
  * Binds utility events to elements with data-util attribute.
