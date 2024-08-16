@@ -9,6 +9,9 @@
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="data-entry.css">
 	<style>
+		form:not(:empty) {
+			margin-block: 2ch 0;
+		}
 		nav {
 			display: flex;
 			gap: 1ch;
@@ -39,22 +42,28 @@
 	<label>Generated Schema
 		<textarea id="schema" placeholder="Generated Schema JSON"></textarea>
 	</label>
+	<form id="configureschema"></form>
 	<nav>
 		<button id="download">Download Schema</button>
+		<button id="configure">Configure Schema</button>
+		<button id="update">Update Schema</button>
 		<button id="preview">Preview with &lt;data-entry&gt;</button>
 	</nav>
 	<data-entry id="dataentry"></data-entry>
 
 	<script type="module">
-		import { generateSchemaFromData } from './modules/schema.js';
-		import DataEntry from './index.js'; 
+		import { addEntryToSchema, generateSchemaFromData } from './modules/schema.js';
+		import DataEntry from './index.js';
+
+		const configureSchema = document.getElementById('configureschema');
+		const dataEntry = document.getElementById('dataentry');
+		const jsonInput = document.getElementById('json');
+		const schemaInput = document.getElementById('schema');
 
 		/* Generate Schema */
 		document.getElementById('generate').addEventListener('click', () => {
-			const jsonInput = document.getElementById('json').value;
-			const schemaInput = document.getElementById('schema');
 			try {
-				const data = JSON.parse(jsonInput);
+				const data = JSON.parse(jsonInput.value);
 				const schema = generateSchemaFromData(data);
 				schemaInput.value = JSON.stringify(schema, null, 2);
 			} catch (error) {
@@ -81,17 +90,91 @@
 
 		/* Preview with <data-entry> */
 		document.getElementById('preview').addEventListener('click', () => {
-			const dataEntry = document.getElementById('dataentry');
-			const json = document.getElementById('json').value;
-			const schema = document.getElementById('schema').value;
 			try {
-				dataEntry.jsonData = JSON.parse(json);
-				dataEntry.jsonSchema = JSON.parse(schema);
+				dataEntry.jsonData = JSON.parse(jsonInput.value);
+				dataEntry.jsonSchema = JSON.parse(schemaInput.value);
 				dataEntry.renderAll();
 			} catch (error) {
 				alert('Invalid JSON for data or schema');
 			}
 		});
+
+		/* Configure Schema */
+		document.getElementById('configure').addEventListener('click', () => {
+			configureSchema.innerHTML = '';
+			try {
+				const schema = JSON.parse(schemaInput.value);
+				for (const [key, value] of Object.entries(schema.properties)) {
+					if (value.type === 'array') {
+						configureSchema.insertAdjacentHTML('beforeend', `
+						<fieldset>
+							<legend><strong>${key}</strong></legend>
+								<label>Render-method:
+									<select name="${key}-type">
+										<option value="">array (default</option>
+										<option value="checklist">checklist</option>
+										<option value="details">details</option>
+										<option value="grid">grid</option>
+									</select>
+								</label>
+									<label><input type="checkbox" name="${key}">Add entry?</label>
+						</fieldset>
+						`);
+					}
+				}
+			} catch (error) {
+				console.error('Invalid JSON in schema');
+			}
+		});
+
+		/* Update Schema */
+		document.getElementById('update').addEventListener('click', () => {
+			try {
+				const schema = JSON.parse(schemaInput.value);
+
+				// First loop: Handle checkboxes to add entry fields
+				const checkboxes = configureSchema.querySelectorAll('input[type="checkbox"]');
+				checkboxes.forEach(checkbox => {
+					if (checkbox.checked) {
+						const key = checkbox.name;
+
+						// Find the corresponding data for the key in the original JSON data
+						const data = JSON.parse(jsonInput.value);
+						const arrayData = data[key];
+
+						// Update the schema by adding the entry field
+						addEntryToSchema(schema, key, arrayData);
+					}
+				});
+
+				// Second loop: Handle select elements to update render method and part attributes
+				const selects = configureSchema.querySelectorAll('select');
+				selects.forEach(select => {
+					const key = select.name.replace('-type', '');
+					const selectedMethod = select.value;
+
+					if (selectedMethod) {
+						schema.properties[key].render.method = selectedMethod;
+
+						// Find or update the 'part' attribute in the render.attributes array
+						let partAttribute = schema.properties[key].render.attributes.find(attr => attr.part);
+						if (partAttribute) {
+							partAttribute.part = selectedMethod;
+						} else {
+							schema.properties[key].render.attributes.push({ part: selectedMethod });
+						}
+					}
+				});
+
+				schemaInput.value = JSON.stringify(schema, null, 2);
+
+			} catch (error) {
+				console.error('Error updating schema:', error);
+			}
+		});
+
+
+
 	</script>
 </body>
 </html>

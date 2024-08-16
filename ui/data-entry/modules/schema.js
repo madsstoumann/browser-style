@@ -112,12 +112,15 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 		} else if (Array.isArray(value)) {
 			const itemSchema = generateSchemaFromData(value[0] || {}, disabledKeys);
 			const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
-			let entryProperties = {};
 
-			try {
-				entryProperties = generateEntryProperties(value[0]);
-			} catch (error) {
-				console.error(`Error generating entry properties for key "${key}":`, error);
+			render.summary = 'LABEL';
+			render.label = 'VALUE';
+
+			// Add property attributes to each item under properties
+			for (const [itemKey, itemValue] of Object.entries(itemSchema.properties)) {
+				if (!itemValue.property) {
+					itemValue.property = itemKey.toLowerCase();  // Example logic to set property
+				}
 			}
 
 			schema.properties[key] = {
@@ -131,15 +134,8 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 				render: {
 					method: isMediaArray ? 'media' : 'array',
 					attributes: [{ part: isMediaArray ? 'media' : 'array' }],
-					entry: {
-						id: `add_${key}`,
-						label: 'Add row',
-						name: '',
-						schema: {
-							type: 'object',
-							properties: entryProperties
-						}
-					}
+					summary: render.summary,
+					label: render.label,
 				},
 			};
 			continue;
@@ -168,6 +164,31 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 	return schema;
 }
 
+
+export function addEntryToSchema(schema, key, value, disabledKeys = []) {
+	if (!schema.properties[key] || !Array.isArray(value)) {
+		return; // Ensure the key exists in the schema and the value is an array
+	}
+
+	const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
+	let entryProperties = {};
+
+	try {
+		entryProperties = generateEntryProperties(value[0]);
+	} catch (error) {
+		console.error(`Error generating entry properties for key "${key}":`, error);
+	}
+
+	schema.properties[key].render.entry = {
+		id: `add_${key}`,
+		label: 'Add row',
+		name: '',
+		schema: {
+			type: 'object',
+			properties: entryProperties
+		}
+	};
+}
 
 function generateEntryProperties(data) {
 	const properties = {};
