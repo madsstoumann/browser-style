@@ -1,0 +1,15 @@
+@layer bs-component {
+	:where(.ui-linenumber) {
+		background-attachment: local;
+		background-position: 0 0;
+		background-repeat: no-repeat;
+		background-size: 5ch 100%;
+		block-size: unset;
+		font-family: var(--ui-linenumber-ff, var(--ff-mono));
+		font-size: var(--ui-linenumber-fs, 0.8125rem);
+		font-weight: normal;
+		line-height: var(--ui-linenumber-lh, 1.6);
+		padding-block: var(--ui-linenumber-pb, 1.5ch);
+		padding-inline: var(--ui-linenumber-fi, 7ch 2ch);
+	}
+}

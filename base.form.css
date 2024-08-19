@@ -359,7 +359,7 @@
 		--icon: url('/assets/svg/chevron-down.svg');
 	}
 	:where(textarea) {
-		field-sizing: auto;
+		/* field-sizing: content; */
 		min-block-size: var(--input-bs);
 		resize: vertical;
 	}

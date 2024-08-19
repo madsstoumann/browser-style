@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Line Number</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-linenumber.css">
+</head>
+<body>
+
+<textarea class="ui-linenumber">1. Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis, minima.
+2. Doloribus voluptatum hic molestiae officia reiciendis, eveniet id quia.
+3. Sunt voluptate nostrum nisi expedita labore dolore deleniti error.
+4. Amet, quibusdam similique. Explicabo obcaecati quod distinctio quaerat.
+5. Nulla temporibus perspiciatis vitae nesciunt consequuntur doloribus quo.
+6. Quasi repudiandae sequi, sint pariatur ipsum sed doloremque.
+7. Veniam, aliquid veritatis. Animi molestias omnis debitis hic.
+8. Fuga repellendus maxime, architecto dolores voluptatem quod dolorum!
+9. Perferendis pariatur distinctio autem minima, alias quibusdam doloribus.
+10. Laborum modi esse consectetur doloremque reprehenderit deserunt fuga.</textarea>
+
+<script type="module">
+	import { init } from './../../assets/js/common.js';
+	import uiLineNumber from './uiLineNumber.js';
+	init('.ui-linenumber', uiLineNumber, 50);
+</script>
+</body>
+</html>

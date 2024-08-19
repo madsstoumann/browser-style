@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="data-entry.css">
+	<link rel="stylesheet" href="../linenumber/ui-linenumber.css">
 	<style>
 		form:not(:empty) {
 			margin-block: 2ch 0;
@@ -16,11 +17,6 @@
 			display: flex;
 			gap: 1ch;
 			margin-block: 1ch;
-		}
-		textarea {
-			font-family: monospace;
-			font-size: small;
-			min-block-size: 10lh;
 		}
 		[data-type="object,null"] {
 			background: hsl(350 85% 95% / 1);
@@ -33,14 +29,14 @@
 	<h2>Data </h2>
 	<label>
 		JSON Data
-		<textarea id="json" placeholder="Paste JSON here"></textarea>
+		<textarea class="ui-linenumber" id="json" placeholder="Paste JSON here"></textarea>
 	</label>
 	<nav>
 		<button id="generate">Generate Schema</button>
 	</nav>
 	<h2>Preview</h2>
 	<label>Generated Schema
-		<textarea id="schema" placeholder="Generated Schema JSON"></textarea>
+		<textarea class="ui-linenumber" id="schema" placeholder="Generated Schema JSON"></textarea>
 	</label>
 	<form id="configureschema"></form>
 	<nav>
@@ -52,13 +48,17 @@
 	<data-entry id="dataentry"></data-entry>
 
 	<script type="module">
+		import { init } from './../../assets/js/common.js';
 		import { addEntryToSchema, generateSchemaFromData } from './modules/schema.js';
+		import uiLineNumber from '../linenumber/uiLineNumber.js';
 		import DataEntry from './index.js';
 
 		const configureSchema = document.getElementById('configureschema');
 		const dataEntry = document.getElementById('dataentry');
 		const jsonInput = document.getElementById('json');
 		const schemaInput = document.getElementById('schema');
+
+		init('.ui-linenumber', uiLineNumber, 1500);
 
 		/* Generate Schema */
 		document.getElementById('generate').addEventListener('click', () => {
