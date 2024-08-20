@@ -1,0 +1,872 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "default": {},
+  "properties": {
+    "id": {
+      "type": "number",
+      "title": "Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "id"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "placeholder": "Enter id"
+          }
+        ]
+      }
+    },
+    "name": {
+      "type": "string",
+      "title": "Name",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "name"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter name"
+          }
+        ]
+      }
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "render": {
+        "method": "richtext",
+        "attributes": [
+          {
+            "toolbar": "h1,h2,h3|b,i,u,s|sub,sup|ol,ul,hr|img|link,unlink"
+          }
+        ]
+      }
+    },
+    "issue": {
+      "type": "number",
+      "title": "Issue",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "issue"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "placeholder": "Enter issue"
+          }
+        ]
+      }
+    },
+    "product_type_id": {
+      "type": "number",
+      "title": "Product Type Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "product_type_id"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "placeholder": "Enter product_type_id"
+          }
+        ]
+      }
+    },
+    "base_product_id": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Base Product Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "base_product_id"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter base_product_id"
+          }
+        ]
+      }
+    },
+    "vendor_id": {
+      "type": "number",
+      "title": "Vendor Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "vendor_id"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "placeholder": "Enter vendor_id"
+          }
+        ]
+      }
+    },
+    "barcode": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Barcode",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "barcode"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter barcode"
+          }
+        ]
+      }
+    },
+    "condition": {
+      "type": "number",
+      "title": "Condition",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "condition"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "placeholder": "Enter condition"
+          }
+        ]
+      }
+    },
+    "published": {
+      "type": "boolean",
+      "title": "Published",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "published"
+          },
+          {
+            "type": "checkbox"
+          }
+        ]
+      }
+    },
+    "searchable": {
+      "type": "boolean",
+      "title": "Searchable",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "searchable"
+          },
+          {
+            "type": "checkbox"
+          }
+        ]
+      }
+    },
+    "sku": {
+      "type": "string",
+      "title": "Sku",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "sku"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter sku"
+          }
+        ]
+      }
+    },
+    "release_date": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Release Date",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "release_date"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter release_date"
+          }
+        ]
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "title": "Created At",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "created_at"
+          },
+          {
+            "type": "datetime-local"
+          },
+          {
+            "placeholder": "Enter date and time"
+          }
+        ]
+      }
+    },
+    "created_by": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Created By",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "created_by"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter created_by"
+          }
+        ]
+      }
+    },
+    "last_modified_at": {
+      "type": "string",
+      "title": "Last Modified At",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "last_modified_at"
+          },
+          {
+            "type": "datetime-local"
+          },
+          {
+            "placeholder": "Enter date and time"
+          }
+        ]
+      }
+    },
+    "last_modified_by": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Last Modified By",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "last_modified_by"
+          },
+          {
+            "type": "text"
+          },
+          {
+            "placeholder": "Enter last_modified_by"
+          }
+        ]
+      }
+    },
+    "attributes": {
+      "type": "array",
+      "title": "Attributes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter id"
+                }
+              ]
+            },
+            "property": "id"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "value"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter value"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "value"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "type"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter type"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "type"
+          }
+        },
+        "required": [
+          "id",
+          "value",
+          "type"
+        ]
+      },
+      "render": {
+        "method": "details",
+        "attributes": [
+          {
+            "part": "details"
+          }
+        ],
+        "summary": "type",
+        "label": "value",
+        "add": true,
+        "delete": true
+      }
+    },
+    "categories": {
+      "type": "array",
+      "title": "Categories",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter id"
+                }
+              ]
+            },
+            "property": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "name"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "name"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "render": {
+        "method": "details",
+        "attributes": [
+          {
+            "part": "details"
+          }
+        ],
+        "summary": "name",
+        "label": "&nbsp;",
+        "add": true,
+        "delete": true
+      }
+    },
+    "collections": {
+      "type": "array",
+      "title": "Collections",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter id"
+                }
+              ]
+            },
+            "property": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "name"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "name"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "render": {
+        "method": "details",
+        "attributes": [
+          {
+            "part": "details"
+          }
+        ],
+        "summary": "Title",
+        "label": "name",
+        "add": true,
+        "delete": true
+      }
+    },
+    "channels": {
+      "type": "array",
+      "title": "Channels",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter id"
+                }
+              ]
+            },
+            "property": "id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "name"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "name"
+          },
+          "currency_code": {
+            "type": "string",
+            "title": "Currency Code",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "currency_code"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter currency_code"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "currency_code"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "currency_code"
+        ]
+      },
+      "render": {
+        "method": "details",
+        "attributes": [
+          {
+            "part": "details"
+          }
+        ],
+        "summary": "name",
+        "label": "&nbsp;",
+        "add": true,
+        "delete": true
+      }
+    },
+    "prices": {
+      "type": "array",
+      "title": "Prices",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "title": "Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter id"
+                }
+              ]
+            },
+            "property": "id"
+          },
+          "product_id": {
+            "type": "number",
+            "title": "Product Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "product_id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter product_id"
+                }
+              ]
+            },
+            "property": "product_id"
+          },
+          "currency_code": {
+            "type": "string",
+            "title": "Currency Code",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "currency_code"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter currency_code"
+                }
+              ]
+            },
+            "property": "currency_code"
+          },
+          "discount": {
+            "type": "boolean",
+            "title": "Discount",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "discount"
+                },
+                {
+                  "type": "checkbox"
+                }
+              ]
+            },
+            "property": "discount"
+          },
+          "is_msrp": {
+            "type": "boolean",
+            "title": "Is Msrp",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "is_msrp"
+                },
+                {
+                  "type": "checkbox"
+                }
+              ]
+            },
+            "property": "is_msrp"
+          },
+          "valid_from": {
+            "type": "string",
+            "title": "Valid From",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "valid_from"
+                },
+                {
+                  "type": "datetime-local"
+                },
+                {
+                  "placeholder": "Enter date and time"
+                }
+              ]
+            },
+            "property": "valid_from"
+          },
+          "valid_to": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "title": "Valid To",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "valid_to"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter valid_to"
+                }
+              ]
+            },
+            "property": "valid_to"
+          },
+          "value": {
+            "type": "number",
+            "title": "Value",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "value"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter value"
+                }
+              ]
+            },
+            "property": "value"
+          }
+        },
+        "required": [
+          "id",
+          "product_id",
+          "currency_code",
+          "discount",
+          "is_msrp",
+          "valid_from",
+          "valid_to",
+          "value"
+        ]
+      },
+      "render": {
+        "method": "details",
+        "attributes": [
+          {
+            "part": "details"
+          }
+        ],
+        "summary": "currency_code",
+        "label": "value",
+        "add": true,
+        "delete": true
+      }
+    },
+    "vendor": {
+      "type": "object",
+      "title": "vendor",
+      "properties": {
+        "id": {
+          "type": "number",
+          "title": "Id",
+          "render": {
+            "method": "input",
+            "attributes": [
+              {
+                "name": "id"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "placeholder": "Enter id"
+              }
+            ]
+          }
+        },
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "render": {
+            "method": "input",
+            "attributes": [
+              {
+                "name": "name"
+              },
+              {
+                "type": "text"
+              },
+              {
+                "placeholder": "Enter name"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "description",
+    "issue",
+    "product_type_id",
+    "base_product_id",
+    "vendor_id",
+    "barcode",
+    "condition",
+    "published",
+    "searchable",
+    "sku",
+    "release_date",
+    "created_at",
+    "created_by",
+    "last_modified_at",
+    "last_modified_by"
+  ]
+}

@@ -19,7 +19,7 @@
 			margin-block: 1ch;
 		}
 		[data-type="object,null"] {
-			background: hsl(350 85% 95% / 1);
+			background: hsl(200 85% 95% / 1);
 		}
 	</style>
 </head>
@@ -49,7 +49,7 @@
 
 	<script type="module">
 		import { init } from './../../assets/js/common.js';
-		import { addEntryToSchema, generateSchemaFromData } from './modules/schema.js';
+		import { generateSchemaFromData } from './modules/schema.js';
 		import uiLineNumber from '../linenumber/uiLineNumber.js';
 		import DataEntry from './index.js';
 
@@ -95,74 +95,171 @@
 				dataEntry.jsonSchema = JSON.parse(schemaInput.value);
 				dataEntry.renderAll();
 			} catch (error) {
+				console.log(error);
 				alert('Invalid JSON for data or schema');
 			}
 		});
 
 		/* Configure Schema */
 		document.getElementById('configure').addEventListener('click', () => {
-			configureSchema.innerHTML = '';
-			try {
-				const schema = JSON.parse(schemaInput.value);
-				for (const [key, value] of Object.entries(schema.properties)) {
-					if (value.type === 'array') {
-						configureSchema.insertAdjacentHTML('beforeend', `
-						<fieldset>
-							<legend><strong>${key}</strong></legend>
-								<label>Render-method:
-									<select name="${key}-type">
-										<option value="">array (default</option>
-										<option value="checklist">checklist</option>
-										<option value="details">details</option>
-										<option value="grid">grid</option>
-									</select>
-								</label>
-									<label><input type="checkbox" name="${key}">Add entry?</label>
-						</fieldset>
-						`);
-					}
+	configureSchema.innerHTML = '';
+	try {
+		const schema = JSON.parse(schemaInput.value);
+		for (const [key, value] of Object.entries(schema.properties)) {
+			if (value.type === 'array') {
+				let optionsHtml = '';
+				let propertiesHtml = '';
+
+				if (value.items && value.items.properties) {
+					optionsHtml = Object.keys(value.items.properties)
+						.map(propKey => `<option value="${propKey}">${propKey}</option>`)
+						.join('');
+
+					// Generate the sub-fieldset for disabling properties
+					propertiesHtml = Object.entries(value.items.properties)
+						.map(([propKey, propValue]) => `
+							<label>
+								<input type="checkbox" name="${key}-${propKey}-disabled">
+								${propValue.title || propKey}
+							</label>
+						`).join('');
 				}
-			} catch (error) {
-				console.error('Invalid JSON in schema');
+
+				// Unique ID for the datalist
+				const datalistId = `${key}-datalist`;
+
+				configureSchema.insertAdjacentHTML('beforeend', `
+				<details name="configure-schema">
+					<summary>${key}</summary>
+					<fieldset>
+						<label>Render-method:
+							<select name="${key}-type">
+								<option value="">array (default)</option>
+								<option value="details">details</option>
+								<option value="grid">grid</option>
+							</select>
+						</label>
+
+						<label>Summary:
+							<input type="text" name="${key}-summary" list="${datalistId}" placeholder="Choose or enter an option">
+						</label>
+
+						<label>Header:
+							<input type="text" name="${key}-label" list="${datalistId}" placeholder="Choose or enter an option">
+						</label>
+
+						<label><input type="checkbox" name="${key}-add">Add entry?</label>
+						<label><input type="checkbox" name="${key}-delete">Delete entry?</label>
+
+						<!-- Sub-fieldset for disabling properties -->
+						<fieldset>
+							<legend>Disable Properties</legend>
+							${propertiesHtml}
+						</fieldset>
+
+						<!-- Datalist rendered once and referenced by both inputs -->
+						<datalist id="${datalistId}">
+							${optionsHtml}
+						</datalist>
+				</fieldset>
+				</details>
+				`);
 			}
-		});
+		}
+	} catch (error) {
+		console.error('Invalid JSON in schema');
+	}
+});
+
+
 
 		/* Update Schema */
 		document.getElementById('update').addEventListener('click', () => {
 			try {
 				const schema = JSON.parse(schemaInput.value);
 
-				// First loop: Handle checkboxes to add entry fields
+				// First loop: Handle checkboxes to add or delete entry fields
 				const checkboxes = configureSchema.querySelectorAll('input[type="checkbox"]');
 				checkboxes.forEach(checkbox => {
+					const [key, action, subAction] = checkbox.name.split('-');
+
 					if (checkbox.checked) {
-						const key = checkbox.name;
+						// Handle adding or deleting entries in the render object
+						if (action === 'add') {
+							schema.properties[key].render.add = true;
+						}
 
-						// Find the corresponding data for the key in the original JSON data
-						const data = JSON.parse(jsonInput.value);
-						const arrayData = data[key];
+						if (action === 'delete') {
+							schema.properties[key].render.delete = true;
+						}
 
-						// Update the schema by adding the entry field
-						addEntryToSchema(schema, key, arrayData);
+						// Handle disabling specific fields within array items
+						if (subAction === 'disabled') {
+							const parentKey = key;
+							const propKey = action;
+							const targetField = schema.properties[parentKey].items.properties[propKey];
+
+							if (!targetField.render.attributes) {
+								targetField.render.attributes = [];
+							}
+							// Add the disabled attribute
+							targetField.render.attributes.push({ disabled: "disabled" });
+						}
+					} else {
+						// If the checkbox is unchecked, remove the property from the render object
+						if (action === 'add') {
+							delete schema.properties[key].render.add;
+						}
+
+						if (action === 'delete') {
+							delete schema.properties[key].render.delete;
+						}
+
+						// Handle enabling specific fields within array items
+						if (subAction === 'disabled') {
+							const parentKey = key;
+							const propKey = action;
+							const targetField = schema.properties[parentKey].items.properties[propKey];
+
+							// Remove the disabled attribute if the checkbox is unchecked
+							targetField.render.attributes = targetField.render.attributes.filter(attr => !attr.disabled);
+						}
 					}
 				});
 
-				// Second loop: Handle select elements to update render method and part attributes
-				const selects = configureSchema.querySelectorAll('select');
+				// Second loop: Handle select elements to update render method
+				const selects = configureSchema.querySelectorAll('select[name$="-type"]');
 				selects.forEach(select => {
 					const key = select.name.replace('-type', '');
-					const selectedMethod = select.value;
+					const selectedValue = select.value;
 
-					if (selectedMethod) {
-						schema.properties[key].render.method = selectedMethod;
+					// Update the render method if applicable
+					if (selectedValue) {
+						schema.properties[key].render.method = selectedValue;
 
 						// Find or update the 'part' attribute in the render.attributes array
 						let partAttribute = schema.properties[key].render.attributes.find(attr => attr.part);
 						if (partAttribute) {
-							partAttribute.part = selectedMethod;
+							partAttribute.part = selectedValue;
 						} else {
-							schema.properties[key].render.attributes.push({ part: selectedMethod });
+							schema.properties[key].render.attributes.push({ part: selectedValue });
 						}
+					}
+				});
+
+				// Third loop: Handle text inputs to update summary and label attributes
+				const textInputs = configureSchema.querySelectorAll('input[type="text"]');
+				textInputs.forEach(input => {
+					const [key, type] = input.name.split('-');
+					const inputValue = input.value;
+
+					// Update the summary and label attributes
+					if (type === 'summary') {
+						schema.properties[key].render.summary = inputValue.trim() === '' ? '&nbsp;' : inputValue;
+					}
+
+					if (type === 'label') {
+						schema.properties[key].render.label = inputValue.trim() === '' ? '&nbsp;' : inputValue;
 					}
 				});
 
@@ -172,6 +269,9 @@
 				console.error('Error updating schema:', error);
 			}
 		});
+
+
+
 
 
 

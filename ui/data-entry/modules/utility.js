@@ -1,21 +1,12 @@
 export function addArrayEntry(dataEntryInstance, key, popoverId) {
-	// const popover = document.getElementById(popoverId);
-	// const inputs = popover.querySelectorAll('input');
-	// const newEntry = {};
-
-	// inputs.forEach(input => {
-	// 	newEntry[input.name] = input.type === 'number' ? parseInt(input.value, 10) : input.value;
-	// });
-
 	const data = dataEntryInstance.data[key];
 	// const schema = dataEntry.schema;
-	console.log(data);
+	console.log(dataEntryInstance,key);
 
-	// if (!data[key]) data[key] = [];
-	// data[key].push(newEntry);
+}
 
-	// const formContent = document.getElementById('form-content');
-	// formContent.innerHTML = dataEntry.methods.all(data, schema, true);
+export function removeArrayEntry(dataEntryInstance, key) {
+	console.log('removeArrayEntry', dataEntryInstance, key);
 }
 
 /**

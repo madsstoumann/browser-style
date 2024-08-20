@@ -68,6 +68,38 @@ export const array = (params) => {
 		return value.map((item, index) => fieldset({ label: `${label} ${index + 1}`, content: all(item, config.items, instance, false, path ? `${path}[${index}]` : ''), attributes })).join('');
 };
 
+
+/* ARRAYLIST */
+const arraylistItem = (item, config, path) => {
+	let itemAttributes, itemLabel, itemType, itemValue;
+	let keyPath = path;
+
+	for (const [key, prop] of Object.entries(config.properties)) {
+		if (prop.property === 'label') itemLabel = item[key];
+		if (prop.property === 'type') itemType = item[key];
+		if (prop.property === 'value') {
+			itemValue = item[key];
+			itemAttributes = prop.render.attributes;
+			keyPath = path ? `${path}.${key}` : key;
+		}
+	}
+console.log(itemAttributes);
+	const defaultAttributes = {
+		checked: 'checked',
+		class: 'bg-gray --fs-lg --cross',
+		type: 'checkbox'
+	};
+
+	return `
+		<label part="row">
+			<span part="label">${itemType}</span>
+			<em part="header">${itemLabel}
+				<input part="input" ${attrs(itemAttributes, defaultAttributes, keyPath)} value="${itemValue}">
+			</em>
+		</label>`;
+};
+
+
 /* AUTOSUGGEST */
 export const autosuggest = (params) => {
 		const { attributes, path = '' } = params;
@@ -77,91 +109,83 @@ export const autosuggest = (params) => {
 /* CHECKLIST */
 export const checklist = (params) => {
 		const { attributes, config, label, path = '', value } = params;
-
-		const checkitem = (item, config, path) => {
-				let itemAttributes, itemLabel, itemType, itemValue;
-				for (const [key, prop] of Object.entries(config.properties)) {
-						if (prop.property === 'label') itemLabel = item[key];
-						if (prop.property === 'type') itemType = item[key];
-						if (prop.property === 'value') {
-								itemValue = item[key];
-								itemAttributes = prop.render.attributes;
-						}
-				}
-
-				const defaultAttributes = {
-					checked: 'checked',
-					class: 'bg-gray --fs-lg --cross',
-					type: 'checkbox'
-				};
-
-				return `
-						<label part="row">
-								<span part="label">${itemType}</span>
-								<em part="header">${itemLabel}
-										<input part="input" type="checkbox" checked ${attrs(itemAttributes, defaultAttributes, path)} value="${itemValue}">
-								</em>
-						</label>`;
-		};
-
 		return fieldset({
 				label,
-				content: value.map((item, index) => checkitem(item, config.items, path ? `${path}[${index}]` : '')).join(''),
+				content: value.map((item, index) => arraylistItem(item, config.items, path ? `${path}[${index}]` : '')).join(''),
 				attributes
 		});
 }
 
 /* DETAILS */
 export const details = (params) => {
-		const { attributes = [], config, instance, label, path = '', value } = params;
+	const { attributes = [], config, instance, label, path = '', value } = params;
 
-		const detail = (value, config, path) => {
-				const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
-				const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
+	const detail = (value, config, path) => {
+		const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
+		const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
 
-				return `
-						<details part="details" ${attrs(attributes)}>
-								<summary part="row summary">
-										<span part="label">${icon()}${summary}</span>
-										<em part="header">${header}</em>
-								</summary>
-								${all(value, config.items, instance, false, path)}
-						</details>`;
-		};
+		return `
+			<details part="details" ${attrs(attributes)}>
+				<summary part="row summary">
+					<span part="label">${summary}</span>
+					<em part="header">${header}
+					${config.render.delete ? `<input part="input" checked class="bg-gray --fs-lg --cross" type="checkbox" data-util="removeArrayEntry" data-path="${path}">` : ''}
+					</em>
+				</summary>
+				${all(value, config.items, instance, false, path)}
+			</details>`;
+	};
 
-		if (!Array.isArray(value)) return detail(value, config, path);
-		return fieldset({
-				label,
-				content: value.map((item, index) => detail(item, config, path ? `${path}[${index}]` : '')).join(''),
-				attributes
-		});
-}
+	const content = value.map((item, index) => detail(item, config, path ? `${path}[${index}]` : '')).join('');
+
+	// Generate the entry form if config.render.add is true
+	let entryContent = '';
+	if (config.render?.add) {
+		entryContent = entry({ config, path });
+	}
+
+	return fieldset({
+		label,
+		content: content + entryContent,
+		attributes
+	});
+};
 
 /* ENTRY */
 export const entry = (params) => {
-		const { instance, key, obj } = params;
-		const formID = `form${uuid()}`;
-		instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
+	const { config, path = '' } = params;
+	const id = `popover-${uuid()}`; // Unique ID for the popover
+	const label = config.title || 'Add New Entry';
 
-		const { id, label, name, schema } = obj;
-		const fields = all({}, schema, instance);
+	// Generate the form fields using the input method for each property
+	const fields = Object.entries(config.items.properties)
+		.map(([propKey, propConfig]) => {
+			return input({
+				label: propConfig.title,
+				attributes: propConfig.render.attributes,
+				path: `${path}.${propKey}`,
+				type: propConfig.type || 'string',
+				value: '' // Default to empty since it's for a new entry
+			});
+		})
+		.join('');
 
-		return `
+	return `
+		<nav part="nav">
+			<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
+				${icon('plus')}${label}
+			</button>
+		</nav>
+		<div id="${id}" popover="" style="--_pa:--${id};">
+			<fieldset part="fieldset" name="${path}-entry">
+				<legend part="legend">${label}</legend>
+				${fields}
 				<nav part="nav">
-						<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
-								${icon('plus')}${label}
-						</button>
+					<button type="button" popovertarget="${id}" popovertargetaction="hide" class="--text fs-xs">Close</button>
+					<button type="button" class="bg-success --light fs-xs" data-util="addArrayEntry" data-path="${path}">Add</button>
 				</nav>
-				<div id="${id}" popover="" style="--_pa:--${id};">
-						<fieldset part="fieldset" name="${name}">
-								<legend part="legend">${label}</legend>
-								${fields}
-								<nav part="nav">
-										<button type="button" popovertarget="${id}" popovertargetaction="hide" class="--text fs-xs">Close</button>
-										<button type="button" class="bg-success --light fs-xs" data-util="addArrayEntry" data-params='{"key": "${key}", "id": "${id}"}'>Add</button>
-								</nav>
-						</fieldset>
-				</div>`;
+			</fieldset>
+		</div>`;
 };
 
 /* FIELDSET */

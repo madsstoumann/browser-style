@@ -165,48 +165,48 @@ export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, 
 }
 
 
-export function addEntryToSchema(schema, key, value, disabledKeys = []) {
-	if (!schema.properties[key] || !Array.isArray(value)) {
-		return; // Ensure the key exists in the schema and the value is an array
-	}
+// export function addEntryToSchema(schema, key, value, disabledKeys = []) {
+// 	if (!schema.properties[key] || !Array.isArray(value)) {
+// 		return; // Ensure the key exists in the schema and the value is an array
+// 	}
 
-	const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
-	let entryProperties = {};
+// 	// const isMediaArray = value.some(item => isLikelyImageUrl(item.url || item));
+// 	let entryProperties = {};
 
-	try {
-		entryProperties = generateEntryProperties(value[0]);
-	} catch (error) {
-		console.error(`Error generating entry properties for key "${key}":`, error);
-	}
+// 	try {
+// 		entryProperties = generateEntryProperties(value[0]);
+// 	} catch (error) {
+// 		console.error(`Error generating entry properties for key "${key}":`, error);
+// 	}
 
-	schema.properties[key].render.entry = {
-		id: `add_${key}`,
-		label: 'Add row',
-		name: '',
-		schema: {
-			type: 'object',
-			properties: entryProperties
-		}
-	};
-}
+// 	schema.properties[key].render.entry = {
+// 		id: `add_${key}`,
+// 		label: 'Add row',
+// 		name: '',
+// 		schema: {
+// 			type: 'object',
+// 			properties: entryProperties
+// 		}
+// 	};
+// }
 
-function generateEntryProperties(data) {
-	const properties = {};
-	for (const [key, value] of Object.entries(data)) {
-		const type = typeof value;
-		const render = generateRenderMethod(type, key, value);
-		properties[key] = {
-			title: toTitleCase(key),
-			type: type === 'number' ? 'number' : 'string',
-			render: render
-		};
+// function generateEntryProperties(data) {
+// 	const properties = {};
+// 	for (const [key, value] of Object.entries(data)) {
+// 		const type = typeof value;
+// 		const render = generateRenderMethod(type, key, value);
+// 		properties[key] = {
+// 			title: toTitleCase(key),
+// 			type: type === 'number' ? 'number' : 'string',
+// 			render: render
+// 		};
 
-		if (isLikelyImageUrl(value)) {
-			properties[key].property = 'src';
-		}
-	}
-	return properties;
-}
+// 		if (isLikelyImageUrl(value)) {
+// 			properties[key].property = 'src';
+// 		}
+// 	}
+// 	return properties;
+// }
 
 function toTitleCase(str) {
 	return str.split('_')
