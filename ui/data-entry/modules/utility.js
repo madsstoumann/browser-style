@@ -37,10 +37,21 @@ export function addArrayEntry(element, dataEntry, path) {
 	}
 }
 
-export function removeArrayEntry(element, dataEntryInstance, key) {
-	console.log('removeArrayEntry', dataEntryInstance, key);
+export function removeArrayEntry(element, dataEntry, path) {
+	const obj = getObjectByPath(dataEntry.instance.data, path);
+
+	if (obj) {
+		if (element.checked === false) {
+			obj._remove = true;
+		} else {
+			delete obj._remove;
+		}
+	} else {
+			console.error(`No object found at path: ${path}`);
+	}
 }
 
+/* Attrs */
 export function attrs(attributes, additionalAttributes = [], path = '') {
 	const merged = {};
 	attributes.concat(additionalAttributes).forEach(attr => {
@@ -67,6 +78,7 @@ export function attrs(attributes, additionalAttributes = [], path = '') {
 		}).join(' ');
 }
 
+/* Bind Utility Events */
 export function bindUtilityEvents(formContent, dataEntry) {
 	const elements = formContent.querySelectorAll('[data-util]');
 	elements.forEach(element => {
@@ -80,6 +92,7 @@ export function bindUtilityEvents(formContent, dataEntry) {
 	});
 }
 
+/* Convert Value */
 export function convertValue(value, dataType, inputType, checked) {
 	switch (dataType) {
 		case 'number':
@@ -100,6 +113,7 @@ export function convertValue(value, dataType, inputType, checked) {
 	}
 }
 
+/*  */
 export function getObjectByPath(obj, path) {
 	return path.split('.').reduce((acc, key) => {
 		if (acc === null || acc === undefined) {
@@ -110,25 +124,21 @@ export function getObjectByPath(obj, path) {
 		const prop = match[1];
 		const idx = match[2];
 
-		// If idx is undefined, return the whole array if it's an array, or the value if it's an object
 		if (idx === '') {
 			return acc[prop];
 		}
 
-		// If idx is defined, return the specific item in the array
 		if (idx !== undefined) {
 			return acc[prop] && Array.isArray(acc[prop]) ? acc[prop][idx] : undefined;
 		}
 
-		// Return the value of the property if it's not an array
 		return acc[prop];
 	}, obj);
 }
 
-
-
+/*  */
 export function isEmpty(obj) {
-	return Object.keys(obj).length === 0;
+	return obj && Object.keys(obj).length === 0;
 }
 
 export function setObjectByPath(obj, path, value) {
