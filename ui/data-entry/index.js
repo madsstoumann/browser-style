@@ -1,5 +1,5 @@
 import { createDataEntryInstance } from './modules/factory.js';
-import { bindUtilityEvents } from './modules/utility.js';
+import { bindUtilityEvents, convertValue, isEmpty, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
 import { AutoSuggest } from '/ui/autosuggest/index.js';
 import { RichText } from '/ui/rich-text/richtext.js';
@@ -7,13 +7,13 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.07
- * @summary 17-06-2024
+ * @version 1.0.10
+ * @summary 21-08-2024
  * @class
  * @extends {HTMLElement}
  */
 class DataEntry extends HTMLElement {
-	static observedAttributes = ['data', 'validation'];
+	static observedAttributes = ['data', 'lookup', 'validation'];
 
 	constructor() {
 		super();
@@ -23,6 +23,7 @@ class DataEntry extends HTMLElement {
 		this.form.part = 'form';
 		this.instance = createDataEntryInstance(this);
 		this.customValidateData = null;
+		this._lookup = null;
 	}
 
 	async connectedCallback() {
@@ -35,15 +36,13 @@ class DataEntry extends HTMLElement {
 
 		this.form.addEventListener('input', (event) => this.syncInstanceData(event));
 
-		if (this.jsonData && this.jsonSchema) {
-			this.instance.data = this.jsonData;
-			this.instance.schema = this.jsonSchema;
+		if (this.data && this.schema) {
+			this.instance.data = this.data;
+			this.instance.schema = this.schema;
 			this.renderAll();
 		} else {
-			await this.fetchSchema();
-			await this.fetchData();
-
-			if (this.isEmpty(this.instance.data) || this.isEmpty(this.instance.schema)) {
+			await this.loadResources();
+			if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
 				console.warn('Data or schema is empty. Skipping render.');
 				return;
 			}
@@ -63,51 +62,38 @@ class DataEntry extends HTMLElement {
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!newValue || oldValue === newValue) return;
+
+		if (name === 'lookup') {
+			this.lookup = newValue;
+		}
 	}
 
-	convertValue(value, dataType, inputType, checked) {
-    switch (dataType) {
-        case 'number':
-            return Number(value);
-        case 'boolean':
-            if (inputType === 'checkbox') {
-                return checked; // Use the checked property for checkboxes
-            }
-            return value === 'true' || value === true;
-        case 'object':
-            try {
-                return JSON.parse(value); // Handle objects and arrays
-            } catch {
-                return value;
-            }
-        default:
-            return value; // Default to string if no specific type is provided
-    }
-}
+	async fetchResource(attribute) {
+		const url = this.getAttribute(attribute);
+		if (!url) return null;
 
-	async fetchData() {
-		const dataUrl = this.getAttribute('data');
-		if (!dataUrl) return;
-		this.instance.data = await (await fetch(dataUrl)).json();
+		try {
+			const response = await fetch(url);
+			return await response.json();
+		} catch (error) {
+			console.error(`Error fetching ${attribute}:`, error);
+			return null;
+		}
 	}
 
-	async fetchSchema() {
-		const schemaUrl = this.getAttribute('schema');
-		if (!schemaUrl) return;
-		this.instance.schema = await (await fetch(schemaUrl)).json();
-	}
-
-	isEmpty(obj) {
-		return Object.keys(obj).length === 0;
+	async loadResources() {
+		this.instance.data = await this.fetchResource('data');
+		this.instance.schema = await this.fetchResource('schema');
+		this.instance.lookup = await this.fetchResource('lookup') || this.lookup;
 	}
 
 	renderAll() {
-		if (this.isEmpty(this.instance.data) || this.isEmpty(this.instance.schema)) {
+		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
 			console.warn('Data or schema is empty. Skipping render.');
 			return;
 		}
 		this.form.innerHTML = this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true);
-		bindUtilityEvents(this.form, this.instance);
+		bindUtilityEvents(this.form, this);
 	}
 
 	shouldValidate() {
@@ -115,33 +101,13 @@ class DataEntry extends HTMLElement {
 	}
 
 	syncInstanceData(event) {
-    const { name, value, type, checked } = event.target;
-    if (!name) return;
+		const { form, name, value, type, checked } = event.target;
+		if (!name) return;
+		if (form !== this.form) return;
 
-    const dataType = event.target.dataset.type; // Get the data type from the data-type attribute
-
-    const path = name.split('.').reduce((acc, key, index, array) => {
-        const match = key.match(/([^\[]+)\[?(\d*)\]?/);
-        const prop = match[1];
-        const idx = match[2];
-
-        if (!acc[prop]) {
-            acc[prop] = idx ? [] : {};
-        }
-
-        if (idx) {
-            acc[prop][idx] = acc[prop][idx] || (array[index + 1] ? {} : this.convertValue(value, dataType, type, checked));
-            return acc[prop][idx];
-        }
-
-        if (index === array.length - 1) {
-            acc[prop] = this.convertValue(value, dataType, type, checked); // Convert value to the correct type
-        }
-
-        return acc[prop];
-    }, this.instance.data);
-
-    console.log('Updated data:', this.instance.data); // For debugging purposes
+		const dataType = event.target.dataset.type;
+		setObjectByPath(this.instance.data, name, convertValue(value, dataType, type, checked));
+		console.log('Updated data:', this.instance.data);
 	}
 
 	async validateData() {
@@ -149,23 +115,34 @@ class DataEntry extends HTMLElement {
 		return validateData(this.instance.schema, this.instance.data);
 	}
 
-	// Setters for jsonData and jsonSchema
-	set jsonData(data) {
+	// Getter and setter for data
+	set data(data) {
 		this._jsonData = data;
 		this.instance.data = data;
 	}
 
-	get jsonData() {
+	get data() {
 		return this._jsonData;
 	}
 
-	set jsonSchema(schema) {
+	// Getter and setter for schema
+	set schema(schema) {
 		this._jsonSchema = schema;
 		this.instance.schema = schema;
 	}
 
-	get jsonSchema() {
+	get schema() {
 		return this._jsonSchema;
+	}
+
+	// Getter and setter for lookup
+	set lookup(lookup) {
+		this._lookup = lookup;
+		this.instance.lookup = lookup;
+	}
+
+	get lookup() {
+		return this._lookup;
 	}
 }
 

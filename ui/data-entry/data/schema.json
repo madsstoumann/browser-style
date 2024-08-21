@@ -17,7 +17,7 @@
             "type": "number"
           },
           {
-            "placeholder": "Enter id"
+            "disabled": "disabled"
           }
         ]
       }
@@ -72,7 +72,7 @@
     },
     "product_type_id": {
       "type": "number",
-      "title": "Product Type Id",
+      "title": "Product Type",
       "render": {
         "method": "input",
         "attributes": [
@@ -89,11 +89,8 @@
       }
     },
     "base_product_id": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "title": "Base Product Id",
+      "type": "string",
+      "title": "Base Id",
       "render": {
         "method": "input",
         "attributes": [
@@ -128,10 +125,7 @@
       }
     },
     "barcode": {
-      "type": [
-        "object",
-        "null"
-      ],
+      "type": "string",
       "title": "Barcode",
       "render": {
         "method": "input",
@@ -215,10 +209,7 @@
       }
     },
     "release_date": {
-      "type": [
-        "object",
-        "null"
-      ],
+      "type": "string",
       "title": "Release Date",
       "render": {
         "method": "input",
@@ -248,16 +239,13 @@
             "type": "datetime-local"
           },
           {
-            "placeholder": "Enter date and time"
+            "disabled": "disabled"
           }
         ]
       }
     },
     "created_by": {
-      "type": [
-        "object",
-        "null"
-      ],
+      "type": "string",
       "title": "Created By",
       "render": {
         "method": "input",
@@ -269,14 +257,14 @@
             "type": "text"
           },
           {
-            "placeholder": "Enter created_by"
+            "disabled": "disabled"
           }
         ]
       }
     },
     "last_modified_at": {
       "type": "string",
-      "title": "Last Modified At",
+      "title": "Modified At",
       "render": {
         "method": "input",
         "attributes": [
@@ -287,17 +275,14 @@
             "type": "datetime-local"
           },
           {
-            "placeholder": "Enter date and time"
+            "disabled": "disabled"
           }
         ]
       }
     },
     "last_modified_by": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "title": "Last Modified By",
+      "type": "string",
+      "title": "Modified By",
       "render": {
         "method": "input",
         "attributes": [
@@ -308,7 +293,7 @@
             "type": "text"
           },
           {
-            "placeholder": "Enter last_modified_by"
+            "disabled": "disabled"
           }
         ]
       }
@@ -352,9 +337,6 @@
                 },
                 {
                   "placeholder": "Enter value"
-                },
-                {
-                  "disabled": "disabled"
                 }
               ]
             },
@@ -374,9 +356,6 @@
                 },
                 {
                   "placeholder": "Enter type"
-                },
-                {
-                  "disabled": "disabled"
                 }
               ]
             },
@@ -463,7 +442,7 @@
           }
         ],
         "summary": "name",
-        "label": "&nbsp;",
+        "label": "name",
         "add": true,
         "delete": true
       }
@@ -595,9 +574,6 @@
                 },
                 {
                   "placeholder": "Enter currency_code"
-                },
-                {
-                  "disabled": "disabled"
                 }
               ]
             },
@@ -618,7 +594,7 @@
           }
         ],
         "summary": "name",
-        "label": "&nbsp;",
+        "label": "name",
         "add": true,
         "delete": true
       }
@@ -738,10 +714,7 @@
             "property": "valid_from"
           },
           "valid_to": {
-            "type": [
-              "object",
-              "null"
-            ],
+            "type": "string",
             "title": "Valid To",
             "render": {
               "method": "input",
@@ -848,6 +821,192 @@
         "id",
         "name"
       ]
+    },
+    "media": {
+      "type": "array",
+      "title": "Media",
+      "items": {
+        "type": "object",
+        "properties": {
+          "media_id": {
+            "type": "number",
+            "title": "Media Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "media_id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter media_id"
+                }
+              ]
+            },
+            "property": "media_id"
+          },
+          "media_type": {
+            "type": "string",
+            "title": "Media Type",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "media_type"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter media_type"
+                }
+              ]
+            },
+            "property": "media_type"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "render": {
+              "method": "img",
+              "attributes": [
+                {
+                  "name": "url"
+                },
+                {
+                  "alt": "none"
+                }
+              ]
+            },
+            "property": "src"
+          }
+        },
+        "required": [
+          "media_id",
+          "media_type",
+          "url"
+        ]
+      },
+      "render": {
+        "method": "media",
+        "attributes": [
+          {
+            "part": "media"
+          }
+        ],
+        "summary": "url",
+        "label": "media_id",
+        "add": true,
+        "delete": true
+      }
+    },
+    "reviews": {
+      "type": "array",
+      "title": "Reviews",
+      "items": {
+        "type": "object",
+        "properties": {
+          "review_id": {
+            "type": "number",
+            "title": "Review Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "review_id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter review_id"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            },
+            "property": "review_id"
+          },
+          "reviewer": {
+            "type": "string",
+            "title": "Reviewer",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "reviewer"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter reviewer"
+                }
+              ]
+            },
+            "property": "reviewer"
+          },
+          "review_date": {
+            "type": "string",
+            "title": "Review Date",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "review_date"
+                },
+                {
+                  "type": "datetime-local"
+                },
+                {
+                  "placeholder": "Enter date and time"
+                }
+              ]
+            },
+            "property": "review_date"
+          },
+          "review_headline": {
+            "type": "string",
+            "title": "Review Headline",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "review_headline"
+                },
+                {
+                  "type": "text"
+                },
+                {
+                  "placeholder": "Enter review_headline"
+                }
+              ]
+            },
+            "property": "review_headline"
+          }
+        },
+        "required": [
+          "review_id",
+          "reviewer",
+          "review_date",
+          "review_headline"
+        ]
+      },
+      "render": {
+        "method": "grid",
+        "attributes": [
+          {
+            "part": "grid"
+          }
+        ],
+        "summary": "&nbsp;",
+        "label": "&nbsp;",
+        "add": true,
+        "delete": true
+      }
     }
   },
   "required": [

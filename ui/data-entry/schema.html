@@ -94,8 +94,8 @@
 		/* Preview with <data-entry> */
 		document.getElementById('preview').addEventListener('click', () => {
 			try {
-				dataEntry.jsonData = JSON.parse(jsonInput.value);
-				dataEntry.jsonSchema = JSON.parse(schemaInput.value);
+				dataEntry.data = JSON.parse(jsonInput.value);
+				dataEntry.schema = JSON.parse(schemaInput.value);
 				dataEntry.renderAll();
 			} catch (error) {
 				console.log(error);
