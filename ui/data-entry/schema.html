@@ -13,11 +13,14 @@
 		form:not(:empty) {
 			margin-block: 2ch 0;
 		}
-		nav {
+		/* nav {
 			display: flex;
 			gap: 1ch;
 			margin-block: 1ch;
-		}
+		} */
+		 .ui-linenumber {
+			margin-block-end: 1ch;
+		 }
 		[data-type="object,null"] {
 			background: hsl(200 85% 95% / 1);
 		}
@@ -137,14 +140,15 @@
 								<option value="">array (default)</option>
 								<option value="details">details</option>
 								<option value="grid">grid</option>
+								<option value="media">media</option>
 							</select>
 						</label>
 
-						<label>Summary:
+						<label>Summary / src:
 							<input type="text" name="${key}-summary" list="${datalistId}" placeholder="Choose or enter an option">
 						</label>
 
-						<label>Header:
+						<label>Header / value:
 							<input type="text" name="${key}-label" list="${datalistId}" placeholder="Choose or enter an option">
 						</label>
 

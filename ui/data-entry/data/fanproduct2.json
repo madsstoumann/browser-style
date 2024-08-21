@@ -67,5 +67,22 @@
   "vendor": {
     "id": 162,
     "name": "Harper Collins Publishers U.K."
-  }
+  },
+  "media": [
+    {
+      "media_id": 190155,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1417900846i/29579.jpg"
+    },
+    {
+      "media_id": 190156,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1558401363i/40793127.jpg"
+    },
+    {
+      "media_id": 190157,
+      "media_type": "image",
+      "url": "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1629666224i/58831139.jpg"
+    }
+  ]
 }
