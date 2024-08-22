@@ -1,62 +1,9 @@
-export function addArrayEntry(element, dataEntry, path) {
-	const form = element.form;
-	const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
-	const newObject = {};
-
-	formElements.forEach(el => {
-		const fieldPath = el.name.slice(path.length + 1);
-		const dataType = el.dataset.type || 'string';
-		newObject[fieldPath] = convertValue(el.value, dataType, el.type, el.checked);
-	});
-
-	const array = getObjectByPath(dataEntry.instance.data, path);
-
-	if (Array.isArray(array)) {
-		array.push(newObject);
-
-		const fieldset = dataEntry.form.querySelector(`fieldset[name="${path}-entry"]`);
-		const schema = getObjectByPath(dataEntry.instance.schema, `properties.${path}`);
-
-		if (fieldset && schema) {
-			const newDetail = dataEntry.instance.methods.detail({
-				value: newObject,
-				config: schema,
-				path: `${path}[${array.length - 1}]`,
-				instance: dataEntry.instance,
-				attributes: []
-			});
-
-			fieldset.insertAdjacentHTML('beforeend', newDetail);
-			form.reset();
-			console.log(dataEntry.instance.data);
-		} else {
-			console.error(`Fieldset with path "${path}" not found in the form.`);
-		}
-	} else {
-		console.error(`Path "${path}" does not reference an array in the data.`);
-	}
-}
-
-export function removeArrayEntry(element, dataEntry, path) {
-	const obj = getObjectByPath(dataEntry.instance.data, path);
-
-	if (obj) {
-		if (element.checked === false) {
-			obj._remove = true;
-		} else {
-			delete obj._remove;
-		}
-	} else {
-			console.error(`No object found at path: ${path}`);
-	}
-}
-
-/* Attrs */
+/* Merges HTML attributes, optionally removing specified attributes. */
 export function attrs(attributes, path = '', additionalAttributes = [], attributesToRemove = []) {
 	const merged = {};
 	attributes.concat(additionalAttributes).forEach(attr => {
 		Object.entries(attr).forEach(([key, value]) => {
-			if (!attributesToRemove.includes(key)) {  // Skip adding the attribute if it's in the attributesToRemove list
+			if (!attributesToRemove.includes(key)) {
 				if (merged[key]) {
 					merged[key] = `${merged[key]} ${value}`.trim();
 				} else {
@@ -80,21 +27,27 @@ export function attrs(attributes, path = '', additionalAttributes = [], attribut
 	}).join(' ');
 }
 
-/* Bind Utility Events */
-export function bindUtilityEvents(formContent, dataEntry) {
-	const elements = formContent.querySelectorAll('[data-util]');
+/* Binds utility event listeners to elements based on data-util attributes. */	
+export function bindUtilityEvents(elementContainer, componentInstance) {
+	const elements = elementContainer.querySelectorAll('[data-util]');
 	elements.forEach(element => {
 		const utilFunction = element.dataset.util;
 		const params = element.dataset.params ? JSON.parse(element.dataset.params) : {};
-		if (dataEntry.instance.utils[utilFunction]) {
+
+		if (componentInstance.utils && componentInstance.utils[utilFunction]) {
 			element.addEventListener('click', () => {
-				dataEntry.instance.utils[utilFunction](element, dataEntry, ...Object.values(params));
+					componentInstance.utils[utilFunction](element, componentInstance, ...Object.values(params));
+			});
+		}
+		else if (typeof componentInstance[utilFunction] === 'function') {
+			element.addEventListener('click', () => {
+				componentInstance[utilFunction](element, ...Object.values(params));
 			});
 		}
 	});
 }
 
-/* Convert Value */
+/* Converts a value to the specified data type. */
 export function convertValue(value, dataType, inputType, checked) {
 	switch (dataType) {
 		case 'number':
@@ -111,11 +64,11 @@ export function convertValue(value, dataType, inputType, checked) {
 				return value;
 			}
 		default:
-			return value; // Default to string if no specific type is provided
+			return value;
 	}
 }
 
-/*  */
+/* Retrieves a nested object or value based on a dot-notated path. */
 export function getObjectByPath(obj, path) {
 	return path.split('.').reduce((acc, key) => {
 		if (acc === null || acc === undefined) {
@@ -138,11 +91,12 @@ export function getObjectByPath(obj, path) {
 	}, obj);
 }
 
-/*  */
+/* Checks if an object is empty (has no properties). */
 export function isEmpty(obj) {
 	return obj && Object.keys(obj).length === 0;
 }
 
+/* Sets a value in an object based on a dot-notated path. */
 export function setObjectByPath(obj, path, value) {
 	path.split('.').reduce((acc, key, index, array) => {
 		const match = key.match(/([^\[]+)\[?(\d*)\]?/);
@@ -170,6 +124,7 @@ export function setObjectByPath(obj, path, value) {
 	}, obj);
 }
 
+/* Generates a unique identifier (UUID). */
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }

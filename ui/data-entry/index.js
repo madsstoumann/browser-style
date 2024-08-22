@@ -1,5 +1,5 @@
 import { createDataEntryInstance } from './modules/factory.js';
-import { bindUtilityEvents, convertValue, isEmpty, setObjectByPath } from './modules/utility.js';
+import { bindUtilityEvents, convertValue, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
 import { AutoSuggest } from '/ui/autosuggest/index.js';
 import { RichText } from '/ui/rich-text/richtext.js';
@@ -58,7 +58,6 @@ class DataEntry extends HTMLElement {
 				this.renderAll();
 			}
 		}
-		// console.log(this.instance)
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -66,6 +65,45 @@ class DataEntry extends HTMLElement {
 
 		if (name === 'lookup') {
 			this.lookup = newValue;
+		}
+	}
+
+	addArrayEntry(element, path) {
+		const form = element.form;
+		const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
+		const newObject = {};
+
+		formElements.forEach(el => {
+				const fieldPath = el.name.slice(path.length + 1);
+				const dataType = el.dataset.type || 'string';
+				newObject[fieldPath] = convertValue(el.value, dataType, el.type, el.checked);
+		});
+
+		const array = getObjectByPath(this.instance.data, path);
+
+		if (Array.isArray(array)) {
+				array.push(newObject);
+
+				const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
+				const schema = getObjectByPath(this.instance.schema, `properties.${path}`);
+
+				if (fieldset && schema) {
+						const newDetail = this.instance.methods.detail({
+								value: newObject,
+								config: schema,
+								path: `${path}[${array.length - 1}]`,
+								instance: this.instance,
+								attributes: []
+						});
+
+						fieldset.insertAdjacentHTML('beforeend', newDetail);
+						form.reset();
+						console.log(this.instance.data);
+				} else {
+						console.error(`Fieldset with path "${path}" not found in the form.`);
+				}
+		} else {
+				console.error(`Path "${path}" does not reference an array in the data.`);
 		}
 	}
 
@@ -86,6 +124,19 @@ class DataEntry extends HTMLElement {
 		this.instance.data = await this.fetchResource('data');
 		this.instance.schema = await this.fetchResource('schema');
 		this.instance.lookup = await this.fetchResource('lookup') || this.lookup;
+	}
+
+	removeArrayEntry(element, path) {
+		const obj = getObjectByPath(this.instance.data, path);
+		if (obj) {
+			if (element.checked === false) {
+				obj._remove = true;
+			} else {
+				delete obj._remove;
+			}
+		} else {
+			console.error(`No object found at path: ${path}`);
+		}
 	}
 
 	renderAll() {
