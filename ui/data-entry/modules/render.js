@@ -9,13 +9,27 @@ export function all(data, schema, instance, root = false, pathPrefix = '') {
 		const label = config.title || 'LABEL';
 		const toolbar = config?.render?.toolbar ? instance.getRenderMethod('toolbar')(config.render.toolbar) : '';
 
-		let options = config?.render?.options || [];
-		if (typeof options === 'string') {
-			const storedOptions = localStorage.getItem(options);
-			try {
-				options = JSON.parse(storedOptions) || [];
-			} catch {
-				options = [];
+		let options = [];
+
+		if (method === 'select') {
+			const optionsKey = config?.render?.options;
+
+			if (Array.isArray(optionsKey)) {
+				options = optionsKey;
+			} else if (typeof optionsKey === 'string') {
+				// Check if optionsKey exists in lookup or localStorage
+				if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
+					options = instance.lookup[optionsKey];
+				} else {
+					const storedOptions = localStorage.getItem(optionsKey);
+					if (storedOptions) {
+						try {
+							options = JSON.parse(storedOptions) || [];
+						} catch {
+							options = [];
+						}
+					}
+				}
 			}
 		}
 
@@ -134,7 +148,7 @@ export const entry = (params) => {
 /* Fieldset Render Method */
 export const fieldset = ({ attributes, content, label, path }) => {
 	return `
-		<fieldset ${attrs(attributes, [{ part: 'fieldset' }])}${path ? ` name="${path}-entry"` : ''}>
+		<fieldset ${attrs(attributes, '', [{ part: 'fieldset' }])}${path ? ` name="${path}-entry"` : ''}>
 			<legend part="legend">${label}</legend>
 			${content}
 		</fieldset>`;
@@ -155,7 +169,7 @@ export const input = (params) => {
 	const { attributes = [], label, path = '', type = 'string', value } = params;
 	const checked = attributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
 	const hidden = attributes.some(attr => attr.type === 'hidden');
-	const output = `<input part="input" value="${value || ''}" ${attrs(attributes, [], path)} data-type="${type}" ${checked}></input>`;
+	const output = `<input part="input" value="${value || ''}" ${attrs(attributes, path)} data-type="${type}" ${checked}></input>`;
 	return hidden ? output : `<label part="row"><span part="label">${label}</span>${output}</label>`;
 }
 
@@ -182,7 +196,7 @@ export const richtext = (params) => {
 	return `
 		<div part="row">
 			<span part="label">${label}</span>
-			<rich-text part="richtext" ${attrs(attributes, [], path)}>
+			<rich-text part="richtext" ${attrs(attributes, path)}>
 				${value}
 			</rich-text>
 		</div>`;
@@ -190,11 +204,11 @@ export const richtext = (params) => {
 
 /* Select Render Method */
 export const select = (params) => {
-	const { attributes = [], label, options = [], path = '', value } = params;
+	const { attributes = [], label, options = [], path = '', type = 'string', value } = params;
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
-			<select part="select" ${attrs(attributes, [], path)}>
+			<select part="select" ${attrs(attributes, path, [], ['type'])} data-type="${type}">
 				${options.map(option => `
 					<option value="${option.value}" ${option.value === value ? 'selected' : ''}>
 						${option.label}
@@ -210,7 +224,7 @@ export const textarea = (params) => {
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
-			<textarea part="textarea" ${attrs(attributes, [], path)}>${value}</textarea>
+			<textarea part="textarea" ${attrs(attributes, path)}>${value}</textarea>
 		</label>`;
 };
 

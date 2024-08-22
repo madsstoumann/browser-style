@@ -1,0 +1,14 @@
+{
+	"product_type": [
+		{ "label": "Book", "value": 1 },
+		{ "label": "Comic", "value": 2 },
+		{ "label": "Figure", "value": 3 },
+		{ "label": "Film", "value": 4 },
+		{ "label": "Game", "value": 5 }
+	],
+	"condition": [
+		{ "label": "New", "value": 1 },
+		{ "label": "Used", "value": 2 },
+		{ "label": "Refurbished", "value": 3 }
+	]
+}

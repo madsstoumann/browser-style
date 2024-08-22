@@ -147,7 +147,20 @@ If method is `select`, provide an additional property: `options`:
 }
 ```
 
-`options` can either be a `string` or an `array`. If it's a string, the string will be used as a key and look in `localStorage` for a match.
+`options` can either be a `string` or an `array`. If it's a string, the string will be used as a key and look in `instance.lookup` or `localStorage` for a match.
+You can use the `lookop`-attribute to specify an endpoint for an object conmtaining options:
+
+```html
+<data-entry lookup="/endpoint-to-options">
+```
+
+Each entry is a key. Us ethis key in the schema-render-method:
+```js
+{
+  render: "select",
+  options: "key-in-lookup-object"
+}
+```
 
 #### † The `all` method
 
@@ -178,30 +191,6 @@ If a field has it's `type`-property set to "array", you can set a render method 
 ```
 
 ### Array Methods
-
-#### ‡ The `checklist` method
-
-The `checklist`-method requires three fields: `label`, `type` and `value`.  
-Since we cannot guarentee the JSON-structure will be named exactly like this, we need to add a `property` to these fields with the _values_ `label`, `type` and `value`.
-
-
-#### Example
-```json
-{
-  "attr_label": {
-    "type": "string",
-    "property": "label"
-  },
-  "attr_type": {
-    "type": "string",
-    "property": "type"
-  },
-  "attr_value": {
-    "type": "integer",
-    "property": "value"
-  }
-}
-```
 
 #### § The `details` Method
 This method simply wraps the fields within a `<fieldset>`, nested in a `<details>`-tag.  

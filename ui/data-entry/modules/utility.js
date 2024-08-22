@@ -52,14 +52,16 @@ export function removeArrayEntry(element, dataEntry, path) {
 }
 
 /* Attrs */
-export function attrs(attributes, additionalAttributes = [], path = '') {
+export function attrs(attributes, path = '', additionalAttributes = [], attributesToRemove = []) {
 	const merged = {};
 	attributes.concat(additionalAttributes).forEach(attr => {
 		Object.entries(attr).forEach(([key, value]) => {
-			if (merged[key]) {
-				merged[key] = `${merged[key]} ${value}`.trim();
-			} else {
-				merged[key] = value;
+			if (!attributesToRemove.includes(key)) {  // Skip adding the attribute if it's in the attributesToRemove list
+				if (merged[key]) {
+					merged[key] = `${merged[key]} ${value}`.trim();
+				} else {
+					merged[key] = value;
+				}
 			}
 		});
 	});
@@ -72,10 +74,10 @@ export function attrs(attributes, additionalAttributes = [], path = '') {
 		.map(([key, value]) => {
 			// Handle the case where key and value are both "name"
 			if (key === 'name' && value === 'name') {
-				return `${key}="${value}"`;
+			return `${key}="${value}"`;
 			}
-			return key === value ? `${key}` : `${key}="${value}"`;
-		}).join(' ');
+		return key === value ? `${key}` : `${key}="${value}"`;
+	}).join(' ');
 }
 
 /* Bind Utility Events */

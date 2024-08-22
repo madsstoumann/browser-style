@@ -7,8 +7,8 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * Data Entry
  * description
  * @author Mads Stoumann
- * @version 1.0.10
- * @summary 21-08-2024
+ * @version 1.0.11
+ * @summary 22-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -58,6 +58,7 @@ class DataEntry extends HTMLElement {
 				this.renderAll();
 			}
 		}
+		// console.log(this.instance)
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {

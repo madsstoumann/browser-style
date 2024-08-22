@@ -74,7 +74,8 @@
       "type": "number",
       "title": "Product Type",
       "render": {
-        "method": "input",
+        "method": "select",
+        "options": "product_type",
         "attributes": [
           {
             "name": "product_type_id"
@@ -146,16 +147,14 @@
       "type": "number",
       "title": "Condition",
       "render": {
-        "method": "input",
+        "method": "select",
+        "options": "condition",
         "attributes": [
           {
             "name": "condition"
           },
           {
             "type": "number"
-          },
-          {
-            "placeholder": "Enter condition"
           }
         ]
       }
