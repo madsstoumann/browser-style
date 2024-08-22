@@ -17,7 +17,6 @@ export function all(data, schema, instance, root = false, pathPrefix = '') {
 			if (Array.isArray(optionsKey)) {
 				options = optionsKey;
 			} else if (typeof optionsKey === 'string') {
-				// Check if optionsKey exists in lookup or localStorage
 				if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
 					options = instance.lookup[optionsKey];
 				} else {
@@ -68,10 +67,26 @@ export const array = (params) => {
 };
 
 /* Autosuggest Render Method */
-export const autosuggest = (params) => {
-	const { attributes, path = '' } = params;
-	return `<auto-suggest part="autosuggest" name="${path}" ${attrs(attributes)}></auto-suggest>`;
-}
+// export const autosuggest = (params) => {
+// 	console.log(params);
+// 	const { attributes, path = '' } = params;
+// 	return `<auto-suggest part="autosuggest" name="${path}"></auto-suggest>`;
+// }
+
+export const autosuggest = ({ autoSuggestConfig, path, formID }) => {
+	const { api, key, value, label } = autoSuggestConfig;
+
+	return `
+		<auto-suggest 
+			part="autosuggest" 
+			name="${path}"
+			api="${api}"
+			api-key="${key}"
+			api-value="${value}"
+			label="${label}"
+			${formID ? `form="${formID}"` : ''}
+			></auto-suggest>`;
+};
 
 /* Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [] }) => {
@@ -114,15 +129,25 @@ export const entry = (params) => {
 	const formID = `form${uuid()}`;
 	const id = `popover-${uuid()}`;
 	const label = config.title || 'Add New Entry';
+	const autoSuggestConfig = config.render?.autosuggest;
 
 	const fields = Object.entries(config.items.properties)
-		.map(([propKey, propConfig]) => input({
-			label: propConfig.title,
-			attributes: [...propConfig.render.attributes, { form: formID }],
-			path: `${path}.${propKey}`,
-			type: propConfig.type || 'string',
-			value: ''
-		})).join('');
+		.map(([propKey, propConfig]) => {
+			const attributes = [...propConfig.render.attributes, { form: formID }];
+
+			if (autoSuggestConfig) {
+				// attributes.push({ disabled: 'disabled' });
+				attributes.push({ required: 'required' });
+			}
+
+			return input({
+				label: propConfig.title,
+				attributes,
+				path: `${path}.${propKey}`,
+				type: propConfig.type || 'string',
+				value: ''
+			});
+		}).join('');
 
 	if (!fields) return '';
 	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
@@ -136,10 +161,11 @@ export const entry = (params) => {
 		<div id="${id}" popover="" style="--_pa:--${id};">
 			<fieldset part="fieldset" name="${path}-entry">
 				<legend part="legend">${label}</legend>
+				${autoSuggestConfig ? autosuggest({ autoSuggestConfig, path, formID }) : ''}
 				${fields}
 				<nav part="nav">
 					<button type="button" form="${formID}" part="close" popovertarget="${id}" popovertargetaction="hide">Close</button>
-					<button type="button" form="${formID}" part="success" popovertarget="${id}" popovertargetaction="hide" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
+					<button type="button" form="${formID}" part="success" data-popover="${id}" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
 				</nav>
 			</fieldset>
 		</div>`;

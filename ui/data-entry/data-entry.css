@@ -16,30 +16,18 @@
 
 		[part~=autosuggest] {
 			--_bdrs: 0;
-			display: contents;
-			& [part~="row"]:first-of-type { border-block-start-width: 0; }
+			&:not([form]) {
+				display: contents;
+				& [part~="row"]:first-of-type { border-block-start-width: 0; }
+			}
+			&[form] {
+				border: var(--_bdw) solid var(--_bdc);
+				border-radius: var(--input-bdrs);	
+				margin-block-end: 1ch; 
+				label { display: contents; }
+				span { display: none; }
+			}
 		}
-
-		/* [part~=checklist] {
-			em {
-				align-items: center;
-				display: flex;
-				font-weight: 400;
-				justify-content: space-between;
-				margin-inline-end: 1ch;
-				text-wrap: nowrap;
-			}
-			label:has(input:not(:checked)) {
-				background: color-mix(in srgb, var(--ColorError), var(--Canvas) 80%);
-				color: var(--GrayText);
-				text-decoration: line-through;
-				input { 
-					background-color: var(--ColorError);
-					--input-check-bdc: var(--ColorError); 
-					--input-check-bga: #FFF; 
-				}
-			}
-		} */
 
 		[part~=close], [part~=success] {
 			font-size: x-small;
@@ -231,7 +219,7 @@
 			display: flex;
 			gap: 1ch;
 			justify-content: end;
-			order: 100;
+			/* order: 100; */
 		}
 
 		[part~=richtext] {

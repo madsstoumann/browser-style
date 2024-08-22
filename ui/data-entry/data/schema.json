@@ -314,9 +314,6 @@
                 },
                 {
                   "type": "number"
-                },
-                {
-                  "placeholder": "Enter id"
                 }
               ]
             },
@@ -333,9 +330,6 @@
                 },
                 {
                   "type": "text"
-                },
-                {
-                  "placeholder": "Enter value"
                 }
               ]
             },
@@ -352,9 +346,6 @@
                 },
                 {
                   "type": "text"
-                },
-                {
-                  "placeholder": "Enter type"
                 }
               ]
             },
@@ -377,7 +368,18 @@
         "summary": "type",
         "label": "value",
         "add": true,
-        "delete": true
+        "delete": true,
+        "autosuggest": {
+          "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=",
+          "key": "adresse.id",
+          "value": "tekst",
+          "label": "",
+          "mapping": {
+            "id": "adresse.x",
+            "value": "adresse.vejkode",
+            "type": "adresse.id"
+          }
+        }
       }
     },
     "categories": {

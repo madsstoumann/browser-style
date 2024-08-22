@@ -19,6 +19,7 @@ export class AutoSuggest extends HTMLElement {
 		root.innerHTML = this.render();
 
 		this.datalist = root.querySelector('datalist');
+		this.form = this.getAttribute('form') ? document.forms[this.getAttribute('form')] : this.closest('form');
 		this.input = root.querySelector('input:not([type="hidden"])');
 		this.inputHidden = root.querySelector('input[type="hidden"]');
 	}
@@ -33,9 +34,9 @@ export class AutoSuggest extends HTMLElement {
 			if (!this.input.checkValidity()) {
 				this.input.reportValidity();
 			} else {
-				this.input.setCustomValidity('')
+				this.input.setCustomValidity('');
 			}
-		}
+		};
 
 		const onentry = async (event) => {
 			const value = this.input.value.length >= this.input.minLength && this.input.value.toLowerCase();
@@ -46,7 +47,7 @@ export class AutoSuggest extends HTMLElement {
 				if (option) {
 					this.inputHidden.value = option.dataset.key;
 					this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail: JSON.parse(option.dataset.obj) }));
-					reset();
+					this.reset(false);
 				}
 				return;
 			}
@@ -68,36 +69,45 @@ export class AutoSuggest extends HTMLElement {
 					this.datalist.innerHTML = this.data.map(obj => {
 						const key = this.getNestedValue(obj, this.settings.apiKey);
 						const value = this.getNestedValue(obj, this.settings.apiValue);
-						return `<option value="${value}" data-key="${key}" data-obj='${obj ? JSON.stringify(obj) : ''}'>`
+						return `<option value="${value}" data-key="${key}" data-obj='${obj ? JSON.stringify(obj) : ''}'>`;
 					}).join('');
 				} catch (error) {
 					this.dispatchEvent(new CustomEvent('autoSuggestFetchError', { detail: error }));
 				}
 			}
-		}
-
-		const reset = () => {
-			this.data = [];
-			this.datalist.innerHTML = `<option value="">`;
-			this.input.setCustomValidity('');
-			this.dispatchEvent(new CustomEvent('autoSuggestClear'));
-		}
+		};
 
 		const selected = () => {
 			const option = [...this.datalist.options].filter(entry => entry.value === this.input.value);
 			return option.length === 1 ? option[0] : 0;
-		}
+		};
 
 		this.input.addEventListener('input', this.debounced(200, event => onentry(event)));
-		this.input.addEventListener('search', () => this.input.value.length === 0 ? reset() : this.settings.limit ? limitToSelection() : '');
+		this.input.addEventListener('search', () => this.input.value.length === 0 ? this.reset(false) : this.settings.limit ? limitToSelection() : '');
+
+		if (this.form) {
+			this.form.addEventListener('reset', () => this.reset());
+		}
+	}
+
+	// Method to reset the auto-suggest control
+	reset(fullReset = true) {
+		if (fullReset) {
+			this.input.value = '';
+			this.inputHidden.value = '';
+		}
+		this.data = [];
+		this.datalist.innerHTML = `<option value="">`;
+		this.input.setCustomValidity('');
+		this.dispatchEvent(new CustomEvent('autoSuggestClear'));
 	}
 
 	debounced(delay, fn) {
 		let timerId;
 		return function(...args) {
 			if (timerId) clearTimeout(timerId);
-			timerId = setTimeout(() => { fn(...args); timerId = null }, delay)
-		}
+			timerId = setTimeout(() => { fn(...args); timerId = null; }, delay);
+		};
 	}
 
 	getNestedValue(obj, key) {
