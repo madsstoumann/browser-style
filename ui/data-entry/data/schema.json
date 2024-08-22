@@ -375,9 +375,9 @@
           "value": "tekst",
           "label": "",
           "mapping": {
-            "id": "adresse.x",
-            "value": "adresse.vejkode",
-            "type": "adresse.id"
+            "id": "adresse.vejkode",
+            "value": "adresse.adresseringsvejnavn",
+            "type": "adresse.postnrnavn"
           }
         }
       }

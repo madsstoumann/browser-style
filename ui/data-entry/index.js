@@ -62,7 +62,6 @@ class DataEntry extends HTMLElement {
 				this.renderAll();
 			}
 		}
-		// console.log(this.instance)
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -74,25 +73,45 @@ class DataEntry extends HTMLElement {
 
 	addArrayEntry(element, path, insertBeforeSelector = `[part="nav"]`) {
 		const form = element.form;
-		if (!form.checkValidity()) return;
+		const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
 
+		// Temporarily enable disabled fields for validation
+		formElements.forEach(el => {
+			if (el.disabled) {
+				el.disabled = false;
+				el.dataset.wasDisabled = 'true';
+			}
+		});
+		const isValid = form.checkValidity();
+	
+		// Re-disable the fields that were originally disabled
+		formElements.forEach(el => {
+			if (el.dataset.wasDisabled === 'true') {
+				el.disabled = true;
+				delete el.dataset.wasDisabled; // Clean up the tracking attribute
+			}
+		});
+	
+		if (!isValid) {
+			this.debugLog('Form is invalid, cannot add entry.');
+			return;
+		}
+	
 		const array = getObjectByPath(this.instance.data, path);
 		if (!Array.isArray(array)) {
 			this.debugLog(`Path "${path}" does not reference an array in the data.`);
 			return;
 		}
-
+	
 		const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
 		const schema = getObjectByPath(this.instance.schema, `properties.${path}`);
-	
+		
 		if (!fieldset || !schema) {
 			this.debugLog(`Fieldset with path "${path}" or schema not found.`);
 			return;
 		}
 	
-		const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
 		const newObject = {};
-
 		formElements.forEach(el => {
 			const fieldPath = el.name.slice(path.length + 1);
 			const dataType = el.dataset.type || 'string';
@@ -108,19 +127,19 @@ class DataEntry extends HTMLElement {
 			instance: this.instance,
 			attributes: []
 		});
-
+	
 		const siblingElm = fieldset.querySelector(insertBeforeSelector);
-
+	
 		if (siblingElm) {
 			siblingElm.insertAdjacentHTML('beforebegin', newDetail);
 		} else {
 			this.debugLog(`Element with selector "${insertBeforeSelector}" not found within the fieldset.`);
 			return;
 		}
-
+	
 		form.reset();
-
-		const popover = this.form.querySelector(`#${element.dataset.popover}`);
+	
+		const popover = this.form.querySelector(`#${form.dataset.popover}`);
 		if (popover) popover.hidePopover();
 		this.debugLog('Updated data:', this.instance.data);
 	}

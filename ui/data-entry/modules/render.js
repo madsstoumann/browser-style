@@ -109,6 +109,13 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 
 export const details = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
+	const disableInputs = !!config.render?.autosuggest;
+
+	if (disableInputs) {
+		Object.values(config.items.properties).forEach(propConfig => {
+			propConfig.render.attributes.push({ disabled: 'disabled' });
+		});
+	}
 
 	const content = value.map((item, index) => detail({
 		value: item,
@@ -119,9 +126,9 @@ export const details = (params) => {
 	})).join('');
 
 	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';
-
 	return fieldset({ attributes, content: content + entryContent, label, path });
 };
+
 
 /* Entry Render Method */
 export const entry = (params) => {
@@ -150,7 +157,7 @@ export const entry = (params) => {
 		}).join('');
 
 	if (!fields) return '';
-	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" hidden></form>`);
+	instance.parent.insertAdjacentHTML('beforeend', `<form id="${formID}" data-popover="${id}" hidden></form>`);
 
 	return `
 		<nav part="nav">
@@ -165,7 +172,7 @@ export const entry = (params) => {
 				${fields}
 				<nav part="nav">
 					<button type="button" form="${formID}" part="close" popovertarget="${id}" popovertargetaction="hide">Close</button>
-					<button type="button" form="${formID}" part="success" data-popover="${id}" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
+					<button type="button" form="${formID}" part="success" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
 				</nav>
 			</fieldset>
 		</div>`;
