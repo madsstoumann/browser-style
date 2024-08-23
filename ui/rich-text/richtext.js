@@ -2,8 +2,8 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.03
- * @summary 17-06-2024
+ * @version 1.0.04
+ * @summary 23-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -12,35 +12,45 @@ export class RichText extends HTMLElement {
 	constructor() {
 		super();
 		this.contentID = `cnt${this.uuid()}`;
+		this.customToolbarItems = [];
+		this.eventMode = this.getAttribute('event-mode') || 'both'; /* custom, input, both */
+		this.form = this.getAttribute('form') || ''; 
 		this.inputTypes = this.getAttribute('input-types')?.split(',') || ['deleteByContent', 'deleteByCut', 'deleteByDrag', 'deleteContentBackward', 'deleteContentForward', 'deleteEntireSoftLine', 'deleteHardLineBackward', 'deleteHardLineForward', 'deleteSoftLineBackward', 'deleteSoftLineForward', 'deleteWordBackward', 'deleteWordForward', 'formatBackColor', 'formatBold', 'formatFontColor', 'formatFontName', 'formatIndent', 'formatItalic', 'formatJustifyCenter', 'formatJustifyFull', 'formatJustifyLeft', 'formatJustifyRight', 'formatOutdent', 'formatRemove', 'formatSetBlockTextDirection', 'formatSetInlineTextDirection', 'formatStrikethrough', 'formatSubscript', 'formatSuperscript', 'formatUnderline', 'historyRedo', 'historyUndo', 'insertCompositionText', 'insertFromComposition', 'insertFromDrop', 'insertFromPaste', 'insertFromYank', 'insertHorizontalRule', 'insertLineBreak', 'insertLink', 'insertOrderedList', 'insertParagraph', 'insertReplacementText', 'insertText', 'insertTranspose', 'insertUnorderedList'];
 		this.toolbarItems = this.getAttribute('toolbar')?.split('|') || [];
 		this.plaintextItems = this.getAttribute('plaintext-toolbar')?.split(',') || [];
-		this.customToolbarItems = [];
 	}
 
 	connectedCallback() {
 		const shadow = this.attachShadow({ mode: 'open' })
 		shadow.adoptedStyleSheets = [stylesheet];
 		shadow.innerHTML = this.renderTemplate();
-
 		this.innerHTML = `
 		<div contenteditable="true" style="outline:none;">${this.innerHTML}</div>
-		<input type="hidden" name="${this.getAttribute('name')||'richtext'}" value="${this.innerHTML}">`;
+		<input type="hidden" name="${this.getAttribute('name')||'rich-text'}" value="${this.innerHTML}">`;
 		this.content = this.querySelector('[contenteditable]');
 		this.content.id = this.contentID;
 		this.input = this.querySelector('input[type=hidden]');
+		if (this.form) this.input.form = this.form;
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
-		this.content.addEventListener('input', () => { 
+		this.content.addEventListener('input', () => {
 			this.input.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
-			this.dispatchEvent(new CustomEvent("richtext-content", {
-				detail: {
-					content: this.plaintext ? this.content.textContent : this.content.innerHTML
-				},
-			})
-		)});
+				if (this.eventMode === 'custom' || this.eventMode === 'both') {
+					this.dispatchEvent(new CustomEvent("richtext-content", {
+						detail: {
+							content: this.plaintext ? this.content.textContent : this.content.innerHTML
+						},
+				}));
+			}
+			if (this.eventMode === 'input' || this.eventMode === 'both') {
+				const event = new Event('input', {
+					bubbles: true,
+					cancelable: true,
+				});
+				this.input.dispatchEvent(event);
+			}
+		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
-		
 		this.customToolbar = shadow.querySelector(`[part=custom]`);
 		this.highlight = this.commands.filter(command => command.highlight).map(command => command.command);
 		this.htmlcode = shadow.querySelector(`[name=htmlcode]`);

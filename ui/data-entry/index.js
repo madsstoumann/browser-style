@@ -171,27 +171,6 @@ class DataEntry extends HTMLElement {
 		});
 	}
 
-	bindRichTextEvents() {
-		const richTextElements = this.form.querySelectorAll('rich-text');
-		richTextElements.forEach(richText => { 
-			richText.addEventListener('richtext-content', (event) => {
-				const detail = event.detail;
-				console.log('detail', detail);
-				// const formName = richText.getAttribute('form');
-				// const path = richText.getAttribute('name');
-				// const inputName = `${path}.value`;
-				// const input = document.forms[formName].elements[inputName];
-				// if (input) {
-				// 	input.value = detail;
-				// 	input.setCustomValidity('');
-				// 	if (!input.checkValidity()) {
-				// 		input.reportValidity();
-				// 	}
-				// }
-			});
-		});
-	}
-
 	debugLog(...args) {
 		if (this.hasAttribute('debug')) {
 			console.log(...args);
@@ -256,7 +235,6 @@ class DataEntry extends HTMLElement {
 		this.form.innerHTML = this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true);
 		bindUtilityEvents(this.form, this);
 		this.bindAutoSuggestEvents();
-		this.bindRichTextEvents();
 	}
 
 	shouldValidate() {
