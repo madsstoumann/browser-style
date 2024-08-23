@@ -9,8 +9,8 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.11
- * @summary 22-08-2024
+ * @version 1.0.12
+ * @summary 23-08-2024
  * @class
  * @extends {HTMLElement}
  */
