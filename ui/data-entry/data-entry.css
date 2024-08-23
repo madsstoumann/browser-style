@@ -321,7 +321,7 @@
 		{
 			clip-path: inset(2px 0 0 0);
 		}
-/* details:not([open]):focus-within + details */
-
+		label:has([part~=delete]):focus-within { outline-offset: 2px; }
+		/* details:not([open]):focus-within + details */
 	}
 }

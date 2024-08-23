@@ -33,7 +33,7 @@ export class RichText extends HTMLElement {
 		this.content.addEventListener('click', () => this.highlightToolbar());
 		this.content.addEventListener('input', () => { 
 			this.input.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
-			this.dispatchEvent(new CustomEvent("ui-richtext-content", {
+			this.dispatchEvent(new CustomEvent("richtext-content", {
 				detail: {
 					content: this.plaintext ? this.content.textContent : this.content.innerHTML
 				},
@@ -389,7 +389,7 @@ export class RichText extends HTMLElement {
 			icon: `M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2,M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0,M14 4l0 4l-6 0l0 -4`,
 			key: 'save',
 			fn: () => {
-				this,this.dispatchEvent(new CustomEvent("ui-richtext-save", {
+				this,this.dispatchEvent(new CustomEvent("richtext-save", {
 					detail: {
 						content: this.plaintext ? this.content.textContent : this.content.innerHTML
 					}
@@ -446,8 +446,8 @@ stylesheet.replaceSync(`
 [hidden] { display: none; }
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
 :host {
-	--ui-richtext-active-bg: var(--Highlight);
-	--ui-richtext-active-c: inherit;
+	--richtext-active-bg: var(--Highlight);
+	--richtext-active-c: inherit;
 	background: Canvas;
 	color: CanvasText;
 	color-scheme: inherit;
@@ -492,8 +492,8 @@ fieldset {
 	display: flex;
 	& > *:only-child { border-radius: .1875em; }
 	& fieldset > *:is(:focus-visible, :hover) {
-		background: var(--ui-richtext-active-bg);
-		color: var(--ui-richtext-active-c);
+		background: var(--richtext-active-bg);
+		color: var(--richtext-active-c);
 	}
 	&:empty { display: none; }
 }
@@ -516,7 +516,7 @@ svg {
 textarea {	
 	color-scheme: dark;
 	field-sizing: content;
-	font-family: ui-monospace, monospace;
+	font-family: monospace, monospace;
 	font-size: small;
 	max-block-size: 25dvh;
 	resize: vertical;
@@ -533,8 +533,8 @@ textarea {
 	width: 1px;
 }
 .--active {
-	background: var(--ui-richtext-active-bg);
-	color: var(--ui-richtext-active-c);
+	background: var(--richtext-active-bg);
+	color: var(--richtext-active-c);
 }
 [disabled] {
 	color: GrayText;
