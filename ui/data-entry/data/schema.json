@@ -107,24 +107,68 @@
         ]
       }
     },
-    "vendor_id": {
-      "type": "number",
-      "title": "Vendor Id",
-      "render": {
-        "method": "input",
-        "attributes": [
-          {
-            "name": "vendor_id"
-          },
-          {
-            "type": "number"
-          },
-          {
-            "placeholder": "Enter vendor_id"
+
+    "vendor": {
+      "type": "object",
+      "title": "vendor",
+      "properties": {
+        "vendor_id": {
+          "type": "number",
+          "title": "Id",
+          "render": {
+            "method": "input",
+            "attributes": [
+              {
+                "name": "id"
+              },
+              {
+                "type": "number"
+              }
+            ]
           }
-        ]
-      }
+        },
+        "vendor_name": {
+          "type": "string",
+          "title": "Name",
+          "render": {
+            "method": "input",
+            "attributes": [
+              {
+                "name": "name"
+              },
+              {
+                "type": "text"
+              },
+              {
+                "placeholder": "Enter name"
+              }
+            ]
+          }
+        }
+      },
+      "render": {
+        "method": "autosuggest",
+        "autosuggest": {
+          "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=",
+          "apiKeyName": "adresse.id",
+          "apiValueName": "tekst",
+          "label": "Vendor",
+          "mapping": {
+            "vendor_id": "adresse.vejkode",
+            "vendor_name": "adresse.adresseringsvejnavn"
+          },
+          "values": {
+            "key": "vendor_id",
+            "value": "vendor_name"
+          }
+        }
+      },
+      "required": [
+        "vendor_id",
+        "vendor_name"
+      ]
     },
+
     "barcode": {
       "type": "string",
       "title": "Barcode",
@@ -371,8 +415,8 @@
         "delete": true,
         "autosuggest": {
           "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=",
-          "key": "adresse.id",
-          "value": "tekst",
+          "apiKeyName": "adresse.id",
+          "apiValueName": "tekst",
           "label": "",
           "mapping": {
             "id": "adresse.vejkode",
@@ -777,52 +821,6 @@
         "delete": true
       }
     },
-    "vendor": {
-      "type": "object",
-      "title": "vendor",
-      "properties": {
-        "id": {
-          "type": "number",
-          "title": "Id",
-          "render": {
-            "method": "input",
-            "attributes": [
-              {
-                "name": "id"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "placeholder": "Enter id"
-              }
-            ]
-          }
-        },
-        "name": {
-          "type": "string",
-          "title": "Name",
-          "render": {
-            "method": "input",
-            "attributes": [
-              {
-                "name": "name"
-              },
-              {
-                "type": "text"
-              },
-              {
-                "placeholder": "Enter name"
-              }
-            ]
-          }
-        }
-      },
-      "required": [
-        "id",
-        "name"
-      ]
-    },
     "media": {
       "type": "array",
       "title": "Media",
@@ -1017,7 +1015,6 @@
     "issue",
     "product_type_id",
     "base_product_id",
-    "vendor_id",
     "barcode",
     "condition",
     "published",

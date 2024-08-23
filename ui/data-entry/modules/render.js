@@ -1,4 +1,4 @@
-import { attrs, uuid } from './utility.js';
+import { attrs, getObjectByPath, uuid } from './utility.js';
 
 /* Main Render Function */
 export function all(data, schema, instance, root = false, pathPrefix = '') {
@@ -66,26 +66,33 @@ export const array = (params) => {
 	return content;
 };
 
-/* Autosuggest Render Method */
-// export const autosuggest = (params) => {
-// 	console.log(params);
-// 	const { attributes, path = '' } = params;
-// 	return `<auto-suggest part="autosuggest" name="${path}"></auto-suggest>`;
-// }
+export const autosuggest = (params) => {
+	const config = params.config?.render?.autosuggest || null;
+	if (!config) return '';
 
-export const autosuggest = ({ autoSuggestConfig, path, formID }) => {
-	const { api, key, value, label } = autoSuggestConfig;
+	const { api, apiKeyName, apiValueName, label, mapping, values } = config;
+	const { path, formID } = params;
+
+	let key = '';
+	let value = '';
+
+	if (values && params.value) {
+		key = getObjectByPath(params.value, values.key) || '';
+		value = getObjectByPath(params.value, values.value) || '';
+	}
 
 	return `
 		<auto-suggest 
 			part="autosuggest" 
 			name="${path}"
 			api="${api}"
-			api-key="${key}"
-			api-value="${value}"
-			label="${label}"
-			${formID ? `form="${formID}"` : ''}
-			></auto-suggest>`;
+			api-key="${apiKeyName}"
+			api-value="${apiValueName}"
+			key="${key}"
+			label="${label || ''}"
+			value="${value}"
+			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
+			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
 /* Detail/Details Render Methods */
@@ -136,14 +143,13 @@ export const entry = (params) => {
 	const formID = `form${uuid()}`;
 	const id = `popover-${uuid()}`;
 	const label = config.title || 'Add New Entry';
-	const autoSuggestConfig = config.render?.autosuggest;
+	const renderAutoSuggest = !!config.render?.autosuggest;
 
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
 			const attributes = [...propConfig.render.attributes, { form: formID }];
 
-			if (autoSuggestConfig) {
-				// attributes.push({ disabled: 'disabled' });
+			if (renderAutoSuggest) {
 				attributes.push({ required: 'required' });
 			}
 
@@ -168,7 +174,7 @@ export const entry = (params) => {
 		<div id="${id}" popover="" style="--_pa:--${id};">
 			<fieldset part="fieldset" name="${path}-entry">
 				<legend part="legend">${label}</legend>
-				${autoSuggestConfig ? autosuggest({ autoSuggestConfig, path, formID }) : ''}
+				${renderAutoSuggest ? autosuggest({ config, path, formID }) : ''}
 				${fields}
 				<nav part="nav">
 					<button type="button" form="${formID}" part="close" popovertarget="${id}" popovertargetaction="hide">Close</button>

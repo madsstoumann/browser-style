@@ -5,7 +5,10 @@
   "issue": 0,
   "product_type_id": 1,
   "base_product_id": "",
-  "vendor_id": 162,
+  "vendor": {
+    "vendor_id": 162,
+    "vendor_name": "Harper Collins Publishers U.K."
+  },
   "barcode": "91872562452",
   "condition": 1,
   "published": false,
@@ -64,10 +67,7 @@
       "value": 2400
     }
   ],
-  "vendor": {
-    "id": 162,
-    "name": "Harper Collins Publishers U.K."
-  },
+  
   "media": [
     {
       "media_id": 190155,

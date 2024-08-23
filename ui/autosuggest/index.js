@@ -19,6 +19,7 @@ export class AutoSuggest extends HTMLElement {
 		root.innerHTML = this.render();
 
 		this.datalist = root.querySelector('datalist');
+		this.eventMode = this.getAttribute('event-mode') || 'custom'; /* custom, input, both */
 		this.form = this.getAttribute('form') ? document.forms[this.getAttribute('form')] : this.closest('form');
 		this.input = root.querySelector('input:not([type="hidden"])');
 		this.inputHidden = root.querySelector('input[type="hidden"]');
@@ -46,8 +47,15 @@ export class AutoSuggest extends HTMLElement {
 				const option = selected();
 				if (option) {
 					this.inputHidden.value = option.dataset.key;
-					this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail: JSON.parse(option.dataset.obj) }));
+					
 					this.reset(false);
+
+					if (this.eventMode === 'custom' || this.eventMode === 'both') {
+						this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail: JSON.parse(option.dataset.obj) }));
+					}
+					if (this.eventMode === 'input' || this.eventMode === 'both') {
+						this.inputHidden.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+					}
 				}
 				return;
 			}

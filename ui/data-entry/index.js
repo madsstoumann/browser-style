@@ -148,16 +148,19 @@ class DataEntry extends HTMLElement {
 		autoSuggestElements.forEach(autoSuggest => {
 			autoSuggest.addEventListener('autoSuggestSelect', (event) => {
 				const detail = event.detail;
-				const formName = autoSuggest.getAttribute('form');
+				const formName = autoSuggest.getAttribute('form') ;
 				const path = autoSuggest.getAttribute('name');
-
-				const autosuggestConfig = this.getAutoSuggestConfig(path);
-				if (autosuggestConfig && autosuggestConfig.mapping) {
-					Object.keys(autosuggestConfig.mapping).forEach((field) => {
-						const mappedKeyPath = autosuggestConfig.mapping[field];
+				const mapping = autoSuggest.dataset.mapping;
+	
+				if (mapping) {
+					const mappingObj = JSON.parse(mapping);
+	
+					Object.keys(mappingObj).forEach((field) => {
+						const mappedKeyPath = mappingObj[field];
 						const mappedValue = getObjectByPath(detail, mappedKeyPath);
 						const inputName = `${path}.${field}`;
-						const input = document.forms[formName].elements[inputName];
+						const input = formName ? document.forms[formName].elements[inputName] : this.form.elements[inputName];
+						
 						if (input) {
 							input.value = mappedValue || '';
 							input.setCustomValidity('');
@@ -188,22 +191,6 @@ class DataEntry extends HTMLElement {
 			this.debugLog(`Error fetching ${attribute}:`, error);
 			return null;
 		}
-	}
-
-	getAutoSuggestConfig(path) {
-		const pathSegments = path.split('.');
-		let config = this.instance.schema.properties;
-
-		for (let segment of pathSegments) {
-			if (config[segment]) {
-				config = config[segment];
-			} else if (config.items && config.items.properties) {
-				config = config.items.properties;
-			} else {
-				return null;
-			}
-		}
-		return config.render?.autosuggest || null;
 	}
 
 	async loadResources() {

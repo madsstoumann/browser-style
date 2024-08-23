@@ -43,11 +43,7 @@ export class RichText extends HTMLElement {
 				}));
 			}
 			if (this.eventMode === 'input' || this.eventMode === 'both') {
-				const event = new Event('input', {
-					bubbles: true,
-					cancelable: true,
-				});
-				this.input.dispatchEvent(event);
+				this.input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
 			}
 		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
@@ -136,10 +132,6 @@ export class RichText extends HTMLElement {
 			return `<option value="${value}">${label}</option>`;
 		}).join('')}</select>`;
 	}
-
-	// renderSkipToolbar() {
-	// 	return `<a href="#${this.contentID}" part="skip">${this.getAttribute('skip-toolbar')||'Skip to content'}</a>`;
-	// }
 
 	renderSkipToolbar() {
 		return `<button type="button" part="skip" onclick="document.getElementById('${this.contentID}').focus()">${this.getAttribute('skip-toolbar') || 'Skip to content'}</button>`;
