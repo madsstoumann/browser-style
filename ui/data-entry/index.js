@@ -9,8 +9,8 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.12
- * @summary 23-08-2024
+ * @version 1.0.14
+ * @summary 26-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -148,20 +148,28 @@ class DataEntry extends HTMLElement {
 		autoSuggestElements.forEach(autoSuggest => {
 			autoSuggest.addEventListener('autoSuggestSelect', (event) => {
 				const detail = event.detail;
-				console.log(detail);
-				const formName = autoSuggest.getAttribute('form') ;
-				const path = autoSuggest.getAttribute('name');
+				const formName = autoSuggest.getAttribute('form');
 				const mapping = autoSuggest.dataset.mapping;
-	
-				if (mapping) {
+				const name = autoSuggest.getAttribute('name');
+				const path = name.includes('.') ? name.split('.').slice(0, -1).join('.') : name;
+				const syncInstance = autoSuggest.getAttribute('sync-instance') === 'true';
+
+				const objIsValid = Object.keys(detail).length === 1 && detail[path];
+				let resultObject = {};
+
+				if (objIsValid) {
+					resultObject[path] = detail[path];
+				} else if (mapping) {
 					const mappingObj = JSON.parse(mapping);
-	
+
 					Object.keys(mappingObj).forEach((field) => {
 						const mappedKeyPath = mappingObj[field];
 						const mappedValue = getObjectByPath(detail, mappedKeyPath);
-						const inputName = `${path}.${field}`;
-						const input = formName ? document.forms[formName].elements[inputName] : this.form.elements[inputName];
-						
+						const fullPath = path ? `${path}.${field}` : field;
+						const input = formName ? document.forms[formName].elements[fullPath] : this.form.elements[fullPath];
+
+						setObjectByPath(resultObject, fullPath, mappedValue);
+
 						if (input) {
 							input.value = mappedValue || '';
 							input.setCustomValidity('');
@@ -171,9 +179,16 @@ class DataEntry extends HTMLElement {
 						}
 					});
 				}
+
+				if (syncInstance && !isEmpty(resultObject)) {
+						Object.keys(resultObject).forEach(key => {
+								setObjectByPath(this.instance.data, key, resultObject[key]);
+						});
+						this.syncInstanceData(event);
+				}
+				console.log('Updated instance data after sync:', this.instance.data);
 			});
 		});
-		console.log(this.instance.data);
 	}
 
 	debugLog(...args) {

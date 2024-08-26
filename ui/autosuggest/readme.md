@@ -1,194 +1,120 @@
 
-# AutoSuggest Web Component
+# `<auto-suggest>` Web Component
 
-The `AutoSuggest` web component is a custom HTML element that provides a flexible and accessible autosuggest functionality using the built-in `<datalist>` element.
+The `<auto-suggest>` is a custom web component that provides an input field with auto-suggest functionality. It dynamically fetches suggestions from an API endpoint as the user types and displays them in a dropdown list.
 
-## Features
+## How to Use
 
-- Fetch suggestions from an API
-- Debounced input handling
-- Keyboard navigation support
-- Customizable via attributes
-- Emits custom events for better control and feedback
+### Basic Implementation
 
-## Installation
-
-Include the `AutoSuggest` component script in your project. Ensure you have defined your component in a JavaScript file and included it in your HTML.
-
-```html
-<script type="module" src="./path/to/AutoSuggest.js"></script>
-```
-
-## Usage
-
-### HTML
+To use the `<auto-suggest>` component in your HTML, include it in your HTML file like so:
 
 ```html
 <auto-suggest
-    id="nationalize"
-    api="https://api.nationalize.io/?name="
-    key="name"
-    label="Nationalize.io"
-    minlength="3"
-    placeholder="Type a name"
-    autocomplete="off"
-    spellcheck="false"
-    type="search"
-    cache="false"
-    invalid="Invalid selection"
-    limit="true"
-    shadow="true">
-</auto-suggest>
+  api="https://example.com/api/suggestions"
+  api-display-path="data.display"
+  api-value-path="data.value"
+  display="Initial Display Value"
+  value="initialValue"
+  label="Search:"
+  name="searchField"
+  initial-object='{"data": {"display": "Initial Display Value", "value": "initialValue"}}'
+  form="myFormID"
+  cache="true"
+  event-mode="both"
+></auto-suggest>
 ```
 
-### JavaScript
+### Attributes
 
-Add event listeners and set a callback for the `auto-suggest` component.
+The `<auto-suggest>` component accepts the following attributes:
+
+- **`api`**: *(Required)* The URL of the API endpoint that returns suggestion data based on the user's input.
+
+- **`api-display-path`**: *(Required)* The dot-notated path in the API response object where the display value (visible in the suggestion dropdown) is located.
+
+- **`api-value-path`**: *(Required)* The dot-notated path in the API response object where the actual value (to be submitted) is located.
+
+- **`display`**: *(Optional)* The initial display value for the input field. This is what the user sees initially.
+
+- **`value`**: *(Optional)* The initial hidden value for the input field. This is the value that gets submitted with the form.
+
+- **`label`**: *(Optional)* A label for the input field. If provided, a `<label>` element will be rendered alongside the input field.
+
+- **`name`**: *(Optional)* The name attribute for the hidden input field, used in form submissions.
+
+- **`initial-object`**: *(Optional)* A JSON string representing the initial object data. This can be used to set both the initial display and value fields dynamically.
+
+- **`form`**: *(Optional)* The ID of the form the input field is associated with.
+
+- **`cache`**: *(Optional)* A boolean (`true` or `false`) that determines if the fetched data should be cached. Default is `false`.
+
+- **`event-mode`**: *(Optional)* Defines how events are dispatched. Possible values are:
+  - `custom`: Dispatches a custom event when a suggestion is selected.
+  - `input`: Triggers an `input` event when a suggestion is selected.
+  - `both`: Triggers both `custom` and `input` events.
+
+### Examples
+
+#### Example 1: Basic Usage
+
+```html
+<auto-suggest
+  api="https://example.com/api/suggestions"
+  api-display-path="suggestion.name"
+  api-value-path="suggestion.id"
+  label="Search Suggestions"
+  name="suggestions"
+></auto-suggest>
+```
+
+#### Example 2: With Initial Values and Form Association
+
+```html
+<form id="searchForm">
+  <auto-suggest
+    api="https://example.com/api/suggestions"
+    api-display-path="result.displayName"
+    api-value-path="result.id"
+    display="Start typing..."
+    value="123"
+    label="Search:"
+    name="search"
+    form="searchForm"
+    initial-object='{"result": {"displayName": "Start typing...", "id": "123"}}'
+    cache="true"
+    event-mode="both"
+  ></auto-suggest>
+  <button type="submit">Submit</button>
+</form>
+```
+
+#### Example 3: Custom Event Handling
+
+You can listen for the `autoSuggestSelect` custom event to handle suggestion selection:
 
 ```javascript
-document.addEventListener('DOMContentLoaded', () => {
-    const nationalize = document.getElementById('nationalize');
-
-    // Set a custom callback for handling fetched data
-    nationalize.setCallback((list, data) => {
-        const country = data.country;
-        list.innerHTML = country.map(obj => 
-            `<option value="\${data.name} — Country: \${obj.country_id}, Probability: \${(obj.probability * 100).toFixed(2)}%" data-obj='\${obj ? JSON.stringify(obj):''}'>`
-        ).join('');
-    });
-
-    // Add event listeners for custom events
-    nationalize.addEventListener('autoSuggestFetchStart', () => {
-        console.log('Fetch started');
-    });
-
-    nationalize.addEventListener('autoSuggestFetchEnd', () => {
-        console.log('Fetch ended');
-    });
-
-    nationalize.addEventListener('autoSuggestFetchError', (event) => {
-        console.log('Fetch error', event.detail);
-    });
-
-    nationalize.addEventListener('autoSuggestNoResults', () => {
-        console.log('No results found');
-    });
-
-    nationalize.addEventListener('autoSuggestHighlight', (event) => {
-        console.log('Highlighted option', event.detail);
-    });
-
-    nationalize.addEventListener('autoSuggestSelect', (event) => {
-        console.log('Selection made', event.detail);
-    });
+document.querySelector('auto-suggest').addEventListener('autoSuggestSelect', (event) => {
+  console.log('Selected Suggestion:', event.detail);
 });
 ```
 
-## Attributes
+### Custom Events
 
-- **api**: The URL of the API to fetch suggestions from. Example: `https://api.nationalize.io/?name=`.
-- **key**: The key to extract the suggestion value from the fetched data. Supports nested keys using dot notation.
-- **label**: The label for the input field.
-- **minlength**: The minimum number of characters required to trigger the fetch. Default is `3`.
-- **placeholder**: The placeholder text for the input field.
-- **autocomplete**: The autocomplete attribute for the input field. Default is `off`.
-- **spellcheck**: The spellcheck attribute for the input field. Default is `false`.
-- **type**: The type attribute for the input field. Default is `search`.
-- **cache**: If `true`, caches the fetched results. Default is `false`.
-- **invalid**: The message to display when the input is invalid. Default is `Invalid selection`.
-- **limit**: If `true`, the input value must match one of the suggestions. Default is `true`.
-- **shadow**: If `true`, renders the component in the shadow DOM. Default is `false`.
+- **`autoSuggestSelect`**: Dispatched when a suggestion is selected. The event `detail` contains the selected suggestion data.
 
-## Custom Events
+- **`autoSuggestFetchStart`**: Dispatched when fetching suggestions from the API begins.
 
-- **autoSuggestFetchStart**: Fired when a fetch request starts.
-- **autoSuggestFetchEnd**: Fired when a fetch request ends.
-- **autoSuggestFetchError**: Fired when a fetch request encounters an error. The event detail contains the error.
-- **autoSuggestNoResults**: Fired when no results are found.
-- **autoSuggestHighlight**: Fired when an option is highlighted using the keyboard. The event detail contains the highlighted option.
-- **autoSuggestSelect**: Fired when a suggestion is selected. The event detail contains the selected option.
+- **`autoSuggestFetchEnd`**: Dispatched when fetching suggestions from the API completes successfully.
 
-## Methods
+- **`autoSuggestFetchError`**: Dispatched when there is an error fetching suggestions from the API. The event `detail` contains the error information.
 
-### `setCallback(callback)`
+- **`autoSuggestNoResults`**: Dispatched when no results are returned from the API.
 
-Sets a custom callback function to handle the fetched data.
+- **`autoSuggestClear`**: Dispatched when the input is cleared or reset.
 
-```javascript
-function customCallback(list, data) {
-    // Custom processing of the fetched data
-}
-autoSuggestElement.setCallback(customCallback);
-```
+### Conclusion
 
-## Example
+The `<auto-suggest>` web component provides a powerful, customizable input field with dynamic suggestions, suitable for any web application requiring a rich, user-friendly search experience.
 
-Here is a complete example:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoSuggest Example</title>
-    <script type="module" src="./path/to/AutoSuggest.js"></script>
-</head>
-<body>
-    <auto-suggest
-        id="nationalize"
-        api="https://api.nationalize.io/?name="
-        key="name"
-        label="Nationalize.io"
-        minlength="3"
-        placeholder="Type a name"
-        autocomplete="off"
-        spellcheck="false"
-        type="search"
-        cache="false"
-        invalid="Invalid selection"
-        limit="true"
-        shadow="true">
-    </auto-suggest>
-
-    <script type="module">
-        document.addEventListener('DOMContentLoaded', () => {
-            const nationalize = document.getElementById('nationalize');
-
-            // Set a custom callback for handling fetched data
-            nationalize.setCallback((list, data) => {
-                const country = data.country;
-                list.innerHTML = country.map(obj => 
-                    `<option value="\${data.name} — Country: \${obj.country_id}, Probability: \${(obj.probability * 100).toFixed(2)}%" data-obj='\${obj ? JSON.stringify(obj):''}'>`
-                ).join('');
-            });
-
-            // Add event listeners for custom events
-            nationalize.addEventListener('autoSuggestFetchStart', () => {
-                console.log('Fetch started');
-            });
-
-            nationalize.addEventListener('autoSuggestFetchEnd', () => {
-                console.log('Fetch ended');
-            });
-
-            nationalize.addEventListener('autoSuggestFetchError', (event) => {
-                console.log('Fetch error', event.detail);
-            });
-
-            nationalize.addEventListener('autoSuggestNoResults', () => {
-                console.log('No results found');
-            });
-
-            nationalize.addEventListener('autoSuggestHighlight', (event) => {
-                console.log('Highlighted option', event.detail);
-            });
-
-            nationalize.addEventListener('autoSuggestSelect', (event) => {
-                console.log('Selection made', event.detail);
-            });
-        });
-    </script>
-</body>
-</html>
-```
+Feel free to customize the component further based on your specific requirements!

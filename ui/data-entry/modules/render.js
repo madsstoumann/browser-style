@@ -56,34 +56,29 @@ export function all(data, schema, instance, root = false, pathPrefix = '') {
 }
 
 /* Array Render Method */
-export const array = (params) => {
-	const { attributes, config, instance, label, path = '', value } = params;
-	const content = value.map((item, index) => fieldset({
-		label: `${label} ${index + 1}`,
-		content: all(item, config.items, instance, false, path ? `${path}[${index}]` : ''),
-		attributes
-	})).join('');
-	return content;
-};
-
 export const autosuggest = (params) => {
 	const config = params.config?.render?.autosuggest || null;
 	if (!config) return '';
 
-	const { api, apiValuePath, apiDisplayPath, label, mapping, values } = config;
+	const { api, apiValuePath, apiDisplayPath, defaults, label, mapping } = config;
 	const { path, formID } = params;
 
 	let display = '';
-	let value = '';
 	let initialObject = null;
+	let name = path;
+	let value = '';
 
-	if (values && params.value) {
-		value = getObjectByPath(params.value, values.key) || '';
-		display = getObjectByPath(params.value, values.value) || '';
+	if (defaults && params.value) {
+		display = getObjectByPath(params.value, defaults.display) || '';
+		value = getObjectByPath(params.value, defaults.value) || '';
 
 		initialObject = {};
-		setObjectByPath(initialObject, apiDisplayPath, display);
-		setObjectByPath(initialObject, apiValuePath, value);
+		setObjectByPath(initialObject, `${path}.${defaults.display}`, display);
+		setObjectByPath(initialObject, `${path}.${defaults.value}`, value);
+
+		if (defaults.value) {
+			name = `${path}.${defaults.value}`;
+		}
 	}
 
 	return `
@@ -91,15 +86,17 @@ export const autosuggest = (params) => {
 			api="${api}"
 			api-display-path="${apiDisplayPath}"
 			api-value-path="${apiValuePath}"
-			display="${display}"
-			label="${label || ''}"
-			name="${path}"
+			${display ? `display="${display}"` : ''}
+			${label ? `label="${label}"` : ''}
+			name="${name}"
 			part="autosuggest" 
-			value="${value}"
+			${config.syncInstance ? `sync-instance="${config.syncInstance}"` : ''}
+			${value ? `value="${value}"` : ''}
 			${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
 			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
 			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
+
 /* Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [] }) => {
 	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';

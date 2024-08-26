@@ -157,10 +157,11 @@
             "vendor_id": "adresse.vejkode",
             "vendor_name": "adresse.adresseringsvejnavn"
           },
-          "values": {
-            "key": "vendor_id",
-            "value": "vendor_name"
-          }
+          "defaults": {
+            "display": "vendor_name",
+            "value": "vendor_id"
+          },
+          "syncInstance": true
         }
       },
       "required": [
