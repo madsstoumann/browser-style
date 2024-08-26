@@ -16,11 +16,14 @@ GUI.addColor('Start color', '#263773', '', { name: 'startcolor' });
 GUI.addColor('End color', '#8c9dd9', '', { name: 'endcolor' });
 GUI.addSelect('Font family', 'fontfamily', '', { 
 	options: [
-		{ key: "Just Another Hand", value: "Just Another Hand, cursive" },
-		{ key: 'Antique', value: "Superclarendon, Bookman Old Style, URW Bookman, URW Bookman L, Georgia Pro, Georgia, serif" },
-		{ key: 'Code', value: "ui-monospace, Cascadia Code, Source Code Pro, Menlo, Consolas, DejaVu Sans Mono, monospace" },
-		{ key: 'Handwritten', value: "Segoe Print, Bradley Hand, Chilanka, TSCu_Comic, casual, cursive" },
-		{ key: 'Impact', value: 'Impact' }
+		{ key: 'Just Another Hand', value: 'Just Another Hand, cursive' },
+		{ key: 'Antique', value: 'Superclarendon, Bookman Old Style, URW Bookman, URW Bookman L, Georgia Pro, Georgia, serif' },
+		{ key: 'Code', value: 'ui-monospace, Cascadia Code, Source Code Pro, Menlo, Consolas, DejaVu Sans Mono, monospace' },
+		{ key: 'Didone', value: 'Didot, Bodoni MT, Noto Serif Display, URW Palladio L, P052, Sylfaen, serif' },
+		{ key: 'Handwritten', value: 'Segoe Print, Bradley Hand, Chilanka, TSCu_Comic, casual, cursive' },
+		{ key: 'Rounded', value: 'ui-rounded, Hiragino Maru Gothic ProN, Quicksand, Comfortaa, Manjari, Arial Rounded MT, Arial Rounded MT Bold, Calibri, source-sans-pro, sans-serif' },
+		{ key: 'Slab Serif', value: 'Rockwell, Rockwell Nova, Roboto Slab, DejaVu Serif, Sitka Small, serif' },
+		{ key: 'System UI', value: 'system-ui, sans-serif'}
 	],
 	'name': 'fontfamily'
 });
