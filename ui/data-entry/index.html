@@ -16,12 +16,35 @@
 
 	<data-entry
 		data="data/product.json"
-		schema="data/schema.json"
 		lookup="data/lookup.json"
+		schema="data/schema.json"
 		validation="true"
+		event-mode="form"
 		debug>
 	</data-entry>
 
+	<!-- <button type="button" id="formdata">Get Form Data</button> -->
+
 	<script type="module" src="index.js"></script>
+	<script>
+
+		const dataEntry = document.querySelector('data-entry');
+		dataEntry.addEventListener('updateData', event => {
+			const data = event.detail.data;
+
+			if (data instanceof FormData) {
+				for (let [key, value] of data.entries()) {
+					console.log(`${key}: ${value}`);
+				}
+			} else {
+				console.log('Object Data:', data);
+			}
+		});
+
+		// const formDataButton = document.querySelector('#formdata');
+		// formDataButton.addEventListener('click', () => {
+		// 	dataEntry.dispatchEvent(new CustomEvent('requestUpdateForm'));
+		// });
+	</script>
 </body>
 </html>

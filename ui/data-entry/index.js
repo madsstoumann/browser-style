@@ -9,7 +9,7 @@ import { RichText } from '/ui/rich-text/richtext.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.14
+ * @version 1.0.15
  * @summary 26-08-2024
  * @class
  * @extends {HTMLElement}
@@ -19,53 +19,38 @@ class DataEntry extends HTMLElement {
 
 	constructor() {
 		super();
+		this.customValidateData = null;
+		this.eventMode = this.getAttribute('event-mode') || '';
 		this.form = document.createElement('form');
 		this.form.method = 'POST';
 		this.form.action = this.getAttribute('action');
 		this.form.part = 'form';
 		this.instance = createDataEntryInstance(this);
-		this.customValidateData = null;
-		this._data = null;
-		this._schema = null;
-		this._lookup = null;
+
+		this.addEventListener('requestUpdateForm', () => this.handleUpdateEvent(true));
+		this.addEventListener('requestUpdateObject', () => this.handleUpdateEvent(false));
 	}
 
 	async connectedCallback() {
-		if (this.hasAttribute('shadow')) {
-			const shadow = this.attachShadow({ mode: 'open' });
-			shadow.appendChild(this.form);
-		} else {
-			this.appendChild(this.form);
-		}
+		const shadowRoot = this.hasAttribute('shadow') ? this.attachShadow({ mode: 'open' }) : this;
+		shadowRoot.appendChild(this.form);
 
 		this.form.addEventListener('input', (event) => this.syncInstanceData(event));
 
-		if (this.data && this.schema) {
-			this.instance.data = this.data;
-			this.instance.schema = this.schema;
-			this.renderAll();
-		} else {
-			await this.loadResources();
-			if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
-				this.debugLog('Data or schema is empty. Skipping render.');
-				return;
-			}
-
-			if (this.instance.data && this.instance.schema) {
-				if (this.shouldValidate()) {
-					const validationResult = await this.validateData();
-					if (!validationResult.valid) {
-						return;
-					}
-				}
-				this.renderAll();
-			}
+		await this.loadResources();
+		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
+			this.debugLog('Data or schema is empty. Skipping render.');
+			return;
 		}
+
+		if (this.shouldValidate() && !(await this.validateData()).valid) {
+			return;
+		}
+		this.renderAll();
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (!newValue || oldValue === newValue) return;
-		if (name === 'lookup') {
+		if (newValue && oldValue !== newValue && name === 'lookup') {
 			this.lookup = newValue;
 		}
 	}
@@ -140,52 +125,37 @@ class DataEntry extends HTMLElement {
 	
 		const popover = this.form.querySelector(`#${form.dataset.popover}`);
 		if (popover) popover.hidePopover();
+		this.dispatchUpdateEvent();
 		this.debugLog('Updated data:', this.instance.data);
 	}
 
 	bindAutoSuggestEvents() {
-		const autoSuggestElements = this.form.querySelectorAll('auto-suggest');
-		autoSuggestElements.forEach(autoSuggest => {
+		this.form.querySelectorAll('auto-suggest').forEach(autoSuggest => {
 			autoSuggest.addEventListener('autoSuggestSelect', (event) => {
 				const detail = event.detail;
-				const formName = autoSuggest.getAttribute('form');
-				const mapping = autoSuggest.dataset.mapping;
-				const name = autoSuggest.getAttribute('name');
-				const path = name.includes('.') ? name.split('.').slice(0, -1).join('.') : name;
+				const path = autoSuggest.getAttribute('name').split('.').slice(0, -1).join('.') || autoSuggest.getAttribute('name');
 				const syncInstance = autoSuggest.getAttribute('sync-instance') === 'true';
+				const mapping = JSON.parse(autoSuggest.dataset.mapping || '{}');
+				let resultObject = Object.keys(detail).length === 1 && detail[path] ? { [path]: detail[path] } : {};
 
-				const objIsValid = Object.keys(detail).length === 1 && detail[path];
-				let resultObject = {};
-
-				if (objIsValid) {
-					resultObject[path] = detail[path];
-				} else if (mapping) {
-					const mappingObj = JSON.parse(mapping);
-
-					Object.keys(mappingObj).forEach((field) => {
-						const mappedKeyPath = mappingObj[field];
-						const mappedValue = getObjectByPath(detail, mappedKeyPath);
-						const fullPath = path ? `${path}.${field}` : field;
-						const input = formName ? document.forms[formName].elements[fullPath] : this.form.elements[fullPath];
-
-						setObjectByPath(resultObject, fullPath, mappedValue);
-
-						if (input) {
-							input.value = mappedValue || '';
-							input.setCustomValidity('');
-							if (!input.checkValidity()) {
-								input.reportValidity();
-							}
-						}
-					});
-				}
+				Object.entries(mapping).forEach(([field, mappedKeyPath]) => {
+					const fullPath = path ? `${path}.${field}` : field;
+					const mappedValue = getObjectByPath(detail, mappedKeyPath);
+					setObjectByPath(resultObject, fullPath, mappedValue);
+					const input = autoSuggest.getAttribute('form') ? document.forms[autoSuggest.getAttribute('form')].elements[fullPath] : this.form.elements[fullPath];
+					if (input) {
+						input.value = mappedValue || '';
+						input.setCustomValidity('');
+						if (!input.checkValidity()) input.reportValidity();
+					}
+				});
 
 				if (syncInstance && !isEmpty(resultObject)) {
-						Object.keys(resultObject).forEach(key => {
-								setObjectByPath(this.instance.data, key, resultObject[key]);
-						});
-						this.syncInstanceData(event);
+					Object.keys(resultObject).forEach(key => setObjectByPath(this.instance.data, key, resultObject[key]));
+					this.syncInstanceData(event);
+					this.dispatchUpdateEvent();
 				}
+
 				console.log('Updated instance data after sync:', this.instance.data);
 			});
 		});
@@ -194,6 +164,14 @@ class DataEntry extends HTMLElement {
 	debugLog(...args) {
 		if (this.hasAttribute('debug')) {
 			console.log(...args);
+		}
+	}
+
+	dispatchUpdateEvent() {
+		if (this.eventMode === 'form') {
+			this.dispatchEvent(new CustomEvent('requestUpdateForm'));
+		} else if (this.eventMode === 'object') {
+			this.dispatchEvent(new CustomEvent('requestUpdateObject'));
 		}
 	}
 
@@ -210,6 +188,11 @@ class DataEntry extends HTMLElement {
 		}
 	}
 
+	handleUpdateEvent(postForm) {
+		const data = this.updateEntry(postForm);
+		this.dispatchEvent(new CustomEvent('updateData', { detail: { data } }));
+	}
+
 	async loadResources() {
 		this.data = await this.fetchResource('data');
 		this.schema = await this.fetchResource('schema');
@@ -221,11 +204,10 @@ class DataEntry extends HTMLElement {
 		if (obj) {
 			if (element.checked === false) {
 				obj._remove = true;
-				this.debugLog('Marked object for removal:', obj);
 			} else {
 				delete obj._remove;
-				this.debugLog('Removed object from removal:', obj);
 			}
+			this.debugLog(element.checked === false ? 'Marked object for removal:' : 'Removed object from removal:', obj);
 		} else {
 			this.debugLog(`No object found at path: ${path}`);
 		}
@@ -249,10 +231,25 @@ class DataEntry extends HTMLElement {
 		const { form, name, value, type, checked } = event.target;
 		if (!name) return;
 		if (form !== this.form) return;
-
+	
 		const dataType = event.target.dataset.type;
 		setObjectByPath(this.instance.data, name, convertValue(value, dataType, type, checked));
 		this.debugLog('Updated data:', this.instance.data);
+		this.dispatchUpdateEvent();
+	}
+
+	updateEntry(postForm = true) {
+		if (postForm) {
+			const formData = new FormData();
+			for (const element of this.form.elements) {
+				if (element.name && !element.disabled) {
+					formData.append(element.name, element.value);
+				}
+			}
+			return formData;
+		} else {
+			return this.instance.data;
+		}
 	}
 
 	async validateData() {
@@ -270,15 +267,6 @@ class DataEntry extends HTMLElement {
 		return this._data;
 	}
 
-	set schema(schema) {
-		this._schema = schema;
-		this.instance.schema = schema;
-	}
-
-	get schema() {
-		return this._schema;
-	}
-
 	set lookup(lookup) {
 		this._lookup = lookup;
 		this.instance.lookup = lookup;
@@ -286,6 +274,15 @@ class DataEntry extends HTMLElement {
 
 	get lookup() {
 		return this._lookup;
+	}
+
+	set schema(schema) {
+		this._schema = schema;
+		this.instance.schema = schema;
+	}
+
+	get schema() {
+		return this._schema;
 	}
 }
 
