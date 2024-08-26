@@ -150,8 +150,8 @@
         "method": "autosuggest",
         "autosuggest": {
           "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=",
-          "apiKeyName": "adresse.id",
-          "apiValueName": "tekst",
+          "apiValuePath": "adresse.id",
+          "apiDisplayPath": "tekst",
           "label": "Vendor",
           "mapping": {
             "vendor_id": "adresse.vejkode",
@@ -415,8 +415,8 @@
         "delete": true,
         "autosuggest": {
           "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q=",
-          "apiKeyName": "adresse.id",
-          "apiValueName": "tekst",
+          "apiValuePath": "adresse.id",
+          "apiDisplayPath": "tekst",
           "label": "",
           "mapping": {
             "id": "adresse.vejkode",

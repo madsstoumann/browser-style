@@ -148,6 +148,7 @@ class DataEntry extends HTMLElement {
 		autoSuggestElements.forEach(autoSuggest => {
 			autoSuggest.addEventListener('autoSuggestSelect', (event) => {
 				const detail = event.detail;
+				console.log(detail);
 				const formName = autoSuggest.getAttribute('form') ;
 				const path = autoSuggest.getAttribute('name');
 				const mapping = autoSuggest.dataset.mapping;
@@ -172,6 +173,7 @@ class DataEntry extends HTMLElement {
 				}
 			});
 		});
+		console.log(this.instance.data);
 	}
 
 	debugLog(...args) {

@@ -1,4 +1,4 @@
-import { attrs, getObjectByPath, uuid } from './utility.js';
+import { attrs, getObjectByPath, isEmpty, setObjectByPath, uuid } from './utility.js';
 
 /* Main Render Function */
 export function all(data, schema, instance, root = false, pathPrefix = '') {
@@ -70,31 +70,36 @@ export const autosuggest = (params) => {
 	const config = params.config?.render?.autosuggest || null;
 	if (!config) return '';
 
-	const { api, apiKeyName, apiValueName, label, mapping, values } = config;
+	const { api, apiValuePath, apiDisplayPath, label, mapping, values } = config;
 	const { path, formID } = params;
 
-	let key = '';
+	let display = '';
 	let value = '';
+	let initialObject = null;
 
 	if (values && params.value) {
-		key = getObjectByPath(params.value, values.key) || '';
-		value = getObjectByPath(params.value, values.value) || '';
+		value = getObjectByPath(params.value, values.key) || '';
+		display = getObjectByPath(params.value, values.value) || '';
+
+		initialObject = {};
+		setObjectByPath(initialObject, apiDisplayPath, display);
+		setObjectByPath(initialObject, apiValuePath, value);
 	}
 
 	return `
 		<auto-suggest 
-			part="autosuggest" 
-			name="${path}"
 			api="${api}"
-			api-key="${apiKeyName}"
-			api-value="${apiValueName}"
-			key="${key}"
+			api-display-path="${apiDisplayPath}"
+			api-value-path="${apiValuePath}"
+			display="${display}"
 			label="${label || ''}"
+			name="${path}"
+			part="autosuggest" 
 			value="${value}"
+			${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
 			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
 			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
-
 /* Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [] }) => {
 	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
