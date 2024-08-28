@@ -124,6 +124,14 @@ export function setObjectByPath(obj, path, value) {
 	}, obj);
 }
 
+/* Converts a string to PascalCase. */
+export function toPascalCase(str) {
+	return str
+		.split('-')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+		.join('');
+}
+
 /* Generates a unique identifier (UUID). */
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);

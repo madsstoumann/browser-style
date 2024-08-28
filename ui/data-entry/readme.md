@@ -8,6 +8,15 @@ For each endpoint, create a [JSON schema](https://jsonschema.net/).
 
 ## Schema Structure
 
+  "form": {
+    "action": "https://api.example.com/products",
+    "method": "POST",
+    "dataMode": "object",
+    "eventMode": "submit",
+    "reset": "Reset",
+    "submit": "Update product"
+  },
+
 ### Basic Structure 
 
 Each schema should include properties and, optionally, definitions for nested objects. Here’s a basic example of a schema with rendering properties:

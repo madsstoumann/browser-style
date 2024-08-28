@@ -2,8 +2,8 @@
  * AutoSuggest
  * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
  * @author Mads Stoumann
- * @version 1.0.12
- * @summary 26-08-2024
+ * @version 1.0.14
+ * @summary 28-08-2024
  * @class AutoSuggest
  * @extends {HTMLElement}
  */
@@ -86,7 +86,7 @@ export class AutoSuggest extends HTMLElement {
 			if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
 				this.resetToDefault();
 				if (this.initialObject) {
-					this.dispatchEventMode(JSON.stringify(this.initialObject));
+					this.dispatchEventMode(JSON.stringify(this.initialObject), true);
 				}
 			}
 		});
@@ -99,13 +99,16 @@ export class AutoSuggest extends HTMLElement {
 		}
 	}
 
-	dispatchEventMode(dataObj = null) {
+	dispatchEventMode(dataObj = null, isInitial = false) {
 		const detail = dataObj ? JSON.parse(dataObj) : {};
+		if (isInitial) {
+			detail.isInitial = true;
+		}
 		if (['custom', 'both'].includes(this.eventMode)) {
 			this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail }));
 		}
 		if (['input', 'both'].includes(this.eventMode)) {
-			this.inputHidden.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+			this.inputHidden.dispatchEvent(new Event('input', { bubbles: true }));
 		}
 	}
 
@@ -166,6 +169,10 @@ export class AutoSuggest extends HTMLElement {
 	uuid() {
 		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 	}
-}
 
-customElements.define('auto-suggest', AutoSuggest);
+	static mount() {
+		if (!customElements.get('auto-suggest')) {
+			customElements.define('auto-suggest', this);
+		}
+	}
+}

@@ -1,7 +1,7 @@
 import { attrs, getObjectByPath, isEmpty, setObjectByPath, uuid } from './utility.js';
 
 /* Main Render Function */
-export function all(data, schema, instance, root = false, pathPrefix = '') {
+export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
 	let content = Object.entries(schema.properties).map(([key, config]) => {
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method;
@@ -52,8 +52,29 @@ export function all(data, schema, instance, root = false, pathPrefix = '') {
 			: '';
 	}).join('');
 
-	return root && schema?.render?.toolbar ? content + instance.getRenderMethod('toolbar')(schema.render.toolbar) : content;
+	if (form) {
+		form.innerHTML = content;
+		if (root && schema.form) {
+			const { action, autoSave, method, dataMode } = schema.form;
+			if (action) form.setAttribute('action', action);
+			if (method) form.setAttribute('method', method);
+			form.setAttribute('data-mode', dataMode || 'object');
+			form.setAttribute('data-auto-save', autoSave || '0');
+			form.innerHTML += `<nav part="nav">
+				${schema.form.reset ? `<button type="reset" part="button reset">${schema.form.reset}</button>` : ''}
+				${schema.form.submit ? `<button type="submit" part="button submit">${schema.form.submit}</button>` : ''}
+			</nav>`;
+		}
+		return;
+	}
+
+	if (root && schema?.render?.toolbar) {
+		content += instance.getRenderMethod('toolbar')(schema.render.toolbar);
+	}
+
+	return content;
 }
+
 
 /* Array Render Method */
 export const autosuggest = (params) => {
@@ -109,7 +130,7 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 				<span part="header">
 					${icon('chevron right', 'sm', 'xs')}
 					<em>${header}</em>
-					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" data-util="removeArrayEntry" data-params='{ "path": "${path}" }'></label>` : ''}
+					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-util="removeArrayEntry" data-params='{ "path": "${path}" }'></label>` : ''}
 				</span>
 			</summary>
 			${all(value, config.items, instance, false, path)}
@@ -237,7 +258,7 @@ export const richtext = (params) => {
 	return `
 		<div part="row">
 			<span part="label">${label}</span>
-			<rich-text part="richtext" ${attrs(attributes, path)}>
+			<rich-text part="richtext" event-mode="input" ${attrs(attributes, path)}>
 				${value}
 			</rich-text>
 		</div>`;

@@ -19,17 +19,13 @@
 		lookup="data/lookup.json"
 		schema="data/schema.json"
 		validation="true"
-		event-mode="form"
 		debug>
 	</data-entry>
-
-	<!-- <button type="button" id="formdata">Get Form Data</button> -->
-
 	<script type="module" src="index.js"></script>
 	<script>
 
 		const dataEntry = document.querySelector('data-entry');
-		dataEntry.addEventListener('updateData', event => {
+		dataEntry.addEventListener('dataEntry', event => {
 			const data = event.detail.data;
 
 			if (data instanceof FormData) {

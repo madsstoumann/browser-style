@@ -1,15 +1,16 @@
 import { createDataEntryInstance } from './modules/factory.js';
 import { bindUtilityEvents, convertValue, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
-import { mountComponents } from './modules/components.js';
+import { AutoSuggest } from '/ui/autosuggest/index.js';
+import { RichText } from '/ui/rich-text/richtext.js';
 
 /**
  * Data Entry
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.18
- * @summary 28-08-2024
+ * @version 1.0.16
+ * @summary 27-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -20,6 +21,11 @@ class DataEntry extends HTMLElement {
 		this.form = document.createElement('form');
 		this.form.part = 'form';
 		this.instance = createDataEntryInstance(this);
+
+		this.form.addEventListener('submit', (event) => {
+			event.preventDefault();	
+			this.handleFormSubmission();
+		});
 	}
 
 	/* === connectedCallback: Called when the component is added to the DOM */
@@ -28,12 +34,10 @@ class DataEntry extends HTMLElement {
 		shadowRoot.appendChild(this.form);
 
 		this.form.addEventListener('input', (event) => {
-			this.syncInstanceData(event)
-		});
-
-		this.form.addEventListener('submit', (event) => {
-			event.preventDefault();
-			this.handleDataSubmission();
+			this.syncInstanceData(event);
+			// if (this.form.dataset.eventMode === 'auto') {
+			// 	this.form.dispatchEvent(new Event('submit'));
+			// }
 		});
 
 		await this.loadResources();
@@ -114,12 +118,46 @@ class DataEntry extends HTMLElement {
 			this.debugLog(`Element with selector "${insertBeforeSelector}" not found within the fieldset.`);
 			return;
 		}
-
+	
 		form.reset();
-
+	
 		const popover = this.form.querySelector(`#${form.dataset.popover}`);
 		if (popover) popover.hidePopover();
-		this.processData();
+		this.handleFormSubmission();
+		// this.debugLog('Updated data:', this.instance.data);
+	}
+
+	/* === bindAutoSuggestEvents: Binds events for auto-suggest elements */
+	bindAutoSuggestEvents() {
+		this.form.querySelectorAll('auto-suggest').forEach(autoSuggest => {
+			autoSuggest.addEventListener('autoSuggestSelect', (event) => {
+				const detail = event.detail;
+				const path = autoSuggest.getAttribute('name').split('.').slice(0, -1).join('.') || autoSuggest.getAttribute('name');
+				const syncInstance = autoSuggest.getAttribute('sync-instance') === 'true';
+				const mapping = JSON.parse(autoSuggest.dataset.mapping || '{}');
+				let resultObject = Object.keys(detail).length === 1 && detail[path] ? { [path]: detail[path] } : {};
+
+				Object.entries(mapping).forEach(([field, mappedKeyPath]) => {
+					const fullPath = path ? `${path}.${field}` : field;
+					const mappedValue = getObjectByPath(detail, mappedKeyPath);
+					setObjectByPath(resultObject, fullPath, mappedValue);
+					const input = autoSuggest.getAttribute('form') ? document.forms[autoSuggest.getAttribute('form')].elements[fullPath] : this.form.elements[fullPath];
+					if (input) {
+						input.value = mappedValue || '';
+						input.setCustomValidity('');
+						if (!input.checkValidity()) input.reportValidity();
+					}
+				});
+
+				if (syncInstance && !isEmpty(resultObject)) {
+					Object.keys(resultObject).forEach(key => setObjectByPath(this.instance.data, key, resultObject[key]));
+					this.syncInstanceData(event);
+					this.handleFormSubmission();
+				}
+
+				// console.log('Updated instance data after sync:', this.instance.data);
+			});
+		});
 	}
 
 	/* === debugLog: Logs debug messages if debug mode is enabled */
@@ -143,36 +181,11 @@ class DataEntry extends HTMLElement {
 		}
 	}
 
-	/* === handleDataSubmission: Common method to handle data submission logic === */
-	handleDataSubmission() {
-		const { action, method } = this.form;
+	/* === handleFormSubmission: Prepares and dispatches form data for submission */
+	handleFormSubmission() {
 		const dataMode = this.form.dataset.mode || 'form';
-		const asObject = dataMode === 'object';
-		const data = asObject ? JSON.stringify(this.instance.data) : this.prepareFormData();
-		const headers = asObject ? { 'Content-Type': 'application/json' } : {};
-
-		if (action) {
-			fetch(action, {
-				method: method || 'POST',
-				headers: headers,
-				body: data
-			})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				return response.json();
-			})
-			.then(result => {
-				this.debugLog('Data submitted successfully:', result);
-				// Handle success (e.g., display a success message, reset form, etc.)
-			})
-			.catch(error => {
-				this.debugLog('Error submitting data:', error);
-			});
-		} else {
-			this.processData();
-		}
+		const data = this.prepareSubmission(dataMode === 'object');
+		console.log(data)
 	}
 
 	/* === loadResources: Loads data, schema, and lookup resources */
@@ -182,32 +195,19 @@ class DataEntry extends HTMLElement {
 		this.lookup = await this.fetchResource('lookup') || [];
 	}
 
-	/* === prepareFormData: Helper method to prepare form data as FormData object */
-	prepareFormData() {
-		const formData = new FormData();
-		for (const element of this.form.elements) {
-			if (element.name && !element.disabled && element.value !== undefined && element.value !== 'undefined') {
-				if (element.type === 'checkbox') {
-					
-						// If checkbox has no explicit value, append 'true' or 'false' based on checked state
-						formData.append(element.name, element.checked ? 'true' : 'false');
-					
-				} else {
-					// For all other element types, append the value directly
+	/* === prepareSubmission: Prepares data for submission based on the mode */
+	prepareSubmission(asObject = false) {
+		if (asObject) {
+			return this.instance.data;
+		} else {
+			const formData = new FormData();
+			for (const element of this.form.elements) {
+				if (element.name && !element.disabled) {
 					formData.append(element.name, element.value);
 				}
 			}
+			return formData;
 		}
-		return formData;
-	}
-
-	/* === processData: Prepares data and handles various actions */
-	processData() {
-		const dataMode = this.form.dataset.mode || 'form';
-		const asObject = dataMode === 'object';
-		const data = asObject ? this.instance.data : this.prepareFormData();
-		this.debugLog('Processing data:', this.instance.data);
-		this.dispatchEvent(new CustomEvent('dataEntry', { detail: { data } }));
 	}
 
 	/* === removeArrayEntry: Removes an entry from an array in the form data */
@@ -226,31 +226,14 @@ class DataEntry extends HTMLElement {
 	}
 
 	/* === renderAll: Renders all form elements based on the data and schema */
-	async renderAll() {
+	renderAll() {
 		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
 			this.debugLog('Data or schema is empty. Skipping render.');
 			return;
 		}
 		this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true, '', this.form);
-		await mountComponents(this.form.innerHTML, this);
 		bindUtilityEvents(this.form, this);
-
-		const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
-		if (autoSaveInterval > 0) {
-			this.setupAutoSave(autoSaveInterval);
-		}
-	}
-
-	/* === setupAutoSave: Configures auto-save functionality with a specified interval in seconds === */
-	setupAutoSave(intervalInSeconds) {
-		if (this.autoSaveTimer) {
-			clearInterval(this.autoSaveTimer);
-		}
-
-		this.autoSaveTimer = setInterval(() => {
-			this.handleDataSubmission();
-			this.debugLog(`Auto-saving data every ${intervalInSeconds} seconds.`);
-		}, intervalInSeconds * 1000);
+		this.bindAutoSuggestEvents();
 	}
 
 	/* === shouldValidate: Checks if JSON schema validation is enabled */
@@ -266,7 +249,7 @@ class DataEntry extends HTMLElement {
 	
 		const dataType = event.target.dataset.type;
 		setObjectByPath(this.instance.data, name, convertValue(value, dataType, type, checked));
-		this.processData();
+		this.debugLog('Updated data:', this.instance.data);
 	}
 
 	/* === validateData: Validates form data against the schema */
@@ -276,6 +259,7 @@ class DataEntry extends HTMLElement {
 	}
 
 	/* === Getters and setters */
+
 	set data(data) {
 		this._data = data;
 		this.instance.data = data;
@@ -304,6 +288,13 @@ class DataEntry extends HTMLElement {
 	}
 }
 
-/* === Register element */
+/* === Register element/s */
+if (!customElements.get('auto-suggest')) {
+	customElements.define('auto-suggest', AutoSuggest);
+}
+if (!customElements.get('rich-text')) {
+	customElements.define('rich-text', RichText);
+}
 customElements.define('data-entry', DataEntry);
+
 export default { DataEntry };

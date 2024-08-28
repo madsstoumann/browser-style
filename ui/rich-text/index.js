@@ -2,8 +2,8 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.04
- * @summary 23-08-2024
+ * @version 1.0.05
+ * @summary 27-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -18,6 +18,7 @@ export class RichText extends HTMLElement {
 		this.inputTypes = this.getAttribute('input-types')?.split(',') || ['deleteByContent', 'deleteByCut', 'deleteByDrag', 'deleteContentBackward', 'deleteContentForward', 'deleteEntireSoftLine', 'deleteHardLineBackward', 'deleteHardLineForward', 'deleteSoftLineBackward', 'deleteSoftLineForward', 'deleteWordBackward', 'deleteWordForward', 'formatBackColor', 'formatBold', 'formatFontColor', 'formatFontName', 'formatIndent', 'formatItalic', 'formatJustifyCenter', 'formatJustifyFull', 'formatJustifyLeft', 'formatJustifyRight', 'formatOutdent', 'formatRemove', 'formatSetBlockTextDirection', 'formatSetInlineTextDirection', 'formatStrikethrough', 'formatSubscript', 'formatSuperscript', 'formatUnderline', 'historyRedo', 'historyUndo', 'insertCompositionText', 'insertFromComposition', 'insertFromDrop', 'insertFromPaste', 'insertFromYank', 'insertHorizontalRule', 'insertLineBreak', 'insertLink', 'insertOrderedList', 'insertParagraph', 'insertReplacementText', 'insertText', 'insertTranspose', 'insertUnorderedList'];
 		this.toolbarItems = this.getAttribute('toolbar')?.split('|') || [];
 		this.plaintextItems = this.getAttribute('plaintext-toolbar')?.split(',') || [];
+		console.log(this.contentID);
 	}
 
 	connectedCallback() {
@@ -35,15 +36,15 @@ export class RichText extends HTMLElement {
 		this.content.addEventListener('click', () => this.highlightToolbar());
 		this.content.addEventListener('input', () => {
 			this.input.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
-				if (this.eventMode === 'custom' || this.eventMode === 'both') {
+				if (['both', 'custom'].includes(this.eventMode)) {
 					this.dispatchEvent(new CustomEvent("richtext-content", {
 						detail: {
 							content: this.plaintext ? this.content.textContent : this.content.innerHTML
 						},
 				}));
 			}
-			if (this.eventMode === 'input' || this.eventMode === 'both') {
-				this.input.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+			if (['both', 'input'].includes(this.eventMode)) {
+				// this.input.dispatchEvent(new Event('input'));
 			}
 		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
@@ -177,6 +178,12 @@ export class RichText extends HTMLElement {
 
 	uuid() {
 		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+	}
+
+	static mount() {
+		if (!customElements.get('rich-text')) {
+			customElements.define('rich-text', this);
+		}
 	}
 
 	/* === DEFAULT COMMANDS === */
@@ -543,4 +550,3 @@ textarea {
 	pointer-events: none;
 }
 `)
-customElements.define('rich-text', RichText);
