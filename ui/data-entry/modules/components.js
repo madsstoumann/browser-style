@@ -6,6 +6,9 @@ const componentsInfo = {
 		tagName: 'auto-suggest',
 		bindFunction: bindAutoSuggest,
 	},
+	NumberSpinner: {
+		tagName: 'number-spinner',
+	},
 	RichText: {
 		tagName: 'rich-text',
 	},

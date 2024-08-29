@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.18
- * @summary 28-08-2024
+ * @version 1.0.19
+ * @summary 29-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -188,10 +188,8 @@ class DataEntry extends HTMLElement {
 		for (const element of this.form.elements) {
 			if (element.name && !element.disabled && element.value !== undefined && element.value !== 'undefined') {
 				if (element.type === 'checkbox') {
-					
-						// If checkbox has no explicit value, append 'true' or 'false' based on checked state
-						formData.append(element.name, element.checked ? 'true' : 'false');
-					
+					// If checkbox has no explicit value, append 'true' or 'false' based on checked state
+					formData.append(element.name, element.checked ? 'true' : 'false');
 				} else {
 					// For all other element types, append the value directly
 					formData.append(element.name, element.value);

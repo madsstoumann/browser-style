@@ -106,7 +106,6 @@
 				& {
 					--_bdrs: 0;
 					background: var(--_bdc);
-					/* border-radius: .25em; */
 					margin-block-start: calc(2 * var(--_rg));
 					padding: var(--_bdw);
 					position: relative;
@@ -233,6 +232,55 @@
 			&:has([part~=submit]) { margin-block: 1em; }
 		}
 
+		/* TODO! */
+		number-spinner {
+			--_bdrs: 0;
+			/* border-block-start-width: 0 !important; */
+
+			align-items: center;
+			border-block-width: 0 var(--_bdw);
+			border-inline-width: var(--_bdw);
+			border-color: var(--_bdc);
+			border-style: solid;
+			display: grid;
+			grid-template-columns: var(--_lblw) 1fr;
+			user-select: none;
+
+			button {
+				padding: 0 .25em; }
+			
+			[part=number-spinner-container] { display: contents; }
+			[part=number-spinner-controls] {
+				display: flex;
+				padding-block: var(--_pb);
+				padding-inline: var(--_pi);	
+			}
+			
+			[part=number-spinner-input] {
+				--icon: none;
+				block-size: unset; 
+				border: 0;
+				font-family: inherit;
+				font-size: inherit;
+				padding: 0 1ch;
+				text-align: center;
+				&::-webkit-inner-spin-button{ display: none; }
+			}
+			[part=number-spinner-label] { 
+				align-items: center;
+				background-color: var(--_bgc);
+				border-inline-end: var(--_bdw) solid var(--_bdc);
+				column-gap: 1ch;
+				display: block;
+				font-weight: 500;
+				height: 100%;
+				overflow: hidden;
+				padding: var(--_pb) var(--_pi);
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			 }
+		}
+
 		[part~=richtext] {
 			--ui-richtext-active-bg: var(--AccentColor);
 			--ui-richtext-active-c: var(--AccentColorText);
@@ -259,14 +307,16 @@
 				& > *:first-child { border-start-start-radius: var(--_bdrs); }
 				& > *:last-child { border-start-end-radius: calc(var(--_bdrs) - var(--_bdw)); }
 			}
-			&:last-of-type {
+			&:last-of-type:not(div) {
 				border-end-start-radius: var(--_bdrs);
 				border-end-end-radius: var(--_bdrs);
 				& > *:first-child { border-end-start-radius: var(--_bdrs); }
 				& > *:last-child { border-end-end-radius: calc(var(--_bdrs) - var(--_bdw)); }
 			}
 			&:is(summary) {
-				[part~=header] { padding-inline: var(--_pi); }
+				[part~=header] {
+					padding-inline: var(--_pi);
+				}
 				[open] & {
 					border-block-end-width: 0;;
 					border-end-start-radius: 0;

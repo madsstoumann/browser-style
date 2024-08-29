@@ -63,7 +63,7 @@
       "type": "number",
       "title": "Issue",
       "render": {
-        "method": "input",
+        "method": "number-spinner",
         "attributes": [
           {
             "name": "issue"
@@ -71,9 +71,10 @@
           {
             "type": "number"
           },
-          {
-            "placeholder": "Enter issue"
-          }
+          { "min": 0 },
+          { "max": 50 },
+          { "step": 5 }
+    
         ]
       }
     },

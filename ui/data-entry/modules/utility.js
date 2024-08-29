@@ -1,9 +1,22 @@
 /* Merges HTML attributes, optionally removing specified attributes. */
-export function attrs(attributes, path = '', additionalAttributes = [], attributesToRemove = []) {
+export function attrs(
+	attributes, 
+	path = '', 
+	additionalAttributes = [], 
+	attributesToRemove = [], 
+	attributesToInclude = []
+) {
 	const merged = {};
+
+	// Merge all attributes, respecting attributesToRemove and attributesToInclude
 	attributes.concat(additionalAttributes).forEach(attr => {
 		Object.entries(attr).forEach(([key, value]) => {
-			if (!attributesToRemove.includes(key)) {
+			// Include the attribute if it's in the include list (if provided) and not in the remove list
+			const shouldInclude = 
+				(attributesToInclude.length === 0 || attributesToInclude.includes(key)) &&
+				!attributesToRemove.includes(key);
+
+			if (shouldInclude) {
 				if (merged[key]) {
 					merged[key] = `${merged[key]} ${value}`.trim();
 				} else {
@@ -13,18 +26,20 @@ export function attrs(attributes, path = '', additionalAttributes = [], attribut
 		});
 	});
 
+	// If a path is provided, set the name attribute to it
 	if (path) {
 		merged['name'] = path;
 	}
 
+	// Convert the merged attributes object into a string of HTML attributes
 	return Object.entries(merged)
 		.map(([key, value]) => {
-			// Handle the case where key and value are both "name"
+			// Handle the case where the key and value are both "name"
 			if (key === 'name' && value === 'name') {
-			return `${key}="${value}"`;
+				return `${key}="${value}"`;
 			}
-		return key === value ? `${key}` : `${key}="${value}"`;
-	}).join(' ');
+			return key === value ? `${key}` : `${key}="${value}"`;
+		}).join(' ');
 }
 
 /* Binds utility event listeners to elements based on data-util attributes. */	

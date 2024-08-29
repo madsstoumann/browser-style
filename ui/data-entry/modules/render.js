@@ -252,6 +252,16 @@ export const media = (params) => {
 	return fieldset({ label, content, attributes });
 };
 
+/* Number Spinner */
+export const numberSpinner = (params) => {
+	const { attributes = [], label, path = '', value } = params;
+	return `
+		<number-spinner ${attrs(attributes, path, [], [], ['min', 'max', 'step'])} label="${label}" value="${value}">
+			<ui-icon type="minus" slot="icon-minus"></ui-icon>
+			<ui-icon type="plus" slot="icon-plus"></ui-icon>
+		</number-spinner>`;
+};
+
 /* Richtext Render Method */
 export const richtext = (params) => {
 	const { attributes = [], label, path = '', value } = params;
