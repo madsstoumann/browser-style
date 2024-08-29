@@ -2,8 +2,8 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.05
- * @summary 27-08-2024
+ * @version 1.0.06
+ * @summary 29-08-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -18,7 +18,6 @@ export class RichText extends HTMLElement {
 		this.inputTypes = this.getAttribute('input-types')?.split(',') || ['deleteByContent', 'deleteByCut', 'deleteByDrag', 'deleteContentBackward', 'deleteContentForward', 'deleteEntireSoftLine', 'deleteHardLineBackward', 'deleteHardLineForward', 'deleteSoftLineBackward', 'deleteSoftLineForward', 'deleteWordBackward', 'deleteWordForward', 'formatBackColor', 'formatBold', 'formatFontColor', 'formatFontName', 'formatIndent', 'formatItalic', 'formatJustifyCenter', 'formatJustifyFull', 'formatJustifyLeft', 'formatJustifyRight', 'formatOutdent', 'formatRemove', 'formatSetBlockTextDirection', 'formatSetInlineTextDirection', 'formatStrikethrough', 'formatSubscript', 'formatSuperscript', 'formatUnderline', 'historyRedo', 'historyUndo', 'insertCompositionText', 'insertFromComposition', 'insertFromDrop', 'insertFromPaste', 'insertFromYank', 'insertHorizontalRule', 'insertLineBreak', 'insertLink', 'insertOrderedList', 'insertParagraph', 'insertReplacementText', 'insertText', 'insertTranspose', 'insertUnorderedList'];
 		this.toolbarItems = this.getAttribute('toolbar')?.split('|') || [];
 		this.plaintextItems = this.getAttribute('plaintext-toolbar')?.split(',') || [];
-		console.log(this.contentID);
 	}
 
 	connectedCallback() {
@@ -44,7 +43,7 @@ export class RichText extends HTMLElement {
 				}));
 			}
 			if (['both', 'input'].includes(this.eventMode)) {
-				// this.input.dispatchEvent(new Event('input'));
+				this.input.dispatchEvent(new Event('input', { bubbles: true }));
 			}
 		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());

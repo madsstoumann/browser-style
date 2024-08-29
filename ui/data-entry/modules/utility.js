@@ -124,6 +124,16 @@ export function setObjectByPath(obj, path, value) {
 	}, obj);
 }
 
+/* Converts a string to camelCase. */
+export function toCamelCase(str) {
+	return str
+		.toLowerCase()
+		.split('-')
+		.map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
+		.join('');
+}
+
+
 /* Converts a string to PascalCase. */
 export function toPascalCase(str) {
 	return str

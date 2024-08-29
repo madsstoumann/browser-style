@@ -411,10 +411,10 @@
         ]
       },
       "render": {
-        "method": "details",
+        "method": "array-details",
         "attributes": [
           {
-            "part": "details"
+            "part": "array-details"
           }
         ],
         "summary": "type",
@@ -488,10 +488,10 @@
         ]
       },
       "render": {
-        "method": "details",
+        "method": "array-details",
         "attributes": [
           {
-            "part": "details"
+            "part": "array-details"
           }
         ],
         "summary": "name",
@@ -554,10 +554,10 @@
         ]
       },
       "render": {
-        "method": "details",
+        "method": "array-details",
         "attributes": [
           {
-            "part": "details"
+            "part": "array-details"
           }
         ],
         "summary": "Title",
@@ -640,10 +640,10 @@
         ]
       },
       "render": {
-        "method": "details",
+        "method": "array-details",
         "attributes": [
           {
-            "part": "details"
+            "part": "array-details"
           }
         ],
         "summary": "name",
@@ -817,10 +817,10 @@
         ]
       },
       "render": {
-        "method": "details",
+        "method": "array-details",
         "attributes": [
           {
-            "part": "details"
+            "part": "array-details"
           }
         ],
         "summary": "currency_code",
@@ -929,9 +929,6 @@
                 },
                 {
                   "placeholder": "Enter review_id"
-                },
-                {
-                  "disabled": "disabled"
                 }
               ]
             },
@@ -966,7 +963,7 @@
                   "name": "review_date"
                 },
                 {
-                  "type": "datetime-local"
+                  "type": "text"
                 },
                 {
                   "placeholder": "Enter date and time"
@@ -1003,10 +1000,10 @@
         ]
       },
       "render": {
-        "method": "grid",
+        "method": "array-grid",
         "attributes": [
           {
-            "part": "grid"
+            "part": "array-grid"
           }
         ],
         "summary": "&nbsp;",

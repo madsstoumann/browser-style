@@ -1,10 +1,10 @@
-import { attrs, getObjectByPath, isEmpty, setObjectByPath, uuid } from './utility.js';
+import { attrs, getObjectByPath, isEmpty, setObjectByPath, toCamelCase, uuid } from './utility.js';
 
 /* Main Render Function */
 export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
 	let content = Object.entries(schema.properties).map(([key, config]) => {
 		const attributes = config?.render?.attributes || [];
-		const method = config?.render?.method;
+		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
 		const label = config.title || 'LABEL';
 		const toolbar = config?.render?.toolbar ? instance.getRenderMethod('toolbar')(config.render.toolbar) : '';
@@ -124,7 +124,7 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 	const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
 
 	return `
-		<details part="details" ${attrs(attributes)}>
+		<details part="array-details" ${attrs(attributes)}>
 			<summary part="row summary">
 				<span part="label">${summary}</span>
 				<span part="header">
@@ -137,7 +137,7 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 		</details>`;
 };
 
-export const details = (params) => {
+export const arrayDetails = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
 	const disableInputs = !!config.render?.autosuggest;
 
@@ -217,7 +217,7 @@ export const fieldset = ({ attributes, content, label, path }) => {
 }
 
 /* Grid Render Method */
-export const grid = (params) => {
+export const arrayGrid = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
 	const content = value.map((item, index) => `<fieldset>${all(item, config.items, instance, false, path ? `${path}[${index}]` : '')}</fieldset>`).join('');
 	return fieldset({ label, content, attributes });

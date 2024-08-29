@@ -22,10 +22,11 @@
 		debug>
 	</data-entry>
 	<script type="module" src="index.js"></script>
-	<script>
+	<!-- <script>
 
 		const dataEntry = document.querySelector('data-entry');
 		dataEntry.addEventListener('dataEntry', event => {
+			console.clear();
 			const data = event.detail.data;
 
 			if (data instanceof FormData) {
@@ -36,11 +37,6 @@
 				console.log('Object Data:', data);
 			}
 		});
-
-		// const formDataButton = document.querySelector('#formdata');
-		// formDataButton.addEventListener('click', () => {
-		// 	dataEntry.dispatchEvent(new CustomEvent('requestUpdateForm'));
-		// });
-	</script>
+	</script> -->
 </body>
 </html>
