@@ -6,16 +6,21 @@
  * @class
  * @extends {HTMLElement}
  */
-export class NumberSpinner extends HTMLElement {
+import { WebComponentTemplate } from '/assets/js/webcomponent.js';
+export class NumberSpinner extends WebComponentTemplate {
+	static tagName = 'number-spinner';
 	constructor() {
 		super();
 
-		const label =  this.getAttribute('label');
-		const shadow = this.hasAttribute('shadow');
-		const root = shadow ? this.attachShadow({ mode: 'open' }) : this;
-		if (!shadow) this.getSlots();
+		/*
+			`this.root` is the shadowRoot or the element itself, depending on attribute `no-shadow`
 
-		root.innerHTML =  `
+			If you set markup in the constructur, be sure to call `super.connectedCallback();` *after* setting the markup.
+			This can also all be done in the `connectedCallback` method.
+		*/
+
+		const label =  this.getAttribute('label');
+		this.root.innerHTML =  `
 			<fieldset part="number-spinner-container">
 				<legend part="number-spinner-label"><slot name="label">${label}</slot></legend>
 				<div part="number-spinner-controls">
@@ -31,35 +36,20 @@ export class NumberSpinner extends HTMLElement {
 				</div>
 			</fieldset>`;
 
-		this.input = root.querySelector('input');
-		this.label = root.querySelector('[part="number-spinner-label"]');
-		this.stepDownButton = root.querySelector('[part="number-spinner-decrement"]');
-		this.stepUpButton = root.querySelector('[part="number-spinner-increment"]');
+		/*
+		To set default styles, when using shadowRoot, use the following:
+			this.stylesheet.replaceSync(`::host { ...}`);
+		Note, that styles will *not* be applied, if attribute `no-styles` is set.
+		*/
+		this.input = this.root.querySelector('input');
+		this.label = this.root.querySelector('[part="number-spinner-label"]');
+		this.stepDownButton = this.root.querySelector('[part="number-spinner-decrement"]');
+		this.stepUpButton = this.root.querySelector('[part="number-spinner-increment"]');
+	}
+
+	connectedCallback() {
+		super.connectedCallback();
 		this.stepUpButton.addEventListener('click', () => this.input.stepUp());
 		this.stepDownButton.addEventListener('click', () => this.input.stepDown());
-		if (!shadow) this.appendSlots();
-	}
-
-	appendSlots() {
-		this.slots.childNodes.forEach((node) => {
-			const name = node.getAttribute('slot');
-			const placeholder = this.querySelector(`slot[name="${name}"]`);
-			if (name && placeholder) {
-				placeholder.outerHTML = node.outerHTML;
-			}
-		});
-	}
-
-	getSlots() {
-		this.slots = new DocumentFragment();
-		this.querySelectorAll('[slot]').forEach((el) => {
-			this.slots.appendChild(el.cloneNode(true));
-		});
-	}
-
-	static mount() {
-		if (!customElements.get('number-spinner')) {
-			customElements.define('number-spinner', this);
-		}
 	}
 }

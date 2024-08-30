@@ -256,7 +256,7 @@ export const media = (params) => {
 export const numberSpinner = (params) => {
 	const { attributes = [], label, path = '', value } = params;
 	return `
-		<number-spinner ${attrs(attributes, path, [], [], ['min', 'max', 'step'])} label="${label}" value="${value}">
+		<number-spinner ${attrs(attributes, path, [], [], ['min', 'max', 'step'])} label="${label}" value="${value}" no-styles no-shadow>
 			<ui-icon type="minus" slot="icon-minus"></ui-icon>
 			<ui-icon type="plus" slot="icon-plus"></ui-icon>
 		</number-spinner>`;
