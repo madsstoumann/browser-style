@@ -108,7 +108,11 @@ export function getObjectByPath(obj, path) {
 
 /* Checks if an object is empty (has no properties). */
 export function isEmpty(obj) {
-	return obj && Object.keys(obj).length === 0;
+	if (obj === null || obj === undefined) {
+		return true;
+	}
+
+	return typeof obj === 'object' && Object.keys(obj).length === 0;
 }
 
 /* Sets a value in an object based on a dot-notated path. */
