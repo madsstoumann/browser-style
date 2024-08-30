@@ -18,10 +18,11 @@ export class AutoSuggest extends HTMLElement {
 		};
 		this.initialObject = this.getAttribute('initial-object') ? JSON.parse(this.getAttribute('initial-object')) : null;
 		this.listId = `datalist-${this.uuid()}`;
-		this.settings = ['api', 'api-display-path', 'api-value-path', 'cache', 'invalid', 'label', 'limit'].reduce((settings, attr) => {
-			settings[attr.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = this.getAttribute(attr) || '';
+		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'invalid', 'label', 'limit'].reduce((settings, attr) => {
+			const value = this.getAttribute(attr);
+			settings[attr.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())] = value ?? null;  // Set to null if value is undefined or null
 			return settings;
-		}, {});
+	}, {});
 
 		this.settings.cache = this.settings.cache === 'true';
 		this.settings.limit = this.settings.limit !== 'false';
@@ -46,36 +47,50 @@ export class AutoSuggest extends HTMLElement {
 		const onentry = async (event) => {
 			const value = this.input.value.length >= this.input.minLength ? this.input.value.toLowerCase() : '';
 			if (!value) return;
-
+		
 			const option = selected();
 			if (option && (event.inputType === "insertReplacementText" || event.inputType == null)) {
-				this.inputHidden.value = option.dataset.value; // Updates the hidden input's value
+				this.inputHidden.value = option.dataset.value;
 				this.reset(false);
 				this.dispatchEventMode(option.dataset.obj);
 				return;
 			}
-
+		
 			if (!this.data.length || !this.settings.cache) {
 				this.dispatchEvent(new CustomEvent('autoSuggestFetchStart'));
 
 				try {
-					this.data = await (await fetch(this.settings.api + encodeURIComponent(value))).json();
+					const response = await fetch(this.settings.api + encodeURIComponent(value));
+					const fetchedData = await response.json();
 					this.dispatchEvent(new CustomEvent('autoSuggestFetchEnd'));
 
-					if (!this.data.length || !Object.keys(this.data).length) {
+					if (this.settings.apiArrayPath) {
+						this.data = this.getNestedValue(fetchedData, this.settings.apiArrayPath) || [];
+					} else {
+						this.data = Array.isArray(fetchedData) ? fetchedData : [];
+					}
+
+
+					if (!this.data.length) {
 						this.dispatchEvent(new CustomEvent('autoSuggestNoResults'));
 					}
 
 					this.datalist.innerHTML = this.data.map(obj => {
-						const display = this.getNestedValue(obj, this.settings.apiDisplayPath);
-						const value = this.getNestedValue(obj, this.settings.apiValuePath);
-						return `<option value="${display}" data-value="${value}" data-obj='${JSON.stringify(obj)}'>`;
+						const dataValue = this.getNestedValue(obj, this.settings.apiValuePath);
+						const displayValue = this.getNestedValue(obj, this.settings.apiDisplayPath);
+						const textValue = this.settings.apiTextPath ? this.getNestedValue(obj, this.settings.apiTextPath) : '';
+						const dataObject = JSON.stringify(obj)
+							.replace(/\\/g, '\\\\')
+							.replace(/"/g, '&quot;')
+							.replace(/'/g, '&#39;');
+						return `<option value="${displayValue}" data-value="${dataValue}" data-obj='${dataObject}'>${textValue ? textValue : ''}</option>`;
 					}).join('');
 				} catch (error) {
 					this.dispatchEvent(new CustomEvent('autoSuggestFetchError', { detail: error }));
 				}
 			}
 		};
+
 
 		const selected = () => {
 			const option = [...this.datalist.options].find(entry => entry.value === this.input.value);

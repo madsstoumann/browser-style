@@ -81,7 +81,7 @@ export const autosuggest = (params) => {
 	const config = params.config?.render?.autosuggest || null;
 	if (!config) return '';
 
-	const { api, apiValuePath, apiDisplayPath, defaults, label, mapping } = config;
+	const { api, apiArrayPath, apiDisplayPath, apiTextPath, apiValuePath, defaults, label, mapping } = config;
 	const { path, formID } = params;
 
 	let display = '';
@@ -103,19 +103,21 @@ export const autosuggest = (params) => {
 	}
 
 	return `
-		<auto-suggest 
-			api="${api}"
-			api-display-path="${apiDisplayPath}"
-			api-value-path="${apiValuePath}"
-			${display ? `display="${display}"` : ''}
-			${label ? `label="${label}"` : ''}
-			name="${name}"
-			part="autosuggest" 
-			${config.syncInstance ? `sync-instance="${config.syncInstance}"` : ''}
-			${value ? `value="${value}"` : ''}
-			${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
-			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
-			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
+	<auto-suggest 
+		${api ? `api="${api}"` : ''}
+		${apiArrayPath ? `api-array-path="${apiArrayPath}"` : ''}
+		${apiDisplayPath ? `api-display-path="${apiDisplayPath}"` : ''}
+		${apiTextPath ? `api-text-path="${apiTextPath}"` : ''}
+		${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
+		${display ? `display="${display}"` : ''}
+		${label ? `label="${label}"` : ''}
+		name="${name}"
+		part="autosuggest" 
+		${config.syncInstance ? `sync-instance="${config.syncInstance}"` : ''}
+		${value ? `value="${value}"` : ''}
+		${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
+		${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
+		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
 /* Detail/Details Render Methods */
