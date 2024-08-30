@@ -271,7 +271,7 @@ export const richtext = (params) => {
 		<div part="row">
 			<span part="label">${label}</span>
 			<rich-text part="richtext" event-mode="input" ${attrs(attributes, path)}>
-				${value}
+				${value || ''}
 			</rich-text>
 		</div>`;
 };
