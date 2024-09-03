@@ -55,15 +55,18 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	if (form) {
 		form.innerHTML = content;
 		if (root && schema.form) {
-			const { action, autoSave, method, dataMode } = schema.form;
-			if (action) form.setAttribute('action', action);
-			if (method) form.setAttribute('method', method);
-			form.setAttribute('data-mode', dataMode || 'object');
-			form.setAttribute('data-auto-save', autoSave || '0');
-			form.innerHTML += `<nav part="nav">
-				${schema.form.reset ? `<button type="reset" part="button reset">${schema.form.reset}</button>` : ''}
-				${schema.form.submit ? `<button type="submit" part="button submit">${schema.form.submit}</button>` : ''}
-			</nav>`;
+			const buttonsHTML = schema.form
+				.map(entry => `
+					<button type="button" 
+									part="button method-${entry.method.toLowerCase()}" 
+									data-form-action="${entry.action}" 
+									data-form-method="${entry.method}" 
+									data-mode="${entry.dataMode}"
+									${entry.autoSave !== undefined ? `data-auto-save="${entry.autoSave}"`:''}>
+						${entry.label}
+					</button>`
+				).join('');
+			form.innerHTML += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
 		return;
 	}
@@ -76,7 +79,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 }
 
 
-/* Array Render Method */
+/* Autosuggest Method */
 export const autosuggest = (params) => {
 	const config = params.config?.render?.autosuggest || null;
 	if (!config) return '';
@@ -120,7 +123,7 @@ export const autosuggest = (params) => {
 		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
-/* Detail/Details Render Methods */
+/* Array Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [] }) => {
 	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
 	const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';

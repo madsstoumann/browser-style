@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.19
- * @summary 29-08-2024
+ * @version 1.0.20
+ * @summary 03-09-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -19,6 +19,7 @@ class DataEntry extends HTMLElement {
 		this.customValidateData = null;
 		this.form = document.createElement('form');
 		this.form.part = 'form';
+		this.primaryKey = this.getAttribute('primary-key') || 'id';
 		this.instance = createDataEntryInstance(this);
 	}
 
@@ -31,9 +32,18 @@ class DataEntry extends HTMLElement {
 			this.syncInstanceData(event)
 		});
 
-		this.form.addEventListener('submit', (event) => {
-			event.preventDefault();
-			this.handleDataSubmission();
+		// this.form.addEventListener('submit', (event) => {
+		// 	event.preventDefault();
+		// 	this.handleDataSubmission();
+		// });
+
+		this.form.addEventListener('click', (event) => {
+			if (event.target.tagName === 'BUTTON' && event.target.dataset.formAction) {
+				event.preventDefault();
+				const action = event.target.dataset.formAction;
+				const method = event.target.dataset.formMethod;
+				this.handleDataSubmission(action, method);
+			}
 		});
 
 		await this.loadResources();
@@ -61,7 +71,7 @@ class DataEntry extends HTMLElement {
 			}
 		});
 		const isValid = form.checkValidity();
-	
+
 		// Re-disable the fields that were originally disabled
 		formElements.forEach(el => {
 			if (el.dataset.wasDisabled === 'true') {
@@ -74,30 +84,30 @@ class DataEntry extends HTMLElement {
 			this.debugLog('Form is invalid, cannot add entry.');
 			return;
 		}
-	
+
 		const array = getObjectByPath(this.instance.data, path);
 		if (!Array.isArray(array)) {
 			this.debugLog(`Path "${path}" does not reference an array in the data.`);
 			return;
 		}
-	
+
 		const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
 		const schema = getObjectByPath(this.instance.schema, `properties.${path}`);
-		
+
 		if (!fieldset || !schema) {
 			this.debugLog(`Fieldset with path "${path}" or schema not found.`);
 			return;
 		}
-	
+
 		const newObject = {};
 		formElements.forEach(el => {
 			const fieldPath = el.name.slice(path.length + 1);
 			const dataType = el.dataset.type || 'string';
 			newObject[fieldPath] = convertValue(el.value, dataType, el.type, el.checked);
 		});
-	
+
 		array.push(newObject);
-	
+
 		const newDetail = this.instance.methods.detail({
 			value: newObject,
 			config: schema,
@@ -105,7 +115,7 @@ class DataEntry extends HTMLElement {
 			instance: this.instance,
 			attributes: []
 		});
-	
+
 		const siblingElm = fieldset.querySelector(insertBeforeSelector);
 	
 		if (siblingElm) {
@@ -144,15 +154,15 @@ class DataEntry extends HTMLElement {
 	}
 
 	/* === handleDataSubmission: Common method to handle data submission logic === */
-	handleDataSubmission() {
-		const { action, method } = this.form;
+	handleDataSubmission(action, method) {
 		const dataMode = this.form.dataset.mode || 'form';
 		const asObject = dataMode === 'object';
 		const data = asObject ? JSON.stringify(this.instance.data) : this.prepareFormData();
 		const headers = asObject ? { 'Content-Type': 'application/json' } : {};
+		const id = this.instance.data[this.primaryKey];
 
 		if (action) {
-			fetch(action, {
+			fetch(action.replace(':id', id), {
 				method: method || 'POST',
 				headers: headers,
 				body: data
@@ -233,10 +243,11 @@ class DataEntry extends HTMLElement {
 		await mountComponents(this.form.innerHTML, this);
 		bindUtilityEvents(this.form, this);
 
-		const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
-		if (autoSaveInterval > 0) {
-			this.setupAutoSave(autoSaveInterval);
-		}
+		// const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
+		// if (autoSaveInterval > 0) {
+		// 	this.setupAutoSave(autoSaveInterval);
+		// }
+		console.log(this.instance.data);
 	}
 
 	/* === setupAutoSave: Configures auto-save functionality with a specified interval in seconds === */
