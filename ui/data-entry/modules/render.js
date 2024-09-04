@@ -234,11 +234,19 @@ const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||
 /* Input Render Method */
 export const input = (params) => {
 	const { attributes = [], label, path = '', type = 'string', value } = params;
-	const checked = attributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
-	const hidden = attributes.some(attr => attr.type === 'hidden');
-	const output = `<input part="input" value="${value || ''}" ${attrs(attributes, path)} data-type="${type}" ${checked}></input>`;
-	return hidden ? output : `<label part="row"><span part="label">${label}</span>${output}</label>`;
-}
+	const hiddenLabel = attributes.some(attr => attr['hidden-label'] === true);
+	const filteredAttributes = attributes.filter(attr => !('hidden-label' in attr));
+	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
+	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
+
+	// Prepare the input element
+	const output = `<input part="input" value="${value !== undefined && value !== null ? value : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}></input>`;
+
+	// Return the appropriate HTML based on the presence of 'hidden' and 'hidden-label' attributes
+	return hidden 
+			? output 
+			: `<label part="row" ${hiddenLabel ? 'hidden' : ''}><span part="label">${label}</span>${output}</label>`;
+};
 
 /* Media Render Method */
 export const media = (params) => {

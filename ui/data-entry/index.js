@@ -247,7 +247,6 @@ class DataEntry extends HTMLElement {
 		// if (autoSaveInterval > 0) {
 		// 	this.setupAutoSave(autoSaveInterval);
 		// }
-		console.log(this.instance.data);
 	}
 
 	/* === setupAutoSave: Configures auto-save functionality with a specified interval in seconds === */
