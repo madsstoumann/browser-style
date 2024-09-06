@@ -112,7 +112,12 @@ function handleTableClick(event, context) {
 		}
 	}
 	const row = node.closest('tr');
-	if (row && row.dataset.uid) {
-		context.dispatch('dg:rowclick', { id: row.dataset.uid });
-	}
+	if (row) {
+		const rowData = Array.from(row.children).map((cell) => cell.innerText.trim());
+		if (row.dataset.uid) {
+			context.dispatch('dg:rowclick', { id: row.dataset.uid, rowData });
+		} else {
+			context.dispatch('dg:rowclick', { rowData });
+		}
+	}	
 }

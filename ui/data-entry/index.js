@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.20
- * @summary 03-09-2024
+ * @version 1.0.21
+ * @summary 06-09-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -21,6 +21,7 @@ class DataEntry extends HTMLElement {
 		this.form.part = 'form';
 		this.primaryKey = this.getAttribute('primary-key') || 'id';
 		this.instance = createDataEntryInstance(this);
+		this.initToast();
 	}
 
 	/* === connectedCallback: Called when the component is added to the DOM */
@@ -139,6 +140,18 @@ class DataEntry extends HTMLElement {
 		}
 	}
 
+	/* displayToast: Displays a toast message with a specified message, type, and duration */
+	displayToast(message, type = 'success', duration = 1000) {
+		this.toastMessage.textContent = message;
+		this.toastElement.className = `ui-toast bg-${type}`;
+		this.toastElement.showPopover();
+		if (duration > 0) {
+			setTimeout(() => {
+				this.toastElement.hidePopover();
+			}, duration);
+		}
+	}
+
 	/* === fetchResource: Fetches JSON data from a specified attribute URL */
 	async fetchResource(attribute) {
 		const url = this.getAttribute(attribute);
@@ -175,15 +188,32 @@ class DataEntry extends HTMLElement {
 			})
 			.then(result => {
 				this.debugLog('Data submitted successfully:', result);
-				// Handle success (e.g., display a success message, reset form, etc.)
+				this.displayToast('Data submitted successfully!', 'success');
 			})
 			.catch(error => {
 				this.debugLog('Error submitting data:', error);
+				this.displayToast('Error submitting data.', 'error');
 			});
 		} else {
 			this.processData();
 		}
 	}
+
+		/* === Initialize the toast container, but do not display it yet === */
+		initToast() {
+			const toastID = `toast-${Date.now()}`;
+			this.insertAdjacentHTML('beforeend', `
+			<div id="${toastID}" class="ui-toast" popover>
+				<span></span>
+				<button popovertarget="${toastID}" popovertargetaction="hide">
+					<ui-icon type="cross"></ui-icon>
+				</button>
+			</div>
+			`);
+
+			this.toastElement = this.querySelector(`#${toastID}`);
+			this.toastMessage = this.toastElement.querySelector('span'); 
+		}
 
 	/* === loadResources: Loads data, schema, and lookup resources */
 	async loadResources() {
