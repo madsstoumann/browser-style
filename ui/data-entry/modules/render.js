@@ -59,8 +59,8 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				.map(entry => `
 					<button type="button" 
 									part="button method-${entry.method.toLowerCase()}" 
-									data-form-action="${entry.action}" 
-									data-form-method="${entry.method}" 
+									data-action="${entry.action}" 
+									data-method="${entry.method}" 
 									data-mode="${entry.dataMode}"
 									${entry.autoSave !== undefined ? `data-auto-save="${entry.autoSave}"`:''}>
 						${entry.label}

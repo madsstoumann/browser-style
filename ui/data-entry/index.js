@@ -39,11 +39,23 @@ class DataEntry extends HTMLElement {
 		// });
 
 		this.form.addEventListener('click', (event) => {
-			if (event.target.tagName === 'BUTTON' && event.target.dataset.formAction) {
+			if (event.target.tagName === 'BUTTON' && event.target.dataset.action) {
 				event.preventDefault();
-				const action = event.target.dataset.formAction;
-				const method = event.target.dataset.formMethod;
-				this.handleDataSubmission(action, method);
+				const action = event.target.dataset.action;
+				const method = event.target.dataset.method;
+				const dataMode = event.target.dataset.mode;
+		
+				if (dataMode === 'custom') {
+					this.dispatchEvent(new CustomEvent('de:custom', {
+						detail: {
+							action: action,
+							method: method,
+							formData: this.instance.data
+						}
+					}));
+				} else {
+					this.handleDataSubmission(action, method);
+				}
 			}
 		});
 
