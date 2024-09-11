@@ -54,7 +54,7 @@ class DataEntry extends HTMLElement {
 						}
 					}));
 				} else {
-					this.handleDataSubmission(action, method);
+					this.handleDataSubmission(action, method, dataMode);
 				}
 			}
 		});
@@ -179,11 +179,10 @@ class DataEntry extends HTMLElement {
 	}
 
 	/* === handleDataSubmission: Common method to handle data submission logic === */
-	handleDataSubmission(action, method) {
-		const dataMode = this.form.dataset.mode || 'form';
-		const asObject = dataMode === 'object';
-		const data = asObject ? JSON.stringify(this.instance.data) : this.prepareFormData();
-		const headers = asObject ? { 'Content-Type': 'application/json' } : {};
+	handleDataSubmission(action, method, contentType = 'form') {
+		const asJSON = contentType === 'json';
+		const data = asJSON ? JSON.stringify(this.instance.data) : this.prepareFormData();
+		const headers = asJSON ? { 'Content-Type': 'application/json' } : {};
 		const id = this.instance.data[this.primaryKey];
 
 		if (action) {
