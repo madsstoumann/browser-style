@@ -102,7 +102,8 @@ export function renderTBody(context) {
 				if (thead[index].hidden) return '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
 				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? `<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
-				const cellValue = searchterm ? cell.toString().replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cell;
+				let cellValue = (cell === null || cell === 'null') ? '' : cell;
+				cellValue = searchterm ? cell.toString().replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
 				return `${selectable}<td tabindex="-1">${formatter(cellValue)}</td>`;
 			}).join('');
 			return `<tr${rowSelected}${uid ? ` data-uid="${row[uid]}"` : ''}>${rowHTML}</tr>`;
