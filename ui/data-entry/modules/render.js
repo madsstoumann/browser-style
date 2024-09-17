@@ -129,6 +129,23 @@ export const autosuggest = (params) => {
 		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
+/* Array Checkboxes Render Method */
+export const arrayCheckbox = (params) => {
+	const { attributes = [], config, label, path = '', value } = params;
+	const content = value.map((item, index) => {
+	const checked = config.render?.summary ? !!item[config.render.summary] : false;
+	const header = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
+
+	return `
+		<label part="row">
+			<span part="label">${header}</span>
+			<input part="input" type="checkbox" name="${path}[${index}].${config.render?.summary || ''}" data-type="boolean"${checked ? ' checked' : ''}>
+		</label>`
+	}).join('');
+
+	return fieldset({ attributes, content, label, path });
+};
+
 /* Array Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [] }) => {
 	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
@@ -169,7 +186,6 @@ export const arrayDetails = (params) => {
 	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';
 	return fieldset({ attributes, content: content + entryContent, label, path });
 };
-
 
 /* Entry Render Method */
 export const entry = (params) => {

@@ -67,6 +67,30 @@
       "value": 2400
     }
   ],
+
+  "jobs": [
+    {
+      "job_id": 1,
+      "product_id": 1234,
+      "timestamp": "2024-05-22T13:26:07",
+      "job_name": "backorder",
+      "active": 0
+    },
+    {
+      "job_id": 2,
+      "product_id": 1234,
+      "timestamp": null,
+      "job_name": "preorder",
+      "active": 0
+    },
+    {
+      "job_id": 3,
+      "product_id": 1234,
+      "timestamp": null,
+      "job_name": "subscription",
+      "active": 1
+    }
+  ],
   
   "media": [
     {

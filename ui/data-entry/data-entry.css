@@ -343,8 +343,11 @@
 		}
 
 
-
-
+/* Custom Toast Styling */
+/* ui-toast.error { --ui-toast-bg: value; --ui-toast-c: value; }
+ui-toast.info { --ui-toast-bg: value; --ui-toast-c: value; }
+ui-toast.success { --ui-toast-bg: value; --ui-toast-c: value; }
+ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 
 /* WIP */
 		[data-lastpass-icon-root] { display: none; }

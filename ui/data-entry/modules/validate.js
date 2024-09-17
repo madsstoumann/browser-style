@@ -6,6 +6,11 @@
  * @returns {boolean} - Returns true if the value matches the specified type, otherwise returns false.
  */
 function validateType(value, type) {
+	if (Array.isArray(type)) {
+		// Check if any of the types in the array match
+		return type.some(t => validateType(value, t));
+	}
+
 	if (type === "integer") {
 		return Number.isInteger(value);
 	}
@@ -16,13 +21,16 @@ function validateType(value, type) {
 		return typeof value === "boolean";
 	}
 	if (type === "number") {
-		return typeof value === "number";
+		return typeof value === "number" && !isNaN(value);
 	}
 	if (type === "array") {
 		return Array.isArray(value);
 	}
 	if (type === "object") {
 		return typeof value === "object" && !Array.isArray(value) && value !== null;
+	}
+	if (type === "null") {
+		return value === null;
 	}
 	return false;
 }
@@ -44,6 +52,7 @@ function validateData(schema, data) {
 		for (const key of Object.keys(schema.properties)) {
 			const propertyPath = path ? `${path}.${key}` : key;
 
+			// Check if the property is required
 			if (schema.required?.includes(key)) {
 				if (data[key] === undefined) {
 					errors.push({

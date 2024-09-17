@@ -63,10 +63,7 @@ class DataEntry extends HTMLElement {
 		}
 
 		if (this.instance.schema?.messages) {
-			this.messageStore = {
-				...this.messageStore || {},
-				messages: this.mergeMessagesByCode(this.messageStore?.messages || [], this.instance.schema.messages)
-			};
+			this.messages = this.mergeMessagesByCode(this.messages || [], this.instance.schema.messages);
 		}
 
 		if (this.validateJSON()) {
@@ -195,11 +192,10 @@ class DataEntry extends HTMLElement {
 
 	/* === getErrorMessage: Fetches an error message based on a status code */
 	getErrorMessage(code) {
-		const messages = this.messageStore?.messages || [];
-		const types = this.messageStore?.types || {};
-		const messageEntry = messages.find(msg => msg.code === code);
-		const message = messageEntry ? messageEntry.message : null;
-		const type = types[code] || 'info';
+		const messages = this.messages || [];
+		const entry = messages.find(msg => msg.code === code);
+		const message = entry ? entry.message : null;
+		const type = entry.type || 'info';
 		return { message, type };
 	}
 
@@ -238,7 +234,7 @@ class DataEntry extends HTMLElement {
 	/* === handleError: Displays an error message based on a status code */
 	handleError(code, msg = '') {
 		const { message, type } = this.getErrorMessage(code);
-		if (message) {
+		if (message && typeof this.showToast === 'function') {
 			this.showToast(message, type, 3000);
 		} else {
 			this.debugLog(`Error ${code}: ${msg}`);
@@ -250,7 +246,7 @@ class DataEntry extends HTMLElement {
 		this.data = await this.fetchResource('data');
 		this.schema = await this.fetchResource('schema');
 		this.lookup = await this.fetchResource('lookup') || [];
-		this.messageStore = await this.fetchResource('messages') || null; 
+		this.messages = await this.fetchResource('messages') || null; 
 	}
 
 	/* === mergeMessagesByCode: Merges two arrays of messages based on their `code`-property */
