@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.21
- * @summary 06-09-2024
+ * @version 1.0.23
+ * @summary 17-09-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -21,7 +21,6 @@ class DataEntry extends HTMLElement {
 		this.form.part = 'form';
 		this.primaryKey = this.getAttribute('primary-key') || 'id';
 		this.instance = createDataEntryInstance(this);
-		this.initToast();
 	}
 
 	/* === connectedCallback: Called when the component is added to the DOM */
@@ -33,19 +32,17 @@ class DataEntry extends HTMLElement {
 			this.syncInstanceData(event)
 		});
 
-		// this.form.addEventListener('submit', (event) => {
-		// 	event.preventDefault();
-		// 	this.handleDataSubmission();
-		// });
+		this.form.addEventListener('submit', (event) => { /* Requires a submit button */
+			event.preventDefault();
+			this.handleDataSubmission();
+		});
 
 		this.form.addEventListener('click', (event) => {
 			if (event.target.tagName === 'BUTTON' && event.target.dataset.action) {
 				event.preventDefault();
-				const action = event.target.dataset.action;
-				const method = event.target.dataset.method;
-				const dataMode = event.target.dataset.mode;
-		
-				if (dataMode === 'custom') {
+				const { action, method, contentType } = event.target.dataset;
+
+				if (contentType === 'custom') {
 					this.dispatchEvent(new CustomEvent('de:custom', {
 						detail: {
 							action: action,
@@ -54,7 +51,7 @@ class DataEntry extends HTMLElement {
 						}
 					}));
 				} else {
-					this.handleDataSubmission(action, method, dataMode);
+					this.handleDataSubmission(action, method, contentType);
 				}
 			}
 		});
@@ -65,9 +62,21 @@ class DataEntry extends HTMLElement {
 			return;
 		}
 
-		if (this.shouldValidate() && !(await this.validateData()).valid) {
-			return;
+		if (this.instance.schema?.messages) {
+			this.messageStore = {
+				...this.messageStore || {},
+				messages: this.mergeMessagesByCode(this.messageStore?.messages || [], this.instance.schema.messages)
+			};
 		}
+
+		if (this.validateJSON()) {
+			const validationResult = await this.validateData();
+			if (!validationResult.valid) {
+				this.debugLog('Schema validation failed. Skipping render.');
+				return;
+			}
+		}
+
 		this.renderAll();
 	}
 
@@ -89,18 +98,18 @@ class DataEntry extends HTMLElement {
 		formElements.forEach(el => {
 			if (el.dataset.wasDisabled === 'true') {
 				el.disabled = true;
-				delete el.dataset.wasDisabled; // Clean up the tracking attribute
+				delete el.dataset.wasDisabled;
 			}
 		});
 	
 		if (!isValid) {
-			this.debugLog('Form is invalid, cannot add entry.');
+			this.handleError(1004, 'Form is invalid, cannot add entry.');
 			return;
 		}
 
 		const array = getObjectByPath(this.instance.data, path);
 		if (!Array.isArray(array)) {
-			this.debugLog(`Path "${path}" does not reference an array in the data.`);
+			this.handleError(1302, `Path "${path}" does not reference an array in the data.`);
 			return;
 		}
 
@@ -134,7 +143,7 @@ class DataEntry extends HTMLElement {
 		if (siblingElm) {
 			siblingElm.insertAdjacentHTML('beforebegin', newDetail);
 		} else {
-			this.debugLog(`Element with selector "${insertBeforeSelector}" not found within the fieldset.`);
+			this.handleError(1304, `Element with selector "${insertBeforeSelector}" not found within the fieldset.`);
 			return;
 		}
 
@@ -152,18 +161,6 @@ class DataEntry extends HTMLElement {
 		}
 	}
 
-	/* displayToast: Displays a toast message with a specified message, type, and duration */
-	displayToast(message, type = 'success', duration = 1000) {
-		this.toastMessage.textContent = message;
-		this.toastElement.className = `ui-toast bg-${type}`;
-		this.toastElement.showPopover();
-		if (duration > 0) {
-			setTimeout(() => {
-				this.toastElement.hidePopover();
-			}, duration);
-		}
-	}
-
 	/* === fetchResource: Fetches JSON data from a specified attribute URL */
 	async fetchResource(attribute) {
 		const url = this.getAttribute(attribute);
@@ -173,18 +170,47 @@ class DataEntry extends HTMLElement {
 			const response = await fetch(url);
 			return await response.json();
 		} catch (error) {
-			this.debugLog(`Error fetching ${attribute}:`, error);
+			this.handleError(1301, `Error fetching ${attribute}: ${error.message}`);
 			return null;
 		}
+	}
+
+	/* === filterRemovedEntries: Filters out entries marked for removal from the data */
+	filterRemovedEntries(data) {
+		const filterRecursive = (obj) => {
+			if (Array.isArray(obj)) {
+				return obj.filter(item => !item._remove).map(filterRecursive);
+			} else if (obj && typeof obj === 'object') {
+				return Object.keys(obj).reduce((acc, key) => {
+					if (key !== '_remove') {
+						acc[key] = filterRecursive(obj[key]);
+					}
+					return acc;
+				}, {});
+			}
+			return obj;
+		};
+		return filterRecursive(data);
+	}
+
+	/* === getErrorMessage: Fetches an error message based on a status code */
+	getErrorMessage(code) {
+		const messages = this.messageStore?.messages || [];
+		const types = this.messageStore?.types || {};
+		const messageEntry = messages.find(msg => msg.code === code);
+		const message = messageEntry ? messageEntry.message : null;
+		const type = types[code] || 'info';
+		return { message, type };
 	}
 
 	/* === handleDataSubmission: Common method to handle data submission logic === */
 	handleDataSubmission(action, method, contentType = 'form') {
 		const asJSON = contentType === 'json';
-		const data = asJSON ? JSON.stringify(this.instance.data) : this.prepareFormData();
+		const filteredData = this.filterRemovedEntries(this.instance.data);
+		const data = asJSON ? JSON.stringify(filteredData) : this.prepareFormData(filteredData);
 		const headers = asJSON ? { 'Content-Type': 'application/json' } : {};
-		const id = this.instance.data[this.primaryKey];
-
+		const id = filteredData[this.primaryKey];
+	
 		if (action) {
 			fetch(action.replace(':id', id), {
 				method: method || 'POST',
@@ -193,44 +219,47 @@ class DataEntry extends HTMLElement {
 			})
 			.then(response => {
 				if (!response.ok) {
+					this.handleError(response.status, `HTTP error! status: ${response.statusText}`);
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return response.json();
 			})
 			.then(result => {
-				this.debugLog('Data submitted successfully:', result);
-				this.displayToast('Data submitted successfully!', 'success');
+				this.handleError(1200, 'Data submitted successfully!');
 			})
 			.catch(error => {
-				this.debugLog('Error submitting data:', error);
-				this.displayToast('Error submitting data.', 'error');
+				this.handleError(1105, 'Network issue detected');
 			});
 		} else {
 			this.processData();
 		}
 	}
 
-		/* === Initialize the toast container, but do not display it yet === */
-		initToast() {
-			const toastID = `toast-${Date.now()}`;
-			this.insertAdjacentHTML('beforeend', `
-			<div id="${toastID}" class="ui-toast" popover>
-				<span></span>
-				<button popovertarget="${toastID}" popovertargetaction="hide">
-					<ui-icon type="cross"></ui-icon>
-				</button>
-			</div>
-			`);
-
-			this.toastElement = this.querySelector(`#${toastID}`);
-			this.toastMessage = this.toastElement.querySelector('span'); 
+	/* === handleError: Displays an error message based on a status code */
+	handleError(code, msg = '') {
+		const { message, type } = this.getErrorMessage(code);
+		if (message) {
+			this.showToast(message, type, 3000);
+		} else {
+			this.debugLog(`Error ${code}: ${msg}`);
 		}
+	}
 
-	/* === loadResources: Loads data, schema, and lookup resources */
+	/* === loadResources: Loads data, schema, lookup and messages resources */
 	async loadResources() {
 		this.data = await this.fetchResource('data');
 		this.schema = await this.fetchResource('schema');
 		this.lookup = await this.fetchResource('lookup') || [];
+		this.messageStore = await this.fetchResource('messages') || null; 
+	}
+
+	/* === mergeMessagesByCode: Merges two arrays of messages based on their `code`-property */
+	mergeMessagesByCode(existingMessages, newMessages) {
+		const messageMap = new Map(existingMessages.map(msg => [msg.code, msg]));
+		newMessages.forEach(newMsg => {
+			messageMap.set(newMsg.code, newMsg);
+		});
+		return Array.from(messageMap.values());
 	}
 
 	/* === prepareFormData: Helper method to prepare form data as FormData object */
@@ -259,21 +288,6 @@ class DataEntry extends HTMLElement {
 		this.dispatchEvent(new CustomEvent('dataEntry', { detail: { data } }));
 	}
 
-	/* === removeArrayEntry: Removes an entry from an array in the form data */
-	removeArrayEntry(element, path) {
-		const obj = getObjectByPath(this.instance.data, path);
-		if (obj) {
-			if (element.checked === false) {
-				obj._remove = true;
-			} else {
-				delete obj._remove;
-			}
-			this.debugLog(element.checked === false ? 'Marked object for removal:' : 'Removed object from removal:', obj);
-		} else {
-			this.debugLog(`No object found at path: ${path}`);
-		}
-	}
-
 	/* === renderAll: Renders all form elements based on the data and schema */
 	async renderAll() {
 		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
@@ -284,10 +298,10 @@ class DataEntry extends HTMLElement {
 		await mountComponents(this.form.innerHTML, this);
 		bindUtilityEvents(this.form, this);
 
-		// const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
-		// if (autoSaveInterval > 0) {
-		// 	this.setupAutoSave(autoSaveInterval);
-		// }
+		const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
+		if (autoSaveInterval > 0) {
+			this.setupAutoSave(autoSaveInterval);
+		}
 	}
 
 	/* === setupAutoSave: Configures auto-save functionality with a specified interval in seconds === */
@@ -302,17 +316,27 @@ class DataEntry extends HTMLElement {
 		}, intervalInSeconds * 1000);
 	}
 
-	/* === shouldValidate: Checks if JSON schema validation is enabled */
-	shouldValidate() {
-		return this.getAttribute('validation') === 'true';
-	}
-
 	/* === syncInstanceData: Synchronizes form data with the instance data */
 	syncInstanceData(event) {
-		const { form, name, value, type, checked } = event.target;
-		if (!name) return;
-		if (form !== this.form) return;
+		const { form, name, value, type, checked, dataset } = event.target;
+		if (!name || form !== this.form) return;
 	
+		// Handle array-control checkbox logic
+		if (type === 'checkbox' && dataset.arrayControl === 'true') {
+			const currentData = getObjectByPath(this.instance.data, name);
+	
+			if (checked === false) {
+				if (currentData) currentData._remove = true;
+				this.handleError(1302, `Marked object at path "${name}" for removal.`);
+			} else {
+				if (currentData && currentData._remove) delete currentData._remove;
+				this.debugLog(`Undoing delete: Removed _remove flag at path "${name}".`);
+			}
+			this.processData();
+			return;
+		}
+	
+		// Default behavior for other inputs
 		const dataType = event.target.dataset.type;
 		setObjectByPath(this.instance.data, name, convertValue(value, dataType, type, checked));
 		this.processData();
@@ -321,7 +345,17 @@ class DataEntry extends HTMLElement {
 	/* === validateData: Validates form data against the schema */
 	async validateData() {
 		const validateData = this.customValidateData || defaultValidateData;
-		return validateData(this.instance.schema, this.instance.data);
+		const validationResult = validateData(this.instance.schema, this.instance.data);
+
+		if (!validationResult.valid) {
+			this.debugLog('Schema validation failed:', validationResult.errors);
+		}
+		return validationResult;
+	}
+
+	/* === validateJSON: Checks if JSON schema validation is enabled */
+	validateJSON() {
+		return this.getAttribute('validate-json') === 'true';
 	}
 
 	/* === Getters and setters */

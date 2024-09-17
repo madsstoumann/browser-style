@@ -3,22 +3,26 @@ import { getObjectByPath, isEmpty, setObjectByPath } from '/ui/data-entry/module
 /* === Object to store information about components */
 const componentsInfo = {
 	AutoSuggest: {
-		tagName: 'auto-suggest',
 		bindFunction: bindAutoSuggest,
-	},
-	NumberSpinner: {
-		tagName: 'number-spinner',
+		path: '/ui/auto-suggest/index.js',
+		tagName: 'auto-suggest',
 	},
 	RichText: {
+		path: '/ui/rich-text/index.js',
 		tagName: 'rich-text',
+	},
+	UiToast: {
+		bindFunction: bindUiToast,
+		path: '/ui/toast/index.js',
+		tagName: 'ui-toast',
 	},
 };
 
 export async function mountComponents(HTML, dataEntry) {
-	const importPromises = Object.entries(componentsInfo).map(async ([componentName, { tagName, bindFunction }]) => {
+	const importPromises = Object.entries(componentsInfo).map(async ([componentName, { bindFunction, path, tagName }]) => {
 		if (HTML.includes(`<${tagName}`)) {
 			try {
-				const module = await import(`/ui/${tagName}/index.js`);
+				const module = await import(path);
 				module[componentName].mount();
 				if (bindFunction) {
 					bindFunction(dataEntry);
@@ -37,6 +41,22 @@ function bindAutoSuggest(dataEntry) {
 	dataEntry.form.querySelectorAll('auto-suggest').forEach(autoSuggest => {
 		autoSuggest.addEventListener('autoSuggestSelect', (event) => handleAutoSuggestSelect(event.detail, autoSuggest, dataEntry));
 	});
+}
+
+// Bind the UiToast component to enable showToast functionality
+function bindUiToast(dataEntry) {
+	const toastElement = dataEntry.form.querySelector('ui-toast');
+	if (toastElement) {
+		// Attach showToast method to use ui-toast if available
+		dataEntry.showToast = (message, type = 'success', duration = 3000) => {
+			toastElement.showToast(message, type, duration);
+		};
+	} else {
+		// Fallback if ui-toast is not available
+		dataEntry.showToast = (message, type = 'info', duration = 3000) => {
+			dataEntry.debugLog(`Toast fallback: ${message} (Type: ${type})`);
+		};
+	}
 }
 
 /* === METHODS === */

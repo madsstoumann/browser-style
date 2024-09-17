@@ -4,17 +4,39 @@
   "type": "object",
   "form": [
     {
+      "type": "reset",
+      "label": "Reset"
+    },
+    {
       "action": "/api/DeleteProduct/:id",
       "label": "i18n.delete",
       "method": "DELETE",
-      "dataMode": "form"
+      "contentType": "form"
     },
     {
       "action": "/api/SetProduct/:id",
       "label": "i18n.post",
       "method": "POST",
-      "dataMode": "form",
+      "contentType": "json"
+    },
+    {
+      "type": "submit",
+      "label": "Submit",
       "autoSave": 0
+    }
+  ],
+  "messages": [
+    {
+      "code": 400,
+      "message": "Bad Request - Please check your inputs."
+    },
+    {
+      "code": 405,
+      "message": "Product not found."
+    },
+    {
+      "code": 1105,
+      "message": "Could not save data AT all!"
     }
   ],
   "properties": {

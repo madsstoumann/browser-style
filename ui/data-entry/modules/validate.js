@@ -34,39 +34,68 @@ function validateType(value, type) {
  * @param {object} data - The data object to be validated.
  * @returns {object} - An object containing the validation result. It has two properties:
  *   - valid: A boolean indicating whether the data is valid or not.
- *   - errors: An array of error messages if the data is invalid, otherwise an empty array.
+ *   - errors: An array of error messages indicating which properties failed validation.
  */
 function validateData(schema, data) {
-	function validateObject(schema, data) {
+	// Helper function to recursively validate objects
+	function validateObject(schema, data, path = '') {
+		let errors = [];
+
 		for (const key of Object.keys(schema.properties)) {
-			if (schema.required.includes(key)) {
+			const propertyPath = path ? `${path}.${key}` : key;
+
+			if (schema.required?.includes(key)) {
 				if (data[key] === undefined) {
-					return { valid: false, errors: [`Missing required property: ${key}`] };
+					errors.push({
+						message: 'Missing required property',
+						property: propertyPath,
+						type: schema.properties[key].type,
+						value: undefined
+					});
+					continue;
 				}
 			}
 
 			const propertySchema = schema.properties[key];
 			const value = data[key];
+
+			// Validate the type of the property
 			if (!validateType(value, propertySchema.type)) {
-				return { valid: false, errors: [`Invalid type for property: ${key}`] };
+				errors.push({
+					message: 'Invalid type for property',
+					property: propertyPath,
+					type: propertySchema.type,
+					value
+				});
+				continue;
 			}
 
-			if (propertySchema.type === "object") {
-				const result = validateObject(propertySchema, value);
-				if (!result.valid) {
-					return result;
-				}
-			} else if (propertySchema.type === "array") {
-				for (const item of value) {
-					const result = validateObject(propertySchema.items, item);
-					if (!result.valid) {
-						return result;
-					}
+			// Recursively validate nested objects
+			if (propertySchema.type === 'object') {
+				const result = validateObject(propertySchema, value, propertyPath);
+				errors = errors.concat(result.errors);
+			}
+
+			// Recursively validate arrays
+			else if (propertySchema.type === 'array') {
+				if (!Array.isArray(value)) {
+					errors.push({
+						message: 'Invalid type for array property',
+						property: propertyPath,
+						type: 'array',
+						value
+					});
+				} else {
+					value.forEach((item, index) => {
+						const result = validateObject(propertySchema.items, item, `${propertyPath}[${index}]`);
+						errors = errors.concat(result.errors);
+					});
 				}
 			}
 		}
-		return { valid: true, errors: [] };
+		return { valid: errors.length === 0, errors };
 	}
+
 	return validateObject(schema, data);
 }
 

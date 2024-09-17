@@ -1,8 +1,8 @@
 @import '../icon/ui-icon.css';
 @layer bs-component {
-	:where(.ui-expand-card) {
-		--ui-expand-card-gap: 2ch;
-		border-radius: var(--ui-expand-card-bdrs, 2ch);
+	:where(.ui-card-expand) {
+		--ui-card-expand-gap: 2ch;
+		border-radius: var(--ui-card-expand-bdrs, 2ch);
 		display: grid;
 		position: relative;
 		& section {
@@ -11,7 +11,7 @@
 			display: grid;
 			gap: 1ch;
 			grid-area: 1 / -1;
-			padding: var(--ui-expand-card-gap);
+			padding: var(--ui-card-expand-gap);
 			transition: all .2s ease-in-out;
 			& > * { margin: 0; }
 			&:last-of-type {
@@ -26,8 +26,8 @@
 		}
 		& .ui-button {
 			position: absolute;
-			inset-block: auto var(--ui-expand-card-gap);
-			inset-inline: auto var(--ui-expand-card-gap);
+			inset-block: auto var(--ui-card-expand-gap);
+			inset-inline: auto var(--ui-card-expand-gap);
 		}
 		&:has(:checked) {
 			& section:first-of-type { opacity: 0; }

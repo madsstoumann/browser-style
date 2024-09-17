@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Card Expand</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-card-expand.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Card Expand</h2>
+	<p>
+		The <strong>Card Expand</strong> component allows users to reveal additional content by clicking on a button. The card has a front and back side, and can be expanded or collapsed by toggling the button.
+	</p>
+	<p>
+		Using the <code>popover API</code>, not requiring JavaScript.
+	</p>
+
+	<article class="ui-card-expand">
+		<!-- FRONT -->
+		<section class="bg-gray">
+			<h3>This is a headline for the front</h3>
+			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+			<img src="https://picsum.photos/seed/picsum/320/200" alt="">
+		</section>
+		<!-- BACK -->
+		<section class="bg-accent --light">
+			<h3>And this is the backside</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis beatae sed, impedit sapiente numquam molestias nam sint nostrum rem qui aspernatur expedita quidem laborum illum.</p>
+		</section>
+		<!-- STATE -->
+		<label class="ui-button --icon bg-accent">
+			<input type="checkbox" data-sr>
+			<ui-icon type="plus-cross"></ui-icon>
+		</label>
+	</article>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<article class="ui-card-expand">
+			<!-- FRONT -->
+			<section class="bg-gray">
+				<h3>This is a headline for the front</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+				<img src="https://picsum.photos/seed/picsum/320/200" alt="">
+			</section>
+			<!-- BACK -->
+			<section class="bg-accent --light">
+				<h3>And this is the backside</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis beatae sed, impedit sapiente numquam molestias nam sint nostrum rem qui aspernatur expedita quidem laborum illum.</p>
+			</section>
+			<!-- STATE -->
+			<label class="ui-button --icon bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross"></ui-icon>
+			</label>
+		</article>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+	<div dir="rtl">
+		<article class="ui-card-expand">
+			<!-- FRONT -->
+			<section class="bg-gray">
+				<h3>This is a headline for the front</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
+				<img src="https://picsum.photos/seed/picsum/320/200" alt="">
+			</section>
+			<!-- BACK -->
+			<section class="bg-accent --light">
+				<h3>And this is the backside</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis beatae sed, impedit sapiente numquam molestias nam sint nostrum rem qui aspernatur expedita quidem laborum illum.</p>
+			</section>
+			<!-- STATE -->
+			<label class="ui-button --icon bg-accent">
+				<input type="checkbox" data-sr>
+				<ui-icon type="plus-cross"></ui-icon>
+			</label>
+		</article>
+	</div>
+
+</body>
+</html>

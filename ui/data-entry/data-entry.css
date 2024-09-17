@@ -349,7 +349,7 @@
 /* WIP */
 		[data-lastpass-icon-root] { display: none; }
 
-		[popover] {
+		div[popover] {
 			border: var(--_bdw) solid var(--_bdc);
 			border-radius: var(--_bdrs);
 			box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);

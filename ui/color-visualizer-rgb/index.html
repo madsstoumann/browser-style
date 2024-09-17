@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Color Visualizer RGB</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-color-visualizer-rgb.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Color Visualizer RGB</h2>
+
+	<fieldset class="ui-color-visualizer-rgb">
+		<label>R:<input type="number" name="r" min="0" max="255" value="255"></label>
+		<label>G:<input type="number" name="g" min="0" max="255" value="255"></label>
+		<label>B:<input type="number" name="b" min="0" max="255" value="255"></label>
+		<output name="rg">R+G</output>
+		<output name="rb">R+B</output>
+		<output name="gb">G+B</output>
+	</fieldset>
+
+	<script type="module">
+		const rgb = document.querySelector('.ui-color-visualizer-rgb');
+		rgb.addEventListener('input', e => {
+			const N = e.target;
+			rgb.style.setProperty(`--${N.name}`, N.value);
+		});
+	</script>
+</body>
+</html>

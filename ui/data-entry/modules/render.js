@@ -7,7 +7,6 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
 		const label = config.title || 'LABEL';
-		const toolbar = config?.render?.toolbar ? instance.getRenderMethod('toolbar')(config.render.toolbar) : '';
 
 		let options = [];
 
@@ -42,7 +41,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 
 		if (config.type === 'array') {
 			const content = method
-				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type }) + toolbar
+				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
 				: data[key].map((item, index) => all(item, config.items, instance, false, `${path}[${index}]`)).join('');
 			return method ? content : fieldset({ label, content, attributes });
 		}
@@ -54,30 +53,37 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 
 	if (form) {
 		form.innerHTML = content;
+
 		if (root && schema.form) {
 			const buttonsHTML = schema.form
-				.map(entry => `
-					<button type="button" 
-									part="button method-${entry.method.toLowerCase()}" 
-									data-action="${entry.action}" 
-									data-method="${entry.method}" 
-									data-mode="${entry.dataMode}"
-									${entry.autoSave !== undefined ? `data-auto-save="${entry.autoSave}"`:''}>
-						${entry.label}
-					</button>`
-				).join('');
+				.map(entry => {
+					if (entry.type === 'submit') {
+						return `<button type="submit" part="button">${entry.label}</button>`;
+					} else if (entry.type === 'reset') {
+						return `<button type="reset" part="button">${entry.label}</button>`;
+					} else {
+						return `<button type="button" 
+										part="button method-${entry.method.toLowerCase()}" 
+										data-action="${entry.action}" 
+										data-method="${entry.method}" 
+										data-content-type="${entry.contentType || 'form'}"
+										${entry.autoSave !== undefined ? `data-auto-save="${entry.autoSave}"` : ''}>
+							${entry.label}
+						</button>`;
+					}
+				}).join('');
 			form.innerHTML += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
-		return;
-	}
 
-	if (root && schema?.render?.toolbar) {
-		content += instance.getRenderMethod('toolbar')(schema.render.toolbar);
+		if (schema.messages && schema.messages.length > 0) {
+			form.innerHTML += `<ui-toast></ui-toast>`;
+		}
+
+		return;
 	}
 
 	return content;
 }
-
 
 /* Autosuggest Method */
 export const autosuggest = (params) => {
@@ -135,7 +141,7 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 				<span part="header">
 					${icon('chevron right', 'sm', 'xs')}
 					<em>${header}</em>
-					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-util="removeArrayEntry" data-params='{ "path": "${path}" }'></label>` : ''}
+					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="true"></label>` : ''}
 				</span>
 			</summary>
 			${all(value, config.items, instance, false, path)}
@@ -312,16 +318,6 @@ export const textarea = (params) => {
 			<textarea part="textarea" ${attrs(attributes, path)}>${value}</textarea>
 		</label>`;
 };
-
-/* Toolbar Generation */
-export const toolbar = (config) => {
-	const buttons = config.map((button) => `
-		<button part="button" type="button" ${attrs(button.attributes)}>
-			${button.label}
-		</button>
-	`).join('');
-	return `<nav part="nav toolbar">${buttons}</nav>`;
-}
 
 // Render method wrapper with error handling
 function safeRender(renderMethod, params) {
