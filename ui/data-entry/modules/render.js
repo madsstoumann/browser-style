@@ -52,7 +52,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	}).join('');
 
 	if (form) {
-		form.innerHTML = content;
+		form.innerHTML = content + `<ui-toast></ui-toast>`;
 
 		if (root && schema.form) {
 			const buttonsHTML = schema.form
@@ -73,10 +73,6 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 					}
 				}).join('');
 			form.innerHTML += `<nav part="nav">${buttonsHTML}</nav>`;
-		}
-
-		if (schema.messages && schema.messages.length > 0) {
-			form.innerHTML += `<ui-toast></ui-toast>`;
 		}
 
 		return;

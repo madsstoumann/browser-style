@@ -57,13 +57,14 @@ class DataEntry extends HTMLElement {
 		});
 
 		await this.loadResources();
-		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
-			this.debugLog('Data or schema is empty. Skipping render.');
-			return;
-		}
 
 		if (this.instance.schema?.messages) {
 			this.messages = this.mergeMessagesByCode(this.messages || [], this.instance.schema.messages);
+		}
+
+		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
+			this.debugLog('Data or schema is empty. Skipping render.');
+			return;
 		}
 
 		if (this.validateJSON()) {
@@ -194,6 +195,7 @@ class DataEntry extends HTMLElement {
 	getErrorMessage(code) {
 		const messages = this.messages || [];
 		const entry = messages.find(msg => msg.code === code);
+		if (!entry) return { message: '', type: 'error' };
 		const message = entry ? entry.message : null;
 		const type = entry.type || 'info';
 		return { message, type };
@@ -214,7 +216,7 @@ class DataEntry extends HTMLElement {
 				body: data
 			})
 			.then(response => {
-				if (!response.ok) {
+				if (!response.ok) { console.error(response.status);
 					this.handleError(response.status, `HTTP error! status: ${response.statusText}`);
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
