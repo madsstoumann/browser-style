@@ -1,4 +1,4 @@
-import { attrs, getObjectByPath, isEmpty, setObjectByPath, toCamelCase, uuid } from './utility.js';
+import { attrs, getObjectByPath, isEmpty, setObjectByPath, resolveValue, toCamelCase, uuid } from './utility.js';
 
 /* Main Render Function */
 export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
@@ -165,11 +165,11 @@ export const arrayDetails = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
 	const disableInputs = !!config.render?.autosuggest;
 
-	if (disableInputs) {
-		Object.values(config.items.properties).forEach(propConfig => {
-			propConfig.render.attributes.push({ disabled: 'disabled' });
-		});
-	}
+	// if (disableInputs) {
+	// 	Object.values(config.items.properties).forEach(propConfig => {
+	// 		propConfig.render.attributes.push({ disabled: 'disabled' });
+	// 	});
+	// }
 
 	const content = value.map((item, index) => detail({
 		value: item,
@@ -199,12 +199,20 @@ export const entry = (params) => {
 				attributes.push({ required: 'required' });
 			}
 
+			attributes.forEach(attr => {
+				if (attr.hasOwnProperty('value')) {
+					attr.value = resolveValue(attr);
+					// console.log(attributes);
+				}
+			});
+
+			
+
 			return input({
 				label: propConfig.title,
 				attributes,
 				path: `${path}.${propKey}`,
-				type: propConfig.type || 'string',
-				value: ''
+				type: propConfig.type || 'string'
 			});
 		}).join('');
 
@@ -252,18 +260,26 @@ const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||
 /* Input Render Method */
 export const input = (params) => {
 	const { attributes = [], label, path = '', type = 'string', value } = params;
-	const hiddenLabel = attributes.some(attr => attr['hidden-label'] === true);
-	const filteredAttributes = attributes.filter(attr => !('hidden-label' in attr));
-	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && value ? ' checked' : '';
+
+	// Check if value is null, empty or undefined, then fallback to value in attributes
+	let finalValue = value !== undefined && value !== null && value !== '' 
+		? value 
+		: attributes.find(attr => attr.value !== undefined)?.value;
+
+	// Filter out the 'value' attribute if it exists in the attributes array
+	const filteredAttributes = attributes.filter(attr => !('value' in attr));
+
+	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label'] === true);
+	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';
 	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
 
 	// Prepare the input element
-	const output = `<input part="input" value="${value !== undefined && value !== null ? value : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}></input>`;
+	const output = `<input part="input" value="${finalValue !== undefined && finalValue !== null ? finalValue : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}></input>`;
 
 	// Return the appropriate HTML based on the presence of 'hidden' and 'hidden-label' attributes
 	return hidden 
-			? output 
-			: `<label part="row" ${hiddenLabel ? 'hidden' : ''}><span part="label">${label}</span>${output}</label>`;
+		? output 
+		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}><span part="label">${label}</span>${output}</label>`;
 };
 
 /* Media Render Method */

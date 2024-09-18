@@ -115,6 +115,16 @@ export function isEmpty(obj) {
 	return typeof obj === 'object' && Object.keys(obj).length === 0;
 }
 
+export function resolveValue(attribute) {
+	if (typeof attribute.value === 'string' && attribute.value.startsWith('{') && attribute.value.endsWith('}')) {
+		const functionName = attribute.value.slice(1, -1);
+		if (staticFunctions[functionName]) {
+			return staticFunctions[functionName]();
+		}
+	}
+	return attribute.value;
+}
+
 /* Sets a value in an object based on a dot-notated path. */
 export function setObjectByPath(obj, path, value) {
 	path.split('.').reduce((acc, key, index, array) => {
@@ -142,6 +152,24 @@ export function setObjectByPath(obj, path, value) {
 		return acc[prop];
 	}, obj);
 }
+
+/* Static functions that can be used in dynamic attribute values. */
+const staticFunctions = {
+	now: () => {
+    const now = new Date();
+    // Format to yyyy-MM-ddThh:mm
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  },
+	uuid: () => crypto.randomUUID(),
+	today: () => new Date().toISOString().split('T')[0], // For date input
+	// Add other dynamic functions here
+};
 
 /* Converts a string to camelCase. */
 export function toCamelCase(str) {

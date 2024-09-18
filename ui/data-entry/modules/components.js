@@ -64,7 +64,7 @@ function bindUiToast(dataEntry) {
 function handleAutoSuggestSelect(detail, autoSuggest, dataEntry) {
 	if (detail.isInitial) {
 		Object.keys(detail).forEach(key => {
-			if (key !== 'isInitial') { // Ignore the isInitial flag itself
+			if (key !== 'isInitial') {
 				setObjectByPath(dataEntry.instance.data, key, detail[key]);
 			}
 		});
@@ -81,7 +81,6 @@ function handleAutoSuggestSelect(detail, autoSuggest, dataEntry) {
 		const fullPath = path ? `${path}.${field}` : field;
 		const mappedValue = getObjectByPath(detail, mappedKeyPath);
 		setObjectByPath(resultObject, fullPath, mappedValue);
-		
 		const input = autoSuggest.getAttribute('form') ? document.forms[autoSuggest.getAttribute('form')].elements[fullPath] : dataEntry.form.elements[fullPath];
 		if (input) {
 			input.value = mappedValue || '';
