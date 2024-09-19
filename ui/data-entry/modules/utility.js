@@ -116,12 +116,17 @@ export function isEmpty(obj) {
 }
 
 export function resolveValue(attribute) {
-	if (typeof attribute.value === 'string' && attribute.value.startsWith('{') && attribute.value.endsWith('}')) {
-		const functionName = attribute.value.slice(1, -1);
-		if (staticFunctions[functionName]) {
-			return staticFunctions[functionName]();
+	// Check if the value is a string and starts with '${' and ends with '}'
+	if (typeof attribute.value === 'string' && attribute.value.startsWith('${') && attribute.value.endsWith('}')) {
+		// Extract the function name between the '${' and '}'
+		const functionName = attribute.value.slice(2, -1);
+		// Check if the function exists in the dynamicFunctions object
+		if (dynamicFunctions[functionName]) {
+			// Execute and return the dynamic function result
+			return dynamicFunctions[functionName]();
 		}
 	}
+	// Return the original value if no matching dynamic function was found
 	return attribute.value;
 }
 
@@ -153,8 +158,8 @@ export function setObjectByPath(obj, path, value) {
 	}, obj);
 }
 
-/* Static functions that can be used in dynamic attribute values. */
-const staticFunctions = {
+/* Dynamic functions that can be used in dynamic attribute values. */
+const dynamicFunctions = {
 	now: () => {
     const now = new Date();
     // Format to yyyy-MM-ddThh:mm

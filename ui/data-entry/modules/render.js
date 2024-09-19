@@ -8,28 +8,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const renderMethod = instance.getRenderMethod(method);
 		const label = config.title || 'LABEL';
 
-		let options = [];
-
-		if (method === 'select') {
-			const optionsKey = config?.render?.options;
-
-			if (Array.isArray(optionsKey)) {
-				options = optionsKey;
-			} else if (typeof optionsKey === 'string') {
-				if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
-					options = instance.lookup[optionsKey];
-				} else {
-					const storedOptions = localStorage.getItem(optionsKey);
-					if (storedOptions) {
-						try {
-							options = JSON.parse(storedOptions) || [];
-						} catch {
-							options = [];
-						}
-					}
-				}
-			}
-		}
+		let options = method === 'select' ? fetchOptions(config, instance) : [];
 
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
@@ -143,12 +122,12 @@ export const arrayCheckbox = (params) => {
 };
 
 /* Array Detail/Details Render Methods */
-export const detail = ({ value, config, path, instance, attributes = [] }) => {
+export const detail = ({ value, config, path, instance, attributes = [], name = '' }) => {
 	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
 	const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
 
 	return `
-		<details part="array-details" ${attrs(attributes)}>
+		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
 			<summary part="row summary">
 				<span part="label">${summary}</span>
 				<span part="header">
@@ -163,20 +142,13 @@ export const detail = ({ value, config, path, instance, attributes = [] }) => {
 
 export const arrayDetails = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
-	const disableInputs = !!config.render?.autosuggest;
-
-	// if (disableInputs) {
-	// 	Object.values(config.items.properties).forEach(propConfig => {
-	// 		propConfig.render.attributes.push({ disabled: 'disabled' });
-	// 	});
-	// }
-
 	const content = value.map((item, index) => detail({
 		value: item,
 		config,
 		path: path ? `${path}[${index}]` : '',
 		instance,
-		attributes
+		attributes,
+		name: path
 	})).join('');
 
 	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';
@@ -194,23 +166,20 @@ export const entry = (params) => {
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
 			const attributes = [...propConfig.render.attributes, { form: formID }];
-
-			if (renderAutoSuggest) {
-				attributes.push({ required: 'required' });
-			}
-
 			attributes.forEach(attr => {
 				if (attr.hasOwnProperty('value')) {
 					attr.value = resolveValue(attr);
-					// console.log(attributes);
 				}
 			});
 
-			
+			const renderMethod = propConfig.render?.method || 'input';
+			const options = renderMethod === 'select' ? fetchOptions(propConfig, instance) : [];
+			const renderFunction = renderMethod === 'select' ? select : input;
 
-			return input({
-				label: propConfig.title,
+			return renderFunction({
 				attributes,
+				label: propConfig.title,
+				options: options,
 				path: `${path}.${propKey}`,
 				type: propConfig.type || 'string'
 			});
@@ -231,8 +200,9 @@ export const entry = (params) => {
 				${renderAutoSuggest ? autosuggest({ config, path, formID }) : ''}
 				${fields}
 				<nav part="nav">
-					<button type="button" form="${formID}" part="close" popovertarget="${id}" popovertargetaction="hide">Close</button>
-					<button type="button" form="${formID}" part="success" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
+					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">Close</button>
+					<button type="reset" form="${formID}" part="button reset">Reset</button>
+					<button type="submit" form="${formID}" part="button add" data-util="addArrayEntry" data-params='{ "path": "${path}" }'>Add</button>
 				</nav>
 			</fieldset>
 		</div>`;
@@ -299,16 +269,6 @@ export const media = (params) => {
 	return fieldset({ label, content, attributes });
 };
 
-/* Number Spinner */
-export const numberSpinner = (params) => {
-	const { attributes = [], label, path = '', value } = params;
-	return `
-		<number-spinner ${attrs(attributes, path, [], [], ['min', 'max', 'step'])} label="${label}" value="${value}" no-styles no-shadow>
-			<ui-icon type="minus" slot="icon-minus"></ui-icon>
-			<ui-icon type="plus" slot="icon-plus"></ui-icon>
-		</number-spinner>`;
-};
-
 /* Richtext Render Method */
 export const richtext = (params) => {
 	const { attributes = [], label, path = '', value } = params;
@@ -324,12 +284,15 @@ export const richtext = (params) => {
 /* Select Render Method */
 export const select = (params) => {
 	const { attributes = [], label, options = [], path = '', type = 'string', value } = params;
+	const attributeValue = attributes.find(attr => attr.value !== undefined)?.value;
+	const finalValue = value !== undefined && value !== null ? value : attributeValue;
+
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
 			<select part="select" ${attrs(attributes, path, [], ['type'])} data-type="${type}">
 				${options.map(option => `
-					<option value="${option.value}" ${option.value === value ? 'selected' : ''}>
+					<option value="${option.value}" ${option.value == finalValue ? 'selected' : ''}>
 						${option.label}
 					</option>
 				`).join('')}
@@ -354,4 +317,31 @@ function safeRender(renderMethod, params) {
 	} catch {
 		return '';
 	}
+}
+
+// Helper function to fetch options based on config.
+function fetchOptions(config, instance) {
+	const optionsKey = config?.render?.options;
+	let options = [];
+
+	if (Array.isArray(optionsKey)) {
+		// Options are defined directly as an array
+		options = optionsKey;
+	} else if (typeof optionsKey === 'string') {
+		// Options are defined as a lookup key
+		if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
+			options = instance.lookup[optionsKey];
+		} else {
+			// Check localStorage for options
+			const storedOptions = localStorage.getItem(optionsKey);
+			if (storedOptions) {
+				try {
+					options = JSON.parse(storedOptions) || [];
+				} catch {
+					options = [];
+				}
+			}
+		}
+	}
+	return options;
 }

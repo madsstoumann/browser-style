@@ -30,11 +30,11 @@
 			}
 		}
 
-		[part~=close], [part~=success] {
-			font-size: x-small;
-			/* bg-success --light
-			class="--text
-			*/
+		/* [part~=button] { font-size: small;} */
+		[part~=close] {
+			background-color: #0000;
+			border-color: var(--_bdc);
+			margin-inline-end: auto;
 		}
 
 		[part~=delete] {
@@ -43,8 +43,8 @@
 			--icon: url('/assets/svg/cross.svg');
 		}
 
+		/* === Details === */
 		[part~=array-details] {
-			margin-block-end: .33lh; 
 			summary label { column-gap: 0; }
 			summary {
 				& [part~=header] {
@@ -69,8 +69,43 @@
 				}
 				input:not([type=checkbox]) { background-color: #0000; }
 			}
+
+			details:not(:first-of-type):not(:last-of-type) summary {
+				border-block-start-width: 0;
+				border-radius: 0;
+			}
+			details:first-of-type:not(:only-of-type) summary {
+				border-end-start-radius: 0;
+				border-end-end-radius: 0;
+			}
+			details:last-of-type:not(:only-of-type) summary {
+				border-block-start-width: 0;
+				border-start-start-radius: 0;
+				border-start-end-radius: 0;
+			}
+			&[open] {
+				background-color: light-dark(hsl(211, 100%, 90%), hsl(211, 60%, 90%));
+				& input:not([type=checkbox]) { background-color: #0000; }
+			}
+
+			
 			label:first-of-type { --_bdrs: 0; }
-			/* & + & { margin-block-end: .33lh; } */
+		}
+
+		fieldset[part~=array-details] {
+			/* === Array has no children, add border to legend and padding to (optional) nav */
+			&:not(:has(details)) {
+				& > legend {
+					border-block-end: var(--_bdw) solid var(--_bdc);
+				}
+				/* [part~=nav] {
+					padding-block-start: .33lh;
+				} */
+			}
+			/* === No nav-element was found, hide */
+			&:not(:has(details, nav)) { 
+				display: none;
+			}
 		}
 
 		[part~=fieldset] {
@@ -80,6 +115,10 @@
 		}
 
 		[part~=form] > [part~=fieldset]:not([part~=array-grid]) {
+			margin-block-start: 1lh;
+		}
+		/* === Add margin to last nav in form (submit, reset etc.) */
+		[part~=form] > [part~=nav]:last-of-type {
 			margin-block-start: 1lh;
 		}
 
@@ -181,6 +220,7 @@
 
 		[part~=legend] {
 			font-weight: 700;
+			width: 100%;
 		}
 
 		[part~=media] {
@@ -229,13 +269,14 @@
 			display: flex;
 			gap: 1ch;
 			justify-content: end;
-			&:has([part~=submit]) { margin-block: 1em; }
+			padding-block-start: .33lh;
+			[popovertarget] { cursor: pointer; }
 		}
 
+
 		/* TODO! */
-		number-spinner {
+		/* number-spinner {
 			--_bdrs: 0;
-			/* border-block-start-width: 0 !important; */
 
 			align-items: center;
 			border-block-width: 0 var(--_bdw);
@@ -279,7 +320,7 @@
 				text-overflow: ellipsis;
 				white-space: nowrap;
 			 }
-		}
+		} */
 
 		[part~=richtext] {
 			--ui-richtext-active-bg: var(--AccentColor);

@@ -81,29 +81,17 @@ class DataEntry extends HTMLElement {
 	/* === addArrayEntry: Adds a new entry to an array in the form data */
 	addArrayEntry(element, path, insertBeforeSelector = `[part="nav"]`) {
 		const form = element.form;
-		const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
 
-		// Temporarily enable disabled fields for validation
-		formElements.forEach(el => {
-			if (el.disabled) {
-				el.disabled = false;
-				el.dataset.wasDisabled = 'true';
+		if (element.type === 'submit') {
+			if (!form.checkValidity()) {
+				return;
 			}
-		});
-		const isValid = form.checkValidity();
 
-		// Re-disable the fields that were originally disabled
-		formElements.forEach(el => {
-			if (el.dataset.wasDisabled === 'true') {
-				el.disabled = true;
-				delete el.dataset.wasDisabled;
-			}
-		});
-	
-		if (!isValid) {
-			this.handleError(1004, 'Form is invalid, cannot add entry.');
-			return;
+			// Prevent the form from actually submitting
+			event.preventDefault(); 
 		}
+
+		const formElements = Array.from(form.elements).filter(el => el.name.startsWith(`${path}.`));
 
 		const array = getObjectByPath(this.instance.data, path);
 		if (!Array.isArray(array)) {

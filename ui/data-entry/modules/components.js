@@ -79,13 +79,24 @@ function handleAutoSuggestSelect(detail, autoSuggest, dataEntry) {
 
 	Object.entries(mapping).forEach(([field, mappedKeyPath]) => {
 		const fullPath = path ? `${path}.${field}` : field;
-		const mappedValue = getObjectByPath(detail, mappedKeyPath);
+		
+		// Check if the mappedKeyPath contains a template string
+		let mappedValue;
+		if (/\$\{.+?\}/.test(mappedKeyPath)) {
+			// Replace the placeholders with the corresponding values from the detail object
+			mappedValue = mappedKeyPath.replace(/\$\{(.+?)\}/g, (_match, p1) => {
+				const value = getObjectByPath(detail, p1.trim());
+				return value !== undefined ? value : '';  // Return empty string if not found
+			});
+		} else {
+			// Fallback to the basic mapping if not a template string
+			mappedValue = getObjectByPath(detail, mappedKeyPath);
+		}
+
 		setObjectByPath(resultObject, fullPath, mappedValue);
 		const input = autoSuggest.getAttribute('form') ? document.forms[autoSuggest.getAttribute('form')].elements[fullPath] : dataEntry.form.elements[fullPath];
 		if (input) {
 			input.value = mappedValue || '';
-			input.setCustomValidity('');
-			if (!input.checkValidity()) input.reportValidity();
 		}
 	});
 
