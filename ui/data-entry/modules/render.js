@@ -108,13 +108,13 @@ export const autosuggest = (params) => {
 export const arrayCheckbox = (params) => {
 	const { attributes = [], config, label, path = '', value } = params;
 	const content = value.map((item, index) => {
-	const checked = config.render?.summary ? !!item[config.render.summary] : false;
-	const header = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
+	const checked = config.render?.value ? !!item[config.render.value] : false;
+	const rowLabel = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
 
 	return `
 		<label part="row">
-			<span part="label">${header}</span>
-			<input part="input" type="checkbox" name="${path}[${index}].${config.render?.summary || ''}" data-type="boolean"${checked ? ' checked' : ''}>
+			<span part="label">${rowLabel}</span>
+			<input part="input" type="checkbox" name="${path}[${index}].${config.render?.value || ''}" data-type="boolean"${checked ? ' checked' : ''}>
 		</label>`
 	}).join('');
 
@@ -123,16 +123,16 @@ export const arrayCheckbox = (params) => {
 
 /* Array Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [], name = '' }) => {
-	const summary = config.render?.summary ? (value[config.render.summary] || config.render.summary) : 'SUMMARY';
-	const header = config.render?.label ? (value[config.render.label] || config.render.label) : 'LABEL';
+	const rowLabel = config.render?.label ? (value[config.render.label] || config.render.label) : 'label';
+	const rowValue = config.render?.value ? (value[config.render.value] || config.render.value) : 'value';
 
 	return `
 		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
 			<summary part="row summary">
-				<span part="label">${summary}</span>
+				<span part="label">${rowLabel}</span>
 				<span part="header">
 					${icon('chevron right', 'sm', 'xs')}
-					<em>${header}</em>
+					<em>${rowValue}</em>
 					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="true"></label>` : ''}
 				</span>
 			</summary>
