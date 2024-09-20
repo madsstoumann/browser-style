@@ -123,9 +123,12 @@ export const arrayCheckbox = (params) => {
 
 /* Array Detail/Details Render Methods */
 export const detail = ({ value, config, path, instance, attributes = [], name = '' }) => {
-	const rowLabel = config.render?.label ? (value[config.render.label] || config.render.label) : 'label';
-	const rowValue = config.render?.value ? (value[config.render.value] || config.render.value) : 'value';
-
+	const rowLabel = config.render?.label 
+	? resolveTemplateString(config.render.label, value) 
+	: 'label';
+const rowValue = config.render?.value 
+	? resolveTemplateString(config.render.value, value) 
+	: 'value';
 	return `
 		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
 			<summary part="row summary">
@@ -344,4 +347,11 @@ function fetchOptions(config, instance) {
 		}
 	}
 	return options;
+}
+
+function resolveTemplateString(template, data) {
+	// Replace ${} placeholders with values from the data object
+	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
+		return getObjectByPath(data, key.trim()) || '';
+	});
 }

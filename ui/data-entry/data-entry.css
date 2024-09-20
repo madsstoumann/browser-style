@@ -422,10 +422,13 @@ ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 			outline-offset: -1px;
 			& * { outline: none; }
 		}
-		label:has([type=checkbox], [type=radio]):focus-within + label:not(:has([part=img]))
+		
+		label:has([type=checkbox], [type=radio]):focus-within + label:not(:has([part=img])),
+		[part~="array-details"]:has(summary:focus-visible) + [part~="array-details"] summary [part~="label"] 
 		{
 			clip-path: inset(2px 0 0 0);
 		}
+
 		label:has([part~=delete]):focus-within { outline-offset: 2px; }
 		/* details:not([open]):focus-within + details */
 	}

@@ -51,7 +51,6 @@
 	<data-entry id="dataentry"></data-entry>
 
 	<script type="module">
-		import { init } from './../../assets/js/common.js';
 		import { generateSchemaFromData } from './modules/schema.js';
 		import uiLineNumber from '../linenumber/uiLineNumber.js';
 		import DataEntry from './index.js';
@@ -61,7 +60,9 @@
 		const jsonInput = document.getElementById('json');
 		const schemaInput = document.getElementById('schema');
 
-		init('.ui-linenumber', uiLineNumber, 1500);
+		document.querySelectorAll('.ui-linenumber').forEach(element => {
+			uiLineNumber(element, 1500);
+		});
 
 		/* Generate Schema */
 		document.getElementById('generate').addEventListener('click', () => {

@@ -23,9 +23,10 @@
 10. Laborum modi esse consectetur doloremque reprehenderit deserunt fuga.</textarea>
 
 <script type="module">
-	import { init } from './../../assets/js/common.js';
 	import uiLineNumber from './uiLineNumber.js';
-	init('.ui-linenumber', uiLineNumber, 50);
+	document.querySelectorAll('.ui-linenumber').forEach(element => {
+    uiLineNumber(element, 50);
+	});
 </script>
 </body>
 </html>
