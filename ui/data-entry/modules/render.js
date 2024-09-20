@@ -2,33 +2,47 @@ import { attrs, getObjectByPath, isEmpty, setObjectByPath, resolveValue, toCamel
 
 /* Main Render Function */
 export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
-	let content = Object.entries(schema.properties).map(([key, config]) => {
+	let nonArrayContent = [];
+	let arrayContent = [];
+	let inlineNav = '';
+
+	Object.entries(schema.properties).forEach(([key, config]) => {
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
 		const label = config.title || 'LABEL';
 
 		let options = method === 'select' ? fetchOptions(config, instance) : [];
-
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
 		if (config.type === 'object') {
-			return config.render && method
+			nonArrayContent.push(config.render && method
 				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
-				: fieldset({ label, content: all(data[key], config, instance, false, path), attributes });
-		}
+				: fieldset({ label, content: all(data[key], config, instance, false, path), attributes }));
+		} else if (config.type === 'array') {
 
-		if (config.type === 'array') {
+			inlineNav += `<a href="#fs_${path}" part="nav-link">${label}</a> `;
+
 			const content = method
 				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
 				: data[key].map((item, index) => all(item, config.items, instance, false, `${path}[${index}]`)).join('');
-			return method ? content : fieldset({ label, content, attributes });
+			arrayContent.push(method ? content : fieldset({ label, content, attributes }));
+		} else {
+			nonArrayContent.push(method
+				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
+				: '');
 		}
+	});
 
-		return method
-			? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
-			: '';
-	}).join('');
+	const fieldsetContent = (root && nonArrayContent.length)
+		? `<fieldset part="fieldset"><legend part="legend">Root</legend>${nonArrayContent.join('')}</fieldset>`
+		: nonArrayContent.join('');
+
+	const arrayContentHtml = arrayContent.join('');
+	const navElement = inlineNav ? `<nav part="inline-nav">${inlineNav}</nav>` : '';
+	let content = navElement + fieldsetContent + arrayContentHtml;
+	// TODO!
+	// let content = `${navElement}<div part="content">${fieldsetContent} ${arrayContentHtml}</div><ui-toast></ui-toast>`;
 
 	if (form) {
 		form.innerHTML = content + `<ui-toast></ui-toast>`;
@@ -213,18 +227,19 @@ export const entry = (params) => {
 
 /* Fieldset Render Method */
 export const fieldset = ({ attributes, content, label, path }) => {
+	const fieldsetId = path ? `fs_${path}` : '';
 	return `
-		<fieldset ${attrs(attributes, '', [{ part: 'fieldset' }])}${path ? ` name="${path}-entry"` : ''}>
+		<fieldset id="${fieldsetId}" ${attrs(attributes, '', [{ part: 'fieldset' }])}${path ? ` name="${path}-entry"` : ''}>
 			<legend part="legend">${label}</legend>
 			${content}
 		</fieldset>`;
-}
+};
 
 /* Grid Render Method */
 export const arrayGrid = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
 	const content = value.map((item, index) => `<fieldset>${all(item, config.items, instance, false, path ? `${path}[${index}]` : '')}</fieldset>`).join('');
-	return fieldset({ label, content, attributes });
+	return fieldset({ label, content, attributes, path });
 }
 
 /* Icon Generation */
@@ -269,7 +284,7 @@ export const media = (params) => {
 		</label>`;
 
 	const content = value.map((item, index) => mediaItem(item, path ? `${path}[${index}]` : '')).join('');
-	return fieldset({ label, content, attributes });
+	return fieldset({ label, content, attributes, path });
 };
 
 /* Richtext Render Method */

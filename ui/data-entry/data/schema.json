@@ -2,6 +2,8 @@
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "$id": "http://example.com/example.json",
   "type": "object",
+  "title": "Product",
+
   "form": [
     {
       "type": "reset",
@@ -25,6 +27,7 @@
       "autoSave": 0
     }
   ],
+
   "messages": [
     {
       "code": 1105,
@@ -32,6 +35,7 @@
       "type": "error"
     }
   ],
+
   "properties": {
     "id": {
       "type": "number",
@@ -59,9 +63,6 @@
         "attributes": [
           {
             "name": "name"
-          },
-          {
-            "type": "text"
           },
           {
             "placeholder": "Enter name"
@@ -128,9 +129,6 @@
             "name": "base_product_id"
           },
           {
-            "type": "text"
-          },
-          {
             "placeholder": "Enter base_product_id"
           }
         ]
@@ -164,9 +162,6 @@
             "attributes": [
               {
                 "name": "name"
-              },
-              {
-                "type": "text"
               },
               {
                 "placeholder": "Enter name"
@@ -207,9 +202,6 @@
         "attributes": [
           {
             "name": "barcode"
-          },
-          {
-            "type": "text"
           },
           {
             "placeholder": "Enter barcode"
@@ -273,9 +265,6 @@
             "name": "sku"
           },
           {
-            "type": "text"
-          },
-          {
             "placeholder": "Enter sku"
           }
         ]
@@ -289,9 +278,6 @@
         "attributes": [
           {
             "name": "release_date"
-          },
-          {
-            "type": "text"
           },
           {
             "placeholder": "Enter release_date"
@@ -327,9 +313,6 @@
             "name": "created_by"
           },
           {
-            "type": "text"
-          },
-          {
             "disabled": "disabled"
           }
         ]
@@ -362,9 +345,7 @@
           {
             "name": "last_modified_by"
           },
-          {
-            "type": "text"
-          },
+
           {
             "disabled": "disabled"
           }
@@ -390,8 +371,7 @@
                   "type": "number"
                 }
               ]
-            },
-            "property": "id"
+            }
           },
           "value": {
             "type": "string",
@@ -406,8 +386,7 @@
                   "type": "text"
                 }
               ]
-            },
-            "property": "value"
+            }
           },
           "type": {
             "type": "string",
@@ -417,13 +396,9 @@
               "attributes": [
                 {
                   "name": "type"
-                },
-                {
-                  "type": "text"
                 }
               ]
-            },
-            "property": "type"
+            }
           }
         },
         "required": [
@@ -439,8 +414,8 @@
             "part": "array-details"
           }
         ],
-        "summary": "type",
-        "label": "value",
+        "label": "${type}",
+        "value": "${value}",
         "add": true,
         "delete": true,
         "autosuggest": {
@@ -456,6 +431,7 @@
         }
       }
     },
+
     "categories": {
       "type": "array",
       "title": "Categories",
@@ -473,13 +449,9 @@
                 },
                 {
                   "type": "number"
-                },
-                {
-                  "placeholder": "Enter id"
                 }
               ]
-            },
-            "property": "id"
+            }
           },
           "name": {
             "type": "string",
@@ -491,17 +463,10 @@
                   "name": "name"
                 },
                 {
-                  "type": "text"
-                },
-                {
-                  "placeholder": "Enter name"
-                },
-                {
                   "disabled": "disabled"
                 }
               ]
-            },
-            "property": "name"
+            }
           }
         },
         "required": [
@@ -516,12 +481,13 @@
             "part": "array-details"
           }
         ],
-        "summary": "name",
-        "label": "name",
         "add": true,
-        "delete": true
+        "delete": true,
+        "label": "${name}",
+        "value": "${name}"
       }
     },
+ 
     "collections": {
       "type": "array",
       "title": "Collections",
@@ -544,8 +510,7 @@
                   "placeholder": "Enter id"
                 }
               ]
-            },
-            "property": "id"
+            }
           },
           "name": {
             "type": "string",
@@ -566,8 +531,7 @@
                   "disabled": "disabled"
                 }
               ]
-            },
-            "property": "name"
+            }
           }
         },
         "required": [
@@ -582,12 +546,13 @@
             "part": "array-details"
           }
         ],
-        "summary": "Title",
-        "label": "name",
         "add": true,
-        "delete": true
+        "delete": true,
+        "label": "Title",
+        "value": "${name}"
       }
     },
+
     "channels": {
       "type": "array",
       "title": "Channels",
@@ -610,8 +575,7 @@
                   "placeholder": "Enter id"
                 }
               ]
-            },
-            "property": "id"
+            }
           },
           "name": {
             "type": "string",
@@ -632,8 +596,7 @@
                   "disabled": "disabled"
                 }
               ]
-            },
-            "property": "name"
+            }
           },
           "currency_code": {
             "type": "string",
@@ -651,8 +614,7 @@
                   "placeholder": "Enter currency_code"
                 }
               ]
-            },
-            "property": "currency_code"
+            }
           }
         },
         "required": [
@@ -668,12 +630,13 @@
             "part": "array-details"
           }
         ],
-        "summary": "name",
-        "label": "name",
+        "value": "${name}",
+        "label": "${currency_code}",
         "add": true,
         "delete": true
       }
     },
+
     "prices": {
       "type": "array",
       "title": "Prices",
@@ -696,8 +659,7 @@
                   "placeholder": "Enter id"
                 }
               ]
-            },
-            "property": "id"
+            }
           },
           "product_id": {
             "type": "number",
@@ -715,8 +677,7 @@
                   "placeholder": "Enter product_id"
                 }
               ]
-            },
-            "property": "product_id"
+            }
           },
           "currency_code": {
             "type": "string",
@@ -734,8 +695,7 @@
                   "placeholder": "Enter currency_code"
                 }
               ]
-            },
-            "property": "currency_code"
+            }
           },
           "discount": {
             "type": "boolean",
@@ -750,8 +710,7 @@
                   "type": "checkbox"
                 }
               ]
-            },
-            "property": "discount"
+            }
           },
           "is_msrp": {
             "type": "boolean",
@@ -766,8 +725,7 @@
                   "type": "checkbox"
                 }
               ]
-            },
-            "property": "is_msrp"
+            }
           },
           "valid_from": {
             "type": "string",
@@ -785,8 +743,7 @@
                   "placeholder": "Enter date and time"
                 }
               ]
-            },
-            "property": "valid_from"
+            }
           },
           "valid_to": {
             "type": "string",
@@ -804,8 +761,7 @@
                   "placeholder": "Enter valid_to"
                 }
               ]
-            },
-            "property": "valid_to"
+            }
           },
           "value": {
             "type": "number",
@@ -823,8 +779,7 @@
                   "placeholder": "Enter value"
                 }
               ]
-            },
-            "property": "value"
+            }
           }
         },
         "required": [
@@ -845,8 +800,8 @@
             "part": "array-details"
           }
         ],
-        "summary": "currency_code",
-        "label": "value",
+        "value": "${currency_code}",
+        "label": "${value}",
         "add": true,
         "delete": true
       }
@@ -924,8 +879,7 @@
                   "placeholder": "Enter media_id"
                 }
               ]
-            },
-            "property": "media_id"
+            }
           },
           "media_type": {
             "type": "string",
@@ -943,8 +897,7 @@
                   "placeholder": "Enter media_type"
                 }
               ]
-            },
-            "property": "media_type"
+            }
           },
           "url": {
             "type": "string",
@@ -959,8 +912,7 @@
                   "alt": "none"
                 }
               ]
-            },
-            "property": "src"
+            }
           }
         },
         "required": [
@@ -1004,8 +956,7 @@
                   "placeholder": "Enter review_id"
                 }
               ]
-            },
-            "property": "review_id"
+            }
           },
           "reviewer": {
             "type": "string",
@@ -1017,14 +968,10 @@
                   "name": "reviewer"
                 },
                 {
-                  "type": "text"
-                },
-                {
                   "placeholder": "Enter reviewer"
                 }
               ]
-            },
-            "property": "reviewer"
+            }
           },
           "review_date": {
             "type": "string",
@@ -1036,14 +983,10 @@
                   "name": "review_date"
                 },
                 {
-                  "type": "text"
-                },
-                {
                   "placeholder": "Enter date and time"
                 }
               ]
-            },
-            "property": "review_date"
+            }
           },
           "review_headline": {
             "type": "string",
@@ -1055,14 +998,10 @@
                   "name": "review_headline"
                 },
                 {
-                  "type": "text"
-                },
-                {
                   "placeholder": "Enter review_headline"
                 }
               ]
-            },
-            "property": "review_headline"
+            }
           }
         },
         "required": [
@@ -1079,10 +1018,11 @@
             "part": "array-grid"
           }
         ],
-        "summary": "&nbsp;",
-        "label": "&nbsp;",
+
         "add": true,
-        "delete": true
+        "delete": true,
+        "label": "&nbsp;",
+        "value": "&nbsp;"
       }
     }
   },

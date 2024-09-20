@@ -265,9 +265,21 @@
 			padding: 0;
 		}
 
+		 /* TMP */
+		/* [part~=tabs] { 
+			display: flex;
+			overflow: hidden;
+			width: 100%;
+			& > * { flex: 0 0 100%; }
+		} */
+
+		[part~=inline-nav],
 		[part~=nav] {
 			display: flex;
+			flex-wrap: wrap;
 			gap: 1ch;
+		}
+		[part~="nav"] {
 			justify-content: end;
 			padding-block-start: .33lh;
 			[popovertarget] { cursor: pointer; }
