@@ -112,7 +112,7 @@ export default class GuiControl extends HTMLElement {
 		}
 
 		options += attributes.options.map(option => 
-			`<option value='${option.value}'${option.key === value ? ' selected' : ''}>${option.key}</option>`
+			`<option value='${option.value}'${option.key === value ? ' selected' : ''}${option.extra ? ` data-extra="${option.extra}"`:''}}>${option.key}</option>`
 		).join('');
 		delete attributes.options;
 
