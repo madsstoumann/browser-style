@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg" style="--frame-c: #f6c6a4; --frame-bdw: 1em; background-color: rgb(64, 54, 63); --frame-asr: 100 / 100.;">
+		<defs>
+			<clipPath id="clipPath32681000">
+				<rect width="25" height="25"></rect>
+			</clipPath>
+		</defs>
+		<g transform="translate(0, 0)">
+			
+			<g transform="translate(0, 0)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#B67F5E"></rect>
+				<circle cx="25" cy="25" r="25" fill="#5A3D31"></circle>
+			</g>
+			<g transform="translate(25, 0)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#704B3E"></rect>
+				<rect width="12.5" height="25" fill="#C0876C"></rect>
+									<circle cx="12.5" cy="25" r="12.5" fill="#C0876C"></circle>;
+									<circle cx="12.5" cy="0" r="12.5" fill="#704B3E"></circle>
+			</g>
+			<g transform="translate(50, 0)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#A2543A"></rect>
+				<rect width="12.5" height="25" fill="#8F6C5A"></rect>
+			</g>
+			<g transform="translate(75, 0)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#D2A98A"></rect>
+				<rect width="25" height="12.5" fill="#5A3D31"></rect>
+			</g>
+			<g transform="translate(0, 25)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#B67F5E"></rect>
+				<circle cx="25" cy="0" r="25" fill="#5A3D31"></circle>
+			</g>
+			<g transform="translate(25, 25)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#5A3D31"></rect>
+				<circle cx="0" cy="0" r="25" fill="#B67F5E"></circle>
+			</g>
+			<g transform="translate(50, 25)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#C0876C"></rect>
+				<circle cx="0" cy="12.5" r="12.5" fill="#5A3D31"></circle>
+			</g>
+			<g transform="translate(75, 25)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#B67F5E"></rect>
+				<polygon points="0,0 25,0 25,25" fill="#C0876C"></polygon>
+			</g>
+			<g transform="translate(0, 50)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#D2A98A"></rect>
+				<circle cx="0" cy="12.5" r="12.5" fill="#A2543A"></circle>
+									 <circle cx="25" cy="12.5" r="12.5" fill="#A2543A"></circle>
+			</g>
+			<g transform="translate(25, 50)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#8F6C5A"></rect>
+				<rect width="25" height="12.5" fill="#5A3D31"></rect>
+									<circle cx="0" cy="12.5" r="12.5" fill="#5A3D31"></circle>;
+									<circle cx="25" cy="12.5" r="12.5" fill="#8F6C5A"></circle>
+			</g>
+			<g transform="translate(50, 50)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#C0876C"></rect>
+				<circle cx="0" cy="12.5" r="12.5" fill="#B67F5E"></circle>
+			</g>
+			<g transform="translate(75, 50)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#5A3D31"></rect>
+				<polygon points="25,0 25,25 0,25" fill="#8F6C5A"></polygon>
+			</g>
+			<g transform="translate(0, 75)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#5A3D31"></rect>
+				<circle cx="25" cy="25" r="12.5" fill="#704B3E"></circle>
+			</g>
+			<g transform="translate(25, 75)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#C0876C"></rect>
+				<circle cx="0" cy="25" r="12.5" fill="#A2543A"></circle>
+			</g>
+			<g transform="translate(50, 75)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#704B3E"></rect>
+				<rect width="12.5" height="25" fill="#5A3D31"></rect>
+									<circle cx="12.5" cy="25" r="12.5" fill="#5A3D31"></circle>;
+									<circle cx="12.5" cy="0" r="12.5" fill="#704B3E"></circle>
+			</g>
+			<g transform="translate(75, 75)" clip-path="url(#clipPath32681000)">
+				<rect width="25" height="25" fill="#C0876C"></rect>
+				<circle cx="25" cy="0" r="25" fill="#8F6C5A"></circle>
+			</g>
+		</g></svg>
