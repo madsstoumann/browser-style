@@ -4,8 +4,8 @@
   "type": "object",
 
   "navigation": "nav",
-  "title": "${name} (${id})",
-  "rootTitle": "Details",
+  "headline": "${name} (${id})",
+  "title": "${t:details}",
 
   "form": [
     {
@@ -275,7 +275,7 @@
     },
     "release_date": {
       "type": "string",
-      "title": "Release Date",
+      "title": "${t:release_date}",
       "render": {
         "method": "input",
         "attributes": [

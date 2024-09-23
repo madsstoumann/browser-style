@@ -16,7 +16,8 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	const nonArrayContent = [];
 	const arrayContent = [];
 	const renderNav = schema.navigation;
-	const rootTitle = schema.rootTitle || '';
+	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang) : '';
+	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang) : '';
 	let navContent = '';
 
 	// Iterate over schema properties
@@ -24,7 +25,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
-		const label = config.title || 'LABEL';
+		const label = resolveTemplateString(config.title, data, instance.lang) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
@@ -51,15 +52,15 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	});
 
 	const fieldsetContent = (root && nonArrayContent.length)
-		? `<fieldset part="fieldset" id="section_root">${rootTitle ? `<legend part="legend">${rootTitle}</legend>`:''}${nonArrayContent.join('')}</fieldset>`
+		? `<fieldset part="fieldset" id="section_root">${title ? `<legend part="legend">${title}</legend>` : ''}${nonArrayContent.join('')}</fieldset>`
 		: nonArrayContent.join('');
 	const arrayContentHtml = arrayContent.join('');
 	const innerContent = `${fieldsetContent} ${arrayContentHtml}`;
 
 	if (form || root) {
-		const navElement = renderNav ? `<nav part="${renderNav}">${rootTitle ? `<a href="#section_root" part="link">${rootTitle}</a>`:''}${navContent}</nav>` : '';
-		const titleElement = schema.title ? `<strong part="title">${resolveTemplateString(schema.title, data)}</strong>` : '';
-		const headerContent = (titleElement || navElement) ? `<header part="header">${navElement}${titleElement}</header>` : '';
+		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>`:''}${navContent}</nav>` : '';
+		const headlineElement = headline ? `<strong part="title">${headline}</strong>` : '';
+		const headerContent = (headlineElement || navElement) ? `<header part="header">${navElement}${headlineElement}</header>` : '';
 		let footerContent = `<ui-toast></ui-toast>`;
 
 		if (schema.form) {
@@ -317,9 +318,9 @@ export const entry = (params) => {
 				${renderAutoSuggest ? autosuggest({ config, path, formID }) : ''}
 				${fields}
 				<nav part="nav">
-					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">${t(lang,'close')}</button>
-					<button type="reset" form="${formID}" part="button reset">${t(lang,'reset')}</button>
-					<button type="submit" form="${formID}" part="button add" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t(lang,'add')}</button>
+					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">${t('close', lang)}</button>
+					<button type="reset" form="${formID}" part="button reset">${t('reset', lang)}</button>
+					<button type="submit" form="${formID}" part="button add" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t('add', lang)}</button>
 				</nav>
 			</fieldset>
 		</div>`;

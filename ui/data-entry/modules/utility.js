@@ -1,4 +1,5 @@
 import { dynamicFunctions } from "./dynamic.js";
+import { t } from "./translations.js";
 
 /**
  * Merges and filters attributes, then converts them into a string of HTML attributes.
@@ -161,14 +162,20 @@ export function isEmpty(obj) {
 }
 
 /**
- * Resolves a template string by replacing placeholders with corresponding values from a data object.
+ * Resolves a template string by replacing placeholders with corresponding values from the data object.
+ * If a placeholder starts with 't:', it will be treated as a translation key.
  *
  * @param {string} template - The template string containing placeholders in the format ${key}.
  * @param {Object} data - The data object containing values to replace the placeholders.
- * @returns {string} - The resolved string with placeholders replaced by corresponding values from the data object.
+ * @param {string} [lang='en'] - The language code for translation (default is 'en').
+ * @returns {string} - The resolved string with placeholders replaced by corresponding values.
  */
-export function resolveTemplateString(template, data) {
+export function resolveTemplateString(template, data, lang = 'en') {
 	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
+		if (key.startsWith('t:')) {
+			const translationKey = key.slice(2).trim();
+			return t(translationKey, lang) || '';
+		}
 		return getObjectByPath(data, key.trim()) || '';
 	});
 }
