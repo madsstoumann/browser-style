@@ -1,0 +1,46 @@
+site_name: DataEntry Documentation
+nav:
+  - Home: index.md
+  - Data:
+      - Overview: data.md
+  - Schema:
+      - What is a JSON Schema?: schema/what-is-json-schema.md
+      - Extending the Schema: 
+          - Navigation: schema/navigation.md
+          - Headline: schema/headline.md
+          - Title: schema/title.md
+          - Form: schema/form.md
+          - Messages: schema/messages.md
+      - Render Methods:
+          - Overview: schema/render-methods.md
+          - Array: schema/render-methods-array.md
+          - Autosuggest: schema/render-methods-autosuggest.md
+  - Custom Methods: 
+      - Overview: custom-methods.md
+      - Extending/Adding: custom-methods-extending.md
+  - Dynamic Methods:
+      - Overview: dynamic-methods.md
+      - Extending/Adding: dynamic-methods-extending.md
+  - Messages:
+      - Endpoint: messages-endpoint.md
+      - Extending from Schema: messages-extending.md
+  - Components:
+      - Built-in Components: components/built-in.md
+      - Extending Components: components/extending.md
+  - Validate: 
+      - Overview: validate/overview.md
+  - Translations:
+      - Overview: translations/overview.md
+      - The `lang` Attribute: translations/lang-attribute.md
+      - Translations.js: translations/translations-js.md
+
+theme:
+  name: material
+  language: en
+  palette:
+    primary: 'blue'
+    accent: 'light blue'
+
+markdown_extensions:
+  - toc:
+      permalink: True
