@@ -1,17 +1,17 @@
 const translations = {
 	en: {
-		close: 'Close',
-		reset: 'Reset',
 		add: 'Add',
-		release_date: 'Release Date',
+		close: 'Close',
 		details: 'Details',
+		release_date: 'Release Date',
+		reset: 'Reset',
 	},
 	da: {
-		close: 'Luk',
-		reset: 'Nulstil',
 		add: 'Tilføj',
-		release_date: 'Udgivelsesdato',
+		close: 'Luk',
 		details: 'Detaljer',
+		release_date: 'Udgivelsesdato',
+		reset: 'Nulstil',
 	},
 	// Add more languages as needed
 };
