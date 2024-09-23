@@ -2,7 +2,10 @@
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "$id": "http://example.com/example.json",
   "type": "object",
-  "title": "Product",
+
+  "navigation": "nav",
+  "title": "${name} (${id})",
+  "rootTitle": "Details",
 
   "form": [
     {
@@ -30,7 +33,7 @@
 
   "messages": [
     {
-      "code": 1105,
+      "code": 405,
       "message": "Could not save data AT all!",
       "type": "error"
     }
@@ -295,7 +298,7 @@
             "name": "created_at"
           },
           {
-            "type": "datetime-local"
+            "type": "text"
           },
           {
             "disabled": "disabled"
@@ -328,7 +331,7 @@
             "name": "last_modified_at"
           },
           {
-            "type": "datetime-local"
+            "type": "text"
           },
           {
             "disabled": "disabled"

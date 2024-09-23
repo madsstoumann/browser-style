@@ -1,5 +1,5 @@
 import { createDataEntryInstance } from './modules/factory.js';
-import { bindUtilityEvents, convertValue, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
+import { convertValue, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
 import { mountComponents } from './modules/components.js';
 
@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.23
- * @summary 17-09-2024
+ * @version 1.0.24
+ * @summary 23-09-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -20,7 +20,9 @@ class DataEntry extends HTMLElement {
 		this.form = document.createElement('form');
 		this.form.part = 'form';
 		this.primaryKey = this.getAttribute('primary-key') || 'id';
+		this.lang = this.getAttribute('lang') || 'en';
 		this.instance = createDataEntryInstance(this);
+		this.instance.lang = this.lang;
 	}
 
 	/* === connectedCallback: Called when the component is added to the DOM */
@@ -140,6 +142,25 @@ class DataEntry extends HTMLElement {
 		this.processData();
 	}
 
+	bindCustomEvents(elementContainer, componentInstance) {
+		const elements = elementContainer.querySelectorAll('[data-custom]');
+		elements.forEach(element => {
+			const customFunc = element.dataset.custom;
+			const params = element.dataset.params ? JSON.parse(element.dataset.params) : {};
+	
+			if (componentInstance.custom && componentInstance.custom[customFunc]) {
+				element.addEventListener('click', () => {
+						componentInstance.custom[customFunc](element, componentInstance, ...Object.values(params));
+				});
+			}
+			else if (typeof componentInstance[customFunc] === 'function') {
+				element.addEventListener('click', () => {
+					componentInstance[customFunc](element, ...Object.values(params));
+				});
+			}
+		});
+	}
+
 	/* === debugLog: Logs debug messages if debug mode is enabled */
 	debugLog(...args) {
 		if (this.hasAttribute('debug')) {
@@ -231,6 +252,27 @@ class DataEntry extends HTMLElement {
 		}
 	}
 
+	handleNavigation() {
+		this.form.querySelectorAll('a[part="link"]').forEach(link => {
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				const targetId = event.target.getAttribute('href').substring(1); // Remove the '#' from href
+				const targetElement = document.getElementById(targetId);
+		
+				if (targetElement) {
+						// Scroll to the target element
+						targetElement.scrollIntoView({ behavior: 'smooth' });
+		
+						// Toggle the 'active' class on the clicked link
+						document.querySelectorAll('a[part="link"]').forEach(link => {
+								link.classList.remove('active');
+						});
+						event.target.classList.add('active');
+				}
+			});
+	});
+	}
+
 	/* === loadResources: Loads data, schema, lookup and messages resources */
 	async loadResources() {
 		this.data = await this.fetchResource('data');
@@ -282,7 +324,8 @@ class DataEntry extends HTMLElement {
 		}
 		this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true, '', this.form);
 		await mountComponents(this.form.innerHTML, this);
-		bindUtilityEvents(this.form, this);
+		this.bindCustomEvents(this.form, this);
+		this.handleNavigation();
 
 		const autoSaveInterval = parseInt(this.form.dataset.autoSave, 10);
 		if (autoSaveInterval > 0) {

@@ -1,4 +1,15 @@
-/* Merges HTML attributes, optionally removing specified attributes. */
+import { dynamicFunctions } from "./dynamic.js";
+
+/**
+ * Merges and filters attributes, then converts them into a string of HTML attributes.
+ *
+ * @param {Array<Object>} attributes - The initial set of attributes.
+ * @param {string} [path=''] - An optional path to set as the name attribute.
+ * @param {Array<Object>} [additionalAttributes=[]] - Additional attributes to merge.
+ * @param {Array<string>} [attributesToRemove=[]] - List of attribute keys to remove.
+ * @param {Array<string>} [attributesToInclude=[]] - List of attribute keys to include.
+ * @returns {string} A string of HTML attributes.
+ */
 export function attrs(
 	attributes, 
 	path = '', 
@@ -42,27 +53,15 @@ export function attrs(
 		}).join(' ');
 }
 
-/* Binds utility event listeners to elements based on data-util attributes. */	
-export function bindUtilityEvents(elementContainer, componentInstance) {
-	const elements = elementContainer.querySelectorAll('[data-util]');
-	elements.forEach(element => {
-		const utilFunction = element.dataset.util;
-		const params = element.dataset.params ? JSON.parse(element.dataset.params) : {};
-
-		if (componentInstance.utils && componentInstance.utils[utilFunction]) {
-			element.addEventListener('click', () => {
-					componentInstance.utils[utilFunction](element, componentInstance, ...Object.values(params));
-			});
-		}
-		else if (typeof componentInstance[utilFunction] === 'function') {
-			element.addEventListener('click', () => {
-				componentInstance[utilFunction](element, ...Object.values(params));
-			});
-		}
-	});
-}
-
-/* Converts a value to the specified data type. */
+/**
+ * Converts a given value to a specified data type.
+ *
+ * @param {any} value - The value to be converted.
+ * @param {string} dataType - The target data type ('number', 'boolean', 'object', etc.).
+ * @param {string} inputType - The type of input element (e.g., 'checkbox').
+ * @param {boolean} checked - The checked state of a checkbox input.
+ * @returns {any} - The converted value.
+ */
 export function convertValue(value, dataType, inputType, checked) {
 	switch (dataType) {
 		case 'number':
@@ -83,7 +82,46 @@ export function convertValue(value, dataType, inputType, checked) {
 	}
 }
 
-/* Retrieves a nested object or value based on a dot-notated path. */
+/**
+ * Fetches options based on the provided configuration and instance.
+ *
+ * @param {Object} config - The configuration object.
+ * @param {Object} config.render - The render configuration.
+ * @param {Array|string} config.render.options - The options key, which can be an array or a string.
+ * @param {Object} instance - The instance object.
+ * @param {Object} instance.lookup - The lookup object containing arrays of options.
+ * @returns {Array} The fetched options array.
+ */
+export function fetchOptions(config, instance) {
+	const optionsKey = config?.render?.options;
+	let options = [];
+
+	if (Array.isArray(optionsKey)) {
+		options = optionsKey;
+	} else if (typeof optionsKey === 'string') {
+		if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
+			options = instance.lookup[optionsKey];
+		} else {
+			const storedOptions = localStorage.getItem(optionsKey);
+			if (storedOptions) {
+				try {
+					options = JSON.parse(storedOptions) || [];
+				} catch {
+					options = [];
+				}
+			}
+		}
+	}
+	return options;
+}
+
+/**
+ * Retrieves the value from an object based on a given dot-separated path.
+ *
+ * @param {Object} obj - The object from which to retrieve the value.
+ * @param {string} path - The dot-separated path string (e.g., 'a.b.c' or 'a.b[0].c').
+ * @returns {*} - The value found at the specified path, or undefined if the path is invalid.
+ */
 export function getObjectByPath(obj, path) {
 	return path.split('.').reduce((acc, key) => {
 		if (acc === null || acc === undefined) {
@@ -106,7 +144,14 @@ export function getObjectByPath(obj, path) {
 	}, obj);
 }
 
-/* Checks if an object is empty (has no properties). */
+/**
+ * Checks if the given object is empty.
+ *
+ * An object is considered empty if it is null, undefined, or an object with no own properties.
+ *
+ * @param {Object|null|undefined} obj - The object to check.
+ * @returns {boolean} - Returns true if the object is empty, otherwise false.
+ */
 export function isEmpty(obj) {
 	if (obj === null || obj === undefined) {
 		return true;
@@ -115,22 +160,62 @@ export function isEmpty(obj) {
 	return typeof obj === 'object' && Object.keys(obj).length === 0;
 }
 
+/**
+ * Resolves a template string by replacing placeholders with corresponding values from a data object.
+ *
+ * @param {string} template - The template string containing placeholders in the format ${key}.
+ * @param {Object} data - The data object containing values to replace the placeholders.
+ * @returns {string} - The resolved string with placeholders replaced by corresponding values from the data object.
+ */
+export function resolveTemplateString(template, data) {
+	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
+		return getObjectByPath(data, key.trim()) || '';
+	});
+}
+
+/**
+ * Resolves the value of an attribute. If the value is a string that starts with '${' and ends with '}', 
+ * it treats the content inside as a function name and attempts to execute a corresponding function 
+ * from the dynamicFunctions object. If the function exists, it returns the result of the function. 
+ * Otherwise, it returns the original value.
+ *
+ * @param {Object} attribute - The attribute object containing the value to be resolved.
+ * @param {string} attribute.value - The value to be resolved, which may be a dynamic function reference.
+ * @returns {*} - The resolved value, either the result of the dynamic function or the original value.
+ */
 export function resolveValue(attribute) {
-	// Check if the value is a string and starts with '${' and ends with '}'
 	if (typeof attribute.value === 'string' && attribute.value.startsWith('${') && attribute.value.endsWith('}')) {
-		// Extract the function name between the '${' and '}'
 		const functionName = attribute.value.slice(2, -1);
-		// Check if the function exists in the dynamicFunctions object
 		if (dynamicFunctions[functionName]) {
-			// Execute and return the dynamic function result
 			return dynamicFunctions[functionName]();
 		}
 	}
-	// Return the original value if no matching dynamic function was found
 	return attribute.value;
 }
 
-/* Sets a value in an object based on a dot-notated path. */
+/**
+ * Safely executes a render method with the given parameters.
+ * If an error occurs during the execution, it returns an empty string.
+ *
+ * @param {Function} renderMethod - The render method to be executed.
+ * @param {any} params - The parameters to be passed to the render method.
+ * @returns {string} The result of the render method or an empty string if an error occurs.
+ */
+export function safeRender(renderMethod, params) {
+	try {
+		return renderMethod(params);
+	} catch {
+		return '';
+	}
+}
+
+/**
+ * Sets a value on an object at a specified path.
+ *
+ * @param {Object} obj - The object to modify.
+ * @param {string} path - The path at which to set the value, with properties separated by dots.
+ * @param {*} value - The value to set at the specified path.
+ */
 export function setObjectByPath(obj, path, value) {
 	path.split('.').reduce((acc, key, index, array) => {
 		const match = key.match(/([^\[]+)\[?(\d*)\]?/);
@@ -158,25 +243,12 @@ export function setObjectByPath(obj, path, value) {
 	}, obj);
 }
 
-/* Dynamic functions that can be used in dynamic attribute values. */
-const dynamicFunctions = {
-	now: () => {
-    const now = new Date();
-    // Format to yyyy-MM-ddThh:mm
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-  },
-	uuid: () => crypto.randomUUID(),
-	today: () => new Date().toISOString().split('T')[0], // For date input
-	// Add other dynamic functions here
-};
-
-/* Converts a string to camelCase. */
+/**
+ * Converts a hyphenated string to camelCase.
+ *
+ * @param {string} str - The hyphenated string to convert.
+ * @returns {string} The camelCase version of the input string.
+ */
 export function toCamelCase(str) {
 	return str
 		.toLowerCase()
@@ -185,8 +257,12 @@ export function toCamelCase(str) {
 		.join('');
 }
 
-
-/* Converts a string to PascalCase. */
+/**
+ * Converts a kebab-case string to PascalCase.
+ *
+ * @param {string} str - The kebab-case string to convert.
+ * @returns {string} The converted PascalCase string.
+ */
 export function toPascalCase(str) {
 	return str
 		.split('-')
@@ -194,7 +270,15 @@ export function toPascalCase(str) {
 		.join('');
 }
 
-/* Generates a unique identifier (UUID). */
+/**
+ * Generates a unique identifier (UUID).
+ *
+ * This function uses the `crypto.getRandomValues` method to generate a random
+ * 32-bit unsigned integer. If the generated value is zero, it falls back to
+ * generating a random number using `Math.random` multiplied by `Number.MAX_SAFE_INTEGER`.
+ *
+ * @returns {number} A unique identifier as a 32-bit unsigned integer.
+ */
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }

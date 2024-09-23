@@ -1,36 +1,45 @@
 import * as renderMethods from './render.js';
-import * as utilityMethods from './utility.js';
+import * as customMethods from './custom.js';
+import { dynamicFunctions, extendDynamicFunction } from './dynamic.js';
 
 export function createDataEntryInstance(parent) {
 	return {
 		methods: {
 			...renderMethods,
 		},
-
-		utils: {
-			...utilityMethods,
+		custom: {
+			...customMethods,
 		},
-
 		extensions: {
+			customMethods: {},
 			renderMethods: {},
-			utilityMethods: {},
 		},
 
+		// Extend methods for custom and render methods
 		extendRenderMethod(name, method) {
 			this.extensions.renderMethods[name] = method;
 		},
 
-		extendUtilityMethod(name, method) {
-			this.extensions.utilityMethods[name] = method;
-			this.utils[name] = method;
+		extendCustomMethod(name, method) {
+			this.extensions.customMethods[name] = method;
+			this.custom[name] = method;
 		},
 
+		// Get methods for render and custom
 		getRenderMethod(name) {
 			return this.extensions.renderMethods[name] || this.methods[name];
 		},
 
-		getUtilityMethod(name) {
-			return this.extensions.utilityMethods[name] || this.utils[name];
+		getCustomMethod(name) {
+			return this.extensions.customMethods[name] || this.custom[name];
+		},
+
+		// Use extendDynamicFunction from dynamic.js
+		extendDynamicFunction,
+
+		// Retrieve a dynamic function
+		getDynamicFunction(name) {
+			return dynamicFunctions[name] || null;
 		},
 
 		data: {},

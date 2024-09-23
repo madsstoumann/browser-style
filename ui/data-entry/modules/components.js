@@ -47,7 +47,6 @@ function bindAutoSuggest(dataEntry) {
 function bindUiToast(dataEntry) {
 	const toastElement = dataEntry.form.querySelector('ui-toast');
 	if (toastElement) {
-		// Attach showToast method to use ui-toast if available
 		dataEntry.showToast = (message, type = 'success', duration = 3000) => {
 			toastElement.showToast(message, type, duration);
 		};

@@ -10,6 +10,11 @@
     "type": "warning"
   },
   {
+    "code": 405,
+    "message": "Could not save data",
+    "type": "error"
+  },
+  {
     "code": 1105,
     "message": "Could not save data",
     "type": "error"
