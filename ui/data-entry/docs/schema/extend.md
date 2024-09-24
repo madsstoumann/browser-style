@@ -39,13 +39,18 @@ The `title` attribute is a static or dynamic string that appears as the legend f
   ```
 - **Usage**: This attribute works similarly to the headline, but it is specifically used to title the root fieldset of the form. The value can be either static or dynamic, with support for localization using `${t:}` for translation. For example, `${t:details}` will be replaced by a translated string like "Details" based on the current `lang` setting.
 
-## Form Buttons
+## Form
 
-The `form` attribute defines the buttons that appear at the bottom of the form. These can include reset, submit, and other custom actions.
+The `form` attribute defines the configuration for form buttons that appear at the bottom of the form. These buttons can include reset, submit, and custom actions, and now allow for additional attributes such as `action`, `method`, and `enctype`.
 
-- **Syntax**:
-  ```json
-  "form": [
+### Syntax:
+```json
+"form": {
+  "action": "/api/UpdateProduct/:id",
+  "method": "POST",
+  "enctype": "json",
+  "autoSave": 0,
+  "buttons": [
     {
       "type": "reset",
       "label": "Reset"
@@ -54,13 +59,13 @@ The `form` attribute defines the buttons that appear at the bottom of the form. 
       "action": "/api/DeleteProduct/:id",
       "label": "${t:delete}",
       "method": "DELETE",
-      "contentType": "form"
+      "enctype": "form"
     },
     {
       "action": "/api/SetProduct/:id",
       "label": "${t:post}",
       "method": "POST",
-      "contentType": "json"
+      "enctype": "json"
     },
     {
       "type": "submit",
@@ -68,9 +73,20 @@ The `form` attribute defines the buttons that appear at the bottom of the form. 
       "autoSave": 0
     }
   ]
-  ```
+}
+```
+
+### Root-Level Properties:
+
+1. **action**: Defines the endpoint for submitting the entire form.
+2. **method**: HTTP method used for submitting the form (`POST`, `PUT`, etc.).
+3. **enctype**: Specifies the encoding type for the form submission (e.g., `json`, `form`).
+4. **autoSave**: Optionally auto-save form data (set `0` to disable).
+
+These properties are applied directly to the `<form>` element and can be overridden by individual button configurations.
 
 ### Button Types:
+
 1. **Reset**: A reset button clears the form's inputs.
    ```json
    {
@@ -80,21 +96,21 @@ The `form` attribute defines the buttons that appear at the bottom of the form. 
    ```
    - **label**: Text displayed on the button.
    
-2. **Custom Action Buttons**: These buttons perform actions like sending a `DELETE` or `POST` request.
+2. **Custom Action Buttons**: These buttons perform actions such as sending a `DELETE` or `POST` request. They can specify their own `action`, `method`, and `enctype`, or inherit them from the root `form` configuration.
    ```json
    {
      "action": "/api/DeleteProduct/:id",
      "label": "${t:delete}",
      "method": "DELETE",
-     "contentType": "form"
+     "enctype": "form"
    }
    ```
    - **action**: The endpoint to send data to.
    - **label**: Text displayed on the button (can be localized using `${t:}`).
-   - **method**: HTTP method used (`POST`, `DELETE`, etc.).
-   - **contentType**: Specifies the format for sending the data (e.g., `form`, `json`).
-   
-3. **Submit**: A submit button sends the form data when clicked.
+   - **method**: HTTP method to be used (`POST`, `DELETE`, etc.).
+   - **enctype**: Specifies the format for sending the data (`form`, `json`, or a custom value).
+
+3. **Submit**: A submit button sends the form data when clicked. This button triggers the default form submission behavior and can also include custom attributes like `autoSave`.
    ```json
    {
      "type": "submit",
@@ -103,7 +119,23 @@ The `form` attribute defines the buttons that appear at the bottom of the form. 
    }
    ```
    - **label**: Text displayed on the button.
-   - **autoSave**: Optionally auto-save form data (set `0` to disable).
+   - **autoSave**: Optionally auto-save form data periodically (set to `0` to disable).
+
+### Custom Buttons with `method: custom`:
+
+In addition to the built-in buttons, custom buttons can be defined by specifying `"method": "custom"`. This enables the button to perform custom actions or events (like triggering a search) while still being a `submit` type to handle form submission:
+
+```json
+{
+  "label": "Search",
+  "method": "custom",
+  "type": "submit"
+}
+```
+
+In this case:
+- The button can trigger custom JavaScript functionality while still acting as a submit button for accessibility and mobile-friendly form submissions.
+
 
 ### Localization:
 - Button labels can be localized using `${t:}` keys.

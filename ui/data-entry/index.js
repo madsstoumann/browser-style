@@ -36,27 +36,18 @@ class DataEntry extends HTMLElement {
 			this.syncInstanceData(event)
 		});
 
-		this.form.addEventListener('submit', (event) => { /* Requires a submit button */
+		this.form.addEventListener('submit', (event) => { 
 			event.preventDefault();
-			this.handleDataSubmission();
-		});
-
-		this.form.addEventListener('click', (event) => {
-			if (event.target.tagName === 'BUTTON' && event.target.dataset.action) {
-				event.preventDefault();
-				const { action, method, contentType } = event.target.dataset;
-
-				if (contentType === 'custom') {
-					this.dispatchEvent(new CustomEvent('de:custom', {
-						detail: {
-							action: action,
-							method: method,
-							formData: this.instance.data
-						}
-					}));
-				} else {
-					this.handleDataSubmission(action, method, contentType);
-				}
+			const submitter = event.submitter;
+			if (submitter && submitter.dataset.method === 'custom') {
+				this.dispatchEvent(new CustomEvent('de:custom', {
+					detail: {
+						data: this.instance.data,
+						submitter
+					}
+				}));
+			} else {
+				this.handleDataSubmission();
 			}
 		});
 
@@ -146,6 +137,23 @@ class DataEntry extends HTMLElement {
 		this.processData();
 	}
 
+	/* === bindCustomButtons: Binds click events to custom buttons */
+	bindCustomButtons() {
+		const customButtons = this.form.querySelectorAll('button[data-method="custom"]');
+		customButtons.forEach(button => {
+			button.addEventListener('click', (event) => {
+				event.preventDefault();
+				this.dispatchEvent(new CustomEvent('de:custom', {
+					detail: {
+						data: this.instance.data,
+						submitter: event.currentTarget
+					}
+				}));
+			});
+		});
+	}
+
+	/* === bindCustomEvents: Binds click events to custom elements */
 	bindCustomEvents(elementContainer, componentInstance) {
 		const elements = elementContainer.querySelectorAll('[data-custom]');
 		elements.forEach(element => {
@@ -215,30 +223,32 @@ class DataEntry extends HTMLElement {
 	}
 
 	/* === handleDataSubmission: Common method to handle data submission logic === */
-	handleDataSubmission(action, method, contentType = 'form') {
-		const asJSON = contentType === 'json';
+	handleDataSubmission(action, method, enctype = 'form') {
+		const formAction = this.form.getAttribute('action') || action;
+		const formMethod = this.form.getAttribute('method') || method || 'POST';
+		const formEnctype = this.form.getAttribute('enctype') || enctype;
 		const filteredData = this.filterRemovedEntries(this.instance.data);
+		const asJSON = formEnctype.includes('json');
 		const data = asJSON ? JSON.stringify(filteredData) : this.prepareFormData(filteredData);
-		const headers = asJSON ? { 'Content-Type': 'application/json' } : {};
 		const id = filteredData[this.primaryKey];
 	
-		if (action) {
-			fetch(action.replace(':id', id), {
-				method: method || 'POST',
-				headers: headers,
+		if (formAction) {
+			fetch(formAction.replace(':id', id), {
+				method: formMethod,
+				headers: { 'Content-Type': formEnctype },
 				body: data
 			})
 			.then(response => {
-				if (!response.ok) { console.error(response.status);
+				if (!response.ok) {
 					this.handleError(response.status, `HTTP error! status: ${response.statusText}`);
 					throw new Error(`HTTP error! status: ${response.status}`);
 				}
 				return response.json();
 			})
-			.then(result => {
+			.then(() => {
 				this.handleError(1200, 'Data submitted successfully!');
 			})
-			.catch(error => {
+			.catch(() => {
 				this.handleError(1105, 'Network issue detected');
 			});
 		} else {
@@ -329,6 +339,7 @@ class DataEntry extends HTMLElement {
 		}
 		this.instance.methods.all(this.instance.data, this.instance.schema, this.instance, true, '', this.form);
 		await mountComponents(this.form.innerHTML, this);
+		this.bindCustomButtons();
 		this.bindCustomEvents(this.form, this);
 		this.handleNavigation();
 

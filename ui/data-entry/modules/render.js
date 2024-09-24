@@ -63,12 +63,33 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		let footerContent = `<ui-toast></ui-toast>`;
 
 		if (schema.form) {
-			const buttonsHTML = schema.form
+			// Set root-level form attributes if available
+			if (schema.form.action) {
+				form.setAttribute('action', schema.form.action);
+			}
+			if (schema.form.method) {
+				form.setAttribute('method', schema.form.method);
+			}
+			if (schema.form.enctype) {
+				const formEnctype = schema.form.enctype === 'json' ? 'application/json' 
+					: schema.form.enctype === 'form' ? 'multipart/form-data' 
+					: schema.form.enctype;
+				form.setAttribute('enctype', formEnctype);
+			}
+			if (schema.form.autoSave !== undefined) {
+				form.setAttribute('data-auto-save', schema.form.autoSave);
+			}
+		
+			// Generate buttons from the form.buttons array
+			const buttonsHTML = schema.form.buttons
 				.map(entry => {
-					const commonAttributes = `data-action="${entry.action}" data-method="${entry.method}" data-content-type="${entry.contentType || 'form'}"`;
-					return entry.type === 'submit' || entry.type === 'reset'
-						? `<button type="${entry.type}" part="button">${entry.label}</button>`
-						: `<button type="button" part="button method-${entry.method.toLowerCase()}" ${commonAttributes} ${entry.autoSave !== undefined ? `data-auto-save="${entry.autoSave}"` : ''}>${entry.label}</button>`;
+					const commonAttributes = Object.keys(entry)
+						.filter(key => key !== 'label')
+						.map(key => `data-${key}="${entry[key]}"`)
+						.join(' ');
+
+					return `<button type="${entry.type || 'button'}" part="button ${entry.method?.toLowerCase() || ''}" ${commonAttributes}>${
+						resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
 				}).join('');
 			footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
 		}

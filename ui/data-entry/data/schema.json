@@ -7,29 +7,35 @@
   "headline": "${name} (${id})",
   "title": "${t:details}",
 
-  "form": [
-    {
-      "type": "reset",
-      "label": "Reset"
-    },
-    {
-      "action": "/api/DeleteProduct/:id",
-      "label": "i18n.delete",
-      "method": "DELETE",
-      "contentType": "form"
-    },
-    {
-      "action": "/api/SetProduct/:id",
-      "label": "i18n.post",
-      "method": "POST",
-      "contentType": "json"
-    },
-    {
-      "type": "submit",
-      "label": "Submit",
-      "autoSave": 0
-    }
-  ],
+  "form": {
+    "action": "/api/UpdateProduct/:id",
+    "method": "POST",
+    "enctype": "json",
+    "autoSave": 0,
+
+    "buttons": [
+      {
+        "type": "reset",
+        "label": "Reset"
+      },
+      {
+        "action": "/api/DeleteProduct/:id",
+        "label": "i18n.delete",
+        "method": "DELETE",
+        "enctype": "form"
+      },
+      {
+        "action": "/api/SetProduct/:id",
+        "label": "i18n.post",
+        "method": "POST",
+        "enctype": "json"
+      },
+      {
+        "type": "submit",
+        "label": "Submit"
+      }
+    ]
+  },
 
   "messages": [
     {
