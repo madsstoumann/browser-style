@@ -284,7 +284,7 @@ export const entry = (params) => {
 			const attributes = [...propConfig.render.attributes, { form: formID }];
 			attributes.forEach(attr => {
 				if (attr.hasOwnProperty('value')) {
-					attr.value = resolveTemplateString(attr, instance.data, instance.lang, instance.i18n);
+					attr.value = resolveTemplateString(attr.value, instance.data, instance.lang, instance.i18n);
 				}
 			});
 

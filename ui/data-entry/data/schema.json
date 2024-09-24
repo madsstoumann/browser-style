@@ -743,7 +743,7 @@
                   "type": "datetime-local"
                 },
                 {
-                  "placeholder": "Enter date and time"
+                  "value": "${d:now}"
                 }
               ]
             }
