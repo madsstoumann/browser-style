@@ -13,7 +13,13 @@ export const dynamicFunctions = {
 	today: () => new Date().toISOString().split('T')[0],
 };
 
-// Function to extend dynamicFunctions
+/**
+ * Extends the dynamic functions object with a new function.
+ *
+ * @param {string} name - The name of the function to add.
+ * @param {Function} func - The function to add.
+ * @throws Will log an error if `func` is not a function.
+ */
 export function extendDynamicFunction(name, func) {
 	if (typeof func === 'function') {
 		dynamicFunctions[name] = func;

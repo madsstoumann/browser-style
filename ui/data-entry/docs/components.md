@@ -1,9 +1,12 @@
 
-# Components in DataEntry
+# Components
 
-The **DataEntry** component comes with built-in support for various UI components. These components are loaded dynamically based on the HTML content of the form and provide extended functionality, such as auto-suggestions and rich text editors. This document describes the built-in components and how to extend DataEntry with your custom components.
+**DataEntry** comes with built-in support for various UI components. These components are loaded dynamically based on the HTML content of the form and provide extended functionality, such as auto-suggestions and rich text editors. This document describes the built-in components and how to extend DataEntry with your custom components.
 
 ## Built-in Components
+
+All built-in components are from [browser.style/ui](https://browser.style/ui).  
+Read full documentation for each of the components there.
 
 ### 1. **AutoSuggest (`<auto-suggest>`)**
 The **AutoSuggest** component provides real-time suggestions as the user types, fetching data from an external API. It automatically populates relevant fields when an option is selected.
@@ -37,20 +40,20 @@ Here’s how components are loaded:
 
 ```javascript
 export async function mountComponents(HTML, dataEntry) {
-    const importPromises = Object.entries(componentsInfo).map(async ([componentName, { bindFunction, path, tagName }]) => {
-        if (HTML.includes(`<${tagName}`)) {
-            try {
-                const module = await import(path);
-                module[componentName].mount();
-                if (bindFunction) {
-                    bindFunction(dataEntry);
-                }
-            } catch (error) {
-                console.error(`Failed to load component ${componentName}:`, error);
-            }
+  const importPromises = Object.entries(componentsInfo).map(async ([componentName, { bindFunction, path, tagName }]) => {
+    if (HTML.includes(`<${tagName}`)) {
+      try {
+        const module = await import(path);
+        module[componentName].mount();
+        if (bindFunction) {
+          bindFunction(dataEntry);
         }
-    });
-    await Promise.all(importPromises);
+      } catch (error) {
+        console.error(`Failed to load component ${componentName}:`, error);
+      }
+    }
+  });
+  await Promise.all(importPromises);
 }
 ```
 
@@ -63,10 +66,10 @@ You can define a custom component as an ES6 class that extends `HTMLElement`.
 #### Example:
 ```javascript
 class MyCustomComponent extends HTMLElement {
-    constructor() {
-        super();
-        this.innerHTML = '<div>Custom Content Here</div>';
-    }
+  constructor() {
+    super();
+    this.innerHTML = '<div>Custom Content Here</div>';
+  }
 }
 
 // Register the custom component
@@ -80,14 +83,44 @@ Once you define your custom component, you can add it to the `componentsInfo` ob
 #### Example:
 ```javascript
 const componentsInfo = {
-    MyCustomComponent: {
-        path: '/path/to/my-custom-component.js',
-        tagName: 'my-custom-component',
-    }
+  MyCustomComponent: {
+    path: '/path/to/my-custom-component.js',
+    tagName: 'my-custom-component',
+  }
 };
 ```
 
-### 3. **Use Your Custom Component in the Form**
+### 3. Adding a custom bindMethod
+You can easily add a custom bindMethod to your custom component. Here's an example for the `<ui-toast>`-component:
+
+```js
+UiToast: {
+  bindFunction: bindUiToast,
+  path: '/ui/toast/index.js',
+  tagName: 'ui-toast',
+}
+```
+
+Then, we add the custom `bindFunction`:
+
+```js
+function bindUiToast(dataEntry) {
+  const toastElement = dataEntry.form.querySelector('ui-toast');
+  if (toastElement) {
+    dataEntry.showToast = (message, type = 'success', duration = 3000) => {
+      toastElement.showToast(message, type, duration);
+    };
+  } else {
+    // Fallback if ui-toast is not available
+    dataEntry.showToast = (message, type = 'info', duration = 3000) => {
+      dataEntry.debugLog(`Toast fallback: ${message} (Type: ${type})`);
+    };
+  }
+}
+```
+
+
+### 4. **Use Your Custom Component in the Form**
 
 Now, you can use the custom component in your DataEntry form or schema just like any other built-in component.
 

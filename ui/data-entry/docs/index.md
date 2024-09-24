@@ -1,18 +1,19 @@
 
 # DataEntry Documentation
 
-DataEntry is an advanced Web Component that renders a UI from an endpoint (data) and a schema. This documentation provides an overview of how to use DataEntry, including setting data, schema, lookup, and messages.
+DataEntry is an advanced Web Component that renders a UI from an endpoint (data) and a schema. This documentation provides an overview of how to use DataEntry, including setting data, schema, lookup data, translations and messages.
 
 ## Using HTML Attributes
 
-You can set `data`, `schema`, `lookup`, and `messages` using HTML attributes when declaring the `<data-entry>` component:
+You can set `data`, `schema`, `lookup`, `i18n` and `messages` using HTML attributes when declaring the `<data-entry>` component:
 
 ```html
 <data-entry
-  data="data/product.json"
-  schema="data/schema.json"
-  lookup="data/lookup.json"
-  messages="data/messages.json"
+  data="your.api/product"
+  schema="your.api/schema"
+  lookup="your.api/lookup"
+  i18n="your.api/translations"
+  messages="your.api/messages"
   lang="en"
   debug>
 </data-entry>
@@ -21,6 +22,7 @@ You can set `data`, `schema`, `lookup`, and `messages` using HTML attributes whe
 - `data`: URL of the data resource (JSON file).
 - `schema`: URL of the schema resource (JSON Schema).
 - `lookup`: URL for global lookup data (optional).
+- `i18n`: URL for translations (optional)
 - `messages`: URL for custom messages (optional).
 - `lang`: Sets the language for translation.
 - `debug`: Enables debug logging to the console.
@@ -31,7 +33,7 @@ If you prefer to set data, schema, or other resources directly using JavaScript,
 
 ### Setting Data and Schema Programmatically
 
-You can directly set the `data`, `schema`, `lookup`, or `messages` using JavaScript:
+You can directly set the `data`, `schema`, `lookup`, `i18n` or `messages` using JavaScript:
 
 ```javascript
 const dataEntry = document.querySelector('data-entry');
@@ -60,6 +62,14 @@ dataEntry.lookup = {
     { label: "Comic", value: 2 },
   ]
 };
+
+// Set translations
+dataEntry.i18n = {
+  en: {
+    add: 'Add',
+    close: 'Close',
+  },
+}
 
 // Set messages
 dataEntry.messages = [

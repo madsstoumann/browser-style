@@ -1,5 +1,4 @@
 import { dynamicFunctions } from "./dynamic.js";
-import { t } from "./translations.js";
 
 /**
  * Merges and filters attributes, then converts them into a string of HTML attributes.
@@ -164,40 +163,33 @@ export function isEmpty(obj) {
 /**
  * Resolves a template string by replacing placeholders with corresponding values from the data object.
  * If a placeholder starts with 't:', it will be treated as a translation key.
+ * If a placeholder starts with 'd:', it will call a dynamic function from the dynamicFunctions object.
  *
  * @param {string} template - The template string containing placeholders in the format ${key}.
  * @param {Object} data - The data object containing values to replace the placeholders.
  * @param {string} [lang='en'] - The language code for translation (default is 'en').
- * @returns {string} - The resolved string with placeholders replaced by corresponding values.
+ * @param {Object} [i18n={}] - The i18n object containing translations.
+ * @returns {string} - The resolved string with placeholders replaced by corresponding values or dynamic function results.
  */
-export function resolveTemplateString(template, data, lang = 'en') {
+export function resolveTemplateString(template, data, lang = 'en', i18n = {}) {
 	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
 		if (key.startsWith('t:')) {
+			// Handle translations with ${t:}
 			const translationKey = key.slice(2).trim();
-			return t(translationKey, lang) || '';
+			return t(translationKey, lang, i18n) || ''; // Use the passed i18n object for translations
+		} else if (key.startsWith('d:')) {
+			// Handle dynamic functions with ${d:}
+			const functionName = key.slice(2).trim();
+			if (dynamicFunctions[functionName]) {
+				return dynamicFunctions[functionName]() || ''; // Call the dynamic function if it exists
+			} else {
+				console.warn(`Dynamic function "${functionName}" not found.`);
+				return '';
+			}
 		}
+		// Handle regular placeholders from data object
 		return getObjectByPath(data, key.trim()) || '';
 	});
-}
-
-/**
- * Resolves the value of an attribute. If the value is a string that starts with '${' and ends with '}', 
- * it treats the content inside as a function name and attempts to execute a corresponding function 
- * from the dynamicFunctions object. If the function exists, it returns the result of the function. 
- * Otherwise, it returns the original value.
- *
- * @param {Object} attribute - The attribute object containing the value to be resolved.
- * @param {string} attribute.value - The value to be resolved, which may be a dynamic function reference.
- * @returns {*} - The resolved value, either the result of the dynamic function or the original value.
- */
-export function resolveValue(attribute) {
-	if (typeof attribute.value === 'string' && attribute.value.startsWith('${') && attribute.value.endsWith('}')) {
-		const functionName = attribute.value.slice(2, -1);
-		if (dynamicFunctions[functionName]) {
-			return dynamicFunctions[functionName]();
-		}
-	}
-	return attribute.value;
 }
 
 /**
@@ -248,6 +240,18 @@ export function setObjectByPath(obj, path, value) {
 
 		return acc[prop];
 	}, obj);
+}
+
+/**
+ * Translates a given key into the specified language using the provided i18n object.
+ *
+ * @param {string} key - The key to be translated.
+ * @param {string} lang - The language code to translate the key into.
+ * @param {object} i18n - The i18n object containing translations.
+ * @returns {string} - The translated string or the key if no translation is found.
+ */
+export function t(key, lang, i18n) {
+	return i18n[lang]?.[key] || key;
 }
 
 /**

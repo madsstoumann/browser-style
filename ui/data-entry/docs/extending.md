@@ -1,7 +1,7 @@
 
-# Extending DataEntry with Custom and Render Methods
+# Extending DataEntry
 
-**DataEntry** is designed to be flexible and extensible, allowing users to define their own **render-methods** and **custom-methods**. This document explains how to extend **DataEntry** with these methods and integrate them into your forms.
+**DataEntry** is designed to be flexible and extensible, allowing users to define their own **render-methods**, **custom-methods** and **dynamic functions**. This document explains how to extend **DataEntry** with these methods and integrate them into your forms.
 
 ## Extending Render Methods
 
@@ -15,8 +15,8 @@ To extend a render method, use the `extendRenderMethod` function. This function 
 
 ```javascript
 const myRenderMethod = (params) => {
-    const { label, value, attributes } = params;
-    return `<label>${label}<input type="text" value="${value}" ${attributes}></label>`;
+  const { label, value, attributes } = params;
+  return `<label>${label}<input type="text" value="${value}" ${attributes}></label>`;
 };
 
 // Extend DataEntry with the new render method
@@ -46,7 +46,7 @@ Once extended, this render method can be used in your schema like so:
 
 ## Extending Custom Methods
 
-Custom methods in **DataEntry** provide the ability to define custom behavior for elements. These methods are typically triggered by user interactions (such as `onclick` events) and are defined using `data-custom` attributes in your form schema.
+Custom methods in **DataEntry** provide the ability to define custom behavior for elements. These methods are typically triggered by user interactions (such as `onclick` events) and are defined using `data-custom` attributes in your schema- and render methods.
 
 ### How to Extend a Custom Method
 
@@ -56,8 +56,8 @@ To define a custom method, use the `extendCustomMethod` function. This allows yo
 
 ```javascript
 const myCustomMethod = (element, instance, ...params) => {
-    console.log("Custom method triggered with parameters:", params);
-    element.style.backgroundColor = 'yellow';
+  console.log("Custom method triggered with parameters:", params);
+  element.style.backgroundColor = 'yellow';
 };
 
 // Extend DataEntry with the custom method
@@ -110,7 +110,7 @@ In addition to `data-custom`, you can use the `data-params` attribute to pass pa
         "attributes": [
           {
             "data-custom": "highlight",
-            "data-params": "{ "color": "blue" }"
+            "data-params": "{ color: 'blue' }"
           }
         ]
       }
@@ -122,6 +122,7 @@ In addition to `data-custom`, you can use the `data-params` attribute to pass pa
 In this example:
 - The `data-params` attribute is used to pass a `color` parameter to the `highlight` method.
 - The custom method can then access this parameter and adjust its behavior accordingly.
+
 
 ## Extending with Dynamic Functions
 
@@ -153,7 +154,7 @@ You can then use this dynamic function in your schema by referencing it:
         "method": "input",
         "attributes": [
           {
-            "value": "${currentDate}"
+            "value": "${d:currentDate}"
           }
         ]
       }
@@ -165,6 +166,49 @@ You can then use this dynamic function in your schema by referencing it:
 In this example:
 - The `currentDate` function dynamically generates the current date and populates the `value` attribute of the input field.
 
-## Conclusion
+### Syntax for Extending Dynamic Functions
 
-Extending **DataEntry** with custom methods, render methods, and dynamic functions provides flexibility and allows you to tailor the behavior and appearance of your forms to your specific requirements. By using the `extendRenderMethod`, `extendCustomMethod`, and `extendDynamicFunction` methods, you can easily add custom behavior and rendering logic to any form field or component.
+```javascript
+export function extendDynamicFunction(name, func) {
+  if (typeof func === 'function') {
+    dynamicFunctions[name] = func;
+  } else {
+    console.error(`Failed to extend: ${name} is not a function`);
+  }
+}
+```
+
+### Example:
+
+```javascript
+// Define a custom dynamic function that returns the current year
+extendDynamicFunction('currentYear', () => {
+  return new Date().getFullYear();
+});
+
+// Now you can use ${d:currentYear} in your schema
+```
+
+### Usage in Schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "year": {
+      "type": "number",
+      "title": "Year",
+      "value": "${d:currentYear}",
+      "render": {
+        "method": "input",
+        "attributes": [
+          { "name": "year" }
+        ]
+      }
+    }
+  }
+}
+```
+
+In this example:
+- The **year** field will automatically be populated with the current year using the custom `currentYear` dynamic function.

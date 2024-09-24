@@ -1,5 +1,4 @@
-import { attrs, fetchOptions, getObjectByPath, isEmpty, setObjectByPath, resolveTemplateString, resolveValue, safeRender, toCamelCase, uuid } from './utility.js';
-import { t } from './translations.js';
+import { attrs, fetchOptions, getObjectByPath, isEmpty, setObjectByPath, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
 
 /**
  * Renders the form elements based on the provided data and schema.
@@ -16,8 +15,8 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	const nonArrayContent = [];
 	const arrayContent = [];
 	const renderNav = schema.navigation;
-	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang) : '';
-	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang) : '';
+	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n) : '';
+	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n) : '';
 	let navContent = '';
 
 	// Iterate over schema properties
@@ -25,7 +24,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
-		const label = resolveTemplateString(config.title, data, instance.lang) || 'LABEL';
+		const label = resolveTemplateString(config.title, data, instance.lan, instance.i18n) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
@@ -194,12 +193,12 @@ export const arrayCheckbox = (params) => {
  */
 export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '' }) => {
 	const rowLabel = config.render?.label 
-		? resolveTemplateString(config.render.label, value) 
+		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
 		: 'label';
 	const rowValue = config.render?.value 
-		? resolveTemplateString(config.render.value, value) 
+		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n) 
 		: 'value';
-		
+
 	return `
 		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
 			<summary part="row summary">
@@ -278,7 +277,6 @@ export const entry = (params) => {
 	const formID = `form${uuid()}`;
 	const id = `popover-${uuid()}`;
 	const label = config.title || 'Add New Entry';
-	const lang = instance.lang || 'en';
 	const renderAutoSuggest = !!config.render?.autosuggest;
 
 	const fields = Object.entries(config.items.properties)
@@ -286,7 +284,7 @@ export const entry = (params) => {
 			const attributes = [...propConfig.render.attributes, { form: formID }];
 			attributes.forEach(attr => {
 				if (attr.hasOwnProperty('value')) {
-					attr.value = resolveValue(attr);
+					attr.value = resolveTemplateString(attr, instance.data, instance.lang, instance.i18n);
 				}
 			});
 
@@ -318,9 +316,9 @@ export const entry = (params) => {
 				${renderAutoSuggest ? autosuggest({ config, path, formID }) : ''}
 				${fields}
 				<nav part="nav">
-					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">${t('close', lang)}</button>
-					<button type="reset" form="${formID}" part="button reset">${t('reset', lang)}</button>
-					<button type="submit" form="${formID}" part="button add" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t('add', lang)}</button>
+					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">${t('close', instance.lang, instance.i18n)}</button>
+					<button type="reset" form="${formID}" part="button reset">${t('reset', instance.lang, instance.i18n)}</button>
+					<button type="submit" form="${formID}" part="button add" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t('add', instance.lang, instance.i18n)}</button>
 				</nav>
 			</fieldset>
 		</div>`;
@@ -377,7 +375,7 @@ export const input = (params) => {
 	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label'] === true);
 	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';
 	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
-	const output = `<input part="input" value="${finalValue !== undefined && finalValue !== null ? finalValue : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}></input>`;
+	const output = `<input part="input" value="${finalValue !== undefined && finalValue !== null ? finalValue : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}>`;
 	return hidden 
 		? output 
 		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}><span part="label">${label}</span>${output}</label>`;

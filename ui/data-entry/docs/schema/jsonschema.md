@@ -1,5 +1,5 @@
 
-# Introduction to JSON Schema
+# What is a JSON Schema?
 
 JSON Schema is a powerful tool for validating and describing the structure of JSON data. It defines the expected format, structure, and rules for JSON objects. JSON Schema is used extensively for data validation, API contracts, form generation, and many other applications.
 

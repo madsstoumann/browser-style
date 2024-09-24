@@ -1,20 +1,33 @@
 
-# Translations in DataEntry
+# Translations
 
-The **DataEntry** component supports multiple languages through a simple translation system. This system allows you to translate key terms used in the interface into different languages by providing translation objects and a `t` function that resolves the translation for a given key.
+DataEntry supports flexible and dynamic translations through the use of an `i18n` attribute or setter method. This enables developers to control translations from an endpoint or directly via JavaScript, offering a more dynamic way to handle internationalization in form rendering.
 
-## How Translations Work
+## Setting Up Translations
 
-The translation system consists of a key-value pair for each language, where:
-- The key represents the term or phrase that needs to be translated.
-- The value is the translated term in the corresponding language.
+### Using the `i18n` Attribute
 
-Translations are organized in an object where each language has its own dictionary of key-value pairs.
+You can specify an endpoint for translations using the `i18n` attribute on the `<data-entry>` component. This attribute points to an API or JSON file containing translation keys and values for different languages.
 
-### Example of Translation Object:
+Example:
+```html
+<data-entry
+    data="your.api/product"
+    schema="your.api/schema"
+    i18n="your.api/i18n"
+    lang="en">
+</data-entry>
+```
+
+In the above example, the `i18n` attribute fetches a JSON file containing translation mappings. The `lang` attribute is used to specify the current language, which can be switched dynamically.
+
+### Setting Translations Programmatically
+
+If you prefer to set translations directly via JavaScript, you can use the `i18n` setter. This allows you to manually load and set translations for the `DataEntry` component.
 
 ```javascript
-const translations = {
+const myDataEntry = document.querySelector('data-entry');
+myDataEntry.i18n = {
   en: {
     add: 'Add',
     close: 'Close',
@@ -27,99 +40,67 @@ const translations = {
     close: 'Luk',
     details: 'Detaljer',
     release_date: 'Udgivelsesdato',
-    reset: 'Nulstil',
-  },
-  // Add more languages as needed
+      reset: 'Nulstil',
+  }
 };
 ```
 
-## The `t` Function
+### Dynamically Loaded Translations
 
-To fetch the appropriate translation for a given key, the `t` function is used. It takes two parameters:
-1. The **key** (string) representing the term to be translated.
-2. The **lang** (string) representing the language code (e.g., `en`, `da`).
-
-If a translation for the key is available in the specified language, it will return the translated string. If no translation is found, it will return the key itself as a fallback.
-
-### Example of the `t` Function:
+When the `i18n` attribute is used, translations are dynamically loaded from the specified endpoint. The translations object can then be accessed via the `this.instance.i18n` object after the `loadResources` method completes.
 
 ```javascript
-export function t(key, lang) {
-  return translations[lang]?.[key] || key;
+class DataEntry extends HTMLElement {
+  async connectedCallback() {
+    // Load resources including translations
+    await this.loadResources();
+
+    // Set the instance i18n after loading the resources
+    this.instance.i18n = this.i18n || {};
+
+    // Now translations are available
+    console.log(this.instance.i18n);
+  }
 }
 ```
 
-### Example Usage:
+## Translation Method (`t` function)
+
+The `t` function is used internally to translate keys in the form schema or other parts of the UI. It looks up the key in the `i18n` object based on the current language.
 
 ```javascript
-const label = t('add', 'en');  // Returns "Add" in English
-const label = t('close', 'da');  // Returns "Luk" in Danish
+export function t(key, lang, i18n) {
+    return i18n[lang]?.[key] || key;
+}
 ```
 
-## How to Use Translations in DataEntry
+If a translation key starts with `${t:}`, the system knows it refers to a translatable string, and the key will be replaced by the corresponding translation in the specified language.
 
-Within **DataEntry**, the translation system can be used to provide localized labels for various UI elements such as buttons, form fields, and headings.
-
-### Example in Schema:
-
-In the schema, you can define titles using the translation system by incorporating translation keys like `${t:details}`. When the form is rendered, the key will be translated based on the selected language.
-
+Example usage in a schema:
 ```json
 {
-  "type": "object",
+  "title": "${t:details}",
   "properties": {
     "release_date": {
       "type": "string",
-      "title": "${t:release_date}",
-      "render": {
-        "method": "input",
-        "attributes": [
-          {
-            "name": "release_date"
-          },
-          {
-            "placeholder": "Enter release date"
-          }
-        ]
-      }
+      "title": "${t:release_date}"
     }
   }
 }
 ```
 
-### Setting the Language
+## Setting the Language
 
-The language used for translations is determined by the `lang` attribute in **DataEntry**. This attribute should be set to the desired language code (e.g., `en` for English, `da` for Danish).
+The language for translations is set using the `lang` attribute or via the `this.instance.lang` property. This determines which language from the `i18n` object is used for translations.
 
 ```html
-<data-entry lang="en"></data-entry>
+<data-entry lang="en" i18n="your.api/i18n.json"></data-entry>
 ```
 
-## Extending the Translations
-
-You can easily extend the translations object by adding more languages and keys as needed. To support a new language, simply add a new dictionary to the `translations` object.
-
-### Example of Adding a New Language:
+You can also change the language dynamically in JavaScript:
 
 ```javascript
-const translations = {
-  ...,
-  fr: {
-    add: 'Ajouter',
-    close: 'Fermer',
-    details: 'Détails',
-    release_date: 'Date de sortie',
-    reset: 'Réinitialiser',
-  }
-};
+myDataEntry.lang = 'da';
 ```
 
-In this example, **French** is added with the respective translations for the keys used in the application.
-
-## Customizing the `t` Function
-
-The `t` function is designed to be modular, which means you can move it to a different module or even make it user-configurable. If you want to centralize translations or manage them globally across your application, you can export the `t` function from a common utilities module.
-
-## Conclusion
-
-The translation system in **DataEntry** provides a simple and effective way to localize your form elements and UI. By leveraging the `t` function and translation objects, you can easily support multiple languages in your application.
+This will instantly switch the UI to Danish if the relevant translations are available in the `i18n` object.

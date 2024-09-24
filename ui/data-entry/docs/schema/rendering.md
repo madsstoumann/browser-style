@@ -1,5 +1,5 @@
 
-# Rendering Methods in DataEntry
+# Rendering Methods
 
 In **DataEntry**, users can customize the way each data entry is rendered by providing a `render` object inside the schema for each property. This allows control over how specific fields are displayed in the UI. Below we’ll explain how you can provide a render object, customize it, and the detailed information about various rendering methods available, including the more complex `array-details` and `autosuggest` methods.
 

@@ -8,15 +8,17 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.24
- * @summary 23-09-2024
+ * @version 1.0.25
+ * @summary 24-09-2024
  * @class
  * @extends {HTMLElement}
  */
 class DataEntry extends HTMLElement {
 	constructor() {
 		super();
-		this.customValidateData = null;
+		this._customValidateData = null;
+		this._i18n = {};
+
 		this.form = document.createElement('form');
 		this.form.part = 'form';
 		this.primaryKey = this.getAttribute('primary-key') || 'id';
@@ -59,6 +61,8 @@ class DataEntry extends HTMLElement {
 		});
 
 		await this.loadResources();
+
+		this.instance.i18n = this.i18n || {};
 
 		if (this.instance.schema?.messages) {
 			this.messages = this.mergeMessagesByCode(this.messages || [], this.instance.schema.messages);
@@ -118,7 +122,7 @@ class DataEntry extends HTMLElement {
 
 		array.push(newObject);
 
-		const newDetail = this.instance.methods.detail({
+		const newDetail = this.instance.methods.arrayDetail({
 			value: newObject,
 			config: schema,
 			path: `${path}[${array.length - 1}]`,
@@ -278,6 +282,7 @@ class DataEntry extends HTMLElement {
 		this.data = await this.fetchResource('data');
 		this.schema = await this.fetchResource('schema');
 		this.lookup = await this.fetchResource('lookup') || [];
+		this.i18n = await this.fetchResource('i18n') || {};
 		this.messages = await this.fetchResource('messages') || null; 
 	}
 
@@ -373,7 +378,7 @@ class DataEntry extends HTMLElement {
 
 	/* === validateData: Validates form data against the schema */
 	async validateData() {
-		const validateData = this.customValidateData || defaultValidateData;
+		const validateData = this._customValidateData || defaultValidateData;
 		const validationResult = validateData(this.instance.schema, this.instance.data);
 
 		if (!validationResult.valid) {
@@ -384,7 +389,7 @@ class DataEntry extends HTMLElement {
 
 	/* === validateJSON: Checks if JSON schema validation is enabled */
 	validateJSON() {
-		return this.getAttribute('validate-json') === 'true';
+		return !this.hasAttribute('novalidate');
 	}
 
 	/* === Getters and setters */
@@ -395,6 +400,18 @@ class DataEntry extends HTMLElement {
 
 	get data() {
 		return this._data;
+	}
+
+	get i18n() {
+		return this._i18n;
+	}
+
+	set i18n(value) {
+		if (typeof value === 'object' && value !== null) {
+			this._i18n = value;
+		} else {
+			console.error('i18n should be an object');
+		}
 	}
 
 	set lookup(lookup) {
@@ -413,6 +430,18 @@ class DataEntry extends HTMLElement {
 
 	get schema() {
 		return this._schema;
+	}
+
+	set validateMethod(method) {
+		if (typeof method === 'function') {
+			this._customValidateData = method;
+		} else {
+			console.error('Validation method must be a function');
+		}
+	}
+
+	get validateMethod() {
+		return this._customValidateData;
 	}
 }
 

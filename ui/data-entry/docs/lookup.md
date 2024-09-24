@@ -1,11 +1,11 @@
 
-# Global Data (Lookup Data) in DataEntry
+# Lookup Data
 
-Global data (also referred to as "lookup data") in **DataEntry** is a powerful feature that allows you to define reusable datasets that can be referenced in your schema to dynamically populate options in fields like dropdowns (`<select>`). This feature simplifies managing common lists, such as product types, conditions, or statuses, across your application.
+Lookup data in **DataEntry** is a powerful feature that allows you to define reusable datasets that can be referenced in your schema to dynamically populate options in fields like dropdowns (`<select>`). This feature simplifies managing common lists, such as product types, conditions, or statuses, across your application.
 
-## Using the Global Data Endpoint
+## Using the Lookup Endpoint
 
-Global data is typically provided via an external endpoint, loaded using the `lookup` (or potentially `global-data`) attribute on the **DataEntry** component.
+Lookup data is typically provided via an external endpoint, loaded using the `lookup` attribute on the **DataEntry** component.
 
 ### Example Data from a Lookup Endpoint
 
@@ -34,22 +34,22 @@ In this example:
 
 These lists can be used in your schema to populate `<select>` fields with dynamic options.
 
-## Defining the Global Data Endpoint in DataEntry
+## Defining the Lookup Data Endpoint in DataEntry
 
-You can define the global data source by specifying a URL in the `lookup` attribute (or `global-data` if you rename it). **DataEntry** will then fetch this data and use it to populate fields as needed.
+You can define the global data source by specifying a URL in the `lookup` attribute.  
+**DataEntry** will then fetch this data and use it to populate fields as needed.
 
 ### Example Usage:
 ```html
 <data-entry
-  lookup="data/lookup.json"
-  schema="data/schema.json"
-  data="data/product.json"
-  lang="en"
+  data="your.api/product"
+  schema="your.api/schema"
+  lookup="your.api/lookup"
 ></data-entry>
 ```
 
 In this example:
-- The `lookup` attribute points to a file (`lookup.json`) that contains global data, like the example shown above.
+- The `lookup` attribute points to an endpoint that contains global data, like the example shown above.
 - The schema and data are loaded via their respective endpoints.
 
 ## Using Global Data in the Schema

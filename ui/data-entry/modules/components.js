@@ -18,6 +18,19 @@ const componentsInfo = {
 	},
 };
 
+/**
+ * Mounts components dynamically based on the provided HTML content and data entry object.
+ *
+ * This function scans the HTML content for specific tags defined in the `componentsInfo` object.
+ * If a tag is found, it dynamically imports the corresponding module, mounts the component,
+ * and optionally binds a function to the data entry object.
+ *
+ * @param {string} HTML - The HTML content to scan for component tags.
+ * @param {Object} dataEntry - The data entry object to bind functions to, if specified.
+ * @returns {Promise<void>} A promise that resolves when all components have been mounted.
+ *
+ * @throws {Error} If a component fails to load, an error is logged to the console.
+ */
 export async function mountComponents(HTML, dataEntry) {
 	const importPromises = Object.entries(componentsInfo).map(async ([componentName, { bindFunction, path, tagName }]) => {
 		if (HTML.includes(`<${tagName}`)) {

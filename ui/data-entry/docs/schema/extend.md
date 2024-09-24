@@ -8,9 +8,10 @@ When working with the **DataEntry** component, the schema can be extended with s
 The `navigation` attribute in the schema defines a navigation menu that can be rendered dynamically based on the schema's structure. It creates links to specific sections within the document.
 
 - **Syntax**:
-  ```json
-  "navigation": "nav"
-  ```
+```json
+"navigation": "nav"
+```
+
 - **Usage**: This specifies the part attribute to be applied to the `<nav>` element that renders the navigation. It’s useful when the form is long or contains multiple sections, allowing quick navigation between different sections of the UI.
 - **How it works**: Each array or object field in your schema will generate a link within the navigation. The part attribute value will define styling for the navigation.
 
@@ -160,10 +161,3 @@ The `form` attribute defines the buttons that appear at the bottom of the form. 
   }
 }
 ```
-
-## Key Takeaways:
-- **Navigation** helps users navigate between sections.
-- **Headline** and **Title** provide dynamic titles, supporting translations via `${t:}`.
-- **Form Buttons** allow adding `reset`, `submit`, and custom action buttons with localization support.
-
-This section explains how to extend the schema, offering dynamic UI elements that are easy to configure and maintain.
