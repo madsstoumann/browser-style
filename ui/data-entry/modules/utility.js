@@ -176,7 +176,7 @@ export function resolveTemplateString(template, data, lang = 'en', i18n = {}) {
 		if (key.startsWith('t:')) {
 			// Handle translations with ${t:}
 			const translationKey = key.slice(2).trim();
-			return t(translationKey, lang, i18n) || ''; // Use the passed i18n object for translations
+			return t(translationKey, lang, i18n) || '';
 		} else if (key.startsWith('d:')) {
 			// Handle dynamic functions with ${d:}
 			const functionName = key.slice(2).trim();

@@ -24,7 +24,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
-		const label = resolveTemplateString(config.title, data, instance.lan, instance.i18n) || 'LABEL';
+		const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
