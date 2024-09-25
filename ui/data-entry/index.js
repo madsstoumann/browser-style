@@ -1,5 +1,5 @@
 import { createDataEntryInstance } from './modules/factory.js';
-import { convertValue, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
+import { convertValue, deepMerge, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
 import { mountComponents } from './modules/components.js';
 
@@ -53,10 +53,14 @@ class DataEntry extends HTMLElement {
 
 		await this.loadResources();
 
+		if (this.instance.schema?.translations) {
+			this.i18n = deepMerge(this.i18n || {}, this.instance.schema.translations);
+		}
+
 		this.instance.i18n = this.i18n || {};
 
 		if (this.instance.schema?.messages) {
-			this.messages = this.mergeMessagesByCode(this.messages || [], this.instance.schema.messages);
+			this.messages = deepMerge(this.messages || [], this.instance.schema.messages, 'code');
 		}
 
 		if (isEmpty(this.instance.data) || isEmpty(this.instance.schema)) {
@@ -294,15 +298,6 @@ class DataEntry extends HTMLElement {
 		this.lookup = await this.fetchResource('lookup') || [];
 		this.i18n = await this.fetchResource('i18n') || {};
 		this.messages = await this.fetchResource('messages') || null; 
-	}
-
-	/* === mergeMessagesByCode: Merges two arrays of messages based on their `code`-property */
-	mergeMessagesByCode(existingMessages, newMessages) {
-		const messageMap = new Map(existingMessages.map(msg => [msg.code, msg]));
-		newMessages.forEach(newMsg => {
-			messageMap.set(newMsg.code, newMsg);
-		});
-		return Array.from(messageMap.values());
 	}
 
 	/* === prepareFormData: Helper method to prepare form data as FormData object */

@@ -83,6 +83,44 @@ export function convertValue(value, dataType, inputType, checked) {
 }
 
 /**
+ * Deeply merges two objects or arrays. If both target and source are arrays,
+ * they are merged based on a unique identifier (key). If both are objects,
+ * they are merged recursively.
+ *
+ * @param {Object|Array} target - The target object or array to merge into.
+ * @param {Object|Array} source - The source object or array to merge from.
+ * @param {string|null} [key=null] - The unique identifier key for merging arrays.
+ * @returns {Object|Array} - The merged object or array.
+ */
+export function deepMerge(target, source, key = null) {
+	if (Array.isArray(target) && Array.isArray(source)) {
+		// If both are arrays, merge them based on a unique identifier (key)
+		const mergedArray = new Map(target.map(item => [getKey(item, key), item]));
+		source.forEach(item => {
+			const itemKey = getKey(item, key);
+			if (mergedArray.has(itemKey)) {
+				mergedArray.set(itemKey, deepMerge(mergedArray.get(itemKey), item, key));
+			} else {
+				mergedArray.set(itemKey, item);
+			}
+		});
+		return Array.from(mergedArray.values());
+	} else if (isObject(target) && isObject(source)) {
+		// If both are objects, merge them recursively
+		const result = { ...target };
+		for (const key in source) {
+			if (isObject(source[key]) && key in target) {
+				result[key] = deepMerge(target[key], source[key], key);
+			} else {
+				result[key] = source[key];
+			}
+		}
+		return result;
+	}
+	return source;
+}
+
+/**
  * Fetches options based on the provided configuration and instance.
  *
  * @param {Object} config - The configuration object.
@@ -174,20 +212,31 @@ export function isEmpty(obj) {
 export function resolveTemplateString(template, data, lang = 'en', i18n = {}) {
 	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
 		if (key.startsWith('t:')) {
-			// Handle translations with ${t:}
+			// Translation
 			const translationKey = key.slice(2).trim();
 			return t(translationKey, lang, i18n) || '';
-		} else if (key.startsWith('d:')) {
-			// Handle dynamic functions with ${d:}
-			const functionName = key.slice(2).trim();
+		}
+		if (key.startsWith('d:')) {
+			// Dynamic function with optional parameters
+			const [functionName, ...params] = key.slice(2).trim().split(/\s+/);
+			
 			if (dynamicFunctions[functionName]) {
-				return dynamicFunctions[functionName]() || ''; // Call the dynamic function if it exists
-			} else {
-				console.warn(`Dynamic function "${functionName}" not found.`);
-				return '';
+				// Resolve params either as direct values or lookups in the data object
+				const parsedParams = params.map(param => {
+					// If the param is wrapped in ${}, treat it as a reference to data object
+					if (param.startsWith('${') && param.endsWith('}')) {
+						const dataKey = param.slice(2, -1);
+						return getObjectByPath(data, dataKey);
+					}
+					// Attempt to look up the parameter directly in the data object
+					const directLookup = getObjectByPath(data, param);
+					return directLookup !== undefined ? directLookup : param;  // Return lookup or static value
+				});
+				// Call the dynamic function with the resolved parameters
+				return dynamicFunctions[functionName](...parsedParams);
 			}
 		}
-		// Handle regular placeholders from data object
+		// If no dynamic function or translation, use object data
 		return getObjectByPath(data, key.trim()) || '';
 	});
 }
@@ -292,4 +341,20 @@ export function toPascalCase(str) {
  */
 export function uuid() {
 	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+}
+
+/* === Helper functions */
+function getKey(item, key) {
+	if (key === null) {
+		// If no key is provided, use the stringified item as a fallback unique key
+		return JSON.stringify(item);
+	} else if (Array.isArray(key)) {
+		// If key is an array of fields, combine them into a composite key
+		return key.map(k => item[k]).join('_');
+	}
+	return item[key];
+}
+
+function isObject(item) {
+	return item && typeof item === 'object' && !Array.isArray(item);
 }

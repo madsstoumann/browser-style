@@ -45,6 +45,20 @@
     }
   ],
 
+  "translations": {
+    "da": {
+      "title": "Titel",
+      "description": "Beskrivelse",
+      "issue": "Nummer",
+      "vendor": "Producent",
+      "condition": "Stand",
+      "published": "Offentliggjort",
+      "searchable": "Søgbar",
+      "sku": "Sku",
+      "release_date": "Udgivelsesdato"
+    }
+  },
+
   "properties": {
     "id": {
       "type": "number",
@@ -663,9 +677,6 @@
                 },
                 {
                   "type": "number"
-                },
-                {
-                  "placeholder": "Enter id"
                 }
               ]
             }
@@ -809,8 +820,8 @@
             "part": "array-details"
           }
         ],
-        "value": "${currency_code}",
-        "label": "${value}",
+        "value": "${d:formatDate valid_from}",
+        "label": "${d:formatCurrency value currency_code}",
         "add": true,
         "delete": true
       }
