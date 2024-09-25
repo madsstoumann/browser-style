@@ -344,6 +344,7 @@ export function uuid() {
 }
 
 /* === Helper functions */
+
 function getKey(item, key) {
 	if (key === null) {
 		// If no key is provided, use the stringified item as a fallback unique key

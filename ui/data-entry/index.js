@@ -8,8 +8,8 @@ import { mountComponents } from './modules/components.js';
  * A custom web component for dynamically rendering and managing form entries based on a provided JSON schema and data.
  * This class supports automatic form rendering, data binding, schema validation, and custom event handling.
  * @author Mads Stoumann
- * @version 1.0.25
- * @summary 24-09-2024
+ * @version 1.0.26
+ * @summary 25-09-2024
  * @class
  * @extends {HTMLElement}
  */
