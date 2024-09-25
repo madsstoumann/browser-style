@@ -10,6 +10,7 @@
 		--_pi: 1.2ch;
 		--_rg: 1lh;
 
+		content-visibility: auto;
 		display: grid;
 		& *:not(ui-icon) { font-size: 1rem; }
 

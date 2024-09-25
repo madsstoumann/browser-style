@@ -232,14 +232,25 @@ class DataEntry extends HTMLElement {
 		const formMethod = this.form.getAttribute('method') || method || 'POST';
 		const formEnctype = this.form.getAttribute('enctype') || enctype;
 		const filteredData = this.filterRemovedEntries(this.instance.data);
-		const asJSON = formEnctype.includes('json');
-		const data = asJSON ? JSON.stringify(filteredData) : this.prepareFormData(filteredData);
+		const isMultipart = formEnctype.includes('multipart/form-data');
+		const headers = isMultipart ? {} : { 'Content-Type': formEnctype };
+
+		let data;
+
+		if (formEnctype.includes('json')) {
+			data = JSON.stringify(filteredData);
+		} else if (isMultipart) {
+				data = this.prepareFormData();
+		} else {
+				data = new URLSearchParams(filteredData).toString();
+		}
+
 		const id = filteredData[this.primaryKey];
-	
+
 		if (formAction) {
 			fetch(formAction.replace(':id', id), {
 				method: formMethod,
-				headers: { 'Content-Type': formEnctype },
+				headers,
 				body: data
 			})
 			.then(response => {
