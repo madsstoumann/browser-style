@@ -80,7 +80,7 @@ export function generateRenderMethod(type, key, value) {
 	};
 }
 
-export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, schemaId = 'http://example.com/example.json', schemaUri = 'https://json-schema.org/draft/2019-09/schema') {
+export function generateSchemaFromData(data, disabledKeys = [], toolbar = null, schemaId = 'https://json-schema.org/draft/2020-12/output/schema', schemaUri = 'https://json-schema.org/draft/2020-12/schema') {
 	const schema = {
 		$schema: schemaUri,
 		$id: schemaId,

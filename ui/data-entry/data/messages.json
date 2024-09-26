@@ -1,17 +1,72 @@
 [
   {
     "code": 400,
-    "message": "Bad Request - Please check your inputs.",
-    "type": "info"
+    "message": "Bad Request - The request could not be understood or was missing required parameters.",
+    "type": "error"
+  },
+  {
+    "code": 401,
+    "message": "Unauthorized - Authentication is required or has failed.",
+    "type": "error"
+  },
+  {
+    "code": 403,
+    "message": "Forbidden - You do not have permission to access this resource.",
+    "type": "error"
   },
   {
     "code": 404,
-    "message": "Product not found.",
+    "message": "Not Found - The requested resource could not be found.",
+    "type": "error"
+  },
+  {
+    "code": 405,
+    "message": "Method Not Allowed - The request method is not supported for the requested resource.",
+    "type": "error"
+  },
+  {
+    "code": 500,
+    "message": "Internal Server Error - An error occurred on the server.",
+    "type": "error"
+  },
+  {
+    "code": 1001,
+    "message": "Data or schema is empty. Cannot proceed.",
+    "type": "error"
+  },
+  {
+    "code": 1002,
+    "message": "Path does not reference an array in the data.",
+    "type": "error"
+  },
+  {
+    "code": 1003,
+    "message": "Marked object at path for removal.",
+    "type": "info"
+  },
+  {
+    "code": 1004,
+    "message": "Element with specified selector not found.",
     "type": "warning"
   },
   {
-    "code": 1105,
-    "message": "Could not save data",
+    "code": 1005,
+    "message": "Data submitted successfully!",
+    "type": "success"
+  },
+  {
+    "code": 1006,
+    "message": "Network issue detected.",
+    "type": "error"
+  },
+  {
+    "code": 1007,
+    "message": "HTTP error! status: [statusText]",
+    "type": "error"
+  },
+  {
+    "code": 1008,
+    "message": "Validation failed.",
     "type": "error"
   }
 ]

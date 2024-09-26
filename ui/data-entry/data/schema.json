@@ -39,9 +39,9 @@
 
   "messages": [
     {
-      "code": 405,
-      "message": "Could not save data AT all!",
-      "type": "error"
+      "code": 1005,
+      "message": "Data was stored successfully!",
+      "type": "success"
     }
   ],
 

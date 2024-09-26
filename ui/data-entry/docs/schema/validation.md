@@ -46,6 +46,18 @@ dataEntryInstance.validateMethod = myCustomValidator;
 
 The custom method is invoked instead of the default validation. If no custom method is set, the default validation is used.
 
+> Note: When using `ajv` in `strict` mode, you have to add a vocabulary of the extra properties in the schema: 
+```js
+ajv.addVocabulary([
+  "form",
+  "headline",
+  "messages",
+  "navigation",
+  "render",
+  "translations"
+  ])
+```
+
 ### Using `validateMethod` in JavaScript
 
 The `validateMethod` can be set directly in JavaScript if preferred over using the attributes:

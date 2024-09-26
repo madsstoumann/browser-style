@@ -91,3 +91,26 @@ Messages are primarily displayed in two ways:
 The built-in `<ui-toast>`-component exposes `::part`´s and can thus be custom styled. 
 
 For more information, see [browser.style/ui/toast](https://browser.style/ui/toast)
+
+---
+
+## Built-in Error Codes
+
+Error Codes (1001–1008):
+
+	1.	1001: Error fetching a resource
+	•	Message: "Error fetching [resource name]: [error message]"
+	2.	1002: Path does not reference an array
+	•	Message: "Path [path] does not reference an array in the data."
+	3.	1003: Object marked for removal
+	•	Message: "Marked object at path [name] for removal."
+	4.	1004: Element with the specified selector not found
+	•	Message: "Element with selector [selector] not found within the fieldset."
+	5.	1005: Data submission success
+	•	Message: "Data submitted successfully!"
+	6.	1006: Network issue detected
+	•	Message: "Network issue detected"
+	7.	1007: HTTP error during form submission
+	•	Message: "HTTP error! status: [statusText]"
+	8.	1008: Validation failed
+	•	Message: "Schema validation failed."
