@@ -82,15 +82,17 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		
 			// Generate buttons from the form.buttons array
 			const buttonsHTML = schema.form.buttons
-				.map(entry => {
-					const commonAttributes = Object.keys(entry)
-						.filter(key => key !== 'label')
-						.map(key => `data-${key}="${entry[key]}"`)
-						.join(' ');
+		.map(entry => {
+			const commonAttributes = Object.keys(entry)
+				.filter(key => key !== 'label' && key !== 'class')
+				.map(key => `data-${key}="${entry[key]}"`)
+				.join(' ');
 
-					return `<button type="${entry.type || 'button'}" part="button ${entry.method?.toLowerCase() || ''}" ${commonAttributes}>${
-						resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
-				}).join('');
+			const classAttribute = entry.class ? ` class="${entry.class}"` : '';
+
+			return `<button type="${entry.type || 'button'}" part="button" ${commonAttributes}${classAttribute}>${
+				resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
+			}).join('');
 			footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
 

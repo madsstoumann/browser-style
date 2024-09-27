@@ -21,6 +21,7 @@ import { mountComponents } from './modules/components.js';
  * 
  * @fires CustomEvent#de:custom - Dispatched when a custom button is clicked.
  * @fires CustomEvent#de:entry - Dispatched when form data is processed.
+ * @listens CustomEvent#de:resetfields - Listens for resetting specific form fields or instance data.
  * 
  * @example
  * <data-entry lang="en" shadow debug></data-entry>
@@ -42,10 +43,11 @@ class DataEntry extends HTMLElement {
 
 		this.form = document.createElement('form');
 		this.form.part = 'form';
-		this.primaryKey = this.getAttribute('primary-key') || 'id';
 		this.lang = this.getAttribute('lang') || 'en';
 		this.instance = createDataEntryInstance(this);
 		this.instance.lang = this.lang;
+		this.instance.primaryKey = this.instance.schema?.primaryKey || this.getAttribute('primary-key') || 'id';
+		this.instance.recordId = this.instance.schema?.recordId || this.getAttribute('record-id') || 'NewId'; // TODO: Change to 'id'?
 	}
 
 	/**
@@ -63,15 +65,26 @@ class DataEntry extends HTMLElement {
 		const shadowRoot = this.hasAttribute('shadow') ? this.attachShadow({ mode: 'open' }) : this;
 		shadowRoot.appendChild(this.form);
 
+		this.addEventListener('de:notify', (event) => {
+			const { code, message, type } = event.detail;
+			this.notify(code || 0, message, type); 
+		});
+
+//TODO! Check `data-handler`, maybe just delete `data-handler-type`, UNIFY
+
+		this.addEventListener('de:resetfields', ({ detail: { fields, resetValue } }) => {
+			this.resetFields(fields, resetValue);
+		});
+
 		this.form.addEventListener('input', this.syncInstanceData.bind(this));
 
 		this.form.addEventListener('submit', (event) => { 
 			event.preventDefault();
 			const submitter = event.submitter;
-			if (submitter?.dataset.method === 'custom') {
+			if (submitter?.dataset.handler) {
 				this.dispatchEvent(new CustomEvent('de:custom', {
 					detail: {
-						data: this.instance.data,
+						instance: this.instance,
 						submitter
 					}
 				}));
@@ -201,12 +214,12 @@ class DataEntry extends HTMLElement {
 	 * @fires CustomEvent#de:custom
 	 */
 	bindCustomButtons() {
-		this.form.querySelectorAll('button[data-method="custom"]').forEach(button => {
+		this.form.querySelectorAll('button[data-handler]').forEach(button => {
 			button.addEventListener('click', (event) => {
 				event.preventDefault();
 				this.dispatchEvent(new CustomEvent('de:custom', {
 					detail: {
-						data: this.instance.data,
+						instance: this.instance,
 						submitter: event.currentTarget
 					}
 				}));
@@ -243,7 +256,7 @@ class DataEntry extends HTMLElement {
 	 * - Clears the innerHTML of the form to remove all elements.
 	 */
 	cleanupBeforeRender() {
-		this.form.querySelectorAll('button[data-method="custom"]').forEach(button => {
+		this.form.querySelectorAll('button[data-handler]').forEach(button => {
 				button.removeEventListener('click', this.handleCustomClick);
 		});
 		this.form.querySelectorAll('[data-custom]').forEach(element => {
@@ -357,10 +370,11 @@ class DataEntry extends HTMLElement {
 			data = new URLSearchParams(filteredData).toString();
 		}
 
-		const id = filteredData[this.primaryKey];
+		const id = filteredData[this.instance.primaryKey];
 
 		if (formAction) {
-			fetch(formAction.replace(':id', id), {
+			const actionUrl = id ? formAction.replace(':id', id) : formAction.replace('/:id', '');
+			fetch(actionUrl, {
 				method: formMethod,
 				headers,
 				body: data
@@ -372,7 +386,15 @@ class DataEntry extends HTMLElement {
 				}
 				return response.json();
 			})
-			.then(() => {
+			.then(result => {
+				let record = Array.isArray(result) ? result[0] : result;
+				if (record && record[this.instance.recordId]) {
+					this.dispatchEvent(new CustomEvent('de:new-record', {
+						detail: {
+							id: record[this.instance.recordId]
+						}
+					}));
+				}
 				this.notify(1005, 'Data submitted successfully!');
 			})
 			.catch(error => {
@@ -380,13 +402,13 @@ class DataEntry extends HTMLElement {
 				let errorMessage = 'Network issue detected';
 				const statusMatch = error.message.match(/status:\s*(\d+)/);
 				if (statusMatch) {
-						statusCode = parseInt(statusMatch[1], 10);
-						errorMessage = `HTTP error! status: ${statusCode}`;
+					statusCode = parseInt(statusMatch[1], 10);
+					errorMessage = `HTTP error! status: ${statusCode}`;
 				}
 				this.notify(statusCode, errorMessage);
 			});
 		} else {
-			this.processData();
+				this.processData();
 		}
 	}
 
@@ -452,16 +474,16 @@ class DataEntry extends HTMLElement {
 	 * @param {number} code - The error code.
 	 * @param {string} [msg=''] - An optional message to log if no specific error message is found.
 	 */
-	notify(code, msg = '') {
-		const { message, type } = this.getErrorMessage(code);
+	notify(code, customMessage = '', notificationType = 'info') {
+		const { message, type } = code > 0 ? this.getErrorMessage(code) : { message: customMessage, type: notificationType };
 		if (message) {
 			if (typeof this.showToast === 'function') {
 				this.showToast(message, type, 3000);
 			} else {
-				this.debugLog(`Error ${code}: ${message}`);
+				this.debugLog(`[${type.toUpperCase()}] ${message}`);
 			}
 		} else {
-			this.debugLog(`Error ${code}: ${msg}`);
+			this.debugLog(`Error ${code}: ${customMessage}`);
 		}
 	}
 
@@ -495,7 +517,7 @@ class DataEntry extends HTMLElement {
 	processData() {
 		const enctype = this.form.getAttribute('enctype') || 'multipart/form-data';
 		const data = enctype.includes('json') ? this.instance.data : this.prepareFormData();
-		this.debugLog('Processing data:', data);
+		this.debugLog('Processing data:', this.instance.data);
 		this.dispatchEvent(new CustomEvent('de:entry', { detail: { data } }));
 	}
 
@@ -532,6 +554,23 @@ class DataEntry extends HTMLElement {
 			this.setupAutoSave(autoSaveInterval);
 		}
 	}
+
+	/**
+	 * Resets the specified fields in the form and the instance data to a given value.
+	 *
+	 * @param {string[]} fields - An array of field names to be reset.
+	 * @param {string} [resetValue=''] - The value to reset the fields to. Defaults to an empty string.
+	 */
+	resetFields(fields, resetValue = '') {
+		fields.forEach(field => {
+			const formElement = this.form.elements[field];
+			if (formElement) {
+				formElement.value = resetValue;
+			}
+			setObjectByPath(this.instance.data, field, resetValue);
+		});
+	}
+
 
 	/**
 	 * Sets up an auto-save mechanism that triggers data submission at specified intervals.
