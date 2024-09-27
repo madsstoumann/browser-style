@@ -131,46 +131,47 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
  * @returns {string} The HTML string for the autosuggest element.
  */
 export const autosuggest = (params) => {
-	const config = params.config?.render?.autosuggest || null;
+	const config = params.config?.render?.autosuggest;
 	if (!config) return '';
 
-	const { api, apiArrayPath, apiDisplayPath, apiTextPath, apiValuePath, defaults, label, mapping } = config;
-	const { path, formID } = params;
+	const {
+		api,
+		apiArrayPath,
+		apiDisplayPath,
+		apiTextPath,
+		apiValuePath,
+		defaults,
+		label,
+		mapping,
+		syncInstance
+	} = config;
+	const { path, formID, value: paramValue } = params;
 
-	let display = '';
-	let initialObject = null;
-	let name = path;
-	let value = '';
+	const display = defaults && paramValue ? getObjectByPath(paramValue, defaults.display) || '' : '';
+	const value = defaults && paramValue ? getObjectByPath(paramValue, defaults.value) || '' : '';
+	const name = defaults?.value ? `${path}.${defaults.value}` : path;
 
-	if (defaults && params.value) {
-		display = getObjectByPath(params.value, defaults.display) || '';
-		value = getObjectByPath(params.value, defaults.value) || '';
-
-		initialObject = {};
-		setObjectByPath(initialObject, `${path}.${defaults.display}`, display);
-		setObjectByPath(initialObject, `${path}.${defaults.value}`, value);
-
-		if (defaults.value) {
-			name = `${path}.${defaults.value}`;
-		}
-	}
+	const initialObject = defaults && paramValue ? {
+		[`${path}.${defaults.display}`]: display,
+		[`${path}.${defaults.value}`]: value
+	} : null;
 
 	return `
-	<auto-suggest 
-		${api ? `api="${api}"` : ''}
-		${apiArrayPath ? `api-array-path="${apiArrayPath}"` : ''}
-		${apiDisplayPath ? `api-display-path="${apiDisplayPath}"` : ''}
-		${apiTextPath ? `api-text-path="${apiTextPath}"` : ''}
-		${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
-		${display ? `display="${display}"` : ''}
-		${label ? `label="${label}"` : ''}
-		name="${name}"
-		part="autosuggest" 
-		${config.syncInstance ? `sync-instance="${config.syncInstance}"` : ''}
-		${value ? `value="${value}"` : ''}
-		${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
-		${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
-		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
+		<auto-suggest 
+			${api ? `api="${api}"` : ''}
+			${apiArrayPath ? `api-array-path="${apiArrayPath}"` : ''}
+			${apiDisplayPath ? `api-display-path="${apiDisplayPath}"` : ''}
+			${apiTextPath ? `api-text-path="${apiTextPath}"` : ''}
+			${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
+			${display ? `display="${display}"` : ''}
+			${label ? `label="${label}"` : ''}
+			name="${name}"
+			part="autosuggest" 
+			${syncInstance ? `sync-instance="${syncInstance}"` : ''}
+			${value ? `value="${value}"` : ''}
+			${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
+			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
+			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
 /**
@@ -189,14 +190,14 @@ export const autosuggest = (params) => {
 export const arrayCheckbox = (params) => {
 	const { attributes = [], config, label, path = '', value } = params;
 	const content = value.map((item, index) => {
-	const checked = config.render?.value ? !!item[config.render.value] : false;
-	const rowLabel = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
+		const checked = config.render?.value ? !!item[config.render.value] : false;
+		const rowLabel = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
 
-	return `
-		<label part="row">
-			<span part="label">${rowLabel}</span>
-			<input part="input" type="checkbox" name="${path}[${index}].${config.render?.value || ''}" data-type="boolean"${checked ? ' checked' : ''}>
-		</label>`
+		return `
+			<label part="row">
+				<span part="label">${rowLabel}</span>
+				<input part="input" type="checkbox" value="${item[config.render.value]}" name="${path}[${index}].${config.render?.value || ''}" data-type="boolean"${checked ? ' checked' : ''}>
+			</label>`;
 	}).join('');
 
 	return fieldset({ attributes, content, label, path });
@@ -229,7 +230,7 @@ export const arrayDetail = ({ value, config, path, instance, attributes = [], na
 				<span part="value">
 					${icon('chevron right', 'sm', 'xs')}
 					<em>${rowValue}</em>
-					${config.render.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="true"></label>` : ''}
+					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="true"></label>` : ''}
 				</span>
 			</summary>
 			${all(value, config.items, instance, false, path)}
@@ -260,7 +261,7 @@ export const arrayDetails = (params) => {
 	})).join('');
 
 	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';
-	return fieldset({ attributes, content: content + entryContent, label, path });
+	return fieldset({ attributes, content: `${content}${entryContent}`, label, path });
 };
 
 /**
@@ -277,7 +278,10 @@ export const arrayDetails = (params) => {
  */
 export const arrayGrid = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
-	const content = value.map((item, index) => `<fieldset>${all(item, config.items, instance, false, path ? `${path}[${index}]` : '')}</fieldset>`).join('');
+	const content = value.map((item, index) => {
+		const itemPath = path ? `${path}[${index}]` : '';
+		return `<fieldset>${all(item, config.items, instance, false, itemPath)}</fieldset>`;
+	}).join('');
 	return fieldset({ label, content, attributes, path });
 };
 
@@ -304,9 +308,9 @@ export const entry = (params) => {
 
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
-			const attributes = [...propConfig.render.attributes, { form: formID }];
+			const attributes = [...(propConfig.render?.attributes || []), { form: formID }];
 			attributes.forEach(attr => {
-				if (attr.hasOwnProperty('value')) {
+				if ('value' in attr) {
 					attr.value = resolveTemplateString(attr.value, instance.data, instance.lang, instance.i18n);
 				}
 			});
@@ -318,7 +322,7 @@ export const entry = (params) => {
 			return renderFunction({
 				attributes,
 				label: propConfig.title,
-				options: options,
+				options,
 				path: `${path}.${propKey}`,
 				type: propConfig.type || 'string'
 			});
@@ -359,8 +363,11 @@ export const entry = (params) => {
  */
 export const fieldset = ({ attributes, content, label, path }) => {
 	const fieldsetId = path ? `section_${path}` : '';
+	const fieldsetAttributes = attrs(attributes, '', [{ part: 'fieldset' }]);
+	const nameAttribute = path ? ` name="${path}-entry"` : '';
+
 	return `
-		<fieldset id="${fieldsetId}" ${attrs(attributes, '', [{ part: 'fieldset' }])}${path ? ` name="${path}-entry"` : ''}>
+		<fieldset id="${fieldsetId}" ${fieldsetAttributes}${nameAttribute}>
 			<legend part="legend">${label}</legend>
 			${content}
 		</fieldset>`;
@@ -388,20 +395,21 @@ const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||
  * @returns {string} The HTML string for the input element, optionally wrapped in a label.
  */
 export const input = (params) => {
-	const { attributes = [], label, path = '', type = 'string', value } = params;
-
-	let finalValue = value !== undefined && value !== null && value !== '' 
-		? value 
-		: attributes.find(attr => attr.value !== undefined)?.value;
-
+	const { attributes = [], instance, label, path = '', type = 'string', value } = params;
+	const finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
 	const filteredAttributes = attributes.filter(attr => !('value' in attr));
-	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label'] === true);
+	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label']);
 	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';
 	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
-	const output = `<input part="input" value="${finalValue !== undefined && finalValue !== null ? finalValue : ''}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}>`;
+	const isRequired = filteredAttributes.some(attr => attr.required === 'required');
+	const inputElement = `<input part="input" value="${finalValue}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}>`;
+
 	return hidden 
-		? output 
-		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}><span part="label">${label}</span>${output}</label>`;
+		? inputElement 
+		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}>
+			<span part="label">${isRequired ? `<abbr title="${t('required', instance.lang, instance.i18n)}">*</abbr>` : ''}${label}</span>
+			${inputElement}
+		</label>`;
 };
 
 /**
@@ -421,13 +429,11 @@ export const input = (params) => {
  */
 export const media = (params) => {
 	const { attributes = [], config, label, path = '', value } = params;
-	const itemDelete = config.render.delete;
-	const itemSrc = config.render?.summary || '';
-	const itemValue = config.render?.label || '';
+	const { delete: itemDelete, summary: itemSrc = '', label: itemValue = '' } = config.render || {};
 
-	const mediaItem = (item, path) => `
+	const mediaItem = (item, itemPath) => `
 		<label part="row">
-			${itemDelete ? `<input part="input delete" value="${item[itemValue]}"type="checkbox" checked data-custom="removeArrayEntry" data-params='{ "path": "${path}" }'>`: ''}
+			${itemDelete ? `<input part="input delete" value="${item[itemValue]}" type="checkbox" checked data-custom="removeArrayEntry" data-params='{ "path": "${itemPath}" }'>` : ''}
 			<img part="img" src="${item[itemSrc]}" alt="">
 		</label>`;
 
@@ -446,14 +452,15 @@ export const media = (params) => {
  * @returns {string} The HTML string for the rich text input field.
  */
 export const richtext = (params) => {
-	const { attributes = [], label, path = '', value } = params;
+	const { attributes = [], instance, label, path = '', value } = params;
+	const isRequired = attributes.some(attr => attr.required === 'required');
 	return `
-		<div part="row">
-			<span part="label">${label}</span>
+		<label part="row">
+			<span part="label">${isRequired ? `<abbr title="${t('required', instance.lang, instance.i18n)}">*</abbr>` : ''}${label}</span>
 			<rich-text part="richtext" event-mode="input" ${attrs(attributes, path)}>
 				${value || ''}
 			</rich-text>
-		</div>`;
+		</label>`;
 };
 
 /**
@@ -470,8 +477,7 @@ export const richtext = (params) => {
  */
 export const select = (params) => {
 	const { attributes = [], label, options = [], path = '', type = 'string', value } = params;
-	const attributeValue = attributes.find(attr => attr.value !== undefined)?.value;
-	const finalValue = value !== undefined && value !== null ? value : attributeValue;
+	const finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
 
 	return `
 		<label part="row">
@@ -497,10 +503,11 @@ export const select = (params) => {
  * @returns {string} The HTML string for the labeled textarea element.
  */
 export const textarea = (params) => {
-	const { attributes = [], label, path = '', value } = params;
+	const { attributes = [], label, path = '', value = '' } = params;
+	const textareaAttributes = attrs(attributes, path);
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
-			<textarea part="textarea" ${attrs(attributes, path)}>${value}</textarea>
+			<textarea part="textarea" ${textareaAttributes}>${value}</textarea>
 		</label>`;
 };

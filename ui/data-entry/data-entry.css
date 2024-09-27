@@ -211,6 +211,7 @@
 					border: 0;
 					grid-template-columns: unset;
 					row-gap: 0;
+					
 					span {
 						border: 0;
 						border-radius: inherit !important;
@@ -346,6 +347,8 @@
 			grid-template-columns: var(--_lblw) 1fr;
 			user-select: none;
 
+			abbr { margin: 0; }
+
 			&:first-of-type:not(div) {
 				border-block-start-width: var(--_bdw);
 				border-start-start-radius: var(--_bdrs);
@@ -424,7 +427,7 @@ ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 		ui-richtext:focus-within {
 			background-color: var(--CanvasGray);
 			outline: 2px solid var(--AccentColor);
-			outline-offset: -1px;
+			outline-offset: -2px;
 			& * { outline: none; }
 		}
 		
@@ -438,6 +441,10 @@ ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 		/* details:not([open]):focus-within + details */
 	}
 }
+
+
+/* TODO */
+.mie-auto { margin-inline-end: auto; }
 
 @keyframes scroll-shadow {
 	from {

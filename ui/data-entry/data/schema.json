@@ -80,7 +80,7 @@
     },
     "name": {
       "type": "string",
-      "title": "Name",
+      "title": "Title",
       "render": {
         "method": "input",
         "attributes": [
@@ -89,6 +89,9 @@
           },
           {
             "placeholder": "Enter name"
+          },
+          {
+            "required": "required"
           }
         ]
       }
@@ -101,6 +104,9 @@
         "attributes": [
           {
             "toolbar": "h1,h2,h3|b,i,u,s|sub,sup|ol,ul,hr|img|link,unlink"
+          },
+          {
+            "required": "required"
           }
         ]
       }
@@ -173,6 +179,9 @@
               },
               {
                 "type": "number"
+              },
+              {
+                "required": "required"
               }
             ]
           }
@@ -259,6 +268,9 @@
           },
           {
             "type": "checkbox"
+          },
+          {
+            "data-check": "true|false"
           }
         ]
       }
@@ -274,6 +286,9 @@
           },
           {
             "type": "checkbox"
+          },
+          {
+            "data-check": "true|false"
           }
         ]
       }
@@ -854,7 +869,8 @@
           },
           "active": {
             "type": "number",
-            "title": "Active"
+            "title": "Active",
+            "data-check": "1|0"
           }
         },
         "required": [
@@ -872,8 +888,8 @@
             "part": "array-checkbox"
           }
         ],
-        "summary": "active",
-        "label": "job_name"
+        "label": "job_name",
+        "value": "active"
       }
     },
 

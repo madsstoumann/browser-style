@@ -7,8 +7,8 @@ import { mountComponents } from './modules/components.js';
  * DataEntry is a custom HTML element that provides a comprehensive data entry form with various functionalities, based on a provided JSON schema and data.
  * It supports schema validation, internationalization, dynamic form rendering, and auto-save mechanisms.
  * @author Mads Stoumann
- * @version 1.0.27
- * @summary 26-09-2024
+ * @version 1.0.28
+ * @summary 27-09-2024
  * 
  * @class
  * @extends HTMLElement
@@ -46,8 +46,10 @@ class DataEntry extends HTMLElement {
 		this.lang = this.getAttribute('lang') || 'en';
 		this.instance = createDataEntryInstance(this);
 		this.instance.lang = this.lang;
-		this.instance.primaryKey = this.instance.schema?.primaryKey || this.getAttribute('primary-key') || 'id';
-		this.instance.recordId = this.instance.schema?.recordId || this.getAttribute('record-id') || 'NewId'; // TODO: Change to 'id'?
+
+		this.instance.primaryKeys = Array.isArray(this.instance.schema?.primaryKeys)
+		? this.instance.schema.primaryKeys
+		: (this.getAttribute('primary-keys') ? this.getAttribute('primary-keys').split(',') : ['id']);
 	}
 
 	/**
@@ -70,10 +72,13 @@ class DataEntry extends HTMLElement {
 			this.notify(code || 0, message, type); 
 		});
 
-//TODO! Check `data-handler`, maybe just delete `data-handler-type`, UNIFY
-
 		this.addEventListener('de:resetfields', ({ detail: { fields, resetValue } }) => {
 			this.resetFields(fields, resetValue);
+		});
+
+		this.addEventListener('de:submit', (event) => {
+			const { action, enctype, method } = event.detail;
+			this.handleDataSubmission(action, method, enctype);
 		});
 
 		this.form.addEventListener('input', this.syncInstanceData.bind(this));
@@ -348,10 +353,10 @@ class DataEntry extends HTMLElement {
 	 *
 	 * @returns {void}
 	 */
-	handleDataSubmission(action, method, enctype = 'form') {
-		const formAction = this.form.getAttribute('action') || action;
-		const formMethod = this.form.getAttribute('method') || method || 'POST';
-		const formEnctype = this.form.getAttribute('enctype') || enctype;
+	handleDataSubmission(action, method, enctype) {
+		const formAction = action || this.form.getAttribute('action');
+		const formMethod = method || this.form.getAttribute('method') || 'POST';
+		const formEnctype = enctype || this.form.getAttribute('enctype');
 		const filteredData = this.filterRemovedEntries(this.instance.data);
 		const isMultipart = formEnctype.includes('multipart/form-data');
 		const headers = isMultipart ? {} : { 'Content-Type': formEnctype };
@@ -370,10 +375,10 @@ class DataEntry extends HTMLElement {
 			data = new URLSearchParams(filteredData).toString();
 		}
 
-		const id = filteredData[this.instance.primaryKey];
+		const id = this.instance.primaryKeys.length > 0 ? filteredData[this.instance.primaryKeys[0]] : null;
+		const actionUrl = id ? formAction.replace(':id', id) : formAction.replace('/:id', '');
 
 		if (formAction) {
-			const actionUrl = id ? formAction.replace(':id', id) : formAction.replace('/:id', '');
 			fetch(actionUrl, {
 				method: formMethod,
 				headers,
@@ -388,14 +393,24 @@ class DataEntry extends HTMLElement {
 			})
 			.then(result => {
 				let record = Array.isArray(result) ? result[0] : result;
-				if (record && record[this.instance.recordId]) {
-					this.dispatchEvent(new CustomEvent('de:new-record', {
-						detail: {
-							id: record[this.instance.recordId]
-						}
+				const recordHasPrimaryKeys = this.instance.primaryKeys.every(key => record && record[key]);
+
+				if (formMethod === 'DELETE') {
+					this.dispatchEvent(new CustomEvent('de:record-deleted', {
+						detail: record
 					}));
+					this.notify(1005, 'Record deleted successfully!');
+				} else if (recordHasPrimaryKeys && !id) {
+					this.dispatchEvent(new CustomEvent('de:record-created', {
+						detail: record
+					}));
+					this.notify(1005, 'New record created successfully!');
+				} else if (recordHasPrimaryKeys) {
+					this.dispatchEvent(new CustomEvent('de:record-upserted', {
+						detail: record
+					}));
+					this.notify(1005, 'Record upserted successfully!');
 				}
-				this.notify(1005, 'Data submitted successfully!');
 			})
 			.catch(error => {
 				let statusCode = 1006;
