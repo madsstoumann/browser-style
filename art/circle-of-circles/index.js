@@ -1,6 +1,5 @@
 import { commonConfig, handleGuiEvent, init } from '../common.js';
 import { getViewBox } from '/assets/js/svgUtils.js';
-import { hexToHSL } from '/assets/js/color.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
