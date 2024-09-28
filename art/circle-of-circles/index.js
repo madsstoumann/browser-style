@@ -8,11 +8,13 @@ const storageKey = 'circlecircles';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Circles', 100, '', { min: 10, max: 200, name: 'numcircles' });
-GUI.addRange('Min Radius', 3, '', { min: 2, max: 50, name: 'minradius' });
+GUI.addRange('Min Radius', 1, '', { min: 1, max: 25, name: 'minradius' });
 GUI.addRange('Max Radius', 15, '', { min: 2, max: 50, name: 'maxradius' });
 GUI.addRange('Cycles', 5, '', { min: 1, max: 25, name: 'cycles' });
 GUI.addColor('Line color', '#F075F0', '', { name: 'stroke' });
 GUI.addRange('Line width', 0.15, '', { min: 0.05, max: 1, step: 0.01, name: 'linestrokewidth' });
+GUI.addCheckbox('No fill', false, '', { name: 'nofill' });
+GUI.addCheckbox('Layered', false, '', { name: 'layered' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 2, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#080828');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, circleOfCircles));
@@ -30,12 +32,13 @@ function circleOfCircles(svg, controls) {
   const stroke = controls.stroke.value;
   const cycles = controls.cycles.valueAsNumber;
   const canvas = controls.canvas.value;
+  const layered = controls.layered.checked;
+  const noFill = controls.nofill.checked;
 
-  svg.style.fill = canvas;
+  svg.style.fill = noFill ? 'transparent' : canvas;
   svg.style.stroke = stroke;
   svg.style.strokeWidth = lineStrokeWidth;
 
-  // Adjust placement radius using the minimum dimension to avoid canvas overflow
   const placementRadius = Math.min(width, height) / 2 - maxRadius;
   const angleStep = (2 * Math.PI) / numCircles;
 
@@ -47,35 +50,36 @@ function circleOfCircles(svg, controls) {
     return isGrowing ? minRadius + radiusDelta : maxRadius - radiusDelta;
   };
 
-  // Generate all circles and calculate total bounding box
-  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-
-  const circles = Array.from({ length: numCircles }).map((_, index) => {
+  let circles = Array.from({ length: numCircles }).map((_, index) => {
     const angle = index * angleStep;
     const x = placementRadius * Math.cos(angle);
     const y = placementRadius * Math.sin(angle);
     const radius = getCircleRadius(index);
+    return { x, y, radius, index };
+  });
 
-    // Update bounding box coordinates
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+  // Calculate bounding box for centering
+  circles.forEach(({ x, y, radius }) => {
     minX = Math.min(minX, x - radius);
     minY = Math.min(minY, y - radius);
     maxX = Math.max(maxX, x + radius);
     maxY = Math.max(maxY, y + radius);
-
-    return { x, y, radius };
   });
 
-  // Calculate the center of the bounding box
   const boundingBoxCenterX = (minX + maxX) / 2;
   const boundingBoxCenterY = (minY + maxY) / 2;
 
-  // Calculate dynamic translation offsets to center the circles perfectly
   const translateX = width / 2 - boundingBoxCenterX;
   const translateY = height / 2 - boundingBoxCenterY;
 
-  svg.innerHTML = `<g transform="translate(${translateX} ${translateY}) scale(${scale})">` +
-    circles.map(({ x, y, radius }) =>
-      `<circle cx="${x}" cy="${y}" r="${radius}"></circle>`
-    ).join('') +
-    '</g>';
+  if (layered) {
+    circles = circles.slice().sort((a, b) => b.radius - a.radius);
+  } 
+
+  svg.innerHTML = `<g transform="translate(${translateX} ${translateY}) scale(${scale})">
+  ${circles.map(({ x, y, radius }) =>
+    `<circle cx="${x}" cy="${y}" r="${radius}"></circle>`
+  ).join('')}</g>`;
 }
