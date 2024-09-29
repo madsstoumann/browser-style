@@ -7,12 +7,12 @@ const GUI = document.querySelector('gui-control');
 const storageKey = 'chess';
 const svg = document.getElementById('svg');
 
-GUI.addRange('Grid Size', 11, '', { min: 3, max: 40, name: 'gridsize' });
+GUI.addRange('Grid Size', 15, '', { min: 3, max: 40, name: 'gridsize' });
 
-GUI.addColor('Color 1', '#DAA00E', '', { name: 'color1' });
-GUI.addColor('Color 2', '#387C17', '', { name: 'color2' });
-GUI.addColor('Color 3', '#B1000F', '', { name: 'color3' });
-GUI.addColor('Color 4', '#190DAF', '', { name: 'color4' });
+GUI.addColor('Color 1', '#474747', '', { name: 'color1' });
+GUI.addColor('Color 2', '#999999', '', { name: 'color2' });
+GUI.addColor('Color 3', '#C2C2C2', '', { name: 'color3' });
+GUI.addColor('Color 4', '#707070', '', { name: 'color4' });
 
 commonConfig(GUI, '#EEEEEE');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, chess));
