@@ -1,6 +1,5 @@
 import { commonConfig, handleGuiEvent, init } from '../common.js';
 import { getViewBox } from '/assets/js/svgUtils.js';
-import { random } from '/assets/js/utils.js';
 import GuiControl from '/ui/gui-control/index.js';
 
 const GUI = document.querySelector('gui-control');
@@ -8,19 +7,18 @@ const storageKey = 'chess';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Grid Size', 15, '', { min: 3, max: 40, name: 'gridsize' });
-
 GUI.addColor('Color 1', '#474747', '', { name: 'color1' });
 GUI.addColor('Color 2', '#999999', '', { name: 'color2' });
 GUI.addColor('Color 3', '#C2C2C2', '', { name: 'color3' });
 GUI.addColor('Color 4', '#707070', '', { name: 'color4' });
 
 commonConfig(GUI, '#EEEEEE');
-GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, chess));
+GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, warpedChess));
 init(GUI, storageKey, []);
 
 /* === MAIN FUNCTION === */
 
-function chess(svg, controls) {
+function warpedChess(svg, controls) {
 	const { width, height } = getViewBox(svg);
 	const gridSize = controls.gridsize.valueAsNumber;
 	const color1 = controls.color1.value;

@@ -476,15 +476,19 @@ export const richtext = (params) => {
  * @returns {string} The generated HTML string for the select dropdown.
  */
 export const select = (params) => {
-	const { attributes = [], label, options = [], path = '', type = 'string', value } = params;
-	const finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
+	const { attributes = [], label, options = [], path = '', type = 'string', value = -1 } = params;
+	const attributeValue = attributes.find(attr => 'value' in attr)?.value;
+	const finalValue = (value !== -1 && value !== undefined) ? value
+									 : (attributeValue !== undefined) ? attributeValue
+									 : '';
+	const filteredAttributes = attributes.filter(attr => !('value' in attr));
 
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
-			<select part="select" ${attrs(attributes, path, [], ['type'])} data-type="${type}">
+			<select part="select" ${attrs(filteredAttributes, path, [], ['type'])} data-type="${type}">
 				${options.map(option => `
-					<option value="${option.value}" ${option.value == finalValue ? 'selected' : ''}>
+					<option value="${option.value}" ${String(option.value) === String(finalValue) ? 'selected' : ''}>
 						${option.label}
 					</option>
 				`).join('')}

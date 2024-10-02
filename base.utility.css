@@ -47,11 +47,27 @@
 	.fs-xl { font-size: x-large; }
 	.fs-xxl { font-size: xx-large; }
 
+	/* Margin */
+	.m-0 { margin: 0; }
+	.mb-0 { margin-block: 0; }
+	.mb-1 { margin-block: 0.25rem; }
+	.mb-2 { margin-block: 0.5rem; }
+	.mb-3 { margin-block: 1rem; }
+	.mb-4 { margin-block: 2rem; }
+	.mi-0 { margin-inline: 0; }
+	.mi-1 { margin-inline: 0.25rem; }
+	.mi-2 { margin-inline: 0.5rem; }
+	.mi-3 { margin-inline: 1rem; }
+	.mi-4 { margin-inline: 2rem; }
+
 	/* Padding */
+	.p-0 { padding: 0; }
+	.pb-0 { padding-block: 0; }
 	.pb-1 { padding-block: 0.25rem; }
 	.pb-2 { padding-block: 0.5rem; }
 	.pb-3 { padding-block: 1rem; }
 	.pb-4 { padding-block: 2rem; }
+	.pi-0 { padding-inline: 0; }
 	.pi-1 { padding-inline: 0.25rem; }
 	.pi-2 { padding-inline: 0.5rem; }
 	.pi-3 { padding-inline: 1rem; }

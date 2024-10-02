@@ -360,9 +360,9 @@ class DataEntry extends HTMLElement {
 		const filteredData = this.filterRemovedEntries(this.instance.data);
 		const isMultipart = formEnctype.includes('multipart/form-data');
 		const headers = isMultipart ? {} : { 'Content-Type': formEnctype };
-
+	
 		let data;
-
+	
 		if (formEnctype.includes('json')) {
 			data = JSON.stringify(filteredData);
 		} else if (isMultipart) {
@@ -374,10 +374,10 @@ class DataEntry extends HTMLElement {
 		} else {
 			data = new URLSearchParams(filteredData).toString();
 		}
-
+	
 		const id = this.instance.primaryKeys.length > 0 ? filteredData[this.instance.primaryKeys[0]] : null;
 		const actionUrl = id ? formAction.replace(':id', id) : formAction.replace('/:id', '');
-
+	
 		if (formAction) {
 			fetch(actionUrl, {
 				method: formMethod,
@@ -394,7 +394,7 @@ class DataEntry extends HTMLElement {
 			.then(result => {
 				let record = Array.isArray(result) ? result[0] : result;
 				const recordHasPrimaryKeys = this.instance.primaryKeys.every(key => record && record[key]);
-
+	
 				if (formMethod === 'DELETE') {
 					this.dispatchEvent(new CustomEvent('de:record-deleted', {
 						detail: record
@@ -410,6 +410,10 @@ class DataEntry extends HTMLElement {
 						detail: record
 					}));
 					this.notify(1005, 'Record upserted successfully!');
+				} else if (result.success) {
+					this.notify(1005, result.message || 'Operation completed successfully!');
+				} else {
+					this.notify(1006, 'An error occurred.');
 				}
 			})
 			.catch(error => {
