@@ -39,22 +39,62 @@ function circlesVerticals(svg, controls) {
   const numElements = controls.numelements.valueAsNumber;
   const rotate = controls.rotate.valueAsNumber;
 
-  const coords = new Array(numElements).fill().map(() => {
-    let x = Math.random() - 0.5, y = Math.random() - 0.5;
-    x = (x * 0.96875 + 0.5) * width;
-    y = (y * 0.96875 + 0.5) * height;
-    return [x, y];
-  });
+  const coords = [];
+  const placedElements = [];
 
   const backgroundColor = colors.shift();
   controls.canvas.value = backgroundColor;
   svg.style.backgroundColor = backgroundColor;
 
+  // Helper to check overlap
+  function isOverlapping(newBox) {
+    return placedElements.some(box => {
+      return (
+        newBox.x < box.x + box.width &&
+        newBox.x + newBox.width > box.x &&
+        newBox.y < box.y + box.height &&
+        newBox.y + newBox.height > box.y
+      );
+    });
+  }
+
+  for (let i = 0; i < numElements; i++) {
+    let x, y, rectWidth, rectHeight;
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    // Retry until we find a non-overlapping position
+    do {
+      if (attempts++ > maxAttempts) break;  // Avoid infinite loop in case it's too crowded
+
+      x = (Math.random() - 0.5) * 0.96875 * width + width / 2;
+      y = (Math.random() - 0.5) * 0.96875 * height + height / 2;
+      rectWidth = random(1, 10);
+      rectHeight = Math.max(random(1, 45), rectWidth * 3);
+
+      const newElementBox = {
+        x: x - rectWidth / 2,
+        y: y - rectHeight / 2,
+        width: rectWidth,
+        height: rectHeight,
+      };
+
+    } while (isOverlapping({ x, y, width: rectWidth, height: rectHeight }));
+
+    // Save the bounding box of the placed element
+    placedElements.push({
+      x: x - rectWidth / 2,
+      y: y - rectHeight / 2,
+      width: rectWidth,
+      height: rectHeight,
+    });
+
+    coords.push([x, y, rectWidth, rectHeight]);
+  }
+
   svg.innerHTML = 
     coords.map(coord => {
-      const [x, y] = [...coord];
-      const rectWidth = random(1, 10);
-      const rectHeight = Math.max(random(1, 45), rectWidth * 3);
+      const [x, y, rectWidth, rectHeight] = coord;
 
       let rectFill = colors[Math.floor(Math.random() * colors.length)];
       let circleFill;
@@ -70,3 +110,4 @@ function circlesVerticals(svg, controls) {
         </g>`;
     }).join('');
 }
+
