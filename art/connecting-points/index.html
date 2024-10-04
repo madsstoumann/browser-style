@@ -8,11 +8,35 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../common.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 </head>
 <body>
 	<h1>Cosmic Lattice</h1>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg"></svg>
 	<gui-control label="Controls" scope="svg"></gui-control>
+
+	<small>
+		<p>
+			<strong>Cosmic Lattice</strong> connects all points in a circle with eachother.
+		</p>
+	</small>
+
+	<h2>Gallery</h2>
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<figure class="m-0">
+			<img src="gallery/cosmic01.svg" alt="Modern">
+			<figcaption><em>Modern</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/cosmic02.svg" alt="Sunny">
+			<figcaption><em>Sunny</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/cosmic03.svg" alt="Lace">
+			<figcaption><em>Lace</em></figcaption>
+		</figure>
+	</div>
+
 	<script type="module" src="index.js"></script>
 </body>
 </html>

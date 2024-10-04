@@ -8,11 +8,35 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../common.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 </head>
 <body>
 	<h1>Rippled Vibrations</h1>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg"></svg>
 	<gui-control label="Controls" scope="svg"></gui-control>
+
+	<small>
+		<p>
+			<strong>Rippled Vibrations</strong> ....
+		</p>
+	</small>
+
+	<h2>Gallery</h2>
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<figure class="m-0">
+			<img src="gallery/ripple01.svg" alt="Sticks">
+			<figcaption><em>Sticks</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/ripple02.svg" alt="Chaos">
+			<figcaption><em>Chaos</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/ripple03.svg" alt="Purple Curtian">
+			<figcaption><em>Purple Curtian</em></figcaption>
+		</figure>
+	</div>
+
 	<script type="module" src="index.js"></script>
 </body>
 </html>

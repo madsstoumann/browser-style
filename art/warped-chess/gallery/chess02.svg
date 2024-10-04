@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg" style="--frame-c: #f6c6a4; --frame-bdw: 1em; background-color: rgb(238, 238, 238); --frame-asr: 100 / 100.;"><rect x="0" y="0" width="25" height="25" fill="#642b2b"></rect>
+<rect x="25" y="0" width="25" height="25" fill="#eb4747"></rect>
+<rect x="50" y="0" width="25" height="25" fill="#642b2b"></rect>
+<rect x="75" y="0" width="25" height="25" fill="#eb4747"></rect>
+<rect x="0" y="25" width="25" height="25" fill="#eb4747"></rect>
+<rect x="75" y="25" width="25" height="25" fill="#642b2b"></rect>
+<rect x="0" y="50" width="25" height="25" fill="#642b2b"></rect>
+<rect x="75" y="50" width="25" height="25" fill="#eb4747"></rect>
+<rect x="0" y="75" width="25" height="25" fill="#eb4747"></rect>
+<rect x="25" y="75" width="25" height="25" fill="#642b2b"></rect>
+<rect x="50" y="75" width="25" height="25" fill="#eb4747"></rect>
+<rect x="75" y="75" width="25" height="25" fill="#642b2b"></rect>
+<rect x="25" y="25" width="16.666666666666668" height="16.666666666666668" fill="#daa9a9"></rect>
+<rect x="41.66666666666667" y="25" width="16.666666666666668" height="16.666666666666668" fill="#9d4343"></rect>
+<rect x="58.333333333333336" y="25" width="16.666666666666668" height="16.666666666666668" fill="#daa9a9"></rect>
+<rect x="25" y="41.66666666666667" width="16.666666666666668" height="16.666666666666668" fill="#9d4343"></rect>
+<rect x="58.333333333333336" y="41.66666666666667" width="16.666666666666668" height="16.666666666666668" fill="#9d4343"></rect>
+<rect x="25" y="58.333333333333336" width="16.666666666666668" height="16.666666666666668" fill="#daa9a9"></rect>
+<rect x="41.66666666666667" y="58.333333333333336" width="16.666666666666668" height="16.666666666666668" fill="#9d4343"></rect>
+<rect x="58.333333333333336" y="58.333333333333336" width="16.666666666666668" height="16.666666666666668" fill="#daa9a9"></rect>
+<rect x="41.66666666666667" y="41.66666666666667" width="8.333333333333332" height="8.333333333333332" fill="#642b2b"></rect>
+<rect x="50" y="41.66666666666667" width="8.333333333333332" height="8.333333333333332" fill="#eb4747"></rect>
+<rect x="41.66666666666667" y="50" width="8.333333333333332" height="8.333333333333332" fill="#eb4747"></rect>
+<rect x="50" y="50" width="8.333333333333332" height="8.333333333333332" fill="#642b2b"></rect></svg>

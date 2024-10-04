@@ -8,11 +8,35 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../common.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 </head>
 <body>
 	<h1>Circle of Life</h1>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg"></svg>
 	<gui-control label="Controls" scope="svg"></gui-control>
+
+	<small>
+		<p>
+			<strong>Circle of Life</strong> is inspired by <a href="https://en.wikipedia.org/wiki/Sacred_geometry">sacred geometry</a> — a different take on <em>Flower of Life</em>.
+		</p>
+	</small>
+
+	<h2>Gallery</h2>
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<figure class="m-0">
+			<img src="gallery/circlelife01.svg" alt="Purple Mic">
+			<figcaption><em>Purple Mic</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/circlelife02.svg" alt="Muted Blue">
+			<figcaption><em>Red Flower</em></figcaption>	
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/circlelife03.svg" alt="Blurry">
+			<figcaption><em>Blurry</em></figcaption>
+		</figure>
+	</div>
+
 	<script type="module" src="index.js"></script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg" style="--frame-c: #f6c6a4; --frame-bdw: 1em; stroke: rgb(211, 182, 211); stroke-width: 0.15; background-color: rgb(40, 40, 82); --frame-asr: 100 / 100.;">
+		<g transform="translate(50, 50) scale(0.95)">
+			<polygon points="0,0 50,0 7.725424859373681,-23.77641290737884" fill="#7d366b"></polygon><polygon points="0,0 15.450849718747373,47.552825814757675 25,0" fill="#945283"></polygon><polygon points="0,0 -40.450849718747364,29.38926261462366 7.725424859373686,23.776412907378838" fill="#ab6e9c"></polygon><polygon points="0,0 -40.45084971874738,-29.38926261462365 -20.225424859373682,14.69463130731183" fill="#945283"></polygon><polygon points="0,0 15.450849718747362,-47.55282581475768 -20.22542485937369,-14.694631307311825" fill="#7d366b"></polygon>
+		</g>
+	</svg>
