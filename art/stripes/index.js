@@ -13,8 +13,7 @@ GUI.addCheckbox('Random', false, '', { name: 'randomwidth', checked: 'checked' }
 GUI.addColor('Hue', '#00c8fa', '', { name: 'hue' });
 GUI.addSelect('Palette', '', '', { 
   options: [
-		{ key: 'Riley London', value: '#f3dce3 #dfa3be #e3aa80 #e5af77 #ecc7c6 #c7cacd #9fcdd6 #d89d75 #cda56f #a1c67b #d0b5ad #e3adbc #e4ac6c #e7b68f #ebc7c7 #e6b07a #d4b188 #99c6ee #c5a0a2 #da8e80 #ebc5c3 #e7bac4 #e3adc4 #db928b #c6927d #6db185 #aab1a8 #d6afc0 #dd986f #c9a192 #a1b3dd #cb9696 #db9285 #ecc7c5 #e7b9c3 #e3adc3 #9aba58 #acbe6f #edc6c9 #efca5e #eacc3c #a1d1f3 #c4ccdd #ecc7c6 #e5af6e #e4ab76 #e4acc4 #a3bacd'},
-		{ key: 'Riley', value: '#9d746c #766f89 #645562 #8287ad #7d6872 #7d5164 #8f7e86 #bd8167 #a15a5e #a78b85 #5c5a7f #936a65 #6f5f7b #914d50 #a28669 #897881 #8b5d70 #83595c #805357 #706e90 #646083 #725e6c #966e68 #9f817f #c4886c #84566a #9d5759 #b57a61 #6a5873 #7c81a5 #a68c6c #736682 #83737d #878db3 #8b848d #5f4f5c #565479 #9b8065 #656789 #695c67 #8d6661 #847984 #66506b #745a79 #756372 #6b516f #99736a #878089 #995457 #737295'},
+		{ key: 'Riley London', value: '#DE99B5 #E2A65E #E9C0BE #96C8D3 #E9C0BE #96C8D3 #E0A4BD #E2A35C #E9C0BE #E2A35C #92BFE9 #D58272 #E0A6BE #D6806F #61AB7A #D3A9BD #DC8E5E #9BA9D6 #87B43D #F0C713' },
     { key: 'Bauhaus Originals', value: '#e47a2c #baccc0 #6c958f #40363f #d7a26c #ae4935 #f7e6d4' }, 
     { key: 'Weimar Heritage', value: '#4f507d #aba59f #eba027 #1f1c16 #998a74 #e2471f #56704a #e2805f' },
     { key: 'Modernist Spectrum', value: '#D32F2F #1976D2 #FFC107 #388E3C #F57C00 #7B1FA2 #455A64 #FBC02D' },
