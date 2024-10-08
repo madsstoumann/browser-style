@@ -7,9 +7,9 @@ const storageKey = 'rileycircles';
 const svg = document.getElementById('svg');
 
 GUI.addRange('Cols', 10, '', { min: 2, max: 20, name: 'cols' });
-GUI.addRange('Line Width', 0.5, '', { min: 0.125, max: 5, step: 0.125, name: 'linestrokewidth' });
-GUI.addColor('Fill One', '#F8C706', '', { name: 'strokeone' });
-GUI.addColor('Fill Two', '#E8E529', '', { name: 'stroketwo' });
+GUI.addColor('Circle One', '#F8C706', '', { name: 'strokeone' });
+GUI.addColor('Circle Two', '#E8E529', '', { name: 'stroketwo' });
+GUI.addRange('Circle Stroke', 0.5, '', { min: 0.125, max: 5, step: 0.125, name: 'linestrokewidth' });
 GUI.addRange('Scale', 1, '', { min: 0, max: 2, step: 0.025, name: 'scale' });
 commonConfig(GUI, '#FFFFFF', '#0c0b0b');
 GUI.addEventListener('gui-input', (event) => handleGuiEvent(event, svg, GUI, storageKey, rileyCircles));
