@@ -7,8 +7,10 @@ function applySorting(context, data) {
 
 	if (sortIndex > -1) {
 		data.sort((a, b) => {
-			const A = Object.values(a)[sortIndex];
-			const B = Object.values(b)[sortIndex];
+			const rowA = Object.values(a);
+			const rowB = Object.values(b);
+			const A = rowA[sortIndex];
+			const B = rowB[sortIndex];
 			return typeof A === 'string' ? A.localeCompare(B, locale, { sensitivity: 'variant' }) : A - B;
 		});
 		if (sortOrder === 1) data.reverse();
@@ -17,23 +19,42 @@ function applySorting(context, data) {
 
 function filterData(context, data) {
 	const { thead } = context.state;
-	const hidden = thead.map((cell, index) => cell.hidden ? index : '').filter(String);
-	const searchterm = context.getAttribute('searchterm')?.toLowerCase();
+	const hidden = thead.map((cell, index) => cell.hidden ? index : null).filter(index => index !== null);
+	const searchterm = context.getAttribute('searchterm')?.toLowerCase()?.trim();
 	const method = context.getAttribute('searchmethod') || 'includes';
 	const allowedMethods = ['end', 'equals', 'start'];
 	const searchMethod = allowedMethods.includes(method) ? method : 'includes';
 
+	// If no search term, return all data
 	if (!searchterm) return data;
 
-	return data.filter(row =>
+	return data.filter(row => 
 		Object.values(row).some((cell, index) => {
+			// Skip hidden columns
 			if (!hidden.includes(index)) {
-				const lowerCaseCell = cell.toString().toLowerCase();
-				switch (searchMethod) {
-					case 'start': return lowerCaseCell.startsWith(searchterm);
-					case 'end': return lowerCaseCell.endsWith(searchterm);
-					case 'equals': return lowerCaseCell === searchterm;
-					default: return lowerCaseCell.includes(searchterm);
+				try {
+					// Handle null, undefined, empty, and non-relevant types
+					if (cell === null || cell === undefined || cell === '' || typeof cell === 'object') {
+						return false;
+					}
+
+					// Convert to lowercase string for comparison
+					let lowerCaseCell = typeof cell === 'string' ? cell.toLowerCase().trim() : cell.toString();
+
+					// Apply the filtering logic based on the search method
+					switch (searchMethod) {
+						case 'start':
+							return lowerCaseCell.startsWith(searchterm);
+						case 'end':
+							return lowerCaseCell.endsWith(searchterm);
+						case 'equals':
+							return lowerCaseCell === searchterm;
+						default:
+							return lowerCaseCell.includes(searchterm);
+					}
+				} catch (error) {
+					console.error(`Error processing cell at index ${index}:`, cell, error);
+					return false;
 				}
 			}
 			return false;
@@ -102,8 +123,11 @@ export function renderTBody(context) {
 				if (thead[index].hidden) return '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
 				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? `<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
-				let cellValue = (cell === null || cell === 'null') ? '' : cell;
-				cellValue = searchterm ? cell.toString().replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
+				let cellValue = (cell === null || cell === 'null' || cell === undefined) ? '' : cell;
+				if (typeof cellValue !== 'string') cellValue = cellValue.toString();
+				// Apply search term highlighting if applicable
+				cellValue = searchterm ? cellValue.replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
+
 				return `${selectable}<td tabindex="-1">${formatter(cellValue)}</td>`;
 			}).join('');
 			return `<tr${rowSelected}${uid ? ` data-uid="${row[uid]}"` : ''}>${rowHTML}</tr>`;

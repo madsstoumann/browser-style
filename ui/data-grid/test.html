@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Grid</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="./../table/ui-table.css">
+	<link rel="stylesheet" href="./data-grid.css">
+	<style>
+		/* Demo */
+		data-grid b { font-weight: 500; }
+		data-grid .c-gray { color: var(--GrayText); }
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Data Grid</h2>
+	<data-grid
+		debug
+		density
+		editable
+		exportable
+		id="grid"
+		itemsperpage="10"
+		nowrap
+		page="0"
+		printable
+		searchable
+		selectable		
+		stickycol
+		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
+	</data-grid>
+	<script type="module" src="index.js"></script>
+
+	<script>
+		const grid = document.getElementById('grid');
+		grid.addEventListener('dg:loaded', () => {
+			fetch(`./data/test.json`)
+				.then((response) => response.json())
+				.then((result) => {
+					grid.data = result.data;
+					grid.setAttribute('itemsPerPage', result.data.length);
+					grid.state.items = parseInt(result.total || result.data.length, 10);
+				});
+		});
+	</script>
+
+</body>
+</html>
