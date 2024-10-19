@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Table</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="ui-table.css">
+	<link rel="stylesheet" href="ui-table-popover.css">
+	<link rel="stylesheet" href="../icon/ui-icon.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Table Popover</h2>
+	<p>
+		Using <code>popover</code> to display additional information when clicking an expand-button within a table row.
+	</p>
+	
+	<table class="ui-table">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City <button type="button" popovertarget="p1"><ui-icon type="kebab"></ui-icon></button></td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis <button type="button" popovertarget="p2"><ui-icon type="kebab"></ui-icon></button></td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu <button type="button" popovertarget="p3"><ui-icon type="kebab"></ui-icon></button></td></tr>
+			<tr style="anchor-name:--p4;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City <button type="button" popovertarget="p4"><ui-icon type="kebab"></ui-icon></button></td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City <button type="button" popovertarget="p5"><ui-icon type="kebab"></ui-icon></button></td></tr>
+		</tbody>
+	</table>
+
+	<h3>Inline popover</h3>
+
+	<table class="ui-table">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p6">Gotham City</button></td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p7">Metropolis</button></td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p8">Malibu</button></td></tr>
+			<tr style="anchor-name:--p9;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p9">New York City</button></td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p10">New York City</button></td></tr>
+		</tbody>
+	</table>
+
+	<div id="p1" popover class="ui-table-popover --inline-end">
+		<strong>Gotham City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p2" popover class="ui-table-popover --inline-start">
+		<strong>Metropolis City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p3" popover class="ui-table-popover --modal">
+		<button type="button" popovertarget="p3" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
+		<strong>Malibu</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p4" popover class="ui-table-popover --anchor" style="position-anchor:--p4;">
+		<strong>New York City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p5" popover class="ui-table-popover --block-end">
+		<strong>Hells Kitchen</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p6" popover class="ui-table-popover --inline-end">
+		<strong>Gotham City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+
+	<div id="p9" popover class="ui-table-popover --anchor" style="position-anchor:--p9;">
+		<strong>New York City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+</body>
+</html>

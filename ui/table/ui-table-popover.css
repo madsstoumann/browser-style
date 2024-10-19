@@ -1,0 +1,159 @@
+@layer bs-component {
+	:where(.ui-table) {
+		td:has(> [popovertarget] > ui-icon) {
+			display: flex;
+			gap: 1ch;
+			justify-content: space-between;
+			padding-inline-end: .6ch;
+		}
+		td:has(> [popovertarget]):not(:has(ui-icon)) {
+			button {
+				--button-bxsh--hover: none;
+				border-bottom: 1px dotted var(--AccentColor);
+				color: var(--AccentColor);
+				font-size: inherit;
+				font-weight: inherit;
+				padding: 0;
+				&:focus-visible {
+					outline: none;
+					text-decoration: underline;
+				}
+			}
+		}
+		button[popovertarget] {
+			background: #0000;
+			border-radius: 0;
+			&:has(ui-icon) {
+				padding: 0 2px;
+				@media (hover: hover) {
+					&:hover {
+						background-color: var(--ButtonFace);
+					}
+				}
+			}
+			
+			&:focus-visible {
+				outline-offset: 0px;
+			}
+			
+		}
+		/* tr[style*="anchor-name"] td {
+			background: crimson;
+			padding-block-end: 200px;
+		} */
+	}
+
+	:where(.ui-table-popover) {
+		--ui-table-popover-m: 1rem;
+		--ui-table-popover-w: clamp(220px, 33vw, 350px); /* for inline start/end positions */
+
+		border: 1px solid var(--ButtonBorder);
+		border-radius: var(--ui-table-popover-bdrs, .33rem);
+		font-size: var(--ui-table-popover-fs, smaller);
+		margin: 0;
+		padding: var(--ui-table-popover-p, 1.2ch);
+		position: fixed;
+		
+
+		&, &::backdrop {
+			transition: 
+				display .5s allow-discrete, 
+				overlay .5s allow-discrete, 
+				inset .5s,
+				scale .5s,
+				opacity .5s;
+			opacity: 0;
+		}
+
+		&::backdrop {
+			background: #0002;
+		}
+
+		&:popover-open {
+			opacity: 1;
+			&::backdrop {
+				opacity: 0.5;
+			}
+		}
+
+		@starting-style {
+			&:popover-open,
+			&:popover-open::backdrop {
+				opacity: 0;
+			}
+		}
+
+		/* === MODIFIERS === */
+
+		&.--anchor {
+			border-start-start-radius: 0px;
+			border-start-end-radius: 0px;
+			inset-block: anchor(bottom);
+			inset-inline: anchor(left);
+			position: unset;
+			transform-origin: 0% 0%;
+			width: anchor-size(width);
+
+			@starting-style {
+				&:popover-open{
+					scale: 1 0;
+				}
+			}
+		}
+		&.--block-end {
+			inline-size: calc(100vw - 2 * var(--ui-table-popover-m));
+			inset-block: auto var(--ui-table-popover-m);
+			inset-inline: var(--ui-table-popover-m);
+
+			@starting-style {
+				&:popover-open {
+					inset-block: 100dvh 0;
+				}
+			}
+		}
+		&.--inline-end {
+			block-size: calc(100dvh - 2 * var(--ui-table-popover-m));
+			inline-size: var(--ui-table-popover-w);
+			inset-block-start: var(--ui-table-popover-m);
+			inset-inline: calc(100vw - var(--ui-table-popover-w) - var(--ui-table-popover-m));
+
+			@starting-style {
+				&:popover-open {
+					inset-inline: 100vw;
+				}
+			}
+		}
+		&.--inline-start {
+			block-size: calc(100dvh - 2 * var(--ui-table-popover-m));
+			inline-size: var(--ui-table-popover-w);
+			inset-block-start: var(--ui-table-popover-m);
+			inset-inline: var(--ui-table-popover-m);
+
+			@starting-style {
+				&:popover-open {
+					inset-inline: calc(0px - var(--ui-table-popover-w));
+				}
+			}
+		}
+		&.--modal {
+			block-size: calc(100dvh - 2 * var(--ui-table-popover-m));
+			inline-size: calc(100dvw - 2 * var(--ui-table-popover-m));
+			inset-block-start: var(--ui-table-popover-m);
+			inset-inline: var(--ui-table-popover-m);
+			transform-origin: 50% 50%;
+
+			@starting-style {
+				&:popover-open{
+					scale: 0;
+				}
+			}
+
+			[popovertargetaction="hide"] {
+				background: #0000;
+				inset-block-start: 0;
+				inset-inline-end: 0;
+				position: absolute;
+			}
+		}
+	}
+}
