@@ -16,9 +16,11 @@
 
 	<h2>Table Popover</h2>
 	<p>
-		Using <code>popover</code> to display additional information when clicking an expand-button within a table row.
+		Using the <code>Popover API</code> to display additional information when clicking a <code>popovertarget</code> within a table row.
 	</p>
-	
+
+	<h3>With Icon</h3>
+
 	<table class="ui-table">
 		<colgroup><col><col><col><col></colgroup>
 		<thead>
@@ -33,7 +35,7 @@
 		</tbody>
 	</table>
 
-	<h3>Inline popover</h3>
+	<h3>With Faux Link</h3>
 
 	<table class="ui-table">
 		<colgroup><col><col><col><col></colgroup>
@@ -41,11 +43,11 @@
 			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
 		</thead>
 		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p6">Gotham City</button></td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p7">Metropolis</button></td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p8">Malibu</button></td></tr>
-			<tr style="anchor-name:--p9;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p9">New York City</button></td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p10">New York City</button></td></tr>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p1">Gotham City</button></td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p2">Metropolis</button></td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p3">Malibu</button></td></tr>
+			<tr style="anchor-name:--p6;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p6">New York City</button></td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p5">New York City</button></td></tr>
 		</tbody>
 	</table>
 
@@ -75,13 +77,7 @@
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p6" popover class="ui-table-popover --inline-end">
-		<strong>Gotham City</strong><br>
-		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
-	</div>
-
-
-	<div id="p9" popover class="ui-table-popover --anchor" style="position-anchor:--p9;">
+	<div id="p6" popover class="ui-table-popover --anchor" style="position-anchor:--p6;">
 		<strong>New York City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>

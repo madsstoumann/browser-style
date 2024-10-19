@@ -1,59 +1,62 @@
 @layer bs-component {
 	:where(.ui-table) {
+		[popovertarget] {
+			background: #0000;
+			border-radius: 0;
+			font-family: inherit;
+			font-size: inherit;
+			font-weight: inherit;
+
+			/* Icon */
+			&:has(ui-icon) {
+				padding: 0 .3ch;
+				@media (hover: hover) {
+					&:hover {
+						background-color: var(--ButtonFace);
+					}
+				}
+				&:focus, &:focus-visible {
+					background-color: var(--ButtonFace);
+					outline-offset: 0px;
+				}
+			}
+			/* Text */
+			&:not(:has(ui-icon)) {
+				--button-bxsh--hover: none;
+				color: var(--AccentColor);
+				cursor: pointer;
+				padding: 0;
+				@media (hover: hover) {
+					&:hover {
+						text-decoration: underline;
+					}
+				}
+				&:focus, &:focus-visible {
+					border-color: #0000;
+					color: var(--AccentColor);
+					outline: none;
+					text-decoration: underline;
+				}
+			}
+		}
+
 		td:has(> [popovertarget] > ui-icon) {
 			display: flex;
 			gap: 1ch;
 			justify-content: space-between;
 			padding-inline-end: .6ch;
 		}
-		td:has(> [popovertarget]):not(:has(ui-icon)) {
-			button {
-				--button-bxsh--hover: none;
-				border-bottom: 1px dotted var(--AccentColor);
-				color: var(--AccentColor);
-				font-size: inherit;
-				font-weight: inherit;
-				padding: 0;
-				&:focus-visible {
-					outline: none;
-					text-decoration: underline;
-				}
-			}
-		}
-		button[popovertarget] {
-			background: #0000;
-			border-radius: 0;
-			&:has(ui-icon) {
-				padding: 0 2px;
-				@media (hover: hover) {
-					&:hover {
-						background-color: var(--ButtonFace);
-					}
-				}
-			}
-			
-			&:focus-visible {
-				outline-offset: 0px;
-			}
-			
-		}
-		/* tr[style*="anchor-name"] td {
-			background: crimson;
-			padding-block-end: 200px;
-		} */
 	}
 
 	:where(.ui-table-popover) {
 		--ui-table-popover-m: 1rem;
 		--ui-table-popover-w: clamp(220px, 33vw, 350px); /* for inline start/end positions */
-
 		border: 1px solid var(--ButtonBorder);
 		border-radius: var(--ui-table-popover-bdrs, .33rem);
 		font-size: var(--ui-table-popover-fs, smaller);
 		margin: 0;
 		padding: var(--ui-table-popover-p, 1.2ch);
 		position: fixed;
-		
 
 		&, &::backdrop {
 			transition: 
