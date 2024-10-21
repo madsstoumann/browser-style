@@ -73,6 +73,26 @@ export default function handleKeyboardEvents(event, context) {
 		}
 	};
 
+	const handleEnterKey = () => {
+		const row = node.closest('tr');
+		if (!row) return;
+
+		if (shiftKey) {
+			// Trigger dg:rowclick when Shift + Enter is pressed
+			if (row && row.dataset.uid) {
+				event.preventDefault();
+				context.dispatch('dg:rowclick', { detail: { id: row.dataset.uid } });
+			}
+		} else if (ctrlKey || metaKey) {
+			// Trigger the popover when Ctrl + Enter (or Cmd + Enter) is pressed
+			const popoverButton = row.querySelector('button[popovertarget]');
+			if (popoverButton) {
+				event.preventDefault();
+				popoverButton.click();
+			}
+		}
+	};
+
 	const handleHomeKey = () => {
 		event.preventDefault();
 		if (!shiftKey) {
@@ -127,14 +147,7 @@ export default function handleKeyboardEvents(event, context) {
 		case 'PageUp': handlePageKeys(key); break;
 		case 'F2': handleF2Key(); break;
 		case 'Tab': handleTabKey(); break;
-		case 'Enter': 
-		if (shiftKey) {
-			const row = node.closest('tr');
-			if (row && row.dataset.uid) {
-				context.dispatch('dg:rowclick', { detail: { id: row.dataset.uid } });
-			}
-		}
-		break;
+		case 'Enter': handleEnterKey(); break;
 	}
 
 	if (!editing) context.setActive();

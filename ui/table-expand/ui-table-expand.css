@@ -2,7 +2,7 @@
 @layer bs-component {
 	:where(.ui-table) {
 		[popovertarget],
-		label:has([data-toggle-row]) {
+		label:has([data-toggle-expand]) {
 			background: #0000;
 			border-radius: 0;
 			font-family: inherit;
@@ -43,22 +43,25 @@
 			}
 		}
 
-		td:has(> [popovertarget] > ui-icon),
-		td:has(input[data-toggle-row]) {
+		.ui-table-expand--trigger,
+		td:has(input[data-toggle-expand]) {
 			display: flex;
 			gap: 1ch;
 			justify-content: space-between;
+			
+		}
+		td:has(> [popovertarget] > ui-icon) {
 			padding-inline-end: .6ch;
 		}
 
 		/* Inline Expand */
-		tr:has([data-toggle-row]:not(:checked)) + tr[data-toggle-row] {
+		tr:has([data-toggle-expand]:not(:checked)) + tr[data-toggle-expand] {
 			display: none;
 		}
-		tr:nth-last-child(2):has([data-toggle-row]:not(:checked)) td {
+		tr:nth-last-child(2):has([data-toggle-expand]:not(:checked)) td {
 			border-block-end-width: 1px;
 		}
-		tr:has([data-toggle-row]:checked) + tr[data-toggle-row] {
+		tr:has([data-toggle-expand]:checked) + tr[data-toggle-expand] {
 			display: table-row;
 		}
 	}

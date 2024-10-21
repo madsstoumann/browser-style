@@ -10,8 +10,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.14
- * @summary 18-10-2024
+ * @version 1.0.15
+ * @summary 21-10-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -135,20 +135,12 @@ export default class DataGrid extends HTMLElement {
 			}
 		}
 		if (name === 'itemsperpage') {
-			this.state.itemsPerPage = parseInt(newValue, 10);
-			if (this.state.itemsPerPage === -1) this.state.itemsPerPage = this.state.items;
-			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
-			this.dispatch('dg:itemsperpage', this.state);
-			if (render) {
-				this.setAttribute('page', 0);
-				renderTBody(this);
-			}
+			this.setItemsPerPage(newValue);
+			if (render) renderTBody(this);
 		}
 		if (name === 'page') {
-			this.state.page = parseInt(newValue, 10);
-			if (render) {
-				this.dispatch('dg:pagechange', this.state);
-				renderTBody(this);
+			if (parseInt(newValue, 10) !== this.state.page) {
+				this.setPage(parseInt(newValue, 10));
 			}
 		}
 		if (name === 'searchterm') {
@@ -341,6 +333,43 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
+	setItemsPerPage(itemsPerPage) {
+		try {
+			const newItemsPerPage = parseInt(itemsPerPage, 10) || 10;
+			if (newItemsPerPage === this.state.itemsPerPage) return;
+
+			this.form.elements.itemsperpage.value = newItemsPerPage;
+			this.state.itemsPerPage = newItemsPerPage;
+			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
+
+			if (parseInt(this.getAttribute('itemsperpage'), 10) !== this.state.itemsPerPage) {
+				this.setAttribute('itemsperpage', this.state.itemsPerPage);
+			}
+
+			this.setPage(0);
+			this.dispatch('dg:itemsperpage', this.state);
+			
+		} catch (error) {
+			this.console(`Error setting items per page: ${error}`, '#F00');
+		}
+	}
+
+	setPage(page) {
+		try {
+			const newPage = Math.max(0, Math.min(page, this.state.pages - 1));
+			if (newPage === this.state.page) return;
+
+			this.state.page = newPage;
+			if (parseInt(this.getAttribute('page'), 10) !== this.state.page) {
+				this.setAttribute('page', this.state.page);
+			}
+
+			this.dispatch('dg:pagechange', this.state);
+			renderTBody(this);
+		} catch (error) {
+			this.console(`Error setting page: ${error}`, '#F00');
+		}
+	}
 
 	translate(key) {
 		return baseTranslate(key, this.options.locale, this.options.i18n);

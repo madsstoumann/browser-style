@@ -135,6 +135,10 @@
 			grid.dispatchEvent(new CustomEvent('dg:clearselected'));
 		 });
 
+		 grid.addEventListener('dg:selected', (event) => {
+			console.log('dg:selected', event.detail);
+		 });
+
 		 const dataToAppend = [
 				{
 					firstname: "Ugo",

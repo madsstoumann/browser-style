@@ -8,6 +8,7 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="./../table/ui-table.css">
+	<link rel="stylesheet" href="./../table-expand/ui-table-expand.css">
 	<link rel="stylesheet" href="./data-grid.css">
 	<style>
 		/* Demo */
@@ -22,11 +23,10 @@
 	<data-grid
 		debug
 		density
-		editable
-		exportable
+
 		id="grid"
-		itemsperpage="10"
-		nowrap
+		itemsperpage="25"
+		
 		page="0"
 		printable
 		searchable
@@ -37,14 +37,36 @@
 	<script type="module" src="index.js"></script>
 
 	<script>
+		const formatters = {
+			link: (value) => `<a href="#${value}" tabindex="-1">${value}</a>`
+		}
+
 		const grid = document.getElementById('grid');
+		grid.formatters = formatters;
 		grid.addEventListener('dg:loaded', () => {
 			fetch(`./data/test.json`)
 				.then((response) => response.json())
 				.then((result) => {
+					grid.config = {
+						expandIcon: 'meatball',
+						expandType: '--inline-end',
+						thead: [
+							{ field: 'id', label: 'ID', uid: true, formatter: 'link' },
+							{ field: 'artist', hidden: true, expand: true },
+							{ field: 'sku', hidden: true, expand: true },
+							{ field: 'type', hidden: true, expand: true },
+							{ field: 'description', hidden: true, expand: true },
+							{ field: 'vendor', hidden: true, expand: true },
+							{ field: 'date', hidden: true, expand: true },
+							{ field: 'delivery', hidden: true, expand: true },
+						],
+					};
 					grid.data = result.data;
-					grid.setAttribute('itemsPerPage', result.data.length);
-					grid.state.items = parseInt(result.total || result.data.length, 10);
+					grid.setItemsPerPage(10);
+					grid.setPage(0);
+					// grid.dataInitialized = false;
+					// grid.setAttribute('itemsPerPage', result.data.length);
+					// grid.state.items = parseInt(result.total || result.data.length, 10);
 				});
 		});
 	</script>
