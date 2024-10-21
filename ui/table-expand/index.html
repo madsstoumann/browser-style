@@ -7,17 +7,93 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-table.css">
-	<link rel="stylesheet" href="ui-table-popover.css">
-	<link rel="stylesheet" href="../icon/ui-icon.css">
+	<link rel="stylesheet" href="../table/ui-table.css">
+	<link rel="stylesheet" href="ui-table-expand.css">
+	<style>
+		.ui-table {
+			width: 100%;
+			p { margin-block: 1ch; }
+			tr[data-toggle-row] { background: var(--ButtonFace); }
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Table Popover</h2>
+	<h2>Table Expand</h2>
 	<p>
 		Using the <code>Popover API</code> to display additional information when clicking a <code>popovertarget</code> within a table row.
 	</p>
+
+	<h3>Inline, expanding row with icon:</h3>
+
+	<table class="ui-table">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Barry</td><td>Allen</td><td>The Flash</td><td>Central City <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Super speed, time travel, ability to phase through objects
+				</td>
+			</tr>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td>Gotham City <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<p>
+						<strong>Abilities</strong><br>
+						Master detective, martial artist, high-tech gadgets, peak human physical condition.
+					</p>
+					<p>
+						<strong>Affiliations</strong><br>
+						Justice League, Bat-Family
+					</p>
+					<p>
+						<strong>Notable Enemies</strong><br>
+						The Joker, Two-Face, Bane
+					</p>
+				</td>
+			</tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td>Metropolis <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Super strength, flight, invulnerability, heat vision, super speed, x-ray vision
+				</td>
+			</tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Genius inventor, powered armor suit with various weapons, flight, enhanced strength
+				</td>
+			</tr>
+			<tr style="anchor-name:--p4;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Super strength, wall-crawling, spider sense, agility, web-slinging
+				</td>
+			</tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Heightened senses, expert martial artist, acrobat
+				</td>
+			</tr>
+			<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Washington, D.C. <label><ui-icon type="kebab"></ui-icon><input data-toggle-row type="checkbox" data-sr></label></td></tr>
+			<tr data-toggle-row>
+				<td colspan="4">
+					<strong>Abilities</strong><br>
+					Super strength, flight, combat skills, indestructible bracelets, Lasso of Truth
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 	<h3>With Icon</h3>
 
@@ -32,6 +108,7 @@
 			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td>Malibu <button type="button" popovertarget="p3"><ui-icon type="kebab"></ui-icon></button></td></tr>
 			<tr style="anchor-name:--p4;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td>New York City <button type="button" popovertarget="p4"><ui-icon type="kebab"></ui-icon></button></td></tr>
 			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td>New York City <button type="button" popovertarget="p5"><ui-icon type="kebab"></ui-icon></button></td></tr>
+			<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td>Washington, D.C. <button type="button" popovertarget="p6"><ui-icon type="kebab"></ui-icon></button></td></tr>
 		</tbody>
 	</table>
 
@@ -51,33 +128,33 @@
 		</tbody>
 	</table>
 
-	<div id="p1" popover class="ui-table-popover --inline-end">
+	<div id="p1" popover class="ui-table-expand --inline-end">
 		<strong>Gotham City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p2" popover class="ui-table-popover --inline-start">
+	<div id="p2" popover class="ui-table-expand --inline-start">
 		<strong>Metropolis City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p3" popover class="ui-table-popover --modal">
+	<div id="p3" popover class="ui-table-expand --modal">
 		<button type="button" popovertarget="p3" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
 		<strong>Malibu</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p4" popover class="ui-table-popover --anchor" style="position-anchor:--p4;">
+	<div id="p4" popover class="ui-table-expand --anchor" style="position-anchor:--p4;">
 		<strong>New York City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p5" popover class="ui-table-popover --block-end">
+	<div id="p5" popover class="ui-table-expand --block-end">
 		<strong>Hells Kitchen</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p6" popover class="ui-table-popover --anchor" style="position-anchor:--p6;">
+	<div id="p6" popover class="ui-table-expand --anchor" style="position-anchor:--p6;">
 		<strong>New York City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>

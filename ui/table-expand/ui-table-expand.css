@@ -1,11 +1,14 @@
+@import '../icon/ui-icon.css';
 @layer bs-component {
 	:where(.ui-table) {
-		[popovertarget] {
+		[popovertarget],
+		label:has([data-toggle-row]) {
 			background: #0000;
 			border-radius: 0;
 			font-family: inherit;
 			font-size: inherit;
 			font-weight: inherit;
+			grid-template-columns: 1fr; /* for label */
 
 			/* Icon */
 			&:has(ui-icon) {
@@ -40,15 +43,27 @@
 			}
 		}
 
-		td:has(> [popovertarget] > ui-icon) {
+		td:has(> [popovertarget] > ui-icon),
+		td:has(input[data-toggle-row]) {
 			display: flex;
 			gap: 1ch;
 			justify-content: space-between;
 			padding-inline-end: .6ch;
 		}
+
+		/* Inline Expand */
+		tr:has([data-toggle-row]:not(:checked)) + tr[data-toggle-row] {
+			display: none;
+		}
+		tr:nth-last-child(2):has([data-toggle-row]:not(:checked)) td {
+			border-block-end-width: 1px;
+		}
+		tr:has([data-toggle-row]:checked) + tr[data-toggle-row] {
+			display: table-row;
+		}
 	}
 
-	:where(.ui-table-popover) {
+	:where(.ui-table-expand) {
 		--ui-table-popover-m: 1rem;
 		--ui-table-popover-w: clamp(220px, 33vw, 350px); /* for inline start/end positions */
 		border: 1px solid var(--ButtonBorder);
