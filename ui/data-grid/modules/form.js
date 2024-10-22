@@ -8,12 +8,24 @@ const bound = (context) => ({
 
 export function renderForm(context) {
 	const { translate, icon } = bound(context);
+	const currentDensity = context.options.density;
+	const densityGroupName = `density-${window.crypto.randomUUID()}`;
+	const densityControls = currentDensity ? Object.keys(context.densityOptions).map(key => {
+		const { label, icon: densityIcon } = context.densityOptions[key];
+		return `<label>
+			<input type="radio" name="${densityGroupName}" value="${key}"${key === currentDensity ? ' checked' : ''}>
+			<img src="${densityIcon}" alt="${label}" />
+			${label}
+		</label>`;
+	}).join('') : '';
 
 	return `
-	<fieldset name="selection"><small><output name="selected">0</output> ${translate('selected')}</small></fieldset>
+	<fieldset name="selection">
+		<small><output name="selected">0</output> ${translate('selected')}</small>
+	</fieldset>
 	<fieldset name="actions">
 		${context.options.printable ? `<button type="button" name="print">${icon(icons.printer)}</button>` : ''}
-		${context.options.density ? `<button type="button" name="density">${icon(icons.density)}</button>` : ''}
+		${currentDensity ? `<fieldset name="density">${densityControls}</fieldset>` : ''}
 		${context.options.exportable ? `<button type="button" name="csv">${icon(icons.csv)}</button>` : ''}
 		${context.options.exportable ? `<button type="button" name="json">${icon(icons.json)}</button>` : ''}
 	</fieldset>

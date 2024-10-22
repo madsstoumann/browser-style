@@ -43,10 +43,10 @@ export function attachEventListeners(context) {
 	const { form, table, options, state } = context;
 
 	// Pagination controls
-	form.elements.stepdown.addEventListener('click', () => context.prev());
-	form.elements.stepup.addEventListener('click', () => context.next());
-	form.elements.first.addEventListener('click', () => context.setAttribute('page', 0));
-	form.elements.last.addEventListener('click', () => context.setAttribute('page', state.pages - 1));
+	form.elements.stepdown.addEventListener('click', () => context.navigatePage(null, 'prev'));
+	form.elements.stepup.addEventListener('click', () => context.navigatePage(null, 'next'));
+	form.elements.first.addEventListener('click', () => context.navigatePage(0));
+	form.elements.last.addEventListener('click', () => context.navigatePage(context.state.pages - 1));
 
 	// Printable option
 	if (options.printable) form.elements.print.addEventListener('click', () => context.printTable());
@@ -63,9 +63,6 @@ export function attachEventListeners(context) {
 		});
 	}
 
-	// Density option
-	if (options.density) form.elements.density.addEventListener('click', () => table.classList.toggle('--compact'));
-
 	// Searchable option
 	if (options.searchable) {
 		addEventListeners(form.elements.searchterm, ['input', 'search'], e => context.setAttribute('searchterm', e.target.value));
@@ -79,6 +76,22 @@ export function attachEventListeners(context) {
 	table.tBodies[0].addEventListener('dblclick', () => context.editBegin());
 	table.addEventListener('keydown', (event) => handleKeyboardEvents(event, context));
 	form.addEventListener('input', (event) => handleFormInput(event, context));
+
+	// Density options
+	if (form.elements.density) {
+		form.elements.density.addEventListener('change', (event) => {
+			Object.values(context.densityOptions).forEach(option => {
+				table.classList.remove(option.class);
+			});
+			const selected = context.densityOptions[event.target.value];
+			if (selected) table.classList.add(selected.class);
+		});
+		const checked = form.elements.density.querySelector('input:checked');
+		if (checked) {
+			const selected = context.densityOptions[checked.value];
+			if (selected) table.classList.add(selected.class);
+		}
+	}
 }
 
 function handleFormInput(event, context) {

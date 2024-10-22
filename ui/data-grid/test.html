@@ -22,8 +22,8 @@
 	<h2>Data Grid</h2>
 	<data-grid
 		debug
-		density
-
+		density="medium"
+		external-navigation
 		id="grid"
 		itemsperpage="25"
 		
@@ -63,12 +63,20 @@
 					};
 					grid.data = result.data;
 					grid.setItemsPerPage(10);
-					grid.setPage(0);
+					// grid.setPage(0, true);
 					// grid.dataInitialized = false;
 					// grid.setAttribute('itemsPerPage', result.data.length);
 					// grid.state.items = parseInt(result.total || result.data.length, 10);
 				});
 		});
+
+
+		grid.addEventListener('dg:requestpagechange', (event) => {
+			const requestedPage = event.detail.page;
+			const direction = event.detail.direction;
+			grid.setPage(requestedPage, true);
+		});
+
 	</script>
 
 </body>

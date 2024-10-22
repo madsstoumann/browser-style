@@ -10,8 +10,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.15
- * @summary 21-10-2024
+ * @version 1.0.16
+ * @summary 22-10-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -44,10 +44,11 @@ export default class DataGrid extends HTMLElement {
 		};
 
 		this.options = {
-			density: this.hasAttribute('density') || false,
 			debug: this.hasAttribute('debug') || false,
+			density: this.getAttribute('density') || '',
 			editable: this.hasAttribute('editable') || false,
 			exportable: this.hasAttribute('exportable') || false,
+			externalNavigation: this.hasAttribute('external-navigation') || false,
 			i18n: this.hasAttribute('i18n') ? i18n(this.getAttribute('i18n'), this.defaultLang) : this.defaultLang,
 			locale: this.getAttribute('lang') || document.documentElement.lang || 'en',
 			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
@@ -78,8 +79,14 @@ export default class DataGrid extends HTMLElement {
 
 		this.wrapper = document.createElement('div');
 		this.appendChild(this.wrapper);
-		this.table = this.querySelector('table')
-		
+		this.table = this.querySelector('table');
+
+		this.densityOptions = {
+			compact: { label: 'Compact', icon: 'compact.svg', class: 'fs-xs' },
+			medium: { label: 'Medium', icon: 'medium.svg', class: 'fs-md' },
+			large: { label: 'Large', icon: 'large.svg', class: 'fs-lg' }
+		};
+
 		if (this.table) {
 			this.state = Object.assign(this.state, dataFromTable(this.table, this.state.itemsPerPage, this.options.selectable));
 		}
@@ -110,7 +117,7 @@ export default class DataGrid extends HTMLElement {
 	async connectedCallback() {
 		if (!this.getAttribute('data')) {
 			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.items;
-			renderTable(this);
+			// renderTable(this);
 		}
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
 			bubbles: true,
@@ -250,22 +257,33 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	next = () => {
+	navigatePage(page = null, direction = null) {
 		try {
-			this.state.rowIndex = 1;
-			this.setAttribute('page', Math.min(this.state.page + 1, this.state.pages - 1));
+			let newPage = this.state.page;
+			const searchtermExists = this.form?.elements.searchterm?.value?.length > 0;
+
+			if (direction === 'next') {
+				newPage = Math.min(this.state.page + 1, this.state.pages - 1);
+			} else if (direction === 'prev') {
+				newPage = Math.max(this.state.page - 1, 0);
+			}
+
+			if (page !== null) {
+				newPage = Math.max(0, Math.min(page, this.state.pages - 1));
+			}
+
+			if (this.options.externalNavigation && !searchtermExists) {
+				this.dispatchEvent(new CustomEvent('dg:requestpagechange', {
+					bubbles: true,
+					detail: { page: newPage, direction }
+				}));
+			} else {
+				this.setPage(newPage);
+			}
 		} catch (error) {
-			this.console(`Error while moving to the next page: ${error}`, '#F00');
+			this.console(`Error navigating to page: ${error}`, '#F00');
 		}
 	}
-
-	prev = () => {
-		try {
-			this.setAttribute('page', Math.max(this.state.page - 1, 0));
-		} catch (error) {
-			this.console(`Error while navigating to previous page: ${error}`, '#F00');
-		}
-	};
 
 	printTable() {
 		try {
@@ -354,18 +372,22 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	setPage(page) {
+	setPage(page, forceRender = false) {
+		/* Note: If a searchterm exists, internal navigation replace external navigation */
 		try {
 			const newPage = Math.max(0, Math.min(page, this.state.pages - 1));
 			if (newPage === this.state.page) return;
-
 			this.state.page = newPage;
+
 			if (parseInt(this.getAttribute('page'), 10) !== this.state.page) {
 				this.setAttribute('page', this.state.page);
 			}
 
-			this.dispatch('dg:pagechange', this.state);
-			renderTBody(this);
+			const searchtermExists = this.form?.elements.searchterm?.value?.length > 0;
+
+			if (!this.options.externalNavigation || searchtermExists || forceRender) {
+				renderTBody(this);
+			}
 		} catch (error) {
 			this.console(`Error setting page: ${error}`, '#F00');
 		}

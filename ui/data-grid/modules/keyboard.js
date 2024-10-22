@@ -113,9 +113,9 @@ export default function handleKeyboardEvents(event, context) {
 	const handlePageKeys = (direction) => {
 		event.preventDefault();
 		if (direction === 'PageDown') {
-			context.next();
+			context.navigatePage(null, 'next')
 		} else if (direction === 'PageUp') {
-			context.prev();
+			context.navigatePage(null, 'prev')
 		}
 	};
 
