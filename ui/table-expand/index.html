@@ -25,7 +25,7 @@
 		Using the <code>Popover API</code> to display additional information when clicking a <code>popovertarget</code> within a table row.
 	</p>
 
-	<h3>Inline, expanding row with icon:</h3>
+	<!-- <h3>Inline, expanding row with icon:</h3>
 
 	<table class="ui-table">
 		<colgroup><col><col><col><col></colgroup>
@@ -93,7 +93,7 @@
 				</td>
 			</tr>
 		</tbody>
-	</table>
+	</table> -->
 
 	<h3>With Icon</h3>
 
@@ -159,5 +159,16 @@
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
+	<script>
+		document.querySelectorAll('.--anchor').forEach(popover => {
+			const cells = document.querySelectorAll(`tr:has([popovertarget="${popover.id}"]) > td`);
+			const initialPadding = parseFloat(getComputedStyle(cells[0]).paddingBlockEnd);
+
+			popover.addEventListener("toggle", event => {
+				const rowHeight = initialPadding + (event.newState === "open" ? popover.offsetHeight : 0);
+				cells.forEach(cell => cell.style.paddingBlockEnd = `${rowHeight}px`);
+			});
+		});
+	</script>
 </body>
 </html>

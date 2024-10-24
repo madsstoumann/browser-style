@@ -547,7 +547,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-
 	/**
 	 * Sets the initial widths of the columns in the data grid based on the widths of the cells in the first row.
 	 * 

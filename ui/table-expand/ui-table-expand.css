@@ -109,7 +109,7 @@
 		&.--anchor {
 			border-start-start-radius: 0px;
 			border-start-end-radius: 0px;
-			inset-block: anchor(bottom);
+			inset-block: auto anchor(bottom);
 			inset-inline: anchor(left);
 			position: unset;
 			transform-origin: 0% 0%;
