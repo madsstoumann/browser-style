@@ -1,12 +1,18 @@
-import { camelCase, consoleLog } from './utils.js';
+import { calculatePages, camelCase, capitalize, consoleLog } from './utility.js';
 
-export function calculatePages(items, itemsPerPage) {
-	if (itemsPerPage <= 0) {
-		throw new Error('Invalid value: items per page should be greater than 0');
-	}
-	return Math.ceil(items / itemsPerPage);
-}
-
+/**
+ * Extracts data from an HTML table element and returns it in a structured format.
+ *
+ * @param {HTMLTableElement} table - The HTML table element to extract data from.
+ * @param {number} [itemsPerPage=5] - The number of items per page for pagination.
+ * @param {number} [selectable=0] - Indicates if the table rows are selectable (1 for true, 0 for false).
+ * @returns {Object} An object containing the extracted table data.
+ * @returns {number} return.cols - The number of columns in the table, adjusted for hidden columns and selectable rows.
+ * @returns {number} return.items - The total number of items (rows) in the table body.
+ * @returns {number} return.pages - The total number of pages based on items per page.
+ * @returns {Array} return.tbody - The extracted table body data.
+ * @returns {Array} return.thead - The extracted table head data.
+ */
 export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	try {
 		const { thead, hiddenCount } = getTableHead(table);
@@ -24,14 +30,20 @@ export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	}
 }
 
+/**
+ * Downloads a file with the given content and filename.
+ *
+ * @param {string} content - The content to be included in the file.
+ * @param {string} filename - The name of the file to be downloaded.
+ * @param {string} [mimeType='text/csv;charset=utf-8;'] - The MIME type of the file.
+ */
 export function downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
 	try {
 		const blob = new Blob([content], { type: mimeType });
 		const link = document.createElement('a');
-		const url = URL.createObjectURL(blob);
-		link.setAttribute('href', url);
-		link.setAttribute('download', filename);
-		link.style.visibility = 'hidden';
+		link.href = URL.createObjectURL(blob);
+		link.download = filename;
+		link.style.display = 'none';
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
@@ -40,10 +52,22 @@ export function downloadFile(content, filename, mimeType = 'text/csv;charset=utf
 	}
 }
 
+/**
+ * Exports the given state data to a CSV format string.
+ *
+ * @param {Object} state - The state object containing table data.
+ * @param {Array} state.thead - Array of header cell objects.
+ * @param {string} state.thead[].label - The label of the header cell.
+ * @param {string} state.thead[].field - The field name corresponding to the header cell.
+ * @param {Array} state.tbody - Array of row objects.
+ * @returns {string} The CSV formatted string.
+ */
 export function exportCSV(state) {
 	try {
 		const headers = state.thead.map(cell => cell.label).join(',');
-		const rows = state.tbody.map(row => Object.values(row).join(','));
+		const rows = state.tbody.map(row => 
+			state.thead.map(cell => `"${(row[cell.field] || '').replace(/"/g, '""')}"`).join(',')
+		);
 		return `${headers}\r\n${rows.join('\r\n')}`;
 	} catch (error) {
 		consoleLog(`Error exporting CSV: ${error}`, '#F00');
@@ -51,65 +75,123 @@ export function exportCSV(state) {
 	}
 }
 
-export async function fetchData(str, context) {
-	try {
-		let data = JSON.parse(str);
-		return parseData(data, context);
-	} catch (jsonError) {
-		try {
-			const response = await fetch(str);
-			const data = await response.json();
-			return parseData(data, context);
-		} catch (fetchError) {
-			consoleLog(`Error fetching data: ${fetchError}`, '#F00');
-			throw fetchError;
-		}
-	}
-}
-
+/**
+ * Extracts and returns the data from the table body as an array of objects.
+ *
+ * @param {HTMLTableElement} table - The table element from which to extract the data.
+ * @param {Array} thead - An array representing the table header, where each element contains a `field` property.
+ * @returns {Array<Object>} An array of objects representing the table body data, where each object corresponds to a row and each property corresponds to a cell's text content.
+ */
 function getTableBody(table, thead) {
-	return [...table.tBodies[0].rows].map(row => {
-		const rowData = {};
-		[...row.cells].forEach((cell, index) => {
+	return Array.from(table.tBodies[0].rows, row => {
+		return Array.from(row.cells).reduce((rowData, cell, index) => {
 			const field = thead[index].field;
 			rowData[field] = cell.textContent;
-		});
-		return rowData;
+			return rowData;
+		}, {});
 	});
 }
 
+/**
+ * Extracts and processes the header cells of a given table element.
+ *
+ * @param {HTMLTableElement} table - The table element from which to extract the header cells.
+ * @returns {Object} An object containing:
+ * - `thead` {Array<Object>} - An array of objects representing each header cell, with properties:
+ * - `field` {string} - The camelCase version of the cell's text content.
+ * - `hidden` {boolean} - Whether the cell is hidden.
+ * - `label` {string} - The text content of the cell.
+ * - `uid` {boolean} - Whether the cell has a `data-uid` attribute.
+ * - `hiddenCount` {number} - The number of hidden header cells.
+ */
 function getTableHead(table) {
+	const thead = [];
 	let hiddenCount = 0;
-	const thead = [...table.tHead.rows[0].cells].map(cell => {
+
+	for (const cell of table.tHead.rows[0].cells) {
 		const isHidden = cell.hasAttribute('hidden');
 		if (isHidden) hiddenCount++;
-		return {
+
+		thead.push({
 			field: camelCase(cell.textContent),
 			hidden: isHidden,
 			label: cell.textContent,
 			uid: cell.hasAttribute('data-uid')
-		};
-	});
+		});
+	}
+
 	return { thead, hiddenCount };
 }
 
+/**
+ * Parses the provided data and updates the context's table structure.
+ * If thead or tbody are not provided, they will be generated based on the data.
+ * Thead can also be merged with a provided config.
+ *
+ * @param {Object|Array} data - The data to be parsed, which can either be an object containing thead and tbody, or just an array representing tbody.
+ * @param {Object} context - The context object containing state, options, and config.
+ * @param {Object} context.config - Configuration object that can provide additional thead information.
+ * @param {Array} context.config.thead - Array of column definitions from the config.
+ * @param {Object} context.options - Options object, including table options like 'selectable'.
+ * @param {boolean} context.options.selectable - Whether the table allows row selection.
+ * @param {Object} context.state - State object that contains table information.
+ * @param {number} context.state.itemsPerPage - Number of items displayed per page.
+ * @param {Function} context.log - Function to log messages for debugging.
+ *
+ * @returns {Object} An object containing the parsed table structure with the following properties:
+ * - cols: The number of visible columns (accounting for hidden columns and selectable rows).
+ * - items: The number of items in tbody.
+ * - pages: The total number of pages calculated based on the number of items and items per page.
+ * - tbody: The parsed tbody array (the rows of the table).
+ * - thead: The parsed or generated thead array (the headers of the table).
+ *
+ * @throws Will throw an error if parsing the data fails.
+ */
 export function parseData(data, context) {
 	try {
-		if (!data.thead || !data.tbody) {
-			throw new Error('Invalid JSON format: Missing table headers or body');
+		let { thead, tbody } = data;
+
+		// If no thead is provided but data is an array (assume tbody items)
+		if (!thead && Array.isArray(tbody)) {
+			thead = Object.keys(tbody[0] || {}).map(key => ({
+				field: key,
+				label: capitalize(key),
+				hidden: false,
+				uid: false,
+			}));
 		}
 
-		const hiddenCount = data.thead.filter(cell => cell.hidden).length;
+		// If no tbody is provided, assume data itself is tbody
+		if (!tbody && Array.isArray(data)) {
+			tbody = data;
+			thead = Object.keys(tbody[0] || {}).map(key => ({
+				field: key,
+				label: capitalize(key),
+				hidden: false,
+				uid: false,
+			}));
+		}
+
+		// Check for a config object and merge thead from config if it exists
+		if (context.config && context.config.thead) {
+			thead = thead.map((col) => {
+				const configCol = context.config.thead.find((c) => c.field === col.field);
+				return configCol ? { ...col, ...configCol } : col;
+			});
+		}
+
+		// Calculate hidden columns count
+		const hiddenCount = thead.filter(cell => cell.hidden).length;
 
 		return {
-			cols: (data.thead.length - hiddenCount) + (context.options.selectable ? 1 : 0),
-			items: data.tbody.length,
-			pages: calculatePages(data.tbody.length, context.state.itemsPerPage),
-			tbody: data.tbody,
-			thead: data.thead
+			cols: (thead.length - hiddenCount) + (context.options.selectable ? 1 : 0),
+			items: tbody.length,
+			pages: calculatePages(tbody.length, context.state.itemsPerPage),
+			tbody,
+			thead
 		};
 	} catch (error) {
-		consoleLog(`Error parsing data: ${error}`, '#F00', context.options.debug);
+		context.log(`Error parsing data: ${error}`, '#F00', context.options.debug);
 		throw error;
 	}
 }

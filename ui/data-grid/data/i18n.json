@@ -1,0 +1,36 @@
+{
+  "en": {
+    "all": "All",
+    "endsWith": "Ends with",
+    "equals": "Equals",
+    "first": "First",
+    "includes": "Includes",
+    "last": "Last",
+    "next": "Next",
+    "noResult": "No results",
+    "of": "of",
+    "page": "Page",
+    "prev": "Previous",
+    "rowsPerPage": "Rows",
+    "search": "Filter Columns",
+    "selected": "selected",
+    "startsWith": "Starts with"
+  },
+  "da": {
+    "all": "Alle",
+    "endsWith": "Slutter med",
+    "equals": "Er lig med",
+    "first": "Første",
+    "includes": "Indeholder",
+    "last": "Sidste",
+    "next": "Næste",
+    "noResult": "Ingen resultater",
+    "of": "af",
+    "page": "Side",
+    "prev": "Forrige",
+    "rowsPerPage": "Rækker pr. side",
+    "search": "Filtrer kolonner",
+    "selected": "valgt",
+    "startsWith": "Starter med"
+  }
+}

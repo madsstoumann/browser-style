@@ -18,7 +18,7 @@
 			display: flex;
 			gap: .75ch;
 
-			& button {
+			& button, & .ui-button {
 				--button-p: 0;
 				--icon-sz: 24px;
 				--icon-sw: 1.5;
@@ -37,7 +37,14 @@
 				&[size="4"] { width: 4ch; }
 			}
 
-			& label { all: unset; line-height: 1; }
+			& label:not(.ui-button) { all: unset; line-height: 1; }
+			& label.ui-button {
+				grid-template-columns: 1fr;
+				&:has(:checked) {
+					background-color: var(--ButtonText);
+					color: var(--Canvas)
+				}
+			}
 
 			& select {
 				background-position: calc(100% - .125ch) center;

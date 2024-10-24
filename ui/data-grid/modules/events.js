@@ -1,11 +1,18 @@
-import { renderTBody } from './render.js';
+import { renderTBody } from './render.table.js';
 import { exportCSV, downloadFile } from './data.js';
-import handleKeyboardEvents from './keyboard.js';
-import { addEventListeners } from './utils.js';
+import handleKeyboardEvents from './events.keyboard.js';
+import { addEventListeners } from './utility.js';
 
+/**
+ * Attaches custom event handlers for the context.
+ * Handles events such as appending new rows, clearing selected rows, and retrieving rows.
+ *
+ * @param {Object} context - The context object containing the state, form, and event dispatching methods.
+ */
 export function attachCustomEventHandlers(context) {
 	const { state } = context;
 
+	// Append new rows to the table
 	context.addEventListener('dg:append', (event) => {
 		const { detail } = event;
 		state.tbody.push(...detail);
@@ -14,6 +21,7 @@ export function attachCustomEventHandlers(context) {
 		renderTBody(context);
 	});
 
+	// Clear selected rows
 	context.addEventListener('dg:clearselected', () => {
 		state.selected.clear();
 		context.form.elements.selected.value = 0;
@@ -25,6 +33,7 @@ export function attachCustomEventHandlers(context) {
 		context.dispatch('dg:selected', { detail: [] });
 	});
 
+	// Get the active row data
 	context.addEventListener('dg:getrow', () => {
 		const node = context.active;
 		if (node) {
@@ -33,12 +42,18 @@ export function attachCustomEventHandlers(context) {
 		}
 	});
 
+	// Get all selected rows data
 	context.addEventListener('dg:getselected', () => {
 		const selected = [...state.selected].map(key => state.tbody.find(row => row[state.thead.find(cell => cell.uid).field] === key));
 		context.dispatch('dg:selected', { detail: selected });
 	});
 }
 
+/**
+ * Attaches standard event listeners to form controls, such as pagination, print, export, search, and density changes.
+ *
+ * @param {Object} context - The context object containing form, table, options, and state.
+ */
 export function attachEventListeners(context) {
 	const { form, table, options, state } = context;
 
@@ -72,6 +87,7 @@ export function attachEventListeners(context) {
 		});
 	}
 
+	// Table click and keyboard events
 	table.addEventListener('click', (event) => handleTableClick(event, context));
 	table.tBodies[0].addEventListener('dblclick', () => context.editBegin());
 	table.addEventListener('keydown', (event) => handleKeyboardEvents(event, context));
@@ -94,43 +110,61 @@ export function attachEventListeners(context) {
 	}
 }
 
+/**
+ * Handles form input events for pagination controls such as items per page and page number.
+ *
+ * @param {Event} event - The input event from the form.
+ * @param {Object} context - The context object with state and options.
+ */
 function handleFormInput(event, context) {
 	const input = event.target;
 	if (input.name === 'itemsperpage') context.setAttribute('itemsperpage', parseInt(input.value, 10));
 	if (input.name === 'page') context.setAttribute('page', parseInt(input.value, 10) - 1);
 }
 
+/**
+ * Handles table clicks for sorting, row selection, and other actions.
+ *
+ * @param {MouseEvent} event - The click event from the table.
+ * @param {Object} context - The context object with state and options.
+ */
 function handleTableClick(event, context) {
 	const { table, state, options } = context;
 	const node = event.target;
 	if (node === table) return;
+
 	if (['TD', 'TH'].includes(node.nodeName)) {
 		state.cellIndex = node.cellIndex;
 		state.rowIndex = node.parentNode.rowIndex;
+
+		// Sorting
 		if (state.rowIndex === 0) {
 			const index = node.dataset.sortIndex;
-			if (index !== undefined) context.setAttribute('sortindex', parseInt(index, 10));
+			const currentSortIndex = parseInt(context.getAttribute('sortindex'), 10);
+			const currentSortOrder = parseInt(context.getAttribute('sortorder'), 10);
+
+			if (index !== undefined) {
+				if (currentSortIndex === parseInt(index, 10)) {
+					if (currentSortOrder === 0) {
+						context.setAttribute('sortorder', 1);
+					} else if (currentSortOrder === 1) {
+						context.removeAttribute('sortindex');
+						context.removeAttribute('sortorder');
+					}
+				} else {
+					context.setAttribute('sortindex', parseInt(index, 10));
+					context.setAttribute('sortorder', 0);
+				}
+			}
 		}
 		context.setActive();
 	}
+
 	if (options.selectable && node.nodeName === 'INPUT') {
 		if (node.hasAttribute('data-toggle-row')) context.selectRows([node.closest('tr')], true);
 		if (node.hasAttribute('data-toggle-all')) {
-			if (state.selected.size) {
-				node.checked = false;
-				context.selectRows(table.tBodies[0].rows, false, true);
-			} else {
-				context.selectRows(table.tBodies[0].rows, true, true);
-			}
+			const allRows = table.tBodies[0].rows;
+			node.checked ? context.selectRows(allRows, true, true) : context.selectRows(allRows, false, true);
 		}
 	}
-	const row = node.closest('tr');
-	if (row) {
-		const rowData = Array.from(row.children).map((cell) => cell.innerText.trim());
-		if (row.dataset.uid) {
-			context.dispatch('dg:rowclick', { id: row.dataset.uid, rowData });
-		} else {
-			context.dispatch('dg:rowclick', { rowData });
-		}
-	}	
 }
