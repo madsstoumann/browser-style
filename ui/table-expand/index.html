@@ -106,9 +106,8 @@
 			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><span class="ui-table-expand--trigger">Gotham City <button type="button" popovertarget="p1"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
 			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><span class="ui-table-expand--trigger">Metropolis <button type="button" popovertarget="p2"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
 			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><span class="ui-table-expand--trigger">Malibu <button type="button" popovertarget="p3"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
-			<tr style="anchor-name:--p4;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><span class="ui-table-expand--trigger">New York City <button type="button" popovertarget="p4"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><span class="ui-table-expand--trigger">New York City <button type="button" popovertarget="p4"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
 			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><span class="ui-table-expand--trigger">New York City <button type="button" popovertarget="p5"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
-			<tr><td>Diana</td><td>Prince</td><td>Wonder Woman</td><td><span class="ui-table-expand--trigger">Washington, D.C. <button type="button" popovertarget="p6"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
 		</tbody>
 	</table>
 
@@ -123,8 +122,24 @@
 			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p1">Gotham City</button></td></tr>
 			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p2">Metropolis</button></td></tr>
 			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p3">Malibu</button></td></tr>
-			<tr style="anchor-name:--p6;"><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p6">New York City</button></td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p4">New York City</button></td></tr>
 			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p5">New York City</button></td></tr>
+		</tbody>
+	</table>
+
+	<h3>With Inline Expand</h3>
+
+	<table class="ui-table">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p6">Gotham City</button></td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p7">Metropolis</button></td></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p8">Malibu</button></td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p9">New York City</button></td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p10">New York City</button></td></tr>
 		</tbody>
 	</table>
 
@@ -138,35 +153,62 @@
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p3" popover class="ui-table-expand --modal">
-		<button type="button" popovertarget="p3" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
+	<div id="p3" popover class="ui-table-expand --block-start">
 		<strong>Malibu</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p4" popover class="ui-table-expand --anchor" style="position-anchor:--p4;">
+	<div id="p4" popover class="ui-table-expand --block-end">
 		<strong>New York City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p5" popover class="ui-table-expand --block-end">
+	<div id="p5" popover class="ui-table-expand --modal">
+		<button type="button" popovertarget="p5" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
 		<strong>Hells Kitchen</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
-	<div id="p6" popover class="ui-table-expand --anchor" style="position-anchor:--p6;">
+	<div id="p6" popover class="ui-table-expand --anchor">
+		<strong>Gotham City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p7" popover class="ui-table-expand --anchor">
+		<strong>Metropolis City</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p8" popover class="ui-table-expand --anchor">
+		<strong>Malibu</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+	<div id="p9" popover class="ui-table-expand --anchor">
 		<strong>New York City</strong><br>
 		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
 	</div>
 
+	<div id="p10" popover class="ui-table-expand --anchor --last">
+		<strong>Hells Kitchen</strong><br>
+		Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem repellendus quis ullam nam aliquam, provident illo voluptas iusto perferendis delectus dolorum natus sint cumque repellat voluptates earum maxime aspernatur facilis non soluta excepturi dicta quos placeat! Obcaecati tempore nihil illo voluptate nesciunt officia consequuntur, earum fugiat dolor consectetur. Quis, id.
+	</div>
+
+
+
 	<script>
 		document.querySelectorAll('.--anchor').forEach(popover => {
-			const cells = document.querySelectorAll(`tr:has([popovertarget="${popover.id}"]) > td`);
-			const initialPadding = parseFloat(getComputedStyle(cells[0]).paddingBlockEnd);
+			const trigger = document.querySelector(`[popovertarget="${popover.id}"]`);
+			const row = trigger.closest("tr");
+
+			row.style.anchorName = `--${popover.id}`;
+			popover.style.positionAnchor = `--${popover.id}`;
+
+			const initialPadding = parseFloat(getComputedStyle(row.cells[0]).paddingBlockEnd);
 
 			popover.addEventListener("toggle", event => {
 				const rowHeight = initialPadding + (event.newState === "open" ? popover.offsetHeight : 0);
-				cells.forEach(cell => cell.style.paddingBlockEnd = `${rowHeight}px`);
+				row.style.setProperty("--row", `${rowHeight}px`);
 			});
 		});
 	</script>
