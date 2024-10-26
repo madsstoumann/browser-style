@@ -116,7 +116,7 @@
 		&.--anchor {
 			border-radius: 0;
 			inset-block: auto anchor(bottom);
-			inset-inline: anchor(left);
+			inset-inline: anchor(start);
 			interpolate-size: allow-keywords;
 			position: unset;
 			width: anchor-size(width);
