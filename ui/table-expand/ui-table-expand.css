@@ -60,7 +60,7 @@
 			transition: padding .25s linear;
 		}
 
-		tr:has([data-toggle-expand]:not(:checked)) + tr[data-toggle-expand] {
+		/* tr:has([data-toggle-expand]:not(:checked)) + tr[data-toggle-expand] {
 			display: none;
 		}
 		tr:nth-last-child(2):has([data-toggle-expand]:not(:checked)) td {
@@ -68,7 +68,7 @@
 		}
 		tr:has([data-toggle-expand]:checked) + tr[data-toggle-expand] {
 			display: table-row;
-		}
+		} */
 	}
 
 	:where(.ui-table-expand) {
@@ -152,11 +152,11 @@
 
 			@starting-style {
 				&:popover-open {
-					inset-block: 100dvh 0;
+					inset-block: auto -100dvh;
 				}
 			}
 			&[popover]:not(:popover-open) { 
-				inset-block: 100dvh 0;
+				inset-block: auto -100dvh;
 			}
 		}
 		&.--block-start {
