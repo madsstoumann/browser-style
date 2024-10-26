@@ -208,6 +208,7 @@
 			inline-size: calc(100dvw - 2 * var(--ui-table-popover-m));
 			inset-block-start: var(--ui-table-popover-m);
 			inset-inline: var(--ui-table-popover-m);
+			padding: calc(2 * var(--ui-table-popover-m));
 			transform-origin: 50% 50%;
 
 			@starting-style {
@@ -221,8 +222,8 @@
 
 			[popovertargetaction="hide"] {
 				background: #0000;
-				inset-block-start: 0;
-				inset-inline-end: 0;
+				inset-block-start: calc(var(--ui-table-popover-m) / 2);
+				inset-inline-end: calc(var(--ui-table-popover-m) / 2);
 				position: absolute;
 			}
 		}
