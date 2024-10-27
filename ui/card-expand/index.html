@@ -8,23 +8,33 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="../card/ui-card.css">
-	<!-- <link rel="stylesheet" href="ui-card-expand.css"> -->
+	<link rel="stylesheet" href="ui-card-expand.css">
 
 	<!-- For demo only -->
 
 	<link rel="stylesheet" href="../grid/ui-grid.css">
 	<style>
-		.ui-card
-		a {
-			background: black;
-			color: #fff;
-			font-size: smaller;
-			margin-block-end: 0;
-			padding-block: 2ch;
-			text-transform: uppercase;
-			text-align: center;
-			text-decoration: none;
+		.ui-card {
+			a {
+				background: black;
+				color: #fff;
+				font-size: smaller;
+				margin-block-end: 0;
+				padding-block: 2ch;
+				text-transform: uppercase;
+				text-align: center;
+				text-decoration: none;
+			}
+			small {
+				display: flex;
+				justify-content: space-between;
+				button {
+					margin: 0;
+				}
+			}
 		}
+		
+		
 	</style>
 </head>
 <body>
@@ -39,32 +49,59 @@
 	</p>
 
 	<div class="ui-grid --xs-c-1 --md-c-2">
-		<article class="ui-card">
+
+		<article class="ui-card" style="anchor-name:--uic1;">
 			<img src="https://picsum.photos/id/1/320/180" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
-			<small>News<button type="button" popovertarget="cxp1">i</button></small>
+			<small>News<button type="button" popovertarget="uic1" class="--icon"><ui-icon type="kebab"></ui-icon></button></small>
 			<h3>Card Title</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
-			<div id="cxp1" popover class="ui-card-expand --end">
+			<div id="uic1" popover class="ui-card-expand" style="position-anchor:--uic1;">
+				<button type="button" popovertarget="uic1" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
 				<h4>More info</h4>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
 			</div>
 			<a href="#">Read more</a>
 		</article>
-		<article class="ui-card">
+
+		<article class="ui-card" style="anchor-name:--uic2;">
 			<img src="https://picsum.photos/id/2/320/180" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
-			<small>News<button type="button" popovertarget="cxp2">i</button></small>
+			<small>News<button type="button" popovertarget="uic2" class="--icon"><ui-icon type="kebab"></ui-icon></button></small>
 			<h3>Card Title</h3>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
-			<div id="cxp2" popover class="ui-card-expand --start">
+			<div id="uic2" popover class="ui-card-expand --bottom" style="position-anchor:--uic2;">
+				<button type="button" popovertarget="uic2" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
 				<h4>More info 2</h4>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
 			</div>
 			<a href="#">Read more</a>
 		</article>
+
+		<article class="ui-card" style="anchor-name:--uic3;">
+			<img src="https://picsum.photos/id/3/320/180" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+			<small>News<button type="button" popovertarget="uic3" class="--icon"><ui-icon type="kebab"></ui-icon></button></small>
+			<h3>Card Title</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
+			<div id="uic3" popover class="ui-card-expand --right" style="position-anchor:--uic3;">
+				<button type="button" popovertarget="uic3" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
+				<h4>More info 3</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
+			</div>
+			<a href="#">Read more</a>
+		</article>
+
+		<article class="ui-card" style="anchor-name:--uic4;">
+			<img src="https://picsum.photos/id/4/320/180" alt="Random image" width="320" height="180" class="ui-placeholder --stripes">
+			<small>News<button type="button" popovertarget="uic4" class="--icon"><ui-icon type="kebab"></ui-icon></button></small>
+			<h3>Card Title</h3>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
+			<div id="uic4" popover class="ui-card-expand --left" style="position-anchor:--uic4;">
+				<button type="button" popovertarget="uic4" popovertargetaction="hide" class="--icon"><ui-icon type="cross"></ui-icon></button>
+				<h4>More info 4</h4>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget aliquam ultricies.</p>
+			</div>
+			<a href="#">Read more</a>
+		</article>
 	</div>
-
-
-	
 
 </body>
 </html>
