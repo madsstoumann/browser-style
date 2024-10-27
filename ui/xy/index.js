@@ -164,17 +164,13 @@ stylesheet.replaceSync(`
 	width: 100%;
 }
 :host([grid-x][grid-y]) {
-	--ui-xy-grid-bdw: 1px;
+	--ui-xy-grid-bdw: 2px;
 	--ui-xy-point-bdrs: 0;
 	--ui-xy-point-sz: calc(100% / var(--xy-grid-x));
-	--_wx: calc( (100% - (((var(--xy-grid-x, 1) - 1) * var(--ui-xy-grid-bdw)))) / var(--xy-grid-x, 1) );
-	--_wy: calc( (100% - (((var(--xy-grid-y, 1) - 1) * var(--ui-xy-grid-bdw)))) / var(--xy-grid-y, 1) );
-	background-image: repeating-linear-gradient(to right,
-		transparent, transparent var(--_wx),
-		var(--ButtonFace) var(--_wx), var(--ButtonFace) calc(var(--_wx) + var(--ui-xy-grid-bdw) ) ),
-		repeating-linear-gradient(to bottom,
-		transparent, transparent var(--_wy),
-		var(--ButtonFace) var(--_wy), var(--ButtonFace) calc(var(--_wy) + var(--ui-xy-grid-bdw) ) );
+
+	--_wx: calc( (100% - var(--ui-xy-grid-bdw) + (var(--ui-xy-grid-bdw) / var(--xy-grid-x, 1)) ) / var(--xy-grid-x, 1) );
+	--_wy: calc( (100% - var(--ui-xy-grid-bdw) + (var(--ui-xy-grid-bdw) / var(--xy-grid-y, 1)) ) / var(--xy-grid-y, 1) );
+  background: conic-gradient(from 90deg at var(--ui-xy-grid-bdw) var(--ui-xy-grid-bdw),#0000 25%,var(--ButtonFace) 0) 0 0/var(--_wx) var(--_wy);
 }
 :host::part(xypoint) {
 	aspect-ratio: 1 / 1;

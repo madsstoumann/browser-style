@@ -59,16 +59,6 @@
 			padding-block-end: var(--row, initial);
 			transition: padding .25s linear;
 		}
-
-		/* tr:has([data-toggle-expand]:not(:checked)) + tr[data-toggle-expand] {
-			display: none;
-		}
-		tr:nth-last-child(2):has([data-toggle-expand]:not(:checked)) td {
-			border-block-end-width: 1px;
-		}
-		tr:has([data-toggle-expand]:checked) + tr[data-toggle-expand] {
-			display: table-row;
-		} */
 	}
 
 	:where(.ui-table-expand) {

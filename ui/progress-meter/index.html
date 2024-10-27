@@ -13,7 +13,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Progress Meter</h2>
-	<p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sequi, eaque.</p>
+	<p>The <strong>Progress Meter</strong> component displays milestones along a monetary path, with checkpoints marked by icons and values.</p>
 
 	<fieldset class="ui-progress-meter">
 		<output data-unit-before="$">0</output>
@@ -37,6 +37,61 @@
 			</label>
 		</fieldset>
 	</fieldset>
+
+	<br>
+	<h2>With opposite color-scheme</h2>
+	<div class="bdrs-md cs-opposite pb-3 pi-3">
+		<fieldset class="ui-progress-meter">
+			<output data-unit-before="$">0</output>
+			<progress value="500" max="950"></progress>
+			<fieldset>
+				<label>
+					<input type="checkbox" value="250" disabled>
+					<small>$250</small>
+				</label>
+				<label>
+					<input type="checkbox" value="400" disabled>
+					<small>$400</small>
+				</label>
+				<label>
+					<input type="checkbox" value="600" disabled>
+					<small>$600</small>
+				</label>
+				<label>
+					<input type="checkbox" value="950" disabled>
+					<small>$950</small>
+				</label>
+			</fieldset>
+		</fieldset>
+	</div>
+
+	<br>
+	<h2>With right-to-left</h2>
+
+	<div dir="rtl">
+		<fieldset class="ui-progress-meter">
+			<output data-unit-before="$">0</output>
+			<progress value="500" max="950"></progress>
+			<fieldset>
+				<label>
+					<input type="checkbox" value="250" disabled>
+					<small>$250</small>
+				</label>
+				<label>
+					<input type="checkbox" value="400" disabled>
+					<small>$400</small>
+				</label>
+				<label>
+					<input type="checkbox" value="600" disabled>
+					<small>$600</small>
+				</label>
+				<label>
+					<input type="checkbox" value="950" disabled>
+					<small>$950</small>
+				</label>
+			</fieldset>
+		</fieldset>
+	</div>
 
 	<script type="module">
 		import { common, init } from './../../assets/js/common.js';

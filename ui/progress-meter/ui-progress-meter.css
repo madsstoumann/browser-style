@@ -2,6 +2,10 @@
 @layer bs-component {
 	:where(.ui-progress-meter) {
 		--AccentColor: #FFC700;
+		--AccentColorText: #333;
+		:dir(rtl) {
+			--_dir: -1;
+		}
 		all: unset;
 		display: grid;
 		 grid-template-rows: 1em 1fr;
@@ -34,7 +38,8 @@
 			grid-template-columns: unset;
 			inset-inline-start: var(--_x);
 			position: absolute;
-			translate: calc(0% - var(--_w, 0%)) 0;
+			translate: calc(var(--_dir, 1) * (0% - var(--_w, 0%))) 0;
+
 			small {
 				margin-block-start: .25em;
 			}
@@ -50,12 +55,14 @@
 				min(100%,var(--_p) + var(--_b)/2) 100%,
 				var(--_p) calc(100% + var(--_h)),
 				max(0%  ,var(--_p) - var(--_b)/2) 100%);
+			color: var(--AccentColorText);
 			font-size: smaller;
 			grid-area: 1 / 1;
 			inset-inline-start: var(--_x);
-			padding: 0 .5ch;
+			padding: .125ch .55ch;
 			position: absolute;
-			translate: calc(0% - var(--_w, 0%) / 2) 0;
+			translate: calc(var(--_dir, 1) * (0% - var(--_w, 0%) / 2)) 0;
+
 		}
 		progress {
 			margin-top: .5em;
