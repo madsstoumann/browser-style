@@ -36,5 +36,11 @@
 			grid-row: 1 / 6;
 			grid-template-rows: subgrid;
 		}
+		&.--block-button .ui-button {
+			border-start-start-radius: 0;
+			border-start-end-radius: 0;
+			margin: 0;
+			padding-block: 1.25ch;
+		}
 	}
 }
