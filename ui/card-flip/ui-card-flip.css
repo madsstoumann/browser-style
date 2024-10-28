@@ -1,6 +1,6 @@
 @import '../icon/ui-icon.css';
 @layer bs-component {
-	:where(.ui-card-reveal) {
+	:where(.ui-card-flip) {
 		--ui-card-expand-gap: 2ch;
 		border-radius: var(--ui-card-expand-bdrs, 2ch);
 		display: grid;
