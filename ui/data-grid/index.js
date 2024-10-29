@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.18
- * @summary 24-10-2024
+ * @version 1.0.20
+ * @summary 29-10-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -392,7 +392,7 @@ export default class DataGrid extends HTMLElement {
 			}
 	
 			// Load all resources in parallel, passing URLs directly to fetchResource
-			const [data, schema, i18n] = await Promise.all([
+			const [data, i18n, schema] = await Promise.all([
 				dataPromise,
 				i18nUrl ? this.fetchResource(i18nUrl) : Promise.resolve(null),
 				schemaUrl ? this.fetchResource(schemaUrl) : Promise.resolve(null)
