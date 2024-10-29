@@ -174,8 +174,8 @@ export function renderTBody(context) {
 			pages: calculatePages(data.length, context.state.itemsPerPage),
 		});
 
-		// Get unique identifier for rows if it exists
-		const uid = thead.find(cell => cell.uid)?.field;
+		// Get the fields that make up the composite key/s
+		const keyFields = thead.filter(cell => cell.key).map(cell => cell.field);
 		const searchterm = context.getAttribute('searchterm')?.toLowerCase();
 
 		// Determine the first visible column for checkbox handling
@@ -183,7 +183,11 @@ export function renderTBody(context) {
 
 		// Generate HTML for table body
 		const tbodyHTML = page.map((row) => {
-			const rowSelected = selected.has(row[uid]) ? ' aria-selected' : '';
+			// Construct the composite key/s for this row
+			const rowKeys = keyFields.map(field => row[field]).join(',');
+
+			// Check if the current row is selected based on the composite key/s
+			const rowSelected = selected.has(rowKeys) ? ' aria-selected' : '';
 			let lastVisibleCellIndex = -1;
 
 			// Build the row HTML by iterating over visible columns
@@ -228,8 +232,8 @@ export function renderTBody(context) {
 				rowHTML = cellHTML.join('</td>');
 			}
 
-			// Return the row HTML
-			return `<tr${rowSelected}${uid ? ` data-uid="${row[uid]}"` : ''}>${rowHTML}</tr>`;
+			// Return the row HTML with the composite key/s in `data-keys`
+			return `<tr${rowSelected} data-keys="${rowKeys}">${rowHTML}</tr>`;
 		}).join('');
 
 		// Inject the newly generated HTML into the table body
@@ -245,6 +249,7 @@ export function renderTBody(context) {
 		context.log(`Error rendering table body (tbody): ${error}`, '#F00');
 	}
 }
+
 
 /**
  * Renders the table header (thead) for a data grid.
@@ -271,7 +276,7 @@ export function renderTHead(context) {
 			const tabIndex = !firstVisibleColumnFound ? 0 : -1;
 			firstVisibleColumnFound = true;
 
-			return html + `<th tabindex="${tabIndex}"${cell.uid ? ` data-uid` : ''} data-field="${cell.field}" data-sort-index="${thead.indexOf(cell)}"><span>${cell.label || cell}</span></th>`;
+			return html + `<th tabindex="${tabIndex}"${cell.key ? ` data-key` : ''} data-field="${cell.field}" data-sort-index="${thead.indexOf(cell)}"><span>${cell.label || cell}</span></th>`;
 		}, `<tr>${selectableHeader}`) + '</tr>';
 
 		context.table.tHead.innerHTML = tableHeaderHTML;

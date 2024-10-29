@@ -65,6 +65,38 @@ export function consoleLog(message, bg = '#000', debug = false) {
 }
 
 /**
+ * Retrieves an object from the state based on a composite key derived from the node's parent dataset.
+ *
+ * @param {Object} state - The state object containing thead and tbody arrays.
+ * @param {Object} state.thead - Array of header cell objects, each containing a `uid` and `field` property.
+ * @param {Object} state.tbody - Array of row objects to search through.
+ * @param {HTMLElement} node - The DOM node whose parent's dataset contains the composite key.
+ * @returns {Object|null} - The matched row object from tbody or null if no match is found.
+ */
+export function getObj(state, node) {
+	try {
+		const keyFields = state.thead.filter(cell => cell.key).map(cell => cell.field);
+		// Verify `data-keys` exists, otherwise log a warning and return null
+		const dataKeys = node.parentNode.dataset.keys;
+		if (!dataKeys) {
+			console.warn("No 'data-keys' attribute found on the provided node.");
+			return null;
+		}
+
+		// Extract composite key from `data-keys` and split it into parts
+		const keyParts = dataKeys.split(',');
+
+		// Find the row that matches all parts of the composite key
+		return state.tbody.find(row => 
+			keyFields.every((field, index) => row[field] === keyParts[index])
+		) || null;
+	} catch (error) {
+		console.error(`Error retrieving object data: ${error}`);
+		return null;
+	}
+}
+
+/**
  * Translates a given key into the specified language using the provided i18n object.
  *
  * @param {string} key - The key to be translated.

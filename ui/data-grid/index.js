@@ -1,6 +1,6 @@
 import { dataFromTable, parseData } from './modules/data.js';
 import { renderTable, renderTBody } from './modules/render.table.js';
-import { calculatePages, consoleLog } from './modules/utility.js';
+import { calculatePages, consoleLog, getObj } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
 import printElements from '../../assets/js/printElements.js';
@@ -285,7 +285,7 @@ export default class DataGrid extends HTMLElement {
 				return;
 			}
 
-			const obj = this.getObj(node);
+			const obj = getObj(this.state, node);
 			const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
 			obj[field] = node.textContent;
 
@@ -315,24 +315,6 @@ export default class DataGrid extends HTMLElement {
 			return await response.json();
 		} catch (error) {
 			this.log(`Error fetching resource: ${error.message}`);
-			return null;
-		}
-	}
-
-	/**
-	 * Retrieves an object from the state based on the provided node.
-	 *
-	 * @param {HTMLElement} node - The DOM node used to find the corresponding object in the state.
-	 * @returns {Object|null} The object from the state that matches the node's parent UID, or null if not found.
-	 * @throws Will log an error message if there is an issue retrieving the object data.
-	 */
-	getObj = (node) => {
-		try {
-			const uid = this.state.thead.find(cell => cell.uid)?.field;
-			const key = node.parentNode.dataset.uid;
-			return this.state.tbody.find(row => row[uid] === key) || null;
-		} catch (error) {
-			this.log(`Error retrieving object data: ${error}`, '#F00');
 			return null;
 		}
 	}
@@ -502,7 +484,7 @@ export default class DataGrid extends HTMLElement {
 				const input = row.querySelector(`input[data-toggle-row]`);
 				if (input) input.checked = selected;
 				
-				const key = row.dataset.uid;
+				const key = row.dataset.keys;
 				if (selected) this.state.selected.add(key);
 				else this.state.selected.delete(key);
 			});

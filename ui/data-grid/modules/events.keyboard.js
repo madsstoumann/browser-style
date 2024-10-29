@@ -171,7 +171,10 @@ export default function handleKeyboardEvents(event, context) {
 	 */
 	const handleF2Key = () => {
 		if (!isEditable) return;
-		context.editBegin();
+		if (!context.active && node.nodeName === 'TD') {
+			context.active = node;
+		}
+		context.state.editing ? context.editEnd(context.active) : context.editBegin();
 	};
 
 	/**

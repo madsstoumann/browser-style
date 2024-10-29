@@ -1,7 +1,7 @@
 import { renderTBody } from './render.table.js';
 import { exportCSV, downloadFile } from './data.js';
 import handleKeyboardEvents from './events.keyboard.js';
-import { addEventListeners } from './utility.js';
+import { addEventListeners, getObj } from './utility.js';
 
 /**
  * Attaches custom event handlers for the context.
@@ -37,15 +37,19 @@ export function attachCustomEventHandlers(context) {
 	context.addEventListener('dg:getrow', () => {
 		const node = context.active;
 		if (node) {
-			const obj = context.getObj(node);
+			const obj = getObj(context.state, node);
 			context.dispatch('dg:row', { detail: obj });
 		}
 	});
 
-	// Get all selected rows data
+	// Event listener for retrieving selected rows based on composite keys
 	context.addEventListener('dg:getselected', () => {
-		const selected = [...state.selected].map(key => state.tbody.find(row => row[state.thead.find(cell => cell.uid).field] === key));
-		context.dispatch('dg:selected', { detail: selected });
+		const selected = [...state.selected].map(key => {
+			const tempNode = { parentNode: { dataset: { keys: key } } };
+			return getObj(state, tempNode);
+		});
+		
+		context.dispatch('dg:selected', { detail: selected.filter(item => item !== null) });
 	});
 }
 
@@ -163,6 +167,7 @@ function handleTableClick(event, context) {
 	if (options.selectable && node.nodeName === 'INPUT') {
 		if (node.hasAttribute('data-toggle-row')) context.selectRows([node.closest('tr')], true);
 		if (node.hasAttribute('data-toggle-all')) {
+			// TODO: Select across pages? Ctrl/Cmd + click?
 			const allRows = table.tBodies[0].rows;
 			node.checked ? context.selectRows(allRows, true, true) : context.selectRows(allRows, false, true);
 		}

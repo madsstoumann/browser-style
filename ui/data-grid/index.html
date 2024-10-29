@@ -136,8 +136,15 @@
 			grid.dispatchEvent(new CustomEvent('dg:clearselected'));
 		 });
 
+		 /* Results */
+		 grid.addEventListener('dg:row', (event) => {
+			console.log('dg:row', event.detail);
+		 });
 		 grid.addEventListener('dg:selected', (event) => {
 			console.log('dg:selected', event.detail);
+		 });
+		 grid.addEventListener('dg:cellchange', (event) => {
+			console.log('dg:cellchange', event.detail);
 		 });
 
 		 const dataToAppend = [

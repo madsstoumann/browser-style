@@ -3308,7 +3308,8 @@
   "thead": [
     {
       "field": "firstname",
-      "label": "First Name"
+      "label": "First Name",
+      "key": true
     },
     {
       "field": "lastname",
@@ -3318,7 +3319,7 @@
     {
       "field": "email",
       "label": "Email",
-      "uid": true,
+      "key": true,
       "formatter": "email"
     },
     {
