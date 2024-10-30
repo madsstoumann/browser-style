@@ -631,9 +631,8 @@ export default class DataGrid extends HTMLElement {
 				this.state.selected.delete(compositeKey);
 			}
 		});
-		
+
 		this.form.elements.selected.value = this.state.selected.size;
-		this.dispatch('dg:selection', this.state.selected);
 	}
 
 	/*
