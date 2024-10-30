@@ -45,7 +45,7 @@
 	<h2>Event Playground</h2>
 	<p>See the <code>console</code></p>
 
-	<button id="getrow" type="button">dg:getrow</button>
+	
 	<button id="getselected" type="button">dg:getselected</button>
 	<button id="clearselected" type="button">dg:clearselected</button>
 	<button id="append" type="button">dg:append</button>
@@ -121,10 +121,7 @@
 		/* === EVENT PLAYGROUND === */
 		const grid = document.getElementById('grid');
 
-		const getRow = document.getElementById('getrow');
-		getRow.addEventListener('click', () => {
-			grid.dispatchEvent(new CustomEvent('dg:getrow'));
-		 });
+
 
 		const getSelected = document.getElementById('getselected');
 		getSelected.addEventListener('click', () => {
@@ -137,15 +134,17 @@
 		 });
 
 		 /* Results */
-		 grid.addEventListener('dg:row', (event) => {
-			console.log('dg:row', event.detail);
-		 });
+
 		 grid.addEventListener('dg:selected', (event) => {
 			console.log('dg:selected', event.detail);
 		 });
 		 grid.addEventListener('dg:cellchange', (event) => {
 			console.log('dg:cellchange', event.detail);
 		 });
+
+		 grid.addEventListener('dg:details', (event) => {
+			console.log(event.detail);
+		});
 
 		 const dataToAppend = [
 				{

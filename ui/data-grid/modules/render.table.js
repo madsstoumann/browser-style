@@ -16,13 +16,34 @@ function applySorting(context, data) {
 	const { locale } = context.options;
 
 	if (sortIndex > -1) {
+		const { type = 'string' } = context.state.thead[sortIndex] || {};
+
 		data.sort((a, b) => {
-			const rowA = Object.values(a);
-			const rowB = Object.values(b);
-			const A = rowA[sortIndex] ?? '';
-			const B = rowB[sortIndex] ?? '';
-			return typeof A === 'string' ? A.localeCompare(B, locale, { sensitivity: 'variant' }) : A - B;
+			const A = a[context.state.thead[sortIndex].field] ?? '';
+			const B = b[context.state.thead[sortIndex].field] ?? '';
+
+			switch (type) {
+				case 'number':
+					return Number(A) - Number(B);
+				case 'date':
+					return new Date(A) - new Date(B);
+				case 'boolean':
+					return (A === B) ? 0 : A ? 1 : -1;
+				case 'currency':
+					const numA = parseFloat(A.replace(/[^0-9.-]+/g, ""));
+					const numB = parseFloat(B.replace(/[^0-9.-]+/g, ""));
+					return numA - numB;
+				case 'percentage':
+					const percentA = parseFloat(A.replace('%', ''));
+					const percentB = parseFloat(B.replace('%', ''));
+					return percentA - percentB;
+				default:
+					// Default to string sorting
+					return String(A).localeCompare(String(B), locale, { sensitivity: 'variant' });
+			}
 		});
+
+		// Reverse order if sortOrder is descending
 		if (sortOrder === 1) data.reverse();
 	}
 }
@@ -241,7 +262,6 @@ export function renderTBody(context) {
 
 		// Log the rendering process for debugging purposes
 		context.log(`render: tbody`, '#584');
-		if (context.options.debug) console.log(context.state);
 
 		// Update the navigation UI
 		updateNavigation(context);

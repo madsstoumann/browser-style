@@ -3309,7 +3309,8 @@
     {
       "field": "firstname",
       "label": "First Name",
-      "key": true
+      "key": true,
+      "event": "dg:details"
     },
     {
       "field": "lastname",

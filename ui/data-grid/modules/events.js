@@ -1,7 +1,7 @@
 import { renderTBody } from './render.table.js';
-import { exportCSV, downloadFile } from './data.js';
+import { exportCSV, downloadFile, handleSorting } from './data.js';
 import handleKeyboardEvents from './events.keyboard.js';
-import { addEventListeners, getObj } from './utility.js';
+import { addEventListeners, getKeyValueObject, getObj } from './utility.js';
 
 /**
  * Attaches custom event handlers for the context.
@@ -31,15 +31,6 @@ export function attachCustomEventHandlers(context) {
 			context.toggle.indeterminate = false;
 		}
 		context.dispatch('dg:selected', { detail: [] });
-	});
-
-	// Get the active row data
-	context.addEventListener('dg:getrow', () => {
-		const node = context.active;
-		if (node) {
-			const obj = getObj(context.state, node);
-			context.dispatch('dg:row', { detail: obj });
-		}
 	});
 
 	// Event listener for retrieving selected rows based on composite keys
@@ -135,41 +126,44 @@ function handleFormInput(event, context) {
 function handleTableClick(event, context) {
 	const { table, state, options } = context;
 	const node = event.target;
+
 	if (node === table) return;
 
 	if (['TD', 'TH'].includes(node.nodeName)) {
 		state.cellIndex = node.cellIndex;
 		state.rowIndex = node.parentNode.rowIndex;
 
-		// Sorting
-		if (state.rowIndex === 0) {
+		// Sorting logic
+		if (state.rowIndex === 0 && node.nodeName === 'TH') {
 			const index = node.dataset.sortIndex;
-			const currentSortIndex = parseInt(context.getAttribute('sortindex'), 10);
-			const currentSortOrder = parseInt(context.getAttribute('sortorder'), 10);
+			handleSorting(context, index);
+		}
 
-			if (index !== undefined) {
-				if (currentSortIndex === parseInt(index, 10)) {
-					if (currentSortOrder === 0) {
-						context.setAttribute('sortorder', 1);
-					} else if (currentSortOrder === 1) {
-						context.removeAttribute('sortindex');
-						context.removeAttribute('sortorder');
-					}
-				} else {
-					context.setAttribute('sortindex', parseInt(index, 10));
-					context.setAttribute('sortorder', 0);
-				}
+		// Handle cell-specific events
+		const columnConfig = state.thead[options.selectable && state.cellIndex > 0 ? state.cellIndex - 1 : state.cellIndex];
+
+		if (node.nodeName === 'TD' && columnConfig?.event) {
+			const { row, rowIndex } = getObj(state, node) || {};
+			const keyValueObject = getKeyValueObject(state, node);
+			
+			if (row && rowIndex !== undefined) {
+				context.dispatch(columnConfig.event, {
+					keys: keyValueObject,
+					row,
+					rowIndex
+				});
 			}
 		}
+
 		context.setActive();
 	}
 
 	if (options.selectable && node.nodeName === 'INPUT') {
-		if (node.hasAttribute('data-toggle-row')) context.selectRows([node.closest('tr')], true);
-		if (node.hasAttribute('data-toggle-all')) {
-			// TODO: Select across pages? Ctrl/Cmd + click?
+		if (node.hasAttribute('data-toggle-row')) {
+			context.selectRows([node.closest('tr')], true);
+		} else if (node.hasAttribute('data-toggle-all')) {
 			const allRows = table.tBodies[0].rows;
-			node.checked ? context.selectRows(allRows, true, true) : context.selectRows(allRows, false, true);
+			context.selectRows(allRows, node.checked, true);
 		}
 	}
 }

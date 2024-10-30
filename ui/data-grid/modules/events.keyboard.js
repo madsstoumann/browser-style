@@ -1,3 +1,5 @@
+import { handleSorting } from './data.js';
+
 /**
  * Handles keyboard events for navigation, selection, sorting, and editing within the table.
  *
@@ -94,22 +96,7 @@ export default function handleKeyboardEvents(event, context) {
 			} else {
 				event.preventDefault();
 				const index = node.dataset.sortIndex;
-				const currentSortIndex = parseInt(context.getAttribute('sortindex'), 10);
-				const currentSortOrder = parseInt(context.getAttribute('sortorder'), 10);
-				
-				if (index !== undefined) {
-					if (currentSortIndex === parseInt(index, 10)) {
-						if (currentSortOrder === 0) {
-							context.setAttribute('sortorder', 1);
-						} else if (currentSortOrder === 1) {
-							context.removeAttribute('sortindex');
-							context.removeAttribute('sortorder');
-						}
-					} else {
-						context.setAttribute('sortindex', parseInt(index, 10));
-						context.setAttribute('sortorder', 0);
-					}
-				}
+				handleSorting(context, index);
 			}
 		}
 

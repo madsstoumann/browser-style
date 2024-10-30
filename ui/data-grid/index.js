@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.20
- * @summary 29-10-2024
+ * @version 1.0.21
+ * @summary 30-10-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -113,7 +113,10 @@ export default class DataGrid extends HTMLElement {
 			this.insertAdjacentHTML('afterbegin', renderSearch(this))
 		}
 
-		renderTable(this);
+		if (this.state.items > 0) {
+			renderTable(this);
+		}
+
 		attachEventListeners(this);
 		attachCustomEventHandlers(this);
 		
@@ -158,26 +161,6 @@ export default class DataGrid extends HTMLElement {
 			this.state.sortOrder = parseInt(newValue, 10);
 			if (render) renderTBody(this);
 		}
-	}
-
-	/**
-	 * Applies the given configuration to the data grid.
-	 * 
-	 * This method updates the `thead` state of the data grid by merging the existing columns
-	 * with the corresponding columns from the provided configuration. If a column in the 
-	 * configuration matches a column in the current state (based on the `field` property), 
-	 * the properties from the configuration column will overwrite those in the current state.
-	 * 
-	 * @param {Object} config - The configuration object.
-	 * @param {Array} config.thead - An array of column configuration objects.
-	 * @param {string} config.thead[].field - The field name of the column.
-	 */
-	applyConfig(config) {
-		if (!config || !config.thead) return;
-		this.state.thead = this.state.thead.map((col) => {
-			const configCol = config.thead.find((c) => c.field === col.field);
-			return configCol ? { ...col, ...configCol } : col;
-		});
 	}
 
 	/**
@@ -538,15 +521,19 @@ export default class DataGrid extends HTMLElement {
 	setInitialWidths() {
 		try {
 			if (!this.table || !this.colgroup) return;
-
+	
 			const calculateWidths = () => {
 				const tableWidth = this.table.offsetWidth;
 
 				Array.from(this.colgroup.children).forEach((col, index) => {
-					const cell = this.table.tHead?.rows[0]?.cells[index] || this.table.tBodies[0].rows[0].cells[index];
-					if (cell) {
-						const colWidthPercentage = ((cell.offsetWidth / tableWidth) * 100).toFixed(2);
-						col.style.width = `${colWidthPercentage}%`;
+					if (this.config?.colWidths && this.config.colWidths[index] !== undefined) {
+						col.style.width = `${this.config.colWidths[index]}%`;
+					} else {
+						const cell = this.table.tHead?.rows[0]?.cells[index] || this.table.tBodies[0].rows[0].cells[index];
+						if (cell) {
+							const colWidthPercentage = ((cell.offsetWidth / tableWidth) * 100).toFixed(2);
+							col.style.width = `${colWidthPercentage}%`;
+						}
 					}
 				});
 

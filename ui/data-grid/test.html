@@ -43,7 +43,6 @@
 		}
 
 		const grid = document.getElementById('grid');
-		grid.formatters = formatters;
 		grid.addEventListener('dg:loaded', () => {
 			fetch(`./data/test.json`)
 				.then((response) => response.json())
@@ -51,9 +50,11 @@
 					grid.config = {
 						expandIcon: 'meatball',
 						expandType: '--inline-end',
+						colWidths: [5, 10, 30, 7.5, 35, 12.5],
 						thead: [
-							{ field: 'id', label: 'ID', key: true, formatter: 'link' },
-							{ field: 'issue', key: true },
+							{ field: 'id', label: 'ID', key: true, event: 'dg:details' },
+							{ field: 'issue', type: 'number' },
+							{ field: 'price', type: 'number' },
 							{ field: 'artist', hidden: true, expand: true },
 							{ field: 'sku', hidden: true, expand: true },
 							{ field: 'type', hidden: true, expand: true },
@@ -63,8 +64,9 @@
 							{ field: 'delivery', hidden: true, expand: true },
 						],
 					};
-					grid.data = result.data;
 					grid.setItemsPerPage(10);
+					grid.data = result.data;
+					
 					// grid.setPage(0, true);
 					// grid.dataInitialized = false;
 					// grid.setAttribute('itemsPerPage', result.data.length);
@@ -77,6 +79,10 @@
 			const requestedPage = event.detail.page;
 			const direction = event.detail.direction;
 			grid.setPage(requestedPage, true);
+		});
+
+		grid.addEventListener('dg:details', (event) => {
+			console.log(event.detail);
 		});
 
 	</script>

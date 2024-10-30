@@ -124,6 +124,27 @@ function getTableHead(table) {
 }
 
 /**
+ * Handles the sorting logic for a data grid.
+ *
+ * @param {HTMLElement} context - The HTML element that contains the sorting attributes.
+ * @param {number} index - The index of the column to sort.
+ */
+export function handleSorting(context, index) {
+	const currentSortIndex = parseInt(context.getAttribute('sortindex'), 10);
+	const currentSortOrder = parseInt(context.getAttribute('sortorder'), 10);
+
+	if (index !== undefined) {
+		if (currentSortIndex === parseInt(index, 10)) {
+			context.setAttribute('sortorder', currentSortOrder === 0 ? 1 : 0);
+			if (currentSortOrder === 1) context.removeAttribute('sortindex');
+		} else {
+			context.setAttribute('sortindex', parseInt(index, 10));
+			context.setAttribute('sortorder', 0);
+		}
+	}
+}
+
+/**
  * Parses the provided data and updates the context's table structure.
  * If thead or tbody are not provided, they will be generated based on the data.
  * Thead can also be merged with a provided config.

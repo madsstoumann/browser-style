@@ -65,31 +65,83 @@ export function consoleLog(message, bg = '#000', debug = false) {
 }
 
 /**
- * Retrieves an object from the state based on a composite key derived from the node's parent dataset.
+ * Generates a key-value object based on the provided state and node.
  *
- * @param {Object} state - The state object containing thead and tbody arrays.
- * @param {Object} state.thead - Array of header cell objects, each containing a `uid` and `field` property.
- * @param {Object} state.tbody - Array of row objects to search through.
- * @param {HTMLElement} node - The DOM node whose parent's dataset contains the composite key.
- * @returns {Object|null} - The matched row object from tbody or null if no match is found.
+ * @param {Object} state - The state object containing the table header information.
+ * @param {HTMLElement} node - The DOM node from which to extract data keys.
+ * @returns {Object|null} The key-value object or null if an error occurs or data keys are not found.
+ *
+ * @throws Will log an error message if an exception occurs during the creation of the key-value object.
  */
-export function getObj(state, node) {
+export function getKeyValueObject(state, node) {
 	try {
 		const keyFields = state.thead.filter(cell => cell.key).map(cell => cell.field);
-		// Verify `data-keys` exists, otherwise log a warning and return null
 		const dataKeys = node.parentNode.dataset.keys;
+
 		if (!dataKeys) {
 			console.warn("No 'data-keys' attribute found on the provided node.");
 			return null;
 		}
 
-		// Extract composite key from `data-keys` and split it into parts
-		const keyParts = dataKeys.split(',');
+		const keyParts = dataKeys.split(',').map(part => part.trim());
 
-		// Find the row that matches all parts of the composite key
-		return state.tbody.find(row => 
-			keyFields.every((field, index) => row[field] === keyParts[index])
-		) || null;
+		// Build the key-value object
+		const keyValueObject = keyFields.reduce((acc, field, index) => {
+			acc[field] = isNaN(keyParts[index]) ? keyParts[index] : Number(keyParts[index]);
+			return acc;
+		}, {});
+
+		return keyValueObject;
+	} catch (error) {
+		console.error(`Error creating key-value object: ${error}`);
+		return null;
+	}
+}
+
+/**
+ * Retrieves an object from the state based on the composite key found in the node's data-keys attribute.
+ *
+ * @param {Object} state - The state object containing thead and tbody arrays.
+ * @param {HTMLElement} node - The DOM node containing the data-keys attribute.
+ * @param {boolean} [typeCheck=false] - Whether to perform type-aware comparison for key matching.
+ * @returns {Object|null} The matched row data and its index, or null if no match is found.
+ *
+ * @throws Will log an error message to the console if an error occurs during execution.
+ */
+export function getObj(state, node, typeCheck = false) {
+	try {
+		const keyFields = state.thead
+			.filter(cell => cell.key)
+			.map(cell => ({ field: cell.field, type: cell.type || 'string' }));
+		const dataKeys = node.parentNode.dataset.keys;
+
+		if (!dataKeys) {
+			console.warn("No 'data-keys' attribute found on the provided node.");
+			return null;
+		}
+
+		const keyParts = dataKeys.split(',').map(part => part.trim());
+
+		// Find the row index and data that match the composite key
+		const rowIndex = state.tbody.findIndex(row => 
+			keyFields.every((keyConfig, index) => {
+				const { field, type } = keyConfig;
+				const rowValue = row[field];
+				const keyPart = keyParts[index];
+				
+				// Perform type-aware comparison if typeCheck is true
+				return typeCheck && type === 'number' 
+					? Number(rowValue) === Number(keyPart)
+					: String(rowValue).trim() === keyPart;
+			})
+		);
+
+		if (rowIndex === -1) {
+			return null;
+		}
+
+		// Return both the row data and its index
+		return { row: state.tbody[rowIndex], rowIndex };
 	} catch (error) {
 		console.error(`Error retrieving object data: ${error}`);
 		return null;
