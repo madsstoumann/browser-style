@@ -157,23 +157,23 @@ export default function handleKeyboardEvents(event, context) {
 	/**
 	 * Handles F2 key event for entering/exiting edit mode.
 	 */
-	const handleF2Key = () => {
-		if (!isEditable) return;
-		if (!context.active && node.nodeName === 'TD') {
-			context.active = node;
-		}
-		context.state.editing ? context.editEnd(context.active) : context.editBegin();
-	};
+	// const handleF2Key = () => {
+	// 	if (!isEditable) return;
+	// 	if (!context.active && node.nodeName === 'TD') {
+	// 		context.active = node;
+	// 	}
+	// 	context.state.editing ? context.editEnd(context.active) : context.editBegin();
+	// };
 
 	/**
 	 * Handles Tab key event when leaving edit mode.
 	 */
 	const handleTabKey = () => {
-		if (context.state.editing) {
-			event.preventDefault();
-			context.state.editing = false;
-			node.toggleAttribute('contenteditable', context.state.editing);
-		}
+		// if (context.state.editing) {
+		// 	event.preventDefault();
+		// 	context.state.editing = false;
+		// 	node.toggleAttribute('contenteditable', context.state.editing);
+		// }
 	};
 
 	/**
@@ -199,7 +199,7 @@ export default function handleKeyboardEvents(event, context) {
 		case 'p': handlePKey(); break;
 		case 'PageDown':
 		case 'PageUp': handlePageKeys(key); break;
-		case 'F2': handleF2Key(); break;
+		// case 'F2': handleF2Key(); break;
 		case 'Tab': handleTabKey(); break;
 		case 'Enter': handleEnterKey(); break;
 	}

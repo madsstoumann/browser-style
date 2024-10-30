@@ -107,7 +107,7 @@
 				position: relative;
 
 				/* Editable */
-				[editable] &:is(:focus,:focus-visible) {
+				&[contenteditable]:is(:focus,:focus-visible) {
 					background: Canvas;
 					color: CanvasText;
 					outline: 2px solid var(--AccentColor);

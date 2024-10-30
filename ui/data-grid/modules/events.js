@@ -84,7 +84,7 @@ export function attachEventListeners(context) {
 
 	// Table click and keyboard events
 	table.addEventListener('click', (event) => handleTableClick(event, context));
-	table.tBodies[0].addEventListener('dblclick', () => context.editBegin());
+	// table.tBodies[0].addEventListener('dblclick', () => context.editBegin());
 	table.addEventListener('keydown', (event) => handleKeyboardEvents(event, context));
 	form.addEventListener('input', (event) => handleFormInput(event, context));
 

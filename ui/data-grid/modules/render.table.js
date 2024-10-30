@@ -215,6 +215,8 @@ export function renderTBody(context) {
 			let rowHTML = Object.values(row).map((cell, index) => {
 				if (thead[index].hidden) return '';
 				lastVisibleCellIndex = index;
+				const isEditable = thead[index].editable;
+
 
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
 				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? 
@@ -224,7 +226,7 @@ export function renderTBody(context) {
 				// Apply search term highlighting if applicable
 				cellValue = searchterm ? cellValue.replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
 
-				return `${selectable}<td tabindex="-1">${formatter(cellValue)}</td>`;
+				return `${selectable}<td tabindex="-1"${isEditable ? ` contenteditable`:''}>${formatter(cellValue)}</td>`;
 			}).join('');
 
 			// Handle the expand / popover feature

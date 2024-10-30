@@ -237,20 +237,20 @@ export default class DataGrid extends HTMLElement {
 	 * 
 	 * @throws {Error} Logs an error message if an exception occurs during the editing process.
 	 */
-	editBegin() {
-		try {
-			if (!this.options.editable || !this.active) return;
-			const node = this.active;
-			if (node.nodeName === 'TD') {
-				this.state.editing = true;
-				node.toggleAttribute('contenteditable', this.state.editing);
-				node.dataset.oldValue = node.textContent;
-				window.getSelection().collapseToEnd();
-			}
-		} catch (error) {
-			this.log(`An error occurred while beginning edit: ${error}`, '#F00');
-		}
-	}
+	// editBegin() {
+	// 	try {
+	// 		if (!this.options.editable || !this.active) return;
+	// 		const node = this.active;
+	// 		if (node.nodeName === 'TD') {
+	// 			this.state.editing = true;
+	// 			node.toggleAttribute('contenteditable', this.state.editing);
+	// 			node.dataset.oldValue = node.textContent;
+	// 			window.getSelection().collapseToEnd();
+	// 		}
+	// 	} catch (error) {
+	// 		this.log(`An error occurred while beginning edit: ${error}`, '#F00');
+	// 	}
+	// }
 
 	/**
 	 * Ends the editing mode for a given node in the data grid.
@@ -258,25 +258,25 @@ export default class DataGrid extends HTMLElement {
 	 * @param {HTMLElement} node - The DOM element representing the cell being edited.
 	 * @throws Will log an error message if an exception occurs during the editing process.
 	 */
-	editEnd(node) {
-		try {
-			this.state.editing = false;
-			node.toggleAttribute('contenteditable', this.state.editing);
+	// editEnd(node) {
+	// 	try {
+	// 		this.state.editing = false;
+	// 		node.toggleAttribute('contenteditable', this.state.editing);
 
-			if (node.textContent === node.dataset.oldValue) {
-				delete node.dataset.oldValue;
-				return;
-			}
+	// 		if (node.textContent === node.dataset.oldValue) {
+	// 			delete node.dataset.oldValue;
+	// 			return;
+	// 		}
 
-			const obj = getObj(this.state, node);
-			const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
-			obj[field] = node.textContent;
+	// 		const obj = getObj(this.state, node);
+	// 		const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
+	// 		obj[field] = node.textContent;
 
-			this.dispatch('dg:cellchange', obj);
-		} catch (error) {
-			this.log(`An error occurred while editing: ${error}`, '#F00');
-		}
-	}
+	// 		this.dispatch('dg:cellchange', obj);
+	// 	} catch (error) {
+	// 		this.log(`An error occurred while editing: ${error}`, '#F00');
+	// 	}
+	// }
 
 	/**
 	 * Fetches a resource from the given URL and returns the parsed JSON data.
@@ -510,6 +510,12 @@ export default class DataGrid extends HTMLElement {
 			if (this.active) {
 				this.active.setAttribute('tabindex', '0');
 				this.active.focus();
+
+				// Check if the cell is editable and set the cursor at the end
+				if (this.active.isContentEditable) {
+					const selection = window.getSelection();
+					selection.collapse(this.active, this.active.childNodes.length);
+				}
 			}
 		} catch (error) {
 			this.log(`Error setting active cell: ${error}`, '#F00');
