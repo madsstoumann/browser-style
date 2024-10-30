@@ -1,3 +1,4 @@
+import { icons } from './icons.js';
 import { calculatePages, t } from './utility.js';
 
 /**
@@ -149,7 +150,6 @@ export function renderTable(context) {
  * @param {boolean} context.options.selectable - Indicates if rows are selectable.
  * @param {Object} context.table - The table element where the tbody will be rendered.
  * @param {Object} context.config - The configuration object containing additional settings.
- * @param {string} context.config.expandIcon - The icon type for the expand button.
  * @param {string} context.config.expandType - The type of expand behavior.
  * @param {Object} context.wrapper - The wrapper element for the table.
  * @param {Object} context.formatters - The object containing formatter functions for cell values.
@@ -236,7 +236,7 @@ export function renderTBody(context) {
 			if (expandFields) {
 				// Generate a unique popover ID and insert the expand button
 				const popoverId = `p${window.crypto.randomUUID()}`;
-				const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}"><ui-icon type="${context.config.expandIcon ? context.config.expandIcon : 'kebab'}"></ui-icon></button>`;
+				const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
 				const popoverHTML = `
 					<div id="${popoverId}" popover class="ui-table-expand ${context.config.expandType ? context.config.expandType : '--inline-start'}">
 						${expandFields}

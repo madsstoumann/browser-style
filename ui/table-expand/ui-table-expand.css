@@ -11,7 +11,7 @@
 			grid-template-columns: 1fr; /* for label */
 
 			/* Icon */
-			&:has(ui-icon) {
+			&:has(ui-icon, .ui-icon) {
 				padding: 0 .3ch;
 				@media (hover: hover) {
 					&:hover {
@@ -24,7 +24,7 @@
 				}
 			}
 			/* Text */
-			&:not(:has(ui-icon)) {
+			&:not(:has(ui-icon, .ui-icon)) {
 				--button-bxsh--hover: none;
 				color: var(--AccentColor);
 				cursor: pointer;
