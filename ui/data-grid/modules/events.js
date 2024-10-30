@@ -163,7 +163,7 @@ function handleTableClick(event, context) {
 			context.selectRows([node.closest('tr')], true);
 		} else if (node.hasAttribute('data-toggle-all')) {
 			const allRows = table.tBodies[0].rows;
-			context.selectRows(allRows, node.checked, true);
+			context.selectRows(allRows, node.checked, true, event.shiftKey);
 		}
 	}
 }

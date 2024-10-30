@@ -457,8 +457,13 @@ export default class DataGrid extends HTMLElement {
 	 *
 	 * @throws Will throw an error if there is an issue during the selection process.
 	 */
-	selectRows = (rows, toggle = true, force = false) => {
+	selectRows = (rows, toggle = true, force = false, shiftKey = false) => {
 		try {
+			if (shiftKey) {
+				this.toggleSelection(toggle);
+			}
+
+		// Regular selection logic
 			Array.from(rows).forEach(row => {
 				const shouldSelect = force ? toggle : row.hasAttribute('aria-selected') ? !toggle : toggle;
 				row.toggleAttribute('aria-selected', shouldSelect);
@@ -471,18 +476,17 @@ export default class DataGrid extends HTMLElement {
 				if (selected) this.state.selected.add(key);
 				else this.state.selected.delete(key);
 			});
-			
+
 			this.form.elements.selected.value = this.state.selected.size;
+			this.dispatch('dg:selection', this.state.selected);
 
 			if (this.toggle) {
 				this.toggle.indeterminate = this.state.selected.size > 0 && this.state.selected.size < this.state.pageItems;
 			}
-
-			this.dispatch('dg:selection', this.state.selected);
 		} catch (error) {
 			this.log(`Error selecting rows: ${error}`, '#F00');
 		}
-	}
+	};
 
 	/**
 	 * Sets the active cell in the data grid.
@@ -607,6 +611,29 @@ export default class DataGrid extends HTMLElement {
 		} catch (error) {
 			this.log(`Error setting page: ${error}`, '#F00');
 		}
+	}
+
+	/**
+	 * Toggles selection for all rows in the current tbody based on the specified toggle parameter.
+	 * This method is only called if Shift is held down during a select-all action.
+	 * 
+	 * @param {boolean} select - Determines if all rows should be selected (true) or deselected (false).
+	 */
+	toggleSelection(select = true) {
+		const keyFields = this.state.thead.filter(col => col.key).map(col => col.field);
+
+		this.state.tbody.forEach(row => {
+			const compositeKey = keyFields.map(field => row[field]).join(',');
+
+			if (select) {
+				this.state.selected.add(compositeKey);
+			} else {
+				this.state.selected.delete(compositeKey);
+			}
+		});
+		
+		this.form.elements.selected.value = this.state.selected.size;
+		this.dispatch('dg:selection', this.state.selected);
 	}
 
 	/*

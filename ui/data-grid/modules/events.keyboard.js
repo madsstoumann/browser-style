@@ -86,14 +86,14 @@ export default function handleKeyboardEvents(event, context) {
 	const handleSpaceKey = () => {
 		if (node.nodeName === 'TH') {
 			if (isSelectable && cellIndex === 0) {
-				if (context.state.selected.size) {
-					context.selectRows(context.table.tBodies[0].rows, false, true);
-					context.toggle.checked = false;
-				} else {
-					context.selectRows(context.table.tBodies[0].rows, true, true);
-					context.toggle.checked = true;
-				}
+				// Toggle select all rows, but only bulk select if Shift is held down
+				const allRows = context.table.tBodies[0].rows;
+				const selectAll = !context.toggle.checked;
+
+				context.selectRows(allRows, selectAll, true, event.shiftKey);
+				context.toggle.checked = selectAll;
 			} else {
+				// Sort the column if not in the first selectable column
 				event.preventDefault();
 				const index = node.dataset.sortIndex;
 				handleSorting(context, index);
@@ -101,6 +101,7 @@ export default function handleKeyboardEvents(event, context) {
 		}
 
 		if (node.nodeName === 'TD' && isSelectable) {
+			// Select individual row if clicking a cell in the first column or Shift is held down
 			if (cellIndex === 0 || shiftKey) {
 				event.preventDefault();
 				context.selectRows([node.parentNode], true);

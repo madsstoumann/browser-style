@@ -107,15 +107,16 @@
 				position: relative;
 
 				/* Editable */
-				&[contenteditable]:is(:focus,:focus-visible) {
+				[editable] &:is(:focus,:focus-visible) {
 					background: Canvas;
 					color: CanvasText;
 					outline: 2px solid var(--AccentColor);
 					outline-offset: -2px;
+
 				}
 
 				/* Value changed */
-				&[data-old-value]::after {
+				/* &[data-old-value]::after {
 					background: var(--ColorWarning);
 					border-radius: 50%;
 					content: "";
@@ -125,7 +126,7 @@
 					inset-inline-end: 0.25em;
 					position: absolute;
 					width: .33em;
-				}
+				} */
 			}
 
 			& th {
