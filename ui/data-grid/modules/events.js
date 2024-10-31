@@ -84,7 +84,9 @@ export function attachEventListeners(context) {
 
 	// Table click and keyboard events
 	table.addEventListener('click', (event) => handleTableClick(event, context));
-	// table.tBodies[0].addEventListener('dblclick', () => context.editBegin());
+	table.addEventListener('focus', (event) => handleCellFocus(event), true);
+	table.addEventListener('focusout', (event) => handleCellUpdate(event, context));
+	table.addEventListener('input', (event) => handleCellEdit(event, context));
 	table.addEventListener('keydown', (event) => handleKeyboardEvents(event, context));
 	form.addEventListener('input', (event) => handleFormInput(event, context));
 
@@ -166,4 +168,74 @@ function handleTableClick(event, context) {
 			context.selectRows(allRows, node.checked, true, event.shiftKey);
 		}
 	}
+}
+
+/**
+ * Handles the focus event on a cell element.
+ * Sets the original and new value to the trimmed text content of the cell if it is content editable.
+ *
+ * @param {Event} event - The focus event triggered on the cell element.
+ */
+function handleCellFocus(event) {
+	const cell = event.target;
+	if (cell.isContentEditable && !cell.dataset.oldValue) {
+		const trimmedContent = cell.textContent.trim();
+		cell.dataset.oldValue = trimmedContent;
+		cell.dataset.newValue = trimmedContent;
+	}
+}
+
+/**
+ * Handles the cell edit event.
+ * 
+ * This function is triggered when a cell in the data grid is edited. 
+ * If the cell is content editable, it stores the trimmed text content 
+ * of the cell in the `data-new-value` attribute.
+ * 
+ * @param {Event} event - The event object representing the cell edit event.
+ */
+function handleCellEdit(event) {
+	const cell = event.target;
+	if (cell.isContentEditable) {
+		cell.dataset.newValue = cell.textContent.trim();
+	}
+}
+
+/**
+ * Handles the update of a cell's content in a data grid.
+ *
+ * @param {Event} event - The event object triggered by the cell update.
+ * @param {Object} context - The context object containing the state and options of the data grid.
+ * @param {Object} context.options - The options for the data grid.
+ * @param {boolean} context.options.selectable - Indicates if the cells are selectable.
+ * @param {Object} context.state - The state of the data grid.
+ * @param {Array} context.state.thead - The header configuration of the data grid.
+ * @param {Function} context.dispatchEvent - Function to dispatch custom events.
+ */
+function handleCellUpdate(event, context) {
+	const cell = event.target;
+	if (!cell.isContentEditable) return;
+
+	const { newValue, oldValue } = cell.dataset;
+
+	if (newValue !== oldValue) {
+		const adjustedCellIndex = context.options.selectable && cell.cellIndex > 0 ? cell.cellIndex - 1 : cell.cellIndex;
+		const columnConfig = context.state.thead[adjustedCellIndex];
+		const field = columnConfig.field;
+		const { row, rowIndex } = getObj(context.state, cell) || {};
+		row[field] = newValue;
+
+		context.dispatchEvent(new CustomEvent('dg:cellchange', {
+			detail: {
+				field,
+				newValue,
+				oldValue,
+				row,
+				rowIndex
+			}
+		}));
+
+		cell.dataset.oldValue = newValue;
+	}
+	cell.dataset.newValue = cell.textContent.trim();
 }

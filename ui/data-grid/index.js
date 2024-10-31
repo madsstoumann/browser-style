@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.21
- * @summary 30-10-2024
+ * @version 1.0.22
+ * @summary 31-10-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -29,7 +29,6 @@ export default class DataGrid extends HTMLElement {
 		this.options = {
 			debug: this.hasAttribute('debug') || false,
 			density: this.getAttribute('density') || '',
-			editable: this.hasAttribute('editable') || false,
 			exportable: this.hasAttribute('exportable') || false,
 			externalNavigation: this.hasAttribute('external-navigation') || false,
 			fixed: true, 
@@ -42,7 +41,6 @@ export default class DataGrid extends HTMLElement {
 		this.state = {
 			cellIndex: 0,
 			cols: 0,
-			editing: false,
 			items: 0, /* total amount of items */
 			itemsPerPage: parseInt(this.getAttribute('itemsperpage'), 10) || 10,
 			page: 0,
@@ -56,7 +54,7 @@ export default class DataGrid extends HTMLElement {
 			thead: [],
 		};
 
-		if (this.options.debug) console.table(this.options, ['editable', 'locale', 'searchable', 'selectable']);
+		if (this.options.debug) console.table(this.options, ['locale', 'searchable', 'selectable']);
 
 		this.wrapper = document.createElement('div');
 		this.appendChild(this.wrapper);
@@ -231,52 +229,6 @@ export default class DataGrid extends HTMLElement {
 			this.log(`Error in dispatch: ${error}`, '#F00');
 		}
 	};
-
-	/**
-	 * Initiates the editing process for a table cell if the grid is editable and an active cell is selected.
-	 * 
-	 * @throws {Error} Logs an error message if an exception occurs during the editing process.
-	 */
-	// editBegin() {
-	// 	try {
-	// 		if (!this.options.editable || !this.active) return;
-	// 		const node = this.active;
-	// 		if (node.nodeName === 'TD') {
-	// 			this.state.editing = true;
-	// 			node.toggleAttribute('contenteditable', this.state.editing);
-	// 			node.dataset.oldValue = node.textContent;
-	// 			window.getSelection().collapseToEnd();
-	// 		}
-	// 	} catch (error) {
-	// 		this.log(`An error occurred while beginning edit: ${error}`, '#F00');
-	// 	}
-	// }
-
-	/**
-	 * Ends the editing mode for a given node in the data grid.
-	 *
-	 * @param {HTMLElement} node - The DOM element representing the cell being edited.
-	 * @throws Will log an error message if an exception occurs during the editing process.
-	 */
-	// editEnd(node) {
-	// 	try {
-	// 		this.state.editing = false;
-	// 		node.toggleAttribute('contenteditable', this.state.editing);
-
-	// 		if (node.textContent === node.dataset.oldValue) {
-	// 			delete node.dataset.oldValue;
-	// 			return;
-	// 		}
-
-	// 		const obj = getObj(this.state, node);
-	// 		const field = this.table.tHead.rows[0].cells[node.cellIndex].dataset.field;
-	// 		obj[field] = node.textContent;
-
-	// 		this.dispatch('dg:cellchange', obj);
-	// 	} catch (error) {
-	// 		this.log(`An error occurred while editing: ${error}`, '#F00');
-	// 	}
-	// }
 
 	/**
 	 * Fetches a resource from the given URL and returns the parsed JSON data.
@@ -499,28 +451,22 @@ export default class DataGrid extends HTMLElement {
 	 */
 	setActive = () => {
 		try {
+			const { rowIndex, cellIndex } = this.state;
+			const targetCell = this.table.rows[rowIndex]?.cells[cellIndex];
+			if (this.active === targetCell && this.active.isContentEditable) return;
 			if (this.active) {
 				this.active.setAttribute('tabindex', '-1');
-				if (this.state.editing) {
-					this.editEnd(this.active);
-				}
 			}
-			const { rowIndex, cellIndex } = this.state;
-			this.active = this.table.rows[rowIndex]?.cells[cellIndex];
+
+			this.active = targetCell;
 			if (this.active) {
 				this.active.setAttribute('tabindex', '0');
 				this.active.focus();
-
-				// Check if the cell is editable and set the cursor at the end
-				if (this.active.isContentEditable) {
-					const selection = window.getSelection();
-					selection.collapse(this.active, this.active.childNodes.length);
-				}
 			}
 		} catch (error) {
 			this.log(`Error setting active cell: ${error}`, '#F00');
 		}
-	}
+	};
 
 	/**
 	 * Sets the initial widths of the columns in the data grid based on the widths of the cells in the first row.

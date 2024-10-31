@@ -8,9 +8,10 @@ import { handleSorting } from './data.js';
  */
 export default function handleKeyboardEvents(event, context) {
 	const { key, ctrlKey, metaKey, shiftKey } = event;
-	const { editable: isEditable, selectable: isSelectable } = context.options;
-	const { cellIndex, cols, editing, pageItems, rowIndex } = context.state;
+	const { selectable: isSelectable } = context.options;
+	const { cellIndex, cols, pageItems, rowIndex } = context.state;
 	const node = event.target;
+	const editable = context.active?.isContentEditable;
 
 	/* === Navigation === */
 
@@ -20,21 +21,37 @@ export default function handleKeyboardEvents(event, context) {
 	 * @param {string} direction - The arrow direction (ArrowUp, ArrowDown, ArrowLeft, ArrowRight).
 	 */
 	const handleArrowKeys = (direction) => {
-		event.preventDefault();
-		if (direction === 'ArrowDown') {
-			context.state.rowIndex = Math.min(rowIndex + 1, pageItems);
-		} else if (direction === 'ArrowUp') {
-			context.state.rowIndex = Math.max(rowIndex - 1, 0);
-		} else if (direction === 'ArrowRight' && !editing) {
-			if (shiftKey && node.nodeName === 'TH') {
-				return context.resizeColumn(cellIndex, 1);
-			}
-			context.state.cellIndex = Math.min(cellIndex + 1, cols - 1);
-		} else if (direction === 'ArrowLeft' && !editing) {
-			if (shiftKey && node.nodeName === 'TH') {
-				return context.resizeColumn(cellIndex, -1);
-			}
-			context.state.cellIndex = Math.max(cellIndex - 1, 0);
+		const metaKey = event.metaKey || event.ctrlKey;
+
+		switch (direction) {
+			case 'ArrowDown':
+				event.preventDefault();
+				context.state.rowIndex = Math.min(rowIndex + 1, pageItems);
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				context.state.rowIndex = Math.max(rowIndex - 1, 0);
+				break;
+			case 'ArrowRight':
+				if (shiftKey && node.nodeName === 'TH') {
+					event.preventDefault();
+					return context.resizeColumn(cellIndex, 1);
+				}
+				if (!editable) {
+					event.preventDefault();
+					context.state.cellIndex = Math.min(cellIndex + 1, cols - 1);
+				}				
+				break;
+			case 'ArrowLeft':
+				if (shiftKey && node.nodeName === 'TH') {
+					event.preventDefault();
+					return context.resizeColumn(cellIndex, -1);
+				}
+				if (!editable) {
+					event.preventDefault();
+					context.state.cellIndex = Math.max(cellIndex - 1, 0);
+				}
+				break;
 		}
 	};
 
@@ -155,25 +172,13 @@ export default function handleKeyboardEvents(event, context) {
 	/* === Editing and actions === */
 
 	/**
-	 * Handles F2 key event for entering/exiting edit mode.
-	 */
-	// const handleF2Key = () => {
-	// 	if (!isEditable) return;
-	// 	if (!context.active && node.nodeName === 'TD') {
-	// 		context.active = node;
-	// 	}
-	// 	context.state.editing ? context.editEnd(context.active) : context.editBegin();
-	// };
-
-	/**
 	 * Handles Tab key event when leaving edit mode.
 	 */
 	const handleTabKey = () => {
-		// if (context.state.editing) {
-		// 	event.preventDefault();
-		// 	context.state.editing = false;
-		// 	node.toggleAttribute('contenteditable', context.state.editing);
-		// }
+		if (editable) {
+			event.preventDefault();
+			context.state.cellIndex = Math.min(cellIndex + 1, cols - 1);
+		}
 	};
 
 	/**
@@ -199,10 +204,9 @@ export default function handleKeyboardEvents(event, context) {
 		case 'p': handlePKey(); break;
 		case 'PageDown':
 		case 'PageUp': handlePageKeys(key); break;
-		// case 'F2': handleF2Key(); break;
 		case 'Tab': handleTabKey(); break;
 		case 'Enter': handleEnterKey(); break;
 	}
 
-	if (!editing) context.setActive();
+	context.setActive();
 }
