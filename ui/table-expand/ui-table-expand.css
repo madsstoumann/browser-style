@@ -16,6 +16,7 @@
 				@media (hover: hover) {
 					&:hover {
 						background-color: var(--ButtonFace);
+						color: var(--CanvasText);
 					}
 				}
 				&:focus, &:focus-visible {
@@ -62,6 +63,9 @@
 	}
 
 	:where(.ui-table-expand) {
+		--ui-table-popover-close-bg: #0000;
+		--ui-table-popover-close-ibs: calc(var(--ui-table-popover-m) / 2);
+		--ui-table-popover-close-iie: calc(var(--ui-table-popover-m) / 2);
 		--ui-table-popover-m: 1rem;
 		--ui-table-popover-w: clamp(220px, 33vw, 350px); /* for inline start/end positions */
 		border: 1px solid var(--ButtonBorder);
@@ -210,12 +214,14 @@
 				scale: 0;
 			}
 
-			[popovertargetaction="hide"] {
-				background: #0000;
-				inset-block-start: calc(var(--ui-table-popover-m) / 2);
-				inset-inline-end: calc(var(--ui-table-popover-m) / 2);
-				position: absolute;
-			}
+
+		}
+
+		[popovertargetaction="hide"] {
+			background: var(--ui-table-popover-close-bg);
+			inset-block-start: var(--ui-table-popover-close-ibs);
+			inset-inline-end: var(--ui-table-popover-close-iie);
+			position: absolute;
 		}
 	}
 }

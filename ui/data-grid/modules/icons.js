@@ -6,6 +6,7 @@ export const icons = {
 	chevronLeftPipe: 'M7 6v12, M18 6l-6 6l6 6',
 	chevronRight: 'M9 6l6 6l-6 6',
 	chevronRightPipe: 'M7 6l6 6l-6 6,M18 6v12',
+	close: 'M18 6l-12 12,M6 6l12 12',
 	csv: 'M10 15a1 1 0 0 0 1 1h2a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1h-2a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1,M17 8l2 8l2 -8,M7 10a2 2 0 1 0 -4 0v4a2 2 0 1 0 4 0',
 	densityMedium: 'M4 6h16, M4 12h16, M4 18h16',
 	densityLarge: 'M4 6h16, M4 18h16',

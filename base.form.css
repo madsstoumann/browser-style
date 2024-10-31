@@ -135,7 +135,7 @@
 		&:indeterminate {
 			--icon: url('/assets/svg/minus-white.svg');
 			--input-check-bga: var(--input-check-bdc, var(--ButtonBorder));
-			--input-check-mask-size: 75%;
+			/* --input-check-mask-size: 75%; */
 		}
 
 		/* Modifiers */

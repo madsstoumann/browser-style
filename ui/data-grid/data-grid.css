@@ -156,7 +156,10 @@
 				pointer-events: none;
 				text-align: center;
 				vertical-align: middle;
-				& input { pointer-events: all; }
+				& input {
+					font-size: 1rem;
+					pointer-events: all;
+				}
 			}
 
 			& tr[aria-selected] td {
