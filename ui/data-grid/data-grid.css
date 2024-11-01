@@ -6,7 +6,7 @@
 		position: relative;
 
 		[hidden] { display: none; }
-		&[nowrap] :is(td,th) { text-wrap: nowrap; }
+		/* &[nowrap] :is(td,th) { text-wrap: nowrap; } */
 
 		& > div {
 			overflow-x: auto;
@@ -186,6 +186,11 @@
 
 
 		/* RWD */
+		@container (min-width: 600px) {
+			:is(td,th) {
+				text-wrap: wrap;
+			}
+		}
 		@container (max-width: 600px) {
 			& > div {
 				border: 1px solid var(--ButtonBorder);
@@ -205,27 +210,59 @@
 			}
 			& form { gap: 1ch; grid-auto-flow: row; }
 
+			table {
+				:is(td,th) {
+					text-wrap: nowrap;
+				}
+			}
+
 			/* Sticky First Col */
-			&[stickycol] table {
-				& :is(td,th):first-of-type {
-					border-inline-end-width: 1px;
-					inset-inline-start: 0;
+			&[stickycols] table {
+				&.--c0 :is(td,th):nth-of-type(1),
+				&.--c1 :is(td,th):nth-of-type(2),
+				&.--c2 :is(td,th):nth-of-type(3),
+				&.--c3 :is(td,th):nth-of-type(4),
+				&.--c4 :is(td,th):nth-of-type(5),
+				&.--c5 :is(td,th):nth-of-type(6),
+				&.--c6 :is(td,th):nth-of-type(7),
+				&.--c7 :is(td,th):nth-of-type(8),
+				&.--c8 :is(td,th):nth-of-type(9) {
+					&:is(td) { background: Canvas; }
+					inset-inline-start: var(--_i);
 					position: sticky;
 					z-index: 1;
 				}
-				& :is(td):first-of-type {
-					background-color: Canvas;
-				}
-				& :is(td,th):nth-of-type(2) {
-					border-inline-start-width: 0;
-				}
+				&.--c0 :is(td,th):nth-of-type(1) { --_i: var(--c0); }
+				&.--c1 :is(td,th):nth-of-type(2) { --_i: var(--c1); }
+				&.--c2 :is(td,th):nth-of-type(3) { --_i: var(--c2); }
+				&.--c3 :is(td,th):nth-of-type(4) { --_i: var(--c3); }
+				&.--c4 :is(td,th):nth-of-type(5) { --_i: var(--c4); }
+				&.--c5 :is(td,th):nth-of-type(6) { --_i: var(--c5); }
+				&.--c6 :is(td,th):nth-of-type(7) { --_i: var(--c6); }
+				&.--c7 :is(td,th):nth-of-type(8) { --_i: var(--c7); }
+				&.--c8 :is(td,th):nth-of-type(9) { --_i: var(--c8); }
 			}
 		}
 
 		/* Density */
-		&:has(table.--compact) [name=density] {
-			background: var(--ButtonText);
-			color: Canvas;
+		table.--density-compact {
+			--input-bdrs: .125em;
+			--input-check-sz: 13px;
+			--ui-table-p: .44ch .88ch;
+			font-family: system-ui, sans-serif;
+			font-size: 13px;
+			font-weight: 400;
+			& td { color: CanvasText; white-space: nowrap; }
+			&.--rounded { --ui-table-bdrs: .2rem; }
+		}
+
+		table.--density-loose {
+			--ui-table-p: .8ch 1.6ch;
+			font-size: 21px;
+			td:has([data-toggle-row]),
+			th:has([data-toggle-all]) {
+				padding-inline: 0;
+			}
 		}
 
 		/* Loading */

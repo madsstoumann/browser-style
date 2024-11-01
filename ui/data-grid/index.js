@@ -1,6 +1,6 @@
 import { dataFromTable, parseData } from './modules/data.js';
 import { renderTable, renderTBody } from './modules/render.table.js';
-import { calculatePages, consoleLog, getObj } from './modules/utility.js';
+import { calculatePages, consoleLog, setupOverflowListener } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
 import printElements from '../../assets/js/printElements.js';
@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.22
- * @summary 31-10-2024
+ * @version 1.0.23
+ * @summary 01-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -31,11 +31,11 @@ export default class DataGrid extends HTMLElement {
 			density: this.getAttribute('density') || '',
 			exportable: this.hasAttribute('exportable') || false,
 			externalNavigation: this.hasAttribute('external-navigation') || false,
-			fixed: true, 
 			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
 			printable: this.hasAttribute('printable') || false,
 			searchable: this.hasAttribute('searchable') || false,
-			selectable: this.hasAttribute('selectable') || false
+			selectable: this.hasAttribute('selectable') || false,
+			stickycols: this.parseStickyCols(this.getAttribute('stickycols'))
 		};
 
 		this.state = {
@@ -61,9 +61,9 @@ export default class DataGrid extends HTMLElement {
 		this.table = this.querySelector('table');
 
 		this.densityOptions = {
-			compact: { label: 'Small', icon: 'densitySmall', class: 'fs-xs' },
-			medium: { label: 'Medium', icon: 'densityMedium', class: 'fs-md' },
-			large: { label: 'Large', icon: 'densityLarge', class: 'fs-lg' },
+			compact: { label: 'Small', icon: 'densitySmall', class: '--density-compact' },
+			medium: { label: 'Medium', icon: 'densityMedium', class: '--density-medium' },
+			large: { label: 'Large', icon: 'densityLarge', class: '--density-loose' },
 			...this.options.densityOptions
 		};
 
@@ -124,6 +124,9 @@ export default class DataGrid extends HTMLElement {
 		}
 
 		this.setInitialWidths();
+		if (this.options.stickycols.length > 0) {
+			setupOverflowListener(this.wrapper, this.setStickyCols.bind(this));
+		}
 
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
 			bubbles: true,
@@ -359,6 +362,18 @@ export default class DataGrid extends HTMLElement {
 	}
 
 	/**
+	 * Parses a string of comma-separated column indices and returns an array of integers.
+	 *
+	 * @param {string} stickycolsAttr - A string of comma-separated column indices.
+	 * @returns {number[]} An array of integers representing the column indices.
+	 */
+	parseStickyCols(stickycolsAttr) {
+		return stickycolsAttr
+			? stickycolsAttr.split(',').map(col => parseInt(col.trim(), 10)).filter(Number.isInteger)
+			: [];
+	}
+
+	/**
 	 * Prints the current table using the printElements class.
 	 * If an error occurs during printing, it logs the error message.
 	 *
@@ -492,10 +507,6 @@ export default class DataGrid extends HTMLElement {
 						}
 					}
 				});
-
-				if (this.options.fixed) {
-					this.table.classList.add('--fixed');
-				}
 			};
 
 			// Use requestAnimationFrame to ensure browser has completed layout rendering
@@ -563,6 +574,26 @@ export default class DataGrid extends HTMLElement {
 		} catch (error) {
 			this.log(`Error setting page: ${error}`, '#F00');
 		}
+	}
+
+	setStickyCols() {
+		if (!this.options.stickycols.length || !this.table.tHead?.rows[0]?.cells) {
+			return;
+		}
+
+		let offset = 0;
+		this.options.stickycols.forEach((index, i) => {
+			const cell = this.table.tHead.rows[0].cells[index];
+			if (!cell) return;
+
+			const isAdjacent = i > 0 && (index - this.options.stickycols[i - 1] === 1);
+			const bdw = isAdjacent ? 0 : parseFloat(getComputedStyle(cell).getPropertyValue('border-inline-end-width')) || 0;
+			const cellWidth = offset + cell.offsetWidth + bdw;
+
+			this.table.style.setProperty(`--c${index}`, `${offset}px`);
+			this.table.classList.add(`--c${index}`);
+			offset = cellWidth;
+		});
 	}
 
 	/**

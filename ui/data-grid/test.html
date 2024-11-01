@@ -22,7 +22,7 @@
 	<h2>Data Grid</h2>
 	<data-grid
 		debug
-		density="custom"
+		density="medium"
 		external-navigation
 		i18n="./data/i18n.json"
 		id="grid"
@@ -32,7 +32,7 @@
 		printable
 		searchable
 		selectable		
-		stickycol
+		stickycols="0,1"
 		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
 	</data-grid>
 	<script type="module" src="index.js"></script>
@@ -49,7 +49,7 @@
 				.then((result) => {
 					grid.config = {
 						expandType: '--inline-end',
-						colWidths: [5, 10, 30, 7.5, 35, 12.5],
+						// colWidths: [5, 10, 30, 7.5, 35, 12.5],
 						thead: [
 							{ field: 'id', label: 'ID', key: true, event: 'dg:details' },
 							{ field: 'issue', type: 'number' },

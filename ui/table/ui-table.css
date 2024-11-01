@@ -14,12 +14,12 @@
 		& :is(td, th) {
 			border-block-width: var(--ui-table-bdw) 0;
 			border-color: var(--ui-table-bdc, var(--ButtonBorder));
-			border-inline-width: var(--ui-table-bdw) 0;
+			border-inline-width: 0 var(--ui-table-bdw);
 			border-style: solid;
 			overflow: hidden;
 			padding: var(--ui-table-p, .6ch 1.2ch);
 			text-overflow: ellipsis;
-			&:last-of-type { border-inline-end-width: var(--ui-table-bdw); }
+			&:first-of-type { border-inline-start-width: var(--ui-table-bdw); }
 		}
 		& th {
 			font-weight: 600;
@@ -41,17 +41,6 @@
 
 		/* Modifiers */
 		&.--block-border :is(td, th) { border-width: 0 0 var(--ui-table-bdw) 0; }
-		/* TODO? */
-		&.--compact {
-			--input-bdrs: .125em;
-			--input-check-sz: 13px;
-			--ui-table-p: .44ch .88ch;
-			font-family: system-ui, sans-serif;
-			font-size: 13px;
-			font-weight: 400;
-			& td { color: CanvasText; white-space: nowrap; }
-			&.--rounded { --ui-table-bdrs: .2rem; }
-		}
 		&.--fixed { table-layout: fixed; }
 		&.--no-border :is(td, th) { border: 0; }
 		&.--rounded { --ui-table-bdrs: .33rem; }
