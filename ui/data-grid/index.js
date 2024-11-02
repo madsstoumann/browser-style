@@ -35,7 +35,7 @@ export default class DataGrid extends HTMLElement {
 			printable: this.hasAttribute('printable') || false,
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
-			stickycols: this.parseStickyCols(this.getAttribute('stickycols'))
+			stickycols: this.parseStickyCols(this.dataset.stickyCols)
 		};
 
 		this.state = {
@@ -576,19 +576,20 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
+	/**
+	 * Sets the sticky columns for the data grid.
+	 * Iterates over the indices of the sticky columns and adjusts their offset positions.
+	 * Adds CSS custom properties and classes to the table for each sticky column.
+	 */
 	setStickyCols() {
-		if (!this.options.stickycols.length || !this.table.tHead?.rows[0]?.cells) {
-			return;
-		}
-
 		let offset = 0;
 		this.options.stickycols.forEach((index, i) => {
 			const cell = this.table.tHead.rows[0].cells[index];
 			if (!cell) return;
 
-			const isAdjacent = i > 0 && (index - this.options.stickycols[i - 1] === 1);
-			const bdw = isAdjacent ? 0 : parseFloat(getComputedStyle(cell).getPropertyValue('border-inline-end-width')) || 0;
-			const cellWidth = offset + cell.offsetWidth + bdw;
+			// const isAdjacent = i > 0 && (index - this.options.stickycols[i - 1] === 1);
+			// const bdw = isAdjacent ? 0 : parseFloat(getComputedStyle(cell).getPropertyValue('border-inline-end-width')) || 0;
+			const cellWidth = offset + cell.offsetWidth // + bdw;
 
 			this.table.style.setProperty(`--c${index}`, `${offset}px`);
 			this.table.classList.add(`--c${index}`);
