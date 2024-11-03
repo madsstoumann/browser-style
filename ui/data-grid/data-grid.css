@@ -257,11 +257,12 @@
 		}
 
 		table.--density-loose {
+			--input-check-sz: 19px;
 			--ui-table-p: .8ch 1.6ch;
-			font-size: 21px;
+			font-size: 19px;
 			td:has([data-toggle-row]),
 			th:has([data-toggle-all]) {
-				padding-inline: 0;
+				/* padding-inline: .8ch; */
 			}
 		}
 

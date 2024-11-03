@@ -26,7 +26,7 @@
 	</p>
 
 
-	<h3>With Icon</h3>
+	<h3>Sidebar and Modal</h3>
 	<p>In order, the variants are: <code>--inline-start</code>, <code>--inline-end</code>, <code>--block-start</code>, <code>--block-end</code> and <code>--modal</code>.</p>
 
 	<table class="ui-table">
@@ -43,6 +43,26 @@
 		</tbody>
 	</table>
 
+
+	<h3>Expandable Rows</h3>
+	<p>Faking inline expand by binding <code>position-achor</code> to  <code>anchor-name</code>, and setting <code>width</code> with <code>anchor-size(width)</code>.</p>
+	<p>Requires a small JavaScript that triggers on the popover <code>toggle</code>-event.</p>
+
+	<table class="ui-table">
+		<colgroup><col><col><col><col></colgroup>
+		<thead>
+			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
+		</thead>
+		<tbody>
+			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><span class="ui-table-expand--trigger">Gotham City <button type="button" popovertarget="p6"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
+			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><span class="ui-table-expand--trigger">Metropolis <button type="button" popovertarget="p7"><ui-icon type="kebab"></ui-icon></button></span></tr>
+			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><span class="ui-table-expand--trigger">Malibu <button type="button" popovertarget="p8"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
+			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><span class="ui-table-expand--trigger">New York City <button type="button" popovertarget="p9"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
+			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><span class="ui-table-expand--trigger">New York City <button type="button" popovertarget="p10"><ui-icon type="kebab"></ui-icon></button></span></td></tr>
+		</tbody>
+	</table>
+
+
 	<h3>With Faux Link</h3>
 
 	<table class="ui-table">
@@ -56,24 +76,6 @@
 			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p3">Malibu</button></td></tr>
 			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p4">New York City</button></td></tr>
 			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p5">New York City</button></td></tr>
-		</tbody>
-	</table>
-
-	<h3>With Inline Expand</h3>
-	<p>Faking inline expand by binding <code>position-achor</code> to  <code>anchor-name</code>, and setting <code>width</code> with <code>anchor-size(width)</code>.</p>
-	<p>Requires a small JavaScript that triggers on the popover <code>toggle</code>-event.</p>
-
-	<table class="ui-table">
-		<colgroup><col><col><col><col></colgroup>
-		<thead>
-			<tr><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
-		</thead>
-		<tbody>
-			<tr><td>Bruce</td><td>Wayne</td><td>Batman</td><td><button type="button" popovertarget="p6">Gotham City</button></td></tr>
-			<tr><td>Clark</td><td>Kent</td><td>Superman</td><td><button type="button" popovertarget="p7">Metropolis</button></td></tr>
-			<tr><td>Tony</td><td>Stark</td><td>Iron Man</td><td><button type="button" popovertarget="p8">Malibu</button></td></tr>
-			<tr><td>Peter</td><td>Parker</td><td>Spider-Man</td><td><button type="button" popovertarget="p9">New York City</button></td></tr>
-			<tr><td>Matt</td><td>Murdock</td><td>Daredevil</td><td><button type="button" popovertarget="p10">New York City</button></td></tr>
 		</tbody>
 	</table>
 
