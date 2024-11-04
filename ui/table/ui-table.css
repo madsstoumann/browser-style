@@ -11,8 +11,10 @@
 
 		border-collapse: separate;
 		border-spacing: var(--ui-table-bdsp-x, 0) var(--ui-table-bdsp-y, 0);
+		font-family: var(--ui-table-ff, inherit);
+		font-size: var(--ui-table-fs, inherit);
+
 		& :is(td, th) {
-			background-color: var(--Canvas);
 			border-block-width: var(--ui-table-bdw) 0;
 			border-color: var(--ui-table-bdc, var(--ButtonBorder));
 			border-inline-width: 0 var(--ui-table-bdw);
@@ -22,7 +24,11 @@
 			text-overflow: ellipsis;
 			&:first-of-type { border-inline-start-width: var(--ui-table-bdw); }
 		}
+		& td {
+			background: var(--ui-table-td-bg, inherit);
+		}
 		& th {
+			background: var(--ui-table-th-bg, inherit);
 			font-weight: 600;
 			text-align: start;
 			vertical-align: middle;
@@ -42,9 +48,19 @@
 
 		/* Modifiers */
 		&.--block-border :is(td, th) { border-width: 0 0 var(--ui-table-bdw) 0; }
+		&.--density-sm {
+			--ui-table-ff: system-ui, sans-serif;
+			--ui-table-fs: .875rem;
+			--ui-table-p: .44ch .88ch;
+		}
+		&.--density-lg {
+			--ui-table-fs: 1.25rem;
+			--ui-table-p: .75ch 1.5ch;
+		}
 		&.--fixed { table-layout: fixed; }
 		&.--no-border :is(td, th) { border: 0; }
-		&.--rounded { --ui-table-bdrs: .33rem; }
+		&.--no-wrap :is(td, th) { text-wrap: nowrap; }
+		&.--rounded, .--rounded & { --ui-table-bdrs: .33rem; }
 		&.--split-cols {
 			--ui-table-bdsp-x: 2ch;
 			margin-inline: calc(0px - var(--ui-table-bdsp-x));
@@ -52,7 +68,7 @@
 			&.--th-dark th {
 				--ui-table-bdc: var(--ui-table-th-dark);
 			}
-			&.--rounded {
+			&.--rounded, .--rounded & {
 				& tr:first-of-type th {
 					border-radius: var(--ui-table-bdrs) var(--ui-table-bdrs) 0 0
 				}
@@ -67,7 +83,7 @@
 			& :is(td, th) { border-block-width: var(--ui-table-bdw) }
 		}
 		&.--th-dark th {
-			background-color: var(--ui-table-th-dark);
+			--ui-table-th-bg: var(--ui-table-th-dark);
 			border-block-color: var(--ui-table-th-dark);
 			color: Canvas;
 			&:first-of-type { border-inline-start-color: var(--ui-table-th-dark); }
@@ -76,34 +92,8 @@
 		&.--zebracol-even col:nth-of-type(even),
 		&.--zebracol-odd col:nth-of-type(odd),
 		&.--zebrarow-even tr:nth-of-type(even) td,
-		&:is(.--th-light, .--zebrarow-even) th,
-		&.--zebrarow-odd tr:nth-of-type(odd) td { background-color: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
-
-		/* Sticky Columns */
-		[data-sticky-cols] & {
-			&.--c0 :is(td,th):nth-of-type(1),
-			&.--c1 :is(td,th):nth-of-type(2),
-			&.--c2 :is(td,th):nth-of-type(3),
-			&.--c3 :is(td,th):nth-of-type(4),
-			&.--c4 :is(td,th):nth-of-type(5),
-			&.--c5 :is(td,th):nth-of-type(6),
-			&.--c6 :is(td,th):nth-of-type(7),
-			&.--c7 :is(td,th):nth-of-type(8),
-			&.--c8 :is(td,th):nth-of-type(9) {
-				inset-inline-start: var(--_iis);
-				position: sticky;
-				z-index: 1;
-			}
-			&.--c0 :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
-			&.--c1 :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
-			&.--c2 :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
-			&.--c3 :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
-			&.--c4 :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
-			&.--c5 :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
-			&.--c6 :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
-			&.--c7 :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
-			&.--c8 :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
-		}
+		&.--zebrarow-odd tr:nth-of-type(odd) td { --ui-table-td-bg: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
+		&:is(.--th-light, .--zebrarow-even) th { --ui-table-th-bg: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
 
 		/* Hover */
 		@media (hover: hover) {
@@ -153,8 +143,8 @@
 			&.--hover-td {
 				td:is(:focus-visible,:hover) {
 					--ui-table-bdc: var(--ui-table-td-hover);
-					background-color: var(--ui-table-td-hover);
-					color: Canvas;
+					--ui-table-td-bg: var(--ui-table-td-hover);
+					color: var(--Canvas);
 					outline: 0;
 				}
 			}
@@ -180,8 +170,8 @@
 			&.--hover-all,
 			&.--hover-tr {
 				tr:has(td:is(:focus-visible,:hover)) {
-					background-color: var(--ui-table-tr-hover);
-					&.--hover-td & td:not(:is(:focus-visible,:hover)) { background-color: var(--ui-table-td-hover); }
+					--ui-table-td-bg: var(--ui-table-tr-hover);
+					&.--hover-td & td:not(:is(:focus-visible,:hover)) { --ui-table-td-bg: var(--ui-table-td-hover); }
 				}
 			}
 			&.--hover-tr-outline {
@@ -189,6 +179,52 @@
 					outline: var(--ui-table-outline-bdw) solid var(--ui-table-outline-bdc);
 					outline-offset: calc(0px - var(--ui-table-outline-bdw));
 				}
+			}
+		}
+	}
+
+	/* Overflow Wrapper. Class `--overflowing` should be added to the wrapper when content (table) is overflowing. */
+	:where(.ui-table-wrapper) {
+		overflow: auto;
+		scrollbar-color: var(--ButtonBorder) #0000;
+		scrollbar-width: thin;
+		&.--overflowing {
+			border: 1px solid var(--ButtonBorder);
+			border-radius: var(--ui-table-bdrs, 0);
+			table {
+				& tr:first-of-type th { border-block-start-width: 0; }
+				& :is(td,th):first-of-type { border-inline-start-width: 0; }
+				& :is(td,th):last-of-type { border-inline-end-width: 0; }
+			}
+			&.--rounded {
+				--ui-table-bdrs: .33rem;
+				& :is(tr:last-of-type) td { --ui-table-bdrs: 0; }
+			}
+			/* Sticky Columns */
+			[data-sticky-cols] & table, table[data-sticky-cols] {
+				--ui-table-td-bg: var(--Canvas);
+				&.--c0 :is(td,th):nth-of-type(1),
+				&.--c1 :is(td,th):nth-of-type(2),
+				&.--c2 :is(td,th):nth-of-type(3),
+				&.--c3 :is(td,th):nth-of-type(4),
+				&.--c4 :is(td,th):nth-of-type(5),
+				&.--c5 :is(td,th):nth-of-type(6),
+				&.--c6 :is(td,th):nth-of-type(7),
+				&.--c7 :is(td,th):nth-of-type(8),
+				&.--c8 :is(td,th):nth-of-type(9) {
+					inset-inline-start: var(--_iis);
+					position: sticky;
+					z-index: 1;
+				}
+				&.--c0 :is(td,th):nth-of-type(1) { --_iis: var(--c0); }
+				&.--c1 :is(td,th):nth-of-type(2) { --_iis: var(--c1); }
+				&.--c2 :is(td,th):nth-of-type(3) { --_iis: var(--c2); }
+				&.--c3 :is(td,th):nth-of-type(4) { --_iis: var(--c3); }
+				&.--c4 :is(td,th):nth-of-type(5) { --_iis: var(--c4); }
+				&.--c5 :is(td,th):nth-of-type(6) { --_iis: var(--c5); }
+				&.--c6 :is(td,th):nth-of-type(7) { --_iis: var(--c6); }
+				&.--c7 :is(td,th):nth-of-type(8) { --_iis: var(--c7); }
+				&.--c8 :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
 			}
 		}
 	}

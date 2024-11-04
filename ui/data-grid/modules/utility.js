@@ -158,17 +158,10 @@ export function getObj(state, node, typeCheck = false) {
 export function setupOverflowListener(node, callback) {
 	const checkOverflow = () => {
 		const isOverflowing = node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth;
-		if (isOverflowing) {
-			// Log overflow detection if needed
-			console.log('Overflow detected');
-			// Call the provided callback, if present
-			if (typeof callback === 'function') {
-				callback({ isOverflowing });
-			}
+		if (typeof callback === 'function') {
+			callback(isOverflowing);
 		}
 	};
-
-	// Observe size changes on the node
 	const resizeObserver = new ResizeObserver(checkOverflow);
 	resizeObserver.observe(node);
 }

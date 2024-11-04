@@ -35,7 +35,10 @@ export default class DataGrid extends HTMLElement {
 			printable: this.hasAttribute('printable') || false,
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
-			stickycols: this.parseStickyCols(this.dataset.stickyCols)
+			stickycols: this.parseStickyCols(this.dataset.stickyCols),
+			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
+			textwrap: this.hasAttribute('textwrap') || false,
+			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper', '--rounded'],
 		};
 
 		this.state = {
@@ -61,9 +64,9 @@ export default class DataGrid extends HTMLElement {
 		this.table = this.querySelector('table');
 
 		this.densityOptions = {
-			compact: { label: 'Small', icon: 'densitySmall', class: '--density-compact' },
-			medium: { label: 'Medium', icon: 'densityMedium', class: '--density-medium' },
-			large: { label: 'Large', icon: 'densityLarge', class: '--density-loose' },
+			small: { label: 'Small', icon: 'densitySmall', class: '--density-sm' },
+			medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md' },
+			large: { label: 'Large', icon: 'densityLarge', class: '--density-lg' },
 			...this.options.densityOptions
 		};
 
@@ -75,9 +78,12 @@ export default class DataGrid extends HTMLElement {
 			this.table = this.createTable();
 		}
 
-		if (this.hasAttribute('tableclass')) {
-			const classes = this.getAttribute('tableclass').split(' ')
-			this.table.classList.add(...classes)
+		if (this.options.tableClasses.length > 0) {
+			this.table.classList.add(...this.options.tableClasses)
+		}
+
+		if (this.options.wrapperClasses.length > 0) {
+			this.wrapper.classList.add(...this.options.wrapperClasses)
 		}
 
 		if (!this.table.tHead) this.table.appendChild(document.createElement('thead'));
@@ -581,20 +587,21 @@ export default class DataGrid extends HTMLElement {
 	 * Iterates over the indices of the sticky columns and adjusts their offset positions.
 	 * Adds CSS custom properties and classes to the table for each sticky column.
 	 */
-	setStickyCols() {
-		let offset = 0;
-		this.options.stickycols.forEach((index, i) => {
-			const cell = this.table.tHead.rows[0].cells[index];
-			if (!cell) return;
-
-			// const isAdjacent = i > 0 && (index - this.options.stickycols[i - 1] === 1);
-			// const bdw = isAdjacent ? 0 : parseFloat(getComputedStyle(cell).getPropertyValue('border-inline-end-width')) || 0;
-			const cellWidth = offset + cell.offsetWidth // + bdw;
-
-			this.table.style.setProperty(`--c${index}`, `${offset}px`);
-			this.table.classList.add(`--c${index}`);
-			offset = cellWidth;
-		});
+	setStickyCols(isOverflowing) {
+		if (isOverflowing) {
+			this.wrapper.classList.add('--overflowing');
+			let offset = 0;
+			this.options.stickycols.forEach((index, i) => {
+				const cell = this.table.tHead.rows[0].cells[index];
+				if (!cell) return;
+				const cellWidth = offset + cell.offsetWidth;
+				this.table.style.setProperty(`--c${index}`, `${offset}px`);
+				this.table.classList.add(`--c${index}`);
+				offset = cellWidth;
+			});
+		} else {
+			this.wrapper.classList.remove('--overflowing');
+		}
 	}
 
 	/**

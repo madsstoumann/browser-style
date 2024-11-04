@@ -38,6 +38,7 @@ export function renderForm(context) {
 	</fieldset>
 	<fieldset name="actions">
 		${context.options.printable ? `<button type="button" name="print">${icon(icons.printer)}</button>` : ''}
+		${context.options.textwrap ? `<label class="ui-button"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>`:''}
 		${currentDensity ? `<fieldset name="density">${densityControls}</fieldset>` : ''}
 		${context.options.exportable ? `<button type="button" name="csv">${icon(icons.csv)}</button>` : ''}
 		${context.options.exportable ? `<button type="button" name="json">${icon(icons.json)}</button>` : ''}

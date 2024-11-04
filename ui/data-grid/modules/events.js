@@ -117,6 +117,7 @@ function handleFormInput(event, context) {
 	const input = event.target;
 	if (input.name === 'itemsperpage') context.setAttribute('itemsperpage', parseInt(input.value, 10));
 	if (input.name === 'page') context.setAttribute('page', parseInt(input.value, 10) - 1);
+	if (input.name === 'textwrap') context.table.classList.toggle('--no-wrap', !input.checked);
 }
 
 /**
