@@ -201,6 +201,7 @@ export function renderTBody(context) {
 
 		// Determine the first visible column for checkbox handling
 		const firstVisibleColumnIndex = visibleColumns[0] ? thead.indexOf(visibleColumns[0]) : 0;
+		const lastVisibleColumnIndex = context.options.selectable ? visibleColumns.length : visibleColumns.length - 1;
 
 		// Generate HTML for table body
 		const tbodyHTML = page.map((row) => {
@@ -209,16 +210,15 @@ export function renderTBody(context) {
 
 			// Check if the current row is selected based on the composite key/s
 			const rowSelected = selected.has(rowKeys) ? ' aria-selected' : '';
-			let lastVisibleCellIndex = -1;
 
 			// Build the row HTML by iterating over visible columns
 			let rowHTML = Object.values(row).map((cell, index) => {
 				if (thead[index].hidden) return '';
-				lastVisibleCellIndex = index;
 				const isEditable = thead[index].editable;
 
-
+				const classList = thead[index].classList ? ` class="${thead[index].classList}"` : '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
+				
 				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? 
 					`<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
 				let cellValue = (cell === null || cell === 'null' || cell === undefined) ? '' : cell.toString();
@@ -226,7 +226,7 @@ export function renderTBody(context) {
 				// Apply search term highlighting if applicable
 				cellValue = searchterm ? cellValue.replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
 
-				return `${selectable}<td tabindex="-1"${isEditable ? ` contenteditable`:''}>${formatter(cellValue)}</td>`;
+				return `${selectable}<td tabindex="-1"${classList}${isEditable ? ` contenteditable`:''}>${formatter(cellValue)}</td>`;
 			}).join('');
 
 			// Handle the expand / popover feature
@@ -240,7 +240,7 @@ export function renderTBody(context) {
 				const popoverId = `p${window.crypto.randomUUID()}`;
 				const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
 				const popoverHTML = `
-					<div id="${popoverId}" popover class="ui-table-expand ${context.config.expandType ? context.config.expandType : '--inline-start'}">
+					<div id="${popoverId}" popover class="ui-table-expand ${context.config.expandType ? context.config.expandType : '--inline-end'}">
 						<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" class="--icon">${context.renderIcon(icons.close)}</button>
 						${expandFields}
 					</div>
@@ -249,7 +249,7 @@ export function renderTBody(context) {
 
 				// Insert the button into the last rendered <td> by appending to it
 				const cellHTML = rowHTML.split('</td>');
-				cellHTML[lastVisibleCellIndex] = cellHTML[lastVisibleCellIndex].replace(
+				cellHTML[lastVisibleColumnIndex] = cellHTML[lastVisibleColumnIndex].replace(
 					/(<td[^>]*>)(.*)/,
 					`$1<span class="ui-table-expand--trigger">$2${buttonHTML}</span>`
 				);
@@ -272,7 +272,6 @@ export function renderTBody(context) {
 		context.log(`Error rendering table body (tbody): ${error}`, '#F00');
 	}
 }
-
 
 /**
  * Renders the table header (thead) for a data grid.

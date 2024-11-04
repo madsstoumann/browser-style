@@ -73,6 +73,13 @@
 	.pi-3 { padding-inline: 1rem; }
 	.pi-4 { padding-inline: 2rem; }
 
+	/* Link */
+	.ui-link {
+		color: var(--AccentColor);
+		cursor: pointer;
+		text-decoration: underline;
+	}
+
 	/* TODO: NEW NAME-classes Gradients */
 	.--blue-green {
 		--ui-gradient: #0077ff, #00e7df, #0077ff;

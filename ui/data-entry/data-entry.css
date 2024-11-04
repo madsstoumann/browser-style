@@ -407,7 +407,6 @@ ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 			box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
 			inset-block: anchor(bottom) auto;
 			inset-inline: auto anchor(right);
-			/* inset-area: block-end span-inline-start; */
 			min-inline-size: 20rem;
 			padding: 2ch;
 			position-anchor: var(--_pa);

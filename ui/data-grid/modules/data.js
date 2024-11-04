@@ -177,8 +177,7 @@ export function parseData(data, context) {
 			thead = Object.keys(tbody[0] || {}).map(key => ({
 				field: key,
 				label: capitalize(key),
-				hidden: false,
-				uid: false,
+				hidden: false
 			}));
 		}
 
@@ -188,8 +187,7 @@ export function parseData(data, context) {
 			thead = Object.keys(tbody[0] || {}).map(key => ({
 				field: key,
 				label: capitalize(key),
-				hidden: false,
-				uid: false,
+				hidden: false
 			}));
 		}
 
