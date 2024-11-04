@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.23
- * @summary 01-11-2024
+ * @version 1.0.24
+ * @summary 04-11-2024
  * @class
  * @extends {HTMLElement}
  */
