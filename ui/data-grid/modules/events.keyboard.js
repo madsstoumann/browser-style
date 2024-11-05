@@ -37,7 +37,7 @@ export default function handleKeyboardEvents(event, context) {
 					event.preventDefault();
 					return context.resizeColumn(cellIndex, 1);
 				}
-				if (!editable) {
+				if (!editable || (editable && metaKey)) {
 					event.preventDefault();
 					context.state.cellIndex = Math.min(cellIndex + 1, cols - 1);
 				}				
@@ -47,7 +47,7 @@ export default function handleKeyboardEvents(event, context) {
 					event.preventDefault();
 					return context.resizeColumn(cellIndex, -1);
 				}
-				if (!editable) {
+				if (!editable || (editable && metaKey)) {
 					event.preventDefault();
 					context.state.cellIndex = Math.max(cellIndex - 1, 0);
 				}

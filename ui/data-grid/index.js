@@ -1,6 +1,6 @@
 import { dataFromTable, parseData } from './modules/data.js';
 import { renderTable, renderTBody } from './modules/render.table.js';
-import { calculatePages, consoleLog, setupOverflowListener } from './modules/utility.js';
+import { calculatePages, consoleLog } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
 import printElements from '../../assets/js/printElements.js';
@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.24
- * @summary 04-11-2024
+ * @version 1.0.25
+ * @summary 05-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -38,7 +38,7 @@ export default class DataGrid extends HTMLElement {
 			stickycols: this.parseStickyCols(this.dataset.stickyCols),
 			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
 			textwrap: this.hasAttribute('textwrap') || false,
-			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper', '--rounded'],
+			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
 		};
 
 		this.state = {
@@ -130,8 +130,9 @@ export default class DataGrid extends HTMLElement {
 		}
 
 		this.setInitialWidths();
+	
 		if (this.options.stickycols.length > 0) {
-			setupOverflowListener(this.wrapper, this.setStickyCols.bind(this));
+			this.setupOverflowListener(this.wrapper, this.table, this.setStickyCols.bind(this));
 		}
 
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
@@ -580,6 +581,44 @@ export default class DataGrid extends HTMLElement {
 		} catch (error) {
 			this.log(`Error setting page: ${error}`, '#F00');
 		}
+	}
+
+	/**
+	 * Sets up listeners to detect overflow changes on the wrapper and table elements.
+	 * Triggers the provided callback function when an overflow condition is detected.
+	 *
+	 * @param {HTMLElement} wrapper - The wrapper element to monitor for overflow.
+	 * @param {HTMLElement} table - The table element to monitor for width changes.
+	 * @param {Function} callback - The callback function to execute when an overflow condition is detected.
+	 * 
+	 * @returns {Function} A cleanup function to disconnect the observers.
+	 */
+	setupOverflowListener(wrapper, table, callback) {
+		let callbackPending = false; // Debounce flag to avoid duplicate calls
+	
+		const checkOverflow = () => {
+			// Overflow check for the wrapper
+			const isOverflowing = wrapper.scrollHeight > wrapper.clientHeight || wrapper.scrollWidth > wrapper.clientWidth;
+
+			// Trigger the callback only if not pending
+			if (!callbackPending && typeof callback === 'function') {
+				callbackPending = true;
+				requestAnimationFrame(() => {
+					callback(isOverflowing);
+					setTimeout(() => callbackPending = false, 50); // Reset pending flag after short delay
+				});
+			}
+		};
+
+		// Observe size changes on wrapper (overflow detection)
+		const wrapperObserver = new ResizeObserver(checkOverflow);
+		wrapperObserver.observe(wrapper);
+	
+		// Observe size changes on table (width changes only)
+		const tableObserver = new ResizeObserver(checkOverflow);
+		tableObserver.observe(table);
+
+		// checkOverflow();
 	}
 
 	/**

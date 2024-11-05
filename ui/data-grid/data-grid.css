@@ -86,6 +86,10 @@
 				padding: .66ch 1.2ch;
 				&:focus-visible { --icon: none; }
 			}
+
+			label:has([name="textwrap"]) {
+				margin-inline-end: 1ch;
+			}
 		}
 
 		& form {
@@ -223,6 +227,17 @@
 			}
 		}
 
+		/* Column Alignment */
+		.--center {
+			text-align: center;
+		}
+
+		.--end {
+			text-align: end;
+			span {
+				justify-content: end;
+			}
+		}
 
 
 		/* Loading */

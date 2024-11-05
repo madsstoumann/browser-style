@@ -146,7 +146,9 @@
 		&[data-c5~="end"] tr > *:nth-of-type(5),
 		&[data-c6~="end"] tr > *:nth-of-type(6),
 		&[data-c7~="end"] tr > *:nth-of-type(7)
-		&[data-c8~="end"] tr > *:nth-of-type(8) { text-align: end; }
+		&[data-c8~="end"] tr > *:nth-of-type(8) {
+			text-align: end;
+		}
 	}
 	:where(td) { border: 1px solid; }
 	:where(td, th) {

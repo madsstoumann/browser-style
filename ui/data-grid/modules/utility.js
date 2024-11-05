@@ -149,24 +149,6 @@ export function getObj(state, node, typeCheck = false) {
 }
 
 /**
- * Sets up an overflow listener on the given DOM node.
- * The listener checks if the node is overflowing its bounds and calls a callback function if it is.
- *
- * @param {HTMLElement} node - The DOM node to observe for overflow.
- * @param {function} callback - Optional callback function to execute when overflow is detected.
- */
-export function setupOverflowListener(node, callback) {
-	const checkOverflow = () => {
-		const isOverflowing = node.scrollHeight > node.clientHeight || node.scrollWidth > node.clientWidth;
-		if (typeof callback === 'function') {
-			callback(isOverflowing);
-		}
-	};
-	const resizeObserver = new ResizeObserver(checkOverflow);
-	resizeObserver.observe(node);
-}
-
-/**
  * Translates a given key into the specified language using the provided i18n object.
  *
  * @param {string} key - The key to be translated.
