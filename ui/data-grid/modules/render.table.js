@@ -8,13 +8,13 @@ import { calculatePages, t } from './utility.js';
  * @param {Object} context.state - The state object containing sorting information.
  * @param {number} context.state.sortIndex - The index of the column to sort by.
  * @param {number} context.state.sortOrder - The order of sorting (1 for descending, -1 for ascending).
- * @param {Object} context.options - The options object containing locale information.
- * @param {string} context.options.locale - The locale string used for string comparison.
+ * @param {Object} context.settings - The options object containing locale information.
+ * @param {string} context.settings.locale - The locale string used for string comparison.
  * @param {Array<Object>} data - The array of data objects to be sorted.
  */
 function applySorting(context, data) {
 	const { sortIndex, sortOrder } = context.state;
-	const { locale } = context.options;
+	const { locale } = context.settings;
 
 	if (sortIndex > -1) {
 		const { type = 'string' } = context.state.thead[sortIndex] || {};
@@ -93,6 +93,7 @@ function filterData(context, data) {
  * @returns {Array} - A subset of the data array corresponding to the current page.
  */
 function paginate(context, data) {
+	if (context.settings.externalNavigation) return data;
 	const { page, itemsPerPage } = context.state;
 	const startIndex = page * itemsPerPage;
 	return data.slice(startIndex, startIndex + itemsPerPage);
@@ -123,17 +124,17 @@ export function renderColGroup(colgroup, cols) {
  * @param {Object} context.colgroup - The column group element to be rendered.
  * @param {Object} context.state - The state object containing column information.
  * @param {Array} context.state.cols - Array of column definitions.
- * @param {Object} context.options - Options for rendering.
- * @param {boolean} context.options.debug - Flag to indicate if debugging is enabled.
+ * @param {Object} context.settings - Options for rendering.
+ * @param {boolean} context.settings.debug - Flag to indicate if debugging is enabled.
  */
 export function renderTable(context) {
 	try {
-		context.log(`render: table`, '#52B', context.options.debug);
+		context.log(`render: table`, '#52B', context.settings.debug);
 		renderColGroup(context.colgroup, context.state.cols);
 		renderTHead(context);
 		renderTBody(context);
 	} catch (error) {
-		context.log(`Error rendering table: ${error}`, '#F00', context.options.debug);
+		context.log(`Error rendering table: ${error}`, '#F00', context.settings.debug);
 	}
 }
 
@@ -146,18 +147,17 @@ export function renderTable(context) {
  * @param {Array} context.state.thead - The array of header cells defining the columns.
  * @param {number} context.state.cols - The number of visible columns.
  * @param {Set} context.state.selected - The set of selected row identifiers.
- * @param {Object} context.options - The options object containing configuration settings.
- * @param {boolean} context.options.selectable - Indicates if rows are selectable.
+ * @param {Object} context.settings - The options object containing configuration settings.
+ * @param {boolean} context.settings.selectable - Indicates if rows are selectable.
+ * @param {string} context.settings.expandType - The type of expand behavior. 
  * @param {Object} context.table - The table element where the tbody will be rendered.
- * @param {Object} context.config - The configuration object containing additional settings.
- * @param {string} context.config.expandType - The type of expand behavior.
  * @param {Object} context.wrapper - The wrapper element for the table.
  * @param {Object} context.formatters - The object containing formatter functions for cell values.
  * @param {Function} context.log - The logging function for debugging purposes.
  * @param {string} context.lang - The language code for localization.
  * @param {Object} context.i18n - The internationalization object for translations.
  * @param {Function} context.getAttribute - Function to get attributes from the context.
- * @param {boolean} context.options.debug - Indicates if debug mode is enabled.
+ * @param {boolean} context.settings.debug - Indicates if debug mode is enabled.
  *
  * @throws Will throw an error if rendering the table body fails.
  */
@@ -171,7 +171,7 @@ export function renderTBody(context) {
 
 		// Filter for visible columns
 		const visibleColumns = thead.filter(cell => !cell.hidden);
-		context.state.cols = visibleColumns.length + (context.options.selectable ? 1 : 0);
+		context.state.cols = visibleColumns.length + (context.settings.selectable ? 1 : 0);
 
 		// Filter and sort the data
 		let data = filterData(context, [...tbody]);
@@ -188,20 +188,33 @@ export function renderTBody(context) {
 		// Use the paginate function to slice the data for the current page
 		const page = paginate(context, data);
 
-		// Initialize page-related state if necessary
-		Object.assign(context.state, {
-			pageItems: page.length,
-			items: data.length,
-			pages: calculatePages(data.length, context.state.itemsPerPage),
-		});
-
 		// Get the fields that make up the composite key/s
 		const keyFields = thead.filter(cell => cell.key).map(cell => cell.field);
 		const searchterm = context.getAttribute('searchterm')?.toLowerCase();
 
+		// If externalNavigation is disabled, or a search term is present, update the state.
+		if (!context.settings.externalNavigation || searchterm) {
+			const updatedState = {
+				pageItems: page.length,
+			};
+
+			// If there is a search term, use search-specific state variables.
+			if (searchterm) {
+				updatedState.searchItems = data.length;
+				updatedState.searchPages = calculatePages(data.length, context.state.itemsPerPage);
+			} else {
+				// Revert to original full dataset state if search is cleared.
+				updatedState.items = data.length;
+				updatedState.pages = calculatePages(data.length, context.state.itemsPerPage);
+				updatedState.searchItems = null;
+				updatedState.searchPages = null;
+			}
+			Object.assign(context.state, updatedState);
+		}
+
 		// Determine the first visible column for checkbox handling
 		const firstVisibleColumnIndex = visibleColumns[0] ? thead.indexOf(visibleColumns[0]) : 0;
-		const lastVisibleColumnIndex = context.options.selectable ? visibleColumns.length : visibleColumns.length - 1;
+		const lastVisibleColumnIndex = context.settings.selectable ? visibleColumns.length : visibleColumns.length - 1;
 
 		// Generate HTML for table body
 		const tbodyHTML = page.map((row) => {
@@ -219,7 +232,7 @@ export function renderTBody(context) {
 				const classList = thead[index].classList ? ` class="${thead[index].classList}"` : '';
 				const formatter = context.formatters?.[thead[index].formatter] || ((value) => value);
 				
-				const selectable = (context.options.selectable && index === firstVisibleColumnIndex) ? 
+				const selectable = (context.settings.selectable && index === firstVisibleColumnIndex) ? 
 					`<td><label><input type="checkbox" tabindex="-1"${rowSelected ? ` checked` : ''} data-toggle-row></label></td>` : '';
 				let cellValue = (cell === null || cell === 'null' || cell === undefined) ? '' : cell.toString();
 
@@ -240,7 +253,7 @@ export function renderTBody(context) {
 				const popoverId = `p${window.crypto.randomUUID()}`;
 				const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
 				const popoverHTML = `
-					<div id="${popoverId}" popover class="ui-table-expand ${context.config.expandType ? context.config.expandType : '--inline-end'}">
+					<div id="${popoverId}" popover class="ui-table-expand ${context.settings.expandType ? context.settings.expandType : '--inline-end'}">
 						<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" class="--icon">${context.renderIcon(icons.close)}</button>
 						${expandFields}
 					</div>
@@ -279,8 +292,8 @@ export function renderTBody(context) {
  * @param {Object} context - The context object containing state and options.
  * @param {Object} context.state - The state object containing thead information.
  * @param {Array} context.state.thead - Array of header cell objects.
- * @param {Object} context.options - The options object containing configuration.
- * @param {boolean} context.options.selectable - Flag indicating if rows are selectable.
+ * @param {Object} context.settings - The options object containing configuration.
+ * @param {boolean} context.settings.selectable - Flag indicating if rows are selectable.
  * @param {Object} context.table - The table DOM element.
  * @param {HTMLElement} context.table.tHead - The table header DOM element.
  * @param {Function} context.log - Function to log messages.
@@ -288,7 +301,7 @@ export function renderTBody(context) {
 export function renderTHead(context) {
 	try {
 		const { thead } = context.state;
-		const { selectable } = context.options;
+		const { selectable } = context.settings;
 		let firstVisibleColumnFound = false;
 
 		const selectableHeader = selectable ? `<th tabindex="0"><label><input type="checkbox" tabindex="-1" data-toggle-all></label></th>` : '';
@@ -324,38 +337,41 @@ export function renderTHead(context) {
  * @param {number} context.state.itemsPerPage - The number of items per page.
  * @param {Object} context.form - The form containing the navigation elements.
  * @param {Object} context.form.elements - The elements of the form.
- * @param {Object} context.options - The options for the data grid.
- * @param {boolean} context.options.selectable - Whether the data grid is selectable.
- * @param {boolean} context.options.debug - Whether debug mode is enabled.
+ * @param {Object} context.settings - The options for the data grid.
+ * @param {boolean} context.settings.debug - Whether debug mode is enabled.
  * @param {Function} context.log - The logging function.
  */
 export function updateNavigation(context) {
 	try {
-		const { page, pages, items, itemsPerPage } = context.state;
+		const { page, itemsPerPage, searchItems, searchPages } = context.state;
 		const E = context.form.elements;
 
-		const isItemsPresent = !!items;
+		// Check if a search is active and use search-specific values if available
+		const isSearchActive = !!context.getAttribute('searchterm');
+		const totalItems = isSearchActive ? searchItems : context.state.items;
+		const totalPages = isSearchActive ? searchPages : context.state.pages;
+		const isItemsPresent = !!totalItems;
 		const isItemsPerPagePresent = context.hasAttribute('itemsperpage');
-		const isSelectable = context.options.selectable;
 
+		// Toggle visibility based on whether items are present
 		E.actions.hidden = !isItemsPresent;
 		E.navigation.hidden = !isItemsPerPagePresent || !isItemsPresent;
-		E.selection.hidden = !isSelectable;
 
 		if (isItemsPresent) {
-			E.end.value = Math.min((page + 1) * itemsPerPage, items);
-			E.page.setAttribute('max', pages);
+			// Update navigation elements based on current page and total items
+			E.end.value = Math.min((page + 1) * itemsPerPage, totalItems);
+			E.page.setAttribute('max', totalPages);
 			E.page.size = (page + 1).toString().length;
 			E.page.value = page + 1;
-			E.pages.value = pages;
+			E.pages.value = totalPages;
 			E.start.value = page * itemsPerPage + 1;
 			E.first.disabled = page === 0;
 			E.stepdown.disabled = page === 0;
-			E.stepup.disabled = page === pages - 1;
-			E.last.disabled = page === pages - 1;
-			E.total.value = items;
+			E.stepup.disabled = page === totalPages - 1;
+			E.last.disabled = page === totalPages - 1;
+			E.total.value = totalItems;
 		}
 	} catch (error) {
-		context.log(`Error updating navigation: ${error}`, '#F00', context.options.debug);
+		context.log(`Error updating navigation: ${error}`, '#F00', context.settings.debug);
 	}
 }

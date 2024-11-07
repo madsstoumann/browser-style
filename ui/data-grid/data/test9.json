@@ -1,0 +1,77 @@
+{
+  "view": "comics",
+  "data": [
+    {
+      "id": 187832,
+      "series": "Flip og Flop",
+      "issue": 32,
+      "name": "Aldrig mere en kæp I øret!",
+      "artist": "Ibanez, Francisco",
+      "price": "149.50",
+      "sku": "179370",
+      "type": "Dansk album",
+      "description": "Nationen er I fare! Ungdommen - der jo altid er på jagt efter sjov I gaden - bæller løs af tarvelig ",
+      "vendor": "Forlaget Zoom",
+      "date": "2023-09-28T00:00:00",
+      "delivery": "2016-09-25T14:17:24"
+    },
+    {
+      "id": 194833,
+      "series": "Flip og Flop",
+      "issue": 33,
+      "name": "Når man klipper hårdet af en skaldet",
+      "artist": "Ibanez, Francisco",
+      "price": "149.50",
+      "sku": "180347",
+      "type": "Dansk album",
+      "description": "Den evindelige økonomiske krise har medført at der på alle tilværelsens områder er klippet ind tl be",
+      "vendor": "Forlaget Zoom",
+      "date": "2023-11-23T00:00:00",
+      "delivery": "2017-10-29T14:17:24"
+    },
+    {
+      "id": 187833,
+      "series": "Flip og Flop",
+      "issue": 34,
+      "name": "Det store jubilæum",
+      "artist": "Ibanez, Francisco",
+      "price": "99.50",
+      "sku": "179371",
+      "type": "Dansk album",
+      "description": "Den internationale politiske situation er højspændt, men det er vel ikke nogen særlig nyhed. Denne g",
+      "vendor": "Forlaget Zoom",
+      "date": "2023-09-28T00:00:00",
+      "delivery": "2006-09-08T14:17:24"
+    },
+    {
+      "id": 188559,
+      "series": "Flip og Flop",
+      "issue": 35,
+      "name": "Da Flop skulle male Mona Lisa",
+      "artist": "Ibanez, Francisco",
+      "price": "149.50",
+      "sku": "181431",
+      "type": "Dansk album",
+      "description": "Den geniale professor har sædvanligvis sit hyr med at holde orden på generaldirektøren, frøken Sisse",
+      "vendor": "Forlaget Zoom",
+      "date": "2024-01-25T00:00:00",
+      "delivery": "2008-01-29T14:17:24"
+    },
+    {
+      "id": 192145,
+      "series": "Gamle Gubber (HC)",
+      "issue": 7,
+      "name": "Varme kartofler",
+      "artist": "Cauuet, Paul",
+      "price": "218.00",
+      "sku": "175523",
+      "type": "Dansk album",
+      "description": "Der er fest I Montcoeur! Borgmesteren har organiseret en venskabspicnic for landsbyen, men det viser",
+      "vendor": "Forlaget Zoom",
+      "date": "2023-02-23T00:00:00",
+      "delivery": "2008-07-15T14:17:24"
+    }
+
+  ],
+  "total": 95
+}

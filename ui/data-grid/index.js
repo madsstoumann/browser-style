@@ -1,5 +1,5 @@
 import { dataFromTable, parseData } from './modules/data.js';
-import { renderTable, renderTBody } from './modules/render.table.js';
+import { renderTable, renderTBody, updateNavigation } from './modules/render.table.js';
 import { calculatePages, consoleLog } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.25
- * @summary 05-11-2024
+ * @version 1.0.27
+ * @summary 07-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -18,122 +18,43 @@ export default class DataGrid extends HTMLElement {
 	static observedAttributes = ['items', 'itemsperpage', 'page', 'searchterm', 'sortindex', 'sortorder'];
 	constructor() {
 		super();
-
-		this.log = (message, color) => consoleLog(message, color, this.options.debug);
+		this.log = (message, color) => consoleLog(message, color, this.settings.debug);
+		this.settings = this.createSettings();
+		this.state = this.createState();
 
 		this.dataInitialized = false;
 		this.lang = this.getAttribute('lang') || 'en';
 		this.manualTableData = false;
 		this._i18n = {};
-
-		this.options = {
-			debug: this.hasAttribute('debug') || false,
-			density: this.getAttribute('density') || '',
-			exportable: this.hasAttribute('exportable') || false,
-			externalNavigation: this.hasAttribute('external-navigation') || false,
-			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
-			printable: this.hasAttribute('printable') || false,
-			searchable: this.hasAttribute('searchable') || false,
-			selectable: this.hasAttribute('selectable') || false,
-			stickycols: this.parseStickyCols(this.dataset.stickyCols),
-			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
-			textwrap: this.hasAttribute('textwrap') || false,
-			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
-		};
-
-		this.state = {
-			cellIndex: 0,
-			cols: 0,
-			items: 0, /* total amount of items */
-			itemsPerPage: parseInt(this.getAttribute('itemsperpage'), 10) || 10,
-			page: 0,
-			pages: 0,
-			pageItems: 0, /* actual amount of items on the current page */
-			rowIndex: 0,
-			selected: new Set(),
-			sortIndex: -1,
-			sortOrder: 0,
-			tbody: [],
-			thead: [],
-		};
-
-		if (this.options.debug) console.table(this.options, ['locale', 'searchable', 'selectable']);
-
-		this.wrapper = document.createElement('div');
-		this.appendChild(this.wrapper);
-		this.table = this.querySelector('table');
-
-		this.densityOptions = {
-			small: { label: 'Small', icon: 'densitySmall', class: '--density-sm' },
-			medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md' },
-			large: { label: 'Large', icon: 'densityLarge', class: '--density-lg' },
-			...this.options.densityOptions
-		};
-
-		if (this.table) {
-			this.manualTableData = true;
-			this.state = Object.assign(this.state, dataFromTable(this.table, this.state.itemsPerPage, this.options.selectable));
-		}
-		else {
-			this.table = this.createTable();
-		}
-
-		if (this.options.tableClasses.length > 0) {
-			this.table.classList.add(...this.options.tableClasses)
-		}
-
-		if (this.options.wrapperClasses.length > 0) {
-			this.wrapper.classList.add(...this.options.wrapperClasses)
-		}
-
-		if (!this.table.tHead) this.table.appendChild(document.createElement('thead'));
-		if (!this.table.tBodies.length) this.table.appendChild(document.createElement('tbody'));
-
-		this.colgroup = this.table.querySelector('colgroup') || this.createColgroup();
 	}
 
 	/**
-	 * Handles the component's connection to the DOM.
-	 * 
-	 * This method is called when the element is added to the document's DOM. It performs the following tasks:
-	 * 1. Loads necessary resources asynchronously.
-	 * 2. Creates and appends a form element to the component.
-	 * 3. If the component is searchable, inserts a search bar at the beginning.
-	 * 4. Renders the data table.
-	 * 5. Attaches event listeners and custom event handlers.
-	 * 6. If manual table data is provided and no data attribute is set, it sets the items per page and re-renders the table.
-	 * 7. Dispatches a custom 'dg:loaded' event indicating that the DataGrid is ready.
-	 * 
-	 * @async
-	 * @returns {Promise<void>} A promise that resolves when the component has finished setting up.
+	 * Lifecycle method called when the element is added to the document's DOM.
+	 * Sets up necessary elements and initializes the grid functionality.
 	 */
 	async connectedCallback() {
 		await this.loadResources();
 
-		this.form = this.createForm();
-		this.appendChild(this.form);
+		this.setupElements();
+		this.settingsWatcher(this.settings);
 
-		if (this.options.searchable) {
-			this.insertAdjacentHTML('afterbegin', renderSearch(this))
-		}
-
+		// Initial rendering of the table if there is data
 		if (this.state.items > 0) {
 			renderTable(this);
 		}
 
 		attachEventListeners(this);
 		attachCustomEventHandlers(this);
-		
+
+		// Handle manual table data if no `data` attribute is provided
 		if (this.manualTableData && !this.getAttribute('data')) {
-			if (!this.hasAttribute('itemsperpage'))	this.state.itemsPerPage = this.state.items;
+			if (!this.hasAttribute('itemsperpage')) {
+				this.state.itemsPerPage = this.state.items;
+			}
 			renderTable(this);
 		}
 
 		this.setInitialWidths();
-	
-		if (this.options.stickycols.length > 0) {
-			this.setupOverflowListener(this.wrapper, this.table, this.setStickyCols.bind(this));
-		}
 
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
 			bubbles: true,
@@ -141,6 +62,13 @@ export default class DataGrid extends HTMLElement {
 		}));
 	}
 
+	/**
+	 * Callback that fires when a custom element's attribute is added, removed, updated, or replaced
+	 * @param {string} name - The name of the attribute that changed
+	 * @param {string|null} oldValue - The previous value of the attribute
+	 * @param {string|null} newValue - The new value of the attribute
+	 * @returns {void}
+	 */
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		this.log(`attr: ${name}=${newValue} (${oldValue})`, '#046');
@@ -214,6 +142,63 @@ export default class DataGrid extends HTMLElement {
 	}
 
 	/**
+	 * Creates a default Settings-object based on the attributes of the custom element.
+	 *
+	 * @returns {Object} The newly created settings object.
+	 */
+	createSettings() {
+		return {
+			debug: this.hasAttribute('debug') || false,
+			density: this.getAttribute('density') || '',
+			densityOptions: {
+				small: { label: 'Small', icon: 'densitySmall', class: '--density-sm' },
+				medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md' },
+				large: { label: 'Large', icon: 'densityLarge', class: '--density-lg' }
+			},
+			exportCSV: this.hasAttribute('export-csv') || false,
+			exportJSON: this.hasAttribute('export-json') || false,
+			externalNavigation: this.hasAttribute('external-navigation') || false,
+			navigation: !this.hasAttribute('nonav'),
+			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
+			pagination: !this.hasAttribute('nopage'),
+			printable: this.hasAttribute('printable') || false,
+			rows: !this.hasAttribute('norows'),
+			searchable: this.hasAttribute('searchable') || false,
+			selectable: this.hasAttribute('selectable') || false,
+			stickyCols: this.parseStickyCols(this.dataset.stickyCols) || [],
+			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
+			textoptions: !this.hasAttribute('notextoptions'),
+			textwrap: this.getAttribute('textwrap') === "false" ? false : true,
+			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
+		}
+	}
+
+	/**
+	 * Creates a default state-object
+	 *
+	 * @returns {Object} The newly created state object.
+	 */
+	createState() {
+		return {
+			cellIndex: 0,
+			cols: 0,
+			items: 0, /* total amount of items */
+			itemsPerPage: parseInt(this.getAttribute('itemsperpage'), 10) || 10,
+			page: 0,
+			pages: 0,
+			pageItems: 0, /* actual amount of items on the current page */
+			rowIndex: 0,
+			searchItems: 0, /* amount of items after search */
+			searchPages: 0, /* total pages in the current search result */
+			selected: new Set(),
+			sortIndex: -1,
+			sortOrder: 0,
+			tbody: [],
+			thead: [],
+		}
+	}
+
+	/**
 	 * Creates a new table element, appends it to the wrapper, and returns the table element.
 	 *
 	 * @returns {HTMLTableElement} The newly created table element.
@@ -233,7 +218,7 @@ export default class DataGrid extends HTMLElement {
 	 */
 	dispatch(name, detail) {
 		try {
-			this.log(`event: ${name}`, '#A0A', this.options.debug);
+			this.log(`event: ${name}`, '#A0A', this.settings.debug);
 			this.dispatchEvent(new CustomEvent(name, { detail }));
 		} catch (error) {
 			this.log(`Error in dispatch: ${error}`, '#F00');
@@ -358,7 +343,7 @@ export default class DataGrid extends HTMLElement {
 				newPage = Math.max(0, Math.min(page, this.state.pages - 1));
 			}
 
-			if (this.options.externalNavigation && !searchtermExists) {
+			if (this.settings.externalNavigation && !searchtermExists) {
 				this.dispatch('dg:requestpagechange', { page: newPage, direction });
 			} else {
 				this.setPage(newPage);
@@ -504,8 +489,8 @@ export default class DataGrid extends HTMLElement {
 				const tableWidth = this.table.offsetWidth;
 
 				Array.from(this.colgroup.children).forEach((col, index) => {
-					if (this.config?.colWidths && this.config.colWidths[index] !== undefined) {
-						col.style.width = `${this.config.colWidths[index]}%`;
+					if (this.settings?.colWidths && this.settings.colWidths[index] !== undefined) {
+						col.style.width = `${this.settings.colWidths[index]}%`;
 					} else {
 						const cell = this.table.tHead?.rows[0]?.cells[index] || this.table.tBodies[0].rows[0].cells[index];
 						if (cell) {
@@ -555,6 +540,22 @@ export default class DataGrid extends HTMLElement {
 	}
 
 	/**
+	 * Sets the total number of items for pagination when using external navigation.
+	 * This is particularly useful when the grid data represents only a subset of a larger dataset.
+	 *
+	 * @param {number} totalItems - The total number of items across all pages.
+	 */
+	setTotalItems(totalItems) {
+		if (this.settings.externalNavigation && Number.isInteger(totalItems) && totalItems >= 0) {
+			this.state.items = totalItems;
+			this.state.pages = calculatePages(this.state.items, this.state.itemsPerPage);
+			this.state.pageItems = Math.min(this.state.itemsPerPage, totalItems - this.state.page * this.state.itemsPerPage);
+			this.form.elements.pages.value = this.state.pages;
+			this.form.elements.total.value = this.state.items;
+		}
+	}
+
+	/**
 	 * Sets the current page of the data grid.
 	 *
 	 * @param {number} page - The page number to set.
@@ -575,12 +576,46 @@ export default class DataGrid extends HTMLElement {
 
 			const searchtermExists = this.form?.elements.searchterm?.value?.length > 0;
 
-			if (!this.options.externalNavigation || searchtermExists || forceRender) {
+			if (!this.settings.externalNavigation || searchtermExists || forceRender) {
 				renderTBody(this);
+			}
+
+			if (this.settings.externalNavigation && !forceRender) {
+				updateNavigation(this);
 			}
 		} catch (error) {
 			this.log(`Error setting page: ${error}`, '#F00');
 		}
+	}
+
+	/**
+	 * Sets up and initializes the essential DOM elements for the data grid.
+	 * Creates or uses existing table structure and adds form elements.
+	 * If a table exists in the DOM, data is extracted from it.
+	 * If no table exists, one is created programmatically.
+	 * Ensures the table has required elements: thead, tbody, and colgroup.
+	 * @private
+	 */
+	setupElements() {
+		this.wrapper = document.createElement('div');
+		this.appendChild(this.wrapper);
+		this.table = this.querySelector('table');
+
+		if (this.table) {
+			this.manualTableData = true;
+			this.state = Object.assign(this.state, dataFromTable(this.table, this.state.itemsPerPage, this.settings.selectable));
+		} else {
+				this.table = this.createTable();
+		}
+
+		if (!this.table.tHead) this.table.appendChild(document.createElement('thead'));
+		if (!this.table.tBodies.length) this.table.appendChild(document.createElement('tbody'));
+
+		this.colgroup = this.table.querySelector('colgroup') || this.createColgroup();
+
+		this.form = this.createForm();
+		this.appendChild(this.form);
+		this.insertAdjacentHTML('afterbegin', renderSearch(this));
 	}
 
 	/**
@@ -597,9 +632,7 @@ export default class DataGrid extends HTMLElement {
 		let callbackPending = false; // Debounce flag to avoid duplicate calls
 	
 		const checkOverflow = () => {
-			// Overflow check for the wrapper
 			const isOverflowing = wrapper.scrollHeight > wrapper.clientHeight || wrapper.scrollWidth > wrapper.clientWidth;
-
 			// Trigger the callback only if not pending
 			if (!callbackPending && typeof callback === 'function') {
 				callbackPending = true;
@@ -613,12 +646,13 @@ export default class DataGrid extends HTMLElement {
 		// Observe size changes on wrapper (overflow detection)
 		const wrapperObserver = new ResizeObserver(checkOverflow);
 		wrapperObserver.observe(wrapper);
-	
-		// Observe size changes on table (width changes only)
 		const tableObserver = new ResizeObserver(checkOverflow);
 		tableObserver.observe(table);
 
-		// checkOverflow();
+		return () => {
+			wrapperObserver.disconnect();
+			tableObserver.disconnect();
+		};
 	}
 
 	/**
@@ -630,7 +664,7 @@ export default class DataGrid extends HTMLElement {
 		if (isOverflowing) {
 			this.wrapper.classList.add('--overflowing');
 			let offset = 0;
-			this.options.stickycols.forEach((index, i) => {
+			this.settings.stickyCols.forEach((index, i) => {
 				const cell = this.table.tHead.rows[0].cells[index];
 				if (!cell) return;
 				const cellWidth = offset + cell.offsetWidth;
@@ -640,6 +674,72 @@ export default class DataGrid extends HTMLElement {
 			});
 		} else {
 			this.wrapper.classList.remove('--overflowing');
+		}
+	}
+
+	/**
+	 * Watches for changes in the settings and updates the UI elements accordingly.
+	 */
+	settingsWatcher() {
+		try {
+			if (!this.form || !this.table) {
+				this.log('Form or Table element is not yet initialized.');
+				return;
+			}
+
+			this.settings.tableClasses.forEach(cls => this.table.classList.toggle(cls, true));
+			this.settings.wrapperClasses.forEach(cls => this.wrapper.classList.toggle(cls, true));
+
+			/* density */
+			this.form.elements.density.hidden = !this.settings.density;
+			if (this.settings.density) {
+				this.form.elements.density_option.value = this.settings.density;
+				this.form.elements.density.value = this.settings.density;
+				this.form.elements.density.dispatchEvent(new Event('change'));
+			}
+
+			/* exportable */
+			this.form.elements.csv.hidden = !this.settings.exportCSV;
+			this.form.elements.json.hidden = !this.settings.exportJSON;
+
+			/* navigation */
+			this.form.elements.pagination.hidden = !this.settings.pagination;
+			this.form.elements.rows.hidden = !this.settings.rows;
+
+			this.form.elements.print.hidden = !this.settings.printable;
+			this.form.elements.search.hidden = !this.settings.searchable;
+			this.form.elements.selection.hidden = !this.settings.selectable;
+			
+			/* textwrap */
+			this.form.textoptions.hidden = !this.settings.textoptions;
+			this.form.elements.textwrap.checked = this.settings.textwrap;
+			if (!this.settings.textwrap) {
+				this.table.classList.toggle('--no-wrap', !this.settings.textwrap);
+			}
+
+			/* sticky cols */
+			const toggleEventListener = (condition, addListener) => {
+				if (condition && !this.overflowListener) {
+					this.overflowListener = addListener();
+				} else if (!condition && this.overflowListener) {
+					this.overflowListener();
+					this.overflowListener = null;
+				}
+			};
+			toggleEventListener(
+				this.settings.stickyCols && this.settings.stickyCols.length > 0,
+				() => this.setupOverflowListener(this.wrapper, this.table, this.setStickyCols.bind(this))
+			);
+			if (!this.settings.stickyCols || this.settings.stickyCols.length === 0) {
+				this.wrapper.classList.remove('--overflowing');
+				for (let index = 0; index < this.state.cols; index++) {
+					this.table.classList.remove(`--c${index}`);
+					this.table.style.removeProperty(`--c${index}`);
+				}
+			}
+
+		} catch (error) {
+			this.log(`Error in settingsWatcher: ${error.message}`);
 		}
 	}
 
@@ -701,5 +801,15 @@ export default class DataGrid extends HTMLElement {
 			this._i18n = {};
 		}
 	}
+
+	set settings(value) {
+		this._settings = { ...this._settings, ...value };
+		this.settingsWatcher();
+	}
+
+	get settings() {
+		return this._settings || {};
+	}
 }
+
 customElements.define("data-grid", DataGrid);

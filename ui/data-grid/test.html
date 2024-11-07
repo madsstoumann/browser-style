@@ -21,37 +21,39 @@
 
 	<h2>Data Grid</h2>
 	<data-grid
-		debug
-		density="medium"
-		external-navigation
 		i18n="./data/i18n.json"
 		id="grid"
 		itemsperpage="25"
 		lang="da"
-		page="0"
-		printable
-		searchable
-		selectable		
-		data-sticky-cols="0,1"
-		textwrap>
+		page="0">
 	</data-grid>
 	<script type="module" src="index.js"></script>
 
 	<script>
-		const formatters = {
-			link: (value) => `<a href="#${value}" tabindex="-1">${value}</a>`
-		}
-
 		const grid = document.getElementById('grid');
 		grid.addEventListener('dg:loaded', () => {
-			fetch(`./data/test.json`)
+			fetch(`./data/test0.json`)
 				.then((response) => response.json())
 				.then((result) => {
-					grid.config = {
+					grid.settings = {
+						colWidths: [5, 10, 30, 7.5, 35, 12.5],
+						debug: true,
+						density: 'medium',
+						externalNavigation: true,
 						expandType: '--inline-end',
-						// colWidths: [5, 10, 30, 7.5, 35, 12.5],
+						exportCSV: false,
+						exportJSON: false,
+						pagination: true,
+						printable: false,
+						rows: false,
+						searchable: true,
+						selectable: true,
+						stickyCols: [0, 1],
+						textoptions: false,
+						textwrap: false,
+
 						thead: [
-							{ field: 'id', label: 'ID', key: true, event: 'dg:details', classList: 'ui-link' },
+							{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },
 							{ field: 'issue', type: 'number', classList: '--end' },
 							{ field: 'price', type: 'number', classList: '--end' },
 							{ field: 'artist', hidden: true, expand: true },
@@ -64,26 +66,30 @@
 						],
 					};
 					grid.setItemsPerPage(10);
+					grid.setTotalItems(result.total);
 					grid.data = result.data;
-					
-					// grid.setPage(0, true);
-					// grid.dataInitialized = false;
-					// grid.setAttribute('itemsPerPage', result.data.length);
-					// grid.state.items = parseInt(result.total || result.data.length, 10);
 				});
 		});
 
-
 		grid.addEventListener('dg:requestpagechange', (event) => {
 			const requestedPage = event.detail.page;
-			const direction = event.detail.direction;
-			grid.setPage(requestedPage, true);
+			const dataUrl = `./data/test${requestedPage}.json`;
+			fetch(dataUrl)
+				.then((response) => response.json())
+				.then((result) => {
+					grid.data = result.data;
+					grid.state.pageItems = result.data.length;
+					grid.setPage(requestedPage);
+				})
+				.catch(error => console.error(`Error fetching data for page ${requestedPage}:`, error));
 		});
 
 		grid.addEventListener('dg:details', (event) => {
 			console.log(event.detail);
 		});
 
+		// if(requestedPage === 1) grid.settings = { stickyCols: [] };
+		// if(requestedPage === 2) grid.settings = { stickyCols: [1, 3] };
 	</script>
 
 </body>

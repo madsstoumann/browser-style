@@ -76,6 +76,20 @@ export function exportCSV(state) {
 }
 
 /**
+ * Generates a table header (thead) configuration from the first row of a table body (tbody).
+ *
+ * @param {Array<Object>} tbody - The table body data, where each object represents a row.
+ * @returns {Array<Object>} An array of objects representing the table header configuration.
+ */
+function generateTheadFromTbody(tbody) {
+	return Object.keys(tbody[0] || {}).map(key => ({
+		field: key,
+		label: capitalize(key),
+		hidden: false
+	}));
+}
+
+/**
  * Extracts and returns the data from the table body as an array of objects.
  *
  * @param {HTMLTableElement} table - The table element from which to extract the data.
@@ -150,11 +164,11 @@ export function handleSorting(context, index) {
  * Thead can also be merged with a provided config.
  *
  * @param {Object|Array} data - The data to be parsed, which can either be an object containing thead and tbody, or just an array representing tbody.
- * @param {Object} context - The context object containing state, options, and config.
+ * @param {Object} context - The context object containing state, settings, and config.
  * @param {Object} context.config - Configuration object that can provide additional thead information.
  * @param {Array} context.config.thead - Array of column definitions from the config.
- * @param {Object} context.options - Options object, including table options like 'selectable'.
- * @param {boolean} context.options.selectable - Whether the table allows row selection.
+ * @param {Object} context.settings - Settings object, including table settings like 'selectable'.
+ * @param {boolean} context.settings.selectable - Whether the table allows row selection.
  * @param {Object} context.state - State object that contains table information.
  * @param {number} context.state.itemsPerPage - Number of items displayed per page.
  * @param {Function} context.log - Function to log messages for debugging.
@@ -170,31 +184,24 @@ export function handleSorting(context, index) {
  */
 export function parseData(data, context) {
 	try {
-		let { thead, tbody } = data;
+		let { thead = [], tbody = [] } = data;
+		const externalNavigation = context.settings.externalNavigation;
 
 		// If no thead is provided but data is an array (assume tbody items)
-		if (!thead && Array.isArray(tbody)) {
-			thead = Object.keys(tbody[0] || {}).map(key => ({
-				field: key,
-				label: capitalize(key),
-				hidden: false
-			}));
+		if (!thead.length && tbody.length) {
+			thead = generateTheadFromTbody(tbody);
 		}
 
 		// If no tbody is provided, assume data itself is tbody
-		if (!tbody && Array.isArray(data)) {
+		if (!tbody.length && Array.isArray(data)) {
 			tbody = data;
-			thead = Object.keys(tbody[0] || {}).map(key => ({
-				field: key,
-				label: capitalize(key),
-				hidden: false
-			}));
+			thead = thead = generateTheadFromTbody(tbody);
 		}
 
-		// Check for a config object and merge thead from config if it exists
-		if (context.config && context.config.thead) {
+		// Check for a settings object and merge thead from settings if it exists
+		if (context.settings?.thead) {
 			thead = thead.map((col) => {
-				const configCol = context.config.thead.find((c) => c.field === col.field);
+				const configCol = context.settings.thead.find((c) => c.field === col.field);
 				return configCol ? { ...col, ...configCol } : col;
 			});
 		}
@@ -203,14 +210,14 @@ export function parseData(data, context) {
 		const hiddenCount = thead.filter(cell => cell.hidden).length;
 
 		return {
-			cols: (thead.length - hiddenCount) + (context.options.selectable ? 1 : 0),
-			items: tbody.length,
-			pages: calculatePages(tbody.length, context.state.itemsPerPage),
+			cols: (thead.length - hiddenCount) + (context.settings.selectable ? 1 : 0),
+			items: externalNavigation ? context.state.items : tbody.length,
+			pages: externalNavigation ? context.state.pages : calculatePages(tbody.length, context.state.itemsPerPage),
 			tbody,
 			thead
 		};
 	} catch (error) {
-		context.log(`Error parsing data: ${error}`, '#F00', context.options.debug);
+		context.log(`Error parsing data: ${error}`, '#F00', context.settings.debug);
 		throw error;
 	}
 }
