@@ -175,7 +175,9 @@ export function renderTBody(context) {
 
 		// Filter and sort the data
 		let data = filterData(context, [...tbody]);
-		applySorting(context, data);
+		if (context.settings.sortable) {
+			applySorting(context, data);
+		}
 
 		// If no data is found, show "no result" message
 		if (!data.length) {

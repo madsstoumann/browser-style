@@ -103,7 +103,7 @@
 	
 	<br>
 	<hr>
-	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects, and <code>page</code> set to 2 (beginning from 0).</p>
+	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects, and <code>page</code> set to 2 (beginning from 0) and <code>nosortable</code>.</p>
 	<script type="module" src="index.js"></script>
 
 	<!-- SCRIPT EXAMPLES -->
@@ -260,6 +260,7 @@
 		grid3.setAttribute('i18n', JSON.stringify(i18n));
 		grid3.setAttribute('itemsperpage', 5);
 		grid3.setAttribute('lang', 'fr');
+		grid3.setAttribute('nosortable', '');
 		grid3.setAttribute('page', 2);
 		grid3.setAttribute('searchable', '');
 		grid3.setAttribute('selectable', '');

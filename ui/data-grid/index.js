@@ -187,6 +187,7 @@ export default class DataGrid extends HTMLElement {
 			rows: !this.hasAttribute('norows'),
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
+			sortable: !this.hasAttribute('nosortable'),
 			stickyCols: this.parseStickyCols(this.dataset.stickyCols) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
 			textoptions: this.hasAttribute('textoptions') || false,
@@ -764,7 +765,10 @@ export default class DataGrid extends HTMLElement {
 			this.form.elements.print.hidden = !this.settings.printable;
 			this.form.elements.search.hidden = !this.settings.searchable;
 			this.form.elements.selection.hidden = !this.settings.selectable;
-			
+
+			/* sorting */
+			this.table.classList.toggle('--nosortable', !this.settings.sortable);
+
 			/* textwrap */
 			this.form.textoptions.hidden = !this.settings.textoptions;
 			this.form.elements.textwrap.checked = this.settings.textwrap;

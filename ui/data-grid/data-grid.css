@@ -102,9 +102,7 @@
 
 		& table {
 			width: 100%;
-
 			& label { display: contents; }
-
 			& td {
 				cursor: default;
 				position: relative;
@@ -115,21 +113,7 @@
 					color: CanvasText;
 					outline: 2px solid var(--AccentColor);
 					outline-offset: -2px;
-
 				}
-
-				/* Value changed */
-				/* &[data-old-value]::after {
-					background: var(--ColorWarning);
-					border-radius: 50%;
-					content: "";
-					display: block;
-					height: .33em;
-					inset-block-start: .25em;
-					inset-inline-end: 0.25em;
-					position: absolute;
-					width: .33em;
-				} */
 			}
 
 			& th {
@@ -150,6 +134,9 @@
 						width: .7em;
 						height: 1em;
 					}
+				}
+				.--nosortable & {
+					span::after { display: none; }
 				}
 			}
 
@@ -186,31 +173,10 @@
 			}
 		}
 
-
-
 		/* RWD */
-		@container (min-width: 600px) {
-			:is(td,th) {
-				/* text-wrap: wrap; */
-			}
-		}
 		@container (max-width: 600px) {
-			/* & > div {
-				border: 1px solid var(--ButtonBorder);
-				border-radius: .33rem;
-				& table {
-					& tr:last-of-type td { border-block-end-width: 0; }
-					& tr:first-of-type th { border-block-start-width: 0; }
-					& :is(td,th):first-of-type { border-inline-start-width: 0; }
-					& :is(td,th):last-of-type { border-inline-end-width: 0; }
-				}
-			} */
 			& [name=actions] {
-				/* border: 1px solid var(--ButtonBorder);
-				border-radius: .33rem; */
 				order: 2;
-				/* padding: 1ch; */
-				
 			}
 			& fieldset[name=navigation] {
 				justify-content: space-between;
@@ -218,26 +184,18 @@
 				& small { display: none; }
 			}
 			& form { gap: 1ch; grid-auto-flow: row; }
-
-			table {
-				:is(td,th) {
-					/* text-wrap: nowrap; */
-				}
-			}
 		}
 
 		/* Column Alignment */
 		.--center {
 			text-align: center;
 		}
-
 		.--end {
 			text-align: end;
 			span {
 				justify-content: end;
 			}
 		}
-
 
 		/* Loading */
 		&[loading] {
