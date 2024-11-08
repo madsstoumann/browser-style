@@ -1,513 +1,96 @@
-# ui-datagrid
 
-`<ui-datagrid>` is a Custom Element, you can wrap around an existing `<table>`, or fill with data through the `src`-attribute, using either a stringified object or a URL to an endpoint.
+# DataGrid Component Documentation
 
-With an existing `<table>`:
+## Table of Contents
 
-```html
-<ui-datagrid
-  itemsperpage="20"
-  searchable>
-  <table>
-    <thead>...</thead>
-    <tbody>...</tbody>
-  </table>
-</ui-datagrid>
-```
+1. [Introduction to DataGrid](#introduction-to-datagrid)
+   - Overview of DataGrid and its purpose
+   - Main features and capabilities
+   - Usage scenarios
 
-With `src`:
+2. [Basic Setup](#basic-setup)
+   - Adding DataGrid to your HTML
+   - Minimal HTML structure requirements
+   - Default behavior and initial rendering
 
-```html
-<ui-datagrid
-  itemsperpage="20"
-  searchable
-  src="https://endpoint.com/">
-</ui-datagrid>
-```
+3. [Configuration Options](#configuration-options)
+   - List of attributes and properties available for customization
+   - Explanation of `data` and `i18n` attributes
+     - Loading data from URL or JSON
+     - Internationalization (i18n) settings and JSON format
+   - Attribute reference:
+     - `itemsperpage`, `page`, `lang`, `searchable`, `selectable`, `pagination`, `external-navigation`
+     - Explanation of each attribute’s usage and default values
 
-With `src` **and** some default `<table>`-styles:
+4. [Data and Schema Loading](#data-and-schema-loading)
+   - Using the `data` attribute to load static JSON or URLs
+   - Setting the `schema` attribute for data structure configuration
+   - Example schema format and field definitions
+   - Loading i18n settings via the `i18n` attribute (URL or JSON)
 
-```html
-<ui-datagrid
-  itemsperpage="20"
-  searchable
-  src="https://endpoint.com/">
-  <table
-    class="my-table-classes">
-  </table>
-</ui-datagrid>
-```
+5. [Internationalization (i18n)](#internationalization-i18n)
+   - Setting default language (`lang` attribute)
+   - Providing translations via JSON
+   - Customizing text labels for UI elements in multiple languages
 
-From JavaScript:
+6. [Customizing Appearance and Behavior](#customizing-appearance-and-behavior)
+   - Overview of customizable settings:
+     - `density`, `densityOptions`, `colWidths`, `wrapperClasses`, `tableClasses`, `textwrap`, etc.
+   - Examples of configuring `density` (e.g., compact vs. large layouts)
+   - Configuring text wrapping (`textwrap` attribute)
+   - Setting sticky columns (`stickyCols` attribute) and overflow handling
+   - Adding custom table classes for appearance control
 
-```js
-const grid = document.createElement('ui-datagrid');
-grid.setAttribute('itemsperpage', 20);
-grid.setAttribute('searchable', '');
-grid.setAttribute('src', 'https://endpoint.com');
-document.body.append(grid);
-```
+7. [Interactivity and Events](#interactivity-and-events)
+   - List of dispatchable events:
+     - `dg:loaded`, `dg:requestpagechange`, `dg:itemsperpage`, etc.
+   - Setting up event listeners to handle user interactions
+   - Dispatching events from the grid and capturing events externally
+   - Example: Handling page navigation with `dg:requestpagechange`
+   - Using `dg:loaded` for custom initialization
 
-With `src` containing JSON, as attribute:
+8. [Sorting, Searching, and Filtering](#sorting-searching-and-filtering)
+   - Enabling sorting (`sortable` attribute) and customizing sort behavior
+   - Using the `searchable` attribute and setting up search functionality
+   - Filtering columns based on user input
 
-```html
-<ui-datagrid
-  src='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'>
-  ...
-</ui-datagrid>
-```
+9. [Pagination Controls](#pagination-controls)
+   - Setting `itemsperpage` for page size control
+   - Using the `pagination` attribute to enable or disable pagination
+   - Navigating pages programmatically or through user interaction
+   - Handling `external-navigation` for server-side pagination
 
-From JavaScript:
+10. [Data Export and Printing](#data-export-and-printing)
+   - Enabling data export options (`exportCSV`, `exportJSON`)
+   - Example: Exporting data to CSV or JSON format
+   - Using the `printable` attribute to enable table printing
 
-```js
-const obj = {
-  thead: [...],
-  tbody: [...]
-}
+11. [Custom Selection and Row Management](#custom-selection-and-row-management)
+   - Enabling row selection (`selectable` attribute)
+   - Handling row selection and multi-selection logic
+   - Using the `selected` event to capture selected rows
+   - Example: Handling selected rows programmatically
 
-const grid = document.createElement('ui-datagrid');
-grid.setAttribute('src', JSON.stringify(obj));
-document.body.append(grid);
-```
+12. [Column Resizing and Layout Control](#column-resizing-and-layout-control)
+   - Enabling column resizing with `colWidths`
+   - Adjusting column widths dynamically
+   - Setting initial column widths programmatically
 
-## Table Data
-If you're using an existing, inline `<table>` as data-source, you need to structure it with `<thead>` and `<tbody>`-tags. To keep it simple, `colspan` and `rowspan` -attributes are **not** allowed, and you can only use `<th>`-tags within `<tr>`’s in `<thead>` — and `<td>`-tags within `<tr>`s in `<tbody>`:
+13. [Performance and Debugging Tools](#performance-and-debugging-tools)
+   - Enabling debug mode (`debug` attribute) for troubleshooting
+   - Performance considerations for large datasets
+   - Optimizing DataGrid settings for fast rendering and minimal latency
 
-```html
-<table>
-  <thead>
-    <tr>
-      <th>First Name</th>
-      <th>Last Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Bruce</td>
-      <td>Wayne</td>
-    </tr>
-  </tbody>
-</table>
-```
+14. [Customization Examples](#customization-examples)
+   - Example configurations for different use cases (e.g., product tables, employee lists)
+   - Sample code snippets for common configurations
+   - Tips for combining attributes to achieve specific behaviors
 
----
-
-If you're using an **external** `src`, the endpoint must return an object with two properties, `tbody` and `thead`:
-
-```json
-{
-  "tbody": [...],
-  "thead": [...]
-}
-```
+15. [API Reference for Implementers](#api-reference-for-implementers)
+   - List of public methods (e.g., `setPage`, `setItemsPerPage`, `navigatePage`)
+   - Example: Calling API methods to dynamically update the DataGrid
+   - Custom functions: Using `setLoading` to show a loading spinner
 
 ---
 
-If you're using the `data`-attribute, the stringified object should return the same type of object as above, with two properties, `tbody` and `thead`:
-
-```json
-{
-  "tbody": [...],
-  "thead": [...]
-}
-```
-
-### Column Definitions
-
-`thead` is an array of objects with column definitions:
-
-```json
-{
-  "thead": [
-    {
-      "edit": false,
-      "field": "id",
-      "formatter": "bold",
-      "hidden": true,
-      "label": "ID",
-      "type": "number",
-      "uid": true,
-    },
-    {
-      "field": "firstname",
-      "label": "First Name"
-    },
-  ]
-}
-```
-`edit` is `true` by default, if `editable` is set as an attribute.
-
-`formatter` is optional, and refers to a cell formatting-method in the `formatters`-object. More on this [below](#formatters).
-
-`hidden` is optional, and `false` by default.
-
-`type` is "string" by default, and only required if you want to be able to sort the column by `number`.
-
-`uid` is also optional — and only required, if `editable` is used.
-
----
-
-If you're using an inline `<table>`, you can set these extra, optional properties as attributes:
-
-```html
-<tr>
-  <th
-    data-uid
-    data-edit="false"
-    data-formatter="bold"
-    data-type="number"
-    hidden>
-    ID
-  </th>
-  <th>
-    First Name†
-  </th>
-</tr>
-```
-
-†) When using an inline `<table>`, headers are automatically converted to `camelCase`:
-
-```json
-{
-  "field": "firstname",
-  "label": "First Name"
-},
-```
-
-### Row Data
-
-`tbody` consists of objects with a property for each column:
-
-```json
-{
-  "tbody": [
-    {
-      "id": "1",
-      "firstname": "Bruce",
-      "lastname": "Wayne",
-    }
-  ]
-}
-```
-
-When using an inline `<table>`, this is simply like the markup in the beginning of this section, with one caveat:
-
-If a column is `hidden`, each row for this column needs to be `hidden` as well:
-
-```html
-<thead>
-  <tr>
-    <th
-      data-uid
-      hidden>
-      ID
-    </th>
-    <th>First Name</th>
-  </tr>
-</thead>
-<tbody>
-  <tr>
-    <td hidden>1</td>
-    <td>Bruce</td>
-  </tr>
-</tbody>
-
-```
-
-## Attributes
-
-`<ui-datagrid>` can be configured through a bunch of attributes:
-
-### editable
-Boolean attribute. If present, the grid is editable — but **only** if at least one column has `"uid": true`
-
----
-
-### itemsperpage
-Numeric. Indicates the number of items on a page. If omitted, pagination is **not** used.
-
----
-
-### searchable
-Boolean attribute. If present, an `<input type="search">` is added _before_ the table, allowing for basic filtering.
-
-> **NOTE:** See `searchterm` and `searchmethod` below.
-
----
-
-### selectable
-Boolean attribute. Allows selection of rows.
-
----
-
-### src
-String. The URL of an endpoint API, returning an object with `thead` and `tbody`-data.
-`src` can also be a stringified object (json), see example at beginning of this document.
-
----
-
-## Additional Attributes
-The following attributes are mostly set by code, but can be set in HTML to preload the grid with specific settings. Attributes like `i18n` and `formatters` are objects. 
-
- `i18n` can be set as stringified objects in attributes, whereas `formatters` can only be set in code.
-
----
-
-### debug
-Boolean attribute. Log events and errors to console.
-
----
-
-### density
-Boolean attribute. Adds a density-button to the actions-part of the bottom navigation, allowing to toggle between a compact and expanded state.
-
----
-
-### exportable
-Boolean attribute. Adds `CSV` and `JSON`-export-buttons tot the actions-part of the bottom navigation.
-
----
-
-### formatters
-Object. By default, cells are using a formatter, that simply returns the content. Thus you can, in principle, use HTML in the json with row data:
-
-```json
-"firstname": "<u>Bruce</u>",
-```
-
-A better approach is to use custom formatters, specified in the `formatters`-object:
-
-```js
-const formatters = {
-  bold: (value) => `<strong>${value}</strong>`,
-  email: (value) => `<a href="mailto:${value}">${value}</a>`,
-  ...
-}
-```
-
-Then, in the column definitions-object (`thead`), add the name of the formatter for a column:
-
-```json
-{
-  "thead": [
-    {
-      "field": "email",
-      "formatter": "email",
-      "label": "Email address"
-    }
-  ]
-}
-```
-
-`formatters` can **only** be set from script:
-
-```js
-grid.formatters = formatters;
-```
-
----
-
-### i18n
-Object. To use `<ui-datagrid>` in a specific language, you can set an `i18n` (internationalization)-object for the current `lang`. 
-
-You need an object with these properties, replacing `en` with your language-code :
-
-```js
-const i18n = {
-  en: {
-    all: 'All',
-    endsWith: 'Ends with',
-    equals: 'Equals',
-    first: 'First',
-    includes: 'Includes',
-    last: 'Last',
-    next: 'Next',
-    noResult: 'No results',
-    of: 'of',
-    page: 'Page',
-    prev: 'Previous',
-    rowsPerPage: 'Rows',
-    search: 'Filter Columns',
-    selected: 'selected',
-    startsWith: 'Starts with',
-  }
-}
-```
-
-Set it from JavaScript:
-
-```js
-grid.setAttribute('i18n', JSON.stringify(i18n))
-```
-
-You can also set it as an attribute:
-
-```html
-<ui-datagrid
-  i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","size":"Rækker per side"}}'>
-  ...
-</ui-datagrid>
-```
-
-Note the **single apostrophe** wrapping the attribute. This is necessary to encode the JSON correctly (in double quotes).
-
-> **IMPORTANT:** If you set the `i18n`-attribute to another lang than `en`, you **must** set that lang as an attribute on `<ui-datagrid>` or on the `<html>`-element:
-
-```html
-<ui-datagrid lang="fr">...</ui-datagrid>
-```
-
----
-
-### lang
-Standard HTML-attribute. If no `lang`-attribute is present, the code will look for the attribute on the `<html>`-tag, othwerise fallback to "en" (see i18n-section above).
-
----
-
-### page
-Numeric. Indicates the current page in a paginated result. This attribute is updated from the internal code, when changing pages — but can be set as an attribute in HTML to preload the grid on a specific page.
-
----
-
-### pagesize
-Array of numbers. Used for the "Page Size"-dropdown. 
-
-A value corresponding to `itemsperpage` **must** exist in this array.
-
----
-
-### printable
-Boolean attribute. Adds a print-button to the actions-part of the navigation and allows `CTRL + P` to be used to trigger it. Prints the active table.
-
----
-
-### searchmethod
-String. Determines the way, search/filtering is applied. Used internally with the value "includes" by default.
-
-Valid values are:
-
-- "end"
-- "equals"
-- "includes"
-- "start"
-
----
-
-### searchterm
-String. Used internally, when a user types something in the search-field. Can be set as an attribute in HTML to preload the grid with a specific searchterm.
-
----
-
-### sortindex
-Numeric. The column-index used for sorting (starting from `0` zero). Set by code, but can be set as an attribute in HTML to preload the grid with a specific column sorted.
-
----
-
-### sortorder
-Numeric. Sort Ascending (`0` zero) or Descending (`1` one)
-
----
-
-### stickycol
-...
-
----
-
-### tableclass
-String. If the grid is added from JavaScript, you can add style-classes to the internal `<table>`-element as a space-delimited string:
-
-`my-table-class is-dark zebra-rows`
-
----
-
-_Example:_
-
-Load grid with pre-filled searchterm, first column sorted descending, showing second page of results:
-
-```html
-<ui-datagrid
-  itemsperpage="5"
-  page="1"
-  sortindex="0"
-  sortorder="1"
-  searchterm="batman">
-</ui-datagrid>
-```
-
----
-
-## Keyboard Shortcuts
-
-### Navigation
-
-The grid can be navigated by keyboard, using the [W3C standard for grids](https://www.w3.org/WAI/ARIA/apg/patterns/grid/), with some additions:
-
-| Key Combination | Action |
-| --- | --- |
-| `Right Arrow` | Moves focus one cell to the right. If focus is on the right-most cell in the row, focus does not move. |
-| `Left Arrow` | Moves focus one cell to the left. If focus is on the left-most cell in the row, focus does not move. |
-| `Down Arrow` | Moves focus one cell down. If focus is on the bottom cell in the column, focus does not move. |
-| `Up Arrow` | Moves focus one cell up. If focus is on the top cell in the column, focus does not move. |
-| `Page Down` | Moves focus down an author-determined number of rows, typically scrolling so the bottom row in the currently visible set of rows becomes one of the first visible rows. If focus is in the last row of the grid, focus does not move. |
-| `Page Up` | Moves focus up an author-determined number of rows, typically scrolling so the top row in the currently visible set of rows becomes one of the last visible rows. If focus is in the first row of the grid, focus does not move. |
-| `Home` | Moves focus to the first cell in the row that contains focus. |
-| `End` | Moves focus to the last cell in the row that contains focus. |
-| `Cmd/Ctrl + Home` | Moves focus to the first cell in the first row. |
-| `Cmd/Ctrl + End` | Moves focus to the last cell in the last row. |
-| `Shift + Home` | Moves focus to the first row in the column that contains focus. |
-| `Shift + End` | Moves focus to the last row in the column that contains focus. |
-
-### Print
-| Key Combination | Action |
-| --- | --- |
-| `Cmd/Ctrl + p` | If `printable` is set, printing can be triggered with this. |
-
-### Headers cells only
-
-| Key Combination | Action |
-| --- | --- |
-| `Space` | Sorts column — or, if table is `selectable` — the first column toggles row-selection |
-| `Shift + Arrow Left` | Resize column: shrink. |
-| `Shift + Arrow Right` | Resize column: expand. |
-
-### Row cells only
-
-| Key Combination | Action |
-| --- | --- |
-| `Space` | If table is `selectable` — toggles row-selection in first column |
-| `Shift + Space` | Toggles selection of current row |
-| `Cmd/Ctrl + a` | Selects all visible cells |
-| `Cmd/Ctrl + Shift + i` | Inverts selection |
-
----
-
-## Events: Emitting
-
-### dg:cellchange
-Triggered when a cell has been edited.
-
-### dg:pagechange
-Triggered when a page change occurs.
-
-### dg:row
-Returns the current/active row, triggered from `dg:getrow`.
-
-### dg:selected
-Returns an array of selected objects, triggered from `dg:getselected`.
-
-### dg:selection
-Triggered when a selection occurs.
-
-## Events: Recieving
-
-### dg:append
-Emit this event with a `detail`-object containing an array of items to add to `tbody`-array.
-
-### dg:clearselected
-Clears selection and emits `dg:selected`.
-
-### dg:getrow
-Emits `dg:selected`.
-
-### dg:getselected
-Emits `dg:selected`.
+Each section includes practical examples, configuration snippets, and clear descriptions to help users implement and customize the DataGrid component effectively.

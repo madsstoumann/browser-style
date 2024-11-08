@@ -9,10 +9,9 @@ const bound = (context) => ({
 export function renderForm(context) {
 	const { t, icon } = bound(context);
 	const currentDensity = context.settings.density;
-	// const densityGroupName = `density-${window.crypto.randomUUID()}`;
 	const densityControls = Object.keys(context.settings.densityOptions).map(key => {
-		const { label, icon: densityIcon } = context.settings.densityOptions[key];
-		return `<label class="ui-button">
+		const { label, icon: densityIcon, i18n } = context.settings.densityOptions[key];
+		return `<label class="ui-button" title="${t(i18n)}">
 			<input type="radio" name="density_option" value="${key}"${key === currentDensity ? ' checked' : ''} data-sr>
 			${icon(icons[densityIcon])}
 		</label>`;
@@ -20,12 +19,14 @@ export function renderForm(context) {
 
 	return `
 	<fieldset name="selection" hidden>
+		<button type="button" name="selectall" title="${t('selectAll')}" hidden>${icon(icons.listCheck)}</button>	
 		<small><output name="selected">0</output> ${t('selected')}</small>
 	</fieldset>
 	<fieldset name="actions">
-		<button type="button" name="print" hidden>${icon(icons.printer)}</button>
+		<button type="button" name="print" title="${t('print')}" hidden>${icon(icons.printer)}</button>
 		<fieldset name="textoptions" hidden>
-			<label class="ui-button"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>
+			<label class="ui-button" title="${t('layoutFixed')}"><input type="checkbox" name="layoutfixed" data-sr checked>${icon(icons.layoutFixed)}</label>
+			<label class="ui-button" title="${t('textWrap')}"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>
 		</fieldset>
 		<fieldset name="density" hidden>${densityControls}</fieldset>
 		<button type="button" name="csv" hidden>${icon(icons.csv)}</button>

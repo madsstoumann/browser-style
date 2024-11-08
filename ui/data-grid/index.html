@@ -32,8 +32,9 @@
 		searchable
 		selectable
 		data="./data/data.json"
-		i18n="./data/i18n.json"
-		data-sticky-cols="0,2,4"
+		stickycols="0,2,4"
+		
+		layoutfixed="false"
 		textoptions>
 	</data-grid>
 
@@ -96,10 +97,8 @@
 	<p>Example with data being fetched on a <code>dg:pagechange</code>-event, also setting and removing the <code>loading</code>-attribute.</p>
 	<data-grid 
 		id="grid2"
-		itemsperpage="5"
-		page="0"
-		selectable
-		tableclass="ui-table --rounded --th-light --hover-all"></data-grid>
+		itemsperpage="5">
+	</data-grid>
 	
 	<br>
 	<hr>
@@ -263,7 +262,6 @@
 		grid3.setAttribute('nosortable', '');
 		grid3.setAttribute('page', 2);
 		grid3.setAttribute('searchable', '');
-		grid3.setAttribute('selectable', '');
 		grid3.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
 		document.body.append(grid3);
 

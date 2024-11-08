@@ -29,20 +29,27 @@ export default class DataGrid extends HTMLElement {
 		this._i18n = {
 			en: {
 				all: "All",
+				densityLarge: "Large density",
+				densityMedium: "Medium density",
+				densitySmall: "Small density",
 				endsWith: "Ends with",
 				equals: "Equals",
 				first: "First",
 				includes: "Includes",
 				last: "Last",
+				layoutFixed: "Toggle Fixed layout",
 				next: "Next",
 				noResult: "No results",
 				of: "of",
 				page: "Page",
 				prev: "Previous",
+				print: "Print",
 				rowsPerPage: "Rows",
 				search: "Filter Columns",
 				selected: "selected",
-				startsWith: "Starts with"
+				selectAll: "Select all",
+				startsWith: "Starts with",
+				textWrap: "Toggle Text wrap",
 			}
 		};
 	}
@@ -173,13 +180,14 @@ export default class DataGrid extends HTMLElement {
 			debug: this.hasAttribute('debug') || false,
 			density: this.getAttribute('density') || '',
 			densityOptions: {
-				small: { label: 'Small', icon: 'densitySmall', class: '--density-sm' },
-				medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md' },
-				large: { label: 'Large', icon: 'densityLarge', class: '--density-lg' }
+				small: { label: 'Small', icon: 'densitySmall', class: '--density-sm', i18n: 'densitySmall' },
+				medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md', i18n: 'densityMedium' },
+				large: { label: 'Large', icon: 'densityLarge', class: '--density-lg', i18n: 'densityLarge' },
 			},
 			exportCSV: this.hasAttribute('export-csv') || false,
 			exportJSON: this.hasAttribute('export-json') || false,
 			externalNavigation: this.hasAttribute('external-navigation') || false,
+			layoutFixed: this.getAttribute('layoutfixed') === "false" ? false : true,
 			navigation: !this.hasAttribute('nonav'),
 			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
 			pagination: !this.hasAttribute('nopage'),
@@ -187,8 +195,9 @@ export default class DataGrid extends HTMLElement {
 			rows: !this.hasAttribute('norows'),
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
+			selectAll: this.hasAttribute('selectall') || false,
 			sortable: !this.hasAttribute('nosortable'),
-			stickyCols: this.parseStickyCols(this.dataset.stickyCols) || [],
+			stickyCols: this.parseStickyCols(this.getAttribute('stickycols')) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
 			textoptions: this.hasAttribute('textoptions') || false,
 			textwrap: this.getAttribute('textwrap') === "false" ? false : true,
@@ -758,24 +767,28 @@ export default class DataGrid extends HTMLElement {
 			this.form.elements.csv.hidden = !this.settings.exportCSV;
 			this.form.elements.json.hidden = !this.settings.exportJSON;
 
+			/* misc */
+			this.form.elements.print.hidden = !this.settings.printable;
+			this.form.elements.search.hidden = !this.settings.searchable;
+
 			/* navigation */
 			this.form.elements.pagination.hidden = !this.settings.pagination;
 			this.form.elements.rows.hidden = !this.settings.rows;
 
-			this.form.elements.print.hidden = !this.settings.printable;
-			this.form.elements.search.hidden = !this.settings.searchable;
+			/* selectable */
 			this.form.elements.selection.hidden = !this.settings.selectable;
+			this.form.elements.selectall.hidden = !this.settings.selectAll;
 
 			/* sorting */
 			this.table.classList.toggle('--nosortable', !this.settings.sortable);
 
-			/* textwrap */
+			/* textoptions */
 			this.form.textoptions.hidden = !this.settings.textoptions;
+			this.form.elements.layoutfixed.checked = this.settings.layoutFixed;
 			this.form.elements.textwrap.checked = this.settings.textwrap;
-			if (!this.settings.textwrap) {
-				this.table.classList.toggle('--no-wrap', !this.settings.textwrap);
-			}
-
+			this.table.classList.toggle('--fixed', this.settings.layoutFixed);
+			this.table.classList.toggle('--no-wrap', !this.settings.textwrap);
+		
 			/* sticky cols */
 			const toggleEventListener = (condition, addListener) => {
 				if (condition && !this.overflowListener) {

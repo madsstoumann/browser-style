@@ -61,6 +61,13 @@ export function attachEventListeners(context) {
 	// Printable option
 	form.elements.print.addEventListener('click', () => context.printTable());
 
+	// Select / Deselect All
+	form.elements.selectall.addEventListener('click', () => {
+		const selectAll = form.elements.selectall.value === 'true' ? false : true;
+		form.elements.selectall.value = selectAll;
+		context.selectRows(table.tBodies[0].rows, selectAll, true, true);
+	});
+
 	// Exportable settings
 	form.elements.csv.addEventListener('click', () => {
 		const csv = exportCSV(state);
@@ -117,6 +124,7 @@ export function attachEventListeners(context) {
 function handleFormInput(event, context) {
 	const input = event.target;
 	if (input.name === 'itemsperpage') context.setAttribute('itemsperpage', parseInt(input.value, 10));
+	if (input.name === 'layoutfixed') context.table.classList.toggle('--fixed', input.checked);
 	if (input.name === 'page') context.setAttribute('page', parseInt(input.value, 10) - 1);
 	if (input.name === 'textwrap') context.table.classList.toggle('--no-wrap', !input.checked);
 }
