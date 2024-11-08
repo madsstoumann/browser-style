@@ -34,7 +34,7 @@
 		data="./data/data.json"
 		i18n="./data/i18n.json"
 		data-sticky-cols="0,2,4"
-		textwrap>
+		textoptions>
 	</data-grid>
 
 	<br>
@@ -53,10 +53,8 @@
 	<p>Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
 
 	<data-grid
-		lang="da"
-		i18n='{"da":{"all":"Alle","next":"Næste","of":"af","page":"Side","prev":"Forrige","selected":"valgt","rowsPerPage":"Rækker"}}'
 		itemsperpage="5"
-		page="0"
+		page="2"
 		selectable>
 		<div>
 			<table class="ui-table --rounded --th-light --hover-all">
@@ -238,9 +236,6 @@
 
 		/* === CREATE WITH JAVASCRIPT === */
 		const grid3 = document.createElement('data-grid');
-		grid3.setAttribute('data', './data/data.json');
-
-
 
 		const i18n = {
 			fr: {
@@ -262,14 +257,15 @@
 			}
 		}
 
+		grid3.setAttribute('data', './data/data.json');
 		grid3.formatters = formatters;
-		grid3.setAttribute('i18n', JSON.stringify(i18n));
+		grid3.i18n = i18n;
+		grid3.lang = 'fr';
+
 		grid3.setAttribute('itemsperpage', 5);
-		grid3.setAttribute('lang', 'fr');
 		grid3.setAttribute('page', 0);
 		grid3.setAttribute('searchable', '');
 		grid3.setAttribute('selectable', '');
-		grid3.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
 		document.body.append(grid3);
 
 	</script>

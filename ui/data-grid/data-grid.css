@@ -2,11 +2,10 @@
 @layer bs-component {
 	:where(data-grid) {
 		container-type: inline-size;
-		display: block;
+		display: grid;
 		position: relative;
 
 		[hidden] { display: none; }
-		/* &[nowrap] :is(td,th) { text-wrap: nowrap; } */
 
 		& > div {
 			overflow-x: auto;

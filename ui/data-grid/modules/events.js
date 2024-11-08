@@ -71,6 +71,9 @@ export function attachEventListeners(context) {
 		if (json) downloadFile(json, 'export.json', 'application/json;charset=utf-8;');
 	});
 
+	// Loading
+	context.addEventListener('dg:loading:start', () => context.setLoading(true));
+	context.addEventListener('dg:loading:end', () => context.setLoading(false));
 
 	// Searchable option
 	addEventListeners(form.elements.searchterm, ['input', 'search'], e => context.setAttribute('searchterm', e.target.value));

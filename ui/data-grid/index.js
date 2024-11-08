@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.27
- * @summary 07-11-2024
+ * @version 1.0.28
+ * @summary 08-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -24,8 +24,27 @@ export default class DataGrid extends HTMLElement {
 
 		this.dataInitialized = false;
 		this.lang = this.getAttribute('lang') || 'en';
+		this.loading = false;
 		this.manualTableData = false;
-		this._i18n = {};
+		this._i18n = {
+			en: {
+				all: "All",
+				endsWith: "Ends with",
+				equals: "Equals",
+				first: "First",
+				includes: "Includes",
+				last: "Last",
+				next: "Next",
+				noResult: "No results",
+				of: "of",
+				page: "Page",
+				prev: "Previous",
+				rowsPerPage: "Rows",
+				search: "Filter Columns",
+				selected: "selected",
+				startsWith: "Starts with"
+			}
+		};
 	}
 
 	/**
@@ -167,7 +186,7 @@ export default class DataGrid extends HTMLElement {
 			selectable: this.hasAttribute('selectable') || false,
 			stickyCols: this.parseStickyCols(this.dataset.stickyCols) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
-			textoptions: !this.hasAttribute('notextoptions'),
+			textoptions: this.hasAttribute('textoptions') || false,
 			textwrap: this.getAttribute('textwrap') === "false" ? false : true,
 			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
 		}
@@ -312,7 +331,7 @@ export default class DataGrid extends HTMLElement {
 
 			this.state = { ...this.state, ...(data ? parseData(data, this) : {}) };
 			this.schema = schema || {};
-			this.i18n = i18n || {};
+			this.i18n = { ...this._i18n, ...i18n };
 
 			this.checkAndSetInitialPage();
 
@@ -537,6 +556,16 @@ export default class DataGrid extends HTMLElement {
 		} catch (error) {
 			this.log(`Error setting items per page: ${error}`, '#F00');
 		}
+	}
+
+	/**
+	 * Sets the loading state of the data grid.
+	 *
+	 * @param {boolean} isLoading - A boolean indicating whether the data grid is in a loading state.
+	 */
+	setLoading(isLoading) {
+		this.loading = isLoading;
+		this.toggleAttribute('loading', this.loading);
 	}
 
 	/**
@@ -797,7 +826,7 @@ export default class DataGrid extends HTMLElement {
 		if (typeof value === 'object' && value !== null) {
 			this._i18n = value;
 		} else {
-			console.warn('i18n should be a valid object. Defaulting to an empty object.');
+			this.log('i18n should be a valid object. Defaulting to an empty object.');
 			this._i18n = {};
 		}
 	}

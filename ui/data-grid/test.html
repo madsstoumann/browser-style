@@ -49,7 +49,7 @@
 						searchable: true,
 						selectable: true,
 						stickyCols: [0, 1],
-						textoptions: false,
+						textoptions: true,
 						textwrap: false,
 
 						thead: [
@@ -74,14 +74,27 @@
 		grid.addEventListener('dg:requestpagechange', (event) => {
 			const requestedPage = event.detail.page;
 			const dataUrl = `./data/test${requestedPage}.json`;
+
+			grid.dispatchEvent(new CustomEvent('dg:loading:start'));
+
 			fetch(dataUrl)
-				.then((response) => response.json())
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(`Network response was not ok: ${response.statusText}`);
+					}
+					return response.json();
+				})
 				.then((result) => {
 					grid.data = result.data;
 					grid.state.pageItems = result.data.length;
 					grid.setPage(requestedPage);
 				})
-				.catch(error => console.error(`Error fetching data for page ${requestedPage}:`, error));
+				.catch((error) => {
+					console.error(`Error fetching data for page ${requestedPage}:`, error);
+				})
+				.finally(() => {
+					grid.dispatchEvent(new CustomEvent('dg:loading:end'));
+				});
 		});
 
 		grid.addEventListener('dg:details', (event) => {

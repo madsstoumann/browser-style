@@ -185,6 +185,7 @@
 
 	/* Overflow Wrapper. Class `--overflowing` should be added to the wrapper when content (table) is overflowing. */
 	:where(.ui-table-wrapper) {
+		max-block-size: 100%;
 		overflow: auto;
 		scrollbar-color: var(--ButtonBorder) #0000;
 		scrollbar-width: thin;
@@ -200,8 +201,13 @@
 				--ui-table-bdrs: .33rem;
 				& :is(tr:last-of-type) td { --ui-table-bdrs: 0; }
 			}
-			/* Sticky Columns */
-			&.--overflowing table, table[data-sticky-cols] {
+			/* Sticky Thead and Columns */
+			&.--overflowing table {
+				thead {
+					inset-block-start: 0;
+					position: sticky;
+					z-index: 2;
+				}
 				--ui-table-td-bg: var(--Canvas);
 				&.--c0 :is(td,th):nth-of-type(1),
 				&.--c1 :is(td,th):nth-of-type(2),
@@ -227,5 +233,21 @@
 				&.--c8 :is(td,th):nth-of-type(9) { --_iis: var(--c8); }
 			}
 		}
+		@supports (animation-timeline: scroll()) {
+			&.--overflowing table thead {
+				animation: scroll-shadow linear both;
+				animation-timeline: scroll();
+				animation-range: 0ex 5ex;
+			}
+		}
+	}
+}
+
+@keyframes scroll-shadow {
+	from {
+		box-shadow: none;
+	}
+	to {
+		box-shadow: 0em .4em .2em -.2em var(--ButtonBorder);
 	}
 }
