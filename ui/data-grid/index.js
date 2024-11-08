@@ -70,6 +70,9 @@ export default class DataGrid extends HTMLElement {
 			if (!this.hasAttribute('itemsperpage')) {
 				this.state.itemsPerPage = this.state.items;
 			}
+			if (this.hasAttribute('page')) {
+				this.state.page = parseInt(this.getAttribute('page'), 10);
+			}
 			renderTable(this);
 		}
 
@@ -185,7 +188,7 @@ export default class DataGrid extends HTMLElement {
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
 			stickyCols: this.parseStickyCols(this.dataset.stickyCols) || [],
-			tableClasses: this.getAttribute('tableclasses')?.split(',') || ['ui-table', '--th-light', '--hover-all'],
+			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
 			textoptions: this.hasAttribute('textoptions') || false,
 			textwrap: this.getAttribute('textwrap') === "false" ? false : true,
 			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
@@ -306,10 +309,11 @@ export default class DataGrid extends HTMLElement {
 	async loadResources() {
 		try {
 			const dataAttr = this.getAttribute('data');
-			const i18nUrl = this.getAttribute('i18n');
+			const i18nAttr = this.getAttribute('i18n');
 			const schemaUrl = this.getAttribute('schema');
 			let dataPromise = Promise.resolve(null);
-
+	
+			// Handle `data` attribute as either a URL or JSON
 			if (dataAttr) {
 				if (this.isValidUrl(dataAttr)) {
 					dataPromise = this.fetchResource(dataAttr);
@@ -322,23 +326,45 @@ export default class DataGrid extends HTMLElement {
 				}
 			}
 	
-			// Load all resources in parallel, passing URLs directly to fetchResource
+			// Handle `i18n` attribute as either a URL or JSON
+			let i18nPromise;
+			if (i18nAttr) {
+				if (this.isValidUrl(i18nAttr)) {
+					// Fetch if it's a URL
+					i18nPromise = this.fetchResource(i18nAttr);
+				} else {
+					// Try parsing as JSON if it's not a URL
+					try {
+						const parsedI18n = JSON.parse(i18nAttr);
+						i18nPromise = Promise.resolve(parsedI18n);
+					} catch (jsonError) {
+						this.log(`Invalid JSON in i18n attribute: ${jsonError.message}`, '#F00');
+						i18nPromise = Promise.resolve(null);
+					}
+				}
+			} else {
+				i18nPromise = Promise.resolve(null);
+			}
+	
+			// Load all resources in parallel
 			const [data, i18n, schema] = await Promise.all([
 				dataPromise,
-				i18nUrl ? this.fetchResource(i18nUrl) : Promise.resolve(null),
-				schemaUrl ? this.fetchResource(schemaUrl) : Promise.resolve(null)
+				i18nPromise,
+				schemaUrl ? this.fetchResource(schemaUrl) : Promise.resolve(null),
 			]);
-
+	
+			// Apply loaded data to component state
 			this.state = { ...this.state, ...(data ? parseData(data, this) : {}) };
 			this.schema = schema || {};
 			this.i18n = { ...this._i18n, ...i18n };
-
+	
 			this.checkAndSetInitialPage();
-
+	
 		} catch (error) {
 			this.log(`Error loading resources: ${error}`, '#F00');
 		}
 	}
+	
 
 	/**
 	 * Navigates to a specified page or in a specified direction within the data grid.

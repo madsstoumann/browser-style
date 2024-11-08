@@ -50,13 +50,12 @@
 	<br>
 	<h2>More examples</h2>
 	<hr>
-	<p>Wrapped around an existing <code>&lt;table&gt;</code>, with custom <code>lang</code> and <code>i18n</code>, set directly in HTML-attributes.</p>
+	<p>Wrapped around an existing <code>&lt;table&gt;</code>.</p>
 
 	<data-grid
 		itemsperpage="5"
-		page="2"
-		selectable>
-		<div>
+		searchable>
+		<div class="ui-table-wrapper">
 			<table class="ui-table --rounded --th-light --hover-all">
 				<thead>
 					<tr><th data-uid hidden>ID</th><th>First Name</th><th>Last Name</th><th>Known As</th><th>Place</th></tr>
@@ -88,9 +87,8 @@
 	<p>With data set as JSON directly in the <code>data</code>-attribute:</p>
 
 	<data-grid
-		data='{"tbody":[{"id":"1","firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"id":"2","firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}],"thead":[{"field":"id","hidden":true,"label":"ID","uid":true},{"field":"firstName","hidden":false,"label":"FirstName","uid":false},{"field":"lastName","hidden":false,"label":"LastName","uid":false},{"field":"knownAs","hidden":false,"label":"KnownAs","uid":false},{"field":"place","hidden":false,"label":"Place","uid":false}]}'
-		page="0"
-		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline">
+		data='[{"firstName":"Bruce","lastName":"Wayne","knownAs":"Batman","place":"GothamCity"},{"firstName":"Clark","lastName":"Kent","knownAs":"Superman","place":"Metropolis"}]'
+		tableclasses="ui-table --rounded --th-light --hover-all">
 	</data-grid>
 
 	<br>
@@ -101,11 +99,11 @@
 		itemsperpage="5"
 		page="0"
 		selectable
-		tableclass="ui-table --rounded --th-light --hover-all --hover-tr-outline"></data-grid>
+		tableclass="ui-table --rounded --th-light --hover-all"></data-grid>
 	
 	<br>
 	<hr>
-	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects.</p>
+	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects, and <code>page</code> set to 2 (beginning from 0).</p>
 	<script type="module" src="index.js"></script>
 
 	<!-- SCRIPT EXAMPLES -->
@@ -236,6 +234,7 @@
 
 		/* === CREATE WITH JAVASCRIPT === */
 		const grid3 = document.createElement('data-grid');
+		grid3.setAttribute('data', './data/data.json');
 
 		const i18n = {
 			fr: {
@@ -257,15 +256,14 @@
 			}
 		}
 
-		grid3.setAttribute('data', './data/data.json');
 		grid3.formatters = formatters;
-		grid3.i18n = i18n;
-		grid3.lang = 'fr';
-
+		grid3.setAttribute('i18n', JSON.stringify(i18n));
 		grid3.setAttribute('itemsperpage', 5);
-		grid3.setAttribute('page', 0);
+		grid3.setAttribute('lang', 'fr');
+		grid3.setAttribute('page', 2);
 		grid3.setAttribute('searchable', '');
 		grid3.setAttribute('selectable', '');
+		grid3.setAttribute('tableclass', 'ui-table --rounded --th-light --hover-all --hover-tr-outline');
 		document.body.append(grid3);
 
 	</script>
