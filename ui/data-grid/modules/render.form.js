@@ -19,7 +19,7 @@ export function renderForm(context) {
 
 	return `
 	<fieldset name="selection" hidden>
-		<button type="button" name="selectall" title="${t('selectAll')}" hidden>${icon(icons.listCheck)}</button>	
+		<button type="button" name="selectall" title="${t('selectAll')}"${!context.settings.isTouch ? ' hidden' : ''}>${icon(icons.listCheck)}</button>
 		<small><output name="selected">0</output> ${t('selected')}</small>
 	</fieldset>
 	<fieldset name="actions">

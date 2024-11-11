@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.28
- * @summary 08-11-2024
+ * @version 1.0.29
+ * @summary 11-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -47,7 +47,7 @@ export default class DataGrid extends HTMLElement {
 				rowsPerPage: "Rows",
 				search: "Filter Columns",
 				selected: "selected",
-				selectAll: "Select all",
+				selectAll: "Select all across pages",
 				startsWith: "Starts with",
 				textWrap: "Toggle Text wrap",
 			}
@@ -83,7 +83,7 @@ export default class DataGrid extends HTMLElement {
 			renderTable(this);
 		}
 
-		this.setInitialWidths();
+		this.setInitialWidths();console.log(this.settings.isTouch)
 
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
 			bubbles: true,
@@ -187,6 +187,7 @@ export default class DataGrid extends HTMLElement {
 			exportCSV: this.hasAttribute('export-csv') || false,
 			exportJSON: this.hasAttribute('export-json') || false,
 			externalNavigation: this.hasAttribute('external-navigation') || false,
+			isTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
 			layoutFixed: this.getAttribute('layoutfixed') === "false" ? false : true,
 			navigation: !this.hasAttribute('nonav'),
 			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
@@ -195,7 +196,6 @@ export default class DataGrid extends HTMLElement {
 			rows: !this.hasAttribute('norows'),
 			searchable: this.hasAttribute('searchable') || false,
 			selectable: this.hasAttribute('selectable') || false,
-			selectAll: this.hasAttribute('selectall') || false,
 			sortable: !this.hasAttribute('nosortable'),
 			stickyCols: this.parseStickyCols(this.getAttribute('stickycols')) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
@@ -777,7 +777,6 @@ export default class DataGrid extends HTMLElement {
 
 			/* selectable */
 			this.form.elements.selection.hidden = !this.settings.selectable;
-			this.form.elements.selectall.hidden = !this.settings.selectAll;
 
 			/* sorting */
 			this.table.classList.toggle('--nosortable', !this.settings.sortable);
