@@ -83,7 +83,7 @@ export default class DataGrid extends HTMLElement {
 			renderTable(this);
 		}
 
-		this.setInitialWidths();console.log(this.settings.isTouch)
+		this.setInitialWidths();
 
 		this.dispatchEvent(new CustomEvent('dg:loaded', {
 			bubbles: true,
