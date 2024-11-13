@@ -81,7 +81,13 @@ class DataEntry extends HTMLElement {
 			this.handleDataSubmission(action, method, enctype);
 		});
 
+		/* form events */
 		this.form.addEventListener('input', this.syncInstanceData.bind(this));
+
+		this.form.addEventListener('reset', (event) => {
+			const richTextElements = this.querySelectorAll('rich-text');
+			richTextElements.forEach(richTextElement => richTextElement.dispatchEvent(new Event('rt:reset')));
+		});
 
 		this.form.addEventListener('submit', (event) => { 
 			event.preventDefault();
@@ -515,9 +521,17 @@ class DataEntry extends HTMLElement {
 		const formData = new FormData();
 		Array.from(this.form.elements).forEach(element => {
 			if (element.name && !element.disabled && element.value !== undefined && element.value !== 'undefined') {
-				const value = element.type === 'checkbox' 
+				let value = element.type === 'checkbox' 
 					? (element.checked ? (element.value || 'true') : (element.dataset.unchecked || 'false')) 
 					: element.value || '';
+
+					if (element.hasAttribute('data-encoded')) {
+						try {
+							value = decodeURIComponent(value);console.log(value)
+						} catch (error) {
+							this.debugLog(`Failed to decode value for ${element.name}: ${value}`, error);
+						}
+					}
 				formData.append(element.name, value);
 			}
 		});
@@ -584,12 +598,18 @@ class DataEntry extends HTMLElement {
 		fields.forEach(field => {
 			const formElement = this.form.elements[field];
 			if (formElement) {
-				formElement.value = resetValue;
+				if (formElement.hasAttribute('data-encoded')) {
+					const richTextElement = formElement.closest('rich-text');
+					if (richTextElement) {
+						richTextElement.dispatchEvent(new Event('rt:clear'));
+					}
+				} else {
+					formElement.value = resetValue;
+				}
 			}
 			setObjectByPath(this.instance.data, field, resetValue);
 		});
 	}
-
 
 	/**
 	 * Sets up an auto-save mechanism that triggers data submission at specified intervals.
@@ -619,8 +639,19 @@ class DataEntry extends HTMLElement {
 	 * @param {DOMStringMap} event.target.dataset - The dataset of the form input, containing custom data attributes.
 	 */
 	syncInstanceData(event) {
-		const { form, name, value, type, checked, dataset } = event.target;
+		const { form, name, type, checked, dataset } = event.target;
 		if (!name || form !== this.form) return;
+
+		let value = event.detail?.content || event.target.value;
+		const isEncoded = event.detail?.isEncoded || false;
+
+		if (isEncoded) {
+			try {
+				value = decodeURIComponent(value);
+			} catch (error) {
+				console.warn(`Failed to decode value: ${value}`, error);
+			}
+		}
 
 		const currentData = getObjectByPath(this.instance.data, name);
 

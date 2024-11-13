@@ -266,7 +266,7 @@ export function renderTBody(context) {
 				const cellHTML = rowHTML.split('</td>');
 				cellHTML[lastVisibleColumnIndex] = cellHTML[lastVisibleColumnIndex].replace(
 					/(<td[^>]*>)(.*)/,
-					`$1<span class="ui-table-expand--trigger">$2${buttonHTML}</span>`
+					`$1<span class="ui-table-expand--trigger"><span>$2</span>${buttonHTML}</span>`
 				);
 				rowHTML = cellHTML.join('</td>');
 			}

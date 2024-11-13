@@ -2,8 +2,8 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.06
- * @summary 29-08-2024
+ * @version 1.0.07
+ * @summary 12-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -26,24 +26,33 @@ export class RichText extends HTMLElement {
 		shadow.innerHTML = this.renderTemplate();
 		this.innerHTML = `
 		<div contenteditable="true" style="outline:none;">${this.innerHTML}</div>
-		<input type="hidden" name="${this.getAttribute('name')||'rich-text'}" value="${this.innerHTML}">`;
+		<input type="hidden" name="${this.getAttribute('name')||'rich-text'}" value="${encodeURIComponent(this.innerHTML)}" data-encoded>`;
 		this.content = this.querySelector('[contenteditable]');
 		this.content.id = this.contentID;
 		this.input = this.querySelector('input[type=hidden]');
+		this.initialValue = this.input.value;
+
 		if (this.form) this.input.form = this.form;
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
 		this.content.addEventListener('input', () => {
-			this.input.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
+			this.input.value = encodeURIComponent(this.plaintext ? this.content.textContent : this.content.innerHTML);
+
 				if (['both', 'custom'].includes(this.eventMode)) {
-					this.dispatchEvent(new CustomEvent("richtext-content", {
+					this.dispatchEvent(new CustomEvent("rt:content", {
 						detail: {
 							content: this.plaintext ? this.content.textContent : this.content.innerHTML
 						},
 				}));
 			}
 			if (['both', 'input'].includes(this.eventMode)) {
-				this.input.dispatchEvent(new Event('input', { bubbles: true }));
+				this.input.dispatchEvent(new CustomEvent('input', {
+					bubbles: true,
+					detail: {
+						content: this.input.value,
+						isEncoded: true
+					}
+				}));
 			}
 		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
@@ -55,6 +64,9 @@ export class RichText extends HTMLElement {
 		if (this.toggle) this.toggle.addEventListener('click', this.toggleHTML.bind(this));
 		this.toolbar = shadow.querySelector(`[part=toolbar]`);
 		this.toolbar.addEventListener('click', this.handleToolbarClick.bind(this));
+		
+		this.addEventListener('rt:clear', () => this.resetContent(true));
+		this.addEventListener('rt:reset', () => this.resetContent(false));
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
@@ -149,6 +161,12 @@ export class RichText extends HTMLElement {
 	renderToolbarItem(entry) {
 		const obj = this.commands.find((item) => item.key === entry) || {};
 		return obj.options ? this.renderSelect(obj) : this.renderCommand(obj) + this.renderInput(obj);
+	}
+
+	resetContent(clear = false) {
+		const content = clear ? '' : decodeURIComponent(this.initialValue);
+		this.setContent(content, this.plaintext);
+		this.input.value = encodeURIComponent(content);
 	}
 
 	setContent(content, plaintextOnly = false) {
