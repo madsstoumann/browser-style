@@ -411,11 +411,19 @@ export class RichText extends HTMLElement {
 			title: 'Remove Formatting'
 		},
 		{
+			command: 'reset',
+			icon: `M3.06 13a9 9 0 1 0 .49 -4.087, M3 4.001v5h5, M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0`,
+			key: 'reset',
+			fn: () => {
+				this,this.resetContent(false);
+			},
+		},
+		{
 			command: 'save',
 			icon: `M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2,M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0,M14 4l0 4l-6 0l0 -4`,
 			key: 'save',
 			fn: () => {
-				this,this.dispatchEvent(new CustomEvent("richtext-save", {
+				this,this.dispatchEvent(new CustomEvent("rt:save", {
 					detail: {
 						content: this.plaintext ? this.content.textContent : this.content.innerHTML
 					}
