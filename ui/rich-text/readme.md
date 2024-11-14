@@ -1,71 +1,143 @@
-# Text Editor
+# Rich Text Editor
 
-## Toolbar
-The configuration-object expects a key, `toolbarItems` with value set to a comma-separated list of keys. By default, _all_ keys are added. To create groups withing the toolbar, add a `&#124;`-character.
+## Overview
 
-Example:
-```js
-{
-  toolbarItems: 'bold, italic'
-}
-```
+The **RichText** component is a customizable rich text editor that can be inlined within a form or used as a standalone editor. It allows for extensive customization of the toolbar and commands, supports plaintext editing, and can be tailored through various attributes.
 
-This can also be set as a `data-attribute` on the tag:
+## Usage
+
+### Basic Example
+To use the RichText component, add the following HTML code:
 
 ```html
-  <div class="ui-text-editor"
-    data-toolbar-items="bold,italic">
-    ...
-  </div>
+<rich-text
+  skip-toolbar="Skip toolbar and go to content"
+  toolbar="b,i,u,s|sub,sup|ol,ul,blockquote,hr"
+  plaintext-toolbar="save">
+  Sample content here...
+</rich-text>
 ```
+
+### Attributes
+- **event-mode**: Controls event dispatch behavior (`input`, `custom`, `both`).
+- **form**: Links the component to a specific form for submission.
+- **input-types**: Defines supported editing commands.
+- **toolbar**: Customizes toolbar commands. Use a pipe (`|`) to separate groups and comma (`,`) between commands in a group.
+- **plaintext-toolbar**: Specifies toolbar items available in plaintext-only mode.
+- **plaintext**: Attribute to switch between plaintext and richtext mode.
+
+## Event Modes
+The `event-mode` attribute supports the following options:
+- **custom**: Dispatches custom events only.
+- **input**: Dispatches native `input` events only.
+- **both**: Dispatches both `input` and custom events.
+
+## Events
+
+### Dispatched Events
+- **input**: Native input event fired on content change when `event-mode` includes `input` (or `both`).
+- **rt:content**: Fired whenever the content changes.
+- **rt:clear**: Clears all content.
+- **rt:reset**: Resets content to the initial state.
+- **rt:save**: Custom save event, with the current editor content in the `event.detail`.
+
+### Received Events
+- **rt:clear**: Clears editor content.
+- **rt:reset**: Resets editor content to the initial loaded state.
+
+## Using in a Form
+The `RichText` component can be added to a form:
+```html
+<form>
+  ... other form controls ...
+  <rich-text name="rich-content"></rich-text>
+  ... other form controls ...
+</form>
+```
+In this mode, the editor will submit the HTML content as encoded data within the form submission.
+
+## Toolbar Customization
+The toolbar can be customized by setting the `toolbar` attribute with desired commands:
+```html
+<rich-text toolbar="bold,italic,underline,link|ul,ol"></rich-text>
+```
+- **Grouping**: Use `|` to group items in the toolbar.
+- **Commands**: Define commands such as `bold`, `italic`, `link`, and list formatting.
+
+## Supported Commands
+| Command                  | Key        | Description                                       |
+|--------------------------|------------|---------------------------------------------------|
+| backColor                | bgc        | Change the background color of the selected text. |
+| bold                     | b          | Make the selected text bold.                      |
+| clear                    | clear      | Clear the editor content.                         |
+| copy                     | copy       | Copy the selected text.                           |
+| createLink               | link       | Create a hyperlink to the specified URL.          |
+| cut                      | cut        | Cut the selected text.                            |
+| fontName                 | fn         | Change the font family of the selected text.      |
+| fontSize                 | fs         | Change the font size of the selected text.        |
+| foreColor                | fc         | Change the font color of the selected text.       |
+| formatBlock (BLOCKQUOTE) | blockquote | Format the selected text as a blockquote.         |
+| formatBlock (H1)         | h1         | Format the selected text as a heading 1.          |
+| formatBlock (H2)         | h2         | Format the selected text as a heading 2.          |
+| formatBlock (H3)         | h3         | Format the selected text as a heading 3.          |
+| formatBlock (H4)         | h4         | Format the selected text as a heading 4.          |
+| formatBlock (H5)         | h5         | Format the selected text as a heading 5.          |
+| formatBlock (H6)         | h6         | Format the selected text as a heading 6.          |
+| html                     | html       | Toggle between HTML and rich text modes.          |
+| indent                   | indent     | Indent the selected text.                         |
+| insertHorizontalRule     | hr         | Insert a horizontal rule into the editor.         |
+| insertImage              | img        | Insert an image into the editor.                  |
+| insertOrderedList        | ol         | Insert an ordered list into the editor.           |
+| insertUnorderedList      | ul         | Insert an unordered list into the editor.         |
+| italic                   | i          | Make the selected text italic.                    |
+| justifyCenter            | center     | Center the selected text.                         |
+| justifyFull              | justify    | Justify the selected text.                        |
+| justifyLeft              | left       | Align the selected text to the left.              |
+| justifyRight             | right      | Align the selected text to the right.             |
+| outdent                  | outdent    | Outdent the selected text.                        |
+| paste                    | paste      | Paste the copied or cut text.                     |
+| redo                     | redo       | Redo the last undone action.                      |
+| removeFormat             | remove     | Remove all formatting from the selected text.     |
+| reset                    | reset      | Reset the editor content.                         |
+| save                     | save       | Save the editor content.                          |
+| strikeThrough            | s          | Strikethrough the selected text.                  |
+| subscript                | sub        | Subscript the selected text.                      |
+| superscript              | sup        | Superscript the selected text.                    |
+| underline                | u          | Underline the selected text.                      |
+| unlink                   | unlink     | Remove the hyperlink from the selected text.      |
+| undo                     | undo       | Undo the last done action.                        |
+
+
+### Adding Custom Commands
+To add a custom command, use `addCustomCommand` in JavaScript:
+```javascript
+const editor = document.querySelector('rich-text');
+editor.addCustomCommand({
+  key: 'customKey',
+  command: 'customCommand',
+  icon: '<svg>...</svg>',
+    fn: (node) => { console.log("Custom command executed"); }
+});
+```
+
+## Styling
+The component uses a CSS stylesheet with the following variables for customization:
+- **--richtext-active-bg**: Background color for active buttons.
+- **--richtext-active-c**: Text color for active buttons.
+
+Adjust these CSS variables as needed to customize the editor’s appearance.
 
 ---
 
-### List of commands
+## Advanced: Handling event.inputType
 
-| Command | Key | Description |
-| ------- | --- | ----------- |
-| backColor | bgc | Change the background color of the selected text. |
-| bold | b | Make the selected text bold. |
-| copy | copy | Copy the selected text. |
-| createLink | link | Create a hyperlink to the specified URL. |
-| cut | cut | Cut the selected text. |
-| fontName | fn | Change the font family of the selected text. |
-| fontSize | fs | Change the font size of the selected text. |
-| foreColor | fc | Change the font color of the selected text. |
-| formatBlock | blockquote | Format the selected text as a blockquote. |
-| formatBlock | h1 | Format the selected text as a heading 1. |
-| formatBlock | h2 | Format the selected text as a heading 2. |
-| formatBlock | h3 | Format the selected text as a heading 3. |
-| formatBlock | h4 | Format the selected text as a heading 4. |
-| formatBlock | h5 | Format the selected text as a heading 5. |
-| formatBlock | h6 | Format the selected text as a heading 6. |
-| html | html | Insert HTML code into the editor. |
-| indent | indent | Indent the selected text. |
-| insertHorizontalRule | hr | Insert a horizontal rule into the editor. |
-| insertImage | img | Insert an image into the editor. |
-| insertOrderedList | ol | Insert an ordered list into the editor. |
-| insertUnorderedList | ul | Insert an unordered list into the editor. |
-| insertVideo | video | Insert a video into the editor. |
-| italic | i | Make the selected text italic. |
-| justifyCenter | center | Center the selected text. |
-| justifyFull | justify | Justify the selected text. |
-| justifyLeft | left | Align the selected text to the left. |
-| justifyRight | right | Align the selected text to the right. |
-| markdown | markdown | Convert the selected text to Markdown. |
-| outdent | outdent | Outdent the selected text. |
-| paste | paste | Paste the copied or cut text. |
-| redo | redo | Redo the last undone action. |
-| removeFormat | remove | Remove all formatting from the selected text. |
-| strikeThrough | s | Strikethrough the selected text. |
-| subscript | sub | Subscript the selected text. |
-| superscript | sup | Superscript the selected text. |
-| underline | u | Underline the selected text. |
-| unlink | unlink | Remove the hyperlink from the selected text. |
-| undo | undo | Undo the last done action. |
+In JavaScript, the `event.inputType` property of the `InputEvent` interface provides a string that specifies the type of change that has been made to the editable content. This property indicates the specific action that triggered the input or beforeinput event, such as 'insertText', 'deleteContentBackward', 'formatBold', and many others.
 
-## Allowed event.inputType
-The configuration-object expects a key, `inputTypes` with value set to a comma-separated list of allowed events. By default, _all_ events are allowed.
+By utilizing `event.inputType` in the `beforeinput` event handler, the app controls which types of input actions are allowed. 
+
+The configuration-object expects a key, `inputTypes` with value set to a comma-separated list of allowed events. This approach effectively filters out unwanted editing actions, allowing you to restrict or customize the editing capabilities of the RichText editor based on the input types. 
+
+By default, _all_ events are allowed.
 
 Example:
 ```js
@@ -82,6 +154,9 @@ This can also be set as a `data-attribute` on the tag:
     ...
   </div>
 ```
+
+In the snippets above, only `formatBold` and `formatItalic` are allowed — all other commands will be ignored.
+
 ---
 
 ### List of types:
