@@ -2,8 +2,8 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.07
- * @summary 12-11-2024
+ * @version 1.0.08
+ * @summary 14-11-2024
  * @class
  * @extends {HTMLElement}
  */
@@ -225,6 +225,15 @@ export class RichText extends HTMLElement {
 			title: 'Bold'
 		},
 		{
+			command: 'clear',
+			icon: `M8 6h12, M6 12h12, M4 18h12`,
+			key: 'clear',
+			fn: () => {
+				this,this.resetContent(true);
+			},
+			title: 'Clear'
+		},
+		{
 			command: 'copy',
 			icon: `M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z,M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2`,
 			key: 'copy',
@@ -412,11 +421,12 @@ export class RichText extends HTMLElement {
 		},
 		{
 			command: 'reset',
-			icon: `M3.06 13a9 9 0 1 0 .49 -4.087, M3 4.001v5h5, M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0`,
+			icon: `M3.06 13a9 9 0 1 0 .49 -4.087, M3 4.001v5h5`,
 			key: 'reset',
 			fn: () => {
 				this,this.resetContent(false);
 			},
+			title: 'Reset'
 		},
 		{
 			command: 'save',
@@ -429,6 +439,7 @@ export class RichText extends HTMLElement {
 					}
 				}));
 			},
+			title: 'Save'
 		},
 		{
 			command: 'strikeThrough',
