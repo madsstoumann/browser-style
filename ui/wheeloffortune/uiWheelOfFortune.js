@@ -6,9 +6,14 @@ export default function uiWheelOfFortune(node) {
 
   spin.addEventListener('click', () => {
     if (animation) animation.cancel();
+    const normalizeAngle = finalAngle => (360 - finalAngle + 90) % 360;
 
+    const items = wheel.children.length;
+    const segment = 360 / items;
     const randomAdditionalDegrees = Math.random() * 360 + 1800;
     const newEndDegree = previousEndDegree + randomAdditionalDegrees;
+    const finalAngle = newEndDegree % 360;
+    const winner = Math.floor(((normalizeAngle(finalAngle) + (segment / 2)) % 360) / segment);
 
     animation = wheel.animate([
       { transform: `rotate(${previousEndDegree}deg)` },
@@ -22,5 +27,7 @@ export default function uiWheelOfFortune(node) {
     });
 
     previousEndDegree = newEndDegree;
+    // animation.onfinish = () => { /* Show winner */ };
+    console.log(wheel.children[winner].textContent);
   });
 }

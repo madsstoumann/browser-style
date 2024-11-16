@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Triangley</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="../common.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+</head>
+<body>
+	<h1>Triangley</h1>
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" id="svg"></svg>
+	<gui-control label="Controls" scope="svg"></gui-control>
+
+	<small>
+		<p>
+			<strong>Triangley</strong> is inspired by the beautiful, geometric art of Bridget Riley</a>.
+		</p>
+	</small>
+
+	<h2>Gallery</h2>
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<figure class="m-0">
+			<img src="gallery/triangley01.svg" alt="Industrial Grays" loading="lazy">
+			<figcaption><em>Industrial Grays</em></figcaption>
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/triangley02.svg" alt="Olive and Ochre" loading="lazy">
+			<figcaption><em>Olive &amp; Ochre</em></figcaption>	
+		</figure>
+		<figure class="m-0">
+			<img src="gallery/triangley03.svg" alt="Muted Blue" loading="lazy">
+			<figcaption><em>Muted Blue</em></figcaption>
+		</figure>
+	</div>
+
+	<script type="module" src="index.js"></script>
+</body>
+</html>

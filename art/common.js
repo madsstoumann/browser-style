@@ -168,6 +168,7 @@ export function handleGuiEvent(event, svg, GUI, storageKey, drawFunction) {
 				default:
 					drawFunction(svg, GUI.form.elements);
 			}
+			GUI.dispatchEvent(new CustomEvent(`${input.name}-updated`));
 	}
 }
 

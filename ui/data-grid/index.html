@@ -4,10 +4,11 @@
 	<title>Data Grid</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="DataGrid is a custom element, you can wrap around an existing &lt;table&gt;, or fill with data using the data-attribute. The latter can be either a stringified object or an endpoint. You can also set data directly in JavaScript.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="./../table/ui-table.css">
+	<link rel="stylesheet" href="./../table-expand/ui-table-expand.css">
 	<link rel="stylesheet" href="./data-grid.css">
 	<style>
 		/* Demo */
@@ -33,7 +34,6 @@
 		selectable
 		data="./data/data.json"
 		stickycols="0,2,4"
-		
 		layoutfixed="false"
 		textoptions>
 	</data-grid>
@@ -47,7 +47,6 @@
 	<button id="clearselected" type="button">dg:clearselected</button>
 	<button id="append" type="button">dg:append</button>
 
-	<br>
 	<br>
 	<h2>More examples</h2>
 	<hr>
@@ -94,10 +93,13 @@
 
 	<br>
 	<hr>
-	<p>Example with data being fetched on a <code>dg:pagechange</code>-event, also setting and removing the <code>loading</code>-attribute.</p>
-	<data-grid 
+	<p>Example with data being fetched on a <code>dg:requestpagechange</code>-event, translations loaded from <code>i18n</code>-attribute, with <code>lang="da"</code>. Also dispatching the <code>dg:loading:start</code> and <code>dg:loading:end</code> events.</p>
+	<data-grid
+		i18n="./data/i18n.json"
 		id="grid2"
-		itemsperpage="5">
+		itemsperpage="25"
+		lang="da"
+		page="0">
 	</data-grid>
 	
 	<br>
@@ -168,68 +170,75 @@
 		}
 
 		/* === FETCH EXAMPLE === */
-		document.addEventListener('DOMContentLoaded', () => {
-			const grid2 = document.getElementById('grid2');
-		
-			// Function to simulate fetching data for a specific page
-			function fetchDataForPage(page, itemsPerPage) {
-				grid2.setAttribute('loading','');
-				return new Promise((resolve) => {
-					setTimeout(() => {
-						const start = page * itemsPerPage;
-						const data = Array.from({ length: itemsPerPage }, (_, index) => {
-							const id = start + index + 1;
-							return {
-								id,
-								name: `User ${id}`,
-								age: Math.floor(Math.random() * 60) + 20,
-								email: `user${id}@example.com`
-							};
-						});
-						console.log(`Fetched data for page ${page}:`, data);
-						grid2.removeAttribute('loading');
-						resolve(data);
-					}, 1000); // Simulate network latency with a timeout
-				});
-			}
+		const grid2 = document.getElementById('grid2');
+		grid2.addEventListener('dg:loaded', () => {
+		fetch(`./data/test0.json`)
+			.then((response) => response.json())
+			.then((result) => {
+				grid2.settings = {
+					colWidths: [5, 10, 30, 7.5, 35, 12.5],
+					externalNavigation: true,
+					expandType: '--inline-end',
+					exportCSV: true,
+					exportJSON: true,
+					layoutFixed: false,
+					pagination: true,
+					printable: false,
+					rows: false,
+					searchable: true,
+					selectable: true,
+					stickyCols: [0, 1],
+					textoptions: false,
+					textwrap: false,
 
-			// Set initial data and total
-			grid2.formatters = formatters;
-			grid2.config = {
-				thead: [
-					{ field: 'id', label: 'ID', uid: true },
-					{ field: 'name', label: 'Name' },
-					{ field: 'age', label: 'Age' },
-					{ field: 'email', label: 'Email', formatter: 'email' }
-				]
-			};
-
-			// grid2.itemsPerPage = 25;
-			grid2.state.items = 20;
-			grid2.state.pages = 4;
-
-			grid2.data = [
-				{ id: 1, name: 'John Doe', age: 30, email: 'john@example.com' },
-				{ id: 2, name: 'Jane Doe', age: 25, email: 'jane@example.com' },
-				{ id: 3, name: 'Jim Beam', age: 35, email: 'jim@example.com' },
-				{ id: 4, name: 'Jack Daniels', age: 40, email: 'jack@example.com' },
-				{ id: 5, name: 'Johnny Walker', age: 45, email: 'johnny@example.com' }
-			];
-
-			// Listen for page navigation changes
-			grid2.addEventListener('dg:pagechange', (event) => {
-				const { page, itemsPerPage } = event.detail;
-				fetchDataForPage(page, itemsPerPage).then(newData => {
-					console.log(`Setting new data for page ${page}`);
-					grid2.data = newData;
-				});
-			});
-			grid2.addEventListener('dg:itemsperpage', (event) => {
-				const { page, itemsPerPage } = event.detail;
-				console.log('Items per page changed:', itemsPerPage);
+					thead: [
+						{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },
+						{ field: 'issue', type: 'number', classList: '--end' },
+						{ field: 'price', type: 'number', classList: '--end' },
+						{ field: 'artist', hidden: true, expand: true },
+						{ field: 'sku', hidden: true, expand: true },
+						{ field: 'type', hidden: true, expand: true },
+						{ field: 'description', hidden: true, expand: true },
+						{ field: 'vendor', hidden: true, expand: true },
+						{ field: 'date', hidden: true, expand: true },
+						{ field: 'delivery', hidden: true, expand: true },
+					],
+				};
+				grid2.setItemsPerPage(10);
+				grid2.setTotalItems(result.total);
+				grid2.data = result.data;
 			});
 		});
 
+		grid2.addEventListener('dg:requestpagechange', (event) => {
+			const requestedPage = event.detail.page;
+			const dataUrl = `./data/test${requestedPage}.json`;
+
+			grid2.dispatchEvent(new CustomEvent('dg:loading:start'));
+
+			fetch(dataUrl)
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(`Network response was not ok: ${response.statusText}`);
+					}
+					return response.json();
+				})
+				.then((result) => {
+					grid2.data = result.data;
+					grid2.state.pageItems = result.data.length;
+					grid2.setPage(requestedPage);
+				})
+				.catch((error) => {
+					console.error(`Error fetching data for page ${requestedPage}:`, error);
+				})
+				.finally(() => {
+					grid2.dispatchEvent(new CustomEvent('dg:loading:end'));
+				});
+		});
+
+		grid2.addEventListener('dg:details', (event) => {
+			console.log(event.detail);
+		});
 
 		/* === CREATE WITH JAVASCRIPT === */
 		const grid3 = document.createElement('data-grid');
