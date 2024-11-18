@@ -7,6 +7,32 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
+
+	<style>
+		ul[part="list"] {
+			block-size: 10rem;
+			border: var(--input-bdw) solid var(--ButtonBorder);
+			inset-block: anchor(bottom);
+			inset-inline: anchor(start);
+			margin: 0;
+			overflow-y: scroll;
+			padding: 0;
+			width: anchor-size(width);
+			li {
+				padding: calc(var(--input-pb) / 2) var(--input-pi);
+				&:focus-visible {
+					background-color: var(--CanvasGray);
+					outline-offset: -1px;
+				}
+				@media (hover: hover) {
+					&:hover {
+						background-color: var(--CanvasGray);
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -16,31 +42,35 @@
 
 	<auto-suggest
 		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-		api-key="adresse.id"
-		api-value="tekst"
-		key="771661"
+		api-value-path="adresse.id"
+		api-display-path="tekst"
+		id="dawa"
 		label="Dawa search"
-		value="Hello World">
+		list-mode="ul">
 	</auto-suggest>
 
 	<br>
 	<auto-suggest
 		api="https://jsonplaceholder.typicode.com/albums/?_limit=10&q="
-		api-key="id"
-		api-value="title"
+		api-value-path="id"
+		api-display-path="title"
 		label="JSON placeholder">
 	</auto-suggest>
 
 	<br>
 	<auto-suggest
 		api="https://api.nationalize.io/?name="
-		api-key="country_id"
-		api-value="name"
+		api-array-path="country"
+		api-value-path="country_id"
+		api-display-path="country_id"
 		id="nationalize"
 		label="Nationalize.io">
 	</auto-suggest>
 	
-	<script type="module" src="./index.js"></script>
+	<script type="module">
+		import { AutoSuggest } from './index.js';
+		AutoSuggest.mount();
+	</script>
 
 	<script>
 		const suggest = document.querySelectorAll('auto-suggest');
@@ -53,13 +83,21 @@
 		});
 
 		document.addEventListener('DOMContentLoaded', () => {
+			// const dawa = document.getElementById('dawa');
+			// dawa.render = (data) => {
+			// 	return data.map(obj => 
+			// 		`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}">
+			// 				<img src='http://unsplash.it/100/100?random&gravity=center' alt=''>${obj.tekst}
+			// 			</li>`
+			// 	).join('');
+			// };
+
 			const nationalize = document.getElementById('nationalize');
-			nationalize.setCallback((list, data) => {
-				const country = data.country;
-				list.innerHTML = country.map(obj => 
-					`<option value="${data.name} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj='${obj ? JSON.stringify(obj):''}'>`
+			nationalize.render = (data) => {
+				return data.map(obj => 
+					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}"></option>`
 				).join('');
-			});
+			};
 		});
 	</script>
 </body>
