@@ -7,88 +7,97 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
+	<style>
+		.demo {
+			border-radius: .33rem;
+			pointer-events: none;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>AutoSuggest</h2>
+	<p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>&lt;datalist&gt;</code> or <code>&lt;ul&gt;</code>.<br>
+		It exposes several events, see the <code>console</code>. Try it out by typing the placholder-text. <br>
+		<a href="readme.md">Documentation</a> in Markdown.</p>
+		<p>A non-web-component version is <a href="nowebc.html">also available</a>.</p>
+
+	<auto-suggest
+		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+		api-value-path="adresse.id"
+		api-display-path="tekst"
+		label="Dawa search, using datalist"
+		placeholder="park">
+	</auto-suggest>
+
+	<p>With <code>list-mode="ul"</code></p>
+	<auto-suggest
+		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+		api-value-path="adresse.id"
+		api-display-path="tekst"
+		label="Dawa search"
+		list-mode="ul"
+		placeholder="park">
+	</auto-suggest>
+
+	<p>With <code>list-mode="ul"</code> and custom <code>render</code>-method:</p>
+	<auto-suggest
+		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+		api-value-path="adresse.id"
+		api-display-path="tekst"
+		id="dawa"
+		label="Dawa search"
+		list-mode="ul"
+		placeholder="park">
+	</auto-suggest>
+
 	<p>
-		An AutoSuggest is a component that provides suggestions based on user input. <br>
-		Same as <a href="/ui/combobox/">combobox</a>, but with an API-call. Parameters are defined in either a <code>dataset</code> (HTML) or a <code>settings</code>-object (JavaScript).
+		With custom <code>render</code>-method, using nationalize.io:
 	</p>
-	<p>See <a href="/ui/form/">Form</a> for right-to-left and opposite color-scheme examples.</p>
 
-	<label>
-		Example with DAWA, danish address-lookup
-		<input
-			autocomplete="off"
-			data-api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-			data-api-cache="false"
-			data-object-key="tekst"
-			data-limit="true"
-			id="dawaInput"
-			list="dawa"
-			minlength="3"
-			placeholder="park"
-			spellcheck="false"
-			type="search">
-	</label>
-	<datalist id="dawa"></datalist>
-
-	<br>
-	<label>
-		Example with JSON placeholder
-		<input
-			autocomplete="off"
-			data-api="https://jsonplaceholder.typicode.com/albums/?_limit=10&q="
-			data-api-cache="false"
-			data-object-key="title"
-			list="jsonplaceholder"
-			minlength="3"
-			placeholder="lorem"
-			spellcheck="false"
-			type="search">
-	</label>
-	<datalist id="jsonplaceholder"></datalist>
-
-	<br>
-
-	<p>With custom callback-method, using nationalize.io:</p>
-	<label>
-		Type your name
-		<input
-			autocomplete="off"
-			id="nationalize"
-			list="nationalizelist"
-			minlength="3"
-			placeholder="peter"
-			spellcheck="false"
-			type="search">
-	</label>
-	<datalist id="nationalizelist"></datalist>
+	<auto-suggest
+		api="https://api.nationalize.io/?name="
+		api-array-path="country"
+		api-value-path="country_id"
+		api-display-path="country_id"
+		id="nationalize"
+		label="Nationalize.io"
+		placeholder="thomas">
+	</auto-suggest>
 	
 	<script type="module">
-		import { init } from './../../assets/js/common.js';
-		import uiAutoSuggest from './uiAutoSuggest.js';
-		init('[data-api]', uiAutoSuggest);
+		import { AutoSuggest } from './index.js';
+		AutoSuggest.mount();
+	</script>
 
-		const dawaInput = document.getElementById('dawaInput');
-		dawaInput.addEventListener('autoSuggestSelect', (event) => {
-			console.log(event.detail);
+	<script>
+		const suggest = document.querySelectorAll('auto-suggest');
+		suggest.forEach((node) => {
+			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect'].forEach((event) => {
+				node.addEventListener(event, (event) => {
+					console.log(event.type, event.detail ? event.detail : '');
+				});
+			});
 		});
 
-		/* Custom Example */
-		uiAutoSuggest(document.getElementById('nationalize'), {
-			api: 'https://api.nationalize.io/?name=',
-			apiCache: false,
-			objectKey: 'name',
-			limit: true,
-			callback: customCallback
+		document.addEventListener('DOMContentLoaded', () => {
+			const dawa = document.getElementById('dawa');
+			dawa.render = (data) => {
+				return data.map(obj => 
+					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}">
+							<img src='http://unsplash.it/50/50?random&gravity=center' alt='' class="demo">${obj.tekst}
+						</li>`
+				).join('');
+			};
+
+			const nationalize = document.getElementById('nationalize');
+			nationalize.render = (data) => {
+				return data.map(obj => 
+					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}"></option>`
+				).join('');
+			};
 		});
-		function customCallback(list, data) {
-			const country = data.country
-			list.innerHTML = country.map(obj => `<option value="${data.name} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-obj='${obj ? JSON.stringify(obj):''}'>`).join('')
-		}
 	</script>
 </body>
 </html>

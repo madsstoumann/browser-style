@@ -165,6 +165,7 @@ export const autosuggest = (params) => {
 			${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
 			${display ? `display="${display}"` : ''}
 			${label ? `label="${label}"` : ''}
+			list-mode="ul"
 			name="${name}"
 			part="autosuggest" 
 			${syncInstance ? `sync-instance="${syncInstance}"` : ''}

@@ -198,47 +198,6 @@
 		}
 	}
 
-	/* :where([type=checkbox], [type=radio]) {
-		appearance: none;
-		height: var(--input-check-sz);
-		margin: 0;
-		width: var(--input-check-sz);
-		&:checked { border-color: var(--AccentColor); }
-	}
-	:where([type=checkbox]:not([role=switch])) { 
-		&.--round {
-			--input-check-bgsz: 50% / 65%;
-			border-radius: 50%;
-		}
-		&:checked { background: var(--AccentColor) url('/assets/svg/check-white.svg') no-repeat var(--input-check-bgsz, 48% / 75%); }
-		&:indeterminate {
-			--ButtonBorder: var(--AccentColor);
-			background: var(--AccentColor) url('/assets/svg/minus-white.svg') no-repeat var(--input-check-bgsz, 48% / 75%);
-		}
-	}
-	:where([type=checkbox][role=switch]) {
-		aspect-ratio: 1.8 / 1;
-		background: var(--ButtonBorder);
-		border: 0;
-		border-radius: var(--input-check-sz);
-		display: flex;
-		width: auto;
-		&::after {
-			aspect-ratio: 1 / 1;
-			background: #FFF;
-			border-radius: 50%;
-			border: 2px solid var(--ButtonBorder);
-			box-sizing: border-box;
-			content: "";
-			display: block;
-			height: 100%;
-			transition: inherit;
-		}
-		&:checked {
-			--ButtonBorder: var(--AccentColor);
-			justify-content: end;
-		}
-	} */
 	:where([type=color]) {
 		padding: 0;
 		width: 100%;
@@ -399,4 +358,46 @@
 	& [type=tel] {  --icon: url('/assets/svg/phone.svg'); }
 	& [type=time] { --icon: url('/assets/svg/time.svg'); }
 	& [type=url] { --icon: url('/assets/svg/link.svg'); }
+
+	/* Auto-Suggest List, `<auto-suggest list-mode="ul">` */
+	.--popover-open { /* class added to anchor, when popover is open */
+		border-end-end-radius: 0;
+		border-end-start-radius: 0;
+	}
+	:where(auto-suggest) {
+		ul[part="list"] {
+			block-size: var(--auto-suggest-list-bs, calc(var(--input-bs, 2em) * 5));
+			border-color: var(--ButtonBorder);
+			border-style: solid;
+			border-block-width: 0 var(--input-bdw);
+			border-inline-width: var(--input-bdw);
+			border-end-end-radius: var(--input-bdrs);
+			border-end-start-radius: var(--input-bdrs);
+			box-shadow: 0px 10px 20px -5px color-mix(in srgb, CanvasText 25%, transparent);
+			inset-block: anchor(bottom);
+			inset-inline: anchor(start);
+			margin: 0;
+			overflow: clip scroll;
+			padding: 0;
+			width: anchor-size(width);
+			li {
+				align-items: center;
+				display: flex;
+				gap: 1ch;
+				overflow-x: clip;
+				padding: calc(var(--input-pb) / 2) var(--input-pi);
+				text-overflow: ellipsis;
+				&:focus-visible {
+					background-color: var(--CanvasGray);
+					outline: none;
+				}
+				@media (hover: hover) {
+					&:hover {
+						background-color: var(--CanvasGray);
+						cursor: pointer;
+					}
+				}
+			}
+		}
+	}
 }

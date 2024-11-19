@@ -2,8 +2,8 @@
  * AutoSuggest
  * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
  * @author Mads Stoumann
- * @version 1.0.16
- * @summary 18-11-2024
+ * @version 1.0.17
+ * @summary 19-11-2024
  * @class AutoSuggest
  * @extends {HTMLElement}
  */
@@ -84,7 +84,10 @@ export class AutoSuggest extends HTMLElement {
 
 					this.list.innerHTML = this.render(this.data);
 
-					if (this.settings.listMode === 'ul') this.list.togglePopover(true);
+					if (this.settings.listMode === 'ul') {
+						this.list.togglePopover(true);
+						this.input.classList.add('--popover-open');
+					}
 
 				} catch (error) {
 					this.dispatchEvent(new CustomEvent('autoSuggestFetchError', { detail: error }));
@@ -200,11 +203,18 @@ export class AutoSuggest extends HTMLElement {
 	}
 
 	reset(fullReset = true) {
+		const isUL = this.settings.listMode === 'ul';
+
 		if (fullReset) {
 			this.resetToDefault();
 		}
 		this.data = [];
-		this.list.innerHTML = this.settings.listMode === 'ul' ? '' : `<option value="">`;
+		this.list.innerHTML = isUL ? '' : `<option value="">`;
+		if (isUL) {
+			this.list.scrollTo(0, 0);
+			this.list.togglePopover(false);
+			this.input.classList.remove('--popover-open');
+		}
 		this.input.setCustomValidity('');
 		this.dispatchEvent(new CustomEvent('autoSuggestClear'));
 	}
@@ -230,7 +240,6 @@ export class AutoSuggest extends HTMLElement {
 		this.inputHidden.value = value;
 		this.reset(false);
 		this.dispatchEventMode(obj);
-		this.list.togglePopover(false);
 		setTimeout(() => this.input.focus(), 0);
 	};
 
@@ -241,7 +250,7 @@ export class AutoSuggest extends HTMLElement {
 		${this.settings.label ? `<label part="row"><span part="label">${this.settings.label}</span>` : ''}
 			<input
 				autocomplete="${this.getAttribute('autocomplete') || 'off'}"
-				list="${this.listId}"
+				${this.settings.listMode === 'ul' ? '' : `list="${this.listId}"`}
 				minlength="${this.getAttribute('minlength') || 3}"
 				part="input"
 				placeholder="${this.getAttribute('placeholder') || ''}"
