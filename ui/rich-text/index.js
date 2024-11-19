@@ -2,7 +2,7 @@
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.08
+ * @version 1.0.09a TODO: plaintext-only
  * @summary 14-11-2024
  * @class
  * @extends {HTMLElement}
@@ -59,7 +59,12 @@ export class RichText extends HTMLElement {
 		this.customToolbar = shadow.querySelector(`[part=custom]`);
 		this.highlight = this.commands.filter(command => command.highlight).map(command => command.command);
 		this.htmlcode = shadow.querySelector(`[name=htmlcode]`);
-		this.plaintext = false;
+
+		this.plaintext = this.hasAttribute('plaintext') || false;
+		if (this.plaintext) {
+			this.content.setAttribute('contenteditable', 'plaintext-only');
+		}
+
 		this.toggle = shadow.querySelector(`[name=html]`);
 		if (this.toggle) this.toggle.addEventListener('click', this.toggleHTML.bind(this));
 		this.toolbar = shadow.querySelector(`[part=toolbar]`);
@@ -72,9 +77,9 @@ export class RichText extends HTMLElement {
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (!newValue || oldValue === newValue) return;
 		if (name === 'plaintext') {
-			this.plaintext = newValue === 'true';
-			this.content.setAttribute('contenteditable', this.plaintext ? 'plaintext-only' : 'true');
-			this.filterToolbar(this.plaintext)
+			// this.plaintext = newValue === 'true';
+			// this.content.setAttribute('contenteditable', this.plaintext ? 'plaintext-only' : 'true');
+			// this.filterToolbar(this.plaintext)
 		}
 	}
 
