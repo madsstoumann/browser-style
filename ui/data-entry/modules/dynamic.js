@@ -43,6 +43,9 @@ export const dynamicFunctions = {
 		const num = parseFloat(value);
 		return isNaN(num) ? '0.00' : num.toFixed(decimals);
 	},
+	multiply: (value, multiplier, decimals = 2) => {
+		return (value * multiplier).toFixed(decimals);
+	},
 
 	/* === Random Generators === */
 	randomNumber: (min = 0, max = 100) => {

@@ -216,7 +216,7 @@ export const arrayCheckbox = (params) => {
  * @param {string} [params.name=''] - The name attribute for the detail element.
  * @returns {string} The rendered array detail element as an HTML string.
  */
-export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '' }) => {
+export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
 	const rowLabel = config.render?.label 
 		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
 		: 'label';
@@ -224,14 +224,17 @@ export const arrayDetail = ({ value, config, path, instance, attributes = [], na
 		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n) 
 		: 'value';
 
+	const cols = rowValue.split('|').map(col => `<span>${col}</span>`).join('');
+	const arrayControl = config.render?.arrayControl || 'mark-remove';
+
 	return `
 		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
 			<summary part="row summary">
-				<span part="label">${rowLabel}</span>
+				<output part="label" name="label_${name}[${index}]">${rowLabel}</output>
 				<span part="value">
 					${icon('chevron right', 'sm', 'xs')}
-					<em>${rowValue}</em>
-					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="true"></label>` : ''}
+					<output name="value_${name}[${index}]">${cols}</output>
+					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
 				</span>
 			</summary>
 			${all(value, config.items, instance, false, path)}
@@ -258,7 +261,8 @@ export const arrayDetails = (params) => {
 		path: path ? `${path}[${index}]` : '',
 		instance,
 		attributes,
-		name: path
+		name: path,
+		index
 	})).join('');
 
 	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';

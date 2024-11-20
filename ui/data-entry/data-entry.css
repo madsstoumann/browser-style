@@ -55,8 +55,15 @@
 					font-weight: 400;
 					text-wrap: nowrap;
 				}
-				& em {
+				& output {
+					display: flex;
+					flex: 1;
+					font-style: normal;
+					gap: 2ch;
+					justify-content: space-between;
+					pointer-events: none;
 					text-wrap: balance;
+					& > :first-child { flex: 1; }
 				}
 				& label {
 					margin-inline-start: auto;

@@ -330,13 +330,11 @@
 	& [type=time] {
 		appearance: none;
 		background-color: inherit;
-		/* &::-webkit-datetime-edit-fields-wrapper { color: var(--GrayText); } */
 		&::-webkit-calendar-picker-indicator {
 			background: none;
 			border-radius: 50%;
 			outline-offset: 2px;
 			padding-inline-end: 0.25em;
-			/* opacity: 0; */
 		}
 		&::-webkit-datetime-edit-day-field:focus,
 		&::-webkit-datetime-edit-month-field:focus,

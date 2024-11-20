@@ -195,7 +195,9 @@ class DataEntry extends HTMLElement {
 			config: schema,
 			path: `${path}[${array.length - 1}]`,
 			instance: this.instance,
-			attributes: []
+			attributes: [],
+			name: path,
+			index: array.length - 1
 		});
 
 		const siblingElm = fieldset.querySelector(insertBeforeSelector);
@@ -547,11 +549,11 @@ class DataEntry extends HTMLElement {
 	 * @method processData
 	 * @fires CustomEvent#dataEntry - Dispatched with the processed data.
 	 */
-	processData() {
+	processData(node) {
 		const enctype = this.form.getAttribute('enctype') || 'multipart/form-data';
 		const data = enctype.includes('json') ? this.instance.data : this.prepareFormData();
 		this.debugLog('Processing data:', this.instance.data);
-		this.dispatchEvent(new CustomEvent('de:entry', { detail: { data } }));
+		this.dispatchEvent(new CustomEvent('de:entry', { detail: { data, node: node || null } }));
 	}
 
 	/* === renderAll: Renders all form elements based on the data and schema */
@@ -655,7 +657,7 @@ class DataEntry extends HTMLElement {
 
 		const currentData = getObjectByPath(this.instance.data, name);
 
-		if (type === 'checkbox' && dataset.arrayControl === 'true') {
+		if (type === 'checkbox' && dataset.arrayControl) {
 			if (checked) {
 				if (currentData && currentData._remove) delete currentData._remove;
 				this.debugLog(`Undoing delete: Removed _remove flag at path "${name}".`);
@@ -663,12 +665,23 @@ class DataEntry extends HTMLElement {
 				if (currentData) currentData._remove = true;
 				this.notify(1003, `Marked object at path "${name}" for removal.`);
 			}
+			if (dataset.arrayControl !== "mark-remove") {
+				this.dispatchEvent(new CustomEvent('de:array-control', {
+					detail: {
+						action: dataset.arrayControl,
+						checked,
+						data: this.instance.data,
+						name,
+						node: event.target
+					}
+				}));
+			}
 		} else {
 			const dataType = dataset.type;
 			setObjectByPath(this.instance.data, name, convertValue(value, dataType, type, checked));
 		}
 
-		this.processData();
+		this.processData(event.target);
 	}
 
 	/**
