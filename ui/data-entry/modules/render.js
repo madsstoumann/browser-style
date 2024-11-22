@@ -3,15 +3,56 @@ import { attrs, fetchOptions, getObjectByPath, isEmpty, setObjectByPath, resolve
 /* === all === */
 
 export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
-	const nonArrayContent = [];
-	const arrayContent = [];
-	const renderNav = schema.navigation;
-	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n) : '';
-	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n) : '';
-	let navContent = '';
+	const groupMap = new Map();
+	const skipItems = new Set();
+	const groupContent = new Map();
 
-	// Iterate over schema properties
+	if (root) {
+		Object.entries(schema.properties).forEach(([key, config]) => {
+			if (config.render?.group) {
+				const groupKey = config.render.group;
+				if (!groupMap.has(groupKey)) {
+					groupMap.set(groupKey, []);
+				}
+				groupMap.get(groupKey).push({key, config});
+				skipItems.add(key);
+			}
+		});
+
+		groupMap.forEach((items, groupKey) => {
+			groupContent.set(groupKey, items.map(({key, config}) => {
+				const method = config?.render?.method ? toCamelCase(config.render.method) : '';
+				const renderMethod = instance.getRenderMethod(method);
+				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n) || 'LABEL';
+				const path = pathPrefix === 'DISABLE_PATH' ? '' : key;
+
+				return method ? safeRender(renderMethod, {
+					label,
+					value: data[key],
+					attributes: config?.render?.attributes || [],
+					options: method === 'select' ? fetchOptions(config, instance) : [],
+					config,
+					instance,
+					path,
+					type: config.type
+				}) : '';
+			}).join(''));
+		});
+	}
+
+	const arrayContent = [];
+	const fieldsetGroups = [];
+	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n) : '';
+	const renderNav = schema.navigation;
+	const standardContent = [];
+	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n) : '';
+
+	let navContent = '';
+	let schemaIndex = 0;
+
 	Object.entries(schema.properties).forEach(([key, config]) => {
+		if (skipItems.has(key)) return;
+
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
@@ -19,13 +60,16 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
-		// Handle different data types (object, array, others)
-		if (config.type === 'object') {
-			const content = all(data[key], config, instance, false, path);
-			const objectContent = config.render && method
-				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
-				: fieldset({ label, content, attributes });
-			nonArrayContent.push(objectContent);
+		if (groupContent.has(key)) {
+			fieldsetGroups.push({
+				index: schemaIndex,
+				content: fieldset({
+					label,
+					content: groupContent.get(key),
+					path: key,
+					attributes
+				})
+			});
 		} else if (config.type === 'array') {
 			if (renderNav) {
 				navContent += `<a href="#section_${path}" part="link">${label}</a>`;
@@ -33,34 +77,60 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			const content = method
 				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
 				: data[key].map((item, index) => all(item, config.items, instance, false, `${path}[${index}]`)).join('');
-			arrayContent.push(method ? content : fieldset({ label, content, attributes }));
+			arrayContent.push({
+				index: schemaIndex,
+				content: method ? content : fieldset({ label, content, attributes })
+			});
 		} else {
-			nonArrayContent.push(method
-				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
-				: '');
+			const content = config.type === 'object'
+				? all(data[key], config, instance, false, path)
+				: method
+					? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
+					: '';
+			standardContent.push({
+				index: schemaIndex,
+				content: config.type === 'object' && !method
+					? fieldset({ label, content, attributes })
+					: content
+			});
 		}
+		schemaIndex++;
 	});
 
-	const fieldsetContent = (root && nonArrayContent.length)
-		? `<fieldset part="fieldset" id="section_root">${title ? `<legend part="legend">${title}</legend>` : ''}${nonArrayContent.join('')}</fieldset>`
-		: nonArrayContent.join('');
-	const arrayContentHtml = arrayContent.join('');
-	const innerContent = `${fieldsetContent} ${arrayContentHtml}`;
+const getSchemaPosition = (key) => Object.keys(schema.properties).indexOf(key);
+
+// Sort groups by their position in schema
+const sortedGroups = fieldsetGroups.sort((a, b) => {
+	const posA = getSchemaPosition(Object.keys(schema.properties)[a.index]);
+	const posB = getSchemaPosition(Object.keys(schema.properties)[b.index]);
+	return posA - posB;
+}).map(item => item.content);
+
+// Sort arrays by their position in schema  
+const sortedArrays = arrayContent.sort((a, b) => {
+	const posA = getSchemaPosition(Object.keys(schema.properties)[a.index]);
+	const posB = getSchemaPosition(Object.keys(schema.properties)[b.index]);
+	return posA - posB;
+}).map(item => item.content);
+
+// Standard content remains sorted by appearance order
+const sortedStandard = standardContent.sort((a, b) => a.index - b.index).map(item => item.content);
+
+const rootFieldset = root && sortedStandard.length
+	? `<fieldset part="fieldset" id="section_root">${title ? `<legend part="legend">${title}</legend>` : ''}${sortedStandard.join('')}</fieldset>`
+	: sortedStandard.join('');
+
+const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join('')}`;
 
 	if (form || root) {
-		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>`:''}${navContent}</nav>` : '';
+		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>` : ''}${navContent}</nav>` : '';
 		const headlineElement = headline ? `<strong part="title">${headline}</strong>` : '';
 		const headerContent = (headlineElement || navElement) ? `<header part="header">${navElement}${headlineElement}</header>` : '';
 		let footerContent = `<ui-toast></ui-toast>`;
 
 		if (schema.form) {
-			// Set root-level form attributes if available
-			if (schema.form.action) {
-				form.setAttribute('action', schema.form.action);
-			}
-			if (schema.form.method) {
-				form.setAttribute('method', schema.form.method);
-			}
+			if (schema.form.action) form.setAttribute('action', schema.form.action);
+			if (schema.form.method) form.setAttribute('method', schema.form.method);
 			if (schema.form.enctype) {
 				const formEnctype = schema.form.enctype === 'json' ? 'application/json' 
 					: schema.form.enctype === 'form' ? 'multipart/form-data' 
@@ -70,25 +140,21 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			if (schema.form.autoSave !== undefined) {
 				form.setAttribute('data-auto-save', schema.form.autoSave);
 			}
-		
-			// Generate buttons from the form.buttons array
-			const buttonsHTML = schema.form.buttons
-		.map(entry => {
-			const commonAttributes = Object.keys(entry)
-				.filter(key => key !== 'label' && key !== 'class')
-				.map(key => `data-${key}="${entry[key]}"`)
-				.join(' ');
 
-			const classAttribute = entry.class ? ` class="${entry.class}"` : '';
-
-			return `<button type="${entry.type || 'button'}" part="button" ${commonAttributes}${classAttribute}>${
-				resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
+			const buttonsHTML = schema.form.buttons?.map(entry => {
+				const commonAttributes = Object.keys(entry)
+					.filter(key => key !== 'label' && key !== 'class')
+					.map(key => `data-${key}="${entry[key]}"`)
+					.join(' ');
+				const classAttribute = entry.class ? ` class="${entry.class}"` : '';
+				return `<button type="${entry.type || 'button'}" part="button" ${commonAttributes}${classAttribute}>${
+					resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
 			}).join('');
-			footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
+			
+			if (buttonsHTML) footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
 
 		const rootContent = `${headerContent}<div part="main">${innerContent}</div><footer part="footer">${footerContent}</footer>`;
-
 		if (form) {
 			form.innerHTML = rootContent;
 			return;
@@ -117,6 +183,7 @@ export const arrayCheckbox = (params) =>
 /* === arrayDetail === */
 
 export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
+	const cleanName = name?.replace(/\[\d+\]/g, '');
 	const rowLabel = config.render?.label 
 		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
 		: 'label';
@@ -128,12 +195,12 @@ export const arrayDetail = ({ value, config, path, instance, attributes = [], na
 	const arrayControl = config.render?.arrayControl || 'mark-remove';
 
 	return `
-		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
+		<details part="array-details" ${attrs(attributes)}${name ? ` name="${cleanName}"`:''}>
 			<summary part="row summary">
-				<output part="label" name="label_${name}[${index}]">${rowLabel}</output>
+				<output part="label" name="label_${name}">${rowLabel}</output>
 				<span part="value">
 					${icon('chevron right', 'sm', 'xs')}
-					<output name="value_${name}[${index}]">${cols}</output>
+					<output name="value_${name}">${cols}</output>
 					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
 				</span>
 			</summary>
@@ -210,7 +277,7 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${name}"` : ''}>
 			${allContent}
 			<span part="value">
-				<output name="value_${name}[${index}]">${cols}</output>
+				<output name="value_${name}">${cols}</output>
 				${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
 			</span>
 	</fieldset>`;
