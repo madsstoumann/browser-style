@@ -190,7 +190,14 @@ class DataEntry extends HTMLElement {
 
 		array.push(newObject);
 
-		const newDetail = this.instance.methods.arrayDetail({
+		const renderMethod = element.dataset.renderMethod || 'arrayDetail';
+		
+		if (!this.instance.methods[renderMethod]) {
+			this.notify(1003, `Render method "${renderMethod}" not found.`);
+			return;
+		}
+
+		const newDetail = this.instance.methods[renderMethod]({
 			value: newObject,
 			config: schema,
 			path: `${path}[${array.length - 1}]`,

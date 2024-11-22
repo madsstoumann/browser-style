@@ -119,6 +119,78 @@
 			}
 		}
 
+		fieldset[part~=array-unit] {
+			display: grid;
+			grid-template-columns: var(--_lblw) 1fr;
+
+			&:first-of-type {
+				input[part=input], span[part=value] {
+					border-block-start-width: var(--_bdw);
+				}
+
+				input[part=input] {
+					border-start-start-radius: var(--_bdrs);
+				}
+				span[part=value] {
+					border-start-end-radius: var(--_bdrs);
+				}
+			}
+			&:last-of-type {
+				input[part=input] {
+					border-end-start-radius: var(--_bdrs);
+				}
+				span[part=value] {
+					border-end-end-radius: var(--_bdrs);
+				}
+			}
+
+			input[part=input] {
+				border-start-end-radius: 0 !important; /* TODO: Remove !important */
+				border-end-end-radius: 0 !important; /* TODO: Remove !important */
+			}
+
+			input[part=input],
+			span[part=value] {
+				border-color: var(--_bdc);
+				border-style: solid;
+				border-block-width: 0 var(--_bdw);
+				border-inline-width: var(--_bdw);
+			}
+
+			label {
+				grid-template-columns: 1fr;
+				place-self: center;
+			}
+			label[part=row] { display: contents; }
+			
+			output {
+				display: flex;
+				flex: 1;
+				margin-inline-end: 1ch;
+				& > span {
+					border-inline-end: var(--_bdw) solid var(--_bdc);
+					padding: var(--_pb) var(--_pi);
+					&:first-of-type { flex: 1; }
+					&:not(:first-of-type) { 
+						flex-basis: 10ch;
+						text-align: end;
+					}
+				}
+				
+			}
+
+			span[part=label] { display: none; }
+			span[part=value] {
+				align-content: center;
+				border-inline-start-width: 0;
+				display: flex;
+				justify-content: space-between;
+				padding-inline: 0 var(--_pi);
+			}
+		}
+
+
+
 		[part~=fieldset] {
 			border: 0;
 			gap: 0;

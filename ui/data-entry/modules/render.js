@@ -1,16 +1,7 @@
 import { attrs, fetchOptions, getObjectByPath, isEmpty, setObjectByPath, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
 
-/**
- * Renders the form elements based on the provided data and schema.
- *
- * @param {Object} data - The data to populate the form.
- * @param {Object} schema - The schema defining the form structure.
- * @param {Object} instance - The instance of the current component.
- * @param {boolean} [root=false] - Whether this is the root form.
- * @param {string} [pathPrefix=''] - The prefix for the data path.
- * @param {HTMLFormElement|null} [form=null] - The form element to render the content into.
- * @returns {string|void} - The generated HTML content or updates the form directly.
- */
+/* === all === */
+
 export function all(data, schema, instance, root = false, pathPrefix = '', form = null) {
 	const nonArrayContent = [];
 	const arrayContent = [];
@@ -107,29 +98,138 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 	return innerContent;
 }
 
-/**
- * Generates an autosuggest HTML element based on the provided configuration and parameters.
- *
- * @param {Object} params - The parameters for rendering the autosuggest element.
- * @param {Object} params.config - The configuration object for rendering.
- * @param {Object} params.config.render - The render configuration.
- * @param {Object} params.config.render.autosuggest - The autosuggest configuration.
- * @param {string} [params.config.render.autosuggest.api] - The API endpoint for fetching suggestions.
- * @param {string} [params.config.render.autosuggest.apiArrayPath] - The path to the array of suggestions in the API response.
- * @param {string} [params.config.render.autosuggest.apiDisplayPath] - The path to the display value in the API response.
- * @param {string} [params.config.render.autosuggest.apiTextPath] - The path to the text value in the API response.
- * @param {string} [params.config.render.autosuggest.apiValuePath] - The path to the value in the API response.
- * @param {Object} [params.config.render.autosuggest.defaults] - Default values for the autosuggest element.
- * @param {string} [params.config.render.autosuggest.defaults.display] - The default display value.
- * @param {string} [params.config.render.autosuggest.defaults.value] - The default value.
- * @param {string} [params.config.render.autosuggest.label] - The label for the autosuggest element.
- * @param {Object} [params.config.render.autosuggest.mapping] - Mapping configuration for the autosuggest element.
- * @param {string} [params.config.render.autosuggest.syncInstance] - Sync instance identifier.
- * @param {string} params.path - The path for the autosuggest element.
- * @param {string} [params.formID] - The form ID to which the autosuggest element belongs.
- * @param {Object} [params.value] - The initial value for the autosuggest element.
- * @returns {string} The HTML string for the autosuggest element.
- */
+/* === arrayCheckbox === */
+
+export const arrayCheckbox = (params) =>
+	renderArray({
+		...params,
+		renderItem: ({ value, config, path }) => {
+			const checked = config.render?.value ? !!value[config.render.value] : false;
+			const rowLabel = config.render?.label ? value[config.render.label] || config.render.label : 'LABEL';
+			return `
+				<label part="row">
+					<span part="label">${rowLabel}</span>
+					<input part="input" type="checkbox" value="${value[config.render.value]}" name="${path}" data-type="boolean" ${checked ? 'checked' : ''}>
+				</label>`;
+		},
+	});
+
+/* === arrayDetail === */
+
+export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
+	const rowLabel = config.render?.label 
+		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
+		: 'label';
+	const rowValue = config.render?.value 
+		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n) 
+		: 'value';
+
+	const cols = rowValue.split('|').map(col => `<span>${col}</span>`).join('');
+	const arrayControl = config.render?.arrayControl || 'mark-remove';
+
+	return `
+		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
+			<summary part="row summary">
+				<output part="label" name="label_${name}[${index}]">${rowLabel}</output>
+				<span part="value">
+					${icon('chevron right', 'sm', 'xs')}
+					<output name="value_${name}[${index}]">${cols}</output>
+					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
+				</span>
+			</summary>
+			${all(value, config.items, instance, false, path)}
+		</details>`;
+};
+
+/* === arrayDetails === */
+
+export const arrayDetails = (params) => {
+	const { config } = params;
+	return renderArray({
+		...params,
+		renderItem: ({ value, config, path, instance, attributes, index }) =>
+			arrayDetail({
+				value,
+				config,
+				path,
+				instance,
+				attributes,
+				name: path,
+				index,
+			}),
+		entry: config.render?.add ? entry : null,
+	});
+}
+
+/* === arrayGrid === */
+
+export const arrayGrid = (params) =>
+	renderArray({
+		...params,
+		renderItem: ({ value, config, path, instance }) =>
+			`<fieldset>${all(value, config.items, instance, false, path)}</fieldset>`,
+	});
+
+/* === arrayUnit === */
+
+export const arrayUnit = ({ value, config, path, instance, attributes = [], name = '', index }) => {
+	const rowValue = config.render?.value;
+	if (!rowValue) return '';
+
+	const rowLabel = config.render?.label
+	? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n)
+	: 'label';
+
+	const cols = rowLabel.split('|').map(col => `<span>${col}</span>`).join('');
+	const arrayControl = config.render?.arrayControl || 'mark-remove';
+
+	// Ensure config.items and properties exist
+	const allContent = config.items?.properties
+		? Object.entries(config.items.properties)
+				.map(([key, itemConfig]) => {
+					const itemName = itemConfig.name || key;
+					const isHidden = itemName !== rowValue ? 'hidden' : '';
+					const content = safeRender(
+						instance.getRenderMethod(itemConfig.render?.method || 'input'),
+						{
+							label: itemConfig.title || key,
+							value: value[key] || '',
+							attributes: itemConfig.render?.attributes || [],
+							config: itemConfig,
+							instance,
+							path: `${path}.${key}`,
+							type: itemConfig.type || 'string',
+						}
+					);
+					return `<span ${isHidden}>${content}</span>`;
+				})
+				.join('')
+		: '';
+
+	return `
+	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${name}"` : ''}>
+			${allContent}
+			<span part="value">
+				<output name="value_${name}[${index}]">${cols}</output>
+				${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
+			</span>
+	</fieldset>`;
+};
+
+/* === arrayUnits === */
+
+export const arrayUnits = (params) => {
+	const { config } = params;
+	return renderArray({
+		...params,
+		renderItem: ({ value, config, path, instance, attributes, index }) =>
+			arrayUnit({ value, config, path, instance, attributes, name: path, index }),
+		entry: config.render?.add ? entry : null,
+	});
+};
+
+/* === autosuggest === */
+
 export const autosuggest = (params) => {
 	const config = params.config?.render?.autosuggest;
 	if (!config) return '';
@@ -157,153 +257,26 @@ export const autosuggest = (params) => {
 	} : null;
 
 	return `
-		<auto-suggest 
-			${api ? `api="${api}"` : ''}
-			${apiArrayPath ? `api-array-path="${apiArrayPath}"` : ''}
-			${apiDisplayPath ? `api-display-path="${apiDisplayPath}"` : ''}
-			${apiTextPath ? `api-text-path="${apiTextPath}"` : ''}
-			${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
-			${display ? `display="${display}"` : ''}
-			${label ? `label="${label}"` : ''}
-			list-mode="ul"
-			name="${name}"
-			part="autosuggest" 
-			${syncInstance ? `sync-instance="${syncInstance}"` : ''}
-			${value ? `value="${value}"` : ''}
-			${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
-			${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
-			${formID ? `form="${formID}"` : ''}></auto-suggest>`;
+	<auto-suggest 
+		${api ? `api="${api}"` : ''}
+		${apiArrayPath ? `api-array-path="${apiArrayPath}"` : ''}
+		${apiDisplayPath ? `api-display-path="${apiDisplayPath}"` : ''}
+		${apiTextPath ? `api-text-path="${apiTextPath}"` : ''}
+		${apiValuePath ? `api-value-path="${apiValuePath}"` : ''}
+		${display ? `display="${display}"` : ''}
+		${label ? `label="${label}"` : ''}
+		list-mode="ul"
+		name="${name}"
+		part="autosuggest" 
+		${syncInstance ? `sync-instance="${syncInstance}"` : ''}
+		${value ? `value="${value}"` : ''}
+		${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
+		${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
+		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
 };
 
-/**
- * Generates a set of checkboxes based on the provided parameters.
- *
- * @param {Object} params - The parameters for generating the checkboxes.
- * @param {Array} [params.attributes=[]] - Additional attributes for the fieldset.
- * @param {Object} params.config - Configuration object for rendering the checkboxes.
- * @param {string} params.config.render.value - The key to determine if a checkbox is checked.
- * @param {string} params.config.render.label - The key to determine the label of each checkbox.
- * @param {string} params.label - The label for the fieldset.
- * @param {string} [params.path=''] - The path for the checkbox name attribute.
- * @param {Array} params.value - The array of values to generate checkboxes from.
- * @returns {string} The HTML string for the fieldset containing the checkboxes.
- */
-export const arrayCheckbox = (params) => {
-	const { attributes = [], config, label, path = '', value } = params;
-	const content = value.map((item, index) => {
-		const checked = config.render?.value ? !!item[config.render.value] : false;
-		const rowLabel = config.render?.label ? (item[config.render.label] || config.render.label) : 'LABEL';
+/* === entry === */
 
-		return `
-			<label part="row">
-				<span part="label">${rowLabel}</span>
-				<input part="input" type="checkbox" value="${item[config.render.value]}" name="${path}[${index}].${config.render?.value || ''}" data-type="boolean"${checked ? ' checked' : ''}>
-			</label>`;
-	}).join('');
-
-	return fieldset({ attributes, content, label, path });
-};
-
-/**
- * Renders a detail element with a summary and content based on the provided configuration.
- *
- * @param {Object} params - The parameters for rendering the array detail element.
- * @param {*} params.value - The value to be rendered.
- * @param {Object} params.config - The configuration object for rendering.
- * @param {string} params.path - The path to the current element.
- * @param {Object} params.instance - The instance of the current element.
- * @param {Array} [params.attributes=[]] - Additional attributes for the detail element.
- * @param {string} [params.name=''] - The name attribute for the detail element.
- * @returns {string} The rendered array detail element as an HTML string.
- */
-export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
-	const rowLabel = config.render?.label 
-		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
-		: 'label';
-	const rowValue = config.render?.value 
-		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n) 
-		: 'value';
-
-	const cols = rowValue.split('|').map(col => `<span>${col}</span>`).join('');
-	const arrayControl = config.render?.arrayControl || 'mark-remove';
-
-	return `
-		<details part="array-details" ${attrs(attributes)}${name ? ` name="${name}"`:''}>
-			<summary part="row summary">
-				<output part="label" name="label_${name}[${index}]">${rowLabel}</output>
-				<span part="value">
-					${icon('chevron right', 'sm', 'xs')}
-					<output name="value_${name}[${index}]">${cols}</output>
-					${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
-				</span>
-			</summary>
-			${all(value, config.items, instance, false, path)}
-		</details>`;
-};
-
-/**
- * Generates HTML content for an array of details and optionally an entry field.
- *
- * @param {Object} params - The parameters for rendering the array details.
- * @param {Array} [params.attributes=[]] - The attributes to be applied to the fieldset.
- * @param {Object} params.config - The configuration object for rendering.
- * @param {Object} params.instance - The instance object related to the rendering context.
- * @param {string} params.label - The label for the fieldset.
- * @param {string} [params.path=''] - The path to the current fieldset in the data structure.
- * @param {Array} params.value - The array of values to be rendered as details.
- * @returns {string} The generated HTML content for the array details and entry field.
- */
-export const arrayDetails = (params) => {
-	const { attributes = [], config, instance, label, path = '', value } = params;
-	const content = value.map((item, index) => arrayDetail({
-		value: item,
-		config,
-		path: path ? `${path}[${index}]` : '',
-		instance,
-		attributes,
-		name: path,
-		index
-	})).join('');
-
-	const entryContent = config.render?.add ? entry({ config, instance, path }) : '';
-	return fieldset({ attributes, content: `${content}${entryContent}`, label, path });
-};
-
-/**
- * Generates an HTML string representing a grid of fieldsets based on the provided parameters.
- *
- * @param {Object} params - The parameters for generating the grid.
- * @param {Array} [params.attributes=[]] - An array of attributes to be applied to the fieldset.
- * @param {Object} params.config - Configuration object for the items.
- * @param {Object} params.instance - The instance object.
- * @param {string} params.label - The label for the fieldset.
- * @param {string} [params.path=''] - The path for the fieldset.
- * @param {Array} params.value - The array of values to be rendered in the grid.
- * @returns {string} The generated HTML string representing the grid of fieldsets.
- */
-export const arrayGrid = (params) => {
-	const { attributes = [], config, instance, label, path = '', value } = params;
-	const content = value.map((item, index) => {
-		const itemPath = path ? `${path}[${index}]` : '';
-		return `<fieldset>${all(item, config.items, instance, false, itemPath)}</fieldset>`;
-	}).join('');
-	return fieldset({ label, content, attributes, path });
-};
-
-/**
- * Renders a data entry form based on the provided configuration.
- *
- * @param {Object} params - The parameters for rendering the entry form.
- * @param {Object} params.config - The configuration object for the form.
- * @param {Object} params.config.items - The items configuration for the form fields.
- * @param {Object} params.config.items.properties - The properties of the items to be rendered as form fields.
- * @param {string} [params.config.title] - The title of the form.
- * @param {boolean} [params.config.render.autosuggest] - Flag to determine if autosuggest should be rendered.
- * @param {Object} params.instance - The instance object containing the parent element.
- * @param {HTMLElement} params.instance.parent - The parent element where the form will be inserted.
- * @param {string} [params.path=''] - The path for the form fields.
- * @returns {string} The HTML string for the rendered entry form.
- */
 export const entry = (params) => {
 	const { config, instance, path = '' } = params;
 	const formID = `form${uuid()}`;
@@ -350,22 +323,14 @@ export const entry = (params) => {
 				<nav part="nav">
 					<button type="button" form="${formID}" part="button close" popovertarget="${id}" popovertargetaction="hide">${t('close', instance.lang, instance.i18n)}</button>
 					<button type="reset" form="${formID}" part="button reset">${t('reset', instance.lang, instance.i18n)}</button>
-					<button type="submit" form="${formID}" part="button add" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t('add', instance.lang, instance.i18n)}</button>
+					<button type="submit" form="${formID}" part="button add" data-render-method="${config.render?.addMethod || 'arrayDetail'}" data-custom="addArrayEntry" data-params='{ "path": "${path}" }'>${t('add', instance.lang, instance.i18n)}</button>
 				</nav>
 			</fieldset>
 		</div>`;
 };
 
-/**
- * Generates an HTML fieldset element with the provided attributes, content, label, and path.
- *
- * @param {Object} options - The options for the fieldset.
- * @param {Object} options.attributes - The attributes to be added to the fieldset element.
- * @param {string} options.content - The inner HTML content of the fieldset.
- * @param {string} options.label - The label for the fieldset, which will be used in the legend element.
- * @param {string} [options.path] - An optional path that will be used to generate the fieldset's ID and name attributes.
- * @returns {string} The generated HTML string for the fieldset element.
- */
+/* === fieldset === */
+
 export const fieldset = ({ attributes, content, label, path }) => {
 	const fieldsetId = path ? `section_${path}` : '';
 	const fieldsetAttributes = attrs(attributes, '', [{ part: 'fieldset' }]);
@@ -378,27 +343,12 @@ export const fieldset = ({ attributes, content, label, path }) => {
 		</fieldset>`;
 };
 
-/**
- * Generates an HTML string for a UI icon component.
- *
- * @param {string} type - The type of the icon.
- * @param {string} size - The size of the icon.
- * @param {string} stroke - The stroke of the icon.
- * @returns {string} The HTML string for the UI icon component.
- */
+/* === icon === */
+
 const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||''}" stroke="${stroke||''}"></ui-icon>`;
 
-/**
- * Generates an HTML input element with specified attributes and value.
- *
- * @param {Object} params - The parameters for the input element.
- * @param {Array} [params.attributes=[]] - An array of attribute objects for the input element.
- * @param {string} params.label - The label for the input element.
- * @param {string} [params.path=''] - The path for the input element.
- * @param {string} [params.type='string'] - The type of the input element.
- * @param {string|number|boolean} params.value - The value of the input element.
- * @returns {string} The HTML string for the input element, optionally wrapped in a label.
- */
+/* === input === */
+
 export const input = (params) => {
 	const { attributes = [], instance, label, path = '', type = 'string', value } = params;
 	const finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
@@ -417,21 +367,8 @@ export const input = (params) => {
 		</label>`;
 };
 
-/**
- * Renders a media fieldset with provided parameters.
- *
- * @param {Object} params - The parameters for rendering the media fieldset.
- * @param {Array} [params.attributes=[]] - Additional attributes for the fieldset.
- * @param {Object} params.config - Configuration object for rendering.
- * @param {Object} params.config.render - Render configuration.
- * @param {boolean} params.config.render.delete - Flag to determine if delete checkbox should be rendered.
- * @param {string} [params.config.render.summary] - Path to the summary image source.
- * @param {string} [params.config.render.label] - Path to the label value.
- * @param {string} [params.label] - Label for the fieldset.
- * @param {string} [params.path=''] - Path for the fieldset.
- * @param {Array} params.value - Array of media items to be rendered.
- * @returns {string} - The rendered HTML string for the media fieldset.
- */
+/* === media === */
+
 export const media = (params) => {
 	const { attributes = [], config, label, path = '', value } = params;
 	const { delete: itemDelete, summary: itemSrc = '', label: itemValue = '' } = config.render || {};
@@ -446,16 +383,31 @@ export const media = (params) => {
 	return fieldset({ label, content, attributes, path });
 };
 
-/**
- * Generates a rich text input field as an HTML string.
- *
- * @param {Object} params - The parameters for the rich text input field.
- * @param {Array} [params.attributes=[]] - An array of attributes to be added to the rich text element.
- * @param {string} params.label - The label for the rich text input field.
- * @param {string} [params.path=''] - The path to be used for the attributes.
- * @param {string} params.value - The initial value of the rich text input field.
- * @returns {string} The HTML string for the rich text input field.
- */
+/* === renderArray === */
+
+export const renderArray = ({ value, config, path, instance, renderItem, attributes = [], label = '', entry }) => { 
+	const content = value.map((item, index) =>
+		renderItem({
+			value: item,
+			config,
+			path: path ? `${path}[${index}]` : '',
+			instance,
+			attributes,
+			index,
+		})
+	).join('');
+
+	const entryContent = entry ? entry({ config, instance, path }) : '';
+	return fieldset({
+		attributes,
+		content: `${content}${entryContent}`,
+		label,
+		path,
+	});
+};
+
+/* === richtext === */
+
 export const richtext = (params) => {
 	const { attributes = [], instance, label, path = '', value } = params;
 	const isRequired = attributes.some(attr => attr.required === 'required');
@@ -468,18 +420,8 @@ export const richtext = (params) => {
 		</label>`;
 };
 
-/**
- * Generates a select dropdown HTML string based on the provided parameters.
- *
- * @param {Object} params - The parameters for generating the select dropdown.
- * @param {Array} [params.attributes=[]] - An array of attribute objects to be applied to the select element.
- * @param {string} params.label - The label text for the select dropdown.
- * @param {Array} [params.options=[]] - An array of option objects for the select dropdown.
- * @param {string} [params.path=''] - The path to be used for the select element.
- * @param {string} [params.type='string'] - The type attribute for the select element.
- * @param {*} params.value - The value to be selected in the dropdown.
- * @returns {string} The generated HTML string for the select dropdown.
- */
+/* === select === */
+
 export const select = (params) => {
 	const { attributes = [], label, options = [], path = '', type = 'string', value = -1 } = params;
 	const attributeValue = attributes.find(attr => 'value' in attr)?.value;
@@ -501,16 +443,8 @@ export const select = (params) => {
 		</label>`;
 };
 
-/**
- * Generates an HTML string for a labeled textarea element.
- *
- * @param {Object} params - The parameters for the textarea element.
- * @param {Array} [params.attributes=[]] - An array of attributes to be added to the textarea element.
- * @param {string} params.label - The label text for the textarea element.
- * @param {string} [params.path=''] - The path to be used in the attributes.
- * @param {string} params.value - The initial value of the textarea element.
- * @returns {string} The HTML string for the labeled textarea element.
- */
+/* === textarea === */
+
 export const textarea = (params) => {
 	const { attributes = [], label, path = '', value = '' } = params;
 	const textareaAttributes = attrs(attributes, path);
