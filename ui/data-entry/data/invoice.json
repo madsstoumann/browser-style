@@ -1,0 +1,72 @@
+{
+	"id": 3,
+	"customer_id": 9387,
+	"order_type_id": 1,
+	"channel_id": 1,
+	"vat": 30.25,
+	"subtotal": 121,
+	"discount": 0,
+	"shipping_costs": null,
+	"total": 121,
+	"created_at": "2024-10-03T10:53:35",
+	"last_modified_at": "2024-10-03T10:53:35",
+	"customer": {
+		"id": 9387,
+		"email": "nightfall@spiritwolf.dk",
+		"first_name": "Lise Pilgaard",
+		"last_name": "Kristensen",
+		"company_name": "",
+		"phone": ""
+	},
+	"addresses": {
+		"invoice": {
+			"address_id": 9387,
+			"street_address": "Gyldenløves Kvarter 73, Stuen",
+			"city": "Solrød Strand",
+			"postal_code": "2680",
+			"country_code": "DK"
+		},
+		"shipping": {
+			"address_id": 9387,
+			"street_address": "Gyldenløves Kvarter 73, Stuen",
+			"city": "Solrød Strand",
+			"postal_code": "2680",
+			"country_code": "DK"
+		}
+	},
+	"statuses": [
+		{
+			"order_id": 3,
+			"status_name": "paid",
+			"status_time": "2024-11-19T12:28:11",
+			"comment": "Testing 1"
+		},
+		{
+			"order_id": 3,
+			"status_name": "shipped",
+			"status_time": "2024-11-19T12:28:17",
+			"comment": "Testing 2"
+		}
+	],
+	"products": [
+		{
+			"product_id": 45022,
+			"price": 44,
+			"quantity": 1,
+			"name": "Elfquest: The Final Quest #12  (Amerikansk blad)"
+		},
+		{
+			"product_id": 51593,
+			"price": 38.5,
+			"quantity": 1,
+			"name": "Elfquest: The Final Quest #3  (Pini, Wendy; Amerikansk blad)"
+		},
+		{
+			"product_id": 163375,
+			"price": 38.5,
+			"quantity": 1,
+			"name": "Elfquest: The Final Quest #5  (Pini, Wendy; Amerikansk blad)"
+		}
+	],
+	"discounts": []
+}

@@ -1,0 +1,1204 @@
+{
+  "address_type": [
+    {
+      "label": "Faktura",
+      "value": 2
+    },
+    {
+      "label": "Forsendelse",
+      "value": 3
+    },
+    {
+      "label": "Standard",
+      "value": 1
+    }
+  ],
+  "attribute_type": [
+    {
+      "label": "Boggenre",
+      "value": 2
+    },
+    {
+      "label": "Bogserie",
+      "value": 3
+    },
+    {
+      "label": "Figurserie",
+      "value": 7
+    },
+    {
+      "label": "Filmserie",
+      "value": 9
+    },
+    {
+      "label": "Filmtype",
+      "value": 8
+    },
+    {
+      "label": "Forfatter",
+      "value": 1
+    },
+    {
+      "label": "Spilserie",
+      "value": 10
+    },
+    {
+      "label": "Spiltype",
+      "value": 11
+    },
+    {
+      "label": "Tegner",
+      "value": 4
+    },
+    {
+      "label": "Tegneserie",
+      "value": 5
+    },
+    {
+      "label": "Tegneserietype",
+      "value": 6
+    }
+  ],
+  "book_genre": [
+    {
+      "value": "",
+      "label": "Alle genrer"
+    },
+    {
+      "value": "5760",
+      "label": "Adventure"
+    },
+    {
+      "value": "5763",
+      "label": "Fantasy"
+    },
+    {
+      "value": "5761",
+      "label": "Fiction"
+    },
+    {
+      "value": "5764",
+      "label": "Horror"
+    },
+    {
+      "value": "5768",
+      "label": "Krimi"
+    },
+    {
+      "value": "5769",
+      "label": "Mytologi"
+    },
+    {
+      "value": "5762",
+      "label": "Non fiction"
+    },
+    {
+      "value": "5766",
+      "label": "Paranormal Romance"
+    },
+    {
+      "value": "5765",
+      "label": "Science Fiction"
+    },
+    {
+      "value": "5767",
+      "label": "Young Adult"
+    }
+  ],
+  "comic_type": [
+    {
+      "value": "",
+      "label": "Alle typer"
+    },
+    {
+      "value": "46661",
+      "label": "Amerikansk blad"
+    },
+    {
+      "value": "46675",
+      "label": "Brugt Manga"
+    },
+    {
+      "value": "46662",
+      "label": "Dansk album"
+    },
+    {
+      "value": "46665",
+      "label": "Dansk blad"
+    },
+    {
+      "value": "46671",
+      "label": "Erotiske tegneserier"
+    },
+    {
+      "value": "46666",
+      "label": "Hardcover"
+    },
+    {
+      "value": "46669",
+      "label": "Hentai"
+    },
+    {
+      "value": "46664",
+      "label": "Magasin"
+    },
+    {
+      "value": "46668",
+      "label": "Manga"
+    },
+    {
+      "value": "46672",
+      "label": "Merchandise"
+    },
+    {
+      "value": "46673",
+      "label": "Slik"
+    },
+    {
+      "value": "46667",
+      "label": "Tilbehør"
+    },
+    {
+      "value": "46663",
+      "label": "Tradepaperback"
+    },
+    {
+      "value": "46674",
+      "label": "Webtoon"
+    },
+    {
+      "value": "46670",
+      "label": "Yaoi (Manga)"
+    }
+  ],
+  "condition": [
+    {
+      "label": "Brugt",
+      "value": 2
+    },
+    {
+      "label": "Ny",
+      "value": 1
+    },
+    {
+      "label": "Renoveret",
+      "value": 3
+    }
+  ],
+  "countries": [
+    {
+      "value": "AF",
+      "label": "Afghanistan"
+    },
+    {
+      "value": "AL",
+      "label": "Albanien"
+    },
+    {
+      "value": "DZ",
+      "label": "Algeriet"
+    },
+    {
+      "value": "AS",
+      "label": "Amerikansk Samoa"
+    },
+    {
+      "value": "AD",
+      "label": "Andorra"
+    },
+    {
+      "value": "AO",
+      "label": "Angola"
+    },
+    {
+      "value": "AI",
+      "label": "Anguilla"
+    },
+    {
+      "value": "AQ",
+      "label": "Antarktis"
+    },
+    {
+      "value": "AG",
+      "label": "Antigua og Barbuda"
+    },
+    {
+      "value": "AR",
+      "label": "Argentina"
+    },
+    {
+      "value": "AM",
+      "label": "Armenien"
+    },
+    {
+      "value": "AW",
+      "label": "Aruba"
+    },
+    {
+      "value": "AZ",
+      "label": "Aserbajdsjan"
+    },
+    {
+      "value": "AU",
+      "label": "Australien"
+    },
+    {
+      "value": "BS",
+      "label": "Bahamas"
+    },
+    {
+      "value": "BH",
+      "label": "Bahrain"
+    },
+    {
+      "value": "BD",
+      "label": "Bangladesh"
+    },
+    {
+      "value": "BB",
+      "label": "Barbados"
+    },
+    {
+      "value": "BE",
+      "label": "Belgien"
+    },
+    {
+      "value": "BZ",
+      "label": "Belize"
+    },
+    {
+      "value": "BJ",
+      "label": "Benin"
+    },
+    {
+      "value": "BM",
+      "label": "Bermuda"
+    },
+    {
+      "value": "BT",
+      "label": "Bhutan"
+    },
+    {
+      "value": "BO",
+      "label": "Bolivia"
+    },
+    {
+      "value": "BQ",
+      "label": "Bonaire"
+    },
+    {
+      "value": "BA",
+      "label": "Bosnien-Hercegovina"
+    },
+    {
+      "value": "BW",
+      "label": "Botswana"
+    },
+    {
+      "value": "BR",
+      "label": "Brasilien"
+    },
+    {
+      "value": "BN",
+      "label": "Brunei"
+    },
+    {
+      "value": "BG",
+      "label": "Bulgarien"
+    },
+    {
+      "value": "BF",
+      "label": "Burkina Faso"
+    },
+    {
+      "value": "BI",
+      "label": "Burundi"
+    },
+    {
+      "value": "KH",
+      "label": "Cambodja"
+    },
+    {
+      "value": "CM",
+      "label": "Cameroun"
+    },
+    {
+      "value": "CA",
+      "label": "Canada"
+    },
+    {
+      "value": "KY",
+      "label": "Caymanøerne"
+    },
+    {
+      "value": "CF",
+      "label": "Centralafrikanske Republik"
+    },
+    {
+      "value": "CL",
+      "label": "Chile"
+    },
+    {
+      "value": "CO",
+      "label": "Colombia"
+    },
+    {
+      "value": "KM",
+      "label": "Comorerne"
+    },
+    {
+      "value": "CG",
+      "label": "Congo"
+    },
+    {
+      "value": "CR",
+      "label": "Costa Rica"
+    },
+    {
+      "value": "CU",
+      "label": "Cuba"
+    },
+    {
+      "value": "CW",
+      "label": "Curaçao"
+    },
+    {
+      "value": "CY",
+      "label": "Cypern"
+    },
+    {
+      "value": "DK",
+      "label": "Danmark"
+    },
+    {
+      "value": "AE",
+      "label": "De Forenede Arabiske Emirater"
+    },
+    {
+      "value": "CD",
+      "label": "Den Demokratiske Republik Congo"
+    },
+    {
+      "value": "DO",
+      "label": "Den Dominikanske Republik"
+    },
+    {
+      "value": "DJ",
+      "label": "Djibouti"
+    },
+    {
+      "value": "DM",
+      "label": "Dominica"
+    },
+    {
+      "value": "EC",
+      "label": "Ecuador"
+    },
+    {
+      "value": "EG",
+      "label": "Egypten"
+    },
+    {
+      "value": "SV",
+      "label": "El Salvador"
+    },
+    {
+      "value": "CI",
+      "label": "Elfenbenskysten"
+    },
+    {
+      "value": "ER",
+      "label": "Eritrea"
+    },
+    {
+      "value": "EE",
+      "label": "Estland"
+    },
+    {
+      "value": "SZ",
+      "label": "Eswatini"
+    },
+    {
+      "value": "ET",
+      "label": "Etiopien"
+    },
+    {
+      "value": "FJ",
+      "label": "Fiji"
+    },
+    {
+      "value": "PH",
+      "label": "Filippinerne"
+    },
+    {
+      "value": "FI",
+      "label": "Finland"
+    },
+    {
+      "value": "FR",
+      "label": "Frankrig"
+    },
+    {
+      "value": "GA",
+      "label": "Gabon"
+    },
+    {
+      "value": "GM",
+      "label": "Gambia"
+    },
+    {
+      "value": "GE",
+      "label": "Georgien"
+    },
+    {
+      "value": "GH",
+      "label": "Ghana"
+    },
+    {
+      "value": "GI",
+      "label": "Gibraltar"
+    },
+    {
+      "value": "GD",
+      "label": "Grenada"
+    },
+    {
+      "value": "GR",
+      "label": "Grækenland"
+    },
+    {
+      "value": "GL",
+      "label": "Grønland"
+    },
+    {
+      "value": "GU",
+      "label": "Guam"
+    },
+    {
+      "value": "GT",
+      "label": "Guatemala"
+    },
+    {
+      "value": "GN",
+      "label": "Guinea"
+    },
+    {
+      "value": "GW",
+      "label": "Guinea-Bissau"
+    },
+    {
+      "value": "GY",
+      "label": "Guyana"
+    },
+    {
+      "value": "HT",
+      "label": "Haiti"
+    },
+    {
+      "value": "NL",
+      "label": "Holland"
+    },
+    {
+      "value": "HN",
+      "label": "Honduras"
+    },
+    {
+      "value": "HK",
+      "label": "Hongkong"
+    },
+    {
+      "value": "BY",
+      "label": "Hviderusland"
+    },
+    {
+      "value": "IN",
+      "label": "Indien"
+    },
+    {
+      "value": "ID",
+      "label": "Indonesien"
+    },
+    {
+      "value": "IQ",
+      "label": "Irak"
+    },
+    {
+      "value": "IR",
+      "label": "Iran"
+    },
+    {
+      "value": "IE",
+      "label": "Irland"
+    },
+    {
+      "value": "IS",
+      "label": "Island"
+    },
+    {
+      "value": "IL",
+      "label": "Israel"
+    },
+    {
+      "value": "IT",
+      "label": "Italien"
+    },
+    {
+      "value": "JM",
+      "label": "Jamaica"
+    },
+    {
+      "value": "JP",
+      "label": "Japan"
+    },
+    {
+      "value": "JO",
+      "label": "Jordan"
+    },
+    {
+      "value": "CV",
+      "label": "Kap Verde"
+    },
+    {
+      "value": "KZ",
+      "label": "Kasakhstan"
+    },
+    {
+      "value": "KE",
+      "label": "Kenya"
+    },
+    {
+      "value": "CN",
+      "label": "Kina"
+    },
+    {
+      "value": "KG",
+      "label": "Kirgisistan"
+    },
+    {
+      "value": "KI",
+      "label": "Kiribati"
+    },
+    {
+      "value": "HR",
+      "label": "Kroatien"
+    },
+    {
+      "value": "KW",
+      "label": "Kuwait"
+    },
+    {
+      "value": "LA",
+      "label": "Laos"
+    },
+    {
+      "value": "LS",
+      "label": "Lesotho"
+    },
+    {
+      "value": "LV",
+      "label": "Letland"
+    },
+    {
+      "value": "LB",
+      "label": "Libanon"
+    },
+    {
+      "value": "LR",
+      "label": "Liberia"
+    },
+    {
+      "value": "LY",
+      "label": "Libyen"
+    },
+    {
+      "value": "LI",
+      "label": "Liechtenstein"
+    },
+    {
+      "value": "LT",
+      "label": "Litauen"
+    },
+    {
+      "value": "LU",
+      "label": "Luxembourg"
+    },
+    {
+      "value": "MO",
+      "label": "Macao"
+    },
+    {
+      "value": "MG",
+      "label": "Madagaskar"
+    },
+    {
+      "value": "MW",
+      "label": "Malawi"
+    },
+    {
+      "value": "MY",
+      "label": "Malaysia"
+    },
+    {
+      "value": "MV",
+      "label": "Maldiverne"
+    },
+    {
+      "value": "ML",
+      "label": "Mali"
+    },
+    {
+      "value": "MT",
+      "label": "Malta"
+    },
+    {
+      "value": "MA",
+      "label": "Marokko"
+    },
+    {
+      "value": "MH",
+      "label": "Marshalløerne"
+    },
+    {
+      "value": "MR",
+      "label": "Mauretanien"
+    },
+    {
+      "value": "MU",
+      "label": "Mauritius"
+    },
+    {
+      "value": "MX",
+      "label": "Mexico"
+    },
+    {
+      "value": "FM",
+      "label": "Mikronesien"
+    },
+    {
+      "value": "MD",
+      "label": "Moldova"
+    },
+    {
+      "value": "MC",
+      "label": "Monaco"
+    },
+    {
+      "value": "MN",
+      "label": "Mongoliet"
+    },
+    {
+      "value": "ME",
+      "label": "Montenegro"
+    },
+    {
+      "value": "MZ",
+      "label": "Mozambique"
+    },
+    {
+      "value": "MM",
+      "label": "Myanmar"
+    },
+    {
+      "value": "NA",
+      "label": "Namibia"
+    },
+    {
+      "value": "NR",
+      "label": "Nauru"
+    },
+    {
+      "value": "NP",
+      "label": "Nepal"
+    },
+    {
+      "value": "NZ",
+      "label": "New Zealand"
+    },
+    {
+      "value": "NI",
+      "label": "Nicaragua"
+    },
+    {
+      "value": "NE",
+      "label": "Niger"
+    },
+    {
+      "value": "NG",
+      "label": "Nigeria"
+    },
+    {
+      "value": "KP",
+      "label": "Nordkorea"
+    },
+    {
+      "value": "NO",
+      "label": "Norge"
+    },
+    {
+      "value": "OM",
+      "label": "Oman"
+    },
+    {
+      "value": "PK",
+      "label": "Pakistan"
+    },
+    {
+      "value": "PW",
+      "label": "Palau"
+    },
+    {
+      "value": "PA",
+      "label": "Panama"
+    },
+    {
+      "value": "PG",
+      "label": "Papua Ny Guinea"
+    },
+    {
+      "value": "PY",
+      "label": "Paraguay"
+    },
+    {
+      "value": "PE",
+      "label": "Peru"
+    },
+    {
+      "value": "PL",
+      "label": "Polen"
+    },
+    {
+      "value": "PT",
+      "label": "Portugal"
+    },
+    {
+      "value": "QA",
+      "label": "Qatar"
+    },
+    {
+      "value": "RO",
+      "label": "Rumænien"
+    },
+    {
+      "value": "RU",
+      "label": "Rusland"
+    },
+    {
+      "value": "RW",
+      "label": "Rwanda"
+    },
+    {
+      "value": "SB",
+      "label": "Salomonøerne"
+    },
+    {
+      "value": "WS",
+      "label": "Samoa"
+    },
+    {
+      "value": "SM",
+      "label": "San Marino"
+    },
+    {
+      "value": "ST",
+      "label": "São Tomé og Príncipe"
+    },
+    {
+      "value": "SA",
+      "label": "Saudi-Arabien"
+    },
+    {
+      "value": "CH",
+      "label": "Schweiz"
+    },
+    {
+      "value": "SN",
+      "label": "Senegal"
+    },
+    {
+      "value": "RS",
+      "label": "Serbien"
+    },
+    {
+      "value": "SC",
+      "label": "Seychellerne"
+    },
+    {
+      "value": "SL",
+      "label": "Sierra Leone"
+    },
+    {
+      "value": "SG",
+      "label": "Singapore"
+    },
+    {
+      "value": "SK",
+      "label": "Slovakiet"
+    },
+    {
+      "value": "SI",
+      "label": "Slovenien"
+    },
+    {
+      "value": "SO",
+      "label": "Somalia"
+    },
+    {
+      "value": "ES",
+      "label": "Spanien"
+    },
+    {
+      "value": "LK",
+      "label": "Sri Lanka"
+    },
+    {
+      "value": "GB",
+      "label": "Storbritannien"
+    },
+    {
+      "value": "SD",
+      "label": "Sudan"
+    },
+    {
+      "value": "SR",
+      "label": "Surinam"
+    },
+    {
+      "value": "SE",
+      "label": "Sverige"
+    },
+    {
+      "value": "ZA",
+      "label": "Sydafrika"
+    },
+    {
+      "value": "KR",
+      "label": "Sydkorea"
+    },
+    {
+      "value": "SY",
+      "label": "Syrien"
+    },
+    {
+      "value": "TJ",
+      "label": "Tadsjikistan"
+    },
+    {
+      "value": "TW",
+      "label": "Taiwan"
+    },
+    {
+      "value": "TZ",
+      "label": "Tanzania"
+    },
+    {
+      "value": "TD",
+      "label": "Tchad"
+    },
+    {
+      "value": "TH",
+      "label": "Thailand"
+    },
+    {
+      "value": "CZ",
+      "label": "Tjekkiet"
+    },
+    {
+      "value": "TG",
+      "label": "Togo"
+    },
+    {
+      "value": "TO",
+      "label": "Tonga"
+    },
+    {
+      "value": "TT",
+      "label": "Trinidad og Tobago"
+    },
+    {
+      "value": "TN",
+      "label": "Tunesien"
+    },
+    {
+      "value": "TM",
+      "label": "Turkmenistan"
+    },
+    {
+      "value": "TR",
+      "label": "Tyrkiet"
+    },
+    {
+      "value": "DE",
+      "label": "Tyskland"
+    },
+    {
+      "value": "UG",
+      "label": "Uganda"
+    },
+    {
+      "value": "UA",
+      "label": "Ukraine"
+    },
+    {
+      "value": "HU",
+      "label": "Ungarn"
+    },
+    {
+      "value": "UY",
+      "label": "Uruguay"
+    },
+    {
+      "value": "US",
+      "label": "USA"
+    },
+    {
+      "value": "UZ",
+      "label": "Usbekistan"
+    },
+    {
+      "value": "VU",
+      "label": "Vanuatu"
+    },
+    {
+      "value": "VE",
+      "label": "Venezuela"
+    },
+    {
+      "value": "VN",
+      "label": "Vietnam"
+    },
+    {
+      "value": "YE",
+      "label": "Yemen"
+    },
+    {
+      "value": "ZM",
+      "label": "Zambia"
+    },
+    {
+      "value": "ZW",
+      "label": "Zimbabwe"
+    },
+    {
+      "value": "GQ",
+      "label": "Ækvatorialguinea"
+    },
+    {
+      "value": "AT",
+      "label": "Østrig"
+    },
+    {
+      "value": "TL",
+      "label": "Østtimor"
+    }
+  ],
+  "employee": [
+    {
+      "label": "Fantask System",
+      "value": 1
+    },
+    {
+      "label": "Mads Stoumann",
+      "value": 2
+    }
+  ],
+  "film_type": [
+    {
+      "value": "",
+      "label": "Alle typer"
+    },
+    {
+      "value": "47282",
+      "label": "Bluray (Region A: USA)"
+    },
+    {
+      "value": "47283",
+      "label": "Bluray (Region B: Europa)"
+    },
+    {
+      "value": "47278",
+      "label": "DVD (Region 0: ingen regionskode)"
+    },
+    {
+      "value": "47271",
+      "label": "DVD (Region 1: USA)"
+    },
+    {
+      "value": "47279",
+      "label": "DVD (Region 1: USA) + Bluray (Region A: USA)"
+    },
+    {
+      "value": "47280",
+      "label": "DVD (Region 1: USA) + Bluray (Region A+B: USA, Europa)"
+    },
+    {
+      "value": "47277",
+      "label": "DVD (Region 2 og Region 4)"
+    },
+    {
+      "value": "47272",
+      "label": "DVD (Region 2: Europa)"
+    },
+    {
+      "value": "47281",
+      "label": "DVD (Region 2: Europa) + Bluray (Region B: Europa)"
+    },
+    {
+      "value": "47273",
+      "label": "DVD (Region 3: Asien)"
+    },
+    {
+      "value": "47274",
+      "label": "DVD (Region 4: Australien)"
+    },
+    {
+      "value": "47275",
+      "label": "DVD (Region 5: Afrika)"
+    },
+    {
+      "value": "47276",
+      "label": "DVD (Region 6: Kina)"
+    },
+    {
+      "value": "47270",
+      "label": "VHS (Ntsc)"
+    },
+    {
+      "value": "47269",
+      "label": "VHS (Pal)"
+    }
+  ],
+  "game_type": [
+    {
+      "value": "",
+      "label": "Alle typer"
+    },
+    {
+      "value": "52358",
+      "label": "Dansk"
+    },
+    {
+      "value": "52359",
+      "label": "Familie"
+    },
+    {
+      "value": "52362",
+      "label": "Økonomi"
+    },
+    {
+      "value": "52360",
+      "label": "SF"
+    },
+    {
+      "value": "52361",
+      "label": "Strategi"
+    }
+  ],
+  "job": [
+    {
+      "label": "Abonnement",
+      "value": 2
+    },
+    {
+      "label": "Restordre",
+      "value": 1
+    }
+  ],
+  "order_type": [
+    {
+      "label": "Abonnement",
+      "value": 3
+    },
+    {
+      "label": "Afhent i butik",
+      "value": 5
+    },
+    {
+      "label": "Reservation",
+      "value": 2
+    },
+    {
+      "label": "Standard",
+      "value": 1
+    },
+    {
+      "label": "Web",
+      "value": 4
+    }
+  ],
+  "page_limits": [
+    {
+      "value": "-1",
+      "label": "Alle varer"
+    },
+    {
+      "value": "10",
+      "label": "10"
+    },
+    {
+      "value": "25",
+      "label": "25"
+    },
+    {
+      "value": "50",
+      "label": "50"
+    },
+    {
+      "value": "100",
+      "label": "100"
+    }
+  ],
+  "product_type": [
+    {
+      "label": "Alle produkttyper",
+      "value": 0
+    },
+    {
+      "label": "Bog",
+      "value": 1
+    },
+    {
+      "label": "Figur",
+      "value": 3
+    },
+    {
+      "label": "Film",
+      "value": 4
+    },
+    {
+      "label": "Spil",
+      "value": 5
+    },
+    {
+      "label": "Tegneserie",
+      "value": 2
+    }
+  ],
+  "release_status": [
+    {
+      "label": "Vis alle produkter",
+      "value": 1
+    },
+    {
+      "label": "Vis kun kommende produkter",
+      "value": 2
+    },
+    {
+      "label": "Vis kun udgivne produkter",
+      "value": 0
+    }
+  ],
+  "stock": [
+    {
+      "label": "Inkluder produkter, der ikke er på lager",
+      "value": 1
+    },
+    {
+      "label": "Vis kun produkter på lager",
+      "value": 0
+    },
+    {
+      "label": "Vis kun produkter, der ikke er på lager",
+      "value": 2
+    }
+  ]
+}

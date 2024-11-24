@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Entry</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="data-entry.css">
+</head>
+<body>
+	<h1>UI: Components &gt; DataEntry</h1>
+
+	<data-entry
+		data="data/invoice.json"
+		i18n="data/translations.json"
+		lookup="data/global.json"
+		schema="data/schema_invoice.json"
+		lang="en"
+		novalidate
+		debug>
+	</data-entry>
+
+	<script type="module" src="index.js"></script>
+
+	<script type="module">
+		import { setObjectByPath } from './modules/utility.js';
+		const entry = document.querySelector('data-entry');
+
+		entry.addEventListener('de:entry', (event) => {
+			manageOrderHandler(event);
+		});
+
+		entry.addEventListener('de:array-control', async (event) => {
+			const { action, checked, data, name, node } = event.detail;
+			const form = event.target.form;
+			if (!checked && action === 'immediate-remove') {
+				const parent = node.closest('fieldset');
+				if (parent) parent.remove();
+				manageOrderHandler(event);
+			}
+		});
+
+	function manageOrderHandler(event) {
+		try {
+			const { data, node } = event.detail;
+			const { form } = event.target;
+
+			// Update product total
+			if (node?.name?.endsWith('.quantity')) {
+				const base = node.name.split('.')[0];
+				const label = form.elements[`label_${base}`];
+				const value = form.elements[`value_${base}`];
+
+				if (label) label.value = node.value;
+				if (value?.children?.length >= 3) {
+					const [, price, quantity] = value.children;
+					const parsedPrice = parseFloat(price.textContent);
+					const parsedQuantity = parseFloat(node.value);
+
+					if (!isNaN(parsedPrice) && !isNaN(parsedQuantity)) {
+						quantity.textContent = (parsedPrice * parsedQuantity).toFixed(2);
+					}
+				}
+			}
+
+			// Calculate subtotal and total
+			const subtotal = (data.products || [])
+				.filter(product => !product._remove)
+				.reduce((sum, { price = 0, quantity = 1 }) => {
+					const productTotal = parseFloat(price) * parseInt(quantity, 10);
+					return sum + (isNaN(productTotal) ? 0 : productTotal);
+				}, 0);
+
+			const total = subtotal + (Number(data.shipping_costs) || 0) - (Number(data.discount) || 0);
+
+			// Update data and form
+			setObjectByPath(data, 'subtotal', subtotal);
+			setObjectByPath(data, 'total', total);
+
+			['subtotal', 'total'].forEach(field => {
+				if (form.elements[field]) {
+					form.elements[field].value = (field === 'subtotal' ? subtotal : total).toFixed(2);
+				}
+			});
+		} catch {
+			// Silently fail
+			return;
+		}
+	}
+
+	</script>
+
+</body>
+</html>

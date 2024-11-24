@@ -1,0 +1,394 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://json-schema.org/draft/2020-12/output/schema",
+  "type": "object",
+  "headline": "Invoice",
+  "properties": {
+    "id": {
+      "type": "number",
+      "title": "Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "id"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "disabled": "disabled"
+          }
+        ]
+      }
+    },
+    "customer_id": {
+      "type": "number",
+      "title": "Customer Id",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "customer_id"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      }
+    },
+    "order_type_id": {
+      "type": "number",
+      "title": "Order Type",
+      "render": {
+        "method": "select",
+        "options": "order_type",
+        "attributes": [
+          {
+            "name": "order_type_id"
+          },
+          {
+            "type": "number"
+          }
+        ]
+      }
+    },
+    "channel_id": {
+      "type": "number",
+      "title": "Channel Id"
+    },
+    "vat": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "Vat"
+    },
+    "subtotal": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "title": "Subtotal",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "class": "fw-700 ta-end",
+            "name": "subtotal",
+            "readonly": "readonly"
+          }
+        ],
+        "group": "financial_summary"
+      }
+    },
+    "discount": {
+      "type": "number",
+      "title": "Discount",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "class": "fw-700 ta-end c-error",
+            "name": "discount"
+          }
+        ],
+        "group": "financial_summary"
+      }
+    },
+    "shipping_costs": {
+      "type": "number",
+      "title": "Shipping",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "class": "fw-700 ta-end",
+            "name": "shipping_costs"
+          }
+        ],
+        "group": "financial_summary"
+      }
+    },
+    "total": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "title": "Total",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "class": "fw-700 ta-end",
+            "name": "total",
+            "readonly": "readonly"
+          }
+        ],
+        "group": "financial_summary"
+      }
+    },
+
+    "created_at": {
+      "type": "string",
+      "title": "Created At",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "created_at"
+          },
+          {
+            "type": "datetime-local"
+          },
+          {
+            "disabled": "disabled"
+          }
+        ],
+        "group": "created"
+      }
+    },
+
+    "last_modified_at": {
+      "type": "string",
+      "title": "Last Modified At",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "name": "last_modified_at"
+          },
+          {
+            "type": "datetime-local"
+          },
+          {
+            "disabled": "disabled"
+          }
+        ],
+        "group": "created"
+      }
+    },
+
+    "discounts": {
+      "type": "array",
+      "title": "Discounts",
+      "items": {
+        "type": "object",
+        "properties": {}
+      },
+      "render": {
+        "method": "array-details",
+        "attributes": [
+          {
+            "part": "array-details"
+          }
+        ]
+      }
+    },
+
+    "statuses": {
+      "type": "array",
+      "title": "Statuses",
+      "items": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "number",
+            "title": "Order Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "order_id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "placeholder": "Enter order_id"
+                }
+              ]
+            }
+          },
+          "status_name": {
+            "type": "string",
+            "title": "Status Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "status_name"
+                },
+                {
+                  "placeholder": "Enter status_name"
+                }
+              ]
+            }
+          },
+          "status_time": {
+            "type": "string",
+            "title": "Status Time",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "status_time"
+                },
+                {
+                  "type": "datetime-local"
+                },
+                {
+                  "placeholder": "Enter date and time"
+                }
+              ]
+            }
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "comment"
+                },
+                {
+                  "placeholder": "Enter comment"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "render": {
+        "method": "array-details",
+        "attributes": [
+          {
+            "part": "array-details"
+          }
+        ]
+      }
+    },
+
+    "products": {
+      "type": "array",
+      "title": "Products",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "number",
+            "title": "Product Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "product_id"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "price": {
+            "type": "number",
+            "title": "Price",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "price"
+                }
+              ]
+            }
+          },
+          "quantity": {
+            "type": "number",
+            "title": "Quantity",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "min": 1
+                },
+                {
+                  "name": "quantity"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "render": {
+        "method": "array-units",
+        "attributes": [
+          {
+            "part": "array-units"
+          }
+        ],
+        "add": true,
+        "delete": true,
+        "addMethod": "arrayUnit",
+        "arrayControl": "immediate-remove",
+        "label": "${name}|${d:formatNumber price}|${d:multiply quantity price}",
+        "value": "quantity"
+      }
+    },
+
+    "financial_summary": {
+      "title": "Financial Summary"
+    },
+
+    "created": {
+      "title": "Created"
+    }
+  },
+
+  "required": [
+    "id",
+    "customer_id",
+    "order_type_id",
+    "channel_id",
+    "vat",
+    "subtotal",
+    "discount",
+    "shipping_costs",
+    "total",
+    "created_at",
+    "last_modified_at",
+    "statuses",
+    "products",
+    "discounts"
+  ],
+
+  "form": {
+    "action": "/api/manage-order/:id",
+    "method": "POST",
+    "enctype": "application/json",
+    "buttons": [
+      {
+        "label": "${t:save}",
+        "type": "submit"
+      }
+    ]
+  }
+}
