@@ -168,12 +168,14 @@
 				flex: 1;
 				margin-inline-end: 1ch;
 				& > span {
-					border-inline-end: var(--_bdw) solid var(--_bdc);
 					padding: var(--_pb) var(--_pi);
 					&:first-of-type { flex: 1; }
 					&:not(:first-of-type) { 
 						flex-basis: 10ch;
 						text-align: end;
+					}
+					&:not(:only-of-type) {
+						border-inline-end: var(--_bdw) solid var(--_bdc);
 					}
 				}
 				

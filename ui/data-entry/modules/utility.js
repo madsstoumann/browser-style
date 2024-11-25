@@ -209,35 +209,34 @@ export function isEmpty(obj) {
  * @param {Object} [i18n={}] - The i18n object containing translations.
  * @returns {string} - The resolved string with placeholders replaced by corresponding values or dynamic function results.
  */
-export function resolveTemplateString(template, data, lang = 'en', i18n = {}) {
+export function resolveTemplateString(template, data, lang = 'en', i18n = {}, constants = {}) {
 	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
-		if (key.startsWith('t:')) {
-			// Translation
-			const translationKey = key.slice(2).trim();
-			return t(translationKey, lang, i18n) || '';
+		const trimmedKey = key.trim();
+		
+		if (trimmedKey.startsWith('t:')) {
+			return t(trimmedKey.slice(2).trim(), lang, i18n) || '';
 		}
-		if (key.startsWith('d:')) {
-			// Dynamic function with optional parameters
-			const [functionName, ...params] = key.slice(2).trim().split(/\s+/);
+		
+		if (trimmedKey.startsWith('v:')) {
+			const value = constants[trimmedKey.slice(2).trim()];
+			return value !== undefined ? value : '';
+		}
+		
+		if (trimmedKey.startsWith('d:')) {
+			const parts = trimmedKey.slice(2).trim().split(/\s+/);
+			const fn = dynamicFunctions[parts[0]];
 			
-			if (dynamicFunctions[functionName]) {
-				// Resolve params either as direct values or lookups in the data object
-				const parsedParams = params.map(param => {
-					// If the param is wrapped in ${}, treat it as a reference to data object
-					if (param.startsWith('${') && param.endsWith('}')) {
-						const dataKey = param.slice(2, -1);
-						return getObjectByPath(data, dataKey);
-					}
-					// Attempt to look up the parameter directly in the data object
-					const directLookup = getObjectByPath(data, param);
-					return directLookup !== undefined ? directLookup : param;  // Return lookup or static value
-				});
-				// Call the dynamic function with the resolved parameters
-				return dynamicFunctions[functionName](...parsedParams);
+			if (fn) {
+				const params = parts.slice(1).map(param => 
+					param.startsWith('${') && param.endsWith('}')
+						? getObjectByPath(data, param.slice(2, -1))
+						: getObjectByPath(data, param) ?? param
+				);
+				return fn(...params);
 			}
 		}
-		// If no dynamic function or translation, use object data
-		return getObjectByPath(data, key.trim()) || '';
+
+		return getObjectByPath(data, trimmedKey) || '';
 	});
 }
 

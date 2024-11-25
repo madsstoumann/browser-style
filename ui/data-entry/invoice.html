@@ -28,6 +28,11 @@
 		import { setObjectByPath } from './modules/utility.js';
 		const entry = document.querySelector('data-entry');
 
+		entry.constants = {
+			API: 'https://api.example.com',
+			DEFAULT_CURRENCY: 'DKK'
+		}
+
 		entry.addEventListener('de:entry', (event) => {
 			manageOrderHandler(event);
 		});

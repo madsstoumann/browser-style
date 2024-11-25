@@ -1,4 +1,4 @@
-import { attrs, fetchOptions, getObjectByPath, isEmpty, setObjectByPath, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
+import { attrs, fetchOptions, getObjectByPath, isEmpty, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
 
 /* === all === */
 
@@ -23,7 +23,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			groupContent.set(groupKey, items.map(({key, config}) => {
 				const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 				const renderMethod = instance.getRenderMethod(method);
-				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n) || 'LABEL';
+				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || 'LABEL';
 				const path = pathPrefix === 'DISABLE_PATH' ? '' : key;
 
 				return method ? safeRender(renderMethod, {
@@ -42,10 +42,10 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 
 	const arrayContent = [];
 	const fieldsetGroups = [];
-	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n) : '';
+	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n, instance.constants) : '';
 	const renderNav = schema.navigation;
 	const standardContent = [];
-	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n) : '';
+	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n, instance.constants) : '';
 
 	let navContent = '';
 	let schemaIndex = 0;
@@ -56,7 +56,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
-		const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n) || 'LABEL';
+		const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 
@@ -148,7 +148,7 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 					.join(' ');
 				const classAttribute = entry.class ? ` class="${entry.class}"` : '';
 				return `<button type="${entry.type || 'button'}" part="button" ${commonAttributes}${classAttribute}>${
-					resolveTemplateString(entry.label, data, instance.lang, instance.i18n)}</button>`;
+					resolveTemplateString(entry.label, data, instance.lang, instance.i18n, instance.constants)}</button>`;
 			}).join('');
 			
 			if (buttonsHTML) footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
@@ -185,10 +185,10 @@ export const arrayCheckbox = (params) =>
 export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
 	const cleanName = name?.replace(/\[\d+\]/g, '');
 	const rowLabel = config.render?.label 
-		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n) 
+		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n, instance.constants) 
 		: 'label';
 	const rowValue = config.render?.value 
-		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n) 
+		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n, instance.constants) 
 		: 'value';
 
 	const cols = rowValue.split('|').map(col => `<span>${col}</span>`).join('');
@@ -244,7 +244,7 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 	if (!rowValue) return '';
 
 	const rowLabel = config.render?.label
-	? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n)
+	? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n, instance.constants)
 	: 'label';
 
 	const cols = rowLabel.split('|').map(col => `<span>${col}</span>`).join('');
@@ -356,7 +356,7 @@ export const entry = (params) => {
 			const attributes = [...(propConfig.render?.attributes || []), { form: formID }];
 			attributes.forEach(attr => {
 				if ('value' in attr) {
-					attr.value = resolveTemplateString(attr.value, instance.data, instance.lang, instance.i18n);
+					attr.value = resolveTemplateString(attr.value, instance.data, instance.lang, instance.i18n, instance.constants);
 				}
 			});
 
@@ -417,8 +417,14 @@ const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||
 /* === input === */
 
 export const input = (params) => {
-	const { attributes = [], instance, label, path = '', type = 'string', value } = params;
-	const finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
+	const { attributes = [], config, instance, label, path = '', type = 'string', value } = params;
+	let finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
+	if (config?.render?.formatter) {
+		try {
+				finalValue = resolveTemplateString(config.render.formatter, { ...instance.data, value: finalValue }, instance.lang, instance.i18n, instance.constants);
+		} catch (_) {}
+	}
+
 	const filteredAttributes = attributes.filter(attr => !('value' in attr));
 	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label']);
 	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';

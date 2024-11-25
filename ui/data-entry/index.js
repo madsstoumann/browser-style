@@ -7,8 +7,8 @@ import { mountComponents } from './modules/components.js';
  * DataEntry is a custom HTML element that provides a comprehensive data entry form with various functionalities, based on a provided JSON schema and data.
  * It supports schema validation, internationalization, dynamic form rendering, and auto-save mechanisms.
  * @author Mads Stoumann
- * @version 1.0.28
- * @summary 27-09-2024
+ * @version 1.0.29
+ * @summary 25-11-2024
  * 
  * @class
  * @extends HTMLElement
@@ -38,18 +38,107 @@ import { mountComponents } from './modules/components.js';
 class DataEntry extends HTMLElement {
 	constructor() {
 		super();
-		this._customValidateData = null;
+		// Initialize private properties
+		this._data = null;
+		this._schema = null;
+		this._lookup = [];
 		this._i18n = {};
+		this._constants = {};
+		this._customValidateData = null;
 
+		// Create form
 		this.form = document.createElement('form');
 		this.form.part = 'form';
+		
+		// Create instance
 		this.lang = this.getAttribute('lang') || 'en';
 		this.instance = createDataEntryInstance(this);
 		this.instance.lang = this.lang;
+	}
 
-		this.instance.primaryKeys = Array.isArray(this.instance.schema?.primaryKeys)
-		? this.instance.schema.primaryKeys
-		: (this.getAttribute('primary-keys') ? this.getAttribute('primary-keys').split(',') : ['id']);
+	// Data getter/setter
+	get data() {
+		return this._data;
+	}
+
+	set data(value) {
+		this._data = value;
+		if (this.instance) {
+			this.instance.data = value;
+		}
+	}
+
+	// Schema getter/setter
+	get schema() {
+		return this._schema;
+	}
+
+	set schema(value) {
+		this._schema = value;
+		if (this.instance) {
+			this.instance.schema = value;
+			// Update primaryKeys when schema changes
+			this.instance.primaryKeys = Array.isArray(value?.primaryKeys)
+				? value.primaryKeys
+				: (this.getAttribute('primary-keys')?.split(',') || ['id']);
+		}
+	}
+
+	// Lookup getter/setter
+	get lookup() {
+		return this._lookup;
+	}
+
+	set lookup(value) {
+		this._lookup = value || [];
+		if (this.instance) {
+			this.instance.lookup = this._lookup;
+		}
+	}
+
+	// i18n getter/setter
+	get i18n() {
+		return this._i18n;
+	}
+
+	set i18n(value) {
+		if (typeof value === 'object' && value !== null) {
+			this._i18n = value;
+			if (this.instance) {
+				this.instance.i18n = value;
+			}
+		} else {
+			console.error('i18n should be an object');
+		}
+	}
+
+	// Add these getter/setter methods alongside the other ones
+	get constants() {
+		return this._constants;
+	}
+
+	set constants(value) {
+		if (typeof value === 'object' && value !== null) {
+			this._constants = value;
+			if (this.instance) {
+				this.instance.constants = value;
+			}
+		} else {
+			console.error('Constants should be an object');
+		}
+	}
+
+	// Validation method getter/setter
+	get validateMethod() {
+		return this._customValidateData;
+	}
+
+	set validateMethod(method) {
+		if (typeof method === 'function') {
+			this._customValidateData = method;
+		} else {
+			console.error('Validation method must be a function');
+		}
 	}
 
 	/**
@@ -488,7 +577,7 @@ class DataEntry extends HTMLElement {
 	 * @returns {Promise<void>} A promise that resolves when all resources are loaded.
 	 */
 	async loadResources() {
-		const resources = await Promise.all([
+		const [data, schema, lookup, i18n, messages] = await Promise.all([
 			this.fetchResource('data'),
 			this.fetchResource('schema'),
 			this.fetchResource('lookup'),
@@ -496,10 +585,11 @@ class DataEntry extends HTMLElement {
 			this.fetchResource('messages')
 		]);
 
-		[this.data, this.schema, this.lookup, this.i18n, this.messages] = resources;
-		this.lookup = this.lookup || [];
-		this.i18n = this.i18n || {};
-		this.messages = this.messages || null;
+		this.data = data;
+		this.schema = schema;
+		this.lookup = lookup;
+		this.i18n = i18n || {};
+		this.messages = messages;
 	}
 
 	/**
@@ -718,59 +808,6 @@ class DataEntry extends HTMLElement {
 	 */
 	validateJSON() {
 		return !this.hasAttribute('novalidate');
-	}
-
-	/* === Getters and setters */
-
-	set data(data) {
-		this._data = data;
-		this.instance.data = data;
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	get i18n() {
-		return this._i18n;
-	}
-
-	set i18n(value) {
-		if (typeof value === 'object' && value !== null) {
-			this._i18n = value;
-		} else {
-			console.error('i18n should be an object');
-		}
-	}
-
-	set lookup(lookup) {
-		this._lookup = lookup;
-		this.instance.lookup = lookup;
-	}
-
-	get lookup() {
-		return this._lookup;
-	}
-
-	set schema(schema) {
-		this._schema = schema;
-		this.instance.schema = schema;
-	}
-
-	get schema() {
-		return this._schema;
-	}
-
-	set validateMethod(method) {
-		if (typeof method === 'function') {
-			this._customValidateData = method;
-		} else {
-			console.error('Validation method must be a function');
-		}
-	}
-
-	get validateMethod() {
-		return this._customValidateData;
 	}
 }
 

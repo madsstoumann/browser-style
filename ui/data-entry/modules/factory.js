@@ -61,6 +61,7 @@ export function createDataEntryInstance(parent) {
 			return dynamicFunctions[name] || null;
 		},
 
+		constants: {},
 		data: {},
 		schema: {},
 		parent,

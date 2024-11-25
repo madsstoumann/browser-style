@@ -3,6 +3,7 @@
   "$id": "https://json-schema.org/draft/2020-12/output/schema",
   "type": "object",
   "headline": "Invoice",
+  "title": "Using ${v:API}",
   "properties": {
     "id": {
       "type": "number",
@@ -57,13 +58,6 @@
       "type": "number",
       "title": "Channel Id"
     },
-    "vat": {
-      "type": [
-        "object",
-        "null"
-      ],
-      "title": "Vat"
-    },
     "subtotal": {
       "type": [
         "number",
@@ -79,6 +73,7 @@
             "readonly": "readonly"
           }
         ],
+        "formatter": "${d:formatNumber subtotal}",
         "group": "financial_summary"
       }
     },
@@ -93,6 +88,7 @@
             "name": "discount"
           }
         ],
+        "formatter": "${d:formatNumber discount}",
         "group": "financial_summary"
       }
     },
@@ -107,6 +103,23 @@
             "name": "shipping_costs"
           }
         ],
+        "formatter": "${d:formatNumber shipping_costs}",
+        "group": "financial_summary"
+      }
+    },
+    "vat": {
+      "type": "number",
+      "title": "Vat",
+      "render": {
+        "method": "input",
+        "attributes": [
+          {
+            "class": "fw-700 ta-end",
+            "name": "vat",
+            "readonly": "readonly"
+          }
+        ],
+        
         "group": "financial_summary"
       }
     },
@@ -125,6 +138,7 @@
             "readonly": "readonly"
           }
         ],
+        "formatter": "${d:formatNumber total}",
         "group": "financial_summary"
       }
     },
@@ -205,7 +219,7 @@
                   "type": "number"
                 },
                 {
-                  "placeholder": "Enter order_id"
+                  "disabled": "disabled"
                 }
               ]
             }
@@ -220,7 +234,7 @@
                   "name": "status_name"
                 },
                 {
-                  "placeholder": "Enter status_name"
+                  "disabled": "disabled"
                 }
               ]
             }
@@ -238,7 +252,7 @@
                   "type": "datetime-local"
                 },
                 {
-                  "placeholder": "Enter date and time"
+                  "disabled": "disabled"
                 }
               ]
             }
@@ -261,12 +275,17 @@
         }
       },
       "render": {
-        "method": "array-details",
+        "method": "array-units",
         "attributes": [
           {
-            "part": "array-details"
+            "part": "array-units"
           }
-        ]
+        ],
+        "add": true,
+        "addMethod": "arrayUnit",
+        "arrayControl": "immediate-remove",
+        "label": "${status_time}",
+        "value": "status_name"
       }
     },
 
