@@ -3,7 +3,7 @@
   "$id": "https://json-schema.org/draft/2020-12/output/schema",
   "type": "object",
   "headline": "Invoice",
-  "title": "Using ${v:API}",
+  "title": "Using consts: ${v:API}",
   "properties": {
     "id": {
       "type": "number",
@@ -202,7 +202,7 @@
 
     "statuses": {
       "type": "array",
-      "title": "Statuses",
+      "title": "Status",
       "items": {
         "type": "object",
         "properties": {
