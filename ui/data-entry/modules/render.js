@@ -81,6 +81,29 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				index: schemaIndex,
 				content: method ? content : fieldset({ label, content, attributes })
 			});
+		} else if (config.type === 'object') {
+			// Check if the object has a specific render method first
+			if (config.render?.method) {
+				standardContent.push({
+					index: schemaIndex,
+					content: safeRender(renderMethod, { 
+						label, 
+						value: data[key], 
+						attributes, 
+						options, 
+						config, 
+						instance, 
+						path, 
+						type: config.type 
+					})
+				});
+			} else {
+				const content = all(data[key], config, instance, false, path);
+				standardContent.push({
+					index: schemaIndex,
+					content: fieldset({ label, content, attributes })
+				});
+			}
 		} else {
 			const content = config.type === 'object'
 				? all(data[key], config, instance, false, path)
