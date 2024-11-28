@@ -328,9 +328,26 @@ class DataEntry extends HTMLElement {
 	addArrayEntries(path, entries, renderMethod = 'arrayDetail') {
 		if (!Array.isArray(entries) || entries.length === 0) return;
 
+		// Find the target fieldset
+		const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
+		if (!fieldset) {
+			this.notify(1002, `Path "${path}" not found in form.`);
+			return;
+		}
+
+		// Get the array from instance data
 		const array = getObjectByPath(this.instance.data, path);
+		if (!Array.isArray(array)) {
+			this.notify(1002, `Path "${path}" does not reference an array in the data.`);
+			return;
+		}
+
+		// Get the schema
 		const schema = getObjectByPath(this.instance.schema, `properties.${path}`);
-		if (!array || !schema) return;
+		if (!schema) {
+			this.notify(1002, `Schema for path "${path}" not found.`);
+			return;
+		}
 
 		// Get unique properties from schema
 		const uniqueProps = this.getUniqueProperties(schema);
@@ -350,20 +367,19 @@ class DataEntry extends HTMLElement {
 		}
 
 		// Process remaining entries
-		const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
 		let insertBeforeElement = fieldset?.querySelector('[part="nav"]');
 
-		newEntries.forEach(entry => {
-			array.push(entry);
-			const currentIndex = array.length - 1;
+		// Get starting index from current array length
+		let currentIndex = array.length;
 
+		newEntries.forEach(entry => {
 			const newDetail = this.instance.methods[renderMethod]({
 				value: entry,
 				config: schema,
 				path: `${path}[${currentIndex}]`,
 				instance: this.instance,
 				attributes: [],
-				name: path,
+				name: `${path}[${currentIndex}]`,
 				index: currentIndex
 			});
 
@@ -372,6 +388,10 @@ class DataEntry extends HTMLElement {
 			} else {
 				fieldset?.insertAdjacentHTML('beforeend', newDetail);
 			}
+
+			// Push to array AFTER rendering to maintain correct indexing
+			array.push(entry);
+			currentIndex++;
 		});
 
 		if (newEntries.length < entries.length) {
