@@ -1,15 +1,18 @@
 {
 	"id": 3,
+	"invoice_address_id": 9387,
+	"shipping_address_id": 9387,
 	"customer_id": 9387,
 	"order_type_id": 1,
 	"channel_id": 1,
 	"vat": 30.25,
 	"subtotal": 121,
 	"discount": 0,
-	"shipping_costs": null,
+	"shipping_costs": 0,
 	"total": 121,
 	"created_at": "2024-10-03T10:53:35",
 	"last_modified_at": "2024-10-03T10:53:35",
+	
 	"customer": {
 		"id": 9387,
 		"email": "nightfall@spiritwolf.dk",
@@ -18,22 +21,17 @@
 		"company_name": "",
 		"phone": ""
 	},
-	"addresses": {
-		"invoice": {
-			"address_id": 9387,
-			"street_address": "Gyldenløves Kvarter 73, Stuen",
-			"city": "Solrød Strand",
-			"postal_code": "2680",
-			"country_code": "DK"
-		},
-		"shipping": {
+
+	"addresses": [
+		{
 			"address_id": 9387,
 			"street_address": "Gyldenløves Kvarter 73, Stuen",
 			"city": "Solrød Strand",
 			"postal_code": "2680",
 			"country_code": "DK"
 		}
-	},
+	],
+
 	"statuses": [
 		{
 			"order_id": 3,
@@ -48,6 +46,18 @@
 			"comment": "Testing 2"
 		}
 	],
+
+	"subscriptions": [
+		{
+			"id": 4,
+			"date": "2024-11-19T12:28:17"
+		},
+		{
+			"id": 3,
+			"date": "2024-10-03T10:53:35"
+		}
+	],
+
 	"products": [
 		{
 			"product_id": 45022,
@@ -68,5 +78,6 @@
 			"name": "Elfquest: The Final Quest #5  (Pini, Wendy; Amerikansk blad)"
 		}
 	],
+
 	"discounts": []
 }

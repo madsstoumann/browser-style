@@ -428,6 +428,15 @@
 			grid-template-columns: var(--_lblw) 1fr;
 			user-select: none;
 
+			&[part~=action] {
+				grid-template-columns: var(--_lblw) 1fr min-content;
+				& > button {
+					font-size: small;
+					margin-inline-end: var(--_pb);
+					padding: .25ch .75ch;
+				}
+			}
+
 			abbr { margin: 0; }
 
 			&:first-of-type:not(div) {

@@ -33,6 +33,10 @@
 			DEFAULT_CURRENCY: 'DKK'
 		}
 
+		entry.addEventListener('de:custom', (event) => {
+			console.log(event);
+		});
+
 		entry.addEventListener('de:entry', (event) => {
 			manageOrderHandler(event);
 		});

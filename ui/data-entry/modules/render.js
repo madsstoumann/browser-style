@@ -494,25 +494,55 @@ export const richtext = (params) => {
 };
 
 /* === select === */
-
 export const select = (params) => {
-	const { attributes = [], label, options = [], path = '', type = 'string', value = -1 } = params;
+	const { attributes = [], config, label, options = [], path = '', type = 'string', value = -1, instance } = params;
 	const attributeValue = attributes.find(attr => 'value' in attr)?.value;
-	const finalValue = (value !== -1 && value !== undefined) ? value
-									 : (attributeValue !== undefined) ? attributeValue
-									 : '';
+	const selectedOption = config?.render?.selectedOption;
+	const selectedOptionDisabled = config?.render?.selectedOptionDisabled;
+	const action = config?.render?.action;
+
+	// Add selectedOption to options if it's an object and not already present
+	let finalOptions = [...options];
+	if (selectedOption && typeof selectedOption === 'object') {
+		const exists = options.some(opt => opt.value === selectedOption.value);
+		if (!exists) {
+			finalOptions = [selectedOption, ...options];
+		}
+	}
+	
+	// Determine final value
+	const finalValue = selectedOption !== undefined 
+		? (typeof selectedOption === 'object' ? selectedOption.value : selectedOption)
+		: value !== -1 ? value
+		: attributeValue !== undefined ? attributeValue
+		: '';
+
 	const filteredAttributes = attributes.filter(attr => !('value' in attr));
 
+	// Create button HTML if action exists
+	const buttonHTML = action ? (() => {
+		const commonAttributes = Object.keys(action)
+			.filter(key => key !== 'label')
+			.map(key => `data-${key.replace('handler-', '')}="${action[key]}"`)
+			.join(' ');
+		return `<button type="button" part="button" ${commonAttributes}>${
+			resolveTemplateString(action.label, instance.data, instance.lang, instance.i18n, instance.constants)
+		}</button>`;
+	})() : '';
+
 	return `
-		<label part="row">
+		<label part="row${action ? ' action' : ''}">
 			<span part="label">${label}</span>
 			<select part="select" ${attrs(filteredAttributes, path, [], ['type'])} data-type="${type}">
-				${options.map(option => `
-					<option value="${option.value}" ${String(option.value) === String(finalValue) ? 'selected' : ''}>
+				${finalOptions.map(option => `
+					<option value="${option.value}" 
+						${String(option.value) === String(finalValue) ? 'selected' : ''}
+						${String(option.value) === String(finalValue) && selectedOptionDisabled ? 'disabled' : ''}>
 						${option.label}
 					</option>
 				`).join('')}
 			</select>
+			${buttonHTML}
 		</label>`;
 };
 

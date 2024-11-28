@@ -132,14 +132,34 @@ export function deepMerge(target, source, key = null) {
  */
 export function fetchOptions(config, instance) {
 	const optionsKey = config?.render?.options;
+	const labelKey = config?.render?.label;
+	const valueKey = config?.render?.value;
 	let options = [];
 
 	if (Array.isArray(optionsKey)) {
 		options = optionsKey;
 	} else if (typeof optionsKey === 'string') {
+		// First check instance.lookup
 		if (instance.lookup && Array.isArray(instance.lookup[optionsKey])) {
 			options = instance.lookup[optionsKey];
-		} else {
+		} 
+		// Then check instance.data
+		else if (instance.data && getObjectByPath(instance.data, optionsKey)) {
+			const dataOptions = getObjectByPath(instance.data, optionsKey);
+			if (Array.isArray(dataOptions)) {
+				// If label and value keys are provided, map the array to the required format
+				if (labelKey && valueKey) {
+					options = dataOptions.map(item => ({
+						label: item[labelKey],
+						value: item[valueKey]
+					}));
+				} else {
+					options = dataOptions;
+				}
+			}
+		}
+		// Finally check localStorage
+		else {
 			const storedOptions = localStorage.getItem(optionsKey);
 			if (storedOptions) {
 				try {

@@ -5,6 +5,7 @@
   "headline": "Invoice",
   "title": "Using consts: ${v:API}",
   "properties": {
+    
     "id": {
       "type": "number",
       "title": "Id",
@@ -23,6 +24,7 @@
         ]
       }
     },
+
     "customer_id": {
       "type": "number",
       "title": "Customer Id",
@@ -38,26 +40,56 @@
         ]
       }
     },
-    "order_type_id": {
+
+    "invoice_address_id": {
+      "title": "Invoice",
       "type": "number",
-      "title": "Order Type",
       "render": {
+        "label": "${street_address} — ${postal_code} ${city}",
         "method": "select",
-        "options": "order_type",
-        "attributes": [
-          {
-            "name": "order_type_id"
-          },
-          {
-            "type": "number"
-          }
-        ]
+        "options": "addresses",
+        "value": "address_id"
       }
     },
+
+    "shipping_address_id": {
+      "title": "Shipping",
+      "type": "number",
+      "render": {
+        "label": "street_address",
+        "method": "select",
+        "options": "addresses",
+        "value": "address_id"
+      }
+    },
+
+    "subscriptions": {
+      "title": "Subscriptions",
+      "type": "number",
+      "render": {
+        "action": {
+          "handler": "custom",
+          "handler-type": "insert_subscription",
+          "label": "${t:insert}"
+        },
+        "group": "insert",
+        "label": "date",
+        "method": "select",
+        "options": "subscriptions",
+        "selectedOption": {
+          "value": "-1",
+          "label": "Pick a subscription"
+        },
+        "selectedOptionDisabled": true,
+        "value": "id"
+      }
+    },
+
     "channel_id": {
       "type": "number",
       "title": "Channel Id"
     },
+
     "subtotal": {
       "type": [
         "number",
@@ -200,6 +232,103 @@
       }
     },
 
+
+    "products": {
+      "type": "array",
+      "title": "Products",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "number",
+            "title": "Product Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "product_id"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "price": {
+            "type": "number",
+            "title": "Price",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "price"
+                }
+              ]
+            }
+          },
+          "quantity": {
+            "type": "number",
+            "title": "Quantity",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "min": 1
+                },
+                {
+                  "name": "quantity"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "render": {
+        "method": "array-units",
+        "attributes": [
+          {
+            "part": "array-units"
+          }
+        ],
+        "add": true,
+        "addMethod": "arrayUnit",
+        "arrayControl": "immediate-remove",
+        "delete": true,
+        "label": "${name}|${d:formatNumber price}|${d:multiply quantity price}",
+        "value": "quantity"
+      }
+    },
+
+    "insert": {
+      "title": "Insert"
+    },
+
+    "financial_summary": {
+      "title": "Financial Summary"
+    },
+
+    "created": {
+      "title": "Created"
+    },
+
     "statuses": {
       "type": "array",
       "title": "Status",
@@ -287,98 +416,6 @@
         "label": "${status_time}",
         "value": "status_name"
       }
-    },
-
-    "products": {
-      "type": "array",
-      "title": "Products",
-      "items": {
-        "type": "object",
-        "properties": {
-          "product_id": {
-            "type": "number",
-            "title": "Product Id",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "product_id"
-                },
-                {
-                  "type": "number"
-                }
-              ]
-            }
-          },
-          "price": {
-            "type": "number",
-            "title": "Price",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "price"
-                }
-              ]
-            }
-          },
-          "quantity": {
-            "type": "number",
-            "title": "Quantity",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "min": 1
-                },
-                {
-                  "name": "quantity"
-                },
-                {
-                  "type": "number"
-                }
-              ]
-            }
-          },
-          "name": {
-            "type": "string",
-            "title": "Name",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "name"
-                },
-                {
-                  "disabled": "disabled"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "render": {
-        "method": "array-units",
-        "attributes": [
-          {
-            "part": "array-units"
-          }
-        ],
-        "add": true,
-        "delete": true,
-        "addMethod": "arrayUnit",
-        "arrayControl": "immediate-remove",
-        "label": "${name}|${d:formatNumber price}|${d:multiply quantity price}",
-        "value": "quantity"
-      }
-    },
-
-    "financial_summary": {
-      "title": "Financial Summary"
-    },
-
-    "created": {
-      "title": "Created"
     }
   },
 
@@ -405,7 +442,7 @@
     "enctype": "application/json",
     "buttons": [
       {
-        "label": "${t:save}",
+        "label": "${t:update}",
         "type": "submit"
       }
     ]
