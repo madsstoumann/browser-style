@@ -376,3 +376,35 @@ function getKey(item, key) {
 function isObject(item) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
+
+/**
+ * Creates HTML button attributes string with consistent data- prefix
+ * @param {Object} entry - Button configuration object
+ * @returns {string} Space-separated attribute string
+ */
+export function buttonAttrs(entry) {
+	const commonAttributes = Object.keys(entry)
+		.filter(key => key !== 'label' && key !== 'class')
+		.map(key => `data-${key}="${entry[key]}"`)
+		.join(' ');
+	
+	const classAttribute = entry.class ? ` class="${entry.class}"` : '';
+	return `${commonAttributes}${classAttribute}`;
+}
+
+/**
+ * Checks if an object with the same specified properties already exists in an array
+ * @param {Array} array - Array to check
+ * @param {Object} newItem - Item to check for
+ * @param {Array} properties - Properties to compare
+ * @returns {boolean} True if item exists
+ */
+export function itemExists(array, newItem, properties) {
+  return array.some(item => 
+    properties.every(prop => 
+      item[prop] !== undefined && 
+      newItem[prop] !== undefined && 
+      item[prop] === newItem[prop]
+    )
+  );
+}

@@ -1,5 +1,5 @@
 import { createDataEntryInstance } from './modules/factory.js';
-import { convertValue, deepMerge, isEmpty, getObjectByPath, setObjectByPath } from './modules/utility.js';
+import { convertValue, deepMerge, isEmpty, getObjectByPath, itemExists, setObjectByPath } from './modules/utility.js';
 import { validateData as defaultValidateData } from './modules/validate.js';
 import { mountComponents } from './modules/components.js';
 
@@ -277,6 +277,13 @@ class DataEntry extends HTMLElement {
 			return acc;
 		}, {});
 
+		// Check for duplicates
+		const uniqueProps = this.getUniqueProperties(schema);
+		if (uniqueProps.length && itemExists(array, newObject, uniqueProps)) {
+			this.notify(0, 'Item already exists', 'warning');
+			return;
+		}
+
 		array.push(newObject);
 
 		const renderMethod = element.dataset.renderMethod || 'arrayDetail';
@@ -309,6 +316,68 @@ class DataEntry extends HTMLElement {
 
 		const popover = this.form.querySelector(`#${form.dataset.popover}`);
 		if (popover) popover.hidePopover();
+		this.processData();
+	}
+
+	/**
+	 * Adds multiple entries to an array in the form data
+	 * @param {string} path - The path to the array in the form data
+	 * @param {Array} entries - Array of objects to add
+	 * @param {string} renderMethod - The render method to use (e.g., 'arrayDetail')
+	 */
+	addArrayEntries(path, entries, renderMethod = 'arrayDetail') {
+		if (!Array.isArray(entries) || entries.length === 0) return;
+
+		const array = getObjectByPath(this.instance.data, path);
+		const schema = getObjectByPath(this.instance.schema, `properties.${path}`);
+		if (!array || !schema) return;
+
+		// Get unique properties from schema
+		const uniqueProps = this.getUniqueProperties(schema);
+		
+		// Filter out duplicates
+		const newEntries = entries.filter(entry => {
+			const isDuplicate = uniqueProps.length && itemExists(array, entry, uniqueProps);
+			if (isDuplicate) {
+				this.notify(0, `Skipping duplicate item: ${JSON.stringify(entry)}`, 'info');
+			}
+			return !isDuplicate;
+		});
+
+		if (newEntries.length === 0) {
+			this.notify(0, 'No new items to add', 'warning');
+			return;
+		}
+
+		// Process remaining entries
+		const fieldset = this.form.querySelector(`fieldset[name="${path}-entry"]`);
+		let insertBeforeElement = fieldset?.querySelector('[part="nav"]');
+
+		newEntries.forEach(entry => {
+			array.push(entry);
+			const currentIndex = array.length - 1;
+
+			const newDetail = this.instance.methods[renderMethod]({
+				value: entry,
+				config: schema,
+				path: `${path}[${currentIndex}]`,
+				instance: this.instance,
+				attributes: [],
+				name: path,
+				index: currentIndex
+			});
+
+			if (insertBeforeElement) {
+				insertBeforeElement.insertAdjacentHTML('beforebegin', newDetail);
+			} else {
+				fieldset?.insertAdjacentHTML('beforeend', newDetail);
+			}
+		});
+
+		if (newEntries.length < entries.length) {
+			this.notify(0, `Added ${newEntries.length} of ${entries.length} items`, 'info');
+		}
+
 		this.processData();
 	}
 
@@ -808,6 +877,28 @@ class DataEntry extends HTMLElement {
 	 */
 	validateJSON() {
 		return !this.hasAttribute('novalidate');
+	}
+
+	/**
+	 * Gets unique identifier properties from schema
+	 * @param {Object} schema - Schema section for array
+	 * @returns {Array} Array of property names to use as unique identifiers
+	 */
+	getUniqueProperties(schema) {
+		const properties = schema?.items?.properties || {};
+		// First check for explicit unique identifiers
+		const uniqueProps = Object.entries(properties)
+			.filter(([_, config]) => config.unique === true)
+			.map(([key]) => key);
+		
+		// If no explicit unique properties, use id or *_id fields
+		if (!uniqueProps.length) {
+			return Object.keys(properties).filter(key => 
+				key === 'id' || key.endsWith('_id')
+			);
+		}
+		
+		return uniqueProps;
 	}
 }
 

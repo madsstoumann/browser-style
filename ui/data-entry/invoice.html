@@ -33,8 +33,43 @@
 			DEFAULT_CURRENCY: 'DKK'
 		}
 
-		entry.addEventListener('de:custom', (event) => {
-			console.log(event);
+		/* Custom: Insert subscription items */
+		entry.addEventListener('de:custom', async (event) => {
+			const { instance, submitter } = event.detail;
+			const form = event.target.form;
+			
+			if (submitter.dataset.handler === 'add-subscriptions') {
+				// Check if subscription is selected and valid
+				const subscriptionSelect = form.elements.subscriptions;
+				if (!subscriptionSelect || subscriptionSelect.selectedOptions[0].disabled) {
+					entry.notify(0, 'Please select a valid subscription first', 'warning');
+					return;
+				}
+
+				const selectedValue = subscriptionSelect.value;
+				try {
+					const response = await fetch(`./data/subscriptions_${selectedValue}.json`);
+					if (!response.ok) throw new Error('Network response was not ok');
+					
+					const items = await response.json();
+					const mappedItems = items.map(item => ({
+						product_id: item.id,
+						name: item.name,
+						price: item.price-0,
+						quantity: 1
+					}));
+
+					// Remove the selected option
+					subscriptionSelect.querySelector(`option[value="${selectedValue}"]`).remove();
+					
+					// Reset select to default option
+					subscriptionSelect.value = "-1";
+
+					entry.addArrayEntries('products', mappedItems, 'arrayUnit');
+				} catch (error) {
+					entry.notify(0, `Error loading subscription items: ${error.message}`, 'error');
+				}
+			}
 		});
 
 		entry.addEventListener('de:entry', (event) => {

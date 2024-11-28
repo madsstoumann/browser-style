@@ -71,8 +71,7 @@
       "type": "array",
       "render": {
         "action": {
-          "handler": "custom",
-          "handler-type": "insert_subscription",
+          "handler": "add-subscriptions",
           "label": "${t:insert}"
         },
         "group": "insert",

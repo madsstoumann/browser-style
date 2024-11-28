@@ -1,4 +1,4 @@
-import { attrs, fetchOptions, getObjectByPath, isEmpty, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
+import { attrs, buttonAttrs, fetchOptions, getObjectByPath, isEmpty, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
 
 /* === all === */
 
@@ -164,15 +164,11 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 				form.setAttribute('data-auto-save', schema.form.autoSave);
 			}
 
-			const buttonsHTML = schema.form.buttons?.map(entry => {
-				const commonAttributes = Object.keys(entry)
-					.filter(key => key !== 'label' && key !== 'class')
-					.map(key => `data-${key}="${entry[key]}"`)
-					.join(' ');
-				const classAttribute = entry.class ? ` class="${entry.class}"` : '';
-				return `<button type="${entry.type || 'button'}" part="button" ${commonAttributes}${classAttribute}>${
-					resolveTemplateString(entry.label, data, instance.lang, instance.i18n, instance.constants)}</button>`;
-			}).join('');
+			const buttonsHTML = schema.form.buttons?.map(entry => 
+				`<button type="${entry.type || 'button'}" part="button" ${buttonAttrs(entry)}>${
+					resolveTemplateString(entry.label, data, instance.lang, instance.i18n, instance.constants)
+				}</button>`
+			).join('');
 			
 			if (buttonsHTML) footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
@@ -559,15 +555,11 @@ export const select = (params) => {
 	const filteredAttributes = attributes.filter(attr => !('value' in attr));
 
 	// Create button HTML if action exists
-	const buttonHTML = action ? (() => {
-		const commonAttributes = Object.keys(action)
-			.filter(key => key !== 'label')
-			.map(key => `data-${key.replace('handler-', '')}="${action[key]}"`)
-			.join(' ');
-		return `<button type="button" part="button" ${commonAttributes}>${
+	const buttonHTML = action ? 
+		`<button type="button" part="button" ${buttonAttrs(action)}>${
 			resolveTemplateString(action.label, instance.data, instance.lang, instance.i18n, instance.constants)
-		}</button>`;
-	})() : '';
+		}</button>` : '';
+	
 
 	return `
 		<label part="row${action ? ' action' : ''}">
