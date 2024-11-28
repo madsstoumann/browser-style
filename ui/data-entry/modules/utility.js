@@ -132,8 +132,6 @@ export function deepMerge(target, source, key = null) {
  */
 export function fetchOptions(config, instance) {
 	const optionsKey = config?.render?.options;
-	const labelKey = config?.render?.label;
-	const valueKey = config?.render?.value;
 	let options = [];
 
 	if (Array.isArray(optionsKey)) {
@@ -146,16 +144,12 @@ export function fetchOptions(config, instance) {
 		// Then check instance.data
 		else if (instance.data && getObjectByPath(instance.data, optionsKey)) {
 			const dataOptions = getObjectByPath(instance.data, optionsKey);
+			// Handle both array and single object cases
 			if (Array.isArray(dataOptions)) {
-				// If label and value keys are provided, map the array to the required format
-				if (labelKey && valueKey) {
-					options = dataOptions.map(item => ({
-						label: item[labelKey],
-						value: item[valueKey]
-					}));
-				} else {
-					options = dataOptions;
-				}
+				options = dataOptions;
+			} else if (typeof dataOptions === 'object') {
+				// Convert single object to array with one item
+				options = [dataOptions];
 			}
 		}
 		// Finally check localStorage
@@ -163,7 +157,8 @@ export function fetchOptions(config, instance) {
 			const storedOptions = localStorage.getItem(optionsKey);
 			if (storedOptions) {
 				try {
-					options = JSON.parse(storedOptions) || [];
+					const parsed = JSON.parse(storedOptions);
+					options = Array.isArray(parsed) ? parsed : [parsed];
 				} catch {
 					options = [];
 				}
@@ -230,6 +225,9 @@ export function isEmpty(obj) {
  * @returns {string} - The resolved string with placeholders replaced by corresponding values or dynamic function results.
  */
 export function resolveTemplateString(template, data, lang = 'en', i18n = {}, constants = {}) {
+	// Add null check for template
+	if (!template) return '';
+	
 	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
 		const trimmedKey = key.trim();
 		

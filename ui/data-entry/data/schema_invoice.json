@@ -5,7 +5,7 @@
   "headline": "Invoice",
   "title": "Using consts: ${v:API}",
   "properties": {
-    
+
     "id": {
       "type": "number",
       "title": "Id",
@@ -27,15 +27,18 @@
 
     "customer_id": {
       "type": "number",
-      "title": "Customer Id",
+      "title": "Customer",
       "render": {
-        "method": "input",
+        "label": "${first_name} ${last_name} (${email})",
+        "method": "select",
+        "options": "customer",
+        "value": "id",
         "attributes": [
           {
             "name": "customer_id"
           },
           {
-            "type": "number"
+            "disabled": "disabled"
           }
         ]
       }
@@ -56,7 +59,7 @@
       "title": "Shipping",
       "type": "number",
       "render": {
-        "label": "street_address",
+        "label": "${street_address} — ${postal_code} ${city}",
         "method": "select",
         "options": "addresses",
         "value": "address_id"
@@ -65,7 +68,7 @@
 
     "subscriptions": {
       "title": "Subscriptions",
-      "type": "number",
+      "type": "array",
       "render": {
         "action": {
           "handler": "custom",
@@ -78,7 +81,7 @@
         "options": "subscriptions",
         "selectedOption": {
           "value": "-1",
-          "label": "Pick a subscription"
+          "label": "Choose a subscription"
         },
         "selectedOptionDisabled": true,
         "value": "id"
@@ -233,6 +236,96 @@
     },
 
 
+    "statuses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "number",
+            "title": "Order Id",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "order_id"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            }
+          },
+          "status_name": {
+            "type": "string",
+            "title": "Status Name",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "status_name"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            }
+          },
+          "status_time": {
+            "type": "string",
+            "title": "Status Time",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "status_time"
+                },
+                {
+                  "type": "datetime-local"
+                },
+                {
+                  "disabled": "disabled"
+                }
+              ]
+            }
+          },
+          "comment": {
+            "type": "string",
+            "title": "Comment",
+            "render": {
+              "method": "input",
+              "attributes": [
+                {
+                  "name": "comment"
+                },
+                {
+                  "placeholder": "Enter comment"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "render": {
+        "method": "array-units",
+        "attributes": [
+          {
+            "part": "array-units"
+          }
+        ],
+        "add": true,
+        "addMethod": "arrayUnit",
+        "arrayControl": "immediate-remove",
+        "group": "status",
+        "label": "${status_time}",
+        "value": "status_name"
+      }
+    },
+
+
     "products": {
       "type": "array",
       "title": "Products",
@@ -329,111 +422,33 @@
       "title": "Created"
     },
 
-    "statuses": {
-      "type": "array",
-      "title": "Status",
-      "items": {
-        "type": "object",
-        "properties": {
-          "order_id": {
-            "type": "number",
-            "title": "Order Id",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "order_id"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "disabled": "disabled"
-                }
-              ]
-            }
-          },
-          "status_name": {
-            "type": "string",
-            "title": "Status Name",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "status_name"
-                },
-                {
-                  "disabled": "disabled"
-                }
-              ]
-            }
-          },
-          "status_time": {
-            "type": "string",
-            "title": "Status Time",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "status_time"
-                },
-                {
-                  "type": "datetime-local"
-                },
-                {
-                  "disabled": "disabled"
-                }
-              ]
-            }
-          },
-          "comment": {
-            "type": "string",
-            "title": "Comment",
-            "render": {
-              "method": "input",
-              "attributes": [
-                {
-                  "name": "comment"
-                },
-                {
-                  "placeholder": "Enter comment"
-                }
-              ]
-            }
-          }
-        }
-      },
-      "render": {
-        "method": "array-units",
-        "attributes": [
-          {
-            "part": "array-units"
-          }
-        ],
-        "add": true,
-        "addMethod": "arrayUnit",
-        "arrayControl": "immediate-remove",
-        "label": "${status_time}",
-        "value": "status_name"
-      }
+    "status": {
+      "title": "Statuses"
     }
+
+   
   },
 
   "required": [
-    "id",
-    "customer_id",
-    "order_type_id",
+    "addresses",
     "channel_id",
-    "vat",
-    "subtotal",
-    "discount",
-    "shipping_costs",
-    "total",
     "created_at",
+    "customer_id",
+    "customer",
+    "discount",
+    "discounts",
+    "id",
+    "invoice_address_id",
     "last_modified_at",
-    "statuses",
+    "order_type_id",
     "products",
-    "discounts"
+    "shipping_address_id",
+    "shipping_costs",
+    "statuses",
+    "subscriptions",
+    "subtotal",
+    "total",
+    "vat"
   ],
 
   "form": {

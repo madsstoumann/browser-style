@@ -23,7 +23,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			groupContent.set(groupKey, items.map(({key, config}) => {
 				const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 				const renderMethod = instance.getRenderMethod(method);
-				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || 'LABEL';
+				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || '';
 				const path = pathPrefix === 'DISABLE_PATH' ? '' : key;
 
 				return method ? safeRender(renderMethod, {
@@ -500,22 +500,38 @@ export const select = (params) => {
 	const selectedOption = config?.render?.selectedOption;
 	const selectedOptionDisabled = config?.render?.selectedOptionDisabled;
 	const action = config?.render?.action;
+	const renderLabel = config?.render?.label;
+	const valueField = config?.render?.value || 'value';
 
-	// Add selectedOption to options if it's an object and not already present
+	// Add selectedOption only if it's an object (with value/label properties)
 	let finalOptions = [...options];
-	if (selectedOption && typeof selectedOption === 'object') {
-		const exists = options.some(opt => opt.value === selectedOption.value);
-		if (!exists) {
-			finalOptions = [selectedOption, ...options];
-		}
+	if (selectedOption && typeof selectedOption === 'object' && 'value' in selectedOption) {
+		finalOptions = [selectedOption, ...options];
 	}
-	
-	// Determine final value
-	const finalValue = selectedOption !== undefined 
-		? (typeof selectedOption === 'object' ? selectedOption.value : selectedOption)
-		: value !== -1 ? value
-		: attributeValue !== undefined ? attributeValue
-		: '';
+
+	// Process options
+	finalOptions = finalOptions.map(option => {
+		// For template strings or direct property access in renderLabel
+		const optionLabel = renderLabel 
+			? renderLabel.includes('${') 
+				? resolveTemplateString(renderLabel, option, instance.lang, instance.i18n, instance.constants)
+				: option[renderLabel]
+			: option.label || option[valueField];
+
+		return {
+			value: option[valueField] || option.value || '',
+			label: optionLabel || option.label || ''  // Preserve original label if no renderLabel
+		};
+	});
+
+	// For primitive selectedOption, just use the value for matching
+	const finalValue = typeof selectedOption === 'object' && 'value' in selectedOption 
+		? selectedOption.value
+		: selectedOption !== undefined 
+			? selectedOption
+			: value !== -1 
+				? value
+				: attributeValue;
 
 	const filteredAttributes = attributes.filter(attr => !('value' in attr));
 
@@ -534,13 +550,16 @@ export const select = (params) => {
 		<label part="row${action ? ' action' : ''}">
 			<span part="label">${label}</span>
 			<select part="select" ${attrs(filteredAttributes, path, [], ['type'])} data-type="${type}">
-				${finalOptions.map(option => `
-					<option value="${option.value}" 
-						${String(option.value) === String(finalValue) ? 'selected' : ''}
-						${String(option.value) === String(finalValue) && selectedOptionDisabled ? 'disabled' : ''}>
-						${option.label}
-					</option>
-				`).join('')}
+				${finalOptions.map(option => {
+					const optionValue = String(option.value);
+					const isSelected = optionValue === String(finalValue);
+					return `
+						<option value="${optionValue}"
+							${isSelected ? 'selected' : ''}
+							${isSelected && selectedOptionDisabled ? 'disabled' : ''}>
+							${option.label}
+						</option>`;
+				}).join('')}
 			</select>
 			${buttonHTML}
 		</label>`;
