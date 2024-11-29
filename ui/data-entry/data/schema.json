@@ -3,7 +3,7 @@
   "$id": "http://example.com/example.json",
   "type": "object",
 
-  "navigation": "nav",
+  "navigation": "main-nav",
   "headline": "${name} (${id})",
   "title": "${t:details}",
 

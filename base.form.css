@@ -316,6 +316,8 @@
 	}
 	:where(select:not([multiple],[size])) {
 		--icon: url('/assets/svg/chevron-down.svg');
+		padding-inline-end: calc((2 * var(--input-pi)) + 1.25ch);
+		text-overflow: ellipsis;
 	}
 	:where(textarea) {
 		/* field-sizing: content; */

@@ -148,7 +148,7 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 	if (form || root) {
 		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>` : ''}${navContent}</nav>` : '';
 		const headlineElement = headline ? `<strong part="title">${headline}</strong>` : '';
-		const headerContent = (headlineElement || navElement) ? `<header part="header">${navElement}${headlineElement}</header>` : '';
+		// const headerContent = (headlineElement || navElement) ? `<header part="header">${navElement}</header>` : '';
 		let footerContent = `<ui-toast></ui-toast>`;
 
 		if (schema.form) {
@@ -173,7 +173,7 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 			if (buttonsHTML) footerContent += `<nav part="nav">${buttonsHTML}</nav>`;
 		}
 
-		const rootContent = `${headerContent}<div part="main">${innerContent}</div><footer part="footer">${footerContent}</footer>`;
+		const rootContent = `${navElement}${headlineElement}<div part="main">${innerContent}</div><footer part="footer">${footerContent}</footer>`;
 		if (form) {
 			form.innerHTML = rootContent;
 			return;
@@ -193,7 +193,7 @@ export const arrayCheckbox = (params) =>
 			const rowLabel = config.render?.label ? value[config.render.label] || config.render.label : 'LABEL';
 			return `
 				<label part="row">
-					<span part="label">${rowLabel}</span>
+					<span part="label" title="${rowLabel}">${rowLabel}</span>
 					<input part="input" type="checkbox" value="${value[config.render.value]}" name="${path}" data-type="boolean" ${checked ? 'checked' : ''}>
 				</label>`;
 		},
@@ -274,7 +274,7 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 		? Object.entries(config.items.properties)
 				.map(([key, itemConfig]) => {
 					const itemName = itemConfig.name || key;
-					const isHidden = itemName !== rowValue ? 'hidden' : '';
+					const isHidden = itemName !== rowValue ? 'hidden' : `part="unit"`;
 					const content = safeRender(
 						instance.getRenderMethod(itemConfig.render?.method || 'input'),
 						{
@@ -295,10 +295,10 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 	return `
 	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${name}"` : ''}>
 			${allContent}
-			<span part="value">
-				<output name="value_${name}">${cols}</output>
+			
+				<output part="value" name="value_${name}">${cols}</output>
 				${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
-			</span>
+			
 	</fieldset>`;
 };
 

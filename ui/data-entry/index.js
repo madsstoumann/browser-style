@@ -627,24 +627,45 @@ class DataEntry extends HTMLElement {
 	/**
 	 * Handles navigation by adding click event listeners to links matching the specified selector.
 	 * When a link is clicked, it prevents the default action, scrolls smoothly to the target element,
-	 * and toggles the active class on the clicked link.
+	 * and toggles the active class on the clicked link. Accounts for sticky parent element height.
 	 *
 	 * @param {string} [selector='a[part="link"]'] - The CSS selector for the links to handle navigation.
 	 * @param {string} [activeClass='active'] - The class to add to the clicked link to indicate it is active.
 	 */
 	handleNavigation(selector = 'a[part="link"]', activeClass = 'active') {
-		this.form.querySelectorAll(selector).forEach(link => {
-			link.addEventListener('click', (event) => {
-				event.preventDefault();
-				const targetId = link.getAttribute('href').substring(1); // Remove the '#' from href
-				const targetElement = document.getElementById(targetId);
+		const links = Array.from(this.form.querySelectorAll(selector));
+		if (!links.length) return;
 
-				if (targetElement) {
-					targetElement.scrollIntoView({ behavior: 'smooth' });
-					this.form.querySelectorAll(selector).forEach(link => link.classList.remove(activeClass));
-					link.classList.add(activeClass);
-				}
-			});
+		// Get the parent element's height for offset calculation
+		const parentHeight = links[0].parentElement?.offsetHeight || 0;
+
+		const io = new IntersectionObserver(entries => 
+			entries.forEach(entry => {
+				const id = entry.target.id;
+				const link = links.find(link => link.getAttribute('href') === `#${id}`);
+				// Only toggle active class if element is at least 50% visible
+				if (link) link.classList.toggle(activeClass, entry.isIntersecting && entry.intersectionRatio >= 0.5);
+			}),
+			{
+				rootMargin: `-${parentHeight}px 0px 0px 0px`,
+				threshold: [0, 0.5, 1.0] // Observe at 0%, 50% and 100% visibility
+			}
+		);
+
+		links.forEach(link => {
+			const targetId = link.getAttribute('href')?.substring(1);
+			const target = targetId && document.getElementById(targetId);
+			if (target) {
+				io.observe(target);
+				link.addEventListener('click', event => {
+					event.preventDefault();
+					const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - parentHeight;
+					window.scrollTo({
+						top: targetPosition,
+						behavior: 'smooth'
+					});
+				});
+			}
 		});
 	}
 
