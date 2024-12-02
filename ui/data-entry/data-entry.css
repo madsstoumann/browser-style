@@ -210,10 +210,11 @@
 				font-size: small;
 				padding: .5ch 1ch;
 				text-decoration: none;
-				&.last-active { 
-					--_bgc: var(--AccentColor);
-					color: var(--AccentColorText);
-					/* &.last-active { background: hotpink; } */
+				&.active { 
+					&.last-active {
+						--_bgc: var(--AccentColor);
+						color: var(--AccentColorText);
+					}
 				}
 			}
 		}
