@@ -7,8 +7,8 @@ import { mountComponents } from './modules/components.js';
  * DataEntry is a custom HTML element that provides a comprehensive data entry form with various functionalities, based on a provided JSON schema and data.
  * It supports schema validation, internationalization, dynamic form rendering, and auto-save mechanisms.
  * @author Mads Stoumann
- * @version 1.0.29
- * @summary 25-11-2024
+ * @version 1.0.30
+ * @summary 02-12-2024
  * 
  * @class
  * @extends HTMLElement
