@@ -632,26 +632,39 @@ class DataEntry extends HTMLElement {
 	 * @param {string} [selector='a[part="link"]'] - The CSS selector for the links to handle navigation.
 	 * @param {string} [activeClass='active'] - The class to add to the clicked link to indicate it is active.
 	 */
-	handleNavigation(selector = 'a[part="link"]', activeClass = 'active') {
+	handleNavigation(selector = 'a[part="link"]', activeClass = 'active', lastActiveClass = 'last-active') {
 		const links = Array.from(this.form.querySelectorAll(selector));
 		if (!links.length) return;
-
+	
 		// Get the parent element's height for offset calculation
 		const parentHeight = links[0].parentElement?.offsetHeight || 0;
-
-		const io = new IntersectionObserver(entries => 
+		let lastActiveLink = null;
+	
+		const io = new IntersectionObserver(entries => {
 			entries.forEach(entry => {
 				const id = entry.target.id;
 				const link = links.find(link => link.getAttribute('href') === `#${id}`);
-				// Only toggle active class if element is at least 50% visible
-				if (link) link.classList.toggle(activeClass, entry.isIntersecting && entry.intersectionRatio >= 0.5);
-			}),
-			{
-				rootMargin: `-${parentHeight}px 0px 0px 0px`,
-				threshold: [0, 0.5, 1.0] // Observe at 0%, 50% and 100% visibility
-			}
-		);
-
+				
+				if (link) {
+					const isIntersecting = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+					link.classList.toggle(activeClass, isIntersecting);
+					
+					if (isIntersecting) {
+						// Remove last-active class from previous link
+						if (lastActiveLink && lastActiveLink !== link) {
+							lastActiveLink.classList.remove(lastActiveClass);
+						}
+						lastActiveLink = link;
+						link.classList.add(lastActiveClass);
+					}
+				}
+			});
+		},
+		{
+			rootMargin: `-${parentHeight}px 0px 0px 0px`,
+			threshold: [0, 0.5, 1.0]
+		});
+		
 		links.forEach(link => {
 			const targetId = link.getAttribute('href')?.substring(1);
 			const target = targetId && document.getElementById(targetId);

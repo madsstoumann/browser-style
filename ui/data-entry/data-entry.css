@@ -159,7 +159,7 @@
 					border-inline-start: var(--_bdw) solid var(--_bdc);
 					padding: var(--_pb) var(--_pi);
 					place-content: center;
-					word-break: break-word;
+					/* word-break: break-word; */
 					&:not(:first-of-type) { 
 						text-align: end;
 					}
@@ -210,9 +210,10 @@
 				font-size: small;
 				padding: .5ch 1ch;
 				text-decoration: none;
-				&.active { 
+				&.last-active { 
 					--_bgc: var(--AccentColor);
 					color: var(--AccentColorText);
+					/* &.last-active { background: hotpink; } */
 				}
 			}
 		}
