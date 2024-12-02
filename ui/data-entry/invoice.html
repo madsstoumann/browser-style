@@ -109,30 +109,45 @@
 				}
 			}
 
-			// Calculate subtotal and total
-			const subtotal = (data.products || [])
-				.filter(product => !product._remove)
-				.reduce((sum, { price = 0, quantity = 1 }) => {
-					const productTotal = parseFloat(price) * parseInt(quantity, 10);
-					return sum + (isNaN(productTotal) ? 0 : productTotal);
-				}, 0);
+				// 1. Calculate subtotal from products
+				const subtotal = (data.products || [])
+					.filter(product => !product._remove)
+					.reduce((sum, { price = 0, quantity = 1 }) => {
+						const productTotal = parseFloat(price) * parseInt(quantity, 10);
+						return sum + (isNaN(productTotal) ? 0 : productTotal);
+					}, 0);
 
-			const total = subtotal + (Number(data.shipping_costs) || 0) - (Number(data.discount) || 0);
+				// 2. Calculate VAT on subtotal
+				const vat = subtotal * 0.25; // 25% VAT
 
-			// Update data and form
-			setObjectByPath(data, 'subtotal', subtotal);
-			setObjectByPath(data, 'total', total);
+				// 3. Add VAT and subtract discount
+				const withVatAndDiscount = (subtotal + vat) - (Number(data.discount) || 0);
 
-			['subtotal', 'total'].forEach(field => {
-				if (form.elements[field]) {
-					form.elements[field].value = (field === 'subtotal' ? subtotal : total).toFixed(2);
-				}
-			});
-		} catch {
-			// Silently fail
-			return;
+				// 4. Add shipping
+				const total = withVatAndDiscount + (Number(data.shipping_costs) || 0);
+
+				// Update data and form
+				setObjectByPath(data, 'subtotal', subtotal);
+				setObjectByPath(data, 'vat', vat);
+				setObjectByPath(data, 'total', total);
+
+				// Update form fields
+				const fields = {
+					'subtotal': subtotal,
+					'vat': vat,
+					'total': total
+				};
+
+				Object.entries(fields).forEach(([field, value]) => {
+					if (form.elements[field]) {
+						form.elements[field].value = value.toFixed(2);
+					}
+				});
+			} catch {
+				// Silently fail
+				return;
+			}
 		}
-	}
 
 	</script>
 
