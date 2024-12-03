@@ -407,6 +407,9 @@
                 },
                 {
                   "type": "number"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -422,6 +425,9 @@
                 },
                 {
                   "type": "text"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -434,6 +440,9 @@
               "attributes": [
                 {
                   "name": "type"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -487,6 +496,9 @@
                 },
                 {
                   "type": "number"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -502,6 +514,9 @@
                 },
                 {
                   "disabled": "disabled"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -545,7 +560,7 @@
                   "type": "number"
                 },
                 {
-                  "placeholder": "Enter id"
+                  "required": "required"
                 }
               ]
             }
@@ -563,7 +578,7 @@
                   "type": "text"
                 },
                 {
-                  "placeholder": "Enter name"
+                  "required": "required"
                 },
                 {
                   "disabled": "disabled"
@@ -610,7 +625,7 @@
                   "type": "number"
                 },
                 {
-                  "placeholder": "Enter id"
+                  "required": "required"
                 }
               ]
             }
@@ -628,7 +643,7 @@
                   "type": "text"
                 },
                 {
-                  "placeholder": "Enter name"
+                  "required": "required"
                 },
                 {
                   "disabled": "disabled"
@@ -649,7 +664,7 @@
                   "type": "text"
                 },
                 {
-                  "placeholder": "Enter currency_code"
+                  "required": "required"
                 }
               ]
             }
@@ -692,6 +707,9 @@
                 },
                 {
                   "type": "number"
+                },
+                {
+                  "required": "required"
                 }
               ]
             }
@@ -709,7 +727,7 @@
                   "type": "number"
                 },
                 {
-                  "placeholder": "Enter product_id"
+                  "required": "required"
                 }
               ]
             }
