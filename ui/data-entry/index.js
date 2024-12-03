@@ -632,39 +632,39 @@ class DataEntry extends HTMLElement {
 	 * @param {string} [selector='a[part="link"]'] - The CSS selector for the links to handle navigation.
 	 * @param {string} [activeClass='active'] - The class to add to the clicked link to indicate it is active.
 	 */
-	handleNavigation(selector = 'a[part="link"]', activeClass = 'active', lastActiveClass = 'last-active') {
+	handleNavigation(selector = 'a[part="link"]', visibleClass = 'visible', activeClass = 'active') {
 		const links = Array.from(this.form.querySelectorAll(selector));
 		if (!links.length) return;
 	
-		// Get the parent element's height for offset calculation
 		const parentHeight = links[0].parentElement?.offsetHeight || 0;
 		let lastActiveLink = null;
 	
 		const io = new IntersectionObserver(entries => {
+			// First, handle visibility for changed entries
 			entries.forEach(entry => {
 				const id = entry.target.id;
 				const link = links.find(link => link.getAttribute('href') === `#${id}`);
-				
 				if (link) {
-					const isIntersecting = entry.isIntersecting && entry.intersectionRatio >= 0.5;
-					link.classList.toggle(activeClass, isIntersecting);
-					
-					if (isIntersecting) {
-						// Remove last-active class from previous link
-						if (lastActiveLink && lastActiveLink !== link) {
-							lastActiveLink.classList.remove(lastActiveClass);
-						}
-						lastActiveLink = link;
-						link.classList.add(lastActiveClass);
-					}
+					link.classList.toggle(visibleClass, entry.isIntersecting);
 				}
 			});
-		},
-		{
+	
+			// Then, find all visible links and set active state on last one
+			const visibleLinks = links.filter(link => link.classList.contains(visibleClass));
+			
+			if (visibleLinks.length > 0) {
+				if (lastActiveLink) {
+					lastActiveLink.classList.remove(activeClass);
+				}
+				lastActiveLink = visibleLinks[visibleLinks.length - 1];
+				lastActiveLink.classList.add(activeClass);
+			}
+		}, {
 			rootMargin: `-${parentHeight}px 0px 0px 0px`,
-			threshold: [0, 0.5, 1.0]
+			threshold: [0]
 		});
-		
+	
+		// Set up observers and click handlers
 		links.forEach(link => {
 			const targetId = link.getAttribute('href')?.substring(1);
 			const target = targetId && document.getElementById(targetId);
@@ -672,11 +672,7 @@ class DataEntry extends HTMLElement {
 				io.observe(target);
 				link.addEventListener('click', event => {
 					event.preventDefault();
-					const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - parentHeight;
-					window.scrollTo({
-						top: targetPosition,
-						behavior: 'smooth'
-					});
+					target.scrollIntoView({ behavior: 'smooth' });
 				});
 			}
 		});

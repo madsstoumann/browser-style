@@ -210,8 +210,9 @@
 				font-size: small;
 				padding: .5ch 1ch;
 				text-decoration: none;
-				&.active { 
-					&.last-active {
+				&.visible { 
+					/* --_bgc: hotpink; */
+					&.active {
 						--_bgc: var(--AccentColor);
 						color: var(--AccentColorText);
 					}
