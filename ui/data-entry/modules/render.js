@@ -387,6 +387,7 @@ export const entry = (params) => {
 				attributes,
 				label: propConfig.title,
 				options,
+				instance,
 				path: `${path}.${propKey}`,
 				type: propConfig.type || 'string'
 			});
