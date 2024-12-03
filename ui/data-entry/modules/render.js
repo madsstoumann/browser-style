@@ -454,7 +454,7 @@ export const input = (params) => {
 	return hidden 
 		? inputElement 
 		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}>
-			<span part="label">${isRequired ? `<abbr title="${t('required', instance.lang, instance.i18n)}">*</abbr>` : ''}${label}</span>
+			<span part="label">${isRequired ? `<abbr title="${instance ? t('required', instance.lang, instance.i18n): ''}">*</abbr>` : ''}${label}</span>
 			${inputElement}
 		</label>`;
 };
