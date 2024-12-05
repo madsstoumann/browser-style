@@ -1,33 +1,84 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Data Entry</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="/ui/icon/ui-icon.css">
+  <title>Barcode Scanner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">	
 </head>
 <body>
-	<h1>UI: Components &gt; Barcode Scanner</h1>
+  <h1>UI: Components</h1>
 
-	<barcode-scanner></barcode-scanner>
+  <h2>Barcode Scanner</h2>
+  <p>A simple component that works with most barcode scanners.<br>
+    Click the icon in the bottom right corner to start scanning, or add the <code>auto</code> attribute to start automatically.
+  </p>
 
-	<script type="module">
-		import { BarcodeScanner } from './index.js';
-		
-		// Mount the custom element
-		BarcodeScanner.mount();
+  <h3>How to Use</h3>
+  <ol>
+    <li>Add the component to your page: <code>&lt;barcode-scanner&gt;&lt;/barcode-scanner&gt;</code></li>
+    <li>Import and mount: <code>import { BarcodeScanner } from './index.js'; BarcodeScanner.mount();</code></li>
+    <li>Listen for scanned barcodes: <code>element.addEventListener('bs:entry', event => ...)</code></li>
+  </ol>
 
-		// Get the first (and only) barcode-scanner element
-		const barcodeScanner = document.querySelector('barcode-scanner');
+  <h3>Settings (Attributes)</h3>
+  <dl>
+    <dt><code>auto</code></dt>
+    <dd>Starts scanning immediately when page loads</dd>
 
-		// Add event listener to the specific instance
-		barcodeScanner.addEventListener('bs:entry', (event) => {
-			const { detail } = event;
-			console.log('Barcode:', detail.value);
-		});
-	</script>
+    <dt><code>clear</code></dt>
+    <dd>How long to show the scanned barcode (in milliseconds)<br>
+    Example: <code>clear="5000"</code> (default: 2 seconds)</dd>
+
+    <dt><code>debug</code></dt>
+    <dd>Shows a history of all scanned barcodes in the browser console</dd>
+
+    <dt><code>terminate-char</code></dt>
+    <dd>The character your scanner sends after reading a barcode<br>
+    Example: <code>terminate-char="\n"</code> (default: Enter key)</dd>
+  </dl>
+
+  <h3>Events</h3>
+  <dl>
+    <dt><code>bs:entry</code></dt>
+    <dd>Triggered when a barcode is successfully scanned.<br>
+    The barcode value is in <code>event.detail.value</code></dd>
+
+    <dt><code>bs:clear</code></dt>
+    <dd>Send this event to manually clear the display</dd>
+  </dl>
+
+  <h3>Example</h3>
+  <pre><code>&lt;barcode-scanner 
+  auto 
+  clear="1000"
+  debug 
+  terminate-char="\n"
+&gt;&lt;/barcode-scanner&gt;</code></pre>
+
+  <barcode-scanner clear="250" debug></barcode-scanner>
+
+  <script type="module">
+    import { BarcodeScanner } from './index.js';
+    
+    // Mount the custom element
+    BarcodeScanner.mount();
+
+    // Get the first (and only) barcode-scanner element
+    const barcodeScanner = document.querySelector('barcode-scanner');
+
+    // Add event listener to the specific instance
+    barcodeScanner.addEventListener('bs:entry', (event) => {
+      const { detail } = event;
+      console.log('Barcode:', detail.value);
+
+      // Clear the display after 10 seconds
+      // setTimeout(() => {
+      // 	barcodeScanner.dispatchEvent(new CustomEvent('bs:clear'));
+      // }, 100);
+    });
+  </script>
 </body>
 </html>
