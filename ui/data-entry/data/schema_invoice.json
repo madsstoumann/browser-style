@@ -411,7 +411,29 @@
         "arrayControl": "immediate-remove",
         "delete": true,
         "label": "${name}|${d:formatNumber price}|${d:multiply quantity price}",
-        "value": "quantity"
+        "value": "quantity",
+
+        "barcode": {
+          "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=1&q=",
+          "mapping": {
+            "product_id": {
+              "path": "adresse.vejkode",
+              "type": "number"
+            },
+            "name": {
+              "path": "adresse.adresseringsvejnavn",
+              "type": "string"
+            },
+            "price": {
+              "path": "adresse.x",
+              "type": "number"
+            },
+            "quantity": {
+              "value": 1,
+              "type": "number"
+            }
+          }
+        }
       }
     },
 

@@ -295,7 +295,6 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 	return `
 	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${name}"` : ''}>
 			${allContent}
-			
 				<output part="value" name="value_${name}">${cols}</output>
 				${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
 			
@@ -328,7 +327,6 @@ export const autosuggest = (params) => {
 		apiValuePath,
 		defaults,
 		label,
-		mapping,
 		syncInstance
 	} = config;
 	const { path, formID, value: paramValue } = params;
@@ -353,12 +351,17 @@ export const autosuggest = (params) => {
 		${label ? `label="${label}"` : ''}
 		list-mode="ul"
 		name="${name}"
-		part="autosuggest" 
+		part="autosuggest"
+		path="${path}"
 		${syncInstance ? `sync-instance="${syncInstance}"` : ''}
 		${value ? `value="${value}"` : ''}
 		${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
-		${mapping ? `data-mapping='${JSON.stringify(mapping)}'` : ''}
 		${formID ? `form="${formID}"` : ''}></auto-suggest>`;
+};
+
+/* === barcode === */
+export const barcode = ({ config, path, formID }) => { 
+	return `<barcode-scanner path="${path}"></barcode-scanner>`;
 };
 
 /* === entry === */
@@ -369,6 +372,7 @@ export const entry = (params) => {
 	const id = `popover-${uuid()}`;
 	const label = config.title || 'Add New Entry';
 	const renderAutoSuggest = !!config.render?.autosuggest;
+	const renderBarcodeScanner = !!config.render?.barcode;
 
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
@@ -398,6 +402,7 @@ export const entry = (params) => {
 
 	return `
 		<nav part="nav">
+			${renderBarcodeScanner ? barcode({ config, path, formID }) : ''}
 			<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
 				${icon('plus')}${label}
 			</button>

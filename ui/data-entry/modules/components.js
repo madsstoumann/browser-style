@@ -1,4 +1,4 @@
-import { getObjectByPath, isEmpty, setObjectByPath } from '/ui/data-entry/modules/utility.js';
+import { getObjectByPath, isEmpty, mapObject, setObjectByPath } from '/ui/data-entry/modules/utility.js';
 
 /* === Object to store information about components */
 const componentsInfo = {
@@ -6,6 +6,11 @@ const componentsInfo = {
 		bindFunction: bindAutoSuggest,
 		path: '/ui/auto-suggest/index.js',
 		tagName: 'auto-suggest',
+	},
+	BarcodeScanner: {
+		bindFunction: bindBarcodeScanner,
+		path: '/ui/barcode-scanner/index.js',
+		tagName: 'barcode-scanner',
 	},
 	RichText: {
 		path: '/ui/rich-text/index.js',
@@ -32,28 +37,42 @@ const componentsInfo = {
  * @throws {Error} If a component fails to load, an error is logged to the console.
  */
 export async function mountComponents(HTML, dataEntry) {
-	const importPromises = Object.entries(componentsInfo).map(async ([componentName, { bindFunction, path, tagName }]) => {
-		if (HTML.includes(`<${tagName}`)) {
-			try {
-				const module = await import(path);
-				module[componentName].mount();
-				if (bindFunction) {
-					bindFunction(dataEntry);
+	const importPromises = Object.entries(componentsInfo).map(
+		async ([componentName, { bindFunction, path, tagName }]) => {
+			if (HTML.includes(`<${tagName}`)) {
+				try {
+					const module = await import(path);
+					module[componentName].mount();
+					if (bindFunction) {
+						bindFunction(dataEntry);
+					}
+				} catch (error) {
+					console.error(`Failed to load component ${componentName}:`, error);
 				}
-			} catch (error) {
-				console.error(`Failed to load component ${componentName}:`, error);
 			}
 		}
-	});
+	);
 	await Promise.all(importPromises);
 }
 
 /* === BIND METHODS === */
 
 function bindAutoSuggest(dataEntry) {
-	dataEntry.form.querySelectorAll('auto-suggest').forEach(autoSuggest => {
-		autoSuggest.addEventListener('autoSuggestSelect', (event) => handleAutoSuggestSelect(event.detail, autoSuggest, dataEntry));
+	dataEntry.form.querySelectorAll('auto-suggest').forEach((autoSuggest) => {
+		autoSuggest.addEventListener('autoSuggestSelect', (event) =>
+			handleAutoSuggestSelect(event.detail, autoSuggest, dataEntry)
+		);
 	});
+}
+
+function bindBarcodeScanner(dataEntry) {
+	dataEntry.form
+		.querySelectorAll('barcode-scanner')
+		.forEach((barcodeScanner) => {
+			barcodeScanner.addEventListener('bs:entry', (event) =>
+				handleBarcodeEntry(event, barcodeScanner, dataEntry)
+			);
+		});
 }
 
 // Bind the UiToast component to enable showToast functionality
@@ -73,47 +92,79 @@ function bindUiToast(dataEntry) {
 
 /* === METHODS === */
 
+/* === AUTO-SUGGEST === */
 function handleAutoSuggestSelect(detail, autoSuggest, dataEntry) {
+	// Handle initial data population
 	if (detail.isInitial) {
-		Object.keys(detail).forEach(key => {
-			if (key !== 'isInitial') {
-				setObjectByPath(dataEntry.instance.data, key, detail[key]);
-			}
-		});
+		Object.entries(detail)
+			.filter(([key]) => key !== 'isInitial')
+			.forEach(([key, value]) =>
+				setObjectByPath(dataEntry.instance.data, key, value)
+			);
 		dataEntry.processData();
 		return;
 	}
 
-	const path = autoSuggest.getAttribute('name').split('.').slice(0, -1).join('.') || autoSuggest.getAttribute('name');
+	const path = autoSuggest.getAttribute('path');
+	if (!path) return;
+
+	const config = getObjectByPath(dataEntry.instance.schema.properties, path);
+	if (!config?.render?.autosuggest?.mapping) return;
+
+	// Map values and determine sync behavior
+	const { mapping } = config.render.autosuggest;
 	const syncInstance = autoSuggest.getAttribute('sync-instance') === 'true';
-	const mapping = JSON.parse(autoSuggest.dataset.mapping || '{}');
-	let resultObject = Object.keys(detail).length === 1 && detail[path] ? { [path]: detail[path] } : {};
+	const resultObject = mapObject(detail, mapping, syncInstance ? path : '');
+	if (isEmpty(resultObject)) return;
 
-	Object.entries(mapping).forEach(([field, mappedKeyPath]) => {
-		const fullPath = path ? `${path}.${field}` : field;
-		
-		// Check if the mappedKeyPath contains a template string
-		let mappedValue;
-		if (/\$\{.+?\}/.test(mappedKeyPath)) {
-			// Replace the placeholders with the corresponding values from the detail object
-			mappedValue = mappedKeyPath.replace(/\$\{(.+?)\}/g, (_match, p1) => {
-				const value = getObjectByPath(detail, p1.trim());
-				return value !== undefined ? value : '';  // Return empty string if not found
-			});
-		} else {
-			// Fallback to the basic mapping if not a template string
-			mappedValue = getObjectByPath(detail, mappedKeyPath);
-		}
-
-		setObjectByPath(resultObject, fullPath, mappedValue);
-		const input = autoSuggest.getAttribute('form') ? document.forms[autoSuggest.getAttribute('form')].elements[fullPath] : dataEntry.form.elements[fullPath];
-		if (input) {
-			input.value = mappedValue || '';
-		}
+	// Update form inputs
+	const form =
+		document.forms[autoSuggest.getAttribute('form')] || dataEntry.form;
+	Object.entries(resultObject).forEach(([key, value]) => {
+		const input = form.elements[`${path}.${key}`];
+		if (input) input.value = value ?? '';
 	});
 
-	if (syncInstance && !isEmpty(resultObject)) {
-		Object.keys(resultObject).forEach(key => setObjectByPath(dataEntry.instance.data, key, resultObject[key]));
+	// Update instance data if needed
+	if (syncInstance) {
+		Object.entries(resultObject).forEach(([key, value]) =>
+			setObjectByPath(dataEntry.instance.data, key, value)
+		);
 		dataEntry.processData();
+	}
+}
+
+/* === BARCODE SCANNER === */
+async function handleBarcodeEntry(event, barcodeScanner, dataEntry) {
+	try {
+		const path = barcodeScanner.getAttribute('path');
+		if (!path) return;
+
+		const config = getObjectByPath(dataEntry.instance.schema.properties, path);
+		if (!config?.render?.barcode) return;
+
+		const { api, mapping } = config.render.barcode;
+
+		const response = await fetch(
+			`${api}${encodeURIComponent(event.detail.value)}`
+		);
+		if (!response.ok) throw new Error('Network response was not ok');
+
+		const data = await response.json();
+
+		const obj = Array.isArray(data)
+			? data[0]
+			: typeof data === 'object'
+			? data
+			: null;
+
+		if (!obj) return;
+
+		const mappedObject = mapObject(obj, mapping, '');
+		const addMethod = config.render?.addMethod || 'arrayUnit';
+		dataEntry.addArrayEntries(path, [mappedObject], addMethod);
+
+	} catch (error) {
+		dataEntry.showToast('Error processing barcode', 'error');
 	}
 }

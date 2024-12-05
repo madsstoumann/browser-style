@@ -408,3 +408,66 @@ export function itemExists(array, newItem, properties) {
     )
   );
 }
+
+/**
+ * Maps values from a source object to a target object using a mapping configuration
+ * @param {Object} sourceObj - The source object containing the values to map
+ * @param {Object} mapping - The mapping configuration object
+ * @param {string} [basePath=''] - Base path for nested properties
+ * @returns {Object} - The mapped object with processed values
+ */
+export function mapObject(sourceObj, mapping, basePath = '') {
+  const result = {};
+
+  Object.entries(mapping).forEach(([field, config]) => {
+    const fullPath = basePath ? `${basePath}.${field}` : field;
+    let mappedValue;
+
+    // Handle string mapping (direct path)
+    if (typeof config === 'string') {
+      mappedValue = getObjectByPath(sourceObj, config);
+    } 
+    // Handle object mapping configuration
+    else if (typeof config === 'object') {
+      if ('value' in config) {
+        mappedValue = config.value;
+      } else if ('path' in config) {
+        // Handle template strings in path
+        if (/\$\{.+?\}/.test(config.path)) {
+          mappedValue = config.path.replace(/\$\{(.+?)\}/g, (_match, p1) => {
+            const value = getObjectByPath(sourceObj, p1.trim());
+            return value !== undefined ? value : '';
+          });
+        } else {
+          mappedValue = getObjectByPath(sourceObj, config.path);
+        }
+      }
+
+      // Apply type conversion if specified
+      if (config.type) {
+        try {
+          switch (config.type) {
+            case 'number':
+              mappedValue = Number(mappedValue);
+              break;
+            case 'boolean':
+              mappedValue = Boolean(mappedValue);
+              break;
+            case 'date':
+              mappedValue = new Date(mappedValue).toISOString();
+              break;
+            case 'string':
+            default:
+              mappedValue = String(mappedValue);
+          }
+        } catch (error) {
+          console.error(`Type conversion failed for ${field}:`, error);
+        }
+      }
+    }
+
+    setObjectByPath(result, fullPath, mappedValue);
+  });
+
+  return result;
+}
