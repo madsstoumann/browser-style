@@ -360,7 +360,8 @@ export const autosuggest = (params) => {
 };
 
 /* === barcode === */
-export const barcode = ({ config, path, formID }) => { 
+export const barcode = ({ config, path }) => { 
+	// const apiArrayPath = config.render?.barcode?.apiArrayPath || '';
 	return `<barcode-scanner path="${path}"></barcode-scanner>`;
 };
 

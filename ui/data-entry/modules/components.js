@@ -143,7 +143,7 @@ async function handleBarcodeEntry(event, barcodeScanner, dataEntry) {
 		const config = getObjectByPath(dataEntry.instance.schema.properties, path);
 		if (!config?.render?.barcode) return;
 
-		const { api, mapping } = config.render.barcode;
+		const { api, apiArrayPath, mapping } = config.render.barcode;
 
 		const response = await fetch(
 			`${api}${encodeURIComponent(event.detail.value)}`
@@ -151,11 +151,12 @@ async function handleBarcodeEntry(event, barcodeScanner, dataEntry) {
 		if (!response.ok) throw new Error('Network response was not ok');
 
 		const data = await response.json();
+		let obj = apiArrayPath ? getObjectByPath(data, apiArrayPath) : data;
 
-		const obj = Array.isArray(data)
-			? data[0]
-			: typeof data === 'object'
-			? data
+		obj = Array.isArray(obj)
+			? obj[0]
+			: typeof obj === 'object'
+			? obj
 			: null;
 
 		if (!obj) return;

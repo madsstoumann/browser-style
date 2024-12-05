@@ -415,6 +415,7 @@
 
         "barcode": {
           "api": "https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=1&q=",
+          "apiArrayPath": "data",
           "mapping": {
             "product_id": {
               "path": "adresse.vejkode",
