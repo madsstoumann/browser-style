@@ -19,7 +19,7 @@
   <h3>How to Use</h3>
   <ol>
     <li>Add the component to your page: <code>&lt;barcode-scanner&gt;&lt;/barcode-scanner&gt;</code></li>
-    <li>Import and mount: <code>import { BarcodeScanner } from './index.js'; BarcodeScanner.mount();</code></li>
+    <li>Import and mount: <code>import { BarcodeScanner } from './index.js';</code><br>Then run <code>BarcodeScanner.mount();</code></li>
     <li>Listen for scanned barcodes: <code>element.addEventListener('bs:entry', event => ...)</code></li>
   </ol>
 
@@ -55,8 +55,8 @@
   auto 
   clear="1000"
   debug 
-  terminate-char="\n"
-&gt;&lt;/barcode-scanner&gt;</code></pre>
+  terminate-char="\n"&gt;
+&lt;/barcode-scanner&gt;</code></pre>
 
   <barcode-scanner clear="250" debug></barcode-scanner>
 
