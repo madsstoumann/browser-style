@@ -1,4 +1,19 @@
-import { attrs, buttonAttrs, fetchOptions, getObjectByPath, isEmpty, resolveTemplateString, safeRender, t, toCamelCase, uuid } from './utility.js';
+import { 
+	attrs, 
+	buttonAttrs, 
+	fetchOptions, 
+	getObjectByPath, 
+	getValueWithFallback,
+	isEmpty, 
+	processAttributes,
+	processRenderConfig,
+	processTemplateStrings,
+	resolveTemplateString, 
+	safeRender, 
+	t, 
+	toCamelCase, 
+	uuid 
+} from './utility.js';
 
 /* === all === */
 
@@ -25,10 +40,11 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				const renderMethod = instance.getRenderMethod(method);
 				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || '';
 				const path = pathPrefix === 'DISABLE_PATH' ? '' : key;
+				const value = getValueWithFallback(data, key, config);
 
 				return method ? safeRender(renderMethod, {
 					label,
-					value: data[key],
+					value,  // Use the value from getValueWithFallback
 					attributes: config?.render?.attributes || [],
 					options: method === 'select' ? fetchOptions(config, instance) : [],
 					config,
@@ -59,6 +75,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
+		const value = getValueWithFallback(data, key, config);
 
 		if (groupContent.has(key)) {
 			fieldsetGroups.push({
@@ -75,7 +92,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				navContent += `<a href="#section_${path}" part="link">${label}</a>`;
 			}
 			const content = method
-				? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
+				? safeRender(renderMethod, { label, value, attributes, options, config, instance, path, type: config.type })
 				: data[key].map((item, index) => all(item, config.items, instance, false, `${path}[${index}]`)).join('');
 			arrayContent.push({
 				index: schemaIndex,
@@ -88,7 +105,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 					index: schemaIndex,
 					content: safeRender(renderMethod, { 
 						label, 
-						value: data[key], 
+						value, 
 						attributes, 
 						options, 
 						config, 
@@ -108,7 +125,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			const content = config.type === 'object'
 				? all(data[key], config, instance, false, path)
 				: method
-					? safeRender(renderMethod, { label, value: data[key], attributes, options, config, instance, path, type: config.type })
+					? safeRender(renderMethod, { label, value, attributes, options, config, instance, path, type: config.type })
 					: '';
 			standardContent.push({
 				index: schemaIndex,
@@ -256,6 +273,30 @@ export const arrayGrid = (params) =>
 			`<fieldset>${all(value, config.items, instance, false, path)}</fieldset>`,
 	});
 
+/* === arrayLink === */
+
+export const arrayLink = (params) => {
+	const { value, config, instance } = params;
+	const processedConfig = processRenderConfig(config, instance.data, instance);
+
+	const links = value || processedConfig.render?.data?.links || [];
+	const processedLinks = links.map(link => {
+		const processedAttrs = processAttributes([
+			{ href: link.href, target: link.target || '_self' }
+		], instance.data, instance);
+
+		const linkValue = processTemplateStrings(
+			link.label || '',
+			instance.data,
+			instance
+		);
+
+		return `<a part="link" ${attrs(processedAttrs)}>${linkValue}</a>`;
+	}).join('');
+
+	return `<nav part="nav">${processedLinks}</nav>`;
+};
+
 /* === arrayUnit === */
 
 export const arrayUnit = ({ value, config, path, instance, attributes = [], name = '', index }) => {
@@ -360,6 +401,7 @@ export const autosuggest = (params) => {
 };
 
 /* === barcode === */
+
 export const barcode = ({ path }) => { 
 	return `<barcode-scanner input path="${path}"></barcode-scanner>`;
 };
@@ -443,14 +485,18 @@ const icon = (type, size, stroke) => `<ui-icon type="${type||''}" size="${size||
 
 export const input = (params) => {
 	const { attributes = [], config, instance, label, path = '', type = 'string', value } = params;
-	let finalValue = value ?? attributes.find(attr => attr.value !== undefined)?.value ?? '';
-	if (config?.render?.formatter) {
+	const processedConfig = processRenderConfig(config, instance.data, instance);
+	const processedAttrs = processAttributes(attributes, instance.data, instance);
+	
+	// Get value using fallback mechanism if needed
+	let finalValue = value ?? processedAttrs.find(attr => attr.value !== undefined)?.value ?? '';
+	if (processedConfig?.render?.formatter) {
 		try {
-				finalValue = resolveTemplateString(config.render.formatter, { ...instance.data, value: finalValue }, instance.lang, instance.i18n, instance.constants);
+				finalValue = resolveTemplateString(processedConfig.render.formatter, { ...instance.data, value: finalValue }, instance.lang, instance.i18n, instance.constants);
 		} catch (_) {}
 	}
 
-	const filteredAttributes = attributes.filter(attr => !('value' in attr));
+	const filteredAttributes = processedAttrs.filter(attr => !('value' in attr));
 	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label']);
 	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';
 	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
@@ -462,6 +508,31 @@ export const input = (params) => {
 		: `<label part="row" ${hiddenLabel ? 'hidden' : ''}>
 			<span part="label">${isRequired ? `<abbr title="${instance ? t('required', instance.lang, instance.i18n): ''}">*</abbr>` : ''}${label}</span>
 			${inputElement}
+		</label>`;
+};
+
+/* === link === */
+
+export const link = (params) => {
+	const { attributes = [], config, instance, label, path = '', value } = params;
+	const processedConfig = processRenderConfig(config, instance.data, instance);
+	
+	// Process the link data with template strings
+	const linkData = processedConfig.render?.data || {};
+	const processedAttrs = processAttributes([
+		{ href: linkData.href, target: linkData.target || '_self' }
+	], instance.data, instance);
+
+	const linkValue = processTemplateStrings(
+		value || linkData.label || processedConfig.render?.value || '', 
+		instance.data, 
+		instance
+	);
+
+	return `
+		<label part="row">
+			<span part="label">${label}</span>
+			<a part="link" ${attrs(processedAttrs)}>${linkValue}</a>
 		</label>`;
 };
 
@@ -519,9 +590,21 @@ export const richtext = (params) => {
 };
 
 /* === select === */
+
 export const select = (params) => {
-	const { attributes = [], config, label, options = [], path = '', type = 'string', value = -1, instance } = params;
-	const attributeValue = attributes.find(attr => 'value' in attr)?.value;
+	const {
+		attributes = [],
+		config,
+		label,
+		options = [],
+		path = '',
+		type = 'string',
+		value = -1,
+		instance,
+	} = params;
+	const processedAttrs = processAttributes(attributes, instance.data, instance);
+
+	const attributeValue = processedAttrs.find((attr) => 'value' in attr)?.value;
 	const selectedOption = config?.render?.selectedOption;
 	const selectedOptionDisabled = config?.render?.selectedOptionDisabled;
 	const action = config?.render?.action;
@@ -530,60 +613,92 @@ export const select = (params) => {
 
 	// Add selectedOption only if it's an object (with value/label properties)
 	let finalOptions = [...options];
-	if (selectedOption && typeof selectedOption === 'object' && 'value' in selectedOption) {
+	if (
+		selectedOption &&
+		typeof selectedOption === 'object' &&
+		'value' in selectedOption
+	) {
 		finalOptions = [selectedOption, ...options];
 	}
 
 	// Process options
-	finalOptions = finalOptions.map(option => {
-		// For template strings or direct property access in renderLabel
-		const optionLabel = renderLabel 
-			? renderLabel.includes('${') 
-				? resolveTemplateString(renderLabel, option, instance.lang, instance.i18n, instance.constants)
-				: option[renderLabel]
-			: option.label || option[valueField];
+	finalOptions = finalOptions.map((option) => {
+		let optionLabel;
+		if (renderLabel) {
+			// If renderLabel is a template string (contains ${})
+			if (typeof renderLabel === 'string' && renderLabel.includes('${')) {
+				optionLabel = resolveTemplateString(
+					renderLabel,
+					option,
+					instance.lang,
+					instance.i18n,
+					instance.constants
+				);
+			} else {
+				// If renderLabel is a property name
+				optionLabel = option[renderLabel] || renderLabel;
+			}
+		} else {
+			optionLabel = option.label || option[valueField] || '';
+		}
 
 		return {
 			value: option[valueField] || option.value || '',
-			label: optionLabel || option.label || ''  // Preserve original label if no renderLabel
+			label: optionLabel,
 		};
 	});
 
 	// For primitive selectedOption, just use the value for matching
-	const finalValue = typeof selectedOption === 'object' && 'value' in selectedOption 
-		? selectedOption.value
-		: selectedOption !== undefined 
+	const finalValue =
+		typeof selectedOption === 'object' && 'value' in selectedOption
+			? selectedOption.value
+			: selectedOption !== undefined
 			? selectedOption
-			: value !== -1 
-				? value
-				: attributeValue;
+			: value !== -1
+			? value
+			: attributeValue;
 
-	const filteredAttributes = attributes.filter(attr => !('value' in attr));
+	const filteredAttributes = processedAttrs.filter(
+		(attr) => !('value' in attr)
+	);
 
 	// Create button HTML if action exists
-	const buttonHTML = action ? 
-		`<button type="button" part="button" ${buttonAttrs(action)}>${
-			resolveTemplateString(action.label, instance.data, instance.lang, instance.i18n, instance.constants)
-		}</button>` : '';
-	
+	const buttonHTML = action
+		? `<button type="button" part="button" ${buttonAttrs(
+				action
+			)}>${resolveTemplateString(
+				action.label,
+				instance.data,
+				instance.lang,
+				instance.i18n,
+				instance.constants
+			)}</button>`
+		: '';
 
 	return `
-		<label part="row${action ? ' action' : ''}">
+	<label part="row${action ? ' action' : ''}">
 			<span part="label">${label}</span>
-			<select part="select" ${attrs(filteredAttributes, path, [], ['type'])} data-type="${type}">
-				${finalOptions.map(option => {
-					const optionValue = String(option.value);
-					const isSelected = optionValue === String(finalValue);
-					return `
-						<option value="${optionValue}"
-							${isSelected ? 'selected' : ''}
-							${isSelected && selectedOptionDisabled ? 'disabled' : ''}>
-							${option.label}
-						</option>`;
-				}).join('')}
+			<select part="select" ${attrs(
+				filteredAttributes,
+				path,
+				[],
+				['type']
+			)} data-type="${type}">
+					${finalOptions
+						.map((option) => {
+							const optionValue = String(option.value);
+							const isSelected = optionValue === String(finalValue);
+							return `
+							<option value="${optionValue}"
+								${isSelected ? 'selected' : ''}
+								${isSelected && selectedOptionDisabled ? 'disabled' : ''}>
+								${option.label}
+							</option>`;
+						})
+						.join('')}
 			</select>
 			${buttonHTML}
-		</label>`;
+	</label>`;
 };
 
 /* === textarea === */

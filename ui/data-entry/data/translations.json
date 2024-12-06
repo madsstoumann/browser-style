@@ -3,6 +3,7 @@
     "add": "Add",
     "close": "Close",
     "details": "Details",
+    "edit": "Edit",
     "release_date": "Release Date",
     "reset": "Reset"
   },
@@ -10,6 +11,7 @@
     "add": "Tilføj",
     "close": "Luk",
     "details": "Detaljer",
+    "edit": "Rediger",
     "release_date": "Udgivelsesdato",
     "reset": "Nulstil"
   }

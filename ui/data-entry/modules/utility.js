@@ -471,3 +471,78 @@ export function mapObject(sourceObj, mapping, basePath = '') {
 
   return result;
 }
+
+/**
+ * Gets a value from data with fallback to render.data
+ * @param {Object} data - Main data source
+ * @param {string} key - Key to look up
+ * @param {Object} config - Config object that may contain render.data
+ * @returns {*} Found value or undefined
+ */
+export function getValueWithFallback(data, key, config) {
+  const mainValue = data[key];
+  if (mainValue !== undefined) {
+    return mainValue;
+  }
+  const fallbackData = config?.render?.data;
+  return fallbackData?.[key];
+}
+
+/**
+ * Processes template strings in a value using resolveTemplateString
+ * @param {string} value - Value to process
+ * @param {Object} data - Data object for resolving variables
+ * @param {Object} instance - Instance containing lang, i18n, constants
+ * @returns {string} Processed string
+ */
+export function processTemplateStrings(value, data, instance) {
+  if (typeof value === 'string' && value.includes('${')) {
+    return resolveTemplateString(value, data, instance.lang, instance.i18n, instance.constants);
+  }
+  return value;
+}
+
+/**
+ * Processes template strings in an array of attributes
+ * @param {Array} attributes - Array of attribute objects
+ * @param {Object} data - Data object for resolving variables
+ * @param {Object} instance - Instance containing lang, i18n, constants
+ * @returns {Array} Processed attributes array
+ */
+export function processAttributes(attributes, data, instance) {
+  return attributes.map(attr => {
+    const processed = {};
+    Object.entries(attr).forEach(([key, value]) => {
+      processed[key] = processTemplateStrings(value, data, instance);
+    });
+    return processed;
+  });
+}
+
+/**
+ * Processes template strings in a render config object
+ * @param {Object} config - Configuration object with render property
+ * @param {Object} data - Data object for resolving variables
+ * @param {Object} instance - Instance containing lang, i18n, constants
+ * @returns {Object} Processed configuration object
+ */
+export function processRenderConfig(config, data, instance) {
+  if (!config?.render) return config;
+
+  const processed = { ...config };
+  Object.entries(config.render).forEach(([key, value]) => {
+    if (typeof value === 'string') {
+      processed.render[key] = processTemplateStrings(value, data, instance);
+    } else if (Array.isArray(value)) {
+      processed.render[key] = value.map(item => 
+        typeof item === 'string' ? processTemplateStrings(item, data, instance) : item
+      );
+    } else if (typeof value === 'object' && value !== null) {
+      processed.render[key] = Object.entries(value).reduce((acc, [k, v]) => {
+        acc[k] = typeof v === 'string' ? processTemplateStrings(v, data, instance) : v;
+        return acc;
+      }, {});
+    }
+  });
+  return processed;
+}

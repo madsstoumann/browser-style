@@ -69,6 +69,36 @@
       }
     },
 
+    "customer_link_test": {
+      "type": "string",
+      "title": "Link",
+      "render": {
+        "method": "link",
+        "data": {
+          "href": "/customer/${customer_id}",
+          "target": "_blank",
+          "label": "${t:edit} ${customer_id}"
+        }
+      }
+    },
+
+    "customer_link": {
+      "type": "array",
+      "title": "Links",
+      "render": {
+        "method": "array-link",
+        "data": {
+          "links": [
+            {
+              "href": "/customer/${customer_id}",
+              "target": "_blank",
+              "label": "${t:edit} ${customer_id}"
+            }
+          ]
+        }
+      }
+    },
+
     "subscriptions": {
       "title": "Subscriptions",
       "type": "array",

@@ -392,6 +392,10 @@
 			column-gap: 1ch;
 			display: flex;
 			flex-wrap: wrap;
+			[part~=link] {
+				font-size: x-small;
+				font-weight: 500;
+			}
 		}
 		[part~="nav"] {
 			justify-content: end;
@@ -456,6 +460,10 @@
 					}
 				}
 				&::-webkit-details-marker { display: none; }
+			}
+
+			[part~=link] {
+				padding-inline: var(--_pi);
 			}
 		}
 
