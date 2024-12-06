@@ -360,8 +360,7 @@ export const autosuggest = (params) => {
 };
 
 /* === barcode === */
-export const barcode = ({ config, path }) => { 
-	// const apiArrayPath = config.render?.barcode?.apiArrayPath || '';
+export const barcode = ({ path }) => { 
 	return `<barcode-scanner input path="${path}"></barcode-scanner>`;
 };
 
@@ -403,7 +402,7 @@ export const entry = (params) => {
 
 	return `
 		<nav part="nav">
-			${renderBarcodeScanner ? barcode({ config, path, formID }) : ''}
+			${renderBarcodeScanner ? barcode({ path }) : ''}
 			<button type="button" part="micro" popovertarget="${id}" style="--_an:--${id};">
 				${icon('plus')}${label}
 			</button>

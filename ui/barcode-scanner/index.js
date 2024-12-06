@@ -194,12 +194,13 @@ stylesheet.replaceSync(`
 	font-weight: 400;
 	inset-block-end: .25rem;
 	inset-inline-end: 1.5rem;
-	opacity: .5;
+	opacity: 1;
 	padding: 3px 6px;
 	position: fixed;
 	text-align: end;
 	width: 15ch;
 }
+:host input::placeholder { color: light-dark(#AAAAAA, #808080); }
 :host input::-webkit-inner-spin-button { display: none; }
 :host input:focus { caret-color: #333; outline: 0; }
 :host [popover] { border: 0; }
