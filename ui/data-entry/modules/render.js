@@ -87,7 +87,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 					attributes
 				})
 			});
-		} else if (config.type === 'array') {
+		} else if (config.type === 'array' && method !== 'arrayLink') {
 			if (renderNav) {
 				navContent += `<a href="#section_${path}" part="link">${label}</a>`;
 			}
@@ -623,28 +623,22 @@ export const select = (params) => {
 
 	// Process options
 	finalOptions = finalOptions.map((option) => {
-		let optionLabel;
-		if (renderLabel) {
-			// If renderLabel is a template string (contains ${})
-			if (typeof renderLabel === 'string' && renderLabel.includes('${')) {
-				optionLabel = resolveTemplateString(
-					renderLabel,
-					option,
-					instance.lang,
-					instance.i18n,
-					instance.constants
-				);
-			} else {
-				// If renderLabel is a property name
-				optionLabel = option[renderLabel] || renderLabel;
-			}
-		} else {
-			optionLabel = option.label || option[valueField] || '';
-		}
+		// For template strings or direct property access in renderLabel
+		const optionLabel = renderLabel
+			? renderLabel.includes('${')
+				? resolveTemplateString(
+						renderLabel,
+						option,
+						instance.lang,
+						instance.i18n,
+						instance.constants
+				  )
+				: option[renderLabel]
+			: option.label || option[valueField];
 
 		return {
 			value: option[valueField] || option.value || '',
-			label: optionLabel,
+			label: optionLabel || option.label || '', // Preserve original label if no renderLabel
 		};
 	});
 
@@ -666,13 +660,13 @@ export const select = (params) => {
 	const buttonHTML = action
 		? `<button type="button" part="button" ${buttonAttrs(
 				action
-			)}>${resolveTemplateString(
+		  )}>${resolveTemplateString(
 				action.label,
 				instance.data,
 				instance.lang,
 				instance.i18n,
 				instance.constants
-			)}</button>`
+		  )}</button>`
 		: '';
 
 	return `

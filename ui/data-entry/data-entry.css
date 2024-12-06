@@ -383,8 +383,8 @@
 		[part~=micro] {
 			background: #0000;
 			color: var(--LinkText);
+			font-family: inherit;
 			font-size: x-small;
-			/* margin-block-start: .5lh; */
 			padding: 0;
 		}
 
