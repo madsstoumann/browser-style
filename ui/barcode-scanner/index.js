@@ -166,14 +166,13 @@ stylesheet.replaceSync(`
 }
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
 :host {
-	--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
-	--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+	--bg: light-dark(#EEE, #666);
 	inset-block-end: 1.5rem;
 	inset-inline-end: 1.5rem;
 	position: fixed;
 }
 :host button {
-	background-color: var(--ButtonFace);
+	background-color: var(--bg);
 	border: 0;
 	border-radius: 50%;
 	display: grid;
@@ -181,11 +180,11 @@ stylesheet.replaceSync(`
 	place-self: end;
 }
 :host button.--open {
-	background-color: var(--ColorSuccess);
+	--bg: light-dark(#3A6, #6A8);
 	color: #FFF;
 }
 :host input {
-	background-color: var(--ButtonFace);
+	background-color: var(--bg);
 	border: 0;
 	border-radius: .25em;
 	caret-color: #0000;
@@ -200,9 +199,9 @@ stylesheet.replaceSync(`
 	text-align: end;
 	width: 15ch;
 }
-:host input::placeholder { color: light-dark(#AAAAAA, #808080); }
+:host input::placeholder { color: light-dark(#AAA, #888); }
 :host input::-webkit-inner-spin-button { display: none; }
-:host input:focus { caret-color: #333; outline: 0; }
+:host input:focus { caret-color: light-dark(#333, #DDD); outline: 0; }
 :host [popover] { border: 0; }
 :host [popover]::backdrop { background-color: #0000; }
 :host svg { 
