@@ -7,9 +7,8 @@ import {
 	isEmpty, 
 	processAttributes,
 	processRenderConfig,
-	processTemplateStrings,
 	resolveTemplateString, 
-	safeRender, 
+	safeRender,
 	t, 
 	toCamelCase, 
 	uuid 
@@ -44,7 +43,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 
 				return method ? safeRender(renderMethod, {
 					label,
-					value,  // Use the value from getValueWithFallback
+					value,
 					attributes: config?.render?.attributes || [],
 					options: method === 'select' ? fetchOptions(config, instance) : [],
 					config,
@@ -99,7 +98,6 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				content: method ? content : fieldset({ label, content, attributes })
 			});
 		} else if (config.type === 'object') {
-			// Check if the object has a specific render method first
 			if (config.render?.method) {
 				standardContent.push({
 					index: schemaIndex,
@@ -122,16 +120,21 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 				});
 			}
 		} else {
-			const content = config.type === 'object'
-				? all(data[key], config, instance, false, path)
-				: method
-					? safeRender(renderMethod, { label, value, attributes, options, config, instance, path, type: config.type })
-					: '';
+			const content = method
+				? safeRender(renderMethod, { 
+					label, 
+					value, 
+					attributes, 
+					options, 
+					config, 
+					instance, 
+					path, 
+					type: config.type 
+				})
+				: '';
 			standardContent.push({
 				index: schemaIndex,
-				content: config.type === 'object' && !method
-					? fieldset({ label, content, attributes })
-					: content
+				content
 			});
 		}
 		schemaIndex++;
@@ -165,7 +168,6 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 	if (form || root) {
 		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>` : ''}${navContent}</nav>` : '';
 		const headlineElement = headline ? `<strong part="title">${headline}</strong>` : '';
-		// const headerContent = (headlineElement || navElement) ? `<header part="header">${navElement}</header>` : '';
 		let footerContent = `<ui-toast></ui-toast>`;
 
 		if (schema.form) {
@@ -285,7 +287,7 @@ export const arrayLink = (params) => {
 			{ href: link.href, target: link.target || '_self' }
 		], instance.data, instance);
 
-		const linkValue = processTemplateStrings(
+		const linkValue = resolveTemplateString(
 			link.label || '',
 			instance.data,
 			instance
@@ -487,20 +489,26 @@ export const input = (params) => {
 	const { attributes = [], config, instance, label, path = '', type = 'string', value } = params;
 	const processedConfig = processRenderConfig(config, instance.data, instance);
 	const processedAttrs = processAttributes(attributes, instance.data, instance);
-	
-	// Get value using fallback mechanism if needed
+
+	const hidden = processedAttrs.some(attr => attr.type === 'hidden');
+	const hiddenLabel = processedAttrs.some(attr => attr['hidden-label']);
+	const isRequired = processedAttrs.some(attr => attr.required === 'required');
+
 	let finalValue = value ?? processedAttrs.find(attr => attr.value !== undefined)?.value ?? '';
+
 	if (processedConfig?.render?.formatter) {
-		try {
-				finalValue = resolveTemplateString(processedConfig.render.formatter, { ...instance.data, value: finalValue }, instance.lang, instance.i18n, instance.constants);
-		} catch (_) {}
+		finalValue = resolveTemplateString(
+			processedConfig.render.formatter,
+			{ ...instance.data, value: finalValue },
+			instance.lang,
+			instance.i18n,
+			instance.constants,
+			finalValue
+		);
 	}
 
 	const filteredAttributes = processedAttrs.filter(attr => !('value' in attr));
-	const hiddenLabel = filteredAttributes.some(attr => attr['hidden-label']);
 	const checked = filteredAttributes.some(attr => attr.type === 'checkbox') && finalValue ? ' checked' : '';
-	const hidden = filteredAttributes.some(attr => attr.type === 'hidden');
-	const isRequired = filteredAttributes.some(attr => attr.required === 'required');
 	const inputElement = `<input part="input" value="${finalValue}" ${attrs(filteredAttributes, path)} data-type="${type}" ${checked}>`;
 
 	return hidden 
@@ -516,17 +524,18 @@ export const input = (params) => {
 export const link = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
 	const processedConfig = processRenderConfig(config, instance.data, instance);
-	
-	// Process the link data with template strings
 	const linkData = processedConfig.render?.data || {};
 	const processedAttrs = processAttributes([
 		{ href: linkData.href, target: linkData.target || '_self' }
 	], instance.data, instance);
 
-	const linkValue = processTemplateStrings(
+	const linkValue = resolveTemplateString(
 		value || linkData.label || processedConfig.render?.value || '', 
 		instance.data, 
-		instance
+		instance.lang, 
+		instance.i18n, 
+		instance.constants,
+		''
 	);
 
 	return `

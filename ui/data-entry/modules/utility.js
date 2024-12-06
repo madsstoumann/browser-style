@@ -1,15 +1,6 @@
 import { dynamicFunctions } from "./dynamic.js";
 
-/**
- * Merges and filters attributes, then converts them into a string of HTML attributes.
- *
- * @param {Array<Object>} attributes - The initial set of attributes.
- * @param {string} [path=''] - An optional path to set as the name attribute.
- * @param {Array<Object>} [additionalAttributes=[]] - Additional attributes to merge.
- * @param {Array<string>} [attributesToRemove=[]] - List of attribute keys to remove.
- * @param {Array<string>} [attributesToInclude=[]] - List of attribute keys to include.
- * @returns {string} A string of HTML attributes.
- */
+/* === attrs === */
 export function attrs(
 	attributes, 
 	path = '', 
@@ -53,15 +44,18 @@ export function attrs(
 		}).join(' ');
 }
 
-/**
- * Converts a given value to a specified data type.
- *
- * @param {any} value - The value to be converted.
- * @param {string} dataType - The target data type ('number', 'boolean', 'object', etc.).
- * @param {string} inputType - The type of input element (e.g., 'checkbox').
- * @param {boolean} checked - The checked state of a checkbox input.
- * @returns {any} - The converted value.
- */
+/* === buttonAttrs === */
+export function buttonAttrs(entry) {
+	const commonAttributes = Object.keys(entry)
+		.filter(key => key !== 'label' && key !== 'class')
+		.map(key => `data-${key}="${entry[key]}"`)
+		.join(' ');
+	
+	const classAttribute = entry.class ? ` class="${entry.class}"` : '';
+	return `${commonAttributes}${classAttribute}`;
+}
+
+/* === convertValue === */
 export function convertValue(value, dataType, inputType, checked) {
 	switch (dataType) {
 		case 'number':
@@ -82,16 +76,7 @@ export function convertValue(value, dataType, inputType, checked) {
 	}
 }
 
-/**
- * Deeply merges two objects or arrays. If both target and source are arrays,
- * they are merged based on a unique identifier (key). If both are objects,
- * they are merged recursively.
- *
- * @param {Object|Array} target - The target object or array to merge into.
- * @param {Object|Array} source - The source object or array to merge from.
- * @param {string|null} [key=null] - The unique identifier key for merging arrays.
- * @returns {Object|Array} - The merged object or array.
- */
+/* === deepMerge === */
 export function deepMerge(target, source, key = null) {
 	if (Array.isArray(target) && Array.isArray(source)) {
 		// If both are arrays, merge them based on a unique identifier (key)
@@ -120,16 +105,7 @@ export function deepMerge(target, source, key = null) {
 	return source;
 }
 
-/**
- * Fetches options based on the provided configuration and instance.
- *
- * @param {Object} config - The configuration object.
- * @param {Object} config.render - The render configuration.
- * @param {Array|string} config.render.options - The options key, which can be an array or a string.
- * @param {Object} instance - The instance object.
- * @param {Object} instance.lookup - The lookup object containing arrays of options.
- * @returns {Array} The fetched options array.
- */
+/* === fetchOptions === */
 export function fetchOptions(config, instance) {
 	const optionsKey = config?.render?.options;
 	let options = [];
@@ -168,13 +144,17 @@ export function fetchOptions(config, instance) {
 	return options;
 }
 
-/**
- * Retrieves the value from an object based on a given dot-separated path.
- *
- * @param {Object} obj - The object from which to retrieve the value.
- * @param {string} path - The dot-separated path string (e.g., 'a.b.c' or 'a.b[0].c').
- * @returns {*} - The value found at the specified path, or undefined if the path is invalid.
- */
+/* === getKey === */
+export function getKey(item, key) {
+	if (key === null) {
+		return JSON.stringify(item);
+	} else if (Array.isArray(key)) {
+		return key.map(k => item[k]).join('_');
+	}
+	return item[key];
+}
+
+/* === getObjectByPath === */
 export function getObjectByPath(obj, path) {
 	return path.split('.').reduce((acc, key) => {
 		if (acc === null || acc === undefined) {
@@ -197,14 +177,17 @@ export function getObjectByPath(obj, path) {
 	}, obj);
 }
 
-/**
- * Checks if the given object is empty.
- *
- * An object is considered empty if it is null, undefined, or an object with no own properties.
- *
- * @param {Object|null|undefined} obj - The object to check.
- * @returns {boolean} - Returns true if the object is empty, otherwise false.
- */
+/* === getValueWithFallback === */
+export function getValueWithFallback(data, key, config) {
+	const mainValue = data[key];
+	if (mainValue !== undefined) {
+		return mainValue;
+	}
+	const fallbackData = config?.render?.data;
+	return fallbackData?.[key];
+}
+
+/* === isEmpty === */
 export function isEmpty(obj) {
 	if (obj === null || obj === undefined) {
 		return true;
@@ -213,192 +196,12 @@ export function isEmpty(obj) {
 	return typeof obj === 'object' && Object.keys(obj).length === 0;
 }
 
-/**
- * Resolves a template string by replacing placeholders with corresponding values from the data object.
- * If a placeholder starts with 't:', it will be treated as a translation key.
- * If a placeholder starts with 'd:', it will call a dynamic function from the dynamicFunctions object.
- *
- * @param {string} template - The template string containing placeholders in the format ${key}.
- * @param {Object} data - The data object containing values to replace the placeholders.
- * @param {string} [lang='en'] - The language code for translation (default is 'en').
- * @param {Object} [i18n={}] - The i18n object containing translations.
- * @returns {string} - The resolved string with placeholders replaced by corresponding values or dynamic function results.
- */
-export function resolveTemplateString(template, data, lang = 'en', i18n = {}, constants = {}) {
-	// Add null check for template
-	if (!template) return '';
-	
-	return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
-		const trimmedKey = key.trim();
-		
-		if (trimmedKey.startsWith('t:')) {
-			return t(trimmedKey.slice(2).trim(), lang, i18n) || '';
-		}
-		
-		if (trimmedKey.startsWith('v:')) {
-			const value = constants[trimmedKey.slice(2).trim()];
-			return value !== undefined ? value : '';
-		}
-		
-		if (trimmedKey.startsWith('d:')) {
-			const parts = trimmedKey.slice(2).trim().split(/\s+/);
-			const fn = dynamicFunctions[parts[0]];
-			
-			if (fn) {
-				const params = parts.slice(1).map(param => 
-					param.startsWith('${') && param.endsWith('}')
-						? getObjectByPath(data, param.slice(2, -1))
-						: getObjectByPath(data, param) ?? param
-				);
-				return fn(...params);
-			}
-		}
-
-		return getObjectByPath(data, trimmedKey) || '';
-	});
-}
-
-/**
- * Safely executes a render method with the given parameters.
- * If an error occurs during the execution, it returns an empty string.
- *
- * @param {Function} renderMethod - The render method to be executed.
- * @param {any} params - The parameters to be passed to the render method.
- * @returns {string} The result of the render method or an empty string if an error occurs.
- */
-export function safeRender(renderMethod, params) {
-	try {
-		return renderMethod(params);
-	} catch {
-		return '';
-	}
-}
-
-/**
- * Sets a value on an object at a specified path.
- *
- * @param {Object} obj - The object to modify.
- * @param {string} path - The path at which to set the value, with properties separated by dots.
- * @param {*} value - The value to set at the specified path.
- */
-export function setObjectByPath(obj, path, value) {
-	path.split('.').reduce((acc, key, index, array) => {
-		const match = key.match(/([^\[]+)\[?(\d*)\]?/);
-		const prop = match[1];
-		const idx = match[2];
-
-		if (!acc[prop]) {
-			acc[prop] = idx ? [] : {};
-		}
-
-		if (idx) {
-			if (index === array.length - 1) {
-				acc[prop][idx] = value;
-			} else {
-				acc[prop][idx] = acc[prop][idx] || {};
-			}
-			return acc[prop][idx];
-		}
-
-		if (index === array.length - 1) {
-			acc[prop] = value;
-		}
-
-		return acc[prop];
-	}, obj);
-}
-
-/**
- * Translates a given key into the specified language using the provided i18n object.
- *
- * @param {string} key - The key to be translated.
- * @param {string} lang - The language code to translate the key into.
- * @param {object} i18n - The i18n object containing translations.
- * @returns {string} - The translated string or the key if no translation is found.
- */
-export function t(key, lang, i18n) {
-	return i18n[lang]?.[key] || key;
-}
-
-/**
- * Converts a hyphenated string to camelCase.
- *
- * @param {string} str - The hyphenated string to convert.
- * @returns {string} The camelCase version of the input string.
- */
-export function toCamelCase(str) {
-	return str
-		.toLowerCase()
-		.split('-')
-		.map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
-		.join('');
-}
-
-/**
- * Converts a kebab-case string to PascalCase.
- *
- * @param {string} str - The kebab-case string to convert.
- * @returns {string} The converted PascalCase string.
- */
-export function toPascalCase(str) {
-	return str
-		.split('-')
-		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
-		.join('');
-}
-
-/**
- * Generates a unique identifier (UUID).
- *
- * This function uses the `crypto.getRandomValues` method to generate a random
- * 32-bit unsigned integer. If the generated value is zero, it falls back to
- * generating a random number using `Math.random` multiplied by `Number.MAX_SAFE_INTEGER`.
- *
- * @returns {number} A unique identifier as a 32-bit unsigned integer.
- */
-export function uuid() {
-	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-}
-
-/* === Helper functions */
-
-function getKey(item, key) {
-	if (key === null) {
-		// If no key is provided, use the stringified item as a fallback unique key
-		return JSON.stringify(item);
-	} else if (Array.isArray(key)) {
-		// If key is an array of fields, combine them into a composite key
-		return key.map(k => item[k]).join('_');
-	}
-	return item[key];
-}
-
-function isObject(item) {
+/* === isObject === */
+export function isObject(item) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
 
-/**
- * Creates HTML button attributes string with consistent data- prefix
- * @param {Object} entry - Button configuration object
- * @returns {string} Space-separated attribute string
- */
-export function buttonAttrs(entry) {
-	const commonAttributes = Object.keys(entry)
-		.filter(key => key !== 'label' && key !== 'class')
-		.map(key => `data-${key}="${entry[key]}"`)
-		.join(' ');
-	
-	const classAttribute = entry.class ? ` class="${entry.class}"` : '';
-	return `${commonAttributes}${classAttribute}`;
-}
-
-/**
- * Checks if an object with the same specified properties already exists in an array
- * @param {Array} array - Array to check
- * @param {Object} newItem - Item to check for
- * @param {Array} properties - Properties to compare
- * @returns {boolean} True if item exists
- */
+/* === itemExists === */
 export function itemExists(array, newItem, properties) {
   return array.some(item => 
     properties.every(prop => 
@@ -409,13 +212,7 @@ export function itemExists(array, newItem, properties) {
   );
 }
 
-/**
- * Maps values from a source object to a target object using a mapping configuration
- * @param {Object} sourceObj - The source object containing the values to map
- * @param {Object} mapping - The mapping configuration object
- * @param {string} [basePath=''] - Base path for nested properties
- * @returns {Object} - The mapped object with processed values
- */
+/* === mapObject === */
 export function mapObject(sourceObj, mapping, basePath = '') {
   const result = {};
 
@@ -472,77 +269,162 @@ export function mapObject(sourceObj, mapping, basePath = '') {
   return result;
 }
 
-/**
- * Gets a value from data with fallback to render.data
- * @param {Object} data - Main data source
- * @param {string} key - Key to look up
- * @param {Object} config - Config object that may contain render.data
- * @returns {*} Found value or undefined
- */
-export function getValueWithFallback(data, key, config) {
-  const mainValue = data[key];
-  if (mainValue !== undefined) {
-    return mainValue;
+/* === processAttributes === */
+export function processAttributes(attributes, data, instance) {
+  try {
+    return attributes.map(attr => {
+      const processed = {};
+      Object.entries(attr).forEach(([key, value]) => {
+        processed[key] = resolveTemplateString(value, data, instance.lang, instance.i18n, instance.constants);
+      });
+      return processed;
+    });
+  } catch (error) {
+    console.warn('Error processing attributes:', error);
+    return attributes;
   }
-  const fallbackData = config?.render?.data;
-  return fallbackData?.[key];
 }
 
-/**
- * Processes template strings in a value using resolveTemplateString
- * @param {string} value - Value to process
- * @param {Object} data - Data object for resolving variables
- * @param {Object} instance - Instance containing lang, i18n, constants
- * @returns {string} Processed string
- */
-export function processTemplateStrings(value, data, instance) {
-  if (typeof value === 'string' && value.includes('${')) {
+/* === processConfigValue === */
+function processConfigValue(value, data, instance) {
+  if (typeof value === 'string') {
     return resolveTemplateString(value, data, instance.lang, instance.i18n, instance.constants);
+  } 
+  if (Array.isArray(value)) {
+    return value.map(item => 
+      typeof item === 'string' ? resolveTemplateString(item, data, instance.lang, instance.i18n, instance.constants) : item
+    );
+  }
+  if (typeof value === 'object' && value !== null) {
+    return Object.entries(value).reduce((acc, [k, v]) => {
+      acc[k] = typeof v === 'string' ? resolveTemplateString(v, data, instance.lang, instance.i18n, instance.constants) : v;
+      return acc;
+    }, {});
   }
   return value;
 }
 
-/**
- * Processes template strings in an array of attributes
- * @param {Array} attributes - Array of attribute objects
- * @param {Object} data - Data object for resolving variables
- * @param {Object} instance - Instance containing lang, i18n, constants
- * @returns {Array} Processed attributes array
- */
-export function processAttributes(attributes, data, instance) {
-  return attributes.map(attr => {
-    const processed = {};
-    Object.entries(attr).forEach(([key, value]) => {
-      processed[key] = processTemplateStrings(value, data, instance);
-    });
-    return processed;
-  });
-}
-
-/**
- * Processes template strings in a render config object
- * @param {Object} config - Configuration object with render property
- * @param {Object} data - Data object for resolving variables
- * @param {Object} instance - Instance containing lang, i18n, constants
- * @returns {Object} Processed configuration object
- */
+/* === processRenderConfig === */
 export function processRenderConfig(config, data, instance) {
   if (!config?.render) return config;
 
-  const processed = { ...config };
-  Object.entries(config.render).forEach(([key, value]) => {
-    if (typeof value === 'string') {
-      processed.render[key] = processTemplateStrings(value, data, instance);
-    } else if (Array.isArray(value)) {
-      processed.render[key] = value.map(item => 
-        typeof item === 'string' ? processTemplateStrings(item, data, instance) : item
-      );
-    } else if (typeof value === 'object' && value !== null) {
-      processed.render[key] = Object.entries(value).reduce((acc, [k, v]) => {
-        acc[k] = typeof v === 'string' ? processTemplateStrings(v, data, instance) : v;
-        return acc;
-      }, {});
-    }
-  });
-  return processed;
+  try {
+    const processed = { ...config };
+    Object.entries(config.render).forEach(([key, value]) => {
+      processed.render[key] = processConfigValue(value, data, instance);
+    });
+    return processed;
+  } catch (error) {
+    console.warn('Error processing render config:', error);
+    return config;
+  }
+}
+
+/* === resolveTemplateString === */
+export function resolveTemplateString(template, data, lang = 'en', i18n = {}, constants = {}, fallback = '') {
+  try {
+    // Early returns for invalid or non-template strings
+    if (!template) return '';
+    if (typeof template !== 'string') return template;
+    if (!template.includes('${')) return template;
+    
+    return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
+      const trimmedKey = key.trim();
+      
+      // Handle translation strings
+      if (trimmedKey.startsWith('t:')) {
+        return t(trimmedKey.slice(2).trim(), lang, i18n) || '';
+      }
+      
+      // Handle constants/variables
+      if (trimmedKey.startsWith('v:')) {
+        const value = constants[trimmedKey.slice(2).trim()];
+        return value !== undefined ? value : '';
+      }
+      
+      // Handle dynamic functions
+      if (trimmedKey.startsWith('d:')) {
+        const parts = trimmedKey.slice(2).trim().split(/\s+/);
+        const fn = dynamicFunctions[parts[0]];
+        
+        if (fn) {
+          const params = parts.slice(1).map(param => 
+            param.startsWith('${') && param.endsWith('}')
+              ? getObjectByPath(data, param.slice(2, -1))
+              : getObjectByPath(data, param) ?? param
+          );
+          return fn(...params);
+        }
+      }
+
+      return getObjectByPath(data, trimmedKey) || '';
+    });
+  } catch (error) {
+    console.warn('Template resolution failed:', error);
+    return fallback || template;
+  }
+}
+
+/* === safeRender === */
+export function safeRender(renderMethod, params) {
+	try {
+		return renderMethod(params);
+	} catch {
+		return '';
+	}
+}
+
+/* === setObjectByPath === */
+export function setObjectByPath(obj, path, value) {
+	path.split('.').reduce((acc, key, index, array) => {
+		const match = key.match(/([^\[]+)\[?(\d*)\]?/);
+		const prop = match[1];
+		const idx = match[2];
+
+		if (!acc[prop]) {
+			acc[prop] = idx ? [] : {};
+		}
+
+		if (idx) {
+			if (index === array.length - 1) {
+				acc[prop][idx] = value;
+			} else {
+				acc[prop][idx] = acc[prop][idx] || {};
+			}
+			return acc[prop][idx];
+		}
+
+		if (index === array.length - 1) {
+			acc[prop] = value;
+		}
+
+		return acc[prop];
+	}, obj);
+}
+
+/* === t === */
+export function t(key, lang, i18n) {
+	return i18n[lang]?.[key] || key;
+}
+
+/* === toCamelCase === */
+export function toCamelCase(str) {
+	return str
+		.toLowerCase()
+		.split('-')
+		.map((word, index) => index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1))
+		.join('');
+}
+
+/* === toPascalCase === */
+export function toPascalCase(str) {
+	return str
+		.split('-')
+		.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+		.join('');
+}
+
+/* === uuid === */
+export function uuid() {
+	return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
