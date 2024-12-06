@@ -36,7 +36,15 @@
     <dd>Shows a history of all scanned barcodes in the browser console</dd>
 
     <dt><code>input</code></dt>
-    <dd>Shows the barcode input, allowing for manual entries.</dd>
+    <dd>Shows the barcode input, allowing for manual entries (press Enter to execute).</dd>
+
+    <dt><code>maxlength</code></dt>
+    <dd>Maximum number of digits required in barcode<br>
+    Example: <code>maxlength="12"</code> (default: 14, minimum: 8)</dd>
+
+    <dt><code>minlength</code></dt>
+    <dd>Minimum number of digits required in barcode<br>
+    Example: <code>minlength="10"</code> (default: 8, cannot exceed maxlength)</dd>
 
     <dt><code>terminate-char</code></dt>
     <dd>The character your scanner sends after reading a barcode<br>
@@ -54,14 +62,15 @@
   </dl>
 
   <h3>Example</h3>
-  <pre><code>&lt;barcode-scanner 
-  auto 
-  clear="1000"
-  debug 
-  terminate-char="\n"&gt;
+  <pre><code>&lt;barcode-scanner auto debug input&gt;
 &lt;/barcode-scanner&gt;</code></pre>
 
   <barcode-scanner clear="250" auto debug input></barcode-scanner>
+
+  <p>
+    If you don't have a barcode-scanner, you can manually type a barcode and press Enter.<br>
+    See the console for debug information.
+  </p>
 
   <script type="module">
     import { BarcodeScanner } from './index.js';
@@ -77,6 +86,7 @@
       const { detail } = event;
       console.log('Barcode:', detail.value);
 
+
       // Clear the display after 10 seconds
       // setTimeout(() => {
       // 	barcodeScanner.dispatchEvent(new CustomEvent('bs:clear'));
@@ -84,4 +94,5 @@
     });
   </script>
 </body>
+</html>
 </html>

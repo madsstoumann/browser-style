@@ -13,6 +13,8 @@ export class BarcodeScanner extends HTMLElement {
 		debugData: [],
 		icons: {},
 		lastKeyTime: 0,
+		maxLength: 14,
+		minLength: 8,
 		showInput: false,
 		terminateChar: '\n',
 		uid: ''
@@ -23,6 +25,8 @@ export class BarcodeScanner extends HTMLElement {
 		this.#state.auto = this.hasAttribute('auto');
 		this.#state.clear = parseInt(this.getAttribute('clear'), 10) || 2000;
 		this.#state.debug = this.hasAttribute('debug');
+		this.#state.maxLength = Math.max(8, parseInt(this.getAttribute('maxlength'), 10) || 14);
+		this.#state.minLength = Math.max(1, Math.min(this.#state.maxLength, parseInt(this.getAttribute('minlength'), 10) || 8));
 		this.#state.showInput = this.hasAttribute('input');
 		this.#state.terminateChar = this.getAttribute('terminate-char') || '\n';
 		this.#state.uid = crypto.randomUUID();
@@ -43,7 +47,10 @@ export class BarcodeScanner extends HTMLElement {
 				${this.#renderIcon(BarcodeScanner.ICONS.scanning, 'scanning', true)}
 			</button>
 			<label id="popover-${this.#state.uid}" popover>
-				<input type="number" id="input-${this.#state.uid}" autofocus${this.#state.showInput ? ``:` data-sr`} placeholder="0123456789123">
+				<input
+					autofocus${this.#state.showInput ? ``:` data-sr`}
+					placeholder="0123456789123"
+					type="number">
 			</label>`;
 	}
 
@@ -81,20 +88,32 @@ export class BarcodeScanner extends HTMLElement {
 		this.#state.icons.scanning?.classList.toggle('--scanning', scanning);
 	}
 
+	#checkValidRange(value, min = this.#state.minLength, max = this.#state.maxLength) {
+		const length = value.toString().length || 0;
+		return length >= min && length <= max;
+	}
+
 	#handleInput(event) {
 		const currentTime = Date.now();
 		const timeDiff = currentTime - this.#state.lastKeyTime;
 		const value = this.input.valueAsNumber;
 		this.#state.lastKeyTime = currentTime;
-		this.#setIcons(true, true);
+		
+		const isScanner = timeDiff < 50;
+		const isEnter = event.key === 'Enter';
+		const isValid = !isNaN(value) && this.#checkValidRange(value);
 
-		if (event.key === this.#state.terminateChar || event.key === 'Enter') {
-			if (value && timeDiff < 50) {
-				this.dispatchEvent(new CustomEvent('bs:entry', { detail: { value } }));
+		// Show scanning animation only for valid inputs
+		this.#setIcons(isValid && (isScanner || isEnter), true);
+
+		if (event.key === this.#state.terminateChar || isEnter) {
+			if (isValid && (isScanner || isEnter)) {
+				this.dispatchEvent(new CustomEvent('bs:entry', { detail: { value }}));
 				if (this.#state.debug) {
 					this.#state.debugData.unshift({ 
 						timestamp: new Date().toISOString(),
-						barcode: value
+						barcode: value,
+						source: isScanner ? 'scanner' : 'manual'
 					});
 					this.#outputDebug();
 				}
