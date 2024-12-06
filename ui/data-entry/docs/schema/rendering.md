@@ -1,11 +1,9 @@
+# Rendering Methods in DataEntry
 
-# Rendering Methods
+The rendering system in DataEntry uses a `render` object in your schema to control how each field is displayed and behaves. Here's a comprehensive guide to the rendering system.
 
-In **DataEntry**, users can customize the way each data entry is rendered by providing a `render` object inside the schema for each property. This allows control over how specific fields are displayed in the UI. Below we’ll explain how you can provide a render object, customize it, and the detailed information about various rendering methods available, including the more complex `array-details` and `autosuggest` methods.
-
-## Providing a Render Object
-
-The `render` object is specified for each property inside the schema. It allows you to define how the UI should render specific data fields. This includes the method of rendering (such as `input`, `select`, `array-details`, etc.) and any additional attributes required for that rendering.
+## Basic Structure
+A render object is defined within a schema property:
 
 ### Example of a Render Object:
 ```json
@@ -51,9 +49,11 @@ Renders a basic input field (e.g., text, number, date, etc.).
 
 - **Attributes**: Specify standard HTML attributes like `type`, `placeholder`, `disabled`, etc.
 
-### 2. **Select**
-Renders a dropdown `<select>` element populated with options.
+## Select Fields
 
+Select fields are one of the most versatile rendering methods, with several ways to configure options and behavior:
+
+### 1. Basic Select with Instance Lookup
 ```json
 {
   "render": {
@@ -70,7 +70,7 @@ Renders a dropdown `<select>` element populated with options.
 
 > TODO!
   
-### 3. **Richtext**
+### 2. **Richtext**
 Renders a rich text editor with various formatting options.
 
 ```json
@@ -84,7 +84,7 @@ Renders a rich text editor with various formatting options.
 }
 ```
 
-### 4. **Array-Details**
+### 3. **Array-Details**
 The `array-details` method is used to render arrays of data where each item can be expanded or collapsed using a `<details>` element. This method requires additional `label` and `value` properties to define the summary and display for each entry.
 
 #### Example:
@@ -117,7 +117,7 @@ The `array-details` method is used to render arrays of data where each item can 
 
 The `array-details` method is particularly useful for managing complex arrays of data where each item may have multiple fields, and users need to toggle the visibility of those fields for better organization.
 
-### 5. **Autosuggest**
+### 4. **Autosuggest**
 The `autosuggest` control is a more complex render method that allows users to enter text and receive suggestions based on data from an external API. This method is useful for fields like address lookup or selecting from a large dataset.
 
 #### Example:
@@ -151,7 +151,95 @@ The `autosuggest` control is a more complex render method that allows users to e
 - **mapping**: Defines how values from the API response map to the fields in the form (e.g., vendor ID and name).
 - **syncInstance**: A boolean that indicates whether the form instance should be synchronized with the selected value from the suggestions.
 
+### 5. **Array Units**
+The `array-units` method is used to render arrays of data where each item represents a unit with specific properties. This method is useful for managing lists of items with detailed information.
+
+#### Example:
+```json
+{
+  "type": "array",
+  "title": "Units",
+  "render": {
+    "method": "array-units",
+    "unitLabel": "${unitName}",
+    "unitValue": "${unitDescription}",
+    "add": true,
+    "delete": true
+  },
+  "items": {
+    "type": "object",
+    "properties": {
+      "unitName": { "type": "string", "title": "Unit Name" },
+      "unitDescription": { "type": "string", "title": "Description" }
+    }
+  }
+}
+```
+
+#### Breakdown:
+- **unitLabel**: This defines the text displayed for each unit in the array.
+- **unitValue**: The `unitValue` defines the content displayed for each unit.
+- **add**: A boolean that indicates if the user can add new units to the array.
+- **delete**: A boolean that indicates if the user can delete units from the array.
+
+### 6. **Array Link**
+The `array-link` method is used to render arrays of data where each item is a link. This method is useful for managing lists of links with specific properties.
+
+#### Example:
+```json
+{
+  "type": "array",
+  "title": "Links",
+  "render": {
+    "method": "array-link",
+    "linkLabel": "${linkText}",
+    "linkUrl": "${linkUrl}",
+    "add": true,
+    "delete": true
+  },
+  "items": {
+    "type": "object",
+    "properties": {
+      "linkText": { "type": "string", "title": "Link Text" },
+      "linkUrl": { "type": "string", "title": "URL" }
+    }
+  }
+}
+```
+
+#### Breakdown:
+- **linkLabel**: This defines the text displayed for each link in the array.
+- **linkUrl**: The `linkUrl` defines the URL for each link.
+- **add**: A boolean that indicates if the user can add new links to the array.
+- **delete**: A boolean that indicates if the user can delete links from the array.
+
+### 7. **Media**
+The `media` method is used to render media elements such as images or videos. This method is useful for managing media content with specific properties.
+
+#### Example:
+```json
+{
+  "type": "object",
+  "title": "Media",
+  "render": {
+    "method": "media",
+    "mediaType": "image",
+    "mediaUrl": "${mediaUrl}",
+    "mediaAlt": "${mediaAlt}"
+  },
+  "properties": {
+    "mediaUrl": { "type": "string", "title": "Media URL" },
+    "mediaAlt": { "type": "string", "title": "Alt Text" }
+  }
+}
+```
+
+#### Breakdown:
+- **mediaType**: This defines the type of media (e.g., image, video).
+- **mediaUrl**: The `mediaUrl` defines the URL for the media.
+- **mediaAlt**: The `mediaAlt` defines the alternative text for the media.
+
 ## Key Takeaways
 - You can customize how data fields are rendered using the `render` object within the schema.
-- Render methods like `array-details` and `autosuggest` allow for more advanced UI elements that can handle arrays of data and external data sources.
+- Render methods like `array-details`, `autosuggest`, `array-units`, `array-link`, and `media` allow for more advanced UI elements that can handle arrays of data, external data sources, and media content.
 - Each render method supports additional attributes and settings to further tailor the behavior and appearance of the rendered elements.
