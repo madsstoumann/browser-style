@@ -35,6 +35,9 @@
     <dt><code>debug</code></dt>
     <dd>Shows a history of all scanned barcodes in the browser console</dd>
 
+    <dt><code>input</code></dt>
+    <dd>Shows the barcode input, allowing for manual entries.</dd>
+
     <dt><code>terminate-char</code></dt>
     <dd>The character your scanner sends after reading a barcode<br>
     Example: <code>terminate-char="\n"</code> (default: Enter key)</dd>
@@ -58,7 +61,7 @@
   terminate-char="\n"&gt;
 &lt;/barcode-scanner&gt;</code></pre>
 
-  <barcode-scanner clear="250" debug></barcode-scanner>
+  <barcode-scanner clear="250" auto debug input></barcode-scanner>
 
   <script type="module">
     import { BarcodeScanner } from './index.js';

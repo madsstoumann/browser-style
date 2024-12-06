@@ -13,6 +13,7 @@ export class BarcodeScanner extends HTMLElement {
 		debugData: [],
 		icons: {},
 		lastKeyTime: 0,
+		showInput: false,
 		terminateChar: '\n',
 		uid: ''
 	};
@@ -22,6 +23,7 @@ export class BarcodeScanner extends HTMLElement {
 		this.#state.auto = this.hasAttribute('auto');
 		this.#state.clear = parseInt(this.getAttribute('clear'), 10) || 2000;
 		this.#state.debug = this.hasAttribute('debug');
+		this.#state.showInput = this.hasAttribute('input');
 		this.#state.terminateChar = this.getAttribute('terminate-char') || '\n';
 		this.#state.uid = crypto.randomUUID();
 	}
@@ -40,9 +42,8 @@ export class BarcodeScanner extends HTMLElement {
 				${this.#renderIcon(BarcodeScanner.ICONS.off, 'off')}
 				${this.#renderIcon(BarcodeScanner.ICONS.scanning, 'scanning', true)}
 			</button>
-			<output for="input-${this.#state.uid}"></output>
 			<label id="popover-${this.#state.uid}" popover>
-				<input type="number" id="input-${this.#state.uid}" autofocus data-sr>
+				<input type="number" id="input-${this.#state.uid}" autofocus${this.#state.showInput ? ``:` data-sr`} placeholder="0123456789123">
 			</label>`;
 	}
 
@@ -50,7 +51,6 @@ export class BarcodeScanner extends HTMLElement {
 		const shadow = this.shadowRoot;
 		this.button = shadow.querySelector('button');
 		this.input = shadow.querySelector('input');
-		this.output = shadow.querySelector('output');
 		this.toggle = this.input.parentNode;
 		this.#state.icons = {
 			on: shadow.querySelector('[data-icon="on"]'),
@@ -67,7 +67,6 @@ export class BarcodeScanner extends HTMLElement {
 		const isOpen = newState === 'open';
 		this.button.classList.toggle('--open', isOpen);
 		this.#setIcons(false, isOpen);
-		if (!isOpen) this.output.value = '';
 		this.input.focus();
 	}
 
@@ -87,7 +86,6 @@ export class BarcodeScanner extends HTMLElement {
 		const timeDiff = currentTime - this.#state.lastKeyTime;
 		const value = this.input.valueAsNumber;
 		this.#state.lastKeyTime = currentTime;
-		this.output.value = value;
 		this.#setIcons(true, true);
 
 		if (event.key === this.#state.terminateChar || event.key === 'Enter') {
@@ -100,6 +98,7 @@ export class BarcodeScanner extends HTMLElement {
 					});
 					this.#outputDebug();
 				}
+				this.input.placeholder = value;
 				this.input.value = '';
 				event.preventDefault();
 				clearTimeout(this.#state.clearTimeout);
@@ -150,12 +149,9 @@ stylesheet.replaceSync(`
 :host {
 	--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
 	--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
-	--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
-	display: grid;
-	inset-block-end: 1ch;
-	inset-inline-end: 3ch;
+	inset-block-end: 1.5rem;
+	inset-inline-end: 1.5rem;
 	position: fixed;
-	row-gap: 5px;
 }
 :host button {
 	background-color: var(--ButtonFace);
@@ -169,14 +165,24 @@ stylesheet.replaceSync(`
 	background-color: var(--ColorSuccess);
 	color: #FFF;
 }
-:host output {
-	block-size: 1lh;
-	color: var(--GrayText);
-	display: block;
+:host input {
+	background-color: var(--ButtonFace);
+	border: 0;
+	border-radius: .25em;
+	caret-color: #0000;
 	font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 	font-size: 10px;
 	font-weight: 400;
+	inset-block-end: .25rem;
+	inset-inline-end: 1.5rem;
+	opacity: .5;
+	padding: 3px 6px;
+	position: fixed;
+	text-align: end;
+	width: 15ch;
 }
+:host input::-webkit-inner-spin-button { display: none; }
+:host input:focus { caret-color: #333; outline: 0; }
 :host [popover] { border: 0; }
 :host [popover]::backdrop { background-color: #0000; }
 :host svg { 
