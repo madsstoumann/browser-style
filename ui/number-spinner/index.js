@@ -1,27 +1,21 @@
 class NumberSpinner extends HTMLElement {
+	static formAssociated = true;
+
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [stylesheet];
-		const attrs = {
-			form: '',
-			name: '',
-			size: 2,
-			min: 0,
-			max: 100,
-			step: 1,
-			value: 1,
-			label: ''
-		};
 
-		Object.keys(attrs).forEach(attr => {
-			if (this.hasAttribute(attr)) {
-				attrs[attr] = this.getAttribute(attr);
-				if (typeof attrs[attr] === 'number') {
-					attrs[attr] = Number(attrs[attr]);
-				}
-			}
-		});
+		const attrs = {
+			form: this.getAttribute('form'),
+			label: this.getAttribute('label') || '',
+			max: Number(this.getAttribute('max')) || 100,
+			min: Number(this.getAttribute('min')) || 0,
+			name: this.getAttribute('name'),
+			size: Number(this.getAttribute('size')) || 2,
+			step: Number(this.getAttribute('step')) || 1,
+			value: Number(this.getAttribute('value')) || 1
+		};
 
 		this.shadowRoot.innerHTML = `
 			<button type="button" part="dec" tabindex="0">
@@ -46,17 +40,13 @@ class NumberSpinner extends HTMLElement {
 		this.addEvents();
 	}
 
-	static get formAssociated() {
-		return true
-	}
-
 	get value() {
 		return this.input.value;
 	}
 
 	set value(val) {
 		this.input.value = val;
-		this.internals.setFormValue(val, this.getAttribute('name'));
+		this.internals.setFormValue(val, this.getAttribute('name') || val);
 	}
 
 	get valueAsNumber() {
@@ -66,19 +56,19 @@ class NumberSpinner extends HTMLElement {
 	addEvents() {
 		const [dec, inc] = this.shadowRoot.querySelectorAll('button');
 		const dispatch = () => {
+			const value = this.input.valueAsNumber;
 			this.dispatchEvent(new CustomEvent('change', {
 				bubbles: true,
-				detail: { value: this.input.valueAsNumber }
+				detail: { value }
 			}));
-			dec.disabled = this.input.valueAsNumber <= this.input.min;
-			inc.disabled = this.input.valueAsNumber >= this.input.max;
-			this.value = this.input.valueAsNumber;
+			dec.disabled = value <= this.input.min;
+			inc.disabled = value >= this.input.max;
+			this.value = value;
 		};
 
 		dec.addEventListener('click', () => { this.input.stepDown(); dispatch(); });
 		inc.addEventListener('click', () => { this.input.stepUp(); dispatch(); });
-		this.input.addEventListener('input', dispatch);
-		this.input.addEventListener('change', dispatch);
+		['input', 'change'].forEach(event => this.input.addEventListener(event, dispatch));
 	}
 }
 
@@ -87,6 +77,7 @@ const stylesheet = new CSSStyleSheet()
 stylesheet.replaceSync(`
 	:host {
 		align-items: center;
+		contain: content;
 		display: flex;
 	}
 	button, input {
@@ -102,9 +93,12 @@ stylesheet.replaceSync(`
 		display: inline-grid;
 		padding: var(--number-spinner-button-p, 1px 6px);
 		place-content: center;
+		touch-action: manipulation;
 		width: var(--number-spinner-button-w, 3ch);
+		will-change: background-color; 
 		&[disabled] {
 			color: var(--number-spinner-button-c--disabled, GrayText);
+			cursor: not-allowed;
 		}
 		@media ( hover: hover ) {
 			&:hover {
@@ -117,6 +111,7 @@ stylesheet.replaceSync(`
 		}
 	}
 	input {
+		-moz-appearance: textfield;
 		background: #0000;
 		border: 0;
 		text-align: center;
@@ -124,6 +119,7 @@ stylesheet.replaceSync(`
 	input::-webkit-outer-spin-button,
 	input::-webkit-inner-spin-button {
 		-webkit-appearance: none;
+		margin: 0;
 	}
 	[part=svg] {
 		aspect-ratio: 1;
