@@ -30,11 +30,12 @@
 	<h2>With custom <code>slot</code></h2>
 
 	<form id="myform">
-		<input type="text" name="firstname">
+		<input type="number" name="firstname" step="10" max="200">
 		<number-spinner value="5" step="10" max="200" class="custom" name="testing">
 			<span slot="dec">dec</span>
 			<span slot="inc">inc</span>
 		</number-spinner>
+		<button type="reset">Reset</button>
 	</form>
 
 		
@@ -47,15 +48,15 @@
 		// 	console.log(e.target.valueAsNumber);
 		// });	
 
-		// const myForm = document.getElementById('myform');
-		// myForm.addEventListener('input', (e) => {
-		// 	console.log(e.target.valueAsNumber);
-		// });	
-
-		const mySpinner = document.querySelector('.custom');
-		mySpinner.addEventListener('change', (e) => {
+		const myForm = document.getElementById('myform');
+		myForm.addEventListener('change', (e) => {
 			console.log(e.target.valueAsNumber);
-		});
+		});	
+
+		// const mySpinner = document.querySelector('.custom');
+		// mySpinner.addEventListener('input', (e) => {
+		// 	console.log(e.target.valueAsNumber);
+		// });
 	</script>
 </body>
 </html>

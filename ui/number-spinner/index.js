@@ -19,7 +19,7 @@ class NumberSpinner extends HTMLElement {
 
 		this.shadowRoot.innerHTML = `
 			<button type="button" part="dec" tabindex="0">
-			<slot name="dec"><svg part="svg" viewBox="0 0 24 24"><path d="M5 12l14 0" /></svg></slot>
+				<slot name="dec"><svg part="svg" viewBox="0 0 24 24"><path d="M5 12l14 0" /></svg></slot>
 			</button>
 			<label aria-label="${attrs.label}">
 			<input type="number"
@@ -32,12 +32,22 @@ class NumberSpinner extends HTMLElement {
 				value="${attrs.value}">
 			</label>
 			<button type="button" part="inc" tabindex="0">
-			<slot name="inc"><svg part="svg" viewBox="0 0 24 24"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></slot>
+				<slot name="inc"><svg part="svg" viewBox="0 0 24 24"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></slot>
 			</button>
 		`;
+
+		this.dec = this.shadowRoot.querySelector('[part=dec]');
+		this.inc = this.shadowRoot.querySelector('[part=inc]');
 		this.input = this.shadowRoot.querySelector('input');
+
+		this.initialValue = attrs.value;
 		this.internals = this.attachInternals();
 		this.addEvents();
+		this.formReset = this.formReset.bind(this);
+	}
+
+	get defaultValue() {
+		return this.initialValue;
 	}
 
 	get value() {
@@ -53,22 +63,38 @@ class NumberSpinner extends HTMLElement {
 		return this.input.valueAsNumber;
 	}
 
-	addEvents() {
-		const [dec, inc] = this.shadowRoot.querySelectorAll('button');
-		const dispatch = () => {
-			const value = this.input.valueAsNumber;
-			this.dispatchEvent(new CustomEvent('change', {
-				bubbles: true,
-				detail: { value }
-			}));
-			dec.disabled = value <= this.input.min;
-			inc.disabled = value >= this.input.max;
-			this.value = value;
-		};
+	connectedCallback() {
+		const form = this.internals.form;
+		if (form) {
+			form.addEventListener('reset', this.formReset);
+		}
+	}
 
-		dec.addEventListener('click', () => { this.input.stepDown(); dispatch(); });
-		inc.addEventListener('click', () => { this.input.stepUp(); dispatch(); });
-		['input', 'change'].forEach(event => this.input.addEventListener(event, dispatch));
+	disconnectedCallback() {
+		const form = this.internals.form;
+		if (form) {
+			form.removeEventListener('reset', this.formReset);
+		}
+	}
+
+	addEvents() {
+		this.dec.addEventListener('click', () => { this.input.stepDown(); this.dispatch(); });
+		this.inc.addEventListener('click', () => { this.input.stepUp(); this.dispatch(); });
+		this.input.addEventListener('change', () => this.dispatch());
+	}
+
+	dispatch(eventType = 'change') {
+		const value = this.input.valueAsNumber;
+		this.dec.disabled = value <= this.input.min;
+		this.inc.disabled = value >= this.input.max;
+		this.value = value;
+		if (eventType === 'reset') return;
+		this.dispatchEvent(new Event('change', { bubbles: true }));
+	}
+
+	formReset() {
+		this.value = this.initialValue;
+		this.dispatch('reset');
 	}
 }
 
