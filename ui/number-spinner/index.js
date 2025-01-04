@@ -1,55 +1,139 @@
-/**
- * Number Spinner
- * @author Mads Stoumann
- * @version 1.0.00
- * @summary 29-08-2024
- * @class
- * @extends {HTMLElement}
- */
-import { WebComponentTemplate } from '/assets/js/webcomponent.js';
-export class NumberSpinner extends WebComponentTemplate {
-	static tagName = 'number-spinner';
+class NumberSpinner extends HTMLElement {
 	constructor() {
 		super();
+		this.attachShadow({ mode: 'open' });
+		this.shadowRoot.adoptedStyleSheets = [stylesheet];
+		const attrs = {
+			form: '',
+			name: '',
+			size: 2,
+			min: 0,
+			max: 100,
+			step: 1,
+			value: 1,
+			label: ''
+		};
 
-		/*
-			`this.root` is the shadowRoot or the element itself, depending on attribute `no-shadow`
+		Object.keys(attrs).forEach(attr => {
+			if (this.hasAttribute(attr)) {
+				attrs[attr] = this.getAttribute(attr);
+				if (typeof attrs[attr] === 'number') {
+					attrs[attr] = Number(attrs[attr]);
+				}
+			}
+		});
 
-			If you set markup in the constructur, be sure to call `super.connectedCallback();` *after* setting the markup.
-			This can also all be done in the `connectedCallback` method.
-		*/
-
-		const label =  this.getAttribute('label');
-		this.root.innerHTML =  `
-			<fieldset part="number-spinner-container">
-				<legend part="number-spinner-label"><slot name="label">${label}</slot></legend>
-				<div part="number-spinner-controls">
-					<button type="button" part="number-spinner-decrement"><slot name="icon-minus">-</slot></button>
-					<label part="number-spinner-input-wrapper" aria-label="${label}">
-						<input type="number" part="number-spinner-input"
-							max="${this.getAttribute('max') || 100}"
-							min="${this.getAttribute('min') || 0}"
-							step="${this.getAttribute('step') || 1}"
-							value="${this.getAttribute('value')}">
-					</label>
-					<button type="button" part="number-spinner-increment"><slot name="icon-plus">+</slot></button>
-				</div>
-			</fieldset>`;
-
-		/*
-		To set default styles, when using shadowRoot, use the following:
-			this.stylesheet.replaceSync(`::host { ...}`);
-		Note, that styles will *not* be applied, if attribute `no-styles` is set.
-		*/
-		this.input = this.root.querySelector('input');
-		this.label = this.root.querySelector('[part="number-spinner-label"]');
-		this.stepDownButton = this.root.querySelector('[part="number-spinner-decrement"]');
-		this.stepUpButton = this.root.querySelector('[part="number-spinner-increment"]');
+		this.shadowRoot.innerHTML = `
+			<button type="button" part="dec" tabindex="0">
+			<slot name="dec"><svg part="svg" viewBox="0 0 24 24"><path d="M5 12l14 0" /></svg></slot>
+			</button>
+			<label aria-label="${attrs.label}">
+			<input type="number"
+				${attrs.form ? `form="${attrs.form}"` : ''}
+				${attrs.name ? `name="${attrs.name}"` : ''}
+				size="${attrs.size}"
+				min="${attrs.min}"
+				max="${attrs.max}"
+				step="${attrs.step}"
+				value="${attrs.value}">
+			</label>
+			<button type="button" part="inc" tabindex="0">
+			<slot name="inc"><svg part="svg" viewBox="0 0 24 24"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></slot>
+			</button>
+		`;
+		this.input = this.shadowRoot.querySelector('input');
+		this.internals = this.attachInternals();
+		this.addEvents();
 	}
 
-	connectedCallback() {
-		super.connectedCallback();
-		this.stepUpButton.addEventListener('click', () => this.input.stepUp());
-		this.stepDownButton.addEventListener('click', () => this.input.stepDown());
+	static get formAssociated() {
+		return true
+	}
+
+	get value() {
+		return this.input.value;
+	}
+
+	set value(val) {
+		this.input.value = val;
+		this.internals.setFormValue(val, this.getAttribute('name'));
+	}
+
+	get valueAsNumber() {
+		return this.input.valueAsNumber;
+	}
+
+	addEvents() {
+		const [dec, inc] = this.shadowRoot.querySelectorAll('button');
+		const dispatch = () => {
+			this.dispatchEvent(new CustomEvent('change', {
+				bubbles: true,
+				detail: { value: this.input.valueAsNumber }
+			}));
+			dec.disabled = this.input.valueAsNumber <= this.input.min;
+			inc.disabled = this.input.valueAsNumber >= this.input.max;
+			this.value = this.input.valueAsNumber;
+		};
+
+		dec.addEventListener('click', () => { this.input.stepDown(); dispatch(); });
+		inc.addEventListener('click', () => { this.input.stepUp(); dispatch(); });
+		this.input.addEventListener('input', dispatch);
+		this.input.addEventListener('change', dispatch);
 	}
 }
+
+/* === STYLES === */
+const stylesheet = new CSSStyleSheet()
+stylesheet.replaceSync(`
+	:host {
+		align-items: center;
+		display: flex;
+	}
+	button, input {
+		font-family: var(--number-spinner-ff, inherit);
+		font-size: var(--number-spinner-fs, inherit);
+	}
+	button {
+		aspect-ratio: var(--number-spinner-button-asr, 1);
+		background-color: var(--number-spinner-button-bg, ButtonFace);
+		border: var(--number-spinner-button-b, 0);
+		border-radius: var(--number-spinner-button-bdrs, 50%);
+		color: var(--number-spinner-button-c, ButtonText);
+		display: inline-grid;
+		padding: var(--number-spinner-button-p, 1px 6px);
+		place-content: center;
+		width: var(--number-spinner-button-w, 3ch);
+		&[disabled] {
+			color: var(--number-spinner-button-c--disabled, GrayText);
+		}
+		@media ( hover: hover ) {
+			&:hover {
+				background-color: var(--number-spinner-button-bg--hover, 
+				light-dark(
+					color-mix(in srgb, ButtonFace, #000 5%),
+					color-mix(in srgb, ButtonFace, #FFF 10%)
+				));
+			}
+		}
+	}
+	input {
+		background: #0000;
+		border: 0;
+		text-align: center;
+	}
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+	}
+	[part=svg] {
+		aspect-ratio: 1;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+		width: 100%;
+	}
+`);
+
+customElements.define('number-spinner', NumberSpinner);

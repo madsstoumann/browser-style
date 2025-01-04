@@ -1,7 +1,7 @@
 
 # Extending the Schema
 
-When working with the **DataEntry** component, the schema can be extended with several additional fields that define how the component renders content and behaves. The following sections explain how to extend the schema with **Navigation**, **Headline**, **Title**, and **Form Buttons**.
+When working with the **DataEntry** component, the schema can be **extended** with several additional fields that define how the component renders content and behaves. The following sections explain how to extend the schema with **Navigation**, **Headline**, **Title**, and **Form Buttons**.
 
 ## Navigation
 

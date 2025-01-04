@@ -1,9 +1,69 @@
+# Dynamic Data
 
-# Dynamic Functions
+The schema supports various types of dynamic data, allowing you to insert values from different sources. These are wrapped within a format akin to template literals: `${dynamic-data}`
+
+## Dynamic Data Types
+
+### 1. Translation Keys (`t:`)
+Use the `t:` prefix to insert translated strings based on the current language setting and the `i18n`-object.
+
+### 2. Variables (`v:`)
+Use the `v:` prefix to insert global variables. Example: `${v:API}`
+
+```json
+{
+  "render": {
+    "method": "input",
+    "attributes": [
+      { "data-api": "${v:API}" }
+    ]
+  }
+}
+```
+
+Global variables are defined in `constants` in `DataEntry`. 
+
+You can set these direcly in JavaScript:
+
+```js
+entry.constants = {
+  API: 'https://api.example.com',
+  DEFAULT_CURRENCY: 'DKK'
+}
+```
+
+### 3. Dynamic Methods (`d:`)
+Use the `d:` prefix to call dynamic functions that generate values at runtime. Example: `${d:uuid}`
+
+```json
+{
+  "type": "string",
+  "title": "Created At",
+  "value": "${d:now}",
+  "render": {
+    "method": "input"
+  }
+}
+```
+
+### 4. Object Values
+Use `${object}` to insert any object in the data-source. Example: `${first_name} ${last_name}`
 
 Dynamic functions in **DataEntry** provide a flexible way to inject dynamic values into the schema. These functions can be used to generate values that are evaluated at runtime, such as timestamps, unique identifiers, or other user-defined logic. This document explains the built-in dynamic functions, how to extend them with custom functions, and how to use them in the schema.
 
-## Built-in Dynamic Functions
+
+### Combining Dynamic Data
+
+You can combine mutiple dynamic values in a single string:
+
+```json
+{
+  "headline": "${t:product_name}: ${name} (${id})",
+  "description": "${t:created_on} ${d:now}"
+}
+```
+
+## Built-in Dynamic Methods
 
 ### 1. **now**
 
@@ -84,4 +144,18 @@ In this example:
 
 ## Extending Dynamic Functions
 
-You can define your own dynamic functions to extend the functionality provided by DataEntry. To do this, use the `extendDynamicFunction` method — see [Extending DataEntry](../extending.md).
+You can define your own dynamic functions to extend the functionality provided by DataEntry. To do this, use the `extendDynamicFunction` method:
+
+```js
+extendDynamicFunction('currentYear', () => {
+  return new Date().getFullYear();
+});
+```
+
+Then, in your schema, add this:
+
+```json
+{
+  "copyright": "${d:currentYear} ${company_name}"
+}
+```
