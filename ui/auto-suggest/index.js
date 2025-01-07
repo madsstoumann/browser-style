@@ -82,69 +82,6 @@ export class AutoSuggest extends HTMLElement {
 	}
 
 	connectedCallback() {
-		const limitToSelection = () => {
-			const option = selected();
-			this.input.setCustomValidity(option ? '' : this.settings.invalid);
-			this.input.reportValidity();
-		};
-
-		const onentry = (event) => {
-			const value = this.input.value.length >= this.input.minLength ? this.input.value.toLowerCase() : '';
-			if (!value) return;
-
-			const option = selected();
-			if (option && (event.inputType === "insertReplacementText" || event.inputType == null)) {
-				this.value = option.dataset.value;
-				this.reset(false);
-				this.dispatch(option.dataset.obj);
-				return;
-			}
-
-			this.debouncedFetch(value);
-		};
-
-		const selected = () => {
-			if (this.settings.listMode === 'ul') return null;
-			const option = [...this.list.options].find(entry => entry.value === this.input.value);
-			return option || null;
-		};
-
-		this.input.addEventListener('keydown', (event) => {
-			if (event.key === 'Enter') {
-				event.preventDefault();
-				if (this.settings.nolimit) {
-					this.dispatchEvent(new CustomEvent('autoSuggestNoSelection', { bubbles: true }));
-					this.reset();
-				}
-			}
-
-			if (this.settings.listMode === 'ul' && event.key === 'ArrowDown' && this.list.children.length) {
-				event.preventDefault();
-				this.list.togglePopover(true);
-				this.list.children[0].focus();
-			}
-
-			if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
-				this.resetToDefault();
-				if (this.initialObject) {
-					this.dispatch(JSON.stringify(this.initialObject), true);
-				}
-			}
-		});
-
-		this.input.addEventListener('input', (event) => {
-			event.stopPropagation();
-			onentry(event);
-		});
-
-		this.input.addEventListener('search', () => {
-			if (this.input.value.length === 0) {
-				this.reset(false);
-			} else if (!this.settings.nolimit) {
-				limitToSelection();
-			}
-		});
-
 		if (this.settings.listMode === 'ul') {
 			this.setupULListeners();
 		}
@@ -152,6 +89,32 @@ export class AutoSuggest extends HTMLElement {
 		if (this.isFormControl && this.internals.form) {
 			this.internals.form.addEventListener('reset', this.formReset.bind(this));
 		}
+
+		const onentry = (event) => {
+			const value = this.input.value.length >= this.input.minLength ? this.input.value.toLowerCase() : '';
+			if (!value) return;
+			this.debouncedFetch(value);
+		};
+
+		this.input.addEventListener('input', event => {
+			event.stopPropagation();
+			onentry(event);
+		});
+
+		this.input.addEventListener('keydown', event => {
+			if (event.key === 'Enter' && this.settings.nolimit) {
+				event.preventDefault();
+				this.dispatchEvent(new CustomEvent('autoSuggestNoSelection', { bubbles: true }));
+				this.reset();
+			} else if (event.key === 'ArrowDown' && this.settings.listMode === 'ul' && this.list.children.length) {
+				event.preventDefault();
+				this.list.togglePopover(true);
+				this.list.children[0].focus();
+			} else if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+				this.resetToDefault();
+				this.initialObject && this.dispatch(JSON.stringify(this.initialObject), true);
+			}
+		});
 	}
 
 	disconnectedCallback() {
@@ -253,25 +216,15 @@ export class AutoSuggest extends HTMLElement {
 	}
 
 	resetToDefault() {
-		if (this.initialObject) {
-			const display = this.getNestedValue(this.initialObject, this.settings.apiDisplayPath);
-			const value = this.getNestedValue(this.initialObject, this.settings.apiValuePath);
-			if (this.isFormControl) {
-				this.displayValue = display || this.defaultValues.input;
-				this.value = value || this.defaultValues.value;
-			} else {
-				this.input.value = display || this.defaultValues.input;
-				this.value = value || this.defaultValues.value;
-			}
-		} else {
-			if (this.isFormControl) {
-				this.displayValue = this.defaultValues.input;
-				this.value = this.defaultValues.value;
-			} else {
-				this.input.value = this.defaultValues.input;
-				this.value = this.defaultValues.value;
-			}
-		}
+		const display = this.initialObject ? 
+			this.getNestedValue(this.initialObject, this.settings.apiDisplayPath) || this.defaultValues.input :
+			this.defaultValues.input;
+		
+		const value = this.initialObject ?
+			this.getNestedValue(this.initialObject, this.settings.apiValuePath) || this.defaultValues.value :
+			this.defaultValues.value;
+
+		this.setDisplayAndValue(display, value);
 		
 		this.input.setCustomValidity('');
 		if (this.settings.listMode === 'ul') {
@@ -282,19 +235,20 @@ export class AutoSuggest extends HTMLElement {
 
 	selectItem(target) {
 		const { obj, value } = target.dataset;
-		const displayText = target.textContent.trim();
-		
-		if (this.isFormControl) {
-			this.value = value;
-			this.displayValue = displayText;
-		} else {
-			this.value = value;
-			this.input.value = displayText;
-		}
-		
+		this.setDisplayAndValue(target.textContent.trim(), value);
 		this.reset(false);
 		this.dispatch(obj);
 		setTimeout(() => this.input.focus(), 0);
+	}
+
+
+	setDisplayAndValue(display, value) {
+		if (this.isFormControl) {
+			this.internals.setFormValue(value, this.getAttribute('name') || '');
+			this.setAttribute('value', value || '');
+			this.displayValue = display;
+		} 
+		this.input.value = display;
 	}
 
 	setupULListeners() {
