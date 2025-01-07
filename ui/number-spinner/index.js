@@ -3,8 +3,12 @@ class NumberSpinner extends HTMLElement {
 
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.adoptedStyleSheets = [stylesheet];
+		if (this.hasAttribute('nomount')) return;
+		
+		const root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
+		if (!this.hasAttribute('noshadow')) {
+			root.adoptedStyleSheets = [stylesheet];
+		}
 
 		const attrs = {
 			form: this.getAttribute('form'),
@@ -17,14 +21,14 @@ class NumberSpinner extends HTMLElement {
 			value: Number(this.getAttribute('value')) || 1
 		};
 
-		this.shadowRoot.innerHTML = `
+		root.innerHTML = `
 			<button type="button" part="dec" tabindex="0">
 				<slot name="dec"><svg part="svg" viewBox="0 0 24 24"><path d="M5 12l14 0" /></svg></slot>
 			</button>
 			<label aria-label="${attrs.label}">
 			<input type="number"
-				${attrs.form ? `form="${attrs.form}"` : ''}
-				${attrs.name ? `name="${attrs.name}"` : ''}
+				${attrs.form ? `form="${attrs.form}` : ''}
+				${attrs.name ? `name="${attrs.name}` : ''}
 				size="${attrs.size}"
 				min="${attrs.min}"
 				max="${attrs.max}"
@@ -36,9 +40,9 @@ class NumberSpinner extends HTMLElement {
 			</button>
 		`;
 
-		this.dec = this.shadowRoot.querySelector('[part=dec]');
-		this.inc = this.shadowRoot.querySelector('[part=inc]');
-		this.input = this.shadowRoot.querySelector('input');
+		this.dec = root.querySelector('[part=dec]');
+		this.inc = root.querySelector('[part=inc]');
+		this.input = root.querySelector('input');
 
 		this.initialValue = attrs.value;
 		this.internals = this.attachInternals();
@@ -95,6 +99,12 @@ class NumberSpinner extends HTMLElement {
 	formReset() {
 		this.value = this.initialValue;
 		this.dispatch('reset');
+	}
+
+	static mount() {
+		if (!customElements.get('number-spinner')) {
+			customElements.define('number-spinner', this);
+		}
 	}
 }
 
@@ -158,4 +168,11 @@ stylesheet.replaceSync(`
 	}
 `);
 
-customElements.define('number-spinner', NumberSpinner);
+// If any instance exists without nomount, mount the component
+if (document.querySelector('number-spinner:not([nomount])')) {
+		NumberSpinner.mount();
+}
+
+if (!customElements.get('number-spinner')) {
+		customElements.define('number-spinner', NumberSpinner);
+}

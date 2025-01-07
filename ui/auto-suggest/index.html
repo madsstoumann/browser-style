@@ -18,23 +18,26 @@
 	<p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>&lt;datalist&gt;</code> or <code>&lt;ul&gt;</code>.<br>
 		It exposes several events, see the <code>console</code>. Try it out by typing the placholder-text. <br>
 		<a href="readme.md">Documentation</a> in Markdown.</p>
-		<p>A non-web-component version is <a href="nowebc.html">also available</a>.</p>
+		<p>A non-web-component version is <a href="basic.html">also available</a>.</p>
 
 	<auto-suggest
 		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
 		api-value-path="adresse.id"
 		api-display-path="tekst"
 		label="Dawa search, using datalist"
+		noshadow
 		placeholder="park">
 	</auto-suggest>
 
-	<p>With <code>list-mode="ul"</code></p>
+	<p>With <code>list-mode="ul"</code> and <code>nolimit</code></p>
 	<auto-suggest
 		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
 		api-value-path="adresse.id"
 		api-display-path="tekst"
 		label="Dawa search"
+		nolimit
 		list-mode="ul"
+		noshadow
 		placeholder="park">
 	</auto-suggest>
 
@@ -46,6 +49,7 @@
 		id="dawa"
 		label="Dawa search"
 		list-mode="ul"
+		noshadow
 		placeholder="park">
 	</auto-suggest>
 
@@ -60,20 +64,21 @@
 		api-display-path="country_id"
 		id="nationalize"
 		label="Nationalize.io"
+		noshadow
 		placeholder="thomas">
 	</auto-suggest>
-	
-	<script type="module">
-		import { AutoSuggest } from './index.js';
-		AutoSuggest.mount();
-	</script>
+
+	<script type="module" src="./index.js"></script>
 
 	<script>
 		const suggest = document.querySelectorAll('auto-suggest');
 		suggest.forEach((node) => {
-			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect'].forEach((event) => {
+			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect', 'autoSuggestNoSelection'].forEach((event) => {
 				node.addEventListener(event, (event) => {
 					console.log(event.type, event.detail ? event.detail : '');
+					if (event.type === 'autoSuggestNoSelection') {
+						console.log('Input value:', node.input.value);
+					}
 				});
 			});
 		});
@@ -82,7 +87,7 @@
 			const dawa = document.getElementById('dawa');
 			dawa.render = (data) => {
 				return data.map(obj => 
-					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}">
+					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}" data-obj="${dawa.stringifyDataObject(obj)}">
 							<img src='http://unsplash.it/50/50?random&gravity=center' alt='' class="demo">${obj.tekst}
 						</li>`
 				).join('');
@@ -91,7 +96,7 @@
 			const nationalize = document.getElementById('nationalize');
 			nationalize.render = (data) => {
 				return data.map(obj => 
-					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}"></option>`
+					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj="${nationalize.stringifyDataObject(obj)}"></option>`
 				).join('');
 			};
 		});

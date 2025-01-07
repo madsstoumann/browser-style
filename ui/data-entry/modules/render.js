@@ -394,6 +394,7 @@ export const autosuggest = (params) => {
 		${label ? `label="${label}"` : ''}
 		list-mode="ul"
 		name="${name}"
+		noshadow
 		part="autosuggest"
 		path="${path}"
 		${syncInstance ? `sync-instance="${syncInstance}"` : ''}
