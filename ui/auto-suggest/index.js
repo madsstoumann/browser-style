@@ -38,7 +38,7 @@ export class AutoSuggest extends HTMLElement {
 		this.initialObject = JSON.parse(this.getAttribute('initial-object') || 'null');
 		this.listId = `list${crypto.randomUUID().replace(/-/g, '')}`;
 
-		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'invalid', 'label', 'list-mode'].reduce((s, attr) => {
+		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'debounce', 'invalid', 'label', 'list-mode'].reduce((s, attr) => {
 			s[attr.replace(/-([a-z])/g, (_, l) => l.toUpperCase())] = this.getAttribute(attr) ?? null;
 			return s;
 		}, {});
@@ -51,6 +51,7 @@ export class AutoSuggest extends HTMLElement {
 		this.settings.cache = this.settings.cache === 'true';
 		this.settings.listMode = this.settings.listMode || 'datalist';
 		this.settings.nolimit = this.hasAttribute('nolimit');
+		this.settings.debounceTime = parseInt(this.settings.debounce) || 300;
 
 		const root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
 		if (!this.hasAttribute('noshadow')) root.adoptedStyleSheets = [stylesheet];
@@ -64,7 +65,7 @@ export class AutoSuggest extends HTMLElement {
 			this.internals.setFormValue(initialValue, this.getAttribute('name') || '');
 		}
 
-		this.debouncedFetch = this.debounced(300, this.fetchData.bind(this));
+		this.debouncedFetch = this.debounced(this.settings.debounceTime, this.fetchData.bind(this));
 	}
 
 	mount() {
@@ -135,7 +136,6 @@ export class AutoSuggest extends HTMLElement {
 		});
 
 		this.input.addEventListener('input', (e) => {
-			e.stopPropagation();
 			const value = this.input.value.length >= this.input.minLength ? this.input.value.toLowerCase() : '';
 			if (!value) return;
 
@@ -323,7 +323,6 @@ export class AutoSuggest extends HTMLElement {
 		const list = this.settings.listMode === 'ul' 
 			? `<ul popover id="${this.listId}" part="list" role="listbox" style="position-anchor:--${this.listId}"></ul>`
 			: `<datalist id="${this.listId}" part="list"></datalist>`;
-
 		return `
 			${this.settings.label ? `<label part="row"><span part="label">${this.settings.label}</span>` : ''}
 				<input
