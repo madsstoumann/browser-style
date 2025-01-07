@@ -63,21 +63,18 @@ export class AutoSuggest extends HTMLElement {
 	get name() { return this.getAttribute('name'); }
 	get type() { return this.localName; }
 	get value() { 
-		if (this.isFormControl) {
-			return this.internals.elementInternals?.value ?? this.getAttribute('value') ?? '';
-		}
-		return this.input?.value ?? '';
+		return this.isFormControl ? 
+			(this.internals?.elementInternals?.value ?? this.getAttribute('value') ?? '') :
+			(this.input?.value ?? '');
 	}
 	set value(v) { 
 		if (this.isFormControl) {
 			this.internals.setFormValue(v, this.getAttribute('name') || '');
 			this.setAttribute('value', v || '');
+		} else if (v) {
+			this.setAttribute('value', v);
 		} else {
-			if (v) {
-				this.setAttribute('value', v);
-			} else {
-				this.removeAttribute('value');
-			}
+			this.removeAttribute('value');
 		}
 	}
 
@@ -168,7 +165,6 @@ export class AutoSuggest extends HTMLElement {
 		};
 	}
 
-
 	dispatch(dataObj = null, isInitial = false) {
 		if (!dataObj) return;
 		const detail = JSON.parse(dataObj);
@@ -222,16 +218,21 @@ export class AutoSuggest extends HTMLElement {
 			acc && typeof acc === 'object' ? acc[part] : undefined, obj);
 	}
 
+	getDataAttributes(obj) {
+		const dataValue = this.getNestedValue(obj, this.settings.apiValuePath);
+		const displayValue = this.getNestedValue(obj, this.settings.apiDisplayPath);
+		const textValue = this.settings.apiTextPath ? this.getNestedValue(obj, this.settings.apiTextPath) : '';
+		const dataObject = this.stringifyDataObject(obj);
+		return `data-display="${displayValue}" data-text="${textValue}" data-value="${dataValue}" data-obj='${dataObject}'`;
+	}
+
 	render(data) {
 		return data.map(obj => {
-			const dataValue = this.getNestedValue(obj, this.settings.apiValuePath);
-			const displayValue = this.getNestedValue(obj, this.settings.apiDisplayPath);
-			const textValue = this.settings.apiTextPath ? this.getNestedValue(obj, this.settings.apiTextPath) : '';
-			const dataObject = this.stringifyDataObject(obj);
-
+			const attrs = this.getDataAttributes(obj);
+			const display = this.getNestedValue(obj, this.settings.apiDisplayPath);
 			return this.settings.listMode === 'ul' 
-				? `<li role="option" tabindex="0" data-display="${displayValue}" data-text="${textValue}" data-value="${dataValue}" data-obj='${dataObject}'>${displayValue}</li>`
-				: `<option value="${displayValue}" data-display="${displayValue}" data-text="${textValue}" data-value="${dataValue}" data-obj='${dataObject}'>${textValue || ''}</option>`;
+				? `<li role="option" tabindex="0" ${attrs}>${display}</li>`
+				: `<option value="${display}" ${attrs}>${this.getNestedValue(obj, this.settings.apiTextPath) || ''}</option>`;
 		}).join('');
 	}
 
@@ -253,24 +254,15 @@ export class AutoSuggest extends HTMLElement {
 	}
 
 	resetToDefault() {
-		if (this.initialObject) {
-			const display = this.getNestedValue(this.initialObject, this.settings.apiDisplayPath);
-			const value = this.getNestedValue(this.initialObject, this.settings.apiValuePath);
-			if (this.isFormControl) {
-				this.displayValue = display || this.defaultValues.input;
-				this.value = value || this.defaultValues.value;
-			} else {
-				this.input.value = display || this.defaultValues.input;
-				this.value = value || this.defaultValues.value;
-			}
+		const display = this.getNestedValue(this.initialObject, this.settings.apiDisplayPath) || this.defaultValues.input;
+		const value = this.getNestedValue(this.initialObject, this.settings.apiValuePath) || this.defaultValues.value;
+
+		if (this.isFormControl) {
+			this.displayValue = display;
+			this.value = value;
 		} else {
-			if (this.isFormControl) {
-				this.displayValue = this.defaultValues.input;
-				this.value = this.defaultValues.value;
-			} else {
-				this.input.value = this.defaultValues.input;
-				this.value = this.defaultValues.value;
-			}
+			this.input.value = display;
+			this.value = value;
 		}
 		
 		this.input.setCustomValidity('');
@@ -329,10 +321,7 @@ export class AutoSuggest extends HTMLElement {
 	}
 
 	stringifyDataObject(obj) {
-		return JSON.stringify(obj)
-			.replace(/\\/g, '\\\\')
-			.replace(/"/g, '&quot;')
-			.replace(/'/g, '&#39;');
+		return `${JSON.stringify(obj)}`.replace(/["'\\]/g, c => ({ '"': '&quot;', "'": '&#39;', '\\': '\\\\' }[c]));
 	}
 
 	template() {
