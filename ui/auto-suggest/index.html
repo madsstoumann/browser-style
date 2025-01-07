@@ -35,8 +35,8 @@
 		api-value-path="adresse.id"
 		api-display-path="tekst"
 		label="Dawa search"
-		nolimit
 		list-mode="ul"
+		nolimit
 		noshadow
 		placeholder="park">
 	</auto-suggest>
@@ -68,11 +68,39 @@
 		placeholder="thomas">
 	</auto-suggest>
 
-	<script type="module" src="./index.js"></script>
+	<p>
+		Within a <code>&lt;form&gt;</code>, and manually mounted (has <code>nomount</code>):
+	</p>
 
-	<script>
+
+	<form>
+		<auto-suggest
+			api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+			api-value-path="adresse.id"
+			api-display-path="tekst"
+			label="Dawa search, using datalist"
+			name="suggest"
+			nomount
+			noshadow
+			placeholder="park">
+		</auto-suggest>
+		<br>
+		<button type="reset">Reset</button>
+	</form>
+
+	<p>After making a selection, highlight the parent form in devtools, and in the console, access the control via:<code>$0.elements.suggest</code></p>
+	<p>Now you can see both <code>suggest.value</code> and <code>suggest.displayValue</code></p>
+	<p>To <strong>exclude</strong> an autosuggest-control from populating <code>value</code> and <code>displayValue</code> to it's associated form, add a <code>noform</code>-attribute.</p>
+
+	<!-- <script type="module" src="./index.js"></script> -->
+
+	<script type="module">
+		import { AutoSuggest } from './index.js';
 		const suggest = document.querySelectorAll('auto-suggest');
 		suggest.forEach((node) => {
+			if (node.hasAttribute('nomount')) {
+				node.mount();
+			}
 			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect', 'autoSuggestNoSelection'].forEach((event) => {
 				node.addEventListener(event, (event) => {
 					console.log(event.type, event.detail ? event.detail : '');
