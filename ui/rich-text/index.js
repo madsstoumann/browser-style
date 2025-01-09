@@ -202,7 +202,7 @@ export class RichText extends HTMLElement {
 		return crypto.getRandomValues(new Uint32Array(1))[0] || Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 	}
 
-	static mount() {
+	static register() {
 		if (!customElements.get('rich-text')) {
 			customElements.define('rich-text', this);
 		}

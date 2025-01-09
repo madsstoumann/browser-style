@@ -7,7 +7,7 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-spinner.css">
+	<!-- <link rel="stylesheet" href="ui-spinner.css"> -->
 	<style>
 		.custom {
 			--number-spinner-button-asr: auto;
@@ -24,14 +24,14 @@
 		<strong>Spinner</strong> allows users to select a number from a range of values, using a pair of buttons to increment or decrement the value.
 	</p>
 
-	<number-spinner value="5" step="10" max="200"></number-spinner>
+	<number-spinner value="5" step="10" max="200" styles></number-spinner>
 
 	<br>
 	<h2>With custom <code>slot</code></h2>
 
 	<form id="myform">
 		<input type="number" name="firstname" step="10" max="200">
-		<number-spinner value="5" step="10" max="200" class="custom" name="testing">
+		<number-spinner value="5" step="10" max="200" class="custom" name="testing" styles>
 			<span slot="dec">dec</span>
 			<span slot="inc">inc</span>
 		</number-spinner>
@@ -40,7 +40,7 @@
 
 		
 	
-	<script src="./index.js"></script>
+	<script type="module" src="./index.js"></script> 
 
 	<script>
 		// const myForm = document.getElementById('myform');
@@ -48,10 +48,10 @@
 		// 	console.log(e.target.valueAsNumber);
 		// });	
 
-		const myForm = document.getElementById('myform');
-		myForm.addEventListener('change', (e) => {
-			console.log(e.target.valueAsNumber);
-		});	
+		// const myForm = document.getElementById('myform');
+		// myForm.addEventListener('change', (e) => {
+		// 	console.log(e.target.valueAsNumber);
+		// });	
 
 		// const mySpinner = document.querySelector('.custom');
 		// mySpinner.addEventListener('input', (e) => {

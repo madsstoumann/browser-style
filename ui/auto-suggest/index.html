@@ -63,7 +63,6 @@
 		api-value-path="country_id"
 		api-display-path="country_id"
 		id="nationalize"
-		label="Nationalize.io"
 		noshadow
 		placeholder="thomas">
 	</auto-suggest>
@@ -82,7 +81,7 @@
 			label="Dawa search, using datalist"
 			name="suggest"
 			nomount
-			noshadow
+			styles
 			placeholder="park">
 		</auto-suggest>
 		<br>
@@ -116,7 +115,7 @@
 			const dawa = document.getElementById('dawa');
 			dawa.render = (data) => {
 				return data.map(obj => 
-					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}" data-obj="${dawa.stringifyDataObject(obj)}">
+					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}" data-obj="${dawa.escapeJsonForHtml(obj)}">
 							<img src='http://unsplash.it/50/50?random&gravity=center' alt='' class="demo">${obj.tekst}
 						</li>`
 				).join('');
@@ -125,7 +124,7 @@
 			const nationalize = document.getElementById('nationalize');
 			nationalize.render = (data) => {
 				return data.map(obj => 
-					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj="${nationalize.stringifyDataObject(obj)}"></option>`
+					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj="${nationalize.escapeJsonForHtml(obj)}"></option>`
 				).join('');
 			};
 		});

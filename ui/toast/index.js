@@ -83,7 +83,7 @@ export class UiToast extends HTMLElement {
 		}
 	}
 
-	static mount() {
+	static register() {
 		if (!customElements.get('ui-toast')) {
 			customElements.define('ui-toast', this);
 		}

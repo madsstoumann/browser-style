@@ -1,28 +1,21 @@
 import { FormControl } from '/formControl.js';
 
-/**
- * AutoSuggest
- * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
- * @author Mads Stoumann
- * @version 1.0.23
- * @summary 09-01-2025
- * @class AutoSuggest
- * @extends {FormControl}
- */
 export class AutoSuggest extends FormControl {
 	constructor() {
 		super();
 		this.data = [];
-	}
-
-	initializeComponent() {
-		this.displayValue = this.getAttribute('display') || '';
-		
 		this.defaultValues = {
 			input: this.getAttribute('display') || '',
 			value: this.getAttribute('value') || ''
 		};
+	}
 
+	initializeComponent() {
+		this.data = [];
+		this.defaultValues = {
+			input: this.getAttribute('display') || '',
+			value: this.getAttribute('value') || ''
+		};
 		this.initialObject = JSON.parse(this.getAttribute('initial-object') || 'null');
 		this.listId = `list${this.uuid()}`;
 
@@ -41,19 +34,18 @@ export class AutoSuggest extends FormControl {
 		this.settings.nolimit = this.hasAttribute('nolimit');
 		this.settings.debounceTime = parseInt(this.settings.debounce) || 300;
 
-
 		this.root.innerHTML = this.template();
 		this.input = this.root.querySelector('input');
 		this.list = this.root.querySelector(`#${this.listId}`);
 
-		if (this.isFormControl) {
-			this.input.value = this.displayValue;
-			const initialValue = this.getAttribute('value') || '';
-			this.value = initialValue;
+		// Now that elements exist, set up initial values
+		if (this.input && this.isFormControl) {
+			const displayValue = this.getAttribute('display') || '';
+			this.input.value = displayValue;
+			this.setAttribute('display', displayValue);
 		}
 
 		this.debouncedFetch = this.debounced(this.settings.debounceTime, this.fetchData.bind(this));
-		this.setupEventListeners();
 	}
 
 	get displayValue() {
@@ -65,12 +57,20 @@ export class AutoSuggest extends FormControl {
 	set displayValue(v) {
 		if (!this.isFormControl) return;
 		this.setAttribute('display', v);
-		if (this.input) {
+		if (this.initialized && this.input) {
 			this.input.value = v;
 		}
 	}
 
-	setupEventListeners() {
+	connectedCallback() {
+		super.connectedCallback();
+		if (!this.initialized || !this.input) return;
+
+		// Ensure input element exists before setting up listeners
+		this.setupListeners();
+	}
+
+	setupListeners() {
 		const selected = () => this.settings.listMode === 'ul' ? null : 
 			[...this.list.options].find(entry => entry.value === this.input.value);
 
@@ -119,18 +119,17 @@ export class AutoSuggest extends FormControl {
 		if (this.settings.listMode === 'ul') this.setupULListeners();
 	}
 
-	formReset() {
-		this.resetToDefault();
-		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
+	debounced(delay, fn) {
+		let timerId;
+		return (...args) => {
+			clearTimeout(timerId);
+			timerId = setTimeout(() => { fn(...args); timerId = null; }, delay);
+		};
 	}
 
 	dispatch(dataObj = null, isInitial = false) {
 		if (!dataObj) return;
-		
-		const detail = typeof dataObj === 'string' ?
-			JSON.parse(dataObj) :
-			dataObj;
-			
+		const detail = JSON.parse(dataObj);
 		if (isInitial) detail.isInitial = true;
 		this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail, bubbles: true }));
 	}
@@ -163,6 +162,11 @@ export class AutoSuggest extends FormControl {
 		}
 	}
 
+	formReset() {
+		this.resetToDefault();
+		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
+	}
+
 	getNestedValue(obj, key) {
 		return key ? key.split('.').reduce((acc, part) => 
 			acc && typeof acc === 'object' ? acc[part] : undefined, obj) : undefined;
@@ -173,7 +177,7 @@ export class AutoSuggest extends FormControl {
 			const value = this.getNestedValue(obj, this.settings.apiValuePath);
 			const display = this.getNestedValue(obj, this.settings.apiDisplayPath);
 			const text = this.settings.apiTextPath ? this.getNestedValue(obj, this.settings.apiTextPath) : '';
-			const dataObj = this.escapeJsonForHtml(obj);
+			const dataObj = this.stringifyDataObject(obj);
 			return this.settings.listMode === 'ul' 
 				? `<li role="option" tabindex="0" data-display="${display}" data-text="${text}" data-value="${value}" data-obj='${dataObj}'>${display}</li>`
 				: `<option value="${display}" data-display="${display}" data-text="${text}" data-value="${value}" data-obj='${dataObj}'>${text || ''}</option>`;
@@ -199,14 +203,9 @@ export class AutoSuggest extends FormControl {
 		const display = this.getNestedValue(this.initialObject, this.settings.apiDisplayPath) || this.defaultValues.input;
 		const value = this.getNestedValue(this.initialObject, this.settings.apiValuePath) || this.defaultValues.value;
 
-		if (this.isFormControl) {
-			this.displayValue = display;
-			this.input.value = display;
-			this.value = value;
-		} else {
-			this.input.value = display;
-			this.value = value;
-		}
+		this.displayValue = display;
+		this.input.value = display;
+		this.value = value;
 
 		this.input.setCustomValidity('');
 		if (this.settings.listMode === 'ul') {
@@ -219,13 +218,9 @@ export class AutoSuggest extends FormControl {
 		const { obj, value } = target.dataset;
 		const displayText = target.textContent.trim();
 
-		if (this.isFormControl) {
-			super.value = value;
-			this.displayValue = displayText;
-			this.input.value = displayText;
-		} else {
-			this.input.value = displayText;
-		}
+		this.value = value;
+		this.displayValue = displayText;
+		this.input.value = displayText;
 
 		this.reset(false);
 		this.dispatch(obj);
@@ -259,6 +254,10 @@ export class AutoSuggest extends FormControl {
 		});
 	}
 
+	stringifyDataObject(obj) {
+		return `${JSON.stringify(obj)}`.replace(/["'\\]/g, c => ({ '"': '&quot;', "'": '&#39;', '\\': '\\\\' }[c]));
+	}
+
 	template() {
 		const list = this.settings.listMode === 'ul' 
 			? `<ul popover id="${this.listId}" part="list" role="listbox" style="position-anchor:--${this.listId}"></ul>`
@@ -282,4 +281,6 @@ export class AutoSuggest extends FormControl {
 	}
 }
 
-AutoSuggest.register();
+if (!customElements.get('auto-suggest')) {
+	customElements.define('auto-suggest', AutoSuggest);
+}

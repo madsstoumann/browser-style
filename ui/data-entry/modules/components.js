@@ -42,7 +42,7 @@ export async function mountComponents(HTML, dataEntry) {
 			if (HTML.includes(`<${tagName}`)) {
 				try {
 					const module = await import(path);
-					module[componentName].mount();
+					module[componentName].register();
 					if (bindFunction) {
 						bindFunction(dataEntry);
 					}

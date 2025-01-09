@@ -1,0 +1,55 @@
+:host {
+	align-items: center;
+	contain: content;
+	display: flex;
+}
+button, input {
+	font-family: var(--number-spinner-ff, inherit);
+	font-size: var(--number-spinner-fs, inherit);
+}
+button {
+	aspect-ratio: var(--number-spinner-button-asr, 1);
+	background-color: var(--number-spinner-button-bg, ButtonFace);
+	border: var(--number-spinner-button-b, 0);
+	border-radius: var(--number-spinner-button-bdrs, 50%);
+	color: var(--number-spinner-button-c, ButtonText);
+	display: inline-grid;
+	padding: var(--number-spinner-button-p, 1px 6px);
+	place-content: center;
+	touch-action: manipulation;
+	width: var(--number-spinner-button-w, 3ch);
+	will-change: background-color; 
+	&[disabled] {
+		color: var(--number-spinner-button-c--disabled, GrayText);
+		cursor: not-allowed;
+	}
+	@media ( hover: hover ) {
+		&:hover {
+			background-color: var(--number-spinner-button-bg--hover, 
+			light-dark(
+				color-mix(in srgb, ButtonFace, #000 5%),
+				color-mix(in srgb, ButtonFace, #FFF 10%)
+			));
+		}
+	}
+}
+input {
+	-moz-appearance: textfield;
+	background: #0000;
+	border: 0;
+	text-align: center;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+[part=svg] {
+	aspect-ratio: 1;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	width: 100%;
+}

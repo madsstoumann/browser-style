@@ -1,0 +1,14 @@
+/* Component specific styles */
+
+:host {
+	background-color: hotpink;
+	border: 2px solid red;
+	display: block;
+}
+
+:host input {
+	background-color: yellow;
+	border: 2px solid green;
+	display: block;
+}
+

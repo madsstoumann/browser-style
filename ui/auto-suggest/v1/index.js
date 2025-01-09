@@ -1,30 +1,42 @@
-import { FormControl } from '/formControl.js';
-
 /**
  * AutoSuggest
  * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
  * @author Mads Stoumann
- * @version 1.0.23
- * @summary 09-01-2025
+ * @version 1.0.21
+ * @summary 07-01-2025
  * @class AutoSuggest
- * @extends {FormControl}
+ * @extends {HTMLElement}
  */
-export class AutoSuggest extends FormControl {
+
+export class AutoSuggest extends HTMLElement {
+	static formAssociated = true;
+
 	constructor() {
 		super();
-		this.data = [];
+		this.initialized = false;
+		this.isFormControl = !this.hasAttribute('noform');
+		this.internals = this.isFormControl ? this.attachInternals() : null;
+
+		if (!this.hasAttribute('nomount')) {
+			this.initialize();
+		}
 	}
 
-	initializeComponent() {
+	initialize() {
+		if (this.initialized) return;
+		this.initialized = true;
+
 		this.displayValue = this.getAttribute('display') || '';
-		
+		const initialValue = this.getAttribute('value') || '';
+
+		this.data = [];
 		this.defaultValues = {
 			input: this.getAttribute('display') || '',
 			value: this.getAttribute('value') || ''
 		};
 
 		this.initialObject = JSON.parse(this.getAttribute('initial-object') || 'null');
-		this.listId = `list${this.uuid()}`;
+		this.listId = `list${crypto.randomUUID().replace(/-/g, '')}`;
 
 		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'debounce', 'invalid', 'label', 'list-mode'].reduce((s, attr) => {
 			s[attr.replace(/-([a-z])/g, (_, l) => l.toUpperCase())] = this.getAttribute(attr) ?? null;
@@ -41,27 +53,55 @@ export class AutoSuggest extends FormControl {
 		this.settings.nolimit = this.hasAttribute('nolimit');
 		this.settings.debounceTime = parseInt(this.settings.debounce) || 300;
 
+		const root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
+		if (!this.hasAttribute('noshadow')) root.adoptedStyleSheets = [stylesheet];
 
-		this.root.innerHTML = this.template();
-		this.input = this.root.querySelector('input');
-		this.list = this.root.querySelector(`#${this.listId}`);
+		root.innerHTML = this.template();
+		this.input = root.querySelector('input');
+		this.list = root.querySelector(`#${this.listId}`);
 
 		if (this.isFormControl) {
 			this.input.value = this.displayValue;
-			const initialValue = this.getAttribute('value') || '';
-			this.value = initialValue;
+			this.internals.setFormValue(initialValue, this.getAttribute('name') || '');
 		}
 
 		this.debouncedFetch = this.debounced(this.settings.debounceTime, this.fetchData.bind(this));
-		this.setupEventListeners();
 	}
 
+	mount() {
+		if (!this.initialized) {
+			this.initialize();
+			if (this.isConnected) {
+				this.connectedCallback();
+			}
+		}
+	}
+
+	static register() {
+		const className = this.name;
+		if (!customElements.get('auto-suggest')) {
+			customElements.define('auto-suggest', this);
+		}
+	}
+
+	get form() { return this.isFormControl ? this.internals.form : null; }
+	get name() { return this.isFormControl ? this.getAttribute('name') : null; }
+	get type() { return this.localName; }
+	get value() { 
+		return this.isFormControl ? 
+			(this.internals?.elementInternals?.value ?? this.getAttribute('value') ?? '') : 
+			null; 
+	}
+	set value(v) { 
+		if (!this.isFormControl) return;
+		this.internals.setFormValue(v, this.getAttribute('name') || '');
+		this.setAttribute('value', v || '');
+	}
 	get displayValue() {
 		return this.isFormControl ? 
 			(this.getAttribute('display') || this.input?.value || '') :
 			null;
 	}
-
 	set displayValue(v) {
 		if (!this.isFormControl) return;
 		this.setAttribute('display', v);
@@ -70,7 +110,9 @@ export class AutoSuggest extends FormControl {
 		}
 	}
 
-	setupEventListeners() {
+	connectedCallback() {
+		if (!this.initialized) return;
+
 		const selected = () => this.settings.listMode === 'ul' ? null : 
 			[...this.list.options].find(entry => entry.value === this.input.value);
 
@@ -117,20 +159,28 @@ export class AutoSuggest extends FormControl {
 		});
 
 		if (this.settings.listMode === 'ul') this.setupULListeners();
+		if (this.isFormControl && this.internals.form) {
+			this.internals.form.addEventListener('reset', this.formReset.bind(this));
+		}
 	}
 
-	formReset() {
-		this.resetToDefault();
-		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
+	disconnectedCallback() {
+		if (this.isFormControl && this.internals.form) {
+			this.internals.form.removeEventListener('reset', this.formReset);
+		}
+	}
+
+	debounced(delay, fn) {
+		let timerId;
+		return (...args) => {
+			clearTimeout(timerId);
+			timerId = setTimeout(() => { fn(...args); timerId = null; }, delay);
+		};
 	}
 
 	dispatch(dataObj = null, isInitial = false) {
 		if (!dataObj) return;
-		
-		const detail = typeof dataObj === 'string' ?
-			JSON.parse(dataObj) :
-			dataObj;
-			
+		const detail = JSON.parse(dataObj);
 		if (isInitial) detail.isInitial = true;
 		this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail, bubbles: true }));
 	}
@@ -163,6 +213,11 @@ export class AutoSuggest extends FormControl {
 		}
 	}
 
+	formReset() {
+		this.resetToDefault();
+		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
+	}
+
 	getNestedValue(obj, key) {
 		return key ? key.split('.').reduce((acc, part) => 
 			acc && typeof acc === 'object' ? acc[part] : undefined, obj) : undefined;
@@ -173,7 +228,7 @@ export class AutoSuggest extends FormControl {
 			const value = this.getNestedValue(obj, this.settings.apiValuePath);
 			const display = this.getNestedValue(obj, this.settings.apiDisplayPath);
 			const text = this.settings.apiTextPath ? this.getNestedValue(obj, this.settings.apiTextPath) : '';
-			const dataObj = this.escapeJsonForHtml(obj);
+			const dataObj = this.stringifyDataObject(obj);
 			return this.settings.listMode === 'ul' 
 				? `<li role="option" tabindex="0" data-display="${display}" data-text="${text}" data-value="${value}" data-obj='${dataObj}'>${display}</li>`
 				: `<option value="${display}" data-display="${display}" data-text="${text}" data-value="${value}" data-obj='${dataObj}'>${text || ''}</option>`;
@@ -220,10 +275,11 @@ export class AutoSuggest extends FormControl {
 		const displayText = target.textContent.trim();
 
 		if (this.isFormControl) {
-			super.value = value;
+			this.value = value;
 			this.displayValue = displayText;
 			this.input.value = displayText;
 		} else {
+			this.value = value;
 			this.input.value = displayText;
 		}
 
@@ -259,6 +315,10 @@ export class AutoSuggest extends FormControl {
 		});
 	}
 
+	stringifyDataObject(obj) {
+		return `${JSON.stringify(obj)}`.replace(/["'\\]/g, c => ({ '"': '&quot;', "'": '&#39;', '\\': '\\\\' }[c]));
+	}
+
 	template() {
 		const list = this.settings.listMode === 'ul' 
 			? `<ul popover id="${this.listId}" part="list" role="listbox" style="position-anchor:--${this.listId}"></ul>`
@@ -282,4 +342,9 @@ export class AutoSuggest extends FormControl {
 	}
 }
 
-AutoSuggest.register();
+const stylesheet = new CSSStyleSheet();
+stylesheet.replaceSync(':host { /* Custom Styles Placeholder */ }');
+
+if (!customElements.get('auto-suggest')) {
+	customElements.define('auto-suggest', AutoSuggest);
+}
