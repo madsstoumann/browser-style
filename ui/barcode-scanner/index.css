@@ -1,0 +1,66 @@
+[hidden] { display: none; }
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0); 
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap; 
+	width: 1px;
+}
+:host *, :host *::after, :host *::before { box-sizing: border-box; }
+:host {
+	--bg: light-dark(#EEE, #666);
+	inset-block-end: 1.5rem;
+	inset-inline-end: 1.5rem;
+	position: fixed;
+}
+:host button {
+	background-color: var(--bg);
+	border: 0;
+	border-radius: 50%;
+	display: grid;
+	padding: .66rem;
+	place-self: end;
+}
+:host button.--open {
+	--bg: light-dark(#3A6, #6A8);
+	color: #FFF;
+}
+:host input {
+	background-color: var(--bg);
+	border: 0;
+	border-radius: .25em;
+	caret-color: #0000;
+	font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	font-size: 10px;
+	font-weight: 400;
+	inset-block-end: .25rem;
+	inset-inline-end: 1.5rem;
+	opacity: 1;
+	padding: 3px 6px;
+	position: fixed;
+	text-align: end;
+	width: 15ch;
+}
+:host input::placeholder { color: light-dark(#AAA, #888); }
+:host input::-webkit-inner-spin-button { display: none; }
+:host input:focus { caret-color: light-dark(#333, #DDD); outline: 0; }
+:host [popover] { border: 0; }
+:host [popover]::backdrop { background-color: #0000; }
+:host svg { 
+	fill: none;
+	height: 2rem;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.25;
+	stroke: currentColor;
+	width: 2rem;
+}
+:host svg.--scanning {
+	animation: rotate 1.5s linear infinite;
+}
+@keyframes rotate {
+	to { rotate: 1turn; }
+}

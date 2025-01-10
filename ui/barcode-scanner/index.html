@@ -12,7 +12,7 @@
   <h1>UI: Components</h1>
 
   <h2>Barcode Scanner</h2>
-  <p>A simple component that works with most barcode scanners.<br>
+  <p>A Web Component that works with most barcode scanners.<br>
     Click the icon in the bottom right corner to start scanning, or add the <code>auto</code> attribute to start automatically.
   </p>
 
@@ -65,19 +65,17 @@
   <pre><code>&lt;barcode-scanner auto debug input&gt;
 &lt;/barcode-scanner&gt;</code></pre>
 
-  <barcode-scanner clear="250" auto debug input></barcode-scanner>
+  <form>
+    <barcode-scanner clear="250" auto debug input styles name="scanner"></barcode-scanner>
+  </form>
 
   <p>
     If you don't have a barcode-scanner, you can manually type a barcode and press Enter.<br>
     See the console for debug information.
   </p>
 
-  <script type="module">
-    import { BarcodeScanner } from './index.js';
-    
-    // Mount the custom element
-    BarcodeScanner.mount();
-
+  <script type="module" src="./index.js"></script>
+   <script>
     // Get the first (and only) barcode-scanner element
     const barcodeScanner = document.querySelector('barcode-scanner');
 
@@ -85,12 +83,6 @@
     barcodeScanner.addEventListener('bs:entry', (event) => {
       const { detail } = event;
       console.log('Barcode:', detail.value);
-
-
-      // Clear the display after 10 seconds
-      // setTimeout(() => {
-      // 	barcodeScanner.dispatchEvent(new CustomEvent('bs:clear'));
-      // }, 100);
     });
   </script>
 </body>

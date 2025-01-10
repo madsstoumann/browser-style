@@ -179,8 +179,8 @@ export class FormControl extends HTMLElement {
 	 * @param {string} [part] - An optional part attribute applied to the SVG element.
 	 * @returns {string} - The generated SVG string.
 	 */
-	icon(paths, part) {
-		return `<svg viewBox="0 0 24 24"${part ? `part="${part}"`:''}>${paths.split(',').map((path) => `<path d="${path}"></path>`).join('')}</svg>`;
+	icon(paths, part, hidden = false) {
+		return `<svg viewBox="0 0 24 24"${part ? `part="${part}"`:''}${hidden ? ' hidden' : ''}>${paths.split(',').map((path) => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
 
 	/**
