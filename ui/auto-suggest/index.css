@@ -1,11 +1,15 @@
-/* Component specific styles */
-
+/* Example: Component specific styles */
 :host {
 	background-color: GrayText;
 	border: 2px dotted CanvasText;
 	display: block;
+	padding: 1ch;
 }
 
 :host input {
 	border: 0;
+	display: block;
+	font-size: inherit;
+	padding: 1ch 1.5ch;
+	width: 100%;
 }

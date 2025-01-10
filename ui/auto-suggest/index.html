@@ -1,134 +1,148 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>AutoSuggest</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
-	<style>
-		.demo { border-radius: .33rem; }
-	</style>
+  <title>AutoSuggest</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">
+  <style>
+    .demo { border-radius: .33rem; }
+  </style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+  <h1>UI: Components</h1>
 
-	<h2>AutoSuggest</h2>
-	<p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>&lt;datalist&gt;</code> or <code>&lt;ul&gt;</code>.<br>
-		It exposes several events, see the <code>console</code>. Try it out by typing the placholder-text. <br>
-		<a href="readme.md">Documentation</a> in Markdown.</p>
-		<p>A basic, non-web-component version is <a href="basic/index.html">also available</a>.</p>
+  <h2>AutoSuggest</h2>
+  <p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>&lt;datalist&gt;</code> or <code>&lt;ul&gt;</code>.<br>
+  It exposes several events, see the <code>console</code>. Try it out by typing the placholder-text. <br>
+  <a href="readme.md">Documentation</a> in Markdown.</p>
+  <p>
+    A basic, non-web-component version is <a href="basic/index.html">also available</a>.<br>
+    To see alternate color-scheme and text direction examples, see <a href="/ui/form/">Form</a>.
+  </p>
 
-	<auto-suggest
-		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-		api-value-path="adresse.id"
-		api-display-path="tekst"
-		label="Dawa search, using datalist"
-		noshadow
-		placeholder="park">
-	</auto-suggest>
+  <auto-suggest
+    api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+    api-value-path="adresse.id"
+    api-display-path="tekst"
+    label="Dawa search, using datalist"
+    noshadow
+    placeholder="park">
+  </auto-suggest>
 
-	<p>With <code>list-mode="ul"</code> and <code>nolimit</code></p>
-	<auto-suggest
-		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-		api-value-path="adresse.id"
-		api-display-path="tekst"
-		label="Dawa search"
-		list-mode="ul"
-		nolimit
-		noshadow
-		placeholder="park">
-	</auto-suggest>
+  <p>With <code>list-mode="ul"</code> and <code>nolimit</code></p>
+  <auto-suggest
+    api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+    api-value-path="adresse.id"
+    api-display-path="tekst"
+    label="Dawa search"
+    list-mode="ul"
+    nolimit
+    noshadow
+    placeholder="park">
+  </auto-suggest>
 
-	<p>With <code>list-mode="ul"</code> and custom <code>render</code>-method:</p>
-	<auto-suggest
-		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-		api-value-path="adresse.id"
-		api-display-path="tekst"
-		id="dawa"
-		label="Dawa search"
-		list-mode="ul"
-		noshadow
-		placeholder="park">
-	</auto-suggest>
+  <p>With <code>list-mode="ul"</code> and custom <code>render</code>-method:</p>
+  <auto-suggest
+    api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+    api-value-path="adresse.id"
+    api-display-path="tekst"
+    id="dawa"
+    label="Dawa search"
+    list-mode="ul"
+    noshadow
+    placeholder="park">
+  </auto-suggest>
 
-	<p>
-		With custom <code>render</code>-method, using nationalize.io:
-	</p>
+  <p>
+    With custom <code>render</code>-method, using nationalize.io:
+  </p>
 
-	<auto-suggest
-		api="https://api.nationalize.io/?name="
-		api-array-path="country"
-		api-value-path="country_id"
-		api-display-path="country_id"
-		id="nationalize"
-		noshadow
-		placeholder="thomas">
-	</auto-suggest>
+  <auto-suggest
+    api="https://api.nationalize.io/?name="
+    api-array-path="country"
+    api-value-path="country_id"
+    api-display-path="country_id"
+    id="nationalize"
+    noshadow
+    placeholder="thomas">
+  </auto-suggest>
 
-	<h3>Advanced, Manual Example</h3>
-	<p>
-		Within a <code>&lt;form&gt;</code>, no <code>noshadow</code>, and manually mounted with <code>Autosuggest.register()</code> (has <code>nomount</code>):
-	</p>
+  <h3>Advanced, Manual Example</h3>
+  <ol>
+    <li>In this example, the component is manually mounted, because it has a <code>nomount</code>-attribute.<br>Use <code>Autosuggest.mount()</code> to mount it.</li>
+    <li>The <code>noshadow</code> attribute has been removed, so it renders in the shadow DOM.</li>
+    <li>The <code>styles</code> attribute is added. It defaults to <code>index.css</code> in the same folder as the component, but can be any path.</li>
+    <li>Finally, the <code>name</code>-attribute makes the component accessible via the form's <code>elements</code>-collection.</li>
+  </ol>
+
+<pre><small>&lt;auto-suggest
+  debounce="500"
+  name="suggest"
+  nomount
+  styles&gt;
+&lt;/auto-suggest&gt;
+</small></pre>
 
 
-	<form>
-		<auto-suggest
-			api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-			api-value-path="adresse.id"
-			api-display-path="tekst"
-			debounce="500"
-			label="Dawa search, using datalist"
-			name="suggest"
-			nomount
-			styles
-			placeholder="park">
-		</auto-suggest>
-		<br>
-		<button type="reset">Reset</button>
-	</form>
+  <form>
+    <auto-suggest
+      api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
+      api-value-path="adresse.id"
+      api-display-path="tekst"
+      debounce="500"
+      label="Dawa search, using datalist"
+      name="suggest"
+      nomount
+      placeholder="park"
+      styles>
+    </auto-suggest>
+    <br>
+    <button type="reset">Reset</button>
+  </form>
 
-	<p>After making a selection, highlight the parent form in devtools, and in the console, access the control via:<code>$0.elements.suggest</code></p>
-	<p>Now you can see both <code>suggest.value</code> and <code>suggest.displayValue</code></p>
-	<p>To <strong>exclude</strong> an autosuggest-control from populating <code>value</code> and <code>displayValue</code> to it's associated form, add a <code>noform</code>-attribute.</p>
+  <p>After making a selection, highlight the parent form in devtools, and in the console, access the control via:<code>$0.elements.suggest</code></p>
+  <p>Now you can see both <code>suggest.value</code> and <code>suggest.displayValue</code></p>
+  <p>To <strong>exclude</strong> an autosuggest-control from populating <code>value</code> and <code>displayValue</code> to it's associated form, add a <code>noform</code>-attribute.</p>
 
-	<!-- <script type="module" src="./index.js"></script> -->
+  <!-- <script type="module" src="./index.js"></script> -->
 
-	<script type="module">
-		import { AutoSuggest } from './index.js';
-		const suggest = document.querySelectorAll('auto-suggest');
-		suggest.forEach((node) => {
-			if (node.hasAttribute('nomount')) {
-				node.mount();
-			}
-			['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect', 'autoSuggestNoSelection'].forEach((event) => {
-				node.addEventListener(event, (event) => {
-					console.log(event.type, event.detail ? event.detail : '');
-					if (event.type === 'autoSuggestNoSelection') {
-						console.log('Input value:', node.input.value);
-					}
-				});
-			});
-		});
+  <script type="module">
+    import { AutoSuggest } from './index.js';
+    const suggest = document.querySelectorAll('auto-suggest');
+    suggest.forEach((node) => {
+      if (node.hasAttribute('nomount')) {
+        node.mount();
+      }
+      ['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect', 'autoSuggestNoSelection'].forEach((event) => {
+        node.addEventListener(event, (event) => {
+          console.log(event.type, event.detail ? event.detail : '');
+          if (event.type === 'autoSuggestNoSelection') {
+            console.log('Input value:', node.input.value);
+          }
+        });
+      });
+    });
 
-		document.addEventListener('DOMContentLoaded', () => {
-			const dawa = document.getElementById('dawa');
-			dawa.render = (data) => {
-				return data.map(obj => 
-					`<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}" data-obj="${dawa.escapeJsonForHtml(obj)}">
-							<img src='http://unsplash.it/50/50?random&gravity=center' alt='' class="demo">${obj.tekst}
-						</li>`
-				).join('');
-			};
+    document.addEventListener('DOMContentLoaded', () => {
+      const dawa = document.getElementById('dawa');
+      dawa.render = (data) => {
+        return data.map(obj => 
+          `<li tabindex="0" data-value="${obj.tekst}" data-key="${obj.adresse.id}" data-obj="${dawa.escapeJsonForHtml(obj)}">
+              <img src='http://unsplash.it/50/50?random&gravity=center' alt='' class="demo">${obj.tekst}
+            </li>`
+        ).join('');
+      };
 
-			const nationalize = document.getElementById('nationalize');
-			nationalize.render = (data) => {
-				return data.map(obj => 
-					`<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj="${nationalize.escapeJsonForHtml(obj)}"></option>`
-				).join('');
-			};
-		});
-	</script>
+      const nationalize = document.getElementById('nationalize');
+      nationalize.render = (data) => {
+        return data.map(obj => 
+          `<option value="${nationalize.input.value} — Country: ${obj.country_id}, Probability: ${(obj.probability * 100).toFixed(2)}%" data-key="${obj.country_id}" data-obj="${nationalize.escapeJsonForHtml(obj)}"></option>`
+        ).join('');
+      };
+    });
+  </script>
 </body>
 </html>
