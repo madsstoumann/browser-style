@@ -208,12 +208,18 @@ export const arrayCheckbox = (params) =>
 	renderArray({
 		...params,
 		renderItem: ({ value, config, path }) => {
-			const checked = config.render?.value ? !!value[config.render.value] : false;
+			const valuePath = config.render?.value || '';
+			const checked = valuePath.includes('[') || valuePath.includes('.')
+				? getObjectByPath(value, valuePath)
+				: valuePath ? value[valuePath] : false;
 			const rowLabel = config.render?.label ? value[config.render.label] || config.render.label : 'LABEL';
+			const fullPath = valuePath ? `${path}.${valuePath}` : path;
+			
 			return `
 				<label part="row">
 					<span part="label" title="${rowLabel}">${rowLabel}</span>
-					<input part="input" type="checkbox" value="${value[config.render.value]}" name="${path}" data-type="boolean" ${checked ? 'checked' : ''}>
+					<input part="input" type="checkbox" value="${checked}" 
+						name="${fullPath}" data-type="boolean" ${checked ? 'checked' : ''}>
 				</label>`;
 		},
 	});

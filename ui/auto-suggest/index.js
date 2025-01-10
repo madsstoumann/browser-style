@@ -41,7 +41,6 @@ export class AutoSuggest extends FormControl {
 		this.settings.nolimit = this.hasAttribute('nolimit');
 		this.settings.debounceTime = parseInt(this.settings.debounce) || 300;
 
-
 		this.root.innerHTML = this.template();
 		this.input = this.root.querySelector('input');
 		this.list = this.root.querySelector(`#${this.listId}`);
@@ -119,11 +118,6 @@ export class AutoSuggest extends FormControl {
 		if (this.settings.listMode === 'ul') this.setupULListeners();
 	}
 
-	formReset() {
-		this.resetToDefault();
-		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
-	}
-
 	dispatch(dataObj = null, isInitial = false) {
 		if (!dataObj) return;
 		
@@ -133,6 +127,11 @@ export class AutoSuggest extends FormControl {
 			
 		if (isInitial) detail.isInitial = true;
 		this.dispatchEvent(new CustomEvent('autoSuggestSelect', { detail, bubbles: true }));
+	}
+
+	formReset() {
+		this.resetToDefault();
+		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
 	}
 
 	async fetchData(value) {
