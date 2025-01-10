@@ -4,8 +4,8 @@ import { FormControl } from '/formControl.js';
  * AutoSuggest
  * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
  * @author Mads Stoumann
- * @version 1.0.23
- * @summary 09-01-2025
+ * @version 1.0.24
+ * @summary 10-01-2025
  * @class AutoSuggest
  * @extends {FormControl}
  */
@@ -53,7 +53,7 @@ export class AutoSuggest extends FormControl {
 		}
 
 		this.debouncedFetch = this.debounced(this.settings.debounceTime, this.fetchData.bind(this));
-		this.setupEventListeners();
+		this.addEvents();
 	}
 
 	get displayValue() {
@@ -70,7 +70,7 @@ export class AutoSuggest extends FormControl {
 		}
 	}
 
-	setupEventListeners() {
+	addEvents() {
 		const selected = () => this.settings.listMode === 'ul' ? null : 
 			[...this.list.options].find(entry => entry.value === this.input.value);
 

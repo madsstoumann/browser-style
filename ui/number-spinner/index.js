@@ -1,5 +1,15 @@
 import { FormControl } from '../../../formControl.js';
 
+/**
+ * NumberSpinner
+ * @description <number-spinner> is a custom element that provides a number input field with increment and decrement buttons
+ * @author Mads Stoumann
+ * @version 1.0.24
+ * @summary 10-01-2025
+ * @class NumberSpinner
+ * @extends {FormControl}
+ */
+
 export class NumberSpinner extends FormControl {
 	constructor() {
 		super();
