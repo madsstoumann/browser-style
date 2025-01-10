@@ -1,0 +1,98 @@
+[hidden] { display: none; }
+:host *, :host *::after, :host *::before { box-sizing: border-box; }
+:host {
+	--richtext-active-bg: var(--Highlight);
+	--richtext-active-c: inherit;
+	background: Canvas;
+	color: CanvasText;
+	color-scheme: inherit;
+}
+:host::part(skip) {
+	background: color-mix(in oklab, #FF0 60%, Canvas);
+	border: 1px solid CanvasText;
+	font-size: smaller;
+	height: auto;
+	inset-block: -100vh auto;
+	inset-inline: -100vw auto;
+	padding: 1ch;
+	position: absolute;
+	text-decoration: underline;
+	text-wrap: pretty;
+	width: auto;
+}
+:host::part(skip):focus { 
+	inset-block-start: 0;
+	inset-inline-start: 0;
+}
+:host::part(toolbar) {
+	align-items: center;
+	flex-wrap: wrap;
+	gap: .5em;
+	position: relative;
+}
+button {
+	all: unset;
+	border: 1px solid color-mix(in srgb, Canvas, CanvasText 30%);
+	display: inline-grid;
+	height: 1.5em;
+	place-content: center;
+	width: 1.5em;
+	&:not(:last-of-type) { border-inline-end-width: 0; }
+	&:first-of-type { border-radius: .1875em 0 0 .1875em; }
+	&:last-of-type { border-radius: 0 .1875em .1875em 0; }
+	&:only-of-type { border-radius: .1875em; }
+}
+fieldset {
+	all: unset;
+	display: flex;
+	& > *:only-child { border-radius: .1875em; }
+	& fieldset > *:is(:focus-visible, :hover) {
+		background: var(--richtext-active-bg);
+		color: var(--richtext-active-c);
+	}
+	&:empty { display: none; }
+}
+select {
+	border: 1px solid GrayText;
+	border-radius: .1875em;
+	font-size: .75em;
+	height: 2em;
+	padding: .125em .25em;
+}
+svg {
+	fill: none;
+	height: 1.5em;
+	padding: 0.125em;
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-width: 1.25;
+	width: 1.5em;
+}
+textarea {	
+	color-scheme: dark;
+	field-sizing: content;
+	font-family: monospace, monospace;
+	font-size: small;
+	margin-block: 2ch 0;
+	max-block-size: 25dvh;
+	resize: vertical;
+	width: 100%;
+}
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: clip;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+.--active {
+	background: var(--richtext-active-bg);
+	color: var(--richtext-active-c);
+}
+[disabled] {
+	color: GrayText;
+	pointer-events: none;
+}

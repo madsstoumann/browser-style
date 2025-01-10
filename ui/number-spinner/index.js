@@ -29,7 +29,7 @@ export class NumberSpinner extends FormControl {
 
 		this.root.innerHTML = `
 			<button type="button" part="dec" tabindex="0">
-				<slot name="dec"><svg part="svg" viewBox="0 0 24 24"><path d="M5 12l14 0" /></svg></slot>
+				<slot name="dec">${this.icon('M5 12l14 0','svg')}</slot>
 			</button>
 			<label aria-label="${attrs.label}">
 			<input type="number"
@@ -42,7 +42,7 @@ export class NumberSpinner extends FormControl {
 				value="${attrs.value}">
 			</label>
 			<button type="button" part="inc" tabindex="0">
-				<slot name="inc"><svg part="svg" viewBox="0 0 24 24"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></slot>
+				<slot name="inc">${this.icon('M12 5l0 14,M5 12l14 0','svg')}</slot>
 			</button>
 		`;
 

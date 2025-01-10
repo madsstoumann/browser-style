@@ -173,6 +173,17 @@ export class FormControl extends HTMLElement {
 	formReset() { }
 
 	/**
+	 * Generates an SVG string from the provided paths.
+	 *
+	 * @param {string} paths - A comma-separated list of path definitions for the SVG.
+	 * @param {string} [part] - An optional part attribute applied to the SVG element.
+	 * @returns {string} - The generated SVG string.
+	 */
+	icon(paths, part) {
+		return `<svg viewBox="0 0 24 24"${part ? `part="${part}"`:''}>${paths.split(',').map((path) => `<path d="${path}"></path>`).join('')}</svg>`;
+	}
+
+	/**
 	 * Hook for component initialization
 	 * Override in child classes to add component-specific initialization
 	 */
@@ -213,6 +224,9 @@ export class FormControl extends HTMLElement {
 
 	async #initialize() {
 		if (this.#initialized) return;
+		
+		// Wait for basePath to be set if styles attribute exists
+		await Promise.resolve();
 
 		this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
 
@@ -228,7 +242,12 @@ export class FormControl extends HTMLElement {
 		try {
 			if (!this.hasAttribute('styles')) return;
 
-			const cssPath = this.getAttribute('styles') || 'index.css';
+			let cssPath = this.getAttribute('styles') || 'index.css';
+			// Use the component's provided base path if available
+			if (cssPath === 'index.css' && this.basePath) {
+				cssPath = `${this.basePath}${cssPath}`;
+			}
+
 			const response = await fetch(cssPath);
 			
 			if (response.ok) {
@@ -237,8 +256,6 @@ export class FormControl extends HTMLElement {
 				sheet.replaceSync(css);
 				this.#root.adoptedStyleSheets = [sheet];
 			}
-		} catch (error) {
-			// Silently fail
-		}
+		} catch (_) {}
 	}
 }
