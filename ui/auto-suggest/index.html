@@ -18,7 +18,7 @@
 	<p>AutoSuggest is a Web Component, wrapping an <code>input</code> and a <code>&lt;datalist&gt;</code> or <code>&lt;ul&gt;</code>.<br>
 		It exposes several events, see the <code>console</code>. Try it out by typing the placholder-text. <br>
 		<a href="readme.md">Documentation</a> in Markdown.</p>
-		<p>A non-web-component version is <a href="basic.html">also available</a>.</p>
+		<p>A basic, non-web-component version is <a href="basic/index.html">also available</a>.</p>
 
 	<auto-suggest
 		api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
@@ -67,8 +67,9 @@
 		placeholder="thomas">
 	</auto-suggest>
 
+	<h3>Advanced, Manual Example</h3>
 	<p>
-		Within a <code>&lt;form&gt;</code>, and manually mounted (has <code>nomount</code>):
+		Within a <code>&lt;form&gt;</code>, no <code>noshadow</code>, and manually mounted with <code>Autosuggest.register()</code> (has <code>nomount</code>):
 	</p>
 
 

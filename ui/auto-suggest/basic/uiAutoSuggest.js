@@ -1,5 +1,5 @@
-import datasetWithTypes from './../../assets/js/datasetWithTypes.js';
-import debounced from './../../assets/js/debounced.js';
+import datasetWithTypes from '/assets/js/datasetWithTypes.js';
+import debounced from '/assets/js/debounced.js';
 
 export default function uiAutoSuggest(input, args) {
 	/* A matching <datalist> must exist */

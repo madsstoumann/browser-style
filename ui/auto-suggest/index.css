@@ -1,14 +1,11 @@
 /* Component specific styles */
 
 :host {
-	background-color: hotpink;
-	border: 2px solid red;
+	background-color: GrayText;
+	border: 2px dotted CanvasText;
 	display: block;
 }
 
 :host input {
-	background-color: yellow;
-	border: 2px solid green;
-	display: block;
+	border: 0;
 }
-
