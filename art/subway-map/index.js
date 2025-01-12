@@ -20,7 +20,12 @@ function subwayMap(svg, controls) {
 	const subwayLines = controls.lines.valueAsNumber;
 	const margin = 5;
 	const elements = [];
-	const colors = ['#FF0A0A', '#008D41', '#009CD3', '#FFC600', '#FF6319', '#6CBE45'];
+	
+	// Original colors and their lighter versions
+	const colors = [
+		'#FF0A0A', '#008D41', '#009CD3', '#FFC600', '#FF6319', '#6CBE45',
+		'#FF8080', '#80C6A0', '#80CEE9', '#FFE380', '#FFB18C', '#B5DFA2'
+	];
 
 	const generateSubwayLine = () => {
 		const points = [];
@@ -44,17 +49,20 @@ function subwayMap(svg, controls) {
 		return { path, points };
 	};
 
+	const paths = [];
+	const stations = [];
+
 	for (let i = 0; i < subwayLines; i++) {
 		const color = colors[i % colors.length];
 		const { path, points } = generateSubwayLine();
-		elements.push(
-			`<path d="${path}" fill="none" stroke="${color}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>`
-		);
-		elements.push(
+		const isDashed = i > 5 && Math.random() < 0.5 ? ' stroke-dasharray="2"' : '';
+		
+		paths.push(`<path d="${path}" fill="none" stroke="${color}" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"${isDashed}/>`);
+		stations.push(
 			`<circle cx="${points[0].x}" cy="${points[0].y}" r="1" fill="white" stroke="black" stroke-width=".5"/>`,
 			`<circle cx="${points[points.length - 1].x}" cy="${points[points.length - 1].y}" r="1" fill="white" stroke="black" stroke-width=".5"/>`
 		);
 	}
 
-	svg.innerHTML = `<g>${elements.join('')}</g>`;
+	svg.innerHTML = `<g>${paths.join('')}${stations.join('')}</g>`;
 }
