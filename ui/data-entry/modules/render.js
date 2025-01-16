@@ -599,7 +599,7 @@ export const richtext = (params) => {
 	return `
 		<label part="row">
 			<span part="label">${isRequired ? `<abbr title="${t('required', instance.lang, instance.i18n)}">*</abbr>` : ''}${label}</span>
-			<rich-text part="richtext" event-mode="input" ${attrs(attributes, path)}>
+			<rich-text part="richtext" styles ${attrs(attributes, path)}>
 				${value || ''}
 			</rich-text>
 		</label>`;
