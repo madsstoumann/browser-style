@@ -653,8 +653,8 @@ export const select = (params) => {
 			: option.label || option[valueField];
 
 		return {
-			value: option[valueField] || option.value || '',
-			label: optionLabel || option.label || '', // Preserve original label if no renderLabel
+			value: option[valueField] !== undefined ? option[valueField] : (option.value !== undefined ? option.value : ''),
+			label: optionLabel || option.label || '',
 		};
 	});
 

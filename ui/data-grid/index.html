@@ -167,6 +167,9 @@
 			email: (value) => `<a href="mailto:${value}" tabindex="-1">${value}</a>`,
 			semibold: (value) => `<b>${value}</b>`,
 			gray: (value) => `<span class="c-gray">${value}</span>`,
+			fullName: (value, row) => `${row.firstname} ${row.lastname}`,
+    	emailWithName: (value, row) => `<a href="mailto:${value}">${row.firstname} ${row.lastname}</a>`,
+    	cityCountry: (value, row) => `${value}, ${row.country}`,
 		}
 
 		/* === FETCH EXAMPLE === */
@@ -242,7 +245,7 @@
 
 		/* === CREATE WITH JAVASCRIPT === */
 		const grid3 = document.createElement('data-grid');
-		grid3.setAttribute('data', './data/data.json');
+		grid3.setAttribute('data', './data/custom.json');
 
 		const i18n = {
 			fr: {

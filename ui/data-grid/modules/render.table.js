@@ -241,7 +241,8 @@ export function renderTBody(context) {
 				// Apply search term highlighting if applicable
 				cellValue = searchterm ? cellValue.replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>') : cellValue;
 
-				return `${selectable}<td tabindex="-1"${classList}${isEditable ? ` contenteditable`:''}>${formatter(cellValue)}</td>`;
+				// Pass both cell value and entire row to formatter
+				return `${selectable}<td tabindex="-1"${classList}${isEditable ? ` contenteditable`:''}>${formatter(cellValue, row)}</td>`;
 			}).join('');
 
 			// Handle the expand / popover feature
