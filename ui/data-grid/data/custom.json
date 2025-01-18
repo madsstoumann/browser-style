@@ -3318,17 +3318,17 @@
     },
     {
       "field": "email",
-      "label": "Name",
+      "label": "Nom",
       "key": true,
       "formatter": "emailWithName"
     },
     {
       "field": "gender",
-      "label": "Gender"
+      "label": "Genre"
     },
     {
       "field": "city",
-      "label": "Place",
+      "label": "Lieu",
 			"formatter": "cityCountry"
     },
     {
