@@ -9,8 +9,8 @@ import printElements from '../../assets/js/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.30
- * @summary 14-11-2024
+ * @version 1.0.31
+ * @summary 20-01-2025
  * @class
  * @extends {HTMLElement}
  */
@@ -19,7 +19,7 @@ export default class DataGrid extends HTMLElement {
 	constructor() {
 		super();
 		this.log = (message, color) => consoleLog(message, color, this.settings.debug);
-		this.settings = this.createSettings();
+		this._settings = this.createSettings();
 		this.state = this.createState();
 
 		this.dataInitialized = false;
