@@ -151,21 +151,18 @@ export default class DataPrint extends HTMLElement {
   }
 
   #cleanup() {
-    // Remove styles
     const style = document.getElementById(DataPrint.#pageStyleId);
     if (style) style.remove();
-    
-    // Remove element
+
     this.remove();
 
-    // Clear instance
     if (DataPrint.#instance === this) {
       DataPrint.#instance = null;
     }
   }
 
   #close() {
-    this.togglePopover(false);
+    this.hidePopover();
   }
 
   #getPaperSizeOptions() {
@@ -180,6 +177,9 @@ export default class DataPrint extends HTMLElement {
       case 'paper-size':
         this.setAttribute('paper-size', target.value);
         break;
+      case 'orientation':
+        this.setAttribute('orientation', target.value);
+        break;
       case 'actual-size':
         if (target.checked) {
           this.setAttribute('actual-size', '');
@@ -187,11 +187,17 @@ export default class DataPrint extends HTMLElement {
           this.removeAttribute('actual-size');
         }
         break;
-      case 'margin':
-        const position = target.dataset.position;
-        if (position) {
-          this.setAttribute(`margin-${position}`, `${target.value}mm`);
-        }
+      case 'margin-bottom':
+        this.setAttribute('margin-bottom', `${target.value}mm`);
+        break;
+      case 'margin-left':
+        this.setAttribute('margin-left', `${target.value}mm`);
+        break;
+      case 'margin-right':
+        this.setAttribute('margin-right', `${target.value}mm`);
+        break;
+      case 'margin-top':
+        this.setAttribute('margin-top', `${target.value}mm`);
         break;
     }
     this.#updatePageStyles();
@@ -236,20 +242,31 @@ export default class DataPrint extends HTMLElement {
         </select>
       </label>
 
+      <label aria-label="Orientation">
+        ${this.#icon(DataPrint.#icons.paper, 'paper')}
+        <select name="orientation">
+          <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>Portrait</option>
+          <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>Landscape</option>
+        </select>
+      </label>
+
       <label aria-label="Top margin">
         T
         <input type="number" value="${parseInt(this.marginTop)}" 
           min="0" max="100" name="margin-top">
       </label>
       <label aria-label="Right margin">
+        R
         <input type="number" value="${parseInt(this.marginRight)}" 
           min="0" max="100" name="margin-right">
       </label>
       <label aria-label="Bottom margin">
+        B
         <input type="number" value="${parseInt(this.marginBottom)}" 
           min="0" max="100" name="margin-bottom">
       </label>
       <label aria-label="Left margin">
+        L
         <input type="number" value="${parseInt(this.marginLeft)}" 
           min="0" max="100" name="margin-left">
       </label>
