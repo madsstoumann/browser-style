@@ -1,5 +1,5 @@
 export default class DataPrint extends HTMLElement {
-  static observedAttributes = ['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'template', 'use-template'];
+  static observedAttributes = ['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'template', 'use-template', 'lang'];
   static #id = [...crypto.getRandomValues(new Uint8Array(4))].map(n => n.toString(16).padStart(2, '0')).join('');
   static id = 'dp' + DataPrint.#id;
   static #icons = {
@@ -96,11 +96,10 @@ export default class DataPrint extends HTMLElement {
   get marginTop() { return this.getAttribute('margin-top') || '20mm'; }
   get orientation() { return this.getAttribute('orientation') || 'portrait'; }
   get paperSize() { return this.getAttribute('paper-size') || 'A4'; }
+  get #t() { return DataPrint.#i18n[this.#lang]; }
   get template() { return this.getAttribute('template') || 'default'; }
   get useTemplate() { return this.hasAttribute('use-template'); }
-  get #t() {
-    return DataPrint.#i18n[this.getAttribute('lang') || 'en'];
-  }
+  #lang = 'en';
 
   set data(value) {
     this._data = value;
@@ -111,6 +110,7 @@ export default class DataPrint extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     this._templates = new Map();
+    this.#lang = this.getAttribute('lang') || 'en';
     this.#loadStyles();
     this.shadowRoot.innerHTML = `
       <form></form>
@@ -137,6 +137,10 @@ export default class DataPrint extends HTMLElement {
 
   // Lifecycle methods
   attributeChangedCallback(name) {
+    if (name === 'lang') {
+      this.#lang = this.getAttribute('lang') || 'en';
+      this.#renderForm();
+    }
     if (['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left'].includes(name)) {
       this.#updatePageStyles();
     }

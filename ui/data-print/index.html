@@ -29,11 +29,11 @@
 			<p>This is yet another sheet</p>
 	</data-print>
 
-	<script type="module" src="index.js"></script>
-	<script>
+	<script type="module">
+		import DataPrint from './index.js';
+
 		window.addEventListener('DOMContentLoaded', () => {
 			const dataPrint = document.querySelector('data-print');
-			// dataPrint.setContent('<h3>And so it goes ...</h3>');
 
 			document.body.insertAdjacentHTML('beforeend', `
 				<button type="button" id="preview">Preview</button>
@@ -44,32 +44,28 @@
 			document.getElementById('print').addEventListener('click', () => dataPrint.print());
 		});
 
-		// Wait for component to be defined
-		customElements.whenDefined('data-print').then(() => {
-			// Add Danish translations
-			DataPrint.i18n = {
-				da: {
-					actual_size: 'Vis i faktisk størrelse',
-					bottom: 'Bund',
-					close: 'Luk',
-					errors: {
-						single_instance: 'Der kan kun være ét <data-print> element',
-						body_child: '<data-print> skal være direkte under <body>'
-					},
-					left: 'Venstre',
-					orientation: 'Retning',
-					orientation_landscape: 'Liggende',
-					orientation_portrait: 'Stående',
-					paper_size: 'Papirstørrelse',
-					print: 'Print',
-					right: 'Højre',
-					top: 'Top'
-				}
-			};
-
-			const dataPrint = document.querySelector('data-print');
-			dataPrint.setAttribute('lang', 'da');
-		});
+		// customElements.whenDefined('data-print').then(() => {
+		// 	DataPrint.i18n = {
+		// 		da: {
+		// 			actual_size: 'Vis i faktisk størrelse',
+		// 			bottom: 'Bund',
+		// 			close: 'Luk',
+		// 			errors: {
+		// 				single_instance: 'Der kan kun være ét <data-print> element',
+		// 				body_child: '<data-print> skal være direkte under <body>'
+		// 			},
+		// 			left: 'Venstre',
+		// 			orientation: 'Retning',
+		// 			orientation_landscape: 'Liggende',
+		// 			orientation_portrait: 'Stående',
+		// 			paper_size: 'Papirstørrelse',
+		// 			print: 'Print',
+		// 			right: 'Højre',
+		// 			top: 'Top'
+		// 		}
+		// 	};
+		// 	document.querySelector('data-print').setAttribute('lang', 'da');
+		// });
 	</script>
 </body>
 </html>
