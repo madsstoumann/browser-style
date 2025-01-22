@@ -1,5 +1,9 @@
 @media screen {
   :host {
+    --_bdc: #CCC;
+    --_bdrs: 4px;
+    --_gap: 2rem;
+
     background-color: #999;
     border: 0;
     height: 100dvh;
@@ -7,46 +11,79 @@
     padding: 0;
     width: 100vw;
   }
+  paper-sheet,
   ::slotted(paper-sheet) {
     aspect-ratio: calc(1 / var(--page-ratio));
     background: #FFF;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
     color: #000;
+    /* container-type: inline-size; */
     display: block;
+    /* --scale: min(1, calc(100% / var(--page-width))); */
+    /* font-size: calc(1rem * var(--scale)); */
+    /* font-size: x-small; */
+    font-size: var(--page-root-size, 1rem);
     margin-inline: auto;
-    min-height: calc(var(--page-actual-size) * var(--page-height));
     padding: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
-    width: calc(var(--page-actual-size) * var(--page-width) + (1 - var(--page-actual-size)) * 100%);
+    max-width: var(--page-width, auto);
+    width: 100%;
   }
-
   paper-tray {
     display: grid;
-    padding-block-end: 2rem;
-    row-gap: 2rem;
+    padding-block-end: var(--_gap);
+    padding-inline: var(--_gap);
+    row-gap: var(--_gap);
   }
 
-  button {
-    all: unset;
-  }
-
-  form {
-    align-content: center;
+  :host > form {
+    align-items: center;
     background-color: Canvas;
     color: CanvasText;
     color-scheme: light dark;
     display: flex;
     font-family: system-ui;
     font-size: small;
-    margin-block-end: 2rem;
+    gap: 1ch;
+    margin-block-end: var(--_gap);
     padding: 1ch;
     position: sticky;
     top: 0;
+
+    button {
+      background: #0000;
+      border: 1px solid var(--_bdc);
+      border-radius: var(--_bdrs);
+      display: grid;
+      padding: 0;
+      
+      place-content: center;
+      &[data-action="close"] {
+        margin-inline-start: auto;
+      }
+    }
+
+    input, select {
+      border: 0;
+      border-radius: inherit;
+      font-size: inherit;
+    }
+
+    svg {
+      fill: none;
+      height: 1.5em;
+      padding: 0.125em;
+      pointer-events: none;
+      stroke: currentColor;
+      stroke-width: 1.25;
+      width: 1.5em;
+    }
   }
 
-  input, select {
-    border: 0;
-    border-radius: inherit;
-    font-size: inherit;
+
+
+  input::-webkit-inner-spin-button,
+  input::-webkit-outer-spin-button {
+    appearance: none;
   }
 
   label {
@@ -62,15 +99,7 @@
     padding-inline: 0 1ch;
   }
 
-  svg {
-    fill: none;
-    height: 1.5em;
-    padding: 0.125em;
-    pointer-events: none;
-    stroke: currentColor;
-    stroke-width: 1.25;
-    width: 1.5em;
-  }
+
 }
 
 @media print {
@@ -89,13 +118,14 @@
   form { 
     display: none; 
   }
-  ::slotted(paper-sheet),
-  paper-sheet {
+  paper-sheet,
+  ::slotted(paper-sheet) {
     background: #0000;
     box-shadow: none;
     break-after: page;
     color: #000;
     display: block !important;
+    font-size: var(--page-root-size, 1rem);
     margin: 0;
     overflow: visible !important;
     page: sheet;

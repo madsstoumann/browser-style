@@ -1,75 +1,51 @@
 export default class DataPrint extends HTMLElement {
-  static observedAttributes = ['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'template', 'use-template', 'lang'];
-  static #id = [...crypto.getRandomValues(new Uint8Array(4))].map(n => n.toString(16).padStart(2, '0')).join('');
-  static id = 'dp' + DataPrint.#id;
+  static #pageStyleId;
+  static #id;
+  static #instance = null;
+  
+  static {
+    const id = [...crypto.getRandomValues(new Uint8Array(4))]
+      .map(n => n.toString(16).padStart(2, '0')).join('');
+    this.#id = `dp${id}`;
+    this.#pageStyleId = `style-${id}`;
+  }
+
+  static get id() { return this.#id; }
+
+  static observedAttributes = [
+    'paper-size', 'orientation', 
+    'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 
+    'template', 'use-template', 'lang', 'font-size'
+  ];
+
   static #icons = {
     close: 'M18 6l-12 12, M6 6l12 12',
     paper: 'M14 3v4a1 1 0 0 0 1 1h4, M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z',
     printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2, M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4, M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z'
   };
+
   static #paperSizes = {
-    A5: {
-      width: '148mm',
-      height: '210mm',
-      ratio: 210/148
-    },
-    A4: {
-      width: '210mm',
-      height: '297mm',
-      ratio: 297/210
-    },
-    A3: {
-      width: '297mm',
-      height: '420mm',
-      ratio: 420/297
-    },
-    B5: {
-      width: '176mm',
-      height: '250mm',
-      ratio: 250/176
-    },
-    B4: {
-      width: '250mm',
-      height: '353mm',
-      ratio: 353/250
-    },
-    'JIS-B5': {
-      width: '182mm',
-      height: '257mm',
-      ratio: 257/182
-    },
-    'JIS-B4': {
-      width: '257mm',
-      height: '364mm',
-      ratio: 364/257
-    },
-    letter: {
-      width: '8.5in',
-      height: '11in',
-      ratio: 11/8.5
-    },
-    legal: {
-      width: '8.5in',
-      height: '14in',
-      ratio: 14/8.5
-    },
-    ledger: {
-      width: '11in',
-      height: '17in',
-      ratio: 17/11
-    }
+    A5: { width: '148mm', height: '210mm', ratio: 210/148 },
+    A4: { width: '210mm', height: '297mm', ratio: 297/210 },
+    A3: { width: '297mm', height: '420mm', ratio: 420/297 },
+    B5: { width: '176mm', height: '250mm', ratio: 250/176 },
+    B4: { width: '250mm', height: '353mm', ratio: 353/250 },
+    'JIS-B5': { width: '182mm', height: '257mm', ratio: 257/182 },
+    'JIS-B4': { width: '257mm', height: '364mm', ratio: 364/257 },
+    letter: { width: '8.5in', height: '11in', ratio: 11/8.5 },
+    legal: { width: '8.5in', height: '14in', ratio: 14/8.5 },
+    ledger: { width: '11in', height: '17in', ratio: 17/11 }
   };
-  static #pageStyleId = `style-${DataPrint.#id}`;
-  static #instance = null;
+
   static #i18n = {
     en: {
-      actual_size: 'Use actual size',
       bottom: 'Bottom',
       close: 'Close',
       errors: {
         single_instance: 'Only one <data-print> element is allowed',
         body_child: '<data-print> must be a direct child of <body>'
       },
+      font_size: 'Font Size',
       left: 'Left',
       orientation: 'Orientation',
       orientation_landscape: 'Landscape',
@@ -81,90 +57,85 @@ export default class DataPrint extends HTMLElement {
     }
   };
 
-  static get i18n() {
-    return this.#i18n;
-  }
+  static get i18n() { return this.#i18n; }
+  static set i18n(value) { this.#i18n = { ...this.#i18n, ...value }; }
 
-  static set i18n(value) {
-    this.#i18n = { ...this.#i18n, ...value };
-  }
-
-  // Getters & Setters
-  get marginBottom() { return this.getAttribute('margin-bottom') || '20mm'; }
-  get marginLeft() { return this.getAttribute('margin-left') || '20mm'; }
-  get marginRight() { return this.getAttribute('margin-right') || '20mm'; }
-  get marginTop() { return this.getAttribute('margin-top') || '20mm'; }
-  get orientation() { return this.getAttribute('orientation') || 'portrait'; }
-  get paperSize() { return this.getAttribute('paper-size') || 'A4'; }
-  get #t() { return DataPrint.#i18n[this.#lang]; }
-  get template() { return this.getAttribute('template') || 'default'; }
-  get useTemplate() { return this.hasAttribute('use-template'); }
   #lang = 'en';
+  #t = () => DataPrint.#i18n[this.#lang];
+  
+  get marginBottom() { return this.getAttribute('margin-bottom') ?? '10mm'; }
+  get marginLeft() { return this.getAttribute('margin-left') ?? '10mm'; }
+  get marginRight() { return this.getAttribute('margin-right') ?? '10mm'; }
+  get marginTop() { return this.getAttribute('margin-top') ?? '10mm'; }
+  get orientation() { return this.getAttribute('orientation') ?? 'portrait'; }
+  get paperSize() { return this.getAttribute('paper-size') ?? 'A4'; }
+  get template() { return this.getAttribute('template') ?? 'default'; }
+  get useTemplate() { return this.hasAttribute('use-template'); }
+  get fontSize() { return this.getAttribute('font-size') ?? 'medium'; }
 
   set data(value) {
     this._data = value;
     this.#renderContent();
   }
 
+  #handleFormChange = {
+    'paper-size': value => this.setAttribute('paper-size', value),
+    orientation: value => this.setAttribute('orientation', value),
+    'margin-bottom': value => this.setAttribute('margin-bottom', `${value}mm`),
+    'margin-left': value => this.setAttribute('margin-left', `${value}mm`),
+    'margin-right': value => this.setAttribute('margin-right', `${value}mm`),
+    'margin-top': value => this.setAttribute('margin-top', `${value}mm`),
+    'font-size': value => this.setAttribute('font-size', value)
+  };
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this._templates = new Map();
-    this.#lang = this.getAttribute('lang') || 'en';
-    this.#loadStyles();
-    this.shadowRoot.innerHTML = `
-      <form></form>
-      <paper-tray></paper-tray>
-    `;
-
+    this.#lang = this.getAttribute('lang') ?? 'en';
+    
+    this.shadowRoot.innerHTML = '<form></form><paper-tray></paper-tray>';
     this.content = this.shadowRoot.querySelector('paper-tray');
-    const form = this.shadowRoot.querySelector('form');
+    
+    this.#loadStyles();
+    this.#setupEventListeners();
+  }
 
-    form.addEventListener('submit', e => e.preventDefault());
-    form.addEventListener('change', e => {
-      const target = e.target;
-      this.#handleFormChange(e);
-    });
-    form.addEventListener('click', e => {
-      const button = e.target.closest('button');
-      if (button) {
-        e.preventDefault();
-        if (button.dataset.action === 'print') this.print();
-        if (button.dataset.action === 'close') this.#close();
+  #setupEventListeners() {
+    this.shadowRoot.addEventListener('submit', e => e.preventDefault());
+    this.shadowRoot.addEventListener('change', e => {
+      const handler = this.#handleFormChange[e.target.name];
+      if (handler) {
+        handler(e.target.value, e.target);
+        this.#updatePageStyles();
       }
+    });
+    this.shadowRoot.addEventListener('click', e => {
+      const action = e.target.closest('button')?.dataset.action;
+      if (action === 'print') this.print();
+      if (action === 'close') this.hidePopover();
     });
   }
 
-  // Lifecycle methods
   attributeChangedCallback(name) {
     if (name === 'lang') {
-      this.#lang = this.getAttribute('lang') || 'en';
+      this.#lang = this.getAttribute('lang') ?? 'en';
       this.#renderForm();
-    }
-    if (['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left'].includes(name)) {
+    } else if (['paper-size', 'orientation', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'font-size'].includes(name)) {
       this.#updatePageStyles();
     }
   }
 
   connectedCallback() {
-    if (DataPrint.#instance) {
-      console.error(this.#t.errors.single_instance);
+    if (DataPrint.#instance || this.parentElement !== document.body) {
+      console.error(this.#t()[DataPrint.#instance ? 'errors.single_instance' : 'errors.body_child']);
       this.#cleanup();
       return;
-    }
-    
-    if (this.parentElement !== document.body) {
-      console.error(this.#t.errors.body_child);
-      this.#cleanup();
-      return;
-    }
-
-    if (!this.hasAttribute('popover')) {
-      this.setAttribute('popover', '');
     }
 
     this.id = DataPrint.id;
     DataPrint.#instance = this;
+    this.setAttribute('popover', '');
     this.#addPageStyles();
     this.#renderForm();
     this.#renderContent();
@@ -174,85 +145,35 @@ export default class DataPrint extends HTMLElement {
     this.#cleanup();
   }
 
-  // Private methods
+  #cleanup = () => {
+    document.getElementById(DataPrint.#pageStyleId)?.remove();
+    if (DataPrint.#instance === this) DataPrint.#instance = null;
+    this.remove();
+  };
+
   #addPageStyles() {
     if (!document.getElementById(DataPrint.#pageStyleId)) {
       const style = document.createElement('style');
       style.id = DataPrint.#pageStyleId;
       document.head.appendChild(style);
+      this.#updatePageStyles();
     }
-    this.#updatePageStyles();
-  }
-
-  #cleanup() {
-    const style = document.getElementById(DataPrint.#pageStyleId);
-    if (style) style.remove();
-
-    this.remove();
-
-    if (DataPrint.#instance === this) {
-      DataPrint.#instance = null;
-    }
-  }
-
-  #close() {
-    this.hidePopover();
-  }
-
-  #getPaperSizeOptions() {
-    return Object.entries(DataPrint.#paperSizes)
-      .map(([size, _]) => `<option value="${size}"${size === this.paperSize ? ' selected' : ''}>${size}</option>`)
-      .join('');
-  }
-
-  #handleFormChange(e) {
-    const target = e.target;
-    switch(target.name) {
-      case 'paper-size':
-        this.setAttribute('paper-size', target.value);
-        break;
-      case 'orientation':
-        this.setAttribute('orientation', target.value);
-        break;
-      case 'actual-size':
-        if (target.checked) {
-          this.setAttribute('actual-size', '');
-        } else {
-          this.removeAttribute('actual-size');
-        }
-        break;
-      case 'margin-bottom':
-        this.setAttribute('margin-bottom', `${target.value}mm`);
-        break;
-      case 'margin-left':
-        this.setAttribute('margin-left', `${target.value}mm`);
-        break;
-      case 'margin-right':
-        this.setAttribute('margin-right', `${target.value}mm`);
-        break;
-      case 'margin-top':
-        this.setAttribute('margin-top', `${target.value}mm`);
-        break;
-    }
-    this.#updatePageStyles();
   }
 
   #icon(paths, part) {
-    return `<svg viewBox="0 0 24 24"${part ? `part="${part}"`:''}>${paths.split(',').map((path) => `<path d="${path}"></path>`).join('')}</svg>`;
+    return `<svg viewBox="0 0 24 24"${part ? ` part="${part}"` : ''}>${
+      paths.split(',').map(path => `<path d="${path}"></path>`).join('')
+    }</svg>`;
   }
 
   async #loadStyles() {
     try {
-      let cssPath = this.getAttribute('styles') || 'index.css';
-      if (cssPath === 'index.css' && this.basePath) {
-        cssPath = `${this.basePath}${cssPath}`;
-      }
-
+      const cssPath = this.getAttribute('styles') || 
+        (this.basePath ? `${this.basePath}index.css` : 'index.css');
       const response = await fetch(cssPath);
       if (response.ok) {
-        const css = await response.text();
         const sheet = new CSSStyleSheet();
-        sheet.replaceSync(css);
+        sheet.replaceSync(await response.text());
         this.shadowRoot.adoptedStyleSheets = [sheet];
       }
     } catch (_) {}
@@ -266,54 +187,46 @@ export default class DataPrint extends HTMLElement {
   }
 
   #renderForm() {
-    const form = this.shadowRoot.querySelector('form');
-    form.innerHTML = `
-      <label aria-label="${this.#t.paper_size}">
+    const t = this.#t();
+    this.shadowRoot.querySelector('form').innerHTML = `
+      <label aria-label="${t.paper_size}">
         ${this.#icon(DataPrint.#icons.paper, 'paper')}
         <select name="paper-size">
-          ${this.#getPaperSizeOptions()}
+          ${Object.keys(DataPrint.#paperSizes)
+            .map(size => `<option value="${size}"${size === this.paperSize ? ' selected' : ''}>${size}</option>`)
+            .join('')}
         </select>
       </label>
 
-      <label aria-label="${this.#t.orientation}">
+      <label aria-label="${t.orientation}">
         ${this.#icon(DataPrint.#icons.paper, 'paper')}
         <select name="orientation">
-          <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>${this.#t.orientation_portrait}</option>
-          <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>${this.#t.orientation_landscape}</option>
+          <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>${t.orientation_portrait}</option>
+          <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>${t.orientation_landscape}</option>
         </select>
       </label>
 
-      <label aria-label="${this.#t.top}">
-        ${this.#t.top[0]}
-        <input type="number" value="${parseInt(this.marginTop)}" 
-          min="0" max="100" name="margin-top">
-      </label>
-      <label aria-label="${this.#t.right}">
-        ${this.#t.right[0]}
-        <input type="number" value="${parseInt(this.marginRight)}" 
-          min="0" max="100" name="margin-right">
-      </label>
-      <label aria-label="${this.#t.bottom}">
-        ${this.#t.bottom[0]}
-        <input type="number" value="${parseInt(this.marginBottom)}" 
-          min="0" max="100" name="margin-bottom">
-      </label>
-      <label aria-label="${this.#t.left}">
-        ${this.#t.left[0]}
-        <input type="number" value="${parseInt(this.marginLeft)}" 
-          min="0" max="100" name="margin-left">
+      <label aria-label="${t.font_size}">
+        <select name="font-size">
+          ${['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large']
+            .map(size => `<option value="${size}"${size === this.fontSize ? ' selected' : ''}>${size}</option>`)
+            .join('')}
+        </select>
       </label>
 
-      <label aria-label="${this.#t.actual_size}">
-        <input type="checkbox" name="actual-size"
-          ${this.hasAttribute('actual-size') ? 'checked' : ''}>
-      </label>
+      ${['top', 'right', 'bottom', 'left'].map(pos => `
+        <label aria-label="${t[pos]}">
+          ${t[pos][0]}
+          <input type="number" value="${parseInt(this[`margin${pos.charAt(0).toUpperCase() + pos.slice(1)}`])}" 
+            min="0" max="100" name="margin-${pos}">
+        </label>
+      `).join('')}
 
-      <button type="button" data-action="print" aria-label="${this.#t.print}">
+      <button type="button" data-action="print" aria-label="${t.print}">
         ${this.#icon(DataPrint.#icons.printer, 'printer')}
       </button>
 
-      <button type="button" data-action="close" aria-label="${this.#t.close}">
+      <button type="button" data-action="close" aria-label="${t.close}">
         ${this.#icon(DataPrint.#icons.close, 'close')}
       </button>
     `;
@@ -321,31 +234,36 @@ export default class DataPrint extends HTMLElement {
 
   #updatePageStyles() {
     const style = document.getElementById(DataPrint.#pageStyleId);
-    const paperData = DataPrint.#paperSizes[this.paperSize];
-    if (style && paperData) {
-      const { width, height, ratio } = paperData;
-      const isActualSize = this.hasAttribute('actual-size');
-      style.textContent = `
-        @media print { body:has(data-print) > *:not(data-print) { display: none !important; }}
-        @page {
-          margin: ${this.marginTop} ${this.marginRight} ${this.marginBottom} ${this.marginLeft};
-          size: ${this.paperSize} ${this.orientation};
-        }
-        :root {
-          --page-width: ${this.orientation === 'portrait' ? width : height};
-          --page-height: ${this.orientation === 'portrait' ? height : width};
-          --page-ratio: ${this.orientation === 'portrait' ? ratio : 1/ratio};
-          --page-actual-size: ${isActualSize ? 1 : 0};
-          --page-margin-top: ${this.marginTop};
-          --page-margin-right: ${this.marginRight};
-          --page-margin-bottom: ${this.marginBottom};
-          --page-margin-left: ${this.marginLeft};
-        }
-      `;
-    }
+    const { width, height, ratio } = DataPrint.#paperSizes[this.paperSize] ?? {};
+    if (!style || !width) return;
+
+    const isLandscape = this.orientation === 'landscape';
+    const cssVars = {
+      '--page-width': isLandscape ? height : width,
+      '--page-height': isLandscape ? width : height,
+      '--page-ratio': isLandscape ? 1/ratio : ratio,
+      '--page-margin-top': this.marginTop,
+      '--page-margin-right': this.marginRight,
+      '--page-margin-bottom': this.marginBottom,
+      '--page-margin-left': this.marginLeft,
+      '--page-root-size': this.fontSize
+    };
+
+    style.textContent = `
+      @media print { 
+        body:has(data-print) > *:not(data-print) { display: none !important; }
+      }
+      @page {
+        margin: ${this.marginTop} ${this.marginRight} ${this.marginBottom} ${this.marginLeft};
+        size: ${this.paperSize} ${this.orientation};
+      }
+      :root {
+        ${Object.entries(cssVars).map(([key, value]) => `${key}: ${value};`).join('\n')}
+      }
+    `;
   }
 
-  // Public methods
+  // Public API
   addTemplate(name, template) {
     this._templates.set(name, template);
   }
