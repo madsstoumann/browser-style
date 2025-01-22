@@ -1,7 +1,9 @@
 @media screen {
   :host {
+    background-color: #999;
     border: 0;
     height: 100dvh;
+    inset: 0;
     padding: 0;
     width: 100vw;
   }
@@ -19,7 +21,8 @@
 
   paper-tray {
     display: grid;
-    row-gap: 2rem;;
+    padding-block-end: 2rem;
+    row-gap: 2rem;
   }
 
   button {
@@ -34,7 +37,10 @@
     display: flex;
     font-family: system-ui;
     font-size: small;
+    margin-block-end: 2rem;
     padding: 1ch;
+    position: sticky;
+    top: 0;
   }
 
   input, select {
@@ -70,31 +76,34 @@
 @media print {
   :host {
     border: 0;
-    display: block;
     margin: 0;
     max-width: none;
-    overflow: visible;
     padding: 0;
-    /* width: 100%; */
+  }
+  :host, paper-tray {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    position: static !important;
   }
   form { 
     display: none; 
   }
-  paper-tray {
-    display: contents;
-  }
-
-  ::slotted(paper-sheet) {
+  ::slotted(paper-sheet),
+  paper-sheet {
     background: #0000;
     box-shadow: none;
+    break-after: page;
     color: #000;
-    display: block;
+    display: block !important;
     margin: 0;
+    overflow: visible !important;
+    page: sheet;
     page-break-after: always;
-  
+    position: relative;
   }
   ::slotted(paper-sheet:last-child) {
-    page-break-after: avoid;
+    break-after: avoid;
   }
 }
 
