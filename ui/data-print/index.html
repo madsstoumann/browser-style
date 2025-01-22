@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Print</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components &gt; DataPrint</h1>
+	<p>
+		<code>&lt;data-print&gt;</code> is a custom element that allows you to print the content of the element.
+	</p>
+	<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Atque, beatae magnam ipsam doloribus repudiandae suscipit reprehenderit pariatur accusamus non tempore sint ea ab nisi quas ipsum quae exercitationem deleniti doloremque illo iure maiores ducimus cum? Adipisci iusto tempore, ipsum similique quidem consequatur modi illum, eius omnis repellat dolor facilis culpa fugit voluptate ullam magnam sapiente et impedit accusamus officiis quos tempora excepturi! Animi error sed quam, facilis saepe doloribus natus? Reprehenderit maxime numquam ratione. Aliquam eveniet iste ab consequuntur dolorum dolores fugiat nemo nam, delectus ipsum qui odio assumenda facilis odit quidem omnis praesentium voluptates, recusandae tenetur minima maiores esse! Vitae, explicabo saepe. Ratione explicabo consequatur laborum possimus eos commodi architecto, consequuntur dolorum in esse voluptate veritatis totam minima, aliquid minus cupiditate autem placeat recusandae exercitationem laboriosam delectus voluptatum vitae? Laborum ea ipsum sit expedita, incidunt adipisci minima minus, magnam suscipit atque ratione, dignissimos corrupti non! Eos temporibus dolor velit deserunt quos totam ab minima laboriosam ducimus tempora quis illo repellendus culpa nesciunt, ex quibusdam in dolorem fuga officiis error. Exercitationem quidem voluptas ducimus nihil pariatur tempora est fuga possimus provident eum maxime earum quod officiis qui cum ipsa quis, hic impedit! Exercitationem, ut beatae. Repellat voluptatibus nemo repudiandae voluptates maiores iste ratione atque nihil rerum minus? Saepe fugiat, laudantium nulla cum impedit facilis nam perspiciatis ratione accusantium, perferendis quam non maiores quae quibusdam vel nihil voluptatibus? Pariatur aspernatur similique doloribus ipsum nihil, ullam tempore, perferendis blanditiis, ratione repellendus tenetur. Saepe alias eligendi voluptatem provident sit praesentium ipsa dolore ipsam totam quis, cum distinctio veritatis impedit, labore deserunt sequi magni? Iure ad enim et similique necessitatibus, nisi, nesciunt reprehenderit in eaque officia ea deserunt nostrum officiis maiores sint fugit, accusamus aliquam vero vitae exercitationem eos sit libero debitis autem? Placeat ea cumque ut delectus! Ad alias ea consequatur suscipit esse impedit rerum, incidunt aut laudantium dolorem voluptates cumque magni animi sequi? Quod est tenetur eaque omnis facere cupiditate quisquam nisi voluptas repellat odit, debitis praesentium neque a minus quam animi consequuntur ipsa corporis magnam delectus eveniet? Assumenda officiis iusto, esse nam hic nesciunt eligendi. Quidem cumque aut corporis reiciendis deserunt nesciunt, molestiae, illum deleniti ipsam iste provident praesentium ducimus architecto, quia nam aliquam. Ullam tempore ratione blanditiis quae ipsam ut iure laboriosam quos sit. Suscipit magnam iusto beatae enim dolorum fuga exercitationem neque, dolore inventore ipsum molestias, quaerat odio, labore accusamus facere reiciendis autem. Voluptatem adipisci temporibus, quasi inventore autem minima odit optio iusto, fuga animi quis tenetur necessitatibus unde? Neque, aperiam. Officiis aut veniam odio voluptates voluptatum fugit sint reiciendis? In, laborum eum. Laboriosam accusantium eos, possimus deserunt id, vel error esse porro inventore a doloribus mollitia. Officia quisquam mollitia exercitationem alias suscipit, quam saepe! Alias minima eum cupiditate, laborum nostrum dignissimos autem eveniet maxime. Soluta rem praesentium tempora eveniet voluptatem, quos veritatis harum temporibus laborum deserunt distinctio enim illum a tempore aliquam est optio, qui quisquam, sint expedita explicabo ipsa nihil at officiis. Corporis tempora hic deleniti omnis quas commodi quo laborum fuga sint? Ab dignissimos atque nesciunt?</p>
+
+	<data-print>
+		<paper-sheet>
+			<h1>My Printable Content</h1>
+			<p>This content will be printed</p>
+		</paper-sheet>
+		<paper-sheet>
+			<h2>Another Sheet</h2>
+			<p>This is another sheet</p>
+		</paper-sheet>
+	</data-print>
+
+	<script type="module" src="index.js"></script>
+	<script>
+		window.addEventListener('DOMContentLoaded', () => {
+			const dataPrint = document.querySelector('data-print');
+			// dataPrint.setContent('<h3>And so it goes ...</h3>');
+
+			document.body.insertAdjacentHTML('beforeend', `
+				<button type="button" id="preview">Preview</button>
+				<button type="button" id="print">Print</button>
+			`);
+
+			document.getElementById('preview').addEventListener('click', () => dataPrint.showPopover());
+			document.getElementById('print').addEventListener('click', () => dataPrint.print());
+		});
+	</script>
+</body>
+</html>
