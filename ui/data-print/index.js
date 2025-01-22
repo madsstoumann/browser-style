@@ -61,6 +61,33 @@ export default class DataPrint extends HTMLElement {
   };
   static #pageStyleId = `style-${DataPrint.#id}`;
   static #instance = null;
+  static #i18n = {
+    en: {
+      actual_size: 'Use actual size',
+      bottom: 'Bottom',
+      close: 'Close',
+      errors: {
+        single_instance: 'Only one <data-print> element is allowed',
+        body_child: '<data-print> must be a direct child of <body>'
+      },
+      left: 'Left',
+      orientation: 'Orientation',
+      orientation_landscape: 'Landscape',
+      orientation_portrait: 'Portrait',
+      paper_size: 'Paper Size',
+      print: 'Print',
+      right: 'Right',
+      top: 'Top'
+    }
+  };
+
+  static get i18n() {
+    return this.#i18n;
+  }
+
+  static set i18n(value) {
+    this.#i18n = { ...this.#i18n, ...value };
+  }
 
   // Getters & Setters
   get marginBottom() { return this.getAttribute('margin-bottom') || '20mm'; }
@@ -71,6 +98,9 @@ export default class DataPrint extends HTMLElement {
   get paperSize() { return this.getAttribute('paper-size') || 'A4'; }
   get template() { return this.getAttribute('template') || 'default'; }
   get useTemplate() { return this.hasAttribute('use-template'); }
+  get #t() {
+    return DataPrint.#i18n[this.getAttribute('lang') || 'en'];
+  }
 
   set data(value) {
     this._data = value;
@@ -114,13 +144,13 @@ export default class DataPrint extends HTMLElement {
 
   connectedCallback() {
     if (DataPrint.#instance) {
-      console.error('Only one <data-print> element is allowed');
+      console.error(this.#t.errors.single_instance);
       this.#cleanup();
       return;
     }
     
     if (this.parentElement !== document.body) {
-      console.error('<data-print> must be a direct child of <body>');
+      console.error(this.#t.errors.body_child);
       this.#cleanup();
       return;
     }
@@ -228,59 +258,58 @@ export default class DataPrint extends HTMLElement {
     if (this.useTemplate && !this._data) return;
     const templateFn = this._templates.get(this.template) || this.defaultTemplate;
     this.content.innerHTML = this.useTemplate && this._data ? 
-      templateFn(this._data, this._schema, this._formatters) : 
-      '<slot></slot>';
+      templateFn(this._data) : '<slot></slot>';
   }
 
   #renderForm() {
     const form = this.shadowRoot.querySelector('form');
     form.innerHTML = `
-      <label aria-label="Paper Size">
+      <label aria-label="${this.#t.paper_size}">
         ${this.#icon(DataPrint.#icons.paper, 'paper')}
         <select name="paper-size">
           ${this.#getPaperSizeOptions()}
         </select>
       </label>
 
-      <label aria-label="Orientation">
+      <label aria-label="${this.#t.orientation}">
         ${this.#icon(DataPrint.#icons.paper, 'paper')}
         <select name="orientation">
-          <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>Portrait</option>
-          <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>Landscape</option>
+          <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>${this.#t.orientation_portrait}</option>
+          <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>${this.#t.orientation_landscape}</option>
         </select>
       </label>
 
-      <label aria-label="Top margin">
-        T
+      <label aria-label="${this.#t.top}">
+        ${this.#t.top[0]}
         <input type="number" value="${parseInt(this.marginTop)}" 
           min="0" max="100" name="margin-top">
       </label>
-      <label aria-label="Right margin">
-        R
+      <label aria-label="${this.#t.right}">
+        ${this.#t.right[0]}
         <input type="number" value="${parseInt(this.marginRight)}" 
           min="0" max="100" name="margin-right">
       </label>
-      <label aria-label="Bottom margin">
-        B
+      <label aria-label="${this.#t.bottom}">
+        ${this.#t.bottom[0]}
         <input type="number" value="${parseInt(this.marginBottom)}" 
           min="0" max="100" name="margin-bottom">
       </label>
-      <label aria-label="Left margin">
-        L
+      <label aria-label="${this.#t.left}">
+        ${this.#t.left[0]}
         <input type="number" value="${parseInt(this.marginLeft)}" 
           min="0" max="100" name="margin-left">
       </label>
 
-      <label aria-label="Use actual size">
+      <label aria-label="${this.#t.actual_size}">
         <input type="checkbox" name="actual-size"
           ${this.hasAttribute('actual-size') ? 'checked' : ''}>
       </label>
 
-      <button type="button" data-action="print">
+      <button type="button" data-action="print" aria-label="${this.#t.print}">
         ${this.#icon(DataPrint.#icons.printer, 'printer')}
       </button>
 
-      <button type="button" data-action="close">
+      <button type="button" data-action="close" aria-label="${this.#t.close}">
         ${this.#icon(DataPrint.#icons.close, 'close')}
       </button>
     `;
