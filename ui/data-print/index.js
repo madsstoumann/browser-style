@@ -20,6 +20,7 @@ export default class DataPrint extends HTMLElement {
 
   static #icons = {
     close: 'M18 6l-12 12, M6 6l12 12',
+    fontsize: 'M3 7v-2h13v2, M10 5v14, M12 19h-4, M15 13v-1h6v1, M18 12v7, M17 19h2',
     paper: 'M14 3v4a1 1 0 0 0 1 1h4, M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z',
     printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2, M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4, M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z'
   };
@@ -207,6 +208,7 @@ export default class DataPrint extends HTMLElement {
       </label>
 
       <label aria-label="${t.font_size}">
+        ${this.#icon(DataPrint.#icons.fontsize, 'fontsize')}
         <select name="font-size">
           ${['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large']
             .map(size => `<option value="${size}"${size === this.fontSize ? ' selected' : ''}>${size}</option>`)
