@@ -120,6 +120,10 @@
     margin: 0;
     max-width: none;
     padding: 0;
+
+    form { 
+      display: none; 
+    }
   }
 
   :host, paper-tray {
@@ -128,9 +132,7 @@
     overflow: visible !important;
     position: static !important;
   }
-  form { 
-    display: none; 
-  }
+
   paper-sheet,
   ::slotted(paper-sheet) {
     background: #0000;
@@ -149,19 +151,4 @@
   ::slotted(paper-sheet:last-child) {
     break-after: avoid;
   }
-}
-
-/* Shared styles */
-table {
-  border-collapse: collapse;
-  margin: 1rem 0;
-  width: 100%;
-}
-td, th {
-  border: 1px solid #999;
-  padding: .5rem;
-  text-align: left;
-}
-th { 
-  background: #f0f0f0; 
 }

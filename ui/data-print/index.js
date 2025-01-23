@@ -1,4 +1,4 @@
-export default class DataPrint extends HTMLElement {
+export default class PrintPreview extends HTMLElement {
   static #pageStyleId;
   static #id;
   static #instance = null;
@@ -47,8 +47,8 @@ export default class DataPrint extends HTMLElement {
       bottom: 'Bottom',
       close: 'Close',
       errors: {
-        single_instance: 'Only one <data-print> element is allowed',
-        body_child: '<data-print> must be a direct child of <body>'
+        single_instance: 'Only one <print-preview> element is allowed',
+        body_child: '<print-preview> must be a direct child of <body>'
       },
       font_family: 'Font Family',
       font_size: 'Font Size',
@@ -66,9 +66,8 @@ export default class DataPrint extends HTMLElement {
   static get i18n() { return this.#i18n; }
   static set i18n(value) { this.#i18n = { ...this.#i18n, ...value }; }
 
-  #isPrinting = false;
   #lang = 'en';
-  #t = () => DataPrint.#i18n[this.#lang];
+  #t = () => PrintPreview.#i18n[this.#lang];
   
   get marginBottom() { return this.getAttribute('margin-bottom') ?? '10mm'; }
   get marginLeft() { return this.getAttribute('margin-left') ?? '10mm'; }
@@ -119,14 +118,14 @@ export default class DataPrint extends HTMLElement {
   }
 
   connectedCallback() {
-    if (DataPrint.#instance || this.parentElement !== document.body) {
-      console.error(this.#t()[DataPrint.#instance ? 'errors.single_instance' : 'errors.body_child']);
+    if (PrintPreview.#instance || this.parentElement !== document.body) {
+      console.error(this.#t()[PrintPreview.#instance ? 'errors.single_instance' : 'errors.body_child']);
       this.#cleanup();
       return;
     }
 
-    this.id = DataPrint.id;
-    DataPrint.#instance = this;
+    this.id = PrintPreview.id;
+    PrintPreview.#instance = this;
     this.setAttribute('popover', '');
     this.#addPageStyles();
     this.#renderForm();
@@ -140,21 +139,21 @@ export default class DataPrint extends HTMLElement {
   /* === private methods === */
 
   #addPageStyles() {
-    if (!document.getElementById(DataPrint.#pageStyleId)) {
+    if (!document.getElementById(PrintPreview.#pageStyleId)) {
       const style = document.createElement('style');
-      style.id = DataPrint.#pageStyleId;
+      style.id = PrintPreview.#pageStyleId;
       document.head.appendChild(style);
       this.#updatePageStyles();
     }
   }
 
   #addPrintStyle() {
-    if (!document.getElementById(DataPrint.#printStyleId)) {
+    if (!document.getElementById(PrintPreview.#printStyleId)) {
       const style = document.createElement('style');
-      style.id = DataPrint.#printStyleId;
+      style.id = PrintPreview.#printStyleId;
       style.textContent = `
         @media print { 
-          body:has(data-print) > *:not(data-print) { display: none !important; }
+          body:has(print-preview) > *:not(print-preview) { display: none !important; }
         }
         @page {
           margin: ${this.marginTop} ${this.marginRight} ${this.marginBottom} ${this.marginLeft};
@@ -166,8 +165,8 @@ export default class DataPrint extends HTMLElement {
   }
 
   #cleanup = () => {
-    document.getElementById(DataPrint.#pageStyleId)?.remove();
-    if (DataPrint.#instance === this) DataPrint.#instance = null;
+    document.getElementById(PrintPreview.#pageStyleId)?.remove();
+    if (PrintPreview.#instance === this) PrintPreview.#instance = null;
     this.remove();
   };
 
@@ -202,7 +201,7 @@ export default class DataPrint extends HTMLElement {
   }
 
   #removePrintStyle() {
-    document.getElementById(DataPrint.#printStyleId)?.remove();
+    document.getElementById(PrintPreview.#printStyleId)?.remove();
   }
 
   #renderContent() {
@@ -216,16 +215,16 @@ export default class DataPrint extends HTMLElement {
     const t = this.#t();
     this.shadowRoot.querySelector('form').innerHTML = `
       <label aria-label="${t.paper_size}">
-        ${this.#icon(DataPrint.#icons.paper, 'paper')}
+        ${this.#icon(PrintPreview.#icons.paper, 'paper')}
         <select name="paper-size">
-          ${Object.keys(DataPrint.#paperSizes)
+          ${Object.keys(PrintPreview.#paperSizes)
             .map(size => `<option value="${size}"${size === this.paperSize ? ' selected' : ''}>${size}</option>`)
             .join('')}
         </select>
       </label>
 
       <label aria-label="${t.orientation}">
-        ${this.#icon(DataPrint.#icons.paper, 'paper')}
+        ${this.#icon(PrintPreview.#icons.paper, 'paper')}
         <select name="orientation">
           <option value="portrait"${this.orientation === 'portrait' ? ' selected' : ''}>${t.orientation_portrait}</option>
           <option value="landscape"${this.orientation === 'landscape' ? ' selected' : ''}>${t.orientation_landscape}</option>
@@ -233,7 +232,7 @@ export default class DataPrint extends HTMLElement {
       </label>
 
       <label aria-label="${t.font_family}">
-        ${this.#icon(DataPrint.#icons.fontfamily, 'fontsize')}
+        ${this.#icon(PrintPreview.#icons.fontfamily, 'fontsize')}
         <select name="font-family">
           ${['Antique', 'Classical', 'Code', 'Didone', 'Geometric', 'Grotesque', 'Handwritten', 'Humanist', 'Industrial', 'Inherit', 'Monospace', 'Old Style', 'Rounded', 'Slab', 'System', 'Transitional']
             .map(family => {
@@ -244,7 +243,7 @@ export default class DataPrint extends HTMLElement {
       </label>
 
       <label aria-label="${t.font_size}">
-        ${this.#icon(DataPrint.#icons.fontsize, 'fontsize')}
+        ${this.#icon(PrintPreview.#icons.fontsize, 'fontsize')}
         <select name="font-size">
           ${['xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large']
             .map(size => `<option value="${size}"${size === this.fontSize ? ' selected' : ''}>${size}</option>`)
@@ -253,7 +252,7 @@ export default class DataPrint extends HTMLElement {
       </label>
 
       <fieldset>
-        ${this.#icon(DataPrint.#icons.margin, 'margin')}
+        ${this.#icon(PrintPreview.#icons.margin, 'margin')}
         ${['top', 'right', 'bottom', 'left'].map(pos => `
           <label aria-label="${t[pos]}">
             ${t[pos][0]}
@@ -264,11 +263,11 @@ export default class DataPrint extends HTMLElement {
       </fieldset>
       
       <button type="button" data-action="print" aria-label="${t.print}">
-        ${this.#icon(DataPrint.#icons.printer, 'printer')}
+        ${this.#icon(PrintPreview.#icons.printer, 'printer')}
       </button>
 
       <button type="button" data-action="close" aria-label="${t.close}">
-        ${this.#icon(DataPrint.#icons.close, 'close')}
+        ${this.#icon(PrintPreview.#icons.close, 'close')}
       </button>
     `;
   }
@@ -290,8 +289,8 @@ export default class DataPrint extends HTMLElement {
   }
 
   #updatePageStyles() {
-    const style = document.getElementById(DataPrint.#pageStyleId);
-    const { width, height, ratio } = DataPrint.#paperSizes[this.paperSize] ?? {};
+    const style = document.getElementById(PrintPreview.#pageStyleId);
+    const { width, height, ratio } = PrintPreview.#paperSizes[this.paperSize] ?? {};
     if (!style || !width) return;
 
     const isLandscape = this.orientation === 'landscape';
@@ -332,7 +331,6 @@ export default class DataPrint extends HTMLElement {
     `;
   }
 
-
   /* === Public API === */
 
   addTemplate(name, template) {
@@ -365,4 +363,4 @@ export default class DataPrint extends HTMLElement {
   }
 }
 
-customElements.define('data-print', DataPrint);
+customElements.define('print-preview', PrintPreview);
