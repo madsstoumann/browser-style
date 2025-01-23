@@ -1,4 +1,5 @@
 @media screen {
+  :host, :host * { box-sizing: border-box; }
   :host {
     --_bdc: #CCC;
     --_bdrs: 4px;
@@ -17,32 +18,30 @@
     background: #FFF;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
     color: #000;
-    /* container-type: inline-size; */
     display: block;
-    /* --scale: min(1, calc(100% / var(--page-width))); */
-    /* font-size: calc(1rem * var(--scale)); */
-    /* font-size: x-small; */
     font-size: var(--page-root-size, 1rem);
+    font-family: var(--page-font, inherit);
+    margin-block-end: var(--_gap);
     margin-inline: auto;
     padding: var(--page-margin-top) var(--page-margin-right) var(--page-margin-bottom) var(--page-margin-left);
     max-width: var(--page-width, auto);
     width: 100%;
   }
   paper-tray {
-    display: grid;
+    display: block;
     padding-block-end: var(--_gap);
     padding-inline: var(--_gap);
-    row-gap: var(--_gap);
   }
 
   :host > form {
     align-items: center;
-    background-color: Canvas;
-    color: CanvasText;
+    background-color: #121212;
+    color: #E1E1E1;
     color-scheme: light dark;
     display: flex;
+    flex-wrap: wrap;
     font-family: system-ui;
-    font-size: small;
+    font-size: 14px;
     gap: 1ch;
     margin-block-end: var(--_gap);
     padding: 1ch;
@@ -50,22 +49,48 @@
     top: 0;
 
     button {
-      background: #0000;
-      border: 1px solid var(--_bdc);
+      background: #262626;
+      border: 0;
       border-radius: var(--_bdrs);
+      color: inherit;
       display: grid;
+      font-size: inherit;
       padding: 0;
-      
       place-content: center;
       &[data-action="close"] {
         margin-inline-start: auto;
       }
+      svg {
+        scale: 1.25;
+      }
+    }
+
+    fieldset {
+      all: unset;
+      label { border: 0; }
+    }
+
+    fieldset, label {
+      align-items: center;
+      background: #262626;
+      border-radius: 4px;
+      display: flex;
+      padding-inline: .5ch;
     }
 
     input, select {
+      appearance: none;
+      background: #0000;
       border: 0;
       border-radius: inherit;
+      color: inherit;
+      font-family: inherit;
       font-size: inherit;
+    }
+
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+      appearance: none;
     }
 
     svg {
@@ -77,38 +102,26 @@
       stroke-width: 1.25;
       width: 1.5em;
     }
+
+    button:focus-visible, label:focus-within {
+      &, input, select { outline: none; }
+      background: #304850;
+    }
   }
-
-
-
-  input::-webkit-inner-spin-button,
-  input::-webkit-outer-spin-button {
-    appearance: none;
-  }
-
-  label {
-    align-items: center;
-    border: 1px solid light-dark(#ccc, #333);
-    border-radius: 4px;
-    color: #777;
-    display: flex;
-  }
-
-  select {
-    appearance: none;
-    padding-inline: 0 1ch;
-  }
-
-
 }
 
 @media print {
+  :host([mode="hidden"]) {
+    display: none !important;
+  }
+
   :host {
     border: 0;
     margin: 0;
     max-width: none;
     padding: 0;
   }
+
   :host, paper-tray {
     display: block !important;
     height: auto !important;
@@ -126,6 +139,7 @@
     color: #000;
     display: block !important;
     font-size: var(--page-root-size, 1rem);
+    font-family: var(--page-font, inherit);
     margin: 0;
     overflow: visible !important;
     page: sheet;
