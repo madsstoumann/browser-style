@@ -15,9 +15,17 @@ export default class PrintPreview extends HTMLElement {
   static get id() { return this.#id; }
 
   static observedAttributes = [
-    'paper-size', 'orientation', 
-    'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 
-    'template', 'use-template', 'lang', 'font-size', 'font-family'
+    'font-family',
+    'font-size',
+    'lang',
+    'margin-bottom',
+    'margin-left',
+    'margin-right', 
+    'margin-top',
+    'orientation',
+    'paper-size',
+    'template',
+    'use-template'
   ];
 
   static #icons = {
@@ -25,7 +33,7 @@ export default class PrintPreview extends HTMLElement {
     fontfamily: 'M4 20l3 0, M14 20l7 0, M6.9 15l6.9 0, M10.2 6.3l5.8 13.7, M5 20l6 -16l2 0l7 16',
     fontsize: 'M3 7v-2h13v2, M10 5v14, M12 19h-4, M15 13v-1h6v1, M18 12v7, M17 19h2',
     image: 'M15 8h.01, M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z, M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5, M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3',
-    margin: 'M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
+    margin: 'M8 8h8v8h-8z, M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z',
     paper: 'M14 3v4a1 1 0 0 0 1 1h4, M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z',
     printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2, M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4, M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z'
   };
