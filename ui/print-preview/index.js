@@ -24,6 +24,7 @@ export default class PrintPreview extends HTMLElement {
     close: 'M18 6l-12 12, M6 6l12 12',
     fontfamily: 'M4 20l3 0, M14 20l7 0, M6.9 15l6.9 0, M10.2 6.3l5.8 13.7, M5 20l6 -16l2 0l7 16',
     fontsize: 'M3 7v-2h13v2, M10 5v14, M12 19h-4, M15 13v-1h6v1, M18 12v7, M17 19h2',
+    image: 'M15 8h.01, M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12z, M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5, M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3',
     margin: 'M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z',
     paper: 'M14 3v4a1 1 0 0 0 1 1h4, M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z',
     printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2, M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4, M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z'
@@ -52,13 +53,17 @@ export default class PrintPreview extends HTMLElement {
       },
       font_family: 'Font Family',
       font_size: 'Font Size',
+      hide: 'Hide',
+      images: 'Images',
       left: 'Left',
       orientation: 'Orientation',
       orientation_landscape: 'Landscape',
       orientation_portrait: 'Portrait',
+      outline: 'Outline',
       paper_size: 'Paper Size',
       print: 'Print',
       right: 'Right',
+      show: 'Show',
       top: 'Top'
     }
   };
@@ -85,6 +90,13 @@ export default class PrintPreview extends HTMLElement {
     this.#renderContent();
   }
 
+  #handleKeyPress = e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+      e.preventDefault();
+      this.print();
+    }
+  };
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -96,6 +108,15 @@ export default class PrintPreview extends HTMLElement {
     
     this.#loadStyles();
     this.#setupEventListeners();
+
+    // Listen for popover state changes
+    this.addEventListener('beforetoggle', e => {
+      if (e.newState === 'open') {
+        document.addEventListener('keydown', this.#handleKeyPress);
+      } else {
+        document.removeEventListener('keydown', this.#handleKeyPress);
+      }
+    });
     
     // Listen for system print
     window.addEventListener('beforeprint', () => {
@@ -261,6 +282,15 @@ export default class PrintPreview extends HTMLElement {
           </label>
         `).join('')}
       </fieldset>
+
+      <label aria-label="${t.images}">
+        ${this.#icon(PrintPreview.#icons.image, 'image')}
+        <select name="images">
+          <option value="show">${t.show}</option>
+          <option value="hide">${t.hide}</option>
+          <option value="outline">${t.outline}</option>
+        </select>
+      </label>
       
       <button type="button" data-action="print" aria-label="${t.print}">
         ${this.#icon(PrintPreview.#icons.printer, 'printer')}
@@ -339,6 +369,10 @@ export default class PrintPreview extends HTMLElement {
 
   defaultTemplate(data) {
     return `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+  }
+
+  preview() {
+    this.showPopover();
   }
 
   print() {

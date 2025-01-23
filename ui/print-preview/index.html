@@ -13,6 +13,7 @@
   <p>
     <code>&lt;print-preview&gt;</code> is a custom element that provides a print preview and configuration interface. It allows users to customize paper size, orientation, margins, and font settings before printing.
   </p>
+  <p><strong>Important:</strong> Text content placed <em>directly</em> in the &lt;body&gt; tag (without being wrapped in a tag) is not supported. Make sure all your text is wrapped in tags like <code>&lt;p&gt;</code> or <code>&lt;div&gt;</code>.</p>
 
   <h2>Features</h2>
   <ul>
@@ -43,16 +44,16 @@
   <h2>JavaScript API</h2>
   <span>Control the component programmatically:</span>
   <pre><code>
-  const preview = document.querySelector('print-preview');
+  const printer = document.querySelector('print-preview');
 
   // Show the print preview dialog
-  preview.showPopover();
+  printer.preview();
 
   // Print directly
-  preview.print();
+  printer.print();
 
   // Set content dynamically
-  preview.setContent(`
+  printer.setContent(`
     &lt;paper-sheet&gt;
       &lt;h1&gt;Dynamic Content&lt;/h1&gt;
       &lt;p&gt;Generated content here...&lt;/p&gt;
@@ -60,7 +61,7 @@
   `);
 
   // Use templates for dynamic data
-  preview.addTemplate('invoice', data => `
+  printer.addTemplate('invoice', data => `
     &lt;paper-sheet&gt;
       &lt;h1&gt;Invoice #${data.id}&lt;/h1&gt;
       &lt;p&gt;Amount: ${data.amount}&lt;/p&gt;
@@ -68,9 +69,9 @@
   `);
 
   // Set data for template
-  preview.setAttribute('use-template', '');
-  preview.setAttribute('template', 'invoice');
-  preview.data = { id: '12345', amount: '$99.99' };
+  printer.setAttribute('use-template', '');
+  printer.setAttribute('template', 'invoice');
+  printer.data = { id: '12345', amount: '$99.99' };
 
 </code></pre>
 
@@ -107,6 +108,7 @@
     <paper-sheet>
       <h1>My Printable Content</h1>
       <p>This content will be printed</p>
+      <img src="https://picsum.photos/id/1/320/180" alt="Random image" width="320" height="180">
     </paper-sheet>
     <paper-sheet>
       <h2>Another Sheet</h2>
@@ -129,7 +131,7 @@
         <button type="button" id="print">Print</button>
       `);
 
-      document.getElementById('preview').addEventListener('click', () => printPreview.showPopover());
+      document.getElementById('preview').addEventListener('click', () => printPreview.preview());
       document.getElementById('print').addEventListener('click', () => printPreview.print());
     });
   </script>
