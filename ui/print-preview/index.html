@@ -7,6 +7,32 @@
   <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
   <meta name="view-transition" content="same-origin">
   <link rel="stylesheet" href="/base.css">
+
+  <style>
+    print-preview {
+      &::part(table) {
+        border-collapse: collapse;
+        margin-block-start: 4rem;
+        width: 100%;
+      }
+      &::part(tfoot) {
+        border-block-start: 1px dashed;
+        border-block-end: 4px double;
+      }
+      &::part(tfoot)::before, &::part(tfoot)::after {
+        content: '';
+        display: block;
+        height: 1rem;
+      }
+      &::part(tbody)::after {
+        content: '';
+        display: block;
+        height: 1rem;
+      }
+      &::part(left) { text-align: left; }
+      &::part(right) { text-align: right; }
+    }
+  </style>
 </head>
 <body>
   <h1>UI: Components &gt; PrintPreview</h1>
@@ -103,6 +129,56 @@
   <h2>Demo</h2>
   <p>First, try the system print dialog, by pressing <kbd>ctrl+p</kbd> (Windows) or <kbd>⌘+p</kbd> (Mac).<br>This should print this page.</p>
   <p>Next, either click <strong>Preview</strong> or <strong>Print</strong> below. The first opens the print-preview where you can adjust settings. If you print from here, you'll only print the content of <code>&lt;print-preview&gt;</code></p>
+  
+  <div class="button-group">
+    <button type="button" id="preview">Preview</button>
+    <button type="button" id="print">Print</button>
+  </div>
+
+  <hr>
+  <h2>Advanced Example</h2>
+  <p>Below is an example of how to use the <code>&lt;print-preview&gt;</code> component with a custom template and JavaScript API. Click the "Show Advanced Example" button to see a demo of:</p>
+  <ul>
+    <li>Dynamic data rendering with multiple invoices</li>
+    <li>Custom template with automatic calculations</li>
+    <li>Formatted price display with currency symbols</li>
+    <li>Multi-page document with one invoice per page</li>
+    <li>Subtotals, VAT, and final totals for each invoice</li>
+  </ul>
+  <p>The example will generate three sample invoices for different customers, each containing various products with quantities and prices. Each invoice will be rendered on its own page with proper layout and calculations.</p>
+  <p>You can style the template with <code>part</code>-attributes:</p>
+  <code>&lt;table part="table"&gt;</code>
+  <p>These can then be styled in CSS with <code>::part</code>:</p>
+
+<pre><code>
+  print-preview {
+    &::part(table) {
+      border-collapse: collapse;
+      margin-block-start: 4rem;
+      width: 100%;
+    }
+    &::part(tfoot) {
+      border-block-start: 1px dashed;
+      border-block-end: 4px double;
+    }
+    &::part(tfoot)::before, &::part(tfoot)::after {
+      content: '';
+      display: block;
+      height: 1rem;
+    }
+    &::part(tbody)::after {
+      content: '';
+      display: block;
+      height: 1rem;
+    }
+    &::part(left) { text-align: left; }
+    &::part(right) { text-align: right; }
+  }
+</code>
+</pre>
+
+  <p><strong>Note:</strong> Clicking the "Show Advanced Example" button will replace the content in the preview above with the invoice template demo.</p>
+  <button type="button" id="advanced">Show Advanced Example</button>
 
   <print-preview>
     <paper-sheet>
@@ -125,14 +201,118 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       const printPreview = document.querySelector('print-preview');
-
-      document.body.insertAdjacentHTML('beforeend', `
-        <button type="button" id="preview">Preview</button>
-        <button type="button" id="print">Print</button>
-      `);
-
       document.getElementById('preview').addEventListener('click', () => printPreview.preview());
       document.getElementById('print').addEventListener('click', () => printPreview.print());
+    });
+
+    /* Advanced Example */
+    const dummyData = [
+      {
+        customer: {
+          id: "C001",
+          first_name: "John",
+          last_name: "Smith",
+          street_address: "123 Main Street",
+          postal_code: "10001",
+          city: "New York"
+        },
+        products: [
+          { quantity: 2, name: "Premium Widget", price: 29.99 },
+          { quantity: 1, name: "Deluxe Gadget", price: 149.99 },
+          { quantity: 3, name: "Basic Tool", price: 9.99 }
+        ]
+      },
+      {
+        customer: {
+          id: "C002",
+          first_name: "Emma",
+          last_name: "Johnson",
+          street_address: "456 Park Avenue",
+          postal_code: "90210",
+          city: "Beverly Hills"
+        },
+        products: [
+          { quantity: 1, name: "Luxury Item", price: 299.99 },
+          { quantity: 2, name: "Standard Kit", price: 79.99 },
+          { quantity: 4, name: "Budget Option", price: 14.99 },
+          { quantity: 1, name: "Premium Service", price: 199.99 }
+        ]
+      },
+      {
+        customer: {
+          id: "C003",
+          first_name: "Michael",
+          last_name: "Brown",
+          street_address: "789 Oak Road",
+          postal_code: "60601",
+          city: "Chicago"
+        },
+        products: [
+          { quantity: 3, name: "Pro Package", price: 89.99 },
+          { quantity: 2, name: "Basic Bundle", price: 49.99 },
+          { quantity: 1, name: "Premium Plus", price: 159.99 }
+        ]
+      }
+    ];
+
+    const jobTemplate = (data) => 
+      data.map((obj) => {
+        const subtotal = obj.products.reduce((sum, product) => 
+          sum + (product.quantity * product.price), 0);
+        const vat = subtotal * 0.2; // 20% VAT
+        const total = subtotal + vat;
+
+        return `
+        <paper-sheet>
+          <h2>Invoice</h2>
+          <p>
+            ${obj.customer.first_name} ${obj.customer.last_name} (${obj.customer.id})<br>
+            ${obj.customer.street_address}<br>
+            ${obj.customer.postal_code} ${obj.customer.city}
+          </p>
+          <table part="table">
+            <thead>
+              <tr>
+                <th part="left">Quantity</th>
+                <th part="left">Product</th>
+                <th part="right">Price</th>
+                <th part="right">Total</th>
+              </tr>
+            </thead>
+            <tbody part="tbody">
+              ${obj.products.map((product) => `
+                <tr>
+                  <td part="left">${product.quantity}</td>
+                  <td part="left">${product.name}</td>
+                  <td part="right">$${product.price.toFixed(2)}</td>
+                  <td part="right">$${(product.quantity * product.price).toFixed(2)}</td>
+                </tr>`).join('')}
+            </tbody>
+            <tfoot part="tfoot">
+              <tr>
+                <td colspan="3">Subtotal</td>
+                <td part="right">$${subtotal.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td colspan="3">VAT (20%)</td>
+                <td part="right">$${vat.toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td part="right"><strong>$${total.toFixed(2)}</strong></td>
+              </tr>
+            </tfoot>
+          </table>
+        </paper-sheet>
+      `}).join('');
+
+    document.getElementById('advanced').addEventListener('click', () => {
+      const printPreview = document.querySelector('print-preview');
+      printPreview.addTemplate('invoice', jobTemplate);
+      printPreview.setAttribute('use-template', '');
+      printPreview.setAttribute('template', 'invoice');
+      printPreview.data = dummyData;
+      printPreview.preview();
     });
   </script>
 </body>
