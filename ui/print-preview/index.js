@@ -73,7 +73,9 @@ export default class PrintPreview extends HTMLElement {
 
   #lang = 'en';
   #t = () => PrintPreview.#i18n[this.#lang];
-  
+
+  get fontSize() { return this.getAttribute('font-size') ?? 'medium'; }
+  get fontFamily() { return this.getAttribute('font-family') ?? 'ff-inherit'; }
   get marginBottom() { return this.getAttribute('margin-bottom') ?? '10mm'; }
   get marginLeft() { return this.getAttribute('margin-left') ?? '10mm'; }
   get marginRight() { return this.getAttribute('margin-right') ?? '10mm'; }
@@ -82,8 +84,6 @@ export default class PrintPreview extends HTMLElement {
   get paperSize() { return this.getAttribute('paper-size') ?? 'A4'; }
   get template() { return this.getAttribute('template') ?? 'default'; }
   get useTemplate() { return this.hasAttribute('use-template'); }
-  get fontSize() { return this.getAttribute('font-size') ?? 'medium'; }
-  get fontFamily() { return this.getAttribute('font-family') ?? 'ff-inherit'; }
 
   set data(value) {
     this._data = value;
@@ -112,8 +112,13 @@ export default class PrintPreview extends HTMLElement {
     // Listen for popover state changes
     this.addEventListener('beforetoggle', e => {
       if (e.newState === 'open') {
+        document.body.style.overflow = 'hidden';
         document.addEventListener('keydown', this.#handleKeyPress);
       } else {
+        document.body.style.overflow = '';
+        if (!document.body.style.length) {
+          document.body.removeAttribute('style');
+        }
         document.removeEventListener('keydown', this.#handleKeyPress);
       }
     });
@@ -192,14 +197,15 @@ export default class PrintPreview extends HTMLElement {
   };
 
   #handleFormChange = {
-    'paper-size': value => this.setAttribute('paper-size', value),
+    images: value => this.setAttribute('images', value),
     orientation: value => this.setAttribute('orientation', value),
+    'font-size': value => this.setAttribute('font-size', value),
+    'font-family': value => this.setAttribute('font-family', value),
     'margin-bottom': value => this.setAttribute('margin-bottom', `${value}mm`),
     'margin-left': value => this.setAttribute('margin-left', `${value}mm`),
     'margin-right': value => this.setAttribute('margin-right', `${value}mm`),
     'margin-top': value => this.setAttribute('margin-top', `${value}mm`),
-    'font-size': value => this.setAttribute('font-size', value),
-    'font-family': value => this.setAttribute('font-family', value)
+    'paper-size': value => this.setAttribute('paper-size', value)
   };
 
   #icon(paths, part) {
@@ -354,7 +360,11 @@ export default class PrintPreview extends HTMLElement {
     };
 
     style.textContent = `
-      
+      print-preview[images="hide"] img { display: none; }
+      print-preview[images="outline"] img {
+        content-visibility: hidden;
+        border: 1px dotted GrayText;
+      }
       :root {
         ${Object.entries(cssVars).map(([key, value]) => `${key}: ${value};`).join('\n')}
       }

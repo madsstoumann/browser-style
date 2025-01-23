@@ -1,10 +1,6 @@
 @media screen {
-  :host, :host * { box-sizing: border-box; }
   :host {
-    --_bdc: #CCC;
-    --_bdrs: 4px;
     --_gap: 2rem;
-
     background-color: #999;
     border: 0;
     height: 100dvh;
@@ -17,6 +13,7 @@
     aspect-ratio: calc(1 / var(--page-ratio));
     background: #FFF;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
+    box-sizing: border-box; 
     color: #000;
     display: block;
     font-size: var(--page-root-size, 1rem);
@@ -28,6 +25,7 @@
     width: 100%;
   }
   paper-tray {
+    box-sizing: border-box; 
     display: block;
     padding-block-end: var(--_gap);
     padding-inline: var(--_gap);
@@ -51,7 +49,7 @@
     button {
       background: #262626;
       border: 0;
-      border-radius: var(--_bdrs);
+      border-radius: 4px;
       color: inherit;
       display: grid;
       font-size: inherit;
@@ -102,7 +100,7 @@
       stroke-width: 1.25;
       width: 1.5em;
     }
-
+    /* focus */
     button:focus-visible, label:focus-within {
       &, input, select { outline: none; }
       background: #304850;
@@ -114,7 +112,6 @@
   :host([mode="hidden"]) {
     display: none !important;
   }
-
   :host {
     border: 0;
     margin: 0;
@@ -125,14 +122,12 @@
       display: none; 
     }
   }
-
   :host, paper-tray {
     display: block !important;
     height: auto !important;
     overflow: visible !important;
     position: static !important;
   }
-
   paper-sheet,
   ::slotted(paper-sheet) {
     background: #0000;
@@ -148,6 +143,7 @@
     page-break-after: always;
     position: relative;
   }
+  paper-sheet:last-child,
   ::slotted(paper-sheet:last-child) {
     break-after: avoid;
   }
