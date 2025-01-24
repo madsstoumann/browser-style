@@ -12,12 +12,16 @@
     print-preview {
       &::part(table) {
         border-collapse: collapse;
-        margin-block-start: 4rem;
+        bargin-block-start: 4rem;
         width: 100%;
+      }
+      &::part(tbody) {
+        break-after: avoid;
       }
       &::part(tfoot) {
         border-block-start: 1px dashed;
         border-block-end: 4px double;
+        break-before: avoid;
       }
       &::part(tfoot)::before, &::part(tfoot)::after {
         content: '';
@@ -157,22 +161,6 @@
       margin-block-start: 4rem;
       width: 100%;
     }
-    &::part(tfoot) {
-      border-block-start: 1px dashed;
-      border-block-end: 4px double;
-    }
-    &::part(tfoot)::before, &::part(tfoot)::after {
-      content: '';
-      display: block;
-      height: 1rem;
-    }
-    &::part(tbody)::after {
-      content: '';
-      display: block;
-      height: 1rem;
-    }
-    &::part(left) { text-align: left; }
-    &::part(right) { text-align: right; }
   }
 </code>
 </pre>
@@ -235,7 +223,10 @@
           { quantity: 1, name: "Luxury Item", price: 299.99 },
           { quantity: 2, name: "Standard Kit", price: 79.99 },
           { quantity: 4, name: "Budget Option", price: 14.99 },
-          { quantity: 1, name: "Premium Service", price: 199.99 }
+          { quantity: 1, name: "Premium Service", price: 199.99 },
+          { quantity: 2, name: "Basic Accessory", price: 4.99 },
+          { quantity: 1, name: "Deluxe Package", price: 99.99 },
+          { quantity: 3, name: "Pro Upgrade", price: 49.99 }
         ]
       },
       {
@@ -288,7 +279,7 @@
                   <td part="right">$${(product.quantity * product.price).toFixed(2)}</td>
                 </tr>`).join('')}
             </tbody>
-            <tfoot part="tfoot">
+            <tbody part="tfoot">
               <tr>
                 <td colspan="3">Subtotal</td>
                 <td part="right">$${subtotal.toFixed(2)}</td>
@@ -301,7 +292,7 @@
                 <td colspan="3"><strong>Total</strong></td>
                 <td part="right"><strong>$${total.toFixed(2)}</strong></td>
               </tr>
-            </tfoot>
+            </tbody>
           </table>
         </paper-sheet>
       `}).join('');

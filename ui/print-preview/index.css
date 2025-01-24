@@ -118,6 +118,7 @@
     margin: 0;
     max-width: none;
     padding: 0;
+    width: 100%;
 
     form { 
       display: none; 
