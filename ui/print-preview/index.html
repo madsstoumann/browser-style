@@ -250,7 +250,7 @@
       data.map((obj) => {
         const subtotal = obj.products.reduce((sum, product) => 
           sum + (product.quantity * product.price), 0);
-        const vat = subtotal * 0.2; // 20% VAT
+        const vat = subtotal * 0.2;
         const total = subtotal + vat;
 
         return `
@@ -299,7 +299,11 @@
 
     document.getElementById('advanced').addEventListener('click', () => {
       const printPreview = document.querySelector('print-preview');
-      printPreview.addTemplate('invoice', jobTemplate);
+      printPreview.addTemplate('invoice', jobTemplate, {
+        'font-family': 'ff-transitional',
+        'font-size': 'large',
+        'margin-left': '15mm'
+      });
       printPreview.setAttribute('use-template', '');
       printPreview.setAttribute('template', 'invoice');
       printPreview.data = dummyData;

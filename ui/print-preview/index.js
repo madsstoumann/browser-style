@@ -241,7 +241,16 @@ export default class PrintPreview extends HTMLElement {
 
   #renderContent() {
     if (this.useTemplate && !this._data) return;
-    const templateFn = this._templates.get(this.template) || this.defaultTemplate;
+    const templateFn = this._templates.get(this.template);
+    const settings = this._templates.get(`${this.template}-settings`);
+    
+    if (settings) {
+      Object.entries(settings).forEach(([key, value]) => {
+        this.setAttribute(key, value);
+      });
+      this.#renderForm();
+    }
+    
     this.content.innerHTML = this.useTemplate && this._data ? 
       templateFn(this._data) : '<slot></slot>';
   }
@@ -381,8 +390,11 @@ export default class PrintPreview extends HTMLElement {
 
   /* === Public API === */
 
-  addTemplate(name, template) {
+  addTemplate(name, template, settings = {}) {
     this._templates.set(name, template);
+    if (settings) {
+      this._templates.set(`${name}-settings`, settings);
+    }
   }
 
   defaultTemplate(data) {
