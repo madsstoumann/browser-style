@@ -24,8 +24,7 @@ export default class PrintPreview extends HTMLElement {
     'margin-top',
     'orientation',
     'paper-size',
-    'template',
-    'use-template'
+    'template'
   ];
 
   static #icons = {
@@ -91,7 +90,7 @@ export default class PrintPreview extends HTMLElement {
   get orientation() { return this.getAttribute('orientation') ?? 'portrait'; }
   get paperSize() { return this.getAttribute('paper-size') ?? 'A4'; }
   get template() { return this.getAttribute('template') ?? 'default'; }
-  get useTemplate() { return this.hasAttribute('use-template'); }
+  get useTemplate() { return this.getAttribute('template') !== null; }
 
   set data(value) {
     this._data = value;
