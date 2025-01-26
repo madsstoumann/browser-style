@@ -1,4 +1,3 @@
-
 # Advanced Configuration
 
 ## Configuration Options
@@ -176,4 +175,16 @@ grid.resizeColumn(0, 20);
 
 // Select the first row
 grid.selectRows([grid.table.rows[1]]);
+```
+
+## Column Display Order
+
+You can control the order in which columns are displayed using the `displayOrder` setting, regardless of their original order in the data or table structure.
+
+### Example
+```js
+// Reorder columns to show price first, then id, then artist
+grid.settings = {
+  displayOrder: ['price', 'id', 'artist']
+};
 ```

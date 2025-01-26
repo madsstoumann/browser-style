@@ -196,7 +196,9 @@
 
 					thead: [
 						{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },
+						{ field: 'series', label: 'Series'},
 						{ field: 'issue', type: 'number', classList: '--end' },
+						{ field: 'name', label: 'Title' },
 						{ field: 'price', type: 'number', classList: '--end' },
 						{ field: 'artist', hidden: true, expand: true },
 						{ field: 'sku', hidden: true, expand: true },
@@ -206,6 +208,7 @@
 						{ field: 'date', hidden: true, expand: true },
 						{ field: 'delivery', hidden: true, expand: true },
 					],
+					// displayOrder: ['name', 'issue', 'id', 'price', 'series']
 				};
 				grid2.setItemsPerPage(10);
 				grid2.setTotalItems(result.total);

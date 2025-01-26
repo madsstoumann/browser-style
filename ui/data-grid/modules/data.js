@@ -159,6 +159,45 @@ export function handleSorting(context, index) {
 }
 
 /**
+ * Reorders columns based on displayOrder setting
+ * @param {Array} thead - Original thead array
+ * @param {Array} tbody - Original tbody array
+ * @param {Array} displayOrder - Array of field names in desired order
+ * @returns {Object} Object containing reordered thead and tbody
+ */
+function reorderColumns(thead, tbody, displayOrder) {
+    if (!displayOrder?.length) return { thead, tbody };
+
+    // Create map of field positions in displayOrder
+    const orderMap = displayOrder.reduce((acc, field, idx) => {
+        acc[field] = idx;
+        return acc;
+    }, {});
+
+    // Reorder thead
+    const reorderedThead = [...thead].sort((a, b) => {
+        const aOrder = orderMap[a.field] ?? Number.MAX_SAFE_INTEGER;
+        const bOrder = orderMap[b.field] ?? Number.MAX_SAFE_INTEGER;
+        return aOrder - bOrder;
+    });
+
+    // Create field mapping for tbody reordering
+    const fieldMapping = thead.map(col => col.field);
+    const newFieldMapping = reorderedThead.map(col => col.field);
+
+    // Reorder tbody by creating new objects with reordered properties
+    const reorderedTbody = tbody.map(row => {
+        const newRow = {};
+        newFieldMapping.forEach((field, idx) => {
+            newRow[field] = row[fieldMapping[fieldMapping.indexOf(field)]];
+        });
+        return newRow;
+    });
+
+    return { thead: reorderedThead, tbody: reorderedTbody };
+}
+
+/**
  * Parses the provided data and updates the context's table structure.
  * If thead or tbody are not provided, they will be generated based on the data.
  * Thead can also be merged with a provided config.
@@ -195,7 +234,7 @@ export function parseData(data, context) {
 		// If no tbody is provided, assume data itself is tbody
 		if (!tbody.length && Array.isArray(data)) {
 			tbody = data;
-			thead = thead = generateTheadFromTbody(tbody);
+			thead = generateTheadFromTbody(tbody);
 		}
 
 		// Check for a settings object and merge thead from settings if it exists
@@ -208,6 +247,13 @@ export function parseData(data, context) {
 
 		// Calculate hidden columns count
 		const hiddenCount = thead.filter(cell => cell.hidden).length;
+
+		// Apply column reordering if displayOrder is set
+        if (context.settings?.displayOrder) {
+            const { thead: reorderedThead, tbody: reorderedTbody } = reorderColumns(thead, tbody, context.settings.displayOrder);
+            thead = reorderedThead;
+            tbody = reorderedTbody;
+        }
 
 		return {
 			cols: (thead.length - hiddenCount) + (context.settings.selectable ? 1 : 0),
