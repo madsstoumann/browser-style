@@ -1,51 +1,59 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Toast</title>
+	<title>UiToast</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-toast.css">
-	
+	<script type="module">
+		import { UiToast } from './index.js';
+		UiToast.register();
+	</script>
+	<style>
+		.demo { display: flex; gap: 1rem; flex-wrap: wrap; }
+		.demo button { min-width: 8rem; }
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Toast</h2>
+	<h2>SnackBar</h2>
 	<p>
 		<strong>Toast</strong> presents a message to the user, in the bottom right corner, managed through a <code>&lt;button&gt;</code> HTML element and the <code>popover API</code>.
 	</p>
 
-	<button popovertarget="toast-info">Info</button>
-	<div id="toast-info" popover class="ui-toast bg-info">
-		<span>I am a popover with more information.</span>
-		<button popovertarget="toast-info" popovertargetaction="hide">
-			<ui-icon type="cross"></ui-icon>
+	<h3>Examples</h3>
+	<div class="demo">
+		<button onclick="demoToast.showToast('Default toast message')">
+			Default Toast
 		</button>
-	</div>
-	<button popovertarget="toast-success">Success</button>
-	<div id="toast-success" popover class="ui-toast bg-success">
-		<span>I am a popover with more information.</span>
-		<button popovertarget="toast-success" popovertargetaction="hide">
-			<ui-icon type="cross"></ui-icon>
+		<button onclick="demoToast.showToast('Success! Operation completed.', 'success')">
+			Success Toast
 		</button>
-	</div>
-	<button popovertarget="toast-warning">Warning</button>
-	<div id="toast-warning" popover class="ui-toast bg-warning">
-		<span>I am a popover with more information.</span>
-		<button popovertarget="toast-warning" popovertargetaction="hide">
-			<ui-icon type="cross"></ui-icon>
+		<button onclick="demoToast.showToast('Info: System update available.', 'info')">
+			Info Toast
 		</button>
-	</div>
-	<button popovertarget="toast-error">Error</button>
-	<div id="toast-error" popover class="ui-toast bg-error">
-		<span>I am a popover with more information.</span>
-		<button popovertarget="toast-error" popovertargetaction="hide">
-			<ui-icon type="cross"></ui-icon>
+		<button onclick="demoToast.showToast('Warning: Low disk space.', 'warning')">
+			Warning Toast
+		</button>
+		<button onclick="demoToast.showToast('Error: Connection failed!', 'error')">
+			Error Toast
+		</button>
+		<button onclick="demoToast.showToast('This toast stays until dismissed', 'info', 80000)">
+			Persistent Toast
 		</button>
 	</div>
 
+	<h3>Usage</h3>
+	<pre><code>&lt;ui-toast&gt;&lt;/ui-toast&gt;
+
+// JavaScript
+const toast = document.querySelector('ui-toast');
+toast.showToast('Message', 'type', duration);</code></pre>
+
+	<ui-toast id="demoToast"></ui-toast>
 </body>
 </html>

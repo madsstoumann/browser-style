@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>SnackBar</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="module" src="./index.js">
+		
+	</script>
+	<style>
+		.demo { display: flex; gap: 1rem; flex-wrap: wrap; }
+		.demo button { min-width: 8rem; }
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>SnackBar</h2>
+	<p>
+		
+		
+	</p>
+
+	<h3>Examples</h3>
+	<div class="demo">
+		<button onclick="demoSnack.showToast('First message')">
+			Add Default
+		</button>
+		<button onclick="demoSnack.showToast('Success message', 'success')">
+			Add Success
+		</button>
+		<button onclick="demoSnack.showToast('Info message', 'info')">
+			Add Info
+		</button>
+		<button onclick="demoSnack.showToast('Warning message', 'warning')">
+			Add Warning
+		</button>
+		<button onclick="demoSnack.showToast('Error message', 'error')">
+			Add Error
+		</button>
+		<button onclick="demoSnack.showToast('Persistent message', 'info', 0)">
+			Add Persistent
+		</button>
+		<button onclick="showMultipleSnacks()">
+			Show Multiple Messages
+		</button>
+	</div>
+
+	<h3>Action Button Example</h3>
+	<div class="demo">
+		<button onclick="showActionSnack()">Show Action Message</button>
+	</div>
+
+	<h3>Order Example</h3>
+	<div class="demo">
+		<button onclick="showReverseOrderSnacks()">Show Reverse Order Messages</button>
+	</div>
+
+	<script>
+		function showMultipleSnacks() {
+			// Show three different messages with different types
+			demoSnack.showToast('Processing started...', 'info', 0);
+			setTimeout(() => {
+				demoSnack.showToast('Step 2 completed', 'success', 0);
+			}, 1000);
+			setTimeout(() => {
+				demoSnack.showToast('Please wait for final results...', 'warning', 0);
+			}, 2000);
+		}
+
+		function showActionSnack() {
+			const item = demoSnack.showToast('Item deleted', 'warning', 0, 'Undo');
+			item.action.addEventListener('click', () => {
+				item.remove();
+				demoSnack.showToast('Action undone!', 'success', 3000);
+			});
+		}
+
+		function handleAction(btn) {
+			// Remove the snack item when action is clicked
+			btn.closest('snack-item').remove();
+			// Show confirmation
+			demoSnack.showToast('Action undone!', 'success', 3000);
+		}
+
+		function showReverseOrderSnacks() {
+			const reverseSnack = document.createElement('snack-bar');
+			reverseSnack.setAttribute('order', 'reverse');
+			document.body.appendChild(reverseSnack);
+			
+			reverseSnack.showToast('First message (stays at bottom)', 'info', 5000);
+			setTimeout(() => {
+				reverseSnack.showToast('Second message (appears above)', 'success', 4000);
+			}, 1000);
+			setTimeout(() => {
+				reverseSnack.showToast('Third message (appears at top)', 'warning', 3000);
+			}, 2000);
+		}
+	</script>
+
+	<h3>Usage</h3>
+	<pre><code>&lt;snack-bar&gt;&lt;/snack-bar&gt;
+
+// JavaScript
+const snackbar = document.querySelector('snack-bar');
+snackbar.showToast('Message', 'type', duration);</code></pre>
+
+	<h3>Multiple Messages Example</h3>
+	<pre><code>// Show multiple messages
+snackbar.showToast('First message', 'info', 5000);
+snackbar.showToast('Second message', 'success', 4000);
+snackbar.showToast('Third message', 'warning', 3000);
+
+// Messages will stack and dismiss independently</code></pre>
+
+	<h3>Usage with Action Button</h3>
+	<pre><code>// Basic usage with action button
+const actionSlot = '&lt;button slot="action" onclick="handleAction()"&gt;Undo&lt;/button&gt;';
+snackbar.showToast('Message', 'type', duration, actionSlot);
+
+// Custom styling
+snack-bar::part(action) {
+  /* style the action button */
+  font-weight: bold;
+  text-transform: uppercase;
+}</code></pre>
+
+	<h3>Usage with Reverse Order</h3>
+	<pre><code>&lt;snack-bar order="reverse"&gt;&lt;/snack-bar&gt;
+
+// Messages will stack from bottom to top
+// First message stays at the bottom
+// New messages appear above previous ones</code></pre>
+
+	<snack-bar id="demoSnack"></snack-bar>
+</body>
+</html>

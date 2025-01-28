@@ -52,23 +52,45 @@ stylesheet.replaceSync(`
 `);
 
 export class UiToast extends HTMLElement {
+	#initialized = false;
+	#root;
+
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
+		this.#root = this.attachShadow({ mode: 'open' });
+		this.basePath = new URL('./', import.meta.url).href;
+		
+		if (!this.hasAttribute('nomount')) {
+			this.mount();
+		}
 	}
 
 	connectedCallback() {
-		/* Can't usse `popovertarget` and `popovertargetaction` because of shadowDOM */
-		this.shadowRoot.adoptedStyleSheets = [stylesheet];
+		if (!this.#initialized) return;
+	}
+
+	async mount() {
+		if (!this.#initialized) {
+			await Promise.resolve();
+			this.initializeComponent();
+			this.#initialized = true;
+			if (this.isConnected) {
+				this.connectedCallback();
+			}
+		}
+	}
+
+	initializeComponent() {
+		this.#root.adoptedStyleSheets = [stylesheet];
 		this.setAttribute('popover', '');
-		this.shadowRoot.innerHTML = `
+		this.#root.innerHTML = `
 			<span part="message"></span>
 			<button part="close">
 				<slot name="close">×</slot>
 			</button>`;
-		this.close = this.shadowRoot.querySelector(`[part="close"]`);
+		this.close = this.#root.querySelector(`[part="close"]`);
 		this.close.addEventListener('click', () => this.hidePopover());
-		this.message = this.shadowRoot.querySelector(`[part="message"]`);
+		this.message = this.#root.querySelector(`[part="message"]`);
 	}
 
 	showToast(message, type, duration = 3000) {
@@ -89,3 +111,5 @@ export class UiToast extends HTMLElement {
 		}
 	}
 }
+
+UiToast.register();
