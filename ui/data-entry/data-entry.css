@@ -498,6 +498,7 @@ ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 			min-inline-size: 20rem;
 			padding: 2ch;
 			position-anchor: var(--_pa);
+			position-try-fallbacks: flip-block;
 			text-wrap: nowrap;
 			&::backdrop { background: light-dark(#0002, #000A); }
 			[dir=rtl] & { inset-inline: auto anchor(left); }
