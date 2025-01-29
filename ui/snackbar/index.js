@@ -1,80 +1,57 @@
+const SNACK_TYPES = {
+	info: { bg: '#d1ecf1', color: '#0c5460', action: '#007bff' },
+	success: { bg: '#d4edda', color: '#155724', action: '#28a745' },
+	warning: { bg: '#fff3cd', color: '#856404', action: '#ffc107' },
+	error: { bg: '#f8d7da', color: '#721c24', action: '#dc3545' }
+};
+
 const snackBarStyles = new CSSStyleSheet();
 snackBarStyles.replaceSync(`
 	:host {
 		background: #0000;
 		border: 0;
-		gap: 0.5rem;
-		inset-block: auto 1em;
-		inset-inline: auto 1em;
-		justify-items: end;
-		position: fixed;
+		gap: .5rem;
+		inset: auto 1rem 1rem auto;
 	}
 	:host(:popover-open) {
 		display: grid;
+		justify-items: end;
 	}
 `);
-
 const snackItemStyles = new CSSStyleSheet();
 snackItemStyles.replaceSync(`
 	:host {
 		align-items: center;
-		background: var(--snack-bar-bg, #CCC);
-		border: 0;
+		background: var(--snack-item-bg, #222);
 		border-radius: .25em;
-		color: var(--snack-bar-c, #333);
+		color: var(--snack-item-c, #FFF);
 		display: flex;
-		font-family: system-ui, sans-serif;
-		font-size: 1rem;
+		font: 1rem system-ui, sans-serif;
 		gap: 1.5ch;
 		padding: 1ch 1.75ch 1ch 2ch;
 	}
 	:host::part(action) {
 		all: unset;
-		color: var(--snack-bar-ac, inherit);
+		color: var(--snack-item-ac, hotpink);
 		font-size: smaller;
 		text-decoration: underline;
 	}
 	:host::part(close) {
-		background: transparent;
-		border: 0;
-		border-radius: .25em;
-		color: inherit;
-		cursor: pointer;
-		line-height: 1;
-		margin: 0;
+		all: unset;
+		font-size: 1.5em;
 		padding: 0 .2em;
-		font-size: x-large;
 	}
-	:host::part(action):hover {
-		opacity: 0.8;
-	}
+	:host::part(action):hover,
 	:host::part(close):hover {
-		background-color: var(--snack-bar-c, #333);
-		color: var(--snack-bar-bg, #CCC);
-	}
-	:host(.info) {
-		--snack-bar-bg: #d1ecf1;
-		--snack-bar-c: #0c5460;
-		--snack-bar-ac: #007bff;
-	}
-	:host(.success) {
-		--snack-bar-bg: #d4edda;
-		--snack-bar-c: #155724;
-		--snack-bar-ac: #28a745;
-	}
-	:host(.warning) {
-		--snack-bar-bg: #fff3cd;
-		--snack-bar-c: #856404;
-		--snack-bar-ac: #ffc107;
-	}
-	:host(.error) {
-		--snack-bar-bg: #f8d7da;
-		--snack-bar-c: #721c24;
-		--snack-bar-ac: #dc3545;
+		opacity: 0.8;
 	}
 `);
 
 class SnackItem extends HTMLElement {
+	static observedAttributes = ['duration', 'action', 'message', 'part'];
+	#elements = {};
+	#timer;
+
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
@@ -84,43 +61,72 @@ class SnackItem extends HTMLElement {
 	connectedCallback() {
 		this.shadowRoot.innerHTML = `
 			<span part="message"></span>
-			<button part="action" hidden>
-				<slot name="action"></slot>
-			</button>
-			<button part="close">
-				<slot name="close">×</slot>
-			</button>`;
+			<button part="action" hidden><slot name="action"></slot></button>
+			<button part="close">×</button>`;
 		
-		this.close = this.shadowRoot.querySelector('[part="close"]');
-		this.action = this.shadowRoot.querySelector('[part="action"]');
-		
-		this.close.addEventListener('click', () => {
+		this.#elements = {
+			action: this.shadowRoot.querySelector('[part="action"]'),
+			close: this.shadowRoot.querySelector('[part="close"]'),
+			message: this.shadowRoot.querySelector('[part="message"]')
+		};
+
+		this.#setupListeners();
+
+		if (this.hasAttribute('message')) {
+			this.show(
+				this.getAttribute('message'),
+				this.getAttribute('part'),
+				parseInt(this.getAttribute('duration')) || 0,
+				this.getAttribute('action')
+			);
+		}
+	}
+
+	disconnectedCallback() {
+		clearTimeout(this.#timer);
+	}
+
+	#setupListeners() {
+		this.#elements.close.onclick = () => {
 			this.remove();
 			if (!this.parentElement?.hasChildNodes()) {
 				this.parentElement?.hidePopover();
 			}
-		});
+		};
 
-		// Show action button if slot has content
 		this.shadowRoot.querySelector('slot[name="action"]')
 			.addEventListener('slotchange', (e) => {
-				this.action.hidden = !e.target.assignedNodes().length;
+				this.#elements.action.hidden = !e.target.assignedNodes().length;
 			});
 	}
 
-	show(message, type, duration = 3000, actionText = '') {
-		this.shadowRoot.querySelector('[part="message"]').textContent = message;
-		this.className = type || '';
+	show(message, part, duration = 3000, actionText = '') {
+		if (typeof message !== 'string') return;
+		
+		this.#elements.message.textContent = message;
+		
+		if (part) {
+			const type = SNACK_TYPES[part];
+			if (type) {
+				this.style.setProperty('--snack-item-bg', type.bg);
+				this.style.setProperty('--snack-item-c', type.color);
+				this.style.setProperty('--snack-item-ac', type.action);
+			}
+		}
 
 		if (actionText) {
-			const actionSlot = this.shadowRoot.querySelector('slot[name="action"]');
-			actionSlot.textContent = actionText;
-			this.action.hidden = false;
+			const slot = this.shadowRoot.querySelector('slot[name="action"]');
+			slot.textContent = actionText;
+			this.#elements.action.hidden = false;
 		}
 
 		if (duration > 0) {
-			setTimeout(() => this.remove(), duration);
+			this.#timer = setTimeout(() => this.remove(), duration);
 		}
+	}
+
+	get action() {
+		return this.#elements.action;
 	}
 }
 
@@ -132,11 +138,20 @@ export class SnackBar extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.setAttribute('popover', '');
-		this.setAttribute('exportparts', 'message, action, close');
+		if (!this.hasAttribute('popover')) {
+			this.setAttribute('popover', '');
+		}
+		this.setAttribute('exportparts', 'action, close, message');
+
+		if (this.hasChildNodes()) {
+			Array.from(this.children).forEach(child => {
+				this.shadowRoot.appendChild(child);
+			});
+			this.showPopover();
+		}
 	}
 
-	showToast(message, type, duration = 3000, actionText = '') {
+	add(message, part, duration = 3000, actionText = '') {
 		const item = document.createElement('snack-item');
 		
 		if (this.getAttribute('order') === 'reverse') {
@@ -145,13 +160,12 @@ export class SnackBar extends HTMLElement {
 			this.shadowRoot.appendChild(item);
 		}
 		
-		item.show(message, type, duration, actionText);
+		item.show(message, part, duration, actionText);
 		
 		if (!this.matches(':popover-open')) {
 			this.showPopover();
 		}
 
-		// Hide popover when last item is removed
 		if (duration > 0) {
 			setTimeout(() => {
 				if (!this.shadowRoot.hasChildNodes()) {

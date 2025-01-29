@@ -20,34 +20,41 @@
 
 	<h2>SnackBar</h2>
 	<p>
-		
-		
+
 	</p>
 
 	<h3>Examples</h3>
 	<div class="demo">
-		<button onclick="demoSnack.showToast('First message')">
+		<button onclick="demoSnack.add('First message')">
 			Add Default
 		</button>
-		<button onclick="demoSnack.showToast('Success message', 'success')">
+		<button onclick="demoSnack.add('Success message', 'success')">
 			Add Success
 		</button>
-		<button onclick="demoSnack.showToast('Info message', 'info')">
+		<button onclick="demoSnack.add('Info message', 'info')">
 			Add Info
 		</button>
-		<button onclick="demoSnack.showToast('Warning message', 'warning')">
+		<button onclick="demoSnack.add('Warning message', 'warning')">
 			Add Warning
 		</button>
-		<button onclick="demoSnack.showToast('Error message', 'error')">
+		<button onclick="demoSnack.add('Error message', 'error')">
 			Add Error
 		</button>
-		<button onclick="demoSnack.showToast('Persistent message', 'info', 0)">
+		<button onclick="demoSnack.add('Persistent message', 'info', 0)">
 			Add Persistent
 		</button>
 		<button onclick="showMultipleSnacks()">
 			Show Multiple Messages
 		</button>
 	</div>
+
+	<snack-bar popover="manual">
+		<snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
+		<snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
+		<snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
+		<snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
+		<snack-item message="This is a fifth message" action="Close" part="default" duration="0"></snack-item>
+	</snack-bar>
 
 	<h3>Action Button Example</h3>
 	<div class="demo">
@@ -62,20 +69,20 @@
 	<script>
 		function showMultipleSnacks() {
 			// Show three different messages with different types
-			demoSnack.showToast('Processing started...', 'info', 0);
+			demoSnack.add('Processing started...', 'info', 0);
 			setTimeout(() => {
-				demoSnack.showToast('Step 2 completed', 'success', 0);
+				demoSnack.add('Step 2 completed', 'success', 0);
 			}, 1000);
 			setTimeout(() => {
-				demoSnack.showToast('Please wait for final results...', 'warning', 0);
+				demoSnack.add('Please wait for final results...', 'warning', 0);
 			}, 2000);
 		}
 
 		function showActionSnack() {
-			const item = demoSnack.showToast('Item deleted', 'warning', 0, 'Undo');
+			const item = demoSnack.add('Item deleted', 'warning', 0, 'Undo');
 			item.action.addEventListener('click', () => {
 				item.remove();
-				demoSnack.showToast('Action undone!', 'success', 3000);
+				demoSnack.add('Action undone!', 'success', 3000);
 			});
 		}
 
@@ -83,7 +90,7 @@
 			// Remove the snack item when action is clicked
 			btn.closest('snack-item').remove();
 			// Show confirmation
-			demoSnack.showToast('Action undone!', 'success', 3000);
+			demoSnack.add('Action undone!', 'success', 3000);
 		}
 
 		function showReverseOrderSnacks() {
@@ -91,35 +98,37 @@
 			reverseSnack.setAttribute('order', 'reverse');
 			document.body.appendChild(reverseSnack);
 			
-			reverseSnack.showToast('First message (stays at bottom)', 'info', 5000);
+			reverseSnack.add('First message (stays at bottom)', 'info', 5000);
 			setTimeout(() => {
-				reverseSnack.showToast('Second message (appears above)', 'success', 4000);
+				reverseSnack.add('Second message (appears above)', 'success', 4000);
 			}, 1000);
 			setTimeout(() => {
-				reverseSnack.showToast('Third message (appears at top)', 'warning', 3000);
+				reverseSnack.add('Third message (appears at top)', 'warning', 3000);
 			}, 2000);
 		}
 	</script>
 
 	<h3>Usage</h3>
-	<pre><code>&lt;snack-bar&gt;&lt;/snack-bar&gt;
+	<pre><code>&lt;snack-bar&gt;
+  &lt;snack-item message="Manual message" part="info" duration="0"&gt;&lt;/snack-item&gt;
+&lt;/snack-bar&gt;
 
 // JavaScript
 const snackbar = document.querySelector('snack-bar');
-snackbar.showToast('Message', 'type', duration);</code></pre>
+snackbar.add('Message', 'part', duration);</code></pre>
 
 	<h3>Multiple Messages Example</h3>
 	<pre><code>// Show multiple messages
-snackbar.showToast('First message', 'info', 5000);
-snackbar.showToast('Second message', 'success', 4000);
-snackbar.showToast('Third message', 'warning', 3000);
+snackbar.show('First message', 'info', 5000);
+snackbar.show('Second message', 'success', 4000);
+snackbar.show('Third message', 'warning', 3000);
 
 // Messages will stack and dismiss independently</code></pre>
 
 	<h3>Usage with Action Button</h3>
 	<pre><code>// Basic usage with action button
 const actionSlot = '&lt;button slot="action" onclick="handleAction()"&gt;Undo&lt;/button&gt;';
-snackbar.showToast('Message', 'type', duration, actionSlot);
+snackbar.show('Message', 'type', duration, actionSlot);
 
 // Custom styling
 snack-bar::part(action) {
