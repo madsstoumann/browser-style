@@ -125,8 +125,7 @@
     </button>
   </div>
 
-
-  <!-- <snack-bar popover="manual" position="bottom right">
+  <!-- <snack-bar popover="manual" position="top right">
     <snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
     <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
     <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
@@ -147,12 +146,12 @@
   <script>
     function showMultipleSnacks() {
       // Show three different messages with different types
-      demo.add('Processing started...', 'info');
+      demo.add('Processing started...', 'info', 0);
       setTimeout(() => {
-        demo.add('Step 2 completed', 'success');
+        demo.add('Step 2 completed', 'success', 0);
       }, 1000);
       setTimeout(() => {
-        demo.add('Please wait for final results...', 'warning');
+        demo.add('Please wait for final results...', 'warning', 0);
       }, 2000);
     }
 

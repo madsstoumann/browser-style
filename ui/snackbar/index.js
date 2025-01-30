@@ -3,11 +3,13 @@ const DEFAULT_DURATION = 3000;
 const snackBarStyles = new CSSStyleSheet();
 snackBarStyles.replaceSync(`
 	:host {
+		align-content: baseline;
 		background: #0000;
 		border: 0;
 		gap: .5rem;
 		inset-block: auto 1rem;
 		inset-inline: auto 1rem;
+		justify-items: end;
 	}
 	:host([position*="top"]) {
 		inset-block: 1rem auto;
@@ -17,7 +19,6 @@ snackBarStyles.replaceSync(`
 	}
 	:host(:popover-open) {
 		display: grid;
-		justify-items: end;
 	}
 `);
 const snackItemStyles = new CSSStyleSheet();
