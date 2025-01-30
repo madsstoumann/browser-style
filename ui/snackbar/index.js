@@ -43,6 +43,7 @@ snackItemStyles.replaceSync(`
 		border: none;
 		color: currentColor;
 		font-size: 1.5rem;
+		line-height: 0;
 		padding: 0 .2rem;
 	}
 	:host::part(action):hover,
