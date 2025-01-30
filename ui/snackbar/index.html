@@ -15,10 +15,17 @@
     .demo button { min-width: 8rem; }
 
     /* Example: Custom error styling through exported parts */
+    /* snack-bar {
+      --snack-bar-mw: 30rem;
+    } */
     /* snack-bar::part(error) {
+      --snack-item-bdrs: 5rem;
       --snack-item-bg: #f44336;
       --snack-item-c: #ffffff;
       --snack-item-ac: lightcoral;
+      --snack-item-fs: small;
+      --snack-item-p: 2ch 4ch;
+      --snack-item-icon-size: 2.5rem;
     } */
   </style>
 </head>
@@ -125,13 +132,15 @@
     </button>
   </div>
 
-  <!-- <snack-bar popover="manual" position="top right">
-    <snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
+  <snack-bar popover="manual" position="">
+    <snack-item message="This is a manual message taking up multiple lines of text content" action="Undo" part="error" duration="0">
+      <!-- <svg slot="icon" viewBox="0 0 24 24"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg> -->
+    </snack-item>
     <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
     <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
     <snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
     <snack-item message="This is a fifth message" action="Close" duration="0"></snack-item>
-  </snack-bar> -->
+  </snack-bar>
 
   <h3>Action Button Example</h3>
   <div class="demo">
