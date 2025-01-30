@@ -1,115 +1,205 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>SnackBar</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
-	<script type="module" src="./index.js">
-		
-	</script>
-	<style>
-		.demo { display: flex; gap: 1rem; flex-wrap: wrap; }
-		.demo button { min-width: 8rem; }
-	</style>
+  <title>SnackBar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">
+  <script type="module" src="./index.js">
+    
+  </script>
+  <style>
+    .demo { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .demo button { min-width: 8rem; }
+
+    /* Example: Custom error styling through exported parts */
+    /* snack-bar::part(error) {
+      --snack-item-bg: #f44336;
+      --snack-item-c: #ffffff;
+      --snack-item-ac: lightcoral;
+    } */
+  </style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+  <h1>UI: Components</h1>
 
-	<h2>SnackBar</h2>
-	<p>
+  <h2>SnackBar</h2>
+  <p>A web component behaving like a customizable notification system that can display messages in different positions with various styles.</p>
 
-	</p>
+  <hr>
+  <h3>Placement</h3>
+  <h4>Bottom right (default)</h4>
+  <code>&lt;snack-bar&gt;&lt;/snack-bar&gt;</code>
 
-	<h3>Examples</h3>
-	<div class="demo">
-		<button onclick="demoSnack.add('First message')">
-			Add Default
-		</button>
-		<button onclick="demoSnack.add('Success message', 'success')">
-			Add Success
-		</button>
-		<button onclick="demoSnack.add('Info message', 'info')">
-			Add Info
-		</button>
-		<button onclick="demoSnack.add('Warning message', 'warning')">
-			Add Warning
-		</button>
-		<button onclick="demoSnack.add('Error message', 'error')">
-			Add Error
-		</button>
-		<button onclick="demoSnack.add('Persistent message', 'info', 0)">
-			Add Persistent
-		</button>
-		<button onclick="showMultipleSnacks()">
-			Show Multiple Messages
-		</button>
-	</div>
+  <h4>Top right</h4>
+  <code>&lt;snack-bar position="top right"&gt;&lt;/snack-bar&gt;</code>
 
-	<snack-bar popover="manual">
-		<snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
-		<snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
-		<snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
-		<snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
-		<snack-item message="This is a fifth message" action="Close" part="default" duration="0"></snack-item>
-	</snack-bar>
+  <h4>Top left</h4>
+  <code>&lt;snack-bar position="top left"&gt;&lt;/snack-bar&gt;</code>
 
-	<h3>Action Button Example</h3>
-	<div class="demo">
-		<button onclick="showActionSnack()">Show Action Message</button>
-	</div>
+  <h4>Bottom left</h4>
+  <code>&lt;snack-bar position="bottom left"&gt;&lt;/snack-bar&gt;</code>
 
-	<h3>Order Example</h3>
-	<div class="demo">
-		<button onclick="showReverseOrderSnacks()">Show Reverse Order Messages</button>
-	</div>
+  <hr>
+  <h3>Behavior</h3>
+  <h4>Light dismiss (default)</h4>
+  <code>&lt;snack-bar&gt;&lt;/snack-bar&gt;</code>
 
-	<script>
-		function showMultipleSnacks() {
-			// Show three different messages with different types
-			demoSnack.add('Processing started...', 'info', 0);
-			setTimeout(() => {
-				demoSnack.add('Step 2 completed', 'success', 0);
-			}, 1000);
-			setTimeout(() => {
-				demoSnack.add('Please wait for final results...', 'warning', 0);
-			}, 2000);
-		}
+  <ul>
+    <li>Click outside to dismiss</li>
+    <li>Press Escape to dismiss</li>
+    <li>Auto-dismisses after duration (default: 3000ms)</li>
+  </ul>
 
-		function showActionSnack() {
-			const item = demoSnack.add('Item deleted', 'warning', 0, 'Undo');
-			item.action.addEventListener('click', () => {
-				item.remove();
-				demoSnack.add('Action undone!', 'success', 3000);
-			});
-		}
+  <h4>Persistent with close button</h4>
+  <code>&lt;snack-bar popover="manual"&gt;&lt;/snack-bar&gt;</code>
+  <ul>
+    <li>Close button appears</li>
+    <li>No light dismiss</li>
+    <li>Stays open until closed</li>
+  </ul>
 
-		function handleAction(btn) {
-			// Remove the snack item when action is clicked
-			btn.closest('snack-item').remove();
-			// Show confirmation
-			demoSnack.add('Action undone!', 'success', 3000);
-		}
+  <h4>Persistent message</h4>
+  <code>snackbar.add('Message', 'info', 0);</code>
+  <ul>
+    <li>Message stays open until closed</li>
+    <li>Does not auto-dismiss</li>
+    <li>Same behavior as <code>popover="manual"</code></li>
+  </ul>
 
-		function showReverseOrderSnacks() {
-			const reverseSnack = document.createElement('snack-bar');
-			reverseSnack.setAttribute('order', 'reverse');
-			document.body.appendChild(reverseSnack);
-			
-			reverseSnack.add('First message (stays at bottom)', 'info', 5000);
-			setTimeout(() => {
-				reverseSnack.add('Second message (appears above)', 'success', 4000);
-			}, 1000);
-			setTimeout(() => {
-				reverseSnack.add('Third message (appears at top)', 'warning', 3000);
-			}, 2000);
-		}
-	</script>
+  This can also be set manually in HTML:
+  <p>
+    <code>
+      &lt;snack-item message="Message" part="info" duration="0"&gt;
+    </code>
+  </p>
 
-	<h3>Usage</h3>
-	<pre><code>&lt;snack-bar&gt;
+  <hr>
+  <h3>Styling</h3>
+  Built-in types: 
+  <ul>
+    <li>info</li>
+    <li>success</li>
+    <li>warning</li>
+    <li>error</li>
+  </ul>
+<code>&lt;snack-item part="info"&gt;&lt;/snack-item&gt;</code>
+
+  <h4>Custom styling</h4>
+  <p>Custom styling can be applied using CSS custom properties.</p>
+  <pre><code>snack-bar::part(custom-error) {
+  --snack-item-bg: #f44336;    // background
+  --snack-item-c: #ffffff;     // color
+  --snack-item-ac: lightcoral; // action
+}
+</code></pre>
+
+  <h4>Usage</h4>
+  <code>&lt;snack-item part="custom-error"&gt;&lt;/snack-item&gt;</code>
+  <p><strong>Note:</strong> snack items use <code>exportparts</code>, so these custom properties can be applied to the snack bar itself.</p>
+
+  <h3>Examples</h3>
+  <div class="demo">
+    <button onclick="demo.add('First message')">
+      Add Default
+    </button>
+    <button onclick="demo.add('Success message', 'success')">
+      Add Success
+    </button>
+    <button onclick="demo.add('Info message', 'info')">
+      Add Info
+    </button>
+    <button onclick="demo.add('Warning message', 'warning')">
+      Add Warning
+    </button>
+    <button onclick="demo.add('Error message', 'error')">
+      Add Error
+    </button>
+    <button onclick="demo.add('Persistent message', 'info', 0)">
+      Add Persistent
+    </button>
+    <button onclick="showMultipleSnacks()">
+      Show Multiple Messages
+    </button>
+  </div>
+
+  <!-- <snack-bar popover="manual" position="bottom right">
+    <snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
+    <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
+    <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
+    <snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
+    <snack-item message="This is a fifth message" action="Close" duration="0"></snack-item>
+  </snack-bar> -->
+
+
+
+
+
+  <!-- <snack-bar popover="manual" position="bottom right">
+    <snack-item message="This is a manual message" action="Undo" part="error" duration="0"></snack-item>
+    <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
+    <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
+    <snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
+    <snack-item message="This is a fifth message" action="Close" duration="0"></snack-item>
+  </snack-bar> -->
+
+  <h3>Action Button Example</h3>
+  <div class="demo">
+    <button onclick="showActionSnack()">Show Action Message</button>
+  </div>
+
+  <h3>Order Example</h3>
+  <div class="demo">
+    <button onclick="showReverseOrderSnacks()">Show Reverse Order Messages</button>
+  </div>
+
+  <script>
+    function showMultipleSnacks() {
+      // Show three different messages with different types
+      demo.add('Processing started...', 'info');
+      setTimeout(() => {
+        demo.add('Step 2 completed', 'success');
+      }, 1000);
+      setTimeout(() => {
+        demo.add('Please wait for final results...', 'warning');
+      }, 2000);
+    }
+
+    function showActionSnack() {
+      const item = demo.add('Item deleted', 'warning', 0, 'Undo');
+      const actionBtn = item.shadowRoot.querySelector('[part="action"]');
+      actionBtn.addEventListener('click', () => {
+        item.remove();
+        demo.add('Action undone!', 'success');
+      });
+    }
+
+    function handleAction(btn) {
+      // Remove the snack item when action is clicked
+      btn.closest('snack-item').remove();
+      // Show confirmation
+      demo.add('Action undone!', 'success');
+    }
+
+    function showReverseOrderSnacks() {
+      const reverseSnack = document.createElement('snack-bar');
+      reverseSnack.setAttribute('order', 'reverse');
+      document.body.appendChild(reverseSnack);
+      
+      reverseSnack.add('First message (stays at bottom)', 'info', 5000);
+      setTimeout(() => {
+        reverseSnack.add('Second message (appears above)', 'success', 4000);
+      }, 1000);
+      setTimeout(() => {
+        reverseSnack.add('Third message (appears at top)', 'warning');
+      }, 2000);
+    }
+  </script>
+
+  <h3>Usage</h3>
+  <pre><code>&lt;snack-bar&gt;
   &lt;snack-item message="Manual message" part="info" duration="0"&gt;&lt;/snack-item&gt;
 &lt;/snack-bar&gt;
 
@@ -117,16 +207,16 @@
 const snackbar = document.querySelector('snack-bar');
 snackbar.add('Message', 'part', duration);</code></pre>
 
-	<h3>Multiple Messages Example</h3>
-	<pre><code>// Show multiple messages
+  <h3>Multiple Messages Example</h3>
+  <pre><code>// Show multiple messages
 snackbar.show('First message', 'info', 5000);
 snackbar.show('Second message', 'success', 4000);
 snackbar.show('Third message', 'warning', 3000);
 
 // Messages will stack and dismiss independently</code></pre>
 
-	<h3>Usage with Action Button</h3>
-	<pre><code>// Basic usage with action button
+  <h3>Usage with Action Button</h3>
+  <pre><code>// Basic usage with action button
 const actionSlot = '&lt;button slot="action" onclick="handleAction()"&gt;Undo&lt;/button&gt;';
 snackbar.show('Message', 'type', duration, actionSlot);
 
@@ -137,13 +227,13 @@ snack-bar::part(action) {
   text-transform: uppercase;
 }</code></pre>
 
-	<h3>Usage with Reverse Order</h3>
-	<pre><code>&lt;snack-bar order="reverse"&gt;&lt;/snack-bar&gt;
+  <h3>Usage with Reverse Order</h3>
+  <pre><code>&lt;snack-bar order="reverse"&gt;&lt;/snack-bar&gt;
 
 // Messages will stack from bottom to top
 // First message stays at the bottom
 // New messages appear above previous ones</code></pre>
 
-	<snack-bar id="demoSnack"></snack-bar>
+  <snack-bar id="demo"></snack-bar>
 </body>
 </html>

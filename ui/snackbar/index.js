@@ -1,9 +1,4 @@
-const SNACK_TYPES = {
-	info: { bg: '#d1ecf1', color: '#0c5460', action: '#007bff' },
-	success: { bg: '#d4edda', color: '#155724', action: '#28a745' },
-	warning: { bg: '#fff3cd', color: '#856404', action: '#ffc107' },
-	error: { bg: '#f8d7da', color: '#721c24', action: '#dc3545' }
-};
+const DEFAULT_DURATION = 3000;
 
 const snackBarStyles = new CSSStyleSheet();
 snackBarStyles.replaceSync(`
@@ -11,7 +6,14 @@ snackBarStyles.replaceSync(`
 		background: #0000;
 		border: 0;
 		gap: .5rem;
-		inset: auto 1rem 1rem auto;
+		inset-block: auto 1rem;
+		inset-inline: auto 1rem;
+	}
+	:host([position*="top"]) {
+		inset-block: 1rem auto;
+	}
+	:host([position*="left"]) {
+		inset-inline: 1rem auto;
 	}
 	:host(:popover-open) {
 		display: grid;
@@ -22,33 +24,54 @@ const snackItemStyles = new CSSStyleSheet();
 snackItemStyles.replaceSync(`
 	:host {
 		align-items: center;
-		background: var(--snack-item-bg, #222);
-		border-radius: .25em;
-		color: var(--snack-item-c, #FFF);
+		background: var(--snack-item-bg, light-dark(#18191B, #FFFFFF));
+		border-radius: .33rem;
+		color: var(--snack-item-c, light-dark(#E2E3E8, #313132));
 		display: flex;
 		font: 1rem system-ui, sans-serif;
 		gap: 1.5ch;
-		padding: 1ch 1.75ch 1ch 2ch;
+		padding: 1ch 1.75ch;
 	}
 	:host::part(action) {
 		all: unset;
-		color: var(--snack-item-ac, hotpink);
+		color: var(--snack-item-ac, light-dark(#7F9BEE, #3468D8));
 		font-size: smaller;
-		text-decoration: underline;
+		font-weight: 500;
 	}
 	:host::part(close) {
-		all: unset;
-		font-size: 1.5em;
-		padding: 0 .2em;
+		background: none;
+		border: none;
+		color: currentColor;
+		font-size: 1.5rem;
+		padding: 0 .2rem;
 	}
 	:host::part(action):hover,
 	:host::part(close):hover {
 		opacity: 0.8;
 	}
+	:host([part~=info]) {
+		--snack-item-bg: #d1ecf1;
+		--snack-item-c: #0c5460;
+		--snack-item-ac: #007bff;
+	}
+	:host([part~=success]) {
+		--snack-item-bg: #d4edda;
+		--snack-item-c: #155724;
+		--snack-item-ac: #28a745;
+	}
+	:host([part~=warning]) {
+		--snack-item-bg: #fff3cd;
+		--snack-item-c: #856404;
+		--snack-item-ac: #ffc107;
+	}
+	:host([part~=error]) {
+		--snack-item-bg: #f8d7da;
+		--snack-item-c: #721c24;
+		--snack-item-ac: #dc3545;
+	}
 `);
 
 class SnackItem extends HTMLElement {
-	static observedAttributes = ['duration', 'action', 'message', 'part'];
 	#elements = {};
 	#timer;
 
@@ -59,26 +82,20 @@ class SnackItem extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.shadowRoot.innerHTML = `
-			<span part="message"></span>
-			<button part="action" hidden><slot name="action"></slot></button>
-			<button part="close">×</button>`;
-		
-		this.#elements = {
-			action: this.shadowRoot.querySelector('[part="action"]'),
-			close: this.shadowRoot.querySelector('[part="close"]'),
-			message: this.shadowRoot.querySelector('[part="message"]')
-		};
-
-		this.#setupListeners();
+		this.shadowRoot.innerHTML = `<span part="message"></span>`;
+		this.#elements = { message: this.shadowRoot.querySelector('[part="message"]') };
 
 		if (this.hasAttribute('message')) {
-			this.show(
-				this.getAttribute('message'),
-				this.getAttribute('part'),
-				parseInt(this.getAttribute('duration')) || 0,
-				this.getAttribute('action')
-			);
+			const duration = this.hasAttribute('duration') ? parseInt(this.getAttribute('duration')) : 0;
+			const showClose = duration === 0 || this.closest('snack-bar')?.getAttribute('popover') === 'manual';
+
+			this.show({
+				message: this.getAttribute('message'),
+				part: this.getAttribute('part'),
+				duration,
+				actionText: this.getAttribute('action'),
+				showClose
+			});
 		}
 	}
 
@@ -86,51 +103,41 @@ class SnackItem extends HTMLElement {
 		clearTimeout(this.#timer);
 	}
 
-	#setupListeners() {
-		this.#elements.close.onclick = () => {
-			this.remove();
-			if (!this.parentElement?.hasChildNodes()) {
-				this.parentElement?.hidePopover();
-			}
-		};
-
-		this.shadowRoot.querySelector('slot[name="action"]')
-			.addEventListener('slotchange', (e) => {
-				this.#elements.action.hidden = !e.target.assignedNodes().length;
-			});
-	}
-
-	show(message, part, duration = 3000, actionText = '') {
+	show({ message, part, duration = DEFAULT_DURATION, actionText = '', showClose = false }) {
 		if (typeof message !== 'string') return;
-		
 		this.#elements.message.textContent = message;
 		
 		if (part) {
-			const type = SNACK_TYPES[part];
-			if (type) {
-				this.style.setProperty('--snack-item-bg', type.bg);
-				this.style.setProperty('--snack-item-c', type.color);
-				this.style.setProperty('--snack-item-ac', type.action);
-			}
+			this.setAttribute('part', part);
 		}
 
 		if (actionText) {
-			const slot = this.shadowRoot.querySelector('slot[name="action"]');
-			slot.textContent = actionText;
-			this.#elements.action.hidden = false;
+			const btn = document.createElement('button');
+			btn.innerHTML = `<slot name="action">${actionText}</slot>`;
+			btn.setAttribute('part', 'action');
+			this.shadowRoot.appendChild(btn);
+		}
+
+		if (showClose) {
+			const btn = document.createElement('button');
+			btn.textContent = '×';
+			btn.setAttribute('part', 'close');
+			btn.onclick = () => {
+				this.remove();
+				this.parentElement?.hasChildNodes() || this.parentElement?.hidePopover();
+			};
+			this.shadowRoot.appendChild(btn);
 		}
 
 		if (duration > 0) {
 			this.#timer = setTimeout(() => this.remove(), duration);
 		}
 	}
-
-	get action() {
-		return this.#elements.action;
-	}
 }
 
 export class SnackBar extends HTMLElement {
+	#isManual = false;
+
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
@@ -138,10 +145,15 @@ export class SnackBar extends HTMLElement {
 	}
 
 	connectedCallback() {
-		if (!this.hasAttribute('popover')) {
-			this.setAttribute('popover', '');
-		}
+		this.#isManual = this.getAttribute('popover') === 'manual';
+		this.setAttribute('popover', this.#isManual ? 'manual' : '');
 		this.setAttribute('exportparts', 'action, close, message');
+
+		this.addEventListener('beforetoggle', (e) => {
+			if (e.newState !== 'open') {
+				this.shadowRoot.innerHTML = '';
+			}
+		});
 
 		if (this.hasChildNodes()) {
 			Array.from(this.children).forEach(child => {
@@ -151,7 +163,7 @@ export class SnackBar extends HTMLElement {
 		}
 	}
 
-	add(message, part, duration = 3000, actionText = '') {
+	add(message, part, duration, actionText = '') {
 		const item = document.createElement('snack-item');
 		
 		if (this.getAttribute('order') === 'reverse') {
@@ -159,8 +171,10 @@ export class SnackBar extends HTMLElement {
 		} else {
 			this.shadowRoot.appendChild(item);
 		}
-		
-		item.show(message, part, duration, actionText);
+
+		const showClose = duration === 0 || this.#isManual;
+
+		item.show({ message, part, duration, actionText, showClose });
 		
 		if (!this.matches(':popover-open')) {
 			this.showPopover();
@@ -168,13 +182,11 @@ export class SnackBar extends HTMLElement {
 
 		if (duration > 0) {
 			setTimeout(() => {
-				if (!this.shadowRoot.hasChildNodes()) {
-					this.hidePopover();
-				}
+				this.shadowRoot.hasChildNodes() || this.hidePopover();
 			}, duration);
 		}
 
-		return item; // Return the item so we can add event listeners if needed
+		return item;
 	}
 
 	static register() {
