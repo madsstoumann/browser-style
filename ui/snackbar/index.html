@@ -18,15 +18,26 @@
     /* snack-bar {
       --snack-bar-mw: 30rem;
     } */
-    /* snack-bar::part(error) {
+
+    /* padding inline end, when close-button exists */
+
+    snack-bar::part(custom-error) {
       --snack-item-bdrs: 5rem;
       --snack-item-bg: #f44336;
       --snack-item-c: #ffffff;
       --snack-item-ac: lightcoral;
       --snack-item-fs: small;
       --snack-item-p: 2ch 4ch;
-      --snack-item-icon-size: 2.5rem;
-    } */
+      --snack-item-pie: 2ch;
+      --snack-item-icon-size: 2rem;
+    }
+
+    snack-bar::part(dialog) {
+      --snack-item-bg: #f9f9f9;
+      --snack-item-c: #333;
+      --snack-item-bxsh: 0 -1px 2px 0 hsl(220 3% 15% / calc(1% + 2%)), 0 2px 1px -2px hsl(220 3% 15% / calc(1% + 3%)), 0 5px 5px -2px hsl(220 3% 15% / calc(1% + 3%)), 0 10px 10px -2px hsl(220 3% 15% / calc(1% + 4%)), 0 20px 20px -2px hsl(220 3% 15% / calc(1% + 5%)), 0 40px 40px -2px hsl(220 3% 15% / calc(1% + 7%));
+      --snack-item-close-align: start;
+    }
   </style>
 </head>
 <body>
@@ -40,14 +51,20 @@
   <h4>Bottom right (default)</h4>
   <code>&lt;snack-bar&gt;&lt;/snack-bar&gt;</code>
 
+  <h4>Bottom left</h4>
+  <code>&lt;snack-bar position="bottom left"&gt;&lt;/snack-bar&gt;</code>
+
+  <h4>Bottom center</h4>
+  <code>&lt;snack-bar position="bottom center"&gt;&lt;/snack-bar&gt;</code>
+
   <h4>Top right</h4>
   <code>&lt;snack-bar position="top right"&gt;&lt;/snack-bar&gt;</code>
 
   <h4>Top left</h4>
   <code>&lt;snack-bar position="top left"&gt;&lt;/snack-bar&gt;</code>
 
-  <h4>Bottom left</h4>
-  <code>&lt;snack-bar position="bottom left"&gt;&lt;/snack-bar&gt;</code>
+  <h4>Top center</h4>
+  <code>&lt;snack-bar position="top center"&gt;&lt;/snack-bar&gt;</code>
 
   <hr>
   <h3>Behavior</h3>
@@ -132,15 +149,17 @@
     </button>
   </div>
 
-  <snack-bar popover="manual" position="">
-    <snack-item message="This is a manual message taking up multiple lines of text content" action="Undo" part="error" duration="0">
-      <!-- <svg slot="icon" viewBox="0 0 24 24"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg> -->
+  <!-- <snack-bar popover="manual" position="center center">
+    <snack-item message="This is a manual message taking up multiple lines of text content" action="Undo" part="custom-error" duration="0">
+      <svg slot="icon" viewBox="0 0 24 24"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
     </snack-item>
     <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
     <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
     <snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
     <snack-item message="This is a fifth message" action="Close" duration="0"></snack-item>
-  </snack-bar>
+
+    <snack-item part="dialog" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae ratione quis sunt placeat modi minus quas soluta est at molestiae ab amet vel ex ipsum maxime voluptates deleniti labore neque doloremque, cumque voluptatum possimus laborum quia porro? Optio cupiditate vel voluptate commodi veritatis soluta, at illo omnis inventore iusto facilis?"></snack-item>
+  </snack-bar> -->
 
   <h3>Action Button Example</h3>
   <div class="demo">

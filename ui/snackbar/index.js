@@ -14,12 +14,20 @@ snackBarStyles.replaceSync(`
 		justify-items: end;
 		max-width: calc(var(--snack-bar-mw, 320px) - (2 * var(--snack-bar-m)));
 	}
-	:host([position*="top"]) {
+	:host([position~="top"]) {
 		inset-block: var(--snack-bar-m) auto;
 	}
-	:host([position*="left"]) {
+	:host([position~="left"]) {
 		inset-inline: var(--snack-bar-m) auto;
 		justify-items: start;
+	}
+	:host([position~="center"]) {
+		inset-inline: 50% auto;
+		translate: -50% 0;
+	}
+	:host([position="center center"]) {
+		inset: 0px;
+		translate: none;
 	}
 	:host(:popover-open) {
 		display: grid;
@@ -61,6 +69,7 @@ snackItemStyles.replaceSync(`
 		color: currentColor;
 		height: var(--snack-item-icon-size, 1.5rem);
 		padding: 0;
+		place-self: var(--snack-item-close-align, center);
 	}
 	:host::part(action):hover,
 	:host::part(close):hover {
@@ -70,6 +79,7 @@ snackItemStyles.replaceSync(`
 		aspect-ratio: 1;
 		fill: none;
 		height: 100%;
+		pointer-events: none;
 		stroke: currentColor;
 		stroke-linecap: round;
 		stroke-linejoin: round;
@@ -109,9 +119,7 @@ class SnackItem extends HTMLElement {
 
 	connectedCallback() {
 		this.shadowRoot.innerHTML = `<span part="message"></span>`;
-		this.#elements = { 
-			message: this.shadowRoot.querySelector('[part="message"]')
-		};
+		this.#elements = { message: this.shadowRoot.querySelector('[part="message"]') };
 
 		if (this.hasAttribute('message')) {
 			const duration = this.hasAttribute('duration') ? parseInt(this.getAttribute('duration')) : 0;
@@ -192,24 +200,24 @@ export class SnackBar extends HTMLElement {
 
 	add(message, part, duration, actionText = '') {
 		const item = document.createElement('snack-item');
+		const method = this.getAttribute('order') === 'reverse' ? 'insertBefore' : 'appendChild';
+		const target = method === 'insertBefore' ? this.shadowRoot.firstChild : null;
 		
-		if (this.getAttribute('order') === 'reverse') {
-			this.shadowRoot.insertBefore(item, this.shadowRoot.firstChild);
-		} else {
-			this.shadowRoot.appendChild(item);
-		}
-
-		const showClose = duration === 0 || this.#isManual;
-
-		item.show({ message, part, duration, actionText, showClose });
+		this.shadowRoot[method](item, target);
 		
-		if (!this.matches(':popover-open')) {
-			this.showPopover();
-		}
+		item.show({ 
+			message, 
+			part, 
+			duration, 
+			actionText, 
+			showClose: duration === 0 || this.#isManual 
+		});
+		
+		!this.matches(':popover-open') && this.showPopover();
 
 		if (duration > 0) {
 			setTimeout(() => {
-				this.shadowRoot.hasChildNodes() || this.hidePopover();
+				!this.shadowRoot.hasChildNodes() && this.hidePopover();
 			}, duration);
 		}
 
