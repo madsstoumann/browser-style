@@ -1,13 +1,13 @@
 /**
- * FormControl
+ * FormElement
  * @description Base class for web components behaving like form controls.
  * @author Mads Stoumann
  * @version 1.0.0
  * @summary 08-01-2025
- * @class FormControl
+ * @class FormElement
  * @extends {HTMLElement}
  */
-export class FormControl extends HTMLElement {
+export class FormElement extends HTMLElement {
 
 	/* === 1. STATIC PROPERTIES & METHODS === */
 
@@ -28,7 +28,7 @@ export class FormControl extends HTMLElement {
 	/* === 2. PRIVATE PROPERTIES === */
 
 	#initialized = false;
-	#isFormControl;
+	#isFormElement;
 	#internals;
 	#root;
 
@@ -36,8 +36,8 @@ export class FormControl extends HTMLElement {
 
 	constructor() {
 		super();
-		this.#isFormControl = !this.hasAttribute('noform');
-		this.#internals = this.#isFormControl ? this.attachInternals() : null;
+		this.#isFormElement = !this.hasAttribute('noform');
+		this.#internals = this.#isFormElement ? this.attachInternals() : null;
 		this.initialValue = this.getAttribute('value') || '';
 
 		if (!this.hasAttribute('nomount')) {
@@ -57,11 +57,11 @@ export class FormControl extends HTMLElement {
 	}
 
 	get form() { 
-		return this.#isFormControl ? this.#internals.form : null; 
+		return this.#isFormElement ? this.#internals.form : null; 
 	}
 
 	get name() { 
-		return this.#isFormControl ? this.getAttribute('name') : null; 
+		return this.#isFormElement ? this.getAttribute('name') : null; 
 	}
 
 	get type() { 
@@ -69,13 +69,13 @@ export class FormControl extends HTMLElement {
 	}
 
 	get value() {
-		return this.#isFormControl ? 
+		return this.#isFormElement ? 
 			(this.#internals?.elementInternals?.value ?? this.getAttribute('value') ?? '') : 
 			null;
 	}
 
 	set value(v) {
-		if (!this.#isFormControl) return;
+		if (!this.#isFormElement) return;
 		const name = this.getAttribute('name');
 		this.#internals.setFormValue(v, name || '');
 		this.setAttribute('value', v || '');
@@ -105,8 +105,8 @@ export class FormControl extends HTMLElement {
 		return this.#initialized;
 	}
 
-	get isFormControl() {
-		return this.#isFormControl;
+	get isFormElement() {
+		return this.#isFormElement;
 	}
 
 	get root() {
@@ -117,13 +117,13 @@ export class FormControl extends HTMLElement {
 
 	connectedCallback() {
 		if (!this.#initialized) return;
-		if (!this.hasAttribute('noshadow') && this.#isFormControl && this.#internals.form) {
+		if (!this.hasAttribute('noshadow') && this.#isFormElement && this.#internals.form) {
 			this.#internals.form.addEventListener('reset', this.formReset.bind(this));
 		}
 	}
 
 	disconnectedCallback() {
-		if (!this.hasAttribute('noshadow') && this.#isFormControl && this.#internals.form) {
+		if (!this.hasAttribute('noshadow') && this.#isFormElement && this.#internals.form) {
 			this.#internals.form.removeEventListener('reset', this.formReset);
 		}
 	}

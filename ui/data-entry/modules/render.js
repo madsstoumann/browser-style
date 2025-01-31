@@ -412,7 +412,7 @@ export const autosuggest = (params) => {
 /* === barcode === */
 
 export const barcode = ({ path }) => { 
-	return `<barcode-scanner input path="${path}"></barcode-scanner>`;
+	return `<barcode-scanner input path="${path}" styles></barcode-scanner>`;
 };
 
 /* === entry === */

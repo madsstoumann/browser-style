@@ -1,4 +1,4 @@
-import { FormControl } from '../../../formControl.js';
+import { FormElement } from '/form.element.js';
 
 /**
  * NumberSpinner
@@ -7,10 +7,15 @@ import { FormControl } from '../../../formControl.js';
  * @version 1.0.24
  * @summary 10-01-2025
  * @class NumberSpinner
- * @extends {FormControl}
+ * @extends {FormElement}
  */
 
-export class NumberSpinner extends FormControl {
+export class NumberSpinner extends FormElement {
+
+	get basePath() {
+		return new URL('.', import.meta.url).href;
+	}
+
 	constructor() {
 		super();
 	}

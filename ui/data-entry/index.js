@@ -858,7 +858,7 @@ class DataEntry extends HTMLElement {
 	 */
 	syncInstanceData(event) {
 		const { form, name, type, checked, dataset } = event.target;
-		if (!name || form !== this.form) return;
+		if (!name || form !== this.form || event.target.hasAttribute('data-no-sync')) return;
 
 		let value = event.detail?.content || event.target.value;
 		const isEncoded = event.detail?.isEncoded || false;

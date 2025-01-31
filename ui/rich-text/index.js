@@ -1,4 +1,4 @@
-import { FormControl } from '/formControl.js';
+import { FormElement } from '/form.element.js';
 import { commands } from './commands.js';
 
 /**
@@ -8,12 +8,16 @@ import { commands } from './commands.js';
  * @version 1.0.10
  * @summary 10-01-2025
  * @class RichText
- * @extends {FormControl}
+ * @extends {FormElement}
  */
-export class RichText extends FormControl {
+export class RichText extends FormElement {
+
+	get basePath() {
+		return new URL('.', import.meta.url).href;
+	}
+
 	constructor() {
 		super();
-		this.basePath = new URL('./', import.meta.url).href;
 	}
 
 	initializeComponent() {
@@ -35,7 +39,7 @@ export class RichText extends FormControl {
 		this.initialValue = this.plaintext ? this.textContent : this.innerHTML;
 		this.root.innerHTML = this.template();
 
-		if (this.isFormControl) super.value = this.initialValue;
+		if (this.isFormElement) super.value = this.initialValue;
 
 		this.addRefs();
 		this.addEvents();
@@ -47,9 +51,9 @@ export class RichText extends FormControl {
 		this.content.addEventListener('beforeinput', this.handleBeforeInput.bind(this));
 		this.content.addEventListener('click', () => this.highlightToolbar());
 		this.content.addEventListener('input', (e) => {
-			if (!this.isFormControl) e.stopPropagation();
+			if (!this.isFormElement) e.stopPropagation();
 			const content = this.plaintext ? this.content.textContent : this.content.innerHTML;
-			if (this.isFormControl) super.value = content;
+			if (this.isFormElement) super.value = content;
 			this.dispatchEvent(new CustomEvent("rt:content", { detail: { content } }));
 		});
 		this.content.addEventListener('keydown', () => this.highlightToolbar());
@@ -143,7 +147,7 @@ export class RichText extends FormControl {
 	resetContent(clear = false) {
 		const content = clear ? '' : this.defaultValue;
 		this.setContent(content, this.plaintext);
-		if (this.isFormControl) {
+		if (this.isFormElement) {
 			super.value = this.plaintext ? this.content.textContent : this.content.innerHTML;
 		}
 	}

@@ -1,4 +1,4 @@
-import { FormControl } from '/formControl.js';
+import { FormElement } from '/form.element.js';
 
 /**
  * AutoSuggest
@@ -7,9 +7,14 @@ import { FormControl } from '/formControl.js';
  * @version 1.0.24
  * @summary 10-01-2025
  * @class AutoSuggest
- * @extends {FormControl}
+ * @extends {FormElement}
  */
-export class AutoSuggest extends FormControl {
+export class AutoSuggest extends FormElement {
+
+	get basePath() {
+		return new URL('.', import.meta.url).href;
+	}
+
 	constructor() {
 		super();
 		this.data = [];
@@ -45,7 +50,7 @@ export class AutoSuggest extends FormControl {
 		this.input = this.root.querySelector('input');
 		this.list = this.root.querySelector(`#${this.listId}`);
 
-		if (this.isFormControl) {
+		if (this.isFormElement) {
 			this.input.value = this.displayValue;
 			const initialValue = this.getAttribute('value') || '';
 			this.value = initialValue;
@@ -56,13 +61,13 @@ export class AutoSuggest extends FormControl {
 	}
 
 	get displayValue() {
-		return this.isFormControl ? 
+		return this.isFormElement ? 
 			(this.getAttribute('display') || this.input?.value || '') :
 			null;
 	}
 
 	set displayValue(v) {
-		if (!this.isFormControl) return;
+		if (!this.isFormElement) return;
 		this.setAttribute('display', v);
 		if (this.input) {
 			this.input.value = v;
@@ -198,7 +203,7 @@ export class AutoSuggest extends FormControl {
 		const display = this.getNestedValue(this.initialObject, this.settings.apiDisplayPath) || this.defaultValues.input;
 		const value = this.getNestedValue(this.initialObject, this.settings.apiValuePath) || this.defaultValues.value;
 
-		if (this.isFormControl) {
+		if (this.isFormElement) {
 			this.displayValue = display;
 			this.input.value = display;
 			this.value = value;
@@ -218,7 +223,7 @@ export class AutoSuggest extends FormControl {
 		const { obj, value } = target.dataset;
 		const displayText = target.textContent.trim();
 
-		if (this.isFormControl) {
+		if (this.isFormElement) {
 			super.value = value;
 			this.displayValue = displayText;
 			this.input.value = displayText;
