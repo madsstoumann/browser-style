@@ -307,7 +307,7 @@ export const arrayLink = (params) => {
 
 /* === arrayUnit === */
 
-export const arrayUnit = ({ value, config, path, instance, attributes = [], name = '', index }) => {
+export const arrayUnit = ({ value, config, path, instance, attributes = '', name = '', index }) => {
 	const rowValue = config.render?.value;
 	if (!rowValue) return '';
 
@@ -341,10 +341,12 @@ export const arrayUnit = ({ value, config, path, instance, attributes = [], name
 				.join('')
 		: '';
 
+	const finalName = name.includes('[') ? name : `${name}[${index}]`;
+	
 	return `
-	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${name}"` : ''}>
+	<fieldset part="array-unit fieldset" ${attrs(attributes)}${name ? ` name="${finalName}"` : ''}>
 			${allContent}
-				<output part="value" name="value_${name}">${cols}</output>
+				<output part="value" name="value_${finalName}">${cols}</output>
 				${config.render?.delete ? `<label><input part="input delete" checked type="checkbox" name="${path}" data-array-control="${arrayControl}"></label>` : ''}
 			
 	</fieldset>`;
