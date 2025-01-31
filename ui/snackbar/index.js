@@ -12,7 +12,7 @@ snackBarStyles.replaceSync(`
 		inset-block: auto var(--snack-bar-m);
 		inset-inline: auto var(--snack-bar-m);
 		justify-items: end;
-		max-width: calc(var(--snack-bar-mw, 320px) - (2 * var(--snack-bar-m)));
+		max-width: calc(var(--snack-bar-mw, 350px) - (2 * var(--snack-bar-m)));
 	}
 	:host([position~="top"]) {
 		inset-block: var(--snack-bar-m) auto;
@@ -23,6 +23,7 @@ snackBarStyles.replaceSync(`
 	}
 	:host([position~="center"]) {
 		inset-inline: 50% auto;
+		justify-items: center;
 		translate: -50% 0;
 	}
 	:host([position="center center"]) {

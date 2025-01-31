@@ -7,6 +7,7 @@
   <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
   <meta name="view-transition" content="same-origin">
   <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="../position/ui-position.css">
   <script type="module" src="./index.js">
     
   </script>
@@ -44,27 +45,54 @@
   <h1>UI: Components</h1>
 
   <h2>SnackBar</h2>
-  <p>A web component behaving like a customizable notification system that can display messages in different positions with various styles.</p>
+  <p><strong>Snackbar</strong> is a web component, inspired by Material Design, behaving like a customizable notification system, that can display messages in different positions with various styles.</p>
 
-  <hr>
-  <h3>Placement</h3>
-  <h4>Bottom right (default)</h4>
-  <code>&lt;snack-bar&gt;&lt;/snack-bar&gt;</code>
+  <fieldset class="ui-position">
+		<legend>Placement</legend>
+		<label aria-label="top left">
+			<input type="radio" name="position" value="top left">
+		</label>
+		<label aria-label="top center">
+			<input type="radio" name="position" value="top center">
+		</label>
+		<label aria-label="top right">
+			<input type="radio" name="position" value="top right">
+		</label>
+		<label aria-label="center left">
+			<input type="radio" name="position" value="center left" disabled>
+		</label>
+		<label aria-label="center center">
+			<input type="radio" name="position" value="center center">
+		</label>
+		<label aria-label="center right">
+			<input type="radio" name="position" value="center right" disabled>
+		</label>
+		<label aria-label="bottom left">
+			<input type="radio" name="position" value="bottom left">
+		</label>
+		<label aria-label="bottom center">
+			<input type="radio" name="position" value="bottom center">
+		</label>
+		<label aria-label="bottom right">
+			<input type="radio" name="position" value="bottom right" checked>
+		</label>
+	</fieldset>
 
-  <h4>Bottom left</h4>
-  <code>&lt;snack-bar position="bottom left"&gt;&lt;/snack-bar&gt;</code>
+  <p><code>&lt;snack-bar position="<output id="positionOutput">bottom right</output>"&gt;&lt;/snack-bar&gt;</code></p>
 
-  <h4>Bottom center</h4>
-  <code>&lt;snack-bar position="bottom center"&gt;&lt;/snack-bar&gt;</code>
+  <snack-bar popover="manual" position="" id="manualSnack">
+    <!-- <snack-item message="This is a manual message taking up multiple lines of text content" action="Undo" part="custom-error" duration="0">
+      <svg slot="icon" viewBox="0 0 24 24"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
+    </snack-item> -->
+    <snack-item message="This is an error message" action="Retry" part="error"></snack-item>
+    <snack-item message="This is a warning message" part="warning" action="Undo"></snack-item>
+    <snack-item message="This is a success message" part="success"></snack-item>
+    <snack-item message="This is an info message" part="info"></snack-item>
+    <snack-item message="This is a default message" action="More"></snack-item>
 
-  <h4>Top right</h4>
-  <code>&lt;snack-bar position="top right"&gt;&lt;/snack-bar&gt;</code>
+    <!-- <snack-item part="dialog" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae ratione quis sunt placeat modi minus quas soluta est at molestiae ab amet vel ex ipsum maxime voluptates deleniti labore neque doloremque, cumque voluptatum possimus laborum quia porro? Optio cupiditate vel voluptate commodi veritatis soluta, at illo omnis inventore iusto facilis?"></snack-item> -->
+  </snack-bar>
 
-  <h4>Top left</h4>
-  <code>&lt;snack-bar position="top left"&gt;&lt;/snack-bar&gt;</code>
-
-  <h4>Top center</h4>
-  <code>&lt;snack-bar position="top center"&gt;&lt;/snack-bar&gt;</code>
 
   <hr>
   <h3>Behavior</h3>
@@ -149,17 +177,7 @@
     </button>
   </div>
 
-  <!-- <snack-bar popover="manual" position="center center">
-    <snack-item message="This is a manual message taking up multiple lines of text content" action="Undo" part="custom-error" duration="0">
-      <svg slot="icon" viewBox="0 0 24 24"><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
-    </snack-item>
-    <snack-item message="This is another message" action="Redo" part="warning" duration="0"></snack-item>
-    <snack-item message="This is a third message" action="Retry" part="success" duration="0"></snack-item>
-    <snack-item message="This is a fourth message" action="Info" part="info" duration="0"></snack-item>
-    <snack-item message="This is a fifth message" action="Close" duration="0"></snack-item>
 
-    <snack-item part="dialog" message="Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae ratione quis sunt placeat modi minus quas soluta est at molestiae ab amet vel ex ipsum maxime voluptates deleniti labore neque doloremque, cumque voluptatum possimus laborum quia porro? Optio cupiditate vel voluptate commodi veritatis soluta, at illo omnis inventore iusto facilis?"></snack-item>
-  </snack-bar> -->
 
   <h3>Action Button Example</h3>
   <div class="demo">
@@ -212,9 +230,18 @@
         reverseSnack.add('Third message (appears at top)', 'warning');
       }, 2000);
     }
+
+
+    const manualSnack = document.getElementById('manualSnack');
+    const positionControl = document.querySelector('.ui-position');
+    const positionOutput = document.getElementById('positionOutput');
+    positionControl.addEventListener('change', (e) => {
+      manualSnack.setAttribute('position', e.target.value);
+      positionOutput.value = e.target.value;
+    });
   </script>
 
-  <h3>Usage</h3>
+  <!-- <h3>Usage</h3>
   <pre><code>&lt;snack-bar&gt;
   &lt;snack-item message="Manual message" part="info" duration="0"&gt;&lt;/snack-item&gt;
 &lt;/snack-bar&gt;
@@ -248,7 +275,7 @@ snack-bar::part(action) {
 
 // Messages will stack from bottom to top
 // First message stays at the bottom
-// New messages appear above previous ones</code></pre>
+// New messages appear above previous ones</code></pre> -->
 
   <snack-bar id="demo"></snack-bar>
 </body>

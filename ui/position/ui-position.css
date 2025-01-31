@@ -10,6 +10,7 @@
 			--input-bdw: 0;
 			&:not(:checked) { background-color: var(--ButtonFace); }
 			&:checked { box-shadow: none; }
+			&[disabled] { opacity: 0; }
 		}
 		& label { display: contents; }
 		& legend {
