@@ -1,0 +1,34 @@
+{
+  "name": "@browser.style/data-entry",
+  "version": "1.0.2",
+  "main": "index.js",
+  "style": "index.css",
+  "files": [
+    "index.js",
+    "index.css",
+    "modules/*.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Dynamic data entry form component with JSON schema validation and internationalization support",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "data-entry",
+    "form",
+    "json-schema",
+    "validation"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+}

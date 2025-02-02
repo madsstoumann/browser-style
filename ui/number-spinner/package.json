@@ -1,0 +1,35 @@
+{
+  "name": "@browser.style/number-spinner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "style": "index.css",
+  "files": [
+    "index.js",
+    "index.css"
+  ],
+  "dependencies": {
+    "@browser.style/common": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Number spinner component with increment/decrement buttons",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "number-spinner",
+    "number-input",
+    "spinner"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+}

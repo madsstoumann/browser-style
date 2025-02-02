@@ -1,0 +1,35 @@
+{
+  "name": "@browser.style/data-grid",
+  "version": "1.0.0",
+  "main": "index.js",
+  "style": "index.css",
+  "files": [
+    "index.js",
+    "index.css",
+    "modules/*.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Dynamic data grid component with sorting, filtering, and pagination support",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "data-grid",
+    "table",
+    "sorting",
+    "filtering",
+    "pagination"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+}

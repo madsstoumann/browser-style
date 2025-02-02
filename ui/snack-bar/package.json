@@ -1,0 +1,35 @@
+{
+  "name": "@browser.style/snack-bar",
+  "version": "1.0.0",
+  "main": "index.js",
+  "style": "index.css",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "@browser.style/common": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Snack bar notification component with support for actions and multiple message types",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "snack-bar",
+    "toast",
+    "notifications",
+    "alerts"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+}

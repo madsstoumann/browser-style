@@ -1,0 +1,29 @@
+{
+  "name": "@browser.style/common",
+  "version": "1.0.1",
+  "main": "form.element.js",
+  "files": [
+    "*.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "description": "Common components for browser.style",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git"
+  },
+  "keywords": [
+    "browser.style"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+}

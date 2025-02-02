@@ -1,96 +1,117 @@
+# DataGrid
 
-# DataGrid Component Documentation
+A dynamic web component for creating interactive data grids with sorting, filtering, pagination, and internationalization support.
 
-## Table of Contents
+## Installation
 
-1. [Introduction to DataGrid](#introduction-to-datagrid)
-   - Overview of DataGrid and its purpose
-   - Main features and capabilities
-   - Usage scenarios
+```bash
+npm install @browser.style/data-grid
+```
 
-2. [Basic Setup](#basic-setup)
-   - Adding DataGrid to your HTML
-   - Minimal HTML structure requirements
-   - Default behavior and initial rendering
+## Usage
 
-3. [Configuration Options](#configuration-options)
-   - List of attributes and properties available for customization
-   - Explanation of `data` and `i18n` attributes
-     - Loading data from URL or JSON
-     - Internationalization (i18n) settings and JSON format
-   - Attribute reference:
-     - `itemsperpage`, `page`, `lang`, `searchable`, `selectable`, `pagination`, `external-navigation`
-     - Explanation of each attribute’s usage and default values
+```javascript
+import '@browser.style/data-grid';
+```
 
-4. [Data and Schema Loading](#data-and-schema-loading)
-   - Using the `data` attribute to load static JSON or URLs
-   - Setting the `schema` attribute for data structure configuration
-   - Example schema format and field definitions
-   - Loading i18n settings via the `i18n` attribute (URL or JSON)
+```html
+<!-- Basic usage -->
+<data-grid
+  data="/api/data"
+  itemsperpage="10">
+</data-grid>
 
-5. [Internationalization (i18n)](#internationalization-i18n)
-   - Setting default language (`lang` attribute)
-   - Providing translations via JSON
-   - Customizing text labels for UI elements in multiple languages
+<!-- Full featured -->
+<data-grid
+  data="/api/data"
+  debug
+  density="medium"
+  export-csv
+  export-json
+  i18n="/api/i18n"
+  itemsperpage="25"
+  lang="en"
+  printable
+  searchable
+  selectable
+  stickycols="0,1"
+  styles>
+</data-grid>
+```
 
-6. [Customizing Appearance and Behavior](#customizing-appearance-and-behavior)
-   - Overview of customizable settings:
-     - `density`, `densityOptions`, `colWidths`, `wrapperClasses`, `tableClasses`, `textwrap`, etc.
-   - Examples of configuring `density` (e.g., compact vs. large layouts)
-   - Configuring text wrapping (`textwrap` attribute)
-   - Setting sticky columns (`stickyCols` attribute) and overflow handling
-   - Adding custom table classes for appearance control
+## Attributes
 
-7. [Interactivity and Events](#interactivity-and-events)
-   - List of dispatchable events:
-     - `dg:loaded`, `dg:requestpagechange`, `dg:itemsperpage`, etc.
-   - Setting up event listeners to handle user interactions
-   - Dispatching events from the grid and capturing events externally
-   - Example: Handling page navigation with `dg:requestpagechange`
-   - Using `dg:loaded` for custom initialization
+- `data`: URL to fetch data or JSON string
+- `debug`: Enable debug logging
+- `density`: Row density ('small', 'medium', 'large')
+- `export-csv`: Enable CSV export
+- `export-json`: Enable JSON export
+- `external-navigation`: Enable external page navigation
+- `i18n`: URL to fetch translations
+- `itemsperpage`: Items per page (default: 10)
+- `lang`: Language code (default: 'en')
+- `layoutfixed`: Fixed table layout (default: true)
+- `noform`: Hide form controls
+- `nonav`: Hide navigation
+- `nopage`: Disable pagination
+- `norows`: Hide rows per page selector
+- `nosortable`: Disable sorting
+- `page`: Initial page number
+- `printable`: Enable print functionality
+- `schema`: URL to fetch JSON schema
+- `searchable`: Enable search functionality
+- `selectable`: Enable row selection
+- `stickycols`: Comma-separated sticky column indices
+- `tableclasses`: Space-separated table CSS classes
+- `textoptions`: Show text wrap/layout options
+- `textwrap`: Enable text wrapping (default: true)
+- `wrapperclasses`: Comma-separated wrapper CSS classes
 
-8. [Sorting, Searching, and Filtering](#sorting-searching-and-filtering)
-   - Enabling sorting (`sortable` attribute) and customizing sort behavior
-   - Using the `searchable` attribute and setting up search functionality
-   - Filtering columns based on user input
+## Events
 
-9. [Pagination Controls](#pagination-controls)
-   - Setting `itemsperpage` for page size control
-   - Using the `pagination` attribute to enable or disable pagination
-   - Navigating pages programmatically or through user interaction
-   - Handling `external-navigation` for server-side pagination
+- `dg:itemsperpage`: Items per page changed
+- `dg:loaded`: Grid initialized
+- `dg:requestpagechange`: Page change requested
+- `dg:selection`: Selection changed
 
-10. [Data Export and Printing](#data-export-and-printing)
-   - Enabling data export options (`exportCSV`, `exportJSON`)
-   - Example: Exporting data to CSV or JSON format
-   - Using the `printable` attribute to enable table printing
+## Form Integration
 
-11. [Custom Selection and Row Management](#custom-selection-and-row-management)
-   - Enabling row selection (`selectable` attribute)
-   - Handling row selection and multi-selection logic
-   - Using the `selected` event to capture selected rows
-   - Example: Handling selected rows programmatically
+```html
+<form>
+  <data-grid name="grid"></data-grid>
+</form>
+```
 
-12. [Column Resizing and Layout Control](#column-resizing-and-layout-control)
-   - Enabling column resizing with `colWidths`
-   - Adjusting column widths dynamically
-   - Setting initial column widths programmatically
+Access grid instance:
+```javascript
+const form = document.querySelector('form');
+const grid = form.elements.grid;
+```
 
-13. [Performance and Debugging Tools](#performance-and-debugging-tools)
-   - Enabling debug mode (`debug` attribute) for troubleshooting
-   - Performance considerations for large datasets
-   - Optimizing DataGrid settings for fast rendering and minimal latency
+## Custom Rendering
 
-14. [Customization Examples](#customization-examples)
-   - Example configurations for different use cases (e.g., product tables, employee lists)
-   - Sample code snippets for common configurations
-   - Tips for combining attributes to achieve specific behaviors
+```javascript
+const grid = document.querySelector('data-grid');
+grid.addEventListener('dg:loaded', () => {
+  // Grid is ready for customization
+  console.log('Total items:', grid.state.items);
+});
+```
 
-15. [API Reference for Implementers](#api-reference-for-implementers)
-   - List of public methods (e.g., `setPage`, `setItemsPerPage`, `navigatePage`)
-   - Example: Calling API methods to dynamically update the DataGrid
-   - Custom functions: Using `setLoading` to show a loading spinner
+## External Navigation
 
----
+```html
+<data-grid
+  data="/api/data?page=0&size=10"
+  external-navigation
+  itemsperpage="10">
+</data-grid>
+```
 
-Each section includes practical examples, configuration snippets, and clear descriptions to help users implement and customize the DataGrid component effectively.
+Handle page changes:
+```javascript
+grid.addEventListener('dg:requestpagechange', event => {
+  const { page, direction } = event.detail;
+  // Fetch new data and update grid
+});
+```
