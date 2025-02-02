@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/number-spinner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -17,7 +17,8 @@
   "description": "Number spinner component with increment/decrement buttons",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/number-spinner"
   },
   "keywords": [
     "browser.style",
@@ -31,5 +32,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/number-spinner"
 }

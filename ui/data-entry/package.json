@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/data-entry",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -15,7 +15,8 @@
   "description": "Dynamic data entry form component with JSON schema validation and internationalization support",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/data-entry"
   },
   "keywords": [
     "browser.style",
@@ -30,5 +31,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/data-entry"
 }

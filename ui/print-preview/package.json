@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/print-preview",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -14,7 +14,8 @@
   "description": "Print preview component with page layout controls and templates support",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/print-preview"
   },
   "keywords": [
     "browser.style",
@@ -29,5 +30,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/print-preview"
 }

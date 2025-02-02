@@ -15,7 +15,8 @@
   "description": "Dynamic data grid component with sorting, filtering, and pagination support",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/data-grid"
   },
   "keywords": [
     "browser.style",
@@ -31,5 +32,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/data-grid"
 }

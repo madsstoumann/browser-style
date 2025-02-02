@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/snack-bar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -16,7 +16,8 @@
   "description": "Snack bar notification component with support for actions and multiple message types",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/snack-bar"
   },
   "keywords": [
     "browser.style",
@@ -31,5 +32,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/snack-bar"
 }

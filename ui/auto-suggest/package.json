@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/auto-suggest",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -17,7 +17,8 @@
   "description": "Auto-suggest component for browser.style",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/auto-suggest"
   },
   "keywords": [
     "browser.style",
@@ -29,5 +30,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/auto-suggest"
 }

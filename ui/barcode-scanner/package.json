@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/barcode-scanner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "style": "index.css",
   "files": [
@@ -17,7 +17,8 @@
   "description": "Barcode Scanner component for browser.style",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git"
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/barcode-scanner"
   },
   "keywords": [
     "browser.style",
@@ -29,5 +30,5 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://github.com/madsstoumann/browser-style#readme"
+  "homepage": "https://browser.style/ui/barcode-scanner"
 }
