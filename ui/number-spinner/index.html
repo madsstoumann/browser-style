@@ -1,84 +1,73 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Spinner</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
-	<link rel="stylesheet" href="ui-spinner.css">
+  <title>Number Spinner</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">
+  <style>
+    .custom {
+      --number-spinner-button-asr: auto;
+      --number-spinner-button-bdrs: .25em;
+      --number-spinner-button-w: auto;
+    }
+  </style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+  <h1>UI: Components</h1>
 
-	<h2>Spinner</h2>
-	<p>
-		<strong>Spinner</strong> allows users to select a number from a range of values, using a pair of buttons to increment or decrement the value.
-	</p>
+  <h2>Number Spinner</h2>
+  <p>
+    <strong>Number Spinner</strong> is a web component that allows users to select a number from a range of values, using a pair of buttons to increment or decrement the value. For a simpler, non-web-component version, see the <a href="basic/index.html">basic implementation</a>.
+  </p>
 
-	<fieldset class="ui-spinner fs-md">
-		<legend>Spinner</legend>
-		<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
-		<label>
-			<input type="number" value="10" min="0" max="20">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
-	</fieldset>
+  <number-spinner value="5" step="10" max="200" styles></number-spinner>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<fieldset class="ui-spinner fs-md">
-			<legend>Spinner</legend>
-			<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
-			<label>
-				<input type="number" value="10" min="0" max="20">
-			</label>
-			<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
-		</fieldset>
-	</div>
+  <br>
+  <h2>With custom <code>slot</code></h2>
 
-	<br>
-	<h2>With right-to-left</h2>
-	<fieldset class="ui-spinner fs-md" dir="rtl">
-		<legend>Spinner</legend>
-		<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
-		<label>
-			<input type="number" value="10" min="0" max="20">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
-	</fieldset>
+  <p>
+    <number-spinner value="5" step="10" max="200" class="custom" name="testing" styles>
+      <span slot="dec">dec</span>
+      <span slot="inc">inc</span>
+    </number-spinner>
+  </p>
 
-	<br>
-	<h2>Variants</h2>
-	<p>Control size with <code>font-size</code> modifiers: fs-xs, fs-sm, fs-md, fs-lg, fs-xl, fs-xxl.</p>
+  <hr>
+  <h2>Usage</h2>
+  <h3>Basic Implementation</h3>
+  <pre><code>&lt;number-spinner
+  value="5"
+  min="0"
+  max="100"
+  step="1"&gt;
+&lt;/number-spinner&gt;</code></pre>
 
-	<p>With <code>fs-xs</code> modifier:</p>
-	<fieldset class="ui-spinner fs-xs">
-		<legend>Spinner</legend>
-		<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
-		<label>
-			<input type="number" value="10" min="0" max="20">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
-	</fieldset>
+  <h3>Attributes</h3>
+  <ul>
+    <li><code>value</code>: Initial value (default: 1)</li>
+    <li><code>min</code>: Minimum allowed value (default: 0)</li>
+    <li><code>max</code>: Maximum allowed value (default: 100)</li>
+    <li><code>step</code>: Increment/decrement step value (default: 1)</li>
+    <li><code>name</code>: Input name for form submission</li>
+    <li><code>label</code>: Label text for accessibility</li>
+    <li><code>form</code>: ID of associated form</li>
+    <li><code>styles</code>: Enable default styling</li>
+  </ul>
 
-	<p>With <code>fs-sm</code> modifier:</p>
-	<fieldset class="ui-spinner fs-sm">
-		<legend>Spinner</legend>
-		<button type="button" name="step-down"><ui-icon type="minus"></ui-icon></button>
-		<label>
-			<input type="number" value="10" min="0" max="20">
-		</label>
-		<button type="button" name="step-up"><ui-icon type="plus"></ui-icon></button>
-	</fieldset>
+  <h3>Customization</h3>
+  <p>Use slots to customize button content:</p>
+  <pre><code>&lt;number-spinner&gt;
+  &lt;span slot="dec"&gt;−&lt;/span&gt;
+  &lt;span slot="inc"&gt;+&lt;/span&gt;
+&lt;/number-spinner&gt;</code></pre>
 
-	<script type="module">
-		import { common, init } from './../../assets/js/common.js';
-		import uiSpinner from './uiSpinner.js';
-		common();
-		init('.ui-spinner', uiSpinner);
-	</script>
+  <script type="module" src="./index.js"></script> 
 </body>
 </html>
+
+
+
+
