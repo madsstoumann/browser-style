@@ -1,4 +1,4 @@
-import { FormElement } from '../../common/form.element.js';
+import { FormElement } from '../common/form.element.js';
 
 /**
  * AutoSuggest

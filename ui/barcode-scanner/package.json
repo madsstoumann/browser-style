@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/barcode-scanner",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "style": "index.css",
   "files": [
