@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
-    "publish-all": "npm publish --workspace=ui/*",
+    "publish-all": "read -p 'OTP: ' otp && npm publish --workspace=ui/auto-suggest --workspace=ui/barcode-scanner --workspace=ui/base --workspace=ui/data-entry --workspace=ui/data-grid --workspace=ui/number-spinner --workspace=ui/print-preview --workspace=ui/rich-text --workspace=ui/snack-bar --workspace=ui/table --access public --otp=$otp",
     "version-all": "npm version patch --workspaces"
   }
 }
