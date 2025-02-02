@@ -3,7 +3,7 @@ import { renderTable, renderTBody, updateNavigation } from './modules/render.tab
 import { calculatePages, consoleLog } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
-import printElements from '../../assets/js/printElements.js';
+import printElements from './modules/printElements.js';
 
 /**
  * Data Grid
