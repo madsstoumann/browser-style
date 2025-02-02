@@ -1,8 +1,17 @@
 {
   "name": "@browser.style/auto-suggest",
-  "version": "1.0.3",
-  "main": "index.js",
-  "style": "index.css",
+  "version": "1.0.4",
+  "description": "Auto-suggest component for browser.style",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
+
   "files": [
     "index.js",
     "index.css"
@@ -10,15 +19,10 @@
   "dependencies": {
     "@browser.style/common": "^1.0.1"
   },
+  
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "description": "Auto-suggest component for browser.style",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/auto-suggest"
   },
   "keywords": [
     "browser.style",
@@ -27,6 +31,11 @@
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/auto-suggest"
+  },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
