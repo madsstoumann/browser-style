@@ -1,4 +1,4 @@
-@import '../icon/ui-icon.css';
+@import '../icon/index.css';
 @import '../scroll/ui-scroll.css';
 :where(.ui-form-step) {
 	--ui-scroll-ga: unset;

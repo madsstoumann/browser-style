@@ -1,4 +1,4 @@
-@import '../icon/ui-icon.css';
+@import '../icon/index.css';
 @layer bs-component {
 	:where(.ui-table) {
 		[popovertarget],
@@ -213,8 +213,6 @@
 			&[popover]:not(:popover-open) { 
 				scale: 0;
 			}
-
-
 		}
 
 		[popovertargetaction="hide"] {

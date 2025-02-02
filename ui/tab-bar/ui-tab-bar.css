@@ -1,4 +1,4 @@
-@import url('../icon/ui-icon.css');
+@import url('../icon/index.css');
 @layer bs-component {
 	:where(.ui-tab-bar) {
 		all: unset;

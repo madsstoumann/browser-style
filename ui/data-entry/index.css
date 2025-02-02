@@ -1,4 +1,4 @@
-@import url('/ui/icon/ui-icon.css');
+@import url('/ui/icon/index.css');
 @layer bs-component {
 	:where(data-entry) {
 		--_bdc: var(--ButtonBorder);

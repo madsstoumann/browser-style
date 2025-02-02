@@ -1,0 +1,22 @@
+{
+  "name": "@browser.style/table-expand",
+  "version": "1.0.0",
+  "style": "index.css",
+  "files": [
+    "index.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/table-expand"
+  },
+  "homepage": "https://browser.style/ui/table-expand",
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.0",
+    "@browser.style/icon": "^1.0.0"
+  }
+}

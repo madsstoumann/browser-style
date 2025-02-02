@@ -1,4 +1,4 @@
-@import '../icon/ui-icon.css';
+@import '../icon/index.css';
 @import '../swap/ui-swap.css';
 :where(.ui-slideshow) {
 	--ui-slideshow-items: 10; /* Set this from JS on the main wrapper = number of child-nodes */

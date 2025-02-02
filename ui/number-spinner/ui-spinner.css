@@ -1,4 +1,4 @@
-@import '../icon/ui-icon.css';
+@import '../icon/index.css';
 @layer bs-component {
 	:where(.ui-spinner) {
 		all: unset;

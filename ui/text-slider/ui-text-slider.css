@@ -1,5 +1,5 @@
 /* requires ui-scroll.css */
-@import url("../icon/ui-icon.css");
+@import url("../icon/index.css");
 @layer bs-component {
 	:where(.ui-text-slider) {
 		--ui-scroll-gap: 2ch;

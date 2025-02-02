@@ -1,5 +1,5 @@
 @import "../anchor/ui-anchor.css";
-@import "../icon/ui-icon.css";
+@import "../icon/index.css";
 
 @layer bs-component {
 	:where(.ui-context-menu) {
