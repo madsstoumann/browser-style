@@ -10,7 +10,6 @@
 		--_pi: 1.2ch;
 		--_rg: 1lh;
 
-		/* content-visibility: auto; */
 		display: grid;
 
 		& *:not(ui-icon) { 
@@ -34,7 +33,6 @@
 			}
 		}
 
-		/* [part~=button] { font-size: small;} */
 		[part~=close] {
 			background-color: #0000;
 			border-color: var(--_bdc);
@@ -159,7 +157,6 @@
 					border-inline-start: var(--_bdw) solid var(--_bdc);
 					padding: var(--_pb) var(--_pi);
 					place-content: center;
-					/* word-break: break-word; */
 					&:not(:first-of-type) { 
 						text-align: end;
 					}
@@ -181,9 +178,6 @@
 		}
 
 		/* TODO part form and part content */
-
-		
-		
 
 		[part~=form],
 		[part~=footer] {
@@ -229,7 +223,6 @@
 			font-size: 150%;
 			font-weight: 700;
 			line-height: 1.3;
-			/* margin-block: .75rlh; */
 		}
 
 		@supports (animation-timeline: scroll()) {
@@ -322,7 +315,6 @@
 			border-radius: 0;
 			font-family: inherit;
 			padding-block: var(--_pb);
-			/* padding-inline: var(--_pi); */
 			&::-webkit-inner-spin-button{ display: none; }
 		}
 
@@ -478,13 +470,6 @@
 		[part~=toolbar] {
 			margin-block-start: .5lh;
 		}
-
-
-/* Custom Toast Styling */
-/* ui-toast.error { --ui-toast-bg: value; --ui-toast-c: value; }
-ui-toast.info { --ui-toast-bg: value; --ui-toast-c: value; }
-ui-toast.success { --ui-toast-bg: value; --ui-toast-c: value; }
-ui-toast.warning { --ui-toast-bg: value; --ui-toast-c: value; } */
 
 /* WIP */
 		[data-lastpass-icon-root] { display: none; }

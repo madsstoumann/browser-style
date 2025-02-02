@@ -2,8 +2,7 @@
   "name": "@browser-style/workspace",
   "private": true,
   "workspaces": [
-    "ui/*",
-    "common"
+    "ui/*"
   ],
   "scripts": {
     "build": "npm run build --workspaces",
