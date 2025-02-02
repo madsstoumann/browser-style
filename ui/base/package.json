@@ -1,0 +1,18 @@
+{
+  "name": "@browser.style/base",
+  "version": "1.0.0",
+  "style": "index.css",
+  "files": [
+    "index.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/base"
+  },
+  "homepage": "https://browser.style/"
+}

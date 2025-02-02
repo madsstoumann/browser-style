@@ -1,8 +1,16 @@
 {
   "name": "@browser.style/barcode-scanner",
   "version": "1.0.2",
-  "main": "index.js",
-  "style": "index.css",
+  "description": "Barcode Scanner component for browser.style",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
   "files": [
     "index.js",
     "index.css"
@@ -14,12 +22,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "Barcode Scanner component for browser.style",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/barcode-scanner"
-  },
   "keywords": [
     "browser.style",
     "web-components",
@@ -27,6 +29,11 @@
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/barcode-scanner"
+  },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },

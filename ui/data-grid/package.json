@@ -1,22 +1,30 @@
 {
   "name": "@browser.style/data-grid",
   "version": "1.0.0",
-  "main": "index.js",
-  "style": "index.css",
+  "description": "Dynamic data grid component with sorting, filtering, and pagination support",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
   "files": [
     "index.js",
     "index.css",
     "modules/*.js"
   ],
+  "peerDependencies": {
+    "@browser.style/base": "^1.0.0",
+    "@browser.style/icon": "^1.0.0",
+    "@browser.style/table": "^1.0.0",
+    "@browser.style/table-expand": "^1.0.0"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "description": "Dynamic data grid component with sorting, filtering, and pagination support",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/data-grid"
   },
   "keywords": [
     "browser.style",
@@ -29,14 +37,13 @@
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/data-grid"
+  },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/data-grid",
-  "peerDependencies": {
-    "@browser.style/base": "^1.0.0",
-    "@browser.style/icon": "^1.0.0",
-    "@browser.style/table": "^1.0.0",
-    "@browser.style/table-expand": "^1.0.0"
-  }
+  "homepage": "https://browser.style/ui/data-grid"
 }

@@ -1,10 +1,19 @@
 {
   "name": "@browser.style/snack-bar",
   "version": "1.0.1",
-  "main": "index.js",
-  "style": "index.css",
+  "description": "Snack bar notification component with support for actions and multiple message types",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
   "files": [
-    "index.js"
+    "index.js",
+    "index.css"
   ],
   "dependencies": {
     "@browser.style/common": "^1.0.1"
@@ -13,7 +22,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "Snack bar notification component with support for actions and multiple message types",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",

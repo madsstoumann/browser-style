@@ -1,8 +1,17 @@
 {
   "name": "@browser.style/rich-text",
   "version": "1.0.2",
-  "main": "index.js",
-  "style": "index.css",
+  "description": "Rich text editor component with customizable toolbar and commands",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css",
+    "./commands": "./commands.js"
+  },
   "files": [
     "index.js",
     "index.css",
@@ -15,7 +24,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "Rich text editor component with customizable toolbar and commands",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",

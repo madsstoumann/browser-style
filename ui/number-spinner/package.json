@@ -1,8 +1,16 @@
 {
   "name": "@browser.style/number-spinner",
   "version": "1.0.2",
-  "main": "index.js",
-  "style": "index.css",
+  "description": "Number spinner component with increment/decrement buttons",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
   "files": [
     "index.js",
     "index.css"
@@ -14,7 +22,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "description": "Number spinner component with increment/decrement buttons",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",

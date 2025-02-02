@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
-    "publish-all": "npm publish --workspace=common && npm publish --workspace=ui/*",
+    "publish-all": "npm publish --workspace=ui/*",
     "version-all": "npm version patch --workspaces"
   }
 }
