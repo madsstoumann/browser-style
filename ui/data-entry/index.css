@@ -1,4 +1,4 @@
-@import url('/ui/icon/index.css');
+@import url('../icon/index.css');
 @layer bs-component {
 	:where(data-entry) {
 		--_bdc: var(--ButtonBorder);
@@ -42,7 +42,7 @@
 		[part~=delete] {
 			--input-check-bg: var(--CanvasGray);
 			--input-check-bga: var(--CanvasText);
-			--icon: url('/assets/svg/cross.svg');
+			--icon: url('./assets/svg/cross.svg');
 		}
 
 		/* === Details === */

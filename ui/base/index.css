@@ -1,4 +1,4 @@
 @import './core.css';
-@import './base.form.css';
-@import './base.utility.css';
-@import './base.webcomponents.css';
+@import './form.css';
+@import './utility.css';
+@import './webcomponents.css';

@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/icon",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "style": "index.css",
   "files": [
     "index.css"
@@ -16,6 +16,6 @@
   },
   "homepage": "https://browser.style/ui/icon",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.0"
+    "@browser.style/base": "^1.0.5"
   }
 }

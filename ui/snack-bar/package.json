@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/snack-bar",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Snack bar notification component with support for actions and multiple message types",
   "type": "module",
   "module": "index.js",

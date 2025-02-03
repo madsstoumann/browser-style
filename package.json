@@ -10,6 +10,7 @@
     "test": "npm run test --workspaces",
     "publish-all": "read -p 'OTP: ' otp && node scripts/publish.js $otp",
     "test-packages": "node scripts/test-packages.js",
-    "version-all": "npm version patch --workspaces"
+    "update-peers": "node scripts/update-peer-deps.js",
+    "version-all": "npm version patch --workspaces && node scripts/update-peer-deps.js"
   }
 }
