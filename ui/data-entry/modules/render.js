@@ -86,7 +86,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 					attributes
 				})
 			});
-		} else if (config.type === 'array' && method !== 'arrayLink') {
+		} else if (config.type === 'array') {
 			if (renderNav) {
 				navContent += `<a href="#section_${path}" part="link">${label}</a>`;
 			}
@@ -284,25 +284,40 @@ export const arrayGrid = (params) =>
 /* === arrayLink === */
 
 export const arrayLink = (params) => {
-	const { value, config, instance } = params;
-	const processedConfig = processRenderConfig(config, instance.data, instance);
+  const { value, config, instance } = params;
+  const renderConfig = config?.render || {};
+  const title = config?.title || '';
 
-	const links = value || processedConfig.render?.data?.links || [];
-	const processedLinks = links.map(link => {
-		const processedAttrs = processAttributes([
-			{ href: link.href, target: link.target || '_self' }
-		], instance.data, instance);
+  // Handle predefined links from data.links
+  if (renderConfig.data?.links) {
+    const links = renderConfig.data.links.map(link => {
+      const href = resolveTemplateString(link.href, instance.data, instance.lang, instance.i18n, instance.constants);
+      const label = resolveTemplateString(link.label, instance.data, instance.lang, instance.i18n, instance.constants);
+      const target = link.target || '_self';
+      
+      return `<a part="link action" href="${href}" target="${target}">${label}</a>`;
+    }).join('');
+    
+    return `<nav part="nav actions">${links}</nav>`;
+  }
 
-		const linkValue = resolveTemplateString(
-			link.label || '',
-			instance.data,
-			instance
-		);
+	// Handle dynamic array data
+	if (Array.isArray(value)) {
+		const links = value.map(item => {
+			const href = resolveTemplateString(renderConfig.href || '', item, instance.lang, instance.i18n, instance.constants);
+			const label = resolveTemplateString(renderConfig.label || '', item, instance.lang, instance.i18n, instance.constants);
+			const target = renderConfig.target || '_self';
+			const value = resolveTemplateString(renderConfig.value || '', item, instance.lang, instance.i18n, instance.constants);
 
-		return `<a part="link" ${attrs(processedAttrs)}>${linkValue}</a>`;
-	}).join('');
+			return `<a part="row summary" href="${href}" target="${target}">
+				<span part="label">${label}</span><span part="value">${value}</span>
+			</a>`;
+		}).join('');
 
-	return `<nav part="nav">${processedLinks}</nav>`;
+		return `<nav part="array-link"><strong>${title}</strong>${links}</nav>`;
+	}
+
+  return '';
 };
 
 /* === arrayUnit === */
