@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/data-grid",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Dynamic data grid component with sorting, filtering, and pagination support",
   "type": "module",
   "module": "index.js",
@@ -17,10 +17,10 @@
     "modules/*.js"
   ],
   "peerDependencies": {
-    "@browser.style/base": "^1.0.5",
-    "@browser.style/icon": "^1.0.6",
-    "@browser.style/table": "^1.0.5",
-    "@browser.style/table-expand": "^1.0.5"
+    "@browser.style/base": "^1.0.6",
+    "@browser.style/icon": "^1.0.7",
+    "@browser.style/table": "^1.0.6",
+    "@browser.style/table-expand": "^1.0.6"
   },
   "publishConfig": {
     "access": "public",
