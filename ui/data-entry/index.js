@@ -720,8 +720,8 @@ class DataEntry extends HTMLElement {
 	notify(code, customMessage = '', notificationType = 'info') {
 		const { message, type } = code > 0 ? this.getErrorMessage(code) : { message: customMessage, type: notificationType };
 		if (message) {
-			if (typeof this.showToast === 'function') {
-				this.showToast(message, type, 3000);
+			if (typeof this.showMsg === 'function') {
+				this.showMsg(message, type, 3000);
 			} else {
 				this.debugLog(`[${type.toUpperCase()}] ${message}`);
 			}

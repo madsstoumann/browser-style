@@ -168,7 +168,7 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 	if (form || root) {
 		const navElement = renderNav ? `<nav part="${renderNav}">${title ? `<a href="#section_root" part="link">${title}</a>` : ''}${navContent}</nav>` : '';
 		const headlineElement = headline ? `<strong part="title">${headline}</strong>` : '';
-		let footerContent = `<ui-toast></ui-toast>`;
+		let footerContent = `<snack-bar></snack-bar>`;
 
 		if (schema.form) {
 			if (schema.form.action) form.setAttribute('action', schema.form.action);

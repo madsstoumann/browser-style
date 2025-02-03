@@ -4,22 +4,22 @@ import { getObjectByPath, isEmpty, mapObject, setObjectByPath } from '/ui/data-e
 const componentsInfo = {
 	AutoSuggest: {
 		bindFunction: bindAutoSuggest,
-		path: '/ui/auto-suggest/index.js',
+		path: '@browser.style/auto-suggest',
 		tagName: 'auto-suggest',
 	},
 	BarcodeScanner: {
 		bindFunction: bindBarcodeScanner,
-		path: '/ui/barcode-scanner/index.js',
+		path: '@browser.style/barcode-scanner',
 		tagName: 'barcode-scanner',
 	},
 	RichText: {
-		path: '/ui/rich-text/index.js',
+		path: '@browser.style/rich-text',
 		tagName: 'rich-text',
 	},
-	UiToast: {
-		bindFunction: bindUiToast,
-		path: '/ui/toast/index.js',
-		tagName: 'ui-toast',
+	SnackBar: {
+		bindFunction: bindSnackBar,
+		path: '@browser.style/snack-bar',
+		tagName: 'snack-bar',
 	},
 };
 
@@ -75,16 +75,16 @@ function bindBarcodeScanner(dataEntry) {
 		});
 }
 
-// Bind the UiToast component to enable showToast functionality
-function bindUiToast(dataEntry) {
-	const toastElement = dataEntry.form.querySelector('ui-toast');
-	if (toastElement) {
-		dataEntry.showToast = (message, type = 'success', duration = 3000) => {
-			toastElement.showToast(message, type, duration);
+// Bind the UiToast component to enable showMsg functionality
+function bindSnackBar(dataEntry) {
+	const snackBar = dataEntry.form.querySelector('snack-bar');
+	if (snackBar) {
+		dataEntry.showMsg = (message, type = 'success', duration = 3000) => {
+			snackBar.add(message, type, duration);
 		};
 	} else {
 		// Fallback if ui-toast is not available
-		dataEntry.showToast = (message, type = 'info', duration = 3000) => {
+		dataEntry.showMsg = (message, type = 'info', duration = 3000) => {
 			dataEntry.debugLog(`Toast fallback: ${message} (Type: ${type})`);
 		};
 	}
@@ -166,6 +166,6 @@ async function handleBarcodeEntry(event, barcodeScanner, dataEntry) {
 		dataEntry.addArrayEntries(path, [mappedObject], addMethod);
 
 	} catch (error) {
-		dataEntry.showToast('Error processing barcode', 'error');
+		dataEntry.showMsg('Error processing barcode', 'error');
 	}
 }
