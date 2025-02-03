@@ -79,7 +79,7 @@
 			}
 
 			& [name="searchterm"] {
-				--icon: url(/assets/svg/filter.svg);
+				--icon: url(./assets/svg/filter.svg);
 				block-size: auto;
 				font-family: inherit;
 				padding: .66ch 1.2ch;

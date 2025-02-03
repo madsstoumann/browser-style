@@ -12,6 +12,10 @@ export default class PrintPreview extends HTMLElement {
     this.#printStyleId = `print-${this.#id}`;
   }
 
+  get basePath() {
+		return new URL('.', import.meta.url).href;
+	}
+
   static get id() { return this.#id; }
 
   static observedAttributes = [

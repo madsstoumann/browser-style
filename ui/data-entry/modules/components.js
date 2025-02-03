@@ -1,4 +1,4 @@
-import { getObjectByPath, isEmpty, mapObject, setObjectByPath } from '/ui/data-entry/modules/utility.js';
+import { getObjectByPath, isEmpty, mapObject, setObjectByPath } from './utility.js';
 
 /* === Object to store information about components */
 const componentsInfo = {
