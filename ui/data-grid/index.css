@@ -1,4 +1,4 @@
-@import "../icon/ui-icon-svg.css";
+@import "../icon/index.css";
 @layer bs-component {
 	:where(data-grid) {
 		container-type: inline-size;
