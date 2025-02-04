@@ -12,17 +12,26 @@
   <h1>UI: Components</h1>
 
   <h2>GUI Panel</h2>
-
+  <button type="button" id="toggle">Toggle GUI Panel</button>
 
   <gui-panel open>
-		<div slot="content">
-			<p>Content goes here</p>
-		</div>
-	</gui-panel>
+    <div slot="content">
+      Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
+    </div>
+    <div slot="footer">
+      &hellip; footer content goes here &hellip;
+  </gui-panel>
 
-  <script type="module">
-    import GuiPanel from './index.js';
+  <script type="module" src="./index.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const gui = document.querySelector('gui-panel');
+      const toggle = document.getElementById('toggle');
 
+      toggle.addEventListener('click', () => {
+        gui.togglePopover(true);
+      });
+    });
   </script>
 </body>
 </html>
