@@ -284,22 +284,22 @@ export const arrayGrid = (params) =>
 /* === arrayLink === */
 
 export const arrayLink = (params) => {
-  const { value, config, instance } = params;
-  const renderConfig = config?.render || {};
-  const title = config?.title || '';
+	const { value, config, instance } = params;
+	const renderConfig = config?.render || {};
+	const title = config?.title || '';
 
-  // Handle predefined links from data.links
-  if (renderConfig.data?.links) {
-    const links = renderConfig.data.links.map(link => {
-      const href = resolveTemplateString(link.href, instance.data, instance.lang, instance.i18n, instance.constants);
-      const label = resolveTemplateString(link.label, instance.data, instance.lang, instance.i18n, instance.constants);
-      const target = link.target || '_self';
-      
-      return `<a part="link action" href="${href}" target="${target}">${label}</a>`;
-    }).join('');
-    
-    return `<nav part="nav actions">${links}</nav>`;
-  }
+	// Handle predefined links from data.links
+	if (renderConfig.data?.links) {
+		const links = renderConfig.data.links.map(link => {
+			const href = resolveTemplateString(link.href, instance.data, instance.lang, instance.i18n, instance.constants);
+			const label = resolveTemplateString(link.label, instance.data, instance.lang, instance.i18n, instance.constants);
+			const target = link.target || '_self';
+
+			return `<a part="link action" href="${href}" target="${target}">${label}</a>`;
+		}).join('');
+		
+		return `<nav part="nav actions">${links}</nav>`;
+	}
 
 	// Handle dynamic array data
 	if (Array.isArray(value)) {
@@ -317,7 +317,7 @@ export const arrayLink = (params) => {
 		return `<nav part="array-link"><strong>${title}</strong>${links}</nav>`;
 	}
 
-  return '';
+	return '';
 };
 
 /* === arrayUnit === */
@@ -665,7 +665,7 @@ export const select = (params) => {
 						instance.lang,
 						instance.i18n,
 						instance.constants
-				  )
+					)
 				: option[renderLabel]
 			: option.label || option[valueField];
 
@@ -693,13 +693,13 @@ export const select = (params) => {
 	const buttonHTML = action
 		? `<button type="button" part="button" ${buttonAttrs(
 				action
-		  )}>${resolveTemplateString(
+			)}>${resolveTemplateString(
 				action.label,
 				instance.data,
 				instance.lang,
 				instance.i18n,
 				instance.constants
-		  )}</button>`
+			)}</button>`
 		: '';
 
 	return `

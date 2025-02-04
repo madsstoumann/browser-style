@@ -123,7 +123,7 @@
 		background-color: var(--Mark);
 		color: var(--MarkText);
 	}
-	:where(pre) { overflow: auto; }
+	:where(pre) { font-size: smaller; overflow: auto; }
 	:where(pre, tr:nth-of-type(even)) {
 		background-color: var(--CanvasGray);
 	}
