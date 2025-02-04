@@ -48,5 +48,18 @@
 				& > * { pointer-events: none; }
 			}
 		}
+
+		@supports not (position-anchor: --anchor) {
+			& {
+				display: block;
+				position: relative;
+				[popover]:popover-open {
+					inset: unset;
+					position: absolute;
+					width: auto;
+					z-index: 1;
+				}
+			}
+		}
 	}
 }
