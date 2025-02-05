@@ -1,23 +1,24 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
   :host {
-    --analog-clock-w: 100%;
-    --analog-clock-clock-fs: smaller;
-    --analog-clock-num-sz: 3em;
-
+    --analog-clock-num-sz: 15cqi;
+    --_c: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
     aspect-ratio: 1;
-    background: var(--CanvasGray);
+    background: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
     border-radius: 50%;
-    color: var(--CanvasText);
+    color: var(--_c);
+    color-scheme: light dark;
     container-type: inline-size;
+    font-family: var(--analog-clock-ff, ui-sans-serif, system-ui, sans-serif);
     display: grid;
     grid-template-rows: repeat(3, 1fr);
-    inline-size: var(--analog-clock-w);
+    inline-size: 100%;
     position: relative;
   }
 
   :host::part(label) { 
-    font-size: 5cqi;
+    font-size: var(--analog-clock-label-fs, 5cqi);
+    font-weight: var(--analog-clock-label-fw, 600);
     grid-area: 3 / 1 / 4 / 2;
     place-self: start center;
   }
@@ -26,14 +27,14 @@ styles.replaceSync(`
   }
 
   :host li {
-    --_r: calc((var(--analog-clock-w) - var(--analog-clock-num-sz)) / 2);
+    --_r: calc((100% - var(--analog-clock-num-sz)) / 2);
     --_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
     --_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
 
+    aspect-ratio: 1;
     display: grid;
     font-size: var(--analog-clock-fs, 6cqi);
     font-weight: var(--analog-clock-fw, 700);
-    height: var(--analog-clock-num-sz);
     left: var(--_x);
     place-content: center;
     position: absolute;
@@ -41,18 +42,17 @@ styles.replaceSync(`
     width: var(--analog-clock-num-sz);
   }
 
-  /* Hands and Date */
+  /* === Hands and Date === */
 
   :host::part(hands) {
     display: grid;
-    font-weight: 500;
     grid-area: 2 / 1 / 3 / 1;
     grid-template-columns: repeat(3, 1fr);
   }
 
   :host::part(hands)::after {
-    aspect-ratio: 1 / 1;
-    background-color: var(--CanvasText);
+    aspect-ratio: 1;
+    background-color: var(--_c);
     border-radius: 50%;
     content: "";
     grid-area: 1 / 2 / 1 / 3;
@@ -63,10 +63,10 @@ styles.replaceSync(`
 
   :host::part(date) { 
     border: .25cqi solid currentColor;
-    color: #888;
+    color: var(--analog-clock-day-c, #888);
     display: grid;
-    font-family: ui-monospace, monospace;
-    font-size: 5cqi;
+    font-family: var(--analog-clock-day-ff, ui-monospace, monospace);
+    font-size: var(--analog-clock-day-fs, 5cqi);
     grid-area: 1 / 3 / 1 / 4;
     padding: 0 1ch;
     place-content: center;
@@ -77,9 +77,9 @@ styles.replaceSync(`
     border-radius: calc(var(--_w) * 2);
     display: block;
     height: var(--_h);
-    left: calc((var(--analog-clock-w) - var(--_w)) / 2);
+    left: calc((100% - var(--_w)) / 2);
     position: absolute;
-    top: calc((var(--analog-clock-w) / 2) - var(--_h));
+    top: calc((100% / 2) - var(--_h));
     transform: rotate(0deg);
     transform-origin: bottom;
     width: var(--_w);
@@ -103,7 +103,7 @@ styles.replaceSync(`
     --_bg: #ff8c05;
     --_h: 45%;
     --_w: 1cqi;
-    animation: turn 60s steps(60) infinite;
+    animation: turn 60s linear infinite;
     animation-delay: var(--_ds, 0ms);
   }
 
@@ -143,6 +143,11 @@ export default class AnalogClock extends HTMLElement {
       <span part="label"></span>`;
 
     this.#root.querySelector('[part="label"]').textContent = this.getAttribute('label') || '';
+
+    if (this.hasAttribute('steps')) {
+      this.#root.querySelector('[part="seconds"]').style.animation = 'turn 60s steps(60) infinite';
+    }
+
     this.updateClock();
   }
 
