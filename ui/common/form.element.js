@@ -117,7 +117,10 @@ export class FormElement extends HTMLElement {
 
 	connectedCallback() {
 		if (!this.#initialized) return;
-		if (!this.hasAttribute('noshadow') && this.#isFormElement && this.#internals.form) {
+		if (this.hasAttribute('form')) {
+			this.#associateWithForm(this.getAttribute('form')); 
+		}
+		else if (this.#isFormElement && this.#internals.form) {
 			this.#internals.form.addEventListener('reset', this.formReset.bind(this));
 		}
 	}
@@ -221,6 +224,18 @@ export class FormElement extends HTMLElement {
 	}
 
 	/* === 7. PRIVATE METHODS === */
+
+	#associateWithForm(formId) {
+		if (!formId) return;
+		const form = document.getElementById(formId);
+		if (!form) {
+			console.warn(`Form with id "${formId}" not found for ${this.tagName}`);
+			return;
+		}
+
+		this.#internals.setFormValue(this.value || this.initialValue);
+		form.addEventListener('reset', this.formReset.bind(this));
+	}
 
 	async #initialize() {
 		if (this.#initialized) return;
