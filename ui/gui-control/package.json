@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/gui-control",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GUI Control",
   "type": "module",
   "module": "index.js",

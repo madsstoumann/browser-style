@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/gui-panel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GUI Panel",
   "type": "module",
   "module": "index.js",

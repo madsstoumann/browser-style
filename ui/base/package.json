@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/base",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "style": "index.css",
   "files": [
     "*.css",
