@@ -321,9 +321,9 @@ export function processRenderConfig(config, data, instance) {
 }
 
 /* === resolveTemplateString === */
-export function resolveTemplateString(template, data, lang = 'en', i18n = {}, constants = {}, fallback = '') {
+export function resolveTemplateString(template, data, instance = {}, fallback = '') {
   try {
-    // Early returns for invalid or non-template strings
+    const { lang = 'en', i18n = {}, constants = {} } = instance;
     if (!template) return '';
     if (typeof template !== 'string') return template;
     if (!template.includes('${')) return template;
@@ -331,32 +331,43 @@ export function resolveTemplateString(template, data, lang = 'en', i18n = {}, co
     return template.replace(/\$\{([^}]+)\}/g, (_, key) => {
       const trimmedKey = key.trim();
       
-      // Handle translation strings
-      if (trimmedKey.startsWith('t:')) {
-        return t(trimmedKey.slice(2).trim(), lang, i18n) || '';
-      }
-      
-      // Handle constants/variables
-      if (trimmedKey.startsWith('v:')) {
-        const value = constants[trimmedKey.slice(2).trim()];
-        return value !== undefined ? value : '';
-      }
-      
       // Handle dynamic functions
       if (trimmedKey.startsWith('d:')) {
         const parts = trimmedKey.slice(2).trim().split(/\s+/);
         const fn = dynamicFunctions[parts[0]];
         
         if (fn) {
-          const params = parts.slice(1).map(param => 
-            param.startsWith('${') && param.endsWith('}')
+          const params = parts.slice(1).map(param => {
+            // Check for global references [prefix:name]
+            const globalMatch = param.match(/\[(.*?)\]/);
+            if (globalMatch) {
+              const [prefix, name] = globalMatch[1].split(':');
+              switch(prefix) {
+                case 'o':
+                  return instance.lookup?.[name] || [];
+                case 'v':
+                  return constants[name];
+                default:
+                  return param;
+              }
+            }
+            return param.startsWith('${') && param.endsWith('}')
               ? getObjectByPath(data, param.slice(2, -1))
-              : getObjectByPath(data, param) ?? param
-          );
+              : getObjectByPath(data, param) ?? param;
+          });
           return fn(...params);
         }
       }
 
+      if (trimmedKey.startsWith('t:')) {
+        return t(trimmedKey.slice(2).trim(), lang, i18n) || '';
+      }
+      
+      if (trimmedKey.startsWith('v:')) {
+        const value = constants[trimmedKey.slice(2).trim()];
+        return value !== undefined ? value : '';
+      }
+      
       return getObjectByPath(data, trimmedKey) || '';
     });
   } catch (error) {

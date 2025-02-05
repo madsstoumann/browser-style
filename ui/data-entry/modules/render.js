@@ -37,7 +37,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 			groupContent.set(groupKey, items.map(({key, config}) => {
 				const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 				const renderMethod = instance.getRenderMethod(method);
-				const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || '';
+				const label = resolveTemplateString(config.title, data, instance) || '';
 				const path = pathPrefix === 'DISABLE_PATH' ? '' : key;
 				const value = getValueWithFallback(data, key, config);
 
@@ -57,10 +57,10 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 
 	const arrayContent = [];
 	const fieldsetGroups = [];
-	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance.lang, instance.i18n, instance.constants) : '';
+	const headline = schema.headline ? resolveTemplateString(schema.headline, data, instance) : '';
 	const renderNav = schema.navigation;
 	const standardContent = [];
-	const title = schema.title ? resolveTemplateString(schema.title, data, instance.lang, instance.i18n, instance.constants) : '';
+	const title = schema.title ? resolveTemplateString(schema.title, data, instance) : '';
 
 	let navContent = '';
 	let schemaIndex = 0;
@@ -71,7 +71,7 @@ export function all(data, schema, instance, root = false, pathPrefix = '', form 
 		const attributes = config?.render?.attributes || [];
 		const method = config?.render?.method ? toCamelCase(config.render.method) : '';
 		const renderMethod = instance.getRenderMethod(method);
-		const label = resolveTemplateString(config.title, data, instance.lang, instance.i18n, instance.constants) || 'LABEL';
+		const label = resolveTemplateString(config.title, data, instance) || 'LABEL';
 		const options = method === 'select' ? fetchOptions(config, instance) : [];
 		const path = pathPrefix === 'DISABLE_PATH' ? '' : (pathPrefix ? `${pathPrefix}.${key}` : key);
 		const value = getValueWithFallback(data, key, config);
@@ -185,7 +185,7 @@ const innerContent = `${rootFieldset}${sortedArrays.join('')}${sortedGroups.join
 
 			const buttonsHTML = schema.form.buttons?.map(entry => 
 				`<button type="${entry.type || 'button'}" part="button" ${buttonAttrs(entry)}>${
-					resolveTemplateString(entry.label, data, instance.lang, instance.i18n, instance.constants)
+					resolveTemplateString(entry.label, data, instance)
 				}</button>`
 			).join('');
 			
@@ -229,10 +229,10 @@ export const arrayCheckbox = (params) =>
 export const arrayDetail = ({ value, config, path, instance, attributes = [], name = '', index }) => {
 	const cleanName = name?.replace(/\[\d+\]/g, '');
 	const rowLabel = config.render?.label 
-		? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n, instance.constants) 
+		? resolveTemplateString(config.render.label, value, instance) 
 		: 'label';
 	const rowValue = config.render?.value 
-		? resolveTemplateString(config.render.value, value, instance.lang, instance.i18n, instance.constants) 
+		? resolveTemplateString(config.render.value, value, instance) 
 		: 'value';
 
 	const cols = rowValue.split('|').map(col => `<span>${col}</span>`).join('');
@@ -291,8 +291,8 @@ export const arrayLink = (params) => {
 	// Handle predefined links from data.links
 	if (renderConfig.data?.links) {
 		const links = renderConfig.data.links.map(link => {
-			const href = resolveTemplateString(link.href, instance.data, instance.lang, instance.i18n, instance.constants);
-			const label = resolveTemplateString(link.label, instance.data, instance.lang, instance.i18n, instance.constants);
+			const href = resolveTemplateString(link.href, instance.data, instance);
+			const label = resolveTemplateString(link.label, instance.data, instance);
 			const target = link.target || '_self';
 
 			return `<a part="link action" href="${href}" target="${target}">${label}</a>`;
@@ -304,10 +304,10 @@ export const arrayLink = (params) => {
 	// Handle dynamic array data
 	if (Array.isArray(value)) {
 		const links = value.map(item => {
-			const href = resolveTemplateString(renderConfig.href || '', item, instance.lang, instance.i18n, instance.constants);
-			const label = resolveTemplateString(renderConfig.label || '', item, instance.lang, instance.i18n, instance.constants);
+			const href = resolveTemplateString(renderConfig.href || '', item, instance);
+			const label = resolveTemplateString(renderConfig.label || '', item, instance);
 			const target = renderConfig.target || '_self';
-			const value = resolveTemplateString(renderConfig.value || '', item, instance.lang, instance.i18n, instance.constants);
+			const value = resolveTemplateString(renderConfig.value || '', item, instance);
 
 			return `<a part="row summary" href="${href}" target="${target}">
 				<span part="label">${label}</span><span part="value">${value}</span>
@@ -327,7 +327,7 @@ export const arrayUnit = ({ value, config, path, instance, attributes = '', name
 	if (!rowValue) return '';
 
 	const rowLabel = config.render?.label
-	? resolveTemplateString(config.render.label, value, instance.lang, instance.i18n, instance.constants)
+	? resolveTemplateString(config.render.label, value, instance)
 	: 'label';
 
 	const cols = rowLabel.split('|').map(col => `<span>${col}</span>`).join('');
@@ -447,7 +447,7 @@ export const entry = (params) => {
 			const attributes = [...(propConfig.render?.attributes || []), { form: formID }];
 			attributes.forEach(attr => {
 				if ('value' in attr) {
-					attr.value = resolveTemplateString(attr.value, instance.data, instance.lang, instance.i18n, instance.constants);
+					attr.value = resolveTemplateString(attr.value, instance.data, instance);
 				}
 			});
 
@@ -524,10 +524,7 @@ export const input = (params) => {
 		finalValue = resolveTemplateString(
 			processedConfig.render.formatter,
 			{ ...instance.data, value: finalValue },
-			instance.lang,
-			instance.i18n,
-			instance.constants,
-			finalValue
+			instance
 		);
 	}
 
@@ -556,9 +553,7 @@ export const link = (params) => {
 	const linkValue = resolveTemplateString(
 		value || linkData.label || processedConfig.render?.value || '', 
 		instance.data, 
-		instance.lang, 
-		instance.i18n, 
-		instance.constants,
+		instance,
 		''
 	);
 
@@ -662,9 +657,7 @@ export const select = (params) => {
 				? resolveTemplateString(
 						renderLabel,
 						option,
-						instance.lang,
-						instance.i18n,
-						instance.constants
+						instance
 					)
 				: option[renderLabel]
 			: option.label || option[valueField];
@@ -696,9 +689,7 @@ export const select = (params) => {
 			)}>${resolveTemplateString(
 				action.label,
 				instance.data,
-				instance.lang,
-				instance.i18n,
-				instance.constants
+				instance
 			)}</button>`
 		: '';
 

@@ -1,4 +1,3 @@
-
 export const dynamicFunctions = {
 	/* === Date and Time Functions === */
 	dateDifference: (startDate, endDate) => {
@@ -77,6 +76,12 @@ export const dynamicFunctions = {
 	/* === Locale Functions === */
 	getLocale: () => {
 		return document.documentElement.lang || 'en-US';
+	},
+
+	/* === Mapping Functions === */
+	mapOptionLabel: (value, options) => {
+		const option = options.find(opt => String(opt.value) === String(value));
+		return option ? option.label : value;
 	}
 };
 
