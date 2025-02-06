@@ -24,6 +24,7 @@ import '@browser.style/analog-clock';
 - `indices`: Show tick marks. Values: empty (60 marks) or "hours" (12 marks)
 - `label`: Text label below the clock
 - `marker`: Character used for indices (default: "|")
+- `marker-hour`: Character used for hour indices (defaults to marker value)
 - `numerals`: Number of numerals to display (1-12, default: 12)
 - `steps`: Use stepping animation for seconds hand
 - `system`: Number system. Values: "roman", "romanlow", or any valid [Intl numberingSystem](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#numberingsystem)
@@ -31,32 +32,32 @@ import '@browser.style/analog-clock';
 
 ## CSS Custom Properties
 
-### Layout
-- `--analog-clock-num-sz`: Size of numeral container (default: 15cqi)
+### Layout & Typography
+- `--analog-clock-ff`: Font family (default: system-ui)
 - `--analog-clock-fs`: Font size for numerals (default: 6cqi)
 - `--analog-clock-fw`: Font weight for numerals (default: 700)
-- `--analog-clock-ff`: Font family (default: system-ui)
 
-### Colors
-- `--analog-clock-bg`: Background color/gradient
-- `--analog-clock-c`: Main color for numerals
-- `--analog-clock-cap`: Center cap color
-- `--analog-clock-date-c`: Date color
-- `--analog-clock-hour`: Hour hand color
-- `--analog-clock-minute`: Minute hand color
-- `--analog-clock-second`: Second hand color
+### Colors & Theme
+- `--analog-clock-bg`: Background color/gradient (default: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)))
+- `--analog-clock-c`: Main color for numerals (default: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)))
+- `--analog-clock-cap`: Center cap color (default: currentColor)
+- `--analog-clock-cap-sz`: Size of center cap (default: 8cqi)
+- `--analog-clock-date-c`: Date color (default: #888)
+- `--analog-clock-hour`: Hour hand color (default: currentColor)
+- `--analog-clock-minute`: Minute hand color (default: currentColor)
+- `--analog-clock-second`: Second hand color (default: #ff8c05)
 - `--analog-clock-indices-c`: Indices color (default: #0005)
 
-### Date Display
+### Indices & Numerals
+- `--analog-clock-indices-fs`: Indices font size (default: 6cqi)
+- `--analog-clock-indices-m`: Indices margin (default: 0)
+- `--analog-clock-indices-hour-fw`: Hour indices font weight (default: 800)
+- `--analog-clock-indices-hour-c`: Hour indices color (default: #0005)
+- `--analog-clock-numerals-m`: Numerals margin (default: 1ch)
+
+### Date & Label Display
 - `--analog-clock-date-ff`: Date font family (default: monospace)
 - `--analog-clock-date-fs`: Date font size (default: 5cqi)
-
-### Indices
-- `--analog-clock-indices-fs`: Indices font size (default: 6cqi)
-- `--analog-clock-indices-m`: Indices margin
-- `--analog-clock-indices-hour-fw`: Hour indices font weight (default: 800)
-
-### Label
 - `--analog-clock-label-fs`: Label font size (default: 5cqi)
 - `--analog-clock-label-fw`: Label font weight (default: 600)
 
@@ -79,6 +80,14 @@ import '@browser.style/analog-clock';
 <analog-clock 
   indices 
   marker="|" 
+  date="day month"
+></analog-clock>
+
+<!-- Clock with different markers for hours and minutes -->
+<analog-clock 
+  indices 
+  marker="·" 
+  marker-hour="●"
   date="day month"
 ></analog-clock>
 ```

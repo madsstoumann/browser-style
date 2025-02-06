@@ -29,11 +29,91 @@
 			--analog-clock-second: var(--_accent);
 			--analog-clock-cap: color-mix(in oklab, var(--_dark), white 20%);
 
-			--mask: repeating-conic-gradient(
-			from 45deg at 50% 50%,
-			black 0deg 6deg,
-			transparent 6deg 6.5deg);
-			/* mask: var(--mask); */
+		}
+		.round-markers {
+			--analog-clock-indices-c: #DDD;
+			--analog-clock-indices-hour-c: #000;
+			--analog-clock-indices-fs: 3cqi;
+			--analog-clock-indices-hour-fw: 400;
+			--analog-clock-indices-m: 2ch;
+			--analog-clock-numerals-m: 1ch;
+			}
+		.indian {
+			--_saffron: #FF9933;
+			--_green: #138808;
+			--_blue: #000080;
+			
+			--analog-clock-bg: radial-gradient(
+				circle at 50% 50%,
+				#FFF 45%,
+				var(--_saffron) 46%,
+				var(--_saffron) 48%,
+				#FFF 49%,
+				#FFF 51%,
+				var(--_green) 52%,
+				var(--_green) 54%,
+				#FFF 55%
+			);
+			--analog-clock-c: var(--_blue);
+			--analog-clock-fw: 600;
+			--analog-clock-hour: var(--_saffron);
+			--analog-clock-minute: var(--_green);
+			--analog-clock-second: #B41E8E;
+			--analog-clock-cap: var(--_blue);
+			--analog-clock-indices-c: var(--_green);
+			--analog-clock-date-c: var(--_blue);
+		}
+		.burmese {
+			--_yellow: #FFCC00;
+			--_green: #43A047;
+			--_red: #EF4438;
+			
+			--analog-clock-bg: radial-gradient(
+				circle at 50% 50%,
+				var(--_yellow) 45%,
+				var(--_green) 46%,
+				var(--_green) 49%,
+				var(--_red) 50%,
+				var(--_red) 55%
+			);
+			--analog-clock-c: var(--_yellow);
+			--analog-clock-fw: 600;
+			--analog-clock-hour: var(--_green);
+			--analog-clock-minute: var(--_green);
+			--analog-clock-second: #FFF;
+			--analog-clock-cap: var(--_green);
+			--analog-clock-indices-c: color-mix(in oklab, var(--_yellow), transparent 30%);
+			--analog-clock-indices-m: 3cqi;
+			--analog-clock-date-c: var(--_yellow);
+			--analog-clock-label-c: var(--_red);
+		}
+
+		.thai {
+			--_red: #EF3340;
+			--_white: #FFF;
+			--_blue: #00247D;
+			
+			--analog-clock-bg: radial-gradient(
+				circle at 50% 50%,
+				var(--_white) 45%,
+				var(--_red) 46%,
+				var(--_red) 48%,
+				var(--_white) 49%,
+				var(--_white) 51%,
+				var(--_blue) 52%,
+				var(--_blue) 54%,
+				var(--_white) 55%
+			);
+			--analog-clock-c: var(--_blue);
+			--analog-clock-fw: 600;
+			--analog-clock-hour: var(--_red);
+			--analog-clock-minute: var(--_blue);
+			--analog-clock-second: gold;
+			--analog-clock-cap: var(--_blue);
+			--analog-clock-indices-c: var(--_red);
+			--analog-clock-indices-hour-c: var(--_blue);
+			--analog-clock-indices-m: 3cqi;
+			--analog-clock-date-c: var(--_blue);
 		}
 	</style>
 </head>
@@ -45,8 +125,8 @@
 
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-clock label="New York" timezone="-4"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" indices markers="●"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" class="round-markers"></analog-clock>
 	</div>
 
 	<br>
@@ -66,15 +146,15 @@
 
   <h2>With different number systems</h2>
   <div class="ui-grid --xs-c-1 --md-c-3">
-    <analog-clock label="Myanmar" system="mymr" timezone="+6.5"></analog-clock>
-    <analog-clock label="Thailand" system="thai" timezone="+7"></analog-clock>
-    <analog-clock label="Arunachal" system="wcho" timezone="+5.5"></analog-clock>
+    <analog-clock label="မြန်မာ" system="mymr" timezone="+6.5" class="burmese" indices marker="•"></analog-clock>
+    <analog-clock label="ประเทศไทย" system="thai" timezone="+7" class="thai" indices marker="·" marker-hour="•"></analog-clock>
+    <analog-clock label="अरुणाचल" system="wcho" timezone="+5.5" class="indian"></analog-clock>
   </div>
 
   <h2>With Roman numerals</h2>
   <div class="ui-grid --xs-c-1 --md-c-3">
-    <analog-clock label="Roman" system="roman" date="day"></analog-clock>
-    <analog-clock label="Roman lowercase" system="romanlow" date="year"></analog-clock>
+    <analog-clock label="SAIKO" system="roman" date="day"></analog-clock>
+    <analog-clock label="" system="romanlow" date="year"></analog-clock>
     <analog-clock label="ROBEX" system="roman" numerals="4" class="gold"></analog-clock>
   </div>
 

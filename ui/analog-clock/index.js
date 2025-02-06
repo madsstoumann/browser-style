@@ -1,9 +1,6 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
   :host {
-    --analog-clock-num-sz: 15cqi;
-    --_tf: linear;
-
     aspect-ratio: 1;
     background: var(--analog-clock-bg, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
     border-radius: 50%;
@@ -30,6 +27,7 @@ styles.replaceSync(`
     padding: 0;
   }
   :host::part(hour) {
+    color: var(--analog-clock-indices-hour-c, #0005);
     font-weight: var(--analog-clock-indices-hour-fw, 800);
   }
   :host [part~=indices] li {
@@ -43,14 +41,15 @@ styles.replaceSync(`
   /* === Numerals === */
 
   :host::part(numerals) {
-    display: contents;
+    grid-area: 1 / 1 / 4 / 1;
+    margin: var(--analog-clock-numerals-m, 0);
+    padding: 0;
+    position: relative;
   }
-
   :host [part~=numerals] li {
-    --_r: calc((100% - var(--analog-clock-num-sz)) / 2);
+    --_r: calc((100% - 15cqi) / 2);
     --_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
     --_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
-
     aspect-ratio: 1;
     display: grid;
     font-size: var(--analog-clock-fs, 6cqi);
@@ -59,7 +58,7 @@ styles.replaceSync(`
     place-content: center;
     position: absolute;
     top: var(--_y);
-    width: var(--analog-clock-num-sz);
+    width: 15cqi;
   }
 
   /* === Hands and Date === */
@@ -69,18 +68,16 @@ styles.replaceSync(`
     grid-area: 2 / 1 / 3 / 1;
     grid-template-columns: repeat(3, 1fr);
   }
-
   :host::part(hands)::after {
     aspect-ratio: 1;
     background-color: var(--analog-clock-cap, currentColor);
     border-radius: 50%;
     content: "";
     grid-area: 1 / 2 / 1 / 3;
-    height: 8cqi;
+    height: var(--analog-clock-cap-sz, 8cqi);
     isolation: isolate;
     place-self: center;
   }
-
   :host [part~="hands"] b {
     border-radius: calc(var(--_w) * 2);
     display: block;
@@ -92,7 +89,6 @@ styles.replaceSync(`
     transform-origin: bottom;
     width: var(--_w);
   }
-
   :host::part(hours) {
     --_h: 35%;
     --_w: 2cqi;
@@ -100,7 +96,6 @@ styles.replaceSync(`
     animation-delay: var(--_dh, 0ms);
     background-color: var(--analog-clock-hour, currentColor);
   }
-
   :host::part(minutes) {
     --_h: 45%;
     --_w: 2cqi;
@@ -108,11 +103,10 @@ styles.replaceSync(`
     animation-delay: var(--_dm, 0ms);
     background-color: var(--analog-clock-minute, currentColor);
   }
-
   :host::part(seconds) {
     --_h: 45%;
     --_w: 1cqi;
-    animation: turn 60s var(--_tf) infinite;
+    animation: turn 60s var(--_tf, linear) infinite;
     animation-delay: var(--_ds, 0ms);
     background-color: var(--analog-clock-second, #ff8c05);
   }
@@ -128,8 +122,8 @@ styles.replaceSync(`
     padding: 0 .6ch;
     place-self: center start;
   }
-
-  :host::part(label) { 
+  :host::part(label) {
+    color: var(--analog-clock-label-c, currentColor);
     font-size: var(--analog-clock-label-fs, 5cqi);
     font-weight: var(--analog-clock-label-fw, 600);
     grid-area: 3 / 1 / 4 / 2;
@@ -177,11 +171,14 @@ export default class AnalogClock extends HTMLElement {
     const count = isHours ? 12 : 60;
     const step = 100 / count;
     const marker = this.getAttribute('marker') || '|';
+    const markerHour = this.getAttribute('marker-hour') || marker;
     
     return Array.from({ length: count }, (_, i) => {
       const percentage = `${(i * step)}%`;
-      const part = isHours || i % 5 === 0 ? 'part="index hour"' : 'part="index"';
-      return `<li style="--_d:${percentage}" ${part}>${marker}</li>`;
+      const isHourMark = isHours || i % 5 === 0;
+      const part = isHourMark ? 'part="index hour"' : 'part="index"';
+      const currentMarker = isHourMark ? markerHour : marker;
+      return `<li style="--_d:${percentage}" ${part}>${currentMarker}</li>`;
     }).join('');
   }
 
