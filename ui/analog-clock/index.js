@@ -2,31 +2,51 @@ const styles = new CSSStyleSheet();
 styles.replaceSync(`
   :host {
     --analog-clock-num-sz: 15cqi;
-    --_c: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+    --_tf: linear;
+
     aspect-ratio: 1;
-    background: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%));
+    background: var(--analog-clock-bg, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
     border-radius: 50%;
-    color: var(--_c);
+    color: var(--analog-clock-c, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
     color-scheme: light dark;
     container-type: inline-size;
     font-family: var(--analog-clock-ff, ui-sans-serif, system-ui, sans-serif);
     display: grid;
     grid-template-rows: repeat(3, 1fr);
     inline-size: 100%;
+    overflow: clip;
     position: relative;
   }
 
-  :host::part(label) { 
-    font-size: var(--analog-clock-label-fs, 5cqi);
-    font-weight: var(--analog-clock-label-fw, 600);
-    grid-area: 3 / 1 / 4 / 2;
-    place-self: start center;
+  /* === Indices === */
+
+  :host::part(indices) {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: var(--analog-clock-indices-c, #0005);
+    font-size: var(--analog-clock-indices-fs, 6cqi);
+    grid-area: 1 / 1 / 4 / 1;
+    margin: var(--analog-clock-indices-m, 0);
+    padding: 0;
   }
+  :host::part(hour) {
+    font-weight: var(--analog-clock-indices-hour-fw, 800);
+  }
+  :host [part~=indices] li {
+    display: inline-block;
+    list-style: none;
+    offset-distance: var(--_d);
+    offset-path: content-box;
+    width: fit-content;
+  }
+
+  /* === Numerals === */
+
   :host::part(numerals) {
     display: contents;
   }
 
-  :host li {
+  :host [part~=numerals] li {
     --_r: calc((100% - var(--analog-clock-num-sz)) / 2);
     --_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
     --_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
@@ -52,7 +72,7 @@ styles.replaceSync(`
 
   :host::part(hands)::after {
     aspect-ratio: 1;
-    background-color: var(--_c);
+    background-color: var(--analog-clock-cap, currentColor);
     border-radius: 50%;
     content: "";
     grid-area: 1 / 2 / 1 / 3;
@@ -61,19 +81,7 @@ styles.replaceSync(`
     place-self: center;
   }
 
-  :host::part(date) { 
-    border: .25cqi solid currentColor;
-    color: var(--analog-clock-day-c, #888);
-    display: grid;
-    font-family: var(--analog-clock-day-ff, ui-monospace, monospace);
-    font-size: var(--analog-clock-day-fs, 5cqi);
-    grid-area: 1 / 3 / 1 / 4;
-    padding: 0 1ch;
-    place-content: center;
-    place-self: center start;
-  }
-  :host b {
-    background-color: var(--_bg, currentColor);
+  :host [part~="hands"] b {
     border-radius: calc(var(--_w) * 2);
     display: block;
     height: var(--_h);
@@ -90,6 +98,7 @@ styles.replaceSync(`
     --_w: 2cqi;
     animation: turn 43200s linear infinite;
     animation-delay: var(--_dh, 0ms);
+    background-color: var(--analog-clock-hour, currentColor);
   }
 
   :host::part(minutes) {
@@ -97,14 +106,34 @@ styles.replaceSync(`
     --_w: 2cqi;
     animation: turn 3600s steps(60, end) infinite;
     animation-delay: var(--_dm, 0ms);
+    background-color: var(--analog-clock-minute, currentColor);
   }
 
   :host::part(seconds) {
-    --_bg: #ff8c05;
     --_h: 45%;
     --_w: 1cqi;
-    animation: turn 60s linear infinite;
+    animation: turn 60s var(--_tf) infinite;
     animation-delay: var(--_ds, 0ms);
+    background-color: var(--analog-clock-second, #ff8c05);
+  }
+
+  /* === Label and Date === */
+ 
+  :host::part(date) { 
+    border: .25cqi solid currentColor;
+    color: var(--analog-clock-date-c, #888);
+    font-family: var(--analog-clock-date-ff, ui-monospace, monospace);
+    font-size: var(--analog-clock-date-fs, 5cqi);
+    grid-area: 1 / 3 / 1 / 4;
+    padding: 0 .6ch;
+    place-self: center start;
+  }
+
+  :host::part(label) { 
+    font-size: var(--analog-clock-label-fs, 5cqi);
+    font-weight: var(--analog-clock-label-fw, 600);
+    grid-area: 3 / 1 / 4 / 2;
+    place-self: start center;
   }
 
   @keyframes turn {
@@ -114,26 +143,75 @@ styles.replaceSync(`
 
 export default class AnalogClock extends HTMLElement {
   #root;
+  #date;
+  #numberFormatter;
+  #romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+
+  #formatNumber(num) {
+    const system = this.getAttribute('system') || 'latn';
+
+    if (system === 'roman') return this.#romanNumerals[num - 1];
+    if (system === 'romanlow') return this.#romanNumerals[num - 1].toLowerCase();
+    
+    if (!this.#numberFormatter) {
+      this.#numberFormatter = new Intl.NumberFormat('en', { 
+        numberingSystem: system
+      });
+    }
+    return this.#numberFormatter.format(num);
+  }
+
+  #generateNumerals(count) {
+    count = Math.min(12, Math.max(1, parseInt(count) || 12));
+    const step = 360 / count;
+    return Array.from({ length: count }, (_, i) => {
+      const deg = ((i * step) + 270) % 360;
+      const num = ((i * (12 / count))) % 12 || 12;
+      return `<li style="--_d:${deg}deg">${this.#formatNumber(num)}</li>`;
+    }).join('');
+  }
+
+  #generateIndices() {
+    if (!this.hasAttribute('indices')) return '';
+    const isHours = this.getAttribute('indices') === 'hours';
+    const count = isHours ? 12 : 60;
+    const step = 100 / count;
+    const marker = this.getAttribute('marker') || '|';
+    
+    return Array.from({ length: count }, (_, i) => {
+      const percentage = `${(i * step)}%`;
+      const part = isHours || i % 5 === 0 ? 'part="index hour"' : 'part="index"';
+      return `<li style="--_d:${percentage}" ${part}>${marker}</li>`;
+    }).join('');
+  }
+
+  #formatDate(tzTime) {
+    const date = this.getAttribute('date');
+    if (!date) {
+      this.#date.hidden = true;
+      return '';
+    }
+
+    this.#date.hidden = false;
+    const parts = {
+      day: tzTime.getDate().toString().padStart(2, '0'),
+      month: (tzTime.getMonth() + 1).toString().padStart(2, '0'),
+      year: tzTime.getFullYear().toString()
+    };
+
+    return date.split(' ')
+      .map(part => parts[part])
+      .filter(Boolean)
+      .join(' ');
+  }
 
   constructor() {
     super();
     this.#root = this.attachShadow({ mode: 'open' });
     this.#root.adoptedStyleSheets = [styles];
     this.#root.innerHTML = `
-      <ol part="numerals">
-        <li style="--_d:300deg">1</li>
-        <li style="--_d:330deg">2</li>
-        <li style="--_d:0deg">3</li>
-        <li style="--_d:30deg">4</li>
-        <li style="--_d:60deg">5</li>
-        <li style="--_d:90deg">6</li>
-        <li style="--_d:120deg">7</li>
-        <li style="--_d:150deg">8</li>
-        <li style="--_d:180deg">9</li>
-        <li style="--_d:210deg">10</li>
-        <li style="--_d:240deg">11</li>
-        <li style="--_d:270deg">12</li>
-      </ol>
+      <ul part="indices">${this.#generateIndices()}</ul>
+      <ol part="numerals">${this.#generateNumerals(this.getAttribute('numerals'))}</ol>
       <nav part="hands">
         <b part="seconds"></b>
         <b part="minutes"></b>
@@ -142,10 +220,11 @@ export default class AnalogClock extends HTMLElement {
       </nav>
       <span part="label"></span>`;
 
+    this.#date = this.#root.querySelector('[part="date"]');
     this.#root.querySelector('[part="label"]').textContent = this.getAttribute('label') || '';
 
     if (this.hasAttribute('steps')) {
-      this.#root.querySelector('[part="seconds"]').style.animation = 'turn 60s steps(60) infinite';
+      this.style.setProperty('--_tf', 'steps(60)');
     }
 
     this.updateClock();
@@ -164,8 +243,7 @@ export default class AnalogClock extends HTMLElement {
     const secs = -tzTime.getSeconds();
 
     // Update date display
-    const day = tzTime.getDate().toString().padStart(2, '0');
-    this.#root.querySelector('[part="date"]').textContent = day;
+    this.#date.textContent = this.#formatDate(tzTime);
 
     this.style.setProperty('--_dh', `${(hour+mins)}s`);
     this.style.setProperty('--_dm', `${mins}s`);

@@ -8,6 +8,34 @@
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+	<style>
+		.gold {
+			--_gold: #E2CA7D;
+			--_dark: color-mix(in oklab, var(--_gold) 60%, black);
+				--_accent: color-mix(in oklab, var(--_gold) 80%, maroon);
+			--analog-clock-bg: 
+				radial-gradient(
+					circle at 50% 50%,
+					color-mix(in oklab, var(--_gold) 20%, white) 50%,
+					var(--_gold) 51%,
+					color-mix(in oklab, var(--_gold) 85%, black) 95%
+				);
+			--analog-clock-c: color-mix(in oklab, var(--_gold) 50%, black);
+			--analog-clock-ff: "Didot", "Bodoni MT", "Noto Serif Display", serif;
+			--analog-clock-fw: 500;
+			--analog-clock-fs: 7cqi;
+			--analog-clock-hour: var(--_dark);
+			--analog-clock-minute: var(--_dark);
+			--analog-clock-second: var(--_accent);
+			--analog-clock-cap: color-mix(in oklab, var(--_dark), white 20%);
+
+			--mask: repeating-conic-gradient(
+			from 45deg at 50% 50%,
+			black 0deg 6deg,
+			transparent 6deg 6.5deg);
+			/* mask: var(--mask); */
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -18,7 +46,7 @@
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-clock label="New York" timezone="-4"></analog-clock>
 		<analog-clock label="Copenhagen" timezone="+1"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9"></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices markers="●"></analog-clock>
 	</div>
 
 	<br>
@@ -28,6 +56,27 @@
 		<analog-clock label="Copenhagen" timezone="+1" steps class="cs-opposite"></analog-clock>
 		<analog-clock label="Tokyo" timezone="+9" steps class="cs-opposite"></analog-clock>
 	</div>
+
+  <!-- <h2>With different numeral counts</h2>
+  <div class="ui-grid --xs-c-1 --md-c-3">
+    <analog-clock label="4 numerals" numerals="4"></analog-clock>
+    <analog-clock label="6 numerals" numerals="6"></analog-clock>
+    <analog-clock label="3 numerals" numerals="3"></analog-clock>
+  </div> -->
+
+  <h2>With different number systems</h2>
+  <div class="ui-grid --xs-c-1 --md-c-3">
+    <analog-clock label="Myanmar" system="mymr" timezone="+6.5"></analog-clock>
+    <analog-clock label="Thailand" system="thai" timezone="+7"></analog-clock>
+    <analog-clock label="Arunachal" system="wcho" timezone="+5.5"></analog-clock>
+  </div>
+
+  <h2>With Roman numerals</h2>
+  <div class="ui-grid --xs-c-1 --md-c-3">
+    <analog-clock label="Roman" system="roman" date="day"></analog-clock>
+    <analog-clock label="Roman lowercase" system="romanlow" date="year"></analog-clock>
+    <analog-clock label="ROBEX" system="roman" numerals="4" class="gold"></analog-clock>
+  </div>
 
 	<script type="module" src="./index.js"></script>
 </body>
