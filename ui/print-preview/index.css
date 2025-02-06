@@ -11,7 +11,7 @@
   paper-sheet,
   ::slotted(paper-sheet) {
     aspect-ratio: calc(1 / var(--page-ratio));
-    background: #FFF;
+    background-color: #FFF;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
     box-sizing: border-box; 
     color: #000;
