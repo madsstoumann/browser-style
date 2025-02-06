@@ -31,11 +31,11 @@
 
 		}
 		.round-markers {
-			--analog-clock-indices-c: #DDD;
-			--analog-clock-indices-hour-c: #000;
+			/* --analog-clock-indices-c: #DDD;
+			--analog-clock-indices-hour-c: #000; */
 			--analog-clock-indices-fs: 3cqi;
 			--analog-clock-indices-hour-fw: 400;
-			--analog-clock-indices-m: 2ch;
+			--analog-clock-indices-p: 2ch;
 			--analog-clock-numerals-m: 1ch;
 			}
 		.indian {
@@ -83,7 +83,7 @@
 			--analog-clock-second: #FFF;
 			--analog-clock-cap: var(--_green);
 			--analog-clock-indices-c: color-mix(in oklab, var(--_yellow), transparent 30%);
-			--analog-clock-indices-m: 3cqi;
+			--analog-clock-indices-p: 3cqi;
 			--analog-clock-date-c: var(--_yellow);
 			--analog-clock-label-c: var(--_red);
 		}
@@ -112,7 +112,7 @@
 			--analog-clock-cap: var(--_blue);
 			--analog-clock-indices-c: var(--_red);
 			--analog-clock-indices-hour-c: var(--_blue);
-			--analog-clock-indices-m: 3cqi;
+			--analog-clock-indices-p: 3cqi;
 			--analog-clock-date-c: var(--_blue);
 		}
 	</style>
@@ -125,16 +125,16 @@
 
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-clock label="New York" timezone="-4"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1" indices></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" indices marker="●" class="round-markers"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices steps></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" class="round-markers" steps></analog-clock>
 	</div>
 
 	<br>
-	<h2>With opposite color-scheme and <code>steps</code> attribute</h2>
+	<h2>With opposite color-scheme</h2>
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-clock label="New York" timezone="-4" steps class="cs-opposite"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1" steps class="cs-opposite"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" steps class="cs-opposite"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices steps class="cs-opposite"></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" steps class="round-markers cs-opposite"></analog-clock>
 	</div>
 
   <!-- <h2>With different numeral counts</h2>

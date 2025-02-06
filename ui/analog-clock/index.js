@@ -20,14 +20,17 @@ styles.replaceSync(`
   :host::part(indices) {
     aspect-ratio: 1;
     border-radius: 50%;
-    color: var(--analog-clock-indices-c, #0005);
+    box-sizing: border-box;
+    color: var(--analog-clock-indices-c, light-dark(hsl(0, 0%, 85%), hsl(0, 0%, 35%)));
     font-size: var(--analog-clock-indices-fs, 6cqi);
     grid-area: 1 / 1 / 4 / 1;
-    margin: var(--analog-clock-indices-m, 0);
-    padding: 0;
+    margin: 0;
+    padding: var(--analog-clock-indices-p, 0);
+    place-self: center;
+    width: 100%;
   }
   :host::part(hour) {
-    color: var(--analog-clock-indices-hour-c, #0005);
+    color: var(--analog-clock-indices-hour-c, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
     font-weight: var(--analog-clock-indices-hour-fw, 800);
   }
   :host [part~=indices] li {
