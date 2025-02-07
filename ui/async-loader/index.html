@@ -11,10 +11,12 @@
 	<style>
 		/* custom error styles */
 		async-loader::part(critical) {
-			color: var(--async-loader-error-critical, red);
+			--async-loader-error-bg: light-dark(red, white);
+			--async-loader-error-c: light-dark(white, red);
 		}
 		async-loader::part(warning) {
-			color: var(--async-loader-error-critical, purple);
+			--async-loader-error-bg: light-dark(darkorange, white);
+			--async-loader-error-c: light-dark(white, darkorange);
 		}
 	</style>
 </head>
@@ -24,24 +26,56 @@
   <h2>Async Loader</h2>
   <p>Displays a loading spinner with optional timeout and error handling.</p>
 
-	<button type="button" onclick="showBasicLoader()">Basic Loading (2s)</button>
-	<button type="button" onclick="showTimeoutLoader()">Timeout Example (3s)</button>
-	<button type="button" onclick="showWarningError()">Warning Error</button>
-	<button type="button" onclick="showCriticalError()">Critical Error</button>
-	<button type="button" onclick="showClosableLoader()">Closable Loader</button>
-	<button type="button" onclick="showInlineLoader(this)">
-		<async-loader inline></async-loader>
-		Inline Success
-	</button>
-	<button type="button" onclick="showInlineLoader(this, true)">
-		<async-loader inline timeout="2000"></async-loader>
-		Inline Failed
-	</button>
+	<p><button type="button" onclick="showLoader('', 2000)">Basic Loading (2s)</button></p>
+	<p><button type="button" onclick="showLoader('allowclose, errormsg:The operation timed out after 1 second, timeout:3000')">Timeout Example (3s)</button></p>
+	<p><button type="button" onclick="showWarningError()">Warning Error</button></p>
+	<p><button type="button" onclick="showCriticalError()">Critical Error</button></p>
+	<p><button type="button" onclick="showLoader('allowclose')">Closable Loader</button></p>
+	<p>
+		<button type="button" onclick="showInlineLoader(this)">
+			<async-loader inline></async-loader>
+			Inline Success
+		</button>
+	</p>
+	<p>
+		<button type="button" onclick="showInlineLoader(this, true)">
+			<async-loader inline timeout="2000"></async-loader>
+			Inline Failed
+		</button>
+	</p>
 
   <script src="./index.js" type="module"></script>
-  <script>
+
+	<script>
     const loader = document.createElement('async-loader');
     document.body.appendChild(loader);
+
+		function showLoader(attributes = '', timeout = 0) {
+      // Remove all existing attributes
+      ['allowclose', 'errormsg', 'errortype', 'timeout'].forEach(attr => {
+        loader.removeAttribute(attr);
+      });
+
+      // Only process attributes if non-empty string is provided
+      if (attributes.trim()) {
+        attributes.split(',').forEach(attr => {
+          attr = attr.trim();
+          if (attr.includes(':')) {
+            const [name, value] = attr.split(':');
+            loader.setAttribute(name.trim(), value.trim());
+          } else {
+            loader.setAttribute(attr, '');
+          }
+        });
+      }
+
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+      if (timeout) {
+        setTimeout(() => {
+          loader.dispatchEvent(new CustomEvent('loader:stop'));
+        }, timeout);
+      }
+    }
 
     // Basic loading example
     function showBasicLoader() {

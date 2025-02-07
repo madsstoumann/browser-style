@@ -19,12 +19,10 @@ styles.replaceSync(`
 		border: 0;
 		border-radius: 50%;
 		block-size: 3.5rem;
-		display: grid;
 		font-size: 1.5rem;
 		grid-row: 1;
 		inline-size: 3.5rem;
 		padding: 1rem;
-		place-content: center;
 		place-self: start end;
 	}
 	:host::part(close):focus-visible,
@@ -33,7 +31,12 @@ styles.replaceSync(`
 		outline: none;
 	}
 	:host::part(error) {
+		background: var(--async-loader-error-bg, light-dark(CanvasText, Canvas));
+		border-radius: 0.25rem;
+		color: var(--async-loader-error-c, light-dark(Canvas, CanvasText));
+		font-size: smaller;
 		grid-row: 3;
+		// padding: 1ch 2ch;
 		place-self: end center;
 		text-align: center;
 	}
@@ -84,6 +87,8 @@ styles.replaceSync(`
 class AsyncLoader extends HTMLElement {
 	#elements = {};
 	#root;
+	#timeoutId = null;
+	#loading = false;
 
 	static observedAttributes = ['allowclose', 'errormsg', 'errortype', 'inline', 'timeout'];
 
@@ -95,16 +100,6 @@ class AsyncLoader extends HTMLElement {
 		super();
 		this.#root = this.attachShadow({ mode: 'open' });
 		this.#root.adoptedStyleSheets = [styles];
-		
-		// Internal state
-		this._timeoutId = null;
-		this._loading = false;
-
-		// Bind methods
-		this.startLoading = this.startLoading.bind(this);
-		this.stopLoading = this.stopLoading.bind(this);
-		this.handleTimeout = this.handleTimeout.bind(this);
-		this.handleError = this.handleError.bind(this);
 	}
 
 	connectedCallback() {
@@ -119,95 +114,86 @@ class AsyncLoader extends HTMLElement {
 			<div part="status-failed" hidden>
 				<slot name="failed"><svg viewBox="0 0 24 24" part="icon"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9v4"/><path d="M12 16v.01"/></svg></slot>
 			</div>
-			<output part="error" role="alert"></div>
+			<output part="error" role="alert"></output>
 		`;
 
 		this.#elements = {
-			close: this.shadowRoot.querySelector('[part="close"]'),
-			error: this.shadowRoot.querySelector('[part="error"]'),
-			spinner: this.shadowRoot.querySelector('[part="spinner"]'),
+			close: this.#root.querySelector('[part="close"]'),
+			error: this.#root.querySelector('[part="error"]'),
+			spinner: this.#root.querySelector('[part="spinner"]'),
 			status: {
-				failed: this.shadowRoot.querySelector('[part="status-failed"]'),
-				success: this.shadowRoot.querySelector('[part="status-success"]')
+				failed: this.#root.querySelector('[part="status-failed"]'),
+				success: this.#root.querySelector('[part="status-success"]')
 			}
 		};
 
 		this.hidden = this.isInline;
 		if (!this.isInline) this.setAttribute('popover', 'manual');
-		this.setupEvents();
-	}
 
-	setupEvents() {
 		this.addEventListener('loader:start', this.startLoading);
 		this.addEventListener('loader:stop', this.stopLoading);
 		this.#elements.close.addEventListener('click', () => this.stopLoading());
 	}
 
-	async startLoading() {
-		if (this._loading) return;
-		
+	startLoading = () => {
+		if (this.#loading) return;
 		if (this.isInline) {
 			this.hidden = false;
-		}
-		else {
+		} else {
 			this.showPopover();
 		}
 
-		this._loading = true;
-		this.#elements.error.value = '';
+		this.#loading = true;
 		this.#elements.error.part = `error ${this.getAttribute('errortype') || ''}`;
+		this.#elements.error.value = '';
 		this.#elements.close.hidden = !this.hasAttribute('allowclose');
+		this.#elements.spinner.style.animationPlayState = 'running';
 
 		const timeout = this.getAttribute('timeout');
 		if (timeout) {
-			this._timeoutId = setTimeout(() => this.handleTimeout(), parseInt(timeout));
+			this.#timeoutId = setTimeout(() => this.handleTimeout(), parseInt(timeout));
 		}
+		this.dispatchEvent(new CustomEvent('loader:started', { bubbles: true }));
+	};
 
-		this.dispatchEvent(new CustomEvent('loader:started', {
-			bubbles: true
-		}));
-	}
-
-	stopLoading(hasError = false) {
+	stopLoading = (hasError = false) => {
 		if (hasError instanceof Event) hasError = false;
-		if (this._timeoutId) {
-			clearTimeout(this._timeoutId);
-			this._timeoutId = null;
-		}
 
-		this._loading = false;
+		this.#timeoutId && clearTimeout(this.#timeoutId);
+		this.#timeoutId = null;
+		this.#loading = false;
 
 		if (this.isInline) {
 			this.#elements.spinner.hidden = true;
 			this.#elements.status.success.hidden = hasError;
 			this.#elements.status.failed.hidden = !hasError;
-		}
-		else {
+		} else {
 			this.togglePopover(false);
 		}
+
 		this.#elements.error.value = '';
+		this.dispatchEvent(new CustomEvent('loader:stopped', { bubbles: true }));
+	};
 
-		this.dispatchEvent(new CustomEvent('loader:stopped', {
-			bubbles: true
-		}));
-	}
-
-	handleTimeout() {
+	handleTimeout = () => {
 		const error = this.getAttribute('errormsg') || 'Operation timed out';
 		this.handleError(new Error(error));
-	}
+	};
 
-	handleError(error) {
-		if (this.isInline) { this.stopLoading(true); }
+	handleError = (error) => {
+		if (this.isInline) {
+			this.stopLoading(true);
+		}
 		this.#elements.close.hidden = false;
 		this.#elements.error.value = error.message;
-		this._loading = false;
+		this.#loading = false;
+		this.#elements.spinner.style.animationPlayState = 'paused';
 
 		this.dispatchEvent(new CustomEvent('loader:error', {
 			bubbles: true,
 			detail: { error }
 		}));
-	}
+	};
 }
 
 customElements.define('async-loader', AsyncLoader);
