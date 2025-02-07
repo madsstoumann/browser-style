@@ -63,6 +63,9 @@ styles.replaceSync(`
 	:host([inline])::part(error) {
 		display: none;
 	}
+	:host::part(status) {
+		display: none;
+	}
 	@keyframes spin {
 		to { rotate: 1turn; }
 	}
@@ -99,10 +102,10 @@ class AsyncLoader extends HTMLElement {
 			<button type="button" part="close"${this.hasAttribute('allowclose') ? '' : ' hidden'}>
 				<svg part="icon" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
 			</button>
-			<div part="spinner" role="progressbar">
-				<slot name="success">
-					<svg viewBox="0 0 24 24" part="icon" style="display:none"><path d="M5 12l5 5l10 -10" /></svg>
-				</slot>
+			<div part="spinner" role="progressbar"></div>
+			<div part="status" role="status">
+				<slot name="success"><svg viewBox="0 0 24 24" part="icon"><path d="M5 12l5 5l10 -10"/></svg></slot>
+				<slot name="failed"><svg viewBox="0 0 24 24" part="icon"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9v4"/><path d="M12 16v.01"/></svg></slot>
 			</div>
 			<output part="error" role="alert"></div>
 		`;
