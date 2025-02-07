@@ -89,8 +89,6 @@ class AsyncLoader extends HTMLElement {
 	#timeoutId = null;
 	#loading = false;
 
-	static observedAttributes = ['allowclose', 'errormsg', 'errortype', 'inline', 'timeout'];
-
 	get isInline() {
 		return this.hasAttribute('inline');
 	}
@@ -127,7 +125,10 @@ class AsyncLoader extends HTMLElement {
 		};
 
 		this.hidden = this.isInline;
-		if (!this.isInline) this.setAttribute('popover', 'manual');
+		if (!this.isInline) {
+			const popover = this.getAttribute('popover');
+			this.setAttribute('popover', popover || 'manual');
+		}
 
 		this.addEventListener('loader:start', this.startLoading);
 		this.addEventListener('loader:stop', this.stopLoading);
@@ -189,7 +190,6 @@ class AsyncLoader extends HTMLElement {
 		this.#elements.error.value = error.message;
 		this.#loading = false;
 		this.#elements.spinner.style.animationPlayState = 'paused';
-		// this.setAttribute('popover', 'auto');
 
 		this.dispatchEvent(new CustomEvent('loader:error', {
 			bubbles: true,
