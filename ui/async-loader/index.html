@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <title>Async Loader</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">
+
+	<style>
+		/* custom error styles */
+		async-loader::part(critical) {
+			color: var(--async-loader-error-critical, red);
+		}
+		async-loader::part(warning) {
+			color: var(--async-loader-error-critical, purple);
+		}
+	</style>
+</head>
+<body>
+  <h1>UI: Components</h1>
+
+  <h2>Async Loader</h2>
+  <p>Displays a loading spinner with optional timeout and error handling.</p>
+
+  <div class="button-group">
+    <button type="button" onclick="showBasicLoader()">Basic Loading (2s)</button>
+    <button type="button" onclick="showTimeoutLoader()">Timeout Example (3s)</button>
+    <button type="button" onclick="showWarningError()">Warning Error</button>
+    <button type="button" onclick="showCriticalError()">Critical Error</button>
+    <button type="button" onclick="showClosableLoader()">Closable Loader</button>
+    <button type="button" class="inline-loader-button" onclick="showInlineLoader(this)">
+      <async-loader inline timeout="3000"></async-loader>
+      Process Data
+    </button>
+  </div>
+
+  <script src="./index.js" type="module"></script>
+  <script>
+    const loader = document.createElement('async-loader');
+    document.body.appendChild(loader);
+
+    // Basic loading example
+    function showBasicLoader() {
+      loader.removeAttribute('allowclose');
+      loader.removeAttribute('timeout');
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+      
+      setTimeout(() => {
+        loader.dispatchEvent(new CustomEvent('loader:stop'));
+      }, 2000);
+    }
+
+    // Timeout example
+    function showTimeoutLoader() {
+      loader.setAttribute('timeout', '3000');
+      loader.setAttribute('errormsg', 'The operation timed out after 1 second');
+      loader.setAttribute('allowclose', '');
+		  loader.dispatchEvent(new CustomEvent('loader:start'));
+    }
+
+    // Error example
+    async function showErrorLoader() {
+      loader.setAttribute('allowclose', '');
+      loader.removeAttribute('timeout');
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+
+      try {
+        // Simulate a failed fetch
+        const response = await fetch('/nonexistent-endpoint');
+        if (!response.ok) throw new Error('Failed to load data');
+      } 
+      catch (error) {
+        loader.handleError(new Error('Network request failed. Please try again.'));
+      }
+    }
+
+    // Closable loader example
+    function showClosableLoader() {
+      loader.setAttribute('allowclose', '');
+      loader.removeAttribute('timeout');
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+    }
+
+    // Warning error example
+    function showWarningError() {
+      loader.setAttribute('allowclose', '');
+      loader.setAttribute('errortype', 'warning');
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+      loader.handleError(new Error('This is a warning message'));
+    }
+
+    // Critical error example
+    function showCriticalError() {
+      loader.setAttribute('allowclose', '');
+      loader.setAttribute('errortype', 'critical');
+      loader.dispatchEvent(new CustomEvent('loader:start'));
+      loader.handleError(new Error('A critical error occurred'));
+    }
+
+    // Inline loader example
+    function showInlineLoader(button) {
+      const inlineLoader = button.querySelector('async-loader');
+			console.log(inlineLoader);
+			inlineLoader.setAttribute('timeout', '3000');
+      inlineLoader.dispatchEvent(new CustomEvent('loader:start'));
+    }
+  </script>
+
+</body>
+</html>
