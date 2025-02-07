@@ -24,17 +24,19 @@
   <h2>Async Loader</h2>
   <p>Displays a loading spinner with optional timeout and error handling.</p>
 
-  <div class="button-group">
-    <button type="button" onclick="showBasicLoader()">Basic Loading (2s)</button>
-    <button type="button" onclick="showTimeoutLoader()">Timeout Example (3s)</button>
-    <button type="button" onclick="showWarningError()">Warning Error</button>
-    <button type="button" onclick="showCriticalError()">Critical Error</button>
-    <button type="button" onclick="showClosableLoader()">Closable Loader</button>
-    <button type="button" class="inline-loader-button" onclick="showInlineLoader(this)">
-      <async-loader inline timeout="3000"></async-loader>
-      Process Data
-    </button>
-  </div>
+	<button type="button" onclick="showBasicLoader()">Basic Loading (2s)</button>
+	<button type="button" onclick="showTimeoutLoader()">Timeout Example (3s)</button>
+	<button type="button" onclick="showWarningError()">Warning Error</button>
+	<button type="button" onclick="showCriticalError()">Critical Error</button>
+	<button type="button" onclick="showClosableLoader()">Closable Loader</button>
+	<button type="button" onclick="showInlineLoader(this)">
+		<async-loader inline></async-loader>
+		Inline Success
+	</button>
+	<button type="button" onclick="showInlineLoader(this, true)">
+		<async-loader inline timeout="2000"></async-loader>
+		Inline Failed
+	</button>
 
   <script src="./index.js" type="module"></script>
   <script>
@@ -100,11 +102,13 @@
     }
 
     // Inline loader example
-    function showInlineLoader(button) {
+    function showInlineLoader(button, raiseError = false) {	
       const inlineLoader = button.querySelector('async-loader');
-			console.log(inlineLoader);
-			inlineLoader.setAttribute('timeout', '3000');
       inlineLoader.dispatchEvent(new CustomEvent('loader:start'));
+			if (raiseError) return;
+      setTimeout(() => {
+        inlineLoader.dispatchEvent(new CustomEvent('loader:stop'));
+      }, 2000);
     }
   </script>
 

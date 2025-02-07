@@ -1,5 +1,6 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
+	:host * { box-sizing: border-box; }
 	:host(:not([inline])) {
 		background: var(--async-loader-bg, color-mix(in oklab, Canvas 80%, transparent 20%));
 		block-size: 100dvh;
@@ -17,9 +18,13 @@ styles.replaceSync(`
 		background: #0000;
 		border: 0;
 		border-radius: 50%;
-		box-sizing: border-box;
+		block-size: 3.5rem;
+		display: grid;
+		font-size: 1.5rem;
 		grid-row: 1;
+		inline-size: 3.5rem;
 		padding: 1rem;
+		place-content: center;
 		place-self: start end;
 	}
 	:host::part(close):focus-visible,
@@ -34,7 +39,7 @@ styles.replaceSync(`
 	}
 	:host::part(icon) {
 		aspect-ratio: 1;
-		block-size: 1.5rem;
+		block-size: 1em;
 		fill: none;
 		pointer-events: none;
 		stroke: currentColor;
@@ -50,12 +55,14 @@ styles.replaceSync(`
 		border-color: var(--async-loader-spinner-accent, light-dark(#007bff, #337dcc)) var(--_bg) var(--_bg);
 		border-radius: 50%;
 		border-style: solid;
-		border-width: var(--async-loader-spinner-bdw, calc(var(--async-loader-spinner-sz, 3.5rem) / 8));
+		border-width: var(--async-loader-spinner-bdw, calc(var(--async-loader-spinner-sz, 3.5rem) / 10));
 		grid-row: 2;
+		overflow: hidden;
 		place-self: center;
 	}
 
 	/* Inline */
+
 	:host([inline]) {
 		--async-loader-spinner-sz: 1em;
 	}
@@ -63,9 +70,12 @@ styles.replaceSync(`
 	:host([inline])::part(error) {
 		display: none;
 	}
-	:host::part(status) {
-		display: none;
+	:host :where([part="status-failed"]):not([hidden]),
+	:host :where([part="status-success"]):not([hidden]) {
+		display: grid;
+		place-content: center;
 	}
+
 	@keyframes spin {
 		to { rotate: 1turn; }
 	}
@@ -133,7 +143,7 @@ class AsyncLoader extends HTMLElement {
 		this.#elements.close.addEventListener('click', () => this.stopLoading());
 	}
 
-	async startLoading(event) {
+	async startLoading() {
 		if (this._loading) return;
 		
 		if (this.isInline) {
@@ -159,6 +169,7 @@ class AsyncLoader extends HTMLElement {
 	}
 
 	stopLoading(hasError = false) {
+		if (hasError instanceof Event) hasError = false;
 		if (this._timeoutId) {
 			clearTimeout(this._timeoutId);
 			this._timeoutId = null;
