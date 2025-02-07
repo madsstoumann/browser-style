@@ -103,8 +103,10 @@ class AsyncLoader extends HTMLElement {
 				<svg part="icon" viewBox="0 0 24 24"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
 			</button>
 			<div part="spinner" role="progressbar"></div>
-			<div part="status" role="status">
+			<div part="status-success" hidden>
 				<slot name="success"><svg viewBox="0 0 24 24" part="icon"><path d="M5 12l5 5l10 -10"/></svg></slot>
+			</div>
+			<div part="status-failed" hidden>
 				<slot name="failed"><svg viewBox="0 0 24 24" part="icon"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9v4"/><path d="M12 16v.01"/></svg></slot>
 			</div>
 			<output part="error" role="alert"></div>
@@ -113,7 +115,11 @@ class AsyncLoader extends HTMLElement {
 		this.#elements = {
 			close: this.shadowRoot.querySelector('[part="close"]'),
 			error: this.shadowRoot.querySelector('[part="error"]'),
-			spinner: this.shadowRoot.querySelector('[part="spinner"]')
+			spinner: this.shadowRoot.querySelector('[part="spinner"]'),
+			status: {
+				failed: this.shadowRoot.querySelector('[part="status-failed"]'),
+				success: this.shadowRoot.querySelector('[part="status-success"]')
+			}
 		};
 
 		this.hidden = this.isInline;
@@ -152,15 +158,18 @@ class AsyncLoader extends HTMLElement {
 		}));
 	}
 
-	stopLoading(event) {
+	stopLoading(hasError = false) {
 		if (this._timeoutId) {
 			clearTimeout(this._timeoutId);
 			this._timeoutId = null;
 		}
 
 		this._loading = false;
+
 		if (this.isInline) {
-			this.hidden = true;
+			this.#elements.spinner.hidden = true;
+			this.#elements.status.success.hidden = hasError;
+			this.#elements.status.failed.hidden = !hasError;
 		}
 		else {
 			this.togglePopover(false);
@@ -178,7 +187,7 @@ class AsyncLoader extends HTMLElement {
 	}
 
 	handleError(error) {
-		if (this.isInline) { this.stopLoading(); }
+		if (this.isInline) { this.stopLoading(true); }
 		this.#elements.close.hidden = false;
 		this.#elements.error.value = error.message;
 		this._loading = false;
