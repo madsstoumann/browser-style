@@ -65,7 +65,6 @@ styles.replaceSync(`
 	}
 
 	/* Inline */
-
 	:host([inline]) {
 		--async-loader-spinner-sz: 1em;
 	}
@@ -144,10 +143,10 @@ class AsyncLoader extends HTMLElement {
 		}
 
 		this.#loading = true;
+		this.#elements.close.hidden = !this.hasAttribute('allowclose');
 		this.#elements.error.hidden = true;
 		this.#elements.error.part = `error ${this.getAttribute('errortype') || ''}`;
 		this.#elements.error.value = '';
-		this.#elements.close.hidden = !this.hasAttribute('allowclose');
 		this.#elements.spinner.style.animationPlayState = 'running';
 
 		const timeout = this.getAttribute('timeout');
