@@ -27,20 +27,20 @@
   <p>Displays a loading spinner with optional timeout and error handling.</p>
 
 	<p><button type="button" onclick="showLoader('', 2000)">Basic Loading (2s)</button></p>
-	<p><button type="button" onclick="showLoader('allowclose, errormsg:The operation timed out after 1 second, timeout:3000')">Timeout Example (3s)</button></p>
-	<p><button type="button" onclick="showWarningError()">Warning Error</button></p>
-	<p><button type="button" onclick="showCriticalError()">Critical Error</button></p>
+	<p><button type="button" onclick="showLoader('errormsg:The operation timed out after 1 second,timeout:2000')">Timeout Example (2s)</button></p>
+	<p><button type="button" onclick="showLoader('allowclose,errormsg:This is a warning message,errortype:warning, timeout:2000')">Warning Error (2s)</button></p>
+	<p><button type="button" onclick="showLoader('allowclose,errormsg:This is a critical message,errortype:critical, timeout:2000')">Critical Error (2s)</button></p>
 	<p><button type="button" onclick="showLoader('allowclose')">Closable Loader</button></p>
 	<p>
 		<button type="button" onclick="showInlineLoader(this)">
 			<async-loader inline></async-loader>
-			Inline Success
+			Inline Success (2s)
 		</button>
 	</p>
 	<p>
 		<button type="button" onclick="showInlineLoader(this, true)">
 			<async-loader inline timeout="2000"></async-loader>
-			Inline Failed
+			Inline Failed (2s)
 		</button>
 	</p>
 
@@ -51,7 +51,6 @@
     document.body.appendChild(loader);
 
 		function showLoader(attributes = '', timeout = 0) {
-      // Remove all existing attributes
       ['allowclose', 'errormsg', 'errortype', 'timeout'].forEach(attr => {
         loader.removeAttribute(attr);
       });
@@ -75,64 +74,6 @@
           loader.dispatchEvent(new CustomEvent('loader:stop'));
         }, timeout);
       }
-    }
-
-    // Basic loading example
-    function showBasicLoader() {
-      loader.removeAttribute('allowclose');
-      loader.removeAttribute('timeout');
-      loader.dispatchEvent(new CustomEvent('loader:start'));
-      
-      setTimeout(() => {
-        loader.dispatchEvent(new CustomEvent('loader:stop'));
-      }, 2000);
-    }
-
-    // Timeout example
-    function showTimeoutLoader() {
-      loader.setAttribute('timeout', '3000');
-      loader.setAttribute('errormsg', 'The operation timed out after 1 second');
-      loader.setAttribute('allowclose', '');
-		  loader.dispatchEvent(new CustomEvent('loader:start'));
-    }
-
-    // Error example
-    async function showErrorLoader() {
-      loader.setAttribute('allowclose', '');
-      loader.removeAttribute('timeout');
-      loader.dispatchEvent(new CustomEvent('loader:start'));
-
-      try {
-        // Simulate a failed fetch
-        const response = await fetch('/nonexistent-endpoint');
-        if (!response.ok) throw new Error('Failed to load data');
-      } 
-      catch (error) {
-        loader.handleError(new Error('Network request failed. Please try again.'));
-      }
-    }
-
-    // Closable loader example
-    function showClosableLoader() {
-      loader.setAttribute('allowclose', '');
-      loader.removeAttribute('timeout');
-      loader.dispatchEvent(new CustomEvent('loader:start'));
-    }
-
-    // Warning error example
-    function showWarningError() {
-      loader.setAttribute('allowclose', '');
-      loader.setAttribute('errortype', 'warning');
-      loader.dispatchEvent(new CustomEvent('loader:start'));
-      loader.handleError(new Error('This is a warning message'));
-    }
-
-    // Critical error example
-    function showCriticalError() {
-      loader.setAttribute('allowclose', '');
-      loader.setAttribute('errortype', 'critical');
-      loader.dispatchEvent(new CustomEvent('loader:start'));
-      loader.handleError(new Error('A critical error occurred'));
     }
 
     // Inline loader example

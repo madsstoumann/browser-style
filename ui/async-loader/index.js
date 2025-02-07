@@ -36,7 +36,7 @@ styles.replaceSync(`
 		color: var(--async-loader-error-c, light-dark(Canvas, CanvasText));
 		font-size: smaller;
 		grid-row: 3;
-		// padding: 1ch 2ch;
+		padding: 1ch 2ch;
 		place-self: end center;
 		text-align: center;
 	}
@@ -114,7 +114,7 @@ class AsyncLoader extends HTMLElement {
 			<div part="status-failed" hidden>
 				<slot name="failed"><svg viewBox="0 0 24 24" part="icon"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9v4"/><path d="M12 16v.01"/></svg></slot>
 			</div>
-			<output part="error" role="alert"></output>
+			<output part="error" role="alert" hidden></output>
 		`;
 
 		this.#elements = {
@@ -144,6 +144,7 @@ class AsyncLoader extends HTMLElement {
 		}
 
 		this.#loading = true;
+		this.#elements.error.hidden = true;
 		this.#elements.error.part = `error ${this.getAttribute('errortype') || ''}`;
 		this.#elements.error.value = '';
 		this.#elements.close.hidden = !this.hasAttribute('allowclose');
@@ -185,6 +186,7 @@ class AsyncLoader extends HTMLElement {
 			this.stopLoading(true);
 		}
 		this.#elements.close.hidden = false;
+		this.#elements.error.hidden = false;
 		this.#elements.error.value = error.message;
 		this.#loading = false;
 		this.#elements.spinner.style.animationPlayState = 'paused';
