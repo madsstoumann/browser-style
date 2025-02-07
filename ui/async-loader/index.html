@@ -18,6 +18,19 @@
 			--async-loader-error-bg: light-dark(darkorange, white);
 			--async-loader-error-c: light-dark(white, darkorange);
 		}
+
+		/* Custom Spinner: https://css-loaders.com/spinner/ */
+		async-loader::part(spinner) {		
+			padding: 6px;
+			background: #007bff;
+			border: 0;
+			mask: conic-gradient(#0000 10%,#000), linear-gradient(#000 0 0) content-box;
+			mask-composite: subtract;
+		}
+		async-loader[inline]::part(spinner) {	
+			padding: 2px;
+		}
+
 	</style>
 </head>
 <body>

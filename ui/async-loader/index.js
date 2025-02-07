@@ -7,7 +7,7 @@ styles.replaceSync(`
 		border: 0;
 		color: var(--async-loader-c, CanvasText);
 		color-scheme: light dark;
-		grid-template-rows: repeat(3, auto);
+		grid-template-rows: repeat(3, 1fr);
 		inline-size: 100dvw;
 		padding: var(--async-loader-p, 1rem);
 	}
@@ -189,6 +189,7 @@ class AsyncLoader extends HTMLElement {
 		this.#elements.error.value = error.message;
 		this.#loading = false;
 		this.#elements.spinner.style.animationPlayState = 'paused';
+		// this.setAttribute('popover', 'auto');
 
 		this.dispatchEvent(new CustomEvent('loader:error', {
 			bubbles: true,
