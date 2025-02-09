@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/auto-suggest",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Auto-suggest component for browser.style",
   "type": "module",
   "module": "index.js",

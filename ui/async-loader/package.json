@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/async-loader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Async Loader Component",
   "type": "module",
   "module": "index.js",

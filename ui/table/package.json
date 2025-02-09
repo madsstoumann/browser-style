@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/table",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "style": "index.css",
   "files": [
     "index.css"
@@ -16,6 +16,6 @@
   },
   "homepage": "https://browser.style/ui/table",
   "peerDependencies": {
-    "@browser.style/base": "^1.0.8"
+    "@browser.style/base": "^1.0.9"
   }
 }

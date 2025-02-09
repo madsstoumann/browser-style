@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/print-preview",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Print preview component with page layout controls and templates support",
   "type": "module",
   "module": "index.js",
