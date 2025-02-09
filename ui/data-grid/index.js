@@ -24,7 +24,6 @@ export default class DataGrid extends HTMLElement {
 
 		this.dataInitialized = false;
 		this.lang = this.getAttribute('lang') || 'en';
-		this.loading = false;
 		this.manualTableData = false;
 		this._i18n = {
 			en: {
@@ -592,16 +591,6 @@ export default class DataGrid extends HTMLElement {
 		} catch (error) {
 			this.log(`Error setting items per page: ${error}`, '#F00');
 		}
-	}
-
-	/**
-	 * Sets the loading state of the data grid.
-	 *
-	 * @param {boolean} isLoading - A boolean indicating whether the data grid is in a loading state.
-	 */
-	setLoading(isLoading) {
-		this.loading = isLoading;
-		this.toggleAttribute('loading', this.loading);
 	}
 
 	/**

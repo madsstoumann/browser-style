@@ -197,38 +197,6 @@
 			}
 		}
 
-		/* Loading */
-		&[loading] {
-			&::before {
-				background: color-mix(in srgb, var(--Canvas), transparent 15%);
-				content: "";
-				display: block;
-				inset: 0;
-				isolation: isolate;
-				position: absolute;
-				z-index: 1;
-			}
-			&::after {
-				animation: l3 1s infinite linear;
-				aspect-ratio: 1;
-				background: var(--CanvasText);
-				border-radius: 50%;
-				content: "";
-				display: block;
-				left: 50%;
-				padding: 8px;
-				position: absolute;
-				top: 50%;
-				width: 50px;
-				z-index: 2;
-				--_m: 
-					conic-gradient(#0000 10%,#000),
-					linear-gradient(#000 0 0) content-box;
-					mask: var(--_m);
-					mask-composite: subtract;
-			}
-		}
-
 		/* Sort */
 		&[sortorder="1"] { --_deg: 0deg; }
 		&[sortindex="0"] [data-sort-index="0"],

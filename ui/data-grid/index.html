@@ -93,7 +93,7 @@
 
 	<br>
 	<hr>
-	<p>Example with data being fetched on a <code>dg:requestpagechange</code>-event, translations loaded from <code>i18n</code>-attribute, with <code>lang="da"</code>. Also dispatching the <code>dg:loading:start</code> and <code>dg:loading:end</code> events.</p>
+	<p>Example with data being fetched on a <code>dg:requestpagechange</code>-event, translations loaded from <code>i18n</code>-attribute, with <code>lang="da"</code>. Also dispatching the <code>loader:start</code> and <code>loader:stop</code> events, using <code>&lt;async-loader&gt;</code>.</p>
 	<data-grid
 		i18n="./data/i18n.json"
 		id="grid2"
@@ -105,7 +105,10 @@
 	<br>
 	<hr>
 	<p>Example: Created from JavaScript with <code>document.createElement('data-grid')</code>, with custom <code>i18n</code> and <code>formatters</code>-objects, and <code>page</code> set to 2 (beginning from 0) and <code>nosortable</code>.</p>
+
+	<async-loader id="loader"></async-loader>
 	<script type="module" src="index.js"></script>
+	<script type="module" src="/ui/async-loader/index.js"></script>
 
 	<!-- SCRIPT EXAMPLES -->
 
@@ -113,6 +116,7 @@
 
 		/* === EVENT PLAYGROUND === */
 		const grid = document.getElementById('grid');
+		const loader = document.getElementById('loader');
 
 		const getSelected = document.getElementById('getselected');
 		getSelected.addEventListener('click', () => {
@@ -220,7 +224,7 @@
 			const requestedPage = event.detail.page;
 			const dataUrl = `./data/test${requestedPage}.json`;
 
-			grid2.dispatchEvent(new CustomEvent('dg:loading:start'));
+			loader.dispatchEvent(new CustomEvent('loader:start'));
 
 			fetch(dataUrl)
 				.then((response) => {
@@ -228,6 +232,13 @@
 						throw new Error(`Network response was not ok: ${response.statusText}`);
 					}
 					return response.json();
+				})
+				.then((result) => {
+					/* === START: SIMULATED DELAY === */
+					return new Promise(resolve => {
+						setTimeout(() => resolve(result), 1000);
+					});
+					/* === END: SIMULATED DELAY === */
 				})
 				.then((result) => {
 					grid2.data = result.data;
@@ -238,7 +249,7 @@
 					console.error(`Error fetching data for page ${requestedPage}:`, error);
 				})
 				.finally(() => {
-					grid2.dispatchEvent(new CustomEvent('dg:loading:end'));
+					loader.dispatchEvent(new CustomEvent('loader:stop'));
 				});
 		});
 
