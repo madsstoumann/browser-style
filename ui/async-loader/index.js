@@ -19,6 +19,7 @@ styles.replaceSync(`
 		border: 0;
 		border-radius: 50%;
 		block-size: 3.5rem;
+		color: inherit;
 		font-size: 1.5rem;
 		grid-row: 1;
 		inline-size: 3.5rem;
@@ -34,7 +35,6 @@ styles.replaceSync(`
 		background: var(--async-loader-error-bg, light-dark(CanvasText, Canvas));
 		border-radius: 0.25rem;
 		color: var(--async-loader-error-c, light-dark(Canvas, CanvasText));
-		font-size: smaller;
 		grid-row: 3;
 		padding: 1ch 2ch;
 		place-self: end center;
@@ -51,22 +51,25 @@ styles.replaceSync(`
 		stroke-width: 2;
 	}
 	:host::part(spinner) {
-		--_bg: var(--async-loader-spinner-bg, light-dark(#f3f3f3, #333));
 		animation: spin 1s linear infinite;
 		aspect-ratio: 1;
+		background: var(--async-loader-spinner-accent, light-dark(#007bff, #337dcc)) ;
 		block-size: var(--async-loader-spinner-sz, 3.5rem);
-		border-color: var(--async-loader-spinner-accent, light-dark(#007bff, #337dcc)) var(--_bg) var(--_bg);
-		border-radius: 50%;
-		border-style: solid;
-		border-width: var(--async-loader-spinner-bdw, calc(var(--async-loader-spinner-sz, 3.5rem) / 10));
+		border: 0;
+		border-radius: var(--async-loader-spinner-bdrs, 50%);
 		grid-row: 2;
+		mask: conic-gradient(#0000 10%,#000), linear-gradient(#000 0 0) content-box;
+		mask-composite: subtract;
 		overflow: hidden;
+		padding: var(--async-loader-spinner-p, calc(var(--async-loader-spinner-sz, 3.5rem) / 10));
 		place-self: center;
 	}
 
 	/* Inline */
 	:host([inline]) {
-		--async-loader-spinner-sz: 1em;
+		--async-loader-spinner-accent: currentColor;
+		--async-loader-spinner-p: 2px;
+		--async-loader-spinner-sz: 1rem;
 	}
 	:host([inline])::part(close),
 	:host([inline])::part(error) {
