@@ -1,0 +1,41 @@
+{
+  "name": "@browser.style/dev-to",
+  "version": "1.0.00",
+  "description": "Load articles from dev.to",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css"
+  ],
+  "dependencies": {
+    "@browser.style/common": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "dev-to"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/dev-to"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/dev-to"
+}
