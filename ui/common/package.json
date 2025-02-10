@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/common",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "main": "form.element.js",
   "files": [
     "*.js"

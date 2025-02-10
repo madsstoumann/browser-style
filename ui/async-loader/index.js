@@ -86,7 +86,7 @@ styles.replaceSync(`
 	}
 `);
 
-class AsyncLoader extends HTMLElement {
+export default class AsyncLoader extends HTMLElement {
 	#elements = {};
 	#root;
 	#timeoutId = null;

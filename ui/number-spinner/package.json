@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/number-spinner",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Number spinner component with increment/decrement buttons",
   "type": "module",
   "module": "index.js",
