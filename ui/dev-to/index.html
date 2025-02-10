@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-  <title>Dev.To</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
-  <meta name="view-transition" content="same-origin">
-  <!-- <link rel="stylesheet" href="/base.css">	 -->
+	<title>Dev.To</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">	
 </head>
 <body>
-  <!-- <h1>UI: Components</h1>
+	<h1>UI: Components</h1>
 
-  <h2>Dev To</h2>
-  <p>
-  </p> -->
+	<h2>Dev To</h2>
+	<p>
+		Dev.To is a platform where software developers can share their knowledge and experiences. 
+		This component is a custom element that fetches and displays articles from Dev.To.
+	</p>
 
-  <dev-to author="madsstoumann" theme="classic" itemsperpage="10" links="internal"></dev-to>
-  <!-- <dev-to article="2014104" theme="classic" lang="en"></dev-to> -->
-   <!-- lang="da"  i18n='{"da":{"more":"Flere...","reactions":"reaktioner"}}'-->
-  <script type="module" src="./index.js"></script>
+	<h2>List View</h2>
+	<code>&lt;dev-to author="madsstoumann" theme="classic" itemsperpage="10" links="external"&gt;</code>
+	<dev-to author="madsstoumann" theme="classic" itemsperpage="10" links="external"></dev-to>
+
+	<hr>
+	<h2>Article View</h2>
+	<code>&lt;dev-to article="2014104" theme="classic"&gt;</code>
+	<dev-to article="2014104" theme="classic"></dev-to>
+
+	<script type="module" src="./index.js"></script>
 
 </body>
 </html>
