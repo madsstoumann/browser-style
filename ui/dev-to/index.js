@@ -33,7 +33,7 @@ styles.replaceSync(`
 	}
 
 	:host::part(cover) {
-  	aspect-ratio: 1000 / 420;
+		aspect-ratio: 1000 / 420;
 		width: 100%;
 	}
 
@@ -124,9 +124,9 @@ styles.replaceSync(`
 		}
 
 		hr {
-		  border: double var(--gray-light);
-  		border-width: 4px 0 0;
-  		margin-block: .5rlh;
+			border: double var(--gray-light);
+			border-width: 4px 0 0;
+			margin-block: .5rlh;
 		}
 
 		pre {
@@ -225,243 +225,241 @@ styles.replaceSync(`
 	}
 `);
 
-// Constants
-const ENDPOINTS = {
-  USER_ARTICLES: (username, page, perPage) => 
-    `https://dev.to/api/articles?username=${username}&page=${page}&per_page=${perPage}`,
-  SINGLE_ARTICLE: (id) => `https://dev.to/api/articles/${id}`
+const DEFAULTS = {
+	LANG: 'en',
+	LIST_LABEL: 'More &hellip;',
+	ITEMS_PER_PAGE: 30
 };
 
 const ELEMENTS = {
-  BACK_BUTTON: ({ onClick }) => {
-    const btn = document.createElement('button');
-    btn.part = 'back';
-    btn.innerHTML = '&larr; Back to Articles';
-    btn.addEventListener('click', onClick);
-    return btn;
-  },
-  MORE_BUTTON: ({ label, onClick }) => {
-    const btn = document.createElement('button');
-    btn.part = 'more';
-    btn.innerHTML = label;
-    btn.addEventListener('click', onClick);
-    return btn;
-  }
+	BACK_BUTTON: ({ onClick }) => {
+		const btn = document.createElement('button');
+		btn.part = 'back';
+		btn.innerHTML = '&larr; Back to Articles';
+		btn.addEventListener('click', onClick);
+		return btn;
+	},
+	MORE_BUTTON: ({ label, onClick }) => {
+		const btn = document.createElement('button');
+		btn.part = 'more';
+		btn.innerHTML = label;
+		btn.addEventListener('click', onClick);
+		return btn;
+	}
 };
 
-const DEFAULTS = {
-  LANG: 'en',
-  LIST_LABEL: 'More &hellip;',
-  ITEMS_PER_PAGE: 30
+const ENDPOINTS = {
+	USER_ARTICLES: (username, page, perPage) => 
+		`https://dev.to/api/articles?username=${username}&page=${page}&per_page=${perPage}`,
+	SINGLE_ARTICLE: (id) => `https://dev.to/api/articles/${id}`
 };
 
 class DevTo extends HTMLElement {
-  #articles = [];
-  #currentPage = 1;
-  #isLoading = false;
-  #root;
-  #abortController;
-  #updateTimeout;
+	#articles = [];
+	#currentPage = 1;
+	#isLoading = false;
+	#root;
+	#abortController;
+	#updateTimeout;
 
-  static get observedAttributes() {
-    return ['author', 'article', 'theme', 'itemsperpage'];
-  }
+	static get observedAttributes() {
+		return ['author', 'article', 'theme', 'itemsperpage'];
+	}
 
-  constructor() {
-    super();
-    this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
-    this.#root.adoptedStyleSheets = [styles];
-  }
+	constructor() {
+		super();
+		this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
+		this.#root.adoptedStyleSheets = [styles];
+	}
 
-  get itemsPerPage() {
-    return Number(this.getAttribute('itemsperpage')) || DEFAULTS.ITEMS_PER_PAGE;
-  }
+	get itemsPerPage() {
+		return Number(this.getAttribute('itemsperpage')) || DEFAULTS.ITEMS_PER_PAGE;
+	}
 
-  get listLabel() {
-    return this.getAttribute('list-label') || DEFAULTS.LIST_LABEL;
-  }
+	get listLabel() {
+		return this.getAttribute('list-label') || DEFAULTS.LIST_LABEL;
+	}
 
-  disconnectedCallback() {
-    this.#cleanup();
-  }
+	disconnectedCallback() {
+		this.#cleanup();
+	}
 
-  async connectedCallback() {
-    await this.updateContent();
-  }
+	async connectedCallback() {
+		await this.updateContent();
+	}
 
-  async attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;
-    
-    if (name === 'author') {
-      this.#currentPage = 1;
-      this.#articles = [];
-    }
-    
-    if (name === 'author' || (name === 'article' && newValue !== null)) {
-      clearTimeout(this.#updateTimeout);
-      this.#updateTimeout = setTimeout(() => this.updateContent(), 100);
-    }
-  }
+	async attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue) return;
+		
+		if (name === 'author') {
+			this.#currentPage = 1;
+			this.#articles = [];
+		}
+		
+		if (name === 'author' || (name === 'article' && newValue !== null)) {
+			clearTimeout(this.#updateTimeout);
+			this.#updateTimeout = setTimeout(() => this.updateContent(), 100);
+		}
+	}
 
-  #cleanup() {
-    this.#abortController?.abort();
-    clearTimeout(this.#updateTimeout);
-  }
+	#cleanup() {
+		this.#abortController?.abort();
+		clearTimeout(this.#updateTimeout);
+	}
 
-  async updateContent() {
-    if (this.#isLoading) {
-      this.#abortController?.abort();
-    }
-    
-    this.#abortController = new AbortController();
-    this.#isLoading = true;
+	async updateContent() {
+		if (this.#isLoading) {
+			this.#abortController?.abort();
+		}
+		
+		this.#abortController = new AbortController();
+		this.#isLoading = true;
 
-    try {
-      const article = this.getAttribute('article');
-      const author = this.getAttribute('author');
-      
-      if (article) {
-        await this.fetchArticle(article);
-      } else if (author) {
-        await this.fetchArticles(author);
-      }
-    } finally {
-      this.#isLoading = false;
-    }
-  }
+		try {
+			const article = this.getAttribute('article');
+			const author = this.getAttribute('author');
+			
+			if (article) {
+				await this.fetchArticle(article);
+			} else if (author) {
+				await this.fetchArticles(author);
+			}
+		} finally {
+			this.#isLoading = false;
+		}
+	}
 
-  async fetchArticles(author) {
-    try {
-      const response = await fetch(
-        ENDPOINTS.USER_ARTICLES(author, this.#currentPage, this.itemsPerPage),
-        { signal: this.#abortController.signal }
-      );
-      const articles = await response.json();
+	async fetchArticles(author) {
+		try {
+			const response = await fetch(
+				ENDPOINTS.USER_ARTICLES(author, this.#currentPage, this.itemsPerPage),
+				{ signal: this.#abortController.signal }
+			);
+			const articles = await response.json();
 
-      this.#articles = this.#currentPage === 1 ? articles : [...this.#articles, ...articles];
-      this.renderArticlesList(articles, this.#currentPage === 1);
-      
-      const moreButton = this.#root.querySelector('[part~="more"]');
-      if (articles.length >= this.itemsPerPage) {
-        if (!moreButton) this.#addMoreButton();
-        moreButton?.removeAttribute('disabled');
-      } else {
-        moreButton?.remove();
-      }
-    } catch (error) {
-      if (error.name !== 'AbortError') console.error('Error fetching articles:', error);
-    }
-  }
+			this.#articles = this.#currentPage === 1 ? articles : [...this.#articles, ...articles];
+			this.renderArticlesList(articles, this.#currentPage === 1);
+			
+			const moreButton = this.#root.querySelector('[part~="more"]');
+			if (articles.length >= this.itemsPerPage) {
+				if (!moreButton) this.#addMoreButton();
+				moreButton?.removeAttribute('disabled');
+			} else {
+				moreButton?.remove();
+			}
+		} catch (error) {
+			if (error.name !== 'AbortError') console.error('Error fetching articles:', error);
+		}
+	}
 
-  async fetchArticle(id) {
-    try {
-      const response = await fetch(
-        ENDPOINTS.SINGLE_ARTICLE(id),
-        { signal: this.#abortController.signal }
-      );
-      const article = await response.json();
-      this.renderArticle(article);
-    } catch (error) {
-      if (error.name !== 'AbortError') console.error('Error fetching article:', error);
-    }
-  }
+	async fetchArticle(id) {
+		try {
+			const response = await fetch(
+				ENDPOINTS.SINGLE_ARTICLE(id),
+				{ signal: this.#abortController.signal }
+			);
+			const article = await response.json();
+			this.renderArticle(article);
+		} catch (error) {
+			if (error.name !== 'AbortError') console.error('Error fetching article:', error);
+		}
+	}
 
-  #addMoreButton() {
-    const button = ELEMENTS.MORE_BUTTON({
-      label: this.listLabel,
-      onClick: async () => {
-        button.disabled = true;
-        this.#currentPage++;
-        await this.fetchArticles(this.getAttribute('author'));
-      }
-    });
-    this.#root.appendChild(button);
-  }
+	#addMoreButton() {
+		const button = ELEMENTS.MORE_BUTTON({
+			label: this.listLabel,
+			onClick: async () => {
+				button.disabled = true;
+				this.#currentPage++;
+				await this.fetchArticles(this.getAttribute('author'));
+			}
+		});
+		this.#root.appendChild(button);
+	}
 
-  #formatDate(dateString) {
-    const date = new Date(dateString);
-    const lang = this.getAttribute('lang') || DEFAULTS.LANG;
-    
-    return {
-      datetime: date.toISOString(),
-      formatted: new Intl.DateTimeFormat(lang, {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      }).format(date)
-    };
-  }
+	#formatDate(dateString) {
+		const date = new Date(dateString);
+		const lang = this.getAttribute('lang') || DEFAULTS.LANG;
+		
+		return {
+			datetime: date.toISOString(),
+			formatted: new Intl.DateTimeFormat(lang, {
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			}).format(date)
+		};
+	}
 
-  renderArticlesList(articles, isFirstPage = true) {
-    const encode = str => str.replace(/[&<>"']/g, m => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#039;'
-    })[m]);
+	renderArticlesList(articles, isFirstPage = true) {
+		const encode = str => str.replace(/[&<>"']/g, m => ({
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			"'": '&#039;'
+		})[m]);
 
-    const articlesToRender = articles.length === 0 ? this.#articles : articles;
-    const list = articlesToRender.map(article => `
-      <li>
-        <img src="${article.cover_image}" alt="${article.title}">
-        <a href="${article.url}" target="_blank" data-id="${article.id}">
-          ${encode(article.title)}
-          <time datetime="${article.published_timestamp}">${this.#formatDate(article.published_timestamp).formatted}</time>
-        </a>
-      </li>
-    `).join('');
+		const articlesToRender = articles.length === 0 ? this.#articles : articles;
+		const list = articlesToRender.map(article => `
+			<li>
+				<img src="${article.cover_image}" alt="${article.title}">
+				<a href="${article.url}" target="_blank" data-id="${article.id}">
+					${encode(article.title)}
+					<time datetime="${article.published_timestamp}">${this.#formatDate(article.published_timestamp).formatted}</time>
+				</a>
+			</li>
+		`).join('');
 
-    if (isFirstPage) {
-      this.#root.innerHTML = `<ul part="list">${list}</ul>`;
-      const ul = this.#root.querySelector('ul');
-      
-      ul.addEventListener('click', e => {
-        const link = e.target.closest('a');
-        if (link && this.getAttribute('links') !== 'external') {
-          e.preventDefault();
-          this.setAttribute('article', link.dataset.id);
-        }
-      });
+		if (isFirstPage) {
+			this.#root.innerHTML = `<ul part="list">${list}</ul>`;
+			const ul = this.#root.querySelector('ul');
+			
+			ul.addEventListener('click', e => {
+				const link = e.target.closest('a');
+				if (link && this.getAttribute('links') !== 'external') {
+					e.preventDefault();
+					this.setAttribute('article', link.dataset.id);
+				}
+			});
 
-      if (articles.length === 0 && this.#articles.length >= this.itemsPerPage) {
-        this.#addMoreButton();
-      }
-    } else {
-      const ul = this.#root.querySelector('ul');
-      if (ul) {
-        ul.insertAdjacentHTML('beforeend', list);
-      }
-    }
-  }
+			if (articles.length === 0 && this.#articles.length >= this.itemsPerPage) {
+				this.#addMoreButton();
+			}
+		} else {
+			const ul = this.#root.querySelector('ul');
+			if (ul) {
+				ul.insertAdjacentHTML('beforeend', list);
+			}
+		}
+	}
 
-  renderArticle(article) {
-    const { datetime, formatted } = this.#formatDate(article.published_timestamp);
-    
-    this.#root.innerHTML = `
-      <button part="back">&larr; Back to Articles</button>
-      <header>
-        <time datetime="${datetime}">${formatted}</time>
-        <h1>${article.title}</h1>
-        <img src="${article.cover_image}" alt="${article.title}" part="cover">
-      </header>
-      <address>
-        <img src="${article.user.profile_image_90}" alt="${article.user.name}" part="avatar">
-        <div>
-          <strong>${article.user.name}</strong>
-          <small>${article.user.website_url}</small>
-          <ul>${article.tags.map(tag => `<li>${tag}</li>`).join('')}</ul>
-        </div>
-      </address>
-      <article>${article.body_html}</article>
-    `;
-    const backBtn = this.#root.querySelector('[part="back"]');
-    backBtn.addEventListener('click', () => {
-      this.removeAttribute('article');
-      this.renderArticlesList([], true);
-    });
-  }
+	renderArticle(article) {
+		const { datetime, formatted } = this.#formatDate(article.published_timestamp);
+		this.#root.innerHTML = `
+			<button part="back">&larr; Back to Articles</button>
+			<header>
+				<time datetime="${datetime}">${formatted}</time>
+				<h1>${article.title}</h1>
+				<img src="${article.cover_image}" alt="${article.title}" part="cover">
+			</header>
+			<address>
+				<img src="${article.user.profile_image_90}" alt="${article.user.name}" part="avatar">
+				<div>
+					<strong>${article.user.name}</strong>
+					<small>${article.user.website_url}</small>
+					<ul>${article.tags.map(tag => `<li>${tag}</li>`).join('')}</ul>
+				</div>
+			</address>
+			<article>${article.body_html}</article>
+		`;
+		const backBtn = this.#root.querySelector('[part="back"]');
+		backBtn.addEventListener('click', () => {
+			this.removeAttribute('article');
+			this.renderArticlesList([], true);
+		});
+	}
 }
 
 customElements.define('dev-to', DevTo);
