@@ -14,20 +14,36 @@
 	<h2>Dev To</h2>
 	<p>
 		Dev.To is a platform where software developers can share their knowledge and experiences. 
-		This component is a custom element that fetches and displays articles from Dev.To.
+		This component is a custom element that fetches and displays a list of articles — or a single article — from Dev.To.
 	</p>
 
+	<h2>Article View</h2>
+	<label>Change theme
+		<select>
+			<option value="brutalist">Brutalist</option>
+			<option value="classic" selected>Classic</option>
+			<option value="modern">Modern</option>
+		</select>
+	</label>
+	<p><code>&lt;dev-to article="2014104" theme="<output id="output">classic</output>"&gt;</code></p>
+	<dev-to article="2014104" theme="classic" id="article"></dev-to>
+
+	<hr>
 	<h2>List View</h2>
 	<code>&lt;dev-to author="madsstoumann" theme="classic" itemsperpage="10" links="external"&gt;</code>
 	<dev-to author="madsstoumann" theme="classic" itemsperpage="10" links="external"></dev-to>
 
-	<hr>
-	<h2>Article View</h2>
-	<code>&lt;dev-to article="2014104" theme="classic"&gt;</code>
-	<dev-to article="2014104" theme="classic"></dev-to>
-
 	<script type="module" src="./index.js"></script>
 
+	<script>
+		const article = document.getElementById('article');
+		const output = document.getElementById('output');
+		const select = document.querySelector('select');
+		select.addEventListener('change', () => {
+			article.setAttribute('theme', select.value);
+			output.value = select.value;
+		});
+	</script>
 </body>
 </html>
 </html>
