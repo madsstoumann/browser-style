@@ -111,7 +111,7 @@ pre {
 /* Brutalist Theme */
 :host([theme="brutalist"]) {
 	background-image: linear-gradient(#F2F2F2 1px, #0000 1px), linear-gradient(to right, #F2F2F2 1px, #0000 1px);
-	background-size: 20vw 20vw;
+	background-size: 20% 20%;
 	font-family: var(--ff-geometric);
 	font-size: clamp(0.9375rem, 0.5469rem + 1.25vw, 1.25rem);
 	line-height: 1.6;
@@ -225,7 +225,7 @@ pre {
 		strong {
 			font-family: var(--ff-neo-grotesque);
 			font-weight: 900;
-		letter-spacing: -0.025em;
+			letter-spacing: -0.025em;
 			text-transform: uppercase;
 		}
 	}
