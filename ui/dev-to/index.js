@@ -1,4 +1,4 @@
-class DevTo extends HTMLElement {
+export default class DevTo extends HTMLElement {
 	static CONFIG = {
 		LANG: 'en',
 		ITEMS_PER_PAGE: 30,
