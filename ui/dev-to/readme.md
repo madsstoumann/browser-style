@@ -28,7 +28,7 @@ import '@browser.style/dev-to';
 
 - `article`: ID of a single article to display
 - `author`: dev.to username to fetch articles from
-- `theme`: Visual theme ("classic" for now)
+- `theme`: Visual theme (see below)
 - `itemsperpage`: Number of articles per page (default: 30)
 - `lang`: Language code for dates and translations (default: "en")
 - `i18n`: JSON string with translations
@@ -36,8 +36,10 @@ import '@browser.style/dev-to';
 - `noshadow`: Remove shadow DOM if needed
 
 ## Themes
-The component includes — for now! — a single theme:
+The component includes these themes:
+- `brutalist`: A rugged, industrial look
 - `classic`: Traditional article layout with drop caps and serif fonts
+- `modern`: Swiss, modern article layout
 
 ```html
 <dev-to author="madsstoumann" theme="classic"></dev-to>
