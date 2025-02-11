@@ -171,7 +171,7 @@ class SnackItem extends HTMLElement {
 	}
 }
 
-export class SnackBar extends HTMLElement {
+export default class SnackBar extends HTMLElement {
 	#isManual = false;
 
 	constructor() {
