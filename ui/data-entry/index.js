@@ -712,18 +712,23 @@ class DataEntry extends HTMLElement {
 	}
 
 	/**
-	 * Handles a notification by displaying a toast message or logging it.
-	 *
-	 * @param {number} code - The error code.
-	 * @param {string} [msg=''] - An optional message to log if no specific error message is found.
+	 * Displays a notification message based on error code or custom message
+	 * @param {number} code - The error code. If greater than 0 and this.messages exists, retrieves message from error codes
+	 * @param {string} [customMessage=''] - Optional custom message to display if no error code message exists
+	 * @param {string} [notificationType='info'] - Optional notification type ('info', 'error', etc.)
+	 * @returns {void}
 	 */
 	notify(code, customMessage = '', notificationType = 'info') {
-		const { message, type } = code > 0 ? this.getErrorMessage(code) : { message: customMessage, type: notificationType };
-		if (message) {
+		// If we have a code and this.messages exists, try to get the message from there
+		const messageFromCode = code > 0 && this.messages ? 
+			this.getErrorMessage(code) : 
+			{ message: customMessage, type: notificationType };
+
+		if (messageFromCode.message) {
 			if (typeof this.showMsg === 'function') {
-				this.showMsg(message, type, 3000);
+				this.showMsg(messageFromCode.message, messageFromCode.type, 3000);
 			} else {
-				this.debugLog(`[${type.toUpperCase()}] ${message}`);
+				this.debugLog(`[${messageFromCode.type.toUpperCase()}] ${messageFromCode.message}`);
 			}
 		} else {
 			this.debugLog(`Error ${code}: ${customMessage}`);
