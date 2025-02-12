@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/dev-to",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Load articles from dev.to",
   "type": "module",
   "module": "index.js",
