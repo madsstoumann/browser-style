@@ -268,7 +268,9 @@ export class AutoSuggest extends FormElement {
 			? `<ul popover id="${this.listId}" part="list" role="listbox" style="position-anchor:--${this.listId}"></ul>`
 			: `<datalist id="${this.listId}" part="list"></datalist>`;
 		return `
-			${this.settings.label ? `<label part="row"><span part="label">${this.settings.label}</span>` : ''}
+			${this.settings.label ? `<label part="row"><span part="label">
+				${this.getAttribute('required') === 'true' ? `<abbr title="required">*</abbr>`:''}
+				${this.settings.label}</span>` : ''}
 				<input
 					autocomplete="${this.getAttribute('autocomplete') || 'off'}"
 					enterkeyhint="search"

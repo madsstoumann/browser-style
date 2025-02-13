@@ -194,9 +194,6 @@
             "attributes": [
               {
                 "name": "name"
-              },
-              {
-                "placeholder": "Enter name"
               }
             ]
           }
@@ -217,6 +214,7 @@
             "display": "vendor_name",
             "value": "vendor_id"
           },
+          "required": true,
           "syncInstance": true
         }
       },

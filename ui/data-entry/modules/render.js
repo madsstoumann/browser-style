@@ -393,6 +393,7 @@ export const autosuggest = (params) => {
 		apiValuePath,
 		defaults,
 		label,
+		required,
 		syncInstance
 	} = config;
 	const { path, formID, value: paramValue } = params;
@@ -420,6 +421,7 @@ export const autosuggest = (params) => {
 		noshadow
 		part="autosuggest"
 		path="${path}"
+		required="${required||false}"
 		${syncInstance ? `sync-instance="${syncInstance}"` : ''}
 		${value ? `value="${value}"` : ''}
 		${initialObject && !isEmpty(initialObject) ? `initial-object='${JSON.stringify(initialObject)}'` : ''}
