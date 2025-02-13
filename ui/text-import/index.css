@@ -38,6 +38,74 @@
 	stroke-width: 2;
 }
 :host::part(mapping):popover-open {
-	background: red;
 	display: grid;
 }
+
+:host::part(mapping-content) {
+  display: grid;
+	font-family: ui-monospace, monospace;
+  font-size: small;
+	column-gap: .5rem;
+	row-gap: .25rem;
+	grid-template-columns: 150px 150px 90px 110px 175px 175px;
+	justify-self: center;
+	max-width: 1024px;
+	padding: 0;
+}
+
+:host::part(mapping-row) {
+  display: contents;
+}
+
+:host::part(mapping-header) {
+  overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+:host::part(mapping-input) {
+	background: var(--text-import-input-bg, light-dark(#f3f3f3, #333));
+  border: 0;
+	font-family: inherit;
+	padding-inline: 1ch;
+}
+input::placeholder {
+	color: var(--text-import-input-placeholder, light-dark(#CCC, #777));
+}
+:host::part(mapping-input):focus-visible {
+	background: var(--text-import-close-bg, light-dark(#333, #f3f3f3));
+	color: Canvas;
+	outline: none;
+}
+
+:host::part(output) {
+  background: #333;
+  border-radius: 4px;
+	color: #EEE;
+  font-size: .875rem;
+	justify-self: center;
+  margin-block-start: 1rem;
+  max-height: 50vh;
+	max-width: 900px;
+  overflow: auto;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+:host::part(process) {
+	justify-self: center;
+}
+
+/* :host::part(process) {
+  background: var(--text-import-process-bg, light-dark(#f3f3f3, #333));
+  border: 0;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+	grid-column: 2;
+  margin-top: 1rem;
+  padding: 0.75rem;
+}
+
+:host::part(process):hover {
+  background: var(--text-import-process-hover-bg, light-dark(#e3e3e3, #444));
+} */
