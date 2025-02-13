@@ -18,7 +18,8 @@
 
 		/* === PARTS === */
 
-		[part~=autosuggest] {
+		[part~=autosuggest],
+		[part~=textimport] {
 			--_bdrs: 0;
 			&:not([form]) {
 				display: contents;
@@ -30,6 +31,30 @@
 				margin-block-end: 1ch; 
 				label { display: contents; }
 				span { display: none; }
+			}
+		}
+
+		[part~=textimport] {
+			[part~="filewrap"] {
+				align-items: center;
+        display: flex;
+				justify-content: space-between;
+				padding-inline: var(--_pi);
+      }
+			[part~="processed"] {
+				color: var(--ColorInfo);
+				font-size: small;
+				white-space: nowrap;
+			}
+			[type="file"] {
+				--button-p: 3px 6px;
+				font-size: small;
+				width: fit-content;
+			}
+			abbr {
+				color: var(--ColorError);
+				margin-inline: .25ch 1ch;
+				text-decoration: none;
 			}
 		}
 
@@ -325,13 +350,6 @@
 			font-family: inherit;
 			padding-block: var(--_pb);
 			&::-webkit-inner-spin-button{ display: none; }
-		}
-
-		[type="file"] {
-			--button-p: 3px 6px;
-			font-size: small;
-			margin-block-start: 3px;
-			margin-inline-start: var(--_pi);
 		}
 
 		[part~=label] {

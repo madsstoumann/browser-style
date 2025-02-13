@@ -321,6 +321,20 @@
         ]
       }
     },
+
+    "import": {
+      "type": "string",
+      "title": "Import",
+      "render": {
+        "method": "textimport",
+        "textimport": {
+          "accept": ".csv, .tsv,.txt",
+          "firstRow": "First row contains headers",
+          "label": "Import"
+        }
+      }
+    },
+  
     "created_at": {
       "type": "string",
       "title": "Created At",
@@ -1076,22 +1090,6 @@
         "delete": true,
         "label": "&nbsp;",
         "value": "&nbsp;"
-      }
-    },
-
-    "import": {
-      "type": "string",
-      "title": "Import",
-      "render": {
-        "method": "input",
-        "attributes": [
-          {
-            "name": "file"
-          },
-          {
-            "type": "file"
-          }
-        ]
       }
     }
   },

@@ -443,6 +443,7 @@ export const entry = (params) => {
 	const label = config.title || 'Add New Entry';
 	const renderAutoSuggest = !!config.render?.autosuggest;
 	const renderBarcodeScanner = !!config.render?.barcode;
+	// const renderTextImport = !!config.render?.textimport;
 
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
@@ -732,3 +733,20 @@ export const textarea = (params) => {
 			<textarea part="textarea" ${textareaAttributes}>${value}</textarea>
 		</label>`;
 };
+
+/* === textimport === */
+
+export const textimport = (params) => {
+	const config = params.config?.render?.textimport || {};
+	return `
+	<text-import part="textimport">
+		<div part="row">
+			<span part="label"><abbr title="required">*</abbr>${config.label}</span>
+			<div part="filewrap">
+				<input part="file" type="file" name="file" accept="${config.accept}">
+				<small part="processed"></small>
+				<input type="checkbox" part="firstrow" name="firstrow" checked title="${config.firstRow}">
+			</div>
+		</div>
+	</text-import>`;
+}
