@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Import</title>
-	</head>
-	<body>
-		<h1>Import</h1>
-		<label>Select Diamond file
+<html lang="en-US" dir="ltr">
+<head>
+  <title>Text Import</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/base.css">	
+</head>
+<body>
+  <h1>UI: Components</h1>
+
+  <h2>Import Text</h2>
+  <p>
+		Convert a TSV or CSV file to JSON using a user-defined mapping.
+  </p>
+
+
+	<text-import required label="Select file" accept=".txt,.csv" styles></text-import>
+	<script type="module" src="./index.js"></script>
+
+	<!-- <label part="row">
+		<span part="label">Select file<abbr title="required">*</abbr></span>
+		<input type="file" name="file" accept=".txt,.csv">
+	</label> -->
+
+		<!-- <label>Select Diamond file
 			<input type="file" name="file" accept=".txt">
-		</label>
+		</label> -->
 
 		<script>
 
@@ -88,9 +108,9 @@
 				console.log(data);
 			}
 
-			document.querySelector('input').addEventListener('change', (e) => {
-				loadFile(e.target.files[0]);
-			});
+			// document.querySelector('input').addEventListener('change', (e) => {
+			// 	loadFile(e.target.files[0]);
+			// });
 		</script>
 	</body>
 </html>

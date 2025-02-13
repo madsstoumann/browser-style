@@ -1,0 +1,43 @@
+:host *, :host *::after, :host *::before { box-sizing: border-box; }
+
+:host::part(mapping) {
+	align-content: start;
+	background: Canvas;
+	border: 0;
+	color: CanvasText;
+	height: 100dvh;
+	inset: 0;
+	padding: 1rem;
+	width: 100vw;
+}
+
+:host::part(close) {
+	background: #0000;
+	border: 0;
+	border-radius: 50%;
+	block-size: 3.5rem;
+	color: inherit;
+	font-size: 1.5rem;
+	grid-row: 1;
+	inline-size: 3.5rem;
+	padding: 1rem;
+	place-self: start end;
+}
+:host::part(close):hover {
+	background: var(--text-import-close-bg, light-dark(#f3f3f3, #333));
+	outline: none;
+}
+:host::part(icon) {
+	aspect-ratio: 1;
+	block-size: 1em;
+	fill: none;
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+}
+:host::part(mapping):popover-open {
+	background: red;
+	display: grid;
+}

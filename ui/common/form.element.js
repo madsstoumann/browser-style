@@ -264,7 +264,7 @@ export class FormElement extends HTMLElement {
 			}
 
 			const response = await fetch(cssPath);
-			
+
 			if (response.ok) {
 				const css = await response.text();
 				const sheet = new CSSStyleSheet();
