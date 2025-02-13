@@ -21,6 +21,10 @@ const componentsInfo = {
 		path: '@browser.style/snack-bar',
 		tagName: 'snack-bar',
 	},
+	TextImport: {
+		path: '@browser.style/text-import',
+		tagName: 'text-import'
+	},
 };
 
 /**

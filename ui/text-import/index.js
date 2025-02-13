@@ -1,6 +1,121 @@
-import { FormElement } from '../common/form.element.js';
+export class TextImport extends HTMLElement {
+	#initialized = false;
+	#shadow;
+	#styles = `
+		:host *, :host *::after, :host *::before { box-sizing: border-box; }
+		:host {
+			--accent-color: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+			--accent-color-text: hsl(211, 100%, 95%);
+			--grey-light: #f3f3f3;
+			--grey-dark: #333;
+			--text-import-button-bg: light-dark(var(--grey-light), var(--grey-dark));
+		}
+		:host::part(close) {
+			background: #0000;
+			border: 0;
+			border-radius: 50%;
+			block-size: 3.5rem;
+			color: inherit;
+			font-size: 1.5rem;
+			grid-row: 1;
+			inline-size: 3.5rem;
+			padding: 1rem;
+			place-self: start end;
+		}
+		:host::part(close):hover {
+			background: var(--text-import-button-bg);
+			outline: none;
+		}
+		:host::part(icon) {
+			aspect-ratio: 1;
+			block-size: 1em;
+			fill: none;
+			pointer-events: none;
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 2;
+		}
+		:host::part(mapping) {
+			align-content: start;
+			background: Canvas;
+			border: 0;
+			color: CanvasText;
+			height: 100dvh;
+			inset: 0;
+			padding: 1rem;
+			width: 100vw;
+		}
+		:host::part(mapping):popover-open {
+			display: grid;
+		}
+		:host::part(mapping-content) {
+			display: grid;
+			font-family: ui-monospace, monospace;
+			font-size: small;
+			column-gap: .5rem;
+			row-gap: .25rem;
+			grid-template-columns: 150px 150px 90px 110px 175px 175px;
+			justify-self: center;
+			max-width: 1024px;
+			padding: 0;
+		}
+		:host::part(mapping-header) {
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		:host::part(mapping-input) {
+			background: var(--text-import-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
+			border: 0;
+			font-family: inherit;
+			padding-inline: 1ch;
+		}
+		:host::part(mapping-input):focus-visible {
+			background: var(--text-import-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
+			color: Canvas;
+			outline: none;
+		}
+		:host::part(mapping-nav) {
+			display: flex;
+			gap: 1rem;
+			justify-content: center;
+		}
+		:host::part(mapping-row) {
+			display: contents;
+		}
+		:host::part(output) {
+			background: var(--grey-dark);
+			border-radius: 4px;
+			color: var(--grey-light);
+			font-size: .875rem;
+			justify-self: center;
+			max-width: 900px;
+			padding: 1rem;
+			white-space: pre-wrap;
+		}
+		:host::part(preview),
+		:host::part(process) {
+			background: var(--text-import-button-bg);
+			border: 0;
+			border-radius: .25rem;
+			color: inherit;
+			padding: 0.75rem 1.25rem;
+		}
+		:host::part(preview):hover {
+			background: color-mix(in oklab, var(--text-import-button-bg), #000 10%);
+		}
+		:host::part(process) {
+			background-color: var(--accent-color);
+			color: var(--accent-color-text);
+		}
+		:host::part(process):hover {
+			background-color: color-mix(in oklab, var(--accent-color), #000 10%);
+		}
+		input::placeholder {
+			color: var(--text-import-input-placeholder, light-dark(#CCC, #777));
+		}
+	`;
 
-export class TextImport extends FormElement {
 	static defaultAccept = '.txt';
 	static defaultLabel = 'Select file';
 	
@@ -18,7 +133,7 @@ export class TextImport extends FormElement {
 			const falsyValues = ['false', '0', 'no', 'n'];
 			value = value.toLowerCase().trim();
 			return truthyValues.includes(value) ? true : 
-				   falsyValues.includes(value) ? false : null;
+				falsyValues.includes(value) ? false : null;
 		},
 		date: value => {
 			const [month, day, year] = value.split('/');
@@ -57,7 +172,23 @@ export class TextImport extends FormElement {
 
 	constructor() {
 		super();
-		this.uid = this.uuid();
+		this.#shadow = this.attachShadow({ mode: 'open' });
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(this.#styles);
+		this.#shadow.adoptedStyleSheets = [sheet];
+
+		if (!this.hasAttribute('nomount')) {
+			this.#initialize();
+		}
+	}
+
+	get initialized() { return this.#initialized; }
+
+	async #initialize() {
+		if (this.#initialized) return;
+		
+		this.uid = crypto.getRandomValues(new Uint8Array(4))
+			.reduce((acc, val) => acc + val.toString(36).padStart(2, '0'), '');
 		this.accept = this.getAttribute('accept') || TextImport.defaultAccept;
 		this.label = this.getAttribute('label') || TextImport.defaultLabel;
 		this.required = this.hasAttribute('required');
@@ -70,6 +201,34 @@ export class TextImport extends FormElement {
 				console.warn('Invalid mapping JSON:', error);
 			}
 		}
+
+		await this.initializeComponent();
+		this.#initialized = true;
+	}
+
+	async mount() {
+		if (!this.#initialized) {
+			await this.#initialize();
+		}
+	}
+
+	async initializeComponent() {
+		const elements = this.#state.elements;
+		elements.input = this.querySelector('[part~=file]');
+		if (!elements.input) {
+			console.warn('TextImport: No file input found. Add an input with part="file".');
+			return;
+		}
+
+		const firstRowCheckbox = this.querySelector('[part~=firstrow]');
+		this.#state.firstrow = firstRowCheckbox ? firstRowCheckbox.checked : true;
+		firstRowCheckbox?.addEventListener('change', e => this.#state.firstrow = e.target.checked);
+
+		this.#shadow.innerHTML = this.#getTemplate();
+		elements.mapping = this.#shadow.querySelector(`#mapping${this.uid}`);
+		
+		this.#updateDataLists();
+		this.#setupEventListeners();
 	}
 
 	get converters() { return this.#converters; }
@@ -90,25 +249,6 @@ export class TextImport extends FormElement {
 		mappingEl?.hasAttribute('popover-open') && this.#applyCustomMapping();
 	}
 
-	initializeComponent() {
-		const elements = this.#state.elements;
-		elements.input = this.querySelector('[part~=file]');
-		if (!elements.input) {
-			console.warn('TextImport: No file input found. Add an input with part="file".');
-			return;
-		}
-
-		const firstRowCheckbox = this.querySelector('[part~=firstrow]');
-		this.#state.firstrow = firstRowCheckbox ? firstRowCheckbox.checked : true;
-		firstRowCheckbox?.addEventListener('change', e => this.#state.firstrow = e.target.checked);
-
-		this.root.innerHTML = this.#getTemplate();
-		elements.mapping = this.root.querySelector(`#mapping${this.uid}`);
-		
-		this.#updateDataLists();
-		this.#setupEventListeners();
-	}
-
 	#updateDataLists() {
 		const lists = {
 			converters: Object.keys(this.#converters),
@@ -116,7 +256,7 @@ export class TextImport extends FormElement {
 		};
 
 		Object.entries(lists).forEach(([type, keys]) => {
-			const list = this.root.querySelector(`#${type}${this.uid}`);
+			const list = this.#shadow.querySelector(`#${type}${this.uid}`);
 			list.innerHTML = keys.map(key => `<option value="${key}">`).join('');
 		});
 	}
@@ -241,7 +381,10 @@ export class TextImport extends FormElement {
 		const mappingEl = this.#state.elements.mapping;
 		mappingEl.innerHTML = `
 			<button type="button" part="close">
-				${this.icon('M18 6l-12 12,M6 6l12 12', 'icon')}
+				<svg viewBox="0 0 24 24" part="icon">
+					<path d="M18 6l-12 12"></path>
+					<path d="M6 6l12 12"></path>
+				</svg>
 			</button>
 			<ul part="mapping-content">
 				${headers.map(header => `
@@ -372,9 +515,9 @@ export class TextImport extends FormElement {
 		`;
 	}
 
-	formReset() {
-		super.value = '';
-		this.#state.elements.input.value = '';
+	static register() {
+		const name = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+		if (!customElements.get(name)) customElements.define(name, this);
 	}
 }
 
