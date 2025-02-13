@@ -327,6 +327,13 @@
 			&::-webkit-inner-spin-button{ display: none; }
 		}
 
+		[type="file"] {
+			--button-p: 3px 6px;
+			font-size: small;
+			margin-block-start: 3px;
+			margin-inline-start: var(--_pi);
+		}
+
 		[part~=label] {
 			align-items: center;
 			background-color: var(--_bgc);

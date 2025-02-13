@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Import</title>
+	</head>
+	<body>
+		<h1>Import</h1>
+		<label>Select Diamond file
+			<input type="file" name="file" accept=".txt">
+		</label>
+
+		<script>
+
+			const formatters = {
+				isbn: str => str.length > 13 ? str.slice(0, 13) : str,
+				titleCase: str => str.toLowerCase().replace(/\b\w+/g, word => 
+					word.charAt(0).toUpperCase() + word.slice(1)
+				)
+			};
+
+			const converters = {
+				int: value => parseInt(value, 10) || null,
+				float: value => parseFloat(value) || null,
+				date: value => {
+					const [month, day, year] = value.split('/');
+					return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+				}
+			};
+
+			const MAPPING = [
+				{ source: 'STOCK_NO', target: 'sku' },
+				{ source: 'EAN_NO', target: 'barcode', formatter: 'isbn' },
+				{ source: 'FULL_TITLE', target: 'name', formatter: 'titleCase' },
+				{ source: 'ISSUE_NO', target: 'issue', type: 'int' },
+				{ source: 'PRICE', target: 'price', type: 'float' },
+				{ source: 'SHIP_DATE', target: 'release_date', type: 'date' },
+				{ 
+					target: 'description',
+					concat: true,
+					separator: '\n',
+					fields: [
+						{ source: 'MAIN_DESC', prefix: '', suffix: '.' },
+						{ source: 'PAGE', prefix: 'Page in catalog: ', suffix: '.' },
+						{ source: 'WRITER', prefix: 'Writer: ', suffix: '.' },
+						{ source: 'ARTIST', prefix: 'Artist: ', suffix: '.' }
+					]
+				}
+			];
+
+			function convertValue(value, type, formatter) {
+				if (!value) return null;
+				const converted = type ? converters[type]?.(value) ?? value : value;
+				return formatter ? formatters[formatter]?.(converted) ?? converted : converted;
+			}
+
+			function tsvToJSON(tsv) {
+				const lines = tsv.trim().split('\n');
+				const headers = lines[0].split('\t');
+				
+				return lines.slice(1).map(line => {
+					const values = line.split('\t');
+					const row = {};
+
+					MAPPING.forEach(col => {
+						if (col.concat) {
+							const parts = col.fields.map((field) => {
+								const idx = headers.indexOf(field.source);
+								const value = idx > -1 ? values[idx] : '';
+								return value ? `${field.prefix}${value}${field.suffix}` : '';
+							});
+							const description = parts.filter(Boolean).join(col.separator);
+							row[col.target] = description || null;
+						} else {
+							const idx = headers.indexOf(col.source);
+							if (idx > -1) {
+								row[col.target] = convertValue(values[idx], col.type, col.formatter);
+							}
+						}
+					});
+					
+					return row;
+				});
+			}
+
+			async function loadFile(file) {
+				const text = await file.text();
+				const data = tsvToJSON(text);
+				console.log(data);
+			}
+
+			document.querySelector('input').addEventListener('change', (e) => {
+				loadFile(e.target.files[0]);
+			});
+		</script>
+	</body>
+</html>
