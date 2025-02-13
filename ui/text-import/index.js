@@ -13,18 +13,46 @@ export class TextImport extends FormElement {
 	};
 	
 	#converters = {
-		int: value => parseInt(value, 10) || null,
+		boolean: value => {
+			const truthyValues = ['true', '1', 'yes', 'y'];
+			const falsyValues = ['false', '0', 'no', 'n'];
+			value = value.toLowerCase().trim();
+			return truthyValues.includes(value) ? true : 
+				   falsyValues.includes(value) ? false : null;
+		},
 		date: value => {
 			const [month, day, year] = value.split('/');
 			return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 		},
-		float: value => parseFloat(value) || null
+		float: value => parseFloat(value) || null,
+		int: value => parseInt(value, 10) || null,
+		number: value => {
+			const num = Number(value);
+			return !isNaN(num) ? num : null;
+		}
 	};
 
 	#formatters = {
+		capitalize: str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(),
+		currency: str => {
+			const num = parseFloat(str);
+			return !isNaN(num) ? num.toFixed(2) : null;
+		},
+		lowercase: str => str.toLowerCase(),
+		percentage: str => {
+			const num = parseFloat(str);
+			return !isNaN(num) ? `${num}%` : null;
+		},
+		removeSpaces: str => str.replace(/\s+/g, ''),
+		slugify: str => str.toLowerCase()
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-+|-+$/g, ''),
 		titleCase: str => str.toLowerCase().replace(/\b\w+/g, word => 
 			word.charAt(0).toUpperCase() + word.slice(1)
-		)
+		),
+		trim: str => str.trim(),
+		truncate: str => str.length > 100 ? str.substring(0, 97) + '...' : str,
+		uppercase: str => str.toUpperCase(),
 	};
 
 	constructor() {

@@ -28,14 +28,19 @@
 		<small part="processed"></small>
 	</text-import>
 
+	<br>
+	<h2>Simulation</h2>
+	<p><button type="button" data-format="csv">Load CSV Demo</button></p>
+	<p><button type="button" data-format="tsv">Load TSV Demo</button></p>
+
 	<script type="module" src="./index.js"></script>
 
 	<script>
 		customElements.whenDefined('text-import').then(() => {
 			const textImport = document.querySelector('text-import');
 			const processed = textImport.querySelector('[part="processed"]');
-			
-			 // Merge the new isbn formatter with existing formatters
+
+			// Merge the new isbn formatter with existing formatters
 			textImport.formatters = {
 				isbn: str => {
 					if (!str) return null;
@@ -70,7 +75,31 @@
 				console.error('Error:', event.detail.message);
 			});
 
+			 // Fix button event listeners
+			document.addEventListener('click', async e => {
+				if (!e.target.matches('button[data-format]')) return;
+				
+				const format = e.target.dataset.format;
+				const response = await fetch(`./demo.${format}`);
+				const content = await response.text();
+				
+				// Create a File object from the content
+				const file = new File([content], `demo.${format}`, {
+					type: format === 'csv' ? 'text/csv' : 'text/tab-separated-values'
+				});
+
+				// Create a change event with the file
+				const event = new Event('change');
+				Object.defineProperty(event, 'target', {
+					writable: false,
+					value: { files: [file] }
+				});
+
+				// Trigger the file input's change event
+				textImport.querySelector('[part="file"]').dispatchEvent(event);
+			});
 		});
 	</script>
+
 </body>
 </html>
