@@ -5,8 +5,8 @@ export class TextImport extends FormElement {
 	static defaultLabel = 'Select file';
 	
 	#state = {
+		content: '',
 		elements: {},
-		fileContent: '',
 		separator: ',',
 		firstrow: true,
 		mapping: null
@@ -109,7 +109,7 @@ export class TextImport extends FormElement {
 			input.value = '';
 			input.toggleAttribute('inert', true);
 			
-			this.#state.fileContent = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
+			this.#state.content = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
 			console.error('Error processing file:', error);
 			this.dispatchEvent(new CustomEvent('ti:error', { 
@@ -135,7 +135,7 @@ export class TextImport extends FormElement {
 			mappingsByTarget.get(mapping.target).push(mapping);
 		});
 
-		return this.#state.fileContent.trim().split('\n')
+		return this.#state.content.trim().split('\n')
 			.map(line => {
 				const values = line.split(this.#state.separator);
 				const row = {};
@@ -245,8 +245,8 @@ export class TextImport extends FormElement {
 			mappingEl.togglePopover(false));
 		
 		elements.preview?.addEventListener('click', () => {
-			const tempContent = this.#state.fileContent;
-			this.#state.fileContent = this.#state.fileContent.split('\n')[0];
+			const tempContent = this.#state.content;
+			this.#state.content = this.#state.content.split('\n')[0];
 
 			const mappings = this.#getCurrentMappings();
 			const previewData = this.#processMapping(mappings);
@@ -256,7 +256,7 @@ export class TextImport extends FormElement {
 				elements.output.hidden = false;
 			}
 
-			this.#state.fileContent = tempContent;
+			this.#state.content = tempContent;
 		});
 		
 		elements.process?.addEventListener('click', () => {
