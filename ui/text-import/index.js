@@ -1,27 +1,17 @@
 import { FormElement } from '../common/form.element.js';
 
-/**
- * TextImport
- * @description Web Component that converts TSV or CSV files, with a custom mapping, into JSON objects.
- * @author Mads Stoumann
- * @version 1.0.0
- * @summary 13-02-2025
- * @class TextImport
- * @extends {FormElement}
- */
 export class TextImport extends FormElement {
-	get basePath() {
-		return new URL('.', import.meta.url).href;
-	}
-
-	#elements = {};
+	static defaultAccept = '.txt';
+	static defaultLabel = 'Select file';
+	
 	#state = {
-		accept: '.txt',
-		label: 'Select file',
-		required: false,
+		elements: {},
+		fileContent: '',
+		separator: ',',
+		firstrow: true,
 		mapping: null
 	};
-
+	
 	#converters = {
 		int: value => parseInt(value, 10) || null,
 		date: value => {
@@ -37,47 +27,13 @@ export class TextImport extends FormElement {
 		)
 	};
 
-	get converters() {
-		return this.#converters;
-	}
-
-	set converters(newConverters) {
-		this.#converters = { ...this.#converters, ...newConverters };
-	}
-
-	get formatters() {
-		return this.#formatters;
-	}
-
-	set formatters(newFormatters) {
-		this.#formatters = { 
-			...this.#formatters,
-			...newFormatters
-		};
-		
-		// Update datalist if component is initialized
-		if (this.initialized) {
-			this.#populateDataLists();
-		}
-	}
-
-	get customMapping() {
-		return this.#state.mapping;
-	}
-
-	set customMapping(mapping) {
-		this.#state.mapping = mapping;
-		if (this.#elements.mapping?.hasAttribute('popover-open')) {
-			this.#applyCustomMapping();
-		}
-	}
-
 	constructor() {
 		super();
-		this.#state.uid = this.uuid();
-		this.#state.accept = this.getAttribute('accept') || this.#state.accept;
-		this.#state.label = this.getAttribute('label') || this.#state.label;
-		this.#state.required = this.hasAttribute('required');
+		this.uid = this.uuid();
+		this.accept = this.getAttribute('accept') || TextImport.defaultAccept;
+		this.label = this.getAttribute('label') || TextImport.defaultLabel;
+		this.required = this.hasAttribute('required');
+		
 		const mappingAttr = this.getAttribute('mapping');
 		if (mappingAttr) {
 			try {
@@ -88,17 +44,52 @@ export class TextImport extends FormElement {
 		}
 	}
 
-	initializeComponent() {
-		this.root.innerHTML = this.template();
-		this.#elements.mapping = this.root.querySelector(`#popover${this.#state.uid}`);
-		this.#elements.input = this.root.querySelector('[part~=file]');
-		this.#populateDataLists();
-		this.addEvents();
+	get converters() { return this.#converters; }
+	set converters(newConverters) {
+		this.#converters = { ...this.#converters, ...newConverters };
+	}
 
-		// Add beforetoggle event listener
-		this.#elements.mapping?.addEventListener('beforetoggle', (e) => {
-			const isOpening = e.newState === 'open';
-			this.#elements.input.toggleAttribute('inert', isOpening);
+	get formatters() { return this.#formatters; }
+	set formatters(newFormatters) {
+		this.#formatters = { ...this.#formatters, ...newFormatters };
+		this.initialized && this.#updateDataLists();
+	}
+
+	get customMapping() { return this.#state.mapping; }
+	set customMapping(mapping) {
+		this.#state.mapping = mapping;
+		const mappingEl = this.#state.elements.mapping;
+		mappingEl?.hasAttribute('popover-open') && this.#applyCustomMapping();
+	}
+
+	initializeComponent() {
+		const elements = this.#state.elements;
+		elements.input = this.querySelector('[part~=file]');
+		if (!elements.input) {
+			console.warn('TextImport: No file input found. Add an input with part="file".');
+			return;
+		}
+
+		const firstRowCheckbox = this.querySelector('[part~=firstrow]');
+		this.#state.firstrow = firstRowCheckbox ? firstRowCheckbox.checked : true;
+		firstRowCheckbox?.addEventListener('change', e => this.#state.firstrow = e.target.checked);
+
+		this.root.innerHTML = this.#getTemplate();
+		elements.mapping = this.root.querySelector(`#mapping${this.uid}`);
+		
+		this.#updateDataLists();
+		this.#setupEventListeners();
+	}
+
+	#updateDataLists() {
+		const lists = {
+			converters: Object.keys(this.#converters),
+			formatters: Object.keys(this.#formatters)
+		};
+
+		Object.entries(lists).forEach(([type, keys]) => {
+			const list = this.root.querySelector(`#${type}${this.uid}`);
+			list.innerHTML = keys.map(key => `<option value="${key}">`).join('');
 		});
 	}
 
@@ -106,154 +97,36 @@ export class TextImport extends FormElement {
 		try {
 			const text = await file.text();
 			const lines = text.trim().split('\n');
-			const separator = text.includes('\t') ? '\t' : ',';
-			const headers = lines[0].split(separator);
+			this.#state.separator = text.includes('\t') ? '\t' : ',';
 			
-			if (headers.length > 0) {
-				this.#renderMapping(headers);
-				this.#elements.mapping.togglePopover(true);
-				this.#elements.input.value = '';
-				this.#elements.input.toggleAttribute('inert', true);
-			}
+			const headers = this.#getHeaders(lines);
+			if (!headers.length) throw new Error('No headers found in file');
 			
-			this.#state.fileContent = text;
-			this.#state.separator = separator;
+			this.#renderMapping(headers);
+			const { mapping, input } = this.#state.elements;
+			
+			mapping.togglePopover(true);
+			input.value = '';
+			input.toggleAttribute('inert', true);
+			
+			this.#state.fileContent = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
 			console.error('Error processing file:', error);
+			this.dispatchEvent(new CustomEvent('ti:error', { 
+				detail: { message: error.message },
+				bubbles: true
+			}));
 		}
 	}
 
-	#populateDataLists() {
-		const convertersList = this.root.querySelector(`#converters${this.#state.uid}`);
-		const formattersList = this.root.querySelector(`#formatters${this.#state.uid}`);
-
-		convertersList.innerHTML = Object.keys(this.#converters)
-			.map(key => `<option value="${key}">`).join('');
-		
-		formattersList.innerHTML = Object.keys(this.#formatters)
-			.map(key => `<option value="${key}">`).join('');
-	}
-
-	#renderMapping(headers) {
-		const mappingHtml = `
-			<button type="button" part="close">
-				${this.icon('M18 6l-12 12,M6 6l12 12', 'icon')}
-			</button>
-			<ul part="mapping-content">
-				${headers.map(header => `
-					<li part="mapping-row">
-						<span part="mapping-header">${header}</span>
-						<input type="text" part="mapping-input" data-source="${header}" placeholder="target">
-						<input type="text" part="mapping-input" list="converters${this.#state.uid}" placeholder="type">
-						<input type="text" part="mapping-input" list="formatters${this.#state.uid}" placeholder="formatter">
-						<input type="text" part="mapping-input" name="prefix" placeholder="prefix">
-						<input type="text" part="mapping-input" name="suffix" placeholder="suffix">
-					</label>
-				`).join('')}
-			</ul>
-			<button type="button" part="process">Process mapping</button>
-			<pre part="output" hidden></pre>
-		`;
-		this.#elements.mapping.innerHTML = mappingHtml;
-		this.#setMappingElements();
-		if (this.#state.mapping) {
-			this.#applyCustomMapping();
-		}
-	}
-
-	#setMappingElements() {
-		this.#elements.close = this.#elements.mapping.querySelector('[part~=close]');
-		this.#elements.process = this.#elements.mapping.querySelector('[part~=process]');
-		this.#elements.output = this.#elements.mapping.querySelector('[part~=output]');
-		
-		this.#elements.close?.addEventListener('click', () => 
-			this.#elements.mapping.togglePopover(false));
-		
-		this.#elements.process?.addEventListener('click', () => {
-			const mappingsByTarget = new Map();
-			const rows = this.#elements.mapping.querySelectorAll('[part~=mapping-row]');
-			
-			rows.forEach(row => {
-				const [target, type, formatter, prefix, suffix] = 
-					row.querySelectorAll('[part~=mapping-input]');
-				
-				if (target.value) {
-					const [targetField, orderStr] = target.value.split('|');
-					const order = parseInt(orderStr, 10) || 0;
-					
-					const mapping = {
-						source: target.dataset.source,
-						target: targetField,
-						order
-					};
-					
-					if (type.value) mapping.type = type.value;
-					if (formatter.value) mapping.formatter = formatter.value;
-					if (prefix.value || suffix.value) {
-						mapping.prefix = prefix.value;
-						mapping.suffix = suffix.value;
-					}
-					
-					if (!mappingsByTarget.has(targetField)) {
-						mappingsByTarget.set(targetField, []);
-					}
-					mappingsByTarget.get(targetField).push(mapping);
-				}
-			});
-			
-			// Sort mappings by order for each target
-			mappingsByTarget.forEach(mappings => 
-				mappings.sort((a, b) => a.order - b.order));
-			
-			const finalMappings = Array.from(mappingsByTarget.values())
-				.flat();
-			
-			const processedData = this.#processMapping(finalMappings);
-			console.log('Processed Data:', processedData);
-			// Show first item in formatted JSON
-			if (processedData.length > 0) {
-				this.#elements.output.textContent = JSON.stringify(processedData[0], null, 2);
-				this.#elements.output.hidden = false;
-				// Removed: this.#elements.mapping.togglePopover(false);
-			}
-		});
-	}
-
-	#applyCustomMapping() {
-		if (!this.#state.mapping) return;
-		
-		const inputs = this.#elements.mapping.querySelectorAll('[part~=mapping-row]');
-		inputs.forEach(row => {
-			const [target, type, formatter, prefix, suffix] = 
-				row.querySelectorAll('[part~=mapping-input]');
-			const source = target.dataset.source;
-			
-			const mapping = this.#state.mapping.find(m => m.source === source);
-			
-			if (mapping) {
-				target.value = mapping.order ? 
-					`${mapping.target}|${mapping.order}` : 
-					mapping.target;
-				type.value = mapping.type || '';
-				formatter.value = mapping.formatter || '';
-				prefix.value = mapping.prefix || '';
-				suffix.value = mapping.suffix || '';
-			}
-		});
-	}
-
-	#convertValue(value, type, formatter) {
-		if (!value) return null;
-		const converted = type ? this.#converters[type]?.(value) ?? value : value;
-		return formatter ? this.#formatters[formatter]?.(converted) ?? converted : converted;
+	#getHeaders(lines) {
+		if (!lines.length) return [];
+		if (this.#state.firstrow) return lines[0].split(this.#state.separator);
+		const columnCount = lines[0].split(this.#state.separator).length;
+		return Array.from({ length: columnCount }, (_, i) => `COL ${i + 1}`);
 	}
 
 	#processMapping(mappings) {
-		const lines = this.#state.fileContent.trim().split('\n');
-		const headers = lines[0].split(this.#state.separator);
-		const result = [];
-
-		// Group mappings by target field
 		const mappingsByTarget = new Map();
 		mappings.forEach(mapping => {
 			if (!mappingsByTarget.has(mapping.target)) {
@@ -262,72 +135,218 @@ export class TextImport extends FormElement {
 			mappingsByTarget.get(mapping.target).push(mapping);
 		});
 
-		// Process each line
-		lines.slice(1).forEach(line => {
-			const values = line.split(this.#state.separator);
-			const row = {};
+		return this.#state.fileContent.trim().split('\n')
+			.map(line => {
+				const values = line.split(this.#state.separator);
+				const row = {};
 
-			mappingsByTarget.forEach((targetMappings, target) => {
-				if (targetMappings.length === 1) {
-					// Single field mapping
-					const mapping = targetMappings[0];
-					const idx = headers.indexOf(mapping.source);
-					if (idx > -1) {
-						const value = this.#convertValue(values[idx], mapping.type, mapping.formatter);
-						if (mapping.prefix || mapping.suffix) {
-							row[target] = value ? `${mapping.prefix || ''}${value}${mapping.suffix || ''}` : null;
-						} else {
-							row[target] = value;
-						}
-					}
-				} else {
-					// Multiple fields mapping to same target (ordered by mapping.order)
-					const parts = targetMappings
-						.sort((a, b) => a.order - b.order)
-						.map(mapping => {
-							const idx = headers.indexOf(mapping.source);
-							if (idx > -1) {
-								const value = this.#convertValue(values[idx], mapping.type, mapping.formatter);
-								return value ? `${mapping.prefix || ''}${value}${mapping.suffix || ''}` : '';
-							}
-							return '';
-						})
-						.filter(Boolean);
+				mappingsByTarget.forEach((targetMappings, target) => {
+					row[target] = this.#processTargetField(targetMappings, values);
+				});
 
-					row[target] = parts.length ? parts.join('\n') : null;
-				}
+				return Object.fromEntries(
+					Object.entries(row).sort(([a], [b]) => a.localeCompare(b))
+				);
 			});
-
-			result.push(row);
-		});
-
-		return result;
 	}
 
-	addEvents() {
-		this.#elements.input?.addEventListener('change', e => {
+	#processTargetField(mappings, values) {
+		if (mappings.length === 1) {
+			const mapping = mappings[0];
+			const idx = this.#getFieldIndex(mapping.source);
+			return idx > -1 ? this.#convertField(values[idx], mapping) : null;
+		}
+
+		const parts = mappings
+			.sort((a, b) => a.order - b.order)
+			.map(mapping => {
+				const idx = this.#getFieldIndex(mapping.source);
+				return idx > -1 ? this.#convertField(values[idx], mapping) : '';
+			})
+			.filter(Boolean);
+
+		return parts.length ? parts.join('\n') : null;
+	}
+
+	#convertField(value, mapping) {
+		if (!value?.trim()) return null;
+		
+		const converted = mapping.type ? 
+			this.#converters[mapping.type]?.(value.trim()) ?? value.trim() : 
+			value.trim();
+			
+		const formatted = mapping.formatter ? 
+			this.#formatters[mapping.formatter]?.(converted) ?? converted : 
+			converted;
+			
+		return mapping.prefix || mapping.suffix ? 
+			`${mapping.prefix || ''}${formatted}${mapping.suffix || ''}` : 
+			formatted;
+	}
+
+	#getFieldIndex(sourceName) {
+		if (!this.#state.firstrow) {
+			return parseInt(sourceName.split(' ')[1]) - 1;
+		}
+		const headers = this.#state.elements.mapping.querySelectorAll('[part~="mapping-header"]');
+		return Array.from(headers).findIndex(h => h.textContent === sourceName);
+	}
+
+	#setupEventListeners() {
+		const { input, mapping } = this.#state.elements;
+		
+		input?.addEventListener('change', e => {
 			const file = e.target.files[0];
-			if (file) {
-				this.#processFile(file);
+			file && this.#processFile(file);
+		});
+
+		if (mapping) {
+			mapping.addEventListener('beforetoggle', e => {
+				input.toggleAttribute('inert', e.newState === 'open');
+			});
+
+			this.addEventListener('ti:close', () => mapping.togglePopover(false));
+		}
+	}
+
+	#renderMapping(headers) {
+		const mappingEl = this.#state.elements.mapping;
+		mappingEl.innerHTML = `
+			<button type="button" part="close">
+				${this.icon('M18 6l-12 12,M6 6l12 12', 'icon')}
+			</button>
+			<ul part="mapping-content">
+				${headers.map(header => `
+					<li part="mapping-row">
+						<span part="mapping-header">${header}</span>
+						<input type="text" part="mapping-input" data-source="${header}" placeholder="target">
+						<input type="text" part="mapping-input" list="converters${this.uid}" placeholder="type">
+						<input type="text" part="mapping-input" list="formatters${this.uid}" placeholder="formatter">
+						<input type="text" part="mapping-input" placeholder="prefix">
+						<input type="text" part="mapping-input" placeholder="suffix">
+					</li>
+				`).join('')}
+			</ul>
+			<nav part="mapping-nav">
+				<button type="button" part="preview">Preview</button>
+				<button type="button" part="process">Process</button>
+			</nav>
+			<pre part="output" hidden></pre>
+		`;
+
+		const elements = {
+			close: mappingEl.querySelector('[part~=close]'),
+			preview: mappingEl.querySelector('[part~=preview]'),
+			process: mappingEl.querySelector('[part~=process]'),
+			output: mappingEl.querySelector('[part~=output]')
+		};
+
+		elements.close?.addEventListener('click', () => 
+			mappingEl.togglePopover(false));
+		
+		elements.preview?.addEventListener('click', () => {
+			const tempContent = this.#state.fileContent;
+			this.#state.fileContent = this.#state.fileContent.split('\n')[0];
+
+			const mappings = this.#getCurrentMappings();
+			const previewData = this.#processMapping(mappings);
+
+			if (previewData.length > 0) {
+				elements.output.textContent = JSON.stringify(previewData[0], null, 2);
+				elements.output.hidden = false;
+			}
+
+			this.#state.fileContent = tempContent;
+		});
+		
+		elements.process?.addEventListener('click', () => {
+			const mappings = this.#getCurrentMappings();
+			const processedData = this.#processMapping(mappings);
+
+			this.dispatchEvent(new CustomEvent('ti:processed', { 
+				detail: processedData,
+				bubbles: true
+			}));
+
+			if (processedData.length > 0) {
+				elements.output.textContent = JSON.stringify(processedData[0], null, 2);
+				elements.output.hidden = false;
+			}
+		});
+
+		this.#state.mapping && this.#applyCustomMapping();
+	}
+
+	#getCurrentMappings() {
+		const mappingsByTarget = new Map();
+		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
+		
+		rows.forEach(row => {
+			const [target, type, formatter, prefix, suffix] = 
+				row.querySelectorAll('[part~=mapping-input]');
+			
+			if (target.value) {
+				const [targetField, orderStr] = target.value.split('|');
+				const order = parseInt(orderStr, 10) || 0;
+				
+				const mapping = {
+					source: target.dataset.source,
+					target: targetField,
+					order
+				};
+				
+				if (type.value) mapping.type = type.value;
+				if (formatter.value) mapping.formatter = formatter.value;
+				if (prefix.value || suffix.value) {
+					mapping.prefix = prefix.value;
+					mapping.suffix = suffix.value;
+				}
+				
+				if (!mappingsByTarget.has(targetField)) {
+					mappingsByTarget.set(targetField, []);
+				}
+				mappingsByTarget.get(targetField).push(mapping);
+			}
+		});
+		
+		return Array.from(mappingsByTarget.values()).flat();
+	}
+
+	#applyCustomMapping() {
+		const { mapping } = this.#state;
+		if (!mapping) return;
+		
+		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
+		rows.forEach(row => {
+			const [target, type, formatter, prefix, suffix] = 
+				row.querySelectorAll('[part~=mapping-input]');
+			const source = target.dataset.source;
+			
+			const sourceMapping = mapping.find(m => m.source === source);
+			if (sourceMapping) {
+				target.value = sourceMapping.order ? 
+					`${sourceMapping.target}|${sourceMapping.order}` : 
+					sourceMapping.target;
+				type.value = sourceMapping.type || '';
+				formatter.value = sourceMapping.formatter || '';
+				prefix.value = sourceMapping.prefix || '';
+				suffix.value = sourceMapping.suffix || '';
 			}
 		});
 	}
 
-	template() {
+	#getTemplate() {
 		return `
-			<label part="row">
-				<span part="label">${this.#state.label}${this.#state.required ? '<abbr title="required" part="abbr">*</abbr>' : ''}</span>
-				<input type="file" name="file" accept="${this.#state.accept}" part="file">
-			</label>
-			<datalist id="converters${this.#state.uid}"></datalist>
-			<datalist id="formatters${this.#state.uid}"></datalist>
-			<fieldset id="popover${this.#state.uid}" part="mapping" popover="manual"></fieldset>
+			<slot></slot>
+			<datalist id="converters${this.uid}"></datalist>
+			<datalist id="formatters${this.uid}"></datalist>
+			<fieldset id="mapping${this.uid}" part="mapping" popover="manual"></fieldset>
 		`;
 	}
 
 	formReset() {
 		super.value = '';
-		this.input.value = '';
+		this.#state.elements.input.value = '';
 	}
 }
 

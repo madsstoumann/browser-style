@@ -1,16 +1,11 @@
 :host *, :host *::after, :host *::before { box-sizing: border-box; }
-
-:host::part(mapping) {
-	align-content: start;
-	background: Canvas;
-	border: 0;
-	color: CanvasText;
-	height: 100dvh;
-	inset: 0;
-	padding: 1rem;
-	width: 100vw;
+:host {
+	--accent-color: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+	--accent-color-text: hsl(211, 100%, 95%);
+	--grey-light: #f3f3f3;
+	--grey-dark: #333;
+	--text-import-button-bg: light-dark(var(--grey-light), var(--grey-dark));
 }
-
 :host::part(close) {
 	background: #0000;
 	border: 0;
@@ -24,7 +19,7 @@
 	place-self: start end;
 }
 :host::part(close):hover {
-	background: var(--text-import-close-bg, light-dark(#f3f3f3, #333));
+	background: var(--text-import-button-bg);
 	outline: none;
 }
 :host::part(icon) {
@@ -37,10 +32,19 @@
 	stroke-linejoin: round;
 	stroke-width: 2;
 }
+:host::part(mapping) {
+	align-content: start;
+	background: Canvas;
+	border: 0;
+	color: CanvasText;
+	height: 100dvh;
+	inset: 0;
+	padding: 1rem;
+	width: 100vw;
+}
 :host::part(mapping):popover-open {
 	display: grid;
 }
-
 :host::part(mapping-content) {
   display: grid;
 	font-family: ui-monospace, monospace;
@@ -52,60 +56,57 @@
 	max-width: 1024px;
 	padding: 0;
 }
-
-:host::part(mapping-row) {
-  display: contents;
-}
-
 :host::part(mapping-header) {
   overflow: hidden;
 	text-overflow: ellipsis;
 }
-
 :host::part(mapping-input) {
-	background: var(--text-import-input-bg, light-dark(#f3f3f3, #333));
+	background: var(--text-import-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
   border: 0;
 	font-family: inherit;
 	padding-inline: 1ch;
 }
-input::placeholder {
-	color: var(--text-import-input-placeholder, light-dark(#CCC, #777));
-}
 :host::part(mapping-input):focus-visible {
-	background: var(--text-import-close-bg, light-dark(#333, #f3f3f3));
+	background: var(--text-import-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
 	color: Canvas;
 	outline: none;
 }
-
+:host::part(mapping-nav) {
+	display: flex;
+	gap: 1rem;
+	justify-content: center;
+}
+:host::part(mapping-row) {
+  display: contents;
+}
 :host::part(output) {
-  background: #333;
+  background: var(--grey-dark);
   border-radius: 4px;
-	color: #EEE;
+	color: var(--grey-light);
   font-size: .875rem;
 	justify-self: center;
-  margin-block-start: 1rem;
-  max-height: 50vh;
 	max-width: 900px;
-  overflow: auto;
   padding: 1rem;
   white-space: pre-wrap;
 }
-
+:host::part(preview),
 :host::part(process) {
-	justify-self: center;
-}
-
-/* :host::part(process) {
-  background: var(--text-import-process-bg, light-dark(#f3f3f3, #333));
+  background: var(--text-import-button-bg);
   border: 0;
-  border-radius: 4px;
+  border-radius: .25rem;
   color: inherit;
-  cursor: pointer;
-	grid-column: 2;
-  margin-top: 1rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1.25rem;
 }
-
+:host::part(preview):hover {
+  background: color-mix(in oklab, var(--text-import-button-bg), #000 10%);
+}
+:host::part(process) {
+	background-color: var(--accent-color);
+	color: var(--accent-color-text);
+}
 :host::part(process):hover {
-  background: var(--text-import-process-hover-bg, light-dark(#e3e3e3, #444));
-} */
+	background-color: color-mix(in oklab, var(--accent-color), #000 10%);
+}
+input::placeholder {
+	color: var(--text-import-input-placeholder, light-dark(#CCC, #777));
+}

@@ -16,13 +16,24 @@
 		Convert a TSV or CSV file to JSON using a user-defined mapping.
   </p>
 
+	<text-import styles>
+		<label part="row">
+			<span part="label">Import<abbr title="required">*</abbr></span>
+			<input part="file" type="file" name="file" accept=".txt,.csv">
+		</label>
+		<label part="row">
+			<input type="checkbox" part="firstrow" name="firstrow" checked>
+			<span part="label">First row contain headers</span>
+		</label>
+		<small part="processed"></small>
+	</text-import>
 
-	<text-import required label="Select file" accept=".txt,.csv" styles></text-import>
 	<script type="module" src="./index.js"></script>
 
 	<script>
 		customElements.whenDefined('text-import').then(() => {
 			const textImport = document.querySelector('text-import');
+			const processed = textImport.querySelector('[part="processed"]');
 			
 			 // Merge the new isbn formatter with existing formatters
 			textImport.formatters = {
@@ -47,7 +58,18 @@
 				{ source: 'PAGE', target: 'description|3', prefix: 'Page in catalog: ', suffix: '.' },
 				{ source: 'WRITER', target: 'description|1', prefix: 'Writer: ', suffix: '.' },
 				{ source: 'ARTIST', target: 'description|2', prefix: 'Artist: ', suffix: '.' }
-			];
+			];	
+
+			textImport.addEventListener('ti:processed', event => {
+				console.log('JSON', event.detail);
+				processed.textContent = `${event.detail.length} records processed`;
+				textImport.dispatchEvent(new CustomEvent('ti:close'));
+			});
+
+			textImport.addEventListener('ti:error', event => {
+				console.error('Error:', event.detail.message);
+			});
+
 		});
 	</script>
 </body>
