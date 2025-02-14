@@ -55,9 +55,7 @@ export class TextImport extends HTMLElement {
 			font-size: small;
 			column-gap: .5rem;
 			row-gap: .25rem;
-			grid-template-columns: 150px 150px 90px 110px 175px 175px;
-			justify-self: center;
-			max-width: 1024px;
+			grid-template-columns: 150px 1fr 90px 110px 175px 175px;
 			padding: 0;
 		}
 		:host::part(mapping-header) {
@@ -83,14 +81,20 @@ export class TextImport extends HTMLElement {
 		:host::part(mapping-row) {
 			display: contents;
 		}
+		:host::part(mapping-thead) {
+			display: contents;
+		}
+		:host::part(mapping-wrapper) {
+			justify-self: center;
+			max-width: 950px;
+		}
 		:host::part(output) {
 			background: var(--grey-dark);
 			border-radius: 4px;
 			color: var(--grey-light);
-			font-size: .875rem;
-			justify-self: center;
-			max-width: 900px;
-			padding: 1rem;
+			font-size: .75rem;
+			line-height: 1.6;
+			padding: 1em;
 			white-space: pre-wrap;
 		}
 		:host::part(preview),
@@ -170,8 +174,24 @@ export class TextImport extends HTMLElement {
 		uppercase: str => str.toUpperCase(),
 	};
 
+	#i18n = {
+		en: {
+			source: 'Source',
+			target: 'Target',
+			type: 'Type',
+			formatter: 'Formatter',
+			prefix: 'Prefix',
+			suffix: 'Suffix',
+			preview: 'Preview',
+			process: 'Process'
+		}
+	};
+
+	#lang = 'en';
+
 	constructor() {
 		super();
+		this.#lang = this.getAttribute('lang') || 'en';
 		this.#shadow = this.attachShadow({ mode: 'open' });
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(this.#styles);
@@ -182,7 +202,29 @@ export class TextImport extends HTMLElement {
 		}
 	}
 
+	get converters() { return this.#converters; }
+	set converters(newConverters) {
+		this.#converters = { ...this.#converters, ...newConverters };
+	}
+
+	get customMapping() { return this.#state.mapping; }
+	set customMapping(mapping) {
+		this.#state.mapping = mapping;
+		const mappingEl = this.#state.elements.mapping;
+		mappingEl?.hasAttribute('popover-open') && this.#applyCustomMapping();
+	}
+
+	get formatters() { return this.#formatters; }
+	set formatters(newFormatters) {
+		this.#formatters = { ...this.#formatters, ...newFormatters };
+		this.initialized && this.#updateDataLists();
+	}
+
 	get initialized() { return this.#initialized; }
+
+	t(key) {
+		return this.#i18n[this.#lang]?.[key] ?? this.#i18n.en[key] ?? key;
+	}
 
 	async #initialize() {
 		if (this.#initialized) return;
@@ -231,23 +273,7 @@ export class TextImport extends HTMLElement {
 		this.#setupEventListeners();
 	}
 
-	get converters() { return this.#converters; }
-	set converters(newConverters) {
-		this.#converters = { ...this.#converters, ...newConverters };
-	}
 
-	get formatters() { return this.#formatters; }
-	set formatters(newFormatters) {
-		this.#formatters = { ...this.#formatters, ...newFormatters };
-		this.initialized && this.#updateDataLists();
-	}
-
-	get customMapping() { return this.#state.mapping; }
-	set customMapping(mapping) {
-		this.#state.mapping = mapping;
-		const mappingEl = this.#state.elements.mapping;
-		mappingEl?.hasAttribute('popover-open') && this.#applyCustomMapping();
-	}
 
 	#updateDataLists() {
 		const lists = {
@@ -386,23 +412,34 @@ export class TextImport extends HTMLElement {
 					<path d="M6 6l12 12"></path>
 				</svg>
 			</button>
-			<ul part="mapping-content">
-				${headers.map(header => `
-					<li part="mapping-row">
-						<span part="mapping-header">${header}</span>
-						<input type="text" part="mapping-input" data-source="${header}" placeholder="target">
-						<input type="text" part="mapping-input" list="converters${this.uid}" placeholder="type">
-						<input type="text" part="mapping-input" list="formatters${this.uid}" placeholder="formatter">
-						<input type="text" part="mapping-input" placeholder="prefix">
-						<input type="text" part="mapping-input" placeholder="suffix">
+			<div part="mapping-wrapper">
+				<ul part="mapping-content">
+					<li part="mapping-thead">
+					<li part="mapping-thead">
+						<span>${this.t('source')}</span>
+						<span>${this.t('target')}</span>
+						<span>${this.t('type')}</span>
+						<span>${this.t('formatter')}</span>
+						<span>${this.t('prefix')}</span>
+						<span>${this.t('suffix')}</span>
 					</li>
-				`).join('')}
-			</ul>
-			<nav part="mapping-nav">
-				<button type="button" part="preview">Preview</button>
-				<button type="button" part="process">Process</button>
-			</nav>
-			<pre part="output" hidden></pre>
+					${headers.map(header => `
+						<li part="mapping-row">
+							<span part="mapping-header">${header}</span>
+							<input type="text" part="mapping-input" data-source="${header}" placeholder="target">
+							<input type="text" part="mapping-input" list="converters${this.uid}" placeholder="type">
+							<input type="text" part="mapping-input" list="formatters${this.uid}" placeholder="formatter">
+							<input type="text" part="mapping-input" placeholder="prefix">
+							<input type="text" part="mapping-input" placeholder="suffix">
+						</li>
+					`).join('')}
+				</ul>
+				<nav part="mapping-nav">
+					<button type="button" part="preview">${this.t('preview')}</button>
+					<button type="button" part="process">${this.t('process')}</button>
+				</nav>
+				<pre part="output" hidden></pre>
+			</div>
 		`;
 
 		const elements = {

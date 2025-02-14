@@ -6,7 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
   <meta name="view-transition" content="same-origin">
-  <link rel="stylesheet" href="/base.css">	
+  <link rel="stylesheet" href="/base.css">
+	<style>
+		small[part="processed"] {
+			color: var(--AccentColor);
+		}
+	</style>
 </head>
 <body>
   <h1>UI: Components</h1>
@@ -17,21 +22,31 @@
   </p>
 
 	<text-import styles>
-		<label part="row">
-			<span part="label">Import<abbr title="required">*</abbr></span>
-			<input part="file" type="file" name="file" accept=".csv,.txt,.tsv">
-		</label>
-		<label part="row">
-			<input type="checkbox" part="firstrow" name="firstrow" checked>
-			<span part="label">First row contain headers</span>
-		</label>
-		<small part="processed"></small>
+		<fieldset>
+			<legend>Import CSV- or TSV-file</legend>
+			<label part="row">
+				<span part="label">Import<abbr title="required">*</abbr></span>
+				<input part="file" type="file" name="file" accept=".csv,.txt,.tsv">
+			</label>
+			<label part="row">
+				<input type="checkbox" part="firstrow" name="firstrow" checked>
+				<span part="label">First row contain headers</span>
+			</label>
+			<small part="processed">0 processed</small>
+		</fieldset>
 	</text-import>
 
 	<br>
 	<h2>Simulation</h2>
-	<p><button type="button" data-format="csv">Load CSV Demo</button></p>
-	<p><button type="button" data-format="tsv">Load TSV Demo</button></p>
+	<p>
+		<h3><a href="demo.csv" target="_blank">demo.csv</a></h3>
+		<button type="button" data-format="csv">Load CSV Demo</button>
+	</p>
+
+	<p>
+		<h3><a href="demo.tsv" target="_blank">demo.tsv</a></h3>
+		<button type="button" data-format="tsv">Load TSV Demo</button>
+	</p>
 
 	<script type="module" src="./index.js"></script>
 
