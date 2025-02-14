@@ -74,9 +74,10 @@ export class TextImport extends HTMLElement {
 			outline: none;
 		}
 		:host::part(mapping-nav) {
+			align-items: center;
 			display: flex;
 			gap: 1rem;
-			justify-content: center;
+			justify-content: end;
 		}
 		:host::part(mapping-row) {
 			display: contents;
@@ -87,6 +88,10 @@ export class TextImport extends HTMLElement {
 		:host::part(mapping-wrapper) {
 			justify-self: center;
 			max-width: 950px;
+		}
+		:host::part(numlines) {
+			color: var(--accent-color);
+			margin-inline-end: auto;
 		}
 		:host::part(output) {
 			background: var(--grey-dark);
@@ -120,17 +125,6 @@ export class TextImport extends HTMLElement {
 		}
 	`;
 
-	static defaultAccept = '.txt';
-	static defaultLabel = 'Select file';
-	
-	#state = {
-		content: '',
-		elements: {},
-		separator: ',',
-		firstrow: true,
-		mapping: null
-	};
-	
 	#converters = {
 		boolean: value => {
 			const truthyValues = ['true', '1', 'yes', 'y'];
@@ -176,18 +170,29 @@ export class TextImport extends HTMLElement {
 
 	#i18n = {
 		en: {
-			source: 'Source',
-			target: 'Target',
-			type: 'Type',
 			formatter: 'Formatter',
+			numlines: 'Number of lines: ',
 			prefix: 'Prefix',
-			suffix: 'Suffix',
 			preview: 'Preview',
-			process: 'Process'
+			process: 'Process',
+			source: 'Source',
+			suffix: 'Suffix',
+			target: 'Target',
+			type: 'Type'
 		}
 	};
 
 	#lang = 'en';
+	#state = {
+		content: '',
+		elements: {},
+		separator: ',',
+		firstrow: true,
+		mapping: null
+	};
+
+	static defaultAccept = '.txt';
+	static defaultLabel = 'Select file';
 
 	constructor() {
 		super();
@@ -202,28 +207,153 @@ export class TextImport extends HTMLElement {
 		}
 	}
 
+	// Getters & Setters
 	get converters() { return this.#converters; }
+	get customMapping() { return this.#state.mapping; }
+	get formatters() { return this.#formatters; }
+	get initialized() { return this.#initialized; }
+
 	set converters(newConverters) {
 		this.#converters = { ...this.#converters, ...newConverters };
 	}
-
-	get customMapping() { return this.#state.mapping; }
 	set customMapping(mapping) {
 		this.#state.mapping = mapping;
 		const mappingEl = this.#state.elements.mapping;
 		mappingEl?.hasAttribute('popover-open') && this.#applyCustomMapping();
 	}
-
-	get formatters() { return this.#formatters; }
 	set formatters(newFormatters) {
 		this.#formatters = { ...this.#formatters, ...newFormatters };
 		this.initialized && this.#updateDataLists();
 	}
 
-	get initialized() { return this.#initialized; }
+	// Public Methods
+	async initializeComponent() {
+		const elements = this.#state.elements;
+		elements.input = this.querySelector('[part~=file]');
+		if (!elements.input) {
+			console.warn('TextImport: No file input found. Add an input with part="file".');
+			return;
+		}
 
-	t(key) {
-		return this.#i18n[this.#lang]?.[key] ?? this.#i18n.en[key] ?? key;
+		const firstRowCheckbox = this.querySelector('[part~=firstrow]');
+		this.#state.firstrow = firstRowCheckbox ? firstRowCheckbox.checked : true;
+		firstRowCheckbox?.addEventListener('change', e => this.#state.firstrow = e.target.checked);
+
+		this.#shadow.innerHTML = this.#getTemplate();
+		elements.mapping = this.#shadow.querySelector(`#mapping${this.uid}`);
+		
+		this.#updateDataLists();
+		this.#setupEventListeners();
+	}
+
+	async mount() {
+		if (!this.#initialized) {
+			await this.#initialize();
+		}
+	}
+
+	static register() {
+		const name = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+		if (!customElements.get(name)) customElements.define(name, this);
+	}
+
+	// Private Methods
+	#applyCustomMapping() {
+		const { mapping } = this.#state;
+		if (!mapping) return;
+		
+		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
+		rows.forEach(row => {
+			const [target, type, formatter, prefix, suffix] = 
+				row.querySelectorAll('[part~=mapping-input]');
+			const source = target.dataset.source;
+			
+			const sourceMapping = mapping.find(m => m.source === source);
+			if (sourceMapping) {
+				target.value = sourceMapping.order ? 
+					`${sourceMapping.target}|${sourceMapping.order}` : 
+					sourceMapping.target;
+				type.value = sourceMapping.type || '';
+				formatter.value = sourceMapping.formatter || '';
+				prefix.value = sourceMapping.prefix || '';
+				suffix.value = sourceMapping.suffix || '';
+			}
+		});
+	}
+
+	#convertField(value, mapping) {
+		if (!value?.trim()) return null;
+		
+		const converted = mapping.type ? 
+			this.#converters[mapping.type]?.(value.trim()) ?? value.trim() : 
+			value.trim();
+			
+		const formatted = mapping.formatter ? 
+			this.#formatters[mapping.formatter]?.(converted) ?? converted : 
+			converted;
+			
+		return mapping.prefix || mapping.suffix ? 
+			`${mapping.prefix || ''}${formatted}${mapping.suffix || ''}` : 
+			formatted;
+	}
+
+	#getCurrentMappings() {
+		const mappingsByTarget = new Map();
+		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
+		
+		rows.forEach(row => {
+			const [target, type, formatter, prefix, suffix] = 
+				row.querySelectorAll('[part~=mapping-input]');
+			
+			if (target.value) {
+				const [targetField, orderStr] = target.value.split('|');
+				const order = parseInt(orderStr, 10) || 0;
+				
+				const mapping = {
+					source: target.dataset.source,
+					target: targetField,
+					order
+				};
+				
+				if (type.value) mapping.type = type.value;
+				if (formatter.value) mapping.formatter = formatter.value;
+				if (prefix.value || suffix.value) {
+					mapping.prefix = prefix.value;
+					mapping.suffix = suffix.value;
+				}
+				
+				if (!mappingsByTarget.has(targetField)) {
+					mappingsByTarget.set(targetField, []);
+				}
+				mappingsByTarget.get(targetField).push(mapping);
+			}
+		});
+		
+		return Array.from(mappingsByTarget.values()).flat();
+	}
+
+	#getFieldIndex(sourceName) {
+		if (!this.#state.firstrow) {
+			return parseInt(sourceName.split(' ')[1]) - 1;
+		}
+		const headers = this.#state.elements.mapping.querySelectorAll('[part~="mapping-header"]');
+		return Array.from(headers).findIndex(h => h.textContent === sourceName);
+	}
+
+	#getHeaders(lines) {
+		if (!lines.length) return [];
+		if (this.#state.firstrow) return lines[0].split(this.#state.separator);
+		const columnCount = lines[0].split(this.#state.separator).length;
+		return Array.from({ length: columnCount }, (_, i) => `COL ${i + 1}`);
+	}
+
+	#getTemplate() {
+		return `
+			<slot></slot>
+			<datalist id="converters${this.uid}"></datalist>
+			<datalist id="formatters${this.uid}"></datalist>
+			<fieldset id="mapping${this.uid}" part="mapping" popover="manual"></fieldset>
+		`;
 	}
 
 	async #initialize() {
@@ -248,45 +378,6 @@ export class TextImport extends HTMLElement {
 		this.#initialized = true;
 	}
 
-	async mount() {
-		if (!this.#initialized) {
-			await this.#initialize();
-		}
-	}
-
-	async initializeComponent() {
-		const elements = this.#state.elements;
-		elements.input = this.querySelector('[part~=file]');
-		if (!elements.input) {
-			console.warn('TextImport: No file input found. Add an input with part="file".');
-			return;
-		}
-
-		const firstRowCheckbox = this.querySelector('[part~=firstrow]');
-		this.#state.firstrow = firstRowCheckbox ? firstRowCheckbox.checked : true;
-		firstRowCheckbox?.addEventListener('change', e => this.#state.firstrow = e.target.checked);
-
-		this.#shadow.innerHTML = this.#getTemplate();
-		elements.mapping = this.#shadow.querySelector(`#mapping${this.uid}`);
-		
-		this.#updateDataLists();
-		this.#setupEventListeners();
-	}
-
-
-
-	#updateDataLists() {
-		const lists = {
-			converters: Object.keys(this.#converters),
-			formatters: Object.keys(this.#formatters)
-		};
-
-		Object.entries(lists).forEach(([type, keys]) => {
-			const list = this.#shadow.querySelector(`#${type}${this.uid}`);
-			list.innerHTML = keys.map(key => `<option value="${key}">`).join('');
-		});
-	}
-
 	async #processFile(file) {
 		try {
 			const text = await file.text();
@@ -297,11 +388,14 @@ export class TextImport extends HTMLElement {
 			if (!headers.length) throw new Error('No headers found in file');
 			
 			this.#renderMapping(headers);
-			const { mapping, input } = this.#state.elements;
+			const { mapping, input, numlines } = this.#state.elements;
 			
 			mapping.togglePopover(true);
 			input.value = '';
 			input.toggleAttribute('inert', true);
+			
+			const lineCount = this.#state.firstrow ? lines.length - 1 : lines.length;
+			numlines.textContent = `${this.#t('numlines')}${lineCount}`;
 			
 			this.#state.content = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
@@ -311,13 +405,6 @@ export class TextImport extends HTMLElement {
 				bubbles: true
 			}));
 		}
-	}
-
-	#getHeaders(lines) {
-		if (!lines.length) return [];
-		if (this.#state.firstrow) return lines[0].split(this.#state.separator);
-		const columnCount = lines[0].split(this.#state.separator).length;
-		return Array.from({ length: columnCount }, (_, i) => `COL ${i + 1}`);
 	}
 
 	#processMapping(mappings) {
@@ -362,47 +449,6 @@ export class TextImport extends HTMLElement {
 		return parts.length ? parts.join('\n') : null;
 	}
 
-	#convertField(value, mapping) {
-		if (!value?.trim()) return null;
-		
-		const converted = mapping.type ? 
-			this.#converters[mapping.type]?.(value.trim()) ?? value.trim() : 
-			value.trim();
-			
-		const formatted = mapping.formatter ? 
-			this.#formatters[mapping.formatter]?.(converted) ?? converted : 
-			converted;
-			
-		return mapping.prefix || mapping.suffix ? 
-			`${mapping.prefix || ''}${formatted}${mapping.suffix || ''}` : 
-			formatted;
-	}
-
-	#getFieldIndex(sourceName) {
-		if (!this.#state.firstrow) {
-			return parseInt(sourceName.split(' ')[1]) - 1;
-		}
-		const headers = this.#state.elements.mapping.querySelectorAll('[part~="mapping-header"]');
-		return Array.from(headers).findIndex(h => h.textContent === sourceName);
-	}
-
-	#setupEventListeners() {
-		const { input, mapping } = this.#state.elements;
-		
-		input?.addEventListener('change', e => {
-			const file = e.target.files[0];
-			file && this.#processFile(file);
-		});
-
-		if (mapping) {
-			mapping.addEventListener('beforetoggle', e => {
-				input.toggleAttribute('inert', e.newState === 'open');
-			});
-
-			this.addEventListener('ti:close', () => mapping.togglePopover(false));
-		}
-	}
-
 	#renderMapping(headers) {
 		const mappingEl = this.#state.elements.mapping;
 		mappingEl.innerHTML = `
@@ -416,12 +462,12 @@ export class TextImport extends HTMLElement {
 				<ul part="mapping-content">
 					<li part="mapping-thead">
 					<li part="mapping-thead">
-						<span>${this.t('source')}</span>
-						<span>${this.t('target')}</span>
-						<span>${this.t('type')}</span>
-						<span>${this.t('formatter')}</span>
-						<span>${this.t('prefix')}</span>
-						<span>${this.t('suffix')}</span>
+						<span>${this.#t('source')}</span>
+						<span>${this.#t('target')}</span>
+						<span>${this.#t('type')}</span>
+						<span>${this.#t('formatter')}</span>
+						<span>${this.#t('prefix')}</span>
+						<span>${this.#t('suffix')}</span>
 					</li>
 					${headers.map(header => `
 						<li part="mapping-row">
@@ -435,8 +481,9 @@ export class TextImport extends HTMLElement {
 					`).join('')}
 				</ul>
 				<nav part="mapping-nav">
-					<button type="button" part="preview">${this.t('preview')}</button>
-					<button type="button" part="process">${this.t('process')}</button>
+					<small part="numlines"></small>
+					<button type="button" part="preview">${this.#t('preview')}</button>
+					<button type="button" part="process">${this.#t('process')}</button>
 				</nav>
 				<pre part="output" hidden></pre>
 			</div>
@@ -444,10 +491,12 @@ export class TextImport extends HTMLElement {
 
 		const elements = {
 			close: mappingEl.querySelector('[part~=close]'),
+			numlines: mappingEl.querySelector('[part~=numlines]'),
+			output: mappingEl.querySelector('[part~=output]'),
 			preview: mappingEl.querySelector('[part~=preview]'),
-			process: mappingEl.querySelector('[part~=process]'),
-			output: mappingEl.querySelector('[part~=output]')
+			process: mappingEl.querySelector('[part~=process]')
 		};
+		this.#state.elements = { ...this.#state.elements, ...elements };
 
 		elements.close?.addEventListener('click', () => 
 			mappingEl.togglePopover(false));
@@ -485,76 +534,37 @@ export class TextImport extends HTMLElement {
 		this.#state.mapping && this.#applyCustomMapping();
 	}
 
-	#getCurrentMappings() {
-		const mappingsByTarget = new Map();
-		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
+	#setupEventListeners() {
+		const { input, mapping } = this.#state.elements;
 		
-		rows.forEach(row => {
-			const [target, type, formatter, prefix, suffix] = 
-				row.querySelectorAll('[part~=mapping-input]');
-			
-			if (target.value) {
-				const [targetField, orderStr] = target.value.split('|');
-				const order = parseInt(orderStr, 10) || 0;
-				
-				const mapping = {
-					source: target.dataset.source,
-					target: targetField,
-					order
-				};
-				
-				if (type.value) mapping.type = type.value;
-				if (formatter.value) mapping.formatter = formatter.value;
-				if (prefix.value || suffix.value) {
-					mapping.prefix = prefix.value;
-					mapping.suffix = suffix.value;
-				}
-				
-				if (!mappingsByTarget.has(targetField)) {
-					mappingsByTarget.set(targetField, []);
-				}
-				mappingsByTarget.get(targetField).push(mapping);
-			}
+		input?.addEventListener('change', e => {
+			const file = e.target.files[0];
+			file && this.#processFile(file);
 		});
-		
-		return Array.from(mappingsByTarget.values()).flat();
+
+		if (mapping) {
+			mapping.addEventListener('beforetoggle', e => {
+				input.toggleAttribute('inert', e.newState === 'open');
+			});
+
+			this.addEventListener('ti:close', () => mapping.togglePopover(false));
+		}
 	}
 
-	#applyCustomMapping() {
-		const { mapping } = this.#state;
-		if (!mapping) return;
-		
-		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
-		rows.forEach(row => {
-			const [target, type, formatter, prefix, suffix] = 
-				row.querySelectorAll('[part~=mapping-input]');
-			const source = target.dataset.source;
-			
-			const sourceMapping = mapping.find(m => m.source === source);
-			if (sourceMapping) {
-				target.value = sourceMapping.order ? 
-					`${sourceMapping.target}|${sourceMapping.order}` : 
-					sourceMapping.target;
-				type.value = sourceMapping.type || '';
-				formatter.value = sourceMapping.formatter || '';
-				prefix.value = sourceMapping.prefix || '';
-				suffix.value = sourceMapping.suffix || '';
-			}
+	#t(key) {
+		return this.#i18n[this.#lang]?.[key] ?? this.#i18n.en[key] ?? key;
+	}
+
+	#updateDataLists() {
+		const lists = {
+			converters: Object.keys(this.#converters),
+			formatters: Object.keys(this.#formatters)
+		};
+
+		Object.entries(lists).forEach(([type, keys]) => {
+			const list = this.#shadow.querySelector(`#${type}${this.uid}`);
+			list.innerHTML = keys.map(key => `<option value="${key}">`).join('');
 		});
-	}
-
-	#getTemplate() {
-		return `
-			<slot></slot>
-			<datalist id="converters${this.uid}"></datalist>
-			<datalist id="formatters${this.uid}"></datalist>
-			<fieldset id="mapping${this.uid}" part="mapping" popover="manual"></fieldset>
-		`;
-	}
-
-	static register() {
-		const name = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-		if (!customElements.get(name)) customElements.define(name, this);
 	}
 }
 
