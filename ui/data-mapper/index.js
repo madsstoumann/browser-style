@@ -1,4 +1,4 @@
-export class TextImport extends HTMLElement {
+export class DataMapper extends HTMLElement {
 	#initialized = false;
 	#shadow;
 	#styles = `
@@ -8,7 +8,7 @@ export class TextImport extends HTMLElement {
 			--accent-color-text: hsl(211, 100%, 95%);
 			--grey-light: #f3f3f3;
 			--grey-dark: #333;
-			--text-import-button-bg: light-dark(var(--grey-light), var(--grey-dark));
+			--data-mapper-button-bg: light-dark(var(--grey-light), var(--grey-dark));
 		}
 		:host::part(close) {
 			background: #0000;
@@ -23,7 +23,7 @@ export class TextImport extends HTMLElement {
 			place-self: start end;
 		}
 		:host::part(close):hover {
-			background: var(--text-import-button-bg);
+			background: var(--data-mapper-button-bg);
 			outline: none;
 		}
 		:host::part(icon) {
@@ -63,13 +63,13 @@ export class TextImport extends HTMLElement {
 			text-overflow: ellipsis;
 		}
 		:host::part(mapping-input) {
-			background: var(--text-import-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
+			background: var(--data-mapper-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
 			border: 0;
 			font-family: inherit;
 			padding-inline: 1ch;
 		}
 		:host::part(mapping-input):focus-visible {
-			background: var(--text-import-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
+			background: var(--data-mapper-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
 			color: Canvas;
 			outline: none;
 		}
@@ -104,14 +104,14 @@ export class TextImport extends HTMLElement {
 		}
 		:host::part(preview),
 		:host::part(process) {
-			background: var(--text-import-button-bg);
+			background: var(--data-mapper-button-bg);
 			border: 0;
 			border-radius: .25rem;
 			color: inherit;
 			padding: 0.75rem 1.25rem;
 		}
 		:host::part(preview):hover {
-			background: color-mix(in oklab, var(--text-import-button-bg), #000 10%);
+			background: color-mix(in oklab, var(--data-mapper-button-bg), #000 10%);
 		}
 		:host::part(process) {
 			background-color: var(--accent-color);
@@ -121,7 +121,7 @@ export class TextImport extends HTMLElement {
 			background-color: color-mix(in oklab, var(--accent-color), #000 10%);
 		}
 		input::placeholder {
-			color: var(--text-import-input-placeholder, light-dark(#CCC, #777));
+			color: var(--data-mapper-input-placeholder, light-dark(#CCC, #777));
 		}
 	`;
 
@@ -231,7 +231,7 @@ export class TextImport extends HTMLElement {
 		const elements = this.#state.elements;
 		elements.input = this.querySelector('[part~=file]');
 		if (!elements.input) {
-			console.warn('TextImport: No file input found. Add an input with part="file".');
+			console.warn('DataMapper: No file input found. Add an input with part="file".');
 			return;
 		}
 
@@ -361,8 +361,8 @@ export class TextImport extends HTMLElement {
 		
 		this.uid = crypto.getRandomValues(new Uint8Array(4))
 			.reduce((acc, val) => acc + val.toString(36).padStart(2, '0'), '');
-		this.accept = this.getAttribute('accept') || TextImport.defaultAccept;
-		this.label = this.getAttribute('label') || TextImport.defaultLabel;
+		this.accept = this.getAttribute('accept') || DataMapper.defaultAccept;
+		this.label = this.getAttribute('label') || DataMapper.defaultLabel;
 		this.required = this.hasAttribute('required');
 		
 		const mappingAttr = this.getAttribute('mapping');
@@ -568,4 +568,4 @@ export class TextImport extends HTMLElement {
 	}
 }
 
-TextImport.register();
+DataMapper.register();

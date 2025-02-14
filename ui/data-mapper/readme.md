@@ -1,30 +1,30 @@
-# TextImport
+# DataMapper
 
 A web component for importing and transforming CSV/TSV text files with a visual mapping interface.
 
 ## Installation
 
 ```bash
-npm install @browser.style/text-import
+npm install @browser.style/data-mapper
 ```
 
 ## Basic Usage
 
 ```javascript
-import '@browser.style/text-import';
+import '@browser.style/data-mapper';
 ```
 
 ```html
-<text-import>
+<data-mapper>
   <label part="row">
-    <span part="label">Import<abbr title="required">*</abbr></span>
+    <span part="label">File<abbr title="required">*</abbr></span>
     <input part="file" type="file" name="file" accept=".csv,.txt,.tsv">
   </label>
   <label part="row">
     <input type="checkbox" part="firstrow" name="firstrow" checked>
-    <span part="label">First row contain headers</span>
+    <span part="label">First row contains headers</span>
   </label>
-</text-import>
+</data-mapper>
 ```
 
 ## Attributes
@@ -43,19 +43,19 @@ import '@browser.style/text-import';
 
 ## CSS Custom Properties
 
-- `--accent-color`: Primary accent color
-- `--accent-color-text`: Text color for accent elements
-- `--grey-light`: Light grey color
-- `--grey-dark`: Dark grey color
-- `--text-import-button-bg`: Background color for buttons
-- `--text-import-input-bg`: Background color for input fields
-- `--text-import-input-placeholder`: Color for input placeholders
-- `--text-import-close-bg`: Background color for close button
+- `--accent-color`: Primary accent color (default: `light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%))`)
+- `--accent-color-text`: Text color for accent elements (default: `hsl(211, 100%, 95%)`)
+- `--grey-light`: Light grey color (default: `#f3f3f3`)
+- `--grey-dark`: Dark grey color (default: `#333`)
+- `--data-mapper-button-bg`: Background color for buttons (default: `light-dark(var(--grey-light), var(--grey-dark))`)
+- `--data-mapper-input-bg`: Background color for input fields
+- `--data-mapper-input-placeholder`: Color for input placeholders
+- `--data-mapper-close-bg`: Background color for close button
 
 ## Custom Mapping
 
 ```javascript
-textImport.customMapping = [
+dataMapper.customMapping = [
   { 
     source: 'SOURCE_FIELD',    // Source field name
     target: 'target_field',    // Target field name
@@ -70,29 +70,29 @@ textImport.customMapping = [
 
 ### Available Type Converters
 
-- `boolean`: Converts to boolean (true/false)
-- `date`: Converts MM/DD/YYYY to YYYY-MM-DD
-- `float`: Converts to floating point number
-- `int`: Converts to integer
-- `number`: Converts to number
+- `boolean`: Converts values to true/false (truthy: 'true', '1', 'yes', 'y'; falsy: 'false', '0', 'no', 'n')
+- `date`: Converts dates from MM/DD/YYYY to YYYY-MM-DD format
+- `float`: Converts to floating point number (returns null if invalid)
+- `int`: Converts to integer (returns null if invalid)
+- `number`: Converts to number (returns null if invalid)
 
 ### Built-in Formatters
 
 - `capitalize`: Capitalizes first letter
-- `currency`: Formats as currency (2 decimals)
+- `currency`: Formats as currency with 2 decimal places
 - `lowercase`: Converts to lowercase
 - `percentage`: Adds % symbol
 - `removeSpaces`: Removes all spaces
-- `slugify`: Creates URL-friendly slug
-- `titleCase`: Capitalizes Words
+- `slugify`: Creates URL-friendly slug (lowercase, hyphens, no special chars)
+- `titleCase`: Capitalizes Each Word
 - `trim`: Removes leading/trailing spaces
-- `truncate`: Limits to 100 characters
+- `truncate`: Limits text to 100 characters with ellipsis
 - `uppercase`: Converts to uppercase
 
 ## Custom Formatters
 
 ```javascript
-textImport.formatters = {
+dataMapper.formatters = {
   isbn: str => {
     if (!str) return null;
     const cleaned = str.replace(/\D/g, '');

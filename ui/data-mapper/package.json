@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/text-import",
+  "name": "@browser.style/data-mapper",
   "version": "1.0.0",
-  "description": "Text Import component for browser.style",
+  "description": "Data Mapper component for browser.style",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -19,17 +19,17 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "text-import"
+    "data-mapper"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/text-import"
+    "directory": "ui/data-mapper"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/text-import"
+  "homepage": "https://browser.style/ui/data-mapper"
 }

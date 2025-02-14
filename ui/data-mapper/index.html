@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-  <title>Text Import</title>
+  <title>Data Mapper</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
@@ -16,12 +16,12 @@
 <body>
   <h1>UI: Components</h1>
 
-  <h2>Import Text</h2>
+  <h2>Data Mapper</h2>
   <p>
-		Convert a TSV or CSV file to JSON using a user-defined mapping.
+		Imports a CSV or TSV file, maps to JSON using a user-defined mapping.
   </p>
 
-	<text-import styles>
+	<data-mapper styles>
 		<fieldset>
 			<legend>Import CSV- or TSV-file</legend>
 			<label part="row">
@@ -34,7 +34,7 @@
 			</label>
 			<small part="processed">0 processed</small>
 		</fieldset>
-	</text-import>
+	</data-mapper>
 
 	<br>
 	<h2>Simulation</h2>
@@ -51,12 +51,12 @@
 	<script type="module" src="./index.js"></script>
 
 	<script>
-		customElements.whenDefined('text-import').then(() => {
-			const textImport = document.querySelector('text-import');
-			const processed = textImport.querySelector('[part="processed"]');
+		customElements.whenDefined('data-mapper').then(() => {
+			const dataMapper = document.querySelector('data-mapper');
+			const processed = dataMapper.querySelector('[part="processed"]');
 
 			// Merge the new isbn formatter with existing formatters
-			textImport.formatters = {
+			dataMapper.formatters = {
 				isbn: str => {
 					if (!str) return null;
 					const cleaned = str.replace(/\D/g, '');
@@ -67,7 +67,7 @@
 				}
 			};
 
-			textImport.customMapping = [
+			dataMapper.customMapping = [
 				{ source: 'STOCK_NO', target: 'sku' },
 				{ source: 'EAN_NO', target: 'barcode', formatter: 'isbn' },
 				{ source: 'FULL_TITLE', target: 'name', formatter: 'titleCase' },
@@ -80,13 +80,13 @@
 				{ source: 'ARTIST', target: 'description|2', prefix: 'Artist: ', suffix: '.' }
 			];	
 
-			textImport.addEventListener('ti:processed', event => {
+			dataMapper.addEventListener('ti:processed', event => {
 				console.log('JSON', event.detail);
 				processed.textContent = `${event.detail.length} records processed`;
-				textImport.dispatchEvent(new CustomEvent('ti:close'));
+				dataMapper.dispatchEvent(new CustomEvent('ti:close'));
 			});
 
-			textImport.addEventListener('ti:error', event => {
+			dataMapper.addEventListener('ti:error', event => {
 				console.error('Error:', event.detail.message);
 			});
 
@@ -111,7 +111,7 @@
 				});
 
 				// Trigger the file input's change event
-				textImport.querySelector('[part="file"]').dispatchEvent(event);
+				dataMapper.querySelector('[part="file"]').dispatchEvent(event);
 			});
 		});
 	</script>
