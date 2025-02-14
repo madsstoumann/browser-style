@@ -326,7 +326,7 @@
       "type": "string",
       "title": "Import",
       "render": {
-        "method": "datamapper",
+        "method": "not-in-use",
         "datamapper": {
           "accept": ".csv, .tsv,.txt",
           "firstRow": "First row contains headers",
