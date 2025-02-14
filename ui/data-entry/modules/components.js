@@ -12,6 +12,11 @@ const componentsInfo = {
 		path: '@browser.style/barcode-scanner',
 		tagName: 'barcode-scanner',
 	},
+	DataMapper: {
+		bindFunction: bindDataMapper,
+		path: '@browser.style/data-mapper',
+		tagName: 'data-mapper'
+	},
 	RichText: {
 		path: '@browser.style/rich-text',
 		tagName: 'rich-text',
@@ -20,11 +25,7 @@ const componentsInfo = {
 		bindFunction: bindSnackBar,
 		path: '@browser.style/snack-bar',
 		tagName: 'snack-bar',
-	},
-	TextImport: {
-		path: '@browser.style/text-import',
-		tagName: 'text-import'
-	},
+	}
 };
 
 /**
@@ -81,7 +82,55 @@ function bindBarcodeScanner(dataEntry) {
 		});
 }
 
-// Bind the UiToast component to enable showMsg functionality
+function bindDataMapper(dataEntry) {
+	dataEntry.form.querySelectorAll('data-mapper').forEach((dataMapper) => {
+			// Find the property containing datamapper configuration
+			const schemaProperty = Object.entries(dataEntry.instance.schema.properties)
+				.find(([_, config]) => config?.render?.method === 'datamapper');
+
+			if (!schemaProperty) {
+				console.warn('No datamapper configuration found in schema');
+				return;
+			}
+
+			const [propertyName, propertyConfig] = schemaProperty;
+			const datamapperConfig = propertyConfig?.render?.datamapper;
+
+			if (datamapperConfig) {
+				// Set custom formatters if defined in schema
+				if (datamapperConfig.formatters) {
+					const parsedFormatters = {};
+					// Convert formatter function strings to actual functions
+					Object.entries(datamapperConfig.formatters).forEach(([key, formatter]) => {
+						try {
+							parsedFormatters[key] = new Function('return ' + formatter.function)();
+						} catch (error) {
+							console.warn(`Failed to parse formatter function for ${key}:`, error);
+						}
+					});
+					dataMapper.formatters = parsedFormatters;
+				}
+
+				// Set custom mapping if defined in schema
+				if (datamapperConfig.customMapping) {
+					dataMapper.customMapping = datamapperConfig.customMapping;
+				}
+			}
+
+			// Handle processed data
+			dataMapper.addEventListener('dm:processed', (event) => {
+				const processed = dataMapper.querySelector('[part="processed"]');
+				if (processed) {
+					processed.textContent = `${event.detail.length} processed`;
+				}
+				setObjectByPath(dataEntry.instance.data, propertyName, event.detail);
+				dataEntry.processData();
+				dataMapper.dispatchEvent(new CustomEvent('dm:close'));
+			});
+		});
+}
+
+// Bind the SnackBar component to enable showMsg functionality
 function bindSnackBar(dataEntry) {
 	const snackBar = dataEntry.form.querySelector('snack-bar');
 	if (snackBar) {

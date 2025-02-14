@@ -400,7 +400,7 @@ export class DataMapper extends HTMLElement {
 			this.#state.content = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
 			console.error('Error processing file:', error);
-			this.dispatchEvent(new CustomEvent('ti:error', { 
+			this.dispatchEvent(new CustomEvent('dm:error', { 
 				detail: { message: error.message },
 				bubbles: true
 			}));
@@ -520,7 +520,7 @@ export class DataMapper extends HTMLElement {
 			const mappings = this.#getCurrentMappings();
 			const processedData = this.#processMapping(mappings);
 
-			this.dispatchEvent(new CustomEvent('ti:processed', { 
+			this.dispatchEvent(new CustomEvent('dm:processed', { 
 				detail: processedData,
 				bubbles: true
 			}));
@@ -547,7 +547,7 @@ export class DataMapper extends HTMLElement {
 				input.toggleAttribute('inert', e.newState === 'open');
 			});
 
-			this.addEventListener('ti:close', () => mapping.togglePopover(false));
+			this.addEventListener('dm:close', () => mapping.togglePopover(false));
 		}
 	}
 

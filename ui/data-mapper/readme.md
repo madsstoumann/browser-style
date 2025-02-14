@@ -37,9 +37,9 @@ import '@browser.style/data-mapper';
 
 ## Events
 
-- `ti:processed`: Fired when file processing is complete. The `detail` property contains the processed data array.
-- `ti:error`: Fired when an error occurs. The `detail` property contains the error message.
-- `ti:close`: Can be dispatched to close the mapping interface.
+- `dm:processed`: Fired when file processing is complete. The `detail` property contains the processed data array.
+- `dm:error`: Fired when an error occurs. The `detail` property contains the error message.
+- `dm:close`: Can be dispatched to close the mapping interface.
 
 ## CSS Custom Properties
 

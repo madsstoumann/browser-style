@@ -30,7 +30,7 @@
 			</label>
 			<label part="row">
 				<input type="checkbox" part="firstrow" name="firstrow" checked>
-				<span part="label">First row contain headers</span>
+				<span part="label">First row contains headers</span>
 			</label>
 			<small part="processed">0 processed</small>
 		</fieldset>
@@ -80,13 +80,13 @@
 				{ source: 'ARTIST', target: 'description|2', prefix: 'Artist: ', suffix: '.' }
 			];	
 
-			dataMapper.addEventListener('ti:processed', event => {
+			dataMapper.addEventListener('dm:processed', event => {
 				console.log('JSON', event.detail);
 				processed.textContent = `${event.detail.length} records processed`;
-				dataMapper.dispatchEvent(new CustomEvent('ti:close'));
+				dataMapper.dispatchEvent(new CustomEvent('dm:close'));
 			});
 
-			dataMapper.addEventListener('ti:error', event => {
+			dataMapper.addEventListener('dm:error', event => {
 				console.error('Error:', event.detail.message);
 			});
 

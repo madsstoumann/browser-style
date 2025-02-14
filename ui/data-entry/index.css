@@ -19,7 +19,7 @@
 		/* === PARTS === */
 
 		[part~=autosuggest],
-		[part~=textimport] {
+		[part~=datamapper] {
 			--_bdrs: 0;
 			&:not([form]) {
 				display: contents;
@@ -34,7 +34,7 @@
 			}
 		}
 
-		[part~=textimport] {
+		[part~=datamapper] {
 			[part~="filewrap"] {
 				align-items: center;
         display: flex;

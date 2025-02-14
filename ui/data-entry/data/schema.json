@@ -326,11 +326,29 @@
       "type": "string",
       "title": "Import",
       "render": {
-        "method": "textimport",
-        "textimport": {
+        "method": "datamapper",
+        "datamapper": {
           "accept": ".csv, .tsv,.txt",
           "firstRow": "First row contains headers",
-          "label": "Import"
+          "label": "Import",
+          "formatters": {
+            "isbn": {
+              "description": "Format ISBN numbers by removing non-digits",
+              "function": "str => str ? str.replace(/\\D/g, '').slice(0, 13) : null"
+            }
+          },
+          "customMapping": [
+            { "source": "STOCK_NO", "target": "sku" },
+            { "source": "EAN_NO", "target": "barcode", "formatter": "isbn" },
+            { "source": "FULL_TITLE", "target": "name", "formatter": "titleCase" },
+            { "source": "ISSUE_NO", "target": "issue", "type": "int" },
+            { "source": "PRICE", "target": "price", "type": "float" },
+            { "source": "SHIP_DATE", "target": "release_date", "type": "date" },
+            { "source": "MAIN_DESC", "target": "description|0", "prefix": "", "suffix": "." },
+            { "source": "PAGE", "target": "description|3", "prefix": "Page in catalog: ", "suffix": "." },
+            { "source": "WRITER", "target": "description|1", "prefix": "Writer: ", "suffix": "." },
+            { "source": "ARTIST", "target": "description|2", "prefix": "Artist: ", "suffix": "." }
+          ]
         }
       }
     },

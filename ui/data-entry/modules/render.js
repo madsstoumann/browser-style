@@ -443,7 +443,6 @@ export const entry = (params) => {
 	const label = config.title || 'Add New Entry';
 	const renderAutoSuggest = !!config.render?.autosuggest;
 	const renderBarcodeScanner = !!config.render?.barcode;
-	// const renderTextImport = !!config.render?.textimport;
 
 	const fields = Object.entries(config.items.properties)
 		.map(([propKey, propConfig]) => {
@@ -734,12 +733,12 @@ export const textarea = (params) => {
 		</label>`;
 };
 
-/* === textimport === */
+/* === datamapper === */
 
-export const textimport = (params) => {
-	const config = params.config?.render?.textimport || {};
+export const datamapper = (params) => {
+	const config = params.config?.render?.datamapper || {};
 	return `
-	<text-import part="textimport">
+	<data-mapper part="datamapper">
 		<div part="row">
 			<span part="label"><abbr title="required">*</abbr>${config.label}</span>
 			<div part="filewrap">
@@ -748,5 +747,5 @@ export const textimport = (params) => {
 				<input type="checkbox" part="firstrow" name="firstrow" checked title="${config.firstRow}">
 			</div>
 		</div>
-	</text-import>`;
+	</data-mapper>`;
 }
