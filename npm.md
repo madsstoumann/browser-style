@@ -1,16 +1,3 @@
-# browser.style web components
-
-- auto-suggest
-- barcode-scanner
-- data-entry
-- data-grid
-- number-spinner
-- print-preview
-- rich-text
-- snackbar
-
-
-## Maintain
 ```bash
 # Check npm login status
 npm whoami
