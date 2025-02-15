@@ -9,8 +9,8 @@ import printElements from './modules/printElements.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.31
- * @summary 20-01-2025
+ * @version 1.0.32
+ * @summary 15-02-2025
  * @class
  * @extends {HTMLElement}
  */
@@ -28,6 +28,7 @@ export default class DataGrid extends HTMLElement {
 		this._i18n = {
 			en: {
 				all: "All",
+				columns: 'Columns',
 				densityLarge: "Large density",
 				densityMedium: "Medium density",
 				densitySmall: "Small density",
@@ -44,7 +45,7 @@ export default class DataGrid extends HTMLElement {
 				prev: "Previous",
 				print: "Print",
 				rowsPerPage: "Rows",
-				search: "Filter Columns",
+				search: "Search",
 				selected: "selected",
 				selectAll: "Select all across pages",
 				startsWith: "Starts with",

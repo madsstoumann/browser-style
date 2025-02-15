@@ -200,6 +200,7 @@
 	:where(.ui-icon) {
 		fill: none;
 		height: var(--icon-sz, 1em);
+		pointer-events: none;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 		stroke-width: var(--icon-sw, 1.25);

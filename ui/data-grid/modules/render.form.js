@@ -62,7 +62,7 @@ export function renderNavigation(context) {
 }
 
 export function renderSearch(context) {
-	const { t } = bound(context);
+	const { t, icon } = bound(context);
 
 	return `
 	<fieldset name="search" form="${context.form.id}" hidden>
@@ -77,5 +77,6 @@ export function renderSearch(context) {
 				<option value="equals">${t('equals')}</option>
 			</select>
 		</label>
+		<button type="button" name="columns" title="${t('columns')}">${icon(icons.columns)}</button>
 	</fieldset>`;
 }
