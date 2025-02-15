@@ -113,6 +113,22 @@ export function renderColGroup(colgroup, cols) {
 	}
 }
 
+export function renderColumnFilter(context) {
+	if (!context.form?.elements.columnfilter) return;
+
+	const columnfilter = context.form.elements.columnfilter;
+	columnfilter.innerHTML = `
+		${context.state.thead.map((cell, index) => {
+			const checked = cell.hidden ? '' : 'checked';
+			return `<label><input type="checkbox" name="column-${index}" ${checked}>${cell.label || cell}</label>`;
+		}).join('')}`;
+	
+		setTimeout(() => {
+		columnfilter.hidden = false;
+		columnfilter.popover = 'auto';
+		}, 1000);
+}
+
 /**
  * Renders the table by invoking functions to render the column group, table head, and table body.
  *
@@ -131,6 +147,7 @@ export function renderTable(context) {
 	try {
 		context.log(`render: table`, '#52B', context.settings.debug);
 		renderColGroup(context.colgroup, context.state.cols);
+		renderColumnFilter(context);
 		renderTHead(context);
 		renderTBody(context);
 	} catch (error) {

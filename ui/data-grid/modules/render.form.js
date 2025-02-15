@@ -63,6 +63,7 @@ export function renderNavigation(context) {
 
 export function renderSearch(context) {
 	const { t, icon } = bound(context);
+	const columnFilterId = `${crypto.randomUUID()}`;
 
 	return `
 	<fieldset name="search" form="${context.form.id}" hidden>
@@ -77,6 +78,7 @@ export function renderSearch(context) {
 				<option value="equals">${t('equals')}</option>
 			</select>
 		</label>
-		<button type="button" name="columns" title="${t('columns')}">${icon(icons.columns)}</button>
-	</fieldset>`;
+		<button type="button" name="columns" title="${t('columns')}" id="pa${columnFilterId}" popovertarget="cf${columnFilterId}">${icon(icons.columns)}</button>
+	</fieldset>
+	<fieldset name="columnfilter" form="${context.form.id}" id="cf${columnFilterId}" style="--_pa:pa${columnFilterId};" hidden></fieldset>`;
 }

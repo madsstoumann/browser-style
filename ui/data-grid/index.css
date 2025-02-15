@@ -91,6 +91,26 @@
 			}
 		}
 
+		fieldset[name=columnfilter] {
+			background: Canvas;
+			border-radius: .25em;
+			box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
+			display: grid;
+			font-size: smaller;
+			inset-block: anchor(bottom) auto;
+			inset-inline: auto anchor(right);
+			padding: 1ch;
+			position-anchor: var(--_pa);
+    	position-try-fallbacks: flip-block;
+			&:not(:popover-open) { display: none; }
+			label {
+				display: grid;
+				grid-template-columns: min-content 1fr;
+				gap: 1ch;
+				text-align: start;
+			}
+		}
+
 		& form {
 			align-items: center;
 			display: grid;
