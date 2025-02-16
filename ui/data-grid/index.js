@@ -838,14 +838,18 @@ export default class DataGrid extends HTMLElement {
 	 */
 	set data(newData) {
 		if (Array.isArray(newData) || (newData && typeof newData === 'object')) {
-			this.state = { ...this.state, ...parseData(newData, this) };
-				if (!this.dataInitialized) {
-					renderTable(this);
-					this.setInitialWidths();
-					this.dataInitialized = true;
-				} else {
-					renderTBody(this);
-				}
+			if (!this.dataInitialized) {
+				// First time: parse all data including thead
+				this.state = { ...this.state, ...parseData(newData, this) };
+				renderTable(this);
+				this.setInitialWidths();
+				this.dataInitialized = true;
+			} else {
+				// Subsequent times: only update tbody
+				const parsed = parseData(newData, this);
+				this.state.tbody = parsed.tbody;
+				renderTBody(this);
+			}
 		} else {
 			this.log(`Invalid data format: ${newData}`, '#F00');
 		}
