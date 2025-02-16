@@ -8,6 +8,11 @@ export function setupPrint(context) {
 	}
 	context.printPreview = printPreview;
 
+	// Generate unique template name for this grid instance
+	if (!context.templateId) {
+		context.templateId = `data-grid-${crypto.randomUUID()}`;
+	}
+
 	const template = (data) => {
 		const visibleColumns = context.state.thead.filter(col => !col.hidden);
 		return `
@@ -34,7 +39,7 @@ export function setupPrint(context) {
 		`;
 	};
 
-	printPreview.addTemplate('data-grid', template, {
+	printPreview.addTemplate(context.templateId, template, {
 		'font-family': 'ff-system',
 		'font-size': 'small',
 		'margin-top': '15mm',
@@ -51,7 +56,7 @@ export function printTable(context, directPrint = false) {
 		setupPrint(context);
 	}
 	
-	context.printPreview.setAttribute('template', 'data-grid');
+	context.printPreview.setAttribute('template', context.templateId);
 	context.printPreview.setAttribute('use-template', '');
 	context.printPreview.data = context.state.tbody;
 	

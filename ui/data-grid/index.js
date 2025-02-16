@@ -94,6 +94,12 @@ export default class DataGrid extends HTMLElement {
 				this.overflowListener();
 				this.overflowListener = null;
 			}
+
+			// Clean up print preview template
+			if (this.printPreview && this.templateId) {
+				this.printPreview._templates.delete(this.templateId);
+				this.printPreview._templates.delete(`${this.templateId}-settings`);
+			}
 		} catch (error) {
 			this.log(`Error in disconnectedCallback: ${error}`, '#F00');
 		}
