@@ -9,21 +9,23 @@ export function setupPrint(context) {
 	}
 	context.printPreview = printPreview;
 
-	// Create template function based on visible columns
 	const template = (data) => {
 		const visibleColumns = context.state.thead.filter(col => !col.hidden);
 		return `
+			<style>
+				table { width: 100%; border-collapse: collapse; }
+				th { text-align: start; }
+			</style>
 			<paper-sheet>
 				<table part="table">
 					<thead>
-						<tr>${visibleColumns.map(col => `<th part="left">${col.label}</th>`).join('')}</tr>
+						<tr>${visibleColumns.map(col => `<th>${col.label}</th>`).join('')}</tr>
 					</thead>
 					<tbody part="tbody">
 						${data.map(row => `
 							<tr>
 								${visibleColumns.map(col => {
-									const align = col.classList?.includes('--end') ? 'right' : 'left';
-									return `<td part="${align}">${row[col.field] || ''}</td>`;
+									return `<td>${row[col.field] || ''}</td>`;
 								}).join('')}
 							</tr>
 						`).join('')}
