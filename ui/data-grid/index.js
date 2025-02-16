@@ -87,6 +87,18 @@ export default class DataGrid extends HTMLElement {
 		}));
 	}
 
+	disconnectedCallback() {
+		try {
+			// Clean up overflow observer
+			if (this.overflowListener) {
+				this.overflowListener();
+				this.overflowListener = null;
+			}
+		} catch (error) {
+			this.log(`Error in disconnectedCallback: ${error}`, '#F00');
+		}
+	}
+
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		this.log(`attr: ${name}=${newValue} (${oldValue})`, '#046');
