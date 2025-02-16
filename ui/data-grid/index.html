@@ -178,46 +178,51 @@
 
 		/* === FETCH EXAMPLE === */
 		const grid2 = document.getElementById('grid2');
-		grid2.addEventListener('dg:loaded', () => {
-		fetch(`./data/test0.json`)
-			.then((response) => response.json())
-			.then((result) => {
-				grid2.settings = {
-					colWidths: [5, 10, 30, 7.5, 35, 12.5],
-					externalNavigation: true,
-					expandType: '--inline-end',
-					exportCSV: true,
-					exportJSON: true,
-					layoutFixed: false,
-					pagination: true,
-					printable: false,
-					rows: false,
-					searchable: true,
-					selectable: true,
-					stickyCols: [0, 1],
-					textoptions: false,
-					textwrap: false,
+		let theadInitialized = false;
 
-					thead: [
-						{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },
-						{ field: 'series', label: 'Series'},
-						{ field: 'issue', type: 'number', classList: '--end' },
-						{ field: 'name', label: 'Title' },
-						{ field: 'price', type: 'number', classList: '--end' },
-						{ field: 'artist', hidden: true, expand: true },
-						{ field: 'sku', hidden: true, expand: true },
-						{ field: 'type', hidden: true, expand: true },
-						{ field: 'description', hidden: true, expand: true },
-						{ field: 'vendor', hidden: true, expand: true },
-						{ field: 'date', hidden: true, expand: true },
-						{ field: 'delivery', hidden: true, expand: true },
-					],
-					// displayOrder: ['name', 'issue', 'id', 'price', 'series']
-				};
-				grid2.setItemsPerPage(10);
-				grid2.setTotalItems(result.total);
-				grid2.data = result.data;
-			});
+		grid2.addEventListener('dg:loaded', () => {
+			fetch(`./data/test0.json`)
+				.then((response) => response.json())
+				.then((result) => {
+					if (!theadInitialized) {
+						grid2.settings = {
+							colWidths: [5, 10, 30, 7.5, 35, 12.5],
+							externalNavigation: true,
+							expandType: '--inline-end',
+							exportCSV: true,
+							exportJSON: true,
+							layoutFixed: false,
+							pagination: true,
+							printable: false,
+							rows: false,
+							searchable: true,
+							selectable: true,
+							stickyCols: [0, 1],
+							textoptions: false,
+							textwrap: false,
+
+							thead: [
+								{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },
+								{ field: 'series', label: 'Series'},
+								{ field: 'issue', type: 'number', classList: '--end' },
+								{ field: 'name', label: 'Title' },
+								{ field: 'price', type: 'number', classList: '--end' },
+								{ field: 'artist', hidden: true, expand: true },
+								{ field: 'sku', hidden: true, expand: true },
+								{ field: 'type', hidden: true, expand: true },
+								{ field: 'description', hidden: true, expand: true },
+								{ field: 'vendor', hidden: true, expand: true },
+								{ field: 'date', hidden: true, expand: true },
+								{ field: 'delivery', hidden: true, expand: true },
+							],
+							// displayOrder: ['name', 'issue', 'id', 'price', 'series']
+						};
+						theadInitialized = true;
+					}
+					grid2.setItemsPerPage(10);
+					grid2.setTotalItems(result.total);
+					grid2.data = result.data;
+				});
 		});
 
 		grid2.addEventListener('dg:requestpagechange', (event) => {

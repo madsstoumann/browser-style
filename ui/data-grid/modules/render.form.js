@@ -23,7 +23,6 @@ export function renderForm(context) {
 		<small><output name="selected">0</output> ${t('selected')}</small>
 	</fieldset>
 	<fieldset name="actions">
-		<button type="button" name="print" title="${t('print')}" hidden>${icon(icons.printer)}</button>
 		<fieldset name="textoptions" hidden>
 			<label class="ui-button" title="${t('layoutFixed')}"><input type="checkbox" name="layoutfixed" data-sr checked>${icon(icons.layoutFixed)}</label>
 			<label class="ui-button" title="${t('textWrap')}"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>
@@ -78,7 +77,11 @@ export function renderSearch(context) {
 				<option value="equals">${t('equals')}</option>
 			</select>
 		</label>
-		<button type="button" name="columns" title="${t('columns')}" id="pa${columnFilterId}" popovertarget="cf${columnFilterId}">${icon(icons.columns)}</button>
+		<fieldset name="printfilter">
+			<button type="button" name="preview" form="${context.form.id}" title="${t('printpreview')}" hidden>${icon(icons.preview)}</button>
+			<button type="button" name="print" form="${context.form.id}" title="${t('print')}" hidden>${icon(icons.printer)}</button>
+			<button type="button" name="columns" title="${t('columns')}" id="pa${columnFilterId}" popovertarget="cf${columnFilterId}">${icon(icons.columns)}</button>
+		</fieldset>
 	</fieldset>
-	<fieldset name="columnfilter" form="${context.form.id}" id="cf${columnFilterId}" style="--_pa:pa${columnFilterId};" hidden></fieldset>`;
+	<fieldset name="columnfilter" form="${context.form.id}" id="cf${columnFilterId}" style="--_pa:pa${columnFilterId};" popover></fieldset>`;
 }

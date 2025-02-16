@@ -115,22 +115,12 @@ export function renderColGroup(colgroup, cols) {
 
 export function renderColumnFilter(context) {
 	if (!context.form?.elements.columnfilter) return;
-
 	const columnfilter = context.form.elements.columnfilter;
 	columnfilter.innerHTML = `
 		${context.state.thead.map((cell, index) => {
 			const checked = cell.hidden ? '' : 'checked';
-			return `<label><input type="checkbox" name="column-${index}" ${checked}>${cell.label || cell}</label>`;
+			return `<label><input type="checkbox" name="${cell.field}" ${checked}>${cell.label || cell}</label>`;
 		}).join('')}`;
-
-	requestAnimationFrame(() => {
-		queueMicrotask(() => {
-			if (columnfilter) {
-				columnfilter.toggleAttribute('popover', true);
-				columnfilter.hidden = false;
-			}
-		});
-	});
 }
 
 /**
@@ -188,7 +178,7 @@ export function renderTBody(context) {
 		if (!tbody.length) return;
 
 		// Remove existing popovers
-		context.querySelectorAll('[popover]').forEach(popover => popover.remove());
+		context.querySelectorAll('.ui-table-expand').forEach(popover => popover.remove());
 
 		// Filter for visible columns
 		const visibleColumns = thead.filter(cell => !cell.hidden);

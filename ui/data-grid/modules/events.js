@@ -1,4 +1,4 @@
-import { renderTBody } from './render.table.js';
+import { renderTBody, renderTHead } from './render.table.js';
 import { exportCSV, downloadFile, handleSorting } from './data.js';
 import handleKeyboardEvents from './events.keyboard.js';
 import { addEventListeners, getKeyValueObject, getObj } from './utility.js';
@@ -60,6 +60,17 @@ export function attachEventListeners(context) {
 
 	// Printable option
 	form.elements.print.addEventListener('click', () => context.printTable());
+
+	// Column filter
+	form.elements.columnfilter.addEventListener('change', (event) => {
+		const column = context.state.thead.find(col => col.field === event.target.name);
+		if (column) {
+			column.hidden = !event.target.checked;
+			context.colgroup.innerHTML = '';
+			renderTHead(context);
+			renderTBody(context);
+		}
+	});
 
 	// Select / Deselect All
 	form.elements.selectall.addEventListener('click', () => {

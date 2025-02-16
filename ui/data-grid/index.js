@@ -44,6 +44,7 @@ export default class DataGrid extends HTMLElement {
 				page: "Page",
 				prev: "Previous",
 				print: "Print",
+				printpreview: "Print preview",
 				rowsPerPage: "Rows",
 				search: "Search",
 				selected: "selected",
@@ -758,6 +759,7 @@ export default class DataGrid extends HTMLElement {
 			this.form.elements.json.hidden = !this.settings.exportJSON;
 
 			/* misc */
+			this.form.elements.preview.hidden = !this.settings.printable;
 			this.form.elements.print.hidden = !this.settings.printable;
 			this.form.elements.search.hidden = !this.settings.searchable;
 
@@ -837,7 +839,6 @@ export default class DataGrid extends HTMLElement {
 	set data(newData) {
 		if (Array.isArray(newData) || (newData && typeof newData === 'object')) {
 			this.state = { ...this.state, ...parseData(newData, this) };
-
 				if (!this.dataInitialized) {
 					renderTable(this);
 					this.setInitialWidths();

@@ -45,6 +45,10 @@
 				}
 			}
 
+			& label:has([name="searchmethod"]) {
+				margin-inline-end: auto;
+			}
+
 			& select {
 				background-position: calc(100% - .125ch) center;
 				block-size: unset;
