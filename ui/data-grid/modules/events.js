@@ -59,7 +59,8 @@ export function attachEventListeners(context) {
 	form.elements.last.addEventListener('click', () => context.navigatePage(context.state.pages - 1));
 
 	// Printable option
-	form.elements.print.addEventListener('click', () => context.printTable());
+	form.elements.preview.addEventListener('click', () => context.print());
+	form.elements.print.addEventListener('click', () => context.print(true));
 
 	// Column filter
 	form.elements.columnfilter.addEventListener('change', (event) => {

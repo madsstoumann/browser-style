@@ -3,14 +3,14 @@ import { renderTable, renderTBody, updateNavigation } from './modules/render.tab
 import { calculatePages, consoleLog } from './modules/utility.js';
 import { attachCustomEventHandlers, attachEventListeners } from './modules/events.js';
 import { renderForm, renderSearch } from './modules/render.form.js';
-import printElements from './modules/printElements.js';
+import { printTable } from './modules/print.js';
 
 /**
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.32
- * @summary 15-02-2025
+ * @version 1.0.33
+ * @summary 16-02-2025
  * @class
  * @extends {HTMLElement}
  */
@@ -422,19 +422,11 @@ export default class DataGrid extends HTMLElement {
 	}
 
 	/**
-	 * Prints the current table using the printElements class.
-	 * If an error occurs during printing, it logs the error message.
-	 *
-	 * @method printTable
-	 * @throws Will log an error message if printing fails.
+	 * Prints the current table
+	 * @param {boolean} [directPrint=false] - If true, prints directly without preview
 	 */
-	printTable() {
-		try {
-			const printer = new printElements();
-			printer.print([this.table]);
-		} catch (error) {
-			this.log(`Error printing: ${error}`, '#F00');
-		}
+	print(directPrint = false) {
+		printTable(this, directPrint);
 	}
 
 	/**
