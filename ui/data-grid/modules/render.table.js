@@ -122,11 +122,15 @@ export function renderColumnFilter(context) {
 			const checked = cell.hidden ? '' : 'checked';
 			return `<label><input type="checkbox" name="column-${index}" ${checked}>${cell.label || cell}</label>`;
 		}).join('')}`;
-	
-		setTimeout(() => {
-		columnfilter.hidden = false;
-		columnfilter.popover = 'auto';
-		}, 1000);
+
+	requestAnimationFrame(() => {
+		queueMicrotask(() => {
+			if (columnfilter) {
+				columnfilter.toggleAttribute('popover', true);
+				columnfilter.hidden = false;
+			}
+		});
+	});
 }
 
 /**
