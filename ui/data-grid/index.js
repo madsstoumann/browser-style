@@ -55,17 +55,12 @@ export default class DataGrid extends HTMLElement {
 		};
 	}
 
-	/**
-	 * Lifecycle method called when the element is added to the document's DOM.
-	 * Sets up necessary elements and initializes the grid functionality.
-	 */
 	async connectedCallback() {
 		await this.loadResources();
 
 		this.setupElements();
 		this.settingsWatcher(this.settings);
 
-		// Initial rendering of the table if there is data
 		if (this.state.items > 0) {
 			renderTable(this);
 		}
@@ -92,13 +87,6 @@ export default class DataGrid extends HTMLElement {
 		}));
 	}
 
-	/**
-	 * Callback that fires when a custom element's attribute is added, removed, updated, or replaced
-	 * @param {string} name - The name of the attribute that changed
-	 * @param {string|null} oldValue - The previous value of the attribute
-	 * @param {string|null} newValue - The new value of the attribute
-	 * @returns {void}
-	 */
 	attributeChangedCallback(name, oldValue, newValue) {
 		const render = (oldValue && (oldValue !== newValue)) || false;
 		this.log(`attr: ${name}=${newValue} (${oldValue})`, '#046');
@@ -129,14 +117,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Checks and sets the initial page for the data grid.
-	 * 
-	 * This method retrieves the 'page' attribute, parses it as an integer, and sets the 
-	 * current page state if the parsed value is valid and within the range of available pages.
-	 * 
-	 * @throws Will log an error message if an exception occurs during the process.
-	 */
 	checkAndSetInitialPage() {
 		try {
 			const page = parseInt(this.getAttribute('page'), 10);
@@ -148,22 +128,12 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Creates a <colgroup> element and inserts it at the beginning of the table.
-	 *
-	 * @returns {HTMLTableColElement} The created <colgroup> element.
-	 */
 	createColgroup() {
 		const colgroup = document.createElement('colgroup');
 		this.table.prepend(colgroup);
 		return colgroup;
 	}
 
-	/**
-	 * Creates a new form element with a unique ID and populates it with content.
-	 *
-	 * @returns {HTMLFormElement} The newly created form element.
-	 */
 	createForm() {
 		const form = document.createElement('form');
 		form.id = `form${crypto.randomUUID()}`;
@@ -171,11 +141,6 @@ export default class DataGrid extends HTMLElement {
 		return form;
 	}
 
-	/**
-	 * Creates a default Settings-object based on the attributes of the custom element.
-	 *
-	 * @returns {Object} The newly created settings object.
-	 */
 	createSettings() {
 		return {
 			debug: this.hasAttribute('debug') || false,
@@ -206,11 +171,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Creates a default state-object
-	 *
-	 * @returns {Object} The newly created state object.
-	 */
 	createState() {
 		return {
 			cellIndex: 0,
@@ -231,24 +191,12 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Creates a new table element, appends it to the wrapper, and returns the table element.
-	 *
-	 * @returns {HTMLTableElement} The newly created table element.
-	 */
 	createTable() {
 		const table = document.createElement('table');
 		this.wrapper.appendChild(table);
 		return table;
 	}
 
-	/**
-	 * Dispatches a custom event with the given name and detail.
-	 * Logs the event name and any errors that occur during dispatch.
-	 *
-	 * @param {string} name - The name of the event to dispatch.
-	 * @param {Object} detail - The detail object to include with the event.
-	 */
 	dispatch(name, detail) {
 		try {
 			this.log(`event: ${name}`, '#A0A', this.settings.debug);
@@ -258,14 +206,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	};
 
-	/**
-	 * Fetches a resource from the given URL and returns the parsed JSON data.
-	 * If the URL is invalid or the fetch operation fails, it logs an error and returns null.
-	 *
-	 * @async
-	 * @param {string} url - The URL of the resource to fetch.
-	 * @returns {Promise<Object|null>} A promise that resolves to the parsed JSON data, or null if an error occurs.
-	 */
 	async fetchResource(url) {
 		if (!url) return null;
 		if (!this.isValidUrl(url)) return null;
@@ -282,12 +222,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Checks if a given string is a valid URL.
-	 *
-	 * @param {string} str - The string to be validated as a URL.
-	 * @returns {boolean} - Returns true if the string is a valid URL, otherwise false.
-	 */
 	isValidUrl(str) {
 		// First, try to parse the string as JSON. If it succeeds, return false (as it is valid JSON, not a URL).
 		try {
@@ -306,17 +240,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Asynchronously loads resources for the data grid component.
-	 * 
-	 * This method fetches data, schema, and internationalization (i18n) resources.
-	 * If the `data` attribute is a URL, it fetches the data from the URL; otherwise,
-	 * it treats the `data` attribute as JSON.
-	 * 
-	 * @async
-	 * @function loadResources
-	 * @returns {Promise<void>} A promise that resolves when all resources are loaded.
-	 */
 	async loadResources() {
 		try {
 			const dataAttr = this.getAttribute('data');
@@ -375,15 +298,7 @@ export default class DataGrid extends HTMLElement {
 			this.log(`Error loading resources: ${error}`, '#F00');
 		}
 	}
-	
 
-	/**
-	 * Navigates to a specified page or in a specified direction within the data grid.
-	 *
-	 * @param {number|null} [page=null] - The page number to navigate to. If null, navigation is based on the direction.
-	 * @param {string|null} [direction=null] - The direction to navigate ('next' or 'prev'). Ignored if page is specified.
-	 * @throws Will throw an error if navigation fails.
-	 */
 	navigatePage(page = null, direction = null) {
 		try {
 			let newPage = this.state.page;
@@ -409,42 +324,20 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Parses a string of comma-separated column indices and returns an array of integers.
-	 *
-	 * @param {string} stickycolsAttr - A string of comma-separated column indices.
-	 * @returns {number[]} An array of integers representing the column indices.
-	 */
 	parseStickyCols(stickycolsAttr) {
 		return stickycolsAttr
 			? stickycolsAttr.split(',').map(col => parseInt(col.trim(), 10)).filter(Number.isInteger)
 			: [];
 	}
 
-	/**
-	 * Prints the current table
-	 * @param {boolean} [directPrint=false] - If true, prints directly without preview
-	 */
 	print(directPrint = false) {
 		printTable(this, directPrint);
 	}
 
-	/**
-	 * Renders an SVG icon using the provided paths.
-	 *
-	 * @param {string} paths - A comma-separated string of path data for the SVG.
-	 * @returns {string} The SVG element as a string.
-	 */
 	renderIcon(paths) {
 		return `<svg viewBox="0 0 24 24" class="ui-icon">${paths.split(',').map(path => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
 
-	/**
-	 * Resizes a column in the table by adjusting its width.
-	 *
-	 * @param {number} index - The index of the column to resize.
-	 * @param {number} value - The value to adjust the column width by, in percentage points.
-	 */
 	resizeColumn(index, value) {
 		try {
 			const col = this.colgroup.children[index];
@@ -455,15 +348,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Selects or deselects rows in the data grid.
-	 *
-	 * @param {NodeList|Array} rows - The rows to be selected or deselected.
-	 * @param {boolean} [toggle=true] - If true, toggles the selection state of each row.
-	 * @param {boolean} [force=false] - If true, forces the selection state based on the toggle parameter.
-	 *
-	 * @throws Will throw an error if there is an issue during the selection process.
-	 */
 	selectRows = (rows, toggle = true, force = false, shiftKey = false) => {
 		try {
 			if (shiftKey) {
@@ -495,15 +379,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	};
 
-	/**
-	 * Sets the active cell in the data grid.
-	 * 
-	 * This method updates the tabindex of the previously active cell to -1, ends editing if necessary,
-	 * and sets the new active cell based on the current row and cell indices. The new active cell's tabindex
-	 * is set to 0, and it is focused.
-	 * 
-	 * @throws Will log an error message if an exception occurs during the process.
-	 */
 	setActive = () => {
 		try {
 			const { rowIndex, cellIndex } = this.state;
@@ -523,12 +398,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	};
 
-	/**
-	 * Sets the initial widths of the columns in the data grid based on the widths of the cells in the first row.
-	 * 
-	 * This method calculates the width of each column as a percentage of the total table width and applies it to the corresponding <col> element.
-	 * @throws Will log an error message if an error occurs during the width calculation and setting process.
-	 */
 	setInitialWidths() {
 		try {
 			if (!this.table || !this.colgroup) return;
@@ -549,7 +418,6 @@ export default class DataGrid extends HTMLElement {
 				});
 			};
 
-			// Use requestAnimationFrame to ensure browser has completed layout rendering
 			requestAnimationFrame(calculateWidths);
 
 		} catch (error) {
@@ -557,12 +425,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Sets the number of items to display per page in the data grid.
-	 *
-	 * @param {number|string} itemsPerPage - The number of items per page. If a string is provided, it will be parsed as an integer.
-	 * @throws Will log an error if setting items per page fails.
-	 */
 	setItemsPerPage(itemsPerPage) {
 		try {
 			const newItemsPerPage = parseInt(itemsPerPage, 10) || 10;
@@ -587,12 +449,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Sets the total number of items for pagination when using external navigation.
-	 * This is particularly useful when the grid data represents only a subset of a larger dataset.
-	 *
-	 * @param {number} totalItems - The total number of items across all pages.
-	 */
 	setTotalItems(totalItems) {
 		if (this.settings.externalNavigation && Number.isInteger(totalItems) && totalItems >= 0) {
 			this.state.items = totalItems;
@@ -603,13 +459,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Sets the current page of the data grid.
-	 *
-	 * @param {number} page - The page number to set.
-	 * @param {boolean} [forceRender=false] - Whether to force rendering of the table body.
-	 * @throws Will log an error message if an exception occurs during the page setting process.
-	 */
 	setPage(page, forceRender = false) {
 		try {
 			const newPage = Math.max(0, Math.min(page, this.state.pages - 1));
@@ -636,14 +485,6 @@ export default class DataGrid extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Sets up and initializes the essential DOM elements for the data grid.
-	 * Creates or uses existing table structure and adds form elements.
-	 * If a table exists in the DOM, data is extracted from it.
-	 * If no table exists, one is created programmatically.
-	 * Ensures the table has required elements: thead, tbody, and colgroup.
-	 * @private
-	 */
 	setupElements() {
 		this.wrapper = document.createElement('div');
 		this.appendChild(this.wrapper);
@@ -666,16 +507,6 @@ export default class DataGrid extends HTMLElement {
 		this.insertAdjacentHTML('afterbegin', renderSearch(this));
 	}
 
-	/**
-	 * Sets up listeners to detect overflow changes on the wrapper and table elements.
-	 * Triggers the provided callback function when an overflow condition is detected.
-	 *
-	 * @param {HTMLElement} wrapper - The wrapper element to monitor for overflow.
-	 * @param {HTMLElement} table - The table element to monitor for width changes.
-	 * @param {Function} callback - The callback function to execute when an overflow condition is detected.
-	 * 
-	 * @returns {Function} A cleanup function to disconnect the observers.
-	 */
 	setupOverflowListener(wrapper, table, callback) {
 		let callbackPending = false; // Debounce flag to avoid duplicate calls
 	
@@ -703,11 +534,6 @@ export default class DataGrid extends HTMLElement {
 		};
 	}
 
-	/**
-	 * Sets the sticky columns for the data grid.
-	 * Iterates over the indices of the sticky columns and adjusts their offset positions.
-	 * Adds CSS custom properties and classes to the table for each sticky column.
-	 */
 	setStickyCols(isOverflowing) {
 		if (isOverflowing) {
 			this.wrapper.classList.add('--overflowing');

@@ -1,18 +1,5 @@
 import { calculatePages, camelCase, capitalize, consoleLog } from './utility.js';
 
-/**
- * Extracts data from an HTML table element and returns it in a structured format.
- *
- * @param {HTMLTableElement} table - The HTML table element to extract data from.
- * @param {number} [itemsPerPage=5] - The number of items per page for pagination.
- * @param {number} [selectable=0] - Indicates if the table rows are selectable (1 for true, 0 for false).
- * @returns {Object} An object containing the extracted table data.
- * @returns {number} return.cols - The number of columns in the table, adjusted for hidden columns and selectable rows.
- * @returns {number} return.items - The total number of items (rows) in the table body.
- * @returns {number} return.pages - The total number of pages based on items per page.
- * @returns {Array} return.tbody - The extracted table body data.
- * @returns {Array} return.thead - The extracted table head data.
- */
 export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	try {
 		const { thead, hiddenCount } = getTableHead(table);
@@ -30,13 +17,6 @@ export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	}
 }
 
-/**
- * Downloads a file with the given content and filename.
- *
- * @param {string} content - The content to be included in the file.
- * @param {string} filename - The name of the file to be downloaded.
- * @param {string} [mimeType='text/csv;charset=utf-8;'] - The MIME type of the file.
- */
 export function downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
 	try {
 		const blob = new Blob([content], { type: mimeType });
@@ -52,16 +32,6 @@ export function downloadFile(content, filename, mimeType = 'text/csv;charset=utf
 	}
 }
 
-/**
- * Exports the given state data to a CSV format string.
- *
- * @param {Object} state - The state object containing table data.
- * @param {Array} state.thead - Array of header cell objects.
- * @param {string} state.thead[].label - The label of the header cell.
- * @param {string} state.thead[].field - The field name corresponding to the header cell.
- * @param {Array} state.tbody - Array of row objects.
- * @returns {string} The CSV formatted string.
- */
 export function exportCSV(state) {
 	try {
 		const headers = state.thead.map(cell => cell.label).join(',');
@@ -75,12 +45,6 @@ export function exportCSV(state) {
 	}
 }
 
-/**
- * Generates a table header (thead) configuration from the first row of a table body (tbody).
- *
- * @param {Array<Object>} tbody - The table body data, where each object represents a row.
- * @returns {Array<Object>} An array of objects representing the table header configuration.
- */
 function generateTheadFromTbody(tbody) {
 	return Object.keys(tbody[0] || {}).map(key => ({
 		field: key,
@@ -89,13 +53,6 @@ function generateTheadFromTbody(tbody) {
 	}));
 }
 
-/**
- * Extracts and returns the data from the table body as an array of objects.
- *
- * @param {HTMLTableElement} table - The table element from which to extract the data.
- * @param {Array} thead - An array representing the table header, where each element contains a `field` property.
- * @returns {Array<Object>} An array of objects representing the table body data, where each object corresponds to a row and each property corresponds to a cell's text content.
- */
 function getTableBody(table, thead) {
 	return Array.from(table.tBodies[0].rows, row => {
 		return Array.from(row.cells).reduce((rowData, cell, index) => {
@@ -106,18 +63,6 @@ function getTableBody(table, thead) {
 	});
 }
 
-/**
- * Extracts and processes the header cells of a given table element.
- *
- * @param {HTMLTableElement} table - The table element from which to extract the header cells.
- * @returns {Object} An object containing:
- * - `thead` {Array<Object>} - An array of objects representing each header cell, with properties:
- * - `field` {string} - The camelCase version of the cell's text content.
- * - `hidden` {boolean} - Whether the cell is hidden.
- * - `label` {string} - The text content of the cell.
- * - `uid` {boolean} - Whether the cell has a `data-uid` attribute.
- * - `hiddenCount` {number} - The number of hidden header cells.
- */
 function getTableHead(table) {
 	const thead = [];
 	let hiddenCount = 0;
@@ -137,12 +82,6 @@ function getTableHead(table) {
 	return { thead, hiddenCount };
 }
 
-/**
- * Handles the sorting logic for a data grid.
- *
- * @param {HTMLElement} context - The HTML element that contains the sorting attributes.
- * @param {number} index - The index of the column to sort.
- */
 export function handleSorting(context, index) {
 	const currentSortIndex = parseInt(context.getAttribute('sortindex'), 10);
 	const currentSortOrder = parseInt(context.getAttribute('sortorder'), 10);
@@ -160,10 +99,6 @@ export function handleSorting(context, index) {
 
 /**
  * Reorders columns based on displayOrder setting
- * @param {Array} thead - Original thead array
- * @param {Array} tbody - Original tbody array
- * @param {Array} displayOrder - Array of field names in desired order
- * @returns {Object} Object containing reordered thead and tbody
  */
 function reorderColumns(thead, tbody, displayOrder) {
 		if (!displayOrder?.length) return { thead, tbody };

@@ -1,7 +1,6 @@
 import PrintPreview from '../../print-preview/index.js';
 
 export function setupPrint(context) {
-	// Either find existing print-preview or create new one
 	let printPreview = document.querySelector('print-preview');
 	if (!printPreview) {
 		printPreview = document.createElement('print-preview');
@@ -35,7 +34,6 @@ export function setupPrint(context) {
 		`;
 	};
 
-	// Add template to print-preview with some default settings
 	printPreview.addTemplate('data-grid', template, {
 		'font-family': 'ff-system',
 		'font-size': 'small',
@@ -48,10 +46,6 @@ export function setupPrint(context) {
 	});
 }
 
-/**
- * Prints the current table using the PrintPreview component.
- * @param {boolean} [directPrint=false] - If true, prints directly without preview
- */
 export function printTable(context, directPrint = false) {
 	if (!context.printPreview) {
 		setupPrint(context);

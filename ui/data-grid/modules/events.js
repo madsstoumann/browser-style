@@ -3,12 +3,6 @@ import { exportCSV, downloadFile, handleSorting } from './data.js';
 import handleKeyboardEvents from './events.keyboard.js';
 import { addEventListeners, getKeyValueObject, getObj } from './utility.js';
 
-/**
- * Attaches custom event handlers for the context.
- * Handles events such as appending new rows, clearing selected rows, and retrieving rows.
- *
- * @param {Object} context - The context object containing the state, form, and event dispatching methods.
- */
 export function attachCustomEventHandlers(context) {
 	const { state } = context;
 
@@ -44,11 +38,6 @@ export function attachCustomEventHandlers(context) {
 	});
 }
 
-/**
- * Attaches standard event listeners to form controls, such as pagination, print, export, search, and density changes.
- *
- * @param {Object} context - The context object containing form, table and state.
- */
 export function attachEventListeners(context) {
 	const { form, table, state } = context;
 
@@ -123,12 +112,6 @@ export function attachEventListeners(context) {
 	}
 }
 
-/**
- * Handles form input events for pagination controls such as items per page and page number.
- *
- * @param {Event} event - The input event from the form.
- * @param {Object} context - The context object with state and settings.
- */
 function handleFormInput(event, context) {
 	const input = event.target;
 	if (input.name === 'itemsperpage') context.setAttribute('itemsperpage', parseInt(input.value, 10));
@@ -137,12 +120,6 @@ function handleFormInput(event, context) {
 	if (input.name === 'textwrap') context.table.classList.toggle('--no-wrap', !input.checked);
 }
 
-/**
- * Handles table clicks for sorting, row selection, and other actions.
- *
- * @param {MouseEvent} event - The click event from the table.
- * @param {Object} context - The context object with state and settings.
- */
 function handleTableClick(event, context) {
 	const { table, state, settings } = context;
 	const node = event.target;
@@ -190,12 +167,6 @@ function handleTableClick(event, context) {
 	}
 }
 
-/**
- * Handles the focus event on a cell element.
- * Sets the original and new value to the trimmed text content of the cell if it is content editable.
- *
- * @param {Event} event - The focus event triggered on the cell element.
- */
 function handleCellFocus(event) {
 	const cell = event.target;
 	if (cell.isContentEditable && !cell.dataset.oldValue) {
@@ -221,17 +192,6 @@ function handleCellEdit(event) {
 	}
 }
 
-/**
- * Handles the update of a cell's content in a data grid.
- *
- * @param {Event} event - The event object triggered by the cell update.
- * @param {Object} context - The context object containing the state and settings of the data grid.
- * @param {Object} context.settings - The settings for the data grid.
- * @param {boolean} context.settings.selectable - Indicates if the cells are selectable.
- * @param {Object} context.state - The state of the data grid.
- * @param {Array} context.state.thead - The header configuration of the data grid.
- * @param {Function} context.dispatchEvent - Function to dispatch custom events.
- */
 function handleCellUpdate(event, context) {
 	const cell = event.target;
 	if (!cell.isContentEditable) return;

@@ -1,17 +1,6 @@
 import { icons } from './icons.js';
 import { calculatePages, t } from './utility.js';
 
-/**
- * Sorts the provided data array based on the sorting context.
- *
- * @param {Object} context - The context object containing state and options.
- * @param {Object} context.state - The state object containing sorting information.
- * @param {number} context.state.sortIndex - The index of the column to sort by.
- * @param {number} context.state.sortOrder - The order of sorting (1 for descending, -1 for ascending).
- * @param {Object} context.settings - The options object containing locale information.
- * @param {string} context.settings.locale - The locale string used for string comparison.
- * @param {Array<Object>} data - The array of data objects to be sorted.
- */
 function applySorting(context, data) {
 	const { sortIndex, sortOrder } = context.state;
 	const { locale } = context.settings;
@@ -49,16 +38,6 @@ function applySorting(context, data) {
 	}
 }
 
-/**
- * Filters the provided data based on the search term and method specified in the context.
- *
- * @param {Object} context - The context object containing state and attributes.
- * @param {Object} context.state - The state object containing thead information.
- * @param {Array} context.state.thead - The table header array with cell information.
- * @param {string} context.getAttribute - Function to get attributes from the context.
- * @param {Array} data - The data array to be filtered.
- * @returns {Array} - The filtered data array.
- */
 function filterData(context, data) {
 	const { thead } = context.state;
 	const hiddenIndices = thead.reduce((acc, cell, index) => cell.hidden ? [...acc, index] : acc, []);
@@ -82,16 +61,6 @@ function filterData(context, data) {
 	);
 }
 
-/**
- * Paginates the provided data based on the current page and items per page from the context state.
- *
- * @param {Object} context - The context object containing the state.
- * @param {Object} context.state - The state object containing pagination information.
- * @param {number} context.state.page - The current page number.
- * @param {number} context.state.itemsPerPage - The number of items per page.
- * @param {Array} data - The array of data to paginate.
- * @returns {Array} - A subset of the data array corresponding to the current page.
- */
 function paginate(context, data) {
 	if (context.settings.externalNavigation) return data;
 	const { page, itemsPerPage } = context.state;
@@ -99,12 +68,6 @@ function paginate(context, data) {
 	return data.slice(startIndex, startIndex + itemsPerPage);
 }
 
-/**
- * Renders a column group by setting its inner HTML to a specified number of <col> elements.
- *
- * @param {HTMLElement} colgroup - The column group element to render into.
- * @param {number} cols - The number of <col> elements to create and insert into the column group.
- */
 export function renderColGroup(colgroup, cols) {
 	try {
 		colgroup.innerHTML = new Array(cols).fill('<col>').join('');
@@ -123,20 +86,6 @@ export function renderColumnFilter(context) {
 		}).join('')}`;
 }
 
-/**
- * Renders the table by invoking functions to render the column group, table head, and table body.
- *
- * @param {Object} context - The context object containing necessary information for rendering.
- * @param {Object} context.log - Function to log messages.
- * @param {string} context.log.message - The message to log.
- * @param {string} context.log.color - The color code for the log message.
- * @param {boolean} context.log.debug - Flag to indicate if debugging is enabled.
- * @param {Object} context.colgroup - The column group element to be rendered.
- * @param {Object} context.state - The state object containing column information.
- * @param {Array} context.state.cols - Array of column definitions.
- * @param {Object} context.settings - Options for rendering.
- * @param {boolean} context.settings.debug - Flag to indicate if debugging is enabled.
- */
 export function renderTable(context) {
 	try {
 		context.log(`render: table`, '#52B', context.settings.debug);
@@ -149,29 +98,6 @@ export function renderTable(context) {
 	}
 }
 
-/**
- * Renders the table body (tbody) based on the provided context.
- *
- * @param {Object} context - The context object containing state, options, and other necessary properties.
- * @param {Object} context.state - The state object containing tbody, thead, cols, and selected properties.
- * @param {Array} context.state.tbody - The array of data rows to be rendered.
- * @param {Array} context.state.thead - The array of header cells defining the columns.
- * @param {number} context.state.cols - The number of visible columns.
- * @param {Set} context.state.selected - The set of selected row identifiers.
- * @param {Object} context.settings - The options object containing configuration settings.
- * @param {boolean} context.settings.selectable - Indicates if rows are selectable.
- * @param {string} context.settings.expandType - The type of expand behavior. 
- * @param {Object} context.table - The table element where the tbody will be rendered.
- * @param {Object} context.wrapper - The wrapper element for the table.
- * @param {Object} context.formatters - The object containing formatter functions for cell values.
- * @param {Function} context.log - The logging function for debugging purposes.
- * @param {string} context.lang - The language code for localization.
- * @param {Object} context.i18n - The internationalization object for translations.
- * @param {Function} context.getAttribute - Function to get attributes from the context.
- * @param {boolean} context.settings.debug - Indicates if debug mode is enabled.
- *
- * @throws Will throw an error if rendering the table body fails.
- */
 export function renderTBody(context) {
 	try {
 		const { tbody, thead, cols, selected } = context.state;
@@ -300,18 +226,6 @@ export function renderTBody(context) {
 	}
 }
 
-/**
- * Renders the table header (thead) for a data grid.
- *
- * @param {Object} context - The context object containing state and options.
- * @param {Object} context.state - The state object containing thead information.
- * @param {Array} context.state.thead - Array of header cell objects.
- * @param {Object} context.settings - The options object containing configuration.
- * @param {boolean} context.settings.selectable - Flag indicating if rows are selectable.
- * @param {Object} context.table - The table DOM element.
- * @param {HTMLElement} context.table.tHead - The table header DOM element.
- * @param {Function} context.log - Function to log messages.
- */
 export function renderTHead(context) {
 	try {
 		const { thead } = context.state;
@@ -340,21 +254,6 @@ export function renderTHead(context) {
 	}
 }
 
-/**
- * Updates the navigation elements of the data grid based on the current state.
- *
- * @param {Object} context - The context object containing state and form elements.
- * @param {Object} context.state - The current state of the data grid.
- * @param {number} context.state.page - The current page number.
- * @param {number} context.state.pages - The total number of pages.
- * @param {number} context.state.items - The total number of items.
- * @param {number} context.state.itemsPerPage - The number of items per page.
- * @param {Object} context.form - The form containing the navigation elements.
- * @param {Object} context.form.elements - The elements of the form.
- * @param {Object} context.settings - The options for the data grid.
- * @param {boolean} context.settings.debug - Whether debug mode is enabled.
- * @param {Function} context.log - The logging function.
- */
 export function updateNavigation(context) {
 	try {
 		const { page, itemsPerPage, searchItems, searchPages } = context.state;

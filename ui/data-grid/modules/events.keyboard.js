@@ -1,11 +1,5 @@
 import { handleSorting } from './data.js';
 
-/**
- * Handles keyboard events for navigation, selection, sorting, and editing within the table.
- *
- * @param {KeyboardEvent} event - The keyboard event triggered by the user.
- * @param {Object} context - The context object containing the table state and settings.
- */
 export default function handleKeyboardEvents(event, context) {
 	const { key, ctrlKey, metaKey, shiftKey } = event;
 	const { selectable: isSelectable } = context.settings;
