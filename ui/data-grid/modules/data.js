@@ -36,7 +36,10 @@ export function exportCSV(state) {
 	try {
 		const headers = state.thead.map(cell => cell.label).join(',');
 		const rows = state.tbody.map(row => 
-			state.thead.map(cell => `"${(row[cell.field] || '').replace(/"/g, '""')}"`).join(',')
+			state.thead.map(cell => {
+				const value = row[cell.field] ?? '';
+				return `"${String(value).replace(/"/g, '""')}"`;
+			}).join(',')
 		);
 		return `${headers}\r\n${rows.join('\r\n')}`;
 	} catch (error) {

@@ -9,8 +9,8 @@ import { printTable } from './modules/print.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.33
- * @summary 16-02-2025
+ * @version 1.0.34
+ * @summary 17-02-2025
  * @class
  * @extends {HTMLElement}
  */
@@ -170,6 +170,7 @@ export default class DataGrid extends HTMLElement {
 			},
 			exportCSV: this.hasAttribute('export-csv') || false,
 			exportJSON: this.hasAttribute('export-json') || false,
+			expandable: !this.hasAttribute('noexpand'),
 			externalNavigation: this.hasAttribute('external-navigation') || false,
 			filter: !this.hasAttribute('nofilter'),
 			isTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,

@@ -183,30 +183,32 @@ export function renderTBody(context) {
 			}).join('');
 
 			// Handle the expand / popover feature
-			const expandFields = thead
-				.map((header) => header.expand ? `<p><strong>${header.label}</strong><br>${row[header.field]}</p>` : '')
-				.filter(content => content !== '')
-				.join('');
+			if (context.settings.expandable) {
+				const expandFields = thead
+					.map((header) => header.hidden ? `<p><strong>${header.label}</strong><br>${row[header.field]}</p>` : '')
+					.filter(content => content !== '')
+					.join('');
 
-			if (expandFields) {
-				// Generate a unique popover ID and insert the expand button
-				const popoverId = `p${window.crypto.randomUUID()}`;
-				const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
-				const popoverHTML = `
-					<div id="${popoverId}" popover class="ui-table-expand ${context.settings.expandType ? context.settings.expandType : '--inline-end'}">
-						<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" class="--icon">${context.renderIcon(icons.close)}</button>
-						${expandFields}
-					</div>
-				`;
-				context.wrapper.insertAdjacentHTML('beforeend', popoverHTML);
+				if (expandFields) {
+					// Generate a unique popover ID and insert the expand button
+					const popoverId = `p${window.crypto.randomUUID()}`;
+					const buttonHTML = ` <button type="button" tabindex="-1" popovertarget="${popoverId}">${context.renderIcon(icons.dots)}</button>`;
+					const popoverHTML = `
+						<div id="${popoverId}" popover class="ui-table-expand ${context.settings.expandType ? context.settings.expandType : '--inline-end'}">
+							<button type="button" popovertarget="${popoverId}" popovertargetaction="hide" class="--icon">${context.renderIcon(icons.close)}</button>
+							${expandFields}
+						</div>
+					`;
+					context.wrapper.insertAdjacentHTML('beforeend', popoverHTML);
 
-				// Insert the button into the last rendered <td> by appending to it
-				const cellHTML = rowHTML.split('</td>');
-				cellHTML[lastVisibleColumnIndex] = cellHTML[lastVisibleColumnIndex].replace(
-					/(<td[^>]*>)(.*)/,
-					`$1<span class="ui-table-expand--trigger"><span>$2</span>${buttonHTML}</span>`
-				);
-				rowHTML = cellHTML.join('</td>');
+					// Insert the button into the last rendered <td> by appending to it
+					const cellHTML = rowHTML.split('</td>');
+					cellHTML[lastVisibleColumnIndex] = cellHTML[lastVisibleColumnIndex].replace(
+						/(<td[^>]*>)(.*)/,
+						`$1<span class="ui-table-expand--trigger"><span>$2</span>${buttonHTML}</span>`
+					);
+					rowHTML = cellHTML.join('</td>');
+				}
 			}
 
 			// Return the row HTML with the composite key/s in `data-keys`

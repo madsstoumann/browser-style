@@ -38,7 +38,6 @@
 	<h2>Event Playground</h2>
 	<p>See the <code>console</code></p>
 
-	
 	<button id="getselected" type="button">dg:getselected</button>
 	<button id="clearselected" type="button">dg:clearselected</button>
 	<button id="append" type="button">dg:append</button>
@@ -195,7 +194,7 @@
 							externalNavigation: true,
 							expandType: '--inline-end',
 							exportCSV: true,
-							exportJSON: true,
+							exportJSON: false,
 							layoutFixed: false,
 							pagination: true,
 							printable: true,
@@ -210,13 +209,13 @@
 								{ field: 'issue', type: 'number', classList: '--end' },
 								{ field: 'name', label: 'Title' },
 								{ field: 'price', type: 'number', classList: '--end' },
-								{ field: 'artist', hidden: true, expand: true },
-								{ field: 'sku', hidden: true, expand: true },
-								{ field: 'type', hidden: true, expand: true },
-								{ field: 'description', hidden: true, expand: true },
-								{ field: 'vendor', hidden: true, expand: true },
-								{ field: 'date', hidden: true, expand: true },
-								{ field: 'delivery', hidden: true, expand: true },
+								{ field: 'artist', hidden: true },
+								{ field: 'sku', hidden: true },
+								{ field: 'type', hidden: true },
+								{ field: 'description', hidden: true },
+								{ field: 'vendor', hidden: true },
+								{ field: 'date', hidden: true },
+								{ field: 'delivery', hidden: true },
 							],
 							// displayOrder: ['name', 'issue', 'id', 'price', 'series']
 						};

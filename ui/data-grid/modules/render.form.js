@@ -24,6 +24,7 @@ export function renderForm(context) {
 	</fieldset>
 
 	<fieldset name="actions" part="group actions">
+
 		<fieldset name="textoptions" part="group textoptions">
 			<label class="ui-button" title="${t('layoutFixed')}"><input type="checkbox" name="layoutfixed" data-sr checked>${icon(icons.layoutFixed)}</label>
 			<label class="ui-button" title="${t('textWrap')}"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>
@@ -32,6 +33,7 @@ export function renderForm(context) {
 		<fieldset name="density" part="group density">${densityControls}</fieldset>
 		<button type="button" name="csv" hidden>${icon(icons.csv)}</button>
 		<button type="button" name="json" hidden>${icon(icons.json)}</button>
+	
 	</fieldset>
 
 	<fieldset name="navigation" part="group navigation">

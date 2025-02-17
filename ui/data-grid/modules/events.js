@@ -39,7 +39,7 @@ export function attachCustomEventHandlers(context) {
 }
 
 export function attachEventListeners(context) {
-	const { form, table, state } = context;
+	const { form, table } = context;
 
 	// Pagination controls
 	form.elements.stepdown.addEventListener('click', () => context.navigatePage(null, 'prev'));
@@ -71,11 +71,11 @@ export function attachEventListeners(context) {
 
 	// Exportable settings
 	form.elements.csv.addEventListener('click', () => {
-		const csv = exportCSV(state);
+		const csv = exportCSV(context.state);
 		if (csv) downloadFile(csv, 'export.csv');
 	});
 	form.elements.json.addEventListener('click', () => {
-		const json = JSON.stringify(state.tbody, null, 2);
+		const json = JSON.stringify(context.state.tbody, null, 2);
 		if (json) downloadFile(json, 'export.json', 'application/json;charset=utf-8;');
 	});
 
