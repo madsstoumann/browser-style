@@ -44,7 +44,7 @@ export default class DataGrid extends HTMLElement {
 				page: "Page",
 				prev: "Previous",
 				print: "Print",
-				printpreview: "Print preview",
+				printpreview: "Print Preview",
 				rowsPerPage: "Rows",
 				search: "Search",
 				selected: "selected",
