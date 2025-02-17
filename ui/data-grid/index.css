@@ -5,7 +5,17 @@
 		display: grid;
 		position: relative;
 
-		[hidden] { display: none; }
+		[hidden] { display: none !important; }
+
+
+		/* === PARTS === */
+
+		[part~=group] {
+			align-items: center;
+			display: flex;
+			gap: .75ch;
+		}
+
 
 		& > div {
 			overflow-x: auto;
@@ -13,9 +23,9 @@
 		
 		& fieldset {
 			all: unset;
-			align-items: center;
+			/* align-items: center;
 			display: flex;
-			gap: .75ch;
+			gap: .75ch; */
 
 			& button, & .ui-button {
 				--button-p: 0;
@@ -101,6 +111,7 @@
 			box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
 			display: grid;
 			font-size: smaller;
+			gap: 1ch;
 			inset-block: anchor(bottom) auto;
 			inset-inline: auto anchor(right);
 			padding: 1ch;
@@ -181,6 +192,9 @@
 				--ui-table-td-bg: var(--Highlight);
 			}
 
+
+
+
 			/* Printable */
 			@media print {
 				& :is(td, th) {
@@ -196,6 +210,9 @@
 				}
 			}
 		}
+
+
+
 
 		/* RWD */
 		@container (max-width: 600px) {

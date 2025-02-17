@@ -26,16 +26,12 @@
 
 	<data-grid
 		debug
-		density="medium"
 		id="grid"
 		itemsperpage="10"
-		printable
-		searchable
-		selectable
 		data="./data/data.json"
+		selectable
 		stickycols="0,2,4"
-		layoutfixed="false"
-		textoptions>
+		layoutfixed="false">
 	</data-grid>
 
 	<br>
@@ -82,6 +78,15 @@
 		</div>
 	</data-grid>
 
+	<!--
+		nofilter
+		nodensity
+		nopage
+		noprint
+		norows
+		nosearch
+		notext
+	-->
 	<br>
 	<hr>
 	<p>With data set as JSON directly in the <code>data</code>-attribute:</p>
@@ -198,8 +203,6 @@
 							searchable: true,
 							selectable: true,
 							stickyCols: [0, 1],
-							textoptions: false,
-							textwrap: false,
 
 							thead: [
 								{ field: 'id', label: 'ID', key: true, event: 'dg:details', eventData: { view: 'comics'},  classList: 'ui-link' },

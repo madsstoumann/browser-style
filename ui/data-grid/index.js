@@ -28,12 +28,12 @@ export default class DataGrid extends HTMLElement {
 		this._i18n = {
 			en: {
 				all: "All",
-				columns: 'Columns',
 				densityLarge: "Large density",
 				densityMedium: "Medium density",
 				densitySmall: "Small density",
 				endsWith: "Ends with",
 				equals: "Equals",
+				filter: 'Column filter',
 				first: "First",
 				includes: "Includes",
 				last: "Last",
@@ -162,7 +162,7 @@ export default class DataGrid extends HTMLElement {
 	createSettings() {
 		return {
 			debug: this.hasAttribute('debug') || false,
-			density: this.getAttribute('density') || '',
+			density: this.getAttribute('density') || 'medium',
 			densityOptions: {
 				small: { label: 'Small', icon: 'densitySmall', class: '--density-sm', i18n: 'densitySmall' },
 				medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md', i18n: 'densityMedium' },
@@ -171,20 +171,21 @@ export default class DataGrid extends HTMLElement {
 			exportCSV: this.hasAttribute('export-csv') || false,
 			exportJSON: this.hasAttribute('export-json') || false,
 			externalNavigation: this.hasAttribute('external-navigation') || false,
+			filter: !this.hasAttribute('nofilter'),
 			isTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
-			layoutFixed: this.getAttribute('layoutfixed') === "false" ? false : true,
+			layout: this.getAttribute('layout'),
 			navigation: !this.hasAttribute('nonav'),
 			pagesize: this.getAttribute('pagesize')?.split(',') || [5, 10, 25, 50, 100],
 			pagination: !this.hasAttribute('nopage'),
-			printable: this.hasAttribute('printable') || false,
+			printable: !this.hasAttribute('noprint'),
 			rows: !this.hasAttribute('norows'),
-			searchable: this.hasAttribute('searchable') || false,
+			searchable: !this.hasAttribute('nosearch'),
 			selectable: this.hasAttribute('selectable') || false,
 			sortable: !this.hasAttribute('nosortable'),
 			stickyCols: this.parseStickyCols(this.getAttribute('stickycols')) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
-			textoptions: this.hasAttribute('textoptions') || false,
-			textwrap: this.getAttribute('textwrap') === "false" ? false : true,
+			textoptions: !this.hasAttribute('notext'),
+			textwrap: this.getAttribute('textwrap'),
 			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
 		}
 	}
@@ -583,7 +584,7 @@ export default class DataGrid extends HTMLElement {
 			this.settings.wrapperClasses.forEach(cls => this.wrapper.classList.toggle(cls, true));
 
 			/* density */
-			this.form.elements.density.hidden = !this.settings.density;
+			this.form.elements.density.hidden = this.settings.density === 'none';
 			if (this.settings.density) {
 				this.form.elements.density_option.value = this.settings.density;
 				this.form.elements.density.value = this.settings.density;
@@ -594,10 +595,12 @@ export default class DataGrid extends HTMLElement {
 			this.form.elements.csv.hidden = !this.settings.exportCSV;
 			this.form.elements.json.hidden = !this.settings.exportJSON;
 
-			/* misc */
+			/* search, print, column filter */
+			this.form.elements.filter.hidden = !this.settings.filter;
 			this.form.elements.preview.hidden = !this.settings.printable;
 			this.form.elements.print.hidden = !this.settings.printable;
-			this.form.elements.search.hidden = !this.settings.searchable;
+			this.form.elements.searchmethod.hidden = !this.settings.searchable;
+			this.form.elements.searchterm.hidden = !this.settings.searchable;
 
 			/* navigation */
 			this.form.elements.pagination.hidden = !this.settings.pagination;
@@ -609,12 +612,14 @@ export default class DataGrid extends HTMLElement {
 			/* sorting */
 			this.table.classList.toggle('--nosortable', !this.settings.sortable);
 
-			/* textoptions */
+			/* text- and layout options */
 			this.form.textoptions.hidden = !this.settings.textoptions;
-			this.form.elements.layoutfixed.checked = this.settings.layoutFixed;
-			this.form.elements.textwrap.checked = this.settings.textwrap;
-			this.table.classList.toggle('--fixed', this.settings.layoutFixed);
-			this.table.classList.toggle('--no-wrap', !this.settings.textwrap);
+			const isLayoutFixed = this.settings.layout === 'fixed';
+			const isNoWrap = this.settings.textwrap === 'nowrap';
+			this.form.elements.layoutfixed.checked = isLayoutFixed;
+			this.form.elements.textwrap.checked = !isNoWrap;
+			this.table.classList.toggle('--fixed', isLayoutFixed);
+			this.table.classList.toggle('--no-wrap', isNoWrap);
 		
 			/* sticky cols */
 			const toggleEventListener = (condition, addListener) => {

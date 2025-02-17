@@ -17,7 +17,7 @@ export function setupPrint(context) {
 		const visibleColumns = context.state.thead.filter(col => !col.hidden);
 		return `
 			<style>
-				table { width: 100%; border-collapse: collapse; }
+				table { width: 100%; border-collapse: separate; border-spacing: 2ch 0; }
 				th { text-align: start; }
 			</style>
 			<paper-sheet>
