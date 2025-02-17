@@ -38,7 +38,7 @@ function applySorting(context, data) {
 	}
 }
 
-function filterData(context, data) {
+export function filterData(context, data) {
 	const { thead } = context.state;
 	const hiddenIndices = thead.reduce((acc, cell, index) => cell.hidden ? [...acc, index] : acc, []);
 	const searchterm = context.getAttribute('searchterm')?.toLowerCase()?.trim();
@@ -120,7 +120,7 @@ export function renderTBody(context) {
 		if (!data.length) {
 			context.table.tBodies[0].innerHTML = `<tr><td colspan="${cols}">${t('noResult', context.lang, context.i18n)}</td></tr>`;
 			Object.assign(context.state, { pageItems: 0, items: 0, pages: 0 });
-			updateNavigation(context);
+			updateNavigation(context, true);
 			return;
 		}
 
@@ -256,21 +256,23 @@ export function renderTHead(context) {
 	}
 }
 
-export function updateNavigation(context) {
+export function updateNavigation(context, noData = false) {
 	try {
 		const { page, itemsPerPage, searchItems, searchPages } = context.state;
 		const E = context.form.elements;
 
 		// Check if a search is active and use search-specific values if available
 		const isSearchActive = !!context.getAttribute('searchterm');
-		const totalItems = isSearchActive ? searchItems : context.state.items;
-		const totalPages = isSearchActive ? searchPages : context.state.pages;
+		const totalItems = noData ? 0 : (isSearchActive ? context.state.searchItems : context.state.items);
+		const totalPages = noData ? 0 : (isSearchActive ? context.state.searchPages : context.state.pages);
 		const isItemsPresent = !!totalItems;
 		const isItemsPerPagePresent = context.hasAttribute('itemsperpage');
 
 		// Toggle visibility based on whether items are present
-		E.actions.hidden = !isItemsPresent;
 		E.navigation.hidden = !isItemsPerPagePresent || !isItemsPresent;
+		
+		// Only show selection if both conditions are met: selectable is true AND there are items
+		E.selection.hidden = !context.settings.selectable || !isItemsPresent;
 
 		if (isItemsPresent) {
 			// Update navigation elements based on current page and total items

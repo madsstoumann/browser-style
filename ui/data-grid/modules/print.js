@@ -1,4 +1,5 @@
 import PrintPreview from '../../print-preview/index.js';
+import { filterData } from './render.table.js';
 
 export function setupPrint(context) {
 	let printPreview = document.querySelector('print-preview');
@@ -55,10 +56,35 @@ export function printTable(context, directPrint = false) {
 	if (!context.printPreview) {
 		setupPrint(context);
 	}
-	
+
+	let dataToPrint = [];
+	const { printOptions, tbody, page, itemsPerPage, selected } = context.state;
+
+	switch (printOptions) {
+		case 'search':
+			dataToPrint = filterData(context, [...tbody]);
+			break;
+		case 'page':
+			const startIndex = page * itemsPerPage;
+			dataToPrint = tbody.slice(startIndex, startIndex + itemsPerPage);
+			break;
+		case 'selected':
+			if (selected.size > 0) {
+				const keyFields = context.state.thead.filter(col => col.key).map(col => col.field);
+				dataToPrint = tbody.filter(row => {
+					const compositeKey = keyFields.map(field => row[field]).join(',');
+					return selected.has(compositeKey);
+				});
+			}
+			break;
+		case 'all':
+		default:
+			dataToPrint = tbody;
+	}
+
 	context.printPreview.setAttribute('template', context.templateId);
 	context.printPreview.setAttribute('use-template', '');
-	context.printPreview.data = context.state.tbody;
+	context.printPreview.data = dataToPrint;
 	
 	if (directPrint) {
 		context.printPreview.print();

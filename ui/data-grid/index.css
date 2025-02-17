@@ -105,25 +105,30 @@
 			}
 		}
 
-		fieldset[name=columnfilter] {
+		fieldset[name=columnfilter],
+		fieldset[name=allsettings] {
 			background: Canvas;
 			border-radius: .25em;
 			box-shadow: 0px 25px 50px -12px color-mix(in srgb, CanvasText 25%, transparent);
 			display: grid;
-			font-size: smaller;
-			gap: 1ch;
+			font-size: 14px;
+			column-gap: 1ch;
 			inset-block: anchor(bottom) auto;
 			inset-inline: auto anchor(right);
-			padding: 1ch;
+			padding: 2ch;
 			position-anchor: var(--_pa);
     	position-try-fallbacks: flip-block;
+			row-gap: 1.5ch;
 			&:not(:popover-open) { display: none; }
-			label {
+			label:not(:has(select)) {
 				display: grid;
 				grid-template-columns: min-content 1fr;
 				gap: 1ch;
 				text-align: start;
 			}
+		}
+		fieldset[name=allsettings] {
+			inset-inline: anchor(left) auto;
 		}
 
 		& form {

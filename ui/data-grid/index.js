@@ -37,20 +37,25 @@ export default class DataGrid extends HTMLElement {
 				first: "First",
 				includes: "Includes",
 				last: "Last",
-				layoutFixed: "Toggle Fixed layout",
+				layoutFixed: "Fixed layout",
 				next: "Next",
 				noResult: "No results",
 				of: "of",
 				page: "Page",
 				prev: "Previous",
 				print: "Print",
-				printpreview: "Print Preview",
+				printAll: "Print All",
+				printCurrentPage: "Print Current Page",
+				printOptions: "Print Options",
+				printPreview: "Print Preview",
+				printSearch: "Print Search Results",
+				printSelected: "Print Selected",
 				rowsPerPage: "Rows",
 				search: "Search",
 				selected: "selected",
 				selectAll: "Select all across pages",
 				startsWith: "Starts with",
-				textWrap: "Toggle Text wrap",
+				textWrap: "Text wrap",
 			}
 		};
 	}
@@ -185,7 +190,6 @@ export default class DataGrid extends HTMLElement {
 			sortable: !this.hasAttribute('nosortable'),
 			stickyCols: this.parseStickyCols(this.getAttribute('stickycols')) || [],
 			tableClasses: this.getAttribute('tableclasses')?.split(' ') || ['ui-table', '--th-light', '--hover-all'],
-			textoptions: !this.hasAttribute('notext'),
 			textwrap: this.getAttribute('textwrap'),
 			wrapperClasses: this.getAttribute('wrapperclasses')?.split(',') || ['ui-table-wrapper'],
 		}
@@ -200,6 +204,7 @@ export default class DataGrid extends HTMLElement {
 			page: 0,
 			pages: 0,
 			pageItems: 0, /* actual amount of items on the current page */
+			printOptions: 'all',
 			rowIndex: 0,
 			searchItems: 0, /* amount of items after search */
 			searchPages: 0, /* total pages in the current search result */
@@ -614,7 +619,6 @@ export default class DataGrid extends HTMLElement {
 			this.table.classList.toggle('--nosortable', !this.settings.sortable);
 
 			/* text- and layout options */
-			this.form.textoptions.hidden = !this.settings.textoptions;
 			const isLayoutFixed = this.settings.layout === 'fixed';
 			const isNoWrap = this.settings.textwrap === 'nowrap';
 			this.form.elements.layoutfixed.checked = isLayoutFixed;

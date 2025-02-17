@@ -24,16 +24,9 @@ export function renderForm(context) {
 	</fieldset>
 
 	<fieldset name="actions" part="group actions">
-
-		<fieldset name="textoptions" part="group textoptions">
-			<label class="ui-button" title="${t('layoutFixed')}"><input type="checkbox" name="layoutfixed" data-sr checked>${icon(icons.layoutFixed)}</label>
-			<label class="ui-button" title="${t('textWrap')}"><input type="checkbox" name="textwrap" data-sr checked>${icon(icons.textWrap)}</label>
-		</fieldset>
-
 		<fieldset name="density" part="group density">${densityControls}</fieldset>
 		<button type="button" name="csv" hidden>${icon(icons.csv)}</button>
 		<button type="button" name="json" hidden>${icon(icons.json)}</button>
-	
 	</fieldset>
 
 	<fieldset name="navigation" part="group navigation">
@@ -68,7 +61,7 @@ export function renderNavigation(context) {
 
 export function renderSearch(context) {
 	const { t, icon } = bound(context);
-	const columnFilterId = `${crypto.randomUUID()}`;
+	const popoverID = `${crypto.randomUUID()}`;
 
 	return `
 	<fieldset name="search" form="${context.form.id}" part="group searchfilter">
@@ -88,12 +81,25 @@ export function renderSearch(context) {
 		</search>
 
 		<nav part="group print">
-			<button type="button" name="preview" form="${context.form.id}" title="${t('printpreview')}">${icon(icons.preview)}</button>
+			<button type="button" name="settings" form="${context.form.id}" title="${t('settings')}" id="stb${popoverID}" popovertarget="st${popoverID}">${icon(icons.settings)}</button>
+			<button type="button" name="preview" form="${context.form.id}" title="${t('printPreview')}">${icon(icons.preview)}</button>
 			<button type="button" name="print" form="${context.form.id}" title="${t('print')}">${icon(icons.printer)}</button>
-			<button type="button" name="filter" form="${context.form.id}" title="${t('filter')}" id="pa${columnFilterId}" popovertarget="cf${columnFilterId}">${icon(icons.columns)}</button>
+			<button type="button" name="filter" form="${context.form.id}" title="${t('filter')}" id="cfb${popoverID}" popovertarget="cf${popoverID}">${icon(icons.columns)}</button>
 		</nav>
 
 	</fieldset>
 
-	<fieldset name="columnfilter" form="${context.form.id}" id="cf${columnFilterId}" style="--_pa:pa${columnFilterId};" popover></fieldset>`;
+	<fieldset name="allsettings" form="${context.form.id}" id="st${popoverID}" style="--_pa:stb${popoverID};" popover>
+		<label><input type="checkbox" name="layoutfixed" form="${context.form.id}">${t('layoutFixed')}</label>
+		<label><input type="checkbox" name="textwrap" form="${context.form.id}">${t('textWrap')}</label>
+		<label aria-label="${t('printOptions')}">
+			<select name="printoptions" form="${context.form.id}">
+				<option value="all" selected>${t('printAll')}</option>
+				<option value="page">${t('printCurrentPage')}</option>
+				<option value="search">${t('printSearch')}</option>
+				<option value="selected">${t('printSelected')}</option>
+			</select>
+		</label>
+	</fieldset>
+	<fieldset name="columnfilter" form="${context.form.id}" id="cf${popoverID}" style="--_pa:cfb${popoverID};" popover></fieldset>`;
 }

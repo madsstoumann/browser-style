@@ -50,6 +50,9 @@ export function attachEventListeners(context) {
 	// Printable option
 	form.elements.preview.addEventListener('click', () => context.print());
 	form.elements.print.addEventListener('click', () => context.print(true));
+	form.elements.printoptions.addEventListener('change', (event) => {
+		context.state.printOptions = event.target.value;
+	});
 
 	// Column filter
 	form.elements.columnfilter.addEventListener('change', (event) => {
@@ -86,6 +89,10 @@ export function attachEventListeners(context) {
 		renderTBody(context);
 	});
 
+	// Layout and textwrap options
+	form.elements.layoutfixed.addEventListener('change', e => context.table.classList.toggle('--fixed', e.target.checked));
+	form.elements.textwrap.addEventListener('change', e => context.table.classList.toggle('--no-wrap', !e.target.checked));
+
 	// Table click and keyboard events
 	table.addEventListener('click', (event) => handleTableClick(event, context));
 	table.addEventListener('focus', (event) => handleCellFocus(event), true);
@@ -115,9 +122,7 @@ export function attachEventListeners(context) {
 function handleFormInput(event, context) {
 	const input = event.target;
 	if (input.name === 'itemsperpage') context.setAttribute('itemsperpage', parseInt(input.value, 10));
-	if (input.name === 'layoutfixed') context.table.classList.toggle('--fixed', input.checked);
 	if (input.name === 'page') context.setAttribute('page', parseInt(input.value, 10) - 1);
-	if (input.name === 'textwrap') context.table.classList.toggle('--no-wrap', !input.checked);
 }
 
 function handleTableClick(event, context) {
