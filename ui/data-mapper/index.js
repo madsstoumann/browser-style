@@ -177,7 +177,7 @@ export class DataMapper extends HTMLElement {
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
-			updateTarget: 'Update Target',
+			updateTargets: 'Use Source Names',
 			type: 'Type'
 		}
 	};
@@ -482,7 +482,7 @@ export class DataMapper extends HTMLElement {
 				</ul>
 				<nav part="mapping-nav">
 					<small part="numobjects"></small>
-					<button type="button" part="button updatetarget">${this.#t('updateTarget')}</button>
+					<button type="button" part="button updatetarget">${this.#t('updateTargets')}</button>
 					<button type="button" part="button preview">${this.#t('preview')}</button>
 					<button type="button" part="button process">${this.#t('process')}</button>
 				</nav>
