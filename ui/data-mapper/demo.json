@@ -1,0 +1,38 @@
+[
+  {
+    "id": "0125DC280",
+    "title": "100 BULLETS TP BOOK 02 (2025 EDITION) (MR)",
+    "description": "100 Bullets TP 2025 Edition",
+    "issue": 2,
+    "price": 39.99,
+    "releaseDate": "4/22/2025",
+    "pageNumber": 101,
+    "writer": "Brian Azzarello",
+    "artist": "Eduardo Risso",
+    "isbn": "978179950113853999"
+  },
+  {
+    "id": "0125MA518",
+    "title": "A LEGACY OF VIOLENCE COLLECTION TP (MR)",
+    "description": "A Legacy of Violence Collection TP",
+    "issue": 1,
+    "price": 29.99,
+    "releaseDate": "3/5/2025",
+    "pageNumber": 243,
+    "writer": "Cullen Bunn",
+    "artist": "Andrea Mutti",
+    "isbn": "978154581601152999"
+  },
+  {
+    "id": "0125DC020",
+    "title": "ABSOLUTE BATMAN #6 CVR A NICK DRAGOTTA",
+    "description": "Absolute Batman",
+    "issue": 6,
+    "price": 4.99,
+    "releaseDate": "3/12/2025",
+    "pageNumber": 58,
+    "writer": "Scott Snyder",
+    "artist": "Nick Dragotta",
+    "isbn": "76194138584600611"
+  }
+]

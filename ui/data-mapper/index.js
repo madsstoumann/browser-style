@@ -89,7 +89,7 @@ export class DataMapper extends HTMLElement {
 			justify-self: center;
 			max-width: 950px;
 		}
-		:host::part(numlines) {
+		:host::part(numobjects) {
 			color: var(--accent-color);
 			margin-inline-end: auto;
 		}
@@ -102,15 +102,14 @@ export class DataMapper extends HTMLElement {
 			padding: 1em;
 			white-space: pre-wrap;
 		}
-		:host::part(preview),
-		:host::part(process) {
+		:host::part(button) {
 			background: var(--data-mapper-button-bg);
 			border: 0;
 			border-radius: .25rem;
 			color: inherit;
 			padding: 0.75rem 1.25rem;
 		}
-		:host::part(preview):hover {
+		:host::part(button):hover {
 			background: color-mix(in oklab, var(--data-mapper-button-bg), #000 10%);
 		}
 		:host::part(process) {
@@ -171,13 +170,14 @@ export class DataMapper extends HTMLElement {
 	#i18n = {
 		en: {
 			formatter: 'Formatter',
-			numlines: 'Number of lines: ',
+			numObjects: 'Number of objects: ',
 			prefix: 'Prefix',
 			preview: 'Preview',
 			process: 'Process',
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
+			updateTarget: 'Update Target',
 			type: 'Type'
 		}
 	};
@@ -388,14 +388,14 @@ export class DataMapper extends HTMLElement {
 			if (!headers.length) throw new Error('No headers found in file');
 			
 			this.#renderMapping(headers);
-			const { mapping, input, numlines } = this.#state.elements;
+			const { mapping, input, numObjects } = this.#state.elements;
 			
 			mapping.togglePopover(true);
 			input.value = '';
 			input.toggleAttribute('inert', true);
 			
 			const lineCount = this.#state.firstrow ? lines.length - 1 : lines.length;
-			numlines.textContent = `${this.#t('numlines')}${lineCount}`;
+			numObjects.textContent = `${this.#t('numObjects')}${lineCount}`;
 			
 			this.#state.content = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
@@ -481,9 +481,10 @@ export class DataMapper extends HTMLElement {
 					`).join('')}
 				</ul>
 				<nav part="mapping-nav">
-					<small part="numlines"></small>
-					<button type="button" part="preview">${this.#t('preview')}</button>
-					<button type="button" part="process">${this.#t('process')}</button>
+					<small part="numobjects"></small>
+					<button type="button" part="button updatetarget">${this.#t('updateTarget')}</button>
+					<button type="button" part="button preview">${this.#t('preview')}</button>
+					<button type="button" part="button process">${this.#t('process')}</button>
 				</nav>
 				<pre part="output" hidden></pre>
 			</div>
@@ -491,16 +492,28 @@ export class DataMapper extends HTMLElement {
 
 		const elements = {
 			close: mappingEl.querySelector('[part~=close]'),
-			numlines: mappingEl.querySelector('[part~=numlines]'),
+			numObjects: mappingEl.querySelector('[part~=numobjects]'),
 			output: mappingEl.querySelector('[part~=output]'),
 			preview: mappingEl.querySelector('[part~=preview]'),
-			process: mappingEl.querySelector('[part~=process]')
+			process: mappingEl.querySelector('[part~=process]'),
+			updateTarget: mappingEl.querySelector('[part~=updatetarget]')
 		};
 		this.#state.elements = { ...this.#state.elements, ...elements };
 
 		elements.close?.addEventListener('click', () => 
 			mappingEl.togglePopover(false));
-		
+			
+		elements.updateTarget?.addEventListener('click', () => {
+			const rows = mappingEl.querySelectorAll('[part~=mapping-row]');
+			rows.forEach(row => {
+				const source = row.querySelector('[part~=mapping-header]').textContent;
+				const target = row.querySelector('[part~=mapping-input]');
+				if (!target.value.trim()) {
+					target.value = source.toLowerCase().replace(/\s+/g, '_');
+				}
+			});
+		});
+
 		elements.preview?.addEventListener('click', () => {
 			const tempContent = this.#state.content;
 			this.#state.content = this.#state.content.split('\n')[0];
@@ -515,7 +528,7 @@ export class DataMapper extends HTMLElement {
 
 			this.#state.content = tempContent;
 		});
-		
+
 		elements.process?.addEventListener('click', () => {
 			const mappings = this.#getCurrentMappings();
 			const processedData = this.#processMapping(mappings);
