@@ -1,4 +1,11 @@
 export class DataMapper extends HTMLElement {
+	#icons = {
+		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
+		clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z',
+		download: 'M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2, M7 11l5 5l5 -5, M12 4l0 12',
+		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01',
+		process: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5'
+	}
 	#initialized = false;
 	#shadow;
 	#styles = `
@@ -8,7 +15,10 @@ export class DataMapper extends HTMLElement {
 			--accent-color-text: hsl(211, 100%, 95%);
 			--grey-light: #f3f3f3;
 			--grey-dark: #333;
-			--data-mapper-button-bg: light-dark(var(--grey-light), var(--grey-dark));
+			--data-mapper-button-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+			--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+
+			color: var(--CanvasText);
 		}
 		:host::part(close) {
 			background: #0000;
@@ -28,13 +38,13 @@ export class DataMapper extends HTMLElement {
 		}
 		:host::part(icon) {
 			aspect-ratio: 1;
-			block-size: 1em;
+			block-size: 24px;
 			fill: none;
 			pointer-events: none;
 			stroke: currentColor;
 			stroke-linecap: round;
 			stroke-linejoin: round;
-			stroke-width: 2;
+			stroke-width: 1.5;
 		}
 		:host::part(mapping) {
 			align-content: start;
@@ -76,7 +86,7 @@ export class DataMapper extends HTMLElement {
 		:host::part(mapping-nav) {
 			align-items: center;
 			display: flex;
-			gap: 1rem;
+			gap: .75ch;
 			justify-content: end;
 		}
 		:host::part(mapping-row) {
@@ -102,15 +112,24 @@ export class DataMapper extends HTMLElement {
 			padding: 1em;
 			white-space: pre-wrap;
 		}
-		:host::part(button) {
+		:host::part(outputformat) {
 			background: var(--data-mapper-button-bg);
 			border: 0;
 			border-radius: .25rem;
-			color: inherit;
-			padding: 0.75rem 1.25rem;
+			height: 26px;
+			padding: 0 .5ch 0 1ch;
+		}
+		:host::part(button) {
+			aspect-ratio: 1;
+			background: var(--data-mapper-button-bg);
+			border: 0;
+			border-radius: .25rem;
+			height: 26px;
+			padding: 0;
+			width: 26px;
 		}
 		:host::part(button):hover {
-			background: color-mix(in oklab, var(--data-mapper-button-bg), #000 10%);
+			background: color-mix(in oklab, var(--data-mapper-button-bg), var(--CanvasText) 25%);
 		}
 		:host::part(process) {
 			background-color: var(--accent-color);
@@ -169,6 +188,7 @@ export class DataMapper extends HTMLElement {
 
 	#i18n = {
 		en: {
+			download: 'Download',
 			formatter: 'Formatter',
 			numObjects: 'Number of objects: ',
 			prefix: 'Prefix',
@@ -177,7 +197,7 @@ export class DataMapper extends HTMLElement {
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
-			updateTargets: 'Use Source Names',
+			updateTargets: 'Use Source Names as Targets',
 			type: 'Type'
 		}
 	};
@@ -297,6 +317,21 @@ export class DataMapper extends HTMLElement {
 			formatted;
 	}
 
+	#downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
+		try {
+			const blob = new Blob([content], { type: mimeType });
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = filename;
+			link.style.display = 'none';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		} catch (error) {
+			// console.warn(`Error creating downloadable file: ${error}`, '#F00');
+		}
+	}
+
 	#getCurrentMappings() {
 		const mappingsByTarget = new Map();
 		const rows = this.#state.elements.mapping.querySelectorAll('[part~=mapping-row]');
@@ -356,19 +391,8 @@ export class DataMapper extends HTMLElement {
 		`;
 	}
 
-	downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
-		try {
-			const blob = new Blob([content], { type: mimeType });
-			const link = document.createElement('a');
-			link.href = URL.createObjectURL(blob);
-			link.download = filename;
-			link.style.display = 'none';
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		} catch (error) {
-			consoleLog(`Error creating downloadable file: ${error}`, '#F00');
-		}
+	#icon(paths, part) {
+		return `<svg viewBox="0 0 24 24"${part ? `part="${part}"`:''}>${paths.split(',').map((path) => `<path d="${path}"></path>`).join('')}</svg>`;
 	}
 
 	async #initialize() {
@@ -497,9 +521,17 @@ export class DataMapper extends HTMLElement {
 				</ul>
 				<nav part="mapping-nav">
 					<small part="numobjects"></small>
-					<button type="button" part="button updatetarget">${this.#t('updateTargets')}</button>
-					<button type="button" part="button preview">${this.#t('preview')}</button>
-					<button type="button" part="button process">${this.#t('process')}</button>
+					<select part="outputformat">
+						<option value="csv">CSV</option>
+						<option value="json" selected>JSON</option>
+						<option value="ndjson">NDJSON</option>
+						<option value="tsv">TSV</option>
+						<option value="yaml">YAML</option>
+					</select>
+					<button type="button" part="button updatetarget" title="${this.#t('updateTargets')}">${this.#icon(this.#icons.arrowright, 'icon')}</button>
+					<button type="button" part="button preview" title="${this.#t('preview')}">${this.#icon(this.#icons.preview, 'icon')}</button>
+					<button type="button" part="button download" title="${this.#t('download')}">${this.#icon(this.#icons.download, 'icon')}</button>
+					<button type="button" part="button process" title="${this.#t('process')}">${this.#icon(this.#icons.process, 'icon')}</button>
 				</nav>
 				<pre part="output" hidden></pre>
 			</div>
