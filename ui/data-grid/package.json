@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/data-grid",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Dynamic data grid component with sorting, filtering, and pagination support",
   "type": "module",
   "module": "index.js",
