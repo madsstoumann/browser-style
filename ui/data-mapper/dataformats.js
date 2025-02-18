@@ -8,17 +8,31 @@ export const dataFormats = {
     const {
       delimiter = ',',
       headers = true,
-      quotes = false
+      quotes = true,
+      replaceNewlines = true
     } = options;
 
     if (!data?.length) return '';
     const keys = Object.keys(data[0]);
-    const wrap = quotes ? str => `"${str}"` : str => str;
+    
+    const escapeField = value => {
+      if (value === null || value === undefined) return '';
+      let str = String(value);
+      
+      // Replace newlines with spaces if option is enabled
+      if (replaceNewlines) {
+        str = str.replace(/\n/g, ' ');
+      }
+      
+      const needsQuoting = str.includes(delimiter) || str.includes('\n') || str.includes('"');
+      if (!needsQuoting && !quotes) return str;
+      return `"${str.replace(/"/g, '""')}"`;
+    };
     
     const rows = [
-      headers ? keys.map(wrap).join(delimiter) : '',
+      headers ? keys.map(escapeField).join(delimiter) : '',
       ...data.map(row => 
-        keys.map(key => wrap(row[key] ?? '')).join(delimiter)
+        keys.map(key => escapeField(row[key])).join(delimiter)
       )
     ].filter(Boolean);
 
@@ -43,7 +57,7 @@ export const dataFormats = {
     return dataFormats.csv(data, { 
       ...options, 
       delimiter: '\t',
-      quotes: false 
+      quotes: true 
     });
   },
 

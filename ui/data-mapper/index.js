@@ -1,3 +1,5 @@
+import { dataFormats, mimeTypes } from './dataformats.js';
+
 export class DataMapper extends HTMLElement {
 	#icons = {
 		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
@@ -206,7 +208,8 @@ export class DataMapper extends HTMLElement {
 	#state = {
 		content: '',
 		elements: {},
-		separator: ',',
+		separator: null,
+		concatenator: '\n',
 		firstrow: true,
 		mapping: null
 	};
@@ -217,6 +220,7 @@ export class DataMapper extends HTMLElement {
 	constructor() {
 		super();
 		this.#lang = this.getAttribute('lang') || 'en';
+		this.#state.concatenator = this.getAttribute('separator') || '\n';
 		this.#shadow = this.attachShadow({ mode: 'open' });
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(this.#styles);
@@ -421,6 +425,8 @@ export class DataMapper extends HTMLElement {
 		try {
 			const text = await file.text();
 			const lines = text.trim().split('\n');
+			
+			// Auto-detect input file separator (CSV/TSV)
 			this.#state.separator = text.includes('\t') ? '\t' : ',';
 			
 			const headers = this.#getHeaders(lines);
@@ -455,7 +461,7 @@ export class DataMapper extends HTMLElement {
 			mappingsByTarget.get(mapping.target).push(mapping);
 		});
 
-		return this.#state.content.trim().split('\n')
+		const processedData = this.#state.content.trim().split('\n')
 			.map(line => {
 				const values = line.split(this.#state.separator);
 				const row = {};
@@ -468,6 +474,8 @@ export class DataMapper extends HTMLElement {
 					Object.entries(row).sort(([a], [b]) => a.localeCompare(b))
 				);
 			});
+
+		return processedData;
 	}
 
 	#processTargetField(mappings, values) {
@@ -485,7 +493,7 @@ export class DataMapper extends HTMLElement {
 			})
 			.filter(Boolean);
 
-		return parts.length ? parts.join('\n') : null;
+		return parts.length ? parts.join(this.#state.concatenator) : null;
 	}
 
 	#renderMapping(headers) {
@@ -526,6 +534,7 @@ export class DataMapper extends HTMLElement {
 						<option value="json" selected>JSON</option>
 						<option value="ndjson">NDJSON</option>
 						<option value="tsv">TSV</option>
+						<option value="xml">XML</option>
 						<option value="yaml">YAML</option>
 					</select>
 					<button type="button" part="button updatetarget" title="${this.#t('updateTargets')}">${this.#icon(this.#icons.arrowright, 'icon')}</button>
@@ -567,9 +576,10 @@ export class DataMapper extends HTMLElement {
 
 			const mappings = this.#getCurrentMappings();
 			const previewData = this.#processMapping(mappings);
+			const format = mappingEl.querySelector('[part~=outputformat]').value;
 
 			if (previewData.length > 0) {
-				elements.output.textContent = JSON.stringify(previewData[0], null, 2);
+				elements.output.textContent = dataFormats[format]([previewData[0]]);
 				elements.output.hidden = false;
 			}
 
@@ -579,6 +589,7 @@ export class DataMapper extends HTMLElement {
 		elements.process?.addEventListener('click', () => {
 			const mappings = this.#getCurrentMappings();
 			const processedData = this.#processMapping(mappings);
+			const format = mappingEl.querySelector('[part~=outputformat]').value;
 
 			this.dispatchEvent(new CustomEvent('dm:processed', { 
 				detail: processedData,
@@ -586,9 +597,20 @@ export class DataMapper extends HTMLElement {
 			}));
 
 			if (processedData.length > 0) {
-				elements.output.textContent = JSON.stringify(processedData[0], null, 2);
+				elements.output.textContent = dataFormats[format]([processedData[0]]);
 				elements.output.hidden = false;
 			}
+		});
+
+		const downloadButton = mappingEl.querySelector('[part~=download]');
+		downloadButton?.addEventListener('click', () => {
+			const mappings = this.#getCurrentMappings();
+			const processedData = this.#processMapping(mappings);
+			const format = mappingEl.querySelector('[part~=outputformat]').value;
+			const content = dataFormats[format](processedData);
+			const timestamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-');
+			const filename = `export-${timestamp}.${format}`;
+			this.#downloadFile(content, filename, `${mimeTypes[format]};charset=utf-8;`);
 		});
 
 		this.#state.mapping && this.#applyCustomMapping();
