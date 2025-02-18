@@ -173,8 +173,6 @@ export default class DataGrid extends HTMLElement {
 				medium: { label: 'Medium', icon: 'densityMedium', class: '--density-md', i18n: 'densityMedium' },
 				large: { label: 'Large', icon: 'densityLarge', class: '--density-lg', i18n: 'densityLarge' },
 			},
-			exportCSV: this.hasAttribute('export-csv') || false,
-			exportJSON: this.hasAttribute('export-json') || false,
 			expandable: !this.hasAttribute('noexpand'),
 			externalNavigation: this.hasAttribute('external-navigation') || false,
 			filter: !this.hasAttribute('nofilter'),
@@ -597,11 +595,7 @@ export default class DataGrid extends HTMLElement {
 				this.form.elements.density.dispatchEvent(new Event('change'));
 			}
 
-			/* exportable */
-			this.form.elements.csv.hidden = !this.settings.exportCSV;
-			this.form.elements.json.hidden = !this.settings.exportJSON;
-
-			/* search, print, column filter */
+				/* search, print, column filter */
 			this.form.elements.filter.hidden = !this.settings.filter;
 			this.form.elements.preview.hidden = !this.settings.printable;
 			this.form.elements.print.hidden = !this.settings.printable;

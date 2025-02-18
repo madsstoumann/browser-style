@@ -23,11 +23,7 @@ export function renderForm(context) {
 		<small><output name="selected">0</output> ${t('selected')}</small>
 	</fieldset>
 
-	<fieldset name="actions" part="group actions">
-		<fieldset name="density" part="group density">${densityControls}</fieldset>
-		<button type="button" name="csv" hidden>${icon(icons.csv)}</button>
-		<button type="button" name="json" hidden>${icon(icons.json)}</button>
-	</fieldset>
+	<fieldset name="density" part="group density">${densityControls}</fieldset>
 
 	<fieldset name="navigation" part="group navigation">
 		${renderNavigation(context)}

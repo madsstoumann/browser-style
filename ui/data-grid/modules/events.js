@@ -1,5 +1,5 @@
 import { renderTBody, renderTHead } from './render.table.js';
-import { exportCSV, downloadFile, handleSorting } from './data.js';
+import { handleSorting } from './data.js';
 import handleKeyboardEvents from './events.keyboard.js';
 import { addEventListeners, getKeyValueObject, getObj } from './utility.js';
 
@@ -70,16 +70,6 @@ export function attachEventListeners(context) {
 		const selectAll = form.elements.selectall.value === 'true' ? false : true;
 		form.elements.selectall.value = selectAll;
 		context.selectRows(table.tBodies[0].rows, selectAll, true, true);
-	});
-
-	// Exportable settings
-	form.elements.csv.addEventListener('click', () => {
-		const csv = exportCSV(context.state);
-		if (csv) downloadFile(csv, 'export.csv');
-	});
-	form.elements.json.addEventListener('click', () => {
-		const json = JSON.stringify(context.state.tbody, null, 2);
-		if (json) downloadFile(json, 'export.json', 'application/json;charset=utf-8;');
 	});
 
 	// Searchable option

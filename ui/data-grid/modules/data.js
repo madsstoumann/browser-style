@@ -17,37 +17,6 @@ export function dataFromTable(table, itemsPerPage = 5, selectable = 0) {
 	}
 }
 
-export function downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
-	try {
-		const blob = new Blob([content], { type: mimeType });
-		const link = document.createElement('a');
-		link.href = URL.createObjectURL(blob);
-		link.download = filename;
-		link.style.display = 'none';
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-	} catch (error) {
-		consoleLog(`Error creating downloadable file: ${error}`, '#F00');
-	}
-}
-
-export function exportCSV(state) {
-	try {
-		const headers = state.thead.map(cell => cell.label).join(',');
-		const rows = state.tbody.map(row => 
-			state.thead.map(cell => {
-				const value = row[cell.field] ?? '';
-				return `"${String(value).replace(/"/g, '""')}"`;
-			}).join(',')
-		);
-		return `${headers}\r\n${rows.join('\r\n')}`;
-	} catch (error) {
-		consoleLog(`Error exporting CSV: ${error}`, '#F00');
-		return '';
-	}
-}
-
 function generateTheadFromTbody(tbody) {
 	return Object.keys(tbody[0] || {}).map(key => ({
 		field: key,

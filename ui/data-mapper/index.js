@@ -356,6 +356,21 @@ export class DataMapper extends HTMLElement {
 		`;
 	}
 
+	downloadFile(content, filename, mimeType = 'text/csv;charset=utf-8;') {
+		try {
+			const blob = new Blob([content], { type: mimeType });
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.download = filename;
+			link.style.display = 'none';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		} catch (error) {
+			consoleLog(`Error creating downloadable file: ${error}`, '#F00');
+		}
+	}
+
 	async #initialize() {
 		if (this.#initialized) return;
 		
