@@ -10,7 +10,8 @@
     }
   },
   "files": [
-    "index.js"
+    "index.js",
+    "dataformats.js"
   ],
   "publishConfig": {
     "access": "public",

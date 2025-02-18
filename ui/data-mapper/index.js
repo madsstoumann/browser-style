@@ -8,6 +8,11 @@ export class DataMapper extends HTMLElement {
 		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01',
 		process: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5'
 	}
+
+	static #SLUGIFY_PATTERN = /[^a-z0-9]+/g;
+	static #TRIM_PATTERN = /^-+|-+$/g;
+	static #WORD_PATTERN = /\b\w+/g;
+
 	#initialized = false;
 	#shadow;
 	#styles = `
@@ -178,10 +183,11 @@ export class DataMapper extends HTMLElement {
 		},
 		removeSpaces: str => str.replace(/\s+/g, ''),
 		slugify: str => str.toLowerCase()
-			.replace(/[^a-z0-9]+/g, '-')
-			.replace(/^-+|-+$/g, ''),
-		titleCase: str => str.toLowerCase().replace(/\b\w+/g, word => 
-			word.charAt(0).toUpperCase() + word.slice(1)
+			.replace(DataMapper.#SLUGIFY_PATTERN, '-')
+			.replace(DataMapper.#TRIM_PATTERN, ''),
+		titleCase: str => str.toLowerCase().replace(
+			DataMapper.#WORD_PATTERN, 
+			word => word[0].toUpperCase() + word.slice(1)
 		),
 		trim: str => str.trim(),
 		truncate: str => str.length > 100 ? str.substring(0, 97) + '...' : str,
@@ -207,7 +213,16 @@ export class DataMapper extends HTMLElement {
 	#lang = 'en';
 	#state = {
 		content: '',
-		elements: {},
+		elements: {
+			input: null,
+			mapping: null,
+			close: null,
+			numObjects: null,
+			output: null,
+			preview: null,
+			process: null,
+			updateTarget: null
+		},
 		separator: null,
 		concatenator: '\n',
 		firstrow: true,
@@ -366,7 +381,7 @@ export class DataMapper extends HTMLElement {
 			link.click();
 			document.body.removeChild(link);
 		} catch (error) {
-			// console.warn(`Error creating downloadable file: ${error}`, '#F00');
+			console.warn('Error creating downloadable file');
 		}
 	}
 
@@ -653,18 +668,15 @@ export class DataMapper extends HTMLElement {
 	#setupEventListeners() {
 		const { input, mapping } = this.#state.elements;
 		
-		input?.addEventListener('change', e => {
-			const file = e.target.files[0];
-			file && this.#processFile(file);
-		});
+		const handlers = new Map([
+			['change', e => e.target.files[0] && this.#processFile(e.target.files[0])],
+			['beforetoggle', e => input.toggleAttribute('inert', e.newState === 'open')],
+			['dm:close', () => mapping.togglePopover(false)]
+		]);
 
-		if (mapping) {
-			mapping.addEventListener('beforetoggle', e => {
-				input.toggleAttribute('inert', e.newState === 'open');
-			});
-
-			this.addEventListener('dm:close', () => mapping.togglePopover(false));
-		}
+		input?.addEventListener('change', handlers.get('change'));
+		mapping?.addEventListener('beforetoggle', handlers.get('beforetoggle'));
+		this.addEventListener('dm:close', handlers.get('dm:close'));
 	}
 
 	#t(key) {
