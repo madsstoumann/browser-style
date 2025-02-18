@@ -211,7 +211,8 @@ export class DataMapper extends HTMLElement {
 		separator: null,
 		concatenator: '\n',
 		firstrow: true,
-		mapping: null
+		mapping: null,
+		outputData: null
 	};
 
 	static defaultAccept = '.txt';
@@ -236,6 +237,18 @@ export class DataMapper extends HTMLElement {
 	get customMapping() { return this.#state.mapping; }
 	get formatters() { return this.#formatters; }
 	get initialized() { return this.#initialized; }
+	get content() { return this.#state.content; }
+	set content(value) { 
+		this.#state.content = value;
+		this.#state.separator = value.includes('\t') ? '\t' : ',';
+	}
+
+	get outputData() { return this.#state.outputData; }
+	set outputData(data) { 
+		if (Array.isArray(data) && data.length > 0) {
+			this.#state.outputData = data;
+		}
+	}
 
 	set converters(newConverters) {
 		this.#converters = { ...this.#converters, ...newConverters };
@@ -279,6 +292,27 @@ export class DataMapper extends HTMLElement {
 	static register() {
 		const name = this.name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
 		if (!customElements.get(name)) customElements.define(name, this);
+	}
+
+	async process() {
+		if (this.#state.outputData) {
+			return this.#state.outputData;
+		}
+		const mappings = this.customMapping || [];
+		return this.#processMapping(mappings);
+	}
+
+	async preview(format = 'json') {
+		const data = await this.process();
+		return data.length ? dataFormats[format]([data[0]]) : '';
+	}
+
+	async download(format = 'json') {
+		const data = await this.process();
+		const content = dataFormats[format](data);
+		const timestamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-');
+		const filename = `export-${timestamp}.${format}`;
+		this.#downloadFile(content, filename, `${mimeTypes[format]};charset=utf-8;`);
 	}
 
 	// Private Methods

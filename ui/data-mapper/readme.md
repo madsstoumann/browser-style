@@ -31,9 +31,27 @@ import '@browser.style/data-mapper';
 
 - `accept`: File types to accept (default: `.txt`)
 - `label`: Label text for file input (default: `Select file`)
+- `lang`: Language code for UI text (default: `en`)
 - `mapping`: JSON string for predefined field mappings
 - `nomount`: Prevents automatic initialization
 - `required`: Makes file input required
+- `separator`: Character to use when concatenating multiple fields (default: `\n`)
+
+## Methods
+
+- `mount()`: Initialize component manually (when using `nomount`)
+- `process()`: Process data with current mapping
+- `preview(format)`: Generate preview in specified format
+- `download(format)`: Download data in specified format
+- `initializeComponent()`: Re-initialize the component
+
+## Properties
+
+- `content`: Get/set the raw content string
+- `outputData`: Get/set processed data array
+- `customMapping`: Get/set field mappings array
+- `converters`: Get/set type converters object
+- `formatters`: Get/set text formatters object
 
 ## Events
 
@@ -41,16 +59,28 @@ import '@browser.style/data-mapper';
 - `dm:error`: Fired when an error occurs. The `detail` property contains the error message.
 - `dm:close`: Can be dispatched to close the mapping interface.
 
+## Output Formats
+- CSV
+- JSON
+- NDJSON (Newline Delimited JSON)
+- TSV
+- XML
+- YAML
+
 ## CSS Custom Properties
 
-- `--accent-color`: Primary accent color (default: `light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%))`)
-- `--accent-color-text`: Text color for accent elements (default: `hsl(211, 100%, 95%)`)
-- `--grey-light`: Light grey color (default: `#f3f3f3`)
-- `--grey-dark`: Dark grey color (default: `#333`)
-- `--data-mapper-button-bg`: Background color for buttons (default: `light-dark(var(--grey-light), var(--grey-dark))`)
-- `--data-mapper-input-bg`: Background color for input fields
-- `--data-mapper-input-placeholder`: Color for input placeholders
-- `--data-mapper-close-bg`: Background color for close button
+```css
+:host {
+  --accent-color: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+  --accent-color-text: hsl(211, 100%, 95%);
+  --grey-light: #f3f3f3;
+  --grey-dark: #333;
+  --data-mapper-button-bg: light-dark(var(--grey-light), var(--grey-dark));
+  --data-mapper-input-bg: light-dark(var(--grey-light), var(--grey-dark));
+  --data-mapper-input-placeholder: light-dark(#CCC, #777);
+  --data-mapper-close-bg: light-dark(var(--grey-dark), var(--grey-light));
+}
+```
 
 ## Custom Mapping
 
@@ -89,7 +119,7 @@ dataMapper.customMapping = [
 - `truncate`: Limits text to 100 characters with ellipsis
 - `uppercase`: Converts to uppercase
 
-## Custom Formatters
+### Custom Formatters
 
 ```javascript
 dataMapper.formatters = {
@@ -103,8 +133,7 @@ dataMapper.formatters = {
 
 ## Styling Parts
 
-Use these part names to style component elements:
-
+- `button`: Action buttons
 - `close`: Close button
 - `file`: File input
 - `firstrow`: First row checkbox

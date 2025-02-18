@@ -48,6 +48,11 @@
 		<button type="button" data-format="tsv">Load TSV Demo</button>
 	</p>
 
+	<p>
+		<h3>Set JSON outputData and download as CSV</h3>
+		<button type="button" data-action="download">Download JSON as CSV</button>
+	</p>
+
 	<!-- <p>
 		<h3><a href="demo.json" target="_blank">demo.json</a></h3>
 		<button type="button" data-format="json">Load JSON Demo</button>
@@ -117,6 +122,29 @@
 
 				// Trigger the file input's change event
 				dataMapper.querySelector('[part="file"]').dispatchEvent(event);
+			});
+
+			// Add sample data for direct conversion
+			const sampleData = [
+				{
+					id: '0125DC280',
+					name: '100 Bullets TP Book 02',
+					price: 39.99,
+					released: '2025-04-22'
+				},
+				{
+					id: '0125MA518',
+					name: 'Legacy of Violence',
+					price: 29.99,
+					released: '2025-03-05'
+				}
+			];
+
+			// Add click handler for direct download
+			document.querySelector('[data-action="download"]').addEventListener('click', () => {
+				dataMapper.outputData = sampleData;
+				dataMapper.download('csv');
+				dataMapper.outputData = null; // Reset after download
 			});
 		});
 	</script>
