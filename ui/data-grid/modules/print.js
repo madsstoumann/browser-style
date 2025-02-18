@@ -1,5 +1,5 @@
 import PrintPreview from '../../print-preview/index.js';
-import { filterData } from './render.table.js';
+import { applySorting, filterData } from './render.table.js';
 
 export function setupPrint(context) {
 	try {
@@ -79,36 +79,34 @@ export function printTable(context, directPrint = false) {
 			setupPrint(context);
 		}
 
+		// First, create a sorted copy of the full dataset if sorting is active
+		let sortedData = [...context.state.tbody];
+		sortedData = context.state.sortIndex > -1 ? applySorting(context, sortedData) : sortedData;
+
 		let dataToPrint = [];
-		const { printOptions, tbody, page, itemsPerPage, selected } = context.state;
+		const { printOptions, page, itemsPerPage, selected } = context.state;
 
 		switch (printOptions) {
 			case 'search':
-				dataToPrint = filterData(context, [...tbody]);
-				if (!dataToPrint.length) {
-					throw new Error('No search results to print');
-				}
+				dataToPrint = filterData(context, sortedData);
 				break;
 			case 'page':
 				const startIndex = page * itemsPerPage;
-				dataToPrint = tbody.slice(startIndex, startIndex + itemsPerPage);
-				if (!dataToPrint.length) {
-					throw new Error('No data on current page');
-				}
+				dataToPrint = sortedData.slice(startIndex, startIndex + itemsPerPage);
 				break;
 			case 'selected':
 				if (!selected?.size) {
 					throw new Error('No rows selected');
 				}
 				const keyFields = context.state.thead.filter(col => col.key).map(col => col.field);
-				dataToPrint = tbody.filter(row => {
+				dataToPrint = sortedData.filter(row => {
 					const compositeKey = keyFields.map(field => row[field]).join(',');
 					return selected.has(compositeKey);
 				});
 				break;
 			case 'all':
 			default:
-				dataToPrint = tbody;
+				dataToPrint = sortedData;
 		}
 
 		if (!dataToPrint.length) {
@@ -126,7 +124,6 @@ export function printTable(context, directPrint = false) {
 		}
 	} catch (error) {
 		context.log(`Print error: ${error.message}`, '#F00');
-		// Optionally dispatch an event that can be handled by the application
 		context.dispatchEvent(new CustomEvent('dg:printerror', { 
 			detail: { error: error.message, printOptions: context.state.printOptions } 
 		}));

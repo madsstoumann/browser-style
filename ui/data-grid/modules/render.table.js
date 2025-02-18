@@ -1,7 +1,7 @@
 import { icons } from './icons.js';
 import { calculatePages, t } from './utility.js';
 
-function applySorting(context, data) {
+export function applySorting(context, data) {
 	const { sortIndex, sortOrder } = context.state;
 	const { locale } = context.settings;
 
@@ -36,6 +36,7 @@ function applySorting(context, data) {
 		// Reverse order if sortOrder is descending
 		if (sortOrder === 1) data.reverse();
 	}
+	return data;
 }
 
 export function filterData(context, data) {
