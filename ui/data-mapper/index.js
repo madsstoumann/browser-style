@@ -3,7 +3,7 @@ import { dataFormats, mimeTypes } from './dataformats.js';
 export class DataMapper extends HTMLElement {
 	#icons = {
 		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
-		clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z',
+		clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 0 0 1 -2 -2z',
 		download: 'M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2, M7 11l5 5l5 -5, M12 4l0 12',
 		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01',
 		process: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5'
@@ -660,6 +660,18 @@ export class DataMapper extends HTMLElement {
 			const timestamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-');
 			const filename = `export-${timestamp}.${format}`;
 			this.#downloadFile(content, filename, `${mimeTypes[format]};charset=utf-8;`);
+		});
+
+		const formatSelect = mappingEl.querySelector('[part~=outputformat]');
+		formatSelect?.addEventListener('change', () => {
+			const output = elements.output;
+			if (!output.hidden && output.textContent.trim()) {
+				const mappings = this.#getCurrentMappings();
+				const previewData = this.#processMapping(mappings);
+				if (previewData.length > 0) {
+					output.textContent = dataFormats[formatSelect.value]([previewData[0]]);
+				}
+			}
 		});
 
 		this.#state.mapping && this.#applyCustomMapping();
