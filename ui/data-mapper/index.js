@@ -199,40 +199,40 @@ export class DataMapper extends HTMLElement {
 	#i18n = {
 		en: {
 			download: 'Download',
+			import: 'Import',
 			formatter: 'Formatter',
 			numObjects: 'Number of objects: ',
 			prefix: 'Prefix',
 			preview: 'Preview',
-			import: 'Import',
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
-			updateTargets: 'Use Source Names as Targets',
-			type: 'Type'
+			type: 'Type',
+			updateTargets: 'Use Source Names as Targets'
 		}
 	};
 
 	#lang = 'en';
 	#state = {
+		concatenator: '\n',
 		content: '',
 		elements: {
+			close: null,
+			import: null,
 			input: null,
 			mapping: null,
-			close: null,
 			numObjects: null,
 			output: null,
 			preview: null,
-			import: null,
 			updateTarget: null
 		},
-		separator: null,
-		concatenator: '\n',
 		firstrow: true,
 		mapping: null,
-		outputData: null
+		outputData: null,
+		separator: null
 	};
 
-	static defaultAccept = '.csv,.json,.ndjson,.tsv,.xml,.yaml,.yml';
+	static defaultAccept = '.csv,.json,.ndjson,.tsv,,txt,.xml,.yaml,.yml';
 	static defaultLabel = 'Select file';
 
 	constructor() {
@@ -504,7 +504,7 @@ export class DataMapper extends HTMLElement {
 			const text = await file.text();
 			let format = this.#detectFormat(file);
 			
-			// For .txt files, examine content to determine if it's TSV
+			// For .txt files, examine content to determine if it's TSV or CSV
 			if (file.name.endsWith('.txt')) {
 				const firstLine = text.split('\n')[0];
 				format = firstLine.includes('\t') ? 'tsv' : 'csv';
@@ -572,25 +572,20 @@ export class DataMapper extends HTMLElement {
 
 	#detectFormat(file) {
 		const extension = file.name.split('.').pop()?.toLowerCase();
-		
-			// Check extension first
+
 		if (['csv', 'json', 'ndjson', 'tsv', 'xml', 'yaml', 'yml'].includes(extension)) {
 			return extension === 'yml' ? 'yaml' : extension;
 		}
-		
-			// Special case for .txt files - examine content
+
+		// Special case for .txt files - examine content
 		if (extension === 'txt') {
-			// Note: At this point we don't have the content yet
-			// Using filename convention as initial check
 			return file.name.toLowerCase().includes('tsv') ? 'tsv' : 'csv';
 		}
-		
-			// Fallback to mime type check
+
 		for (const [format, mime] of Object.entries(mimeTypes)) {
 			if (file.type === mime) return format;
 		}
-		
-			// Default to CSV if no match
+
 		return 'csv';
 	}
 
