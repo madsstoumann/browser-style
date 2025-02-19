@@ -5,8 +5,7 @@ export class DataMapper extends HTMLElement {
 		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
 		clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 0 0 1 -2 -2z',
 		download: 'M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2, M7 11l5 5l5 -5, M12 4l0 12',
-		import: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5',
-		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01'
+		import: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5'
 	}
 
 	static #SLUGIFY_PATTERN = /[^a-z0-9]+/g;
@@ -203,7 +202,6 @@ export class DataMapper extends HTMLElement {
 			formatter: 'Formatter',
 			numObjects: 'Number of objects: ',
 			prefix: 'Prefix',
-			preview: 'Preview',
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
@@ -223,7 +221,6 @@ export class DataMapper extends HTMLElement {
 			mapping: null,
 			numObjects: null,
 			output: null,
-			preview: null,
 			updateTarget: null
 		},
 		firstrow: true,
@@ -234,6 +231,8 @@ export class DataMapper extends HTMLElement {
 
 	static defaultAccept = '.csv,.json,.ndjson,.tsv,,txt,.xml,.yaml,.yml';
 	static defaultLabel = 'Select file';
+
+	#updateLivePreview = () => {};
 
 	constructor() {
 		super();
@@ -312,10 +311,7 @@ export class DataMapper extends HTMLElement {
 	}
 
 	async import() {
-		if (this.#state.outputData) {
-			return this.#state.outputData;
-		}
-		const mappings = this.customMapping || [];
+		const mappings = this.#getCurrentMappings();
 		return this.#processMapping(mappings);
 	}
 
@@ -328,11 +324,6 @@ export class DataMapper extends HTMLElement {
 		}
 		
 		return data;
-	}
-
-	async preview(format = 'json') {
-		const data = await this.import();
-		return data.length ? dataFormats[format]([data[0]]) : '';
 	}
 
 	async download(format = 'json') {
@@ -561,6 +552,9 @@ export class DataMapper extends HTMLElement {
 			
 			const lineCount = this.#state.content.split('\n').length;
 			numObjects.textContent = `${this.#t('numObjects')}${lineCount}`;
+
+			// Show initial preview
+			this.#updateLivePreview();
 		} catch (error) {
 			console.error('Error processing file:', error);
 			this.dispatchEvent(new CustomEvent('dm:error', { 
@@ -699,11 +693,10 @@ export class DataMapper extends HTMLElement {
 						<option value="yaml">YAML</option>
 					</select>
 					<button type="button" part="button updatetarget" title="${this.#t('updateTargets')}">${this.#icon(this.#icons.arrowright, 'icon')}</button>
-					<button type="button" part="button preview" title="${this.#t('preview')}">${this.#icon(this.#icons.preview, 'icon')}</button>
 					<button type="button" part="button download" title="${this.#t('download')}">${this.#icon(this.#icons.download, 'icon')}</button>
 					<button type="button" part="button import" title="${this.#t('import')}">${this.#icon(this.#icons.import, 'icon')}</button>
 				</nav>
-				<pre part="output" hidden></pre>
+				<pre part="output"></pre>
 			</div>
 		`;
 
@@ -711,11 +704,26 @@ export class DataMapper extends HTMLElement {
 			close: mappingEl.querySelector('[part~=close]'),
 			numObjects: mappingEl.querySelector('[part~=numobjects]'),
 			output: mappingEl.querySelector('[part~=output]'),
-			preview: mappingEl.querySelector('[part~=preview]'),
 			import: mappingEl.querySelector('[part~=import]'),
 			updateTarget: mappingEl.querySelector('[part~=updatetarget]')
 		};
 		this.#state.elements = { ...this.#state.elements, ...elements };
+
+		// Move updateLivePreview to class property so it can be called from #processFile
+		this.#updateLivePreview = () => {
+			const tempContent = this.#state.content;
+			this.#state.content = this.#state.content.split('\n')[0];
+
+			const mappings = this.#getCurrentMappings();
+			const previewData = this.#processMapping(mappings);
+			const format = mappingEl.querySelector('[part~=outputformat]').value;
+
+			if (previewData.length > 0) {
+				elements.output.textContent = dataFormats[format]([previewData[0]]);
+			}
+
+			this.#state.content = tempContent;
+		};
 
 		elements.close?.addEventListener('click', () => 
 			mappingEl.togglePopover(false));
@@ -728,27 +736,11 @@ export class DataMapper extends HTMLElement {
 				if (!target.value.trim()) {
 					target.value = source.toLowerCase().replace(/\s+/g, '_');
 				}
+				this.#updateLivePreview();
 			});
 		});
 
-		elements.preview?.addEventListener('click', () => {
-			const tempContent = this.#state.content;
-			this.#state.content = this.#state.content.split('\n')[0];
-
-			const mappings = this.#getCurrentMappings();
-			const previewData = this.#processMapping(mappings);
-			const format = mappingEl.querySelector('[part~=outputformat]').value;
-
-			if (previewData.length > 0) {
-				elements.output.textContent = dataFormats[format]([previewData[0]]);
-				elements.output.hidden = false;
-			}
-
-			this.#state.content = tempContent;
-		});
-
 		elements.import?.addEventListener('click', async () => {
-			const mappings = this.#getCurrentMappings();
 			const data = await this.import();
 			const format = mappingEl.querySelector('[part~=outputformat]').value;
 
@@ -758,8 +750,7 @@ export class DataMapper extends HTMLElement {
 			}));
 
 			if (data.length > 0) {
-				elements.output.textContent = await this.output(format);
-				elements.output.hidden = false;
+				elements.output.textContent = dataFormats[format](data);
 			}
 		});
 
@@ -785,6 +776,19 @@ export class DataMapper extends HTMLElement {
 				}
 			}
 		});
+
+		// Add live preview functionality
+		mappingEl.querySelectorAll('[part~=mapping-input]').forEach(input => {
+			input.addEventListener('input', () => this.#updateLivePreview());
+		});
+
+		// Update preview when output format changes
+		mappingEl.querySelector('[part~=outputformat]').addEventListener('change', () => this.#updateLivePreview());
+
+		// Initial preview update
+		if (this.#state.content) {
+			this.#updateLivePreview();
+		}
 
 		this.#state.mapping && this.#applyCustomMapping();
 	}
