@@ -1,12 +1,12 @@
-import { dataFormats, mimeTypes } from './dataformats.js';
+import { dataFormats, mimeTypes, inputParsers } from './dataformats.js';
 
 export class DataMapper extends HTMLElement {
 	#icons = {
 		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
 		clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 0 0 1 -2 -2z',
 		download: 'M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2, M7 11l5 5l5 -5, M12 4l0 12',
-		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01',
-		process: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5'
+		import: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5',
+		preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01'
 	}
 
 	static #SLUGIFY_PATTERN = /[^a-z0-9]+/g;
@@ -57,7 +57,7 @@ export class DataMapper extends HTMLElement {
 			align-content: start;
 			background: Canvas;
 			border: 0;
-			color: CanvasText;
+			color: inherit;
 			height: 100dvh;
 			inset: 0;
 			padding: 1rem;
@@ -123,6 +123,7 @@ export class DataMapper extends HTMLElement {
 			background: var(--data-mapper-button-bg);
 			border: 0;
 			border-radius: .25rem;
+			color: inherit;
 			height: 26px;
 			padding: 0 .5ch 0 1ch;
 		}
@@ -131,6 +132,7 @@ export class DataMapper extends HTMLElement {
 			background: var(--data-mapper-button-bg);
 			border: 0;
 			border-radius: .25rem;
+			color: inherit;
 			height: 26px;
 			padding: 0;
 			width: 26px;
@@ -138,11 +140,11 @@ export class DataMapper extends HTMLElement {
 		:host::part(button):hover {
 			background: color-mix(in oklab, var(--data-mapper-button-bg), var(--CanvasText) 25%);
 		}
-		:host::part(process) {
+		:host::part(import) {
 			background-color: var(--accent-color);
 			color: var(--accent-color-text);
 		}
-		:host::part(process):hover {
+		:host::part(import):hover {
 			background-color: color-mix(in oklab, var(--accent-color), #000 10%);
 		}
 		input::placeholder {
@@ -201,7 +203,7 @@ export class DataMapper extends HTMLElement {
 			numObjects: 'Number of objects: ',
 			prefix: 'Prefix',
 			preview: 'Preview',
-			process: 'Process',
+			import: 'Import',
 			source: 'Source',
 			suffix: 'Suffix',
 			target: 'Target',
@@ -220,7 +222,7 @@ export class DataMapper extends HTMLElement {
 			numObjects: null,
 			output: null,
 			preview: null,
-			process: null,
+			import: null,
 			updateTarget: null
 		},
 		separator: null,
@@ -230,7 +232,7 @@ export class DataMapper extends HTMLElement {
 		outputData: null
 	};
 
-	static defaultAccept = '.txt';
+	static defaultAccept = '.csv,.json,.ndjson,.tsv,.xml,.yaml,.yml';
 	static defaultLabel = 'Select file';
 
 	constructor() {
@@ -309,7 +311,7 @@ export class DataMapper extends HTMLElement {
 		if (!customElements.get(name)) customElements.define(name, this);
 	}
 
-	async process() {
+	async import() {
 		if (this.#state.outputData) {
 			return this.#state.outputData;
 		}
@@ -317,14 +319,26 @@ export class DataMapper extends HTMLElement {
 		return this.#processMapping(mappings);
 	}
 
+	async output(format = null) {
+		const data = await this.import();
+		if (!data?.length) return '';
+		
+		if (format) {
+			return dataFormats[format](data);
+		}
+		
+		return data;
+	}
+
 	async preview(format = 'json') {
-		const data = await this.process();
+		const data = await this.import();
 		return data.length ? dataFormats[format]([data[0]]) : '';
 	}
 
 	async download(format = 'json') {
-		const data = await this.process();
-		const content = dataFormats[format](data);
+		const content = await this.output(format);
+		if (!content) return;
+		
 		const timestamp = new Date().toISOString().slice(0, 16).replace(/[T:]/g, '-');
 		const filename = `export-${timestamp}.${format}`;
 		this.#downloadFile(content, filename, `${mimeTypes[format]};charset=utf-8;`);
@@ -430,9 +444,24 @@ export class DataMapper extends HTMLElement {
 
 	#getHeaders(lines) {
 		if (!lines.length) return [];
-		if (this.#state.firstrow) return lines[0].split(this.#state.separator);
-		const columnCount = lines[0].split(this.#state.separator).length;
-		return Array.from({ length: columnCount }, (_, i) => `COL ${i + 1}`);
+		
+		const separator = this.#state.separator;
+		const firstLine = lines[0];
+		
+		if (this.#state.firstrow) {
+			// Split and clean each header
+			return firstLine.split(separator)
+				.map(header => header.trim())
+				.filter(Boolean);  // Remove empty headers
+		}
+		
+		const columnCount = firstLine.split(separator)
+			.filter(Boolean).length;  // Count non-empty columns
+			
+		return Array.from(
+			{ length: columnCount }, 
+			(_, i) => `COL ${i + 1}`
+		);
 	}
 
 	#getTemplate() {
@@ -473,25 +502,65 @@ export class DataMapper extends HTMLElement {
 	async #processFile(file) {
 		try {
 			const text = await file.text();
-			const lines = text.trim().split('\n');
+			let format = this.#detectFormat(file);
 			
-			// Auto-detect input file separator (CSV/TSV)
-			this.#state.separator = text.includes('\t') ? '\t' : ',';
-			
-			const headers = this.#getHeaders(lines);
-			if (!headers.length) throw new Error('No headers found in file');
-			
-			this.#renderMapping(headers);
+			// For .txt files, examine content to determine if it's TSV
+			if (file.name.endsWith('.txt')) {
+				const firstLine = text.split('\n')[0];
+				format = firstLine.includes('\t') ? 'tsv' : 'csv';
+			}
+
+			let data;
+
+			if (format === 'csv' || format === 'tsv') {
+				const separator = format === 'tsv' ? '\t' : ',';
+				this.#state.separator = separator;
+				
+				// Clean the text - normalize line endings and remove any BOM
+				const cleanText = text.replace(/^\uFEFF/, '')  // Remove BOM if present
+					.replace(/\r\n?/g, '\n')    // Normalize line endings
+					.trim();                    // Remove leading/trailing whitespace
+				
+				const lines = cleanText.split('\n')
+					.map(line => line.trim())   // Trim each line
+					.filter(Boolean);           // Remove empty lines
+				
+				if (!lines.length) throw new Error('File is empty');
+				
+				const headers = this.#getHeaders(lines);
+				if (!headers.length) throw new Error('No headers found in file');
+				
+				this.#renderMapping(headers);
+				this.#state.content = this.#state.firstrow ? 
+					lines.slice(1).join('\n') : lines.join('\n');
+			} else {
+				// For other formats, parse to array of objects first
+				data = this.#parseInputFormat(text, format);
+				// Ensure data is an array
+				data = Array.isArray(data) ? data : [data];
+				if (!data?.length) throw new Error('No valid data found in file');
+				
+				// If we have an array of primitive values, convert them to objects
+				if (typeof data[0] !== 'object') {
+					data = data.map(value => ({ value }));
+				}
+				
+				// Use first object's keys as headers
+				const headers = Object.keys(data[0]);
+				this.#renderMapping(headers);
+				
+				// Convert structured data back to CSV format for internal processing
+				this.#state.separator = ',';
+				this.#state.content = this.#objectsToCsv(data);
+			}
+
 			const { mapping, input, numObjects } = this.#state.elements;
-			
 			mapping.togglePopover(true);
 			input.value = '';
 			input.toggleAttribute('inert', true);
 			
-			const lineCount = this.#state.firstrow ? lines.length - 1 : lines.length;
+			const lineCount = this.#state.content.split('\n').length;
 			numObjects.textContent = `${this.#t('numObjects')}${lineCount}`;
-			
-			this.#state.content = this.#state.firstrow ? lines.slice(1).join('\n') : lines.join('\n');
 		} catch (error) {
 			console.error('Error processing file:', error);
 			this.dispatchEvent(new CustomEvent('dm:error', { 
@@ -501,21 +570,71 @@ export class DataMapper extends HTMLElement {
 		}
 	}
 
+	#detectFormat(file) {
+		const extension = file.name.split('.').pop()?.toLowerCase();
+		
+			// Check extension first
+		if (['csv', 'json', 'ndjson', 'tsv', 'xml', 'yaml', 'yml'].includes(extension)) {
+			return extension === 'yml' ? 'yaml' : extension;
+		}
+		
+			// Special case for .txt files - examine content
+		if (extension === 'txt') {
+			// Note: At this point we don't have the content yet
+			// Using filename convention as initial check
+			return file.name.toLowerCase().includes('tsv') ? 'tsv' : 'csv';
+		}
+		
+			// Fallback to mime type check
+		for (const [format, mime] of Object.entries(mimeTypes)) {
+			if (file.type === mime) return format;
+		}
+		
+			// Default to CSV if no match
+		return 'csv';
+	}
+
+	#parseInputFormat(text, format) {
+		switch (format) {
+			case 'json':
+				return JSON.parse(text);
+			case 'ndjson':
+				return text.trim().split('\n').map(line => JSON.parse(line));
+			case 'xml':
+				return inputParsers.xml(text);
+			case 'yaml':
+				return inputParsers.yaml(text);
+			default:
+				throw new Error(`Unsupported input format: ${format}`);
+		}
+	}
+
+	#objectsToCsv(data) {
+		if (!data?.length) return '';
+		const headers = Object.keys(data[0]);
+		return data.map(obj => 
+			headers.map(key => obj[key] ?? '').join(this.#state.separator)
+		).join('\n');
+	}
+
 	#processMapping(mappings) {
 		const mappingsByTarget = new Map();
 		mappings.forEach(mapping => {
-			if (!mappingsByTarget.has(mapping.target)) {
-				mappingsByTarget.set(mapping.target, []);
+			// Extract base target name (without order suffix)
+			const [baseTarget] = mapping.target.split('|');
+			if (!mappingsByTarget.has(baseTarget)) {
+				mappingsByTarget.set(baseTarget, []);
 			}
-			mappingsByTarget.get(mapping.target).push(mapping);
+			mappingsByTarget.get(baseTarget).push(mapping);
 		});
 
-		const processedData = this.#state.content.trim().split('\n')
+		return this.#state.content.trim().split('\n')
 			.map(line => {
 				const values = line.split(this.#state.separator);
 				const row = {};
 
 				mappingsByTarget.forEach((targetMappings, target) => {
+					// Use the same logic as preview for all fields
 					row[target] = this.#processTargetField(targetMappings, values);
 				});
 
@@ -523,8 +642,6 @@ export class DataMapper extends HTMLElement {
 					Object.entries(row).sort(([a], [b]) => a.localeCompare(b))
 				);
 			});
-
-		return processedData;
 	}
 
 	#processTargetField(mappings, values) {
@@ -589,7 +706,7 @@ export class DataMapper extends HTMLElement {
 					<button type="button" part="button updatetarget" title="${this.#t('updateTargets')}">${this.#icon(this.#icons.arrowright, 'icon')}</button>
 					<button type="button" part="button preview" title="${this.#t('preview')}">${this.#icon(this.#icons.preview, 'icon')}</button>
 					<button type="button" part="button download" title="${this.#t('download')}">${this.#icon(this.#icons.download, 'icon')}</button>
-					<button type="button" part="button process" title="${this.#t('process')}">${this.#icon(this.#icons.process, 'icon')}</button>
+					<button type="button" part="button import" title="${this.#t('import')}">${this.#icon(this.#icons.import, 'icon')}</button>
 				</nav>
 				<pre part="output" hidden></pre>
 			</div>
@@ -600,7 +717,7 @@ export class DataMapper extends HTMLElement {
 			numObjects: mappingEl.querySelector('[part~=numobjects]'),
 			output: mappingEl.querySelector('[part~=output]'),
 			preview: mappingEl.querySelector('[part~=preview]'),
-			process: mappingEl.querySelector('[part~=process]'),
+			import: mappingEl.querySelector('[part~=import]'),
 			updateTarget: mappingEl.querySelector('[part~=updatetarget]')
 		};
 		this.#state.elements = { ...this.#state.elements, ...elements };
@@ -635,18 +752,18 @@ export class DataMapper extends HTMLElement {
 			this.#state.content = tempContent;
 		});
 
-		elements.process?.addEventListener('click', () => {
+		elements.import?.addEventListener('click', async () => {
 			const mappings = this.#getCurrentMappings();
-			const processedData = this.#processMapping(mappings);
+			const data = await this.import();
 			const format = mappingEl.querySelector('[part~=outputformat]').value;
 
-			this.dispatchEvent(new CustomEvent('dm:processed', { 
-				detail: processedData,
+			this.dispatchEvent(new CustomEvent('dm:imported', { 
+				detail: data,
 				bubbles: true
 			}));
 
-			if (processedData.length > 0) {
-				elements.output.textContent = dataFormats[format]([processedData[0]]);
+			if (data.length > 0) {
+				elements.output.textContent = await this.output(format);
 				elements.output.hidden = false;
 			}
 		});

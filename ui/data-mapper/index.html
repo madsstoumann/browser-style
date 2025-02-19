@@ -21,12 +21,12 @@
 		Imports a CSV or TSV file, maps to JSON using a user-defined mapping.
   </p>
 
-	<data-mapper separator="|">
+	<data-mapper separator=" ">
 		<fieldset>
 			<legend>Import CSV- or TSV-file</legend>
 			<label part="row">
 				<span part="label">Import<abbr title="required">*</abbr></span>
-				<input part="file" type="file" name="file" accept=".csv,.txt,.tsv">
+				<input part="file" type="file" name="file" accept=".csv,.json,.ndjson,.tsv,.txt,.xml,.yaml,.yml">
 			</label>
 			<label part="row">
 				<input type="checkbox" part="firstrow" name="firstrow" checked>
@@ -37,26 +37,40 @@
 	</data-mapper>
 
 	<br>
-	<h2>Simulation</h2>
+	<h2>Simulations</h2>
 	<p>
-		<h3><a href="demo.csv" target="_blank">demo.csv</a></h3>
 		<button type="button" data-format="csv">Load CSV Demo</button>
 	</p>
 
 	<p>
-		<h3><a href="demo.tsv" target="_blank">demo.tsv</a></h3>
 		<button type="button" data-format="tsv">Load TSV Demo</button>
 	</p>
 
 	<p>
+		<button type="button" data-format="yaml">Load YAML Demo</button>
+	</p>
+
+	<p></p>
+		<button type="button" data-format="xml">Load XML Demo</button>
+	</p>
+
+	<p>
+		<button type="button" data-format="json">Load JSON Demo</button>
+	</p>
+
+	<p>
+		<button type="button" data-format="ndjson">Load NDJSON Demo</button>
+	</p>
+
+	<p></p>
 		<h3>Set JSON outputData and download as CSV</h3>
 		<button type="button" data-action="download">Download JSON as CSV</button>
 	</p>
 
-	<!-- <p>
-		<h3><a href="demo.json" target="_blank">demo.json</a></h3>
-		<button type="button" data-format="json">Load JSON Demo</button>
-	</p> -->
+	<p>
+		<h3>Load CSV, output as YAML (see console)</h3>
+		<button type="button" data-action="yaml-output">Convert CSV to YAML</button>
+	</p>
 
 	<script type="module" src="./index.js"></script>
 
@@ -91,6 +105,12 @@
 			];	
 
 			dataMapper.addEventListener('dm:processed', event => {
+				console.log('JSON', event.detail);
+				processed.textContent = `${event.detail.length} records processed`;
+				dataMapper.dispatchEvent(new CustomEvent('dm:close'));
+			});
+
+			dataMapper.addEventListener('dm:imported', event => {
 				console.log('JSON', event.detail);
 				processed.textContent = `${event.detail.length} records processed`;
 				dataMapper.dispatchEvent(new CustomEvent('dm:close'));
@@ -145,6 +165,30 @@
 				dataMapper.outputData = sampleData;
 				dataMapper.download('csv');
 				dataMapper.outputData = null; // Reset after download
+			});
+
+			// Add handler for YAML output demo
+			document.querySelector('[data-action="yaml-output"]').addEventListener('click', async () => {
+				const response = await fetch('./demo.csv');
+				const content = await response.text();
+				
+				// Create a File object and trigger change event
+				const file = new File([content], 'demo.csv', { type: 'text/csv' });
+				const event = new Event('change');
+				Object.defineProperty(event, 'target', {
+					writable: false,
+					value: { files: [file] }
+				});
+
+				// Process the file then output as YAML
+				dataMapper.querySelector('[part="file"]').dispatchEvent(event);
+				
+				// Wait for processing to complete
+				setTimeout(async () => {
+					const yamlOutput = await dataMapper.output('yaml');
+					console.log(yamlOutput);
+					dataMapper.dispatchEvent(new CustomEvent('dm:close'));
+				}, 100);
 			});
 		});
 	</script>
