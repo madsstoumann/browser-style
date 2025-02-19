@@ -56,16 +56,20 @@ import '@browser.style/data-mapper';
 ## Events
 
 - `dm:processed`: Fired when file processing is complete. The `detail` property contains the processed data array.
+- `dm:imported`: Fired after successful import operation. The `detail` property contains the processed data.
 - `dm:error`: Fired when an error occurs. The `detail` property contains the error message.
 - `dm:close`: Can be dispatched to close the mapping interface.
 
-## Output Formats
-- CSV
-- JSON
+## Input Formats
+- CSV (Comma Separated Values)
+- JSON 
 - NDJSON (Newline Delimited JSON)
-- TSV
+- TSV (Tab Separated Values)
 - XML
-- YAML
+- YAML/YML
+
+## Output Formats
+Same as input formats. Convert between any supported format.
 
 ## CSS Custom Properties
 
@@ -138,6 +142,7 @@ dataMapper.formatters = {
 - `file`: File input
 - `firstrow`: First row checkbox
 - `icon`: SVG icons
+- `import`: Import button
 - `label`: Labels
 - `mapping`: Mapping container
 - `mapping-content`: Mapping fields container
@@ -147,5 +152,4 @@ dataMapper.formatters = {
 - `mapping-row`: Mapping row
 - `output`: Preview/output area
 - `preview`: Preview button
-- `process`: Process button
 - `row`: Form row
