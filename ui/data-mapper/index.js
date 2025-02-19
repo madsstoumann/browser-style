@@ -441,10 +441,9 @@ export class DataMapper extends HTMLElement {
 		const firstLine = lines[0];
 		
 		if (this.#state.firstrow) {
-			// Split and clean each header
 			return firstLine.split(separator)
 				.map(header => header.trim())
-				.filter(Boolean);  // Remove empty headers
+				.filter(Boolean);
 		}
 		
 		const columnCount = firstLine.split(separator)
@@ -507,15 +506,14 @@ export class DataMapper extends HTMLElement {
 			if (format === 'csv' || format === 'tsv') {
 				const separator = format === 'tsv' ? '\t' : ',';
 				this.#state.separator = separator;
-				
-				// Clean the text - normalize line endings and remove any BOM
-				const cleanText = text.replace(/^\uFEFF/, '')  // Remove BOM if present
-					.replace(/\r\n?/g, '\n')    // Normalize line endings
-					.trim();                    // Remove leading/trailing whitespace
+
+				const cleanText = text.replace(/^\uFEFF/, '')
+					.replace(/\r\n?/g, '\n')
+					.trim();
 				
 				const lines = cleanText.split('\n')
-					.map(line => line.trim())   // Trim each line
-					.filter(Boolean);           // Remove empty lines
+					.map(line => line.trim())
+					.filter(Boolean);
 				
 				if (!lines.length) throw new Error('File is empty');
 				
@@ -536,8 +534,7 @@ export class DataMapper extends HTMLElement {
 				if (typeof data[0] !== 'object') {
 					data = data.map(value => ({ value }));
 				}
-				
-				// Use first object's keys as headers
+
 				const headers = Object.keys(data[0]);
 				this.#renderMapping(headers);
 				
@@ -554,7 +551,6 @@ export class DataMapper extends HTMLElement {
 			const lineCount = this.#state.content.split('\n').length;
 			numObjects.textContent = `${this.#t('numObjects')}${lineCount}`;
 
-			// Show initial preview
 			this.#updateLivePreview();
 		} catch (error) {
 			console.error('Error processing file:', error);
@@ -610,7 +606,6 @@ export class DataMapper extends HTMLElement {
 	#processMapping(mappings) {
 		const mappingsByTarget = new Map();
 		mappings.forEach(mapping => {
-			// Extract base target name (without order suffix)
 			const [baseTarget] = mapping.target.split('|');
 			if (!mappingsByTarget.has(baseTarget)) {
 				mappingsByTarget.set(baseTarget, []);
@@ -624,7 +619,6 @@ export class DataMapper extends HTMLElement {
 				const row = {};
 
 				mappingsByTarget.forEach((targetMappings, target) => {
-					// Use the same logic as preview for all fields
 					row[target] = this.#processTargetField(targetMappings, values);
 				});
 
@@ -710,7 +704,6 @@ export class DataMapper extends HTMLElement {
 		};
 		this.#state.elements = { ...this.#state.elements, ...elements };
 
-		// Move updateLivePreview to class property so it can be called from #processFile
 		this.#updateLivePreview = () => {
 			const tempContent = this.#state.content;
 			this.#state.content = this.#state.content.split('\n')[0];
@@ -778,15 +771,12 @@ export class DataMapper extends HTMLElement {
 			}
 		});
 
-		// Add live preview functionality
 		mappingEl.querySelectorAll('[part~=mapping-input]').forEach(input => {
 			input.addEventListener('input', () => this.#updateLivePreview());
 		});
 
-		// Update preview when output format changes
 		mappingEl.querySelector('[part~=outputformat]').addEventListener('change', () => this.#updateLivePreview());
 
-		// Initial preview update
 		if (this.#state.content) {
 			this.#updateLivePreview();
 		}
