@@ -676,7 +676,7 @@ export const select = (params) => {
 			? selectedOption.value
 			: selectedOption !== undefined
 			? selectedOption
-			: value !== -1
+			: value !== undefined  // Changed from value !== -1 to value !== undefined
 			? value
 			: attributeValue;
 
