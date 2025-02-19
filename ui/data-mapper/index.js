@@ -1,5 +1,142 @@
 import { dataFormats, mimeTypes, inputParsers } from './dataformats.js';
 
+const styles = `
+:host *, :host *::after, :host *::before { box-sizing: border-box; }
+:host {
+	--accent-color: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+	--accent-color-text: hsl(211, 100%, 95%);
+	--grey-light: #f3f3f3;
+	--grey-dark: #333;
+	--data-mapper-button-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
+	--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
+
+	color: var(--CanvasText);
+}
+:host::part(close) {
+	background: #0000;
+	border: 0;
+	border-radius: 50%;
+	block-size: 3.5rem;
+	color: inherit;
+	font-size: 1.5rem;
+	grid-row: 1;
+	inline-size: 3.5rem;
+	padding: 1rem;
+	place-self: start end;
+}
+:host::part(close):hover {
+	background: var(--data-mapper-button-bg);
+	outline: none;
+}
+:host::part(icon) {
+	aspect-ratio: 1;
+	block-size: 24px;
+	fill: none;
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.5;
+}
+:host::part(mapping) {
+	align-content: start;
+	background: Canvas;
+	border: 0;
+	color: inherit;
+	height: 100dvh;
+	inset: 0;
+	padding: 1rem;
+	width: 100vw;
+}
+:host::part(mapping):popover-open {
+	display: grid;
+}
+:host::part(mapping-content) {
+	display: grid;
+	font-family: ui-monospace, monospace;
+	font-size: small;
+	column-gap: .5rem;
+	row-gap: .25rem;
+	grid-template-columns: 150px 1fr 90px 110px 175px 175px;
+	padding: 0;
+}
+:host::part(mapping-header) {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+:host::part(mapping-input) {
+	background: var(--data-mapper-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
+	border: 0;
+	font-family: inherit;
+	padding-inline: 1ch;
+}
+:host::part(mapping-input):focus-visible {
+	background: var(--data-mapper-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
+	color: Canvas;
+	outline: none;
+}
+:host::part(mapping-nav) {
+	align-items: center;
+	display: flex;
+	gap: .75ch;
+	justify-content: end;
+}
+:host::part(mapping-row) {
+	display: contents;
+}
+:host::part(mapping-thead) {
+	display: contents;
+}
+:host::part(mapping-wrapper) {
+	justify-self: center;
+	max-width: 950px;
+}
+:host::part(numobjects) {
+	color: var(--accent-color);
+	margin-inline-end: auto;
+}
+:host::part(output) {
+	background: var(--grey-dark);
+	border-radius: 4px;
+	color: var(--grey-light);
+	font-size: .75rem;
+	line-height: 1.6;
+	padding: 1em;
+	white-space: pre-wrap;
+}
+:host::part(outputformat) {
+	background: var(--data-mapper-button-bg);
+	border: 0;
+	border-radius: .25rem;
+	color: inherit;
+	height: 26px;
+	padding: 0 .5ch 0 1ch;
+}
+:host::part(button) {
+	aspect-ratio: 1;
+	background: var(--data-mapper-button-bg);
+	border: 0;
+	border-radius: .25rem;
+	color: inherit;
+	height: 26px;
+	padding: 0;
+	width: 26px;
+}
+:host::part(button):hover {
+	background: color-mix(in oklab, var(--data-mapper-button-bg), var(--CanvasText) 25%);
+}
+:host::part(import) {
+	background-color: var(--accent-color);
+	color: var(--accent-color-text);
+}
+:host::part(import):hover {
+	background-color: color-mix(in oklab, var(--accent-color), #000 10%);
+}
+input::placeholder {
+	color: var(--data-mapper-input-placeholder, light-dark(#CCC, #777));
+}
+`;
+
 export class DataMapper extends HTMLElement {
 	#icons = {
 		arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z',
@@ -14,142 +151,6 @@ export class DataMapper extends HTMLElement {
 
 	#initialized = false;
 	#shadow;
-	#styles = `
-		:host *, :host *::after, :host *::before { box-sizing: border-box; }
-		:host {
-			--accent-color: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
-			--accent-color-text: hsl(211, 100%, 95%);
-			--grey-light: #f3f3f3;
-			--grey-dark: #333;
-			--data-mapper-button-bg: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
-			--CanvasText: light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%));
-
-			color: var(--CanvasText);
-		}
-		:host::part(close) {
-			background: #0000;
-			border: 0;
-			border-radius: 50%;
-			block-size: 3.5rem;
-			color: inherit;
-			font-size: 1.5rem;
-			grid-row: 1;
-			inline-size: 3.5rem;
-			padding: 1rem;
-			place-self: start end;
-		}
-		:host::part(close):hover {
-			background: var(--data-mapper-button-bg);
-			outline: none;
-		}
-		:host::part(icon) {
-			aspect-ratio: 1;
-			block-size: 24px;
-			fill: none;
-			pointer-events: none;
-			stroke: currentColor;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			stroke-width: 1.5;
-		}
-		:host::part(mapping) {
-			align-content: start;
-			background: Canvas;
-			border: 0;
-			color: inherit;
-			height: 100dvh;
-			inset: 0;
-			padding: 1rem;
-			width: 100vw;
-		}
-		:host::part(mapping):popover-open {
-			display: grid;
-		}
-		:host::part(mapping-content) {
-			display: grid;
-			font-family: ui-monospace, monospace;
-			font-size: small;
-			column-gap: .5rem;
-			row-gap: .25rem;
-			grid-template-columns: 150px 1fr 90px 110px 175px 175px;
-			padding: 0;
-		}
-		:host::part(mapping-header) {
-			overflow: hidden;
-			text-overflow: ellipsis;
-		}
-		:host::part(mapping-input) {
-			background: var(--data-mapper-input-bg, light-dark(var(--grey-light), var(--grey-dark)));
-			border: 0;
-			font-family: inherit;
-			padding-inline: 1ch;
-		}
-		:host::part(mapping-input):focus-visible {
-			background: var(--data-mapper-close-bg, light-dark(var(--grey-dark), var(--grey-light)));
-			color: Canvas;
-			outline: none;
-		}
-		:host::part(mapping-nav) {
-			align-items: center;
-			display: flex;
-			gap: .75ch;
-			justify-content: end;
-		}
-		:host::part(mapping-row) {
-			display: contents;
-		}
-		:host::part(mapping-thead) {
-			display: contents;
-		}
-		:host::part(mapping-wrapper) {
-			justify-self: center;
-			max-width: 950px;
-		}
-		:host::part(numobjects) {
-			color: var(--accent-color);
-			margin-inline-end: auto;
-		}
-		:host::part(output) {
-			background: var(--grey-dark);
-			border-radius: 4px;
-			color: var(--grey-light);
-			font-size: .75rem;
-			line-height: 1.6;
-			padding: 1em;
-			white-space: pre-wrap;
-		}
-		:host::part(outputformat) {
-			background: var(--data-mapper-button-bg);
-			border: 0;
-			border-radius: .25rem;
-			color: inherit;
-			height: 26px;
-			padding: 0 .5ch 0 1ch;
-		}
-		:host::part(button) {
-			aspect-ratio: 1;
-			background: var(--data-mapper-button-bg);
-			border: 0;
-			border-radius: .25rem;
-			color: inherit;
-			height: 26px;
-			padding: 0;
-			width: 26px;
-		}
-		:host::part(button):hover {
-			background: color-mix(in oklab, var(--data-mapper-button-bg), var(--CanvasText) 25%);
-		}
-		:host::part(import) {
-			background-color: var(--accent-color);
-			color: var(--accent-color-text);
-		}
-		:host::part(import):hover {
-			background-color: color-mix(in oklab, var(--accent-color), #000 10%);
-		}
-		input::placeholder {
-			color: var(--data-mapper-input-placeholder, light-dark(#CCC, #777));
-		}
-	`;
 
 	#converters = {
 		boolean: value => {
@@ -240,7 +241,7 @@ export class DataMapper extends HTMLElement {
 		this.#state.concatenator = this.getAttribute('separator') || '\n';
 		this.#shadow = this.attachShadow({ mode: 'open' });
 		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(this.#styles);
+		sheet.replaceSync(styles);
 		this.#shadow.adoptedStyleSheets = [sheet];
 
 		if (!this.hasAttribute('nomount')) {
