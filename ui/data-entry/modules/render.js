@@ -742,9 +742,9 @@ export const datamapper = (params) => {
 		<div part="row">
 			<span part="label"><abbr title="required">*</abbr>${config.label}</span>
 			<div part="filewrap">
-				<input part="file" type="file" name="file" accept="${config.accept}">
+				<input part="file" type="file" name="file" accept="${config.accept}" data-no-sync>
 				<small part="processed"></small>
-				<input type="checkbox" part="firstrow" name="firstrow" checked title="${config.firstRow}">
+				<input type="checkbox" part="firstrow" name="firstrow" checked title="${config.firstRow}" data-no-sync>
 			</div>
 		</div>
 	</data-mapper>`;

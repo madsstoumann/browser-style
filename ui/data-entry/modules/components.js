@@ -118,7 +118,7 @@ function bindDataMapper(dataEntry) {
 			}
 
 			// Handle processed data
-			dataMapper.addEventListener('dm:processed', (event) => {
+			dataMapper.addEventListener('dm:imported', (event) => {
 				const processed = dataMapper.querySelector('[part="processed"]');
 				if (processed) {
 					processed.textContent = `${event.detail.length} processed`;
