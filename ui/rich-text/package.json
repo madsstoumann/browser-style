@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/rich-text",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "description": "Rich text editor component with customizable toolbar and commands",
   "type": "module",
   "module": "index.js",

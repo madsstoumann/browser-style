@@ -152,10 +152,23 @@ export class RichText extends FormElement {
 		}
 	}
 
+	sanitizeHTML(html) {
+		return html
+				.replace(/[\n\t\r]/g, '')         // Remove all newlines and tabs
+				.replace(/\s+/g, ' ')             // Replace multiple spaces with single space
+				.replace(/>\s+</g, '><')          // Remove whitespace between tags
+				.replace(/\s+>/g, '>')            // Remove whitespace before closing bracket
+				.replace(/<\s+/g, '<')            // Remove whitespace after opening bracket
+				.replace(/^\s+|\s+$/g, '')        // Trim start and end
+				.replace(/>\s+([^<]*)\s+</g, '>$1<') // Clean up text between tags
+				.replace(/\s*([\/?]?)>/g, '$1>'); // Clean up before closing tags
+	}
+
 	setContent(content, plaintextOnly = false) {
 		const stripTags = (input) => input.replace(/<[^>]*>/g, '');
 		this.setAttribute('plaintext', plaintextOnly);
-		this.content[plaintextOnly ? 'textContent' : 'innerHTML'] = plaintextOnly ? stripTags(content) : content;
+		const cleanContent = plaintextOnly ? stripTags(content) : this.sanitizeHTML(content);
+		this.content[plaintextOnly ? 'textContent' : 'innerHTML'] = cleanContent;
 	}
 
 	template() {
@@ -180,10 +193,10 @@ export class RichText extends FormElement {
 		});
 
 		if (this.htmlcode.hidden) {
-			this.content.innerHTML = this.htmlcode.value;
+			this.content.innerHTML = this.sanitizeHTML(this.htmlcode.value);
 			this.content.dispatchEvent(new Event('input'));
 		} else {
-			this.htmlcode.value = this.content.innerHTML;
+			this.htmlcode.value = this.sanitizeHTML(this.content.innerHTML);
 		}
 	}
 }
