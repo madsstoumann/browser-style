@@ -5,8 +5,8 @@ import { commands } from './commands.js';
  * RichText
  * Rich Text Editor
  * @author Mads Stoumann
- * @version 1.0.10
- * @summary 10-01-2025
+ * @version 1.0.11
+ * @summary 21-02-2025
  * @class RichText
  * @extends {FormElement}
  */
@@ -52,7 +52,8 @@ export class RichText extends FormElement {
 		this.content.addEventListener('click', () => this.highlightToolbar());
 		this.content.addEventListener('input', (e) => {
 			if (!this.isFormElement) e.stopPropagation();
-			const content = this.plaintext ? this.content.textContent : this.content.innerHTML;
+			const content = this.plaintext ? this.content.textContent : this.sanitizeHTML(this.content.innerHTML);
+			
 			if (this.isFormElement) super.value = content;
 			this.dispatchEvent(new CustomEvent("rt:content", { detail: { content } }));
 		});
@@ -154,21 +155,22 @@ export class RichText extends FormElement {
 
 	sanitizeHTML(html) {
 		return html
-				.replace(/[\n\t\r]/g, '')         // Remove all newlines and tabs
-				.replace(/\s+/g, ' ')             // Replace multiple spaces with single space
-				.replace(/>\s+</g, '><')          // Remove whitespace between tags
-				.replace(/\s+>/g, '>')            // Remove whitespace before closing bracket
-				.replace(/<\s+/g, '<')            // Remove whitespace after opening bracket
-				.replace(/^\s+|\s+$/g, '')        // Trim start and end
-				.replace(/>\s+([^<]*)\s+</g, '>$1<') // Clean up text between tags
-				.replace(/\s*([\/?]?)>/g, '$1>'); // Clean up before closing tags
+			.replace(/[\n\t\r]+/g, '') // Remove all newlines, tabs, and carriage returns
+			.replace(/\s{2,}/g, ' ') // Replace multiple spaces with single space
+			.replace(/>\s+</g, '><') // Remove whitespace between tags
+			.replace(/\s+>/g, '>') // Remove whitespace before closing bracket
+			.replace(/<\s+/g, '<') // Remove whitespace after opening bracket
+			.replace(/^\s+|\s+$/g, '') // Trim start and end
+			.replace(/(\S)(<[^>]+>)(\S)/g, '$1$2 $3') // Add space after tag if next char is not space
+			.replace(/(\S)(<\/[^>]+>)(\S)/g, '$1 $2$3') // Add space before closing tag if prev char is not space
+			.replace(/\s{2,}/g, ' ') // Clean up any double spaces created
+			.replace(/<(br|hr)(.*?)>/gi, '<$1>'); // Normalize self-closing tags
 	}
 
 	setContent(content, plaintextOnly = false) {
 		const stripTags = (input) => input.replace(/<[^>]*>/g, '');
 		this.setAttribute('plaintext', plaintextOnly);
-		const cleanContent = plaintextOnly ? stripTags(content) : this.sanitizeHTML(content);
-		this.content[plaintextOnly ? 'textContent' : 'innerHTML'] = cleanContent;
+		this.content[plaintextOnly ? 'textContent' : 'innerHTML'] = plaintextOnly ? stripTags(content) : content;
 	}
 
 	template() {
@@ -193,10 +195,10 @@ export class RichText extends FormElement {
 		});
 
 		if (this.htmlcode.hidden) {
-			this.content.innerHTML = this.sanitizeHTML(this.htmlcode.value);
+			this.content.innerHTML = this.htmlcode.value;
 			this.content.dispatchEvent(new Event('input'));
 		} else {
-			this.htmlcode.value = this.sanitizeHTML(this.content.innerHTML);
+			this.htmlcode.value = this.content.innerHTML;
 		}
 	}
 }
