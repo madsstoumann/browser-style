@@ -6,6 +6,7 @@
 	background: Canvas;
 	color: CanvasText;
 	color-scheme: inherit;
+	font-weight: initial;
 }
 :host::part(skip) {
 	background: color-mix(in oklab, #FF0 60%, Canvas);
