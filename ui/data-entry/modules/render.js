@@ -546,18 +546,15 @@ export const input = (params) => {
 
 export const link = (params) => {
 	const { attributes = [], config, instance, label, path = '', value } = params;
-	const processedConfig = processRenderConfig(config, instance.data, instance);
-	const linkData = processedConfig.render?.data || {};
+	const linkData = config?.render?.data || {};
 	const processedAttrs = processAttributes([
 		{ href: linkData.href, target: linkData.target || '_self' }
 	], instance.data, instance);
 
-	const linkValue = resolveTemplateString(
-		value || linkData.label || processedConfig.render?.value || '', 
-		instance.data, 
-		instance,
-		''
-	);
+	const rawLabel = value || linkData.label || config?.render?.value || '';
+	const linkValue = rawLabel.startsWith('${t:') ? 
+		t(rawLabel.slice(4, -1), instance.lang, instance.i18n) : 
+		resolveTemplateString(rawLabel, instance.data, instance, '');
 
 	return `
 		<label part="row">
@@ -695,9 +692,11 @@ export const select = (params) => {
 			)}</button>`
 		: '';
 
+		const isRequired = processedAttrs.some(attr => attr.required === 'required');
+
 	return `
 	<label part="row${action ? ' action' : ''}">
-			<span part="label">${label}</span>
+			<span part="label">${isRequired ? `<abbr title="${t('required', instance.lang, instance.i18n)}">*</abbr>` : ''}${label}</span>
 			<select part="select" ${attrs(
 				filteredAttributes,
 				path,
@@ -726,10 +725,11 @@ export const select = (params) => {
 export const textarea = (params) => {
 	const { attributes = [], label, path = '', value = '' } = params;
 	const textareaAttributes = attrs(attributes, path);
+	const finalValue = value === null ? '' : value;
 	return `
 		<label part="row">
 			<span part="label">${label}</span>
-			<textarea part="textarea" ${textareaAttributes}>${value}</textarea>
+			<textarea part="textarea" ${textareaAttributes}>${finalValue}</textarea>
 		</label>`;
 };
 

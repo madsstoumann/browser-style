@@ -38,6 +38,9 @@ export const dynamicFunctions = {
 		const date = new Date(value);
 		return date.toLocaleDateString(locale, options || {});
 	},
+	formatDateTimeLocal: (value) => {
+		return value ? value.substring(0, 16) : '';
+	},
 	formatNumber: (value, decimals = 2) => {
 		const num = parseFloat(value);
 		return isNaN(num) ? '0.00' : num.toFixed(decimals);
