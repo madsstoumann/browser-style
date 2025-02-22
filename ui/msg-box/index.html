@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Alert Confirm Prompt</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Custom Alert, Confirm, and Prompt components using the &lt;dialog&gt; element.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="../dialog/ui-dialog.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Msg Box</h2>
+	<p></p>
+
+	<p><button type="button" id="alertbtn">Alert</button></p>
+	<p><button type="button" id="confirmbtn">Confirm</button></p>
+	<p><button type="button" id="promptbtn">Prompt</button></p>
+
+	<dialog id="alert">
+		<form>
+			<header>
+				<!-- slot name="header" -->
+				<strong>Alert</strong>
+			</header>
+			<div>
+				<!-- slot name="body" -->
+				Alert message.
+			</div>
+			<footer>
+				<!-- slot name="footer" -->
+				<button value="cancel" formmethod="dialog">OK</button>
+			</footer>
+		</form>
+	</dialog>
+
+	<dialog id="confirm">
+		<form>
+			<header>
+				<!-- slot name="header" -->
+				<strong>Confirm</strong>
+			</header>
+			<div>
+				<!-- slot name="body" -->
+				Confirm message.
+			</div>
+			<footer>
+				<!-- slot name="footer" -->
+				<button formmethod="dialog">Cancel</button>
+				<button type="submit" value="true" autofocus>OK</button>
+			</footer>
+		</form>
+	</dialog>
+
+	<dialog id="prompt">
+		<form>
+			<header>
+				<!-- slot name="header" -->
+				<strong>Prompt</strong>
+			</header>
+			<div>
+				<!-- slot name="body" -->
+				<label>
+					<span>Prompt here</span>
+					<input type="text" name="prompt" autofocus required>
+				</label>
+			</div>
+			<footer>
+				<!-- slot name="footer" -->
+				<button type="button" formmethod="dialog">Cancel</button>
+				<button type="submit">OK</button>
+			</footer>
+		</form>
+	</dialog>
+
+	<script type="module">
+		
+		const confirm = document.getElementById('confirm');
+		confirm.addEventListener('submit', function(event) {
+			event.preventDefault();
+			confirm.returnValue = event.submitter.value;
+			confirm.close();
+		});
+
+		confirm.addEventListener("close", (e) => {
+			console.log(confirm.returnValue);
+		});
+
+		const prompt = document.getElementById('prompt');
+		prompt.addEventListener('submit', function(event) {
+			event.preventDefault();
+			const form = event.target;
+			prompt.returnValue = form.elements.prompt.value;
+			form.reset();
+			prompt.close();
+		});
+
+		prompt.addEventListener("close", (e) => {
+			console.log(prompt.returnValue);
+		});
+
+		const promptcancel = prompt.querySelector('button[formmethod="dialog"]');
+		promptcancel.addEventListener('click', function(event) {
+			prompt.returnValue = null;
+			prompt.close();
+		});
+
+		const alert = document.getElementById('alert');
+		const alertbtn = document.getElementById('alertbtn');
+		alertbtn.addEventListener('click', function(event) {
+			alert.showModal();
+		});
+
+		const confirmbtn = document.getElementById('confirmbtn');
+		confirmbtn.addEventListener('click', function(event) {
+			confirm.showModal();
+		});
+
+		promptbtn.addEventListener('click', function(event) {
+			prompt.showModal();
+		});
+
+		/*
+
+		MsgBox.alert('Alert message.');
+		
+		const status = await MsgBox.confirm('Confirm message.');
+		console.log(status);
+
+		const value = await MsgBox.prompt('The meaning of life?', 42);
+  	console.log(value);
+
+		Or 
+
+		MsgBox.confirm('Confirm message.').then((status) => {
+			console.log(status);
+		});
+		*/
+
+	</script>
+</body>
+</html>
