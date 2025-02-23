@@ -19,126 +19,31 @@
 	<p><button type="button" id="confirmbtn">Confirm</button></p>
 	<p><button type="button" id="promptbtn">Prompt</button></p>
 
-	<dialog id="alert">
-		<form>
-			<header>
-				<!-- slot name="header" -->
-				<strong>Alert</strong>
-			</header>
-			<div>
-				<!-- slot name="body" -->
-				Alert message.
-			</div>
-			<footer>
-				<!-- slot name="footer" -->
-				<button value="cancel" formmethod="dialog">OK</button>
-			</footer>
-		</form>
-	</dialog>
+	<msg-box></msg-box>
 
-	<dialog id="confirm">
-		<form>
-			<header>
-				<!-- slot name="header" -->
-				<strong>Confirm</strong>
-			</header>
-			<div>
-				<!-- slot name="body" -->
-				Confirm message.
-			</div>
-			<footer>
-				<!-- slot name="footer" -->
-				<button formmethod="dialog">Cancel</button>
-				<button type="submit" value="true" autofocus>OK</button>
-			</footer>
-		</form>
-	</dialog>
+	<script type="module" src="./index.js"></script>
 
-	<dialog id="prompt">
-		<form>
-			<header>
-				<!-- slot name="header" -->
-				<strong>Prompt</strong>
-			</header>
-			<div>
-				<!-- slot name="body" -->
-				<label>
-					<span>Prompt here</span>
-					<input type="text" name="prompt" autofocus required>
-				</label>
-			</div>
-			<footer>
-				<!-- slot name="footer" -->
-				<button type="button" formmethod="dialog">Cancel</button>
-				<button type="submit">OK</button>
-			</footer>
-		</form>
-	</dialog>
+	<script>
+		customElements.whenDefined('msg-box').then(() => {
+			const alertBtn = document.getElementById('alertbtn');
+			const confirmBtn = document.getElementById('confirmbtn');
+			const promptBtn = document.getElementById('promptbtn');
+			const msgBox = document.querySelector('msg-box');
 
-	<script type="module">
-		
-		const confirm = document.getElementById('confirm');
-		confirm.addEventListener('submit', function(event) {
-			event.preventDefault();
-			confirm.returnValue = event.submitter.value;
-			confirm.close();
+			alertBtn.addEventListener('click', () => {
+				msgBox.alert('Alert message', 'Alert Title');
+			});
+
+			confirmBtn.addEventListener('click', async () => {
+				const status = await msgBox.confirm('Confirm message', 'Confirm title');
+				console.log(status);
+			});
+
+			promptBtn.addEventListener('click', async () => {
+				const value = await msgBox.prompt('The meaning of life?', 42, 'Prompt headline');
+				console.log(value);
+			});
 		});
-
-		confirm.addEventListener("close", (e) => {
-			console.log(confirm.returnValue);
-		});
-
-		const prompt = document.getElementById('prompt');
-		prompt.addEventListener('submit', function(event) {
-			event.preventDefault();
-			const form = event.target;
-			prompt.returnValue = form.elements.prompt.value;
-			form.reset();
-			prompt.close();
-		});
-
-		prompt.addEventListener("close", (e) => {
-			console.log(prompt.returnValue);
-		});
-
-		const promptcancel = prompt.querySelector('button[formmethod="dialog"]');
-		promptcancel.addEventListener('click', function(event) {
-			prompt.returnValue = null;
-			prompt.close();
-		});
-
-		const alert = document.getElementById('alert');
-		const alertbtn = document.getElementById('alertbtn');
-		alertbtn.addEventListener('click', function(event) {
-			alert.showModal();
-		});
-
-		const confirmbtn = document.getElementById('confirmbtn');
-		confirmbtn.addEventListener('click', function(event) {
-			confirm.showModal();
-		});
-
-		promptbtn.addEventListener('click', function(event) {
-			prompt.showModal();
-		});
-
-		/*
-
-		MsgBox.alert('Alert message.');
-		
-		const status = await MsgBox.confirm('Confirm message.');
-		console.log(status);
-
-		const value = await MsgBox.prompt('The meaning of life?', 42);
-  	console.log(value);
-
-		Or 
-
-		MsgBox.confirm('Confirm message.').then((status) => {
-			console.log(status);
-		});
-		*/
-
 	</script>
 </body>
 </html>
