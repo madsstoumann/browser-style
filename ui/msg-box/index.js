@@ -79,7 +79,7 @@ styles.replaceSync(`
 	}
 `);
 
-export class MsgBox extends HTMLElement {
+export default class MsgBox extends HTMLElement {
 	#elements = {};
 
 	#i18n = {
