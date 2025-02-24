@@ -22,10 +22,12 @@ styles.replaceSync(`
 	button {
 		border: 0;
 		border-radius: 3ch;
-		font-family: inherit;
-		font-size: 0.875rem;
 		font-weight: 500;
 		outline: 0;
+	}
+	button, input {
+		font-family: inherit;
+		font-size: 0.875rem;
 		padding: 1.5ch 3ch;
 	}
 	dialog {
@@ -33,6 +35,8 @@ styles.replaceSync(`
 		border: 0;
 		border-radius: var(--msgbox-bdrs, 1.75rem);
 		box-shadow: var(--msgbox-bxsh, none);
+		font-family: var(--msgbox-ff, ui-sans-serif, system-ui);
+		font-size: 1rem;
 		max-inline-size: min(90vw, 32rem);
 		min-inline-size: 25rem;
 		padding: var(--msgbox-p, 1.5rem);
@@ -58,9 +62,9 @@ styles.replaceSync(`
 	input {
 		border: 1px solid GrayText;
 		border-radius: 1em;
-		font-family: inherit;
-		font-size: 0.875rem	;
-		padding: 1.5ch 3ch;
+	}
+	input:focus-visible {
+		outline: 2px solid var(--AccentColor);
 	}
 	label {
 		display: contents;
@@ -79,26 +83,12 @@ export class MsgBox extends HTMLElement {
 	#elements = {};
 
 	#i18n = {
+		de: { ok: 'OK', cancel: 'Abbrechen' },
 		en: { ok: 'OK', cancel: 'Cancel' },
 		es: { ok: 'Aceptar', cancel: 'Cancelar' },
-		fr: { ok: 'OK', cancel: 'Annuler' },
-		de: { ok: 'OK', cancel: 'Abbrechen' },
+		ja: { ok: 'OK', cancel: 'キャンセル' },
 		ru: { ok: 'ОК', cancel: 'Отмена' },
-		it: { ok: 'OK', cancel: 'Annulla' },
-		pt: { ok: 'OK', cancel: 'Cancelar' },
-		pl: { ok: 'OK', cancel: 'Anuluj' },
-		nl: { ok: 'OK', cancel: 'Annuleren' },
-		uk: { ok: 'Гаразд', cancel: 'Скасувати' },
-		ro: { ok: 'OK', cancel: 'Anulare' },
-		tr: { ok: 'Tamam', cancel: 'İptal' },
-		hu: { ok: 'OK', cancel: 'Mégse' },
-		cs: { ok: 'OK', cancel: 'Zrušit' },
-		sv: { ok: 'OK', cancel: 'Avbryt' },
-		el: { ok: 'Εντάξει', cancel: 'Ακύρωση' },
-		bg: { ok: 'ОК', cancel: 'Отказ' },
-		da: { ok: 'OK', cancel: 'Annuller' },
-		sk: { ok: 'OK', cancel: 'Zrušiť' },
-		fi: { ok: 'OK', cancel: 'Peruuta' }
+		zh: { ok: '确定', cancel: '取消' }
 	};
 
 	set i18n(translations) {
@@ -109,7 +99,7 @@ export class MsgBox extends HTMLElement {
 		const shadow = this.attachShadow({ mode: 'open' });
 		shadow.adoptedStyleSheets = [styles];
 		shadow.innerHTML = `
-			<dialog part="dialog">
+			<dialog part="dialog" closedby="${this.hasAttribute('dismiss') ? 'any' : 'closerequest'}">
 				<form part="form">
 					<h2 part="headline"></h2>
 					<span part="message"></span>
@@ -158,7 +148,7 @@ export class MsgBox extends HTMLElement {
 
 	#t(text) {
 		const lang = this.getAttribute('lang') || navigator.language.split('-')[0];
-		return this.#i18n[lang]?.[text] || text;
+		return this.#i18n[lang]?.[text] || this.#i18n.en[text] || text;
 	}
 }
 
