@@ -36,6 +36,7 @@ console.log(value); // Entered value or false if cancelled
 ## Attributes
 
 - `lang`: Set language for button labels (defaults to browser language)
+- `dismiss`: Enable light dismiss (allows closing dialog by clicking outside or pressing Escape)
 
 ## CSS Properties
 
@@ -48,7 +49,15 @@ console.log(value); // Entered value or false if cancelled
 
 ## Internationalization
 
-The component includes translations for 20 languages. You can add or override translations:
+The component includes built-in translations for the following languages:
+- German (de)
+- English (en)
+- Spanish (es)
+- Japanese (ja)
+- Russian (ru)
+- Chinese (zh)
+
+English is used as fallback when the requested language is not available. You can add or override translations:
 
 ```javascript
 msgBox.i18n = {
