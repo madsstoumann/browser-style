@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/msg-box",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MsgBox (alert, confirt, prompt) component for browser.style",
   "type": "module",
   "module": "index.js",

@@ -18,7 +18,6 @@ styles.replaceSync(`
 	:host::part(ok):focus-visible {
 		background: color-mix(in oklab, var(--AccentColor), CanvasText 20%);
 	}
-
 	button {
 		border: 0;
 		border-radius: 3ch;
@@ -31,10 +30,12 @@ styles.replaceSync(`
 		padding: 1.5ch 3ch;
 	}
 	dialog {
-		background: Canvas;
+		background: lightdark(#FFF, #444);
 		border: 0;
 		border-radius: var(--msgbox-bdrs, 1.75rem);
 		box-shadow: var(--msgbox-bxsh, none);
+		color: CanvasText;
+		color-scheme: light dark;
 		font-family: var(--msgbox-ff, ui-sans-serif, system-ui);
 		font-size: 1rem;
 		max-inline-size: min(90vw, 32rem);
@@ -42,7 +43,7 @@ styles.replaceSync(`
 		padding: var(--msgbox-p, 1.5rem);
 	}
 	dialog::backdrop {
-		background: var(--msgbox-backdrop, rgb(0 0 0 / 0.25));
+		background: var(--msgbox-backdrop, #0004);
 	}
 	footer {
 		display: flex;
