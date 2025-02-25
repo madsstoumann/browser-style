@@ -13,6 +13,7 @@
 		grid-template-rows: repeat(8, 1fr);
 		margin-inline: auto;
 		max-width: 800px;
+		mix-blend-mode: darken;
 		width: 100%;
 
 		label:has([name=r], [name=g], [name=b]) {
