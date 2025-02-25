@@ -1,6 +1,6 @@
 A couple of years ago, when CSS trigonometry functions became baseline, I [wrote an article](https://css-tricks.com/creating-a-clock-with-the-new-css-sin-and-cos-trigonometry-functions/) about them. One of the examples I did, was a CSS-only analog clock:
 
-{% codepen https://codepen.io/stoumann/pen/wvxOQKo %}
+[Codepen Example](https://codepen.io/stoumann/pen/wvxOQKo)
 
 Since then, CSS has introduced a _bunch_ of new features — one being `offset-path`, which is perfect for creating indices on a clock (I sound like an horology expert, but I Googled that).
 
@@ -315,6 +315,6 @@ You can display different timezones using the `timezone` attribute:
 ## Demo
 Here's a Codepen with all the clocks and watches, we've coded:
 
-{% codepen https://codepen.io/stoumann/pen/OPJLRLV %}
+[Codepen Example](https://codepen.io/stoumann/pen/OPJLRLV)
 
 Now go teach kids how to read an analog clock!
