@@ -14,8 +14,8 @@
       display: grid;
       grid-template-columns: 1fr min-content;
       margin-block: 1rem;
-      /* gap: 1rem; */
       section {
+        border-inline-end: 1px dashed;
         padding: 1ch;
       }
     }
@@ -34,7 +34,7 @@
 
   <article>
     <section>MAIN</section>
-    <gui-panel open resize="inline-start block-end" position="">
+    <gui-panel open resize="inline-start block-end" position=""> <!-- dismiss -->
       <div slot="content">
         Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
       </div>

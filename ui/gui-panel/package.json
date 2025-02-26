@@ -4,13 +4,17 @@
   "description": "GUI Panel",
   "type": "module",
   "module": "index.js",
+  "style": "index.css",
   "exports": {
     ".": {
       "import": "./index.js"
-    }
+    },
+    "./style": "./index.css",
+    "./index.css": "./index.css"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "index.css"
   ],
   "publishConfig": {
     "access": "public",

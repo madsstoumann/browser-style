@@ -1,140 +1,26 @@
-const styles = new CSSStyleSheet();
-styles.replaceSync(`
-	:host {
-		--gui-panel-gap: .5rem;
-		--gui-panel-m: 1rem;
-		--gui-panel-w: 265px;
-		--gui-panel-rz-block: 12px;
-		--gui-panel-rz-inline: 6px;
+const cssStyles = new CSSStyleSheet();
+const response = await fetch('./index.css');
+const cssText = await response.text();
+cssStyles.replaceSync(cssText);
 
-		background: var(--gui-panel-bg, Canvas);
-		border: 0;
-		border-radius: var(--gui-panel-bdrs, 10px);
-		box-shadow: var(--gui-panel-bxsh, 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%));
-		color: var(--gui-panel-c, CanvasText);
-		color-scheme:light dark;
-		container-type: inline-size;
-		font-family: var(--gui-panel-ff, system-ui, sans-serif);
-		font-size: var(--gui-panel-fs, 1rem);
-		grid-template-columns: var(--gui-panel-rz-inline) 1fr var(--gui-panel-rz-inline);
-		grid-template-rows: var(--gui-panel-rz-block-start, var(--gui-panel-rz-inline)) min-content minmax(0, 1fr) var(--gui-panel-rz-block-end, 6px);
-		height: var(--gui-panel-h, auto);
-		inset-block: var(--gui-panel-y, var(--gui-panel-m)) auto;
-		inset-inline: var(--gui-panel-x, calc(100% - var(--gui-panel-w) - var(--gui-panel-m))) auto;
-		padding: 0;
-		max-height: calc(100dvh - (2 * var(--gui-panel-m)));
-		min-height: min-content;
-		touch-action: none;
-		user-select: none;
-		-webkit-user-select: none;
-		width: var(--gui-panel-w);
-	}
-	:host(:popover-open) { display: grid }
-
-	:host::part(icon-button) {
-		all: unset;
-		border-radius: 50%;
-		height: 1.25rem;
-		padding: var(--gui-panel-rz-inline);
-		width: 1.25rem;
-	}
-	:host::part(icon-group) {
-		display: flex;
-	}
-
-
-	:host::part(content) {
-		grid-area: 3 / 1 / 4 / 4;
-		padding: 2ch;
-		overflow: auto;
-	}
-	:host::part(header) {
-		align-items: center;
-		display: grid;
-		grid-area: 2 / 2 / 3 / 3;
-		grid-template-columns: 1fr 2fr 1fr;
-		min-height: min-content;
-	}
-	:host::part(icon) {
-		fill: none;
-		pointer-events: none;
-		stroke: currentColor;
-		stroke-linecap: round;
-		stroke-linejoin: round;
-		stroke-width: 2;
-	}
-	:host::part(title) {
-		cursor: move;
-		text-align: center;
-	}
-
-	/* position */
-	:host([position~="bottom"]) { 
-		inset-block: var(--gui-panel-y, calc(100dvh - var(--gui-panel-h) - var(--gui-panel-m))) auto;
-	}
-	:host([position~="center"]) {
-		inset-inline: var(--gui-panel-x, calc(50vw - (var(--gui-panel-w) / 2))) auto;
-	} 
-	:host([position~="left"]) {
-		inset-inline: var(--gui-panel-x, var(--gui-panel-m)) auto;
-	}
-
-	/* resize */
-	:host::part(resize-block-start),
-	:host::part(resize-block-end) {
-		block-size: 0;
-		cursor: ns-resize;
-		display: grid;
-		justify-items: center;
-		overflow: clip;
-	}
-	:host::part(resize-block-start)::before {
-		align-self: end;
-	}
-	:host::part(resize-block-start)::before,
-	:host::part(resize-block-end)::before {
-		background: #CCC8;
-		border-radius: 40px;
-		content: '';
-		height: calc(var(--gui-panel-rz-block) / 2);
-		width: 80px;
-	}
-	:host::part(resize-block-start) {
-		grid-area: 1 / 1 / 2 / 4;
-		place-self: start center;
-	}
-	:host::part(resize-block-end) {
-		grid-area: 4 / 1 / 5 / 4;
-		place-self: end center;
-	}
-	:host([resize~="block-end"]) { --gui-panel-rz-block-end: var(--gui-panel-rz-block); }
-	:host([resize~="block-end"]):host::part(resize-block-end) { block-size: var(--gui-panel-rz-block); }
-	:host([resize~="block-start"]) { --gui-panel-rz-block-start: var(--gui-panel-rz-block); }
-	:host([resize~="block-start"]):host::part(resize-block-start) { block-size: var(--gui-panel-rz-block); }
-
-	:host([resize~="inline-start"]):host::part(resize-inline-start),
-	:host([resize~="inline-end"]):host::part(resize-inline-end) {
-		cursor: ew-resize;
-	}
-	:host::part(resize-inline-start) { grid-area: 1 / 1 / 4 / 2; }
-	:host::part(resize-inline-end) { grid-area: 1 / 3 / 4 / 4; }
-
-	/* media */
-	@media (prefers-color-scheme: light) {
-		:host(.cs) { color-scheme: dark; }
-	}
-	@media (prefers-color-scheme: dark) {
-		:host(.cs) { color-scheme: light; }
-	}
-	@media (hover:hover) {
-		:host::part(icon-button):hover { background: #CCC4; }
-	}
-`);
+const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${
+	paths.map(d => `<path d="${d}" />`).join('')
+}</svg>`;
 
 const ICONS = {
-	close : `<svg part="icon" viewBox="0 0 24 24"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>`,
-	scheme: `<svg part="icon" viewBox="0 0 24 24"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 3l0 18" /><path d="M12 9l4.65 -4.65" /><path d="M12 14.3l7.37 -7.37" /><path d="M12 19.6l8.85 -8.85" /></svg>`,
-	sidebar: `<svg part="icon" viewBox="0 0 24 24"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M15 4l0 16" /></svg>`
+	close: ['M18 6l-12 12', 'M6 6l12 12'],
+	scheme: [
+		'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0',
+		'M12 3l0 18',
+		'M12 9l4.65 -4.65',
+		'M12 14.3l7.37 -7.37',
+		'M12 19.6l8.85 -8.85'
+	],
+	sidebar: [
+		'M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z',
+		'M15 4l0 16'
+	],
+	external: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5']
 }
 
 export default class GuiPanel extends HTMLElement {
@@ -147,21 +33,22 @@ export default class GuiPanel extends HTMLElement {
 		super();
 		this.id = `gui-${Math.random().toString(36).slice(2, 7)}`;
 		this.#root = this.attachShadow({ mode: 'open' });
-		this.#root.adoptedStyleSheets = [styles];
+		this.#root.adoptedStyleSheets = [cssStyles];
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
 					<button type="button" part="icon-button scheme">
-						<slot name="scheme">${ICONS.scheme}</slot>
+						<slot name="scheme">${icon(ICONS.scheme)}</slot>
 					</button>
 				</nav>
 				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
 				<nav part="icon-group">
 					<button type="button" part="icon-button sidebar">
-						<slot name="sidebar">${ICONS.sidebar}</slot>
+						<slot name="external">${icon(ICONS.external)}</slot>
+						<slot name="sidebar">${icon(ICONS.sidebar)}</slot>
 					</button>
 					<button type="button" part="icon-button close">
-						<slot name="close">${ICONS.close}</slot>
+						<slot name="close">${icon(ICONS.close)}</slot>
 					</button>
 				</nav>
 			</header>
@@ -174,15 +61,29 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-end"></div>
 				`;
 
-		 ['close', 'content', 'footer', 'scheme', 'title'].forEach(part => {
+		 ['close', 'content', 'footer', 'scheme', 'sidebar', 'title'].forEach(part => {
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`);
 		});
 
 		// Initialize
 		this.addDraggable(this.#parts.title, this);
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle('cs'));
+
+		this.#parts.sidebar.addEventListener('click', () => {
+			if (this.hasAttribute('popover')) {
+				this.removeAttribute('popover');
+			} else {
+				const popoverType = this.hasAttribute('dismiss') ? 'auto' : 'manual';
+				this.setAttribute('popover', popoverType);
+				this.togglePopover(true);
+			}
+		});
 		this.#parts.close.addEventListener('click', () => this.togglePopover(false));
-		if (!this.hasAttribute('popover')) this.setAttribute('popover', '');
+		
+		// Set initial popover type
+		if (!this.hasAttribute('popover')) {
+			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+		}
 		if (this.hasAttribute('open')) this.togglePopover(true);
 		['content'].forEach(name => this.checkSlots(name));
 	}
