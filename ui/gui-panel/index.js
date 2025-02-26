@@ -24,14 +24,17 @@ export default class GuiPanel extends HTMLElement {
 		this.id = `gui-${Math.random().toString(36).slice(2, 7)}`;
 		this.#useShadow = !this.hasAttribute('noshadow');
 		this.#root = this.#useShadow ? this.attachShadow({ mode: 'open' }) : this;
+		let content;
 
 		if (this.#useShadow) {
 			const sheet = new CSSStyleSheet();
 			sheet.replaceSync(cssText);
 			this.#root.adoptedStyleSheets = [sheet];
 		} else {
+			content = this.querySelector('[slot="content"]');
 			document.head.insertAdjacentHTML('beforeend', `<style>${cssText}</style>`);
 		}
+
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
@@ -50,8 +53,8 @@ export default class GuiPanel extends HTMLElement {
 					</button>
 				</nav>
 			</header>
-			<div part="content" hidden>
-				<slot name="content"></slot>
+			<div part="content">
+				${this.#useShadow ? `<slot name="content"></slot>`: content.outerHTML}
 			</div>
 			<div part="resize-block-start"></div>
 			<div part="resize-block-end"></div>
@@ -85,7 +88,7 @@ export default class GuiPanel extends HTMLElement {
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 		}
 		if (this.hasAttribute('open')) this.togglePopover(true);
-		['content'].forEach(name => this.checkSlots(name));
+		if (this.#useShadow) ['content'].forEach(name => this.checkSlots(name));
 	}
 
 	connectedCallback() {
