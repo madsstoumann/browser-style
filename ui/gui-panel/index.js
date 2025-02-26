@@ -17,7 +17,7 @@ styles.replaceSync(`
 		font-family: var(--gui-panel-ff, system-ui, sans-serif);
 		font-size: var(--gui-panel-fs, 1rem);
 		grid-template-columns: var(--gui-panel-rz-inline) 1fr var(--gui-panel-rz-inline);
-		grid-template-rows: var(--gui-panel-rz-block) fit-content auto var(--gui-panel-rz-block);
+		grid-template-rows: var(--gui-panel-rz-block-start, var(--gui-panel-rz-inline)) min-content minmax(0, 1fr) var(--gui-panel-rz-block-end, 6px);
 		height: var(--gui-panel-h, auto);
 		inset-block: var(--gui-panel-y, var(--gui-panel-m)) auto;
 		inset-inline: var(--gui-panel-x, calc(100% - var(--gui-panel-w) - var(--gui-panel-m))) auto;
@@ -42,12 +42,14 @@ styles.replaceSync(`
 	:host::part(content) {
 		grid-area: 3 / 1 / 4 / 4;
 		padding: 2ch;
+		overflow: auto;
 	}
 	:host::part(header) {
 		align-items: center;
 		display: flex;
 		grid-area: 2 / 2 / 3 / 3;
 		justify-content: space-between;
+		min-height: min-content;
 	}
 	:host::part(icon) {
 		fill: none;
@@ -65,16 +67,21 @@ styles.replaceSync(`
 	:host([position~="bottom"]) { 
 		inset-block: var(--gui-panel-y, calc(100dvh - var(--gui-panel-h) - var(--gui-panel-m))) auto;
 	}
-	:host([position~="center"]) { inset-inline: var(--gui-panel-x, calc(50vw - (var(--gui-panel-w) / 2))) auto; } 
-	:host([position~="left"]) { inset-inline: var(--gui-panel-x, var(--gui-panel-m)) auto; }
+	:host([position~="center"]) {
+		inset-inline: var(--gui-panel-x, calc(50vw - (var(--gui-panel-w) / 2))) auto;
+	} 
+	:host([position~="left"]) {
+		inset-inline: var(--gui-panel-x, var(--gui-panel-m)) auto;
+	}
 
 	/* resize */
 	:host::part(resize-block-start),
 	:host::part(resize-block-end) {
-		block-size: var(--gui-panel-rz-block);
+		block-size: 0;
 		cursor: ns-resize;
 		display: grid;
 		justify-items: center;
+		overflow: clip;
 	}
 	:host::part(resize-block-start)::before {
 		align-self: end;
@@ -82,14 +89,10 @@ styles.replaceSync(`
 	:host::part(resize-block-start)::before,
 	:host::part(resize-block-end)::before {
 		background: #CCC8;
-		border-radius: 5rem;
+		border-radius: 40px;
 		content: '';
 		height: calc(var(--gui-panel-rz-block) / 2);
-		width: 5rem;
-	}
-	:host::part(resize-inline-start),
-	:host::part(resize-inline-end) {
-		cursor: ew-resize;
+		width: 80px;
 	}
 	:host::part(resize-block-start) {
 		grid-area: 1 / 1 / 2 / 4;
@@ -98,6 +101,15 @@ styles.replaceSync(`
 	:host::part(resize-block-end) {
 		grid-area: 4 / 1 / 5 / 4;
 		place-self: end center;
+	}
+	:host([resize~="block-end"]) { --gui-panel-rz-block-end: var(--gui-panel-rz-block); }
+	:host([resize~="block-end"]):host::part(resize-block-end) { block-size: var(--gui-panel-rz-block); }
+	:host([resize~="block-start"]) { --gui-panel-rz-block-start: var(--gui-panel-rz-block); }
+	:host([resize~="block-start"]):host::part(resize-block-start) { block-size: var(--gui-panel-rz-block); }
+
+	:host([resize~="inline-start"]):host::part(resize-inline-start),
+	:host([resize~="inline-end"]):host::part(resize-inline-end) {
+		cursor: ew-resize;
 	}
 	:host::part(resize-inline-start) { grid-area: 1 / 1 / 4 / 2; }
 	:host::part(resize-inline-end) { grid-area: 1 / 3 / 4 / 4; }
@@ -147,7 +159,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-block-end"></div>
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>
-			`;
+				`;
 
 		 ['close', 'content', 'footer', 'scheme', 'title'].forEach(part => {
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`);
@@ -160,13 +172,6 @@ export default class GuiPanel extends HTMLElement {
 		if (!this.hasAttribute('popover')) this.setAttribute('popover', '');
 		if (this.hasAttribute('open')) this.togglePopover(true);
 		['content'].forEach(name => this.checkSlots(name));
-
-		// Add resize handlers
-		['resize-block-start', 'resize-block-end', 'resize-inline-start', 'resize-inline-end']
-			.forEach(part => {
-				const el = this.#root.querySelector(`[part="${part}"]`);
-				this.addResizeHandler(el, part.includes('inline') ? 'inline' : 'block');
-			});
 	}
 
 	connectedCallback() {
@@ -175,6 +180,20 @@ export default class GuiPanel extends HTMLElement {
 			const height = this.offsetHeight;
 			this.style.setProperty('--gui-panel-h', `${height}px`);
 		});
+
+		if (this.hasAttribute('resize')) {
+			// Get enabled resize handlers from attribute
+			const resizeAttr = this.getAttribute('resize').split(/\s+/);
+			const enabledHandlers = new Set(resizeAttr.map(dir => `resize-${dir}`));
+
+			// Only initialize specified handlers
+			['resize-block-start', 'resize-block-end', 'resize-inline-start', 'resize-inline-end']
+				.filter(part => enabledHandlers.has(part))
+				.forEach(part => {
+					const el = this.#root.querySelector(`[part="${part}"]`);
+					this.addResizeHandler(el, part.includes('inline') ? 'inline' : 'block');
+				});
+		}
 	}
 
 	addDraggable(handle, panel, propX = '--gui-panel-x', propY = '--gui-panel-y') {
