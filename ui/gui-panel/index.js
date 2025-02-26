@@ -43,7 +43,7 @@ export default class GuiPanel extends HTMLElement {
 					</button>
 				</nav>
 				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
-				<nav part="icon-group">
+				<nav part="icon-group jc-end">
 					<button type="button" part="icon-button sidebar">
 						<slot name="external">${icon(ICONS.external)}</slot>
 						<slot name="sidebar">${icon(ICONS.sidebar)}</slot>
@@ -88,7 +88,6 @@ export default class GuiPanel extends HTMLElement {
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 		}
 		if (this.hasAttribute('open')) this.togglePopover(true);
-		if (this.#useShadow) ['content'].forEach(name => this.checkSlots(name));
 	}
 
 	connectedCallback() {
@@ -220,13 +219,6 @@ export default class GuiPanel extends HTMLElement {
 		handle.addEventListener('pointerup', endResize);
 		handle.addEventListener('pointercancel', endResize);
 		handle.addEventListener('touchstart', e => e.preventDefault());
-	}
-
-	checkSlots(name) {
-		const slot = this.#root.querySelector(`slot[name="${name}"]`);
-		const update = () => this.#parts[name].hidden = !slot.assignedNodes().length;
-		slot.addEventListener('slotchange', update);
-		update();
 	}
 }
 

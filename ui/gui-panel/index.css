@@ -80,6 +80,9 @@
 [part~="icon-group"] {
 	display: flex;
 }
+[part~="jc-end"] {
+	justify-content: end;
+}
 [part~="title"] {
 	cursor: move;
 	text-align: center;
