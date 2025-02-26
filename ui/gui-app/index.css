@@ -1,0 +1,71 @@
+body { all: unset; }
+
+gui-app {
+	* { box-sizing: border-box;}
+	--gui-app-bdc: light-dark(#DDD, #444);
+
+	block-size: 100dvh;
+	color-scheme: dark light;
+	container-type: inline-size;
+	display: grid;
+	font-family: var(--gui-app-ff, ui-sans-serif, system-ui);
+	grid-template: auto 1fr var(--gui-app-footer-h, auto) / var(--gui-app-left-w, 220px) 1fr var(--gui-app-right-w, 220px) ;
+
+	&:has([name="hide-aside-left"]:checked) {
+		--gui-app-left-w: 0;
+	}
+	&:has([name="hide-aside-right"]:checked) {
+		--gui-app-right-w: 0;
+	}
+
+	aside {
+		background: light-dark(#FFF, #2C2C2C);
+		color: #0008; /* #0009 */
+		display: flow-root;
+		overflow: clip auto;
+		padding: 1ch;
+		overflow-clip-margin: content-box;
+		
+		&:first-of-type {
+			border-inline-end: 1px solid var(--gui-app-bdc);
+			grid-column: 1 / 2;
+		}
+		&:last-of-type {
+			border-inline-start: 1px solid var(--gui-app-bdc);
+			grid-column: 3 / 4;
+		}
+	}
+	footer {
+		background: #777;
+		grid-column: 1 / 4;
+		overflow: clip;
+		overflow-clip-margin: content-box;
+		padding: 1ch;
+	}
+	header {
+		background: light-dark(#FFF, #2C2C2C);
+		border-block-end: 1px solid var(--gui-app-bdc);
+		display: flex;
+		grid-column: 1 / 4;
+		justify-content: space-between;
+		padding: 1ch;
+	}
+	main {
+		background: light-dark(#F5F5F5, #333);
+		grid-column: 2 / 3;
+		padding: 1ch;
+	}
+	[data-sr] {
+		border: 0;
+		clip: rect(0 0 0 0); 
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap; 
+		width: 1px;
+	}
+	svg {
+		pointer-events: none;
+	}
+}
