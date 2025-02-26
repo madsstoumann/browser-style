@@ -75,6 +75,8 @@ export default class GuiPanel extends HTMLElement {
 			} else {
 				const popoverType = this.hasAttribute('dismiss') ? 'auto' : 'manual';
 				this.setAttribute('popover', popoverType);
+				// Force reflow
+				this.offsetHeight;
 				this.togglePopover(true);
 			}
 		});
