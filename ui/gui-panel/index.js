@@ -34,10 +34,14 @@ styles.replaceSync(`
 	:host::part(icon-button) {
 		all: unset;
 		border-radius: 50%;
-		height: 1.5rem;
+		height: 1.25rem;
 		padding: var(--gui-panel-rz-inline);
-		width: 1.5rem;
+		width: 1.25rem;
 	}
+	:host::part(icon-group) {
+		display: flex;
+	}
+
 
 	:host::part(content) {
 		grid-area: 3 / 1 / 4 / 4;
@@ -46,9 +50,9 @@ styles.replaceSync(`
 	}
 	:host::part(header) {
 		align-items: center;
-		display: flex;
+		display: grid;
 		grid-area: 2 / 2 / 3 / 3;
-		justify-content: space-between;
+		grid-template-columns: 1fr 2fr 1fr;
 		min-height: min-content;
 	}
 	:host::part(icon) {
@@ -61,6 +65,7 @@ styles.replaceSync(`
 	}
 	:host::part(title) {
 		cursor: move;
+		text-align: center;
 	}
 
 	/* position */
@@ -128,7 +133,8 @@ styles.replaceSync(`
 
 const ICONS = {
 	close : `<svg part="icon" viewBox="0 0 24 24"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>`,
-	scheme: `<svg part="icon" viewBox="0 0 24 24"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 3l0 18" /><path d="M12 9l4.65 -4.65" /><path d="M12 14.3l7.37 -7.37" /><path d="M12 19.6l8.85 -8.85" /></svg>`
+	scheme: `<svg part="icon" viewBox="0 0 24 24"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 3l0 18" /><path d="M12 9l4.65 -4.65" /><path d="M12 14.3l7.37 -7.37" /><path d="M12 19.6l8.85 -8.85" /></svg>`,
+	sidebar: `<svg part="icon" viewBox="0 0 24 24"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M15 4l0 16" /></svg>`
 }
 
 export default class GuiPanel extends HTMLElement {
@@ -144,13 +150,20 @@ export default class GuiPanel extends HTMLElement {
 		this.#root.adoptedStyleSheets = [styles];
 		this.#root.innerHTML = `
 			<header part="header">
-				<button type="button" part="icon-button scheme">
-					<slot name="scheme">${ICONS.scheme}</slot>
-				</button>
+				<nav part="icon-group">
+					<button type="button" part="icon-button scheme">
+						<slot name="scheme">${ICONS.scheme}</slot>
+					</button>
+				</nav>
 				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
-				<button type="button" part="icon-button close">
-					<slot name="close">${ICONS.close}</slot>
-				</button>
+				<nav part="icon-group">
+					<button type="button" part="icon-button sidebar">
+						<slot name="sidebar">${ICONS.sidebar}</slot>
+					</button>
+					<button type="button" part="icon-button close">
+						<slot name="close">${ICONS.close}</slot>
+					</button>
+				</nav>
 			</header>
 			<div part="content" hidden>
 				<slot name="content"></slot>
@@ -243,29 +256,26 @@ export default class GuiPanel extends HTMLElement {
 		const move = ({ clientX, clientY }) => {
 			if (!this.#resizeState) return;
 
-			// Calculate how far the pointer has moved from start position
+			const isRTL = getComputedStyle(this).direction === 'rtl';
 			const delta = type === 'inline' 
 				? clientX - this.#resizeState.startX 
 				: clientY - this.#resizeState.startY;
 
 			let newSize;
-			if (this.#resizeState.edge === 'start') {
-					// When resizing from start (left/top), we:
-				// 1. Invert the delta since dragging left/up should increase size
-				// 2. Need to move the panel to maintain end position
+			// For RTL, swap start/end behavior for inline resizing
+			const isStart = this.#resizeState.edge === 'start';
+			const effectiveIsStart = type === 'inline' && isRTL ? !isStart : isStart;
+
+			if (effectiveIsStart) {
 				newSize = this.#resizeState.startSize - delta;
 				if (type === 'inline') {
-					// For left edge: maintain right edge position by updating x
 					const currentRight = this.#resizeState.startRight;
 					this.style.setProperty('--gui-panel-x', `${currentRight - newSize}px`);
 				} else {
-					// For top edge: maintain bottom edge position by updating y
 					const currentBottom = this.#resizeState.startBottom;
 					this.style.setProperty('--gui-panel-y', `${currentBottom - newSize}px`);
 				}
 			} else {
-				// When resizing from end (right/bottom):
-				// Simply adjust size based on pointer movement
 				newSize = this.#resizeState.startSize + delta;
 			}
 

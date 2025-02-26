@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="rtl">
+<html lang="en-US" dir="ltr">
 <head>
   <title>GUI Panel</title>
   <meta charset="UTF-8">
@@ -7,6 +7,19 @@
   <meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
   <meta name="view-transition" content="same-origin">
   <link rel="stylesheet" href="/base.css">
+  <style>
+
+    article {
+      border: 1px dashed;
+      display: grid;
+      grid-template-columns: 1fr min-content;
+      margin-block: 1rem;
+      /* gap: 1rem; */
+      section {
+        padding: 1ch;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>UI: Components</h1>
@@ -19,11 +32,15 @@
   </p>
   <button type="button" id="toggle">Toggle GUI Panel</button>
 
-  <gui-panel open resize="inline-start block-end">
-    <div slot="content">
-      Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
-    </div>
-  </gui-panel>
+  <article>
+    <section>MAIN</section>
+    <gui-panel open resize="inline-start block-end" position="">
+      <div slot="content">
+        Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
+      </div>
+    </gui-panel>
+  </article>
+  
 
   <script type="module" src="./index.js"></script>
   <script>
