@@ -1,7 +1,5 @@
-const cssStyles = new CSSStyleSheet();
-const response = await fetch('./index.css');
-const cssText = await response.text();
-cssStyles.replaceSync(cssText);
+const styles = await fetch('./index.css');
+const cssText = await styles.text();
 
 const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${
 	paths.map(d => `<path d="${d}" />`).join('')
@@ -9,17 +7,8 @@ const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${
 
 const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
-	scheme: [
-		'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0',
-		'M12 3l0 18',
-		'M12 9l4.65 -4.65',
-		'M12 14.3l7.37 -7.37',
-		'M12 19.6l8.85 -8.85'
-	],
-	sidebar: [
-		'M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z',
-		'M15 4l0 16'
-	],
+	scheme: [ 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
+	sidebar: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
 	external: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5']
 }
 
@@ -28,12 +17,21 @@ export default class GuiPanel extends HTMLElement {
 	#parts = {};
 	#dragState = null;
 	#resizeState = null;
+	#useShadow = true;
 
 	constructor() {
 		super();
 		this.id = `gui-${Math.random().toString(36).slice(2, 7)}`;
-		this.#root = this.attachShadow({ mode: 'open' });
-		this.#root.adoptedStyleSheets = [cssStyles];
+		this.#useShadow = !this.hasAttribute('noshadow');
+		this.#root = this.#useShadow ? this.attachShadow({ mode: 'open' }) : this;
+
+		if (this.#useShadow) {
+			const sheet = new CSSStyleSheet();
+			sheet.replaceSync(cssText);
+			this.#root.adoptedStyleSheets = [sheet];
+		} else {
+			document.head.insertAdjacentHTML('beforeend', `<style>${cssText}</style>`);
+		}
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
