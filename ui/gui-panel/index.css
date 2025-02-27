@@ -47,10 +47,10 @@
 	display: grid;
 	header { 
 		display: flex;
-			[part~="close"],
-			[part~="reset"],
-			[part="title"] { 
-				display: none; 
+		[part~="close"],
+		[part~="reset"],
+		[part="title"] { 
+			display: none; 
 		}
 	}
 	
@@ -70,6 +70,8 @@
 [part~="content"] {
 	grid-area: 3 / 1 / 4 / 4;
 	overflow: auto;
+	scrollbar-color: #CCC8 #0000;
+	scrollbar-width: thin;
 }
 [part~="header"] {
 	align-items: center;

@@ -90,6 +90,7 @@ export default class GuiPanel extends HTMLElement {
 		const toggleSidebar = () => {
 			if (this.hasAttribute('popover')) {
 				this.removeAttribute('popover');
+				this.style.setProperty('--gui-panel-w', `${MIN_PANEL_WIDTH}px`);
 			} else {
 				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
@@ -223,7 +224,9 @@ export default class GuiPanel extends HTMLElement {
 			handle.addEventListener('pointercancel', endDrag, {once: true});
 		});
 
-		handle.addEventListener('touchstart', e => e.preventDefault());
+		handle.addEventListener('touchstart', e => {
+			if (e.cancelable) { e.preventDefault() }
+		}, { passive: false });
 	}
 
 	addResizeHandler(handle, type) {
@@ -279,7 +282,9 @@ export default class GuiPanel extends HTMLElement {
 			handle.addEventListener('pointercancel', endResize, {once: true});
 		});
 
-		handle.addEventListener('touchstart', e => e.preventDefault());
+		handle.addEventListener('touchstart', e => {
+			if (e.cancelable) { e.preventDefault(); }
+		}, { passive: false });
 	}
 
 	handlePopoverToggle(force) {
