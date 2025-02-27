@@ -36,21 +36,18 @@
   <button type="button" id="toggle">Toggle GUI Panel</button>
 
   <article>
-    <gui-panel open resize="inline-end block-start" position="bottom left" dock="start" noscheme> <!-- dismiss -->
+    <gui-panel open resize="inline-end block-start" position="bottom left" dock="start" noscheme title=":: Settings ::"> <!-- dismiss -->
       <div slot="content">
         Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
       </div>
     </gui-panel>
     <section>MAIN</section>
-    <gui-panel open resize="inline-start block-end" position="top right" dock="end" noshadow> <!-- dismiss -->
+    <gui-panel open resize="inline-start block-end" position="top right" dock="end" noshadow title="Control Panel"> <!-- dismiss -->
       <div slot="content">
         Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
       </div>
     </gui-panel>
   </article>
-  
-
-
 
   <script type="module" src="./index.js"></script>
   <script>

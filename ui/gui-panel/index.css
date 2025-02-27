@@ -2,6 +2,7 @@
 	--gui-panel-gap: .5rem;
 	--gui-panel-m: 1rem;
 	--gui-panel-w: 265px;
+	--gui-panel-icon-sz: 1.25rem;
 	--gui-panel-rz-touch: 12px;
 	--gui-panel-rz-area: 6px;
 
@@ -33,7 +34,7 @@
 	height: var(--gui-panel-h, auto);
 }
 
-:where(:host, gui-control) [hidden],
+[hidden] { display: none !important;}
 :where(:host([popover]), gui-panel[popover]) slot[name="externalend"],
 :where(:host(:not([popover])), gui-panel:not([popover])) slot[name="sidebarend"],
 :where(:host([popover]), gui-panel[popover]) slot[name="externalstart"],
@@ -75,29 +76,34 @@
 }
 [part~="icon"] {
 	fill: none;
-	height: 1.25rem;
+	height: var(--gui-panel-icon-sz);
 	pointer-events: none;
 	stroke: currentColor;
 	stroke-linecap: round;
 	stroke-linejoin: round;
 	stroke-width: 2;
-	width: 1.25rem;
+	width: var(--gui-panel-icon-sz);
 }
 [part~="icon-button"] {
+	display: inline-grid;
 	background: #0000;
 	border: none;
 	border-radius: 50%;
-	padding: var(--gui-panel-rz-area);
+	padding: calc(var(--gui-panel-rz-area) / 2);
 }
 [part~="icon-group"] {
 	display: flex;
+	padding-inline: calc(var(--gui-panel-rz-area) / 2);
 }
 [part~="jc-end"] {
 	justify-content: end;
 }
 [part~="title"] {
 	cursor: move;
+	font-size: var(--gui-panel-title-fs, 0.875rem);
+	font-weight: 500;
 	text-align: center;
+	transition: all .16s ease;
 }
 
 /* position */
@@ -155,9 +161,10 @@
 }
 @media (hover:hover) {
 	[part~="icon-button"]:hover { background: #CCC8; }
+	[part~="title"]:hover { font-weight: 700; scale: 1.1; } 
 }
 @media (pointer: coarse) {
-  /* Touch-specific styles */
+	/* Touch-specific styles */
 	:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) { --_rzbs: var(--gui-panel-rz-touch); }
 	:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) { --_rzbe: var(--gui-panel-rz-touch); }
 	:where(:host([resize~="inline-start"]), gui-panel[resize~="inline-start"]) { --_rzis: var(--gui-panel-rz-touch); }

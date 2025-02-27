@@ -1,6 +1,6 @@
 const styles = await fetch('./index.css').then(r => r.text());
 
-const MIN_PANEL_WIDTH = 200; // Minimum width for the panel
+const MIN_PANEL_WIDTH = 220; // Minimum width for the panel
 const MIN_PANEL_HEIGHT = 100; // Minimum height for the panel
 const THROTTLE_DELAY = 100; // Milliseconds to throttle resize events
 
@@ -59,7 +59,7 @@ export default class GuiPanel extends HTMLElement {
 						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
 					</button>
 				</nav>
-				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
+				<strong part="title">${this.getAttribute('title') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group jc-end">
 					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
 						<slot name="externalend">${icon(ICONS.externalend)}</slot>
