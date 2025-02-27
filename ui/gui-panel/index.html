@@ -12,12 +12,15 @@
     article {
       border: 1px dashed;
       display: grid;
-      grid-template-columns: 1fr min-content;
+      grid-template-columns: min-content 1fr min-content;
       margin-block: 1rem;
       section {
-        border-inline-end: 1px dashed;
+        border-inline: 1px dashed;
         padding: 1ch;
       }
+    }
+    gui-panel [slot="content"] {
+      padding: 2ch;
     }
   </style>
 </head>
@@ -33,14 +36,21 @@
   <button type="button" id="toggle">Toggle GUI Panel</button>
 
   <article>
+    <gui-panel open resize="inline-end block-end" position="bottom left" dock="start" noscheme> <!-- dismiss -->
+      <div slot="content">
+        Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
+      </div>
+    </gui-panel>
     <section>MAIN</section>
-    <gui-panel open resize="inline-start block-end" position="" noshadow> <!-- dismiss -->
+    <gui-panel open resize="inline-start block-end" position="top right" dock="end" noshadow> <!-- dismiss -->
       <div slot="content">
         Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
       </div>
     </gui-panel>
   </article>
   
+
+
 
   <script type="module" src="./index.js"></script>
   <script>

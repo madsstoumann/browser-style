@@ -7,9 +7,11 @@ const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${
 
 const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
+	externalend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
+	externalstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
 	scheme: [ 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
-	sidebar: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
-	external: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5']
+	sidebarend: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
+	sidebarstart: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M9 4l0 16']
 }
 
 export default class GuiPanel extends HTMLElement {
@@ -35,18 +37,24 @@ export default class GuiPanel extends HTMLElement {
 			document.head.insertAdjacentHTML('beforeend', `<style>${cssText}</style>`);
 		}
 
+		const dock = this.getAttribute('dock') || '';
+
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
-					<button type="button" part="icon-button scheme">
+					<button type="button" part="icon-button scheme"${this.hasAttribute('noscheme') ? ' hidden' : ''}>
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
+					</button>
+					<button type="button" part="icon-button sidebarstart"${dock === 'start' ? '' : ' hidden'}>
+						<slot name="externalstart">${icon(ICONS.externalstart)}</slot>
+						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
 					</button>
 				</nav>
 				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
 				<nav part="icon-group jc-end">
-					<button type="button" part="icon-button sidebar">
-						<slot name="external">${icon(ICONS.external)}</slot>
-						<slot name="sidebar">${icon(ICONS.sidebar)}</slot>
+					<button type="button" part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
+						<slot name="externalend">${icon(ICONS.externalend)}</slot>
+						<slot name="sidebarend">${icon(ICONS.sidebarend)}</slot>
 					</button>
 					<button type="button" part="icon-button close">
 						<slot name="close">${icon(ICONS.close)}</slot>
@@ -62,7 +70,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-end"></div>
 				`;
 
-		 ['close', 'content', 'footer', 'scheme', 'sidebar', 'title'].forEach(part => {
+		 ['close', 'content', 'footer', 'scheme', 'sidebarend', 'sidebarstart', 'title'].forEach(part => {
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`);
 		});
 
@@ -70,17 +78,20 @@ export default class GuiPanel extends HTMLElement {
 		this.addDraggable(this.#parts.title, this);
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle('cs'));
 
-		this.#parts.sidebar.addEventListener('click', () => {
+		const handleSidebarClick = () => {
 			if (this.hasAttribute('popover')) {
 				this.removeAttribute('popover');
 			} else {
 				const popoverType = this.hasAttribute('dismiss') ? 'auto' : 'manual';
 				this.setAttribute('popover', popoverType);
-				// Force reflow
 				this.offsetHeight;
 				this.togglePopover(true);
 			}
-		});
+		};
+
+		this.#parts.sidebarend.addEventListener('click', handleSidebarClick);
+		this.#parts.sidebarstart.addEventListener('click', handleSidebarClick);
+
 		this.#parts.close.addEventListener('click', () => this.togglePopover(false));
 		
 		// Set initial popover type
