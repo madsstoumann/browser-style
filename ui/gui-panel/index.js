@@ -163,9 +163,15 @@ export default class GuiPanel extends HTMLElement {
 				if (type === 'inline') {
 					this.style.setProperty('--gui-panel-x', `${startRight - newSize}px`);
 				} else {
-					this.style.setProperty('--gui-panel-y', `${startBottom - newSize}px`);
+					const newY = startBottom - newSize;
+					this.style.setProperty('--gui-panel-y', `${Math.max(0, newY)}px`);
 				}
+			} else if (type === 'block') {
+				const currentTop = this.getBoundingClientRect().top;
+				const maxHeight = window.innerHeight - currentTop;
+				newSize = Math.min(newSize, maxHeight);
 			}
+
 			this.style.setProperty(`--gui-panel-${type === 'inline' ? 'w' : 'h'}`, `${newSize}px`);
 		};
 
