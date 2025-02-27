@@ -1,214 +1,175 @@
-const styles = await fetch('./index.css');
-const cssText = await styles.text();
-
-const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${
-	paths.map(d => `<path d="${d}" />`).join('')
-}</svg>`;
+const styles = await fetch('./index.css').then(r => r.text());
+const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
 
 const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
 	externalend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
 	externalstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
-	scheme: [ 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
+	scheme: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
 	sidebarend: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
 	sidebarstart: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M9 4l0 16']
-}
+};
 
 export default class GuiPanel extends HTMLElement {
-	#root;
-	#parts = {};
-	#dragState = null;
-	#resizeState = null;
-	#useShadow = true;
+	#root; #parts = {}; #dragState = null; #resizeState = null;
 
 	constructor() {
 		super();
-		this.id = `gui-${Math.random().toString(36).slice(2, 7)}`;
-		this.#useShadow = !this.hasAttribute('noshadow');
-		this.#root = this.#useShadow ? this.attachShadow({ mode: 'open' }) : this;
-		let content;
+		const useShadow = !this.hasAttribute('noshadow');
+		this.#root = useShadow ? this.attachShadow({mode: 'open'}) : this;
 
-		if (this.#useShadow) {
+		if (useShadow) {
 			const sheet = new CSSStyleSheet();
-			sheet.replaceSync(cssText);
+			sheet.replaceSync(styles);
 			this.#root.adoptedStyleSheets = [sheet];
 		} else {
-			content = this.querySelector('[slot="content"]');
-			document.head.insertAdjacentHTML('beforeend', `<style>${cssText}</style>`);
+			document.head.insertAdjacentHTML('beforeend', `<style>${styles}</style>`);
 		}
 
 		const dock = this.getAttribute('dock') || '';
+		const content = useShadow ? 
+			`<slot name="content"></slot>` : 
+			this.querySelector('[slot="content"]')?.innerHTML || '';
+
+		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
 
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
-					<button type="button" part="icon-button scheme"${this.hasAttribute('noscheme') ? ' hidden' : ''}>
+					<button part="icon-button scheme"${this.hasAttribute('noscheme') ? ' hidden' : ''}>
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
 					</button>
-					<button type="button" part="icon-button sidebarstart"${dock === 'start' ? '' : ' hidden'}>
+					<button part="icon-button sidebarstart"${dock === 'start' ? '' : ' hidden'}>
 						<slot name="externalstart">${icon(ICONS.externalstart)}</slot>
 						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
 					</button>
 				</nav>
 				<strong part="title">${this.getAttribute('title') || 'GUI Panel'}</strong>
 				<nav part="icon-group jc-end">
-					<button type="button" part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
+					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
 						<slot name="externalend">${icon(ICONS.externalend)}</slot>
 						<slot name="sidebarend">${icon(ICONS.sidebarend)}</slot>
 					</button>
-					<button type="button" part="icon-button close">
+					<button part="icon-button close">
 						<slot name="close">${icon(ICONS.close)}</slot>
 					</button>
 				</nav>
 			</header>
-			<div part="content">
-				${this.#useShadow ? `<slot name="content"></slot>`: content.outerHTML}
-			</div>
+			<div part="content">${content}</div>
 			<div part="resize-block-start"></div>
 			<div part="resize-block-end"></div>
 			<div part="resize-inline-start"></div>
-			<div part="resize-inline-end"></div>
-				`;
+			<div part="resize-inline-end"></div>`;
 
-		 ['close', 'content', 'footer', 'scheme', 'sidebarend', 'sidebarstart', 'title'].forEach(part => {
-			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`);
-		});
+		['close', 'scheme', 'sidebarend', 'sidebarstart', 'title'].forEach(part => 
+			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
+		);
 
-		// Initialize
 		this.addDraggable(this.#parts.title, this);
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle('cs'));
 
-		const handleSidebarClick = () => {
+		const toggleSidebar = () => {
 			if (this.hasAttribute('popover')) {
 				this.removeAttribute('popover');
 			} else {
-				const popoverType = this.hasAttribute('dismiss') ? 'auto' : 'manual';
-				this.setAttribute('popover', popoverType);
-				this.offsetHeight;
+				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+				this.offsetHeight; // Force reflow
 				this.togglePopover(true);
 			}
 		};
 
-		this.#parts.sidebarend.addEventListener('click', handleSidebarClick);
-		this.#parts.sidebarstart.addEventListener('click', handleSidebarClick);
-
+		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
+		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
 		this.#parts.close.addEventListener('click', () => this.togglePopover(false));
-		
-		// Set initial popover type
-		if (!this.hasAttribute('popover')) {
+
+		if (!this.hasAttribute('popover'))
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
-		}
-		if (this.hasAttribute('open')) this.togglePopover(true);
+		
+		if (this.hasAttribute('open')) 
+			this.togglePopover(true);
 	}
 
 	connectedCallback() {
-		// Set initial height once mounted
-		requestAnimationFrame(() => {
-			const height = this.offsetHeight;
-			this.style.setProperty('--gui-panel-h', `${height}px`);
-		});
+		requestAnimationFrame(() => 
+			this.style.setProperty('--gui-panel-h', `${this.offsetHeight}px`)
+		);
 
 		if (this.hasAttribute('resize')) {
-			// Get enabled resize handlers from attribute
-			const resizeAttr = this.getAttribute('resize').split(/\s+/);
-			const enabledHandlers = new Set(resizeAttr.map(dir => `resize-${dir}`));
+			const enabledHandlers = new Set(
+				this.getAttribute('resize').split(/\s+/).map(dir => `resize-${dir}`)
+			);
 
-			// Only initialize specified handlers
 			['resize-block-start', 'resize-block-end', 'resize-inline-start', 'resize-inline-end']
 				.filter(part => enabledHandlers.has(part))
-				.forEach(part => {
-					const el = this.#root.querySelector(`[part="${part}"]`);
-					this.addResizeHandler(el, part.includes('inline') ? 'inline' : 'block');
-				});
+				.forEach(part => this.addResizeHandler(
+					this.#root.querySelector(`[part="${part}"]`),
+					part.includes('inline') ? 'inline' : 'block'
+				));
 		}
 	}
 
 	addDraggable(handle, panel, propX = '--gui-panel-x', propY = '--gui-panel-y') {
-		const move = ({ clientX, clientY }) => {
+		const move = e => {
 			if (!this.#dragState) return;
 
-			const deltaX = this.#dragState.startX - clientX;
-			const deltaY = this.#dragState.startY - clientY;
-			
-			const newX = Math.min(Math.max(panel.offsetLeft - deltaX, 0), 
-				window.innerWidth - panel.offsetWidth);
-			const newY = Math.min(Math.max(panel.offsetTop - deltaY, 0), 
-				window.innerHeight - panel.offsetHeight);
+			const {clientX, clientY} = e;
+			const {startX, startY} = this.#dragState;
 
-			panel.style.setProperty(propX, `${newX}px`);
-			panel.style.setProperty(propY, `${newY}px`);
+			panel.style.setProperty(propX, `${Math.max(0, Math.min(
+				panel.offsetLeft - (startX - clientX),
+				window.innerWidth - panel.offsetWidth
+			))}px`);
 
-			this.#dragState.startX = clientX;
-			this.#dragState.startY = clientY;
+			panel.style.setProperty(propY, `${Math.max(0, Math.min(
+				panel.offsetTop - (startY - clientY),
+				window.innerHeight - panel.offsetHeight
+			))}px`);
+
+			// Update start position for next move
+			Object.assign(this.#dragState, {startX: clientX, startY: clientY});
 		};
 
 		handle.addEventListener('pointerdown', e => {
-			this.#dragState = {
-				startX: e.clientX,
-				startY: e.clientY
-			};
+			this.#dragState = {startX: e.clientX, startY: e.clientY};
 			handle.setPointerCapture(e.pointerId);
 			handle.addEventListener('pointermove', move);
+
+			const endDrag = () => {
+				handle.removeEventListener('pointermove', move);
+				this.#dragState = null;
+			};
+
+			handle.addEventListener('pointerup', endDrag, {once: true});
+			handle.addEventListener('pointercancel', endDrag, {once: true});
 		});
 
-		const endDrag = () => {
-			handle.removeEventListener('pointermove', move);
-			this.#dragState = null;
-		};
-
-		handle.addEventListener('pointerup', endDrag);
-		handle.addEventListener('pointercancel', endDrag);
 		handle.addEventListener('touchstart', e => e.preventDefault());
 	}
 
-	/**
-	 * Adds resize functionality to a handle element
-	 * @param {HTMLElement} handle - The resize handle element
-	 * @param {string} type - Either 'inline' (width) or 'block' (height)
-	 */
 	addResizeHandler(handle, type) {
-		const move = ({ clientX, clientY }) => {
+		const move = e => {
 			if (!this.#resizeState) return;
 
-			const isRTL = getComputedStyle(this).direction === 'rtl';
-			const delta = type === 'inline' 
-				? clientX - this.#resizeState.startX 
-				: clientY - this.#resizeState.startY;
+			const {clientX, clientY, startX, startY, edge, startSize, startRight, startBottom} = this.#resizeState;
+			const delta = type === 'inline' ? e.clientX - startX : e.clientY - startY;
+			const isStart = edge === 'start';
+			let newSize = isStart ? startSize - delta : startSize + delta;
 
-			let newSize;
-			// For RTL, swap start/end behavior for inline resizing
-			const isStart = this.#resizeState.edge === 'start';
-			const effectiveIsStart = type === 'inline' && isRTL ? !isStart : isStart;
-
-			if (effectiveIsStart) {
-				newSize = this.#resizeState.startSize - delta;
-				if (type === 'inline') {
-					const currentRight = this.#resizeState.startRight;
-					this.style.setProperty('--gui-panel-x', `${currentRight - newSize}px`);
-				} else {
-					const currentBottom = this.#resizeState.startBottom;
-					this.style.setProperty('--gui-panel-y', `${currentBottom - newSize}px`);
-				}
-			} else {
-				newSize = this.#resizeState.startSize + delta;
-			}
-
-			// Apply size constraints and update
-			const prop = type === 'inline' ? '--gui-panel-w' : '--gui-panel-h';
 			const minSize = type === 'inline' ? 200 : 100;
-			const maxSize = type === 'inline' 
-				? window.innerWidth - 40
-				: window.innerHeight - 40;
+			const maxSize = type === 'inline' ? window.innerWidth : window.innerHeight;
+			newSize = Math.max(minSize, Math.min(newSize, maxSize));
 
-			if (newSize >= minSize && newSize <= maxSize) {
-				this.style.setProperty(prop, `${newSize}px`);
+			if (isStart) {
+				if (type === 'inline') {
+					this.style.setProperty('--gui-panel-x', `${startRight - newSize}px`);
+				} else {
+					this.style.setProperty('--gui-panel-y', `${startBottom - newSize}px`);
+				}
 			}
+			this.style.setProperty(`--gui-panel-${type === 'inline' ? 'w' : 'h'}`, `${newSize}px`);
 		};
 
 		handle.addEventListener('pointerdown', e => {
-			// Store initial state when resize starts:
-			// - Current size and pointer position
-			// - Right/bottom positions for start-edge resizing
 			const rect = this.getBoundingClientRect();
 			this.#resizeState = {
 				edge: handle.getAttribute('part').split('-').pop(),
@@ -218,17 +179,19 @@ export default class GuiPanel extends HTMLElement {
 				startRight: rect.right,
 				startBottom: rect.bottom
 			};
+
 			handle.setPointerCapture(e.pointerId);
 			handle.addEventListener('pointermove', move);
+
+			const endResize = () => {
+				handle.removeEventListener('pointermove', move);
+				this.#resizeState = null;
+			};
+
+			handle.addEventListener('pointerup', endResize, {once: true});
+			handle.addEventListener('pointercancel', endResize, {once: true});
 		});
 
-		const endResize = () => {
-			handle.removeEventListener('pointermove', move);
-			this.#resizeState = null;
-		};
-
-		handle.addEventListener('pointerup', endResize);
-		handle.addEventListener('pointercancel', endResize);
 		handle.addEventListener('touchstart', e => e.preventDefault());
 	}
 }

@@ -18,7 +18,7 @@
 	inset-inline: var(--gui-panel-x, calc(100% - var(--gui-panel-w) - var(--gui-panel-m))) auto;
 	padding: 0;
 	max-height: calc(100dvh - (2 * var(--gui-panel-m)));
-	min-height: min-content;
+	min-height: max-content;
 	touch-action: none;
 	user-select: none;
 	-webkit-user-select: none;
