@@ -74,25 +74,29 @@ export default class GuiPanel extends HTMLElement {
 			} else {
 				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
-				this.togglePopover(true);
+				this.handlePopoverToggle(true);
 			}
 		};
 
 		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
 		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
-		this.#parts.close.addEventListener('click', () => this.togglePopover(false));
+		this.#parts.close.addEventListener('click', () => this.handlePopoverToggle(false));
 
 		if (!this.hasAttribute('popover'))
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
-		
+
 		if (this.hasAttribute('open')) 
-			this.togglePopover(true);
+			this.handlePopoverToggle(true);
+
+		this._resizeObserver = () => this.constrainToViewport();
+		window.addEventListener('resize', this._resizeObserver);
 	}
 
 	connectedCallback() {
-		requestAnimationFrame(() => 
-			this.style.setProperty('--gui-panel-h', `${this.offsetHeight}px`)
-		);
+		requestAnimationFrame(() => {
+			this.style.setProperty('--gui-panel-h', `${this.offsetHeight}px`);
+			this.constrainToViewport();
+		});
 
 		if (this.hasAttribute('resize')) {
 			const enabledHandlers = new Set(
@@ -105,6 +109,54 @@ export default class GuiPanel extends HTMLElement {
 					this.#root.querySelector(`[part="${part}"]`),
 					part.includes('inline') ? 'inline' : 'block'
 				));
+		}
+	}
+
+	disconnectedCallback() {
+		if (this._resizeObserver) {
+			window.removeEventListener('resize', this._resizeObserver);
+		}
+	}
+
+	constrainToViewport() {
+		if (!this.isConnected || this.getAttribute('popover') !== 'manual' || !this.matches(':popover-open')) {
+			return;
+		}
+
+		const rect = this.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+
+		let width = parseInt(this.style.getPropertyValue('--gui-panel-w')) || rect.width;
+		let height = parseInt(this.style.getPropertyValue('--gui-panel-h')) || rect.height;
+
+		if (width > viewportWidth) {
+			this.style.setProperty('--gui-panel-w', `${Math.max(200, viewportWidth - 32)}px`);
+		}
+		
+		if (height > viewportHeight) {
+			this.style.setProperty('--gui-panel-h', `${Math.max(100, viewportHeight - 32)}px`);
+		}
+		
+		// Only adjust position if custom position has been set (via drag/resize)
+		// This preserves initial position from attributes
+		const hasCustomX = this.style.getPropertyValue('--gui-panel-x') !== '';
+		const hasCustomY = this.style.getPropertyValue('--gui-panel-y') !== '';
+		
+		if (hasCustomX) {
+			const x = parseInt(this.style.getPropertyValue('--gui-panel-x'));
+			if (x < 0 || x + rect.width > viewportWidth) {
+				const newX = Math.max(0, Math.min(x, viewportWidth - rect.width));
+				this.style.setProperty('--gui-panel-x', `${newX}px`);
+			}
+		}
+		
+		if (hasCustomY) {
+			const y = parseInt(this.style.getPropertyValue('--gui-panel-y'));
+			if (y < 0 || y + rect.height > viewportHeight) {
+				const newY = Math.max(0, Math.min(y, viewportHeight - rect.height));
+				this.style.setProperty('--gui-panel-y', `${newY}px`);
+			}
 		}
 	}
 
@@ -192,6 +244,7 @@ export default class GuiPanel extends HTMLElement {
 			const endResize = () => {
 				handle.removeEventListener('pointermove', move);
 				this.#resizeState = null;
+				this.constrainToViewport();
 			};
 
 			handle.addEventListener('pointerup', endResize, {once: true});
@@ -199,6 +252,25 @@ export default class GuiPanel extends HTMLElement {
 		});
 
 		handle.addEventListener('touchstart', e => e.preventDefault());
+	}
+
+	handlePopoverToggle(force) {
+		const wasOpen = this.matches(':popover-open');
+		if (force === true) {
+			this.showPopover();
+		} else if (force === false) {
+			this.hidePopover();
+		} else {
+			if (wasOpen) {
+				this.hidePopover();
+			} else {
+				this.showPopover();
+			}
+		}
+
+		if (!wasOpen && force !== false) {
+			requestAnimationFrame(() => this.constrainToViewport());
+		}
 	}
 }
 
