@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resize Test</title>
+</head>
+<body>
+    <h1>Image Resize Test</h1>
+    
+    <div>
+        <h2>Original Image</h2>
+        <img id="originalImg" src="" alt="Original image">
+    </div>
+    
+    <div>
+        <h2>Resized Image (200px width)</h2>
+        <img id="resizedImg" src="" alt="Resized image">
+    </div>
+    
+    <script>
+        // Replace with a known path to one of your images
+        const imagePath = '/assets/12/34/56/123456/_77045a22-8f0f-4496-8dfd-803467e49a0b-1740670448658-454263608.jpeg';
+        
+        // Set the image sources
+        document.getElementById('originalImg').src = imagePath;
+        document.getElementById('resizedImg').src = `${imagePath}?w=200`;
+    </script>
+</body>
+</html>
