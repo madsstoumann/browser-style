@@ -20,6 +20,7 @@ const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
 	externalend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
 	externalstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
+	reset: ['M3.06 13a9 9 0 1 0 .49 -4.087','M3 4.001v5h5'],
 	scheme: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
 	sidebarend: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
 	sidebarstart: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M9 4l0 16']
@@ -47,13 +48,15 @@ export default class GuiPanel extends HTMLElement {
 			this.querySelector('[slot="content"]')?.innerHTML || '';
 
 		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
+		const resetButton = `<button part="icon-button reset"${this.hasAttribute('reset') ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
 
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="icon-group">
-					<button part="icon-button scheme"${this.hasAttribute('noscheme') ? ' hidden' : ''}>
+					<button part="icon-button scheme"${this.hasAttribute('scheme') ? '' : ' hidden'}>
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
 					</button>
+						${(dock === 'end' || dock === '') ? resetButton : ''}
 					<button part="icon-button sidebarstart"${dock === 'start' ? '' : ' hidden'}>
 						<slot name="externalstart">${icon(ICONS.externalstart)}</slot>
 						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
@@ -61,6 +64,7 @@ export default class GuiPanel extends HTMLElement {
 				</nav>
 				<strong part="title">${this.getAttribute('title') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group jc-end">
+					${dock === 'start' ? resetButton : ''}
 					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
 						<slot name="externalend">${icon(ICONS.externalend)}</slot>
 						<slot name="sidebarend">${icon(ICONS.sidebarend)}</slot>
@@ -76,7 +80,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'scheme', 'sidebarend', 'sidebarstart', 'title'].forEach(part => 
+		['close', 'scheme', 'reset', 'sidebarend', 'sidebarstart', 'title'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
@@ -91,8 +95,17 @@ export default class GuiPanel extends HTMLElement {
 				this.offsetHeight; // Force reflow
 				this.handlePopoverToggle(true);
 			}
-		};
+			};
 
+		this.#parts.reset.addEventListener('click', () => {
+			/* TODO! rework this */
+			const panelHeight = this.style.getPropertyValue('--gui-panel-h');
+			this.removeAttribute('style');
+			if (panelHeight) {
+				this.style.setProperty('--gui-panel-h', panelHeight);
+			}
+		});
+		
 		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
 		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
 		this.#parts.close.addEventListener('click', () => this.handlePopoverToggle(false));

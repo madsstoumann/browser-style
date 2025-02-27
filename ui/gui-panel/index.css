@@ -47,14 +47,18 @@
 	display: grid;
 	header { 
 		display: flex;
-			[part="title"],
-			[part~="close"] { 
+			[part~="close"],
+			[part~="reset"],
+			[part="title"] { 
 				display: none; 
 		}
 	}
 	
 	&[dock="end"] header {
 		justify-content: end;
+	}
+	[part~="icon-group"] {
+		display: contents;
 	}
 	[part~="resize-block-start"],
 	[part~="resize-block-end"] { 
@@ -161,7 +165,7 @@
 }
 @media (hover:hover) {
 	[part~="icon-button"]:hover { background: #CCC8; }
-	[part~="title"]:hover { font-weight: 700; scale: 1.1; } 
+	[part~="title"]:hover { font-weight: 700; scale: 1.025; } 
 }
 @media (pointer: coarse) {
 	/* Touch-specific styles */
