@@ -1,5 +1,20 @@
 const styles = await fetch('./index.css').then(r => r.text());
+
+const MIN_PANEL_WIDTH = 200; // Minimum width for the panel
+const MIN_PANEL_HEIGHT = 100; // Minimum height for the panel
+const THROTTLE_DELAY = 100; // Milliseconds to throttle resize events
+
 const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
+const throttle = (fn, delay) => {
+  let lastCall = 0;
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      fn.apply(this, args);
+    }
+  };
+};
 
 const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
@@ -88,7 +103,9 @@ export default class GuiPanel extends HTMLElement {
 		if (this.hasAttribute('open')) 
 			this.handlePopoverToggle(true);
 
-		this._resizeObserver = () => this.constrainToViewport();
+		// Add throttled window resize listener
+		this._constrainFn = () => this.constrainToViewport();
+		this._resizeObserver = throttle(this._constrainFn, THROTTLE_DELAY);
 		window.addEventListener('resize', this._resizeObserver);
 	}
 
@@ -131,15 +148,13 @@ export default class GuiPanel extends HTMLElement {
 		let height = parseInt(this.style.getPropertyValue('--gui-panel-h')) || rect.height;
 
 		if (width > viewportWidth) {
-			this.style.setProperty('--gui-panel-w', `${Math.max(200, viewportWidth - 32)}px`);
+			this.style.setProperty('--gui-panel-w', `${Math.max(MIN_PANEL_WIDTH, viewportWidth)}px`);
 		}
 		
 		if (height > viewportHeight) {
-			this.style.setProperty('--gui-panel-h', `${Math.max(100, viewportHeight - 32)}px`);
+			this.style.setProperty('--gui-panel-h', `${Math.max(MIN_PANEL_HEIGHT, viewportHeight)}px`);
 		}
-		
-		// Only adjust position if custom position has been set (via drag/resize)
-		// This preserves initial position from attributes
+
 		const hasCustomX = this.style.getPropertyValue('--gui-panel-x') !== '';
 		const hasCustomY = this.style.getPropertyValue('--gui-panel-y') !== '';
 		
@@ -207,7 +222,7 @@ export default class GuiPanel extends HTMLElement {
 			const isStart = edge === 'start';
 			let newSize = isStart ? startSize - delta : startSize + delta;
 
-			const minSize = type === 'inline' ? 200 : 100;
+			const minSize = type === 'inline' ? MIN_PANEL_WIDTH : MIN_PANEL_HEIGHT;
 			const maxSize = type === 'inline' ? window.innerWidth : window.innerHeight;
 			newSize = Math.max(minSize, Math.min(newSize, maxSize));
 
