@@ -29,14 +29,11 @@ export default class AssetHandler extends HTMLElement {
 		try {
 			this.config = await this.fetch(this.#url.config);
 			if (!this.config || Object.keys(this.config).length === 0) {
-				console.warn('AssetHandler: Invalid or empty configuration');
 				return;
 			}
 
 			this.initialize();
-		} catch (error) {
-			console.error('Error initializing AssetHandler:', error);
-		}
+		} catch (error) { return; }
 	}
 
 	async fetch(url, options = {}) {
@@ -47,7 +44,6 @@ export default class AssetHandler extends HTMLElement {
 			}
 			return await response.json();
 		} catch (error) {
-			console.error(`Error fetching from ${url}:`, error);
 			return null;
 		}
 	}
@@ -80,26 +76,20 @@ export default class AssetHandler extends HTMLElement {
 				<span>${asset.name}</span>
 				<fieldset part="tag-list" data-name="${asset.name}">
 					${this.renderTags(asset.tags)}
-					<button type="button" part="button" data-action="save">SAVE</button>
-					<button type="button" part="button" data-action="delete">DEL</button>
+					<button type="button" part="button save" data-action="save">SAVE</button>
+					<button type="button" part="button delete" data-action="delete">DEL</button>
 				</fieldset>
 			</li>`).join('');
-
 		return node ? node.innerHTML = html : html;
 	}
 
 	renderTags(tags) {
-		return `
-			${this.config.tags.map(tag => {
-				const checked = tags.includes(tag) ? 'checked' : '';
-				return `
-					<label part="tag-label">
-						<input type="checkbox" name="tags" value="${tag}" ${checked}>
-						<span>${tag}</span>
-					</label>
-				`;
-			}
-		).join('')}`
+		return this.config.tags.map(tag => 
+			`<label part="tag-label">
+				<input type="checkbox" name="tags" value="${tag}" ${tags.includes(tag) ? 'checked' : ''}>
+				<span>${tag}</span>
+			</label>`
+		).join('');
 	}
 
 	async handleFile(event) {
@@ -114,9 +104,7 @@ export default class AssetHandler extends HTMLElement {
 				try {
 					await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
 					await this.renderAssets(this.#elements.list);
-				} catch (error) {
-					console.error('Error deleting file:', error);
-				}
+				} catch (error) {}
 				break;
 			}
 			case 'save': {
@@ -124,14 +112,12 @@ export default class AssetHandler extends HTMLElement {
 				.filter(element => element.type === 'checkbox' && element.checked)
 				.map(element => element.value);
 				try {
-					const result = await this.fetch(this.#url.tags, {
+					await this.fetch(this.#url.tags, {
 						method: 'PUT',
 						headers: {'Content-Type': 'application/json'},
 						body: JSON.stringify({ filename, tags })
 					});
-				} catch (error) {
-					console.error('Error updating tags:', error);
-				}
+				} catch (error) {}
 				break;
 			}
 		}
@@ -144,10 +130,7 @@ export default class AssetHandler extends HTMLElement {
 		const maxSizeBytes = this.config.maxFileSize * 1024 * 1024 || 0;
 
 		Array.from(files).forEach(file => { 
-			if (file.size > maxSizeBytes) {
-				console.error(`File too large. Maximum size is ${this.config.maxFileSize} MB.`);
-				return;
-			}
+			if (file.size > maxSizeBytes) return;
 			formData.append('assets', file);
 		});
 
@@ -155,9 +138,7 @@ export default class AssetHandler extends HTMLElement {
 			await this.fetch(this.#url.upload, { method: 'POST', body: formData });
 			await this.renderAssets(this.#elements.list);
 			event.target.value = '';
-		} catch (error) {
-			console.error('Error uploading files:', error);
-		}
+		} catch (error) {}
 	}
 }
 
