@@ -129,6 +129,102 @@ export class AssetUploader extends HTMLElement {
         .set-default-btn:hover {
           background-color: #e68a00;
         }
+        
+        /* Updated tag styles */
+        .tag-selector {
+          margin-top: 15px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          padding: 10px;
+          border-top: 1px solid #eee;
+        }
+        
+        .tag-checkbox {
+          display: none;
+        }
+        
+        .tag-label {
+          display: inline-block;
+          padding: 4px 12px;
+          background-color: #f1f1f1;
+          border-radius: 16px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        
+        .tag-checkbox:checked + .tag-label {
+          background-color: #2196F3;
+          color: white;
+        }
+        
+        .tag-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+          margin-top: 5px;
+        }
+        
+        .tag {
+          background-color: #e1f5fe;
+          color: #0288d1;
+          border-radius: 12px;
+          padding: 2px 8px;
+          font-size: 12px;
+        }
+        
+        .file-info {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+        }
+        
+        .file-actions {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        .update-tags-btn {
+          background-color: #2196F3;
+          font-size: 12px;
+          padding: 2px 8px;
+        }
+        
+        .update-tags-btn:hover {
+          background-color: #0b7dda;
+        }
+        
+        .edit-tags-container {
+          margin-top: 5px;
+          display: none;
+          padding: 8px;
+          background-color: #f9f9f9;
+          border-radius: 4px;
+        }
+        
+        .edit-tags-container.active {
+          display: block;
+        }
+        
+        .tags-header {
+          margin-bottom: 10px;
+          font-weight: bold;
+          font-size: 14px;
+        }
+
+        .save-tags-btn {
+          background-color: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+          padding: 4px 10px;
+          margin-top: 8px;
+        }
       </style>
       
       <div class="uploader" id="dropZone">
@@ -138,6 +234,11 @@ export class AssetUploader extends HTMLElement {
         <div class="button-group">
           <button id="loadAssetsButton" class="load-assets-btn">View Existing Assets</button>
           <button id="browseButton">Browse Files</button>
+        </div>
+        
+        <div class="tag-selector" id="tagSelector">
+          <div class="tags-header">Select tags for upload:</div>
+          <!-- Tag checkboxes will be inserted here -->
         </div>
         
         <div class="progress-container" id="progressContainer">
@@ -158,7 +259,10 @@ export class AssetUploader extends HTMLElement {
     this.handleBrowseClick = this.handleBrowseClick.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
     this.loadAssetList = this.loadAssetList.bind(this);
-    this.setAsDefault = this.setAsDefault.bind(this);
+    this.updateAssetTags = this.updateAssetTags.bind(this);
+    
+    // Internal state
+    this._selectedTags = [];
   }
   
   connectedCallback() {
@@ -172,6 +276,7 @@ export class AssetUploader extends HTMLElement {
     this.uploadStatus = this.shadowRoot.getElementById('uploadStatus');
     this.fileList = this.shadowRoot.getElementById('fileList');
     this.errorMessage = this.shadowRoot.getElementById('errorMessage');
+    this.tagSelector = this.shadowRoot.getElementById('tagSelector');
     
     // Add event listeners
     this.dropZone.addEventListener('dragover', this.handleDragOver);
@@ -180,6 +285,9 @@ export class AssetUploader extends HTMLElement {
     this.fileInput.addEventListener('change', this.handleFileSelect);
     this.browseButton.addEventListener('click', this.handleBrowseClick);
     this.loadAssetsButton.addEventListener('click', this.loadAssetList);
+    
+    // Initialize tag selector
+    this.initializeTagSelector();
   }
   
   disconnectedCallback() {
@@ -190,6 +298,53 @@ export class AssetUploader extends HTMLElement {
     this.fileInput.removeEventListener('change', this.handleFileSelect);
     this.browseButton.removeEventListener('click', this.handleBrowseClick);
     this.loadAssetsButton.removeEventListener('click', this.loadAssetList);
+  }
+  
+  // Initialize tag checkboxes
+  initializeTagSelector() {
+    const allowedTags = this.getAttribute('allowed-tags');
+    if (!allowedTags) return;
+    
+    // Make sure tagSelector exists before trying to use it
+    if (!this.tagSelector) {
+      this.tagSelector = this.shadowRoot.getElementById('tagSelector');
+      if (!this.tagSelector) return; // Still not found, exit early
+    }
+    
+    // Clear existing tags
+    const tagsHeader = this.tagSelector.querySelector('.tags-header');
+    if (tagsHeader) {
+      this.tagSelector.innerHTML = '<div class="tags-header">Select tags for upload:</div>';
+    }
+    
+    const tags = allowedTags.split(',').map(tag => tag.trim());
+    
+    // Create a checkbox for each tag
+    tags.forEach(tag => {
+      const id = `tag-${tag}`;
+      
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = id;
+      checkbox.className = 'tag-checkbox';
+      checkbox.value = tag;
+      checkbox.addEventListener('change', () => this.handleTagSelection());
+      
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.className = 'tag-label';
+      label.textContent = tag;
+      
+      this.tagSelector.appendChild(checkbox);
+      this.tagSelector.appendChild(label);
+    });
+  }
+  
+  // Handle tag selection
+  handleTagSelection() {
+    const checkboxes = this.shadowRoot.querySelectorAll('.tag-checkbox:checked');
+    this._selectedTags = Array.from(checkboxes).map(cb => cb.value);
+    console.log('Selected tags:', this._selectedTags);
   }
   
   // Event handlers
@@ -281,12 +436,19 @@ export class AssetUploader extends HTMLElement {
       const formData = new FormData();
       formData.append('asset', file);
       
-      // Check if this should be set as default
-      const isDefault = this.fileList.children.length === 0 && 
-        (this.getAttribute('auto-default') !== 'false');
+      // Add selected tags to the form data - FIXING THE TAGS ISSUE
+      if (this._selectedTags.length > 0) {
+        // Send each tag as a separate field with the same name
+        this._selectedTags.forEach(tag => {
+          formData.append('tag', tag);
+        });
+        
+        // Log the tags being sent for debugging
+        console.log('Sending tags:', this._selectedTags);
+      }
       
-      // Create URL with product ID
-      const url = `${uploadUrl}/${productId}${isDefault ? '?default=true' : ''}`;
+      // Create URL with product ID (no default parameter)
+      const url = `${uploadUrl}/${productId}`;
       
       // Log the URL to help with debugging
       console.log(`Uploading to: ${url}`);
@@ -405,23 +567,68 @@ export class AssetUploader extends HTMLElement {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
             
-            // Add default indicator and set default button
-            const defaultBadge = asset.isDefault 
-              ? '<span class="default-badge">Default</span>' 
-              : `<button class="set-default-btn" data-filename="${asset.name}">Set as Default</button>`;
+            // Create tags HTML
+            const tagsHtml = this.createTagsHtml(asset.tags || []);
             
             fileItem.innerHTML = `
-              <span>${asset.name}</span>
-              ${defaultBadge}
-              <span class="file-size">${this.formatFileSize(asset.size)}</span>
+              <div class="file-info">
+                <span>${asset.name}</span>
+                <div class="tag-list">${tagsHtml}</div>
+              </div>
+              <div class="file-actions">
+                <button class="update-tags-btn" data-filename="${asset.name}">Edit Tags</button>
+                <span class="file-size">${this.formatFileSize(asset.size)}</span>
+              </div>
             `;
             
-            // Add event listener for set default buttons
-            const setDefaultBtn = fileItem.querySelector('.set-default-btn');
-            if (setDefaultBtn) {
-              setDefaultBtn.addEventListener('click', (e) => {
+            // Add edit tags container
+            const editTagsContainer = document.createElement('div');
+            editTagsContainer.className = 'edit-tags-container';
+            editTagsContainer.id = `edit-tags-${asset.name}`;
+            
+            // Add tag checkboxes to the edit container
+            const allowedTags = this.getAttribute('allowed-tags');
+            if (allowedTags) {
+              const tags = allowedTags.split(',').map(tag => tag.trim());
+              let checkboxesHtml = '<div class="tags-header">Select tags:</div>';
+              
+              tags.forEach(tag => {
+                const isChecked = (asset.tags || []).includes(tag) ? 'checked' : '';
+                const id = `edit-tag-${asset.name}-${tag}`;
+                
+                checkboxesHtml += `
+                  <input type="checkbox" id="${id}" class="tag-checkbox edit-tag-checkbox" 
+                    value="${tag}" ${isChecked} data-filename="${asset.name}">
+                  <label for="${id}" class="tag-label">${tag}</label>
+                `;
+              });
+              
+              checkboxesHtml += `<button class="save-tags-btn" data-filename="${asset.name}">Save Tags</button>`;
+              editTagsContainer.innerHTML = checkboxesHtml;
+            }
+            
+            fileItem.appendChild(editTagsContainer);
+            
+            // Add event listener for update tags button
+            const updateTagsBtn = fileItem.querySelector('.update-tags-btn');
+            if (updateTagsBtn) {
+              updateTagsBtn.addEventListener('click', (e) => {
                 const filename = e.target.dataset.filename;
-                this.setAsDefault(filename);
+                const editContainer = this.shadowRoot.getElementById(`edit-tags-${filename}`);
+                editContainer.classList.toggle('active');
+              });
+            }
+            
+            // Add event listener for save tags button
+            const saveTagsBtn = fileItem.querySelector('.save-tags-btn');
+            if (saveTagsBtn) {
+              saveTagsBtn.addEventListener('click', (e) => {
+                const filename = e.target.dataset.filename;
+                const editContainer = this.shadowRoot.getElementById(`edit-tags-${filename}`);
+                const checkedTags = Array.from(editContainer.querySelectorAll('.edit-tag-checkbox:checked'))
+                  .map(cb => cb.value);
+                
+                this.updateAssetTags(filename, checkedTags);
               });
             }
             
@@ -438,8 +645,15 @@ export class AssetUploader extends HTMLElement {
       });
   }
   
-  // Set a file as the default asset
-  setAsDefault(filename) {
+  // Create HTML for tags display
+  createTagsHtml(tags) {
+    if (!tags || tags.length === 0) return '';
+    
+    return tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+  }
+  
+  // Update asset tags
+  updateAssetTags(filename, tags) {
     const api = this.getAttribute('api') || '';
     const productId = this.getAttribute('product-id');
     
@@ -450,37 +664,48 @@ export class AssetUploader extends HTMLElement {
     
     // Construct the URL
     const baseUrl = api ? `${api.replace(/\/$/, '')}` : '';
-    const url = `${baseUrl}/api/asset/${productId}/default/${filename}`;
+    const url = `${baseUrl}/api/asset/${productId}/tags`;
     
     // Show loading state
-    this.errorMessage.textContent = `Setting ${filename} as default...`;
+    this.errorMessage.textContent = `Updating tags for ${filename}...`;
+    
+    const requestData = {
+      filename: filename,
+      tags: tags
+    };
+    
+    console.log(`Sending update tags request:`, requestData);
     
     fetch(url, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify(requestData)
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        return response.text().then(text => {
+          throw new Error(`HTTP error! Status: ${response.status}, Body: ${text}`);
+        });
       }
       return response.json();
     })
     .then(data => {
+      console.log('Tags update response:', data);
       this.errorMessage.textContent = '';
       
-      // Dispatch success event
-      this.dispatchEvent(new CustomEvent('default-set', {
-        detail: { filename, response: data }
+      // Dispatch event
+      this.dispatchEvent(new CustomEvent('tags-updated', {
+        detail: { filename, tags, response: data }
       }));
       
       // Refresh the asset list
       this.loadAssetList();
     })
     .catch(error => {
-      console.error('Error setting default asset:', error);
-      this.errorMessage.textContent = `Failed to set as default: ${error.message}`;
+      console.error('Error updating asset tags:', error);
+      this.errorMessage.textContent = `Failed to update tags: ${error.message}`;
     });
   }
   
@@ -497,13 +722,13 @@ export class AssetUploader extends HTMLElement {
   
   // Attribute handling
   static get observedAttributes() {
-    return ['api', 'upload-url', 'product-id', 'allowed-types', 'max-size', 'auto-default'];
+    return ['api', 'upload-url', 'product-id', 'allowed-types', 'max-size', 'allowed-tags'];
   }
   
   attributeChangedCallback(name, oldValue, newValue) {
-    // Handle attribute changes if needed
-    if (name === 'product-id' && newValue) {
-      // Maybe fetch existing files for this product if needed
+    if (name === 'allowed-tags' && this.isConnected && oldValue !== newValue) {
+      // Re-initialize tag selector if tags change
+      this.initializeTagSelector();
     }
   }
 }
