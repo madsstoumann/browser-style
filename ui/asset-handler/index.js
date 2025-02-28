@@ -73,6 +73,7 @@ export default class AssetHandler extends HTMLElement {
 
 	async renderAssets(node) {
 		const list = await this.fetch(`${this.#url.list}`);
+		if (!list || !list.assets) return '';
 		const html = list.assets.map(asset => `
 			<li>
 				<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}" />
@@ -83,6 +84,7 @@ export default class AssetHandler extends HTMLElement {
 					<button type="button" part="button" data-action="delete">DEL</button>
 				</fieldset>
 			</li>`).join('');
+
 		return node ? node.innerHTML = html : html;
 	}
 
@@ -109,14 +111,16 @@ export default class AssetHandler extends HTMLElement {
 
 		switch(node.dataset.action) {
 			case 'delete': {
-				this.fetch(`${this.#url.upload}?filename=${filename}`, {
-					method: 'DELETE'
-				});
-				this.renderAssets(this.#elements.list);
+				try {
+					await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
+					await this.renderAssets(this.#elements.list);
+				} catch (error) {
+					console.error('Error deleting file:', error);
+				}
 				break;
 			}
 			case 'save': {
-				const tags = Array.from(event.currentTarget.elements)
+				const tags = Array.from(fieldset.elements)
 				.filter(element => element.type === 'checkbox' && element.checked)
 				.map(element => element.value);
 				try {
@@ -133,7 +137,7 @@ export default class AssetHandler extends HTMLElement {
 		}
 	}
 
-	uploadFile(event) {
+	async uploadFile(event) {
 		const files = event.target.files;
 		if (!files) return;
 		const formData = new FormData();
@@ -147,11 +151,13 @@ export default class AssetHandler extends HTMLElement {
 			formData.append('assets', file);
 		});
 
-		this.fetch(this.#url.upload, {
-			method: 'POST',
-			body: formData,
-		});
-		this.renderAssets(this.#elements.list);
+		try {
+			await this.fetch(this.#url.upload, { method: 'POST', body: formData });
+			await this.renderAssets(this.#elements.list);
+			event.target.value = '';
+		} catch (error) {
+			console.error('Error uploading files:', error);
+		}
 	}
 }
 
