@@ -28,20 +28,16 @@ export default class AssetHandler extends HTMLElement {
 
 		try {
 			this.config = await this.fetch(this.#url.config);
-			if (!this.config || Object.keys(this.config).length === 0) {
-				return;
+			if (this.config && Object.keys(this.config).length) {
+				this.initialize();
 			}
-
-			this.initialize();
-		} catch (error) { return; }
+		} catch (error) {}
 	}
 
 	async fetch(url, options = {}) {
 		try {
 			const response = await fetch(url, options);
-			if (!response.ok) {
-				throw new Error(`Failed to fetch from ${url}: ${response.status}`);
-			}
+			if (!response.ok) throw new Error(`Failed to fetch from ${url}: ${response.status}`);
 			return await response.json();
 		} catch (error) {
 			return null;
@@ -50,17 +46,17 @@ export default class AssetHandler extends HTMLElement {
 
 	async initialize() {
 		this.shadow.innerHTML = `
-			<form part="form">
-				<label part="label">
-					<input type="file" accept="${this.config.accept}" part="input" multiple>
+			<form>
+				<label>
+					<input type="file" accept="${this.config.accept}" multiple>
 				</label>
-				<ul part="list">${await this.renderAssets()}</ul>
-			</form>`
+				<ul>${await this.renderAssets()}</ul>
+			</form>`;
 
 		this.#elements = {
-			form: this.shadow.querySelector('[part="form"]'),
-			input: this.shadow.querySelector('[part="input"]'),
-			list: this.shadow.querySelector('[part="list"]')
+			form: this.shadow.querySelector('form'),
+			input: this.shadow.querySelector('[type="file"]'),
+			list: this.shadow.querySelector('ul')
 		};
 
 		this.#elements.form.addEventListener('click', this.handleFile.bind(this));
@@ -68,28 +64,27 @@ export default class AssetHandler extends HTMLElement {
 	}
 
 	async renderAssets(node) {
-		const list = await this.fetch(`${this.#url.list}`);
+		const list = await this.fetch(this.#url.list);
 		if (!list || !list.assets) return '';
 		const html = list.assets.map(asset => `
 			<li>
 				<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}" />
 				<span>${asset.name}</span>
-				<fieldset part="tag-list" data-name="${asset.name}">
+				<fieldset data-name="${asset.name}">
 					${this.renderTags(asset.tags)}
-					<button type="button" part="button save" data-action="save">SAVE</button>
-					<button type="button" part="button delete" data-action="delete">DEL</button>
+					<button type="button" data-action="save">SAVE</button>
+					<button type="button" data-action="delete">DEL</button>
 				</fieldset>
 			</li>`).join('');
 		return node ? node.innerHTML = html : html;
 	}
 
 	renderTags(tags) {
-		return this.config.tags.map(tag => 
-			`<label part="tag-label">
-				<input type="checkbox" name="tags" value="${tag}" ${tags.includes(tag) ? 'checked' : ''}>
-				<span>${tag}</span>
-			</label>`
-		).join('');
+		return this.config.tags.map(tag => `
+			<label>
+				<input type="checkbox" value="${tag}" ${tags.includes(tag) ? 'checked' : ''}>
+				${tag}
+			</label>`).join('');
 	}
 
 	async handleFile(event) {
@@ -99,27 +94,18 @@ export default class AssetHandler extends HTMLElement {
 		const fieldset = node.closest('fieldset');
 		const filename = fieldset.dataset.name;
 
-		switch(node.dataset.action) {
-			case 'delete': {
-				try {
-					await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
-					await this.renderAssets(this.#elements.list);
-				} catch (error) {}
-				break;
-			}
-			case 'save': {
-				const tags = Array.from(fieldset.elements)
-				.filter(element => element.type === 'checkbox' && element.checked)
-				.map(element => element.value);
-				try {
-					await this.fetch(this.#url.tags, {
-						method: 'PUT',
-						headers: {'Content-Type': 'application/json'},
-						body: JSON.stringify({ filename, tags })
-					});
-				} catch (error) {}
-				break;
-			}
+		if (node.dataset.action === 'delete') {
+			await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
+			await this.renderAssets(this.#elements.list);
+		} else if (node.dataset.action === 'save') {
+			const tags = Array.from(fieldset.elements)
+				.filter(el => el.type === 'checkbox' && el.checked)
+				.map(el => el.value);
+			await this.fetch(this.#url.tags, {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ filename, tags })
+			});
 		}
 	}
 
@@ -129,16 +115,13 @@ export default class AssetHandler extends HTMLElement {
 		const formData = new FormData();
 		const maxSizeBytes = this.config.maxFileSize * 1024 * 1024 || 0;
 
-		Array.from(files).forEach(file => { 
-			if (file.size > maxSizeBytes) return;
-			formData.append('assets', file);
+		Array.from(files).forEach(file => {
+			if (file.size <= maxSizeBytes) formData.append('assets', file);
 		});
 
-		try {
-			await this.fetch(this.#url.upload, { method: 'POST', body: formData });
-			await this.renderAssets(this.#elements.list);
-			event.target.value = '';
-		} catch (error) {}
+		await this.fetch(this.#url.upload, { method: 'POST', body: formData });
+		await this.renderAssets(this.#elements.list);
+		event.target.value = '';
 	}
 }
 
