@@ -1,3 +1,76 @@
+const styles = `
+	:host *, :host *::after, :host *::before { box-sizing: border-box; }
+	:host {
+		--accent: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+		--accent-text: hsl(211, 100%, 95%);
+		--error: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
+		--success: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
+		--asset-handler-cg: .5ch;
+		--asset-handler-rg: 1em;
+		font-family: ui-sans-serif, system-ui;
+	}
+	button {
+		border: 0;
+		color: #EEE;
+		font-family: inherit;
+		&[data-action=save] { background: var(--success); }
+		&[data-action=delete] { background: var(--error); }
+	}
+	div {
+		display: grid;
+		margin-block-start: var(--asset-handler-rg);
+		row-gap: var(--asset-handler-rg);
+	}
+	fieldset {
+		all: unset;
+		align-items: center;
+		border-block-end: 1px dotted #CCC;
+		display: flex;
+		gap: var(--asset-handler-cg);
+		padding-block-end: var(--asset-handler-rg);
+	}
+	button, label:has([type="checkbox"]) {
+		background: light-dark(#EEE, #333);
+		border-radius: 2.5ch;
+		font-size: 12px;
+		padding: .5ch 1.5ch;
+		&:has(:checked) {
+			background: var(--accent);
+			color: var(--accent-text);
+		}
+	}
+	label:has([type="file"]) {
+		border: 2px dashed #CCC;
+		display: grid;
+		padding: 3ch;
+		place-content: center;
+		transition: border-color 0.3s ease;
+		&::after {
+			background: var(--accent);
+			border-radius: 2.5ch;
+			color: var(--accent-text);
+			content: attr(title);
+			padding: .5ch 1.5ch;
+		}
+		&.dragover {
+			background-color: #CCC4;
+		}
+	}
+	nav {
+		margin-inline-start: auto;
+	}
+	[data-sr] {
+		border: 0;
+		clip: rect(0 0 0 0); 
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap; 
+		width: 1px;
+	}
+}`;
+
 export default class AssetHandler extends HTMLElement {
 	static observedAttributes = ['asset-id'];
 	#api; #assetId; #elements; #url;
@@ -6,6 +79,9 @@ export default class AssetHandler extends HTMLElement {
 		super();
 		this.config = null;
 		this.shadow = this.attachShadow({ mode: 'open' });
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(styles);
+		this.shadow.adoptedStyleSheets = [sheet];
 
 		this.#api = this.getAttribute('api');
 		this.#assetId = this.getAttribute('asset-id');
@@ -25,7 +101,6 @@ export default class AssetHandler extends HTMLElement {
 
 	async connectedCallback() {
 		if (!this.#api || !this.#assetId) return;
-
 		try {
 			this.config = await this.fetch(this.#url.config);
 			if (this.config && Object.keys(this.config).length) {
@@ -47,17 +122,41 @@ export default class AssetHandler extends HTMLElement {
 	async initialize() {
 		this.shadow.innerHTML = `
 			<form>
-				<label>
-					<input type="file" accept="${this.config.accept}" multiple>
+				<label title="${this.getAttribute('label') || 'Upload'}" part="dropzone">
+					<input type="file" accept="${this.config.accept}" multiple data-sr>
 				</label>
-				<ul>${await this.renderAssets()}</ul>
+				<div>${await this.renderAssets()}</div>
 			</form>`;
 
 		this.#elements = {
+			dropzone: this.shadow.querySelector('[part="dropzone"]'),
 			form: this.shadow.querySelector('form'),
 			input: this.shadow.querySelector('[type="file"]'),
-			list: this.shadow.querySelector('ul')
+			list: this.shadow.querySelector('div')
 		};
+
+		this.#elements.dropzone.addEventListener('dragover', e => {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		this.#elements.dropzone.addEventListener('dragenter', e => {
+			e.preventDefault();
+			e.stopPropagation();
+			this.#elements.dropzone.classList.add('dragover');
+		});
+		this.#elements.dropzone.addEventListener('dragleave', e => {
+			e.preventDefault();
+			e.stopPropagation();
+			this.#elements.dropzone.classList.remove('dragover');
+		});
+		this.#elements.dropzone.addEventListener('drop', e => {
+			e.preventDefault();
+			e.stopPropagation();
+			this.#elements.dropzone.classList.remove('dragover');
+			if (e.dataTransfer.files.length > 0) {
+				this.uploadFile(e);
+			}
+		});
 
 		this.#elements.form.addEventListener('click', this.handleFile.bind(this));
 		this.#elements.input.addEventListener('change', this.uploadFile.bind(this));
@@ -67,22 +166,21 @@ export default class AssetHandler extends HTMLElement {
 		const list = await this.fetch(this.#url.list);
 		if (!list || !list.assets) return '';
 		const html = list.assets.map(asset => `
-			<li>
-				<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}" />
-				<span>${asset.name}</span>
-				<fieldset data-name="${asset.name}">
-					${this.renderTags(asset.tags)}
-					<button type="button" data-action="save">SAVE</button>
-					<button type="button" data-action="delete">DEL</button>
-				</fieldset>
-			</li>`).join('');
+		<fieldset data-name="${asset.name}">
+		<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}">
+			${this.renderTags(asset.tags)}
+			<nav>
+				<button type="button" data-action="save">${this.getAttribute('save')||'Save'}</button>
+				<button type="button" data-action="delete">${this.getAttribute('delete')||'Delete'}</button>
+			</nav>
+		</fieldset>`).join('');
 		return node ? node.innerHTML = html : html;
 	}
 
 	renderTags(tags) {
 		return this.config.tags.map(tag => `
 			<label>
-				<input type="checkbox" value="${tag}" ${tags.includes(tag) ? 'checked' : ''}>
+				<input type="checkbox" value="${tag}" data-sr ${tags.includes(tag) ? 'checked' : ''}>
 				${tag}
 			</label>`).join('');
 	}
@@ -110,8 +208,15 @@ export default class AssetHandler extends HTMLElement {
 	}
 
 	async uploadFile(event) {
-		const files = event.target.files;
-		if (!files) return;
+		let files;
+		if (event.dataTransfer && event.dataTransfer.files) {
+			files = event.dataTransfer.files;
+		} else if (event.target && event.target.files) {
+			files = event.target.files;
+		}
+
+		if (!files || files.length === 0) return;
+
 		const formData = new FormData();
 		const maxSizeBytes = this.config.maxFileSize * 1024 * 1024 || 0;
 
@@ -121,7 +226,7 @@ export default class AssetHandler extends HTMLElement {
 
 		await this.fetch(this.#url.upload, { method: 'POST', body: formData });
 		await this.renderAssets(this.#elements.list);
-		event.target.value = '';
+		if (event.target && event.target.value !== undefined) event.target.value = '';
 	}
 }
 
