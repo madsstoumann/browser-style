@@ -16,6 +16,8 @@ const styles = `
 		&[data-action=save] { background: var(--success); }
 		&[data-action=delete] { background: var(--error); }
 	}
+	button.error { animation: pulse 0.6s ease-out; }
+	button.success { animation: pulse 0.6s ease-out; }
 	div {
 		display: grid;
 		margin-block-start: var(--asset-handler-rg);
@@ -68,6 +70,11 @@ const styles = `
 		position: absolute;
 		white-space: nowrap; 
 		width: 1px;
+	}
+	@keyframes pulse {
+		0% { scale: 1; }
+		50% { opacity: .8; scale: 1.075; }
+		100% { scale: 1; }
 	}
 }`;
 
@@ -153,9 +160,7 @@ export default class AssetHandler extends HTMLElement {
 			e.preventDefault();
 			e.stopPropagation();
 			this.#elements.dropzone.classList.remove('dragover');
-			if (e.dataTransfer.files.length > 0) {
-				this.uploadFile(e);
-			}
+			if (e.dataTransfer.files.length > 0) { this.uploadFile(e); }
 		});
 
 		this.#elements.form.addEventListener('click', this.handleFile.bind(this));
@@ -188,22 +193,33 @@ export default class AssetHandler extends HTMLElement {
 	async handleFile(event) {
 		const node = event.target;
 		if (node.tagName !== 'BUTTON' || !node.dataset.action) return;
-
 		const fieldset = node.closest('fieldset');
 		const filename = fieldset.dataset.name;
 
 		if (node.dataset.action === 'delete') {
-			await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
-			await this.renderAssets(this.#elements.list);
+			const result = await this.fetch(`${this.#url.upload}?filename=${filename}`, { method: 'DELETE' });
+			if (result && result.success) {
+				await this.renderAssets(this.#elements.list);
+			} else {
+				node.classList.add('error');
+				setTimeout(() => node.classList.remove('error'), 3000);
+			}
 		} else if (node.dataset.action === 'save') {
 			const tags = Array.from(fieldset.elements)
 				.filter(el => el.type === 'checkbox' && el.checked)
 				.map(el => el.value);
-			await this.fetch(this.#url.tags, {
+			const result = await this.fetch(this.#url.tags, {
 				method: 'PUT',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ filename, tags })
 			});
+			if (result && result.success) {
+				node.classList.add('success');
+				setTimeout(() => node.classList.remove('success'), 3000);
+			} else {
+				node.classList.add('error');
+				setTimeout(() => node.classList.remove('error'), 3000);
+			}
 		}
 	}
 
@@ -216,7 +232,6 @@ export default class AssetHandler extends HTMLElement {
 		}
 
 		if (!files || files.length === 0) return;
-
 		const formData = new FormData();
 		const maxSizeBytes = this.config.maxFileSize * 1024 * 1024 || 0;
 
