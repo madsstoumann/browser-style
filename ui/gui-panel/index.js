@@ -31,6 +31,10 @@ const ICONS = {
 export default class GuiPanel extends HTMLElement {
 	#root; #parts = {}; #dragState = null; #resizeState = null;
 
+	get isDocked() {
+		return !this.hasAttribute('popover');
+	}
+
 	constructor() {
 		super();
 		const useShadow = !this.hasAttribute('noshadow');
@@ -257,7 +261,10 @@ export default class GuiPanel extends HTMLElement {
 			let newSize = isStart ? startSize - delta : startSize + delta;
 
 			const minSize = type === 'inline' ? DOCKED_WIDTH : MIN_PANEL_HEIGHT;
-			const maxSize = type === 'inline' ? window.innerWidth : window.innerHeight;
+			const maxSize = type === 'inline' ? 
+				(this.isDocked ? DOCKED_MAX_WIDTH : window.innerWidth) : 
+				window.innerHeight;
+
 			newSize = Math.max(minSize, Math.min(newSize, maxSize));
 
 			if (isStart) {
