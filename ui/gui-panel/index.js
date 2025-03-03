@@ -50,8 +50,8 @@ export default class GuiPanel extends HTMLElement {
 
 		const dock = this.getAttribute('dock') || '';
 		const content = useShadow ? 
-			`<slot name="content"></slot>` : 
-			this.querySelector('[slot="content"]')?.innerHTML || '';
+			`<slot></slot>` : 
+			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
 
 		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
 		const resetButton = `<button part="icon-button reset"${this.hasAttribute('reset') ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;

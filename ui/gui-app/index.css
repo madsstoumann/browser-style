@@ -1,20 +1,27 @@
 body { all: unset; }
 
-gui-app {
+:where(gui-app) {
 	* { box-sizing: border-box;}
-	--gui-app-bdc: light-dark(#DDD, #444);
+	--gui-app-bdc: light-dark(#DDDDDD, #5E5E5E);
+	--gui-app-bdw: 1px;
+	--gui-app-c: light-dark(#222222, #CBCBCB);
+	--gui-app-main-bg: light-dark(#F5F5F5, #1E1E1E);
+	--gui-app-panels-bg: light-dark(#FFFFFF, #2C2C2C);
+	--gui-app-regions-bg: light-dark(#FFFFFF, #282828);
 
 	block-size: 100dvh;
+	color: var(--gui-app-c, inherit);
 	color-scheme: dark light;
 	container-type: inline-size;
 	display: grid;
 	font-family: var(--gui-app-ff, ui-sans-serif, system-ui);
+	font-size: 1rem;
 	grid-template: auto 1fr var(--gui-app-footer-h, auto) / min-content 1fr min-content;
 
 	&:has([dock=start]:not([popover])) {
 		[dock=start] { grid-column: 1 / 2; }
 		main {
-			border-inline-start: 1px solid var(--gui-app-bdc);
+			border-inline-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
 			grid-column: 2 / 4;
 		}
 		
@@ -36,37 +43,48 @@ gui-app {
 	}
 
 	footer {
-		background: #777;
+		background: var(--gui-app-footer-bg, var(--gui-app-regions-bg));
+		border-block-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
+		color: var(--gui-app-footer-c, inherit);
+		font-size: var(--gui-app-footer-fs, .875rem);
 		grid-column: 1 / 4;
-		overflow: clip;
-		overflow-clip-margin: content-box;
-		padding: 1ch;
+		padding: var(--gui-app-footer-p, 1ch);
 	}
-	
+
+	gui-panel {
+		--gui-panel-bg: var(--gui-app-panels-bg);
+		--gui-panel-c: var(--gui-app-c);
+		--gui-panel-bxsh: 0px 0px 1px 1px var(--gui-app-bdc);
+		--gui-panel-gap: .5rem;
+	}
+
 	header {
-		background: light-dark(#FFF, #2C2C2C);
-		border-block-end: 1px solid var(--gui-app-bdc);
+		background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
+		border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
+		color: var(--gui-app-header-c, inherit);
 		display: flex;
+		font-size: var(--gui-app-header-fs, .875rem);
 		grid-column: 1 / 4;
 		justify-content: space-between;
-		padding: 1ch;
+		padding: var(--gui-app-header-p, 1ch);
+		button {
+			background: #0000;
+			border:0;
+			color: inherit;
+			padding: 0;
+		}
 	}
 	main {
-		background: light-dark(#F5F5F5, #333);
+		background: var(--gui-app-main-bg);
 		grid-column: 1 / 4;
-		padding: 1ch;
+		padding: var(--gui-app-main-p, initial);
 	}
-	[data-sr] {
-		border: 0;
-		clip: rect(0 0 0 0); 
-		clip-path: inset(50%);
-		height: 1px;
-		overflow: hidden;
-		position: absolute;
-		white-space: nowrap; 
-		width: 1px;
-	}
-	svg {
-		pointer-events: none;
+
+	@container (max-width: 600px) {
+		
+		gui-panel {
+			transition: inset .25s allow-discrete, overlay .25s allow-discrete;
+			/* &::part(sidebarend) { display: none; } */
+		}
 	}
 }

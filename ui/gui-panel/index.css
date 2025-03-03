@@ -1,4 +1,5 @@
 :host, gui-panel {
+	--gui-panel-bxsh: 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%);
 	--gui-panel-gap: .5rem;
 	--gui-panel-m: 1rem;
 	--gui-panel-w: 265px;
@@ -20,6 +21,7 @@
 	grid-template-rows: var(--_rzbs, var(--gui-panel-rz-area)) min-content minmax(0, 1fr) var(--_rzbe, var(--gui-panel-rz-area));
 	inset-block: var(--gui-panel-y, var(--gui-panel-m)) auto;
 	inset-inline: var(--gui-panel-x, calc(100% - var(--gui-panel-w) - var(--gui-panel-m))) auto;
+	interpolate-size: allow-keywords;
 	padding: 0;
 	max-height: calc(100dvh - (2 * var(--gui-panel-m)));
 	min-height: max-content;
@@ -33,7 +35,7 @@
 
 :host([popover]), gui-panel[popover] {
 	border-radius: var(--gui-panel-bdrs, 10px);
-	box-shadow: var(--gui-panel-bxsh, 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%));
+	box-shadow: var(--gui-panel-bxsh);
 	height: var(--gui-panel-h, auto);
 	touch-action: none;
 }
@@ -110,9 +112,6 @@ gui-panel:not([popover])[dock="end"] header {
 	display: flex;
 	padding-inline: calc(var(--gui-panel-rz-area) / 2);
 }
-/* [part~="jc-end"] {
-	justify-content: end;
-} */
 [part~="heading"] {
 	cursor: move;
 	font-size: var(--gui-panel-heading-fs, 0.875rem);

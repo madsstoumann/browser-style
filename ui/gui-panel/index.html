@@ -29,11 +29,11 @@
         section { border-inline: 1px dashed; }
       }
       section {
-        background: #EEE;
+        background: light-dark(#EEE, #333);
         padding: 2ch;
       }
     }
-    gui-panel [slot="content"], gui-panel [part="content"]  {
+    gui-panel::part(content)  {
       padding: 2ch;
     }
   </style>
@@ -48,17 +48,13 @@
     <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
   <article>
     <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset heading=":: Settings ::">
-      <div slot="content">
-        This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
-      </div>
+      This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
     </gui-panel>
     <section>Main content. A docked panel can be resized either left- or right.</section>
     <gui-panel open resize="inline-start block-end" position="top right" dock="end" scheme reset heading="Control Panel"> <!-- dismiss -->
-      <div slot="content">
-        This is an undocked panel. You can move it around, and resize it. Resize is bottom and left. Closing will dismiss it. Default, un-docked position is top right.
+      This is an undocked panel. You can move it around, and resize it. Resize is bottom and left. Closing will dismiss it. Default, un-docked position is top right.
         <p>&nbsp;</p>
         <button type="submit">Button</button>
-      </div>
     </gui-panel>
   </article>
 

@@ -12,26 +12,36 @@
 
 	<gui-app>
 		<header>
-			
+			<button type="button" popovertarget="start">
+				<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M9 4l0 16" /></svg>
+			</button>
 			Header
-			
+			<button type="button" popovertarget="end">
+				<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M15 4l0 16" /></svg>
+			</button>
 		</header>
 
-		<gui-panel docked resize="inline-end block-end" position="top left" dock="start" scheme heading="Control Panel">
-			<div slot="content">
-				tables and stuff
-			</div>
+		<gui-panel
+			dock="start"
+			docked
+			heading="Left"
+			id="start"
+			position="top left"
+			resize="inline-start inline-end block-start block-end">
 		</gui-panel>
 
-		<main>MAIN</main>
+		<main></main>
 
-		<gui-panel docked resize="inline-start block-end" position="top right" dock="end" scheme heading="Control Panel">
-			<div slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, debitis?</div>
+		<gui-panel
+			dock="end"
+			docked
+			heading="Right"
+			id="end"
+			position="top right"
+			resize="inline-start inline-end block-start block-end">
 		</gui-panel>
 
-		<footer>
-			&copy; Footer
-		</footer>
+		<footer><small>&copy; year</small></footer>
 	</gui-app>
 
 	<script type="importmap">
