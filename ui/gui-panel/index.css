@@ -4,6 +4,7 @@
 	--gui-panel-w: 265px;
 	--gui-panel-popover-w: 265;
 	--gui-panel-docked-w: 220;
+	--gui-panel-docked-mw: 500;
 	--gui-panel-icon-sz: 1.25rem;
 	--gui-panel-rz-touch: 12px;
 	--gui-panel-rz-area: 6px;
@@ -52,7 +53,7 @@
 		display: flex;
 		[part~="close"],
 		[part~="reset"],
-		[part="title"] { 
+		[part="heading"] { 
 			display: none; 
 		}
 	}
@@ -112,9 +113,9 @@ gui-panel:not([popover])[dock="end"] header {
 /* [part~="jc-end"] {
 	justify-content: end;
 } */
-[part~="title"] {
+[part~="heading"] {
 	cursor: move;
-	font-size: var(--gui-panel-title-fs, 0.875rem);
+	font-size: var(--gui-panel-heading-fs, 0.875rem);
 	font-weight: 500;
 	text-align: center;
 	transition: all .16s ease;
@@ -175,7 +176,7 @@ gui-panel:not([popover])[dock="end"] header {
 }
 @media (hover:hover) {
 	[part~="icon-button"]:hover { background: #CCC8; }
-	[part~="title"]:hover { font-weight: 700; scale: 1.025; } 
+	[part~="heading"]:hover { font-weight: 700; scale: 1.025; } 
 }
 @media (pointer: coarse) {
 	/* Touch-specific styles */

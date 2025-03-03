@@ -1,9 +1,10 @@
-const styles = await fetch('./index.css').then(r => r.text());
+const styles = await fetch(new URL('./index.css', import.meta.url).href).then(r => r.text());
 
 const DOCKED_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-docked-w')) || 220;
+const DOCKED_MAX_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-docked-mw')) || 500;
 const POPOVER_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-popover-w')) || 265;
-const MIN_PANEL_HEIGHT = 100; // Minimum height for the panel
-const THROTTLE_DELAY = 100; // Milliseconds to throttle resize events
+const MIN_PANEL_HEIGHT = 100;
+const THROTTLE_DELAY = 100;
 
 const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
 const throttle = (fn, delay) => {
@@ -63,7 +64,7 @@ export default class GuiPanel extends HTMLElement {
 						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
 					</button>
 				</nav>
-				<strong part="title">${this.getAttribute('title') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
+				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
 					${dock === 'start' ? resetButton : ''}
 					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
@@ -81,11 +82,11 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'scheme', 'reset', 'sidebarend', 'sidebarstart', 'title'].forEach(part => 
+		['close', 'heading', 'scheme', 'reset', 'sidebarend', 'sidebarstart'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
-		this.addDraggable(this.#parts.title, this);
+		this.addDraggable(this.#parts.heading, this);
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle('cs'));
 
 		const toggleSidebar = () => {
@@ -93,6 +94,7 @@ export default class GuiPanel extends HTMLElement {
 				this.removeAttribute('popover');
 				this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 			} else {
+				this.setHeightBasedOnPosition('auto');
 				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
 				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`); // Reset width for popover mode
@@ -101,19 +103,16 @@ export default class GuiPanel extends HTMLElement {
 		};
 
 		this.#parts.reset.addEventListener('click', () => {
-			/* TODO! rework this */
 			const panelHeight = this.style.getPropertyValue('--gui-panel-h');
 			this.removeAttribute('style');
-			if (panelHeight) {
-				this.style.setProperty('--gui-panel-h', panelHeight);
-			}
+			this.setHeightBasedOnPosition('auto', panelHeight);
 		});
-		
+
 		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
 		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
+
 		this.#parts.close.addEventListener('click', () => {
 			if (this.hasAttribute('docked')) {
-				// For docked elements, toggle popover attribute
 				if (this.hasAttribute('popover')) {
 					this.removeAttribute('popover');
 					this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
@@ -123,7 +122,6 @@ export default class GuiPanel extends HTMLElement {
 					this.handlePopoverToggle(true);
 				}
 			} else {
-				// For non-docked elements, close as normal
 				this.handlePopoverToggle(false);
 			}
 		});
@@ -323,6 +321,18 @@ export default class GuiPanel extends HTMLElement {
 
 		if (!wasOpen && force !== false) {
 			requestAnimationFrame(() => this.constrainToViewport());
+		}
+	}
+
+	// Helper method to set height based on position attribute
+	setHeightBasedOnPosition(defaultHeight = 'auto', preservedHeight = null) {
+		const position = this.getAttribute('position') || '';
+		if (position.includes('bottom') && preservedHeight) {
+			// For bottom-positioned panels, preserve specific height if available
+			this.style.setProperty('--gui-panel-h', preservedHeight);
+		} else if (!position.includes('bottom')) {
+			// For non-bottom panels, use default height (typically 'auto')
+			this.style.setProperty('--gui-panel-h', defaultHeight);
 		}
 	}
 }

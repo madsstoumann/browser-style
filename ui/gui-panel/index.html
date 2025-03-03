@@ -47,13 +47,13 @@
     and automatically saves its position between sessions. It features a built-in color scheme toggle, and can be <code>docked</code> in a layout.
     <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
   <article>
-    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset title=":: Settings ::">
+    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset heading=":: Settings ::">
       <div slot="content">
         This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
       </div>
     </gui-panel>
     <section>Main content. A docked panel can be resized either left- or right.</section>
-    <gui-panel open resize="inline-start block-end" position="top right" dock="end" scheme reset title="Control Panel"> <!-- dismiss -->
+    <gui-panel open resize="inline-start block-end" position="top right" dock="end" scheme reset heading="Control Panel"> <!-- dismiss -->
       <div slot="content">
         This is an undocked panel. You can move it around, and resize it. Resize is bottom and left. Closing will dismiss it. Default, un-docked position is top right.
         <p>&nbsp;</p>

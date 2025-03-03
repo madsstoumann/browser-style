@@ -9,32 +9,32 @@ gui-app {
 	container-type: inline-size;
 	display: grid;
 	font-family: var(--gui-app-ff, ui-sans-serif, system-ui);
-	grid-template: auto 1fr var(--gui-app-footer-h, auto) / var(--gui-app-left-w, 220px) 1fr var(--gui-app-right-w, 220px) ;
+	grid-template: auto 1fr var(--gui-app-footer-h, auto) / min-content 1fr min-content;
 
-	&:has([name="hide-aside-left"]:checked) {
-		--gui-app-left-w: 0;
-	}
-	&:has([name="hide-aside-right"]:checked) {
-		--gui-app-right-w: 0;
-	}
-
-	aside {
-		background: light-dark(#FFF, #2C2C2C);
-		color: #0008; /* #0009 */
-		display: flow-root;
-		overflow: clip auto;
-		padding: 1ch;
-		overflow-clip-margin: content-box;
-		
-		&:first-of-type {
-			border-inline-end: 1px solid var(--gui-app-bdc);
-			grid-column: 1 / 2;
-		}
-		&:last-of-type {
+	&:has([dock=start]:not([popover])) {
+		[dock=start] { grid-column: 1 / 2; }
+		main {
 			border-inline-start: 1px solid var(--gui-app-bdc);
-			grid-column: 3 / 4;
+			grid-column: 2 / 4;
+		}
+		
+	}
+	&:has([dock=end]:not([popover])) {
+		[dock=end] { grid-column: 3 / 4; }
+		main {
+			border-inline-end: 1px solid var(--gui-app-bdc);
+			grid-column: 1 / 3;
 		}
 	}
+	&:has([dock=start]:not([popover])):has([dock=end]:not([popover])) {
+		[dock=start] { grid-column: 1 / 2; }
+		[dock=end] { grid-column: 3 / 4; }
+		main {
+			border-inline: 1px solid var(--gui-app-bdc);
+			grid-column: 2 / 3;
+		}
+	}
+
 	footer {
 		background: #777;
 		grid-column: 1 / 4;
@@ -42,6 +42,7 @@ gui-app {
 		overflow-clip-margin: content-box;
 		padding: 1ch;
 	}
+	
 	header {
 		background: light-dark(#FFF, #2C2C2C);
 		border-block-end: 1px solid var(--gui-app-bdc);
@@ -52,7 +53,7 @@ gui-app {
 	}
 	main {
 		background: light-dark(#F5F5F5, #333);
-		grid-column: 2 / 3;
+		grid-column: 1 / 4;
 		padding: 1ch;
 	}
 	[data-sr] {

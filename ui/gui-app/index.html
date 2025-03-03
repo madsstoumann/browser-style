@@ -12,25 +12,34 @@
 
 	<gui-app>
 		<header>
-			<label>
-				<input type="checkbox" name="hide-aside-left" data-sr>
-				<svg xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M9 4l0 16" /></svg>
-			</label>
-			Header
-			<label>
-				<input type="checkbox" name="hide-aside-right" data-sr>
-				<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M15 4l0 16" /></svg>
-			</label>
-		</header>
-		<aside>
 			
-			LEFT</aside>
+			Header
+			
+		</header>
+
+		<gui-panel docked resize="inline-end block-end" position="top left" dock="start" scheme heading="Control Panel">
+			<div slot="content">
+				tables and stuff
+			</div>
+		</gui-panel>
+
 		<main>MAIN</main>
-		<aside>RIGHT</aside>
-		
+
+		<gui-panel docked resize="inline-start block-end" position="top right" dock="end" scheme heading="Control Panel">
+			<div slot="content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, debitis?</div>
+		</gui-panel>
+
 		<footer>
-			FOOTER
+			&copy; Footer
 		</footer>
 	</gui-app>
+
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/gui-panel": "/ui/gui-panel/index.js" }
+		}
+	</script>
+	<script type="module" src="index.js"></script>
 </body>
 </html>
