@@ -112,8 +112,16 @@ export default class AssetHandler extends HTMLElement {
 			this.config = await this.fetch(this.#url.config);
 			if (this.config && Object.keys(this.config).length) {
 				this.initialize();
+			} else {
+				this.showConnectionError();
 			}
-		} catch (error) {}
+		} catch (error) {
+			this.showConnectionError();
+		}
+	}
+
+	showConnectionError() {
+		this.shadow.innerHTML = '<small>AssetHandler could not connect to an asset server</small>';
 	}
 
 	async fetch(url, options = {}) {
