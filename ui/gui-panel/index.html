@@ -29,14 +29,11 @@
 
   <h2>GUI Panel</h2>
   <p>
-    GUI Panel is a draggable container, using the <code>Popover API</code>. The panel can be freely positioned by dragging its title bar, 
-    and automatically saves its position between sessions. It features a built-in color scheme toggle, customizable slots for content and footer,
-    and responds to clicks outside the panel for dismissal. The panel's appearance can be customized using CSS custom properties.
-  </p>
-  <button type="button" id="toggle">Toggle GUI Panel</button>
-
+    GUI Panel is a draggable, resizable container, using the <code>Popover API</code>. The panel can be freely positioned by dragging its title bar, 
+    and automatically saves its position between sessions. It features a built-in color scheme toggle, and can be <code>docked</code> in a layout.
+    <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
   <article>
-    <gui-panel open resize="inline-end block-start" position="bottom left" dock="start" scheme reset title=":: Settings ::"> <!-- dismiss -->
+    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset title=":: Settings ::"> <!-- dismiss -->
       <div slot="content">
         Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
         <p>&nbsp;</p>
@@ -56,7 +53,7 @@
   <script type="module" src="./index.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const gui = document.querySelector('gui-panel');
+      const gui = document.querySelector('gui-panel[open]');
       const toggle = document.getElementById('toggle');
 
       toggle.addEventListener('click', () => {

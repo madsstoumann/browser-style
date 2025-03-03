@@ -2,6 +2,8 @@
 	--gui-panel-gap: .5rem;
 	--gui-panel-m: 1rem;
 	--gui-panel-w: 265px;
+	--gui-panel-popover-w: 265;
+	--gui-panel-docked-w: 220;
 	--gui-panel-icon-sz: 1.25rem;
 	--gui-panel-rz-touch: 12px;
 	--gui-panel-rz-area: 6px;
@@ -32,6 +34,7 @@
 	border-radius: var(--gui-panel-bdrs, 10px);
 	box-shadow: var(--gui-panel-bxsh, 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%));
 	height: var(--gui-panel-h, auto);
+	touch-action: none;
 }
 
 [hidden] { display: none !important;}
@@ -53,10 +56,6 @@
 			display: none; 
 		}
 	}
-	
-	&[dock="end"] header {
-		justify-content: end;
-	}
 	[part~="icon-group"] {
 		display: contents;
 	}
@@ -64,6 +63,11 @@
 	[part~="resize-block-end"] { 
 		display: none; 
 	}
+}
+
+:host(:not([popover])[dock="end"]) header, 
+gui-panel:not([popover])[dock="end"] header {
+  justify-content: end;
 }
 
 /* parts */
@@ -79,6 +83,9 @@
 	grid-area: 2 / 2 / 3 / 3;
 	grid-template-columns: 1fr 2fr 1fr;
 	min-height: min-content;
+	[part~="icon-group"]:last-of-type {
+		justify-content: end;
+	}
 }
 [part~="icon"] {
 	fill: none;
@@ -93,6 +100,7 @@
 [part~="icon-button"] {
 	display: inline-grid;
 	background: #0000;
+	color: inherit;
 	border: none;
 	border-radius: 50%;
 	padding: calc(var(--gui-panel-rz-area) / 2);

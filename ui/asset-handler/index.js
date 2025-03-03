@@ -113,14 +113,14 @@ export default class AssetHandler extends HTMLElement {
 			if (this.config && Object.keys(this.config).length) {
 				this.initialize();
 			} else {
-				this.showConnectionError();
+				this.connectionError();
 			}
 		} catch (error) {
-			this.showConnectionError();
+			this.onnectionError();
 		}
 	}
 
-	showConnectionError() {
+	connectionError() {
 		this.shadow.innerHTML = '<small>AssetHandler could not connect to an asset server</small>';
 	}
 

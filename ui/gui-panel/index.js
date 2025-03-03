@@ -1,6 +1,7 @@
 const styles = await fetch('./index.css').then(r => r.text());
 
-const MIN_PANEL_WIDTH = 220; // Minimum width for the panel
+const DOCKED_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-docked-w')) || 220;
+const POPOVER_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-popover-w')) || 265;
 const MIN_PANEL_HEIGHT = 100; // Minimum height for the panel
 const THROTTLE_DELAY = 100; // Milliseconds to throttle resize events
 
@@ -51,7 +52,7 @@ export default class GuiPanel extends HTMLElement {
 		const resetButton = `<button part="icon-button reset"${this.hasAttribute('reset') ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
 
 		this.#root.innerHTML = `
-			<header part="header">
+			<header part="header ${dock}">
 				<nav part="icon-group">
 					<button part="icon-button scheme"${this.hasAttribute('scheme') ? '' : ' hidden'}>
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
@@ -63,7 +64,7 @@ export default class GuiPanel extends HTMLElement {
 					</button>
 				</nav>
 				<strong part="title">${this.getAttribute('title') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
-				<nav part="icon-group jc-end">
+				<nav part="icon-group">
 					${dock === 'start' ? resetButton : ''}
 					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
 						<slot name="externalend">${icon(ICONS.externalend)}</slot>
@@ -90,13 +91,14 @@ export default class GuiPanel extends HTMLElement {
 		const toggleSidebar = () => {
 			if (this.hasAttribute('popover')) {
 				this.removeAttribute('popover');
-				this.style.setProperty('--gui-panel-w', `${MIN_PANEL_WIDTH}px`);
+				this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 			} else {
 				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
+				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`); // Reset width for popover mode
 				this.handlePopoverToggle(true);
 			}
-			};
+		};
 
 		this.#parts.reset.addEventListener('click', () => {
 			/* TODO! rework this */
@@ -109,10 +111,30 @@ export default class GuiPanel extends HTMLElement {
 		
 		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
 		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
-		this.#parts.close.addEventListener('click', () => this.handlePopoverToggle(false));
+		this.#parts.close.addEventListener('click', () => {
+			if (this.hasAttribute('docked')) {
+				// For docked elements, toggle popover attribute
+				if (this.hasAttribute('popover')) {
+					this.removeAttribute('popover');
+					this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
+				} else {
+					this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+					this.offsetHeight; // Force reflow
+					this.handlePopoverToggle(true);
+				}
+			} else {
+				// For non-docked elements, close as normal
+				this.handlePopoverToggle(false);
+			}
+		});
 
-		if (!this.hasAttribute('popover'))
+		if (!this.hasAttribute('popover') && !this.hasAttribute('docked'))
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+
+		// Set initial width based on docked state
+		if (this.hasAttribute('docked')) {
+			this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
+		}
 
 		if (this.hasAttribute('open')) 
 			this.handlePopoverToggle(true);
@@ -162,7 +184,7 @@ export default class GuiPanel extends HTMLElement {
 		let height = parseInt(this.style.getPropertyValue('--gui-panel-h')) || rect.height;
 
 		if (width > viewportWidth) {
-			this.style.setProperty('--gui-panel-w', `${Math.max(MIN_PANEL_WIDTH, viewportWidth)}px`);
+			this.style.setProperty('--gui-panel-w', `${Math.max(DOCKED_WIDTH, viewportWidth)}px`);
 		}
 		
 		if (height > viewportHeight) {
@@ -238,7 +260,7 @@ export default class GuiPanel extends HTMLElement {
 			const isStart = edge === 'start';
 			let newSize = isStart ? startSize - delta : startSize + delta;
 
-			const minSize = type === 'inline' ? MIN_PANEL_WIDTH : MIN_PANEL_HEIGHT;
+			const minSize = type === 'inline' ? DOCKED_WIDTH : MIN_PANEL_HEIGHT;
 			const maxSize = type === 'inline' ? window.innerWidth : window.innerHeight;
 			newSize = Math.max(minSize, Math.min(newSize, maxSize));
 
