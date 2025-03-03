@@ -12,11 +12,25 @@
     article {
       border: 1px dashed;
       display: grid;
-      grid-template-columns: min-content 1fr min-content;
+      font-size: 1rem;
+      grid-template-columns: 1fr;
       margin-block: 1rem;
+
+      &:has([dock=start]:not([popover])) {
+        grid-template-columns: min-content auto;
+        section { border-inline-start: 1px dashed; }
+      }
+      &:has([dock=end]:not([popover])) {
+        grid-template-columns: auto min-content;
+        section { border-inline-end: 1px dashed; }
+      }
+      &:has([dock=start]:not([popover])):has([dock=end]:not([popover])) {
+        grid-template-columns: min-content auto min-content;
+        section { border-inline: 1px dashed; }
+      }
       section {
-        border-inline: 1px dashed;
-        padding: 1ch;
+        background: #EEE;
+        padding: 2ch;
       }
     }
     gui-panel [slot="content"], gui-panel [part="content"]  {
@@ -33,17 +47,15 @@
     and automatically saves its position between sessions. It features a built-in color scheme toggle, and can be <code>docked</code> in a layout.
     <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
   <article>
-    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset title=":: Settings ::"> <!-- dismiss -->
+    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" docked scheme reset title=":: Settings ::">
       <div slot="content">
-        Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
-        <p>&nbsp;</p>
-        <button type="submit">Button</button>
+        This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
       </div>
     </gui-panel>
-    <section>MAIN</section>
+    <section>Main content. A docked panel can be resized either left- or right.</section>
     <gui-panel open resize="inline-start block-end" position="top right" dock="end" scheme reset title="Control Panel"> <!-- dismiss -->
       <div slot="content">
-        Content goes here.<br>Drag the panel by grabbing the title. Toggle color-scheme by clicking the scheme-icon.
+        This is an undocked panel. You can move it around, and resize it. Resize is bottom and left. Closing will dismiss it. Default, un-docked position is top right.
         <p>&nbsp;</p>
         <button type="submit">Button</button>
       </div>

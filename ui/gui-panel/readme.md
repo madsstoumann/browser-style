@@ -41,6 +41,7 @@ Add the component to your HTML:
 - `open` - Shows the panel when added
 - `title` - Sets the panel title (default: "GUI Panel")
 - `dock` - Docks the panel to either side ("start" or "end")
+- `docked` - Start panel as docked
 - `dismiss` - Makes the panel auto-dismiss when clicking outside
 - `noscheme` - Hides the color scheme toggle button
 - `noshadow` - Disables Shadow DOM encapsulation

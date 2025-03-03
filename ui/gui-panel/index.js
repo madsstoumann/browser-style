@@ -131,7 +131,6 @@ export default class GuiPanel extends HTMLElement {
 		if (!this.hasAttribute('popover') && !this.hasAttribute('docked'))
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 
-		// Set initial width based on docked state
 		if (this.hasAttribute('docked')) {
 			this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 		}
@@ -139,7 +138,6 @@ export default class GuiPanel extends HTMLElement {
 		if (this.hasAttribute('open')) 
 			this.handlePopoverToggle(true);
 
-		// Add throttled window resize listener
 		this._constrainFn = () => this.constrainToViewport();
 		this._resizeObserver = throttle(this._constrainFn, THROTTLE_DELAY);
 		window.addEventListener('resize', this._resizeObserver);
