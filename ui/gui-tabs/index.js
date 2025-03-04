@@ -32,9 +32,9 @@ export default class GuiTabs extends HTMLElement {
 	#render() {
 		const tabs = Array.from(this.querySelectorAll('gui-tab')).map(tab => (tab.id ||= crypto.randomUUID(), tab));
 		this.#root.innerHTML = `
-			<nav role="tablist">
+			<nav role="tablist" part="tabs">
 				${tabs.map(tab => `
-					<a href="#${tab.id}" id="label-${tab.id}" role="tab" aria-selected="${tab.hasAttribute('active')}" aria-controls="tab-${tab.id}">
+					<a draggable="false" href="#${tab.id}" id="label-${tab.id}" role="tab" part="tab" aria-selected="${tab.hasAttribute('active')}" aria-controls="tab-${tab.id}">
 						${this.#getIconSlot(tab)}
 						<span part="label">${tab.getAttribute('label') || ''}</span>
 					</a>
@@ -42,7 +42,7 @@ export default class GuiTabs extends HTMLElement {
 			</nav>
 			<div part="panels">
 				${tabs.map(tab => `
-					<div role="tabpanel" id="tab-${tab.id}" aria-labelledby="label-${tab.id}" hidden>
+					<div role="tabpanel" part="panel" id="tab-${tab.id}" aria-labelledby="label-${tab.id}" hidden>
 						${tab.innerHTML}
 					</div>
 				`).join('')}

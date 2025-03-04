@@ -58,6 +58,13 @@ body { all: unset; }
 		--gui-panel-gap: .5rem;
 	}
 
+	gui-tabs::part(panels) {
+		padding-inline: 8px;
+	}
+	gui-tabs::part(tabs) {
+		margin: 4px;
+	}
+
 	header {
 		background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
 		border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
