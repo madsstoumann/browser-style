@@ -2,10 +2,20 @@ body { all: unset; }
 
 :where(gui-app) {
 	* { box-sizing: border-box;}
-	--gui-app-bdc: light-dark(#DDDDDD, #5E5E5E);
+
+	--blue: light-dark(#007AFF, #0B84FF);
+	--gray-1: light-dark(#8E8E93, #8E8E93);
+	--gray-2: light-dark(#AEAEB2, #636366);
+	--gray-3: light-dark(#C7C7CC, #48484A);
+	--gray-4: light-dark(#D1D1D6, #3A3A3C);
+	--gray-5: light-dark(#E5E5EA, #2C2C2E);
+	--gray-6: light-dark(#F2F2F7, #1C1C1E);
+
+	--gui-app-bdc: light-dark(#DEDEE0, #000000);
 	--gui-app-bdw: 1px;
 	--gui-app-c: light-dark(#222222, #CBCBCB);
-	--gui-app-main-bg: light-dark(#F5F5F5, #1E1E1E);
+	/* --gui-app-main-bg: light-dark(#F3F2F8, #1C1C1E); */
+	--gui-app-main-bg: light-dark(#Ededec, #1C1C1E);
 	--gui-app-panels-bg: light-dark(#FFFFFF, #2C2C2C);
 	--gui-app-regions-bg: light-dark(#FFFFFF, #282828);
 
@@ -17,29 +27,38 @@ body { all: unset; }
 	font-family: var(--gui-app-ff, ui-sans-serif, system-ui);
 	font-size: 1rem;
 	grid-template: auto 1fr var(--gui-app-footer-h, auto) / min-content 1fr min-content;
+	interpolate-size: allow-keywords;
 
-	&:has([dock=start]:not([popover])) {
-		[dock=start] { grid-column: 1 / 2; }
-		main {
-			border-inline-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
-			grid-column: 2 / 4;
-		}
-		
+	/* Panels */
+	[dock=start], [dock=end] { transition: width .2s ease; }
+
+	/* Panels are not toggled on, and not in popover mode */
+	&:has([name=panel-start]:not(:checked)) [dock=start]:not([popover]),
+	&:has([name=panel-end]:not(:checked)) [dock=end]:not([popover]) {
+		overflow: clip;
+		width: 0;
 	}
-	&:has([dock=end]:not([popover])) {
-		[dock=end] { grid-column: 3 / 4; }
-		main {
-			border-inline-end: 1px solid var(--gui-app-bdc);
-			grid-column: 1 / 3;
-		}
+
+	/* Start panel is visible and docked */
+	&:has([name=panel-start]:checked):has([dock=start]:not([popover])) main {
+		border-inline-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
 	}
-	&:has([dock=start]:not([popover])):has([dock=end]:not([popover])) {
-		[dock=start] { grid-column: 1 / 2; }
-		[dock=end] { grid-column: 3 / 4; }
-		main {
-			border-inline: 1px solid var(--gui-app-bdc);
-			grid-column: 2 / 3;
-		}
+
+	/* End panel is visible and docked */
+	&:has([name=panel-end]:checked):has([dock=end]:not([popover])) main {
+		border-inline-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
+	}
+
+	/* Both panels are visible and docked */
+	&:has([name=panel-start]:checked):has([dock=start]:not([popover])):has([name=panel-end]:checked):has([dock=end]:not([popover])) main {
+		border-inline: var(--gui-app-bdw) solid var(--gui-app-bdc);
+	}
+
+	/* Disable toggle-icons when panel is :popover-open */
+	&:has([dock=start][popover]) [data-toggle=start],
+	&:has([dock=end][popover]) [data-toggle=end] {
+		color: var(--gray-5);
+		pointer-events: none;
 	}
 
 	footer {
@@ -83,9 +102,25 @@ body { all: unset; }
 	}
 	main {
 		background: var(--gui-app-main-bg);
-		grid-column: 1 / 4;
-		padding: var(--gui-app-main-p, initial);
+		grid-column: 2 / 3;
+		padding: var(--gui-app-main-p, 2ch);
 	}
+
+	[data-sr] {
+		border: 0;
+		clip: rect(0 0 0 0); 
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap; 
+		width: 1px;
+	}
+	[data-toggle] {
+		color: var(--gray-2);
+		&:has(:checked) { color: var(--blue); }
+	}
+
 
 	@container (max-width: 600px) {
 		
