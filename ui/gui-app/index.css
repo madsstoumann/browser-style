@@ -59,10 +59,10 @@ body { all: unset; }
 	}
 
 	gui-tabs::part(panels) {
-		padding-inline: 8px;
+		padding: 4px 8px;
 	}
 	gui-tabs::part(tabs) {
-		margin: 4px;
+		margin: 6px;
 	}
 
 	header {

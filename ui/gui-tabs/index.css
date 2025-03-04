@@ -53,7 +53,7 @@
 	}
 }
 :host::part(tabs) {
-	background: var(--gui-tabs-bg, light-dark(#F5F5F5, #1E1E1E));
+	background: var(--gui-tabs-bg, light-dark(#E3E3E3, #1E1E1E));
 	border-radius: .5em;
 	color: var(--gui-tabs-c, light-dark(#222222, #CBCBCB));
 	display: grid;
