@@ -3,6 +3,8 @@ const styles = await fetch(new URL('./index.css', import.meta.url).href).then(r 
 export default class GuiTabs extends HTMLElement {
 	#root = this.attachShadow({ mode: 'open' });
 	#initialized = false;
+	#tabs = [];  // Store tab elements
+	#panels = []; // Store panel elements
 
 	constructor() {
 		super();
@@ -34,7 +36,7 @@ export default class GuiTabs extends HTMLElement {
 				${tabs.map(tab => `
 					<a href="#${tab.id}" id="label-${tab.id}" role="tab" aria-selected="${tab.hasAttribute('active')}" aria-controls="tab-${tab.id}">
 						${this.#getIconSlot(tab)}
-						${tab.getAttribute('label') || ''}
+						<span part="label">${tab.getAttribute('label') || ''}</span>
 					</a>
 				`).join('')}
 			</nav>
@@ -48,19 +50,21 @@ export default class GuiTabs extends HTMLElement {
 	}
 
 	#setupEventListeners() {
-		const tabs = this.#root.querySelectorAll('a[role="tab"]');
-		const panels = this.#root.querySelectorAll('div[role="tabpanel"]');
-		tabs.forEach(tab => tab.addEventListener('click', e => {
+		this.#tabs = Array.from(this.#root.querySelectorAll('a[role="tab"]'));
+		this.#panels = Array.from(this.#root.querySelectorAll('div[role="tabpanel"]'));
+		this.#tabs.forEach(tab => tab.addEventListener('click', e => {
 			e.preventDefault();
-			this.#setTab(tab, panels);
+			this.#setTab(tab);
 		}));
 	}
 
-	#setTab(tab, panels = this.#root.querySelectorAll('div[role="tabpanel"]')) {
-		panels.forEach(panel => {
+	#setTab(tab) {
+		this.#tabs.forEach(t => {
+			t.setAttribute('aria-selected', t === tab);
+		});
+		this.#panels.forEach(panel => {
 			const active = panel.id === tab.getAttribute('aria-controls');
 			panel.hidden = !active;
-			panel.setAttribute('aria-selected', active);
 		});
 	}
 }

@@ -12,6 +12,7 @@
 
 	background: var(--gui-panel-bg, Canvas);
 	border: 0;
+	box-sizing: border-box;
 	color: var(--gui-panel-c, CanvasText);
 	color-scheme: light dark;
 	container-type: inline-size;

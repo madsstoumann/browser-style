@@ -1,5 +1,6 @@
 // Import the GuiPanel component using the alias from the importmap
 import '@browser.style/gui-panel';
+import '@browser.style/gui-tabs';
 
 // Initialize gui-app component if needed
 class GuiApp extends HTMLElement {

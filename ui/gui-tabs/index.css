@@ -1,17 +1,66 @@
+:host, :host * { box-sizing: border-box; }
 :host {
+	--gui-tabs-gap: 4px;
+	--gui-tabs-icon-sz: 1.5rem;
 	font-family: var(--gui-tabs-ff, ui-sans-serif, system-ui);
 }
+:host::part(icon) {
+	fill: none;
+	height: var(--gui-tabs-icon-sz);
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+	width: var(--gui-tabs-icon-sz);
+}
 :host::part(panels) {
-	background: tomato;
 	display: flex;
 	overflow-y: hidden;
 	scroll-behavior: auto;
 	scroll-snap-type: x mandatory;
 	scrollbar-width: none;
 }
+[role=tab] {
+	align-items: center;
+	background: var(--gui-tab-bg, #0000);
+	border-radius: 5px;
+	color: inherit;
+	container-type: inline-size;
+	container-name: tab;
+	display: flex;
+	flex-wrap: nowrap;
+	font-size: var(--gui-tabs-fs, 12px);
+	gap: var(--gui-tabs-gap);
+	padding: var(--gui-tab-p, .25em .5em);
+	justify-content: center;
+	text-align: center;
+	text-decoration: none;
+	user-select: none;
+	&[aria-selected="true"] {
+		background: var(--gui-tab-selected-bg, light-dark(#FFFFFF, #2C2C2C));
+		color: var(--gui-tab-selected-c, inherit);
+	}
+}
+
+@container tab (max-width: 70px) {
+	[part="label"] { 
+		display: none; 
+	}
+}
+
+[role=tablist] {
+	background: var(--gui-tabs-bg, light-dark(#F5F5F5, #1E1E1E));
+	border-radius: .5em;
+	color: var(--gui-tabs-c, light-dark(#222222, #CBCBCB));
+	display: grid;
+	gap: var(--gui-tabs-gap);
+	grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
+	padding: var(--gui-tabs-gap);
+	place-content: center;
+}
 [role=tabpanel] {
 	flex: 0 0 100%;
 	margin: var(--gui-tabs-panel-m, 0);
 	padding: var(--gui-tabs-panel-p, 0);
-	scroll-snap-align: start;
 }
