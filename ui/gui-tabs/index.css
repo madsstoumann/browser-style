@@ -1,0 +1,17 @@
+:host {
+	font-family: var(--gui-tabs-ff, ui-sans-serif, system-ui);
+}
+:host::part(panels) {
+	background: tomato;
+	display: flex;
+	overflow-y: hidden;
+	scroll-behavior: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: none;
+}
+[role=tabpanel] {
+	flex: 0 0 100%;
+	margin: var(--gui-tabs-panel-m, 0);
+	padding: var(--gui-tabs-panel-p, 0);
+	scroll-snap-align: start;
+}
