@@ -16,7 +16,7 @@
       grid-template-columns: 1fr;
       margin-block: 1rem;
 
-      &:has([dock=fixed-start]:not([popover])) {
+      &:has([dock=start]:not([popover])) {
         grid-template-columns: min-content auto;
         section { border-inline-start: 1px dashed; }
       }
@@ -24,7 +24,7 @@
         grid-template-columns: auto min-content;
         section { border-inline-end: 1px dashed; }
       }
-      &:has([dock=fixed-start]:not([popover])):has([dock=end]:not([popover])) {
+      &:has([dock=start]:not([popover])):has([dock=end]:not([popover])) {
         grid-template-columns: min-content auto min-content;
         section { border-inline: 1px dashed; }
       }
@@ -47,7 +47,7 @@
     and automatically saves its position between sessions. It features a built-in color scheme toggle, and can be <code>docked</code> in a layout.
     <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
   <article>
-    <gui-panel resize="inline-end" dock="fixed-start" heading=":: Settings ::">
+    <gui-panel resize="inline-end" position="bottom left" dock="start" scheme heading=":: Settings ::">
       This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
     </gui-panel>
     <section>Main content. A docked panel can be resized either left- or right.</section>

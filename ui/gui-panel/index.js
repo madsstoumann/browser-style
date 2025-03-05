@@ -9,14 +9,14 @@ const THROTTLE_DELAY = 100;
 
 const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
 const throttle = (fn, delay) => {
-  let lastCall = 0;
-  return function(...args) {
-    const now = Date.now();
-    if (now - lastCall >= delay) {
-      lastCall = now;
-      fn.apply(this, args);
-    }
-  };
+	let lastCall = 0;
+	return function(...args) {
+		const now = Date.now();
+		if (now - lastCall >= delay) {
+			lastCall = now;
+			fn.apply(this, args);
+		}
+	};
 };
 
 const ICONS = {
@@ -31,46 +31,21 @@ const ICONS = {
 
 export default class GuiPanel extends HTMLElement {
 	#root; #parts = {}; #dragState = null; #resizeState = null;
+	#has(name) { return this.hasAttribute(name); }
 
-	get dockPosition() {
-		return this.getAttribute('dock')?.replace('fixed-', '') || '';
-	}
-
-	get isDockable() {
-		return this.hasAttribute('dock');
-	}
-
-	get isDocked() {
-		return !this.isUndocked;
-	}
-
-	get isFixed() {
-		return this.getAttribute('dock')?.startsWith('fixed-') || false;
-	}
-
-	get isUndocked() {	
-		return this.hasAttribute('popover');
-	}
-
-	get showScheme() {
-		return this.hasAttribute('scheme');
-	}
-
-	get hasReset() {
-		return this.hasAttribute('reset');
-	}
-
-	get hasDismiss() {
-		return this.hasAttribute('dismiss');
-	}
-
-	get hasOpen() {
-		return this.hasAttribute('open');
-	}
+	get dockPosition() { return this.getAttribute('dock')?.replace('fixed-', '') || ''; }
+	get hasDismiss() { return this.#has('dismiss'); }
+	get hasOpen() { return this.#has('open'); }
+	get hasReset() { return this.#has('reset'); }
+	get isDockable() { return this.#has('dock'); }
+	get isDocked() { return !this.isUndocked; }
+	get isFixed() { return this.getAttribute('dock')?.startsWith('fixed-') || false; }
+	get isUndocked() { return this.#has('popover'); }
+	get showScheme() { return this.#has('scheme'); }
 
 	constructor() {
 		super();
-		const useShadow = !this.hasAttribute('noshadow');
+		const useShadow = !this.#has('noshadow');
 		this.#root = useShadow ? this.attachShadow({mode: 'open'}) : this;
 
 		if (useShadow) {
@@ -81,32 +56,29 @@ export default class GuiPanel extends HTMLElement {
 			document.head.insertAdjacentHTML('beforeend', `<style>${styles}</style>`);
 		}
 
+		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
 		const content = useShadow ? 
 			`<slot></slot>` : 
 			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
 
-		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
-		const undockButton = (position) => `<button part="icon-button undock"${this.isDockable ? '' : ' hidden'}>
-			<slot name="undock">${position === 'start' ? icon(ICONS.undockstart) : icon(ICONS.undockend)}</slot>
-		</button>`;
-		const resetButton = `<button part="icon-button reset"${this.hasReset ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
+		const createButton = (part, icon, condition = true) => 
+			`<button part="icon-button ${part}"${condition ? '' : ' hidden'}><slot name="${part}">${icon}</slot></button>`;
+						
+		const dockPos = this.dockPosition;
+		const undockIcon = dockPos === 'start' ? ICONS.undockstart : ICONS.undockend;
 
 		this.#root.innerHTML = `
-			<header part="header ${this.dockPosition}">
+			<header part="header ${dockPos}">
 				<nav part="icon-group">
-					<button part="icon-button scheme"${this.showScheme && this.isUndocked ? '' : ' hidden'}>
-						<slot name="scheme">${icon(ICONS.scheme)}</slot>
-					</button>
-						${(this.dockPosition === 'end' || this.dockPosition === '') ? resetButton : ''}
-						${this.dockPosition === 'start' && !this.isFixed ? undockButton('start') : ''}
+					${createButton('scheme', icon(ICONS.scheme), this.showScheme && this.isUndocked)}
+					${(dockPos === 'end' || dockPos === '') ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
+					${dockPos === 'start' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
-						${this.dockPosition === 'start' ? resetButton : ''}
-						${this.dockPosition === 'end' && !this.isFixed ? undockButton('end') : ''}
-					<button part="icon-button close">
-						<slot name="close">${icon(ICONS.close)}</slot>
-					</button>
+					${dockPos === 'start' ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
+					${dockPos === 'end' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
+					${createButton('close', icon(ICONS.close))}
 				</nav>
 			</header>
 			<div part="content">${content}</div>
@@ -115,7 +87,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'heading', 'scheme', 'reset', 'undock'].forEach(part => 
+		['close', 'heading', 'reset', 'scheme', 'undock'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
@@ -162,19 +134,20 @@ export default class GuiPanel extends HTMLElement {
 				this.handlePopoverToggle(false);
 			}
 		});
-		
+
 		if (!this.isUndocked && !this.isDockable) {
 			this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 		} else if (!this.isFixed && this.hasOpen) {
 			this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 		}
-		
+
 		if (this.isDocked) {
 			this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 		}
-		
+
 		if (this.hasOpen) {
 			this.handlePopoverToggle(true);
+			if (this.showScheme) this.#parts.scheme.hidden = false;
 		}
 
 		this._constrainFn = () => this.constrainToViewport();
@@ -364,7 +337,6 @@ export default class GuiPanel extends HTMLElement {
 				this.showPopover();
 			}
 		}
-
 		if (!wasOpen && force !== false) {
 			requestAnimationFrame(() => this.constrainToViewport());
 		}
