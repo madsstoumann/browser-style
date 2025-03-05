@@ -184,9 +184,9 @@ gui-panel:not([popover])[dock="end"] header {
 
 	:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) [part~="resize-block-start"]::before,
 	:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) [part~="resize-block-end"]::before,
-	:where(:host([resize~="inline-start"]), gui-panel[resize~="inline-start"]) [part~="resize-inline-start"]::before,
-	:where(:host([resize~="inline-end"]), gui-panel[resize~="inline-end"]) [part~="resize-inline-end"]::before {
-		background: #CCC6;
+	:host([resize~="inline-start"]:not(:popover-open)) [part~="resize-inline-start"]::before,
+	:host([resize~="inline-end"]:not(:popover-open)) [part~="resize-inline-end"]::before {
+		background: var(--gui-panel-rz-bg, light-dark(#CCC4, #CCC1));
 		border-radius: 40px;
 		content: '';
 		display: block;

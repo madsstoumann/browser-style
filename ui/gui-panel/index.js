@@ -45,21 +45,11 @@ export default class GuiPanel extends HTMLElement {
 
 	constructor() {
 		super();
-		const useShadow = !this.#has('noshadow');
-		this.#root = useShadow ? this.attachShadow({mode: 'open'}) : this;
-
-		if (useShadow) {
-			const sheet = new CSSStyleSheet();
-			sheet.replaceSync(styles);
-			this.#root.adoptedStyleSheets = [sheet];
-		} else {
-			document.head.insertAdjacentHTML('beforeend', `<style>${styles}</style>`);
-		}
-
+		this.#root = this.attachShadow({mode: 'open'});
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(styles);
+		this.#root.adoptedStyleSheets = [sheet];
 		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
-		const content = useShadow ? 
-			`<slot></slot>` : 
-			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
 
 		const createButton = (part, icon, condition = true) => 
 			`<button part="icon-button ${part}"${condition ? '' : ' hidden'}><slot name="${part}">${icon}</slot></button>`;
@@ -81,7 +71,7 @@ export default class GuiPanel extends HTMLElement {
 					${createButton('close', icon(ICONS.close))}
 				</nav>
 			</header>
-			<div part="content">${content}</div>
+			<div part="content"><slot></slot></div>
 			<div part="resize-block-start"></div>
 			<div part="resize-block-end"></div>
 			<div part="resize-inline-start"></div>
@@ -102,7 +92,7 @@ export default class GuiPanel extends HTMLElement {
 				this.#parts.scheme.hidden = !this.showScheme;
 				this.setHeightBasedOnPosition('auto');
 				this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
-				this.offsetHeight; // Force reflow
+				this.offsetHeight;
 				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`);
 				this.handlePopoverToggle(true);
 			}
@@ -127,7 +117,7 @@ export default class GuiPanel extends HTMLElement {
 					this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 				} else {
 					this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
-					this.offsetHeight; // Force reflow
+					this.offsetHeight;
 					this.handlePopoverToggle(true);
 				}
 			} else {
@@ -196,14 +186,14 @@ export default class GuiPanel extends HTMLElement {
 		if (width > viewportWidth) {
 			this.style.setProperty('--gui-panel-w', `${Math.max(DOCKED_WIDTH, viewportWidth)}px`);
 		}
-		
+
 		if (height > viewportHeight) {
 			this.style.setProperty('--gui-panel-h', `${Math.max(MIN_PANEL_HEIGHT, viewportHeight)}px`);
 		}
 
 		const hasCustomX = this.style.getPropertyValue('--gui-panel-x') !== '';
 		const hasCustomY = this.style.getPropertyValue('--gui-panel-y') !== '';
-		
+
 		if (hasCustomX) {
 			const x = parseInt(this.style.getPropertyValue('--gui-panel-x'));
 			if (x < 0 || x + rect.width > viewportWidth) {
@@ -211,7 +201,7 @@ export default class GuiPanel extends HTMLElement {
 				this.style.setProperty('--gui-panel-x', `${newX}px`);
 			}
 		}
-		
+
 		if (hasCustomY) {
 			const y = parseInt(this.style.getPropertyValue('--gui-panel-y'));
 			if (y < 0 || y + rect.height > viewportHeight) {

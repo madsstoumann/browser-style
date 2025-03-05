@@ -34,6 +34,10 @@ body { all: unset; }
 		transition: width .2s ease;
 	}
 
+	gui-panel {
+		--gui-panel-docked-w: 100;
+	}
+
 	/* Panels are not toggled on, and not in popover mode */
 	&:has([name=panel-start]:not(:checked)) [dock=start]:not([popover]),
 	&:has([name=panel-end]:not(:checked)) [dock=end]:not([popover]) {

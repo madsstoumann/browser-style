@@ -45,9 +45,9 @@
   <p>
     GUI Panel is a draggable, resizable container, using the <code>Popover API</code>. The panel can be freely positioned by dragging its title bar, 
     and automatically saves its position between sessions. It features a built-in color scheme toggle, and can be <code>docked</code> in a layout.
-    <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p>
+    <!-- <p><button type="button" id="toggle">Toggle panel, if you closed it</button></p> -->
   <article>
-    <gui-panel resize="inline-end" position="bottom left" dock="start" scheme heading=":: Settings ::">
+    <gui-panel resize="inline-end block-start" position="bottom left" dock="start" scheme heading=":: Settings ::">
       This panel is docked by default. You can undock it, and move it around. Resize is top and right. Closing will in this case behave like "re-dock". Default, un-docked position is bottom left.
     </gui-panel>
     <section>Main content. A docked panel can be resized either left- or right.</section>
@@ -59,7 +59,7 @@
   </article>
 
   <script type="module" src="./index.js"></script>
-  <script>
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', () => {
       const gui = document.querySelector('gui-panel[open]');
       const toggle = document.getElementById('toggle');
@@ -68,6 +68,6 @@
         gui.togglePopover(true);
       });
     });
-  </script>
+  </script> -->
 </body>
 </html>
