@@ -42,10 +42,7 @@
 }
 
 [hidden] { display: none !important;}
-:where(:host([popover]), gui-panel[popover]) slot[name="externalend"],
-:where(:host(:not([popover])), gui-panel:not([popover])) slot[name="sidebarend"],
-:where(:host([popover]), gui-panel[popover]) slot[name="externalstart"],
-:where(:host(:not([popover])), gui-panel:not([popover])) slot[name="sidebarstart"] {
+:where(:host([popover]), gui-panel[popover]) [part~="icon-button"][part~="undock"] {
 	display: none;
 }
 

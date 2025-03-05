@@ -21,8 +21,8 @@ const throttle = (fn, delay) => {
 
 const ICONS = {
 	close: ['M18 6l-12 12', 'M6 6l12 12'],
-	externalend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
-	externalstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
+	undockend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
+	undockstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
 	reset: ['M3.06 13a9 9 0 1 0 .49 -4.087','M3 4.001v5h5'],
 	scheme: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
 	sidebarend: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
@@ -86,6 +86,9 @@ export default class GuiPanel extends HTMLElement {
 			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
 
 		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
+		const undockButton = (position) => `<button part="icon-button undock"${this.isDockable ? '' : ' hidden'}>
+			<slot name="undock">${position === 'start' ? icon(ICONS.undockstart) : icon(ICONS.undockend)}</slot>
+		</button>`;
 		const resetButton = `<button part="icon-button reset"${this.hasReset ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
 
 		this.#root.innerHTML = `
@@ -95,16 +98,12 @@ export default class GuiPanel extends HTMLElement {
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
 					</button>
 						${(this.dockPosition === 'end' || this.dockPosition === '') ? resetButton : ''}
-					<button part="icon-button sidebarstart"${this.dockPosition === 'start' && !this.isFixed ? '' : ' hidden'}>
-						<slot name="externalstart">${icon(ICONS.externalstart)}</slot>
-					</button>
+						${this.dockPosition === 'start' && !this.isFixed ? undockButton('start') : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
 						${this.dockPosition === 'start' ? resetButton : ''}
-					<button part="icon-button sidebarend"${this.dockPosition === 'end' ? '' : ' hidden'}>
-						<slot name="externalend">${icon(ICONS.externalend)}</slot>
-					</button>
+						${this.dockPosition === 'end' && !this.isFixed ? undockButton('end') : ''}
 					<button part="icon-button close">
 						<slot name="close">${icon(ICONS.close)}</slot>
 					</button>
@@ -116,7 +115,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'heading', 'scheme', 'reset', 'sidebarend', 'sidebarstart'].forEach(part => 
+		['close', 'heading', 'scheme', 'reset', 'undock'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
@@ -143,8 +142,9 @@ export default class GuiPanel extends HTMLElement {
 			this.setHeightBasedOnPosition('auto', panelHeight);
 		});
 
-		this.#parts.sidebarend.addEventListener('click', toggleSidebar);
-		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
+		if (this.#parts.undock) {
+			this.#parts.undock.addEventListener('click', toggleSidebar);
+		}
 
 		this.#parts.close.addEventListener('click', () => {
 			if (this.isDockable) {
