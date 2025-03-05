@@ -39,21 +39,20 @@
 
 		<gui-panel
 			dock="end"
-			docked
 			heading="Right"
 			id="end"
 			position="top right"
 			resize="inline-start block-end" scheme>
 
 			<gui-tabs>
-				<gui-tab label="Home" >
+				<gui-tab label="Home" active>
 					<slot name="icon">
 						<svg viewBox="0 0 24 24" part="icon"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
 					</slot>
 					<small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus facere soluta aspernatur, modi officia distinctio. Laboriosam, corrupti ad. Architecto reiciendis blanditiis qui facere amet officia, tempora ipsum maxime omnis, dolore voluptas ex mollitia ea nesciunt. Soluta nobis iusto voluptate quo eius? Itaque harum est saepe provident magnam, rem magni architecto.</small>
 				</gui-tab>
 		
-				<gui-tab label="Search" active>
+				<gui-tab label="Search">
 					<slot name="icon">
 						<svg viewBox="0 0 24 24" part="icon"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
 					</slot>

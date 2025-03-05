@@ -4,6 +4,7 @@ const DOCKED_WIDTH = parseInt(getComputedStyle(document.documentElement).getProp
 const DOCKED_MAX_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-docked-mw')) || 500;
 const POPOVER_WIDTH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gui-panel-popover-w')) || 265;
 const MIN_PANEL_HEIGHT = 100;
+const SCHEME_CLASS = 'cs';
 const THROTTLE_DELAY = 100;
 
 const icon = paths => `<svg part="icon" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
@@ -31,8 +32,28 @@ const ICONS = {
 export default class GuiPanel extends HTMLElement {
 	#root; #parts = {}; #dragState = null; #resizeState = null;
 
+	get dockPosition() {
+		return this.getAttribute('dock')?.replace('fixed-', '') || '';
+	}
+
+	get isDockable() {
+		return this.hasAttribute('dock');
+	}
+
 	get isDocked() {
-		return !this.hasAttribute('popover');
+		return !this.isUndocked;
+	}
+
+	get isFixed() {
+		return this.getAttribute('dock')?.startsWith('fixed-') || false;
+	}
+
+	get isUndocked() {	
+		return this.hasAttribute('popover');
+	}
+
+	get showScheme() {
+		return this.hasAttribute('scheme');
 	}
 
 	constructor() {
@@ -48,7 +69,6 @@ export default class GuiPanel extends HTMLElement {
 			document.head.insertAdjacentHTML('beforeend', `<style>${styles}</style>`);
 		}
 
-		const dock = this.getAttribute('dock') || '';
 		const content = useShadow ? 
 			`<slot></slot>` : 
 			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
@@ -57,23 +77,21 @@ export default class GuiPanel extends HTMLElement {
 		const resetButton = `<button part="icon-button reset"${this.hasAttribute('reset') ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
 
 		this.#root.innerHTML = `
-			<header part="header ${dock}">
+			<header part="header ${this.dockPosition}">
 				<nav part="icon-group">
-					<button part="icon-button scheme"${this.hasAttribute('scheme') ? '' : ' hidden'}>
+					<button part="icon-button scheme"${this.showScheme && this.isUndocked ? '' : ' hidden'}>
 						<slot name="scheme">${icon(ICONS.scheme)}</slot>
 					</button>
-						${(dock === 'end' || dock === '') ? resetButton : ''}
-					<button part="icon-button sidebarstart"${dock === 'start' ? '' : ' hidden'}>
+						${(this.dockPosition === 'end' || this.dockPosition === '') ? resetButton : ''}
+					<button part="icon-button sidebarstart"${this.dockPosition === 'start' && !this.isFixed ? '' : ' hidden'}>
 						<slot name="externalstart">${icon(ICONS.externalstart)}</slot>
-						<slot name="sidebarstart">${icon(ICONS.sidebarstart)}</slot>
 					</button>
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
-					${dock === 'start' ? resetButton : ''}
-					<button part="icon-button sidebarend"${dock === 'end' ? '' : ' hidden'}>
+						${this.dockPosition === 'start' ? resetButton : ''}
+					<button part="icon-button sidebarend"${this.dockPosition === 'end' ? '' : ' hidden'}>
 						<slot name="externalend">${icon(ICONS.externalend)}</slot>
-						<slot name="sidebarend">${icon(ICONS.sidebarend)}</slot>
 					</button>
 					<button part="icon-button close">
 						<slot name="close">${icon(ICONS.close)}</slot>
@@ -91,17 +109,19 @@ export default class GuiPanel extends HTMLElement {
 		);
 
 		this.addDraggable(this.#parts.heading, this);
-		this.#parts.scheme.addEventListener('click', () => this.classList.toggle('cs'));
+		this.#parts.scheme.addEventListener('click', () => this.classList.toggle(SCHEME_CLASS));
 
 		const toggleSidebar = () => {
-			if (this.hasAttribute('popover')) {
+			if (this.isUndocked) {
+
 				this.removeAttribute('popover');
 				this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 			} else {
+				this.#parts.scheme.hidden = !this.showScheme;
 				this.setHeightBasedOnPosition('auto');
 				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
-				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`); // Reset width for popover mode
+				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`);
 				this.handlePopoverToggle(true);
 			}
 		};
@@ -116,8 +136,10 @@ export default class GuiPanel extends HTMLElement {
 		this.#parts.sidebarstart.addEventListener('click', toggleSidebar);
 
 		this.#parts.close.addEventListener('click', () => {
-			if (this.hasAttribute('docked')) {
-				if (this.hasAttribute('popover')) {
+			if (this.isDockable) {
+				if (this.isUndocked) {
+					this.#parts.scheme.hidden = true;
+					this.classList.remove(SCHEME_CLASS);
 					this.removeAttribute('popover');
 					this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 				} else {
@@ -129,16 +151,18 @@ export default class GuiPanel extends HTMLElement {
 				this.handlePopoverToggle(false);
 			}
 		});
-
-		if (!this.hasAttribute('popover') && !this.hasAttribute('docked'))
+		
+		if (!this.hasAttribute('popover') && !this.hasAttribute('dock')) {
 			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
-
-		if (this.hasAttribute('docked')) {
+		}
+		
+		if (this.isDocked) {
 			this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 		}
-
-		if (this.hasAttribute('open')) 
+		
+		if (this.hasAttribute('open')) {
 			this.handlePopoverToggle(true);
+		}
 
 		this._constrainFn = () => this.constrainToViewport();
 		this._resizeObserver = throttle(this._constrainFn, THROTTLE_DELAY);
