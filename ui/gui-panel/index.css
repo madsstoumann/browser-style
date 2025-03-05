@@ -5,7 +5,8 @@
 	--gui-panel-w: 265px;
 	--gui-panel-popover-w: 265;
 	--gui-panel-docked-w: 220;
-	--gui-panel-docked-mw: 500;
+	--gui-panel-docked-maw: 500;
+	--gui-panel-docked-miw: 75;
 	--gui-panel-icon-sz: 1.25rem;
 	--gui-panel-rz-touch: 12px;
 	--gui-panel-rz-area: 6px;

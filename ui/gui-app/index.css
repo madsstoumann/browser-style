@@ -63,7 +63,7 @@ body { all: unset; }
 	/* Disable toggle-icons when panel is :popover-open */
 	&:has([dock=start][popover]) [data-toggle=start],
 	&:has([dock=end][popover]) [data-toggle=end] {
-		color: var(--gray-5);
+		color: var(--gray-4);
 		pointer-events: none;
 	}
 
