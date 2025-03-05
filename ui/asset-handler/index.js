@@ -178,15 +178,26 @@ export default class AssetHandler extends HTMLElement {
 	async renderAssets(node) {
 		const list = await this.fetch(this.#url.list);
 		if (!list || !list.assets) return '';
-		const html = list.assets.map(asset => `
-		<fieldset data-name="${asset.name}">
-		<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}">
-			${this.renderTags(asset.tags)}
-			<nav>
-				<button type="button" data-action="save">${this.getAttribute('save')||'Save'}</button>
-				<button type="button" data-action="delete">${this.getAttribute('delete')||'Delete'}</button>
-			</nav>
-		</fieldset>`).join('');
+		const html = list.assets.map(asset => {
+			let assetType = '';
+			if (asset.type === 'image') {
+				assetType = `<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}">`;
+			} else if (asset.type === 'video') {
+				assetType = `<video src="${this.#api}/${asset.path}" preload="metadata" controls width="150" height="100"></video>`;
+			} else {
+				assetType = `<small>${asset.name} (${asset.type})</small>`;
+			}
+			
+			return `
+			<fieldset data-name="${asset.name}">
+				${assetType}
+				${this.renderTags(asset.tags)}
+				<nav>
+					<button type="button" data-action="save">${this.getAttribute('save')||'Save'}</button>
+					<button type="button" data-action="delete">${this.getAttribute('delete')||'Delete'}</button>
+				</nav>
+			</fieldset>`;
+		}).join('');
 		return node ? node.innerHTML = html : html;
 	}
 
@@ -238,13 +249,16 @@ export default class AssetHandler extends HTMLElement {
 		} else if (event.target && event.target.files) {
 			files = event.target.files;
 		}
-
 		if (!files || files.length === 0) return;
 		const formData = new FormData();
 		const maxSizeBytes = this.config.maxFileSize * 1024 * 1024 || 0;
 
 		Array.from(files).forEach(file => {
-			if (file.size <= maxSizeBytes) formData.append('assets', file);
+			if (file.size <= maxSizeBytes) {
+				formData.append('assets', file);
+			} else {
+				console.error(`File ${file.name} exceeds the maximum file size of ${this.config.maxFileSize} MB`);
+			}
 		});
 
 		await this.fetch(this.#url.upload, { method: 'POST', body: formData });
