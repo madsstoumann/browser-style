@@ -35,7 +35,7 @@ body { all: unset; }
 	}
 
 	gui-panel {
-		--gui-panel-docked-w: 100;
+		--gui-panel-docked-miw: 60;
 	}
 
 	/* Panels are not toggled on, and not in popover mode */

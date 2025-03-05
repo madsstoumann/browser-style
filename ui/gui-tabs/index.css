@@ -2,6 +2,10 @@
 :host {
 	--gui-tabs-gap: 4px;
 	--gui-tabs-icon-sz: 1.25rem;
+
+	container-type: inline-size;
+	container-name: gui-tabs;
+	display: block;
 	font-family: var(--gui-tabs-ff, ui-sans-serif, system-ui);
 }
 :host::part(icon) {
@@ -47,11 +51,6 @@
 	background: var(--gui-tab-selected-bg, light-dark(#FFFFFF, #414140));
 	color: var(--gui-tab-selected-c, inherit);
 }
-@container tab (width < 100px) {
-	[part="label"] { 
-		display: none; 
-	}
-}
 :host::part(tabs) {
 	background: var(--gui-tabs-bg, light-dark(#EDEDEC, #1C1C1E));
 	border-radius: var(--gui-tabs-bdrs, .5em);
@@ -61,4 +60,16 @@
 	grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
 	padding: var(--gui-tabs-gap);
 	place-content: center;
+}
+
+@container tab (width < 100px) {
+	[part="label"] { 
+		display: none; 
+	}
+}
+
+@container gui-tabs (width < 100px) {
+	:host::part(panels) { display: none; }
+	:host::part(tab) { aspect-ratio: 1; }
+	:host::part(tabs) { grid-template-columns: 1fr; }
 }
