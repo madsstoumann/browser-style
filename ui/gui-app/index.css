@@ -11,11 +11,10 @@ body { all: unset; }
 	--gray-5: light-dark(#E5E5EA, #2C2C2E);
 	--gray-6: light-dark(#F2F2F7, #1C1C1E);
 
-	--gui-app-bdc: light-dark(#DEDEE0, #000000);
 	--gui-app-bdw: 1px;
+	--gui-app-bdc: light-dark(#DEDEE0, #000000);
 	--gui-app-c: light-dark(#222222, #CBCBCB);
-	/* --gui-app-main-bg: light-dark(#F3F2F8, #1C1C1E); */
-	--gui-app-main-bg: light-dark(#Ededec, #1C1C1E);
+	--gui-app-main-bg: light-dark(#EDECEC, #1C1C1E);
 	--gui-app-panels-bg: light-dark(#FFFFFF, #2C2C2C);
 	--gui-app-regions-bg: light-dark(#FFFFFF, #282828);
 
