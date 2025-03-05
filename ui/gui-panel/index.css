@@ -1,4 +1,4 @@
-:host, gui-panel {
+:host {
 	--gui-panel-bxsh: 0px 8px 56px 0px color-mix(in srgb, CanvasText, transparent 70%);
 	--gui-panel-gap: .5rem;
 	--gui-panel-m: 1rem;
@@ -32,9 +32,9 @@
 	width: var(--gui-panel-w);
 }
 
-:host(:popover-open), gui-panel:popover-open { display: grid }
+:host(:popover-open) { display: grid }
 
-:host([popover]), gui-panel[popover] {
+:host([popover]) {
 	border-radius: var(--gui-panel-bdrs, 10px);
 	box-shadow: var(--gui-panel-bxsh);
 	height: var(--gui-panel-h, auto);
@@ -42,12 +42,12 @@
 }
 
 [hidden] { display: none !important;}
-:where(:host([popover]), gui-panel[popover]) [part~="icon-button"][part~="undock"] {
+:host([popover]) [part~="icon-button"][part~="undock"] {
 	display: none;
 }
 
 /* docked */
-:host(:not([popover])[dock]), gui-panel:not([popover])[dock] {
+:host(:not([popover])[dock]) {
 	display: grid;
 	header { 
 		display: flex;
@@ -66,8 +66,7 @@
 	}
 }
 
-:host(:not([popover])[dock="end"]) header, 
-gui-panel:not([popover])[dock="end"] header {
+:host(:not([popover])[dock="end"]) header {
   justify-content: end;
 }
 
@@ -119,13 +118,13 @@ gui-panel:not([popover])[dock="end"] header {
 }
 
 /* position */
-:host([position~="bottom"]), gui-panel[position~="bottom"] { 
+:host([position~="bottom"]) { 
 	inset-block: var(--gui-panel-y, calc(100dvh - var(--gui-panel-h) - var(--gui-panel-m))) auto;
 }
-:host([position~="center"]), gui-panel[position~="center"] {
+:host([position~="center"]) {
 	inset-inline: var(--gui-panel-x, calc(50vw - (var(--gui-panel-w) / 2))) auto;
 }
-:host([position~="left"]), gui-panel[position~="left"] {
+:host([position~="left"]) {
 	inset-inline: var(--gui-panel-x, var(--gui-panel-m)) auto;
 }
 
@@ -141,12 +140,12 @@ gui-panel:not([popover])[dock="end"] header {
 	grid-area: 4 / 1 / 5 / 4;
 	place-self: end center;
 }
-:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) [part~="resize-block-start"] {
+:host([resize~="block-start"]) [part~="resize-block-start"] {
 	height: 100%;
 	cursor: ns-resize;
 	width: 100%;
 }
-:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) [part~="resize-block-end"] {
+:host([resize~="block-end"]) [part~="resize-block-end"] {
 	height: 100%;
 	cursor: ns-resize;
 	width: 100%;
@@ -157,19 +156,21 @@ gui-panel:not([popover])[dock="end"] header {
 [part~="resize-inline-end"] {
 	grid-area: 1 / 3 / 4 / 4;
 }
-:where(:host([resize~="inline-start"]), gui-panel[resize~="inline-start"]) [part~="resize-inline-start"],
-:where(:host([resize~="inline-end"]), gui-panel[resize~="inline-end"]) [part~="resize-inline-end"] {
+:host([resize~="inline-start"]) [part~="resize-inline-start"],
+:host([resize~="inline-end"]) [part~="resize-inline-end"] {
 	cursor: ew-resize;
 }
 
 /* media */
 @media (prefers-color-scheme: light) {
-	:host(.cs),
-	gui-panel.cs { color-scheme: dark; }
+	:host(.cs) { color-scheme: dark; }
+	:host::part(content) { scrollbar-color: #CCC8 #0000; }
+	:host(.cs)::part(content) { scrollbar-color: #CCC5 #0000; }
 }
 @media (prefers-color-scheme: dark) {
-	:host(.cs),
-	gui-panel.cs { color-scheme: light; }
+	:host(.cs) { color-scheme: light; }
+	:host::part(content) { scrollbar-color: #CCC5 #0000; }
+	:host(.cs)::part(content) { scrollbar-color: #CCC8 #0000; }
 }
 @media (hover:hover) {
 	[part~="icon-button"]:hover { background: #CCC8; }
@@ -177,13 +178,13 @@ gui-panel:not([popover])[dock="end"] header {
 }
 @media (pointer: coarse) {
 	/* Touch-specific styles */
-	:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) { --_rzbs: var(--gui-panel-rz-touch); }
-	:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) { --_rzbe: var(--gui-panel-rz-touch); }
-	:where(:host([resize~="inline-start"]), gui-panel[resize~="inline-start"]) { --_rzis: var(--gui-panel-rz-touch); }
-	:where(:host([resize~="inline-end"]), gui-panel[resize~="inline-end"]) { --_rzie: var(--gui-panel-rz-touch); }
+	:host([resize~="block-start"]) { --_rzbs: var(--gui-panel-rz-touch); }
+	:host([resize~="block-end"]) { --_rzbe: var(--gui-panel-rz-touch); }
+	:host([resize~="inline-start"]) { --_rzis: var(--gui-panel-rz-touch); }
+	:host([resize~="inline-end"]) { --_rzie: var(--gui-panel-rz-touch); }
 
-	:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) [part~="resize-block-start"]::before,
-	:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) [part~="resize-block-end"]::before,
+	:host([resize~="block-start"]) [part~="resize-block-start"]::before,
+	:host([resize~="block-end"]) [part~="resize-block-end"]::before,
 	:host([resize~="inline-start"]:not(:popover-open)) [part~="resize-inline-start"]::before,
 	:host([resize~="inline-end"]:not(:popover-open)) [part~="resize-inline-end"]::before {
 		background: var(--gui-panel-rz-bg, light-dark(#CCC4, #CCC1));
@@ -191,23 +192,22 @@ gui-panel:not([popover])[dock="end"] header {
 		content: '';
 		display: block;
 	}
-
-	:where(:host([resize~="block-start"]), gui-panel[resize~="block-start"]) [part~="resize-block-start"]::before {
+	:host([resize~="block-start"]) [part~="resize-block-start"]::before {
 		height: var(--gui-panel-rz-area);
 		place-self: end center;
 		width: 80px;
 	}
-	:where(:host([resize~="block-end"]), gui-panel[resize~="block-end"]) [part~="resize-block-end"]::before {
+	:host([resize~="block-end"]) [part~="resize-block-end"]::before {
 		height: var(--gui-panel-rz-area);
 		place-self: start center;
 		width: 80px;
 	}
-	:where(:host([resize~="inline-start"]), gui-panel[resize~="inline-start"]) [part~="resize-inline-start"]::before {
+	:host([resize~="inline-start"]) [part~="resize-inline-start"]::before {
 		height: 80px;
 		place-self: center end;
 		width: var(--gui-panel-rz-area);
 	}
-	:where(:host([resize~="inline-end"]), gui-panel[resize~="inline-end"]) [part~="resize-inline-end"]::before {
+	:host([resize~="inline-end"]) [part~="resize-inline-end"]::before {
 		height: 80px;
 		place-self: center start;
 		width: var(--gui-panel-rz-area);
