@@ -56,6 +56,18 @@ export default class GuiPanel extends HTMLElement {
 		return this.hasAttribute('scheme');
 	}
 
+	get hasReset() {
+		return this.hasAttribute('reset');
+	}
+
+	get hasDismiss() {
+		return this.hasAttribute('dismiss');
+	}
+
+	get hasOpen() {
+		return this.hasAttribute('open');
+	}
+
 	constructor() {
 		super();
 		const useShadow = !this.hasAttribute('noshadow');
@@ -74,7 +86,7 @@ export default class GuiPanel extends HTMLElement {
 			this.innerHTML && !this.querySelector('[slot]') ? this.innerHTML : '';
 
 		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
-		const resetButton = `<button part="icon-button reset"${this.hasAttribute('reset') ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
+		const resetButton = `<button part="icon-button reset"${this.hasReset ? '': ' hidden'}><slot name="reset">${icon(ICONS.reset)}</slot></button>`;
 
 		this.#root.innerHTML = `
 			<header part="header ${this.dockPosition}">
@@ -113,13 +125,12 @@ export default class GuiPanel extends HTMLElement {
 
 		const toggleSidebar = () => {
 			if (this.isUndocked) {
-
 				this.removeAttribute('popover');
 				this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 			} else {
 				this.#parts.scheme.hidden = !this.showScheme;
 				this.setHeightBasedOnPosition('auto');
-				this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+				this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 				this.offsetHeight; // Force reflow
 				this.style.setProperty('--gui-panel-w', `${POPOVER_WIDTH}px`);
 				this.handlePopoverToggle(true);
@@ -143,7 +154,7 @@ export default class GuiPanel extends HTMLElement {
 					this.removeAttribute('popover');
 					this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 				} else {
-					this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+					this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 					this.offsetHeight; // Force reflow
 					this.handlePopoverToggle(true);
 				}
@@ -152,15 +163,17 @@ export default class GuiPanel extends HTMLElement {
 			}
 		});
 		
-		if (!this.hasAttribute('popover') && !this.hasAttribute('dock')) {
-			this.setAttribute('popover', this.hasAttribute('dismiss') ? 'auto' : 'manual');
+		if (!this.isUndocked && !this.isDockable) {
+			this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
+		} else if (!this.isFixed && this.hasOpen) {
+			this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 		}
 		
 		if (this.isDocked) {
 			this.style.setProperty('--gui-panel-w', `${DOCKED_WIDTH}px`);
 		}
 		
-		if (this.hasAttribute('open')) {
+		if (this.hasOpen) {
 			this.handlePopoverToggle(true);
 		}
 
