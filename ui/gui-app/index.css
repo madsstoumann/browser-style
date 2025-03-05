@@ -30,7 +30,9 @@ body { all: unset; }
 	interpolate-size: allow-keywords;
 
 	/* Panels */
-	[dock=start], [dock=end] { transition: width .2s ease; }
+	[dock=start], [dock=end] {
+		transition: width .2s ease;
+	}
 
 	/* Panels are not toggled on, and not in popover mode */
 	&:has([name=panel-start]:not(:checked)) [dock=start]:not([popover]),
@@ -85,6 +87,7 @@ body { all: unset; }
 	}
 
 	header {
+		align-items: center;
 		background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
 		border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
 		color: var(--gui-app-header-c, inherit);
@@ -92,7 +95,7 @@ body { all: unset; }
 		font-size: var(--gui-app-header-fs, .875rem);
 		grid-column: 1 / 4;
 		justify-content: space-between;
-		padding: var(--gui-app-header-p, 1ch);
+		padding: var(--gui-app-header-p, .5em 1em);
 		button {
 			background: #0000;
 			border:0;
@@ -117,7 +120,8 @@ body { all: unset; }
 		width: 1px;
 	}
 	[data-toggle] {
-		color: var(--gray-2);
+		color: var(--gray-1);
+		transition: color .2s ease;
 		&:has(:checked) { color: var(--blue); }
 	}
 

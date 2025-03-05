@@ -300,11 +300,13 @@ export default class GuiPanel extends HTMLElement {
 			const endResize = () => {
 				handle.removeEventListener('pointermove', move);
 				this.#resizeState = null;
+				this.style.removeProperty('transition');
 				this.constrainToViewport();
 			};
 
 			handle.addEventListener('pointerup', endResize, {once: true});
 			handle.addEventListener('pointercancel', endResize, {once: true});
+			this.style.transition = 'none';
 		});
 
 		handle.addEventListener('touchstart', e => {
