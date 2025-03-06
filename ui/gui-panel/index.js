@@ -2,7 +2,7 @@
  * @module gui-panel
  * @description A customizable, resizable panel component that can be used as a sidebar or popover.
  * Supports docking, dragging, resizing, and theme switching functionality.
- * @version 1.0.0
+ * @version 1.0.1
  * @date 2025-03-06
  * @author Mads Stoumann
  * @license MIT
@@ -30,7 +30,7 @@ const ICONS = {
 	undockend: ['M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6', 'M11 13l9 -9', 'M15 4h5v5'],
 	undockstart: ['M12 6h6a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6', 'M13 13l-9 -9', 'M9 4h-5v5'],
 	reset: ['M3.06 13a9 9 0 1 0 .49 -4.087','M3 4.001v5h5'],
-	resizesidebar: ['M7 8l-4 4l4 4', 'M17 8l4 4l-4 4', 'M3 12l18 0'],
+	resize: ['M21 17l-18 0', 'M6 10l-3 -3l3 -3', 'M3 7l18 0', 'M18 20l3 -3l-3 -3'],
 	scheme: ['M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0', 'M12 3l0 18', 'M12 9l4.65 -4.65', 'M12 14.3l7.37 -7.37', 'M12 19.6l8.85 -8.85'],
 	sidebarend: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'],
 	sidebarstart: ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M9 4l0 16']
@@ -79,10 +79,12 @@ export default class GuiPanel extends HTMLElement {
 					${createButton('scheme', icon(ICONS.scheme), this.showScheme && this.isUndocked)}
 					${(dockPos === 'end' || dockPos === '') ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
 					${dockPos === 'start' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
+					${dockPos === 'start' && !this.isFixed ? createButton('resize', icon(ICONS.resize), this.isDockable) : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
 					${dockPos === 'start' ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
+					${dockPos === 'end' && !this.isFixed ? createButton('resize', icon(ICONS.resize), this.isDockable) : ''}
 					${dockPos === 'end' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
 					${createButton('close', icon(ICONS.close))}
 				</nav>
@@ -93,7 +95,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'heading', 'reset', 'scheme', 'undock'].forEach(part => 
+		['close', 'heading', 'reset', 'resize', 'scheme', 'undock'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
@@ -109,6 +111,18 @@ export default class GuiPanel extends HTMLElement {
 			const panelHeight = this.style.getPropertyValue('--gui-panel-h');
 			this.removeAttribute('style');
 			this.setHeightBasedOnPosition('auto', panelHeight);
+		});
+
+		this.#parts.resize.addEventListener('click', () => {
+			let currentWidth = parseInt(this.style.getPropertyValue('--gui-panel-w')) || this.#CURRENT_DOCKED_WIDTH;
+			if (currentWidth >= this.#DOCKED_MAX_WIDTH) {
+				currentWidth = this.#DOCKED_MIN_WIDTH;
+			} else if (currentWidth <= this.#DOCKED_MIN_WIDTH) {
+				currentWidth = this.#CURRENT_DOCKED_WIDTH;
+			} else {
+				currentWidth = this.#DOCKED_MAX_WIDTH;
+			}
+			this.style.setProperty('--gui-panel-w', `${currentWidth}px`);
 		});
 
 		if (this.#parts.undock) {

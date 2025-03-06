@@ -6,7 +6,7 @@
 	--gui-panel-popover-w: 265;
 	--gui-panel-docked-w: 220;
 	--gui-panel-docked-maw: 500;
-	--gui-panel-docked-miw: 75;
+	--gui-panel-docked-miw: 65;
 	--gui-panel-icon-sz: 1.25rem;
 	--gui-panel-rz-touch: 12px;
 	--gui-panel-rz-area: 6px;
@@ -43,6 +43,7 @@
 }
 
 [hidden] { display: none !important;}
+:host([popover]) [part~="icon-button"][part~="resize"], 
 :host([popover]) [part~="icon-button"][part~="undock"] {
 	display: none;
 }
