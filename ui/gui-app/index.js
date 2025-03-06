@@ -23,8 +23,7 @@ class GuiApp extends HTMLElement {
 	}
 	
 	#icon(type, part) {
-		const paths = this.#ICONS[type];
-		return `<svg part="icon${part ? ` ${part}` : ''}" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
+		return `<svg part="icon${part ? ` ${part}` : ''}" viewBox="0 0 24 24">${this.#ICONS[type].map(d => `<path d="${d}" />`).join('')}</svg>`;
 	}
 
 	init() {

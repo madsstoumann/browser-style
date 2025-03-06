@@ -1,6 +1,6 @@
 :host * { box-sizing: border-box; }
 :host {
-	--gui-app-icon-sz: 1.5rem;
+	--gui-app-icon-sz: 1.25rem;
 
 	--blue: light-dark(#007AFF, #0B84FF);
 	--gray-1: light-dark(#8E8E93, #8E8E93);
@@ -109,13 +109,15 @@
 /* Toggle Icons */
 :host::part(toggle-panel-end), :host::part(toggle-panel-start) {
 	all: unset;
+	color: var(--gray-1);
+	line-height: 0;
 }
-:host([panel-end=open])::part(panel-end-icon),
-:host([panel-start=open])::part(panel-start-icon) { color: var(--blue); }
+:host([panel-end=open])::part(toggle-panel-end),
+:host([panel-start=open])::part(toggle-panel-start) { color: var(--blue); }
 
-/* Disable toggle-icons when panel is a popover */
-:host([panel-start-docked=false])::part(panel-start-icon),
-:host([panel-end-docked=false])::part(panel-end-icon) {
+
+:host([panel-start-docked=false])::part(toggle-panel-start),
+:host([panel-end-docked=false])::part(toggle-panel-end) {
 	color: var(--gray-4);
 	pointer-events: none;
 }
