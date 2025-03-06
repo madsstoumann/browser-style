@@ -74,7 +74,6 @@
 	--gui-panel-bxsh: 0px 0px 1px 1px var(--gui-app-bdc);
 	--gui-panel-docked-miw: 60;
 	--gui-panel-gap: .5rem;
-
 	--gui-tabs-panels-p: 4px 10px;
 	--gui-tabs-tabs-m: 6px;
 
@@ -110,15 +109,9 @@
 :host([panel-end=open])::part(panel-end-icon),
 :host([panel-start=open])::part(panel-start-icon) { color: var(--blue); }
 
-/* Disable toggle-icons when panel is :popover-open */
+/* Disable toggle-icons when panel is a popover */
 :host([panel-start-docked=false])::part(panel-start-icon),
 :host([panel-end-docked=false])::part(panel-end-icon) {
 	color: var(--gray-4);
 	pointer-events: none;
 }
-
-/* @container (max-width: 600px) {
-	gui-panel {
-		transition: inset .25s allow-discrete, overlay .25s allow-discrete;
-	}
-} */

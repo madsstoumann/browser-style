@@ -26,6 +26,9 @@ class GuiApp extends HTMLElement {
 		const hasPanelEnd = !!this.querySelector('[slot="panel-end"]');
 		const hasPanelStart = !!this.querySelector('[slot="panel-start"]');
 
+		this.setDefaultAttributes(hasPanelStart, 'panel-start');
+		this.setDefaultAttributes(hasPanelEnd, 'panel-end');
+
 		if (hasPanelEnd || hasPanelStart) {
 			this.addEventListener('gui-panel-mode', (event) => {
 				const { docked, position } = event.detail;
@@ -36,7 +39,7 @@ class GuiApp extends HTMLElement {
 		this.#root.innerHTML = `
 			<header part="header">
 				${hasPanelStart ? `
-					<button type"="button" part="toggle-panel-start">
+					<button type="button" part="toggle-panel-start">
 						${icon(this.#ICONS.panelStart, 'panel-start-icon')}
 					</button>
 				` : ''}
@@ -63,9 +66,16 @@ class GuiApp extends HTMLElement {
 		this.#elements.toggleStart?.addEventListener('click', () => this.togglePanel('start'));
 		this.#elements.toggleEnd?.addEventListener('click', () => this.togglePanel('end'));
 	}
-	
-	disconnectedCallback() {
-		// Nothing to clean up
+
+	setDefaultAttributes(hasPanel, panelType) {
+		if (hasPanel) {
+			if (!this.hasAttribute(panelType)) {
+				this.setAttribute(panelType, 'closed');
+			}
+			if (!this.hasAttribute(`${panelType}-docked`)) {
+				this.setAttribute(`${panelType}-docked`, 'true');
+			}
+		}
 	}
 
 	togglePanel(position) {
@@ -74,5 +84,4 @@ class GuiApp extends HTMLElement {
 	}
 }
 
-// Register the gui-app custom element
 customElements.define('gui-app', GuiApp);
