@@ -47,9 +47,9 @@ class GuiApp extends HTMLElement {
 
 		this.#root.innerHTML = `
 			<header part="header">
-				${hasPanelStart ? `<button type="button" part="toggle-panel-start">${this.#icon('panelStart', 'panel-start-icon')}</button>` : ''}
-				<slot name="header"></slot>
-				${hasPanelEnd ? `<button type="button" part="toggle-panel-end">${this.#icon('panelEnd', 'panel-end-icon')}</button>` : ''}
+				${hasPanelStart ? `<button type="button" part="toggle-panel-start">${this.#icon('panelStart', 'panel-start-icon')}</button>` : '<b></b>'}
+				<span part="title"><slot name="header"></slot></span>
+				${hasPanelEnd ? `<button type="button" part="toggle-panel-end">${this.#icon('panelEnd', 'panel-end-icon')}</button>` : '<b></b>'}
 			</header>
 			${hasPanelStart ? '<slot name="panel-start"></slot>' : ''}
 			<main part="main"><slot name="main"></slot></main>

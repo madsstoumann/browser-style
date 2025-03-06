@@ -42,10 +42,10 @@
 	background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
 	border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
 	color: var(--gui-app-header-c, inherit);
-	display: flex;
+	display: grid;
 	font-size: var(--gui-app-header-fs, .875rem);
 	grid-column: 1 / 4;
-	justify-content: space-between;
+	grid-template-columns: min-content 1fr min-content;
 	padding: var(--gui-app-header-p, .5em 1em);
 }
 
@@ -64,6 +64,10 @@
 	background: var(--gui-app-main-bg);
 	grid-column: 2 / 3;
 	padding: var(--gui-app-main-p, 2ch);
+}
+
+:host::part(title) {
+	text-align: center;
 }
 
 /* GuiPanel, GuiTabs */
