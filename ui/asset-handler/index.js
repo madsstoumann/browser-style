@@ -187,7 +187,6 @@ export default class AssetHandler extends HTMLElement {
 			} else {
 				assetType = `<small>${asset.name} (${asset.type})</small>`;
 			}
-			
 			return `
 			<fieldset data-name="${asset.name}">
 				${assetType}

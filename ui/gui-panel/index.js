@@ -26,7 +26,9 @@ const ICONS = {
 };
 
 export default class GuiPanel extends HTMLElement {
-	#root; #parts = {}; #dragState = null; #resizeState = null; #DOCKED_WIDTH; #DOCKED_MIN_WIDTH; #DOCKED_MAX_WIDTH; #POPOVER_WIDTH;
+	#root; #parts = {}; #dragState = null; #resizeState = null; 
+	#DOCKED_WIDTH; #DOCKED_MIN_WIDTH; #DOCKED_MAX_WIDTH; #POPOVER_WIDTH;
+	#CURRENT_DOCKED_WIDTH; #CURRENT_POPOVER_WIDTH;
 	#has(name) { return this.hasAttribute(name); }
 
 	get dockPosition() { return this.getAttribute('dock')?.replace('fixed-', '') || ''; }
@@ -51,6 +53,8 @@ export default class GuiPanel extends HTMLElement {
 		this.#DOCKED_MAX_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-docked-maw')) || 500;
 		this.#DOCKED_MIN_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-docked-miw')) || 75;
 		this.#POPOVER_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-popover-w')) || 265;
+		this.#CURRENT_DOCKED_WIDTH = this.#DOCKED_WIDTH;
+		this.#CURRENT_POPOVER_WIDTH = this.#POPOVER_WIDTH;
 
 		const createButton = (part, icon, condition = true) => 
 			`<button part="icon-button ${part}"${condition ? '' : ' hidden'}><slot name="${part}">${icon}</slot></button>`;
@@ -88,13 +92,16 @@ export default class GuiPanel extends HTMLElement {
 		const toggleSidebar = () => {
 			if (this.isUndocked) {
 				this.removeAttribute('popover');
-				this.style.setProperty('--gui-panel-w', `${this.#DOCKED_WIDTH}px`);
+				console.log(this.#CURRENT_DOCKED_WIDTH);
+				this.style.setProperty('--gui-panel-w', `${this.#CURRENT_DOCKED_WIDTH}px`);
 			} else {
+				console.log(this.#CURRENT_POPOVER_WIDTH);
 				this.#parts.scheme.hidden = !this.showScheme;
 				this.setHeightBasedOnPosition('auto');
 				this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 				this.offsetHeight;
-				this.style.setProperty('--gui-panel-w', `${this.#POPOVER_WIDTH}px`);
+				// Use preserved popover width when switching to popover mode
+				this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
 				this.handlePopoverToggle(true);
 			}
 		};
@@ -115,11 +122,12 @@ export default class GuiPanel extends HTMLElement {
 					this.#parts.scheme.hidden = true;
 					this.classList.remove(SCHEME_CLASS);
 					this.removeAttribute('popover');
-					this.style.setProperty('--gui-panel-w', `${this.#DOCKED_WIDTH}px`);
+					this.style.setProperty('--gui-panel-w', `${this.#CURRENT_DOCKED_WIDTH}px`);
 				} else {
 					this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
 					this.offsetHeight;
 					this.handlePopoverToggle(true);
+					this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
 				}
 			} else {
 				this.handlePopoverToggle(false);
@@ -282,6 +290,15 @@ export default class GuiPanel extends HTMLElement {
 			}
 
 			this.style.setProperty(`--gui-panel-${type === 'inline' ? 'w' : 'h'}`, `${newSize}px`);
+			
+			// Update the appropriate current width tracker when resizing width
+			if (type === 'inline') {
+				if (this.isDocked) {
+					this.#CURRENT_DOCKED_WIDTH = newSize;
+				} else {
+					this.#CURRENT_POPOVER_WIDTH = newSize;
+				}
+			}
 		};
 
 		handle.addEventListener('pointerdown', e => {
