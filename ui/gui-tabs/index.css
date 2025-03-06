@@ -4,7 +4,6 @@
 	--gui-tabs-icon-sz: 1.25rem;
 
 	container-type: inline-size;
-	container-name: gui-tabs;
 	display: block;
 	font-family: var(--gui-tabs-ff, ui-sans-serif, system-ui);
 }
@@ -68,8 +67,8 @@
 	}
 }
 
-@container gui-tabs (width < 100px) {
+@container (width < 100px) {
 	:host::part(panels) { display: none; }
-	:host::part(tab) { aspect-ratio: 1; }
+	:host::part(tab) { aspect-ratio: 1; width: 100%; }
 	:host::part(tabs) { grid-template-columns: 1fr; }
 }
