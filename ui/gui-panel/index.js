@@ -1,3 +1,13 @@
+/**
+ * @module gui-panel
+ * @description A customizable, resizable panel component that can be used as a sidebar or popover.
+ * Supports docking, dragging, resizing, and theme switching functionality.
+ * @version 1.0.0
+ * @date 2025-03-06
+ * @author Mads Stoumann
+ * @license MIT
+ */
+
 const styles = await fetch(new URL('./index.css', import.meta.url).href).then(r => r.text());
 const MIN_PANEL_HEIGHT = 100;
 const SCHEME_CLASS = 'cs';
@@ -90,20 +100,7 @@ export default class GuiPanel extends HTMLElement {
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle(SCHEME_CLASS));
 
 		const toggleSidebar = () => {
-			if (this.isUndocked) {
-				this.removeAttribute('popover');
-				console.log(this.#CURRENT_DOCKED_WIDTH);
-				this.style.setProperty('--gui-panel-w', `${this.#CURRENT_DOCKED_WIDTH}px`);
-			} else {
-				console.log(this.#CURRENT_POPOVER_WIDTH);
-				this.#parts.scheme.hidden = !this.showScheme;
-				this.setHeightBasedOnPosition('auto');
-				this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
-				this.offsetHeight;
-				// Use preserved popover width when switching to popover mode
-				this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
-				this.handlePopoverToggle(true);
-			}
+			this.switchPanelMode(this.isUndocked);
 		};
 
 		this.#parts.reset.addEventListener('click', () => {
@@ -119,15 +116,9 @@ export default class GuiPanel extends HTMLElement {
 		this.#parts.close.addEventListener('click', () => {
 			if (this.isDockable) {
 				if (this.isUndocked) {
-					this.#parts.scheme.hidden = true;
-					this.classList.remove(SCHEME_CLASS);
-					this.removeAttribute('popover');
-					this.style.setProperty('--gui-panel-w', `${this.#CURRENT_DOCKED_WIDTH}px`);
+					this.switchPanelMode(true, { hideScheme: true });
 				} else {
-					this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
-					this.offsetHeight;
-					this.handlePopoverToggle(true);
-					this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
+					this.switchPanelMode(false);
 				}
 			} else {
 				this.handlePopoverToggle(false);
@@ -290,8 +281,7 @@ export default class GuiPanel extends HTMLElement {
 			}
 
 			this.style.setProperty(`--gui-panel-${type === 'inline' ? 'w' : 'h'}`, `${newSize}px`);
-			
-			// Update the appropriate current width tracker when resizing width
+
 			if (type === 'inline') {
 				if (this.isDocked) {
 					this.#CURRENT_DOCKED_WIDTH = newSize;
@@ -350,15 +340,31 @@ export default class GuiPanel extends HTMLElement {
 		}
 	}
 
-	// Helper method to set height based on position attribute
 	setHeightBasedOnPosition(defaultHeight = 'auto', preservedHeight = null) {
 		const position = this.getAttribute('position') || '';
 		if (position.includes('bottom') && preservedHeight) {
 			// For bottom-positioned panels, preserve specific height if available
 			this.style.setProperty('--gui-panel-h', preservedHeight);
 		} else if (!position.includes('bottom')) {
-			// For non-bottom panels, use default height (typically 'auto')
 			this.style.setProperty('--gui-panel-h', defaultHeight);
+		}
+	}
+
+	switchPanelMode(toDocked, options = {}) {
+		const { hideScheme = false } = options;
+
+		if (toDocked) {
+			if (hideScheme) this.#parts.scheme.hidden = true;
+			this.classList.remove(SCHEME_CLASS);
+			this.removeAttribute('popover');
+			this.style.setProperty('--gui-panel-w', `${this.#CURRENT_DOCKED_WIDTH}px`);
+		} else {
+			if (!hideScheme) this.#parts.scheme.hidden = !this.showScheme;
+			this.setHeightBasedOnPosition('auto');
+			this.setAttribute('popover', this.hasDismiss ? 'auto' : 'manual');
+			this.offsetHeight;
+			this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
+			this.handlePopoverToggle(true);
 		}
 	}
 }
