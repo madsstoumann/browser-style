@@ -366,6 +366,11 @@ export default class GuiPanel extends HTMLElement {
 			this.style.setProperty('--gui-panel-w', `${this.#CURRENT_POPOVER_WIDTH}px`);
 			this.handlePopoverToggle(true);
 		}
+		this.dispatchEvent(new CustomEvent('gui-panel-mode', { 
+			detail: { docked: toDocked, position: this.dockPosition },
+			bubbles: true,
+			composed: true
+		}));
 	}
 }
 

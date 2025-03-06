@@ -25,6 +25,7 @@
 :host::part(panels) {
 	display: flex;
 	overflow-y: hidden;
+	padding: var(--gui-tabs-panels-p, initial);
 	scroll-behavior: auto;
 	scroll-snap-type: x mandatory;
 	scrollbar-width: none;
@@ -57,7 +58,8 @@
 	display: grid;
 	gap: var(--gui-tabs-gap);
 	grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
-	padding: var(--gui-tabs-gap);
+	margin: var(--gui-tabs-tabs-m, initial);
+	padding: var(--gui-tabs-tabs-p, var(--gui-tabs-gap));
 	place-content: center;
 }
 

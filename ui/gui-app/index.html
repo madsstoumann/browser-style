@@ -6,43 +6,40 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="GUI App">
 	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="index.css">
+	 <style>body { all: unset; }</style>
 </head>
 <body>
 
-	<gui-app>
-		<header>
-			<label data-toggle="start">
-				<input type="checkbox" name="panel-start" data-sr>
-				<svg xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M9 4l0 16" /></svg>
-			</label>
+	<gui-app panel-start="closed" panel-end="open" panel-end-docked="true" panel-start-docked="true">
+		<span slot="header">
 			Header
-			<label data-toggle="end">
-				<input type="checkbox" name="panel-end" data-sr checked>
-				<svg xmlns="http://www.w3.org/2000/svg"  width="20"  height="20"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-layout-sidebar-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M15 4l0 16" /></svg>
-			</label>
-		</header>
+		</span>
 
 		<gui-panel
 			dock="start"
 			docked
 			heading="Left"
 			id="start"
+			part="panel-start"
 			position="top left"
-			resize="inline-end block-end" scheme>
+			resize="inline-end block-end"
+			scheme
+			slot="panel-start">
 		</gui-panel>
 
-		<main>
+		<span slot="main">
 			Hello World!
-
-		</main>
+		</span>
 
 		<gui-panel
 			dock="end"
 			heading="Right"
 			id="end"
+			part="panel-end"
 			position="top right"
-			resize="inline-start block-end" scheme>
+			resize="inline-start block-end"
+			scheme
+			slot="panel-end">
 
 			<gui-tabs>
 				<gui-tab label="Home" active>
@@ -51,7 +48,7 @@
 					</slot>
 					<small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus facere soluta aspernatur, modi officia distinctio. Laboriosam, corrupti ad. Architecto reiciendis blanditiis qui facere amet officia, tempora ipsum maxime omnis, dolore voluptas ex mollitia ea nesciunt. Soluta nobis iusto voluptate quo eius? Itaque harum est saepe provident magnam, rem magni architecto.</small>
 				</gui-tab>
-		
+
 				<gui-tab label="Search">
 					<slot name="icon">
 						<svg viewBox="0 0 24 24" part="icon"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
@@ -68,7 +65,7 @@
 			</gui-tabs>
 		</gui-panel>
 
-		<footer><small>&copy; year</small></footer>
+		<footer slot="footer"><small>&copy; 2025</small></footer>
 	</gui-app>
 
 	<script type="importmap">

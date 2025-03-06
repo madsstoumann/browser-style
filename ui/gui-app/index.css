@@ -1,7 +1,6 @@
-body { all: unset; }
-
-:where(gui-app) {
-	* { box-sizing: border-box;}
+:host * { box-sizing: border-box; }
+:host {
+	--gui-app-icon-sz: 1.5rem;
 
 	--blue: light-dark(#007AFF, #0B84FF);
 	--gray-1: light-dark(#8E8E93, #8E8E93);
@@ -27,113 +26,99 @@ body { all: unset; }
 	font-size: 1rem;
 	grid-template: auto 1fr var(--gui-app-footer-h, auto) / min-content 1fr min-content;
 	interpolate-size: allow-keywords;
-
-	/* Panels */
-	[dock=start], [dock=end] {
-		transition: width .2s ease;
-	}
-
-	gui-panel {
-		--gui-panel-docked-miw: 60;
-	}
-
-	/* Panels are not toggled on, and not in popover mode */
-	&:has([name=panel-start]:not(:checked)) [dock=start]:not([popover]),
-	&:has([name=panel-end]:not(:checked)) [dock=end]:not([popover]) {
-		overflow: clip;
-		width: 0;
-	}
-
-	/* Start panel is visible and docked */
-	&:has([name=panel-start]:checked):has([dock=start]:not([popover])) main {
-		border-inline-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
-	}
-
-	/* End panel is visible and docked */
-	&:has([name=panel-end]:checked):has([dock=end]:not([popover])) main {
-		border-inline-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
-	}
-
-	/* Both panels are visible and docked */
-	&:has([name=panel-start]:checked):has([dock=start]:not([popover])):has([name=panel-end]:checked):has([dock=end]:not([popover])) main {
-		border-inline: var(--gui-app-bdw) solid var(--gui-app-bdc);
-	}
-
-	/* Disable toggle-icons when panel is :popover-open */
-	&:has([dock=start][popover]) [data-toggle=start],
-	&:has([dock=end][popover]) [data-toggle=end] {
-		color: var(--gray-4);
-		pointer-events: none;
-	}
-
-	footer {
-		background: var(--gui-app-footer-bg, var(--gui-app-regions-bg));
-		border-block-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
-		color: var(--gui-app-footer-c, inherit);
-		font-size: var(--gui-app-footer-fs, .875rem);
-		grid-column: 1 / 4;
-		padding: var(--gui-app-footer-p, 1ch);
-	}
-
-	gui-panel {
-		--gui-panel-bg: var(--gui-app-panels-bg);
-		--gui-panel-c: var(--gui-app-c);
-		--gui-panel-bxsh: 0px 0px 1px 1px var(--gui-app-bdc);
-		--gui-panel-gap: .5rem;
-	}
-
-	gui-tabs::part(panels) {
-		padding: 4px 8px;
-	}
-	gui-tabs::part(tabs) {
-		margin: 6px;
-	}
-
-	header {
-		align-items: center;
-		background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
-		border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
-		color: var(--gui-app-header-c, inherit);
-		display: flex;
-		font-size: var(--gui-app-header-fs, .875rem);
-		grid-column: 1 / 4;
-		justify-content: space-between;
-		padding: var(--gui-app-header-p, .5em 1em);
-		button {
-			background: #0000;
-			border:0;
-			color: inherit;
-			padding: 0;
-		}
-	}
-	main {
-		background: var(--gui-app-main-bg);
-		grid-column: 2 / 3;
-		padding: var(--gui-app-main-p, 2ch);
-	}
-
-	[data-sr] {
-		border: 0;
-		clip: rect(0 0 0 0); 
-		clip-path: inset(50%);
-		height: 1px;
-		overflow: hidden;
-		position: absolute;
-		white-space: nowrap; 
-		width: 1px;
-	}
-	[data-toggle] {
-		color: var(--gray-1);
-		transition: color .2s ease;
-		&:has(:checked) { color: var(--blue); }
-	}
-
-
-	@container (max-width: 600px) {
-		
-		gui-panel {
-			transition: inset .25s allow-discrete, overlay .25s allow-discrete;
-			/* &::part(sidebarend) { display: none; } */
-		}
-	}
 }
+
+:host::part(footer) {
+	background: var(--gui-app-footer-bg, var(--gui-app-regions-bg));
+	border-block-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
+	color: var(--gui-app-footer-c, inherit);
+	font-size: var(--gui-app-footer-fs, .875rem);
+	grid-column: 1 / 4;
+	padding: var(--gui-app-footer-p, 1ch);
+}
+
+:host::part(header) {
+	align-items: center;
+	background: var(--gui-app-header-bg, var(--gui-app-regions-bg));
+	border-block-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
+	color: var(--gui-app-header-c, inherit);
+	display: flex;
+	font-size: var(--gui-app-header-fs, .875rem);
+	grid-column: 1 / 4;
+	justify-content: space-between;
+	padding: var(--gui-app-header-p, .5em 1em);
+}
+
+:host::part(icon) {
+	fill: none;
+	height: var(--gui-app-icon-sz);
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+	width: var(--gui-app-icon-sz);
+}
+
+:host::part(main) {
+	background: var(--gui-app-main-bg);
+	grid-column: 2 / 3;
+	padding: var(--gui-app-main-p, 2ch);
+}
+
+/* GuiPanel, GuiTabs */
+::slotted([slot="panel-start"]), 
+::slotted([slot="panel-end"]) {
+	--gui-panel-bg: var(--gui-app-panels-bg);
+	--gui-panel-c: var(--gui-app-c);
+	--gui-panel-bxsh: 0px 0px 1px 1px var(--gui-app-bdc);
+	--gui-panel-docked-miw: 60;
+	--gui-panel-gap: .5rem;
+
+	--gui-tabs-panels-p: 4px 10px;
+	--gui-tabs-tabs-m: 6px;
+
+	transition: width .2s ease;
+}
+
+/* Panels are not toggled on, and not in popover mode */
+:host([panel-start=closed]) ::slotted([slot="panel-start"]:not([popover])),
+:host([panel-end=closed]) ::slotted([slot="panel-end"]:not([popover])) {
+	overflow: clip;
+	width: 0;
+}
+
+/* Start panel is visible and docked */
+:host([panel-start="open"][panel-start-docked=true]) [part="main"] {
+	border-inline-start: var(--gui-app-bdw) solid var(--gui-app-bdc);
+}
+
+/* End panel is visible and docked */
+:host([panel-end=open][panel-end-docked=true]) [part="main"] {
+	border-inline-end: var(--gui-app-bdw) solid var(--gui-app-bdc);
+}
+
+/* Both panels are visible and docked */
+:host([panel-start=open][panel-start-docked=true][panel-end=open][panel-end-docked=true]) [part="main"] {
+	border-inline: var(--gui-app-bdw) solid var(--gui-app-bdc);
+}
+
+/* Toggle Icons */
+:host::part(toggle-panel-end), :host::part(toggle-panel-start) {
+	all: unset;
+}
+:host([panel-end=open])::part(panel-end-icon),
+:host([panel-start=open])::part(panel-start-icon) { color: var(--blue); }
+
+/* Disable toggle-icons when panel is :popover-open */
+:host([panel-start-docked=false])::part(panel-start-icon),
+:host([panel-end-docked=false])::part(panel-end-icon) {
+	color: var(--gray-4);
+	pointer-events: none;
+}
+
+/* @container (max-width: 600px) {
+	gui-panel {
+		transition: inset .25s allow-discrete, overlay .25s allow-discrete;
+	}
+} */
