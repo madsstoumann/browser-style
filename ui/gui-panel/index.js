@@ -67,8 +67,8 @@ export default class GuiPanel extends HTMLElement {
 		this.#CURRENT_DOCKED_WIDTH = this.#DOCKED_WIDTH;
 		this.#CURRENT_POPOVER_WIDTH = this.#POPOVER_WIDTH;
 
-		const createButton = (part, icon, condition = true) => 
-			`<button part="icon-button ${part}"${condition ? '' : ' hidden'}><slot name="${part}">${icon}</slot></button>`;
+		const createButton = (part, icon, condition = true, title) => 
+			`<button part="icon-button ${part}"${condition ? '' : ' hidden'} title="${title||part}"><slot name="${part}">${icon}</slot></button>`;
 
 		const dockPos = this.dockPosition;
 		const undockIcon = dockPos === 'start' ? ICONS.undockstart : ICONS.undockend;
@@ -77,13 +77,12 @@ export default class GuiPanel extends HTMLElement {
 			<header part="header ${dockPos}">
 				<nav part="icon-group">
 					${createButton('scheme', icon(ICONS.scheme), this.showScheme && this.isUndocked)}
-					${(dockPos === 'end' || dockPos === '') ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
+					${createButton('reset', icon(ICONS.reset), this.hasReset)}
 					${dockPos === 'start' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
 					${dockPos === 'start' && !this.isFixed ? createButton('resize', icon(ICONS.resize), this.isDockable) : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
-					${dockPos === 'start' ? createButton('reset', icon(ICONS.reset), this.hasReset) : ''}
 					${dockPos === 'end' && !this.isFixed ? createButton('resize', icon(ICONS.resize), this.isDockable) : ''}
 					${dockPos === 'end' && !this.isFixed ? createButton('undock', icon(undockIcon), this.isDockable) : ''}
 					${createButton('close', icon(ICONS.close))}

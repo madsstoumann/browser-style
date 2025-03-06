@@ -53,6 +53,7 @@
 	display: grid;
 	header { 
 		display: flex;
+		justify-content: space-between;
 		[part~="close"],
 		[part~="reset"],
 		[part="heading"] { 
@@ -66,10 +67,6 @@
 	[part~="resize-block-end"] { 
 		display: none; 
 	}
-}
-
-:host(:not([popover])[dock="end"]) header {
-  justify-content: end;
 }
 
 /* parts */
