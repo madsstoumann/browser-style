@@ -2,8 +2,8 @@
  * @module gui-panel
  * @description A customizable, resizable panel component that can be used as a sidebar or popover.
  * Supports docking, dragging, resizing, and theme switching functionality.
- * @version 1.0.1
- * @date 2025-03-06
+ * @version 1.0.2
+ * @date 2025-03-07
  * @author Mads Stoumann
  * @license MIT
  */
@@ -99,7 +99,10 @@ export default class GuiPanel extends HTMLElement {
 		);
 
 		/* Event listeners */
-		this.addDraggable(this.#parts.heading, this);
+		if (this.hasAttribute('draggable')) {
+			this.addDraggable(this.#parts.heading, this);
+		}
+
 		this.#parts.scheme.addEventListener('click', () => this.classList.toggle(SCHEME_CLASS));
 
 		const toggleSidebar = () => {

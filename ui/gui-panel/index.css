@@ -109,12 +109,13 @@
 	padding-inline: calc(var(--gui-panel-rz-area) / 2);
 }
 [part~="heading"] {
-	cursor: move;
 	font-size: var(--gui-panel-heading-fs, 0.875rem);
 	font-weight: 500;
 	text-align: center;
 	transition: all .16s ease;
 }
+
+:host([draggable])::part(heading) { cursor: grab; }
 
 /* position */
 :host([position~="bottom"]) { 
@@ -172,8 +173,8 @@
 	:host(.cs)::part(content) { scrollbar-color: #CCC8 #0000; }
 }
 @media (hover:hover) {
-	[part~="icon-button"]:hover { background: #CCC8; }
-	[part~="heading"]:hover { font-weight: 700; scale: 1.025; } 
+	[part~="icon-button"]:hover { background: light-dark(#CCC8, #1C1C1E); }
+	:host([draggable])::part(heading):hover { font-weight: 700; scale: 1.025; } 
 }
 @media (pointer: coarse) {
 	/* Touch-specific styles */
@@ -186,7 +187,7 @@
 	:host([resize~="block-end"]) [part~="resize-block-end"]::before,
 	:host([resize~="inline-start"]:not(:popover-open)) [part~="resize-inline-start"]::before,
 	:host([resize~="inline-end"]:not(:popover-open)) [part~="resize-inline-end"]::before {
-		background: var(--gui-panel-rz-bg, light-dark(#CCC4, #CCC1));
+		background: var(--gui-panel-rz-bg, light-dark(#CCC4, #1C1C1E));
 		border-radius: 40px;
 		content: '';
 		display: block;
