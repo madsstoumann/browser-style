@@ -13,7 +13,7 @@
 	width: var(--gui-icon-sz);
 }
 :host::part(icon-button) {
-	color-scheme: light dark;
+	color-scheme: inherit;
 	display: inline-grid;
 	background: #0000;
 	color: var(--gui-icon-button-c, inherit);
