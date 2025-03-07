@@ -13,16 +13,8 @@
 	<gui-app panel-end="open">
 		<span slot="header">
 			App Title
+			<button type="button" popovertarget="settings">Settings</button>
 		</span>
-
-		<gui-panel
-			heading="Settings"
-			id="settings"
-			part="settings"
-			slot="settings">
-
-			SETTINGS AND CONFIGURATIONS
-		</gui-panel>
 
 		<gui-panel
 			dock="start"
@@ -76,6 +68,22 @@
 		</gui-panel>
 
 		<footer slot="footer"><small>&copy; 2025</small></footer>
+
+		<span slot="gui-panels">
+			<gui-panel
+				heading="Settings"
+				id="settings"
+				part="settings">
+				SETTINGS AND CONFIGURATIONS
+			</gui-panel>
+
+			<gui-panel
+				heading="Help"
+				id="help"
+				part="help">
+				HELP AND SUPPORT
+			</gui-panel>
+		</span>
 	</gui-app>
 
 	<script type="importmap">
