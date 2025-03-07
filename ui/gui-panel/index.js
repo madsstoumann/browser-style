@@ -7,7 +7,7 @@
  * @author Mads Stoumann
  * @license MIT
  */
-import { renderIcon, icoArrowsLeftRight, icoBrightness, icoClose, icoExternalLink, icoInternalLink, icoReset } from '../gui-icon/index.js';
+import { renderIconButton, iconStyles, icoArrowsLeftRight, icoBrightness, icoClose, icoExternalLink, icoInternalLink, icoReset } from '../gui-icon/index.js';
 const styles = await fetch(new URL('./index.css', import.meta.url).href).then(r => r.text());
 const MIN_PANEL_HEIGHT = 100;
 const SCHEME_CLASS = 'cs';
@@ -43,9 +43,13 @@ export default class GuiPanel extends HTMLElement {
 	constructor() {
 		super();
 		this.#root = this.attachShadow({mode: 'open'});
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(styles);
-		this.#root.adoptedStyleSheets = [sheet];
+		const iconSheet = new CSSStyleSheet();
+		iconSheet.replaceSync(iconStyles);
+
+		const panelSheet = new CSSStyleSheet();
+		panelSheet.replaceSync(styles);
+		this.#root.adoptedStyleSheets = [panelSheet, iconSheet];
+
 		this.id ||= `gui-panel-${Math.random().toString(36).slice(2, 7)}`;
 
 		this.#DOCKED_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-docked-w')) || 220;
@@ -55,25 +59,22 @@ export default class GuiPanel extends HTMLElement {
 		this.#CURRENT_DOCKED_WIDTH = this.#DOCKED_WIDTH;
 		this.#CURRENT_POPOVER_WIDTH = this.#POPOVER_WIDTH;
 
-		const createButton = (part, icon, condition = true, title) => 
-			`<button part="icon-button ${part}"${condition ? '' : ' hidden'} title="${title||part}"><slot name="${part}">${icon}</slot></button>`;
-
 		const dockPos = this.dockPosition;
 		const undockIcon = dockPos === 'start' ? icoInternalLink : icoExternalLink;
 
 		this.#root.innerHTML = `
 			<header part="header ${dockPos}">
 				<nav part="icon-group">
-					${createButton('scheme', renderIcon(icoBrightness), this.showScheme && this.isUndocked)}
-					${createButton('reset', renderIcon(icoReset), this.hasReset)}
-					${dockPos === 'start' && !this.isFixed ? createButton('undock', renderIcon(undockIcon), this.isDockable) : ''}
-					${dockPos === 'start' && !this.isFixed ? createButton('resize', renderIcon(icoArrowsLeftRight), this.isDockable) : ''}
+					${renderIconButton(icoBrightness, 'Toggle Color Scheme', 'scheme', !(this.showScheme && this.isUndocked))}
+					${renderIconButton(icoReset, 'Reset position', 'reset', !this.hasReset)}
+					${dockPos === 'start' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
+					${dockPos === 'start' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Resize', 'resize', !this.isDockable) : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
-					${dockPos === 'end' && !this.isFixed ? createButton('resize', renderIcon(icoArrowsLeftRight), this.isDockable) : ''}
-					${dockPos === 'end' && !this.isFixed ? createButton('undock', renderIcon(undockIcon), this.isDockable) : ''}
-					${createButton('close', renderIcon(icoClose))}
+					${dockPos === 'end' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Resize', 'resize', !this.isDockable) : ''}
+					${dockPos === 'end' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
+					${renderIconButton(icoClose, 'Close', 'close')}
 				</nav>
 			</header>
 			<div part="content"><slot></slot></div>

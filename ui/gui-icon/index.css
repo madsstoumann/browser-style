@@ -1,0 +1,29 @@
+:host {
+	--gui-icon-sz: 20px;
+	contain: paint;
+}
+:host::part(icon) {
+	fill: none;
+	height: var(--gui-icon-sz);
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 2;
+	width: var(--gui-icon-sz);
+}
+:host::part(icon-button) {
+	color-scheme: light dark;
+	display: inline-grid;
+	background: #0000;
+	color: var(--gui-icon-button-c, inherit);
+	border: var(--gui-icon-button-b, none);
+	border-radius: var(--gui-icon-button-bdrs, 50%);
+	padding: var(--gui-icon-button-p, 3px);
+	place-content: center;
+}
+@media (hover:hover) {
+	:host::part(icon-button):hover {
+		background: var(--gui-icon-button-bg-hover, light-dark(#CCC8, #1C1C1E));
+	}
+}

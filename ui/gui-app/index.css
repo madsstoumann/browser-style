@@ -2,6 +2,7 @@
 :host {
 	--gui-app-icon-sz: 1.25rem;
 
+	/* TODO: Reword these colors */
 	--blue: light-dark(#007AFF, #0B84FF);
 	--gray-1: light-dark(#8E8E93, #8E8E93);
 	--gray-2: light-dark(#AEAEB2, #636366);
@@ -20,6 +21,7 @@
 	block-size: 100dvh;
 	color: var(--gui-app-c, inherit);
 	color-scheme: dark light;
+	contain: layout;
 	container-type: inline-size;
 	display: grid;
 	font-family: var(--gui-app-ff, ui-sans-serif, system-ui);

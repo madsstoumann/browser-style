@@ -11,7 +11,7 @@ import { CommandHandler } from '@browser.style/gui-icon-button';
  * @author Mads Stoumann
  * @license MIT
  */
-import { renderIcon, icoSidebarLeft, icoSidebarRight } from '../gui-icon/index.js';
+import { renderIconButton, iconStyles, icoSidebarLeft, icoSidebarRight } from '../gui-icon/index.js';
 class GuiApp extends HTMLElement {
 	#root;
   #commandHandlerCleanup;
@@ -27,7 +27,9 @@ class GuiApp extends HTMLElement {
 		const styles = await fetch(new URL('./index.css', import.meta.url).href).then(r => r.text());
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(styles);
-		this.#root.adoptedStyleSheets = [sheet];
+		const iconSheet = new CSSStyleSheet();
+		iconSheet.replaceSync(iconStyles);
+		this.#root.adoptedStyleSheets = [sheet, iconSheet];
 	}
 
 	init() {
@@ -49,19 +51,18 @@ class GuiApp extends HTMLElement {
 			});
 		}
 
-		 // Initialize the command handler
 		this.#commandHandlerCleanup = CommandHandler.initialize(this);
 
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="header-nav">
-					${hasPanelStart ? `<button type="button" part="toggle-panel-start">${renderIcon(icoSidebarLeft, 'panel-start-icon')}</button>` : ''}
-					<slot name="header-start-nav"></slot></span>
+					${hasPanelStart ? renderIconButton(icoSidebarLeft, 'Toggle left panel', 'toggle-panel-start') : ''}
+					<slot name="header-start-nav"></slot>
 				</nav>
 				<span part="title"><slot name="header"></slot></span>
 				<nav part="header-nav">
-					<slot name="header-end-nav"></slot></span>
-					${hasPanelEnd ? `<button type="button" part="toggle-panel-end">${renderIcon(icoSidebarRight, 'panel-end-icon')}</button>` : ''}
+					<slot name="header-end-nav"></slot>
+					${hasPanelEnd ? renderIconButton(icoSidebarRight, 'Toggle right panel', 'toggle-panel-end') : ''}
 				</nav>
 			</header>
 			${hasPanelStart ? '<slot name="panel-start"></slot>' : ''}
@@ -71,8 +72,8 @@ class GuiApp extends HTMLElement {
 			${hasGuiPanels ? '<slot name="gui-panels"></slot>' : ''}
 		`;
 
-		this.#root.querySelectorAll('[part^="toggle-panel-"]').forEach(btn => {
-			const position = btn.getAttribute('part').replace('toggle-panel-', '');
+		this.#root.querySelectorAll('[part*="toggle-panel-"]').forEach(btn => {
+			const position = btn.getAttribute('part').includes('start') ? 'start' : 'end';
 			btn.addEventListener('click', () => {
 				const open = this.getAttribute(`panel-${position}`) === 'open';
 				this.setAttribute(`panel-${position}`, open ? 'closed' : 'open');
@@ -81,7 +82,6 @@ class GuiApp extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		// Clean up event listener when component is removed
 		if (this.#commandHandlerCleanup) {
 			this.#commandHandlerCleanup();
 		}

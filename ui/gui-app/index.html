@@ -14,16 +14,20 @@
 		<span slot="header">
 			App Title
 		</span>
+
+		<gui-icon-button
+			icon="icoHelp"
+			slot="header-end-nav"
+			command="show-popover"
+			commandfor="help">
+		</gui-icon-button>
+
 		<gui-icon-button
 			icon="icoDotsVertical"
 			slot="header-end-nav"
 			command="show-popover"
-			commandfor="settings"
-			anchor="--settings"
-			anchor-position="anchor-right-bottom">
+			commandfor="settings">
 		</gui-icon-button>
-		
-		<!-- <gui-icon-button type="button" icon="icoSidebarRight" slot="header-end-nav" part="toggle-panel-end"></gui-icon-button> -->
 
 		<gui-panel
 			dock="start"

@@ -16,6 +16,7 @@
 	box-sizing: border-box;
 	color: var(--gui-panel-c, CanvasText);
 	color-scheme: light dark;
+	contain: layout;
 	container-type: inline-size;
 	font-family: var(--gui-panel-ff, system-ui, sans-serif);
 	font-size: var(--gui-panel-fs, 1rem);
@@ -86,24 +87,6 @@
 		justify-content: end;
 	}
 }
-[part~="icon"] {
-	fill: none;
-	height: var(--gui-panel-icon-sz);
-	pointer-events: none;
-	stroke: currentColor;
-	stroke-linecap: round;
-	stroke-linejoin: round;
-	stroke-width: 2;
-	width: var(--gui-panel-icon-sz);
-}
-[part~="icon-button"] {
-	display: inline-grid;
-	background: #0000;
-	color: inherit;
-	border: none;
-	border-radius: 50%;
-	padding: calc(var(--gui-panel-rz-area) / 2);
-}
 [part~="icon-group"] {
 	display: flex;
 	padding-inline: calc(var(--gui-panel-rz-area) / 2);
@@ -162,10 +145,10 @@
 }
 
 /* anchor */
-:host(.anchor-right-bottom) {
+/* :host(.anchor-right-bottom) {
 	inset-block: anchor(bottom) auto;
 	inset-inline: auto anchor(right);
-	position-anchor: attr(anchor);
+	position-anchor:--settings;
 	position-try-fallbacks: flip-block;
 }
 :host(.anchor-right-top) {
@@ -185,7 +168,7 @@
 	inset-inline: anchor(left) auto;
 	position-anchor: attr(anchor);
 	position-try-fallbacks: flip-block;
-}
+} */
 
 /* media */
 @media (prefers-color-scheme: light) {
@@ -199,7 +182,6 @@
 	:host(.cs)::part(content) { scrollbar-color: #CCC8 #0000; }
 }
 @media (hover:hover) {
-	[part~="icon-button"]:hover { background: light-dark(#CCC8, #1C1C1E); }
 	:host([draggable])::part(heading):hover { font-weight: 700; scale: 1.025; } 
 }
 @media (pointer: coarse) {
