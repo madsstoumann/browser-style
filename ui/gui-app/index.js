@@ -1,17 +1,20 @@
+import '@browser.style/gui-icon-button';
 import '@browser.style/gui-panel';
 import '@browser.style/gui-tabs';
+import { CommandHandler } from '@browser.style/gui-icon-button';
 
 /**
  * @module gui-app
  * @description 
- * @version 1.0.0
- * @date 2025-03-06
+ * @version 1.0.1
+ * @date 2025-03-07
  * @author Mads Stoumann
  * @license MIT
  */
 import { renderIcon, icoSidebarLeft, icoSidebarRight } from '../gui-icon/index.js';
 class GuiApp extends HTMLElement {
 	#root;
+  #commandHandlerCleanup;
 
 	constructor() {
 		super();
@@ -46,13 +49,18 @@ class GuiApp extends HTMLElement {
 			});
 		}
 
+		 // Initialize the command handler
+		this.#commandHandlerCleanup = CommandHandler.initialize(this);
+
 		this.#root.innerHTML = `
 			<header part="header">
 				<nav part="header-nav">
 					${hasPanelStart ? `<button type="button" part="toggle-panel-start">${renderIcon(icoSidebarLeft, 'panel-start-icon')}</button>` : ''}
+					<slot name="header-start-nav"></slot></span>
 				</nav>
 				<span part="title"><slot name="header"></slot></span>
 				<nav part="header-nav">
+					<slot name="header-end-nav"></slot></span>
 					${hasPanelEnd ? `<button type="button" part="toggle-panel-end">${renderIcon(icoSidebarRight, 'panel-end-icon')}</button>` : ''}
 				</nav>
 			</header>
@@ -70,6 +78,13 @@ class GuiApp extends HTMLElement {
 				this.setAttribute(`panel-${position}`, open ? 'closed' : 'open');
 			});
 		});
+	}
+
+	disconnectedCallback() {
+		// Clean up event listener when component is removed
+		if (this.#commandHandlerCleanup) {
+			this.#commandHandlerCleanup();
+		}
 	}
 }
 

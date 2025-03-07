@@ -50,7 +50,6 @@
 }
 
 :host::part(header-nav) {
-	column-gap: 4px;
 	display: flex;
 }
 
@@ -120,6 +119,9 @@
 :host([panel-end=open])::part(toggle-panel-end),
 :host([panel-start=open])::part(toggle-panel-start) { color: var(--blue); }
 
+:host([panel-end=open]) ::slotted(gui-icon-button[part="toggle-panel-end"]) {
+  --gui-icon-button-c: var(--blue);
+}
 
 :host([panel-start-docked=false])::part(toggle-panel-start),
 :host([panel-end-docked=false])::part(toggle-panel-end) {

@@ -1,14 +1,22 @@
 /**
  * @module gui-icon / gui-icon-button
  * @description Centralized icon library for browser.style UI components
- * @version 1.0.2
- * @date 2025-03-20
+ * @version 1.0.0
+ * @date 2025-03-07
  * @author Mads Stoumann
  * @license MIT
  */
 
 export function renderIcon(paths, part) {
 	return `<svg part="icon${part ? ` ${part}`:''}" viewBox="0 0 24 24">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
+}
+
+export function renderIconButton(icon, title, part, iconPart) {
+	return `
+		<button part="icon-button ${part || ''}" ${title ? `title="${title}"` : ''} type="button">
+			${renderIcon(icon, iconPart)}
+		</button>
+	`;
 }
 
 // Icons: https://tabler.io/icons
@@ -23,119 +31,15 @@ export const icoSearch = ['M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0', 'M21 21l
 export const icoSidebarLeft = ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M9 4l0 16'];
 export const icoSidebarRight = ['M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z', 'M15 4l0 16'];
 
-// Simple object that maps icon names to their values
-const iconMap = {
-  icoArrowsLeftRight,
-  icoBrightness,
-  icoClose,
-  icoDotsVertical,
-  icoExternalLink,
-  icoInternalLink,
-  icoReset,
-  icoSearch,
-  icoSidebarLeft,
-  icoSidebarRight
+export const iconMap = {
+	icoArrowsLeftRight,
+	icoBrightness,
+	icoClose,
+	icoDotsVertical,
+	icoExternalLink,
+	icoInternalLink,
+	icoReset,
+	icoSearch,
+	icoSidebarLeft,
+	icoSidebarRight
 };
-
-
-class GuiIcon extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({mode: 'open'});
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(`
-      :host {
-				--gui-icon-sz: 20px;
-				color-scheme: light dark;
-				fill: none;
-				height: var(--gui-icon-sz);
-				pointer-events: none;
-				stroke: currentColor;
-				stroke-linecap: round;
-				stroke-linejoin: round;
-				stroke-width: 2;
-				width: var(--gui-panel-icon-sz);
-			}
-    `);
-    this.shadowRoot.adoptedStyleSheets = [sheet];
-  }
-  
-  connectedCallback() {
-    this.render();
-  }
-    
-  render() {
-    const iconName = this.getAttribute('icon');
-    const part = this.getAttribute('part') || '';
-    const iconPaths = iconName ? iconMap[iconName] : null;
-    
-    if (iconPaths) {
-      this.shadowRoot.innerHTML = GuiIcon(iconPaths, part);
-    } else {
-      this.shadowRoot.innerHTML = '<slot></slot>';
-    }
-  }
-}
-
-export default class GuiIconButton extends HTMLElement {
-	#root;
-	
-	constructor() {
-		super();
-		this.#root = this.attachShadow({ mode: 'open' });
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(`
-		 :host {
-				--gui-icon-sz: 20px;
-				color-scheme: light dark;
-			}
-			:host::part(icon) {
-				fill: none;
-				height: var(--gui-icon-sz);
-				pointer-events: none;
-				stroke: currentColor;
-				stroke-linecap: round;
-				stroke-linejoin: round;
-				stroke-width: 2;
-				width: var(--gui-panel-icon-sz);
-			}
-			:host::part(icon-button) {
-				display: inline-grid;
-				background: #0000;
-				color: inherit;
-				border: none;
-				border-radius: var(--gui-icon-bdrs, 50%);
-				padding: var(--gui-icon-p, 0);
-			}
-			@media (hover:hover) {
-				:host::part(icon-button):hover {
-					background: var(--gui-icon-bg-hover, light-dark(#CCC8, #1C1C1E));
-				}
-			}
-		`);
-		this.#root.adoptedStyleSheets = [sheet];
-	}
-
-	connectedCallback() {
-		const iconName = this.getAttribute('icon');
-		const iconPart = this.getAttribute('icon-part') || '';
-		const buttonPart = this.getAttribute('part') || '';
-		const title = this.getAttribute('title') || '';
-		
-		 // Simply look up the icon in our map
-		const iconPaths = iconName ? iconMap[iconName] : null;
-		
-		this.#root.innerHTML = `
-			<button 
-				part="icon-button ${buttonPart}" 
-				title="${title}"
-				type="button">
-				${iconPaths ? GuiIcon(iconPaths, iconPart) : '<slot name="icon"></slot>'}
-			</button>
-		`;
-	}
-}
-
-// Register both components
-customElements.define('gui-icon', GuiIcon);
-customElements.define('gui-icon-button', GuiIconButton);

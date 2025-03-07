@@ -13,8 +13,17 @@
 	<gui-app panel-end="open">
 		<span slot="header">
 			App Title
-			<button type="button" popovertarget="settings">Settings</button>
 		</span>
+		<gui-icon-button
+			icon="icoDotsVertical"
+			slot="header-end-nav"
+			command="show-popover"
+			commandfor="settings"
+			anchor="--settings"
+			anchor-position="anchor-right-bottom">
+		</gui-icon-button>
+		
+		<!-- <gui-icon-button type="button" icon="icoSidebarRight" slot="header-end-nav" part="toggle-panel-end"></gui-icon-button> -->
 
 		<gui-panel
 			dock="start"
@@ -71,6 +80,7 @@
 
 		<span slot="gui-panels">
 			<gui-panel
+				dismiss
 				heading="Settings"
 				id="settings"
 				part="settings">
@@ -89,6 +99,7 @@
 	<script type="importmap">
 		{
 			"imports": {
+				"@browser.style/gui-icon-button": "/ui/gui-icon-button/index.js",
 				"@browser.style/gui-panel": "/ui/gui-panel/index.js",
 				"@browser.style/gui-tabs": "/ui/gui-tabs/index.js" 
 			}
