@@ -12,14 +12,22 @@
 
 	<gui-app panel-end="open">
 		<span slot="header">
-			Header
+			App Title
 		</span>
+
+		<gui-panel
+			heading="Settings"
+			id="settings"
+			part="settings"
+			slot="settings">
+
+			SETTINGS AND CONFIGURATIONS
+		</gui-panel>
 
 		<gui-panel
 			dock="start"
 			docked
 			heading="Left"
-			id="start"
 			part="panel-start"
 			position="top left"
 			resize="inline-end block-end"
@@ -34,7 +42,6 @@
 		<gui-panel
 			dock="end"
 			heading="Right"
-			id="end"
 			part="panel-end"
 			position="top right"
 			resize="inline-start block-end"

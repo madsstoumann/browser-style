@@ -49,6 +49,11 @@
 	padding: var(--gui-app-header-p, .5em 1em);
 }
 
+:host::part(header-nav) {
+	column-gap: 4px;
+	display: flex;
+}
+
 :host::part(icon) {
 	fill: none;
 	height: var(--gui-app-icon-sz);
@@ -107,7 +112,7 @@
 }
 
 /* Toggle Icons */
-:host::part(toggle-panel-end), :host::part(toggle-panel-start) {
+:host::part(toggle-panel-end), :host::part(toggle-panel-settings), :host::part(toggle-panel-start) {
 	all: unset;
 	color: var(--gray-1);
 	line-height: 0;

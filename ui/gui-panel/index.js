@@ -58,7 +58,7 @@ export default class GuiPanel extends HTMLElement {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(styles);
 		this.#root.adoptedStyleSheets = [sheet];
-		this.id ||= `gui-${Math.random().toString(36).slice(2, 7)}`;
+		this.id ||= `gui-panel-${Math.random().toString(36).slice(2, 7)}`;
 
 		this.#DOCKED_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-docked-w')) || 220;
 		this.#DOCKED_MAX_WIDTH = parseInt(getComputedStyle(this).getPropertyValue('--gui-panel-docked-maw')) || 500;
@@ -112,17 +112,19 @@ export default class GuiPanel extends HTMLElement {
 			this.setHeightBasedOnPosition('auto', panelHeight);
 		});
 
-		this.#parts.resize.addEventListener('click', () => {
-			let currentWidth = parseInt(this.style.getPropertyValue('--gui-panel-w')) || this.#CURRENT_DOCKED_WIDTH;
-			if (currentWidth >= this.#DOCKED_MAX_WIDTH) {
-				currentWidth = this.#DOCKED_MIN_WIDTH;
-			} else if (currentWidth <= this.#DOCKED_MIN_WIDTH) {
-				currentWidth = this.#CURRENT_DOCKED_WIDTH;
-			} else {
-				currentWidth = this.#DOCKED_MAX_WIDTH;
-			}
-			this.style.setProperty('--gui-panel-w', `${currentWidth}px`);
-		});
+		if (this.#parts.resize) {
+			this.#parts.resize.addEventListener('click', () => {
+				let currentWidth = parseInt(this.style.getPropertyValue('--gui-panel-w')) || this.#CURRENT_DOCKED_WIDTH;
+				if (currentWidth >= this.#DOCKED_MAX_WIDTH) {
+					currentWidth = this.#DOCKED_MIN_WIDTH;
+				} else if (currentWidth <= this.#DOCKED_MIN_WIDTH) {
+					currentWidth = this.#CURRENT_DOCKED_WIDTH;
+				} else {
+					currentWidth = this.#DOCKED_MAX_WIDTH;
+				}
+				this.style.setProperty('--gui-panel-w', `${currentWidth}px`);
+			});
+		}
 
 		if (this.#parts.undock) {
 			this.#parts.undock.addEventListener('click', toggleSidebar);
