@@ -147,32 +147,6 @@
 	cursor: ew-resize;
 }
 
-/* anchor */
-/* :host(.anchor-right-bottom) {
-	inset-block: anchor(bottom) auto;
-	inset-inline: auto anchor(right);
-	position-anchor:--settings;
-	position-try-fallbacks: flip-block;
-}
-:host(.anchor-right-top) {
-	inset-block: auto anchor(top);
-	inset-inline: auto anchor(right);
-	position-anchor: attr(anchor);
-	position-try-fallbacks: flip-block;
-}
-:host(.anchor-left-bottom) {
-	inset-block: anchor(bottom) auto;
-	inset-inline: anchor(left) auto;
-	position-anchor: attr(anchor);
-	position-try-fallbacks: flip-block;
-}
-:host(.anchor-left-top) {
-	inset-block: auto anchor(top);
-	inset-inline: anchor(left) auto;
-	position-anchor: attr(anchor);
-	position-try-fallbacks: flip-block;
-} */
-
 /* media */
 @media (prefers-color-scheme: light) {
 	:host(.cs) { color-scheme: dark; }
