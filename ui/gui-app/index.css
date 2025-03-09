@@ -130,3 +130,16 @@
 	color: var(--gray-4);
 	pointer-events: none;
 }
+
+@container (width < 600px) {
+	:host::part(main) {
+		grid-area: 2 / 1 / 3 / 4;
+	}
+	::slotted([slot="panel-start"]), 
+	::slotted([slot="panel-end"]) {
+		--gui-panel-header-d: none;
+		--gui-panel-rz-bg: #0000;
+		grid-area: 2 / 1 / 3 / 4;
+		width: 100%;
+	}
+}

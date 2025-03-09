@@ -32,6 +32,7 @@ export default class GuiPanel extends HTMLElement {
 
 	get dockPosition() { return this.getAttribute('dock')?.replace('fixed-', '') || ''; }
 	get hasDismiss() { return this.#has('dismiss'); }
+	get hasExpand() { return this.#has('expand'); }
 	get hasOpen() { return this.#has('open'); }
 	get hasReset() { return this.#has('reset'); }
 	get isDockable() { return this.#has('dock'); }
@@ -68,11 +69,11 @@ export default class GuiPanel extends HTMLElement {
 					${renderIconButton(icoBrightness, 'Toggle Color Scheme', 'scheme', !(this.showScheme && this.isUndocked))}
 					${renderIconButton(icoReset, 'Reset position', 'reset', !this.hasReset)}
 					${dockPos === 'start' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
-					${dockPos === 'start' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Resize', 'resize', !this.isDockable) : ''}
+					${dockPos === 'start' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Expand', 'expand', !(this.isDockable && this.hasExpand)) : ''}
 				</nav>
 				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
 				<nav part="icon-group">
-					${dockPos === 'end' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Resize', 'resize', !this.isDockable) : ''}
+					${dockPos === 'end' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Expand', 'expand', !(this.isDockable && this.hasExpand)) : ''}
 					${dockPos === 'end' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
 					${renderIconButton(icoClose, 'Close', 'close')}
 				</nav>

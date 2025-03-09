@@ -53,12 +53,15 @@
 :host(:not([popover])[dock]) {
 	display: grid;
 	header { 
-		display: flex;
+		display: var(--gui-panel-header-d, flex);
 		justify-content: space-between;
 		[part~="close"],
 		[part~="reset"],
 		[part="heading"] { 
 			display: none; 
+		}
+		&:has([part~="expand"][hidden]) {
+			justify-content: end;
 		}
 	}
 	[part~="icon-group"] {
