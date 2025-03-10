@@ -84,7 +84,7 @@ export default class GuiPanel extends HTMLElement {
 			<div part="resize-inline-start"></div>
 			<div part="resize-inline-end"></div>`;
 
-		['close', 'heading', 'reset', 'resize', 'scheme', 'undock'].forEach(part => 
+		['close', 'expand', 'heading', 'reset', 'scheme', 'undock'].forEach(part => 
 			this.#parts[part] = this.#root.querySelector(`[part~="${part}"]`)
 		);
 
@@ -105,8 +105,8 @@ export default class GuiPanel extends HTMLElement {
 			this.setHeightBasedOnPosition('auto', panelHeight);
 		});
 
-		if (this.#parts.resize) {
-			this.#parts.resize.addEventListener('click', () => {
+		if (this.#parts.expand) {
+			this.#parts.expand.addEventListener('click', () => {
 				let currentWidth = parseInt(this.style.getPropertyValue('--gui-panel-w')) || this.#CURRENT_DOCKED_WIDTH;
 				if (currentWidth >= this.#DOCKED_MAX_WIDTH) {
 					currentWidth = this.#DOCKED_MIN_WIDTH;

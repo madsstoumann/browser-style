@@ -44,7 +44,7 @@
 }
 
 [hidden] { display: none !important;}
-:host([popover]) [part~="icon-button"][part~="resize"], 
+:host([popover]) [part~="icon-button"][part~="expand"], 
 :host([popover]) [part~="icon-button"][part~="undock"] {
 	display: none;
 }
