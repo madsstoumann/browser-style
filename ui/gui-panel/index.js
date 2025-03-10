@@ -2,8 +2,8 @@
  * @module gui-panel
  * @description A customizable, resizable panel component that can be used as a sidebar or popover.
  * Supports docking, dragging, resizing, and theme switching functionality.
- * @version 1.0.2
- * @date 2025-03-07
+ * @version 1.0.3
+ * @date 2025-03-10
  * @author Mads Stoumann
  * @license MIT
  */
@@ -28,7 +28,22 @@ export default class GuiPanel extends HTMLElement {
 	#root; #parts = {}; #dragState = null; #resizeState = null; 
 	#DOCKED_WIDTH; #DOCKED_MIN_WIDTH; #DOCKED_MAX_WIDTH; #POPOVER_WIDTH;
 	#CURRENT_DOCKED_WIDTH; #CURRENT_POPOVER_WIDTH;
+	#i18n = {
+		en: {
+			close: 'Close',
+			closeDock: 'Redock panel',
+			detachPanel: 'Detach panel',
+			heading: '⋮⋮ GUI Panel ⋮⋮',
+			resetPosition: 'Reset position',
+			toggleColorScheme: 'Toggle Color Scheme',
+			toggleExpand: 'Toggle between min/max width',
+		}
+	};
+	
 	#has(name) { return this.hasAttribute(name); }
+	#t(key, lang = 'en') {
+		return (this.#i18n[lang] && this.#i18n[lang][key]) || this.#i18n.en[key] || key;
+	}
 
 	get dockPosition() { return this.getAttribute('dock')?.replace('fixed-', '') || ''; }
 	get hasDismiss() { return this.#has('dismiss'); }
@@ -66,16 +81,16 @@ export default class GuiPanel extends HTMLElement {
 		this.#root.innerHTML = `
 			<header part="header ${dockPos}">
 				<nav part="icon-group">
-					${renderIconButton(icoBrightness, 'Toggle Color Scheme', 'scheme', !(this.showScheme && this.isUndocked))}
-					${renderIconButton(icoReset, 'Reset position', 'reset', !this.hasReset)}
-					${dockPos === 'start' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
-					${dockPos === 'start' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Expand', 'expand', !(this.isDockable && this.hasExpand)) : ''}
+					${renderIconButton(icoBrightness, this.#t('toggleColorScheme'), 'scheme', !(this.showScheme && this.isUndocked))}
+					${renderIconButton(icoReset, this.#t('resetPosition'), 'reset', !this.hasReset)}
+					${dockPos === 'start' && !this.isFixed ? renderIconButton(undockIcon, this.#t('detachPanel'), 'undock', !this.isDockable) : ''}
+					${dockPos === 'start' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, this.#t('toggleExpand'), 'expand', !(this.isDockable && this.hasExpand)) : ''}
 				</nav>
-				<strong part="heading">${this.getAttribute('heading') || '⋮⋮ GUI Panel ⋮⋮'}</strong>
+				<strong part="heading">${this.getAttribute('heading') || this.#t('heading')}</strong>
 				<nav part="icon-group">
-					${dockPos === 'end' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, 'Expand', 'expand', !(this.isDockable && this.hasExpand)) : ''}
-					${dockPos === 'end' && !this.isFixed ? renderIconButton(undockIcon, 'Detach', 'undock', !this.isDockable) : ''}
-					${renderIconButton(icoClose, 'Close', 'close')}
+					${dockPos === 'end' && !this.isFixed ? renderIconButton(icoArrowsLeftRight, this.#t('toggleExpand'), 'expand', !(this.isDockable && this.hasExpand)) : ''}
+					${dockPos === 'end' && !this.isFixed ? renderIconButton(undockIcon, this.#t('detachPanel'), 'undock', !this.isDockable) : ''}
+					${renderIconButton(icoClose, this.#t(this.isDockable ? 'closeDock' : 'close'), 'close')}
 				</nav>
 			</header>
 			<div part="content"><slot></slot></div>
@@ -238,7 +253,6 @@ export default class GuiPanel extends HTMLElement {
 				window.innerHeight - panel.offsetHeight
 			))}px`);
 
-			// Update start position for next move
 			Object.assign(this.#dragState, {startX: clientX, startY: clientY});
 		};
 
@@ -353,7 +367,6 @@ export default class GuiPanel extends HTMLElement {
 	setHeightBasedOnPosition(defaultHeight = 'auto', preservedHeight = null) {
 		const position = this.getAttribute('position') || '';
 		if (position.includes('bottom') && preservedHeight) {
-			// For bottom-positioned panels, preserve specific height if available
 			this.style.setProperty('--gui-panel-h', preservedHeight);
 		} else if (!position.includes('bottom')) {
 			this.style.setProperty('--gui-panel-h', defaultHeight);
