@@ -1,3 +1,4 @@
+import '@browser.style/gui-group';
 import '@browser.style/gui-icon-button';
 import '@browser.style/gui-panel';
 import '@browser.style/gui-tabs';

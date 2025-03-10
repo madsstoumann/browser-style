@@ -76,15 +76,18 @@
 	text-align: center;
 }
 
-/* GuiPanel, GuiTabs */
+/* GuiGroup, GuiPanel, GuiTabs */
 ::slotted([slot="panel-start"]), 
 ::slotted([slot="panel-end"]) {
+	/* --gui-group-p: 0 4px; */
+
 	--gui-panel-bg: var(--gui-app-panels-bg);
 	--gui-panel-c: var(--gui-app-c);
 	--gui-panel-bxsh: 0px 0px 1px 1px var(--gui-app-bdc);
 	--gui-panel-docked-miw: 60;
 	--gui-panel-gap: .5rem;
-	--gui-tabs-panels-p: 4px 10px;
+
+	--gui-tabs-panels-p: 4px 6px;
 	--gui-tabs-tabs-m: 6px;
 
 	transition: width .2s ease;

@@ -1,0 +1,65 @@
+:host {
+	border-radius: var(--gui-group-bdrs, .5rem);
+	container-type: inline-size;
+	display: block;
+	font-family: var(--gui-group-ff, inherit);
+	font-size: var(--gui-group-fs, 12px);
+	interpolate-size: allow-keywords;
+	padding: var(--gui-group-p, 0);
+}
+
+:host::part(group) {
+ /* <details> */
+}
+
+:host::part(summary) {
+	border-radius: var(--gui-group-label-bdrs, .5rem);
+  cursor: pointer;
+  font-weight: var(--gui-group-label-fw, 600);
+	padding: var(--gui-group-label-p, 1ch);
+	text-indent: calc(var(--_level, 0) * var(--gui-group-ti, .75ch));
+}
+
+:host::part(summary)::marker {
+	color: var(--gui-group-marker-c, inherit);
+	font-size: var(--gui-group-marker-fs, smaller);
+}
+
+:host([level="0"]) details[open] summary {
+	background: #4A5878;
+	border-end-end-radius: 0;
+	border-end-start-radius: 0;
+	/* color: light-dark(#007AFF, #0B84FF); */
+}
+:host([level="0"]):has(details[open]) {
+	background: #394360;
+}
+/* Animate, target <details> directly */
+details::details-content {	
+	
+	block-size: 0;
+	overflow: clip;
+	transition-behavior: allow-discrete;
+	transition-duration: .15s;
+	transition-property: block-size, content-visibility;
+	transition-timing-function: linear;
+}
+details[open]::details-content {
+	block-size: auto;
+}
+
+@media ( hover: hover ) {
+	summary:hover {
+		background: light-dark(#EDEDEC, #414140);
+	}
+}
+@container (width < 100px) {
+	/* details { border-inline-start: none; }
+	summary {
+		list-style-type: none;
+		padding-inline: 2ch;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	} */
+}

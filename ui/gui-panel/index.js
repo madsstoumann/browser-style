@@ -41,8 +41,9 @@ export default class GuiPanel extends HTMLElement {
 	};
 	
 	#has(name) { return this.hasAttribute(name); }
-	#t(key, lang = 'en') {
-		return (this.#i18n[lang] && this.#i18n[lang][key]) || this.#i18n.en[key] || key;
+	#t(key, lang) {
+		const preferredLang = lang || this.getAttribute('lang') || document.documentElement.lang || 'en';
+		return (this.#i18n[preferredLang] && this.#i18n[preferredLang][key]) || this.#i18n.en[key] || key;
 	}
 
 	get dockPosition() { return this.getAttribute('dock')?.replace('fixed-', '') || ''; }

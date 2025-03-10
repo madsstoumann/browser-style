@@ -9,7 +9,6 @@
 	 <style>body { all: unset; }</style>
 </head>
 <body>
-
 	<gui-app panel-end="open">
 		<span slot="header">
 			App Title
@@ -40,6 +39,13 @@
 			resize="inline-end block-end"
 			scheme
 			slot="panel-start">
+			<gui-group group="home" label="Layers" >
+				<gui-group label="Text styles">
+					<gui-group label="text-xs">
+						...
+					</gui-group>
+				</gui-group>
+			</gui-group>
 		</gui-panel>
 
 		<span slot="main">
@@ -59,11 +65,32 @@
 			slot="panel-end">
 
 			<gui-tabs>
-				<gui-tab label="Home" active>
+				<gui-tab label="Home" active style="interpolate-size: allow-keywords;">
 					<slot name="icon">
 						<svg viewBox="0 0 24 24" part="icon"><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
 					</slot>
-					<small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus facere soluta aspernatur, modi officia distinctio. Laboriosam, corrupti ad. Architecto reiciendis blanditiis qui facere amet officia, tempora ipsum maxime omnis, dolore voluptas ex mollitia ea nesciunt. Soluta nobis iusto voluptate quo eius? Itaque harum est saepe provident magnam, rem magni architecto.</small>
+					<!-- <small>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus facere soluta aspernatur, modi officia distinctio. Laboriosam, corrupti ad. Architecto reiciendis blanditiis qui facere amet officia, tempora ipsum maxime omnis, dolore voluptas ex mollitia ea nesciunt. Soluta nobis iusto voluptate quo eius? Itaque harum est saepe provident magnam, rem magni architecto.</small> -->
+
+					<gui-group group="home" label="Layout" >
+						<gui-group label="Typography">
+							<gui-group label="Font family" group="typography">
+								1-2-3
+							</gui-group>
+							<gui-group label="Font Size" group="typography">
+								4-5-6
+							</gui-group>
+						</gui-group>
+					</gui-group>
+
+
+					<gui-group group="home" label="Animations" >
+						<gui-group label="Typography">
+							<gui-group label="Font family">
+								...
+							</gui-group>
+						</gui-group>
+					</gui-group>
+
 				</gui-tab>
 
 				<gui-tab label="Search">
@@ -105,6 +132,7 @@
 	<script type="importmap">
 		{
 			"imports": {
+				"@browser.style/gui-group": "/ui/gui-group/index.js",
 				"@browser.style/gui-icon-button": "/ui/gui-icon-button/index.js",
 				"@browser.style/gui-panel": "/ui/gui-panel/index.js",
 				"@browser.style/gui-tabs": "/ui/gui-tabs/index.js" 
