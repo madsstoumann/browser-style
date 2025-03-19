@@ -66,6 +66,7 @@ styles.replaceSync(`
 		grid-auto-flow: column;
 		inline-size: min-content;
 		list-style: none;
+		text-wrap: nowrap;
 	}
 	:host::part(hours) {
 		animation: hours 86400s steps(24, end) infinite;
