@@ -21,15 +21,10 @@ CSS.registerProperty({
 
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
-	@counter-style am-pm {
-		system: cyclic;
-		symbols: "am" "pm";
-		range: 0 1;
-		suffix: "";
-	}
 	:host {
 		background-color: var(--digital-clock-bg, var(--CanvasGray));
 		border-radius: var(--digital-clock-bdrs, var(--input-bdrs));
+		box-sizing: border-box;
 		color-scheme: light dark;
 		display: flex;
 		direction: ltr;
@@ -38,12 +33,12 @@ styles.replaceSync(`
 		padding: var(--digital-clock-p, .75ch 1.5ch);
 	}
 	:host::part(ampm) {
-    animation: ampm 86400s steps(2, end) infinite;
-    animation-delay: var(--delay-hours, 0s);
-    counter-reset: ampm var(--initial-ampm, 0);
+		animation: ampm 86400s steps(2, end) infinite;
+		animation-delay: var(--delay-hours, 0s);
+		counter-reset: ampm var(--initial-ampm, 0);
 	}
 	:host::part(ampm)::after {
-			content: counter(ampm, am-pm);
+		content: counter(ampm, am-pm);
 	}
 	:host::part(date) {
 		font-family: var(--digital-clock-date-ff, inherit);
@@ -98,16 +93,15 @@ styles.replaceSync(`
 	:host::part(seconds)::after {
 		content: counter(seconds, var(--number-system, decimal-leading-zero)) ' ';
 	}
-
 	:host([time*="12hour"])::part(hours) {
-    /* Convert 24-hour to 12-hour format */
+		/* Convert 24-hour to 12-hour format */
 		counter-reset: hours mod(var(--hours), 12);
 	}
 
 	@keyframes ampm {
-    0% { counter-reset: ampm 0; }    /* AM: 0-11 hours (0-49.9%) */
-    50% { counter-reset: ampm 1; }   /* PM: 12-23 hours (50-99.9%) */
-    100% { counter-reset: ampm 0; }  /* Back to AM */
+		0% { counter-reset: ampm 0; }    /* AM: 0-11 hours (0-49.9%) */
+		50% { counter-reset: ampm 1; }   /* PM: 12-23 hours (50-99.9%) */
+		100% { counter-reset: ampm 0; }  /* Back to AM */
 	}
 	@keyframes hours {
 		from { --hours: 0; }
@@ -122,6 +116,8 @@ styles.replaceSync(`
 		to { --seconds: 60; }
 	}
 `);
+
+let counterStyleInjected = false;
 
 export default class DigitalClock extends HTMLElement {
 	#root;
@@ -158,6 +154,12 @@ export default class DigitalClock extends HTMLElement {
 			this.#label.textContent = this.getAttribute('label') || '';
 		}
 		this.#updateClock(hasDate, is12Hour);
+
+		if (!counterStyleInjected) {
+			/* Safari Hack: Safari has issues with counter-style in shadow DOM */
+			this.#injectCounterStyle();
+			counterStyleInjected = true;
+		}
 	}
 
 	#formatDate(date, format) {
@@ -188,6 +190,17 @@ export default class DigitalClock extends HTMLElement {
 				};
 		}
 		return new Intl.DateTimeFormat(lang, options).format(date);
+	}
+
+	#injectCounterStyle() {
+		const style = document.createElement('style');
+		style.textContent = `
+			@counter-style am-pm {
+				system: cyclic;
+				symbols: "pm" "am";
+			}
+		`;
+		document.head.appendChild(style);
 	}
 
 	#updateClock(hasDate, is12Hour) {
