@@ -14,16 +14,30 @@
 	<h2>Digital Clock</h2>
 	<p>Web Component, using CSS to drive a digital clock.</p>
 
+	<h3>Default</h3>
+	<p>UTC time, no additional formatting</p>
+	<digital-clock lang="en"></digital-clock>
 
-	<digital-clock label="New York" date="full" timezone="-4">
+	<h3>With timezone, label and full date</h3>
+	<p>Berlin time (UTC+1) with German language and <code>time="short"</code></p>
+	<digital-clock label="Berlin," lang="de" date="full" timezone="+1" time="short"></digital-clock>
 
-	<br>
-	<h2>With opposite color-scheme</h2>
-	<!-- <div class="ui-grid --xs-c-1 --md-c-3">
-		<analog-clock label="New York" timezone="-4" class="cs-opposite"></analog-clock>
-		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day" class="cs-opposite"></analog-clock>
-		<analog-clock label="Tokyo" timezone="+9" indices marker="●" steps class="round-markers cs-opposite"></analog-clock>
-	</div> -->
+	<h3>Short date format</h3>
+	<p>New York time (UTC-4) and <code>time="12hour short"</code></p>
+	<digital-clock label="New York," lang="en-US" date="short" timezone="-4" time="12hour short"></digital-clock>
+
+	<h3>Narrow date format</h3>
+	<p>Tokyo time (UTC+9)</p>
+	<digital-clock label="Tokyo," lang="ja-JP" date="narrow" timezone="+9"></digital-clock>
+
+	<h3>Arabic language</h3>
+	<p>Riyadh time (UTC+3)</p>
+	<digital-clock label="الرياض," lang="ar-SA" date="full" number-system="arabic-indic" timezone="+3"></digital-clock>	
+
+	<h3>With opposite color-scheme</h3>
+	<p>Sydney time (UTC+10)</p>
+	<digital-clock label="Sydney," lang="en-AU" date="short" timezone="+10" time="12hour short" class="cs-opposite"></digital-clock>
+
 	<script type="module" src="./index.js"></script>
 </body>
 </html>
