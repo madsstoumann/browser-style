@@ -1,5 +1,5 @@
 :host {
-	border-radius: var(--gui-group-bdrs, .5rem);
+	/* border-radius: var(--gui-group-bdrs, .5rem); */
 	container-type: inline-size;
 	display: block;
 	font-family: var(--gui-group-ff, inherit);
@@ -26,17 +26,13 @@
 }
 
 :host([level="0"]) details[open] summary {
-	background: #4A5878;
-	border-end-end-radius: 0;
-	border-end-start-radius: 0;
-	/* color: light-dark(#007AFF, #0B84FF); */
+	/* background: #4A5878; */
 }
 :host([level="0"]):has(details[open]) {
-	background: #394360;
+	/* background: #394360; */
 }
 /* Animate, target <details> directly */
 details::details-content {	
-	
 	block-size: 0;
 	overflow: clip;
 	transition-behavior: allow-discrete;
