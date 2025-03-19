@@ -14,6 +14,7 @@
 		margin-inline: auto;
 		max-width: 800px;
 		mix-blend-mode: darken;
+		padding: 0;
 		width: 100%;
 
 		label:has([name=r], [name=g], [name=b]) {
@@ -21,7 +22,7 @@
 			border-radius: 50%;
 			display: grid;
 			font-size: 5cqi;
-			mix-blend-mode: difference;
+			mix-blend-mode: color-dodge;
 			line-height: 1;
 			place-content: center;
 			text-align: center;

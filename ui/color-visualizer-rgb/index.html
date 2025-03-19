@@ -8,12 +8,18 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="ui-color-visualizer-rgb.css">
+	<style>
+		main {
+			background: #FFF;
+			padding: 1em;
+		}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Color Visualizer RGB</h2>
-
+ <main>
 	<fieldset class="ui-color-visualizer-rgb">
 		<label>R:<input type="number" name="r" min="0" max="255" value="255"></label>
 		<label>G:<input type="number" name="g" min="0" max="255" value="255"></label>
@@ -22,7 +28,7 @@
 		<output name="rb">R+B</output>
 		<output name="gb">G+B</output>
 	</fieldset>
-
+</main>
 	<script type="module">
 		const rgb = document.querySelector('.ui-color-visualizer-rgb');
 		rgb.addEventListener('input', e => {

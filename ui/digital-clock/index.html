@@ -4,40 +4,26 @@
 	<title>Digital Clock</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="description" content="Digital Clock: CSS-driven digital clock web component">
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-  <link rel="stylesheet" href="ui-digital-clock.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Digital Clock</h2>
-	<p>
-		<strong>Digital Clock</strong> is a CSS-driven clock that displays the time in 24:00-hour format.
-	</p>
-	<p>Uses CSS <code>@property</code>-animations to avoid DOM-manipulation.</p>
-	<ol class="ui-digital-clock">
-		<li></li>
-		<li></li>
-		<li></li>
-	</ol>
+	<p>Web Component, using CSS to drive a digital clock.</p>
+
+
+	<digital-clock label="New York" date="full" timezone="-4">
 
 	<br>
 	<h2>With opposite color-scheme</h2>
-	<div class="bdrs-md cs-opposite pb-3 pi-3">
-		<ol class="ui-digital-clock">
-			<li></li>
-			<li></li>
-			<li></li>
-		</ol>
-	</div>
-
-	<script type="module">
-		import { common, init } from './../../assets/js/common.js';
-		import uiDigitalClock from './uiDigitalClock.js';
-		common();
-		init('.ui-digital-clock', uiDigitalClock);
-	</script>
+	<!-- <div class="ui-grid --xs-c-1 --md-c-3">
+		<analog-clock label="New York" timezone="-4" class="cs-opposite"></analog-clock>
+		<analog-clock label="Copenhagen" timezone="+1" indices steps date="day" class="cs-opposite"></analog-clock>
+		<analog-clock label="Tokyo" timezone="+9" indices marker="●" steps class="round-markers cs-opposite"></analog-clock>
+	</div> -->
+	<script type="module" src="./index.js"></script>
 </body>
 </html>
