@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/analog-clock",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Analog Clock Component",
   "type": "module",
   "module": "index.js",

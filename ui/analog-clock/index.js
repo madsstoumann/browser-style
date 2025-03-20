@@ -144,67 +144,6 @@ export default class AnalogClock extends HTMLElement {
   #numberFormatter;
   #romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 
-  #formatNumber(num) {
-    const system = this.getAttribute('system') || 'latn';
-
-    if (system === 'roman') return this.#romanNumerals[num - 1];
-    if (system === 'romanlow') return this.#romanNumerals[num - 1].toLowerCase();
-    
-    if (!this.#numberFormatter) {
-      this.#numberFormatter = new Intl.NumberFormat('en', { 
-        numberingSystem: system
-      });
-    }
-    return this.#numberFormatter.format(num);
-  }
-
-  #generateNumerals(count) {
-    count = Math.min(12, Math.max(1, parseInt(count) || 12));
-    const step = 360 / count;
-    return Array.from({ length: count }, (_, i) => {
-      const deg = ((i * step) + 270) % 360;
-      const num = ((i * (12 / count))) % 12 || 12;
-      return `<li style="--_d:${deg}deg">${this.#formatNumber(num)}</li>`;
-    }).join('');
-  }
-
-  #generateIndices() {
-    if (!this.hasAttribute('indices')) return '';
-    const isHours = this.getAttribute('indices') === 'hours';
-    const count = isHours ? 12 : 60;
-    const step = 100 / count;
-    const marker = this.getAttribute('marker') || '|';
-    const markerHour = this.getAttribute('marker-hour') || marker;
-    
-    return Array.from({ length: count }, (_, i) => {
-      const percentage = `${(i * step)}%`;
-      const isHourMark = isHours || i % 5 === 0;
-      const part = isHourMark ? 'part="index hour"' : 'part="index"';
-      const currentMarker = isHourMark ? markerHour : marker;
-      return `<li style="--_d:${percentage}" ${part}>${currentMarker}</li>`;
-    }).join('');
-  }
-
-  #formatDate(tzTime) {
-    const date = this.getAttribute('date');
-    if (!date) {
-      this.#date.hidden = true;
-      return '';
-    }
-
-    this.#date.hidden = false;
-    const parts = {
-      day: tzTime.getDate().toString().padStart(2, '0'),
-      month: (tzTime.getMonth() + 1).toString().padStart(2, '0'),
-      year: tzTime.getFullYear().toString()
-    };
-
-    return date.split(' ')
-      .map(part => parts[part])
-      .filter(Boolean)
-      .join(' ');
-  }
-
   constructor() {
     super();
     this.#root = this.attachShadow({ mode: 'open' });
@@ -227,14 +166,77 @@ export default class AnalogClock extends HTMLElement {
       this.style.setProperty('--_tf', 'steps(60)');
     }
 
-    this.updateClock();
+    this.#updateClock();
   }
 
-  updateClock() {
-    const time = new Date();
-    const tzOffset = parseInt(this.getAttribute('timezone') || '0');
+  #formatDate(tzTime) {
+    const date = this.getAttribute('date');
+    if (!date) {
+      this.#date.hidden = true;
+      return '';
+    }
+
+    this.#date.hidden = false;
+    const parts = {
+      day: tzTime.getDate().toString().padStart(2, '0'),
+      month: (tzTime.getMonth() + 1).toString().padStart(2, '0'),
+      year: tzTime.getFullYear().toString()
+    };
+
+    return date.split(' ')
+      .map(part => parts[part])
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  #formatNumber(num) {
+    const system = this.getAttribute('system') || 'latn';
+
+    if (system === 'roman') return this.#romanNumerals[num - 1];
+    if (system === 'romanlow') return this.#romanNumerals[num - 1].toLowerCase();
     
-    // Convert to UTC first, then add timezone offset
+    if (!this.#numberFormatter) {
+      this.#numberFormatter = new Intl.NumberFormat('en', { 
+        numberingSystem: system
+      });
+    }
+    return this.#numberFormatter.format(num);
+  }
+
+  #generateIndices() {
+    if (!this.hasAttribute('indices')) return '';
+    const isHours = this.getAttribute('indices') === 'hours';
+    const count = isHours ? 12 : 60;
+    const step = 100 / count;
+    const marker = this.getAttribute('marker') || '|';
+    const markerHour = this.getAttribute('marker-hour') || marker;
+    
+    return Array.from({ length: count }, (_, i) => {
+      const percentage = `${(i * step)}%`;
+      const isHourMark = isHours || i % 5 === 0;
+      const part = isHourMark ? 'part="index hour"' : 'part="index"';
+      const currentMarker = isHourMark ? markerHour : marker;
+      return `<li style="--_d:${percentage}" ${part}>${currentMarker}</li>`;
+    }).join('');
+  }
+
+  #generateNumerals(count) {
+    count = Math.min(12, Math.max(1, parseInt(count) || 12));
+    const step = 360 / count;
+    return Array.from({ length: count }, (_, i) => {
+      const deg = ((i * step) + 270) % 360;
+      const num = ((i * (12 / count))) % 12 || 12;
+      return `<li style="--_d:${deg}deg">${this.#formatNumber(num)}</li>`;
+    }).join('');
+  }
+
+  #roundTzOffset(offset) {
+    return Math.round((parseFloat(offset) || 0) * 4) / 4
+  };
+
+  #updateClock() {
+    const time = new Date();
+    const tzOffset = this.#roundTzOffset(this.getAttribute('timezone') || '0');
     const utc = time.getTime() + (time.getTimezoneOffset() * 60000);
     const tzTime = new Date(utc + (3600000 * tzOffset));
 

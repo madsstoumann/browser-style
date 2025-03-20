@@ -192,9 +192,13 @@ export default class DigitalClock extends HTMLElement {
 		document.head.appendChild(style);
 	}
 
+	#roundTzOffset(offset) {
+		return Math.round((parseFloat(offset) || 0) * 4) / 4
+	};
+
 	#updateClock(hasDate) {
 		const time = new Date();
-		const tzOffset = parseInt(this.getAttribute('timezone') || '0');
+		const tzOffset = this.#roundTzOffset(this.getAttribute('timezone') || '0');
 		const utc = time.getTime() + (time.getTimezoneOffset() * 60000);
 		const tzTime = new Date(utc + (3600000 * tzOffset));
 
