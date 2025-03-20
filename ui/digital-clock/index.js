@@ -32,13 +32,8 @@ styles.replaceSync(`
 		inline-size: min-content;
 		padding: var(--digital-clock-p, .75ch 1.5ch);
 	}
-	:host::part(ampm) {
-		animation: ampm 86400s steps(2, end) infinite;
-		animation-delay: var(--delay-hours, 0s);
-		counter-reset: ampm var(--initial-ampm, 0);
-	}
 	:host::part(ampm)::after {
-		content: counter(ampm, am-pm);
+		content: counter(hours, am-pm);
 	}
 	:host::part(date) {
 		font-family: var(--digital-clock-date-ff, inherit);
@@ -63,6 +58,7 @@ styles.replaceSync(`
 		list-style: none;
 		text-wrap: nowrap;
 	}
+	:host::part(ampm),
 	:host::part(hours) {
 		animation: hours 86400s steps(24, end) infinite;
 		animation-delay: var(--delay-hours, 0s);
@@ -94,15 +90,9 @@ styles.replaceSync(`
 		content: counter(seconds, var(--number-system, decimal-leading-zero)) ' ';
 	}
 	:host([time*="12hour"])::part(hours) {
-		/* Convert 24-hour to 12-hour format */
-		counter-reset: hours mod(var(--hours), 12);
+		counter-reset: hours calc(mod(var(--hours) - 1, 12) + 1);
 	}
 
-	@keyframes ampm {
-		0% { counter-reset: ampm 0; }    /* AM: 0-11 hours (0-49.9%) */
-		50% { counter-reset: ampm 1; }   /* PM: 12-23 hours (50-99.9%) */
-		100% { counter-reset: ampm 0; }  /* Back to AM */
-	}
 	@keyframes hours {
 		from { --hours: 0; }
 		to { --hours: 24; } 
@@ -143,7 +133,6 @@ export default class DigitalClock extends HTMLElement {
 				${time?.includes('short') ? '':`<li part="seconds"></li>`}
 				${is12Hour ? `<li part="ampm"></li>` : ''}
 			</ol>
-			
 		`;
 
 		if (hasDate) {
@@ -153,7 +142,7 @@ export default class DigitalClock extends HTMLElement {
 			this.#label = this.#root.querySelector('[part=label]');
 			this.#label.textContent = this.getAttribute('label') || '';
 		}
-		this.#updateClock(hasDate, is12Hour);
+		this.#updateClock(hasDate);
 
 		if (!counterStyleInjected) {
 			/* Safari Hack: Safari has issues with counter-style in shadow DOM */
@@ -197,13 +186,13 @@ export default class DigitalClock extends HTMLElement {
 		style.textContent = `
 			@counter-style am-pm {
 				system: cyclic;
-				symbols: "pm" "am";
+				symbols: "am" "am" "am" "am" "am" "am" "am" "am" "am" "am" "am" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "pm" "am";
 			}
 		`;
 		document.head.appendChild(style);
 	}
 
-	#updateClock(hasDate, is12Hour) {
+	#updateClock(hasDate) {
 		const time = new Date();
 		const tzOffset = parseInt(this.getAttribute('timezone') || '0');
 		const utc = time.getTime() + (time.getTimezoneOffset() * 60000);
@@ -217,11 +206,6 @@ export default class DigitalClock extends HTMLElement {
 		this.style.setProperty('--delay-minutes', `-${minutes + seconds}s`);
 		this.style.setProperty('--delay-seconds', `-${seconds}s`);
 		this.style.setProperty('--number-system', this.getAttribute('number-system') || 'decimal-leading-zero');
-
-		if (is12Hour) {
-			const isPM = tzTime.getHours() >= 12 ? 1 : 0;
-			this.style.setProperty('--initial-ampm', isPM.toString());
-		}
 		if (hasDate) this.#updateDate(tzTime);
 	}
 
