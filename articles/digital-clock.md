@@ -286,4 +286,4 @@ All the parts (pun intended) of the clock have `::part`s, so you can easily styl
 ## Demo
 Here’s a CodePen with all the clocks we've been making (and a few extra!):
 
-{% codepen https://codepen.io/stoumann/pen/ByaxmOv %}
+https://codepen.io/stoumann/pen/ByaxmOv
