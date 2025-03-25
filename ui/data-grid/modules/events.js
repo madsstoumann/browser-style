@@ -4,20 +4,18 @@ import handleKeyboardEvents from './events.keyboard.js';
 import { addEventListeners, getKeyValueObject, getObj } from './utility.js';
 
 export function attachCustomEventHandlers(context) {
-	const { state } = context;
-
 	// Append new rows to the table
 	context.addEventListener('dg:append', (event) => {
 		const { detail } = event;
-		state.tbody.push(...detail);
-		state.rows = state.tbody.length;
-		state.pages = Math.floor(state.rows / state.itemsPerPage);
+		context.state.tbody.push(...detail);
+		context.state.rows = context.state.tbody.length;
+		context.state.pages = Math.floor(context.state.rows / context.state.itemsPerPage);
 		renderTBody(context);
 	});
 
 	// Clear selected rows
 	context.addEventListener('dg:clearselected', () => {
-		state.selected.clear();
+		context.state.selected.clear();
 		context.form.elements.selected.value = 0;
 		renderTBody(context);
 		if (context.toggle) {
@@ -29,9 +27,9 @@ export function attachCustomEventHandlers(context) {
 
 	// Event listener for retrieving selected rows based on composite keys
 	context.addEventListener('dg:getselected', () => {
-		const selected = [...state.selected].map(key => {
+		const selected = [...context.state.selected].map(key => {
 			const tempNode = { parentNode: { dataset: { keys: key } } };
-			return getObj(state, tempNode);
+			return getObj(context.state, tempNode);
 		});
 		
 		context.dispatch('dg:selected', { detail: selected.filter(item => item !== null) });
