@@ -26,6 +26,7 @@ styles.replaceSync(`
 	/* === Header === */
 	:host::part(header) {
 		display: grid;
+		gap: var(--weather-api-header-g, 1ch);
 		grid-template-columns: 1fr auto;
 	}
 	:host::part(hgroup) {
