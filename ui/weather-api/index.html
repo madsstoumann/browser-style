@@ -22,9 +22,9 @@
 
 	<h3>Proxy Mode (Default)</h3>
 	<weather-api 
-		display="current"
+		display="current tempgraph forecast precgraph"
 		lang="en-UK"
-		url="https://api.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=lanzarote">
+		url="https://api.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen">
 	</weather-api>
 <!-- 
 	<h3>Proxy Mode with Forecast</h3>
@@ -48,8 +48,8 @@
 
 	<h3>Local Mode (for testing/development)</h3>
 	<weather-api
-		class="sunset"
-		display="current tempgraph precgraph"
+		class="sunsets"
+		display="current tempgraph precgraph forecast"
 		lang="da-DK"
 		url="./response.json">
 	</weather-api>

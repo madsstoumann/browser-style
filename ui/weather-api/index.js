@@ -118,17 +118,15 @@ styles.replaceSync(`
 	:host::part(footer-link) { color: inherit; }
 
 
+	/* === Forecast === */
 
 	:host::part(forecast) {
 		all: unset;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 	}
 	:host::part(day) {
-		display: grid;
-		place-items: center;
-		row-gap: 1ch;
-		text-align: center;
+	align-items: center;
+		display: flex;
+		justify-content: space-between;
 	}
 	:host::part(day-date) {
 		font-size: var(--weather-api-day-date-fs, 80%);
@@ -138,30 +136,39 @@ styles.replaceSync(`
 	}
 	:host::part(day-name) {
 		font-weight: var(--weather-api-day-fw, 500);
-		text-transform: var(--weather-api-day-tt, uppercase);
+		text-transform: var(--weather-api-day-tt, capitalize);
 	}
 	:host::part(day-temp) {
-		font-size: var(--weather-api-day-temp-fs, 200%);
-		font-weight: var(--weather-api-day-temp-fw, 300);
+		// font-size: var(--weather-api-day-temp-fs, 200%);
+		// font-weight: var(--weather-api-day-temp-fw, 300);
 	}
 	:host::part(night-temp) {
-		background: var(--weather-api-night-temp-bg, light-dark(#FEFEFE, #222));
-		border-radius: var(--weather-api-night-temp-br, .25em);
-		color: var(--weather-api-night-temp-color, inherit);
-		font-size: var(--weather-api-night-temp-fs, 80%);
-		font-weight: var(--weather-api-night-temp-fw, 400);
-		padding: var(--weather-api-night-temp-padding, .5em);
+		color: var(--weather-api-night-temp-color, var(--weather-api-light-text));
+	}
+
+	/* === Graphs === */
+	:host::part(precipitation-graph) {}
+	
+	:host::part(precipitation-bar) {
+		fill: var(--weather-api-precipitation-bar , #1A73E8);
+	}
+	:host::part(precipitation-text) {
+		fill: var(--weather-api-precipitation-color, #1A73E8);
+		font-family: inherit;
+		font-size: var(--weather-api-precipitation-fs, 9px);
+		text-anchor: start;
+		stroke: none;
+		stroke-width: 0;
 	}
 
 
-
-	:host::part(forecast-graph) {
+	:host::part(temperature-graph) {
 		fill: none;
 		stroke: var(--weather-api-graph-color, #FFCC00);
 		stroke-width: var(--weather-api-graph-stroke-width, 3);
 	}
 	
-	:host::part(forecast-graph-fill) {
+	:host::part(temperature-graph-fill) {
 		fill: var(--weather-api-graph-fill, rgba(255, 204, 0, 0.2));
 		stroke: none;
 	}
@@ -179,7 +186,7 @@ styles.replaceSync(`
 	:host::part(forecast-hour) {
 		fill: var(--weather-api-hour-color, var(--weather-api-light-text));
 		font-family: inherit;
-		font-size: var(--weather-api-hour-fs, 7px);
+		font-size: var(--weather-api-hour-fs, 9px);
 		text-anchor: start;
 		stroke: none;
 		stroke-width: 0;
@@ -298,6 +305,8 @@ class WeatherApi extends HTMLElement {
 		</header>
 
 		${this._display.includes('tempgraph') ? this.#renderTemperatureGraph(location, forecast.forecastday) : ''}
+		${this._display.includes('precgraph') ? this.#renderPrecipitationGraph(location, forecast.forecastday) : ''}
+
 		${this._display.includes('forecast') ? this.#renderForecast(forecast.forecastday, isMetric, tempUnit) : ''}
 
 		<footer part="footer">
@@ -332,31 +341,121 @@ class WeatherApi extends HTMLElement {
 				const dayTemp = isMetric ? day.day.maxtemp_c : day.day.maxtemp_f;
 				const nightTemp = isMetric ? day.day.mintemp_c : day.day.mintemp_f;
 				const date = new Date(day.date);
-				const dayName = this.#formatDate(date, { weekday: 'long' });
+				const dayName = this.#formatDate(date, { weekday: 'short' });
 				const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
 				
 				return `
 					<li part="day" title="${day.day.condition.text}">
-						<strong part="day-name">${dayName}</strong>
-						<em part="day-date">${shortDate}</em>
-						<img part="day-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
-						<h3 part="day-temp">${dayTemp}${tempUnit}</h3>
-						<h4 part="night-temp">${nightTemp}${tempUnit}</h4>
+						<strong part="day-name" title="${shortDate}">${dayName}</strong>
+						<img part="condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+						<span part="night-temp">${nightTemp}${tempUnit}</span>
+						<span part="day-temp">${dayTemp}${tempUnit}</span>
 					</li>
 				`;
 			}).join('') || ''}
 		</ul>`;
 	}
 
+	#renderPrecipitationGraph(location, days) {
+		const precipKey = this._isMetric ? 'precip_mm' : 'precip_in';
+		const precipUnit = this._isMetric ? 'mm' : 'in';
+		
+		const localTime = new Date(location.localtime);
+		const currentHour = localTime.getHours();
+
+		const hoursArray = [];
+
+		// Get hours from today
+		const todayHours = days[0].hour.slice(currentHour);
+		hoursArray.push(...todayHours);
+		
+		// If we need more hours to make 24, get them from tomorrow
+		if (hoursArray.length < 24 && days.length > 1) {
+			const tomorrowHours = days[1].hour.slice(0, 24 - hoursArray.length);
+			hoursArray.push(...tomorrowHours);
+		}
+
+		// If no hours data, return empty string
+		if (hoursArray.length === 0) return '';
+		
+		// Find the maximum precipitation value to scale the bars
+		const maxPrecip = Math.max(...hoursArray.map(hour => hour[precipKey]));
+		
+		// If there's no precipitation at all, display a message
+		if (maxPrecip === 0) {
+			return '';
+		}
+		
+		// Reserve space at top (15px) and bottom (15px) for labels
+		const topMargin = 15;
+		const bottomMargin = 15;
+		const graphHeight = 100 - topMargin - bottomMargin;
+		
+		// Calculate bar width based on number of hours
+		const barWidth = Math.floor(490 / hoursArray.length);
+		const barGap = 1; // Gap between bars
+		
+		// Create bars for each hour - keep this part unchanged
+		const bars = hoursArray.map((hour, index) => {
+			const precip = hour[precipKey];
+			// Calculate x position
+			const x = 5 + (index * (barWidth + barGap));
+			// Calculate bar height proportional to precipitation (minimum 1px if there's any precipitation)
+			const barHeight = precip === 0 ? 0 : Math.max(1, (precip / maxPrecip) * graphHeight);
+			// Calculate y position (bottom-aligned)
+			const y = (100 - bottomMargin) - barHeight;
+			
+			 // No inline labels on bars anymore
+			return `<rect part="precipitation-bar" x="${x}" y="${y}" width="${barWidth}" height="${barHeight+1}"></rect>`;
+		}).join('');
+		
+		// Add 8 evenly-spaced precipitation labels at the top
+		const labelInterval = Math.floor(hoursArray.length / 8);
+		const precipLabels = hoursArray
+			.filter((_, index) => index % labelInterval === 0)
+			.slice(0, 8) // Ensure we have max 8 labels
+			.map((hour, index) => {
+				const x = 5 + ((index * labelInterval) * (barWidth + barGap)) + barWidth/2;
+				const precip = hour[precipKey];
+				
+				// Show the precipitation amount at the top of the graph
+				return `<text part="precipitation-text" x="${x}" y="${topMargin - 5}">${precip > 0 ? precip.toFixed(1) + precipUnit : '0'}</text>`;
+			}).join('');
+		
+		// Add hour labels at regular intervals - unchanged
+		const hourLabels = hoursArray
+			.filter((_, index) => index % labelInterval === 0)
+			.slice(0, 8) // Ensure we have max 8 labels
+			.map((hour, index) => {
+				const x = 5 + ((index * labelInterval) * (barWidth + barGap)) + barWidth/2;
+				
+				// Format hour time for display
+				const hourTime = new Date(hour.time);
+				const formattedHour = hourTime.getHours().toString().padStart(2, '0');
+				
+				return `<text part="forecast-hour" x="${x}" y="${100 - bottomMargin + 10}">${formattedHour}:00</text>`;
+			}).join('');
+		
+		return `
+			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="precipitation-graph">
+				${bars}
+				${precipLabels}
+				${hourLabels}
+			</svg>`;
+	}
+
 	#renderTemperatureGraph(location, days) {
-		const tempKey = this._isMetric ? 'temp_c' : 'temp_f';
-		const [minTemp, maxTemp] = days.reduce(
-			([min, max], day) => [
-				Math.min(min, Math.min(day.day[`max${tempKey}`], day.day[`min${tempKey}`])),
-				Math.max(max, Math.max(day.day[`max${tempKey}`], day.day[`min${tempKey}`]))
-			],
-			[Infinity, -Infinity]
-		);
+		const tempSuffix = this._isMetric ? 'c' : 'f';
+		
+		// Get min/max directly from forecast data
+		let minTemp = Infinity;
+		let maxTemp = -Infinity;
+		
+		// Get min/max from today and tomorrow only (slice(0,2))
+		days.slice(0, 2).forEach(day => {
+			minTemp = Math.min(minTemp, day.day[`mintemp_${tempSuffix}`]);
+			maxTemp = Math.max(maxTemp, day.day[`maxtemp_${tempSuffix}`]);
+		});
 
 		const localTime = new Date(location.localtime);
 		const currentHour = localTime.getHours();
@@ -383,7 +482,7 @@ class WeatherApi extends HTMLElement {
 		
 		// Create points for polyline with adjusted y-coordinates to leave margins
 		const points = hoursArray.map((hour, index) => {
-			const temp = hour[tempKey];
+			const temp = hour[`temp_${tempSuffix}`];
 			// Calculate x position with slight inset (5 units on each side)
 			const x = 5 + ((index / (hoursArray.length - 1)) * 490);
 			// Calculate y position with range topMargin to (100 - bottomMargin), inverted for SVG
@@ -401,7 +500,7 @@ class WeatherApi extends HTMLElement {
 			.filter((_, index) => index % labelInterval === 0)
 			.slice(0, 8) // Ensure we have max 8 labels
 			.map((hour, index) => {
-				const temp = hour[tempKey];
+				const temp = hour[`temp_${tempSuffix}`];
 				const x = 5 + ((index * labelInterval) / (hoursArray.length - 1)) * 490;
 				// Calculate y with the same normalization as for the points
 				const normalizedTemp = (temp - minTemp) / (maxTemp - minTemp);
@@ -419,8 +518,8 @@ class WeatherApi extends HTMLElement {
 			}).join('');
 		
 		return `
-			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="forecast-graph">
-				<polygon points="${polygonPoints}" part="forecast-graph-fill"></polygon>
+			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="temperature-graph">
+				<polygon points="${polygonPoints}" part="temperature-graph-fill"></polygon>
 				<polyline points="${points}" vector-effect="non-scaling-stroke"></polyline>
 				${tempLabels}
 			</svg>`;
