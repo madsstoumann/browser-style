@@ -1,0 +1,173 @@
+{
+  "version": "1.0",
+  "organization": {
+    "name": "Example Company",
+    "contact_email": "privacy@example.com",
+    "privacy_policy_url": "https://example.com/privacy"
+  },
+  "defaultLang": "en",
+  "translations": {
+    "en": {
+      "consent_categories": {
+        "necessary": {
+          "name": "Strictly Necessary",
+          "description": "Essential for website functionality"
+        },
+        "functional": {
+          "name": "Functional",
+          "description": "Enable specific functions like remembering preferences"
+        },
+        "analytics": {
+          "name": "Analytics",
+          "description": "Help understand how visitors use the site"
+        },
+        "marketing": {
+          "name": "Marketing",
+          "description": "Used for targeted advertising"
+        }
+      }
+    }
+  },
+  "consent_categories": [
+    {
+      "id": "necessary",
+      "can_be_declined": false,
+      "default_state": "enabled"
+    },
+    {
+      "id": "functional",
+      "can_be_declined": true,
+      "default_state": "recommended",
+      "legal_basis": "legitimate_interest"
+    },
+    {
+      "id": "analytics",
+      "can_be_declined": true,
+      "default_state": "optional",
+      "legal_basis": "consent"
+    },
+    {
+      "id": "marketing",
+      "can_be_declined": true,
+      "default_state": "optional",
+      "legal_basis": "consent"
+    }
+  ],
+  "tracking_technologies": {
+    "cookies": [
+      {
+        "name": "session_id",
+        "domain": "example.com",
+        "path": "/",
+        "category_id": "necessary",
+        "purpose": "Maintain user session",
+        "storage_type": "cookie",
+        "storage_duration": "session",
+        "same_site": "lax",
+        "secure": true,
+        "http_only": true,
+        "data_shared_with": []
+      },
+      {
+        "name": "language_preference",
+        "domain": "example.com",
+        "path": "/",
+        "category_id": "functional",
+        "purpose": "Remember language preference",
+        "storage_type": "cookie",
+        "storage_duration": "30d",
+        "same_site": "lax",
+        "secure": true,
+        "http_only": false,
+        "data_shared_with": []
+      },
+      {
+        "name": "_ga",
+        "domain": ".example.com",
+        "path": "/",
+        "category_id": "analytics",
+        "purpose": "Google Analytics tracking",
+        "storage_type": "cookie",
+        "storage_duration": "2y",
+        "same_site": "none",
+        "secure": true,
+        "http_only": false,
+        "data_shared_with": ["Google LLC"],
+        "data_controller": "Google LLC",
+        "data_processor": "Google LLC",
+        "third_party_info": {
+          "privacy_policy": "https://policies.google.com/privacy"
+        }
+      }
+    ],
+    "local_storage": [
+      {
+        "name": "theme_preference",
+        "category_id": "functional",
+        "purpose": "Store theme preferences",
+        "storage_type": "localStorage",
+        "storage_duration": "persistent",
+        "data_shared_with": []
+      }
+    ],
+    "fingerprinting": [
+      {
+        "id": "canvas_fp",
+        "category_id": "marketing",
+        "purpose": "Device identification for fraud prevention",
+        "technique": "canvas_fingerprinting",
+        "data_retention": "90d",
+        "data_shared_with": ["FraudDetection Inc."],
+        "mitigations": ["Data anonymization"]
+      }
+    ],
+    "other_tracking": [
+      {
+        "id": "session_replay",
+        "category_id": "analytics",
+        "purpose": "Record user interactions for UX improvements",
+        "technique": "session_recording",
+        "data_retention": "30d",
+        "data_shared_with": ["HotjarLike Inc."],
+        "data_controller": "Example Company",
+        "data_processor": "HotjarLike Inc.",
+        "anonymization": true,
+        "third_party_info": {
+          "privacy_policy": "https://hotjarlike.com/privacy"
+        }
+      }
+    ]
+  },
+  "geo_specific_requirements": {
+    "EU": {
+      "requires_explicit_consent": true,
+      "default_state": "disabled",
+      "exceptions": ["necessary"]
+    },
+    "US-CA": {
+      "requires_explicit_consent": true,
+      "default_state": "disabled", 
+      "exceptions": ["necessary"],
+      "do_not_sell_option": true
+    }
+  },
+  "user_controls": {
+    "granular_selection": true,
+    "reject_all_option": true,
+    "withdraw_consent_url": "https://example.com/privacy/consent-preferences"
+  },
+  "extensions": {
+    "tcf": {
+      "version": "2.0",
+      "cmp_id": "123",
+      "vendor_list_version": "56",
+      "purposes": [
+        {"id": 1, "category_id": "functional"},
+        {"id": 5, "category_id": "analytics"}
+      ]
+    },
+    "custom_extension": {
+      "key1": "value1"
+    }
+  }
+}
