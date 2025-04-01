@@ -1,225 +1,51 @@
-// Create a stylesheet outside the component
-const styles = new CSSStyleSheet();
-styles.replaceSync(`
-	:host {
-		--weather-api-light-text: color-mix(in srgb, currentColor, 50% transparent);
-		background: var(--weather-api-bg, light-dark(#EEE, #222));
-		border-radius: var(--weather-api-bdrs, .66em);
-		color: var(--weather-api-c, light-dark(#222, #EEE));
-		container-type: inline-size;
-		display: grid;
-		font-family: var(--weather-api-ff, ui-sans-serif, system-ui);
-		font-size: var(--weather-api-fs, clamp(.75rem, 3.5cqi, 1rem));
-		padding: var(--weather-api-padding, 1em);
-		row-gap: var(--weather-api-rg, 1em);
-	}
-
-	:host * {
-		box-sizing: border-box;
-	}
-
-	h2, h3, h4 {
-		margin: unset;
-		text-box: text;
-	}
-
-	/* === Header === */
-	:host::part(header) {
-		display: grid;
-		gap: var(--weather-api-header-g, 1ch);
-		grid-template-columns: 1fr auto;
-	}
-	:host::part(hgroup) {
-		align-content: start;
-		display: grid;
-		row-gap: var(--weather-api-header-rg, .5ch);
-	}
-	:host::part(location) {
-		font-size: var(--weather-api-location-fs, clamp(1rem, 4cqi, 4rem));
-		font-weight: var(--weather-api-location-fw, 300);
-	}
-	:host::part(temperature) {
-		font-size: var(--weather-api-temperature-value-fs, clamp(1.625rem, 6.5cqi, 6.5rem));
-		font-weight: var(--weather-api-temperature-value-fw, 400);
-	}
-	:host::part(feels-like) {
-		font-size: var(--weather-api-feels-like-fs, inherit);
-		font-weight: var(--weather-api-feels-like-fw, 500);
-	}
-	:host::part(date) {
-		color: var(--weather-api-date-color, var(--weather-api-light-text));
-		font-size: var(--weather-api-date-fs, inherit);
-		font-weight: var(--weather-api-date-fw, 300);
-		text-box: text;
-	}
-
-	/* === Condition === */
-	:host::part(condition) {
-		align-content: start;
-		display: grid;
-		justify-items: end;
-		margin: 0;
-		row-gap: var(--weather-api-header-rg, .5ch);
-		text-align: end;
-	}
-	:host::part(condition-icon) {
-		width: var(--weather-api-condition-icon-w, clamp(2rem, 10cqi, 4rem));
-	}
-	:host::part(condition-text) {
-		font-size: var(--weather-api-condition-text-fs, inherit);
-		text-box: text;
-	}
-	:host::part(lowhigh) {
-		color: var(--weather-api-lowhigh-color, var(--weather-api-light-text));
-		font-size: var(--weather-api-lowhigh-fs, inherit);
-		text-box: text;
-	}
-	:host::part(wind) {
-		align-items: center;
-		display: flex;
-		font-size: var(--weather-api-wind-fs, small);
-	}
-	:host::part(icon) {
-		fill: none;
-		height: 1.5rem;
-		pointer-events: none;
-		stroke: currentColor;
-		stroke-width: 1.25;
-		width: 1.5rem;
-	}
-
-/* === UV Index === */
-	:host::part(uv-index) {
-		background: var(--_bg);
-		border-radius: var(--weather-api-uv-bdrs, .25em);
-		color: var(--_c);
-		font-size: small;
-		padding: .25ch .5ch;
-		text-box: text;
-		text-wrap: nowrap;
-	}
-	:host::part(uv-0)  { --_bg: #55AF33; --_c: #FFF; }
-	:host::part(uv-1)  { --_bg: #A0C61B; --_c: #FFF; }
-	:host::part(uv-2)  { --_bg: #F7E98E; --_c: #000; }
-	:host::part(uv-3)  { --_bg: #F6E301; --_c: #000; }
-	:host::part(uv-4)  { --_bg: #FAB60D; --_c: #000; }
-	:host::part(uv-5)  { --_bg: #F88D2F; --_c: #FFF; }
-	:host::part(uv-6)  { --_bg: #F76D00; --_c: #FFF; }
-	:host::part(uv-7)  { --_bg: #E53015; --_c: #FFF; }
-	:host::part(uv-8)  { --_bg: #D90E21; --_c: #FFF; }
-	:host::part(uv-9)  { --_bg: #D80010; --_c: #FFF; }
-	:host::part(uv-10) { --_bg: #8A4F9E; --_c: #FFF; }
-
-	/* === Footer === */
-	:host::part(footer) {
-		color: var(--weather-api-footer-color, var(--weather-api-light-text));
-		font-size: var(--weather-api-footer-fs, 60%);
-	}
-	:host::part(footer-link) { color: inherit; }
-
-
-	/* === Forecast === */
-
-	:host::part(forecast) {
-		all: unset;
-	}
-	:host::part(day) {
-	align-items: center;
-		display: flex;
-		justify-content: space-between;
-	}
-	:host::part(day-date) {
-		font-size: var(--weather-api-day-date-fs, 80%);
-		font-style: var(--weather-api-day-date-fs, normal);
-		font-weight: var(--weather-api-day-date-fw, 300);
-	
-	}
-	:host::part(day-name) {
-		font-weight: var(--weather-api-day-fw, 500);
-		text-transform: var(--weather-api-day-tt, capitalize);
-	}
-	:host::part(day-temp) {
-		// font-size: var(--weather-api-day-temp-fs, 200%);
-		// font-weight: var(--weather-api-day-temp-fw, 300);
-	}
-	:host::part(night-temp) {
-		color: var(--weather-api-night-temp-color, var(--weather-api-light-text));
-	}
-
-	/* === Graphs === */
-	:host::part(precipitation-graph) {}
-	
-	:host::part(precipitation-bar) {
-		fill: var(--weather-api-precipitation-bar , #1A73E8);
-	}
-	:host::part(precipitation-text) {
-		fill: var(--weather-api-precipitation-color, #1A73E8);
-		font-family: inherit;
-		font-size: var(--weather-api-precipitation-fs, 9px);
-		text-anchor: start;
-		stroke: none;
-		stroke-width: 0;
-	}
-
-
-	:host::part(temperature-graph) {
-		fill: none;
-		stroke: var(--weather-api-graph-color, #FFCC00);
-		stroke-width: var(--weather-api-graph-stroke-width, 3);
-	}
-	
-	:host::part(temperature-graph-fill) {
-		fill: var(--weather-api-graph-fill, rgba(255, 204, 0, 0.2));
-		stroke: none;
-	}
-	
-	:host::part(forecast-temp) {
-		fill: var(--weather-api-temp-color, var(--weather-api-light-text));
-		font-family: inherit;
-		font-size: var(--weather-api-temp-fs, 8px);
-		text-anchor: middle;
-		dominant-baseline: middle;
-		stroke: none;
-		stroke-width: 0;
-	}
-
-	:host::part(forecast-hour) {
-		fill: var(--weather-api-hour-color, var(--weather-api-light-text));
-		font-family: inherit;
-		font-size: var(--weather-api-hour-fs, 9px);
-		text-anchor: start;
-		stroke: none;
-		stroke-width: 0;
-	}
-`);
-
 const i18n = {
 	'en': {
-		feelsLike: 'Feels like',
-		wind: 'Wind',
-		humidity: 'Humidity',
-		precipitation: 'Precipitation',
-		forecast: 'Forecast',
 		day: 'Day',
-		low: 'L',
+		direction: 'Direction',
+		east: 'E',
+		feelsLike: 'Feels like',
+		forecastDays: 'Forecast days',
+		forecastHours: 'Forecast hours',
+		gusts: 'Gusts',
+		humidity: 'Humidity',
 		high: 'H',
+		low: 'L',
 		night: 'Night',
-		poweredBy: 'Powered by',
-		uvIndex: 'UV',
+		north: 'N',
+		precipitation: 'Precipitation',
+		south: 'S',
+		uv: 'UV',
+		west: 'W',
+		wind: 'Wind',
 	}
 };
+
+const ICONS = {
+	calendarWeek: 'M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z, M16 3v4, M8 3v4, M4 11h16, M7 14h.013, M10.01 14h.005, M13.01 14h.005, M16.015 14h.005, M13.015 17h.005, M7.01 17h.005, M10.01 17h.005',
+	clock: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12h3.5, M12 7v5',
+	eye: 'M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0, M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
+	precipitation: 'M10.708 2.372a2.382 2.382 0 0 0 -.71 .686l-4.892 7.26c-1.981 3.314 -1.22 7.466 1.767 9.882c2.969 2.402 7.286 2.402 10.254 0c2.987 -2.416 3.748 -6.569 1.795 -9.836l-4.919 -7.306c-.722 -1.075 -2.192 -1.376 -3.295 -.686z',
+	sun: 'M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z, M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z, M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z',
+	sunrise: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M12 12a5 5 0 0 1 5 5a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1a5 5 0 0 1 5 -5, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12.707 2.293l3 3a1 1 0 1 1 -1.414 1.414l-1.293 -1.292v3.585a1 1 0 0 1 -.883 .993l-.117 .007a1 1 0 0 1 -1 -1v-3.586l-1.293 1.293a1 1 0 0 1 -1.414 -1.414l2.958 -2.96a1 1 0 0 1 .15 -.135l.127 -.08l.068 -.033l.11 -.041l.12 -.029c.3 -.055 .627 .024 .881 .278, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
+	sunset: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12 2a1 1 0 0 1 1 1v3.584l1.293 -1.291a1 1 0 0 1 1.32 -.083l.094 .083a1 1 0 0 1 0 1.414l-3 3a.98 .98 0 0 1 -.767 .293l-.124 -.017l-.127 -.032l-.104 -.04l-.115 -.063a1 1 0 0 1 -.151 -.114l-3.026 -3.027a1 1 0 0 1 1.414 -1.414l1.293 1.292v-3.585a1 1 0 0 1 1 -1, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
+	wind: 'M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24, M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24, M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24'
+}
 
 class WeatherApi extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.adoptedStyleSheets = [styles];
+		this.#loadStyles();
 		this._data = null;
-		this._display = this.getAttribute('display') || 'current';
 		this._locale = this.getAttribute('lang') || document.documentElement.lang || navigator.language;
 		this._lang = this._locale.split('-')[0];
 		this._i18n = { ...i18n };
 		this._isMetric = this.#determineUnitSystem();
+		this._widgets = this.getAttribute('widgets') || '';
+	}
+
+	get basePath() {
+		return new URL('.', import.meta.url).href;
 	}
 
 	/**
@@ -252,66 +78,39 @@ class WeatherApi extends HTMLElement {
 		return new Intl.DateTimeFormat(this._locale, options).format(date);
 	}
 
+	#icon(paths, part) {
+    return `<svg viewBox="0 0 24 24"${part ? ` part="${part}"` : ''}>${
+      paths.split(',').map(path => `<path d="${path}"></path>`).join('')
+    }</svg>`;
+  }
+
+	async #loadStyles() {
+    try {
+      const cssPath = this.getAttribute('styles') || 
+        (this.basePath ? `${this.basePath}index.css` : 'index.css');
+      const response = await fetch(cssPath);
+      if (response.ok) {
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(await response.text());
+        this.shadowRoot.adoptedStyleSheets = [sheet];
+      }
+    } catch (_) {}
+  }
+
 	#t(key) {
 		return this._i18n[this._lang]?.[key] || this._i18n.en?.[key] || key;
 	}
 
 	#render() {
 		if (!this._data) return;
-		
 		const { location, current, forecast } = this._data;
-		const isMetric = this._isMetric;
-
-		const unitValues = {
-			temperature: isMetric ? current.temp_c : current.temp_f,
-			tempUnit: isMetric ? '°C' : '°F',
-			feelsLike: isMetric ? current.feelslike_c : current.feelslike_f,
-			wind: isMetric ? (current.wind_kph / 3.6).toFixed(1) : current.wind_mph,
-			windUnit: isMetric ? 'm/s' : 'mph',
-			precipitation: isMetric ? current.precip_mm : current.precip_in,
-			precipUnit: isMetric ? 'mm' : 'in'
-		};
-
-		const formattedTime = this.#formatDate(location.localtime, { 
-			weekday: 'long', 
-			hour: '2-digit', 
-			minute: '2-digit',
-			hour12: !isMetric
-		});
-
-		const { temperature, tempUnit, feelsLike, wind, windUnit, precipitation, precipUnit } = unitValues;
-
 		this.shadowRoot.innerHTML = `
-		<header part="header">
-			<hgroup part="hgroup">
-				<h2 part="location" title="${location.region}, ${location.country}">${location.name}</h2>
-				<h3 part="temperature">${temperature}${tempUnit}</h3>
-				<h4 part="feels-like">${this.#t('feelsLike')}: ${feelsLike}${tempUnit}</h4>
-				<div part="date">${formattedTime}</div>
-			</hgroup>
-			<figure part="condition">
-				<img part="condition-icon" src="https:${current.condition.icon}" alt="${current.condition.text}">
-				<figcaption part="condition-text">${current.condition.text}</figcaption>
-				${forecast ? this.#renderLowHigh(forecast.forecastday) : ''}
-				${forecast ? this.#renderAstro(forecast.forecastday[0].astro) : ''}
-				<div part="wind">
-					<svg part="icon" viewBox="0 0 24 24" style="rotate:${current.wind_degree + 180}deg;">
-						<path d="M12 5l0 14"/><path d="M16 9l-4 -4"/><path d="M8 9l4 -4"/>
-					</svg>
-					${wind} ${windUnit}
-				</div>
-				<div part="uv-index uv-${Math.min(Math.round(current.uv), 10)}">${this.#t('uvIndex')}: ${current.uv}</div>
-			</figure>
-		</header>
-
-		${this._display.includes('tempgraph') ? this.#renderTemperatureGraph(location, forecast.forecastday) : ''}
-		${this._display.includes('precgraph') ? this.#renderPrecipitationGraph(location, forecast.forecastday) : ''}
-
-		${this._display.includes('forecast') ? this.#renderForecast(forecast.forecastday, isMetric, tempUnit) : ''}
-
-		<footer part="footer">
-			${this.#t('poweredBy')} <a href="https://www.weatherapi.com/" part="footer-link" target="_blank">WeatherAPI</a>
-		</footer>`;
+			${this._widgets.includes('overview') ? this.#renderOverview(location, current, forecast) : ''}
+			${this._widgets.includes('forecast-hours') ? this.#renderForecastHours(location, forecast.forecastday) : ''}
+			${this._widgets.includes('forecast-days') ? this.#renderForecastDays(forecast.forecastday) : ''}
+			${this._widgets.includes('precipitation') ? this.#renderPrecipitation(current) : ''}
+			${this._widgets.includes('wind') ? this.#renderWind(current) : ''}
+		`;
 	}
 
 	#renderLowHigh(forecast) {
@@ -335,194 +134,128 @@ class WeatherApi extends HTMLElement {
 		return `<small part="astro">☀ ${sunrise} ☽ ${sunset}</small>`;
 	}
 
- 	#renderForecast(forecast, isMetric, tempUnit) {
-		return `<ul part="forecast">
-			${forecast.map(day => {
-				const dayTemp = isMetric ? day.day.maxtemp_c : day.day.maxtemp_f;
-				const nightTemp = isMetric ? day.day.mintemp_c : day.day.mintemp_f;
-				const date = new Date(day.date);
-				const dayName = this.#formatDate(date, { weekday: 'short' });
-				const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
-				
+	#renderCompass(current) {
+		return `
+		<div part="compass">
+			<ul part="compass-indices"></ul>
+			<ol part="compass-text">
+				<li part="north">${this.#t('north')}</li>
+				<li part="east">${this.#t('east')}</li>
+				<li part="south">${this.#t('south')}</li>
+				<li part="west">${this.#t('west')}</li>
+			</ol>
+		</div>`
+	}
+
+ 	#renderForecastDays(forecast) {
+		const tempUnit = this._isMetric ? '°C' : '°F';
+		return `
+		<div part="forecast-days">
+			<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays')}</h4>
+			<ul part="forecast-days-wrapper">
+				${forecast.map(day => {
+					const dayTemp = this._isMetric ? day.day.maxtemp_c : day.day.maxtemp_f;
+					const nightTemp = this._isMetric ? day.day.mintemp_c : day.day.mintemp_f;
+					const date = new Date(day.date);
+					const dayName = this.#formatDate(date, { weekday: 'short' });
+					const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
+					
+					return `
+						<li part="forecast-day" title="${day.day.condition.text}">
+							<strong part="forecast-day-name" title="${shortDate}">${dayName}</strong>
+							<img part="forecast-day-icon condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+							<span part="forecast-day-night-temp">${nightTemp}${tempUnit}</span>
+							<span part="forecast-day-temp">${dayTemp}${tempUnit}</span>
+						</li>
+					`;
+				}).join('') || ''}
+			</ul>
+		</div>`;
+	}
+
+	#renderForecastHours(location, days) {
+		const localTime = new Date(location.localtime);
+		const currentHour = localTime.getHours();
+		const hours = [];
+		const today = days[0].hour.slice(currentHour);
+		hours.push(...today);
+
+		if (hours.length < 24 && days.length > 1) {
+			const tomorrow = days[1].hour.slice(0, 24 - hours.length);
+			hours.push(...tomorrow);
+		}
+
+		return `
+		<div part="forecast-hours">
+			<h4 part="title forecast-hours-title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours')}</h4>
+			<ul part="forecast-hours-scroll">
+			${hours.map(hour => {
+				const hourTime = new Date(hour.time);
 				return `
-					<li part="day" title="${day.day.condition.text}">
-						<strong part="day-name" title="${shortDate}">${dayName}</strong>
-						<img part="condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
-						<span part="night-temp">${nightTemp}${tempUnit}</span>
-						<span part="day-temp">${dayTemp}${tempUnit}</span>
+					<li part="forecast-hour-item" title="${hour.condition.text}">
+						<span part="forecast-hour-time">${hourTime.getHours().toString().padStart(2, '0')}:00</span>
+						<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
+						<span part="forecast-hour-temp">${this._isMetric ? hour.temp_c : hour.temp_f}°${this._isMetric ? 'C' : 'F'}</span>
 					</li>
 				`;
 			}).join('') || ''}
-		</ul>`;
+			</ul>
+		</div>`;
 	}
 
-	#renderPrecipitationGraph(location, days) {
-		const precipKey = this._isMetric ? 'precip_mm' : 'precip_in';
-		const precipUnit = this._isMetric ? 'mm' : 'in';
-		
-		const localTime = new Date(location.localtime);
-		const currentHour = localTime.getHours();
-
-		const hoursArray = [];
-
-		// Get hours from today
-		const todayHours = days[0].hour.slice(currentHour);
-		hoursArray.push(...todayHours);
-		
-		// If we need more hours to make 24, get them from tomorrow
-		if (hoursArray.length < 24 && days.length > 1) {
-			const tomorrowHours = days[1].hour.slice(0, 24 - hoursArray.length);
-			hoursArray.push(...tomorrowHours);
-		}
-
-		// If no hours data, return empty string
-		if (hoursArray.length === 0) return '';
-		
-		// Find the maximum precipitation value to scale the bars
-		const maxPrecip = Math.max(...hoursArray.map(hour => hour[precipKey]));
-		
-		// If there's no precipitation at all, display a message
-		if (maxPrecip === 0) {
-			return '';
-		}
-		
-		// Reserve space at top (15px) and bottom (15px) for labels
-		const topMargin = 15;
-		const bottomMargin = 15;
-		const graphHeight = 100 - topMargin - bottomMargin;
-		
-		// Calculate bar width based on number of hours
-		const barWidth = Math.floor(490 / hoursArray.length);
-		const barGap = 1; // Gap between bars
-		
-		// Create bars for each hour - keep this part unchanged
-		const bars = hoursArray.map((hour, index) => {
-			const precip = hour[precipKey];
-			// Calculate x position
-			const x = 5 + (index * (barWidth + barGap));
-			// Calculate bar height proportional to precipitation (minimum 1px if there's any precipitation)
-			const barHeight = precip === 0 ? 0 : Math.max(1, (precip / maxPrecip) * graphHeight);
-			// Calculate y position (bottom-aligned)
-			const y = (100 - bottomMargin) - barHeight;
-			
-			 // No inline labels on bars anymore
-			return `<rect part="precipitation-bar" x="${x}" y="${y}" width="${barWidth}" height="${barHeight+1}"></rect>`;
-		}).join('');
-		
-		// Add 8 evenly-spaced precipitation labels at the top
-		const labelInterval = Math.floor(hoursArray.length / 8);
-		const precipLabels = hoursArray
-			.filter((_, index) => index % labelInterval === 0)
-			.slice(0, 8) // Ensure we have max 8 labels
-			.map((hour, index) => {
-				const x = 5 + ((index * labelInterval) * (barWidth + barGap)) + barWidth/2;
-				const precip = hour[precipKey];
-				
-				// Show the precipitation amount at the top of the graph
-				return `<text part="precipitation-text" x="${x}" y="${topMargin - 5}">${precip > 0 ? precip.toFixed(1) + precipUnit : '0'}</text>`;
-			}).join('');
-		
-		// Add hour labels at regular intervals - unchanged
-		const hourLabels = hoursArray
-			.filter((_, index) => index % labelInterval === 0)
-			.slice(0, 8) // Ensure we have max 8 labels
-			.map((hour, index) => {
-				const x = 5 + ((index * labelInterval) * (barWidth + barGap)) + barWidth/2;
-				
-				// Format hour time for display
-				const hourTime = new Date(hour.time);
-				const formattedHour = hourTime.getHours().toString().padStart(2, '0');
-				
-				return `<text part="forecast-hour" x="${x}" y="${100 - bottomMargin + 10}">${formattedHour}:00</text>`;
-			}).join('');
-		
-		return `
-			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="precipitation-graph">
-				${bars}
-				${precipLabels}
-				${hourLabels}
-			</svg>`;
-	}
-
-	#renderTemperatureGraph(location, days) {
-		const tempSuffix = this._isMetric ? 'c' : 'f';
-		
-		// Get min/max directly from forecast data
-		let minTemp = Infinity;
-		let maxTemp = -Infinity;
-		
-		// Get min/max from today and tomorrow only (slice(0,2))
-		days.slice(0, 2).forEach(day => {
-			minTemp = Math.min(minTemp, day.day[`mintemp_${tempSuffix}`]);
-			maxTemp = Math.max(maxTemp, day.day[`maxtemp_${tempSuffix}`]);
+	#renderOverview(location, current, forecast) {
+		const tempUnit = this._isMetric ? '°C' : '°F';
+		const formattedTime = this.#formatDate(location.localtime, { 
+			weekday: 'long', 
+			hour: '2-digit', 
+			minute: '2-digit',
+			hour12: !this._isMetric
 		});
 
-		const localTime = new Date(location.localtime);
-		const currentHour = localTime.getHours();
-
-		const hoursArray = [];
-
-		// Get hours from today
-		const todayHours = days[0].hour.slice(currentHour);
-		hoursArray.push(...todayHours);
-		
-		// If we need more hours to make 24, get them from tomorrow
-		if (hoursArray.length < 24 && days.length > 1) {
-			const tomorrowHours = days[1].hour.slice(0, 24 - hoursArray.length);
-			hoursArray.push(...tomorrowHours);
-		}
-
-		// If no hours data, return empty string
-		if (hoursArray.length === 0) return '';
-		
-		 // Reserve space at top (15px) and bottom (15px) for labels
-		const topMargin = 15;
-		const bottomMargin = 15;
-		const graphHeight = 100 - topMargin - bottomMargin; // Actual height for the graph
-		
-		// Create points for polyline with adjusted y-coordinates to leave margins
-		const points = hoursArray.map((hour, index) => {
-			const temp = hour[`temp_${tempSuffix}`];
-			// Calculate x position with slight inset (5 units on each side)
-			const x = 5 + ((index / (hoursArray.length - 1)) * 490);
-			// Calculate y position with range topMargin to (100 - bottomMargin), inverted for SVG
-			const normalizedTemp = (temp - minTemp) / (maxTemp - minTemp);
-			const y = (100 - bottomMargin) - (normalizedTemp * graphHeight);
-			return `${x},${y}`;
-		}).join(' ');
-		
-		// Create polygon points by adding bottom corners to close the shape
-		const polygonPoints = points + ` 495,${100 - bottomMargin} 5,${100 - bottomMargin}`;
-		
-		// Adjust temperature label positions and add hour labels
-		const labelInterval = Math.floor(hoursArray.length / 8);
-		const tempLabels = hoursArray
-			.filter((_, index) => index % labelInterval === 0)
-			.slice(0, 8) // Ensure we have max 8 labels
-			.map((hour, index) => {
-				const temp = hour[`temp_${tempSuffix}`];
-				const x = 5 + ((index * labelInterval) / (hoursArray.length - 1)) * 490;
-				// Calculate y with the same normalization as for the points
-				const normalizedTemp = (temp - minTemp) / (maxTemp - minTemp);
-				const y = (100 - bottomMargin) - (normalizedTemp * graphHeight);
-				
-				// Format hour time for display
-				const hourTime = new Date(hour.time);
-				const formattedHour = hourTime.getHours().toString().padStart(2, '0');
-				
-				// Temperature label above points and hour label below the graph
-				return `
-					<text part="forecast-temp" x="${x}" y="${y - 7}">${Math.round(temp)}</text>
-					<text part="forecast-hour" x="${x}" y="${100 - bottomMargin + 10}">${formattedHour}:00</text>
-				`;
-			}).join('');
-		
 		return `
-			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="temperature-graph">
-				<polygon points="${polygonPoints}" part="temperature-graph-fill"></polygon>
-				<polyline points="${points}" vector-effect="non-scaling-stroke"></polyline>
-				${tempLabels}
-			</svg>`;
+		<div part="overview">
+			<hgroup part="overview-group">
+				<h2 part="overview-location" title="${location.region}, ${location.country}">${location.name}</h2>
+				<h3 part="overview-temperature">${this._isMetric ? current.temp_c : current.temp_f}${tempUnit}</h3>
+				<h4 part="overview-feels-like">${this.#t('feelsLike')}: ${this._isMetric ? current.feelslike_c : current.feelslike_f}${tempUnit}</h4>
+				<div part="overview-date">${formattedTime}</div>
+			</hgroup>
+			<figure part="overview-condition">
+				<img part="condition-icon" src="https:${current.condition.icon}" alt="${current.condition.text}">
+				<figcaption part="overview-condition-text">${current.condition.text}</figcaption>
+				${forecast ? this.#renderLowHigh(forecast.forecastday) : ''}
+				${forecast ? this.#renderAstro(forecast.forecastday[0].astro) : ''}
+				<div part="overview-wind">
+					<svg part="icon" viewBox="0 0 24 24" style="rotate:${current.wind_degree + 180}deg;">
+						<path d="M12 5l0 14"/><path d="M16 9l-4 -4"/><path d="M8 9l4 -4"/>
+					</svg>
+					${this._isMetric ? (current.wind_kph / 3.6).toFixed(1) : current.wind_mph} ${this._isMetric ? 'm/s' : 'mph'}
+				</div>
+				<div part="overview-uv-index uv-${Math.min(Math.round(current.uv), 10)}">${this.#t('uv')}: ${current.uv}</div>
+			</figure>
+		</div>`;
+	}
+
+	#renderPrecipitation(current, unit) {
+		return `<div></div>`;
+	}
+
+	#renderWind(current) {
+		const gusts = this._isMetric ? current.gust_kph : current.gust_mph;
+		const wind = this._isMetric ? current.wind_kph : current.wind_mph;
+		const windUnit = this._isMetric ? 'm/s' : 'mph';
+		return `
+			<div part="wind">
+				<h4 part="title wind-title">${this.#icon(ICONS.wind, 'icon wind-icon')}${this.#t('wind')}</h4>
+				<div part="wind-wrapper">
+					<ul part="wind-items">
+						<li part="wind-item"><strong part="wind-item-key">${this.#t('wind')}</strong><span part="wind-item-value">${wind} ${windUnit}</span></li>
+						<li part="wind-item"><strong part="wind-item-key">${this.#t('gusts')}</strong><span part="wind-item-value">${gusts} ${windUnit}</span></li>
+						<li part="wind-item"><strong part="wind-item-key">${this.#t('direction')}</strong><span part="wind-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
+					</ul>
+					${this.#renderCompass(current)}
+				</div>
+			</div>`;
 	}
 }
 

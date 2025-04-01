@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Nav Compass</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Analog Clock: CSS-driven analog clock with JavaScript initialization.">
+  <meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Nav Compass</h2>
+	<p>Web Component, using mostly CSS to drive a compass</p>
+
+	<div class="ui-grid --xs-c-1 --md-c-2">
+		<nav-compass degree="28.5" lang="en" mode="course"></nav-compass>
+		<nav-compass degree="28.5" lang="zh" value="5" label="米/秒" mode="bearing"></nav-compass>
+	</div>
+
+	<script type="module" src="./index.js"></script>
+</body>
+</html>

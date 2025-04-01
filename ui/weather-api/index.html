@@ -7,6 +7,10 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<link rel="stylesheet" href="/base.css">
 	<style>
+		.apple {
+			--weather-api-bg: linear-gradient(180deg, #084380, #7a9fc5);
+			--weather-api-c: #EEE;
+		}
 		.sunset {
 			--weather-api-bg: url("./pexels-no-name-14543-66997.jpg");
 			--weather-api-c: #EEE;
@@ -20,11 +24,11 @@
 	<h2>Weather</h2>
 	<p>Using <a href="https://weatherapi.com">WeatherAPI</a> to get weather data.</p>
 
-	<h3>Proxy Mode (Default)</h3>
+	<!-- <h3>Proxy Mode (Default)</h3> -->
 	<!-- <weather-api 
-		display="current tempgraph forecast precgraph"
-		lang="en-UK"
-		url="https://weatherapi.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen&lang=ja">
+		widgets="current tempgraph forecast precgraph"
+		lang="fr-fr"
+		url="https://weatherapi.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen&lang=da">
 	</weather-api> -->
 <!-- 
 	<h3>Proxy Mode with Forecast</h3>
@@ -33,7 +37,7 @@
 		units="metric"
 		mode="proxy"
 		endpoint="forecast"
-		display="forecast"
+		widgets="forecast"
 		url="https://api.stoumann.workers.dev/">
 	</weather-api> -->
 
@@ -43,13 +47,13 @@
 		city="london"
 		url-template="https://api.weatherapi.com/v1/current.json?q={city}&key={apiKey}"
 		api-key="your-api-key-here"
-		display="micro">
+		widgets="micro">
 	</weather-api> -->
 
-	<h3>Local Mode (for testing/development)</h3>
+	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-api
-		class="sunsets"
-		display="current tempgraph precgraph forecast"
+		class="apples sunsets"
+		widgets="overview forecast-hours forecast-days wind"
 		lang="da-DK"
 		url="./current.response.json">
 	</weather-api>
@@ -70,8 +74,13 @@
 			if (weatherAppDa) {
 				weatherAppDa.i18n = {
 					'da': {
+						direction: 'Retning',
+						east: 'Ø',
+						west: 'V',
 						feelsLike: 'Føles som',
-						forecast: 'Vejrudsigt',
+						forecastDays: 'Vejrudsigt for de kommende dage',
+						forecastHours: 'Vejrudsigt det næste døgn',
+						gusts: 'Vindstød',
 						wind: 'Vind',
 						humidity: 'Luftfugtighed',
 						precipitation: 'Nedbør'
