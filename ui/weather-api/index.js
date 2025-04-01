@@ -1,3 +1,6 @@
+// Import the NavCompass component at the top of the file
+import '../nav-compass/index.js';
+
 const i18n = {
 	'en': {
 		day: 'Day',
@@ -41,7 +44,7 @@ class WeatherApi extends HTMLElement {
 		this._lang = this._locale.split('-')[0];
 		this._i18n = { ...i18n };
 		this._isMetric = this.#determineUnitSystem();
-		this._widgets = this.getAttribute('widgets') || '';
+		this._widgets = this.getAttribute('widgets')?.split(' ') || [];
 	}
 
 	get basePath() {
@@ -97,20 +100,34 @@ class WeatherApi extends HTMLElement {
     } catch (_) {}
   }
 
-	#t(key) {
-		return this._i18n[this._lang]?.[key] || this._i18n.en?.[key] || key;
+	#t(key, values = {}) {
+		let text = this._i18n[this._lang]?.[key] || this._i18n.en?.[key] || key;
+		
+		// Replace any {{placeholder}} with corresponding values
+		if (values && Object.keys(values).length) {
+			text = text.replace(/\{\{([^}]+)\}\}/g, (match, placeholder) => {
+				return values[placeholder] !== undefined ? values[placeholder] : match;
+			});
+		}
+		
+		return text;
 	}
 
 	#render() {
 		if (!this._data) return;
 		const { location, current, forecast } = this._data;
-		this.shadowRoot.innerHTML = `
-			${this._widgets.includes('overview') ? this.#renderOverview(location, current, forecast) : ''}
-			${this._widgets.includes('forecast-hours') ? this.#renderForecastHours(location, forecast.forecastday) : ''}
-			${this._widgets.includes('forecast-days') ? this.#renderForecastDays(forecast.forecastday) : ''}
-			${this._widgets.includes('precipitation') ? this.#renderPrecipitation(current) : ''}
-			${this._widgets.includes('wind') ? this.#renderWind(current) : ''}
-		`;
+		
+		const widgetRenderers = {
+			'overview': () => this.#renderOverview(location, current, forecast),
+			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
+			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
+			'precipitation': () => this.#renderPrecipitation(current),
+			'wind': () => this.#renderWind(current)
+		};
+		
+		this.shadowRoot.innerHTML = this._widgets
+			.map(widget => widgetRenderers[widget] ? widgetRenderers[widget]() : '')
+			.join('');
 	}
 
 	#renderLowHigh(forecast) {
@@ -134,24 +151,11 @@ class WeatherApi extends HTMLElement {
 		return `<small part="astro">☀ ${sunrise} ☽ ${sunset}</small>`;
 	}
 
-	#renderCompass(current) {
-		return `
-		<div part="compass">
-			<ul part="compass-indices"></ul>
-			<ol part="compass-text">
-				<li part="north">${this.#t('north')}</li>
-				<li part="east">${this.#t('east')}</li>
-				<li part="south">${this.#t('south')}</li>
-				<li part="west">${this.#t('west')}</li>
-			</ol>
-		</div>`
-	}
-
  	#renderForecastDays(forecast) {
 		const tempUnit = this._isMetric ? '°C' : '°F';
 		return `
 		<div part="forecast-days">
-			<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays')}</h4>
+			<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
 			<ul part="forecast-days-wrapper">
 				${forecast.map(day => {
 					const dayTemp = this._isMetric ? day.day.maxtemp_c : day.day.maxtemp_f;
@@ -253,7 +257,7 @@ class WeatherApi extends HTMLElement {
 						<li part="wind-item"><strong part="wind-item-key">${this.#t('gusts')}</strong><span part="wind-item-value">${gusts} ${windUnit}</span></li>
 						<li part="wind-item"><strong part="wind-item-key">${this.#t('direction')}</strong><span part="wind-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
 					</ul>
-					${this.#renderCompass(current)}
+					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${windUnit}"></nav-compass>
 				</div>
 			</div>`;
 	}

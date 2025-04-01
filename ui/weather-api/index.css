@@ -246,37 +246,10 @@ h2, h3, h4 {
 }
 
 /* === Compas === */
-:host::part(compass) {
-	aspect-ratio: 1;
-	background: var(--weather-api-compass-bg, light-dark(#CCC, #AAA));
-	border-radius: 50%;
-	container-type: inline-size;
-	display: grid;
-	margin-block-start: calc(var(--weather-api-p) / 2);
-	position: relative;
-	width: 100%;
+nav-compass {
+	color-scheme: dark;
+	margin-block-start: var(--weather-api-p);
 }
-:host::part(compass-indices),
-:host::part(compass-text) {
-	height: 100%;
-	inset: 0;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	position: absolute;
-	width: 100%;
-}
-:host::part(compass-text) {
-	display: grid;
-	font-size: var(--weather-api-compass-fs, 7cqi);
-	font-weight: var(--weather-api-compass-text-fw, 500);
-	grid: repeat(3, 1fr) / repeat(3, 1fr);
-	padding: .25ch .5ch;
-}
-:host::part(north) { grid-area: 1 / 2; place-self: start center; }
-:host::part(east) { grid-area: 2 / 3; place-self: center end; }
-:host::part(south) { grid-area: 3 / 2; place-self: end center; }
-:host::part(west) { grid-area: 2 / 1; place-self: center start; }
 
 
 
