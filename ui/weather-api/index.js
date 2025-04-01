@@ -7,8 +7,8 @@ const i18n = {
 		direction: 'Direction',
 		east: 'E',
 		feelsLike: 'Feels like',
-		forecastDays: 'Forecast days',
-		forecastHours: 'Forecast hours',
+		forecastDays: 'Forecast for the next {{value}} days',
+		forecastHours: 'Forecast for the next {{value}} hours',
 		gusts: 'Gusts',
 		humidity: 'Humidity',
 		high: 'H',
@@ -191,7 +191,7 @@ class WeatherApi extends HTMLElement {
 
 		return `
 		<div part="forecast-hours">
-			<h4 part="title forecast-hours-title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours')}</h4>
+			<h4 part="title forecast-hours-title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}</h4>
 			<ul part="forecast-hours-scroll">
 			${hours.map(hour => {
 				const hourTime = new Date(hour.time);
