@@ -30,6 +30,9 @@ export default class NavCompass extends HTMLElement {
 		return ['degree'];
 	}
 
+	/**
+	 * @param {Object} i18n - The i18n object with language keys and direction translations
+	 */
 	set i18n(i18n) {
 		this.#i18n = { ...this.#i18n, ...i18n };
 	}
@@ -74,14 +77,14 @@ export default class NavCompass extends HTMLElement {
 		const step = 100 / count;
 		const mark = count / parseInt(this.getAttribute('marks')) || 5;
 		return Array.from({ length: count }, (_, i) => {
-			return `<li style="--_p:${i * step}%" part="${i % mark === 0 ? 'indice-mark': 'indice'}"></li>`;
+			const isMark = i % mark === 0;
+			return `<li style="--_p:${i * step}%" part="${isMark ? 'indice-mark': 'indice'}"${isMark ? ` title="${Math.round(i * (360 / count))}°"` : ''}></li>`;
 		}).join('');
 	}
 
 	async #loadStyles() {
 		try {
-			const cssPath = this.getAttribute('styles') || 
-				(this.basePath ? `${this.basePath}index.css` : 'index.css');
+			const cssPath = this.getAttribute('styles') || (this.basePath ? `${this.basePath}index.css` : 'index.css');
 			const response = await fetch(cssPath);
 			if (response.ok) {
 				const sheet = new CSSStyleSheet();
