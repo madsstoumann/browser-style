@@ -247,8 +247,10 @@ h2, h3, h4 {
 
 /* === Compas === */
 nav-compass {
-	
-	margin-block-start: var(--weather-api-p);
+	/* --nav-compass-bg: #3373B5;
+	--nav-compass-c: #a7cff9; */
+	margin: var(--weather-api-p) auto 0 auto;
+	max-width: 250px;
 }
 
 

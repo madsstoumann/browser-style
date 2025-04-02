@@ -21,6 +21,7 @@ export default class NavCompass extends HTMLElement {
 		}
 	};
 	#lang;
+
 	get basePath() {
 		return new URL('.', import.meta.url).href;
 	}
@@ -45,13 +46,13 @@ export default class NavCompass extends HTMLElement {
 				<abbr part="east" title="${this.#t('E', 'full')}">${this.#t('E', 'abbr')}</abbr>
 				<abbr part="south" title="${this.#t('S', 'full')}">${this.#t('S', 'abbr')}</abbr>
 				<abbr part="west" title="${this.#t('W', 'full')}">${this.#t('W', 'abbr')}</abbr>
-				<div part="arrow">
+				<div part="arrow" aria-hidden="true">
 					<div part="arrow-head"></div>
 					<div part="arrow-line"></div>
 					<div part="arrow-tail"></div>
 				</div>
 				<h3 part="header">
-					<span part="value"></span>
+					<span part="value" aria-live="polite"></span>
 					<span part="label">${this.getAttribute('label')||''}</span>
 				</h3>
 			</nav>`;
@@ -73,8 +74,7 @@ export default class NavCompass extends HTMLElement {
 		const step = 100 / count;
 		const mark = count / parseInt(this.getAttribute('marks')) || 5;
 		return Array.from({ length: count }, (_, i) => {
-			const percentage = `${(i * step)}%`;
-			return `<li style="--_p:${percentage}" part="${i % mark === 0 ? 'indice-mark': 'indice'}"></li>`;
+			return `<li style="--_p:${i * step}%" part="${i % mark === 0 ? 'indice-mark': 'indice'}"></li>`;
 		}).join('');
 	}
 
@@ -93,7 +93,7 @@ export default class NavCompass extends HTMLElement {
 
 	#update(degree) {
 		this.style.setProperty('--_d', `${degree}deg`);
-		this.value.textContent = `${this.getAttribute('value') || `${degree}°`}`;
+		this.value.textContent = this.getAttribute('value') || `${degree}°`;
 	}
 }
 

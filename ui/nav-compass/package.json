@@ -7,10 +7,12 @@
   "exports": {
     ".": {
       "import": "./index.js"
-    }
+    },
+    "./styles": "./index.css"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "index.css"
   ],
   "publishConfig": {
     "access": "public",
