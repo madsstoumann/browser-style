@@ -40,7 +40,7 @@ export default class NavCompass extends HTMLElement {
 		this.#root = this.attachShadow({ mode: 'open' });
 		this.#loadStyles();
 		this.#root.innerHTML = `
-			<ul part="indices">${this.#generateIndices()}</ul>
+			<ul part="indices" aria-hidden="true">${this.#generateIndices()}</ul>
 			<nav part="directions">
 				<abbr part="north" title="${this.#t('N', 'full')}">${this.#t('N', 'abbr')}</abbr>
 				<abbr part="east" title="${this.#t('E', 'full')}">${this.#t('E', 'abbr')}</abbr>
