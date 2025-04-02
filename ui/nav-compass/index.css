@@ -130,7 +130,15 @@
 	background: var(--nav-compass-indice-mark-bg, var(--nav-compass-indice-bg));
 	border-radius: var(--nav-compass-indice-mark-bdrs, var(--nav-compass-indice-bdrs));
 	height: var(--nav-compass-indice-mark-h, var(--nav-compass-indice-h));
+	position: relative;
 	width: var(--nav-compass-indice-mark-w, var(--nav-compass-indice-w));
+}
+:host([degrees])::part(indice-mark)::after {
+	color: var(--nav-compass-indice-degree-c, var(--nav-compass-indice-bg));
+	content: attr(title);
+	font-size: var(--nav-compass-indice-degree-fs, 2.5cqi);
+	position: absolute;
+	top: calc(1ch + var(--nav-compass-indice-h));
 }
 
 /* === Bearing / Course Mode === */
