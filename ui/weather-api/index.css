@@ -2,18 +2,17 @@
 	--weather-api-bdc: color-mix(in srgb, currentColor, 80% transparent);
 	--weather-api-bdrs: .66em;
 	--weather-api-bdw: 1px;
-	--weather-api-light-text: color-mix(in srgb, currentColor, 50% transparent);
+	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
 	--weather-api-p: 1em;
 
-	/* background: var(--weather-api-bg, light-dark(#EEE, #222));
-	border-radius: var(--weather-api-bdrs, .66em);
-	color: var(--weather-api-c, light-dark(#222, #EEE)); */
+	--weather-api-widget-bg: light-dark(hsl(210, 55%, 45%), hsl(210, 35%, 25%));
+	--weather-api-widget-c: light-dark(hsl(210, 100%, 95%), hsl(210, 95%, 90%));
+
 	container-type: inline-size;
 	display: grid;
 	font-family: var(--weather-api-ff, ui-sans-serif, system-ui);
-	font-size: var(--weather-api-fs, clamp(.75rem, 3.5cqi, 1rem));
-	/* padding: var(--weather-api-padding, 1em); */
-	row-gap: var(--weather-api-rg, 1em);
+	font-size: var(--weather-api-fs, clamp(.75rem, 3.5cqi, .75rem));
+	gap: var(--weather-api-g, 1em);
 }
 
 :host * {
@@ -26,10 +25,12 @@ h2, h3, h4 {
 }
 
 /* === Widgets === */
-:host > * {
-	background: var(--weather-api-bg, light-dark(#EEE, #222));
+:host::part(widget) {
+	background: var(--weather-api-widget-bg);
+	background-position: var(--weather-api-widget-bgp, center);
+	background-size: var(--weather-api-widget-bgsz, cover);
 	border-radius: var(--weather-api-bdrs, .66em);
-	color: var(--weather-api-c, light-dark(#222, #EEE));
+	color: var(--weather-api-widget-c);
 	padding: var(--weather-api-p);
 }
 :host::part(icon) {
@@ -47,6 +48,7 @@ h2, h3, h4 {
 	font-size: var(--weather-api-title-fs, inherit);
 	font-weight: var(--weather-api-title-fw, 500);
 	gap: .25ch;
+	margin-block-end: calc(var(--weather-api-p) / 2);
 	padding-block-end: calc(var(--weather-api-p) / 2);
 }
 
@@ -130,6 +132,16 @@ h2, h3, h4 {
 :host::part(uv-9)  { --_bg: #D80010; --_c: #FFF; }
 :host::part(uv-10) { --_bg: #8A4F9E; --_c: #FFF; }
 
+
+:host::part(uv-slider) {
+	background: linear-gradient(to right, #55AF33, #A0C61B, #F7E98E, #F6E301, #FAB60D, #F88D2F, #F76D00, #E53015, #D90E21, #D80010, #8A4F9E);
+	border-radius: 1ch;;
+	display: block;
+	height: 1ch;
+	width: 100%;
+}
+
+
 /* === Footer === */
 /* :host::part(footer) {
 	color: var(--weather-api-footer-color, var(--weather-api-light-text));
@@ -204,7 +216,7 @@ h2, h3, h4 {
 @container (width > 500px) {
 	:host::part(forecast-days-wrapper) {
 		grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-		padding-block: var(--weather-api-p);
+		padding-block: 0;
 	}
 	:host::part(forecast-day) {
 		border-width: 0 0 0 var(--weather-api-bdw);
@@ -247,8 +259,8 @@ h2, h3, h4 {
 
 /* === Compas === */
 nav-compass {
-	/* --nav-compass-bg: #3373B5;
-	--nav-compass-c: #a7cff9; */
+	--nav-compass-bg: var(--weather-api-widget-bg);
+	--nav-compass-c: var(--weather-api-widget-c);
 	margin: var(--weather-api-p) auto 0 auto;
 	max-width: 250px;
 }

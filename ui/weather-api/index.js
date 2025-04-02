@@ -17,6 +17,11 @@ const i18n = {
 		precipitation: 'Precipitation',
 		south: 'S',
 		uv: 'UV',
+		uvLow: 'Low',
+		uvModerate: 'Moderate',
+		uvHigh: 'High',
+		uvVeryHigh: 'Very High',
+		uvExtreme: 'Extreme',
 		west: 'W',
 		wind: 'Wind',
 	}
@@ -75,6 +80,14 @@ class WeatherApi extends HTMLElement {
 		return units ? units === 'metric' : !['en-US', 'en-LR', 'en-MM'].includes(navigator.language);
 	}
 
+	#getUVCategory(uvIndex) {
+		if (uvIndex < 3) return 'uvLow';
+		if (uvIndex < 6) return 'uvModerate';
+		if (uvIndex < 8) return 'uvHigh';
+		if (uvIndex < 11) return 'uvVeryHigh';
+		return 'uvExtreme';
+	}
+
 	#formatDate(dateStr, options = {}) {
 		const date = new Date(dateStr);
 		return new Intl.DateTimeFormat(this._locale, options).format(date);
@@ -121,6 +134,7 @@ class WeatherApi extends HTMLElement {
 			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
 			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
 			'precipitation': () => this.#renderPrecipitation(current),
+			'uv': () => this.#renderUV(current),
 			'wind': () => this.#renderWind(current)
 		};
 		
@@ -153,7 +167,7 @@ class WeatherApi extends HTMLElement {
  	#renderForecastDays(forecast) {
 		const tempUnit = this._isMetric ? '°C' : '°F';
 		return `
-		<div part="forecast-days">
+		<div part="forecast-days widget">
 			<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
 			<ul part="forecast-days-wrapper">
 				${forecast.map(day => {
@@ -189,7 +203,7 @@ class WeatherApi extends HTMLElement {
 		}
 
 		return `
-		<div part="forecast-hours">
+		<div part="forecast-hours widget">
 			<h4 part="title forecast-hours-title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}</h4>
 			<ul part="forecast-hours-scroll">
 			${hours.map(hour => {
@@ -216,7 +230,7 @@ class WeatherApi extends HTMLElement {
 		});
 
 		return `
-		<div part="overview">
+		<div part="overview widget">
 			<hgroup part="overview-group">
 				<h2 part="overview-location" title="${location.region}, ${location.country}">${location.name}</h2>
 				<h3 part="overview-temperature">${this._isMetric ? current.temp_c : current.temp_f}${tempUnit}</h3>
@@ -243,12 +257,26 @@ class WeatherApi extends HTMLElement {
 		return `<div></div>`;
 	}
 
+	#renderUV(current) {
+		const uvIndex = current.uv;
+		const uvCategory = this.#getUVCategory(uvIndex);
+		return `
+			<div part="uv widget">
+				<h4 part="title uv-title">${this.#icon(ICONS.sun, 'icon uv-icon')}${this.#t('uv')}</h4>
+				<div part="uv-wrapper">
+					<h2 part="uv-value">${uvIndex}</h2>
+					<p part="uv-category uv-${uvCategory.toLowerCase()}">${this.#t(uvCategory)}</p>
+				</div>
+				<output value="${uvIndex}" part="uv-slider"></output>
+			</div>`;
+	}
+
 	#renderWind(current) {
 		const gusts = this._isMetric ? current.gust_kph : current.gust_mph;
 		const wind = this._isMetric ? current.wind_kph : current.wind_mph;
 		const windUnit = this._isMetric ? 'm/s' : 'mph';
 		return `
-			<div part="wind">
+			<div part="wind widget">
 				<h4 part="title wind-title">${this.#icon(ICONS.wind, 'icon wind-icon')}${this.#t('wind')}</h4>
 				<div part="wind-wrapper">
 					<ul part="wind-items">

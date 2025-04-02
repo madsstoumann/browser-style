@@ -1,735 +1,75 @@
 {
   "location": {
-    "name": "København",
-    "region": "Region Hovedstaden",
-    "country": "Danmark",
+    "name": "Copenhagen",
+    "region": "Capital Region of Denmark",
+    "country": "Denmark",
     "lat": 55.667,
     "lon": 12.583,
     "tz_id": "Europe/Copenhagen",
-    "localtime_epoch": 1743412020,
-    "localtime": "2025-03-31 11:07"
+    "localtime_epoch": 1743592981,
+    "localtime": "2025-04-02 13:23"
   },
   "current": {
-    "last_updated_epoch": 1743411600,
-    "last_updated": "2025-03-31 11:00",
-    "temp_c": 7.4,
-    "temp_f": 45.3,
+    "last_updated_epoch": 1743592500,
+    "last_updated": "2025-04-02 13:15",
+    "temp_c": 13.3,
+    "temp_f": 55.9,
     "is_day": 1,
     "condition": {
-      "text": "Letskyet",
-      "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-      "code": 1003
+      "text": "Sunny",
+      "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+      "code": 1000
     },
-    "wind_mph": 10.3,
-    "wind_kph": 16.6,
-    "wind_degree": 350,
-    "wind_dir": "N",
-    "pressure_mb": 1020,
-    "pressure_in": 30.12,
+    "wind_mph": 2.2,
+    "wind_kph": 3.6,
+    "wind_degree": 31,
+    "wind_dir": "NNE",
+    "pressure_mb": 1033,
+    "pressure_in": 30.5,
     "precip_mm": 0,
     "precip_in": 0,
-    "humidity": 81,
-    "cloud": 75,
-    "feelslike_c": 4.5,
-    "feelslike_f": 40.1,
-    "windchill_c": 4,
-    "windchill_f": 39.3,
-    "heatindex_c": 7,
-    "heatindex_f": 44.6,
-    "dewpoint_c": 2,
-    "dewpoint_f": 35.6,
+    "humidity": 41,
+    "cloud": 0,
+    "feelslike_c": 13.9,
+    "feelslike_f": 57,
+    "windchill_c": 11.2,
+    "windchill_f": 52.2,
+    "heatindex_c": 10.9,
+    "heatindex_f": 51.5,
+    "dewpoint_c": 1.4,
+    "dewpoint_f": 34.5,
     "vis_km": 10,
     "vis_miles": 6,
-    "uv": 1.5,
-    "gust_mph": 15.3,
-    "gust_kph": 24.6
+    "uv": 3.2,
+    "gust_mph": 3.8,
+    "gust_kph": 6.1
   },
   "forecast": {
     "forecastday": [
       {
-        "date": "2025-03-31",
-        "date_epoch": 1743379200,
-        "day": {
-          "maxtemp_c": 8.3,
-          "maxtemp_f": 46.9,
-          "mintemp_c": 5.1,
-          "mintemp_f": 41.2,
-          "avgtemp_c": 6.4,
-          "avgtemp_f": 43.4,
-          "maxwind_mph": 13,
-          "maxwind_kph": 20.9,
-          "totalprecip_mm": 0.25,
-          "totalprecip_in": 0.01,
-          "totalsnow_cm": 0,
-          "avgvis_km": 10,
-          "avgvis_miles": 6,
-          "avghumidity": 78,
-          "daily_will_it_rain": 1,
-          "daily_chance_of_rain": 87,
-          "daily_will_it_snow": 0,
-          "daily_chance_of_snow": 0,
-          "condition": {
-            "text": "Stedvis regn",
-            "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
-            "code": 1063
-          },
-          "uv": 0.5
-        },
-        "astro": {
-          "sunrise": "06:43 AM",
-          "sunset": "07:46 PM",
-          "moonrise": "07:01 AM",
-          "moonset": "11:31 PM",
-          "moon_phase": "Waxing Crescent",
-          "moon_illumination": 4,
-          "is_moon_up": 0,
-          "is_sun_up": 0
-        },
-        "hour": [
-          {
-            "time_epoch": 1743372000,
-            "time": "2025-03-31 00:00",
-            "temp_c": 5.7,
-            "temp_f": 42.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743375600,
-            "time": "2025-03-31 01:00",
-            "temp_c": 5.7,
-            "temp_f": 42.3,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743379200,
-            "time": "2025-03-31 02:00",
-            "temp_c": 5.8,
-            "temp_f": 42.5,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743382800,
-            "time": "2025-03-31 03:00",
-            "temp_c": 5.8,
-            "temp_f": 42.4,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743386400,
-            "time": "2025-03-31 04:00",
-            "temp_c": 5.7,
-            "temp_f": 42.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743390000,
-            "time": "2025-03-31 05:00",
-            "temp_c": 5.4,
-            "temp_f": 41.7,
-            "is_day": 0,
-            "condition": {
-              "text": "Overskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
-              "code": 1009
-            }
-          },
-          {
-            "time_epoch": 1743393600,
-            "time": "2025-03-31 06:00",
-            "temp_c": 5.2,
-            "temp_f": 41.4,
-            "is_day": 0,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743397200,
-            "time": "2025-03-31 07:00",
-            "temp_c": 5.4,
-            "temp_f": 41.8,
-            "is_day": 1,
-            "condition": {
-              "text": "Overskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
-              "code": 1009
-            }
-          },
-          {
-            "time_epoch": 1743400800,
-            "time": "2025-03-31 08:00",
-            "temp_c": 5.9,
-            "temp_f": 42.5,
-            "is_day": 1,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743404400,
-            "time": "2025-03-31 09:00",
-            "temp_c": 6.1,
-            "temp_f": 43.1,
-            "is_day": 1,
-            "condition": {
-              "text": "Stedvis regn",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
-              "code": 1063
-            }
-          },
-          {
-            "time_epoch": 1743408000,
-            "time": "2025-03-31 10:00",
-            "temp_c": 6.6,
-            "temp_f": 43.9,
-            "is_day": 1,
-            "condition": {
-              "text": "Skyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
-              "code": 1006
-            }
-          },
-          {
-            "time_epoch": 1743411600,
-            "time": "2025-03-31 11:00",
-            "temp_c": 7.4,
-            "temp_f": 45.3,
-            "is_day": 1,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743415200,
-            "time": "2025-03-31 12:00",
-            "temp_c": 7.4,
-            "temp_f": 45.3,
-            "is_day": 1,
-            "condition": {
-              "text": "Skyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
-              "code": 1006
-            }
-          },
-          {
-            "time_epoch": 1743418800,
-            "time": "2025-03-31 13:00",
-            "temp_c": 7.7,
-            "temp_f": 45.9,
-            "is_day": 1,
-            "condition": {
-              "text": "Skyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
-              "code": 1006
-            }
-          },
-          {
-            "time_epoch": 1743422400,
-            "time": "2025-03-31 14:00",
-            "temp_c": 8.3,
-            "temp_f": 46.9,
-            "is_day": 1,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743426000,
-            "time": "2025-03-31 15:00",
-            "temp_c": 8.3,
-            "temp_f": 46.9,
-            "is_day": 1,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743429600,
-            "time": "2025-03-31 16:00",
-            "temp_c": 8.1,
-            "temp_f": 46.6,
-            "is_day": 1,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743433200,
-            "time": "2025-03-31 17:00",
-            "temp_c": 7.7,
-            "temp_f": 45.9,
-            "is_day": 1,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743436800,
-            "time": "2025-03-31 18:00",
-            "temp_c": 7.1,
-            "temp_f": 44.8,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743440400,
-            "time": "2025-03-31 19:00",
-            "temp_c": 6.2,
-            "temp_f": 43.2,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743444000,
-            "time": "2025-03-31 20:00",
-            "temp_c": 5.7,
-            "temp_f": 42.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743447600,
-            "time": "2025-03-31 21:00",
-            "temp_c": 5.4,
-            "temp_f": 41.6,
-            "is_day": 0,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743451200,
-            "time": "2025-03-31 22:00",
-            "temp_c": 5.2,
-            "temp_f": 41.3,
-            "is_day": 0,
-            "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
-              "code": 1003
-            }
-          },
-          {
-            "time_epoch": 1743454800,
-            "time": "2025-03-31 23:00",
-            "temp_c": 5.1,
-            "temp_f": 41.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          }
-        ]
-      },
-      {
-        "date": "2025-04-01",
-        "date_epoch": 1743465600,
-        "day": {
-          "maxtemp_c": 10.4,
-          "maxtemp_f": 50.7,
-          "mintemp_c": 4.4,
-          "mintemp_f": 39.9,
-          "avgtemp_c": 7,
-          "avgtemp_f": 44.6,
-          "maxwind_mph": 7.8,
-          "maxwind_kph": 12.6,
-          "totalprecip_mm": 0,
-          "totalprecip_in": 0,
-          "totalsnow_cm": 0,
-          "avgvis_km": 10,
-          "avgvis_miles": 6,
-          "avghumidity": 70,
-          "daily_will_it_rain": 0,
-          "daily_chance_of_rain": 0,
-          "daily_will_it_snow": 0,
-          "daily_chance_of_snow": 0,
-          "condition": {
-            "text": "klart",
-            "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-            "code": 1000
-          },
-          "uv": 0.9
-        },
-        "astro": {
-          "sunrise": "06:40 AM",
-          "sunset": "07:48 PM",
-          "moonrise": "07:15 AM",
-          "moonset": "No moonset",
-          "moon_phase": "Waxing Crescent",
-          "moon_illumination": 10,
-          "is_moon_up": 0,
-          "is_sun_up": 0
-        },
-        "hour": [
-          {
-            "time_epoch": 1743458400,
-            "time": "2025-04-01 00:00",
-            "temp_c": 4.9,
-            "temp_f": 40.8,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743462000,
-            "time": "2025-04-01 01:00",
-            "temp_c": 4.8,
-            "temp_f": 40.6,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743465600,
-            "time": "2025-04-01 02:00",
-            "temp_c": 4.6,
-            "temp_f": 40.4,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743469200,
-            "time": "2025-04-01 03:00",
-            "temp_c": 4.6,
-            "temp_f": 40.3,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743472800,
-            "time": "2025-04-01 04:00",
-            "temp_c": 4.6,
-            "temp_f": 40.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743476400,
-            "time": "2025-04-01 05:00",
-            "temp_c": 4.5,
-            "temp_f": 40.1,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743480000,
-            "time": "2025-04-01 06:00",
-            "temp_c": 4.4,
-            "temp_f": 39.9,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743483600,
-            "time": "2025-04-01 07:00",
-            "temp_c": 4.8,
-            "temp_f": 40.6,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743487200,
-            "time": "2025-04-01 08:00",
-            "temp_c": 5.6,
-            "temp_f": 42.1,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743490800,
-            "time": "2025-04-01 09:00",
-            "temp_c": 6.4,
-            "temp_f": 43.6,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743494400,
-            "time": "2025-04-01 10:00",
-            "temp_c": 7.2,
-            "temp_f": 45,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743498000,
-            "time": "2025-04-01 11:00",
-            "temp_c": 8,
-            "temp_f": 46.4,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743501600,
-            "time": "2025-04-01 12:00",
-            "temp_c": 8.7,
-            "temp_f": 47.7,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743505200,
-            "time": "2025-04-01 13:00",
-            "temp_c": 9.4,
-            "temp_f": 48.8,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743508800,
-            "time": "2025-04-01 14:00",
-            "temp_c": 9.8,
-            "temp_f": 49.7,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743512400,
-            "time": "2025-04-01 15:00",
-            "temp_c": 10.2,
-            "temp_f": 50.4,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743516000,
-            "time": "2025-04-01 16:00",
-            "temp_c": 10.4,
-            "temp_f": 50.7,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743519600,
-            "time": "2025-04-01 17:00",
-            "temp_c": 10,
-            "temp_f": 50,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743523200,
-            "time": "2025-04-01 18:00",
-            "temp_c": 9.1,
-            "temp_f": 48.4,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743526800,
-            "time": "2025-04-01 19:00",
-            "temp_c": 8,
-            "temp_f": 46.3,
-            "is_day": 1,
-            "condition": {
-              "text": "klart",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743530400,
-            "time": "2025-04-01 20:00",
-            "temp_c": 7.4,
-            "temp_f": 45.3,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743534000,
-            "time": "2025-04-01 21:00",
-            "temp_c": 7.1,
-            "temp_f": 44.8,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743537600,
-            "time": "2025-04-01 22:00",
-            "temp_c": 6.8,
-            "temp_f": 44.2,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          },
-          {
-            "time_epoch": 1743541200,
-            "time": "2025-04-01 23:00",
-            "temp_c": 6.4,
-            "temp_f": 43.5,
-            "is_day": 0,
-            "condition": {
-              "text": "Skyfrit",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
-              "code": 1000
-            }
-          }
-        ]
-      },
-      {
         "date": "2025-04-02",
         "date_epoch": 1743552000,
         "day": {
-          "maxtemp_c": 11.5,
-          "maxtemp_f": 52.6,
-          "mintemp_c": 4.8,
-          "mintemp_f": 40.7,
-          "avgtemp_c": 7.9,
-          "avgtemp_f": 46.1,
-          "maxwind_mph": 7.2,
-          "maxwind_kph": 11.5,
+          "maxtemp_c": 11.8,
+          "maxtemp_f": 53.2,
+          "mintemp_c": 5.7,
+          "mintemp_f": 42.2,
+          "avgtemp_c": 8.4,
+          "avgtemp_f": 47,
+          "maxwind_mph": 5.1,
+          "maxwind_kph": 8.3,
           "totalprecip_mm": 0,
           "totalprecip_in": 0,
           "totalsnow_cm": 0,
           "avgvis_km": 10,
           "avgvis_miles": 6,
-          "avghumidity": 70,
+          "avghumidity": 62,
           "daily_will_it_rain": 0,
           "daily_chance_of_rain": 0,
           "daily_will_it_snow": 0,
           "daily_chance_of_snow": 0,
           "condition": {
-            "text": "klart",
+            "text": "Sunny",
             "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
             "code": 1000
           },
@@ -742,18 +82,18 @@
           "moonset": "01:14 AM",
           "moon_phase": "Waxing Crescent",
           "moon_illumination": 18,
-          "is_moon_up": 0,
+          "is_moon_up": 1,
           "is_sun_up": 0
         },
         "hour": [
           {
             "time_epoch": 1743544800,
             "time": "2025-04-02 00:00",
-            "temp_c": 5.9,
-            "temp_f": 42.6,
+            "temp_c": 6.6,
+            "temp_f": 43.8,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -761,11 +101,11 @@
           {
             "time_epoch": 1743548400,
             "time": "2025-04-02 01:00",
-            "temp_c": 5.6,
-            "temp_f": 42.1,
+            "temp_c": 6.4,
+            "temp_f": 43.6,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -773,11 +113,11 @@
           {
             "time_epoch": 1743552000,
             "time": "2025-04-02 02:00",
-            "temp_c": 6,
-            "temp_f": 42.8,
+            "temp_c": 6.3,
+            "temp_f": 43.4,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -785,11 +125,11 @@
           {
             "time_epoch": 1743555600,
             "time": "2025-04-02 03:00",
-            "temp_c": 5.8,
-            "temp_f": 42.4,
+            "temp_c": 6.1,
+            "temp_f": 43.1,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -797,11 +137,11 @@
           {
             "time_epoch": 1743559200,
             "time": "2025-04-02 04:00",
-            "temp_c": 5.2,
-            "temp_f": 41.3,
+            "temp_c": 5.9,
+            "temp_f": 42.6,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -809,13 +149,13 @@
           {
             "time_epoch": 1743562800,
             "time": "2025-04-02 05:00",
-            "temp_c": 5.7,
-            "temp_f": 42.3,
+            "temp_c": 5.8,
+            "temp_f": 42.4,
             "is_day": 0,
             "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
-              "code": 1003
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
             }
           },
           {
@@ -825,7 +165,7 @@
             "temp_f": 42.4,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -833,11 +173,11 @@
           {
             "time_epoch": 1743570000,
             "time": "2025-04-02 07:00",
-            "temp_c": 5.2,
-            "temp_f": 41.4,
+            "temp_c": 6.1,
+            "temp_f": 43,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -845,11 +185,11 @@
           {
             "time_epoch": 1743573600,
             "time": "2025-04-02 08:00",
-            "temp_c": 6.8,
-            "temp_f": 44.2,
+            "temp_c": 7,
+            "temp_f": 44.6,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -857,23 +197,23 @@
           {
             "time_epoch": 1743577200,
             "time": "2025-04-02 09:00",
-            "temp_c": 7.7,
-            "temp_f": 45.9,
+            "temp_c": 7.8,
+            "temp_f": 46.1,
             "is_day": 1,
             "condition": {
-              "text": "Letskyet",
-              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
-              "code": 1003
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
             }
           },
           {
             "time_epoch": 1743580800,
             "time": "2025-04-02 10:00",
-            "temp_c": 8.2,
-            "temp_f": 46.7,
+            "temp_c": 8.7,
+            "temp_f": 47.7,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -881,11 +221,11 @@
           {
             "time_epoch": 1743584400,
             "time": "2025-04-02 11:00",
-            "temp_c": 9.3,
-            "temp_f": 48.7,
+            "temp_c": 9.5,
+            "temp_f": 49.1,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -893,11 +233,11 @@
           {
             "time_epoch": 1743588000,
             "time": "2025-04-02 12:00",
-            "temp_c": 10,
-            "temp_f": 50,
+            "temp_c": 10.2,
+            "temp_f": 50.4,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -905,11 +245,11 @@
           {
             "time_epoch": 1743591600,
             "time": "2025-04-02 13:00",
-            "temp_c": 10.5,
-            "temp_f": 50.9,
+            "temp_c": 13.3,
+            "temp_f": 55.9,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -917,11 +257,11 @@
           {
             "time_epoch": 1743595200,
             "time": "2025-04-02 14:00",
-            "temp_c": 11,
-            "temp_f": 51.9,
+            "temp_c": 11.3,
+            "temp_f": 52.4,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -929,11 +269,11 @@
           {
             "time_epoch": 1743598800,
             "time": "2025-04-02 15:00",
-            "temp_c": 11.4,
-            "temp_f": 52.5,
+            "temp_c": 11.7,
+            "temp_f": 53,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -941,11 +281,11 @@
           {
             "time_epoch": 1743602400,
             "time": "2025-04-02 16:00",
-            "temp_c": 11.5,
-            "temp_f": 52.6,
+            "temp_c": 11.8,
+            "temp_f": 53.2,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -953,11 +293,11 @@
           {
             "time_epoch": 1743606000,
             "time": "2025-04-02 17:00",
-            "temp_c": 11,
-            "temp_f": 51.8,
+            "temp_c": 11.3,
+            "temp_f": 52.3,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -965,11 +305,11 @@
           {
             "time_epoch": 1743609600,
             "time": "2025-04-02 18:00",
-            "temp_c": 9.9,
-            "temp_f": 49.8,
+            "temp_c": 10,
+            "temp_f": 50,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -977,11 +317,11 @@
           {
             "time_epoch": 1743613200,
             "time": "2025-04-02 19:00",
-            "temp_c": 8.6,
-            "temp_f": 47.5,
+            "temp_c": 8.9,
+            "temp_f": 48.1,
             "is_day": 1,
             "condition": {
-              "text": "klart",
+              "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
               "code": 1000
             }
@@ -989,11 +329,11 @@
           {
             "time_epoch": 1743616800,
             "time": "2025-04-02 20:00",
-            "temp_c": 8.3,
-            "temp_f": 46.9,
+            "temp_c": 8.5,
+            "temp_f": 47.4,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -1001,11 +341,11 @@
           {
             "time_epoch": 1743620400,
             "time": "2025-04-02 21:00",
-            "temp_c": 8,
-            "temp_f": 46.4,
+            "temp_c": 8.2,
+            "temp_f": 46.7,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -1013,11 +353,11 @@
           {
             "time_epoch": 1743624000,
             "time": "2025-04-02 22:00",
-            "temp_c": 7.8,
-            "temp_f": 46,
+            "temp_c": 8,
+            "temp_f": 46.3,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }
@@ -1029,7 +369,1987 @@
             "temp_f": 46.1,
             "is_day": 0,
             "condition": {
-              "text": "Skyfrit",
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-03",
+        "date_epoch": 1743638400,
+        "day": {
+          "maxtemp_c": 12.9,
+          "maxtemp_f": 55.2,
+          "mintemp_c": 7,
+          "mintemp_f": 44.7,
+          "avgtemp_c": 9.7,
+          "avgtemp_f": 49.5,
+          "maxwind_mph": 8.1,
+          "maxwind_kph": 13,
+          "totalprecip_mm": 0,
+          "totalprecip_in": 0,
+          "totalsnow_cm": 0,
+          "avgvis_km": 10,
+          "avgvis_miles": 6,
+          "avghumidity": 63,
+          "daily_will_it_rain": 0,
+          "daily_chance_of_rain": 0,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Sunny",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+            "code": 1000
+          },
+          "uv": 0.8
+        },
+        "astro": {
+          "sunrise": "06:35 AM",
+          "sunset": "07:52 PM",
+          "moonrise": "08:12 AM",
+          "moonset": "02:47 AM",
+          "moon_phase": "Waxing Crescent",
+          "moon_illumination": 27,
+          "is_moon_up": 1,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1743631200,
+            "time": "2025-04-03 00:00",
+            "temp_c": 7.7,
+            "temp_f": 45.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743634800,
+            "time": "2025-04-03 01:00",
+            "temp_c": 7.6,
+            "temp_f": 45.6,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743638400,
+            "time": "2025-04-03 02:00",
+            "temp_c": 7.4,
+            "temp_f": 45.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743642000,
+            "time": "2025-04-03 03:00",
+            "temp_c": 7.3,
+            "temp_f": 45.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743645600,
+            "time": "2025-04-03 04:00",
+            "temp_c": 7.2,
+            "temp_f": 45,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743649200,
+            "time": "2025-04-03 05:00",
+            "temp_c": 7.1,
+            "temp_f": 44.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743652800,
+            "time": "2025-04-03 06:00",
+            "temp_c": 7,
+            "temp_f": 44.7,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743656400,
+            "time": "2025-04-03 07:00",
+            "temp_c": 7.6,
+            "temp_f": 45.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743660000,
+            "time": "2025-04-03 08:00",
+            "temp_c": 8.4,
+            "temp_f": 47.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743663600,
+            "time": "2025-04-03 09:00",
+            "temp_c": 9.4,
+            "temp_f": 48.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743667200,
+            "time": "2025-04-03 10:00",
+            "temp_c": 10.3,
+            "temp_f": 50.5,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743670800,
+            "time": "2025-04-03 11:00",
+            "temp_c": 11.1,
+            "temp_f": 52,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743674400,
+            "time": "2025-04-03 12:00",
+            "temp_c": 11.8,
+            "temp_f": 53.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743678000,
+            "time": "2025-04-03 13:00",
+            "temp_c": 12.4,
+            "temp_f": 54.4,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743681600,
+            "time": "2025-04-03 14:00",
+            "temp_c": 12.8,
+            "temp_f": 55,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743685200,
+            "time": "2025-04-03 15:00",
+            "temp_c": 12.9,
+            "temp_f": 55.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743688800,
+            "time": "2025-04-03 16:00",
+            "temp_c": 12.8,
+            "temp_f": 55,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743692400,
+            "time": "2025-04-03 17:00",
+            "temp_c": 12.3,
+            "temp_f": 54.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743696000,
+            "time": "2025-04-03 18:00",
+            "temp_c": 11.4,
+            "temp_f": 52.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743699600,
+            "time": "2025-04-03 19:00",
+            "temp_c": 10.3,
+            "temp_f": 50.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743703200,
+            "time": "2025-04-03 20:00",
+            "temp_c": 10,
+            "temp_f": 49.9,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743706800,
+            "time": "2025-04-03 21:00",
+            "temp_c": 9.8,
+            "temp_f": 49.6,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743710400,
+            "time": "2025-04-03 22:00",
+            "temp_c": 9.6,
+            "temp_f": 49.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743714000,
+            "time": "2025-04-03 23:00",
+            "temp_c": 9.1,
+            "temp_f": 48.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-04",
+        "date_epoch": 1743724800,
+        "day": {
+          "maxtemp_c": 10.7,
+          "maxtemp_f": 51.2,
+          "mintemp_c": 5.6,
+          "mintemp_f": 42,
+          "avgtemp_c": 8.1,
+          "avgtemp_f": 46.6,
+          "maxwind_mph": 11.6,
+          "maxwind_kph": 18.7,
+          "totalprecip_mm": 0,
+          "totalprecip_in": 0,
+          "totalsnow_cm": 0,
+          "avgvis_km": 10,
+          "avgvis_miles": 6,
+          "avghumidity": 65,
+          "daily_will_it_rain": 0,
+          "daily_chance_of_rain": 0,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Sunny",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+            "code": 1000
+          },
+          "uv": 0.8
+        },
+        "astro": {
+          "sunrise": "06:32 AM",
+          "sunset": "07:54 PM",
+          "moonrise": "09:10 AM",
+          "moonset": "03:58 AM",
+          "moon_phase": "Waxing Crescent",
+          "moon_illumination": 38,
+          "is_moon_up": 1,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1743717600,
+            "time": "2025-04-04 00:00",
+            "temp_c": 8.6,
+            "temp_f": 47.6,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743721200,
+            "time": "2025-04-04 01:00",
+            "temp_c": 8.4,
+            "temp_f": 47.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743724800,
+            "time": "2025-04-04 02:00",
+            "temp_c": 8.2,
+            "temp_f": 46.7,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743728400,
+            "time": "2025-04-04 03:00",
+            "temp_c": 7.8,
+            "temp_f": 46.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743732000,
+            "time": "2025-04-04 04:00",
+            "temp_c": 7.7,
+            "temp_f": 45.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743735600,
+            "time": "2025-04-04 05:00",
+            "temp_c": 7.5,
+            "temp_f": 45.5,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743739200,
+            "time": "2025-04-04 06:00",
+            "temp_c": 7.2,
+            "temp_f": 45,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743742800,
+            "time": "2025-04-04 07:00",
+            "temp_c": 7.5,
+            "temp_f": 45.5,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743746400,
+            "time": "2025-04-04 08:00",
+            "temp_c": 7.8,
+            "temp_f": 46,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743750000,
+            "time": "2025-04-04 09:00",
+            "temp_c": 8.2,
+            "temp_f": 46.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly Cloudy ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743753600,
+            "time": "2025-04-04 10:00",
+            "temp_c": 8.7,
+            "temp_f": 47.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743757200,
+            "time": "2025-04-04 11:00",
+            "temp_c": 9.2,
+            "temp_f": 48.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly Cloudy ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743760800,
+            "time": "2025-04-04 12:00",
+            "temp_c": 9.6,
+            "temp_f": 49.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Cloudy ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743764400,
+            "time": "2025-04-04 13:00",
+            "temp_c": 10.2,
+            "temp_f": 50.4,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly Cloudy ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743768000,
+            "time": "2025-04-04 14:00",
+            "temp_c": 10.7,
+            "temp_f": 51.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly Cloudy ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743771600,
+            "time": "2025-04-04 15:00",
+            "temp_c": 10,
+            "temp_f": 50.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743775200,
+            "time": "2025-04-04 16:00",
+            "temp_c": 9.5,
+            "temp_f": 49.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743778800,
+            "time": "2025-04-04 17:00",
+            "temp_c": 9.4,
+            "temp_f": 48.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743782400,
+            "time": "2025-04-04 18:00",
+            "temp_c": 8.6,
+            "temp_f": 47.5,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743786000,
+            "time": "2025-04-04 19:00",
+            "temp_c": 7.2,
+            "temp_f": 45,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743789600,
+            "time": "2025-04-04 20:00",
+            "temp_c": 7.4,
+            "temp_f": 45.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743793200,
+            "time": "2025-04-04 21:00",
+            "temp_c": 6.9,
+            "temp_f": 44.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743796800,
+            "time": "2025-04-04 22:00",
+            "temp_c": 5.7,
+            "temp_f": 42.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743800400,
+            "time": "2025-04-04 23:00",
+            "temp_c": 6.3,
+            "temp_f": 43.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-05",
+        "date_epoch": 1743811200,
+        "day": {
+          "maxtemp_c": 12.4,
+          "maxtemp_f": 54.3,
+          "mintemp_c": 6.2,
+          "mintemp_f": 43.2,
+          "avgtemp_c": 9.3,
+          "avgtemp_f": 48.7,
+          "maxwind_mph": 12.3,
+          "maxwind_kph": 19.8,
+          "totalprecip_mm": 0.4,
+          "totalprecip_in": 0.02,
+          "totalsnow_cm": 0,
+          "avgvis_km": 9.8,
+          "avgvis_miles": 6,
+          "avghumidity": 67,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 30,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Partly cloudy",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+            "code": 1003
+          },
+          "uv": 1.2
+        },
+        "astro": {
+          "sunrise": "06:30 AM",
+          "sunset": "07:56 PM",
+          "moonrise": "10:15 AM",
+          "moonset": "04:24 AM",
+          "moon_phase": "First Quarter",
+          "moon_illumination": 49,
+          "is_moon_up": 0,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1743804000,
+            "time": "2025-04-05 00:00",
+            "temp_c": 6.2,
+            "temp_f": 43.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743807600,
+            "time": "2025-04-05 01:00",
+            "temp_c": 6.0,
+            "temp_f": 42.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743811200,
+            "time": "2025-04-05 02:00",
+            "temp_c": 5.8,
+            "temp_f": 42.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743814800,
+            "time": "2025-04-05 03:00",
+            "temp_c": 5.7,
+            "temp_f": 42.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1743818400,
+            "time": "2025-04-05 04:00",
+            "temp_c": 5.5,
+            "temp_f": 41.9,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743822000,
+            "time": "2025-04-05 05:00",
+            "temp_c": 5.4,
+            "temp_f": 41.7,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743825600,
+            "time": "2025-04-05 06:00",
+            "temp_c": 5.3,
+            "temp_f": 41.5,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743829200,
+            "time": "2025-04-05 07:00",
+            "temp_c": 6.1,
+            "temp_f": 43.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743832800,
+            "time": "2025-04-05 08:00",
+            "temp_c": 7.2,
+            "temp_f": 45.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743836400,
+            "time": "2025-04-05 09:00",
+            "temp_c": 8.3,
+            "temp_f": 46.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743840000,
+            "time": "2025-04-05 10:00",
+            "temp_c": 9.4,
+            "temp_f": 48.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743843600,
+            "time": "2025-04-05 11:00",
+            "temp_c": 10.5,
+            "temp_f": 50.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743847200,
+            "time": "2025-04-05 12:00",
+            "temp_c": 11.2,
+            "temp_f": 52.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743850800,
+            "time": "2025-04-05 13:00",
+            "temp_c": 11.8,
+            "temp_f": 53.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743854400,
+            "time": "2025-04-05 14:00",
+            "temp_c": 12.4,
+            "temp_f": 54.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain shower",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
+              "code": 1240
+            }
+          },
+          {
+            "time_epoch": 1743858000,
+            "time": "2025-04-05 15:00",
+            "temp_c": 12.0,
+            "temp_f": 53.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain shower",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
+              "code": 1240
+            }
+          },
+          {
+            "time_epoch": 1743861600,
+            "time": "2025-04-05 16:00",
+            "temp_c": 11.5,
+            "temp_f": 52.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743865200,
+            "time": "2025-04-05 17:00",
+            "temp_c": 10.7,
+            "temp_f": 51.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743868800,
+            "time": "2025-04-05 18:00",
+            "temp_c": 9.8,
+            "temp_f": 49.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743872400,
+            "time": "2025-04-05 19:00",
+            "temp_c": 9.0,
+            "temp_f": 48.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743876000,
+            "time": "2025-04-05 20:00",
+            "temp_c": 8.5,
+            "temp_f": 47.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743879600,
+            "time": "2025-04-05 21:00",
+            "temp_c": 8.0,
+            "temp_f": 46.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743883200,
+            "time": "2025-04-05 22:00",
+            "temp_c": 7.5,
+            "temp_f": 45.5,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1743886800,
+            "time": "2025-04-05 23:00",
+            "temp_c": 7.2,
+            "temp_f": 45.0,
+            "is_day": 0,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-06",
+        "date_epoch": 1743897600,
+        "day": {
+          "maxtemp_c": 11.3,
+          "maxtemp_f": 52.3,
+          "mintemp_c": 6.8,
+          "mintemp_f": 44.2,
+          "avgtemp_c": 9.0,
+          "avgtemp_f": 48.2,
+          "maxwind_mph": 14.2,
+          "maxwind_kph": 22.9,
+          "totalprecip_mm": 8.2,
+          "totalprecip_in": 0.32,
+          "totalsnow_cm": 0,
+          "avgvis_km": 7.2,
+          "avgvis_miles": 4.5,
+          "avghumidity": 78,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 85,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Light rain",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+            "code": 1183
+          },
+          "uv": 0.9
+        },
+        "astro": {
+          "sunrise": "06:28 AM",
+          "sunset": "07:58 PM",
+          "moonrise": "11:28 AM",
+          "moonset": "04:52 AM",
+          "moon_phase": "First Quarter",
+          "moon_illumination": 58,
+          "is_moon_up": 0,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1743890400,
+            "time": "2025-04-06 00:00",
+            "temp_c": 7.0,
+            "temp_f": 44.6,
+            "is_day": 0,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743894000,
+            "time": "2025-04-06 01:00",
+            "temp_c": 6.9,
+            "temp_f": 44.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743897600,
+            "time": "2025-04-06 02:00",
+            "temp_c": 6.8,
+            "temp_f": 44.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743901200,
+            "time": "2025-04-06 03:00",
+            "temp_c": 6.8,
+            "temp_f": 44.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743904800,
+            "time": "2025-04-06 04:00",
+            "temp_c": 6.9,
+            "temp_f": 44.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743908400,
+            "time": "2025-04-06 05:00",
+            "temp_c": 7.0,
+            "temp_f": 44.6,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743912000,
+            "time": "2025-04-06 06:00",
+            "temp_c": 7.1,
+            "temp_f": 44.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743915600,
+            "time": "2025-04-06 07:00",
+            "temp_c": 7.3,
+            "temp_f": 45.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743919200,
+            "time": "2025-04-06 08:00",
+            "temp_c": 7.6,
+            "temp_f": 45.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743922800,
+            "time": "2025-04-06 09:00",
+            "temp_c": 8.1,
+            "temp_f": 46.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743926400,
+            "time": "2025-04-06 10:00",
+            "temp_c": 8.7,
+            "temp_f": 47.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743930000,
+            "time": "2025-04-06 11:00",
+            "temp_c": 9.4,
+            "temp_f": 48.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Moderate rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
+              "code": 1189
+            }
+          },
+          {
+            "time_epoch": 1743933600,
+            "time": "2025-04-06 12:00",
+            "temp_c": 10.0,
+            "temp_f": 50.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Moderate rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
+              "code": 1189
+            }
+          },
+          {
+            "time_epoch": 1743937200,
+            "time": "2025-04-06 13:00",
+            "temp_c": 10.6,
+            "temp_f": 51.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Moderate rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
+              "code": 1189
+            }
+          },
+          {
+            "time_epoch": 1743940800,
+            "time": "2025-04-06 14:00",
+            "temp_c": 11.0,
+            "temp_f": 51.8,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743944400,
+            "time": "2025-04-06 15:00",
+            "temp_c": 11.3,
+            "temp_f": 52.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743948000,
+            "time": "2025-04-06 16:00",
+            "temp_c": 11.1,
+            "temp_f": 52.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743951600,
+            "time": "2025-04-06 17:00",
+            "temp_c": 10.5,
+            "temp_f": 50.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743955200,
+            "time": "2025-04-06 18:00",
+            "temp_c": 10.0,
+            "temp_f": 50.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743958800,
+            "time": "2025-04-06 19:00",
+            "temp_c": 9.6,
+            "temp_f": 49.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743962400,
+            "time": "2025-04-06 20:00",
+            "temp_c": 9.1,
+            "temp_f": 48.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743966000,
+            "time": "2025-04-06 21:00",
+            "temp_c": 8.8,
+            "temp_f": 47.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743969600,
+            "time": "2025-04-06 22:00",
+            "temp_c": 8.5,
+            "temp_f": 47.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743973200,
+            "time": "2025-04-06 23:00",
+            "temp_c": 8.2,
+            "temp_f": 46.8,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-07",
+        "date_epoch": 1743984000,
+        "day": {
+          "maxtemp_c": 13.7,
+          "maxtemp_f": 56.7,
+          "mintemp_c": 7.9,
+          "mintemp_f": 46.2,
+          "avgtemp_c": 10.8,
+          "avgtemp_f": 51.4,
+          "maxwind_mph": 10.5,
+          "maxwind_kph": 16.9,
+          "totalprecip_mm": 2.5,
+          "totalprecip_in": 0.1,
+          "totalsnow_cm": 0,
+          "avgvis_km": 9.0,
+          "avgvis_miles": 5.6,
+          "avghumidity": 70,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 60,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Patchy rain possible",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+            "code": 1063
+          },
+          "uv": 2.2
+        },
+        "astro": {
+          "sunrise": "06:26 AM",
+          "sunset": "08:00 PM",
+          "moonrise": "12:45 PM",
+          "moonset": "05:15 AM",
+          "moon_phase": "Waxing Gibbous",
+          "moon_illumination": 67,
+          "is_moon_up": 0,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1743976800,
+            "time": "2025-04-07 00:00",
+            "temp_c": 7.9,
+            "temp_f": 46.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Light rain",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            }
+          },
+          {
+            "time_epoch": 1743980400,
+            "time": "2025-04-07 01:00",
+            "temp_c": 7.9,
+            "temp_f": 46.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Light drizzle",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
+              "code": 1153
+            }
+          },
+          {
+            "time_epoch": 1743984000,
+            "time": "2025-04-07 02:00",
+            "temp_c": 8.0,
+            "temp_f": 46.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Light drizzle",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
+              "code": 1153
+            }
+          },
+          {
+            "time_epoch": 1743987600,
+            "time": "2025-04-07 03:00",
+            "temp_c": 8.0,
+            "temp_f": 46.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Light drizzle",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
+              "code": 1153
+            }
+          },
+          {
+            "time_epoch": 1743991200,
+            "time": "2025-04-07 04:00",
+            "temp_c": 7.9,
+            "temp_f": 46.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743994800,
+            "time": "2025-04-07 05:00",
+            "temp_c": 7.8,
+            "temp_f": 46.0,
+            "is_day": 0,
+            "condition": {
+              "text": "Cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            }
+          },
+          {
+            "time_epoch": 1743998400,
+            "time": "2025-04-07 06:00",
+            "temp_c": 7.9,
+            "temp_f": 46.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Overcast",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
+              "code": 1009
+            }
+          },
+          {
+            "time_epoch": 1744002000,
+            "time": "2025-04-07 07:00",
+            "temp_c": 8.3,
+            "temp_f": 46.9,
+            "is_day": 1,
+            "condition": {
+              "text": "Overcast",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
+              "code": 1009
+            }
+          },
+          {
+            "time_epoch": 1744005600,
+            "time": "2025-04-07 08:00",
+            "temp_c": 8.9,
+            "temp_f": 48.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Overcast",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
+              "code": 1009
+            }
+          },
+          {
+            "time_epoch": 1744009200,
+            "time": "2025-04-07 09:00",
+            "temp_c": 9.5,
+            "temp_f": 49.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Light rain shower",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
+              "code": 1240
+            }
+          },
+          {
+            "time_epoch": 1744012800,
+            "time": "2025-04-07 10:00",
+            "temp_c": 10.4,
+            "temp_f": 50.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Patchy rain possible",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            }
+          },
+          {
+            "time_epoch": 1744016400,
+            "time": "2025-04-07 11:00",
+            "temp_c": 11.2,
+            "temp_f": 52.2,
+            "is_day": 1,
+            "condition": {
+              "text": "Patchy rain possible",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            }
+          },
+          {
+            "time_epoch": 1744020000,
+            "time": "2025-04-07 12:00",
+            "temp_c": 12.0,
+            "temp_f": 53.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1744023600,
+            "time": "2025-04-07 13:00",
+            "temp_c": 12.8,
+            "temp_f": 55.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Partly cloudy",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            }
+          },
+          {
+            "time_epoch": 1744027200,
+            "time": "2025-04-07 14:00",
+            "temp_c": 13.4,
+            "temp_f": 56.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744030800,
+            "time": "2025-04-07 15:00",
+            "temp_c": 13.7,
+            "temp_f": 56.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744034400,
+            "time": "2025-04-07 16:00",
+            "temp_c": 13.5,
+            "temp_f": 56.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744038000,
+            "time": "2025-04-07 17:00",
+            "temp_c": 13.0,
+            "temp_f": 55.4,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744041600,
+            "time": "2025-04-07 18:00",
+            "temp_c": 12.2,
+            "temp_f": 54.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744045200,
+            "time": "2025-04-07 19:00",
+            "temp_c": 11.3,
+            "temp_f": 52.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744048800,
+            "time": "2025-04-07 20:00",
+            "temp_c": 10.6,
+            "temp_f": 51.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744052400,
+            "time": "2025-04-07 21:00",
+            "temp_c": 10.0,
+            "temp_f": 50.0,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744056000,
+            "time": "2025-04-07 22:00",
+            "temp_c": 9.5,
+            "temp_f": 49.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744059600,
+            "time": "2025-04-07 23:00",
+            "temp_c": 9.0,
+            "temp_f": 48.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          }
+        ]
+      },
+      {
+        "date": "2025-04-08",
+        "date_epoch": 1744070400,
+        "day": {
+          "maxtemp_c": 14.9,
+          "maxtemp_f": 58.8,
+          "mintemp_c": 8.3,
+          "mintemp_f": 46.9,
+          "avgtemp_c": 11.6,
+          "avgtemp_f": 52.9,
+          "maxwind_mph": 6.3,
+          "maxwind_kph": 10.1,
+          "totalprecip_mm": 0,
+          "totalprecip_in": 0,
+          "totalsnow_cm": 0,
+          "avgvis_km": 10,
+          "avgvis_miles": 6,
+          "avghumidity": 62,
+          "daily_will_it_rain": 0,
+          "daily_chance_of_rain": 0,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "Sunny",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+            "code": 1000
+          },
+          "uv": 3.5
+        },
+        "astro": {
+          "sunrise": "06:24 AM",
+          "sunset": "08:02 PM",
+          "moonrise": "02:08 PM",
+          "moonset": "05:35 AM",
+          "moon_phase": "Waxing Gibbous",
+          "moon_illumination": 76,
+          "is_moon_up": 0,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1744063200,
+            "time": "2025-04-08 00:00",
+            "temp_c": 8.6,
+            "temp_f": 47.5,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744066800,
+            "time": "2025-04-08 01:00",
+            "temp_c": 8.4,
+            "temp_f": 47.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744070400,
+            "time": "2025-04-08 02:00",
+            "temp_c": 8.3,
+            "temp_f": 46.9,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744074000,
+            "time": "2025-04-08 03:00",
+            "temp_c": 8.3,
+            "temp_f": 46.9,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744077600,
+            "time": "2025-04-08 04:00",
+            "temp_c": 8.4,
+            "temp_f": 47.1,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744081200,
+            "time": "2025-04-08 05:00",
+            "temp_c": 8.5,
+            "temp_f": 47.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744084800,
+            "time": "2025-04-08 06:00",
+            "temp_c": 8.6,
+            "temp_f": 47.5,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744088400,
+            "time": "2025-04-08 07:00",
+            "temp_c": 9.1,
+            "temp_f": 48.4,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744092000,
+            "time": "2025-04-08 08:00",
+            "temp_c": 9.8,
+            "temp_f": 49.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744095600,
+            "time": "2025-04-08 09:00",
+            "temp_c": 10.6,
+            "temp_f": 51.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744099200,
+            "time": "2025-04-08 10:00",
+            "temp_c": 11.5,
+            "temp_f": 52.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744102800,
+            "time": "2025-04-08 11:00",
+            "temp_c": 12.4,
+            "temp_f": 54.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744106400,
+            "time": "2025-04-08 12:00",
+            "temp_c": 13.2,
+            "temp_f": 55.8,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744110000,
+            "time": "2025-04-08 13:00",
+            "temp_c": 13.9,
+            "temp_f": 57.0,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744113600,
+            "time": "2025-04-08 14:00",
+            "temp_c": 14.5,
+            "temp_f": 58.1,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744117200,
+            "time": "2025-04-08 15:00",
+            "temp_c": 14.9,
+            "temp_f": 58.8,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744120800,
+            "time": "2025-04-08 16:00",
+            "temp_c": 14.7,
+            "temp_f": 58.5,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744124400,
+            "time": "2025-04-08 17:00",
+            "temp_c": 14.2,
+            "temp_f": 57.6,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744128000,
+            "time": "2025-04-08 18:00",
+            "temp_c": 13.5,
+            "temp_f": 56.3,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744131600,
+            "time": "2025-04-08 19:00",
+            "temp_c": 12.6,
+            "temp_f": 54.7,
+            "is_day": 1,
+            "condition": {
+              "text": "Sunny",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744135200,
+            "time": "2025-04-08 20:00",
+            "temp_c": 11.8,
+            "temp_f": 53.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744138800,
+            "time": "2025-04-08 21:00",
+            "temp_c": 11.2,
+            "temp_f": 52.2,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744142400,
+            "time": "2025-04-08 22:00",
+            "temp_c": 10.7,
+            "temp_f": 51.3,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            }
+          },
+          {
+            "time_epoch": 1744146000,
+            "time": "2025-04-08 23:00",
+            "temp_c": 10.2,
+            "temp_f": 50.4,
+            "is_day": 0,
+            "condition": {
+              "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
               "code": 1000
             }

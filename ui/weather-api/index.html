@@ -11,10 +11,26 @@
 			--weather-api-bg: linear-gradient(180deg, #084380, #7a9fc5);
 			--weather-api-c: #EEE;
 		}
-		.sunset {
-			--weather-api-bg: url("./pexels-no-name-14543-66997.jpg");
-			--weather-api-c: #EEE;
-			background-size: cover;
+		.sunset::part(overview) {
+			--weather-api-widget-bg: url("./pexels-pixabay-416024.jpg");
+			--weather-api-widget-bgp: top;
+		}
+		.sunset::part(forecast-hours) {
+			--weather-api-widget-bg: url("./pexels-pixabay-33834.jpg");
+			--weather-api-widget-bgp: center;
+		}
+		.sunset::part(wind) {
+			--weather-api-widget-bg: url("./pexels-no-name-14543-66997.jpg");
+			--weather-api-widget-bgp: bottom;
+		}
+
+		.bento {
+			grid-template-columns: repeat(4, 1fr);
+			&::part(overview) { grid-column: 1 / 5; }
+			&::part(forecast-hours) { grid-column: 1 / 5; }
+			&::part(forecast-days) { grid-column: 1 / 3; }
+			&::part(wind) { grid-column: 3 / 5; }
+			&::part(uv) { grid-column: 1 / 2; }
 		}
 	</style>
 </head>
@@ -26,9 +42,9 @@
 
 	<!-- <h3>Proxy Mode (Default)</h3> -->
 	<!-- <weather-api 
-		widgets="current tempgraph forecast precgraph"
-		lang="fr-fr"
-		url="https://weatherapi.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen&lang=da">
+		widgets="overview"
+		lang="en-US"
+		url="https://weatherapi.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen&lang=en">
 	</weather-api> -->
 <!-- 
 	<h3>Proxy Mode with Forecast</h3>
@@ -52,9 +68,9 @@
 
 	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-api
-		class="apples sunsets"
-		widgets="overview forecast-hours forecast-days wind"
-		lang="da-DK"
+		class="bento"
+		widgets="overview forecast-hours forecast-days wind uv"
+		lang="en-US"
 		url="./current.response.json">
 	</weather-api>
 
