@@ -7,6 +7,7 @@
 		container-type: inline-size;
 		margin-block-end: var(--ui-range-gauge-bdw);
 		max-inline-size: 320px;
+		position: relative;
 		touch-action: none;
 
 		&[dir=rtl], [dir=rtl] & {

@@ -3,11 +3,12 @@ import '../nav-compass/index.js';
 const i18n = {
 	'en': {
 		day: 'Day',
+		dewPoint: 'Dew point is {{value}}°',
 		direction: 'Direction',
 		east: 'E',
 		feelsLike: 'Feels like',
-		forecastDays: 'Forecast for the next {{value}} days',
-		forecastHours: 'Forecast for the next {{value}} hours',
+		forecastDays: 'Forecast for {{value}} days',
+		forecastHours: 'Forecast for {{value}} hours',
 		gusts: 'Gusts',
 		humidity: 'Humidity',
 		high: 'H',
@@ -22,6 +23,7 @@ const i18n = {
 		uvHigh: 'High',
 		uvVeryHigh: 'Very High',
 		uvExtreme: 'Extreme',
+		visibility: 'Visibility',
 		west: 'W',
 		wind: 'Wind',
 	}
@@ -32,9 +34,11 @@ const ICONS = {
 	clock: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12h3.5, M12 7v5',
 	eye: 'M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0, M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
 	precipitation: 'M10.708 2.372a2.382 2.382 0 0 0 -.71 .686l-4.892 7.26c-1.981 3.314 -1.22 7.466 1.767 9.882c2.969 2.402 7.286 2.402 10.254 0c2.987 -2.416 3.748 -6.569 1.795 -9.836l-4.919 -7.306c-.722 -1.075 -2.192 -1.376 -3.295 -.686z',
+	ripple: 'M3 7c3 -2 6 -2 9 0s6 2 9 0, M3 17c3 -2 6 -2 9 0s6 2 9 0, M3 12c3 -2 6 -2 9 0s6 2 9 0',
 	sun: 'M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z, M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z, M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z',
 	sunrise: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M12 12a5 5 0 0 1 5 5a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1a5 5 0 0 1 5 -5, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12.707 2.293l3 3a1 1 0 1 1 -1.414 1.414l-1.293 -1.292v3.585a1 1 0 0 1 -.883 .993l-.117 .007a1 1 0 0 1 -1 -1v-3.586l-1.293 1.293a1 1 0 0 1 -1.414 -1.414l2.958 -2.96a1 1 0 0 1 .15 -.135l.127 -.08l.068 -.033l.11 -.041l.12 -.029c.3 -.055 .627 .024 .881 .278, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
 	sunset: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12 2a1 1 0 0 1 1 1v3.584l1.293 -1.291a1 1 0 0 1 1.32 -.083l.094 .083a1 1 0 0 1 0 1.414l-3 3a.98 .98 0 0 1 -.767 .293l-.124 -.017l-.127 -.032l-.104 -.04l-.115 -.063a1 1 0 0 1 -.151 -.114l-3.026 -3.027a1 1 0 0 1 1.414 -1.414l1.293 1.292v-3.585a1 1 0 0 1 1 -1, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
+	temperature: 'M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5, M10 9l4 0',
 	wind: 'M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24, M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24, M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24'
 }
 
@@ -133,8 +137,11 @@ class WeatherApi extends HTMLElement {
 			'overview': () => this.#renderOverview(location, current, forecast),
 			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
 			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
+			'humidity': () => this.#renderHumidity(current),
 			'precipitation': () => this.#renderPrecipitation(current),
+			'pressure': () => this.#renderPressure(current),
 			'uv': () => this.#renderUV(current),
+			'visibility': () => this.#renderVisibility(current),
 			'wind': () => this.#renderWind(current)
 		};
 		
@@ -220,6 +227,16 @@ class WeatherApi extends HTMLElement {
 		</div>`;
 	}
 
+	#renderHumidity(current) {
+		const humidity = current.humidity;
+		return `
+			<div part="humidity widget widget-sm">
+				<h2 part="title humidity-title">${this.#icon(ICONS.ripple, 'icon humidity-icon')}${this.#t('humidity')}</h2>
+				<h3 part="humidity-value header-lg">${current.humidity}%</h3>
+				<p part="humidity-depoint header-sm">${this.#t('dewPoint', { value: this._isMetric ? current.dewpoint_c : current.dewpoint_f })}</p>
+			</div>`;
+	}
+
 	#renderOverview(location, current, forecast) {
 		const tempUnit = this._isMetric ? '°C' : '°F';
 		const formattedTime = this.#formatDate(location.localtime, { 
@@ -257,17 +274,38 @@ class WeatherApi extends HTMLElement {
 		return `<div></div>`;
 	}
 
+	#renderPressure(current) {
+		const pressure = this._isMetric ? current.pressure_mb : current.pressure_in;
+		const pressureUnit = this._isMetric ? 'hPa' : 'inHg';
+		return `
+			<div part="pressure widget">
+				<h4 part="title pressure-title">${this.#icon(ICONS.precipitation, 'icon pressure-icon')}${this.#t('pressure')}</h4>
+				<h3 part="pressure-value header-lg">${pressure} ${pressureUnit}</h3>
+			</div>`;
+	}
+
 	#renderUV(current) {
 		const uvIndex = current.uv;
 		const uvCategory = this.#getUVCategory(uvIndex);
 		return `
-			<div part="uv widget">
-				<h4 part="title uv-title">${this.#icon(ICONS.sun, 'icon uv-icon')}${this.#t('uv')}</h4>
-				<div part="uv-wrapper">
-					<h2 part="uv-value">${uvIndex}</h2>
-					<p part="uv-category uv-${uvCategory.toLowerCase()}">${this.#t(uvCategory)}</p>
-				</div>
-				<output value="${uvIndex}" part="uv-slider"></output>
+			<div part="uv widget widget-sm">
+				<h2 part="title uv-title">${this.#icon(ICONS.sun, 'icon uv-icon')}${this.#t('uv')}</h2>
+				<hgroup part="uv-wrapper">
+					<h3 part="uv-value header-lg">${uvIndex}</h3>
+					<h4 part="uv-category header-md">${this.#t(uvCategory)}</h4>
+				</hgroup>
+				<output value="${uvIndex}" part="uv-slider" style="--_p:${Math.min((uvIndex / 10) * 100, 100)}%"></output>
+			</div>`;
+	}
+
+	#renderVisibility(current) {
+		const visibility = this._isMetric ? current.vis_km : current.vis_miles;
+		const visibilityUnit = this._isMetric ? 'km' : 'miles';
+		return `
+			<div part="visibility widget widget-sm">
+				<h4 part="title visibility-title">${this.#icon(ICONS.eye, 'icon visibility-icon')}${this.#t('visibility')}</h4>
+				<h3 part="visibility-value header-lg">${visibility} ${visibilityUnit}</h3>
+				<p>Perfectly clear view</p>
 			</div>`;
 	}
 
