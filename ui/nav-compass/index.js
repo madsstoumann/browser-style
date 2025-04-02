@@ -1,127 +1,3 @@
-const styles = new CSSStyleSheet();
-styles.replaceSync(`
-	:host {
-		--nav-compass-arrow-width: 8cqi;
-		--nav-compass-arrow-line-width: 1.5cqi;
-
-		aspect-ratio: 1;
-		background: var(--nav-compass-bg, light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 15%)));
-		border-radius: 50%;
-		color: var(--nav-compass-c, light-dark(hsl(0, 0%, 15%), hsl(0, 0%, 85%)));
-		color-scheme: light dark;
-		container-type: inline-size;
-		font-family: var(--nav-compass-ff, ui-sans-serif, system-ui, sans-serif);
-		display: grid;
-		inline-size: 100%;
-		overflow: clip;
-		place-content: center;
-		position: relative;
-	}
-
-	/* === Directions === */
-	:host::part(directions),
-	:host::part(indices) {
-		all: unset;
-		box-sizing: border-box;
-		inset: 0;
-		position: absolute;
-		width: 100%;
-	}
-	:host::part(directions) {
-		display: grid;
-		font-size: var(--weather-api-compass-fs, 7cqi);
-		font-weight: var(--weather-api-compass-text-fw, 500);
-		grid: repeat(3, 1fr) / repeat(3, 1fr);
-	}
-	:host [part~=directions] abbr {
-		padding: var(--nav-compass-directions-p, .5ch 1ch);
-		text-decoration: none; 
-	}
-	:host::part(north) { grid-area: 1 / 2; place-self: start center; }
-	:host::part(east) { grid-area: 2 / 3; place-self: center end; }
-	:host::part(south) { grid-area: 3 / 2; place-self: end center; }
-	:host::part(west) { grid-area: 2 / 1; place-self: center start; }
-
-	/* === Arrow === */
-	:host::part(arrow) {
-		display: grid;
-		grid-area: 1 / 2 / 4 / 3;
-		grid-template-rows: min-content 1fr min-content;
-		height: 100%;
-		place-self: center;
-		rotate: var(--_d, 0deg);
-	}
-	:host::part(arrow)::before {
-		aspect-ratio: 1;
-		background: var(--nav-compass-arrow-bg, currentColor);
-		clip-path: polygon(50% 0, 100% 100%, 0% 100%);
-		content: '';
-		grid-area: 1 / 1 / 2 / 2;
-		width: var(--nav-compass-arrow-width);
-	}
-	:host::part(arrow)::after {
-		aspect-ratio: 1;
-		border: 1.5cqi solid var(--nav-compass-arrow-bg, currentColor);
-		border-radius: 50%;
-		box-sizing: border-box;
-		content: '';
-		grid-area: 3 / 1 / 4 / 2;
-		width: var(--nav-compass-arrow-width);
-	} 
-	:host::part(arrow-line) {
-		background: var(--nav-compass-arrow-bg, currentColor);
-		grid-area: 2 / 1 / 3 / 2;
-		justify-self: center;
-		mask: linear-gradient(180deg, #FFF 0%, #FFF 30%, #0000 30%, #0000 70%, #FFF 70%, #FFF 100%);
-		width: var(--nav-compass-arrow-line-width);
-	}
-
-	/* === Header: Label / Value === */
-	:host::part(header) {
-		grid-area: 2 / 2 / 3 / 3;
-		line-height: 1.2;
-		margin: 0;
-		place-content: center;
-		text-align: center;
-	}
-	:host::part(label) {
-		display: block;
-		font-size: var(--nav-compass-label-fs, 5cqi);
-		font-weight: var(--nav-compass-label-fw, 500);
-	}
-	:host::part(value) {
-		font-size: var(--nav-compass-label-fs, 10cqi);
-		font-weight: var(--nav-compass-label-fw, 300);
-	}
-
-	/* === Indices & Marks === */
-	:host::part(indices) {
-		border-radius: 50%;
-		color: var(--nav-compass-indices-c, currentColor);
-	}
-	:host::part(indice),
-	:host::part(indice-mark) {
-		display: inline-block;
-		font-size: var(--nav-compass-indice-fs, 2.5cqi);
-		font-weight: var(--nav-compass-indice-fw, 300);
-		offset-anchor: top;
-		offset-distance: var(--_p, 0%);
-		offset-path: content-box;
-		width: fit-content;
-	}
-	:host::part(indice-mark) {
-		font-weight: var(--nav-compass-indice-mark-fw, 900);
-	}
-
-	/* === Bearing (default) / Course Mode === */
-	:host([mode="course"]) {
-		rotate: calc(0deg - var(--_d, 0deg));
-	}
-	:host([mode="course"])::part(header) {
-		rotate: var(--_d, 0deg);
-	}
-`);
-
 export default class NavCompass extends HTMLElement {
 	#root;
 	#i18n = {
@@ -145,6 +21,9 @@ export default class NavCompass extends HTMLElement {
 		}
 	};
 	#lang;
+	get basePath() {
+		return new URL('.', import.meta.url).href;
+	}
 
 	static get observedAttributes() {
 		return ['degree'];
@@ -158,7 +37,7 @@ export default class NavCompass extends HTMLElement {
 		super();
 		this.#lang = (this.getAttribute('lang') || document.documentElement.getAttribute('lang') || navigator.language || 'en')
 		this.#root = this.attachShadow({ mode: 'open' });
-		this.#root.adoptedStyleSheets = [styles];
+		this.#loadStyles();
 		this.#root.innerHTML = `
 			<ul part="indices">${this.#generateIndices()}</ul>
 			<nav part="directions">
@@ -166,7 +45,11 @@ export default class NavCompass extends HTMLElement {
 				<abbr part="east" title="${this.#t('E', 'full')}">${this.#t('E', 'abbr')}</abbr>
 				<abbr part="south" title="${this.#t('S', 'full')}">${this.#t('S', 'abbr')}</abbr>
 				<abbr part="west" title="${this.#t('W', 'full')}">${this.#t('W', 'abbr')}</abbr>
-				<div part="arrow"><b part="arrow-line"></b></div>
+				<div part="arrow">
+					<div part="arrow-head"></div>
+					<div part="arrow-line"></div>
+					<div part="arrow-tail"></div>
+				</div>
 				<h3 part="header">
 					<span part="value"></span>
 					<span part="label">${this.getAttribute('label')||''}</span>
@@ -191,8 +74,21 @@ export default class NavCompass extends HTMLElement {
 		const mark = count / parseInt(this.getAttribute('marks')) || 5;
 		return Array.from({ length: count }, (_, i) => {
 			const percentage = `${(i * step)}%`;
-			return `<li style="--_p:${percentage}" part="${i % mark === 0 ? 'indice-mark': 'indice'}">|</li>`;
+			return `<li style="--_p:${percentage}" part="${i % mark === 0 ? 'indice-mark': 'indice'}"></li>`;
 		}).join('');
+	}
+
+	async #loadStyles() {
+		try {
+			const cssPath = this.getAttribute('styles') || 
+				(this.basePath ? `${this.basePath}index.css` : 'index.css');
+			const response = await fetch(cssPath);
+			if (response.ok) {
+				const sheet = new CSSStyleSheet();
+				sheet.replaceSync(await response.text());
+				this.shadowRoot.adoptedStyleSheets = [sheet];
+			}
+		} catch (_) {}
 	}
 
 	#update(degree) {

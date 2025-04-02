@@ -1,4 +1,3 @@
-// Import the NavCompass component at the top of the file
 import '../nav-compass/index.js';
 
 const i18n = {
@@ -257,7 +256,7 @@ class WeatherApi extends HTMLElement {
 						<li part="wind-item"><strong part="wind-item-key">${this.#t('gusts')}</strong><span part="wind-item-value">${gusts} ${windUnit}</span></li>
 						<li part="wind-item"><strong part="wind-item-key">${this.#t('direction')}</strong><span part="wind-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
 					</ul>
-					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${windUnit}"></nav-compass>
+					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${windUnit}" mode="bearing"></nav-compass>
 				</div>
 			</div>`;
 	}

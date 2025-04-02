@@ -247,7 +247,7 @@ h2, h3, h4 {
 
 /* === Compas === */
 nav-compass {
-	color-scheme: dark;
+	
 	margin-block-start: var(--weather-api-p);
 }
 
