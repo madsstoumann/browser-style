@@ -133,6 +133,7 @@
 	position: relative;
 	width: var(--nav-compass-indice-mark-w, var(--nav-compass-indice-w));
 }
+/* Show degree value for indice-marks, if [degrees]-attribute exists */
 :host([degrees])::part(indice-mark)::after {
 	color: var(--nav-compass-indice-degree-c, var(--nav-compass-indice-bg));
 	content: attr(title);
