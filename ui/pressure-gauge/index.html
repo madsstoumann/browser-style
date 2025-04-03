@@ -8,18 +8,29 @@
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+	<style>
+		.solid-angle {
+			--pressure-gauge-mask-angle: conic-gradient(from 145deg,
+				#0000 0deg, 
+				#0000 90deg,
+				#FFF 90deg,
+				#FFF 340deg,
+				#0000 340deg
+			);
+		}
 
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Pressure Gauge</h2>
-	<p>Web Component, using mostly CSS to drive a compass</p>
+	<p>Web Component, using mostly CSS to drive a pressure gauge</p>
 
-	<!-- <div class="ui-grid --xs-c-1 --md-c-3"> -->
-		<pressure-gauge value="1.032" low="Low" high="High"></pressure-gauge>
-
-	<!-- </div> -->
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<pressure-gauge value="1032" label="hPa" min="Low" max="High"></pressure-gauge>
+		<pressure-gauge value="1032" label="hPa" min="Low" max="High" style="--_d:130deg;" class="solid-angle"></pressure-gauge>
+	</div>
 
 	<script type="module" src="./index.js"></script>
 </body>
