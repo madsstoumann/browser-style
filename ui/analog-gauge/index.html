@@ -10,15 +10,21 @@
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 	<style>
 		.humidity{
-			--analog-gauge-bg:  #8CF, #6BF, #46E, #24C var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
+			--analog-gauge-bg: #8CF, #6BF, #46E, #24C var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
 			--analog-gauge-start-angle: 270deg;
 			--analog-gauge-range: 220deg;
 			--analog-gauge-values-bg: linear-gradient(180deg, light-dark(#DEF, #1e1b40), light-dark(#FFF, #333));
 		}
 		.download-speed {
-			--analog-gauge-bg: #12C2FC, #6CFFD4, #78FF80 var(--analog-gauge-value, 0%), #a2a3a5 0 var(--analog-gauge-range),  #0000 0 var(--analog-gauge-range);
-			/* --analog-gauge-needle-bg: linear-gradient(to right, #EEE, #AAA, #333); */
-			/* linear-gradient(-90deg, #222, #8a99a8bf) */
+			--analog-gauge-bg: #12C2FC, #6CFFD4, #78FF80 var(--analog-gauge-value, 0%), light-dark(#DDD, #222) 0 var(--analog-gauge-range),  #0000 0 var(--analog-gauge-range);
+			--analog-gauge-needle-bg: light-dark(#445, #EEE);
+			--analog-gauge-needle-cp: polygon(
+				20% 35.00%,
+				80.00% 0.00%,
+				85.00% 35.00%,
+				85.00% 65.00%,
+				80.00% 100.00%,
+				20% 65.00%);
 		}
 
 	</style>
@@ -32,7 +38,7 @@
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-gauge value="1032" label="hPa" min="950" max="1050" min-label="Low" max-label="High" values="11"></analog-gauge>
 		<analog-gauge value="55" suffix="%" label="Humidity" min="0" max="100" class="humidity" values="11"></analog-gauge>
-		<analog-gauge value="879" label="mbps" min="0" max="1000" class="download-speed" values="11"></analog-gauge>
+		<analog-gauge value="779" label="mbps" min="0" max="1000" class="download-speed" values="11"></analog-gauge>
 	</div>
 
 	<script type="module" src="./index.js"></script>
