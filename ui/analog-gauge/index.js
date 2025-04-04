@@ -22,6 +22,7 @@ styles.replaceSync(`
 		inline-size: 100%;
 	}
 
+	/* === GAUGE === */
 	:host::part(gauge) {
 		background: conic-gradient(from var(--analog-gauge-start-angle, 235deg), var(--analog-gauge-bg));
 		border-radius: 50%;
@@ -29,6 +30,7 @@ styles.replaceSync(`
 		mask: var(--analog-gauge-mask-circle);
 	}
 
+	/* === INDICES === */
 	:host::part(indices) {
 		all: unset;
 		border-radius: 50%;
@@ -44,11 +46,10 @@ styles.replaceSync(`
 		offset-anchor: top;
 		offset-distance: var(--_p, 0%);
 		offset-path: content-box;
-		width: .25cqi;
+		width: var(--analog-gauge-indice-w, .25cqi);
 	}
 
 	/* === LABELS === */
-
 	:host::part(label) {
 		font-size: var(--analog-gauge-label-fs, 7.5cqi);
 		font-weight: var(--analog-gauge-label-fw, 200);
@@ -56,7 +57,6 @@ styles.replaceSync(`
 		place-self: center center;
 		text-box: ex alphabetic;
 	}
-
 	:host::part(label-min),
 	:host::part(label-max) {
 		font-size: var(--analog-gauge-label-fs, 5cqi);
@@ -65,11 +65,19 @@ styles.replaceSync(`
 	}
 	:host::part(label-min) { grid-area: 3 / 1 / 4 / 2;}
 	:host::part(label-max) { grid-area: 3 / 3 / 4 / 4; }
+	:host::part(value) {
+		font-size: var(--analog-gauge-value-fs, 15cqi);
+		font-weight: var(--analog-gauge-value-fw, 200);
+		grid-area: 3 / 2 / 4 / 3;
+		place-self: start center;
+		text-box: ex alphabetic;
+	}
 
+	/* === NEEDLE === */
 	:host::part(needle) {
 		align-self: center;
 		background: var(--analog-gauge-needle-bg);
-		clip-path: polygon(0.00% 50.00%,78.00% 0.00%,83.00% 35.00%,83.00% 65.00%,78.00% 100.00%);
+		clip-path: var(--analog-gauge-needle-cp, polygon(0.00% 50.00%,78.00% 0.00%,83.00% 35.00%,83.00% 65.00%,78.00% 100.00%));
 		grid-area: 2 / 1 / 3 / 3;
 		height: var(--analog-gauge-needle-h);
 		isolation: isolate;
@@ -79,16 +87,7 @@ styles.replaceSync(`
 		width: var(--_w);
 	}
 
-	:host::part(value) {
-		font-size: var(--analog-gauge-value-fs, 15cqi);
-		font-weight: var(--analog-gauge-value-fw, 200);
-		grid-area: 3 / 2 / 4 / 3;
-		place-self: start center;
-		text-box: ex alphabetic;
-	}
-
 	/* === VALUE MARKS === */
-
 	:host::part(value-marks) {
 		all: unset;
 		aspect-ratio: 1;
