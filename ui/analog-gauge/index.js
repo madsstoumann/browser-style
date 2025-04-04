@@ -107,7 +107,7 @@ styles.replaceSync(`
 		--_x: calc(var(--_r) + (var(--_r) * cos(var(--_d))));
 		--_y: calc(var(--_r) + (var(--_r) * sin(var(--_d))));
 		aspect-ratio: var(--analog-gauge-value-mark-asr, 1);
-		color: var(--analog-gauge-value-mark-c, #0006);
+		color: var(--analog-gauge-value-mark-c, light-dark(#0006, #FFF6));
 		display: grid;
 		font-size: var(--analog-gauge-value-mark-fs, 3cqi);
 		font-weight: var(--analog-gauge-value-mark-fw, 400);
