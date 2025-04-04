@@ -6,7 +6,7 @@ styles.replaceSync(`
 		--analog-gauge-bdw: 10cqi;
 		--analog-gauge-bg: #009, #69f, #ff0, #f90, #f00 var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
 		--analog-gauge-mask-circle: radial-gradient(circle at 50% 50%, #0000 calc(50cqi - var(--analog-gauge-bdw, 10cqi)), #000 0);
-		--analog-gauge-needle-bg: linear-gradient(-90deg, #222, #8a99a8bf);
+		--analog-gauge-needle-bg: light-dark(#333, #DDD);
 		--analog-gauge-needle-h: 10cqi;
 		--analog-gauge-value-mark-w: 6ch;
 
@@ -54,6 +54,7 @@ styles.replaceSync(`
 		font-size: var(--analog-gauge-label-fs, 7.5cqi);
 		font-weight: var(--analog-gauge-label-fw, 200);
 		grid-area: 3 / 2 / 4 / 3;
+		isolation: isolate;
 		place-self: center center;
 		text-box: ex alphabetic;
 	}
@@ -69,8 +70,9 @@ styles.replaceSync(`
 		font-size: var(--analog-gauge-value-fs, 15cqi);
 		font-weight: var(--analog-gauge-value-fw, 200);
 		grid-area: 3 / 2 / 4 / 3;
+		isolation: isolate;
 		place-self: start center;
-		text-box: ex alphabetic;
+		text-box: cap alphabetic;
 	}
 
 	/* === NEEDLE === */
