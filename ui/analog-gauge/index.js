@@ -1,11 +1,17 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
+		--analog-gauge-segments: 0;
+		--analog-gauge-segments-w: 1deg;
 		--analog-gauge-start-angle: 235deg;
 		--analog-gauge-range: 250deg;
 		--analog-gauge-bdw: 10cqi;
 		--analog-gauge-bg: #009, #69f, #ff0, #f90, #f00 var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
 		--analog-gauge-mask-circle: radial-gradient(circle at 50% 50%, #0000 calc(50cqi - var(--analog-gauge-bdw, 10cqi)), #000 0);
+		--analog-gauge-mask-segment: repeating-conic-gradient(
+				from var(--analog-gauge-start-angle, 235deg) at 50% 50%,
+				#000 0 var(--analog-gauge-segments-w, 1deg),
+				#0000 0 calc((var(--analog-gauge-range, 250deg) / var(--analog-gauge-segments, 5))));
 		--analog-gauge-needle-bg: light-dark(#333, #DDD);
 		--analog-gauge-needle-h: 10cqi;
 		--analog-gauge-value-mark-w: 6ch;
@@ -27,26 +33,8 @@ styles.replaceSync(`
 		background: conic-gradient(from var(--analog-gauge-start-angle, 235deg), var(--analog-gauge-bg));
 		border-radius: 50%;
 		grid-area: 1 / 1 / 4 / 4;
-		mask: var(--analog-gauge-mask-circle);
-	}
-
-	/* === INDICES === */
-	:host::part(indices) {
-		all: unset;
-		border-radius: 50%;
-		grid-area: 1 / 1 / 4 / 4;
-		rotate: var(--_ir, 0deg);
-	}
-	:host::part(indice) {
-		background: var(--analog-gauge-indice-bg, #FFF3);
-		border-radius: var(--analog-gauge-indice-bdrs, .5cqi);
-		display: inline-block;
-		font-size: small;
-		height: var(--analog-gauge-indice-h, var(--analog-gauge-bdw, 10cqi));
-		offset-anchor: top;
-		offset-distance: var(--_p, 0%);
-		offset-path: content-box;
-		width: var(--analog-gauge-indice-w, .25cqi);
+		mask: var(--analog-gauge-mask-circle), var(--analog-gauge-mask-segment, none);
+		mask-composite: var(--analog-gauge-mask-composite, subtract);
 	}
 
 	/* === LABELS === */
@@ -79,7 +67,7 @@ styles.replaceSync(`
 	:host::part(needle) {
 		align-self: center;
 		background: var(--analog-gauge-needle-bg);
-		clip-path: var(--analog-gauge-needle-cp, polygon(0.00% 50.00%,78.00% 0.00%,83.00% 35.00%,83.00% 65.00%,78.00% 100.00%));
+		clip-path: var(--analog-gauge-needle-cp, polygon(7.5% 50%,78% 0%,83% 35%,83% 65%,78% 100%));
 		grid-area: 2 / 1 / 3 / 3;
 		height: var(--analog-gauge-needle-h);
 		isolation: isolate;
@@ -147,7 +135,6 @@ export default class AnalogGauge extends HTMLElement {
 
 		this.#root.innerHTML = `
 			<div part="gauge"></div>
-			${this.#generateIndices()}
 			${this.#generateValueMarks()}
 			<div part="needle"></div>
 			<div part="value"></div>
@@ -163,19 +150,6 @@ export default class AnalogGauge extends HTMLElement {
 			this.#units.value = parseFloat(newValue || 0);
 			this.#update();
 		}
-	}
-
-	#generateIndices() {
-		const count = parseInt(this.getAttribute('indices'));
-		if (isNaN(count) || count <= 0) return '';
-		const step = 100 / (360/this.#units.range) / count;
-		return `
-		<ul part="indices" style="--_ir:-${this.#units.totalRange/2}deg">${
-			Array.from({ length: count }, (_, i) => {
-				const position = i * step;
-				return `<li style="--_p:${position}%" part="indice"></li>`;
-			}).join('')}
-		</ul>`;
 	}
 
 	#generateValueMarks() {
