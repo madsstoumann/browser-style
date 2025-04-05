@@ -13,7 +13,7 @@
 			--analog-gauge-bg: #8CF, #6BF, #46E, #24C var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
 			--analog-gauge-start-angle: 270deg;
 			--analog-gauge-range: 220deg;
-			--analog-gauge-segments: 5;
+			--analog-gauge-segments: 100;
 			--analog-gauge-values-bg: linear-gradient(180deg, light-dark(#DEF, #1e1b40), light-dark(#FFF, #333));
 		}
 		.download-speed {
@@ -28,19 +28,51 @@
 				20% 65.00%);
 			--analog-gauge-segments: 10;
 		}
+		.temperature {
+			--analog-gauge-bdw: 5cqi;
+			--analog-gauge-bg: #69f,  #f00 var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
+			--analog-gauge-segments: 15;
+		}
+		.uv {
+			--_dg: calc(var(--analog-gauge-range) / var(--analog-gauge-segments));
+			--analog-gauge-bdw: 25cqi;
+			--analog-gauge-bg: 
+				#55AF33 var(--_dg), 
+				#A0C61B 0 calc(2 * var(--_dg)), 
+				#F7E98E 0 calc(3 * var(--_dg)), 
+				#F6E301 0 calc(4 * var(--_dg)), 
+				#FAB60D 0 calc(5 * var(--_dg)), 
+				#F88D2F 0 calc(6 * var(--_dg)), 
+				#F76D00 0 calc(7 * var(--_dg)), 
+				#E53015 0 calc(8 * var(--_dg)), 
+				#D90E21 0 calc(9 * var(--_dg)), 
+				#D80010 0 calc(10 * var(--_dg)), 
+				#8A4F9E 0 var(--analog-gauge-range), 
+				#0000 0 var(--analog-gauge-range);
+			--analog-gauge-segments: 11;
+		}
+		.battery {
+			--analog-gauge-bdw: 7.5cqi;
+			--analog-gauge-bg: red, orange, yellow, lightgreen, green var(--analog-gauge-range), #0000 0 var(--analog-gauge-range);
+			--analog-gauge-label-ps: end center;
+			--analog-gauge-segments: 10;
+		}
 
 	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Pressure Gauge</h2>
-	<p>Web Component, using mostly CSS to drive a pressure gauge</p>
+	<h2>Analog Gauge</h2>
+	<p>Web Component, using mostly CSS to drive an analog gauge</p>
 
 	<div class="ui-grid --xs-c-1 --md-c-3">
 		<analog-gauge value="1032" label="hPa" min="950" max="1050" min-label="Low" max-label="High" values="11"></analog-gauge>
-		<analog-gauge value="55" suffix="%" label="Humidity" min="0" max="100" class="humidity" values="11"></analog-gauge>
+		<analog-gauge value="55" suffix="%" label="Humidity" min="0" max="100" class="humidity" values="Arid,Dry,Crisp,Low,Fair,Mild,Moist,Damp,Wet,Soggy"></analog-gauge>
 		<analog-gauge value="779" label="mbps" min="0" max="1000" class="download-speed" values="11"></analog-gauge>
+		<analog-gauge  value="20" suffix="&deg;" min="-25" max="50" min-label="Cold" max-label="Hot" class="temperature" values="16"></analog-gauge>
+		<analog-gauge value="3.2" label="UV" min="0" max="11" min-label="Low" max-label="Extreme" class="uv"></analog-gauge>
+		<analog-gauge value="35" suffix="%" label="battery remaining" min="0" max="100" min-label="Low" max-label="Full" class="battery" values="0%,20%,40%,60%,80%,100%"></analog-gauge>
 	</div>
 
 	<script type="module" src="./index.js"></script>

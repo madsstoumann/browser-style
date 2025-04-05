@@ -1,7 +1,7 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
-		--analog-gauge-segments: 0;
+		--analog-gauge-segments: 1;
 		--analog-gauge-segments-w: 1deg;
 		--analog-gauge-start-angle: 235deg;
 		--analog-gauge-range: 250deg;
@@ -43,7 +43,9 @@ styles.replaceSync(`
 		font-weight: var(--analog-gauge-label-fw, 200);
 		grid-area: 3 / 2 / 4 / 3;
 		isolation: isolate;
-		place-self: center center;
+		line-height: 1.2;
+		place-self: var(--analog-gauge-label-ps, center center);
+		text-align: center;
 		text-box: ex alphabetic;
 	}
 	:host::part(label-min),
@@ -153,16 +155,30 @@ export default class AnalogGauge extends HTMLElement {
 	}
 
 	#generateValueMarks() {
-		if (!this.hasAttribute('values')) return '';
-		const count = parseInt(this.getAttribute('values'));
-		if (isNaN(count) || count <= 0) return '';
+		const values = this.getAttribute('values');
+		if (!values) return '';
+		
+		let valueArray = [];
+		let count = 0;
+		
+		if (/^\s*\d+\s*$/.test(values)) {
+			count = parseInt(values.trim());
+			if (isNaN(count) || count <= 0) return '';	
+			valueArray = Array.from({ length: count }, (_, i) => 
+				Math.round(this.#units.min + (i * (this.#units.max - this.#units.min) / (count - 1 || 1)))
+			);
+		} else {
+			valueArray = values.split(',').map(v => v.trim());
+			count = valueArray.length;
+			if (count <= 0) return '';
+		}
+		
 		const degreeStep = this.#units.range / (count - 1 || 1);
 		
 		return `
 		<ul part="value-marks">
-			${Array.from({ length: count }, (_, i) => {
+			${valueArray.map((value, i) => {
 				const degree = this.#units.start - this.#units.defaultMark + (i * degreeStep);
-				const value = Math.round(this.#units.min + (i * (this.#units.max - this.#units.min) / (count - 1 || 1)));
 				return `<li style="--_d:${degree}deg" part="value-mark">${value}</li>`;
 			}).join('')}
 		</ul>`;
