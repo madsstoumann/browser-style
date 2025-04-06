@@ -64,6 +64,7 @@ class WeatherApi extends HTMLElement {
 		// Initialize units
 		this.#units = {
 			humidity: this.#metric ? 'g/m³' : 'g/ft³',
+			presipitation: this.#metric ? 'mm' : 'in',
 			pressure: this.#metric ? 'hPa' : 'inHg',
 			temperature: this.#metric ? '°C' : '°F',
 			visibility: this.#metric ? 'km' : 'miles',
@@ -243,7 +244,7 @@ class WeatherApi extends HTMLElement {
 					<li part="forecast-hour-item" title="${hour.condition.text}">
 						<span part="forecast-hour-time">${hourTime.getHours().toString().padStart(2, '0')}:00</span>
 						<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
-						<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}°${this.#units.temperature}</span>
+						<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
 					</li>
 				`;
 			}).join('') || ''}
@@ -300,8 +301,14 @@ class WeatherApi extends HTMLElement {
 		</div>`;
 	}
 
-	#renderPrecipitation(current, unit) {
-		return `<div></div>`;
+	#renderPrecipitation(current) {
+		const precipitation = this.#metric ? current.precip_mm : current.precip_in;
+		return `
+			<div part="precipitation widget widget-sm">
+				<h2 part="title precipitation-title">${this.#icon(ICONS.precipitation, 'icon humidity-icon')}${this.#t('precipitation')}</h2>
+				<h3 part="humidity-value header-lg">${precipitation}${this.#units.presipitation}</h3>
+				
+			</div>`;
 	}
 
 	/**
