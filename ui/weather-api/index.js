@@ -14,6 +14,9 @@ const i18n = {
 		humidity: 'Humidity',
 		high: 'H',
 		low: 'L',
+		moonillumination: 'Moon illumination',
+		moonrise: 'Moonrise',
+		moonset: 'Moonset',
 		night: 'Night',
 		north: 'N',
 		precipitation: 'Precipitation',
@@ -38,6 +41,7 @@ const ICONS = {
 	clock: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12h3.5, M12 7v5',
 	eye: 'M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0, M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
 	gauge: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0, M13.41 10.59l2.59 -2.59, M7 12a5 5 0 0 1 5 -5',
+	moon: 'M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z',
 	precipitation: 'M10.708 2.372a2.382 2.382 0 0 0 -.71 .686l-4.892 7.26c-1.981 3.314 -1.22 7.466 1.767 9.882c2.969 2.402 7.286 2.402 10.254 0c2.987 -2.416 3.748 -6.569 1.795 -9.836l-4.919 -7.306c-.722 -1.075 -2.192 -1.376 -3.295 -.686z',
 	ripple: 'M3 7c3 -2 6 -2 9 0s6 2 9 0, M3 17c3 -2 6 -2 9 0s6 2 9 0, M3 12c3 -2 6 -2 9 0s6 2 9 0',
 	sun: 'M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z, M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z, M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z',
@@ -102,7 +106,19 @@ class WeatherApi extends HTMLElement {
 		return units ? units === 'metric' : !['en-US', 'en-LR', 'en-MM'].includes(navigator.language);
 	}
 
-
+	/**
+	 * Converts time from 12-hour format (AM/PM) to 24-hour format
+	 * @private
+	 * @param {string} time - Time string in "HH:MM AM/PM" format
+	 * @returns {string} Time in 24-hour format (HH:MM)
+	 */
+	#to24Hour(time) {
+		const [_, hhmm, period] = time.match(/(\d+:\d+)\s*(AM|PM)/);
+		let [hours, minutes] = hhmm.split(':');
+		if (period === 'PM' && hours !== '12') hours = +hours + 12;
+		if (period === 'AM' && hours === '12') hours = '00';
+		return `${hours}:${minutes}`;
+	}
 
 	#formatDate(dateStr, options = {}) {
 		const date = new Date(dateStr);
@@ -148,7 +164,9 @@ class WeatherApi extends HTMLElement {
 			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
 			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
 			'humidity': () => this.#renderHumidity(current),
-			'precipitation': () => this.#renderPrecipitation(current),
+			'moonphase': () => this.#renderMoonPhase(forecast.forecastday[0].astro),
+			'precipitation-sm': () => this.#renderPrecipitation(current),
+			'precipitation-lg': () => this.#renderPrecipitation(location, forecast.forecastday, 'lg'),
 			'pressure': () => this.#renderPressure(current),
 			'uv': () => this.#renderUV(current),
 			'visibility': () => this.#renderVisibility(current),
@@ -169,18 +187,14 @@ class WeatherApi extends HTMLElement {
 	}
 
 	#renderAstro(astro) {
-		const to24Hour = time => {
-				const [_, hhmm, period] = time.match(/(\d+:\d+)\s*(AM|PM)/);
-				let [hours, minutes] = hhmm.split(':');
-				if (period === 'PM' && hours !== '12') hours = +hours + 12;
-				if (period === 'AM' && hours === '12') hours = '00';
-				return `${hours}:${minutes}`;
-		};
-		const sunrise = this.#metric ? to24Hour(astro.sunrise) : astro.sunrise;
-		const sunset = this.#metric ? to24Hour(astro.sunset) : astro.sunset;
+		const sunrise = this.#metric ? this.#to24Hour(astro.sunrise) : astro.sunrise;
+		const sunset = this.#metric ? this.#to24Hour(astro.sunset) : astro.sunset;
 		return `<small part="astro">☀ ${sunrise} ☽ ${sunset}</small>`;
 	}
 
+	#renderFeelsLike(current) {
+		return ``;
+	}
 
 	/**
 	 * Renders a weather forecast for multiple days
@@ -268,6 +282,23 @@ class WeatherApi extends HTMLElement {
 			</div>`;
 	}
 
+	#renderMoonPhase(astro) {
+		const moonrise = this.#metric ? this.#to24Hour(astro.moonrise) : astro.moonrise;
+		const moonset = this.#metric ? this.#to24Hour(astro.moonset) : astro.moonset;
+		
+		return `
+		<div part="moonphase widget">
+			<h4 part="title moonphase-title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>
+			<div part="moonphase-wrapper">
+				<ul part="list">
+					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
+					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
+					<li part="list-item"><strong part="list-item-key">${this.#t('moonillumination')}</strong><span part="list-item-value">${astro.moon_illumination}</span></li>
+				</ul>
+			</div>
+		</div>`;
+	}
+
 	#renderOverview(location, current, forecast) {
 		const tempUnit = this.#metric ? '°C' : '°F';
 		const formattedTime = this.#formatDate(location.localtime, { 
@@ -301,14 +332,33 @@ class WeatherApi extends HTMLElement {
 		</div>`;
 	}
 
-	#renderPrecipitation(current) {
+	#renderPrecipitation(current, forecast = {}, size = 'sm') {
 		const precipitation = this.#metric ? current.precip_mm : current.precip_in;
 		return `
-			<div part="precipitation widget widget-sm">
+			<div part="precipitation-${size} widget widget-sm">
 				<h2 part="title precipitation-title">${this.#icon(ICONS.precipitation, 'icon humidity-icon')}${this.#t('precipitation')}</h2>
-				<h3 part="humidity-value header-lg">${precipitation}${this.#units.presipitation}</h3>
+				${size === 'lg' ? this.#renderGraph(current, forecast) : `<h3 part="humidity-value header-lg">${precipitation}${this.#units.presipitation}</h3>`}
+				
 				
 			</div>`;
+	}
+
+	#renderGraph(location, days, type = 'precipitation') {
+		const localTime = new Date(location.localtime);
+		const currentHour = localTime.getHours();
+		const hoursArray = [];
+		const todayHours = days[0].hour.slice(currentHour);
+		hoursArray.push(...todayHours);
+		
+		if (hoursArray.length < 24 && days.length > 1) {
+			const tomorrowHours = days[1].hour.slice(0, 24 - hoursArray.length);
+			hoursArray.push(...tomorrowHours);
+		}
+		if (hoursArray.length === 0) return '';
+
+
+		console.log(hoursArray);
+		return '';
 	}
 
 	/**
@@ -322,8 +372,12 @@ class WeatherApi extends HTMLElement {
 		return `
 			<div part="pressure widget">
 				<h4 part="title pressure-title">${this.#icon(ICONS.gauge, 'icon pressure-icon')}${this.#t('pressure')}</h4>
-				<analog-gauge part="pressure-value" min=950 max=1050 value="${pressure}" label="${this.#units.pressure}" min-label="${this.#t('pressureLow')}" max-label="${this.#t('pressureHigh')}"></analog-gauge>
+				<analog-gauge part="pressure-value" min=950 max=1085 value="${pressure}" label="${this.#units.pressure}" min-label="${this.#t('pressureLow')}" max-label="${this.#t('pressureHigh')}"></analog-gauge>
 			</div>`;
+	}
+
+	#renderSunset() {
+		return ``
 	}
 
 	/**
@@ -379,10 +433,10 @@ class WeatherApi extends HTMLElement {
 			<div part="wind widget">
 				<h4 part="title wind-title">${this.#icon(ICONS.wind, 'icon wind-icon')}${this.#t('wind')}</h4>
 				<div part="wind-wrapper">
-					<ul part="wind-items">
-						<li part="wind-item"><strong part="wind-item-key">${this.#t('wind')}</strong><span part="wind-item-value">${wind} ${this.#units.wind}</span></li>
-						<li part="wind-item"><strong part="wind-item-key">${this.#t('gusts')}</strong><span part="wind-item-value">${gusts} ${this.#units.wind}</span></li>
-						<li part="wind-item"><strong part="wind-item-key">${this.#t('direction')}</strong><span part="wind-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
+					<ul part="list">
+						<li part="list-item"><strong part="list-item-key">${this.#t('wind')}</strong><span part="list-item-value">${wind} ${this.#units.wind}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('gusts')}</strong><span part="list-item-value">${gusts} ${this.#units.wind}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('direction')}</strong><span part="list-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
 					</ul>
 					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${this.#units.wind}" mode="bearing"></nav-compass>
 				</div>

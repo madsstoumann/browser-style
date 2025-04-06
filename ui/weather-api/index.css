@@ -43,6 +43,25 @@ h2, h3, h4, p {
 	stroke-width: 1.25;
 	width: 1.25em;
 }
+:host::part(list) {
+	all: unset;
+	align-self: center;
+}
+:host::part(list-item) {
+	border-block-start: var(--weather-api-bdw) solid var(--weather-api-bdc);
+	display: flex;
+	justify-content: space-between;
+	padding-block: var(--weather-api-wind-item-p, calc(var(--weather-api-p) / 2));
+}
+:host::part(list-item-key) {
+	font-weight: var(--weather-api-wind-item-key-fw, 500);
+}
+:host::part(list-item-value) {
+	color: var(--weather-api-wind-item-value-color, var(--weather-api-light-text));
+}
+[part~=list] li:first-of-type {
+	border: 0;
+}
 :host::part(widget-sm) {
 	align-items: start;
 	grid-template-rows: auto 1fr auto;
@@ -278,25 +297,9 @@ analog-gauge {
 	column-gap: var(--weather-api-wind-gap, 2ch);
 	display: grid;
 }
-:host::part(wind-items) {
-	all: unset;
-	align-self: center;
-}
-:host::part(wind-item) {
-	border-block-start: var(--weather-api-bdw) solid var(--weather-api-bdc);
-	display: flex;
-	justify-content: space-between;
-	padding-block: var(--weather-api-wind-item-p, calc(var(--weather-api-p) / 2));
-}
-:host::part(wind-item-key) {
-	font-weight: var(--weather-api-wind-item-key-fw, 500);
-}
-:host::part(wind-item-value) {
-	color: var(--weather-api-wind-item-value-color, var(--weather-api-light-text));
-}
-[part~=wind-items] li:first-of-type {
-	border: 0;
-}
+
+
+
 @container (width > 400px) {
   :host::part(wind-wrapper) {
     grid-template-columns: 1fr 1fr;
