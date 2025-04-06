@@ -204,6 +204,13 @@ analog-gauge {
 	max-width: 300px;
 }
 
+/* === MOON PHASE === */
+moon-phase {
+	--moon-phase-mask-bg: var(--weather-api-widget-bg);
+	margin: 0 auto;
+	max-width: 300px;
+}
+
 /* === Footer === */
 /* :host::part(footer) {
 	color: var(--weather-api-footer-color, var(--weather-api-light-text));

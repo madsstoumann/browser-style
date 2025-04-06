@@ -1,4 +1,5 @@
 import '../analog-gauge/index.js';
+import '../moon-phase/index.js';
 import '../nav-compass/index.js';
 
 const i18n = {
@@ -285,7 +286,7 @@ class WeatherApi extends HTMLElement {
 	#renderMoonPhase(astro) {
 		const moonrise = this.#metric ? this.#to24Hour(astro.moonrise) : astro.moonrise;
 		const moonset = this.#metric ? this.#to24Hour(astro.moonset) : astro.moonset;
-		
+
 		return `
 		<div part="moonphase widget">
 			<h4 part="title moonphase-title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>
@@ -293,8 +294,8 @@ class WeatherApi extends HTMLElement {
 				<ul part="list">
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
-					<li part="list-item"><strong part="list-item-key">${this.#t('moonillumination')}</strong><span part="list-item-value">${astro.moon_illumination}</span></li>
 				</ul>
+				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}%" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
 			</div>
 		</div>`;
 	}
