@@ -18,11 +18,10 @@ styles.replaceSync(`
     border-top-left-radius: var(--_btlr, 0);
     border-top-right-radius: var(--_btrr, 0);
     content: '';
-    filter: blur(2px);
+    filter: blur(3px);
     height: 100%;
     inset-inline: var(--_ii, 0 auto);
     position: absolute;
-    top: var(--_t, 0);
     width: var(--_w, calc(100% - attr(illumination type(<percentage>), 0%)));
   }
 	:host([phase*="first-quarter"]),
@@ -41,9 +40,6 @@ styles.replaceSync(`
 		--_btrr: 100%;
 		--_bbrr: 100%;
 	}
-	:host([phase*="new"]) {
-		--_w: 100%;
-	}
 `);
 
 export default class MoonPhase extends HTMLElement {
@@ -55,7 +51,6 @@ export default class MoonPhase extends HTMLElement {
     this.#root.adoptedStyleSheets = [styles];
     this.style.setProperty('--_bgi', `url('${this.getAttribute('moon') || this.basePath + 'moon.png'}')`);
   }
-
   get basePath() { return new URL('.', import.meta.url).href; }
 }
 
