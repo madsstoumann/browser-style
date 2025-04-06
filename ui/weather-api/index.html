@@ -25,12 +25,24 @@
 		}
 
 		.bento {
-			grid-template-columns: repeat(4, 1fr);
-			&::part(overview) { grid-column: 1 / 5; }
-			&::part(forecast-hours) { grid-column: 1 / 5; }
+			grid-template-columns: 1fr 1fr;
+			&::part(overview) { grid-column: 1 / 3; }
+			&::part(forecast-hours) { grid-column: 1 / 3; }
 			&::part(forecast-days) { grid-column: 1 / 3; }
-			&::part(wind) { grid-column: 3 / 5; }
-			&::part(uv) { grid-column: 1 / 2; }
+			&::part(wind) { grid-column: 1 / 3; }
+			&::part(pressure) { grid-column: 1 / 3; }
+			
+		}
+		@media (min-width: 600px) {
+			.bento {
+				grid-auto-flow: row dense;
+				grid-template-columns: repeat(4, 1fr);
+				&::part(overview) { grid-column: 1 / 5; }
+				&::part(forecast-hours) { grid-column: 1 / 5; }
+				&::part(forecast-days) { grid-column: 1 / 3; }
+				&::part(wind) { grid-column: 3 / 5; }
+				&::part(pressure) { grid-row: span 2; }
+			}
 		}
 	</style>
 </head>
@@ -69,7 +81,7 @@
 	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-api
 		class="bento"
-		widgets="overview forecast-hours forecast-days wind uv visibility humidity pressure"
+		widgets="overview forecast-hours forecast-days wind pressure uv visibility humidity"
 		lang="en-US"
 		url="./current.response.json">
 	</weather-api>

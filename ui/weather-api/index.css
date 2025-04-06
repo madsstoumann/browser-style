@@ -1,9 +1,9 @@
 :host {
 	--weather-api-bdc: color-mix(in srgb, currentColor, 80% transparent);
-	--weather-api-bdrs: .66em;
+	/* --weather-api-bdrs: .66em; */
 	--weather-api-bdw: 1px;
 	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
-	--weather-api-p: 1em;
+	--weather-api-p: 1rem;
 
 	--weather-api-widget-bg: light-dark(hsl(210, 55%, 45%), hsl(210, 35%, 25%));
 	--weather-api-widget-c: light-dark(hsl(210, 100%, 95%), hsl(210, 95%, 90%));
@@ -30,7 +30,7 @@ h2, h3, h4, p {
 	background: var(--weather-api-widget-bg);
 	background-position: var(--weather-api-widget-bgp, center);
 	background-size: var(--weather-api-widget-bgsz, cover);
-	border-radius: var(--weather-api-bdrs, .66em);
+	border-radius: var(--weather-api-bdrs, 1rem);
 	color: var(--weather-api-widget-c);
 	display: grid;
 	padding: var(--weather-api-p);
@@ -156,7 +156,7 @@ h2, h3, h4, p {
 :host::part(uv-slider) {
 	align-items: center;
 	background: linear-gradient(to right, #55AF33, #A0C61B, #F7E98E, #F6E301, #FAB60D, #F88D2F, #F76D00, #E53015, #D90E21, #D80010, #8A4F9E);
-	border-radius: 1ch;;
+	border-radius: 1ch;
 	display: flex;
 	height: 1ch;
 	margin-block-start: var(--weather-api-p);
@@ -176,6 +176,14 @@ h2, h3, h4, p {
 	width: 1.25ch;
 }
 
+/*=== PRESSURE ===*/
+analog-gauge {
+	--analog-gauge-needle-bg: currentColor;
+	--analog-gauge-segments: 10;
+	/* margin-block-start: calc(var(--weather-api-p) / 2); */
+	margin: 0 auto;
+	max-width: 300px;
+}
 
 /* === Footer === */
 /* :host::part(footer) {
@@ -289,7 +297,7 @@ h2, h3, h4, p {
 [part~=wind-items] li:first-of-type {
 	border: 0;
 }
-@container (width > 300px) {
+@container (width > 400px) {
   :host::part(wind-wrapper) {
     grid-template-columns: 1fr 1fr;
   }
@@ -299,8 +307,8 @@ h2, h3, h4, p {
 nav-compass {
 	--nav-compass-bg: var(--weather-api-widget-bg);
 	--nav-compass-c: var(--weather-api-widget-c);
-	/* margin: var(--weather-api-p) auto 0 auto; */
-	/* max-width: 250px; */
+	margin: 0 auto;
+	max-width: 300px;
 }
 
 
