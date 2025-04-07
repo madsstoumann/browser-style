@@ -207,8 +207,9 @@ analog-gauge {
 /* === MOON PHASE === */
 moon-phase {
 	--moon-phase-mask-bg: var(--weather-api-widget-bg);
+	--moon-phase-filter: grayscale(.5) brightness(1.05);
 	margin: 0 auto;
-	max-width: 300px;
+	max-width: 200px;
 }
 
 /* === Footer === */

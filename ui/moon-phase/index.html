@@ -8,46 +8,147 @@
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
-
+	<style>
+		body {
+			color-scheme: dark;
+		}
+		li {
+			list-style: none;
+			text-align: center;
+		}
+		small {
+			font-size: x-small;
+		}
+	</style>
 </head>
-<body style="color-scheme:dark;">
+<body>
 	<h1>UI: Components</h1>
 
 	<h2>Moon Phase</h2>
 	<p>Simple CSS-only web component that adds a dynamic mask to an image of the moon, based on attributes <code>illumination</code>, <code>phase</code> and — optional — <code>mask-color</code>.</p>
 
-	<div class="ui-grid --xs-c-3 --md-c-6">
-		<moon-phase illumination="18%" phase="waxing_crescent"></moon-phase>
-		<moon-phase illumination="23%" phase="waxing_crescent"></moon-phase>
-		<moon-phase illumination="29%" phase="waxing_crescent"></moon-phase>
-		<moon-phase illumination="36%" phase="waxing_crescent"></moon-phase>
-		<moon-phase illumination="43%" phase="waxing_crescent"></moon-phase>
-		<moon-phase illumination="50%" phase="first_quarter"></moon-phase>
-		<moon-phase illumination="58%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="66%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="74%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="82%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="90%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="96%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="99%" phase="waxing_gibbous"></moon-phase>
-		<moon-phase illumination="100%" phase="full"></moon-phase>
-		<moon-phase illumination="99%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="96%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="90%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="82%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="74%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="66%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="58%" phase="waning_gibbous"></moon-phase>
-		<moon-phase illumination="50%" phase="last_quarter"></moon-phase>
-		<moon-phase illumination="43%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="36%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="29%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="23%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="18%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="12%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="6%" phase="waning_crescent"></moon-phase>
-		<moon-phase illumination="2%" phase="waning_crescent"></moon-phase>
-	</div>
+	<ul class="ui-grid --xs-c-3 --md-c-6">
+		<li>
+			<moon-phase illumination="0" phase="new moon"></moon-phase>
+			<small>New Moon</small>
+		</li>
+		<li>
+			<moon-phase illumination="6" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 1)</small>
+		</li>
+		<li>
+			<moon-phase illumination="12" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 2)</small>
+		</li>
+		<li>
+			<moon-phase illumination="18" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 3)</small>
+		</li>
+		<li>
+			<moon-phase illumination="23" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 4)</small>
+		</li>
+		<li>
+			<moon-phase illumination="29" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 5)</small>
+		</li>
+		<li>
+			<moon-phase illumination="36" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 6)</small>
+		</li>
+		<li>
+			<moon-phase illumination="43" phase="waxing crescent"></moon-phase>
+			<small>Waxing Crescent (Day 7)</small>
+		</li>
+		<li>
+			<moon-phase illumination="50" phase="first quarter"></moon-phase>
+			<small>First Quarter</small>
+		</li>
+		<li>
+			<moon-phase illumination="58" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 1)</small>
+		</li>
+		<li>
+			<moon-phase illumination="66" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 2)</small>
+		</li>
+		<li>
+			<moon-phase illumination="74" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 3)</small>
+		</li>
+		<li>
+			<moon-phase illumination="82" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 4)</small>
+		</li>
+		<li>
+			<moon-phase illumination="90" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 5)</small>
+		</li>
+		<li>
+			<moon-phase illumination="96" phase="waxing gibbous"></moon-phase>
+			<small>Waxing Gibbous (Day 6)</small>
+		</li>
+		<li>
+			<moon-phase illumination="100" phase="full moon"></moon-phase>
+			<small>Full Moon</small>
+		</li>
+		<li>
+			<moon-phase illumination="96" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 1)</small>
+		</li>
+		<li>
+			<moon-phase illumination="90" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 2)</small>
+		</li>
+		<li>
+			<moon-phase illumination="82" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 3)</small>
+		</li>
+		<li>
+			<moon-phase illumination="74" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 4)</small>
+		</li>
+		<li>
+			<moon-phase illumination="66" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 5)</small>
+		</li>
+		<li>
+			<moon-phase illumination="58" phase="waning gibbous"></moon-phase>
+			<small>Waning Gibbous (Day 6)</small>
+		</li>
+		<li>
+			<moon-phase illumination="50" phase="last quarter"></moon-phase>
+			<small>Last Quarter</small>
+		</li>
+		<li>
+			<moon-phase illumination="43" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 1)</small>
+		</li>
+		<li>
+			<moon-phase illumination="36" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 2)</small>
+		</li>
+		<li>
+			<moon-phase illumination="29" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 3)</small>
+		</li>
+		<li>
+			<moon-phase illumination="23" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 4)</small>
+		</li>
+		<li>
+			<moon-phase illumination="18" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 5)</small>
+		</li>
+		<li>
+			<moon-phase illumination="12" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 6)</small>
+		</li>
+		<li>
+			<moon-phase illumination="6" phase="waning crescent"></moon-phase>
+			<small>Waning Crescent (Day 7)</small>
+		</li>
+	</ul>
 
 	<script type="module" src="./index.js"></script>
 </body>

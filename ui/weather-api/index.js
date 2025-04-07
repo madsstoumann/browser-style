@@ -295,7 +295,7 @@ class WeatherApi extends HTMLElement {
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
 				</ul>
-				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}%" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
+				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
 			</div>
 		</div>`;
 	}
