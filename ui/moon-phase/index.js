@@ -45,17 +45,16 @@ styles.replaceSync(`
 		border-radius: 0;
 		width: 100%;
 	}
-	:host([phase*="waxing gibbous"])::after {
+	:host([phase="waxing gibbous"])::after {
 		mask: radial-gradient(circle at 100% 50%, #0000 calc(90% - var(--_w)), #000 calc(100% - var(--_w)) 100%);
 	}
-	:host([phase*="waning gibbous"])::after {
+	:host([phase="waning gibbous"])::after {
 		mask: radial-gradient(circle at 0% 50%, #0000 calc(90% - var(--_w)), #000 calc(100% - var(--_w)) 100%);
 	}
 `);
 
 export default class MoonPhase extends HTMLElement {
 	#root;
-
 	constructor() {
 		super();
 		this.#root = this.attachShadow({ mode: 'open' });
