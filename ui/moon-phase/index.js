@@ -17,7 +17,7 @@ styles.replaceSync(`
 		position: absolute;
 	}
 	:host::after {
-		background-color: var(--moon-phase-mask-bg, #000D);
+		background-color: var(--moon-phase-mask-bg, #000C);
 		border-radius: var(--_btlr, 0) var(--_btrr, 0) var(--_bbrr, 0) var(--_bblr, 0);
 		content: '';
 		filter: var(--moon-phase-mask-filter, blur(var(--moon-phase-blur, 0px)));
