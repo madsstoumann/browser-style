@@ -1,6 +1,7 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
+		--moon-phase-blur: 0px;
 		--_w: calc(100% - 1% * attr(illumination type(<number>), 0%));
 		aspect-ratio: 1;
 		border-radius: 50%;
@@ -16,10 +17,10 @@ styles.replaceSync(`
 		position: absolute;
 	}
 	:host::after {
-		background-color: var(--moon-phase-mask-bg, #000C);
+		background-color: var(--moon-phase-mask-bg, #000D);
 		border-radius: var(--_btlr, 0) var(--_btrr, 0) var(--_bbrr, 0) var(--_bblr, 0);
 		content: '';
-		filter: var(--moon-phase-mask-filter, blur(3px));
+		filter: var(--moon-phase-mask-filter, blur(var(--moon-phase-blur, 0px)));
 		height: 100%;
 		inset-inline: var(--_ii, auto 0);
 		position: absolute;
@@ -46,10 +47,14 @@ styles.replaceSync(`
 		width: 100%;
 	}
 	:host([phase="waxing gibbous"])::after {
-		mask: radial-gradient(circle at 100% 50%, #0000 calc(90% - var(--_w)), #000 calc(100% - var(--_w)) 100%);
+		mask: radial-gradient(circle at 100% 50%,
+			#0000 calc(100% - var(--_w)),
+			#000 calc(100% - var(--_w) + 1px + (2 * var(--moon-phase-blur, 0))) 100%);
 	}
 	:host([phase="waning gibbous"])::after {
-		mask: radial-gradient(circle at 0% 50%, #0000 calc(90% - var(--_w)), #000 calc(100% - var(--_w)) 100%);
+		mask: radial-gradient(circle at 0% 50%,
+			#0000 calc(100% - var(--_w)),
+			#000 calc(100% - var(--_w) + 1px + (2 * var(--moon-phase-blur, 0))) 100%);
 	}
 `);
 
