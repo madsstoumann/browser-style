@@ -25,6 +25,7 @@ const i18n = {
 		pressureHigh: 'High',
 		pressureLow: 'Low',
 		south: 'S',
+		temperature: 'Temperature',
 		uv: 'UV',
 		uvLow: 'Low',
 		uvModerate: 'Moderate',
@@ -121,6 +122,23 @@ class WeatherApi extends HTMLElement {
 		return `${hours}:${minutes}`;
 	}
 
+	/**
+	 * Formats an hour according to the user's unit system preference
+	 * @private
+	 * @param {Date} date - The date object containing the hour to format
+	 * @returns {string} Formatted hour string (24h for metric, 12h for imperial)
+	 */
+	#formatHour(date) {
+		if (this.#metric) {
+			return `${date.getHours().toString().padStart(2, '0')}:00`;
+		} else {
+			const hours = date.getHours();
+			const period = hours >= 12 ? 'PM' : 'AM';
+			const hour12 = hours % 12 || 12;
+			return `${hour12}${period}`;
+		}
+	}
+
 	#formatDate(dateStr, options = {}) {
 		const date = new Date(dateStr);
 		return new Intl.DateTimeFormat(this._locale, options).format(date);
@@ -169,6 +187,8 @@ class WeatherApi extends HTMLElement {
 			'precipitation-sm': () => this.#renderPrecipitation(current),
 			'precipitation-lg': () => this.#renderPrecipitation(location, forecast.forecastday, 'lg'),
 			'pressure': () => this.#renderPressure(current),
+			'temperature': () => this.#renderTemperature(current),
+			'temperature-lg': () => this.#renderTemperature(current, forecast.forecastday, 'lg'),
 			'uv': () => this.#renderUV(current),
 			'visibility': () => this.#renderVisibility(current),
 			'wind': () => this.#renderWind(current)
@@ -257,7 +277,7 @@ class WeatherApi extends HTMLElement {
 				const hourTime = new Date(hour.time);
 				return `
 					<li part="forecast-hour-item" title="${hour.condition.text}">
-						<span part="forecast-hour-time">${hourTime.getHours().toString().padStart(2, '0')}:00</span>
+						<span part="forecast-hour-time">${this.#formatHour(hourTime)}</span>
 						<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
 						<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
 					</li>
@@ -339,8 +359,6 @@ class WeatherApi extends HTMLElement {
 			<div part="precipitation-${size} widget widget-sm">
 				<h2 part="title precipitation-title">${this.#icon(ICONS.precipitation, 'icon humidity-icon')}${this.#t('precipitation')}</h2>
 				${size === 'lg' ? this.#renderGraph(current, forecast) : `<h3 part="humidity-value header-lg">${precipitation}${this.#units.presipitation}</h3>`}
-				
-				
 			</div>`;
 	}
 
@@ -349,17 +367,61 @@ class WeatherApi extends HTMLElement {
 		const currentHour = localTime.getHours();
 		const hoursArray = [];
 		const todayHours = days[0].hour.slice(currentHour);
+		let key, unit;
+
 		hoursArray.push(...todayHours);
-		
+
 		if (hoursArray.length < 24 && days.length > 1) {
 			const tomorrowHours = days[1].hour.slice(0, 24 - hoursArray.length);
 			hoursArray.push(...tomorrowHours);
 		}
 		if (hoursArray.length === 0) return '';
 
+		switch(type) {
+			case 'precipitation':
+				key = this.#metric ? 'precip_mm' : 'precip_in';
+				unit = this.#units.presipitation
+				break;
+			case 'temperature':
+				key = this.#metric ? 'temp_c' : 'temp_f';
+				unit = this.#units.temperature
+				break;
+		}
 
-		console.log(hoursArray);
-		return '';
+		const max = Math.max(...hoursArray.map(hour => hour[key]));
+		const min = Math.min(...hoursArray.map(hour => hour[key]));
+
+		const top = 10;
+		const bottom = 10;
+		const graphHeight = 90 - top - bottom;
+		const labelInterval = Math.floor(hoursArray.length / 8);
+
+		const gap = 1;
+		const width = 500 / hoursArray.length - gap;
+		const bars = hoursArray.map((hour, index) => {
+			const value = hour[key];
+			const x = index * (width + gap);
+			const height = value === 0 ? 0 : Math.max(1, (value / max) * graphHeight);
+			const y = (100 - bottom) - height;
+			return `<rect part="graph-bar" rx="2" x="${x}" y="${y}" width="${width}" height="${height+1}"></rect>`;
+		}).join('');
+
+		const labels = hoursArray
+			.filter((_, index) => index % labelInterval === 0)
+			.slice(0, 8)
+			.map((hour, index) => {
+				const x = 5 + ((index * labelInterval) * (width + gap)) + width/2;
+				const hourTime = new Date(hour.time);
+				return `
+					<text part="graph-hour" x="${x}" y="${top - 4}">${hour[key]}${unit}</text>
+					<text part="graph-hour" x="${x}" y="${100 - bottom + 10}">${this.#formatHour(hourTime)}</text>`;
+			}).join('');
+
+		return `
+			<svg viewBox="0 0 500 100" preserveAspectRatio="none" part="graph-${type}">
+				${bars}
+				${labels}
+			</svg>`;
 	}
 
 	/**
@@ -370,15 +432,26 @@ class WeatherApi extends HTMLElement {
 	 */
 	#renderPressure(current) {
 		const pressure = this.#metric ? current.pressure_mb : current.pressure_in;
+		const minPressure = this.#metric ? 950 : 27;
+		const maxPressure = this.#metric ? 1085 : 32;
 		return `
 			<div part="pressure widget">
 				<h4 part="title pressure-title">${this.#icon(ICONS.gauge, 'icon pressure-icon')}${this.#t('pressure')}</h4>
-				<analog-gauge part="pressure-value" min=950 max=1085 value="${pressure}" label="${this.#units.pressure}" min-label="${this.#t('pressureLow')}" max-label="${this.#t('pressureHigh')}"></analog-gauge>
+				<analog-gauge part="pressure-value" min=${minPressure} max=${maxPressure} value="${pressure}" label="${this.#units.pressure}" min-label="${this.#t('pressureLow')}" max-label="${this.#t('pressureHigh')}"></analog-gauge>
 			</div>`;
 	}
 
 	#renderSunset() {
 		return ``
+	}
+
+	#renderTemperature(current, forecast = {}, size = 'sm') {
+		const temperature = this.#metric ? current.temp_c : current.temp_f;
+		return `
+			<div part="temperature-${size} widget">
+				<h2 part="title precipitation-title">${this.#icon(ICONS.temperature, 'icon temperature-icon')}${this.#t('temperature')}</h2>
+				${size === 'lg' ? this.#renderGraph(current, forecast, 'temperature') : `<h3 part="temperature-value header-lg">${temperature}${this.#units.temperature}</h3>`}
+			</div>`;
 	}
 
 	/**

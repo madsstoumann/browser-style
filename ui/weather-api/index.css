@@ -380,11 +380,19 @@ nav-compass {
 	stroke-width: 0;
 }
 
-:host::part(forecast-hour) {
-	fill: var(--weather-api-hour-color, var(--weather-api-light-text));
+ */
+ :host::part(graph-bar) {
+	fill: var(--weather-api-graph-bar, var(--weather-api-light-text));
+ }
+ :host::part(graph-hour) {
+	fill: var(--weather-api-graph-hour-color, var(--weather-api-light-text));
 	font-family: inherit;
-	font-size: var(--weather-api-hour-fs, 9px);
+	font-size: var(--weather-api-graph-hour-fs, 8px);
 	text-anchor: start;
 	stroke: none;
 	stroke-width: 0;
-} */
+}
+:host::part(graph-temperature) {
+	--weather-api-graph-bar: #FFF5CC;
+	/* #FFCC00 */
+}

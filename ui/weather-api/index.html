@@ -32,6 +32,7 @@
 			&::part(wind) { grid-column: 1 / 3; }
 			&::part(pressure) { grid-column: 1 / 3; }
 			&::part(precipitation-lg) { grid-column: 1 / 3; }
+			&::part(temperature-lg) { grid-column: 1 / 3; }
 			&::part(moonphase) { grid-column: 1 / 3; }
 			
 		}
@@ -45,6 +46,7 @@
 				&::part(wind) { grid-column: 3 / 5; }
 				&::part(pressure) { grid-row: span 2; }
 				&::part(precipitation-lg) { grid-column: 1 / 5; }
+				&::part(temperature-lg) { grid-column: 1 / 5; }
 			}
 		}
 	</style>
@@ -84,8 +86,9 @@
 	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-api
 		class="bento"
-		widgets="overview forecast-hours forecast-days wind pressure uv visibility humidity precipitation-sm precipitation-lg moonphase"
+		widgets="overview forecast-hours forecast-days wind pressure uv visibility humidity precipitation-sm precipitation-lg temperature-lg moonphase"
 		lang="en-US"
+		units="imperial"
 		url="./current.response.json">
 	</weather-api>
 
