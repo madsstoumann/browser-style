@@ -388,12 +388,20 @@ nav-compass {
  :host::part(graph-text-top) {
 	fill: var(--weather-api-graph-hour-color, var(--weather-api-light-text));
 	font-family: inherit;
-	font-size: var(--weather-api-graph-hour-fs, 8px);
+	font-size: var(--weather-api-graph-hour-fs, 6px);
 	text-anchor: start;
 	stroke: none;
 	stroke-width: 0;
 }
+:host::part(graph-text-top) {
+	font-size: var(--weather-api-text-top-fs, 6px);
+	letter-spacing: -0.05em;
+}
 :host::part(graph-temperature) {
 	--weather-api-graph-bar: #FFF5CC;
 	/* #FFCC00 */
+}
+
+:host::part(sun-path) {
+	background: hotpink;
 }
