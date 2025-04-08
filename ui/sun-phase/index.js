@@ -32,32 +32,52 @@ styles.replaceSync(`
 		--sun-phase-sun-bg: hsl(210, 55%, 15%);
 	}
 	:host::part(rising) {
-		--sun-phase-sun-bg: hsla(0, 0%, 100%, 0.65);
+		--sun-phase-bg: hsl(210, 55%, 30%);
+		--sun-phase-sun-bg: hsla(0, 0%, 100%, 0.5);
 	}
 	:host::part(setting) {
-		--sun-phase-sun-bg: hsla(0, 0%, 100%, 0.45);
+		--sun-phase-bg:hsl(210, 55%, 20%);
+		--sun-phase-sun-bg: hsla(0, 0%, 100%, 0.5);
 	}
 	`);
 
 export default class SunPhase extends HTMLElement {
 	#root;
+
 	constructor() {
 		super();
 		this.#root = this.attachShadow({ mode: 'open' });
 		this.#root.adoptedStyleSheets = [styles];
+	}
 
+	connectedCallback() {
+		const sunriseAttr = this.getAttribute('sunrise');
+		const sunsetAttr = this.getAttribute('sunset');
+		const timeAttr = this.getAttribute('time');
 
-		/* DEMO */
-		const sunrise = new Date('2023-10-01T06:21:00'); // Example sunrise time
-			const sunset = new Date('2023-10-01T20:03:00'); // Example sunset time
-			const time = new Date('2023-10-01T19:50:00'); // Set to 8:00 AM
-			const sunriseMinutes = sunrise.getHours() * 60 + sunrise.getMinutes();
-			const sunsetMinutes = sunset.getHours() * 60 + sunset.getMinutes();
-			const currentMinutes =
-				time.getHours() * 60 + time.getMinutes();
-		this.#root.innerHTML = this.#render(sunriseMinutes, sunsetMinutes, currentMinutes);
+		if (sunriseAttr && sunsetAttr && timeAttr) {
+			const sunrise = this.#parseTimeToMinutes(sunriseAttr);
+			const sunset = this.#parseTimeToMinutes(sunsetAttr);
+			const time = this.#parseTimeToMinutes(timeAttr);
+			
+			this.#root.innerHTML = this.#render(sunrise, sunset, time);
+		}
+	}
 
+	#parseTimeToMinutes(timeStr) {
+		if (/^\d+$/.test(timeStr)) {
+			return parseInt(timeStr, 10);
+		}
 
+		const timePattern = /^(\d{1,2}):(\d{1,2})$/;
+		const match = timeStr.match(timePattern);
+		
+		if (match) {
+			const hours = parseInt(match[1], 10);
+			const minutes = parseInt(match[2], 10);
+			return hours * 60 + minutes;
+		}
+		return 0;
 	}
 
 	#render(sunrise, sunset, time, settings = {}) {
@@ -98,15 +118,32 @@ export default class SunPhase extends HTMLElement {
 
 		let sunX, sunY, t, part = 'night';
 		const threshold = 30;
+		
 		if (time < sunrise) {
-			t = time / sunrise;
+			// For morning night path: follow the bezier curve
+			t = time / sunrise; // normalized position along the path (0 to 1)
 			sunX = width * (time / totalMinutesInDay);
-			sunY = 75 * (1 - t * t) + baseline * (t * t);
+			
+			// Bezier curve formula: P = (1-t)²P₁ + 2(1-t)tP₂ + t²P₃
+			// Where P₁ = start point, P₂ = control point, P₃ = end point
+			const p1y = arcStartBefore;
+			const p2y = arcStartBefore;
+			const p3y = baseline;
+			
+			sunY = Math.pow(1-t, 2) * p1y + 2 * (1-t) * t * p2y + Math.pow(t, 2) * p3y;
 		} else if (time > sunset) {
+			// For evening night path: follow the bezier curve
 			t = (time - sunset) / (totalMinutesInDay - sunset);
 			sunX = sunsetX + (width - sunsetX) * t;
-			sunY = baseline * (1 - t) + 75 * t + (75 - baseline) * (1 - t) * t;
+			
+			// Bezier curve formula for evening path
+			const p1y = baseline;
+			const p2y = arcEndAfter;
+			const p3y = arcEndAfter;
+			
+			sunY = Math.pow(1-t, 2) * p1y + 2 * (1-t) * t * p2y + Math.pow(t, 2) * p3y;
 		} else {
+			// For daytime path (unchanged)
 			t = (time - sunrise) / (sunset - sunrise);
 			sunX = sunriseX + (sunsetX - sunriseX) * t;
 			sunY =
@@ -115,7 +152,8 @@ export default class SunPhase extends HTMLElement {
 			part = 'day';
 		}
 
-		if (time <= sunrise + threshold) {
+		// Fix: Only set "rising" if we're within threshold minutes of sunrise
+		if (time >= sunrise - threshold && time <= sunrise + threshold) {
 			part = 'rising';
 		} else if (
 			time >= sunset - threshold &&
@@ -152,4 +190,5 @@ export default class SunPhase extends HTMLElement {
 		</svg>`;
 	}
 }
+
 customElements.define('sun-phase', SunPhase);
