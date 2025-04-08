@@ -396,7 +396,7 @@ class WeatherApi extends HTMLElement {
 		const graphHeight = 90 - top - bottom;
 		const labelInterval = Math.floor(hoursArray.length / 8);
 
-		const gap = 1;
+		const gap = 2;
 		const width = 500 / hoursArray.length - gap;
 		const bars = hoursArray.map((hour, index) => {
 			const value = hour[key];
@@ -413,8 +413,8 @@ class WeatherApi extends HTMLElement {
 				const x = 5 + ((index * labelInterval) * (width + gap)) + width/2;
 				const hourTime = new Date(hour.time);
 				return `
-					<text part="graph-hour" x="${x}" y="${top - 4}">${hour[key]}${unit}</text>
-					<text part="graph-hour" x="${x}" y="${100 - bottom + 10}">${this.#formatHour(hourTime)}</text>`;
+					<text part="graph-text-top" x="${x}" y="${top - 4}">${hour[key]}${unit}</text>
+					<text part="graph-text-bottom" x="${x}" y="${100 - bottom + 10}">${this.#formatHour(hourTime)}</text>`;
 			}).join('');
 
 		return `

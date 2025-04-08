@@ -384,7 +384,8 @@ nav-compass {
  :host::part(graph-bar) {
 	fill: var(--weather-api-graph-bar, var(--weather-api-light-text));
  }
- :host::part(graph-hour) {
+ :host::part(graph-text-bottom),
+ :host::part(graph-text-top) {
 	fill: var(--weather-api-graph-hour-color, var(--weather-api-light-text));
 	font-family: inherit;
 	font-size: var(--weather-api-graph-hour-fs, 8px);
