@@ -34,6 +34,7 @@
 			&::part(precipitation-lg) { grid-column: 1 / 3; }
 			&::part(temperature-lg) { grid-column: 1 / 3; }
 			&::part(moonphase) { grid-column: 1 / 3; }
+			&::part(sunset) { grid-column: 1 / 3; }
 			
 		}
 		@media (min-width: 600px) {
@@ -47,7 +48,8 @@
 				&::part(pressure) { grid-row: span 2; }
 				&::part(precipitation-lg) { grid-column: 1 / 5; }
 				&::part(temperature-lg) { grid-column: 1 / 5; }
-				&::part(moonphase) { grid-row: span 2; }
+				/* &::part(moonphase) { grid-row: span 2; } */
+				&::part(sunset) { grid-column: 3 / 5; }
 			}
 		}
 	</style>

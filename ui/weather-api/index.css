@@ -207,7 +207,7 @@ analog-gauge {
 /* === MOON PHASE === */
 moon-phase {
 	--moon-phase-mask-bg: var(--weather-api-widget-bg);
-	/* --moon-phase-blur: 2px; */
+	--moon-phase-blur: 3px;
 	--moon-phase-filter: grayscale(.5) brightness(1.05);
 	margin: 0 auto;
 	max-width: 200px;
@@ -323,6 +323,11 @@ nav-compass {
 	max-width: 300px;
 }
 
+/* === Sun === */
+sun-phase {
+	--sun-phase-bdrs: .5rem;
+	margin-block: 1ch;
+}
 
 
 
@@ -400,8 +405,4 @@ nav-compass {
 :host::part(graph-temperature) {
 	--weather-api-graph-bar: #FFF5CC;
 	/* #FFCC00 */
-}
-
-:host::part(sun-path) {
-	background: hotpink;
 }
