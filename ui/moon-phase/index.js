@@ -23,6 +23,7 @@ styles.replaceSync(`
 		filter: var(--moon-phase-mask-filter, blur(var(--moon-phase-blur, 0px)));
 		height: 100%;
 		inset-inline: var(--_ii, auto 0);
+		opacity: var(--moon-phase-mask-opacity, 1);
 		position: absolute;
 		width: var(--_w);
 	}

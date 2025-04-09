@@ -1,7 +1,7 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host::part(canvas) {
-		background: var(--sun-phase-bg,hsl(210, 55%, 50%));
+		background: var(--sun-phase-bg,light-dark(hsl(210, 55%, 50%), hsl(210 45% 30% / 1)));
 		border-radius: var(--sun-phase-bdrs, 1rem);
 	}
 	:host::part(line-night) {
@@ -17,6 +17,15 @@ styles.replaceSync(`
 	:host::part(baseline) {
 		stroke: var(--sun-phase-baseline-bdc, hsl(210, 55%, 65%));
 		stroke-width: var(--sun-phase-baseline-bdw, 1.25);
+	}
+	:host::part(indice) {
+		stroke: var(--sun-phase-indice-bdc, hsl(210, 55%, 65%));
+		stroke-width: var(--sun-phase-indice-bdw, 1);
+	}
+	:host::part(label) {
+		fill: var(--sun-phase-label-c, hsl(210, 55%, 75%));
+		font-size: var(--sun-phase-label-fz, 5px);
+		text-anchor: middle;
 	}
 	:host::part(sun) {
 		fill: var(--sun-phase-sun-bg, #fff);
@@ -84,6 +93,9 @@ export default class SunPhase extends HTMLElement {
 		const {
 			arcHeight = 60,
 			height = 100,
+			indices = 8,
+			indiceHeight = 4,
+			isMetric = true,
 			sunRadius = 6,
 			width = 200
 		} = settings;
@@ -186,6 +198,19 @@ export default class SunPhase extends HTMLElement {
 				<path d="${dayPath}" part="line-day" />
 				<path d="${nightPathEnd}" part="line-night" />
 				<line x1="0" y1="${baseline}" x2="${width}" y2="${baseline}" part="baseline" />
+				${
+					Array.from({ length: indices - 1 }, (_, i) => {
+						const x = (i + 1) * (width / indices);
+						const hour = Math.round((i + 1) * (24/indices));
+						const hourLabel = isMetric 
+							? `${hour}:00` 
+							: `${hour % 12 || 12}${hour < 12 ? 'am' : 'pm'}`;
+						return `
+							<line x1="${x}" y1="${baseline}" x2="${x}" y2="${baseline + indiceHeight}" part="indice" />
+							<text x="${x}" y="${baseline + indiceHeight + 5}" part="label">${hourLabel}</text>
+						`;
+					}).join('')
+				}
 				<circle cx="${sunX}" cy="${sunY}" r="${sunRadius}" part="sun" />
 		</svg>`;
 	}
