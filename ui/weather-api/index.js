@@ -401,10 +401,10 @@ class WeatherApi extends HTMLElement {
 			.slice(0, autoTopLabels ? data.length : topLabels)
 			.map((item, index) => {
 				const dataIndex = index * topLabelInterval;
-				const x = dataIndex * (barWidth + gap);
+				const x = dataIndex * (barWidth + gap) + (barWidth / 2);
 				const y = isAutoTop ? 
 					(height - bottom) - (item.value / max * graphHeight) - topOffset : topPadding - topOffset;
-				return `<text part="graph-text-top" x="${x}" y="${y}">${item.topLabel}</text>`;
+				return `<text text-anchor="middle" part="graph-text-top" x="${x}" y="${y}">${item.topLabel}</text>`;
 			}).join('');
 
 		// Generate bottom labels
@@ -413,8 +413,8 @@ class WeatherApi extends HTMLElement {
 			.slice(0, autoBottomLabels ? data.length : bottomLabels)
 			.map((item, index) => {
 				const dataIndex = index * bottomLabelInterval;
-				const x = dataIndex * (barWidth + gap);
-				return `<text part="graph-text-bottom" x="${x}" y="${height - bottom + 10}">${item.bottomLabel}</text>`;
+				const x = dataIndex * (barWidth + gap) + (barWidth / 2);
+				return `<text text-anchor="middle" part="graph-text-bottom" x="${x}" y="${height - bottom + 10}">${item.bottomLabel}</text>`;
 			}).join('');
 
 		return `
