@@ -9,7 +9,6 @@ styles.replaceSync(`
 
 		--_l: calc(var(--_lat) * 1.5deg);
 		--_a: calc(((var(--_hour) - 12) * 15 * 0.7) * 1deg);
-
 		--_r: calc(var(--_l) + var(--_a));
 
 		aspect-ratio: 1;
@@ -76,9 +75,14 @@ export default class MoonPhase extends HTMLElement {
 		this.#root = this.attachShadow({ mode: 'open' });
 		this.#root.adoptedStyleSheets = [styles];
 		this.style.setProperty('--moon-phase-bgi', `url('${this.getAttribute('moon') || this.basePath + 'moon.png'}')`);
-		this.style.setProperty('--_w', `${100 - parseInt(this.getAttribute('illumination'))}%`);
+
+		/* Safari doesn't support attr() with types, so for now we just set these with JS: */
+		if (this.hasAttribute('hour')) this.style.setProperty('--_hour', this.getAttribute('hour'));
+		if (this.hasAttribute('lat')) this.style.setProperty('--_lat', this.getAttribute('lat'));
 		if (this.hasAttribute('mask-color')) this.style.setProperty('--moon-phase-mask-bg', this.getAttribute('mask-color'));
+		this.style.setProperty('--_w', `${100 - parseInt(this.getAttribute('illumination'))}%`);
 	}
+
 	get basePath() { return new URL('.', import.meta.url).href; }
 }
 

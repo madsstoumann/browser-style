@@ -15,8 +15,8 @@ const i18n = {
 		gusts: 'Gusts',
 		humidity: 'Humidity',
 		high: 'H',
+		illumination: 'Illumination',
 		low: 'L',
-		moonillumination: 'Moon illumination',
 		moonrise: 'Moonrise',
 		moonset: 'Moonset',
 		night: 'Night',
@@ -453,6 +453,7 @@ class WeatherApi extends HTMLElement {
 				<ul part="list">
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
+					<li part="list-item"><strong part="list-item-key">${this.#t('illumination')}</strong><span part="list-item-value">${astro.moon_illumination}%</span></li>
 				</ul>
 				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}" lat="${location.lat}" hour="${hour}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
 			</div>

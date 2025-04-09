@@ -5,7 +5,7 @@
 	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
 	--weather-api-p: 1rem;
 
-	--weather-api-widget-bg: light-dark(hsl(210, 55%, 45%), hsl(210, 35%, 25%));
+	--weather-api-widget-bg: light-dark(hsl(210, 55%, 45%), hsl(235, 30%, 22%)); /*  hsl(210, 35%, 25%) */
 	--weather-api-widget-c: light-dark(hsl(210, 100%, 95%), hsl(210, 95%, 90%));
 
 	container-type: inline-size;
