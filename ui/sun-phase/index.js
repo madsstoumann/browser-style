@@ -22,7 +22,8 @@ styles.replaceSync(`
 		stroke: var(--sun-phase-indice-bdc, hsl(210, 55%, 65%));
 		stroke-width: var(--sun-phase-indice-bdw, 1);
 	}
-	:host::part(label) {
+	:host::part(label),
+	:host::part(time) {
 		fill: var(--sun-phase-label-c, hsl(210, 55%, 75%));
 		font-size: var(--sun-phase-label-fz, 5px);
 		text-anchor: middle;
@@ -32,6 +33,7 @@ styles.replaceSync(`
 		filter: url(#glow);
 		stroke-width: 0;
 	}
+
 	/* STATES */
 	:host::part(night) {
 		--sun-phase-baseline-bdc: hsl(210, 35%, 35%);
@@ -70,6 +72,19 @@ export default class SunPhase extends HTMLElement {
 			const time = this.#parseTimeToMinutes(timeAttr);
 			
 			this.#root.innerHTML = this.#render(sunrise, sunset, time);
+		}
+	}
+
+	#formatTime(minutes, isMetric) {
+		const hours = Math.floor(minutes / 60);
+		const mins = minutes % 60;
+		
+		if (isMetric) {
+			return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+		} else {
+			const twelveHour = hours % 12 || 12;
+			const ampm = hours >= 12 ? 'pm' : 'am';
+			return `${twelveHour}:${mins.toString().padStart(2, '0')}${ampm}`;
 		}
 	}
 
@@ -178,6 +193,8 @@ export default class SunPhase extends HTMLElement {
 			part = 'night';
 		}
 
+		const timeLabelY = sunY > baseline ? sunY + 13.5 : sunY - 10;
+
 		return `
 		<svg viewBox="0 0 ${width} ${height}" part="canvas ${part}">
 			<defs>
@@ -211,6 +228,7 @@ export default class SunPhase extends HTMLElement {
 						`;
 					}).join('')
 				}
+				<text x="${sunX}" y="${timeLabelY}" part="time">${this.#formatTime(time, isMetric)}</text>
 				<circle cx="${sunX}" cy="${sunY}" r="${sunRadius}" part="sun" />
 		</svg>`;
 	}
