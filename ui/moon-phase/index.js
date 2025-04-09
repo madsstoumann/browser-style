@@ -2,12 +2,22 @@ const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
 		--moon-phase-blur: 0px;
+
+		--_lat: attr(lat type(<number>), 0);
+		--_hour: attr(hour type(<number>), 12);
 		--_w: calc(100% - 1% * attr(illumination type(<number>), 0%));
+
+		--_l: calc(var(--_lat) * 1.5deg);
+		--_a: calc(((var(--_hour) - 12) * 15 * 0.7) * 1deg);
+
+		--_r: calc(var(--_l) + var(--_a));
+
 		aspect-ratio: 1;
 		border-radius: 50%;
 		display: block;
 		overflow: clip;
 		position: relative;
+		rotate: var(--_r, 0deg);
 	}
 	:host::before {
 		background: var(--moon-phase-bgi, url('moon.png')) center / cover no-repeat;  
@@ -17,13 +27,13 @@ styles.replaceSync(`
 		position: absolute;
 	}
 	:host::after {
-		background-color: var(--moon-phase-mask-bg, #000C);
+		background-color: var(--moon-phase-mask-bg, #000);
 		border-radius: var(--_btlr, 0) var(--_btrr, 0) var(--_bbrr, 0) var(--_bblr, 0);
 		content: '';
 		filter: var(--moon-phase-mask-filter, blur(var(--moon-phase-blur, 0px)));
 		height: 100%;
 		inset-inline: var(--_ii, auto 0);
-		opacity: var(--moon-phase-mask-opacity, 1);
+		opacity: var(--moon-phase-mask-opacity, .85);
 		position: absolute;
 		width: var(--_w);
 	}

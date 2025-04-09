@@ -243,7 +243,7 @@ class WeatherApi extends HTMLElement {
 			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
 			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
 			'humidity': () => this.#renderHumidity(current),
-			'moonphase': () => this.#renderMoonPhase(forecast.forecastday[0].astro),
+			'moonphase': () => this.#renderMoonPhase(forecast.forecastday[0].astro, location),
 			'precipitation-sm': () => this.#renderPrecipitation(current),
 			'precipitation-lg': () => this.#renderPrecipitation(location, forecast.forecastday, 'lg'),
 			'pressure': () => this.#renderPressure(current),
@@ -441,10 +441,11 @@ class WeatherApi extends HTMLElement {
 			</div>`;
 	}
 
-	#renderMoonPhase(astro) {
+	#renderMoonPhase(astro, location) {
 		const moonrise = this.#metric ? this.#to24Hour(astro.moonrise) : astro.moonrise;
 		const moonset = this.#metric ? this.#to24Hour(astro.moonset) : astro.moonset;
-
+		const hour = this.#get24HourTime(location.localtime);
+console.log(hour);
 		return `
 		<div part="moonphase widget">
 			<h4 part="title moonphase-title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>
@@ -453,7 +454,7 @@ class WeatherApi extends HTMLElement {
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
 					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
 				</ul>
-				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
+				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}" lat="${location.lat}" hour="${hour}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
 			</div>
 		</div>`;
 	}
