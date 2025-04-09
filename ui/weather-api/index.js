@@ -147,11 +147,11 @@ class WeatherApi extends HTMLElement {
 		return new Intl.DateTimeFormat(this._locale, options).format(date);
 	}
 
-	#get24HourTime(date) {
+	#get24HourTime(date, minutes = true) {
 		return new Date(date).toLocaleTimeString('en-US', {
 			hour12: false,
 			hour: '2-digit',
-			minute: '2-digit'
+			minute: minutes ? '2-digit' : undefined
 		});
 	}
 
@@ -444,8 +444,8 @@ class WeatherApi extends HTMLElement {
 	#renderMoonPhase(astro, location) {
 		const moonrise = this.#metric ? this.#to24Hour(astro.moonrise) : astro.moonrise;
 		const moonset = this.#metric ? this.#to24Hour(astro.moonset) : astro.moonset;
-		const hour = this.#get24HourTime(location.localtime);
-console.log(hour);
+		const hour = this.#get24HourTime(location.localtime, false);
+
 		return `
 		<div part="moonphase widget">
 			<h4 part="title moonphase-title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>

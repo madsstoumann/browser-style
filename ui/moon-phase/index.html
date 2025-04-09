@@ -77,36 +77,36 @@
 	</ul>
 
 	<p>
-		<strong>Example: With latitude and hour</strong> (Chrome only)<br>
-		<code>&lt;moon-phase illumination="12" phase="waxing crescent" lat="59.91" hour="22"&gt;</code>
+		<strong>Example: Same day, but with different latitudes</strong> (Chrome only)<br>
+		<code>&lt;moon-phase illumination="25" phase="waxing crescent" lat="59.91" hour="22"&gt;</code>
 	</p>
 
 	<ul class="ui-grid --xs-c-3 --md-c-6">
-		<!-- Extreme latitude examples (all at 22:00 local time) -->
-		<li>
-				<moon-phase illumination="25" phase="waxing crescent" lat="-77.85" hour="22"></moon-phase>
-				<small>McMurdo Station, Antarctica<br>-77.85° · 25%</small>
-		</li>
-		<li>
-				<moon-phase illumination="50" phase="first quarter" lat="-33.86" hour="22"></moon-phase>
-				<small>Sydney, Australia<br>-33.86° · 50%</small>
-		</li>
-		<li>
-				<moon-phase illumination="75" phase="waxing gibbous" lat="0" hour="22"></moon-phase>
-				<small>Quito, Ecuador<br>0° · 75%</small>
-		</li>
-		<li>
-				<moon-phase illumination="75" phase="waning gibbous" lat="51.50" hour="22"></moon-phase>
-				<small>London, UK<br>51.50° · 75%</small>
-		</li>
-		<li>
-				<moon-phase illumination="50" phase="last quarter" lat="70.00" hour="22"></moon-phase>
-				<small>Longyearbyen, Svalbard<br>70.00° · 50%</small>
-		</li>
-		<li>
-				<moon-phase illumination="25" phase="waning crescent" lat="90.00" hour="22"></moon-phase>
-				<small>North Pole<br>90.00° · 25%</small>
-		</li>
+    <!-- Same date (April 15, 2025), same phase, different latitudes -->
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="-77.85" hour="22"></moon-phase>
+        <small>Antarctica<br>-77.85°</small>
+    </li>
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="-33.86" hour="22"></moon-phase>
+        <small>Sydney<br>-33.86°</small>
+    </li>
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="0" hour="22"></moon-phase>
+        <small>Equator<br>0°</small>
+    </li>
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="51.50" hour="22"></moon-phase>
+        <small>London<br>51.50°</small>
+    </li>
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="70.00" hour="22"></moon-phase>
+        <small>Svalbard<br>70.00°</small>
+    </li>
+    <li>
+        <moon-phase illumination="25" phase="waxing crescent" lat="90.00" hour="22"></moon-phase>
+        <small>North Pole<br>90.00°</small>
+    </li>
 </ul>
 
 	<script type="module" src="./index.js"></script>
