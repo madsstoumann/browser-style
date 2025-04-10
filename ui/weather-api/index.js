@@ -10,6 +10,9 @@ const i18n = {
 		direction: 'Direction',
 		east: 'E',
 		feelsLike: 'Feels like',
+		feelsLikeActual: 'Feels same as actual temperature',
+		feelsLikeColder: 'Feels colder than actual temperature',
+		feelsLikeWarmer: 'Feels warmer than actual temperature',
 		forecastDays: 'Forecast for {{value}} days',
 		forecastHours: 'Forecast for {{value}} hours',
 		gusts: 'Gusts',
@@ -36,6 +39,10 @@ const i18n = {
 		uvVeryHigh: 'Very High',
 		uvExtreme: 'Extreme',
 		visibility: 'Visibility',
+		visibilityVeryPoor: 'Very poor visibility',
+		visibilityPoor: 'Poor visibility',
+		visibilityModerate: 'Moderate visibility',
+		visibilityGood: 'Good visibility',
 		west: 'W',
 		wind: 'Wind',
 	}
@@ -239,85 +246,68 @@ class WeatherApi extends HTMLElement {
 		const { location, current, forecast } = this._data;
 		
 		const widgetRenderers = {
-			'overview': () => this.#renderOverview(location, current, forecast),
+			'feels-like': () => this.#renderFeelsLike(current),
 			'forecast-hours': () => this.#renderForecastHours(location, forecast.forecastday),
 			'forecast-days': () => this.#renderForecastDays(forecast.forecastday),
 			'humidity': () => this.#renderHumidity(current),
 			'moonphase': () => this.#renderMoonPhase(forecast.forecastday[0].astro, location),
-			'precipitation-sm': () => this.#renderPrecipitation(current),
-			'precipitation-lg': () => this.#renderPrecipitation(location, forecast.forecastday, 'lg'),
+			'overview': () => this.#renderOverview(location, current, forecast),
+			'precipitation': () => this.#renderPrecipitation(current, location, forecast.forecastday),
 			'pressure': () => this.#renderPressure(current),
-			'sunset': () => this.#renderSunset(forecast.forecastday[0].astro, current.last_updated),
-			'temperature': () => this.#renderTemperature(current),
-			'temperature-lg': () => this.#renderTemperature(current, forecast.forecastday, 'lg'),
+			'sunphase': () => this.#renderSunPhase(forecast.forecastday[0].astro, current.last_updated),
+			'temperature': () => this.#renderTemperature(current, forecast.forecastday),
 			'uv': () => this.#renderUV(current),
 			'visibility': () => this.#renderVisibility(current),
 			'wind': () => this.#renderWind(current)
 		};
-		
+
 		this.shadowRoot.innerHTML = this._widgets
 			.map(widget => widgetRenderers[widget] ? widgetRenderers[widget]() : '')
 			.join('');
 	}
 
-	#renderLowHigh(forecast) {
-		const day = forecast[0].day;
-		const high = this.#metric ? day.maxtemp_c : day.maxtemp_f;
-		const low = this.#metric ? day.mintemp_c : day.mintemp_f;
-		const unit = this.#metric ? '°C' : '°F';
-		return `<small part="lowhigh">${this.#t('high')}:${high}${unit} ${this.#t('low')}:${low}${unit}</small>`
-	}
-
-	#renderAstro(astro) {
-		const sunrise = this.#metric ? this.#to24Hour(astro.sunrise) : astro.sunrise;
-		const sunset = this.#metric ? this.#to24Hour(astro.sunset) : astro.sunset;
-		return `<small part="astro">☀ ${sunrise} ☽ ${sunset}</small>`;
-	}
-
 	#renderFeelsLike(current) {
-		return ``;
+		const actualTemp = this.#metric ? current.temp_c : current.temp_f;
+		const feelsLikeTemp = this.#metric ? current.feelslike_c : current.feelslike_f;
+		const tempDiff = feelsLikeTemp - actualTemp;
+		const comparisonKey = Math.abs(tempDiff) < 1 ? 'feelsLikeActual' : tempDiff < 0 ? 'feelsLikeColder' : 'feelsLikeWarmer';
+		return `
+		<weather-widget part="feels-like-widget">
+			<div part="feels-like widget">
+				<h2 part="title">${this.#icon(ICONS.eye, 'icon feels-like-icon')}${this.#t('feelsLike')}</h2>
+				<h3 part="header-lg">${feelsLikeTemp}${this.#units.temperature}</h3>
+				<p part="light-text">${this.#t(comparisonKey)}</p>
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders a weather forecast for multiple days
-	 * @private
-	 * @param {Object[]} forecast - Array of forecast data objects
-	 * @returns {string} HTML string containing the formatted weather forecast
-	 */
  	#renderForecastDays(forecast) {
 		return `
-		<div part="forecast-days widget">
-			<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
-			<ul part="forecast-days-wrapper">
-				${forecast.map(day => {
-					const dayTemp = this.#metric ? day.day.maxtemp_c : day.day.maxtemp_f;
-					const nightTemp = this.#metric ? day.day.mintemp_c : day.day.mintemp_f;
-					const date = new Date(day.date);
-					const dayName = this.#formatDate(date, { weekday: 'short' });
-					const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
-					
-					return `
-						<li part="forecast-day" title="${day.day.condition.text}">
-							<strong part="forecast-day-name" title="${shortDate}">${dayName}</strong>
-							<img part="forecast-day-icon condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
-							<span part="forecast-day-night-temp">${nightTemp}${this.#units.temperature}</span>
-							<span part="forecast-day-temp">${dayTemp}${this.#units.temperature}</span>
-						</li>
-					`;
-				}).join('') || ''}
-			</ul>
-		</div>`;
+		<weather-widget part="forecast-days-widget">
+			<div part="forecast-days widget">
+				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
+				<ul part="forecast-days-list">
+					${forecast.map(day => {
+						const dayTemp = this.#metric ? day.day.maxtemp_c : day.day.maxtemp_f;
+						const nightTemp = this.#metric ? day.day.mintemp_c : day.day.mintemp_f;
+						const date = new Date(day.date);
+						const dayName = this.#formatDate(date, { weekday: 'short' });
+						const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
+						
+						return `
+							<li part="forecast-day" title="${day.day.condition.text}">
+								<strong part="forecast-day-name" title="${shortDate}">${dayName}</strong>
+								<img part="forecast-day-icon condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+								<span part="forecast-day-night-temp light-text">${nightTemp}${this.#units.temperature}</span>
+								<span part="forecast-day-temp">${dayTemp}${this.#units.temperature}</span>
+							</li>
+						`;
+					}).join('') || ''}
+				</ul>
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders forecast hours for a given location.
-	 * Takes hours from current hour until end of day, and if less than 24 hours,
-	 * adds hours from next day to complete 24-hour forecast.
-	 * @private
-	 * @param {Object} location - Location object containing localtime
-	 * @param {Array} days - Array of daily forecasts, each containing hourly data
-	 * @returns {string} HTML string containing the forecast hours widget
-	 */
 	#renderForecastHours(location, days) {
 		const localTime = new Date(location.localtime);
 		const currentHour = localTime.getHours();
@@ -331,21 +321,23 @@ class WeatherApi extends HTMLElement {
 		}
 
 		return `
-		<div part="forecast-hours widget">
-			<h4 part="title forecast-hours-title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}</h4>
-			<ul part="forecast-hours-scroll">
-			${hours.map(hour => {
-				const hourTime = new Date(hour.time);
-				return `
-					<li part="forecast-hour-item" title="${hour.condition.text}">
-						<span part="forecast-hour-time">${this.#formatHour(hourTime)}</span>
-						<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
-						<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
-					</li>
-				`;
-			}).join('') || ''}
-			</ul>
-		</div>`;
+		<weather-widget part="forecast-hours-widget">
+			<div part="forecast-hours widget">
+				<h4 part="title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}</h4>
+				<ul part="forecast-hours-scroll">
+				${hours.map(hour => {
+					const hourTime = new Date(hour.time);
+					return `
+						<li part="forecast-hour-item" title="${hour.condition.text}">
+							<span part="forecast-hour-time">${this.#formatHour(hourTime)}</span>
+							<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
+							<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
+						</li>
+					`;
+				}).join('') || ''}
+				</ul>
+			</div>
+		</weather-widget>`;
 	}
 
 	/**
@@ -425,20 +417,16 @@ class WeatherApi extends HTMLElement {
 			</svg>`;
 	}
 
-	/**
-	 * Renders the humidity widget with current humidity data
-	 * @private
-	 * @param {Object} current - The current weather data object
-	 * @returns {string} HTML string containing the humidity widget markup
-	 */
 	#renderHumidity(current) {
 		const humidity = current.humidity;
 		return `
-			<div part="humidity widget widget-sm">
-				<h2 part="title humidity-title">${this.#icon(ICONS.ripple, 'icon humidity-icon')}${this.#t('humidity')}</h2>
-				<h3 part="humidity-value header-lg">${current.humidity}%</h3>
-				<p part="humidity-depoint header-sm">${this.#t('dewPoint', { value: this.#metric ? current.dewpoint_c : current.dewpoint_f })}</p>
-			</div>`;
+		<weather-widget part="humidity-widget">
+			<div part="humidity widget">
+				<h2 part="title">${this.#icon(ICONS.ripple, 'icon humidity-icon')}${this.#t('humidity')}</h2>
+				<h3 part="header-lg">${current.humidity}%</h3>
+				<p part="header-sm">${this.#t('dewPoint', { value: this.#metric ? current.dewpoint_c : current.dewpoint_f })}</p>
+			</div>
+		</weather-widget>`;
 	}
 
 	#renderMoonPhase(astro, location) {
@@ -447,111 +435,101 @@ class WeatherApi extends HTMLElement {
 		const hour = this.#get24HourTime(location.localtime, false);
 
 		return `
-		<div part="moonphase widget">
-			<h4 part="title moonphase-title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>
-			<div part="moonphase-wrapper">
-				<ul part="list">
-					<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
-					<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
-					<li part="list-item"><strong part="list-item-key">${this.#t('illumination')}</strong><span part="list-item-value">${astro.moon_illumination}%</span></li>
-				</ul>
-				<moon-phase part="moon-phase" illumination="${astro.moon_illumination}" lat="${location.lat}" hour="${hour}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
+		<weather-widget part="moonphase-widget">
+			<div part="moonphase widget">
+				<h4 part="title">${this.#icon(ICONS.moon, 'icon wind-icon')}${astro.moon_phase}</h4>
+				<div part="moonphase-wrapper">
+					<ul part="list">
+						<li part="list-item"><strong part="list-item-key">${this.#t('moonrise')}</strong><span part="list-item-value">${moonrise}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('moonset')}</strong><span part="list-item-value">${moonset}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('illumination')}</strong><span part="list-item-value">${astro.moon_illumination}%</span></li>
+					</ul>
+					<moon-phase illumination="${astro.moon_illumination}" lat="${location.lat}" hour="${hour}" phase="${astro.moon_phase.toLowerCase()}"></moon-phase>
+				</div>
 			</div>
-		</div>`;
+		</weather-widget>`;
 	}
 
 	#renderOverview(location, current, forecast) {
-		const tempUnit = this.#metric ? '°C' : '°F';
-		const formattedTime = this.#formatDate(location.localtime, { 
-			weekday: 'long', 
-			hour: '2-digit', 
-			minute: '2-digit',
-			hour12: !this.#metric
-		});
-
+		const day = forecast.forecastday[0].day;
 		return `
-		<div part="overview widget">
-			<hgroup part="overview-group">
-				<h2 part="overview-location" title="${location.region}, ${location.country}">${location.name}</h2>
-				<h3 part="overview-temperature">${this.#metric ? current.temp_c : current.temp_f}${tempUnit}</h3>
-				<h4 part="overview-feels-like">${this.#t('feelsLike')}: ${this.#metric ? current.feelslike_c : current.feelslike_f}${tempUnit}</h4>
-				<div part="overview-date">${formattedTime}</div>
-			</hgroup>
-			<figure part="overview-condition">
+		<weather-widget part="overview-widget">
+			<div part="overview widget">
+				<h2 part="header-lg" title="${location.region}, ${location.country}">${location.name}</h2>
+				<h3 part="header-xl">${this.#metric ? current.temp_c : current.temp_f}${this.#units.temperature}</h3>
+				<ul part="overview-list light-text">
+					<li>${this.#t('precipitation')}: ${this.#metric ? current.precip_mm : current.precip_in}${this.#units.presipitation}</li>
+					<li>${this.#t('humidity')}: ${current.humidity}%</li>
+					<li>${this.#t('wind')}: ${this.#metric ? (current.wind_kph / 3.6).toFixed(1) : current.wind_mph} ${this.#units.wind}</li>
+				</ul>
 				<img part="condition-icon" src="https:${current.condition.icon}" alt="${current.condition.text}">
-				<figcaption part="overview-condition-text">${current.condition.text}</figcaption>
-				${forecast ? this.#renderLowHigh(forecast.forecastday) : ''}
-				${forecast ? this.#renderAstro(forecast.forecastday[0].astro) : ''}
-				<div part="overview-wind">
-					<svg part="icon" viewBox="0 0 24 24" style="rotate:${current.wind_degree + 180}deg;">
-						<path d="M12 5l0 14"/><path d="M16 9l-4 -4"/><path d="M8 9l4 -4"/>
-					</svg>
-					${this.#metric ? (current.wind_kph / 3.6).toFixed(1) : current.wind_mph} ${this.#metric ? 'm/s' : 'mph'}
-				</div>
-				<div part="overview-uv-index uv-${Math.min(Math.round(current.uv), 10)}">${this.#t('uv')}: ${current.uv}</div>
-			</figure>
-		</div>`;
+				<h4 part="header-md">${current.condition.text}</h4>
+				<span part="overview-highlow light-text">
+					${this.#t('high')}:${this.#metric ? day.maxtemp_c : day.maxtemp_f}${this.#units.temperature}
+					${this.#t('low')}:${this.#metric ? day.mintemp_c : day.mintemp_f}${this.#units.temperature}</span>
+			</div>
+		</weather-widget>`;
 	}
 
-	#renderPrecipitation(current, forecast = {}, size = 'sm') {
+
+	#renderPrecipitation(current, location, forecast = {}) {
 		const precipitation = this.#metric ? current.precip_mm : current.precip_in;
 		return `
-			<div part="precipitation-${size} widget widget-sm">
-				<h2 part="title precipitation-title">${this.#icon(ICONS.precipitation, 'icon humidity-icon')}${this.#t('precipitation')}</h2>
-				${size === 'lg' ? 
-					this.#renderGraph(
-						this.#prepareGraphData(current, forecast, 'precipitation'), 
-						{
-							top: 10,
-							topOffset: 5,
-							bottom: 10,
-							topLabels: 8,
-							bottomLabels: 8,
-							type: 'precipitation'
-						}
-					) : 
-					`<h3 part="humidity-value header-lg">${precipitation}${this.#units.presipitation}</h3>`
-				}
-			</div>`;
+		<weather-widget part="precipitation-widget">
+			<div part="precipitation widget">
+				<h2 part="title">${this.#icon(ICONS.precipitation, 'icon humidity-icon')}${this.#t('precipitation')}</h2>
+				<h3 part="header-lg">${precipitation}${this.#units.presipitation}</h3>
+				${this.#renderGraph(
+					this.#prepareGraphData(location, forecast, 'precipitation'), 
+					{
+						top: 10,
+						topOffset: 5,
+						bottom: 10,
+						topLabels: 8,
+						bottomLabels: 8,
+						type: 'precipitation'
+					}
+				)}
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders the pressure widget with an analog gauge
-	 * @private
-	 * @param {Object} current - The current weather data object
-	 * @returns {string} HTML string containing the pressure widget markup
-	 */
 	#renderPressure(current) {
 		const pressure = this.#metric ? current.pressure_mb : current.pressure_in;
 		const minPressure = this.#metric ? 950 : 27;
 		const maxPressure = this.#metric ? 1085 : 32;
 		return `
+		<weather-widget part="pressure-widget">
 			<div part="pressure widget">
 				<h4 part="title pressure-title">${this.#icon(ICONS.gauge, 'icon pressure-icon')}${this.#t('pressure')}</h4>
 				<analog-gauge part="pressure-value" min=${minPressure} max=${maxPressure} value="${pressure}" label="${this.#units.pressure}" min-label="${this.#t('pressureLow')}" max-label="${this.#t('pressureHigh')}"></analog-gauge>
-			</div>`;
+			</div>
+		</weather-widget>`;
 	}
 
-	#renderSunset(astro, date) {
+	#renderSunPhase(astro, date) {
 		const time = this.#get24HourTime(date);
 		const sunset = this.#to24Hour(astro.sunset);
 		const sunrise = this.#to24Hour(astro.sunrise);
 		return `
-			<div part="sunset widget">
-				<h4 part="title sunset-title">${this.#icon(ICONS.sunset, 'icon sunset-icon')}${this.#t('sunset')}</h4>
-				<h3 part="sunset-value header-lg">${this.#metric ? sunset : astro.sunset}</h3>
-				<sun-phase part="sun-phase" sunrise="${sunrise}" sunset="${sunset}" time="${time}"></sun-phase>
+		<weather-widget part="sunphase-widget">
+			<div part="sunphase widget">
+				<h4 part="title">${this.#icon(ICONS.sunset, 'icon sunset-icon')}${this.#t('sunset')}</h4>
+				<h3 part="header-lg">${this.#metric ? sunset : astro.sunset}</h3>
+				<sun-phase sunrise="${sunrise}" sunset="${sunset}" time="${time}"></sun-phase>
 				<p>${this.#t('sunrise')}: ${this.#metric ? sunrise : astro.sunrise}</p>
-			</div>`;
+			</div>
+		</weather-widget>`;
 	}
 
-	#renderTemperature(current, forecast = {}, size = 'sm') {
+	#renderTemperature(current, forecast = {}) {
 		const temperature = this.#metric ? current.temp_c : current.temp_f;
 		return `
-			<div part="temperature-${size} widget">
-				<h2 part="title precipitation-title">${this.#icon(ICONS.temperature, 'icon temperature-icon')}${this.#t('temperature')}</h2>
-				${size === 'lg' ? 
-					this.#renderGraph(
+		<weather-widget part="temperature-widget">
+			<div part="temperature widget">
+				<h2 part="title">${this.#icon(ICONS.temperature, 'icon temperature-icon')}${this.#t('temperature')}</h2>
+				<h3 part="header-lg">${temperature}${this.#units.temperature}</h3>
+				${this.#renderGraph(
 						this.#prepareGraphData(current, forecast, 'temperature'),
 						{
 							top: 'auto',
@@ -560,18 +538,12 @@ class WeatherApi extends HTMLElement {
 							bottomLabels: 8,
 							type: 'temperature'
 						}
-					) : 
-					`<h3 part="temperature-value header-lg">${temperature}${this.#units.temperature}</h3>`
+					)
 				}
-			</div>`;
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders a UV index widget with category and visual indicator
-	 * @private
-	 * @param {Object} current - The current weather data object
-	 * @returns {string} HTML markup for the UV widget
-	 */
 	#renderUV(current) {
 		const uvIndex = current.uv;
 		const uvCategory = uvIndex < 3 ? 'uvLow' : 
@@ -580,42 +552,41 @@ class WeatherApi extends HTMLElement {
 											 uvIndex < 11 ? 'uvVeryHigh' : 'uvExtreme';
 
 		return `
-			<div part="uv widget widget-sm">
-				<h2 part="title uv-title">${this.#icon(ICONS.sun, 'icon uv-icon')}${this.#t('uv')}</h2>
-				<hgroup part="uv-wrapper">
-					<h3 part="uv-value header-lg">${uvIndex}</h3>
-					<h4 part="uv-category header-md">${this.#t(uvCategory)}</h4>
+		<weather-widget part="uv-widget">
+			<div part="uv widget">
+				<h2 part="title">${this.#icon(ICONS.sun, 'icon uv-icon')}${this.#t('uv')}</h2>
+				<hgroup>
+					<h3 part="header-lg">${uvIndex}</h3>
+					<h4 part="header-md">${this.#t(uvCategory)}</h4>
 				</hgroup>
 				<output value="${uvIndex}" part="uv-slider" style="--_p:${Math.min((uvIndex / 10) * 100, 100)}%"></output>
-			</div>`;
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders the visibility widget with current visibility conditions
-	 * @private
-	 * @param {Object} current - The current weather data object
-	 * @returns {string} HTML string containing the visibility widget markup
-	 */
 	#renderVisibility(current) {
 		const visibility = this.#metric ? current.vis_km : current.vis_miles;
+		const thresholds = this.#metric ? { veryPoor: 1, poor: 4, moderate: 10 } : { veryPoor: 0.6, poor: 2.5, moderate: 6 };
+		const visibilityKey = visibility < thresholds.veryPoor ? 'visibilityVeryPoor'
+		: visibility < thresholds.poor ? 'visibilityPoor'
+		: visibility < thresholds.moderate ? 'visibilityModerate'
+		: 'visibilityGood';
+		
 		return `
-			<div part="visibility widget widget-sm">
-				<h4 part="title visibility-title">${this.#icon(ICONS.eye, 'icon visibility-icon')}${this.#t('visibility')}</h4>
-				<h3 part="visibility-value header-lg">${visibility} ${this.#units.visibility}</h3>
-				<p>Perfectly clear view</p>
-			</div>`;
+		<weather-widget part="visibility-widget">
+			<div part="visibility widget">
+				<h4 part="title">${this.#icon(ICONS.eye, 'icon visibility-icon')}${this.#t('visibility')}</h4>
+				<h3 part="header-lg">${visibility} ${this.#units.visibility}</h3>
+				<p>${this.#t(visibilityKey)}</p>
+			</div>
+		</weather-widget>`;
 	}
 
-	/**
-	 * Renders the wind information section of the weather widget
-	 * @private
-	 * @param {Object} current - The current weather data object
-	 * @returns {string} HTML markup for the wind widget section
-	 */
 	#renderWind(current) {
 		const gusts = this.#metric ? current.gust_kph : current.gust_mph;
 		const wind = this.#metric ? current.wind_kph : current.wind_mph;
 		return `
+		<weather-widget part="wind-widget">
 			<div part="wind widget">
 				<h4 part="title wind-title">${this.#icon(ICONS.wind, 'icon wind-icon')}${this.#t('wind')}</h4>
 				<div part="wind-wrapper">
@@ -626,9 +597,9 @@ class WeatherApi extends HTMLElement {
 					</ul>
 					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${this.#units.wind}" mode="bearing"></nav-compass>
 				</div>
-			</div>`;
+			</div>
+		</weather-widget>`;
 	}
-
 }
 
 customElements.define('weather-api', WeatherApi);

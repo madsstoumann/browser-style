@@ -26,30 +26,31 @@
 
 		.bento {
 			grid-template-columns: 1fr 1fr;
-			&::part(overview) { grid-column: 1 / 3; }
-			&::part(forecast-hours) { grid-column: 1 / 3; }
-			&::part(forecast-days) { grid-column: 1 / 3; }
-			&::part(wind) { grid-column: 1 / 3; }
-			&::part(pressure) { grid-column: 1 / 3; }
-			&::part(precipitation-lg) { grid-column: 1 / 3; }
-			&::part(temperature-lg) { grid-column: 1 / 3; }
-			&::part(moonphase) { grid-column: 1 / 3; }
-			&::part(sunset) { grid-column: 1 / 3; }
+			&::part(overview-widget) { grid-column: 1 / 3; }
+			&::part(forecast-hours-widget) { grid-column: 1 / 3; }
+			&::part(forecast-days-widget) { grid-column: 1 / 3; }
+			&::part(wind-widget) { grid-column: 1 / 3; }
+			&::part(pressure-widget) { grid-column: 1 / 3; }
+			&::part(moonphase-widget) { grid-column: 1 / 3; }
+			&::part(sunphase-widget) { grid-column: 1 / 3; }
 			
 		}
 		@media (min-width: 600px) {
-			.bento {
+			 .bento {
 				grid-auto-flow: row dense;
 				grid-template-columns: repeat(4, 1fr);
-				&::part(overview) { grid-column: 1 / 5; }
-				&::part(forecast-hours) { grid-column: 1 / 5; }
-				&::part(forecast-days) { grid-column: 1 / 3; }
+				&::part(overview-widget) { grid-column: 1 / 5; }
+				&::part(forecast-hours-widget) { grid-column: 1 / 5; }
+				&::part(forecast-days-widget) { grid-column: 1 / 5; }
+				&::part(precipitation-widget) { grid-column: 1 / 5; }
+				&::part(temperature-widget) { grid-column: 1 / 5; }
+
 				&::part(wind) { grid-column: 3 / 5; }
 				&::part(pressure) { grid-row: span 2; }
-				&::part(precipitation-lg) { grid-column: 1 / 5; }
-				&::part(temperature-lg) { grid-column: 1 / 5; }
-				/* &::part(moonphase) { grid-row: span 2; } */
-				&::part(sunset) { grid-column: 3 / 5; }
+				
+				
+				&::part(moonphase) { grid-row: span 2; }
+				&::part(sunphase) { grid-column: 3 / 5; }
 			}
 		}
 	</style>
@@ -90,12 +91,12 @@
 	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-api
 		class="bento"
-		widgets="overview forecast-hours forecast-days wind pressure uv visibility humidity precipitation-sm precipitation-lg temperature-lg moonphase sunset"
+		widgets="overview forecast-hours forecast-days precipitation temperature wind pressure feels-like uv visibility humidity  moonphase sunphase"
 		lang="en-US"
 		units="metric"
 		url="./current.response.json">
 	</weather-api>
-
+<!--   wind pressure uv visibility humidity precipitation-sm precipitation-lg temperature-lg moonphase sunset -->
 	<!-- <h3>With Danish Language</h3>
 	<weather-api
 		mode="local"
