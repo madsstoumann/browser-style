@@ -37,7 +37,7 @@
 		}
 		@media (min-width: 600px) {
 			 .bento {
-				grid-auto-flow: row dense;
+				/* grid-auto-flow: row dense; */
 				grid-template-columns: repeat(4, 1fr);
 				&::part(overview-widget) { grid-column: 1 / 5; }
 				&::part(forecast-hours-widget) { grid-column: 1 / 5; }
@@ -45,12 +45,12 @@
 				&::part(precipitation-widget) { grid-column: 1 / 5; }
 				&::part(temperature-widget) { grid-column: 1 / 5; }
 
-				&::part(wind) { grid-column: 3 / 5; }
-				&::part(pressure) { grid-row: span 2; }
+				&::part(wind-widget) { grid-column: 1 / 3; }
+				&::part(pressure-widget) { grid-column: 3 / 5; }
 				
 				
-				&::part(moonphase) { grid-row: span 2; }
-				&::part(sunphase) { grid-column: 3 / 5; }
+				&::part(moonphase-widget) { grid-column: 1 / 3; }
+				&::part(sunphase-widget) { grid-column: 3 / 5; }
 			}
 		}
 	</style>

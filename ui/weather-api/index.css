@@ -26,13 +26,14 @@ h2, h3, h4, p {
 
 /* === Widgets === */
 :host::part(widget) {
-	align-content: start;
+	/* align-content: start; */
 	background: var(--weather-api-widget-bg);
 	background-position: var(--weather-api-widget-bgp, center);
 	background-size: var(--weather-api-widget-bgsz, cover);
 	border-radius: var(--weather-api-bdrs, 1rem);
 	color: var(--weather-api-widget-c);
 	display: grid;
+	height: 100%;
 	padding: var(--weather-api-p);
 	row-gap: var(--weather-api-widget-rg, .5ch);
 }
