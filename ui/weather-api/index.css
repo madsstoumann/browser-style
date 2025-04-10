@@ -5,7 +5,7 @@
 	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
 	--weather-api-p: 1rem;
 
-	--weather-api-widget-bg: light-dark(hsl(210, 55%, 45%), hsl(235, 30%, 22%)); /*  hsl(210, 35%, 25%) */
+	--weather-api-widget-bgc: light-dark(hsl(210, 55%, 45%), hsl(235, 30%, 22%)); /*  hsl(210, 35%, 25%) */
 	--weather-api-widget-c: light-dark(hsl(210, 100%, 95%), hsl(210, 95%, 90%));
 
 	container-type: inline-size;
@@ -27,10 +27,9 @@ h2, h3, h4, p {
 /* === Widgets === */
 :host::part(widget) {
 	align-content: start;
-	background: var(--weather-api-widget-bg);
-	background-position: var(--weather-api-widget-bgp, center);
-	background-size: var(--weather-api-widget-bgsz, cover);
-	border-radius: var(--weather-api-bdrs, 1rem);
+	backdrop-filter: var(--weather-api-widget-bdf, none);
+	background-color: var(--weather-api-widget-bgc);
+	border-radius: inherit;
 	color: var(--weather-api-widget-c);
 	display: grid;
 	height: 100%;
@@ -75,7 +74,7 @@ h2, h3, h4, p {
 	align-items: center;
 	border-block-end: var(--weather-api-bdw) solid var(--weather-api-bdc);
 	display: flex;
-	font-size: var(--weather-api-title-fs, 100%);
+	font-size: var(--weather-api-title-fs, 1.2em);
 	font-weight: var(--weather-api-title-fw, 500);
 	gap: .25ch;
 	margin-block-end: calc(var(--weather-api-p) / 2);
@@ -104,6 +103,10 @@ h2, h3, h4, p {
 
 /* === GENERIC WEATHER WIDGET === */
 weather-widget {
+	background-image: var(--weather-api-widget-bgi, none);
+	background-position: var(--weather-api-widget-bgp, center);
+	background-size: var(--weather-api-widget-bgsz, cover);
+	border-radius: var(--weather-api-bdrs, 1rem);
 	container-type: inline-size;
 }
 
@@ -207,7 +210,7 @@ weather-widget {
 	container-name: moonphase-widget;
 }
 moon-phase {
-	--moon-phase-mask-bg: var(--weather-api-widget-bg);
+	--moon-phase-mask-bg: var(--weather-api-widget-bgc);
 	--moon-phase-mask-opacity: 0.85;
 	--moon-phase-blur: 3px;
 	--moon-phase-filter: grayscale(.5) brightness(1.05);
@@ -316,7 +319,7 @@ sun-phase {
 output[part="uv-slider"]::after {
 	aspect-ratio: 1;
 	background-color: rgba(255,255,255,.8);
-	border: 2px solid var(--weather-api-widget-bg);
+	border: 2px solid var(--weather-api-widget-bgc);
 	border-radius: 50%;
 	box-sizing: border-box;
 	content: "";
@@ -338,7 +341,7 @@ output[part="uv-slider"]::after {
 	display: grid;
 }
 nav-compass {
-	--nav-compass-bg: var(--weather-api-widget-bg);
+	--nav-compass-bg: var(--weather-api-widget-bgc);
 	--nav-compass-c: var(--weather-api-widget-c);
 	margin: 0 auto;
 	max-width: 300px;

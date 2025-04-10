@@ -11,16 +11,20 @@
 			--weather-api-bg: linear-gradient(180deg, #084380, #7a9fc5);
 			--weather-api-c: #EEE;
 		}
-		.sunset::part(overview) {
-			--weather-api-widget-bg: url("./pexels-pixabay-416024.jpg");
-			--weather-api-widget-bgp: top;
+		.sunset::part(overview-widget) {
+			--weather-api-widget-bgi: url("./pexels-pixabay-416024.jpg");
+			--weather-api-widget-bgc: rgba(0, 0, 0, .4);
+			--weather-api-widget-bdf: blur(6px);
 		}
-		.sunset::part(forecast-hours) {
-			--weather-api-widget-bg: url("./pexels-pixabay-33834.jpg");
-			--weather-api-widget-bgp: center;
+
+		.sunset::part(forecast-hours-widget) {
+			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
+			--weather-api-widget-bgi: url("./pexels-pixabay-33834.jpg");
+
 		}
-		.sunset::part(wind) {
-			--weather-api-widget-bg: url("./pexels-no-name-14543-66997.jpg");
+		.sunset::part(wind-widget) {
+			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
+			--weather-api-widget-bgi: url("./pexels-no-name-14543-66997.jpg");
 			--weather-api-widget-bgp: bottom;
 		}
 
