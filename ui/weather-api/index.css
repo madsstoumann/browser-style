@@ -26,7 +26,7 @@ h2, h3, h4, p {
 
 /* === Widgets === */
 :host::part(widget) {
-	/* align-content: start; */
+	align-content: start;
 	background: var(--weather-api-widget-bg);
 	background-position: var(--weather-api-widget-bgp, center);
 	background-size: var(--weather-api-widget-bgsz, cover);
@@ -75,7 +75,7 @@ h2, h3, h4, p {
 	align-items: center;
 	border-block-end: var(--weather-api-bdw) solid var(--weather-api-bdc);
 	display: flex;
-	font-size: var(--weather-api-title-fs, 120%);
+	font-size: var(--weather-api-title-fs, 100%);
 	font-weight: var(--weather-api-title-fw, 500);
 	gap: .25ch;
 	margin-block-end: calc(var(--weather-api-p) / 2);
