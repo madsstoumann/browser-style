@@ -1,0 +1,1185 @@
+{
+  "location": {
+    "name": "東京都",
+    "region": "東京都",
+    "country": "日本",
+    "lat": 35.6895,
+    "lon": 139.6917,
+    "tz_id": "Asia/Tokyo",
+    "localtime_epoch": 1744354458,
+    "localtime": "2025-04-11 15:54"
+  },
+  "current": {
+    "last_updated_epoch": 1744353900,
+    "last_updated": "2025-04-11 15:45",
+    "temp_c": 20,
+    "temp_f": 68,
+    "is_day": 1,
+    "condition": {
+      "text": "所により曇り",
+      "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+      "code": 1003
+    },
+    "wind_mph": 9.8,
+    "wind_kph": 15.8,
+    "wind_degree": 161,
+    "wind_dir": "SSE",
+    "pressure_mb": 1005,
+    "pressure_in": 29.68,
+    "precip_mm": 0,
+    "precip_in": 0,
+    "humidity": 56,
+    "cloud": 50,
+    "feelslike_c": 20,
+    "feelslike_f": 68,
+    "windchill_c": 19,
+    "windchill_f": 66.3,
+    "heatindex_c": 19,
+    "heatindex_f": 66.3,
+    "dewpoint_c": 10.3,
+    "dewpoint_f": 50.6,
+    "vis_km": 10,
+    "vis_miles": 6,
+    "uv": 1.9,
+    "gust_mph": 11.9,
+    "gust_kph": 19.1
+  },
+  "forecast": {
+    "forecastday": [
+      {
+        "date": "2025-04-11",
+        "date_epoch": 1744329600,
+        "day": {
+          "maxtemp_c": 19.2,
+          "maxtemp_f": 66.5,
+          "mintemp_c": 14.2,
+          "mintemp_f": 57.6,
+          "avgtemp_c": 16.8,
+          "avgtemp_f": 62.2,
+          "maxwind_mph": 13.9,
+          "maxwind_kph": 22.3,
+          "totalprecip_mm": 11.26,
+          "totalprecip_in": 0.44,
+          "totalsnow_cm": 0,
+          "avgvis_km": 9.4,
+          "avgvis_miles": 5,
+          "avghumidity": 65,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 94,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "穏やかな雨",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
+            "code": 1189
+          },
+          "uv": 1.1
+        },
+        "astro": {
+          "sunrise": "05:14 AM",
+          "sunset": "06:11 PM",
+          "moonrise": "04:38 PM",
+          "moonset": "04:16 AM",
+          "moon_phase": "Waxing Gibbous",
+          "moon_illumination": 96,
+          "is_moon_up": 1,
+          "is_sun_up": 0
+        },
+        "hour": [
+          {
+            "time_epoch": 1744297200,
+            "time": "2025-04-11 00:00",
+            "temp_c": 16.7,
+            "temp_f": 62.1,
+            "is_day": 0,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744300800,
+            "time": "2025-04-11 01:00",
+            "temp_c": 16.3,
+            "temp_f": 61.4,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744304400,
+            "time": "2025-04-11 02:00",
+            "temp_c": 16.1,
+            "temp_f": 61,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744308000,
+            "time": "2025-04-11 03:00",
+            "temp_c": 15.5,
+            "temp_f": 59.9,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744311600,
+            "time": "2025-04-11 04:00",
+            "temp_c": 15,
+            "temp_f": 59.1,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.12,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744315200,
+            "time": "2025-04-11 05:00",
+            "temp_c": 14.7,
+            "temp_f": 58.5,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.08,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744318800,
+            "time": "2025-04-11 06:00",
+            "temp_c": 15.7,
+            "temp_f": 60.2,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744322400,
+            "time": "2025-04-11 07:00",
+            "temp_c": 15.8,
+            "temp_f": 60.5,
+            "is_day": 1,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744326000,
+            "time": "2025-04-11 08:00",
+            "temp_c": 16.4,
+            "temp_f": 61.5,
+            "is_day": 1,
+            "condition": {
+              "text": "本曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
+              "code": 1009
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744329600,
+            "time": "2025-04-11 09:00",
+            "temp_c": 17.1,
+            "temp_f": 62.8,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744333200,
+            "time": "2025-04-11 10:00",
+            "temp_c": 18.2,
+            "temp_f": 64.7,
+            "is_day": 1,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744336800,
+            "time": "2025-04-11 11:00",
+            "temp_c": 18.9,
+            "temp_f": 65.9,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744340400,
+            "time": "2025-04-11 12:00",
+            "temp_c": 19.2,
+            "temp_f": 66.5,
+            "is_day": 1,
+            "condition": {
+              "text": "本曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
+              "code": 1009
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744344000,
+            "time": "2025-04-11 13:00",
+            "temp_c": 19.2,
+            "temp_f": 66.5,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744347600,
+            "time": "2025-04-11 14:00",
+            "temp_c": 19.1,
+            "temp_f": 66.4,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744351200,
+            "time": "2025-04-11 15:00",
+            "temp_c": 20,
+            "temp_f": 68,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744354800,
+            "time": "2025-04-11 16:00",
+            "temp_c": 18.6,
+            "temp_f": 65.5,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744358400,
+            "time": "2025-04-11 17:00",
+            "temp_c": 18.1,
+            "temp_f": 64.6,
+            "is_day": 1,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744362000,
+            "time": "2025-04-11 18:00",
+            "temp_c": 17.3,
+            "temp_f": 63.1,
+            "is_day": 1,
+            "condition": {
+              "text": "所により弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/293.png",
+              "code": 1180
+            },
+            "precip_mm": 1.3,
+            "precip_in": 0.05
+          },
+          {
+            "time_epoch": 1744365600,
+            "time": "2025-04-11 19:00",
+            "temp_c": 16.5,
+            "temp_f": 61.8,
+            "is_day": 0,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            },
+            "precip_mm": 2.29,
+            "precip_in": 0.09
+          },
+          {
+            "time_epoch": 1744369200,
+            "time": "2025-04-11 20:00",
+            "temp_c": 15.5,
+            "temp_f": 59.9,
+            "is_day": 0,
+            "condition": {
+              "text": "穏やかなまたは強いにわか雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/356.png",
+              "code": 1243
+            },
+            "precip_mm": 3.12,
+            "precip_in": 0.12
+          },
+          {
+            "time_epoch": 1744372800,
+            "time": "2025-04-11 21:00",
+            "temp_c": 14.8,
+            "temp_f": 58.7,
+            "is_day": 0,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            },
+            "precip_mm": 2.26,
+            "precip_in": 0.09
+          },
+          {
+            "time_epoch": 1744376400,
+            "time": "2025-04-11 22:00",
+            "temp_c": 14.2,
+            "temp_f": 57.6,
+            "is_day": 0,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            },
+            "precip_mm": 1.45,
+            "precip_in": 0.06
+          },
+          {
+            "time_epoch": 1744380000,
+            "time": "2025-04-11 23:00",
+            "temp_c": 14.4,
+            "temp_f": 57.9,
+            "is_day": 0,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.64,
+            "precip_in": 0.03
+          }
+        ]
+      },
+      {
+        "date": "2025-04-12",
+        "date_epoch": 1744416000,
+        "day": {
+          "maxtemp_c": 19.9,
+          "maxtemp_f": 67.8,
+          "mintemp_c": 14,
+          "mintemp_f": 57.2,
+          "avgtemp_c": 16.4,
+          "avgtemp_f": 61.5,
+          "maxwind_mph": 13.4,
+          "maxwind_kph": 21.6,
+          "totalprecip_mm": 0.05,
+          "totalprecip_in": 0,
+          "totalsnow_cm": 0,
+          "avgvis_km": 10,
+          "avgvis_miles": 6,
+          "avghumidity": 60,
+          "daily_will_it_rain": 0,
+          "daily_chance_of_rain": 0,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "所により曇り",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+            "code": 1003
+          },
+          "uv": 1.3
+        },
+        "astro": {
+          "sunrise": "05:13 AM",
+          "sunset": "06:12 PM",
+          "moonrise": "05:36 PM",
+          "moonset": "04:38 AM",
+          "moon_phase": "Waxing Gibbous",
+          "moon_illumination": 99,
+          "is_moon_up": 0,
+          "is_sun_up": 1
+        },
+        "hour": [
+          {
+            "time_epoch": 1744383600,
+            "time": "2025-04-12 00:00",
+            "temp_c": 14.9,
+            "temp_f": 58.8,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.05,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744387200,
+            "time": "2025-04-12 01:00",
+            "temp_c": 14.9,
+            "temp_f": 58.9,
+            "is_day": 0,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744390800,
+            "time": "2025-04-12 02:00",
+            "temp_c": 14.9,
+            "temp_f": 58.8,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744394400,
+            "time": "2025-04-12 03:00",
+            "temp_c": 14.8,
+            "temp_f": 58.6,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744398000,
+            "time": "2025-04-12 04:00",
+            "temp_c": 14.6,
+            "temp_f": 58.2,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744401600,
+            "time": "2025-04-12 05:00",
+            "temp_c": 14.2,
+            "temp_f": 57.6,
+            "is_day": 0,
+            "condition": {
+              "text": "快晴",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744405200,
+            "time": "2025-04-12 06:00",
+            "temp_c": 14,
+            "temp_f": 57.2,
+            "is_day": 1,
+            "condition": {
+              "text": "晴れ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744408800,
+            "time": "2025-04-12 07:00",
+            "temp_c": 14.4,
+            "temp_f": 58,
+            "is_day": 1,
+            "condition": {
+              "text": "晴れ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744412400,
+            "time": "2025-04-12 08:00",
+            "temp_c": 15.3,
+            "temp_f": 59.5,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744416000,
+            "time": "2025-04-12 09:00",
+            "temp_c": 16.2,
+            "temp_f": 61.2,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744419600,
+            "time": "2025-04-12 10:00",
+            "temp_c": 17.2,
+            "temp_f": 63,
+            "is_day": 1,
+            "condition": {
+              "text": "晴れ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744423200,
+            "time": "2025-04-12 11:00",
+            "temp_c": 18,
+            "temp_f": 64.4,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744426800,
+            "time": "2025-04-12 12:00",
+            "temp_c": 18.8,
+            "temp_f": 65.9,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744430400,
+            "time": "2025-04-12 13:00",
+            "temp_c": 19.7,
+            "temp_f": 67.4,
+            "is_day": 1,
+            "condition": {
+              "text": "晴れ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744434000,
+            "time": "2025-04-12 14:00",
+            "temp_c": 19.9,
+            "temp_f": 67.8,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744437600,
+            "time": "2025-04-12 15:00",
+            "temp_c": 19.6,
+            "temp_f": 67.2,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744441200,
+            "time": "2025-04-12 16:00",
+            "temp_c": 19.1,
+            "temp_f": 66.4,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744444800,
+            "time": "2025-04-12 17:00",
+            "temp_c": 18.7,
+            "temp_f": 65.7,
+            "is_day": 1,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744448400,
+            "time": "2025-04-12 18:00",
+            "temp_c": 17.9,
+            "temp_f": 64.2,
+            "is_day": 1,
+            "condition": {
+              "text": "晴れ",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+              "code": 1000
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744452000,
+            "time": "2025-04-12 19:00",
+            "temp_c": 16.7,
+            "temp_f": 62.1,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744455600,
+            "time": "2025-04-12 20:00",
+            "temp_c": 15.7,
+            "temp_f": 60.2,
+            "is_day": 0,
+            "condition": {
+              "text": "所により曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
+              "code": 1003
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744459200,
+            "time": "2025-04-12 21:00",
+            "temp_c": 15.1,
+            "temp_f": 59.1,
+            "is_day": 0,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744462800,
+            "time": "2025-04-12 22:00",
+            "temp_c": 14.7,
+            "temp_f": 58.4,
+            "is_day": 0,
+            "condition": {
+              "text": "曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
+              "code": 1006
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744466400,
+            "time": "2025-04-12 23:00",
+            "temp_c": 14.3,
+            "temp_f": 57.8,
+            "is_day": 0,
+            "condition": {
+              "text": "本曇り",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
+              "code": 1009
+            },
+            "precip_mm": 0,
+            "precip_in": 0
+          }
+        ]
+      },
+      {
+        "date": "2025-04-13",
+        "date_epoch": 1744502400,
+        "day": {
+          "maxtemp_c": 14.7,
+          "maxtemp_f": 58.5,
+          "mintemp_c": 13.5,
+          "mintemp_f": 56.3,
+          "avgtemp_c": 14.3,
+          "avgtemp_f": 57.8,
+          "maxwind_mph": 16.8,
+          "maxwind_kph": 27,
+          "totalprecip_mm": 10.87,
+          "totalprecip_in": 0.43,
+          "totalsnow_cm": 0,
+          "avgvis_km": 7.1,
+          "avgvis_miles": 4,
+          "avghumidity": 80,
+          "daily_will_it_rain": 1,
+          "daily_chance_of_rain": 88,
+          "daily_will_it_snow": 0,
+          "daily_chance_of_snow": 0,
+          "condition": {
+            "text": "穏やかな雨",
+            "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
+            "code": 1189
+          },
+          "uv": 0.4
+        },
+        "astro": {
+          "sunrise": "05:12 AM",
+          "sunset": "06:12 PM",
+          "moonrise": "06:33 PM",
+          "moonset": "05:01 AM",
+          "moon_phase": "Full Moon",
+          "moon_illumination": 100,
+          "is_moon_up": 0,
+          "is_sun_up": 1
+        },
+        "hour": [
+          {
+            "time_epoch": 1744470000,
+            "time": "2025-04-13 00:00",
+            "temp_c": 14.1,
+            "temp_f": 57.4,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.02,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744473600,
+            "time": "2025-04-13 01:00",
+            "temp_c": 13.8,
+            "temp_f": 56.9,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.02,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744477200,
+            "time": "2025-04-13 02:00",
+            "temp_c": 13.7,
+            "temp_f": 56.6,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744480800,
+            "time": "2025-04-13 03:00",
+            "temp_c": 13.5,
+            "temp_f": 56.3,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744484400,
+            "time": "2025-04-13 04:00",
+            "temp_c": 13.6,
+            "temp_f": 56.5,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744488000,
+            "time": "2025-04-13 05:00",
+            "temp_c": 13.6,
+            "temp_f": 56.5,
+            "is_day": 0,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.03,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744491600,
+            "time": "2025-04-13 06:00",
+            "temp_c": 13.6,
+            "temp_f": 56.4,
+            "is_day": 1,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744495200,
+            "time": "2025-04-13 07:00",
+            "temp_c": 13.9,
+            "temp_f": 57,
+            "is_day": 1,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744498800,
+            "time": "2025-04-13 08:00",
+            "temp_c": 14.4,
+            "temp_f": 57.9,
+            "is_day": 1,
+            "condition": {
+              "text": "近くで所により雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
+              "code": 1063
+            },
+            "precip_mm": 0.01,
+            "precip_in": 0
+          },
+          {
+            "time_epoch": 1744502400,
+            "time": "2025-04-13 09:00",
+            "temp_c": 14.6,
+            "temp_f": 58.2,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.18,
+            "precip_in": 0.01
+          },
+          {
+            "time_epoch": 1744506000,
+            "time": "2025-04-13 10:00",
+            "temp_c": 14.7,
+            "temp_f": 58.5,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.23,
+            "precip_in": 0.01
+          },
+          {
+            "time_epoch": 1744509600,
+            "time": "2025-04-13 11:00",
+            "temp_c": 14.6,
+            "temp_f": 58.4,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.36,
+            "precip_in": 0.01
+          },
+          {
+            "time_epoch": 1744513200,
+            "time": "2025-04-13 12:00",
+            "temp_c": 14.6,
+            "temp_f": 58.3,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.69,
+            "precip_in": 0.03
+          },
+          {
+            "time_epoch": 1744516800,
+            "time": "2025-04-13 13:00",
+            "temp_c": 14.6,
+            "temp_f": 58.3,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.53,
+            "precip_in": 0.02
+          },
+          {
+            "time_epoch": 1744520400,
+            "time": "2025-04-13 14:00",
+            "temp_c": 14.7,
+            "temp_f": 58.4,
+            "is_day": 1,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            },
+            "precip_mm": 0.9,
+            "precip_in": 0.04
+          },
+          {
+            "time_epoch": 1744524000,
+            "time": "2025-04-13 15:00",
+            "temp_c": 14.6,
+            "temp_f": 58.3,
+            "is_day": 1,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            },
+            "precip_mm": 0.87,
+            "precip_in": 0.03
+          },
+          {
+            "time_epoch": 1744527600,
+            "time": "2025-04-13 16:00",
+            "temp_c": 14.6,
+            "temp_f": 58.3,
+            "is_day": 1,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.58,
+            "precip_in": 0.02
+          },
+          {
+            "time_epoch": 1744531200,
+            "time": "2025-04-13 17:00",
+            "temp_c": 14.4,
+            "temp_f": 57.9,
+            "is_day": 1,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            },
+            "precip_mm": 1.41,
+            "precip_in": 0.06
+          },
+          {
+            "time_epoch": 1744534800,
+            "time": "2025-04-13 18:00",
+            "temp_c": 14.3,
+            "temp_f": 57.8,
+            "is_day": 1,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
+              "code": 1183
+            },
+            "precip_mm": 1.28,
+            "precip_in": 0.05
+          },
+          {
+            "time_epoch": 1744538400,
+            "time": "2025-04-13 19:00",
+            "temp_c": 14.5,
+            "temp_f": 58.1,
+            "is_day": 0,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            },
+            "precip_mm": 1.5,
+            "precip_in": 0.06
+          },
+          {
+            "time_epoch": 1744542000,
+            "time": "2025-04-13 20:00",
+            "temp_c": 14.6,
+            "temp_f": 58.2,
+            "is_day": 0,
+            "condition": {
+              "text": "軽いにわか雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/353.png",
+              "code": 1240
+            },
+            "precip_mm": 0.42,
+            "precip_in": 0.02
+          },
+          {
+            "time_epoch": 1744545600,
+            "time": "2025-04-13 21:00",
+            "temp_c": 15.1,
+            "temp_f": 59.2,
+            "is_day": 0,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.31,
+            "precip_in": 0.01
+          },
+          {
+            "time_epoch": 1744549200,
+            "time": "2025-04-13 22:00",
+            "temp_c": 14.8,
+            "temp_f": 58.7,
+            "is_day": 0,
+            "condition": {
+              "text": "霧雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/266.png",
+              "code": 1153
+            },
+            "precip_mm": 0.62,
+            "precip_in": 0.02
+          },
+          {
+            "time_epoch": 1744552800,
+            "time": "2025-04-13 23:00",
+            "temp_c": 14.9,
+            "temp_f": 58.9,
+            "is_day": 0,
+            "condition": {
+              "text": "弱い雨",
+              "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
+              "code": 1183
+            },
+            "precip_mm": 0.87,
+            "precip_in": 0.03
+          }
+        ]
+      }
+    ]
+  }
+}

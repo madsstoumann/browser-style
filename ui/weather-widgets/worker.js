@@ -1,5 +1,5 @@
 // Toggle this to true to disable domain validation while testing in Cloudflare worker panel
-const DISABLE_DOMAIN_VALIDATION = false;
+const DISABLE_DOMAIN_VALIDATION = true;
 
 // Configuration of allowed domains for origin validation
 const ALLOWED_DOMAINS = [
@@ -22,7 +22,7 @@ const filterWeatherData = (data) => {
   // Properties to remove from hourly forecast
   const hourlyPropsToRemove = [
     'wind_mph', 'wind_kph', 'wind_degree', 'wind_dir',
-    'pressure_mb', 'pressure_in', 'precip_mm', 'precip_in',
+    'pressure_mb', 'pressure_in',
     'snow_cm', 'humidity', 'cloud', 'feelslike_c', 'feelslike_f',
     'windchill_c', 'windchill_f', 'heatindex_c', 'heatindex_f',
     'dewpoint_c', 'dewpoint_f', 'will_it_rain', 'chance_of_rain',
@@ -159,33 +159,49 @@ async function enhanceWithOSMData(weatherData, lang, q, env, ctx) {
 
         // If we found a matching record, store it in cache without expiry
         if (cityRecord && cityRecord.address && env.OSM_CACHE) {
-          // Store only the necessary address data to save storage space
+          // Store the necessary data to save storage space, including the localized name
           const locationData = {
+            name: cityRecord.name,
             address: {
               city: cityRecord.address.city,
+              province: cityRecord.address.province,
               state: cityRecord.address.state,
               country: cityRecord.address.country
             }
           };
 
-          // Cache the OSM data without expiration (or use a very long expiration like 365 days)
+          // Cache the OSM data without expiration
           ctx.waitUntil(env.OSM_CACHE.put(cacheKey, JSON.stringify(locationData)));
         }
       }
     }
 
     // Enhance weather data with the city record (cached or fresh)
-    if (cityRecord && cityRecord.address) {
-      if (cityRecord.address.city) {
-        weatherData.location.name = cityRecord.address.city;
+    if (cityRecord) {
+      // Use the localized name directly from OSM data first
+      if (cityRecord.name) {
+        weatherData.location.name = cityRecord.name;
       }
       
-      if (cityRecord.address.state) {
-        weatherData.location.region = cityRecord.address.state;
-      }
-      
-      if (cityRecord.address.country) {
-        weatherData.location.country = cityRecord.address.country;
+      if (cityRecord.address) {
+        // If name wasn't set and we have address.city, use that
+        if (!weatherData.location.name && cityRecord.address.city) {
+          weatherData.location.name = cityRecord.address.city;
+        }
+        // If name wasn't set and we have address.province, use that
+        else if (!weatherData.location.name && cityRecord.address.province) {
+          weatherData.location.name = cityRecord.address.province;
+        }
+        
+        // Update region
+        if (cityRecord.address.state || cityRecord.address.province) {
+          weatherData.location.region = cityRecord.address.state || cityRecord.address.province;
+        }
+        
+        // Update country
+        if (cityRecord.address.country) {
+          weatherData.location.country = cityRecord.address.country;
+        }
       }
     }
   } catch (osmError) {

@@ -58,37 +58,19 @@
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Weather</h2>
-	<p>Using <a href="https://weatherapi.com">WeatherAPI</a> to get weather data.</p>
-
-	<!-- <h3>Proxy Mode (Default)</h3> -->
+	<h2>Weather Widgets</h2>
+	<p>Weather Widgets are a bunch of widgets, using <a href="https://weatherapi.com" target="_blank">WeatherAPI</a> to display various parts of weather data. Note that the example do not use live data, but a static json-file.</p>
+	<p>Safari <a href="https://www2.webkit.org/show_bug.cgi?id=267793" target="_blank">does not support</a> <code>container-name</code> in the shadowDOM.</p>
 	<!-- <weather-widgets 
-		class="bento"
-		widgets="overview forecast-hours forecast-days wind pressure uv visibility humidity precipitation-sm precipitation-lg temperature-lg moonphase sunset"
-		lang="en-US"
-		url="https://weatherapi.stoumann.workers.dev?api=weather&days=3&endpoint=forecast&q=copenhagen&lang=en">
-	</weather-widgets> -->
-<!-- 
-	<h3>Proxy Mode with Forecast</h3>
-	<weather-widgets 
-		city="Yaiza" 
-		units="metric"
-		mode="proxy"
-		endpoint="forecast"
-		widgets="forecast"
-		url="https://api.stoumann.workers.dev/">
+		widgets="overview"
+		url="https://weatherapi.stoumann.workers.dev?days=3&endpoint=forecast&q=tokyo&lang=ja">
 	</weather-widgets> -->
 
-	<!-- <h3>Direct API Mode</h3> -->
-	<!-- <weather-widgets
-		mode="direct"
-		city="london"
-		url-template="https://api.weatherapi.com/v1/current.json?q={city}&key={apiKey}"
-		api-key="your-api-key-here"
-		widgets="micro">
+	<!-- <weather-widgets 
+		widgets="overview"
+		url="./response.ja.json">
 	</weather-widgets> -->
 
-	<!-- <h3>Local Mode (for testing/development)</h3> -->
 	<weather-widgets
 		class="bento"
 		widgets="overview forecast-hours forecast-days precipitation temperature wind pressure feels-like uv visibility humidity  moonphase sunphase"
@@ -96,18 +78,11 @@
 		units="metric"
 		url="./current.response.json">
 	</weather-widgets>
-<!--   wind pressure uv visibility humidity precipitation-sm precipitation-lg temperature-lg moonphase sunset -->
-	<!-- <h3>With Danish Language</h3>
-	<weather-widgets
-		mode="local"
-		city="london"
-		lang="da"
-		url="./response.json">
-	</weather-widgets> -->
 
 	<script type="module" src="./index.js"></script>
+
+	<!--
 	<script>
-		// Example of setting custom Danish translations using whenDefined
 		customElements.whenDefined('weather-api').then(() => {
 			const weatherAppDa = document.querySelector('weather-api[lang="da-DK"]');
 			if (weatherAppDa) {
@@ -128,5 +103,6 @@
 			}
 		});
 	</script>
+	-->
 </body>
 </html>
