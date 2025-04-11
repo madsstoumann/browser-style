@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>UI: Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="./index.css">
+
+	<style>
+		body {
+			max-inline-size: 1200px;
+		}
+		content-area > * {
+			background: var(--bg, lightgray);
+			max-inline-size: 100%;
+			min-block-size: 14rem;
+			&:nth-of-type(1) { --bg: cornflowerblue; }
+			&:nth-of-type(2) { --bg: lightcoral; }
+			&:nth-of-type(3) { --bg: lightgreen; }
+			&:nth-of-type(4) { --bg: lightpink; }
+			&:nth-of-type(5) { --bg: lightyellow; }
+			&:nth-of-type(6) { --bg: lightgray; }
+			&:nth-of-type(7) { --bg: lightblue; }
+			&:nth-of-type(8) { --bg: lightcyan; }
+			&:nth-of-type(9) { --bg: lightgoldenrodyellow; }
+			&:nth-of-type(10) { --bg: lightgray; }
+		}
+
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Content Area</h2>
+
+	<h3>100</h3>
+	<content-area layout="100">
+		<div>1</div>
+	</content-area>
+
+	<h2>2 items</h2>
+
+	<h3>50:50</h3>
+	<content-area layout="50:50">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>25:75</h3>
+	<content-area layout="25:75">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>75:25</h3>
+	<content-area layout="75:25">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>33:66</h3>
+	<content-area layout="33:66">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>66:33</h3>
+	<content-area layout="66:33">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>60:40</h3>
+	<content-area layout="60:40">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>40:60</h3>
+	<content-area layout="40:60">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>asym-tb</h3>
+	<content-area layout="asym-tb">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>asym-lr</h3>
+	<content-area layout="asym-lr">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h3>asym-rl</h3>
+	<content-area layout="asym-rl">
+		<div>1</div>
+		<div>2</div>
+	</content-area>
+
+	<h2>3 items</h2>
+
+	<h3>33:33:33</h3>
+	<content-area layout="33:33:33">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+
+	<h3>25:25:50</h3>
+	<content-area layout="25:25:50">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+
+	<h3>50:25:25</h3>
+	<content-area layout="50:25:25">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+
+	<h3>25:50:25</h3>
+	<content-area layout="25:50:25">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+
+	<h3>50:50:100</h3>
+	<content-area layout="50:50:100">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+
+	<h3>1l_2sq</h3>
+	<content-area layout="1l_2sq">
+		<div>1</div>
+		<div>2</div>
+		<div>3</div>
+	</content-area>
+</body>
+</html>

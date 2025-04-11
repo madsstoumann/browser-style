@@ -94,6 +94,7 @@
             "is_day": 0,
             "precip_mm": 3.2,
             "precip_in": 0.13,
+            "wind_degree": 31,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -108,6 +109,7 @@
             "is_day": 0,
             "precip_mm": 4.5,
             "precip_in": 0.18,
+            "wind_degree": 33,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -122,6 +124,7 @@
             "is_day": 0,
             "precip_mm": 3.8,
             "precip_in": 0.15,
+            "wind_degree": 35,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -136,6 +139,7 @@
             "is_day": 0,
             "precip_mm": 2.7,
             "precip_in": 0.11,
+            "wind_degree": 30,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -150,6 +154,7 @@
             "is_day": 0,
             "precip_mm": 1.9,
             "precip_in": 0.07,
+            "wind_degree": 28,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -164,6 +169,7 @@
             "is_day": 0,
             "precip_mm": 1.5,
             "precip_in": 0.06,
+            "wind_degree": 30,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -178,6 +184,7 @@
             "is_day": 0,
             "precip_mm": 0.8,
             "precip_in": 0.03,
+            "wind_degree": 32,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -192,6 +199,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 31,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -206,6 +214,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 30,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -220,6 +229,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 32,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -234,6 +244,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 34,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -248,6 +259,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 35,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -262,6 +274,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 36,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -276,6 +289,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 31,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -290,6 +304,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 29,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -304,6 +319,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 28,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -318,6 +334,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 30,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -332,6 +349,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 32,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -346,6 +364,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 35,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -360,6 +379,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 38,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -374,6 +394,7 @@
             "is_day": 0,
             "precip_mm": 1.2,
             "precip_in": 0.05,
+            "wind_degree": 40,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -388,6 +409,7 @@
             "is_day": 0,
             "precip_mm": 2.3,
             "precip_in": 0.09,
+            "wind_degree": 42,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -402,6 +424,7 @@
             "is_day": 0,
             "precip_mm": 3.0,
             "precip_in": 0.12,
+            "wind_degree": 45,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -416,6 +439,7 @@
             "is_day": 0,
             "precip_mm": 2.5,
             "precip_in": 0.1,
+            "wind_degree": 48,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -472,6 +496,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 50,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -486,6 +511,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 52,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -500,6 +526,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 54,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -514,6 +541,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 56,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -528,6 +556,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 58,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -542,6 +571,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 60,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -556,6 +586,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 62,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -570,6 +601,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 64,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -584,6 +616,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 66,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -598,6 +631,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 68,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -612,6 +646,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 70,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -626,6 +661,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 72,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -640,6 +676,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 74,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -654,6 +691,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 76,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -668,6 +706,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 78,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -682,6 +721,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 80,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -696,6 +736,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 82,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -710,6 +751,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 84,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -724,6 +766,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 86,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -738,6 +781,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 88,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -752,6 +796,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 90,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -766,6 +811,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 92,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -780,6 +826,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 94,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -794,6 +841,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 96,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -850,6 +898,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 98,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -864,6 +913,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 100,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -878,6 +928,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 102,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -892,6 +943,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 104,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -906,6 +958,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 106,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -920,6 +973,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 108,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -934,6 +988,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 110,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -948,6 +1003,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 112,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -962,6 +1018,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 114,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -976,6 +1033,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 116,
             "condition": {
               "text": "Partly Cloudy ",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -990,6 +1048,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 118,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1004,6 +1063,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 120,
             "condition": {
               "text": "Partly Cloudy ",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1018,6 +1078,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 122,
             "condition": {
               "text": "Cloudy ",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
@@ -1032,6 +1093,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 124,
             "condition": {
               "text": "Partly Cloudy ",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1046,6 +1108,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 126,
             "condition": {
               "text": "Partly Cloudy ",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1060,6 +1123,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 128,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1074,6 +1138,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 130,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1088,6 +1153,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 132,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1102,6 +1168,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 134,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1116,6 +1183,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 136,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -1130,6 +1198,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 138,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1144,6 +1213,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 140,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1158,6 +1228,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 142,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1172,6 +1243,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 144,
             "condition": {
               "text": "Clear ",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1228,6 +1300,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 146,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1242,6 +1315,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 148,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1256,6 +1330,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 150,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1270,6 +1345,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 152,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -1284,6 +1360,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 154,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1298,6 +1375,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 156,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1312,6 +1390,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 158,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1326,6 +1405,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 160,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1340,6 +1420,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 162,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1354,6 +1435,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 164,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1368,6 +1450,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 166,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1382,6 +1465,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 168,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1396,6 +1480,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 170,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1410,6 +1495,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 172,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
@@ -1424,6 +1510,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 174,
             "condition": {
               "text": "Light rain shower",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
@@ -1438,6 +1525,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 176,
             "condition": {
               "text": "Light rain shower",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
@@ -1452,6 +1540,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 178,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/119.png",
@@ -1466,6 +1555,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 180,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1480,6 +1570,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 182,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1494,6 +1585,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 184,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -1508,6 +1600,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 186,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1522,6 +1615,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 188,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1536,6 +1630,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 190,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1550,6 +1645,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 192,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/116.png",
@@ -1606,6 +1702,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 194,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
@@ -1620,6 +1717,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 196,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
@@ -1634,6 +1732,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 198,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1648,6 +1747,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 200,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1662,6 +1762,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 202,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1676,6 +1777,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 204,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1690,6 +1792,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 206,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1704,6 +1807,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 208,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1718,6 +1822,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 210,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1732,6 +1837,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 212,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1746,6 +1852,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 214,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1760,6 +1867,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 216,
             "condition": {
               "text": "Moderate rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
@@ -1774,6 +1882,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 218,
             "condition": {
               "text": "Moderate rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
@@ -1788,6 +1897,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 220,
             "condition": {
               "text": "Moderate rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/302.png",
@@ -1802,6 +1912,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 222,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1816,6 +1927,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 224,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1830,6 +1942,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 226,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1844,6 +1957,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 228,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1858,6 +1972,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 230,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1872,6 +1987,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 232,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/296.png",
@@ -1886,6 +2002,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 234,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1900,6 +2017,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 236,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1914,6 +2032,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 238,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1928,6 +2047,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 240,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1984,6 +2104,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 242,
             "condition": {
               "text": "Light rain",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/296.png",
@@ -1998,6 +2119,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 244,
             "condition": {
               "text": "Light drizzle",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
@@ -2012,6 +2134,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 246,
             "condition": {
               "text": "Light drizzle",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
@@ -2026,6 +2149,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 248,
             "condition": {
               "text": "Light drizzle",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/263.png",
@@ -2040,6 +2164,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 250,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
@@ -2054,6 +2179,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 252,
             "condition": {
               "text": "Cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/119.png",
@@ -2068,6 +2194,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 254,
             "condition": {
               "text": "Overcast",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/122.png",
@@ -2082,6 +2209,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 256,
             "condition": {
               "text": "Overcast",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
@@ -2096,6 +2224,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 258,
             "condition": {
               "text": "Overcast",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/122.png",
@@ -2110,6 +2239,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 260,
             "condition": {
               "text": "Light rain shower",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/353.png",
@@ -2124,6 +2254,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 262,
             "condition": {
               "text": "Patchy rain possible",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
@@ -2138,6 +2269,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 264,
             "condition": {
               "text": "Patchy rain possible",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/176.png",
@@ -2152,6 +2284,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 266,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -2166,6 +2299,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 268,
             "condition": {
               "text": "Partly cloudy",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/116.png",
@@ -2180,6 +2314,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 270,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2194,6 +2329,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 272,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2208,6 +2344,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 274,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2222,6 +2359,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 276,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2236,6 +2374,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 278,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2250,6 +2389,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 280,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2264,6 +2404,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 282,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2278,6 +2419,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 284,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2292,6 +2434,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 286,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2306,6 +2449,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 288,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2362,6 +2506,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 290,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2376,6 +2521,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 292,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2390,6 +2536,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 294,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2404,6 +2551,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 296,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2418,6 +2566,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 298,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2432,6 +2581,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 300,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2446,6 +2596,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 302,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2460,6 +2611,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 304,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2474,6 +2626,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 306,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2488,6 +2641,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 308,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2502,6 +2656,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 310,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2516,6 +2671,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 312,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2530,6 +2686,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 314,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2544,6 +2701,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 316,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2558,6 +2716,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 318,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2572,6 +2731,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 320,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2586,6 +2746,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 322,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2600,6 +2761,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 324,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2614,6 +2776,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 326,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2628,6 +2791,7 @@
             "is_day": 1,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 328,
             "condition": {
               "text": "Sunny",
               "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
@@ -2642,6 +2806,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 330,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2656,6 +2821,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 332,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2670,6 +2836,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 334,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",
@@ -2684,6 +2851,7 @@
             "is_day": 0,
             "precip_mm": 0,
             "precip_in": 0,
+            "wind_degree": 336,
             "condition": {
               "text": "Clear",
               "icon": "//cdn.weatherapi.com/weather/64x64/night/113.png",

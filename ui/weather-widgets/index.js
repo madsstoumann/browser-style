@@ -49,15 +49,15 @@ const i18n = {
 };
 
 const ICONS = {
-	calendarWeek: 'M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z, M16 3v4, M8 3v4, M4 11h16, M7 14h.013, M10.01 14h.005, M13.01 14h.005, M16.015 14h.005, M13.015 17h.005, M7.01 17h.005, M10.01 17h.005',
+	arrowup: 'M12 5l0 14, M18 11l-6 -6, M6 11l6 -6',
+	calendar: 'M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z, M16 3v4, M8 3v4, M4 11h16, M7 14h.013, M10.01 14h.005, M13.01 14h.005, M16.015 14h.005, M13.015 17h.005, M7.01 17h.005, M10.01 17h.005',
 	clock: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12h3.5, M12 7v5',
 	eye: 'M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0, M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6',
 	gauge: 'M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0, M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0, M13.41 10.59l2.59 -2.59, M7 12a5 5 0 0 1 5 -5',
 	moon: 'M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z',
 	precipitation: 'M10.708 2.372a2.382 2.382 0 0 0 -.71 .686l-4.892 7.26c-1.981 3.314 -1.22 7.466 1.767 9.882c2.969 2.402 7.286 2.402 10.254 0c2.987 -2.416 3.748 -6.569 1.795 -9.836l-4.919 -7.306c-.722 -1.075 -2.192 -1.376 -3.295 -.686z',
 	ripple: 'M3 7c3 -2 6 -2 9 0s6 2 9 0, M3 17c3 -2 6 -2 9 0s6 2 9 0, M3 12c3 -2 6 -2 9 0s6 2 9 0',
-	sun: 'M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z, M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l.7 -.7a1 1 0 0 1 1.414 0z, M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z, M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l-.7 -.7a1 1 0 0 1 1.414 0z, M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z',
-	sunrise: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M12 12a5 5 0 0 1 5 5a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1a5 5 0 0 1 5 -5, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12.707 2.293l3 3a1 1 0 1 1 -1.414 1.414l-1.293 -1.292v3.585a1 1 0 0 1 -.883 .993l-.117 .007a1 1 0 0 1 -1 -1v-3.586l-1.293 1.293a1 1 0 0 1 -1.414 -1.414l2.958 -2.96a1 1 0 0 1 .15 -.135l.127 -.08l.068 -.033l.11 -.041l.12 -.029c.3 -.055 .627 .024 .881 .278, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
+	sun: 'M12 19a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M18.313 16.91l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.218 -1.567l.102 .07z, M7.007 16.993a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l-.7 -.7a1 1 0 0 1 1.414 0z, M4 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M21 11a1 1 0 0 1 .117 1.993l-.117 .007h-1a1 1 0 0 1 -.117 -1.993l.117 -.007h1z, M6.213 4.81l.094 .083l.7 .7a1 1 0 0 1 -1.32 1.497l-.094 -.083l-.7 -.7a1 1 0 0 1 1.217 -1.567l.102 .07z, M19.107 4.893a1 1 0 0 1 .083 1.32l-.083 .094l-.7 .7a1 1 0 0 1 -1.497 -1.32l.083 -.094l-.7 -.7a1 1 0 0 1 1.414 0z, M12 2a1 1 0 0 1 .993 .883l.007 .117v1a1 1 0 0 1 -1.993 .117l-.007 -.117v-1a1 1 0 0 1 1 -1z, M12 7a5 5 0 1 1 -4.995 5.217l-.005 -.217l.005 -.217a5 5 0 0 1 4.995 -4.783z',
 	sunset: 'M4 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M21 16a1 1 0 0 1 0 2h-1a1 1 0 0 1 0 -2z, M6.307 9.893l.7 .7a1 1 0 0 1 -1.414 1.414l-.7 -.7a1 1 0 0 1 1.414 -1.414, M19.107 9.893a1 1 0 0 1 0 1.414l-.7 .7a1 1 0 0 1 -1.414 -1.414l.7 -.7a1 1 0 0 1 1.414 0, M12 2a1 1 0 0 1 1 1v3.584l1.293 -1.291a1 1 0 0 1 1.32 -.083l.094 .083a1 1 0 0 1 0 1.414l-3 3a.98 .98 0 0 1 -.767 .293l-.124 -.017l-.127 -.032l-.104 -.04l-.115 -.063a1 1 0 0 1 -.151 -.114l-3.026 -3.027a1 1 0 0 1 1.414 -1.414l1.293 1.292v-3.585a1 1 0 0 1 1 -1, M3 20h18a1 1 0 0 1 0 2h-18a1 1 0 0 1 0 -2, M12 12a5 5 0 0 1 4.583 7.002h-9.166a5 5 0 0 1 4.583 -7.002',
 	temperature: 'M10 13.5a4 4 0 1 0 4 0v-8.5a2 2 0 0 0 -4 0v8.5, M10 9l4 0',
 	wind: 'M5 8h8.5a2.5 2.5 0 1 0 -2.34 -3.24, M3 12h15.5a2.5 2.5 0 1 1 -2.34 3.24, M4 16h5.5a2.5 2.5 0 1 1 -2.34 3.24'
@@ -193,6 +193,21 @@ class WeatherWidgets extends HTMLElement {
 	}
 
 	/**
+	 * Converts wind speed to the appropriate unit based on the system
+	 * @private
+	 * @param {number} speed - Wind speed in kph (metric) or mph (imperial)
+	 * @returns {string} Formatted wind speed in m/s or mph
+	 */
+	#formatWindSpeed(speed) {
+		if (this.#metric) {
+			// Convert kph to m/s (divide by 3.6)
+			return (speed / 3.6).toFixed(1);
+		} else {
+			return speed;
+		}
+	}
+
+	/**
  * Prepares data array for graph rendering
  * @private
  * @param {Object} location - Location object containing localtime
@@ -281,11 +296,11 @@ class WeatherWidgets extends HTMLElement {
 		</weather-widget>`;
 	}
 
- 	#renderForecastDays(forecast) {
+ 	#renderForecastDays(forecast) { console.log(forecast);
 		return `
 		<weather-widget part="forecast-days-widget">
 			<div part="forecast-days widget">
-				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendarWeek, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
+				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendar, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
 				<ul part="forecast-days-list">
 					${forecast.map(day => {
 						const dayTemp = this.#metric ? day.day.maxtemp_c : day.day.maxtemp_f;
@@ -294,12 +309,20 @@ class WeatherWidgets extends HTMLElement {
 						const dayName = this.#formatDate(date, { weekday: 'short' });
 						const shortDate = this.#formatDate(date, { day: 'numeric', month: 'numeric' });
 						
+						// Get wind speed and convert to appropriate units
+						const windSpeed = this.#formatWindSpeed(this.#metric ? day.day.maxwind_kph : day.day.maxwind_mph);
+						
+						const windDegree = day.hour.length ? 
+							day.hour.reduce((sum, hour) => sum + hour.wind_degree, 0) / day.hour.length : 
+							0;
+						
 						return `
 							<li part="forecast-day" title="${day.day.condition.text}">
 								<strong part="forecast-day-name" title="${shortDate}">${dayName}</strong>
 								<img part="forecast-day-icon condition-icon" src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
 								<span part="forecast-day-night-temp light-text">${nightTemp}${this.#units.temperature}</span>
 								<span part="forecast-day-temp">${dayTemp}${this.#units.temperature}</span>
+								<span part="forecast-day-wind" style="--_r:${windDegree}deg;">${this.#icon(ICONS.arrowup, 'icon-lg')}${windSpeed}</span>
 							</li>
 						`;
 					}).join('') || ''}
@@ -460,7 +483,7 @@ class WeatherWidgets extends HTMLElement {
 				<ul part="overview-list light-text">
 					<li>${this.#t('precipitation')}: ${this.#metric ? current.precip_mm : current.precip_in}${this.#units.presipitation}</li>
 					<li>${this.#t('humidity')}: ${current.humidity}%</li>
-					<li>${this.#t('wind')}: ${this.#metric ? (current.wind_kph / 3.6).toFixed(1) : current.wind_mph} ${this.#units.wind}</li>
+					<li>${this.#t('wind')}: ${this.#formatWindSpeed(this.#metric ? current.wind_kph : current.wind_mph)} ${this.#units.wind}</li>
 				</ul>
 				<img part="condition-icon" src="https:${current.condition.icon}" alt="${current.condition.text}">
 				<h4 part="header-md">${current.condition.text}</h4>
@@ -583,19 +606,20 @@ class WeatherWidgets extends HTMLElement {
 	}
 
 	#renderWind(current) {
-		const gusts = this.#metric ? current.gust_kph : current.gust_mph;
-		const wind = this.#metric ? current.wind_kph : current.wind_mph;
+		const windSpeed = this.#formatWindSpeed(this.#metric ? current.wind_kph : current.wind_mph);
+		const gustSpeed = this.#formatWindSpeed(this.#metric ? current.gust_kph : current.gust_mph);
+		
 		return `
 		<weather-widget part="wind-widget">
 			<div part="wind widget">
 				<h4 part="title wind-title">${this.#icon(ICONS.wind, 'icon wind-icon')}${this.#t('wind')}</h4>
 				<div part="wind-wrapper">
 					<ul part="list">
-						<li part="list-item"><strong part="list-item-key">${this.#t('wind')}</strong><span part="list-item-value">${wind} ${this.#units.wind}</span></li>
-						<li part="list-item"><strong part="list-item-key">${this.#t('gusts')}</strong><span part="list-item-value">${gusts} ${this.#units.wind}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('wind')}</strong><span part="list-item-value">${windSpeed} ${this.#units.wind}</span></li>
+						<li part="list-item"><strong part="list-item-key">${this.#t('gusts')}</strong><span part="list-item-value">${gustSpeed} ${this.#units.wind}</span></li>
 						<li part="list-item"><strong part="list-item-key">${this.#t('direction')}</strong><span part="list-item-value">${current.wind_degree}°${current.wind_dir}</span></li>
 					</ul>
-					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${wind}" label="${this.#units.wind}" mode="bearing"></nav-compass>
+					<nav-compass degree="${current.wind_degree}" lang="${this._lang}" value="${windSpeed}" label="${this.#units.wind}" mode="bearing"></nav-compass>
 				</div>
 			</div>
 		</weather-widget>`;

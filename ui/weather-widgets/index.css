@@ -50,6 +50,15 @@ weather-widget {
 	stroke-width: 1.25;
 	width: 1.25em;
 }
+:host::part(icon-lg) {
+	fill: none;
+	height: 3em;
+	pointer-events: none;
+	rotate: var(--_r, 0deg);
+	stroke: currentColor;
+	stroke-width: 1.5;
+	width: 3em;
+}
 :host::part(list) {
 	all: unset;
 	align-self: center;
@@ -138,6 +147,9 @@ weather-widget {
 :host::part(forecast-day-night-temp) {
 	text-align: end;
 }
+:host::part(forecast-day-wind) {
+	display: none;
+}
 [part~=forecast-days-list] li:first-of-type {
 	border: 0;
 }
@@ -153,6 +165,13 @@ weather-widget {
 		grid-column: unset;
 		justify-items: center;
 		row-gap: var(--weather-api-widget-rg, .5ch);
+	}
+	:host::part(forecast-day-temp) {
+		font-size: 150%;
+	}
+	:host::part(forecast-day-wind) {
+		align-items: center;
+		display: flex;
 	}
 }
 
