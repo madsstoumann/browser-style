@@ -7,27 +7,6 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<link rel="stylesheet" href="/base.css">
 	<style>
-		.apple {
-			--weather-api-bg: linear-gradient(180deg, #084380, #7a9fc5);
-			--weather-api-c: #EEE;
-		}
-		.sunset::part(overview-widget) {
-			--weather-api-widget-bgi: url("./pexels-pixabay-416024.jpg");
-			--weather-api-widget-bgc: rgba(0, 0, 0, .4);
-			--weather-api-widget-bdf: blur(6px);
-		}
-
-		.sunset::part(forecast-hours-widget) {
-			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
-			--weather-api-widget-bgi: url("./pexels-pixabay-33834.jpg");
-
-		}
-		.sunset::part(wind-widget) {
-			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
-			--weather-api-widget-bgi: url("./pexels-no-name-14543-66997.jpg");
-			--weather-api-widget-bgp: bottom;
-		}
-
 		.bento {
 			grid-template-columns: 1fr 1fr;
 			&::part(overview-widget) { grid-column: 1 / 3; }
@@ -53,6 +32,21 @@
 				&::part(sunphase-widget) { grid-column: 3 / 5; }
 			}
 		}
+
+		.copenhagen::part(overview-widget) {
+			--weather-api-widget-bgi: url("./assets/pexels-pixabay-416024.jpg");
+			--weather-api-widget-bgc: rgba(0, 0, 0, .4);
+			--weather-api-widget-bdf: blur(6px);
+		}
+		.copenhagen::part(forecast-hours-widget) {
+			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
+			--weather-api-widget-bgi: url("./assets/pexels-pixabay-33834.jpg");
+		}
+		.copenhagen::part(temperature-widget) {
+			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
+			--weather-api-widget-bgi: url("./assets/pexels-no-name-14543-66997.jpg");
+			--weather-api-widget-bgp: top;
+		}
 	</style>
 </head>
 <body>
@@ -61,25 +55,37 @@
 	<h2>Weather Widgets</h2>
 	<p>Weather Widgets are a bunch of widgets, using <a href="https://weatherapi.com" target="_blank">WeatherAPI</a> to display various parts of weather data. Note that the example do not use live data, but a static json-file.</p>
 	<p>Safari <a href="https://www2.webkit.org/show_bug.cgi?id=267793" target="_blank">does not support</a> <code>container-name</code> in the shadowDOM.</p>
-	<!-- <weather-widgets 
-		widgets="overview"
-		url="https://weatherapi.stoumann.workers.dev?days=3&endpoint=forecast&q=tokyo&lang=ja">
-	</weather-widgets> -->
 
-	<!-- <weather-widgets 
-		widgets="overview"
-		url="./response.ja.json">
-	</weather-widgets> -->
 
 	<weather-widgets
 		class="bento"
 		widgets="overview forecast-hours forecast-days precipitation temperature wind pressure feels-like uv visibility humidity  moonphase sunphase"
 		lang="en-US"
 		units="metric"
-		url="./current.response.json">
+		url="./data/response.en.json">
+	</weather-widgets>
+
+	<h3>With localized city</h3>
+	<weather-widgets 
+		widgets="overview"
+		url="./data/response.ja.json">
+	</weather-widgets>
+
+	<h3>Custom style</h3>
+	<weather-widgets
+		class="copenhagen"
+		widgets="overview forecast-hours temperature"
+		url="./data/response.en.json">
 	</weather-widgets>
 
 	<script type="module" src="./index.js"></script>
+
+	<!--
+	<weather-widgets 
+		widgets="overview"
+		url="https://weatherapi.stoumann.workers.dev?days=3&endpoint=forecast&q=tokyo&lang=ja">
+	</weather-widgets>
+	-->
 
 	<!--
 	<script>
