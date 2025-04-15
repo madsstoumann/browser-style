@@ -36,18 +36,18 @@ styles.replaceSync(`
 		position: absolute;
 		width: var(--_w);
 	}
-	:host([phase*="first-quarter"]),
+	:host([phase*="first quarter"]),
 	:host([phase*="waxing"]) {
 		--_ii: 0 auto;
 	}
 	:host([phase*="crescent"]),
-	:host([phase*="first-quarter"]),
+	:host([phase*="first quarter"]),
 	:host([phase*="waxing"]) {
 		--_bblr: 100%;
 		--_btlr: 100%;
 	}
 	:host([phase*="crescent"]),
-	:host([phase*="last-quarter"]),
+	:host([phase*="last quarter"]),
 	:host([phase*="waning"]) {
 		--_btrr: 100%;
 		--_bbrr: 100%;
