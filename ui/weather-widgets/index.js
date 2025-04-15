@@ -64,10 +64,9 @@ const ICONS = {
 }
 
 class WeatherWidgets extends HTMLElement {
-	#metric; #units;
+	#metric; #root; #units;
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
 		this.#loadStyles();
 		this._data = null;
 		this._locale = this.getAttribute('lang') || document.documentElement.lang || navigator.language;
@@ -103,6 +102,8 @@ class WeatherWidgets extends HTMLElement {
 	}
 
 	async connectedCallback() {
+		this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
+
 		try {
 			if (!this.hasAttribute('url')) throw new Error('Missing URL attribute');
 			const response = await fetch(this.getAttribute('url'));
@@ -163,23 +164,35 @@ class WeatherWidgets extends HTMLElement {
 	}
 
 	#icon(paths, part) {
-    return `<svg viewBox="0 0 24 24"${part ? ` part="${part}"` : ''}>${
-      paths.split(',').map(path => `<path d="${path}"></path>`).join('')
-    }</svg>`;
-  }
+		return `<svg viewBox="0 0 24 24"${part ? ` part="${part}"` : ''}>${
+			paths.split(',').map(path => `<path d="${path}"></path>`).join('')
+		}</svg>`;
+	}
 
 	async #loadStyles() {
-    try {
-      const cssPath = this.getAttribute('styles') || 
-        (this.basePath ? `${this.basePath}index.css` : 'index.css');
-      const response = await fetch(cssPath);
-      if (response.ok) {
-        const sheet = new CSSStyleSheet();
-        sheet.replaceSync(await response.text());
-        this.shadowRoot.adoptedStyleSheets = [sheet];
-      }
-    } catch (_) {}
-  }
+		try {
+			const cssPath = this.getAttribute('styles') || 
+				(this.basePath ? `${this.basePath}index.css` : 'index.css');
+			const response = await fetch(cssPath);
+			if (response.ok) {
+				const cssText = await response.text();
+				if (this.hasAttribute('noshadow')) {
+					// Check if we already added these styles
+					const styleId = `weather-widgets-styles-${cssPath.replace(/[^\w]/g, '-')}`;
+					if (!document.getElementById(styleId)) {
+						const style = document.createElement('style');
+						style.id = styleId;
+						style.textContent = cssText;
+						document.head.appendChild(style);
+					}
+				} else {
+					const sheet = new CSSStyleSheet();
+					sheet.replaceSync(cssText);
+					this.shadowRoot.adoptedStyleSheets = [sheet];
+				}
+			}
+		} catch (_) {}
+	}
 
 	#t(key, values = {}) {
 		let text = this._i18n[this._lang]?.[key] || this._i18n.en?.[key] || key;
@@ -276,7 +289,7 @@ class WeatherWidgets extends HTMLElement {
 			'wind': () => this.#renderWind(current)
 		};
 
-		this.shadowRoot.innerHTML = this._widgets
+		this.#root.innerHTML = this._widgets
 			.map(widget => widgetRenderers[widget] ? widgetRenderers[widget]() : '')
 			.join('');
 	}

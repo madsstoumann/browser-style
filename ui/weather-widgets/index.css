@@ -1,5 +1,8 @@
-/* NOTE: Safari does not support container-name in shadowDOM: https://www2.webkit.org/show_bug.cgi?id=267793 */
-:host {
+/*
+  NOTE: Safari does not support container-name in shadowDOM: https://www2.webkit.org/show_bug.cgi?id=267793
+  Because of that, all selectorts are both ::part and [part] to support both light- and shadowDOM.
+*/
+:host, weather-widgets {
 	--weather-api-bdc: color-mix(in srgb, currentColor, 80% transparent);
 	--weather-api-bdw: 1px;
 	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
@@ -13,11 +16,11 @@
 	gap: var(--weather-api-g, 1em);
 }
 
-:host * {
+:host *, weather-widgets * {
 	box-sizing: border-box;
 }
 
-h2, h3, h4, p {
+:is(:host, weather-widgets) :is(h2, h3, h4, p) {
 	margin: unset;
 	text-box: text;
 }
@@ -31,7 +34,7 @@ weather-widget {
 	container-type: inline-size;
 }
 /* === Inner Widget === */
-:host::part(widget) {
+:host::part(widget), [part~="widget"] {
 	align-content: start;
 	backdrop-filter: var(--weather-api-widget-bdf, none);
 	background-color: var(--weather-api-widget-bgc);
@@ -42,7 +45,7 @@ weather-widget {
 	padding: var(--weather-api-p);
 	row-gap: var(--weather-api-widget-rg, .5ch);
 }
-:host::part(icon) {
+:host::part(icon), [part~="icon"] {
 	fill: none;
 	height: 1.25em;
 	pointer-events: none;
@@ -50,7 +53,7 @@ weather-widget {
 	stroke-width: 1.25;
 	width: 1.25em;
 }
-:host::part(icon-lg) {
+:host::part(icon-lg), [part~="icon-lg"] {
 	fill: none;
 	height: 3em;
 	pointer-events: none;
@@ -59,26 +62,26 @@ weather-widget {
 	stroke-width: 1.5;
 	width: 3em;
 }
-:host::part(list) {
+:host::part(list), [part~="list"] {
 	all: unset;
 	align-self: center;
 }
-:host::part(list-item) {
+:host::part(list-item), [part~="list-item"] {
 	border-block-start: var(--weather-api-bdw) solid var(--weather-api-bdc);
 	display: flex;
 	justify-content: space-between;
 	padding-block: var(--weather-api-wind-item-p, calc(var(--weather-api-p) / 2));
 }
-:host::part(list-item-key) {
+:host::part(list-item-key), [part~="list-item-key"] {
 	font-weight: var(--weather-api-wind-item-key-fw, 500);
 }
-:host::part(list-item-value) {
+:host::part(list-item-value), [part~="list-item-value"] {
 	color: var(--weather-api-wind-item-value-color, var(--weather-api-light-text));
 }
 [part~=list] li:first-of-type {
 	border: 0;
 }
-:host::part(title) {
+:host::part(title), [part~="title"] {
 	align-items: center;
 	border-block-end: var(--weather-api-bdw) solid var(--weather-api-bdc);
 	display: flex;
@@ -90,43 +93,44 @@ weather-widget {
 	text-wrap: nowrap;
 	text-overflow: ellipsis;
 }
-:host::part(header-xl) {
+:host::part(header-xl), [part~="header-xl"] {
 	font-size: var(--weather-api-header-xl-fs, clamp(1.625rem, 6.5cqi, 6.5rem));
 	font-weight: var(--weather-api-header-xl-fw, 300);
 }
-:host::part(header-lg) {
+:host::part(header-lg), [part~="header-lg"] {
 	font-size: var(--weather-api-header-lg-fs, clamp(1.25rem, 4cqi, 4rem));
 	font-weight: var(--weather-api-header-lg-fw, 300);
 }
-:host::part(header-md) {
+:host::part(header-md), [part~="header-md"] {
 	font-size: var(--weather-api-header-md-fs, clamp(1rem, 2cqi, 2rem));
 	font-weight: var(--weather-api-header-md-fw, 300);
 }
-:host::part(light-text) {
+:host::part(light-text), [part~="light-text"] {
 	color: var(--weather-api-light-text);
 }
-:host::part(condition-icon) {
+:host::part(condition-icon), [part~="condition-icon"] {
+	max-width: unset;
 	width: var(--weather-api-condition-icon-w, clamp(2rem, 10cqi, 4rem));
 }
 
 /* === WIDGETS === */
 
 /*== FORECAST DAYS WIDGET ===*/
-:host::part(forecast-days-widget) {
+:host::part(forecast-days-widget), [part~="forecast-days-widget"] {
 	container-name: forecast-days-widget;
 }
-:host::part(forecast-days) {
+:host::part(forecast-days), [part~="forecast-days"] {
 	padding-block-end: 0;
 }
-:host::part(forecast-days-list) {
+:host::part(forecast-days-list), [part~="forecast-days-list"] {
 	column-gap: var(--weather-api-forecast-days-gap, 1ch);
-	container-type: inline-size;
+	/* container-type: inline-size; */
 	display: grid;
 	grid-template-columns: auto 2fr 1fr 1fr;
 	margin: 0;
 	padding: 0;
 }
-:host::part(forecast-day) {
+:host::part(forecast-day), [part~="forecast-day"] {
 	align-items: center;
 	border-style: solid;
 	border-width: var(--weather-api-bdw) 0 0 0;
@@ -136,18 +140,18 @@ weather-widget {
 	grid-template-columns: subgrid;
 	padding-block: var(--weather-api-forecast-day-p, .5ch);
 }
-:host::part(forecast-day-icon) {
+:host::part(forecast-day-icon), [part~="forecast-day-icon"] {
 	place-self: center;
 }
-:host::part(forecast-day-name),
-:host::part(forecast-day-temp) {
+:host::part(forecast-day-name), [part~="forecast-day-name"],
+:host::part(forecast-day-temp), [part~="forecast-day-temp"] {
 	font-weight: var(--weather-api-day-fw, 500);
 }
-:host::part(forecast-day-temp),
-:host::part(forecast-day-night-temp) {
+:host::part(forecast-day-temp), [part~="forecast-day-temp"],
+:host::part(forecast-day-night-temp), [part~="forecast-day-night-temp"] {
 	text-align: end;
 }
-:host::part(forecast-day-wind) {
+:host::part(forecast-day-wind), [part~="forecast-day-wind"] {
 	display: none;
 }
 [part~=forecast-days-list] li:first-of-type {
@@ -155,55 +159,55 @@ weather-widget {
 }
 @container forecast-days-widget (width > 500px) {
 
-	:host::part(forecast-days-list) {
+	:host::part(forecast-days-list), [part~="forecast-days-list"] {
 		grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
 		padding-block: var(--weather-api-p);
 	}
-	:host::part(forecast-day) {
+	:host::part(forecast-day), [part~="forecast-day"] {
 		border-width: 0 0 0 var(--weather-api-bdw);
 		display: grid;
 		grid-column: unset;
 		justify-items: center;
 		row-gap: var(--weather-api-widget-rg, .5ch);
 	}
-	:host::part(forecast-day-temp) {
+	:host::part(forecast-day-temp), [part~="forecast-day-temp"] {
 		font-size: 150%;
 	}
-	:host::part(forecast-day-wind) {
+	:host::part(forecast-day-wind), [part~="forecast-day-wind"] {
 		align-items: center;
 		display: flex;
 	}
 }
 
 /* === FORECAST HOURS WIDGET === */
-:host::part(forecast-hours-widget) {
+:host::part(forecast-hours-widget), [part~="forecast-hours-widget"] {
 	container-name: forecast-hours-widget;
 }
-:host::part(forecast-hours) {
+:host::part(forecast-hours), [part~="forecast-hours"] {
 	overflow: auto clip;
 	scrollbar-color: #0001 #0000;
 	scrollbar-width: thin;
 	user-select: none;
 }
-:host::part(forecast-hours-scroll) {
+:host::part(forecast-hours-scroll), [part~="forecast-hours-scroll"] {
 	column-gap: var(--weather-api-forecast-hours-gap, 1ch);
 	display: flex;
 	margin: 0;
 	padding: 0;
 }
-:host::part(forecast-hour-item) {
+:host::part(forecast-hour-item), [part~="forecast-hour-item"] {
 	display: grid;
 	place-items: center;
 }
-:host::part(forecast-hour-time) {
+:host::part(forecast-hour-time), [part~="forecast-hour-time"] {
 	color: var(--weather-api-hour-color, var(--weather-api-light-text));
 }
-:host::part(forecast-hour-temp) {
+:host::part(forecast-hour-temp), [part~="forecast-hour-temp"] {
 	font-weight: var(--weather-api-hour-temp-fw, 500);
 }
 
 /* === MOON PHASE WIDGET === */
-:host::part(moonphase-widget) {
+:host::part(moonphase-widget), [part~="moonphase-widget"] {
 	container-name: moonphase-widget;
 }
 moon-phase {
@@ -215,7 +219,7 @@ moon-phase {
 	max-width: 200px;
 }
 @container moonphase-widget (width > 400px) {
-	:host::part(moonphase-wrapper) {
+	:host::part(moonphase-wrapper), [part~="moonphase-wrapper"] {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 	}
@@ -225,49 +229,49 @@ moon-phase {
 }
 
 /* === OVERVIEW WIDGET === */
-:host::part(overview-widget) {
+:host::part(overview-widget), [part~="overview-widget"] {
 	container-name: overview-widget;
 }
-:host::part(overview-list) {
+:host::part(overview-list), [part~="overview-list"] {
 	display: none;
 }
 @container overview-widget (width > 300px) {
-	:host::part(widget) {
+	:host::part(widget), [part~="widget"] {
 		grid-template-columns: 1fr auto;
 	}
-	:host::part(overview-list) {
+	:host::part(overview-list), [part~="overview-list"] {
 		display: grid;
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
 	}
-	:host::part(header-xl),
-	:host::part(overview-highlow) {
+	:host::part(header-xl), [part~="header-xl"],
+	:host::part(overview-highlow), [part~="overview-highlow"] {
 		text-align: end;
 	}
-	:host::part(condition-icon) {
+	:host::part(condition-icon), [part~="condition-icon"] {
 		place-self: end; 
 	}
 }
 
 /* === PRECIPITATION WIDGET === */
-:host::part(precipitation-widget) {
+:host::part(precipitation-widget), [part~="precipitation-widget"] {
 	container-name: precipitation-widget;
 }
-:host::part(graph-precipitation) {
+:host::part(graph-precipitation), [part~="graph-precipitation"] {
 	display: none;
 }
 @container precipitation-widget (width > 400px) {
-	:host::part(header-lg) {
+	:host::part(header-lg), [part~="header-lg"] {
 		display: none;
 	}
-	:host::part(graph-precipitation) {
+	:host::part(graph-precipitation), [part~="graph-precipitation"] {
 		display: block;
 	}
 }
 
 /*=== PRESSURE WIDGET ===*/
-:host::part(pressure-widget) {
+:host::part(pressure-widget), [part~="pressure-widget"] {
 	container-name: pressure-widget;
 }
 analog-gauge {
@@ -284,26 +288,26 @@ sun-phase {
 }
 
 /* === TEMPERATURE WIDGET === */
-:host::part(temperature-widget) {
+:host::part(temperature-widget), [part~="temperature-widget"] {
 	container-name: temperature-widget;
 }
-:host::part(graph-temperature) {
+:host::part(graph-temperature), [part~="graph-temperature"] {
 	display: none;
 }
 @container temperature-widget (width > 400px) {
-	:host::part(header-lg) {
+	:host::part(header-lg), [part~="header-lg"] {
 		display: none;
 	}
-	:host::part(graph-temperature) {
+	:host::part(graph-temperature), [part~="graph-temperature"] {
 		display: block;
 	}
 }
 
 /* === UV WIDGET === */
-:host::part(uv-widget) {
+:host::part(uv-widget), [part~="uv-widget"] {
 	container-name: uv-widget;
 }
-:host::part(uv-slider) {
+:host::part(uv-slider), [part~="uv-slider"] {
 	align-items: center;
 	background: linear-gradient(to right, #55AF33, #A0C61B, #F7E98E, #F6E301, #FAB60D, #F88D2F, #F76D00, #E53015, #D90E21, #D80010, #8A4F9E);
 	border-radius: 1ch;
@@ -313,7 +317,7 @@ sun-phase {
 	position: relative;
 	width: 100%;
 }
-output[part="uv-slider"]::after {
+output[part="uv-slider"]::after, [part~="uv-slider"]::after {
 	aspect-ratio: 1;
 	background-color: rgba(255,255,255,.8);
 	border: 2px solid var(--weather-api-widget-bgc);
@@ -327,13 +331,13 @@ output[part="uv-slider"]::after {
 }
 
 /* === WIND WIDGET	=== */
-:host::part(wind-widget) {
+:host::part(wind-widget), [part~="wind-widget"] {
 	container-name: wind-widget;
 }
-:host::part(wind) {
+/* :host::part(wind), [part~="wind"] {
 	container-type: inline-size;
-}
-:host::part(wind-wrapper) {
+} */
+:host::part(wind-wrapper), [part~="wind-wrapper"] {
 	column-gap: var(--weather-api-wind-gap, 2ch);
 	display: grid;
 }
@@ -344,20 +348,17 @@ nav-compass {
 	max-width: 300px;
 }
 @container wind-widget (width > 400px) {
-	:host::part(wind-wrapper) {
+	:host::part(wind-wrapper), [part~="wind-wrapper"] {
 		grid-template-columns: 1fr 1fr;
 	}
 }
 
-
-
-
 /* === TODO === */
- :host::part(graph-bar) {
+:host::part(graph-bar), [part~="graph-bar"] {
 	fill: var(--weather-api-graph-bar, var(--weather-api-light-text));
- }
- :host::part(graph-text-bottom),
- :host::part(graph-text-top) {
+}
+:host::part(graph-text-bottom), [part~="graph-text-bottom"],
+:host::part(graph-text-top), [part~="graph-text-top"] {
 	fill: var(--weather-api-graph-hour-color, var(--weather-api-light-text));
 	font-family: inherit;
 	font-size: var(--weather-api-graph-hour-fs, 6px);
@@ -365,11 +366,11 @@ nav-compass {
 	stroke: none;
 	stroke-width: 0;
 }
-:host::part(graph-text-top) {
+:host::part(graph-text-top), [part~="graph-text-top"] {
 	font-size: var(--weather-api-text-top-fs, 6px);
 	letter-spacing: -0.05em;
 }
-:host::part(graph-temperature) {
+:host::part(graph-temperature), [part~="graph-temperature"] {
 	--weather-api-graph-bar: #FFF5CC;
 	/* #FFCC00 */
 }
