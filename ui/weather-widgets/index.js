@@ -309,11 +309,13 @@ class WeatherWidgets extends HTMLElement {
 		</weather-widget>`;
 	}
 
- 	#renderForecastDays(forecast) { console.log(forecast);
+ 	#renderForecastDays(forecast) {
 		return `
 		<weather-widget part="forecast-days-widget">
 			<div part="forecast-days widget">
-				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendar, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}</h4>
+				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendar, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}
+					<span part="unit-switcher">°C | °F</span>
+				</h4>
 				<ul part="forecast-days-list">
 					${forecast.map(day => {
 						const dayTemp = this.#metric ? day.day.maxtemp_c : day.day.maxtemp_f;

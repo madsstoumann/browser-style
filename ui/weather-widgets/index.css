@@ -50,6 +50,8 @@ weather-widget {
 	height: 1.25em;
 	pointer-events: none;
 	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 	stroke-width: 1.25;
 	width: 1.25em;
 }
@@ -59,6 +61,8 @@ weather-widget {
 	pointer-events: none;
 	rotate: var(--_r, 0deg);
 	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 	stroke-width: 1.5;
 	width: 3em;
 }
@@ -112,7 +116,12 @@ weather-widget {
 	max-width: unset;
 	width: var(--weather-api-condition-icon-w, clamp(2rem, 10cqi, 4rem));
 }
-
+:host::part(unit-switcher), [part~="unit-switcher"] {
+	color: var(--weather-api-light-text);
+	cursor: pointer;
+	margin-inline-start: auto;
+	user-select: none;
+}
 /* === WIDGETS === */
 
 /*== FORECAST DAYS WIDGET ===*/
