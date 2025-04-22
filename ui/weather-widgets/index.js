@@ -314,7 +314,6 @@ class WeatherWidgets extends HTMLElement {
 		<weather-widget part="forecast-days-widget">
 			<div part="forecast-days widget">
 				<h4 part="title forecast-days-title">${this.#icon(ICONS.calendar, 'icon forecast-days-icon')}${this.#t('forecastDays', { value: forecast.length })}
-					<span part="unit-switcher">°C | °F</span>
 				</h4>
 				<ul part="forecast-days-list">
 					${forecast.map(day => {
@@ -362,7 +361,6 @@ class WeatherWidgets extends HTMLElement {
 		<weather-widget part="forecast-hours-widget">
 			<div part="widget">
 				<h4 part="title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}
-					<span part="unit-switcher">°C | °F</span>
 				</h4>
 				<div part="forecast-hours">
 					<ul part="forecast-hours-scroll">
