@@ -65,13 +65,14 @@ export default class SunPhase extends HTMLElement {
 		const sunriseAttr = this.getAttribute('sunrise');
 		const sunsetAttr = this.getAttribute('sunset');
 		const timeAttr = this.getAttribute('time');
+		const isMetric = this.hasAttribute('units') ? this.getAttribute('units') === 'metric' : true;
 
 		if (sunriseAttr && sunsetAttr && timeAttr) {
 			const sunrise = this.#parseTimeToMinutes(sunriseAttr);
 			const sunset = this.#parseTimeToMinutes(sunsetAttr);
 			const time = this.#parseTimeToMinutes(timeAttr);
 			
-			this.#root.innerHTML = this.#render(sunrise, sunset, time);
+			this.#root.innerHTML = this.#render(sunrise, sunset, time, { isMetric });
 		}
 	}
 

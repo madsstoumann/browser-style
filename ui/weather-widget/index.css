@@ -1,0 +1,149 @@
+/* Base styles for all weather widgets */
+
+:host {
+	--weather-api-bdc: color-mix(in srgb, currentColor, 80% transparent);
+	--weather-api-bdw: 1px;
+	--weather-api-light-text: color-mix(in srgb, currentColor, 30% transparent);
+	--weather-api-p: 1rem;
+	--weather-api-widget-bgc: light-dark(hsl(210, 55%, 45%), hsl(235, 30%, 22%)); /*  hsl(210, 35%, 25%) */
+	--weather-api-widget-c: light-dark(hsl(210, 100%, 95%), hsl(210, 95%, 90%));
+
+	display: block;
+	font-family: var(--weather-api-ff, ui-sans-serif, system-ui);
+	font-size: var(--weather-api-fs, .75rem);
+	gap: var(--weather-api-g, 1em);
+}
+
+:host * {
+	box-sizing: border-box;
+}
+
+:host :is(h2, h3, h4, p) {
+	margin: unset;
+	text-box: text;
+}
+
+/* === GENERIC WEATHER WIDGET === */
+:host {
+	background-image: var(--weather-api-widget-bgi, none);
+	background-position: var(--weather-api-widget-bgp, center);
+	background-size: var(--weather-api-widget-bgsz, cover);
+	border-radius: var(--weather-api-bdrs, 1rem);
+	container-type: inline-size;
+}
+/* === Inner Widget === */
+:host::part(widget) {
+	align-content: start;
+	backdrop-filter: var(--weather-widget-bdf, none);
+	background-color: var(--weather-api-widget-bgc, rgba(0, 0, 0, 0.1));
+	background-image: var(--weather-widget-bgi, none);
+	background-position: var(--weather-widget-bgp, center);
+	background-size: var(--weather-widget-bgs, cover);
+	border-radius: var(--weather-widget-br, 8px);
+	box-sizing: border-box;
+	color: var(--weather-api-widget-c, inherit);
+	display: grid;
+	height: 100%;
+	overflow: hidden;
+	padding: var(--weather-widget-p, 16px);
+	position: relative;
+	row-gap: var(--weather-api-widget-rg, .5ch);
+}
+:host::part(icon) {
+	fill: none;
+	height: 24px;
+	pointer-events: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.25;
+	width: 24px;
+}
+:host::part(icon-lg) {
+	fill: none;
+	height: 3em;
+	pointer-events: none;
+	rotate: var(--_r, 0deg);
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.5;
+	width: 3em;
+}
+:host::part(list) {
+	all: unset;
+	align-self: center;
+}
+:host::part(list-item), [part~="list-item"] {
+	border-block-start: var(--weather-api-bdw) solid var(--weather-api-bdc);
+	display: flex;
+	justify-content: space-between;
+	padding-block: var(--weather-api-wind-item-p, calc(var(--weather-api-p) / 2));
+}
+:host::part(list-item-key), [part~="list-item-key"] {
+	font-weight: var(--weather-api-wind-item-key-fw, 500);
+}
+:host::part(list-item-value), [part~="list-item-value"] {
+	color: var(--weather-api-wind-item-value-color, var(--weather-api-light-text));
+}
+[part~=list] li:first-of-type {
+	border: 0;
+}
+:host::part(title),
+[part~="title"] {
+	align-items: center;
+	border-block-end: var(--weather-api-bdw) solid var(--weather-api-bdc);
+	display: flex;
+	font-size: var(--weather-widget-title-fs, 1rem);
+	font-weight: var(--weather-widget-title-fw, 500);
+	gap: 8px;
+	margin: 0 0 16px;
+	margin-block-end: calc(var(--weather-api-p) / 2);
+	padding-block-end: calc(var(--weather-api-p) / 2);
+	text-wrap: nowrap;
+	text-overflow: ellipsis;
+}
+:host::part(header-xl),
+[part~="header-xl"] {
+	font-size: 3rem;
+	font-weight: 700;
+	margin: 8px 0;
+}
+:host::part(header-lg),
+[part~="header-lg"] {
+	font-size: 2rem;
+	font-weight: 600;
+	margin: 8px 0;
+}
+:host::part(header-md),
+[part~="header-md"] {
+	font-size: 1.25rem;
+	font-weight: var(--weather-api-header-md-fw, 300);
+	margin: 8px 0;
+}
+:host::part(light-text),
+[part~="light-text"] {
+	color: var(--weather-api-light-text);
+	opacity: 0.8;
+}
+:host::part(condition-icon) {
+	aspect-ratio: 1;
+	max-width: unset;
+	width: var(--weather-api-condition-icon-w, clamp(2rem, 10cqi, 4rem));
+	/* height: 64px; */
+	/* width: 64px; */
+}
+:host::part(unit-switcher),
+[part~="unit-switcher"] {
+	/* color: var(--weather-api-light-text); */
+	cursor: pointer;
+	font-size: 0.8em;
+	margin-inline-start: auto;
+	margin-left: auto;
+	/* opacity: 0.7; */
+	transition: opacity 0.2s;
+	user-select: none;
+}
+[part~="unit-switcher"]:hover {
+	opacity: 1;
+}
