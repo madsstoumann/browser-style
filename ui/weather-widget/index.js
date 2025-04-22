@@ -116,7 +116,7 @@ class WeatherWidget extends HTMLElement {
     }
   }
   
-  async loadStyles(componentSheet) {
+  async loadStyles(componentSheet = null) {
     try {
       const cssPath = this.getAttribute('styles') || 
         (this.basePath ? `${this.basePath}index.css` : 'index.css');
@@ -125,7 +125,8 @@ class WeatherWidget extends HTMLElement {
         const cssText = await response.text();
         const baseSheet = new CSSStyleSheet();
         baseSheet.replaceSync(cssText);
-        this.shadowRoot.adoptedStyleSheets = [baseSheet, componentSheet];
+        this.shadowRoot.adoptedStyleSheets = componentSheet ? 
+          [baseSheet, componentSheet] : [baseSheet];
       }
     } catch (error) {
       // Silently fail if styles cannot be loaded
