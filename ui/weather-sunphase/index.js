@@ -2,6 +2,10 @@ import WeatherWidget from '../weather-widget/index.js';
 import '../sun-phase/index.js';
 
 const styles = `
+  :host::part(sunphase-wrapper) {
+    display: grid;
+    gap: var(--weather-widget-rg);
+  }
   sun-phase {
     --sun-phase-bdrs: .5rem;
     margin-block: 1ch;

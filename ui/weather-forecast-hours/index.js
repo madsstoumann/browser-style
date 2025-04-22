@@ -8,7 +8,7 @@ const styles = `
 		user-select: none;
 	}
 	:host::part(forecast-hours-scroll) {
-		column-gap: var(--weather-api-forecast-hours-gap, 1ch);
+		column-gap: var(--weather-forecast-hours-gap, 1ch);
 		display: flex;
 		margin: 0;
 		padding: 0;
@@ -18,10 +18,10 @@ const styles = `
 		place-items: center;
 	}
 	:host::part(forecast-hour-time){
-		color: var(--weather-api-hour-color, var(--weather-api-light-text));
+		color: var(--weather-widget-light-text);
 	}
 	:host::part(forecast-hour-temp) {
-		font-weight: var(--weather-api-hour-temp-fw, 500);
+		font-weight: 500;
 	}
 `;
 

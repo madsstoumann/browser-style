@@ -5,7 +5,7 @@ const styles = `
 		padding-block-end: 0;
 	}
 	:host::part(forecast-days-list) {
-		column-gap: var(--weather-api-forecast-days-gap, 1ch);
+		column-gap: var(--weather-forecast-days-gap, 1ch);
 		display: grid;
 		grid-template-columns: auto 2fr 1fr 1fr;
 		margin: 0;
@@ -14,19 +14,19 @@ const styles = `
 	:host::part(forecast-day) {
 		align-items: center;
 		border-style: solid;
-		border-width: var(--weather-api-bdw) 0 0 0;
-		border-color: var(--weather-api-bdc);
+		border-width: var(--weather-widget-bdw) 0 0 0;
+		border-color: var(--weather-widget-bdc);
 		display: grid;
 		grid-column: span 4;
 		grid-template-columns: subgrid;
-		padding-block: var(--weather-api-forecast-day-p, .5ch);
+		padding-block: var(--weather-forecast-day-p, .5ch);
 	}
 	:host::part(forecast-day-icon){
 		place-self: center;
 	}
 	:host::part(forecast-day-name),
 	:host::part(forecast-day-temp) {
-		font-weight: var(--weather-api-day-fw, 500);
+		font-weight: var(--weather-widget-day-fw, 500);
 	}
 	:host::part(forecast-day-temp),
 	:host::part(forecast-day-night-temp) {
@@ -41,14 +41,14 @@ const styles = `
 	@container (width > 500px) {
 		:host::part(forecast-days-list) {
 			grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-			padding-block: var(--weather-api-p);
+			padding-block: var(--weather-widget-p);
 		}
 		:host::part(forecast-day) {
-			border-width: 0 0 0 var(--weather-api-bdw);
+			border-width: 0 0 0 var(--weather-widget-bdw);
 			display: grid;
 			grid-column: unset;
 			justify-items: center;
-			row-gap: var(--weather-api-widget-rg, .5ch);
+			row-gap: var(--weather-widget-rg, .5ch);
 		}
 		:host::part(forecast-day-temp) {
 			font-size: 150%;

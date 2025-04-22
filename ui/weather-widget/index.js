@@ -215,8 +215,7 @@ class WeatherWidget extends HTMLElement {
    * @returns {string} HTML markup for unit switcher
    */
   renderUnitSwitcher(metricLabel = '°C', imperialLabel = '°F') {
-    return `
-      <span part="unit-switcher" class="unit-switcher" onclick="this.getRootNode().host.toggleUnits()">
+    return `<span part="unit-switcher" class="unit-switcher" onclick="this.getRootNode().host.toggleUnits()">
         ${this.#metric ? 
           `${metricLabel} | <span part="light-text">${imperialLabel}</span>` : 
           `<span part="light-text">${metricLabel}</span> | ${imperialLabel}`

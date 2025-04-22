@@ -6,7 +6,7 @@ const styles = `
 		gap: 1rem;
 	}
 	moon-phase {
-		--moon-phase-mask-bg: var(--weather-api-widget-bgc);
+		--moon-phase-mask-bg: var(--weather-widget-bgc);
 		--moon-phase-mask-opacity: 0.85;
 		--moon-phase-blur: 3px;
 		--moon-phase-filter: grayscale(.5) brightness(1.05);
@@ -14,7 +14,7 @@ const styles = `
 		max-width: 200px;
 	}
 	@container (width > 400px) {
-		:host::part(moonphase-wrapper), [part~="moonphase-wrapper"] {
+		:host::part(moonphase-wrapper) {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
 		}

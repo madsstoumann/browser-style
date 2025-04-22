@@ -3,17 +3,17 @@ import '../nav-compass/index.js';
 
 const styles = `
   :host::part(wind-wrapper) {
-		column-gap: var(--weather-api-wind-gap, 1rem);
+		column-gap: var(--weather-wind-gap, 1rem);
 		display: grid;
 	}
 	nav-compass {
-		--nav-compass-bg: var(--weather-api-widget-bgc);
-		--nav-compass-c: var(--weather-api-widget-c);
+		--nav-compass-bg: var(--weather-widget-bgc);
+		--nav-compass-c: var(--weather-widget-c);
 		margin: 0 auto;
 		max-width: 300px;
 	}
 	@container (width > 400px) {
-		:host::part(wind-wrapper), [part~="wind-wrapper"] {
+		:host::part(wind-wrapper) {
 			grid-template-columns: 1fr 1fr;
 		}
 	}
