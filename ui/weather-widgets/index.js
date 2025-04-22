@@ -360,20 +360,24 @@ class WeatherWidgets extends HTMLElement {
 
 		return `
 		<weather-widget part="forecast-hours-widget">
-			<div part="forecast-hours widget">
-				<h4 part="title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}</h4>
-				<ul part="forecast-hours-scroll">
-				${hours.map(hour => {
-					const hourTime = new Date(hour.time);
-					return `
-						<li part="forecast-hour-item" title="${hour.condition.text}">
-							<span part="forecast-hour-time">${this.#formatHour(hourTime)}</span>
-							<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
-							<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
-						</li>
-					`;
-				}).join('') || ''}
-				</ul>
+			<div part="widget">
+				<h4 part="title">${this.#icon(ICONS.clock, 'icon forecast-hours-icon')}${this.#t('forecastHours', { value: hours.length })}
+					<span part="unit-switcher">°C | °F</span>
+				</h4>
+				<div part="forecast-hours">
+					<ul part="forecast-hours-scroll">
+					${hours.map(hour => {
+						const hourTime = new Date(hour.time);
+						return `
+							<li part="forecast-hour-item" title="${hour.condition.text}">
+								<span part="forecast-hour-time">${this.#formatHour(hourTime)}</span>
+								<img part="condition-icon" src="https:${hour.condition.icon}" alt="${hour.condition.text}">
+								<span part="forecast-hour-temp">${this.#metric ? hour.temp_c : hour.temp_f}${this.#units.temperature}</span>
+							</li>
+						`;
+					}).join('') || ''}
+					</ul>
+				</div>
 			</div>
 		</weather-widget>`;
 	}
