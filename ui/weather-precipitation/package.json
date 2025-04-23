@@ -1,0 +1,39 @@
+{
+  "name": "@browser.style/weather-precipitation",
+  "version": "1.0.0",
+  "description": "Weather Precipitation Component",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "index.js"
+  ],
+	"peerDependencies": {
+    "@browser.style/weather-widget": "^1.0.0",
+    "@browser.style/column-chart": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "weather-precipitation"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/weather-precipitation"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/weather-precipitation"
+}

@@ -1,0 +1,43 @@
+{
+  "name": "@browser.style/weather-widget",
+  "version": "1.0.0",
+  "description": "Weather Widget Base Component, used by all other Weather Components",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    },
+    "./index.css": {
+      "import": "./index.css"
+    },
+    "./translations.js": {
+      "import": "./translations.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "translations.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "weather-widget"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/weather-widget"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/weather-widget"
+}
