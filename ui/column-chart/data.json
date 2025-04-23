@@ -1,11 +1,11 @@
 {
 	"settings": {
-		"styles": "--_bg:linear-gradient(180deg, purple, navy, deepskyblue);--_c:#FFF;",
 		"legend": false,
 		"min": 0,
 		"max": 15,
-		"type": "column",
-		"title": "Temperature in °C"
+		"styles": "--_bg:linear-gradient(180deg, purple, navy, deepskyblue);--_c:#FFF;",
+		"title": "Temperature in °C",
+		"type": ""
 	},
 	"data": [
 		{
