@@ -8,44 +8,53 @@
 	<link rel="stylesheet" href="/base.css">
 	<style>
 		.bento {
+			display: grid;
+			gap: 1ch;
 			grid-template-columns: 1fr 1fr;
-			&::part(overview-widget), &>[part~="overview-widget"] { grid-column: 1 / 3; }
-			&::part(forecast-hours-widget), &>[part~="forecast-hours-widget"] { grid-column: 1 / 3; }
-			&::part(forecast-days-widget), &>[part~="forecast-days-widget"] { grid-column: 1 / 3; }
-			&::part(wind-widget), &>[part~="wind-widget"] { grid-column: 1 / 3; }
-			&::part(pressure-widget), &>[part~="pressure-widget"] { grid-column: 1 / 3; }
-			&::part(moonphase-widget), &>[part~="moonphase-widget"] { grid-column: 1 / 3; }
-			&::part(sunphase-widget), &>[part~="sunphase-widget"] { grid-column: 1 / 3; }
+			weather-overview { grid-column: 1 / 3; }
+			weather-forecast-hours { grid-column: 1 / 3; }
+			weather-forecast-days { grid-column: 1 / 3; }
+			weather-wind { grid-column: 1 / 3; }
+			weather-pressure { grid-column: 1 / 3; }
+			weather-moonphase { grid-column: 1 / 3; }
+			weather-sunphase { grid-column: 1 / 3; }
 		}
 		@media (min-width: 600px) {
 			.bento {
 				grid-template-columns: repeat(4, 1fr);
-				&::part(overview-widget), &>[part~="overview-widget"] { grid-column: 1 / 5; }
-				&::part(forecast-hours-widget), &>[part~="forecast-hours-widget"] { grid-column: 1 / 5; }
-				&::part(forecast-days-widget), &>[part~="forecast-days-widget"] { grid-column: 1 / 5; }
-				&::part(precipitation-widget), &>[part~="precipitation-widget"] { grid-column: 1 / 5; }
-				&::part(temperature-widget), &>[part~="temperature-widget"] { grid-column: 1 / 5; }
-				&::part(wind-widget), &>[part~="wind-widget"] { grid-column: 1 / 3; }
-				&::part(pressure-widget), &>[part~="pressure-widget"] { grid-column: 3 / 5; }
-				&::part(moonphase-widget), &>[part~="moonphase-widget"] { grid-column: 1 / 3; }
-				&::part(sunphase-widget), &>[part~="sunphase-widget"] { grid-column: 3 / 5; }
+				weather-overview { grid-column: 1 / 5; }
+				weather-forecast-hours { grid-column: 1 / 5; }
+				weather-forecast-days { grid-column: 1 / 5; }
+				weather-precipitation { grid-column: 1 / 5; }
+				weather-temperature { grid-column: 1 / 5; }
+				weather-wind { grid-column: 1 / 3; }
+				weather-pressure { grid-column: 3 / 5; }
+				weather-moonphase { grid-column: 1 / 3; }
+				weather-sunphase { grid-column: 3 / 5; }
 			}
 		}
 
-		.copenhagen::part(overview-widget) {
-			--weather-api-widget-bgi: url("./assets/pexels-pixabay-416024.jpg");
-			--weather-api-widget-bgc: rgba(0, 0, 0, .4);
-			--weather-api-widget-bdf: blur(6px);
+		.copenhagen {
+			display: grid;
+			gap: 1ch;
+
+			weather-overview {
+				--weather-widget-bgi: url("./assets/pexels-pixabay-416024.jpg");
+				--weather-widget-bgc: rgba(0, 0, 0, .4);
+				--weather-widget-bdf: blur(6px);
+			}
+			weather-forecast-hours {
+				--weather-widget-bgc: rgba(255, 255, 255, .1);
+				--weather-widget-bgi: url("./assets/pexels-pixabay-33834.jpg");
+			}
+
+			weather-temperature {
+				--weather-widget-bgc: rgba(255, 255, 255, .1);
+				--weather-widget-bgi: url("./assets/pexels-no-name-14543-66997.jpg");
+				--weather-widget-bgp: top;
+			}
 		}
-		.copenhagen::part(forecast-hours-widget) {
-			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
-			--weather-api-widget-bgi: url("./assets/pexels-pixabay-33834.jpg");
-		}
-		.copenhagen::part(temperature-widget) {
-			--weather-api-widget-bgc: rgba(255, 255, 255, .1);
-			--weather-api-widget-bgi: url("./assets/pexels-no-name-14543-66997.jpg");
-			--weather-api-widget-bgp: top;
-		}
+
 	</style>
 </head>
 <body>
@@ -58,32 +67,44 @@
 
 	<weather-widgets
 		class="bento"
-		widgets="overview forecast-hours forecast-days precipitation temperature wind pressure feels-like uv visibility humidity  moonphase sunphase"
 		lang="en-US"
-		noshadow
 		units="metric"
 		url="./data/response.en.json">
+		<weather-overview switcher></weather-overview>
+		<weather-forecast-hours></weather-forecast-hours>
+		<weather-forecast-days></weather-forecast-days>
+		<weather-precipitation></weather-precipitation>
+		<weather-temperature></weather-temperature>
+		<weather-wind></weather-wind>
+		<weather-pressure></weather-pressure>
+		<weather-feelslike></weather-feelslike>
+		<weather-uv></weather-uv>
+		<weather-visibility></weather-visibility>
+		<weather-humidity></weather-humidity>
+		<weather-moonphase></weather-moonphase>
+		<weather-sunphase></weather-sunphase>
 	</weather-widgets>
 
 	<h3>With localized city</h3>
-	<weather-widgets 
-		widgets="overview"
-		url="./data/response.ja.json">
+	<weather-widgets url="./data/response.ja.json">
+		<weather-overview></weather-overview>
 	</weather-widgets>
 
 	<h3>Custom style</h3>
 	<weather-widgets
 		class="copenhagen"
-		widgets="overview forecast-hours temperature"
 		url="./data/response.en.json">
+		<weather-overview></weather-overview>
+		<weather-forecast-hours></weather-forecast-hours>
+		<weather-temperature></weather-temperature>
 	</weather-widgets>
 
 	<script type="module" src="./index.js"></script>
 
 	<!--
 	<weather-widgets 
-		widgets="overview"
 		url="https://weatherapi.stoumann.workers.dev?days=3&endpoint=forecast&q=copenhagen&lang=en">
+		<weather-overview></weather-overview>
 	</weather-widgets>
 	-->
 
