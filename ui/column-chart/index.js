@@ -18,9 +18,9 @@ const styles = `
 		width: 100%;
 	}
 	:host::part(column) {
-		background: var(--_bg, #007bff);
+		background: var(--column-chart-item-bg, var(--_bg, #007bff));
 		border-radius: var(--column-chart-item-bdrs, max(2px, .66cqi));
-		color: var(--_c, inherit);
+		color: var(--column-chart-item-c, var(--_c, inherit));
 		position: relative;
 	}
 	[part="column"]::before {
@@ -38,6 +38,7 @@ const styles = `
 		text-align: center;
 	}
 	:host::part(label) {
+		color: var(--column-chart-label-c, inherit);
 		text-box: cap alphabetic;
 	}
 	:host::part(title) {
@@ -99,14 +100,16 @@ class ColumnChart extends HTMLElement {
 		}
 		const min = this.settings?.min ?? 0;
 		const max = this.settings?.max ?? 100;
+		const showZeroValues = this.settings?.showZeroValues ?? false;
 		this.#root.innerHTML = `
 		${this.settings?.title ? `<h2 part="title">${this.settings.title}</h2>` : ''}
 		<ul part="chart"${this.settings.styles ? ` style="${this.settings.styles}"` : ''}>
 			${this.data.map((item) => {
 				const percent = ((item.value - min) / (max - min)) * 100;
+				const showValue = showZeroValues || item.value !== 0;
 				return `
 				<li part="item" style="--_p: ${percent}%;${item.styles ? item.styles : ''}">
-					<output part="column" value="${item.value}"></output>
+					<output part="column" value="${showValue ? item.value : ''}"></output>
 					<span part="label">${item.label||'&nbsp;'}</span>
 				</li>`;
 			}).join('')}
