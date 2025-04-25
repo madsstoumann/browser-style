@@ -61,8 +61,15 @@ const styles = `
 			background-color: #CCC4;
 		}
 	}
-	nav {
+	:host::part(actions) {
 		margin-inline-start: auto;
+		text-align: end;
+	}
+	:host::part(actions),
+	:host::part(tags) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--asset-handler-cg);
 	}
 	[data-sr] {
 		border: 0;
@@ -217,13 +224,14 @@ export default class AssetHandler extends HTMLElement {
 			} else if (asset.type === 'video') {
 				assetType = `<video src="${this.#demoMode ? asset.path : this.#api + '/' + asset.path}" preload="metadata" controls width="150" height="100"></video>`;
 			} else {
-				assetType = `<small>${asset.name} (${asset.type})</small>`;
+				const assetUrl = this.#demoMode ? asset.path : this.#api + '/' + asset.path;
+				assetType = `<small><a href="${assetUrl}" target="_blank" rel="noopener">${asset.name}</a> (${asset.type})</small>`;
 			}
 			return `
 			<fieldset data-name="${asset.name}">
 				${assetType}
-				${this.renderTags(asset.tags)}
-				<nav>
+				<nav part="tags">${this.renderTags(asset.tags)}</nav>
+				<nav part="actions">
 					<button type="button" data-action="save" ${this.#demoMode ? 'disabled' : ''}>${this.getAttribute('save')||'Save'}</button>
 					<button type="button" data-action="delete" ${this.#demoMode ? 'disabled' : ''}>${this.getAttribute('delete')||'Delete'}</button>
 				</nav>
