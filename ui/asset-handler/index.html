@@ -12,15 +12,37 @@
 	<h1>UI: Components</h1>
 
 	<h2>Asset Handler</h2>
-	<p></p>
+	<p>
+		The <b>Asset Handler</b> component provides a UI for uploading, tagging, and managing assets (images, videos, documents) via an <a href="https://github.com/madsstoumann/asset-server" traget="_blank">asset server API</a>.<br>
+		<b>Demo mode:</b> When using a static JSON file (like <a href="data.json" target="_blank">data.json</a> used in this example), uploads, deletes, and tag changes are disabled; only asset listing is available.
+	</p>
 
 	<asset-handler
-		api="http://localhost:3000"
+		api="data.json"
 		asset-id="123456"
 		label="Upload files"
 		list="/api/asset-list"
 		upload="/api/asset">
 	</asset-handler>
+
+	<h2>JSON example</h2>
+	<pre>
+
+    {
+      "name": "test1.jpeg",
+      "originalname": "test1.jpeg",
+      "path": "assets/12/34/56/123456/test1.jpeg",
+      "size": 202300,
+      "tags": [
+        "front"
+      ],
+      "createdAt": "2025-03-05T14:26:16.789Z",
+      "modifiedAt": "2025-03-05T14:26:16.791Z",
+      "uploadDate": "2025-03-05T14:26:16.792Z",
+      "type": "image",
+      "mimeType": "image/jpeg"
+    },
+	</pre>
 
 	<script type="module" src="./index.js"></script>
 </body>

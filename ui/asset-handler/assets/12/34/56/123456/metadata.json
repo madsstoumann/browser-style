@@ -1,0 +1,69 @@
+{
+  "assets": [
+    {
+      "id": "123456",
+      "filename": "test1.jpeg",
+      "originalname": "test1.jpeg",
+      "path": "/Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/asset-server/assets/12/34/56/123456/test1.jpeg",
+      "tags": [
+        "front"
+      ],
+      "uploadDate": "2025-03-05T14:26:16.792Z",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "updateDate": "2025-03-05T14:26:19.954Z"
+    },
+    {
+      "id": "123456",
+      "filename": "test2.jpeg",
+      "originalname": "test2.jpeg",
+      "path": "/Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/asset-server/assets/12/34/56/123456/test2.jpeg",
+      "tags": [
+        "back"
+      ],
+      "uploadDate": "2025-03-05T14:26:16.793Z",
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "updateDate": "2025-03-05T14:26:22.120Z"
+    },
+    {
+      "id": "123456",
+      "filename": "3048187-sd_426_240_24fps.mp4",
+      "originalname": "3048187-sd_426_240_24fps.mp4",
+      "path": "/Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/asset-server/assets/12/34/56/123456/3048187-sd_426_240_24fps.mp4",
+      "tags": [
+        "video"
+      ],
+      "uploadDate": "2025-03-05T14:26:28.048Z",
+      "type": "video",
+      "mimeType": "video/mp4",
+      "updateDate": "2025-03-05T14:26:32.092Z"
+    },
+    {
+      "id": "123456",
+      "filename": "a11y_dk.pdf",
+      "originalname": "a11y_dk.pdf",
+      "path": "/Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/asset-server/assets/12/34/56/123456/a11y_dk.pdf",
+      "tags": [
+        "manual"
+      ],
+      "uploadDate": "2025-03-05T14:27:18.916Z",
+      "type": "document",
+      "mimeType": "application/pdf",
+      "updateDate": "2025-03-05T14:31:37.661Z"
+    },
+    {
+      "id": "123456",
+      "filename": "10640406-sd_426_226_25fps.mp4",
+      "originalname": "10640406-sd_426_226_25fps.mp4",
+      "path": "/Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/asset-server/assets/12/34/56/123456/10640406-sd_426_226_25fps.mp4",
+      "tags": [
+        "video"
+      ],
+      "uploadDate": "2025-03-05T14:31:30.204Z",
+      "type": "video",
+      "mimeType": "video/mp4",
+      "updateDate": "2025-03-05T14:31:38.442Z"
+    }
+  ]
+}

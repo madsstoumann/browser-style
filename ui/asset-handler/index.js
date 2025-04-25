@@ -18,6 +18,9 @@ const styles = `
 	}
 	button.error { animation: pulse 0.6s ease-out; }
 	button.success { animation: pulse 0.6s ease-out; }
+	button[disabled], label:has([disabled]) {
+		filter: grayscale(1);
+	}
 	div {
 		display: grid;
 		margin-block-start: var(--asset-handler-rg);
@@ -81,6 +84,7 @@ const styles = `
 export default class AssetHandler extends HTMLElement {
 	static observedAttributes = ['asset-id'];
 	#api; #assetId; #elements; #url;
+	#demoMode = false;
 
 	constructor() {
 		super();
@@ -92,11 +96,22 @@ export default class AssetHandler extends HTMLElement {
 
 		this.#api = this.getAttribute('api');
 		this.#assetId = this.getAttribute('asset-id');
-		this.#url = {
-			config: `${this.#api}/api/config/client`,
-			list: `${this.#api}/api/asset-list/${this.#assetId}`,
-			tags: `${this.#api}/api/asset/${this.#assetId}/tags`,
-			upload: `${this.#api}/api/asset/${this.#assetId}`,
+		this.#demoMode = this.#api && this.#api.endsWith('.json');
+
+		if (!this.#demoMode) {
+			this.#url = {
+				config: `${this.#api}/api/config/client`,
+				list: `${this.#api}/api/asset-list/${this.#assetId}`,
+				tags: `${this.#api}/api/asset/${this.#assetId}/tags`,
+				upload: `${this.#api}/api/asset/${this.#assetId}`,
+			}
+		} else {
+			this.#url = {
+				config: null,
+				list: this.#api,
+				tags: null,
+				upload: null,
+			}
 		}
 	}
 
@@ -109,14 +124,23 @@ export default class AssetHandler extends HTMLElement {
 	async connectedCallback() {
 		if (!this.#api || !this.#assetId) return;
 		try {
-			this.config = await this.fetch(this.#url.config);
-			if (this.config && Object.keys(this.config).length) {
+			if (this.#demoMode) {
+				this.config = {
+					accept: "image/*,video/*,application/pdf",
+					maxFileSize: 2,
+					tags: ["front", "back", "video", "manual"]
+				};
 				this.initialize();
 			} else {
-				this.connectionError();
+				this.config = await this.fetch(this.#url.config);
+				if (this.config && Object.keys(this.config).length) {
+					this.initialize();
+				} else {
+					this.connectionError();
+				}
 			}
 		} catch (error) {
-			this.onnectionError();
+			this.connectionError();
 		}
 	}
 
@@ -126,6 +150,14 @@ export default class AssetHandler extends HTMLElement {
 
 	async fetch(url, options = {}) {
 		try {
+			if (this.#demoMode) {
+				if (url === this.#url.list && (!options.method || options.method === 'GET')) {
+					const response = await fetch(url);
+					if (!response.ok) throw new Error(`Failed to fetch from ${url}: ${response.status}`);
+					return await response.json();
+				}
+				return { success: false };
+			}
 			const response = await fetch(url, options);
 			if (!response.ok) throw new Error(`Failed to fetch from ${url}: ${response.status}`);
 			return await response.json();
@@ -138,7 +170,7 @@ export default class AssetHandler extends HTMLElement {
 		this.shadow.innerHTML = `
 			<form>
 				<label title="${this.getAttribute('label') || 'Upload'}" part="dropzone">
-					<input type="file" accept="${this.config.accept}" multiple data-sr>
+					<input type="file" accept="${this.config.accept}" multiple data-sr ${this.#demoMode ? 'disabled' : ''}>
 				</label>
 				<div>${await this.renderAssets()}</div>
 			</form>`;
@@ -168,7 +200,7 @@ export default class AssetHandler extends HTMLElement {
 			e.preventDefault();
 			e.stopPropagation();
 			this.#elements.dropzone.classList.remove('dragover');
-			if (e.dataTransfer.files.length > 0) { this.uploadFile(e); }
+			if (!this.#demoMode && e.dataTransfer.files.length > 0) { this.uploadFile(e); }
 		});
 
 		this.#elements.form.addEventListener('click', this.handleFile.bind(this));
@@ -181,9 +213,9 @@ export default class AssetHandler extends HTMLElement {
 		const html = list.assets.map(asset => {
 			let assetType = '';
 			if (asset.type === 'image') {
-				assetType = `<img src="${this.#api}/${asset.path}?w=75" alt="${asset.name}">`;
+				assetType = `<img src="${this.#demoMode ? asset.path : this.#api + '/' + asset.path}?w=75" alt="${asset.name}" width="75">`;
 			} else if (asset.type === 'video') {
-				assetType = `<video src="${this.#api}/${asset.path}" preload="metadata" controls width="150" height="100"></video>`;
+				assetType = `<video src="${this.#demoMode ? asset.path : this.#api + '/' + asset.path}" preload="metadata" controls width="150" height="100"></video>`;
 			} else {
 				assetType = `<small>${asset.name} (${asset.type})</small>`;
 			}
@@ -192,8 +224,8 @@ export default class AssetHandler extends HTMLElement {
 				${assetType}
 				${this.renderTags(asset.tags)}
 				<nav>
-					<button type="button" data-action="save">${this.getAttribute('save')||'Save'}</button>
-					<button type="button" data-action="delete">${this.getAttribute('delete')||'Delete'}</button>
+					<button type="button" data-action="save" ${this.#demoMode ? 'disabled' : ''}>${this.getAttribute('save')||'Save'}</button>
+					<button type="button" data-action="delete" ${this.#demoMode ? 'disabled' : ''}>${this.getAttribute('delete')||'Delete'}</button>
 				</nav>
 			</fieldset>`;
 		}).join('');
@@ -203,12 +235,13 @@ export default class AssetHandler extends HTMLElement {
 	renderTags(tags) {
 		return this.config.tags.map(tag => `
 			<label>
-				<input type="checkbox" value="${tag}" data-sr ${tags.includes(tag) ? 'checked' : ''}>
+				<input type="checkbox" value="${tag}" data-sr ${tags.includes(tag) ? 'checked' : ''} ${this.#demoMode ? 'disabled' : ''}>
 				${tag}
 			</label>`).join('');
 	}
 
 	async handleFile(event) {
+		if (this.#demoMode) return;
 		const node = event.target;
 		if (node.tagName !== 'BUTTON' || !node.dataset.action) return;
 		const fieldset = node.closest('fieldset');
@@ -242,6 +275,7 @@ export default class AssetHandler extends HTMLElement {
 	}
 
 	async uploadFile(event) {
+		if (this.#demoMode) return;
 		let files;
 		if (event.dataTransfer && event.dataTransfer.files) {
 			files = event.dataTransfer.files;

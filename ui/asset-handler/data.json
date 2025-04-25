@@ -1,0 +1,76 @@
+{
+  "success": true,
+  "count": 5,
+  "assets": [
+    {
+      "name": "test1.jpeg",
+      "originalname": "test1.jpeg",
+      "path": "assets/12/34/56/123456/test1.jpeg",
+      "size": 202300,
+      "tags": [
+        "front"
+      ],
+      "createdAt": "2025-03-05T14:26:16.789Z",
+      "modifiedAt": "2025-03-05T14:26:16.791Z",
+      "uploadDate": "2025-03-05T14:26:16.792Z",
+      "type": "image",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "test2.jpeg",
+      "originalname": "test2.jpeg",
+      "path": "assets/12/34/56/123456/test2.jpeg",
+      "size": 204759,
+      "tags": [
+        "back"
+      ],
+      "createdAt": "2025-03-05T14:26:16.791Z",
+      "modifiedAt": "2025-03-05T14:26:16.793Z",
+      "uploadDate": "2025-03-05T14:26:16.793Z",
+      "type": "image",
+      "mimeType": "image/jpeg"
+    },
+    {
+      "name": "3048187-sd_426_240_24fps.mp4",
+      "originalname": "3048187-sd_426_240_24fps.mp4",
+      "path": "assets/12/34/56/123456/3048187-sd_426_240_24fps.mp4",
+      "size": 527868,
+      "tags": [
+        "video"
+      ],
+      "createdAt": "2025-03-05T14:26:28.046Z",
+      "modifiedAt": "2025-03-05T14:26:28.048Z",
+      "uploadDate": "2025-03-05T14:26:28.048Z",
+      "type": "video",
+      "mimeType": "video/mp4"
+    },
+    {
+      "name": "a11y_dk.pdf",
+      "originalname": "a11y_dk.pdf",
+      "path": "assets/12/34/56/123456/a11y_dk.pdf",
+      "size": 895405,
+      "tags": [
+        "manual"
+      ],
+      "createdAt": "2025-03-05T14:27:18.912Z",
+      "modifiedAt": "2025-03-05T14:27:18.916Z",
+      "uploadDate": "2025-03-05T14:27:18.916Z",
+      "type": "document",
+      "mimeType": "application/pdf"
+    },
+    {
+      "name": "10640406-sd_426_226_25fps.mp4",
+      "originalname": "10640406-sd_426_226_25fps.mp4",
+      "path": "assets/12/34/56/123456/10640406-sd_426_226_25fps.mp4",
+      "size": 553467,
+      "tags": [
+        "video"
+      ],
+      "createdAt": "2025-03-05T14:31:30.202Z",
+      "modifiedAt": "2025-03-05T14:31:30.204Z",
+      "uploadDate": "2025-03-05T14:31:30.204Z",
+      "type": "video",
+      "mimeType": "video/mp4"
+    }
+  ]
+}
