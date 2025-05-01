@@ -3,6 +3,9 @@ import '../column-chart/index.js';
 
 const styles = `
 	column-chart {
+		--column-chart-bar-bg: #FFF5CC;
+		--column-chart-bar-c: #000;
+		--column-chart-x-axis-c: #FFF5CC;
 		display: none;
 	}
 	@container (width > 400px) {
@@ -10,19 +13,8 @@ const styles = `
 			display: none;
 		}
 		column-chart {
-			--column-chart-item-bg: #FFF5CC;
-			--column-chart-item-c: #000;
-			--column-chart-item-fs: 2cqi;
-			--column-chart-item-miw: 7cqi;
-			--column-chart-label-c: var(--weather-widget-light-text);
 			display: grid;
 			margin-block-start: 1em;
-		}
-	}
-	@container (width > 600px) {
-		column-chart {
-			--column-chart-item-fs: 1.25cqi;
-			--column-chart-item-miw: 3cqi;
 		}
 	}
 `;
@@ -94,7 +86,7 @@ class WeatherTemperature extends WeatherWidget {
 				${this.hasAttribute('switcher') ? this.renderUnitSwitcher() : ''}
 			</h2>
 			<h3 part="header-lg">${temperature}${this.units.temperature}</h3>
-			<column-chart></column-chart>
+			<column-chart display="value-labels x-labels" small="6" medium="12"></column-chart>
 		</div>
 		`;
 

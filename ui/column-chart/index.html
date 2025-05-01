@@ -7,13 +7,37 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
+
+	<style>
+		column-chart {
+			/* margin-inline: auto; */
+			/* max-width: 1000px; */
+		
+			--c1: hsla(0, 75%, 57%, .75);
+			--c2: hsla(38, 100%, 60%, .75);
+			--c3: hsla(47, 100%, 68%, .75);
+			--c4: hsla(111, 50%, 57%, .75);
+			--c5: hsla(213, 75%, 68%, .75);
+			--c6: hsla(272, 75%, 65%, .75);
+			--c7: hsla(0, 0%, 75%, .75);
+			--c8: hsla(0, 0%, 50%, .75);
+			--c9: hsla(40, 45%, 65%, .75);
+			--c10: hsla(16, 65%, 50%, .75);
+		
+			--column-chart-bar-gap: 0;
+			--column-chart-bg: linear-gradient(175deg, #EEE, #FFF);
+			--column-chart-x-axis-bdw: 2px;
+			--column-chart-p: 5px 10px;
+		}
+
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Column Chart</h2>
 
-	<column-chart data="data.json">
+	<column-chart data="data.json" display="caption-end x-labels value-labels y-grid y-labels" small="5" medium="10">
 	</column-chart>
 
 	<script type="module" src="./index.js"></script>

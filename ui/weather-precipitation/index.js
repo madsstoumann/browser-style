@@ -12,21 +12,14 @@ const styles = `
 			display: none;
 		}
 		column-chart {
-			--column-chart-item-bg: #B0CCE8;
-			--column-chart-item-c: #000;
-			--column-chart-item-fs: 2cqi;
-			--column-chart-item-miw: 7cqi;
-			--column-chart-label-c: var(--weather-widget-light-text);
+			--column-chart-bar-bg: #B0CCE8;
+			--column-chart-bar-c: #000;
+			--column-chart-x-axis-c: #FFF;
 			display: grid;
 			margin-block-start: 1em;
 		}
 	}
-	@container (width > 600px) {
-		column-chart {
-			--column-chart-item-fs: 1.25cqi;
-			--column-chart-item-miw: 3cqi;
-		}
-	}
+
 `;
 
 const sheet = new CSSStyleSheet();
@@ -73,7 +66,7 @@ class WeatherPrecipitation extends WeatherWidget {
 				label = `${hour12}${period}`;
 			}
 			return {
-				value: hour[key],
+				value: hour[key] === 0 ? '' : hour[key],
 				label: idx % LABEL_INTERVAL === 0 ? label : ''
 			};
 		});
@@ -86,7 +79,7 @@ class WeatherPrecipitation extends WeatherWidget {
 
 		const precipitation = this.metric ? this._data.current.precip_mm : this._data.current.precip_in;
 		const graphData = this.prepareGraphData(this._data.forecast.forecastday);
-
+console.log(graphData)
 		this.root.innerHTML = `
 		<div part="widget">
 			<h2 part="title">${this.createIcon(ICONS.precipitation, 'icon')}
@@ -94,7 +87,7 @@ class WeatherPrecipitation extends WeatherWidget {
 				${this.hasAttribute('switcher') ? this.renderUnitSwitcher('mm', 'in') : ''}
 			</h2>
 			<h3 part="header-lg">${precipitation}${this.units.presipitation}</h3>
-			<column-chart></column-chart>
+			<column-chart display="value-labels x-labels" small="6" medium="12"></column-chart>
 		</div>
 		`;
 
