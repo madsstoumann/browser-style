@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title></title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Analog Clock: CSS-driven analog clock with JavaScript initialization.">
+  <meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+
+	<style>
+		fret-board {
+			--fret-board-bg: light-dark(#EEE, #333);
+			--fret-board-top-row-h: 12%;
+			--fret-board-bottom-row-h: 15%;
+			--fret-board-string-c: light-dark(#0008, #FFF8);
+			--fret-board-string-w: clamp(0.0625rem, 0.03125rem + 0.5cqi, 0.125rem);
+			--fret-board-fret-c: light-dark(#000, #FFF);
+			--fret-board-fret-w: clamp(0.0625rem, 0.03125rem + 0.5cqi, 0.5rem);
+
+			--frets: attr(frets type(<number>), 4);
+			--strings: attr(strings type(<number>), 6);
+
+			aspect-ratio: 1 / 1;
+			background-color: var(--fret-board-bg);
+
+			border-radius: .5rem;
+			box-sizing: border-box;
+			container-type: inline-size;
+			display: grid;
+			grid-template-columns: repeat(calc(var(--strings) * 2), 1fr);
+			grid-template-rows:
+				var(--fret-board-top-row-h)
+				repeat(calc(var(--frets)), 1fr)
+				var(--fret-board-bottom-row-h);
+			place-items: center;
+
+			&::before {
+				background-image:
+					linear-gradient(90deg, var(--fret-board-string-c) var(--fret-board-string-w), #0000 0 var(--fret-board-string-w)),
+					linear-gradient(180deg,  var(--fret-board-fret-c) var(--fret-board-fret-w), #0000 0 var(--fret-board-fret-w));
+				background-repeat: repeat-x, repeat-y;
+				background-size:
+					calc(100% / (var(--strings) - 1) - (var(--fret-board-string-w) / var(--strings))) 100%,
+					100% calc(100% / var(--frets) - (var(--fret-board-fret-w) / var(--frets)));
+				content: '';
+				display: block;
+				grid-area: 2 / 2 / calc(var(--frets) + 2) / calc(var(--strings) * 2);
+				height: 100%;
+				width: 100%;
+			}
+			&::after {
+				color: light-dark(#222, #FFF);
+				content: attr(chord);
+				font-size: 5cqi;
+				font-weight: 700;
+				grid-column: 2 / span calc((var(--strings) * 2) - 2);
+				grid-row: calc(var(--frets) + 2);
+				text-align: center;
+				width: 100%;
+			}
+		}
+
+		guitar-note {
+			--barre: attr(barre type(<number>), 1);
+			--string:  attr(string type(<number>), 0);
+			--fret:  attr(fret type(<number>), 0);
+			--height: calc(100cqi / var(--strings));
+
+			background-color: currentColor;
+			border-radius: var(--height);
+			box-sizing: border-box;
+			display: grid;
+			grid-column: calc((var(--strings) * 2) - (var(--string) * 2 - 1)) / span calc(var(--barre) * 2);
+			grid-row: calc(var(--fret) + 1);
+			height: var(--height);
+			isolation: isolate;
+			list-style: none;
+			place-content: center;
+			width: 100%;
+			&::after {
+				color: light-dark(#FFF, #222);
+				content: attr(finger);
+				font-size: 5cqi;
+				font-weight: 500;
+			}
+			&[barre] {
+				opacity: .6;
+			}
+			&[mute] {
+				aspect-ratio: 1;
+				border-image: conic-gradient(var(--fret-board-bg) 0 0) 50%/calc(50% - 0.4cqi);
+				rotate: 45deg;
+				height: 5cqi;
+				width: 5cqi;
+			}
+			&[open] {
+				border-radius: 50%;
+				mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - 1cqi), #000 calc(100% - 1cqi + 1px));
+				height: 5cqi;
+				width: 5cqi;
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Guitar Chord</h2>
+	<p></p>
+
+	<div class="ui-grid --xs-c-1 --md-c-3">
+		<fret-board frets="3" strings="6" chord="C Major">
+			<guitar-note string="6" mute></guitar-note>
+			<guitar-note string="5" fret="3" finger="3"></guitar-note>
+			<guitar-note string="4" fret="2" finger="2"></guitar-note>
+			<guitar-note string="3" open></guitar-note>
+			<guitar-note string="2" fret="1" finger="1"></guitar-note>
+			<guitar-note string="1" open></guitar-note>
+		</fret-board>
+
+		<fret-board frets="3" strings="6" chord="F Major">
+			<guitar-note string="6" fret="1" barre="6" finger="1"></guitar-note>
+			<guitar-note string="3" fret="2" finger="2"></guitar-note>
+			<guitar-note string="5" fret="3" finger="3"></guitar-note>
+			<guitar-note string="4" fret="3" finger="4"></guitar-note>
+		</fret-board>
+
+		<fret-board frets="3" strings="6" chord="G Major">
+			<guitar-note string="6" fret="3" finger="2"></guitar-note>
+			<guitar-note string="5" fret="2" finger="1"></guitar-note>
+			<guitar-note string="4" open></guitar-note>
+			<guitar-note string="3" open></guitar-note>
+			<guitar-note string="2" open></guitar-note>
+			<guitar-note string="1" fret="3" finger="3"></guitar-note>
+		</fret-board>
+	</div>
+
+	<!-- <script type="module" src="./index.js"></script> -->
+</body>
+</html>

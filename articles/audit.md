@@ -1,0 +1,149 @@
+Last week, a designer called Daniel Destefanis launched an app called [Clocks](https://apps.apple.com/us/app/clocks-a-fun-standby-mode/id6742508073?platform=iphone), as well as a [companion website](https://www.clocks.app/).
+
+It's a collection of beautifully designed clocks, but what struck me about the app (and probably the website as well) was this tweet, where Daniel replied to a question about how he coded it:
+
+> No prior experience! Mostly entirely @AnthropicAI Claude 3.5 (not 3.7) and @cursor_ai! Main thing is to design your idea first, I have sooo many designs for every view in this app. Then start really simple, get just a screen rendering, then take it one step at a time
+
+It made me think what web developers — and agencies — will do in order to survive in a time, where AI can generate an app or a full website in the blink of a well-written prompt?
+
+**We have to up our game.** I still see _too many_ websites (created by humans), with invalid markup, no security settings, no lazy-loading etc.
+
+---
+
+### Invalid markup
+
+I recently audited a website shared by an agency on LinkedIn. It had more than **30 validation errors**, including invalid markup like `<a type="button">`,  multiple `<h1>`-tags — as well as unnecessary trailing slashes on `<link />`, `<meta />` and `<img />`-tags (that's a thing of the past, but developers still add them!)
+
+Browsers are _very_ forgiving if the markup is invalid, so often you won't notice, but screen-readers do — and the browser will spend extra, unnecessary time parsing the invalid markup.
+
+### Security
+
+The same site had **no** security besides `Strict-Transport-Security` (https). 
+
+It does not require much effort to at least provide:
+
+- Content-Security-Policy
+- X-Frame-Options
+- X-Content-Type-Options
+- Referer-Policy
+- Permissions-Policy
+
+Tools like [SecurityHeaders](https://securityheaders.com/) and [Mozilla Observatory](https://developer.mozilla.org/en-US/observatory) can help you here.
+
+### Accessibility
+
+Testing accessibility is getting more and more complicated with all the newer CSS color-methods. A lot of the testing-tools cannot compute these colors correctly.
+
+A classic error here is white text on images with an overlay. While this looks great on larger viewports, the text can still be hard-to-read, and more often than not, the text overflows the container at specific widths.
+
+It's also a common mistake to hide the scrollbar, which makes the website miserable and hard-to-use for people who cannot use a mouse. Nowadays, we can easily detect — in CSS — whether the user is using a keyboard or a pointer-device. For a scrollable region, I'd add an outline for the keyboard-user, when focused.
+
+### Images
+
+While most sites use `srcset` and `loading="lazy"`, they're using the `w`-descriptor wrong. An example here is if you place an image in a card in a grid. 
+
+The `w`-descriptor looks at the viewport-width, and might return an image that is 3-4 times larger than the actual rendered image if `sizes` has not been configured correctly.
+
+### Audits
+
+As web developers and agencies, we **must** perform these audits and ensure our quality exceeds the issues I've described above.
+
+## Knowing AI's Limitations
+
+If you know HTML, CSS, and JS well, you'll have noticed that AI often doesn't use the **latest and greatest** techniques. Sometimes, this is because the LLM hasn't been trained on the most recent documentation.
+
+For example, I asked claude.ai how to display a text box vertically.  
+
+It returned:
+
+```css
+transform: rotate(90deg);
+```
+
+While this works, individual transform properties have been available for several years now, so a less invasive way would be:
+
+```css
+rotate: 90deg;
+```
+
+However, the correct approach is:
+
+```css
+writing-mode: vertical-rl;
+text-orientation: mixed;
+```
+
+Someone needs to know this and train the AI to use the best method. This brings us to the first of several new roles some of us will transition to in the coming years:
+
+**Job #1: AI Trainer**
+
+An AI Trainer is responsible for teaching AI systems to produce better, more accurate, and up-to-date results. This involves curating high-quality training data, correcting AI mistakes, providing feedback on outputs, and ensuring the AI learns best practices and current standards. The AI Trainer bridges the gap between evolving technology and real-world requirements, helping AI tools become more reliable and effective for end users.
+
+---
+
+Grady Booch, a legendary software engineer, recently tweeted:
+
+> In the coming years, I look forward to the best-selling books titled "Debugging AI-generated Codebases" and its companion "Refactoring Legacy AI Systems".
+
+While this is clearly a joke, there's some truth to it. AI-generated codebases should be reviewed by humans, which leads us to the second new role:
+
+**Job #2: AI Codebase Maintainer**
+
+An AI Codebase Maintainer is responsible for overseeing, reviewing, and improving code generated by AI systems. This includes identifying and fixing bugs, refactoring code for clarity and efficiency, ensuring adherence to coding standards, and updating codebases as technologies evolve. The maintainer acts as a quality gate, making sure AI-generated code is robust, maintainable, and secure.
+
+---
+
+**Job #4: Organization-level LLM Maintainer**
+
+An LLM Maintainer is responsible for managing and maintaining the organization's Large Language Model. This includes monitoring model performance, updating training data, fine-tuning the model to reflect evolving coding standards and best practices, and addressing issues such as model drift or bias. The LLM Maintainer ensures the model continues to produce consistent, high-quality outputs that align with organizational requirements, and coordinates retraining as standards or technologies change.
+
+---
+
+### Coding Guidelines and Rules
+
+You can set up `.cursorrules` for Cursor, but many of these guidelines work well with other AIs too. They can be as simple as:
+
+- "Do not guess or assume, but validate that ..."
+
+Or more specific:
+
+- "In T-SQL code, do not allow `SELECT *`"
+
+So that's:
+
+**Job #3: AI Rule Writer and Maintainer**
+
+An AI Rule Writer and Maintainer defines, documents, and updates the guidelines and rules that AI systems follow when generating code or content. This role involves creating clear instructions, best practices, and constraints to ensure outputs meet organizational standards and compliance requirements. The rule writer also reviews and refines these rules as technologies and needs change, helping AI systems stay aligned with current expectations.
+
+---
+
+## Training an Organization-Specific LLM for Code Consistency
+
+To ensure a consistent codebase and enforce specific component standards, organizations can train their own Large Language Model (LLM) tailored to their development practices. This process involves several key steps:
+
+1. **Curate Internal Code Standards:**  
+   Gather documentation, style guides, and examples of approved components that reflect the organization's coding standards and best practices.
+
+2. **Collect High-Quality Code Samples:**  
+   Assemble a dataset of well-implemented components and modules from the existing codebase. Include both positive (approved) and negative (non-compliant) examples to help the LLM learn what to accept and reject.
+
+3. **Fine-Tune the LLM:**  
+   Use the curated dataset to fine-tune a base LLM, teaching it to generate code that matches the organization's standards. This can be done using supervised learning, reinforcement learning from human feedback, or both.
+
+4. **Integrate with Development Workflow:**  
+   Connect the trained LLM to code review tools, CI/CD pipelines, or IDE plugins. This allows the LLM to automatically review or even generate code that adheres to the organization's component standards.
+
+5. **Continuous Feedback and Updates:**  
+   Regularly update the training data with new patterns, standards, and feedback from code reviews. Retrain or fine-tune the LLM as standards evolve.
+
+By following this approach, organizations can ensure that new developers—and even AI tools—cannot introduce components that do not comply with established standards. This leads to a more maintainable, secure, and consistent codebase, reducing technical debt and onboarding time for new team members.
+
+---
+
+## AI Throughout the Organization
+
+Apple recently restructured their AI team to be part of the *entire* organization, rather than a single team. This signals that AI will become integrated into **all** teams across organizations.
+
+## Conclusion
+
+Agencies are a hive-mind of talented people — but some of these people will need to adapt and change roles in the coming years.

@@ -1,0 +1,10 @@
+			/* background-image:
+				linear-gradient(90deg, var(--fret-board-string-c) var(--fret-board-string-w), #0000 0 var(--fret-board-string-w)),
+				linear-gradient(180deg,  var(--fret-board-fret-c) var(--fret-board-fret-w), #0000 0 var(--fret-board-fret-w));
+			background-position:
+				calc(100% / (2 * (var(--strings) - 1)) - var(--fret-board-string-w)) 100%,
+				calc(50% - var(--fret-board-string-w) / 2) calc((100% / var(--frets)) - var(--fret-board-fret-w));
+			background-repeat: repeat-x, repeat-y;
+			background-size:
+				calc(100% / var(--strings)) calc(100% - (100% / (var(--frets) + 1))),
+				calc(100% - (100% / var(--strings)) + var(--fret-board-string-w)) calc(100% / (var(--frets) + 1)); */

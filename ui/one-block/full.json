@@ -1,0 +1,191 @@
+{
+  "id": "content-123456",
+  "type": "article",
+  "locale": "en-US",
+
+	"media": {
+    "caption": "This is an example caption for the media section.",
+    "sources": [
+			{
+        "type": "image",
+        "src": "https://cdn.example.com/images/main-image.png",
+        "srcset": "https://cdn.example.com/images/main-image.png 1x, https://cdn.example.com/images/main-image@2x.png 2x",
+        "mimeType": "image/png",
+        "width": 1200,
+        "height": 675,
+        "alt": "Descriptive alt text for the image",
+        "loading": "lazy"
+      },
+      {
+        "type": "video",
+        "src": "https://cdn.example.com/videos/main-video.mp4",
+        "mimeType": "video/mp4",
+        "width": 1280,
+        "height": 720,
+        "alt": "Descriptive alt text for the video",
+        "poster": "https://cdn.example.com/images/video-poster.jpg",
+        "tracks": [
+          {
+            "kind": "captions",
+            "src": "https://cdn.example.com/videos/captions-en.vtt",
+            "srclang": "en",
+            "label": "English"
+          }
+        ],
+        "options": {
+          "autoplay": false,
+          "loop": false,
+          "controls": true,
+          "muted": true,
+          "playsinline": true
+        }
+      }
+    ]
+  },
+
+  "ribbon": {
+    "text": "FEATURED",
+    "color": "#ff6600",
+    "icon": "star"
+  },
+  "sticker": {
+    "text": "NEW",
+    "position": "top-right",
+    "style": "badge"
+  },
+
+  "content": {
+    "category": "Technology",
+    "headline": "This is an example heading.",
+    "subheadline": "This is an example subheading.",
+    "summary": "This is an example text. It can be a bit longer to provide more context.",
+    "text": "This is the main content of the article. It can include various HTML elements like <strong>bold text</strong>, <em>italic text</em>, and lists.",
+    "readingTime": "5 min",
+    "published": {
+      "datetime": "2023-10-01T12:00:00Z",
+      "relative": "2 days ago",
+      "formatted": "October 1, 2023"
+    },
+    "modified": {
+      "datetime": "2023-10-02T14:30:00Z",
+      "relative": "Yesterday",
+      "formatted": "October 2, 2023"
+    }
+  },
+  "engagement": {
+    "reactions": [
+      {
+        "type": "like",
+        "icon": "👍",
+        "count": 100,
+        "active": false,
+        "ariaLabel": "Like this post"
+      },
+      {
+        "type": "dislike",
+        "icon": "👎",
+        "count": 5,
+        "active": false,
+        "ariaLabel": "Dislike this post"
+      }
+    ],
+    "commentCount": 25,
+    "shareCount": 17,
+    "viewCount": 1560
+  },
+
+  "authors": [
+    {
+      "name": "John Doe",
+      "role": "Author",
+      "avatar": {
+        "src": "https://media2.dev.to/dynamic/image/width=90,height=90,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F515396%2Fbf9dcb06-ff90-4fb1-b507-c3dc21c82b85.png",
+        "alt": "",
+        "width": 90,
+        "height": 90
+      },
+      "contacts": [
+        {
+          "type": "email",
+          "value": "john@example.com",
+          "label": "Email"
+        },
+        {
+          "type": "twitter",
+          "value": "https://twitter.com/johndoe",
+          "label": "Twitter"
+        }
+      ],
+      "url": "/authors/john-doe"
+    }
+  ],
+
+  "tags": [
+    {
+      "name": "Web Development",
+      "slug": "web-development",
+      "url": "/tags/web-development"
+    },
+    {
+      "name": "Accessibility",
+      "slug": "accessibility",
+      "url": "/tags/accessibility"
+    }
+  ],
+
+  "product": {
+    "id": "prod-456",
+    "name": "Premium Course",
+    "price": {
+      "current": 49.99,
+      "original": 69.99,
+      "currency": "USD",
+      "discountPercentage": 28,
+      "discountText": "Save 28%"
+    },
+    "availability": "InStock",
+    "validUntil": "2023-12-31",
+    "rating": {
+      "value": 4.7,
+      "count": 356,
+      "starCount": 5
+    }
+  },
+
+  "actions": {
+    "primary": [
+      {
+        "text": "Read more",
+        "url": "/articles/example-article",
+        "icon": "arrow-right",
+        "type": "link",
+        "ariaLabel": "Read the full article",
+				"isWrapper": true
+      },
+      {
+        "text": "Watch video",
+        "url": "/videos/example-video",
+        "icon": "play",
+        "type": "link",
+        "ariaLabel": "Watch the video"
+      }
+    ],
+    "secondary": [
+      {
+        "text": "Save for later",
+        "action": "save",
+        "icon": "bookmark",
+        "type": "button",
+        "active": false,
+        "ariaLabel": "Save this article for later reading"
+      },
+      {
+        "text": "Share",
+        "action": "share",
+        "icon": "share",
+        "type": "button",
+        "ariaLabel": "Share this article"
+      }
+    ]
+  }
+}
