@@ -4,10 +4,10 @@ const styles = `
   --column-chart-bar-c: currentColor;
   --column-chart-bdw: 1px;
   --column-chart-bds: solid;
-  --column-chart-bdc: #CCC;
+  --column-chart-bdc: light-dark(#CCC, #666);
   --column-chart-light-bdw: 1px;
   --column-chart-light-bds: solid;
-  --column-chart-light-bdc: #EBEBEB;
+  --column-chart-light-bdc: light-dark(#EBEBEB, #444);
 
   --column-chart-caption-h: 1.5rem;
   --column-chart-label-h: 20px;
@@ -55,7 +55,7 @@ tbody {
 
   td {
     --_v: attr(data-v type(<number>), 0);
-    background: var(--column-chart-bar-bg, var(--_bg, hsla(210, 100%, 70%, .8)));
+    background: var(--column-chart-bar-bg, var(--_bg, light-dark(hsla(210, 100%, 70%, .8), hsla(210, 60%, 60%, .8))));
     color: #0000;
     font-size: var(--column-chart-bar-fs, clamp(0.5625rem, 0.45rem + .5cqi, 0.75rem));
     font-weight: var(--column-chart-bar-fw, 400);
@@ -73,7 +73,7 @@ tbody {
 
   th {
     border-block-start: var(--column-chart-x-axis-bdw, 0px) var(--column-chart-x-axis-bds, solid) var(--column-chart-x-axis-bdc, hsla(0, 0%, 41%, .95));
-    color: var(--column-chart-x-axis-c, #444);
+    color: var(--column-chart-x-axis-c, light-dark(#444, #EEE));
     display: none;
     font-size: var(--column-chart-x-axis-fs, clamp(0.5625rem, 0.4rem + .5cqi, 0.6875rem));
     font-weight: var(--column-chart-x-axis-fw, 400);
@@ -177,7 +177,7 @@ thead {
 :host([display*="y-labels"]) {
   tbody { padding-inline: var(--column-chart-y-axis-w) 0; }
   thead {
-    color: var(--column-chart-y-axis-c, #696969);
+    color: var(--column-chart-y-axis-c, light-dark(#696969, #EEE));
     display: grid;
   }
 }
@@ -211,7 +211,7 @@ thead {
 }
 
 /* === Colors === */
-tbody {
+:host(:not([display~="groups"])) tbody {
   tr:nth-of-type(10n+1) td { --_bg: var(--c1); }
   tr:nth-of-type(10n+2) td { --_bg: var(--c2); }
   tr:nth-of-type(10n+3) td { --_bg: var(--c3); }
@@ -222,6 +222,20 @@ tbody {
   tr:nth-of-type(10n+8) td { --_bg: var(--c8); }
   tr:nth-of-type(10n+9) td { --_bg: var(--c9); }
   tr:nth-of-type(10n+0) td { --_bg: var(--c10); }
+}
+
+/* === Groups === */
+:host([display~="groups"]) tbody tr {
+  td:nth-of-type(10n+1) { --_bg: var(--c1); }
+  td:nth-of-type(10n+2) { --_bg: var(--c2); }
+  td:nth-of-type(10n+3) { --_bg: var(--c3); }
+  td:nth-of-type(10n+4) { --_bg: var(--c4); }
+  td:nth-of-type(10n+5) { --_bg: var(--c5); }
+  td:nth-of-type(10n+6) { --_bg: var(--c6); }
+  td:nth-of-type(10n+7) { --_bg: var(--c7); }
+  td:nth-of-type(10n+8) { --_bg: var(--c8); }
+  td:nth-of-type(10n+9) { --_bg: var(--c9); }
+  td:nth-of-type(10n+0) { --_bg: var(--c10); }
 }
 `;
 
@@ -305,6 +319,12 @@ class ColumnChart extends HTMLElement {
 			return '';
 		};
 
+		const getDisplayContent = (value, displayValue) => {
+			if (displayValue === false) return '';
+			if (typeof displayValue === 'string') return displayValue;
+			return value;
+		};
+
 		const maxColspan = Math.max(...this.data.map(item => 
 			1 + (Array.isArray(item.value) ? item.value.length : 1)
 		));
@@ -315,23 +335,22 @@ class ColumnChart extends HTMLElement {
 		}
 
 		this.#root.innerHTML = `
-		<table>
+		<table aria-disabled="true">
 			${this.settings?.caption ? `<caption>${this.settings.caption}</caption>` : ''}
-			<thead>
+			<thead aria-hidden="true">
 				${yAxisData.map(x => `<tr><th colspan="${maxColspan}">${x}</th></tr>`).join('')}
 			</thead>
 			<tbody>
 				${this.data.map(item => {
-					// Generate td elements
 					const tdElements = Array.isArray(item.value) 
 						? item.value.map((v, index) => 
-							`<td data-v="${v}"${getStyleAttr(item.styles, index)}>${v}</td>`
+							`<td data-v="${v}"${getStyleAttr(item.styles, index)}${item.displayValue === false ? ` aria-label="${v}"` : ''}>${getDisplayContent(v, item.displayValue)}</td>`
 						).join('')
-						: `<td data-v="${item.value}"${getStyleAttr(item.styles)}">${item.value}</td>`;
+						: `<td data-v="${item.value}"${getStyleAttr(item.styles)}${item.displayValue === false ? ` aria-label="${item.value}"` : ''}>${getDisplayContent(item.value, item.displayValue)}</td>`;
 						
 					return `
 					<tr>
-						<th scope="row">${item.label || ''}</th>
+						<th scope="row"${item.displayLabel === false ? ` aria-label="${item.label}"` : ''}>${item.displayLabel === false ? '' : (item.label || '')}</th>
 						${tdElements}
 					</tr>`;
 				}).join('')}

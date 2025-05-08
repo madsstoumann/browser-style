@@ -1,92 +1,59 @@
 {
 	"settings": {
 		"min": 0,
-		"max": 15,
-		"style": "--_bg:linear-gradient(180deg, purple, navy, deepskyblue);--_c:#FFF;",
-		"caption": "Hourly Temperature Readings (°C)",
-		"yAxis": [0, "", 3, "", 6, "", 9, "", 12, "", 15]
+		"max": 20000,
+		"caption": "Monthly Sales by Channel ($)",
+		"yAxis": [0, "", 5000, "", 10000, "", 15000, "", 20000],
+		"legend": ["In-store", "Online", "Mobile"]
 	},
 	"data": [
 		{
-			"value": [4, 4.4, 6.6],
-			"label": "00:00",
-			"styles": ["--_bg:lightgreen", "--_bg:orange"]
+			"value": [12500, 9800, 6200],
+			"label": "January"
 		},
 		{
-			"value": 6.4
+			"value": [10300, 8400, 3600],
+			"label": "February"
 		},
 		{
-			"value": 6.3
+			"value": [11900, 11200, 7000],
+			"label": "March"
 		},
 		{
-			"value": 6.1,
-			"label": "03:00"
+			"value": [14200, 13600, 8000],
+			"label": "April"
 		},
 		{
-			"value": 5.9
+			"value": [16400, 16800, 8800],
+			"label": "May"
 		},
 		{
-			"value": 5.8
+			"value": [17800, 17500, 10000],
+			"label": "June"
 		},
 		{
-			"value": 5.8,
-			"label": "06:00"
+			"value": [19200, 19700, 10000],
+			"label": "July"
 		},
 		{
-			"value": 6.1
+			"value": [18400, 19800, 9000],
+			"label": "August"
 		},
 		{
-			"value": 7
+			"value": [16800, 17700, 9000],
+			"label": "September"
 		},
 		{
-			"value": 7.8,
-			"label": "09:00"
+			"value": [15500, 15200, 8000],
+			"label": "October"
 		},
 		{
-			"value": 8.7
+			"value": [13200, 12700, 6500],
+			"label": "November"
 		},
 		{
-			"value": 9.5
-		},
-		{
-			"value": 10.2,
-			"label": "12:00"
-		},
-		{
-			"value": 13.3
-		},
-		{
-			"value": 15
-		},
-		{
-			"value": 11.7,
-			"label": "15:00"
-		},
-		{
-			"value": 11.8
-		},
-		{
-			"value": 11.3
-		},
-		{
-			"value": 10,
-			"label": "18:00"
-		},
-		{
-			"value": 8.9
-		},
-		{
-			"value": 8.5
-		},
-		{
-			"value": 8.2,
-			"label": "21:00"
-		},
-		{
-			"value": 8
-		},
-		{
-			"value": 7.8
+			"value": [18500, 16000, 7000],
+			"label": "December"
 		}
 	]
 }

@@ -1,0 +1,70 @@
+{
+	"settings": {
+		"min": 0,
+		"max": 50000,
+		"caption": "Monthly Sales Figures ($)",
+		"yAxis": [0, "", 10000, "", 20000, "", 30000, "", 40000, "", 50000]
+	},
+	"data": [
+		{
+			"value": 28500,
+			"displayValue": "$28,500",
+			"label": "January"
+		},
+		{
+			"value": 22300,
+			"displayValue": "$22,300",
+			"label": "February"
+		},
+		{
+			"value": 30100,
+			"displayValue": "$30,100",
+			"label": "March"
+		},
+		{
+			"value": 35800,
+			"displayValue": "$35,800",
+			"label": "April"
+		},
+		{
+			"value": 42000,
+			"displayValue": "$42,000",
+			"label": "May"
+		},
+		{
+			"value": 45300,
+			"displayValue": "$45,300",
+			"label": "June"
+		},
+		{
+			"value": 48900,
+			"displayValue": "$48,900",
+			"label": "July"
+		},
+		{
+			"value": 47200,
+			"displayValue": "$47,200",
+			"label": "August"
+		},
+		{
+			"value": 43500,
+			"displayValue": "$43,500",
+			"label": "September"
+		},
+		{
+			"value": 38700,
+			"displayValue": "$38,700",
+			"label": "October"
+		},
+		{
+			"value": 32400,
+			"displayValue": "$32,400",
+			"label": "November"
+		},
+		{
+			"value": 41500,
+			"displayValue": "$41,500",
+			"label": "December"
+		}
+	]
+}

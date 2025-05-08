@@ -9,10 +9,16 @@
 	<link rel="stylesheet" href="/base.css">
 
 	<style>
-		column-chart {
-			/* margin-inline: auto; */
-			/* max-width: 1000px; */
-		
+		.groups {
+			--column-chart-y-axis-w: 3rem;
+			--c1: hsla(0, 75%, 57%, .75);
+			--c2: hsla(38, 100%, 60%, .75);
+			--c3: hsla(111, 50%, 57%, .75);
+		}
+		.sales {
+			--column-chart-y-axis-w: 3rem;
+		}
+		.temperature {
 			--c1: hsla(0, 75%, 57%, .75);
 			--c2: hsla(38, 100%, 60%, .75);
 			--c3: hsla(47, 100%, 68%, .75);
@@ -25,7 +31,7 @@
 			--c10: hsla(16, 65%, 50%, .75);
 		
 			--column-chart-bar-gap: 0;
-			--column-chart-bg: linear-gradient(175deg, #EEE, #FFF);
+			--column-chart-bg: linear-gradient(175deg, light-dark(#EEE, #111), light-dark(#FFF, #333));
 			--column-chart-x-axis-bdw: 2px;
 			--column-chart-p: 5px 10px;
 		}
@@ -35,9 +41,17 @@
 <body>
 	<h1>UI: Components</h1>
 
-	<h2>Column Chart</h2>
+	<h2>Custom Column Bar Styles</h2>
 
-	<column-chart data="data.json" display="caption-end x-labels value-labels y-grid y-labels" small="5" medium="10">
+	<column-chart data="temperature.json" class="temperature" display="caption-end x-labels value-labels y-grid y-labels" small="5" medium="10">
+	</column-chart>
+
+	<h2>Default Column Bar Styles</h2>
+	<column-chart data="sales.json" class="sales" display="caption x-labels value-labels y-grid y-labels" small="3" medium="6">
+	</column-chart>
+
+	<h2>Column Chart with Grouped Data</h2>
+	<column-chart data="data.json" class="groups" display="caption-start x-labels y-grid y-labels-end groups" small="3" medium="6">
 	</column-chart>
 
 	<script type="module" src="./index.js"></script>
