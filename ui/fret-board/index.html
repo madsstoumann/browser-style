@@ -37,12 +37,14 @@
 
 			/* Grid Lines (frets and strings) */
 			&::before {
+				background-color: var(--fret-board-fret-bg, #0000);
 				background-image:
 					linear-gradient(90deg, var(--fret-board-string-c) var(--fret-board-string-w), #0000 0 var(--fret-board-string-w)),
 					linear-gradient(180deg,  var(--fret-board-fret-c) var(--fret-board-fret-w), #0000 0 var(--fret-board-fret-w));
+				background-position: 0 var(--fret-board-fret-w), 0 0;
 				background-repeat: repeat-x, repeat-y;
 				background-size:
-					calc(100% / (var(--_strings) - 1) - (var(--fret-board-string-w) / var(--_strings))) 100%,
+					calc(100% / (var(--_strings) - 1) - (var(--fret-board-string-w) / var(--_strings))) calc(100% - (2 * var(--fret-board-fret-w))),
 					100% calc(100% / var(--_frets) - (var(--fret-board-fret-w) / var(--_frets)));
 				box-shadow: 0 calc(0px - var(--fred-board-fret-bbsw, 1.5cqi)) 0 0 var(--fret-board-fret-c);
 				content: '';
@@ -98,7 +100,6 @@
 			isolation: isolate;
 			list-style: none;
 			place-content: center;
-			
 
 			&::after {
 				color: var(--string-note-c, light-dark(#FFF, #222));
@@ -114,6 +115,7 @@
 				width: 100%;
 			}
 			&[mute], &[open] {
+				background-color: var(--string-note-mute-open-c, light-dark(#222, #FFF));
 				height: var(--string-note-open-mute-h);
 				width: var(--string-note-open-mute-h);
 			}
