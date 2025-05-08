@@ -1,0 +1,143 @@
+{
+  "id": "product-789012",
+  "type": "product",
+  "locale": "en-US",
+
+  "media": {
+    "caption": "Ultra HD Smart TV with AI capabilities",
+    "sources": [
+      {
+        "type": "image",
+        "src": "https://cdn.example.com/images/smart-tv-main.jpg",
+        "srcset": "https://cdn.example.com/images/smart-tv-main.jpg 1x, https://cdn.example.com/images/smart-tv-main@2x.jpg 2x",
+        "mimeType": "image/jpeg",
+        "width": 1200,
+        "height": 800,
+        "alt": "55-inch Ultra HD Smart TV with sleek design",
+        "loading": "lazy"
+      },
+      {
+        "type": "image",
+        "src": "https://cdn.example.com/images/smart-tv-angle.jpg",
+        "mimeType": "image/jpeg",
+        "width": 1200,
+        "height": 800,
+        "alt": "Side view of the Smart TV showing thin profile",
+        "loading": "lazy"
+      }
+    ]
+  },
+
+  "sticker": {
+    "text": "SALE",
+    "position": "top-right",
+    "style": "badge"
+  },
+
+  "content": {
+    "category": "Electronics",
+    "headline": "55\" Ultra HD Smart TV",
+    "subheadline": "AI-powered with voice control",
+    "summary": "Experience immersive entertainment with our latest 55-inch Ultra HD Smart TV featuring AI technology for optimal viewing experience.",
+    "text": "This premium 55-inch Smart TV delivers stunning 4K resolution with HDR support for vivid colors and deep contrasts. The integrated AI processor automatically adjusts picture and sound settings based on content and environment. Features include voice control, smart home integration, and multiple connectivity options."
+  },
+
+  "product": {
+    "id": "tv-55uhd-2023",
+    "name": "55\" Ultra HD Smart TV",
+    "sku": "TV55UHD2023",
+    "gtin13": "5901234123457",
+    "brand": {
+      "name": "TechVision",
+      "logo": "https://cdn.example.com/brands/techvision.png"
+    },
+    "price": {
+      "current": 699.99,
+      "original": 899.99,
+      "currency": "USD",
+      "discountPercentage": 22,
+      "discountText": "Save $200"
+    },
+    "availability": "InStock",
+    "inventoryLevel": 24,
+    "rating": {
+      "value": 4.8,
+      "count": 312,
+      "starCount": 5
+    },
+    "features": [
+      "55-inch Ultra HD display (3840x2160)",
+      "AI processor for optimized picture quality",
+      "Voice-controlled remote",
+      "Wi-Fi and Bluetooth connectivity",
+      "4 HDMI ports, 2 USB ports"
+    ],
+    "shipping": {
+      "freeShipping": true,
+      "deliveryTime": "2-3 business days"
+    }
+  },
+
+  "actions": {
+    "primary": [
+      {
+        "text": "Add to Cart",
+        "action": "addToCart",
+        "icon": "shopping-cart",
+        "type": "button",
+        "ariaLabel": "Add this TV to your cart"
+      },
+      {
+        "text": "Buy Now",
+        "action": "buyNow",
+        "type": "button",
+        "ariaLabel": "Proceed to checkout"
+      }
+    ],
+    "secondary": [
+      {
+        "text": "Add to Wishlist",
+        "action": "addToWishlist",
+        "icon": "heart",
+        "type": "button",
+        "active": false,
+        "ariaLabel": "Add this TV to your wishlist"
+      },
+      {
+        "text": "Compare",
+        "action": "compare",
+        "icon": "scale",
+        "type": "button",
+        "ariaLabel": "Add this TV to comparison"
+      }
+    ]
+  },
+
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "55\" Ultra HD Smart TV",
+    "image": "https://cdn.example.com/images/smart-tv-main.jpg",
+    "description": "Experience immersive entertainment with our latest 55-inch Ultra HD Smart TV featuring AI technology for optimal viewing experience.",
+    "sku": "TV55UHD2023",
+    "gtin13": "5901234123457",
+    "brand": {
+      "@type": "Brand",
+      "name": "TechVision"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://example.com/products/55-ultra-hd-smart-tv",
+      "priceCurrency": "USD",
+      "price": 699.99,
+      "priceValidUntil": "2023-12-31",
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/InStock"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": 4.8,
+      "reviewCount": 312
+    }
+  }
+}

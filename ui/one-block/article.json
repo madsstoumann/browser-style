@@ -1,0 +1,154 @@
+{
+  "id": "content-123456",
+  "type": "article",
+  "locale": "en-US",
+
+  "media": {
+    "caption": "This is an example caption for the article image.",
+    "sources": [
+      {
+        "type": "image",
+        "src": "https://cdn.example.com/images/article-main.jpg",
+        "srcset": "https://cdn.example.com/images/article-main.jpg 1x, https://cdn.example.com/images/article-main@2x.jpg 2x",
+        "mimeType": "image/jpeg",
+        "width": 1200,
+        "height": 675,
+        "alt": "A researcher examining sustainable technology components",
+        "loading": "lazy"
+      }
+    ]
+  },
+
+  "ribbon": {
+    "text": "FEATURED",
+    "color": "#2c7be5",
+    "icon": "star"
+  },
+
+  "content": {
+    "category": "Technology",
+    "headline": "The Future of Sustainable Technology",
+    "subheadline": "How innovation is driving environmental change",
+    "summary": "This article explores emerging sustainable technologies and their impact on reducing global carbon emissions.",
+    "text": "Sustainable technology is revolutionizing industries worldwide. From renewable energy sources to biodegradable components, innovations are helping reduce environmental impact while maintaining technological progress. <p>Researchers have identified several key areas where technological advancement is making the most significant impact...</p>",
+    "readingTime": "8 min",
+    "published": {
+      "datetime": "2023-10-15T09:30:00Z",
+      "relative": "4 days ago",
+      "formatted": "October 15, 2023"
+    },
+    "modified": {
+      "datetime": "2023-10-16T14:15:00Z",
+      "relative": "3 days ago",
+      "formatted": "October 16, 2023"
+    }
+  },
+
+  "engagement": {
+    "reactions": [
+      {
+        "type": "like",
+        "icon": "👍",
+        "count": 132,
+        "active": false,
+        "ariaLabel": "Like this article"
+      }
+    ],
+    "commentCount": 42,
+    "shareCount": 28,
+    "viewCount": 3240
+  },
+
+  "authors": [
+    {
+      "name": "Jane Smith",
+      "role": "Senior Technology Editor",
+      "avatar": {
+        "src": "https://cdn.example.com/authors/jane-smith.jpg",
+        "alt": "Jane Smith",
+        "width": 90,
+        "height": 90
+      },
+      "contacts": [
+        {
+          "type": "twitter",
+          "value": "https://twitter.com/janesmith",
+          "label": "Twitter"
+        }
+      ],
+      "url": "/authors/jane-smith"
+    }
+  ],
+
+  "tags": [
+    {
+      "name": "Sustainability",
+      "slug": "sustainability",
+      "url": "/tags/sustainability"
+    },
+    {
+      "name": "Technology",
+      "slug": "technology",
+      "url": "/tags/technology"
+    }
+  ],
+
+  "actions": {
+    "primary": [
+      {
+        "text": "Read full article",
+        "url": "/articles/future-sustainable-technology",
+        "icon": "arrow-right",
+        "type": "link",
+        "ariaLabel": "Read the full article",
+        "isWrapper": true
+      }
+    ],
+    "secondary": [
+      {
+        "text": "Save",
+        "action": "save",
+        "icon": "bookmark",
+        "type": "button",
+        "active": false,
+        "ariaLabel": "Save this article for later"
+      },
+      {
+        "text": "Share",
+        "action": "share",
+        "icon": "share",
+        "type": "button",
+        "ariaLabel": "Share this article"
+      }
+    ]
+  },
+  
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "The Future of Sustainable Technology",
+    "description": "This article explores emerging sustainable technologies and their impact on reducing global carbon emissions.",
+    "image": "https://cdn.example.com/images/article-main.jpg",
+    "datePublished": "2023-10-15T09:30:00Z",
+    "dateModified": "2023-10-16T14:15:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "Jane Smith",
+      "url": "/authors/jane-smith"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Example Publisher",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cdn.example.com/logo.png",
+        "width": 600,
+        "height": 60
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://example.com/articles/future-sustainable-technology"
+    }
+  }
+}

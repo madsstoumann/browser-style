@@ -78,25 +78,6 @@ class OneBlock extends HTMLElement {
 		}
 	}
 
-	schemaAttrs(type, map = {}) {
-		this._ensureSettingsInitialized();
-		if (!this.#settings?.useSchema) return '';
-		const schemaTypes = {
-			article: 'https://schema.org/Article',
-			video: 'https://schema.org/VideoObject',
-			product: 'https://schema.org/Product',
-			event: 'https://schema.org/Event'
-		};
-		let attrs = [];
-		if (type && schemaTypes[type]) {
-			attrs.push('itemscope', `itemtype="${schemaTypes[type]}"`);
-		}
-		for (const [k, v] of Object.entries(map)) {
-			if (v) attrs.push(`itemprop="${k}"`);
-		}
-		return attrs.join(' ');
-	}
-
 	async attributeChangedCallback(attr, oldVal, newVal) {
 		if (newVal === oldVal) return;
 
@@ -161,7 +142,7 @@ class OneBlock extends HTMLElement {
 		this._ensureSettingsInitialized();
 		const type = this.getAttribute('type') || this.#settings?.type;
 		return `
-		<figure ${this.getStyle('ob-media')} ${this.schemaAttrs(type === 'video' ? 'video' : undefined, { image: type === 'article' })}>
+		<figure ${this.getStyle('ob-media')}>
 			${media.sources
 				.map((entry) => {
 					if (entry.type === 'image') return this.renderImage(entry)
@@ -175,9 +156,7 @@ class OneBlock extends HTMLElement {
 
 	renderVideo(video) {
 		this._ensureSettingsInitialized();
-		const schema = this.#settings?.useSchema;
 		return `<video ${this.getStyle('ob-media-video')} src="${video.src.url}"
-			${schema ? 'itemprop="video"' : ''}
 			${video.autoplay ? `autoplay playsinline` : ''}
 			${video.controls ? `controls` : ''}
 			${video.loop ? `loop` : ''}
@@ -222,12 +201,11 @@ class OneBlock extends HTMLElement {
 	renderAuthors(authors) {
 		this._ensureSettingsInitialized();
 		if (!authors?.length) return '';
-		const schema = this.#settings?.useSchema;
 		return `
-			<address ${this.getStyle('ob-authors')} ${schema ? 'itemprop="author" itemscope itemtype="https://schema.org/Person"' : ''}>
+			<address ${this.getStyle('ob-authors')}>
 				${authors.map(author => `
-					${author.avatar ? `<img src="${author.avatar.src}" alt="${author.avatar.alt || author.name}" width="${author.avatar.width}" height="${author.avatar.height}" ${this.getStyle('ob-avatar')} ${schema ? 'itemprop="image"' : ''}>` : ''}
-					<span ${this.getStyle('ob-author')} ${schema ? 'itemprop="name"' : ''}>${author.name}</span>
+					${author.avatar ? `<img src="${author.avatar.src}" alt="${author.avatar.alt || author.name}" width="${author.avatar.width}" height="${author.avatar.height}" ${this.getStyle('ob-avatar')}>` : ''}
+					<span ${this.getStyle('ob-author')}>${author.name}</span>
 					${author.contacts?.map(c =>
 						`<a href="${c.type === 'email' ? `mailto:${c.value}` : c.value}" ${this.getStyle('ob-contact')}>${c.label}</a>`
 					).join('') || ''}
@@ -262,16 +240,16 @@ class OneBlock extends HTMLElement {
 		if (!product) return '';
 		const price = product.price || {};
 		const rating = product.rating || {};
-		const schema = this.#settings?.useSchema;
+
 		return `
-			<section ${this.getStyle('ob-product')} ${schema ? 'itemscope itemtype="https://schema.org/Product"' : ''}>
-				<h4 ${this.getStyle('ob-product-name')} ${schema ? 'itemprop="name"' : ''}>${product.name}</h4>
+			<section ${this.getStyle('ob-product')}>
+				<h4 ${this.getStyle('ob-product-name')}>${product.name}</h4>
 				${price.current ? `<div ${this.getStyle('ob-product-price')}>
-					<span ${schema ? 'itemprop="price"' : ''}>${price.currency || ''} ${price.current}</span>
+					<spa>${price.currency || ''} ${price.current}</span>
 					${price.original && price.original > price.current ? `<del ${this.getStyle('ob-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
 					${price.discountText ? `<span ${this.getStyle('ob-product-discount')}>${price.discountText}</span>` : ''}
 				</div>` : ''}
-				${product.availability ? `<span ${this.getStyle('ob-product-availability')} ${schema ? 'itemprop="availability"' : ''}>${product.availability}</span>` : ''}
+				${product.availability ? `<span ${this.getStyle('ob-product-availability')}>${product.availability}</span>` : ''}
 				${rating.value ? `<span ${this.getStyle('ob-product-rating')}>
 					${'★'.repeat(Math.round(rating.value))}${'☆'.repeat((rating.starCount || 5) - Math.round(rating.value))}
 					(${rating.value} / ${rating.starCount || 5}, ${rating.count} ratings)
@@ -285,11 +263,11 @@ class OneBlock extends HTMLElement {
 		const content = data.content || {};
 		const type = this.getAttribute('type') || this.#settings?.type;
 		return `
-			<article ${this.getStyle('ob-content')} ${this.schemaAttrs(type, { headline: content.headline, description: content.summary })}>
+			<article ${this.getStyle('ob-content')}>
 				${content.category ? `<strong ${this.getStyle('ob-tagline')}>${content.category}</strong>` : ''}
-				${content.headline ? `<h2 ${this.getStyle('ob-headline')} ${this.#settings?.useSchema ? 'itemprop="headline"' : ''}>${content.headline}</h2>` : ''}
+				${content.headline ? `<h2 ${this.getStyle('ob-headline')}>${content.headline}</h2>` : ''}
 				${content.subheadline ? `<h3 ${this.getStyle('ob-subheadline')}>${content.subheadline}</h3>` : ''}
-				${content.summary ? `<p ${this.getStyle('ob-summary')} ${this.#settings?.useSchema ? 'itemprop="description"' : ''}>${content.summary}</p>` : ''}
+				${content.summary ? `<p ${this.getStyle('ob-summary')}>${content.summary}</p>` : ''}
 				${content.text ? `<div ${this.getStyle('ob-text')}>${content.text}</div>` : ''}
 				${this.renderAuthors(data.authors)}
 				${this.renderTags(data.tags)}
