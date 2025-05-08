@@ -26,6 +26,7 @@
 			border-radius: var(--fret-board-bdrs, .5rem);
 			box-sizing: border-box;
 			container-type: inline-size;
+			direction: ltr;
 			display: grid;
 			font-family: var(--fret-board-ff, inherit);
 			grid-template-columns: repeat(calc(var(--_strings) * 2), 1fr);
@@ -77,6 +78,11 @@
 				height: 100%;
 				list-style-position: inside;
 				padding: 0;
+			}
+
+			/* Left-handed */
+			&[left-handed] {
+				direction: rtl;
 			}
 		}
 
@@ -134,7 +140,7 @@
 	<h1>UI: Components</h1>
 
 	<h2>Fret Board</h2>
-	<p><strong>Fret Board</strong> is a custom element that displays guitar, ukulele, banjo or mandolin chords. It hosts <strong>String Note</strong> elements that represent individual notes on the fretboard, supporting muted strings, open strings, fret positions, finger numbers, and barre chords. The layout automatically adjusts based on the specified number of frets and strings. JavaScript is <strong>not</strong> required, but the components use the updated <code>attr()</code>-method in CSS, currently only available in Chrome.</p>
+	<p><strong>Fret Board</strong> is a custom element that displays guitar, ukulele, banjo or mandolin chords. It hosts <strong>String Note</strong> elements that represent individual notes on the fretboard, supporting muted strings, open strings, fret positions, finger numbers, and barre chords. The layout automatically adjusts based on the specified number of frets and strings. JavaScript is <strong>not</strong> required, but the components use the updated <code>attr()</code>-method in CSS, currently <strong>only available in Chrome</strong>.</p>
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
@@ -327,6 +333,48 @@
 
 	</div>
 
+	<h2>Left-Handed Guitarists</h2>
+	<p>For left-handed guitarists, there are two main approaches to stringing a guitar: mirror stringing or standard stringing played upside down. With mirror stringing, the strings are reversed (thickest string at the bottom), which matches how right-handed guitars appear in mirror. This is the most common approach and you just need to add <code>left-handed</code> attribute to the <code>&lt;fret-board&gt;</code>.</p>
+
+	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
+
+		<fret-board frets="4" strings="6" chord="G Major" left-handed>
+			<string-note string="6" fret="3" finger="2"></string-note>
+			<string-note string="5" fret="2" finger="1"></string-note>
+			<string-note string="4" open></string-note>
+			<string-note string="3" open></string-note>
+			<string-note string="2" open></string-note>
+			<string-note string="1" fret="3" finger="3"></string-note>
+		</fret-board>
+
+		<fret-board frets="4" strings="6" chord="C Major" left-handed>
+			<string-note string="6" mute></string-note>
+			<string-note string="5" fret="3" finger="3"></string-note>
+			<string-note string="4" fret="2" finger="2"></string-note>
+			<string-note string="3" open></string-note>
+			<string-note string="2" fret="1" finger="1"></string-note>
+			<string-note string="1" open></string-note>
+		</fret-board>
+
+		<fret-board frets="4" strings="6" chord="D Major" left-handed>
+			<string-note string="6" mute></string-note>
+			<string-note string="5" mute></string-note>
+			<string-note string="4" open></string-note>
+			<string-note string="3" fret="2" finger="1"></string-note>
+			<string-note string="2" fret="3" finger="3"></string-note>
+			<string-note string="1" fret="2" finger="2"></string-note>
+		</fret-board>
+
+		<fret-board frets="4" strings="6" chord="A Major" left-handed>
+			<string-note string="6" mute></string-note>
+			<string-note string="5" open></string-note>
+			<string-note string="4" fret="2" finger="2"></string-note>
+			<string-note string="3" fret="2" finger="3"></string-note>
+			<string-note string="2" fret="2" finger="4"></string-note>
+			<string-note string="1" open></string-note>
+		</fret-board>
+	</div>
+
 	<h2>Ukulele</h2>
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
@@ -434,6 +482,43 @@
 
 	</div>
 
-	<!-- <script type="module" src="./index.js"></script> -->
+	<script>
+		/* JS *NOT NEEDED* for Chrome, only for Safari/Firefox */
+		/* Uses the enhanced attr()-method in CSS */
+
+		function isAdvancedAttrSupported() {
+			const T = document.createElement('div');
+			document.body.appendChild(T);
+			
+			try {
+				T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
+				T.dataset.test = "123";
+
+				const computedValue = getComputedStyle(T)
+					.getPropertyValue('--t')
+					.trim();
+				
+				return computedValue === "123";
+			} catch (e) {
+				return false;
+			} finally {
+				T.remove();
+			}
+		}
+
+		if (!isAdvancedAttrSupported()) {
+			const fretBoards = document.querySelectorAll('fret-board');
+			fretBoards.forEach(fret => {
+				fret.style.setProperty('--_strings', fret.getAttribute('strings'));
+				fret.style.setProperty('--_frets', fret.getAttribute('frets'));
+				const stringNotes = fret.querySelectorAll('string-note');
+				stringNotes.forEach(note => {
+					note.style.setProperty('--string', note.getAttribute('string') || 1);
+					note.style.setProperty('--fret', note.getAttribute('fret') || 0);
+					note.style.setProperty('--barre', note.getAttribute('barre') || 1);
+				});
+			});
+		}
+	</script>>
 </body>
 </html>
