@@ -192,7 +192,7 @@ ul {
 		}
 	}
 }
-:host([display~="x-labels"]) {
+:host([display*="x-labels"]) {
 	--_gtr: var(--column-chart-caption-h) 1fr var(--column-chart-label-h);
 	td {
 		height: calc(
@@ -202,6 +202,16 @@ ul {
 		);
 	}
 	th { display: inline grid; }
+}
+:host([display~="x-labels-vertical"]) {
+	--column-chart-label-h: var(--column-chart-label-h-vertical, 5rem);
+	--column-chart-mih: var(--column-chart-mih-vertical, 350px);
+	th[scope="row"] {
+		padding-inline-start: 2ch; /* TODO! */
+		place-content: center start;
+		text-orientation: mixed;
+		writing-mode: vertical-rl;
+	}
 }
 :host([display~="y-grid"]) {
 	thead {
