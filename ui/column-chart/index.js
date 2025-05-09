@@ -55,6 +55,10 @@ tbody {
 
 	td {
 		--_v: attr(data-v type(<number>), 0);
+		--_pv: attr(data-pv type(<number>), var(--_v));
+		--_y: calc(1 - ((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))));
+		--_py: calc(1 - ((var(--_pv) - var(--_min)) / (var(--_max) - var(--_min))));
+
 		background: var(--column-chart-bar-bg, var(--_bg, light-dark(hsla(210, 100%, 70%, .8), hsla(210, 60%, 60%, .8))));
 		color: #0000;
 		font-size: var(--column-chart-bar-fs, clamp(0.5625rem, 0.45rem + .5cqi, 0.75rem));
@@ -162,7 +166,7 @@ ul {
 :host([display~="caption-start"]) {
 	caption { text-align: start; }
 }
-:host([display~="groups"]) {
+:host([display~="groups"]:not([type=area]):not([type=line])) {
 	tbody {
 		--column-chart-bar-bdrs: 0;
 		th { grid-column: span var(--_c, 1); }
@@ -273,6 +277,43 @@ ul {
 	td:nth-of-type(10n+9) { --_bg: var(--c9); }
 	td:nth-of-type(10n+0) { --_bg: var(--c10); }
 }
+
+/* === Types === */
+
+/* === Area === */
+:host([type=area]) tbody {
+	--column-chart-bar-gap: 0;
+	td {
+		clip-path: polygon(
+			0 100%,
+			0 calc(var(--_py) * 100%),
+			100% calc(var(--_y) * 100%),
+			100% 100%
+		);
+		font-size: 0;
+		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
+		height: calc(100cqb - var(--column-chart-label-h));
+	}
+}
+
+/* === Line === */
+:host([type=line]) tbody {
+	--line-chart-line-h: 2cqb;
+	--column-chart-bar-gap: 0;
+	td {
+		--_y: calc(1 - ((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))));
+		--_py: calc(1 - ((var(--_pv) - var(--_min)) / (var(--_max) - var(--_min))));
+		clip-path: polygon(
+			0 calc(var(--_py) * 100% + var(--line-chart-line-h) / 2),
+			0 calc(var(--_py) * 100% - var(--line-chart-line-h) / 2),
+			100% calc(var(--_y) * 100% - var(--line-chart-line-h) / 2),
+			100% calc(var(--_y) * 100% + var(--line-chart-line-h) / 2)
+		);
+		font-size: 0;
+		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
+		height: calc(100cqb - var(--column-chart-label-h));
+	}
+}
 `;
 
 const sheet = new CSSStyleSheet();
@@ -377,13 +418,22 @@ class ColumnChart extends HTMLElement {
 				${yAxisData.map(x => `<tr><th colspan="${maxColspan}">${x}</th></tr>`).join('')}
 			</thead>
 			<tbody>
-				${this.data.map(item => {
+				${this.data.map((item, rowIdx, arr) => {
 					const tdElements = Array.isArray(item.value) 
-						? item.value.map((v, index) => 
-							`<td data-v="${v}"${getStyleAttr(item.styles, index)}${item.displayValue === false ? ` aria-label="${v}"` : ''}>${getDisplayContent(v, item.displayValue)}</td>`
-						).join('')
-						: `<td data-v="${item.value}"${getStyleAttr(item.styles)}${item.displayValue === false ? ` aria-label="${item.value}"` : ''}>${getDisplayContent(item.value, item.displayValue)}</td>`;
-						
+						? item.value.map((v, index) => {
+							let prevValue;
+							if (rowIdx > 0 && Array.isArray(arr[rowIdx - 1]?.value)) {
+								prevValue = arr[rowIdx - 1].value[index];
+							} else {
+								prevValue = v;
+							}
+							return `<td data-v="${v}" data-pv="${prevValue}"${getStyleAttr(item.styles, index)}${item.displayValue === false ? ` aria-label="${v}"` : ''}>${getDisplayContent(v, item.displayValue)}</td>`;
+						}).join('')
+						: (() => {
+							const prevValue = this.data[rowIdx - 1]?.value ?? item.value;
+							return `<td data-v="${item.value}" data-pv="${prevValue}"${getStyleAttr(item.styles)}${item.displayValue === false ? ` aria-label="${item.value}"` : ''}>${getDisplayContent(item.value, item.displayValue)}</td>`;
+						})();
+
 					return `
 					<tr>
 						<th scope="row"${item.displayLabel === false ? ` aria-label="${item.label}"` : ''}>${item.displayLabel === false ? '' : (item.label || '')}</th>
@@ -409,6 +459,7 @@ class ColumnChart extends HTMLElement {
 		const tds = this.#root.querySelectorAll('[data-v]');
 		tds.forEach(td => {
 			td.style.setProperty('--_v', td.getAttribute('data-v'));
+			td.style.setProperty('--_pv', td.getAttribute('data-pv'));
 		});
 
 		const tbody = this.#root.querySelector('tbody');
