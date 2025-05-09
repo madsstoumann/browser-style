@@ -285,10 +285,10 @@ ul {
 	--column-chart-bar-gap: 0;
 	td {
 		clip-path: polygon(
-			0 100%,
-			0 calc(var(--_py) * 100%),
-			100% calc(var(--_y) * 100%),
-			100% 100%
+			-1% 100%,
+			-1% calc(var(--_py) * 100%),
+			101% calc(var(--_y) * 100%),
+			101% 100%
 		);
 		font-size: 0;
 		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
@@ -304,10 +304,10 @@ ul {
 		--_y: calc(1 - ((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))));
 		--_py: calc(1 - ((var(--_pv) - var(--_min)) / (var(--_max) - var(--_min))));
 		clip-path: polygon(
-			0 calc(var(--_py) * 100% + var(--line-chart-line-h) / 2),
-			0 calc(var(--_py) * 100% - var(--line-chart-line-h) / 2),
-			100% calc(var(--_y) * 100% - var(--line-chart-line-h) / 2),
-			100% calc(var(--_y) * 100% + var(--line-chart-line-h) / 2)
+			-1% calc(var(--_py) * 100% + var(--line-chart-line-h) / 2),
+			-1% calc(var(--_py) * 100% - var(--line-chart-line-h) / 2),
+			101% calc(var(--_y) * 100% - var(--line-chart-line-h) / 2),
+			101% calc(var(--_y) * 100% + var(--line-chart-line-h) / 2)
 		);
 		font-size: 0;
 		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
