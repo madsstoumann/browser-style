@@ -234,7 +234,7 @@ ul {
 	:host([small="8"]) { tbody tr:nth-of-type(n+9) { display: none; } }
 }
 
-@container (min-width: 400px) and (max-width: 800px) {
+@container (min-width: 400px) and (max-width: 700px) {
 	:host([medium="4"]) { tbody tr:nth-of-type(n+5) { display: none; } }
 	:host([medium="5"]) { tbody tr:nth-of-type(n+6) { display: none; } }
 	:host([medium="6"]) { tbody tr:nth-of-type(n+7) { display: none; } }
