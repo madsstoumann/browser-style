@@ -336,21 +336,20 @@ ul {
 	}
 }
 
-/* === Pie === */
+/* === Donut / Pie === */
+:host([type=donut]) tbody,
 :host([type=pie]) tbody {
 	--_t: attr(data-t type(<number>), 0);
 	aspect-ratio: 1;
 	border-radius: 50%;
 	td {
 		--_av: attr(data-av type(<number>), 0);
-		--_v: attr(data-v type(<number>), 0);
-		--_start: calc((var(--_av) / var(--_t)) * 1turn);
-		--_end: calc(((var(--_av) + var(--_v)) / var(--_t)) * 1turn);
-		--_percent: calc(var(--_v) / var(--_t));
-		background: conic-gradient(
-			var(--_bg) var(--_start) var(--_end),
-			#0000 0 var(--_end)
-		);
+		--_start: calc((var(--_av) / var(--_t)) * 360deg);
+		--_end: calc((var(--_v) / var(--_t)) * 360deg);
+
+		background: conic-gradient(from var(--_start),
+		var(--_bg) 0 var(--_end),
+		#0000 var(--_end) calc(var(--_start) + 360deg));
 		border-radius: 50%;
 		grid-area: 1 / 1 / 2 / 2;
 		height: 100cqb;
@@ -363,6 +362,10 @@ ul {
 	tr {
 		display: contents;
 	}
+}
+
+:host([type=donut]) tbody {
+	mask: radial-gradient(circle, #0000 40%, #000 40%);
 }
 `;
 
