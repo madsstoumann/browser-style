@@ -1,0 +1,23 @@
+{
+	"settings": {
+		"min": 0,
+		"max": 20000,
+		"caption": "Monthly Sales by Channel ($)",
+		"yAxis": [0, "", 5000, "", 10000, "", 15000, "", 20000],
+		"legend": ["In-store", "Online", "Mobile"]
+	},
+	"data": [
+		{
+			"value": 12000,
+			"label": "In-store"
+		},
+		{
+			"value": 6500,
+			"label": "Online"
+		},
+		{
+			"value": 1500,
+			"label": "Mobile"
+		}
+	]
+}
