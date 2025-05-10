@@ -1,0 +1,20 @@
+.demo {
+	--data-chart-y-axis-w: 3rem;
+}
+.custom {
+	--c1: linear-gradient(180deg, hsla(220, 100%, 92%, .95), hsla(220, 100%, 85%, .85));
+	--c2: linear-gradient(180deg, hsla(220, 80%, 85%, .95), hsla(220, 80%, 75%, .85));
+	--c3: linear-gradient(180deg, hsla(240, 80%, 90%, .95), hsla(240, 80%, 80%, .85));
+	--c4: linear-gradient(180deg, hsla(260, 70%, 90%, .95), hsla(260, 70%, 80%, .85));
+	--c5: linear-gradient(180deg, hsla(260, 60%, 85%, .95), hsla(260, 60%, 75%, .85));
+	--c6: linear-gradient(180deg, hsla(270, 60%, 80%, .95), hsla(270, 60%, 70%, .85));
+	--c7: linear-gradient(180deg, hsla(270, 50%, 75%, .95), hsla(270, 50%, 65%, .85));
+	--c8: linear-gradient(180deg, hsla(280, 50%, 85%, .95), hsla(280, 50%, 75%, .85));
+	--c9: linear-gradient(180deg, hsla(290, 60%, 90%, .95), hsla(290, 60%, 80%, .85));
+	--c10: linear-gradient(180deg, hsla(300, 70%, 95%, .95), hsla(300, 70%, 85%, .85));
+
+	--data-chart-bar-gap: 0;
+	--data-chart-bg: linear-gradient(175deg, hsla(220, 100%, 96%, 1), hsla(300, 70%, 95%, 1));
+	--data-chart-x-axis-bdw: 2px;
+	--data-chart-p: 5px 10px;
+}

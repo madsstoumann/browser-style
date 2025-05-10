@@ -1,31 +1,42 @@
 const styles = `
 :host {
-	--column-chart-bar-bdrs: clamp(0.125rem, -0.35rem + 1cqi, 0.33rem);
-	--column-chart-bar-c: currentColor;
-	--column-chart-bdw: 1px;
-	--column-chart-bds: solid;
-	--column-chart-bdc: light-dark(#CCC, #666);
-	--column-chart-light-bdw: 1px;
-	--column-chart-light-bds: solid;
-	--column-chart-light-bdc: light-dark(#EBEBEB, #444);
+	--data-chart-bar-bdrs: clamp(0.125rem, -0.35rem + 1cqi, 0.33rem);
+	--data-chart-bar-c: currentColor;
+	--data-chart-bdw: 1px;
+	--data-chart-bds: solid;
+	--data-chart-bdc: light-dark(#CCC, #666);
+	--data-chart-nolabel-bdw: 1px;
+	--data-chart-nolabel-bds: solid;
+	--data-chart-nolabel-bdc: light-dark(#EBEBEB, #444);
 
-	--column-chart-caption-h: 1.5rem;
-	--column-chart-label-h: 20px;
-	--column-chart-mih: 275px;
-	--column-chart-y-axis-w: 1.5rem;
+	--data-chart-caption-h: 1.5rem;
+	--data-chart-label-h: 20px;
+	--data-chart-mih: 275px;
+	--data-chart-y-axis-w: 1.5rem;
 
 	--_min: attr(min type(<number>), 0);
 	--_max: attr(max type(<number>), 100);
 	--_sm: attr(small type(<number>), 0);
 	--_md: attr(medium type(<number>), 0);
 
-	background: var(--column-chart-bg, #FFF0);
-	border-radius: var(--column-chart-bdrs, .5rem);
+	--c1: hsla(210, 60%, 60%, .75);
+	--c2: hsla(170, 45%, 55%, .75);
+	--c3: hsla(100, 40%, 55%, .75);
+	--c4: hsla(60, 40%, 60%, .75);
+	--c5: hsla(35, 50%, 65%, .75);
+	--c6: hsla(15, 55%, 60%, .75);
+	--c7: hsla(350, 50%, 60%, .75);
+	--c8: hsla(280, 40%, 60%, .75);
+	--c9: hsla(240, 45%, 55%, .75);
+	--c10: hsla(200, 30%, 65%, .75);
+
+	background: var(--data-chart-bg, #FFF0);
+	border-radius: var(--data-chart-bdrs, .5rem);
 	box-sizing: border-box;
 	container-type: inline-size;
 	display: block;
-	font-family: var(--column-chart-ff, ui-sans-serif, system-ui);
-	padding: var(--column-chart-p, 0);
+	font-family: var(--data-chart-ff, ui-sans-serif, system-ui);
+	padding: var(--data-chart-p, 0);
 }
 
 :host * {
@@ -34,24 +45,24 @@ const styles = `
 
 caption {
 	display: none;
-	font-size: var(--column-chart-caption-fs, 11px);
-	font-weight: var(--column-chart-caption-fw, 500);
+	font-size: var(--data-chart-caption-fs, 11px);
+	font-weight: var(--data-chart-caption-fw, 500);
 	grid-area: 1 / 1 / 2 / 2;
 	text-wrap: nowrap;
 }
 
 table {
 	display: grid;
-	grid-template-rows: var(--_gtr, var(--column-chart-caption-h) 1fr);
-	min-height: var(--column-chart-mih);
+	grid-template-rows: var(--_gtr, var(--data-chart-caption-h) 1fr);
+	min-height: var(--data-chart-mih);
 }
 
 tbody {
 	container-type: size;
 	display: grid;
-	gap: var(--column-chart-bar-gap, .25rem);
+	gap: var(--data-chart-bar-gap, .25rem);
 	grid-area: 2 / 1 / 4 / 2;
-	grid-template-columns: repeat(auto-fit, minmax(var(--column-chart-bar-miw, 1.25cqi), 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(var(--data-chart-bar-miw, 1.25cqi), 1fr));
 
 	td {
 		--_v: attr(data-v type(<number>), 0);
@@ -59,30 +70,30 @@ tbody {
 		--_y: calc(1 - ((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))));
 		--_py: calc(1 - ((var(--_pv) - var(--_min)) / (var(--_max) - var(--_min))));
 
-		background: var(--column-chart-bar-bg, var(--_bg, light-dark(hsla(210, 100%, 70%, .8), hsla(210, 60%, 60%, .8))));
+		background: var(--data-chart-bar-bg, var(--_bg, light-dark(hsla(210, 100%, 70%, .8), hsla(210, 60%, 60%, .8))));
 		color: #0000;
-		font-size: var(--column-chart-bar-fs, clamp(0.5625rem, 0.45rem + .5cqi, 0.75rem));
-		font-weight: var(--column-chart-bar-fw, 400);
+		font-size: var(--data-chart-bar-fs, clamp(0.5625rem, 0.45rem + .5cqi, 0.75rem));
+		font-weight: var(--data-chart-bar-fw, 400);
 		height: calc(
 			(
 				(var(--_v) - var(--_min)) / (var(--_max) - var(--_min))
 			) * 100cqb
 		);
-		padding: var(--column-chart-bar-p, .75ch 0 0 0);
+		padding: var(--data-chart-bar-p, .75ch 0 0 0);
 		text-align: center;
 		&:first-of-type {
-			border-radius: var(--column-chart-bar-bdrs) var(--column-chart-bar-bdrs) 0 0;
+			border-radius: var(--data-chart-bar-bdrs) var(--data-chart-bar-bdrs) 0 0;
 		}
 	}
 
 	th {
-		border-block-start: var(--column-chart-x-axis-bdw, 0px) var(--column-chart-x-axis-bds, solid) var(--column-chart-x-axis-bdc, hsla(0, 0%, 41%, .95));
-		color: var(--column-chart-x-axis-c, light-dark(#444, #EEE));
+		border-block-start: var(--data-chart-x-axis-bdw, 0px) var(--data-chart-x-axis-bds, solid) var(--data-chart-x-axis-bdc, hsla(0, 0%, 41%, .95));
+		color: var(--data-chart-x-axis-c, light-dark(#444, #EEE));
 		display: none;
-		font-size: var(--column-chart-x-axis-fs, clamp(0.5625rem, 0.4rem + .5cqi, 0.6875rem));
-		font-weight: var(--column-chart-x-axis-fw, 400);
+		font-size: var(--data-chart-x-axis-fs, clamp(0.5625rem, 0.4rem + .5cqi, 0.6875rem));
+		font-weight: var(--data-chart-x-axis-fw, 400);
 		grid-row: calc(var(--_c, 1) + 1);
-		height: var(--column-chart-label-h);
+		height: var(--data-chart-label-h);
 		overflow-inline: clip;
 		place-content: center;
 	}
@@ -108,11 +119,11 @@ thead {
 	color: #0000;
 	display: none;
 	grid-area: 1 / 1 / 3 / 2;
-	grid-template-rows: var(--column-chart-caption-h) repeat(auto-fit, minmax(1rem, 1fr));
+	grid-template-rows: var(--data-chart-caption-h) repeat(auto-fit, minmax(1rem, 1fr));
 
 	th {
-		font-size: var(--column-chart-y-axis-fs, 10px);
-		font-weight: var(--column-chart-y-axis-fw, 300);
+		font-size: var(--data-chart-y-axis-fs, 10px);
+		font-weight: var(--data-chart-y-axis-fw, 300);
 		text-align: start;
 	}
 	tr {
@@ -125,23 +136,23 @@ ul {
 	all: unset;
 	display: flex;
 	flex-wrap: wrap;
-	font-size: var(--column-chart-legend-fs, small);
-	gap: var(--column-chart-legend-gap, .25rem 1rem);
+	font-size: var(--data-chart-legend-fs, small);
+	gap: var(--data-chart-legend-gap, .25rem 1rem);
 	list-style-type: none;
-	justify-content: var(--column-chart-legend-jc, center);
-	margin-block: var(--column-chart-legend-m, 1rem 0);
+	justify-content: var(--data-chart-legend-jc, center);
+	margin-block: var(--data-chart-legend-m, 1rem 0);
 
 	li {
 		align-items: center;
 		display: flex;
-		gap: var(--column-chart-legend-item-gap, 0.5rem);
+		gap: var(--data-chart-legend-item-gap, 0.5rem);
 		text-wrap: nowrap;
 		&::before {
 			background: var(--_lbg, #0000);
-			border-radius: var(--column-chart-legend-item-bdrs, 0);
+			border-radius: var(--data-chart-legend-item-bdrs, 0);
 			content: '';
-			height: var(--column-chart-legend-item-h, 1rem);
-			width: var(--column-chart-legend-item-w, 1.5rem);
+			height: var(--data-chart-legend-item-h, 1rem);
+			width: var(--data-chart-legend-item-w, 1.5rem);
 		}
 		&:nth-child(10n+1) { --_lbg: var(--c1); }
 		&:nth-child(10n+2) { --_lbg: var(--c2); }
@@ -168,13 +179,13 @@ ul {
 }
 :host([display~="groups"]:not([type=area]):not([type=line])) {
 	tbody {
-		--column-chart-bar-bdrs: 0;
+		--data-chart-bar-bdrs: 0;
 		th { grid-column: span var(--_c, 1); }
 		tr { grid-template-columns: repeat(auto-fit, minmax(var(--chart-group-bar-miw, 2px), 1fr)); }
 	}
 }
 :host([display*="value-labels"]) {
-	td { color: var(--column-chart-bar-c); }
+	td { color: var(--data-chart-bar-c); }
 }
 :host([display~="value-labels-center"]) {
 	td { align-content: center; }
@@ -183,29 +194,29 @@ ul {
 	td { align-content: end; }
 }
 :host([display~="x-grid"]) {
-	--column-chart-bar-gap: 0;
+	--data-chart-bar-gap: 0;
 	tr {
-		border-block-end: var(--column-chart-light-bdw) var(--column-chart-light-bds) var(--column-chart-light-bdc);
-		border-inline-end: var(--column-chart-light-bdw) var(--column-chart-light-bds) var(--column-chart-light-bdc);
+		border-block-end: var(--data-chart-nolabel-bdw) var(--data-chart-nolabel-bds) var(--data-chart-nolabel-bdc);
+		border-inline-end: var(--data-chart-nolabel-bdw) var(--data-chart-nolabel-bds) var(--data-chart-nolabel-bdc);
 		&:first-of-type {
-			border-inline-start: var(--column-chart-light-bdw) var(--column-chart-light-bds) var(--column-chart-light-bdc);
+			border-inline-start: var(--data-chart-nolabel-bdw) var(--data-chart-nolabel-bds) var(--data-chart-nolabel-bdc);
 		}
 	}
 }
 :host([display*="x-labels"]) {
-	--_gtr: var(--column-chart-caption-h) 1fr var(--column-chart-label-h);
+	--_gtr: var(--data-chart-caption-h) 1fr var(--data-chart-label-h);
 	td {
 		height: calc(
 			(
 				(var(--_v) - var(--_min)) / (var(--_max) - var(--_min))
-			) * 100cqb - var(--column-chart-label-h)
+			) * 100cqb - var(--data-chart-label-h)
 		);
 	}
 	th { display: inline grid; }
 }
 :host([display~="x-labels-vertical"]) {
-	--column-chart-label-h: var(--column-chart-label-h-vertical, 5rem);
-	--column-chart-mih: var(--column-chart-mih-vertical, 350px);
+	--data-chart-label-h: var(--data-chart-label-h-vertical, 5rem);
+	--data-chart-mih: var(--data-chart-mih-vertical, 350px);
 	th[scope="row"] {
 		padding-inline-start: 2ch; /* TODO! */
 		place-content: center start;
@@ -217,22 +228,22 @@ ul {
 	thead {
 		display: grid; 
 		th {
-			border-block-end: var(--column-chart-bdw) var(--column-chart-bds) var(--column-chart-bdc);
+			border-block-end: var(--data-chart-bdw) var(--data-chart-bds) var(--data-chart-bdc);
 			&:empty {
-				border-block-end: var(--column-chart-light-bdw) var(--column-chart-light-bds) var(--column-chart-light-bdc);
+				border-block-end: var(--data-chart-nolabel-bdw) var(--data-chart-nolabel-bds) var(--data-chart-nolabel-bdc);
 			}
 		}
 	}
 }
 :host([display*="y-labels"]) {
-	tbody { padding-inline: var(--column-chart-y-axis-w) 0; }
+	tbody { padding-inline: var(--data-chart-y-axis-w) 0; }
 	thead {
-		color: var(--column-chart-y-axis-c, light-dark(#696969, #EEE));
+		color: var(--data-chart-y-axis-c, light-dark(#696969, #EEE));
 		display: grid;
 	}
 }
 :host([display~="y-labels-end"]) {
-	tbody { padding-inline: 0 var(--column-chart-y-axis-w); }
+	tbody { padding-inline: 0 var(--data-chart-y-axis-w); }
 	thead th { text-align: end; }
 }
 
@@ -292,7 +303,7 @@ ul {
 
 /* === Area === */
 :host([type=area]) tbody {
-	--column-chart-bar-gap: 0;
+	--data-chart-bar-gap: 0;
 	td {
 		clip-path: polygon(
 			-1% 100%,
@@ -302,14 +313,14 @@ ul {
 		);
 		font-size: 0;
 		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
-		height: calc(100cqb - var(--column-chart-label-h));
+		height: calc(100cqb - var(--data-chart-label-h));
 	}
 }
 
 /* === Line === */
 :host([type=line]) tbody {
 	--line-chart-line-h: 2cqb;
-	--column-chart-bar-gap: 0;
+	--data-chart-bar-gap: 0;
 	td {
 		--_y: calc(1 - ((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))));
 		--_py: calc(1 - ((var(--_pv) - var(--_min)) / (var(--_max) - var(--_min))));
@@ -321,7 +332,36 @@ ul {
 		);
 		font-size: 0;
 		grid-area: 1 / 1 / 2 / 2; /* stack all columns */
-		height: calc(100cqb - var(--column-chart-label-h));
+		height: calc(100cqb - var(--data-chart-label-h));
+	}
+}
+
+/* === Pie === */
+:host([type=pie]) tbody {
+	--_t: attr(data-t type(<number>), 0);
+	aspect-ratio: 1;
+	border-radius: 50%;
+	td {
+		--_av: attr(data-av type(<number>), 0);
+		--_v: attr(data-v type(<number>), 0);
+		--_start: calc((var(--_av) / var(--_t)) * 1turn);
+		--_end: calc(((var(--_av) + var(--_v)) / var(--_t)) * 1turn);
+		--_percent: calc(var(--_v) / var(--_t));
+		background: conic-gradient(
+			var(--_bg) var(--_start) var(--_end),
+			#0000 0 var(--_end)
+		);
+		border-radius: 50%;
+		grid-area: 1 / 1 / 2 / 2;
+		height: 100cqb;
+		padding: 0;
+		width: 100cqi;
+	}
+	th {
+		display: none;
+	}
+	tr {
+		display: contents;
 	}
 }
 `;
@@ -329,7 +369,7 @@ ul {
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(styles);
 
-class ColumnChart extends HTMLElement {
+class DataChart extends HTMLElement {
 	#dataset; #root;
 	#resizeObserver;
 
@@ -412,6 +452,25 @@ class ColumnChart extends HTMLElement {
 			return value;
 		};
 
+		// Calculate sums for percentage calculation
+		let totalSum = 0;
+		let colSums = [];
+		if (this.data.length > 0) {
+			if (Array.isArray(this.data[0].value)) {
+				const colCount = this.data[0].value.length;
+				colSums = Array(colCount).fill(0);
+				this.data.forEach(item => {
+					if (Array.isArray(item.value)) {
+						item.value.forEach((v, i) => {
+							colSums[i] += Number(v) || 0;
+						});
+					}
+				});
+			} else {
+				totalSum = this.data.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
+			}
+		}
+
 		const maxColspan = Math.max(...this.data.map(item => 
 			1 + (Array.isArray(item.value) ? item.value.length : 1)
 		));
@@ -427,30 +486,39 @@ class ColumnChart extends HTMLElement {
 			<thead aria-hidden="true">
 				${yAxisData.map(x => `<tr><th colspan="${maxColspan}">${x}</th></tr>`).join('')}
 			</thead>
-			<tbody>
-				${this.data.map((item, rowIdx, arr) => {
-					const tdElements = Array.isArray(item.value) 
-						? item.value.map((v, index) => {
-							let prevValue;
-							if (rowIdx > 0 && Array.isArray(arr[rowIdx - 1]?.value)) {
-								prevValue = arr[rowIdx - 1].value[index];
-							} else {
-								prevValue = v;
-							}
-							return `<td data-v="${v}" data-pv="${prevValue}"${getStyleAttr(item.styles, index)}${item.displayValue === false ? ` aria-label="${v}"` : ''}>${getDisplayContent(v, item.displayValue)}</td>`;
-						}).join('')
-						: (() => {
-							const prevValue = this.data[rowIdx - 1]?.value ?? item.value;
-							return `<td data-v="${item.value}" data-pv="${prevValue}"${getStyleAttr(item.styles)}${item.displayValue === false ? ` aria-label="${item.value}"` : ''}>${getDisplayContent(item.value, item.displayValue)}</td>`;
-						})();
+				<tbody data-t="${Array.isArray(this.data[0]?.value) ? colSums.join(',') : totalSum}">
+					${(() => {
+						let accumulated = 0;
+						let accumulatedArr = [];
+						return this.data.map((item, rowIdx, arr) => {
+							const tdElements = Array.isArray(item.value) 
+								? item.value.map((v, index) => {
+									let prevValue;
+									if (rowIdx > 0 && Array.isArray(arr[rowIdx - 1]?.value)) {
+										prevValue = arr[rowIdx - 1].value[index];
+									} else {
+										prevValue = v;
+									}
+									// Calculate accumulated value for this column
+									const prevAccum = accumulatedArr[index] || 0;
+									accumulatedArr[index] = prevAccum + (Number(v) || 0);
+									return `<td data-v="${v}" data-pv="${prevValue}" data-av="${prevAccum}"${getStyleAttr(item.styles, index)}${item.displayValue === false ? ` aria-label="${v}"` : ''}>${getDisplayContent(v, item.displayValue)}</td>`;
+								}).join('')
+								: (() => {
+									const prevValue = this.data[rowIdx - 1]?.value ?? item.value;
+									const prevAccum = accumulated;
+									accumulated += Number(item.value) || 0;
+									return `<td data-v="${item.value}" data-pv="${prevValue}" data-av="${prevAccum}"${getStyleAttr(item.styles)}${item.displayValue === false ? ` aria-label="${item.value}"` : ''}>${getDisplayContent(item.value, item.displayValue)}</td>`;
+								})();
 
-					return `
-					<tr>
-						<th scope="row"${item.displayLabel === false ? ` aria-label="${item.label}"` : ''}>${item.displayLabel === false ? '' : (item.label || '')}</th>
-						${tdElements}
-					</tr>`;
-				}).join('')}
-			</tbody>
+							return `
+							<tr>
+								<th scope="row"${item.displayLabel === false ? ` aria-label="${item.label}"` : ''}>${item.displayLabel === false ? '' : (item.label || '')}</th>
+								${tdElements}
+							</tr>`;
+						}).join('');
+					})()}
+				</tbody>
 		</table>
 		${this.settings?.legend ? `
 			<ul>
@@ -463,9 +531,11 @@ class ColumnChart extends HTMLElement {
 		}
 	}
 
+
+
 	/* Only for Safari */
 	#applyAdvancedAttrPolyfill() {
-		console.warn('Polyfilling advanced attribute support for ColumnChart'); 
+		console.warn('Polyfilling advanced attribute support for DataChart'); 
 		const tds = this.#root.querySelectorAll('[data-v]');
 		tds.forEach(td => {
 			td.style.setProperty('--_v', td.getAttribute('data-v'));
@@ -525,4 +595,4 @@ class ColumnChart extends HTMLElement {
 	}
 }
 
-customElements.define('column-chart', ColumnChart);
+customElements.define('data-chart', DataChart);
