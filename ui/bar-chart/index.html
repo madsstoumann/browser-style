@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Bar Chart</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="../data-chart/demo/index.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Bar Chart</h2>
+	<data-chart type="bar" data="../data-chart/demo/sales.json" class="demo" display="caption x-labels value-labels y-grid y-labels" small="3" medium="6">
+	</data-chart>
+
+	<h2>Bar Chart with Grouped Data</h2>
+	<data-chart type="bar" data="../data-chart/demo/data.json" class="demo" display="caption-start x-labels-vertical y-grid y-labels-end groups" small="3" medium="6">
+	</data-chart>
+
+	<h2>Bar Chart with Custom Styles</h2>
+	<data-chart type="bar" data="../data-chart/demo/temperature.json" class="custom" display="caption-end x-labels value-labels y-grid y-labels" small="5" medium="10">
+	</data-chart>
+
+	<script type="module" src="../data-chart/index.js"></script>
+</body>
+</html>

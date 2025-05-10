@@ -543,12 +543,14 @@ class DataChart extends HTMLElement {
 		tds.forEach(td => {
 			td.style.setProperty('--_v', td.getAttribute('data-v'));
 			td.style.setProperty('--_pv', td.getAttribute('data-pv'));
+			td.style.setProperty('--_av', td.getAttribute('data-av'));
 		});
 
 		const tbody = this.#root.querySelector('tbody');
 		if (tbody) {
 			const host = this;
 			let numCols;
+			tbody.style.setProperty('--_t', tbody.getAttribute('data-t'));
 			if (host.hasAttribute('small')) {
 				const smallVal = parseInt(host.getAttribute('small'), 10);
 				if (!isNaN(smallVal) && smallVal > 0) {
