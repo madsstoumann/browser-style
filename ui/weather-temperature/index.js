@@ -1,18 +1,18 @@
 import WeatherWidget from '../weather-widget/index.js';
-import '../column-chart/index.js';
+import '../data-chart/index.js';
 
 const styles = `
-	column-chart {
-		--column-chart-bar-bg: #FFF5CC;
-		--column-chart-bar-c: #000;
-		--column-chart-x-axis-c: #FFF5CC;
+	data-chart {
+		--data-chart-bar-bg: #FFF5CC;
+		--data-chart-bar-c: #000;
+		--data-chart-x-axis-c: #FFF5CC;
 		display: none;
 	}
 	@container (width > 400px) {
 		:host::part(header-lg) {
 			display: none;
 		}
-		column-chart {
+		data-chart {
 			display: grid;
 			margin-block-start: 1em;
 		}
@@ -86,11 +86,11 @@ class WeatherTemperature extends WeatherWidget {
 				${this.hasAttribute('switcher') ? this.renderUnitSwitcher() : ''}
 			</h2>
 			<h3 part="header-lg">${temperature}${this.units.temperature}</h3>
-			<column-chart display="value-labels x-labels" small="6" medium="12"></column-chart>
+			<data-chart type"=column" display="value-labels x-labels" small="6" medium="12"></data-chart>
 		</div>
 		`;
 
-		const chart = this.root.querySelector('column-chart');
+		const chart = this.root.querySelector('data-chart');
 		if (chart) {
 			const maxValue = Math.max(...graphData.map(d => d.value));
 			chart.dataset = {

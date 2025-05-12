@@ -1,20 +1,20 @@
 import WeatherWidget from '../weather-widget/index.js';
-import '../column-chart/index.js';
+import '../data-chart/index.js';
 
 const LABEL_INTERVAL = 2;
 
 const styles = `
-	column-chart {
+	data-chart {
 		display: none;
 	}
 	@container (width > 400px) {
 		:host::part(header-lg) {
 			display: none;
 		}
-		column-chart {
-			--column-chart-bar-bg: #B0CCE8;
-			--column-chart-bar-c: #000;
-			--column-chart-x-axis-c: #FFF;
+		data-chart {
+			--data-chart-bar-bg: #B0CCE8;
+			--data-chart-bar-c: #000;
+			--data-chart-x-axis-c: #FFF;
 			display: grid;
 			margin-block-start: 1em;
 		}
@@ -87,11 +87,11 @@ console.log(graphData)
 				${this.hasAttribute('switcher') ? this.renderUnitSwitcher('mm', 'in') : ''}
 			</h2>
 			<h3 part="header-lg">${precipitation}${this.units.presipitation}</h3>
-			<column-chart display="value-labels x-labels" small="6" medium="12"></column-chart>
+			<data-chart type="column" display="value-labels x-labels" small="6" medium="12"></data-chart>
 		</div>
 		`;
 
-		const chart = this.root.querySelector('column-chart');
+		const chart = this.root.querySelector('data-chart');
 		if (chart) {
 			const maxValue = Math.max(...graphData.map(d => d.value));
 			chart.dataset = {
