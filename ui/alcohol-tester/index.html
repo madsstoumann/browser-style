@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Alcohol Tester</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<style>
+		button { justify-self: end; }
+		label:has(input[disabled]) { display: none; }
+		ul {
+			list-style-position: inside;
+			margin: 0;
+			padding: 0;
+			li::marker { content: '✓ '; }
+		}
+		[name=result] {
+			&::before {
+				color: GrayText;
+				content: 'This beverage contains ';
+			}
+			&::after {
+				content: ' units of alcohol.';
+			}
+		}
+		[name=finaltotal]:not(:empty) {
+			&::before {
+				content: 'Total alcohol units: ';
+			}
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Micro Apps</h1>
+
+	<h2>Alcohol Tester</h2>
+
+<form id="app">
+	<fieldset>
+		<legend>Profile Details</legend>
+		<label>
+			<span>Region (BAC limit):</span>
+			<select name="limit">
+				<option value="0.00">Australia (Learner/Provisional drivers) - 0.00%</option>
+				<option value="0.05">Australia (General drivers) - 0.05%</option>
+				<option value="0.08">Canada - 0.08%</option>
+				<option value="0.05">European Union - 0.05%</option>
+				<option value="0.03">Japan - 0.03%</option>
+				<option value="0.02">Norway - 0.02%</option>
+				<option value="0.02">Poland - 0.02%</option>
+				<option value="0.02">Sweden - 0.02%</option>
+				<option value="0.00">United Arab Emirates - 0.00% (Zero tolerance)</option>
+				<option value="0.08">United Kingdom (England, Wales, Northern Ireland) - 0.08%</option>
+				<option value="0.05">United Kingdom (Scotland) - 0.05%</option>
+				<option value="0.08" selected>United States - 0.08%</option>
+			</select>
+		</label>
+		<label>Weight
+			<input type="range" name="weight" min="30" max="200" step="0.5" value="70">
+		</label>
+		<label>Body water distribution:
+			<select name="bodywater">
+				<option value="0.58">Typical for males</option>
+				<option value="0.49">Typical for females</option>
+			</select>
+		</label>
+	</fieldset>
+	<br>
+	<fieldset name="addbeverage">
+		<legend>Add beverage</legend>
+		<label>Beverage
+			<select name="beverage">
+				<option selected disabled>Choose a beverage</option>
+				<option data-volume="330" data-percentage="5">Beer, pilsner</option>
+				<option data-volume="400" data-percentage="8">Stronger beer</option>
+				<option data-volume="150" data-percentage="14">Glass of red wine</option>
+				<option data-volume="150" data-percentage="11">Glass of light Riesling</option>
+				<option data-volume="40" data-percentage="40">Shot of vodka</option>
+				<option data-volume="40" data-percentage="35">Shot of whiskey</option>
+				<option data-volume="100" data-percentage="17">Glass of port wine</option>
+				<option data-volume="100" data-percentage="20">Glass of sherry</option>
+				<option data-volume="120" data-percentage="9">Glass of sparkling wine</option>
+				<option data-volume="150" data-percentage="13">Glass of white wine</option>
+				<option data-volume="120" data-percentage="6">Glass of cider</option>
+				<option data-volume="100" data-percentage="40">Shot of gin</option>
+				<option data-volume="100" data-percentage="40">Shot of tequila</option>
+			</select>
+		</label>
+		<label>
+			Units
+			<input type="number" name="units" min="1" value="1" disabled>
+		</label>
+		<label>
+			Volume in milliliters
+			<input type="number" name="volume" min="1" step="0.25" value="0" disabled>
+		</label>
+		<label>
+			Alcohol percentage
+			<input type="number" name="percentage" min="0" max="50" step="0.1" value="14" disabled>
+		</label>
+		<strong><output name="result" hidden></output></strong>
+		<button type="button" class="bg-accent" name="add" disabled>Add</button>
+	</fieldset>
+	<br>
+	<fieldset name="results" hidden>
+		<legend>Results: Consumed beverages</legend>
+		<ul id="list"></ul>
+		<strong><output name="finaltotal"></output></strong>
+		<output name="answer" class="ui-button"></output>
+	</fieldset>
+</form>
+
+<br>
+<small>
+	BAC stands for <em>Blood Alcohol Concentration</em>, which is an estimate of the amount of alcohol in your bloodstream based on your input. 
+	Please note, this tool provides a rough estimate and should not be used as a definitive measure of your fitness to drive. 
+	Even if the calculator indicates you are fit to drive, it is your responsibility to make safe and lawful decisions. 
+	I cannot be held responsible for any actions taken based on the results of this calculator.
+</small>
+
+<script>
+	const app = document.getElementById('app');
+	const list = document.getElementById('list');
+
+	const { add, addbeverage, answer, beverage, bodywater, finaltotal, limit, percentage, result, results, units, volume, weight } = app.elements;
+	let total = 0;
+
+	add.addEventListener('click', () => {
+		const productName = beverage.selectedOptions[0].textContent;
+		const { percentage: p } = beverage.selectedOptions[0].dataset;
+		const units = parseFloat(result.value);
+		list.insertAdjacentHTML('beforeend', `<li>${productName} (${percentage.value}%) — ${units} units</li>`);
+		total += units;
+		finaltotal.value = total.toFixed(2);
+		calculateAnswer();
+		enableElements(false);
+		results.hidden = false;
+	});
+
+	addbeverage.addEventListener('input', () => {
+		if (units.value && volume.value && percentage.value) {
+			result.value = (units.valueAsNumber * (volume.valueAsNumber / 10) * percentage.valueAsNumber * 0.8 / 120).toFixed(2);
+			updateVolume();
+		}
+	});
+
+	beverage.addEventListener('change', () => {
+		const { volume: v, percentage: p } = beverage.selectedOptions[0].dataset;
+		units.value = 1;
+		volume.value = v;
+		percentage.value = p;
+		updateVolume();
+		enableElements(true);
+		addbeverage.dispatchEvent(new Event('input'));
+	});
+
+	weight.addEventListener('input', () => {
+		weight.style.setProperty('--value', ((weight.value - weight.min) / (weight.max - weight.min)) * 100);
+		weight.parentNode.dataset.output = `${weight.value} kg / ${Math.round(weight.value * 2.20462)} lbs`;
+	});	
+
+	/* Methods */
+
+	function calculateAnswer() {
+		const alcoholMetabolismRate = 0.015;
+		// BAC = (Alcohol in grams / (Body weight in grams * Body water constant)) * 100
+		const currentBAC = ((total * 10) / ((weight.valueAsNumber * 1000) * parseFloat(bodywater.value))) * 100;
+		const hoursToSober = (currentBAC / alcoholMetabolismRate).toFixed(1);
+		const canDrive = currentBAC <= parseFloat(limit.value);
+		answer.value = `Current BAC: ${currentBAC.toFixed(2)}%. Time to sober: ${hoursToSober} hours. ${
+			canDrive ? "You are fit to drive." : 'You are NOT fit to drive.'
+		}`;
+		answer.classList.toggle('bg-success', canDrive);
+				answer.classList.toggle('bg-error', !canDrive);
+	}
+
+	function enableElements(bool) {
+		[percentage, units, volume].forEach(el => el.disabled = !bool);
+		result.hidden = !bool;
+		if (!bool) beverage.selectedIndex = 0;
+		app.elements.add.disabled = !bool;
+	};
+
+	function updateVolume() {
+		volume.parentNode.dataset.output = `${volume.valueAsNumber} ml / ${(volume.valueAsNumber * 0.033814).toFixed(2)} oz`;
+	}
+
+	/* Init */
+	weight.dispatchEvent(new Event('input'));
+</script>
+
+</body>
+</html>
