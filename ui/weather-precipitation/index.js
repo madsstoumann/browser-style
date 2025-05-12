@@ -79,7 +79,7 @@ class WeatherPrecipitation extends WeatherWidget {
 
 		const precipitation = this.metric ? this._data.current.precip_mm : this._data.current.precip_in;
 		const graphData = this.prepareGraphData(this._data.forecast.forecastday);
-console.log(graphData)
+
 		this.root.innerHTML = `
 		<div part="widget">
 			<h2 part="title">${this.createIcon(ICONS.precipitation, 'icon')}
