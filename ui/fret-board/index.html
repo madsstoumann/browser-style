@@ -4,147 +4,20 @@
 	<title>Fret Board</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Analog Clock: CSS-driven analog clock with JavaScript initialization.">
+	<meta name="description" content="Fret Board is a web component that displays guitar, ukulele, banjo or mandolin chords.">
   <meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
-
-	<style>
-		fret-board {
-			--fret-board-bg: light-dark(#EEE, #333);
-			--fret-board-fret-c: light-dark(#000, #FFF);
-			--fret-board-fret-w: clamp(0.0625rem, 0.03125rem + 0.5cqi, 0.5rem);
-			--fret-board-string-c: light-dark(#0008, #FFF8);
-			--fret-board-string-w: clamp(0.0625rem, 0.03125rem + 0.5cqi, 0.125rem);
-
-			/* private consts */
-			--_frets: attr(frets type(<number>), 4);
-			--_strings: attr(strings type(<number>), 6);
-
-			aspect-ratio: 1 / 1;
-			background-color: var(--fret-board-bg);
-			border-radius: var(--fret-board-bdrs, .5rem);
-			box-sizing: border-box;
-			container-type: inline-size;
-			direction: ltr;
-			display: grid;
-			font-family: var(--fret-board-ff, inherit);
-			grid-template-columns: repeat(calc(var(--_strings) * 2), 1fr);
-			grid-template-rows:
-				var(--fret-board-top-row-h, 12%)
-				repeat(calc(var(--_frets)), 1fr)
-				var(--fret-board-bottom-row-h, 15%);
-			place-items: center;
-
-			/* Grid Lines (frets and strings) */
-			&::before {
-				background-color: var(--fret-board-fret-bg, #0000);
-				background-image:
-					linear-gradient(90deg, var(--fret-board-string-c) var(--fret-board-string-w), #0000 0 var(--fret-board-string-w)),
-					linear-gradient(180deg,  var(--fret-board-fret-c) var(--fret-board-fret-w), #0000 0 var(--fret-board-fret-w));
-				background-position: 0 var(--fret-board-fret-w), 0 0;
-				background-repeat: repeat-x, repeat-y;
-				background-size:
-					calc(100% / (var(--_strings) - 1) - (var(--fret-board-string-w) / var(--_strings))) calc(100% - (2 * var(--fret-board-fret-w))),
-					100% calc(100% / var(--_frets) - (var(--fret-board-fret-w) / var(--_frets)));
-				box-shadow: 0 calc(0px - var(--fred-board-fret-bbsw, 1.5cqi)) 0 0 var(--fret-board-fret-c);
-				content: '';
-				display: block;
-				grid-area: 2 / 2 / calc(var(--_frets) + 2) / calc(var(--_strings) * 2);
-				height: 100%;
-				width: 100%;
-			}
-			/* Chord Name */
-			&::after {
-				color: var(--fret-board-chord-c, light-dark(#222, #FFF));
-				content: attr(chord);
-				font-size: var(--fret-board-chord-fs, 7.5cqi);
-				font-weight: var(--fret-board-chord-fw, 500);
-				grid-column: 2 / span calc((var(--_strings) * 2) - 2);
-				grid-row: calc(var(--_frets) + 2);
-				text-align: center;
-				width: 100%;
-			}
-
-			/* Fret Number (optional). Set <li value="[number]"> to set fret offset */
-			ol {
-				align-items: center;
-				display: grid;
-				font-size: var(--fret-board-fret-number-fs, 5cqi);
-				font-weight: var(--fret-board-fret-number-fw, 400);
-				grid-column: 1;
-				grid-row: 2 / span var(--_frets);
-				grid-template-rows: repeat(var(--_frets), 1fr);
-				height: 100%;
-				list-style-position: inside;
-				padding: 0;
-			}
-
-			/* Left-handed */
-			&[left-handed] {
-				direction: rtl;
-			}
-		}
-
-		string-note {
-			--string-note-h: 12cqi;
-			--string-note-open-mute-h: 5cqi;
-
-			/* from attr() */
-			--barre: attr(barre type(<number>), 1);
-			--fret:  attr(fret type(<number>), 0);
-			--string:  attr(string type(<number>), 0);
-
-			aspect-ratio: 1;
-			background-color: var(--string-note-bg, currentColor);
-			border-radius: 50%; 
-			box-sizing: border-box;
-			display: grid;
-			grid-column: calc((var(--_strings) * 2) - (var(--string) * 2 - 1)) / span calc(var(--barre) * 2);
-			grid-row: calc(var(--fret) + 1);
-			height: var(--string-note-h);
-			isolation: isolate;
-			list-style: none;
-			place-content: center;
-
-			&::after {
-				color: var(--string-note-c, light-dark(#FFF, #222));
-				content: attr(finger);
-				font-size: var(--string-note-fs, 7cqi);
-				font-weight: var(--string-note-fw, 500);
-				text-box: cap alphabetic;
-			}
-			&[barre] {
-				aspect-ratio: unset;
-				border-radius: var(--string-note-h);
-				opacity: var(--string-note-barre-o, .6);
-				width: 100%;
-			}
-			&[mute], &[open] {
-				background-color: var(--string-note-mute-open-c, light-dark(#222, #FFF));
-				height: var(--string-note-open-mute-h);
-				width: var(--string-note-open-mute-h);
-			}
-			&[mute] {
-				border-image: conic-gradient(var(--fret-board-bg) 0 0) 50%/calc(50% - 0.25cqi);
-				rotate: 45deg;
-			}
-			&[open] {
-				border-radius: 50%;
-				mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - 1cqi), #000 calc(100% - 1cqi + 1px));
-			}
-		}
-	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
 
 	<h2>Fret Board</h2>
-	<p><strong>Fret Board</strong> is a custom element that displays guitar, ukulele, banjo or mandolin chords. It hosts <strong>String Note</strong> elements that represent individual notes on the fretboard, supporting muted strings, open strings, fret positions, finger numbers, and barre chords. The layout automatically adjusts based on the specified number of frets and strings. JavaScript is <strong>not</strong> required, but the components use the updated <code>attr()</code>-method in CSS, currently <strong>only available in Chrome</strong>.</p>
+	<p><code>&lt;fret-board&gt;</code> is a web component that displays guitar, ukulele, banjo or mandolin chords. It hosts <code>&lt;string-note&gt;</code> elements that represent individual notes on the fretboard, supporting muted strings, open strings, fret positions, finger numbers, and barre chords. The layout automatically adjusts based on the specified number of frets and strings.</p>
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
-		<fret-board frets="4" strings="6" chord="G Major">
+		<fret-board frets="4" strings="6" chord="G">
 			<string-note string="6" fret="3" finger="2"></string-note>
 			<string-note string="5" fret="2" finger="1"></string-note>
 			<string-note string="4" open></string-note>
@@ -153,7 +26,7 @@
 			<string-note string="1" fret="3" finger="3"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="C Major">
+		<fret-board frets="4" strings="6" chord="C">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" fret="3" finger="3"></string-note>
 			<string-note string="4" fret="2" finger="2"></string-note>
@@ -162,7 +35,7 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="D Major">
+		<fret-board frets="4" strings="6" chord="D">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" mute></string-note>
 			<string-note string="4" open></string-note>
@@ -171,16 +44,16 @@
 			<string-note string="1" fret="2" finger="2"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="A Major">
+		<fret-board frets="4" strings="6" chord="A">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" open></string-note>
-			<string-note string="4" fret="2" finger="2"></string-note>
-			<string-note string="3" fret="2" finger="3"></string-note>
-			<string-note string="2" fret="2" finger="4"></string-note>
+			<string-note string="4" fret="2" finger="1"></string-note>
+			<string-note string="3" fret="2" finger="2"></string-note>
+			<string-note string="2" fret="2" finger="3"></string-note>
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="E Major">
+		<fret-board frets="4" strings="6" chord="E">
 			<string-note string="6" open></string-note>
 			<string-note string="5" fret="2" finger="2"></string-note>
 			<string-note string="4" fret="2" finger="3"></string-note>
@@ -189,14 +62,14 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="F Major">
+		<fret-board frets="4" strings="6" chord="F">
 			<string-note string="6" fret="1" barre="6" finger="1"></string-note>
 			<string-note string="3" fret="2" finger="2"></string-note>
 			<string-note string="5" fret="3" finger="3"></string-note>
 			<string-note string="4" fret="3" finger="4"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="A Minor">
+		<fret-board frets="4" strings="6" chord="A">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" open></string-note>
 			<string-note string="4" fret="2" finger="2"></string-note>
@@ -205,7 +78,7 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="E Minor">
+		<fret-board frets="4" strings="6" chord="E">
 			<string-note string="6" open></string-note>
 			<string-note string="5" fret="2" finger="2"></string-note>
 			<string-note string="4" fret="2" finger="3"></string-note>
@@ -213,8 +86,12 @@
 			<string-note string="2" open></string-note>
 			<string-note string="1" open></string-note>
 		</fret-board>
+	</div>
 
-		<fret-board frets="4" strings="6" chord="D Minor">
+	<h2>With <code>lang</code> attribute</h2>
+
+	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
+		<fret-board frets="4" strings="6" chord="D" lang="zh">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" mute></string-note>
 			<string-note string="4" open></string-note>
@@ -223,16 +100,16 @@
 			<string-note string="1" fret="1" finger="1"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="A7">
+		<fret-board frets="4" strings="6" chord="A7" lang="es">
 			<string-note string="6" mute></string-note>
 			<string-note string="5" open></string-note>
-			<string-note string="4" fret="2" finger="2"></string-note>
+			<string-note string="4" fret="2" finger="1"></string-note>
 			<string-note string="3" open></string-note>
 			<string-note string="2" fret="2" finger="3"></string-note>
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="E7">
+		<fret-board frets="4" strings="6" chord="E7" lang="ar">
 			<string-note string="6" open></string-note>
 			<string-note string="5" fret="2" finger="2"></string-note>
 			<string-note string="4" open></string-note>
@@ -241,10 +118,10 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="B7">
+		<fret-board frets="4" strings="6" chord="B7" lang="fr">
 			<string-note string="6" mute></string-note>
-			<string-note string="5" fret="2" finger="1"></string-note>
-			<string-note string="4" fret="1" finger="2"></string-note>
+			<string-note string="5" fret="2" finger="2"></string-note>
+			<string-note string="4" fret="1" finger="1"></string-note>
 			<string-note string="3" fret="2" finger="3"></string-note>
 			<string-note string="2" open></string-note>
 			<string-note string="1" fret="2" finger="4"></string-note>
@@ -338,7 +215,7 @@
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
-		<fret-board frets="4" strings="6" chord="G Major" left-handed>
+		<fret-board frets="4" strings="6" chord="G" left-handed>
 			<string-note string="6" fret="3" finger="2"></string-note>
 			<string-note string="5" fret="2" finger="1"></string-note>
 			<string-note string="4" open></string-note>
@@ -347,7 +224,7 @@
 			<string-note string="1" fret="3" finger="3"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="C Major" left-handed>
+		<fret-board frets="4" strings="6" chord="C" left-handed>
 			<string-note string="6" mute></string-note>
 			<string-note string="5" fret="3" finger="3"></string-note>
 			<string-note string="4" fret="2" finger="2"></string-note>
@@ -356,7 +233,7 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="D Major" left-handed>
+		<fret-board frets="4" strings="6" chord="D" left-handed>
 			<string-note string="6" mute></string-note>
 			<string-note string="5" mute></string-note>
 			<string-note string="4" open></string-note>
@@ -365,7 +242,7 @@
 			<string-note string="1" fret="2" finger="2"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="6" chord="A Major" left-handed>
+		<fret-board frets="4" strings="6" chord="A" left-handed>
 			<string-note string="6" mute></string-note>
 			<string-note string="5" open></string-note>
 			<string-note string="4" fret="2" finger="2"></string-note>
@@ -379,28 +256,28 @@
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
-		<fret-board frets="4" strings="4" chord="C Major">
+		<fret-board frets="4" strings="4" chord="C">
 			<string-note string="4" open></string-note>
 			<string-note string="3" open></string-note>
 			<string-note string="2" open></string-note>
 			<string-note string="1" fret="3" finger="3"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="G Major">
+		<fret-board frets="4" strings="4" chord="G">
 			<string-note string="4" open></string-note>
 			<string-note string="3" fret="2" finger="1"></string-note>
 			<string-note string="2" fret="3" finger="3"></string-note>
 			<string-note string="1" fret="2" finger="2"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="F Major">
+		<fret-board frets="4" strings="4" chord="F">
 			<string-note string="4" fret="2" finger="2"></string-note>
 			<string-note string="3" open></string-note>
 			<string-note string="2" fret="1" finger="1"></string-note>
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="A Minor">
+		<fret-board frets="4" strings="4" chord="A">
 			<string-note string="4" fret="2" finger="2"></string-note>
 			<string-note string="3" open></string-note>
 			<string-note string="2" open></string-note>
@@ -413,21 +290,21 @@
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
-		<fret-board frets="4" strings="4" chord="G Major">
+		<fret-board frets="4" strings="4" chord="G">
 			<string-note string="4" open></string-note>
 			<string-note string="3" open></string-note>
 			<string-note string="2" open></string-note>
 			<string-note string="1" fret="2" finger="2"></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="D Major">
+		<fret-board frets="4" strings="4" chord="D">
 			<string-note string="4" fret="2" finger="2"></string-note>
 			<string-note string="3" fret="3" finger="3"></string-note>
 			<string-note string="2" fret="2" finger="1"></string-note>
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="A Major">
+		<fret-board frets="4" strings="4" chord="A">
 			<string-note string="4" fret="2" finger="1"></string-note>
 			<string-note string="3" fret="2" finger="1"></string-note>
 			<string-note string="2" fret="2" finger="1"></string-note>
@@ -435,7 +312,7 @@
 			<ol><li value="2"></li></ol>
 		</fret-board>
 
-		<fret-board frets="4" strings="4" chord="E Major">
+		<fret-board frets="4" strings="4" chord="E">
 			<string-note string="4" fret="2" finger="1"></string-note>
 			<string-note string="3" fret="2" finger="1"></string-note>
 			<string-note string="2" open></string-note>
@@ -448,7 +325,7 @@
 
 	<div class="ui-grid --xs-c-1 --sm-c-2 --md-c-4">
 
-		<fret-board frets="4" strings="5" chord="G Major">
+		<fret-board frets="4" strings="5" chord="G">
 			<string-note string="5" open></string-note>
 			<string-note string="4" open></string-note>
 			<string-note string="3" open></string-note>
@@ -456,7 +333,7 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="5" chord="C Major">
+		<fret-board frets="4" strings="5" chord="C">
 			<string-note string="5" open></string-note>
 			<string-note string="4" fret="2" finger="2"></string-note>
 			<string-note string="3" open></string-note>
@@ -464,7 +341,7 @@
 			<string-note string="1" open></string-note>
 		</fret-board>
 
-		<fret-board frets="4" strings="5" chord="D Major">
+		<fret-board frets="4" strings="5" chord="D">
 			<string-note string="5" open></string-note>
 			<string-note string="4" fret="4" finger="3"></string-note>
 			<string-note string="3" fret="4" finger="4"></string-note>
@@ -482,43 +359,6 @@
 
 	</div>
 
-	<script>
-		/* JS *NOT NEEDED* for Chrome, only for Safari/Firefox */
-		/* Uses the enhanced attr()-method in CSS */
-
-		function isAdvancedAttrSupported() {
-			const T = document.createElement('div');
-			document.body.appendChild(T);
-			
-			try {
-				T.style.setProperty('--t', 'attr(data-test type(<number>), 0)');
-				T.dataset.test = "123";
-
-				const computedValue = getComputedStyle(T)
-					.getPropertyValue('--t')
-					.trim();
-				
-				return computedValue === "123";
-			} catch (e) {
-				return false;
-			} finally {
-				T.remove();
-			}
-		}
-
-		if (!isAdvancedAttrSupported()) {
-			const fretBoards = document.querySelectorAll('fret-board');
-			fretBoards.forEach(fret => {
-				fret.style.setProperty('--_strings', fret.getAttribute('strings'));
-				fret.style.setProperty('--_frets', fret.getAttribute('frets'));
-				const stringNotes = fret.querySelectorAll('string-note');
-				stringNotes.forEach(note => {
-					note.style.setProperty('--string', note.getAttribute('string') || 1);
-					note.style.setProperty('--fret', note.getAttribute('fret') || 0);
-					note.style.setProperty('--barre', note.getAttribute('barre') || 1);
-				});
-			});
-		}
-	</script>>
+	<script type="module" src="index.js"></script>
 </body>
 </html>

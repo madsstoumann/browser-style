@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Component</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Web Component</h2>
+    <p>This page demonstrates the <code>WebComponent</code> base class through various examples of a <code>my-element</code> custom component that extends it. The base class provides flexible rendering modes (Shadow DOM, Light DOM/standard DOM, Declarative Shadow DOM) and stylesheet management.</p>
+
+    <h3>Default (Shadow DOM)</h3>
+    <my-element name="Shadow Default">
+        <p>This is slotted content.</p>
+    </my-element>
+
+    <h3>DOM (Light DOM) Rendering</h3>
+    <my-element render-mode="dom" name="Light DOM">
+        <p>Content rendered in Light DOM.</p>
+    </my-element>
+
+    <h3>Declarative Shadow DOM (DSD)</h3>
+    <my-element render-mode="dsd" name="DSD Simple">
+        <template shadowrootmode="open">
+            <style data-webcomponent-dsd-style>
+/* Content from index.css */
+:host {
+  display: block;
+  padding: 1.5em;
+  border: 2px solid steelblue;
+  margin-bottom: 1em;
+  font-family: sans-serif;
+  background-color: #f0f8ff; /* AliceBlue background */
+  border-radius: 8px;
+}
+p { color: steelblue; margin-top: 0; }
+::slotted(p) { color: #333; font-style: italic; margin: 0.5em 0; }
+:host([render-mode="dsd"]) { border-color: purple; background-color: #e6e6fa; }
+            </style>
+            <p>Hello, DSD Simple!</p>
+            <slot><p>Content rendered with DSD.</p></slot>
+        </template>
+    </my-element>
+
+    <h3>DSD with Shared Styles</h3>
+    <p>The following three "DSD Shared" components use <code>shared-styles-id="shared-dsd-styles"</code>. The <code>&lt;style&gt;</code> block should only be in the HTML for the first instance. All instances will share the same CSSStyleSheet object on the client.</p>
+    <my-element render-mode="dsd" shared-styles-id="shared-dsd-styles" name="DSD Shared 1">
+        <template shadowrootmode="open">
+            <style id="shared-dsd-styles">
+/* Content from index.css */
+:host {
+  display: block;
+  padding: 1.5em;
+  border: 2px solid steelblue;
+  margin-bottom: 1em;
+  font-family: sans-serif;
+  background-color: #f0f8ff; /* AliceBlue background */
+  border-radius: 8px;
+}
+p { color: steelblue; margin-top: 0; }
+::slotted(p) { color: #333; font-style: italic; margin: 0.5em 0; }
+:host([render-mode="dsd"]) { border-color: purple; background-color: #e6e6fa; }
+            </style>
+            <p>Hello, DSD Shared 1!</p>
+            <slot><p>Instance 1 with shared styles.</p></slot>
+        </template>
+    </my-element>
+    <my-element render-mode="dsd" shared-styles-id="shared-dsd-styles" name="DSD Shared 2">
+        <template shadowrootmode="open">
+            <!-- No style block here, as it's shared from the first instance -->
+            <p>Hello, DSD Shared 2!</p>
+            <slot><p>Instance 2 with shared styles.</p></slot>
+        </template>
+    </my-element>
+    <my-element render-mode="dsd" shared-styles-id="shared-dsd-styles" name="DSD Shared 3">
+        <template shadowrootmode="open">
+            <!-- No style block here, as it's shared from the first instance -->
+            <p>Hello, DSD Shared 3!</p>
+            <slot><p>Instance 3 with shared styles.</p></slot>
+        </template>
+    </my-element>
+
+    <h3>Custom Stylesheet URL</h3>
+    <my-element styles="./another.css" name="Custom Styles">
+        <p>This component uses <code>another.css</code>.</p>
+    </my-element>
+    
+    <h3>Manual Styles (styles="none")</h3>
+    <my-element styles="none" name="Manual Styles">
+        <p>Default styles (index.css) are loaded but not automatically applied.</p>
+    </my-element>
+
+    <h3>Combination: DSD with Custom Stylesheet (not shared)</h3>
+    <my-element render-mode="dsd" styles="./another.css" name="DSD with Custom Styles">
+        <template shadowrootmode="open">
+            <style data-webcomponent-dsd-style>
+/* Content from another.css */
+:host {
+  display: block;
+  padding: 1.2em;
+  border: 3px dotted darkgreen;
+  margin-bottom: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f0fff0; /* Honeydew background */
+  border-radius: 0;
+}
+p { color: darkgreen; font-weight: bold; margin-top: 0; }
+::slotted(p) { color: #2e8b57; text-decoration: underline; margin: 0.25em 0; }
+            </style>
+            <p>Hello, DSD with Custom Styles!</p>
+            <slot><p>DSD using <code>another.css</code>.</p></slot>
+        </template>
+    </my-element>
+
+    <h3>Combination: DSD with Custom Stylesheet (shared)</h3>
+    <my-element render-mode="dsd" styles="./another.css" shared-styles-id="custom-shared" name="DSD Custom Shared 1">
+        <template shadowrootmode="open">
+            <style id="custom-shared">
+/* Content from another.css */
+:host {
+  display: block;
+  padding: 1.2em;
+  border: 3px dotted darkgreen;
+  margin-bottom: 1em;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f0fff0; /* Honeydew background */
+  border-radius: 0;
+}
+p { color: darkgreen; font-weight: bold; margin-top: 0; }
+::slotted(p) { color: #2e8b57; text-decoration: underline; margin: 0.25em 0; }
+            </style>
+            <p>Hello, DSD Custom Shared 1!</p>
+            <slot><p>DSD using shared <code>another.css</code> - Instance 1.</p></slot>
+        </template>
+    </my-element>
+    <my-element render-mode="dsd" styles="./another.css" shared-styles-id="custom-shared" name="DSD Custom Shared 2">
+        <template shadowrootmode="open">
+            <!-- No style block here, as it's shared from the first instance -->
+            <p>Hello, DSD Custom Shared 2!</p>
+            <slot><p>DSD using shared <code>another.css</code> - Instance 2.</p></slot>
+        </template>
+    </my-element>
+
+
+    <script type="module" src="./my-element.js"></script>
+</body>
+</html>

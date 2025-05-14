@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  padding: 1.2em;
+  border: 3px dotted darkgreen; /* Distinct border */
+  margin-bottom: 1em;
+  font-family: 'Courier New', Courier, monospace; /* Different font */
+  background-color: #f0fff0; /* Honeydew background */
+  border-radius: 0; /* Sharp corners */
+}
+
+p { /* This targets <p> tags inside the component's template */
+  color: darkgreen; /* Distinct text color */
+  font-weight: bold;
+  margin-top: 0;
+}
+
+::slotted(p) { /* This targets <p> tags passed into a slot */
+  color: #2e8b57; /* SeaGreen for slotted content */
+  text-decoration: underline;
+  margin: 0.25em 0;
+}
