@@ -1,7 +1,7 @@
 {
   "name": "@browser.style/fret-board",
   "version": "1.0.0",
-  "description": "Fret Board Component",
+  "description": "A web component for displaying interactive musical instrument chord diagrams (guitar, ukulele, etc.).",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -10,7 +10,11 @@
     }
   },
   "files": [
-    "index.js"
+    "index.js",
+    "readme.md"
+  ],
+  "sideEffects": [
+    "./index.js"
   ],
   "publishConfig": {
     "access": "public",
