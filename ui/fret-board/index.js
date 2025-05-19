@@ -150,7 +150,7 @@ const styles = `
 	background-size:
 		calc(100% / (var(--_strings, 6) - 1) - (var(--fret-board-string-w) / var(--_strings, 6))) calc(100% - (2 * var(--fret-board-fret-w))),
 		100% calc(100% / var(--_frets, 4) - (var(--fret-board-fret-w) / var(--_frets, 4)));
-	box-shadow: 0 calc(0px - var(--fred-board-fret-bbsw, 1.5cqi)) 0 0 var(--fret-board-fret-c);
+	box-shadow: 0 calc(0px - var(--fret-board-fret-bbsw, 1.5cqi)) 0 0 var(--fret-board-fret-c);
 	content: '';
 	display: block;
 	grid-area: 2 / 2 / calc(var(--_frets, 4) + 2) / calc(var(--_strings, 6) * 2);

@@ -21,90 +21,90 @@ CSS.registerProperty({
 
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
-	:host {
-		background-color: var(--digital-clock-bg, var(--CanvasGray));
-		border-radius: var(--digital-clock-bdrs, var(--input-bdrs));
-		box-sizing: border-box;
-		color-scheme: light dark;
-		display: flex;
-		direction: ltr;
-		gap: var(--digital-clock-gap, 1ch);
-		inline-size: min-content;
-		padding: var(--digital-clock-p, .75ch 1.5ch);
-	}
-	:host::part(ampm)::after {
-		content: counter(hours, am-pm);
-	}
-	:host::part(date) {
-		font-family: var(--digital-clock-date-ff, inherit);
-		font-size: var(--digital-clock-date-fs, inherit);
-		font-weight: var(--digital-clock-date-fw, inherit);
-		text-wrap: nowrap;
-	} 
-	:host::part(label) {
-		font-family: var(--digital-clock-label-ff, inherit);
-		font-size: var(--digital-clock-label-fs, inherit);
-		font-weight: var(--digital-clock-label-fw, inherit);
-		text-wrap: nowrap;
-	}
-	:host::part(time) {
-		all: unset;
-		display: grid;
-		font-size: var(--digital-clock-fs, inherit);
-		font-variant-numeric: tabular-nums;
-		font-weight: var(--digital-clock-fw, inherit);
-		grid-auto-flow: column;
-		inline-size: min-content;
-		list-style: none;
-		text-wrap: nowrap;
-	}
-	:host::part(ampm),
-	:host::part(hours) {
-		animation: hours 86400s steps(24, end) infinite;
-		animation-delay: var(--delay-hours, 0s);
-		counter-reset: hours var(--hours);
-	}
-	:host::part(hours)::after {
-		content: counter(hours, var(--number-system, decimal-leading-zero)) ' ';
-	}
-	:host::part(minutes){
-		animation: minutes 3600s steps(60, end) infinite;
-		animation-delay: var(--delay-minutes, 0s);
-		counter-reset: minutes var(--minutes);
-	}
-	:host::part(minutes)::before {
-		content: ':';
-	}
-	:host::part(minutes)::after {
-		content: counter(minutes, var(--number-system, decimal-leading-zero)) ' ';
-	}
-	:host::part(seconds) {
-		animation: seconds 60s steps(60, end) infinite;
-		animation-delay: var(--delay-seconds, 0s);
-		counter-reset: seconds var(--seconds);
-	}
-	:host::part(seconds)::before {
-		content: ':';
-	}
-	:host::part(seconds)::after {
-		content: counter(seconds, var(--number-system, decimal-leading-zero)) ' ';
-	}
-	:host([time*="12hour"])::part(hours) {
-		counter-reset: hours calc(mod(var(--hours) - 1, 12) + 1);
-	}
+  :host {
+    background-color: var(--digital-clock-bg, var(--CanvasGray));
+    border-radius: var(--digital-clock-bdrs, var(--input-bdrs));
+    box-sizing: border-box;
+    color-scheme: light dark;
+    display: flex;
+    direction: ltr;
+    gap: var(--digital-clock-gap, 1ch);
+    inline-size: min-content;
+    padding: var(--digital-clock-p, .75ch 1.5ch);
+  }
+  [part~=ampm]::after {
+    content: counter(hours, am-pm);
+  }
+  [part~=date] {
+    font-family: var(--digital-clock-date-ff, inherit);
+    font-size: var(--digital-clock-date-fs, inherit);
+    font-weight: var(--digital-clock-date-fw, inherit);
+    text-wrap: nowrap;
+  } 
+  [part~=label] {
+    font-family: var(--digital-clock-label-ff, inherit);
+    font-size: var(--digital-clock-label-fs, inherit);
+    font-weight: var(--digital-clock-label-fw, inherit);
+    text-wrap: nowrap;
+  }
+  [part~=time] {
+    all: unset;
+    display: grid;
+    font-size: var(--digital-clock-fs, inherit);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--digital-clock-fw, inherit);
+    grid-auto-flow: column;
+    inline-size: min-content;
+    list-style: none;
+    text-wrap: nowrap;
+  }
+  [part~=ampm],
+  [part~=hours] {
+    animation: hours 86400s steps(24, end) infinite;
+    animation-delay: var(--delay-hours, 0s);
+    counter-reset: hours var(--hours);
+  }
+  [part~=hours]::after {
+    content: counter(hours, var(--number-system, decimal-leading-zero)) ' ';
+  }
+  [part~=minutes] {
+    animation: minutes 3600s steps(60, end) infinite;
+    animation-delay: var(--delay-minutes, 0s);
+    counter-reset: minutes var(--minutes);
+  }
+  [part~=minutes]::before {
+    content: ':';
+  }
+  [part~=minutes]::after {
+    content: counter(minutes, var(--number-system, decimal-leading-zero)) ' ';
+  }
+  [part~=seconds] {
+    animation: seconds 60s steps(60, end) infinite;
+    animation-delay: var(--delay-seconds, 0s);
+    counter-reset: seconds var(--seconds);
+  }
+  [part~=seconds]::before {
+    content: ':';
+  }
+  [part~=seconds]::after {
+    content: counter(seconds, var(--number-system, decimal-leading-zero)) ' ';
+  }
+  :host([time*="12hour"])::part(hours) {
+    counter-reset: hours calc(mod(var(--hours) - 1, 12) + 1);
+  }
 
-	@keyframes hours {
-		from { --hours: 0; }
-		to { --hours: 24; } 
-	}
-	@keyframes minutes { 
-		from { --minutes: 0; }
-		to { --minutes: 60; } 
-	}
-	@keyframes seconds { 
-		from { --seconds: 0;}
-		to { --seconds: 60; }
-	}
+  @keyframes hours {
+    from { --hours: 0; }
+    to { --hours: 24; } 
+  }
+  @keyframes minutes { 
+    from { --minutes: 0; }
+    to { --minutes: 60; } 
+  }
+  @keyframes seconds { 
+    from { --seconds: 0;}
+    to { --seconds: 60; }
+  }
 `);
 
 let counterStyleInjected = false;
