@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout-demo.css">
+</head>
+<body>
+
+	<section>
+		<h3>1-column</h3>
+		<code>&lt;lay-out&gt;</code>
+		<lay-out>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<h2>2 items</h2>
+
+	<section>
+		<h3>2-column</h3>
+		<code>&lt;lay-out md="2"&gt;</code>
+		<lay-out md="2" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>25/75</h3>
+		<code>&lt;lay-out name="md:25-75"&gt;</code>
+		<lay-out name="md:25-75">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>75/25</h3>
+		<code>&lt;lay-out name="md:75-25"&gt;</code>
+		<lay-out name="md:75-25">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>33/66</h3>
+		<code>&lt;lay-out name="md:33-66"&gt;</code>
+		<lay-out name="md:33-66">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>66/33</h3>
+		<code>&lt;lay-out name="md:66-33"&gt;</code>
+		<lay-out name="md:66-33">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>40/60</h3>
+		<code>&lt;lay-out name="md:40-60"&gt;</code>
+		<lay-out name="md:40-60">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>60/40</h3>
+		<code>&lt;lay-out name="md:60-40"&gt;</code>
+		<lay-out name="md:60-40">
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+ 
+	<section>
+		<h3>Asymmetrical Top Bottom </h3>
+		<code>&lt;lay-out name="md:asym-tb"&gt;</code>
+		<lay-out name="md:asym-tb">
+		<content-item></content-item>
+		<content-item></content-item>	
+	</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Left Right </h3>
+		<code>&lt;lay-out name="md:asym-lr"&gt;</code>
+		<lay-out name="md:asym-lr">
+			<content-item></content-item>
+			<content-item></content-item>	
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Right Left </h3>
+		<code>&lt;lay-out name="md:asym-rl"&gt;</code>
+		<lay-out name="md:asym-rl">
+			<content-item></content-item>
+			<content-item></content-item>	
+		</lay-out>
+	</section>
+
+	<h2>3 items</h2>
+
+	<section>
+		<h3>3-column</h3>
+		<code>&lt;lay-out md="3"&gt;</code>
+		<lay-out md="3">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>25/25/50</h3>
+		<code>&lt;lay-out name="md:25-25-50"&gt;</code>
+		<lay-out name="md:25-25-50">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>25/50/25</h3>
+		<code>&lt;lay-out name="md:25-50-25"&gt;</code>
+		<lay-out name="md:25-50-25">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>50/25/25</h3>
+		<code>&lt;lay-out name="md:50-25-25"&gt;</code>
+		<lay-out name="md:50-25-25">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>50/50/100</h3>
+		<code>&lt;lay-out name="md:50-50-100"&gt;</code>
+		<lay-out name="md:50-50-100">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>100/50/50</h3>
+		<code>&lt;lay-out name="md:100-50-50"&gt;</code>
+		<lay-out name="md:100-50-50">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>2sm/1lg</h3>
+		<code>&lt;lay-out name="md:2sm-1lg"&gt;</code>
+		<lay-out name="md:2sm-1lg">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>1 Large, 2 Small</h3>
+		<code>&lt;lay-out name="md:1lg-2sm"&gt;</code>
+		<lay-out name="md:1lg-2sm">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Top Left &gt; Bottom Right</h3>
+		<code>&lt;lay-out name="md:asym-tl-br"&gt;</code>
+		<lay-out name="md:asym-tl-br">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Bottom Left &gt; Top Right</h3>
+		<code>&lt;lay-out name="md:asym-bl-tl"&gt;</code>
+		<lay-out name="md:asym-bl-tr">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<h2>4 items</h2>
+
+	<section>
+		<h3>4-column</h3>
+		<code>&lt;lay-out md="4"&gt;</code>
+		<lay-out md="4">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>2 Large, 2 Small</h3>
+		<code>&lt;lay-out name="md:2lg-2sm"&gt;</code>
+		<lay-out name="md:2lg-2sm">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>2 Small, 2 Large</h3>
+		<code>&lt;lay-out name="md:2sm-2lg"&gt;</code>
+		<lay-out name="md:2sm-2lg">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>1 Large, 2 Small, 1 Large</h3>
+		<code>&lt;lay-out name="md:1lg-2sm-1lg"&gt;</code>
+		<lay-out name="md:1lg-2sm-1lg">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>1 Large, 3 Small</h3>
+		<code>&lt;lay-out name="md:1lg-3sm"&gt;</code>
+		<lay-out name="md:1lg-3sm">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>3 Small, 1 Large</h3>
+		<code>&lt;lay-out name="md:3sm-1lg"&gt;</code>
+		<lay-out name="md:3sm-1lg">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<h2>5 items</h2>
+
+	<section>
+		<h3>5-column</h3>
+		<code>&lt;lay-out md="2" lg="5"&gt;</code>
+		<lay-out md="2" lg="5">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>4 Small, 1 Large</h3>
+		<code>&lt;lay-out name="md:1lg-4sm"&gt;</code>
+		<lay-out name="md:1lg-4sm">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>4 Small, 1 Large</h3>
+		<code>&lt;lay-out name="md:4sm-1lg"&gt;</code>
+		<lay-out name="md:4sm-1lg">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>2 Small, 1 Large, 2 Small</h3>
+		<code>&lt;lay-out name="md:2sm-1lg-2sm"&gt;</code>
+		<lay-out name="md:2sm-1lg-2sm">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+</body>
+</html>
