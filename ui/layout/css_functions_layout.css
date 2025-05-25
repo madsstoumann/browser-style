@@ -1,0 +1,219 @@
+/* CSS Functions for Enhanced Layout System */
+
+/* 1. RESPONSIVE COLUMN FUNCTION */
+@function --responsive-cols(
+  --xs: 1, 
+  --sm: var(--xs), 
+  --md: var(--sm), 
+  --lg: var(--md), 
+  --xl: var(--lg), 
+  --xxl: var(--xl)
+) {
+  result: var(--xs);
+  
+  @container (min-width: 240px) {
+    result: var(--sm);
+  }
+  @container (min-width: 380px) {
+    result: var(--md);
+  }
+  @container (min-width: 540px) {
+    result: var(--lg);
+  }
+  @container (min-width: 720px) {
+    result: var(--xl);
+  }
+  @container (min-width: 920px) {
+    result: var(--xxl);
+  }
+}
+
+/* 2. RATIO-BASED LAYOUT FUNCTION */
+@function --ratio-layout(--ratio: "1:1", --breakpoint: 540px) {
+  result: 1fr;
+  
+  @container (min-width: var(--breakpoint)) {
+    @supports (--ratio: "25:75") {
+      result: 1fr 3fr;
+    }
+    @supports (--ratio: "33:66") {
+      result: 1fr 2fr;
+    }
+    @supports (--ratio: "50:50") {
+      result: 1fr 1fr;
+    }
+    @supports (--ratio: "66:33") {
+      result: 2fr 1fr;
+    }
+    @supports (--ratio: "75:25") {
+      result: 3fr 1fr;
+    }
+  }
+}
+
+/* 3. SEMANTIC LAYOUT PATTERNS */
+@function --sidebar-layout(--sidebar-width: 250px, --breakpoint: 768px) {
+  result: 1fr;
+  
+  @container (min-width: var(--breakpoint)) {
+    result: minmax(var(--sidebar-width), max-content) 1fr;
+  }
+}
+
+@function --hero-grid(--breakpoint: 720px) {
+  result: 1fr;
+  
+  @container (min-width: var(--breakpoint)) {
+    result: repeat(4, 1fr);
+  }
+}
+
+@function --magazine-layout(--breakpoint: 920px) {
+  result: 1fr;
+  
+  @container (min-width: var(--breakpoint)) {
+    result: repeat(6, 1fr);
+  }
+}
+
+/* 4. AUTO-FIT WITH MINIMUM SIZES */
+@function --auto-fit-layout(--min-width: 250px, --max-cols: 4) {
+  result: repeat(auto-fit, minmax(min(var(--min-width), 100%), 1fr));
+  
+  @supports (grid-template-columns: subgrid) {
+    @container (min-width: calc(var(--min-width) * var(--max-cols))) {
+      result: repeat(var(--max-cols), 1fr);
+    }
+  }
+}
+
+/* 5. ASPECT RATIO AWARE LAYOUT */
+@function --aspect-layout(--aspect: 16/9, --min-width: 300px) {
+  result: repeat(auto-fit, minmax(var(--min-width), 1fr));
+  
+  @container (aspect-ratio > 1) {
+    result: repeat(auto-fit, minmax(calc(var(--min-width) * var(--aspect)), 1fr));
+  }
+}
+
+/* 6. CONTENT-AWARE SPACING */
+@function --adaptive-gap(--base-gap: 1rem, --scale: 1.5) {
+  result: var(--base-gap);
+  
+  @container (min-width: 540px) {
+    result: calc(var(--base-gap) * var(--scale));
+  }
+  @container (min-width: 920px) {
+    result: calc(var(--base-gap) * var(--scale) * var(--scale));
+  }
+}
+
+/* 7. DENSITY-BASED LAYOUTS */
+@function --density-layout(--density: "comfortable") {
+  result: repeat(auto-fit, minmax(300px, 1fr));
+  
+  @supports (--density: "compact") {
+    result: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  @supports (--density: "spacious") {
+    result: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}
+
+/* USAGE IN SIMPLIFIED LAYOUT SYSTEM */
+lay-out {
+  --_xxs: attr(xxs type(<number>), 1);
+  --_xs: attr(xs type(<number>));
+  --_sm: attr(sm type(<number>));
+  --_md: attr(md type(<number>));
+  --_lg: attr(lg type(<number>));
+  --_xl: attr(xl type(<number>));
+  --_xxl: attr(xxl type(<number>));
+  
+  --_layout: attr(layout type(<custom-ident>), "auto");
+  --_ratio: attr(ratio type(<custom-ident>), "1:1");
+  --_min-width: attr(min-width type(<length>), 250px);
+  --_breakpoint: attr(breakpoint type(<length>), 540px);
+  
+  display: grid;
+  container-type: inline-size;
+  column-gap: --adaptive-gap(1rem, 1.2);
+  row-gap: --adaptive-gap(1rem, 1.2);
+  
+  /* Default: Use responsive columns */
+  grid-template-columns: repeat(
+    --responsive-cols(var(--_xxs), var(--_xs), var(--_sm), var(--_md), var(--_lg), var(--_xl), var(--_xxl)),
+    1fr
+  );
+  
+  /* Layout-specific overrides */
+  &[layout="sidebar"] {
+    grid-template-columns: --sidebar-layout(250px, var(--_breakpoint));
+  }
+  
+  &[layout="ratio"] {
+    grid-template-columns: --ratio-layout(var(--_ratio), var(--_breakpoint));
+  }
+  
+  &[layout="auto-fit"] {
+    grid-template-columns: --auto-fit-layout(var(--_min-width), 4);
+  }
+  
+  &[layout="hero"] {
+    grid-template-columns: --hero-grid(720px);
+    
+    *:nth-child(1) { grid-area: 1 / 1 / 3 / 3; }
+    *:nth-child(2) { grid-area: 1 / 3 / 2 / 5; }
+    *:nth-child(3) { grid-area: 2 / 3 / 3 / 4; }
+    *:nth-child(4) { grid-area: 2 / 4 / 3 / 5; }
+  }
+  
+  &[layout="magazine"] {
+    grid-template-columns: --magazine-layout(920px);
+    
+    *:nth-child(1) { grid-area: 1 / 1 / 3 / 4; }
+    *:nth-child(2) { grid-area: 1 / 4 / 2 / 7; }
+    *:nth-child(3) { grid-area: 2 / 4 / 3 / 6; }
+    *:nth-child(4) { grid-area: 2 / 6 / 3 / 7; }
+  }
+}
+
+/* EXAMPLE USAGE WITH FUNCTIONS */
+
+/* Simple responsive columns */
+.example-1 {
+  grid-template-columns: repeat(--responsive-cols(1, 2, 3, 4, 5, 6), 1fr);
+}
+
+/* Ratio-based layout */
+.example-2 {
+  grid-template-columns: --ratio-layout("25:75", 768px);
+}
+
+/* Auto-fitting cards */
+.example-3 {
+  grid-template-columns: --auto-fit-layout(300px, 3);
+}
+
+/* Adaptive sidebar */
+.example-4 {
+  grid-template-columns: --sidebar-layout(200px, 640px);
+}
+
+/* ADVANCED: COMBINED FUNCTIONS */
+@function --smart-layout(--type: "auto", --min: 250px, --ratio: "1:1") {
+  @supports (--type: "auto") {
+    result: --auto-fit-layout(var(--min), 4);
+  }
+  @supports (--type: "ratio") {
+    result: --ratio-layout(var(--ratio), 540px);
+  }
+  @supports (--type: "sidebar") {
+    result: --sidebar-layout(var(--min), 640px);
+  }
+}
+
+/* Usage would be incredibly clean: */
+.smart-container {
+  grid-template-columns: --smart-layout("ratio", 300px, "33:66");
+}
