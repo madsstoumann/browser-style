@@ -26,7 +26,16 @@ class SpeedTicket extends HTMLElement {
 				margin: 0 auto;
 				padding: 20px;
 			}
-			
+
+			[name="speed"] {
+				label { 
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+					input { grid-column: span 2; }
+					small:last-of-type { text-align: end; }
+				}
+			}
+
 			fieldset {
 				margin: 20px 0;
 				padding: 15px;
@@ -46,16 +55,13 @@ class SpeedTicket extends HTMLElement {
 				font-size: 0.9em;
 			}
 			
-			label {
-				display: block;
-				margin: 10px 0;
-				cursor: pointer;
-			}
+			// label {
+			// 	display: block;
+			// 	margin: 10px 0;
+			// 	cursor: pointer;
+			// }
 			
-			input[type="range"] {
-				width: 100%;
-				margin: 10px 0;
-			}
+
 			
 			input[type="radio"], input[type="checkbox"] {
 				margin-right: 8px;
@@ -63,7 +69,7 @@ class SpeedTicket extends HTMLElement {
 			
 			output {
 				font-weight: bold;
-				color: #2563eb;
+				// color: #2563eb;
 			}
 			
 			output[name="result"] {
@@ -157,10 +163,8 @@ class SpeedTicket extends HTMLElement {
 									 name="value" 
 									 value="${this.state.speed}" 
 									 step="${this.data.speedRange.step}">
-						<div class="range-labels">
-							<span>${this.data.speedRange.min} ${this.data.speedRange.unit}</span>
-							<span>${this.data.speedRange.max} ${this.data.speedRange.unit}</span>
-						</div>
+							<small aria-hidden>${this.data.speedRange.min} ${this.data.speedRange.unit}</small>
+							<small aria-hidden>${this.data.speedRange.max} ${this.data.speedRange.unit}</small>
 					</label>
 				</fieldset>
 
