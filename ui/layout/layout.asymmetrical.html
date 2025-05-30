@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout-demo.css">
+</head>
+<body>
+
+	<h2>Asymmetrical</h2>
+
+	<p>
+		Asymmetrical layouts do not repeat like <code>column()</code>, <code>ratio()</code> and <code>masonry()</code> layouts. <br>
+		If you add more items than the layout can handle, it will be hidden.
+	</p>
+
+	<section>
+		<h3>Asymmetrical Left Right</h3>
+		<code>&lt;lay-out md="asym(left-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(left-right)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Right Left</h3>
+		<code>&lt;lay-out md="asym(right-left)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(right-left)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Top Bottom</h3>
+		<code>&lt;lay-out md="asym(top-bottom)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(top-bottom)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Top Left &gt; Bottom Right</h3>
+		<code>&lt;lay-out md="asym(top-left-bottom-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(top-left-bottom-right)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Bottom Left &gt; Top Right</h3>
+		<code>&lt;lay-out md="asym(bottom-left-top-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(bottom-left-top-right)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+</body>
+</html>

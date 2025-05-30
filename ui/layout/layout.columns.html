@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout-demo.css">
+</head>
+<body>
+
+	<h2>Columns</h2>
+
+	<section>
+		<h3>1 column</h3>
+		<code>&lt;lay-out&gt;</code>
+		<lay-out col-gap="1em">
+			<content-item></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>2 Columns</h3>
+		<code>&lt;lay-out md="columns(2)" col-gap="1em"&gt;</code>
+		<lay-out md="columns(2)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>3-column</h3>
+		<code>&lt;lay-out sm="columns(2)" md="columns(3)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(3)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>4-column</h3>
+		<code>&lt;lay-out sm="columns(2)" md="columns(4)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(4)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>5-column</h3>
+		<code>&lt;lay-out sm="ratio(50x4:100)" lg="columns(5)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50x4:100)" lg="columns(5)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>6-column</h3>
+		<code>&lt;lay-out sm="columns(2)" md="columns(3)" md="columns(6)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(3)" xl="columns(6)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+</body>
+</html>

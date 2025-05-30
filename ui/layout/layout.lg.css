@@ -1,0 +1,173 @@
+@container (min-width: 720px)  {
+	/* Autofill / Autofit */
+	lay-out[lg="autofill"] {
+		--layout-gtc: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
+		--_ga: auto;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="autofit"] { 
+		--layout-gtc: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+		--_ga: auto; 
+		& > * { --layout-ga: auto; }
+	}
+
+	/* Columns */
+	lay-out[lg="columns(2)"] { --layout-gtc: repeat(2, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(3)"] { --layout-gtc: repeat(3, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(4)"] { --layout-gtc: repeat(4, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(5)"] { --layout-gtc: repeat(5, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(6)"] { --layout-gtc: repeat(6, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+
+	/* Ratios */
+	lay-out[lg="ratio(25:75)"] { --layout-gtc: 1fr 3fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(75:25)"] { --layout-gtc: 3fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(33:66)"] { --layout-gtc: 1fr 2fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(66:33)"] { --layout-gtc: 2fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(40:60)"] { --layout-gtc: 2fr 3fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(60:40)"] { --layout-gtc: 3fr 2fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(25:25:50)"] { --layout-gtc: 1fr 1fr 2fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(25:50:25)"] { --layout-gtc: 1fr 2fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(50:25:25)"] { --layout-gtc: 2fr 1fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="ratio(50:50:100)"],
+	lay-out[lg="ratio(100:50:50)"],
+	lay-out[lg="ratio(50x4:100)"] { 
+		--layout-gtc: 1fr 1fr;
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="ratio(50:50:100)"] { 
+		*:nth-of-type(3n+3) { --layout-ga: auto / span 2; } 
+	}
+	lay-out[lg="ratio(100:50:50)"] { 
+		*:nth-of-type(3n+1) { --layout-ga: auto / span 2; } 
+	}
+	lay-out[lg="ratio(50x4:100)"] {
+		*:nth-of-type(5n+5) { --layout-ga: auto / span 2; }
+	}
+
+	/* Masonry */
+	lay-out[lg="masonry(1-2)"] { 
+		--layout-gtc: 2fr 1fr;
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+		*:nth-of-type(3n+1) { --layout-ga: span 2 / auto; } 
+	}
+	lay-out[lg="masonry(2-1)"] { 
+		--layout-gtc: 1fr 2fr;
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+		*:nth-of-type(3n+2) { --layout-ga: span 2 / auto; } 
+	}
+	lay-out[lg="masonry(1-3)"],
+	lay-out[lg="masonry(1-4)"] {
+		--layout-gtc: 2fr 1fr; 
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="masonry(1-3)"] {
+		*:nth-of-type(4n+1) { --layout-ga: span 3 / auto; } 
+	}
+	lay-out[lg="masonry(1-4)"] {
+		*:nth-of-type(5n+1) { --layout-ga: span 4 / auto; } 
+	}
+	lay-out[lg="masonry(3-1)"],
+	lay-out[lg="masonry(4-1)"] {
+		--layout-gtc: 1fr 2fr;
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="masonry(3-1)"] {
+		*:nth-of-type(4n+2) { --layout-ga: span 3 / auto; } 
+	}
+	lay-out[lg="masonry(4-1)"] {
+		*:nth-of-type(5n+2) { --layout-ga: span 4 / auto; } 
+	}
+	lay-out[lg="masonry(1-1-2)"],
+	lay-out[lg="masonry(1-1-2-reverse)"],
+	lay-out[lg="masonry(1-2-1)"],
+	lay-out[lg="masonry(2-2-1)"],
+	lay-out[lg="masonry(1-2-2)"] {
+		--layout-gtc: 1fr 1fr 1fr;
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="masonry(1-1-2)"] {
+		*:nth-of-type(4n+1) { --layout-ga: auto / span 2; }
+		*:nth-of-type(4n+2) { --layout-ga: span 2 / auto; }
+	}
+	lay-out[lg="masonry(1-1-2-reverse)"] {
+		*:nth-of-type(4n+1) { --layout-ga: span 2 / auto; }
+		*:nth-of-type(4n+2) { --layout-ga: auto / span 2; }
+	}
+	lay-out[lg="masonry(1-2-1)"] {
+		*:nth-of-type(4n+1),
+		*:nth-of-type(4n+3) { --layout-ga: span 2 / auto; } 
+	}
+	lay-out[lg="masonry(2-2-1)"] {
+		*:nth-of-type(5n+3) { --layout-ga: span 2 / auto; } 
+	}
+	lay-out[lg="masonry(1-2-2)"] {
+		*:nth-of-type(5n+1) { --layout-ga: span 2 / auto; } 
+	}
+	lay-out[lg="masonry(3-1-1)"],
+	lay-out[lg="masonry(1-1-3)"],
+	lay-out[lg="masonry(1-3-1)"] {
+		--layout-gtc: repeat(6, 1fr);
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[lg="masonry(3-1-1)"] {
+		*:nth-of-type(5n+1) { --layout-ga: auto / span 2; }
+		*:nth-of-type(5n+2),
+		*:nth-of-type(5n+3) { --layout-ga: span 2 / span 2; }
+	}
+	lay-out[lg="masonry(1-1-3)"] {
+		*:nth-of-type(5n+1),
+		*:nth-of-type(5n+2) { --layout-ga: span 2 / span 2; }
+		*:nth-of-type(5n+3) { --layout-ga: auto / span 2; }
+	}
+	lay-out[lg="masonry(1-3-1)"] {
+		*:nth-of-type(5n+1),
+		*:nth-of-type(5n+3) { --layout-ga: span 2 / span 2; }
+		*:nth-of-type(5n+2) { --layout-ga: auto / span 2; }
+	}
+
+	/* Asymmetrical */
+	lay-out[lg="asym(left-right)"],
+	lay-out[lg="asym(right-left)"],
+	lay-out[lg="asym(top-bottom)"] {
+		--layout-gtc: repeat(8, 1fr);
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+		*:nth-of-type(n+3) { display: none; }
+	}
+	lay-out[lg="asym(left-right)"] {
+		*:nth-of-type(1) { --layout-ga: 1 / 1 / 7 / 7; }
+		*:nth-of-type(2) { --layout-ga: 3 / 5 / 5 / 9; }
+	}
+	lay-out[lg="asym(right-left)"] {
+		*:nth-of-type(1) { --layout-ga: 1 / 3 / 7 / 9; }
+		*:nth-of-type(2) { --layout-ga: 3 / 1 / 5 / 5; }
+	}
+	lay-out[lg="asym(top-bottom)"] {
+		*:nth-of-type(1) { --layout-ga: 1 / 1 / 5 / 9; }
+		*:nth-of-type(2) { --layout-ga: 3 / 2 / 6 / 8; }
+	}
+	lay-out[lg="asym(top-left-bottom-right)"],
+	lay-out[lg="asym(bottom-left-top-right)"] {
+		--layout-gtc: repeat(7, 1fr);
+		--_ga: initial;
+		& > * { --layout-ga: auto; }
+		*:nth-of-type(n+4) { display: none; }
+	}
+	lay-out[lg="asym(top-left-bottom-right)"] {
+		*:nth-of-type(1) { --layout-ga: 1 / 1 / 3 / 4; }
+		*:nth-of-type(2) { --layout-ga: 2 / 3 / 4 / 6; }
+		*:nth-of-type(3) { --layout-ga: 3 / 5 / 5 / 8; }
+	}
+	lay-out[lg="asym(bottom-left-top-right)"] {
+		*:nth-of-type(1) { --layout-ga: 3 / 1 / 5 / 4; }
+		*:nth-of-type(2) { --layout-ga: 2 / 3 / 4 / 6; }
+		*:nth-of-type(3) { --layout-ga: 1 / 5 / 3 / 8; }
+	}
+}

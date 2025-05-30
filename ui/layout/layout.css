@@ -1,169 +1,144 @@
-@layer layout {
+@layer layout.base, layout.reset, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.overflow, layout.animations.css;
+
+@import url("layout.xs.css") layer(layout.xs);
+@import url("layout.sm.css") layer(layout.sm);
+@import url("layout.md.css") layer(layout.md);
+@import url("layout.lg.css") layer(layout.lg);
+@import url("layout.xl.css") layer(layout.xl);
+@import url("layout.xxl.css") layer(layout.xxl);
+
+@import url("layout.overflow.css") layer(layout.overflow);
+@import url("layout.animations.css") layer(layout.animations);
+
+@layer layout.base {
 	lay-out {
-		--_xxs: attr(xxs type(<number>), 1);
-		--_xs:  attr(xs type(<number>));
-		--_sm:  attr(sm type(<number>));
-		--_md:  attr(md type(<number>));
-		--_lg:  attr(lg type(<number>));
-		--_xl:  attr(xl type(<number>));
-		--_xxl: attr(xxl type(<number>));
-
-		--_cg: attr(col-gap type(<length> | <percentage>), 0);
-		--_rg: attr(row-gap type(<length> | <percentage>), var(--_cg));
-		--_sz: attr(size type(<length> | <custom-ident>), auto);
-
-		/* --layout-gtc: autofit, minmax(min(5rem, 100%)); */
-
-		column-gap: var(--_cg);
+		/* typed attr() */
+		--layout-bg: attr(background type(<color>), #0000);
+		--layout-bleed: attr(bleed type(<number>), 0);
+		--layout-c: attr(color type(<color>), inherit);
+		--layout-colmg: attr(col-gap type(<length> | <percentage>), 0);
+		--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr);
+		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
+		--layout-p: attr(padding type(<length> | <percentage>), 0);
+		--layout-rg: attr(row-gap type(<length> | <percentage>), var(--layout-colmg));
+		
+		background: var(--layout-bg);
+		color: var(--layout-c);
+		column-gap: var(--layout-colmg);
 		contain: layout inline-size;
 		container-type: inline-size;
-		/* content-visibility: auto; */
-		contain-intrinsic-size: var(--_sz);
 		display: grid;
 		grid-auto-flow: row dense;
-		grid-template-columns: repeat(var(--layout-gtc, 1), 1fr);
-		grid-template-rows: var(--layout-gtr, auto);
-		row-gap: var(--_rg);
+		grid-template-columns: var(--layout-gtc);
+		grid-template-rows: var(--layout-gtr);
+		padding: var(--layout-p);
+		row-gap: var(--layout-rg);
 
-		& > * { grid-area: var(--layout-ga, auto); }
+		& > * { grid-area: var(--_ga, var(--layout-ga, auto)); }
 
-		/* RESPONSIVE */
-
-		/* extra small */
-		@container (min-width: 240px)  {
-			--layout-gtc: var(--_xs,  var(--_xxs));
+		/*
+		 * The `[size]` attribute is used to optimize rendering performance.
+		 * When `[size]` is present, `content-visibility: auto` is applied,
+		 * allowing the browser to skip rendering off-screen content.
+		 * `contain-intrinsic-size` provides a placeholder size for the element
+		 * before its actual content is rendered, preventing layout shifts.
+		 * The value of `[size]` (e.g., "300px 200px") is used as the `contain-intrinsic-size`.
+		 */
+		&[size] {
+			--_sz: attr(size type(<length> | <custom-ident>), auto);
+			content-visibility: auto;
+			contain-intrinsic-size: var(--_sz);
 		}
+		/* 
+		 * The `[bleed]` attribute controls the layout's bleed behavior with progressive enhancement:
+		 * 
+		 * 1. `[bleed]` (no value): 
+		 *    - Container bleeds to full width with negative margins
+		 *    - Content remains constrained to max-width (--layout-mw)
+		 *    - Useful for background colors/images that need full width
+		 * 
+		 * 2. `bleed="0"`: 
+		 *    - Container bleeds to full width AND content expands to full width
+		 *    - Applies symmetric padding to fill the available space
+		 *    - Both container and content become full width
+		 * 
+		 * 3. `bleed="value"` (any number between -100 to 100):
+		 *    - Container bleeds to full width with asymmetrical content distribution
+		 *    - Positive values (1-100): Content favors the start side
+		 *    - Negative values (-1 to -100): Content favors the end side
+		 *    - Higher absolute values increase the asymmetry
+		 * 
+		 * Examples:
+		 * - `bleed`: Container full width, content max-width constrained
+		 * - `bleed="0"`: Both container and content full width, symmetric
+		 * - `bleed="25"`: Full width with start-side emphasis (125% vs 75% factors)
+		 * - `bleed="-25"`: Full width with end-side emphasis (75% vs 125% factors)
+		 * - `bleed="50"`: Maximum start-side asymmetry (150% vs 50% factors)
+		 */
 
-		/* small */
-		@container (min-width: 380px)  {
-			--layout-gtc: var(--_sm,  var(--_xs, var(--_xxs)));
-			/* &[name*="sm:50-50-100"] { --layout-gtc: 2; *:nth-of-type(2n+3) { --layout-ga: auto / span 2; } } */
+		&[bleed] {
+			--_pi: calc((100cqi - var(--layout-mw, 100cqi)) / 2);
+			margin-inline: min(-1 * var(--layout-mi, 0), var(--layout-mw, 100cqi) / 2 - 50cqi);
 		}
-
-		/* medium */
-		@container (min-width: 540px)  {
-			--layout-gtc: var(--_md,  var(--_sm, var(--_xs, var(--_xxs))));
-
-			&[name*="md:50-50-100"],
-			&[name*="md:100-50-50"] { --layout-gtc: 2; }
-			&[name*="md:33-66"],
-			&[name*="md:66-33"] { --layout-gtc: 3; }
-			&[name*="md:25-75"],
-			&[name*="md:75-25"],
-			&[name*="md:50-25-25"],
-			&[name*="md:25-50-25"],
-			&[name*="md:25-25-50"] { --layout-gtc: 4; }
-			&[name*="md:40-60"],
-			&[name*="md:60-40"] { --layout-gtc: 5; }
-
-			&[name*="md:60-40"] *:nth-of-type(2n+2),
-			&[name*="md:40-60"] *:nth-of-type(2n+1),
-			&[name*="md:50-25-25"] *:nth-of-type(3n+1),
-			&[name*="md:25-50-25"] *:nth-of-type(3n+2),
-			&[name*="md:25-25-50"] *:nth-of-type(3n+3) { --layout-ga: auto / span 2; }
-
-			&[name*="md:25-75"] *:nth-of-type(2n+0),
-			&[name*="md:75-25"] *:nth-of-type(2n+1),
-			&[name*="md:40-60"] *:nth-of-type(2n+2),
-			&[name*="md:60-40"] *:nth-of-type(2n+1) { --layout-ga: auto / span 3; }
-
-			&[name*="md:66-33"] *:nth-of-type(2n+1),
-			&[name*="md:33-66"] *:nth-of-type(2n+2),
-			&[name*="md:50-50-100"] *:nth-of-type(3n+3),
-			&[name*="md:100-50-50"] *:nth-of-type(3n+1) { --layout-ga: auto / span 2; } 
-
-			&[name*="md:1lg-2sm"] { --layout-gtc: 3; *:nth-of-type(3n+1) { --layout-ga: span 2 / span 2; } }
-			&[name*="md:1lg-3sm"] { --layout-gtc: 3; *:nth-of-type(4n+1) { --layout-ga: span 3 / span 2; } }
-			&[name*="md:1lg-4sm"] { --layout-gtc: 3; *:nth-of-type(5n+1) { --layout-ga: span 4 / span 2; } }
-			&[name*="md:2sm-1lg"] { --layout-gtc: 3; *:nth-of-type(3n+3) { --layout-ga: 1 / 2 / 3 / 4; } }
-			&[name*="md:3sm-1lg"] { --layout-gtc: 3; *:nth-of-type(4n+4) { --layout-ga: 1 / 2 / 4 / 4; } }
-			&[name*="md:4sm-1lg"] { --layout-gtc: 3; *:nth-of-type(5n+5) { --layout-ga: 1 / 2 / 5 / 4; } }
-
-			&[name*="md:asym-lr"] {
-				--layout-gtc: 8;
-				*:nth-of-type(2n+1) { --layout-ga: 1 / 1 / 7 / 7; }
-				*:nth-of-type(2n+2) { --layout-ga: 3 / 5 / 5 / 9; }
-			}
-			&[name*="md:asym-rl"] {
-				--layout-gtc: 8;
-				*:nth-of-type(2n+1) { --layout-ga: 1 / 3 / 7 / 9; }
-				*:nth-of-type(2n+2) { --layout-ga: 3 / 1 / 5 / 5; }
-			}
-			&[name*="md:asym-tb"] {
-				--layout-gtc: 8;
-				*:nth-of-type(2n+1) { --layout-ga: 1 / 1 / 5 / 9; }
-				*:nth-of-type(2n+2) { --layout-ga: 3 / 2 / 6 / 8; }
-			}
-
-			&[name*="md:asym-tl-br"] {
-				--layout-gtc: 7;
-				*:nth-of-type(3n+1) { --layout-ga: 1 / 1 / 3 / 4; }
-				*:nth-of-type(3n+2) { --layout-ga: 2 / 3 / 4 / 6; }
-				*:nth-of-type(3n+3) { --layout-ga: 3 / 5 / 5 / 8; }
-			}
-			&[name*="md:asym-bl-tr"] {
-				--layout-gtc: 7;
-				*:nth-of-type(3n+1) { --layout-ga: 3 / 1 / 5 / 4; }
-				*:nth-of-type(3n+2) { --layout-ga: 2 / 3 / 4 / 6; }
-				*:nth-of-type(3n+3) { --layout-ga: 1 / 5 / 3 / 8; }
-			}
-
-			/* 4 items */
-			&[name*="md:2lg-2sm"] {
-				--layout-gtc: 3;
-				*:nth-of-type(4n+1) { --layout-ga: auto / span 2; }
-				*:nth-of-type(4n+2) { --layout-ga: span 2 / auto; }
-			}
-			&[name*="md:2sm-2lg"] {
-				--layout-gtc: 3;
-				*:nth-of-type(4n+1) { --layout-ga: span 2 / auto; }
-				*:nth-of-type(4n+2) { --layout-ga: auto / span 2; }
-			}
-
-			&[name*="md:1lg-2sm-1lg"] {
-				--layout-gtc: 3;
-				*:nth-of-type(4n+1) { --layout-ga: 1 / 1 / 3 / 2; }
-				*:nth-of-type(4n+4) { --layout-ga: 1 / 3 / 3 / 4; }
-			}
-
-			&[name*="md:2sm-1lg-2sm"] {
-				--layout-gtc: 3;
-				*:nth-of-type(5n+3) { --layout-ga: span 2 / auto; }
-				
-			}
+		&[bleed]:not([bleed="0"]) {
+			--_S: calc(1 + (var(--layout-bleed) / 100));
+  		--_E: calc(1 - (var(--layout-bleed) / 100));
+			padding-inline: 
+				max(var(--layout-p, 0), var(--_pi) * var(--_S, 1))
+				max(var(--layout-p, 0), var(--_pi) * var(--_E, 1));
 		}
+	}
 
-		/* large */
-		@container (min-width: 720px)  {
-			--layout-gtc: var(--_lg,  var(--_md, var(--_sm, var(--_xs, var(--_xxs)))));
+	html {
+		container-type: inline-size;
+	}
 
-			&[name*="lg:50-50-100"] { --layout-gtc: 2; *:nth-of-type(2n+3) { --layout-ga: auto / span 2; } }
-			&[name*="lg:100-50-50"] { --layout-gtc: 2; *:nth-of-type(2n+3) { --layout-ga: auto / span 2; } }
-			&[name*="lg:2sm-1lg"] { --layout-gtc: 3; *:nth-of-type(3n+3) { --layout-ga: 1 / 2 / 3 / 4; } }
-			&[name*="lg:1lg-3sm"] { --layout-gtc: 3; *:nth-of-type(4n+1) { --layout-ga: 1 / 1 / 3 / 4; } }
+	.layout-wrapper {
+		margin-inline:  max(var(--layout-mi, 0), 50cqw - var(--layout-mw, 100cqw) / 2);
+	}
+}
 
-			&[name*="lg:asym-lr"] {
-				--layout-gtc: 8;
-				*:nth-of-type(2n+1) { --layout-ga: 1 / 1 / 7 / 7; }
-				*:nth-of-type(2n+2) { --layout-ga: 3 / 5 / 5 / 9; }
-			}
-		}
-
-		/* extra large */
-		@container (min-width: 920px)  {
-			--layout-gtc: var(--_xl,  var(--_lg, var(--_md, var(--_sm, var(--_xs, var(--_xxs)))))); 
-			&[name*="xl:50-50-100"] { --layout-gtc: 2; *:nth-of-type(2n+3) { --layout-ga: auto / span 2; } }
-			&[name*="xl:2sm-1lg"] {
-				--layout-gtc: 3;
-				*:nth-of-type(3n+3) { --layout-ga: 1 / 2 / 3 / 4; }
-			}
-		}
-
-		/* extra extra large */
-		@container (min-width: 1140px) {
-			--layout-gtc: var(--_xxl, var(--_xl, var(--_lg, var(--_md, var(--_sm, var(--_xs, var(--_xxs)))))));
-			&[name*="xxl:50-50-100"] { --layout-gtc: 2; *:nth-of-type(2n+3) { --layout-ga: auto / span 2; } }
-			&[name*="xxl:2sm-1lg"] { --layout-gtc: 3; *:nth-of-type(3n+3) { --layout-ga: 1 / 2 / 3 / 4; } }
+@layer layout.reset {
+	lay-out {
+		/* 
+		 * Default Container-Level Grid Area Behavior (`--_ga`):
+		 * By default, `--_ga` is set to `initial`.
+		 * This means that, by default, the `lay-out` container does NOT enforce a uniform `grid-area` 
+		 * for all its children via `--_ga`.
+		 * Instead, it allows the `var(--layout-ga, auto)` part of the `grid-area` definition 
+		 * (in `layout.base`) to take effect.
+		 * 
+		 * Layouts that *do* want all their children to have a uniform `grid-area` (e.g., `auto` for simple flow)
+		 * must explicitly set `--_ga` on the `lay-out` element itself within their specific rules 
+		 * (e.g., `lay-out[columns="2"] { --_ga: auto; }` in `layout.sm.css`).
+		 * 
+		 * This reset is crucial. If a layout at a smaller breakpoint (e.g., `sm`) sets `--_ga: auto`,
+		 * and a subsequent layout at a larger breakpoint (e.g., `md`) needs child-specific `--layout-ga` rules,
+		 * the `md` layout rule *must* reset `--_ga` back to `initial` (or another non-overriding value)
+		 * on the `lay-out` container. Otherwise, the `--_ga: auto` from `sm` would persist and prevent
+		 * the child-specific `--layout-ga` rules in `md` from working.
+		 */
+		--_ga: initial;
+		
+		/* 
+		 * Default Child-Specific Grid Area Behavior (`--layout-ga`):
+		 * By default, each direct child (`> *`) of a `lay-out` element has its `--layout-ga` set to `auto`.
+		 * This means that if a more specific rule in a later layer (e.g., `layout.md`)
+		 * doesn't provide a different value for `--layout-ga` for a particular child
+		 * (e.g., `span 2 / auto`), and if `--_ga` on the parent `lay-out` is `initial`,
+		 * then the child's `grid-area` will ultimately resolve to `auto`.
+		 * 
+		 * This provides a baseline. Specific layouts (like masonry or complex ratios)
+		 * will override this `--layout-ga: auto` for certain children using `nth-of-type` selectors
+		 * in the breakpoint-specific CSS files (e.g., `layout.md.css`).
+		 * 
+		 * It's also important that breakpoint-specific rules using `nth-of-type` to set `--layout-ga`
+		 * include a reset for all children (`& > * { --layout-ga: auto; }`) within their own scope
+		 * if they are changing a pattern from a smaller breakpoint. This prevents `nth-of-type` rules
+		 * from one breakpoint's layout from incorrectly affecting another breakpoint's layout.
+		 */
+		& > * {
+		 	--layout-ga: auto;
 		}
 	}
 }

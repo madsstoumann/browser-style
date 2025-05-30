@@ -11,323 +11,530 @@
 </head>
 <body>
 
+	<h2>Columns</h2>
+
 	<section>
-		<h3>1-column</h3>
+		<h3>1 column</h3>
 		<code>&lt;lay-out&gt;</code>
-		<lay-out>
+		<lay-out col-gap="1em">
 			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<h2>2 items</h2>
-
-	<section>
-		<h3>2-column</h3>
-		<code>&lt;lay-out md="2"&gt;</code>
-		<lay-out md="2" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>25/75</h3>
-		<code>&lt;lay-out name="md:25-75"&gt;</code>
-		<lay-out name="md:25-75">
+		<h3>2 Columns</h3>
+		<code>&lt;lay-out md="columns(2)" col-gap="1em"&gt;</code>
+		<lay-out md="columns(2)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
-
-	<section>
-		<h3>75/25</h3>
-		<code>&lt;lay-out name="md:75-25"&gt;</code>
-		<lay-out name="md:75-25">
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>33/66</h3>
-		<code>&lt;lay-out name="md:33-66"&gt;</code>
-		<lay-out name="md:33-66">
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>66/33</h3>
-		<code>&lt;lay-out name="md:66-33"&gt;</code>
-		<lay-out name="md:66-33">
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>40/60</h3>
-		<code>&lt;lay-out name="md:40-60"&gt;</code>
-		<lay-out name="md:40-60">
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>60/40</h3>
-		<code>&lt;lay-out name="md:60-40"&gt;</code>
-		<lay-out name="md:60-40">
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
- 
-	<section>
-		<h3>Asymmetrical Top Bottom </h3>
-		<code>&lt;lay-out name="md:asym-tb"&gt;</code>
-		<lay-out name="md:asym-tb">
-		<content-item></content-item>
-		<content-item></content-item>	
-	</lay-out>
-	</section>
-
-	<section>
-		<h3>Asymmetrical Left Right </h3>
-		<code>&lt;lay-out name="md:asym-lr"&gt;</code>
-		<lay-out name="md:asym-lr">
-			<content-item></content-item>
-			<content-item></content-item>	
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Asymmetrical Right Left </h3>
-		<code>&lt;lay-out name="md:asym-rl"&gt;</code>
-		<lay-out name="md:asym-rl">
-			<content-item></content-item>
-			<content-item></content-item>	
-		</lay-out>
-	</section>
-
-	<h2>3 items</h2>
 
 	<section>
 		<h3>3-column</h3>
-		<code>&lt;lay-out md="3"&gt;</code>
-		<lay-out md="3">
+		<code>&lt;lay-out sm="columns(2)" md="columns(3)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(3)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>25/25/50</h3>
-		<code>&lt;lay-out name="md:25-25-50"&gt;</code>
-		<lay-out name="md:25-25-50">
+		<h3>4-column</h3>
+		<code>&lt;lay-out sm="columns(2)" md="columns(4)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(4)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>25/50/25</h3>
-		<code>&lt;lay-out name="md:25-50-25"&gt;</code>
-		<lay-out name="md:25-50-25">
+		<h3>5-column</h3>
+		<code>&lt;lay-out sm="ratio(50x4:100)" lg="columns(5)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50x4:100)" lg="columns(5)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>50/25/25</h3>
-		<code>&lt;lay-out name="md:50-25-25"&gt;</code>
-		<lay-out name="md:50-25-25">
+		<h3>6-column</h3>
+		<code>&lt;lay-out sm="columns(2)" md="columns(3)" md="columns(6)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="columns(3)" xl="columns(6)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<h2>Ratios</h2>
+
+	<section>
+		<h3>Ratio 25:75</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(25:75)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(25:75)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>50/50/100</h3>
-		<code>&lt;lay-out name="md:50-50-100"&gt;</code>
-		<lay-out name="md:50-50-100">
+		<h3>Ratio 33:66</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(33:66)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(33:66)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>100/50/50</h3>
-		<code>&lt;lay-out name="md:100-50-50"&gt;</code>
-		<lay-out name="md:100-50-50">
+		<h3>Ratio 40:60</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(40:60)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(40:60)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>2sm/1lg</h3>
-		<code>&lt;lay-out name="md:2sm-1lg"&gt;</code>
-		<lay-out name="md:2sm-1lg">
+		<h3>Ratio 60:40</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(60:40)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(60:40)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
-		<h3>1 Large, 2 Small</h3>
-		<code>&lt;lay-out name="md:1lg-2sm"&gt;</code>
-		<lay-out name="md:1lg-2sm">
+		<h3>Ratio 66:33</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(66:33)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(66:33)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 75:25</h3>
+		<code>&lt;lay-out sm="columns(2)" md="ratio(75:25)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="ratio(75:25)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 25:25:50</h3>
+		<code>&lt;lay-out sm="ratio(50:50:100)" md="ratio(25:25:50)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50:50:100)" md="ratio(25:25:50)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 25:50:25</h3>
+		<code>&lt;lay-out sm="ratio(50:50:100)" md="ratio(25:50:25)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50:50:100)" md="ratio(25:50:25)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 50:25:25</h3>
+		<code>&lt;lay-out sm="ratio(50:50:100)" md="ratio(50:25:25)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50:50:100)" md="ratio(50:25:25)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 50:50:100</h3>
+		<code>&lt;lay-out sm="ratio(50:50:100)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50:50:100)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 100:50:50</h3>
+		<code>&lt;lay-out sm="ratio(100:50:50)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(100:50:50)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Ratio 50x4 100</h3>
+		<code>&lt;lay-out sm="ratio(50x4:100)" col-gap="1em"&gt;</code>
+		<lay-out sm="ratio(50x4:100)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<h2>Masonry</h2>
+
+	<section>
+		<h3>Masonry 1-2</h3>
+		<code>&lt;lay-out md="masonry(1-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 2-1</h3>
+		<code>&lt;lay-out md="masonry(2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-1-2</h3>
+		<code>&lt;lay-out md="masonry(1-1-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-2)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+		<section>
+		<h3>Masonry 1-1-2 Reverse</h3>
+		<code>&lt;lay-out md="masonry(1-1-2-reverse)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-2-reverse)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-2-1</h3>
+		<code>&lt;lay-out md="masonry(1-2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 2-2-1</h3>
+		<code>&lt;lay-out md="masonry(2-2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2-2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-2-2</h3>
+		<code>&lt;lay-out md="masonry(1-2-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2-2)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 3-1-1</h3>
+		<code>&lt;lay-out md="masonry(3-1-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(3-1-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-1-3</h3>
+		<code>&lt;lay-out md="masonry(1-1-3)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-3)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-3-1</h3>
+		<code>&lt;lay-out md="masonry(1-3-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-3-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-3</h3>
+		<code>&lt;lay-out md="masonry(1-3)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-3)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 3-1</h3>
+		<code>&lt;lay-out md="masonry(3-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(3-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-4</h3>
+		<code>&lt;lay-out md="masonry(1-4)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-4)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 4-1</h3>
+		<code>&lt;lay-out md="masonry(4-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(4-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<h2>Asymmetrical</h2>
+	<p>
+		Asymmetrical layouts do not repeat like <code>column()</code>, <code>ratio()</code> and <code>masonry()</code> layouts. <br>
+		If you add more items than the layout can handle, it will be hidden.
+	</p>
+
+	<section>
+		<h3>Asymmetrical Left Right</h3>
+		<code>&lt;lay-out md="asym(left-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(left-right)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Right Left</h3>
+		<code>&lt;lay-out md="asym(right-left)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(right-left)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Asymmetrical Top Bottom</h3>
+		<code>&lt;lay-out md="asym(top-bottom)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(top-bottom)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
 		<h3>Asymmetrical Top Left &gt; Bottom Right</h3>
-		<code>&lt;lay-out name="md:asym-tl-br"&gt;</code>
-		<lay-out name="md:asym-tl-br">
+		<code>&lt;lay-out md="asym(top-left-bottom-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(top-left-bottom-right)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 
 	<section>
 		<h3>Asymmetrical Bottom Left &gt; Top Right</h3>
-		<code>&lt;lay-out name="md:asym-bl-tl"&gt;</code>
-		<lay-out name="md:asym-bl-tr">
+		<code>&lt;lay-out md="asym(bottom-left-top-right)" col-gap="1em"&gt;</code>
+		<lay-out md="asym(bottom-left-top-right)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<h2>4 items</h2>
-
-	<section>
-		<h3>4-column</h3>
-		<code>&lt;lay-out md="4"&gt;</code>
-		<lay-out md="4">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>2 Large, 2 Small</h3>
-		<code>&lt;lay-out name="md:2lg-2sm"&gt;</code>
-		<lay-out name="md:2lg-2sm">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>2 Small, 2 Large</h3>
-		<code>&lt;lay-out name="md:2sm-2lg"&gt;</code>
-		<lay-out name="md:2sm-2lg">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>1 Large, 2 Small, 1 Large</h3>
-		<code>&lt;lay-out name="md:1lg-2sm-1lg"&gt;</code>
-		<lay-out name="md:1lg-2sm-1lg">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>1 Large, 3 Small</h3>
-		<code>&lt;lay-out name="md:1lg-3sm"&gt;</code>
-		<lay-out name="md:1lg-3sm">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>3 Small, 1 Large</h3>
-		<code>&lt;lay-out name="md:3sm-1lg"&gt;</code>
-		<lay-out name="md:3sm-1lg">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<h2>5 items</h2>
-
-	<section>
-		<h3>5-column</h3>
-		<code>&lt;lay-out md="2" lg="5"&gt;</code>
-		<lay-out md="2" lg="5">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>4 Small, 1 Large</h3>
-		<code>&lt;lay-out name="md:1lg-4sm"&gt;</code>
-		<lay-out name="md:1lg-4sm">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>4 Small, 1 Large</h3>
-		<code>&lt;lay-out name="md:4sm-1lg"&gt;</code>
-		<lay-out name="md:4sm-1lg">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>2 Small, 1 Large, 2 Small</h3>
-		<code>&lt;lay-out name="md:2sm-1lg-2sm"&gt;</code>
-		<lay-out name="md:2sm-1lg-2sm">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
 		</lay-out>
 	</section>
 

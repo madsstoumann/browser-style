@@ -2,7 +2,7 @@ content-item {
 	/* aspect-ratio: 16 / 9; */
 	background: var(--bg, #DDD);
 	max-inline-size: 100%;
-	min-block-size: 10rem;
+	min-block-size: 14rem;
 	&:nth-of-type(1) { --bg: cornflowerblue; }
 	&:nth-of-type(2) { --bg: lightcoral; }
 	&:nth-of-type(3) { --bg: lightgreen; }
@@ -15,17 +15,23 @@ content-item {
 	&:nth-of-type(10) { --bg: lightcyan; }
 	&:nth-of-type(11) { --bg: lightgray; }
 	&:nth-of-type(12) { --bg: lightblue; }
+	&[repeat] {
+		filter: grayscale(95%) brightness(.9);
+	}
 }
 
+.layout-wrapper {
+	--layout-mw: 1200px;
+	--layout-mi: 1rem;
+}
+
+
 body {
-	container-type: inline-size;
 	display: grid;
 	font-family: system-ui;
-	margin: 0 auto;
-	max-inline-size: 1200px;
-	padding: 1rem;
 	row-gap: 1rem;
 }
+
 code {
 	background: #333;
 	border-radius: .5ch;

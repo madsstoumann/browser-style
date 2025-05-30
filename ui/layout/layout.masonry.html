@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout-demo.css">
+</head>
+<body class="layout-wrapper">
+
+	<h2>Masonry</h2>
+
+	<section>
+		<h3>Masonry 1-2</h3>
+		<code>&lt;lay-out md="masonry(1-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2)" col-gap="1em" bleed background="#CCC" padding="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 2-1</h3>
+		<code>&lt;lay-out md="masonry(2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-1-2</h3>
+		<code>&lt;lay-out md="masonry(1-1-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-2)" col-gap="1em" animation="bounce-in-left">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+		<section>
+		<h3>Masonry 1-1-2 Reverse</h3>
+		<code>&lt;lay-out md="masonry(1-1-2-reverse)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-2-reverse)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-2-1</h3>
+		<code>&lt;lay-out md="masonry(1-2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 2-2-1</h3>
+		<code>&lt;lay-out md="masonry(2-2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2-2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-2-2</h3>
+		<code>&lt;lay-out md="masonry(1-2-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-2-2)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 3-1-1</h3>
+		<code>&lt;lay-out md="masonry(3-1-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(3-1-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-1-3</h3>
+		<code>&lt;lay-out md="masonry(1-1-3)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-3)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-3-1</h3>
+		<code>&lt;lay-out md="masonry(1-3-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-3-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-3</h3>
+		<code>&lt;lay-out md="masonry(1-3)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-3)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 3-1</h3>
+		<code>&lt;lay-out md="masonry(3-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(3-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-4</h3>
+		<code>&lt;lay-out md="masonry(1-4)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-4)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 4-1</h3>
+		<code>&lt;lay-out md="masonry(4-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(4-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+</body>
+</html>
