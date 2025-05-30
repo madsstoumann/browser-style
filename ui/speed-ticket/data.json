@@ -1,0 +1,268 @@
+{
+  "locale": "da-DK",
+  "speedRange": {
+    "min": 0,
+    "max": 200,
+    "default": 50,
+    "step": 1,
+    "unit": "km/t"
+  },
+  "roadTypes": {
+    "cityZone": {
+      "id": "cityZone",
+      "label": "Byzone",
+      "description": "Veje i byområder",
+      "defaultSpeed": 50,
+      "minSpeed": 30,
+      "maxSpeed": 80,
+      "value": 50
+    },
+    "countryRoad": {
+      "id": "countryRoad", 
+      "label": "Landevej",
+      "description": "Almindelige landeveje",
+      "defaultSpeed": 80,
+      "minSpeed": 40,
+      "maxSpeed": 90,
+      "value": 80
+    },
+    "expressway": {
+      "id": "expressway",
+      "label": "Motortrafikvej", 
+      "description": "Motortrafikveje uden for byzone",
+      "defaultSpeed": 90,
+      "minSpeed": 40,
+      "maxSpeed": 90,
+      "value": 90
+    },
+    "highway": {
+      "id": "highway",
+      "label": "Motorvej",
+      "description": "Motorveje",
+      "defaultSpeed": 130,
+      "minSpeed": 40,
+      "maxSpeed": 130,
+      "value": 130
+    }
+  },
+  "vehicles": {
+    "car": {
+      "id": "car",
+      "label": "Personbil",
+      "value": 1,
+      "category": "car"
+    },
+    "motorcycle": {
+      "id": "motorcycle", 
+      "label": "Motorcykel",
+      "value": 2,
+      "category": "mc"
+    },
+    "truck": {
+      "id": "truck",
+      "label": "Lastbil", 
+      "value": 3,
+      "category": "truck"
+    },
+    "bus": {
+      "id": "bus",
+      "label": "Bus",
+      "value": 4,
+      "category": "bus"
+    },
+    "busExpress": {
+      "id": "busExpress",
+      "label": "Bus Tempo 100",
+      "value": 5,
+      "category": "bus100"
+    }
+  },
+  "factors": {
+    "probationary": {
+      "id": "probationary",
+      "label": "Prøveperiode",
+      "description": "Du har haft kørekort i under 3 år",
+      "value": 1,
+      "multiplier": 1.0
+    },
+    "roadwork": {
+      "id": "roadwork",
+      "label": "Vejarbejde", 
+      "description": "Fartoverskridelse ved vejarbejde",
+      "value": 2,
+      "multiplier": 2.0
+    },
+    "alcoholImpairment": {
+      "id": "alcoholImpairment",
+      "label": "Spirituskørsel",
+      "description": "Fartoverskridelse kombineret med spirituskørsel", 
+      "value": 3,
+      "multiplier": 1.5
+    }
+  },
+  "speedLimits": [30, 40, 50, 60, 70, 80, 90, 100, 110, 130],
+  "penaltyRanges": [
+    {
+      "percentageOver": 0,
+      "rate1": 1200,
+      "rate2": 1200, 
+      "rate3": 1800,
+      "description": "Mindre fartoverskridelse",
+      "consequence": "Bøde"
+    },
+    {
+      "percentageOver": 20,
+      "rate1": 1800,
+      "rate2": 1800,
+      "rate3": 1800,
+      "description": "Moderat fartoverskridelse", 
+      "consequence": "Bøde"
+    },
+    {
+      "percentageOver": 30,
+      "rate1": 1800,
+      "rate2": 2400,
+      "rate3": 2400,
+      "description": "Betydelig fartoverskridelse",
+      "consequence": "Bøde + klip i kørekortet"
+    },
+    {
+      "percentageOver": 40,
+      "rate1": 2400,
+      "rate2": 3000, 
+      "rate3": 3000,
+      "description": "Grov fartoverskridelse",
+      "consequence": "Høj bøde + klip i kørekortet"
+    },
+    {
+      "percentageOver": 50,
+      "rate1": 2400,
+      "rate2": 3600,
+      "rate3": 3600,
+      "description": "Meget grov fartoverskridelse",
+      "consequence": "Meget høj bøde + klip i kørekortet"
+    },
+    {
+      "percentageOver": 60,
+      "rate1": 3000,
+      "rate2": 4200,
+      "rate3": 4200,
+      "description": "Ekstrem fartoverskridelse",
+      "consequence": "Ekstrem bøde + betinget frakendelse"
+    },
+    {
+      "percentageOver": 70,
+      "rate1": 3600,
+      "rate2": 5400,
+      "rate3": 5400,
+      "description": "Meget ekstrem fartoverskridelse", 
+      "consequence": "Meget ekstrem bøde + betinget frakendelse"
+    },
+    {
+      "percentageOver": 80,
+      "rate1": 4200,
+      "rate2": 6000,
+      "rate3": 6000,
+      "description": "Vanvittig fartoverskridelse",
+      "consequence": "Vanvittig bøde + betinget frakendelse"
+    },
+    {
+      "percentageOver": 90,
+      "rate1": 5400,
+      "rate2": 7800,
+      "rate3": 7800,
+      "description": "Livsfarlig fartoverskridelse",
+      "consequence": "Livsfarlig bøde + betinget frakendelse"
+    },
+    {
+      "percentageOver": 100,
+      "rate1": 6000,
+      "rate2": 9000,
+      "rate3": 9000,
+      "description": "Ekstrem livsfarlig fartoverskridelse",
+      "consequence": "Maksimal bøde + betinget frakendelse"
+    }
+  ],
+  "rateCategories": {
+    "rate1": {
+      "description": "Hastighed under 100 km/t, personbil/motorcykel uden anhænger",
+      "conditions": {
+        "speedLimit": "< 100",
+        "vehicle": ["car", "mc"],
+        "trailer": false
+      }
+    },
+    "rate2": {
+      "description": "Hastighed 100 km/t eller over, personbil/motorcykel",
+      "conditions": {
+        "speedLimit": ">= 100", 
+        "vehicle": ["car", "mc"],
+        "trailer": false
+      }
+    },
+    "rate3": {
+      "description": "Bus, lastbil eller køretøj med anhænger",
+      "conditions": {
+        "vehicle": ["bus", "truck", "bus100"],
+        "trailer": true
+      }
+    }
+  },
+  "specialRules": {
+    "highSpeedByzone": {
+      "description": "Ekstra bøde ved høj hastighed i byzone",
+      "condition": "roadType === 'cityZone' && percentageOver >= 30",
+      "penalty": 1200
+    },
+    "extremeSpeed": {
+      "description": "Ekstra bøde ved hastighed over 140 km/t",
+      "condition": "speed >= 140",
+      "formula": "Math.floor((speed - 140) / 10) * 600 + 1200"
+    },
+    "roadwork": {
+      "description": "Dobbelt bøde ved vejarbejde",
+      "multiplier": 2.0
+    },
+    "unconditionalLicenseLoss": {
+      "description": "Ubetinget frakendelse af kørekort",
+      "conditions": [
+        "speed >= 200",
+        "(vehicle in ['car', 'mc'] && !trailer && percentageOver >= 101 && speed >= 101)",
+        "(vehicle in ['car', 'mc'] && trailer && percentageOver >= 100 && speed >= 101)",
+        "(vehicle in ['bus', 'truck'] && percentageOver >= 101 && speed >= 101)"
+      ]
+    }
+  },
+  "labels": {
+    "yourSpeed": "Din hastighed",
+    "speedLimit": "Hastighedsgrænse",
+    "roadType": "Vejtype",
+    "vehicle": "Køretøj",
+    "factors": "Faktorer"
+  },
+  "messages": {
+    "noFine": "Ingen fartoverskridelse",
+    "fine": "Du får en bøde på",
+    "clipLicense": "Du får klip i kørekortet",
+    "conditionalLoss": "Betinget frakendelse af kørekort",
+    "unconditionalLoss": "Ubetinget frakendelse af kørekort",
+    "overSpeed": "Hastigheden er for høj til at være realistisk",
+    "defaultViolation": "Fartoverskridelse",
+    "noFineCalculated": "Ingen bøde beregnet",
+    "unit": "kr."
+  },
+  "vehicleSpecificLimits": {
+    "truck": {
+      "maxSpeed": 90,
+      "message": "Lastbiler må maksimalt køre 90 km/t"
+    },
+    "bus": {
+      "maxSpeed": 100,
+      "message": "Busser må maksimalt køre 100 km/t"
+    },
+    "bus100": {
+      "maxSpeed": 100,
+      "message": "Bus Tempo 100 må maksimalt køre 100 km/t"
+    }
+  }
+}
