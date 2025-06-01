@@ -39,6 +39,21 @@ The system supports several layout types, each configurable via an attribute val
 *   **Asymmetrical:** `asym(<type>)` - Creates various asymmetrical layouts.
     *   Examples: `asym(left-right)`, `asym(top-bottom)`. These layouts do not typically repeat items beyond their defined structure.
 
+## The `size` Attribute
+
+The `size` attribute is used to optimize rendering performance of the `<lay-out>` element.
+When the `size` attribute is present, `content-visibility: auto` is applied. This allows the browser to skip rendering the content of the `<lay-out>` element if it's currently off-screen.
+To prevent layout shifts when the content is not rendered, `contain-intrinsic-size` is used. The value provided to the `size` attribute (e.g., `size="300px 200px"`) is used as the `contain-intrinsic-size`.
+
+**Example:**
+
+```html
+<lay-out size="800px 600px">
+  <!-- Content that might be off-screen -->
+</lay-out>
+```
+This helps the browser allocate space for the element even before it's fully rendered, improving perceived performance.
+
 ## The `bleed` Attribute
 
 The `bleed` attribute offers powerful control over how the layout container and its content interact with the viewport edges. It's primarily used for creating full-width sections while managing content width.
@@ -70,6 +85,26 @@ The `bleed` effect is achieved using CSS Custom Properties and calculations base
 - `--layout-mw`: Defines the maximum width of the content when bleed is active (but not `bleed="0"`).
 - `--layout-mi`: Controls `margin-inline`, often calculated as `min(-1 * var(--layout-mi, 0), var(--layout-mw, 100cqi) / 2 - 50cqi)` to pull the container outwards.
 - For asymmetrical bleed, factors `--_S` (start factor) and `--_E` (end factor) are calculated based on the `bleed` attribute's numeric value to adjust `padding-inline`.
+
+## Advanced: Grid Area Control (`--_ga` and `--layout-ga`)
+
+The layout system uses CSS Custom Properties `--_ga` and `--layout-ga` to control how child elements are placed within the grid defined by `<lay-out>`. Understanding these properties is key for customizing or extending layout behaviors.
+
+### Container-Level Control (`--_ga`)
+
+*   **Purpose:** `--_ga` is a custom property set on the `<lay-out>` element itself. It determines a default `grid-area` for *all* direct children.
+*   **Default Behavior:** By default, `--_ga` is `initial`. This means the `<lay-out>` container does *not* enforce a uniform `grid-area` on its children through this property. Instead, children rely on the `--layout-ga` property (see below) or their default grid flow.
+*   **Usage:** Specific layout types (e.g., a simple column layout like `columns="2"`) might set `--_ga: auto;` on the `<lay-out>` element. This ensures all children flow naturally into the grid cells.
+*   **Resetting is Crucial:** If a layout at a smaller breakpoint (e.g., `sm="columns(2)"` which sets `--_ga: auto`) is overridden by a more complex layout at a larger breakpoint (e.g., `md="masonry(1-2)"` which requires child-specific `grid-area`s), the `md` layout rules *must* reset `--_ga` back to `initial` on the `<lay-out>` element. Otherwise, the `--_ga: auto` from the `sm` breakpoint would persist and override the child-specific `--layout-ga` rules needed for the masonry layout.
+
+### Child-Specific Control (`--layout-ga`)
+
+*   **Purpose:** `--layout-ga` is a custom property intended to be set on the *direct children* of a `<lay-out>` element, or used by the `<lay-out>` element's styles to target specific children (e.g., via `nth-of-type`). It defines the `grid-area` for an individual child.
+*   **Default Behavior:** By default, each direct child of `<lay-out>` has its `--layout-ga` effectively resolve to `auto` (assuming `--_ga` on the parent is `initial`). This allows children to flow naturally in the grid.
+*   **Usage:** Complex layouts like masonry or asymmetrical ratios use specific CSS rules (often in breakpoint-specific files like `md.css`) to set `--layout-ga` on children (e.g., `content-item:nth-of-type(1) { --layout-ga: span 2 / auto; }`).
+*   **Contextual Resets:** When a breakpoint-specific layout (e.g., `md`) defines a new pattern for children using `--layout-ga` (often with `nth-of-type` selectors), it's important that these rules also include a general reset for all children within that breakpoint's scope (e.g., `lay-out[md] > * { --layout-ga: auto; }`) before applying specific `nth-of-type` overrides. This prevents `--layout-ga` rules from a smaller breakpoint's layout pattern from incorrectly affecting the current breakpoint's layout.
+
+In summary, `--_ga` provides a container-level default for child grid areas, while `--layout-ga` allows for fine-grained control over individual children, often varying by layout type and breakpoint. Proper resetting of these properties across breakpoints is essential for the system's inheritance and override logic to work correctly.
 
 ## Animations Module (`animations.css`)
 

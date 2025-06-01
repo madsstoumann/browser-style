@@ -21,7 +21,7 @@ content-item {
 }
 
 [data-layout-wrapper] {
-	--layout-mw: 1200px;
+	--layout-bleed-mw: 1200px;
 	--layout-mi: 1rem;
 }
 

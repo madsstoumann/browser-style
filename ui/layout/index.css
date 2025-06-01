@@ -7,8 +7,8 @@
 @import url("css/xl.css") layer(layout.xl);
 @import url("css/xxl.css") layer(layout.xxl);
 
-@import url("css/overflow.css") layer(layout.overflow);
 @import url("css/animations.css") layer(layout.animations);
+@import url("css/overflow.css") layer(layout.overflow);
 
 @layer layout.base {
 	lay-out {
@@ -19,6 +19,7 @@
 		--layout-colmg: attr(col-gap type(<length> | <percentage>), 0);
 		--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr);
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
+		--layout-mw: attr(max-width type(<length> | <percentage>), 100cqi);
 		--layout-p: attr(padding type(<length> | <percentage>), 0);
 		--layout-rg: attr(row-gap type(<length> | <percentage>), var(--layout-colmg));
 		
@@ -31,54 +32,22 @@
 		grid-auto-flow: row dense;
 		grid-template-columns: var(--layout-gtc);
 		grid-template-rows: var(--layout-gtr);
+		margin-inline: auto;
+		max-inline-size: var(--layout-mw);
 		padding: var(--layout-p);
 		row-gap: var(--layout-rg);
 
 		& > * { grid-area: var(--_ga, var(--layout-ga, auto)); }
 
-		/*
-		 * The `[size]` attribute is used to optimize rendering performance.
-		 * When `[size]` is present, `content-visibility: auto` is applied,
-		 * allowing the browser to skip rendering off-screen content.
-		 * `contain-intrinsic-size` provides a placeholder size for the element
-		 * before its actual content is rendered, preventing layout shifts.
-		 * The value of `[size]` (e.g., "300px 200px") is used as the `contain-intrinsic-size`.
-		 */
 		&[size] {
 			--_sz: attr(size type(<length> | <custom-ident>), auto);
 			content-visibility: auto;
 			contain-intrinsic-size: var(--_sz);
 		}
-		/* 
-		 * The `[bleed]` attribute controls the layout's bleed behavior with progressive enhancement:
-		 * 
-		 * 1. `[bleed]` (no value): 
-		 *    - Container bleeds to full width with negative margins
-		 *    - Content remains constrained to max-width (--layout-mw)
-		 *    - Useful for background colors/images that need full width
-		 * 
-		 * 2. `bleed="0"`: 
-		 *    - Container bleeds to full width AND content expands to full width
-		 *    - Applies symmetric padding to fill the available space
-		 *    - Both container and content become full width
-		 * 
-		 * 3. `bleed="value"` (any number between -100 to 100):
-		 *    - Container bleeds to full width with asymmetrical content distribution
-		 *    - Positive values (1-100): Content favors the start side
-		 *    - Negative values (-1 to -100): Content favors the end side
-		 *    - Higher absolute values increase the asymmetry
-		 * 
-		 * Examples:
-		 * - `bleed`: Container full width, content max-width constrained
-		 * - `bleed="0"`: Both container and content full width, symmetric
-		 * - `bleed="25"`: Full width with start-side emphasis (125% vs 75% factors)
-		 * - `bleed="-25"`: Full width with end-side emphasis (75% vs 125% factors)
-		 * - `bleed="50"`: Maximum start-side asymmetry (150% vs 50% factors)
-		 */
-
+	
 		&[bleed] {
-			--_pi: calc((100cqi - var(--layout-mw, 100cqi)) / 2);
-			margin-inline: min(-1 * var(--layout-mi, 0), var(--layout-mw, 100cqi) / 2 - 50cqi);
+			--_pi: calc((100cqi - var(--layout-bleed-mw, 100cqi)) / 2);
+			margin-inline: min(-1 * var(--layout-mi, 0), var(--layout-bleed-mw, 100cqi) / 2 - 50cqi);
 		}
 		&[bleed]:not([bleed="0"]) {
 			--_S: calc(1 + (var(--layout-bleed) / 100));
@@ -95,49 +64,13 @@
 	}
 
 	[data-layout-wrapper] {
-		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-mw, 100cqw) / 2);
+		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-bleed-mw, 100cqw) / 2);
 	}
 }
 
 @layer layout.reset {
 	lay-out {
-		/* 
-		 * Default Container-Level Grid Area Behavior (`--_ga`):
-		 * By default, `--_ga` is set to `initial`.
-		 * This means that, by default, the `lay-out` container does NOT enforce a uniform `grid-area` 
-		 * for all its children via `--_ga`.
-		 * Instead, it allows the `var(--layout-ga, auto)` part of the `grid-area` definition 
-		 * (in `layout.base`) to take effect.
-		 * 
-		 * Layouts that *do* want all their children to have a uniform `grid-area` (e.g., `auto` for simple flow)
-		 * must explicitly set `--_ga` on the `lay-out` element itself within their specific rules 
-		 * (e.g., `lay-out[columns="2"] { --_ga: auto; }` in `layout.sm.css`).
-		 * 
-		 * This reset is crucial. If a layout at a smaller breakpoint (e.g., `sm`) sets `--_ga: auto`,
-		 * and a subsequent layout at a larger breakpoint (e.g., `md`) needs child-specific `--layout-ga` rules,
-		 * the `md` layout rule *must* reset `--_ga` back to `initial` (or another non-overriding value)
-		 * on the `lay-out` container. Otherwise, the `--_ga: auto` from `sm` would persist and prevent
-		 * the child-specific `--layout-ga` rules in `md` from working.
-		 */
 		--_ga: initial;
-		
-		/* 
-		 * Default Child-Specific Grid Area Behavior (`--layout-ga`):
-		 * By default, each direct child (`> *`) of a `lay-out` element has its `--layout-ga` set to `auto`.
-		 * This means that if a more specific rule in a later layer (e.g., `layout.md`)
-		 * doesn't provide a different value for `--layout-ga` for a particular child
-		 * (e.g., `span 2 / auto`), and if `--_ga` on the parent `lay-out` is `initial`,
-		 * then the child's `grid-area` will ultimately resolve to `auto`.
-		 * 
-		 * This provides a baseline. Specific layouts (like masonry or complex ratios)
-		 * will override this `--layout-ga: auto` for certain children using `nth-of-type` selectors
-		 * in the breakpoint-specific CSS files (e.g., `layout.md.css`).
-		 * 
-		 * It's also important that breakpoint-specific rules using `nth-of-type` to set `--layout-ga`
-		 * include a reset for all children (`& > * { --layout-ga: auto; }`) within their own scope
-		 * if they are changing a pattern from a smaller breakpoint. This prevents `nth-of-type` rules
-		 * from one breakpoint's layout from incorrectly affecting another breakpoint's layout.
-		 */
 		& > * {
 		 	--layout-ga: auto;
 		}
