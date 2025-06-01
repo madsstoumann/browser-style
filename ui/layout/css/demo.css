@@ -20,11 +20,14 @@ content-item {
 	}
 }
 
-.layout-wrapper {
+[data-layout-wrapper] {
 	--layout-mw: 1200px;
 	--layout-mi: 1rem;
 }
 
+lay-out {
+	transition: grid-template-columns 0.35s ease;
+}
 
 body {
 	display: grid;

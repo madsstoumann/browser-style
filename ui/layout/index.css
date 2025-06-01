@@ -91,10 +91,11 @@
 
 	html {
 		container-type: inline-size;
+		interpolate-size: allow-keywords;
 	}
 
-	.layout-wrapper {
-		margin-inline:  max(var(--layout-mi, 0), 50cqw - var(--layout-mw, 100cqw) / 2);
+	[data-layout-wrapper] {
+		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-mw, 100cqw) / 2);
 	}
 }
 
