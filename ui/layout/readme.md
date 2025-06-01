@@ -1,0 +1,116 @@
+# Layout System Technical Documentation
+
+This document provides a technical overview of the `@browser.style/layout` system.
+
+## Core Concept: Responsive Layouts via Attributes
+
+The layout system is built around the `<lay-out>` custom element. Its primary function is to enable developers to define different visual layouts for various viewport sizes (breakpoints) using simple HTML attributes.
+
+The system defines standard breakpoints: `xs`, `sm`, `md`, `lg`, `xl`, and `xxl`. You can apply a specific layout type to any of these breakpoints by adding an attribute to the `<lay-out>` element.
+
+**Example:**
+
+```html
+<lay-out sm="columns(2)" md="masonry(1-2)" lg="columns(4)">
+  <content-item>1</content-item>
+  <content-item>2</content-item>
+  <content-item>3</content-item>
+  <content-item>4</content-item>
+</lay-out>
+```
+
+In this example:
+- On **small** screens (`sm`), the content will be arranged in 2 columns.
+- On **medium** screens (`md`), the layout will switch to a 1-2 masonry configuration.
+- On **large** screens (`lg`), the items will be arranged in 4 columns.
+
+If no specific layout is defined for a breakpoint, the layout from the next smallest breakpoint is inherited. If no attributes are specified, it defaults to a single column layout.
+
+## Layout Types
+
+The system supports several layout types, each configurable via an attribute value:
+
+*   **Columns:** `columns(<number_of_columns>)` - Arranges items in a specified number of equal-width columns.
+    *   Example: `md="columns(3)"`
+*   **Ratio:** `ratio(<aspect_ratio_definition>)` - Arranges items to maintain a specific aspect ratio.
+    *   Example: `lg="ratio(1:1)"` (for square items, a common aspect ratio interpretation), `sm="ratio(50x4:100)"` (example from demo files, illustrating support for complex definitions).
+*   **Masonry:** `masonry(<pattern>)` - Creates a Pinterest-like masonry layout. The pattern defines the column spans of items in a repeating sequence.
+    *   Example: `md="masonry(1-2)"` means the first item spans 1 column, the second spans 2, and this pattern repeats.
+*   **Asymmetrical:** `asym(<type>)` - Creates various asymmetrical layouts.
+    *   Examples: `asym(left-right)`, `asym(top-bottom)`. These layouts do not typically repeat items beyond their defined structure.
+
+## The `bleed` Attribute
+
+The `bleed` attribute offers powerful control over how the layout container and its content interact with the viewport edges. It's primarily used for creating full-width sections while managing content width.
+
+There are three main ways to use `bleed`:
+
+1.  **`bleed` (no value): Full-width Background, Constrained Content**
+    *   The `<lay-out>` container's background will extend to the full width of the viewport.
+    *   The actual content *within* the `<lay-out>` element will remain constrained to a maximum width (defined by `--layout-mw`, which defaults to the container's own width if not set, effectively respecting padding).
+    *   This is useful for full-width background colors or images where the text or other content should still be comfortably readable within a narrower column.
+    *   CSS equivalent: The container uses negative margins (`margin-inline`) to achieve the bleed effect, while internal padding or a max-width on content elements keeps the content itself constrained.
+
+2.  **`bleed="0"`: Full-width Background and Full-width Content (Symmetric)**
+    *   Both the `<lay-out>` container and its direct child content will expand to the full width of the viewport.
+    *   Symmetric padding is applied to the content to fill the available space if the content itself doesn't naturally fill it.
+    *   This is for true full-bleed sections where everything, including the content, should span edge-to-edge.
+
+3.  **`bleed="<value>"` (numeric value, e.g., `bleed="25"` or `bleed="-50"`): Full-width Background, Asymmetrical Content**
+    *   The `<lay-out>` container's background extends to the full viewport width.
+    *   The content is also allowed to use the full width but is distributed asymmetrically.
+    *   The numeric value (ranging from -100 to 100) controls this asymmetry:
+        *   **Positive values** (e.g., `bleed="25"`): Content favors the **start** side (left in LTR languages). A value of `25` might mean the start side padding is effectively `(100% + 25%)/2` of the available bleed space, and the end side is `(100% - 25%)/2`.
+        *   **Negative values** (e.g., `bleed="-25"`): Content favors the **end** side (right in LTR languages).
+        *   The higher the absolute value, the more pronounced the asymmetry. `bleed="50"` would create maximum start-side asymmetry (e.g., 150% of bleed space on start, 50% on end), and `bleed="-50"` maximum end-side asymmetry.
+    *   This allows for creative layouts where a background bleeds fully, but the content within it is intentionally shifted to one side.
+
+**Technical Details of `bleed`:**
+The `bleed` effect is achieved using CSS Custom Properties and calculations based on container queries (`cqi`).
+- `--layout-mw`: Defines the maximum width of the content when bleed is active (but not `bleed="0"`).
+- `--layout-mi`: Controls `margin-inline`, often calculated as `min(-1 * var(--layout-mi, 0), var(--layout-mw, 100cqi) / 2 - 50cqi)` to pull the container outwards.
+- For asymmetrical bleed, factors `--_S` (start factor) and `--_E` (end factor) are calculated based on the `bleed` attribute's numeric value to adjust `padding-inline`.
+
+## Animations Module (`animations.css`)
+
+The `animations.css` file provides a suite of scroll-driven animations that can be applied to elements, including the `<lay-out>` element itself or its children.
+
+**Usage:**
+
+Animations are typically applied using the `animation` attribute on an HTML element.
+
+```html
+<lay-out animation="fade-in">
+  <content-item animation="bounce-in-left">...</content-item>
+  <content-item animation="bounce-in-right">...</content-item>
+</lay-out>
+```
+
+**Key Features:**
+
+*   **Scroll-Driven:** Animations are triggered and progress based on the element's visibility within the viewport as the user scrolls. This is achieved using `animation-timeline: view();`.
+*   **Variety of Effects:** The module includes a wide range of pre-defined animations:
+    *   **Bounce:** `bounce-in`, `bounce-in-down`, `bounce-in-left`, `bounce-in-up`, `bounce-in-right`
+    *   **Fade:** `fade-in`, `fade-down`, `fade-left`, `fade-right`, `fade-up`, and combinations like `fade-down-left`, `fade-in-scale`, `fade-out`, `fade-out-scale`.
+    *   **Flip:** `flip-diagonal`, `flip-down`, `flip-left`, `flip-right`, `flip-up`
+    *   **Reveal:** `reveal` (clip-path inset), `reveal-circle`, `reveal-polygon`
+    *   **Slide:** `slide-down`, `slide-in` (from left), `slide-out` (to right), `slide-up`
+    *   **Zoom:** `zoom-in`, `zoom-in-rotate`, `zoom-out`, `zoom-out-rotate`
+*   **Customizable Behavior:**
+    *   `--animn`: CSS custom property set by the `animation` attribute to select the `@keyframes` name.
+    *   `--animtm`: `animation-timing-function` (defaults to `linear`).
+    *   `--animfm`: `animation-fill-mode` (defaults to `forwards`).
+    *   `--animtl`: `animation-timeline` (defaults to `view()`).
+    *   `--animrs`: `animation-range-start` (defaults to `entry 0%`).
+    *   `--animre`: `animation-range-end` (defaults to `entry 90%`).
+*   **Animation Range Control:** Classes like `.ar-contain`, `.ar-cover`, and `.ar-exit` can be added to modify the `animation-range-start` and `animation-range-end` values, controlling when the animation begins and ends relative to the element's position in the scrollport.
+    *   `.ar-contain`: `entry 0%` to `contain 50%`
+    *   `.ar-cover`: `entry 25%` to `cover 50%`
+    *   `.ar-exit`: `exit 0%` to `exit 100%`
+*   **CSS Variables for Fine-Tuning:** Some animation groups use CSS variables for their effects, like `--_dg` (degrees for flips), `--_tx`, `--_ty` (translate X/Y for fades), `--_zi`, `--_zo` (zoom in/out scale factors). These are defined in `:root` but could potentially be overridden for more specific control if needed.
+
+**Implementation:**
+Each animation type (e.g., `[animation="fade-in"]`) sets the `--animn` variable. A general rule `:where([animation])` then applies the actual CSS animation properties using these variables. This provides a clean and extensible way to manage many animation types.
+The `@supports (view-transition-name: none)` query is likely a feature detection or progressive enhancement check, though its direct relation to scroll animations here might be for ensuring compatibility or specific browser behavior.
+
+This documentation provides a foundational understanding of the layout system and its animation capabilities. For specific layout values and detailed behavior of each animation, refer to the respective CSS files (`xs.css`, `sm.css`, etc., and `animations.css`).

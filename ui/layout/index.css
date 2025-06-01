@@ -1,14 +1,14 @@
-@layer layout.base, layout.reset, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.overflow, layout.animations.css;
+@layer layout.base, layout.reset, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.overflow, layout.animations;
 
-@import url("layout.xs.css") layer(layout.xs);
-@import url("layout.sm.css") layer(layout.sm);
-@import url("layout.md.css") layer(layout.md);
-@import url("layout.lg.css") layer(layout.lg);
-@import url("layout.xl.css") layer(layout.xl);
-@import url("layout.xxl.css") layer(layout.xxl);
+@import url("css/xs.css") layer(layout.xs);
+@import url("css/sm.css") layer(layout.sm);
+@import url("css/md.css") layer(layout.md);
+@import url("css/lg.css") layer(layout.lg);
+@import url("css/xl.css") layer(layout.xl);
+@import url("css/xxl.css") layer(layout.xxl);
 
-@import url("layout.overflow.css") layer(layout.overflow);
-@import url("layout.animations.css") layer(layout.animations);
+@import url("css/overflow.css") layer(layout.overflow);
+@import url("css/animations.css") layer(layout.animations);
 
 @layer layout.base {
 	lay-out {

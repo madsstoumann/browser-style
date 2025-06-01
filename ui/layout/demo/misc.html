@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Layout</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="../index.css">
+	<link rel="stylesheet" href="../css/demo.css">
+</head>
+<body class="layout-wrapper">
+
+	<h2>Misc</h2>
+	<section>
+		<h3>Masonry 1-2</h3>
+		<code>&lt;lay-out md="masonry(1-2)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="masonry(1-2)" lg="masonry(2-1)" xxl="columns(3)" col-gap="1em" bleed background="hsl(190, 10%, 90%)" padding="1rem">
+			<content-item></content-item>
+			<content-item></content-item>
+		<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 2-1</h3>
+		<code>&lt;lay-out md="masonry(2-1)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2-1)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1-1-2</h3>
+		<code>&lt;lay-out md="masonry(1-1-2)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1-1-2)" col-gap="1em" animation="bounce-in-left">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+	</body>
+	</html>
