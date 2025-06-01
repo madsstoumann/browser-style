@@ -17,14 +17,27 @@ class SpeedTicket extends HTMLElement {
 		const styleSheet = new CSSStyleSheet();
 		styleSheet.replaceSync(`
 			:host {
+				--speed-ticket-accent: hsl(207, 100%, 25%);
+				--speed-ticket-muted-c: hsl(215.4, 16.3%, 46.9%);
+				--speed-ticket-bdrs: 0.5rem;
+				--speed-ticket-p: 1rem;
+
+
+				container-type: inline-size;
 				display: block;
-				font-family: system-ui, -apple-system, sans-serif;
+				font-family: system-ui, sans-serif;
 			}
-			
+
 			form {
-				max-width: 600px;
-				margin: 0 auto;
-				padding: 20px;
+				display: grid;
+				gap: 1rem;
+				grid-template-columns: 1fr;
+			}
+
+			@container (min-width: 42rem) {
+				form {
+						grid-template-columns: 1fr 1fr;
+				}
 			}
 
 			[name="speed"] {
@@ -34,32 +47,36 @@ class SpeedTicket extends HTMLElement {
 					input { grid-column: span 2; }
 					small:last-of-type { text-align: end; }
 				}
+					strong:has(output[name="result"]) {
+						color: var(--speed-ticket-accent);
+						font-size: 2.25rem;
+						font-weight: 700;
+					}
 			}
 
 			fieldset {
-				margin: 20px 0;
-				padding: 15px;
+				display: grid;
 				border: 2px solid #e0e0e0;
-				border-radius: 8px;
+				border-radius: var(--speed-ticket-bdrs);
+				margin: 0;
+				padding: var(--speed-ticket-p);
+				row-gap: 0.5rem;
 			}
 			
 			legend {
+				color: var(--speed-ticket-accent);
+				display: contents;
+				font-size: var(--speed-ticket-legend-fs, 1.5rem);
 				font-weight: bold;
-				padding: 0 10px;
-				color: #333;
+				small {
+					color: var(--speed-ticket-muted-c);
+					font-size: 0.9rem;
+					font-weight: 300;
+				}
 			}
 			
-			legend small {
-				font-weight: normal;
-				color: #666;
-				font-size: 0.9em;
-			}
-			
-			// label {
-			// 	display: block;
-			// 	margin: 10px 0;
-			// 	cursor: pointer;
-			// }
+
+
 			
 
 			
@@ -67,16 +84,7 @@ class SpeedTicket extends HTMLElement {
 				margin-right: 8px;
 			}
 			
-			output {
-				font-weight: bold;
-				// color: #2563eb;
-			}
-			
-			output[name="result"] {
-				font-size: 2em;
-				display: block;
-				margin: 10px 0;
-			}
+
 			
 			output[name="description"] {
 				display: block;
@@ -113,12 +121,7 @@ class SpeedTicket extends HTMLElement {
 font-weight: bold;
 			}
 			
-			small {
-				display: block;
-				color: #666;
-				font-size: 0.9em;
-				margin-top: 2px;
-			}
+
 			
 			.range-labels {
 				display: flex;
