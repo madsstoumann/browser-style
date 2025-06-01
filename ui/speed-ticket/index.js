@@ -105,6 +105,14 @@ class SpeedTicket extends HTMLElement {
 				color: #dc2626;
 			}
 			
+			output[name="fine"] {
+				font-size: 2.5em;
+				
+				display: block;
+			font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+font-weight: bold;
+			}
+			
 			small {
 				display: block;
 				color: #666;
@@ -142,20 +150,22 @@ class SpeedTicket extends HTMLElement {
 		if (!this.data) return;
 		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
 		const description = this.calculateDescription(this.state.speed, speedLimit);
+		const fineResult = this.calculateFine();
 
 		this.shadowRoot.innerHTML = `
 			<form>
 				<fieldset name="speed">
 					<legend>${this.data.labels.yourSpeed}
 						<small>${this.data.labels.speedLimit}:
-							<output name="limit">${speedLimit}</output> ${this.data.speedRange.unit}
+							<output name="limit" aria-live="polite" aria-atomic="true">${speedLimit}</output> ${this.data.speedRange.unit}
 						</small>
 					</legend>
 					<strong>
 						<output name="result">${this.state.speed}</output>
 						${this.data.speedRange.unit}
 					</strong>
-					<output name="description" class="${this.getViolationStatus(this.state.speed, speedLimit)}">${description}</output>
+					<output name="description" class="${this.getViolationStatus(this.state.speed, speedLimit)}" aria-live="polite" aria-atomic="true">${description}</output>
+					<output name="fine" aria-live="polite" aria-atomic="true">${fineResult.fine}</output>
 					<label>
 						<input type="range" 
 									 min="${this.data.speedRange.min}" 
@@ -183,7 +193,7 @@ class SpeedTicket extends HTMLElement {
 					`).join('')}
 				</fieldset>
 
-				<fieldset name="vehicle">
+				<fieldset name="vehicles">
 					<legend>${this.data.labels.vehicle}</legend>
 					${Object.values(this.data.vehicles).map(vehicle => `
 						<label>
@@ -202,7 +212,7 @@ class SpeedTicket extends HTMLElement {
 					${Object.values(this.data.factors).map(factor => `
 						<label>
 							<input type="checkbox" 
-										 name="factors" 
+										 name="factor" 
 										 value="${factor.value}" 
 										 data-id="${factor.id}"
 										 ${this.state.factors.includes(factor.id) ? 'checked' : ''}>
@@ -232,7 +242,7 @@ class SpeedTicket extends HTMLElement {
 			case 'vehicle':
 				if (checked) this.state.vehicle = target.dataset.id;
 				break;
-			case 'factors':
+			case 'factor':
 				const factorId = target.dataset.id;
 				if (checked) {
 					if (!this.state.factors.includes(factorId)) {
@@ -251,6 +261,10 @@ class SpeedTicket extends HTMLElement {
 		const description = this.calculateDescription(this.state.speed, speedLimit);
 		this._form.elements.description.value = description;
 		this._form.elements.description.className = this.getViolationStatus(this.state.speed, speedLimit);
+
+		// Calculate and display the fine
+		const fineResult = this.calculateFine();
+		this._form.elements.fine.value = fineResult.fine;
 	}
 
 	getViolationStatus(speed, speedLimit) {
@@ -276,38 +290,64 @@ class SpeedTicket extends HTMLElement {
 	calculateFine() {
 		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
 		const vehicle = this.data.vehicles[this.state.vehicle];
-		
-		if (this.state.speed <= speedLimit) {
-			return { fine: 0, message: this.data.messages.noFine };
-		}
+
+		if (this.state.speed <= speedLimit) return { fine: "0" };
 
 		const percentageOver = ((this.state.speed / speedLimit) * 100) - 100;
+
+		const vehicleLimit = this.data.vehicleSpecificLimits[vehicle.id];
+		if (vehicleLimit && this.state.speed > vehicleLimit.maxSpeed) {
+			return { fine: "0", consequence: this.data.vehicleSpecificLimits[vehicle.id]?.message || "Overskridelse af køretøjsspecifik hastighedsgrænse" };
+		}
+
 		const penaltyRange = this.data.penaltyRanges
 			.slice()
 			.reverse()
 			.find(range => percentageOver >= range.percentageOver);
 
-		if (!penaltyRange) {
-			return { fine: 0, message: this.data.messages.noFineCalculated };
-		}
+		if (!penaltyRange) return { fine: "0" };
 
-		let rate = penaltyRange.rate1;
-		if (vehicle.category === 'bus' || vehicle.category === 'truck' || vehicle.category === 'bus100') {
-			rate = penaltyRange.rate3;
+		let finalFine;
+		if (vehicle.category === 'bus' || vehicle.category === 'truck' || vehicle.category === 'bus100' || this.state.factors.includes('trailer')) {
+			finalFine = penaltyRange.rate3;
 		} else if (speedLimit >= 100 && (vehicle.category === 'car' || vehicle.category === 'mc')) {
-			rate = penaltyRange.rate2;
+			finalFine = penaltyRange.rate2;
+		} else {
+			finalFine = penaltyRange.rate1;
 		}
 
-		const fine = this.state.factors.includes('roadwork') 
-			? rate * this.data.specialRules.roadwork.multiplier 
-			: rate;
-		const formattedFine = fine.toLocaleString(this.data.locale);
+		if (percentageOver >= 30 && (this.state.roadType === 'cityZone' || (this.state.roadType === 'countryRoad' && speedLimit <= 90))) {
+			finalFine += this.data.specialRules.highSpeedByzone.penalty;
+		}
+		if (this.state.speed >= 140) {
+			finalFine += Math.floor((this.state.speed - 140) / 10) * 600 + 1200;
+		}
+
+		finalFine = this.state.factors.reduce((currentFine, factorId) => {
+			const factor = this.data.factors[factorId];
+			return factor?.multiplier ? currentFine * factor.multiplier : currentFine;
+		}, finalFine);
+
+		const roundedFine = Math.round(finalFine);
+		const formattedFine = new Intl.NumberFormat(this.data.locale, { style: 'currency', currency: this.data.currency || 'DKK' }).format(roundedFine);
+		const isUnconditional = this.isUnconditionalLoss(percentageOver, vehicle);
 
 		return {
 			fine: formattedFine,
-			message: `${this.data.messages.fine} ${formattedFine} ${this.data.messages.unit}`,
-			consequence: penaltyRange.consequence
+			consequence: isUnconditional ? this.data.messages.unconditionalLoss : penaltyRange.consequence
 		};
+	}
+
+	isUnconditionalLoss(percentageOver, vehicle) {
+		if (this.state.speed >= 200) return true;
+		
+		const rules = [
+			() => (vehicle.category === 'car' || vehicle.category === 'mc') && !this.state.factors.includes('trailer') && percentageOver >= 101 && this.state.speed >= 101,
+			() => (vehicle.category === 'car' || vehicle.category === 'mc') && this.state.factors.includes('trailer') && percentageOver >= 100 && this.state.speed >= 101,
+			() => (vehicle.category === 'bus' || vehicle.category === 'truck' || vehicle.category === 'bus100') && percentageOver >= 101 && this.state.speed >= 101
+		];
+		
+		return rules.some(rule => rule());
 	}
 }
 

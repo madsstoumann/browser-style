@@ -1,0 +1,977 @@
+@import "../../styles/config/all";
+
+$weight__thick: 800;
+$border__thin: rem(1px) solid #b1b1b1;
+$column__mobile_height: rem(150px);
+
+%sliderWrapper {
+  overflow: hidden;
+}
+
+%checkmark {
+  position: absolute;
+  top: rem(6px);
+  left: rem(10px);
+  content: "";
+  display: block;
+  width: rem(7px);
+  height: rem(13px);
+  border: solid $color-black;
+  border-width: 0 rem(2px) rem(2px) 0;
+  transform: rotate(45deg);
+}
+
+%selectableboxes {
+  text-align: center;
+  cursor: pointer;
+  height: rem(160px);
+  width: rem(160px);
+  padding: rem(28px) rem(10px) 0;
+  box-shadow: 0 0 rem(3px) 0 rgba($color-black, 0.1);
+  background-color: $color-white;
+  transition: all 0.3s;
+  border-radius: rem(10px);
+  opacity: 0.5;
+}
+
+%selectedHoverbox {
+  -webkit-box-shadow: rem(0px) rem(0px) rem(12px) rem(0px)
+    rgba($color-black, 0.2);
+  -moz-box-shadow: rem(0px) rem(0px) rem(12px) rem(0px) rgba($color-black, 0.2);
+  box-shadow: rem(0px) rem(0px) rem(12px) rem(0px) rgba($color-black, 0.2);
+  background-color: $color-white;
+  cursor: pointer;
+  border-radius: rem(10px);
+  opacity: 1;
+}
+
+%stepSectionWrapper {
+  text-align: center;
+
+  @media #{$medium} {
+    opacity: 1;
+    transition: height 0.2s, opacity 0.4s;
+  }
+}
+
+%stepSectionPadding {
+  padding: rem(0px) rem(35px) rem(0px) rem(35px);
+  height: 100%;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+%stepTitle {
+  color: $color-darkblue;
+  padding: rem(16px) rem(20px) 0;
+  font-size: $fontsize_20;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+%fullWidth {
+  width: 100%;
+}
+
+%ticketCalcDefaultFont {
+  font-family: $font-family-safety-light;
+  font-weight: $weight__thick;
+}
+
+.row {
+  &-no-border {
+    border-bottom: rem(0px);
+  }
+}
+
+
+
+.ticketcalculator-ribbon {
+  &-bg {
+    background: $color-lightwarmgrey;
+
+    @media print {
+      display: none;
+    }
+  }
+
+  .social-share {
+    top: rem(15px);
+
+    @media #{$medium} {
+      top: 0;
+      margin-right: rem(15px);
+    }
+  }
+
+  .headline {
+    padding: 0 rem(15px) rem(45px) rem(15px);
+    margin: auto;
+    text-align: center;
+    border-bottom: rem(1px) solid $color-lightwarmgrey;
+
+    @media #{$medium} {
+      padding: 0 rem(15px);
+      font-size: $fontsize_38;
+      clear: both;
+    }
+  }
+
+  .top-info {
+    text-align: center;
+    h3 {
+      text-transform: uppercase;
+      color: $color-coral;
+    }
+    h2 {
+      text-transform: uppercase;
+      font-size: $fontsize_52;
+      line-height: rem(59px);
+      color: $color-bluemiddle;
+    }
+  }
+  section.ticketcalculator {
+    position: relative;
+
+    @extend %ticketCalcDefaultFont;
+
+    /** Commonly used modules **/
+    .step-section-wrapper {
+      @extend %stepSectionWrapper;
+    }
+
+    .tick-box {
+      display: block;
+      cursor: pointer;
+      margin-bottom: rem(10px);
+      span {
+        font-size: $fontsize_18;
+        display: block;
+        position: relative;
+        &:before {
+          content: " ";
+          margin-right: rem(10px);
+          display: inline-block;
+          border: rem(2px) solid $color-lightgrey;
+          background-color: $color-white;
+          border-radius: 100%;
+          padding: rem(11px);
+          transition: background-color 0.2s;
+          transition: border 0.2s;
+          vertical-align: middle;
+          width: rem(26px);
+          height: rem(26px);
+        }
+      }
+      input {
+        height: 0;
+        opacity: 0;
+        position: absolute;
+
+        &:focus-visible {
+          & + span {
+            outline: -webkit-focus-ring-color auto rem(1px);
+          }
+        }
+
+        &:checked {
+          & + span:before {
+            background-color: #f6f5f5;
+            border: rem(2px) solid #f6f5f5;
+          }
+          & + span:after {
+            @extend %checkmark;
+          }
+        }
+      }
+    }
+
+    .step-title {
+      @extend %stepTitle;
+    }
+    .step-section-padding {
+      @extend %stepSectionPadding;
+    }
+
+    .slider-wrapper {
+      @extend %sliderWrapper;
+    }
+
+    .row {
+      border-bottom: $border__thin;
+
+      &.top {
+        border-top: $border__thin;
+      }
+    }
+
+    div.global-slider-styles {
+      list-style-type: none;
+      button.swiper-slide {
+        box-sizing: border-box;
+        border: 0;
+        display: inline-block;
+        @extend %selectableboxes;
+
+        img {
+          margin: auto;
+        }
+
+        &.selected {
+          @extend %selectedHoverbox;
+        }
+      }
+    }
+
+    /** Vehicle Selection - Step 1 **/
+    .ticketcalculator-vehicle {
+      margin: auto;
+      max-width: rem(880px);
+    }
+
+    .vehicle-wrapper {
+      padding: rem(15px) rem(10px);
+
+      /* Slider list */
+      .swiper-slide {
+        &.vehicle {
+          margin: rem(10px);
+
+          img {
+            width: rem(89px);
+            height: rem(89px);
+          }
+
+          p {
+            margin-top: rem(10px);
+            font-family: $font-family-safety-regular;
+          }
+        }
+      }
+
+      @media #{$medium} {
+        position: relative;
+
+        /* Slider list */
+        .swiper-slide {
+          &.vehicle {
+            margin: rem(10px) 0;
+            img {
+              width: 100%;
+              height: rem(65px);
+            }
+          }
+        }
+      }
+    }
+
+    /** Trailer Selection - Step 1 **/
+    .trailer-select {
+      opacity: 1;
+      .trailer-title {
+        margin-bottom: rem(5px);
+        p {
+          margin: 0;
+        }
+      }
+      .trailer-wrapper {
+        text-align: left;
+        font-size: $fontsize_18;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: rem(0px);
+        padding-left: 0;
+        display: inline-block;
+
+        @media #{$medium} {
+          margin-bottom: rem(20px);
+        }
+      }
+    }
+
+    /** Road Selection - Step 2 **/
+    .ticketcalculator-road {
+      margin: auto;
+      max-width: rem(880px);
+      text-align: center;
+    }
+
+    .road-wrapper {
+      /* Slider list */
+
+      .swiper-wrapper {
+        display: inline-flex;
+      }
+
+      .swiper-slide {
+        width: rem(180px);
+        &.road {
+          margin: rem(10px);
+          img {
+            width: rem(65px);
+            height: rem(65px);
+          }
+        }
+      }
+
+      @media #{$medium} {
+        position: relative;
+        padding: rem(15px) rem(10px);
+
+        /* Slider list */
+        .swiper-slide {
+          margin: rem(10px) 0;
+          &.road {
+            img {
+              width: 100%;
+              height: rem(65px);
+            }
+          }
+        }
+      }
+    }
+
+    .road-work {
+      display: inline-block;
+      margin: 0 auto;
+
+      .road-title {
+        margin-bottom: rem(5px);
+        p {
+          margin: 0;
+        }
+      }
+
+      @media #{$medium} {
+        margin-bottom: rem(15px);
+      }
+
+      p {
+        display: inline-block;
+      }
+      @include clearfix;
+    }
+
+    .step-section-wrapper {
+      .step-section-padding {
+        padding: rem(0px);
+      }
+    }
+    @media #{$large} {
+      .road-work {
+        margin-bottom: rem(5px);
+      }
+      .step-section-wrapper {
+        .step-section-padding {
+          padding: rem(0px) rem(35px);
+        }
+      }
+    }
+
+    /** Speed Limit Select Section - Step 3 **/
+    .mySpeed-speedLimit-wrapper {
+      max-width: $pageMaxXlarge;
+      margin: 0 auto;
+
+      .step-section-wrapper {
+        height: rem(150px);
+      }
+
+      @media #{$medium} {
+        display: flex;
+
+        .col-md-6 {
+          width: 50%;
+
+          &:first-child {
+            border-right: $border__thin;
+          }
+        }
+      }
+    }
+    .speedlimit-slider-wrapper {
+      text-align: center;
+      position: relative;
+      width: 100%;
+      margin: auto;
+
+      .speedlimit-slider-inner-wrapper {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        margin: 0 auto;
+      }
+      .speedlimit-select {
+        width: 100%;
+        .swiper-wrapper {
+          padding: rem(0px);
+
+          .swiper-slide {
+            width: rem(125px);
+            height: rem(125px);
+
+            p {
+              opacity: 0;
+            }
+
+            &.swiper-slide-prev.speed-limit,
+            &.swiper-slide-next.speed-limit {
+              padding: rem(16px) rem(29px) rem(29px) rem(29px);
+              opacity: 0.6;
+
+              @media #{$medium} {
+                padding: rem(15px) rem(25px) rem(25px) rem(25px);
+              }
+            }
+
+            &.swiper-slide-active.speed-limit {
+              opacity: 1;
+              padding: rem(16px);
+
+              @media #{$medium} {
+                padding: rem(15px) rem(15px) rem(15px);
+              }
+            }
+          }
+          .speed-limit {
+            text-align: center;
+            box-sizing: border-box;
+
+            padding: rem(16px) rem(35px) rem(35px) rem(35px);
+            border: 0;
+            background: none;
+
+            opacity: 0.4;
+            transition: all 0.3s;
+
+            cursor: pointer;
+
+            img {
+              width: 100%;
+              height: 100%;
+            }
+            &.selected {
+              p {
+                margin-right: rem(2px);
+              }
+            }
+            p {
+              display: inline-block;
+              background-color: #fff;
+              font-size: $fontsize_22;
+              opacity: 1;
+              border: rem(8px) solid #ff727e;
+              border-radius: 100%;
+              height: rem(65px);
+              width: rem(65px);
+              line-height: rem(50px);
+              text-align: center;
+              position: relative;
+              font-family: $font-family-safety-bold;
+              cursor: pointer;
+              box-shadow: 0 0 rem(4px) 0 rgba($color-black, 0);
+              transition: box-shadow 0.2s;
+            }
+          }
+        }
+      }
+      .speedlimit-left {
+        z-index: 999;
+        position: absolute;
+        height: 100%;
+        width: 28%;
+        left: 0;
+        top: 0;
+      }
+      .speedlimit-right {
+        z-index: 999;
+        position: absolute;
+        height: 100%;
+        width: 28%;
+        right: 0;
+        top: 0;
+      }
+      @media #{$large} {
+        .speedlimit-slider-inner-wrapper {
+          .speedlimit-slider {
+            margin-top: rem(10px);
+            transition: box-shadow 0.1s;
+            transition: background-color 0.1s;
+            cursor: pointer;
+            height: rem(110px);
+          }
+          .speedlimit-select {
+            width: 100%;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    /** Speed Input Section - Step 4 **/
+    .speedinput-slider-wrapper {
+      position: relative;
+      .speed-input-wrapper {
+        position: absolute;
+        top: rem(20px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+
+        border-radius: rem(10px);
+        background-color: $color-white;
+        width: rem(100px);
+        height: rem(100px);
+        padding-top: rem(13px);
+
+        &:hover {
+          cursor: pointer;
+
+          &:before {
+            opacity: 1;
+          }
+        }
+
+        &:before {
+          opacity: 0;
+          padding-top: 0;
+          content: " ";
+          height: rem(15px);
+          width: rem(15px);
+          right: rem(7px);
+          top: rem(7px);
+          position: absolute;
+          z-index: 55555555555555555;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%238ad0c1' viewBox='0 0 512 512'%3E%3Cpath d='M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z'/%3E%3C/svg%3E");
+          display: block;
+          background-size: cover;
+          transition: all 0.3s;
+        }
+
+        #speed-input {
+          height: rem(50px);
+          width: rem(74px);
+          padding: 0;
+          background-color: transparent;
+          font-family: Safety_Light, Helvetica, Arial, sans-serif;
+          font-weight: 800;
+          font-size: $fontsize_38;
+          color: #373d46;
+          text-align: center;
+          border: 0;
+        }
+
+        &:after {
+          content: "km/t";
+          display: block;
+          font-size: $fontsize_14;
+          position: absolute;
+          bottom: rem(15px);
+          width: rem(100px);
+        }
+      }
+
+      .speedInput-slider {
+        margin-top: rem(10px);
+        transition: box-shadow 0.1s;
+        transition: background-color 0.1s;
+        cursor: pointer;
+        height: rem(110px);
+      }
+
+      .speed-input {
+        width: rem(100px);
+        height: rem(100px);
+        border: 0;
+        text-align: center;
+        font-size: $fontsize_24;
+        transition: all 0.1s ease-in-out;
+        opacity: 0.2;
+        margin: 0 rem(7px);
+        cursor: pointer;
+        padding-top: rem(20px);
+        background: none;
+
+        &:before {
+          font-size: $fontsize_24;
+
+          margin-top: -rem(20px);
+          content: attr(data-speed);
+          display: block;
+        }
+
+        @media #{$medium} {
+          font-size: $fontsize_36;
+        }
+
+        &.swiper-slide-next,
+        &.swiper-slide-prev {
+          font-size: $fontsize_38;
+          opacity: 0.5;
+
+          &:before {
+            margin-top: 0;
+            font-size: $fontsize_38;
+          }
+        }
+      }
+    }
+
+    /** Calculate Ticket Section - last step **/
+    .calculate {
+      padding: rem(30px) 0;
+      text-align: center;
+
+      .calc-button {
+        @include resetButton;
+        @extend %selectedHoverbox;
+
+        background: rgb(0, 57, 114);
+        background: linear-gradient(
+          90deg,
+          rgba(0, 57, 114, 1) 0%,
+          rgba(0, 118, 204, 1) 100%
+        );
+        color: #fff;
+        padding: 0 rem(5px);
+        width: rem(180px);
+        height: rem(50px);
+        font-size: $fontsize_20;
+        line-height: rem(50px);
+        text-align: center;
+        border-radius: rem(60px);
+      }
+    }
+  }
+  /** Result modal showing ticket information*/
+  .resultModalOverlay {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 80ms;
+    display: none;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: rem(50px);
+
+    height: 100%;
+    width: 100%;
+
+
+    align-items: flex-end;
+    justify-content: center;
+
+    &.active {
+      opacity: 1;
+      display: flex;
+      transition: opacity 1000ms;
+      background-color: rgba($color-white, 0.93);
+
+      .fineWrapper {
+        display: block;
+      }
+    }
+  }
+  .resultModalWrapper {
+    max-width: rem(550px);
+    padding: 2% 3%;
+    max-height: 100%;
+
+    .resultModalInnerWrapper {
+      width: 100%;
+      background-color: $color-white;
+      //font-family: $font-family-opensansregular;
+    }
+    .resultModal {
+      &__close {
+        @include resetButton;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: rem(50px);
+        height: rem(50px);
+        background-color: #f2f2f2;
+        cursor: pointer;
+
+        &:before,
+        &:after {
+          position: absolute;
+          top: rem(13px);
+          right: rem(24px);
+          display: block;
+          content: "";
+          background-color: #404040;
+          width: rem(2px);
+          height: rem(25px);
+          transform: rotate(45deg);
+        }
+        &:after {
+          transform: rotate(-45deg);
+        }
+      }
+
+      &.top {
+        background-color: $color-white;
+        margin-bottom: 4%;
+        margin-top: 7rem;
+        position: relative;
+        box-shadow: rem(0px) rem(0px) rem(35px) rem(6px) rgba($color-black, 0.1);
+        .ticket-text-and-fine {
+          padding: rem(10px) rem(15px);
+          padding-bottom: rem(50px);
+
+          @media #{$medium} {
+            padding: rem(20px) rem(50px);
+          }
+
+          .fineWrapper {
+            .overSpeed {
+              color: $color-bluemiddle;
+              font-weight: $weight__thick;
+              font-size: $fontsize_16;
+              text-align: center;
+            }
+            .fineText {
+              color: $color-bluemiddle;
+              font-weight: $weight__thick;
+              font-size: $fontsize_24;
+              text-align: center;
+              font-family: $font-family-safety-light;
+            }
+            .fineNumber {
+              color: $color-coral;
+              font-size: $fontsize_52;
+              font-weight: $weight__thick;
+              text-align: center;
+              font-family: $font-family-safety-light;
+            }
+            .noFine {
+              color: $color-bluemiddle;
+              font-weight: $weight__thick;
+              text-align: center;
+              padding: rem(50px) 0;
+              font-size: $fontsize_26;
+            }
+            .redText {
+              margin: rem(0px);
+              display: inline-block;
+              color: $color-coral;
+            }
+            .info-text {
+              margin-top: rem(0px);
+              display: none;
+              &.active {
+                display: block;
+              }
+            }
+          }
+        }
+        .mytest-selections {
+          padding: rem(20px) 0;
+          margin: 0 rem(50px);
+          border-top: rem(1px) solid rgb(186, 186, 186);
+          font-size: $fontsize_18;
+        }
+
+        .info-text-wrapper {
+          .info-text {
+            margin-top: rem(10px);
+            display: none;
+            font-size: $fontsize_16;
+            line-height: 1.4;
+            &.active {
+              display: block;
+            }
+            .topText {
+              font-weight: $weight__thick;
+              font-size: $fontsize_16;
+            }
+            .ubetheadline {
+              color: $color-coral;
+              font-size: $fontsize_38;
+              font-weight: $weight__thick;
+              text-align: center;
+              font-family: $font-family-safety-light;
+            }
+            .red {
+              color: $color-coral;
+            }
+            ul {
+              padding: 0% 8%;
+              li {
+                font-size: $fontsize_16;
+              }
+            }
+          }
+        }
+
+        .btnrow {
+          padding-bottom: rem(20px);
+        }
+
+        .tryagain-btn {
+          padding: 0;
+          text-align: center;
+          width: rem(205px);
+          background-color: #73c687;
+          color: $color-white;
+          font-size: $fontsize_20;
+          cursor: pointer;
+          font-family: $font-family-safety-bold;
+          display: block;
+          margin: 0 auto;
+          position: relative;
+          border-radius: rem(60px);
+          line-height: rem(60px);
+          height: rem(60px);
+          border: 0;
+        }
+      }
+      &.bottom {
+        height: 17%;
+        min-height: rem(124px);
+        padding: 0% 6%;
+        font-size: $fontsize_16;
+        background-color: $color-white;
+        position: relative;
+        box-shadow: rem(0px) rem(0px) rem(35px) rem(6px) rgba($color-black, 0.1);
+        padding: rem(20px) rem(15px);
+        .btnrow {
+          text-align: center;
+          .callForAction-link {
+            padding: 0 rem(20px);
+            font-size: $fontsize_18;
+            text-align: center;
+            color: $color-white;
+            background-color: $color-bluemiddle;
+            font-family: $font-family-safety-bold;
+            display: inline-block;
+            margin: rem(10px) auto;
+            border-radius: rem(60px);
+            line-height: rem(60px);
+            height: rem(60px);
+          }
+        }
+      }
+    }
+    .spaceTop {
+      margin-top: rem(10px);
+      font-weight: $weight__thick;
+    }
+
+    .underlined {
+      text-decoration: underline;
+      display: inline-block;
+    }
+
+    @media #{$large} {
+      max-width: rem(550px);
+      padding: 0;
+      transition: box-shadow 80ms, opacity 80ms;
+
+      .resultModalInnerWrapper {
+        width: rem(550px);
+      }
+      .tryagain-btn {
+        padding: rem(18px) rem(30px);
+      }
+      &.top {
+        height: 75%;
+      }
+      &.bottom {
+        height: 15%;
+        top: 64%;
+        left: 0;
+        bottom: 0;
+        right: 0;
+      }
+      .topText {
+        font-size: $fontsize_20;
+      }
+      .resultModal {
+        &.top {
+          .ticket-text-and-fine {
+            padding: rem(20px) rem(50px);
+            .fineWrapper {
+              .overSpeed {
+                color: $color-bluemiddle;
+                font-weight: $weight__thick;
+                font-size: $fontsize_22;
+                text-align: center;
+              }
+              .fineText {
+                color: $color-bluemiddle;
+                font-weight: $weight__thick;
+                font-size: $fontsize_22;
+                text-align: center;
+              }
+              .fineNumber {
+                color: $color-coral;
+                font-size: rem(73px);
+                font-weight: $weight__thick;
+                text-align: center;
+              }
+              .noFine {
+                color: $color-bluemiddle;
+                font-weight: $weight__thick;
+                text-align: center;
+                padding: rem(50px) 0;
+                font-size: $fontsize_26;
+              }
+              .redText {
+                margin: rem(0px);
+                display: inline-block;
+                color: $color-coral;
+              }
+              .info-text {
+                margin-top: rem(0px);
+                display: none;
+                &.active {
+                  display: block;
+                }
+              }
+            }
+          }
+        }
+        .richtextinput {
+          font-size: $fontsize_18;
+        }
+      }
+
+      .info-text-wrapper {
+        .info-text {
+          margin-top: rem(10px);
+          display: none;
+          font-size: $fontsize_18;
+          &.active {
+            display: block;
+          }
+          .topText {
+            font-weight: $weight__thick;
+            font-family: $font-family-safety-bold;
+            font-size: $fontsize_18;
+          }
+          ul {
+            padding: 0% 8%;
+            li {
+              font-size: $fontsize_16;
+            }
+          }
+        }
+      }
+
+      .fineWrapper {
+        display: none;
+        margin-top: 0;
+
+        .noFine {
+          width: 75%;
+          margin: 0 auto;
+          padding: 0;
+        }
+      }
+    }
+  }
+}

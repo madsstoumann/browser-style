@@ -1,0 +1,18 @@
+import { Meta, Story, Canvas } from "@storybook/addon-docs/blocks";
+import { TicketCalculator } from "./TicketCalculator";
+
+<Meta
+  title="Modules/TicketCalculator"
+  component={TicketCalculator}
+  parameters={{ layout: "fullscreen" }}
+/>
+
+export const Template = args => <TicketCalculator {...args} />;
+
+# TicketCalculator
+
+<Canvas>
+  <Story name="default" args={{ imageFolder: "", headline: "Har du kørt for stærkt? Beregn din bøde her" }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
