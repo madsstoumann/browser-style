@@ -106,6 +106,13 @@
       "description": "Køretøj med anhænger",
       "value": 4,
       "multiplier": 1.0
+    },
+    "trailerTempo100": {
+      "id": "trailerTempo100",
+      "label": "Anhænger (tempo 100)",
+      "description": "Køretøj med anhænger godkendt til 100 km/t",
+      "value": 5,
+      "multiplier": 1.0
     }
   },
   "speedLimits": [30, 40, 50, 60, 70, 80, 90, 100, 110, 130],
@@ -216,30 +223,178 @@
       }
     }
   },
-  "specialRules": {
-    "highSpeedByzone": {
-      "description": "Ekstra bøde ved høj hastighed i byzone",
-      "condition": "roadType === 'cityZone' && percentageOver >= 30",
-      "penalty": 1200
-    },
-    "extremeSpeed": {
-      "description": "Ekstra bøde ved hastighed over 140 km/t",
-      "condition": "speed >= 140",
-      "formula": "Math.floor((speed - 140) / 10) * 600 + 1200"
-    },
-    "roadwork": {
-      "description": "Dobbelt bøde ved vejarbejde",
-      "multiplier": 2.0
-    },
-    "unconditionalLicenseLoss": {
-      "description": "Ubetinget frakendelse af kørekort",
-      "conditions": [
-        "speed >= 200",
-        "(vehicle in ['car', 'mc'] && !trailer && percentageOver >= 101 && speed >= 101)",
-        "(vehicle in ['car', 'mc'] && trailer && percentageOver >= 100 && speed >= 101)",
-        "(vehicle in ['bus', 'truck'] && percentageOver >= 101 && speed >= 101)"
-      ]
-    }
+  "ruleEngine": {
+    "rateSelectionRules": [
+      {
+        "id": "rate3_vehicles",
+        "description": "Bus, lastbil eller køretøj med anhænger",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              { "field": "vehicle.category", "operator": "in", "value": ["bus", "truck", "bus100"] },
+              { "field": "factors", "operator": "includes", "value": "trailer" },
+              { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+            ]
+          }
+        ],
+        "result": "rate3"
+      },
+      {
+        "id": "rate2_high_speed",
+        "description": "Hastighed 100 km/t eller over, personbil/motorcykel uden anhænger",
+        "conditions": [
+          { "field": "speedLimit", "operator": ">=", "value": 100 },
+          { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+          { "field": "factors", "operator": "not_includes", "value": "trailer" },
+          { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" }
+        ],
+        "result": "rate2"
+      },
+      {
+        "id": "rate1_default",
+        "description": "Standard rate for andre tilfælde",
+        "conditions": [],
+        "result": "rate1"
+      }
+    ],
+    "penaltyRules": [
+      {
+        "id": "high_speed_city_country",
+        "description": "Ekstra bøde ved høj hastighed i byzone eller på landevej",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">=", "value": 30 },
+          {
+            "type": "or",
+            "rules": [
+              { "field": "roadType", "operator": "=", "value": "cityZone" },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "roadType", "operator": "=", "value": "countryRoad" },
+                  { "field": "speedLimit", "operator": "<=", "value": 90 }
+                ]
+              }
+            ]
+          }
+        ],
+        "penalty": 1200
+      },
+      {
+        "id": "extreme_speed",
+        "description": "Ekstra bøde ved hastighed over 140 km/t",
+        "conditions": [
+          { "field": "speed", "operator": ">=", "value": 140 }
+        ],
+        "formula": {
+          "type": "calculation",
+          "expression": "Math.floor((speed - 140) / 10) * 600 + 1200"
+        }
+      }
+    ],
+    "consequenceRules": [
+      {
+        "id": "conditional_loss_roadwork",
+        "description": "Betinget frakendelse ved vejarbejde og høj fartoverskridelse",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">", "value": 40 },
+          { "field": "factors", "operator": "includes", "value": "roadwork" }
+        ],
+        "consequence": "betinget_frakendelse"
+      },
+      {
+        "id": "conditional_loss_heavy_vehicles",
+        "description": "Betinget frakendelse for tunge køretøjer eller køretøjer med anhænger",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">", "value": 40 },
+          {
+            "type": "or",
+            "rules": [
+              { "field": "vehicle.category", "operator": "in", "value": ["bus", "truck", "bus100"] },
+              { "field": "factors", "operator": "includes", "value": "trailer" },
+              { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+            ]
+          }
+        ],
+        "consequence": "betinget_frakendelse"
+      },
+      {
+        "id": "conditional_loss_extreme_speed",
+        "description": "Betinget frakendelse ved ekstrem hastighed eller høj fartoverskridelse for personbiler",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              { "field": "speed", "operator": ">=", "value": 160 },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "percentageOver", "operator": ">", "value": 60 },
+                  { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+                  { "field": "factors", "operator": "not_includes", "value": "trailer" },
+                  { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" }
+                ]
+              }
+            ]
+          }
+        ],
+        "consequence": "betinget_frakendelse"
+      },
+      {
+        "id": "license_points",
+        "description": "Klip i kørekortet ved moderat fartoverskridelse",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">", "value": 30 }
+        ],
+        "consequence": "klip_i_koerekort"
+      },
+      {
+        "id": "unconditional_license_loss",
+        "description": "Ubetinget frakendelse af kørekort",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              { "field": "speed", "operator": ">=", "value": 200 },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+                  { "field": "factors", "operator": "not_includes", "value": "trailer" },
+                  { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" },
+                  { "field": "percentageOver", "operator": ">=", "value": 101 },
+                  { "field": "speed", "operator": ">=", "value": 101 }
+                ]
+              },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+                  {
+                    "type": "or",
+                    "rules": [
+                      { "field": "factors", "operator": "includes", "value": "trailer" },
+                      { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+                    ]
+                  },
+                  { "field": "percentageOver", "operator": ">=", "value": 100 },
+                  { "field": "speed", "operator": ">=", "value": 101 }
+                ]
+              },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "vehicle.category", "operator": "in", "value": ["bus", "truck", "bus100"] },
+                  { "field": "percentageOver", "operator": ">=", "value": 101 },
+                  { "field": "speed", "operator": ">=", "value": 101 }
+                ]
+              }
+            ]
+          }
+        ],
+        "consequence": "ubetinget_frakendelse"
+      }
+    ]
   },
   "labels": {
     "yourSpeed": "Din hastighed",
@@ -257,6 +412,9 @@
     "overSpeed": "Hastigheden er for høj til at være realistisk",
     "defaultViolation": "Fartoverskridelse",
     "noFineCalculated": "Ingen bøde beregnet",
+    "betinget_frakendelse": "Betinget frakendelse af kørekort",
+    "klip_i_koerekort": "Klip i kørekortet",
+    "ubetinget_frakendelse": "Ubetinget frakendelse af kørekort",
     "unit": "kr."
   },
   "vehicleSpecificLimits": {

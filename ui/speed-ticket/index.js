@@ -22,7 +22,6 @@ class SpeedTicket extends HTMLElement {
 				--speed-ticket-bdrs: 0.5rem;
 				--speed-ticket-p: 1rem;
 
-
 				container-type: inline-size;
 				display: block;
 				font-family: system-ui, sans-serif;
@@ -30,7 +29,7 @@ class SpeedTicket extends HTMLElement {
 
 			form {
 				display: grid;
-				gap: 1rem;
+				gap: var(--speed-ticket-p);
 				grid-template-columns: 1fr;
 			}
 
@@ -47,11 +46,11 @@ class SpeedTicket extends HTMLElement {
 					input { grid-column: span 2; }
 					small:last-of-type { text-align: end; }
 				}
-					strong:has(output[name="result"]) {
-						color: var(--speed-ticket-accent);
-						font-size: 2.25rem;
-						font-weight: 700;
-					}
+				strong:has(output[name="result"]) {
+					color: var(--speed-ticket-accent);
+					font-size: 2.25rem;
+					font-weight: 700;
+				}
 			}
 
 			fieldset {
@@ -74,14 +73,9 @@ class SpeedTicket extends HTMLElement {
 					font-weight: 300;
 				}
 			}
-			
 
-
-			
-
-			
 			input[type="radio"], input[type="checkbox"] {
-				margin-right: 8px;
+				margin-right: .5rem;
 			}
 			
 
@@ -117,18 +111,11 @@ class SpeedTicket extends HTMLElement {
 				font-size: 2.5em;
 				
 				display: block;
-			font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
-font-weight: bold;
+				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+				font-weight: bold;
 			}
-			
 
-			
-			.range-labels {
-				display: flex;
-				justify-content: space-between;
-				font-size: 0.9em;
-				color: #666;
-			}
+
 		`);
 		
 		this.shadowRoot.adoptedStyleSheets = [styleSheet];
@@ -144,8 +131,32 @@ font-weight: bold;
 			const dataUrl = this.getAttribute('data') || './data.json';
 			const response = await fetch(dataUrl);
 			this.data = await response.json();
+			
+			// Initialize state with proper defaults from loaded data
+			this.initializeState();
 		} catch (error) {
 			console.error('Failed to load data:', error);
+		}
+	}
+
+	initializeState() {
+		if (!this.data) return;
+		
+		// Get first available road type if current one doesn't exist
+		const roadTypeIds = Object.keys(this.data.roadTypes);
+		if (!this.data.roadTypes[this.state.roadType] && roadTypeIds.length > 0) {
+			this.state.roadType = roadTypeIds[0];
+		}
+		
+		// Get first available vehicle if current one doesn't exist
+		const vehicleIds = Object.keys(this.data.vehicles);
+		if (!this.data.vehicles[this.state.vehicle] && vehicleIds.length > 0) {
+			this.state.vehicle = vehicleIds[0];
+		}
+		
+		// Set default speed from speed range if needed
+		if (this.data.speedRange && this.data.speedRange.default) {
+			this.state.speed = this.data.speedRange.default;
 		}
 	}
 
@@ -291,40 +302,41 @@ font-weight: bold;
 	}
 
 	calculateFine() {
+		const speed = this.state.speed;
 		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
 		const vehicle = this.data.vehicles[this.state.vehicle];
+		const percentageOver = Math.round(((speed - speedLimit) / speedLimit) * 100);
 
-		if (this.state.speed <= speedLimit) return { fine: "0" };
+		// Edge case validations
+		if (!speed || speed === 0) return { fine: "0", consequence: this.data.messages.noFine };
+		if (speed > 300) return { fine: "0", consequence: this.data.messages.overSpeed };
+		if (speed <= speedLimit) return { fine: "0", consequence: this.data.messages.noFine };
 
-		const percentageOver = ((this.state.speed / speedLimit) * 100) - 100;
-
-		const vehicleLimit = this.data.vehicleSpecificLimits[vehicle.id];
-		if (vehicleLimit && this.state.speed > vehicleLimit.maxSpeed) {
-			return { fine: "0", consequence: this.data.vehicleSpecificLimits[vehicle.id]?.message || "Overskridelse af køretøjsspecifik hastighedsgrænse" };
+		// Check for unconditional license loss first (returns no fine)
+		const unconditionalLoss = this.evaluateConsequenceRules();
+		if (unconditionalLoss === 'ubetinget_frakendelse') {
+			return { fine: "0", consequence: this.data.messages.ubetinget_frakendelse };
 		}
 
-		const penaltyRange = this.data.penaltyRanges
-			.slice()
+		// Check for vehicle-specific speed limits
+		let vehicleLimitViolation = null;
+		const vehicleLimits = this.data.vehicleSpecificLimits;
+		if (vehicleLimits[vehicle.id] && speed > vehicleLimits[vehicle.id].maxSpeed) {
+			vehicleLimitViolation = vehicleLimits[vehicle.id].message;
+		}
+
+		const penaltyRange = [...this.data.penaltyRanges]
 			.reverse()
 			.find(range => percentageOver >= range.percentageOver);
 
 		if (!penaltyRange) return { fine: "0" };
 
-		let finalFine;
-		if (vehicle.category === 'bus' || vehicle.category === 'truck' || vehicle.category === 'bus100' || this.state.factors.includes('trailer')) {
-			finalFine = penaltyRange.rate3;
-		} else if (speedLimit >= 100 && (vehicle.category === 'car' || vehicle.category === 'mc')) {
-			finalFine = penaltyRange.rate2;
-		} else {
-			finalFine = penaltyRange.rate1;
-		}
+		// Use rule engine to determine base rate
+		const rateCategory = this.evaluateRateSelectionRules();
+		let finalFine = penaltyRange[rateCategory];
 
-		if (percentageOver >= 30 && (this.state.roadType === 'cityZone' || (this.state.roadType === 'countryRoad' && speedLimit <= 90))) {
-			finalFine += this.data.specialRules.highSpeedByzone.penalty;
-		}
-		if (this.state.speed >= 140) {
-			finalFine += Math.floor((this.state.speed - 140) / 10) * 600 + 1200;
-		}
+		// Apply penalty rules
+		finalFine += this.evaluatePenaltyRules();
 
 		finalFine = this.state.factors.reduce((currentFine, factorId) => {
 			const factor = this.data.factors[factorId];
@@ -333,24 +345,151 @@ font-weight: bold;
 
 		const roundedFine = Math.round(finalFine);
 		const formattedFine = new Intl.NumberFormat(this.data.locale, { style: 'currency', currency: this.data.currency || 'DKK' }).format(roundedFine);
-		const isUnconditional = this.isUnconditionalLoss(percentageOver, vehicle);
+		
+		// Evaluate consequence rules (skip unconditional loss since we checked it earlier)
+		const specialConsequence = this.evaluateConsequenceRules();
+
+		// Determine the appropriate consequence message
+		let consequence = penaltyRange.consequence;
+		if (specialConsequence === 'betinget_frakendelse') {
+			consequence = this.data.messages.betinget_frakendelse;
+		} else if (specialConsequence === 'klip_i_koerekort') {
+			consequence = this.data.messages.klip_i_koerekort;
+		} else if (vehicleLimitViolation) {
+			consequence = `${penaltyRange.consequence} + ${vehicleLimitViolation}`;
+		}
 
 		return {
 			fine: formattedFine,
-			consequence: isUnconditional ? this.data.messages.unconditionalLoss : penaltyRange.consequence
+			consequence: consequence
 		};
 	}
 
-	isUnconditionalLoss(percentageOver, vehicle) {
-		if (this.state.speed >= 200) return true;
+	evaluateRateSelectionRules() {
+		const rules = this.data.ruleEngine.rateSelectionRules;
 		
-		const rules = [
-			() => (vehicle.category === 'car' || vehicle.category === 'mc') && !this.state.factors.includes('trailer') && percentageOver >= 101 && this.state.speed >= 101,
-			() => (vehicle.category === 'car' || vehicle.category === 'mc') && this.state.factors.includes('trailer') && percentageOver >= 100 && this.state.speed >= 101,
-			() => (vehicle.category === 'bus' || vehicle.category === 'truck' || vehicle.category === 'bus100') && percentageOver >= 101 && this.state.speed >= 101
-		];
+		for (const rule of rules) {
+			if (this.evaluateConditions(rule.conditions)) {
+				return rule.result;
+			}
+		}
 		
-		return rules.some(rule => rule());
+		return 'rate1'; // fallback
+	}
+
+	evaluatePenaltyRules() {
+		const rules = this.data.ruleEngine.penaltyRules;
+		let totalPenalty = 0;
+		
+		for (const rule of rules) {
+			if (this.evaluateConditions(rule.conditions)) {
+				if (rule.penalty) {
+					totalPenalty += rule.penalty;
+				} else if (rule.formula) {
+					totalPenalty += this.evaluateFormula(rule.formula);
+				}
+			}
+		}
+		
+		return totalPenalty;
+	}
+
+	evaluateConsequenceRules() {
+		const rules = this.data.ruleEngine.consequenceRules;
+		
+		for (const rule of rules) {
+			if (this.evaluateConditions(rule.conditions)) {
+				return rule.consequence;
+			}
+		}
+		
+		return null;
+	}
+
+	evaluateConditions(conditions) {
+		if (!conditions || conditions.length === 0) return true;
+		
+		for (const condition of conditions) {
+			if (condition.type === 'or') {
+				if (!condition.rules.some(rule => this.evaluateConditions([rule]))) {
+					return false;
+				}
+			} else if (condition.type === 'and') {
+				if (!condition.rules.every(rule => this.evaluateConditions([rule]))) {
+					return false;
+				}
+			} else {
+				// Direct condition evaluation
+				if (!this.evaluateCondition(condition)) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	evaluateCondition(condition) {
+		const value = this.getFieldValue(condition.field);
+		const targetValue = condition.value;
+		
+		switch (condition.operator) {
+			case '=':
+				return value === targetValue;
+			case '>=':
+				return value >= targetValue;
+			case '<=':
+				return value <= targetValue;
+			case '>':
+				return value > targetValue;
+			case '<':
+				return value < targetValue;
+			case 'in':
+				return Array.isArray(targetValue) && targetValue.includes(value);
+			case 'includes':
+				return Array.isArray(value) && value.includes(targetValue);
+			case 'not_includes':
+				return Array.isArray(value) && !value.includes(targetValue);
+			default:
+				return false;
+		}
+	}
+
+	getFieldValue(field) {
+		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
+		const vehicle = this.data.vehicles[this.state.vehicle];
+		const percentageOver = Math.round(((this.state.speed - speedLimit) / speedLimit) * 100);
+		
+		switch (field) {
+			case 'speed':
+				return this.state.speed;
+			case 'speedLimit':
+				return speedLimit;
+			case 'percentageOver':
+				return percentageOver;
+			case 'roadType':
+				return this.state.roadType;
+			case 'vehicle.category':
+				return vehicle.category;
+			case 'factors':
+				return this.state.factors;
+			default:
+				return null;
+		}
+	}
+
+	evaluateFormula(formula) {
+		if (formula.type === 'calculation') {
+			const expression = formula.expression;
+			const speed = this.state.speed;
+			
+			// For security, only allow specific safe expressions
+			if (expression === 'Math.floor((speed - 140) / 10) * 600 + 1200') {
+				return Math.floor((speed - 140) / 10) * 600 + 1200;
+			}
+		}
+		
+		return 0;
 	}
 }
 

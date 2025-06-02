@@ -1,0 +1,252 @@
+{
+  "locale": "en-US",
+  "currency": "USD",
+  "speedRange": {
+    "min": 0,
+    "max": 120,
+    "default": 35,
+    "step": 1,
+    "unit": "mph"
+  },
+  "roadTypes": {
+    "urban": {
+      "id": "urban",
+      "label": "Urban Area",
+      "description": "City streets and urban roads",
+      "defaultSpeed": 35,
+      "minSpeed": 25,
+      "maxSpeed": 45,
+      "value": 35
+    },
+    "rural": {
+      "id": "rural",
+      "label": "Rural Road",
+      "description": "Rural and country roads",
+      "defaultSpeed": 55,
+      "minSpeed": 45,
+      "maxSpeed": 65,
+      "value": 55
+    },
+    "highway": {
+      "id": "highway",
+      "label": "Highway",
+      "description": "Interstate highways",
+      "defaultSpeed": 70,
+      "minSpeed": 45,
+      "maxSpeed": 80,
+      "value": 70
+    }
+  },
+  "vehicles": {
+    "car": {
+      "id": "car",
+      "label": "Car",
+      "value": 1,
+      "category": "car"
+    },
+    "motorcycle": {
+      "id": "motorcycle",
+      "label": "Motorcycle",
+      "value": 2,
+      "category": "mc"
+    },
+    "truck": {
+      "id": "truck",
+      "label": "Truck",
+      "value": 3,
+      "category": "truck"
+    },
+    "commercial": {
+      "id": "commercial",
+      "label": "Commercial Vehicle",
+      "value": 4,
+      "category": "commercial"
+    }
+  },
+  "factors": {
+    "schoolZone": {
+      "id": "schoolZone",
+      "label": "School Zone",
+      "description": "Speeding in a school zone",
+      "value": 1,
+      "multiplier": 2.0
+    },
+    "constructionZone": {
+      "id": "constructionZone",
+      "label": "Construction Zone",
+      "description": "Speeding in a construction zone",
+      "value": 2,
+      "multiplier": 2.0
+    },
+    "reckless": {
+      "id": "reckless",
+      "label": "Reckless Driving",
+      "description": "Reckless driving behavior",
+      "value": 3,
+      "multiplier": 1.5
+    }
+  },
+  "speedLimits": [25, 35, 45, 55, 65, 70, 75, 80],
+  "penaltyRanges": [
+    {
+      "percentageOver": 0,
+      "rate1": 50,
+      "rate2": 75,
+      "rate3": 100,
+      "description": "Minor speeding violation",
+      "consequence": "Fine"
+    },
+    {
+      "percentageOver": 20,
+      "rate1": 100,
+      "rate2": 150,
+      "rate3": 200,
+      "description": "Moderate speeding violation",
+      "consequence": "Fine + points"
+    },
+    {
+      "percentageOver": 40,
+      "rate1": 200,
+      "rate2": 300,
+      "rate3": 400,
+      "description": "Serious speeding violation",
+      "consequence": "High fine + points"
+    },
+    {
+      "percentageOver": 60,
+      "rate1": 400,
+      "rate2": 600,
+      "rate3": 800,
+      "description": "Severe speeding violation",
+      "consequence": "Very high fine + license review"
+    },
+    {
+      "percentageOver": 80,
+      "rate1": 600,
+      "rate2": 900,
+      "rate3": 1200,
+      "description": "Extreme speeding violation",
+      "consequence": "Maximum fine + license suspension"
+    }
+  ],
+  "ruleEngine": {
+    "rateSelectionRules": [
+      {
+        "id": "commercial_vehicles",
+        "description": "Commercial vehicles and trucks",
+        "conditions": [
+          { "field": "vehicle.category", "operator": "in", "value": ["truck", "commercial"] }
+        ],
+        "result": "rate3"
+      },
+      {
+        "id": "high_speed_cars",
+        "description": "Cars and motorcycles on highways",
+        "conditions": [
+          { "field": "speedLimit", "operator": ">=", "value": 65 },
+          { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] }
+        ],
+        "result": "rate2"
+      },
+      {
+        "id": "default_rate",
+        "description": "Default rate for other cases",
+        "conditions": [],
+        "result": "rate1"
+      }
+    ],
+    "penaltyRules": [
+      {
+        "id": "school_zone_penalty",
+        "description": "Additional penalty for school zone speeding",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "schoolZone" },
+          { "field": "percentageOver", "operator": ">=", "value": 10 }
+        ],
+        "penalty": 100
+      },
+      {
+        "id": "extreme_speed_penalty",
+        "description": "Additional penalty for extreme speeds",
+        "conditions": [
+          { "field": "speed", "operator": ">=", "value": 90 }
+        ],
+        "formula": {
+          "type": "calculation",
+          "expression": "Math.floor((speed - 90) / 5) * 50 + 200"
+        }
+      }
+    ],
+    "consequenceRules": [
+      {
+        "id": "license_suspension",
+        "description": "Automatic license suspension",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              { "field": "speed", "operator": ">=", "value": 120 },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "percentageOver", "operator": ">=", "value": 80 },
+                  { "field": "speed", "operator": ">=", "value": 90 }
+                ]
+              }
+            ]
+          }
+        ],
+        "consequence": "license_suspension"
+      }
+    ]
+  },
+  "rateCategories": {
+    "rate1": {
+      "description": "Standard rate for cars and motorcycles",
+      "conditions": {
+        "vehicle": ["car", "mc"]
+      }
+    },
+    "rate2": {
+      "description": "Higher rate for high-speed areas",
+      "conditions": {
+        "speedLimit": ">= 65",
+        "vehicle": ["car", "mc"]
+      }
+    },
+    "rate3": {
+      "description": "Commercial vehicle rate",
+      "conditions": {
+        "vehicle": ["truck", "commercial"]
+      }
+    }
+  },
+  "labels": {
+    "yourSpeed": "Your Speed",
+    "speedLimit": "Speed Limit",
+    "roadType": "Road Type",
+    "vehicle": "Vehicle",
+    "factors": "Factors"
+  },
+  "messages": {
+    "noFine": "No speeding violation",
+    "fine": "You will receive a fine of",
+    "clipLicense": "Points added to license",
+    "conditionalLoss": "License review required",
+    "unconditionalLoss": "License suspension",
+    "overSpeed": "Speed too high to be realistic",
+    "defaultViolation": "Speeding violation",
+    "noFineCalculated": "No fine calculated",
+    "unit": "$"
+  },
+  "vehicleSpecificLimits": {
+    "truck": {
+      "maxSpeed": 65,
+      "message": "Trucks limited to 65 mph"
+    },
+    "commercial": {
+      "maxSpeed": 70,
+      "message": "Commercial vehicles limited to 70 mph"
+    }
+  }
+}
