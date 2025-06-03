@@ -2,6 +2,8 @@
 	:where(.ui-tab-group) {
 		--ui-tab-group-bdrs: 8px;
 		--ui-tab-group-bdw: 4px;
+	
+		--_count: calc(sibling-count() - 1);
 
 		background: var(--ui-tab-group-bg, light-dark(#222, #EEE));
 		border-radius: var(--ui-tab-group-bdrs);
@@ -24,7 +26,7 @@
 			position: absolute;
 			transition: translate .25s ease-in;
 			translate: calc(var(--_active) * 100%) 0;
-			width: calc(100% / (sibling-count() - 1));
+			width: calc(100% / var(--_count, 1));
 		}
 
 		/*
