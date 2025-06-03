@@ -12,15 +12,12 @@
 			0.992 61.97%, 0.9976 70.09%, 1
 		);
 
-		--_count: calc(sibling-count() - 1);
-
 		background: var(--ui-tab-group-bg, light-dark(#222, #EEE));
 		border-radius: var(--ui-tab-group-bdrs);
 		box-sizing: border-box;
 		border: var(--ui-tab-group-bdw) solid #0000;
 		color: var(--ui-tab-group-c, light-dark(#EEE, #222));
 		display: grid;
-		/* grid-template-columns: repeat(var(--_count, 1), 1fr); */
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
 		padding: 0;
@@ -36,10 +33,10 @@
 			position: absolute;
 			transition: translate .25s var(--ui-tab-group-ttf, ease);
 			translate: calc(var(--_active) * 100%) 0;
-			width: calc(100% / var(--_count, 1));
+			width: calc(100% / (sibling-count() - 1));
 		}
 
-		/* Can't we use `sibling-index()` here? */
+		/* Can't we somehow use `sibling-index()` here? */
 		&:has(label:nth-of-type(1) :checked) { --_active: 0; }
 		&:has(label:nth-of-type(2) :checked) { --_active: 1; }
 		&:has(label:nth-of-type(3) :checked) { --_active: 2; }
