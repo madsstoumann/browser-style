@@ -18,6 +18,7 @@
 		border: var(--ui-tab-group-bdw) solid #0000;
 		color: var(--ui-tab-group-c, light-dark(#EEE, #222));
 		display: grid;
+		/* grid-template-columns: repeat(sibling-count() - 1, 1fr); */
 		grid-auto-columns: 1fr;
 		grid-auto-flow: column;
 		padding: 0;
@@ -44,6 +45,7 @@
 
 		label {
 			display: block;
+			/* grid-area: 1 / sibling-index() / 1 / span 1; */
 			padding-block: var(--ui-tab-group-item-pb, 1ch);
 			text-align: center;
 			user-select: none;
