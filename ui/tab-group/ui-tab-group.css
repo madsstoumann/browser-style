@@ -2,15 +2,6 @@
 	:where(.ui-tab-group) {
 		--ui-tab-group-bdrs: 8px;
 		--ui-tab-group-bdw: 4px;
-		--ui-tab-group-ttf: linear(
-			0, 0.1641 3.52%, 0.311 7.18%,
-			0.4413 10.99%, 0.5553 14.96%,
-			0.6539 19.12%, 0.738 23.5%,
-			0.8086 28.15%, 0.8662 33.12%,
-			0.9078 37.92%, 0.9405 43.12%,
-			0.965 48.84%, 0.9821 55.28%,
-			0.992 61.97%, 0.9976 70.09%, 1
-		);
 
 		background: var(--ui-tab-group-bg, light-dark(#222, #EEE));
 		border-radius: var(--ui-tab-group-bdrs);
@@ -32,7 +23,7 @@
 			mix-blend-mode: difference;
 			pointer-events: none;
 			position: absolute;
-			transition: translate .25s var(--ui-tab-group-ttf, ease);
+			transition: translate .25s ease-in;
 			translate: calc(var(--_active) * 100%) 0;
 			width: calc(100% / (sibling-count() - 1));
 		}
