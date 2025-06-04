@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Mega Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Sun Phase">
+	<meta name="view-transition" content="same-origin">
+	<!-- <link rel="stylesheet" href="/base.css"> -->
+
+	<style>
+		body {
+			font-family: system-ui, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+	html {
+		container-type: inline-size;
+		interpolate-size: allow-keywords;
+	}
+
+	main {
+		background: tomato;
+	}
+
+	[data-layout-wrapper] {
+		--layout-bleed-mw: 85ch;
+		--layout-mi: 1rem;
+		--mega-menu-mi: var(--layout-mi);
+		--mega-menu-bleed-mw: var(--layout-bleed-mw);
+
+		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-bleed-mw, 100cqw) / 2);
+	}
+
+[data-menu="header"] {
+	background: #CCC;
+	padding-block: 1ch;
+}
+[data-menu="container"] {
+	background: #FFF;
+}
+[data-menu="panel"] {
+	--mega-menu-desktop-panel-mh: 15rem;
+	background: #F0F0F0;
+}
+
+
+@layer components.mega-menu {
+	[data-menu="header"] {
+		align-content: var(--mega-menu-ac, center);
+		container-type: inline-size;
+		display: flex;
+		justify-content: var(--mega-menu-jc, space-between);
+		margin-inline: min(-1 * var(--mega-menu-mi, 0), var(--mega-menu-bleed-mw, 100cqi) / 2 - 50cqi);
+		padding-inline: max(var(--mega-menu-mi, 0), calc((100cqi - var(--mega-menu-bleed-mw, 100cqi)) / 2));
+		position: relative;
+
+		[data-menu="container"] {
+			height: 100svh;
+			inset: 0 calc(100vw - var(--mega-menu-container-w, 80vw)) 0 0;
+			width: var(--mega-menu-container-w, 80vw);
+			position: var(--mega-menu-container-pos, fixed);
+			transition: translate var(--mega-menu-container-trsdu, .2s) var(--mega-menu-container-trstf, cubic-bezier(.4, 0, .2, 1));
+			translate: -100vw 0;
+		}
+
+		:is([data-menu="group"],[data-menu="section"]) summary {
+			list-style: none;
+		}
+
+		&:has(#mega-menu-trigger:checked) {
+			[data-menu="container"] { translate: 0; }
+		}
+
+		@container (min-width: 720px) {
+			[data-menu="container"] { display: contents; }
+			[data-menu="panel"] {
+				inset: 100% auto auto 0;
+				min-height: var(--mega-menu-desktop-panel-mh, initial);
+				padding-inline: max(var(--mega-menu-mi, 0), calc((100vw - var(--mega-menu-bleed-mw, 100cqi)) / 2));
+				position: absolute;
+				width: 100vw;
+				details[data-menu="section"]::details-content {
+					content-visibility: visible;
+				}
+			}
+			[data-menu="trigger"] { display: none; }
+			[data-menu="primary"], [data-menu="secondary"], [data-menu="utility"] {
+				column-gap: var(--mega-menu-cg, 1ch);
+				display: flex;
+				flex-direction: row;
+			}
+		}
+	}
+}
+
+</style>
+	</head>
+	<body data-layout-wrapper>
+		<!-- <h1>UI: Components</h1>
+
+		<h2>Mega Menu</h2> -->
+
+		<header data-menu="header">
+			<a href="/">LOGO</a>
+			<label aria-label="Open menu" data-menu="trigger" for="mega-menu-trigger">
+				<input type="checkbox" data-sr id="mega-menu-trigger">
+				Menu
+			</label>
+			<div data-menu="container">
+				<label aria-label="Close menu" data-menu="trigger" for="mega-menu-trigger">
+					Close
+				</label>
+				<nav aria-label="Main navigation" data-menu="primary">
+					<details data-menu="group">
+						<summary>Products</summary>
+						<div data-menu="panel">
+							<details data-menu="section">
+								<summary>Smartphones</summary>
+								<div data-menu="links">
+									<a href="/products/smartphones/iphone">iPhone</a>
+									<a href="/products/smartphones/android">Android</a>
+									<a href="/products/smartphones/pixel">Google Pixel</a>
+									<a href="/products/smartphones/samsung">Samsung Galaxy</a>
+								</div>
+							</details>
+							
+							<details data-menu="section">
+								<summary>Laptops</summary>
+								<div data-menu="links">
+									<a href="/products/laptops/macbook">MacBook</a>
+									<a href="/products/laptops/surface">Surface</a>
+									<a href="/products/laptops/thinkpad">ThinkPad</a>
+									<a href="/products/laptops/chromebook">Chromebook</a>
+								</div>
+							</details>
+							
+							<details data-menu="section">
+								<summary>Tablets</summary>
+								<div data-menu="links">
+									<a href="/products/tablets/ipad">iPad</a>
+									<a href="/products/tablets/surface-pro">Surface Pro</a>
+									<a href="/products/tablets/galaxy-tab">Galaxy Tab</a>
+								</div>
+							</details>
+							
+							<details data-menu="section">
+								<summary>Accessories</summary>
+								<div data-menu="group">
+									<details data-menu="section">
+										<summary>Audio</summary>
+										<div data-menu="links">
+											<a href="/products/accessories/audio/headphones">Headphones</a>
+											<a href="/products/accessories/audio/earbuds">Earbuds</a>
+											<a href="/products/accessories/audio/speakers">Speakers</a>
+										</div>
+									</details>
+									
+									<details data-menu="section">
+										<summary>Charging</summary>
+										<div data-menu="links">
+											<a href="/products/accessories/charging/cables">Cables</a>
+											<a href="/products/accessories/charging/wireless">Wireless Chargers</a>
+											<a href="/products/accessories/charging/power-banks">Power Banks</a>
+										</div>
+									</details>
+									
+									<details data-menu="section">
+										<summary>Cases & Protection</summary>
+										<div data-menu="links">
+											<a href="/products/accessories/cases/phone-cases">Phone Cases</a>
+											<a href="/products/accessories/cases/laptop-bags">Laptop Bags</a>
+											<a href="/products/accessories/cases/screen-protectors">Screen Protectors</a>
+										</div>
+									</details>
+								</div>
+							</details>
+						</div>
+					</details>
+					
+					<details data-menu="group">
+						<summary>Services</summary>
+						<div data-menu="panel">
+							<details data-menu="section">
+								<summary>Support</summary>
+								<div data-menu="links">
+									<a href="/services/support/technical">Technical Support</a>
+									<a href="/services/support/warranty">Warranty</a>
+									<a href="/services/support/repairs">Repairs</a>
+								</div>
+							</details>
+							
+							<details data-menu="section">
+								<summary>Business</summary>
+								<div data-menu="links">
+									<a href="/services/business/enterprise">Enterprise Solutions</a>
+									<a href="/services/business/bulk-orders">Bulk Orders</a>
+									<a href="/services/business/consultation">Consultation</a>
+								</div>
+							</details>
+						</div>
+					</details>
+					
+					<details data-menu="group">
+						<summary>About</summary>
+						<div data-menu="panel">
+							<a href="/about/company">Company</a>
+							<a href="/about/careers">Careers</a>
+							<a href="/about/news">News</a>
+							<a href="/about/contact">Contact</a>
+						</div>
+					</details>
+				</nav>
+
+				<nav data-menu="secondary">
+				<details data-menu="group">
+					<summary>Search</summary>
+					<search data-menu="panel">
+						<input type="text" placeholder="Search...">
+						<button type="submit">Search</button>
+					</search>
+				</details>
+				<a href="">Help</a>
+				</nav>
+			</div>
+		</header>
+
+		<!-- Main content -->
+
+	<main>
+		<h2>Welcome to Our Website</h2>
+		<p>This is the main content area. Click on the menu items to explore more.</p>
+	</main>
+
+	<!-- <script type="module" src="./index.js"></script> -->
+</body>
+</html>
