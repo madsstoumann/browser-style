@@ -1,11 +1,5 @@
 /* === ANIMATIONS === */
-/* This file contains animations for the view transitions API.
- * It is used to define animations that can be applied to elements
- * during view transitions, such as entering or exiting the viewport.
- */
 [animation] {
-	--_animrs: attr(range-start type(<custom-ident> | <length-percentage>), entry 0%);
-	--_animre: attr(range-end type(<custom-ident> | <length-percentage>), entry 70%);
 	--_dg: attr(degree type(<degree>), 100deg);
 	--_tx: attr(trans-x type(<length>), 55px);
 	--_ty: attr(trans-y type(<length>), 110px);
@@ -49,7 +43,7 @@
 [animation~="zoom-out"] { --_animn: zoom-out; }
 [animation~="zoom-out-rotate"] { --_animn: zoom-out-rotate; }
 
-/* Opacity animations */
+/* Secondary Animations */
 [animation~="opacity"] { --_animn2: opacity; }
 [animation~="fade-in"] { --_animn2: fade-in; }
 [animation~="fade-out"] { --_animn2: fade-out; }
@@ -60,16 +54,16 @@
 [animation~="items-slide-left"] > * { translate: 50px 0; }
 [animation~="items-slide-right"] > * { translate: -50px 0; }
 
-/* animation-range-start / animation-range-end */
-[animation~="contain"] {
+/* === RANGES === */
+[range="contain"] {
 	--_animrs: entry 0%;
 	--_animre: contain 50%;
 }
-[animation~="cover"] {
+[range="cover"] {
 	--_animrs: entry 25%;
 	--_animre: cover 50%;
 }
-[animation~="exit"] {
+[range="exit"] {
 	--_animrs: exit 0%;
 	--_animre: exit 100%;
 }
@@ -80,14 +74,15 @@
 		animation-timing-function: var(--animtm, linear);
 		animation-fill-mode: var(--animfm, forwards);
 		animation-timeline: view();
-		animation-range: var(--_animrs) var(--_animre);
+		animation-range: var(--_animrs, entry 0%) var(--_animre, entry 75%);
 	}
-	:where([animation*="items-slide-"] > *) {
+	/* Child items slide in after parent, but not if parent is exiting */
+	/* :where([animation*="items-slide-"]:not([range="exit"]) > *) {
 		animation: items-slide 0.25s ease-out both;
 		animation-delay: calc(sibling-index() * 150ms);
 		animation-timeline: view();
-		/* animation-range: var(--_animrs, entry 25%) var(--_animre, entry 90%); */
-	}
+		animation-range: var(--_animre, entry 75%) entry 100%;
+	} */
 }
 
 /* === KEYFRAMES === */
