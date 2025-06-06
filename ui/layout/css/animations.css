@@ -4,11 +4,13 @@
  * during view transitions, such as entering or exiting the viewport.
  */
 [animation] {
-	--_animrs: attr(range-start type(<custom-ident>), entry 0%);
-	--_animre: attr(range-end type(<custom-ident>), entry 70%);
+	--_animrs: attr(range-start type(<custom-ident> | <length-percentage>), entry 0%);
+	--_animre: attr(range-end type(<custom-ident> | <length-percentage>), entry 70%);
 	--_dg: attr(degree type(<degree>), 100deg);
 	--_tx: attr(trans-x type(<length>), 55px);
 	--_ty: attr(trans-y type(<length>), 110px);
+	--_txv: attr(trans-x-viewport type(<length>), 100vw);
+	--_tyv: attr(trans-y-viewport type(<length>), 100vh);
 	--_zi: attr(zoom-in type(<number>), 0.6);
 	--_zo: attr(zoom-out type(<number>), 1.2);
 }
@@ -47,6 +49,11 @@
 [animation~="zoom-out"] { --_animn: zoom-out; }
 [animation~="zoom-out-rotate"] { --_animn: zoom-out-rotate; }
 
+/* Opacity animations */
+[animation~="opacity"] { --_animn2: opacity; }
+[animation~="fade-in"] { --_animn2: fade-in; }
+[animation~="fade-out"] { --_animn2: fade-out; }
+
 /* child items */
 [animation~="items-slide-up"] > * { translate: 0 50px; }
 [animation~="items-slide-down"] > * { translate: 0 -50px; }
@@ -69,7 +76,9 @@
 
 @supports (view-transition-name: none) {
 	:where([animation]) {
-		animation: var(--_animn) var(--animtm, linear) var(--animfm, forwards);
+		animation: var(--_animn, none), var(--_animn2, none);
+		animation-timing-function: var(--animtm, linear);
+		animation-fill-mode: var(--animfm, forwards);
 		animation-timeline: view();
 		animation-range: var(--_animrs) var(--_animre);
 	}
@@ -83,256 +92,134 @@
 
 /* === KEYFRAMES === */
 
-/* Bounce */
-@keyframes bounce-in {
-	0% {
-		opacity: 0;
-		scale: 0.3;
-	}
-	50% {
-		scale: 1.05;
-	}
-	70% {
-		scale: 0.9;
-	}
-	100% {
-		opacity: 1;
-		scale: 1;
-	}
-}
-@keyframes bounce-in-down {
-	0% {
-		opacity: 0;
-		translate: 0 -100vh;
-	}
-	60% {
-		translate: 0 10vh;
-	}
-	80% {
-		translate: 0 -5vh;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes bounce-in-left {
-	0% {
-		opacity: 0;
-		translate: -100vw 0;
-	}
-	60% {
-		translate: 5vw 0;
-	}
-	80% {
-		translate: -2.5vw 0;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes bounce-in-up {
-	0% {
-		opacity: 0;
-		translate: 0 100vh;
-	}
-	60% {
-		translate: 0 -10vh;
-	}
-	80% {
-		translate: 0 5vh;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes bounce-in-right {
-	0% {
-		opacity: 0;
-		translate: 100vw 0;
-	}
-	60% {
-		translate: -5vw 0;
-	}
-	80% {
-		translate: 2.5vw 0;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-
-/* Fade */
-@keyframes fade-down {
-	0% {
-		opacity: 0;
-		translate: 0px calc(-1 * var(--_ty));
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-down-left {
-	0% {
-		opacity: 0;
-		translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty));
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-down-right {
-	0% {
-		opacity: 0;
-		translate: var(--_tx) calc(-1 * var(--_ty));
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
+/* Opacity */
+@keyframes opacity {
+	0% { opacity: 0; }
+	100% { opacity: 1; }
 }
 @keyframes fade-in {
-	0%,
-	20% {
-		opacity: 0;
-	}
-	100% {
-		opacity: 1;
-	}
-}
-@keyframes fade-left {
-	0% {
-		opacity: 0;
-		translate: calc(-1 * var(--_tx)) 0px;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-in-scale {
-	0% {
-		opacity: 0;
-		transform: scale(0.8);
-	}
-	100% {
-		opacity: 1;
-		transform: scale(1);
-	}
+	0%, 20% { opacity: 0; }
+	100% { opacity: 1; }
 }
 @keyframes fade-out {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
-}
-@keyframes fade-out-scale {
-	0% {
-		opacity: 1;
-		transform: scale(1);
-	}
-	100% {
-		opacity: 0;
-		transform: scale(0.8);
-	}
-}
-@keyframes fade-right {
-	0% {
-		opacity: 0;
-		translate: var(--_tx) 0px;
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-up {
-	0% {
-		opacity: 0;
-		translate: 0px var(--_ty);
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-up-left {
-	0% {
-		opacity: 0;
-		translate: calc(-1 * var(--_tx)) var(--_ty);
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
-}
-@keyframes fade-up-right {
-	0% {
-		opacity: 0;
-		translate: var(--_tx) var(--_ty);
-	}
-	100% {
-		opacity: 1;
-		translate: 0;
-	}
+	0% { opacity: 1; }
+	100% { opacity: 0; }
 }
 
-/* Flip */
+/* Bounce - using custom properties */
+@keyframes bounce-in {
+	0% { scale: 0.3; }
+	50% { scale: 1.05; }
+	70% { scale: 0.9; }
+	100% { scale: 1; }
+}
+@keyframes bounce-in-down {
+	0% { translate: 0 calc(-1 * var(--_tyv)); }
+	60% { translate: 0 calc(var(--_tyv) * 0.1); }
+	80% { translate: 0 calc(var(--_tyv) * -0.05); }
+	100% { translate: 0; }
+}
+@keyframes bounce-in-left {
+	0% { translate: calc(-1 * var(--_txv)) 0; }
+	60% { translate: calc(var(--_txv) * 0.05) 0; }
+	80% { translate: calc(var(--_txv) * -0.025) 0; }
+	100% { translate: 0; }
+}
+@keyframes bounce-in-up {
+	0% { translate: 0 var(--_tyv); }
+	60% { translate: 0 calc(var(--_tyv) * -0.1); }
+	80% { translate: 0 calc(var(--_tyv) * 0.05); }
+	100% { translate: 0; }
+}
+@keyframes bounce-in-right {
+	0% { translate: var(--_txv) 0; }
+	60% { translate: calc(var(--_txv) * -0.05) 0; }
+	80% { translate: calc(var(--_txv) * 0.025) 0; }
+	100% { translate: 0; }
+}
+
+/* Fade - using custom properties */
+@keyframes fade-down {
+	0% { translate: 0px calc(-1 * var(--_ty)); }
+	100% { translate: 0; }
+}
+@keyframes fade-down-left {
+	0% { translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty)); }
+	100% { translate: 0; }
+}
+@keyframes fade-down-right {
+	0% { translate: var(--_tx) calc(-1 * var(--_ty)); }
+	100% { translate: 0; }
+}
+@keyframes fade-left {
+	0% { translate: calc(-1 * var(--_tx)) 0px; }
+	100% { translate: 0; }
+}
+@keyframes fade-right {
+	0% { translate: var(--_tx) 0px; }
+	100% { translate: 0; }
+}
+@keyframes fade-up {
+	0% { translate: 0px var(--_ty); }
+	100% { translate: 0; }
+}
+@keyframes fade-up-left {
+	0% { translate: calc(-1 * var(--_tx)) var(--_ty); }
+	100% { translate: 0; }
+}
+@keyframes fade-up-right {
+	0% { translate: var(--_tx) var(--_ty); }
+	100% { translate: 0; }
+}
+
+/* Scale animations */
+@keyframes fade-in-scale {
+	0% { transform: scale(0.8); }
+	100% { transform: scale(1); }
+}
+@keyframes fade-out-scale {
+	0% { transform: scale(1); }
+	100% { transform: scale(0.8); }
+}
+
+/* Flip - using custom properties */
 @keyframes flip-diagonal {
 	0% {
 		backface-visibility: hidden;
-		transform: perspective(2500px) rotateX(calc(0deg - var(--_dg)))
-			rotateY(calc(0deg - var(--_dg)));
+		transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))) rotateY(calc(0deg - var(--_dg)));
 	}
-	100% {
-		transform: perspective(2500px) rotateX(0) rotateY(0);
-	}
+	100% { transform: perspective(2500px) rotateX(0) rotateY(0); }
 }
 @keyframes flip-down {
 	0% {
 		backface-visibility: hidden;
 		transform: perspective(2500px) rotateX(var(--_dg));
 	}
-	100% {
-		transform: perspective(2500px) rotateX(0);
-	}
+	100% { transform: perspective(2500px) rotateX(0); }
 }
 @keyframes flip-left {
 	0% {
 		backface-visibility: hidden;
 		transform: perspective(2500px) rotateY(calc(0deg - var(--_dg)));
 	}
-	100% {
-		transform: perspective(2500px) rotateY(0);
-	}
+	100% { transform: perspective(2500px) rotateY(0); }
 }
 @keyframes flip-right {
 	0% {
 		backface-visibility: hidden;
 		transform: perspective(2500px) rotateY(var(--_dg));
 	}
-	100% {
-		transform: perspective(2500px) rotateY(0);
-	}
+	100% { transform: perspective(2500px) rotateY(0); }
 }
 @keyframes flip-up {
 	0% {
 		backface-visibility: hidden;
 		transform: perspective(2500px) rotateX(calc(0deg - var(--_dg)));
 	}
-	100% {
-		transform: perspective(2500px) rotateX(0);
-	}
+	100% { transform: perspective(2500px) rotateX(0); }
 }
 
-/* Reveal */
+/* Reveal - keeping opacity as they're integral to the effect */
 @keyframes reveal {
 	0% {
 		opacity: 0;
@@ -364,84 +251,54 @@
 	}
 }
 
-/* Slide */
+/* Slide - using custom properties */
 @keyframes slide-down {
-	0% {
-		translate: 0 -100vh;
-	}
-	100% {
-		translate: 0;
-	}
+	0% { translate: 0 calc(-1 * var(--_tyv)); }
+	100% { translate: 0; }
 }
 @keyframes slide-in {
-	0% {
-		translate: -100vw 0;
-	}
-	100% {
-		translate: 0;
-	}
+	0% { translate: calc(-1 * var(--_txv)) 0; }
+	100% { translate: 0; }
 }
 @keyframes slide-out {
-	0% {
-		translate: 0;
-	}
-	100% {
-		translate: 100vw 0;
-	}
+	0% { translate: 0; }
+	100% { translate: var(--_txv) 0; }
 }
 @keyframes slide-up {
-	0% {
-		translate: 0 100vh;
-	}
-	100% {
-		translate: 0;
-	}
+	0% { translate: 0 var(--_tyv); }
+	100% { translate: 0; }
 }
 
-/* Zoom */
+/* Zoom - using custom properties */
 @keyframes zoom-in {
-	0% {
-		opacity: 0;
-		scale: var(--_zi);
-	}
-	100% {
-		opacity: 1;
-		scale: 1;
-	}
+	0% { scale: var(--_zi); }
+	100% { scale: 1; }
 }
 @keyframes zoom-in-rotate {
 	0% {
-		opacity: 0;
 		scale: var(--_zi);
 		rotate: -180deg;
 	}
 	100% {
-		opacity: 1;
 		scale: 1;
 		rotate: 0deg;
 	}
 }
 @keyframes zoom-out {
-	0% {
-		opacity: 0;
-		scale: var(--_zo);
-	}
-	100% {
-		opacity: 1;
-		scale: 1;
-	}
+	0% { scale: var(--_zo); }
+	100% { scale: 1; }
 }
 @keyframes zoom-out-rotate {
 	0% {
-		opacity: 1;
 		scale: 1;
 		transform: rotate(0deg);
 	}
 	100% {
-		opacity: 0;
 		scale: var(--_zo);
 		transform: rotate(-180deg);
 	}
 }
-@keyframes items-slide { to { translate: 0 0; } }
 
+@keyframes items-slide {
+	to { translate: 0 0; }
+}
