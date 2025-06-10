@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Mega Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Sun Phase">
+	<meta name="view-transition" content="same-origin">
+	<!-- <link rel="stylesheet" href="/base.css"> -->
+
+	<style>
+		body {
+			font-family: system-ui, sans-serif;
+			margin: 0;
+			padding: 0;
+		}
+	:root {
+		container-type: inline-size;
+		interpolate-size: allow-keywords;
+	}
+
+	main {
+		background: tomato;
+	}
+
+	body {
+		--layout-bleed-mw: 85ch;
+		--layout-mi: 1rem;
+		--mega-menu-mi: var(--layout-mi);
+		--mega-menu-bleed-mw: var(--layout-bleed-mw);
+
+		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-bleed-mw, 100cqw) / 2);
+	}
+
+[data-menu="header"] {
+	background: #CCC;
+}
+[data-menu="container"] {
+	background: #FFF;
+}
+[data-menu="panel"] {
+	--mega-menu-desktop-panel-mih: 15rem;
+	background: #F0F0F0;
+}
+
+/* === MEGA MENU COMPONENT === */
+@layer components.mega-menu {
+	[data-menu="header"] {
+		* { box-sizing: border-box; }
+		--mega-menu-h: 3rem;
+
+		align-items: var(--mega-menu-ai, center);
+		box-sizing: border-box;
+		display: flex;
+		font-size: var(--mega-menu-fs, 1rem);
+		height: var(--mega-menu-h);
+		justify-content: var(--mega-menu-jc, space-between);
+		margin-inline: min(-1 * var(--mega-menu-mi, 0), var(--mega-menu-bleed-mw, 100vw) / 2 - 50vw);
+		padding-block: var(--mega-menu-pb, 1ch);
+		padding-inline: max(var(--mega-menu-mi, 0), calc((100vw - var(--mega-menu-bleed-mw, 100vw)) / 2));
+		text-box: cap alphabetic;
+		user-select: none;
+
+		[data-menu="container"] {
+			height: 100svh;
+			inset: 0 calc(100vw - var(--mega-menu-container-w, 80vw)) 0 0;
+			width: var(--mega-menu-container-w, 80vw);
+			position: var(--mega-menu-container-pos, fixed);
+			transition: translate var(--mega-menu-container-trsdu, .2s) var(--mega-menu-container-trstf, cubic-bezier(.4, 0, .2, 1));
+			translate: -100vw 0;
+		}
+
+		[data-menu="panel"] {
+			background: #0000;
+			border: 0;
+		}
+
+		:is([data-menu="group"],[data-menu="section"]) summary { list-style: none; }
+		&:has(#mega-menu-trigger:checked) [data-menu="container"] { translate: 0; }
+
+		@media (min-width: 720px) {
+			[data-menu="container"] { display: contents; }
+			[data-menu="panel"] {
+				columns: var(--mega-menu-desktop-panel-colm, 2);
+				inset: var(--mega-menu-h) auto auto 0;
+				min-height: var(--mega-menu-desktop-panel-mih, initial);
+				padding-block: var(--mega-menu-desktop-panel-pb, 1lh);
+				padding-inline: max(var(--mega-menu-panel-pi, var(--mega-menu-mi, 0)), calc((100vw - var(--mega-menu-bleed-mw, 100vw)) / 2));
+				position: absolute;
+				width: 100vw;
+				details[data-menu="section"]::details-content {
+					content-visibility: visible;
+				}
+			}
+			[data-menu="primary"], [data-menu="secondary"], [data-menu="utility"] {
+				column-gap: var(--mega-menu-nav-cg, 2ch);
+				display: flex;
+				flex-direction: row;
+			}
+			[data-menu="trigger"] { display: none; }
+		}
+	}
+}
+
+</style>
+	</head>
+	<body>
+		<!-- <h1>UI: Components</h1>
+
+		<h2>Mega Menu</h2> -->
+
+		<header data-menu="header">
+			<a href="/">LOGO</a>
+			<label aria-label="Open menu" data-menu="trigger" for="mega-menu-trigger">
+				<input type="checkbox" data-sr id="mega-menu-trigger">
+				Menu
+			</label>
+			<div data-menu="container">
+				<label aria-label="Close menu" data-menu="trigger" for="mega-menu-trigger">
+					Close
+				</label>
+				<nav aria-label="Main navigation" data-menu="primary">
+					<button data-menu="group" popovertarget="menu-products">Products</button>
+				</nav>	
+
+				<nav data-menu="secondary">
+				<details data-menu="group" name="main-menu">
+					<summary>Search</summary>
+					<search data-menu="panel">
+						<input type="text" placeholder="Search...">
+						<button type="submit">Search</button>
+					</search>
+				</details>
+				<a href="">Help</a>
+				</nav>
+			</div>
+
+
+			<div data-menu="panel" id="menu-products" popover>
+				<details data-menu="section">
+					<summary>Smartphones</summary>
+					<div data-menu="links">
+						<a href="/products/smartphones/iphone">iPhone</a>
+						<a href="/products/smartphones/android">Android</a>
+						<a href="/products/smartphones/pixel">Google Pixel</a>
+						<a href="/products/smartphones/samsung">Samsung Galaxy</a>
+					</div>
+				</details>
+			</div>
+		</header>
+
+		<!-- Main content -->
+
+	<main>
+		<h2>Welcome to Our Website</h2>
+		<p>This is the main content area. Click on the menu items to explore more.</p>
+	</main>
+
+	<!-- <script type="module" src="./index.js"></script> -->
+</body>
+</html>

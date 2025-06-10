@@ -95,6 +95,7 @@
 </style>
 	</head>
 	<body>
+		<!-- https://www.w3.org/WAI/ARIA/apg/patterns/menubar/ -->
 		<!-- <h1>UI: Components</h1>
 
 		<h2>Mega Menu</h2> -->
@@ -230,6 +231,86 @@
 		<p>This is the main content area. Click on the menu items to explore more.</p>
 	</main>
 
-	<!-- <script type="module" src="./index.js"></script> -->
+	<script>
+		function setupMenuA11y(header, groupSel, panelSel, focusSel) {
+			if (!header) return;
+			let current = null, clearAttrs = el => (el.removeAttribute('data-last-typed-char'), el.removeAttribute('data-last-typed-index'));
+			
+			const handleKey = evt => {
+				if (!current?.open) return;
+				const panel = current.querySelector(panelSel);
+				if (!panel) return;
+				
+				const elements = Array.from(panel.querySelectorAll(focusSel)).filter(el => el.offsetParent);
+				const len = elements.length;
+				
+				if (evt.key === 'Escape') {
+					evt.preventDefault();
+					const summary = current.querySelector('summary');
+					current.open = false;
+					summary?.focus();
+				} else if (evt.key === 'Tab' && len) {
+					evt.preventDefault();
+					const idx = elements.indexOf(document.activeElement);
+					elements[(evt.shiftKey ? idx - 1 + len : idx + 1) % len].focus();
+				} else if (evt.key === 'Home' && len) {
+					evt.preventDefault();
+					elements[0].focus();
+				} else if (evt.key === 'End' && len) {
+					evt.preventDefault();
+					elements[len - 1].focus();
+				} else if (/^[a-z0-9]$/i.test(evt.key) && !evt.ctrlKey && !evt.altKey && !evt.metaKey) {
+					evt.preventDefault();
+					const char = evt.key.toLowerCase();
+					const getText = el => (el.getAttribute('aria-label') || el.textContent || el.innerText || el.value || el.placeholder || '').trim().toLowerCase();
+					const matches = elements.filter(el => getText(el).startsWith(char));
+					
+					if (!matches.length) return;
+					
+					const {lastTypedChar: last, lastTypedIndex: lastIdx} = current.dataset;
+					const nextIdx = last === char ? ((+lastIdx || 0) + 1) % matches.length : 0;
+					
+					matches[nextIdx].focus();
+					current.dataset.lastTypedChar = char;
+					current.dataset.lastTypedIndex = nextIdx;
+				}
+			};
+			
+			const handleClick = evt => current && !header.contains(evt.target) && (current.open = false);
+			
+			header.addEventListener('toggle', evt => {
+				const details = evt.target;
+				if (!details.matches(groupSel)) return;
+				
+				if (details.open) {
+					header.querySelectorAll(groupSel).forEach(other => other !== details && other.open && (other.open = false, clearAttrs(other)));
+					current = details;
+					clearAttrs(current);
+					document.addEventListener('keydown', handleKey, true);
+					document.addEventListener('click', handleClick, true);
+					
+					const panel = details.querySelector(panelSel);
+					if (panel) {
+						const first = Array.from(panel.querySelectorAll(focusSel)).find(el => el.offsetParent);
+						first && setTimeout(() => first.focus(), 0);
+					}
+				} else if (current === details) {
+					document.removeEventListener('keydown', handleKey, true);
+					document.removeEventListener('click', handleClick, true);
+					clearAttrs(details);
+					current = null;
+				}
+			}, true);
+		}
+		
+		document.addEventListener('DOMContentLoaded', () => {
+			setupMenuA11y(
+				document.querySelector('[data-menu="header"]'),
+				'nav[data-menu="primary"] > details[data-menu="group"], nav[data-menu="secondary"] > details[data-menu="group"]',
+				'[data-menu="panel"]',
+				'a[href]:not([disabled]), button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+			);
+		});
+	</script>
 </body>
 </html>
