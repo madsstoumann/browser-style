@@ -1,0 +1,63 @@
+/*
+ * Work based on this article by @bramus
+ * https://www.bram.us/2023/10/23/css-scroll-detection/
+ */
+
+@property --scroll {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --scroll-delayed {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --scroll-direction {
+	syntax: "<number>";
+	inherits: true;
+	initial-value: 0;
+}
+
+
+@keyframes setScrollProps {
+	to {
+		--scroll: 1000;
+		--scroll-delayed: 1000;
+	}
+}
+
+:root {
+	animation: setScrollProps linear both;
+	animation-timeline: scroll(root);
+	 --header-effect-duration: .3s;
+}
+
+body {
+	 transition: --scroll-delayed calc(var(--header-effect-duration) + .1s);
+	 --scroll-velocity: calc(var(--scroll) - var(--scroll-delayed));
+	 --scroll-speed: max(var(--scroll-velocity), -1 * var(--scroll-velocity));
+	 --scroll-direction: calc(var(--scroll-velocity) / var(--scroll-speed));
+}
+
+mega-menu [data-menu="menubar"] {
+	 inset: 0 0 auto;
+	 position: sticky;
+	 transform: translateY(var(--translate));
+	 transition: transform var(--header-effect-duration) 0s;
+	 will-change: transform;
+	 
+	 @container style(--scroll-direction: 0) {
+			transition-delay: calc(infinity * 1s);  
+	 }
+
+	 @container style(--scroll-direction: -1) {
+			--translate: 0;
+	 }
+
+	 @container style(--scroll-direction: 1) { 
+			--translate: -100%;
+	 }
+}

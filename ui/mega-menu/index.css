@@ -1,10 +1,10 @@
-/* === MEGA MENU COMPONENT === */
 @layer components.mega-menu {
 	@scope (mega-menu) {
 		--mega-menu-margin-inline: attr(margin-inline type(<length>), 0);
 		--mega-menu-max-width: attr(max-width type(<length>), none);
 		--mega-menu-menubar-height: attr(menubar-height type(<length>), 3rem);
 		--mega-menu-view-width: attr(mobile-view-width type(<length>), 60vw);
+		--mega-menu-z-index: attr(z-index type(<integer>), 1000);
 
 		* { box-sizing: border-box; }
 
@@ -16,6 +16,7 @@
 			padding-inline: var(--mega-menu-menubar-pi, 0);
 			position: relative;
 			user-select: none;
+			z-index: var(--mega-menu-z-index);
 			[bleed] & {
 				margin-inline: min(
 					-1 * var(--mega-menu-margin-inline),
@@ -33,7 +34,7 @@
 			translate: calc(0px - 100vw) calc(0px - var(--mega-menu-menubar-height));
 			&:focus-visible {
 				translate: -50% 0;
-				z-index: 1;
+				z-index: calc(var(--mega-menu-z-index) + 1);
 			}
 		}
 		[data-menu="view"] {
@@ -61,6 +62,7 @@
 				details[data-menu="section"]::details-content {
 					content-visibility: visible;
 				}
+				details[data-menu="section"] summary { pointer-events: none;}
 				[bleed] & {
 					margin-inline: auto;
 					padding-inline: max(
@@ -78,7 +80,6 @@
 			[data-menu='view'] { display: contents; }
 		}
 
-		/* State */
 		[data-menu="trigger"] input {
 			clip-path: inset(50%);
 			height: 1px;

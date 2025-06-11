@@ -47,7 +47,15 @@ mega-menu {
 	}
 	:is(
 		[data-menu='section'],
-		[data-menu='topic']) summary {
+		[data-menu="topic"]) summary {
 		list-style: none;
 	}
 }
+mega-menu:not([bleed]) {
+	:is([data-menu="content"], [data-menu="menubar"]) { padding-inline: 1rem; }
+}
+
+/* body:has([data-menu="topic"][open]) {
+	background: gray;
+	overflow: clip;
+} */
