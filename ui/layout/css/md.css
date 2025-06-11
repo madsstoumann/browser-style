@@ -52,6 +52,12 @@
 		& > * { --layout-ga: auto; }
 		*:nth-of-type(3n+1) { --layout-ga: span 2 / auto; } 
 	}
+		lay-out[md="masonry(1-2b)"] { 
+		--_ga: initial;
+		--layout-gtc: 1fr 1fr;
+		& > * { --layout-ga: auto; }
+		*:nth-of-type(3n+3) { --layout-ga: auto / span 2; } 
+	}
 	lay-out[md="masonry(2-1)"] { 
 		--_ga: initial;
 		--layout-gtc: 1fr 2fr;

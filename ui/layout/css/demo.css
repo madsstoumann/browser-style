@@ -19,22 +19,17 @@ content-item {
 		filter: grayscale(95%) brightness(.9);
 	}
 }
-
-[data-layout-wrapper] {
-	--layout-bleed-mw: 1200px;
-	--layout-mi: 1rem;
-}
-
 lay-out {
 	transition: grid-template-columns 0.35s ease;
 }
-
 body {
+	--layout-bleed-mw: 1024px;
+	--layout-mi: 1rem;
 	display: grid;
 	font-family: system-ui;
+	margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
 	row-gap: 1rem;
 }
-
 code {
 	background: #333;
 	border-radius: .5ch;
@@ -55,8 +50,4 @@ h3 {
 	font-weight: 500;
 	margin-block: 0 .5ch;
 	text-box: cap alphabetic;
-}
-
-@scope (one-block) {
-
 }
