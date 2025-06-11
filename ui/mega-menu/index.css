@@ -62,7 +62,7 @@
 				details[data-menu="section"]::details-content {
 					content-visibility: visible;
 				}
-				details[data-menu="section"] summary { pointer-events: none;}
+				details[data-menu="section"] summary { pointer-events: none; }
 				[bleed] & {
 					margin-inline: auto;
 					padding-inline: max(
