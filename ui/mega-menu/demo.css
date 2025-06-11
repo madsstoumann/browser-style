@@ -1,0 +1,53 @@
+mega-menu {
+	--mega-menu-margin-inline: 1rem;
+	--mega-menu-max-width: 900px;
+
+	font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+
+	a {
+		color: inherit;
+		display: block;
+		text-decoration: none;
+	}
+
+	[data-menu="menubar"] {
+		background: hsl(200, 10%, 90%);
+		color: var(--mega-menu-c, ButtonText);
+	}
+	[data-menu="view"] {
+		background: var(--mega-menu-view-bg, Canvas);
+		transition: translate var(--mega-menu-view-trsdu, 0.2s)
+			var(--mega-menu-view-trstf, cubic-bezier(0.4, 0, 0.2, 1));
+	}
+	[data-menu="content"] {
+		background: Canvas;
+		box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.12);
+		columns: 2;
+	}
+
+	[data-menu="nav"] > a, 
+	[data-menu="topic"] > summary,
+	[data-menu="skip"] {
+		padding: .25ch 1ch;
+		&:is(:hover, :focus-visible) {
+			background: CanvasText;
+			color: Canvas;
+			outline: 0;
+		}
+	}
+	:is([data-menu="content"],[data-menu="section"]) :is(a, summary):is(:focus-visible,:hover) {
+		color: cornflowerblue;
+		outline: 0;
+		text-decoration: underline;
+	}
+
+	[data-menu='section'] {
+		margin-block-end: 1lh;
+		summary { font-weight: 700; }
+	}
+	:is(
+		[data-menu='section'],
+		[data-menu='topic']) summary {
+		list-style: none;
+	}
+}
