@@ -22,7 +22,6 @@
 	initial-value: 0;
 }
 
-
 @keyframes setScrollProps {
 	to {
 		--scroll: 1000;
