@@ -27,6 +27,7 @@
 		color: var(--layout-c);
 		column-gap: var(--layout-colmg);
 		contain: layout inline-size;
+		container-name: --layout;
 		container-type: inline-size;
 		display: grid;
 		grid-auto-flow: row dense;
@@ -59,6 +60,7 @@
 	}
 
 	html {
+		container-name: --root;
 		container-type: inline-size;
 		interpolate-size: allow-keywords;
 	}
