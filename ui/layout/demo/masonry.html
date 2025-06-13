@@ -10,13 +10,29 @@
 	<link rel="stylesheet" href="../css/demo.css">
 </head>
 <body>
-
-	<h2>Masonry</h2>
+	<h1>Masonry</h1>
 
 	<section>
-		<h3>Masonry 1-2</h3>
-		<code>&lt;lay-out md="masonry(1-2)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-2b)" lg="masonry(2-1)" xl="masonry(1-2)" col-gap="1em">
+		<h3>Masonry 1lg-v:2sm</h3>
+		<small>1 large item spanning vertically on the left and 2 small items on the right</small>
+		<code>&lt;lay-out md="masonry(1lg-v:2sm)"&gt;</code>
+		<lay-out sm="masonry(1lg-h:2sm)" md="masonry(2sm:1lg-h)" lg="masonry(1lg-v:2sm)" xl="masonry(2sm:1lg-v)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<h2>3 items</h2>
+<!-- <lay-out md="masonry(2sm:1lg-bottom)" lg="masonry(2sm:1lg-right)" xl="masonry(1lg:2sm-right)" col-gap="1em"> -->
+	<section>
+		<h3>Masonry 1lg-v:2sm</h3>
+		<small>1 large item spanning vertically on the left and 2 small items on the right</small>
+		<code>&lt;lay-out md="masonry(1lg-v:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -27,9 +43,10 @@
 	</section>
 
 	<section>
-		<h3>Masonry 2-1</h3>
-		<code>&lt;lay-out md="masonry(2-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(2-1)" col-gap="1em">
+		<h3>Masonry 2sm:1lg-v</h3>
+		<small>2 small items on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="masonry(2sm:1lg-v)"&gt;</code>
+		<lay-out md="masonry(2sm:1lg-v)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -40,9 +57,40 @@
 	</section>
 
 	<section>
-		<h3>Masonry 1-1-2</h3>
-		<code>&lt;lay-out md="masonry(1-1-2)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-1-2)" col-gap="1em">
+		<h3>Masonry 2sm:1lg-h</h3>
+		<small>2 small items in top row and 1 large item spanning horizontally at bottom</small>
+		<code>&lt;lay-out md="masonry(2sm:1lg-h)"&gt;</code>
+		<lay-out md="masonry(2sm:1lg-h)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1lg-h:2sm</h3>
+		<small>1 large item spanning horizontally at top and 2 small items at bottom</small>
+		<code>&lt;lay-out md="masonry(1lg-h:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-h:2sm)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<h2>4 items</h2>
+
+	<section>
+		<h3>Masonry 1lg-h:1lg-v:2sm</h3>
+		<small>1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items</small>
+		<code>&lt;lay-out md="masonry(1lg-h:1lg-v:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-h:1lg-v:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -55,9 +103,10 @@
 	</section>
 
 		<section>
-		<h3>Masonry 1-1-2 Reverse</h3>
-		<code>&lt;lay-out md="masonry(1-1-2-reverse)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-1-2-reverse)" col-gap="1em">
+		<h3>Masonry 1lg-v:1lg-h:2sm</h3>
+		<small>1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items</small>
+		<code>&lt;lay-out md="masonry(1lg-v:1lg-h:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:1lg-h:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -70,9 +119,10 @@
 	</section>
 
 	<section>
-		<h3>Masonry 1-2-1</h3>
-		<code>&lt;lay-out md="masonry(1-2-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-2-1)" col-gap="1em">
+		<h3>Masonry 1lg-v:2sm:1lg-v</h3>
+		<small>1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically</small>
+		<code>&lt;lay-out md="masonry(1lg-v:2sm:1lg-v)"&gt;</code>
+		<lay-out md="masonry(1lg-v:2sm:1lg-v)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -85,15 +135,14 @@
 	</section>
 
 	<section>
-		<h3>Masonry 2-2-1</h3>
-		<code>&lt;lay-out md="masonry(2-2-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(2-2-1)" col-gap="1em">
+		<h3>Masonry 1lg-v:3sm</h3>
+		<small>1 large item spanning vertically on the left and 3 small items stacked on the right</small>
+		<code>&lt;lay-out md="masonry(1lg-v:3sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:3sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>
@@ -102,15 +151,14 @@
 	</section>
 
 	<section>
-		<h3>Masonry 1-2-2</h3>
-		<code>&lt;lay-out md="masonry(1-2-2)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-2-2)" col-gap="1em">
+		<h3>Masonry 3sm:1lg-v</h3>
+		<small>3 small items stacked on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="masonry(3sm:1lg-v)"&gt;</code>
+		<lay-out md="masonry(3sm:1lg-v)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>
@@ -118,27 +166,13 @@
 		</lay-out>
 	</section>
 
-	<section>
-		<h3>Masonry 3-1-1</h3>
-		<code>&lt;lay-out md="masonry(3-1-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(3-1-1)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
+	<h2>5 items</h2>
 
 	<section>
-		<h3>Masonry 1-1-3</h3>
-		<code>&lt;lay-out md="masonry(1-1-3)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-1-3)" col-gap="1em">
+		<h3>Masonry 2sm:1lg-v:2sm</h3>
+		<small>2 small items, 1 large item spanning vertically, and 2 more small items</small>
+		<code>&lt;lay-out md="masonry(2sm:1lg-v:2sm)"&gt;</code>
+		<lay-out md="masonry(2sm:1lg-v:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -153,9 +187,10 @@
 	</section>
 
 	<section>
-		<h3>Masonry 1-3-1</h3>
-		<code>&lt;lay-out md="masonry(1-3-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-3-1)" col-gap="1em">
+		<h3>Masonry 1lg-v:2sm:2sm</h3>
+		<small>1 large item spanning vertically on the left and 4 small items in a grid</small>
+		<code>&lt;lay-out md="masonry(1lg-v:2sm:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:2sm:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -170,39 +205,10 @@
 	</section>
 
 	<section>
-		<h3>Masonry 1-3</h3>
-		<code>&lt;lay-out md="masonry(1-3)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-3)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Masonry 3-1</h3>
-		<code>&lt;lay-out md="masonry(3-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(3-1)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Masonry 1-4</h3>
-		<code>&lt;lay-out md="masonry(1-4)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-4)" col-gap="1em">
+		<h3>Masonry 1lg-h:2lg-v:2sm</h3>
+		<small>1 large item spanning horizontally, 2 large items spanning vertically, and 2 small items</small>
+		<code>&lt;lay-out md="masonry(1lg-h:2lg-v:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-h:2lg-v:2sm)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -217,9 +223,100 @@
 	</section>
 
 	<section>
-		<h3>Masonry 4-1</h3>
-		<code>&lt;lay-out md="masonry(4-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(4-1)" col-gap="1em">
+		<h3>Masonry 2lg-v:1lg:2sm</h3>
+		<small>2 large items spanning vertically, 1 large item, and 2 small items</small>
+		<code>&lt;lay-out md="masonry(2lg-v:1lg:2sm)"&gt;</code>
+		<lay-out md="masonry(2lg-v:1lg:2sm)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1lg-v:1lg:1lg-v:2sm</h3>
+		<small>1 large item spanning vertically, 1 large item, 1 large item spanning vertically, and 2 small items</small>
+		<code>&lt;lay-out md="masonry(1lg-v:1lg:1lg-v:2sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:1lg:1lg-v:2sm)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1lg-h:4sm</h3>
+		<small>1 large item spanning horizontally at top and 4 small items in a grid below</small>
+		<code>&lt;lay-out md="masonry(1lg-h:4sm)"&gt;</code>
+		<lay-out md="masonry(1lg-h:4sm)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 4sm:1lg-h</h3>
+		<small>4 small items in a grid at top and 1 large item spanning horizontally at bottom</small>
+		<code>&lt;lay-out md="masonry(4sm:1lg-h)"&gt;</code>
+		<lay-out md="masonry(4sm:1lg-h)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 1lg-v:4sm</h3>
+		<small>1 large item spanning vertically on the left and 4 small items in a grid on the right</small>
+		<code>&lt;lay-out md="masonry(1lg-v:4sm)"&gt;</code>
+		<lay-out md="masonry(1lg-v:4sm)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+			<content-item repeat></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Masonry 4sm:1lg-v</h3>
+		<small>4 small items in a grid on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="masonry(4sm:1lg-v)"&gt;</code>
+		<lay-out md="masonry(4sm:1lg-v)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>

@@ -11,11 +11,13 @@
 </head>
 <body>
 
-	<h2>Ratios</h2>
+	<h1>Ratios</h1>
+	<h2>2 Items</h2>
 
 	<section>
 		<h3>Ratio 25:75</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(25:75)" col-gap="1em"&gt;</code>
+		<small>Narrow sidebar with wide main content area</small>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(25:75)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(25:75)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -26,7 +28,8 @@
 
 	<section>
 		<h3>Ratio 33:66</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(33:66)" col-gap="1em"&gt;</code>
+		<small>Common sidebar and main content layout (1:2 ratio)</small>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(33:66)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(33:66)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -37,7 +40,7 @@
 
 	<section>
 		<h3>Ratio 40:60</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(40:60)" col-gap="1em"&gt;</code>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(40:60)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(40:60)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -48,7 +51,7 @@
 
 	<section>
 		<h3>Ratio 60:40</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(60:40)" col-gap="1em"&gt;</code>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(60:40)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(60:40)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -59,7 +62,8 @@
 
 	<section>
 		<h3>Ratio 66:33</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(66:33)" col-gap="1em"&gt;</code>
+		<small>Main content with sidebar (2:1 ratio)</small>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(66:33)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(66:33)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -70,7 +74,8 @@
 
 	<section>
 		<h3>Ratio 75:25</h3>
-		<code>&lt;lay-out sm="columns(2)" lg="ratio(75:25)" col-gap="1em"&gt;</code>
+		<small>Wide main content with narrow sidebar</small>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(75:25)"&gt;</code>
 		<lay-out sm="columns(2)" lg="ratio(75:25)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
@@ -79,10 +84,11 @@
 		</lay-out>
 	</section>
 
+	<h2>3 Items</h2>
 	<section>
 		<h3>Ratio 25:25:50</h3>
-		<code>&lt;lay-out sm="ratio(50:50:100)" lg="ratio(25:25:50)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(50:50:100)" lg="ratio(25:25:50)" col-gap="1em">
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(25:25:50)"&gt;</code>
+		<lay-out sm="columns(2)" lg="ratio(25:25:50)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -94,8 +100,9 @@
 
 	<section>
 		<h3>Ratio 25:50:25</h3>
-		<code>&lt;lay-out sm="ratio(50:50:100)" lg="ratio(25:50:25)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(50:50:100)" lg="ratio(25:50:25)" col-gap="1em">
+		<small>Centered main content with equal sidebars</small>
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(25:50:25)"&gt;</code>
+		<lay-out sm="columns(2)" lg="ratio(25:50:25)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -107,54 +114,11 @@
 
 	<section>
 		<h3>Ratio 50:25:25</h3>
-		<code>&lt;lay-out sm="ratio(50:50:100)" lg="ratio(50:25:25)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(50:50:100)" lg="ratio(50:25:25)" col-gap="1em">
+		<code>&lt;lay-out sm="columns(2)" lg="ratio(50:25:25)"&gt;</code>
+		<lay-out sm="columns(2)" lg="ratio(50:25:25)" col-gap="1em">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Ratio 50:50:100</h3>
-		<code>&lt;lay-out sm="ratio(50:50:100)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(50:50:100)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Ratio 100:50:50</h3>
-		<code>&lt;lay-out sm="ratio(100:50:50)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(100:50:50)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Ratio 50x4 100</h3>
-		<code>&lt;lay-out sm="ratio(50x4:100)" col-gap="1em"&gt;</code>
-		<lay-out sm="ratio(50x4:100)" col-gap="1em">
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item></content-item>
-			<content-item repeat></content-item>
-			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>
 			<content-item repeat></content-item>

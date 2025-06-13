@@ -16,6 +16,7 @@ content-item {
 	&:nth-of-type(11) { --bg: lightgray; }
 	&:nth-of-type(12) { --bg: lightblue; }
 	&[repeat] {
+		display: none;
 		filter: grayscale(95%) brightness(.9);
 	}
 }
@@ -40,9 +41,16 @@ code {
 	margin-block: 1ch;
 	padding: .5ch 1.25ch;
 }
+h1 {
+	font-weight: 500;
+	margin-block: 1ch 0;
+	text-box: cap alphabetic;
+}
 h2 {
 	font-weight: 500;
 	border-block: 1px dotted #999;
+
+	margin: 0;
 	padding-block: 1ch;
 	text-box: cap alphabetic;
 }
@@ -50,4 +58,8 @@ h3 {
 	font-weight: 500;
 	margin-block: 0 .5ch;
 	text-box: cap alphabetic;
+}
+small {
+	color: gray;
+	display: block;
 }

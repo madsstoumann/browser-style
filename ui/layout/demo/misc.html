@@ -14,8 +14,8 @@
 	<h2>Advanced Demo</h2>
 	<section>
 		<h3>Masonry 1-2</h3>
-		<code>&lt;lay-out md="masonry(1-2)" col-gap="1em"&gt;</code>
-		<lay-out sm="columns(2)" md="masonry(1-2)" lg="masonry(2-1)" xxl="columns(3)" col-gap="1em" bleed background="hsl(190, 10%, 90%)" padding="1rem">
+		<code>&lt;lay-out md="masonry(1lg:2sm-right)" col-gap="1em"&gt;</code>
+		<lay-out sm="columns(2)" md="masonry(1lg:2sm-right)" lg="masonry(2sm:1lg-right)" xxl="columns(3)" col-gap="1em" bleed background="hsl(190, 10%, 90%)" padding="1rem">
 			<content-item></content-item>
 			<content-item></content-item>
 		<content-item></content-item>
@@ -27,8 +27,8 @@
 
 	<section>
 		<h3>Masonry 2-1</h3>
-		<code>&lt;lay-out md="masonry(2-1)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(2-1)" col-gap="1em" animation="bounce-in-right">
+		<code>&lt;lay-out md="masonry(2sm:1lg-right)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(2sm:1lg-right)" col-gap="1em" animation="bounce-in-right">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -38,8 +38,8 @@
 
 	<section>
 		<h3>Masonry 1-1-2</h3>
-		<code>&lt;lay-out md="masonry(1-1-2)" col-gap="1em"&gt;</code>
-		<lay-out md="masonry(1-1-2)" col-gap="1em" animation="bounce-in-left" max-width="600px">
+		<code>&lt;lay-out md="masonry(1lg-h:1lg-v:2sm)" col-gap="1em"&gt;</code>
+		<lay-out md="masonry(1lg-h:1lg-v:2sm)" col-gap="1em" animation="bounce-in-left" max-width="600px">
 			<content-item></content-item>
 			<content-item></content-item>
 			<content-item></content-item>
@@ -53,8 +53,8 @@
 
 	<section>
 		<h3>Demo 1: Responsive Masonry with Bleed & Animation</h3>
-		<code>&lt;lay-out sm="columns(2)" md="masonry(1-2)" lg="masonry(2-1)" xxl="columns(3)" col-gap="1.5em" row-gap="1em" bleed background="hsl(190, 20%, 90%)" padding="2rem" animation="fade-in-scale"&gt;</code>
-		<lay-out sm="columns(2)" md="masonry(1-2)" lg="masonry(2-1)" xxl="columns(3)" col-gap="1.5em" row-gap="1em" bleed background="hsl(190, 20%, 90%)" padding="2rem" animation="fade-in-scale">
+		<code>&lt;lay-out sm="columns(2)" md="masonry(1lg:2sm-right)" lg="masonry(2sm:1lg-right)" xxl="columns(3)" col-gap="1.5em" row-gap="1em" bleed background="hsl(190, 20%, 90%)" padding="2rem" animation="fade-in-scale"&gt;</code>
+		<lay-out sm="columns(2)" md="masonry(1lg:2sm-right)" lg="masonry(2sm:1lg-right)" xxl="columns(3)" col-gap="1.5em" row-gap="1em" bleed background="hsl(190, 20%, 90%)" padding="2rem" animation="fade-in-scale">
 			<content-item>Item A1</content-item>
 			<content-item>Item A2</content-item>
 			<content-item>Item A3</content-item>
@@ -66,8 +66,8 @@
 
 	<section>
 		<h3>Demo 2: Masonry with Varied Gaps & Background</h3>
-		<code>&lt;lay-out sm="columns(1)" md="masonry(2-1)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up"&gt;</code>
-		<lay-out sm="columns(1)" md="masonry(2-1)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up">
+		<code>&lt;lay-out sm="columns(1)" md="masonry(2sm:1lg-right)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up"&gt;</code>
+		<lay-out sm="columns(1)" md="masonry(2sm:1lg-right)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up">
 			<content-item>Item B1</content-item>
 			<content-item>Item B2</content-item>
 			<content-item>Item B3</content-item>
@@ -79,8 +79,8 @@
 
 	<section>
 		<h3>Demo 3: Mixed Layouts with Asymmetrical Bleed</h3>
-		<code>&lt;lay-out sm="columns(2)" md="masonry(1-1-2)" lg="asym(top-left-bottom-right)" col-gap="1em" row-gap="1em" padding="1.5em" background="hsl(120, 20%, 94%)" animation="flip-left" bleed="-20"&gt;</code>
-		<lay-out sm="columns(2)" md="masonry(1-1-2)" lg="asym(top-left-bottom-right)" col-gap="1em" row-gap="1em" padding="1.5em" background="hsl(120, 20%, 94%)" animation="flip-left" bleed="-20">
+		<code>&lt;lay-out sm="columns(2)" md="masonry(1lg-h:1lg-v:2sm)" lg="asym(top-left-bottom-right)" col-gap="1em" row-gap="1em" padding="1.5em" background="hsl(120, 20%, 94%)" animation="flip-left" bleed="-20"&gt;</code>
+		<lay-out sm="columns(2)" md="masonry(1lg-h:1lg-v:2sm)" lg="asym(top-left-bottom-right)" col-gap="1em" row-gap="1em" padding="1.5em" background="hsl(120, 20%, 94%)" animation="flip-left" bleed="-20">
 			<content-item>Item C1 (Bleed -20)</content-item>
 			<content-item>Item C2</content-item>
 			<content-item>Item C3</content-item>
