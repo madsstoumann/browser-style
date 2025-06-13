@@ -1,5 +1,5 @@
-@container (min-width: 240px)  {
-	/* Autofill / Autofit */
+@media (min-width: 240px)  {
+	/* Autofill/fit */
 	lay-out[xs="autofill"] { 
 		--layout-gtc: repeat(auto-fill, minmax(min(10rem, 100%), 1fr)); 
 		--_ga: auto;
