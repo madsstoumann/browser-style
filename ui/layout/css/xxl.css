@@ -1,5 +1,5 @@
 @container (min-width: 1140px) {
-	/* Autofill / Autofit */
+	/* Autofill/fit */
 	lay-out[xxl="autofill"] {
 		--layout-gtc: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
 		--_ga: auto;
@@ -28,51 +28,24 @@
 	lay-out[xxl="ratio(25:25:50)"] { --layout-gtc: 1fr 1fr 2fr; --_ga: auto; & > * { --layout-ga: auto; } }
 	lay-out[xxl="ratio(25:50:25)"] { --layout-gtc: 1fr 2fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
 	lay-out[xxl="ratio(50:25:25)"] { --layout-gtc: 2fr 1fr 1fr; --_ga: auto; & > * { --layout-ga: auto; } }
-	lay-out[xxl="ratio(50x4:100)"] { 
-		--layout-gtc: 1fr 1fr;
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
-	}
-	lay-out[xxl="ratio(50x4:100)"] {
-		*:nth-of-type(5n+5) { --layout-ga: auto / span 2; }
-	}
 
 	/* Masonry */
-	lay-out[xxl="masonry(1lg-v:2sm)"] { 
-		--layout-gtc: 2fr 1fr;
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
-		*:nth-of-type(3n+1) { --layout-ga: span 2 / auto; } 
+	lay-out[xxl*="masonry"] { --_ga: initial; & > * { --layout-ga: auto; } }
+	lay-out[xxl="masonry(2sm:1lg-h)"],
+	lay-out[xxl="masonry(1lg-h:2sm)"],
+	lay-out[xxl="masonry(1lg-h:4sm)"],
+	lay-out[xxl="masonry(4sm:1lg-h)"] {
+		--layout-gtc: 1fr 1fr;
 	}
-	lay-out[xxl="masonry(2sm:1lg-v)"] { 
-		--layout-gtc: 1fr 2fr;
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
-		*:nth-of-type(3n+2) { --layout-ga: span 2 / auto; } 
-	}
+	lay-out[xxl="masonry(1lg-v:2sm)"],
 	lay-out[xxl="masonry(1lg-v:3sm)"],
-	lay-out[xxl="masonry(1lg-v:2sm:2sm)"] {
+	lay-out[xxl="masonry(1lg-v:4sm)"] {
 		--layout-gtc: 2fr 1fr; 
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
 	}
-	lay-out[xxl="masonry(1lg-v:3sm)"] {
-		*:nth-of-type(4n+1) { --layout-ga: span 3 / auto; } 
-	}
-	lay-out[xxl="masonry(1lg-v:2sm:2sm)"] {
-		*:nth-of-type(5n+1) { --layout-ga: span 4 / auto; } 
-	}
+	lay-out[xxl="masonry(2sm:1lg-v)"],
 	lay-out[xxl="masonry(3sm:1lg-v)"],
-	lay-out[xxl="masonry(2sm:1lg-v:2sm)"] {
+	lay-out[xxl="masonry(4sm:1lg-v)"] {
 		--layout-gtc: 1fr 2fr;
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
-	}
-	lay-out[xxl="masonry(3sm:1lg-v)"] {
-		*:nth-of-type(4n+2) { --layout-ga: span 3 / auto; } 
-	}
-	lay-out[xxl="masonry(2sm:1lg-v:2sm)"] {
-		*:nth-of-type(5n+2) { --layout-ga: span 4 / auto; } 
 	}
 	lay-out[xxl="masonry(1lg-h:1lg-v:2sm)"],
 	lay-out[xxl="masonry(1lg-v:1lg-h:2sm)"],
@@ -80,9 +53,23 @@
 	lay-out[xxl="masonry(2sm:1lg-v:2sm)"],
 	lay-out[xxl="masonry(1lg-v:2sm:2sm)"] {
 		--layout-gtc: 1fr 1fr 1fr;
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
 	}
+	lay-out[xxl="masonry(1lg-h:2lg-v:2sm)"],
+	lay-out[xxl="masonry(2lg-v:1lg:2sm)"],
+	lay-out[xxl="masonry(1lg-v:1lg:1lg-v:2sm)"] {
+		--layout-gtc: repeat(6, 1fr);
+	}
+
+	lay-out[xxl="masonry(1lg-v:2sm)"] *:nth-of-type(3n+1) { --layout-ga: span 2 / auto; }
+	lay-out[xxl="masonry(2sm:1lg-h)"] *:nth-of-type(3n+3) { --layout-ga: auto / span 2; }
+	lay-out[xxl="masonry(1lg-h:2sm)"] *:nth-of-type(3n+1) { --layout-ga: auto / span 2; }
+	lay-out[xxl="masonry(2sm:1lg-v)"] *:nth-of-type(3n+2) { --layout-ga: span 2 / auto; }
+	lay-out[xxl="masonry(1lg-v:3sm)"] *:nth-of-type(4n+1) { --layout-ga: span 3 / auto; }
+	lay-out[xxl="masonry(1lg-v:4sm)"] *:nth-of-type(5n+1) { --layout-ga: span 4 / auto; }
+	lay-out[xxl="masonry(3sm:1lg-v)"] *:nth-of-type(4n+2) { --layout-ga: span 3 / auto; }
+	lay-out[xxl="masonry(4sm:1lg-v)"] *:nth-of-type(5n+2) { --layout-ga: span 4 / auto; }
+	lay-out[xxl="masonry(1lg-h:4sm)"] *:nth-of-type(5n+1) { --layout-ga: auto / span 2; }
+	lay-out[xxl="masonry(4sm:1lg-h)"] *:nth-of-type(5n+5) { --layout-ga: auto / span 2; }
 	lay-out[xxl="masonry(1lg-h:1lg-v:2sm)"] {
 		*:nth-of-type(4n+1) { --layout-ga: auto / span 2; }
 		*:nth-of-type(4n+2) { --layout-ga: span 2 / auto; }
@@ -95,19 +82,9 @@
 		*:nth-of-type(4n+1),
 		*:nth-of-type(4n+3) { --layout-ga: span 2 / auto; } 
 	}
-	lay-out[xxl="masonry(2sm:1lg-v:2sm)"] {
-		*:nth-of-type(5n+3) { --layout-ga: span 2 / auto; } 
-	}
-	lay-out[xxl="masonry(1lg-v:2sm:2sm)"] {
-		*:nth-of-type(5n+1) { --layout-ga: span 2 / auto; } 
-	}
-	lay-out[xxl="masonry(1lg-h:2lg-v:2sm)"],
-	lay-out[xxl="masonry(2lg-v:1lg:2sm)"],
-	lay-out[xxl="masonry(1lg-v:1lg:1lg-v:2sm)"] {
-		--layout-gtc: repeat(6, 1fr);
-		--_ga: initial;
-		& > * { --layout-ga: auto; }
-	}
+	lay-out[xxl="masonry(2sm:1lg-v:2sm)"] *:nth-of-type(5n+3) { --layout-ga: span 2 / auto; }
+	lay-out[xxl="masonry(1lg-v:2sm:2sm)"] *:nth-of-type(5n+1) { --layout-ga: span 2 / auto; }
+
 	lay-out[xxl="masonry(1lg-h:2lg-v:2sm)"] {
 		*:nth-of-type(5n+1) { --layout-ga: auto / span 2; }
 		*:nth-of-type(5n+2),
