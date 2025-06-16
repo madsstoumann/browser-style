@@ -4,12 +4,12 @@
 	lay-out[xl="bento(fixed-6a)"] {
 		--layout-gtc: repeat(10, 1fr);
 		--layout-gtr: repeat(5, 1fr);
-		*:nth-of-type(6n+1) { --layout-ga: span 2 / span 3; }
-		*:nth-of-type(6n+2) { --layout-ga: span 4 / span 4; }
-		*:nth-of-type(6n+3) { --layout-ga: span 3 / span 3; }
-		*:nth-of-type(6n+4) { --layout-ga: span 3 / span 3; }
-		*:nth-of-type(6n+5) { --layout-ga: span 1 / span 4; }
-		*:nth-of-type(6n+6) { --layout-ga: span 2 / span 3; }
+		*:nth-of-type(6n+1) { --layout-ga: span 2 / span 3; } /* 1 / 1 / 3 / 4  */
+		*:nth-of-type(6n+2) { --layout-ga: span 4 / span 4; } /* 1 / 4 / 5 / 8  */
+		*:nth-of-type(6n+3) { --layout-ga: span 3 / span 3; } /* 1 / 8 / 4 / 11 */
+		*:nth-of-type(6n+4) { --layout-ga: span 3 / span 3; } /* 3 / 1 / 7 / 4  */
+		*:nth-of-type(6n+5) { --layout-ga: span 1 / span 4; } /* 5 / 4 / 6 / 8  */
+		*:nth-of-type(6n+6) { --layout-ga: span 2 / span 3; } /* 4 / 8 / 6 / 11 */
 		*:nth-of-type(n+7) { display: none; }
 	}
 
