@@ -7,16 +7,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Layout using CSS container queries">
 	<link rel="stylesheet" href="../index.css">
-	<link rel="stylesheet" href="../css/demo.css">
+	<link rel="stylesheet" href="../demo/demo.css">
 </head>
 <body>
 
-	<h2>Asymmetrical</h2>
+	<h1>Asymmetrical</h1>
 
 	<p>
-		Asymmetrical layouts do not repeat like <code>column()</code>, <code>ratio()</code> and <code>masonry()</code> layouts. <br>
-		If you add more items than the layout can handle, it will be hidden.
+		These layouts use <strong>fixed patterns</strong> where the number of items is predetermined and the layout adapts to a specific arrangement. Unlike <strong>columns()</strong>, <strong>ratios()</strong> and non-fixed <strong>bento()</strong> layouts which repeat patterns, these asymmetrical layouts do not repeat.<br>
+		If you add more items than the layout can handle, they will be hidden.
 	</p>
+
+	<h2>2 Items</h2>
 
 	<section>
 		<h3>Asymmetrical Left Right</h3>
@@ -54,6 +56,8 @@
 			<content-item repeat></content-item>
 		</lay-out>
 	</section>
+
+	<h2>3 Items</h2>
 
 	<section>
 		<h3>Asymmetrical Top Left &gt; Bottom Right</h3>

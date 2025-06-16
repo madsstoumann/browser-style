@@ -1,14 +1,14 @@
 @layer layout.base, layout.reset, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.overflow, layout.animations;
 
-@import url("css/xs.css") layer(layout.xs);
-@import url("css/sm.css") layer(layout.sm);
-@import url("css/md.css") layer(layout.md);
-@import url("css/lg.css") layer(layout.lg);
-@import url("css/xl.css") layer(layout.xl);
-@import url("css/xxl.css") layer(layout.xxl);
+@import url("modules/xs.css") layer(layout.xs);
+@import url("modules/sm.css") layer(layout.sm);
+@import url("modules/md.css") layer(layout.md);
+@import url("modules/lg.css") layer(layout.lg);
+@import url("modules/xl.css") layer(layout.xl);
+@import url("modules/xxl.css") layer(layout.xxl);
 
-@import url("css/animations.css") layer(layout.animations);
-@import url("css/overflow.css") layer(layout.overflow);
+@import url("modules/animations.css") layer(layout.animations);
+@import url("modules/overflow.css") layer(layout.overflow);
 
 @layer layout.base {
 	lay-out {
@@ -27,8 +27,6 @@
 		color: var(--layout-c);
 		column-gap: var(--layout-colmg);
 		contain: layout inline-size;
-		container-name: --layout;
-		container-type: inline-size;
 		display: grid;
 		grid-auto-flow: row dense;
 		grid-template-columns: var(--layout-gtc);
@@ -58,13 +56,10 @@
 				max(var(--layout-p, 0), var(--_pi) * var(--_E, 1));
 		}
 	}
-
-	html {
-		container-name: --root;
-		container-type: inline-size;
-		interpolate-size: allow-keywords;
-	}
-
+	/*
+		If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
+		and wrap a container around the layout, with a `data-layout-wrapper` attribute
+	*/
 	[data-layout-wrapper] {
 		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-bleed-mw, 100cqw) / 2);
 	}

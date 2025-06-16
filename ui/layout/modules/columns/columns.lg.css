@@ -1,0 +1,7 @@
+@media (min-width: 720px) {
+	lay-out[lg="columns(2)"] { --layout-gtc: repeat(2, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(3)"] { --layout-gtc: repeat(3, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(4)"] { --layout-gtc: repeat(4, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(5)"] { --layout-gtc: repeat(5, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+	lay-out[lg="columns(6)"] { --layout-gtc: repeat(6, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
+}

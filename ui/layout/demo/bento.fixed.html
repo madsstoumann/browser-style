@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Bento</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Layout using CSS container queries">
+	<link rel="stylesheet" href="../index.css">
+	<link rel="stylesheet" href="../demo/demo.css">
+</head>
+<body>
+	<h1>Bento: Fixed Patterns</h1>
+	<p>These layouts use <strong>fixed patterns</strong> where the number of items is predetermined and the layout adapts to a specific arrangement.<br>
+		If you add more items than the layout can handle, they will be hidden.</p>
+
+	<h2>6 Items</h2>
+	<section>
+		<h3>Bento 1lg:1xl:1md:1md:1sm:1lg-fixed</h3>
+		<small>1 large + 1 extra-large + 1 medium + 1 medium + 1 small + 1 large in a fixed 6-item pattern</small>
+		<code>&lt;lay-out xl="bento(1lg:1xl:1md:1md:1sm:1lg-fixed)"&gt;</code>
+		<lay-out xl="bento(1lg:1xl:1md:1md:1sm:1lg-fixed)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bento: Varied Layout (Fixed)</h3>
+		<small>1 extra-large + 1 medium + 1 small + 1 large + 1 extra-large horizontal + 1 large in a fixed 6-item pattern</small>
+		<code>&lt;lay-out xl="bento(1xl:1md:1sm:1lg:1xl-h:1lg-fixed)"&gt;</code>
+		<lay-out sm="" xl="bento(1xl:1md:1sm:1lg:1xl-h:1lg-fixed)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<h2>7 Items</h2>
+	<section>
+		<h3>Bento: Vertical Emphasis (Fixed)</h3>
+		<small>Large vertical items with 1 small and 1 extra-large vertical in a fixed 7-item pattern</small>
+		<code>&lt;lay-out xl="bento(1lg-v:1lg-v:1lg-v:1sm:1xl-v:1lg-v-fixed)"&gt;</code>
+		<lay-out sm="" xl="bento(1lg-v:1lg-v:1lg-v:1sm:1xl-v:1lg-v-fixed)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+		<section>
+		<h3>Bento: Complex Grid (Fixed)</h3>
+		<small>Complex layout with 1 extra-extra-large + mixed horizontals and verticals in a fixed 7-item pattern</small>
+		<code>&lt;lay-out xl="bento(1xxl:1lg-h:1xl-v:1lg:1lg-h:1lg:1xl-h-fixed)"&gt;</code>
+		<lay-out sm="" xl="bento(1xxl:1lg-h:1xl-v:1lg:1lg-h:1lg:1xl-h-fixed)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+	<section>
+		<h3>Bento: Simple Pattern (Fixed)</h3>
+		<small>1 large vertical + 1 large horizontal + 4 small items in a fixed 9-item pattern</small>
+		<code>&lt;lay-out xl="bento(1lg-v:1lg-h:4sm-fixed)"&gt;</code>
+		<lay-out sm="" xl="bento(1lg-v:1lg-h:4sm-fixed)" col-gap="1em">
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+			<content-item></content-item>
+		</lay-out>
+	</section>
+
+</body>
+</html>

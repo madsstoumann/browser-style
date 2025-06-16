@@ -1,0 +1,7 @@
+@media (min-width: 380px) {
+	lay-out[sm*="bento"] { --_ga: initial; & > * { --layout-ga: auto; } }
+	lay-out[sm="bento(2sm:1lg-h)"] *:nth-of-type(3n+3) { --layout-ga: auto / span 2; } 
+	lay-out[sm="bento(1lg-h:2sm)"] *:nth-of-type(3n+1) { --layout-ga: auto / span 2; } 
+	lay-out[sm="bento(1lg-h:4sm)"] *:nth-of-type(5n+1) { --layout-ga: auto / span 2; }
+	lay-out[sm="bento(4sm:1lg-h)"] *:nth-of-type(5n+5) { --layout-ga: auto / span 2; }
+}

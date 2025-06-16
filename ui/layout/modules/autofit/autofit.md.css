@@ -1,0 +1,12 @@
+@media (min-width: 540px) {
+	lay-out[md="autofill"] {
+		--layout-gtc: repeat(auto-fill, minmax(min(10rem, 100%), 1fr));
+		--_ga: auto;
+		& > * { --layout-ga: auto; }
+	}
+	lay-out[md="autofit"] { 
+		--layout-gtc: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+		--_ga: auto; 
+		& > * { --layout-ga: auto; }
+	}
+}

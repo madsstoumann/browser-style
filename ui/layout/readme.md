@@ -11,7 +11,7 @@ The system defines standard breakpoints: `xs`, `sm`, `md`, `lg`, `xl`, and `xxl`
 **Example:**
 
 ```html
-<lay-out sm="columns(2)" md="masonry(1lg:2sm-right)" lg="columns(4)">
+<lay-out sm="columns(2)" md="bento(1lg:2sm-right)" lg="columns(4)">
   <content-item>1</content-item>
   <content-item>2</content-item>
   <content-item>3</content-item>
@@ -34,8 +34,8 @@ The system supports several layout types, each configurable via an attribute val
     *   Example: `md="columns(3)"`
 *   **Ratio:** `ratio(<aspect_ratio_definition>)` - Arranges items to maintain a specific aspect ratio.
     *   Example: `lg="ratio(1:1)"` (for square items, a common aspect ratio interpretation), `sm="ratio(50x4:100)"` (example from demo files, illustrating support for complex definitions).
-*   **Masonry:** `masonry(<pattern>)` - Creates a Pinterest-like masonry layout. The pattern defines the column spans of items in a repeating sequence.
-    *   Example: `md="masonry(1lg:2sm-right)"` means the first item spans 1 column, the second spans 2, and this pattern repeats.
+*   **Masonry:** `bento(<pattern>)` - Creates a Pinterest-like masonry layout. The pattern defines the column spans of items in a repeating sequence.
+    *   Example: `md="bento(1lg:2sm-right)"` means the first item spans 1 column, the second spans 2, and this pattern repeats.
 *   **Asymmetrical:** `asym(<type>)` - Creates various asymmetrical layouts.
     *   Examples: `asym(left-right)`, `asym(top-bottom)`. These layouts do not typically repeat items beyond their defined structure.
 
@@ -95,7 +95,7 @@ The layout system uses CSS Custom Properties `--_ga` and `--layout-ga` to contro
 *   **Purpose:** `--_ga` is a custom property set on the `<lay-out>` element itself. It determines a default `grid-area` for *all* direct children.
 *   **Default Behavior:** By default, `--_ga` is `initial`. This means the `<lay-out>` container does *not* enforce a uniform `grid-area` on its children through this property. Instead, children rely on the `--layout-ga` property (see below) or their default grid flow.
 *   **Usage:** Specific layout types (e.g., a simple column layout like `columns="2"`) might set `--_ga: auto;` on the `<lay-out>` element. This ensures all children flow naturally into the grid cells.
-*   **Resetting is Crucial:** If a layout at a smaller breakpoint (e.g., `sm="columns(2)"` which sets `--_ga: auto`) is overridden by a more complex layout at a larger breakpoint (e.g., `md="masonry(1lg:2sm-right)"` which requires child-specific `grid-area`s), the `md` layout rules *must* reset `--_ga` back to `initial` on the `<lay-out>` element. Otherwise, the `--_ga: auto` from the `sm` breakpoint would persist and override the child-specific `--layout-ga` rules needed for the masonry layout.
+*   **Resetting is Crucial:** If a layout at a smaller breakpoint (e.g., `sm="columns(2)"` which sets `--_ga: auto`) is overridden by a more complex layout at a larger breakpoint (e.g., `md="bento(1lg:2sm-right)"` which requires child-specific `grid-area`s), the `md` layout rules *must* reset `--_ga` back to `initial` on the `<lay-out>` element. Otherwise, the `--_ga: auto` from the `sm` breakpoint would persist and override the child-specific `--layout-ga` rules needed for the masonry layout.
 
 ### Child-Specific Control (`--layout-ga`)
 
