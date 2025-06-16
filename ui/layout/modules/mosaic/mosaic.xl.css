@@ -1,5 +1,5 @@
 @media (min-width: 920px) {
-	lay-out[xlg*="mosaic"] { --_ga: initial; & > * { --layout-ga: auto; } }
+	lay-out[xl*="mosaic"] { --_ga: initial; & > * { --layout-ga: auto; } }
 	lay-out[xl="mosaic(scatter)"] {
 		--layout-gtc: repeat(12, 1fr);
 		--layout-gtr: repeat(12, 1fr);

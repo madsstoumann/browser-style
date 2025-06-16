@@ -16,7 +16,6 @@ content-item {
 	&:nth-of-type(11) { --bg: lightgray; }
 	&:nth-of-type(12) { --bg: lightblue; }
 	&[repeat] {
-		/* display: none; */
 		filter: grayscale(95%) brightness(.9);
 	}
 }
@@ -24,8 +23,7 @@ lay-out {
 	transition: grid-template-columns 0.35s ease;
 }
 
-
-lay-out[xl*="-fixed"] content-item { min-block-size: 8rem; }
+lay-out[xl*="fixed-"] content-item { min-block-size: 8rem; }
 lay-out[xl*="mosaic"] content-item { min-block-size: 8rem; }
 
 html {
