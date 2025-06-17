@@ -2,6 +2,41 @@
 
 This document provides a technical overview of the `@browser.style/layout` system.
 
+## Configuration
+
+The layout system now uses a modular architecture for better flexibility and performance:
+
+### Quick Start
+```css
+/* Basic configuration - import the main index.css */
+@import url("path/to/layout/index.css");
+```
+
+### Custom Configuration
+For more control, create your own configuration file:
+
+```css
+/* Only import the modules you need */
+@layer layout.base, layout.reset, layout.sm, layout.md, layout.lg;
+
+@import url("path/to/layout/modules/base.css");
+@import url("path/to/layout/modules/sm.css") layer(layout.sm);
+@import url("path/to/layout/modules/md.css") layer(layout.md);
+@import url("path/to/layout/modules/lg.css") layer(layout.lg);
+
+/* Add project-specific defaults */
+:root {
+  --layout-default-gap: 1.5rem;
+  --layout-max-width: 1200px;
+}
+```
+
+### Available Modules
+- `base.css` - Core lay-out component (required)
+- `xs.css`, `sm.css`, `md.css`, `lg.css`, `xl.css`, `xxl.css` - Breakpoint modules
+- `animations.css` - Layout transition animations
+- `overflow.css` - Overflow handling utilities
+
 ## Core Concept: Responsive Layouts via Attributes
 
 The layout system is built around the `<lay-out>` custom element. Its primary function is to enable developers to define different visual layouts for various viewport sizes (breakpoints) using simple HTML attributes.
