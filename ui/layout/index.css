@@ -36,6 +36,7 @@
 		max-inline-size: var(--layout-mw);
 		padding: var(--layout-p);
 		row-gap: var(--layout-rg);
+		width: 100%;
 
 		& > * { grid-area: var(--_ga, var(--layout-ga, auto)); }
 
