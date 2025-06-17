@@ -1,5 +1,6 @@
 @layer layout.base, layout.reset, layout.xs, layout.sm, layout.md, layout.lg, layout.xl, layout.xxl, layout.overflow, layout.animations;
 
+/* TODO: Move breakpoints outside this module */
 @import url("modules/xs.css") layer(layout.xs);
 @import url("modules/sm.css") layer(layout.sm);
 @import url("modules/md.css") layer(layout.md);

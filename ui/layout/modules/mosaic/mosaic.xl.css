@@ -16,7 +16,6 @@
 
 	lay-out[xl="mosaic(hex)"] {
 		--layout-gtc: repeat(12, 1fr);
-		/* --layout-gtr: repeat(12, 1fr); */
 		& > * {
 			aspect-ratio: cos(30deg);
 			clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
@@ -29,5 +28,20 @@
 		& *:nth-of-type(8n+6) { --layout-ga: 7 / 5 / 11 / 9; }
 		& *:nth-of-type(8n+7) { --layout-ga: 7 / 1 / 11 / 5; }
 		& *:nth-of-type(8n+8) { --layout-ga: 7 / 9 / 11 / 13; }
+	}
+
+		lay-out[sm*="mosaic"] { --_ga: initial; & > * { --layout-ga: auto; } }
+
+		lay-out[sm="mosaic(photo)"] {
+		--layout-bg: light-dark(#333, #EEE);
+		--layout-colmg: 2px;
+		--layout-gtc: repeat(5, 1fr);
+		--layout-p: var(--layout-colmg);
+		grid-auto-flow: dense;
+		& > * { aspect-ratio: 1 / 1; }
+		& *:nth-of-type(11n+1) { --layout-ga: span 3 / span 3; }
+		& *:nth-of-type(11n+3) { --layout-ga: span 2 / span 2; }
+		& *:nth-of-type(11n+6) { --layout-ga: span 2 / span 2; }
+		& *:nth-of-type(11n+9) { --layout-ga: span 2 / span 2; }
 	}
 }
