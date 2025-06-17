@@ -20,11 +20,11 @@
 			[bleed] & {
 				margin-inline: min(
 					-1 * var(--mega-menu-margin-inline),
-					var(--mega-menu-max-width) / 2 - 50cqw
+					var(--mega-menu-max-width) / 2 - 50cqi
 				);
 				padding-inline: max(
 					var(--mega-menu-margin-inline),
-					calc((100cqw - var(--mega-menu-max-width)) / 2)
+					calc((100cqi - var(--mega-menu-max-width)) / 2)
 				);
 			}
 		}
@@ -38,15 +38,23 @@
 			}
 		}
 		[data-menu="view"] {
+			border: 0;
 			height: 100svh;
-			inset-block: 0;
-			inset-inline: 0 calc(100vw - var(--mega-menu-view-width));
-			position: fixed;
-			translate: calc(0px - var(--mega-menu-view-width));
+			inset: 0 auto 0 0;
 			width: var(--mega-menu-view-width);
+
+			@starting-style {
+				&:popover-open {
+					translate: -100% 0;
+				}
+			}
 			[mobile-view-entry="right"] & {
-				inset-inline: calc(100vw - var(--mega-menu-view-width)) 0;
-				translate: var(--mega-menu-view-width);
+				inset: 0 0 0 auto;
+				@starting-style {
+					&:popover-open {
+						translate: 100% 0;
+					}
+				}
 			}
 		}
 
@@ -57,8 +65,11 @@
 				padding-block: var(--mega-menu-content-pb, 1lh);
 				position: absolute;
 				width: 100%;
-				/* SAFARI: */
-				/* var(--mega-menu-max-width) */
+
+				/* Safari Fix */
+				@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+					width: calc(var(--mega-menu-max-width) - 1rem);
+				}
 				details[data-menu="section"]::details-content {
 					content-visibility: visible;
 				}
@@ -67,7 +78,7 @@
 					margin-inline: auto;
 					padding-inline: max(
 						var(--mega-menu-panel-pi, var(--mega-menu-margin-inline)),
-						calc((100cqw - var(--mega-menu-max-width)) / 2)
+						calc((100cqi - var(--mega-menu-max-width)) / 2)
 					);
 				}
 			}
@@ -78,18 +89,6 @@
 			}
 			[data-menu="trigger"] { display: none; }
 			[data-menu='view'] { display: contents; }
-		}
-
-		[data-menu="trigger"] input {
-			clip-path: inset(50%);
-			height: 1px;
-			margin: -1px;
-			overflow: clip;
-			position: absolute;
-			width: 1px;
-		}
-		&:has([data-menu="trigger"] input:checked) [data-menu='view'] {
-			translate: 0;
 		}
 	}
 }

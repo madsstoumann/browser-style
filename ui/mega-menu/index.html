@@ -12,7 +12,7 @@
 	</head>
 	<body>
 
-		<mega-menu bleed>
+		<mega-menu bleed mobile-view-entry="left">
 
 			<!-- data-menu="skip": Accessibility skip link that's hidden off-screen but appears when focused -->
 			<a href="#main" data-menu="skip">Skip to main content</a>
@@ -21,15 +21,18 @@
 			<header data-menu="menubar">
 				<a href="/">BRAND</a>
 				<!-- data-menu="trigger": Mobile menu toggle button with hidden checkbox for state management -->
-				<label aria-label="Open menu" data-menu="trigger">
+				<!-- <label aria-label="Open menu" data-menu="trigger">
 					<input type="checkbox">
 					☰
-				</label>
+				</label> -->
+				<button type="button" aria-label="Toggle mobile navigation" data-menu="trigger" popovertarget="menu-view">
+					☰
+				</button>
 
 				<!-- data-menu="view": Viewport container that slides in on mobile and contains navigation on desktop -->
-				<div data-menu="view">
+				<div data-menu="view" id="menu-view" popover>
 					<!-- data-menu="nav": Navigation container that flexes horizontally on desktop -->
-					<nav aria-label="Main navigation" data-menu="nav">
+					<nav aria-label="Main" data-menu="nav">
 						<!-- data-menu="topic": Top-level menu items that contain dropdown content -->
 						<details data-menu="topic" name="main-menu">
 							<summary>Products</summary>
