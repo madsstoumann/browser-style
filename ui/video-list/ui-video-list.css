@@ -1,5 +1,5 @@
 @layer bs-component {
-	@scope(.ui-video-list) {
+	:where(.ui-video-list) {
 		all: unset;
 		display: grid;
 		gap: 1rem;
@@ -7,18 +7,6 @@
 		grid-template-rows: repeat(4, auto);
 		list-style: none;
 
-		button {
-			all: unset;
-			color: #0000;
-			inset: 0;
-			position: absolute;
-			&:is(:focus-visible,:hover) {
-				outline: 2px solid #DDD;
-				outline-offset: .5rem;
-			}
-		}
-		h3 { margin: 0; }
-		img { width: 100%; }
 		li {
 			display: grid;
 			gap: .5lh;
@@ -27,33 +15,83 @@
 			justify-items: start;
 			position: relative;
 		}
+		h3 { margin: 0; }
+		img, video { width: 100%; }
 		time {
 			font-weight: 500;
 			text-transform: uppercase;
 		}
-		video[popover] {
+
+		[popover] {
+			background: #0000;
 			border: 0;
+			height: 100svh;
 			opacity: 0;
 			transition:
 				display 0.5s allow-discrete,
 				overlay 0.5s allow-discrete,
-				opacity 0.5s,
-				scale 0.5s;
-			width: 100%;
-
+				opacity 0.5s;
+			width: 100vw;
 			&::backdrop {
 				backdrop-filter: blur(3px);
 				background: #000C;
 			}
 			&:popover-open {
+				display: grid;
 				opacity: 1;
-				scale: 1;
+				video { scale: 1; }
+			}
+			video {
+				scale: 0;
+				transition: scale 0.5s;
 			}
 			@starting-style {
 				&:popover-open {
 					opacity: 0;
-					scale: 0;
+					video { scale: 0; }
 				}
+			}
+		}
+		[popovertargetaction="hide"],
+		[popovertargetaction="show"]::after {
+			aspect-ratio: 1;
+			background: #EEE;
+			border: 0;
+			border-radius: 50%;
+			color: #333;
+			font-family: system-ui, sans-serif;
+			font-size: 2rem;
+			place-content: center;
+			transition: background 0.2s ease;
+			width: 3rem;
+			&:is(:hover, :focus-visible) {
+				background: #CCC;
+			}
+		}
+		[popovertargetaction="hide"] {
+			display: inline grid;
+			place-self: start end;
+			translate: -1rem 1rem;
+		}
+		[popovertargetaction="show"] {
+			all: unset;
+			color: #0000;
+			display: grid;
+			inset: 0;
+			position: absolute;
+			&::after {
+				content: "▶";
+				display: inline grid;
+				grid-area: 1 / 1;
+				justify-self: center;
+				align-self: center;
+				opacity: 0;
+				transition: background 0.2s ease, opacity 0.5s ease;
+			}
+			&:is(:focus-visible, :hover) {
+				outline: 2px solid #DDD;
+				outline-offset: .5rem;
+				&::after { opacity: .75; }
 			}
 		}
 	}
