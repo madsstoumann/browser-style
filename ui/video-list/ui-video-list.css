@@ -89,6 +89,7 @@
 				transition: background 0.2s ease, opacity 0.5s ease;
 			}
 			&:is(:focus-visible, :hover) {
+				background: #0000;
 				outline: 2px solid #DDD;
 				outline-offset: .5rem;
 				&::after { opacity: .75; }
