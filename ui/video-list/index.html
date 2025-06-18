@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Video List</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/core.css">
+	<link rel="stylesheet" href="ui-video-list.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Video List</h2>
+	<p>
+		A responsive video list component that displays video thumbnails in a grid layout. Each video opens in a popover modal when clicked, with automatic play/pause functionality.
+	</p>
+
+	<ul class="ui-video-list">
+		<li>
+			<img src="https://fastly.picsum.photos/id/9/320/180.jpg?hmac=3_PVsuLBGhWbsW8t-hB7nvQ7BOBrkqwYeEqQnUK6Nl4" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="320" height="180" loading="lazy" decoding="async">
+			<time datetime="2024-12-15T10:30:00Z">Dec 15, 2024</time>
+			<h3>Peaceful River Journey</h3>
+			<button type="button" popovertarget="video-1">Open video in new window</button>
+			<video id="video-1" popover preload="metadata" src="https://assets.stoumann.dk/video/river.mp4" controls></video>
+		</li>
+		<li>
+			<img src="https://fastly.picsum.photos/id/79/320/180.jpg?hmac=49A2dpGcAe69cOywjoVhy3mUCQmlifKUZr8JD2H9IV8" alt="Image of a mountainside in grayscale" width="320" height="180" loading="lazy" decoding="async">
+			<time datetime="2025-03-22T14:45:00Z">Mar 22, 2025</time>
+			<h3>Big Buck Bunny Adventures</h3>
+			<button type="button" popovertarget="video-2">Open video in new window</button>
+			<video id="video-2" popover preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" controls muted></video>
+		</li>
+		<li>
+			<img src="https://fastly.picsum.photos/id/89/320/180.jpg?hmac=Mzkn52wP19ZMV84c_yeTan7c7EjQk-02JJyWC-PLbj0" alt="Image of a lush green field" width="320" height="180" loading="lazy" decoding="async">
+			<time datetime="2025-06-08T09:15:00Z">Jun 8, 2025</time>
+			<h3>Elephants Dream Documentary</h3>
+			<button type="button" popovertarget="video-3">Open video in new window</button>
+			<video id="video-3" popover preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" controls muted></video>
+		</li>
+	</ul>
+
+	<script>
+		document.querySelectorAll('.ui-video-list video[popover]').forEach(video => {
+			video.addEventListener('toggle', (event) => {
+				if (event.newState === 'open') {
+					video.play();
+				} else if (event.newState === 'closed') {
+					video.pause();
+					video.currentTime = 0;
+				}
+			});
+		});
+	</script>
+</body>
+</html>
