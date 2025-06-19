@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="index.css">
 		<link rel="stylesheet" href="scroll.css">
 		<link rel="stylesheet" href="demo.css">
+		<link rel="stylesheet" href="../icon/index.css">
 	</head>
 	<body>
 
@@ -20,13 +21,8 @@
 			<!-- data-menu="menubar": Main container that holds brand (logo), trigger for mobile navigation, and navigation -->
 			<header data-menu="menubar">
 				<a href="/">BRAND</a>
-				<!-- data-menu="trigger": Mobile menu toggle button with hidden checkbox for state management -->
-				<!-- <label aria-label="Open menu" data-menu="trigger">
-					<input type="checkbox">
-					☰
-				</label> -->
 				<button type="button" aria-label="Toggle mobile navigation" data-menu="trigger" popovertarget="menu-view">
-					☰
+					<ui-icon type="burger-menu" size="xl"></ui-icon>
 				</button>
 
 				<!-- data-menu="view": Viewport container that slides in on mobile and contains navigation on desktop -->
@@ -35,12 +31,12 @@
 					<nav aria-label="Main" data-menu="nav">
 						<!-- data-menu="topic": Top-level menu items that contain dropdown content -->
 						<details data-menu="topic" name="main-menu">
-							<summary>Products</summary>
+							<summary>Products<ui-icon type="chevron right"></ui-icon></summary>
 							<!-- data-menu="content": Dropdown content area that appears below menu items -->
 							<div data-menu="content">
 								<!-- data-menu="section": Sub-sections within dropdown content that can be nested -->
 								<details data-menu="section">
-									<summary>Smartphones</summary>
+									<summary>Smartphones<ui-icon type="plus-minus"></ui-icon></summary>
 									<div role="group">
 										<a href="/products/smartphones/iphone">iPhone</a>
 										<a href="/products/smartphones/android">Android</a>

@@ -27,11 +27,7 @@ mega-menu {
 		transition: translate var(--mega-menu-view-trsdu, 0.2s)
 			var(--mega-menu-view-trstf, cubic-bezier(0.4, 0, 0.2, 1));
 	}
-	[data-menu="content"] {
-		background: Canvas;
-		box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.12);
-		columns: 2;
-	}
+
 
 	[data-menu="nav"] > a, 
 	[data-menu="topic"] > summary,
@@ -49,15 +45,30 @@ mega-menu {
 		text-decoration: underline;
 	}
 
-	[data-menu='section'] {
-		margin-block-end: 1lh;
-		summary { font-weight: 700; }
-	}
 	:is(
 		[data-menu='section'],
 		[data-menu="topic"]) summary {
 		list-style: none;
+		        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border-block-end: 1px dotted #CCC; */
 	}
+
+
+	@media (min-width: 720px) {
+		[data-menu="content"] {
+			background: Canvas;
+			box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.12);
+			columns: 2;
+		}
+		ui-icon { display: none; }
+		[data-menu='section'] {
+			margin-block-end: 1lh;
+			summary { font-weight: 700; }
+		}
+	}
+
 }
 mega-menu:not([bleed]) {
 	:is([data-menu="content"], [data-menu="menubar"]) { padding-inline: 1rem; }
