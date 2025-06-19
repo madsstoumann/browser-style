@@ -19,43 +19,54 @@
 
 	<ul class="ui-video-list">
 		<li>
-			<img src="https://fastly.picsum.photos/id/9/320/180.jpg?hmac=3_PVsuLBGhWbsW8t-hB7nvQ7BOBrkqwYeEqQnUK6Nl4" alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="320" height="180" loading="lazy" decoding="async">
+			<img src="https://fastly.picsum.photos/id/9/320/180.jpg?hmac=3_PVsuLBGhWbsW8t-hB7nvQ7BOBrkqwYeEqQnUK6Nl4"
+				alt="Image of a desk with a laptop, a glass of water and a mobile phone" width="320" height="180" loading="lazy"
+				decoding="async">
 			<time datetime="2024-12-15T10:30:00Z">Dec 15, 2024</time>
 			<h3>Peaceful River Journey</h3>
 			<button type="button" popovertarget="video-1" popovertargetaction="show">Open video in modal overlay</button>
 			<div id="video-1" popover>
-				<button type="button" popovertarget="video-1" popovertargetaction="hide" aria-label="Close and hide the modal overlay">✕</button>
-				<video preload="metadata" src="https://assets.stoumann.dk/video/river.mp4" controls></video>
+				<button type="button" popovertarget="video-1" popovertargetaction="hide"
+					aria-label="Close and hide the modal overlay">✕</button>
+				<video preload="metadata" src="https://assets.stoumann.dk/video/river.mp4" controls data-autoplay playsinline></video>
 			</div>
 		</li>
 		<li>
-			<img src="https://fastly.picsum.photos/id/79/320/180.jpg?hmac=49A2dpGcAe69cOywjoVhy3mUCQmlifKUZr8JD2H9IV8" alt="Image of a mountainside in grayscale" width="320" height="180" loading="lazy" decoding="async">
+			<img src="https://fastly.picsum.photos/id/79/320/180.jpg?hmac=49A2dpGcAe69cOywjoVhy3mUCQmlifKUZr8JD2H9IV8"
+				alt="Image of a mountainside in grayscale" width="320" height="180" loading="lazy" decoding="async">
 			<time datetime="2025-03-22T14:45:00Z">Mar 22, 2025</time>
 			<h3>Big Buck Bunny Adventures</h3>
 			<button type="button" popovertarget="video-2" popovertargetaction="show">Open video in modal overlay</button>
 			<div id="video-2" popover>
-				<button type="button" popovertarget="video-2" popovertargetaction="hide" aria-label="Close and hide the modal overlay">✕</button>
-				<video preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" controls muted></video>
+				<button type="button" popovertarget="video-2" popovertargetaction="hide"
+					aria-label="Close and hide the modal overlay">✕</button>
+				<video preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+					controls muted data-autoplay playsinline></video>
 			</div>
 		</li>
 		<li>
-			<img src="https://fastly.picsum.photos/id/89/320/180.jpg?hmac=Mzkn52wP19ZMV84c_yeTan7c7EjQk-02JJyWC-PLbj0" alt="Image of a lush green field" width="320" height="180" loading="lazy" decoding="async">
+			<img src="https://fastly.picsum.photos/id/89/320/180.jpg?hmac=Mzkn52wP19ZMV84c_yeTan7c7EjQk-02JJyWC-PLbj0"
+				alt="Image of a lush green field" width="320" height="180" loading="lazy" decoding="async">
 			<time datetime="2025-06-08T09:15:00Z">Jun 8, 2025</time>
 			<h3>Elephants Dream Documentary</h3>
 			<button type="button" popovertarget="video-3" popovertargetaction="show">Open video in modal overlay</button>
 			<div id="video-3" popover>
-				<button type="button" popovertarget="video-3" popovertargetaction="hide" aria-label="Close and hide the modal overlay">✕</button>
-				<video preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" controls muted></video>
+				<button type="button" popovertarget="video-3" popovertargetaction="hide"
+					aria-label="Close and hide the modal overlay">✕</button>
+				<video preload="metadata" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+					controls muted data-autoplay data-reset playsinline></video>
 			</div>
 		</li>
 	</ul>
 
 	<script>
-		document.querySelectorAll('.ui-video-list div[popover]').forEach(popover => {
-			const video = popover.querySelector('video');
-			if (!video) return;
-			popover.addEventListener('toggle', ({ newState }) => {
-				newState === 'open' ? video.play() : (video.pause(), video.currentTime = 0);
+		document.querySelectorAll('.ui-video-list div[popover]').forEach(elm => {
+			const v = elm.querySelector('video');
+			if (!v) return;
+			elm.addEventListener('toggle', ({ newState }) => {
+				newState === 'open' 
+					? 'autoplay' in v.dataset && v.play()
+					: (v.pause(), 'reset' in v.dataset && (v.currentTime = 0));
 			});
 		});
 	</script>
