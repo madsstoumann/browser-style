@@ -1,25 +1,43 @@
 @layer bs-component {
 	:where(.ui-video-list) {
+		--ui-video-list-bdrs: .25rem;
+		--ui-video-list-olo: .5rem;
+		--ui-video-list-popover-trsdu: 0.5s;
+		--ui-video-list-btn-bgc: #EEE;
+		--ui-video-list-btn-bgc-hover: #CCC;
+		--ui-video-list-btn-c: #333;
+		--ui-video-list-btn-fz: 2rem;
+		--ui-video-list-btn-w: 3rem;
+		--ui-video-list-btn-bdrs: 50%;
+		--ui-video-list-btn-trsdu: 0.2s;
+
 		all: unset;
 		display: grid;
-		gap: 1rem;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		gap: var(--ui-video-list-gap, 1rem); /* gap between items */
+		grid-template-columns: repeat(auto-fill, minmax(var(--ui-video-list-miw, 250px), 1fr));
 		grid-template-rows: repeat(4, auto);
 		list-style: none;
 
 		li {
 			display: grid;
-			gap: .5lh;
 			grid-row: span 4;
 			grid-template-rows: subgrid;
 			justify-items: start;
 			position: relative;
+			row-gap: var(--ui-video-list-rg, .5lh);
+			&:has([popovertargetaction="show"]:is(:focus-visible, :hover)) img {
+				filter: brightness(var(--ui-video-list-hover-brightness, 0.6)) contrast(var(--ui-video-list-hover-contrast, 1.2));
+			}
 		}
 		h3 { margin: 0; }
+		img {
+			border-radius: var(--ui-video-list-bdrs);
+			transition: filter var(--ui-video-list-img-trsdu, 0.2s) ease;
+		}
 		img, video { width: 100%; }
 		time {
-			font-weight: 500;
-			text-transform: uppercase;
+			color: var(--ui-video-list-time-c, GrayText);
+			font-weight: var(--ui-video-list-time-fw, 500);
 		}
 
 		[popover] {
@@ -28,9 +46,9 @@
 			height: 100svh;
 			opacity: 0;
 			transition:
-				display 0.5s allow-discrete,
-				overlay 0.5s allow-discrete,
-				opacity 0.5s;
+				display var(--ui-video-list-popover-trsdu) allow-discrete,
+				overlay var(--ui-video-list-popover-trsdu) allow-discrete,
+				opacity var(--ui-video-list-popover-trsdu);
 			width: 100vw;
 			&::backdrop {
 				backdrop-filter: blur(3px);
@@ -43,7 +61,7 @@
 			}
 			video {
 				scale: 0;
-				transition: scale 0.5s;
+				transition: scale var(--ui-video-list-popover-trsdu);
 			}
 			@starting-style {
 				&:popover-open {
@@ -55,17 +73,17 @@
 		[popovertargetaction="hide"],
 		[popovertargetaction="show"]::after {
 			aspect-ratio: 1;
-			background: #EEE;
+			background: var(--ui-video-list-btn-bgc, #EEE);
 			border: 0;
-			border-radius: 50%;
-			color: #333;
+			border-radius: var(--ui-video-list-btn-bdrs, 50%);
+			color: var(--ui-video-list-btn-c, #333);
 			font-family: system-ui, sans-serif;
-			font-size: 2rem;
+			font-size: var(--ui-video-list-btn-fz, 2rem);
 			place-content: center;
-			transition: background 0.2s ease;
-			width: 3rem;
-			&:is(:hover, :focus-visible) {
-				background: #CCC;
+			transition: background var(--ui-video-list-btn-trsdu, 0.2s) ease;
+			width: var(--ui-video-list-btn-w, 3rem);
+			&:is(:focus-visible, :hover) {
+				background: var(--ui-video-list-btn-bgc-hover, #CCC);
 			}
 		}
 		[popovertargetaction="hide"] {
@@ -75,23 +93,26 @@
 		}
 		[popovertargetaction="show"] {
 			all: unset;
+			border-radius: var(--ui-video-list-bdrs);
 			color: #0000;
 			display: grid;
 			inset: 0;
 			position: absolute;
 			&::after {
-				content: "▶";
+				/* thin space: "\2009▶" */
+				/* hairspace: */
+				content: "\200A▶";
 				display: inline grid;
 				grid-area: 1 / 1;
 				justify-self: center;
 				align-self: center;
 				opacity: 0;
-				transition: background 0.2s ease, opacity 0.5s ease;
+				transition: background var(--ui-video-list-btn-trsdu, 0.2s) ease, opacity var(--ui-video-list-show-trsdu, 0.5s) ease;
 			}
 			&:is(:focus-visible, :hover) {
 				background: #0000;
-				outline: 2px solid #DDD;
-				outline-offset: .5rem;
+				outline: var(--ui-video-list-focus-outline-w, 2px) solid var(--ui-video-list-focus-outline-c, #DDD);
+				outline-offset: var(--ui-video-list-olo);
 				&::after { opacity: .75; }
 			}
 		}
