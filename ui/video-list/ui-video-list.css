@@ -9,7 +9,7 @@
 		--ui-video-list-btn-fz: 2rem;
 		--ui-video-list-btn-w: 3rem;
 		--ui-video-list-btn-bdrs: 50%;
-		--ui-video-list-btn-trsdu: 0.2s;
+		--ui-video-list-btn-trsdu: 0.25s;
 
 		all: unset;
 		display: grid;
@@ -80,7 +80,7 @@
 			font-family: system-ui, sans-serif;
 			font-size: var(--ui-video-list-btn-fz, 2rem);
 			place-content: center;
-			transition: background var(--ui-video-list-btn-trsdu, 0.2s) ease;
+			transition: background var(--ui-video-list-btn-trsdu, 0.25s) ease;
 			width: var(--ui-video-list-btn-w, 3rem);
 			&:is(:focus-visible, :hover) {
 				background: var(--ui-video-list-btn-bgc-hover, #CCC);
@@ -107,7 +107,7 @@
 				justify-self: center;
 				align-self: center;
 				opacity: 0;
-				transition: background var(--ui-video-list-btn-trsdu, 0.2s) ease, opacity var(--ui-video-list-show-trsdu, 0.5s) ease;
+				transition: background var(--ui-video-list-btn-trsdu, 0.25s) ease, opacity var(--ui-video-list-show-trsdu, .75s) ease;
 			}
 			&:is(:focus-visible, :hover) {
 				background: #0000;
