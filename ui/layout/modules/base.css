@@ -1,16 +1,23 @@
 @layer layout.base {
 	lay-out {
+		--layout-spacing-unit: 1rem;
+
+		/* attr() */
 		--layout-bg: attr(background type(<color>), #0000);
 		--layout-bleed: attr(bleed type(<number>), 0);
 		--layout-c: attr(color type(<color>), inherit);
-		--layout-colmg: attr(col-gap type(<length> | <percentage>), 0);
+		--layout-colmg: attr(col-gap type(<length> | <percentage>), var(--layout-spacing-unit));
 		--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr);
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
-		--layout-mw: attr(max-width type(<length> | <percentage>), 100cqi);
-		--layout-p: attr(padding type(<length> | <percentage>), 0);
+		--layout-mbe: attr(space-after type(<number>), 0);
+		--layout-mbs: attr(space-before type(<number>), 0);
+		--layout-mw: attr(max-width type(<length> | <percentage>), 100vw);
+		--layout-pb: attr(padding-block type(<length> | <percentage>), 0);
+		--layout-pi: attr(padding-inline type(<length> | <percentage>), 0);
 		--layout-rg: attr(row-gap type(<length> | <percentage>), var(--layout-colmg));
-		
+
 		background: var(--layout-bg);
+		box-sizing: border-box;
 		color: var(--layout-c);
 		column-gap: var(--layout-colmg);
 		contain: layout inline-size;
@@ -18,11 +25,14 @@
 		grid-auto-flow: row dense;
 		grid-template-columns: var(--layout-gtc);
 		grid-template-rows: var(--layout-gtr);
+		margin-block-start: calc(var(--layout-mbs) * var(--layout-spacing-unit));
+		margin-block-end: calc(var(--layout-mbe) * var(--layout-spacing-unit));
 		margin-inline: auto;
 		max-inline-size: var(--layout-mw);
-		padding: var(--layout-p);
+		padding-block: var(--layout-pb);
+		padding-inline: var(--layout-pi);
 		row-gap: var(--layout-rg);
-		width: 100%;
+		width: var(--layout-w, 100%);
 
 		& > * { grid-area: var(--_ga, var(--layout-ga, auto)); }
 
@@ -33,23 +43,22 @@
 		}
 	
 		&[bleed] {
-			--_pi: calc((100cqi - var(--layout-bleed-mw, 100cqi)) / 2);
-			margin-inline: min(-1 * var(--layout-mi, 0), var(--layout-bleed-mw, 100cqi) / 2 - 50cqi);
+			--layout-w: calc(100vw - var(--layout-mi, 0));
+			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
+			margin-inline: min(-1 * var(--layout-mi, 0), var(--layout-bleed-mw, 100vw) / 2 - 50vw);
+			
 		}
 		&[bleed]:not([bleed="0"]) {
 			--_S: calc(1 + (var(--layout-bleed) / 100));
   		--_E: calc(1 - (var(--layout-bleed) / 100));
 			padding-inline: 
-				max(var(--layout-p, 0), var(--_pi) * var(--_S, 1))
-				max(var(--layout-p, 0), var(--_pi) * var(--_E, 1));
+				max(var(--layout-pi, 0), var(--_pi) * var(--_S, 1))
+				max(var(--layout-pi, 0), var(--_pi) * var(--_E, 1));
 		}
-	}
-	/*
-		If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
-		and wrap a container around the layout, with a `data-layout-wrapper` attribute
-	*/
-	[data-layout-wrapper] {
-		margin-inline: max(var(--layout-mi, 0), 50cqw - var(--layout-bleed-mw, 100cqw) / 2);
+
+		/*
+		&[width="xs"] {}
+		*/
 	}
 }
 
@@ -61,3 +70,12 @@
 		}
 	}
 }
+
+
+	/*
+		If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
+		and wrap a container around the layout, with a `data-layout-wrapper` attribute
+	*/
+	/* [data-layout-wrapper] {
+		margin-inline: max(var(--layout-mi, 0), 50vw - var(--layout-bleed-mw, 100vw) / 2);
+	} */

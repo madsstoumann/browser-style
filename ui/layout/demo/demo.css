@@ -20,7 +20,8 @@ content-item {
 	}
 }
 lay-out:not([sm*="mosaic(photo)"]) {
-	--layout-colmg: 1em;
+	--layout-colmg: 1rem;
+	--layout-rg: 1rem;
 	transition: grid-template-columns 0.35s ease;
 }
 
