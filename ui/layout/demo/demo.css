@@ -32,6 +32,16 @@ lay-out[sm*="mosaic(photo)"] content-item { min-block-size: auto; }
 html {
 	interpolate-size: allow-keywords;
 }
+:root {
+	--layout-primary-bg: hsl(220, 100%, 95%);
+	--layout-primary-c: hsl(220, 100%, 20%);
+	
+	--layout-secondary-bg: hsl(120, 50%, 95%);
+	--layout-secondary-c: hsl(120, 50%, 20%);
+	
+	--layout-tertiary-bg: hsl(30, 80%, 95%);
+	--layout-tertiary-c: hsl(30, 80%, 20%);
+}
 body {
 	--layout-bleed-mw: 1024px;
 	--layout-mi: 1rem;
@@ -56,7 +66,7 @@ h1 {
 	margin-block: 1ch 0;
 	text-box: cap alphabetic;
 }
-h2 {
+body > h2 {
 	font-weight: 500;
 	border-block: 1px dotted #999;
 

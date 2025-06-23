@@ -46,7 +46,15 @@ The system defines standard breakpoints: `xs`, `sm`, `md`, `lg`, `xl`, and `xxl`
 **Example:**
 
 ```html
-<lay-out sm="columns(2)" md="bento(1lg:2sm-right)" lg="columns(4)">
+<lay-out 
+  sm="columns(2)" 
+  md="bento(1lg:2sm-right)" 
+  lg="columns(4)"
+  theme="primary"
+  top="2"
+  bottom="3"
+  pad-v="2"
+  width="lg">
   <content-item>1</content-item>
   <content-item>2</content-item>
   <content-item>3</content-item>
@@ -58,8 +66,94 @@ In this example:
 - On **small** screens (`sm`), the content will be arranged in 2 columns.
 - On **medium** screens (`md`), the layout will switch to a 1-2 masonry configuration.
 - On **large** screens (`lg`), the items will be arranged in 4 columns.
+- The layout uses the `primary` theme for consistent branding colors.
+- It has a top margin of 2 spacing units, bottom margin of 3 units, and vertical padding of 2 units.
+- The maximum width is constrained to the `lg` breakpoint width (64rem by default).
 
 If no specific layout is defined for a breakpoint, the layout from the next smallest breakpoint is inherited. If no attributes are specified, it defaults to a single column layout.
+
+## Spacing and Layout Attributes
+
+The layout system provides intuitive spacing controls that work well for both developers and designers:
+
+### Spacing Attributes
+
+```html
+<lay-out top="4" bottom="4" pad-v="2" pad-h="3">
+  <!-- Content with spacing applied -->
+</lay-out>
+```
+
+**Available spacing attributes:**
+- `top` - Sets top margin (multiplied by `--layout-spacing-unit`, default 1rem)
+- `bottom` - Sets bottom margin (multiplied by `--layout-spacing-unit`)
+- `pad-v` - Sets vertical padding (top and bottom internal spacing)
+- `pad-h` - Sets horizontal padding (left and right internal spacing)
+
+All spacing values are unitless numbers that get multiplied by the spacing unit. To customize the base spacing unit:
+
+```css
+:root {
+  --layout-spacing-unit: 1.5rem; /* Default is 1rem */
+}
+```
+
+### Width Control
+
+Control the maximum width of layout containers with predefined breakpoint-based widths:
+
+```html
+<lay-out width="md">  <!-- 48rem max-width -->
+<lay-out width="lg">  <!-- 64rem max-width -->
+<lay-out width="xl">  <!-- 80rem max-width -->
+```
+
+**Available width values:**
+- `xs` - 20rem (320px at default font size)
+- `sm` - 30rem (480px)
+- `md` - 48rem (768px)
+- `lg` - 64rem (1024px)
+- `xl` - 80rem (1280px)
+- `xxl` - 96rem (1536px)
+
+Customize width values using CSS custom properties:
+
+```css
+:root {
+  --layout-width-lg: 1200px;
+  --layout-width-xl: 1400px;
+}
+```
+
+### Theme System
+
+Apply semantic color themes to layout containers:
+
+```html
+<lay-out theme="primary">   <!-- Blue theme -->
+<lay-out theme="secondary"> <!-- Green theme -->
+<lay-out theme="tertiary">  <!-- Orange theme -->
+```
+
+Define theme colors in your CSS:
+
+```css
+:root {
+  --layout-primary-bg: hsl(220, 100%, 95%);
+  --layout-primary-c: hsl(220, 100%, 20%);
+  
+  --layout-secondary-bg: hsl(120, 50%, 95%);
+  --layout-secondary-c: hsl(120, 50%, 20%);
+  
+  --layout-tertiary-bg: hsl(30, 80%, 95%);
+  --layout-tertiary-c: hsl(30, 80%, 20%);
+}
+```
+
+**Theme vs Direct Colors:**
+- Use `theme` for consistent semantic colors across your design system
+- Use `background` and `color` attributes for one-off custom colors
+- Direct color attributes override theme settings when both are present
 
 ## Layout Types
 

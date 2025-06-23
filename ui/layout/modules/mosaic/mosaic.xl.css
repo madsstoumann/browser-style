@@ -36,8 +36,8 @@
 		--layout-bg: light-dark(#333, #EEE);
 		--layout-colmg: 2px;
 		--layout-gtc: repeat(5, 1fr);
-		--layout-p: var(--layout-colmg);
 		grid-auto-flow: dense;
+		padding: var(--layout-colmg);
 		& > * { aspect-ratio: 1 / 1; }
 		& *:nth-of-type(11n+1) { --layout-ga: span 3 / span 3; }
 		& *:nth-of-type(11n+3) { --layout-ga: span 2 / span 2; }

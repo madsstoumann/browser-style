@@ -13,13 +13,25 @@
 
 	<h1>Advanced Demo</h1>
 
-	<lay-out sm="bento(1lg-h:2sm)" md="bento(2sm:1lg-h)" lg="bento(1lg-v:2sm)" xl="bento(2sm:1lg-v)" col-gap="1em">
+	<lay-out sm="bento(1lg-h:2sm)" md="bento(2sm:1lg-h)" lg="bento(1lg-v:2sm)" xl="bento(2sm:1lg-v)">
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
 	</lay-out>
 
-	<lay-out md="bento(1lg-v:2sm)" xl="bento(fixed-6a)" bleed="0" background="hsl(190, 60%, 90%)">
+<lay-out
+	bleed
+	bottom="4"
+	pad-h="1"
+	pad-v="2"
+	theme="primary"
+	top="4"
+	width="xl">
+	<h2>Some section headline</h2>
+	<lay-out
+		md="bento(1lg-v:2sm)"
+		xl="bento(fixed-6a)"
+		width="xl">
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
@@ -27,6 +39,7 @@
 		<content-item></content-item>
 		<content-item></content-item>
 	</lay-out>
+</lay-out>
 
 	<lay-out md="columns(3)" col-gap="1em" animation="bounce-in-right">
 		<content-item></content-item>
