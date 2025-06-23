@@ -3,20 +3,21 @@
 		--layout-spacing-unit: 1rem;
 
 		--layout-bleed: attr(bleed type(<number>), 0);
-		--layout-colmg: attr(col-gap type(<length> | <percentage>), var(--layout-spacing-unit));
+		--layout-colmg: attr(col-gap type(<number>), 1);
 		--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr);
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
 		--layout-mbe: attr(bottom type(<number>), 0);
 		--layout-mbs: attr(top type(<number>), 0);
 		--layout-mw: attr(max-width type(<length> | <percentage>), 100vw);
-		--layout-pb: attr(pad-v type(<number>), 0);
+		--layout-pbe: attr(pad-b type(<number>), 0);
+		--layout-pbs: attr(pad-t type(<number>), 0);
 		--layout-pi: attr(pad-h type(<number>), 0);
-		--layout-rg: attr(row-gap type(<length> | <percentage>), var(--layout-colmg));
+		--layout-rg: attr(row-gap type(<number>), 1);
 
 		background: var(--layout-bg, #0000);
 		box-sizing: border-box;
 		color: var(--layout-c, inherit);
-		column-gap: var(--layout-colmg);
+		column-gap: calc(var(--layout-colmg) * var(--layout-spacing-unit));
 		contain: layout inline-size;
 		display: grid;
 		grid-auto-flow: row dense;
@@ -26,9 +27,10 @@
 		margin-block-end: calc(var(--layout-mbe) * var(--layout-spacing-unit));
 		margin-inline: auto;
 		max-inline-size: var(--layout-mw);
-		padding-block: calc(var(--layout-pb) * var(--layout-spacing-unit));
+		padding-block-end: calc(var(--layout-pbe) * var(--layout-spacing-unit));
+		padding-block-start: calc(var(--layout-pbs) * var(--layout-spacing-unit));
 		padding-inline: calc(var(--layout-pi) * var(--layout-spacing-unit));
-		row-gap: var(--layout-rg);
+		row-gap: calc(var(--layout-rg) * var(--layout-spacing-unit));
 		width: var(--layout-w, 100%);
 
 		& > *:not(lay-out) { grid-area: var(--_ga, var(--layout-ga, auto)); }
