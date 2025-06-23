@@ -13,7 +13,11 @@
 
 	<h1>Advanced Demo</h1>
 
-	<lay-out sm="bento(1lg-h:2sm)" md="bento(2sm:1lg-h)" lg="bento(1lg-v:2sm)" xl="bento(2sm:1lg-v)">
+	<lay-out
+		sm="bento(1lg-h:2sm)"
+		md="bento(2sm:1lg-h)"
+		lg="bento(1lg-v:2sm)"
+		xl="bento(2sm:1lg-v)">
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
@@ -43,77 +47,49 @@
 	</lay-out>
 </lay-out>
 
-	<lay-out md="columns(3)" col-gap="1em" animation="bounce-in-right">
+	<lay-out
+		md="columns(3)"
+		animation="fade-up"
+		bleed
+		pad-bottom="2"
+		pad-inline="1"
+		pad-top="2"
+		space-bottom="4"
+		theme="tertiary">
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
 	</lay-out>
 
-	<lay-out md="bento(1lg-h:1lg-v:2sm)" col-gap="1em" animation="bounce-in-left" max-width="850px">
+	<lay-out
+		md="bento(1lg-h:1lg-v:2sm)"
+		animation="bounce-in-left">
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
 		<content-item></content-item>
-
 	</lay-out>
 
-	<lay-out sm="columns(2)" md="bento(1lg:2sm-right)" lg="bento(2sm:1lg-right)" xxl="columns(3)" col-gap="1.5em" row-gap="1em" bleed background="hsl(190, 20%, 90%)" padding="2rem" animation="fade-in-scale">
-		<content-item>Item A1</content-item>
-		<content-item>Item A2</content-item>
-		<content-item>Item A3</content-item>
-		<content-item>Item A4</content-item>
-		<content-item>Item A5</content-item>
-		<content-item>Item A6</content-item>
+	<lay-out
+		sm="columns(2)"
+		md="bento(1lg:2sm-right)"
+		lg="bento(fixed-8a)"
+		xl="mosaic(scatter)"
+		animation="fade-in-scale"
+		bleed
+		pad-bottom="3"
+		pad-inline="2"
+		pad-top="3"
+		theme="secondary">
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
+		<content-item></content-item>
 	</lay-out>
 
-	<!-- <section>
-		<h3>Demo 2: Masonry with Varied Gaps & Background</h3>
-		<code>&lt;lay-out sm="columns(1)" md="bento(2sm:1lg-right)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up"&gt;</code>
-		<lay-out sm="columns(1)" md="bento(2sm:1lg-right)" lg="columns(2)" col-gap="2em" row-gap="1em" padding="1.5em" background="hsl(210, 25%, 92%)" animation="slide-up">
-			<content-item>Item B1</content-item>
-			<content-item>Item B2</content-item>
-			<content-item>Item B3</content-item>
-			<content-item>Item B4</content-item>
-			<content-item>Item B5</content-item>
-			<content-item>Item B6</content-item>
-		</lay-out>
-	</section>
-
-
-	<lay-out sm="columns(2)" md="bento(1lg-h:1lg-v:2sm)" lg="asym(top-left-bottom-right)" col-gap="1em" row-gap="1em" padding="1.5em" background="hsl(120, 20%, 94%)" animation="flip-left" bleed="-20">
-		<content-item>Item C1 (Bleed -20)</content-item>
-		<content-item>Item C2</content-item>
-		<content-item>Item C3</content-item>
-		<content-item>Item C4</content-item>
-		<content-item>Item C5</content-item>
-		<content-item>Item C6</content-item>
-		<content-item>Item C7</content-item>
-		<content-item>Item C8</content-item>
-	</lay-out>
-
-	<section>
-		<h3>Demo 4: Nested Layout with Positive Asymmetrical Bleed</h3>
-		<code>Outer: &lt;lay-out sm="columns(1)" bleed="25" background="hsl(30, 50%, 90%)" padding="2em" animation="zoom-in"&gt;</code><br>
-		<code>Inner: &lt;lay-out xs="columns(1)" sm="columns(2)" col-gap="0.5em" padding="1em" background="hsl(30, 60%, 85%)" animation="fade-in"&gt;</code>
-		<lay-out sm="columns(1)" bleed="25" background="hsl(30, 50%, 90%)" padding="2em" animation="zoom-in">
-			<content-item>
-				Outer Layout Item (Bleed 25)
-				<lay-out xs="columns(1)" sm="columns(2)" col-gap="0.5em" padding="1em" background="hsl(30, 60%, 85%)" animation="fade-in">
-					<content-item>Nested D1</content-item>
-					<content-item>Nested D2</content-item>
-				</lay-out>
-			</content-item>
-			<content-item>Outer Layout Item 2</content-item>
-		</lay-out>
-	</section>
-
-	<section>
-		<h3>Demo 5: Full Bleed Content (bleed="0")</h3>
-		<code>&lt;lay-out sm="columns(1)" md="columns(2)" bleed="0" background="hsl(60, 50%, 88%)" padding="3em 1em" col-gap="2em" animation="reveal-polygon"&gt;</code>
-		<lay-out sm="columns(1)" md="columns(2)" bleed="0" background="hsl(60, 50%, 88%)" padding="3em 1em" col-gap="2em" animation="reveal-polygon">
-			<content-item>Full Bleed Content E1</content-item>
-			<content-item>Full Bleed Content E2</content-item>
-		</lay-out>
-	</section> -->
 	</body>
 	</html>

@@ -1,5 +1,4 @@
 content-item {
-	/* aspect-ratio: 16 / 9; */
 	background: var(--bg, #DDD);
 	max-inline-size: 100%;
 	min-block-size: 14rem;
@@ -20,12 +19,10 @@ content-item {
 	}
 }
 lay-out:not([sm*="mosaic(photo)"]) {
-	/* --layout-colmg: 1; */
-	/* --layout-rg: 1; */
 	transition: grid-template-columns 0.35s ease;
 }
 
-lay-out[xl*="fixed-"] content-item { border-radius: 1rem; min-block-size: 10rem; }
+lay-out[xl*="fixed-"] content-item { min-block-size: 10rem; }
 lay-out[xl*="mosaic"] content-item { min-block-size: 8rem; }
 lay-out[sm*="mosaic(photo)"] content-item { min-block-size: auto; }
 
@@ -45,7 +42,7 @@ html {
 	--layout-secondary-bg: hsl(120, 50%, 95%);
 	--layout-secondary-c: hsl(120, 50%, 20%);
 	
-	--layout-tertiary-bg: hsl(30, 80%, 95%);
+	--layout-tertiary-bg: hsl(30, 10%, 95%);
 	--layout-tertiary-c: hsl(30, 80%, 20%);
 }
 body {
