@@ -51,9 +51,9 @@ The system defines standard breakpoints: `xs`, `sm`, `md`, `lg`, `xl`, and `xxl`
   md="bento(1lg:2sm-right)" 
   lg="columns(4)"
   theme="primary"
-  top="2"
-  bottom="3"
-  pad-v="2"
+  space-top="2"
+  space-bottom="3"
+  pad-top="2"
   width="lg">
   <content-item>1</content-item>
   <content-item>2</content-item>
@@ -67,7 +67,7 @@ In this example:
 - On **medium** screens (`md`), the layout will switch to a 1-2 masonry configuration.
 - On **large** screens (`lg`), the items will be arranged in 4 columns.
 - The layout uses the `primary` theme for consistent branding colors.
-- It has a top margin of 2 spacing units, bottom margin of 3 units, and vertical padding of 2 units.
+- It has a top margin of 2 spacing units, bottom margin of 3 units, and top padding of 2 units.
 - The maximum width is constrained to the `lg` breakpoint width (64rem by default).
 
 If no specific layout is defined for a breakpoint, the layout from the next smallest breakpoint is inherited. If no attributes are specified, it defaults to a single column layout.
@@ -79,16 +79,17 @@ The layout system provides intuitive spacing controls that work well for both de
 ### Spacing Attributes
 
 ```html
-<lay-out top="4" bottom="4" pad-v="2" pad-h="3">
+<lay-out space-top="4" space-bottom="4" pad-inline="3" pad-top="2" pad-bottom="1">
   <!-- Content with spacing applied -->
 </lay-out>
 ```
 
 **Available spacing attributes:**
-- `top` - Sets top margin (multiplied by `--layout-spacing-unit`, default 1rem)
-- `bottom` - Sets bottom margin (multiplied by `--layout-spacing-unit`)
-- `pad-v` - Sets vertical padding (top and bottom internal spacing)
-- `pad-h` - Sets horizontal padding (left and right internal spacing)
+- `space-top` - Sets top margin (multiplied by `--layout-spacing-unit`, default 1rem)
+- `space-bottom` - Sets bottom margin (multiplied by `--layout-spacing-unit`)
+- `pad-inline` - Sets horizontal padding (left and right internal spacing)
+- `pad-top` - Sets top padding (padding-block-start)
+- `pad-bottom` - Sets bottom padding (padding-block-end)
 
 All spacing values are unitless numbers that get multiplied by the spacing unit. To customize the base spacing unit:
 
@@ -97,6 +98,16 @@ All spacing values are unitless numbers that get multiplied by the spacing unit.
   --layout-spacing-unit: 1.5rem; /* Default is 1rem */
 }
 ```
+
+**Gap Control:**
+Set spacing between grid items using unitless gap values:
+
+```html
+<lay-out md="columns(3)" col-gap="2" row-gap="1">
+```
+
+- `col-gap` - Space between columns (multiplied by spacing unit)
+- `row-gap` - Space between rows (multiplied by spacing unit)
 
 ### Width Control
 
@@ -278,3 +289,36 @@ Each animation type (e.g., `[animation="fade-in"]`) sets the `--animn` variable.
 The `@supports (view-transition-name: none)` query is likely a feature detection or progressive enhancement check, though its direct relation to scroll animations here might be for ensuring compatibility or specific browser behavior.
 
 This documentation provides a foundational understanding of the layout system and its animation capabilities. For specific layout values and detailed behavior of each animation, refer to the respective CSS files (`xs.css`, `sm.css`, etc., and `animations.css`).
+
+## Nested Layouts
+
+Create complex layouts with headers and sections by nesting `<lay-out>` elements:
+
+```html
+<lay-out
+  bleed
+  space-bottom="4"
+  pad-inline="1"
+  pad-top="4"
+  pad-bottom="2"
+  theme="primary"
+  space-top="4"
+  width="xl">
+  <h2>Section headline</h2>
+  <lay-out
+    md="bento(1lg-v:2sm)"
+    xl="bento(fixed-6a)">
+    <content-item></content-item>
+    <content-item></content-item>
+    <content-item></content-item>
+  </lay-out>
+</lay-out>
+```
+
+**Best Practices for Nested Layouts:**
+- **Outer layout**: Use for theming, spacing (`space-top`, `space-bottom`, `pad-*`), bleed, and width constraints
+- **Inner layout**: Use purely for content arrangement (columns, bento, etc.)
+- **Avoid nested bleed**: Don't use `bleed` attributes on inner layouts to prevent conflicts
+- **Headers**: Place headlines and introductory content directly in the outer layout before the inner layout
+
+This pattern provides clean separation between layout semantics (outer) and content arrangement (inner).

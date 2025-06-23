@@ -40,7 +40,7 @@ mega-menu {
 		}
 	}
 	:is([data-menu="content"],[data-menu="section"]) :is(a, summary):is(:focus-visible,:hover) {
-		color: cornflowerblue;
+		color: hotpink;
 		outline: 0;
 		text-decoration: underline;
 	}

@@ -6,12 +6,12 @@
 		--layout-colmg: attr(col-gap type(<number>), 1);
 		--layout-gtc: attr(columns type(<length> | <custom-ident>), 1fr);
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
-		--layout-mbe: attr(bottom type(<number>), 0);
-		--layout-mbs: attr(top type(<number>), 0);
+		--layout-mbe: attr(space-bottom type(<number>), 0);
+		--layout-mbs: attr(space-top type(<number>), 0);
 		--layout-mw: attr(max-width type(<length> | <percentage>), 100vw);
-		--layout-pbe: attr(pad-b type(<number>), 0);
-		--layout-pbs: attr(pad-t type(<number>), 0);
-		--layout-pi: attr(pad-h type(<number>), 0);
+		--layout-pbe: attr(pad-bottom type(<number>), 0);
+		--layout-pbs: attr(pad-top type(<number>), 0);
+		--layout-pi: attr(pad-inline type(<number>), 0);
 		--layout-rg: attr(row-gap type(<number>), 1);
 
 		background: var(--layout-bg, #0000);
