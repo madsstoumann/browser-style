@@ -7,6 +7,11 @@
 	--_tyv: attr(trans-y-viewport type(<length>), 100vh);
 	--_zi: attr(zoom-in type(<number>), 0.6);
 	--_zo: attr(zoom-out type(<number>), 1.2);
+
+	/* Animation range support */
+	--_animr: attr(range, entry 0% entry 75%);
+	--_animrs: attr(range-start, entry 0%);
+	--_animre: attr(range-end, entry 75%);
 }
 
 [animation~="bounce"] { --_animn: bounce-in; --_animn2: opacity; }
@@ -64,7 +69,8 @@
 		animation-timing-function: var(--animtm, linear);
 		animation-fill-mode: var(--animfm, forwards);
 		animation-timeline: view();
-		animation-range: var(--_animrs, entry 0%) var(--_animre, entry 75%);
+		/* Use the most specific range available: range > range-start/range-end > default */
+		animation-range: var(--_animr, var(--_animrs, entry 0%) var(--_animre, entry 75%));
 	}
 }
 

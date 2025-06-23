@@ -248,11 +248,11 @@ In summary, `--_ga` provides a container-level default for child grid areas, whi
 
 ## Animations Module (`animations.css`)
 
-The `animations.css` file provides a suite of scroll-driven animations that can be applied to elements, including the `<lay-out>` element itself or its children.
+The `animations.css` file provides a comprehensive suite of scroll-driven animations that can be applied to elements, including the `<lay-out>` element itself or its children. The system uses CSS Scroll-Driven Animation API for performant, timeline-based effects.
 
-**Usage:**
+**Basic Usage:**
 
-Animations are typically applied using the `animation` attribute on an HTML element.
+Apply animations using the `animation` attribute:
 
 ```html
 <lay-out animation="fade-in">
@@ -261,34 +261,118 @@ Animations are typically applied using the `animation` attribute on an HTML elem
 </lay-out>
 ```
 
-**Key Features:**
+**Available Animation Types:**
 
-*   **Scroll-Driven:** Animations are triggered and progress based on the element's visibility within the viewport as the user scrolls. This is achieved using `animation-timeline: view();`.
-*   **Variety of Effects:** The module includes a wide range of pre-defined animations:
-    *   **Bounce:** `bounce-in`, `bounce-in-down`, `bounce-in-left`, `bounce-in-up`, `bounce-in-right`
-    *   **Fade:** `fade-in`, `fade-down`, `fade-left`, `fade-right`, `fade-up`, and combinations like `fade-down-left`, `fade-in-scale`, `fade-out`, `fade-out-scale`.
-    *   **Flip:** `flip-diagonal`, `flip-down`, `flip-left`, `flip-right`, `flip-up`
-    *   **Reveal:** `reveal` (clip-path inset), `reveal-circle`, `reveal-polygon`
-    *   **Slide:** `slide-down`, `slide-in` (from left), `slide-out` (to right), `slide-up`
-    *   **Zoom:** `zoom-in`, `zoom-in-rotate`, `zoom-out`, `zoom-out-rotate`
-*   **Customizable Behavior:**
-    *   `--animn`: CSS custom property set by the `animation` attribute to select the `@keyframes` name.
-    *   `--animtm`: `animation-timing-function` (defaults to `linear`).
-    *   `--animfm`: `animation-fill-mode` (defaults to `forwards`).
-    *   `--animtl`: `animation-timeline` (defaults to `view()`).
-    *   `--animrs`: `animation-range-start` (defaults to `entry 0%`).
-    *   `--animre`: `animation-range-end` (defaults to `entry 90%`).
-*   **Animation Range Control:** Classes like `.ar-contain`, `.ar-cover`, and `.ar-exit` can be added to modify the `animation-range-start` and `animation-range-end` values, controlling when the animation begins and ends relative to the element's position in the scrollport.
-    *   `.ar-contain`: `entry 0%` to `contain 50%`
-    *   `.ar-cover`: `entry 25%` to `cover 50%`
-    *   `.ar-exit`: `exit 0%` to `exit 100%`
-*   **CSS Variables for Fine-Tuning:** Some animation groups use CSS variables for their effects, like `--_dg` (degrees for flips), `--_tx`, `--_ty` (translate X/Y for fades), `--_zi`, `--_zo` (zoom in/out scale factors). These are defined in `:root` but could potentially be overridden for more specific control if needed.
+*   **Bounce Effects:** `bounce`, `bounce-in-left`, `bounce-in-right`, `bounce-in-up`, `bounce-in-down`
+*   **Fade Effects:** `fade-in`, `fade-out`, `fade-down`, `fade-left`, `fade-right`, `fade-up`, `fade-down-left`, `fade-down-right`, `fade-up-left`, `fade-up-right`, `fade-in-scale`, `fade-out-scale`
+*   **Flip Effects:** `flip-diagonal`, `flip-down`, `flip-left`, `flip-right`, `flip-up`
+*   **Reveal Effects:** `reveal` (clip-path inset), `reveal-circle`, `reveal-polygon`
+*   **Slide Effects:** `slide-down`, `slide-in`, `slide-out`, `slide-up`
+*   **Zoom Effects:** `zoom-in`, `zoom-in-rotate`, `zoom-out`, `zoom-out-rotate`
+*   **Opacity:** `opacity` (standalone opacity transition)
 
-**Implementation:**
-Each animation type (e.g., `[animation="fade-in"]`) sets the `--animn` variable. A general rule `:where([animation])` then applies the actual CSS animation properties using these variables. This provides a clean and extensible way to manage many animation types.
-The `@supports (view-transition-name: none)` query is likely a feature detection or progressive enhancement check, though its direct relation to scroll animations here might be for ensuring compatibility or specific browser behavior.
+**Animation Range Control**
 
-This documentation provides a foundational understanding of the layout system and its animation capabilities. For specific layout values and detailed behavior of each animation, refer to the respective CSS files (`xs.css`, `sm.css`, etc., and `animations.css`).
+The animation system provides three levels of range control for maximum flexibility:
+
+### 1. Simple Range Control (Recommended)
+Use the `range` attribute for common presets:
+
+```html
+<!-- Animation runs from entry to 75% of entry (default) -->
+<div animation="fade-in">Default range</div>
+
+<!-- Animation runs from entry to 50% of contain -->
+<div animation="fade-in" range="contain">Contain range</div>
+
+<!-- Animation runs from 25% of entry to 50% of cover -->
+<div animation="fade-in" range="cover">Cover range</div>
+
+<!-- Animation runs through the entire exit phase -->
+<div animation="fade-in" range="exit">Exit range</div>
+```
+
+### 2. Advanced Range Control
+For precise control, use `range-start` and `range-end` attributes:
+
+```html
+<!-- Custom start and end points -->
+<div animation="zoom-in" 
+     range-start="entry 20%" 
+     range-end="contain 80%">Custom range</div>
+
+<!-- Only set start (end defaults to entry 75%) -->
+<div animation="slide-in" range-start="entry 50%">Custom start</div>
+
+<!-- Only set end (start defaults to entry 0%) -->
+<div animation="fade-up" range-end="exit 25%">Custom end</div>
+```
+
+### 3. Complete Range Override
+Use the full `range` syntax for maximum control:
+
+```html
+<!-- Complete custom range specification -->
+<div animation="bounce" range="entry 10% contain 90%">Full custom</div>
+```
+
+**Range Reference:**
+
+- `entry`: Element is entering the viewport
+- `contain`: Element is fully contained within the viewport
+- `cover`: Element covers the entire viewport
+- `exit`: Element is exiting the viewport
+
+Percentages specify the progress through each phase (0% = start of phase, 100% = end of phase).
+
+**Customization Options:**
+
+*   **Timing:** `--animtm` (animation-timing-function, defaults to `linear`)
+*   **Fill Mode:** `--animfm` (animation-fill-mode, defaults to `forwards`)
+*   **Transform Values:** Customize movement and scale:
+    *   `degree`: Rotation amount for flip animations (default: 100deg)
+    *   `trans-x`, `trans-y`: Translation distances (default: 55px, 110px)
+    *   `trans-x-viewport`, `trans-y-viewport`: Viewport-relative translations (default: 100vw, 100vh)
+    *   `zoom-in`, `zoom-out`: Scale factors (default: 0.6, 1.2)
+
+**Custom Values Example:**
+
+```html
+<div animation="flip-left" degree="45deg">Smaller flip</div>
+<div animation="fade-right" trans-x="200px">Longer fade distance</div>
+<div animation="zoom-in" zoom-in="0.3">More dramatic zoom</div>
+```
+
+**CSS Override Example:**
+
+```css
+/* Global timing function override */
+[animation] {
+  --animtm: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Specific animation customization */
+.my-element {
+  --animtm: ease-out;
+  --animfm: both;
+}
+```
+
+**Browser Support:**
+
+The animation system uses the CSS Scroll-Driven Animation API and requires browser support for `animation-timeline: view()`. A feature detection wrapper ensures animations only activate in supporting browsers:
+
+```css
+@supports (view-transition-name: none) {
+  /* Animations activate here */
+}
+```
+
+**Performance Notes:**
+
+- All animations use modern CSS properties (`transform`, `opacity`, `scale`, `translate`) for optimal performance
+- Scroll-driven animations leverage the browser's animation engine for smooth 60fps effects
+- Animations are GPU-accelerated where possible for maximum smoothness
 
 ## Nested Layouts
 
