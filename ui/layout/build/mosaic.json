@@ -1,0 +1,48 @@
+[
+  {
+    "id": "mosaic(photo)",
+    "description": "Photo gallery mosaic with varied item sizes in a repeating pattern",
+    "columns": "repeat(5, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(11n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(11n+4)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(11n+7)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(11n+10)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "&", "properties": { "--layout-bg": "light-dark(#333, #EEE)", "--layout-colmg": "1px", "--layout-p": "var(--layout-colmg)", "grid-auto-flow": "dense" } },
+      { "selector": "&>*", "properties": { "aspect-ratio": "1 / 1", "object-fit": "cover", "object-position": "center" } }
+    ]
+  },
+  {
+    "id": "mosaic(scatter)",
+    "description": "Square items arranged in an artistic, non-traditional pattern across a 12x12 grid with overlapping and scattered positioning",
+    "columns": "repeat(12, 1fr)",
+    "rows": "repeat(12, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 7 / 7" } },
+      { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "5 / 5 / 11 / 11" } },
+      { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "9 / 3 / 13 / 7" } },
+      { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "3 / 9 / 7 / 13" } },
+      { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "8 / 1 / 11 / 4" } },
+      { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "2 / 8 / 4 / 10" } },
+      { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "10 / 10 / 13 / 13" } },
+      { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "1 / 11 / 3 / 13" } }
+    ]
+  },
+  {
+    "id": "mosaic(hex)",
+    "description": "Square items arranged in an artistic, non-traditional pattern across a 12x12 grid with overlapping and scattered positioning",
+    "columns": "repeat(12, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 5 / 5" } },
+      { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "4 / 3 / 8 / 7" } },
+      { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "1 / 5 / 5 / 9" } },
+      { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "4 / 7 / 8 / 11" } },
+      { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "1 / 9 / 5 / 13" } },
+      { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "7 / 5 / 11 / 9" } },
+      { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "7 / 1 / 11 / 5" } },
+      { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "7 / 9 / 11 / 13" } },
+			{ "selector": "*:nth-of-type(n+9)", "properties": { "display": "none" } },
+      { "selector": "&>*", "properties": { "aspect-ratio": "cos(30deg)", "clip-path": "polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0)" } }
+    ]
+  }
+]

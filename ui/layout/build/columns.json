@@ -1,0 +1,27 @@
+[
+  {
+    "id": "columns(2)",
+    "description": "2-column layout with equal width columns",
+    "columns": "repeat(2, 1fr)"
+  },
+  {
+    "id": "columns(3)",
+    "description": "3-column layout with equal width columns",
+    "columns": "repeat(3, 1fr)"
+  },
+  {
+    "id": "columns(4)",
+    "description": "4-column layout with equal width columns",
+    "columns": "repeat(4, 1fr)"
+  },
+  {
+    "id": "columns(5)",
+    "description": "5-column layout with equal width columns",
+    "columns": "repeat(5, 1fr)"
+  },
+  {
+    "id": "columns(6)",
+    "description": "6-column layout with equal width columns",
+    "columns": "repeat(6, 1fr)"
+  }
+]

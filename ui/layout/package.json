@@ -1,17 +1,43 @@
 {
   "name": "@browser.style/layout",
   "version": "1.0.7",
-  "description": "Layout",
+  "description": "Modern CSS layout system with responsive grid patterns, container queries, and configurable builds",
   "type": "module",
   "style": "index.css",
+  "scripts": {
+    "build": "node build-css.js",
+    "build:min": "node build-css.js --minify",
+    "build:watch": "node build-css.js --watch",
+    "dev": "npm run build:watch",
+    "prepublishOnly": "npm run build"
+  },
   "exports": {
     ".": "./index.css",
-    "./style": "./index.css",
-    "./index.css": "./index.css"
+    "./style": "./index.css", 
+    "./index.css": "./index.css",
+    "./layout": "./layout.css",
+    "./layout.css": "./layout.css",
+    "./layout.min": "./layout.min.css",
+    "./layout.min.css": "./layout.min.css",
+    "./config": "./config.json",
+    "./config.json": "./config.json",
+    "./build": "./build/",
+    "./build/*": "./build/*",
+    "./build-css": "./build-css.js",
+    "./builder": "./build-css.js"
   },
   "files": [
     "index.css",
-    "css/"
+    "layout.css",
+    "layout.min.css",
+    "css/",
+    "modules/",
+    "build/",
+    "build/*.json",
+    "config.json",
+    "build-css.js",
+    "BUILD.md",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
@@ -20,7 +46,14 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "layout"
+    "layout",
+    "css-grid",
+    "responsive-design",
+    "container-queries",
+    "media-queries",
+    "css-framework",
+    "grid-layouts",
+    "bento-grids"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",

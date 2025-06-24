@@ -1,0 +1,258 @@
+[
+  {
+    "id": "bento(2sm:1lg-h)",
+    "description": "2 small items in top row and 1 large item spanning horizontally at bottom",
+    "columns": "1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(3n+3)", "properties": { "--layout-ga": "auto / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-h:2sm)",
+    "description": "1 large item spanning horizontally at top and 2 small items at bottom",
+    "columns": "1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-h:4sm)",
+    "description": "1 large item spanning horizontally at top and 4 small items in a grid below",
+    "columns": "1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(4sm:1lg-h)",
+    "description": "4 small items in a grid at top and 1 large item spanning horizontally at bottom",
+    "columns": "1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:2sm)",
+    "description": "1 large item spanning vertically on the left and 2 small items on the right",
+    "columns": "2fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:3sm)",
+    "description": "1 large item spanning vertically on the left and 3 small items stacked on the right",
+    "columns": "2fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:4sm)",
+    "description": "1 large item spanning vertically on the left and 4 small items in a grid on the right",
+    "columns": "2fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(2sm:1lg-v)",
+    "description": "2 small items on the left and 1 large item spanning vertically on the right",
+    "columns": "1fr 2fr",
+    "rules": [
+      { "selector": "*:nth-of-type(3n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(3sm:1lg-v)",
+    "description": "3 small items stacked on the left and 1 large item spanning vertically on the right",
+    "columns": "1fr 2fr",
+    "rules": [
+      { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 3 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(4sm:1lg-v)",
+    "description": "4 small items in a grid on the left and 1 large item spanning vertically on the right",
+    "columns": "1fr 2fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-h:1lg-v:2sm)",
+    "description": "1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items",
+    "columns": "1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "auto / span 2" } },
+      { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:1lg-h:2sm)",
+    "description": "1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items",
+    "columns": "1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:2sm:1lg-v)",
+    "description": "1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically",
+    "columns": "1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(4n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(2sm:1lg-v:2sm)",
+    "description": "2 small items, 1 large item spanning vertically, and 2 more small items",
+    "columns": "1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1lg-v:2sm:2sm)",
+    "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+    "columns": "1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+    ]
+  },
+  {
+    "id": "bento(1xl-v:2sm:2sm)",
+    "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+    "columns": "1fr 1fr 1fr 1fr",
+    "rules": [
+      { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
+    ]
+  },
+  {
+    "id": "bento(6a-fixed)",
+    "description": "Balanced layout with mixed item sizes in a fixed 6-item pattern",
+    "columns": "repeat(10, 1fr)",
+    "rows": "repeat(5, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(6n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(6n+2)", "properties": { "--layout-ga": "span 4 / span 4" } },
+      { "selector": "*:nth-of-type(6n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(6n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(6n+5)", "properties": { "--layout-ga": "span 1 / span 4" } },
+      { "selector": "*:nth-of-type(6n+6)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(n+7)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(6b-fixed)",
+    "description": "Varied layout with prominent lead item in a fixed 6-item pattern",
+    "columns": "repeat(10, 1fr)",
+    "rows": "repeat(5, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(6n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
+      { "selector": "*:nth-of-type(6n+2)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(6n+3)", "properties": { "--layout-ga": "auto / span 3" } },
+      { "selector": "*:nth-of-type(6n+4)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(6n+5)", "properties": { "--layout-ga": "span 2 / span 6" } },
+      { "selector": "*:nth-of-type(6n+6)", "properties": { "--layout-ga": "auto / span 4" } },
+      { "selector": "*:nth-of-type(n+7)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(7a-fixed)",
+    "description": "Vertical emphasis layout with tall columns in a fixed 7-item pattern",
+    "columns": "repeat(3, 1fr)",
+    "rows": "repeat(5, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(7n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(7n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(7n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(7n+4)", "properties": { "--layout-ga": "auto / auto" } },
+      { "selector": "*:nth-of-type(7n+5)", "properties": { "--layout-ga": "span 3 / auto" } },
+      { "selector": "*:nth-of-type(7n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(n+8)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(7b-fixed)",
+    "description": "Complex grid layout with hero item and mixed proportions in a fixed 7-item pattern",
+    "columns": "repeat(10, 1fr)",
+    "rows": "repeat(6, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(7n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
+      { "selector": "*:nth-of-type(7n+2)", "properties": { "--layout-ga": "span 2 / span 6" } },
+      { "selector": "*:nth-of-type(7n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(7n+4)", "properties": { "--layout-ga": "span 1 / span 3" } },
+      { "selector": "*:nth-of-type(7n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(7n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
+      { "selector": "*:nth-of-type(7n+7)", "properties": { "--layout-ga": "auto / span 6" } },
+      { "selector": "*:nth-of-type(n+8)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(8a-fixed)",
+    "description": "Portfolio layout with featured items in a fixed 8-item pattern",
+    "columns": "repeat(3, 1fr)",
+    "rows": "repeat(6, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "span 1 / auto" } },
+      { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "span 3 / auto" } },
+      { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(n+9)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(8b-fixed)",
+    "description": "Portfolio layout with featured items in a fixed 8-item pattern",
+    "columns": "repeat(10, 1fr)",
+    "rows": "repeat(4, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "span 1 / span 2" } },
+      { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "span 3 / span 2" } },
+      { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "span 1 / span 3" } },
+      { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "span 1 / span 5" } },
+      { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "span 1 / span 5" } },
+      { "selector": "*:nth-of-type(n+9)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(9a-fixed)",
+    "description": "Portfolio layout with featured items in a fixed 9-item pattern",
+    "columns": "repeat(4, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(9n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(9n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(9n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(9n+8)", "properties": { "--layout-ga": "span 2 / auto" } },
+      { "selector": "*:nth-of-type(n+10)", "properties": { "display": "none" } }
+    ]
+  },
+  {
+    "id": "bento(9b-fixed)",
+    "description": "Compact portfolio layout with varied item sizes",
+    "columns": "repeat(10, 1fr)",
+    "rules": [
+      { "selector": "*:nth-of-type(9n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(9n+3)", "properties": { "--layout-ga": "span 2 / span 2" } },
+      { "selector": "*:nth-of-type(9n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(9n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(9n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
+      { "selector": "*:nth-of-type(9n+7)", "properties": { "--layout-ga": "span 2 / span 4" } },
+      { "selector": "*:nth-of-type(9n+8)", "properties": { "--layout-ga": "span 3 / span 3" } },
+      { "selector": "*:nth-of-type(9n+9)", "properties": { "--layout-ga": "span 2 / span 3" } },
+      { "selector": "*:nth-of-type(n+10)", "properties": { "display": "none" } }
+    ]
+  }
+]
