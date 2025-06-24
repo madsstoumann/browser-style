@@ -23,6 +23,7 @@
 	lay-out[xl="bento(1lg-v:2sm:2sm)"] {
 		--layout-gtc: 1fr 1fr 1fr;
 	}
+	lay-out[xl="bento(1xl-v:2sm:2sm)"] { --layout-gtc: 1fr 1fr 1fr 1fr; }
 
 	lay-out[xl="bento(1lg-v:2sm)"] *:nth-of-type(3n+1) { --layout-ga: span 2 / auto; }
 	lay-out[xl="bento(2sm:1lg-h)"] *:nth-of-type(3n+3) { --layout-ga: auto / span 2; }
@@ -48,4 +49,5 @@
 	}
 	lay-out[xl="bento(2sm:1lg-v:2sm)"] *:nth-of-type(5n+3) { --layout-ga: span 2 / auto; }
 	lay-out[xl="bento(1lg-v:2sm:2sm)"] *:nth-of-type(5n+1) { --layout-ga: span 2 / auto; }
+	lay-out[xl="bento(1xl-v:2sm:2sm)"] *:nth-of-type(5n+1) { --layout-ga: span 2 / span 2; }
 }
