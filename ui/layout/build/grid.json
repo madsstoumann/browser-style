@@ -1,0 +1,169 @@
+{
+  "name": "Grid Layouts",
+  "prefix": "grid",
+  "layouts": [
+    {
+      "id": "2sm:1lg-h",
+      "description": "2 small items in top row and 1 large item spanning horizontally at bottom",
+      "columns": "1fr 1fr",
+      "items": 3,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(3n+3)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "1lg-h:2sm",
+      "description": "1 large item spanning horizontally at top and 2 small items at bottom",
+      "columns": "1fr 1fr",
+      "items": 3,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "1lg-h:4sm",
+      "description": "1 large item spanning horizontally at top and 4 small items in a grid below",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "4sm:1lg-h",
+      "description": "4 small items in a grid at top and 1 large item spanning horizontally at bottom",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "1lg-v:2sm",
+      "description": "1 large item spanning vertically on the left and 2 small items on the right",
+      "columns": "2fr 1fr",
+      "items": 3,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "1lg-v:3sm",
+      "description": "1 large item spanning vertically on the left and 3 small items stacked on the right",
+      "columns": "2fr 1fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
+      ]
+    },
+    {
+      "id": "1lg-v:4sm",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid on the right",
+      "columns": "2fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "2sm:1lg-v",
+      "description": "2 small items on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 3,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(3n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "3sm:1lg-v",
+      "description": "3 small items stacked on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 3 / auto" } }
+      ]
+    },
+    {
+      "id": "4sm:1lg-v",
+      "description": "4 small items in a grid on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "1lg-h:1lg-v:2sm",
+      "description": "1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "auto / span 2" } },
+        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "1lg-v:1lg-h:2sm",
+      "description": "1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "1lg-v:2sm:1lg-v",
+      "description": "1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-of-type(4n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "2sm:1lg-v:2sm",
+      "description": "2 small items, 1 large item spanning vertically, and 2 more small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "1lg-v:2sm:2sm",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+      "columns": "1fr 1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "1xl-v:2sm:2sm",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
+      ]
+    }
+  ]
+}

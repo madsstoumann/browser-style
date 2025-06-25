@@ -48,7 +48,27 @@ class LayoutBuilder {
       try {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
         const layoutData = JSON.parse(layoutContent);
-        this.layouts.set(layoutName, layoutData);
+        
+        // Handle new structure with layouts array
+        if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
+          // Store metadata and transform layouts
+          const transformedData = {
+            name: layoutData.name,
+            prefix: layoutData.prefix,
+            layouts: layoutData.layouts.map(layout => ({
+              ...layout,
+              id: `${layoutData.prefix}(${layout.id})`,  // Reconstruct full ID for CSS generation
+              originalId: layout.id  // Keep original short ID for reference
+            }))
+          };
+          this.layouts.set(layoutName, transformedData.layouts);
+          // Store prefix mapping for CSS generation
+          this.layouts.set(`${layoutName}_prefix`, layoutData.prefix);
+        } else {
+          // Handle old structure (if any files still use it)
+          this.layouts.set(layoutName, layoutData);
+        }
+        
         console.log(`✓ Loaded ${file}`);
       } catch (error) {
         console.warn(`⚠ Failed to load ${file}: ${error.message}`);
@@ -138,14 +158,16 @@ class LayoutBuilder {
       return;
     }
 
+    const prefix = this.layouts.get(`${layoutName}_prefix`) || layoutName;
+
     for (const layout of layoutData) {
       const layoutId = this.extractLayoutId(layout.id);
-      const key = `${mediaQuery}::${layoutName}(${layoutId})`;
+      const key = `${mediaQuery}::${prefix}(${layoutId})`;
       
       if (processedLayouts.has(key)) continue;
       processedLayouts.add(key);
 
-      this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery);
+      this.generateLayoutCSS(layout, prefix, layoutId, breakpointName, mediaQuery);
     }
   }
 
@@ -360,6 +382,147 @@ class LayoutBuilder {
     
     return { outputPath, size: css.length, rules: this.cssRules.size };
   }
+
+  /**
+   * Generate HTML template for a layout file
+   */
+  generateLayoutHTML(layoutName, layoutData, layoutType) {
+    const title = layoutType.name || `${layoutName.charAt(0).toUpperCase() + layoutName.slice(1)} Layouts`;
+    const prefix = layoutType.prefix || layoutName;
+    
+    let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="../layout.min.css">
+	<link rel="stylesheet" href="../demo/demo.css">
+</head>
+<body>
+	<h1>${title}</h1>`;
+
+    // Add description based on layout type
+    if (layoutType.name === 'Bento Box Layouts') {
+      html += `
+	<p>These layouts use <strong>fixed patterns</strong> where the number of items is predetermined and the layout adapts to a specific arrangement.<br>
+		If you add more items than the layout can handle, they will be hidden.</p>`;
+    } else if (layoutType.name === 'Grid Layouts') {
+      html += `
+	<p>These layouts use <strong>grid patterns</strong> with mixed item sizes to create <strong>repeating patterns</strong>.<br>
+		When you add more items, the pattern repeats automatically.</p>`;
+    } else {
+      html += `
+	<p>These layouts use the <strong>${prefix}()</strong> layout mode to create various patterns.<br>
+		${layoutData.some(l => l.repeatable) ? 'When you add more items, repeatable patterns continue automatically.' : 'Fixed layouts display a specific number of items.'}</p>`;
+    }
+
+    // Group layouts by item count
+    const layoutsByItems = new Map();
+    layoutData.forEach(layout => {
+      const items = layout.items || 1;
+      if (!layoutsByItems.has(items)) {
+        layoutsByItems.set(items, []);
+      }
+      layoutsByItems.get(items).push(layout);
+    });
+
+    // Generate sections for each item count
+    for (const [itemCount, layouts] of Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)) {
+      html += `\n\n	<h2>${itemCount} Item${itemCount !== 1 ? 's' : ''}</h2>`;
+      
+      for (const layout of layouts) {
+        const layoutId = layout.originalId || layout.id.replace(`${prefix}(`, '').replace(')', '');
+        const description = layout.description || '';
+        
+        html += `
+	<section>
+		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
+		${description ? `<small>${description}</small>` : ''}
+		<code>&lt;lay-out md="${prefix}(${layoutId})"&gt;</code>
+		<lay-out md="${prefix}(${layoutId})">`;
+
+        // Add content items
+        for (let i = 0; i < itemCount; i++) {
+          html += `
+			<content-item></content-item>`;
+        }
+
+        // Add repeat items if layout is repeatable
+        if (layout.repeatable) {
+          const repeatCount = Math.min(itemCount, 6); // Add same number as base items, max 6
+          for (let i = 0; i < repeatCount; i++) {
+            html += `
+			<content-item repeat></content-item>`;
+          }
+        }
+
+        html += `
+		</lay-out>
+	</section>`;
+      }
+    }
+
+    html += `\n\n</body>
+</html>`;
+
+    return html;
+  }
+
+  /**
+   * Generate all HTML demo files
+   */
+  async generateHTML() {
+    console.log('\n🎨 Generating HTML demos...');
+    
+    // Ensure dist directory exists
+    const distDir = path.join(__dirname, 'dist');
+    if (!fs.existsSync(distDir)) {
+      fs.mkdirSync(distDir, { recursive: true });
+    }
+
+    // Get all layout files from build directory
+    const layoutFiles = fs.readdirSync(this.buildDir)
+      .filter(file => file.endsWith('.json') && file !== 'config.json');
+
+    for (const file of layoutFiles) {
+      const layoutName = path.basename(file, '.json');
+      
+      // Skip overflow or empty layout files
+      if (layoutName === 'overflow') continue;
+      
+      const layoutPath = path.join(this.buildDir, file);
+      
+      try {
+        const layoutContent = fs.readFileSync(layoutPath, 'utf8');
+        const layoutData = JSON.parse(layoutContent);
+        
+        // Handle new structure with layouts array
+        if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
+          if (layoutData.layouts.length === 0) {
+            console.log(`⚠ Skipping ${file}: No layouts defined`);
+            continue;
+          }
+          
+          // Transform layouts for HTML generation (without full ID reconstruction)
+          const layoutsForHTML = layoutData.layouts.map(layout => ({
+            ...layout,
+            originalId: layout.id  // Keep the original short ID for HTML
+          }));
+          
+          const html = this.generateLayoutHTML(layoutName, layoutsForHTML, layoutData);
+          const outputPath = path.join(distDir, `${layoutName}.html`);
+          fs.writeFileSync(outputPath, html, 'utf8');
+          console.log(`✓ Generated ${layoutName}.html`);
+        } else {
+          console.log(`⚠ Skipping ${file}: Old format or invalid structure`);
+        }
+      } catch (error) {
+        console.warn(`⚠ Failed to generate HTML for ${file}: ${error.message}`);
+      }
+    }
+  }
 }
 
 // CLI interface
@@ -378,6 +541,9 @@ async function main() {
     try {
       // Build layout.css (standard)
       const layoutBuild = await builder.build(false, 'layout');
+      
+      // Generate HTML demos
+      await builder.generateHTML();
       
       // Build minified version if requested or if not in watch mode
       if (isMinify || !isWatch) {

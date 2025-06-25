@@ -1,27 +1,41 @@
-[
-  {
-    "id": "columns(2)",
-    "description": "2-column layout with equal width columns",
-    "columns": "repeat(2, 1fr)"
-  },
-  {
-    "id": "columns(3)",
-    "description": "3-column layout with equal width columns",
-    "columns": "repeat(3, 1fr)"
-  },
-  {
-    "id": "columns(4)",
-    "description": "4-column layout with equal width columns",
-    "columns": "repeat(4, 1fr)"
-  },
-  {
-    "id": "columns(5)",
-    "description": "5-column layout with equal width columns",
-    "columns": "repeat(5, 1fr)"
-  },
-  {
-    "id": "columns(6)",
-    "description": "6-column layout with equal width columns",
-    "columns": "repeat(6, 1fr)"
-  }
-]
+{
+  "name": "Column Layouts",
+  "prefix": "columns",
+  "layouts": [
+    {
+      "id": "2",
+      "description": "2-column layout with equal width columns",
+      "columns": "repeat(2, 1fr)",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "3",
+      "description": "3-column layout with equal width columns",
+      "columns": "repeat(3, 1fr)",
+      "items": 3,
+      "repeatable": true
+    },
+    {
+      "id": "4",
+      "description": "4-column layout with equal width columns",
+      "columns": "repeat(4, 1fr)",
+      "items": 4,
+      "repeatable": true
+    },
+    {
+      "id": "5",
+      "description": "5-column layout with equal width columns",
+      "columns": "repeat(5, 1fr)",
+      "items": 5,
+      "repeatable": true
+    },
+    {
+      "id": "6",
+      "description": "6-column layout with equal width columns",
+      "columns": "repeat(6, 1fr)",
+      "items": 6,
+      "repeatable": true
+    }
+  ]
+}

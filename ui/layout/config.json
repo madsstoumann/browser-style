@@ -21,7 +21,7 @@
       "type": "@media",
       "min": "540px",
       "max": null,
-      "layouts": ["autofit", "asymmetrical", "bento", "columns", "ratios"]
+      "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
     },
     "lg": {
       "type": "@media",
@@ -30,10 +30,11 @@
       "layouts": [
         "autofit", 
         "asymmetrical", 
+        "grid",
         "columns", 
         "ratios",
         {
-          "bento": ["bento(1xl-v:2sm:2sm)", "bento(1lg-v:2sm:2sm)"]
+          "grid": ["grid(1xl-v:2sm:2sm)", "grid(1lg-v:2sm:2sm)"]
         }
       ]
     },
@@ -41,15 +42,14 @@
       "type": "@media",
       "min": "920px",
       "max": null,
-      "layouts": ["autofit", "asymmetrical", "bento", "columns", "ratios", "mosaic"]
+      "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios", "mosaic"]
     },
     "xxl": {
       "type": "@media",
       "min": "1140px",
       "max": null,
-      "layouts": ["autofit", "asymmetrical", "bento", "columns", "ratios"]
+      "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
     }
   },
-  
   "core": ["base", "animations"]
 }

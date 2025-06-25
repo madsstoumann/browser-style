@@ -1,20 +1,28 @@
-[
-  {
-    "id": "autofit",
-    "description": "Auto-fit grid that creates columns as needed, collapsing empty ones",
-    "columns": "repeat(auto-fit, minmax(min(10rem, 100%), 1fr))",
-    "rules": [
-      { "selector": "&", "properties": { "--_ga": "auto" } },
-      { "selector": "&>*", "properties": { "--layout-ga": "auto" } }
-    ]
-  },
-  {
-    "id": "autofill", 
-    "description": "Auto-fill grid that creates columns as needed, preserving empty ones",
-    "columns": "repeat(auto-fill, minmax(min(10rem, 100%), 1fr))",
-    "rules": [
-      { "selector": "&", "properties": { "--_ga": "auto" } },
-      { "selector": "&>*", "properties": { "--layout-ga": "auto" } }
-    ]
-  }
-]
+{
+  "name": "Auto Layouts",
+  "prefix": "auto",
+  "layouts": [
+    {
+      "id": "fit",
+      "description": "Auto-fit grid that creates columns as needed, collapsing empty ones",
+      "columns": "repeat(auto-fit, minmax(min(10rem, 100%), 1fr))",
+      "items": 0,
+      "repeatable": true,
+      "rules": [
+        { "selector": "&", "properties": { "--_ga": "auto" } },
+        { "selector": "&>*", "properties": { "--layout-ga": "auto" } }
+      ]
+    },
+    {
+      "id": "fill", 
+      "description": "Auto-fill grid that creates columns as needed, preserving empty ones",
+      "columns": "repeat(auto-fill, minmax(min(10rem, 100%), 1fr))",
+      "items": 0,
+      "repeatable": true,
+      "rules": [
+        { "selector": "&", "properties": { "--_ga": "auto" } },
+        { "selector": "&>*", "properties": { "--layout-ga": "auto" } }
+      ]
+    }
+  ]
+}

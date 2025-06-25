@@ -1,47 +1,69 @@
-[
-  {
-    "id": "ratio(25:75)",
-    "description": "Narrow sidebar with wide main content area",
-    "columns": "1fr 3fr"
-  },
-  {
-    "id": "ratio(33:66)",
-    "description": "Common sidebar and main content layout (1:2 ratio)",
-    "columns": "1fr 2fr"
-  },
-  {
-    "id": "ratio(40:60)",
-    "description": "40:60 ratio layout",
-    "columns": "2fr 3fr"
-  },
-  {
-    "id": "ratio(60:40)",
-    "description": "60:40 ratio layout",
-    "columns": "3fr 2fr"
-  },
-  {
-    "id": "ratio(66:33)",
-    "description": "Main content with sidebar (2:1 ratio)",
-    "columns": "2fr 1fr"
-  },
-  {
-    "id": "ratio(75:25)",
-    "description": "Wide main content with narrow sidebar",
-    "columns": "3fr 1fr"
-  },
-  {
-    "id": "ratio(25:25:50)",
-    "description": "25:25:50 ratio layout",
-    "columns": "1fr 1fr 2fr"
-  },
-  {
-    "id": "ratio(25:50:25)",
-    "description": "Centered main content with equal sidebars",
-    "columns": "1fr 2fr 1fr"
-  },
-  {
-    "id": "ratio(50:25:25)",
-    "description": "50:25:25 ratio layout",
-    "columns": "2fr 1fr 1fr"
-  }
-]
+{
+  "name": "Ratio Layouts",
+  "prefix": "ratio",
+  "layouts": [
+    {
+      "id": "25:75",
+      "description": "Narrow sidebar with wide main content area",
+      "columns": "1fr 3fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "33:66",
+      "description": "Common sidebar and main content layout (1:2 ratio)",
+      "columns": "1fr 2fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "40:60",
+      "description": "40:60 ratio layout",
+      "columns": "2fr 3fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "60:40",
+      "description": "60:40 ratio layout",
+      "columns": "3fr 2fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "66:33",
+      "description": "Main content with sidebar (2:1 ratio)",
+      "columns": "2fr 1fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "75:25",
+      "description": "Wide main content with narrow sidebar",
+      "columns": "3fr 1fr",
+      "items": 2,
+      "repeatable": true
+    },
+    {
+      "id": "25:25:50",
+      "description": "25:25:50 ratio layout",
+      "columns": "1fr 1fr 2fr",
+      "items": 3,
+      "repeatable": true
+    },
+    {
+      "id": "25:50:25",
+      "description": "Centered main content with equal sidebars",
+      "columns": "1fr 2fr 1fr",
+      "items": 3,
+      "repeatable": true
+    },
+    {
+      "id": "50:25:25",
+      "description": "50:25:25 ratio layout",
+      "columns": "2fr 1fr 1fr",
+      "items": 3,
+      "repeatable": true
+    }
+  ]
+}
