@@ -3,17 +3,25 @@
   "prefix": "mosaic",
   "layouts": [
     {
-      "id": "photo",
+      "id": "photo-lg",
       "description": "Photo gallery mosaic with varied item sizes in a repeating pattern",
       "columns": "repeat(5, 1fr)",
       "items": 11,
-      "repeatable": true,
+      "repeatable": false,
       "rules": [
         { "selector": "*:nth-of-type(11n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
         { "selector": "*:nth-of-type(11n+4)", "properties": { "--layout-ga": "span 2 / span 2" } },
         { "selector": "*:nth-of-type(11n+7)", "properties": { "--layout-ga": "span 2 / span 2" } },
         { "selector": "*:nth-of-type(11n+10)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "&", "properties": { "--layout-bg": "light-dark(#333, #EEE)", "--layout-colmg": "1px", "--layout-p": "var(--layout-colmg)", "grid-auto-flow": "dense" } },
+        { "selector": "&", "properties": 
+          { 
+            "--layout-bg": "light-dark(#333, #EEE)",
+            "--layout-spacing-unit": "0.25rem",
+            "--layout-pbe": "var(--layout-colmg)",
+            "--layout-pbs": "var(--layout-colmg)",
+            "--layout-pi": "var(--layout-colmg)"
+          } 
+        },
         { "selector": "&>*", "properties": { "aspect-ratio": "1 / 1", "object-fit": "cover", "object-position": "center" } }
       ]
     },
@@ -23,7 +31,7 @@
       "columns": "repeat(12, 1fr)",
       "rows": "repeat(12, 1fr)",
       "items": 8,
-      "repeatable": true,
+      "repeatable": false,
       "rules": [
         { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 7 / 7" } },
         { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "5 / 5 / 11 / 11" } },

@@ -7,7 +7,7 @@
       "layouts": ["autofit"]
     },
     "sm": {
-      "type": "@container",
+      "type": "@media",
       "min": "380px",
       "max": null,
       "layouts": [
@@ -21,7 +21,7 @@
       "type": "@media",
       "min": "540px",
       "max": null,
-      "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
+      "layouts": ["autofit", "asymmetrical", "bento", "columns", "grid", "mosaic", "ratios"]
     },
     "lg": {
       "type": "@media",
@@ -51,5 +51,5 @@
       "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
     }
   },
-  "core": ["base", "animations"]
+  "core": ["base", "animations", "demo"]
 }

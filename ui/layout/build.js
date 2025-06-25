@@ -12,9 +12,9 @@ const __dirname = path.dirname(__filename);
  * Generates optimized CSS from config.json and layout JSON files
  */
 class LayoutBuilder {
-  constructor(configPath, buildDir, outputPath) {
+  constructor(configPath, layoutsDir, outputPath) {
     this.configPath = configPath;
-    this.buildDir = buildDir;
+    this.layoutsDir = layoutsDir;
     this.outputPath = outputPath;
     this.config = null;
     this.layouts = new Map();
@@ -38,12 +38,12 @@ class LayoutBuilder {
    * Load all layout JSON files
    */
   async loadLayouts() {
-    const layoutFiles = fs.readdirSync(this.buildDir)
+    const layoutFiles = fs.readdirSync(this.layoutsDir)
       .filter(file => file.endsWith('.json'));
 
     for (const file of layoutFiles) {
       const layoutName = path.basename(file, '.json');
-      const layoutPath = path.join(this.buildDir, file);
+      const layoutPath = path.join(this.layoutsDir, file);
       
       try {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
@@ -84,7 +84,7 @@ class LayoutBuilder {
     
     if (this.config.core && Array.isArray(this.config.core)) {
       for (const coreFile of this.config.core) {
-        const corePath = path.join(__dirname, 'modules', `${coreFile}.css`);
+        const corePath = path.join(__dirname, 'core', `${coreFile}.css`);
         
         try {
           if (fs.existsSync(corePath)) {
@@ -368,10 +368,16 @@ class LayoutBuilder {
     // Generate final CSS with core files
     const css = this.generateCSS(minify, coreCSS);
 
-    // Write output file
+    // Ensure dist directory exists
+    const distDir = path.join(__dirname, 'dist');
+    if (!fs.existsSync(distDir)) {
+      fs.mkdirSync(distDir, { recursive: true });
+    }
+
+    // Write output file to dist directory
     const outputPath = minify 
-      ? path.join(__dirname, `${outputName}.min.css`)
-      : path.join(__dirname, `${outputName}.css`);
+      ? path.join(distDir, `${outputName}.min.css`)
+      : path.join(distDir, `${outputName}.css`);
     
     fs.writeFileSync(outputPath, css, 'utf8');
 
@@ -390,15 +396,14 @@ class LayoutBuilder {
     const title = layoutType.name || `${layoutName.charAt(0).toUpperCase() + layoutName.slice(1)} Layouts`;
     const prefix = layoutType.prefix || layoutName;
     
-    let html = `<!DOCTYPE html>
+  	let html = `<!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
 	<title>${title}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
-	<link rel="stylesheet" href="../layout.min.css">
-	<link rel="stylesheet" href="../demo/demo.css">
+	<link rel="stylesheet" href="layout.min.css">
 </head>
 <body>
 	<h1>${title}</h1>`;
@@ -482,8 +487,8 @@ class LayoutBuilder {
       fs.mkdirSync(distDir, { recursive: true });
     }
 
-    // Get all layout files from build directory
-    const layoutFiles = fs.readdirSync(this.buildDir)
+    // Get all layout files from layouts directory
+    const layoutFiles = fs.readdirSync(this.layoutsDir)
       .filter(file => file.endsWith('.json') && file !== 'config.json');
 
     for (const file of layoutFiles) {
@@ -492,7 +497,7 @@ class LayoutBuilder {
       // Skip overflow or empty layout files
       if (layoutName === 'overflow') continue;
       
-      const layoutPath = path.join(this.buildDir, file);
+      const layoutPath = path.join(this.layoutsDir, file);
       
       try {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
@@ -532,10 +537,10 @@ async function main() {
   const isMinify = args.includes('--minify');
   
   const configPath = path.join(__dirname, 'config.json');
-  const buildDir = path.join(__dirname, 'build');
+  const layoutsDir = path.join(__dirname, 'layouts');
   const outputPath = path.join(__dirname, 'dist.css');
 
-  const builder = new LayoutBuilder(configPath, buildDir, outputPath);
+  const builder = new LayoutBuilder(configPath, layoutsDir, outputPath);
 
   const runBuild = async () => {
     try {
@@ -564,8 +569,8 @@ async function main() {
   if (isWatch) {
     console.log('\n👀 Watching for changes...');
     
-    // Watch config and build files
-    const watchPaths = [configPath, buildDir];
+    // Watch config and layouts files
+    const watchPaths = [configPath, layoutsDir];
     
     // Simple file watcher
     const { watch } = await import('fs');

@@ -1,0 +1,109 @@
+@layer layout {
+	[overflow] {
+		--_anchor: attr(anchor type(<custom-ident>), --carousel);
+		--_sb-is: center span-inline-end;
+		--_sb-ie: center span-inline-start;
+
+		anchor-name: var(--_anchor);
+		scrollbar-width: none;
+
+		&::before, &::after {
+			content: "";
+			display: block;
+			inline-size: 50cqi;
+		}
+
+		/* === ITEMS === */
+		& > * {
+			container-type: scroll-state;
+			scroll-snap-align: center;
+
+			/* === SCROLL MARKER. Prefix: --layout-ofsm- === */
+			&::scroll-marker {
+				aspect-ratio: var(--layout-ofsm-asr, 1);
+				border-radius: var(--layout-ofsm-br, 50%);
+				border: var(--layout-ofsm-bdw, 1px) solid var(--layout-ofsm-bc, #0004);
+				content: "";
+				cursor: pointer;
+				scroll-snap-align: center;
+			}
+		}
+
+		/* === TYPES === */
+		&[overflow~="slider"] { 
+			grid-auto-columns: 100%;
+			grid-auto-flow: column;
+			overflow-x: auto;
+			overscroll-behavior-x: contain;
+			scroll-snap-type: x mandatory;
+		}
+
+		/* === MARKER GROUP. Prefix: --layout-ofmg- === */
+		&[overflow~="markers"] {
+			scroll-marker-group: var(--layout-ofmg, after);
+			&::scroll-marker-group {
+				box-sizing: border-box;
+				container: marker-group / inline-size;
+				display: grid;
+				gap: var(--layout-ofmg-gap, .5em);
+				grid-auto-columns: var(--layout-ofsm-size, 1em);
+				grid-auto-flow: column;
+				justify-self: center;
+				inline-size: 100%;
+				inset: anchor(bottom) calc(anchor(right) - 10%) auto calc(anchor(left) - 10%);
+				overflow-x: auto;
+				padding: var(--layout-ofmg-pad, 1em);
+				place-content: safe center;
+				position: absolute;
+				position-anchor: var(--_anchor);
+			}
+		}
+
+		/* === SCROLL BUTTONS. Prefix: --layout-ofsb- === */
+		&::scroll-button(*) {
+			aspect-ratio: var(--layout-ofsb-asr, 1);
+			background: var(--layout-ofsb-bg, #0003);
+			border-radius: var(--layout-ofsb-bdrs, 50%);
+			border: var(--layout-ofsb-bdw, 0) solid var(--layout-ofsb-bdc, #0004);
+			cursor: pointer;
+			inline-size: var(--layout-ofsb-size, 3rem);
+
+			font-family: Material Symbols Outlined;
+			line-height: 1;
+			font-size: 2rem;
+			font-variation-settings: "FILL" 0, "wght" 100, "GRAD" 0, "opsz" 24;
+
+			margin: var(--layout-ofsb-m, 1rem);
+			/* place-content: center; */
+			position-anchor: var(--_anchor);
+			position: absolute;
+			z-index: 1;
+		}
+		&::scroll-button(*):disabled {
+			cursor: not-allowed;
+			opacity: 25%;
+		}
+
+		&::scroll-button(inline-start) {
+			content: "arrow_back";
+			/*
+				https://fonts.google.com/icons?selected=Material+Symbols+Outlined:arrow_forward_ios:FILL@0;wght@400;GRAD@0;opsz@24&icon.size=24&icon.color=%231f1f1f&icon.platform=web
+			*/
+			/* content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg>'); */
+			position-area: var(--_sb-is);
+		}
+		&::scroll-button(inline-end) {
+			content: "arrow_forward";
+			/* content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M13 18l6-6M13 6l6 6"/></svg>'); */
+			position-area: var(--_sb-ie)
+		}
+
+
+
+
+
+		@media (prefers-reduced-motion: no-preference) {
+			scroll-behavior: smooth;
+		}
+	}
+}
