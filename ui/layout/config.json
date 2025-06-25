@@ -27,16 +27,7 @@
       "type": "@media",
       "min": "720px",
       "max": null,
-      "layouts": [
-        "autofit", 
-        "asymmetrical", 
-        "grid",
-        "columns", 
-        "ratios",
-        {
-          "grid": ["grid(1xl-v:2sm:2sm)", "grid(1lg-v:2sm:2sm)"]
-        }
-      ]
+      "layouts": ["autofit", "asymmetrical", "bento", "columns", "grid", "mosaic", "ratios"]
     },
     "xl": {
       "type": "@media",
@@ -51,5 +42,6 @@
       "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
     }
   },
-  "core": ["base", "animations", "demo"]
+  "core": ["base"],
+  "common": ["animations", "demo"]
 }

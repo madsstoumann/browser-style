@@ -18,9 +18,9 @@ content-item {
 		filter: grayscale(95%) brightness(.9);
 	}
 }
-/* lay-out:not([sm*="mosaic(photo)"]) {
+lay-out {
 	transition: grid-template-columns 0.35s ease;
-} */
+}
 
 lay-out[xl*="fixed-"] content-item { min-block-size: 10rem; }
 lay-out:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {

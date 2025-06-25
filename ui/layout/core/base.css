@@ -90,11 +90,3 @@
 		}
 	}
 }
-
-/*
-	If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
-	and wrap a container around the layout, with a `data-layout-wrapper` attribute
-*/
-/* [data-layout-wrapper] {
-	margin-inline: max(var(--layout-mi, 0), 50vw - var(--layout-bleed-mw, 100vw) / 2);
-} */

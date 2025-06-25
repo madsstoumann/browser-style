@@ -102,6 +102,33 @@ class LayoutBuilder {
     
     return coreCSS;
   }
+
+  /**
+   * Load common CSS files (loaded after layouts)
+   */
+  async loadCommonFiles() {
+    let commonCSS = '';
+    
+    if (this.config.common && Array.isArray(this.config.common)) {
+      for (const commonFile of this.config.common) {
+        const commonPath = path.join(__dirname, 'core', `${commonFile}.css`);
+        
+        try {
+          if (fs.existsSync(commonPath)) {
+            const commonContent = fs.readFileSync(commonPath, 'utf8');
+            commonCSS += commonContent + '\n\n';
+            console.log(`✓ Loaded common file: ${commonFile}.css`);
+          } else {
+            console.warn(`⚠ Common file not found: ${commonFile}.css`);
+          }
+        } catch (error) {
+          console.warn(`⚠ Failed to load common file ${commonFile}.css: ${error.message}`);
+        }
+      }
+    }
+    
+    return commonCSS;
+  }
   generateMediaQuery(breakpoint, config) {
     const conditions = [];
     if (config.min) conditions.push(`min-width: ${config.min}`);
@@ -279,65 +306,87 @@ class LayoutBuilder {
   }
 
   /**
-   * Generate optimized CSS output
+   * Generate optimized CSS output with breakpoint-specific layers
    */
-  generateCSS(minify = false, coreCSS = '') {
-    // Group rules by media query
-    const mediaGroups = new Map();
+  generateCSS(minify = false, coreCSS = '', commonCSS = '') {
+    // Group rules by media query and breakpoint
+    const breakpointGroups = new Map();
     
     for (const [key, properties] of this.cssRules) {
       const [mediaQuery, selector] = key.split('::', 2);
       
-      if (!mediaGroups.has(mediaQuery)) {
-        mediaGroups.set(mediaQuery, new Map());
+      // Extract breakpoint name from media query processing
+      let breakpointName = 'unknown';
+      for (const [bpName, bpConfig] of Object.entries(this.config.breakpoints)) {
+        const expectedQuery = this.generateMediaQuery(bpName, bpConfig);
+        if (expectedQuery === mediaQuery) {
+          breakpointName = bpName;
+          break;
+        }
       }
       
-      mediaGroups.get(mediaQuery).set(selector, properties);
+      if (!breakpointGroups.has(breakpointName)) {
+        breakpointGroups.set(breakpointName, new Map());
+      }
+      
+      const breakpointRules = breakpointGroups.get(breakpointName);
+      if (!breakpointRules.has(mediaQuery)) {
+        breakpointRules.set(mediaQuery, new Map());
+      }
+      
+      breakpointRules.get(mediaQuery).set(selector, properties);
     }
 
     let css = '';
 
-    // Add core CSS first (outside of @layer layout)
+    // Add core CSS first (already contains its own layers)
     if (coreCSS) {
       css += coreCSS;
     }
 
-    // Generate layout layer
-    css += '@layer layout {\n';
-
-    // Process each media query
-    for (const [mediaQuery, rules] of mediaGroups) {
-      css += `\t${mediaQuery} {\n`;
+    // Process each breakpoint in its own layer
+    for (const [breakpointName, mediaQueries] of breakpointGroups) {
+      css += `@layer layout.${breakpointName} {\n`;
       
-      // Group selectors with identical properties
-      const propertyGroups = new Map();
-      
-      for (const [selector, properties] of rules) {
-        const propsKey = JSON.stringify([...properties.entries()].sort());
+      // Process each media query within the breakpoint layer
+      for (const [mediaQuery, rules] of mediaQueries) {
+        css += `\t${mediaQuery} {\n`;
         
-        if (!propertyGroups.has(propsKey)) {
-          propertyGroups.set(propsKey, { selectors: [], properties });
+        // Group selectors with identical properties
+        const propertyGroups = new Map();
+        
+        for (const [selector, properties] of rules) {
+          const propsKey = JSON.stringify([...properties.entries()].sort());
+          
+          if (!propertyGroups.has(propsKey)) {
+            propertyGroups.set(propsKey, { selectors: [], properties });
+          }
+          
+          propertyGroups.get(propsKey).selectors.push(selector);
+        }
+
+        // Output grouped rules
+        for (const { selectors, properties } of propertyGroups.values()) {
+          const selectorList = selectors.join(',\n\t\t');
+          css += `\t\t${selectorList} {\n`;
+          
+          for (const [prop, value] of properties) {
+            css += `\t\t\t${prop}: ${value};\n`;
+          }
+          
+          css += '\t\t}\n\n';
         }
         
-        propertyGroups.get(propsKey).selectors.push(selector);
-      }
-
-      // Output grouped rules
-      for (const { selectors, properties } of propertyGroups.values()) {
-        const selectorList = selectors.join(',\n\t\t');
-        css += `\t\t${selectorList} {\n`;
-        
-        for (const [prop, value] of properties) {
-          css += `\t\t\t${prop}: ${value};\n`;
-        }
-        
-        css += '\t\t}\n\n';
+        css += '\t}\n\n';
       }
       
-      css += '\t}\n\n';
+      css += '}\n\n';
     }
 
-    css += '}\n';
+    // Add common CSS last (animations, demo styles, etc.)
+    if (commonCSS) {
+      css += commonCSS;
+    }
 
     return minify ? this.minifyCSS(css) : css;
   }
@@ -363,10 +412,13 @@ class LayoutBuilder {
       this.processBreakpoint(breakpointName, breakpointConfig);
     }
 
+    // Load common CSS files (animations, demo styles, etc.)
+    const commonCSS = await this.loadCommonFiles();
+
     console.log(`\n🎨 Generating ${minify ? 'minified' : 'optimized'} CSS...`);
 
-    // Generate final CSS with core files
-    const css = this.generateCSS(minify, coreCSS);
+    // Generate final CSS with core files and common files
+    const css = this.generateCSS(minify, coreCSS, commonCSS);
 
     // Ensure dist directory exists
     const distDir = path.join(__dirname, 'dist');
@@ -446,7 +498,7 @@ class LayoutBuilder {
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>&lt;lay-out md="${prefix}(${layoutId})"&gt;</code>
-		<lay-out md="${prefix}(${layoutId})">`;
+		<lay-out md="columns(${itemCount})" lg="${prefix}(${layoutId})">`;
 
         // Add content items
         for (let i = 0; i < itemCount; i++) {

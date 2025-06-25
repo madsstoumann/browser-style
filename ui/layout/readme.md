@@ -248,8 +248,8 @@ Each layout type is defined in a JSON file with this structure:
 
 ## File Sizes
 
-- **dist/layout.css**: ~54KB (optimized)
-- **dist/layout.min.css**: ~46KB (15% smaller)
+- **dist/layout.css**: ~61KB (optimized with breakpoint layers)
+- **dist/layout.min.css**: ~53KB (14% smaller)
 
 ## Browser Support
 
@@ -259,3 +259,36 @@ Each layout type is defined in a JSON file with this structure:
 ## License
 
 ISC
+
+### CSS Layer Structure
+
+The generated CSS uses CSS cascade layers for better control and organization:
+
+```css
+@layer layout.base      /* Core layout system */
+@layer layout.reset     /* Reset and initialization */  
+@layer layout.animations /* Animation definitions */
+@layer layout.demo      /* Demo styling (optional) */
+@layer layout.xs        /* Extra small breakpoint styles */
+@layer layout.sm        /* Small breakpoint styles */
+@layer layout.md        /* Medium breakpoint styles */
+@layer layout.lg        /* Large breakpoint styles */
+@layer layout.xl        /* Extra large breakpoint styles */
+@layer layout.xxl       /* Extra extra large breakpoint styles */
+```
+
+This structure provides:
+- ✅ **Predictable cascade**: Layers ensure consistent styling precedence
+- ✅ **Breakpoint isolation**: Each breakpoint has its own layer for better organization
+- ✅ **Customization**: You can override styles by targeting specific layers
+- ✅ **Modularity**: Core, animations, and demo styles are separated
+
+
+
+/*
+	If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
+	and wrap a container around the layout, with a `data-layout-wrapper` attribute
+*/
+/* [data-layout-wrapper] {
+	margin-inline: max(var(--layout-mi, 0), 50vw - var(--layout-bleed-mw, 100vw) / 2);
+} */

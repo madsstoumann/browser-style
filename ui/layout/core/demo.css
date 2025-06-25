@@ -1,91 +1,93 @@
-content-item {
-	background: var(--bg, #DDD);
-	max-inline-size: 100%;
-	min-block-size: 14rem;
-	&:nth-of-type(12n+1) { --bg: cornflowerblue; }
-	&:nth-of-type(12n+2) { --bg: lightcoral; }
-	&:nth-of-type(12n+3) { --bg: lightgreen; }
-	&:nth-of-type(12n+4) { --bg: lightgoldenrodyellow; }
-	&:nth-of-type(12n+5) { --bg: lightpink; }
-	&:nth-of-type(12n+6) { --bg: lightseagreen; }
-	&:nth-of-type(12n+7) { --bg: lightsteelblue; }
-	&:nth-of-type(12n+8) { --bg: lightsalmon; }
-	&:nth-of-type(12n+9) { --bg: lightyellow; }
-	&:nth-of-type(12n+10) { --bg: lightcyan; }
-	&:nth-of-type(12n+11) { --bg: lightgray; }
-	&:nth-of-type(12n+12) { --bg: lightblue; }
-	&[repeat] {
-		filter: grayscale(95%) brightness(.9);
+@layer layout.demo {
+	content-item {
+		background: var(--bg, #DDD);
+		max-inline-size: 100%;
+		min-block-size: 14rem;
+		&:nth-of-type(12n+1) { --bg: cornflowerblue; }
+		&:nth-of-type(12n+2) { --bg: lightcoral; }
+		&:nth-of-type(12n+3) { --bg: lightgreen; }
+		&:nth-of-type(12n+4) { --bg: lightgoldenrodyellow; }
+		&:nth-of-type(12n+5) { --bg: lightpink; }
+		&:nth-of-type(12n+6) { --bg: lightseagreen; }
+		&:nth-of-type(12n+7) { --bg: lightsteelblue; }
+		&:nth-of-type(12n+8) { --bg: lightsalmon; }
+		&:nth-of-type(12n+9) { --bg: lightyellow; }
+		&:nth-of-type(12n+10) { --bg: lightcyan; }
+		&:nth-of-type(12n+11) { --bg: lightgray; }
+		&:nth-of-type(12n+12) { --bg: lightblue; }
+		&[repeat] {
+			filter: grayscale(95%) brightness(.9);
+		}
 	}
-}
-/* lay-out:not([sm*="mosaic(photo)"]) {
-	transition: grid-template-columns 0.35s ease;
-} */
+	lay-out {
+		transition: --layout-gtc 0.35s ease, grid-template-columns 0.35s ease;
+	}
 
-lay-out[xl*="fixed-"] content-item { min-block-size: 10rem; }
-lay-out:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
-    min-block-size: 8rem;
-}
-/* lay-out[sm*="mosaic(photo)"] content-item { min-block-size: auto; } */
+	lay-out[xl*="fixed-"] content-item { min-block-size: 10rem; }
+	lay-out:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
+			min-block-size: 8rem;
+	}
+	/* lay-out[sm*="mosaic(photo)"] content-item { min-block-size: auto; } */
 
-lay-out > h2 {
-	font-size: 2.5rem;
-	font-weight: 200;
-	margin: 0;
-	text-box: cap alphabetic;
-}
-html {
-	interpolate-size: allow-keywords;
-}
-:root {
-	--layout-primary-bg: hsl(220, 100%, 95%);
-	--layout-primary-c: hsl(220, 100%, 20%);
-	
-	--layout-secondary-bg: hsl(120, 50%, 95%);
-	--layout-secondary-c: hsl(120, 50%, 20%);
-	
-	--layout-tertiary-bg: hsl(30, 10%, 95%);
-	--layout-tertiary-c: hsl(30, 80%, 20%);
-}
-body {
-	--layout-bleed-mw: 1024px;
-	--layout-mi: 1rem;
-	display: grid;
-	font-family: system-ui;
-	line-height: 1.6;
-	margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
-	row-gap: 1rem;
-}
-code {
-	background: #333;
-	border-radius: .5ch;
-	color: #EEE;
-	display: inline-block;
-	font-family: monospace;
-	font-size: .8rem;
-	margin-block: 1ch;
-	padding: .5ch 1.25ch;
-}
-h1 {
-	font-weight: 500;
-	margin-block: 1ch 0;
-	text-box: cap alphabetic;
-}
-body > h2 {
-	font-weight: 500;
-	border-block: 1px dotted #999;
+	lay-out > h2 {
+		font-size: 2.5rem;
+		font-weight: 200;
+		margin: 0;
+		text-box: cap alphabetic;
+	}
+	html {
+		interpolate-size: allow-keywords;
+	}
+	:root {
+		--layout-primary-bg: hsl(220, 100%, 95%);
+		--layout-primary-c: hsl(220, 100%, 20%);
+		
+		--layout-secondary-bg: hsl(120, 50%, 95%);
+		--layout-secondary-c: hsl(120, 50%, 20%);
+		
+		--layout-tertiary-bg: hsl(30, 10%, 95%);
+		--layout-tertiary-c: hsl(30, 80%, 20%);
+	}
+	body {
+		--layout-bleed-mw: 1024px;
+		--layout-mi: 1rem;
+		display: grid;
+		font-family: system-ui;
+		line-height: 1.6;
+		margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+		row-gap: 1rem;
+	}
+	code {
+		background: #333;
+		border-radius: .5ch;
+		color: #EEE;
+		display: inline-block;
+		font-family: monospace;
+		font-size: .8rem;
+		margin-block: 1ch;
+		padding: .5ch 1.25ch;
+	}
+	h1 {
+		font-weight: 500;
+		margin-block: 1ch 0;
+		text-box: cap alphabetic;
+	}
+	body > h2 {
+		font-weight: 500;
+		border-block: 1px dotted #999;
 
-	margin: 0;
-	padding-block: 1ch;
-	text-box: cap alphabetic;
-}
-h3 {
-	font-weight: 500;
-	margin-block: 0 .5ch;
-	text-box: cap alphabetic;
-}
-small {
-	color: gray;
-	display: block;
-	line-height: 1.8;
+		margin: 0;
+		padding-block: 1ch;
+		text-box: cap alphabetic;
+	}
+	h3 {
+		font-weight: 500;
+		margin-block: 0 .5ch;
+		text-box: cap alphabetic;
+	}
+	small {
+		color: gray;
+		display: block;
+		line-height: 1.8;
+	}
 }
