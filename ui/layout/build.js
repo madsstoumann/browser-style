@@ -460,16 +460,12 @@ class LayoutBuilder {
 <body>
 	<h1>${title}</h1>`;
 
-    // Add description based on layout type
-    if (layoutType.name === 'Bento Box Layouts') {
+    // Add description from layout type data
+    if (layoutType.desc) {
       html += `
-	<p>These layouts use <strong>fixed patterns</strong> where the number of items is predetermined and the layout adapts to a specific arrangement.<br>
-		If you add more items than the layout can handle, they will be hidden.</p>`;
-    } else if (layoutType.name === 'Grid Layouts') {
-      html += `
-	<p>These layouts use <strong>grid patterns</strong> with mixed item sizes to create <strong>repeating patterns</strong>.<br>
-		When you add more items, the pattern repeats automatically.</p>`;
+	<p>${layoutType.desc}</p>`;
     } else {
+      // Fallback description if no desc property is found
       html += `
 	<p>These layouts use the <strong>${prefix}()</strong> layout mode to create various patterns.<br>
 		${layoutData.some(l => l.repeatable) ? 'When you add more items, repeatable patterns continue automatically.' : 'Fixed layouts display a specific number of items.'}</p>`;
@@ -497,7 +493,7 @@ class LayoutBuilder {
 	<section>
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
-		<code>&lt;lay-out md="${prefix}(${layoutId})"&gt;</code>
+		<code>&lt;lay-out lg="${prefix}(${layoutId})"&gt;</code>
 		<lay-out md="columns(${itemCount})" lg="${prefix}(${layoutId})">`;
 
         // Add content items

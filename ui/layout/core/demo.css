@@ -21,7 +21,9 @@
 	}
 	lay-out {
 		transition: grid-template-columns 0.35s ease;
-		&[xl*="fixed-"] content-item { min-block-size: 10rem; }
+		&:is([md*="bento"], [lg*="bento"], [xl*="bento"], [xxl*="bento"]) content-item {
+			min-block-size: 8rem;
+		}
 		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
 			min-block-size: 8rem;
 		}

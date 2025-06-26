@@ -1,6 +1,7 @@
 {
   "name": "Auto Layouts",
   "prefix": "auto",
+  "desc": "These layouts use the <strong>auto()</strong> layout mode to create various patterns.<br>When you add more items, repeatable patterns continue automatically.",
   "layouts": [
     {
       "id": "fit",

@@ -1,6 +1,7 @@
 {
   "name": "Mosaic Layouts",
   "prefix": "mosaic",
+  "desc": "These layouts use the <strong>mosaic()</strong> layout mode to create various patterns.<br>Fixed layouts display a specific number of items.",
   "layouts": [
     {
       "id": "photo-lg",

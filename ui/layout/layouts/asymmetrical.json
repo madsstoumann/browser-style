@@ -1,6 +1,7 @@
 {
   "name": "Asymmetrical Layouts",
   "prefix": "asym",
+  "desc": "These layouts use the <strong>asym()</strong> layout mode to create various asymmetrical patterns.<br>The layouts display a specific/fixed number of items.",
   "layouts": [
     {
       "id": "l-r",
