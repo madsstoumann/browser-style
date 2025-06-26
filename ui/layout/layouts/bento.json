@@ -3,7 +3,7 @@
   "prefix": "bento",
   "layouts": [
     {
-      "id": "6a-fixed",
+      "id": "6a",
       "description": "Balanced layout with mixed item sizes in a fixed 6-item pattern",
       "columns": "repeat(10, 1fr)",
       "rows": "repeat(5, 1fr)",
@@ -20,7 +20,7 @@
       ]
     },
     {
-      "id": "6b-fixed",
+      "id": "6b",
       "description": "Varied layout with prominent lead item in a fixed 6-item pattern",
       "columns": "repeat(10, 1fr)",
       "rows": "repeat(5, 1fr)",
@@ -37,7 +37,7 @@
       ]
     },
     {
-      "id": "7a-fixed",
+      "id": "7a",
       "description": "Vertical emphasis layout with tall columns in a fixed 7-item pattern",
       "columns": "repeat(3, 1fr)",
       "rows": "repeat(5, 1fr)",
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "id": "7b-fixed",
+      "id": "7b",
       "description": "Complex grid layout with hero item and mixed proportions in a fixed 7-item pattern",
       "columns": "repeat(10, 1fr)",
       "rows": "repeat(6, 1fr)",
@@ -72,7 +72,7 @@
       ]
     },
     {
-      "id": "8a-fixed",
+      "id": "8a",
       "description": "Portfolio layout with featured items in a fixed 8-item pattern",
       "columns": "repeat(3, 1fr)",
       "rows": "repeat(6, 1fr)",
@@ -91,7 +91,7 @@
       ]
     },
     {
-      "id": "8b-fixed",
+      "id": "8b",
       "description": "Portfolio layout with featured items in a fixed 8-item pattern",
       "columns": "repeat(10, 1fr)",
       "rows": "repeat(4, 1fr)",
@@ -110,7 +110,7 @@
       ]
     },
     {
-      "id": "9a-fixed",
+      "id": "9a",
       "description": "Portfolio layout with featured items in a fixed 9-item pattern",
       "columns": "repeat(4, 1fr)",
       "items": 9,
@@ -125,7 +125,7 @@
       ]
     },
     {
-      "id": "9b-fixed",
+      "id": "9b",
       "description": "Compact portfolio layout with varied item sizes",
       "columns": "repeat(10, 1fr)",
       "items": 9,

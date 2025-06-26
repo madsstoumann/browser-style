@@ -3,7 +3,7 @@
   "prefix": "grid",
   "layouts": [
     {
-      "id": "2sm:1lg-h",
+      "id": "3a",
       "description": "2 small items in top row and 1 large item spanning horizontally at bottom",
       "columns": "1fr 1fr",
       "items": 3,
@@ -13,7 +13,7 @@
       ]
     },
     {
-      "id": "1lg-h:2sm",
+      "id": "3b",
       "description": "1 large item spanning horizontally at top and 2 small items at bottom",
       "columns": "1fr 1fr",
       "items": 3,
@@ -22,28 +22,8 @@
         { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
-    {
-      "id": "1lg-h:4sm",
-      "description": "1 large item spanning horizontally at top and 4 small items in a grid below",
-      "columns": "1fr 1fr",
-      "items": 5,
-      "repeatable": true,
-      "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
-      ]
-    },
-    {
-      "id": "4sm:1lg-h",
-      "description": "4 small items in a grid at top and 1 large item spanning horizontally at bottom",
-      "columns": "1fr 1fr",
-      "items": 5,
-      "repeatable": true,
-      "rules": [
-        { "selector": "*:nth-of-type(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
-      ]
-    },
-    {
-      "id": "1lg-v:2sm",
+        {
+      "id": "3c",
       "description": "1 large item spanning vertically on the left and 2 small items on the right",
       "columns": "2fr 1fr",
       "items": 3,
@@ -52,28 +32,8 @@
         { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
-    {
-      "id": "1lg-v:3sm",
-      "description": "1 large item spanning vertically on the left and 3 small items stacked on the right",
-      "columns": "2fr 1fr",
-      "items": 4,
-      "repeatable": true,
-      "rules": [
-        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
-      ]
-    },
-    {
-      "id": "1lg-v:4sm",
-      "description": "1 large item spanning vertically on the left and 4 small items in a grid on the right",
-      "columns": "2fr 1fr",
-      "items": 5,
-      "repeatable": true,
-      "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
-      ]
-    },
-    {
-      "id": "2sm:1lg-v",
+        {
+      "id": "3d",
       "description": "2 small items on the left and 1 large item spanning vertically on the right",
       "columns": "1fr 2fr",
       "items": 3,
@@ -83,7 +43,17 @@
       ]
     },
     {
-      "id": "3sm:1lg-v",
+      "id": "4a",
+      "description": "1 large item spanning vertically on the left and 3 small items stacked on the right",
+      "columns": "2fr 1fr",
+      "items": 4,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
+      ]
+    },
+    {
+      "id": "4b",
       "description": "3 small items stacked on the left and 1 large item spanning vertically on the right",
       "columns": "1fr 2fr",
       "items": 4,
@@ -93,17 +63,7 @@
       ]
     },
     {
-      "id": "4sm:1lg-v",
-      "description": "4 small items in a grid on the left and 1 large item spanning vertically on the right",
-      "columns": "1fr 2fr",
-      "items": 5,
-      "repeatable": true,
-      "rules": [
-        { "selector": "*:nth-of-type(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
-      ]
-    },
-    {
-      "id": "1lg-h:1lg-v:2sm",
+      "id": "4c",
       "description": "1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items",
       "columns": "1fr 1fr 1fr",
       "items": 4,
@@ -114,7 +74,7 @@
       ]
     },
     {
-      "id": "1lg-v:1lg-h:2sm",
+      "id": "4d",
       "description": "1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items",
       "columns": "1fr 1fr 1fr",
       "items": 4,
@@ -124,8 +84,9 @@
         { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
+    
     {
-      "id": "1lg-v:2sm:1lg-v",
+      "id": "4e",
       "description": "1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically",
       "columns": "1fr 1fr 1fr",
       "items": 4,
@@ -136,7 +97,47 @@
       ]
     },
     {
-      "id": "2sm:1lg-v:2sm",
+      "id": "5a",
+      "description": "1 large item spanning horizontally at top and 4 small items in a grid below",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "5b",
+      "description": "4 small items in a grid at top and 1 large item spanning horizontally at bottom",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "5c",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid on the right",
+      "columns": "2fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "5d",
+      "description": "4 small items in a grid on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "5e",
       "description": "2 small items, 1 large item spanning vertically, and 2 more small items",
       "columns": "1fr 1fr 1fr",
       "items": 5,
@@ -146,7 +147,7 @@
       ]
     },
     {
-      "id": "1lg-v:2sm:2sm",
+      "id": "5f",
       "description": "1 large item spanning vertically on the left and 4 small items in a grid",
       "columns": "1fr 1fr 1fr",
       "items": 5,
@@ -156,13 +157,23 @@
       ]
     },
     {
-      "id": "1xl-v:2sm:2sm",
+      "id": "5g",
       "description": "1 large item spanning vertically on the left and 4 small items in a grid",
       "columns": "1fr 1fr 1fr 1fr",
       "items": 5,
       "repeatable": true,
       "rules": [
         { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
+      ]
+    },
+    {
+      "id": "5h",
+      "description": "4 small items and 1 large item spanning vertically on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rules": [
+        { "selector": "*:nth-of-type(5n+3)", "properties": { "--layout-ga": "span 2 / span 2" } }
       ]
     }
   ]

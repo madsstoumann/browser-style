@@ -3,6 +3,13 @@
   "prefix": "columns",
   "layouts": [
     {
+      "id": "1",
+      "description": "1-column layout (default)",
+      "columns": "1fr",
+      "items": 1,
+      "repeatable": true
+    },
+    {
       "id": "2",
       "description": "2-column layout with equal width columns",
       "columns": "repeat(2, 1fr)",

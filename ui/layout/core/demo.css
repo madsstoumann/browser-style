@@ -20,31 +20,25 @@
 		}
 	}
 	lay-out {
-		transition: --layout-gtc 0.35s ease, grid-template-columns 0.35s ease;
-	}
-
-	lay-out[xl*="fixed-"] content-item { min-block-size: 10rem; }
-	lay-out:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
+		transition: grid-template-columns 0.35s ease;
+		&[xl*="fixed-"] content-item { min-block-size: 10rem; }
+		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
 			min-block-size: 8rem;
+		}
+		& > h2 {
+			font-size: 2.5rem;
+			font-weight: 200;
+			margin: 0;
+			text-box: cap alphabetic;
+		}
 	}
-	/* lay-out[sm*="mosaic(photo)"] content-item { min-block-size: auto; } */
 
-	lay-out > h2 {
-		font-size: 2.5rem;
-		font-weight: 200;
-		margin: 0;
-		text-box: cap alphabetic;
-	}
 	html {
 		interpolate-size: allow-keywords;
-	}
-	:root {
 		--layout-primary-bg: hsl(220, 100%, 95%);
 		--layout-primary-c: hsl(220, 100%, 20%);
-		
 		--layout-secondary-bg: hsl(120, 50%, 95%);
 		--layout-secondary-c: hsl(120, 50%, 20%);
-		
 		--layout-tertiary-bg: hsl(30, 10%, 95%);
 		--layout-tertiary-c: hsl(30, 80%, 20%);
 	}
@@ -75,7 +69,6 @@
 	body > h2 {
 		font-weight: 500;
 		border-block: 1px dotted #999;
-
 		margin: 0;
 		padding-block: 1ch;
 		text-box: cap alphabetic;
