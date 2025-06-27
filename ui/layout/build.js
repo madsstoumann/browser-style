@@ -489,12 +489,30 @@ class LayoutBuilder {
         const layoutId = layout.originalId || layout.id.replace(`${prefix}(`, '').replace(')', '');
         const description = layout.description || '';
         
+        // Generate breakpoint attributes from layout.breakpoints
+        let breakpointAttrs = '';
+        let codeExample = '';
+        
+        if (layout.breakpoints) {
+          // Use the breakpoints defined in the layout
+          const breakpointPairs = [];
+          for (const [breakpoint, value] of Object.entries(layout.breakpoints)) {
+            breakpointAttrs += ` ${breakpoint}="${value}"`;
+            breakpointPairs.push(`${breakpoint}="${value}"`);
+          }
+          codeExample = `&lt;lay-out${breakpointAttrs}&gt;`;
+        } else {
+          // Fallback to old behavior if no breakpoints defined
+          breakpointAttrs = ` md="columns(${itemCount})" lg="${prefix}(${layoutId})"`;
+          codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"&gt;`;
+        }
+        
         html += `
 	<section>
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
-		<code>&lt;lay-out lg="${prefix}(${layoutId})"&gt;</code>
-		<lay-out md="columns(${itemCount})" lg="${prefix}(${layoutId})">`;
+		<code>${codeExample}</code>
+		<lay-out${breakpointAttrs}>`;
 
         // Add content items
         for (let i = 0; i < itemCount; i++) {

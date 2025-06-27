@@ -9,6 +9,10 @@
       "columns": "repeat(5, 1fr)",
       "items": 11,
       "repeatable": false,
+      "breakpoints": {
+        "md": "columns(11)",
+        "lg": "mosaic(photo-lg)"
+      },
       "rules": [
         { "selector": "*:nth-of-type(11n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
         { "selector": "*:nth-of-type(11n+4)", "properties": { "--layout-ga": "span 2 / span 2" } },
@@ -33,6 +37,10 @@
       "rows": "repeat(12, 1fr)",
       "items": 8,
       "repeatable": false,
+      "breakpoints": {
+        "md": "columns(8)",
+        "lg": "mosaic(scatter)"
+      },
       "rules": [
         { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 7 / 7" } },
         { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "5 / 5 / 11 / 11" } },
@@ -50,6 +58,10 @@
       "columns": "repeat(12, 1fr)",
       "items": 8,
       "repeatable": false,
+      "breakpoints": {
+        "md": "columns(8)",
+        "lg": "mosaic(hex)"
+      },
       "rules": [
         { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 5 / 5" } },
         { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "4 / 3 / 8 / 7" } },

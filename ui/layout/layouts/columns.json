@@ -8,42 +8,66 @@
       "description": "1-column layout (default)",
       "columns": "1fr",
       "items": 1,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(1)",
+        "lg": "columns(1)"
+      }
     },
     {
       "id": "2",
       "description": "2-column layout with equal width columns",
       "columns": "repeat(2, 1fr)",
       "items": 2,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "columns(2)"
+      }
     },
     {
       "id": "3",
       "description": "3-column layout with equal width columns",
       "columns": "repeat(3, 1fr)",
       "items": 3,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "columns(3)"
+      }
     },
     {
       "id": "4",
       "description": "4-column layout with equal width columns",
       "columns": "repeat(4, 1fr)",
       "items": 4,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "columns(4)"
+      }
     },
     {
       "id": "5",
       "description": "5-column layout with equal width columns",
       "columns": "repeat(5, 1fr)",
       "items": 5,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "columns(5)"
+      }
     },
     {
       "id": "6",
       "description": "6-column layout with equal width columns",
       "columns": "repeat(6, 1fr)",
       "items": 6,
-      "repeatable": true
+      "repeatable": true,
+      "breakpoints": {
+        "md": "columns(6)",
+        "lg": "columns(6)"
+      }
     }
   ]
 }
