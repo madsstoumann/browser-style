@@ -4,14 +4,13 @@
   "desc": "These layouts use the <strong>mosaic()</strong> layout mode to create various patterns.<br>Fixed layouts display a specific number of items.",
   "layouts": [
     {
-      "id": "photo-lg",
+      "id": "photo",
       "description": "Photo gallery mosaic with varied item sizes in a repeating pattern",
-      "columns": "repeat(5, 1fr)",
+      "columns": "1fr 1fr 1fr 1fr 1fr",
       "items": 11,
       "repeatable": false,
       "breakpoints": {
-        "md": "columns(11)",
-        "lg": "mosaic(photo-lg)"
+        "sm": "mosaic(photo)"
       },
       "rules": [
         { "selector": "*:nth-of-type(11n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
@@ -38,8 +37,9 @@
       "items": 8,
       "repeatable": false,
       "breakpoints": {
-        "md": "columns(8)",
-        "lg": "mosaic(scatter)"
+        "md": "columns(2)",
+        "lg": "grid(4c)",
+        "xl": "mosaic(scatter)"
       },
       "rules": [
         { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 7 / 7" } },
@@ -59,8 +59,9 @@
       "items": 8,
       "repeatable": false,
       "breakpoints": {
-        "md": "columns(8)",
-        "lg": "mosaic(hex)"
+        "md": "columns(2)",
+        "lg": "grid(4d)",
+        "xl": "mosaic(hex)"
       },
       "rules": [
         { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "1 / 1 / 5 / 5" } },

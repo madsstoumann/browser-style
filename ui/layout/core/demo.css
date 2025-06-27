@@ -24,8 +24,11 @@
 		&:is([md*="bento"], [lg*="bento"], [xl*="bento"], [xxl*="bento"]) content-item {
 			min-block-size: 8rem;
 		}
-		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"], [lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
-			min-block-size: 8rem;
+		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"]) content-item {
+			min-block-size: 3rem;
+		}
+		&:is([lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
+			min-block-size: 6rem;
 		}
 		& > h2 {
 			font-size: 2.5rem;

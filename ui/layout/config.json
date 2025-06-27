@@ -13,8 +13,11 @@
       "layouts": [
 				"autofit", 
 				{
-					"columns": ["columns(2)"]
+					"columns": ["columns(2)"],
+          "grid": ["grid(3a)"],
+          "mosaic": ["mosaic(photo)"]
 				}
+        
 			]
     },
     "md": {
