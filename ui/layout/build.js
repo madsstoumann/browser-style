@@ -517,7 +517,7 @@ class LayoutBuilder {
         // Add content items
         for (let i = 0; i < itemCount; i++) {
           html += `
-			<content-item></content-item>`;
+			<item-card></item-card>`;
         }
 
         // Add repeat items if layout is repeatable
@@ -525,7 +525,7 @@ class LayoutBuilder {
           const repeatCount = Math.min(itemCount, 6); // Add same number as base items, max 6
           for (let i = 0; i < repeatCount; i++) {
             html += `
-			<content-item repeat></content-item>`;
+			<item-card repeat></item-card>`;
           }
         }
 

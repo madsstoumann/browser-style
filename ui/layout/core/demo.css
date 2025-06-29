@@ -1,5 +1,5 @@
 @layer layout.demo {
-	content-item {
+	item-card {
 		background: var(--bg, #DDD);
 		max-inline-size: 100%;
 		min-block-size: 14rem;
@@ -21,13 +21,13 @@
 	}
 	lay-out {
 		transition: grid-template-columns 0.35s ease;
-		&:is([md*="bento"], [lg*="bento"], [xl*="bento"], [xxl*="bento"]) content-item {
+		&:is([md*="bento"], [lg*="bento"], [xl*="bento"], [xxl*="bento"]) item-card {
 			min-block-size: 8rem;
 		}
-		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"]) content-item {
+		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"]) item-card {
 			min-block-size: 3rem;
 		}
-		&:is([lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) content-item {
+		&:is([lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) item-card {
 			min-block-size: 6rem;
 		}
 		& > h2 {

@@ -46,5 +46,5 @@
     }
   },
   "core": ["base"],
-  "common": ["animations", "demo"]
+  "common": ["animations", "content", "demo"]
 }

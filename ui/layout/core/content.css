@@ -1,0 +1,59 @@
+@layer layout.content {
+	item-card {
+		display: grid;
+		grid-template-columns: var(--item-card-gtc, 1fr);
+		grid-template-rows: var(--item-card-gtr, auto);
+		article {
+			& > * {
+				margin: 0;
+				text-box: cap alphabetic;
+			}
+			display: grid;
+			gap: 1em;
+			padding: 1em;
+		}
+		figure {
+			all: unset;
+			img {
+				/* aspect-ratio: 16 / 9; */
+				width: 100%;
+				height: auto;
+				/* display: block; */
+				object-fit: cover;
+			}
+		}
+
+		&:is([xs*="stack("], [sm*="stack("], [md*="stack("], [lg*="stack("], [xl*="stack("], [xxl*="stack("]) {
+			grid-template-columns: 1fr;
+			grid-template-rows: 1fr;
+			article {
+				background: var(--item-card-bg, #FFF);
+				color: var(--item-card-c, inherit);
+				grid-area: 1 / -1;
+				place-self: start center;
+				width: 50%;
+			}
+			figure {
+				grid-area: 1 / -1;
+				img { height: 100%; }
+			}
+		}
+
+		&[sm*="image("] article { display: none; }
+		&[sm*="text("] figure { display: none; }
+
+		&[sm*="text(start)"] { align-content: start; }
+		&[sm*="text(center)"] { align-content: center; }
+		&[sm*="text(end)"] { align-content: end; }
+
+		&[sm*="stack(t-l)"] article { place-self: start start; }
+		&[sm*="stack(t-c)"] article { place-self: start center; }
+		&[sm*="stack(t-r)"] article { place-self: start end; }
+		&[sm*="stack(c-l)"] article { place-self: center start; }
+		&[sm*="stack(c-c)"] article { place-self: center center; }
+		&[sm*="stack(c-r)"] article { place-self: center end; }
+		&[sm*="stack(b-l)"] article { place-self: end start; }
+		&[sm*="stack(b-c)"] article { place-self: end center; }
+		&[sm*="stack(b-r)"] article { place-self: end end; }
+	}
+}

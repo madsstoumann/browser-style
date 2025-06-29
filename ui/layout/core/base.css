@@ -20,7 +20,7 @@
 		column-gap: calc(var(--layout-colmg) * var(--layout-spacing-unit));
 		contain: layout inline-size;
 		display: grid;
-		grid-auto-flow: row dense;
+		/* grid-auto-flow: row dense; */
 		grid-template-columns: var(--layout-gtc);
 		grid-template-rows: var(--layout-gtr);
 		margin-block-start: calc(var(--layout-mbs) * var(--layout-spacing-unit));
