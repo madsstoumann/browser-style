@@ -10,8 +10,7 @@
       "items": 1,
       "repeatable": true,
       "breakpoints": {
-        "md": "columns(1)",
-        "lg": "columns(1)"
+        "md": "columns(1)"
       }
     },
     {

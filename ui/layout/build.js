@@ -181,16 +181,17 @@ class LayoutBuilder {
     if (!mediaQuery) return;
 
     const processedLayouts = new Set();
+    const processedGlobalRules = new Set(); // Track global rules to avoid duplication
 
     for (const layoutRef of breakpointConfig.layouts) {
       if (typeof layoutRef === 'string') {
         // Simple layout reference
-        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, layoutType);
+        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, layoutType, processedGlobalRules);
       } else if (typeof layoutRef === 'object') {
         // Complex layout reference with specific variants
         for (const [layoutName, variants] of Object.entries(layoutRef)) {
           for (const variant of variants) {
-            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, layoutType);
+            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, layoutType, processedGlobalRules);
           }
         }
       }
@@ -208,7 +209,7 @@ class LayoutBuilder {
   /**
    * Process a single layout type
    */
-  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout') {
+  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
       console.warn(`⚠ Layout '${layoutName}' not found`);
@@ -237,14 +238,14 @@ class LayoutBuilder {
       if (processedLayouts.has(key)) continue;
       processedLayouts.add(key);
 
-      this.generateLayoutCSS(layout, actualPrefix, layoutId, breakpointName, mediaQuery, layoutType);
+      this.generateLayoutCSS(layout, actualPrefix, layoutId, breakpointName, mediaQuery, layoutType, processedGlobalRules);
     }
   }
 
   /**
    * Process a specific layout variant
    */
-  processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout') {
+  processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
       console.warn(`⚠ Layout type '${layoutName}' not found`);
@@ -271,13 +272,13 @@ class LayoutBuilder {
     if (processedLayouts.has(key)) return;
     processedLayouts.add(key);
 
-    this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, layoutType);
+    this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, layoutType, processedGlobalRules);
   }
 
   /**
    * Generate CSS for a specific layout
    */
-  generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, layoutType = 'layout') {
+  generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, layoutType = 'layout', processedGlobalRules = new Set()) {
     // Determine the element selector based on layout type
     const elementSelector = layoutType === 'content' ? 'item-card' : 'lay-out';
     
@@ -310,17 +311,23 @@ class LayoutBuilder {
       }
     }
 
-    // Add global container rules (only for layout, not content)
+    // Add global container rules (only for layout, not content) - avoid duplicates
     if (layoutType === 'layout') {
-      const globalContainerSelector = `${elementSelector}[${breakpointName}*="${layoutPrefix}("]`;
-      this.addRule(mediaQuery, globalContainerSelector, {
-        '--_ga': 'initial'
-      });
+      const globalRuleKey = `${mediaQuery}::${layoutPrefix}`;
+      
+      if (!processedGlobalRules.has(globalRuleKey)) {
+        processedGlobalRules.add(globalRuleKey);
+        
+        const globalContainerSelector = `${elementSelector}[${breakpointName}*="${layoutPrefix}("]`;
+        this.addRule(mediaQuery, globalContainerSelector, {
+          '--_ga': 'initial'
+        });
 
-      // Add global child rules
-      this.addRule(mediaQuery, `${globalContainerSelector} > *`, {
-        '--layout-ga': 'auto'
-      });
+        // Add global child rules
+        this.addRule(mediaQuery, `${globalContainerSelector} > *`, {
+          '--layout-ga': 'auto'
+        });
+      }
     }
 
     // Add specific container rules (only if there are properties to set)
@@ -392,9 +399,133 @@ class LayoutBuilder {
   }
 
   /**
+   * Analyze property patterns and optimize for better grouping
+   */
+  optimizePropertyPatterns() {
+    const optimizedRules = new Map();
+    
+    // Group rules by media query for within-breakpoint optimization
+    const rulesByMediaQuery = new Map();
+    
+    for (const [key, properties] of this.cssRules) {
+      const [mediaQuery, selector] = key.split('::', 2);
+      
+      if (!rulesByMediaQuery.has(mediaQuery)) {
+        rulesByMediaQuery.set(mediaQuery, new Map());
+      }
+      
+      rulesByMediaQuery.get(mediaQuery).set(selector, properties);
+    }
+    
+    // Optimize within each media query
+    for (const [mediaQuery, rules] of rulesByMediaQuery) {
+      const optimized = this.optimizeWithinMediaQuery(mediaQuery, rules);
+      
+      for (const [selector, properties] of optimized) {
+        const key = `${mediaQuery}::${selector}`;
+        optimizedRules.set(key, properties);
+      }
+    }
+    
+    // Replace original rules with optimized ones
+    this.cssRules = optimizedRules;
+  }
+
+  /**
+   * Optimize rules within a single media query by extracting common patterns
+   */
+  optimizeWithinMediaQuery(mediaQuery, rules) {
+    const propertyFrequency = new Map();
+    const selectorsByProperty = new Map();
+    
+    // Analyze property frequency
+    for (const [selector, properties] of rules) {
+      for (const [prop, value] of properties) {
+        const propValue = `${prop}:${value}`;
+        
+        if (!propertyFrequency.has(propValue)) {
+          propertyFrequency.set(propValue, 0);
+          selectorsByProperty.set(propValue, []);
+        }
+        
+        propertyFrequency.set(propValue, propertyFrequency.get(propValue) + 1);
+        selectorsByProperty.get(propValue).push(selector);
+      }
+    }
+    
+    // Find properties that appear in 3+ selectors (good candidates for grouping)
+    const commonProperties = new Map();
+    for (const [propValue, frequency] of propertyFrequency) {
+      if (frequency >= 3) {
+        const selectors = selectorsByProperty.get(propValue);
+        commonProperties.set(propValue, selectors);
+      }
+    }
+    
+    // Create optimized rules
+    const optimizedRules = new Map();
+    const processedSelectors = new Set();
+    
+    // First, create grouped rules for common properties
+    for (const [propValue, selectors] of commonProperties) {
+      const [prop, value] = propValue.split(':', 2);
+      
+      // Group selectors that share this common property
+      const groupedSelectors = selectors.filter(sel => {
+        // Only group if selector hasn't been processed and shares this property
+        const originalProps = rules.get(sel);
+        return originalProps && originalProps.has(prop) && originalProps.get(prop) === value;
+      });
+      
+      if (groupedSelectors.length >= 3) {
+        // Create a grouped selector for this common property
+        const groupedKey = groupedSelectors.sort().join(', ');
+        
+        if (!optimizedRules.has(groupedKey)) {
+          optimizedRules.set(groupedKey, new Map());
+        }
+        
+        optimizedRules.get(groupedKey).set(prop, value);
+        
+        // Mark these selectors as having this property processed
+        groupedSelectors.forEach(sel => {
+          if (!processedSelectors.has(sel)) {
+            processedSelectors.add(sel);
+          }
+        });
+      }
+    }
+    
+    // Then, add remaining unique properties for each selector
+    for (const [selector, properties] of rules) {
+      const remainingProps = new Map();
+      
+      for (const [prop, value] of properties) {
+        const propValue = `${prop}:${value}`;
+        const commonSelectors = commonProperties.get(propValue) || [];
+        
+        // If this property wasn't grouped, or this selector wasn't part of the group
+        if (!commonProperties.has(propValue) || commonSelectors.length < 3) {
+          remainingProps.set(prop, value);
+        }
+      }
+      
+      // Add remaining properties if any
+      if (remainingProps.size > 0) {
+        optimizedRules.set(selector, remainingProps);
+      }
+    }
+    
+    return optimizedRules;
+  }
+
+  /**
    * Generate optimized CSS output with breakpoint-specific layers
    */
   generateCSS(minify = false, coreCSS = '', commonCSS = '') {
+    // Apply property pattern optimization before generating CSS
+    this.optimizePropertyPatterns();
+    
     // Group rules by media query and breakpoint
     const layoutBreakpointGroups = new Map();
     const contentBreakpointGroups = new Map();
@@ -478,15 +609,39 @@ class LayoutBuilder {
   }
 
   /**
-   * Generate CSS rules with proper indentation
+   * Generate CSS rules with proper indentation and enhanced grouping
    */
   generateRulesCSS(rules, indent = '') {
     let css = '';
     
-    // Group selectors with identical properties
-    const propertyGroups = new Map();
+    // Separate single selectors from grouped selectors
+    const singleRules = new Map();
+    const groupedRules = new Map();
     
     for (const [selector, properties] of rules) {
+      if (selector.includes(', ')) {
+        // This is already a grouped selector from optimization
+        groupedRules.set(selector, properties);
+      } else {
+        singleRules.set(selector, properties);
+      }
+    }
+    
+    // Output grouped rules first (they are more efficient)
+    for (const [groupedSelector, properties] of groupedRules) {
+      css += `${indent}${groupedSelector} {\n`;
+      
+      for (const [prop, value] of properties) {
+        css += `${indent}\t${prop}: ${value};\n`;
+      }
+      
+      css += `${indent}}\n\n`;
+    }
+    
+    // Then group remaining single selectors with identical properties
+    const propertyGroups = new Map();
+    
+    for (const [selector, properties] of singleRules) {
       const propsKey = JSON.stringify([...properties.entries()].sort());
       
       if (!propertyGroups.has(propsKey)) {
@@ -496,10 +651,16 @@ class LayoutBuilder {
       propertyGroups.get(propsKey).selectors.push(selector);
     }
 
-    // Output grouped rules
+    // Output newly grouped single rules
     for (const { selectors, properties } of propertyGroups.values()) {
-      const selectorList = selectors.join(',\n' + indent);
-      css += `${indent}${selectorList} {\n`;
+      if (selectors.length > 1) {
+        // Group multiple selectors with same properties
+        const selectorList = selectors.sort().join(',\n' + indent);
+        css += `${indent}${selectorList} {\n`;
+      } else {
+        // Single selector
+        css += `${indent}${selectors[0]} {\n`;
+      }
       
       for (const [prop, value] of properties) {
         css += `${indent}\t${prop}: ${value};\n`;
@@ -512,9 +673,21 @@ class LayoutBuilder {
   }
 
   /**
+   * Reset builder state for a fresh build
+   */
+  reset() {
+    this.config = null;
+    this.layouts.clear();
+    this.cssRules.clear();
+  }
+
+  /**
    * Build the complete CSS
    */
   async build(minify = false, outputName = 'layout') {
+    // Reset state for fresh build
+    this.reset();
+    
     console.log('🚀 Starting CSS build...\n');
 
     // Load configuration and layouts
@@ -558,8 +731,15 @@ class LayoutBuilder {
 
     console.log(`\n🎨 Generating ${minify ? 'minified' : 'optimized'} CSS...`);
 
+    // Store original rule count for comparison
+    const originalRuleCount = this.cssRules.size;
+
     // Generate final CSS with core files and common files
     const css = this.generateCSS(minify, coreCSS, commonCSS);
+
+    // Calculate optimization stats
+    const optimizedRuleCount = this.cssRules.size;
+    const reductionPercent = Math.round((1 - optimizedRuleCount / originalRuleCount) * 100);
 
     // Ensure dist directory exists
     const distDir = path.join(__dirname, 'dist');
@@ -576,10 +756,10 @@ class LayoutBuilder {
 
     console.log(`\n✅ Build complete!`);
     console.log(`📁 Output: ${outputPath}`);
-    console.log(`📊 Generated ${this.cssRules.size} CSS rules`);
+    console.log(`📊 Generated ${optimizedRuleCount} CSS rules (${reductionPercent}% reduction from ${originalRuleCount})`);
     console.log(`📏 File size: ${(css.length / 1024).toFixed(1)}KB`);
     
-    return { outputPath, size: css.length, rules: this.cssRules.size };
+    return { outputPath, size: css.length, rules: optimizedRuleCount };
   }
 
   /**

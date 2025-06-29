@@ -24,25 +24,29 @@
         "type": "@media",
         "min": "540px",
         "max": null,
-        "layouts": ["autofit", "asymmetrical", "bento", "columns", "grid", "mosaic", "ratios"]
+        "layouts": ["columns"]
       },
       "lg": {
         "type": "@media",
         "min": "720px",
         "max": null,
-        "layouts": ["autofit", "asymmetrical", "bento", "columns", "grid", "mosaic", "ratios"]
+        "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
       },
       "xl": {
         "type": "@media",
         "min": "920px",
         "max": null,
-        "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios", "mosaic"]
+        "layouts": [
+          {
+            "mosaic": ["mosaic(scatter)", "mosaic(hex)"]
+          }
+        ]
       },
       "xxl": {
         "type": "@media",
         "min": "1140px",
         "max": null,
-        "layouts": ["autofit", "asymmetrical", "grid", "bento", "columns", "ratios"]
+        "layouts": []
       }
     }
   },
