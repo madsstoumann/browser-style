@@ -16,13 +16,13 @@
         "lg": "bento(6a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(6n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(6n+2)", "properties": { "--layout-ga": "span 4 / span 4" } },
-        { "selector": "*:nth-of-type(6n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(6n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(6n+5)", "properties": { "--layout-ga": "span 1 / span 4" } },
-        { "selector": "*:nth-of-type(6n+6)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(n+7)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(6n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(6n+2)", "properties": { "--layout-ga": "span 4 / span 4" } },
+        { "selector": "*:nth-child(6n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(6n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(6n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "span 1 / span 4" } },
+        { "selector": "*:nth-child(n+7)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -38,13 +38,13 @@
         "lg": "bento(6b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(6n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
-        { "selector": "*:nth-of-type(6n+2)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(6n+3)", "properties": { "--layout-ga": "auto / span 3" } },
-        { "selector": "*:nth-of-type(6n+4)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(6n+5)", "properties": { "--layout-ga": "span 2 / span 6" } },
-        { "selector": "*:nth-of-type(6n+6)", "properties": { "--layout-ga": "auto / span 4" } },
-        { "selector": "*:nth-of-type(n+7)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(6n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
+        { "selector": "*:nth-child(6n+2)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(6n+3)", "properties": { "--layout-ga": "auto / span 3" } },
+        { "selector": "*:nth-child(6n+4)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(6n+5)", "properties": { "--layout-ga": "span 2 / span 6" } },
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 4" } },
+        { "selector": "*:nth-child(n+7)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -59,13 +59,13 @@
         "lg": "bento(7a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(7n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(7n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(7n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(7n+4)", "properties": { "--layout-ga": "auto / auto" } },
-        { "selector": "*:nth-of-type(7n+5)", "properties": { "--layout-ga": "span 3 / auto" } },
-        { "selector": "*:nth-of-type(7n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(n+8)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(7n+1)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(7n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(7n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(7n+4)", "properties": { "--layout-ga": "auto / auto" } },
+        { "selector": "*:nth-child(7n+5)", "properties": { "--layout-ga": "span 3 / auto" } },
+        { "selector": "*:nth-child(7n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(n+8)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -80,14 +80,14 @@
         "lg": "bento(7b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(7n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
-        { "selector": "*:nth-of-type(7n+2)", "properties": { "--layout-ga": "span 2 / span 6" } },
-        { "selector": "*:nth-of-type(7n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(7n+4)", "properties": { "--layout-ga": "span 1 / span 3" } },
-        { "selector": "*:nth-of-type(7n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(7n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
-        { "selector": "*:nth-of-type(7n+7)", "properties": { "--layout-ga": "auto / span 6" } },
-        { "selector": "*:nth-of-type(n+8)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(7n+1)", "properties": { "--layout-ga": "span 4 / span 4" } },
+        { "selector": "*:nth-child(7n+2)", "properties": { "--layout-ga": "span 2 / span 6" } },
+        { "selector": "*:nth-child(7n+3)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(7n+4)", "properties": { "--layout-ga": "span 1 / span 3" } },
+        { "selector": "*:nth-child(7n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(7n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
+        { "selector": "*:nth-child(7n+7)", "properties": { "--layout-ga": "auto / span 6" } },
+        { "selector": "*:nth-child(n+8)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -102,15 +102,15 @@
         "lg": "bento(8a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "span 1 / auto" } },
-        { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "span 3 / auto" } },
-        { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(n+9)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(8n+1)", "properties": { "--layout-ga": "span 1 / auto" } },
+        { "selector": "*:nth-child(8n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(8n+3)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(8n+4)", "properties": { "--layout-ga": "span 3 / auto" } },
+        { "selector": "*:nth-child(8n+5)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(8n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(8n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(8n+8)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(n+9)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -125,15 +125,15 @@
         "lg": "bento(8b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(8n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(8n+2)", "properties": { "--layout-ga": "span 1 / span 2" } },
-        { "selector": "*:nth-of-type(8n+3)", "properties": { "--layout-ga": "span 3 / span 2" } },
-        { "selector": "*:nth-of-type(8n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(8n+5)", "properties": { "--layout-ga": "span 1 / span 3" } },
-        { "selector": "*:nth-of-type(8n+6)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(8n+7)", "properties": { "--layout-ga": "span 1 / span 5" } },
-        { "selector": "*:nth-of-type(8n+8)", "properties": { "--layout-ga": "span 1 / span 5" } },
-        { "selector": "*:nth-of-type(n+9)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(8n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(8n+2)", "properties": { "--layout-ga": "span 1 / span 2" } },
+        { "selector": "*:nth-child(8n+3)", "properties": { "--layout-ga": "span 3 / span 2" } },
+        { "selector": "*:nth-child(8n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(8n+5)", "properties": { "--layout-ga": "span 1 / span 3" } },
+        { "selector": "*:nth-child(8n+6)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(8n+7)", "properties": { "--layout-ga": "span 1 / span 5" } },
+        { "selector": "*:nth-child(8n+8)", "properties": { "--layout-ga": "span 1 / span 5" } },
+        { "selector": "*:nth-child(n+9)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -147,12 +147,12 @@
         "lg": "bento(9a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(9n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(9n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(9n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(9n+8)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(n+10)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(9n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(9n+6)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(9n+7)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(9n+8)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(n+10)", "properties": { "display": "none" } }
       ]
     },
     {
@@ -166,16 +166,16 @@
         "lg": "bento(9b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(9n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(9n+3)", "properties": { "--layout-ga": "span 2 / span 2" } },
-        { "selector": "*:nth-of-type(9n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(9n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(9n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
-        { "selector": "*:nth-of-type(9n+7)", "properties": { "--layout-ga": "span 2 / span 4" } },
-        { "selector": "*:nth-of-type(9n+8)", "properties": { "--layout-ga": "span 3 / span 3" } },
-        { "selector": "*:nth-of-type(9n+9)", "properties": { "--layout-ga": "span 2 / span 3" } },
-        { "selector": "*:nth-of-type(n+10)", "properties": { "display": "none" } }
+        { "selector": "*:nth-child(9n+1)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(9n+2)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(9n+3)", "properties": { "--layout-ga": "span 2 / span 2" } },
+        { "selector": "*:nth-child(9n+4)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(9n+5)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(9n+6)", "properties": { "--layout-ga": "span 2 / span 4" } },
+        { "selector": "*:nth-child(9n+7)", "properties": { "--layout-ga": "span 2 / span 4" } },
+        { "selector": "*:nth-child(9n+8)", "properties": { "--layout-ga": "span 3 / span 3" } },
+        { "selector": "*:nth-child(9n+9)", "properties": { "--layout-ga": "span 2 / span 3" } },
+        { "selector": "*:nth-child(n+10)", "properties": { "display": "none" } }
       ]
     }
   ]

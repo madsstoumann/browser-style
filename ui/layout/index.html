@@ -18,16 +18,18 @@
 		md="grid(3b)"
 		lg="grid(3d)"
 		xl="grid(3c)">
-		<item-card sm="text(end)">
-			<figure>
-				<img src="https://picsum.photos/seed/1/320/180" alt="Image 1">
-			</figure>
-			<article>
-				<h2>Item 1</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-				<a href="#">Read more</a>
-			</article>
-		</item-card>
+		<con-tain>
+			<item-card sm="rows(b-t)" lg="stack(b-r)" md="stack(c-c)" xxl="stack(b-r)">
+				<figure>
+					<img src="https://picsum.photos/seed/1/320/180" alt="Image 1">
+				</figure>
+				<article>
+					<h2>Item 1</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+					<a href="#">Read more</a>
+				</article>
+			</item-card>
+		</con-tain>
 		<item-card></item-card>
 		<item-card></item-card>
 	</lay-out>

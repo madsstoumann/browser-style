@@ -14,7 +14,7 @@
         "lg": "grid(3a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(3n+3)", "properties": { "--layout-ga": "auto / span 2" } }
+        { "selector": "*:nth-child(3n+3)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
     {
@@ -28,7 +28,7 @@
         "lg": "grid(3b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+        { "selector": "*:nth-child(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
         {
@@ -42,7 +42,7 @@
         "lg": "grid(3c)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
         {
@@ -56,7 +56,7 @@
         "lg": "grid(3d)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(3n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(3n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
     {
@@ -70,7 +70,7 @@
         "lg": "grid(4a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
       ]
     },
     {
@@ -84,7 +84,7 @@
         "lg": "grid(4b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 3 / auto" } }
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "span 3 / auto" } }
       ]
     },
     {
@@ -98,8 +98,8 @@
         "lg": "grid(4c)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "auto / span 2" } },
-        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "auto / span 2" } },
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
     {
@@ -113,8 +113,8 @@
         "lg": "grid(4d)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
     
@@ -129,8 +129,8 @@
         "lg": "grid(4e)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
-        { "selector": "*:nth-of-type(4n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(4n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
     {
@@ -144,7 +144,7 @@
         "lg": "grid(5a)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
     {
@@ -158,7 +158,7 @@
         "lg": "grid(5b)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
+        { "selector": "*:nth-child(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
     {
@@ -172,7 +172,7 @@
         "lg": "grid(5c)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
       ]
     },
     {
@@ -186,7 +186,7 @@
         "lg": "grid(5d)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
+        { "selector": "*:nth-child(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
       ]
     },
     {
@@ -200,7 +200,7 @@
         "lg": "grid(5e)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(5n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
     {
@@ -214,7 +214,7 @@
         "lg": "grid(5f)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
       ]
     },
     {
@@ -228,7 +228,7 @@
         "lg": "grid(5g)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
       ]
     },
     {
@@ -242,7 +242,7 @@
         "lg": "grid(5h)"
       },
       "rules": [
-        { "selector": "*:nth-of-type(5n+3)", "properties": { "--layout-ga": "span 2 / span 2" } }
+        { "selector": "*:nth-child(5n+3)", "properties": { "--layout-ga": "span 2 / span 2" } }
       ]
     }
   ]

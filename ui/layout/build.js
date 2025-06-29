@@ -55,15 +55,45 @@ class LayoutBuilder {
           const transformedData = {
             name: layoutData.name,
             prefix: layoutData.prefix,
-            layouts: layoutData.layouts.map(layout => ({
-              ...layout,
-              id: `${layoutData.prefix}(${layout.id})`,  // Reconstruct full ID for CSS generation
-              originalId: layout.id  // Keep original short ID for reference
-            }))
+            layouts: layoutData.layouts.map(layout => {
+              // For content layouts, don't transform the ID as it already has the correct format
+              if (layoutData.prefix === 'content') {
+                return {
+                  ...layout,
+                  originalId: layout.id  // Keep original ID for reference
+                };
+              } else {
+                return {
+                  ...layout,
+                  id: `${layoutData.prefix}(${layout.id})`,  // Reconstruct full ID for CSS generation
+                  originalId: layout.id  // Keep original short ID for reference
+                };
+              }
+            })
           };
           this.layouts.set(layoutName, transformedData.layouts);
           // Store prefix mapping for CSS generation
           this.layouts.set(`${layoutName}_prefix`, layoutData.prefix);
+        } else if (layoutData.groups && typeof layoutData.groups === 'object') {
+          // Handle grouped structure (like content.json)
+          const allLayouts = [];
+          
+          for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
+            const groupPrefix = groupData.prefix || groupName;
+            
+            for (const layout of groupData.layouts) {
+              allLayouts.push({
+                ...layout,
+                id: `${groupPrefix}(${layout.id})`,  // Create full ID: stack(t-l), columns(r-l), etc.
+                originalId: layout.id,
+                groupName: groupName,
+                groupPrefix: groupPrefix
+              });
+            }
+          }
+          
+          this.layouts.set(layoutName, allLayouts);
+          // For grouped layouts, we don't set a single prefix
         } else {
           // Handle old structure (if any files still use it)
           this.layouts.set(layoutName, layoutData);
@@ -135,9 +165,9 @@ class LayoutBuilder {
     if (config.max) conditions.push(`max-width: ${config.max}`);
     
     if (config.type === '@media') {
-      return `@media (${conditions.join(' and ')})`;
+      return `@media (${conditions.join(') and (')})`;
     } else if (config.type === '@container') {
-      return `@container (${conditions.join(' and ')})`;
+      return `@container (${conditions.join(') and (')})`;
     }
     
     return null;
@@ -146,7 +176,7 @@ class LayoutBuilder {
   /**
    * Process layouts for a specific breakpoint
    */
-  processBreakpoint(breakpointName, breakpointConfig) {
+  processBreakpoint(breakpointName, breakpointConfig, layoutType = 'layout') {
     const mediaQuery = this.generateMediaQuery(breakpointName, breakpointConfig);
     if (!mediaQuery) return;
 
@@ -155,12 +185,12 @@ class LayoutBuilder {
     for (const layoutRef of breakpointConfig.layouts) {
       if (typeof layoutRef === 'string') {
         // Simple layout reference
-        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts);
+        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, layoutType);
       } else if (typeof layoutRef === 'object') {
         // Complex layout reference with specific variants
-        for (const [layoutType, variants] of Object.entries(layoutRef)) {
+        for (const [layoutName, variants] of Object.entries(layoutRef)) {
           for (const variant of variants) {
-            this.processLayoutVariant(layoutType, variant, breakpointName, mediaQuery, processedLayouts);
+            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, layoutType);
           }
         }
       }
@@ -178,7 +208,7 @@ class LayoutBuilder {
   /**
    * Process a single layout type
    */
-  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts) {
+  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout') {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
       console.warn(`⚠ Layout '${layoutName}' not found`);
@@ -188,65 +218,115 @@ class LayoutBuilder {
     const prefix = this.layouts.get(`${layoutName}_prefix`) || layoutName;
 
     for (const layout of layoutData) {
-      const layoutId = this.extractLayoutId(layout.id);
-      const key = `${mediaQuery}::${prefix}(${layoutId})`;
+      let layoutId;
+      let actualPrefix;
+      
+      if (layoutType === 'content') {
+        // For content layouts, use the full ID (which includes the function format)
+        layoutId = layout.id;
+        // For grouped layouts, use the group prefix, otherwise use the layout prefix
+        actualPrefix = layout.groupPrefix || prefix;
+      } else {
+        // For regular layouts, extract the ID from parentheses if present
+        layoutId = this.extractLayoutId(layout.id);
+        actualPrefix = prefix;
+      }
+      
+      const key = `${mediaQuery}::${actualPrefix}(${layoutId})`;
       
       if (processedLayouts.has(key)) continue;
       processedLayouts.add(key);
 
-      this.generateLayoutCSS(layout, prefix, layoutId, breakpointName, mediaQuery);
+      this.generateLayoutCSS(layout, actualPrefix, layoutId, breakpointName, mediaQuery, layoutType);
     }
   }
 
   /**
    * Process a specific layout variant
    */
-  processLayoutVariant(layoutType, variantId, breakpointName, mediaQuery, processedLayouts) {
-    const layoutData = this.layouts.get(layoutType);
+  processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout') {
+    const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
-      console.warn(`⚠ Layout type '${layoutType}' not found`);
+      console.warn(`⚠ Layout type '${layoutName}' not found`);
       return;
     }
 
     const layout = layoutData.find(l => l.id === variantId);
     if (!layout) {
-      console.warn(`⚠ Layout variant '${variantId}' not found in ${layoutType}`);
+      console.warn(`⚠ Layout variant '${variantId}' not found in ${layoutName}`);
       return;
     }
 
-    const layoutId = this.extractLayoutId(variantId);
+    let layoutId;
+    
+    if (layoutType === 'content') {
+      // For content layouts, use the full ID
+      layoutId = variantId;
+    } else {
+      // For regular layouts, extract the ID from parentheses if present
+      layoutId = this.extractLayoutId(variantId);
+    }
+    
     const key = `${mediaQuery}::${variantId}`;
     if (processedLayouts.has(key)) return;
     processedLayouts.add(key);
 
-    this.generateLayoutCSS(layout, layoutType, layoutId, breakpointName, mediaQuery);
+    this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, layoutType);
   }
 
   /**
    * Generate CSS for a specific layout
    */
-  generateLayoutCSS(layout, layoutType, layoutId, breakpointName, mediaQuery) {
-    const baseSelector = `lay-out[${breakpointName}="${layoutType}(${layoutId})"]`;
+  generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, layoutType = 'layout') {
+    // Determine the element selector based on layout type
+    const elementSelector = layoutType === 'content' ? 'item-card' : 'lay-out';
+    
+    // For content layouts, use the full layout.id which already includes the format we want
+    // For regular layouts, combine prefix and id
+    let selectorValue;
+    if (layoutType === 'content') {
+      // For grouped content layouts, layout.id already contains the full format (e.g., "stack(t-l)")
+      selectorValue = layout.id;
+    } else {
+      selectorValue = `${layoutPrefix}(${layoutId})`;
+    }
+    
+    const baseSelector = `${elementSelector}[${breakpointName}="${selectorValue}"]`;
     
     // Container properties
-    const containerProps = {
-      '--layout-gtc': layout.columns || 'auto',
-      '--layout-gtr': layout.rows || 'auto'
-    };
+    const containerProps = {};
+    
+    if (layoutType === 'layout') {
+      // Traditional layout properties
+      containerProps['--layout-gtc'] = layout.columns || 'auto';
+      containerProps['--layout-gtr'] = layout.rows || 'auto';
+    } else if (layoutType === 'content') {
+      // Content-specific properties (using item-card custom properties)
+      if (layout.columns && layout.columns !== '1fr') {
+        containerProps['--item-card-gtc'] = layout.columns;
+      }
+      if (layout.rows && layout.rows !== 'auto') {
+        containerProps['--item-card-gtr'] = layout.rows;
+      }
+    }
 
-    // Add global container rules
-    const globalContainerSelector = `lay-out[${breakpointName}*="${layoutType}("]`;
-    this.addRule(mediaQuery, globalContainerSelector, {
-      '--_ga': 'initial'
-    });
+    // Add global container rules (only for layout, not content)
+    if (layoutType === 'layout') {
+      const globalContainerSelector = `${elementSelector}[${breakpointName}*="${layoutPrefix}("]`;
+      this.addRule(mediaQuery, globalContainerSelector, {
+        '--_ga': 'initial'
+      });
 
-    // Add global child rules
-    this.addRule(mediaQuery, `${globalContainerSelector} > *`, {
-      '--layout-ga': 'auto'
-    });
+      // Add global child rules
+      this.addRule(mediaQuery, `${globalContainerSelector} > *`, {
+        '--layout-ga': 'auto'
+      });
+    }
 
-    // Add specific container rules
-    this.addRule(mediaQuery, baseSelector, containerProps);
+    // Add specific container rules (only if there are properties to set)
+    if (Object.keys(containerProps).length > 0) {
+      this.addRule(mediaQuery, baseSelector, containerProps);
+    }
 
     // Process layout-specific rules
     if (layout.rules) {
@@ -255,10 +335,16 @@ class LayoutBuilder {
         
         if (rule.selector === '&') {
           selector = baseSelector;
+        } else if (rule.selector === 'root') {
+          // Root selector targets the element itself (e.g., item-card[xs="stack(t-l)"])
+          selector = baseSelector;
         } else if (rule.selector === '&>*') {
           selector = `${baseSelector} > *`;
         } else if (rule.selector.startsWith('&')) {
           selector = baseSelector + rule.selector.substring(1);
+        } else if (rule.selector === elementSelector) {
+          // If the rule selector is the same as the base element, use the base selector
+          selector = baseSelector;
         } else {
           selector = `${baseSelector} ${rule.selector}`;
         }
@@ -310,14 +396,23 @@ class LayoutBuilder {
    */
   generateCSS(minify = false, coreCSS = '', commonCSS = '') {
     // Group rules by media query and breakpoint
-    const breakpointGroups = new Map();
+    const layoutBreakpointGroups = new Map();
+    const contentBreakpointGroups = new Map();
     
     for (const [key, properties] of this.cssRules) {
       const [mediaQuery, selector] = key.split('::', 2);
       
+      // Determine if this is a layout or content rule
+      const isContentRule = selector.includes('item-card[');
+      const breakpointGroups = isContentRule ? contentBreakpointGroups : layoutBreakpointGroups;
+      
       // Extract breakpoint name from media query processing
       let breakpointName = 'unknown';
-      for (const [bpName, bpConfig] of Object.entries(this.config.breakpoints)) {
+      const configBreakpoints = isContentRule 
+        ? (this.config.content?.breakpoints || {})
+        : (this.config.layout?.breakpoints || this.config.breakpoints || {});
+        
+      for (const [bpName, bpConfig] of Object.entries(configBreakpoints)) {
         const expectedQuery = this.generateMediaQuery(bpName, bpConfig);
         if (expectedQuery === mediaQuery) {
           breakpointName = bpName;
@@ -344,40 +439,31 @@ class LayoutBuilder {
       css += coreCSS;
     }
 
-    // Process each breakpoint in its own layer
-    for (const [breakpointName, mediaQueries] of breakpointGroups) {
+    // Process layout breakpoints in their own layers
+    for (const [breakpointName, mediaQueries] of layoutBreakpointGroups) {
       css += `@layer layout.${breakpointName} {\n`;
       
       // Process each media query within the breakpoint layer
       for (const [mediaQuery, rules] of mediaQueries) {
         css += `\t${mediaQuery} {\n`;
-        
-        // Group selectors with identical properties
-        const propertyGroups = new Map();
-        
-        for (const [selector, properties] of rules) {
-          const propsKey = JSON.stringify([...properties.entries()].sort());
-          
-          if (!propertyGroups.has(propsKey)) {
-            propertyGroups.set(propsKey, { selectors: [], properties });
-          }
-          
-          propertyGroups.get(propsKey).selectors.push(selector);
-        }
-
-        // Output grouped rules
-        for (const { selectors, properties } of propertyGroups.values()) {
-          const selectorList = selectors.join(',\n\t\t');
-          css += `\t\t${selectorList} {\n`;
-          
-          for (const [prop, value] of properties) {
-            css += `\t\t\t${prop}: ${value};\n`;
-          }
-          
-          css += '\t\t}\n\n';
-        }
-        
+        css += this.generateRulesCSS(rules, '\t\t');
         css += '\t}\n\n';
+      }
+      
+      css += '}\n\n';
+    }
+
+    // Process content breakpoints in content layer
+    if (contentBreakpointGroups.size > 0) {
+      css += `@layer layout.content {\n`;
+      
+      for (const [breakpointName, mediaQueries] of contentBreakpointGroups) {
+        // Process each container query within the content layer
+        for (const [mediaQuery, rules] of mediaQueries) {
+          css += `\t${mediaQuery} {\n`;
+          css += this.generateRulesCSS(rules, '\t\t');
+          css += '\t}\n\n';
+        }
       }
       
       css += '}\n\n';
@@ -389,6 +475,40 @@ class LayoutBuilder {
     }
 
     return minify ? this.minifyCSS(css) : css;
+  }
+
+  /**
+   * Generate CSS rules with proper indentation
+   */
+  generateRulesCSS(rules, indent = '') {
+    let css = '';
+    
+    // Group selectors with identical properties
+    const propertyGroups = new Map();
+    
+    for (const [selector, properties] of rules) {
+      const propsKey = JSON.stringify([...properties.entries()].sort());
+      
+      if (!propertyGroups.has(propsKey)) {
+        propertyGroups.set(propsKey, { selectors: [], properties });
+      }
+      
+      propertyGroups.get(propsKey).selectors.push(selector);
+    }
+
+    // Output grouped rules
+    for (const { selectors, properties } of propertyGroups.values()) {
+      const selectorList = selectors.join(',\n' + indent);
+      css += `${indent}${selectorList} {\n`;
+      
+      for (const [prop, value] of properties) {
+        css += `${indent}\t${prop}: ${value};\n`;
+      }
+      
+      css += `${indent}}\n\n`;
+    }
+    
+    return css;
   }
 
   /**
@@ -406,10 +526,31 @@ class LayoutBuilder {
 
     console.log('\n📝 Processing breakpoints...');
 
-    // Process each breakpoint
-    for (const [breakpointName, breakpointConfig] of Object.entries(this.config.breakpoints)) {
-      console.log(`\t- Processing ${breakpointName} (${breakpointConfig.min})`);
-      this.processBreakpoint(breakpointName, breakpointConfig);
+    // Process layout breakpoints (media queries)
+    if (this.config.layout && this.config.layout.breakpoints) {
+      console.log('\n🔧 Processing layout breakpoints...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.layout.breakpoints)) {
+        console.log(`\t- Processing layout ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
+      }
+    }
+
+    // Process content breakpoints (container queries)
+    if (this.config.content && this.config.content.breakpoints) {
+      console.log('\n📦 Processing content breakpoints...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.content.breakpoints)) {
+        console.log(`\t- Processing content ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'content');
+      }
+    }
+
+    // Handle legacy config format (for backwards compatibility)
+    if (this.config.breakpoints && !this.config.layout && !this.config.content) {
+      console.log('\n⚠️  Processing legacy breakpoints format...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.breakpoints)) {
+        console.log(`\t- Processing ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
+      }
     }
 
     // Load common CSS files (animations, demo styles, etc.)
@@ -583,6 +724,30 @@ class LayoutBuilder {
           }));
           
           const html = this.generateLayoutHTML(layoutName, layoutsForHTML, layoutData);
+          const outputPath = path.join(distDir, `${layoutName}.html`);
+          fs.writeFileSync(outputPath, html, 'utf8');
+          console.log(`✓ Generated ${layoutName}.html`);
+        } else if (layoutData.groups && typeof layoutData.groups === 'object') {
+          // Handle grouped structure (like content.json)
+          const allLayoutsForHTML = [];
+          
+          for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
+            for (const layout of groupData.layouts) {
+              allLayoutsForHTML.push({
+                ...layout,
+                originalId: layout.id,  // Keep the original short ID for HTML
+                groupName: groupName,
+                groupPrefix: groupData.prefix || groupName
+              });
+            }
+          }
+          
+          if (allLayoutsForHTML.length === 0) {
+            console.log(`⚠ Skipping ${file}: No layouts defined in groups`);
+            continue;
+          }
+          
+          const html = this.generateLayoutHTML(layoutName, allLayoutsForHTML, layoutData);
           const outputPath = path.join(distDir, `${layoutName}.html`);
           fs.writeFileSync(outputPath, html, 'utf8');
           console.log(`✓ Generated ${layoutName}.html`);

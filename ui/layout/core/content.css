@@ -1,5 +1,11 @@
 @layer layout.content {
+	con-tain {
+		box-sizing: border-box;
+		container-type: inline-size;
+	}
 	item-card {
+		block-size: 100%;
+		box-sizing: border-box;
 		display: grid;
 		grid-template-columns: var(--item-card-gtc, 1fr);
 		grid-template-rows: var(--item-card-gtr, auto);
@@ -8,52 +14,34 @@
 				margin: 0;
 				text-box: cap alphabetic;
 			}
+			color: var(--item-card-article-c, inherit);
 			display: grid;
+			font-size: clamp(12px, 4cqw, 16px);
 			gap: 1em;
+			grid-area: var(--item-card-ga, auto);
 			padding: 1em;
+			place-self: var(--item-card-article-ps, unset);
+			z-index: 1;
+
+			a { color: inherit; }
 		}
 		figure {
-			all: unset;
+			grid-area: var(--item-card-ga, auto);
+			margin: 0;
+			position: relative;
+			&::after {
+				content: "";
+				display: var(--item-card-overlay, none);
+				background: #0008;
+				position: absolute;
+				inset: 0;
+			}
 			img {
 				/* aspect-ratio: 16 / 9; */
 				width: 100%;
-				height: auto;
-				/* display: block; */
+				height: 100%;
 				object-fit: cover;
 			}
 		}
-
-		&:is([xs*="stack("], [sm*="stack("], [md*="stack("], [lg*="stack("], [xl*="stack("], [xxl*="stack("]) {
-			grid-template-columns: 1fr;
-			grid-template-rows: 1fr;
-			article {
-				background: var(--item-card-bg, #FFF);
-				color: var(--item-card-c, inherit);
-				grid-area: 1 / -1;
-				place-self: start center;
-				width: 50%;
-			}
-			figure {
-				grid-area: 1 / -1;
-				img { height: 100%; }
-			}
-		}
-
-		&[sm*="image("] article { display: none; }
-		&[sm*="text("] figure { display: none; }
-
-		&[sm*="text(start)"] { align-content: start; }
-		&[sm*="text(center)"] { align-content: center; }
-		&[sm*="text(end)"] { align-content: end; }
-
-		&[sm*="stack(t-l)"] article { place-self: start start; }
-		&[sm*="stack(t-c)"] article { place-self: start center; }
-		&[sm*="stack(t-r)"] article { place-self: start end; }
-		&[sm*="stack(c-l)"] article { place-self: center start; }
-		&[sm*="stack(c-c)"] article { place-self: center center; }
-		&[sm*="stack(c-r)"] article { place-self: center end; }
-		&[sm*="stack(b-l)"] article { place-self: end start; }
-		&[sm*="stack(b-c)"] article { place-self: end center; }
-		&[sm*="stack(b-r)"] article { place-self: end end; }
 	}
 }
