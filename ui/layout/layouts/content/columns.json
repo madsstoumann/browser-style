@@ -1,0 +1,30 @@
+{
+  "name": "Column Layouts",
+  "prefix": "columns",
+  "desc": "Side-by-side column layouts",
+  "layouts": [
+    {
+      "id": "l-r",
+      "description": "Two columns with image left, text right",
+      "columns": "1fr 1fr",
+      "rows": "auto",
+      "items": 2,
+      "repeatable": false,
+      "rules": [
+        { "selector": "item-card", "properties": { "--item-card-gtc": "1fr 1fr" } }
+      ]
+    },
+    {
+      "id": "r-l",
+      "description": "Two columns with image right, text left",
+      "columns": "1fr 1fr",
+      "rows": "auto",
+      "items": 2,
+      "repeatable": false,
+      "rules": [
+        { "selector": "item-card", "properties": { "--item-card-gtc": "1fr 1fr" } },
+        { "selector": "article", "properties": { "order": "-1", "reading-order": "-1" } }
+      ]
+    }
+  ]
+}

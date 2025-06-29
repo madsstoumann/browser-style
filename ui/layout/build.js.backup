@@ -7,6 +7,10 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * CSS Layout Builder
+ * Generates optimized CSS from config.json and layout JSON files
+ */
 class LayoutBuilder {
   constructor(configPath, layoutsDir, outputPath) {
     this.configPath = configPath;
@@ -15,9 +19,11 @@ class LayoutBuilder {
     this.config = null;
     this.layouts = new Map();
     this.cssRules = new Map();
-    this.currentSystem = null;
   }
 
+  /**
+   * Load configuration and layout files
+   */
   async loadConfig() {
     try {
       const configContent = fs.readFileSync(this.configPath, 'utf8');
@@ -28,39 +34,68 @@ class LayoutBuilder {
     }
   }
 
-  async loadLayouts(systemPath = '') {
-    const targetDir = systemPath === '/' || systemPath === '' 
-      ? this.layoutsDir 
-      : path.join(this.layoutsDir, systemPath);
-    
-    if (!fs.existsSync(targetDir)) {
-      console.warn(`⚠ Layout directory not found: ${targetDir}`);
-      return;
-    }
-
-    const layoutFiles = fs.readdirSync(targetDir).filter(file => file.endsWith('.json'));
+  /**
+   * Load all layout JSON files
+   */
+  async loadLayouts() {
+    const layoutFiles = fs.readdirSync(this.layoutsDir)
+      .filter(file => file.endsWith('.json'));
 
     for (const file of layoutFiles) {
       const layoutName = path.basename(file, '.json');
-      const layoutPath = path.join(targetDir, file);
+      const layoutPath = path.join(this.layoutsDir, file);
       
       try {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
         const layoutData = JSON.parse(layoutContent);
         
+        // Handle new structure with layouts array
         if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
+          // Store metadata and transform layouts
           const transformedData = {
             name: layoutData.name,
             prefix: layoutData.prefix,
-            layouts: layoutData.layouts.map(layout => ({
-              ...layout,
-              id: `${layoutData.prefix}(${layout.id})`,
-              originalId: layout.id
-            }))
+            layouts: layoutData.layouts.map(layout => {
+              // For content layouts, don't transform the ID as it already has the correct format
+              if (layoutData.prefix === 'content') {
+                return {
+                  ...layout,
+                  originalId: layout.id  // Keep original ID for reference
+                };
+              } else {
+                return {
+                  ...layout,
+                  id: `${layoutData.prefix}(${layout.id})`,  // Reconstruct full ID for CSS generation
+                  originalId: layout.id  // Keep original short ID for reference
+                };
+              }
+            })
           };
           this.layouts.set(layoutName, transformedData.layouts);
+          // Store prefix mapping for CSS generation
           this.layouts.set(`${layoutName}_prefix`, layoutData.prefix);
+        } else if (layoutData.groups && typeof layoutData.groups === 'object') {
+          // Handle grouped structure (like content.json)
+          const allLayouts = [];
+          
+          for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
+            const groupPrefix = groupData.prefix || groupName;
+            
+            for (const layout of groupData.layouts) {
+              allLayouts.push({
+                ...layout,
+                id: `${groupPrefix}(${layout.id})`,  // Create full ID: stack(t-l), columns(r-l), etc.
+                originalId: layout.id,
+                groupName: groupName,
+                groupPrefix: groupPrefix
+              });
+            }
+          }
+          
+          this.layouts.set(layoutName, allLayouts);
+          // For grouped layouts, we don't set a single prefix
         } else {
+          // Handle old structure (if any files still use it)
           this.layouts.set(layoutName, layoutData);
         }
         
@@ -71,11 +106,14 @@ class LayoutBuilder {
     }
   }
 
-  async loadCoreFiles(coreFiles = []) {
+  /**
+   * Load core CSS files
+   */
+  async loadCoreFiles() {
     let coreCSS = '';
     
-    if (coreFiles && Array.isArray(coreFiles)) {
-      for (const coreFile of coreFiles) {
+    if (this.config.core && Array.isArray(this.config.core)) {
+      for (const coreFile of this.config.core) {
         const corePath = path.join(__dirname, 'core', `${coreFile}.css`);
         
         try {
@@ -95,11 +133,14 @@ class LayoutBuilder {
     return coreCSS;
   }
 
-  async loadCommonFiles(commonFiles = []) {
+  /**
+   * Load common CSS files (loaded after layouts)
+   */
+  async loadCommonFiles() {
     let commonCSS = '';
     
-    if (commonFiles && Array.isArray(commonFiles)) {
-      for (const commonFile of commonFiles) {
+    if (this.config.common && Array.isArray(this.config.common)) {
+      for (const commonFile of this.config.common) {
         const commonPath = path.join(__dirname, 'core', `${commonFile}.css`);
         
         try {
@@ -118,7 +159,7 @@ class LayoutBuilder {
     
     return commonCSS;
   }
-  generateMediaQuery(breakpoint, config, layer = null) {
+  generateMediaQuery(breakpoint, config) {
     const conditions = [];
     if (config.min) conditions.push(`min-width: ${config.min}`);
     if (config.max) conditions.push(`max-width: ${config.max}`);
@@ -128,35 +169,46 @@ class LayoutBuilder {
     } else if (config.type === '@container') {
       return `@container (${conditions.join(') and (')})`;
     }
+    
     return null;
   }
 
-  processBreakpoint(breakpointName, breakpointConfig, systemType = 'layout') {
-    const layer = this.currentSystem?.layer || null;
-    const mediaQuery = this.generateMediaQuery(breakpointName, breakpointConfig, layer);
+  /**
+   * Process layouts for a specific breakpoint
+   */
+  processBreakpoint(breakpointName, breakpointConfig, layoutType = 'layout') {
+    const mediaQuery = this.generateMediaQuery(breakpointName, breakpointConfig);
     if (!mediaQuery) return;
 
     const processedLayouts = new Set();
-    const processedGlobalRules = new Set();
+    const processedGlobalRules = new Set(); // Track global rules to avoid duplication
 
     for (const layoutRef of breakpointConfig.layouts) {
       if (typeof layoutRef === 'string') {
-        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, systemType, processedGlobalRules);
+        // Simple layout reference
+        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, layoutType, processedGlobalRules);
       } else if (typeof layoutRef === 'object') {
+        // Complex layout reference with specific variants
         for (const [layoutName, variants] of Object.entries(layoutRef)) {
           for (const variant of variants) {
-            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, systemType, processedGlobalRules);
+            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, layoutType, processedGlobalRules);
           }
         }
       }
     }
   }
 
+  /**
+   * Extract layout identifier from full id string
+   */
   extractLayoutId(fullId) {
     const match = fullId.match(/\(([^)]+)\)$/);
     return match ? match[1] : fullId;
   }
 
+  /**
+   * Process a single layout type
+   */
   processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
@@ -164,17 +216,24 @@ class LayoutBuilder {
       return;
     }
 
-    console.log(`🔍 Processing layout '${layoutName}' for breakpoint '${breakpointName}' with ${layoutData.length} layouts`);
-
     const prefix = this.layouts.get(`${layoutName}_prefix`) || layoutName;
 
     for (const layout of layoutData) {
-      const layoutId = this.extractLayoutId(layout.id);
-      const actualPrefix = prefix;
+      let layoutId;
+      let actualPrefix;
+      
+      if (layoutType === 'content') {
+        // For content layouts, use the full ID (which includes the function format)
+        layoutId = layout.id;
+        // For grouped layouts, use the group prefix, otherwise use the layout prefix
+        actualPrefix = layout.groupPrefix || prefix;
+      } else {
+        // For regular layouts, extract the ID from parentheses if present
+        layoutId = this.extractLayoutId(layout.id);
+        actualPrefix = prefix;
+      }
       
       const key = `${mediaQuery}::${actualPrefix}(${layoutId})`;
-      
-      console.log(`  - Layout ID: ${layout.id}, extracted: ${layoutId}, prefix: ${actualPrefix}`);
       
       if (processedLayouts.has(key)) continue;
       processedLayouts.add(key);
@@ -183,6 +242,9 @@ class LayoutBuilder {
     }
   }
 
+  /**
+   * Process a specific layout variant
+   */
   processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
@@ -196,7 +258,15 @@ class LayoutBuilder {
       return;
     }
 
-    const layoutId = this.extractLayoutId(variantId);
+    let layoutId;
+    
+    if (layoutType === 'content') {
+      // For content layouts, use the full ID
+      layoutId = variantId;
+    } else {
+      // For regular layouts, extract the ID from parentheses if present
+      layoutId = this.extractLayoutId(variantId);
+    }
     
     const key = `${mediaQuery}::${variantId}`;
     if (processedLayouts.has(key)) return;
@@ -205,24 +275,44 @@ class LayoutBuilder {
     this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, layoutType, processedGlobalRules);
   }
 
+  /**
+   * Generate CSS for a specific layout
+   */
   generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, layoutType = 'layout', processedGlobalRules = new Set()) {
-    const elementSelector = this.currentSystem.element || 'lay-out';
-    const selectorValue = `${layoutPrefix}(${layoutId})`;
+    // Determine the element selector based on layout type
+    const elementSelector = layoutType === 'content' ? 'item-card' : 'lay-out';
+    
+    // For content layouts, use the full layout.id which already includes the format we want
+    // For regular layouts, combine prefix and id
+    let selectorValue;
+    if (layoutType === 'content') {
+      // For grouped content layouts, layout.id already contains the full format (e.g., "stack(t-l)")
+      selectorValue = layout.id;
+    } else {
+      selectorValue = `${layoutPrefix}(${layoutId})`;
+    }
+    
     const baseSelector = `${elementSelector}[${breakpointName}="${selectorValue}"]`;
     
-    console.log(`    🎯 Generating CSS for ${baseSelector}`);
-    
+    // Container properties
     const containerProps = {};
-    const propertyPrefix = elementSelector === 'item-card' ? '--item-card' : '--layout';
     
-    if (layout.columns) {
-      containerProps[`${propertyPrefix}-gtc`] = layout.columns;
-    }
-    if (layout.rows) {
-      containerProps[`${propertyPrefix}-gtr`] = layout.rows;
+    if (layoutType === 'layout') {
+      // Traditional layout properties
+      containerProps['--layout-gtc'] = layout.columns || 'auto';
+      containerProps['--layout-gtr'] = layout.rows || 'auto';
+    } else if (layoutType === 'content') {
+      // Content-specific properties (using item-card custom properties)
+      if (layout.columns && layout.columns !== '1fr') {
+        containerProps['--item-card-gtc'] = layout.columns;
+      }
+      if (layout.rows && layout.rows !== 'auto') {
+        containerProps['--item-card-gtr'] = layout.rows;
+      }
     }
 
-    if (elementSelector === 'lay-out') {
+    // Add global container rules (only for layout, not content) - avoid duplicates
+    if (layoutType === 'layout') {
       const globalRuleKey = `${mediaQuery}::${layoutPrefix}`;
       
       if (!processedGlobalRules.has(globalRuleKey)) {
@@ -233,30 +323,34 @@ class LayoutBuilder {
           '--_ga': 'initial'
         });
 
+        // Add global child rules
         this.addRule(mediaQuery, `${globalContainerSelector} > *`, {
           '--layout-ga': 'auto'
         });
       }
     }
 
+    // Add specific container rules (only if there are properties to set)
     if (Object.keys(containerProps).length > 0) {
       this.addRule(mediaQuery, baseSelector, containerProps);
     }
 
+    // Process layout-specific rules
     if (layout.rules) {
-      console.log(`    📝 Processing ${layout.rules.length} layout-specific rules`);
       for (const rule of layout.rules) {
         let selector;
         
         if (rule.selector === '&') {
           selector = baseSelector;
         } else if (rule.selector === 'root') {
+          // Root selector targets the element itself (e.g., item-card[xs="stack(t-l)"])
           selector = baseSelector;
         } else if (rule.selector === '&>*') {
           selector = `${baseSelector} > *`;
         } else if (rule.selector.startsWith('&')) {
           selector = baseSelector + rule.selector.substring(1);
         } else if (rule.selector === elementSelector) {
+          // If the rule selector is the same as the base element, use the base selector
           selector = baseSelector;
         } else {
           selector = `${baseSelector} ${rule.selector}`;
@@ -264,11 +358,12 @@ class LayoutBuilder {
 
         this.addRule(mediaQuery, selector, rule.properties);
       }
-    } else {
-      console.log(`    ⚠️  No layout-specific rules found for ${layout.id}`);
     }
   }
 
+  /**
+   * Add a CSS rule to the collection
+   */
   addRule(mediaQuery, selector, properties) {
     const key = `${mediaQuery}::${selector}`;
     
@@ -282,21 +377,34 @@ class LayoutBuilder {
     }
   }
 
+  /**
+   * Minify CSS by removing unnecessary whitespace and formatting
+   */
   minifyCSS(css) {
     return css
+      // Remove comments
       .replace(/\/\*[\s\S]*?\*\//g, '')
+      // Remove extra whitespace and newlines
       .replace(/\s+/g, ' ')
+      // Remove whitespace around selectors and braces
       .replace(/\s*{\s*/g, '{')
       .replace(/\s*}\s*/g, '}')
       .replace(/\s*;\s*/g, ';')
       .replace(/\s*,\s*/g, ',')
       .replace(/\s*:\s*/g, ':')
+      // Remove trailing semicolons before closing braces
       .replace(/;}/g, '}')
+      // Remove leading/trailing whitespace
       .trim();
   }
 
+  /**
+   * Analyze property patterns and optimize for better grouping
+   */
   optimizePropertyPatterns() {
     const optimizedRules = new Map();
+    
+    // Group rules by media query for within-breakpoint optimization
     const rulesByMediaQuery = new Map();
     
     for (const [key, properties] of this.cssRules) {
@@ -309,6 +417,7 @@ class LayoutBuilder {
       rulesByMediaQuery.get(mediaQuery).set(selector, properties);
     }
     
+    // Optimize within each media query
     for (const [mediaQuery, rules] of rulesByMediaQuery) {
       const optimized = this.optimizeWithinMediaQuery(mediaQuery, rules);
       
@@ -318,13 +427,18 @@ class LayoutBuilder {
       }
     }
     
+    // Replace original rules with optimized ones
     this.cssRules = optimizedRules;
   }
 
+  /**
+   * Optimize rules within a single media query by extracting common patterns
+   */
   optimizeWithinMediaQuery(mediaQuery, rules) {
     const propertyFrequency = new Map();
     const selectorsByProperty = new Map();
     
+    // Analyze property frequency
     for (const [selector, properties] of rules) {
       for (const [prop, value] of properties) {
         const propValue = `${prop}:${value}`;
@@ -339,6 +453,7 @@ class LayoutBuilder {
       }
     }
     
+    // Find properties that appear in 3+ selectors (good candidates for grouping)
     const commonProperties = new Map();
     for (const [propValue, frequency] of propertyFrequency) {
       if (frequency >= 3) {
@@ -347,18 +462,23 @@ class LayoutBuilder {
       }
     }
     
+    // Create optimized rules
     const optimizedRules = new Map();
     const processedSelectors = new Set();
     
+    // First, create grouped rules for common properties
     for (const [propValue, selectors] of commonProperties) {
       const [prop, value] = propValue.split(':', 2);
       
+      // Group selectors that share this common property
       const groupedSelectors = selectors.filter(sel => {
+        // Only group if selector hasn't been processed and shares this property
         const originalProps = rules.get(sel);
         return originalProps && originalProps.has(prop) && originalProps.get(prop) === value;
       });
-
+      
       if (groupedSelectors.length >= 3) {
+        // Create a grouped selector for this common property
         const groupedKey = groupedSelectors.sort().join(', ');
         
         if (!optimizedRules.has(groupedKey)) {
@@ -367,6 +487,7 @@ class LayoutBuilder {
         
         optimizedRules.get(groupedKey).set(prop, value);
         
+        // Mark these selectors as having this property processed
         groupedSelectors.forEach(sel => {
           if (!processedSelectors.has(sel)) {
             processedSelectors.add(sel);
@@ -375,6 +496,7 @@ class LayoutBuilder {
       }
     }
     
+    // Then, add remaining unique properties for each selector
     for (const [selector, properties] of rules) {
       const remainingProps = new Map();
       
@@ -382,11 +504,13 @@ class LayoutBuilder {
         const propValue = `${prop}:${value}`;
         const commonSelectors = commonProperties.get(propValue) || [];
         
+        // If this property wasn't grouped, or this selector wasn't part of the group
         if (!commonProperties.has(propValue) || commonSelectors.length < 3) {
           remainingProps.set(prop, value);
         }
       }
       
+      // Add remaining properties if any
       if (remainingProps.size > 0) {
         optimizedRules.set(selector, remainingProps);
       }
@@ -395,26 +519,35 @@ class LayoutBuilder {
     return optimizedRules;
   }
 
+  /**
+   * Generate optimized CSS output with breakpoint-specific layers
+   */
   generateCSS(minify = false, coreCSS = '', commonCSS = '') {
-    return this.generateSystemCSS(minify, coreCSS, commonCSS, this.currentSystem);
-  }
-
-  generateSystemCSS(minify = false, coreCSS = '', commonCSS = '', system) {
+    // Apply property pattern optimization before generating CSS
     this.optimizePropertyPatterns();
     
-    const breakpointGroups = new Map();
+    // Group rules by media query and breakpoint
+    const layoutBreakpointGroups = new Map();
+    const contentBreakpointGroups = new Map();
     
     for (const [key, properties] of this.cssRules) {
       const [mediaQuery, selector] = key.split('::', 2);
       
+      // Determine if this is a layout or content rule
+      const isContentRule = selector.includes('item-card[');
+      const breakpointGroups = isContentRule ? contentBreakpointGroups : layoutBreakpointGroups;
+      
+      // Extract breakpoint name from media query processing
       let breakpointName = 'unknown';
-      if (system.breakpoints) {
-        for (const [bpName, bpConfig] of Object.entries(system.breakpoints)) {
-          const expectedQuery = this.generateMediaQuery(bpName, bpConfig);
-          if (expectedQuery === mediaQuery) {
-            breakpointName = bpName;
-            break;
-          }
+      const configBreakpoints = isContentRule 
+        ? (this.config.content?.breakpoints || {})
+        : (this.config.layout?.breakpoints || this.config.breakpoints || {});
+        
+      for (const [bpName, bpConfig] of Object.entries(configBreakpoints)) {
+        const expectedQuery = this.generateMediaQuery(bpName, bpConfig);
+        if (expectedQuery === mediaQuery) {
+          breakpointName = bpName;
+          break;
         }
       }
       
@@ -432,34 +565,42 @@ class LayoutBuilder {
 
     let css = '';
 
+    // Add core CSS first (already contains its own layers)
     if (coreCSS) {
       css += coreCSS;
     }
 
-    if (system.layer) {
-      for (const [breakpointName, mediaQueries] of breakpointGroups) {
-        if (mediaQueries.size > 0) {
-          css += `@layer ${system.layer}.${breakpointName} {\n`;
-          
-          for (const [mediaQuery, rules] of mediaQueries) {
-            css += `\t${mediaQuery} {\n`;
-            css += this.generateRulesCSS(rules, '\t\t');
-            css += '\t}\n\n';
-          }
-          
-          css += '}\n\n';
-        }
+    // Process layout breakpoints in their own layers
+    for (const [breakpointName, mediaQueries] of layoutBreakpointGroups) {
+      css += `@layer layout.${breakpointName} {\n`;
+      
+      // Process each media query within the breakpoint layer
+      for (const [mediaQuery, rules] of mediaQueries) {
+        css += `\t${mediaQuery} {\n`;
+        css += this.generateRulesCSS(rules, '\t\t');
+        css += '\t}\n\n';
       }
-    } else {
-      for (const [breakpointName, mediaQueries] of breakpointGroups) {
-        for (const [mediaQuery, rules] of mediaQueries) {
-          css += `${mediaQuery} {\n`;
-          css += this.generateRulesCSS(rules, '\t');
-          css += '}\n\n';
-        }
-      }
+      
+      css += '}\n\n';
     }
 
+    // Process content breakpoints in content layer
+    if (contentBreakpointGroups.size > 0) {
+      css += `@layer layout.content {\n`;
+      
+      for (const [breakpointName, mediaQueries] of contentBreakpointGroups) {
+        // Process each container query within the content layer
+        for (const [mediaQuery, rules] of mediaQueries) {
+          css += `\t${mediaQuery} {\n`;
+          css += this.generateRulesCSS(rules, '\t\t');
+          css += '\t}\n\n';
+        }
+      }
+      
+      css += '}\n\n';
+    }
+
+    // Add common CSS last (animations, demo styles, etc.)
     if (commonCSS) {
       css += commonCSS;
     }
@@ -467,20 +608,26 @@ class LayoutBuilder {
     return minify ? this.minifyCSS(css) : css;
   }
 
+  /**
+   * Generate CSS rules with proper indentation and enhanced grouping
+   */
   generateRulesCSS(rules, indent = '') {
     let css = '';
     
+    // Separate single selectors from grouped selectors
     const singleRules = new Map();
     const groupedRules = new Map();
     
     for (const [selector, properties] of rules) {
       if (selector.includes(', ')) {
+        // This is already a grouped selector from optimization
         groupedRules.set(selector, properties);
       } else {
         singleRules.set(selector, properties);
       }
     }
     
+    // Output grouped rules first (they are more efficient)
     for (const [groupedSelector, properties] of groupedRules) {
       css += `${indent}${groupedSelector} {\n`;
       
@@ -491,6 +638,7 @@ class LayoutBuilder {
       css += `${indent}}\n\n`;
     }
     
+    // Then group remaining single selectors with identical properties
     const propertyGroups = new Map();
     
     for (const [selector, properties] of singleRules) {
@@ -503,11 +651,14 @@ class LayoutBuilder {
       propertyGroups.get(propsKey).selectors.push(selector);
     }
 
+    // Output newly grouped single rules
     for (const { selectors, properties } of propertyGroups.values()) {
       if (selectors.length > 1) {
+        // Group multiple selectors with same properties
         const selectorList = selectors.sort().join(',\n' + indent);
         css += `${indent}${selectorList} {\n`;
       } else {
+        // Single selector
         css += `${indent}${selectors[0]} {\n`;
       }
       
@@ -521,81 +672,99 @@ class LayoutBuilder {
     return css;
   }
 
+  /**
+   * Reset builder state for a fresh build
+   */
   reset() {
     this.config = null;
     this.layouts.clear();
     this.cssRules.clear();
   }
 
-  async buildSystems(minify = false) {
+  /**
+   * Build the complete CSS
+   */
+  async build(minify = false, outputName = 'layout') {
+    // Reset state for fresh build
+    this.reset();
+    
     console.log('🚀 Starting CSS build...\n');
 
+    // Load configuration and layouts
     await this.loadConfig();
+    await this.loadLayouts();
 
-    if (!this.config.systems || !Array.isArray(this.config.systems)) {
-      throw new Error('Configuration must contain a "systems" array with the new format');
+    // Load core CSS files
+    const coreCSS = await this.loadCoreFiles();
+
+    console.log('\n📝 Processing breakpoints...');
+
+    // Process layout breakpoints (media queries)
+    if (this.config.layout && this.config.layout.breakpoints) {
+      console.log('\n🔧 Processing layout breakpoints...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.layout.breakpoints)) {
+        console.log(`\t- Processing layout ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
+      }
     }
 
-    console.log(`📁 Found ${this.config.systems.length} system(s) to build...\n`);
-
-    const buildResults = [];
-
-    for (const system of this.config.systems) {
-      console.log(`🔧 Building system: ${system.fileName || 'unnamed system'}`);
-      
-      this.currentSystem = system;
-      
-      this.reset();
-      
-      await this.loadLayouts(system.path);
-      
-      const coreCSS = await this.loadCoreFiles(system.core);
-      
-      console.log(`📝 Processing breakpoints for ${system.fileName}...`);
-      
-      if (system.breakpoints) {
-        for (const [breakpointName, breakpointConfig] of Object.entries(system.breakpoints)) {
-          console.log(`\t- Processing ${breakpointName} (${breakpointConfig.min})`);
-          this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
-        }
+    // Process content breakpoints (container queries)
+    if (this.config.content && this.config.content.breakpoints) {
+      console.log('\n📦 Processing content breakpoints...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.content.breakpoints)) {
+        console.log(`\t- Processing content ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'content');
       }
-      
-      const commonCSS = await this.loadCommonFiles(system.common);
-      
-      console.log(`🎨 Generating ${minify ? 'minified' : 'optimized'} CSS for ${system.fileName}...`);
-      
-      const css = this.generateSystemCSS(minify, coreCSS, commonCSS, system);
-      
-      const distDir = path.join(__dirname, 'dist');
-      if (!fs.existsSync(distDir)) {
-        fs.mkdirSync(distDir, { recursive: true });
-      }
-      
-      const fileName = system.fileName || 'output.css';
-      const outputPath = minify 
-        ? path.join(distDir, fileName.replace('.css', '.min.css'))
-        : path.join(distDir, fileName);
-      
-      fs.writeFileSync(outputPath, css, 'utf8');
-      
-      const result = {
-        system: system.fileName,
-        outputPath,
-        size: css.length,
-        rules: this.cssRules.size
-      };
-      
-      buildResults.push(result);
-      
-      console.log(`✅ ${system.fileName} complete!`);
-      console.log(`📁 Output: ${outputPath}`);
-      console.log(`📊 Generated ${result.rules} CSS rules`);
-      console.log(`📏 File size: ${(result.size / 1024).toFixed(1)}KB\n`);
     }
 
-    return buildResults;
+    // Handle legacy config format (for backwards compatibility)
+    if (this.config.breakpoints && !this.config.layout && !this.config.content) {
+      console.log('\n⚠️  Processing legacy breakpoints format...');
+      for (const [breakpointName, breakpointConfig] of Object.entries(this.config.breakpoints)) {
+        console.log(`\t- Processing ${breakpointName} (${breakpointConfig.min})`);
+        this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
+      }
+    }
+
+    // Load common CSS files (animations, demo styles, etc.)
+    const commonCSS = await this.loadCommonFiles();
+
+    console.log(`\n🎨 Generating ${minify ? 'minified' : 'optimized'} CSS...`);
+
+    // Store original rule count for comparison
+    const originalRuleCount = this.cssRules.size;
+
+    // Generate final CSS with core files and common files
+    const css = this.generateCSS(minify, coreCSS, commonCSS);
+
+    // Calculate optimization stats
+    const optimizedRuleCount = this.cssRules.size;
+    const reductionPercent = Math.round((1 - optimizedRuleCount / originalRuleCount) * 100);
+
+    // Ensure dist directory exists
+    const distDir = path.join(__dirname, 'dist');
+    if (!fs.existsSync(distDir)) {
+      fs.mkdirSync(distDir, { recursive: true });
+    }
+
+    // Write output file to dist directory
+    const outputPath = minify 
+      ? path.join(distDir, `${outputName}.min.css`)
+      : path.join(distDir, `${outputName}.css`);
+    
+    fs.writeFileSync(outputPath, css, 'utf8');
+
+    console.log(`\n✅ Build complete!`);
+    console.log(`📁 Output: ${outputPath}`);
+    console.log(`📊 Generated ${optimizedRuleCount} CSS rules (${reductionPercent}% reduction from ${originalRuleCount})`);
+    console.log(`📏 File size: ${(css.length / 1024).toFixed(1)}KB`);
+    
+    return { outputPath, size: css.length, rules: optimizedRuleCount };
   }
 
+  /**
+   * Generate HTML template for a layout file
+   */
   generateLayoutHTML(layoutName, layoutData, layoutType) {
     const title = layoutType.name || `${layoutName.charAt(0).toUpperCase() + layoutName.slice(1)} Layouts`;
     const prefix = layoutType.prefix || layoutName;
@@ -612,15 +781,18 @@ class LayoutBuilder {
 <body>
 	<h1>${title}</h1>`;
 
+    // Add description from layout type data
     if (layoutType.desc) {
       html += `
 	<p>${layoutType.desc}</p>`;
     } else {
+      // Fallback description if no desc property is found
       html += `
 	<p>These layouts use the <strong>${prefix}()</strong> layout mode to create various patterns.<br>
 		${layoutData.some(l => l.repeatable) ? 'When you add more items, repeatable patterns continue automatically.' : 'Fixed layouts display a specific number of items.'}</p>`;
     }
 
+    // Group layouts by item count
     const layoutsByItems = new Map();
     layoutData.forEach(layout => {
       const items = layout.items || 1;
@@ -630,6 +802,7 @@ class LayoutBuilder {
       layoutsByItems.get(items).push(layout);
     });
 
+    // Generate sections for each item count
     for (const [itemCount, layouts] of Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)) {
       html += `\n\n	<h2>${itemCount} Item${itemCount !== 1 ? 's' : ''}</h2>`;
       
@@ -637,10 +810,12 @@ class LayoutBuilder {
         const layoutId = layout.originalId || layout.id.replace(`${prefix}(`, '').replace(')', '');
         const description = layout.description || '';
         
+        // Generate breakpoint attributes from layout.breakpoints
         let breakpointAttrs = '';
         let codeExample = '';
         
         if (layout.breakpoints) {
+          // Use the breakpoints defined in the layout
           const breakpointPairs = [];
           for (const [breakpoint, value] of Object.entries(layout.breakpoints)) {
             breakpointAttrs += ` ${breakpoint}="${value}"`;
@@ -648,6 +823,7 @@ class LayoutBuilder {
           }
           codeExample = `&lt;lay-out${breakpointAttrs}&gt;`;
         } else {
+          // Fallback to old behavior if no breakpoints defined
           breakpointAttrs = ` md="columns(${itemCount})" lg="${prefix}(${layoutId})"`;
           codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"&gt;`;
         }
@@ -659,13 +835,15 @@ class LayoutBuilder {
 		<code>${codeExample}</code>
 		<lay-out${breakpointAttrs}>`;
 
+        // Add content items
         for (let i = 0; i < itemCount; i++) {
           html += `
 			<item-card></item-card>`;
         }
 
+        // Add repeat items if layout is repeatable
         if (layout.repeatable) {
-          const repeatCount = Math.min(itemCount, 6);
+          const repeatCount = Math.min(itemCount, 6); // Add same number as base items, max 6
           for (let i = 0; i < repeatCount; i++) {
             html += `
 			<item-card repeat></item-card>`;
@@ -684,20 +862,26 @@ class LayoutBuilder {
     return html;
   }
 
+  /**
+   * Generate all HTML demo files
+   */
   async generateHTML() {
     console.log('\n🎨 Generating HTML demos...');
     
+    // Ensure dist directory exists
     const distDir = path.join(__dirname, 'dist');
     if (!fs.existsSync(distDir)) {
       fs.mkdirSync(distDir, { recursive: true });
     }
 
+    // Get all layout files from layouts directory
     const layoutFiles = fs.readdirSync(this.layoutsDir)
       .filter(file => file.endsWith('.json') && file !== 'config.json');
 
     for (const file of layoutFiles) {
       const layoutName = path.basename(file, '.json');
       
+      // Skip overflow or empty layout files
       if (layoutName === 'overflow') continue;
       
       const layoutPath = path.join(this.layoutsDir, file);
@@ -706,15 +890,17 @@ class LayoutBuilder {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
         const layoutData = JSON.parse(layoutContent);
         
+        // Handle new structure with layouts array
         if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
           if (layoutData.layouts.length === 0) {
             console.log(`⚠ Skipping ${file}: No layouts defined`);
             continue;
           }
           
+          // Transform layouts for HTML generation (without full ID reconstruction)
           const layoutsForHTML = layoutData.layouts.map(layout => ({
             ...layout,
-            originalId: layout.id
+            originalId: layout.id  // Keep the original short ID for HTML
           }));
           
           const html = this.generateLayoutHTML(layoutName, layoutsForHTML, layoutData);
@@ -722,13 +908,14 @@ class LayoutBuilder {
           fs.writeFileSync(outputPath, html, 'utf8');
           console.log(`✓ Generated ${layoutName}.html`);
         } else if (layoutData.groups && typeof layoutData.groups === 'object') {
+          // Handle grouped structure (like content.json)
           const allLayoutsForHTML = [];
           
           for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
             for (const layout of groupData.layouts) {
               allLayoutsForHTML.push({
                 ...layout,
-                originalId: layout.id,
+                originalId: layout.id,  // Keep the original short ID for HTML
                 groupName: groupName,
                 groupPrefix: groupData.prefix || groupName
               });
@@ -768,28 +955,19 @@ async function main() {
 
   const runBuild = async () => {
     try {
-      await builder.loadConfig();
+      // Build layout.css (standard)
+      const layoutBuild = await builder.build(false, 'layout');
       
-      if (builder.config.systems && Array.isArray(builder.config.systems)) {
-        console.log('📋 Using new systems configuration format');
+      // Generate HTML demos
+      await builder.generateHTML();
+      
+      // Build minified version if requested or if not in watch mode
+      if (isMinify || !isWatch) {
+        const layoutMinBuild = await builder.build(true, 'layout');
         
-        const systemBuilds = await builder.buildSystems(false);
-        
-        await builder.generateHTML();
-        
-        if (isMinify || !isWatch) {
-          console.log('\n🗜️  Building minified versions...');
-          const minifiedBuilds = await builder.buildSystems(true);
-          
-          for (let i = 0; i < systemBuilds.length; i++) {
-            const normal = systemBuilds[i];
-            const minified = minifiedBuilds[i];
-            const reduction = Math.round((1 - minified.size / normal.size) * 100);
-            console.log(`💾 ${normal.system} minified: ${(minified.size / 1024).toFixed(1)}KB (${reduction}% smaller)`);
-          }
-        }
-      } else {
-        throw new Error('Configuration must use the new "systems" array format. Legacy format is no longer supported.');
+        // Show comparison
+        const reduction = Math.round((1 - layoutMinBuild.size / layoutBuild.size) * 100);
+        console.log(`💾 Minified version: ${(layoutMinBuild.size / 1024).toFixed(1)}KB (${reduction}% smaller)`);
       }
     } catch (error) {
       console.error('❌ Build failed:', error.message);
@@ -802,19 +980,22 @@ async function main() {
   if (isWatch) {
     console.log('\n👀 Watching for changes...');
     
+    // Watch config and layouts files
     const watchPaths = [configPath, layoutsDir];
     
+    // Simple file watcher
     const { watch } = await import('fs');
     
     for (const watchPath of watchPaths) {
       watch(watchPath, { recursive: true }, (eventType, filename) => {
-        if (filename && (filename.endsWith('.json') || filename.endsWith('.css'))) {
+        if (filename && (filename.endsWith('.json') || filename.endsWith('.js'))) {
           console.log(`\n🔄 File changed: ${filename}`);
           runBuild();
         }
       });
     }
     
+    // Keep process alive
     process.on('SIGINT', () => {
       console.log('\n👋 Build watcher stopped');
       process.exit(0);
