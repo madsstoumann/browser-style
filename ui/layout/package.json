@@ -53,5 +53,10 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/layout"
+  "homepage": "https://browser.style/ui/layout",
+  "devDependencies": {
+    "cssnano": "^7.0.7",
+    "cssnano-preset-advanced": "^7.0.7",
+    "postcss": "^8.5.6"
+  }
 }

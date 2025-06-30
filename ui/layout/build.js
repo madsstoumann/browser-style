@@ -285,7 +285,7 @@ class LayoutBuilder {
   }
 
   async minifyCSS(css) {
-    const result = await postcss([cssnano]).process(css, { from: undefined });
+    const result = await postcss([cssnano({ preset: 'advanced' })]).process(css, { from: undefined });
     return result.css;
   }
 
