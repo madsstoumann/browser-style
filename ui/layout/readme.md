@@ -1,6 +1,6 @@
 # @browser.style/layout
 
-A modern, configurable CSS layout system with support for responsive design using both media queries and container queries. This system uses a JSON-driven build process to generate optimized CSS from modular layout definitions.
+A modern, configurable CSS layout and content styling system with support for responsive design using both media queries and container queries. This project uses a JSON-driven build process to generate optimized CSS from modular definitions for multiple, distinct systems.
 
 ## Installation
 
@@ -12,32 +12,47 @@ npm install @browser.style/layout
 
 ### 1. Pre-built CSS (Recommended)
 
-Use the optimized, pre-built CSS files:
+Use the optimized, pre-built CSS files for layout and content styling:
 
 ```css
-/* Standard version */
-@import '@browser.style/layout';
+/* Layout System */
+@import '@browser.style/layout/dist/layout.css';
 
-/* Minified version (production) */
-@import '@browser.style/layout/layout.min';
+/* Content System */
+@import '@browser.style/layout/dist/content.css';
+
+/* Minified versions (production) */
+@import '@browser.style/layout/dist/layout.min.css';
+@import '@browser.style/layout/dist/content.min.css';
 ```
 
 ### 2. Custom Build (Advanced)
 
-For advanced customization, access the layout definitions and build your own:
+For advanced customization, you can modify the configuration and run the build process yourself.
+
+```bash
+# Modify ui/layout/config.json to your needs
+npm run build
+```
+
+The build script (`ui/layout/build.js`) can also be used programmatically:
 
 ```javascript
-import config from '@browser.style/layout/config.json';
 import LayoutBuilder from '@browser.style/layout/builder';
 
 // Custom build with your own configuration
-const builder = new LayoutBuilder('./my-config.json', './layouts/', './my-layout.css');
-await builder.build();
+const builder = new LayoutBuilder('./config.json', './systems/', './dist/');
+await builder.buildSystems();
+await builder.generateHTML();
 ```
 
 ## HTML Usage
 
-### Basic Example
+The system generates CSS for different HTML elements based on the configuration.
+
+### Layout System (`<lay-out>`)
+
+Use the `<lay-out>` element for page and component structures.
 
 ```html
 <lay-out sm="columns(2)" md="bento(6a-fixed)" xl="mosaic(photo-lg)">
@@ -50,245 +65,233 @@ await builder.build();
 </lay-out>
 ```
 
-### Responsive Design
+### Content System (`<item-card>`)
 
-Use different layout types at different breakpoints:
+Use the `<item-card>` element for styling content items within a layout. These styles are often driven by container queries.
 
 ```html
-<!-- Auto-fit on small screens, grid pattern on medium+, bento on large -->
-<lay-out sm="auto(fit)" md="grid(2sm:1lg-h)" xl="bento(6a-fixed)">
-  <article>Article 1</article>
-  <article>Article 2</article>
-  <article>Article 3</article>
+<lay-out md="columns(3)">
+  <item-card sm="stack(media, body)" md="columns(media, body)">
+    <!-- card content -->
+  </item-card>
+  <item-card sm="stack(media, body)" md="columns(media, body)">
+    <!-- card content -->
+  </item-card>
+  <item-card sm="stack(media, body)" md="columns(media, body)">
+    <!-- card content -->
+  </item-card>
 </lay-out>
 ```
 
-### Container Queries
+## Configuration (`config.json`)
 
-Some breakpoints use container queries for component-level responsiveness:
-
-```html
-<!-- This layout responds to its container size, not viewport -->
-<div style="width: 400px;">
-  <lay-out sm="columns(2)">
-    <div>Card 1</div>
-    <div>Card 2</div>
-  </lay-out>
-</div>
-```
-
-## Available Layouts
-
-### Layout Types by Category
-
-**Grid Layouts** (`grid` prefix)
-- Repeatable grid patterns with mixed item sizes that can accommodate unlimited items
-- Examples: `grid(2sm:1lg-h)`, `grid(1lg-v:4sm)`, `grid(1xl-v:2sm:2sm)`
-
-**Bento Layouts** (`bento` prefix)  
-- Fixed, non-repeatable layouts inspired by traditional Japanese bento boxes
-- Highly curated arrangements with specific item counts (6-9 items)
-- Examples: `bento(6a-fixed)`, `bento(7b-fixed)`, `bento(9a-fixed)`
-
-**Other Layout Types**
-- **autofit/autofill** (`auto` prefix): Auto-fitting grid layouts
-- **columns** (`columns` prefix): 2-6 column layouts  
-- **asymmetrical** (`asym` prefix): Basic asymmetrical grid layouts
-- **ratios** (`ratio` prefix): Ratio-based layouts (25:75, 33:66, etc.)
-- **mosaic** (`mosaic` prefix): Photo gallery and artistic patterns
-
-## Configuration
-
-The layout system is fully configurable through JSON files:
-
-### Default Breakpoints
-
-The default configuration includes the following breakpoints (fully customizable in `config.json`):
-
-- **xs**: 240px+ (extra small)
-- **sm**: 380px+ (small) 
-- **md**: 540px+ (medium)
-- **lg**: 720px+ (large)
-- **xl**: 920px+ (extra large)
-- **xxl**: 1140px+ (extra extra large)
-
-### Custom Configuration
-
-You can customize breakpoints, query types, and core modules in `config.json`:
+The build process is controlled by `ui/layout/config.json`, which defines an array of "systems". Each system is an independent set of CSS rules and configurations.
 
 ```json
 {
-  "breakpoints": {
-    "mobile": {
-      "type": "@media",
-      "min": "320px",
-      "layouts": ["columns", "autofit"]
-    },
-    "tablet": {
-      "type": "@container", 
-      "min": "768px",
-      "layouts": ["grid", "bento", "mosaic"]
-    }
-  },
-  "core": ["base", "animations", "demo"]
-}
-```
-
-## Development & Building
-
-### Quick Start
-
-```bash
-# Build CSS once
-npm run build
-
-# Build and watch for changes (development)
-npm run dev
-
-# Build minified version
-npm run build:min
-
-# Build with watch mode
-npm run build:watch
-```
-
-### Build Features
-
-- ✅ **CSS optimization**: Groups identical selectors and properties
-- ✅ **Mixed query types**: Supports both `@media` and `@container` queries
-- ✅ **Deduplication**: Eliminates redundant CSS rules
-- ✅ **Watch mode**: Auto-rebuilds on file changes
-- ✅ **Layer support**: Uses CSS `@layer` for proper cascade control
-
-## Package Contents
-
-When you install this package, you get:
-
-```
-@browser.style/layout/
-├── dist/               # Compiled output
-│   ├── layout.css      # Pre-built CSS (standard)
-│   ├── layout.min.css  # Pre-built CSS (minified)
-│   └── *.html          # Demo files for each layout type
-├── config.json         # Layout configuration
-├── layouts/            # Layout JSON definitions
-│   ├── autofit.json    # Auto-fitting grid layouts
-│   ├── asymmetrical.json # Asymmetrical layouts
-│   ├── bento.json      # Bento box layouts
-│   ├── columns.json    # Column layouts
-│   ├── grid.json       # Grid layouts
-│   ├── ratios.json     # Ratio layouts
-│   └── mosaic.json     # Mosaic layouts
-├── core/               # Core CSS files
-│   ├── base.css        # Base layout styles
-│   ├── animations.css  # Layout animations
-│   └── demo.css        # Demo styling
-├── build.js            # Build script
-└── README.md           # This documentation
-```
-
-### Layout Definition Structure
-
-Each layout type is defined in a JSON file with this structure:
-
-```json
-{
-  "name": "Human-readable name",
-  "prefix": "css-prefix",
-  "layouts": [
+  "systems": [
     {
-      "id": "short-id",
-      "description": "Description of the layout",
-      "columns": "CSS grid columns",
-      "items": 3,
-      "repeatable": true,
-      "rules": [
-        {
-          "selector": "*:nth-of-type(3n+1)",
-          "properties": {
-            "--layout-ga": "span 2 / span 1"
-          }
+      "fileName": "layout.css",
+      "path": "layouts",
+      "layer": "layout",
+      "element": "lay-out",
+      "generateHTML": true,
+      "core": ["base"],
+      "common": ["animations", "demo"],
+      "breakpoints": {
+        "lg": {
+          "type": "@media",
+          "min": "720px",
+          "layouts": ["bento", "columns", "grid"]
         }
-      ]
+      }
+    },
+    {
+      "fileName": "content.css",
+      "path": "content",
+      "layer": "content",
+      "element": "item-card",
+      "generateHTML": false,
+      "core": ["content"],
+      "breakpoints": {
+        "sm": {
+          "type": "@container",
+          "min": "280px",
+          "layouts": ["stack", "columns", "rows"]
+        }
+      }
     }
   ]
 }
 ```
 
-## Quick Reference
+### System Properties
 
-### Most Common Layouts
+- `fileName`: The name of the output CSS file.
+- `path`: The subdirectory within `systems/` containing the JSON definitions.
+- `layer`: The name for the CSS cascade layer.
+- `element`: The HTML element this system targets.
+- `generateHTML`: A boolean to enable or disable the generation of a demo HTML file.
+- `core`: Core CSS files to include.
+- `common`: Common CSS files to include.
+- `breakpoints`: An object defining responsive breakpoints and the layouts to apply.
 
-```html
-<!-- Responsive columns -->
-<lay-out sm="columns(2)" lg="columns(3)">
-  
-<!-- Auto-fitting grid -->
-<lay-out md="auto(fit)">
+## Development & Building
 
-<!-- Bento box (fixed layout) -->
-<lay-out lg="bento(6a-fixed)">
+### Build Commands
 
-<!-- Repeating grid pattern -->
-<lay-out md="grid(2sm:1lg-h)">
+```bash
+# Build all systems once
+npm run build
 
-<!-- Asymmetrical layout -->
-<lay-out md="asym(left-right)">
+# Build and watch for changes (development)
+npm run dev
+
+# Build minified versions for production
+npm run build:min
 ```
 
-### Layout Prefixes Quick Guide
+### Build Features
 
-- `auto()` - Auto-fitting grids
-- `columns()` - Column layouts
-- `bento()` - Fixed bento layouts
-- `grid()` - Repeatable grid patterns  
-- `asym()` - Asymmetrical layouts
-- `ratio()` - Proportional layouts
-- `mosaic()` - Mosaic patterns
+- ✅ **Multi-System Output**: Generates separate CSS files for each configured system.
+- ✅ **CSS Optimization**: Groups identical selectors and properties.
+- ✅ **Mixed Query Types**: Supports both `@media` and `@container` queries.
+- ✅ **Deduplication**: Eliminates redundant CSS rules.
+- ✅ **Watch Mode**: Auto-rebuilds on file changes.
+- ✅ **Layer Support**: Uses CSS `@layer` for proper cascade control.
 
-## File Sizes
+## Package Contents
 
-- **dist/layout.css**: ~61KB (optimized with breakpoint layers)
-- **dist/layout.min.css**: ~53KB (14% smaller)
+The relevant development files are located in the `ui/layout/` directory:
 
-## Browser Support
+```
+ui/layout/
+├── dist/                 # Compiled output
+│   ├── layout.css        # Pre-built CSS for layout system
+│   ├── content.css       # Pre-built CSS for content system
+│   ├── layout.min.css    # Minified layout CSS
+│   ├── content.min.css   # Minified content CSS
+│   └── *.html            # Demo files for each layout type
+├── systems/              # System JSON definitions
+│   ├── layouts/          # JSON files for the "layout" system
+│   └── content/          # JSON files for the "content" system
+├── core/                 # Core CSS files (base, content, etc.)
+├── config.json           # Build configuration
+├── build.js              # Build script
+└── README.md             # This documentation
+```
 
-- All modern browsers supporting CSS Grid
-- Container queries supported where available (with graceful fallback)
+## CSS Layer Structure
+
+The generated CSS uses CSS cascade layers for better control and organization. Layers are created on a per-system, per-breakpoint basis.
+
+```css
+/* Layers for the "layout" system */
+@layer layout.xs;
+@layer layout.sm;
+@layer layout.md;
+
+/* Layers for the "content" system */
+@layer content.xs;
+@layer content.sm;
+@layer content.md;
+```
+
+This structure provides:
+- ✅ **Predictable Cascade**: Layers ensure consistent styling precedence.
+- ✅ **System Isolation**: Styles for `layout` and `content` are kept separate.
+- ✅ **Breakpoint Isolation**: Each breakpoint has its own layer.
+- ✅ **Easy Overrides**: You can override styles by targeting specific layers.
+
+## Framework Integration (React, Vue, & Angular)
+
+This CSS-only system is designed to work seamlessly with modern web frameworks. Because it uses standard CSS to style custom HTML tags (`<lay-out>`, `<item-card>`), **no JavaScript components or plugins are required.**
+
+You can use the custom tags directly in your components as if they were native HTML elements. Just import the generated CSS into your project.
+
+### React Example
+
+In your React component, you can use the custom tags directly in your JSX. React will render them correctly without any extra configuration.
+
+```jsx
+import '@browser.style/layout/dist/layout.css';
+import '@browser.style/layout/dist/content.css';
+
+function MyComponent() {
+  return (
+    <lay-out md="columns(2)" lg="asym(l-r)">
+      <item-card sm="stack(media, body)">
+        <h2>Card 1</h2>
+        <p>Some content here.</p>
+      </item-card>
+      <item-card sm="stack(media, body)">
+        <h2>Card 2</h2>
+        <p>Some content here.</p>
+      </item-card>
+    </lay-out>
+  );
+}
+```
+
+### Vue Example
+
+In your Vue components, you can use the custom tags directly in your templates. Vue's compiler will handle them correctly.
+
+```vue
+<template>
+  <lay-out md="columns(2)" lg="asym(l-r)">
+    <item-card sm="stack(media, body)">
+      <h2>Card 1</h2>
+      <p>Some content here.</p>
+    </item-card>
+    <item-card sm="stack(media, body)">
+      <h2>Card 2</h2>
+      <p>Some content here.</p>
+    </item-card>
+  </lay-out>
+</template>
+
+<style>
+@import '@browser.style/layout/dist/layout.css';
+@import '@browser.style/layout/dist/content.css';
+</style>
+```
+
+### Angular Example
+
+To use custom elements in Angular, you need to include `CUSTOM_ELEMENTS_SCHEMA` in the module where you are using them. This tells the Angular compiler to allow non-standard tags.
+
+**In your `app.module.ts` (or feature module):**
+```typescript
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+@NgModule({
+  // ... other module properties
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class AppModule { }
+```
+
+**In your global `styles.css`:**
+```css
+@import '@browser.style/layout/dist/layout.css';
+@import '@browser.style/layout/dist/content.css';
+```
+
+**In your component template:**
+```html
+<lay-out md="columns(2)" lg="asym(l-r)">
+  <item-card sm="stack(media, body)">
+    <h2>Card 1</h2>
+    <p>Some content here.</p>
+  </item-card>
+  <item-card sm="stack(media, body)">
+    <h2>Card 2</h2>
+    <p>Some content here.</p>
+  </item-card>
+</lay-out>
+```
 
 ## License
 
 ISC
-
-### CSS Layer Structure
-
-The generated CSS uses CSS cascade layers for better control and organization:
-
-```css
-@layer layout.base      /* Core layout system */
-@layer layout.reset     /* Reset and initialization */  
-@layer layout.animations /* Animation definitions */
-@layer layout.demo      /* Demo styling (optional) */
-@layer layout.xs        /* Extra small breakpoint styles */
-@layer layout.sm        /* Small breakpoint styles */
-@layer layout.md        /* Medium breakpoint styles */
-@layer layout.lg        /* Large breakpoint styles */
-@layer layout.xl        /* Extra large breakpoint styles */
-@layer layout.xxl       /* Extra extra large breakpoint styles */
-```
-
-This structure provides:
-- ✅ **Predictable cascade**: Layers ensure consistent styling precedence
-- ✅ **Breakpoint isolation**: Each breakpoint has its own layer for better organization
-- ✅ **Customization**: You can override styles by targeting specific layers
-- ✅ **Modularity**: Core, animations, and demo styles are separated
-
-
-
-/*
-	If you use bleed, you must set `--layout-mi` and `--layout-bleed-mw`
-	and wrap a container around the layout, with a `data-layout-wrapper` attribute
-*/
-/* [data-layout-wrapper] {
-	margin-inline: max(var(--layout-mi, 0), 50vw - var(--layout-bleed-mw, 100vw) / 2);
-} */

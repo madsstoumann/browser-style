@@ -3,6 +3,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import postcss from 'postcss';
+import cssnano from 'cssnano';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -282,17 +284,9 @@ class LayoutBuilder {
     }
   }
 
-  minifyCSS(css) {
-    return css
-      .replace(/\/\*[\s\S]*?\*\//g, '')
-      .replace(/\s+/g, ' ')
-      .replace(/\s*{\s*/g, '{')
-      .replace(/\s*}\s*/g, '}')
-      .replace(/\s*;\s*/g, ';')
-      .replace(/\s*,\s*/g, ',')
-      .replace(/\s*:\s*/g, ':')
-      .replace(/;}/g, '}')
-      .trim();
+  async minifyCSS(css) {
+    const result = await postcss([cssnano]).process(css, { from: undefined });
+    return result.css;
   }
 
   optimizePropertyPatterns() {
@@ -395,11 +389,11 @@ class LayoutBuilder {
     return optimizedRules;
   }
 
-  generateCSS(minify = false, coreCSS = '', commonCSS = '') {
+  async generateCSS(minify = false, coreCSS = '', commonCSS = '') {
     return this.generateSystemCSS(minify, coreCSS, commonCSS, this.currentSystem);
   }
 
-  generateSystemCSS(minify = false, coreCSS = '', commonCSS = '', system) {
+  async generateSystemCSS(minify = false, coreCSS = '', commonCSS = '', system) {
     this.optimizePropertyPatterns();
     
     const breakpointGroups = new Map();
@@ -464,7 +458,7 @@ class LayoutBuilder {
       css += commonCSS;
     }
 
-    return minify ? this.minifyCSS(css) : css;
+    return minify ? await this.minifyCSS(css) : css;
   }
 
   generateRulesCSS(rules, indent = '') {
@@ -522,7 +516,6 @@ class LayoutBuilder {
   }
 
   reset() {
-    this.config = null;
     this.layouts.clear();
     this.cssRules.clear();
   }
@@ -564,7 +557,7 @@ class LayoutBuilder {
       
       console.log(`🎨 Generating ${minify ? 'minified' : 'optimized'} CSS for ${system.fileName}...`);
       
-      const css = this.generateSystemCSS(minify, coreCSS, commonCSS, system);
+      const css = await this.generateSystemCSS(minify, coreCSS, commonCSS, system);
       
       const distDir = path.join(__dirname, 'dist');
       if (!fs.existsSync(distDir)) {
@@ -692,63 +685,81 @@ class LayoutBuilder {
       fs.mkdirSync(distDir, { recursive: true });
     }
 
-    const layoutFiles = fs.readdirSync(this.layoutsDir)
-      .filter(file => file.endsWith('.json') && file !== 'config.json');
+    if (!this.config || !this.config.systems) {
+      console.warn('⚠ Skipping HTML generation: config not loaded or no systems defined.');
+      return;
+    }
 
-    for (const file of layoutFiles) {
-      const layoutName = path.basename(file, '.json');
+    for (const system of this.config.systems) {
+      if (!system.generateHTML) {
+        console.warn(`HTML generation disabled for ${system.fileName}`);
+        continue;
+      }
+      const systemLayoutsDir = system.path ? path.join(this.layoutsDir, system.path) : this.layoutsDir;
       
-      if (layoutName === 'overflow') continue;
-      
-      const layoutPath = path.join(this.layoutsDir, file);
-      
-      try {
-        const layoutContent = fs.readFileSync(layoutPath, 'utf8');
-        const layoutData = JSON.parse(layoutContent);
+      if (!fs.existsSync(systemLayoutsDir)) {
+        console.warn(`⚠ Layout directory not found for system, skipping: ${systemLayoutsDir}`);
+        continue;
+      }
+
+      const layoutFiles = fs.readdirSync(systemLayoutsDir)
+        .filter(file => file.endsWith('.json') && file !== 'config.json');
+
+      for (const file of layoutFiles) {
+        const layoutName = path.basename(file, '.json');
         
-        if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
-          if (layoutData.layouts.length === 0) {
-            console.log(`⚠ Skipping ${file}: No layouts defined`);
-            continue;
-          }
+        if (layoutName === 'overflow') continue;
+        
+        const layoutPath = path.join(systemLayoutsDir, file);
+        
+        try {
+          const layoutContent = fs.readFileSync(layoutPath, 'utf8');
+          const layoutData = JSON.parse(layoutContent);
           
-          const layoutsForHTML = layoutData.layouts.map(layout => ({
-            ...layout,
-            originalId: layout.id
-          }));
-          
-          const html = this.generateLayoutHTML(layoutName, layoutsForHTML, layoutData);
-          const outputPath = path.join(distDir, `${layoutName}.html`);
-          fs.writeFileSync(outputPath, html, 'utf8');
-          console.log(`✓ Generated ${layoutName}.html`);
-        } else if (layoutData.groups && typeof layoutData.groups === 'object') {
-          const allLayoutsForHTML = [];
-          
-          for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
-            for (const layout of groupData.layouts) {
-              allLayoutsForHTML.push({
-                ...layout,
-                originalId: layout.id,
-                groupName: groupName,
-                groupPrefix: groupData.prefix || groupName
-              });
+          if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
+            if (layoutData.layouts.length === 0) {
+              console.log(`⚠ Skipping ${file}: No layouts defined`);
+              continue;
             }
+            
+            const layoutsForHTML = layoutData.layouts.map(layout => ({
+              ...layout,
+              originalId: layout.id
+            }));
+            
+            const html = this.generateLayoutHTML(layoutName, layoutsForHTML, layoutData);
+            const outputPath = path.join(distDir, `${layoutName}.html`);
+            fs.writeFileSync(outputPath, html, 'utf8');
+            console.log(`✓ Generated ${layoutName}.html`);
+          } else if (layoutData.groups && typeof layoutData.groups === 'object') {
+            const allLayoutsForHTML = [];
+            
+            for (const [groupName, groupData] of Object.entries(layoutData.groups)) {
+              for (const layout of groupData.layouts) {
+                allLayoutsForHTML.push({
+                  ...layout,
+                  originalId: layout.id,
+                  groupName: groupName,
+                  groupPrefix: groupData.prefix || groupName
+                });
+              }
+            }
+            
+            if (allLayoutsForHTML.length === 0) {
+              console.log(`⚠ Skipping ${file}: No layouts defined in groups`);
+              continue;
+            }
+            
+            const html = this.generateLayoutHTML(layoutName, allLayoutsForHTML, layoutData);
+            const outputPath = path.join(distDir, `${layoutName}.html`);
+            fs.writeFileSync(outputPath, html, 'utf8');
+            console.log(`✓ Generated ${layoutName}.html`);
+          } else {
+            console.log(`⚠ Skipping ${file}: Old format or invalid structure`);
           }
-          
-          if (allLayoutsForHTML.length === 0) {
-            console.log(`⚠ Skipping ${file}: No layouts defined in groups`);
-            continue;
-          }
-          
-          const html = this.generateLayoutHTML(layoutName, allLayoutsForHTML, layoutData);
-          const outputPath = path.join(distDir, `${layoutName}.html`);
-          fs.writeFileSync(outputPath, html, 'utf8');
-          console.log(`✓ Generated ${layoutName}.html`);
-        } else {
-          console.log(`⚠ Skipping ${file}: Old format or invalid structure`);
+        } catch (error) {
+          console.warn(`⚠ Failed to generate HTML for ${file}: ${error.message}`);
         }
-      } catch (error) {
-        console.warn(`⚠ Failed to generate HTML for ${file}: ${error.message}`);
       }
     }
   }
@@ -761,7 +772,7 @@ async function main() {
   const isMinify = args.includes('--minify');
   
   const configPath = path.join(__dirname, 'config.json');
-  const layoutsDir = path.join(__dirname, 'layouts');
+  const layoutsDir = path.join(__dirname, 'systems');
   const outputPath = path.join(__dirname, 'dist.css');
 
   const builder = new LayoutBuilder(configPath, layoutsDir, outputPath);

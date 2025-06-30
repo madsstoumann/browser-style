@@ -2,9 +2,10 @@
   "systems": [
     {
       "fileName": "layout.css",
-      "path": "/",
+      "path": "layouts",
       "layer": "layout",
       "element": "lay-out",
+      "generateHTML": true,
       "core": ["base"],
       "common": ["animations", "demo"],
       "breakpoints": {
@@ -45,6 +46,7 @@
           "max": null,
           "layouts": [
             {
+              "bento": ["bento(6a)"],
               "mosaic": ["mosaic(scatter)", "mosaic(hex)"]
             }
           ]
@@ -53,7 +55,7 @@
           "type": "@media",
           "min": "1140px",
           "max": null,
-          "layouts": []
+          "layouts": [{ "bento": ["bento(6a)"] }]
         }
       }
     },
@@ -62,6 +64,7 @@
       "path": "content",
       "layer": "content",
       "element": "item-card",
+      "generateHTML": false,
       "core": ["content"],
       "common": [],
       "breakpoints": {
