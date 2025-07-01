@@ -3,6 +3,9 @@ class CircularRange extends HTMLElement {
 	static #css = `
 		:host {
 			--circular-range-fill: #0066cc;
+			--circular-range-fill-start: var(--circular-range-fill);
+			--circular-range-fill-middle: var(--circular-range-fill-start);
+			--circular-range-fill-end: var(--circular-range-fill-start);
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
@@ -26,8 +29,9 @@ class CircularRange extends HTMLElement {
 			background:
 				conic-gradient(
 					from calc(var(--_start) * 1deg),
-					var(--circular-range-fill) 0deg,
-					var(--circular-range-fill) calc((var(--_fill) - var(--_start)) * 1deg),
+					var(--circular-range-fill-start) 0deg,
+					var(--circular-range-fill-middle) calc((var(--_fill) - var(--_start)) * 0.5deg),
+					var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
 					#0000 calc((var(--_fill) - var(--_start)) * 1deg)
 				),
 				conic-gradient(

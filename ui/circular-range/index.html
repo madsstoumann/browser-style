@@ -19,7 +19,7 @@
 
 	<form id="app">
 		<label>Range — Circular
-			<circular-range value="25" min="0" max="200" suffix="%" start="220" end="500" style="--circular-range-fill:green,orange,red;--circular-range-thumb:red;"></circular-range>
+			<circular-range id="speedometer" value="25" min="0" max="200" suffix="km/t" start="220" end="500"></circular-range>
 		</label>
 
 		<label>Range — Circular
@@ -31,17 +31,50 @@
 		</label>
 
 		<label>Range — Circular
-			<circular-range value="50" min="0" max="100" suffix="km/t" step="5" start="270" end="450"></circular-range>
+			<circular-range value="50" min="0" max="100" suffix="kr" step="5" start="270" end="450"></circular-range>
 		</label>
 
 		<label>Range — Circular
-			<circular-range value="50" min="0" max="100" suffix="km/t" step="5" start="90" end="270"></circular-range>
+			<circular-range value="50" min="0" max="100" suffix="%" step="5" start="90" end="270"></circular-range>
 		</label>
 	</form>
 
 	<script>
+		const speedometer = document.getElementById('speedometer');
+		
+		function updateSpeedometerColors(value) {
+			// Always start with green
+			speedometer.style.setProperty('--circular-range-fill-start', 'green');
+			speedometer.style.setProperty('--circular-range-thumb', 'green');
+			
+			if (value > 150) {
+				// Green to orange to red
+				speedometer.style.setProperty('--circular-range-fill-middle', 'orange');
+				speedometer.style.setProperty('--circular-range-fill-end', 'red');
+				speedometer.style.setProperty('--circular-range-thumb', 'red');
+			} else if (value > 100) {
+				// Green to orange
+				speedometer.style.setProperty('--circular-range-fill-middle', 'orange');
+				speedometer.style.setProperty('--circular-range-fill-end', 'orange');
+				speedometer.style.setProperty('--circular-range-thumb', 'orange');
+			} else {
+				// Just green
+				speedometer.style.setProperty('--circular-range-fill-middle', 'green');
+				speedometer.style.setProperty('--circular-range-fill-end', 'green');
+				speedometer.style.setProperty('--circular-range-thumb', 'green');
+			}
+		}
+		
+		// Initialize colors based on current value
+		updateSpeedometerColors(parseInt(speedometer.value));
+		
 		document.getElementById('app').addEventListener('input', event => {
 			console.log(event.target.value);
+			
+			// Update speedometer colors if this is the speedometer element
+			if (event.target.id === 'speedometer') {
+				updateSpeedometerColors(parseInt(event.target.value));
+			}
 		});
 	</script>
 </body>
