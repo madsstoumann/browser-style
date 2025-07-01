@@ -2,14 +2,12 @@
 	:where(circular-range) {
 		--circular-range-fill: #0066cc;
     --circular-range-track: #f0f0f0;
-		--circular-range-thumb-sz: 1.5rem;
+		--circular-range-track-sz: 1.5rem;
 
-		--_min: attr(min type(<number>), 0);
-		--_max: attr(max type(<number>), 100);
-		--_value: attr(value type(<number>), 0);
-		--_fill: calc((var(--_value) - var(--_min)) / (var(--_max) - var(--_min)) * 100);
-		--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-thumb-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-thumb-sz)));
-		--_rad: calc(360deg / (var(--max, 100) - var(--min, 0)));
+		--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-track-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-track-sz)));
+		--_start-angle: 0deg;
+		--_end-angle: 360deg;
+		--_fill-angle: 0deg;
 
 		aspect-ratio: 1;
 		display: grid;
@@ -20,8 +18,10 @@
 
 		&::before {
 			background: conic-gradient(
-				var(--circular-range-fill) calc(1% * var(--_fill)),
-				var(--circular-range-track) calc(1% * var(--_fill))
+				#0000 0, #0000 var(--_start-angle),
+				var(--circular-range-fill) var(--_start-angle), var(--circular-range-fill) var(--_fill-angle),
+				var(--circular-range-track) var(--_fill-angle), var(--circular-range-track) var(--_end-angle),
+				#0000 var(--_end-angle), #0000 360deg
 			);
 			border-radius: 50%;
 			content: "";
@@ -44,8 +44,8 @@
 			grid-area: 1 / 1;
 			height: 100%;
 			pointer-events: none;
-			rotate: calc(var(--_rad) * var(--_fill));
-			width: var(--circular-range-thumb-sz);
+			rotate: var(--_fill-angle);
+			width: var(--circular-range-track-sz);
 			&::before {
 				aspect-ratio: 1;
 				background-color: var(--circular-range-fill);

@@ -18,11 +18,16 @@
 	</p>
 
 	<label>Range — Circular
-		<circular-range value="25" min="0" max="200" suffix="%">
+		<circular-range value="25" min="0" max="200" suffix="%" start="35" end="325">
 			<span></span>
 		</circular-range>
 	</label>
 
+	<label>Range — Circular
+		<circular-range value="10" min="0" max="100" suffix="kr" step="5">
+			<span></span>
+		</circular-range>
+	</label>
 	<script type="module">
 		import { init } from './../../assets/js/common.js'
 		import circularRange from './index.js'
