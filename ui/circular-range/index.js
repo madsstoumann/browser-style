@@ -52,7 +52,7 @@ class CircularRange extends HTMLElement {
 			grid-area: 1 / 1;
 		}
 
-		span {
+		range-thumb {
 			grid-area: 1 / 1;
 			height: 100%;
 			pointer-events: none;
@@ -60,7 +60,7 @@ class CircularRange extends HTMLElement {
 			width: var(--circular-range-track-sz);
 		}
 
-		span::before {
+		range-thumb::before {
 			aspect-ratio: 1;
 			background-color: var(--circular-range-thumb);
 			border-radius: 50%;
@@ -91,7 +91,7 @@ class CircularRange extends HTMLElement {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(CircularRange.#css);
 		this.shadowRoot.adoptedStyleSheets = [sheet];
-		this.shadowRoot.innerHTML = `<span></span>`;
+		this.shadowRoot.innerHTML = `<range-thumb></range-thumb>`;
 	}
 
 	connectedCallback() {
