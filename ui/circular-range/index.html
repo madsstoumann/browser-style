@@ -19,11 +19,13 @@
 
 	<form id="app">
 		<label>Range — Circular
-			<circular-range id="speedometer" value="25" min="0" max="200" suffix="km/t" start="220" end="500" indices="60"></circular-range>
+			<circular-range id="speedometer" value="90" min="0" max="200" suffix="km/t" start="220" end="500" indices="50">
+				<slot>Hello world</slot>
+			</circular-range>
 		</label>
 
 		<label>Range — Circular
-			<circular-range value="20" min="0" max="100" suffix="kr" step="5"></circular-range>
+			<circular-range value="20" min="0" max="100" suffix="kr" step="5" indices="25"></circular-range>
 		</label>
 
 		<label>Range — Circular

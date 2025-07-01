@@ -6,19 +6,23 @@ class CircularRange extends HTMLElement {
 			--circular-range-fill-start: var(--circular-range-fill);
 			--circular-range-fill-middle: var(--circular-range-fill-start);
 			--circular-range-fill-end: var(--circular-range-fill-start);
-			--circular-range-indice-gap: 8px;
+			--circular-range-gap: 8px;
+			--circular-range-indice-h: 8px;
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
+
+			--_indices-w: calc(100% - var(--circular-range-gap) - (2 * var(--circular-range-track-sz)));
+			--_slotted_w: calc(var(--_indices-w) - (2 * var(--circular-range-gap)) - (2 * var(--circular-range-indice-h)));
 			--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-track-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-track-sz)));
 			--_start-angle: 0deg;
 			--_end-angle: 360deg;
+
 			aspect-ratio: 1;
 			display: grid;
 			place-items: center;
-			max-inline-size: var(--circular-range-mai, 320px);
 			touch-action: none;
-			width: 100%;
+			width: var(--circular-range-w, 320px);
 		}
 
 		:host(:focus-visible) {
@@ -46,6 +50,7 @@ class CircularRange extends HTMLElement {
 			grid-area: 1 / 1;
 			height: 100%;
 			mask: var(--_mask);
+			transition: background .2s ease-in-out;
 			width: 100%;
 		}
 
@@ -75,27 +80,34 @@ class CircularRange extends HTMLElement {
 			width: 100%;
 		}
 
+		::slotted(*) {
+			grid-area: 1 / 1;
+			height: var(--_slotted_w);
+			width: var(--_slotted_w);
+			display: grid;
+			place-content: center;
+			margin: auto;
+		}
+
 		/* indices */
 		ul {
-		aspect-ratio: 1;
-	border-radius: 50%;
-	grid-area: 1 / 1;
-	list-style: none;
-	margin:0;
-	padding: 0;
-	width: calc(100% - var(--circular-range-indice-gap, 0px) - (2 * var(--circular-range-track-sz)));
-}
-li {
-	background: var(--circular-range-indice-c, #999);
-	
-	display: inline-block;
-	height: 8px;
-	offset-anchor: top;
-	offset-distance: var(--_p, 0%);
-	offset-path: content-box;
-	width: 2px;
-}
+			all: unset;
+			aspect-ratio: 1;
+			border-radius: 50%;
+			grid-area: 1 / 1;
+			padding: 0;
+			width: var(--_indices-w);
+		}
 
+		li {
+			background: var(--circular-range-indice-c, #999);
+			display: inline-block;
+			height: var(--circular-range-indice-h);
+			offset-anchor: top;
+			offset-distance: var(--_p, 0%);
+			offset-path: content-box;
+			width: var(--circular-range-indice-w, 2px);
+		}
 	`;
 
 	#min;
@@ -118,12 +130,13 @@ li {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(CircularRange.#css);
 		this.shadowRoot.adoptedStyleSheets = [sheet];
-		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ul>${this.#generateIndices()}</ul>`;
+		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ul></ul><slot></slot>`;
 	}
 
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
+		this.shadowRoot.querySelector('ul').innerHTML = this.#generateIndices();
 		this.#update();
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
@@ -214,11 +227,14 @@ li {
 	}
 
 	#generateIndices() {
-		const count = parseInt(this.getAttribute('indices')) || 60;
-		const step = 100 / count;
+		const count = parseInt(this.getAttribute('indices')) || 0;
+		if (count === 0) return '';
+		const startPercent = this.#startAngle / 360 * 100;
+		const rangePercent = this.#angleRange / 360 * 100;
+		const step = rangePercent / (count - 1);
 
 		return Array.from({ length: count }, (_, i) => {
-			return `<li style="--_p:${i * step}%"></li>`;
+			return `<li style="--_p:${startPercent + (i * step)}%"></li>`;
 		}).join('');
 	}
 }
