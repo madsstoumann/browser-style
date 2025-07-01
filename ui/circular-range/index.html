@@ -8,6 +8,13 @@
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<script type="module" src="./index.js"></script>
+	<style>
+		#my-label {
+  grid-row: 3; /* Places the label in the 4th row */
+  grid-column: 1;
+  align-self: end; /* Or start, end, etc. */
+}
+	</style>
 </head>
 <body>
 	<h1>UI: Components</h1>
@@ -20,7 +27,7 @@
 	<form id="app">
 		<label>Range — Circular
 			<circular-range id="speedometer" value="90" min="0" max="200" suffix="km/t" start="220" end="500" indices="50">
-
+			<div id="my-label">My Label</div>
 			</circular-range>
 		</label>
 
