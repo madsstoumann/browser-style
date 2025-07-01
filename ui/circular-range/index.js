@@ -8,9 +8,11 @@ class CircularRange extends HTMLElement {
 			--circular-range-fill-end: var(--circular-range-fill-start);
 			--circular-range-gap: 8px;
 			--circular-range-indice-h: 8px;
+			--circular-range-rows: 5;
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
+			--_ga: 1 / 1 / calc(var(--circular-range-rows) + 1) / 1;
 
 			--_indices-w: calc(100% - var(--circular-range-gap) - (2 * var(--circular-range-track-sz)));
 			--_slotted_w: calc(var(--_indices-w) - (2 * var(--circular-range-gap)) - (2 * var(--circular-range-indice-h)));
@@ -20,6 +22,7 @@ class CircularRange extends HTMLElement {
 
 			aspect-ratio: 1;
 			display: grid;
+			grid-template-rows: repeat(var(--circular-range-rows), 1fr);
 			place-items: center;
 			touch-action: none;
 			width: var(--circular-range-w, 320px);
@@ -47,7 +50,7 @@ class CircularRange extends HTMLElement {
 				);
 			border-radius: 50%;
 			content: "";
-			grid-area: 1 / 1;
+			grid-area: var(--_ga);
 			height: 100%;
 			mask: var(--_mask);
 			transition: background .2s ease-in-out;
@@ -55,15 +58,19 @@ class CircularRange extends HTMLElement {
 		}
 
 		:host::after {
+			align-self: end;
 			counter-reset: val var(--_value);
 			content: counter(val) attr(suffix);
-			font-size: 200%;
-			font-weight: 700;
-			grid-area: 1 / 1;
+			font-family: var(--circular-range-output-ff, inherit);
+			font-size: var(--circular-range-output-fs, 200%);
+			font-weight: var(--circular-range-output-fw, 700);
+			grid-column: 1;
+			grid-row: var(--circular-range-output-gr, 2);
+			text-box: cap alphabetic;
 		}
 
 		range-thumb {
-			grid-area: 1 / 1;
+			grid-area: var(--_ga);
 			height: 100%;
 			pointer-events: none;
 			rotate: calc(1deg * var(--_fill, 0));
@@ -80,21 +87,12 @@ class CircularRange extends HTMLElement {
 			width: 100%;
 		}
 
-		::slotted(*) {
-			grid-area: 1 / 1;
-			height: var(--_slotted_w);
-			width: var(--_slotted_w);
-			display: grid;
-			place-content: center;
-			margin: auto;
-		}
-
 		/* indices */
 		ul {
 			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
-			grid-area: 1 / 1;
+			grid-area: var(--_ga);
 			padding: 0;
 			width: var(--_indices-w);
 		}
