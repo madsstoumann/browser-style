@@ -6,6 +6,7 @@ class CircularRange extends HTMLElement {
 			--circular-range-fill-start: var(--circular-range-fill);
 			--circular-range-fill-middle: var(--circular-range-fill-start);
 			--circular-range-fill-end: var(--circular-range-fill-start);
+			--circular-range-indice-gap: 8px;
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
@@ -73,6 +74,28 @@ class CircularRange extends HTMLElement {
 			display: block;
 			width: 100%;
 		}
+
+		/* indices */
+		ul {
+		aspect-ratio: 1;
+	border-radius: 50%;
+	grid-area: 1 / 1;
+	list-style: none;
+	margin:0;
+	padding: 0;
+	width: calc(100% - var(--circular-range-indice-gap, 0px) - (2 * var(--circular-range-track-sz)));
+}
+li {
+	background: var(--circular-range-indice-c, #999);
+	
+	display: inline-block;
+	height: 8px;
+	offset-anchor: top;
+	offset-distance: var(--_p, 0%);
+	offset-path: content-box;
+	width: 2px;
+}
+
 	`;
 
 	#min;
@@ -95,7 +118,7 @@ class CircularRange extends HTMLElement {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(CircularRange.#css);
 		this.shadowRoot.adoptedStyleSheets = [sheet];
-		this.shadowRoot.innerHTML = `<range-thumb></range-thumb>`;
+		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ul>${this.#generateIndices()}</ul>`;
 	}
 
 	connectedCallback() {
@@ -188,6 +211,15 @@ class CircularRange extends HTMLElement {
 		const currentValue = Number(this.getAttribute('value')) || this.#min;
 		const newValue = currentValue + ((event.key === 'ArrowUp' || event.key === 'ArrowRight') ? this.#step : -this.#step);
 		this.#setValue(newValue);
+	}
+
+	#generateIndices() {
+		const count = parseInt(this.getAttribute('indices')) || 60;
+		const step = 100 / count;
+
+		return Array.from({ length: count }, (_, i) => {
+			return `<li style="--_p:${i * step}%"></li>`;
+		}).join('');
 	}
 }
 
