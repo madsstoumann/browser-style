@@ -7,7 +7,7 @@ class CircularRange extends HTMLElement {
 			--circular-range-fill-middle: var(--circular-range-fill-start);
 			--circular-range-fill-end: var(--circular-range-fill-start);
 			--circular-range-gap: 8px;
-			--circular-range-indice-h: 8px;
+			--circular-range-indice-h: 6px;
 			--circular-range-rows: 5;
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
@@ -95,16 +95,33 @@ class CircularRange extends HTMLElement {
 			grid-area: var(--_ga);
 			padding: 0;
 			width: var(--_indices-w);
+			& > li {
+				background: var(--circular-range-indice-c, #e0e0e0);
+				height: var(--circular-range-indice-h);
+				width: var(--circular-range-indice-w, 2px)
+			}
 		}
 
 		li {
-			background: var(--circular-range-indice-c, #999);
+			
 			display: inline-block;
-			height: var(--circular-range-indice-h);
+			
 			offset-anchor: top;
 			offset-distance: var(--_p, 0%);
 			offset-path: content-box;
-			width: var(--circular-range-indice-w, 2px);
+			;
+		}
+
+		/* digits */
+		ol {
+			all: unset;
+			aspect-ratio: 1;
+			border-radius: 50%;
+			font-size: x-small;
+			grid-area: var(--_ga);
+			padding: 0;
+			width: calc(var(--_indices-w) - 2rem);
+			& > li { offset-rotate: 0deg; }
 		}
 	`;
 
@@ -128,23 +145,28 @@ class CircularRange extends HTMLElement {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(CircularRange.#css);
 		this.shadowRoot.adoptedStyleSheets = [sheet];
-		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ul></ul><slot></slot>`;
+		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ol></ol><ul></ul><slot></slot>`;
 	}
 
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
 		this.shadowRoot.querySelector('ul').innerHTML = this.#generateIndices();
+		this.#renderAndPositionLabels();
 		this.#update();
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
 	}
 
 	static get observedAttributes() {
-		return ['value'];
+		return ['value', 'labels'];
 	}
 
-	attributeChangedCallback() {
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue) return;
+		if (name === 'labels') {
+			this.#renderAndPositionLabels();
+		}
 		this.#update();
 	}
 
@@ -234,6 +256,33 @@ class CircularRange extends HTMLElement {
 		return Array.from({ length: count }, (_, i) => {
 			return `<li style="--_p:${startPercent + (i * step)}%"></li>`;
 		}).join('');
+	}
+
+	#renderAndPositionLabels() {
+		const labelsAttr = this.getAttribute('labels');
+		const ol = this.shadowRoot.querySelector('ol');
+		if (!ol) return;
+
+		ol.innerHTML = '';
+		if (!labelsAttr) return;
+
+		const pairs = labelsAttr.split(',').map(pair => pair.split(':'));
+		for (const [valueRaw, labelRaw] of pairs) {
+			if (valueRaw === undefined || labelRaw === undefined) continue;
+			const value = Number(valueRaw.trim());
+			const label = labelRaw.trim();
+			const li = document.createElement('li');
+			li.setAttribute('value', value);
+			li.textContent = label;
+
+			if (!isNaN(value)) {
+				const percent = this.#range > 0 ? (value - this.#min) / this.#range : 0;
+				const angle = this.#startAngle + percent * this.#angleRange;
+				const arcPercent = angle / 360 * 100;
+				li.style.setProperty('--_p', `${arcPercent}%`);
+			}
+			ol.appendChild(li);
+		}
 	}
 }
 
