@@ -64,9 +64,9 @@ class CircularRange extends HTMLElement {
 			width: var(--circular-range-track-sz);
 		}
 
-		[part="fill"]::before { background: var(--circular-range-fill-start); offset-distance: var(--_tb, -39%); }
-		[part="track"]::before { offset-distance: var(--_tb, -39%); }
-		[part="track"]::after {offset-distance: var(--_ta, 39%); }
+		[part="fill"]::before { background: var(--circular-range-fill-start); offset-distance: var(--_tb); }
+		[part="track"]::before { offset-distance: var(--_tb); }
+		[part="track"]::after {offset-distance: var(--_ta); }
 		
 
 
@@ -213,6 +213,8 @@ class CircularRange extends HTMLElement {
 		this.#radian = this.#angleRange / this.#range;
 		this.style.setProperty('--_start', this.#startAngle);
 		this.style.setProperty('--_end', this.#endAngle);
+		this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
+		this.style.setProperty('--_ta', `${(this.#endAngle / 360) * 100}%`);
 	}
 
 	#update() {
