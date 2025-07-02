@@ -11,9 +11,9 @@ class CircularRange extends HTMLElement {
 			--circular-range-rows: 5;
 			--circular-range-thumb: #0066cc;
 			--circular-range-track: #f0f0f0;
-			--circular-range-track-sz: 1.5rem;
-			--_ga: 1 / 1 / calc(var(--circular-range-rows) + 1) / 1;
+			--circular-range-track-sz: 1.5rem;			
 
+			--_ga: 1 / 1 / calc(var(--circular-range-rows) + 1) / 1;
 			--_indices-w: calc(100% - var(--circular-range-gap) - (2 * var(--circular-range-track-sz)));
 			--_slotted_w: calc(var(--_indices-w) - (2 * var(--circular-range-gap)) - (2 * var(--circular-range-indice-h)));
 			--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-track-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-track-sz)));
@@ -33,30 +33,55 @@ class CircularRange extends HTMLElement {
 			outline-offset: 4px;
 		}
 
-		:host::before {
-			background:
-				conic-gradient(
-					from calc(var(--_start) * 1deg),
-					var(--circular-range-fill-start) 0deg,
-					var(--circular-range-fill-middle) calc((var(--_fill) - var(--_start)) * 0.5deg),
-					var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
-					#0000 calc((var(--_fill) - var(--_start)) * 1deg)
-				),
-				conic-gradient(
-					from calc(var(--_start) * 1deg),
-					var(--circular-range-track) 0deg,
-					var(--circular-range-track) calc((var(--_end) - var(--_start)) * 1deg),
-					#0000 calc((var(--_end) - var(--_start)) * 1deg)
-				);
+		[part="track"],
+		[part="fill"] {
 			border-radius: 50%;
-			content: "";
 			grid-area: var(--_ga);
 			height: 100%;
 			mask: var(--_mask);
-			transition: background .2s ease-in-out;
 			width: 100%;
 		}
 
+		[part="track"] {
+			background: conic-gradient(
+				from calc(var(--_start) * 1deg),
+				var(--circular-range-track) 0deg,
+				var(--circular-range-track) calc((var(--_end) - var(--_start)) * 1deg),
+				#0000 calc((var(--_end) - var(--_start)) * 1deg)
+			);
+		}
+
+		[part="fill"]::before,
+		[part="track"]::before,
+		[part="track"]::after {
+			background: var(--circular-range-track);
+			border-radius: 50%;
+			content: '';
+			display: block;
+			height: var(--circular-range-track-sz);
+			offset-anchor: top;
+    	offset-path: content-box;
+			width: var(--circular-range-track-sz);
+		}
+
+		[part="fill"]::before { background: var(--circular-range-fill-start); offset-distance: var(--_tb, -39%); }
+		[part="track"]::before { offset-distance: var(--_tb, -39%); }
+		[part="track"]::after {offset-distance: var(--_ta, 39%); }
+		
+
+
+		[part="fill"] {
+			background: conic-gradient(
+				from calc(var(--_start) * 1deg),
+				var(--circular-range-fill-start) 0deg,
+				var(--circular-range-fill-middle) calc((var(--_fill) - var(--_start)) * 0.5deg),
+				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
+				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
+			);
+			will-change: transform;
+		}
+
+		/* value counter */
 		:host::after {
 			align-self: end;
 			counter-reset: val var(--_value);
@@ -75,6 +100,7 @@ class CircularRange extends HTMLElement {
 			pointer-events: none;
 			rotate: calc(1deg * var(--_fill, 0));
 			width: var(--circular-range-track-sz);
+			will-change: transform;
 		}
 
 		range-thumb::before {
@@ -103,13 +129,11 @@ class CircularRange extends HTMLElement {
 		}
 
 		li {
-			
 			display: inline-block;
-			
 			offset-anchor: top;
 			offset-distance: var(--_p, 0%);
 			offset-path: content-box;
-			;
+			user-select: none;
 		}
 
 		/* digits */
@@ -145,7 +169,7 @@ class CircularRange extends HTMLElement {
 		const sheet = new CSSStyleSheet();
 		sheet.replaceSync(CircularRange.#css);
 		this.shadowRoot.adoptedStyleSheets = [sheet];
-		this.shadowRoot.innerHTML = `<range-thumb></range-thumb><ol></ol><ul></ul><slot></slot>`;
+		this.shadowRoot.innerHTML = `<div part="track"></div><div part="fill"></div><range-thumb></range-thumb><ol></ol><ul></ul><slot></slot>`;
 	}
 
 	connectedCallback() {
