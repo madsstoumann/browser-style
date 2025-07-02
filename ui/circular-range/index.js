@@ -64,11 +64,17 @@ class CircularRange extends HTMLElement {
 			width: var(--circular-range-track-sz);
 		}
 
-		[part="fill"]::before { background: var(--circular-range-fill-start); offset-distance: var(--_tb); }
+		[part="fill"]::before {
+			background: var(--circular-range-fill-start);
+			offset-distance: var(--_tb);
+		}
+
 		[part="track"]::before { offset-distance: var(--_tb); }
 		[part="track"]::after {offset-distance: var(--_ta); }
-		
 
+		:host(.at-min) range-thumb::before {
+			background-color: var(--circular-range-track);
+		}
 
 		[part="fill"] {
 			background: conic-gradient(
@@ -78,7 +84,6 @@ class CircularRange extends HTMLElement {
 				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
 				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
 			);
-			will-change: transform;
 		}
 
 		/* value counter */
@@ -231,6 +236,8 @@ class CircularRange extends HTMLElement {
 		if (this.value === clampedValue) return;
 		this.setAttribute('value', clampedValue);
 		this.#internals.setFormValue(clampedValue);
+
+		this.classList.toggle('at-min', clampedValue === this.#min);
 		this.dispatchEvent(new Event('input', { bubbles: true }));
 	}
 
