@@ -33,6 +33,7 @@
 			align-self: end;
 			padding: .5em 1.5em;
 			text-box: cap alphabetic;
+			transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
 		}
 	}
 
@@ -46,6 +47,16 @@
 	.top-arc {
 		clip-path: inset(0 0 40% 0);
 		margin-bottom: -120px;
+	}
+
+	@keyframes pulse-info {
+		0% { transform: scale(1); }
+		50% { transform: scale(1.05); }
+		100% { transform: scale(1); }
+	}
+
+	.info.pulse {
+		animation: pulse-info 0.3s ease-in-out;
 	}
 
 	</style>
@@ -98,6 +109,7 @@
 	<script>
 		const speedometer = document.querySelector('.speedometer');
 		const infoBox = speedometer.querySelector('.info');
+		let currentStatus = null; // Variable to track the current status
 
 		const speedStatus = {
 			green: { color: '#33FF00', text: 'No speeding' },
@@ -126,12 +138,21 @@
 			speedometer.style.setProperty('--circular-range-fill-end', endColor);
 			speedometer.style.setProperty('--circular-range-thumb', status.color);
 
-			// Update info box
-			if (infoBox) {
+			// Update info box only if the status has changed
+			if (infoBox && status !== currentStatus) {
 				infoBox.textContent = status.text;
 				infoBox.style.backgroundColor = status.color;
 				infoBox.style.color = status === speedStatus.red ? 'white' : '#333';
+
+				// Add pulse class to trigger animation
+				infoBox.classList.add('pulse');
+
+				// Remove class after animation ends to allow re-triggering
+				infoBox.addEventListener('animationend', () => {
+					infoBox.classList.remove('pulse');
+				}, { once: true });
 			}
+			currentStatus = status; // Update the current status
 		}
 
 		// Initialize based on current value
