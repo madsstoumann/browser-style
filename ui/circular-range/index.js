@@ -73,7 +73,7 @@ class CircularRange extends HTMLElement {
 		[part="track"]::after {offset-distance: var(--_ta); }
 
 		:host(.at-min) range-thumb::before {
-			background-color: var(--circular-range-track);
+			background-color: var(--circular-range-thumb-min, #e0e0e0);
 		}
 
 		[part="fill"] {
@@ -237,7 +237,7 @@ class CircularRange extends HTMLElement {
 		this.setAttribute('value', clampedValue);
 		this.#internals.setFormValue(clampedValue);
 
-		this.classList.toggle('at-min', clampedValue === this.#min);
+		this.classList.toggle('at-min', this.hasAttribute('enable-min') && clampedValue === this.#min);
 		this.dispatchEvent(new Event('input', { bubbles: true }));
 	}
 
