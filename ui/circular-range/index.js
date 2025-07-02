@@ -7,7 +7,7 @@ class CircularRange extends HTMLElement {
 			--circular-range-fill-middle: var(--circular-range-fill);
 			--circular-range-fill-start: var(--circular-range-fill);
 			--circular-range-indice-bdrs: 0;
-			--circular-range-indice-c: #d9d9d9;
+			--circular-range-indice-c: #999;
 			--circular-range-indice-h: 5px;
 			--circular-range-indice-w: 1px;
 			--circular-range-indices-w: 80%;
@@ -220,17 +220,22 @@ class CircularRange extends HTMLElement {
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
 		this.#update();
+		this.#updateActiveLabel();
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
 	}
 
 	static get observedAttributes() {
-		return ['value'];
+		return ['value', 'active-label'];
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
-		this.#update();
+		if (name === 'value') {
+			this.#update();
+		} else if (name === 'active-label') {
+			this.#updateActiveLabel();
+		}
 	}
 
 	get value() {
@@ -274,6 +279,22 @@ class CircularRange extends HTMLElement {
 
 		this.classList.toggle('at-min', this.hasAttribute('enable-min') && clampedValue === this.#min);
 		this.dispatchEvent(new Event('input', { bubbles: true }));
+	}
+
+	#updateActiveLabel() {
+		const activeLabelValue = this.getAttribute('active-label');
+		const labels = this.shadowRoot.querySelectorAll('[part="labels"] li');
+
+		labels.forEach(label => {
+			label.part.remove('active-label');
+		});
+
+		if (activeLabelValue) {
+			const activeLabel = this.shadowRoot.querySelector(`[part="labels"] li[value="${activeLabelValue}"]`);
+			if (activeLabel) {
+				activeLabel.part.add('active-label');
+			}
+		}
 	}
 
 	#pointerdown(event) {
@@ -343,21 +364,15 @@ class CircularRange extends HTMLElement {
 			const label = labelRaw.trim();
 			const li = document.createElement('li');
 			li.setAttribute('value', value);
+			li.part.add(`label-${value}`);
 			li.textContent = label;
 
-			if (i === 0) {
-				li.part.add('first-label');
-			}
-			if (i === pairs.length - 1) {
-				li.part.add('last-label');
+			if (value >= this.#min && value <= this.#max) {
+				const degree = ((value - this.#min) * this.#radian) + this.#startAngle;
+				const percent = (degree / 360) * 100;
+				li.style.setProperty('--_p', `${percent}%`);
 			}
 
-			if (!isNaN(value)) {
-				const percent = this.#range > 0 ? (value - this.#min) / this.#range : 0;
-				const angle = this.#startAngle + percent * this.#angleRange;
-				const arcPercent = angle / 360 * 100;
-				li.style.setProperty('--_p', `${arcPercent}%`);
-			}
 			ol.appendChild(li);
 		}
 	}

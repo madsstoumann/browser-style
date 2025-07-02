@@ -28,10 +28,11 @@ A customizable, circular range slider web component.
 | `max`        | The maximum value of the slider.                                                                           | `100`     |
 | `step`       | The stepping interval for the value.                                                                       | `1`       |
 | `shift-step` | The stepping interval when using arrow keys with the Shift key.                                            | `step * 10` |
+| `active-label` | The value of the label to be styled as active.                                                             | `null`    |
 | `start`      | The start angle of the circular range in degrees.                                                          | `0`       |
 | `end`        | The end angle of the circular range in degrees.                                                            | `360`     |
 | `labels`     | Comma-separated value-label pairs to display around the slider. Example: `0:Low,50:Mid,100:High`.           | `null`    |
-| `indices`    | The number of tick marks (indices) to display along the track.                                             | `0`       |
+| `indices`    | The number of tick marks (indices) to display along the track. To get an indice for each step, you can calculate it as `(max - min) / step + 1`. For example, with `min="0"`, `max="100"`, and `step="5"`, you would need `(100 - 0) / 5 + 1 = 21` indices. | `0`       |
 | `suffix`     | A string to append to the displayed value.                                                                 | `""`      |
 | `enable-min` | A boolean attribute that, when present, applies a different style to the thumb when the value is at minimum. | `false`   |
 
@@ -50,6 +51,7 @@ You can style the component's internal elements using the `::part()` pseudo-elem
 | `labels`      | The container for the labels.  |
 | `first-label` | The first label element.     |
 | `last-label`  | The last label element.      |
+| `active-label`| The currently active label.  |
 
 Example:
 ```css
@@ -86,3 +88,10 @@ Customize the component's appearance using these CSS custom properties.
 | `--circular-range-track`           | The color of the track.                      | `#f0f0f0`   |
 | `--circular-range-track-sz`        | The size (thickness) of the track.           | `1.5rem`    |
 | `--circular-range-w`               | The width of the component.                  | `320px`     |
+
+## Parts
+
+- `label-[value]` - The label for a specific value.
+- `active-label` - The currently active label.
+- `first-label` - The first label.
+- `last-label` - The last label.
