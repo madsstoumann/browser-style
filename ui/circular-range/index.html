@@ -14,6 +14,10 @@
   grid-column: 1;
   align-self: end; /* Or start, end, etc. */
 }
+
+/* circular-range::part(first-label) { padding-inline-start: 1rem; }
+circular-range::part(last-label) { padding-inline-end: 1rem; } */
+
 	</style>
 </head>
 <body>
@@ -53,24 +57,24 @@
 		
 		function updateSpeedometerColors(value) {
 			// Always start with green
-			speedometer.style.setProperty('--circular-range-fill-start', 'green');
-			speedometer.style.setProperty('--circular-range-thumb', 'green');
+			speedometer.style.setProperty('--circular-range-fill-start', '#33FF00');
+			speedometer.style.setProperty('--circular-range-thumb', '33FF00');
 			
 			if (value > 150) {
 				// Green to orange to red
-				speedometer.style.setProperty('--circular-range-fill-middle', 'orange');
-				speedometer.style.setProperty('--circular-range-fill-end', 'red');
-				speedometer.style.setProperty('--circular-range-thumb', 'red');
+				speedometer.style.setProperty('--circular-range-fill-middle', '#F2C94C');
+				speedometer.style.setProperty('--circular-range-fill-end', '#EB5757');
+				speedometer.style.setProperty('--circular-range-thumb', '#EB5757');
 			} else if (value > 100) {
 				// Green to orange
-				speedometer.style.setProperty('--circular-range-fill-middle', 'orange');
-				speedometer.style.setProperty('--circular-range-fill-end', 'orange');
-				speedometer.style.setProperty('--circular-range-thumb', 'orange');
+				speedometer.style.setProperty('--circular-range-fill-middle', '#F2C94C');
+				speedometer.style.setProperty('--circular-range-fill-end', '#F2C94C');
+				speedometer.style.setProperty('--circular-range-thumb', '#F2C94C');
 			} else {
 				// Just green
-				speedometer.style.setProperty('--circular-range-fill-middle', 'green');
-				speedometer.style.setProperty('--circular-range-fill-end', 'green');
-				speedometer.style.setProperty('--circular-range-thumb', 'green');
+				speedometer.style.setProperty('--circular-range-fill-middle', '#33FF00');
+				speedometer.style.setProperty('--circular-range-fill-end', '#33FF00');
+				speedometer.style.setProperty('--circular-range-thumb', '#33FF00');
 			}
 		}
 		
@@ -78,7 +82,7 @@
 		updateSpeedometerColors(parseInt(speedometer.value));
 		
 		document.getElementById('app').addEventListener('input', event => {
-			console.log(event.target.value);
+			// console.log(event.target.value);
 			
 			// Update speedometer colors if this is the speedometer element
 			if (event.target.id === 'speedometer') {
