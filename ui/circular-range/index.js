@@ -11,14 +11,18 @@ class CircularRange extends HTMLElement {
 			--circular-range-indice-h: 5px;
 			--circular-range-indice-w: 1px;
 			--circular-range-indices-w: 80%;
+			--circular-range-labels-c: light-dark(#333, #CCC);
+			--circular-range-labels-fs: x-small;
 			--circular-range-labels-w: 70%;
 			--circular-range-output-ff: inherit;
 			--circular-range-output-fs: 200%;
 			--circular-range-output-fw: 700;
 			--circular-range-output-gr: 2;
 			--circular-range-rows: 5;
-			--circular-range-thumb: #0066cc;
+			--circular-range-thumb: var(--circular-range-fill);
 			--circular-range-thumb-min: #e0e0e0;
+			--circular-range-thumb-bxsh: 0 0 0 2px Canvas;
+			--circular-range-thumb-bxsh-focus: 0 0 0 2px Canvas;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
 			--circular-range-w: 320px;
@@ -37,8 +41,12 @@ class CircularRange extends HTMLElement {
 		*:not([part="thumb"]) { user-select: none; }
 
 		:host(:focus-visible) {
-			outline: 2px solid var(--circular-range-fill);
-			outline-offset: 4px;
+			outline: 0;
+			[part="fill"] { opacity: .65; }
+			[part="thumb"]::before {
+				box-shadow: var(--circular-range-thumb-bxsh-focus);
+				scale: 1.2;
+			}
 		}
 
 		/* === TRACK AND FILL === */
@@ -60,8 +68,9 @@ class CircularRange extends HTMLElement {
 				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
 				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
 			);
+			transition: all 0.2s ease-in-out;
 			&::before {
-				background: var(--circular-range-fill-start);
+				background: var(--circular-range-fill);
 				offset-distance: var(--_tb);
 			}
 		}
@@ -107,9 +116,10 @@ class CircularRange extends HTMLElement {
 				aspect-ratio: 1;
 				background-color: var(--circular-range-thumb);
 				border-radius: 50%;
-				box-shadow: 0 0 0 2px Canvas;
+				box-shadow: var(--circular-range-thumb-bxsh);
 				content: '';
 				display: block;
+				transition: all 0.2s ease-in-out;
 				width: 100%;
 			}
 		}
@@ -154,11 +164,13 @@ class CircularRange extends HTMLElement {
 		}
 
 		/* === LABELS === */
+
 		[part="labels"] {
 			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
-			font-size: x-small;
+			color: var(--circular-range-labels-c);
+			font-size: var(--circular-range-labels-fs);
 			grid-area: var(--_ga);
 			padding: 0;
 			width: var(--circular-range-labels-w);
@@ -172,18 +184,19 @@ class CircularRange extends HTMLElement {
 		}
 	`;
 
-	#min;
-	#max;
-	#step;
-	#startAngle;
-	#endAngle;
-	#range;
 	#angleRange;
-	#radian;
-	#internals;
-	lastValue;
 	#CX;
 	#CY;
+	#endAngle;
+	#internals;
+	#max;
+	#min;
+	#radian;
+	#range;
+	#shiftStep;
+	#startAngle;
+	#step;
+	lastValue;
 
 	constructor() {
 		super();
@@ -204,7 +217,7 @@ class CircularRange extends HTMLElement {
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
-		this.shadowRoot.querySelector('ul').innerHTML = this.#generateIndices();
+		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
 		this.#update();
 		this.addEventListener('keydown', this.#keydown);
@@ -212,14 +225,11 @@ class CircularRange extends HTMLElement {
 	}
 
 	static get observedAttributes() {
-		return ['value', 'labels'];
+		return ['value'];
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
-		if (name === 'labels') {
-			this.#renderAndPositionLabels();
-		}
 		this.#update();
 	}
 
@@ -235,6 +245,7 @@ class CircularRange extends HTMLElement {
 		this.#min = Number(this.getAttribute('min')) || 0;
 		this.#max = Number(this.getAttribute('max')) || 100;
 		this.#step = Number(this.getAttribute('step')) || 1;
+		this.#shiftStep = Number(this.getAttribute('shift-step')) || this.#step;
 		this.#startAngle = Number(this.getAttribute('start')) || 0;
 		this.#endAngle = Number(this.getAttribute('end')) || 360;
 		this.#range = this.#max - this.#min;
@@ -299,7 +310,8 @@ class CircularRange extends HTMLElement {
 		if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 		event.preventDefault();
 		const currentValue = Number(this.getAttribute('value')) || this.#min;
-		const newValue = currentValue + ((event.key === 'ArrowUp' || event.key === 'ArrowRight') ? this.#step : -this.#step);
+		const step = event.shiftKey ? this.#shiftStep : this.#step;
+		const newValue = currentValue + ((event.key === 'ArrowUp' || event.key === 'ArrowRight') ? step : -step);
 		this.#setValue(newValue);
 	}
 
@@ -317,7 +329,7 @@ class CircularRange extends HTMLElement {
 
 	#renderAndPositionLabels() {
 		const labelsAttr = this.getAttribute('labels');
-		const ol = this.shadowRoot.querySelector('ol');
+		const ol = this.shadowRoot.querySelector('[part="labels"]');
 		if (!ol) return;
 
 		ol.innerHTML = '';
