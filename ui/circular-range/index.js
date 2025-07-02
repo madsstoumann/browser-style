@@ -14,6 +14,7 @@ class CircularRange extends HTMLElement {
 			--circular-range-labels-c: light-dark(#333, #CCC);
 			--circular-range-labels-fs: x-small;
 			--circular-range-labels-w: 70%;
+			--circular-range-output-as: end;
 			--circular-range-output-ff: inherit;
 			--circular-range-output-fs: 200%;
 			--circular-range-output-fw: 700;
@@ -131,7 +132,7 @@ class CircularRange extends HTMLElement {
 		/* === VALUE === */
 
 		:host::after {
-			align-self: end;
+			align-self: var(--circular-range-output-as);
 			counter-reset: val var(--_value);
 			content: counter(val) attr(suffix);
 			font-family: var(--circular-range-output-ff);

@@ -37,6 +37,8 @@
 	}
 
 	.bottom-arc {
+		--circular-range-output-as: start;
+		--circular-range-output-gr: 4;
 		clip-path: inset(40% 0 0 0);
 		margin-top: -140px;
 	}
@@ -85,11 +87,11 @@
 		</label>
 
 		<label>Top Arc
-			<circular-range class="top-arc" value="50" min="0" max="100" suffix="kr" step="5" start="270" end="450"></circular-range>
+			<circular-range class="top-arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
 		</label>
 
 		<label>Bottom Arc
-			<circular-range class="bottom-arc value="50" min="0" max="100" suffix="%" step="5" start="90" end="270"></circular-range>
+			<circular-range class="bottom-arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
 		</label>
 	</form>
 
