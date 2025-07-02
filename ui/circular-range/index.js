@@ -34,52 +34,22 @@ class CircularRange extends HTMLElement {
 			width: var(--circular-range-w);
 		}
 
+		*:not([part="thumb"]) { user-select: none; }
+
 		:host(:focus-visible) {
 			outline: 2px solid var(--circular-range-fill);
 			outline-offset: 4px;
 		}
 
-		[part="track"],
-		[part="fill"] {
+		/* === TRACK AND FILL === */
+
+		[part="fill"],
+		[part="track"] {
 			border-radius: 50%;
 			grid-area: var(--_ga);
 			height: 100%;
 			mask: var(--_mask);
 			width: 100%;
-		}
-
-		[part="track"] {
-			background: conic-gradient(
-				from calc(var(--_start) * 1deg),
-				var(--circular-range-track) 0deg,
-				var(--circular-range-track) calc((var(--_end) - var(--_start)) * 1deg),
-				#0000 calc((var(--_end) - var(--_start)) * 1deg)
-			);
-		}
-
-		[part="fill"]::before,
-		[part="track"]::before,
-		[part="track"]::after {
-			background: var(--circular-range-track);
-			border-radius: 50%;
-			content: '';
-			display: block;
-			height: var(--circular-range-track-sz);
-			offset-anchor: top;
-    	offset-path: content-box;
-			width: var(--circular-range-track-sz);
-		}
-
-		[part="fill"]::before {
-			background: var(--circular-range-fill-start);
-			offset-distance: var(--_tb);
-		}
-
-		[part="track"]::before { offset-distance: var(--_tb); }
-		[part="track"]::after {offset-distance: var(--_ta); }
-
-		:host(.at-min) range-thumb::before {
-			background-color: var(--circular-range-thumb-min);
 		}
 
 		[part="fill"] {
@@ -90,9 +60,66 @@ class CircularRange extends HTMLElement {
 				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
 				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
 			);
+			&::before {
+				background: var(--circular-range-fill-start);
+				offset-distance: var(--_tb);
+			}
 		}
 
-		/* value counter */
+		[part="track"] {
+			background: conic-gradient(
+				from calc(var(--_start) * 1deg),
+				var(--circular-range-track) 0deg,
+				var(--circular-range-track) calc((var(--_end) - var(--_start)) * 1deg),
+				#0000 calc((var(--_end) - var(--_start)) * 1deg)
+			);
+			&::before {
+				background: var(--circular-range-track);
+				offset-distance: var(--_tb);
+			}
+			&::after {
+				background: var(--circular-range-track);
+				offset-distance: var(--_ta); }
+			}
+
+		[part="fill"]::before,
+		[part="track"]::before,
+		[part="track"]::after {
+			border-radius: 50%;
+			content: '';
+			display: block;
+			height: var(--circular-range-track-sz);
+			offset-anchor: top;
+    	offset-path: content-box;
+			width: var(--circular-range-track-sz);
+		}
+
+		/* === THUMB === */
+
+		[part="thumb"] {
+			grid-area: var(--_ga);
+			height: 100%;
+			pointer-events: none;
+			rotate: calc(1deg * var(--_fill, 0));
+			width: var(--circular-range-track-sz);
+			will-change: transform;
+			&::before {
+				aspect-ratio: 1;
+				background-color: var(--circular-range-thumb);
+				border-radius: 50%;
+				box-shadow: 0 0 0 2px Canvas;
+				content: '';
+				display: block;
+				width: 100%;
+			}
+		}
+
+		:host(.at-min) [part="thumb"]::before {
+			background-color: var(--circular-range-thumb-min);
+		}
+
+		/* === VALUE === */
+
 		:host::after {
 			align-self: end;
 			counter-reset: val var(--_value);
@@ -105,51 +132,29 @@ class CircularRange extends HTMLElement {
 			text-box: cap alphabetic;
 		}
 
-		range-thumb {
-			grid-area: var(--_ga);
-			height: 100%;
-			pointer-events: none;
-			rotate: calc(1deg * var(--_fill, 0));
-			width: var(--circular-range-track-sz);
-			will-change: transform;
-		}
+		/* === INDICES === */
 
-		range-thumb::before {
-			aspect-ratio: 1;
-			background-color: var(--circular-range-thumb);
-			border-radius: 50%;
-			box-shadow: 0 0 0 2px Canvas;
-			content: '';
-			display: block;
-			width: 100%;
-		}
-
-		/* indices */
-		ul {
+		[part="indices"] {
 			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
 			grid-area: var(--_ga);
 			padding: 0;
 			width: var(--circular-range-indices-w);
-			& > li {
+			li {
 				background: var(--circular-range-indice-c);
 				border-radius: var(--circular-range-indice-bdrs);
+				display: inline-block;
 				height: var(--circular-range-indice-h);
+				offset-anchor: top;
+				offset-distance: var(--_p, 0%);
+				offset-path: content-box;
 				width: var(--circular-range-indice-w);
 			}
 		}
 
-		li {
-			display: inline-block;
-			offset-anchor: top;
-			offset-distance: var(--_p, 0%);
-			offset-path: content-box;
-			user-select: none;
-		}
-
-		/* digits */
-		ol {
+		/* === LABELS === */
+		[part="labels"] {
 			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
@@ -157,7 +162,13 @@ class CircularRange extends HTMLElement {
 			grid-area: var(--_ga);
 			padding: 0;
 			width: var(--circular-range-labels-w);
-			& > li { offset-rotate: 0deg; }
+			li {
+				display: inline-block;
+				offset-anchor: top;
+				offset-distance: var(--_p, 0%);
+				offset-path: content-box;
+				offset-rotate: 0deg;
+			}
 		}
 	`;
 
@@ -184,9 +195,9 @@ class CircularRange extends HTMLElement {
 		this.shadowRoot.innerHTML = `
 			<div part="track"></div>
 			<div part="fill"></div>
-			<range-thumb></range-thumb>
-			<ol></ol>
-			<ul></ul>
+			<div part="thumb"></div>
+			<ul part="indices"></ul>
+			<ol part="labels"></ol>
 			<slot></slot>`;
 	}
 
