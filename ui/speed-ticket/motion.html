@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Motion Blur</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .controls {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .speedometer {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #333;
+            border-radius: 50%;
+            position: relative;
+            margin: 20px auto;
+            background: radial-gradient(circle, #222, #000);
+        }
+        .speedometer-needle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2px;
+            height: 60px;
+            background: #ff4444;
+            transform-origin: bottom center;
+            transform: translate(-50%, -100%) rotate(-90deg);
+            transition: transform 0.1s ease;
+        }
+        .speedometer-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .speed-slider {
+            width: 300px;
+            margin: 10px auto;
+            display: block;
+        }
+        .speed-display {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        .file-input {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 5px;
+            color: white;
+        }
+        .vanishing-point-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #222;
+            border-radius: 5px;
+        }
+        .vanishing-point-controls label {
+            display: inline-block;
+            margin-right: 10px;
+            width: 120px;
+        }
+        .vanishing-point-controls input {
+            width: 100px;
+            margin-right: 20px;
+        }
+        .instructions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #222;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Motion Blur Effect</h1>
+        
+        <input type="file" id="imageInput" class="file-input" accept="image/*">
+        
+        <div class="image-container">
+            <canvas id="imageCanvas"></canvas>
+        </div>
+        
+        <div class="vanishing-point-controls">
+            <label>Vanishing Point X:</label>
+            <input type="range" id="vanishingX" min="0" max="100" value="50">
+            <span id="vanishingXValue">50%</span>
+            <br><br>
+            <label>Vanishing Point Y:</label>
+            <input type="range" id="vanishingY" min="0" max="100" value="40">
+            <span id="vanishingYValue">40%</span>
+        </div>
+        
+        <div class="controls">
+            <div class="speedometer">
+                <div class="speedometer-needle" id="needle"></div>
+                <div class="speedometer-center"></div>
+            </div>
+            
+            <input type="range" id="speedSlider" class="speed-slider" min="0" max="100" value="0">
+            <div class="speed-display">Speed: <span id="speedDisplay">0</span> mph</div>
+        </div>
+        
+        <div class="instructions">
+            <h3>How to use:</h3>
+            <p>• Upload your road/scenery image using the file input above</p>
+            <p>• Adjust the vanishing point sliders to match your image's perspective</p>
+            <p>• Use the speed slider to control motion blur intensity</p>
+            <p>• The effect creates realistic radial motion blur from the vanishing point</p>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        const imageInput = document.getElementById('imageInput');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const needle = document.getElementById('needle');
+        const vanishingX = document.getElementById('vanishingX');
+        const vanishingY = document.getElementById('vanishingY');
+        const vanishingXValue = document.getElementById('vanishingXValue');
+        const vanishingYValue = document.getElementById('vanishingYValue');
+
+        let originalImage = null;
+        let originalImageData = null;
+        let prerenderedBlurs = [];
+        let isPrerendering = false;
+
+        // Pre-render blur levels
+        async function prerenderBlurLevels() {
+            if (!originalImageData || isPrerendering) return;
+            
+            isPrerendering = true;
+            prerenderedBlurs = [];
+            
+            // Show loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loading';
+            loadingDiv.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 10px;
+                z-index: 1000; font-size: 18px;
+            `;
+            loadingDiv.textContent = 'Pre-rendering blur levels... 0/10';
+            document.body.appendChild(loadingDiv);
+            
+            const vpX = parseInt(vanishingX.value);
+            const vpY = parseInt(vanishingY.value);
+            
+            // Pre-render 11 levels (0-100 speed, every 10)
+            for (let i = 0; i <= 10; i++) {
+                const speed = i * 10;
+                loadingDiv.textContent = `Pre-rendering blur levels... ${i}/10`;
+                
+                // Use setTimeout to prevent UI blocking
+                await new Promise(resolve => {
+                    setTimeout(() => {
+                        const blurredImageData = applyRadialMotionBlur(originalImageData, speed, vpX, vpY);
+                        prerenderedBlurs[i] = blurredImageData;
+                        resolve();
+                    }, 10);
+                });
+            }
+            
+            document.body.removeChild(loadingDiv);
+            isPrerendering = false;
+            
+            // Initial render with prerendered data
+            render();
+        }
+
+        function loadImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    // Set canvas size to match image
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    // Store original image
+                    originalImage = img;
+                    ctx.drawImage(img, 0, 0);
+                    originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    
+                    // Initial render
+                    render();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Apply radial motion blur effect
+        function applyRadialMotionBlur(imageData, speed, vanishingPointX, vanishingPointY) {
+            if (speed === 0) return imageData;
+            
+            const width = imageData.width;
+            const height = imageData.height;
+            const data = new Uint8ClampedArray(imageData.data);
+            const originalData = imageData.data;
+            
+            const centerX = width * (vanishingPointX / 100);
+            const centerY = height * (vanishingPointY / 100);
+            
+            // Much more aggressive blur parameters
+            const blurSamples = Math.max(5, Math.floor(speed / 5) + 5);
+            const maxBlurDistance = speed * 2; // Increased multiplier
+            
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    const dx = x - centerX;
+                    const dy = y - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // More aggressive distance-based blur
+                    const normalizedDistance = Math.min(distance / 200, 1); // Reduced divisor for more effect
+                    const blurIntensity = normalizedDistance * maxBlurDistance;
+                    
+                    if (blurIntensity > 0.5) { // Lower threshold
+                        // Calculate blur direction (away from vanishing point)
+                        const angle = Math.atan2(dy, dx);
+                        const blurDx = Math.cos(angle);
+                        const blurDy = Math.sin(angle);
+                        
+                        let r = 0, g = 0, b = 0, a = 0;
+                        let sampleCount = 0;
+                        
+                        // Sample pixels along the blur direction with larger steps
+                        for (let i = 0; i < blurSamples; i++) {
+                            const offset = (i - blurSamples / 2) * blurIntensity / blurSamples;
+                            const sampleX = Math.round(x + blurDx * offset);
+                            const sampleY = Math.round(y + blurDy * offset);
+                            
+                            if (sampleX >= 0 && sampleX < width && sampleY >= 0 && sampleY < height) {
+                                const idx = (sampleY * width + sampleX) * 4;
+                                r += originalData[idx];
+                                g += originalData[idx + 1];
+                                b += originalData[idx + 2];
+                                a += originalData[idx + 3];
+                                sampleCount++;
+                            }
+                        }
+                        
+                        if (sampleCount > 0) {
+                            const idx = (y * width + x) * 4;
+                            data[idx] = r / sampleCount;
+                            data[idx + 1] = g / sampleCount;
+                            data[idx + 2] = b / sampleCount;
+                            data[idx + 3] = a / sampleCount;
+                        }
+                    }
+                }
+            }
+            
+            return new ImageData(data, width, height);
+        }
+
+        // Render function
+        function render() {
+            if (!originalImageData) return;
+            
+            const speed = parseInt(speedSlider.value);
+            const vpX = parseInt(vanishingX.value);
+            const vpY = parseInt(vanishingY.value);
+            
+            // Update vanishing point display
+            vanishingXValue.textContent = vpX + '%';
+            vanishingYValue.textContent = vpY + '%';
+            
+            // Apply motion blur
+            const blurredImageData = applyRadialMotionBlur(originalImageData, speed, vpX, vpY);
+            
+            // Draw result
+            ctx.putImageData(blurredImageData, 0, 0);
+            
+            // Update speedometer
+            speedDisplay.textContent = speed;
+            const needleAngle = (speed / 100) * 180 - 90;
+            needle.style.transform = `translate(-50%, -100%) rotate(${needleAngle}deg)`;
+        }
+
+        // Event listeners
+        imageInput.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                loadImage(e.target.files[0]);
+            }
+        });
+
+        speedSlider.addEventListener('input', render);
+        vanishingX.addEventListener('input', render);
+        vanishingY.addEventListener('input', render);
+        
+        // Load a default placeholder
+        function createPlaceholder() {
+            canvas.width = 800;
+            canvas.height = 500;
+            
+            // Create a simple road scene as placeholder
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(0.6, '#98FB98');
+            gradient.addColorStop(1, '#654321');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add road
+            ctx.fillStyle = '#333';
+            ctx.beginPath();
+            ctx.moveTo(canvas.width * 0.3, canvas.height * 0.7);
+            ctx.lineTo(canvas.width * 0.7, canvas.height * 0.7);
+            ctx.lineTo(canvas.width * 0.9, canvas.height);
+            ctx.lineTo(canvas.width * 0.1, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Store as original
+            originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+        
+        // Initialize with placeholder
+        createPlaceholder();
+    </script>
+</body>
+</html>
