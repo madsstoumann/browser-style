@@ -24,11 +24,15 @@
 		&:is([md*="bento"], [lg*="bento"], [xl*="bento"], [xxl*="bento"]) item-card {
 			min-block-size: 8rem;
 		}
-		&:is([xs*="mosaic"], [sm*="mosaic"], [md*="mosaic"]) item-card {
-			min-block-size: 3rem;
-		}
-		&:is([lg*="mosaic"], [xl*="mosaic"], [xxl*="mosaic"]) item-card {
+		&[xl*="mosaic"] item-card {
 			min-block-size: 6rem;
+		}
+		&:not([xl="mosaic(hex)"]) item-card {
+			clip-path: inset(0 0 0 0 round 1em);
+		}
+		&[sm="mosaic(photo)"] item-card {
+			clip-path: unset;
+			min-block-size: 3rem;
 		}
 		& > h2 {
 			font-size: 2.5rem;

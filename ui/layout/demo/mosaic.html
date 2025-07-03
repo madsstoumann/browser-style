@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Mosaic Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Mosaic Layouts using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+</head>
+<body>
+	<h1>Mosaic Layouts</h1>
+	<p>These layouts use the <strong>mosaic()</strong> layout mode to create various patterns.<br>Fixed layouts display a specific number of items.</p>
+
+	<h2>8 Items</h2>
+	<section>
+		<h3>Mosaic scatter</h3>
+		<small>Square items arranged in an artistic, non-traditional pattern across a 12x12 grid with overlapping and scattered positioning</small>
+		<code>&lt;lay-out md="columns(2)" lg="grid(4c)" xl="mosaic(scatter)"&gt;</code>
+		<lay-out md="columns(2)" lg="grid(4c)" xl="mosaic(scatter)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Mosaic hex</h3>
+		<small>Square items arranged in an artistic, non-traditional pattern across a 12x12 grid with overlapping and scattered positioning</small>
+		<code>&lt;lay-out md="columns(2)" lg="grid(4d)" xl="mosaic(hex)"&gt;</code>
+		<lay-out md="columns(2)" lg="grid(4d)" xl="mosaic(hex)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>11 Items</h2>
+	<section>
+		<h3>Mosaic photo</h3>
+		<small>Photo gallery mosaic with varied item sizes in a repeating pattern</small>
+		<code>&lt;lay-out sm="mosaic(photo)"&gt;</code>
+		<lay-out sm="mosaic(photo)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+</body>
+</html>

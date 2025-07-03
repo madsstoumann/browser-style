@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/layout",
-  "version": "1.0.7",
+  "version": "1.0.0",
   "description": "Modern CSS layout system with responsive grid patterns, container queries, and configurable builds",
   "type": "module",
   "style": "dist/layout.css",
@@ -15,14 +15,14 @@
     ".": "./dist/layout.css",
     "./layout.min": "./dist/layout.min.css",
     "./config": "./config.json",
-    "./layouts": "./layouts/",
-    "./layouts/*": "./layouts/*",
+    "./systems": "./systems/",
+    "./systems/*": "./systems/*",
     "./builder": "./build.js"
   },
   "files": [
     "dist/",
     "core/",
-    "layouts/",
+    "systems/",
     "config.json",
     "build.js",
     "README.md"

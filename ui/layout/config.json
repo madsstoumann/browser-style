@@ -32,7 +32,12 @@
           "type": "@media",
           "min": "540px",
           "max": null,
-          "layouts": ["columns"]
+          "layouts": ["columns", 
+            "grid", 
+            {
+              "grid": ["grid(3a)"]
+            }
+          ]
         },
         "lg": {
           "type": "@media",
