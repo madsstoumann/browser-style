@@ -66,6 +66,9 @@ Customize the component's appearance using these CSS custom properties.
 
 | Property                           | Description                                  | Default     |
 |------------------------------------|----------------------------------------------|-------------|
+| `--circular-range-bg`              | The background color of the component.       | `#0000`     |
+| `--circular-range-bg-mask`         | The mask for the background.                 | `none`      |
+| `--circular-range-bg-scale`        | Scale the background.                        | `1`         |
 | `--circular-range-fill`            | The fill color of the range.                 | `#0066cc`   |
 | `--circular-range-fill-end`        | The end color of the fill gradient.          | `var(--circular-range-fill)` |
 | `--circular-range-fill-middle`     | The middle color of the fill gradient.       | `var(--circular-range-fill)` |

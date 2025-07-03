@@ -2,6 +2,9 @@ class CircularRange extends HTMLElement {
 	static formAssociated = true;
 	static #css = `
 		:host {
+			--circular-range-bg: #0000;
+			--circular-range-bg-mask: none;
+			--circular-range-bg-scale: 1;
 			--circular-range-fill: #0066cc;
 			--circular-range-fill-end: var(--circular-range-fill);
 			--circular-range-fill-middle: var(--circular-range-fill);
@@ -143,6 +146,20 @@ class CircularRange extends HTMLElement {
 			text-box: cap alphabetic;
 		}
 
+		/* === OPTIONAL BACKGROUND LAYER === */
+
+		:host::before {
+			background: var(--circular-range-bg);
+			border-radius: 50%;
+			content: '';
+			display: block;
+			grid-area: var(--_ga);
+			height: 100%;
+			mask: var(--circular-range-bg-mask);
+			scale: var(--circular-range-bg-scale);
+			width: 100%;
+		}
+
 		/* === INDICES === */
 
 		[part="indices"] {
@@ -220,8 +237,11 @@ class CircularRange extends HTMLElement {
 		this.#readAttributes();
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
-		this.#update();
-		this.#updateActiveLabel();
+		/* small setTimeout-hack to ensure styles are applied before the first update in Safari */
+		setTimeout(() => {
+			this.#update();
+			this.#updateActiveLabel();
+		});
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
 	}

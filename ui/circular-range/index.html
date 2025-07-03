@@ -14,11 +14,20 @@
 	.speedometer {
 		--circular-range-indice-c: #D0D0D0;
 		--circular-range-labels-c: #CCC;
-
+		/* --circular-range-bg: radial-gradient(
+			circle at 50% 50%,
+			#0000 0 52%,
+			rgba(10,10,10,.125) 0 60%
+		);
+		--circular-range-bg-mask: linear-gradient(to bottom, #000 50%, #0000 85%);
+		--circular-range-bg-scale: 1.06;
 		&::part(active-label) {
 			font-weight: bold;
 			color: #333;
-		}
+		} */
+
+
+
 
 		/* Example: Adjust labels */
 		&::part(label-0) { padding-inline-start: 1rem; }
