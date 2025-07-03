@@ -14,6 +14,7 @@
 	.speedometer {
 		--circular-range-indice-c: #D0D0D0;
 		--circular-range-labels-c: #CCC;
+
 		/* --circular-range-bg: radial-gradient(
 			circle at 50% 50%,
 			#0000 0 52%,
@@ -29,6 +30,9 @@
 		/* Example: Adjust labels */
 		&::part(label-0) { padding-inline-start: 1rem; }
 		&::part(label-200) { padding-inline-end: 1rem; }
+
+		&::part(active-label) { color: light-dark(#333, #EEE); }
+
 
 		.info {
 			background: var(--green);
@@ -115,7 +119,7 @@
 	<script>
 		const speedometer = document.querySelector('.speedometer');
 		const infoBox = speedometer.querySelector('.info');
-		let currentStatus = null; // Variable to track the current status
+		let currentStatus = null;
 
 		const speedStatus = {
 			green: { color: '#33FF00', text: 'No speeding' },
