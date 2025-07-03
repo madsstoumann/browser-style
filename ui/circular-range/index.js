@@ -207,6 +207,7 @@ class CircularRange extends HTMLElement {
 	#CY;
 	#endAngle;
 	#internals;
+	#lastValue;
 	#max;
 	#min;
 	#radian;
@@ -214,7 +215,6 @@ class CircularRange extends HTMLElement {
 	#shiftStep;
 	#startAngle;
 	#step;
-	lastValue;
 
 	constructor() {
 		super();
@@ -237,13 +237,18 @@ class CircularRange extends HTMLElement {
 		this.#readAttributes();
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
-		/* small setTimeout-hack to ensure styles are applied before the first update in Safari */
+		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
 		setTimeout(() => {
 			this.#update();
 			this.#updateActiveLabel();
 		});
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
+	}
+
+	disconnectedCallback() {
+		this.removeEventListener('keydown', this.#keydown);
+		this.removeEventListener('pointerdown', this.#pointerdown);
 	}
 
 	static get observedAttributes() {
@@ -320,7 +325,7 @@ class CircularRange extends HTMLElement {
 
 	#pointerdown(event) {
 		this.setPointerCapture(event.pointerId);
-		this.lastValue = Number(this.getAttribute('value')) || 0;
+		this.#lastValue = Number(this.getAttribute('value')) || 0;
 		this.#CX = this.offsetWidth / 2;
 		this.#CY = this.offsetHeight / 2;
 		this.addEventListener('pointermove', this.#pointerMove);
@@ -339,12 +344,12 @@ class CircularRange extends HTMLElement {
 				return;
 			}
 		} else {
-			if (Math.abs(value - this.lastValue) > this.#range / 2) {
-				value = (value > this.lastValue) ? this.#min : this.#max;
+			if (Math.abs(value - this.#lastValue) > this.#range / 2) {
+				value = (value > this.#lastValue) ? this.#min : this.#max;
 			}
 		}
 		
-		this.lastValue = value;
+		this.#lastValue = value;
 		this.#setValue(value);
 	}
 
