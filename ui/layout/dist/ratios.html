@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Ratio Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Ratio Layouts using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+  <link rel="stylesheet" href="/ui/layout/demo.css">
+</head>
+<body>
+	<h1>Ratio Layouts</h1>
+	<p>These layouts use the <strong>ratio()</strong> layout mode to create various patterns.<br>When you add more items, repeatable patterns continue automatically.</p>
+
+	<h2>2 Items</h2>
+	<section>
+		<h3>Ratio 25:75</h3>
+		<small>Narrow sidebar with wide main content area</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(25:75)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(25:75)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 33:66</h3>
+		<small>Common sidebar and main content layout (1:2 ratio)</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(33:66)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(33:66)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 40:60</h3>
+		<small>40:60 ratio layout</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(40:60)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(40:60)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 60:40</h3>
+		<small>60:40 ratio layout</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(60:40)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(60:40)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 66:33</h3>
+		<small>Main content with sidebar (2:1 ratio)</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(66:33)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(66:33)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 75:25</h3>
+		<small>Wide main content with narrow sidebar</small>
+		<code>&lt;lay-out md="columns(2)" lg="ratio(75:25)"&gt;</code>
+		<lay-out md="columns(2)" lg="ratio(75:25)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>3 Items</h2>
+	<section>
+		<h3>Ratio 25:25:50</h3>
+		<small>25:25:50 ratio layout</small>
+		<code>&lt;lay-out md="columns(3)" lg="ratio(25:25:50)"&gt;</code>
+		<lay-out md="columns(3)" lg="ratio(25:25:50)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 25:50:25</h3>
+		<small>Centered main content with equal sidebars</small>
+		<code>&lt;lay-out md="columns(3)" lg="ratio(25:50:25)"&gt;</code>
+		<lay-out md="columns(3)" lg="ratio(25:50:25)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Ratio 50:25:25</h3>
+		<small>50:25:25 ratio layout</small>
+		<code>&lt;lay-out md="columns(3)" lg="ratio(50:25:25)"&gt;</code>
+		<lay-out md="columns(3)" lg="ratio(50:25:25)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+</body>
+</html>

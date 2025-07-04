@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-dist/
+# dist/
 _tmp/
 _v1/
 _v2/
