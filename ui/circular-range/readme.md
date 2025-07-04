@@ -16,6 +16,7 @@ A customizable, circular range slider web component.
   indices="10"
   suffix="%"
   enable-min
+  haptic="0,50,100"
 ></circular-range>
 ```
 
@@ -35,6 +36,7 @@ A customizable, circular range slider web component.
 | `indices`    | The number of tick marks (indices) to display along the track. To get an indice for each step, you can calculate it as `(max - min) / step + 1`. For example, with `min="0"`, `max="100"`, and `step="5"`, you would need `(100 - 0) / 5 + 1 = 21` indices. | `0`       |
 | `suffix`     | A string to append to the displayed value.                                                                 | `""`      |
 | `enable-min` | A boolean attribute that, when present, applies a different style to the thumb when the value is at minimum. | `false`   |
+| `haptic`     | A comma-separated list of values that trigger haptic feedback when the value changes.                      | `null`    |
 
 ## Styling
 
