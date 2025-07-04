@@ -200,6 +200,12 @@ class CircularRange extends HTMLElement {
 				offset-rotate: 0deg;
 			}
 		}
+
+		/* === HAPTIC FEEDBACL === */
+		input[type="checkbox"][switch] {
+			// appearance: none;
+			grid-area: var(--_ga);
+		}
 	`;
 
 	#angleRange;
@@ -238,14 +244,13 @@ class CircularRange extends HTMLElement {
 		this.tabIndex = 0;
 		this.#readAttributes();
 
-		if (this.#hapticValues.length > 0 && !('vibrate' in navigator)) {
+		// if (this.#hapticValues.length > 0 && !('vibrate' in navigator)) {
 			this.#hapticCheckbox = document.createElement('input');
 			this.#hapticCheckbox.type = 'checkbox';
 			this.#hapticCheckbox.setAttribute('switch', '');
-			this.#hapticCheckbox.style.position = 'absolute';
-			this.#hapticCheckbox.style.left = '-9999px';
+
 			this.shadowRoot.appendChild(this.#hapticCheckbox);
-		}
+		// }
 
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
@@ -371,11 +376,11 @@ class CircularRange extends HTMLElement {
 	}
 
 	#hapticFeedback() {
-		if ('vibrate' in navigator) {
-			navigator.vibrate(10);
-		} else if (this.#hapticCheckbox) {
+		// if ('vibrate' in navigator) {
+			// navigator.vibrate(10);
+		// } else if (this.#hapticCheckbox) {
 			this.#hapticCheckbox.checked = !this.#hapticCheckbox.checked;
-		}
+		// }
 	}
 
 	#keydown(event) {
