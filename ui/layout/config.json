@@ -7,7 +7,7 @@
       "element": "lay-out",
       "generateHTML": true,
       "core": ["base"],
-      "common": ["animations", "demo"],
+      "common": ["animations"],
       "breakpoints": {
         "xs": {
           "type": "@media",

@@ -1,9 +1,0 @@
-@media (min-width: 920px) {
-	/* Columns */
-	lay-out[xl="columns(2)"] { --layout-gtc: repeat(2, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
-	lay-out[xl="columns(3)"] { --layout-gtc: repeat(3, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
-	lay-out[xl="columns(4)"] { --layout-gtc: repeat(4, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
-	lay-out[xl="columns(5)"] { --layout-gtc: repeat(5, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
-	lay-out[xl="columns(6)"] { --layout-gtc: repeat(6, 1fr); --_ga: auto; & > * { --layout-ga: auto; } }
-
-}

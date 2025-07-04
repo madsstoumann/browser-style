@@ -601,6 +601,7 @@ class LayoutBuilder {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="layout.min.css">
+  <link rel="stylesheet" href="/ui/layout/demo.css">
 </head>
 <body>
 	<h1>${title}</h1>`;
@@ -677,6 +678,45 @@ class LayoutBuilder {
     return html;
   }
 
+  generateMainIndexHTML(generatedFiles) {
+    const title = 'Layout System Demos';
+    
+    let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="A collection of layout system demos">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+	<h2>Layouts</h2>
+	
+	<ol>`;
+
+    // Sort files alphabetically for consistent ordering
+    const sortedFiles = Array.from(generatedFiles).sort();
+    
+    for (const fileName of sortedFiles) {
+      const layoutName = fileName.replace('.html', '');
+      // Convert filename to display name (capitalize first letter)
+      const displayName = layoutName.charAt(0).toUpperCase() + layoutName.slice(1);
+      
+      html += `
+		<li><a href="${fileName}">${displayName}</a></li>`;
+    }
+
+    html += `
+	</ol>
+</body>
+</html>`;
+
+    return html;
+  }
+
   async generateHTML() {
     console.log('\n🎨 Generating HTML demos...');
     
@@ -689,6 +729,8 @@ class LayoutBuilder {
       console.warn('⚠ Skipping HTML generation: config not loaded or no systems defined.');
       return;
     }
+
+    const generatedFiles = new Set();
 
     for (const system of this.config.systems) {
       if (!system.generateHTML) {
@@ -731,6 +773,7 @@ class LayoutBuilder {
             const outputPath = path.join(distDir, `${layoutName}.html`);
             fs.writeFileSync(outputPath, html, 'utf8');
             console.log(`✓ Generated ${layoutName}.html`);
+            generatedFiles.add(`${layoutName}.html`);
           } else if (layoutData.groups && typeof layoutData.groups === 'object') {
             const allLayoutsForHTML = [];
             
@@ -754,6 +797,7 @@ class LayoutBuilder {
             const outputPath = path.join(distDir, `${layoutName}.html`);
             fs.writeFileSync(outputPath, html, 'utf8');
             console.log(`✓ Generated ${layoutName}.html`);
+            generatedFiles.add(`${layoutName}.html`);
           } else {
             console.log(`⚠ Skipping ${file}: Old format or invalid structure`);
           }
@@ -762,6 +806,11 @@ class LayoutBuilder {
         }
       }
     }
+
+    // Generate the main index.html file
+    const indexHTML = this.generateMainIndexHTML(generatedFiles);
+    fs.writeFileSync(path.join(distDir, 'index.html'), indexHTML, 'utf8');
+    console.log('✓ Generated index.html');
   }
 }
 
