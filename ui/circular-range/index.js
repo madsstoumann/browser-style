@@ -215,6 +215,8 @@ class CircularRange extends HTMLElement {
 	#shiftStep;
 	#startAngle;
 	#step;
+	#hapticValues;
+	#hapticCheckbox;
 
 	constructor() {
 		super();
@@ -235,6 +237,16 @@ class CircularRange extends HTMLElement {
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
+
+		if (this.#hapticValues.length > 0 && !('vibrate' in navigator)) {
+			this.#hapticCheckbox = document.createElement('input');
+			this.#hapticCheckbox.type = 'checkbox';
+			this.#hapticCheckbox.setAttribute('switch', '');
+			this.#hapticCheckbox.style.position = 'absolute';
+			this.#hapticCheckbox.style.left = '-9999px';
+			this.shadowRoot.appendChild(this.#hapticCheckbox);
+		}
+
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
 		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
@@ -282,6 +294,7 @@ class CircularRange extends HTMLElement {
 		this.#range = this.#max - this.#min;
 		this.#angleRange = this.#endAngle - this.#startAngle;
 		this.#radian = this.#angleRange / this.#range;
+		this.#hapticValues = (this.getAttribute('haptic') || '').split(',').map(v => Number(v.trim())).filter(v => !isNaN(v));
 		this.style.setProperty('--_start', this.#startAngle);
 		this.style.setProperty('--_end', this.#endAngle);
 		this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
@@ -302,6 +315,10 @@ class CircularRange extends HTMLElement {
 		if (this.value === clampedValue) return;
 		this.setAttribute('value', clampedValue);
 		this.#internals.setFormValue(clampedValue);
+
+		if (this.#hapticValues?.includes(clampedValue)) {
+			this.#hapticFeedback();
+		}
 
 		this.classList.toggle('at-min', this.hasAttribute('enable-min') && clampedValue === this.#min);
 		this.dispatchEvent(new Event('input', { bubbles: true }));
@@ -351,6 +368,14 @@ class CircularRange extends HTMLElement {
 		
 		this.#lastValue = value;
 		this.#setValue(value);
+	}
+
+	#hapticFeedback() {
+		if ('vibrate' in navigator) {
+			navigator.vibrate(10);
+		} else if (this.#hapticCheckbox) {
+			this.#hapticCheckbox.checked = !this.#hapticCheckbox.checked;
+		}
 	}
 
 	#keydown(event) {
