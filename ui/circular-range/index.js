@@ -200,12 +200,6 @@ class CircularRange extends HTMLElement {
 				offset-rotate: 0deg;
 			}
 		}
-
-		/* === HAPTIC FEEDBACL === */
-		input[type="checkbox"][switch] {
-			// appearance: none;
-			grid-area: var(--_ga);
-		}
 	`;
 
 	#angleRange;
@@ -222,7 +216,6 @@ class CircularRange extends HTMLElement {
 	#startAngle;
 	#step;
 	#hapticValues;
-	#hapticCheckbox;
 
 	constructor() {
 		super();
@@ -243,15 +236,6 @@ class CircularRange extends HTMLElement {
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
-
-		// if (this.#hapticValues.length > 0 && !('vibrate' in navigator)) {
-			this.#hapticCheckbox = document.createElement('input');
-			this.#hapticCheckbox.type = 'checkbox';
-			this.#hapticCheckbox.setAttribute('switch', '');
-
-			this.shadowRoot.appendChild(this.#hapticCheckbox);
-		// }
-
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
 		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
@@ -376,11 +360,9 @@ class CircularRange extends HTMLElement {
 	}
 
 	#hapticFeedback() {
-		// if ('vibrate' in navigator) {
-			// navigator.vibrate(10);
-		// } else if (this.#hapticCheckbox) {
-			this.#hapticCheckbox.checked = !this.#hapticCheckbox.checked;
-		// }
+		if (navigator.vibrate) {
+			navigator.vibrate(10);
+		}
 	}
 
 	#keydown(event) {
