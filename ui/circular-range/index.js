@@ -240,6 +240,7 @@ class CircularRange extends HTMLElement {
 		this.#readAttributes();
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderAndPositionLabels();
+		this.setAttribute('role', 'slider');
 		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
 		setTimeout(() => {
 			this.#update();
@@ -280,6 +281,8 @@ class CircularRange extends HTMLElement {
 	#readAttributes() {
 		this.#min = Number(this.getAttribute('min')) || 0;
 		this.#max = Number(this.getAttribute('max')) || 100;
+		this.setAttribute('aria-valuemin', this.#min);
+		this.setAttribute('aria-valuemax', this.#max);
 		this.#step = Number(this.getAttribute('step')) || 1;
 		this.#shiftStep = Number(this.getAttribute('shift-step')) || this.#step;
 		this.#startAngle = Number(this.getAttribute('start')) || 0;
@@ -296,6 +299,7 @@ class CircularRange extends HTMLElement {
 
 	#update() {
 		const value = Number(this.getAttribute('value')) || 0;
+		this.setAttribute('aria-valuenow', value);
 		const fillPercentage = this.#range > 0 ? (value - this.#min) / this.#range : 0;
 		const fillAngle = this.#startAngle + (fillPercentage * this.#angleRange);
 		this.style.setProperty('--_value', value);
@@ -364,6 +368,8 @@ class CircularRange extends HTMLElement {
 	}
 
 	#hapticFeedback() {
+		// TODO: Add fallback for iOS as navigator.vibrate is not supported.
+		// A possible alternative is to use <input type="checkbox" switch>, which provides haptic feedback.
 		if (navigator.vibrate) {
 			navigator.vibrate(10);
 		}
@@ -407,6 +413,7 @@ class CircularRange extends HTMLElement {
 			const li = document.createElement('li');
 			li.setAttribute('value', value);
 			li.part.add(`label-${value}`);
+			li.setAttribute('aria-readonly', 'true');
 			li.textContent = label;
 
 			if (value >= this.#min && value <= this.#max) {

@@ -10,37 +10,25 @@
 	<script type="module" src="./index.js"></script>
 	<style>
 
-/* Demos */
-	body {
-		margin: 0;
-		padding: 0;
-	}
 	form {
 		aspect-ratio: 9 / 16;
 		display: grid;
-		margin: 0 auto;
-		max-width: 414px;
+		margin-inline: auto;
 		position: relative;
-		width: 100%;
+		width: 414px;
 
 		circular-range, video {
 			grid-area: 1 / 1;
 		}
 
 		&::before {
+			background: linear-gradient(to bottom, #0004, #0008 25%);
 			content: '';
 			grid-area: 1 / 1;
-			background: linear-gradient(to bottom, #0004, #0008 25%);
-			
-			pointer-events: none;
-			z-index: 1;
-			width: 100%;
 			height: 100%;
-		}
-
-		circular-range {
-			margin-top: 25%;
-			place-self: start center;
+			pointer-events: none;
+			width: 100%;
+			z-index: 1;
 		}
 
 		video {
@@ -56,13 +44,6 @@
 	circular-range{
 		--_ff: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
 
-		--circular-range-indice-c: #D0D0D0;
-		--circular-range-labels-c: #CCC;
-		--circular-range-track: #F0F0F073;
-
-		position: relative;
-		z-index: 2;
-
 		--circular-range-bg: radial-gradient(
 			circle at 50% 50%,
 			#0000 0 52%,
@@ -70,48 +51,29 @@
 		);
 		--circular-range-bg-mask: linear-gradient(to bottom, #000 50%, #0000 85%);
 		--circular-range-bg-scale: 1.06;
+		--circular-range-indice-c: #D0D0D0;
+		--circular-range-labels-c: #CCC;
 		--circular-range-output-c: #EEE;
 		--circular-range-output-ff: var(--_ff);
 		--circular-range-output-fs: 5rem;
 		--circular-range-output-fw: 100;
-		    --circular-range-output-gr: 3;
-		    --circular-range-rows: 7;
-		
+		--circular-range-output-gr: 3;
+		--circular-range-rows: 7;
+		--circular-range-track: #F0F0F073;
 
 		&::part(active-label) {
-			font-weight: bold;
 			color: #333;
+			font-weight: bold;			
 		}
 
-		&::part(track)::after {
-			mix-blend-mode: exclusion;
-		}
-
-		/* Example: Adjust labels */
 		&::part(label-0) { padding-inline-start: 1rem; }
 		&::part(label-200) { padding-inline-end: 1rem; }
-
 		&::part(active-label) { color: light-dark(#333, #EEE); }
+		&::part(track)::after { mix-blend-mode: exclusion; }
 
-		.kmt {
-			color: #EEEe;
-			font-family: var(--_ff);
-			font-size: 1.5rem;
-			grid-column: 1;
-			grid-row: 4;
-		}
-
-		.info {
-			background: var(--green);
-			border-radius: 2em;
-			font-size: small;
-			grid-row: 5;
-			grid-column: 1;
-			align-self: end;
-			padding: .5em 1.5em;
-			text-box: cap alphabetic;
-			transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
-		}
+		margin-top: 25%;
+		place-self: start center;
+		z-index: 1;
 	}
 
 
@@ -121,8 +83,26 @@
 		100% { transform: scale(1); }
 	}
 
+	.info {
+		background: var(--green);
+		border-radius: 2em;
+		font-size: small;
+		grid-row: 5;
+		grid-column: 1;
+		align-self: end;
+		padding: .5em 1.5em;
+		text-box: cap alphabetic;
+		transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
+	}
 	.info.pulse {
 		animation: pulse-info 0.3s ease-in-out;
+	}
+	.kmt {
+		color: #EEEe;
+		font-family: var(--_ff);
+		font-size: 1.5rem;
+		grid-column: 1;
+		grid-row: 4;
 	}
 
 
