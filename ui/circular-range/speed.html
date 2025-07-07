@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Circular Range</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="module" src="./index.js"></script>
+	<style>
+
+/* Demos */
+	body {
+		margin: 0;
+		padding: 0;
+	}
+	form {
+		aspect-ratio: 9 / 16;
+		display: grid;
+		margin: 0 auto;
+		max-width: 414px;
+		position: relative;
+		width: 100%;
+
+		circular-range, video {
+			grid-area: 1 / 1;
+		}
+
+		&::before {
+			content: '';
+			grid-area: 1 / 1;
+			background: linear-gradient(to bottom, #0004, #0008 25%);
+			
+			pointer-events: none;
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+		}
+
+		circular-range {
+			margin-top: 25%;
+			place-self: start center;
+		}
+
+		video {
+			aspect-ratio: inherit;
+			height: 100%;
+			object-fit: cover;
+			overflow: hidden;
+			width: 100%;
+			z-index: 0;
+		}
+	}
+
+	circular-range{
+		--_ff: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+
+		--circular-range-indice-c: #D0D0D0;
+		--circular-range-labels-c: #CCC;
+		--circular-range-track: #F0F0F073;
+
+		position: relative;
+		z-index: 2;
+
+		--circular-range-bg: radial-gradient(
+			circle at 50% 50%,
+			#0000 0 52%,
+			#1112 0 60%
+		);
+		--circular-range-bg-mask: linear-gradient(to bottom, #000 50%, #0000 85%);
+		--circular-range-bg-scale: 1.06;
+		--circular-range-output-c: #EEE;
+		--circular-range-output-ff: var(--_ff);
+		--circular-range-output-fs: 5rem;
+		--circular-range-output-fw: 100;
+		    --circular-range-output-gr: 3;
+		    --circular-range-rows: 7;
+		
+
+		&::part(active-label) {
+			font-weight: bold;
+			color: #333;
+		}
+
+		&::part(track)::after {
+			mix-blend-mode: exclusion;
+		}
+
+		/* Example: Adjust labels */
+		&::part(label-0) { padding-inline-start: 1rem; }
+		&::part(label-200) { padding-inline-end: 1rem; }
+
+		&::part(active-label) { color: light-dark(#333, #EEE); }
+
+		.kmt {
+			color: #EEEe;
+			font-family: var(--_ff);
+			font-size: 1.5rem;
+			grid-column: 1;
+			grid-row: 4;
+		}
+
+		.info {
+			background: var(--green);
+			border-radius: 2em;
+			font-size: small;
+			grid-row: 5;
+			grid-column: 1;
+			align-self: end;
+			padding: .5em 1.5em;
+			text-box: cap alphabetic;
+			transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
+		}
+	}
+
+
+	@keyframes pulse-info {
+		0% { transform: scale(1); }
+		50% { transform: scale(1.05); }
+		100% { transform: scale(1); }
+	}
+
+	.info.pulse {
+		animation: pulse-info 0.3s ease-in-out;
+	}
+
+
+	</style>
+</head>
+<body>
+
+
+	<form id="app">
+		<video src="speed.mp4" playsinline muted preload="auto"></video>
+		<circular-range
+			active-label="90"
+			class="speedometer"
+			enable-min
+			end="500"
+			haptic="120,180"
+			indices="50"
+			labels="0:0,50:50,80:80,90:90,130:130,200:200"
+			max="200"
+			min="0"
+			shift-step="10"
+			start="220"
+			
+			value="0">
+			<span class="kmt">km/t</span>
+			<span class="info"></span>
+		</circular-range>
+	</form>
+
+	<script>
+		const speedometer = document.querySelector('.speedometer');
+		const infoBox = speedometer.querySelector('.info');
+		const video = document.querySelector('video');
+		let currentStatus = null;
+
+		const speedStatus = {
+			green: { color: '#33FF00', text: 'No speeding' },
+			orange: { color: '#F2C94C', text: 'Minor speeding' },
+			red: { color: '#EB5757', text: 'Serious speeding' }
+		};
+
+		function updateSpeedometer(value) {
+			let status = speedStatus.green;
+			let middleColor = speedStatus.green.color;
+			let endColor = speedStatus.green.color;
+
+			if (value > 150) {
+				status = speedStatus.red;
+				middleColor = speedStatus.orange.color;
+				endColor = speedStatus.red.color;
+			} else if (value > 100) {
+				status = speedStatus.orange;
+				middleColor = speedStatus.orange.color;
+				endColor = speedStatus.orange.color;
+			}
+
+			// Update circular-range colors
+			speedometer.style.setProperty('--circular-range-fill', speedStatus.green.color);
+			speedometer.style.setProperty('--circular-range-fill-middle', middleColor);
+			speedometer.style.setProperty('--circular-range-fill-end', endColor);
+			speedometer.style.setProperty('--circular-range-thumb', status.color);
+
+			// Update video currentTime based on speedometer value
+			if (video && video.duration && isFinite(video.duration)) {
+				const max = parseInt(speedometer.getAttribute('max'));
+				const min = parseInt(speedometer.getAttribute('min'));
+				// Calculate the progress as a percentage of the range
+				const progress = (value - min) / (max - min);
+				const newTime = progress * video.duration;
+				if (isFinite(newTime) && newTime >= 0 && newTime <= video.duration) {
+					video.currentTime = newTime;
+				}
+			}
+
+			// Update info box only if the status has changed
+			if (infoBox && status !== currentStatus) {
+				infoBox.textContent = status.text;
+				infoBox.style.backgroundColor = status.color;
+				infoBox.style.color = status === speedStatus.red ? 'white' : '#333';
+
+				// Add pulse class to trigger animation
+				infoBox.classList.add('pulse');
+
+				// Remove class after animation ends to allow re-triggering
+				infoBox.addEventListener('animationend', () => {
+					infoBox.classList.remove('pulse');
+				}, { once: true });
+			}
+			currentStatus = status; // Update the current status
+		}
+
+		// Initialize based on current value
+		video.addEventListener('loadeddata', () => {
+			updateSpeedometer(parseInt(speedometer.value));
+		});
+
+		video.addEventListener('canplaythrough', () => {
+			updateSpeedometer(parseInt(speedometer.value));
+		});
+
+		// Load the video
+		video.load();
+
+		document.getElementById('app').addEventListener('input', event => {
+			if (event.target.matches('.speedometer')) {
+				updateSpeedometer(parseInt(event.target.value));
+			}
+		});
+	</script>
+</body>
+</html>

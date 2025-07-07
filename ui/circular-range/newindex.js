@@ -210,6 +210,7 @@ class CircularRange extends HTMLElement {
 	#endAngle;
 	#hapticValues;
 	#internals;
+	#isPointerActive = false;
 	#lastValue;
 	#max;
 	#min;
@@ -252,8 +253,13 @@ class CircularRange extends HTMLElement {
 	}
 
 	disconnectedCallback() {
+		// Clean up event listeners
 		this.removeEventListener('keydown', this.#keydown);
 		this.removeEventListener('pointerdown', this.#pointerdown);
+		this.removeEventListener('pointermove', this.#pointerMove);
+		
+		// Reset pointer state
+		this.#isPointerActive = false;
 	}
 
 	static get observedAttributes() {
@@ -278,20 +284,30 @@ class CircularRange extends HTMLElement {
 	}
 
 	#readAttributes() {
-		this.#min = Number(this.getAttribute('min')) || 0;
-		this.#max = Number(this.getAttribute('max')) || 100;
-		this.#step = Number(this.getAttribute('step')) || 1;
-		this.#shiftStep = Number(this.getAttribute('shift-step')) || this.#step;
-		this.#startAngle = Number(this.getAttribute('start')) || 0;
-		this.#endAngle = Number(this.getAttribute('end')) || 360;
+		this.#min = this.#parseNumber(this.getAttribute('min'), 0);
+		this.#max = this.#parseNumber(this.getAttribute('max'), 100);
+		this.#step = this.#parseNumber(this.getAttribute('step'), 1);
+		this.#shiftStep = this.#parseNumber(this.getAttribute('shift-step'), this.#step);
+		this.#startAngle = this.#parseNumber(this.getAttribute('start'), 0);
+		this.#endAngle = this.#parseNumber(this.getAttribute('end'), 360);
+		
+		// Ensure valid ranges
+		if (this.#max <= this.#min) this.#max = this.#min + 1;
+		if (this.#step <= 0) this.#step = 1;
+		
 		this.#range = this.#max - this.#min;
 		this.#angleRange = this.#endAngle - this.#startAngle;
-		this.#radian = this.#angleRange / this.#range;
+		this.#radian = this.#range > 0 ? this.#angleRange / this.#range : 0;
 		this.#hapticValues = (this.getAttribute('haptic') || '').split(',').map(v => Number(v.trim())).filter(v => !isNaN(v));
 		this.style.setProperty('--_start', this.#startAngle);
 		this.style.setProperty('--_end', this.#endAngle);
 		this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
 		this.style.setProperty('--_ta', `${(this.#endAngle / 360) * 100}%`);
+	}
+
+	#parseNumber(value, defaultValue) {
+		const parsed = Number(value);
+		return isNaN(parsed) ? defaultValue : parsed;
 	}
 
 	#update() {
@@ -334,15 +350,22 @@ class CircularRange extends HTMLElement {
 	}
 
 	#pointerdown(event) {
+		if (this.#isPointerActive) return; // Prevent multiple captures
+		this.#isPointerActive = true;
 		this.setPointerCapture(event.pointerId);
 		this.#lastValue = Number(this.getAttribute('value')) || 0;
 		this.#CX = this.offsetWidth / 2;
 		this.#CY = this.offsetHeight / 2;
 		this.addEventListener('pointermove', this.#pointerMove);
-		this.addEventListener('pointerup', () => this.removeEventListener('pointermove', this.#pointerMove), { once: true });
+		this.addEventListener('pointerup', () => {
+			this.removeEventListener('pointermove', this.#pointerMove);
+			this.#isPointerActive = false;
+		}, { once: true });
 	}
 
 	#pointerMove(event) {
+		if (this.#radian === 0) return; // Prevent division by zero
+		
 		const degree = (((Math.atan2(event.offsetY - this.#CY, event.offsetX - this.#CX) * 180 / Math.PI) + 90 + 360) % 360);
 		const relativeDegree = (degree - this.#startAngle + 360) % 360;
 		let value = (relativeDegree / this.#radian) + this.#min;
@@ -364,8 +387,12 @@ class CircularRange extends HTMLElement {
 	}
 
 	#hapticFeedback() {
-		if (navigator.vibrate) {
-			navigator.vibrate(10);
+		if ('vibrate' in navigator && typeof navigator.vibrate === 'function') {
+			try {
+				navigator.vibrate(10);
+			} catch (error) {
+				// Silently fail if vibration is not supported or blocked
+			}
 		}
 	}
 
@@ -391,31 +418,38 @@ class CircularRange extends HTMLElement {
 	}
 
 	#renderAndPositionLabels() {
-		const labelsAttr = this.getAttribute('labels');
-		const ol = this.shadowRoot.querySelector('[part="labels"]');
-		if (!ol) return;
+		try {
+			const labelsAttr = this.getAttribute('labels');
+			const ol = this.shadowRoot.querySelector('[part="labels"]');
+			if (!ol) return;
 
-		ol.innerHTML = '';
-		if (!labelsAttr) return;
+			ol.innerHTML = '';
+			if (!labelsAttr) return;
 
-		const pairs = labelsAttr.split(',').map(pair => pair.split(':'));
-		for (let i = 0; i < pairs.length; i++) {
-			const [valueRaw, labelRaw] = pairs[i];
-			if (valueRaw === undefined || labelRaw === undefined) continue;
-			const value = Number(valueRaw.trim());
-			const label = labelRaw.trim();
-			const li = document.createElement('li');
-			li.setAttribute('value', value);
-			li.part.add(`label-${value}`);
-			li.textContent = label;
+			const pairs = labelsAttr.split(',').map(pair => pair.split(':'));
+			for (let i = 0; i < pairs.length; i++) {
+				const [valueRaw, labelRaw] = pairs[i];
+				if (valueRaw === undefined || labelRaw === undefined) continue;
+				const value = Number(valueRaw.trim());
+				const label = labelRaw.trim();
+				
+				if (isNaN(value)) continue; // Skip invalid values
+				
+				const li = document.createElement('li');
+				li.setAttribute('value', value);
+				li.part.add(`label-${value}`);
+				li.textContent = label;
 
-			if (value >= this.#min && value <= this.#max) {
-				const degree = ((value - this.#min) * this.#radian) + this.#startAngle;
-				const percent = (degree / 360) * 100;
-				li.style.setProperty('--_p', `${percent}%`);
+				if (value >= this.#min && value <= this.#max && this.#radian !== 0) {
+					const degree = ((value - this.#min) * this.#radian) + this.#startAngle;
+					const percent = (degree / 360) * 100;
+					li.style.setProperty('--_p', `${percent}%`);
+				}
+
+				ol.appendChild(li);
 			}
-
-			ol.appendChild(li);
+		} catch (error) {
+			console.warn('Error rendering labels:', error);
 		}
 	}
 }

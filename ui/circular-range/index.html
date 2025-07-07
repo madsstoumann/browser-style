@@ -9,71 +9,22 @@
 	<link rel="stylesheet" href="/base.css">
 	<script type="module" src="./index.js"></script>
 	<style>
-
-/* Demos */
-	.speedometer {
-		--circular-range-indice-c: #D0D0D0;
-		--circular-range-labels-c: #CCC;
-
-		/* --circular-range-bg: radial-gradient(
-			circle at 50% 50%,
-			#0000 0 52%,
-			rgba(10,10,10,.125) 0 60%
-		);
-		--circular-range-bg-mask: linear-gradient(to bottom, #000 50%, #0000 85%);
-		--circular-range-bg-scale: 1.06;
-		&::part(active-label) {
-			font-weight: bold;
-			color: #333;
-		} */
-
-		/* Example: Adjust labels */
-		&::part(label-0) { padding-inline-start: 1rem; }
-		&::part(label-200) { padding-inline-end: 1rem; }
-
-		&::part(active-label) { color: light-dark(#333, #EEE); }
-
-
-		.info {
-			background: var(--green);
-			border-radius: 2em;
-			font-size: small;
-			grid-row: 3;
-			grid-column: 1;
-			align-self: end;
-			padding: .5em 1.5em;
-			text-box: cap alphabetic;
-			transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
+		.bottom-arc {
+			--circular-range-output-as: start;
+			--circular-range-output-gr: 4;
+			clip-path: inset(40% 0 0 0);
+			margin-top: -140px;
 		}
-	}
 
-	.bottom-arc {
-		--circular-range-output-as: start;
-		--circular-range-output-gr: 4;
-		clip-path: inset(40% 0 0 0);
-		margin-top: -140px;
-	}
+		.top-arc {
+			clip-path: inset(0 0 40% 0);
+			margin-bottom: -120px;
+		}
 
-	.top-arc {
-		clip-path: inset(0 0 40% 0);
-		margin-bottom: -120px;
-	}
-
-	@keyframes pulse-info {
-		0% { transform: scale(1); }
-		50% { transform: scale(1.05); }
-		100% { transform: scale(1); }
-	}
-
-	.info.pulse {
-		animation: pulse-info 0.3s ease-in-out;
-	}
-
-	.oven {
-		--circular-range-output-as: center;
-		--circular-range-output-gr: 3;
-	}
-
+		.oven {
+			--circular-range-output-as: center;
+			--circular-range-output-gr: 3;
+		}
 	</style>
 </head>
 <body>
@@ -84,101 +35,39 @@
 		A customizable, circular range slider web component. It can be used as a standalone element or as part of a form. It is highly styleable through CSS custom properties and parts, and supports keyboard navigation, labels, and indices.
 	</p>
 
-	<form id="app">
-		<label>Speedometer with Haptic Feedback:
-			<circular-range
-				active-label="90"
-				class="speedometer"
-				enable-min
-				end="500"
-				haptic="120,180"
-				indices="50"
-				labels="0:0,50:50,80:80,90:90,130:130,200:200"
-				max="200"
-				min="0"
-				shift-step="10"
-				start="220"
-				suffix="km/t"
-				value="90">
-				
-				<span class="info">My Label</span>
-			</circular-range>
-		</label>
+	<label>Speedometer
+		<circular-range
+			active-label="90"
+			class="speedometer"
+			enable-min
+			end="500"
+			haptic="120,180"
+			indices="50"
+			labels="0:0,50:50,80:80,90:90,130:130,200:200"
+			max="200"
+			min="0"
+			shift-step="10"
+			start="220"
+			suffix="km/t"
+			value="90">
+		</circular-range>
+	</label>
 
-		<label>Full Circle — steps set to 5:
-			<circular-range value="20" min="0" max="100" suffix="%" step="5" indices="21"></circular-range>
-		</label>
+	<label>Full Circle — steps set to 5:
+		<circular-range value="50" min="0" max="100" suffix="%" step="5" indices="21"></circular-range>
+	</label>
 
-		<label>Oven
-			<circular-range class="oven" value="120" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
-		</label>
+	<label>Oven
+		<circular-range class="oven" value="120" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
+	</label>
 
-		<label>Top Arc
-			<circular-range class="top-arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
-		</label>
+	<label>Top Arc
+		<circular-range class="top-arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
+	</label>
 
-		<label>Bottom Arc
-			<circular-range class="bottom-arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
-		</label>
-	</form>
+	<label>Bottom Arc
+		<circular-range class="bottom-arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
+	</label>
 
-	<script>
-		const speedometer = document.querySelector('.speedometer');
-		const infoBox = speedometer.querySelector('.info');
-		let currentStatus = null;
-
-		const speedStatus = {
-			green: { color: '#33FF00', text: 'No speeding' },
-			orange: { color: '#F2C94C', text: 'Minor speeding' },
-			red: { color: '#EB5757', text: 'Serious speeding' }
-		};
-
-		function updateSpeedometer(value) {
-			let status = speedStatus.green;
-			let middleColor = speedStatus.green.color;
-			let endColor = speedStatus.green.color;
-
-			if (value > 150) {
-				status = speedStatus.red;
-				middleColor = speedStatus.orange.color;
-				endColor = speedStatus.red.color;
-			} else if (value > 100) {
-				status = speedStatus.orange;
-				middleColor = speedStatus.orange.color;
-				endColor = speedStatus.orange.color;
-			}
-
-			// Update circular-range colors
-			speedometer.style.setProperty('--circular-range-fill', speedStatus.green.color);
-			speedometer.style.setProperty('--circular-range-fill-middle', middleColor);
-			speedometer.style.setProperty('--circular-range-fill-end', endColor);
-			speedometer.style.setProperty('--circular-range-thumb', status.color);
-
-			// Update info box only if the status has changed
-			if (infoBox && status !== currentStatus) {
-				infoBox.textContent = status.text;
-				infoBox.style.backgroundColor = status.color;
-				infoBox.style.color = status === speedStatus.red ? 'white' : '#333';
-
-				// Add pulse class to trigger animation
-				infoBox.classList.add('pulse');
-
-				// Remove class after animation ends to allow re-triggering
-				infoBox.addEventListener('animationend', () => {
-					infoBox.classList.remove('pulse');
-				}, { once: true });
-			}
-			currentStatus = status; // Update the current status
-		}
-
-		// Initialize based on current value
-		updateSpeedometer(parseInt(speedometer.value));
-
-		document.getElementById('app').addEventListener('input', event => {
-			if (event.target.matches('.speedometer')) {
-				updateSpeedometer(parseInt(event.target.value));
-			}
-		});
-	</script>
 </body>
 </html>
