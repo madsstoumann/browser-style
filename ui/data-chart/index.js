@@ -525,8 +525,16 @@ class DataChart extends HTMLElement {
 	}
 
 	render() {
-		if (!this.#dataset || !this.data) {
-			this.#root.innerHTML = '';
+		if (!this.#dataset || !Array.isArray(this.data) || this.data.length === 0) {
+			this.#root.innerHTML = '<div style="padding: 1rem; text-align: center; color: grey;">Error: No data or invalid data provided.</div>';
+			console.error('DataChart: Data is missing, not an array, or empty.');
+			return;
+		}
+
+		const hasInvalidData = this.data.some(item => typeof item !== 'object' || item === null || typeof item.value === 'undefined');
+		if (hasInvalidData) {
+			this.#root.innerHTML = '<div style="padding: 1rem; text-align: center; color: grey;">Error: Invalid data structure. Each item must be an object with a "value" property.</div>';
+			console.error('DataChart: Invalid data structure. Each item must be an object with a "value" property.');
 			return;
 		}
 
