@@ -1,0 +1,118 @@
+{
+	"settings": {
+		"min": 95,
+		"max": 125,
+		"caption": "Stock Price Movement (AAPL)",
+		"yAxis": ["$95", "$100", "$105", "$110", "$115", "$120", "$125"]
+	},
+	"data": [
+		{
+			"value": 108.5,
+			"displayValue": "$108.50",
+			"label": "W1",
+			"open": 105.2,
+			"high": 110.8,
+			"low": 104.1,
+			"close": 108.5
+		},
+		{
+			"value": 112.3,
+			"displayValue": "$112.30",
+			"label": "W2",
+			"open": 108.5,
+			"high": 114.2,
+			"low": 107.9,
+			"close": 112.3
+		},
+		{
+			"value": 109.8,
+			"displayValue": "$109.80",
+			"label": "W3",
+			"open": 112.3,
+			"high": 113.5,
+			"low": 95.0,
+			"close": 109.8
+		},
+		{
+			"value": 115.6,
+			"displayValue": "$115.60",
+			"label": "W4",
+			"open": 109.8,
+			"high": 117.2,
+			"low": 109.2,
+			"close": 115.6
+		},
+		{
+			"value": 118.9,
+			"displayValue": "$118.90",
+			"label": "W5",
+			"open": 115.6,
+			"high": 120.4,
+			"low": 114.8,
+			"close": 118.9
+		},
+		{
+			"value": 116.2,
+			"displayValue": "$116.20",
+			"label": "W6",
+			"open": 118.9,
+			"high": 119.7,
+			"low": 114.5,
+			"close": 116.2
+		},
+		{
+			"value": 121.4,
+			"displayValue": "$121.40",
+			"label": "W7",
+			"open": 116.2,
+			"high": 125.0,
+			"low": 115.8,
+			"close": 121.4
+		},
+		{
+			"value": 119.7,
+			"displayValue": "$119.70",
+			"label": "W8",
+			"open": 121.4,
+			"high": 122.8,
+			"low": 117.9,
+			"close": 119.7
+		},
+		{
+			"value": 107.2,
+			"displayValue": "$107.20",
+			"label": "W9",
+			"open": 119.7,
+			"high": 120.5,
+			"low": 105.8,
+			"close": 107.2
+		},
+		{
+			"value": 123.8,
+			"displayValue": "$123.80",
+			"label": "W10",
+			"open": 107.2,
+			"high": 124.5,
+			"low": 106.9,
+			"close": 123.8
+		},
+		{
+			"value": 102.1,
+			"displayValue": "$102.10",
+			"label": "W11",
+			"open": 123.8,
+			"high": 124.2,
+			"low": 101.5,
+			"close": 102.1
+		},
+		{
+			"value": 117.9,
+			"displayValue": "$117.90",
+			"label": "W12",
+			"open": 102.1,
+			"high": 118.6,
+			"low": 101.8,
+			"close": 117.9
+		}
+	]
+}

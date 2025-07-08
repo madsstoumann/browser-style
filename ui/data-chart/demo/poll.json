@@ -1,0 +1,40 @@
+{
+	"settings": {
+		"min": 0,
+		"max": 17478,
+		"caption": "When will AGI be achieved?",
+		"yAxis": []
+	},
+	"data": [
+		{
+			"value": 950,
+			"displayValue": "950 votes / 5%",
+			"label": "By the end of 2026"
+		},
+		{
+			"value": 2191,
+			"displayValue": "2191 votes / 13%",
+			"label": "2027 to 2030"
+		},
+		{
+			"value": 1857,
+			"displayValue": "1857 votes / 11%",
+			"label": "2031 to 2035"
+		},
+		{
+			"value": 1335,
+			"displayValue": "1335 votes / 8%",
+			"label": "2035 to 2040"
+		},
+		{
+			"value": 2835,
+			"displayValue": "2835 votes / 16%",
+			"label": "2040 to 2050"
+		},
+		{
+			"value": 8300,
+			"displayValue": "8300 votes / 47%",
+			"label": "Never"
+		}
+	]
+}

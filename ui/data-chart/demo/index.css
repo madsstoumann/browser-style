@@ -17,4 +17,8 @@
 	--data-chart-bg: linear-gradient(175deg, hsla(220, 100%, 96%, 1), hsla(300, 70%, 95%, 1));
 	--data-chart-x-axis-bdw: 2px;
 	--data-chart-p: 5px 10px;
+
+	--data-chart-candlestick-up: var(--c1);
+	--data-chart-candlestick-down: var(--c7);
+	--data-chart-candlestick-wick: hsl(270, 40%, 35%);
 }
