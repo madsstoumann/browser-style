@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/column-chart",
+  "name": "@browser.style/data-chart",
   "version": "1.0.0",
-  "description": "Column Chart Component",
+  "description": "Data Chart Component",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -19,17 +19,17 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "column-chart"
+    "data-chart"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/column-chart"
+    "directory": "ui/data-chart"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/column-chart"
+  "homepage": "https://browser.style/ui/data-chart"
 }
