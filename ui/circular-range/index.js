@@ -1,3 +1,10 @@
+/**
+ * @module CircularRange
+ * @version 1.0.2
+ * @date 2025-07-08
+ * @author Mads Stoumann
+ * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
+ */
 class CircularRange extends HTMLElement {
 	static formAssociated = true;
 	static #css = `
@@ -68,8 +75,7 @@ class CircularRange extends HTMLElement {
 		[part="fill"] {
 			background: conic-gradient(
 				from calc(var(--_start) * 1deg),
-				var(--circular-range-fill-start) 0deg,
-				var(--circular-range-fill-middle) calc((var(--_fill) - var(--_start)) * 0.5deg),
+				var(--c
 				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
 				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
 			);

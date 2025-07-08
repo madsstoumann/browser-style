@@ -2,6 +2,20 @@
 
 A customizable, circular range slider web component.
 
+## Installation
+
+Install the component from npm:
+
+```bash
+npm install @browser.style/circular-range
+```
+
+Then, import the component into your project:
+
+```javascript
+import '@browser.style/circular-range';
+```
+
 ## Usage
 
 ```html
@@ -18,6 +32,74 @@ A customizable, circular range slider web component.
   enable-min
   haptic="0,50,100"
 ></circular-range>
+```
+
+## Examples
+
+Here are a few examples demonstrating how the component can be configured.
+
+### Speedometer
+
+This example mimics a speedometer with custom start and end angles, labels for speed markings, and haptic feedback at specific speeds.
+
+```html
+<circular-range
+  active-label="90"
+  class="speedometer"
+  enable-min
+  end="500"
+  haptic="120,180"
+  indices="50"
+  labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200"
+  max="200"
+  min="0"
+  shift-step="10"
+  start="220"
+  suffix=" km"
+  value="90">
+</circular-range>
+```
+
+### Oven Temperature Control
+
+This example shows a temperature control for an oven, with a specific degree range and a suffix.
+
+```html
+<circular-range 
+  class="oven" 
+  value="120" 
+  min="0" 
+  max="330" 
+  suffix="°C" 
+  step="5" 
+  start="20" 
+  end="340" 
+  indices="67" 
+  labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320">
+</circular-range>
+```
+
+### Arc Sliders
+
+You can create partial sliders, or arcs, by setting the `start` and `end` angles to less than a 360-degree range and applying a `clip-path` in your CSS.
+
+```html
+<circular-range 
+  class="top-arc" 
+  value="50" 
+  min="0" 
+  max="100" 
+  suffix="$" 
+  step="1" 
+  start="270" 
+  end="450">
+</circular-range>
+```
+```css
+.top-arc {
+  clip-path: inset(0 0 40% 0);
+  margin-bottom: -120px;
+}
 ```
 
 ## Attributes
@@ -83,12 +165,16 @@ Customize the component's appearance using these CSS custom properties.
 | `--circular-range-labels-c`        | The color of the labels.                     | `light-dark(#333, #CCC)` |
 | `--circular-range-labels-fs`       | The font-size of the labels.                 | `x-small`   |
 | `--circular-range-labels-w`        | The width of the labels container.           | `70%`       |
+| `--circular-range-output-as`       | The `align-self` for the output value.       | `end`       |
+| `--circular-range-output-c`        | The color of the output value.               | `inherit`   |
 | `--circular-range-output-ff`       | The font-family of the output value.         | `inherit`   |
 | `--circular-range-output-fs`       | The font-size of the output value.           | `200%`      |
 | `--circular-range-output-fw`       | The font-weight of the output value.         | `700`       |
 | `--circular-range-output-gr`       | The grid-row for the output value.           | `2`         |
 | `--circular-range-rows`            | The number of grid rows in the component.    | `5`         |
 | `--circular-range-thumb`           | The color of the thumb.                      | `#0066cc`   |
+| `--circular-range-thumb-bxsh`      | The `box-shadow` of the thumb.               | `0 0 0 2px Canvas` |
+| `--circular-range-thumb-bxsh-focus`| The `box-shadow` of the thumb when focused.  | `0 0 0 2px Canvas` |
 | `--circular-range-thumb-min`       | The color of the thumb when at the minimum value and `enable-min` is set. | `#e0e0e0`   |
 | `--circular-range-track`           | The color of the track.                      | `#f0f0f0`   |
 | `--circular-range-track-sz`        | The size (thickness) of the track.           | `1.5rem`    |
