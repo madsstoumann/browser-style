@@ -80,6 +80,7 @@ tbody td {
 	font-weight: var(--data-chart-bar-fw, 400);
 	height: calc(((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))) * 100cqb);
 	padding: var(--data-chart-bar-p, .75ch 0 0 0);
+	position: relative;
 	text-align: center;
 }
 
@@ -347,29 +348,32 @@ ul li:nth-child(10n+0) { --_lbg: var(--c10); }
 	height: calc(100cqb - var(--data-chart-label-h));
 }
 
-/* -- Bar -- */
-:host([type=bar]) {
+/* -- Bar / Poll -- */
+:host(:is([type=bar],[type=poll])) {
 	--data-chart-bar-p: 0.5ch 1ch;
 }
 
-:host([type=bar]) table {
+:host(:is([type=bar],[type=poll])) table {
 	min-height: unset;
 }
 
-:host([type=bar]) tbody {
+:host(:is([type=bar],[type=poll])) tbody {
 	container-type: inline-size;
 	grid-template-columns: 1fr;
 	padding-inline: 0;
 }
 
 :host([type=bar]) tbody td {
+	width: calc(((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))) * 100cqi - var(--data-chart-label-w));
+}
+
+:host(:is([type=bar],[type=poll])) tbody td {
 	border-radius: 0;
 	height: auto;
-	width: calc(((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))) * 100cqi - var(--data-chart-label-w));
 	text-align: end;
 }
 
-:host([type=bar]) tbody th {
+:host(:is([type=bar],[type=poll])) tbody th {
 	--data-chart-x-axis-bdw: 0;
 	grid-row: unset;
 	padding-inline: var(--data-chart-bar-label-pi, 1ch);
@@ -381,7 +385,7 @@ ul li:nth-child(10n+0) { --_lbg: var(--c10); }
 	grid-template-columns: var(--data-chart-label-w) repeat(auto-fit, minmax(var(--chart-group-bar-miw, 2px), auto));
 }
 
-:host([type=bar]) thead {
+:host(:is([type=bar],[type=poll])) thead {
 	display: none;
 }
 
@@ -407,7 +411,6 @@ ul li:nth-child(10n+0) { --_lbg: var(--c10); }
 	--data-chart-bar-p: 0;
 	
 	height: calc(((var(--_high) - var(--_min)) / (var(--_max) - var(--_min))) * 100cqb);
-	position: relative;
 }
 
 :host([type=candlestick][options*="x-labels"]) tbody td {
@@ -515,6 +518,29 @@ ul li:nth-child(10n+0) { --_lbg: var(--c10); }
 /* -- Pie -- */
 :host([type=pie]) tbody {
 	mask: radial-gradient(circle, #000 0 100%);
+}
+
+/* -- Poll -- */
+:host([type=poll]) tbody {
+	margin-block-end: var(--data-chart-poll-row-gap, 1ch);
+	row-gap: var(--data-chart-poll-row-gap, 1ch);
+}
+:host([type=poll]) tbody td { background: var(--data-chart-poll-bg, #EEE); }
+
+:host([type=poll]) tbody td::before {
+	background: var(--_bg);
+	content: "";
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: calc(((var(--_v) - var(--_min)) / (var(--_max) - var(--_min))) * 100%);
+}
+
+:host([type=poll]) tbody th {
+	font-weight: var(--data-chart-poll-fw, 600);
+	padding: 0;
+	text-align: start;
 }
 `;
 

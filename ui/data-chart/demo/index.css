@@ -21,4 +21,5 @@
 	--data-chart-candlestick-up: var(--c1);
 	--data-chart-candlestick-down: var(--c7);
 	--data-chart-candlestick-wick: hsl(270, 40%, 35%);
+	--data-chart-poll-bg: hsl(270, 20%, 92%);
 }
