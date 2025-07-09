@@ -1,4 +1,18 @@
+/**
+ * @module DataChart
+ * @version 1.0.1
+ * @date 2025-07-09
+ * @author Mads Stoumann
+ * @description A custom element for displaying data in various chart formats, including bar, line, area, pie, and candlestick charts.
+ */
 const styles = `
+/**
+ * @module CircularRange
+ * @version 1.0.3
+ * @date 2025-07-08
+ * @author Mads Stoumann
+ * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
+ */
 :host {
 	--data-chart-bar-bdrs: clamp(0.125rem, -0.35rem + 1cqi, 0.33rem);
 	--data-chart-bar-c: currentColor;
@@ -728,73 +742,43 @@ class DataChart extends HTMLElement {
 
 	/* Only for Safari */
 	#applyAdvancedAttrPolyfill() {
-		console.warn('Polyfilling advanced attribute support for DataChart'); 
-		const tds = this.#root.querySelectorAll('[data-v]');
-		tds.forEach(td => {
-			td.style.setProperty('--_v', td.getAttribute('data-v'));
-			td.style.setProperty('--_pv', td.getAttribute('data-pv'));
-			td.style.setProperty('--_av', td.getAttribute('data-av'));
-		});
+		console.warn('Polyfilling advanced attribute support for DataChart');
+		// Helper function to set CSS properties from data attributes
+		const setPropsFromAttrs = (element, attrMap) => {
+			for (const [attr, prop] of Object.entries(attrMap)) {
+				const value = element.getAttribute(attr);
+				if (value) element.style.setProperty(prop, value);
+			}
+		};
 
-		// Handle candlestick data attributes
-		const candlestickTds = this.#root.querySelectorAll('[data-open]');
-		candlestickTds.forEach(td => {
-			td.style.setProperty('--_open', td.getAttribute('data-open'));
-			td.style.setProperty('--_high', td.getAttribute('data-high'));
-			td.style.setProperty('--_low', td.getAttribute('data-low'));
-			td.style.setProperty('--_close', td.getAttribute('data-close'));
+		const tds = this.#root.querySelectorAll('td[data-v], td[data-open]');
+		tds.forEach(td => {
+			if (td.hasAttribute('data-v')) {
+				setPropsFromAttrs(td, {
+					'data-v': '--_v',
+					'data-pv': '--_pv', 
+					'data-av': '--_av'
+				});
+			}
+			if (td.hasAttribute('data-open')) {
+				setPropsFromAttrs(td, {
+					'data-open': '--_open',
+					'data-high': '--_high',
+					'data-low': '--_low',
+					'data-close': '--_close'
+				});
+			}
 		});
 
 		const tbody = this.#root.querySelector('tbody');
 		if (tbody) {
-			const host = this;
-			let numCols;
+			const chartType = this.getAttribute('type');
+			const isBarOrPoll = chartType === 'bar' || chartType === 'poll';
+			const numCols = isBarOrPoll ? 1 : tbody.querySelectorAll('tr').length;
 			tbody.style.setProperty('--_t', tbody.getAttribute('data-t'));
-			if (host.hasAttribute('small')) {
-				const smallVal = parseInt(host.getAttribute('small'), 10);
-				if (!isNaN(smallVal) && smallVal > 0) {
-					numCols = smallVal;
-				}
-			} else if (host.hasAttribute('medium')) {
-				const mediumVal = parseInt(host.getAttribute('medium'), 10);
-				if (!isNaN(mediumVal) && mediumVal > 0) {
-					numCols = mediumVal;
-				}
-			}
-			if (!numCols) {
-				numCols = tbody.querySelectorAll('tr').length;
-			}
 			tbody.style.setProperty('--_min', this.getAttribute('min'));
 			tbody.style.setProperty('--_max', this.getAttribute('max'));
 			tbody.style.gridTemplateColumns = `repeat(${numCols}, 1fr)`;
-
-			// Setup ResizeObserver if small/medium attribute exists
-			const needsObserver = host.hasAttribute('small') || host.hasAttribute('medium');
-			if (needsObserver && !this.#resizeObserver) {
-				this.#resizeObserver = new ResizeObserver(entries => {
-					const width = entries[0].contentRect.width;
-					let newNumCols;
-					// Use >= and < for clear boundaries, matching CSS container queries
-					if (host.hasAttribute('small') && width < 400) {
-						const smallVal = parseInt(host.getAttribute('small'), 10);
-						if (!isNaN(smallVal) && smallVal > 0) {
-							newNumCols = smallVal;
-						}
-					} else if (host.hasAttribute('medium') && width >= 400 && width < 815) {
-						const mediumVal = parseInt(host.getAttribute('medium'), 10);
-						if (!isNaN(mediumVal) && mediumVal > 0) {
-							newNumCols = mediumVal;
-						}
-					} else {
-						newNumCols = tbody.querySelectorAll('tr').length;
-					}
-					tbody.style.gridTemplateColumns = `repeat(${newNumCols}, 1fr)`;
-				});
-				this.#resizeObserver.observe(this);
-			} else if (!needsObserver && this.#resizeObserver) {
-				this.#resizeObserver.disconnect();
-				this.#resizeObserver = null;
-			}
 		}
 	}
 }
