@@ -22,7 +22,7 @@ You can load data from an external JSON file by providing the path to the file i
 <data-chart
   type="area"
   data="../data-chart/demo/temperature.json"
-  display="caption-end x-labels value-labels y-grid y-labels"
+  options="caption-end x-labels value-labels y-grid y-labels"
   items-xs="5"
   items-sm="10"
 ></data-chart>
@@ -42,11 +42,14 @@ Example `temperature.json`:
   "data": [
     {
       "value": 6.4,
-      "label": "01:00"
+      "label": "01:00",
+      "displayValue": "6.4°",
+      "displayLabel": false
     },
     {
       "value": 6.3,
-      "label": "02:00"
+      "label": "02:00",
+      "displayValue": "6.3°"
     }
   ]
 }
@@ -58,7 +61,7 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 
 ```html
 <data-chart
-  display="x-labels y-labels y-grid"
+  options="x-labels y-labels y-grid"
   type="column"
   legend='["January", "February", "March"]'
   data='[
@@ -73,7 +76,7 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 
 ```html
 <data-chart
-  display="x-labels y-labels y-grid"
+  options="x-labels y-labels y-grid"
   type="column"
   legend='["January", "February", "March"]'
   data='[
@@ -88,7 +91,7 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 
 ```html
 <data-chart
-  display="x-labels"
+  options="x-labels"
   type="bar"
   data='[
     {"label": "Apples", "value": 40},
@@ -108,6 +111,63 @@ You can also provide the data directly as a JSON string in the `data` attribute.
     {"value": 20},
     {"value": 30},
     {"value": 50}
+  ]'
+></data-chart>
+```
+
+### Pie Chart
+
+```html
+<data-chart
+  type="pie"
+  legend='["Red", "Green", "Blue"]'
+  data='[
+    {"value": 20},
+    {"value": 30},
+    {"value": 50}
+  ]'
+></data-chart>
+```
+
+### Candlestick Chart
+
+```html
+<data-chart
+  type="candlestick"
+  options="caption x-labels y-grid y-labels"
+  data='[
+    {
+      "label": "W1",
+      "value": 108.5,
+      "displayValue": "$108.50",
+      "open": 105.2,
+      "high": 110.8,
+      "low": 104.1,
+      "close": 108.5
+    },
+    {
+      "label": "W2", 
+      "value": 112.3,
+      "displayValue": "$112.30",
+      "open": 108.5,
+      "high": 114.2,
+      "low": 107.9,
+      "close": 112.3
+    }
+  ]'
+></data-chart>
+```
+
+### Poll Chart
+
+```html
+<data-chart
+  type="poll"
+  options="caption"
+  data='[
+    {"label": "Option A", "value": 950, "displayValue": "950 votes / 5%"},
+    {"label": "Option B", "value": 2191, "displayValue": "2191 votes / 13%"},
+    {"label": "Option C", "value": 1857, "displayValue": "1857 votes / 11%"}
   ]'
 ></data-chart>
 ```
@@ -135,17 +195,88 @@ In this example, the chart will show 5 items on screens smaller than 400px and 1
 
 ## Data Structure
 
-### Settings
-- `type` can be
-	- column (default)
-	- area
-	- donut
-	- line
-	- pie
+### Chart Types
+The `type` attribute can be:
+- `column` (default)
+- `area`
+- `bar`
+- `candlestick`
+- `donut`
+- `line`
+- `pie`
+- `poll`
 
-### Data
+### Data Properties
 
-- `value` can be a single string, number — or an array of values.
+Each data item is an object that can contain:
+
+- `value` (required): The data value. Can be a single number/string or an array of values for grouped charts.
+- `label` (optional): The label for this data point.
+- `displayValue` (optional): Custom display text for the value. If `false`, hides the value display.
+- `displayLabel` (optional): Custom display text for the label. If `false`, hides the label display.
+- `styles` (optional): Custom CSS styles for this data point (string or array of strings for grouped data).
+
+#### Candlestick-Specific Properties
+For candlestick charts, each data item should also include:
+- `open`: Opening price
+- `high`: Highest price
+- `low`: Lowest price  
+- `close`: Closing price
+
+The `value` property typically matches the `close` value for candlestick charts.
+
+### Settings Object
+
+The settings object can contain:
+- `min`: Minimum value for the chart scale
+- `max`: Maximum value for the chart scale
+- `caption`: Chart title/caption
+- `yAxis`: Array of y-axis labels
+- `legend`: Array of legend items
+- `style`: Global styles for the chart
+
+## Display Options
+
+The `options` attribute controls chart display features. Multiple options can be combined with spaces:
+
+### Caption Options
+- `caption`: Show the chart caption
+- `caption-start`: Align caption to start
+- `caption-end`: Align caption to end
+
+### Label Options
+- `x-labels`: Show x-axis labels
+- `x-labels-vertical`: Display x-axis labels vertically
+- `y-labels`: Show y-axis labels
+- `y-labels-end`: Align y-axis labels to end
+
+### Grid Options
+- `x-grid`: Show vertical grid lines
+- `y-grid`: Show horizontal grid lines
+
+### Value Display Options
+- `value-labels`: Show value labels on data points
+- `value-labels-center`: Center-align value labels
+- `value-labels-end`: End-align value labels
+
+### Grouping Options
+- `groups`: Enable grouped data styling (for multi-series charts)
+
+Example:
+```html
+<data-chart options="caption-end x-labels y-grid y-labels groups"></data-chart>
+```
+
+## Browser Compatibility
+
+The component uses modern CSS features and includes automatic fallbacks for browsers that don't support advanced CSS attribute functions. Safari and older browsers will receive a JavaScript polyfill for full functionality.
+
+## Error Handling
+
+The component includes built-in validation and will display error messages for:
+- Missing or invalid data
+- Incorrect data structure
+- Network errors when loading external JSON files
 
 ## Custom Properties
 
@@ -159,6 +290,7 @@ In this example, the chart will show 5 items on screens smaller than 400px and 1
 | `--data-chart-bar-label-pi` | Padding inline for bar labels |
 | `--data-chart-bar-miw` | Minimum inline width for bars |
 | `--data-chart-bar-p` | Padding for bars |
+| `--data-chart-bar-bg` | Background for bars |
 | `--data-chart-bdc` | Border color for labeled grid lines |
 | `--data-chart-bds` | Border style for labeled grid lines |
 | `--data-chart-bdrs` | Border radius for the chart container |
@@ -192,6 +324,7 @@ In this example, the chart will show 5 items on screens smaller than 400px and 1
 | `--data-chart-x-axis-c` | Text color for x-axis labels |
 | `--data-chart-x-axis-fs` | Font size for x-axis labels |
 | `--data-chart-x-axis-fw` | Font weight for x-axis labels |
+| `--data-chart-x-axis-p` | Padding for x-axis labels |
 | `--data-chart-y-axis-c` | Text color for y-axis labels |
 | `--data-chart-y-axis-fs` | Font size for y-axis labels |
 | `--data-chart-y-axis-fw` | Font weight for y-axis labels |
@@ -199,5 +332,20 @@ In this example, the chart will show 5 items on screens smaller than 400px and 1
 | `--chart-group-bar-miw` | Minimum width for grouped bars |
 | `--line-chart-line-h` | Height of the line in line chart |
 
-> Note: Color variables like `--c1`, `--c2`, ... are used for series coloring and can be set per chart instance.
+### Candlestick Chart Properties
+| Name | Description |
+|------|-------------|
+| `--data-chart-candlestick-up` | Color for bullish (up) candles |
+| `--data-chart-candlestick-down` | Color for bearish (down) candles |
+| `--data-chart-candlestick-wick` | Color for candlestick wicks |
+| `--data-chart-candlestick-wick-w` | Width of candlestick wicks |
+
+### Poll Chart Properties
+| Name | Description |
+|------|-------------|
+| `--data-chart-poll-bg` | Background color for poll bars |
+| `--data-chart-poll-fw` | Font weight for poll labels |
+| `--data-chart-poll-row-gap` | Gap between poll rows |
+
+> Note: Color variables like `--c1`, `--c2`, ... `--c10` are used for series coloring and can be set per chart instance.
 
