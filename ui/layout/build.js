@@ -223,6 +223,11 @@ class LayoutBuilder {
     if (layout.rows) {
       containerProps[`${propertyPrefix}-gtr`] = layout.rows;
     }
+    
+    // Add --_ci property for columns layout type
+    if (layoutPrefix === 'columns' && layout.items) {
+      containerProps['--_ci'] = layout.items;
+    }
 
     if (elementSelector === 'lay-out') {
       const globalRuleKey = `${mediaQuery}::${layoutPrefix}`;
@@ -678,6 +683,90 @@ class LayoutBuilder {
     return html;
   }
 
+  generateOverflowHTML(layoutName, layoutData, layoutType) {
+    const title = 'Overflow Column Layouts';
+    const prefix = layoutType.prefix || layoutName;
+    
+    let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+  <link rel="stylesheet" href="/ui/layout/demo.css">
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>These layouts demonstrate overflow scrolling with the <strong>${prefix}()</strong> layout mode.<br>
+		Each layout shows both regular overflow and preview modes.</p>`;
+
+    // Group layouts by item count
+    const layoutsByItems = new Map();
+    layoutData.forEach(layout => {
+      const items = layout.items || 1;
+      if (!layoutsByItems.has(items)) {
+        layoutsByItems.set(items, []);
+      }
+      layoutsByItems.get(items).push(layout);
+    });
+
+    for (const [itemCount, layouts] of Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)) {
+      html += `\n\n	<h2>${itemCount} Column${itemCount !== 1 ? 's' : ''}</h2>`;
+      
+      for (const layout of layouts) {
+        const layoutId = layout.originalId || layout.id;
+        const description = layout.description || '';
+        
+        // Extract the ID without prefix for cleaner display
+        const cleanId = layoutId.replace(/^[^(]*\(/, '').replace(/\)$/, '');
+        
+        // Regular overflow example
+        html += `
+	<section>
+		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Regular Overflow</h3>
+		${description ? `<small>${description}</small>` : ''}
+		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow&gt;</code>
+		<lay-out lg="${prefix}(${cleanId})" overflow>`;
+
+        // Add items (double the column count to ensure overflow)
+        const totalItems = Math.max(itemCount * 2, 6);
+        for (let i = 0; i < totalItems; i++) {
+          html += `
+			<item-card></item-card>`;
+        }
+
+        html += `
+		</lay-out>
+	</section>`;
+
+        // Preview overflow example
+        html += `
+	<section>
+		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Preview Mode</h3>
+		${description ? `<small>${description} with preview of next items</small>` : '<small>Shows preview of next items</small>'}
+		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow="preview"&gt;</code>
+		<lay-out lg="${prefix}(${cleanId})" overflow="preview">`;
+
+        // Add same items for preview mode
+        for (let i = 0; i < totalItems; i++) {
+          html += `
+			<item-card></item-card>`;
+        }
+
+        html += `
+		</lay-out>
+	</section>`;
+      }
+    }
+
+    html += `\n\n</body>
+</html>`;
+
+    return html;
+  }
+
   generateMainIndexHTML(generatedFiles) {
     const title = 'Layout System Demos';
     
@@ -774,6 +863,15 @@ class LayoutBuilder {
             fs.writeFileSync(outputPath, html, 'utf8');
             console.log(`✓ Generated ${layoutName}.html`);
             generatedFiles.add(`${layoutName}.html`);
+            
+            // Generate overflow.html for columns layouts
+            if (layoutName === 'columns') {
+              const overflowHTML = this.generateOverflowHTML(layoutName, layoutsForHTML, layoutData);
+              const overflowOutputPath = path.join(distDir, 'overflow.html');
+              fs.writeFileSync(overflowOutputPath, overflowHTML, 'utf8');
+              console.log(`✓ Generated overflow.html`);
+              generatedFiles.add('overflow.html');
+            }
           } else if (layoutData.groups && typeof layoutData.groups === 'object') {
             const allLayoutsForHTML = [];
             

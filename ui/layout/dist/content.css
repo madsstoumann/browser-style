@@ -102,6 +102,7 @@
 		item-card[xs="columns(l-r)"],
 		item-card[xs="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[xs="columns(r-l)"] article,
@@ -180,6 +181,7 @@
 		item-card[sm="columns(l-r)"],
 		item-card[sm="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[sm="columns(r-l)"] article,
@@ -258,6 +260,7 @@
 		item-card[md="columns(l-r)"],
 		item-card[md="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[md="columns(r-l)"] article,
@@ -336,6 +339,7 @@
 		item-card[lg="columns(l-r)"],
 		item-card[lg="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[lg="columns(r-l)"] article,
@@ -414,6 +418,7 @@
 		item-card[xl="columns(l-r)"],
 		item-card[xl="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[xl="columns(r-l)"] article,
@@ -492,6 +497,7 @@
 		item-card[xxl="columns(l-r)"],
 		item-card[xxl="columns(r-l)"] {
 			--item-card-gtc: 1fr 1fr;
+			--_ci: 2;
 		}
 
 		item-card[xxl="columns(r-l)"] article,
