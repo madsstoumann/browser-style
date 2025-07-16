@@ -4,20 +4,26 @@
 		container-type: inline-size;
 	}
 	item-card {
+		align-items: start;
 		block-size: 100%;
 		box-sizing: border-box;
 		display: grid;
+		font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
 		grid-template-columns: var(--item-card-gtc, 1fr);
 		grid-template-rows: var(--item-card-gtr, auto);
+		line-height: 1.5;
+		
 		article {
+			h2 { font-weight: 500; line-height: 1.2;}
 			& > * {
 				margin: 0;
 				text-box: cap alphabetic;
 			}
+			align-self: start;
 			color: var(--item-card-article-c, inherit);
 			display: grid;
 			font-size: clamp(12px, 4cqw, 16px);
-			gap: 1em;
+			row-gap: 2ch;
 			grid-area: var(--item-card-ga, auto);
 			padding: 1em;
 			place-self: var(--item-card-article-ps, unset);
@@ -47,7 +53,7 @@
 }
 
 @layer content.xs {
-	@container (min-width: 160px) {
+	
 		item-card[xs="content(image)"], item-card[xs="content(text)"], item-card[xs="rows(b-t)"], item-card[xs="rows(t-b)"], item-card[xs="stack(b-c)"], item-card[xs="stack(b-l)"], item-card[xs="stack(b-r)"], item-card[xs="stack(c-c)"], item-card[xs="stack(c-l)"], item-card[xs="stack(c-r)"], item-card[xs="stack(t-c)"], item-card[xs="stack(t-l)"], item-card[xs="stack(t-r)"] {
 			--item-card-gtc: 1fr;
 		}
@@ -121,7 +127,7 @@
 			display: none;
 		}
 
-	}
+	
 
 }
 

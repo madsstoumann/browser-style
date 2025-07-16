@@ -1,0 +1,900 @@
+[
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/tech1/400/225",
+          "alt": "Abstract technology background"
+        }
+      ],
+      "caption": "Quantum computing advances."
+    },
+    "sticker": {
+      "text": "New",
+      "style": "badge",
+      "position": "top-right"
+    },
+    "content": {
+      "category": "Technology",
+      "headline": "The Future of Quantum Computing is Now",
+      "headlineTag": "h3",
+      "subheadline": "A Major Leap Forward",
+      "summary": "Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.",
+      "published": {
+        "datetime": "2025-07-16T10:00:00Z",
+        "formatted": "July 16, 2025"
+      },
+      "modified": {
+        "datetime": "2025-07-16T12:00:00Z",
+        "formatted": "July 16, 2025"
+      },
+      "readingTime": "4 min read"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Read More",
+          "isWrapper": true
+        }
+      ],
+      "secondary": [
+        {
+          "type": "button",
+          "text": "Save",
+          "active": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "content": {
+      "category": "World News",
+      "headline": "Global Summit Addresses Climate Change",
+      "headlineTag": "h3",
+      "summary": "Leaders from around the world gather to discuss new initiatives to combat the escalating climate crisis."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Learn More"
+        }
+      ],
+      "secondary": [
+        {
+          "type": "button",
+          "text": "Share"
+        }
+      ]
+    },
+    "tags": [
+      { "name": "Europe", "slug": "europe", "url": "#" },
+      { "name": "Politics", "slug": "politics", "url": "#" }
+    ]
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/sports1/400/225",
+          "alt": "Athlete crossing the finish line"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "LIVE",
+      "style": "live"
+    },
+    "content": {
+      "category": "Sport",
+      "headline": "Underdogs Clinch Championship Title"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Watch Highlights"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/food1/400/225",
+          "alt": "Gourmet dish"
+        }
+      ]
+    },
+    "content": {
+      "category": "Lifestyle",
+      "headline": "The Rise of Sustainable Gastronomy",
+      "summary": "How chefs are embracing local, seasonal, and zero-waste cooking to create a more sustainable food culture."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Discover Recipes"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "content": {
+      "category": "Domestic",
+      "headline": "New Infrastructure Bill Passed",
+      "summary": "The new bill promises to upgrade roads, bridges, and public transport systems across the nation over the next decade.",
+      "published": {
+        "datetime": "2025-07-15T18:30:00Z",
+        "formatted": "July 15, 2025"
+      },
+      "readingTime": "6 min read"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "See the Plan"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/space1/400/225",
+          "alt": "Nebula in deep space"
+        }
+      ]
+    },
+    "content": {
+      "category": "Science",
+      "headline": "Hubble Successor Telescope Reveals Stunning Images"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "View Gallery"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/health1/400/225",
+          "alt": "Person meditating outdoors"
+        }
+      ]
+    },
+    "content": {
+      "category": "Health",
+      "headline": "Mindfulness and its Impact on Mental Well-being",
+      "summary": "A new study confirms the long-term benefits of daily mindfulness practice for stress reduction and improved focus."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Read the Study"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/finance1/400/225",
+          "alt": "Stock market chart"
+        }
+      ]
+    },
+    "sticker": {
+      "text": "LIVE"
+    },
+    "content": {
+      "category": "Finance",
+      "headline": "Market Hits Record High Amidst Volatility"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Analyze the Data"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "content": {
+      "category": "Culture",
+      "headline": "Revival of Classic Cinema in Theaters",
+      "summary": "Independent theaters are seeing a resurgence in popularity by screening timeless classic films for a new generation."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Find a Screening"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/travel1/400/225",
+          "alt": "Tropical beach"
+        }
+      ]
+    },
+    "content": {
+      "category": "Travel",
+      "headline": "Top 10 Hidden Gems to Visit This Summer",
+      "summary": "Escape the crowds and discover breathtaking destinations that are still off the beaten path."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Explore Destinations"
+        }
+      ]
+    }
+  },
+  {
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/politics1/400/225",
+          "alt": "Government building"
+        }
+      ]
+    },
+    "content": {
+      "category": "Politics",
+      "headline": "In-depth Analysis of the New International Trade Agreement",
+      "summary": "The recently signed trade agreement is set to reshape global commerce, affecting everything from local businesses to multinational corporations. This article provides a comprehensive look into the key clauses, potential impacts on various sectors, and expert opinions on what the future holds for international trade relations.",
+      "published": {
+        "datetime": "2025-07-16T14:00:00Z",
+        "formatted": "July 16, 2025"
+      },
+      "readingTime": "12 min read"
+    },
+    "authors": [
+      {
+        "name": "Jane Smith",
+        "role": "Chief Political Correspondent",
+        "avatar": {
+          "src": "https://picsum.photos/seed/author1/100/100",
+          "alt": "Jane Smith",
+          "width": 40,
+          "height": 40
+        },
+        "contacts": [
+          {
+            "type": "email",
+            "value": "jane.smith@example.com",
+            "label": "Email"
+          },
+          {
+            "type": "twitter",
+            "value": "https://twitter.com/janesmith",
+            "label": "Twitter"
+          }
+        ],
+        "url": "/authors/jane-smith"
+      }
+    ],
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Read Full Analysis"
+        }
+      ]
+    }
+  },
+  {
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/recipe1/400/225",
+          "alt": "A delicious plate of Spaghetti Carbonara"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Popular",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Classic Spaghetti Carbonara",
+      "summary": "A creamy and delicious pasta dish made with eggs, cheese, pancetta, and pepper. Ready in just 20 minutes.",
+      "readingTime": "Prep time: 20 min"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "👍", "count": 250, "ariaLabel": "Like this recipe" }
+      ],
+      "commentCount": 45,
+      "shareCount": 120,
+      "viewCount": 12000
+    },
+    "actions": {
+      "primary": [
+        { "type": "link", "url": "#", "text": "View Recipe" }
+      ]
+    }
+  },
+  {
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/recipe2/400/225",
+          "alt": "A vibrant summer salad"
+        }
+      ]
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Vibrant Summer Salad",
+      "summary": "A refreshing and healthy salad with mixed greens, berries, goat cheese, and a light vinaigrette dressing.",
+      "readingTime": "Prep time: 10 min"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "👍", "count": 120, "ariaLabel": "Like this recipe" }
+      ],
+      "commentCount": 15,
+      "shareCount": 30,
+      "viewCount": 8500
+    },
+    "actions": {
+      "primary": [
+        { "type": "link", "url": "#", "text": "View Recipe" }
+      ]
+    },
+    "tags": [
+      { "name": "Vegan", "slug": "vegan", "url": "#" },
+      { "name": "Healthy", "slug": "healthy", "url": "#" }
+    ]
+  },
+  {
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/recipe3/400/225",
+          "alt": "Homemade chocolate chip cookies"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Popular",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Perfect Chocolate Chip Cookies",
+      "summary": "The ultimate guide to baking soft, chewy, and delicious chocolate chip cookies from scratch.",
+      "readingTime": "Prep time: 45 min"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "👍", "count": 530, "ariaLabel": "Like this recipe" }
+      ],
+      "commentCount": 95,
+      "shareCount": 250,
+      "viewCount": 35000
+    },
+    "actions": {
+      "primary": [
+        { "type": "link", "url": "#", "text": "View Recipe" }
+      ]
+    }
+  },
+  {
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/recipe4/400/225",
+          "alt": "A bowl of spicy chicken curry"
+        }
+      ]
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Spicy Chicken Curry",
+      "summary": "A fragrant and flavorful chicken curry with a rich blend of spices that will warm you up.",
+      "readingTime": "Prep time: 35 min"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "👍", "count": 180, "ariaLabel": "Like this recipe" }
+      ],
+      "commentCount": 30,
+      "shareCount": 75,
+      "viewCount": 15000
+    },
+    "actions": {
+      "primary": [
+        { "type": "link", "url": "#", "text": "View Recipe" }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "video",
+          "src": "https://assets.stoumann.dk/video/river.mp4",
+          "poster": "https://fastly.picsum.photos/id/9/320/180.jpg?hmac=3_PVsuLBGhWbsW8t-hB7nvQ7BOBrkqwYeEqQnUK6Nl4",
+          "tracks": [
+            { "kind": "captions", "src": "captions_en.vtt", "srclang": "en", "label": "English" }
+          ]
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Peaceful River Journey",
+      "published": {
+        "datetime": "2024-12-15T10:30:00Z",
+        "formatted": "Dec 15, 2024"
+      }
+    },
+    "video": {
+      "src": "https://assets.stoumann.dk/video/river.mp4",
+      "options": { "controls": true, "autoplay": true, "playsinline": true }
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "button",
+          "text": "Watch Video",
+          "popover": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://fastly.picsum.photos/id/79/320/180.jpg?hmac=49A2dpGcAe69cOywjoVhy3mUCQmlifKUZr8JD2H9IV8",
+          "alt": "Big Buck Bunny Adventures thumbnail"
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Big Buck Bunny Adventures",
+      "published": {
+        "datetime": "2025-03-22T14:45:00Z",
+        "formatted": "Mar 22, 2025"
+      }
+    },
+    "video": {
+      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true }
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "button",
+          "text": "Watch Video",
+          "popover": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://fastly.picsum.photos/id/89/320/180.jpg?hmac=Mzkn52wP19ZMV84c_yeTan7c7EjQk-02JJyWC-PLbj0",
+          "alt": "Elephants Dream Documentary thumbnail"
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Elephants Dream Documentary",
+      "published": {
+        "datetime": "2025-06-08T09:15:00Z",
+        "formatted": "Jun 8, 2025"
+      }
+    },
+    "video": {
+      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true, "resetOnClose": true }
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "button",
+          "text": "Watch Video",
+          "popover": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://youtu.be/VTCIStB6y8s",
+          "alt": "What's new in Web UI"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web UI",
+      "headline": "What's new in Web UI",
+      "summary": "A look at the latest updates in Web UI, including new features in CSS and HTML for building modern user interfaces."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "https://youtu.be/VTCIStB6y8s",
+          "text": "Watch on YouTube"
+        }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://youtu.be/beYbnNT_02U",
+          "alt": "What's new in the web"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web Platform",
+      "headline": "What's new in the web",
+      "summary": "Discover the latest features landing in stable and beta web browsers, from new CSS functions to powerful web platform APIs."
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "https://youtu.be/beYbnNT_02U",
+          "text": "Watch on YouTube"
+        }
+      ]
+    }
+  },
+  {
+    "type": "video",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
+          "alt": "Building a UI component library"
+        }
+      ]
+    }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product1/400/225", "alt": "Wireless Noise-Cancelling Headphones" }
+      ]
+    },
+    "content": {
+      "category": "Electronics",
+      "headline": "AuraSound Pro"
+    },
+    "product": {
+      "price": { "current": "199.99", "original": "249.99", "currency": "$", "discountText": "20% off" },
+      "availability": "In Stock",
+      "validUntil": "2025-12-31",
+      "rating": { "value": 4.7, "count": 1250 }
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product2/400/225", "alt": "Smartwatch with Fitness Tracker" }
+      ]
+    },
+    "content": {
+      "category": "Wearables",
+      "headline": "FitTrack 5"
+    },
+    "product": {
+      "price": { "current": "149.95", "currency": "$" },
+      "availability": "In Stock",
+      "rating": { "value": 4.5, "count": 890 }
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product3/400/225", "alt": "Portable Bluetooth Speaker" }
+      ]
+    },
+    "content": {
+      "category": "Audio",
+      "headline": "SoundWave Mini"
+    },
+    "product": {
+      "price": { "current": "39.99", "original": "49.99", "currency": "$", "discountText": "Sale" },
+      "availability": "In Stock",
+      "rating": { "value": 2.8, "count": 450 }
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product4/400/225", "alt": "Ergonomic Office Chair" }
+      ]
+    },
+    "content": {
+      "category": "Furniture",
+      "headline": "ErgoComfort Pro"
+    },
+    "product": {
+      "price": { "current": "350.00", "currency": "$" },
+      "availability": "Ships in 2-3 days",
+      "rating": { "value": 1.9, "count": 120 }
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product5/400/225", "alt": "4K Action Camera" }
+      ]
+    },
+    "content": {
+      "category": "Cameras",
+      "headline": "AdventureCam 4K"
+    },
+    "product": {
+      "price": { "current": "179.50", "original": "219.50", "currency": "$" },
+      "availability": "In Stock"
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product6/400/225", "alt": "Electric Kettle" }
+      ]
+    },
+    "content": {
+      "category": "Home Goods",
+      "headline": "QuickBoil Plus"
+    },
+    "product": {
+      "price": { "current": "29.99", "currency": "$" },
+      "availability": "Out of Stock"
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Notify Me" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product7/400/225", "alt": "Professional Chef's Knife" }
+      ]
+    },
+    "content": {
+      "category": "Kitchenware",
+      "headline": "CutMaster Pro 8-inch"
+    },
+    "product": {
+      "price": { "current": "79.00", "original": "99.00", "currency": "$", "discountText": "Limited Time" },
+      "availability": "In Stock",
+      "rating": { "value": 4.9, "count": 2500 }
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "product",
+    "media": {
+      "sources": [
+        { "type": "image", "src": "https://picsum.photos/seed/product8/400/225", "alt": "Leather Wallet" }
+      ]
+    },
+    "content": {
+      "category": "Accessories",
+      "headline": "SlimFold Wallet"
+    },
+    "product": {
+      "price": { "current": "45.00", "currency": "$" },
+      "availability": "In Stock"
+    },
+    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+  },
+  {
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/popover1/400/225",
+          "alt": "An image that will have a video popover"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web Development",
+      "headline": "Interactive Popovers",
+      "summary": "This card demonstrates how a popover can be triggered from a non-video card type."
+    },
+    "popover": {
+      "type": "article",
+      "content": "<h3>More Details</h3><p>This is a small article inside a popover.</p><p>It can contain any HTML content.</p><p>This demonstrates the flexibility of the popover component.</p><p>Click the close button to dismiss.</p>"
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "button",
+          "text": "Read More in Popover",
+          "popover": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "event",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/event1/400/225",
+          "alt": "People networking at a tech conference"
+        }
+      ]
+    },
+    "content": {
+      "category": "Conference",
+      "headline": "Web Innovators Summit 2025",
+      "summary": "Join us for a two-day summit exploring the future of web development, design, and technology.",
+      "published": {
+        "formatted": "October 25-26, 2025"
+      }
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "button",
+          "text": "Get Tickets"
+        }
+      ],
+      "secondary": [
+        {
+          "type": "button",
+          "text": "View Agenda",
+          "popover": true
+        }
+      ]
+    },
+    "popover": {
+      "type": "article",
+      "content": "<h3>Agenda</h3><p>Day 1: Keynotes & Workshops</p><p>Day 2: Deep Dives & Networking</p>"
+    }
+  },
+  {
+    "type": "poll",
+    "content": {
+      "category": "Community Poll",
+      "headline": "What's your favorite front-end framework?",
+      "summary": "Help us understand what the community loves to build with."
+    },
+    "actions": {
+      "primary": [
+        { "type": "button", "text": "React" },
+        { "type": "button", "text": "Vue" },
+        { "type": "button", "text": "Svelte" }
+      ],
+      "secondary": [
+        { "type": "button", "text": "Other" }
+      ]
+    },
+    "engagement": {
+      "viewCount": 5420
+    }
+  },
+  {
+    "type": "quote",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://picsum.photos/seed/quote1/400/225",
+          "alt": "A serene landscape"
+        }
+      ]
+    },
+    "content": {
+      "summary": "The best way to predict the future is to invent it.",
+      "category": "Quote of the Day"
+    },
+    "authors": [
+      {
+        "name": "Alan Kay",
+        "role": "Computer Scientist"
+      }
+    ],
+    "actions": {
+      "secondary": [
+        {
+          "type": "button",
+          "text": "Share"
+        }
+      ]
+    }
+  }
+]

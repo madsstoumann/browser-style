@@ -1,5 +1,5 @@
 @layer layout.demo {
-	item-card {
+	item-card:empty {
 		background: var(--bg, #DDD);
 		max-inline-size: 100%;
 		min-block-size: 14rem;
