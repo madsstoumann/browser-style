@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<!-- <link rel="stylesheet" href="/base.css"> -->
+	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css">
+	<link rel="stylesheet" href="index.css">
+
+	<style>
+		/*
+		content-card {
+	font-family: var(--cc-ff,  Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif);
+}
+		font-family: var(--c-headline-ff, Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif);
+		*/
+			html {
+		interpolate-size: allow-keywords;
+		--layout-primary-bg: hsl(220, 100%, 95%);
+		--layout-primary-c: hsl(220, 100%, 20%);
+		--layout-secondary-bg: hsl(120, 50%, 95%);
+		--layout-secondary-c: hsl(120, 50%, 20%);
+		--layout-tertiary-bg: hsl(30, 10%, 95%);
+		--layout-tertiary-c: hsl(30, 80%, 20%);
+	}
+	body {
+		--layout-bleed-mw: 1024px;
+		--layout-mi: 1rem;
+		display: grid;
+		margin-block: 1rem;
+		margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+		row-gap: 1rem;
+	}
+		
+		main {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 1rem;
+			padding: 1rem;
+		}
+/* 
+		.ic-ribbon--live {
+			background-color: #c00;
+			color: white;
+		}
+
+		.ic-ribbon--popular {
+			background-color: #007bff;
+			color: white;
+		} */
+	</style>
+</head>
+<body>
+	<!-- <h1>UI: Components</h1>
+
+	<h2>Item Card</h2> -->
+
+	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap="">
+		<content-card content="news-11"></content-card>
+		<content-card content="news-2"></content-card>
+		<content-card content="news-3"></content-card>
+	</lay-out>
+
+	<lay-out lg="columns(4)">
+		<content-card content="spot-1" layout="stack(b-c 3:4)"></content-card>
+		<content-card content="spot-2"></content-card>
+		<content-card content="spot-3"></content-card>
+		<content-card content="spot-4"></content-card>
+	</lay-out>
+
+	<!-- <content-card data="full.json"></content-card> -->
+
+	<main></main>
+
+	<script type="module" src="./index.js"></script>
+
+	<script type="module">
+		customElements.whenDefined('content-card').then(async () => {
+			const main = document.querySelector('main');
+			const news = await fetch('data.json').then(r => r.json());
+			
+			news.forEach(item => {
+				// if (item.id === 'news-1') return; 
+				const card = document.createElement('content-card');
+				card.dataset = { data: item };
+				card.setAttribute('type', item.type);
+				main.appendChild(card);
+			});
+		});
+	</script>
+
+	<!--
+<script type="module">
+		customElements.whenDefined('one-block').then(async () => {
+			const block = document.getElementById('content-12345');
+			const data = await fetch('full.json').then(r => r.json());
+			
+			const settings = {
+				type: "article",
+				styles: {
+					'ob-content': "shadow-md rounded-lg p-6 border border-gray-200",
+					'ob-tagline': "text-xs font-semibold tracking-wide uppercase text-blue-600",
+					'ob-headline': "text-2xl font-bold text-gray-900 mt-2 mb-3",
+					'ob-summary': "text-gray-700 mb-4",
+					'ob-authors': "text-sm text-gray-500 mt-4",
+					'ob-author': "font-medium text-gray-800",
+					'ob-avatar': "w-8 h-8 rounded-full mr-2 inline-block",
+					'ob-tags': "mt-4 flex flex-wrap gap-2",
+					'ob-tag': "text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-2 py-1 rounded-full",
+					'ob-actions': "mt-5 flex gap-3",
+					'ob-action-primary': "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded", // Prefixed key
+					'ob-action-secondary': "bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded", // Prefixed key
+					'ob-action-icon': "inline-block mr-1" // Prefixed key
+					// Add more prefixed part names and Tailwind classes as needed
+				}
+			};
+
+			block.dataset = { data, settings };
+		});
+	</script>
+
+	-->
+</body>
+</html>

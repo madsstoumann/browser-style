@@ -1,8 +1,8 @@
-class ItemCard extends HTMLElement {
+class ContentCard extends HTMLElement {
 	#data; #root; #settings; #popoverId;
 
 	static get observedAttributes() {
-		return ['data', 'settings'];
+		return ['data', 'settings', 'content'];
 	}
 
 	constructor() {
@@ -86,6 +86,23 @@ class ItemCard extends HTMLElement {
 				this.#data = null;
 				this._prepareAndRender();
 			}
+		} else if (attr === 'content') {
+			try {
+				const res = await fetch('data.json');
+				if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+				const allData = await res.json();
+				const itemData = allData.find(item => item.id === newVal);
+				if (itemData) {
+					this.#data = itemData;
+					this._prepareAndRender();
+				} else {
+					console.error(`Item with id "${newVal}" not found in data.json`);
+					this.innerHTML = `<p>Error: Item with id "${newVal}" not found.</p>`;
+				}
+			} catch (e) {
+				console.error(`Failed to fetch or process data for content="${newVal}":`, e);
+				this.innerHTML = `<p>Error loading content.</p>`;
+			}
 		}
 	}
 
@@ -109,6 +126,9 @@ class ItemCard extends HTMLElement {
 		if (this.#root) return;
 
 		this.#root = this;
+		if (this.#data?.id) {
+			this.id = this.#data.id;
+		}
 	}
 
 	connectedCallback() {
@@ -118,10 +138,11 @@ class ItemCard extends HTMLElement {
 	renderImage(image) {
 		if (!image?.src) return '';
 		return `<img 
-			${this.getStyle('ic-media-image')} 
+			${this.getStyle('cc-media-image')} 
 			src="${image.src}" 
 			${image.srcset ? `srcset="${image.srcset}"` : ''}
 			alt="${image.alt || ''}" 
+			decoding="${image.decoding || 'async'}"
 			${image.width ? `width="${image.width}"` : ''}
 			${image.height ? `height="${image.height}"` : ''}
 			loading="${image.loading ? image.loading : 'lazy'}"
@@ -154,7 +175,7 @@ class ItemCard extends HTMLElement {
 		}
 
 		return `<iframe 
-			${this.getStyle('ic-media-youtube')}
+			${this.getStyle('cc-media-youtube')}
 			src="https://www.youtube.com/embed/${videoId}" 
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
 			allowfullscreen
@@ -166,7 +187,7 @@ class ItemCard extends HTMLElement {
 		if (!ribbon?.text) return '';
 		const styleAttr = ribbon.color ? `style="background-color: ${ribbon.color};"` : '';
 		const styleClass = ribbon.style ? ` ic-ribbon--${ribbon.style}` : '';
-		const baseStyle = this.getStyle('ic-ribbon').slice(0, -1); // remove closing quote
+		const baseStyle = this.getStyle('cc-ribbon').slice(0, -1); // remove closing quote
 
 		return `<div ${baseStyle}${styleClass}" role="status" ${styleAttr}>
 			${ribbon.icon ? `<span class="ic-ribbon-icon">${ribbon.icon}</span>` : ''}
@@ -176,16 +197,15 @@ class ItemCard extends HTMLElement {
 
 	renderSticker(sticker) {
 		if (!sticker?.text) return '';
-		return `<span ${this.getStyle('ic-sticker')} role="status">${sticker.text}</span>`;
+		return `<span ${this.getStyle('cc-sticker')} role="status">${sticker.text}</span>`;
 	}
 
 	renderMedia(media, ribbon, sticker) {
 		this._ensureSettingsInitialized();
 		if (!media?.sources?.length) return '';
 		return `
-		<figure ${this.getStyle('ic-media')}>
-			${this.renderRibbon(ribbon)}
-			${this.renderSticker(sticker)}
+		<figure ${this.getStyle('cc-media')}>
+		
 			${media.sources
 				.map((entry) => {
 					if (entry.type === 'image') return this.renderImage(entry)
@@ -193,7 +213,9 @@ class ItemCard extends HTMLElement {
 					if (entry.type === 'youtube') return this.renderYouTube(entry)
 				})
 				.join('')}
-			${media.caption ? `<figcaption ${this.getStyle('ic-media-caption')}>${media.caption}</figcaption>`: ''}
+			${this.renderRibbon(ribbon)}
+			${this.renderSticker(sticker)}
+			${media.caption ? `<figcaption ${this.getStyle('cc-media-caption')}>${media.caption}</figcaption>`: ''}
 		</figure>`
 	}
 
@@ -201,7 +223,7 @@ class ItemCard extends HTMLElement {
 		this._ensureSettingsInitialized();
 		if (!video?.src) return '';
 		const opts = video.options || {};
-		return `<video ${this.getStyle('ic-media-video')} src="${video.src}"
+		return `<video ${this.getStyle('cc-media-video')} src="${video.src}"
 			${opts.autoplay ? `autoplay playsinline` : ''}
 			${opts.controls ? `controls` : ''}
 			${opts.loop ? `loop` : ''}
@@ -241,7 +263,7 @@ class ItemCard extends HTMLElement {
 				break;
 			case 'article':
 				if (popoverData.content) {
-					content = `<div class="ic-popover-article">${popoverData.content}</div>`;
+					content = `<div class="ic-popover-content">${popoverData.content}</div>`;
 				}
 				break;
 			// Future cases for 'image', 'text', etc. can be added here.
@@ -291,15 +313,15 @@ class ItemCard extends HTMLElement {
 					style = style.slice(0, -1) + ' ic-wrapper"';
 				}
 				return `<a href="${a.url}" ${style} ${a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''}>
-						${a.icon ? `<span ${this.getStyle('ic-action-icon')}>${a.icon}</span>` : ''}${a.text}
+						${a.icon ? `<span ${this.getStyle('cc-action-icon')}>${a.icon}</span>` : ''}${a.text}
 					</a>`;
 			}
 			return `<button type="button" ${this.getStyle(`ic-action-${a.role || 'button'}`)} ${a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''} ${popoverAttrs}>
-						${a.icon ? `<span ${this.getStyle('ic-action-icon')}>${a.icon}</span>` : ''}${a.text}
+						${a.icon ? `<span ${this.getStyle('cc-action-icon')}>${a.icon}</span>` : ''}${a.text}
 					</button>`;
 		}
 		return `
-			<div ${this.getStyle('ic-actions')}>
+			<div ${this.getStyle('cc-actions')}>
 				${actions.primary?.map(a => renderBtn({...a, role: 'primary'})).join('') || ''}
 				${actions.secondary?.map(a => renderBtn({...a, role: 'secondary'})).join('') || ''}
 			</div>
@@ -309,31 +331,42 @@ class ItemCard extends HTMLElement {
 	renderTags(tags) {
 		if (!tags?.length) return '';
 		return `
-			<ul ${this.getStyle('ic-tags')}>
+			<ul ${this.getStyle('cc-tags')}>
 				${tags.map(tag =>
-					`<li><a href="${tag.url}" ${this.getStyle('ic-tag')}>${tag.name}</a></li>`
+					`<li><a href="${tag.url}" ${this.getStyle('cc-tag')}>${tag.name}</a></li>`
 				).join('')}
 			</ul>
 		`;
 	}
 
 	renderAuthors(authors) {
-		this._ensureSettingsInitialized();
+		// this._ensureSettingsInitialized();
 		if (!authors?.length) return '';
 		return `
-			<div ${this.getStyle('ic-authors')}>
-				${authors.map(author => `
-					<address ${this.getStyle('ic-author')}>
-						<a href="${author.url || '#'}" ${this.getStyle('ic-author-link')}>
-							${author.avatar ? `<img src="${author.avatar.src}" alt="${author.avatar.alt || author.name}" width="${author.avatar.width}" height="${author.avatar.height}" ${this.getStyle('ic-avatar')}>` : ''}
-							<span ${this.getStyle('ic-author-name')}>${author.name}</span>
-						</a>
-						${author.role ? `<span ${this.getStyle('ic-author-role')}>${author.role}</span>` : ''}
-						${author.contacts?.map(c =>
-							`<a href="${c.type === 'email' ? `mailto:${c.value}` : c.value}" ${this.getStyle('ic-contact')}>${c.label}</a>`
-						).join('') || ''}
-					</address>
-				`).join('')}
+			<div ${this.getStyle('cc-authors')}>
+				${authors.map(author => {
+					const contactLinks = author.contacts?.map(c =>
+						`<li><a href="${c.type === 'email' ? `mailto:${c.value}` : c.value}" ${this.getStyle('cc-author-contact')}>${c.label}</a></li>`
+					).join('') || '';
+
+					const avatar = author.avatar;
+					const avatarImg = avatar ?
+						`<img src="${avatar.src}" 
+							alt="${avatar.alt || author.name}" 
+							${avatar.width !== undefined ? `width="${avatar.width}"` : ''} 
+							${avatar.height !== undefined ? `height="${avatar.height}"` : ''} 
+							${this.getStyle('cc-avatar')}>`
+						: '';
+
+					return `<address ${this.getStyle('cc-author')}>
+						${avatarImg}
+						
+							<strong ${this.getStyle('cc-author-name')}>${author.name}</strong>
+							${author.role ? `<small ${this.getStyle('cc-author-role')}>${author.role}</small>` : ''}
+							${contactLinks ? `<ul ${this.getStyle('cc-author-contacts')}>${contactLinks}</ul>` : ''}
+					
+					</address>`;
+				}).join('')}
 			</div>
 		`;
 	}
@@ -341,20 +374,20 @@ class ItemCard extends HTMLElement {
 	renderEngagement(engagement) {
 		if (!engagement) return '';
 		return `
-			<div ${this.getStyle('ic-engagement')}>
+			<div ${this.getStyle('cc-engagement')}>
 				${engagement.reactions?.map(r =>
 					`<button type="button"
-						${this.getStyle('ic-reaction')}
+						${this.getStyle('cc-reaction')}
 						${r.ariaLabel ? `aria-label="${r.ariaLabel}"` : ''}
 						${r.active ? 'aria-pressed="true"' : ''}
 					>
-						${r.icon ? `<span ${this.getStyle('ic-reaction-icon')}>${r.icon}</span>` : ''} 
+						${r.icon ? `<span ${this.getStyle('cc-reaction-icon')}>${r.icon}</span>` : ''} 
 						${r.count}
 					</button>`
 				).join('') || ''}
-				${typeof engagement.commentCount === 'number' ? `<span ${this.getStyle('ic-comments')}>${engagement.commentCount} comments</span>` : ''}
-				${typeof engagement.shareCount === 'number' ? `<span ${this.getStyle('ic-shares')}>${engagement.shareCount} shares</span>` : ''}
-				${typeof engagement.viewCount === 'number' ? `<span ${this.getStyle('ic-views')}>${engagement.viewCount} views</span>` : ''}
+				${typeof engagement.commentCount === 'number' ? `<span ${this.getStyle('cc-comments')}>${engagement.commentCount} comments</span>` : ''}
+				${typeof engagement.shareCount === 'number' ? `<span ${this.getStyle('cc-shares')}>${engagement.shareCount} shares</span>` : ''}
+				${typeof engagement.viewCount === 'number' ? `<span ${this.getStyle('cc-views')}>${engagement.viewCount} views</span>` : ''}
 			</div>
 		`;
 	}
@@ -368,10 +401,10 @@ class ItemCard extends HTMLElement {
 		if (!hasPublished && !hasReadingTime && !hasModified) return '';
 
 		return `
-			<div ${this.getStyle('ic-meta')}>
-				${hasPublished ? `<time ${this.getStyle('ic-published')} datetime="${content.published.datetime}">${content.published.formatted || content.published.relative}</time>` : ''}
-				${hasModified ? `<small ${this.getStyle('ic-modified')}> (Updated: <time datetime="${content.modified.datetime}">${content.modified.formatted || content.modified.relative}</time>)</small>` : ''}
-				${hasReadingTime ? `<span ${this.getStyle('ic-reading-time')}>${content.readingTime}</span>` : ''}
+			<div ${this.getStyle('cc-meta')}>
+				${hasPublished ? `<time ${this.getStyle('cc-published')} datetime="${content.published.datetime}">${content.published.formatted || content.published.relative}</time>` : ''}
+				${hasModified ? `<small ${this.getStyle('cc-modified')}> (Updated: <time datetime="${content.modified.datetime}">${content.modified.formatted || content.modified.relative}</time>)</small>` : ''}
+				${hasReadingTime ? `<span ${this.getStyle('cc-reading-time')}>${content.readingTime}</span>` : ''}
 			</div>
 		`;
 	}
@@ -383,14 +416,14 @@ class ItemCard extends HTMLElement {
 		const rating = product.rating || {};
 
 		return [
-			(price.current ? `<div ${this.getStyle('ic-product-price')}>
+			(price.current ? `<div ${this.getStyle('cc-product-price')}>
 					<span>${price.currency || ''} ${price.current}</span>
-					${price.original && price.original > price.current ? `<del ${this.getStyle('ic-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
-					${price.discountText ? `<span ${this.getStyle('ic-product-discount')}>${price.discountText}</span>` : ''}
+					${price.original && price.original > price.current ? `<del ${this.getStyle('cc-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
+					${price.discountText ? `<span ${this.getStyle('cc-product-discount')}>${price.discountText}</span>` : ''}
 				</div>` : ''),
-			(product.availability ? `<span ${this.getStyle('ic-product-availability')}>${product.availability}</span>` : ''),
-			(product.validUntil ? `<span ${this.getStyle('ic-product-validity')}>Offer valid until ${product.validUntil}</span>` : ''),
-			(rating.value ? `<span ${this.getStyle('ic-product-rating')}>
+			(product.availability ? `<span ${this.getStyle('cc-product-availability')}>${product.availability}</span>` : ''),
+			(product.validUntil ? `<span ${this.getStyle('cc-product-validity')}>Offer valid until ${product.validUntil}</span>` : ''),
+			(rating.value ? `<span ${this.getStyle('cc-product-rating')}>
 					${'★'.repeat(Math.round(rating.value))}${'☆'.repeat((rating.starCount || 5) - Math.round(rating.value))}
 					(${rating.value} / ${rating.starCount || 5}, ${rating.count} ratings)
 				</span>` : '')
@@ -403,16 +436,17 @@ class ItemCard extends HTMLElement {
 		const headlineTag = content.headlineTag || 'h2';
 
 		return `
-			<div ${this.getStyle('ic-content')}>
-				${content.category ? `<p ${this.getStyle('ic-category')}>${content.category}</p>` : ''}
-				${content.headline ? `<${headlineTag} ${this.getStyle('ic-headline')}>${content.headline}</${headlineTag}>` : ''}
-				${content.subheadline ? `<p ${this.getStyle('ic-subheadline')}>${content.subheadline}</p>` : ''}
-				${content.summary ? `<p ${this.getStyle('ic-summary')}>${content.summary}</p>` : ''}
-				${content.text ? `<div ${this.getStyle('ic-text')}>${content.text}</div>` : ''}
+			<div ${this.getStyle('cc-content')}>
+				${content.category ? `<p ${this.getStyle('cc-category')}>${content.category}</p>` : ''}
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
+				${content.subheadline ? `<p ${this.getStyle('cc-subheadline')}>${content.subheadline}</p>` : ''}
+				${this.renderAuthors(data.authors)}
+				${content.summary ? `<p ${this.getStyle('cc-summary')}>${content.summary}</p>` : ''}
+				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
 				${this.renderMeta(content)}
 				${this.renderProduct(data.product)}
 				${this.renderEngagement(data.engagement)}
-				${this.renderAuthors(data.authors)}
+				
 				${this.renderTags(data.tags)}
 				${this.renderActions(data.actions)}
 			</div>
@@ -420,21 +454,19 @@ class ItemCard extends HTMLElement {
 	}
 
 	render() {
-		if (!this.#root) {
-			this._init();
-			if (!this.#root) {
-				return;
-			}
-		}
-
 		if (!this.#data) {
-			this.#root.innerHTML = '';
+			// Don't render if there's no data yet, especially for attribute-driven components
+			if (!this.hasAttribute('content') && !this.hasAttribute('data')) {
+				this.innerHTML = '<p>No data provided.</p>';
+			}
 			return;
 		}
 
+		const { type, media, ribbon, sticker, content, actions, tags, authors, engagement, product, popover } = this.#data;
+
 		this.#root.innerHTML = `
-			${this.renderMedia(this.#data.media, this.#data.ribbon, this.#data.sticker)}
-			${this.#data?.content ? this.renderContent(this.#data) : ''}
+			${this.renderMedia(media, ribbon, sticker)}
+			${content ? this.renderContent(this.#data) : ''}
 			${this.renderPopover(this.#data)}
 		`;
 	}
@@ -442,4 +474,4 @@ class ItemCard extends HTMLElement {
 
 }
 
-customElements.define('item-card', ItemCard);
+customElements.define('content-card', ContentCard);

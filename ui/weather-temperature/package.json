@@ -14,7 +14,7 @@
   ],
 	"peerDependencies": {
     "@browser.style/weather-widget": "^1.0.0",
-    "@browser.style/column-chart": "^1.0.0"
+    "@browser.style/data-chart": "^1.0.0"
   },
   "publishConfig": {
     "access": "public",

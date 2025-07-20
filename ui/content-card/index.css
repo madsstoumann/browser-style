@@ -1,0 +1,328 @@
+/* --- General Card Structure --- */
+.cc, content-card {
+	--cc-gap-unit: .75lh;
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		text-box: text;
+	}
+	box-sizing: border-box;
+	display: grid;
+	font-family: var(--cc-ff, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif);
+	grid-template-columns: var(--cc-gtc, 1fr);
+	grid-template-rows: var(--cc-gtr, auto 1fr);
+}
+
+/* --- Media Area --- */
+.cc-media {
+	all: unset;
+	display: grid;
+	grid-area: var(--cc-media-ga, auto);
+	position: relative;
+	&::after {
+		content: "";
+		display: var(--item-card-overlay, none);
+		background: #0008;
+		position: absolute;
+		inset: 0;
+	}
+	& * {
+		grid-area: 1 / 1;
+	}
+}
+.cc-media-iframe,
+.cc-media-image,
+.cc-media-video  {
+	aspect-ratio: var(--cc-media-ar, 16 / 9);
+	height: var(--cc-media-h, auto);
+	object-fit: var(--cc-media-of, cover);
+	place-self: var(--cc-media-ps, auto);	
+	width: var(--cc-media-w, 100%);
+}
+.cc-media-video {
+
+}
+.cc-media-caption {
+
+}
+
+/* YouTube Specific */
+.cc-media-youtube { /* iframe container */
+
+}
+.cc-youtube { /* embed container */
+
+}
+.cc-youtube-play-button {
+
+}
+
+/* --- Overlays --- */
+.cc-ribbon {
+
+}
+.cc-sticker {
+
+}
+
+/* --- Content Area --- */
+.cc-content {
+	/* --cc-content-gap: .75lh; */
+	display: grid;
+	font-size: var(--cc-content-fs, 1rem);
+	grid-area: var(--cc-content-ga, auto);
+	isolation: isolate;
+	line-height: var(--c-content-lh, 1.5);
+	place-self: var(--cc-content-ps, unset);
+	row-gap: var(--cc-content-rg, var(--cc-gap-unit));
+}
+.cc-category {
+	color: var(--cc-category-color, light-dark(#666, #CCC));
+	font-size: var(--cc-category-fs, 0.875rem);
+}
+.cc-headline {
+	font-family: var(--c-headline-ff, Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif);
+	font-size: var(--c-headline-fs, 1.5rem);
+	font-weight: var(--c-headline-fw, 600);
+	line-height: var(--c-headline-lh, 1.3);
+	margin-block-end: var(--cc-content-gap);
+
+}
+.cc-subheadline {
+
+}
+.cc-summary {
+
+}
+.cc-text {
+
+}
+
+/* --- Meta Information --- */
+.cc-meta {
+
+}
+.cc-published {
+
+}
+.cc-modified {
+
+}
+.cc-reading-time {
+
+}
+
+/* --- Engagement Section --- */
+.cc-engagement {
+
+}
+.cc-reaction {
+
+}
+.cc-reaction-icon {
+
+}
+.cc-comments {
+
+}
+.cc-shares {
+
+}
+.cc-views {
+
+}
+
+/* --- Authors Section --- */
+.cc-authors {
+
+}
+.cc-author {
+	display: grid;
+	font-size: var(--ic-author-fs, 0.875rem);
+	font-style: normal;
+	gap: .5lh;
+	grid-template-columns: auto 1fr;
+	row-gap: .25lh;
+	& * { text-box: cap alphabetic; }
+}
+.cc-author-link {
+
+}
+.cc-avatar {
+	aspect-ratio: var(--ic-avatar-asr, 1 / 1);
+	border-radius: var(--ic-avatar-bdrs, 50%);
+	grid-area: 1 / 1 / 4 / 2;
+	width: var(--ic-avatar-size, 3em);
+}
+.cc-author-name {
+
+}
+.cc-author-role {
+}
+
+.cc-author-contacts {
+	all: unset;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cc-author-contact-gap, 0.5em);
+	list-style: none;
+	li {
+		background: var(--cc-author-contact-bg, #f0f0f0);
+		border-radius: var(--cc-author-contact-br, 0.125em);
+		color: var(--cc-author-contact-color, #333);
+		font-size: var(--cc-author-contact-fs, 0.75em);
+		padding: var(--cc-author-contact-p, 0.5em 0.75em);
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+	}
+}
+
+/* --- Tags Section --- */
+.cc-tags {
+	all: unset;
+	display: var(--ic-tags-d, flex);
+	flex-wrap: var(--ic-tags-fw, wrap);
+	gap: var(--ic-tags-gap, 0.5em);
+	/* justify-content: var(--ic-tags-jc, flex-start);
+	align-items: var(--ic-tags-ai, center); */
+	
+	/* color: var(--ic-tags-color, #666);
+	list-style: var(--ic-tags-ls, none);
+	margin: var(--ic-tags-m, 0);
+	padding: var(--ic-tags-p, 0); */
+	li {
+		background: var(--ic-tag-bg, #f0f0f0);
+		border-radius: var(--ic-tag-br, 0.25em);
+		padding: var(--ic-tag-p, 0.25em 0.75em);
+		color: var(--ic-tag-color, #333);
+		font-size: var(--ic-tags-fs, 0.75em);
+		cursor: pointer;
+		
+
+		a {
+			text-decoration: none;
+			color: inherit;
+		}
+
+		&:hover {
+			background: var(--ic-tag-hover-bg, #e0e0e0);
+		}
+	}
+}
+.cc-tag {
+
+}
+
+/* --- Product Information --- */
+.cc-product-price {
+
+}
+.cc-product-price-original {
+
+}
+.cc-product-discount {
+
+}
+.cc-product-availability {
+
+}
+.cc-product-validity {
+
+}
+.cc-product-rating {
+
+}
+
+/* --- Actions --- */
+.cc-actions {
+
+}
+.cc-action-link {
+
+}
+.cc-action-button {
+
+}
+.cc-action-primary {
+
+}
+.cc-action-secondary {
+
+}
+.cc-action-icon {
+
+}
+.cc-wrapper { /* Full card link wrapper */
+
+}
+
+/* --- Popover --- */
+.cc-popover {
+
+}
+.cc-popover-close {
+
+}
+.cc-popover-video {
+
+}
+.cc-popover-article {
+
+}
+
+	/* LAYOUT */
+
+	[layout*="columns("] {
+		--item-card-gtr: 1fr;
+		--item-card-gtc: 1fr 1fr;
+	}
+
+	[layout*="reverse"] figure { order: 1; reading-order: 1; }
+	
+
+	[layout*="rows(b-t)"] {
+		--item-card-gtr: 1fr auto;
+		/* --ic-text-pb: 1em 1.5em; */
+		figure { order: 1; reading-order: 1; }
+	}
+	[layout*="image("] {
+		--cc-gtr: 1fr;
+		article { display: none; }
+	}
+	[layout*="stack"] {
+		/* --cc-content-ps-c: #FFF; */
+		--cc-gtr: 1fr;
+		--cc-content-ga: 1 / 1;
+		--cc-media-ga: 1 / 1;
+	}
+	[layout*="text("] {
+		--item-card-gtr: 1fr;
+		figure { display: none; }
+	}
+
+	[layout*="t-l"] { --cc-content-ps: start start; }
+	[layout*="t-c"] { --cc-content-ps: start center; }
+	[layout*="t-r"] { --cc-content-ps: start end; }
+	[layout*="c-l"] { --cc-content-ps: center start; }
+	[layout*="c-c"] { --cc-content-ps: center center; }
+	[layout*="c-r"] { --cc-content-ps: center end; }
+	[layout*="b-l"] { --cc-content-ps: end start; }
+	[layout*="b-c"] { --cc-content-ps: end center; }
+	[layout*="b-r"] { --cc-content-ps: end end; }
+	
+
+	[layout*="1:1"] { --cc-media-ar: 1 / 1; }
+	[layout*="4:3"] { --cc-media-ar: 4 / 3; }
+	[layout*="3:4"] { --cc-media-ar: 3 / 4; }
+	[layout*="16:9"] { --cc-media-ar: 16 / 9; }
+	[layout*="9:16"] { --cc-media-ar: 9 / 16; }
+	[layout*="3:2"] { --cc-media-ar: 3 / 2; }
+	[layout*="2:3"] { --cc-media-ar: 2 / 3; }
+	[layout*="5:4"] { --cc-media-ar: 5 / 4; }
+	[layout*="4:5"] { --cc-media-ar: 4 / 5; }
+	[layout*="21:9"] { --cc-media-ar: 21 / 9; }
+	[layout*="9:21"] { --cc-media-ar: 9 / 21; }
+
+

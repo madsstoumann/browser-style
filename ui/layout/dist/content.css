@@ -4,34 +4,65 @@
 		container-type: inline-size;
 	}
 	item-card {
-		align-items: start;
+		--item-card-gap-unit: 1em;
+
+		
 		block-size: 100%;
 		box-sizing: border-box;
 		display: grid;
-		font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+		font-family: var(--item-card-ff, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif);
 		grid-template-columns: var(--item-card-gtc, 1fr);
-		grid-template-rows: var(--item-card-gtr, auto);
-		line-height: 1.5;
-		
+		grid-template-rows: var(--item-card-gtr, auto 1fr);
+		position: relative;
+
+		/* content area */
 		article {
-			h2 { font-weight: 500; line-height: 1.2;}
 			& > * {
 				margin: 0;
 				text-box: cap alphabetic;
 			}
-			align-self: start;
+			:is(h1,h2,h3,h4) {
+				font-weight: var(--item-card-header-fw, 500);
+				line-height: var(--item-card-header-lh, 1.2);
+			}
+			
 			color: var(--item-card-article-c, inherit);
 			display: grid;
-			font-size: clamp(12px, 4cqw, 16px);
-			row-gap: 2ch;
+			font-size: 14px; /*clamp(12px, 4cqw, 16px);*/
+			
 			grid-area: var(--item-card-ga, auto);
-			padding: 1em;
+			padding-block: var(--ic-text-pb, 1.5em 1em);
+			padding-inline: var(--ic-text-pi, var(--item-card-gap-unit, 1em));
 			place-self: var(--item-card-article-ps, unset);
+			row-gap: var(--item-card-article-rg, 1em);
 			z-index: 1;
+
+			&:has(a) {
+				a::before {
+					content: "";
+					cursor: pointer;
+					inset: 0;
+					position: absolute;
+				}
+				a:focus-visible {
+					outline: 0;
+					&::before {
+						outline: 2px solid cornflowerblue;
+					}
+				}
+				@media(hover: hover) {
+					a:hover::before {
+						outline: 2px solid cornflowerblue;
+					}
+				}
+			}
 
 			a { color: inherit; }
 		}
+
+		/* media area */
 		figure {
+			display: flex;
 			grid-area: var(--item-card-ga, auto);
 			margin: 0;
 			position: relative;
@@ -43,17 +74,72 @@
 				inset: 0;
 			}
 			img {
-				/* aspect-ratio: 16 / 9; */
+				aspect-ratio: var(--item-card-img-ar, 16 / 9);
 				width: 100%;
-				height: 100%;
+				height: auto;
 				object-fit: cover;
+				place-self: var(--item-card-img-ps, auto);
 			}
 		}
 	}
+
+	/* LAYOUT */
+
+	[layout*="columns("] {
+		--item-card-gtr: 1fr;
+		--item-card-gtc: 1fr 1fr;
+	}
+
+	[layout*="reverse"] figure { order: 1; reading-order: 1; }
+	
+
+	[layout*="rows(b-t)"] {
+		--item-card-gtr: 1fr auto;
+		/* --ic-text-pb: 1em 1.5em; */
+		figure { order: 1; reading-order: 1; }
+	}
+	[layout*="image("] {
+		--item-card-gtr: 1fr;
+		article { display: none; }
+	}
+	[layout*="stack"] {
+		--item-card-article-c: #FFF;
+		--item-card-gtr: 1fr;
+		--item-card-ga: 1 / 1;
+	}
+	[layout*="text("] {
+		--item-card-gtr: 1fr;
+		figure { display: none; }
+	}
+
+	[layout*="t-l"] { --item-card-article-ps: start start; }
+	[layout*="t-c"] { --item-card-article-ps: start center; }
+	[layout*="t-r"] { --item-card-article-ps: start end; }
+	[layout*="c-l"] { --item-card-article-ps: center start; }
+	[layout*="c-c"] { --item-card-article-ps: center center; }
+	[layout*="c-r"] { --item-card-article-ps: center end; }
+	[layout*="b-l"] { --item-card-article-ps: end start; }
+	[layout*="b-c"] { --item-card-article-ps: end center; }
+	[layout*="b-r"] { --item-card-article-ps: end end; }
+	
+
+	[layout*="1:1"] { --item-card-img-ar: 1 / 1; }
+	[layout*="4:3"] { --item-card-img-ar: 4 / 3; }
+	[layout*="3:4"] { --item-card-img-ar: 3 / 4; }
+	[layout*="16:9"] { --item-card-img-ar: 16 / 9; }
+	[layout*="9:16"] { --item-card-img-ar: 9 / 16; }
+	[layout*="3:2"] { --item-card-img-ar: 3 / 2; }
+	[layout*="2:3"] { --item-card-img-ar: 2 / 3; }
+	[layout*="5:4"] { --item-card-img-ar: 5 / 4; }
+	[layout*="4:5"] { --item-card-img-ar: 4 / 5; }
+	[layout*="21:9"] { --item-card-img-ar: 21 / 9; }
+	[layout*="9:21"] { --item-card-img-ar: 9 / 21; }
+
+
 }
 
 @layer content.xs {
-	
+	@container (min-width: 160px) {
 		item-card[xs="content(image)"], item-card[xs="content(text)"], item-card[xs="rows(b-t)"], item-card[xs="rows(t-b)"], item-card[xs="stack(b-c)"], item-card[xs="stack(b-l)"], item-card[xs="stack(b-r)"], item-card[xs="stack(c-c)"], item-card[xs="stack(c-l)"], item-card[xs="stack(c-r)"], item-card[xs="stack(t-c)"], item-card[xs="stack(t-l)"], item-card[xs="stack(t-r)"] {
 			--item-card-gtc: 1fr;
 		}
@@ -127,7 +213,7 @@
 			display: none;
 		}
 
-	
+	}
 
 }
 

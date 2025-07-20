@@ -1,5 +1,6 @@
 [
   {
+    "id": "news-1",
     "type": "news",
     "media": {
       "sources": [
@@ -51,6 +52,7 @@
     }
   },
   {
+    "id": "news-2",
     "type": "news",
     "content": {
       "category": "World News",
@@ -79,6 +81,7 @@
     ]
   },
   {
+    "id": "news-3",
     "type": "news",
     "media": {
       "sources": [
@@ -108,6 +111,7 @@
     }
   },
   {
+    "id": "news-4",
     "type": "news",
     "media": {
       "sources": [
@@ -134,6 +138,7 @@
     }
   },
   {
+    "id": "news-5",
     "type": "news",
     "content": {
       "category": "Domestic",
@@ -156,6 +161,7 @@
     }
   },
   {
+    "id": "news-6",
     "type": "news",
     "media": {
       "sources": [
@@ -181,6 +187,7 @@
     }
   },
   {
+    "id": "news-7",
     "type": "news",
     "media": {
       "sources": [
@@ -207,6 +214,7 @@
     }
   },
   {
+    "id": "news-8",
     "type": "news",
     "media": {
       "sources": [
@@ -235,6 +243,7 @@
     }
   },
   {
+    "id": "news-9",
     "type": "news",
     "content": {
       "category": "Culture",
@@ -252,6 +261,7 @@
     }
   },
   {
+    "id": "news-10",
     "type": "news",
     "media": {
       "sources": [
@@ -278,6 +288,7 @@
     }
   },
   {
+    "id": "news-11",
     "type": "news",
     "media": {
       "sources": [
@@ -334,6 +345,7 @@
     }
   },
   {
+    "id": "recipe-1",
     "type": "recipe",
     "media": {
       "sources": [
@@ -369,6 +381,7 @@
     }
   },
   {
+    "id": "recipe-2",
     "type": "recipe",
     "media": {
       "sources": [
@@ -404,6 +417,7 @@
     ]
   },
   {
+    "id": "recipe-3",
     "type": "recipe",
     "media": {
       "sources": [
@@ -439,6 +453,7 @@
     }
   },
   {
+    "id": "recipe-4",
     "type": "recipe",
     "media": {
       "sources": [
@@ -470,6 +485,7 @@
     }
   },
   {
+    "id": "video-1",
     "type": "video",
     "media": {
       "sources": [
@@ -506,6 +522,7 @@
     }
   },
   {
+    "id": "video-2",
     "type": "video",
     "media": {
       "sources": [
@@ -539,6 +556,7 @@
     }
   },
   {
+    "id": "video-3",
     "type": "video",
     "media": {
       "sources": [
@@ -572,6 +590,7 @@
     }
   },
   {
+    "id": "video-4",
     "type": "video",
     "media": {
       "sources": [
@@ -598,6 +617,7 @@
     }
   },
   {
+    "id": "video-5",
     "type": "video",
     "media": {
       "sources": [
@@ -624,6 +644,7 @@
     }
   },
   {
+    "id": "video-6",
     "type": "video",
     "media": {
       "sources": [
@@ -636,6 +657,7 @@
     }
   },
   {
+    "id": "product-1",
     "type": "product",
     "media": {
       "sources": [
@@ -655,6 +677,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-2",
     "type": "product",
     "media": {
       "sources": [
@@ -673,6 +696,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-3",
     "type": "product",
     "media": {
       "sources": [
@@ -691,6 +715,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-4",
     "type": "product",
     "media": {
       "sources": [
@@ -709,6 +734,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-5",
     "type": "product",
     "media": {
       "sources": [
@@ -726,6 +752,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-6",
     "type": "product",
     "media": {
       "sources": [
@@ -743,6 +770,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Notify Me" }] }
   },
   {
+    "id": "product-7",
     "type": "product",
     "media": {
       "sources": [
@@ -761,6 +789,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "product-8",
     "type": "product",
     "media": {
       "sources": [
@@ -778,6 +807,7 @@
     "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
   },
   {
+    "id": "article-1",
     "type": "article",
     "media": {
       "sources": [
@@ -808,6 +838,7 @@
     }
   },
   {
+    "id": "event-1",
     "type": "event",
     "media": {
       "sources": [
@@ -847,6 +878,7 @@
     }
   },
   {
+    "id": "poll-1",
     "type": "poll",
     "content": {
       "category": "Community Poll",
@@ -868,6 +900,7 @@
     }
   },
   {
+    "id": "quote-1",
     "type": "quote",
     "media": {
       "sources": [
@@ -896,5 +929,73 @@
         }
       ]
     }
-  }
+  },
+  {
+    "id": "spot-1",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/pexels-minan1398-1006121.jpg",
+          "alt": "Spring"
+        }
+      ]
+    },
+    "content": {
+      "category": "Seasons",
+      "headline": "Spring"
+    }
+  },
+  {
+    "id": "spot-2",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/pexels-trupert-1032650.jpg",
+          "alt": "Summer"
+        }
+      ]
+    },
+    "content": {
+      "category": "Seasons",
+      "headline": "Summer"
+    }
+  },
+  {
+    "id": "spot-3",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/pexels-kadri-vosumae-249986-756903.jpg",
+          "alt": "Autumn"
+        }
+      ]
+    },
+    "content": {
+      "category": "Seasons",
+      "headline": "Autumn"
+    }
+  },
+  {
+    "id": "spot-4",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/pexels-alissa-nabiullina-367960-997567.jpg",
+          "alt": "Winter"
+        }
+      ]
+    },
+    "content": {
+      "category": "Seasons",
+      "headline": "Winter"
+    }
+  } 
 ]

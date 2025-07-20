@@ -1,5 +1,6 @@
 @layer layout.base {
 	lay-out {
+		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px;
 		--layout-spacing-unit: 1rem;
 
@@ -67,6 +68,14 @@
 				max(calc(var(--layout-pi) * var(--layout-spacing-unit)), var(--_pi) * var(--_e, 1));
 		}
 		&[bleed][width] { --_pi: calc((100vw - var(--_mi)) / 2); }
+
+		/* gap decorations */
+		&[gap] {
+			column-rule: var(--layout-col-rule-w, 1px) var(--layout-col-rule-style, solid) var(--layout-col-rule-c);
+			column-rule-outset: var(--layout-col-rule-outset, 0%);
+			row-rule: var(--layout-row-rule-w, 1px) var(--layout-row-rule-style, solid) var(--layout-row-rule-c, var(--layout-col-rule-c));
+			row-rule-outset: var(--layout-row-rule-outset, 0%);
+		}
 
 		/* overflow */
 		&[overflow] {
