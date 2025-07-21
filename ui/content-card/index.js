@@ -92,13 +92,16 @@ class ContentCard extends HTMLElement {
 				if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 				const allData = await res.json();
 				const itemData = allData.find(item => item.id === newVal);
-				if (itemData) {
-					this.#data = itemData;
-					this._prepareAndRender();
-				} else {
-					console.error(`Item with id "${newVal}" not found in data.json`);
-					this.innerHTML = `<p>Error: Item with id "${newVal}" not found.</p>`;
-				}
+			   if (itemData) {
+				   this.#data = itemData;
+				   if (itemData.type) {
+					   this.setAttribute('type', itemData.type);
+				   }
+				   this._prepareAndRender();
+			   } else {
+				   console.error(`Item with id "${newVal}" not found in data.json`);
+				   this.innerHTML = `<p>Error: Item with id "${newVal}" not found.</p>`;
+			   }
 			} catch (e) {
 				console.error(`Failed to fetch or process data for content="${newVal}":`, e);
 				this.innerHTML = `<p>Error loading content.</p>`;
@@ -308,24 +311,25 @@ class ContentCard extends HTMLElement {
 		const renderBtn = (a) => {
 			const popoverAttrs = a.popover ? `popovertarget="${this.#popoverId}" popovertargetaction="show"` : '';
 			if (a.type === 'link') {
-				let style = this.getStyle(`ic-action-${a.role || 'link'}`);
+				let style = this.getStyle(`cc-action-link`);
 				if (a.isWrapper) {
-					style = style.slice(0, -1) + ' ic-wrapper"';
+					style = style.slice(0, -1) + ' cc-wrapper"';
 				}
-				return `<a href="${a.url}" ${style} ${a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''}>
-						${a.icon ? `<span ${this.getStyle('cc-action-icon')}>${a.icon}</span>` : ''}${a.text}
-					</a>`;
+			   return `<a href="${a.url}" ${style} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))}>
+					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class="', '').replace('"', '')}">${a.icon}</span>` : a.text}
+				   </a>`;
 			}
-			return `<button type="button" ${this.getStyle(`ic-action-${a.role || 'button'}`)} ${a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''} ${popoverAttrs}>
-						${a.icon ? `<span ${this.getStyle('cc-action-icon')}>${a.icon}</span>` : ''}${a.text}
-					</button>`;
+		   return `<button type="button" ${this.getStyle(`cc-action-button`)} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))} ${popoverAttrs}>
+					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class=\"', '').replace('\"', '')}">${a.icon}</span>` : a.text}
+				   </button>`;
 		}
-		return `
-			<div ${this.getStyle('cc-actions')}>
-				${actions.primary?.map(a => renderBtn({...a, role: 'primary'})).join('') || ''}
-				${actions.secondary?.map(a => renderBtn({...a, role: 'secondary'})).join('') || ''}
-			</div>
-		`;
+	   const primaryBlock = actions.primary?.length
+		   ? `<nav class="cc-primary-actions" aria-label="Primary actions">${actions.primary.map(a => renderBtn({...a, role: 'primary'})).join('')}</nav>`
+		   : '';
+	   const secondaryBlock = actions.secondary?.length
+		   ? `<nav class="cc-secondary-actions" aria-label="Secondary actions">${actions.secondary.map(a => renderBtn({...a, role: 'secondary'})).join('')}</nav>`
+		   : '';
+	   return `${primaryBlock}${secondaryBlock}`;
 	}
 
 	renderTags(tags) {
@@ -345,10 +349,6 @@ class ContentCard extends HTMLElement {
 		return `
 			<div ${this.getStyle('cc-authors')}>
 				${authors.map(author => {
-					const contactLinks = author.contacts?.map(c =>
-						`<li><a href="${c.type === 'email' ? `mailto:${c.value}` : c.value}" ${this.getStyle('cc-author-contact')}>${c.label}</a></li>`
-					).join('') || '';
-
 					const avatar = author.avatar;
 					const avatarImg = avatar ?
 						`<img src="${avatar.src}" 
@@ -360,11 +360,10 @@ class ContentCard extends HTMLElement {
 
 					return `<address ${this.getStyle('cc-author')}>
 						${avatarImg}
-						
+						<div ${this.getStyle('cc-author-deails')}>
 							<strong ${this.getStyle('cc-author-name')}>${author.name}</strong>
 							${author.role ? `<small ${this.getStyle('cc-author-role')}>${author.role}</small>` : ''}
-							${contactLinks ? `<ul ${this.getStyle('cc-author-contacts')}>${contactLinks}</ul>` : ''}
-					
+						</div>
 					</address>`;
 				}).join('')}
 			</div>
@@ -392,20 +391,22 @@ class ContentCard extends HTMLElement {
 		`;
 	}
 
-	renderMeta(content) {
+	renderHeader(content) {
 		if (!content) return '';
 		const hasPublished = content.published && (content.published.datetime || content.published.formatted);
 		const hasModified = content.modified && (content.modified.datetime || content.modified.formatted);
 		const hasReadingTime = content.readingTime;
+		const hasCategory = content.category;
 
-		if (!hasPublished && !hasReadingTime && !hasModified) return '';
+		if (!hasCategory && !hasPublished && !hasReadingTime && !hasModified) return '';
 
 		return `
-			<div ${this.getStyle('cc-meta')}>
+			<header ${this.getStyle('cc-header')}>
+				${hasCategory ? `<span ${this.getStyle('cc-category')}>${content.category}</span>` : ''}
 				${hasPublished ? `<time ${this.getStyle('cc-published')} datetime="${content.published.datetime}">${content.published.formatted || content.published.relative}</time>` : ''}
-				${hasModified ? `<small ${this.getStyle('cc-modified')}> (Updated: <time datetime="${content.modified.datetime}">${content.modified.formatted || content.modified.relative}</time>)</small>` : ''}
-				${hasReadingTime ? `<span ${this.getStyle('cc-reading-time')}>${content.readingTime}</span>` : ''}
-			</div>
+			   ${hasModified ? `<small ${this.getStyle('cc-modified')}><time datetime="${content.modified.datetime}">${content.modified.formatted || content.modified.relative}</time></small>` : ''}
+				${hasReadingTime ? `<small ${this.getStyle('cc-reading-time')}>${content.readingTime}</small>` : ''}
+			</header>
 		`;
 	}
 
@@ -436,20 +437,17 @@ class ContentCard extends HTMLElement {
 		const headlineTag = content.headlineTag || 'h2';
 
 		return `
-			<div ${this.getStyle('cc-content')}>
-				${content.category ? `<p ${this.getStyle('cc-category')}>${content.category}</p>` : ''}
-				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
-				${content.subheadline ? `<p ${this.getStyle('cc-subheadline')}>${content.subheadline}</p>` : ''}
+			<article ${this.getStyle('cc-content')}>
+				${this.renderHeader(content)}
+			   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
 				${this.renderAuthors(data.authors)}
 				${content.summary ? `<p ${this.getStyle('cc-summary')}>${content.summary}</p>` : ''}
 				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
-				${this.renderMeta(content)}
 				${this.renderProduct(data.product)}
 				${this.renderEngagement(data.engagement)}
-				
 				${this.renderTags(data.tags)}
 				${this.renderActions(data.actions)}
-			</div>
+			</article>
 		`;
 	}
 

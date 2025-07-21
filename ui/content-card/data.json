@@ -19,7 +19,7 @@
     },
     "content": {
       "category": "Technology",
-      "headline": "The Future of Quantum Computing is Now",
+      "headline": "The Future of Quantum Computing is:",
       "headlineTag": "h3",
       "subheadline": "A Major Leap Forward",
       "summary": "Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.",
@@ -29,7 +29,7 @@
       },
       "modified": {
         "datetime": "2025-07-16T12:00:00Z",
-        "formatted": "July 16, 2025"
+        "formatted": "(Updated July 16, 2025)"
       },
       "readingTime": "4 min read"
     },
@@ -46,7 +46,8 @@
         {
           "type": "button",
           "text": "Save",
-          "active": true
+          "active": true,
+          "icon": "bookmark"
         }
       ]
     }
@@ -71,7 +72,8 @@
       "secondary": [
         {
           "type": "button",
-          "text": "Share"
+          "text": "Share",
+          "icon": "share"
         }
       ]
     },
@@ -340,6 +342,29 @@
           "type": "link",
           "url": "#",
           "text": "Read Full Analysis"
+        }
+      ]
+    }
+  },
+  {
+    "id": "news-12",
+    "type": "news",
+    "content": {
+      "category": "Short news",
+      "headline": "Police still looking for mysterious beaver",
+      
+      "published": {
+        "datetime": "2025-07-16T14:00:00Z",
+        "formatted": "July 16, 2025"
+      }
+    },
+    "actions": {
+      "primary": [
+        {
+          "type": "link",
+          "url": "#",
+          "text": "Read Story",
+          "isWrapper": true
         }
       ]
     }
