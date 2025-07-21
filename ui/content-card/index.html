@@ -24,8 +24,8 @@
 		--layout-primary-c: hsl(220, 100%, 20%);
 		--layout-secondary-bg: hsl(120, 50%, 95%);
 		--layout-secondary-c: hsl(120, 50%, 20%);
-		--layout-tertiary-bg: hsl(30, 10%, 95%);
-		--layout-tertiary-c: hsl(30, 80%, 20%);
+		/* --layout-tertiary-c: hsl(30, 10%, 95%); */
+		--layout-tertiary-bg: #FFE7E0;
 	}
 	body {
 		--layout-bleed-mw: 1024px;
@@ -68,11 +68,17 @@
 		<content-card content="news-3"></content-card>
 	</lay-out>
 
-	<lay-out lg="columns(4)">
+	<lay-out lg="columns(4)" pad-top="2" pad-bottom="2">
 		<content-card content="spot-1" layout="stack(b-c ta-c p:1 3:4)"></content-card>
 		<content-card content="spot-2" layout="stack(b-c ta-c p:1 3:4)"></content-card>
 		<content-card content="spot-3" layout="stack(b-c ta-c p:1 3:4)"></content-card>
 		<content-card content="spot-4" layout="stack(b-c ta-c p:1 3:4)"></content-card>
+	</lay-out>
+
+	
+
+	<lay-out theme="tertiary" bleed pad-top="2" pad-bottom="2">
+		<content-card content="news-1" layout=""></content-card>
 	</lay-out>
 
 	<content-card content="news-12" layout="p:1.5" class="secondary"></content-card>

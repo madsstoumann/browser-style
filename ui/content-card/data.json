@@ -6,7 +6,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/tech1/400/225",
+          "src": "assets/quantum.png",
           "alt": "Abstract technology background"
         }
       ],

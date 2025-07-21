@@ -26,8 +26,8 @@
 	position: relative;
 	&::after {
 		content: "";
-		display: var(--item-card-overlay, none);
-		background: #0008;
+		display: var(--cc-media-overlay-d, block);
+		background: var(--cc-media-overlay-bg, linear-gradient(180deg, #0000, #000E));
 		position: absolute;
 		inset: 0;
 	}
@@ -243,7 +243,7 @@
 
 }
 .cc-wrapper { /* Full card link wrapper */
-	
+
 }
 
 /* --- Popover --- */
