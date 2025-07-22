@@ -178,7 +178,7 @@ class ContentCard extends HTMLElement {
 		}
 
 		return `<iframe 
-			${this.getStyle('cc-media-youtube')}
+			${this.getStyle('cc-media-iframe')}
 			src="https://www.youtube.com/embed/${videoId}" 
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
 			allowfullscreen
@@ -431,25 +431,73 @@ class ContentCard extends HTMLElement {
 		].filter(Boolean).join('');
 	}
 
-	renderContent(data) {
-		const content = data.content || {};
-		const published = content.published?.formatted || '';
-		const headlineTag = content.headlineTag || 'h2';
 
-		return `
-			<article ${this.getStyle('cc-content')}>
-				${this.renderHeader(content)}
-			   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
-				${this.renderAuthors(data.authors)}
-				${content.summary ? `<p ${this.getStyle('cc-summary')}>${content.summary}</p>` : ''}
-				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
-				${this.renderProduct(data.product)}
-				${this.renderEngagement(data.engagement)}
-				${this.renderTags(data.tags)}
-				${this.renderActions(data.actions)}
-			</article>
-		`;
+renderContent(data) {
+	const content = data.content || {};
+	const published = content.published?.formatted || '';
+	const headlineTag = content.headlineTag || 'h2';
+	// If text is an array and type is accordion or timeline, use special renderers
+	if (Array.isArray(content.text)) {
+		if (data.type === 'accordion') {
+			return this.renderAccordion(content, data);
+		} else if (data.type === 'timeline') {
+			return this.renderTimeline(content, data);
+		}
 	}
+	return `
+		<article ${this.getStyle('cc-content')}>
+			${this.renderHeader(content)}
+		   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+			${this.renderAuthors(data.authors)}
+			${content.summary ? `<p ${this.getStyle('cc-summary')}>${content.summary}</p>` : ''}
+			${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
+			${this.renderProduct(data.product)}
+			${this.renderEngagement(data.engagement)}
+			${this.renderTags(data.tags)}
+			${this.renderActions(data.actions)}
+		</article>
+	`;
+}
+
+renderAccordion(content, data) {
+   const headlineTag = content.headlineTag || 'h2';
+   // Generate a unique name for this accordion instance
+   const accordionName = `accordion-${data.id || Math.random().toString(36).slice(2)}`;
+   return `
+	   <article ${this.getStyle('cc-content')}>
+		   ${this.renderHeader(content)}
+		   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
+		   <div class="cc-accordion">
+			   ${content.text.map((item, idx) => `
+				   <details class="cc-accordion-item" name="${accordionName}">
+					   <summary class="cc-accordion-title">${item.headline}</summary>
+					   <div class="cc-accordion-panel">${item.text}</div>
+				   </details>
+			   `).join('')}
+		   </div>
+		   ${this.renderActions(data.actions)}
+	   </article>
+   `;
+}
+
+renderTimeline(content, data) {
+	const headlineTag = content.headlineTag || 'h2';
+	return `
+		<article ${this.getStyle('cc-content')}>
+			${this.renderHeader(content)}
+			${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
+			<ol class="cc-timeline">
+				${content.text.map(item => `
+					<li class="cc-timeline-item">
+						<div class="cc-timeline-headline">${item.headline}</div>
+						<div class="cc-timeline-text">${item.text}</div>
+					</li>
+				`).join('')}
+			</ol>
+			${this.renderActions(data.actions)}
+		</article>
+	`;
+}
 
 	render() {
 		if (!this.#data) {

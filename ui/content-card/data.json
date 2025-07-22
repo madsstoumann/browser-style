@@ -970,6 +970,11 @@
     "content": {
       "category": "Seasons",
       "headline": "Spring"
+    },
+     "actions": {
+      "primary": [
+        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+      ]
     }
   },
   {
@@ -987,6 +992,11 @@
     "content": {
       "category": "Seasons",
       "headline": "Summer"
+    },
+     "actions": {
+      "primary": [
+        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+      ]
     }
   },
   {
@@ -1004,6 +1014,11 @@
     "content": {
       "category": "Seasons",
       "headline": "Autumn"
+    },
+     "actions": {
+      "primary": [
+        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+      ]
     }
   },
   {
@@ -1021,6 +1036,36 @@
     "content": {
       "category": "Seasons",
       "headline": "Winter"
+    },
+     "actions": {
+      "primary": [
+        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+      ]
     }
-  } 
+  },
+  {
+    "id": "accordion-1",
+    "type": "accordion",
+    "content": {
+      "category": "FAQ",
+      "headline": "Frequently Asked Questions",
+      "text": [
+        { "headline": "What is Quantum Computing?", "text": "Quantum computing uses quantum bits to perform computations much faster than classical computers for certain problems." },
+        { "headline": "When will it be mainstream?", "text": "Experts predict quantum computers will become more widely available within the next decade." }
+      ]
+    }
+  },
+  {
+    "id": "timeline-1",
+    "type": "timeline",
+    "content": {
+      "category": "History",
+      "headline": "Milestones in Quantum Computing",
+      "text": [
+        { "headline": "1980s", "text": "Theoretical foundations of quantum computing are established." },
+        { "headline": "1994", "text": "Peter Shor develops Shor's algorithm, showing quantum computers can factor large numbers efficiently." },
+        { "headline": "2020s", "text": "Quantum computers achieve quantum supremacy on specific tasks." }
+      ]
+    }
+  }
 ]
