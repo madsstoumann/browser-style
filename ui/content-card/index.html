@@ -63,14 +63,17 @@
 
 
 	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap="">
-		<content-card content="news-11" layout="" class="primary"></content-card>
+		<content-card content="news-11" layout="rows(th-1 p:1 flip)"></content-card>
 		<content-card content="news-2"></content-card>
-		<content-card content="news-3" layout="rows(t-b)"></content-card>
+		<content-card content="news-3" layout="rows(th-2 p:1)"></content-card>
 	</lay-out>
 
 	<lay-out lg="columns(1)" bleed col-gap="2" pad-bottom="2" pad-top="2" theme="secondary">
 		<content-card content="news-4" layout="columns(21:9)" col-gap="2"></content-card>
 	</lay-out>
+
+	<content-card content="news-6" layout="columns(21:9 th-2 p:1.5)"></content-card>
+	<content-card content="news-7" layout="columns(21:9 th-2 p:1.5 flip)"></content-card>
 
 	<lay-out lg="columns(4)" pad-top="2" pad-bottom="2">
 		<content-card content="spot-1" layout="stack(b-c ta-c p:1 3:4 ovl-tb)"></content-card>
@@ -96,8 +99,14 @@
 			const main = document.querySelector('main');
 			const news = await fetch('data.json').then(r => r.json());
 			
+			// Collect all statically defined content-card[content] elements
+			const definedContent = new Set(
+				Array.from(document.querySelectorAll('content-card[content]'))
+					.map(el => el.getAttribute('content'))
+			);
+
 			news.forEach(item => {
-				// if (item.id === 'news-1') return; 
+				if (definedContent.has(item.id)) return;
 				const card = document.createElement('content-card');
 				card.dataset = { data: item };
 				card.setAttribute('type', item.type);
