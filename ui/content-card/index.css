@@ -208,9 +208,16 @@
 .cc-secondary-actions {}
 
 .cc-action-link {
+	align-items: center;
 	color: var(--cc-link-c, inherit);
-
+	column-gap: .33ch;
+	display: inline-flex;
+	&:has(.cc-action-icon) { text-decoration: none; }
+	&:hover .cc-link-text {
+		text-decoration: underline;
+	}
 }
+
 .cc-action-button {
 	&:has(.cc-action-icon) {
 		aspect-ratio: 1;    
@@ -274,8 +281,10 @@
 	&[layout*="th-"] {
 		--cc-colmg: 0;
 		--cc-media-bdrs: var(--cc-bdrs) 0 0 var(--cc-bdrs);
+		[dir="rtl"] & { --cc-media-bdrs: 0 var(--cc-bdrs) var(--cc-bdrs) 0; }
 		&[layout*="flip"] {
 			--cc-media-bdrs: 0 var(--cc-bdrs) var(--cc-bdrs) 0;
+			[dir="rtl"] & { --cc-media-bdrs: var(--cc-bdrs) 0 0 var(--cc-bdrs); }
 		}
 	}
 }

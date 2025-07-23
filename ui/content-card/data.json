@@ -107,7 +107,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Watch Highlights"
+          "text": "Watch Highlights",
+          "icon": "play_arrow"
         }
       ]
     }
@@ -134,7 +135,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Discover Recipes"
+          "text": "Discover Recipes",
+          "icon": "restaurant_menu"
         }
       ]
     }
@@ -157,7 +159,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "See the Plan"
+          "text": "See the Plan",
+          "icon": "map"
         }
       ]
     }
@@ -183,7 +186,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "View Gallery"
+          "text": "View Gallery",
+          "icon": "photo_library"
         }
       ]
     }
@@ -210,7 +214,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Read the Study"
+          "text": "Read the Study",
+          "icon": "self_improvement"
         }
       ]
     }
@@ -239,7 +244,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Analyze the Data"
+          "text": "Analyze the Data",
+          "icon": "insights"
         }
       ]
     }
@@ -257,7 +263,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Find a Screening"
+          "text": "Find a Screening",
+          "icon": "movie"
         }
       ]
     }
@@ -284,7 +291,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Explore Destinations"
+          "text": "Explore Destinations",
+          "icon": "flight"
         }
       ]
     }
@@ -341,7 +349,8 @@
         {
           "type": "link",
           "url": "#",
-          "text": "Read Full Analysis"
+          "text": "Read Full Analysis",
+          "icon": "analytics"
         }
       ]
     }
@@ -401,7 +410,7 @@
     },
     "actions": {
       "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe" }
+        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
       ]
     }
   },
@@ -433,7 +442,7 @@
     },
     "actions": {
       "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe" }
+        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
       ]
     },
     "tags": [
@@ -473,7 +482,7 @@
     },
     "actions": {
       "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe" }
+        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
       ]
     }
   },
@@ -505,7 +514,7 @@
     },
     "actions": {
       "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe" }
+        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
       ]
     }
   },
@@ -636,7 +645,8 @@
         {
           "type": "link",
           "url": "https://youtu.be/VTCIStB6y8s",
-          "text": "Watch on YouTube"
+          "text": "Watch on YouTube",
+          "icon": "smart_display"
         }
       ]
     }
@@ -663,7 +673,8 @@
         {
           "type": "link",
           "url": "https://youtu.be/beYbnNT_02U",
-          "text": "Watch on YouTube"
+          "text": "Watch on YouTube",
+          "icon": "smart_display"
         }
       ]
     }

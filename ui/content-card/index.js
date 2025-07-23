@@ -316,7 +316,7 @@ class ContentCard extends HTMLElement {
 					style = style.slice(0, -1) + ' cc-wrapper"';
 				}
 			   return `<a href="${a.url}" ${style} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))}>
-					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class="', '').replace('"', '')}">${a.icon}</span>` : a.text}
+					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class="', '').replace('"', '')}">${a.icon}</span> <span class="cc-link-text">${a.text}</span>` : a.text}
 				   </a>`;
 			}
 		   return `<button type="button" ${this.getStyle(`cc-action-button`)} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))} ${popoverAttrs}>
