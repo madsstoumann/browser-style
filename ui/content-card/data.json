@@ -39,7 +39,7 @@
           "type": "link",
           "url": "#",
           "text": "Read More",
-          "isWrapper": true
+          "hideText": true
         }
       ],
       "secondary": [
@@ -373,7 +373,7 @@
           "type": "link",
           "url": "#",
           "text": "Read Story",
-          "isWrapper": true
+          "hideText": true
         }
       ]
     }
@@ -983,7 +983,7 @@
     },
      "actions": {
       "primary": [
-        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
       ]
     }
   },
@@ -1004,7 +1004,7 @@
     },
      "actions": {
       "primary": [
-        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
       ]
     }
   },
@@ -1025,7 +1025,7 @@
     },
      "actions": {
       "primary": [
-        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
       ]
     }
   },
@@ -1046,7 +1046,7 @@
     },
      "actions": {
       "primary": [
-        { "isWrapper": true, "type": "link", "url": "#", "text": "Read more" }
+        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
       ]
     }
   },
