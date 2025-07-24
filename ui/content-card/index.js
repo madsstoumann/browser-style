@@ -325,7 +325,7 @@ class ContentCard extends HTMLElement {
 			</a>`;
 		};
 		
-		return `<nav class="cc-primary-actions" aria-label="Primary actions">${links.map(link => renderLink(link)).join('')}</nav>`;
+		return `<nav class="cc-links">${links.map(link => renderLink(link)).join('')}</nav>`;
 	}
 
 	renderActions(actions) {
@@ -338,7 +338,7 @@ class ContentCard extends HTMLElement {
 			</button>`;
 		};
 		
-		return `<nav class="cc-secondary-actions" aria-label="Secondary actions">${actions.map(a => renderBtn(a)).join('')}</nav>`;
+		return `<nav class="cc-actions">${actions.map(a => renderBtn(a)).join('')}</nav>`;
 	}
 
 	renderTags(tags) {
