@@ -272,6 +272,20 @@
 .cc-timeline-text {}
 
 
+/* === SUBGRID === */
+[subgrid] {
+	--cc-subgrid-rows: attr(subgrid type(<number>), 1);
+	content-card {
+		--cc-d: contents;
+		--cc-gtr: 1fr;
+		.cc-content {
+			grid-row: 1 / var(--cc-subgrid-rows);
+			grid-template-rows: subgrid;
+		}
+	}
+}
+
+
 /* LAYOUT */
 
 [layout*="columns("] {

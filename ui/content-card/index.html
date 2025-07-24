@@ -62,7 +62,7 @@
 <body>
 
 
-	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap="">
+	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
 		<content-card content="news-11" layout="rows(th-1 p:1 flip)"></content-card>
 		<content-card content="news-2"></content-card>
 		<content-card content="news-3" layout="rows(th-2 p:1)"></content-card>
@@ -86,9 +86,14 @@
 		<content-card content="news-1" layout="stack(c-l th-2 p:1 w:50)"></content-card>
 	</lay-out>
 
-	<content-card content="news-12" layout="p:1.5" class="secondary"></content-card>
+	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-top="2" subgrid="5">
+		<content-card content="news-5"></content-card>
+		<content-card content="news-9"></content-card>
+		<content-card content="news-13"></content-card>
+	</lay-out>
 
-	<!-- <content-card data="full.json"></content-card> -->
+	<content-card content="news-12" layout="p:1.5" class="secondary"></content-card>
+	
 
 	<main></main>
 

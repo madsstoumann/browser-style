@@ -333,6 +333,22 @@
       }
     ]
   },
+    {
+    "id": "news-13",
+    "type": "news",
+    "content": {
+      "category": "Inspiration",
+      "headline": "Creativity Sparks Change",
+      "summary": "Discover how creative minds are driving innovation."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Read the Story",
+        "icon": "lightbulb"
+      }
+    ]
+  },
   {
     "id": "recipe-1",
     "type": "recipe",
