@@ -210,18 +210,18 @@
 .cc-primary-actions { display: contents; } /* TODO! */
 .cc-secondary-actions {}
 
-.cc-action-link {
+.cc-link {
 	align-items: center;
 	color: var(--cc-link-c, inherit);
 	column-gap: .33ch;
 	display: inline-flex;
-	&:has(.cc-action-icon) { text-decoration: none; }
+	&:has(.cc-icon) { text-decoration: none; }
 	&:hover .cc-link-text {
 		text-decoration: underline;
 	}
 }
 
-.cc-action-button {
+.cc-action {
 	&:has(.cc-action-icon) {
 		aspect-ratio: 1;    
 		border: 0;
@@ -236,16 +236,11 @@
 
 }
 .cc-wrapper {
-	color: #0000;
-	inset: 0;
-	position: absolute;
-	/* display: contents;
-	
-	grid-area: 1 / -1;
-	text-indent: 200%; */
-	/* height: 0;
-	overflow: clip; */
-	/* Full card link wrapper */
+	&.cc-hidetext {
+		color: #0000;
+		inset: 0;
+		position: absolute;
+	}
 	&::before {
 		content: "";
 		inset: 0px;

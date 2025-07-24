@@ -306,30 +306,39 @@ class ContentCard extends HTMLElement {
 		`;
 	}
 
+	renderLinks(links, actions) {
+		if (!links?.length) return '';
+		
+		const renderLink = (link) => {
+			const isOnlyLink = links.length === 1 && (!actions || actions.length === 0);
+			
+			let style = this.getStyle(`cc-link`);
+			if (isOnlyLink) {
+				style = style.slice(0, -1) + ' cc-wrapper"';
+			}
+			if (isOnlyLink && link.hideText) {
+				style = style.slice(0, -1) + ' cc-hidetext"';
+			}
+			
+			return `<a href="${link.url}" ${style} ${(link.icon ? `aria-label="${link.text}"` : (link.ariaLabel ? `aria-label="${link.ariaLabel}"` : ''))}>
+				${link.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-icon').replace('class="', '').replace('"', '')}">${link.icon}</span> <span class="cc-link-text">${link.hideText ? '' : link.text}</span>` : link.text}
+			</a>`;
+		};
+		
+		return `<nav class="cc-primary-actions" aria-label="Primary actions">${links.map(link => renderLink(link)).join('')}</nav>`;
+	}
+
 	renderActions(actions) {
-		if (!actions) return '';
+		if (!actions?.length) return '';
+		
 		const renderBtn = (a) => {
 			const popoverAttrs = a.popover ? `popovertarget="${this.#popoverId}" popovertargetaction="show"` : '';
-			if (a.type === 'link') {
-				let style = this.getStyle(`cc-action-link`);
-				if (a.isWrapper) {
-					style = style.slice(0, -1) + ' cc-wrapper"';
-				}
-			   return `<a href="${a.url}" ${style} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))}>
-					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class="', '').replace('"', '')}">${a.icon}</span> <span class="cc-link-text">${a.text}</span>` : a.text}
-				   </a>`;
-			}
-		   return `<button type="button" ${this.getStyle(`cc-action-button`)} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))} ${popoverAttrs}>
-					   ${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-action-icon').replace('class=\"', '').replace('\"', '')}">${a.icon}</span>` : a.text}
-				   </button>`;
-		}
-	   const primaryBlock = actions.primary?.length
-		   ? `<nav class="cc-primary-actions" aria-label="Primary actions">${actions.primary.map(a => renderBtn({...a, role: 'primary'})).join('')}</nav>`
-		   : '';
-	   const secondaryBlock = actions.secondary?.length
-		   ? `<nav class="cc-secondary-actions" aria-label="Secondary actions">${actions.secondary.map(a => renderBtn({...a, role: 'secondary'})).join('')}</nav>`
-		   : '';
-	   return `${primaryBlock}${secondaryBlock}`;
+			return `<button type="button" ${this.getStyle(`cc-action`)} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))} ${popoverAttrs}>
+				${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-icon').replace('class=\"', '').replace('\"', '')}">${a.icon}</span>` : a.text}
+			</button>`;
+		};
+		
+		return `<nav class="cc-secondary-actions" aria-label="Secondary actions">${actions.map(a => renderBtn(a)).join('')}</nav>`;
 	}
 
 	renderTags(tags) {
@@ -454,6 +463,7 @@ renderContent(data) {
 			${this.renderProduct(data.product)}
 			${this.renderEngagement(data.engagement)}
 			${this.renderTags(data.tags)}
+			${this.renderLinks(data.links, data.actions)}
 			${this.renderActions(data.actions)}
 		</article>
 	`;
@@ -475,6 +485,7 @@ renderAccordion(content, data) {
 				   </details>
 			   `).join('')}
 		   </div>
+		   ${this.renderLinks(data.links, data.actions)}
 		   ${this.renderActions(data.actions)}
 	   </article>
    `;
@@ -494,6 +505,7 @@ renderTimeline(content, data) {
 					</li>
 				`).join('')}
 			</ol>
+			${this.renderLinks(data.links, data.actions)}
 			${this.renderActions(data.actions)}
 		</article>
 	`;
@@ -508,7 +520,7 @@ renderTimeline(content, data) {
 			return;
 		}
 
-		const { type, media, ribbon, sticker, content, actions, tags, authors, engagement, product, popover } = this.#data;
+		const { type, media, ribbon, sticker, content, actions, links, tags, authors, engagement, product, popover } = this.#data;
 
 		this.#root.innerHTML = `
 			${this.renderMedia(media, ribbon, sticker)}

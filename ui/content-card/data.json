@@ -33,24 +33,13 @@
       },
       "readingTime": "4 min read"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Read More",
-          "hideText": true
-        }
-      ],
-      "secondary": [
-        {
-          "type": "button",
-          "text": "Save",
-          "active": true,
-          "icon": "bookmark"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Read More",
+        "hideText": true
+      }
+    ]
   },
   {
     "id": "news-2",
@@ -61,22 +50,18 @@
       "headlineTag": "h3",
       "summary": "Leaders from around the world gather to discuss new initiatives to combat the escalating climate crisis."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Learn More"
-        }
-      ],
-      "secondary": [
-        {
-          "type": "button",
-          "text": "Share",
-          "icon": "share"
-        }
-      ]
-    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Learn More"
+      }
+    ],
+    "actions": [
+      {
+        "text": "Share",
+        "icon": "share"
+      }
+    ],
     "tags": [
       { "name": "Europe", "slug": "europe", "url": "#" },
       { "name": "Politics", "slug": "politics", "url": "#" }
@@ -102,16 +87,13 @@
       "category": "Sport",
       "headline": "Underdogs Clinch Championship Title"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Watch Highlights",
-          "icon": "play_arrow"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Watch Highlights",
+        "icon": "play_arrow"
+      }
+    ]
   },
   {
     "id": "news-4",
@@ -130,16 +112,13 @@
       "headline": "The Rise of Sustainable Gastronomy",
       "summary": "How chefs are embracing local, seasonal, and zero-waste cooking to create a more sustainable food culture."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Discover Recipes",
-          "icon": "restaurant_menu"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Discover Recipes",
+        "icon": "restaurant_menu"
+      }
+    ]
   },
   {
     "id": "news-5",
@@ -154,16 +133,13 @@
       },
       "readingTime": "6 min read"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "See the Plan",
-          "icon": "map"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "See the Plan",
+        "icon": "map"
+      }
+    ]
   },
   {
     "id": "news-6",
@@ -181,16 +157,13 @@
       "category": "Science",
       "headline": "Hubble Successor Telescope Reveals Stunning Images"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "View Gallery",
-          "icon": "photo_library"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "View Gallery",
+        "icon": "photo_library"
+      }
+    ]
   },
   {
     "id": "news-7",
@@ -209,16 +182,13 @@
       "headline": "Mindfulness and its Impact on Mental Well-being",
       "summary": "A new study confirms the long-term benefits of daily mindfulness practice for stress reduction and improved focus."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Read the Study",
-          "icon": "self_improvement"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Read the Study",
+        "icon": "self_improvement"
+      }
+    ]
   },
   {
     "id": "news-8",
@@ -239,16 +209,13 @@
       "category": "Finance",
       "headline": "Market Hits Record High Amidst Volatility"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Analyze the Data",
-          "icon": "insights"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Analyze the Data",
+        "icon": "insights"
+      }
+    ]
   },
   {
     "id": "news-9",
@@ -258,16 +225,13 @@
       "headline": "Revival of Classic Cinema in Theaters",
       "summary": "Independent theaters are seeing a resurgence in popularity by screening timeless classic films for a new generation."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Find a Screening",
-          "icon": "movie"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Find a Screening",
+        "icon": "movie"
+      }
+    ]
   },
   {
     "id": "news-10",
@@ -286,16 +250,13 @@
       "headline": "Top 10 Hidden Gems to Visit This Summer",
       "summary": "Escape the crowds and discover breathtaking destinations that are still off the beaten path."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Explore Destinations",
-          "icon": "flight"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Explore Destinations",
+        "icon": "flight"
+      }
+    ]
   },
   {
     "id": "news-11",
@@ -344,16 +305,13 @@
         "url": "/authors/jane-smith"
       }
     ],
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Read Full Analysis",
-          "icon": "analytics"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Read Full Analysis",
+        "icon": "analytics"
+      }
+    ]
   },
   {
     "id": "news-12",
@@ -367,16 +325,13 @@
         "formatted": "July 16, 2025"
       }
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "#",
-          "text": "Read Story",
-          "hideText": true
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "Read Story",
+        "hideText": true
+      }
+    ]
   },
   {
     "id": "recipe-1",
@@ -408,11 +363,13 @@
       "shareCount": 120,
       "viewCount": 12000
     },
-    "actions": {
-      "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
-      ]
-    }
+    "links": [
+      {
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "restaurant_menu"
+      }
+    ]
   },
   {
     "id": "recipe-2",
@@ -440,11 +397,13 @@
       "shareCount": 30,
       "viewCount": 8500
     },
-    "actions": {
-      "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
-      ]
-    },
+    "links": [
+      { 
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "restaurant_menu"
+      }
+    ],
     "tags": [
       { "name": "Vegan", "slug": "vegan", "url": "#" },
       { "name": "Healthy", "slug": "healthy", "url": "#" }
@@ -480,11 +439,13 @@
       "shareCount": 250,
       "viewCount": 35000
     },
-    "actions": {
-      "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
-      ]
-    }
+    "links": [
+      { 
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "restaurant_menu"
+      }
+    ]
   },
   {
     "id": "recipe-4",
@@ -512,11 +473,13 @@
       "shareCount": 75,
       "viewCount": 15000
     },
-    "actions": {
-      "primary": [
-        { "type": "link", "url": "#", "text": "View Recipe", "icon": "restaurant_menu" }
-      ]
-    }
+    "links": [
+      { 
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "restaurant_menu"
+      }
+    ]
   },
   {
     "id": "video-1",
@@ -545,15 +508,12 @@
       "src": "https://assets.stoumann.dk/video/river.mp4",
       "options": { "controls": true, "autoplay": true, "playsinline": true }
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "button",
-          "text": "Watch Video",
-          "popover": true
-        }
-      ]
-    }
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": true
+      }
+    ]
   },
   {
     "id": "video-2",
@@ -579,15 +539,12 @@
       "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
       "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true }
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "button",
-          "text": "Watch Video",
-          "popover": true
-        }
-      ]
-    }
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": true
+      }
+    ]
   },
   {
     "id": "video-3",
@@ -613,15 +570,12 @@
       "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
       "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true, "resetOnClose": true }
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "button",
-          "text": "Watch Video",
-          "popover": true
-        }
-      ]
-    }
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": true
+      }
+    ]
   },
   {
     "id": "video-4",
@@ -640,16 +594,13 @@
       "headline": "What's new in Web UI",
       "summary": "A look at the latest updates in Web UI, including new features in CSS and HTML for building modern user interfaces."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "https://youtu.be/VTCIStB6y8s",
-          "text": "Watch on YouTube",
-          "icon": "smart_display"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "https://youtu.be/VTCIStB6y8s",
+        "text": "Watch on YouTube",
+        "icon": "smart_display"
+      }
+    ]
   },
   {
     "id": "video-5",
@@ -668,16 +619,13 @@
       "headline": "What's new in the web",
       "summary": "Discover the latest features landing in stable and beta web browsers, from new CSS functions to powerful web platform APIs."
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "link",
-          "url": "https://youtu.be/beYbnNT_02U",
-          "text": "Watch on YouTube",
-          "icon": "smart_display"
-        }
-      ]
-    }
+    "links": [
+      {
+        "url": "https://youtu.be/beYbnNT_02U",
+        "text": "Watch on YouTube",
+        "icon": "smart_display"
+      }
+    ]
   },
   {
     "id": "video-6",
@@ -710,7 +658,7 @@
       "validUntil": "2025-12-31",
       "rating": { "value": 4.7, "count": 1250 }
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-2",
@@ -729,7 +677,7 @@
       "availability": "In Stock",
       "rating": { "value": 4.5, "count": 890 }
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-3",
@@ -748,7 +696,7 @@
       "availability": "In Stock",
       "rating": { "value": 2.8, "count": 450 }
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-4",
@@ -767,7 +715,7 @@
       "availability": "Ships in 2-3 days",
       "rating": { "value": 1.9, "count": 120 }
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-5",
@@ -785,7 +733,7 @@
       "price": { "current": "179.50", "original": "219.50", "currency": "$" },
       "availability": "In Stock"
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-6",
@@ -803,7 +751,7 @@
       "price": { "current": "29.99", "currency": "$" },
       "availability": "Out of Stock"
     },
-    "actions": { "primary": [{ "type": "button", "text": "Notify Me" }] }
+    "actions": [{ "type": "button", "text": "Notify Me" }]
   },
   {
     "id": "product-7",
@@ -822,7 +770,7 @@
       "availability": "In Stock",
       "rating": { "value": 4.9, "count": 2500 }
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "product-8",
@@ -840,7 +788,7 @@
       "price": { "current": "45.00", "currency": "$" },
       "availability": "In Stock"
     },
-    "actions": { "primary": [{ "type": "button", "text": "Add to Cart" }] }
+    "actions": [{ "text": "Add to Cart" }]
   },
   {
     "id": "article-1",
@@ -863,15 +811,12 @@
       "type": "article",
       "content": "<h3>More Details</h3><p>This is a small article inside a popover.</p><p>It can contain any HTML content.</p><p>This demonstrates the flexibility of the popover component.</p><p>Click the close button to dismiss.</p>"
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "button",
-          "text": "Read More in Popover",
-          "popover": true
-        }
-      ]
-    }
+    "actions": [
+      {
+        "text": "Read More in Popover",
+        "popover": true
+      }
+    ]
   },
   {
     "id": "event-1",
@@ -893,21 +838,15 @@
         "formatted": "October 25-26, 2025"
       }
     },
-    "actions": {
-      "primary": [
-        {
-          "type": "button",
-          "text": "Get Tickets"
-        }
-      ],
-      "secondary": [
-        {
-          "type": "button",
-          "text": "View Agenda",
-          "popover": true
-        }
-      ]
-    },
+    "actions": [
+      {
+        "text": "Get Tickets"
+      },
+      {
+        "text": "View Agenda",
+        "popover": true
+      }
+    ],
     "popover": {
       "type": "article",
       "content": "<h3>Agenda</h3><p>Day 1: Keynotes & Workshops</p><p>Day 2: Deep Dives & Networking</p>"
@@ -921,16 +860,13 @@
       "headline": "What's your favorite front-end framework?",
       "summary": "Help us understand what the community loves to build with."
     },
-    "actions": {
-      "primary": [
-        { "type": "button", "text": "React" },
-        { "type": "button", "text": "Vue" },
-        { "type": "button", "text": "Svelte" }
-      ],
-      "secondary": [
-        { "type": "button", "text": "Other" }
-      ]
-    },
+    "actions": [
+      { "text": "React" },
+      { "text": "Vue" },
+      { "text": "Svelte" },
+      { "text": "Angular" },
+      { "text": "Other" }
+    ],
     "engagement": {
       "viewCount": 5420
     }
@@ -957,14 +893,9 @@
         "role": "Computer Scientist"
       }
     ],
-    "actions": {
-      "secondary": [
-        {
-          "type": "button",
-          "text": "Share"
-        }
-      ]
-    }
+    "actions": [
+      { "text": "Share" }
+    ]
   },
   {
     "id": "spot-1",
@@ -981,11 +912,13 @@
     "content": {
       "headline": "Spring"
     },
-     "actions": {
-      "primary": [
-        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
-      ]
-    }
+    "links": [
+      {
+        "hideText": true, 
+        "url": "#spring",
+        "text": "Read more"
+      }
+    ]
   },
   {
     "id": "spot-2",
@@ -1002,11 +935,13 @@
     "content": {
       "headline": "Summer"
     },
-     "actions": {
-      "primary": [
-        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
-      ]
-    }
+    "links": [
+      {
+        "hideText": true,
+        "url": "#summer",
+        "text": "Read more"
+      }
+    ]
   },
   {
     "id": "spot-3",
@@ -1023,11 +958,13 @@
     "content": {
       "headline": "Autumn"
     },
-     "actions": {
-      "primary": [
-        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
-      ]
-    }
+    "links": [
+      {
+        "hideText": true,
+        "url": "#autumn",
+        "text": "Read more"
+      }
+    ]
   },
   {
     "id": "spot-4",
@@ -1044,11 +981,13 @@
     "content": {
       "headline": "Winter"
     },
-     "actions": {
-      "primary": [
-        { "hideText": true, "type": "link", "url": "#", "text": "Read more" }
-      ]
-    }
+    "links": [
+      {
+        "hideText": true,
+        "url": "#winter",
+        "text": "Read more"
+      }
+    ]
   },
   {
     "id": "accordion-1",
