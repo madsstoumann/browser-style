@@ -14,6 +14,8 @@
 piano-chord {
 	/* from attr() */
 	--_keys: attr(keys type(<number>), 8); /* number of keys */
+	 /* to make it work in Safari, we need to hardcode it (for now): */
+	 --_keys: 14;
 
 	/* public properties */
 	--piano-chord-black-key: #000;
@@ -55,13 +57,58 @@ piano-chord {
 		calc(100% / var(--_keys) - (var(--piano-chord-key-gap) / var(--_keys))) 100%;
 	border-block: var(--piano-chord-key-gap) solid var(--piano-chord-black-key);
 	display: grid;
-	
 	grid-template-columns: repeat(var(--_keys), 1fr);
 	grid-template-rows: 1fr;
 	height: 150px;
 	width: 100%;
-
 }
+
+piano-key { display: inline-grid; }
+piano-key::after {
+	background: var(--_bg, #000);
+	border-radius: 50%;
+	content: "";
+	display: block;
+	height: 10px;
+	margin-block: 8px;
+	place-self: end center;
+	width: 10px;
+}
+
+piano-key[note="C"] {  grid-column: 1; }
+piano-key[note="C#"] { grid-column: 1; }
+piano-key[note="D"] {  grid-column: 2; }
+piano-key[note="Db"] { grid-column: 2; }
+piano-key[note="D#"] { grid-column: 2; }
+piano-key[note="E"] {  grid-column: 3; }
+piano-key[note="Eb"] { grid-column: 3; }
+piano-key[note="F"] {  grid-column: 4; }
+piano-key[note="F#"] { grid-column: 4; }
+piano-key[note="G"] {  grid-column: 5; }
+piano-key[note="Gb"] { grid-column: 5; }
+piano-key[note="G#"] { grid-column: 5; }
+piano-key[note="A"] {  grid-column: 6; }
+piano-key[note="Ab"] { grid-column: 6; }
+piano-key[note="A#"] { grid-column: 6; }
+piano-key[note="B"] {  grid-column: 7; }
+piano-key[note="Bb"] { grid-column: 7; }
+piano-key[note="C2"] {  grid-column: 8; }
+piano-key[note="C#2"] { grid-column: 8; }
+piano-key[note="D2"] {  grid-column: 9; }
+piano-key[note="Db2"] { grid-column: 9; }
+piano-key[note="D#2"] { grid-column: 9; }
+piano-key[note="E2"] {  grid-column: 10; }
+piano-key[note="Eb2"] { grid-column: 10; }
+piano-key[note="F2"] {  grid-column: 11; }
+piano-key[note="F#2"] { grid-column: 11; }
+piano-key[note="G2"] {  grid-column: 12; }
+piano-key[note="Gb2"] { grid-column: 12; }
+piano-key[note="G#2"] { grid-column: 12; }
+piano-key[note="Ab2"] { grid-column: 13; }
+piano-key[note="Bb2"] { grid-column: 14; }
+
+piano-key[note*="#"] { translate: 50% -40%; }
+piano-key[note*="b"] { translate: -50% -40%; }
 
 /* Demo styles */
 .blue { --_bg: #42A3BD; }
@@ -86,6 +133,11 @@ piano-chord {
 		text-box: text;
 	}	
 }
+main {
+	display: grid;
+	gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
 
 </style>
 
@@ -96,81 +148,204 @@ piano-chord {
 <h2>Piano Chord</h2>
 <p><code>&lt;piano-chord&gt;</code> is a web component that displays piano chords. It hosts <code>&lt;piano-key&gt;</code> elements that represent individual notes (keys) on the keyboard, supporting custom key counts and note labeling. The layout automatically adjusts based on the specified number of keys.</p>
 
-	<div class="ui-grid --xs-c-1 --sm-c-2">
+<main>
+	<div class="blue chord">
+		<h2>G Major</h2>
+		<piano-chord chord="G" keys="14">
+			<piano-key note="G"></piano-key>
+			<piano-key note="B"></piano-key>
+			<piano-key note="D2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="pink chord">
+		<h2>C Major</h2>
+		<piano-chord chord="C" keys="14">
+			<piano-key note="C"></piano-key>
+			<piano-key note="E"></piano-key>
+			<piano-key note="G"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="red chord">
+		<h2>D Major</h2>
+		<piano-chord chord="D" keys="14">
+			<piano-key note="D"></piano-key>
+			<piano-key note="F#"></piano-key>
+			<piano-key note="A"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="orange chord">
+		<h2>A Minor</h2>
+		<piano-chord chord="Am" keys="14">
+			<piano-key note="A"></piano-key>
+			<piano-key note="C2"></piano-key>
+			<piano-key note="E2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="yellow chord">
+		<h2>E Minor</h2>
+		<piano-chord chord="Em" keys="14">
+			<piano-key note="E"></piano-key>
+			<piano-key note="G"></piano-key>
+			<piano-key note="B"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="hotpink chord">
+		<h2>F Major</h2>
+		<piano-chord chord="F" keys="14">
+			<piano-key note="F"></piano-key>
+			<piano-key note="A"></piano-key>
+			<piano-key note="C2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="beige chord">
+		<h2>B Diminished</h2>
+		<piano-chord chord="Bdim" keys="14">
+			<piano-key note="B"></piano-key>
+			<piano-key note="D2"></piano-key>
+			<piano-key note="F2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="sage chord">
+		<h2>C Major 7</h2>
+		<piano-chord chord="Cmaj7" keys="14">
+			<piano-key note="C"></piano-key>
+			<piano-key note="E"></piano-key>
+			<piano-key note="G"></piano-key>
+			<piano-key note="B"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="blue chord">
+		<h2>G Major 7</h2>
+		<piano-chord chord="G7" keys="14">
+			<piano-key note="G"></piano-key>
+			<piano-key note="B"></piano-key>
+			<piano-key note="D2"></piano-key>
+			<piano-key note="F2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="pink chord">
+		<h2>D Minor</h2>
+		<piano-chord chord="Dm" keys="14">
+			<piano-key note="D"></piano-key>
+			<piano-key note="F"></piano-key>
+			<piano-key note="A"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="red chord">
+		<h2>A Major</h2>
+		<piano-chord chord="A" keys="14">
+			<piano-key note="A"></piano-key>
+			<piano-key note="C#2"></piano-key>
+			<piano-key note="E2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="orange chord">
+		<h2>E Major</h2>
+		<piano-chord chord="E" keys="14">
+			<piano-key note="E"></piano-key>
+			<piano-key note="G#"></piano-key>
+			<piano-key note="B"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="yellow chord">
+		<h2>B Major</h2>
+		<piano-chord chord="B" keys="14">
+			<piano-key note="B"></piano-key>
+			<piano-key note="D#2"></piano-key>
+			<piano-key note="F#2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="hotpink chord">
+		<h2>F# Minor</h2>
+		<piano-chord chord="F#m" keys="14">
+			<piano-key note="F#"></piano-key>
+			<piano-key note="A"></piano-key>
+			<piano-key note="C#2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="beige chord">
+		<h2>Eb Major</h2>
+		<piano-chord chord="Eb" keys="14">
+			<piano-key note="Eb"></piano-key>
+			<piano-key note="G"></piano-key>
+			<piano-key note="Bb"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="sage chord">
+		<h2>Ab Major</h2>
+		<piano-chord chord="Ab" keys="14">
+			<piano-key note="Ab"></piano-key>
+			<piano-key note="C2"></piano-key>
+			<piano-key note="Eb2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="blue chord">
+		<h2>Bb Major</h2>
+		<piano-chord chord="Bb" keys="14">
+			<piano-key note="Bb"></piano-key>
+			<piano-key note="D2"></piano-key>
+			<piano-key note="F2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="pink chord">
+		<h2>Db Major</h2>
+		<piano-chord chord="Db" keys="14">
+			<piano-key note="Db"></piano-key>
+			<piano-key note="F"></piano-key>
+			<piano-key note="Ab"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="red chord">
+		<h2>G Minor</h2>
+		<piano-chord chord="Gm" keys="14">
+			<piano-key note="G"></piano-key>
+			<piano-key note="Bb"></piano-key>
+			<piano-key note="D2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="yellow chord">
+		<h2>F Minor</h2>
+		<piano-chord chord="Fm" keys="14">
+			<piano-key note="F"></piano-key>
+			<piano-key note="Ab"></piano-key>
+			<piano-key note="C2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="hotpink chord">
+		<h2>Bb Minor</h2>
+		<piano-chord chord="Bbm" keys="14">
+			<piano-key note="Bb"></piano-key>
+			<piano-key note="Db2"></piano-key>
+			<piano-key note="F2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="beige chord">
+		<h2>Eb Minor</h2>
+		<piano-chord chord="Ebm" keys="14">
+			<piano-key note="Eb"></piano-key>
+			<piano-key note="Gb"></piano-key>
+			<piano-key note="Bb"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="sage chord">
+		<h2>Ab Minor</h2>
+		<piano-chord chord="Abm" keys="14">
+			<piano-key note="Ab"></piano-key>
+			<piano-key note="B2"></piano-key>
+			<piano-key note="Eb2"></piano-key>
+		</piano-chord>
+	</div>
+	<div class="blue chord">
+		<h2>Db Minor</h2>
+		<piano-chord chord="Dbm" keys="14">
+			<piano-key note="Db"></piano-key>
+			<piano-key note="E"></piano-key>
+			<piano-key note="Ab"></piano-key>
+		</piano-chord>
+	</div>
+</main>
 
-		<div class="blue chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-		<div class="pink chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
 
-		<div class="red chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
 
-		<div class="orange chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-
-		<div class="yellow chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-
-		<div class="hotpink chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-
-		<div class="beige chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-
-		<div class="sage chord">
-			<h2>G Major</h2>
-			<piano-chord chord="G" keys="12">
-				<piano-key note="G"></piano-key>
-				<piano-key note="C"></piano-key>
-				<piano-key note="E"></piano-key>
-			</piano-chord>
-		</div>
-
-</div>
-
-	<!-- <script type="module" src="index.js"></script> -->
 </body>
 </html>
