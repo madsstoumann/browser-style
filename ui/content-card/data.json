@@ -56,12 +56,6 @@
         "text": "Learn More"
       }
     ],
-    "actions": [
-      {
-        "text": "Share",
-        "icon": "share"
-      }
-    ],
     "tags": [
       { "name": "Europe", "slug": "europe", "url": "#" },
       { "name": "Politics", "slug": "politics", "url": "#" }
@@ -909,8 +903,11 @@
         "role": "Computer Scientist"
       }
     ],
-    "actions": [
-      { "text": "Share" }
+       "actions": [
+      {
+        "text": "Share",
+        "icon": "share"
+      }
     ]
   },
   {

@@ -1,8 +1,8 @@
 @layer layout.base {
 	lay-out {
 		--layout-col-rule-c: #CCC;
-		--layout-preview-size: 100px;
-		--layout-spacing-unit: 1rem;
+		--layout-preview-size: 100px; /* preview when overflow is set to preview */
+		--layout-space-unit: 1rem;
 
 		--layout-bleed: attr(bleed type(<number>), 0);
 		--layout-colmg: attr(col-gap type(<number>), 1);
@@ -14,26 +14,28 @@
 		--layout-pbe: attr(pad-bottom type(<number>), 0);
 		--layout-pbs: attr(pad-top type(<number>), 0);
 		--layout-pi: attr(pad-inline type(<number>), 0);
+		--layout-ps: attr(self type(<custom-ident>), auto);
 		--layout-rg: attr(row-gap type(<number>), 1);
 
 		background: var(--layout-bg, #0000);
 		border-radius: var(--layout-bdrs, 0);
 		box-sizing: border-box;
 		color: var(--layout-c, inherit);
-		column-gap: calc(var(--layout-colmg) * var(--layout-spacing-unit));
+		column-gap: calc(var(--layout-colmg) * var(--layout-space-unit));
 		contain: layout inline-size;
 		display: grid;
 		grid-auto-flow: dense;
 		grid-template-columns: var(--layout-gtc);
 		grid-template-rows: var(--layout-gtr);
-		margin-block-start: calc(var(--layout-mbs) * var(--layout-spacing-unit));
-		margin-block-end: calc(var(--layout-mbe) * var(--layout-spacing-unit));
+		margin-block-start: calc(var(--layout-mbs) * var(--layout-space-unit));
+		margin-block-end: calc(var(--layout-mbe) * var(--layout-space-unit));
 		margin-inline: auto;
 		max-inline-size: var(--layout-mw);
-		padding-block-end: calc(var(--layout-pbe) * var(--layout-spacing-unit));
-		padding-block-start: calc(var(--layout-pbs) * var(--layout-spacing-unit));
-		padding-inline: calc(var(--layout-pi) * var(--layout-spacing-unit));
-		row-gap: calc(var(--layout-rg) * var(--layout-spacing-unit));
+		padding-block-end: calc(var(--layout-pbe) * var(--layout-space-unit));
+		padding-block-start: calc(var(--layout-pbs) * var(--layout-space-unit));
+		padding-inline: calc(var(--layout-pi) * var(--layout-space-unit));
+		place-self: var(--layout-ps, auto);
+		row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
 		scroll-behavior: var(--layout-sb, smooth);
 		scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
 		scrollbar-width: var(--layout-scroll-w, thin);
@@ -64,8 +66,8 @@
 			--_s: calc(1 + (var(--layout-bleed) / 100));
 			--_e: calc(1 - (var(--layout-bleed) / 100));
 			padding-inline: 
-				max(calc(var(--layout-pi) * var(--layout-spacing-unit)), var(--_pi) * var(--_s, 1))
-				max(calc(var(--layout-pi) * var(--layout-spacing-unit)), var(--_pi) * var(--_e, 1));
+				max(calc(var(--layout-pi) * var(--layout-space-unit)), var(--_pi) * var(--_s, 1))
+				max(calc(var(--layout-pi) * var(--layout-space-unit)), var(--_pi) * var(--_e, 1));
 		}
 		&[bleed][width] { --_pi: calc((100vw - var(--_mi)) / 2); }
 
@@ -84,29 +86,29 @@
 			overflow-x: scroll;
 			scroll-snap-type: x mandatory;
 			& > *:not(lay-out) { 
-				flex: 0 0 calc((100% - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-spacing-unit))) / var(--_ci, 1)); 
+				flex: 0 0 calc((100% - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1)); 
 				scroll-snap-align: start;
 			}
 		}
 		&[overflow]:not([bleed]) {
 			& > *:not(lay-out) { 
-				scroll-margin-inline-start: calc(var(--layout-pi, 0) * var(--layout-spacing-unit));
+				scroll-margin-inline-start: calc(var(--layout-pi, 0) * var(--layout-space-unit));
 			}
 		}
 		&[overflow][bleed] {
 			& > *:not(lay-out) { 
-				scroll-margin-inline-start: max(calc(var(--layout-pi) * var(--layout-spacing-unit)), var(--_pi) * var(--_s, 1));
+				scroll-margin-inline-start: max(calc(var(--layout-pi) * var(--layout-space-unit)), var(--_pi) * var(--_s, 1));
 			}
 		}
 		&[overflow~="none"] { overflow: hidden; }
 		&[overflow~="preview"] {
 			& > *:not(lay-out) { 
-				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-spacing-unit))) / var(--_ci, 1)); 
+				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1)); 
 			}
 		}
 		&[overflow~="preview-dynamic"] {
 			& > *:not(lay-out) { 
-				flex: 0 0 calc((100% - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-spacing-unit))) / var(--_ci, 1) - var(--layout-preview-size)); 
+				flex: 0 0 calc((100% - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1) - var(--layout-preview-size)); 
 			}
 		}
 

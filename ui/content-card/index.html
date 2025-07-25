@@ -63,7 +63,7 @@
 
 
 	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
-		<content-card content="news-11" layout="rows(th-1 p:1 flip)"></content-card>
+		<content-card content="news-11" layout="rows(th-1 21:9 p:1 flip)"></content-card>
 		<content-card content="news-2"></content-card>
 		<content-card content="news-3" layout="rows(th-2 p:1)"></content-card>
 	</lay-out>
@@ -93,6 +93,19 @@
 	</lay-out>
 
 	<content-card content="news-12" layout="p:1.5" class="secondary"></content-card>
+
+	<lay-out md="columns(2)" lg="ratio(66:33)" bleed theme="primary" pad-top="2" pad-bottom="2" col-gap="4">
+		<lay-out lg="bento(4a)">
+			<content-card content="spot-1" layout="stack(b-c ta-c p:1 1:1 ovl)"></content-card>
+			<content-card content="spot-2" layout="stack(t-l ta-c p:1 1:1 ovl)"></content-card>
+			<content-card content="spot-3" layout="stack(b-r ta-c p:1 1:1 ovl)"></content-card>
+			<content-card content="spot-4" layout="stack(t-c ta-c p:1 1:1 ovl)"></content-card>
+		</lay-out>
+		<lay-out gap self="start" row-gap="2">
+			<content-card content="news-5"></content-card>
+			<content-card content="news-9"></content-card>
+		</lay-out>
+	</lay-out>
 	
 
 	<main></main>

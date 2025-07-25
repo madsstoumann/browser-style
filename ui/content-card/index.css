@@ -1,7 +1,7 @@
 /* --- General Card Structure --- */
 .cc, content-card {
 	--cc-bdrs: 0.5rem;
-	--cc-gap-unit: .75lh;
+	--cc-space-unit: .75lh;
 
 	--cc-colmg: attr(col-gap type(<number>), 1);
 	--cc-rg: attr(row-gap type(<number>), 1);
@@ -17,14 +17,17 @@
 	box-sizing: var(--cc-bxsz, border-box);
 	/* clip-path: inset(0 0 0 0 round var(--cc-cp, 0)); */
 	color: var(--cc-c, inherit);
-	column-gap: calc(var(--cc-colmg) * var(--cc-gap-unit));
+	column-gap: calc(var(--cc-colmg) * var(--cc-space-unit));
 	display: var(--cc-d, grid);
 	font-family: var(--cc-ff, Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif);
 	grid-template-columns: var(--cc-gtc, 1fr);
-	grid-template-rows: var(--cc-gtr, auto 1fr);
+	grid-template-rows: var(--cc-gtr, 1fr);
 	padding: var(--cc-p, 0px);
 	position: relative;
-	row-gap: calc(var(--cc-rg) * var(--cc-gap-unit));
+	row-gap: calc(var(--cc-rg) * var(--cc-space-unit));
+	&:has(.cc-media)&:has(.cc-content) {
+		grid-template-rows: var(--cc-gtr, auto 1fr);
+	}
 }
 
 /* --- Media Area --- */
@@ -86,7 +89,7 @@
 		var(--cc-content-pbe, var(--cc-content-p, 0px))
 		var(--cc-content-pis, var(--cc-content-p, 0px));
 	place-self: var(--cc-content-ps, start);
-	row-gap: calc(var(--cc-content-rg, 1) * var(--cc-gap-unit));
+	row-gap: calc(var(--cc-content-rg, 1) * var(--cc-space-unit));
 	text-align: var(--cc-content-ta, start);
 	width: var(--cc-content-w, auto);
 }
@@ -367,9 +370,9 @@
 
 
 	/*--- Padding for Content Area ---*/
-	[layout*="p:1"] { --cc-content-p: calc(1 * var(--cc-gap-unit)); }
-	[layout*="p:1.5"] { --cc-content-p: calc(1.5 * var(--cc-gap-unit)); }
-	[layout*="p:2"] { --cc-content-p: calc(2 * var(--cc-gap-unit)); }
+	[layout*="p:1"] { --cc-content-p: calc(1 * var(--cc-space-unit)); }
+	[layout*="p:1.5"] { --cc-content-p: calc(1.5 * var(--cc-space-unit)); }
+	[layout*="p:2"] { --cc-content-p: calc(2 * var(--cc-space-unit)); }
 
 
 /* === Themes === */

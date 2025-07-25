@@ -4,6 +4,24 @@
   "desc": "These layouts use <strong>fixed patterns</strong> where the number of items is predetermined and the layout adapts to a specific arrangement.<br>If you add more items than the layout can handle, they will be hidden.",
   "layouts": [
     {
+      "id": "4a",
+      "description": "Balanced layout with mixed item sizes in a fixed 4-item pattern",
+      "columns": "1fr 1fr",
+      "rows": "repeat(5, 1fr)",
+      "items": 4,
+      "repeatable": false,
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "bento(4a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } },
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(4n+3)", "properties": { "--layout-ga": "span 3 / auto" } },
+        { "selector": "*:nth-child(4n+4)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+     {
       "id": "6a",
       "description": "Balanced layout with mixed item sizes in a fixed 6-item pattern",
       "columns": "repeat(10, 1fr)",
