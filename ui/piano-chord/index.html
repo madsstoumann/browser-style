@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Piano Chord</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Piano Chord is a web component that displays piano chords and keys.">
+  <meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
+
+<style>
+
+piano-chord {
+	/* from attr() */
+	--_keys: attr(keys type(<number>), 8); /* number of keys */
+
+	/* public properties */
+	--piano-chord-black-key: #000;
+	--piano-chord-white-key: #FFF;
+	--piano-chord-key-gap: 2px;
+
+	/* private properties */
+	--_octave-keys: 7;
+	--_ow: calc(100% / (var(--_keys) / var(--_octave-keys))); /* octave width  */
+	--_r: calc(var(--_keys) / var(--_octave-keys) * 0.6); /* ratio of black key compared to white key (60%) */
+	--_wkw: calc(100% / var(--_keys)); /* white key width  */
+	--_bkw: calc(var(--_wkw) * var(--_r)); /* black key width  */
+
+	--_off1: calc(0.7 / var(--_octave-keys) * 100%);
+	--_off2: calc(1.7 / var(--_octave-keys) * 100%);
+	--_off3: calc(3.7 / var(--_octave-keys) * 100%);
+	--_off4: calc(4.7 / var(--_octave-keys) * 100%);
+	--_off5: calc(5.7 / var(--_octave-keys) * 100%);
+	
+	background-color: var(--piano-chord-white-key);
+	background-image:
+		/* Black Keys */
+		linear-gradient(90deg,#0000 0 var(--_off1), var(--piano-chord-black-key) var(--_off1) calc(var(--_off1) + var(--_bkw)),#0000 0),
+		linear-gradient(90deg,#0000 0 var(--_off2), var(--piano-chord-black-key) var(--_off2) calc(var(--_off2) + var(--_bkw)),#0000 0),
+		linear-gradient(90deg,#0000 0 var(--_off3), var(--piano-chord-black-key) var(--_off3) calc(var(--_off3) + var(--_bkw)),#0000 0),
+		linear-gradient(90deg,#0000 0 var(--_off4), var(--piano-chord-black-key) var(--_off4) calc(var(--_off4) + var(--_bkw)),#0000 0),
+		linear-gradient(90deg,#0000 0 var(--_off5), var(--piano-chord-black-key) var(--_off5) calc(var(--_off5) + var(--_bkw)),#0000 0),
+		
+		/* White key separators */
+		linear-gradient(90deg, var(--piano-chord-black-key) var(--piano-chord-key-gap), #0000 0 var(--piano-chord-key-gap));
+	background-position: 0 0;
+	background-repeat: repeat-x;
+	background-size:
+		var(--_ow) 60%,
+		var(--_ow) 60%,
+		var(--_ow) 60%,
+		var(--_ow) 60%,
+		var(--_ow) 60%,
+		calc(100% / var(--_keys) - (var(--piano-chord-key-gap) / var(--_keys))) 100%;
+	border-block: var(--piano-chord-key-gap) solid var(--piano-chord-black-key);
+	display: grid;
+	
+	grid-template-columns: repeat(var(--_keys), 1fr);
+	grid-template-rows: 1fr;
+	height: 150px;
+	width: 100%;
+
+}
+
+/* Demo styles */
+.blue { --_bg: #42A3BD; }
+.pink { --_bg: #F1919C; }
+.red { --_bg: #fc260a; --_c: #FFF; }
+.orange { --_bg: #ff4901; --_c: #FFF; }
+.yellow { --_bg: #f49118; }
+.hotpink { --_bg: #BD3F63; --_c: #FFF; }
+.beige { --_bg: #DBC8B1; }
+.sage { --_bg: #A3B18A; }
+.chord {
+	background: var(--_bg) url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+	border-radius: 1ch;
+	color: var(--_c, #000);
+	display: grid;
+	gap: 1ch;
+	padding: 1.5ch 2ch 2ch;
+	h2 {
+		font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+		font-weight: 500;
+		margin: 0;
+		text-box: text;
+	}	
+}
+
+</style>
+
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+<h2>Piano Chord</h2>
+<p><code>&lt;piano-chord&gt;</code> is a web component that displays piano chords. It hosts <code>&lt;piano-key&gt;</code> elements that represent individual notes (keys) on the keyboard, supporting custom key counts and note labeling. The layout automatically adjusts based on the specified number of keys.</p>
+
+	<div class="ui-grid --xs-c-1 --sm-c-2">
+
+		<div class="blue chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+		<div class="pink chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="red chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="orange chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="yellow chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="hotpink chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="beige chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+		<div class="sage chord">
+			<h2>G Major</h2>
+			<piano-chord chord="G" keys="12">
+				<piano-key note="G"></piano-key>
+				<piano-key note="C"></piano-key>
+				<piano-key note="E"></piano-key>
+			</piano-chord>
+		</div>
+
+</div>
+
+	<!-- <script type="module" src="index.js"></script> -->
+</body>
+</html>
