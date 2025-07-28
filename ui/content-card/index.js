@@ -138,8 +138,9 @@ class ContentCard extends HTMLElement {
 		this._ensureSettingsInitialized();
 	}
 
-	renderImage(image) {
+	renderImage(image, isProduct = false, isEvent = false, isRecipe = false, isArticle = false, isNews = false) {
 		if (!image?.src) return '';
+		const schemaAttr = (isProduct || isEvent || isRecipe || isArticle || isNews) ? 'itemprop="image"' : '';
 		return `<img 
 			${this.getStyle('cc-media-image')} 
 			src="${image.src}" 
@@ -149,6 +150,7 @@ class ContentCard extends HTMLElement {
 			${image.width ? `width="${image.width}"` : ''}
 			${image.height ? `height="${image.height}"` : ''}
 			loading="${image.loading ? image.loading : 'lazy'}"
+			${schemaAttr}
 		>`;
 	}
 
@@ -203,7 +205,7 @@ class ContentCard extends HTMLElement {
 		return `<span ${this.getStyle('cc-sticker')} role="status">${sticker.text}</span>`;
 	}
 
-	renderMedia(media, ribbon, sticker) {
+	renderMedia(media, ribbon, sticker, isProduct = false, isEvent = false, isRecipe = false, isArticle = false, isNews = false) {
 		this._ensureSettingsInitialized();
 		if (!media?.sources?.length) return '';
 		return `
@@ -211,7 +213,7 @@ class ContentCard extends HTMLElement {
 		
 			${media.sources
 				.map((entry) => {
-					if (entry.type === 'image') return this.renderImage(entry)
+					if (entry.type === 'image') return this.renderImage(entry, isProduct, isEvent, isRecipe, isArticle, isNews)
 					if (entry.type === 'video') return this.renderVideo(entry)
 					if (entry.type === 'youtube') return this.renderYouTube(entry)
 				})
@@ -352,8 +354,7 @@ class ContentCard extends HTMLElement {
 		`;
 	}
 
-	renderAuthors(authors) {
-		// this._ensureSettingsInitialized();
+	renderAuthors(authors, includeSchema = false) {
 		if (!authors?.length) return '';
 		return `
 			<div ${this.getStyle('cc-authors')}>
@@ -367,11 +368,11 @@ class ContentCard extends HTMLElement {
 							${this.getStyle('cc-avatar')}>`
 						: '';
 
-					return `<address ${this.getStyle('cc-author')}>
+					return `<address ${this.getStyle('cc-author')} ${includeSchema ? 'itemprop="author" itemscope itemtype="https://schema.org/Person"' : ''}>
 						${avatarImg}
 						<div ${this.getStyle('cc-author-deails')}>
-							<strong ${this.getStyle('cc-author-name')}>${author.name}</strong>
-							${author.role ? `<small ${this.getStyle('cc-author-role')}>${author.role}</small>` : ''}
+							<strong ${this.getStyle('cc-author-name')} ${includeSchema ? 'itemprop="name"' : ''}>${author.name}</strong>
+							${author.role ? `<small ${this.getStyle('cc-author-role')} ${includeSchema ? 'itemprop="jobTitle"' : ''}>${author.role}</small>` : ''}
 						</div>
 					</address>`;
 				}).join('')}
@@ -421,30 +422,283 @@ class ContentCard extends HTMLElement {
 
 	renderProduct(product) {
 		this._ensureSettingsInitialized();
-		if (!product) return '';
-		const price = product.price || {};
-		const rating = product.rating || {};
+		if (!this.#data || this.#data.type !== 'product') return '';
+		
+		const { content = {}, product: productData = {} } = this.#data;
+		const price = productData.price || {};
+		const rating = productData.rating || {};
+		const headlineTag = content.headlineTag || 'h2';
 
-		return [
-			(price.current ? `<div ${this.getStyle('cc-product-price')}>
-					<span>${price.currency || ''} ${price.current}</span>
-					${price.original && price.original > price.current ? `<del ${this.getStyle('cc-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
-					${price.discountText ? `<span ${this.getStyle('cc-product-discount')}>${price.discountText}</span>` : ''}
-				</div>` : ''),
-			(product.availability ? `<span ${this.getStyle('cc-product-availability')}>${product.availability}</span>` : ''),
-			(product.validUntil ? `<span ${this.getStyle('cc-product-validity')}>Offer valid until ${product.validUntil}</span>` : ''),
-			(rating.value ? `<span ${this.getStyle('cc-product-rating')}>
-					${'★'.repeat(Math.round(rating.value))}${'☆'.repeat((rating.starCount || 5) - Math.round(rating.value))}
-					(${rating.value} / ${rating.starCount || 5}, ${rating.count} ratings)
-				</span>` : '')
-		].filter(Boolean).join('');
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${this.#data.id ? `<meta itemprop="sku" content="${this.#data.id}">` : ''}
+				${content.category ? `<meta itemprop="category" content="${content.category}">` : ''}
+				
+				${this.renderHeader(content)}
+				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+				
+				${this.renderAuthors(this.#data.authors)}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
+				
+				${price.current ? `
+					<div ${this.getStyle('cc-product-price')} itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+						<meta itemprop="priceCurrency" content="${price.currency || 'USD'}">
+						<span itemprop="price" content="${price.current}">${price.currency || ''} ${price.current}</span>
+						${price.original && price.original > price.current ? `<del ${this.getStyle('cc-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
+						${price.discountText ? `<span ${this.getStyle('cc-product-discount')}>${price.discountText}</span>` : ''}
+						<meta itemprop="availability" content="https://schema.org/${productData.availability && productData.availability.toLowerCase().includes('out of stock') ? 'OutOfStock' : 'InStock'}">
+						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
+					</div>
+				` : ''}
+				
+				${productData.availability ? `<span ${this.getStyle('cc-product-availability')}>${productData.availability}</span>` : ''}
+				
+				${productData.validUntil ? `<span ${this.getStyle('cc-product-validity')}>Offer valid until ${productData.validUntil}</span>` : ''}
+				
+				${rating.value ? `
+					<div ${this.getStyle('cc-product-rating')} itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="${rating.value || 1}">
+						<meta itemprop="ratingCount" content="${rating.count || 0}">
+						<meta itemprop="bestRating" content="${rating.starCount || 5}">
+						<meta itemprop="worstRating" content="1">
+						<span>${'★'.repeat(Math.round(rating.value))}${'☆'.repeat((rating.starCount || 5) - Math.round(rating.value))}
+						(${rating.value} / ${rating.starCount || 5}, ${rating.count} ratings)</span>
+					</div>
+				` : ''}
+				
+				${this.renderEngagement(this.#data.engagement)}
+				${this.renderTags(this.#data.tags)}
+				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
+	}
+
+	renderEvent() {
+		this._ensureSettingsInitialized();
+		if (!this.#data || this.#data.type !== 'event') return '';
+		
+		const { content = {}, event: eventData = {} } = this.#data;
+		const headlineTag = content.headlineTag || 'h2';
+
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${content.category ? `<meta itemprop="eventType" content="${content.category}">` : ''}
+				${eventData.status ? `<meta itemprop="eventStatus" content="https://schema.org/EventStatus${eventData.status}">` : ''}
+				${eventData.attendanceMode ? `<meta itemprop="eventAttendanceMode" content="https://schema.org/${eventData.attendanceMode}">` : ''}
+				
+				${this.renderHeader(content)}
+				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+				
+				${this.renderAuthors(this.#data.authors)}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
+				
+				${eventData.startDate ? `<meta itemprop="startDate" content="${eventData.startDate}">` : ''}
+				${eventData.endDate ? `<meta itemprop="endDate" content="${eventData.endDate}">` : ''}
+				
+				${eventData.location ? `
+					<div ${this.getStyle('cc-event-location')} itemprop="location" itemscope itemtype="https://schema.org/Place">
+						<span itemprop="name">${eventData.location.name}</span>
+						${eventData.location.address ? `
+							<span itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+								<span itemprop="streetAddress">${eventData.location.address}</span>
+							</span>
+						` : ''}
+					</div>
+				` : ''}
+				
+				${eventData.organizer ? `
+					<div ${this.getStyle('cc-event-organizer')} itemprop="organizer" itemscope itemtype="https://schema.org/Organization">
+						<span itemprop="name">${eventData.organizer.name}</span>
+					</div>
+				` : ''}
+				
+				${eventData.offers && eventData.offers.length ? `
+					${eventData.offers.map(offer => `
+						<div ${this.getStyle('cc-event-offer')} itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+							<span itemprop="name">${offer.name}</span>
+							${offer.price ? `<span itemprop="price" content="${offer.price}">${offer.currency || '$'}${offer.price}</span>` : ''}
+							${offer.price ? `<meta itemprop="priceCurrency" content="${offer.currency || 'USD'}">` : ''}
+							<meta itemprop="availability" content="https://schema.org/InStock">
+						</div>
+					`).join('')}
+				` : ''}
+				
+				${this.renderEngagement(this.#data.engagement)}
+				${this.renderTags(this.#data.tags)}
+				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
+	}
+
+	renderRecipe() {
+		this._ensureSettingsInitialized();
+		if (!this.#data || this.#data.type !== 'recipe') return '';
+		
+		const { content = {}, recipe: recipeData = {}, engagement } = this.#data;
+		const headlineTag = content.headlineTag || 'h2';
+		const rating = engagement?.reactions?.[0]; // Assuming first reaction is "like" for rating
+
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${content.category ? `<meta itemprop="recipeCategory" content="${content.category}">` : ''}
+				${content.readingTime ? `<meta itemprop="totalTime" content="${content.readingTime}">` : ''}
+				${recipeData.prepTime ? `<meta itemprop="prepTime" content="${recipeData.prepTime}">` : ''}
+				${recipeData.cookTime ? `<meta itemprop="cookTime" content="${recipeData.cookTime}">` : ''}
+				${recipeData.servings ? `<meta itemprop="recipeYield" content="${recipeData.servings}">` : ''}
+				
+				${this.renderHeader(content)}
+				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+				
+				${this.renderAuthors(this.#data.authors, true)}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${Array.isArray(content.text) ? `
+					<details ${this.getStyle('cc-recipe-ingredients')}>
+						<summary>Ingredients</summary>
+						<ul itemprop="recipeIngredient">
+							${content.text.map(ingredient => `<li>${ingredient.headline || ingredient.text || ingredient}</li>`).join('')}
+						</ul>
+					</details>
+				` : (content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : '')}
+				
+				${recipeData.instructions ? `
+					<div ${this.getStyle('cc-recipe-instructions')} itemprop="recipeInstructions">
+						<h3>Instructions</h3>
+						${Array.isArray(recipeData.instructions) ? 
+							recipeData.instructions.map((instruction, index) => `
+								<div itemscope itemtype="https://schema.org/HowToStep">
+									<meta itemprop="position" content="${index + 1}">
+									<p itemprop="text">${instruction}</p>
+								</div>
+							`).join('') :
+							`<p>${recipeData.instructions}</p>`
+						}
+					</div>
+				` : ''}
+				
+				${rating && rating.count ? `
+					<div ${this.getStyle('cc-recipe-rating')} itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+						<meta itemprop="ratingValue" content="${rating.value || 1}">
+						<meta itemprop="ratingCount" content="${rating.count || 0}">
+						<meta itemprop="bestRating" content="5">
+						<meta itemprop="worstRating" content="1">
+					</div>
+				` : ''}
+				
+				${this.renderEngagement(this.#data.engagement)}
+				${this.renderTags(this.#data.tags)}
+				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
+	}
+
+	renderNewsArticle() {
+		this._ensureSettingsInitialized();
+		if (!this.#data || this.#data.type !== 'news') return '';
+		
+		const { content = {} } = this.#data;
+		const headlineTag = content.headlineTag || 'h2';
+
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${content.category ? `<meta itemprop="articleSection" content="${content.category}">` : ''}
+				${content.published?.datetime ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
+				${content.modified?.datetime ? `<meta itemprop="dateModified" content="${content.modified.datetime}">` : ''}
+				${content.readingTime ? `<meta itemprop="wordCount" content="${content.readingTime}">` : ''}
+				
+				${this.renderHeader(content)}
+				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="headline">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+				
+				${this.renderAuthors(this.#data.authors, true)}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${content.text ? `<div ${this.getStyle('cc-text')} itemprop="articleBody">${content.text}</div>` : ''}
+				
+				${this.renderEngagement(this.#data.engagement)}
+				${this.renderTags(this.#data.tags)}
+				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
+	}
+
+	renderArticle() {
+		this._ensureSettingsInitialized();
+		if (!this.#data || this.#data.type !== 'article') return '';
+		
+		const { content = {} } = this.#data;
+		const headlineTag = content.headlineTag || 'h2';
+
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${content.category ? `<meta itemprop="articleSection" content="${content.category}">` : ''}
+				${content.published?.datetime ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
+				${content.modified?.datetime ? `<meta itemprop="dateModified" content="${content.modified.datetime}">` : ''}
+				
+				${this.renderHeader(content)}
+				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="headline">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
+				
+				${this.renderAuthors(this.#data.authors, true)}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${content.text ? `<div ${this.getStyle('cc-text')} itemprop="articleBody">${content.text}</div>` : ''}
+				
+				${this.renderEngagement(this.#data.engagement)}
+				${this.renderTags(this.#data.tags)}
+				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
 	}
 
 
 renderContent(data) {
+	// Check if this is a product card and use dedicated product renderer
+	if (data.type === 'product') {
+		return this.renderProduct();
+	}
+	
+	// Check if this is an event card and use dedicated event renderer
+	if (data.type === 'event') {
+		return this.renderEvent();
+	}
+	
+	// Check if this is a recipe card and use dedicated recipe renderer
+	if (data.type === 'recipe') {
+		return this.renderRecipe();
+	}
+	
+	// Check if this is a news article card and use dedicated news renderer
+	if (data.type === 'news') {
+		return this.renderNewsArticle();
+	}
+	
+	// Check if this is an article card and use dedicated article renderer
+	if (data.type === 'article') {
+		return this.renderArticle();
+	}
+	
 	const content = data.content || {};
 	const published = content.published?.formatted || '';
 	const headlineTag = content.headlineTag || 'h2';
+	
 	// If text is an array and type is accordion or timeline, use special renderers
 	if (Array.isArray(content.text)) {
 		if (data.type === 'accordion') {
@@ -460,7 +714,6 @@ renderContent(data) {
 			${this.renderAuthors(data.authors)}
 			${content.summary ? `<p ${this.getStyle('cc-summary')}>${content.summary}</p>` : ''}
 			${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
-			${this.renderProduct(data.product)}
 			${this.renderEngagement(data.engagement)}
 			${this.renderTags(data.tags)}
 			${this.renderLinks(data.links, data.actions)}
@@ -522,8 +775,31 @@ renderTimeline(content, data) {
 
 		const { type, media, ribbon, sticker, content, actions, links, tags, authors, engagement, product, popover } = this.#data;
 
+		// Clear any existing schema attributes
+		this.removeAttribute('itemscope');
+		this.removeAttribute('itemtype');
+
+		// Set schema.org attributes on the content-card element itself
+		if (type === 'product') {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Product');
+		} else if (type === 'event') {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Event');
+		} else if (type === 'recipe') {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Recipe');
+		} else if (type === 'news') {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/NewsArticle');
+		} else if (type === 'article') {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Article');
+		}
+
+		// Render with proper structure - media area first, content area second
 		this.#root.innerHTML = `
-			${this.renderMedia(media, ribbon, sticker)}
+			${this.renderMedia(media, ribbon, sticker, type === 'product', type === 'event', type === 'recipe', type === 'article', type === 'news')}
 			${content ? this.renderContent(this.#data) : ''}
 			${this.renderPopover(this.#data)}
 		`;

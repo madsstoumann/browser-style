@@ -9,6 +9,8 @@
 	<!-- <link rel="stylesheet" href="/base.css"> -->
 	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css">
 <link rel="stylesheet" href="index.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 
 	<style>
@@ -18,7 +20,7 @@
 }
 		font-family: var(--c-headline-ff, Didot, 'Bodoni MT', 'Noto Serif Display', 'URW Palladio L', P052, Sylfaen, serif);
 		*/
-			html {
+	html {
 		interpolate-size: allow-keywords;
 		--layout-primary-bg: hsl(220, 20%, 95%);
 		--layout-primary-c: hsl(220, 100%, 20%);
@@ -47,6 +49,8 @@
 		.secondary { --cc-bg: var(--layout-secondary-bg); }
 
 		content-card[type=spot] { --cc-bdrs: .5rem; }
+		lay-out[overflow] { --layout-scrollbar-c: #0002 #0000; }
+		.material-symbols-outlined { font-display: auto; }
 /* 
 		.ic-ribbon--live {
 			background-color: #c00;
@@ -86,7 +90,7 @@
 		<content-card content="news-1" layout="stack(c-l th-2 p:1 w:50)"></content-card>
 	</lay-out>
 
-	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-top="2" subgrid="5">
+	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-bottom="2" pad-top="2" subgrid="5">
 		<content-card content="news-5"></content-card>
 		<content-card content="news-9"></content-card>
 		<content-card content="news-13"></content-card>
@@ -105,6 +109,24 @@
 			<content-card content="news-5"></content-card>
 			<content-card content="news-9"></content-card>
 		</lay-out>
+	</lay-out>
+
+	<lay-out md="columns(2)" lg="columns(4)" overflow="preview" pad-top="2" pad-bottom="2">
+		<content-card content="product-1"></content-card>
+		<content-card content="product-2"></content-card>
+		<content-card content="product-3"></content-card>
+		<content-card content="product-4"></content-card>
+		<content-card content="product-5"></content-card>
+		<content-card content="product-6"></content-card>
+		<content-card content="product-7"></content-card>
+		<content-card content="product-8"></content-card>
+	</lay-out>
+
+	<lay-out md="columns(2)" bleed col-gap="2" pad-top="3" pad-bottom="2" row-gap="2" theme="tertiary">
+		<content-card content="recipe-3"></content-card>
+		<content-card content="recipe-1" layout=""></content-card>
+		<content-card content="recipe-2"></content-card>
+		<content-card content="recipe-4"></content-card>
 	</lay-out>
 	
 
