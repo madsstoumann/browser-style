@@ -1,3 +1,5 @@
+import { ICONS } from './icons.js';
+
 class ContentCard extends HTMLElement {
 	#data; #root; #settings; #popoverId;
 
@@ -124,23 +126,23 @@ class ContentCard extends HTMLElement {
 	}
 
 	_init() {
-		this._ensureSettingsInitialized();
+		// this._ensureSettingsInitialized();
 
 		if (this.#root) return;
 
 		this.#root = this;
-		if (this.#data?.id) {
-			this.id = this.#data.id;
-		}
+		// if (this.#data?.id) {
+			// this.id = this.#data.id;
+		// }
 	}
 
 	connectedCallback() {
-		this._ensureSettingsInitialized();
+		// this._ensureSettingsInitialized();
 	}
 
-	renderImage(image, isProduct = false, isEvent = false, isRecipe = false, isArticle = false, isNews = false) {
+	renderImage(image, useSchema = false) {
 		if (!image?.src) return '';
-		const schemaAttr = (isProduct || isEvent || isRecipe || isArticle || isNews) ? 'itemprop="image"' : '';
+		const schemaAttr = useSchema ? 'itemprop="image"' : '';
 		return `<img 
 			${this.getStyle('cc-media-image')} 
 			src="${image.src}" 
@@ -179,13 +181,14 @@ class ContentCard extends HTMLElement {
 			}
 		}
 
-		return `<iframe 
-			${this.getStyle('cc-media-iframe')}
-			src="https://www.youtube.com/embed/${videoId}" 
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-			allowfullscreen
-			title="${video.alt || 'YouTube video player'}"
-		></iframe>`;
+		return `<img 
+			${this.getStyle('cc-media-image')}
+			decoding="async"
+			loading="lazy"
+			src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" 
+			alt="${video.alt || 'YouTube video player'}"
+			data-video-id="${videoId}"
+		>`;
 	}
 
 	renderRibbon(ribbon) {
@@ -195,7 +198,7 @@ class ContentCard extends HTMLElement {
 		const baseStyle = this.getStyle('cc-ribbon').slice(0, -1); // remove closing quote
 
 		return `<div ${baseStyle}${styleClass}" role="status" ${styleAttr}>
-			${ribbon.icon ? `<span class="ic-ribbon-icon">${ribbon.icon}</span>` : ''}
+			${ribbon.icon ? this.renderSVG(ribbon.icon) : ''}
 			${ribbon.text}
 		</div>`;
 	}
@@ -205,7 +208,7 @@ class ContentCard extends HTMLElement {
 		return `<span ${this.getStyle('cc-sticker')} role="status">${sticker.text}</span>`;
 	}
 
-	renderMedia(media, ribbon, sticker, isProduct = false, isEvent = false, isRecipe = false, isArticle = false, isNews = false) {
+	renderMedia(media, ribbon, sticker, useSchema = false) {
 		this._ensureSettingsInitialized();
 		if (!media?.sources?.length) return '';
 		return `
@@ -213,7 +216,7 @@ class ContentCard extends HTMLElement {
 		
 			${media.sources
 				.map((entry) => {
-					if (entry.type === 'image') return this.renderImage(entry, isProduct, isEvent, isRecipe, isArticle, isNews)
+					if (entry.type === 'image') return this.renderImage(entry, useSchema)
 					if (entry.type === 'video') return this.renderVideo(entry)
 					if (entry.type === 'youtube') return this.renderYouTube(entry)
 				})
@@ -238,6 +241,11 @@ class ContentCard extends HTMLElement {
 			${video.height ? `height="${video.height}"` : ''}
 			${video.crossorigin ? `crossorigin="${video.crossorigin}"` : ''}
 			preload="${opts.preload || 'metadata'}"></video>`
+	}
+
+	renderSVG(name) {
+		if (!name || !ICONS[name]) return '';
+		return `<svg viewBox="0 -960 960 960" width="24" height="24"><path d="${ICONS[name]}"></path></svg>`;
 	}
 
 	renderPopover(data) {
@@ -323,7 +331,7 @@ class ContentCard extends HTMLElement {
 			}
 			
 			return `<a href="${link.url}" ${style} ${(link.icon ? `aria-label="${link.text}"` : (link.ariaLabel ? `aria-label="${link.ariaLabel}"` : ''))}>
-				${link.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-icon').replace('class="', '').replace('"', '')}">${link.icon}</span> <span class="cc-link-text">${link.hideText ? '' : link.text}</span>` : link.text}
+				${link.icon ? `${this.renderSVG(link.icon)} <span class="cc-link-text">${link.hideText ? '' : link.text}</span>` : link.text}
 			</a>`;
 		};
 		
@@ -336,7 +344,7 @@ class ContentCard extends HTMLElement {
 		const renderBtn = (a) => {
 			const popoverAttrs = a.popover ? `popovertarget="${this.#popoverId}" popovertargetaction="show"` : '';
 			return `<button type="button" ${this.getStyle(`cc-action`)} ${(a.icon ? `aria-label="${a.text}"` : (a.ariaLabel ? `aria-label="${a.ariaLabel}"` : ''))} ${popoverAttrs}>
-				${a.icon ? `<span class="material-symbols-outlined ${this.getStyle('cc-icon').replace('class=\"', '').replace('\"', '')}">${a.icon}</span>` : a.text}
+				${a.icon ? this.renderSVG(a.icon) : ''} ${a.text}
 			</button>`;
 		};
 		
@@ -390,7 +398,7 @@ class ContentCard extends HTMLElement {
 						${r.ariaLabel ? `aria-label="${r.ariaLabel}"` : ''}
 						${r.active ? 'aria-pressed="true"' : ''}
 					>
-						${r.icon ? `<span ${this.getStyle('cc-reaction-icon')}>${r.icon}</span>` : ''} 
+						${r.icon ? this.renderSVG(r.icon) : ''} 
 						${r.count}
 					</button>`
 				).join('') || ''}
@@ -448,8 +456,8 @@ class ContentCard extends HTMLElement {
 					<div ${this.getStyle('cc-product-price')} itemprop="offers" itemscope itemtype="https://schema.org/Offer">
 						<meta itemprop="priceCurrency" content="${price.currency || 'USD'}">
 						<span itemprop="price" content="${price.current}">${price.currency || ''} ${price.current}</span>
-						${price.original && price.original > price.current ? `<del ${this.getStyle('cc-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
-						${price.discountText ? `<span ${this.getStyle('cc-product-discount')}>${price.discountText}</span>` : ''}
+					${price.original && price.original > price.current ? `<del ${this.getStyle('cc-product-price-original')}>${price.currency || ''} ${price.original}</del>` : ''}
+					${price.discountText ? `<span ${this.getStyle('cc-product-discount')}>${price.discountText}</span>` : ''}
 						<meta itemprop="availability" content="https://schema.org/${productData.availability && productData.availability.toLowerCase().includes('out of stock') ? 'OutOfStock' : 'InStock'}">
 						<meta itemprop="itemCondition" content="https://schema.org/NewCondition">
 					</div>
@@ -799,7 +807,7 @@ renderTimeline(content, data) {
 
 		// Render with proper structure - media area first, content area second
 		this.#root.innerHTML = `
-			${this.renderMedia(media, ribbon, sticker, type === 'product', type === 'event', type === 'recipe', type === 'article', type === 'news')}
+			${this.renderMedia(media, ribbon, sticker, ['product', 'event', 'recipe', 'article', 'news'].includes(type))}
 			${content ? this.renderContent(this.#data) : ''}
 			${this.renderPopover(this.#data)}
 		`;

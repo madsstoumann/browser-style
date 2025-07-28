@@ -6,7 +6,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/quantum.png",
+          "src": "assets/quantum.avif",
           "alt": "Abstract technology background"
         }
       ],
@@ -85,7 +85,7 @@
       {
         "url": "#",
         "text": "Watch Highlights",
-        "icon": "play_arrow"
+        "icon": "play"
       }
     ]
   },
@@ -110,7 +110,7 @@
       {
         "url": "#",
         "text": "Discover Recipes",
-        "icon": "restaurant_menu"
+        "icon": "recipe"
       }
     ]
   },
@@ -207,7 +207,7 @@
       {
         "url": "#",
         "text": "Analyze the Data",
-        "icon": "insights"
+        "icon": "analytics"
       }
     ]
   },
@@ -367,7 +367,7 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "👍", "count": 250, "ariaLabel": "Like this recipe" }
+        { "type": "like", "icon": "thumbs_up", "count": 250, "ariaLabel": "Like this recipe" }
       ],
       "commentCount": 45,
       "shareCount": 120,
@@ -377,7 +377,7 @@
       {
         "url": "#",
         "text": "View Recipe",
-        "icon": "restaurant_menu"
+        "icon": "recipe"
       }
     ]
   },
@@ -401,7 +401,7 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "👍", "count": 120, "ariaLabel": "Like this recipe" }
+        { "type": "like", "icon": "thumbs_up", "count": 120, "ariaLabel": "Like this recipe" }
       ],
       "commentCount": 15,
       "shareCount": 30,
@@ -411,7 +411,7 @@
       { 
         "url": "#",
         "text": "View Recipe",
-        "icon": "restaurant_menu"
+        "icon": "recipe"
       }
     ],
     "tags": [
@@ -443,7 +443,7 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "👍", "count": 530, "ariaLabel": "Like this recipe" }
+        { "type": "like", "icon": "thumbs_up", "count": 530, "ariaLabel": "Like this recipe" }
       ],
       "commentCount": 95,
       "shareCount": 250,
@@ -453,7 +453,7 @@
       { 
         "url": "#",
         "text": "View Recipe",
-        "icon": "restaurant_menu"
+        "icon": "recipe"
       }
     ]
   },
@@ -477,7 +477,7 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "👍", "count": 180, "ariaLabel": "Like this recipe" }
+        { "type": "like", "icon": "thumbs_up", "count": 180, "ariaLabel": "Like this recipe" }
       ],
       "commentCount": 30,
       "shareCount": 75,
@@ -487,7 +487,7 @@
       { 
         "url": "#",
         "text": "View Recipe",
-        "icon": "restaurant_menu"
+        "icon": "recipe"
       }
     ]
   },
@@ -668,7 +668,7 @@
       "validUntil": "2025-12-31",
       "rating": { "value": 4.7, "count": 1250 }
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "product-2",
@@ -687,7 +687,7 @@
       "availability": "In Stock",
       "rating": { "value": 4.5, "count": 890 }
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "product-3",
@@ -725,7 +725,7 @@
       "availability": "Ships in 2-3 days",
       "rating": { "value": 1.9, "count": 120 }
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "product-5",
@@ -743,7 +743,7 @@
       "price": { "current": "179.50", "original": "219.50", "currency": "USD" },
       "availability": "In Stock"
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "product-6",
@@ -780,7 +780,7 @@
       "availability": "In Stock",
       "rating": { "value": 4.9, "count": 2500 }
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "product-8",
@@ -798,7 +798,7 @@
       "price": { "current": "45.00", "currency": "USD" },
       "availability": "In Stock"
     },
-    "actions": [{ "text": "Add to Cart" }]
+    "actions": [{ "text": "Add to Cart", "icon": "add_to_basket" }]
   },
   {
     "id": "article-1",
@@ -947,7 +947,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-minan1398-1006121.jpg",
+          "src": "assets/pexels-minan1398-1006121.avif",
           "alt": "Spring"
         }
       ]
@@ -970,7 +970,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-trupert-1032650.jpg",
+          "src": "assets/pexels-trupert-1032650.avif",
           "alt": "Summer"
         }
       ]
@@ -993,7 +993,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-kadri-vosumae-249986-756903.jpg",
+          "src": "assets/pexels-kadri-vosumae-249986-756903.avif",
           "alt": "Autumn"
         }
       ]
@@ -1016,7 +1016,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-alissa-nabiullina-367960-997567.jpg",
+          "src": "assets/pexels-alissa-nabiullina-367960-997567.avif",
           "alt": "Winter"
         }
       ]

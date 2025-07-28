@@ -7,11 +7,12 @@
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
 	<!-- <link rel="stylesheet" href="/base.css"> -->
-	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css">
-<link rel="stylesheet" href="index.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
+	<link rel="stylesheet" href="index.css" blocking="render">
+
+	<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"> -->
 
 	<style>
 		/*
@@ -64,7 +65,6 @@
 	</style>
 </head>
 <body>
-
 
 	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
 		<content-card content="news-11" layout="rows(th-1 21:9 p:1 flip)"></content-card>
