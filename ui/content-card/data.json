@@ -68,7 +68,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/sports1/400/225",
+          "src": "assets/underdogs.png",
           "alt": "Athlete crossing the finish line"
         }
       ]
@@ -96,7 +96,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/food1/400/225",
+          "src": "assets/gastronomy.png",
           "alt": "Gourmet dish"
         }
       ]
@@ -142,7 +142,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/space1/400/225",
+          "src": "assets/hubble.png",
           "alt": "Nebula in deep space"
         }
       ]
@@ -166,7 +166,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/health1/400/225",
+          "src": "assets/mindfulness.png",
           "alt": "Person meditating outdoors"
         }
       ]
@@ -259,7 +259,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/politics1/400/225",
+          "src": "assets/government.png",
           "alt": "Government building"
         }
       ]
@@ -279,7 +279,7 @@
         "name": "Jane Smith",
         "role": "Chief Political Correspondent",
         "avatar": {
-          "src": "https://picsum.photos/seed/author1/100/100",
+          "src": "assets/janesmith.png",
           "alt": "Jane Smith",
           "width": 40,
           "height": 40
@@ -350,7 +350,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/recipe1/400/225",
+          "src": "assets/carbonara.png",
           "alt": "A delicious plate of Spaghetti Carbonara"
         }
       ]
@@ -388,7 +388,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/recipe2/400/225",
+          "src": "assets/summersalad.png",
           "alt": "A vibrant summer salad"
         }
       ]
@@ -426,7 +426,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/recipe3/400/225",
+          "src": "assets/cookies.png",
           "alt": "Homemade chocolate chip cookies"
         }
       ]
@@ -464,7 +464,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/recipe4/400/225",
+          "src": "assets/spicycurry.png",
           "alt": "A bowl of spicy chicken curry"
         }
       ]
@@ -655,7 +655,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product1/400/225", "alt": "Wireless Noise-Cancelling Headphones" }
+        { "type": "image", "src": "assets/aurasoundpro.png", "alt": "Wireless Noise-Cancelling Headphones" }
       ]
     },
     "content": {
@@ -675,7 +675,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product2/400/225", "alt": "Smartwatch with Fitness Tracker" }
+        { "type": "image", "src": "assets/fittrackpro.png", "alt": "Smartwatch with Fitness Tracker" }
       ]
     },
     "content": {
@@ -694,7 +694,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product3/400/225", "alt": "Portable Bluetooth Speaker" }
+        { "type": "image", "src": "assets/soundwavemini.png", "alt": "Portable Bluetooth Speaker" }
       ]
     },
     "content": {
@@ -713,7 +713,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product4/400/225", "alt": "Ergonomic Office Chair" }
+        { "type": "image", "src": "assets/ergochair.png", "alt": "Ergonomic Office Chair" }
       ]
     },
     "content": {
@@ -732,7 +732,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product5/400/225", "alt": "4K Action Camera" }
+        { "type": "image", "src": "assets/adventurecam.png", "alt": "4K Action Camera" }
       ]
     },
     "content": {
@@ -750,7 +750,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product6/400/225", "alt": "Electric Kettle" }
+        { "type": "image", "src": "assets/quickboil.png", "alt": "Electric Kettle" }
       ]
     },
     "content": {
@@ -768,7 +768,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product7/400/225", "alt": "Professional Chef's Knife" }
+        { "type": "image", "src": "assets/cutmaster.png", "alt": "Professional Chef's Knife" }
       ]
     },
     "content": {
@@ -787,7 +787,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "https://picsum.photos/seed/product8/400/225", "alt": "Leather Wallet" }
+        { "type": "image", "src": "assets/slimfold.png", "alt": "Leather Wallet" }
       ]
     },
     "content": {
