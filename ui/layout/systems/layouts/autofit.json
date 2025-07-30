@@ -9,6 +9,7 @@
       "columns": "repeat(auto-fit, minmax(min(7.5rem, 100%), 1fr))",
       "items": 5,
       "repeatable": true,
+      "srcset": "20vw",
       "breakpoints": {
         "sm": "auto(fit)"
       }

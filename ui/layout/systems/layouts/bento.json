@@ -10,6 +10,7 @@
       "rows": "repeat(5, 1fr)",
       "items": 4,
       "repeatable": false,
+      "srcset": "50vw,50vw,50vw,50vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "bento(4a)"
@@ -28,6 +29,7 @@
       "rows": "repeat(5, 1fr)",
       "items": 6,
       "repeatable": false,
+      "srcset": "30vw,40vw,30vw,30vw,30vw,40vw",
       "breakpoints": {
         "sm": "columns(2)",
         "md": "grid(3a)",
@@ -50,6 +52,7 @@
       "rows": "repeat(5, 1fr)",
       "items": 6,
       "repeatable": false,
+      "srcset": "40vw,30vw,30vw,30vw,60vw,40vw",
       "breakpoints": {
         "sm": "columns(2)",
         "md": "columns(3)",
@@ -72,6 +75,7 @@
       "rows": "repeat(5, 1fr)",
       "items": 7,
       "repeatable": false,
+      "srcset": "66.67vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw",
       "breakpoints": {
         "md": "columns(7)",
         "lg": "bento(7a)"
@@ -93,6 +97,7 @@
       "rows": "repeat(6, 1fr)",
       "items": 7,
       "repeatable": false,
+      "srcset": "40vw,60vw,30vw,30vw,30vw,40vw,60vw",
       "breakpoints": {
         "md": "columns(7)",
         "lg": "bento(7b)"
@@ -115,6 +120,7 @@
       "rows": "repeat(6, 1fr)",
       "items": 8,
       "repeatable": false,
+      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,66.67vw",
       "breakpoints": {
         "md": "columns(8)",
         "lg": "bento(8a)"
@@ -138,6 +144,7 @@
       "rows": "repeat(4, 1fr)",
       "items": 8,
       "repeatable": false,
+      "srcset": "30vw,20vw,20vw,30vw,30vw,20vw,50vw,50vw",
       "breakpoints": {
         "md": "columns(8)",
         "lg": "bento(8b)"
@@ -160,6 +167,7 @@
       "columns": "repeat(4, 1fr)",
       "items": 9,
       "repeatable": false,
+      "srcset": "25vw,50vw,25vw,25vw,25vw,25vw,25vw,25vw,25vw",
       "breakpoints": {
         "md": "columns(9)",
         "lg": "bento(9a)"
@@ -179,6 +187,7 @@
       "columns": "repeat(10, 1fr)",
       "items": 9,
       "repeatable": false,
+      "srcset": "30vw,20vw,20vw,30vw,30vw,40vw,40vw,30vw,30vw",
       "breakpoints": {
         "md": "columns(9)",
         "lg": "bento(9b)"

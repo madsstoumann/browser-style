@@ -68,7 +68,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/underdogs.png",
+          "src": "assets/underdogs.avif",
           "alt": "Athlete crossing the finish line"
         }
       ]
@@ -96,7 +96,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/gastronomy.png",
+          "src": "assets/gastronomy.avif",
           "alt": "Gourmet dish"
         }
       ]
@@ -142,7 +142,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/hubble.png",
+          "src": "assets/hubble.avif",
           "alt": "Nebula in deep space"
         }
       ]
@@ -166,7 +166,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/mindfulness.png",
+          "src": "assets/mindfulness.avif",
           "alt": "Person meditating outdoors"
         }
       ]
@@ -191,7 +191,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/finance1/400/225",
+          "src": "assets/finance.avif",
           "alt": "Stock market chart"
         }
       ]
@@ -234,7 +234,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/travel1/400/225",
+          "src": "assets/destinations.avif",
           "alt": "Tropical beach"
         }
       ]
@@ -259,7 +259,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/government.png",
+          "src": "assets/government.avif",
           "alt": "Government building"
         }
       ]
@@ -279,7 +279,7 @@
         "name": "Jane Smith",
         "role": "Chief Political Correspondent",
         "avatar": {
-          "src": "assets/janesmith.png",
+          "src": "assets/janesmith.avif",
           "alt": "Jane Smith",
           "width": 40,
           "height": 40
@@ -350,7 +350,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/carbonara.png",
+          "src": "assets/carbonara.avif",
           "alt": "A delicious plate of Spaghetti Carbonara"
         }
       ]
@@ -388,7 +388,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/summersalad.png",
+          "src": "assets/summersalad.avif",
           "alt": "A vibrant summer salad"
         }
       ]
@@ -426,7 +426,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/cookies.png",
+          "src": "assets/cookies.avif",
           "alt": "Homemade chocolate chip cookies"
         }
       ]
@@ -464,7 +464,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/spicycurry.png",
+          "src": "assets/spicycurry.avif",
           "alt": "A bowl of spicy chicken curry"
         }
       ]
@@ -499,7 +499,7 @@
         {
           "type": "video",
           "src": "https://assets.stoumann.dk/video/river.mp4",
-          "poster": "https://fastly.picsum.photos/id/9/320/180.jpg?hmac=3_PVsuLBGhWbsW8t-hB7nvQ7BOBrkqwYeEqQnUK6Nl4",
+          "poster": "assets/river.avif",
           "tracks": [
             { "kind": "captions", "src": "captions_en.vtt", "srclang": "en", "label": "English" }
           ]
@@ -532,7 +532,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://fastly.picsum.photos/id/79/320/180.jpg?hmac=49A2dpGcAe69cOywjoVhy3mUCQmlifKUZr8JD2H9IV8",
+          "src": "assets/bunny.avif",
           "alt": "Big Buck Bunny Adventures thumbnail"
         }
       ]
@@ -563,7 +563,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://fastly.picsum.photos/id/89/320/180.jpg?hmac=Mzkn52wP19ZMV84c_yeTan7c7EjQk-02JJyWC-PLbj0",
+          "src": "assets/elephant.avif",
           "alt": "Elephants Dream Documentary thumbnail"
         }
       ]
@@ -655,7 +655,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/aurasoundpro.png", "alt": "Wireless Noise-Cancelling Headphones" }
+        { "type": "image", "src": "assets/aurasoundpro.avif", "alt": "Wireless Noise-Cancelling Headphones" }
       ]
     },
     "content": {
@@ -675,7 +675,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/fittrackpro.png", "alt": "Smartwatch with Fitness Tracker" }
+        { "type": "image", "src": "assets/fittrackpro.avif", "alt": "Smartwatch with Fitness Tracker" }
       ]
     },
     "content": {
@@ -694,7 +694,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/soundwavemini.png", "alt": "Portable Bluetooth Speaker" }
+        { "type": "image", "src": "assets/soundwavemini.avif", "alt": "Portable Bluetooth Speaker" }
       ]
     },
     "content": {
@@ -713,7 +713,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/ergochair.png", "alt": "Ergonomic Office Chair" }
+        { "type": "image", "src": "assets/ergochair.avif", "alt": "Ergonomic Office Chair" }
       ]
     },
     "content": {
@@ -732,7 +732,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/adventurecam.png", "alt": "4K Action Camera" }
+        { "type": "image", "src": "assets/adventurecam.avif", "alt": "4K Action Camera" }
       ]
     },
     "content": {
@@ -750,7 +750,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/quickboil.png", "alt": "Electric Kettle" }
+        { "type": "image", "src": "assets/quickboil.avif", "alt": "Electric Kettle" }
       ]
     },
     "content": {
@@ -768,7 +768,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/cutmaster.png", "alt": "Professional Chef's Knife" }
+        { "type": "image", "src": "assets/cutmaster.avif", "alt": "Professional Chef's Knife" }
       ]
     },
     "content": {
@@ -787,7 +787,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "assets/slimfold.png", "alt": "Leather Wallet" }
+        { "type": "image", "src": "assets/slimfold.avif", "alt": "Leather Wallet" }
       ]
     },
     "content": {
@@ -807,7 +807,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/popover1/400/225",
+          "src": "assets/popovers.avif",
           "alt": "An image that will have a video popover"
         }
       ]
@@ -835,7 +835,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/event1/400/225",
+          "src": "assets/websummit.avif",
           "alt": "People networking at a tech conference"
         }
       ]
@@ -918,7 +918,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "https://picsum.photos/seed/quote1/400/225",
+          "src": "assets/quote.avif",
           "alt": "A serene landscape"
         }
       ]
@@ -947,7 +947,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-minan1398-1006121.avif",
+          "src": "assets/spring.avif",
           "alt": "Spring"
         }
       ]
@@ -970,7 +970,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-trupert-1032650.avif",
+          "src": "assets/summer.avif",
           "alt": "Summer"
         }
       ]
@@ -993,7 +993,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-kadri-vosumae-249986-756903.avif",
+          "src": "assets/autumn.avif",
           "alt": "Autumn"
         }
       ]
@@ -1016,7 +1016,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/pexels-alissa-nabiullina-367960-997567.avif",
+          "src": "assets/winter.avif",
           "alt": "Winter"
         }
       ]

@@ -9,6 +9,7 @@
       "columns": "1fr 3fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "25vw,75vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(25:75)"
@@ -20,6 +21,7 @@
       "columns": "1fr 2fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "33.33vw,66.67vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(33:66)"
@@ -31,6 +33,7 @@
       "columns": "2fr 3fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "40vw,60vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(40:60)"
@@ -42,6 +45,7 @@
       "columns": "3fr 2fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "60vw,40vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(60:40)"
@@ -53,6 +57,7 @@
       "columns": "2fr 1fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "66.67vw,33.33vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(66:33)"
@@ -64,6 +69,7 @@
       "columns": "3fr 1fr",
       "items": 2,
       "repeatable": true,
+      "srcset": "75vw,25vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "ratio(75:25)"
@@ -75,6 +81,7 @@
       "columns": "1fr 1fr 2fr",
       "items": 3,
       "repeatable": true,
+      "srcset": "25vw,25vw,50vw",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "ratio(25:25:50)"
@@ -86,6 +93,7 @@
       "columns": "1fr 2fr 1fr",
       "items": 3,
       "repeatable": true,
+      "srcset": "25vw,50vw,25vw",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "ratio(25:50:25)"
@@ -97,6 +105,7 @@
       "columns": "2fr 1fr 1fr",
       "items": 3,
       "repeatable": true,
+      "srcset": "50vw,25vw,25vw",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "ratio(50:25:25)"

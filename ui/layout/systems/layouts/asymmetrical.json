@@ -9,6 +9,7 @@
       "columns": "repeat(8, 1fr)",
       "items": 2,
       "repeatable": false,
+      "srcset": "75vw,50vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(l-r)"
@@ -25,6 +26,7 @@
       "columns": "repeat(8, 1fr)",
       "items": 2,
       "repeatable": false,
+      "srcset": "75vw,50vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(r-l)"
@@ -41,6 +43,7 @@
       "columns": "repeat(8, 1fr)",
       "items": 2,
       "repeatable": false,
+      "srcset": "100vw,75vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(t-b)"
@@ -57,6 +60,7 @@
       "columns": "repeat(8, 1fr)",
       "items": 2,
       "repeatable": false,
+      "srcset": "100vw,75vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(b-t)"
@@ -73,6 +77,7 @@
       "columns": "repeat(7, 1fr)",
       "items": 3,
       "repeatable": false,
+      "srcset": "42.86vw,42.86vw,42.86vw",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "asym(tl-br)"
@@ -90,6 +95,7 @@
       "columns": "repeat(7, 1fr)",
       "items": 3,
       "repeatable": false,
+      "srcset": "42.86vw,42.86vw,42.86vw",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "asym(bl-tr)"

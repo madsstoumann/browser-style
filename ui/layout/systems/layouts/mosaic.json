@@ -9,6 +9,7 @@
       "columns": "1fr 1fr 1fr 1fr 1fr",
       "items": 11,
       "repeatable": false,
+      "srcset": "40vw,20vw,20vw,40vw,20vw,20vw,40vw,20vw,20vw,40vw,20vw",
       "breakpoints": {
         "sm": "mosaic(photo)"
       },
@@ -36,6 +37,7 @@
       "rows": "repeat(12, 1fr)",
       "items": 8,
       "repeatable": false,
+      "srcset": "50vw,50vw,33.33vw,33.33vw,25vw,16.67vw,25vw,16.67vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "grid(4c)",
@@ -58,6 +60,7 @@
       "columns": "repeat(12, 1fr)",
       "items": 8,
       "repeatable": false,
+      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "grid(4d)",

@@ -16,6 +16,7 @@ class LayoutBuilder {
     this.outputPath = outputPath;
     this.config = null;
     this.layouts = new Map();
+    this.layoutSystemLayouts = new Map(); // Dedicated storage for layout system (for srcsets)
     this.cssRules = new Map();
     this.currentSystem = null;
   }
@@ -62,8 +63,19 @@ class LayoutBuilder {
           };
           this.layouts.set(layoutName, transformedData.layouts);
           this.layouts.set(`${layoutName}_prefix`, layoutData.prefix);
+          
+          // Also store in layoutSystemLayouts if this is the layout system (path: "layouts")
+          if (this.currentSystem && this.currentSystem.path === 'layouts') {
+            this.layoutSystemLayouts.set(layoutName, transformedData.layouts);
+            this.layoutSystemLayouts.set(`${layoutName}_prefix`, layoutData.prefix);
+          }
         } else {
           this.layouts.set(layoutName, layoutData);
+          
+          // Also store in layoutSystemLayouts if this is the layout system (path: "layouts")  
+          if (this.currentSystem && this.currentSystem.path === 'layouts') {
+            this.layoutSystemLayouts.set(layoutName, layoutData);
+          }
         }
         
         console.log(`✓ Loaded ${file}`);
@@ -594,6 +606,76 @@ class LayoutBuilder {
     return buildResults;
   }
 
+  generateSrcsetsFromElement(layOutElementString) {
+    // Parse lay-out element to extract breakpoint attributes
+    // Example: '<lay-out md="grid(3a)" lg="columns(3)">' 
+    const breakpointRegex = /(\w+)="([^"]+)"/g;
+    const breakpoints = {};
+    let match;
+    
+    while ((match = breakpointRegex.exec(layOutElementString)) !== null) {
+      const [, breakpoint, value] = match;
+      if (breakpoint !== 'srcsets' && breakpoint !== 'overflow') {
+        breakpoints[breakpoint] = value;
+      }
+    }
+    
+    // Create a mock layout object with the parsed breakpoints
+    const mockLayout = { breakpoints };
+    
+    return this.generateSrcsets(mockLayout, '');
+  }
+
+  generateSrcsets(layout, breakpointAttrs) {
+    const srcsetParts = ['xs:100vw']; // Default: single column stack
+    
+    if (layout.breakpoints) {
+      for (const [breakpoint, layoutPattern] of Object.entries(layout.breakpoints)) {
+        const srcset = this.getSrcsetForPattern(layoutPattern);
+        if (srcset) {
+          srcsetParts.push(`${breakpoint}:${srcset}`);
+        }
+      }
+    }
+    
+    return srcsetParts.join(';');
+  }
+
+  getSrcsetForPattern(pattern) {
+    // Parse pattern like "grid(3a)" or "columns(3)"
+    const match = pattern.match(/(\w+)\(([^)]+)\)/);
+    if (!match) return null;
+    
+    const [, layoutType, layoutId] = match;
+    
+    // Look up the layout in our layout system layouts - try different possible keys
+    let layouts = this.layoutSystemLayouts.get(layoutType);
+    if (!layouts) {
+      // Try with 's' suffix (e.g., "columns" for "column")
+      layouts = this.layoutSystemLayouts.get(layoutType + 's');
+    }
+    if (!layouts) {
+      // Try finding by prefix
+      for (const [key, value] of this.layoutSystemLayouts.entries()) {
+        if (Array.isArray(value) && value.length > 0 && value[0].id?.startsWith(layoutType + '(')) {
+          layouts = value;
+          break;
+        }
+      }
+    }
+    
+    if (!layouts) {
+      return null;
+    }
+    
+    const layout = layouts.find(l => l.originalId === layoutId || l.id === `${layoutType}(${layoutId})`);
+    if (!layout) {
+      return null;
+    }
+    
+    return layout.srcset || null;
+  }
+
   generateLayoutHTML(layoutName, layoutData, layoutType) {
     const title = layoutType.name || `${layoutName.charAt(0).toUpperCase() + layoutName.slice(1)} Layouts`;
     const prefix = layoutType.prefix || layoutName;
@@ -651,12 +733,16 @@ class LayoutBuilder {
           codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"&gt;`;
         }
         
+        // Generate srcsets attribute
+        const srcsets = this.generateSrcsets(layout, breakpointAttrs);
+        const srcsetAttr = srcsets ? ` srcsets="${srcsets}"` : '';
+        
         html += `
 	<section>
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>${codeExample}</code>
-		<lay-out${breakpointAttrs}>`;
+		<lay-out${breakpointAttrs}${srcsetAttr}>`;
 
         for (let i = 0; i < itemCount; i++) {
           html += `
@@ -723,12 +809,15 @@ class LayoutBuilder {
         const cleanId = layoutId.replace(/^[^(]*\(/, '').replace(/\)$/, '');
         
         // Regular overflow example
+        const srcset = this.getSrcsetForPattern(`${prefix}(${cleanId})`);
+        const srcsetAttr = srcset ? ` srcsets="xs:100vw;lg:${srcset}"` : '';
+        
         html += `
 	<section>
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Regular Overflow</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow&gt;</code>
-		<lay-out lg="${prefix}(${cleanId})" overflow>`;
+		<lay-out lg="${prefix}(${cleanId})" overflow${srcsetAttr}>`;
 
         // Add items (double the column count to ensure overflow)
         const totalItems = Math.max(itemCount * 2, 6);
@@ -747,7 +836,7 @@ class LayoutBuilder {
 		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Preview Mode</h3>
 		${description ? `<small>${description} with preview of next items</small>` : '<small>Shows preview of next items</small>'}
 		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow="preview"&gt;</code>
-		<lay-out lg="${prefix}(${cleanId})" overflow="preview">`;
+		<lay-out lg="${prefix}(${cleanId})" overflow="preview"${srcsetAttr}>`;
 
         // Add same items for preview mode
         for (let i = 0; i < totalItems; i++) {
@@ -986,3 +1075,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export default LayoutBuilder;
+
+// Usage example for manual srcsets generation:
+// 
+// const builder = new LayoutBuilder('config.json', 'systems', 'dist.css');
+// await builder.loadConfig();
+// await builder.loadLayouts('layouts');
+// 
+// const srcsets = builder.generateSrcsetsFromElement('<lay-out md="grid(3a)" lg="columns(3)">');
+// console.log(srcsets); // Output: "xs:100vw;md:50vw,50vw,100vw;lg:33.33vw"
