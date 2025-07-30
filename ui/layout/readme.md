@@ -1,323 +1,179 @@
-# @browser.style/layout
+# Layout Srcsets Generator
 
-A modern, configurable CSS layout and content styling system with support for responsive design using both media queries and container queries. This project uses a JSON-driven build process to generate optimized CSS from modular definitions for multiple, distinct systems.
+This module provides utilities for generating responsive `srcsets` attributes for `lay-out` web components based on layout configurations.
+
+## Features
+
+- ✅ **Self-contained**: No file system dependencies
+- ✅ **Flexible input**: Accepts both DOM elements and HTML strings
+- ✅ **Pixel-based output**: Generates media query-ready pixel values
+- ✅ **Range support**: Handles min-width, max-width, and ranges (e.g., `540-920`)
 
 ## Installation
 
-```bash
-npm install @browser.style/layout
+```javascript
+import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from './layout/index.js';
 ```
 
-## Usage Options
+## Usage
 
-### 1. Pre-built CSS (Recommended)
-
-Use the optimized, pre-built CSS files for layout and content styling:
-
-```css
-/* Layout System */
-@import '@browser.style/layout/dist/layout.css';
-
-/* Content System */
-@import '@browser.style/layout/dist/content.css';
-
-/* Minified versions (production) */
-@import '@browser.style/layout/dist/layout.min.css';
-@import '@browser.style/layout/dist/content.min.css';
-```
-
-### 2. Custom Build (Advanced)
-
-For advanced customization, you can modify the configuration and run the build process yourself.
-
-```bash
-# Modify ui/layout/config.json to your needs
-npm run build
-```
-
-The build script (`ui/layout/build.js`) can also be used programmatically:
+### Basic Example
 
 ```javascript
-import LayoutBuilder from '@browser.style/layout/builder';
+// Load configuration and layout data
+const config = await fetch('config.json').then(r => r.json());
+const gridData = await fetch('systems/layouts/grid.json').then(r => r.json());
+const columnsData = await fetch('systems/layouts/columns.json').then(r => r.json());
 
-// Custom build with your own configuration
-const builder = new LayoutBuilder('./config.json', './systems/', './dist/');
-await builder.buildSystems();
-await builder.generateHTML();
+// Create layouts data map
+const layoutsData = createLayoutsDataMap({
+  'grid.json': gridData,
+  'columns.json': columnsData
+});
+
+// Generate srcsets for an element
+const element = document.querySelector('lay-out');
+const srcsets = generateLayoutSrcsets(element, config, layoutsData);
+
+// Apply to element
+element.setAttribute('srcsets', srcsets);
 ```
 
-## HTML Usage
+### String Input Example
 
-The system generates CSS for different HTML elements based on the configuration.
-
-### Layout System (`<lay-out>`)
-
-Use the `<lay-out>` element for page and component structures.
-
-```html
-<lay-out sm="columns(2)" md="bento(6a-fixed)" xl="mosaic(photo-lg)">
-  <div>Content 1</div>
-  <div>Content 2</div>
-  <div>Content 3</div>
-  <div>Content 4</div>
-  <div>Content 5</div>
-  <div>Content 6</div>
-</lay-out>
+```javascript
+const elementString = '<lay-out md="grid(3a)" lg="columns(3)">';
+const srcsets = generateLayoutSrcsets(elementString, config, layoutsData);
+// Returns: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
 ```
 
-### Content System (`<item-card>`)
+### Child Component Srcset Generation
 
-Use the `<item-card>` element for styling content items within a layout. These styles are often driven by container queries.
+```javascript
+// Get CSS srcset for specific child elements
+const layoutElement = document.querySelector('lay-out');
 
-```html
-<lay-out md="columns(3)">
-  <item-card sm="stack(media, body)" md="columns(media, body)">
-    <!-- card content -->
-  </item-card>
-  <item-card sm="stack(media, body)" md="columns(media, body)">
-    <!-- card content -->
-  </item-card>
-  <item-card sm="stack(media, body)" md="columns(media, body)">
-    <!-- card content -->
-  </item-card>
-</lay-out>
+// Generate srcsets for different children
+const firstChildSrcset = getSrcset(layoutElement, 0);  // First child
+const secondChildSrcset = getSrcset(layoutElement, 1); // Second child
+
+// Apply to image elements
+document.querySelector('img:nth-child(1)').setAttribute('sizes', firstChildSrcset);
+document.querySelector('img:nth-child(2)').setAttribute('sizes', secondChildSrcset);
 ```
 
-## Configuration (`config.json`)
+### Complete Example
 
-The build process is controlled by `ui/layout/config.json`, which defines an array of "systems". Each system is an independent set of CSS rules and configurations.
+```javascript
+// 1. Load layout configuration
+const config = await fetch('config.json').then(r => r.json());
+const layoutFiles = {
+  'grid.json': await fetch('systems/layouts/grid.json').then(r => r.json()),
+  'columns.json': await fetch('systems/layouts/columns.json').then(r => r.json())
+};
+const layoutsData = createLayoutsDataMap(layoutFiles);
 
-```json
-{
-  "systems": [
-    {
-      "fileName": "layout.css",
-      "path": "layouts",
-      "layer": "layout",
-      "element": "lay-out",
-      "generateHTML": true,
-      "core": ["base"],
-      "common": ["animations", "demo"],
-      "breakpoints": {
-        "lg": {
-          "type": "@media",
-          "min": "720px",
-          "layouts": ["bento", "columns", "grid"]
-        }
-      }
-    },
-    {
-      "fileName": "content.css",
-      "path": "content",
-      "layer": "content",
-      "element": "item-card",
-      "generateHTML": false,
-      "core": ["content"],
-      "breakpoints": {
-        "sm": {
-          "type": "@container",
-          "min": "280px",
-          "layouts": ["stack", "columns", "rows"]
-        }
-      }
+// 2. Generate and apply srcsets to layout element
+const layoutElement = document.querySelector('lay-out');
+const srcsets = generateLayoutSrcsets(layoutElement, config, layoutsData);
+layoutElement.setAttribute('srcsets', srcsets);
+
+// 3. Generate individual srcsets for child images
+const images = layoutElement.querySelectorAll('img');
+images.forEach((img, index) => {
+  const imgSizes = getSrcset(layoutElement, index);
+  img.setAttribute('sizes', imgSizes);
+});
+
+// Example output:
+// Layout srcsets: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
+// Child 0 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
+// Child 1 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
+// Child 2 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 100vw, 100vw"
+```
+
+## Output Format
+
+The generated srcsets use a pixel-based format that child components can easily parse:
+
+- **`default:100vw`** - Mobile-first fallback (no media query)
+- **`540:50vw`** - `min-width: 540px` (simple number for min-width only)
+- **`540-920:50vw`** - `min-width: 540px AND max-width: 920px` (range format)
+
+## Child Component Usage
+
+Child components can parse the srcsets attribute to generate proper media queries:
+
+```javascript
+function parseSrcsets(srcsets) {
+  const rules = srcsets.split(';');
+  return rules.map(rule => {
+    const [key, value] = rule.split(':');
+    
+    if (key === 'default') {
+      return { value, mediaQuery: null }; // No media query
     }
-  ]
+    
+    if (key.includes('-')) {
+      // Range: "540-920" -> "(min-width: 540px) and (max-width: 920px)"
+      const [min, max] = key.split('-');
+      return { 
+        value, 
+        mediaQuery: `(min-width: ${min}px) and (max-width: ${max}px)` 
+      };
+    } else {
+      // Min-width only: "540" -> "(min-width: 540px)"
+      return { 
+        value, 
+        mediaQuery: `(min-width: ${key}px)` 
+      };
+    }
+  });
 }
 ```
 
-### System Properties
+## API Reference
 
-- `fileName`: The name of the output CSS file.
-- `path`: The subdirectory within `systems/` containing the JSON definitions.
-- `layer`: The name for the CSS cascade layer.
-- `element`: The HTML element this system targets.
-- `generateHTML`: A boolean to enable or disable the generation of a demo HTML file.
-- `core`: Core CSS files to include.
-- `common`: Common CSS files to include.
-- `breakpoints`: An object defining responsive breakpoints and the layouts to apply.
+### `generateLayoutSrcsets(element, config, layoutsData)`
 
-## Development & Building
+Generates srcsets attribute for lay-out elements.
 
-### Build Commands
+**Parameters:**
+- `element` (Element|string) - DOM element or lay-out element string
+- `config` (Object) - Loaded config.json object
+- `layoutsData` (Map) - Map of layout type → layout objects array
 
-```bash
-# Build all systems once
-npm run build
+**Returns:**
+- `string` - Formatted srcsets string
 
-# Build and watch for changes (development)
-npm run dev
+### `getSrcset(layoutElement, childIndex)`
 
-# Build minified versions for production
-npm run build:min
+Generates CSS srcset string for a specific child element within a lay-out.
+
+**Parameters:**
+- `layoutElement` (Element|string) - Layout DOM element or element string with srcsets attribute
+- `childIndex` (number) - Zero-based index of the child element
+
+**Returns:**
+- `string` - CSS srcset string ready for img elements (e.g., "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw")
+
+**Example:**
+```javascript
+const layoutEl = document.querySelector('lay-out[srcsets]');
+const imgSrcset = getSrcset(layoutEl, 0); // First child
+// Returns: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
 ```
 
-### Build Features
+### `createLayoutsDataMap(layoutFiles)`
 
-- ✅ **Multi-System Output**: Generates separate CSS files for each configured system.
-- ✅ **CSS Optimization**: Groups identical selectors and properties.
-- ✅ **Mixed Query Types**: Supports both `@media` and `@container` queries.
-- ✅ **Deduplication**: Eliminates redundant CSS rules.
-- ✅ **Watch Mode**: Auto-rebuilds on file changes.
-- ✅ **Layer Support**: Uses CSS `@layer` for proper cascade control.
+Helper function to create layoutsData Map from JSON files.
 
-## Package Contents
+**Parameters:**
+- `layoutFiles` (Object) - Object where keys are filenames and values are loaded JSON data
 
-The relevant development files are located in the `ui/layout/` directory:
+**Returns:**
+- `Map` - Map suitable for use with generateLayoutSrcsets
 
-```
-ui/layout/
-├── dist/                 # Compiled output
-│   ├── layout.css        # Pre-built CSS for layout system
-│   ├── content.css       # Pre-built CSS for content system
-│   ├── layout.min.css    # Minified layout CSS
-│   ├── content.min.css   # Minified content CSS
-│   └── *.html            # Demo files for each layout type
-├── systems/              # System JSON definitions
-│   ├── layouts/          # JSON files for the "layout" system
-│   └── content/          # JSON files for the "content" system
-├── core/                 # Core CSS files (base, content, etc.)
-├── config.json           # Build configuration
-├── build.js              # Build script
-└── README.md             # This documentation
-```
+## Integration with Build System
 
-## CSS Layer Structure
-
-The generated CSS uses CSS cascade layers for better control and organization. Layers are created on a per-system, per-breakpoint basis.
-
-```css
-/* Layers for the "layout" system */
-@layer layout.xs;
-@layer layout.sm;
-@layer layout.md;
-
-/* Layers for the "content" system */
-@layer content.xs;
-@layer content.sm;
-@layer content.md;
-```
-
-This structure provides:
-- ✅ **Predictable Cascade**: Layers ensure consistent styling precedence.
-- ✅ **System Isolation**: Styles for `layout` and `content` are kept separate.
-- ✅ **Breakpoint Isolation**: Each breakpoint has its own layer.
-- ✅ **Easy Overrides**: You can override styles by targeting specific layers.
-
-## Framework Integration (React, Vue, & Angular)
-
-This CSS-only system is designed to work seamlessly with modern web frameworks. Because it uses standard CSS to style custom HTML tags (`<lay-out>`, `<item-card>`), **no JavaScript components or plugins are required.**
-
-You can use the custom tags directly in your components as if they were native HTML elements. Just import the generated CSS into your project.
-
-### React Example
-
-In your React component, you can use the custom tags directly in your JSX. React will render them correctly without any extra configuration.
-
-```jsx
-import '@browser.style/layout/dist/layout.css';
-import '@browser.style/layout/dist/content.css';
-
-function MyComponent() {
-  return (
-    <lay-out md="columns(2)" lg="asym(l-r)">
-      <item-card sm="stack(media, body)">
-        <h2>Card 1</h2>
-        <p>Some content here.</p>
-      </item-card>
-      <item-card sm="stack(media, body)">
-        <h2>Card 2</h2>
-        <p>Some content here.</p>
-      </item-card>
-    </lay-out>
-  );
-}
-```
-
-### Vue Example
-
-In your Vue components, you can use the custom tags directly in your templates. Vue's compiler will handle them correctly.
-
-```vue
-<template>
-  <lay-out md="columns(2)" lg="asym(l-r)">
-    <item-card sm="stack(media, body)">
-      <h2>Card 1</h2>
-      <p>Some content here.</p>
-    </item-card>
-    <item-card sm="stack(media, body)">
-      <h2>Card 2</h2>
-      <p>Some content here.</p>
-    </item-card>
-  </lay-out>
-</template>
-
-<style>
-@import '@browser.style/layout/dist/layout.css';
-@import '@browser.style/layout/dist/content.css';
-</style>
-```
-
-### Angular Example
-
-To use custom elements in Angular, you need to include `CUSTOM_ELEMENTS_SCHEMA` in the module where you are using them. This tells the Angular compiler to allow non-standard tags.
-
-**In your `app.module.ts` (or feature module):**
-```typescript
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
-@NgModule({
-  // ... other module properties
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
-})
-export class AppModule { }
-```
-
-**In your global `styles.css`:**
-```css
-@import '@browser.style/layout/dist/layout.css';
-@import '@browser.style/layout/dist/content.css';
-```
-
-**In your component template:**
-```html
-<lay-out md="columns(2)" lg="asym(l-r)">
-  <item-card sm="stack(media, body)">
-    <h2>Card 1</h2>
-    <p>Some content here.</p>
-  </item-card>
-  <item-card sm="stack(media, body)">
-    <h2>Card 2</h2>
-    <p>Some content here.</p>
-  </item-card>
-</lay-out>
-```
-
-## License
-
-ISC
-
----
-
-columns(l-r)
-columns(r-l)
-image()
-rows(t-b) // default
-rows(b-t)
-stack(t-l)
-stack(t-c)
-stack(t-r)
-stack(c-l)
-stack(c-c)
-stack(c-r)
-stack(b-l)
-stack(b-c)
-stack(b-r)
-stack(flip-t)
-stack(flip-r)
-stack(flip-b)
-stack(flip-l)
-stack(slide-t)
-stack(slide-r)
-stack(slide-b)
-stack(slide-l)
-text()
+This module works alongside the existing build system in `build.js`. The build system automatically generates srcsets during the build process, while this module provides runtime generation for dynamic scenarios.

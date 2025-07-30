@@ -63,53 +63,6 @@
           "layouts": [{ "bento": ["bento(6a)"] }]
         }
       }
-    },
-    {
-      "fileName": "content.css",
-      "path": "content",
-      "layer": "content",
-      "element": "item-card",
-      "generateHTML": false,
-      "core": ["content"],
-      "common": [],
-      "breakpoints": {
-        "xs": {
-          "type": "@container",
-          "min": "160px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        },
-        "sm": {
-          "type": "@container",
-          "min": "280px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        },
-        "md": {
-          "type": "@container",
-          "min": "400px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        },
-        "lg": {
-          "type": "@container",
-          "min": "520px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        },
-        "xl": {
-          "type": "@container",
-          "min": "680px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        },
-        "xxl": {
-          "type": "@container",
-          "min": "840px",
-          "max": null,
-          "layouts": ["stack", "columns", "rows", "content"]
-        }
-      }
     }
   ]
 }

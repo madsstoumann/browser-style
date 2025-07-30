@@ -51,6 +51,8 @@ class LayoutBuilder {
         const layoutContent = fs.readFileSync(layoutPath, 'utf8');
         const layoutData = JSON.parse(layoutContent);
         
+        const isLayoutSystem = this.currentSystem?.path === 'layouts';
+        
         if (layoutData.layouts && Array.isArray(layoutData.layouts)) {
           const transformedData = {
             name: layoutData.name,
@@ -64,16 +66,16 @@ class LayoutBuilder {
           this.layouts.set(layoutName, transformedData.layouts);
           this.layouts.set(`${layoutName}_prefix`, layoutData.prefix);
           
-          // Also store in layoutSystemLayouts if this is the layout system (path: "layouts")
-          if (this.currentSystem && this.currentSystem.path === 'layouts') {
+          // Also store in layoutSystemLayouts if this is the layout system
+          if (isLayoutSystem) {
             this.layoutSystemLayouts.set(layoutName, transformedData.layouts);
             this.layoutSystemLayouts.set(`${layoutName}_prefix`, layoutData.prefix);
           }
         } else {
           this.layouts.set(layoutName, layoutData);
           
-          // Also store in layoutSystemLayouts if this is the layout system (path: "layouts")  
-          if (this.currentSystem && this.currentSystem.path === 'layouts') {
+          // Also store in layoutSystemLayouts if this is the layout system
+          if (isLayoutSystem) {
             this.layoutSystemLayouts.set(layoutName, layoutData);
           }
         }
@@ -85,54 +87,28 @@ class LayoutBuilder {
     }
   }
 
-  async loadCoreFiles(coreFiles = []) {
-    let coreCSS = '';
+  async loadCSSFiles(files = [], fileType = 'file') {
+    let css = '';
     
-    if (coreFiles && Array.isArray(coreFiles)) {
-      for (const coreFile of coreFiles) {
-        const corePath = path.join(__dirname, 'core', `${coreFile}.css`);
-        
-        try {
-          if (fs.existsSync(corePath)) {
-            const coreContent = fs.readFileSync(corePath, 'utf8');
-            coreCSS += coreContent + '\n\n';
-            console.log(`✓ Loaded core file: ${coreFile}.css`);
-          } else {
-            console.warn(`⚠ Core file not found: ${coreFile}.css`);
-          }
-        } catch (error) {
-          console.warn(`⚠ Failed to load core file ${coreFile}.css: ${error.message}`);
+    for (const fileName of files) {
+      const filePath = path.join(__dirname, 'core', `${fileName}.css`);
+      
+      try {
+        if (fs.existsSync(filePath)) {
+          const content = fs.readFileSync(filePath, 'utf8');
+          css += content + '\n\n';
+          console.log(`✓ Loaded ${fileType} file: ${fileName}.css`);
+        } else {
+          console.warn(`⚠ ${fileType.charAt(0).toUpperCase() + fileType.slice(1)} file not found: ${fileName}.css`);
         }
+      } catch (error) {
+        console.warn(`⚠ Failed to load ${fileType} file ${fileName}.css: ${error.message}`);
       }
     }
     
-    return coreCSS;
+    return css;
   }
-
-  async loadCommonFiles(commonFiles = []) {
-    let commonCSS = '';
-    
-    if (commonFiles && Array.isArray(commonFiles)) {
-      for (const commonFile of commonFiles) {
-        const commonPath = path.join(__dirname, 'core', `${commonFile}.css`);
-        
-        try {
-          if (fs.existsSync(commonPath)) {
-            const commonContent = fs.readFileSync(commonPath, 'utf8');
-            commonCSS += commonContent + '\n\n';
-            console.log(`✓ Loaded common file: ${commonFile}.css`);
-          } else {
-            console.warn(`⚠ Common file not found: ${commonFile}.css`);
-          }
-        } catch (error) {
-          console.warn(`⚠ Failed to load common file ${commonFile}.css: ${error.message}`);
-        }
-      }
-    }
-    
-    return commonCSS;
-  }
-  generateMediaQuery(breakpoint, config, layer = null) {
+  generateMediaQuery(breakpoint, config) {
     const conditions = [];
     if (config.min) conditions.push(`min-width: ${config.min}`);
     if (config.max) conditions.push(`max-width: ${config.max}`);
@@ -145,9 +121,8 @@ class LayoutBuilder {
     return null;
   }
 
-  processBreakpoint(breakpointName, breakpointConfig, systemType = 'layout') {
-    const layer = this.currentSystem?.layer || null;
-    const mediaQuery = this.generateMediaQuery(breakpointName, breakpointConfig, layer);
+  processBreakpoint(breakpointName, breakpointConfig) {
+    const mediaQuery = this.generateMediaQuery(breakpointName, breakpointConfig);
     if (!mediaQuery) return;
 
     const processedLayouts = new Set();
@@ -155,11 +130,11 @@ class LayoutBuilder {
 
     for (const layoutRef of breakpointConfig.layouts) {
       if (typeof layoutRef === 'string') {
-        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, systemType, processedGlobalRules);
+        this.processLayout(layoutRef, breakpointName, mediaQuery, processedLayouts, processedGlobalRules);
       } else if (typeof layoutRef === 'object') {
         for (const [layoutName, variants] of Object.entries(layoutRef)) {
           for (const variant of variants) {
-            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, systemType, processedGlobalRules);
+            this.processLayoutVariant(layoutName, variant, breakpointName, mediaQuery, processedLayouts, processedGlobalRules);
           }
         }
       }
@@ -171,7 +146,7 @@ class LayoutBuilder {
     return match ? match[1] : fullId;
   }
 
-  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
+  processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
       console.warn(`⚠ Layout '${layoutName}' not found`);
@@ -193,11 +168,11 @@ class LayoutBuilder {
       if (processedLayouts.has(key)) continue;
       processedLayouts.add(key);
 
-      this.generateLayoutCSS(layout, actualPrefix, layoutId, breakpointName, mediaQuery, layoutType, processedGlobalRules);
+      this.generateLayoutCSS(layout, actualPrefix, layoutId, breakpointName, mediaQuery, processedGlobalRules);
     }
   }
 
-  processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, layoutType = 'layout', processedGlobalRules = new Set()) {
+  processLayoutVariant(layoutName, variantId, breakpointName, mediaQuery, processedLayouts, processedGlobalRules = new Set()) {
     const layoutData = this.layouts.get(layoutName);
     if (!layoutData) {
       console.warn(`⚠ Layout type '${layoutName}' not found`);
@@ -216,10 +191,10 @@ class LayoutBuilder {
     if (processedLayouts.has(key)) return;
     processedLayouts.add(key);
 
-    this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, layoutType, processedGlobalRules);
+    this.generateLayoutCSS(layout, layoutName, layoutId, breakpointName, mediaQuery, processedGlobalRules);
   }
 
-  generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, layoutType = 'layout', processedGlobalRules = new Set()) {
+  generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, processedGlobalRules = new Set()) {
     const elementSelector = this.currentSystem.element || 'lay-out';
     const selectorValue = `${layoutPrefix}(${layoutId})`;
     const baseSelector = `${elementSelector}[${breakpointName}="${selectorValue}"]`;
@@ -267,16 +242,12 @@ class LayoutBuilder {
       for (const rule of layout.rules) {
         let selector;
         
-        if (rule.selector === '&') {
-          selector = baseSelector;
-        } else if (rule.selector === 'root') {
+        if (rule.selector === '&' || rule.selector === 'root' || rule.selector === elementSelector) {
           selector = baseSelector;
         } else if (rule.selector === '&>*') {
           selector = `${baseSelector} > *`;
         } else if (rule.selector.startsWith('&')) {
           selector = baseSelector + rule.selector.substring(1);
-        } else if (rule.selector === elementSelector) {
-          selector = baseSelector;
         } else {
           selector = `${baseSelector} ${rule.selector}`;
         }
@@ -532,10 +503,7 @@ class LayoutBuilder {
     return css;
   }
 
-  reset() {
-    this.layouts.clear();
-    this.cssRules.clear();
-  }
+
 
   async buildSystems(minify = false) {
     console.log('🚀 Starting CSS build...\n');
@@ -555,22 +523,24 @@ class LayoutBuilder {
       
       this.currentSystem = system;
       
-      this.reset();
+      // Clear layouts and CSS rules for each system
+      this.layouts.clear();
+      this.cssRules.clear();
       
       await this.loadLayouts(system.path);
       
-      const coreCSS = await this.loadCoreFiles(system.core);
+      const coreCSS = await this.loadCSSFiles(system.core, 'core');
       
       console.log(`📝 Processing breakpoints for ${system.fileName}...`);
       
       if (system.breakpoints) {
         for (const [breakpointName, breakpointConfig] of Object.entries(system.breakpoints)) {
           console.log(`\t- Processing ${breakpointName} (${breakpointConfig.min})`);
-          this.processBreakpoint(breakpointName, breakpointConfig, 'layout');
+          this.processBreakpoint(breakpointName, breakpointConfig);
         }
       }
       
-      const commonCSS = await this.loadCommonFiles(system.common);
+      const commonCSS = await this.loadCSSFiles(system.common, 'common');
       
       console.log(`🎨 Generating ${minify ? 'minified' : 'optimized'} CSS for ${system.fileName}...`);
       
@@ -627,18 +597,52 @@ class LayoutBuilder {
   }
 
   generateSrcsets(layout, breakpointAttrs) {
-    const srcsetParts = ['xs:100vw']; // Default: single column stack
+    const srcsetParts = ['default:100vw']; // Mobile-first fallback
     
     if (layout.breakpoints) {
       for (const [breakpoint, layoutPattern] of Object.entries(layout.breakpoints)) {
         const srcset = this.getSrcsetForPattern(layoutPattern);
         if (srcset) {
-          srcsetParts.push(`${breakpoint}:${srcset}`);
+          const pixelKey = this.getPixelKeyForBreakpoint(breakpoint);
+          if (pixelKey) {
+            srcsetParts.push(`${pixelKey}:${srcset}`);
+          }
         }
       }
     }
     
     return srcsetParts.join(';');
+  }
+
+  getPixelKeyForBreakpoint(breakpointName) {
+    // Find the breakpoint config in the current system, or fallback to layout system
+    let breakpointConfig = this.currentSystem?.breakpoints?.[breakpointName];
+    
+    // If not found and no current system, search in all systems (for manual calls)
+    if (!breakpointConfig && this.config?.systems) {
+      for (const system of this.config.systems) {
+        if (system.breakpoints?.[breakpointName]) {
+          breakpointConfig = system.breakpoints[breakpointName];
+          break;
+        }
+      }
+    }
+    
+    if (!breakpointConfig) return null;
+    
+    const min = breakpointConfig.min ? parseInt(breakpointConfig.min.replace('px', '')) : null;
+    const max = breakpointConfig.max ? parseInt(breakpointConfig.max.replace('px', '')) : null;
+    
+    // Convert to pixel-based key format
+    if (min && max) {
+      return `${min}-${max}`; // Range: "540-920"
+    } else if (min) {
+      return `${min}`; // Min-width only: "540"
+    } else if (max) {
+      return `0-${max}`; // Max-width only: "0-720" (rare case)
+    }
+    
+    return null;
   }
 
   getSrcsetForPattern(pattern) {
@@ -648,19 +652,27 @@ class LayoutBuilder {
     
     const [, layoutType, layoutId] = match;
     
-    // Look up the layout in our layout system layouts - try different possible keys
+    // Look up the layout in our layout system layouts first, then fallback to regular layouts
     let layouts = this.layoutSystemLayouts.get(layoutType);
     if (!layouts) {
       // Try with 's' suffix (e.g., "columns" for "column")
       layouts = this.layoutSystemLayouts.get(layoutType + 's');
     }
     if (!layouts) {
-      // Try finding by prefix
+      // Try finding by prefix in layoutSystemLayouts
       for (const [key, value] of this.layoutSystemLayouts.entries()) {
         if (Array.isArray(value) && value.length > 0 && value[0].id?.startsWith(layoutType + '(')) {
           layouts = value;
           break;
         }
+      }
+    }
+    
+    // Fallback to regular layouts map if not found in layoutSystemLayouts
+    if (!layouts) {
+      layouts = this.layouts.get(layoutType);
+      if (!layouts) {
+        layouts = this.layouts.get(layoutType + 's');
       }
     }
     
@@ -1083,4 +1095,4 @@ export default LayoutBuilder;
 // await builder.loadLayouts('layouts');
 // 
 // const srcsets = builder.generateSrcsetsFromElement('<lay-out md="grid(3a)" lg="columns(3)">');
-// console.log(srcsets); // Output: "xs:100vw;md:50vw,50vw,100vw;lg:33.33vw"
+// console.log(srcsets); // Output: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
