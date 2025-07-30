@@ -1,4 +1,5 @@
 import { ICONS } from './icons.js';
+import { getSrcset } from '../layout/index.js';
 
 class ContentCard extends HTMLElement {
 	#data; #root; #settings; #popoverId;
@@ -143,10 +144,15 @@ class ContentCard extends HTMLElement {
 	renderImage(image, useSchema = false) {
 		if (!image?.src) return '';
 		const schemaAttr = useSchema ? 'itemprop="image"' : '';
+		
+		// Generate responsive srcset and sizes
+		const { srcset, sizes } = this._generateResponsiveSrcset(image.src);
+		
 		return `<img 
 			${this.getStyle('cc-media-image')} 
 			src="${image.src}" 
-			${image.srcset ? `srcset="${image.srcset}"` : ''}
+			${srcset ? `srcset="${srcset}"` : ''}
+			${sizes ? `sizes="${sizes}"` : ''}
 			alt="${image.alt || ''}" 
 			decoding="${image.decoding || 'async'}"
 			${image.width ? `width="${image.width}"` : ''}
@@ -154,6 +160,83 @@ class ContentCard extends HTMLElement {
 			loading="${image.loading ? image.loading : 'lazy'}"
 			${schemaAttr}
 		>`;
+	}
+
+	_generateResponsiveSrcset(imageSrc) {
+		try {
+			// Find parent lay-out element with srcsets attribute
+			const layoutParent = this.closest('lay-out[srcsets]');
+			if (!layoutParent) {
+				// Try to find any lay-out parent and generate basic responsive srcset
+				const anyLayoutParent = this.closest('lay-out');
+				if (anyLayoutParent) {
+					return this._generateFallbackSrcset(imageSrc);
+				}
+				
+				// No lay-out parent at all - use basic responsive srcset
+				return this._generateFallbackSrcset(imageSrc);
+			}
+
+			// Check if this is just a fallback srcsets (default only)
+			const srcsets = layoutParent.getAttribute('srcsets');
+			if (srcsets === 'default:100vw') {
+				return this._generateFallbackSrcset(imageSrc);
+			}
+
+			// Find the index of this content-card within the lay-out
+			const siblings = Array.from(layoutParent.children);
+			const childIndex = siblings.indexOf(this);
+			if (childIndex === -1) {
+				return this._generateFallbackSrcset(imageSrc);
+			}
+
+			// Get CSS sizes string using getSrcset
+			let sizes;
+			try {
+				sizes = getSrcset(layoutParent, childIndex);
+			} catch (getSrcsetError) {
+				return this._generateFallbackSrcset(imageSrc);
+			}
+
+			// Validate that we got a proper sizes result
+			if (!sizes || sizes === '100vw') {
+				return this._generateFallbackSrcset(imageSrc);
+			}
+			
+			// Generate srcset with different widths using query parameters
+			const widths = [320, 768, 1280];
+			const srcsetParts = widths.map(width => {
+				const url = new URL(imageSrc, window.location.href);
+				url.searchParams.set('w', width.toString());
+				return `${url.toString()} ${width}w`;
+			});
+			
+			return {
+				srcset: srcsetParts.join(', '),
+				sizes: sizes
+			};
+		} catch (error) {
+			return this._generateFallbackSrcset(imageSrc);
+		}
+	}
+
+	_generateFallbackSrcset(imageSrc) {
+		try {
+			// Generate basic responsive srcset with mobile-first sizing
+			const widths = [320, 768, 1280];
+			const srcsetParts = widths.map(width => {
+				const url = new URL(imageSrc, window.location.href);
+				url.searchParams.set('w', width.toString());
+				return `${url.toString()} ${width}w`;
+			});
+
+			return {
+				srcset: srcsetParts.join(', '),
+				sizes: '(min-width: 768px) 50vw, 100vw' // Basic responsive fallback
+			};
+		} catch (error) {
+			return { srcset: null, sizes: null };
+		}
 	}
 
 	renderYouTube(video) {

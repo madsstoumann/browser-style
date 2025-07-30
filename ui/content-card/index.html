@@ -132,10 +132,108 @@
 
 	<main></main>
 
-	<script type="module" src="./index.js"></script>
-
 	<script type="module">
-		customElements.whenDefined('content-card').then(async () => {
+		// Import layout srcsets utilities
+		import { generateLayoutSrcsets, createLayoutsDataMap } from '../layout/index.js';
+
+		// Load layout data once and initialize everything
+		async function initializeApp() {
+			try {
+				console.log('🔧 Loading layout configuration...');
+				
+				// Load configuration and layout data once
+				const [config, gridData, columnsData, bentoData, asymmetricalData, ratiosData] = await Promise.all([
+					fetch('../layout/config.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/grid.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/columns.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/bento.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/asymmetrical.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/ratios.json').then(r => r.json())
+				]);
+
+				// Store globally for reuse
+				window._layoutSrcsetData = {
+					config,
+					layoutsData: createLayoutsDataMap({
+						'grid.json': gridData,
+						'columns.json': columnsData,
+						'bento.json': bentoData,
+						'asymmetrical.json': asymmetricalData,
+						'ratios.json': ratiosData
+					})
+				};
+
+				// 1. First, set srcsets on all lay-out elements
+				console.log('📐 Setting layout srcsets...');
+				const layoutElements = document.querySelectorAll('lay-out');
+				console.log(`📊 Found ${layoutElements.length} lay-out elements`);
+
+				let processedCount = 0;
+				layoutElements.forEach((element, index) => {
+					try {
+						const srcsets = generateLayoutSrcsets(element, config, window._layoutSrcsetData.layoutsData);
+						
+						if (srcsets && srcsets !== 'default:100vw') {
+							element.setAttribute('srcsets', srcsets);
+							console.log(`✅ Set srcsets for lay-out ${index + 1}:`, srcsets);
+							processedCount++;
+						} else {
+							// For lay-out elements without responsive breakpoints, set a basic fallback
+							element.setAttribute('srcsets', 'default:100vw');
+							console.log(`ℹ️  Set fallback srcsets for lay-out ${index + 1} (no breakpoint layouts)`);
+							processedCount++;
+						}
+					} catch (error) {
+						console.warn(`⚠️  Failed to generate srcsets for lay-out ${index + 1}:`, error);
+						// Still set basic fallback on error
+						element.setAttribute('srcsets', 'default:100vw');
+					}
+				});
+
+				console.log(`📈 Successfully processed ${processedCount}/${layoutElements.length} lay-out elements`);
+				console.log('🎉 Layout srcsets complete!');
+
+				// 2. Now load and initialize content-card custom element
+				console.log('🃏 Loading content-card component...');
+				await import('./index.js');
+				
+				// 3. Initialize content cards (layout srcsets are ready)
+				console.log('🃏 Initializing content cards...');
+				await initializeContentCards();
+
+			} catch (error) {
+				console.error('❌ Failed to initialize app:', error);
+			}
+		}
+
+		// Utility function for dynamic content
+		window.updateLayoutSrcsets = function(container = document) {
+			if (!window._layoutSrcsetData) {
+				console.warn('⚠️  Layout data not loaded yet');
+				return;
+			}
+
+			const newLayoutElements = container.querySelectorAll('lay-out:not([srcsets])');
+			if (newLayoutElements.length > 0) {
+				console.log(`🔄 Updating srcsets for ${newLayoutElements.length} new lay-out elements`);
+				
+				newLayoutElements.forEach((element, index) => {
+					try {
+						const srcsets = generateLayoutSrcsets(element, window._layoutSrcsetData.config, window._layoutSrcsetData.layoutsData);
+						if (srcsets && srcsets !== 'default:100vw') {
+							element.setAttribute('srcsets', srcsets);
+							console.log(`✅ Updated srcsets for new lay-out ${index + 1}:`, srcsets);
+						}
+					} catch (error) {
+						console.warn(`⚠️  Failed to update srcsets for new lay-out ${index + 1}:`, error);
+					}
+				});
+			}
+		};
+
+		// Content card initialization function
+		async function initializeContentCards() {
+			await customElements.whenDefined('content-card');
 			const main = document.querySelector('main');
 			const news = await fetch('data.json').then(r => r.json());
 			
@@ -152,7 +250,12 @@
 				card.setAttribute('type', item.type);
 				main.appendChild(card);
 			});
-		});
+
+			console.log('🃏 Content cards initialized!');
+		}
+
+		// Start the app
+		initializeApp();
 	</script>
 
 	<!--

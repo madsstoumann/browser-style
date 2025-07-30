@@ -1,19 +1,26 @@
 {
   "name": "@browser.style/layout",
-  "version": "1.0.1",
-  "description": "Modern CSS layout system with responsive grid patterns, container queries, and configurable builds",
+  "version": "1.1.0",
+  "description": "Modern CSS layout system with responsive grid patterns, container queries, configurable builds, and responsive image srcsets generation",
   "type": "module",
+  "main": "index.js",
   "style": "dist/layout.css",
   "scripts": {
     "build": "node build.js",
     "build:min": "node build.js --minify",
     "build:watch": "node build.js --watch",
     "dev": "npm run build:watch",
-    "prepublishOnly": "npm run build"
+    "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
+    "prepublishOnly": "npm run build && npm test"
   },
   "exports": {
-    ".": "./dist/layout.css",
-    "./layout.min": "./dist/layout.min.css",
+    ".": {
+      "import": "./index.js",
+      "style": "./dist/layout.css"
+    },
+    "./css": "./dist/layout.css",
+    "./css/min": "./dist/layout.min.css",
+    "./srcsets": "./index.js",
     "./config": "./config.json",
     "./systems": "./systems/",
     "./systems/*": "./systems/*",
@@ -25,6 +32,7 @@
     "systems/",
     "config.json",
     "build.js",
+    "index.js",
     "README.md"
   ],
   "publishConfig": {
@@ -37,11 +45,15 @@
     "layout",
     "css-grid",
     "responsive-design",
+    "responsive-images",
+    "srcsets",
+    "sizes-attribute",
     "container-queries",
     "media-queries",
     "css-framework",
     "grid-layouts",
-    "bento-grids"
+    "bento-grids",
+    "image-optimization"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",

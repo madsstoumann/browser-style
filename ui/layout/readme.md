@@ -11,6 +11,25 @@ This module provides utilities for generating responsive `srcsets` attributes fo
 
 ## Installation
 
+### From npm
+
+```bash
+npm install @browser.style/layout
+```
+
+```javascript
+// Import the srcsets utilities
+import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from '@browser.style/layout';
+
+// Or import specific functions
+import { getSrcset } from '@browser.style/layout/srcsets';
+
+// Import CSS (optional)
+import '@browser.style/layout/css';
+```
+
+### Local Development
+
 ```javascript
 import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from './layout/index.js';
 ```
@@ -162,6 +181,26 @@ Generates CSS srcset string for a specific child element within a lay-out.
 const layoutEl = document.querySelector('lay-out[srcsets]');
 const imgSrcset = getSrcset(layoutEl, 0); // First child
 // Returns: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
+```
+
+## NPM Package Structure
+
+The package provides multiple export paths for different use cases:
+
+```javascript
+// Main exports (srcsets utilities)
+import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from '@browser.style/layout';
+
+// CSS imports
+import '@browser.style/layout/css';           // Full CSS
+import '@browser.style/layout/css/min';       // Minified CSS
+
+// Configuration and layout data
+import config from '@browser.style/layout/config';
+import gridLayouts from '@browser.style/layout/systems/layouts/grid.json';
+
+// Build system
+import builder from '@browser.style/layout/builder';
 ```
 
 ### `createLayoutsDataMap(layoutFiles)`
