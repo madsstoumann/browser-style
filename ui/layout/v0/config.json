@@ -1,0 +1,115 @@
+{
+  "systems": [
+    {
+      "fileName": "layout.css",
+      "path": "layouts",
+      "layer": "layout",
+      "element": "lay-out",
+      "generateHTML": true,
+      "core": ["base"],
+      "common": ["animations"],
+      "breakpoints": {
+        "xs": {
+          "type": "@media",
+          "min": "240px",
+          "max": null,
+          "layouts": ["autofit"]
+        },
+        "sm": {
+          "type": "@media",
+          "min": "380px",
+          "max": null,
+          "layouts": [
+            "autofit", 
+            {
+              "columns": ["columns(2)"],
+              "grid": ["grid(3a)"],
+              "mosaic": ["mosaic(photo)"]
+            }
+          ]
+        },
+        "md": {
+          "type": "@media",
+          "min": "540px",
+          "max": null,
+          "layouts": ["columns", 
+            "grid", 
+            {
+              "grid": ["grid(3a)"]
+            }
+          ]
+        },
+        "lg": {
+          "type": "@media",
+          "min": "720px",
+          "max": null,
+          "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
+        },
+        "xl": {
+          "type": "@media",
+          "min": "920px",
+          "max": null,
+          "layouts": [
+            {
+              "bento": ["bento(6a)"],
+              "mosaic": ["mosaic(scatter)", "mosaic(hex)"]
+            }
+          ]
+        },
+        "xxl": {
+          "type": "@media",
+          "min": "1140px",
+          "max": null,
+          "layouts": [{ "bento": ["bento(6a)"] }]
+        }
+      }
+    },
+    {
+      "fileName": "content.css",
+      "path": "content",
+      "layer": "content",
+      "element": "item-card",
+      "generateHTML": false,
+      "core": ["content"],
+      "common": [],
+      "breakpoints": {
+        "xs": {
+          "type": "@container",
+          "min": "160px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        },
+        "sm": {
+          "type": "@container",
+          "min": "280px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        },
+        "md": {
+          "type": "@container",
+          "min": "400px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        },
+        "lg": {
+          "type": "@container",
+          "min": "520px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        },
+        "xl": {
+          "type": "@container",
+          "min": "680px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        },
+        "xxl": {
+          "type": "@container",
+          "min": "840px",
+          "max": null,
+          "layouts": ["stack", "columns", "rows", "content"]
+        }
+      }
+    }
+  ]
+}
