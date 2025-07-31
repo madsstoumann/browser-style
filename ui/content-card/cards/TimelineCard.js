@@ -14,9 +14,15 @@ export class TimelineCard extends BaseCard {
 		const { content = {} } = this.data;
 		const headlineTag = content.headlineTag || 'h2';
 
+		// Set schema on the card element itself
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/EventSeries');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/EventSeries"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : (useSchema ? '<meta itemprop="name" content="Timeline">' : '')}
 				<ol ${getStyle('cc-timeline', settings)}>

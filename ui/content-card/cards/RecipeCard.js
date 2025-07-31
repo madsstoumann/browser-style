@@ -14,10 +14,15 @@ export class RecipeCard extends BaseCard {
 		const { content = {}, recipe: recipeData = {} } = this.data;
 		const headlineTag = content.headlineTag || 'h2';
 		const rating = this.data.engagement?.reactions?.[0]; // First reaction is "like" for rating
+		
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Recipe');
+		}
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/Recipe"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="recipeCategory" content="${content.category}">` : ''}
 				${content.readingTime && useSchema ? `<meta itemprop="totalTime" content="${content.readingTime}">` : ''}
 				${recipeData.prepTime && useSchema ? `<meta itemprop="prepTime" content="${recipeData.prepTime}">` : ''}

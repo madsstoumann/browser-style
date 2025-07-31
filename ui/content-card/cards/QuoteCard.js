@@ -13,11 +13,17 @@ export class QuoteCard extends BaseCard {
 		const useSchema = settings.useSchema;
 		const { content = {} } = this.data;
 
+		// Set schema on the card element itself
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Quotation');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.summary ? `
-					<blockquote ${getStyle('cc-quote', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/Quotation"' : ''}>
+					<blockquote ${getStyle('cc-quote', settings)}>
 						<p ${getStyle('cc-quote-text', settings)} ${useSchema ? 'itemprop="text"' : ''}>${content.summary}</p>
 						${this.data.authors?.length ? `
 							<cite ${getStyle('cc-quote-citation', settings)} ${useSchema ? 'itemprop="citation"' : ''}>

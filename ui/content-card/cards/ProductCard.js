@@ -16,9 +16,14 @@ export class ProductCard extends BaseCard {
 		const rating = productData.rating || {};
 		const headlineTag = content.headlineTag || 'h2';
 
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/Product');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/Product"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${this.data.sku && useSchema ? `<meta itemprop="sku" content="${this.data.sku}">` : ''}
 				${content.category && useSchema ? `<meta itemprop="category" content="${content.category}">` : ''}
 				

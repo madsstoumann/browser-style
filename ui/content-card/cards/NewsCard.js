@@ -14,9 +14,15 @@ export class NewsCard extends BaseCard {
 		const { content = {} } = this.data;
 		const headlineTag = content.headlineTag || 'h2';
 
+		// Set schema on the card element itself
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/NewsArticle');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/NewsArticle"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="articleSection" content="${content.category}">` : ''}
 				${content.published?.datetime && useSchema ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
 				${content.modified?.datetime && useSchema ? `<meta itemprop="dateModified" content="${content.modified.datetime}">` : ''}

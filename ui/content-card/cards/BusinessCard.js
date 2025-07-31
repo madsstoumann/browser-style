@@ -52,32 +52,37 @@ export class BusinessCard extends BaseCard {
 		const { content = {}, business: businessData = {} } = this.data;
 		const headlineTag = content.headlineTag || 'h2';
 
+		// Set schema on the card element itself
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/LocalBusiness');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/LocalBusiness"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : ''}
 				
 				${content.summary ? `<p ${getStyle('cc-summary', settings)} ${useSchema ? 'itemprop="description"' : ''}>${content.summary}</p>` : ''}
 				
 				${businessData.address ? `
-					<div ${getStyle('cc-business-location', settings)} ${useSchema ? 'itemprop="location" itemscope itemtype="https://schema.org/Place"' : ''}>
-						<div ${getStyle('cc-business-address', settings)} ${useSchema ? 'itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"' : ''}>
-							<div ${useSchema ? 'itemprop="streetAddress"' : ''}>${businessData.address.streetAddress}</div>
-							<div>
-								<span ${useSchema ? 'itemprop="addressLocality"' : ''}>${businessData.address.addressLocality}</span>,
-								<span ${useSchema ? 'itemprop="addressRegion"' : ''}>${businessData.address.addressRegion}</span>
-								<span ${useSchema ? 'itemprop="postalCode"' : ''}>${businessData.address.postalCode}</span>
-							</div>
-							${useSchema ? `<meta itemprop="addressCountry" content="${businessData.address.addressCountry}">` : ''}
+					<div ${getStyle('cc-business-address', settings)} ${useSchema ? 'itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"' : ''}>
+						<div ${useSchema ? 'itemprop="streetAddress"' : ''}>${businessData.address.streetAddress}</div>
+						<div>
+							<span ${useSchema ? 'itemprop="addressLocality"' : ''}>${businessData.address.addressLocality}</span>,
+							<span ${useSchema ? 'itemprop="addressRegion"' : ''}>${businessData.address.addressRegion}</span>
+							<span ${useSchema ? 'itemprop="postalCode"' : ''}>${businessData.address.postalCode}</span>
 						</div>
-						${businessData.geo ? `
-							<div ${useSchema ? 'itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates"' : ''}>
-								${useSchema ? `<meta itemprop="latitude" content="${businessData.geo.latitude}">` : ''}
-								${useSchema ? `<meta itemprop="longitude" content="${businessData.geo.longitude}">` : ''}
-								${useMap ? this.renderMap(businessData.geo, content.headline) : ''}
-							</div>
-						` : ''}
+						${useSchema ? `<meta itemprop="addressCountry" content="${businessData.address.addressCountry}">` : ''}
+					</div>
+				` : ''}
+				
+				${businessData.geo ? `
+					<div ${getStyle('cc-business-location', settings)} ${useSchema ? 'itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates"' : ''}>
+						${useSchema ? `<meta itemprop="latitude" content="${businessData.geo.latitude}">` : ''}
+						${useSchema ? `<meta itemprop="longitude" content="${businessData.geo.longitude}">` : ''}
+						${useMap ? this.renderMap(businessData.geo, content.headline) : ''}
 					</div>
 				` : ''}
 				

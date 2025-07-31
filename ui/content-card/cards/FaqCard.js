@@ -17,9 +17,15 @@ export class FaqCard extends BaseCard {
 		// Generate a unique name for this FAQ instance (Math.random() is fine for DOM IDs)
 		const faqName = `faq-${this.data.id || Math.random().toString(36).slice(2)}`;
 
+		// Set schema on the card element itself
+		if (useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', 'https://schema.org/FAQPage');
+		}
+
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
-			<div ${getStyle('cc-content', settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/FAQPage"' : ''}>
+			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : (useSchema ? '<meta itemprop="name" content="Frequently Asked Questions">' : '')}
 				<div ${getStyle('cc-faq', settings)}>
