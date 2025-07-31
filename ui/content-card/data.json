@@ -841,7 +841,7 @@
       ]
     },
     "content": {
-      "category": "Conference",
+      "category": "BusinessEvent",
       "headline": "Web Innovators Summit 2025",
       "summary": "Join us for a two-day summit exploring the future of web development, design, and technology.",
       "published": {
@@ -1056,5 +1056,61 @@
         { "headline": "2020s", "text": "Quantum computers achieve quantum supremacy on specific tasks." }
       ]
     }
+  },
+  {
+    "id": "business-1",
+    "type": "business",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/brewandbean.avif",
+          "alt": "Brew & Bean Coffee Shop Logo"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Brew & Bean Coffee Shop",
+      "summary": "Artisan coffee roastery and café serving locally sourced, ethically traded coffee beans with handcrafted pastries."
+    },
+    "business": {
+      "address": {
+        "streetAddress": "123 Main Street",
+        "addressLocality": "San Francisco",
+        "addressRegion": "CA",
+        "postalCode": "94105",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "latitude": "37.7749",
+        "longitude": "-122.4194"
+      },
+      "telephone": "+1-415-555-0123",
+      "email": "hello@brewandbean.com",
+      "website": "https://brewandbean.com",
+      "sameAs": [
+        "https://facebook.com/brewandbean",
+        "https://instagram.com/brewandbean",
+        "https://twitter.com/brewandbean"
+      ],
+      "foundingDate": "2018-03-15",
+      "openingHours": [
+        "Mo-Fr 06:00-20:00",
+        "Sa 07:00-21:00",
+        "Su 07:00-19:00"
+      ]
+    },
+    "actions": [
+      {
+        "text": "Visit Website",
+        "url": "https://brewandbean.com",
+        "icon": "open_in_new"
+      },
+      {
+        "text": "Call Now",
+        "url": "tel:+14155550123",
+        "icon": "phone"
+      }
+    ]
   }
 ]

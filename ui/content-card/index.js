@@ -141,6 +141,11 @@ class ContentCard extends HTMLElement {
 		// this._ensureSettingsInitialized();
 	}
 
+	// Helper method to clean up template whitespace
+	cleanHTML(html) {
+		return html.replace(/>\s+</g, '><').replace(/^\s+|\s+$/g, '');
+	}
+
 	renderImage(image, useSchema = false) {
 		if (!image?.src) return '';
 		const schemaAttr = useSchema ? 'itemprop="image"' : '';
@@ -277,7 +282,7 @@ class ContentCard extends HTMLElement {
 	renderRibbon(ribbon) {
 		if (!ribbon?.text) return '';
 		const styleAttr = ribbon.color ? `style="background-color: ${ribbon.color};"` : '';
-		const styleClass = ribbon.style ? ` ic-ribbon--${ribbon.style}` : '';
+		const styleClass = ribbon.style ? ` cc-ribbon--${ribbon.style}` : '';
 		const baseStyle = this.getStyle('cc-ribbon').slice(0, -1); // remove closing quote
 
 		return `<div ${baseStyle}${styleClass}" role="status" ${styleAttr}>
@@ -292,11 +297,9 @@ class ContentCard extends HTMLElement {
 	}
 
 	renderMedia(media, ribbon, sticker, useSchema = false) {
-		this._ensureSettingsInitialized();
 		if (!media?.sources?.length) return '';
-		return `
+		return this.cleanHTML(`
 		<figure ${this.getStyle('cc-media')}>
-		
 			${media.sources
 				.map((entry) => {
 					if (entry.type === 'image') return this.renderImage(entry, useSchema)
@@ -307,11 +310,10 @@ class ContentCard extends HTMLElement {
 			${this.renderRibbon(ribbon)}
 			${this.renderSticker(sticker)}
 			${media.caption ? `<figcaption ${this.getStyle('cc-media-caption')}>${media.caption}</figcaption>`: ''}
-		</figure>`
+		</figure>`)
 	}
 
 	renderVideo(video) {
-		this._ensureSettingsInitialized();
 		if (!video?.src) return '';
 		const opts = video.options || {};
 		return `<video ${this.getStyle('cc-media-video')} src="${video.src}"
@@ -324,6 +326,32 @@ class ContentCard extends HTMLElement {
 			${video.height ? `height="${video.height}"` : ''}
 			${video.crossorigin ? `crossorigin="${video.crossorigin}"` : ''}
 			preload="${opts.preload || 'metadata'}"></video>`
+	}
+
+	renderQuote(useSchema = true) {
+		if (!this.#data || this.#data.type !== 'quote') return '';
+		
+		const { content = {} } = this.#data;
+		
+		return `
+			<article ${this.getStyle('cc-content')}>
+				${content.category ? `<meta itemprop="about" content="${content.category}">` : ''}
+				
+				${content.summary ? `
+					<blockquote ${this.getStyle('cc-quote')} ${useSchema ? 'itemscope itemtype="https://schema.org/Quotation"' : ''}>
+						<p ${this.getStyle('cc-quote-text')} ${useSchema ? 'itemprop="text"' : ''}>${content.summary}</p>
+						${this.#data.authors?.length ? `
+							<cite ${this.getStyle('cc-quote-citation')} ${useSchema ? 'itemprop="citation"' : ''}>
+								${this.renderAuthors(this.#data.authors, useSchema)}
+								${content.category ? `<span ${this.getStyle('cc-quote-source')}>${content.category}</span>` : ''}
+							</cite>
+						` : ''}
+					</blockquote>
+				` : ''}
+				
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
 	}
 
 	renderSVG(name) {
@@ -345,7 +373,7 @@ class ContentCard extends HTMLElement {
 					const video = popoverData.video;
 					const opts = video.options || {};
 					const videoAttrs = `
-						class="ic-popover-video"
+						class="cc-popover-video"
 						src="${video.src}"
 						${opts.controls ? 'controls' : ''}
 						${opts.muted ? 'muted' : ''}
@@ -359,7 +387,7 @@ class ContentCard extends HTMLElement {
 				break;
 			case 'article':
 				if (popoverData.content) {
-					content = `<div class="ic-popover-content">${popoverData.content}</div>`;
+					content = `<div class="cc-popover-content">${popoverData.content}</div>`;
 				}
 				break;
 			// Future cases for 'image', 'text', etc. can be added here.
@@ -368,8 +396,8 @@ class ContentCard extends HTMLElement {
 		if (!content) return '';
 
 		return `
-			<div id="${this.#popoverId}" popover class="ic-popover">
-				<button type="button" popovertarget="${this.#popoverId}" popovertargetaction="hide" aria-label="Close and hide the modal overlay" class="ic-popover-close">✕</button>
+			<div id="${this.#popoverId}" popover class="cc-popover">
+				<button type="button" popovertarget="${this.#popoverId}" popovertargetaction="hide" aria-label="Close and hide the modal overlay" class="cc-popover-close">✕</button>
 				${content}
 			</div>
 		`;
@@ -381,7 +409,7 @@ class ContentCard extends HTMLElement {
 		const video = data.video;
 		const opts = video.options || {};
 		const videoAttrs = `
-				class="ic-popover-video"
+				class="cc-popover-video"
 				src="${video.src}"
 				${opts.controls ? 'controls' : ''}
 				${opts.muted ? 'muted' : ''}
@@ -392,8 +420,8 @@ class ContentCard extends HTMLElement {
 		`.trim();
 
 		return `
-			<div id="${this.#popoverId}" popover class="ic-popover">
-				<button type="button" popovertarget="${this.#popoverId}" popovertargetaction="hide" aria-label="Close and hide the modal overlay" class="ic-popover-close">✕</button>
+			<div id="${this.#popoverId}" popover class="cc-popover">
+				<button type="button" popovertarget="${this.#popoverId}" popovertargetaction="hide" aria-label="Close and hide the modal overlay" class="cc-popover-close">✕</button>
 				<video ${videoAttrs}></video>
 			</div>
 		`;
@@ -512,7 +540,6 @@ class ContentCard extends HTMLElement {
 	}
 
 	renderProduct(product) {
-		this._ensureSettingsInitialized();
 		if (!this.#data || this.#data.type !== 'product') return '';
 		
 		const { content = {}, product: productData = {} } = this.#data;
@@ -528,11 +555,7 @@ class ContentCard extends HTMLElement {
 				${this.renderHeader(content)}
 				
 				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
-				
-				${this.renderAuthors(this.#data.authors)}
-				
-				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
-				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}				
 				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
 				
 				${price.current ? `
@@ -570,28 +593,20 @@ class ContentCard extends HTMLElement {
 	}
 
 	renderEvent() {
-		this._ensureSettingsInitialized();
 		if (!this.#data || this.#data.type !== 'event') return '';
 		
 		const { content = {}, event: eventData = {} } = this.#data;
 		const headlineTag = content.headlineTag || 'h2';
 
 		return `
-			<article ${this.getStyle('cc-content')}>
-				${content.category ? `<meta itemprop="eventType" content="${content.category}">` : ''}
+			<article ${this.getStyle('cc-content')} itemscope itemtype="https://schema.org/${content.category || 'Event'}">
 				${eventData.status ? `<meta itemprop="eventStatus" content="https://schema.org/EventStatus${eventData.status}">` : ''}
 				${eventData.attendanceMode ? `<meta itemprop="eventAttendanceMode" content="https://schema.org/${eventData.attendanceMode}">` : ''}
 				
-				${this.renderHeader(content)}
-				
-				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
-				
-				${this.renderAuthors(this.#data.authors)}
-				
+				${this.renderHeader(content)}				
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}				
 				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
-				
 				${content.text ? `<div ${this.getStyle('cc-text')}>${content.text}</div>` : ''}
-				
 				${eventData.startDate ? `<meta itemprop="startDate" content="${eventData.startDate}">` : ''}
 				${eventData.endDate ? `<meta itemprop="endDate" content="${eventData.endDate}">` : ''}
 				
@@ -626,6 +641,104 @@ class ContentCard extends HTMLElement {
 				${this.renderEngagement(this.#data.engagement)}
 				${this.renderTags(this.#data.tags)}
 				${this.renderLinks(this.#data.links, this.#data.actions)}
+				${this.renderActions(this.#data.actions)}
+			</article>
+		`;
+	}
+
+	renderBusiness() {
+		if (!this.#data || this.#data.type !== 'business') return '';
+		
+		const { content = {}, business: businessData = {} } = this.#data;
+		const headlineTag = content.headlineTag || 'h2';
+
+		return `
+			<article ${this.getStyle('cc-content')} itemscope itemtype="https://schema.org/LocalBusiness">
+				${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}</${headlineTag}>` : ''}
+				
+				${content.summary ? `<p ${this.getStyle('cc-summary')} itemprop="description">${content.summary}</p>` : ''}
+				
+				${businessData.address ? `
+					<div ${this.getStyle('cc-business-location')} itemprop="location" itemscope itemtype="https://schema.org/Place">
+						<div ${this.getStyle('cc-business-address')} itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
+							<div itemprop="streetAddress">${businessData.address.streetAddress}</div>
+							<div>
+								<span itemprop="addressLocality">${businessData.address.addressLocality}</span>,
+								<span itemprop="addressRegion">${businessData.address.addressRegion}</span>
+								<span itemprop="postalCode">${businessData.address.postalCode}</span>
+							</div>
+							<meta itemprop="addressCountry" content="${businessData.address.addressCountry}">
+						</div>
+						${businessData.geo ? `
+							<div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
+								<meta itemprop="latitude" content="${businessData.geo.latitude}">
+								<meta itemprop="longitude" content="${businessData.geo.longitude}">
+								<div ${this.getStyle('cc-business-map')}>
+									<iframe 
+										src="https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(businessData.geo.longitude) - 0.005},${parseFloat(businessData.geo.latitude) - 0.003},${parseFloat(businessData.geo.longitude) + 0.005},${parseFloat(businessData.geo.latitude) + 0.003}&layer=mapnik&marker=${businessData.geo.latitude},${businessData.geo.longitude}"
+										style="border: 1px solid #ccc; width: 100%; height: 200px; border-radius: 8px;"
+										frameborder="0"
+										scrolling="no"
+										marginheight="0"
+										marginwidth="0"
+										loading="lazy"
+										title="OpenStreetMap showing ${content.headline || 'business location'}">
+									</iframe>
+								</div>
+							</div>
+						` : ''}
+					</div>
+				` : ''}
+				
+				${businessData.telephone ? `
+					<div ${this.getStyle('cc-business-contact')}>
+						<a href="tel:${businessData.telephone}" itemprop="telephone">${businessData.telephone}</a>
+					</div>
+				` : ''}
+				
+				${businessData.email ? `
+					<div ${this.getStyle('cc-business-contact')}>
+						<a href="mailto:${businessData.email}" itemprop="email">${businessData.email}</a>
+					</div>
+				` : ''}
+				
+				${businessData.website ? `<meta itemprop="url" content="${businessData.website}">` : ''}
+				${businessData.foundingDate ? `<meta itemprop="foundingDate" content="${businessData.foundingDate}">` : ''}
+				
+				${businessData.sameAs?.length ? `
+					${businessData.sameAs.map(url => `<link itemprop="sameAs" href="${url}">`).join('')}
+				` : ''}
+				
+				${businessData.openingHours?.length ? `
+					<div ${this.getStyle('cc-business-hours')}>
+						<h3 ${this.getStyle('cc-business-hours-title')}>Opening Hours</h3>
+						${businessData.openingHours.map(hours => `<meta itemprop="openingHours" content="${hours}">`).join('')}
+						<div ${this.getStyle('cc-business-hours-display')}>
+							${businessData.openingHours.map(hours => {
+								// Convert schema format to readable format
+								const readable = hours
+									.replace(/Mo-Fr/, 'Monday - Friday')
+									.replace(/Sa/, 'Saturday')
+									.replace(/Su/, 'Sunday')
+									.replace(/(\d{2}):(\d{2})-(\d{2}):(\d{2})/, (match, h1, m1, h2, m2) => {
+										const startHour = parseInt(h1);
+										const endHour = parseInt(h2);
+										const start = startHour === 0 ? `12:${m1} AM` : 
+													  startHour < 12 ? `${startHour}:${m1} AM` : 
+													  startHour === 12 ? `12:${m1} PM` : 
+													  `${startHour - 12}:${m1} PM`;
+										const end = endHour === 0 ? `12:${m2} AM` : 
+													endHour < 12 ? `${endHour}:${m2} AM` : 
+													endHour === 12 ? `12:${m2} PM` : 
+													`${endHour - 12}:${m2} PM`;
+										return `${start} - ${end}`;
+									});
+								return `<div ${this.getStyle('cc-business-hour')}>${readable}</div>`;
+							}).join('')}
+						</div>
+					</div>
+				` : ''}
+				
 				${this.renderActions(this.#data.actions)}
 			</article>
 		`;
@@ -761,6 +874,16 @@ class ContentCard extends HTMLElement {
 
 
 renderContent(data) {
+	// Check if this is a quote card and use dedicated quote renderer
+	if (data.type === 'quote') {
+		return this.renderQuote();
+	}
+	
+	// Check if this is a business card and use dedicated business renderer
+	if (data.type === 'business') {
+		return this.renderBusiness();
+	}
+	
 	// Check if this is a product card and use dedicated product renderer
 	if (data.type === 'product') {
 		return this.renderProduct();
@@ -798,7 +921,7 @@ renderContent(data) {
 			return this.renderTimeline(content, data);
 		}
 	}
-	return `
+	return this.cleanHTML(`
 		<article ${this.getStyle('cc-content')}>
 			${this.renderHeader(content)}
 		   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
@@ -810,49 +933,55 @@ renderContent(data) {
 			${this.renderLinks(data.links, data.actions)}
 			${this.renderActions(data.actions)}
 		</article>
-	`;
+	`);
 }
 
 renderAccordion(content, data) {
    const headlineTag = content.headlineTag || 'h2';
    // Generate a unique name for this accordion instance
    const accordionName = `accordion-${data.id || Math.random().toString(36).slice(2)}`;
-   return `
-	   <article ${this.getStyle('cc-content')}>
+   
+   return this.cleanHTML(`
+	   <article ${this.getStyle('cc-content')} itemscope itemtype="https://schema.org/FAQPage">
 		   ${this.renderHeader(content)}
-		   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
+		   ${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}</${headlineTag}>` : '<meta itemprop="name" content="Frequently Asked Questions">'}
 		   <div class="cc-accordion">
 			   ${content.text.map((item, idx) => `
-				   <details class="cc-accordion-item" name="${accordionName}">
-					   <summary class="cc-accordion-title">${item.headline}</summary>
-					   <div class="cc-accordion-panel">${item.text}</div>
+				   <details class="cc-accordion-item" name="${accordionName}" itemscope itemtype="https://schema.org/Question" itemprop="mainEntity">
+					   <summary class="cc-accordion-title" itemprop="name">${item.headline}</summary>
+					   <div class="cc-accordion-panel" itemscope itemtype="https://schema.org/Answer" itemprop="acceptedAnswer">
+						   <div itemprop="text">${item.text}</div>
+					   </div>
 				   </details>
 			   `).join('')}
 		   </div>
 		   ${this.renderLinks(data.links, data.actions)}
 		   ${this.renderActions(data.actions)}
 	   </article>
-   `;
+   `);
 }
 
 renderTimeline(content, data) {
 	const headlineTag = content.headlineTag || 'h2';
-	return `
-		<article ${this.getStyle('cc-content')}>
+	return this.cleanHTML(`
+		<article ${this.getStyle('cc-content')} itemscope itemtype="https://schema.org/EventSeries">
 			${this.renderHeader(content)}
-			${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')}>${content.headline}</${headlineTag}>` : ''}
+			${content.headline ? `<${headlineTag} ${this.getStyle('cc-headline')} itemprop="name">${content.headline}</${headlineTag}>` : '<meta itemprop="name" content="Timeline">'}
 			<ol class="cc-timeline">
 				${content.text.map(item => `
-					<li class="cc-timeline-item">
-						<div class="cc-timeline-headline">${item.headline}</div>
-						<div class="cc-timeline-text">${item.text}</div>
+					<li class="cc-timeline-item" itemscope itemtype="https://schema.org/Event" itemprop="subEvent">
+						<div class="cc-timeline-headline" itemprop="name">${item.headline}</div>
+						<div class="cc-timeline-text" itemprop="description">${item.text}</div>
+						<meta itemprop="startDate" content="${item.startDate || new Date().toISOString().split('T')[0]}">
+						${item.endDate ? `<meta itemprop="endDate" content="${item.endDate}">` : ''}
+						<meta itemprop="location" content="${item.location || 'Timeline Event'}">
 					</li>
 				`).join('')}
 			</ol>
 			${this.renderLinks(data.links, data.actions)}
 			${this.renderActions(data.actions)}
 		</article>
-	`;
+	`);
 }
 
 	render() {
@@ -889,11 +1018,11 @@ renderTimeline(content, data) {
 		}
 
 		// Render with proper structure - media area first, content area second
-		this.#root.innerHTML = `
+		this.#root.innerHTML = this.cleanHTML(`
 			${this.renderMedia(media, ribbon, sticker, ['product', 'event', 'recipe', 'article', 'news'].includes(type))}
 			${content ? this.renderContent(this.#data) : ''}
 			${this.renderPopover(this.#data)}
-		`;
+		`);
 	}
 
 

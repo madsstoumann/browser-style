@@ -400,40 +400,40 @@
 	[layout*="pb:3"] { --cc-content-pb: calc(3 * var(--cc-space-unit)); }
 
 	/* Padding Top */
-	[layout*="pt:0"] { --cc-content-pbs: 0px; }
+	/* [layout*="pt:0"] { --cc-content-pbs: 0px; }
 	[layout*="pt:0.5"] { --cc-content-pbs: calc(0.5 * var(--cc-space-unit)); }
 	[layout*="pt:1"] { --cc-content-pbs: calc(1 * var(--cc-space-unit)); }
 	[layout*="pt:1.5"] { --cc-content-pbs: calc(1.5 * var(--cc-space-unit)); }
 	[layout*="pt:2"] { --cc-content-pbs: calc(2 * var(--cc-space-unit)); }
 	[layout*="pt:2.5"] { --cc-content-pbs: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pt:3"] { --cc-content-pbs: calc(3 * var(--cc-space-unit)); }
+	[layout*="pt:3"] { --cc-content-pbs: calc(3 * var(--cc-space-unit)); } */
 
 	/* Padding Right */
-	[layout*="pr:0"] { --cc-content-pie: 0px; }
+	/* [layout*="pr:0"] { --cc-content-pie: 0px; }
 	[layout*="pr:0.5"] { --cc-content-pie: calc(0.5 * var(--cc-space-unit)); }
 	[layout*="pr:1"] { --cc-content-pie: calc(1 * var(--cc-space-unit)); }
 	[layout*="pr:1.5"] { --cc-content-pie: calc(1.5 * var(--cc-space-unit)); }
 	[layout*="pr:2"] { --cc-content-pie: calc(2 * var(--cc-space-unit)); }
 	[layout*="pr:2.5"] { --cc-content-pie: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pr:3"] { --cc-content-pie: calc(3 * var(--cc-space-unit)); }
+	[layout*="pr:3"] { --cc-content-pie: calc(3 * var(--cc-space-unit)); } */
 
 	/* Padding Bottom */
-	[layout*="pbt:0"] { --cc-content-pbe: 0px; }
+	/* [layout*="pbt:0"] { --cc-content-pbe: 0px; }
 	[layout*="pbt:0.5"] { --cc-content-pbe: calc(0.5 * var(--cc-space-unit)); }
 	[layout*="pbt:1"] { --cc-content-pbe: calc(1 * var(--cc-space-unit)); }
 	[layout*="pbt:1.5"] { --cc-content-pbe: calc(1.5 * var(--cc-space-unit)); }
 	[layout*="pbt:2"] { --cc-content-pbe: calc(2 * var(--cc-space-unit)); }
 	[layout*="pbt:2.5"] { --cc-content-pbe: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pbt:3"] { --cc-content-pbe: calc(3 * var(--cc-space-unit)); }
+	[layout*="pbt:3"] { --cc-content-pbe: calc(3 * var(--cc-space-unit)); } */
 
 	/* Padding Left */
-	[layout*="pl:0"] { --cc-content-pis: 0px; }
+	/* [layout*="pl:0"] { --cc-content-pis: 0px; }
 	[layout*="pl:0.5"] { --cc-content-pis: calc(0.5 * var(--cc-space-unit)); }
 	[layout*="pl:1"] { --cc-content-pis: calc(1 * var(--cc-space-unit)); }
 	[layout*="pl:1.5"] { --cc-content-pis: calc(1.5 * var(--cc-space-unit)); }
 	[layout*="pl:2"] { --cc-content-pis: calc(2 * var(--cc-space-unit)); }
 	[layout*="pl:2.5"] { --cc-content-pis: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pl:3"] { --cc-content-pis: calc(3 * var(--cc-space-unit)); }
+	[layout*="pl:3"] { --cc-content-pis: calc(3 * var(--cc-space-unit)); } */
 
 	/* Content row-gap using dedicated content space unit */
 	[layout*="rg:0"] { --cc-content-rg: 0; }
