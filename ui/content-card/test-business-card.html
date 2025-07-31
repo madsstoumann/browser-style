@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusinessCard Component Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            gap: 2rem;
+        }
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .debug {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* BusinessCard Styles */
+        .cc-content {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            max-width: 600px;
+        }
+        .cc-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .cc-category {
+            background: #1d9bf0;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .cc-published, .cc-modified, .cc-reading-time {
+            color: #536471;
+            font-size: 0.9rem;
+        }
+        .cc-headline {
+            margin: 0 0 1rem 0;
+            color: #0f1419;
+            font-weight: 700;
+        }
+        .cc-summary {
+            color: #536471;
+            margin: 1rem 0;
+        }
+        .cc-business-location {
+            background: #f7f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .cc-business-address {
+            margin-bottom: 1rem;
+            color: #0f1419;
+        }
+        .cc-business-map {
+            margin-top: 1rem;
+        }
+        .cc-business-contact {
+            background: #e8f5e8;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+        .cc-business-contact a {
+            color: #1d9bf0;
+            text-decoration: none;
+        }
+        .cc-business-contact a:hover {
+            text-decoration: underline;
+        }
+        .cc-business-hours {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .cc-business-hours-title {
+            margin: 0 0 0.5rem 0;
+            color: #856404;
+            font-size: 1rem;
+        }
+        .cc-business-hour {
+            color: #856404;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        .cc-links {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem;
+        }
+        .cc-link {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-link:hover {
+            background: #e9ecef;
+            color: #0056b3;
+        }
+        .cc-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #eff3f4;
+        }
+        .cc-action {
+            padding: 0.5rem 1rem;
+            background: #1d9bf0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-action:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 BusinessCard Component Test</h1>
+        
+        <div class="demo-section">
+            <h2>Example 1: With Data Loader (Map Enabled)</h2>
+            <business-card content="business-1"></business-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 2: JavaScript Object with Danish Address (Map Enabled)</h2>
+            <business-card id="js-business"></business-card>
+            <p><small><em>Note: This example uses OpenStreetMap (no API key required) with a Copenhagen address at Staunings Plads 3. Perfect for public deployment!</em></small></p>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 3: Without Map</h2>
+            <business-card content="business-1" id="no-map-business"></business-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 4: Without Schema & Map</h2>
+            <business-card content="business-1" id="no-schema-business"></business-card>
+        </div>
+
+        <div class="debug">
+            <strong>Debug Info:</strong><br>
+            • BusinessCard uses Schema.org LocalBusiness markup<br>
+            • Includes complete address (PostalAddress) and geographic coordinates (GeoCoordinates)<br>
+            • Configurable map provider system with URL templates (OpenStreetMap, Google Maps, Mapbox, custom)<br>
+            • Map display controlled by <code>useMap</code> setting<br>
+            • Easy provider switching via <code>mapProvider.type</code> and <code>mapProvider.url</code><br>
+            • Configurable zoom: <code>latOffset</code>/<code>lngOffset</code> (OpenStreetMap) or <code>zoom</code> (Mapbox/Google)<br>
+            • Provider-specific parameters: only relevant placeholders are used per provider<br>
+            • Example 2 shows Danish café in Copenhagen using OpenStreetMap (completely free)<br>
+            • Danish content example: "Mandag - Fredag" opening hours, Danish phone format<br>
+            • Contact information with clickable phone and email links<br>
+            • Opening hours with separate schema and display fields (no hardcoded parsing)<br>
+            • Internationalization-friendly: display text can be in any language/format<br>
+            • Social media links via sameAs schema properties<br>
+            • JavaScript objects use <code>card.dataset = { data: {...} }</code> (object, not stringified)<br>
+            • Schema disabled via <code>card.dataset = { settings: { useSchema: false } }</code><br>
+            • Map disabled via <code>card.dataset = { settings: { useMap: false } }</code><br>
+            • Links render as navigation links (different from action buttons)<br>
+            • Perfect for local businesses, restaurants, shops, and service providers<br>
+            • Check browser console for any loading issues<br>
+            • <strong>Note:</strong> Requires local HTTP server to load data.json
+        </div>
+    </div>
+
+    <script type="module">
+        import { setContentForElement } from './base/data-loader.js';
+        import './cards/BusinessCard.js';
+
+        // Set up data loader example
+        const dataLoaderBusiness = document.querySelector('business-card[content="business-1"]');
+        if (dataLoaderBusiness) {
+            setContentForElement(dataLoaderBusiness, 'business-1');
+        }
+
+        // Set up JavaScript object example
+        const jsBusiness = document.getElementById('js-business');
+        if (jsBusiness) {
+            jsBusiness.dataset = {
+                data: {
+                    id: "js-danish-cafe",
+                    type: "business",
+                    media: {
+                        sources: [
+                            { type: "image", src: "assets/danish-cafe.avif", alt: "Café Hygge Logo" }
+                        ]
+                    },
+                    content: {
+                        headline: "Café Hygge",
+                        summary: "Autentisk dansk café med hjemmebagte kager, specialty kaffe og en varm, hyggelig atmosfære i hjertet af København."
+                    },
+                    business: {
+                        address: {
+                            streetAddress: "Staunings Plads 3",
+                            addressLocality: "København",
+                            addressRegion: "København",
+                            postalCode: "1607",
+                            addressCountry: "DK"
+                        },
+                        geo: {
+                            latitude: "55.6741",
+                            longitude: "12.5640",
+                            mapProvider: {
+                                type: "openstreetmap",
+                                name: "OpenStreetMap",
+                                url: "https://www.openstreetmap.org/export/embed.html?bbox={lng1},{lat1},{lng2},{lat2}&layer=mapnik&marker={lat},{lng}",
+                                latOffset: 0.002,
+                                lngOffset: 0.003
+                            }
+                        },
+                        telephone: "+45 33 12 34 56",
+                        email: "hej@cafehygge.dk",
+                        website: "https://cafehygge.dk",
+                        sameAs: [
+                            "https://facebook.com/cafehygge",
+                            "https://instagram.com/cafehygge_cph",
+                            "https://twitter.com/cafehygge"
+                        ],
+                        foundingDate: "2019-03-01",
+                        openingHours: [
+                            {
+                                schema: "Mo-Fr 07:00-18:00",
+                                display: "Mandag - Fredag: 07:00 - 18:00"
+                            },
+                            {
+                                schema: "Sa-Su 08:00-17:00",
+                                display: "Weekend: 08:00 - 17:00"
+                            }
+                        ]
+                    },
+                    links: [
+                        {
+                            url: "https://cafehygge.dk/menu",
+                            text: "Se Menu"
+                        },
+                        {
+                            url: "https://cafehygge.dk/events",
+                            text: "Events"
+                        }
+                    ],
+                    actions: [
+                        {
+                            text: "Bestil Bord",
+                            url: "https://cafehygge.dk/booking"
+                        },
+                        {
+                            text: "Ring Nu",
+                            url: "tel:+4533123456"
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Set up no-map example
+        const noMapBusiness = document.getElementById('no-map-business');
+        if (noMapBusiness) {
+            setContentForElement(noMapBusiness, 'business-1', { useMap: false });
+        }
+
+        // Set up no-schema and no-map example
+        const noSchemaBusiness = document.getElementById('no-schema-business');
+        if (noSchemaBusiness) {
+            setContentForElement(noSchemaBusiness, 'business-1', { useSchema: false, useMap: false });
+        }
+
+        // Debug info
+        console.log('BusinessCard test page loaded');
+        console.log('Available businesses:', ['business-1']);
+        console.log('Custom element defined:', customElements.get('business-card'));
+    </script>
+</body>
+</html>

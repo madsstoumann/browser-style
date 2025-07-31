@@ -821,7 +821,6 @@ class ContentCard extends HTMLElement {
 				${content.category ? `<meta itemprop="articleSection" content="${content.category}">` : ''}
 				${content.published?.datetime ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
 				${content.modified?.datetime ? `<meta itemprop="dateModified" content="${content.modified.datetime}">` : ''}
-				${content.readingTime ? `<meta itemprop="wordCount" content="${content.readingTime}">` : ''}
 				
 				${this.renderHeader(content)}
 				

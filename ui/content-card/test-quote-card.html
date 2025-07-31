@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Card Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            line-height: 1.6;
+        }
+        
+        .example {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        h2 {
+            color: #333;
+        }
+        
+        /* Basic quote card styles */
+        .cc-content {
+            max-width: 500px;
+            margin: 1rem 0;
+        }
+        
+        .cc-quote {
+            border-left: 4px solid #007acc;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: #f9f9f9;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .cc-quote-text {
+            font-size: 1.1em;
+            font-style: italic;
+            margin: 0;
+        }
+        
+        .cc-quote-citation {
+            margin-top: 1rem;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .cc-author {
+            display: inline-block;
+            font-style: normal;
+        }
+        
+        .cc-author-name {
+            font-weight: bold;
+        }
+        
+        .cc-author-role {
+            color: #888;
+        }
+        
+        .cc-quote-source {
+            margin-left: 0.5rem;
+        }
+        
+        .cc-actions {
+            margin-top: 1rem;
+        }
+        
+        .cc-action {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #007acc;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+        
+        .content-card {
+            border: 2px solid #007acc;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        /* Media styles */
+        .cc-media {
+            margin: 1rem 0;
+        }
+        
+        .cc-media-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .cc-media-caption {
+            margin-top: 0.5rem;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quote Card Test</h1>
+    
+    <div class="example">
+        <h2>Method 1: Explicit Data Loading</h2>
+        <p>Using data loader utility to set content by ID</p>
+        <p><small>Note: Data is loaded explicitly via JavaScript</small></p>
+        <quote-card id="quote-from-data"></quote-card>
+    </div>
+    
+    <div class="example">
+        <h2>Method 2: JavaScript Object (Full Card Wrapper)</h2>
+        <p>Using JavaScript to set dataset property</p>
+        <p><small>Note: This example includes media (image) to demonstrate media support</small></p>
+        <div id="js-quote-container"></div>
+    </div>
+    
+    <div class="example">
+        <h2>Method 3: Custom Settings (useSchema = false)</h2>
+        <p>Using data loader with custom settings</p>
+        <quote-card id="quote-no-schema"></quote-card>
+    </div>
+
+    <!-- Import the QuoteCard module -->
+    <script type="module" src="cards/QuoteCard.js"></script>
+    
+    <script type="module">
+        import { setContentForElement } from './base/data-loader.js';
+        
+        console.log('QuoteCard test page loaded');
+        
+        // Method 1: Load content by ID using data loader
+        const quoteFromData = document.getElementById('quote-from-data');
+        setContentForElement(quoteFromData, 'quote-1');
+        
+        // Method 3: Load content with custom settings
+        const quoteNoSchema = document.getElementById('quote-no-schema');
+        setContentForElement(quoteNoSchema, 'quote-1', { useSchema: false });
+        
+        // Test Method 2: JavaScript object
+        const quoteCard = document.createElement('quote-card');
+        
+        // Example quote data with media
+        const quoteData = {
+            id: "quote-js",
+            type: "quote",
+            media: {
+                sources: [
+                    {
+                        type: "image",
+                        src: "https://via.placeholder.com/400x200/007acc/ffffff?text=Quote+Image",
+                        alt: "Inspirational quote background"
+                    }
+                ],
+                caption: "Visual representation of innovation"
+            },
+            content: {
+                summary: "The best way to predict the future is to invent it.",
+                category: "Innovation"
+            },
+            authors: [
+                {
+                    name: "Alan Kay",
+                    role: "Computer Scientist"
+                }
+            ],
+            actions: [
+                {
+                    text: "Share Quote",
+                    icon: "share"
+                }
+            ]
+        };
+        
+        quoteCard.dataset = {
+            data: quoteData,
+            settings: { useSchema: true }
+        };
+        
+        document.getElementById('js-quote-container').appendChild(quoteCard);
+    </script>
+</body>
+</html>

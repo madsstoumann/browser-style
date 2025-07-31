@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoCard Component Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            gap: 2rem;
+        }
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .debug {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* VideoCard Styles */
+        .cc-content {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            max-width: 600px;
+        }
+        .cc-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .cc-category {
+            background: #e74c3c;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .cc-published, .cc-modified {
+            color: #536471;
+            font-size: 0.9rem;
+        }
+        .cc-headline {
+            margin: 0 0 1rem 0;
+            color: #0f1419;
+            font-weight: 700;
+        }
+        .cc-summary {
+            color: #536471;
+            margin: 1rem 0;
+        }
+        .cc-media {
+            position: relative;
+            background: #000;
+        }
+        .cc-media-video, .cc-media-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .cc-media-video {
+            aspect-ratio: 16/9;
+        }
+        .cc-popover {
+            max-width: 90vw;
+            max-height: 90vh;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            background: white;
+        }
+        .cc-popover-video {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+        }
+        .cc-popover-close {
+            float: right;
+            border: none;
+            background: transparent;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+        .cc-popover-close:hover {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .cc-popover-content {
+            margin-top: 1rem;
+        }
+        .cc-links {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem;
+        }
+        .cc-link {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-link:hover {
+            background: #e9ecef;
+            color: #0056b3;
+        }
+        .cc-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #eff3f4;
+        }
+        .cc-action {
+            padding: 0.5rem 1rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-action:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📹 VideoCard Component Test</h1>
+        
+        <div class="demo-section">
+            <h2>Example 1: YouTube with Inline Play (Data Loader)</h2>
+            <video-card content="video-4"></video-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 2: Regular Video with Popover (Data Loader)</h2>
+            <video-card content="video-2"></video-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 3: YouTube without Inline (ArticleCard Fallback)</h2>
+            <video-card id="youtube-fallback"></video-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 4: Custom Video with Inline Play</h2>
+            <video-card id="js-video"></video-card>
+        </div>
+
+        <div class="debug">
+            <strong>Debug Info:</strong><br>
+            • VideoCard handles both YouTube and regular videos<br>
+            • YouTube with <code>playsinline: true</code> → inline iframe with autoplay<br>
+            • YouTube with <code>playsinline: false</code> → ArticleCard fallback behavior<br>
+            • Regular videos use poster image + popover video player<br>
+            • Video popovers support full video object with options<br>
+            • Backward compatible with HTML content popovers<br>
+            • Auto-fallback to ArticleCard for external video links<br>
+            • Uses VideoObject schema when in ArticleCard mode<br>
+            • Perfect for video content, tutorials, and media galleries<br>
+            • <strong>Note:</strong> Requires local HTTP server to load data.json
+        </div>
+    </div>
+
+    <script type="module">
+        import { setContentForElement } from './base/data-loader.js';
+        import './cards/VideoCard.js';
+
+        // Set up data loader examples
+        const youtubeInline = document.querySelector('video-card[content="video-4"]');
+        if (youtubeInline) {
+            setContentForElement(youtubeInline, 'video-4');
+        }
+
+        const videoPopover = document.querySelector('video-card[content="video-2"]');
+        if (videoPopover) {
+            setContentForElement(videoPopover, 'video-2');
+        }
+
+        // Set up YouTube fallback example (no playsinline)
+        const youtubeFallback = document.getElementById('youtube-fallback');
+        if (youtubeFallback) {
+            youtubeFallback.dataset = {
+                data: {
+                    id: "youtube-fallback",
+                    type: "video",
+                    media: {
+                        sources: [
+                            {
+                                type: "youtube",
+                                src: "https://youtu.be/beYbnNT_02U",
+                                alt: "What's new in the web",
+                                playsinline: false
+                            }
+                        ]
+                    },
+                    content: {
+                        category: "Web Development",
+                        headline: "What's new in the web",
+                        summary: "Discover the latest features and improvements in web technologies, from new CSS properties to JavaScript APIs."
+                    },
+                    links: [
+                        {
+                            url: "https://youtu.be/beYbnNT_02U",
+                            text: "Watch on YouTube"
+                        }
+                    ],
+                    actions: [
+                        {
+                            text: "Share",
+                            icon: "share"
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Set up custom video example
+        const jsVideo = document.getElementById('js-video');
+        if (jsVideo) {
+            jsVideo.dataset = {
+                data: {
+                    id: "js-custom-video",
+                    type: "video",
+                    media: {
+                        sources: [
+                            {
+                                type: "youtube",
+                                src: "https://youtu.be/dQw4w9WgXcQ",
+                                alt: "Custom Video Demo",
+                                playsinline: true
+                            }
+                        ]
+                    },
+                    content: {
+                        category: "Demo",
+                        headline: "Custom Video Demo",
+                        summary: "This demonstrates YouTube inline playback with auto-play and muted start."
+                    },
+                    actions: [
+                        {
+                            text: "More Info",
+                            popover: {
+                                content: "<h3>About This Video</h3><p>This video demonstrates the inline YouTube playback feature.</p><p>The video starts muted and can be unmuted by the viewer.</p>"
+                            }
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Debug info
+        console.log('VideoCard test page loaded');
+        console.log('Available videos:', ['video-2', 'video-4']);
+        console.log('Custom element defined:', customElements.get('video-card'));
+    </script>
+</body>
+</html>

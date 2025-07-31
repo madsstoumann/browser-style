@@ -279,7 +279,7 @@
 /* === SUBGRID === */
 [subgrid] {
 	--cc-subgrid-rows: attr(subgrid type(<number>), 1);
-	content-card {
+	.cc {
 		--cc-d: contents;
 		--cc-gtr: 1fr;
 		.cc-content {

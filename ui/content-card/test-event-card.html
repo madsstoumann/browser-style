@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventCard Component Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            gap: 2rem;
+        }
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .debug {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* EventCard Styles */
+        .cc-content {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            max-width: 600px;
+        }
+        .cc-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .cc-category {
+            background: #1d9bf0;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .cc-published, .cc-modified, .cc-reading-time {
+            color: #536471;
+            font-size: 0.9rem;
+        }
+        .cc-headline {
+            margin: 0 0 1rem 0;
+            color: #0f1419;
+            font-weight: 700;
+        }
+        .cc-summary {
+            color: #536471;
+            margin: 1rem 0;
+        }
+        .cc-text {
+            color: #0f1419;
+            margin: 1rem 0;
+        }
+        .cc-event-location {
+            background: #f7f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .cc-event-organizer {
+            background: #e8f5e8;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        .cc-event-offer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cc-engagement {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-top: 1px solid #eff3f4;
+            color: #536471;
+            font-size: 0.9rem;
+        }
+        .cc-metric {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .cc-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem;
+            flex-wrap: wrap;
+        }
+        .cc-tag {
+            background: #f1f3f4;
+            color: #1d9bf0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-links {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem;
+        }
+        .cc-link {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-link:hover {
+            background: #e9ecef;
+            color: #0056b3;
+        }
+        .cc-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #eff3f4;
+        }
+        .cc-action {
+            padding: 0.5rem 1rem;
+            background: #1d9bf0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-action:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 EventCard Component Test</h1>
+        
+        <div class="demo-section">
+            <h2>Example 1: With Data Loader</h2>
+            <event-card content="event-1"></event-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 2: JavaScript Object</h2>
+            <event-card id="js-event"></event-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 3: Without Schema</h2>
+            <event-card content="event-1" id="no-schema-event"></event-card>
+        </div>
+
+        <div class="debug">
+            <strong>Debug Info:</strong><br>
+            • EventCard uses Schema.org Event markup with specific event types<br>
+            • Includes location (Place), organizer (Organization), and offers (Offer) schema<br>
+            • Features event status, attendance mode, and date metadata<br>
+            • Supports event offers with pricing and availability<br>
+            • JavaScript objects use <code>card.dataset = { data: {...} }</code> (object, not stringified)<br>
+            • Schema disabled via <code>card.dataset = { settings: { useSchema: false } }</code><br>
+            • Links render as navigation links (different from action buttons)<br>
+            • Engagement metrics visible but no schema (Event types don't support interactionStatistic)<br>
+            • Check browser console for any loading issues<br>
+            • <strong>Note:</strong> Requires local HTTP server to load data.json
+        </div>
+    </div>
+
+    <script type="module">
+        import { setContentForElement } from './base/data-loader.js';
+        import './cards/EventCard.js';
+
+        // Set up data loader example
+        const dataLoaderEvent = document.querySelector('event-card[content="event-1"]');
+        if (dataLoaderEvent) {
+            setContentForElement(dataLoaderEvent, 'event-1');
+        }
+
+        // Set up JavaScript object example
+        const jsEvent = document.getElementById('js-event');
+        if (jsEvent) {
+            jsEvent.dataset = {
+                data: {
+                    id: "js-tech-conference",
+                    type: "event",
+                    media: {
+                        sources: [
+                            { type: "image", src: "assets/tech-conference.avif", alt: "Tech Conference 2024" }
+                        ]
+                    },
+                    content: {
+                        category: "BusinessEvent",
+                        headline: "Future of Web Development Conference 2024",
+                        subheadline: "Exploring the Next Generation of Web Technologies",
+                        summary: "Join industry leaders and developers as we explore cutting-edge web technologies, best practices, and the future of web development.",
+                        text: "<p>This comprehensive conference brings together experts from around the world to discuss the latest trends in web development, including AI integration, performance optimization, and emerging frameworks.</p>",
+                        published: { datetime: "2024-12-10T09:00:00Z", formatted: "December 10, 2024" }
+                    },
+                    event: {
+                        startDate: "2024-03-15T09:00:00Z",
+                        endDate: "2024-03-17T17:00:00Z",
+                        status: "Scheduled",
+                        attendanceMode: "MixedEventAttendanceMode",
+                        location: {
+                            name: "San Francisco Convention Center",
+                            address: "747 Howard St, San Francisco, CA 94103"
+                        },
+                        organizer: {
+                            name: "Web Dev Association"
+                        },
+                        offers: [
+                            {
+                                name: "Early Bird Ticket",
+                                price: "299",
+                                currency: "USD"
+                            },
+                            {
+                                name: "VIP Pass",
+                                price: "499",
+                                currency: "USD"
+                            }
+                        ]
+                    },
+                    engagement: {
+                        viewCount: 5600,
+                        likeCount: 420,
+                        shareCount: 89,
+                        commentCount: 67
+                    },
+                    tags: ["Conference", "Web Development", "Technology", "JavaScript"],
+                    links: [
+                        {
+                            url: "https://example.com/event-schedule",
+                            text: "View Schedule"
+                        },
+                        {
+                            url: "https://example.com/speakers",
+                            text: "Meet Speakers"
+                        }
+                    ],
+                    actions: [
+                        {
+                            text: "Register Now"
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Set up no-schema example
+        const noSchemaEvent = document.getElementById('no-schema-event');
+        if (noSchemaEvent) {
+            setContentForElement(noSchemaEvent, 'event-1', { useSchema: false });
+        }
+
+        // Debug info
+        console.log('EventCard test page loaded');
+        console.log('Available events:', ['event-1']);
+        console.log('Custom element defined:', customElements.get('event-card'));
+    </script>
+</body>
+</html>

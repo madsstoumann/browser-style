@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaqCard Component Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            gap: 2rem;
+        }
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .debug {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* FaqCard Styles */
+        .cc-content {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            max-width: 600px;
+        }
+        .cc-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .cc-category {
+            background: #1d9bf0;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .cc-published, .cc-modified, .cc-reading-time {
+            color: #536471;
+            font-size: 0.9rem;
+        }
+        .cc-headline {
+            margin: 0 0 1rem 0;
+            color: #0f1419;
+            font-weight: 700;
+        }
+        .cc-faq {
+            margin: 1rem 0;
+        }
+        .cc-faq-item {
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        .cc-faq-title {
+            background: #f7f9fa;
+            padding: 1rem;
+            margin: 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: #0f1419;
+            list-style: none;
+            display: block;
+            border: none;
+            user-select: none;
+        }
+        .cc-faq-title:hover {
+            background: #eff3f4;
+        }
+        .cc-faq-title::marker {
+            content: none;
+        }
+        .cc-faq-title::-webkit-details-marker {
+            display: none;
+        }
+        .cc-faq-title::before {
+            content: "▶";
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease;
+        }
+        .cc-faq-item[open] .cc-faq-title::before {
+            transform: rotate(90deg);
+        }
+        .cc-faq-panel {
+            padding: 1rem;
+            color: #536471;
+            border-top: 1px solid #e1e8ed;
+            background: white;
+        }
+        .cc-links {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem;
+        }
+        .cc-link {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            color: #007bff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-link:hover {
+            background: #e9ecef;
+            color: #0056b3;
+        }
+        .cc-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #eff3f4;
+        }
+        .cc-action {
+            padding: 0.5rem 1rem;
+            background: #1d9bf0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .cc-action:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❓ FaqCard Component Test</h1>
+        
+        <div class="demo-section">
+            <h2>Example 1: With Data Loader</h2>
+            <faq-card content="accordion-1"></faq-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 2: JavaScript Object</h2>
+            <faq-card id="js-faq"></faq-card>
+        </div>
+
+        <div class="demo-section">
+            <h2>Example 3: Without Schema</h2>
+            <faq-card content="accordion-1" id="no-schema-faq"></faq-card>
+        </div>
+
+        <div class="debug">
+            <strong>Debug Info:</strong><br>
+            • FaqCard uses Schema.org FAQPage markup with Question/Answer schema<br>
+            • Interactive FAQ using HTML details/summary elements<br>
+            • Grouped FAQ items (only one can be open at a time)<br>
+            • Supports custom headlines and category classification<br>
+            • JavaScript objects use <code>card.dataset = { data: {...} }</code> (object, not stringified)<br>
+            • Schema disabled via <code>card.dataset = { settings: { useSchema: false } }</code><br>
+            • Links render as navigation links (different from action buttons)<br>
+            • Perfect for FAQ sections, help content, and Q&A displays<br>
+            • Check browser console for any loading issues<br>
+            • <strong>Note:</strong> Requires local HTTP server to load data.json
+        </div>
+    </div>
+
+    <script type="module">
+        import { setContentForElement } from './base/data-loader.js';
+        import './cards/FaqCard.js';
+
+        // Set up data loader example
+        const dataLoaderFaq = document.querySelector('faq-card[content="accordion-1"]');
+        if (dataLoaderFaq) {
+            setContentForElement(dataLoaderFaq, 'accordion-1');
+        }
+
+        // Set up JavaScript object example
+        const jsFaq = document.getElementById('js-faq');
+        if (jsFaq) {
+            jsFaq.dataset = {
+                data: {
+                    id: "js-web-dev-faq",
+                    type: "faq",
+                    content: {
+                        category: "Web Development",
+                        headline: "Web Development FAQ",
+                        text: [
+                            {
+                                headline: "What is the difference between React and Vue?",
+                                text: "React is a library focused on building user interfaces with a component-based architecture, while Vue is a progressive framework that provides a more complete solution with built-in state management and routing."
+                            },
+                            {
+                                headline: "Should I learn TypeScript?",
+                                text: "Yes! TypeScript adds static typing to JavaScript, which helps catch errors early, improves code documentation, and enhances the development experience with better tooling and IntelliSense."
+                            },
+                            {
+                                headline: "What's the best way to optimize web performance?",
+                                text: "Focus on the fundamentals: minimize HTTP requests, optimize images, use efficient CSS and JavaScript, leverage browser caching, and consider using a CDN. Tools like Lighthouse can help identify specific improvements."
+                            },
+                            {
+                                headline: "How do I choose between CSS Grid and Flexbox?",
+                                text: "Use CSS Grid for 2D layouts (both rows and columns) and overall page structure. Use Flexbox for 1D layouts (either row or column) and for distributing space and aligning items within containers."
+                            }
+                        ]
+                    },
+                    links: [
+                        {
+                            url: "https://developer.mozilla.org/en-US/docs/Web",
+                            text: "MDN Web Docs"
+                        },
+                        {
+                            url: "https://web.dev/",
+                            text: "web.dev"
+                        }
+                    ],
+                    actions: [
+                        {
+                            text: "Ask a Question"
+                        }
+                    ]
+                }
+            };
+        }
+
+        // Set up no-schema example
+        const noSchemaFaq = document.getElementById('no-schema-faq');
+        if (noSchemaFaq) {
+            setContentForElement(noSchemaFaq, 'accordion-1', { useSchema: false });
+        }
+
+        // Debug info
+        console.log('FaqCard test page loaded');
+        console.log('Available FAQs:', ['accordion-1']);
+        console.log('Custom element defined:', customElements.get('faq-card'));
+    </script>
+</body>
+</html>
