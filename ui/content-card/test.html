@@ -194,8 +194,9 @@
 							child.settings; // Triggers _ensureSettingsInitialized()
 							child._settings.layoutIndex = childIndex;
 							child._settings.layoutSrcsets = srcsets || 'default:100vw';
+							child._settings.srcsetBreakpoints = [280, 480, 900];
 							
-							console.log(`📍 Set layout index ${childIndex} and srcsets "${srcsets}" on child ${childIndex + 1} of lay-out ${index + 1}`);
+							console.log(`📍 Set layout index ${childIndex}, srcsets "${srcsets}", and breakpoints [280, 480, 900] on child ${childIndex + 1} of lay-out ${index + 1}`);
 						});
 						
 					} catch (error) {
@@ -342,6 +343,7 @@
 						child.settings; // Triggers _ensureSettingsInitialized()
 						child._settings.layoutIndex = childIndex;
 						child._settings.layoutSrcsets = srcsets || 'default:100vw';
+						child._settings.srcsetBreakpoints = [280, 480, 900];
 					});
 					
 				} catch (error) {

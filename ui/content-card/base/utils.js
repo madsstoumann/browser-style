@@ -1,5 +1,4 @@
 import { ICONS } from '../icons.js';
-import { getSrcset } from '../../layout/index.js';
 
 // Helper function to clean up template whitespace
 export function cleanHTML(html) {
@@ -496,23 +495,27 @@ export function renderLinks(links, settings = {}, actions = null) {
 	return `<nav ${getStyle('cc-links', settings)}>${links.map(link => renderLink(link)).join('')}</nav>`;
 }
 
-// Private helper function for responsive srcset generation
+function generateSrcsetString(imageSrc, breakpoints) {
+	if (!imageSrc || !Array.isArray(breakpoints) || breakpoints.length === 0) {
+		return null;
+	}
+	
+	return breakpoints
+		.map(width => `${imageSrc}?w=${width} ${width}w`)
+		.join(', ');
+}
+
 function _generateResponsiveSrcset(imageSrc, element, settings = {}) {
 	try {
-		// Check if layout system is available and we have srcset data from settings
-		if (settings.layoutSrcset) {
-			return {
-				srcset: null, // We'll implement srcset generation later if needed
-				sizes: settings.layoutSrcset
-			};
-		}
+		const breakpoints = settings.srcsetBreakpoints || [];
+		const srcset = generateSrcsetString(imageSrc, breakpoints);
+		const sizes = settings.layoutSrcset || 'auto';
 		
-		// Fallback for non-layout contexts
 		return {
-			srcset: null,
-			sizes: '100vw'
+			srcset,
+			sizes
 		};
 	} catch (error) {
-		return { srcset: null, sizes: '100vw' };
+		return { srcset: null, sizes: null };
 	}
 }

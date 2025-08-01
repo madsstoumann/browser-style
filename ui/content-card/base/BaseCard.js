@@ -27,6 +27,7 @@ export class BaseCard extends HTMLElement {
 			const defaultSettings = {
 				styles: {},
 				useSchema: true,
+				// srcsetBreakpoints: [280, 500, 720, 1080, 1440], // Optional override
 			};
 			this._settings = { ...defaultSettings, ...(parsedSettings || {}) };
 		}
