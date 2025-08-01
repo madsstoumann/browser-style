@@ -1,4 +1,4 @@
-import { ICONS } from '../icons.js';
+import { ICONS } from './icons.js';
 
 // Helper function to clean up template whitespace
 export function cleanHTML(html) {

@@ -278,7 +278,13 @@
 .cc-timeline-text {}
 
 /* --- Poll --- */
-.
+
+/* Business Card --- */
+.cc-business-map {
+	border: 0;
+	display: block;
+
+}
 
 
 /* === SUBGRID === */

@@ -1,5 +1,5 @@
-import { ICONS } from './icons.js';
-import { getSrcset } from '../layout/index.js';
+import { ICONS } from '../icons.js';
+import { getSrcset } from '@browser.style/layout';
 
 class ContentCard extends HTMLElement {
 	#data; #root; #settings; #popoverId;

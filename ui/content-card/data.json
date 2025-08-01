@@ -1192,7 +1192,7 @@
     ]
   },
   {
-    "id": "accordion-1",
+    "id": "faq-1",
     "type": "faq",
     "content": {
       "category": "FAQ",
@@ -1275,16 +1275,14 @@
         }
       ]
     },
-    "actions": [
+    "links": [
       {
         "text": "Visit Website",
-        "url": "https://brewandbean.com",
-        "icon": "open_in_new"
+        "url": "https://brewandbean.com"
       },
       {
         "text": "Call Now",
-        "url": "tel:+14155550123",
-        "icon": "phone"
+        "url": "tel:+14155550123"
       }
     ]
   }
