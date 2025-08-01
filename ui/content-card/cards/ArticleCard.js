@@ -7,18 +7,10 @@ export class ArticleCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		const renderContext = this._setSchema('Article');
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
-		const { content = {} } = this.data;
-		const headlineTag = content.headlineTag || 'h2';
-
-		// Set schema on the card element itself
-		if (useSchema) {
-			this.setAttribute('itemscope', '');
-			this.setAttribute('itemtype', 'https://schema.org/Article');
-		}
+		const { settings, useSchema, content, headlineTag } = renderContext;
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
@@ -38,7 +30,7 @@ export class ArticleCard extends BaseCard {
 				${renderEngagement(this.data.engagement, useSchema, settings)}
 				${renderTags(this.data.tags, settings)}
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}

@@ -40,11 +40,27 @@ export async function getContentById(id) {
 	return item;
 }
 
-export async function setContentForElement(element, contentId, settings = {}) {
+export async function setContentForElement(element, contentId, dataArray = null, additionalSettings = {}) {
 	try {
-		const data = await getContentById(contentId);
+		let data;
+		
+		if (dataArray) {
+			// Use provided data array (avoids loading data.json again)
+			data = dataArray.find(item => item.id === contentId);
+			if (!data) {
+				console.warn(`Content with id "${contentId}" not found`);
+				console.log('Available IDs:', dataArray.map(item => item.id).join(', '));
+			}
+		} else {
+			// Fallback to loading data (for backward compatibility)
+			data = await getContentById(contentId);
+		}
+		
 		if (data) {
-			element.dataset = { data, settings };
+			// Merge with existing settings (which may already contain layoutIndex/layoutSrcset)
+			const existingSettings = element.settings || {};
+			const mergedSettings = { useSchema: true, ...existingSettings, ...additionalSettings };
+			element.dataset = { data, settings: mergedSettings };
 		} else {
 			element.innerHTML = `<div style="border: 2px dashed #ff9500; padding: 1rem; color: #b7791f; background: #fff3e0;">
 				⚠️ Content not found: "${contentId}"

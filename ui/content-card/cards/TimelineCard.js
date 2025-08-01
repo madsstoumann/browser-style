@@ -7,18 +7,10 @@ export class TimelineCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		const renderContext = this._setSchema('EventSeries');
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
-		const { content = {} } = this.data;
-		const headlineTag = content.headlineTag || 'h2';
-
-		// Set schema on the card element itself
-		if (useSchema) {
-			this.setAttribute('itemscope', '');
-			this.setAttribute('itemtype', 'https://schema.org/EventSeries');
-		}
+		const { settings, useSchema, content, headlineTag } = renderContext;
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
@@ -37,7 +29,7 @@ export class TimelineCard extends BaseCard {
 					`).join('') || ''}
 				</ol>
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}

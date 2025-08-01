@@ -1,0 +1,33 @@
+{
+  "poll": {
+    "id": "poll-1",
+    "status": "active",
+    "totalVotes": 5420,
+    "results": {
+      "react": {
+        "votes": 2210,
+        "percentage": 40.8
+      },
+      "vue": {
+        "votes": 1355,
+        "percentage": 25.0
+      },
+      "svelte": {
+        "votes": 975,
+        "percentage": 18.0
+      },
+      "angular": {
+        "votes": 650,
+        "percentage": 12.0
+      },
+      "other": {
+        "votes": 230,
+        "percentage": 4.2
+      }
+    },
+    "userVote": null,
+    "hasVoted": false
+  },
+  "success": true,
+  "timestamp": "2024-01-15T10:30:00Z"
+}

@@ -7,19 +7,13 @@ export class ProductCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		const renderContext = this._setSchema('Product');
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
-		const { content = {}, product: productData = {} } = this.data;
+		const { settings, useSchema, content, headlineTag } = renderContext;
+		const { product: productData = {} } = this.data;
 		const price = productData.price || {};
 		const rating = productData.rating || {};
-		const headlineTag = content.headlineTag || 'h2';
-
-		if (useSchema) {
-			this.setAttribute('itemscope', '');
-			this.setAttribute('itemtype', 'https://schema.org/Product');
-		}
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
@@ -59,11 +53,10 @@ export class ProductCard extends BaseCard {
 				${renderEngagement(this.data.engagement, false, settings)}
 				${renderTags(this.data.tags, settings)}
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}
 }
 
-// Define the custom element
 customElements.define('product-card', ProductCard);

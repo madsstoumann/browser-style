@@ -44,19 +44,13 @@ export class BusinessCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		// Use BaseCard helper for common setup and schema
+		const renderContext = this._setSchema('LocalBusiness');
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
+		const { settings, useSchema, content, headlineTag } = renderContext;
 		const useMap = settings.useMap !== false; // Default to true, can be disabled
-		const { content = {}, business: businessData = {} } = this.data;
-		const headlineTag = content.headlineTag || 'h2';
-
-		// Set schema on the card element itself
-		if (useSchema) {
-			this.setAttribute('itemscope', '');
-			this.setAttribute('itemtype', 'https://schema.org/LocalBusiness');
-		}
+		const { business: businessData = {} } = this.data;
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
@@ -124,7 +118,7 @@ export class BusinessCard extends BaseCard {
 				` : ''}
 				
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}

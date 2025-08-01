@@ -531,12 +531,9 @@
     "media": {
       "sources": [
         {
-          "type": "video",
-          "src": "https://assets.stoumann.dk/video/river.mp4",
-          "poster": "assets/river.avif",
-          "tracks": [
-            { "kind": "captions", "src": "captions_en.vtt", "srclang": "en", "label": "English" }
-          ]
+          "type": "image",
+          "src": "assets/river.avif",
+          "alt": "Peaceful River Journey"
         }
       ]
     },
@@ -548,15 +545,19 @@
         "formatted": "Dec 15, 2024"
       }
     },
-    "video": {
-      "src": "https://assets.stoumann.dk/video/river.mp4",
-      "options": { "controls": true, "autoplay": true, "playsinline": true }
-    },
+   
     "actions": [
       {
         "text": "Watch Video",
         "popover": {
-          "content": "<h3>Video Player</h3><p>This video player would open in a popover overlay.</p><p>You can embed video content, controls, and additional information here.</p>"
+          "video": {
+            "src": "https://assets.stoumann.dk/video/river.mp4",
+            "name": "Peaceful River Journey",
+            "description": "A serene video showcasing the peaceful flow of a river through nature",
+            "uploadDate": "2024-12-15T10:30:00Z",
+            "thumbnailUrl": "assets/river.avif",
+            "options": { "controls": true, "autoplay": true, "playsinline": true }
+          }
         }
       }
     ]
@@ -587,6 +588,10 @@
         "popover": {
           "video": {
             "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "name": "Big Buck Bunny Adventures",
+            "description": "An animated short film featuring the adventures of Big Buck Bunny",
+            "uploadDate": "2025-03-22T14:45:00Z",
+            "thumbnailUrl": "assets/bunny.avif",
             "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true }
           }
         }
@@ -613,15 +618,19 @@
         "formatted": "Jun 8, 2025"
       }
     },
-    "video": {
-      "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-      "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true, "resetOnClose": true }
-    },
+   
     "actions": [
       {
         "text": "Watch Video",
         "popover": {
-          "content": "<h3>Video Player</h3><p>This video player would open in a popover overlay.</p><p>You can embed video content, controls, and additional information here.</p>"
+          "video": {
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "name": "Elephants Dream Documentary",
+            "description": "A surreal computer-animated short film exploring dreams and imagination",
+            "uploadDate": "2025-06-08T09:15:00Z",
+            "thumbnailUrl": "assets/elephant.avif",
+            "options": { "controls": true, "muted": true, "autoplay": false, "playsinline": true, "resetOnClose": true }
+          }
         }
       }
     ]
@@ -635,7 +644,8 @@
           "type": "youtube",
           "src": "https://youtu.be/VTCIStB6y8s",
           "alt": "What's new in Web UI",
-          "playsinline": false
+          "playsinline": false,
+          "uploadDate": "2023-05-10T09:00:00Z"
         }
       ]
     },
@@ -660,7 +670,8 @@
         {
           "type": "youtube",
           "src": "https://youtu.be/beYbnNT_02U",
-          "alt": "What's new in the web"
+          "alt": "What's new in the web",
+          "uploadDate": "2023-04-15T14:30:00Z"
         }
       ]
     },
@@ -685,9 +696,49 @@
         {
           "type": "youtube",
           "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
-          "alt": "Building a UI component library"
+          "alt": "Building a UI component library",
+          "uploadDate": "2023-03-22T11:15:00Z"
         }
       ]
+    },
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": {
+          "video": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
+            "alt": "Building a UI component library",
+            "description": "Learn how to build a comprehensive UI component library for modern web development",
+            "uploadDate": "2023-03-22T11:15:00Z",
+            "thumbnailUrl": "https://i.ytimg.com/vi/5b4YcLB4DVI/hqdefault.jpg",
+            "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "video-7",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "video",
+          "src": "https://assets.stoumann.dk/video/river.mp4",
+          "alt": "Nature River Flow",
+          "name": "Peaceful River Journey",
+          "description": "A serene video of a flowing river in nature",
+          "duration": "PT1M30S",
+          "uploadDate": "2024-01-15T08:00:00Z",
+          "poster": "assets/river.avif"
+        }
+      ]
+    },
+    "content": {
+      "category": "Nature",
+      "headline": "River Flow Meditation",
+      "summary": "Experience the calming sounds and sights of a peaceful river flowing through nature."
     }
   },
   {
@@ -915,12 +966,6 @@
       {
         "name": "Sarah Chen",
         "role": "UX Engineer",
-        "avatar": {
-          "src": "assets/sarah-chen.avif",
-          "alt": "Sarah Chen",
-          "width": 40,
-          "height": 40
-        },
         "email": "sarah.chen@example.com",
         "sameAs": [
           "https://twitter.com/sarahuxchen",
@@ -989,25 +1034,12 @@
           "name": "Early Bird Ticket",
           "price": "299",
           "currency": "USD"
-        },
-        {
-          "name": "Student Ticket",
-          "price": "99",
-          "currency": "USD"
-        },
-        {
-          "name": "VIP Pass",
-          "price": "599",
-          "currency": "USD"
         }
       ],
       "status": "Scheduled",
       "attendanceMode": "OfflineEventAttendanceMode"
     },
     "actions": [
-      {
-        "text": "Get Tickets"
-      },
       {
         "text": "View Agenda",
         "popover": {
@@ -1018,18 +1050,38 @@
   },
   {
     "id": "poll-1",
-    "type": "article",
+    "type": "poll",
     "content": {
       "category": "Community Poll",
       "headline": "What's your favorite front-end framework?",
-      "summary": "Help us understand what the community loves to build with."
+      "summary": "Help us understand what the community loves to build with.",
+      "text": [
+        { "id": "react", "headline": "React", "text": "A JavaScript library for building user interfaces" },
+        { "id": "vue", "headline": "Vue.js", "text": "The progressive JavaScript framework" },
+        { "id": "svelte", "headline": "Svelte", "text": "Cybernetically enhanced web apps" },
+        { "id": "angular", "headline": "Angular", "text": "Platform for building mobile and desktop web applications" },
+        { "id": "other", "headline": "Other", "text": "Something else entirely" }
+      ]
+    },
+    "poll": {
+      "endpoint": "/api/polls/poll-1",
+      "allowMultiple": false,
+      "showResults": "afterVote",
+      "totalVotes": 5420,
+      "labels": {
+        "vote": "Vote",
+        "submitVote": "Submit Vote",
+        "results": "Results",
+        "totalVotes": "Total votes:",
+        "votes": "votes",
+        "fallbackTitle": "Poll"
+      }
     },
     "actions": [
-      { "text": "React" },
-      { "text": "Vue" },
-      { "text": "Svelte" },
-      { "text": "Angular" },
-      { "text": "Other" }
+      {
+        "text": "Vote",
+        "type": "submit"
+      }
     ],
     "engagement": {
       "viewCount": 5420

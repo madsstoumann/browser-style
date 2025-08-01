@@ -6,6 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
+	
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../layout/index.js"
+		}
+	}
+	</script>
 	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
 	<link rel="stylesheet" href="index.css" blocking="render">
 
@@ -102,21 +110,31 @@
 
 	<lay-out md="columns(2)" bleed col-gap="2" pad-top="3" pad-bottom="2" row-gap="2" theme="tertiary">
 		<recipe-card content="recipe-3"></recipe-card>
-		<recipe-card content="recipe-1" layout=""></recipe-card>
+		<recipe-card content="recipe-1"></recipe-card>
 		<recipe-card content="recipe-2"></recipe-card>
 		<recipe-card content="recipe-4"></recipe-card>
+	</lay-out>
+
+	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-bottom="2" pad-top="2">
+		<news-card content="news-8"></news-card>
+		<news-card content="news-10" layout="rows(p:1 th-2)"></news-card>
+		<event-card content="event-1"></event-card>
 	</lay-out>
 	
 
 	<main></main>
 
 	<script type="module">
+		// Import layout srcsets utilities
+		import { generateLayoutSrcsets, createLayoutsDataMap, getSrcset } from '@browser.style/layout';
+		
 		// Import individual card components
 		import { setContentForElement } from './base/data-loader.js';
 		import { NewsCard } from './cards/NewsCard.js';
 		import { ArticleCard } from './cards/ArticleCard.js';
 		import { ProductCard } from './cards/ProductCard.js';
 		import { RecipeCard } from './cards/RecipeCard.js';
+		import { PollCard } from './cards/PollCard.js';
 		import { QuoteCard } from './cards/QuoteCard.js';
 		import { EventCard } from './cards/EventCard.js';
 		import { FaqCard } from './cards/FaqCard.js';
@@ -125,11 +143,82 @@
 
 		// Custom elements are auto-registered when modules are imported
 
+		async function initializeLayoutSrcsets() {
+			try {
+				console.log('🔧 Loading layout configuration...');
+				
+				// Load configuration and layout data
+				const [config, gridData, columnsData, bentoData, asymmetricalData, ratiosData] = await Promise.all([
+					fetch('../layout/config.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/grid.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/columns.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/bento.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/asymmetrical.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/ratios.json').then(r => r.json())
+				]);
+
+				// Store globally for card system to use
+				window._layoutSrcsetData = {
+					config,
+					layoutsData: createLayoutsDataMap({
+						'grid.json': gridData,
+						'columns.json': columnsData,
+						'bento.json': bentoData,
+						'asymmetrical.json': asymmetricalData,
+						'ratios.json': ratiosData
+					})
+				};
+
+				// Set srcsets on all lay-out elements
+				console.log('📐 Setting layout srcsets...');
+				const layoutElements = document.querySelectorAll('lay-out');
+				console.log(`📊 Found ${layoutElements.length} lay-out elements`);
+
+				layoutElements.forEach((element, index) => {
+					try {
+						const srcsets = generateLayoutSrcsets(element, config, window._layoutSrcsetData.layoutsData);
+						
+						if (srcsets && srcsets !== 'default:100vw') {
+							element.setAttribute('srcsets', srcsets);
+							console.log(`✅ Set srcsets for lay-out ${index + 1}:`, srcsets);
+						} else {
+							element.setAttribute('srcsets', 'default:100vw');
+							console.log(`ℹ️  Set fallback srcsets for lay-out ${index + 1}`);
+						}
+						
+						// Set layout data on child elements
+						Array.from(element.children).forEach((child, childIndex) => {
+							child.setAttribute('data-layout-index', childIndex);
+							
+							// Set layout data in settings for BaseCard to use
+							child.settings; // Triggers _ensureSettingsInitialized()
+							child._settings.layoutIndex = childIndex;
+							child._settings.layoutSrcsets = srcsets || 'default:100vw';
+							
+							console.log(`📍 Set layout index ${childIndex} and srcsets "${srcsets}" on child ${childIndex + 1} of lay-out ${index + 1}`);
+						});
+						
+					} catch (error) {
+						console.warn(`⚠️  Failed to generate srcsets for lay-out ${index + 1}:`, error);
+						element.setAttribute('srcsets', 'default:100vw');
+					}
+				});
+
+				console.log('🎉 Layout srcsets complete!');
+
+			} catch (error) {
+				console.error('💥 Failed to initialize layout srcsets:', error);
+			}
+		}
+
 		async function initializeCards() {
 			try {
 				console.log('🃏 Loading content data...');
 				const allData = await fetch('data.json').then(r => r.json());
 				console.log(`📄 Loaded ${allData.length} content items`);
+				
+				// Store globally to avoid multiple loads
+				window._cardData = allData;
 
 				// Wait for custom elements to be defined
 				await Promise.all([
@@ -162,7 +251,8 @@
 					const cards = document.querySelectorAll(selector);
 					cards.forEach(card => {
 						const contentId = card.getAttribute('content');
-						setContentForElement(card, contentId);
+						
+						setContentForElement(card, contentId, allData);
 					});
 				});
 				
@@ -188,8 +278,8 @@
 						case 'article':
 						case 'spot':
 						case 'video':  // Map video to article-card
-						case 'poll':   // Map poll to article-card
 							tagName = 'article-card'; break;
+						case 'poll': tagName = 'poll-card'; break;
 						case 'product': tagName = 'product-card'; break;
 						case 'recipe': tagName = 'recipe-card'; break;
 						case 'quote': tagName = 'quote-card'; break;
@@ -208,21 +298,65 @@
 					const cardElement = wrapper.firstElementChild;
 					main.appendChild(cardElement);
 					
-					// Use setContentForElement just like existing cards
-					setContentForElement(cardElement, item.id);
+					// Use setContentForElement - layout data already set during initialization
+					setContentForElement(cardElement, item.id, allData);
 					dynamicCardsCreated++;
 					console.log(`✅ Created ${tagName} for ${item.id}`);
 				});
 
 				console.log(`🎉 Cards initialized! ${dynamicCardsCreated} dynamic cards created`);
 
+				// Initialize smart popover toggle listeners for YouTube lazy loading and video play/pause
+				const { initializePopoverToggleListeners } = await import('./base/utils.js');
+				
+				// Add a small delay to ensure DOM is fully rendered
+				setTimeout(() => {
+					initializePopoverToggleListeners();
+				}, 100);
+
 			} catch (error) {
 				console.error('❌ Failed to initialize cards:', error);
 			}
 		}
 
-		// Start the app
-		initializeCards();
+		// Add global function to update srcsets for new layout elements
+		window.updateLayoutSrcsets = function(container = document) {
+			if (!window._layoutSrcsetData) return;
+			
+			const newLayoutElements = container.querySelectorAll('lay-out:not([srcsets])');
+			console.log(`🔄 Updating srcsets for ${newLayoutElements.length} new lay-out elements`);
+			
+			newLayoutElements.forEach((element, index) => {
+				try {
+					const srcsets = generateLayoutSrcsets(element, window._layoutSrcsetData.config, window._layoutSrcsetData.layoutsData);
+					if (srcsets && srcsets !== 'default:100vw') {
+						element.setAttribute('srcsets', srcsets);
+						console.log(`✅ Updated srcsets for new lay-out ${index + 1}:`, srcsets);
+					}
+					
+					// Set layout data on child elements
+					Array.from(element.children).forEach((child, childIndex) => {
+						child.setAttribute('data-layout-index', childIndex);
+						
+						// Set layout data in settings for BaseCard to use
+						child.settings; // Triggers _ensureSettingsInitialized()
+						child._settings.layoutIndex = childIndex;
+						child._settings.layoutSrcsets = srcsets || 'default:100vw';
+					});
+					
+				} catch (error) {
+					console.warn(`⚠️  Failed to update srcsets for new lay-out ${index + 1}:`, error);
+				}
+			});
+		};
+
+		// Start the app - layout srcsets first, then cards
+		async function startApp() {
+			await initializeLayoutSrcsets();
+			await initializeCards();
+		}
+		
+		startApp();
 	</script>
 
 

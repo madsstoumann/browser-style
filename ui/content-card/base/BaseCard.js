@@ -1,3 +1,6 @@
+import { getSrcset } from '../../layout/index.js';
+import { getStyle } from './utils.js';
+
 export class BaseCard extends HTMLElement {
 	_data; _settings; _root;
 
@@ -48,28 +51,20 @@ export class BaseCard extends HTMLElement {
 
 	get settings() {
 		this._ensureSettingsInitialized();
+		if (typeof this._settings.layoutIndex === 'number' && this._settings.layoutSrcsets && !this._settings.layoutSrcset) {
+			try {
+				const sizes = getSrcset(this._settings.layoutSrcsets, this._settings.layoutIndex);
+				this._settings.layoutSrcset = sizes;
+			} catch (error) {
+			}
+		}
+		
 		return this._settings;
 	}
 
 	getStyle(componentName) {
 		this._ensureSettingsInitialized();
-		
-		const styles = this._settings?.styles || {};
-		const styleOverride = styles[componentName];
-
-		if (styleOverride) {
-			if (Array.isArray(styleOverride)) {
-				return `class="${styleOverride.join(' ')}"`;
-			} else if (typeof styleOverride === 'string') {
-				return `class="${styleOverride}"`;
-			} else if (typeof styleOverride === 'object') {
-				const classes = styleOverride.class || '';
-				const inlineStyle = styleOverride.style || '';
-				return `class="${classes}" style="${inlineStyle}"`;
-			}
-		}
-
-		return `class="${componentName}"`;
+		return getStyle(componentName, this._settings);
 	}
 
 	_prepareAndRender() {
@@ -89,9 +84,26 @@ export class BaseCard extends HTMLElement {
 		this._prepareAndRender();
 	}
 
-	// Helper method to clean up template whitespace
-	cleanHTML(html) {
-		return html.replace(/>\s+</g, '><').replace(/^\s+|\s+$/g, '');
+	// Helper method to set up common render variables
+	_setupRender() {
+		if (!this.data) return null;
+		
+		const settings = this.settings;
+		const useSchema = settings.useSchema;
+		const { content = {} } = this.data;
+		const headlineTag = content.headlineTag || 'h2';
+		
+		return { settings, useSchema, content, headlineTag };
+	}
+
+	// Helper method to set schema attributes
+	_setSchema(schemaType) {
+		const renderContext = this._setupRender();
+		if (renderContext?.useSchema) {
+			this.setAttribute('itemscope', '');
+			this.setAttribute('itemtype', `https://schema.org/${schemaType}`);
+		}
+		return renderContext;
 	}
 
 	// Abstract method to be overridden by subclasses

@@ -58,19 +58,26 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
 
 /**
  * Generates CSS srcset string for a specific child element within a lay-out
- * @param {Element|string} layoutElement - Layout DOM element or element string
+ * @param {Element|string} layoutElementOrSrcsets - Layout DOM element, element string, or srcsets string directly
  * @param {number} childIndex - Zero-based index of the child element
  * @returns {string} CSS srcset string (e.g., "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw")
  */
-export function getSrcset(layoutElement, childIndex) {
-  // Get the srcsets attribute from the element
+export function getSrcset(layoutElementOrSrcsets, childIndex) {
+  // Get the srcsets string from various input types
   let srcsets;
   
-  if (typeof layoutElement === 'string') {
-    const match = layoutElement.match(/srcsets="([^"]+)"/);
-    srcsets = match ? match[1] : null;
-  } else if (layoutElement && layoutElement.getAttribute) {
-    srcsets = layoutElement.getAttribute('srcsets');
+  if (typeof layoutElementOrSrcsets === 'string') {
+    // Check if it's an element string with srcsets attribute
+    const match = layoutElementOrSrcsets.match(/srcsets="([^"]+)"/);
+    if (match) {
+      srcsets = match[1];
+    } else {
+      // Assume it's the srcsets string directly
+      srcsets = layoutElementOrSrcsets;
+    }
+  } else if (layoutElementOrSrcsets && layoutElementOrSrcsets.getAttribute) {
+    // It's a DOM element
+    srcsets = layoutElementOrSrcsets.getAttribute('srcsets');
   }
   
   if (!srcsets) {

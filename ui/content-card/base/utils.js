@@ -36,7 +36,7 @@ export function renderImage(image, useSchema = false, settings = {}) {
 	const schemaAttr = useSchema ? 'itemprop="image"' : '';
 	
 	// Generate responsive srcset and sizes
-	const { srcset, sizes } = _generateResponsiveSrcset(image.src);
+	const { srcset, sizes } = _generateResponsiveSrcset(image.src, null, settings);
 	
 	return `<img 
 		${getStyle('cc-media-image', settings)} 
@@ -52,15 +52,27 @@ export function renderImage(image, useSchema = false, settings = {}) {
 	>`;
 }
 
-export function renderYouTube(video, settings = {}) {
-	if (!video?.src) return '';
+// Helper function to detect YouTube URLs
+export function isYouTubeUrl(url) {
+	if (!url) return false;
+	try {
+		const urlObj = new URL(url);
+		return urlObj.hostname === 'youtu.be' || urlObj.hostname.includes('youtube.com');
+	} catch (e) {
+		return url.includes('youtube.com') || url.includes('youtu.be');
+	}
+}
+
+// Helper function to extract YouTube video ID
+export function extractYouTubeId(url) {
+	if (!url) return null;
 	let videoId;
 	try {
-		const url = new URL(video.src);
-		if (url.hostname === 'youtu.be') {
-			videoId = url.pathname.slice(1);
-		} else if (url.hostname.includes('youtube.com')) {
-			videoId = url.searchParams.get('v');
+		const urlObj = new URL(url);
+		if (urlObj.hostname === 'youtu.be') {
+			videoId = urlObj.pathname.slice(1);
+		} else if (urlObj.hostname.includes('youtube.com')) {
+			videoId = urlObj.searchParams.get('v');
 		}
 	} catch (e) {
 		// fallback for malformed urls
@@ -68,28 +80,48 @@ export function renderYouTube(video, settings = {}) {
 
 	if (!videoId) {
 		// Fallback for simple cases if URL parsing fails
-		const parts = video.src.split('v=');
+		const parts = url.split('v=');
 		if (parts.length > 1) {
 			videoId = parts[1].split('&')[0];
 		} else {
-			const pathParts = video.src.split('/');
+			const pathParts = url.split('/');
 			videoId = pathParts.pop().split('?')[0];
 		}
 	}
 
-	// If playsinline is true, render iframe instead of thumbnail
+	return videoId;
+}
+
+export function renderYouTube(video, useSchema = false, settings = {}) {
+	if (!video?.src) return '';
+	const videoId = extractYouTubeId(video.src);
+	if (!videoId) return '';
+
+	// If playsinline is true, render iframe instead of thumbnail (with schema if enabled)
 	if (video.playsinline) {
-		return `<iframe 
-			${getStyle('cc-media-video', settings)}
-			src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1"
-			frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			allowfullscreen
-			title="${video.alt || 'YouTube video player'}">
-		</iframe>`;
+		const schemaAttrs = useSchema ? 'itemscope itemtype="https://schema.org/VideoObject"' : '';
+		const nameAttr = useSchema && video.alt ? `<meta itemprop="name" content="${video.alt}">` : '';
+		const embedUrlAttr = useSchema ? `<meta itemprop="embedUrl" content="https://www.youtube.com/embed/${videoId}">` : '';
+		const thumbnailUrlAttr = useSchema ? `<meta itemprop="thumbnailUrl" content="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg">` : '';
+		const uploadDateAttr = useSchema && video.uploadDate ? `<meta itemprop="uploadDate" content="${video.uploadDate}">` : '';
+
+		return `<div ${schemaAttrs}>
+			${nameAttr}
+			${embedUrlAttr}
+			${thumbnailUrlAttr}
+			${uploadDateAttr}
+			<iframe 
+				${getStyle('cc-media-video', settings)}
+				src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&playsinline=1"
+				frameborder="0"
+				allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				allowfullscreen
+				title="${video.alt || 'YouTube video player'}">
+			</iframe>
+		</div>`;
 	}
 
-	// Default: render thumbnail image
+	// Default: render thumbnail image (NO schema - this is just a link/image, not a video object)
 	return `<img 
 		${getStyle('cc-media-image', settings)}
 		decoding="async"
@@ -100,19 +132,34 @@ export function renderYouTube(video, settings = {}) {
 	>`;
 }
 
-export function renderVideo(video, settings = {}) {
+export function renderVideo(video, useSchema = false, settings = {}) {
 	if (!video?.src) return '';
 	const opts = video.options || {};
-	return `<video ${getStyle('cc-media-video', settings)} src="${video.src}"
-		${opts.autoplay ? `autoplay playsinline` : ''}
-		${opts.controls !== false ? `controls` : ''}
-		${opts.muted ? `muted` : ''}
-		${opts.loop ? `loop` : ''}
-		${video.poster ? `poster="${video.poster}"` : ''}
-		${video.width ? `width="${video.width}"` : ''}
-		${video.height ? `height="${video.height}"` : ''}
-		${video.crossorigin ? `crossorigin="${video.crossorigin}"` : ''}
-		preload="${opts.preload || 'metadata'}"></video>`;
+	const schemaAttrs = useSchema ? 'itemscope itemtype="https://schema.org/VideoObject"' : '';
+	const contentUrlAttr = useSchema ? 'itemprop="contentUrl"' : '';
+	const nameAttr = useSchema && video.name ? `<meta itemprop="name" content="${video.name}">` : '';
+	const descriptionAttr = useSchema && video.description ? `<meta itemprop="description" content="${video.description}">` : '';
+	const durationAttr = useSchema && video.duration ? `<meta itemprop="duration" content="${video.duration}">` : '';
+	const uploadDateAttr = useSchema && video.uploadDate ? `<meta itemprop="uploadDate" content="${video.uploadDate}">` : '';
+	const thumbnailUrlAttr = useSchema && video.poster ? `<meta itemprop="thumbnailUrl" content="${video.poster}">` : '';
+	
+	return `<div ${schemaAttrs}>
+		${nameAttr}
+		${descriptionAttr}
+		${durationAttr}
+		${uploadDateAttr}
+		${thumbnailUrlAttr}
+		<video ${getStyle('cc-media-video', settings)} src="${video.src}" ${contentUrlAttr}
+			${opts.autoplay ? `autoplay playsinline` : ''}
+			${opts.controls !== false ? `controls` : ''}
+			${opts.muted ? `muted` : ''}
+			${opts.loop ? `loop` : ''}
+			${video.poster ? `poster="${video.poster}"` : ''}
+			${video.width ? `width="${video.width}"` : ''}
+			${video.height ? `height="${video.height}"` : ''}
+			${video.crossorigin ? `crossorigin="${video.crossorigin}"` : ''}
+			preload="${opts.preload || 'metadata'}"></video>
+	</div>`;
 }
 
 export function renderRibbon(ribbon, settings = {}) {
@@ -139,8 +186,8 @@ export function renderMedia(media, ribbon, sticker, useSchema = false, settings 
 		${media.sources
 			.map((entry) => {
 				if (entry.type === 'image') return renderImage(entry, useSchema, settings)
-				if (entry.type === 'video') return renderVideo(entry, settings)
-				if (entry.type === 'youtube') return renderYouTube(entry, settings)
+				if (entry.type === 'video') return renderVideo(entry, useSchema, settings)
+				if (entry.type === 'youtube') return renderYouTube(entry, useSchema, settings)
 			})
 			.join('')}
 		${renderRibbon(ribbon, settings)}
@@ -149,7 +196,7 @@ export function renderMedia(media, ribbon, sticker, useSchema = false, settings 
 	</figure>`)
 }
 
-export function renderActions(actions, settings = {}) {
+export function renderActions(actions, useSchema = false, settings = {}) {
 	if (!actions?.length) return '';
 	
 	const renderBtn = (action) => {
@@ -164,7 +211,7 @@ export function renderActions(actions, settings = {}) {
 			popover: action.popover ? `
 				<div id="${popoverId}" popover="${action.popover.type || 'auto'}" ${getStyle('cc-popover', settings)}>
 					<button ${getStyle('cc-popover-close', settings)} popovertarget="${popoverId}" popovertargetaction="hide">✕</button>
-					${action.popover.video ? renderPopoverVideo(action.popover.video, settings) : `<div ${getStyle('cc-popover-content', settings)}>${action.popover.content || ''}</div>`}
+					${action.popover.video ? renderPopoverVideo(action.popover.video, useSchema, settings) : `<div ${getStyle('cc-popover-content', settings)}>${action.popover.content || ''}</div>`}
 				</div>
 			` : ''
 		};
@@ -180,21 +227,110 @@ export function renderActions(actions, settings = {}) {
 	`;
 }
 
-function renderPopoverVideo(video, settings = {}) {
+function renderPopoverVideo(video, useSchema = false, settings = {}) {
 	if (!video?.src) return '';
 	const opts = video.options || {};
-	return `
-		<video ${getStyle('cc-popover-video', settings)} 
-			src="${video.src}"
+	
+	// Check if this is a YouTube video
+	if (video.type === 'youtube' || isYouTubeUrl(video.src)) {
+		const videoId = extractYouTubeId(video.src);
+		if (videoId) {
+			const embedParams = new URLSearchParams();
+			if (opts.autoplay) embedParams.append('autoplay', '1');
+			if (opts.muted) embedParams.append('mute', '1');
+			if (opts.controls !== false) embedParams.append('controls', '1');
+			if (opts.playsinline) embedParams.append('playsinline', '1');
+			
+			const schemaAttrs = useSchema ? 'itemscope itemtype="https://schema.org/VideoObject"' : '';
+			const nameAttr = useSchema && video.alt ? `<meta itemprop="name" content="${video.alt}">` : '';
+			const embedUrlAttr = useSchema ? `<meta itemprop="embedUrl" content="https://www.youtube.com/embed/${videoId}">` : '';
+			const thumbnailUrlAttr = useSchema ? `<meta itemprop="thumbnailUrl" content="${video.thumbnailUrl || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}">` : '';
+			const uploadDateAttr = useSchema && video.uploadDate ? `<meta itemprop="uploadDate" content="${video.uploadDate}">` : '';
+			const descriptionAttr = useSchema && video.description ? `<meta itemprop="description" content="${video.description}">` : '';
+			
+			return `<div ${schemaAttrs}>
+				${nameAttr}
+				${embedUrlAttr}
+				${thumbnailUrlAttr}
+				${uploadDateAttr}
+				${descriptionAttr}
+				<iframe 
+					${getStyle('cc-popover-youtube', settings)}
+					data-src="https://www.youtube.com/embed/${videoId}?${embedParams.toString()}"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen
+					title="${video.alt || 'YouTube video player'}">
+				</iframe>
+			</div>`;
+		}
+	}
+	
+	// Regular video element
+	const schemaAttrs = useSchema ? 'itemscope itemtype="https://schema.org/VideoObject"' : '';
+	const contentUrlAttr = useSchema ? 'itemprop="contentUrl"' : '';
+	const nameAttr = useSchema && video.name ? `<meta itemprop="name" content="${video.name}">` : '';
+	const descriptionAttr = useSchema && video.description ? `<meta itemprop="description" content="${video.description}">` : '';
+	const durationAttr = useSchema && video.duration ? `<meta itemprop="duration" content="${video.duration}">` : '';
+	const uploadDateAttr = useSchema && video.uploadDate ? `<meta itemprop="uploadDate" content="${video.uploadDate}">` : '';
+	const thumbnailUrlAttr = useSchema && (video.thumbnailUrl || video.poster) ? `<meta itemprop="thumbnailUrl" content="${video.thumbnailUrl || video.poster}">` : '';
+	
+	return `<div ${schemaAttrs}>
+		${nameAttr}
+		${descriptionAttr}
+		${durationAttr}
+		${uploadDateAttr}
+		${thumbnailUrlAttr}
+		<video ${getStyle('cc-popover-video', settings)} src="${video.src}" ${contentUrlAttr}
 			${opts.controls ? 'controls' : ''}
 			${opts.muted ? 'muted' : ''}
-			${opts.autoplay ? 'autoplay' : ''}
 			${opts.playsinline ? 'playsinline' : ''}
 			${opts.loop ? 'loop' : ''}
 			${video.poster ? `poster="${video.poster}"` : ''}
+			${opts.autoplay ? 'data-autoplay' : ''}
+			${opts.resetOnClose ? 'data-reset' : ''}
 			preload="${opts.preload || 'metadata'}">
 		</video>
-	`;
+	</div>`;
+}
+
+export function initializePopoverToggleListeners(container = document) {
+	container.querySelectorAll('[popover]').forEach(popover => {
+		// Skip if listener already added
+		if (popover.dataset.toggleListenerAdded) return;
+		popover.dataset.toggleListenerAdded = 'true';
+		
+		popover.addEventListener('toggle', ({ newState }) => {
+			if (newState === 'open') {
+				// Handle YouTube iframes - set src from data-src
+				const youtubeIframe = popover.querySelector('iframe[data-src*="youtube.com"]');
+				if (youtubeIframe && youtubeIframe.dataset.src) {
+					youtubeIframe.src = youtubeIframe.dataset.src;
+				}
+				
+				// Handle regular videos - play if autoplay is set
+				const video = popover.querySelector('video');
+				if (video && 'autoplay' in video.dataset) {
+					video.play().catch(() => {}); // Ignore autoplay failures
+				}
+			} else {
+				// Handle YouTube iframes - remove src to stop playback and save bandwidth
+				const youtubeIframe = popover.querySelector('iframe[src*="youtube.com"]');
+				if (youtubeIframe) {
+					youtubeIframe.src = 'about:blank';
+				}
+				
+				// Handle regular videos - pause and optionally reset
+				const video = popover.querySelector('video');
+				if (video) {
+					video.pause();
+					if ('reset' in video.dataset) {
+						video.currentTime = 0;
+					}
+				}
+			}
+		});
+	});
 }
 
 export function renderTags(tags, settings = {}) {
@@ -361,15 +497,22 @@ export function renderLinks(links, settings = {}, actions = null) {
 }
 
 // Private helper function for responsive srcset generation
-function _generateResponsiveSrcset(imageSrc) {
+function _generateResponsiveSrcset(imageSrc, element, settings = {}) {
 	try {
-		// This would need to be implemented based on your specific srcset generation logic
-		// For now, returning basic fallback
+		// Check if layout system is available and we have srcset data from settings
+		if (settings.layoutSrcset) {
+			return {
+				srcset: null, // We'll implement srcset generation later if needed
+				sizes: settings.layoutSrcset
+			};
+		}
+		
+		// Fallback for non-layout contexts
 		return {
 			srcset: null,
 			sizes: '100vw'
 		};
 	} catch (error) {
-		return { srcset: null, sizes: null };
+		return { srcset: null, sizes: '100vw' };
 	}
 }

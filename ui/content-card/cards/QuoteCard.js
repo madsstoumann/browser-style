@@ -7,17 +7,10 @@ export class QuoteCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		const renderContext = this._setSchema('Quotation');
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
-		const { content = {} } = this.data;
-
-		// Set schema on the card element itself
-		if (useSchema) {
-			this.setAttribute('itemscope', '');
-			this.setAttribute('itemtype', 'https://schema.org/Quotation');
-		}
+		const { settings, useSchema, content } = renderContext;
 
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
@@ -33,11 +26,10 @@ export class QuoteCard extends BaseCard {
 					</blockquote>
 				` : ''}
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}
 }
 
-// Define the custom element
 customElements.define('quote-card', QuoteCard);

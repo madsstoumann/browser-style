@@ -7,14 +7,12 @@ export class EventCard extends BaseCard {
 	}
 
 	render() {
-		if (!this.data) return '';
+		const renderContext = this._setupRender();
+		if (!renderContext) return '';
 		
-		const settings = this.settings;
-		const useSchema = settings.useSchema;
-		const { content = {}, event: eventData = {} } = this.data;
-		const headlineTag = content.headlineTag || 'h2';
-
-		// Set schema on the card element itself
+		const { settings, useSchema, content, headlineTag } = renderContext;
+		const { event: eventData = {} } = this.data;
+		
 		if (useSchema) {
 			this.setAttribute('itemscope', '');
 			this.setAttribute('itemtype', `https://schema.org/${content.category || 'Event'}`);
@@ -64,11 +62,10 @@ export class EventCard extends BaseCard {
 				${renderEngagement(this.data.engagement, false, settings)}
 				${renderTags(this.data.tags, settings)}
 				${renderLinks(this.data.links, settings, this.data.actions)}
-				${renderActions(this.data.actions, settings)}
+				${renderActions(this.data.actions, useSchema, settings)}
 			</div>
 		`;
 	}
 }
 
-// Define the custom element
 customElements.define('event-card', EventCard);
