@@ -1,4 +1,4 @@
-import { getSrcset } from '../../layout/index.js';
+import { getSrcset } from '@browser.style/layout';
 import { getStyle } from './utils.js';
 
 export class BaseCard extends HTMLElement {
