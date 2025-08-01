@@ -719,29 +719,6 @@
     ]
   },
   {
-    "id": "video-7",
-    "type": "article",
-    "media": {
-      "sources": [
-        {
-          "type": "video",
-          "src": "https://assets.stoumann.dk/video/river.mp4",
-          "alt": "Nature River Flow",
-          "name": "Peaceful River Journey",
-          "description": "A serene video of a flowing river in nature",
-          "duration": "PT1M30S",
-          "uploadDate": "2024-01-15T08:00:00Z",
-          "poster": "assets/river.avif"
-        }
-      ]
-    },
-    "content": {
-      "category": "Nature",
-      "headline": "River Flow Meditation",
-      "summary": "Experience the calming sounds and sights of a peaceful river flowing through nature."
-    }
-  },
-  {
     "id": "product-1",
     "sku": "ASP-WH-001",
     "type": "product",
@@ -1064,7 +1041,7 @@
       ]
     },
     "poll": {
-      "endpoint": "/api/polls/poll-1",
+      "endpoint": "./api/polls/poll-1.json",
       "allowMultiple": false,
       "showResults": "afterVote",
       "totalVotes": 5420,
@@ -1080,7 +1057,13 @@
     "actions": [
       {
         "text": "Vote",
-        "type": "submit"
+        "attributes": {
+          "type": "submit",
+          "itemscope": true,
+          "itemtype": "https://schema.org/VoteAction",
+          "data-target": "#poll-1",
+          "data-object": "Which JavaScript framework do you prefer?"
+        }
       }
     ],
     "engagement": {

@@ -9,44 +9,28 @@ export class PollCard extends BaseCard {
 		this.hasVoted = false;
 	}
 
-	connectedCallback() {
+	async connectedCallback() {
 		super.connectedCallback();
-		this.addEventListener('click', this.handlePollInteraction.bind(this));
+		this.addEventListener('submit', this.handleFormSubmit.bind(this));
 	}
 
-	async handlePollInteraction(event) {
-		// Handle poll option selection
-		if (event.target.matches('.cc-poll-option input[type="radio"]')) {
-			this.userVote = event.target.value;
-			this.updateVoteButton();
+	async handleFormSubmit(event) {
+		event.preventDefault();
+		
+		if (this.hasVoted) return;
+		
+		const formData = new FormData(event.target);
+		const pollData = this.data.poll;
+		
+		// Get selected choices (single for radio, multiple for checkbox)
+		if (pollData.allowMultiple) {
+			this.userVote = formData.getAll(`poll-${this.data.id}`);
+		} else {
+			this.userVote = formData.get(`poll-${this.data.id}`);
 		}
 		
-		// Handle vote submission - check for vote button by text and type
-		if (event.target.matches('.cc-action')) {
-			const labels = this.data.poll?.labels || {};
-			const voteText = labels.vote || 'Vote';
-			const submitVoteText = labels.submitVote || 'Submit Vote';
-			const buttonText = event.target.textContent.trim();
-			
-			if ((buttonText === voteText || buttonText === submitVoteText) && !this.hasVoted) {
-				event.preventDefault();
-				if (this.userVote) {
-					await this.submitVote();
-				}
-			}
-		}
-	}
-
-	updateVoteButton() {
-		const labels = this.data.poll?.labels || {};
-		const voteText = labels.vote || 'Vote';
-		const submitVoteText = labels.submitVote || 'Submit Vote';
-		
-		const voteBtn = this.querySelector('.cc-action');
-		const buttonText = voteBtn?.textContent.trim();
-		if (voteBtn && (buttonText === voteText || buttonText === submitVoteText)) {
-			voteBtn.disabled = !this.userVote;
-			voteBtn.textContent = this.userVote ? submitVoteText : voteText;
+		if (this.userVote && (Array.isArray(this.userVote) ? this.userVote.length > 0 : true)) {
+			await this.submitVote();
 		}
 	}
 
@@ -67,9 +51,7 @@ export class PollCard extends BaseCard {
 	}
 
 	async fetchPollResults(endpoint) {
-		// Mock endpoint - replace with actual API call
-		const mockEndpoint = endpoint.replace('/api/polls/', './api/polls/') + '.json';
-		const response = await fetch(mockEndpoint);
+		const response = await fetch(endpoint);
 		return await response.json();
 	}
 
@@ -82,53 +64,20 @@ export class PollCard extends BaseCard {
 		const useSchema = this.settings.useSchema;
 
 		return this.data.content.text.map(option => `
-			<div ${getStyle('cc-poll-option', this.settings)}>
-				<label ${getStyle('cc-poll-label', this.settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/Answer" itemprop="suggestedAnswer"' : ''}>
-					<input 
-						type="${inputType}" 
-						name="${inputName}" 
-						value="${option.id}"
-						${getStyle('cc-poll-input', this.settings)}
-					>
-					<div ${getStyle('cc-poll-option-content', this.settings)}>
-						<div ${getStyle('cc-poll-option-title', this.settings)} ${useSchema ? 'itemprop="text"' : ''}>${option.headline}</div>
-						${option.text ? `<div ${getStyle('cc-poll-option-desc', this.settings)} ${useSchema ? 'itemprop="description"' : ''}>${option.text}</div>` : ''}
-					</div>
-				</label>
-			</div>
-		`).join('');
+			<label ${getStyle('cc-poll-label', this.settings)} ${useSchema ? 'itemscope itemtype="https://schema.org/Answer" itemprop="suggestedAnswer"' : ''}>
+				<input 
+					type="${inputType}" 
+					name="${inputName}" 
+					value="${option.id}"
+					required
+					${getStyle('cc-poll-input', this.settings)}
+				>
+				<strong ${getStyle('cc-poll-option-title', this.settings)} ${useSchema ? 'itemprop="text"' : ''}>${option.headline}</strong>
+				${option.text ? `<small ${getStyle('cc-poll-option-desc', this.settings)} ${useSchema ? 'itemprop="description"' : ''}>${option.text}</small>` : ''}
+			</label>`).join('');
 	}
 
-	renderVoteAction(settings, useSchema) {
-		if (!this.data.actions?.length) return '';
-		
-		const labels = this.data.poll?.labels || {};
-		const voteText = labels.vote || 'Vote';
-		const fallbackTitle = labels.fallbackTitle || 'Poll';
-		
-		const voteAction = this.data.actions.find(action => 
-			action.text === voteText || action.type === 'submit'
-		);
-		
-		if (!voteAction) return '';
-		
-		const voteActionSchema = useSchema ? 
-			`itemscope itemtype="https://schema.org/VoteAction"` : '';
-		
-		const voteActionMeta = useSchema ? `
-			<meta itemprop="target" content="#${this.data.id}">
-			<meta itemprop="object" content="${this.data.content.headline || fallbackTitle}">
-		` : '';
-		
-		return `
-			<nav ${getStyle('cc-actions', settings)}>
-				<button type="button" ${getStyle('cc-action', settings)} ${voteActionSchema}>
-					${voteActionMeta}
-					${voteAction.text || voteText}
-				</button>
-			</nav>
-		`;
-	}
+
 
 	renderPollResults() {
 		if (!this.pollResults) return '';
@@ -151,13 +100,12 @@ export class PollCard extends BaseCard {
 							${result.percentage}% (${result.votes} ${votesText})
 						</div>
 					</div>
-					<div ${getStyle('cc-poll-result-bar-container', this.settings)}>
-						<progress 
-							${getStyle('cc-poll-result-bar', this.settings)} 
+					
+						<progress ${getStyle('cc-poll-result-bar-container', this.settings)}
 							max="100"
 							value="${result.percentage}">
 						</progress>
-					</div>
+					
 				</div>
 			`;
 		}).join('');
@@ -192,13 +140,14 @@ export class PollCard extends BaseCard {
 							</div>
 						</div>
 					` : `
-						<fieldset ${getStyle('cc-poll-voting', settings)}>
-							${this.renderPollOptions()}
-						</fieldset>
+						<form ${getStyle('cc-poll-form', settings)}>
+							<fieldset ${getStyle('cc-poll-voting', settings)}>
+								${this.renderPollOptions()}
+							</fieldset>
+							${renderActions(this.data.actions, useSchema, settings)}
+						</form>
 					`}
 				</div>
-				
-				${showResults ? '' : this.renderVoteAction(settings, useSchema)}
 				${renderEngagement(this.data.engagement, useSchema, settings)}
 				${renderTags(this.data.tags, settings)}
 				${renderLinks(this.data.links, settings, this.data.actions)}

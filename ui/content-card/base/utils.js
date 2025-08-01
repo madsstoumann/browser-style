@@ -203,8 +203,26 @@ export function renderActions(actions, useSchema = false, settings = {}) {
 		const popoverId = action.popover ? `popover-${Math.random().toString(36).slice(2)}` : '';
 		const popoverAttrs = action.popover ? `popovertarget="${popoverId}" popovertargetaction="show"` : '';
 		
+		// Generate attributes string from action.attributes object
+		const attributeString = action.attributes ? 
+			Object.entries(action.attributes)
+				.filter(([key, value]) => !useSchema || !key.startsWith('item') || useSchema) // Only include schema attrs if useSchema is true
+				.map(([key, value]) => value === true ? key : `${key}="${value}"`)
+				.join(' ') : '';
+		
+		// Fallback type if not specified in attributes
+		const typeAttr = action.attributes?.type ? '' : 'type="button"';
+		
+		// Generate VoteAction meta tags if this is a VoteAction and useSchema is true
+		const isVoteAction = useSchema && action.attributes?.itemtype === 'https://schema.org/VoteAction';
+		const voteActionMeta = isVoteAction ? `
+			${action.attributes['data-target'] ? `<meta itemprop="target" content="${action.attributes['data-target']}">` : ''}
+			${action.attributes['data-object'] ? `<meta itemprop="object" content="${action.attributes['data-object']}">` : ''}
+		`.trim() : '';
+		
 		return {
-			button: `<button type="button" ${getStyle('cc-action', settings)} ${(action.icon ? `aria-label="${action.text}"` : (action.ariaLabel ? `aria-label="${action.ariaLabel}"` : ''))} ${popoverAttrs}>
+			button: `<button ${typeAttr} ${attributeString} ${getStyle('cc-action', settings)} ${(action.icon ? `aria-label="${action.text}"` : (action.ariaLabel ? `aria-label="${action.ariaLabel}"` : ''))} ${popoverAttrs}>
+				${voteActionMeta}
 				${action.icon ? renderSVG(action.icon) : ''} ${action.text}
 			</button>`,
 			popover: action.popover ? `
