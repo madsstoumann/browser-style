@@ -393,6 +393,7 @@ export const autosuggest = (params) => {
 		apiValuePath,
 		defaults,
 		label,
+		minlength,
 		required,
 		syncInstance
 	} = config;
@@ -417,6 +418,7 @@ export const autosuggest = (params) => {
 		${display ? `display="${display}"` : ''}
 		${label ? `label="${label}"` : ''}
 		list-mode="ul"
+		minlength="${minlength || 3}"
 		name="${name}"
 		noshadow
 		part="autosuggest"

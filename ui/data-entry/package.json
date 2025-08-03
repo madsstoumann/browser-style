@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/data-entry",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Dynamic data entry form component with JSON schema validation and internationalization support",
   "type": "module",
   "module": "index.js",
