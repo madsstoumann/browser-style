@@ -261,6 +261,23 @@
       "rules": [
         { "selector": "*:nth-child(5n+3)", "properties": { "--layout-ga": "span 2 / span 2" } }
       ]
+    },
+    {
+      "id": "6a",
+      "description": "1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 5,
+      "repeatable": true,
+      "rows": "1fr 1fr 1fr",
+      "srcset": "50vw,25vw,25vw,25vw,25vw,50vw",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(6a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(6n+1)", "properties": { "--layout-ga": "span 3 / span 2" } },
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
     }
   ]
 }

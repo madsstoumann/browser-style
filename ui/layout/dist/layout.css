@@ -224,11 +224,11 @@
 			--layout-gtc: 1fr 1fr 1fr;
 		}
 
-		lay-out[md="columns(4)"], lay-out[md="grid(5g)"], lay-out[md="grid(5h)"] {
+		lay-out[md="columns(4)"], lay-out[md="grid(5g)"], lay-out[md="grid(5h)"], lay-out[md="grid(6a)"] {
 			--layout-gtc: 1fr 1fr 1fr 1fr;
 		}
 
-		lay-out[md="grid(3a)"] *:nth-child(3n+3), lay-out[md="grid(3b)"] *:nth-child(3n+1), lay-out[md="grid(4c)"] *:nth-child(4n+1), lay-out[md="grid(4d)"] *:nth-child(4n+2), lay-out[md="grid(5a)"] *:nth-child(5n+1), lay-out[md="grid(5b)"] *:nth-child(5n+5) {
+		lay-out[md="grid(3a)"] *:nth-child(3n+3), lay-out[md="grid(3b)"] *:nth-child(3n+1), lay-out[md="grid(4c)"] *:nth-child(4n+1), lay-out[md="grid(4d)"] *:nth-child(4n+2), lay-out[md="grid(5a)"] *:nth-child(5n+1), lay-out[md="grid(5b)"] *:nth-child(5n+5), lay-out[md="grid(6a)"] *:nth-child(6n+6) {
 			--layout-ga: auto / span 2;
 		}
 
@@ -294,6 +294,14 @@
 		lay-out[md="grid(5g)"] *:nth-child(5n+1),
 		lay-out[md="grid(5h)"] *:nth-child(5n+3) {
 			--layout-ga: span 2 / span 2;
+		}
+
+		lay-out[md="grid(6a)"] {
+			--layout-gtr: 1fr 1fr 1fr;
+		}
+
+		lay-out[md="grid(6a)"] *:nth-child(6n+1) {
+			--layout-ga: span 3 / span 2;
 		}
 
 	}
@@ -362,11 +370,11 @@
 			--layout-gtc: 1fr 1fr 1fr;
 		}
 
-		lay-out[lg="columns(4)"], lay-out[lg="grid(5g)"], lay-out[lg="grid(5h)"] {
+		lay-out[lg="columns(4)"], lay-out[lg="grid(5g)"], lay-out[lg="grid(5h)"], lay-out[lg="grid(6a)"] {
 			--layout-gtc: 1fr 1fr 1fr 1fr;
 		}
 
-		lay-out[lg="grid(3a)"] *:nth-child(3n+3), lay-out[lg="grid(3b)"] *:nth-child(3n+1), lay-out[lg="grid(4c)"] *:nth-child(4n+1), lay-out[lg="grid(4d)"] *:nth-child(4n+2), lay-out[lg="grid(5a)"] *:nth-child(5n+1), lay-out[lg="grid(5b)"] *:nth-child(5n+5) {
+		lay-out[lg="grid(3a)"] *:nth-child(3n+3), lay-out[lg="grid(3b)"] *:nth-child(3n+1), lay-out[lg="grid(4c)"] *:nth-child(4n+1), lay-out[lg="grid(4d)"] *:nth-child(4n+2), lay-out[lg="grid(5a)"] *:nth-child(5n+1), lay-out[lg="grid(5b)"] *:nth-child(5n+5), lay-out[lg="grid(6a)"] *:nth-child(6n+6) {
 			--layout-ga: auto / span 2;
 		}
 
@@ -491,7 +499,8 @@
 			--layout-ga: span 1 / span 2;
 		}
 
-		lay-out[lg="bento(8b)"] *:nth-child(8n+3) {
+		lay-out[lg="bento(8b)"] *:nth-child(8n+3),
+		lay-out[lg="grid(6a)"] *:nth-child(6n+1) {
 			--layout-ga: span 3 / span 2;
 		}
 
@@ -534,6 +543,10 @@
 		lay-out[lg="grid(5c)"] *:nth-child(5n+1),
 		lay-out[lg="grid(5d)"] *:nth-child(5n+2) {
 			--layout-ga: span 4 / auto;
+		}
+
+		lay-out[lg="grid(6a)"] {
+			--layout-gtr: 1fr 1fr 1fr;
 		}
 
 		lay-out[lg="ratio(25:75)"] {
