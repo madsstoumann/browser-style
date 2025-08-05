@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Read This</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Use the SpeechSynthesis API to read a page / DOM node aloud.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">	
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Read This</h2>
+	<p>
+		A text-to-speech component with customizable voice controls. Use the play button to start speech synthesis, and the controls button to adjust voice settings.
+	</p>
+
+	<h3>Example 1: With text attribute</h3>
+	<read-this lang="en-US" rate="1.0" pitch="1.0" volume="1.0" text="Hello, world! This text is defined in the text attribute."></read-this>
+
+	<h3>Example 2: Using innerHTML content</h3>
+	<read-this lang="en-US" rate="1.2" pitch="0.8" volume="0.8">
+		This is a longer example that demonstrates <em>how</em> the ReadThis component can read content from its innerHTML. 
+		You can adjust the speed, pitch, volume, and voice using the controls popover.
+	</read-this>
+
+	<h3>Example 3: Reading from another element</h3>
+	<div id="myElement">This text will be read by the component below.</div>
+	<read-this lang="en-US" element="#myElement"></read-this>
+
+	<h3>Example 4: Danish language</h3>
+	<read-this lang="da-DK" text="Hej med dig, hvordan har du det?" id="danish-example"></read-this>
+
+	<h3>Example 5: Spanish language</h3>
+	<read-this lang="es-ES" text="¡Hola mundo! Este es un ejemplo en español." id="spanish-example"></read-this>
+
+	<script type="module">
+		import ReadThis from './index.js';
+
+		ReadThis.i18n['da-DK'] = {
+			play: 'Afspil',
+			pause: 'Pause',
+			resume: 'Genoptag',
+			controls: 'Indstillinger',
+			speed: 'Hastighed',
+			pitch: 'Tonehøjde',
+			volume: 'Lydstyrke',
+			voice: 'Stemme'
+		};
+
+		ReadThis.i18n['es-ES'] = {
+			play: 'Reproducir',
+			pause: 'Pausa',
+			resume: 'Reanudar',
+			controls: 'Controles',
+			speed: 'Velocidad',
+			pitch: 'Tono',
+			volume: 'Volumen',
+			voice: 'Voz'
+		};
+	</script>
+	<script type="module" src="./index.js"></script>
+
+</body>
+</html>
+</html>
