@@ -18,7 +18,7 @@ const style = `
     input, select { grid-area: 2 / 1 / 3 / 3; }
   }
   legend { display: contents; font-weight: 700; }
-  nav { align-items: center; display: flex; gap: 0.5ch; }
+  nav { align-items: center; display: flex; gap: 0.5ch; margin-block: 1em; }
   output { text-align: end; }
   select { font: inherit; }
   svg { fill: currentColor; height: 1.5em; width: 1.5em; }
@@ -34,6 +34,9 @@ const style = `
     display: inline-grid; 
     place-content: center;
   }
+
+  :host([position*="center"]) nav { justify-content: center; }
+  :host([position*="end"]) nav { justify-content: end; }
 `;
 
 class ReadThis extends HTMLElement {
@@ -46,11 +49,12 @@ class ReadThis extends HTMLElement {
       speed: 'Speed', pitch: 'Pitch', volume: 'Volume', voice: 'Voice' 
     }
   };
+  static observedAttributes = ['pitch', 'rate', 'voice', 'volume'];
 
   static #initVoices() {
     if (this.#voicesPromise) return this.#voicesPromise;
     
-    this.#voicesPromise = new Promise(resolve => {
+    return this.#voicesPromise = new Promise(resolve => {
       const setVoices = () => {
         this.#voices = speechSynthesis.getVoices();
         if (this.#voices.length) {
@@ -61,25 +65,40 @@ class ReadThis extends HTMLElement {
       speechSynthesis.onvoiceschanged = setVoices;
       setVoices();
     });
-    return this.#voicesPromise;
   }
-
-  static observedAttributes = ['lang', 'voice', 'rate', 'pitch', 'volume', 'text', 'element', 'controls', 'i18n'];
 
   #updating = false;
   #charIndex = 0;
   #config = { lang: 'en-US', rate: 1, pitch: 1, volume: 1, text: '', voice: null };
   #translations = {};
-  #elements = {};
+  #targetElement = null;
+  #originalHTML = '';
+  #words = [];
 
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
     this.synthesis = speechSynthesis;
     this.utterance = new SpeechSynthesisUtterance();
-    this.utterance.onboundary = e => this.#charIndex = e.charIndex;
-    this.utterance.onstart = () => { this.#charIndex = 0; this.#updateBtn(true); };
-    this.utterance.onend = () => { this.#charIndex = 0; this.#updateBtn(false); ReadThis.#current = null; };
+    
+    this.utterance.onboundary = e => {
+      this.#charIndex = e.charIndex;
+      if (e.name === 'word') this.#highlightNextWord(e.charIndex);
+    };
+    
+    this.utterance.onstart = () => { 
+      this.#charIndex = 0; 
+      this.#updateBtn(true);
+      this.#setupHighlighting();
+    };
+    
+    this.utterance.onend = () => { 
+      this.#charIndex = 0; 
+      this.#updateBtn(false); 
+      this.#clearHighlighting();
+      ReadThis.#current = null; 
+    };
+    
     this.utterance.onpause = () => this.#updateBtn(true, true);
     this.utterance.onresume = () => this.#updateBtn(true);
   }
@@ -113,8 +132,10 @@ class ReadThis extends HTMLElement {
     this.shadowRoot.adoptedStyleSheets = [sheet];
     
     const hasControls = this.hasAttribute('controls');
+    const positionTop = this.getAttribute('position')?.includes('top');
+
     this.shadowRoot.innerHTML = `
-      <slot></slot>
+      ${positionTop ? '' : '<slot></slot>'}
       <nav part="button-container">
         <button part="play" type="button" title="${this.#t('play')}">
           <svg viewBox="0 0 24 24" class="play"><path d="M8 5v14l11-7z"/></svg>
@@ -130,16 +151,16 @@ class ReadThis extends HTMLElement {
           <label><span>${this.#t('voice')}:</span><select name="voice"></select></label>
         </fieldset>` : ''}
       </nav>
+      ${positionTop ? '<slot></slot>' : ''}
     `;
     
-    // Cache DOM elements
-    this.#elements.playBtn = this.shadowRoot.querySelector('[part="play"]');
-    this.#elements.controls = this.shadowRoot.querySelector('[part="controls"]');
+    const playBtn = this.shadowRoot.querySelector('[part="play"]');
+    const controls = this.shadowRoot.querySelector('[part="controls"]');
     
-    this.#elements.playBtn.onclick = () => this.#toggle();
+    playBtn.onclick = () => this.#toggle();
     
-    if (hasControls && this.#elements.controls) {
-      const handleControlInput = (e) => {
+    if (hasControls && controls) {
+      controls.oninput = e => {
         const { name, value } = e.target;
         if (name === 'voice') {
           this.setAttribute('voice', ReadThis.#voices[value].name);
@@ -147,16 +168,19 @@ class ReadThis extends HTMLElement {
           this.setAttribute(name, value);
         }
         if (this.synthesis.speaking && ReadThis.#current === this && ['rate', 'pitch', 'volume'].includes(name)) {
-          this.restartFromCurrentPosition();
+          this.#restartFromCurrentPosition();
         }
       };
-      this.#elements.controls.oninput = handleControlInput;
     }
   }
 
   #update() {
     const el = this.getAttribute('element');
     const text = el ? (document.querySelector(el)?.textContent || '').trim() : this.getAttribute('text') || this.textContent.trim();
+
+    // Store target element for highlighting (only if highlight attribute is present and not using text attribute)
+    this.#targetElement = this.hasAttribute('highlight') && !this.getAttribute('text') ? 
+      (el ? document.querySelector(el) : this) : null;
 
     this.#config.lang = this.getAttribute('lang') || 'en-US';
     this.#config.rate = +(this.getAttribute('rate') ?? 1);
@@ -178,18 +202,18 @@ class ReadThis extends HTMLElement {
   }
   
   #updateUI() {
-    if (!this.#elements.controls) return;
+    const controls = this.shadowRoot.querySelector('[part="controls"]');
+    if (!controls) return;
 
-    const rangeProps = ['rate', 'pitch', 'volume'];
-    rangeProps.forEach(prop => {
-      const input = this.#elements.controls.elements[prop];
+    ['rate', 'pitch', 'volume'].forEach(prop => {
+      const input = controls.elements[prop];
       if (input) {
         input.value = this.#config[prop];
         input.nextElementSibling.textContent = this.#config[prop];
       }
     });
 
-    const select = this.#elements.controls.elements.voice;
+    const select = controls.elements.voice;
     if (select && ReadThis.#voices?.length) {
       const langPrefix = this.#config.lang.split('-')[0].toLowerCase();
       const voicesToShow = ReadThis.#voices.filter(v => 
@@ -203,6 +227,54 @@ class ReadThis extends HTMLElement {
         return `<option value="${idx}"${selected}>${voice.name} (${voice.lang})</option>`;
       }).join('');
     }
+  }
+
+  #setupHighlighting() {
+    if (!this.#targetElement) return;
+    this.#originalHTML = this.#targetElement.innerHTML;
+    
+    // Pre-calculate word positions for more accurate highlighting
+    const text = this.#targetElement.textContent;
+    this.#words = [];
+    
+    const wordRegex = /\S+/g;
+    let match;
+    while ((match = wordRegex.exec(text)) !== null) {
+      this.#words.push({
+        word: match[0],
+        start: match.index,
+        end: match.index + match[0].length
+      });
+    }
+  }
+
+  #clearHighlighting() {
+    if (!this.#targetElement || !this.#originalHTML) return;
+    this.#targetElement.innerHTML = this.#originalHTML;
+  }
+
+  #highlightNextWord(currentCharIndex) {
+    if (!this.#targetElement || !this.#words.length) return;
+    
+    // Find the next word to highlight (the one currently being spoken)
+    const nextWord = this.#words.find(w => w.start >= currentCharIndex);
+    if (!nextWord) return;
+    
+    const text = this.#targetElement.textContent;
+    const beforeWord = text.slice(0, nextWord.start);
+    const word = nextWord.word;
+    const afterWord = text.slice(nextWord.end);
+    
+    this.#targetElement.innerHTML = 
+      this.#escapeHtml(beforeWord) + 
+      `<mark>${this.#escapeHtml(word)}</mark>` + 
+      this.#escapeHtml(afterWord);
+  }
+
+  #escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   #toggle() {
@@ -222,19 +294,16 @@ class ReadThis extends HTMLElement {
   }
 
   #updateBtn(speaking, paused = false) {
-    if (!this.#elements.playBtn) return;
-    this.#elements.playBtn.classList.toggle('paused', speaking && !paused);
-    this.#elements.playBtn.title = this.#t(speaking && !paused ? 'pause' : paused ? 'resume' : 'play');
+    const btn = this.shadowRoot.querySelector('[part="play"]');
+    if (!btn) return;
+    btn.classList.toggle('paused', speaking && !paused);
+    btn.title = this.#t(speaking && !paused ? 'pause' : paused ? 'resume' : 'play');
   }
 
   #restartFromCurrentPosition() {
     this.synthesis.cancel();
     this.utterance.text = this.#config.text.slice(this.#charIndex);
     this.synthesis.speak(this.utterance);
-  }
-
-  restartFromCurrentPosition() {
-    this.#restartFromCurrentPosition();
   }
 
   // Public API methods
@@ -247,8 +316,14 @@ class ReadThis extends HTMLElement {
   }
 
   pause() { this.synthesis.pause(); }
-  stop() { this.synthesis.cancel(); }
+  
+  stop() { 
+    this.synthesis.cancel();
+    this.#clearHighlighting();
+  }
+  
   setText(text) { this.setAttribute('text', text); }
+  restartFromCurrentPosition() { this.#restartFromCurrentPosition(); }
 }
 
 customElements.define('read-this', ReadThis);
