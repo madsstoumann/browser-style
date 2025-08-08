@@ -1,3 +1,6 @@
+import CircularRange from '@browser.style/circular-range';
+import VideoScrub from '@browser.style/video-scrub';
+
 class SpeedTicket extends HTMLElement {
 	constructor() {
 		super();
@@ -17,7 +20,7 @@ class SpeedTicket extends HTMLElement {
 		const styleSheet = new CSSStyleSheet();
 		styleSheet.replaceSync(`
 			:host {
-				--speed-ticket-accent: hsl(207, 100%, 25%);
+				--speed-ticket-accent: hsl(207, 100%, 45%);
 				--speed-ticket-muted-c: hsl(215.4, 16.3%, 46.9%);
 				--speed-ticket-bdrs: 0.5rem;
 				--speed-ticket-p: 1rem;
@@ -35,11 +38,12 @@ class SpeedTicket extends HTMLElement {
 
 			@container (min-width: 42rem) {
 				form {
-						grid-template-columns: 1fr 1fr;
+						grid-template-columns: 1fr 1fr 1fr;
 				}
 			}
 
 			[name="speed"] {
+			grid-column: span 3;
 				label { 
 					display: grid;
 					grid-template-columns: 1fr 1fr;
@@ -115,6 +119,32 @@ class SpeedTicket extends HTMLElement {
 				font-weight: bold;
 			}
 
+			circular-range {
+				// --circular-range-w: 280px;
+				--circular-range-output-fs: 1.5rem;
+				--circular-range-output-fw: 700;
+				--circular-range-output-gr: 2;
+				--circular-range-rows: 4;
+				--circular-range-track-sz: 1rem;
+				--circular-range-fill: var(--speed-ticket-accent);
+				--circular-range-thumb: var(--speed-ticket-accent);
+				--circular-range-labels-c: var(--speed-ticket-muted-c);
+				--circular-range-indice-c: var(--speed-ticket-muted-c);
+			
+				grid-area: 2 / 1;
+				margin: 1rem auto;
+				place-self: center;
+
+				&::part(active-label) {
+					color: #FFF;
+					font-weight: bold;			
+				}
+			}
+
+			video-scrub {
+				grid-area: 2 / 1;
+			}
+
 
 		`);
 		
@@ -174,22 +204,33 @@ class SpeedTicket extends HTMLElement {
 							<output name="limit" aria-live="polite" aria-atomic="true">${speedLimit}</output> ${this.data.speedRange.unit}
 						</small>
 					</legend>
-					<strong>
-						<output name="result">${this.state.speed}</output>
-						${this.data.speedRange.unit}
-					</strong>
-					<output name="description" class="${this.getViolationStatus(this.state.speed, speedLimit)}" aria-live="polite" aria-atomic="true">${description}</output>
-					<output name="fine" aria-live="polite" aria-atomic="true">${fineResult.fine}</output>
-					<label>
-						<input type="range" 
-									 min="${this.data.speedRange.min}" 
-									 max="${this.data.speedRange.max}" 
-									 name="value" 
-									 value="${this.state.speed}" 
-									 step="${this.data.speedRange.step}">
-							<small aria-hidden>${this.data.speedRange.min} ${this.data.speedRange.unit}</small>
-							<small aria-hidden>${this.data.speedRange.max} ${this.data.speedRange.unit}</small>
-					</label>
+
+					<video-scrub 
+						src="${this.data.roadTypes[this.state.roadType].video}"
+						min="${this.data.speedRange.min}"
+						max="${this.data.speedRange.max}"
+						value="${this.state.speed}">
+					</video-scrub>
+
+					<circular-range
+						name="value"
+						min="${this.data.speedRange.min}"
+						max="${this.data.speedRange.max}"
+						value="${this.state.speed}"
+						step="${this.data.speedRange.step}"
+						start="220"
+						end="500"
+						indices="50"
+						labels="0:0,50:50,80:80,90:90,130:130,200:200"
+						active-label="${speedLimit}"
+						enable-min
+						suffix=" ${this.data.speedRange.unit}">
+					</circular-range>
+
+					<div>
+						<output name="description" class="${this.getViolationStatus(this.state.speed, speedLimit)}" aria-live="polite" aria-atomic="true">${description}</output>
+						<output name="fine" aria-live="polite" aria-atomic="true">${fineResult.fine}</output>
+					</div>
 				</fieldset>
 
 				<fieldset name="road">
@@ -240,15 +281,19 @@ class SpeedTicket extends HTMLElement {
 
 		this._form = this.shadowRoot.querySelector('form');
 		this._form.addEventListener('input', this.handleInput.bind(this));
+		
 	}
 
 	handleInput(event) {
-		const { target } = event;
-		const { name, value, checked } = target;
+		const target = event.target;
+		const name = target.name || (target.getAttribute ? target.getAttribute('name') : undefined);
+		if (!name) return;
+		const checked = 'checked' in target ? target.checked : false;
+		const value = (target.value !== undefined) ? target.value : (target.getAttribute ? target.getAttribute('value') : undefined);
 
 		switch (name) {
 			case 'value':
-				this.state.speed = parseInt(value);
+				this.state.speed = parseInt(value, 10);
 				break;
 			case 'roadtype':
 				if (checked) this.state.roadType = target.dataset.id;
@@ -269,8 +314,18 @@ class SpeedTicket extends HTMLElement {
 		}
 
 		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
-		this._form.elements.result.value = this.state.speed;
 		this._form.elements.limit.value = speedLimit;
+		const cr = this.shadowRoot.querySelector('circular-range');
+		if (cr) cr.setAttribute('active-label', String(speedLimit));
+		// Sync video-scrub
+		const vs = this.shadowRoot.querySelector('video-scrub');
+		if (vs) {
+			vs.value = this.state.speed;
+			// If road type changed, update src
+			if (event?.target?.name === 'roadtype' && event?.target?.checked) {
+				vs.src = this.data.roadTypes[this.state.roadType].video;
+			}
+		}
 
 		const description = this.calculateDescription(this.state.speed, speedLimit);
 		this._form.elements.description.value = description;

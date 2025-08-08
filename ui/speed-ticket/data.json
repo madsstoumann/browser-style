@@ -16,7 +16,8 @@
       "defaultSpeed": 50,
       "minSpeed": 30,
       "maxSpeed": 80,
-      "value": 50
+      "value": 50,
+      "video": "byzone.mp4"
     },
     "countryRoad": {
       "id": "countryRoad", 
@@ -25,7 +26,8 @@
       "defaultSpeed": 80,
       "minSpeed": 40,
       "maxSpeed": 90,
-      "value": 80
+      "value": 80,
+      "video": "landevej.mp4"
     },
     "expressway": {
       "id": "expressway",
@@ -34,7 +36,8 @@
       "defaultSpeed": 90,
       "minSpeed": 40,
       "maxSpeed": 90,
-      "value": 90
+      "value": 90,
+      "video": "motorvej.mp4"
     },
     "highway": {
       "id": "highway",
@@ -43,7 +46,8 @@
       "defaultSpeed": 130,
       "minSpeed": 40,
       "maxSpeed": 130,
-      "value": 130
+      "value": 130,
+      "video": "motorvej.mp4"
     }
   },
   "vehicles": {

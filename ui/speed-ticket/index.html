@@ -8,11 +8,19 @@
 	<style>
 		body { font-family: system-ui; }
 	</style>
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/circular-range": "../circular-range/index.js",
+				"@browser.style/video-scrub": "../video-scrub/index.js"
+			}
+		}
+	</script>
 </head>
 <body>
-	<speed-ticket data="data.json"></speed-ticket>
-	<p><h2>US example</p>
-	<speed-ticket data="data-us.json"></speed-ticket>
-	<script src="index.js"></script>
+	<speed-ticket data="data.json" style="background:#0b1320;color:#eee;"></speed-ticket>
+	<!-- <p><h2>US example</p>
+	<speed-ticket data="data-us.json"></speed-ticket> -->
+	<script type="module" src="index.js"></script>
 </body>
 </html>

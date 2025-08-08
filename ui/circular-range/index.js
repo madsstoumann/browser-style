@@ -37,7 +37,7 @@ class CircularRange extends HTMLElement {
 			--circular-range-thumb-bxsh-focus: 0 0 0 2px Canvas;
 			--circular-range-track: #f0f0f0;
 			--circular-range-track-sz: 1.5rem;
-			--circular-range-w: 320px;
+			--circular-range-maw: 320px;
 
 			--_ga: 1 / 1 / calc(var(--circular-range-rows) + 1) / 1;
 			--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-track-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-track-sz)));
@@ -45,9 +45,10 @@ class CircularRange extends HTMLElement {
 			aspect-ratio: 1;
 			display: grid;
 			grid-template-rows: repeat(var(--circular-range-rows), 1fr);
+			max-width: var(--circular-range-maw);
 			place-items: center;
 			touch-action: none;
-			width: var(--circular-range-w);
+			width: var(--circular-range-w, 100%);
 		}
 
 		*:not([part="thumb"]) { user-select: none; }
@@ -152,6 +153,7 @@ class CircularRange extends HTMLElement {
 			font-weight: var(--circular-range-output-fw);
 			grid-column: 1;
 			grid-row: var(--circular-range-output-gr);
+			isolation: isolate;
 			text-box: cap alphabetic;
 		}
 
@@ -253,6 +255,8 @@ class CircularRange extends HTMLElement {
 			this.#update();
 			this.#updateActiveLabel();
 			const value = Number(this.getAttribute('value')) || 0;
+			// Ensure form value is initialized when connected
+			this.#internals.setFormValue(value);
 			this.classList.toggle('at-min', this.hasAttribute('enable-min') && value === this.#min);
 		});
 		this.addEventListener('keydown', this.#keydown);
@@ -283,6 +287,19 @@ class CircularRange extends HTMLElement {
 
 	set value(newValue) {
 		this.#setValue(newValue);
+	}
+
+	// Expose name like native form controls
+	get name() {
+		return this.getAttribute('name') ?? '';
+	}
+
+	set name(newName) {
+		if (newName === null || newName === undefined) {
+			this.removeAttribute('name');
+		} else {
+			this.setAttribute('name', String(newName));
+		}
 	}
 
 	#readAttributes() {
@@ -435,3 +452,5 @@ class CircularRange extends HTMLElement {
 }
 
 customElements.define('circular-range', CircularRange);
+
+export default CircularRange;

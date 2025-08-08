@@ -1,7 +1,7 @@
 {
-  "name": "@browser.style/circular-range",
-  "version": "1.0.4",
-  "description": "Circular Range component for browser.style",
+  "name": "@browser.style/video-scrub",
+  "version": "1.0.0",
+  "description": "Video scrub component",
   "type": "module",
   "module": "index.js",
   "exports": {
@@ -19,17 +19,20 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "circular-range"
+    "video",
+    "scrub",
+    "video-scrub"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/circular-range"
+    "directory": "ui/video-scrub"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/circular-range"
+  "homepage": "https://browser.style/ui/video-scrub"
 }
+
