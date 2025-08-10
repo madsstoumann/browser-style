@@ -84,19 +84,6 @@ class SpeedTicket extends HTMLElement {
 			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
 			video-scrub { grid-area: 1 / 1 / 5 / 1; pointer-events: none; }
 
-			// legend {
-			// 	color: var(--speed-ticket-accent);
-				
-			// 	font-size: var(--speed-ticket-legend-fs, 1.5rem);
-			// 	font-weight: bold;
-			// 	grid-area: 1 / 1;
-			// 	small {
-			// 		color: var(--speed-ticket-muted-c);
-			// 		font-size: 0.9rem;
-			// 		font-weight: 300;
-			// 	}
-			// }
-
 			input[type="radio"], input[type="checkbox"] {
 				margin-right: .5rem;
 			}
