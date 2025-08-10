@@ -14,9 +14,9 @@ const styles = `
 video {
   aspect-ratio: var(--video-scrub-aspect-ratio, none);
   display: block;  
-  height: auto;
+  height: var(--video-scrub-h, auto);
   object-fit: var(--video-scrub-object-fit, cover);
-  width: 100%;
+  width: var(--video-scrub-w, 100%);
 }
 
 :host::after {
@@ -27,7 +27,13 @@ video {
   position: absolute;  
 }
 `;
-
+/**
+ * @module VideoScrub
+ * @version 1.0.0
+ * @date 2025-08-10
+ * @author Mads Stoumann
+ * @description A web component for scrubbing through video content, allowing users to control playback via a range input.
+ */
 class VideoScrub extends HTMLElement {
   static get observedAttributes() {
     return ['min', 'max', 'src', 'value', 'poster'];
@@ -75,6 +81,9 @@ class VideoScrub extends HTMLElement {
     if (this.hasAttribute('poster')) this._video.poster = this.getAttribute('poster') || '';
     if (this.hasAttribute('crossorigin')) this._video.crossOrigin = this.getAttribute('crossorigin') || 'anonymous';
     if (this.hasAttribute('preload')) this._video.preload = this.getAttribute('preload');
+
+    // Step 1: Force early load (especially for iOS Safari so poster/first frame paints under mask)
+    try { this._video.load(); } catch {}
 
     this._video.addEventListener('loadedmetadata', this._onMetadata);
     this._video.addEventListener('durationchange', this._onMetadata);

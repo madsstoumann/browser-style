@@ -1,6 +1,13 @@
 import CircularRange from '@browser.style/circular-range';
 import VideoScrub from '@browser.style/video-scrub';
 
+/**
+ * @module SpeedTicket
+ * @version 1.0.0
+ * @date 2025-08-10
+ * @author Mads Stoumann
+ * @description A web component for calculating speed tickets based on user input and predefined rules.
+ */
 class SpeedTicket extends HTMLElement {
 	constructor() {
 		super();
@@ -25,7 +32,6 @@ class SpeedTicket extends HTMLElement {
 				--speed-ticket-bdrs: 0.5rem;
 				--speed-ticket-p: 1rem;
 
-				/* Unified color system */
 				--speed-success-bg: #33FF00;
 				--speed-success-fg: #333;
 				--speed-warning-bg: #F2C94C;
@@ -35,7 +41,6 @@ class SpeedTicket extends HTMLElement {
 				--speed-info-bg: #f0f9ff;
 				--speed-info-fg: #0369a1;
 
-				container-type: inline-size;
 				display: block;
 				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, system-ui, sans-serif;
 			}
@@ -43,7 +48,7 @@ class SpeedTicket extends HTMLElement {
 			:host * { box-sizing: border-box; }
 
 			fieldset { all: unset; }
-			form { display: grid; grid-template-rows: min-content 1fr 1fr min-content; }
+			form { display: grid; grid-template-rows: min-content 1fr 1fr min-content; height: 100dvh; }
 			label { display: block; }
 			input, select { font-family: inherit; font-size: small; }
 			select { border: 0; padding: 1ch 2ch; }
@@ -82,7 +87,7 @@ class SpeedTicket extends HTMLElement {
 			}
 
 			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
-			video-scrub { grid-area: 1 / 1 / 5 / 1; pointer-events: none; }
+			video-scrub { grid-area: 1 / 1 / 5 / 1; pointer-events: none; --video-scrub-h: 100%; }
 
 			input[type="radio"], input[type="checkbox"] {
 				margin-right: .5rem;

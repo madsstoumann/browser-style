@@ -1,7 +1,7 @@
 /**
  * @module CircularRange
- * @version 1.0.3
- * @date 2025-07-08
+ * @version 1.0.5
+ * @date 2025-08-10
  * @author Mads Stoumann
  * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
  */
@@ -227,9 +227,15 @@ class CircularRange extends HTMLElement {
 	#shiftStep;
 	#startAngle;
 	#step;
+	#isSafari;
+	#safariVisHandler;
+	#safariPageShowHandler;
 
 	constructor() {
 		super();
+		// Basic Safari detection (exclude Chrome, Edge, Opera, Firefox, iOS Chrome)
+		const ua = navigator.userAgent;
+		this.#isSafari = /Safari\//.test(ua) && !/(Chrome|Chromium|Edg|OPR|OPiOS|CriOS|FxiOS)/.test(ua);
 		this.attachShadow({ mode: 'open' });
 		this.#internals = this.attachInternals();
 		const sheet = new CSSStyleSheet();
@@ -258,7 +264,15 @@ class CircularRange extends HTMLElement {
 			// Ensure form value is initialized when connected
 			this.#internals.setFormValue(value);
 			this.classList.toggle('at-min', this.hasAttribute('enable-min') && value === this.#min);
+			if (this.#isSafari) this.#safariRepaint();
 		});
+
+		if (this.#isSafari) {
+			this.#safariVisHandler = () => { if (!document.hidden) this.#safariRepaint(); };
+			this.#safariPageShowHandler = (e) => { if (e.persisted || true) this.#safariRepaint(); };
+			document.addEventListener('visibilitychange', this.#safariVisHandler);
+			window.addEventListener('pageshow', this.#safariPageShowHandler);
+		}
 		this.addEventListener('keydown', this.#keydown);
 		this.addEventListener('pointerdown', this.#pointerdown);
 	}
@@ -266,6 +280,10 @@ class CircularRange extends HTMLElement {
 	disconnectedCallback() {
 		this.removeEventListener('keydown', this.#keydown);
 		this.removeEventListener('pointerdown', this.#pointerdown);
+		if (this.#isSafari) {
+			document.removeEventListener('visibilitychange', this.#safariVisHandler);
+			window.removeEventListener('pageshow', this.#safariPageShowHandler);
+		}
 	}
 
 	static get observedAttributes() {
@@ -328,6 +346,18 @@ class CircularRange extends HTMLElement {
 		const fillAngle = this.#startAngle + (fillPercentage * this.#angleRange);
 		this.style.setProperty('--_value', value);
 		this.style.setProperty('--_fill', fillAngle);
+	}
+
+	// Safari-specific repaint stabilization (avoid affecting other browsers)
+	#safariRepaint() {
+		// Force layout & style invalidation in Safari which sometimes fails to position offset-path pseudo-elements
+		const v = this.getAttribute('value') ?? '0';
+		// Read geometry to ensure layout tree is current
+		this.getBoundingClientRect();
+		// Toggle an inert custom property to invalidate style
+		this.style.setProperty('--_invalidate', performance.now().toString());
+		// Re-set the value attribute to trigger attributeChangedCallback without changing the value
+		this.setAttribute('value', v);
 	}
 
 	#setValue(newValue) {
