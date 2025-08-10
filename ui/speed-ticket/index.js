@@ -50,6 +50,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	setupStyles() {
+		/** @private Sets up and attaches the component's shadow DOM stylesheet. */
 		const styleSheet = new CSSStyleSheet();
 		styleSheet.replaceSync(`
 			:host {
@@ -79,7 +80,6 @@ class SpeedTicket extends HTMLElement {
 			input, select { font-family: inherit; font-size: small; }
 			select { border: 0; padding: 1ch 2ch; }
 
-			
 			select, summary {
 				appearance: none;
 				background: #FFF;
@@ -87,9 +87,7 @@ class SpeedTicket extends HTMLElement {
 				color: #222;
 				padding: 1ch 2ch;
 				font-size: small;
-				
 			}
-
 
 			[name="speed"] { display: contents; }
 			[part="header"] { 
@@ -214,16 +212,18 @@ class SpeedTicket extends HTMLElement {
 				&::part(track)::after { mix-blend-mode: exclusion; }
 			}
 		`);
-		
+
 		this.shadowRoot.adoptedStyleSheets = [styleSheet];
 	}
 
 	async connectedCallback() {
+		/** Lifecycle hook invoked when element is added to the document; loads data then renders UI. */
 		await this.loadData();
 		this.render();
 	}
 
 	async loadData() {
+		/** Fetches JSON data (rules, ranges, labels); initializes state and precompiles rules. */
 		try {
 			const response = await fetch(this.getAttribute('data') || './data.json');
 			this.data = await response.json();
@@ -239,6 +239,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	initializeState() {
+		/** Initializes internal reactive state from loaded data defaults (road, vehicle, factors, speed). */
 		if (!this.data) return;
 		const { roadTypes, vehicles, speedRange, defaults } = this.data;
 		this.state.roadType = defaults?.roadType && roadTypes[defaults.roadType] ? defaults.roadType : Object.keys(roadTypes)[0];
@@ -282,21 +283,15 @@ class SpeedTicket extends HTMLElement {
 	 * Evaluate conditions specifically for speed limit calculation (avoids circular dependency)
 	 */
 	evaluateConditionsForSpeedLimit(conditions) {
+		/** Evaluates a condition set using only basic fields to avoid recursive speed limit derivation. */
 		return this.#evaluateConditionsGeneric(conditions, field => this.getBasicFieldValue(field));
-	}
-
-	/**
-	 * Evaluate a single condition for speed limit calculation (avoids circular dependency)
-	 */
-	evaluateConditionForSpeedLimit(condition) {
-		// Kept for backward compatibility; now routed through generic evaluator.
-		return this.#evaluateConditionGeneric(condition, field => this.getBasicFieldValue(field));
 	}
 
 	/**
 	 * Get basic field values without calculating vehicle-specific speed limits (avoids circular dependency)
 	 */
 	getBasicFieldValue(field) {
+		/** Returns primitive field values (speed, base speedLimit, factors, etc.) without dynamic rules. */
 		const basicSpeedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
 		const fields = {
 			'speed': this.state.speed,
@@ -310,6 +305,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	render() {
+		/** (Re)renders the component's static HTML structure into the shadow root. */
 		if (!this.data) return;
 		this.shadowRoot.innerHTML = this.createHTML();
 		this._form = this.shadowRoot.querySelector('form');
@@ -319,6 +315,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	createHTML() {
+		/** Builds the HTML markup string for the component using current state & derived values. */
 		const { roadTypes, vehicles, factors, labels, speedRange, circularRange } = this.data;
 		const speedLimit = roadTypes[this.state.roadType].defaultSpeed;
 		const { description, fine, summary, violationStatus } = this.calculateAll();
@@ -392,6 +389,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	handleInput(event) {
+		/** Handles user form interactions, mutating state and scheduling a debounced UI update. */
 		const { name, checked, value, dataset } = event.target;
 		if (!name) return;
 
@@ -425,6 +423,7 @@ class SpeedTicket extends HTMLElement {
 
 	// Batch multiple rapid state changes into a single UI update within a microtask / frame
 	scheduleUpdate() {
+		/** Microtask-batches multiple rapid state changes into a single updateUI call. */
 		if (this._pendingUpdate) return;
 		this._pendingUpdate = true;
 		Promise.resolve().then(() => {
@@ -434,6 +433,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	updateUI() {
+		/** Diff-applies derived context values to the DOM, minimizing layout / paint work. */
 		// Compute and cache core derived values once per cycle
 		const ctx = this.computeContext();
 		this._currentCtx = ctx; // used by getFieldValue during this cycle
@@ -496,6 +496,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	updateSpeedometerColors(speed, speedLimit, ctx) {
+		/** Updates dynamic color custom properties based on violation status thresholds. */
 		const circularRange = this.shadowRoot.querySelector('circular-range');
 		
 		if (!circularRange) return;
@@ -538,6 +539,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	calculateAll(existingCtx) {
+		/** Derives description, fine, summary, and violation status (optionally using partial ctx). */
 		// Accept precomputed context to avoid recomputation
 		const ctx = existingCtx || {};
 		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
@@ -562,6 +564,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	findPenaltyRange(percentageOver) {
+		/** Binary-searches ascending penalty ranges for the best match <= percentageOver. */
 		const arr = this._penaltyRangesAsc || this.data.penaltyRanges;
 		let low = 0, high = arr.length - 1, best = null;
 		while (low <= high) {
@@ -578,18 +581,21 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	preprocessPenaltyRanges() {
+		/** Pre-sorts penalty range thresholds ascending to enable binary search lookup. */
 		if (!this.data?.penaltyRanges) return;
 		// Ensure ascending order for binary search (original logic expected descending find of first match)
 		this._penaltyRangesAsc = [...this.data.penaltyRanges].sort((a,b) => a.percentageOver - b.percentageOver);
 	}
 
 	classifyViolation(speed, speedLimit, percentageOver) {
+		/** Classifies violation severity (success | warning | danger) using configurable threshold. */
 		if (speed <= speedLimit) return 'success';
 		const threshold = this.data?.thresholds?.dangerPercentageOver ?? SpeedTicket.DANGER_THRESHOLD;
 		return percentageOver >= threshold ? 'danger' : 'warning';
 	}
 
 	calculateFineAmount(existingCtx) {
+		/** Computes the formatted fine value applying rates, penalties, factors, and consequences. */
 		const speed = this.state.speed;
 		const ctx = existingCtx || {};
 		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
@@ -623,11 +629,13 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	evaluateRateSelectionRules() {
+		/** Selects which base rate (rate1/2/3) applies using rule engine conditions. */
 		return this.data.ruleEngine.rateSelectionRules
 			.find(rule => (rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions)))?.result || 'rate1';
 	}
 
 	evaluatePenaltyRules() {
+		/** Aggregates additive penalties from matching penalty rules (and formula evaluations). */
 		return this.data.ruleEngine.penaltyRules.reduce((total, rule) => {
 			const match = rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions);
 			if (match) return total + (rule.penalty || this.evaluateFormula(rule.formula));
@@ -636,6 +644,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	evaluateConsequenceRules() {
+		/** Collects matching consequences and returns the most severe one. */
 		const consequences = this.data.ruleEngine.consequenceRules
 			.filter(rule => (rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions)))
 			.map(rule => rule.consequence);
@@ -644,6 +653,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	compileAllRules() {
+		/** Precompiles condition sets for speed limits, rates, penalties, consequences, and factors. */
 		const compileSet = (rules, useBasic = false) => {
 			if (!Array.isArray(rules)) return;
 			rules.forEach(rule => {
@@ -665,6 +675,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	compileConditions(conditions, useBasic = false) {
+		/** Returns (and caches) a predicate function for a given condition tree. */
 		const key = JSON.stringify(conditions) + '::' + useBasic;
 		if (this._compiledConditionCache.has(key)) return this._compiledConditionCache.get(key);
 		const fn = (component) => component.#evaluateConditionsGeneric(
@@ -720,21 +731,20 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	getMostSevereConsequence(consequences) {
+		/** Returns the highest-severity consequence id from a list, or null. */
 		return consequences
 			.filter(c => this.data.consequenceTypes[c])
 			.sort((a, b) => this.data.consequenceTypes[b].severity - this.data.consequenceTypes[a].severity)[0] || null;
 	}
 
 	evaluateConditions(conditions) {
+		/** Public wrapper to evaluate a condition array against current dynamic fields. */
 		return this.#evaluateConditionsGeneric(conditions, field => this.getFieldValue(field));
-	}
-
-	evaluateCondition(condition) {
-		return this.#evaluateConditionGeneric(condition, field => this.getFieldValue(field));
 	}
 
 	// === Generic condition evaluation helpers ===
 	#evaluateConditionsGeneric(conditions, valueGetter) {
+		/** @private Recursively evaluates AND/OR condition trees with a supplied field resolver. */
 		if (!conditions || !conditions.length) return true;
 		return conditions.every(cond => {
 			if (cond.type === 'or') return cond.rules?.some(rule => this.#evaluateConditionsGeneric([rule], valueGetter));
@@ -744,6 +754,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	#evaluateConditionGeneric(condition, valueGetter) {
+		/** @private Evaluates a single leaf condition using an operator and target value. */
 		if (!condition) return false;
 		const value = valueGetter(condition.field);
 		const target = condition.value;
@@ -762,6 +773,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	getFieldValue(field) {
+		/** Resolves a dynamic field value (speedLimit may be rule-derived) for rule evaluation. */
 		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
 		// Use current context if present to avoid recomputation
 		const speedLimit = this._currentCtx?.speedLimit ?? vehicleSpeedLimits.default;
@@ -777,6 +789,7 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	evaluateFormula(formula) {
+		/** Evaluates supported formula expressions (currently a single whitelisted calculation). */
 		if (formula?.type === 'calculation' && 
 			formula.expression === 'Math.floor((speed - 140) / 10) * 600 + 1200') {
 			return Math.floor((this.state.speed - 140) / 10) * 600 + 1200;
