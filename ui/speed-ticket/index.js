@@ -45,6 +45,8 @@ class SpeedTicket extends HTMLElement {
 			fieldset { all: unset; }
 			form { display: grid; grid-template-rows: min-content 1fr 1fr min-content; }
 			label { display: block; }
+			input, select { font-family: inherit; font-size: small; }
+			select { border: 0; padding: 1ch 2ch; }
 
 			[name="speed"] { display: contents; }
 			[part="header"] { 
@@ -70,12 +72,17 @@ class SpeedTicket extends HTMLElement {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 1rem;
+				grid-area: 4 / 1 / 5 / 1;
 				justify-content: center;
 				padding: 1ch 2ch;
+				z-index: 1;
+
+				legend { font-size: x-small; font-weight: 400; margin-block-end: .5ch; }
+				span { font-size: small; font-weight: 300; }
 			}
 
 			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
-			video-scrub { grid-area: 1 / 1 / 4 / 1; pointer-events: none; }
+			video-scrub { grid-area: 1 / 1 / 5 / 1; pointer-events: none; }
 
 			// legend {
 			// 	color: var(--speed-ticket-accent);
@@ -365,7 +372,7 @@ class SpeedTicket extends HTMLElement {
 							<label>
 								<input type="checkbox" name="factor" value="${f.id}" 
 									${this.state.factors.includes(f.id) ? 'checked' : ''}>
-								<strong>${f.label}</strong>
+								<span>${f.label}</span>
 								<!--<small>${f.description}</small>-->
 							</label>
 						`).join('')}
