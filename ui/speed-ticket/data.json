@@ -4,9 +4,14 @@
   "speedRange": {
     "min": 0,
     "max": 200,
-    "default": 50,
+    "default": 80,
     "step": 1,
     "unit": "km/t"
+  },
+  "defaults": {
+    "roadType": "countryRoad",
+    "vehicle": "car",
+    "factors": []
   },
   "circularRange": {
     "start": "220",

@@ -13,12 +13,7 @@ class SpeedTicket extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.data = null;
-		this.state = {
-			speed: 50,
-			roadType: 'cityZone',
-			vehicle: 'car',
-			factors: []
-		};
+		this.state = { speed: 0, roadType: '', vehicle: '', factors: [] };
 		this._form = null;
 		this.setupStyles();
 	}
@@ -207,12 +202,12 @@ class SpeedTicket extends HTMLElement {
 
 	initializeState() {
 		if (!this.data) return;
-		const { roadTypes, vehicles, speedRange } = this.data;
-		
-		// Use first available if current doesn't exist
-		if (!roadTypes[this.state.roadType]) this.state.roadType = Object.keys(roadTypes)[0];
-		if (!vehicles[this.state.vehicle]) this.state.vehicle = Object.keys(vehicles)[0];
-		if (speedRange?.default) this.state.speed = speedRange.default;
+		const { roadTypes, vehicles, speedRange, defaults } = this.data;
+		// Apply defaults from data.json
+		this.state.roadType = defaults?.roadType && roadTypes[defaults.roadType] ? defaults.roadType : Object.keys(roadTypes)[0];
+		this.state.vehicle = defaults?.vehicle && vehicles[defaults.vehicle] ? defaults.vehicle : Object.keys(vehicles)[0];
+		this.state.factors = Array.isArray(defaults?.factors) ? defaults.factors.filter(f => this.data.factors[f]) : [];
+		this.state.speed = speedRange?.default ?? roadTypes[this.state.roadType]?.defaultSpeed ?? 0;
 	}
 
 	/**
