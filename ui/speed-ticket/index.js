@@ -25,6 +25,16 @@ class SpeedTicket extends HTMLElement {
 				--speed-ticket-bdrs: 0.5rem;
 				--speed-ticket-p: 1rem;
 
+				/* Unified color system */
+				--speed-success-bg: #33FF00;
+				--speed-success-fg: #333;
+				--speed-warning-bg: #F2C94C;
+				--speed-warning-fg: #333;
+				--speed-danger-bg: #EB5757;
+				--speed-danger-fg: white;
+				--speed-info-bg: #f0f9ff;
+				--speed-info-fg: #0369a1;
+
 				container-type: inline-size;
 				display: block;
 				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, system-ui, sans-serif;
@@ -90,23 +100,23 @@ class SpeedTicket extends HTMLElement {
 			}
 			
 			.info {
-				background: #f0f9ff;
-				color: #0369a1;
+				background: var(--speed-info-bg);
+				color: var(--speed-info-fg);
 			}
 			
 			.success {
-				background-color: #33FF00;
-				color: #333;
+				background-color: var(--speed-success-bg);
+				color: var(--speed-success-fg);
 			}
 			
 			.warning {
-				background-color: #F2C94C;
-				color: #333;
+				background-color: var(--speed-warning-bg);
+				color: var(--speed-warning-fg);
 			}
 			
 			.danger {
-				background-color: #EB5757;
-				color: white;
+				background-color: var(--speed-danger-bg);
+				color: var(--speed-danger-fg);
 			}
 			
 			output[name="fine"] {
@@ -138,22 +148,6 @@ class SpeedTicket extends HTMLElement {
 			output[name="summary"].pulse {
 				animation: pulse-info 0.3s ease-in-out;
 			}
-
-			/* Speed status colors */
-			output[name="summary"].speed-green {
-				background-color: #33FF00;
-				color: #333;
-			}
-
-			output[name="summary"].speed-orange {
-				background-color: #F2C94C;
-				color: #333;
-			}
-
-			output[name="summary"].speed-red {
-				background-color: #EB5757;
-				color: white;
-			}
 				[part=unit] {
 					color: #EEEe;
 					
@@ -168,8 +162,8 @@ class SpeedTicket extends HTMLElement {
 				--circular-range-output-gr: 3;
 				--circular-range-rows: 7;
 				--circular-range-track-sz: 1.35rem;
-				--circular-range-fill: #33FF00;
-				--circular-range-thumb: #33FF00;
+				--circular-range-fill: var(--speed-success-bg);
+				--circular-range-thumb: var(--speed-success-bg);
 				--circular-range-labels-c: #FFF8;
 				--circular-range-indice-c: #FFF8;
 				
@@ -338,7 +332,7 @@ class SpeedTicket extends HTMLElement {
 						indices="${circularRange.indices}" labels="${circularRange.labels}"
 						active-label="${speedLimit}" enable-min>
 						<span part="unit">${speedRange.unit}</span>
-						<output name="summary" class="speed-green ${violationStatus}" aria-live="polite" aria-atomic="true">${summary}</output>
+						<output name="summary" class="${violationStatus}" aria-live="polite" aria-atomic="true">${summary}</output>
 					</circular-range>
 				</fieldset>
 
@@ -440,6 +434,12 @@ class SpeedTicket extends HTMLElement {
 			resultFieldset.className = violationStatus;
 		}
 
+		// Update summary output class to match
+		const summaryOutput = this.shadowRoot.querySelector('output[name="summary"]');
+		if (summaryOutput) {
+			summaryOutput.className = violationStatus;
+		}
+
 		// Update circular range with vehicle-specific limit
 		const cr = this.shadowRoot.querySelector('circular-range');
 		if (cr) cr.setAttribute('active-label', String(speedLimit));
@@ -453,54 +453,50 @@ class SpeedTicket extends HTMLElement {
 
 	updateSpeedometerColors(speed, speedLimit) {
 		const circularRange = this.shadowRoot.querySelector('circular-range');
-		const summaryOutput = this.shadowRoot.querySelector('output[name="summary"]');
 		
-		if (!circularRange || !summaryOutput) return;
+		if (!circularRange) return;
 
-		// Define speed status colors like in speed.html
-		const speedStatus = {
-			green: { color: '#33FF00', class: 'speed-green' },
-			orange: { color: '#F2C94C', class: 'speed-orange' },
-			red: { color: '#EB5757', class: 'speed-red' }
+		// Get colors from CSS custom properties
+		const rootStyles = getComputedStyle(this);
+		const speedColors = {
+			success: { 
+				color: rootStyles.getPropertyValue('--speed-success-bg').trim(), 
+				class: 'success' 
+			},
+			warning: { 
+				color: rootStyles.getPropertyValue('--speed-warning-bg').trim(), 
+				class: 'warning' 
+			},
+			danger: { 
+				color: rootStyles.getPropertyValue('--speed-danger-bg').trim(), 
+				class: 'danger' 
+			}
 		};
 
-		let status = speedStatus.green;
-		let middleColor = speedStatus.green.color;
-		let endColor = speedStatus.green.color;
+		let status = speedColors.success;
+		let middleColor = speedColors.success.color;
+		let endColor = speedColors.success.color;
 
-		// Determine status based on speed relative to limit
+		// Determine status based on speed relative to limit (match calculateAll logic)
 		const percentageOver = ((speed / speedLimit) * 100) - 100;
 		
-		if (percentageOver > 50) { // Serious speeding (50%+ over limit)
-			status = speedStatus.red;
-			middleColor = speedStatus.orange.color;
-			endColor = speedStatus.red.color;
-		} else if (percentageOver > 10) { // Minor speeding (10%+ over limit)
-			status = speedStatus.orange;
-			middleColor = speedStatus.orange.color;
-			endColor = speedStatus.orange.color;
+		if (speed <= speedLimit) {
+			status = speedColors.success;
+		} else if (percentageOver >= 30) {
+			status = speedColors.danger;
+			middleColor = speedColors.warning.color;
+			endColor = speedColors.danger.color;
+		} else {
+			status = speedColors.warning;
+			middleColor = speedColors.warning.color;
+			endColor = speedColors.warning.color;
 		}
 
-		// Update circular-range colors
-		circularRange.style.setProperty('--circular-range-fill', speedStatus.green.color);
+		// Update circular-range colors only
+		circularRange.style.setProperty('--circular-range-fill', speedColors.success.color);
 		circularRange.style.setProperty('--circular-range-fill-middle', middleColor);
 		circularRange.style.setProperty('--circular-range-fill-end', endColor);
 		circularRange.style.setProperty('--circular-range-thumb', status.color);
-
-		// Update summary output styling with pulse animation
-		const currentClass = summaryOutput.className.match(/speed-(green|orange|red)/)?.[0];
-		if (currentClass !== status.class) {
-			// Remove existing speed color classes
-			summaryOutput.classList.remove('speed-green', 'speed-orange', 'speed-red');
-			// Add new color class
-			summaryOutput.classList.add(status.class);
-			
-			// Add pulse animation
-			summaryOutput.classList.add('pulse');
-			summaryOutput.addEventListener('animationend', () => {
-				summaryOutput.classList.remove('pulse');
-			}, { once: true });
-		}
 	}
 
 	calculateAll() {
