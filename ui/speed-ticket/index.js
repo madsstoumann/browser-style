@@ -48,6 +48,18 @@ class SpeedTicket extends HTMLElement {
 			input, select { font-family: inherit; font-size: small; }
 			select { border: 0; padding: 1ch 2ch; }
 
+			
+			select, summary {
+				appearance: none;
+				background: #FFF;
+				border: 0;
+				color: #222;
+				padding: 1ch 2ch;
+				font-size: small;
+				
+			}
+
+
 			[name="speed"] { display: contents; }
 			[part="header"] { 
 				color: #FFF;
@@ -90,6 +102,7 @@ class SpeedTicket extends HTMLElement {
 
 			output[name="description"] {
 				display: block;
+				font-size: clamp(.75rem, 2vw, 1rem);
 				padding: 1ch 2ch;
 			}
 			
@@ -114,7 +127,7 @@ class SpeedTicket extends HTMLElement {
 			}
 			
 			output[name="fine"] {
-				font-size: 2.5em;
+				font-size: clamp(1.5rem, 3vw, 2.5rem);
 				display: block;
 				
 				font-weight: bold;
@@ -144,7 +157,6 @@ class SpeedTicket extends HTMLElement {
 			}
 				[part=unit] {
 					color: #EEEe;
-					
 					grid-column: 1;
 					grid-row: 4;
 					isolation: isolate;
@@ -332,7 +344,7 @@ class SpeedTicket extends HTMLElement {
 
 				<fieldset name="selection">
 					<fieldset name="road">
-						<legend>${labels.roadType}</legend>
+						<!--<legend>${labels.roadType}</legend>-->
 						<select name="roadtype">
 							${Object.values(roadTypes).map(r => `
 								<option value="${r.id}" ${r.id === this.state.roadType ? 'selected' : ''}>
@@ -343,7 +355,7 @@ class SpeedTicket extends HTMLElement {
 					</fieldset>
 
 					<fieldset name="vehicles">
-						<legend>${labels.vehicle}</legend>
+						<!--<legend>${labels.vehicle}</legend>-->
 						<select name="vehicle">
 							${Object.values(vehicles).map(v => `
 								<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>
@@ -353,17 +365,17 @@ class SpeedTicket extends HTMLElement {
 						</select>
 					</fieldset>
 
-					<fieldset name="factors">
-						<legend>${labels.factors}</legend>
+					<details name="factors">
+						<summary>${labels.factors}</summary>
+						<div class="factor-list" part="factors-list">
 						${Object.values(factors).map(f => `
 							<label>
-								<input type="checkbox" name="factor" value="${f.id}" 
-									${this.state.factors.includes(f.id) ? 'checked' : ''}>
+								<input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.includes(f.id) ? 'checked' : ''}>
 								<span>${f.label}</span>
-								<!--<small>${f.description}</small>-->
 							</label>
 						`).join('')}
-					</fieldset>
+						</div>
+					</details>
 				</fieldset>
 				<fieldset name="result" class="${violationStatus}">
 					<output name="fine" aria-live="polite" aria-atomic="true">${fine}</output>	
