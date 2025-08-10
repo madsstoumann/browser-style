@@ -1,6 +1,9 @@
 {
   "locale": "da-DK",
   "currency": "DKK",
+  "thresholds": {
+    "dangerPercentageOver": 30
+  },
   "speedRange": {
     "min": 0,
     "max": 200,

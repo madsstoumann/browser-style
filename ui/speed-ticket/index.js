@@ -9,11 +9,12 @@ import VideoScrub from '@browser.style/video-scrub';
  * @description A web component for calculating speed tickets based on user input and predefined rules.
  */
 class SpeedTicket extends HTMLElement {
+	static DANGER_THRESHOLD = 30; // fallback if not provided in data
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.data = null;
-		this.state = { speed: 0, roadType: '', vehicle: '', factors: [] };
+		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set() };
 		this._form = null;
 		this.setupStyles();
 	}
@@ -207,6 +208,8 @@ class SpeedTicket extends HTMLElement {
 			const response = await fetch(this.getAttribute('data') || './data.json');
 			this.data = await response.json();
 			this.initializeState();
+			this.compileAllRules?.();
+			this.preprocessPenaltyRanges();
 		} catch (error) {
 			console.error('Failed to load data:', error);
 		}
@@ -218,7 +221,7 @@ class SpeedTicket extends HTMLElement {
 		// Apply defaults from data.json
 		this.state.roadType = defaults?.roadType && roadTypes[defaults.roadType] ? defaults.roadType : Object.keys(roadTypes)[0];
 		this.state.vehicle = defaults?.vehicle && vehicles[defaults.vehicle] ? defaults.vehicle : Object.keys(vehicles)[0];
-		this.state.factors = Array.isArray(defaults?.factors) ? defaults.factors.filter(f => this.data.factors[f]) : [];
+		this.state.factors = new Set(Array.isArray(defaults?.factors) ? defaults.factors.filter(f => this.data.factors[f]) : []);
 		this.state.speed = speedRange?.default ?? roadTypes[this.state.roadType]?.defaultSpeed ?? 0;
 	}
 
@@ -237,8 +240,8 @@ class SpeedTicket extends HTMLElement {
 		}
 
 		// Find the first matching rule using basic field values (avoid circular dependency)
-		const matchingRule = this.data.speedLimitRules.find(rule => 
-			this.evaluateConditionsForSpeedLimit(rule.conditions)
+		const matchingRule = this.data.speedLimitRules.find(rule =>
+			(rule._compiled ? rule._compiled(this) : this.evaluateConditionsForSpeedLimit(rule.conditions))
 		);
 
 		if (matchingRule) {
@@ -257,32 +260,15 @@ class SpeedTicket extends HTMLElement {
 	 * Evaluate conditions specifically for speed limit calculation (avoids circular dependency)
 	 */
 	evaluateConditionsForSpeedLimit(conditions) {
-		return !conditions?.length || conditions.every(condition => {
-			if (condition.type === 'or') return condition.rules.some(rule => this.evaluateConditionsForSpeedLimit([rule]));
-			if (condition.type === 'and') return condition.rules.every(rule => this.evaluateConditionsForSpeedLimit([rule]));
-			return this.evaluateConditionForSpeedLimit(condition);
-		});
+		return this.#evaluateConditionsGeneric(conditions, field => this.getBasicFieldValue(field));
 	}
 
 	/**
 	 * Evaluate a single condition for speed limit calculation (avoids circular dependency)
 	 */
 	evaluateConditionForSpeedLimit(condition) {
-		const value = this.getBasicFieldValue(condition.field);
-		const target = condition.value;
-		
-		const operators = {
-			'=': () => value === target,
-			'>=': () => value >= target,
-			'<=': () => value <= target,
-			'>': () => value > target,
-			'<': () => value < target,
-			'in': () => Array.isArray(target) && target.includes(value),
-			'includes': () => Array.isArray(value) && value.includes(target),
-			'not_includes': () => Array.isArray(value) && !value.includes(target)
-		};
-		
-		return operators[condition.operator]?.() || false;
+		// Kept for backward compatibility; now routed through generic evaluator.
+		return this.#evaluateConditionGeneric(condition, field => this.getBasicFieldValue(field));
 	}
 
 	/**
@@ -296,7 +282,7 @@ class SpeedTicket extends HTMLElement {
 			'percentageOver': Math.round(((this.state.speed - basicSpeedLimit) / basicSpeedLimit) * 100),
 			'roadType': this.state.roadType,
 			'vehicle.category': this.data.vehicles[this.state.vehicle].category,
-			'factors': this.state.factors
+			'factors': Array.from(this.state.factors)
 		};
 		return fields[field] || null;
 	}
@@ -370,7 +356,7 @@ class SpeedTicket extends HTMLElement {
 						<div class="factor-list" part="factors-list">
 						${Object.values(factors).map(f => `
 							<label>
-								<input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.includes(f.id) ? 'checked' : ''}>
+								<input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}>
 								<span>${f.label}</span>
 							</label>
 						`).join('')}
@@ -399,19 +385,14 @@ class SpeedTicket extends HTMLElement {
 			case 'vehicle': 
 				this.state.vehicle = value; 
 				break;
-			case 'factor':
-				// Handle checkboxes
-				const factors = this.state.factors;
+			case 'factor': {
 				const factorId = value;
-				if (checked && !factors.includes(factorId)) {
-					factors.push(factorId);
-				} else if (!checked) {
-					this.state.factors = factors.filter(id => id !== factorId);
-				}
+				if (checked) this.state.factors.add(factorId); else this.state.factors.delete(factorId);
 				break;
+			}
 		}
 
-		this.updateUI();
+		this.scheduleUpdate();
 		if (name === 'roadtype') {
 			// Simple, direct property updates
 			const videoScrub = this.shadowRoot.querySelector('video-scrub');
@@ -422,10 +403,20 @@ class SpeedTicket extends HTMLElement {
 		}
 	}
 
+	// Batch multiple rapid state changes into a single UI update within a microtask / frame
+	scheduleUpdate() {
+		if (this._pendingUpdate) return;
+		this._pendingUpdate = true;
+		Promise.resolve().then(() => {
+			this._pendingUpdate = false;
+			this.updateUI();
+		});
+	}
+
 	updateUI() {
-		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
-		const speedLimit = vehicleSpeedLimits.default;
-		const { description, fine, summary, violationStatus } = this.calculateAll();
+		// Compute and cache core derived values once per cycle
+		const ctx = this.computeContext();
+		const { speedLimit, description, fine, summary, violationStatus } = ctx;
 		const form = this._form.elements;
 
 		// Update form outputs
@@ -454,10 +445,24 @@ class SpeedTicket extends HTMLElement {
 		const vs = this.shadowRoot.querySelector('video-scrub');
 		if (vs) vs.value = this.state.speed;
 
-		this.updateSpeedometerColors(this.state.speed, speedLimit);
+		this.updateSpeedometerColors(this.state.speed, speedLimit, ctx);
 	}
 
-	updateSpeedometerColors(speed, speedLimit) {
+	/**
+	 * Compute core derived context (cached per update cycle) to avoid duplicate calculations.
+	 */
+	computeContext() {
+		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
+		const speedLimit = vehicleSpeedLimits.default;
+		const speed = this.state.speed;
+		const percentageOver = speedLimit > 0 ? ((speed / speedLimit) * 100) - 100 : 0;
+		const penaltyRange = this.findPenaltyRange(percentageOver);
+		// Reuse existing logic for description / fine / summary / violationStatus via calculateAll with context
+		const { description, fine, summary, violationStatus } = this.calculateAll({ speedLimit, percentageOver, penaltyRange });
+		return { speed, speedLimit, percentageOver, penaltyRange, description, fine, summary, violationStatus, penaltyContext: { speed, speedLimit, percentageOver, penaltyRange } };
+	}
+
+	updateSpeedometerColors(speed, speedLimit, ctx) {
 		const circularRange = this.shadowRoot.querySelector('circular-range');
 		
 		if (!circularRange) return;
@@ -484,11 +489,12 @@ class SpeedTicket extends HTMLElement {
 		let endColor = speedColors.success.color;
 
 		// Determine status based on speed relative to limit (match calculateAll logic)
-		const percentageOver = ((speed / speedLimit) * 100) - 100;
+		const percentageOver = ctx?.percentageOver ?? ((speed / speedLimit) * 100) - 100;
 		
-		if (speed <= speedLimit) {
+		const violationStatus = this.classifyViolation(speed, speedLimit, percentageOver);
+		if (violationStatus === 'success') {
 			status = speedColors.success;
-		} else if (percentageOver >= 30) {
+		} else if (violationStatus === 'danger') {
 			status = speedColors.danger;
 			middleColor = speedColors.warning.color;
 			endColor = speedColors.danger.color;
@@ -505,41 +511,65 @@ class SpeedTicket extends HTMLElement {
 		circularRange.style.setProperty('--circular-range-thumb', status.color);
 	}
 
-	calculateAll() {
-		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
-		const speedLimit = vehicleSpeedLimits.default;
+	calculateAll(existingCtx) {
+		// Accept precomputed context to avoid recomputation
+		const ctx = existingCtx || {};
+		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
+		const speedLimit = existingCtx ? ctx.speedLimit : vehicleSpeedLimits.default;
 		const speed = this.state.speed;
-		const percentageOver = ((speed / speedLimit) * 100) - 100;
+		const percentageOver = existingCtx ? ctx.percentageOver : ((speed / speedLimit) * 100) - 100;
 		
+		const penaltyRange = existingCtx ? ctx.penaltyRange : this.findPenaltyRange(percentageOver);
 		// Base calculations
-		const violationStatus = speed <= speedLimit ? 'success' : 
-			percentageOver >= 30 ? 'danger' : 'warning';
-		
-		const description = speed <= speedLimit ? this.data.messages.noFine :
-			this.findPenaltyRange(percentageOver)?.description + ' - ' + 
-			this.findPenaltyRange(percentageOver)?.consequence || this.data.messages.defaultViolation;
-		
-		const summary = speed <= speedLimit ? '' : 
-			this.findPenaltyRange(percentageOver)?.summary || 'Empty';
-		
-		const fine = this.calculateFineAmount();
-
+		const violationStatus = this.classifyViolation(speed, speedLimit, percentageOver);
+		const defaultViolation = this.data.messages.defaultViolation;
+		let description = this.data.messages.noFine;
+		let summary = '';
+		if (speed > speedLimit) {
+			const desc = penaltyRange?.description;
+			const consequence = penaltyRange?.consequence;
+			description = (desc && consequence) ? `${desc} - ${consequence}` : (desc || defaultViolation);
+			summary = penaltyRange?.summary || 'Empty';
+		}
+		const fine = this.calculateFineAmount({ speedLimit, percentageOver, penaltyRange });
 		return { description, fine, summary, violationStatus };
 	}
 
 	findPenaltyRange(percentageOver) {
-		return this.data.penaltyRanges
-			.slice()
-			.reverse()
-			.find(range => percentageOver >= range.percentageOver);
+		const arr = this._penaltyRangesAsc || this.data.penaltyRanges;
+		let low = 0, high = arr.length - 1, best = null;
+		while (low <= high) {
+			const mid = (low + high) >> 1;
+			const item = arr[mid];
+			if (percentageOver >= item.percentageOver) {
+				best = item; // candidate, search right for higher threshold still <= percentageOver
+				low = mid + 1;
+			} else {
+				high = mid - 1;
+			}
+		}
+		return best;
 	}
 
-	calculateFineAmount() {
+	preprocessPenaltyRanges() {
+		if (!this.data?.penaltyRanges) return;
+		// Ensure ascending order for binary search (original logic expected descending find of first match)
+		this._penaltyRangesAsc = [...this.data.penaltyRanges].sort((a,b) => a.percentageOver - b.percentageOver);
+	}
+
+	classifyViolation(speed, speedLimit, percentageOver) {
+		if (speed <= speedLimit) return 'success';
+		const threshold = this.data?.thresholds?.dangerPercentageOver ?? SpeedTicket.DANGER_THRESHOLD;
+		return percentageOver >= threshold ? 'danger' : 'warning';
+	}
+
+	calculateFineAmount(existingCtx) {
 		const speed = this.state.speed;
-		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
-		const speedLimit = vehicleSpeedLimits.default;
+		const ctx = existingCtx || {};
+		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
+		const speedLimit = existingCtx ? ctx.speedLimit : vehicleSpeedLimits.default;
 		const vehicle = this.data.vehicles[this.state.vehicle];
-		const percentageOver = Math.round(((speed - speedLimit) / speedLimit) * 100);
+		const percentageOver = existingCtx ? Math.round(ctx.percentageOver) : Math.round(((speed - speedLimit) / speedLimit) * 100);
 
 		// Edge cases
 		if (!speed || speed === 0 || speed <= speedLimit) return "0";
@@ -549,16 +579,16 @@ class SpeedTicket extends HTMLElement {
 		const consequenceType = this.evaluateConsequenceRules();
 		if (consequenceType && this.data.consequenceTypes[consequenceType]?.preventsFine) return "0";
 
-		const penaltyRange = this.findPenaltyRange(percentageOver);
+		const penaltyRange = existingCtx ? ctx.penaltyRange : this.findPenaltyRange(percentageOver);
 		if (!penaltyRange) return "0";
 
 		// Calculate fine
 		let finalFine = penaltyRange[this.evaluateRateSelectionRules()];
 		finalFine += this.evaluatePenaltyRules();
-		finalFine = this.state.factors.reduce((currentFine, factorId) => {
+		for (const factorId of this.state.factors) {
 			const factor = this.data.factors[factorId];
-			return factor?.multiplier ? currentFine * factor.multiplier : currentFine;
-		}, finalFine);
+			if (factor?.multiplier) finalFine *= factor.multiplier;
+		}
 
 		return new Intl.NumberFormat(this.data.locale, { 
 			style: 'currency', 
@@ -568,24 +598,51 @@ class SpeedTicket extends HTMLElement {
 
 	evaluateRateSelectionRules() {
 		return this.data.ruleEngine.rateSelectionRules
-			.find(rule => this.evaluateConditions(rule.conditions))?.result || 'rate1';
+			.find(rule => (rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions)))?.result || 'rate1';
 	}
 
 	evaluatePenaltyRules() {
 		return this.data.ruleEngine.penaltyRules.reduce((total, rule) => {
-			if (this.evaluateConditions(rule.conditions)) {
-				return total + (rule.penalty || this.evaluateFormula(rule.formula));
-			}
+			const match = rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions);
+			if (match) return total + (rule.penalty || this.evaluateFormula(rule.formula));
 			return total;
 		}, 0);
 	}
 
 	evaluateConsequenceRules() {
 		const consequences = this.data.ruleEngine.consequenceRules
-			.filter(rule => this.evaluateConditions(rule.conditions))
+			.filter(rule => (rule._compiled ? rule._compiled(this) : this.evaluateConditions(rule.conditions)))
 			.map(rule => rule.consequence);
 		
 		return this.getMostSevereConsequence(consequences);
+	}
+
+	compileAllRules() {
+		const compileSet = (rules, useBasic = false) => {
+			if (!Array.isArray(rules)) return;
+			rules.forEach(rule => {
+				if (rule && rule.conditions) rule._compiled = this.compileConditions(rule.conditions, useBasic);
+			});
+		};
+		compileSet(this.data?.speedLimitRules, true);
+		const re = this.data?.ruleEngine;
+		if (re) {
+			compileSet(re.rateSelectionRules);
+			compileSet(re.penaltyRules);
+			compileSet(re.consequenceRules);
+		}
+		if (this.data?.factors) {
+			Object.values(this.data.factors).forEach(f => {
+				if (f.conditions) f._compiled = this.compileConditions(f.conditions);
+			});
+		}
+	}
+
+	compileConditions(conditions, useBasic = false) {
+		return (component) => component.#evaluateConditionsGeneric(
+			conditions,
+			field => useBasic ? component.getBasicFieldValue(field) : component.getFieldValue(field)
+		);
 	}
 
 	getMostSevereConsequence(consequences) {
@@ -595,29 +652,39 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	evaluateConditions(conditions) {
-		return !conditions?.length || conditions.every(condition => {
-			if (condition.type === 'or') return condition.rules.some(rule => this.evaluateConditions([rule]));
-			if (condition.type === 'and') return condition.rules.every(rule => this.evaluateConditions([rule]));
-			return this.evaluateCondition(condition);
-		});
+		return this.#evaluateConditionsGeneric(conditions, field => this.getFieldValue(field));
 	}
 
 	evaluateCondition(condition) {
-		const value = this.getFieldValue(condition.field);
+		return this.#evaluateConditionGeneric(condition, field => this.getFieldValue(field));
+	}
+
+	// === Generic condition evaluation helpers ===
+	#evaluateConditionsGeneric(conditions, valueGetter) {
+		if (!conditions || !conditions.length) return true;
+		return conditions.every(cond => {
+			if (cond.type === 'or') return cond.rules?.some(rule => this.#evaluateConditionsGeneric([rule], valueGetter));
+			if (cond.type === 'and') return cond.rules?.every(rule => this.#evaluateConditionsGeneric([rule], valueGetter));
+			return this.#evaluateConditionGeneric(cond, valueGetter);
+		});
+	}
+
+	#evaluateConditionGeneric(condition, valueGetter) {
+		if (!condition) return false;
+		const value = valueGetter(condition.field);
 		const target = condition.value;
-		
-		const operators = {
-			'=': () => value === target,
-			'>=': () => value >= target,
-			'<=': () => value <= target,
-			'>': () => value > target,
-			'<': () => value < target,
-			'in': () => Array.isArray(target) && target.includes(value),
-			'includes': () => Array.isArray(value) && value.includes(target),
-			'not_includes': () => Array.isArray(value) && !value.includes(target)
-		};
-		
-		return operators[condition.operator]?.() || false;
+		const op = condition.operator;
+		switch (op) {
+			case '=': return value === target;
+			case '>=': return value >= target;
+			case '<=': return value <= target;
+			case '>': return value > target;
+			case '<': return value < target;
+			case 'in': return Array.isArray(target) && target.includes(value);
+			case 'includes': return Array.isArray(value) && value.includes(target);
+			case 'not_includes': return Array.isArray(value) && !value.includes(target);
+			default: return false;
+		}
 	}
 
 	getFieldValue(field) {
@@ -629,7 +696,7 @@ class SpeedTicket extends HTMLElement {
 			'percentageOver': Math.round(((this.state.speed - speedLimit) / speedLimit) * 100),
 			'roadType': this.state.roadType,
 			'vehicle.category': this.data.vehicles[this.state.vehicle].category,
-			'factors': this.state.factors
+			'factors': Array.from(this.state.factors)
 		};
 		return fields[field] || null;
 	}
