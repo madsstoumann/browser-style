@@ -2,6 +2,33 @@ import CircularRange from '@browser.style/circular-range';
 import VideoScrub from '@browser.style/video-scrub';
 
 /**
+ * @typedef {Object} Condition
+ * @property {string} field
+ * @property {string} operator
+ * @property {any} value
+ * @typedef {Object} CompoundCondition
+ * @property {'and'|'or'} type
+ * @property {(Condition|CompoundCondition)[]} rules
+ * @typedef {Object} PenaltyRange
+ * @property {number} percentageOver
+ * @property {number} rate1
+ * @property {number} rate2
+ * @property {number} rate3
+ * @property {string} [description]
+ * @property {string} [consequence]
+ * @property {string} [summary]
+ * @typedef {Object} ComputedContext
+ * @property {number} speed
+ * @property {number} speedLimit
+ * @property {number} percentageOver Normalized integer percentage over limit
+ * @property {PenaltyRange|null} penaltyRange
+ * @property {string} description
+ * @property {string} fine
+ * @property {string} summary
+ * @property {string} violationStatus
+ */
+
+/**
  * @module SpeedTicket
  * @version 1.0.0
  * @date 2025-08-10
@@ -16,6 +43,9 @@ class SpeedTicket extends HTMLElement {
 		this.data = null;
 		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set() };
 		this._form = null;
+		this._lastRender = null; // snapshot of last rendered core values
+		this._currentCtx = null; // per-cycle cached context for field value access
+		this._compiledConditionCache = new Map(); // hash -> compiled predicate
 		this.setupStyles();
 	}
 
@@ -212,13 +242,15 @@ class SpeedTicket extends HTMLElement {
 			this.preprocessPenaltyRanges();
 		} catch (error) {
 			console.error('Failed to load data:', error);
+			if (this.shadowRoot && !this.shadowRoot.innerHTML) {
+				this.shadowRoot.innerHTML = '<div role="alert" part="error">Failed to load speed ticket data.</div>';
+			}
 		}
 	}
 
 	initializeState() {
 		if (!this.data) return;
 		const { roadTypes, vehicles, speedRange, defaults } = this.data;
-		// Apply defaults from data.json
 		this.state.roadType = defaults?.roadType && roadTypes[defaults.roadType] ? defaults.roadType : Object.keys(roadTypes)[0];
 		this.state.vehicle = defaults?.vehicle && vehicles[defaults.vehicle] ? defaults.vehicle : Object.keys(vehicles)[0];
 		this.state.factors = new Set(Array.isArray(defaults?.factors) ? defaults.factors.filter(f => this.data.factors[f]) : []);
@@ -329,8 +361,7 @@ class SpeedTicket extends HTMLElement {
 				</fieldset>
 
 				<fieldset name="selection">
-					<fieldset name="road">
-						<!--<legend>${labels.roadType}</legend>-->
+					<fieldset name="road" aria-label="${labels.roadType}">
 						<select name="roadtype">
 							${Object.values(roadTypes).map(r => `
 								<option value="${r.id}" ${r.id === this.state.roadType ? 'selected' : ''}>
@@ -340,8 +371,7 @@ class SpeedTicket extends HTMLElement {
 						</select>
 					</fieldset>
 
-					<fieldset name="vehicles">
-						<!--<legend>${labels.vehicle}</legend>-->
+					<fieldset name="vehicles" aria-label="${labels.vehicle}">
 						<select name="vehicle">
 							${Object.values(vehicles).map(v => `
 								<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>
@@ -416,50 +446,63 @@ class SpeedTicket extends HTMLElement {
 	updateUI() {
 		// Compute and cache core derived values once per cycle
 		const ctx = this.computeContext();
-		const { speedLimit, description, fine, summary, violationStatus } = ctx;
+		this._currentCtx = ctx; // used by getFieldValue during this cycle
+		const { speedLimit, description, fine, summary, violationStatus, speed } = ctx;
+		const prev = this._lastRender || {};
 		const form = this._form.elements;
 
-		// Update form outputs
-		form.limit.value = speedLimit;
-		form.description.value = description;
-		form.fine.value = fine;
-		if (form.summary) form.summary.value = summary;
-
-		// Update fieldset class instead of output class
-		const resultFieldset = this.shadowRoot.querySelector('[name="result"]');
-		if (resultFieldset) {
-			resultFieldset.className = violationStatus;
+		// Early exit if nothing meaningful changed
+		if (prev.speed === speed && prev.speedLimit === speedLimit && prev.description === description && prev.fine === fine && prev.summary === summary && prev.violationStatus === violationStatus) {
+			this._currentCtx = null;
+			return;
 		}
 
-		// Update summary output class to match
-		const summaryOutput = this.shadowRoot.querySelector('output[name="summary"]');
-		if (summaryOutput) {
-			summaryOutput.className = violationStatus;
+		// Conditional DOM mutations (only when value changed)
+		if (speedLimit !== prev.speedLimit) form.limit.value = speedLimit;
+		if (description !== prev.description) form.description.value = description;
+		if (fine !== prev.fine) form.fine.value = fine;
+		if (form.summary && summary !== prev.summary) form.summary.value = summary;
+
+		if (violationStatus !== prev.violationStatus) {
+			const resultFieldset = this.shadowRoot.querySelector('[name="result"]');
+			if (resultFieldset) resultFieldset.className = violationStatus;
+			const summaryOutput = this.shadowRoot.querySelector('output[name="summary"]');
+			if (summaryOutput) summaryOutput.className = violationStatus;
 		}
 
-		// Update circular range with vehicle-specific limit
-		const cr = this.shadowRoot.querySelector('circular-range');
-		if (cr) cr.setAttribute('active-label', String(speedLimit));
+		if (speedLimit !== prev.speedLimit) {
+			const cr = this.shadowRoot.querySelector('circular-range');
+			if (cr) cr.setAttribute('active-label', String(speedLimit));
+		}
 
-		// Update video scrub
-		const vs = this.shadowRoot.querySelector('video-scrub');
-		if (vs) vs.value = this.state.speed;
+		if (speed !== prev.speed) {
+			const vs = this.shadowRoot.querySelector('video-scrub');
+			if (vs) vs.value = speed;
+		}
 
-		this.updateSpeedometerColors(this.state.speed, speedLimit, ctx);
+		if (speed !== prev.speed || speedLimit !== prev.speedLimit || violationStatus !== prev.violationStatus) {
+			this.updateSpeedometerColors(speed, speedLimit, ctx);
+		}
+
+		// Store snapshot
+		this._lastRender = { speed, speedLimit, description, fine, summary, violationStatus };
+		this._currentCtx = null; // clear per-cycle cache reference after updates
 	}
 
 	/**
 	 * Compute core derived context (cached per update cycle) to avoid duplicate calculations.
 	 */
 	computeContext() {
+		// Establish temporary context early so downstream lookups reuse it
 		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
 		const speedLimit = vehicleSpeedLimits.default;
 		const speed = this.state.speed;
-		const percentageOver = speedLimit > 0 ? ((speed / speedLimit) * 100) - 100 : 0;
+		const percentageOver = Math.round(speedLimit > 0 ? ((speed / speedLimit) * 100) - 100 : 0);
 		const penaltyRange = this.findPenaltyRange(percentageOver);
-		// Reuse existing logic for description / fine / summary / violationStatus via calculateAll with context
+		this._currentCtx = { speed, speedLimit, percentageOver, penaltyRange }; // provisional
 		const { description, fine, summary, violationStatus } = this.calculateAll({ speedLimit, percentageOver, penaltyRange });
-		return { speed, speedLimit, percentageOver, penaltyRange, description, fine, summary, violationStatus, penaltyContext: { speed, speedLimit, percentageOver, penaltyRange } };
+		const full = { speed, speedLimit, percentageOver, penaltyRange, description, fine, summary, violationStatus, penaltyContext: { speed, speedLimit, percentageOver, penaltyRange } };
+		return full;
 	}
 
 	updateSpeedometerColors(speed, speedLimit, ctx) {
@@ -467,21 +510,14 @@ class SpeedTicket extends HTMLElement {
 		
 		if (!circularRange) return;
 
-		// Get colors from CSS custom properties
+		// Load colors either from data.statusColors or CSS custom properties fallback
 		const rootStyles = getComputedStyle(this);
+		const dataColors = this.data?.statusColors;
+		const resolveColor = (id, cssVar) => (dataColors?.[id]?.fill) || rootStyles.getPropertyValue(cssVar).trim();
 		const speedColors = {
-			success: { 
-				color: rootStyles.getPropertyValue('--speed-success-bg').trim(), 
-				class: 'success' 
-			},
-			warning: { 
-				color: rootStyles.getPropertyValue('--speed-warning-bg').trim(), 
-				class: 'warning' 
-			},
-			danger: { 
-				color: rootStyles.getPropertyValue('--speed-danger-bg').trim(), 
-				class: 'danger' 
-			}
+			success: { color: resolveColor('success', '--speed-success-bg'), class: 'success' },
+			warning: { color: resolveColor('warning', '--speed-warning-bg'), class: 'warning' },
+			danger: { color: resolveColor('danger', '--speed-danger-bg'), class: 'danger' }
 		};
 
 		let status = speedColors.success;
@@ -517,7 +553,7 @@ class SpeedTicket extends HTMLElement {
 		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
 		const speedLimit = existingCtx ? ctx.speedLimit : vehicleSpeedLimits.default;
 		const speed = this.state.speed;
-		const percentageOver = existingCtx ? ctx.percentageOver : ((speed / speedLimit) * 100) - 100;
+		const percentageOver = existingCtx ? ctx.percentageOver : Math.round(((speed / speedLimit) * 100) - 100);
 		
 		const penaltyRange = existingCtx ? ctx.penaltyRange : this.findPenaltyRange(percentageOver);
 		// Base calculations
@@ -569,7 +605,7 @@ class SpeedTicket extends HTMLElement {
 		const vehicleSpeedLimits = existingCtx ? null : this.calculateVehicleSpeedLimit();
 		const speedLimit = existingCtx ? ctx.speedLimit : vehicleSpeedLimits.default;
 		const vehicle = this.data.vehicles[this.state.vehicle];
-		const percentageOver = existingCtx ? Math.round(ctx.percentageOver) : Math.round(((speed - speedLimit) / speedLimit) * 100);
+		const percentageOver = existingCtx ? ctx.percentageOver : Math.round(((speed - speedLimit) / speedLimit) * 100);
 
 		// Edge cases
 		if (!speed || speed === 0 || speed <= speedLimit) return "0";
@@ -639,10 +675,58 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	compileConditions(conditions, useBasic = false) {
-		return (component) => component.#evaluateConditionsGeneric(
+		const key = JSON.stringify(conditions) + '::' + useBasic;
+		if (this._compiledConditionCache.has(key)) return this._compiledConditionCache.get(key);
+		const fn = (component) => component.#evaluateConditionsGeneric(
 			conditions,
 			field => useBasic ? component.getBasicFieldValue(field) : component.getFieldValue(field)
 		);
+		this._compiledConditionCache.set(key, fn);
+		return fn;
+	}
+
+	// === Public API ===
+	/** Set the current speed (number, km/t). */
+	setSpeed(value) {
+		const v = Number(value);
+		if (!Number.isFinite(v)) return;
+		if (this.state.speed === v) return;
+		this.state.speed = v;
+		this.scheduleUpdate();
+	}
+	/** Set the current road type by id. */
+	setRoadType(id) {
+		if (!this.data?.roadTypes[id] || this.state.roadType === id) return;
+		this.state.roadType = id;
+		const videoScrub = this.shadowRoot?.querySelector('video-scrub');
+		if (videoScrub) {
+			videoScrub.src = this.data.roadTypes[id].video;
+			videoScrub.poster = this.data.roadTypes[id].poster;
+		}
+		this.scheduleUpdate();
+	}
+	/** Set the current vehicle by id. */
+	setVehicle(id) {
+		if (!this.data?.vehicles[id] || this.state.vehicle === id) return;
+		this.state.vehicle = id;
+		this.scheduleUpdate();
+	}
+	/** Toggle a factor; pass force=true/false to explicitly add/remove. */
+	toggleFactor(id, force) {
+		if (!this.data?.factors[id]) return;
+		const has = this.state.factors.has(id);
+		const shouldAdd = force === true || (force === undefined && !has);
+		if (shouldAdd) this.state.factors.add(id); else if (has) this.state.factors.delete(id);
+		this.scheduleUpdate();
+	}
+	/** Apply a partial state patch: { speed, roadType, vehicle, addFactors, removeFactors }. */
+	applyState(patch = {}) {
+		if ('speed' in patch) this.setSpeed(patch.speed);
+		if ('roadType' in patch) this.setRoadType(patch.roadType);
+		if ('vehicle' in patch) this.setVehicle(patch.vehicle);
+		if (Array.isArray(patch.addFactors)) patch.addFactors.forEach(f => this.state.factors.add(f));
+		if (Array.isArray(patch.removeFactors)) patch.removeFactors.forEach(f => this.state.factors.delete(f));
+		this.scheduleUpdate();
 	}
 
 	getMostSevereConsequence(consequences) {
@@ -689,11 +773,12 @@ class SpeedTicket extends HTMLElement {
 
 	getFieldValue(field) {
 		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
-		const speedLimit = vehicleSpeedLimits.default;
+		// Use current context if present to avoid recomputation
+		const speedLimit = this._currentCtx?.speedLimit ?? vehicleSpeedLimits.default;
 		const fields = {
 			'speed': this.state.speed,
 			'speedLimit': speedLimit,
-			'percentageOver': Math.round(((this.state.speed - speedLimit) / speedLimit) * 100),
+			'percentageOver': Math.round(this._currentCtx?.percentageOver ?? (((this.state.speed - speedLimit) / speedLimit) * 100)),
 			'roadType': this.state.roadType,
 			'vehicle.category': this.data.vehicles[this.state.vehicle].category,
 			'factors': Array.from(this.state.factors)
