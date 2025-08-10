@@ -203,26 +203,16 @@ class SpeedTicket extends HTMLElement {
 				--circular-range-thumb: var(--speed-success-bg);
 				--circular-range-labels-c: #FFF8;
 				--circular-range-indice-c: #FFF8;
-				
 				--circular-range-track: #F0F0F073;
-			
-	
 
 				&::part(active-label) {
 					color: #FFF;
 					font-weight: bold;
 				}
-							&::part(label-0) { padding-inline-start: 1rem; }
-		&::part(label-200) { padding-inline-end: 1rem; }
-		
-		&::part(track)::after { mix-blend-mode: exclusion; }
-
-
+				&::part(label-0) { padding-inline-start: 1rem; }
+				&::part(label-200) { padding-inline-end: 1rem; }
+				&::part(track)::after { mix-blend-mode: exclusion; }
 			}
-
-			
-
-
 		`);
 		
 		this.shadowRoot.adoptedStyleSheets = [styleSheet];
