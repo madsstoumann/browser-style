@@ -30,7 +30,7 @@ video {
 
 class VideoScrub extends HTMLElement {
   static get observedAttributes() {
-    return ['min', 'max', 'src', 'value'];
+    return ['min', 'max', 'src', 'value', 'poster'];
   }
 
   constructor() {
@@ -60,6 +60,8 @@ class VideoScrub extends HTMLElement {
     this._max = 100;
     this._value = 0;
     this._isMetadataReady = false;
+    this._lastSyncTime = 0;
+    this._syncThreshold = 16; // ~60fps throttling
 
     this._onMetadata = this._onMetadata.bind(this);
   }
@@ -72,7 +74,7 @@ class VideoScrub extends HTMLElement {
     if (this.hasAttribute('src')) this._video.src = this.getAttribute('src');
     if (this.hasAttribute('poster')) this._video.poster = this.getAttribute('poster') || '';
     if (this.hasAttribute('crossorigin')) this._video.crossOrigin = this.getAttribute('crossorigin') || 'anonymous';
-    if (this.hasAttribute('preload')) this._video.preload = this.getAttribute('preload') || 'metadata';
+    if (this.hasAttribute('preload')) this._video.preload = this.getAttribute('preload');
 
     this._video.addEventListener('loadedmetadata', this._onMetadata);
     this._video.addEventListener('durationchange', this._onMetadata);
@@ -128,6 +130,12 @@ class VideoScrub extends HTMLElement {
     else this.setAttribute('src', String(v));
   }
 
+  get poster() { return this.getAttribute('poster') ?? ''; }
+  set poster(v) {
+    if (v == null) this.removeAttribute('poster');
+    else this.setAttribute('poster', String(v));
+  }
+
   get min() { return this._min; }
   set min(v) {
     const num = Number(v);
@@ -162,6 +170,11 @@ class VideoScrub extends HTMLElement {
   _syncCurrentTime() {
     if (!this._isMetadataReady) return;
 
+    // Throttle updates to prevent excessive seeking
+    const now = performance.now();
+    if (now - this._lastSyncTime < this._syncThreshold) return;
+    this._lastSyncTime = now;
+
     const range = this._max - this._min;
     const duration = this._video.duration;
     if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(range) || range <= 0) {
@@ -173,7 +186,11 @@ class VideoScrub extends HTMLElement {
     const newTime = progress * duration;
 
     if (Number.isFinite(newTime) && newTime >= 0 && newTime <= duration) {
-      this._video.currentTime = newTime;
+      // Only update if there's a meaningful difference to prevent micro-adjustments
+      const timeDiff = Math.abs(this._video.currentTime - newTime);
+      if (timeDiff > 0.1) { // 100ms threshold
+        this._video.currentTime = newTime;
+      }
     }
   }
 }

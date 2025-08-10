@@ -27,123 +27,169 @@ class SpeedTicket extends HTMLElement {
 
 				container-type: inline-size;
 				display: block;
-				font-family: system-ui, sans-serif;
+				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, system-ui, sans-serif;
 			}
 
-			form {
-				display: grid;
-				gap: var(--speed-ticket-p);
-				grid-template-columns: 1fr;
-			}
+			:host * { box-sizing: border-box; }
 
-			@container (min-width: 42rem) {
-				form {
-						grid-template-columns: 1fr 1fr 1fr;
-				}
-			}
+			fieldset { all: unset; }
+			form { display: grid; grid-template-rows: min-content 1fr 1fr min-content; }
+			label { display: block; }
 
-			[name="speed"] {
-			grid-column: span 3;
-				label { 
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					input { grid-column: span 2; }
-					small:last-of-type { text-align: end; }
-				}
-				strong:has(output[name="result"]) {
-					color: var(--speed-ticket-accent);
-					font-size: 2.25rem;
-					font-weight: 700;
-				}
-			}
-
-			fieldset {
-				display: grid;
-				border: 2px solid #e0e0e0;
-				border-radius: var(--speed-ticket-bdrs);
-				margin: 0;
-				padding: var(--speed-ticket-p);
-				row-gap: 0.5rem;
-			}
-			
-			legend {
-				color: var(--speed-ticket-accent);
-				display: contents;
-				font-size: var(--speed-ticket-legend-fs, 1.5rem);
-				font-weight: bold;
+			[name="speed"] { display: contents; }
+			[part="header"] { 
+				color: #FFF;
+				font-size: clamp(1.75rem, 4vw, 2.5rem);
+				grid-area: 1 / 1;
+				margin-block: 1ch;
+				text-align: center;
+				z-index: 1;
 				small {
-					color: var(--speed-ticket-muted-c);
+					display: block;
 					font-size: 0.9rem;
 					font-weight: 300;
 				}
 			}
+			[name="result"] {
+				align-items: center;
+				display: flex;
+				justify-content: center;
+				padding: 1ch 2ch;
+			}
+			[name="selection"] {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1rem;
+				justify-content: center;
+				padding: 1ch 2ch;
+			}
+
+			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
+			video-scrub { grid-area: 1 / 1 / 4 / 1; pointer-events: none; }
+
+			// legend {
+			// 	color: var(--speed-ticket-accent);
+				
+			// 	font-size: var(--speed-ticket-legend-fs, 1.5rem);
+			// 	font-weight: bold;
+			// 	grid-area: 1 / 1;
+			// 	small {
+			// 		color: var(--speed-ticket-muted-c);
+			// 		font-size: 0.9rem;
+			// 		font-weight: 300;
+			// 	}
+			// }
 
 			input[type="radio"], input[type="checkbox"] {
 				margin-right: .5rem;
 			}
-			
 
-			
 			output[name="description"] {
 				display: block;
-				margin: 10px 0;
-				padding: 10px;
-				border-radius: 4px;
+				padding: 1ch 2ch;
 			}
 			
-			output[name="description"].info {
+			.info {
 				background: #f0f9ff;
 				color: #0369a1;
 			}
 			
-			output[name="description"].success {
-				background: #f0fdf4;
-				color: #166534;
+			.success {
+				background-color: #33FF00;
+				color: #333;
 			}
 			
-			output[name="description"].warning {
-				background: #fffbeb;
-				color: #d97706;
+			.warning {
+				background-color: #F2C94C;
+				color: #333;
 			}
 			
-			output[name="description"].danger {
-				background: #fef2f2;
-				color: #dc2626;
+			.danger {
+				background-color: #EB5757;
+				color: white;
 			}
 			
 			output[name="fine"] {
 				font-size: 2.5em;
-				
 				display: block;
-				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, sans-serif;
+				
 				font-weight: bold;
 			}
 
+			@keyframes pulse-info {
+				0% { transform: scale(1); }
+				50% { transform: scale(1.05); }
+				100% { transform: scale(1); }
+			}
+
+			output[name="summary"] {
+				border-radius: 2em;
+				font-size: small;
+				grid-row: 5;
+				grid-column: 1;
+				isolation: isolate;
+				align-self: end;
+				padding: .5em 1.5em;
+				text-box: cap alphabetic;
+				transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
+				&:empty { visibility: hidden; }
+			}
+
+			output[name="summary"].pulse {
+				animation: pulse-info 0.3s ease-in-out;
+			}
+
+			/* Speed status colors */
+			output[name="summary"].speed-green {
+				background-color: #33FF00;
+				color: #333;
+			}
+
+			output[name="summary"].speed-orange {
+				background-color: #F2C94C;
+				color: #333;
+			}
+
+			output[name="summary"].speed-red {
+				background-color: #EB5757;
+				color: white;
+			}
+				[part=unit] {
+					color: #EEEe;
+					
+					grid-column: 1;
+					grid-row: 4;
+					isolation: isolate;
+				}
+
 			circular-range {
-				// --circular-range-w: 280px;
-				--circular-range-output-fs: 1.5rem;
+				--circular-range-output-fs: 3rem;
 				--circular-range-output-fw: 700;
-				--circular-range-output-gr: 2;
-				--circular-range-rows: 4;
-				--circular-range-track-sz: 1rem;
-				--circular-range-fill: var(--speed-ticket-accent);
-				--circular-range-thumb: var(--speed-ticket-accent);
-				--circular-range-labels-c: var(--speed-ticket-muted-c);
-				--circular-range-indice-c: var(--speed-ticket-muted-c);
+				--circular-range-output-gr: 3;
+				--circular-range-rows: 7;
+				--circular-range-track-sz: 1.35rem;
+				--circular-range-fill: #33FF00;
+				--circular-range-thumb: #33FF00;
+				--circular-range-labels-c: #FFF8;
+				--circular-range-indice-c: #FFF8;
+				
+				--circular-range-track: #F0F0F073;
 			
-				grid-area: 2 / 1;
-				margin: 1rem auto;
-				place-self: center;
+	
 
 				&::part(active-label) {
 					color: #FFF;
-					font-weight: bold;			
+					font-weight: bold;
 				}
+							&::part(label-0) { padding-inline-start: 1rem; }
+		&::part(label-200) { padding-inline-end: 1rem; }
+		
+		&::part(track)::after { mix-blend-mode: exclusion; }
+
+
 			}
 
-			video-scrub {
-				grid-area: 2 / 1;
-			}
+			
 
 
 		`);
@@ -158,11 +204,8 @@ class SpeedTicket extends HTMLElement {
 
 	async loadData() {
 		try {
-			const dataUrl = this.getAttribute('data') || './data.json';
-			const response = await fetch(dataUrl);
+			const response = await fetch(this.getAttribute('data') || './data.json');
 			this.data = await response.json();
-			
-			// Initialize state with proper defaults from loaded data
 			this.initializeState();
 		} catch (error) {
 			console.error('Failed to load data:', error);
@@ -171,379 +214,429 @@ class SpeedTicket extends HTMLElement {
 
 	initializeState() {
 		if (!this.data) return;
+		const { roadTypes, vehicles, speedRange } = this.data;
 		
-		// Get first available road type if current one doesn't exist
-		const roadTypeIds = Object.keys(this.data.roadTypes);
-		if (!this.data.roadTypes[this.state.roadType] && roadTypeIds.length > 0) {
-			this.state.roadType = roadTypeIds[0];
+		// Use first available if current doesn't exist
+		if (!roadTypes[this.state.roadType]) this.state.roadType = Object.keys(roadTypes)[0];
+		if (!vehicles[this.state.vehicle]) this.state.vehicle = Object.keys(vehicles)[0];
+		if (speedRange?.default) this.state.speed = speedRange.default;
+	}
+
+	/**
+	 * Calculate vehicle-specific speed limits based on data-driven rules
+	 * Uses speedLimitRules from data.json to determine limits
+	 */
+	calculateVehicleSpeedLimit() {
+		if (!this.data?.speedLimitRules) {
+			// Fallback to road default if no rules defined
+			return {
+				min: this.data.roadTypes[this.state.roadType].minSpeed || 30,
+				max: this.data.roadTypes[this.state.roadType].maxSpeed || this.data.roadTypes[this.state.roadType].defaultSpeed,
+				default: this.data.roadTypes[this.state.roadType].defaultSpeed
+			};
 		}
+
+		// Find the first matching rule using basic field values (avoid circular dependency)
+		const matchingRule = this.data.speedLimitRules.find(rule => 
+			this.evaluateConditionsForSpeedLimit(rule.conditions)
+		);
+
+		if (matchingRule) {
+			return matchingRule.limits;
+		}
+
+		// Fallback to road default
+		return {
+			min: this.data.roadTypes[this.state.roadType].minSpeed || 30,
+			max: this.data.roadTypes[this.state.roadType].maxSpeed || this.data.roadTypes[this.state.roadType].defaultSpeed,
+			default: this.data.roadTypes[this.state.roadType].defaultSpeed
+		};
+	}
+
+	/**
+	 * Evaluate conditions specifically for speed limit calculation (avoids circular dependency)
+	 */
+	evaluateConditionsForSpeedLimit(conditions) {
+		return !conditions?.length || conditions.every(condition => {
+			if (condition.type === 'or') return condition.rules.some(rule => this.evaluateConditionsForSpeedLimit([rule]));
+			if (condition.type === 'and') return condition.rules.every(rule => this.evaluateConditionsForSpeedLimit([rule]));
+			return this.evaluateConditionForSpeedLimit(condition);
+		});
+	}
+
+	/**
+	 * Evaluate a single condition for speed limit calculation (avoids circular dependency)
+	 */
+	evaluateConditionForSpeedLimit(condition) {
+		const value = this.getBasicFieldValue(condition.field);
+		const target = condition.value;
 		
-		// Get first available vehicle if current one doesn't exist
-		const vehicleIds = Object.keys(this.data.vehicles);
-		if (!this.data.vehicles[this.state.vehicle] && vehicleIds.length > 0) {
-			this.state.vehicle = vehicleIds[0];
-		}
+		const operators = {
+			'=': () => value === target,
+			'>=': () => value >= target,
+			'<=': () => value <= target,
+			'>': () => value > target,
+			'<': () => value < target,
+			'in': () => Array.isArray(target) && target.includes(value),
+			'includes': () => Array.isArray(value) && value.includes(target),
+			'not_includes': () => Array.isArray(value) && !value.includes(target)
+		};
 		
-		// Set default speed from speed range if needed
-		if (this.data.speedRange && this.data.speedRange.default) {
-			this.state.speed = this.data.speedRange.default;
-		}
+		return operators[condition.operator]?.() || false;
+	}
+
+	/**
+	 * Get basic field values without calculating vehicle-specific speed limits (avoids circular dependency)
+	 */
+	getBasicFieldValue(field) {
+		const basicSpeedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
+		const fields = {
+			'speed': this.state.speed,
+			'speedLimit': basicSpeedLimit,
+			'percentageOver': Math.round(((this.state.speed - basicSpeedLimit) / basicSpeedLimit) * 100),
+			'roadType': this.state.roadType,
+			'vehicle.category': this.data.vehicles[this.state.vehicle].category,
+			'factors': this.state.factors
+		};
+		return fields[field] || null;
 	}
 
 	render() {
 		if (!this.data) return;
-		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
-		const description = this.calculateDescription(this.state.speed, speedLimit);
-		const fineResult = this.calculateFine();
+		this.shadowRoot.innerHTML = this.createHTML();
+		this._form = this.shadowRoot.querySelector('form');
+		this._form.addEventListener('input', this.handleInput.bind(this));
+		this._form.addEventListener('change', this.handleInput.bind(this));
+		this.updateUI();
+	}
 
-		this.shadowRoot.innerHTML = `
+	createHTML() {
+		const { roadTypes, vehicles, factors, labels, speedRange, circularRange } = this.data;
+		const speedLimit = roadTypes[this.state.roadType].defaultSpeed;
+		const { description, fine, summary, violationStatus } = this.calculateAll();
+
+		return `
 			<form>
 				<fieldset name="speed">
-					<legend>${this.data.labels.yourSpeed}
-						<small>${this.data.labels.speedLimit}:
-							<output name="limit" aria-live="polite" aria-atomic="true">${speedLimit}</output> ${this.data.speedRange.unit}
+					<legend part="header">${labels.yourSpeed}
+						<small>${labels.speedLimit}:
+							<output name="limit" aria-live="polite" aria-atomic="true">${speedLimit}</output> ${speedRange.unit}
 						</small>
 					</legend>
 
 					<video-scrub 
-						src="${this.data.roadTypes[this.state.roadType].video}"
-						min="${this.data.speedRange.min}"
-						max="${this.data.speedRange.max}"
-						value="${this.state.speed}">
+						poster="${roadTypes[this.state.roadType].poster}"
+						src="${roadTypes[this.state.roadType].video}"
+						preload="auto"
+						min="${speedRange.min}" max="${speedRange.max}" value="${this.state.speed}">
 					</video-scrub>
 
 					<circular-range
-						name="value"
-						min="${this.data.speedRange.min}"
-						max="${this.data.speedRange.max}"
-						value="${this.state.speed}"
-						step="${this.data.speedRange.step}"
-						start="220"
-						end="500"
-						indices="50"
-						labels="0:0,50:50,80:80,90:90,130:130,200:200"
-						active-label="${speedLimit}"
-						enable-min
-						suffix=" ${this.data.speedRange.unit}">
+						name="value" min="${speedRange.min}" max="${speedRange.max}" 
+						value="${this.state.speed}" step="${speedRange.step}"
+						start="${circularRange.start}" end="${circularRange.end}"
+						indices="${circularRange.indices}" labels="${circularRange.labels}"
+						active-label="${speedLimit}" enable-min>
+						<span part="unit">${speedRange.unit}</span>
+						<output name="summary" class="speed-green ${violationStatus}" aria-live="polite" aria-atomic="true">${summary}</output>
 					</circular-range>
-
-					<div>
-						<output name="description" class="${this.getViolationStatus(this.state.speed, speedLimit)}" aria-live="polite" aria-atomic="true">${description}</output>
-						<output name="fine" aria-live="polite" aria-atomic="true">${fineResult.fine}</output>
-					</div>
 				</fieldset>
 
-				<fieldset name="road">
-					<legend>${this.data.labels.roadType}</legend>
-					${Object.values(this.data.roadTypes).map(roadType => `
-						<label>
-							${roadType.label}
-							<small>${roadType.description}</small>
-							<input type="radio" 
-										 name="roadtype" 
-										 value="${roadType.value}" 
-										 data-id="${roadType.id}"
-										 ${roadType.id === this.state.roadType ? 'checked' : ''}>
-						</label>
-					`).join('')}
-				</fieldset>
+				<fieldset name="selection">
+					<fieldset name="road">
+						<legend>${labels.roadType}</legend>
+						<select name="roadtype">
+							${Object.values(roadTypes).map(r => `
+								<option value="${r.id}" ${r.id === this.state.roadType ? 'selected' : ''}>
+									${r.label}
+								</option>
+							`).join('')}
+						</select>
+					</fieldset>
 
-				<fieldset name="vehicles">
-					<legend>${this.data.labels.vehicle}</legend>
-					${Object.values(this.data.vehicles).map(vehicle => `
-						<label>
-							${vehicle.label}
-							<input type="radio" 
-										 name="vehicle" 
-										 value="${vehicle.value}" 
-										 data-id="${vehicle.id}"
-										 ${vehicle.id === this.state.vehicle ? 'checked' : ''}>
-						</label>
-					`).join('')}
-				</fieldset>
+					<fieldset name="vehicles">
+						<legend>${labels.vehicle}</legend>
+						<select name="vehicle">
+							${Object.values(vehicles).map(v => `
+								<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>
+									${v.label}
+								</option>
+							`).join('')}
+						</select>
+					</fieldset>
 
-				<fieldset name="factors">
-					<legend>${this.data.labels.factors}</legend>
-					${Object.values(this.data.factors).map(factor => `
-						<label>
-							<input type="checkbox" 
-										 name="factor" 
-										 value="${factor.value}" 
-										 data-id="${factor.id}"
-										 ${this.state.factors.includes(factor.id) ? 'checked' : ''}>
-							<strong>${factor.label}</strong>
-							<small>${factor.description}</small>
-						</label>
-					`).join('')}
+					<fieldset name="factors">
+						<legend>${labels.factors}</legend>
+						${Object.values(factors).map(f => `
+							<label>
+								<input type="checkbox" name="factor" value="${f.id}" 
+									${this.state.factors.includes(f.id) ? 'checked' : ''}>
+								<strong>${f.label}</strong>
+								<!--<small>${f.description}</small>-->
+							</label>
+						`).join('')}
+					</fieldset>
+				</fieldset>
+				<fieldset name="result" class="${violationStatus}">
+					<output name="fine" aria-live="polite" aria-atomic="true">${fine}</output>	
+					<output name="description" aria-live="polite" aria-atomic="true">${description}</output>
 				</fieldset>
 			</form>
 		`;
-
-		this._form = this.shadowRoot.querySelector('form');
-		this._form.addEventListener('input', this.handleInput.bind(this));
-		
 	}
 
 	handleInput(event) {
-		const target = event.target;
-		const name = target.name || (target.getAttribute ? target.getAttribute('name') : undefined);
+		const { name, checked, value, dataset } = event.target;
 		if (!name) return;
-		const checked = 'checked' in target ? target.checked : false;
-		const value = (target.value !== undefined) ? target.value : (target.getAttribute ? target.getAttribute('value') : undefined);
 
 		switch (name) {
-			case 'value':
-				this.state.speed = parseInt(value, 10);
+			case 'value': 
+				this.state.speed = parseInt(value, 10); 
 				break;
-			case 'roadtype':
-				if (checked) this.state.roadType = target.dataset.id;
+			case 'roadtype': 
+				this.state.roadType = value; 
 				break;
-			case 'vehicle':
-				if (checked) this.state.vehicle = target.dataset.id;
+			case 'vehicle': 
+				this.state.vehicle = value; 
 				break;
 			case 'factor':
-				const factorId = target.dataset.id;
-				if (checked) {
-					if (!this.state.factors.includes(factorId)) {
-						this.state.factors.push(factorId);
-					}
-				} else {
-					this.state.factors = this.state.factors.filter(id => id !== factorId);
+				// Handle checkboxes
+				const factors = this.state.factors;
+				const factorId = value;
+				if (checked && !factors.includes(factorId)) {
+					factors.push(factorId);
+				} else if (!checked) {
+					this.state.factors = factors.filter(id => id !== factorId);
 				}
 				break;
 		}
 
-		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
-		this._form.elements.limit.value = speedLimit;
-		const cr = this.shadowRoot.querySelector('circular-range');
-		if (cr) cr.setAttribute('active-label', String(speedLimit));
-		// Sync video-scrub
-		const vs = this.shadowRoot.querySelector('video-scrub');
-		if (vs) {
-			vs.value = this.state.speed;
-			// If road type changed, update src
-			if (event?.target?.name === 'roadtype' && event?.target?.checked) {
-				vs.src = this.data.roadTypes[this.state.roadType].video;
+		this.updateUI();
+		if (name === 'roadtype') {
+			// Simple, direct property updates
+			const videoScrub = this.shadowRoot.querySelector('video-scrub');
+			if (videoScrub) {
+				videoScrub.src = this.data.roadTypes[this.state.roadType].video;
+				videoScrub.poster = this.data.roadTypes[this.state.roadType].poster;
 			}
 		}
-
-		const description = this.calculateDescription(this.state.speed, speedLimit);
-		this._form.elements.description.value = description;
-		this._form.elements.description.className = this.getViolationStatus(this.state.speed, speedLimit);
-
-		// Calculate and display the fine
-		const fineResult = this.calculateFine();
-		this._form.elements.fine.value = fineResult.fine;
 	}
 
-	getViolationStatus(speed, speedLimit) {
-		if (speed <= speedLimit) return 'success';
-		const percentageOver = ((speed / speedLimit) * 100) - 100;
-		return percentageOver >= 30 ? 'danger' : percentageOver >= 10 ? 'warning' : 'info';
+	updateUI() {
+		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
+		const speedLimit = vehicleSpeedLimits.default;
+		const { description, fine, summary, violationStatus } = this.calculateAll();
+		const form = this._form.elements;
+
+		// Update form outputs
+		form.limit.value = speedLimit;
+		form.description.value = description;
+		form.fine.value = fine;
+		if (form.summary) form.summary.value = summary;
+
+		// Update fieldset class instead of output class
+		const resultFieldset = this.shadowRoot.querySelector('[name="result"]');
+		if (resultFieldset) {
+			resultFieldset.className = violationStatus;
+		}
+
+		// Update circular range with vehicle-specific limit
+		const cr = this.shadowRoot.querySelector('circular-range');
+		if (cr) cr.setAttribute('active-label', String(speedLimit));
+
+		// Update video scrub
+		const vs = this.shadowRoot.querySelector('video-scrub');
+		if (vs) vs.value = this.state.speed;
+
+		this.updateSpeedometerColors(this.state.speed, speedLimit);
 	}
 
-	calculateDescription(speed, speedLimit) {
-		if (speed <= speedLimit) return this.data.messages.noFine;
+	updateSpeedometerColors(speed, speedLimit) {
+		const circularRange = this.shadowRoot.querySelector('circular-range');
+		const summaryOutput = this.shadowRoot.querySelector('output[name="summary"]');
+		
+		if (!circularRange || !summaryOutput) return;
 
+		// Define speed status colors like in speed.html
+		const speedStatus = {
+			green: { color: '#33FF00', class: 'speed-green' },
+			orange: { color: '#F2C94C', class: 'speed-orange' },
+			red: { color: '#EB5757', class: 'speed-red' }
+		};
+
+		let status = speedStatus.green;
+		let middleColor = speedStatus.green.color;
+		let endColor = speedStatus.green.color;
+
+		// Determine status based on speed relative to limit
 		const percentageOver = ((speed / speedLimit) * 100) - 100;
-		const penaltyRange = this.data.penaltyRanges
+		
+		if (percentageOver > 50) { // Serious speeding (50%+ over limit)
+			status = speedStatus.red;
+			middleColor = speedStatus.orange.color;
+			endColor = speedStatus.red.color;
+		} else if (percentageOver > 10) { // Minor speeding (10%+ over limit)
+			status = speedStatus.orange;
+			middleColor = speedStatus.orange.color;
+			endColor = speedStatus.orange.color;
+		}
+
+		// Update circular-range colors
+		circularRange.style.setProperty('--circular-range-fill', speedStatus.green.color);
+		circularRange.style.setProperty('--circular-range-fill-middle', middleColor);
+		circularRange.style.setProperty('--circular-range-fill-end', endColor);
+		circularRange.style.setProperty('--circular-range-thumb', status.color);
+
+		// Update summary output styling with pulse animation
+		const currentClass = summaryOutput.className.match(/speed-(green|orange|red)/)?.[0];
+		if (currentClass !== status.class) {
+			// Remove existing speed color classes
+			summaryOutput.classList.remove('speed-green', 'speed-orange', 'speed-red');
+			// Add new color class
+			summaryOutput.classList.add(status.class);
+			
+			// Add pulse animation
+			summaryOutput.classList.add('pulse');
+			summaryOutput.addEventListener('animationend', () => {
+				summaryOutput.classList.remove('pulse');
+			}, { once: true });
+		}
+	}
+
+	calculateAll() {
+		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
+		const speedLimit = vehicleSpeedLimits.default;
+		const speed = this.state.speed;
+		const percentageOver = ((speed / speedLimit) * 100) - 100;
+		
+		// Base calculations
+		const violationStatus = speed <= speedLimit ? 'success' : 
+			percentageOver >= 30 ? 'danger' : 'warning';
+		
+		const description = speed <= speedLimit ? this.data.messages.noFine :
+			this.findPenaltyRange(percentageOver)?.description + ' - ' + 
+			this.findPenaltyRange(percentageOver)?.consequence || this.data.messages.defaultViolation;
+		
+		const summary = speed <= speedLimit ? '' : 
+			this.findPenaltyRange(percentageOver)?.summary || 'Empty';
+		
+		const fine = this.calculateFineAmount();
+
+		return { description, fine, summary, violationStatus };
+	}
+
+	findPenaltyRange(percentageOver) {
+		return this.data.penaltyRanges
 			.slice()
 			.reverse()
 			.find(range => percentageOver >= range.percentageOver);
-
-		return penaltyRange 
-			? `${penaltyRange.description} - ${penaltyRange.consequence}`
-			: this.data.messages.defaultViolation;
 	}
 
-	calculateFine() {
+	calculateFineAmount() {
 		const speed = this.state.speed;
-		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
+		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
+		const speedLimit = vehicleSpeedLimits.default;
 		const vehicle = this.data.vehicles[this.state.vehicle];
 		const percentageOver = Math.round(((speed - speedLimit) / speedLimit) * 100);
 
-		// Edge case validations
-		if (!speed || speed === 0) return { fine: "0", consequence: this.data.messages.noFine };
-		if (speed > 300) return { fine: "0", consequence: this.data.messages.overSpeed };
-		if (speed <= speedLimit) return { fine: "0", consequence: this.data.messages.noFine };
+		// Edge cases
+		if (!speed || speed === 0 || speed <= speedLimit) return "0";
+		if (speed > 300) return "0";
 
-		// Check for unconditional license loss first (returns no fine)
-		const unconditionalLoss = this.evaluateConsequenceRules();
-		if (unconditionalLoss === 'ubetinget_frakendelse') {
-			return { fine: "0", consequence: this.data.messages.ubetinget_frakendelse };
-		}
+		// Check for unconditional license loss
+		const consequenceType = this.evaluateConsequenceRules();
+		if (consequenceType && this.data.consequenceTypes[consequenceType]?.preventsFine) return "0";
 
-		// Check for vehicle-specific speed limits
-		let vehicleLimitViolation = null;
-		const vehicleLimits = this.data.vehicleSpecificLimits;
-		if (vehicleLimits[vehicle.id] && speed > vehicleLimits[vehicle.id].maxSpeed) {
-			vehicleLimitViolation = vehicleLimits[vehicle.id].message;
-		}
+		const penaltyRange = this.findPenaltyRange(percentageOver);
+		if (!penaltyRange) return "0";
 
-		const penaltyRange = [...this.data.penaltyRanges]
-			.reverse()
-			.find(range => percentageOver >= range.percentageOver);
-
-		if (!penaltyRange) return { fine: "0" };
-
-		// Use rule engine to determine base rate
-		const rateCategory = this.evaluateRateSelectionRules();
-		let finalFine = penaltyRange[rateCategory];
-
-		// Apply penalty rules
+		// Calculate fine
+		let finalFine = penaltyRange[this.evaluateRateSelectionRules()];
 		finalFine += this.evaluatePenaltyRules();
-
 		finalFine = this.state.factors.reduce((currentFine, factorId) => {
 			const factor = this.data.factors[factorId];
 			return factor?.multiplier ? currentFine * factor.multiplier : currentFine;
 		}, finalFine);
 
-		const roundedFine = Math.round(finalFine);
-		const formattedFine = new Intl.NumberFormat(this.data.locale, { style: 'currency', currency: this.data.currency || 'DKK' }).format(roundedFine);
-		
-		// Evaluate consequence rules (skip unconditional loss since we checked it earlier)
-		const specialConsequence = this.evaluateConsequenceRules();
-
-		// Determine the appropriate consequence message
-		let consequence = penaltyRange.consequence;
-		if (specialConsequence === 'betinget_frakendelse') {
-			consequence = this.data.messages.betinget_frakendelse;
-		} else if (specialConsequence === 'klip_i_koerekort') {
-			consequence = this.data.messages.klip_i_koerekort;
-		} else if (vehicleLimitViolation) {
-			consequence = `${penaltyRange.consequence} + ${vehicleLimitViolation}`;
-		}
-
-		return {
-			fine: formattedFine,
-			consequence: consequence
-		};
+		return new Intl.NumberFormat(this.data.locale, { 
+			style: 'currency', 
+			currency: this.data.currency || 'DKK' 
+		}).format(Math.round(finalFine));
 	}
 
 	evaluateRateSelectionRules() {
-		const rules = this.data.ruleEngine.rateSelectionRules;
-		
-		for (const rule of rules) {
-			if (this.evaluateConditions(rule.conditions)) {
-				return rule.result;
-			}
-		}
-		
-		return 'rate1'; // fallback
+		return this.data.ruleEngine.rateSelectionRules
+			.find(rule => this.evaluateConditions(rule.conditions))?.result || 'rate1';
 	}
 
 	evaluatePenaltyRules() {
-		const rules = this.data.ruleEngine.penaltyRules;
-		let totalPenalty = 0;
-		
-		for (const rule of rules) {
+		return this.data.ruleEngine.penaltyRules.reduce((total, rule) => {
 			if (this.evaluateConditions(rule.conditions)) {
-				if (rule.penalty) {
-					totalPenalty += rule.penalty;
-				} else if (rule.formula) {
-					totalPenalty += this.evaluateFormula(rule.formula);
-				}
+				return total + (rule.penalty || this.evaluateFormula(rule.formula));
 			}
-		}
-		
-		return totalPenalty;
+			return total;
+		}, 0);
 	}
 
 	evaluateConsequenceRules() {
-		const rules = this.data.ruleEngine.consequenceRules;
+		const consequences = this.data.ruleEngine.consequenceRules
+			.filter(rule => this.evaluateConditions(rule.conditions))
+			.map(rule => rule.consequence);
 		
-		for (const rule of rules) {
-			if (this.evaluateConditions(rule.conditions)) {
-				return rule.consequence;
-			}
-		}
-		
-		return null;
+		return this.getMostSevereConsequence(consequences);
+	}
+
+	getMostSevereConsequence(consequences) {
+		return consequences
+			.filter(c => this.data.consequenceTypes[c])
+			.sort((a, b) => this.data.consequenceTypes[b].severity - this.data.consequenceTypes[a].severity)[0] || null;
 	}
 
 	evaluateConditions(conditions) {
-		if (!conditions || conditions.length === 0) return true;
-		
-		for (const condition of conditions) {
-			if (condition.type === 'or') {
-				if (!condition.rules.some(rule => this.evaluateConditions([rule]))) {
-					return false;
-				}
-			} else if (condition.type === 'and') {
-				if (!condition.rules.every(rule => this.evaluateConditions([rule]))) {
-					return false;
-				}
-			} else {
-				// Direct condition evaluation
-				if (!this.evaluateCondition(condition)) {
-					return false;
-				}
-			}
-		}
-		
-		return true;
+		return !conditions?.length || conditions.every(condition => {
+			if (condition.type === 'or') return condition.rules.some(rule => this.evaluateConditions([rule]));
+			if (condition.type === 'and') return condition.rules.every(rule => this.evaluateConditions([rule]));
+			return this.evaluateCondition(condition);
+		});
 	}
 
 	evaluateCondition(condition) {
 		const value = this.getFieldValue(condition.field);
-		const targetValue = condition.value;
+		const target = condition.value;
 		
-		switch (condition.operator) {
-			case '=':
-				return value === targetValue;
-			case '>=':
-				return value >= targetValue;
-			case '<=':
-				return value <= targetValue;
-			case '>':
-				return value > targetValue;
-			case '<':
-				return value < targetValue;
-			case 'in':
-				return Array.isArray(targetValue) && targetValue.includes(value);
-			case 'includes':
-				return Array.isArray(value) && value.includes(targetValue);
-			case 'not_includes':
-				return Array.isArray(value) && !value.includes(targetValue);
-			default:
-				return false;
-		}
+		const operators = {
+			'=': () => value === target,
+			'>=': () => value >= target,
+			'<=': () => value <= target,
+			'>': () => value > target,
+			'<': () => value < target,
+			'in': () => Array.isArray(target) && target.includes(value),
+			'includes': () => Array.isArray(value) && value.includes(target),
+			'not_includes': () => Array.isArray(value) && !value.includes(target)
+		};
+		
+		return operators[condition.operator]?.() || false;
 	}
 
 	getFieldValue(field) {
-		const speedLimit = this.data.roadTypes[this.state.roadType].defaultSpeed;
-		const vehicle = this.data.vehicles[this.state.vehicle];
-		const percentageOver = Math.round(((this.state.speed - speedLimit) / speedLimit) * 100);
-		
-		switch (field) {
-			case 'speed':
-				return this.state.speed;
-			case 'speedLimit':
-				return speedLimit;
-			case 'percentageOver':
-				return percentageOver;
-			case 'roadType':
-				return this.state.roadType;
-			case 'vehicle.category':
-				return vehicle.category;
-			case 'factors':
-				return this.state.factors;
-			default:
-				return null;
-		}
+		const vehicleSpeedLimits = this.calculateVehicleSpeedLimit();
+		const speedLimit = vehicleSpeedLimits.default;
+		const fields = {
+			'speed': this.state.speed,
+			'speedLimit': speedLimit,
+			'percentageOver': Math.round(((this.state.speed - speedLimit) / speedLimit) * 100),
+			'roadType': this.state.roadType,
+			'vehicle.category': this.data.vehicles[this.state.vehicle].category,
+			'factors': this.state.factors
+		};
+		return fields[field] || null;
 	}
 
 	evaluateFormula(formula) {
-		if (formula.type === 'calculation') {
-			const expression = formula.expression;
-			const speed = this.state.speed;
-			
-			// For security, only allow specific safe expressions
-			if (expression === 'Math.floor((speed - 140) / 10) * 600 + 1200') {
-				return Math.floor((speed - 140) / 10) * 600 + 1200;
-			}
+		if (formula?.type === 'calculation' && 
+			formula.expression === 'Math.floor((speed - 140) / 10) * 600 + 1200') {
+			return Math.floor((this.state.speed - 140) / 10) * 600 + 1200;
 		}
-		
 		return 0;
 	}
 }

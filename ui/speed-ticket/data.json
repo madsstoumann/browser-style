@@ -8,6 +8,12 @@
     "step": 1,
     "unit": "km/t"
   },
+  "circularRange": {
+    "start": "220",
+    "end": "500", 
+    "indices": "50",
+    "labels": "0:0,50:50,80:80,90:90,130:130,200:200"
+  },
   "roadTypes": {
     "cityZone": {
       "id": "cityZone",
@@ -17,7 +23,8 @@
       "minSpeed": 30,
       "maxSpeed": 80,
       "value": 50,
-      "video": "byzone.mp4"
+      "video": "byzone.mp4",
+      "poster": "byzone.avif"
     },
     "countryRoad": {
       "id": "countryRoad", 
@@ -27,7 +34,8 @@
       "minSpeed": 40,
       "maxSpeed": 90,
       "value": 80,
-      "video": "landevej.mp4"
+      "video": "landevej.mp4",
+      "poster": "landevej.avif"
     },
     "expressway": {
       "id": "expressway",
@@ -37,7 +45,8 @@
       "minSpeed": 40,
       "maxSpeed": 90,
       "value": 90,
-      "video": "motorvej.mp4"
+      "video": "motorvej.mp4",
+      "poster": "motorvej.avif"
     },
     "highway": {
       "id": "highway",
@@ -47,7 +56,8 @@
       "minSpeed": 40,
       "maxSpeed": 130,
       "value": 130,
-      "video": "motorvej.mp4"
+      "video": "motorvej.mp4",
+      "poster": "motorvej.avif"
     }
   },
   "vehicles": {
@@ -128,6 +138,7 @@
       "rate3": 1800,
       "description": "Mindre fartoverskridelse",
       "consequence": "Bøde"
+    ,"summary": "Mindre overskridelse"
     },
     {
       "percentageOver": 20,
@@ -136,6 +147,7 @@
       "rate3": 1800,
       "description": "Moderat fartoverskridelse", 
       "consequence": "Bøde"
+    ,"summary": "Moderat overskridelse"
     },
     {
       "percentageOver": 30,
@@ -144,6 +156,7 @@
       "rate3": 2400,
       "description": "Betydelig fartoverskridelse",
       "consequence": "Bøde + klip i kørekortet"
+    ,"summary": "Betydelig overskridelse"
     },
     {
       "percentageOver": 40,
@@ -152,6 +165,7 @@
       "rate3": 3000,
       "description": "Grov fartoverskridelse",
       "consequence": "Høj bøde + klip i kørekortet"
+    ,"summary": "Grov overskridelse"
     },
     {
       "percentageOver": 50,
@@ -160,6 +174,7 @@
       "rate3": 3600,
       "description": "Meget grov fartoverskridelse",
       "consequence": "Meget høj bøde + klip i kørekortet"
+    ,"summary": "Meget grov overskridelse"
     },
     {
       "percentageOver": 60,
@@ -168,6 +183,7 @@
       "rate3": 4200,
       "description": "Ekstrem fartoverskridelse",
       "consequence": "Ekstrem bøde + betinget frakendelse"
+    ,"summary": "Ekstrem overskridelse"
     },
     {
       "percentageOver": 70,
@@ -176,6 +192,7 @@
       "rate3": 5400,
       "description": "Meget ekstrem fartoverskridelse", 
       "consequence": "Meget ekstrem bøde + betinget frakendelse"
+    ,"summary": "Vanvidskørsel"
     },
     {
       "percentageOver": 80,
@@ -184,6 +201,7 @@
       "rate3": 6000,
       "description": "Vanvittig fartoverskridelse",
       "consequence": "Vanvittig bøde + betinget frakendelse"
+    ,"summary": "Vanvidskørsel"
     },
     {
       "percentageOver": 90,
@@ -192,6 +210,7 @@
       "rate3": 7800,
       "description": "Livsfarlig fartoverskridelse",
       "consequence": "Livsfarlig bøde + betinget frakendelse"
+    ,"summary": "Vanvidskørsel"
     },
     {
       "percentageOver": 100,
@@ -200,6 +219,7 @@
       "rate3": 9000,
       "description": "Ekstrem livsfarlig fartoverskridelse",
       "consequence": "Maksimal bøde + betinget frakendelse"
+    ,"summary": "Vanvidskørsel"
     }
   ],
   "rateCategories": {
@@ -225,6 +245,26 @@
         "vehicle": ["bus", "truck", "bus100"],
         "trailer": true
       }
+    }
+  },
+  "consequenceTypes": {
+    "UNCONDITIONAL_LICENSE_LOSS": {
+      "id": "UNCONDITIONAL_LICENSE_LOSS",
+      "severity": 5,
+      "messageKey": "ubetinget_frakendelse",
+      "preventsFine": true
+    },
+    "CONDITIONAL_LICENSE_LOSS": {
+      "id": "CONDITIONAL_LICENSE_LOSS", 
+      "severity": 4,
+      "messageKey": "betinget_frakendelse",
+      "preventsFine": false
+    },
+    "LICENSE_POINTS": {
+      "id": "LICENSE_POINTS",
+      "severity": 3,
+      "messageKey": "klip_i_koerekort",
+      "preventsFine": false
     }
   },
   "ruleEngine": {
@@ -304,7 +344,7 @@
           { "field": "percentageOver", "operator": ">", "value": 40 },
           { "field": "factors", "operator": "includes", "value": "roadwork" }
         ],
-        "consequence": "betinget_frakendelse"
+        "consequence": "CONDITIONAL_LICENSE_LOSS"
       },
       {
         "id": "conditional_loss_heavy_vehicles",
@@ -320,7 +360,7 @@
             ]
           }
         ],
-        "consequence": "betinget_frakendelse"
+        "consequence": "CONDITIONAL_LICENSE_LOSS"
       },
       {
         "id": "conditional_loss_extreme_speed",
@@ -342,7 +382,7 @@
             ]
           }
         ],
-        "consequence": "betinget_frakendelse"
+        "consequence": "CONDITIONAL_LICENSE_LOSS"
       },
       {
         "id": "license_points",
@@ -350,7 +390,7 @@
         "conditions": [
           { "field": "percentageOver", "operator": ">", "value": 30 }
         ],
-        "consequence": "klip_i_koerekort"
+        "consequence": "LICENSE_POINTS"
       },
       {
         "id": "unconditional_license_loss",
@@ -396,7 +436,7 @@
             ]
           }
         ],
-        "consequence": "ubetinget_frakendelse"
+        "consequence": "UNCONDITIONAL_LICENSE_LOSS"
       }
     ]
   },
@@ -421,18 +461,137 @@
     "ubetinget_frakendelse": "Ubetinget frakendelse af kørekort",
     "unit": "kr."
   },
-  "vehicleSpecificLimits": {
-    "truck": {
-      "maxSpeed": 90,
-      "message": "Lastbiler må maksimalt køre 90 km/t"
+  "speedLimitRules": [
+    {
+      "id": "car_mc_city",
+      "description": "Car/MC in city zone",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "cityZone" }
+      ],
+      "limits": { "min": 30, "max": 70, "default": 50 }
     },
-    "bus": {
-      "maxSpeed": 100,
-      "message": "Busser må maksimalt køre 100 km/t"
+    {
+      "id": "car_mc_country",
+      "description": "Car/MC on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" }
+      ],
+      "limits": { "min": 40, "max": 100, "default": 80 }
     },
-    "bus100": {
-      "maxSpeed": 100,
-      "message": "Bus Tempo 100 må maksimalt køre 100 km/t"
+    {
+      "id": "car_mc_highway",
+      "description": "Car/MC on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "highway" }
+      ],
+      "limits": { "min": 50, "max": 130, "default": 130 }
+    },
+    {
+      "id": "car_mc_trailer_country",
+      "description": "Car/MC with trailer on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 40, "max": 80, "default": 80 }
+    },
+    {
+      "id": "car_mc_trailer_highway",
+      "description": "Car/MC with trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
+    },
+    {
+      "id": "car_tempo100_trailer_country",
+      "description": "Car with tempo100 trailer on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" },
+        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
+    },
+    {
+      "id": "car_tempo100_trailer_highway",
+      "description": "Car with tempo100 trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+      ],
+      "limits": { "min": 50, "max": 100, "default": 100 }
+    },
+    {
+      "id": "bus_city",
+      "description": "Bus in city zone",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
+        { "field": "roadType", "operator": "=", "value": "cityZone" }
+      ],
+      "limits": { "min": 30, "max": 70, "default": 50 }
+    },
+    {
+      "id": "bus_country",
+      "description": "Bus on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" }
+      ],
+      "limits": { "min": 40, "max": 80, "default": 80 }
+    },
+    {
+      "id": "bus_highway",
+      "description": "Bus on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
+        { "field": "roadType", "operator": "=", "value": "highway" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
+    },
+    {
+      "id": "truck_city",
+      "description": "Truck in city zone",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "truck" },
+        { "field": "roadType", "operator": "=", "value": "cityZone" }
+      ],
+      "limits": { "min": 30, "max": 70, "default": 50 }
+    },
+    {
+      "id": "truck_country",
+      "description": "Truck on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "truck" },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" }
+      ],
+      "limits": { "min": 40, "max": 80, "default": 80 }
+    },
+    {
+      "id": "bus100_trailer_highway",
+      "description": "Bus100 with trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "bus100" },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 60 }
+    },
+    {
+      "id": "truck_highway",
+      "description": "Truck on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "truck" },
+        { "field": "roadType", "operator": "=", "value": "highway" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
     }
-  }
+  ]
 }
