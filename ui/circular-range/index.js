@@ -254,14 +254,13 @@ class CircularRange extends HTMLElement {
 		this.tabIndex = 0;
 		this.#readAttributes();
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
-		this.#renderAndPositionLabels();
+		this.#renderLabels();
 		this.setAttribute('role', 'slider');
 		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
 		setTimeout(() => {
 			this.#update();
 			this.#updateActiveLabel();
 			const value = Number(this.getAttribute('value')) || 0;
-			// Ensure form value is initialized when connected
 			this.#internals.setFormValue(value);
 			this.classList.toggle('at-min', this.hasAttribute('enable-min') && value === this.#min);
 			if (this.#isSafari) this.#safariRepaint();
@@ -378,16 +377,10 @@ class CircularRange extends HTMLElement {
 	#updateActiveLabel() {
 		const activeLabelValue = this.getAttribute('active-label');
 		const labels = this.shadowRoot.querySelectorAll('[part="labels"] li');
-
-		labels.forEach(label => {
-			label.part.remove('active-label');
-		});
-
+		labels.forEach(label => label.part.remove('active-label'));
 		if (activeLabelValue) {
 			const activeLabel = this.shadowRoot.querySelector(`[part="labels"] li[value="${activeLabelValue}"]`);
-			if (activeLabel) {
-				activeLabel.part.add('active-label');
-			}
+			if (activeLabel) activeLabel.part.add('active-label');
 		}
 	}
 
@@ -444,24 +437,21 @@ class CircularRange extends HTMLElement {
 		const startPercent = this.#startAngle / 360 * 100;
 		const rangePercent = this.#angleRange / 360 * 100;
 		const step = rangePercent / (count - 1);
-
-		return Array.from({ length: count }, (_, i) => {
-			return `<li style="--_p:${startPercent + (i * step)}%"></li>`;
-		}).join('');
+		return Array.from({ length: count }, (_, i) => 
+			`<li style="--_p:${startPercent + (i * step)}%"></li>`
+		).join('');
 	}
 
-	#renderAndPositionLabels() {
+	#renderLabels() {
 		const labelsAttr = this.getAttribute('labels');
 		const ol = this.shadowRoot.querySelector('[part="labels"]');
-		if (!ol) return;
-
 		ol.innerHTML = '';
 		if (!labelsAttr) return;
 
-		const pairs = labelsAttr.split(',').map(pair => pair.split(':'));
-		for (let i = 0; i < pairs.length; i++) {
-			const [valueRaw, labelRaw] = pairs[i];
-			if (valueRaw === undefined || labelRaw === undefined) continue;
+		labelsAttr.split(',').forEach(pair => {
+			const [valueRaw, labelRaw] = pair.split(':');
+			if (!valueRaw || !labelRaw) return;
+			
 			const value = Number(valueRaw.trim());
 			const label = labelRaw.trim();
 			const li = document.createElement('li');
@@ -477,7 +467,7 @@ class CircularRange extends HTMLElement {
 			}
 
 			ol.appendChild(li);
-		}
+		});
 	}
 }
 
