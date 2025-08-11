@@ -374,12 +374,12 @@ class SpeedTicket extends HTMLElement {
 	calculateFine(speedLimit, percentageOver, penaltyRange) {
 		const speed = this.state.speed;
 		
-		if (!speed || speed <= speedLimit || speed > 300) return "0";
+		if (!speed || speed <= speedLimit || speed > 300) return "";
 		
 		const consequenceType = this.getConsequence();
-		if (consequenceType && this.data.consequenceTypes[consequenceType]?.preventsFine) return "0";
+		if (consequenceType && this.data.consequenceTypes[consequenceType]?.preventsFine) return "";
 		
-		if (!penaltyRange) return "0";
+		if (!penaltyRange) return "";
 		
 		let fine = penaltyRange[this.getRate()];
 		fine += this.getPenalties();
