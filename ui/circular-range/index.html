@@ -48,6 +48,7 @@
 			<circular-range
 				active-label="90"
 				class="speedometer"
+				aria-label="Speedometer"
 				enable-min
 				end="500"
 				haptic="120,180"
@@ -65,24 +66,25 @@
 		<label><span>Full Circle — <code>step="5"</code></span>
 			<circular-range
 				class="full-circle"
+				aria-label="Full Circle — step=5"
 				labels="0:0,5:5,10:10,15:15,20:20,25:25,30:30,35:35,40:40,45:45,50:50,55:55,60:60,65:65,70:70,75:75,80:80,85:85,90:90,95:95,100:0"
 				value="50" min="0" max="100" suffix="%" step="5" indices="21"></circular-range>
 		</label>
 
 		<label>Oven
-			<circular-range class="oven" value="120" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
+			<circular-range class="oven" aria-label="Oven" value="120" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
 		</label>
 
 		<label>Left Arc
-			<circular-range class="left-arc" value="50" min="0" max="100" suffix="%" step="1" start="180" end="360" indices="11"></circular-range>
+			<circular-range class="left-arc" aria-label="Left Arc" value="50" min="0" max="100" suffix="%" step="1" start="180" end="360" indices="11"></circular-range>
 		</label>
 
 		<label>Top Arc
-			<circular-range class="top-arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
+			<circular-range class="top-arc" aria-label="Top Arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
 		</label>
 
 		<label>Bottom Arc
-			<circular-range class="bottom-arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
+			<circular-range class="bottom-arc" aria-label="Bottom Arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
 		</label>
 	</div>
 </body>

@@ -445,6 +445,7 @@ class CircularRange extends HTMLElement {
 	#renderLabels() {
 		const labelsAttr = this.getAttribute('labels');
 		const ol = this.shadowRoot.querySelector('[part="labels"]');
+		ol.setAttribute('aria-hidden', 'true');
 		ol.innerHTML = '';
 		if (!labelsAttr) return;
 
@@ -457,7 +458,6 @@ class CircularRange extends HTMLElement {
 			const li = document.createElement('li');
 			li.setAttribute('value', value);
 			li.part.add(`label-${value}`);
-			li.setAttribute('aria-readonly', 'true');
 			li.textContent = label;
 
 			if (value >= this.#min && value <= this.#max) {
