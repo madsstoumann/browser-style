@@ -106,8 +106,12 @@ class SpeedTicket extends HTMLElement {
 			[name="result"] {
 				align-items: center;
 				display: flex;
+				height: 4rem;
 				justify-content: center;
 				padding: 1ch 2ch;
+			}
+			@media (max-height: 600px) {
+				[name="result"] { height: 3rem; }
 			}
 			[name="selection"] {
 				display: flex;
@@ -132,7 +136,7 @@ class SpeedTicket extends HTMLElement {
 			output[name="description"] {
 				display: block;
 				font-size: clamp(.75rem, 2vw, 1rem);
-				padding: 1ch 2ch;
+				padding: 1ch 2ch;		
 			}
 			
 			.info {
@@ -202,6 +206,7 @@ class SpeedTicket extends HTMLElement {
 				--circular-range-labels-c: #FFF8;
 				--circular-range-indice-c: #FFF8;
 				--circular-range-track: #F0F0F073;
+				--circular-range-w: 60dvh;
 
 				&::part(active-label) {
 					color: #FFF;

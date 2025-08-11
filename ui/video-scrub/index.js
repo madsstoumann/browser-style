@@ -11,12 +11,24 @@ const styles = `
     )
   ) no-repeat 50% 50% / 100% 100%;
 }
+
 video {
   aspect-ratio: var(--video-scrub-aspect-ratio, none);
   display: block;  
   height: var(--video-scrub-h, auto);
   object-fit: var(--video-scrub-object-fit, cover);
   width: var(--video-scrub-w, 100%);
+}
+
+div {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--video-scrub-object-fit, cover);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity var(--video-scrub-transition-duration, 300ms) ease-in-out;
 }
 
 :host::after {
@@ -27,6 +39,7 @@ video {
   position: absolute;  
 }
 `;
+
 /**
  * @module VideoScrub
  * @version 1.0.0
@@ -60,7 +73,9 @@ class VideoScrub extends HTMLElement {
     sheet.replaceSync(styles);
     this.shadowRoot.adoptedStyleSheets = [sheet];
 
+    this._posterOverlay = document.createElement('div');
     this.shadowRoot.appendChild(this._video);
+    this.shadowRoot.appendChild(this._posterOverlay);
 
     this._min = 0;
     this._max = 100;
@@ -109,7 +124,21 @@ class VideoScrub extends HTMLElement {
         this._isMetadataReady = false;
         break;
       case 'poster':
-        this._video.poster = newValue ?? '';
+        if (oldValue && newValue && oldValue !== newValue) {
+          // Fade transition between posters
+          this._posterOverlay.style.backgroundImage = `url("${newValue}")`;
+          this._posterOverlay.style.opacity = '1';
+          
+          setTimeout(() => {
+            this._video.poster = newValue ?? '';
+            this._posterOverlay.style.opacity = '0';
+            setTimeout(() => {
+              this._posterOverlay.style.backgroundImage = '';
+            }, 300); // Match transition duration
+          }, 300);
+        } else {
+          this._video.poster = newValue ?? '';
+        }
         break;
       case 'crossorigin':
         this._video.crossOrigin = newValue ?? 'anonymous';
