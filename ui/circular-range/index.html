@@ -6,6 +6,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
+	<meta
+		http-equiv="Content-Security-Policy"
+		content="
+		  default-src 'self';
+		  script-src 'self';
+		  style-src 'self' 'unsafe-inline';
+		  img-src 'self';
+		  font-src 'self';
+		  connect-src 'self';
+		  object-src 'none';
+		  base-uri 'self';
+		  form-action 'self';
+		  frame-src 'self';
+		  manifest-src 'self';
+		  media-src 'self';
+		  worker-src 'self';
+		  child-src 'self';
+		"
+	>
 	<link rel="stylesheet" href="/core.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 	<script type="module" src="./index.js"></script>
