@@ -9,20 +9,22 @@
 	<meta
 		http-equiv="Content-Security-Policy"
 		content="
-		  default-src 'self';
-		  script-src 'self';
-		  style-src 'self' 'unsafe-inline';
-		  img-src 'self';
-		  font-src 'self';
-		  connect-src 'self';
-		  object-src 'none';
-		  base-uri 'self';
-		  form-action 'self';
-		  frame-src 'self';
-		  manifest-src 'self';
-		  media-src 'self';
-		  worker-src 'self';
-		  child-src 'self';
+			default-src 'self';
+			script-src 'self';
+			style-src 'self' 'unsafe-inline';
+			img-src 'self';
+			font-src 'self';
+			connect-src 'self';
+			object-src 'none';
+			base-uri 'self';
+			form-action 'self';
+			frame-src 'self';
+			manifest-src 'self';
+			media-src 'self';
+			worker-src 'self';
+			child-src 'self';
+			upgrade-insecure-requests;
+			block-all-mixed-content;
 		"
 	>
 	<link rel="stylesheet" href="/core.css">
