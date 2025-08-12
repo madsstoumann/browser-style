@@ -82,7 +82,12 @@ class SpeedTicket extends HTMLElement {
 			[name="selection"] span { font-size: small; font-weight: 300; }
 
 			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
-			video-scrub { grid-area: 1 / 1 / 5 / 1; pointer-events: none; --video-scrub-h: 100%; }
+			video-scrub {
+				--video-scrub-h: 100%;
+				--video-scrub-mask: radial-gradient(circle at 50% 50%, #000 50%, #0000 80%);
+				grid-area: 1 / 1 / 5 / 1;
+				pointer-events: none;
+			}
 
 			input[type="radio"], input[type="checkbox"] {
 				margin-right: .5rem;

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Video Scrub</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="A custom web component for scrubbing through video content with crossfade transitions and CSS customization.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<meta
+		http-equiv="Content-Security-Policy"
+		content="
+			default-src 'self';
+			script-src 'self' 'unsafe-inline';
+			style-src 'self' 'unsafe-inline';
+			img-src 'self';
+			font-src 'self';
+			connect-src 'self';
+			object-src 'none';
+			base-uri 'self';
+			form-action 'self';
+			frame-src 'self';
+			manifest-src 'self';
+			media-src 'self';
+			worker-src 'self';
+			child-src 'self';
+			upgrade-insecure-requests;
+			block-all-mixed-content;
+		"
+	>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Video Scrub Range</h2>
+	<p>
+		<strong>Video Scrub</strong> is a custom web component for scrubbing through video content, supporting crossfade transitions and CSS customization.
+	</p>
+
+	<p>
+		<label>
+			Scrub Video:
+			<input type="range" min="0" max="100" value="25">
+		</label>
+	</p>
+
+	<video-scrub src="/assets/video/river.mp4"></video-scrub>
+
+	<script type="module" src="./index.js"></script>
+	<script>
+		const range = document.querySelector('input[type="range"]');
+		const video = document.querySelector('video-scrub');
+		range.addEventListener('input', () => {
+			video.value = range.valueAsNumber;
+		});
+	</script>
+</body>
+</html>
