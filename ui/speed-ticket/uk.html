@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-GB" dir="ltr">
+<head>
+	<title>UK Speed Ticket Component Test</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="UK speeding penalty calculator web component">
+	<style>
+		body { font-family: system-ui; margin: 0; }
+	</style>
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/circular-range": "../circular-range/index.js",
+				"@browser.style/video-scrub": "../video-scrub/index.js"
+			}
+		}
+	</script>
+</head>
+<body>
+	<speed-ticket data="data/data-uk.json" style="background:#1a1a2e;color:#eee;"></speed-ticket>
+	<script type="module" src="index.js"></script>
+</body>
+</html>

@@ -1,0 +1,546 @@
+{
+  "locale": "en-GB",
+  "currency": "GBP",
+  "thresholds": {
+    "dangerPercentageOver": 50
+  },
+  "speedRange": {
+    "min": 0,
+    "max": 100,
+    "default": 30,
+    "step": 1,
+    "unit": "mph"
+  },
+  "defaults": {
+    "roadType": "builtUp",
+    "vehicle": "car",
+    "factors": []
+  },
+  "circularRange": {
+    "start": "220",
+    "end": "500", 
+    "indices": "30",
+    "labels": "0:0,20:20,30:30,60:60,70:70"
+  },
+  "roadTypes": {
+    "builtUp": {
+      "id": "builtUp",
+      "label": "Built-up Areas",
+      "description": "Urban roads with street lighting (20mph in Wales, 30mph elsewhere)",
+      "defaultSpeed": 30,
+      "minSpeed": 20,
+      "maxSpeed": 30,
+      "value": 30,
+      "video": "assets/byzone.mp4",
+      "poster": "assets/byzone.avif"
+    },
+    "singleCarriageway": {
+      "id": "singleCarriageway", 
+      "label": "Single Carriageway",
+      "description": "Single carriageway roads outside built-up areas",
+      "defaultSpeed": 60,
+      "minSpeed": 30,
+      "maxSpeed": 60,
+      "value": 60,
+      "video": "assets/landevej.mp4",
+      "poster": "assets/landevej.avif"
+    },
+    "dualCarriageway": {
+      "id": "dualCarriageway",
+      "label": "Dual Carriageway", 
+      "description": "Dual carriageway roads",
+      "defaultSpeed": 70,
+      "minSpeed": 50,
+      "maxSpeed": 70,
+      "value": 70,
+      "video": "assets/motorvej.mp4",
+      "poster": "assets/motorvej.avif"
+    },
+    "motorway": {
+      "id": "motorway",
+      "label": "Motorway",
+      "description": "Motorways (minimum 10mph in tunnels, maximum 70mph)",
+      "defaultSpeed": 70,
+      "minSpeed": 10,
+      "maxSpeed": 70,
+      "value": 70,
+      "video": "assets/motorvej.mp4",
+      "poster": "assets/motorvej.avif"
+    }
+  },
+  "vehicles": {
+    "car": {
+      "id": "car",
+      "label": "Car",
+      "value": 1,
+      "category": "car"
+    },
+    "motorcycle": {
+      "id": "motorcycle", 
+      "label": "Motorcycle",
+      "value": 2,
+      "category": "mc"
+    },
+    "van": {
+      "id": "van",
+      "label": "Van (up to 3.5t)", 
+      "value": 3,
+      "category": "van"
+    },
+    "hgv": {
+      "id": "hgv",
+      "label": "HGV (over 3.5t)",
+      "value": 4,
+      "category": "hgv"
+    },
+    "bus": {
+      "id": "bus",
+      "label": "Bus/Coach",
+      "value": 5,
+      "category": "bus"
+    },
+    "caravan": {
+      "id": "caravan",
+      "label": "Car with Caravan/Trailer",
+      "value": 6,
+      "category": "caravan"
+    }
+  },
+  "factors": {
+    "newDriver": {
+      "id": "newDriver",
+      "label": "New Driver (2 years or less)",
+      "description": "Driver with full licence for 2 years or less (enhanced penalties)",
+      "value": 1,
+      "multiplier": 1.0
+    },
+    "schoolZone": {
+      "id": "schoolZone",
+      "label": "School Zone",
+      "description": "Speeding near schools during school hours",
+      "value": 2,
+      "multiplier": 1.5
+    },
+    "adverseWeather": {
+      "id": "adverseWeather",
+      "label": "Adverse Weather",
+      "description": "Inappropriate speed for weather conditions",
+      "value": 3,
+      "multiplier": 1.3
+    },
+    "repeatOffender": {
+      "id": "repeatOffender",
+      "label": "Repeat Offender", 
+      "description": "Multiple speeding offences in recent period",
+      "value": 4,
+      "multiplier": 1.5
+    },
+    "commercialVehicle": {
+      "id": "commercialVehicle",
+      "label": "Commercial Use",
+      "description": "Vehicle being used for commercial purposes",
+      "value": 5,
+      "multiplier": 1.2
+    }
+  },
+  "speedLimits": [20, 30, 40, 50, 60, 70],
+  "penaltyRanges": [
+    {
+      "percentageOver": 0,
+      "bandA": 100,
+      "bandB": 100,
+      "bandC": 150,
+      "description": "Band A: Minor speeding (up to 10mph over or 20% over limit)",
+      "consequence": "£100 fine + 3 points or speed awareness course",
+      "summary": "Minor speeding"
+    },
+    {
+      "percentageOver": 50,
+      "bandA": 100,
+      "bandB": 300,
+      "bandC": 400,
+      "description": "Band B: Serious speeding (11-20mph over or 21-50% over limit)",
+      "consequence": "4-6 points or 7-28 day disqualification + fine",
+      "summary": "Serious speeding"
+    },
+    {
+      "percentageOver": 100,
+      "bandA": 150,
+      "bandB": 500,
+      "bandC": 800,
+      "description": "Band C: Severe speeding (21+mph over or 51%+ over limit)",
+      "consequence": "6 points or 7-56 day disqualification + fine",
+      "summary": "Severe speeding"
+    }
+  ],
+  "rateCategories": {
+    "bandA": {
+      "description": "Minor speeding offences - Fixed Penalty Notice",
+      "conditions": {
+        "speedOver": "≤ 10mph or ≤ 20%",
+        "fine": "£100 + 3 points"
+      }
+    },
+    "bandB": {
+      "description": "Serious speeding offences - Court prosecution", 
+      "conditions": {
+        "speedOver": "11-20mph or 21-50%",
+        "fine": "75-125% weekly income + 4-6 points"
+      }
+    },
+    "bandC": {
+      "description": "Severe speeding offences - Court prosecution with possible ban",
+      "conditions": {
+        "speedOver": "21+mph or 51%+",
+        "fine": "125-175% weekly income + 6 points or ban"
+      }
+    }
+  },
+  "consequenceTypes": {
+    "FIXED_PENALTY": {
+      "id": "FIXED_PENALTY",
+      "severity": 1,
+      "messageKey": "fixed_penalty",
+      "preventsFine": false
+    },
+    "POINTS_ADDED": {
+      "id": "POINTS_ADDED",
+      "severity": 2,
+      "messageKey": "points_added",
+      "preventsFine": false
+    },
+    "SPEED_AWARENESS_COURSE": {
+      "id": "SPEED_AWARENESS_COURSE", 
+      "severity": 2,
+      "messageKey": "speed_awareness",
+      "preventsFine": true
+    },
+    "COURT_PROSECUTION": {
+      "id": "COURT_PROSECUTION",
+      "severity": 3,
+      "messageKey": "court_prosecution",
+      "preventsFine": false
+    },
+    "SHORT_DISQUALIFICATION": {
+      "id": "SHORT_DISQUALIFICATION",
+      "severity": 4,
+      "messageKey": "short_ban",
+      "preventsFine": false
+    },
+    "LONG_DISQUALIFICATION": {
+      "id": "LONG_DISQUALIFICATION",
+      "severity": 5,
+      "messageKey": "long_ban",
+      "preventsFine": false
+    },
+    "TOTTING_UP_BAN": {
+      "id": "TOTTING_UP_BAN",
+      "severity": 6,
+      "messageKey": "totting_up",
+      "preventsFine": false
+    }
+  },
+  "ruleEngine": {
+    "rateSelectionRules": [
+      {
+        "id": "band_c_severe",
+        "description": "Band C: Severe speeding requiring court prosecution",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              { "field": "speedOverAbsolute", "operator": ">=", "value": 21 },
+              { "field": "percentageOver", "operator": ">=", "value": 100 }
+            ]
+          }
+        ],
+        "result": "bandC"
+      },
+      {
+        "id": "band_b_serious",
+        "description": "Band B: Serious speeding requiring court prosecution",
+        "conditions": [
+          {
+            "type": "or",
+            "rules": [
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "speedOverAbsolute", "operator": ">=", "value": 11 },
+                  { "field": "speedOverAbsolute", "operator": "<=", "value": 20 }
+                ]
+              },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "percentageOver", "operator": ">=", "value": 50 },
+                  { "field": "percentageOver", "operator": "<", "value": 100 }
+                ]
+              }
+            ]
+          }
+        ],
+        "result": "bandB"
+      },
+      {
+        "id": "band_a_minor",
+        "description": "Band A: Minor speeding - Fixed Penalty Notice",
+        "conditions": [
+          {
+            "type": "and",
+            "rules": [
+              { "field": "speedOverAbsolute", "operator": "<=", "value": 10 },
+              { "field": "percentageOver", "operator": "<", "value": 50 }
+            ]
+          }
+        ],
+        "result": "bandA"
+      }
+    ],
+    "penaltyRules": [
+      {
+        "id": "new_driver_enhanced",
+        "description": "Enhanced consequences for new drivers (6+ points = licence revocation)",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "newDriver" },
+          { "field": "percentageOver", "operator": ">=", "value": 30 }
+        ],
+        "penalty": 50
+      },
+      {
+        "id": "school_zone_enhancement",
+        "description": "Enhanced penalties near schools",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "schoolZone" },
+          { "field": "percentageOver", "operator": ">=", "value": 20 }
+        ],
+        "penalty": 100
+      },
+      {
+        "id": "commercial_vehicle_enhancement",
+        "description": "Enhanced penalties for commercial vehicles",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "commercialVehicle" },
+          { "field": "percentageOver", "operator": ">=", "value": 30 }
+        ],
+        "penalty": 150
+      },
+      {
+        "id": "repeat_offender_enhancement",
+        "description": "Enhanced penalties for repeat offenders",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "repeatOffender" },
+          { "field": "percentageOver", "operator": ">=", "value": 20 }
+        ],
+        "penalty": 200
+      }
+    ],
+    "consequenceRules": [
+      {
+        "id": "totting_up_ban",
+        "description": "Totting up ban for 12+ points in 3 years",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "repeatOffender" },
+          { "field": "percentageOver", "operator": ">=", "value": 50 }
+        ],
+        "consequence": "TOTTING_UP_BAN"
+      },
+      {
+        "id": "new_driver_revocation",
+        "description": "Licence revocation for new drivers with 6+ points",
+        "conditions": [
+          { "field": "factors", "operator": "includes", "value": "newDriver" },
+          { "field": "percentageOver", "operator": ">=", "value": 50 }
+        ],
+        "consequence": "LONG_DISQUALIFICATION"
+      },
+      {
+        "id": "severe_speeding_ban",
+        "description": "Discretionary disqualification for severe speeding",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">=", "value": 100 }
+        ],
+        "consequence": "SHORT_DISQUALIFICATION"
+      },
+      {
+        "id": "court_prosecution_serious",
+        "description": "Court prosecution for serious speeding",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">=", "value": 50 }
+        ],
+        "consequence": "COURT_PROSECUTION"
+      },
+      {
+        "id": "speed_awareness_option",
+        "description": "Speed awareness course option for minor offences",
+        "conditions": [
+          { "field": "percentageOver", "operator": "<", "value": 50 },
+          { "field": "speedOverAbsolute", "operator": "<=", "value": 10 },
+          { "field": "factors", "operator": "not_includes", "value": "repeatOffender" }
+        ],
+        "consequence": "SPEED_AWARENESS_COURSE"
+      },
+      {
+        "id": "points_standard",
+        "description": "Standard penalty points for speeding",
+        "conditions": [
+          { "field": "percentageOver", "operator": ">=", "value": 0 }
+        ],
+        "consequence": "POINTS_ADDED"
+      }
+    ]
+  },
+  "labels": {
+    "yourSpeed": "Your Speed",
+    "speedLimit": "Speed Limit",
+    "roadType": "Road Type",
+    "vehicle": "Vehicle Type",
+    "factors": "Aggravating Factors"
+  },
+  "messages": {
+    "noFine": "No speeding offence",
+    "fine": "You will receive a fine of",
+    "clipLicense": "Penalty points will be added to your licence",
+    "conditionalLoss": "Court prosecution may be required",
+    "unconditionalLoss": "Disqualification may occur",
+    "overSpeed": "Speed too high to be realistic",
+    "defaultViolation": "Speeding offence",
+    "noFineCalculated": "No penalty calculated",
+    "fixed_penalty": "Fixed Penalty Notice",
+    "points_added": "Penalty points added to licence",
+    "speed_awareness": "Speed awareness course option available",
+    "court_prosecution": "Court prosecution required",
+    "short_ban": "Short disqualification (7-56 days)",
+    "long_ban": "Long disqualification or licence revocation",
+    "totting_up": "Totting up disqualification (12+ points)",
+    "unit": "£"
+  },
+  "speedLimitRules": [
+    {
+      "id": "car_mc_built_up",
+      "description": "Cars and motorcycles in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 40, "default": 30 }
+    },
+    {
+      "id": "car_mc_single_carriageway",
+      "description": "Cars and motorcycles on single carriageways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+      ],
+      "limits": { "min": 30, "max": 60, "default": 60 }
+    },
+    {
+      "id": "car_mc_dual_carriageway",
+      "description": "Cars and motorcycles on dual carriageways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "dualCarriageway" }
+      ],
+      "limits": { "min": 40, "max": 70, "default": 70 }
+    },
+    {
+      "id": "car_mc_motorway",
+      "description": "Cars and motorcycles on motorways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "motorway" }
+      ],
+      "limits": { "min": 50, "max": 70, "default": 70 }
+    },
+    {
+      "id": "van_built_up",
+      "description": "Vans in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "van" },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 30, "default": 30 }
+    },
+    {
+      "id": "van_single_dual_motorway",
+      "description": "Vans on single carriageways, dual carriageways and motorways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "van" },
+        { "field": "roadType", "operator": "in", "value": ["singleCarriageway", "dualCarriageway", "motorway"] }
+      ],
+      "limits": { "min": 30, "max": 70, "default": 60 }
+    },
+    {
+      "id": "hgv_built_up",
+      "description": "HGVs in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 30, "default": 30 }
+    },
+    {
+      "id": "hgv_single_carriageway",
+      "description": "HGVs on single carriageways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
+        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+      ],
+      "limits": { "min": 30, "max": 50, "default": 50 }
+    },
+    {
+      "id": "hgv_dual_motorway",
+      "description": "HGVs on dual carriageways and motorways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
+        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
+      ],
+      "limits": { "min": 40, "max": 60, "default": 60 }
+    },
+    {
+      "id": "bus_built_up",
+      "description": "Buses in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "bus" },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 30, "default": 30 }
+    },
+    {
+      "id": "bus_other_roads",
+      "description": "Buses on other roads",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "bus" },
+        { "field": "roadType", "operator": "in", "value": ["singleCarriageway", "dualCarriageway", "motorway"] }
+      ],
+      "limits": { "min": 30, "max": 60, "default": 60 }
+    },
+    {
+      "id": "caravan_built_up",
+      "description": "Cars with caravans/trailers in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 30, "default": 30 }
+    },
+    {
+      "id": "caravan_single_carriageway",
+      "description": "Cars with caravans/trailers on single carriageways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+      ],
+      "limits": { "min": 30, "max": 50, "default": 50 }
+    },
+    {
+      "id": "caravan_dual_motorway",
+      "description": "Cars with caravans/trailers on dual carriageways and motorways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
+      ],
+      "limits": { "min": 40, "max": 60, "default": 60 }
+    }
+  ]
+}

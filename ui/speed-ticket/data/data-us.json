@@ -2,7 +2,7 @@
   "locale": "en-US",
   "currency": "USD",
   "thresholds": {
-    "dangerPercentageOver": 40
+    "dangerPercentageOver": 50
   },
   "speedRange": {
     "min": 0,
@@ -19,14 +19,14 @@
   "circularRange": {
     "start": "220",
     "end": "500", 
-    "indices": "25",
-    "labels": "0:0,25:25,35:35,55:55,70:70,80:80"
+    "indices": "35",
+    "labels": "0:0,25:25,35:35,55:55,70:70,85:85"
   },
   "roadTypes": {
     "urban": {
       "id": "urban",
-      "label": "Urban Area",
-      "description": "City streets and urban roads",
+      "label": "Urban/City Streets",
+      "description": "City streets and urban areas",
       "defaultSpeed": 35,
       "minSpeed": 25,
       "maxSpeed": 45,
@@ -36,8 +36,8 @@
     },
     "suburban": {
       "id": "suburban", 
-      "label": "Suburban Road",
-      "description": "Suburban residential areas",
+      "label": "Suburban Roads",
+      "description": "Suburban residential and arterial roads",
       "defaultSpeed": 45,
       "minSpeed": 35,
       "maxSpeed": 55,
@@ -47,21 +47,21 @@
     },
     "rural": {
       "id": "rural",
-      "label": "Rural Road", 
-      "description": "Rural and country roads",
+      "label": "Rural Highways", 
+      "description": "Rural state highways and country roads",
       "defaultSpeed": 55,
       "minSpeed": 45,
-      "maxSpeed": 65,
+      "maxSpeed": 70,
       "value": 55,
       "video": "assets/landevej.mp4",
       "poster": "assets/landevej.avif"
     },
-    "highway": {
-      "id": "highway",
-      "label": "Interstate Highway",
-      "description": "Interstate highways",
+    "interstate": {
+      "id": "interstate",
+      "label": "Interstate Highways",
+      "description": "Interstate highways and freeways",
       "defaultSpeed": 70,
-      "minSpeed": 45,
+      "minSpeed": 55,
       "maxSpeed": 85,
       "value": 70,
       "video": "assets/motorvej.mp4",
@@ -71,7 +71,7 @@
   "vehicles": {
     "car": {
       "id": "car",
-      "label": "Passenger Car",
+      "label": "Passenger Vehicle",
       "value": 1,
       "category": "car"
     },
@@ -83,7 +83,7 @@
     },
     "truck": {
       "id": "truck",
-      "label": "Truck", 
+      "label": "Truck/RV", 
       "value": 3,
       "category": "truck"
     },
@@ -93,8 +93,8 @@
       "value": 4,
       "category": "commercial"
     },
-    "bus": {
-      "id": "bus",
+    "schoolBus": {
+      "id": "schoolBus",
       "label": "School Bus",
       "value": 5,
       "category": "bus"
@@ -104,108 +104,115 @@
     "schoolZone": {
       "id": "schoolZone",
       "label": "School Zone",
-      "description": "Speeding in an active school zone",
+      "description": "Speeding in an active school zone (doubled fines)",
       "value": 1,
       "multiplier": 2.0
     },
-    "constructionZone": {
-      "id": "constructionZone",
-      "label": "Construction Zone", 
-      "description": "Speeding in an active construction zone",
+    "workZone": {
+      "id": "workZone",
+      "label": "Work/Construction Zone", 
+      "description": "Speeding in an active work zone with workers present (doubled fines)",
       "value": 2,
       "multiplier": 2.0
     },
     "recklessDriving": {
       "id": "recklessDriving",
       "label": "Reckless Driving",
-      "description": "Excessive speeding with reckless behavior", 
+      "description": "Excessive speeding with dangerous behavior", 
       "value": 3,
       "multiplier": 1.5
     },
-    "newDriver": {
-      "id": "newDriver",
-      "label": "New Driver (Under 18)",
-      "description": "Driver under 18 years old",
+    "youthfulDriver": {
+      "id": "youthfulDriver",
+      "label": "Driver Under 21",
+      "description": "Enhanced penalties for drivers under 21",
       "value": 4,
-      "multiplier": 1.25
+      "multiplier": 1.2
     },
-    "trailer": {
-      "id": "trailer",
+    "towing": {
+      "id": "towing",
       "label": "Towing Trailer",
-      "description": "Vehicle towing a trailer",
+      "description": "Vehicle towing a trailer or mobile home",
       "value": 5,
       "multiplier": 1.0
+    },
+    "priorOffenses": {
+      "id": "priorOffenses",
+      "label": "Repeat Offender",
+      "description": "Multiple speeding violations in 18 months",
+      "value": 6,
+      "multiplier": 1.5
     }
   },
-  "speedLimits": [25, 35, 45, 55, 65, 70, 75, 80, 85],
+  "speedLimits": [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85],
   "penaltyRanges": [
     {
       "percentageOver": 0,
-      "rate1": 75,
-      "rate2": 100, 
-      "rate3": 150,
-      "description": "Minor speeding violation",
-      "consequence": "Fine only",
+      "rate1": 95,
+      "rate2": 125, 
+      "rate3": 175,
+      "description": "Minor speeding (1-10 mph over)",
+      "consequence": "Fine + 3 points",
       "summary": "Minor violation"
     },
     {
-      "percentageOver": 15,
-      "rate1": 125,
-      "rate2": 175,
-      "rate3": 225,
-      "description": "Moderate speeding violation", 
-      "consequence": "Fine + 2 points",
+      "percentageOver": 20,
+      "rate1": 150,
+      "rate2": 190,
+      "rate3": 240,
+      "description": "Moderate speeding (11-20 mph over)", 
+      "consequence": "Fine + 4 points",
       "summary": "Moderate violation"
     },
     {
-      "percentageOver": 30,
-      "rate1": 200,
-      "rate2": 275,
-      "rate3": 350,
-      "description": "Serious speeding violation",
-      "consequence": "High fine + 4 points",
+      "percentageOver": 40,
+      "rate1": 240,
+      "rate2": 320,
+      "rate3": 420,
+      "description": "Serious speeding (21-30 mph over)",
+      "consequence": "High fine + 6 points",
       "summary": "Serious violation"
     },
     {
-      "percentageOver": 45,
-      "rate1": 325,
-      "rate2": 450, 
-      "rate3": 575,
-      "description": "Severe speeding violation",
-      "consequence": "Very high fine + 6 points",
+      "percentageOver": 60,
+      "rate1": 380,
+      "rate2": 520, 
+      "rate3": 680,
+      "description": "Severe speeding (31-40 mph over)",
+      "consequence": "Very high fine + 8 points",
       "summary": "Severe violation"
     },
     {
-      "percentageOver": 60,
-      "rate1": 500,
-      "rate2": 700,
-      "rate3": 900,
-      "description": "Extreme speeding violation",
-      "consequence": "Maximum fine + license review",
+      "percentageOver": 80,
+      "rate1": 580,
+      "rate2": 780,
+      "rate3": 980,
+      "description": "Extreme speeding (41+ mph over)",
+      "consequence": "Maximum fine + 11 points + license review",
       "summary": "Extreme violation"
     },
     {
-      "percentageOver": 75,
-      "rate1": 750,
-      "rate2": 1000,
-      "rate3": 1250,
-      "description": "Dangerous speeding violation", 
-      "consequence": "Court appearance required",
-      "summary": "Dangerous driving"
+      "percentageOver": 100,
+      "rate1": 800,
+      "rate2": 1150,
+      "rate3": 1500,
+      "description": "Reckless speeding (50+ mph over)", 
+      "consequence": "Court appearance + possible license suspension",
+      "summary": "Reckless driving"
     },
     {
-      "percentageOver": 90,
-      "rate1": 1000,
-      "rate2": 1350,
-      "rate3": 1700,
-      "description": "Reckless endangerment",
-      "consequence": "Criminal charges possible",
-      "summary": "Reckless driving"
+      "percentageOver": 140,
+      "rate1": 1200,
+      "rate2": 1600,
+      "rate3": 2000,
+      "description": "Criminal speeding (excessive speed)",
+      "consequence": "Criminal charges + license suspension",
+      "summary": "Criminal violation"
     }
   ],
   "rateCategories": {
     "rate1": {
-      "description": "Standard rate for passenger vehicles on local roads",
+      "description": "Standard rate for passenger vehicles on local roads (under 65 mph)",
       "conditions": {
         "speedLimit": "< 65",
         "vehicle": ["car", "mc"],
@@ -213,7 +220,7 @@
       }
     },
     "rate2": {
-      "description": "Higher rate for highway speeds", 
+      "description": "Highway rate for passenger vehicles (65+ mph speeds)", 
       "conditions": {
         "speedLimit": ">= 65",
         "vehicle": ["car", "mc"],
@@ -221,7 +228,7 @@
       }
     },
     "rate3": {
-      "description": "Commercial vehicle and trailer rate",
+      "description": "Commercial vehicles, trucks, buses, and vehicles with trailers",
       "conditions": {
         "vehicle": ["truck", "commercial", "bus"],
         "trailer": true
@@ -252,6 +259,12 @@
       "severity": 6,
       "messageKey": "criminal_charges",
       "preventsFine": false
+    },
+    "LICENSE_REVOCATION": {
+      "id": "LICENSE_REVOCATION",
+      "severity": 7,
+      "messageKey": "license_revoked",
+      "preventsFine": false
     }
   },
   "ruleEngine": {
@@ -264,7 +277,7 @@
             "type": "or",
             "rules": [
               { "field": "vehicle.category", "operator": "in", "value": ["truck", "commercial", "bus"] },
-              { "field": "factors", "operator": "includes", "value": "trailer" }
+              { "field": "factors", "operator": "includes", "value": "towing" }
             ]
           }
         ],
@@ -272,62 +285,71 @@
       },
       {
         "id": "rate2_highway",
-        "description": "Highway speeds for cars and motorcycles",
+        "description": "Highway speeds (65+ mph) for passenger vehicles and motorcycles",
         "conditions": [
           { "field": "speedLimit", "operator": ">=", "value": 65 },
           { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-          { "field": "factors", "operator": "not_includes", "value": "trailer" }
+          { "field": "factors", "operator": "not_includes", "value": "towing" }
         ],
         "result": "rate2"
       },
       {
         "id": "rate1_default",
-        "description": "Standard rate for local roads",
+        "description": "Standard rate for local roads and lower speed limits",
         "conditions": [],
         "result": "rate1"
       }
     ],
     "penaltyRules": [
       {
-        "id": "school_construction_penalty",
-        "description": "Double fine in school or construction zones",
+        "id": "school_work_zone_penalty",
+        "description": "Double fine in active school zones or work zones with workers present",
         "conditions": [
           {
             "type": "or",
             "rules": [
               { "field": "factors", "operator": "includes", "value": "schoolZone" },
-              { "field": "factors", "operator": "includes", "value": "constructionZone" }
+              { "field": "factors", "operator": "includes", "value": "workZone" }
             ]
           },
-          { "field": "percentageOver", "operator": ">=", "value": 10 }
+          { "field": "percentageOver", "operator": ">=", "value": 5 }
+        ],
+        "penalty": 100
+      },
+      {
+        "id": "extreme_speed_penalty",
+        "description": "Additional penalty for speeds over 100 mph on any road",
+        "conditions": [
+          { "field": "speed", "operator": ">=", "value": 100 }
+        ],
+        "formula": {
+          "type": "calculation",
+          "expression": "Math.floor((speed - 100) / 5) * 100 + 300"
+        }
+      },
+      {
+        "id": "urban_excessive_speed_penalty",
+        "description": "Enhanced penalty for dangerous speeds in urban areas",
+        "conditions": [
+          { "field": "roadType", "operator": "=", "value": "urban" },
+          { "field": "percentageOver", "operator": ">=", "value": 50 }
         ],
         "penalty": 150
       },
       {
-        "id": "extreme_speed_penalty",
-        "description": "Additional penalty for speeds over 90 mph",
+        "id": "repeat_offender_penalty",
+        "description": "Enhanced penalty for repeat offenders",
         "conditions": [
-          { "field": "speed", "operator": ">=", "value": 90 }
+          { "field": "factors", "operator": "includes", "value": "priorOffenses" },
+          { "field": "percentageOver", "operator": ">=", "value": 20 }
         ],
-        "formula": {
-          "type": "calculation",
-          "expression": "Math.floor((speed - 90) / 5) * 75 + 200"
-        }
-      },
-      {
-        "id": "urban_high_speed_penalty",
-        "description": "Extra penalty for high speeds in urban areas",
-        "conditions": [
-          { "field": "roadType", "operator": "=", "value": "urban" },
-          { "field": "percentageOver", "operator": ">=", "value": 40 }
-        ],
-        "penalty": 100
+        "penalty": 200
       }
     ],
     "consequenceRules": [
       {
         "id": "criminal_charges_extreme",
-        "description": "Criminal charges for extreme speeding",
+        "description": "Criminal charges for extreme speeding (120+ mph or 50+ over)",
         "conditions": [
           {
             "type": "or",
@@ -336,8 +358,8 @@
               {
                 "type": "and",
                 "rules": [
-                  { "field": "percentageOver", "operator": ">=", "value": 90 },
-                  { "field": "speed", "operator": ">=", "value": 85 }
+                  { "field": "percentageOver", "operator": ">=", "value": 140 },
+                  { "field": "speed", "operator": ">=", "value": 90 }
                 ]
               }
             ]
@@ -346,8 +368,22 @@
         "consequence": "CRIMINAL_CHARGES"
       },
       {
+        "id": "license_revocation_extreme",
+        "description": "License revocation for three violations in 18 months",
+        "conditions": [
+          {
+            "type": "and",
+            "rules": [
+              { "field": "factors", "operator": "includes", "value": "priorOffenses" },
+              { "field": "percentageOver", "operator": ">=", "value": 60 }
+            ]
+          }
+        ],
+        "consequence": "LICENSE_REVOCATION"
+      },
+      {
         "id": "license_suspension_high_speed",
-        "description": "License suspension for very high speeds",
+        "description": "License suspension for dangerous speeds (100+ mph or 40+ over)",
         "conditions": [
           {
             "type": "or",
@@ -356,8 +392,8 @@
               {
                 "type": "and",
                 "rules": [
-                  { "field": "percentageOver", "operator": ">=", "value": 75 },
-                  { "field": "speed", "operator": ">=", "value": 75 }
+                  { "field": "percentageOver", "operator": ">=", "value": 100 },
+                  { "field": "speed", "operator": ">=", "value": 85 }
                 ]
               }
             ]
@@ -367,24 +403,31 @@
       },
       {
         "id": "court_appearance_required",
-        "description": "Court appearance required for serious violations",
+        "description": "Mandatory court appearance for serious violations",
         "conditions": [
           {
             "type": "or",
             "rules": [
-              { "field": "percentageOver", "operator": ">=", "value": 75 },
+              { "field": "percentageOver", "operator": ">=", "value": 100 },
               {
                 "type": "and",
                 "rules": [
                   { "field": "factors", "operator": "includes", "value": "recklessDriving" },
-                  { "field": "percentageOver", "operator": ">=", "value": 45 }
+                  { "field": "percentageOver", "operator": ">=", "value": 60 }
                 ]
               },
               {
                 "type": "and",
                 "rules": [
                   { "field": "factors", "operator": "includes", "value": "schoolZone" },
-                  { "field": "percentageOver", "operator": ">=", "value": 30 }
+                  { "field": "percentageOver", "operator": ">=", "value": 40 }
+                ]
+              },
+              {
+                "type": "and",
+                "rules": [
+                  { "field": "factors", "operator": "includes", "value": "workZone" },
+                  { "field": "percentageOver", "operator": ">=", "value": 40 }
                 ]
               }
             ]
@@ -393,10 +436,10 @@
         "consequence": "COURT_APPEARANCE"
       },
       {
-        "id": "license_points_moderate",
-        "description": "License points for moderate violations",
+        "id": "license_points_all",
+        "description": "License points for all speeding violations",
         "conditions": [
-          { "field": "percentageOver", "operator": ">=", "value": 15 }
+          { "field": "percentageOver", "operator": ">=", "value": 0 }
         ],
         "consequence": "LICENSE_POINTS"
       }
@@ -404,7 +447,7 @@
   },
   "labels": {
     "yourSpeed": "Your Speed",
-    "speedLimit": "Speed Limit",
+    "speedLimit": "Posted Speed Limit",
     "roadType": "Road Type",
     "vehicle": "Vehicle Type",
     "factors": "Special Conditions"
@@ -420,14 +463,15 @@
     "noFineCalculated": "No fine calculated",
     "license_suspension": "License suspension required",
     "court_required": "Court appearance required",
-    "points_added": "Points added to license",
+    "points_added": "Points added to your license",
     "criminal_charges": "Criminal charges may apply",
+    "license_revoked": "License revocation may occur",
     "unit": "$"
   },
   "speedLimitRules": [
     {
-      "id": "car_mc_urban",
-      "description": "Cars and motorcycles in urban areas",
+      "id": "passenger_urban",
+      "description": "Passenger vehicles in urban areas",
       "conditions": [
         { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
         { "field": "roadType", "operator": "=", "value": "urban" }
@@ -435,8 +479,8 @@
       "limits": { "min": 25, "max": 45, "default": 35 }
     },
     {
-      "id": "car_mc_suburban",
-      "description": "Cars and motorcycles in suburban areas",
+      "id": "passenger_suburban",
+      "description": "Passenger vehicles in suburban areas",
       "conditions": [
         { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
         { "field": "roadType", "operator": "=", "value": "suburban" }
@@ -444,29 +488,29 @@
       "limits": { "min": 35, "max": 55, "default": 45 }
     },
     {
-      "id": "car_mc_rural",
-      "description": "Cars and motorcycles on rural roads",
+      "id": "passenger_rural",
+      "description": "Passenger vehicles on rural highways",
       "conditions": [
         { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
         { "field": "roadType", "operator": "=", "value": "rural" }
       ],
-      "limits": { "min": 45, "max": 65, "default": 55 }
+      "limits": { "min": 45, "max": 70, "default": 55 }
     },
     {
-      "id": "car_mc_highway",
-      "description": "Cars and motorcycles on highways",
+      "id": "passenger_interstate",
+      "description": "Passenger vehicles on interstate highways",
       "conditions": [
         { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "highway" }
+        { "field": "roadType", "operator": "=", "value": "interstate" }
       ],
       "limits": { "min": 55, "max": 85, "default": 70 }
     },
     {
-      "id": "car_mc_trailer_all",
-      "description": "Cars and motorcycles with trailers",
+      "id": "passenger_towing",
+      "description": "Passenger vehicles towing trailers (all roads)",
       "conditions": [
         { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
+        { "field": "factors", "operator": "includes", "value": "towing" }
       ],
       "limits": { "min": 35, "max": 65, "default": 55 }
     },
@@ -481,25 +525,25 @@
     },
     {
       "id": "truck_rural",
-      "description": "Trucks on rural roads",
+      "description": "Trucks on rural highways",
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "truck" },
         { "field": "roadType", "operator": "=", "value": "rural" }
       ],
-      "limits": { "min": 45, "max": 55, "default": 55 }
+      "limits": { "min": 45, "max": 65, "default": 55 }
     },
     {
-      "id": "truck_highway",
-      "description": "Trucks on highways",
+      "id": "truck_interstate",
+      "description": "Trucks on interstate highways",
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "highway" }
+        { "field": "roadType", "operator": "=", "value": "interstate" }
       ],
-      "limits": { "min": 55, "max": 70, "default": 65 }
+      "limits": { "min": 55, "max": 75, "default": 65 }
     },
     {
-      "id": "commercial_urban_suburban",
-      "description": "Commercial vehicles in urban and suburban areas",
+      "id": "commercial_local",
+      "description": "Commercial vehicles on local roads",
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "commercial" },
         { "field": "roadType", "operator": "in", "value": ["urban", "suburban"] }
@@ -507,17 +551,17 @@
       "limits": { "min": 25, "max": 45, "default": 35 }
     },
     {
-      "id": "commercial_rural_highway",
-      "description": "Commercial vehicles on rural roads and highways",
+      "id": "commercial_highway",
+      "description": "Commercial vehicles on highways",
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "commercial" },
-        { "field": "roadType", "operator": "in", "value": ["rural", "highway"] }
+        { "field": "roadType", "operator": "in", "value": ["rural", "interstate"] }
       ],
-      "limits": { "min": 45, "max": 70, "default": 60 }
+      "limits": { "min": 45, "max": 75, "default": 65 }
     },
     {
-      "id": "bus_all_roads",
-      "description": "School buses on all road types",
+      "id": "school_bus_all",
+      "description": "School buses on all road types (enhanced safety)",
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "bus" }
       ],
