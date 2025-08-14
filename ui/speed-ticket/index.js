@@ -7,7 +7,7 @@ class SpeedTicket extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this.data = null;
 		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set() };
-		this.previousStatus = null;
+		this.previousSummary = null;
 		this.setupStyles();
 	}
 
@@ -36,7 +36,7 @@ class SpeedTicket extends HTMLElement {
 
 			@keyframes pulse-info {
 				0% { transform: scale(1); }
-				50% { transform: scale(1.05); }
+				50% { transform: scale(1.1); }
 				100% { transform: scale(1); }
 			}
 
@@ -207,7 +207,7 @@ class SpeedTicket extends HTMLElement {
 				}
 
 				&.pulse {
-					animation: pulse-info 0.3s ease-in-out;
+					animation: pulse-info 0.5s ease-in-out;
 				}
 			}
 
@@ -374,16 +374,16 @@ class SpeedTicket extends HTMLElement {
 		if (form.fine) form.fine.textContent = results.fine;
 		if (form.description) form.description.textContent = results.description;
 		if (form.summary) {
+			const summaryChanged = this.previousSummary !== null && this.previousSummary !== results.summary;
 			form.summary.textContent = results.summary;
-			const statusChanged = this.previousStatus && this.previousStatus !== results.status;
 			form.summary.className = results.status;
 			
-			if (statusChanged) {
+			if (summaryChanged) {
 				form.summary.classList.add('pulse');
-				setTimeout(() => form.summary.classList.remove('pulse'), 300);
+				setTimeout(() => form.summary.classList.remove('pulse'), 600);
 			}
 			
-			this.previousStatus = results.status;
+			this.previousSummary = results.summary;
 		}
 		
 		const resultFieldset = form.querySelector('[name="result"]');
