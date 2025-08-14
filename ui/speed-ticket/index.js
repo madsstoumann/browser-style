@@ -171,8 +171,9 @@ class SpeedTicket extends HTMLElement {
 			border-radius: .33em;
 			cursor: pointer;
 			display: flex;
+			font-size: inherit;
 			justify-content: space-between;
-			min-width: 10rem;
+			min-width: 12rem;
 			padding: 1.25ch 2ch;
 		}
 
