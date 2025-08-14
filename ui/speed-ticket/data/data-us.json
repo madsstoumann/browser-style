@@ -31,8 +31,7 @@
       "minSpeed": 25,
       "maxSpeed": 45,
       "value": 35,
-      "video": "assets/byzone.mp4",
-      "poster": "assets/byzone.avif"
+      "video": "/assets/video/city.mp4"
     },
     "suburban": {
       "id": "suburban", 
@@ -42,8 +41,7 @@
       "minSpeed": 35,
       "maxSpeed": 55,
       "value": 45,
-      "video": "assets/landevej.mp4",
-      "poster": "assets/landevej.avif"
+      "video": "/assets/video/suburban.mp4"
     },
     "rural": {
       "id": "rural",
@@ -53,8 +51,7 @@
       "minSpeed": 45,
       "maxSpeed": 70,
       "value": 55,
-      "video": "assets/landevej.mp4",
-      "poster": "assets/landevej.avif"
+      "video": "/assets/video/rural.mp4"
     },
     "interstate": {
       "id": "interstate",
@@ -64,8 +61,7 @@
       "minSpeed": 55,
       "maxSpeed": 85,
       "value": 70,
-      "video": "assets/motorvej.mp4",
-      "poster": "assets/motorvej.avif"
+      "video": "/assets/video/highway.mp4"
     }
   },
   "vehicles": {

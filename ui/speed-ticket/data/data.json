@@ -31,8 +31,7 @@
       "minSpeed": 30,
       "maxSpeed": 80,
       "value": 50,
-      "video": "assets/byzone.mp4",
-      "poster": "assets/byzone.avif"
+      "video": "/assets/video/byzone.mp4"
     },
     "countryRoad": {
       "id": "countryRoad", 
@@ -42,7 +41,7 @@
       "minSpeed": 40,
       "maxSpeed": 90,
       "value": 80,
-      "video": "assets/landevej.mp4",
+      "video": "/assets/video/landevej.mp4",
       "poster": "assets/landevej.avif"
     },
     "expressway": {
@@ -53,8 +52,7 @@
       "minSpeed": 40,
       "maxSpeed": 90,
       "value": 90,
-      "video": "assets/motorvej.mp4",
-      "poster": "assets/motorvej.avif"
+      "video": "/assets/video/motorvej.mp4"
     },
     "highway": {
       "id": "highway",
@@ -64,8 +62,7 @@
       "minSpeed": 40,
       "maxSpeed": 130,
       "value": 130,
-      "video": "assets/motorvej.mp4",
-      "poster": "assets/motorvej.avif"
+      "video": "/assets/video/motorvej.mp4"
     }
   },
   "vehicles": {

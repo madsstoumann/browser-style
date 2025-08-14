@@ -38,14 +38,14 @@ class SpeedTicket extends HTMLElement {
 			input, select { font-family: inherit; font-size: small; }
 			select { border: 0; padding: 1ch 2ch; }
 
-			select, summary {
-				appearance: none;
-				background: #FFF;
-				border: 0;
-				color: #222;
-				padding: 1ch 2ch;
-				font-size: small;
-			}
+			// select, summary {
+			// 	appearance: none;
+			// 	background: #FFF;
+			// 	border: 0;
+			// 	color: #222;
+			// 	padding: 1ch 2ch;
+			// 	font-size: small;
+			// }
 
 			[name="speed"] { display: contents; }
 			[part="header"] { 
@@ -75,7 +75,7 @@ class SpeedTicket extends HTMLElement {
 				gap: 1rem;
 				grid-area: 4 / 1 / 5 / 1;
 				justify-content: center;
-				padding: 1ch 2ch;
+				padding: 2ch;
 				z-index: 1;
 			}
 			[name="selection"] legend { font-size: x-small; font-weight: 400; margin-block-end: .5ch; }
@@ -146,6 +146,50 @@ class SpeedTicket extends HTMLElement {
 			output[name="summary"].pulse {
 				animation: pulse-info 0.3s ease-in-out;
 			}
+
+		details[open] {
+			&::details-content {
+				padding-block: 1ch;
+			}
+			summary {
+				
+			}
+		}
+
+		select, summary {
+			align-items: center;
+			align-self: start;
+			appearance: none;
+			background-color: #0002;
+			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
+			background-position: right 10px center;
+			background-repeat: no-repeat;
+			background-size: 20px;
+			backdrop-filter: blur(5px);
+			color: #FFF;
+			border: 1px solid #8D8D8D;
+			border-radius: .33em;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			min-width: 10rem;
+			padding: 1.25ch 2ch;
+		}
+
+		select {
+			@supports (appearance: base-select) {
+				&, &::picker(select) { appearance: base-select; }
+				background-image: none;
+				&:open::picker-icon { scale: -1; }
+				&::picker-icon {
+					content: "";
+					width: 20px;
+					height: 20px;
+					background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
+					transition: scale 0.2s ease-out;
+				}
+			}
+		}
 			
 			[part=unit] {
 				color: #EEEe;
