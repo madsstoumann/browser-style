@@ -132,7 +132,7 @@ class SpeedTicket extends HTMLElement {
 				--circular-range-thumb: var(--speed-success-bg);
 				--circular-range-labels-c: #FFF8;
 				--circular-range-indice-c: #FFF8;
-				--circular-range-track: #F0F0F073;
+				--circular-range-track: #ACACAC;
 				--circular-range-w: 60dvh;
 				grid-area: 2 / 1 / 4 / 1; 
 				place-self: center;
@@ -148,10 +148,6 @@ class SpeedTicket extends HTMLElement {
 
 				&::part(label-200) { 
 					padding-inline-end: 1rem; 
-				}
-
-				&::part(track)::after { 
-					mix-blend-mode: exclusion; 
 				}
 			}
 
@@ -312,7 +308,8 @@ class SpeedTicket extends HTMLElement {
 					<legend part="header">${labels.yourSpeed}
 						<small>${labels.speedLimit}: <output name="limit">${speedLimit}</output> ${speedRange.unit}</small>
 					</legend>
-					<video-scrub poster="${roadTypes[this.state.roadType].poster}" src="${roadTypes[this.state.roadType].video}" 
+					<video-scrub src="${roadTypes[this.state.roadType].video}"
+						${roadTypes[this.state.roadType].poster ? `poster="${roadTypes[this.state.roadType].poster}"` : ''} 
 						min="${speedRange.min}" max="${speedRange.max}" value="${this.state.speed}"></video-scrub>
 					<circular-range name="value" min="${speedRange.min}" max="${speedRange.max}" value="${this.state.speed}" 
 						start="${circularRange.start}" end="${circularRange.end}" indices="${circularRange.indices}" 

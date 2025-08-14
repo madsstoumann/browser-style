@@ -48,10 +48,26 @@ class CircularRange extends HTMLElement {
 			max-width: var(--circular-range-maw);
 			place-items: center;
 			touch-action: none;
+			user-select: none;
 			width: var(--circular-range-w, 100%);
 		}
 
-		*:not([part="thumb"]) { user-select: none; }
+		[part]:not([part="thumb"]) { 
+			pointer-events: none; 
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		::slotted(*) { 
+			pointer-events: none; 
+			user-select: none;
+			-webkit-user-select: none;
+		}
+		
+		/* Prevent selection on all pseudo-elements */
+		::before, ::after {
+			user-select: none;
+			-webkit-user-select: none;
+		}
 
 		:host(:focus-visible) {
 			outline: 0;
@@ -121,7 +137,6 @@ class CircularRange extends HTMLElement {
 		[part="thumb"] {
 			grid-area: var(--_ga);
 			height: 100%;
-			pointer-events: none;
 			rotate: calc(1deg * var(--_fill, 0));
 			width: var(--circular-range-track-sz);
 			will-change: transform;
@@ -154,6 +169,7 @@ class CircularRange extends HTMLElement {
 			grid-column: 1;
 			grid-row: var(--circular-range-output-gr);
 			isolation: isolate;
+			pointer-events: none;
 			text-box: cap alphabetic;
 		}
 
@@ -174,7 +190,6 @@ class CircularRange extends HTMLElement {
 		/* === INDICES === */
 
 		[part="indices"] {
-			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
 			grid-area: var(--_ga);
@@ -195,7 +210,6 @@ class CircularRange extends HTMLElement {
 		/* === LABELS === */
 
 		[part="labels"] {
-			all: unset;
 			aspect-ratio: 1;
 			border-radius: 50%;
 			color: var(--circular-range-labels-c);
