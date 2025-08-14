@@ -7,6 +7,7 @@ class SpeedTicket extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this.data = null;
 		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set() };
+		this.previousStatus = null;
 		this.setupStyles();
 	}
 
@@ -29,100 +30,8 @@ class SpeedTicket extends HTMLElement {
 
 				display: block;
 				font-family: Bahnschrift, 'DIN Alternate', 'Franklin Gothic Medium', 'Nimbus Sans Narrow', sans-serif-condensed, system-ui, sans-serif;
-			}
 
-			:host * { box-sizing: border-box; }
-			fieldset { all: unset; }
-			form { display: grid; grid-template-rows: min-content 1fr 1fr min-content; height: 100dvh; }
-			label { display: block; }
-			input, select { font-family: inherit; font-size: small; }
-			select { border: 0; padding: 1ch 2ch; }
-
-			// select, summary {
-			// 	appearance: none;
-			// 	background: #FFF;
-			// 	border: 0;
-			// 	color: #222;
-			// 	padding: 1ch 2ch;
-			// 	font-size: small;
-			// }
-
-			[name="speed"] { display: contents; }
-			[part="header"] { 
-				color: #FFF;
-				font-size: clamp(1.75rem, 4vw, 2.5rem);
-				grid-area: 1 / 1;
-				margin-block: 1ch;
-				text-align: center;
-				z-index: 1;
-			}
-			[part="header"] small {
-				display: block;
-				font-size: 0.9rem;
-				font-weight: 300;
-			}
-			[name="result"] {
-				align-items: center;
-				display: flex;
-				height: 4rem;
-				justify-content: center;
-				padding: 1ch 2ch;
-			}
-			@media (max-height: 600px) { [name="result"] { height: 3rem; } }
-			[name="selection"] {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 1rem;
-				grid-area: 4 / 1 / 5 / 1;
-				justify-content: center;
-				padding: 2ch;
-				z-index: 1;
-			}
-			[name="selection"] legend { font-size: x-small; font-weight: 400; margin-block-end: .5ch; }
-			[name="selection"] span { font-size: small; font-weight: 300; }
-
-			circular-range { grid-area: 2 / 1 / 4 / 1; place-self: center; }
-			video-scrub {
-				--video-scrub-h: 100%;
-				--video-scrub-mask: radial-gradient(circle at 50% 50%, #000 50%, #0000 80%);
-				grid-area: 1 / 1 / 5 / 1;
-				pointer-events: none;
-			}
-
-			input[type="radio"], input[type="checkbox"] {
-				margin-right: .5rem;
-			}
-
-			output[name="description"] {
-				display: block;
-				font-size: clamp(.75rem, 2vw, 1rem);
-				padding: 1ch 2ch;		
-			}
-			
-			.info {
-				background: var(--speed-info-bg);
-				color: var(--speed-info-fg);
-			}
-			
-			.success {
-				background-color: var(--speed-success-bg);
-				color: var(--speed-success-fg);
-			}
-			
-			.warning {
-				background-color: var(--speed-warning-bg);
-				color: var(--speed-warning-fg);
-			}
-			
-			.danger {
-				background-color: var(--speed-danger-bg);
-				color: var(--speed-danger-fg);
-			}
-			
-			output[name="fine"] {
-				font-size: clamp(1.5rem, 3vw, 2.5rem);
-				display: block;
-				font-weight: bold;
+				* { box-sizing: border-box; }
 			}
 
 			@keyframes pulse-info {
@@ -131,67 +40,78 @@ class SpeedTicket extends HTMLElement {
 				100% { transform: scale(1); }
 			}
 
-			output[name="summary"] {
-				border-radius: 2em;
-				font-size: small;
-				grid-row: 5;
-				grid-column: 1;
-				isolation: isolate;
-				align-self: end;
-				padding: .5em 1.5em;
-				text-box: cap alphabetic;
-				transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
-			}
-			output[name="summary"]:empty { visibility: hidden; }
-			output[name="summary"].pulse {
-				animation: pulse-info 0.3s ease-in-out;
+			@media (max-height: 600px) { 
+				[name="result"] { height: 3rem; } 
 			}
 
-		details[open] {
-			&::details-content {
-				padding-block: 1ch;
+			.danger {
+				background-color: var(--speed-danger-bg);
+				color: var(--speed-danger-fg);
 			}
-			summary {
-				
+
+			.info {
+				background: var(--speed-info-bg);
+				color: var(--speed-info-fg);
 			}
-		}
 
-		select, summary {
-			align-items: center;
-			align-self: start;
-			appearance: none;
-			background-color: #0002;
-			background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
-			background-position: right 10px center;
-			background-repeat: no-repeat;
-			background-size: 20px;
-			backdrop-filter: blur(5px);
-			color: #FFF;
-			border: 1px solid #8D8D8D;
-			border-radius: .33em;
-			cursor: pointer;
-			display: flex;
-			font-size: inherit;
-			justify-content: space-between;
-			min-width: 12rem;
-			padding: 1.25ch 2ch;
-		}
+			.success {
+				background-color: var(--speed-success-bg);
+				color: var(--speed-success-fg);
+			}
 
-		select {
-			@supports (appearance: base-select) {
-				&, &::picker(select) { appearance: base-select; }
-				background-image: none;
-				&:open::picker-icon { scale: -1; }
-				&::picker-icon {
-					content: "";
-					width: 20px;
-					height: 20px;
-					background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
-					transition: scale 0.2s ease-out;
+			.warning {
+				background-color: var(--speed-warning-bg);
+				color: var(--speed-warning-fg);
+			}
+
+			[name="result"] {
+				align-items: center;
+				display: flex;
+				height: 4rem;
+				justify-content: center;
+				padding: 1ch 2ch;
+			}
+
+			[name="selection"] {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1rem;
+				grid-area: 4 / 1 / 5 / 1;
+				justify-content: center;
+				padding: 2ch;
+				z-index: 1;
+
+				legend { 
+					font-size: x-small; 
+					font-weight: 400; 
+					margin-block-end: .5ch; 
+				}
+
+				span { 
+					font-size: small; 
+					font-weight: 300; 
 				}
 			}
-		}
-			
+
+			[name="speed"] { 
+				display: contents; 
+			}
+
+			[part="header"] { 
+				color: #FFF;
+				font-size: clamp(1.75rem, 4vw, 2.5rem);
+				grid-area: 1 / 1;
+				margin-block: 1ch;
+				text-align: center;
+				z-index: 1;
+
+				small {
+					display: block;
+					font-size: 0.9rem;
+					font-weight: 300;
+				}
+			}
+
 			[part=unit] {
 				color: #EEEe;
 				grid-column: 1;
@@ -200,6 +120,9 @@ class SpeedTicket extends HTMLElement {
 			}
 
 			circular-range {
+				--circular-range-bg: rgba(0, 0, 0, 0.2);
+				--circular-range-bg-mask: linear-gradient(to bottom, #000 50%, #0000 85%);
+				--circular-range-bg-scale: 1.1;
 				--circular-range-output-fs: 3rem;
 				--circular-range-output-fw: 700;
 				--circular-range-output-gr: 3;
@@ -211,14 +134,136 @@ class SpeedTicket extends HTMLElement {
 				--circular-range-indice-c: #FFF8;
 				--circular-range-track: #F0F0F073;
 				--circular-range-w: 60dvh;
+				grid-area: 2 / 1 / 4 / 1; 
+				place-self: center;
+
+				&::part(active-label) {
+					color: #FFF;
+					font-weight: bold;
+				}
+
+				&::part(label-0) { 
+					padding-inline-start: 1rem; 
+				}
+
+				&::part(label-200) { 
+					padding-inline-end: 1rem; 
+				}
+
+				&::part(track)::after { 
+					mix-blend-mode: exclusion; 
+				}
 			}
-			circular-range::part(active-label) {
-				color: #FFF;
+
+			details[open] {
+				&::details-content {
+					padding-block: 1ch;
+				}
+			}
+
+			fieldset { 
+				all: unset; 
+			}
+
+			form { 
+				display: grid; 
+				grid-template-rows: min-content 1fr 1fr min-content; 
+				height: 100dvh; 
+			}
+
+			input, select { 
+				font-family: inherit;
+			}
+
+			input[type="radio"], input[type="checkbox"] {
+				margin-right: .5rem;
+			}
+
+			label { 
+				display: block; 
+			}
+
+			output[name="description"] {
+				display: block;
+				font-size: clamp(.75rem, 2vw, 1rem);
+				padding: 1ch 2ch;		
+			}
+
+			output[name="fine"] {
+				font-size: clamp(1.5rem, 3vw, 2.5rem);
+				display: block;
 				font-weight: bold;
 			}
-			circular-range::part(label-0) { padding-inline-start: 1rem; }
-			circular-range::part(label-200) { padding-inline-end: 1rem; }
-			circular-range::part(track)::after { mix-blend-mode: exclusion; }
+
+			output[name="summary"] {
+				border-radius: 2em;
+				font-size: small;
+				grid-row: 5;
+				grid-column: 1;
+				isolation: isolate;
+				align-self: end;
+				padding: .5em 1.5em;
+				text-box: text;
+				transition: background-color 0.3s ease, color 0.3s ease, opacity 0.2s ease;
+
+				&:empty { 
+					visibility: hidden; 
+				}
+
+				&.pulse {
+					animation: pulse-info 0.3s ease-in-out;
+				}
+			}
+
+			select, summary {
+				align-items: center;
+				align-self: start;
+				appearance: none;
+				background-color: #0002;
+				background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
+				background-position: right 10px center;
+				background-repeat: no-repeat;
+				background-size: 20px;
+				backdrop-filter: blur(5px);
+				color: #FFF;
+				border: 1px solid #8D8D8D;
+				border-radius: .33em;
+				cursor: pointer;
+				display: flex;
+				justify-content: space-between;
+				min-width: 12rem;
+				padding: 1.25ch 2ch;
+			}
+
+			select {
+				font-size: inherit;
+				@supports (appearance: base-select) {
+					&, &::picker(select) { 
+						appearance: base-select; 
+					}
+					
+					background-image: none;
+
+					&:open::picker-icon { 
+						scale: -1; 
+					}
+
+					&::picker-icon {
+						content: "";
+						width: 20px;
+						height: 20px;
+						background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23FFF' class='size-6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' /%3E%3C/svg%3E%0A");
+						transition: scale 0.2s ease-out;
+					}
+				}
+			}
+
+			video-scrub {
+				--video-scrub-h: 100%;
+				--video-scrub-mask: radial-gradient(circle at 50% 50%, #000 50%, #0000 80%);
+				grid-area: 1 / 1 / 5 / 1;
+				pointer-events: none;
+			}
 		`);
 
 		this.shadowRoot.adoptedStyleSheets = [styleSheet];
@@ -332,7 +377,15 @@ class SpeedTicket extends HTMLElement {
 		if (form.description) form.description.textContent = results.description;
 		if (form.summary) {
 			form.summary.textContent = results.summary;
+			const statusChanged = this.previousStatus && this.previousStatus !== results.status;
 			form.summary.className = results.status;
+			
+			if (statusChanged) {
+				form.summary.classList.add('pulse');
+				setTimeout(() => form.summary.classList.remove('pulse'), 300);
+			}
+			
+			this.previousStatus = results.status;
 		}
 		
 		const resultFieldset = form.querySelector('[name="result"]');
