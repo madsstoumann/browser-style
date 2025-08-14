@@ -417,9 +417,7 @@ class CircularRange extends HTMLElement {
 	#hapticFeedback() {
 		// TODO: Add fallback for iOS as navigator.vibrate is not supported.
 		// A possible alternative is to use <input type="checkbox" switch>, which provides haptic feedback.
-		if (navigator.vibrate) {
-			navigator.vibrate(10);
-		}
+		// if (navigator.vibrate) navigator.vibrate(10);
 	}
 
 	#keydown(event) {
