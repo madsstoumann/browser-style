@@ -1,0 +1,14 @@
+<svg viewBox="0 0 100 100">
+        <rect rx="4" width="48" height="98" x="0" y="0" />
+        <text x="21" y="52%">1</text>
+        <rect rx="4" width="23" height="31.33" x="50" y="0" />
+        <text x="58.5" y="18.665%">2</text>
+        <rect rx="4" width="23" height="31.33" x="75" y="0" />
+        <text x="83.5" y="18.665%">3</text>
+        <rect rx="4" width="23" height="31.33" x="50" y="33.33" />
+        <text x="58.5" y="51.995%">4</text>
+        <rect rx="4" width="23" height="31.33" x="75" y="33.33" />
+        <text x="83.5" y="51.995%">5</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="66.67" />
+        <text x="71" y="85.33500000000001%">6</text>
+    </svg>

@@ -749,9 +749,22 @@ class LayoutBuilder {
         const srcsets = this.generateSrcsets(layout, breakpointAttrs);
         const srcsetAttr = srcsets ? ` srcsets="${srcsets}"` : '';
         
+        // Check if SVG icon exists for this layout
+        const iconPath = path.join(__dirname, 'icons', `${prefix}(${layoutId}).svg`);
+        const iconExists = fs.existsSync(iconPath);
+        let iconSvg = '';
+        
+        if (iconExists) {
+          try {
+            iconSvg = fs.readFileSync(iconPath, 'utf8');
+          } catch (error) {
+            console.warn(`⚠ Failed to read icon ${iconPath}: ${error.message}`);
+          }
+        }
+        
         html += `
 	<section>
-		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
+		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>${codeExample}</code>
 		<lay-out${breakpointAttrs}${srcsetAttr}>`;

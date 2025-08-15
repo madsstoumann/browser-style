@@ -24,16 +24,52 @@ function renderIcons(layouts, gap = 2, borderRadius = 4) {
 
 function buildIcons(gap = 2, borderRadius = 4) {
   try {
-    const gridPath = path.join(__dirname, 'systems', 'layouts', 'grid.json');
-    const gridData = JSON.parse(fs.readFileSync(gridPath, 'utf8'));
+    const layoutsDir = path.join(__dirname, 'systems', 'layouts');
+    const iconsDir = path.join(__dirname, 'icons');
     
-    const icons = renderIcons(gridData.layouts, gap, borderRadius);
+    // Create icons directory if it doesn't exist, or clear it if it does
+    if (fs.existsSync(iconsDir)) {
+      // Delete all files in the icons directory
+      const files = fs.readdirSync(iconsDir);
+      files.forEach(file => {
+        fs.unlinkSync(path.join(iconsDir, file));
+      });
+    } else {
+      fs.mkdirSync(iconsDir, { recursive: true });
+    }
     
-    console.log(`Generated ${icons.length} icons from ${gridData.layouts.length} layouts`);
-    return icons;
+    // Get all JSON files from layouts directory
+    const jsonFiles = fs.readdirSync(layoutsDir).filter(file => file.endsWith('.json'));
+    
+    let totalIcons = 0;
+    
+    jsonFiles.forEach(jsonFile => {
+      const filePath = path.join(layoutsDir, jsonFile);
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      
+      if (data.layouts && Array.isArray(data.layouts)) {
+        const icons = renderIcons(data.layouts, gap, borderRadius);
+        const prefix = data.prefix || path.basename(jsonFile, '.json');
+        
+        // Save each icon as separate SVG file
+        icons.forEach((icon, index) => {
+          const layout = data.layouts[index];
+          const layoutId = layout?.id || (index + 1);
+          const fileName = `${prefix}(${layoutId}).svg`;
+          const svgPath = path.join(iconsDir, fileName);
+          fs.writeFileSync(svgPath, icon);
+        });
+        
+        totalIcons += icons.length;
+        console.log(`Generated ${icons.length} icons from ${jsonFile}`);
+      }
+    });
+    
+    console.log(`Total: Generated ${totalIcons} SVG files in icons/ folder`);
+    return totalIcons;
   } catch (error) {
     console.error('Error building icons:', error.message);
-    return [];
+    return 0;
   }
 }
 
@@ -43,9 +79,5 @@ export {
 };
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const icons = buildIcons();
-  icons.forEach((icon, index) => {
-    console.log(`\n--- Icon ${index + 1} ---`);
-    console.log(icon);
-  });
+  buildIcons();
 }
