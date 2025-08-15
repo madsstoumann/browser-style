@@ -8,6 +8,11 @@
       "description": "2 small items in top row and 1 large item spanning horizontally at bottom",
       "columns": "1fr 1fr",
       "items": 3,
+      "icon": [
+        { "w": 50, "h": 50, "x": 0, "y": 0 },
+        { "w": 50, "h": 50, "x": 50, "y": 0 },
+        { "w": 100, "h": 50, "x": 0, "y": 50 }
+      ],
       "repeatable": true,
       "srcset": "50vw,50vw,100vw",
       "breakpoints": {
@@ -23,6 +28,11 @@
       "description": "1 large item spanning horizontally at top and 2 small items at bottom",
       "columns": "1fr 1fr",
       "items": 3,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 0 },
+        { "w": 50, "h": 50, "x": 0, "y": 50 },
+        { "w": 50, "h": 50, "x": 50, "y": 50 }
+      ],
       "repeatable": true,
       "srcset": "100vw,50vw,50vw",
       "breakpoints": {
@@ -33,11 +43,16 @@
         { "selector": "*:nth-child(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
     },
-        {
+    {
       "id": "3c",
       "description": "1 large item spanning vertically on the left and 2 small items on the right",
       "columns": "2fr 1fr",
       "items": 3,
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
+      ],
       "repeatable": true,
       "srcset": "66.67vw,33.33vw,33.33vw",
       "breakpoints": {
@@ -52,7 +67,7 @@
       "id": "3d",
       "description": "2 small items on the left and 1 large item spanning vertically on the right",
       "columns": "1fr 2fr",
-      "items": 3,
+      "items": 3,      
       "repeatable": true,
       "srcset": "33.33vw,66.67vw,66.67vw",
       "breakpoints": {
