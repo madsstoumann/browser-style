@@ -8,6 +8,10 @@
       "description": "Asymmetrical Left Right",
       "columns": "repeat(8, 1fr)",
       "items": 2,
+      "icon": [
+        { "w": 75, "h": 100, "x": 0, "y": 0 },
+        { "w": 50, "h": 75, "x": 50, "y": 12.5, "class": "light" }
+      ],
       "repeatable": false,
       "srcset": "75vw,50vw",
       "breakpoints": {
@@ -25,6 +29,10 @@
       "description": "Asymmetrical Right Left",
       "columns": "repeat(8, 1fr)",
       "items": 2,
+      "icon": [
+        { "w": 75, "h": 100, "x": 25, "y": 0 },
+        { "w": 50, "h": 75, "x": 0, "y": 12.5, "class": "light" }
+      ],
       "repeatable": false,
       "srcset": "75vw,50vw",
       "breakpoints": {

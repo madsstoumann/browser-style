@@ -5,6 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import postcss from 'postcss';
 import cssnano from 'cssnano';
+import { buildIcons } from './icons.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -922,6 +923,11 @@ class LayoutBuilder {
 
   async generateHTML() {
     console.log('\n🎨 Generating HTML demos...');
+    
+    // Generate SVG icons before HTML generation
+    console.log('🎯 Generating SVG icons...');
+    const iconCount = buildIcons();
+    console.log(`✓ Generated ${iconCount} SVG icons`);
     
     const distDir = path.join(__dirname, 'dist');
     if (!fs.existsSync(distDir)) {

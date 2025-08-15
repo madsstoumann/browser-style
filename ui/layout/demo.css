@@ -99,6 +99,10 @@
 				fill: white;
 				font-size: 11px;
 			}
+			rect.light {
+				fill: #CCC;
+				& + text { fill: #333; }
+			}
 		}
 	}
 	small {
