@@ -403,6 +403,10 @@ class CircularRange extends HTMLElement {
 		this.#lastValue = Number(this.getAttribute('value')) || 0;
 		this.#CX = this.offsetWidth / 2;
 		this.#CY = this.offsetHeight / 2;
+		
+		// Calculate and set value immediately on click/tap
+		this.#pointerMove(event);
+		
 		this.addEventListener('pointermove', this.#pointerMove);
 		this.addEventListener('pointerup', () => this.removeEventListener('pointermove', this.#pointerMove), { once: true });
 	}
