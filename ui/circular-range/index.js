@@ -1,7 +1,7 @@
 /**
  * @module CircularRange
- * @version 1.0.6
- * @date 2025-08-11
+ * @version 1.0.7
+ * @date 2025-08-15
  * @author Mads Stoumann
  * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
  */
