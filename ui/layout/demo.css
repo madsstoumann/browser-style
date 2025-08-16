@@ -89,25 +89,24 @@
 		gap: 1ch;
 		margin-block: 0 .5ch;
 		text-box: cap alphabetic;
-
-		svg {
-			fill: #333;
-			height: 4rem;
-			stroke: 0;
-			width: 4rem;
-			text {
-				fill: white;
-				font-size: 11px;
-			}
-			rect.light {
-				fill: #CCC;
-				& + text { fill: #333; }
-			}
-		}
 	}
 	small {
 		color: gray;
 		display: block;
 		line-height: 1.8;
+	}
+	svg {
+		fill: #333;
+		height: 4rem;
+		stroke-width: 0;
+		width: 4rem;
+		text {
+			fill: white;
+			font-size: 11px;
+		}
+		rect.light {
+			fill: #CCC;
+			& + text { fill: #333; }
+		}
 	}
 }

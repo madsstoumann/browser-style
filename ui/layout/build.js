@@ -908,6 +908,90 @@ class LayoutBuilder {
     return html;
   }
 
+  generateIconsHTML() {
+    const title = 'Layout Icons';
+    const iconsDir = path.join(__dirname, 'dist', 'icons');
+    
+    let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="All layout system icons">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<style>
+		.icon-list {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			gap: 1rem;
+		}
+		.icon-item {
+			padding: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			text-align: center;
+		}
+		.icon-item svg {
+			width: 100%;
+			max-width: 150px;
+			height: auto;
+		}
+		.icon-name {
+			font-family: monospace;
+			font-size: 0.875rem;
+			margin-top: 0.5rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>A complete collection of all generated layout icons, including regular layouts and overflow preview modes.</p>
+	
+	<section class="icon-list">`;
+
+    // Check if icons directory exists
+    if (!fs.existsSync(iconsDir)) {
+      html += `
+		<p>No icons found. Run icon generation first.</p>`;
+    } else {
+      // Get all SVG files in the icons directory
+      const iconFiles = fs.readdirSync(iconsDir)
+        .filter(file => file.endsWith('.svg'))
+        .sort();
+
+      for (const iconFile of iconFiles) {
+        const iconPath = path.join(iconsDir, iconFile);
+        const iconName = iconFile.replace('.svg', '');
+        
+        try {
+          const iconSvg = fs.readFileSync(iconPath, 'utf8');
+          
+          html += `
+		<div class="icon-item">
+			${iconSvg}
+			<div class="icon-name">${iconName}</div>
+		</div>`;
+        } catch (error) {
+          console.warn(`⚠ Failed to read icon ${iconPath}: ${error.message}`);
+          html += `
+		<div class="icon-item">
+			<div>Failed to load icon</div>
+			<div class="icon-name">${iconName}</div>
+		</div>`;
+        }
+      }
+    }
+
+    html += `
+	</section>
+</body>
+</html>`;
+
+    return html;
+  }
+
   generateMainIndexHTML(generatedFiles) {
     const title = 'Layout System Demos';
     
@@ -1050,6 +1134,12 @@ class LayoutBuilder {
         }
       }
     }
+
+    // Generate the icons.html file
+    const iconsHTML = this.generateIconsHTML();
+    fs.writeFileSync(path.join(distDir, 'icons.html'), iconsHTML, 'utf8');
+    console.log('✓ Generated icons.html');
+    generatedFiles.add('icons.html');
 
     // Generate the main index.html file
     const indexHTML = this.generateMainIndexHTML(generatedFiles);

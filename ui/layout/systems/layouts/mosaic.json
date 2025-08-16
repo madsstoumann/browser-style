@@ -8,6 +8,18 @@
       "description": "Photo gallery mosaic with varied item sizes in a repeating pattern",
       "columns": "1fr 1fr 1fr 1fr 1fr",
       "items": 11,
+      "icon": [
+        { "w": 40, "h": 40, "x": 0, "y": 0 },
+        { "w": 20, "h": 20, "x": 40, "y": 0 },
+        { "w": 20, "h": 20, "x": 60, "y": 0 },
+        { "w": 40, "h": 40, "x": 40, "y": 20 },
+        { "w": 20, "h": 20, "x": 0, "y": 40 },
+        { "w": 20, "h": 20, "x": 20, "y": 40 },
+        { "w": 40, "h": 40, "x": 0, "y": 60 },
+        { "w": 20, "h": 20, "x": 40, "y": 60 },
+        { "w": 20, "h": 20, "x": 60, "y": 60 },
+        { "w": 40, "h": 20, "x": 40, "y": 80 }
+      ],
       "repeatable": false,
       "srcset": "40vw,20vw,20vw,40vw,20vw,20vw,40vw,20vw,20vw,40vw,20vw",
       "breakpoints": {
@@ -36,6 +48,16 @@
       "columns": "repeat(12, 1fr)",
       "rows": "repeat(12, 1fr)",
       "items": 8,
+      "icon": [
+        { "w": 25, "h": 25, "x": 5, "y": 5 },
+        { "w": 20, "h": 20, "x": 60, "y": 15 },
+        { "w": 15, "h": 15, "x": 25, "y": 35 },
+        { "w": 30, "h": 30, "x": 70, "y": 40 },
+        { "w": 18, "h": 18, "x": 10, "y": 65 },
+        { "w": 22, "h": 22, "x": 45, "y": 70 },
+        { "w": 12, "h": 12, "x": 80, "y": 10 },
+        { "w": 16, "h": 16, "x": 35, "y": 8 }
+      ],
       "repeatable": false,
       "srcset": "50vw,50vw,33.33vw,33.33vw,25vw,16.67vw,25vw,16.67vw",
       "breakpoints": {
@@ -59,6 +81,15 @@
       "description": "Square items arranged in an artistic, non-traditional pattern across a 12x12 grid with overlapping and scattered positioning",
       "columns": "repeat(12, 1fr)",
       "items": 8,
+      "icon": [
+        { "w": 25, "h": 25, "x": 10, "y": 15 },
+        { "w": 25, "h": 25, "x": 37.5, "y": 5 },
+        { "w": 25, "h": 25, "x": 65, "y": 15 },
+        { "w": 25, "h": 25, "x": 65, "y": 45 },
+        { "w": 25, "h": 25, "x": 37.5, "y": 55 },
+        { "w": 25, "h": 25, "x": 10, "y": 45 },
+        { "w": 20, "h": 20, "x": 40, "y": 32.5 }
+      ],
       "repeatable": false,
       "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw",
       "breakpoints": {
