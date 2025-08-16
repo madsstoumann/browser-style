@@ -838,9 +838,22 @@ class LayoutBuilder {
         const srcset = this.getSrcsetForPattern(`${prefix}(${cleanId})`);
         const srcsetAttr = srcset ? ` srcsets="xs:100vw;lg:${srcset}"` : '';
         
+        // Check if regular overflow icon exists
+        const regularIconPath = path.join(__dirname, 'dist', 'icons', `${prefix}(${cleanId}).svg`);
+        const regularIconExists = fs.existsSync(regularIconPath);
+        let regularIconSvg = '';
+        
+        if (regularIconExists) {
+          try {
+            regularIconSvg = fs.readFileSync(regularIconPath, 'utf8');
+          } catch (error) {
+            console.warn(`⚠ Failed to read icon ${regularIconPath}: ${error.message}`);
+          }
+        }
+        
         html += `
 	<section>
-		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Regular Overflow</h3>
+		<h3>${regularIconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Regular Overflow</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow&gt;</code>
 		<lay-out lg="${prefix}(${cleanId})" overflow${srcsetAttr}>`;
@@ -857,9 +870,22 @@ class LayoutBuilder {
 	</section>`;
 
         // Preview overflow example
+        // Check if preview overflow icon exists
+        const previewIconPath = path.join(__dirname, 'dist', 'icons', `${prefix}(${cleanId})-preview.svg`);
+        const previewIconExists = fs.existsSync(previewIconPath);
+        let previewIconSvg = '';
+        
+        if (previewIconExists) {
+          try {
+            previewIconSvg = fs.readFileSync(previewIconPath, 'utf8');
+          } catch (error) {
+            console.warn(`⚠ Failed to read icon ${previewIconPath}: ${error.message}`);
+          }
+        }
+        
         html += `
 	<section>
-		<h3>${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Preview Mode</h3>
+		<h3>${previewIconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${cleanId} - Preview Mode</h3>
 		${description ? `<small>${description} with preview of next items</small>` : '<small>Shows preview of next items</small>'}
 		<code>&lt;lay-out lg="${prefix}(${cleanId})" overflow="preview"&gt;</code>
 		<lay-out lg="${prefix}(${cleanId})" overflow="preview"${srcsetAttr}>`;

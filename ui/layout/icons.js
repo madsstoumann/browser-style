@@ -60,6 +60,26 @@ function buildIcons(gap = 2, borderRadius = 4) {
           fs.writeFileSync(svgPath, icon);
         });
         
+        // Generate overflow preview icons if available
+        if (data.overflowIcons) {
+          const overflowIcons = renderIcons(
+            Object.entries(data.overflowIcons).map(([id, icon]) => ({ id, icon })), 
+            gap, 
+            borderRadius
+          );
+          
+          overflowIcons.forEach((icon, index) => {
+            const overflowEntries = Object.entries(data.overflowIcons);
+            const [layoutId] = overflowEntries[index];
+            const fileName = `${prefix}(${layoutId})-preview.svg`;
+            const svgPath = path.join(iconsDir, fileName);
+            fs.writeFileSync(svgPath, icon);
+          });
+          
+          totalIcons += overflowIcons.length;
+          console.log(`Generated ${overflowIcons.length} overflow preview icons from ${jsonFile}`);
+        }
+        
         totalIcons += icons.length;
         console.log(`Generated ${icons.length} icons from ${jsonFile}`);
       }
