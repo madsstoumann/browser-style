@@ -751,7 +751,7 @@ class LayoutBuilder {
         const srcsetAttr = srcsets ? ` srcsets="${srcsets}"` : '';
         
         // Check if SVG icon exists for this layout
-        const iconPath = path.join(__dirname, 'icons', `${prefix}(${layoutId}).svg`);
+        const iconPath = path.join(__dirname, 'dist', 'icons', `${prefix}(${layoutId}).svg`);
         const iconExists = fs.existsSync(iconPath);
         let iconSvg = '';
         

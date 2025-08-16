@@ -8,6 +8,10 @@
       "description": "Narrow sidebar with wide main content area",
       "columns": "1fr 3fr",
       "items": 2,
+      "icon": [
+        { "w": 25, "h": 50, "x": 0, "y": 25 },
+        { "w": 75, "h": 50, "x": 25, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "25vw,75vw",
       "breakpoints": {
@@ -20,6 +24,10 @@
       "description": "Common sidebar and main content layout (1:2 ratio)",
       "columns": "1fr 2fr",
       "items": 2,
+      "icon": [
+        { "w": 33.33, "h": 50, "x": 0, "y": 25 },
+        { "w": 66.67, "h": 50, "x": 33.33, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "33.33vw,66.67vw",
       "breakpoints": {
@@ -32,6 +40,10 @@
       "description": "40:60 ratio layout",
       "columns": "2fr 3fr",
       "items": 2,
+      "icon": [
+        { "w": 40, "h": 50, "x": 0, "y": 25 },
+        { "w": 60, "h": 50, "x": 40, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "40vw,60vw",
       "breakpoints": {
@@ -44,6 +56,10 @@
       "description": "60:40 ratio layout",
       "columns": "3fr 2fr",
       "items": 2,
+      "icon": [
+        { "w": 60, "h": 50, "x": 0, "y": 25 },
+        { "w": 40, "h": 50, "x": 60, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "60vw,40vw",
       "breakpoints": {
@@ -56,6 +72,10 @@
       "description": "Main content with sidebar (2:1 ratio)",
       "columns": "2fr 1fr",
       "items": 2,
+      "icon": [
+        { "w": 66.67, "h": 50, "x": 0, "y": 25 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "66.67vw,33.33vw",
       "breakpoints": {
@@ -68,6 +88,10 @@
       "description": "Wide main content with narrow sidebar",
       "columns": "3fr 1fr",
       "items": 2,
+      "icon": [
+        { "w": 75, "h": 50, "x": 0, "y": 25 },
+        { "w": 25, "h": 50, "x": 75, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "75vw,25vw",
       "breakpoints": {
@@ -80,6 +104,11 @@
       "description": "25:25:50 ratio layout",
       "columns": "1fr 1fr 2fr",
       "items": 3,
+      "icon": [
+        { "w": 25, "h": 50, "x": 0, "y": 25 },
+        { "w": 25, "h": 50, "x": 25, "y": 25 },
+        { "w": 50, "h": 50, "x": 50, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "25vw,25vw,50vw",
       "breakpoints": {
@@ -92,6 +121,11 @@
       "description": "Centered main content with equal sidebars",
       "columns": "1fr 2fr 1fr",
       "items": 3,
+      "icon": [
+        { "w": 25, "h": 50, "x": 0, "y": 25 },
+        { "w": 50, "h": 50, "x": 25, "y": 25 },
+        { "w": 25, "h": 50, "x": 75, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "25vw,50vw,25vw",
       "breakpoints": {
@@ -104,6 +138,11 @@
       "description": "50:25:25 ratio layout",
       "columns": "2fr 1fr 1fr",
       "items": 3,
+      "icon": [
+        { "w": 50, "h": 50, "x": 0, "y": 25 },
+        { "w": 25, "h": 50, "x": 50, "y": 25 },
+        { "w": 25, "h": 50, "x": 75, "y": 25 }
+      ],
       "repeatable": true,
       "srcset": "50vw,25vw,25vw",
       "breakpoints": {

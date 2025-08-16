@@ -25,7 +25,7 @@ function renderIcons(layouts, gap = 2, borderRadius = 4) {
 function buildIcons(gap = 2, borderRadius = 4) {
   try {
     const layoutsDir = path.join(__dirname, 'systems', 'layouts');
-    const iconsDir = path.join(__dirname, 'icons');
+    const iconsDir = path.join(__dirname, 'dist', 'icons');
     
     // Create icons directory if it doesn't exist, or clear it if it does
     if (fs.existsSync(iconsDir)) {

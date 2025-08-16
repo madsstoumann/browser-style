@@ -50,6 +50,10 @@
       "description": "Asymmetrical Top Bottom",
       "columns": "repeat(8, 1fr)",
       "items": 2,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 0 },
+        { "w": 75, "h": 50, "x": 12.5, "y": 25, "class": "light" }
+      ],
       "repeatable": false,
       "srcset": "100vw,75vw",
       "breakpoints": {
@@ -67,6 +71,10 @@
       "description": "Asymmetrical Bottom Top",
       "columns": "repeat(8, 1fr)",
       "items": 2,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 25 },
+        { "w": 75, "h": 50, "x": 12.5, "y": 0, "class": "light" }
+      ],
       "repeatable": false,
       "srcset": "100vw,75vw",
       "breakpoints": {
@@ -84,6 +92,11 @@
       "description": "Asymmetrical Top Left > Bottom Right",
       "columns": "repeat(7, 1fr)",
       "items": 3,
+        "icon": [
+        { "w": 40, "h": 50, "x": 0, "y": 0 },
+        { "w": 40, "h": 50, "x": 30, "y": 25, "class": "light" },
+        { "w": 40, "h": 50, "x": 60, "y": 50 }
+      ],
       "repeatable": false,
       "srcset": "42.86vw,42.86vw,42.86vw",
       "breakpoints": {
@@ -102,6 +115,11 @@
       "description": "Asymmetrical Bottom Left > Top Right",
       "columns": "repeat(7, 1fr)",
       "items": 3,
+      "icon": [
+        { "w": 40, "h": 50, "x": 0, "y": 50 },
+        { "w": 40, "h": 50, "x": 30, "y": 25, "class": "light" },
+        { "w": 40, "h": 50, "x": 60, "y": 0 }
+      ],
       "repeatable": false,
       "srcset": "42.86vw,42.86vw,42.86vw",
       "breakpoints": {
