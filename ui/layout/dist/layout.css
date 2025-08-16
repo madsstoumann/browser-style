@@ -160,6 +160,10 @@
 			--layout-gtc: repeat(auto-fit, minmax(min(7.5rem, 100%), 1fr));
 		}
 
+		lay-out[xs="auto(fill)"] {
+			--layout-gtc: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
+		}
+
 	}
 
 }
@@ -180,6 +184,10 @@
 
 		lay-out[sm="auto(fit)"] {
 			--layout-gtc: repeat(auto-fit, minmax(min(7.5rem, 100%), 1fr));
+		}
+
+		lay-out[sm="auto(fill)"] {
+			--layout-gtc: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
 		}
 
 		lay-out[sm="columns(2)"] {

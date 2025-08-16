@@ -19,6 +19,24 @@
       "breakpoints": {
         "sm": "auto(fit)"
       }
+    },
+    {
+      "id": "fill", 
+      "description": "Auto-fill grid that creates columns to fill available space, including empty ones",
+      "columns": "repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr))",
+      "items": 3,
+      "icon": [
+        { "w": 20, "h": 50, "x": 0, "y": 25, "class": "light" },
+        { "w": 20, "h": 50, "x": 20, "y": 25, "class": "light" },
+        { "w": 20, "h": 50, "x": 40, "y": 25, "class": "light" },
+        { "w": 20, "h": 50, "x": 60, "y": 25, "class": "light" },
+        { "w": 20, "h": 50, "x": 80, "y": 25, "class": "light" }
+      ],
+      "repeatable": true,
+      "srcset": "20vw",
+      "breakpoints": {
+        "sm": "auto(fill)"
+      }
     }
   ]
 }
