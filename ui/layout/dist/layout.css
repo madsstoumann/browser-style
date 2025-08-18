@@ -707,43 +707,45 @@
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] {
-			--layout-gtc: repeat(6, 1fr);
+			--layout-gtc: repeat(10, 1fr);
+			--layout-gtr: repeat(10, 1fr);
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+1) {
-			--layout-ga: 1 / 1 / 3 / 4;
+			--layout-ga: 1 / 1 / 4 / 6;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+2) {
-			--layout-ga: 1 / 4 / 3 / 5;
+			--layout-ga: 1 / 6 / 4 / 8;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+3) {
-			--layout-ga: 1 / 5 / 4 / 7;
+			--layout-ga: 1 / 8 / 6 / 11;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+4) {
-			--layout-ga: 3 / 1 / 4 / 3;
+			--layout-ga: 4 / 1 / 6 / 4;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+5) {
-			--layout-ga: 3 / 3 / 5 / 5;
+			--layout-ga: 4 / 4 / 8 / 8;
+			aspect-ratio: 1;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+6) {
-			--layout-ga: 4 / 5 / 5 / 7;
+			--layout-ga: 6 / 8 / 8 / 11;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+7) {
-			--layout-ga: 4 / 1 / 7 / 3;
+			--layout-ga: 6 / 1 / 11 / 4;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+8) {
-			--layout-ga: 5 / 3 / 7 / 5;
+			--layout-ga: 8 / 4 / 11 / 6;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+9) {
-			--layout-ga: 5 / 3 / 7 / 7;
+			--layout-ga: 8 / 6 / 11 / 11;
 		}
 
 	}
