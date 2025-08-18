@@ -725,16 +725,15 @@
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+4) {
-			--layout-ga: 4 / 1 / 6 / 4;
+			--layout-ga: 6 / 8 / 8 / 11;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+5) {
-			--layout-ga: 4 / 4 / 8 / 8;
-			aspect-ratio: 1;
+			--layout-ga: 8 / 6 / 11 / 11;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+6) {
-			--layout-ga: 6 / 8 / 8 / 11;
+			--layout-ga: 8 / 4 / 11 / 6;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+7) {
@@ -742,11 +741,12 @@
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+8) {
-			--layout-ga: 8 / 4 / 11 / 6;
+			--layout-ga: 4 / 1 / 6 / 4;
 		}
 
 		lay-out[xl="mosaic(pinwheel)"] *:nth-child(9n+9) {
-			--layout-ga: 8 / 6 / 11 / 11;
+			--layout-ga: 4 / 4 / 8 / 8;
+			aspect-ratio: 1;
 		}
 
 		lay-out[xl="mosaic(cornerstone)"] {
@@ -763,11 +763,11 @@
 		}
 
 		lay-out[xl="mosaic(cornerstone)"] *:nth-child(5n+3) {
-			--layout-ga: 3 / 1 / 6 / 3;
+			--layout-ga: 4 / 3 / 6 / 6;
 		}
 
 		lay-out[xl="mosaic(cornerstone)"] *:nth-child(5n+4) {
-			--layout-ga: 4 / 3 / 6 / 6;
+			--layout-ga: 3 / 1 / 6 / 3;
 		}
 
 		lay-out[xl="mosaic(cornerstone)"] *:nth-child(5n+5) {
