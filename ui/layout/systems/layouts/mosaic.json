@@ -114,6 +114,7 @@
       "id": "pinwheel",
       "description": "",
       "columns": "repeat(6, 1fr)",
+      "rows": "repeat(6, 1fr)",
       "items": 9,
       "icon": [
         
