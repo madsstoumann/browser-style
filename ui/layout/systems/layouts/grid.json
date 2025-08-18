@@ -392,6 +392,32 @@
         { "selector": "*:nth-child(6n+1)", "properties": { "--layout-ga": "span 3 / span 2" } },
         { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 2" } }
       ]
+    },
+        {
+      "id": "6b",
+      "description": "1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 6,
+      "icon": [
+        
+        { "w": 25, "h": 33.33, "x": 0, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 25, "y": 0 },
+        { "w": 50, "h": 100, "x": 50, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 0, "y": 33.33 },
+        { "w": 25, "h": 33.33, "x": 25, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 0, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "rows": "1fr 1fr 1fr",
+      "srcset": "25vw,25vw,25vw,25vw,50vw,50vw",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(6b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 2" } },
+        { "selector": "*:nth-child(6n+3)", "properties": { "--layout-ga": "span 3 / span 2" } }
+      ]
     }
   ]
 }

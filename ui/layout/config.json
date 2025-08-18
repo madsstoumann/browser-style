@@ -52,7 +52,7 @@
           "layouts": [
             {
               "bento": ["bento(6a)"],
-              "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)"]
+              "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)", "mosaic(cornerstone)"]
             }
           ]
         },
