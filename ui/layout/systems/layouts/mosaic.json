@@ -6,7 +6,7 @@
     {
       "id": "photo",
       "description": "Photo gallery mosaic with varied item sizes in a repeating pattern",
-      "columns": "1fr 1fr 1fr 1fr 1fr",
+      "columns": "repeat(5, 1fr)",
       "items": 11,
       "icon": [
         { "w": 40, "h": 40, "x": 0, "y": 0 },
@@ -128,7 +128,7 @@
         { "w": 40, "h": 40, "x": 30, "y": 30 }
       ],
       "repeatable": false,
-      "srcset": "",
+      "srcset": "50vw,20vw,30vw,30vw,50vw,20vw,30vw,30vw,40vw",
       "breakpoints": {
         "lg": "columns(3)",        
         "xl": "mosaic(pinwheel)"
@@ -160,7 +160,7 @@
         { "w": 20, "h": 20, "x": 40, "y": 40 }
       ],
       "repeatable": false,
-      "srcset": "",
+      "srcset": "60vw,40vw,60vw,40vw,20vw",
       "breakpoints": {
         "lg": "grid(3a)",
         "xl": "mosaic(cornerstone)"
