@@ -41,6 +41,8 @@ class CircularRange extends HTMLElement {
 
 			--_ga: 1 / 1 / calc(var(--circular-range-rows) + 1) / 1;
 			--_mask: radial-gradient(circle farthest-side at center, #0000 calc(100% - var(--circular-range-track-sz) - 1px), var(--circular-range-fill) calc(100% - var(--circular-range-track-sz)));
+			--_fill-start-angle: var(--_start);
+			--_fill-end-angle: var(--_fill);
 
 			aspect-ratio: 1;
 			display: grid;
@@ -91,11 +93,11 @@ class CircularRange extends HTMLElement {
 
 		[part="fill"] {
 			background: conic-gradient(
-				from calc(var(--_start) * 1deg),
+				from calc(var(--_fill-start) * 1deg),
 				var(--circular-range-fill-start) 0deg,
-				var(--circular-range-fill-middle) calc((var(--_fill) - var(--_start)) * 0.5deg),
-				var(--circular-range-fill-end) calc((var(--_fill) - var(--_start)) * 1deg),
-				#0000 calc((var(--_fill) - var(--_start)) * 1deg)
+				var(--circular-range-fill-middle) calc(var(--_fill-range) * 0.5deg),
+				var(--circular-range-fill-end) calc(var(--_fill-range) * 1deg),
+				#0000 calc(var(--_fill-range) * 1deg)
 			);
 			transition: all 0.2s ease-in-out;
 			&::before {
@@ -267,6 +269,7 @@ class CircularRange extends HTMLElement {
 	connectedCallback() {
 		this.tabIndex = 0;
 		this.#readAttributes();
+		this.#convertInitialValue();
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderLabels();
 		this.setAttribute('role', 'slider');
@@ -350,8 +353,22 @@ class CircularRange extends HTMLElement {
 		this.#radian = this.#angleRange / this.#range;
 		this.style.setProperty('--_start', this.#startAngle);
 		this.style.setProperty('--_end', this.#endAngle);
-		this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
-		this.style.setProperty('--_ta', `${(this.#endAngle / 360) * 100}%`);
+
+		if (this.#reverse) {
+			this.style.setProperty('--_tb', `${(this.#endAngle / 360) * 100}%`);
+			this.style.setProperty('--_ta', `${(this.#startAngle / 360) * 100}%`);
+		} else {
+			this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
+			this.style.setProperty('--_ta', `${(this.#endAngle / 360) * 100}%`);
+		}
+	}
+
+	#convertInitialValue() {
+		if (this.#reverse && this.hasAttribute('value')) {
+			const userValue = Number(this.getAttribute('value')) || 0;
+			const internalValue = this.#min + this.#max - userValue;
+			this.setAttribute('value', internalValue);
+		}
 	}
 
 	#update() {
@@ -362,6 +379,14 @@ class CircularRange extends HTMLElement {
 		const fillAngle = this.#startAngle + (fillPercentage * this.#angleRange);
 		this.style.setProperty('--_value', displayValue);
 		this.style.setProperty('--_fill', fillAngle);
+
+		if (this.#reverse) {
+			this.style.setProperty('--_fill-start', fillAngle);
+			this.style.setProperty('--_fill-range', this.#endAngle - fillAngle);
+		} else {
+			this.style.setProperty('--_fill-start', this.#startAngle);
+			this.style.setProperty('--_fill-range', fillAngle - this.#startAngle);
+		}
 	}
 
 	// Safari-specific repaint stabilization (avoid affecting other browsers)
