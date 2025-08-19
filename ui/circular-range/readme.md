@@ -30,7 +30,6 @@ import '@browser.style/circular-range';
   indices="10"
   suffix="%"
   enable-min
-  haptic="0,50,100"
 ></circular-range>
 ```
 
@@ -40,7 +39,7 @@ Here are a few examples demonstrating how the component can be configured.
 
 ### Speedometer
 
-This example mimics a speedometer with custom start and end angles, labels for speed markings, and haptic feedback at specific speeds.
+This example mimics a speedometer with custom start and end angles and labels for speed markings.
 
 ```html
 <circular-range
@@ -48,7 +47,6 @@ This example mimics a speedometer with custom start and end angles, labels for s
   class="speedometer"
   enable-min
   end="500"
-  haptic="120,180"
   indices="50"
   labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200"
   max="200"
@@ -118,7 +116,6 @@ You can create partial sliders, or arcs, by setting the `start` and `end` angles
 | `indices`    | The number of tick marks (indices) to display along the track. To get an indice for each step, you can calculate it as `(max - min) / step + 1`. For example, with `min="0"`, `max="100"`, and `step="5"`, you would need `(100 - 0) / 5 + 1 = 21` indices. | `0`       |
 | `suffix`     | A string to append to the displayed value.                                                                 | `""`      |
 | `enable-min` | A boolean attribute that, when present, applies a different style to the thumb when the value is at minimum. | `false`   |
-| `haptic`     | A comma-separated list of values that trigger haptic feedback when the value changes.                      | `null`    |
 
 ## Styling
 

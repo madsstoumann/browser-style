@@ -1,9 +1,9 @@
 /**
  * @module CircularRange
- * @version 1.0.7
- * @date 2025-08-15
+ * @version 1.0.8
+ * @date 2025-08-19
  * @author Mads Stoumann
- * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
+ * @description A circular range slider custom element with optional indices and labels.
  */
 class CircularRange extends HTMLElement {
 	static formAssociated = true;
@@ -231,7 +231,6 @@ class CircularRange extends HTMLElement {
 	#CX;
 	#CY;
 	#endAngle;
-	#hapticValues;
 	#internals;
 	#lastValue;
 	#max;
@@ -345,7 +344,6 @@ class CircularRange extends HTMLElement {
 		this.#range = this.#max - this.#min;
 		this.#angleRange = this.#endAngle - this.#startAngle;
 		this.#radian = this.#angleRange / this.#range;
-		this.#hapticValues = (this.getAttribute('haptic') || '').split(',').map(v => Number(v.trim())).filter(v => !isNaN(v));
 		this.style.setProperty('--_start', this.#startAngle);
 		this.style.setProperty('--_end', this.#endAngle);
 		this.style.setProperty('--_tb', `${(this.#startAngle / 360) * 100}%`);
@@ -379,10 +377,6 @@ class CircularRange extends HTMLElement {
 		if (this.value === clampedValue) return;
 		this.setAttribute('value', clampedValue);
 		this.#internals.setFormValue(clampedValue);
-
-		if (this.#hapticValues?.includes(clampedValue)) {
-			this.#hapticFeedback();
-		}
 
 		this.classList.toggle('at-min', this.hasAttribute('enable-min') && clampedValue === this.#min);
 		this.dispatchEvent(new Event('input', { bubbles: true }));
@@ -430,12 +424,6 @@ class CircularRange extends HTMLElement {
 		
 		this.#lastValue = value;
 		this.#setValue(value);
-	}
-
-	#hapticFeedback() {
-		// TODO: Add fallback for iOS as navigator.vibrate is not supported.
-		// A possible alternative is to use <input type="checkbox" switch>, which provides haptic feedback.
-		// if (navigator.vibrate) navigator.vibrate(10);
 	}
 
 	#keydown(event) {
