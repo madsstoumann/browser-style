@@ -249,9 +249,7 @@ class CircularRange extends HTMLElement {
 
 	constructor() {
 		super();
-		// Basic Safari detection (exclude Chrome, Edge, Opera, Firefox, iOS Chrome)
-		const ua = navigator.userAgent;
-		this.#isSafari = /Safari\//.test(ua) && !/(Chrome|Chromium|Edg|OPR|OPiOS|CriOS|FxiOS)/.test(ua);
+		this.#isSafari = /Safari\//.test(navigator.userAgent) && !/(Chrome|Chromium|Edg|OPR|CriOS|FxiOS)/.test(navigator.userAgent);
 		this.attachShadow({ mode: 'open' });
 		this.#internals = this.attachInternals();
 		const sheet = new CSSStyleSheet();
@@ -273,7 +271,7 @@ class CircularRange extends HTMLElement {
 		this.shadowRoot.querySelector('[part="indices"]').innerHTML = this.#generateIndices();
 		this.#renderLabels();
 		this.setAttribute('role', 'slider');
-		/* Small setTimeout-hack to ensure styles are applied before the first update in Safari */
+		/* Small setTimeout-hack to ensure styles are applied before the first update */
 		setTimeout(() => {
 			this.#update();
 			this.#updateActiveLabel();
@@ -285,7 +283,7 @@ class CircularRange extends HTMLElement {
 
 		if (this.#isSafari) {
 			this.#safariVisHandler = () => { if (!document.hidden) this.#safariRepaint(); };
-			this.#safariPageShowHandler = (e) => { if (e.persisted || true) this.#safariRepaint(); };
+			this.#safariPageShowHandler = () => this.#safariRepaint();
 			document.addEventListener('visibilitychange', this.#safariVisHandler);
 			window.addEventListener('pageshow', this.#safariPageShowHandler);
 		}
@@ -302,9 +300,7 @@ class CircularRange extends HTMLElement {
 		}
 	}
 
-	static get observedAttributes() {
-		return ['value', 'active-label'];
-	}
+	static get observedAttributes() { return ['value', 'active-label']; }
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
@@ -325,10 +321,7 @@ class CircularRange extends HTMLElement {
 		this.#setValue(normalizedValue);
 	}
 
-	// Expose name like native form controls
-	get name() {
-		return this.getAttribute('name') ?? '';
-	}
+	get name() { return this.getAttribute('name') ?? ''; }
 
 	set name(newName) {
 		if (newName === null || newName === undefined) {
@@ -389,15 +382,10 @@ class CircularRange extends HTMLElement {
 		}
 	}
 
-	// Safari-specific repaint stabilization (avoid affecting other browsers)
 	#safariRepaint() {
-		// Force layout & style invalidation in Safari which sometimes fails to position offset-path pseudo-elements
 		const v = this.getAttribute('value') ?? '0';
-		// Read geometry to ensure layout tree is current
 		this.getBoundingClientRect();
-		// Toggle an inert custom property to invalidate style
 		this.style.setProperty('--_invalidate', performance.now().toString());
-		// Re-set the value attribute to trigger attributeChangedCallback without changing the value
 		this.setAttribute('value', v);
 	}
 
@@ -427,10 +415,7 @@ class CircularRange extends HTMLElement {
 		this.#lastValue = Number(this.getAttribute('value')) || 0;
 		this.#CX = this.offsetWidth / 2;
 		this.#CY = this.offsetHeight / 2;
-		
-		// Calculate and set value immediately on click/tap
 		this.#pointerMove(event);
-		
 		this.addEventListener('pointermove', this.#pointerMove);
 		this.addEventListener('pointerup', () => this.removeEventListener('pointermove', this.#pointerMove), { once: true });
 	}
@@ -442,27 +427,23 @@ class CircularRange extends HTMLElement {
 
 		if (this.#angleRange < 360) {
 			if (relativeDegree > this.#angleRange) {
-				const midGap = (360 - this.#angleRange) / 2;
-				this.#setValue(relativeDegree - this.#angleRange < midGap ? this.#max : this.#min);
+				this.#setValue(relativeDegree - this.#angleRange < (360 - this.#angleRange) / 2 ? this.#max : this.#min);
 				return;
 			}
-		} else {
-			if (Math.abs(value - this.#lastValue) > this.#range / 2) {
-				value = (value > this.#lastValue) ? this.#min : this.#max;
-			}
+		} else if (Math.abs(value - this.#lastValue) > this.#range / 2) {
+			value = value > this.#lastValue ? this.#min : this.#max;
 		}
-		
+
 		this.#lastValue = value;
 		this.#setValue(value);
 	}
 
 	#keydown(event) {
-		if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+		if (!event.key.startsWith('Arrow')) return;
 		event.preventDefault();
-		const currentValue = Number(this.getAttribute('value')) || this.#min;
 		const step = event.shiftKey ? this.#shiftStep : this.#step;
-		const newValue = currentValue + ((event.key === 'ArrowUp' || event.key === 'ArrowRight') ? step : -step);
-		this.#setValue(newValue);
+		const increment = (event.key === 'ArrowUp' || event.key === 'ArrowRight') ? step : -step;
+		this.#setValue((Number(this.getAttribute('value')) || this.#min) + increment);
 	}
 
 	#generateIndices() {
@@ -492,13 +473,12 @@ class CircularRange extends HTMLElement {
 			if (!valueRaw?.trim() || !labelRaw?.trim()) return;
 			
 			const value = Number(valueRaw.trim());
-			const label = labelRaw.trim();
 			if (value < this.#min || value > this.#max) return;
 
 			const li = document.createElement('li');
 			li.setAttribute('value', value);
 			li.part.add(`label-${value}`);
-			li.textContent = label;
+			li.textContent = labelRaw.trim();
 
 			const positionValue = this.#reverse 
 				? this.#min + ((totalLabels - 1 - index) * stepSize)
@@ -513,5 +493,4 @@ class CircularRange extends HTMLElement {
 }
 
 customElements.define('circular-range', CircularRange);
-
 export default CircularRange;
