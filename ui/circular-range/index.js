@@ -237,6 +237,7 @@ class CircularRange extends HTMLElement {
 	#min;
 	#radian;
 	#range;
+	#reverse;
 	#shiftStep;
 	#startAngle;
 	#step;
@@ -312,11 +313,13 @@ class CircularRange extends HTMLElement {
 	}
 
 	get value() {
-		return Number(this.getAttribute('value')) || 0;
+		const value = Number(this.getAttribute('value')) || 0;
+		return this.#reverse ? this.#min + this.#max - value : value;
 	}
 
 	set value(newValue) {
-		this.#setValue(newValue);
+		const normalizedValue = this.#reverse ? this.#min + this.#max - newValue : newValue;
+		this.#setValue(normalizedValue);
 	}
 
 	// Expose name like native form controls
@@ -337,6 +340,7 @@ class CircularRange extends HTMLElement {
 		this.#max = Number(this.getAttribute('max')) || 100;
 		this.setAttribute('aria-valuemin', this.#min);
 		this.setAttribute('aria-valuemax', this.#max);
+		this.#reverse = this.hasAttribute('reverse');
 		this.#step = Number(this.getAttribute('step')) || 1;
 		this.#shiftStep = Number(this.getAttribute('shift-step')) || this.#step;
 		this.#startAngle = Number(this.getAttribute('start')) || 0;
@@ -352,10 +356,11 @@ class CircularRange extends HTMLElement {
 
 	#update() {
 		const value = Number(this.getAttribute('value')) || 0;
-		this.setAttribute('aria-valuenow', value);
+		const displayValue = this.#reverse ? this.#min + this.#max - value : value;
+		this.setAttribute('aria-valuenow', displayValue);
 		const fillPercentage = this.#range > 0 ? (value - this.#min) / this.#range : 0;
 		const fillAngle = this.#startAngle + (fillPercentage * this.#angleRange);
-		this.style.setProperty('--_value', value);
+		this.style.setProperty('--_value', displayValue);
 		this.style.setProperty('--_fill', fillAngle);
 	}
 
@@ -447,28 +452,35 @@ class CircularRange extends HTMLElement {
 	}
 
 	#renderLabels() {
-		const labelsAttr = this.getAttribute('labels');
+		const labels = this.getAttribute('labels');
+		if (!labels) return;
 		const ol = this.shadowRoot.querySelector('[part="labels"]');
 		ol.setAttribute('aria-hidden', 'true');
 		ol.innerHTML = '';
-		if (!labelsAttr) return;
 
-		labelsAttr.split(',').forEach(pair => {
+		const labelsArray = labels.split(',');
+		const totalLabels = labelsArray.length;
+		const stepSize = this.#range / (totalLabels - 1);
+
+		labelsArray.forEach((pair, index) => {
 			const [valueRaw, labelRaw] = pair.split(':');
-			if (!valueRaw || !labelRaw) return;
+			if (!valueRaw?.trim() || !labelRaw?.trim()) return;
 			
 			const value = Number(valueRaw.trim());
 			const label = labelRaw.trim();
+			if (value < this.#min || value > this.#max) return;
+
 			const li = document.createElement('li');
 			li.setAttribute('value', value);
 			li.part.add(`label-${value}`);
 			li.textContent = label;
 
-			if (value >= this.#min && value <= this.#max) {
-				const degree = ((value - this.#min) * this.#radian) + this.#startAngle;
-				const percent = (degree / 360) * 100;
-				li.style.setProperty('--_p', `${percent}%`);
-			}
+			const positionValue = this.#reverse 
+				? this.#min + ((totalLabels - 1 - index) * stepSize)
+				: value;
+			
+			const degree = ((positionValue - this.#min) * this.#radian) + this.#startAngle;
+			li.style.setProperty('--_p', `${(degree / 360) * 100}%`);
 
 			ol.appendChild(li);
 		});
