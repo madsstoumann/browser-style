@@ -1,0 +1,677 @@
+[
+  {
+    "id": "profile-1",
+    "type": "profile",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/profiles/sarah-chen.avif",
+          "alt": "Sarah Chen, UX Engineer",
+          "width": 300,
+          "height": 300
+        }
+      ]
+    },
+    "content": {
+      "headline": "Sarah Chen",
+      "subheadline": "Senior UX Engineer",
+      "summary": "Passionate about creating inclusive digital experiences. 8+ years in frontend development and user experience design.",
+      "category": "Team Member"
+    },
+    "profile": {
+      "jobTitle": "Senior UX Engineer",
+      "organization": "TechCorp Solutions",
+      "bio": "Sarah specializes in accessibility-first design and has led the redesign of multiple award-winning web applications. She's a frequent speaker at design conferences and mentors junior developers.",
+      "location": "San Francisco, CA",
+      "skills": ["React", "Accessibility", "Design Systems", "User Research"],
+      "contacts": [
+        {
+          "type": "email",
+          "value": "sarah.chen@techcorp.com",
+          "label": "Email"
+        },
+        {
+          "type": "linkedin",
+          "value": "https://linkedin.com/in/sarahchen",
+          "label": "LinkedIn"
+        },
+        {
+          "type": "twitter",
+          "value": "https://twitter.com/sarahuxchen",
+          "label": "Twitter"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "text": "View Portfolio",
+        "url": "https://sarahchen.design",
+        "icon": "portfolio"
+      }
+    ]
+  },
+  {
+    "id": "course-1",
+    "type": "course",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/courses/web-fundamentals.avif",
+          "alt": "Modern Web Development Fundamentals course"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Bestseller",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Web Development",
+      "headline": "Modern Web Development Fundamentals",
+      "summary": "Master HTML5, CSS3, and JavaScript essentials. Build responsive, accessible websites from scratch with hands-on projects.",
+      "readingTime": "40 hours"
+    },
+    "course": {
+      "duration": "6 weeks",
+      "difficultyLevel": "Beginner",
+      "prerequisites": ["Basic computer skills", "Text editor familiarity"],
+      "learningOutcomes": [
+        "Build responsive websites using modern HTML and CSS",
+        "Create interactive features with JavaScript",
+        "Understand web accessibility principles",
+        "Deploy projects to production"
+      ],
+      "instructor": {
+        "name": "Mark Rodriguez",
+        "title": "Senior Full-Stack Developer",
+        "experience": "12+ years"
+      },
+      "provider": "CodeAcademy Pro",
+      "price": {
+        "current": "89.99",
+        "original": "149.99",
+        "currency": "USD"
+      }
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "thumbs_up", "count": 1250, "value": 4.8, "max": 5, "ariaLabel": "Rate this course" }
+      ],
+      "viewCount": 15420,
+      "shareCount": 340
+    },
+    "actions": [
+      {
+        "text": "Enroll Now",
+        "icon": "school"
+      }
+    ],
+    "tags": ["HTML", "CSS", "JavaScript", "Responsive Design"]
+  },
+  {
+    "id": "job-1",
+    "type": "job",
+    "content": {
+      "category": "Software Engineering",
+      "headline": "Senior Frontend Developer",
+      "subheadline": "Remote-First • Full-Time",
+      "summary": "Join our growing engineering team to build next-generation web applications using React and modern JavaScript technologies."
+    },
+    "job": {
+      "company": "InnovateTech",
+      "location": "Remote (US Timezone)",
+      "employmentType": "Full-time",
+      "salaryRange": {
+        "min": 120000,
+        "max": 150000,
+        "currency": "USD",
+        "period": "annually"
+      },
+      "qualifications": [
+        "5+ years React/JavaScript experience",
+        "Strong CSS and responsive design skills",
+        "Experience with modern build tools",
+        "Excellent communication skills"
+      ],
+      "applicationDeadline": "2025-09-15",
+      "benefits": ["Health Insurance", "401k Match", "Flexible PTO", "Home Office Stipend"]
+    },
+    "actions": [
+      {
+        "text": "Apply Now",
+        "icon": "send"
+      },
+      {
+        "text": "Save Job",
+        "icon": "bookmark"
+      }
+    ]
+  },
+  {
+    "id": "review-1",
+    "type": "review",
+    "content": {
+      "headline": "Excellent product quality and fast delivery",
+      "summary": "I've been using this for 3 months now and it's exceeded my expectations. The build quality is outstanding and customer service is very responsive.",
+      "category": "Customer Review"
+    },
+    "review": {
+      "rating": {
+        "value": 5,
+        "max": 5
+      },
+      "reviewer": {
+        "name": "Jennifer M.",
+        "verified": true,
+        "purchaseDate": "2025-06-15"
+      },
+      "reviewDate": "2025-07-20",
+      "helpfulVotes": 23,
+      "productReviewed": "AuraSound Pro Headphones"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "helpful", "icon": "thumb_up", "count": 23, "ariaLabel": "Mark as helpful" }
+      ]
+    },
+    "actions": [
+      {
+        "text": "Helpful",
+        "icon": "thumb_up"
+      }
+    ]
+  },
+  {
+    "id": "location-1",
+    "type": "location",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/locations/golden-gate-bridge.avif",
+          "alt": "Golden Gate Bridge at sunset"
+        }
+      ]
+    },
+    "content": {
+      "category": "Tourist Destination",
+      "headline": "Golden Gate Bridge",
+      "summary": "Iconic suspension bridge connecting San Francisco to Marin County. One of the most photographed structures in the world."
+    },
+    "location": {
+      "address": {
+        "streetAddress": "Golden Gate Bridge",
+        "addressLocality": "San Francisco",
+        "addressRegion": "CA",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "latitude": "37.8199",
+        "longitude": "-122.4783"
+      },
+      "hours": "Always open",
+      "contact": "+1-415-921-5858",
+      "amenities": ["Visitor Center", "Gift Shop", "Parking", "Bike Rental", "Guided Tours"],
+      "rating": {
+        "value": 4.7,
+        "count": 95000,
+        "max": 5
+      }
+    },
+    "actions": [
+      {
+        "text": "Get Directions",
+        "icon": "directions"
+      },
+      {
+        "text": "Visit Website",
+        "url": "https://goldengatebridge.org",
+        "icon": "open_in_new"
+      }
+    ]
+  },
+  {
+    "id": "software-1",
+    "type": "software",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/software/code-editor-pro.avif",
+          "alt": "Code Editor Pro interface screenshot"
+        }
+      ]
+    },
+    "content": {
+      "category": "Development Tools",
+      "headline": "Code Editor Pro",
+      "summary": "Advanced code editor with AI-powered suggestions, built-in terminal, and extensive plugin ecosystem.",
+      "text": "Perfect for full-stack developers working with multiple languages and frameworks."
+    },
+    "software": {
+      "applicationCategory": "Development Environment",
+      "operatingSystem": ["Windows", "macOS", "Linux"],
+      "version": "3.2.1",
+      "fileSize": "125 MB",
+      "developer": {
+        "name": "DevTools Inc",
+        "website": "https://devtools.com"
+      },
+      "screenshots": [
+        "assets/software/code-editor-1.avif",
+        "assets/software/code-editor-2.avif"
+      ],
+      "systemRequirements": {
+        "ram": "4GB minimum, 8GB recommended",
+        "storage": "200MB available space",
+        "processor": "Intel i3 or equivalent"
+      },
+      "price": {
+        "current": "49.99",
+        "currency": "USD",
+        "type": "one-time"
+      }
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "thumbs_up", "count": 2100, "value": 4.6, "max": 5 }
+      ],
+      "viewCount": 45000,
+      "shareCount": 890
+    },
+    "actions": [
+      {
+        "text": "Download",
+        "icon": "download"
+      },
+      {
+        "text": "Free Trial",
+        "icon": "play_arrow"
+      }
+    ]
+  },
+  {
+    "id": "announcement-1",
+    "type": "announcement",
+    "sticker": {
+      "text": "URGENT",
+      "style": "badge",
+      "position": "top-right"
+    },
+    "content": {
+      "category": "System Maintenance",
+      "headline": "Scheduled Maintenance - August 25th",
+      "summary": "Our services will be temporarily unavailable for scheduled maintenance. Please plan accordingly.",
+      "published": {
+        "datetime": "2025-08-20T09:00:00Z",
+        "formatted": "August 20, 2025"
+      }
+    },
+    "announcement": {
+      "priority": "high",
+      "announcementType": "maintenance",
+      "effectiveDate": {
+        "start": "2025-08-25T02:00:00Z",
+        "end": "2025-08-25T06:00:00Z"
+      },
+      "targetAudience": "All Users",
+      "actionRequired": "None - services will resume automatically",
+      "isDismissible": false
+    },
+    "actions": [
+      {
+        "text": "View Details",
+        "popover": {
+          "content": "<h3>Maintenance Details</h3><p>We'll be upgrading our database servers to improve performance and reliability.</p><p>Duration: 4 hours (2 AM - 6 AM PST)</p>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "membership-1",
+    "type": "membership",
+    "ribbon": {
+      "text": "Most Popular",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Subscription Plan",
+      "headline": "Professional Plan",
+      "summary": "Everything you need to scale your business. Advanced features, priority support, and unlimited projects."
+    },
+    "membership": {
+      "planName": "Professional",
+      "price": {
+        "monthly": "29.99",
+        "yearly": "299.99",
+        "currency": "USD",
+        "savings": "20% off annual"
+      },
+      "features": [
+        "Unlimited projects",
+        "Advanced analytics",
+        "Priority email support",
+        "Custom integrations",
+        "Team collaboration (up to 10 users)",
+        "99.9% uptime SLA"
+      ],
+      "limitations": ["10 team members max", "50GB storage"],
+      "trialPeriod": "14 days free",
+      "isPopular": true
+    },
+    "actions": [
+      {
+        "text": "Start Free Trial",
+        "icon": "play_arrow"
+      },
+      {
+        "text": "Compare Plans",
+        "icon": "compare_arrows"
+      }
+    ]
+  },
+  {
+    "id": "achievement-1",
+    "type": "achievement",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/badges/aws-certified.avif",
+          "alt": "AWS Solutions Architect certification badge"
+        }
+      ]
+    },
+    "content": {
+      "category": "Professional Certification",
+      "headline": "AWS Certified Solutions Architect",
+      "summary": "Professional-level certification demonstrating expertise in designing distributed systems on AWS.",
+      "published": {
+        "formatted": "Earned August 2024"
+      }
+    },
+    "achievement": {
+      "achievementName": "AWS Certified Solutions Architect - Professional",
+      "issuingOrganization": "Amazon Web Services",
+      "dateEarned": "2024-08-15",
+      "expirationDate": "2027-08-15",
+      "verificationUrl": "https://aws.amazon.com/verification/ABC123XYZ",
+      "skillLevel": "Professional",
+      "credentialId": "AWS-SAP-2024-001234"
+    },
+    "actions": [
+      {
+        "text": "Verify Credential",
+        "url": "https://aws.amazon.com/verification/ABC123XYZ",
+        "icon": "verified"
+      }
+    ]
+  },
+  {
+    "id": "gallery-1",
+    "type": "gallery",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/gallery/portfolio-1.avif",
+          "alt": "Portfolio project showcase"
+        },
+        {
+          "type": "image",
+          "src": "assets/gallery/portfolio-2.avif",
+          "alt": "Design system components"
+        },
+        {
+          "type": "image",
+          "src": "assets/gallery/portfolio-3.avif",
+          "alt": "Mobile app interface"
+        }
+      ],
+      "caption": "Recent design projects and case studies"
+    },
+    "content": {
+      "category": "Design Portfolio",
+      "headline": "UI/UX Design Showcase 2024",
+      "summary": "A collection of recent design projects including web applications, mobile apps, and design systems."
+    },
+    "gallery": {
+      "totalCount": 24,
+      "featuredMedia": "assets/gallery/portfolio-1.avif",
+      "albumName": "2024 Portfolio",
+      "downloadOptions": ["High Resolution", "Web Optimized"],
+      "slideshowEnabled": true,
+      "categories": ["Web Design", "Mobile Apps", "Branding"]
+    },
+    "engagement": {
+      "viewCount": 3250,
+      "shareCount": 78
+    },
+    "actions": [
+      {
+        "text": "View Gallery",
+        "icon": "photo_library"
+      },
+      {
+        "text": "Download Archive",
+        "icon": "download"
+      }
+    ]
+  },
+  {
+    "id": "contact-1",
+    "type": "contact",
+    "content": {
+      "category": "Customer Support",
+      "headline": "Technical Support",
+      "summary": "Get help with technical issues, account problems, or general questions about our products and services."
+    },
+    "contact": {
+      "contactType": "Technical Support",
+      "availableHours": "Monday - Friday, 9 AM - 6 PM PST",
+      "responseTime": "Usually within 4 hours",
+      "contactMethods": [
+        {
+          "type": "email",
+          "value": "support@company.com",
+          "label": "Email Support"
+        },
+        {
+          "type": "phone",
+          "value": "+1-800-555-HELP",
+          "label": "Phone Support"
+        },
+        {
+          "type": "chat",
+          "value": "Live Chat",
+          "label": "Live Chat",
+          "available": true
+        }
+      ],
+      "languagesSupported": ["English", "Spanish", "French"],
+      "department": "Technical Support Team"
+    },
+    "actions": [
+      {
+        "text": "Start Live Chat",
+        "icon": "chat"
+      },
+      {
+        "text": "Call Support",
+        "url": "tel:+18005554357",
+        "icon": "phone"
+      }
+    ]
+  },
+  {
+    "id": "statistic-1",
+    "type": "statistic",
+    "content": {
+      "category": "Performance Metrics",
+      "headline": "Monthly Active Users",
+      "summary": "User engagement has increased significantly this quarter with strong retention rates."
+    },
+    "statistic": {
+      "metricName": "Monthly Active Users",
+      "currentValue": 125340,
+      "unit": "users",
+      "trend": "up",
+      "trendPercentage": 23.5,
+      "comparisonPeriod": "vs. last month",
+      "targetValue": 150000,
+      "chartData": [98000, 105000, 112000, 125340],
+      "period": "Last 4 months"
+    },
+    "actions": [
+      {
+        "text": "View Detailed Report",
+        "icon": "analytics"
+      }
+    ]
+  },
+  {
+    "id": "social-1",
+    "type": "social",
+    "content": {
+      "headline": "Just shipped a major update to our design system! 🎉",
+      "summary": "New components, improved accessibility, and better documentation. Check it out and let us know what you think!",
+      "published": {
+        "datetime": "2025-08-21T14:30:00Z",
+        "formatted": "2 hours ago"
+      }
+    },
+    "social": {
+      "platform": "Twitter",
+      "postContent": "Just shipped a major update to our design system! 🎉 New components, improved accessibility, and better documentation. Check it out and let us know what you think! #DesignSystems #UX",
+      "author": "@DesignTeam",
+      "engagement": {
+        "likes": 156,
+        "shares": 42,
+        "comments": 18
+      },
+      "hashtags": ["#DesignSystems", "#UX", "#Accessibility"],
+      "mediaAttachments": ["assets/social/design-system-update.avif"]
+    },
+    "actions": [
+      {
+        "text": "View on Twitter",
+        "url": "https://twitter.com/designteam/status/123456789",
+        "icon": "open_in_new"
+      },
+      {
+        "text": "Share",
+        "icon": "share"
+      }
+    ]
+  },
+  {
+    "id": "comparison-1",
+    "type": "comparison",
+    "content": {
+      "category": "Product Comparison",
+      "headline": "Headphone Comparison: Premium vs Pro",
+      "summary": "Compare features, pricing, and performance between our two flagship headphone models."
+    },
+    "comparison": {
+      "items": [
+        {
+          "name": "AuraSound Premium",
+          "price": "$199",
+          "image": "assets/products/aurasound-premium.avif"
+        },
+        {
+          "name": "AuraSound Pro",
+          "price": "$299",
+          "image": "assets/products/aurasound-pro.avif"
+        }
+      ],
+      "criteria": [
+        {
+          "feature": "Battery Life",
+          "premium": "25 hours",
+          "pro": "30 hours",
+          "winner": "pro"
+        },
+        {
+          "feature": "Noise Cancellation",
+          "premium": "Good",
+          "pro": "Excellent",
+          "winner": "pro"
+        },
+        {
+          "feature": "Weight",
+          "premium": "280g",
+          "pro": "320g",
+          "winner": "premium"
+        },
+        {
+          "feature": "Wireless Range",
+          "premium": "10m",
+          "pro": "15m",
+          "winner": "pro"
+        }
+      ],
+      "recommendation": "pro",
+      "summary": "AuraSound Pro offers superior performance for professionals and audiophiles"
+    },
+    "actions": [
+      {
+        "text": "View Full Comparison",
+        "icon": "compare_arrows"
+      }
+    ]
+  },
+  {
+    "id": "booking-1",
+    "type": "booking",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/venues/conference-room-a.avif",
+          "alt": "Modern conference room with large table"
+        }
+      ]
+    },
+    "content": {
+      "category": "Conference Room",
+      "headline": "Conference Room A",
+      "summary": "Spacious conference room with modern AV equipment, perfect for team meetings and presentations."
+    },
+    "booking": {
+      "serviceName": "Conference Room A Rental",
+      "venue": "TechHub Downtown",
+      "capacity": 12,
+      "duration": "2 hours",
+      "availableSlots": [
+        {
+          "date": "2025-08-25",
+          "times": ["9:00 AM", "2:00 PM", "4:00 PM"]
+        },
+        {
+          "date": "2025-08-26",
+          "times": ["10:00 AM", "1:00 PM", "3:00 PM"]
+        }
+      ],
+      "price": {
+        "hourlyRate": 45,
+        "currency": "USD"
+      },
+      "amenities": ["Projector", "Whiteboard", "Video Conferencing", "Coffee Service"],
+      "cancellationPolicy": "Free cancellation up to 24 hours before booking",
+      "specialRequests": "Available upon request"
+    },
+    "actions": [
+      {
+        "text": "Book Now",
+        "icon": "event"
+      },
+      {
+        "text": "Check Availability",
+        "icon": "schedule"
+      }
+    ]
+  }
+]

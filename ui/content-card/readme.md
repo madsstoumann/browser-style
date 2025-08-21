@@ -1,17 +1,18 @@
-# Item Card
+# Content Card
+Content Card is a generic card-component that can be extended into a variety of card types, such as articles, products, videos, and more. It can output structured markup for SEO and rich snippets. It consists of two areas: Media Area and Content Area.
 
 ### Media Area
 
-This area typically contains visual elements like images or videos.
+This area contains visual elements like images or videos.
 
 *   **Media Source(s)**: The primary visual content.
-    *   **Image**: Can include `src`, `srcset` for different resolutions, `alt` text, `width`, `height`, and `loading` attributes.
+    *   **Image**: Can include `src`, `srcset` for different resolutions, `alt` text, `width`, `height`, `decode` and `loading` attributes.
     *   **Video**: Can include `src`, `poster` image, `tracks` for subtitles/captions, and player `options` (like autoplay, controls, loop, muted).
     *   **YouTube**: Can be embedded.
 *   **Media Caption**: A `figcaption` to describe the media.
 *   **Overlays**: Elements positioned over the media.
-    *   **Ribbon**: A banner-like element, often used for "Featured" status. Can have custom `text`, `color`, and an `icon`.
-    *   **Sticker/Badge**: A smaller element, like a "New" sticker, with configurable `text`, `position`, and `style`.
+    *   **Ribbon**: A banner-like element, often used for "Featured" status. 
+    *   **Sticker/Badge**: A smaller element, like a "New" sticker.
 
 ### Content Area
 
@@ -1165,4 +1166,330 @@ Returns appropriate style attributes for a given class name.
 - **Schema.org**: Rich structured data for assistive technologies
 - **Color Contrast**: Follows WCAG guidelines
 - **Focus Management**: Proper focus indicators and order
+
+---
+
+## Umbraco Backend Implementation
+
+### Architecture Approach
+
+For the Umbraco backend implementation, we recommend a **unified composition-based approach** that mirrors the frontend architecture. This provides flexibility while maintaining consistency and ease of management.
+
+### Document Type Structure
+
+#### Base ContentCard Document Type
+
+```csharp
+[PublishedModel("contentCard")]
+public partial class ContentCard : PublishedContentModel
+{
+    public ContentCard(IPublishedContent content, IPublishedValueFallback publishedValueFallback) 
+        : base(content, publishedValueFallback) { }
+
+    // Core Properties (inherited by all card types)
+    public string CardType => GetValue<string>("cardType");
+    public string CardId => GetValue<string>("cardId");
+    public bool UseSchema => GetValue<bool>("useSchema");
+    
+    // Media Area
+    public IPublishedContent Media => GetValue<IPublishedContent>("media");
+    public string MediaCaption => GetValue<string>("mediaCaption");
+    public RibbonModel Ribbon => GetValue<RibbonModel>("ribbon");
+    public StickerModel Sticker => GetValue<StickerModel>("sticker");
+    
+    // Content Area
+    public string Category => GetValue<string>("category");
+    public string Headline => GetValue<string>("headline");
+    public string HeadlineTag => GetValue<string>("headlineTag");
+    public string Subheadline => GetValue<string>("subheadline");
+    public string Summary => GetValue<string>("summary");
+    public IHtmlString Text => GetValue<IHtmlString>("text");
+    
+    // Metadata
+    public DateTime? Published => GetValue<DateTime?>("published");
+    public DateTime? Modified => GetValue<DateTime?>("modified");
+    public string ReadingTime => GetValue<string>("readingTime");
+    
+    // Collections
+    public IEnumerable<AuthorModel> Authors => GetValue<IEnumerable<AuthorModel>>("authors");
+    public IEnumerable<TagModel> Tags => GetValue<IEnumerable<TagModel>>("tags");
+    public IEnumerable<LinkModel> Links => GetValue<IEnumerable<LinkModel>>("links");
+    public IEnumerable<ActionModel> Actions => GetValue<IEnumerable<ActionModel>>("actions");
+    
+    // Engagement
+    public EngagementModel Engagement => GetValue<EngagementModel>("engagement");
+    
+    // Type-specific data (JSON or nested content)
+    public string TypeSpecificData => GetValue<string>("typeSpecificData");
+}
+```
+
+#### Composition-Based Extensions
+
+Instead of separate document types for each card type, use **compositions** to extend the base model:
+
+```csharp
+// Recipe-specific composition
+[PublishedModel("recipeComposition")]
+public partial class RecipeComposition : PublishedElementModel
+{
+    public string PrepTime => GetValue<string>("prepTime");
+    public string CookTime => GetValue<string>("cookTime");
+    public string Servings => GetValue<string>("servings");
+    public IEnumerable<string> Ingredients => GetValue<IEnumerable<string>>("ingredients");
+    public IEnumerable<string> Instructions => GetValue<IEnumerable<string>>("instructions");
+}
+
+// Product-specific composition
+[PublishedModel("productComposition")]
+public partial class ProductComposition : PublishedElementModel
+{
+    public string Sku => GetValue<string>("sku");
+    public PriceModel Price => GetValue<PriceModel>("price");
+    public string Availability => GetValue<string>("availability");
+    public RatingModel Rating => GetValue<RatingModel>("rating");
+}
+
+// Event-specific composition
+[PublishedModel("eventComposition")]
+public partial class EventComposition : PublishedElementModel
+{
+    public DateTime StartDate => GetValue<DateTime>("startDate");
+    public DateTime EndDate => GetValue<DateTime>("endDate");
+    public LocationModel Location => GetValue<LocationModel>("location");
+    public OrganizerModel Organizer => GetValue<OrganizerModel>("organizer");
+    public IEnumerable<OfferModel> Offers => GetValue<IEnumerable<OfferModel>>("offers");
+    public string Status => GetValue<string>("status");
+    public string AttendanceMode => GetValue<string>("attendanceMode");
+}
+```
+
+### Value Converters and Models
+
+#### Supporting Models
+
+```csharp
+public class RibbonModel
+{
+    public string Text { get; set; }
+    public string Style { get; set; }
+    public string Color { get; set; }
+}
+
+public class AuthorModel
+{
+    public string Name { get; set; }
+    public string Role { get; set; }
+    public IPublishedContent Avatar { get; set; }
+    public string Url { get; set; }
+    public IEnumerable<ContactModel> Contacts { get; set; }
+}
+
+public class PriceModel
+{
+    public decimal Current { get; set; }
+    public decimal? Original { get; set; }
+    public string Currency { get; set; }
+    public string DiscountText { get; set; }
+}
+
+public class EngagementModel
+{
+    public IEnumerable<ReactionModel> Reactions { get; set; }
+    public int CommentCount { get; set; }
+    public int ShareCount { get; set; }
+    public int ViewCount { get; set; }
+}
+```
+
+### Property Editors
+
+#### Card Type Selector
+
+```javascript
+// Custom property editor for selecting card type
+angular.module("umbraco").controller("cardTypeSelectorController", function($scope) {
+    $scope.cardTypes = [
+        { alias: "article", name: "Article Card", icon: "icon-article" },
+        { alias: "news", name: "News Card", icon: "icon-newspaper" },
+        { alias: "recipe", name: "Recipe Card", icon: "icon-recipe" },
+        { alias: "product", name: "Product Card", icon: "icon-shopping-basket" },
+        { alias: "event", name: "Event Card", icon: "icon-calendar" },
+        { alias: "business", name: "Business Card", icon: "icon-office" },
+        { alias: "poll", name: "Poll Card", icon: "icon-poll" },
+        { alias: "quote", name: "Quote Card", icon: "icon-quote" },
+        { alias: "faq", name: "FAQ Card", icon: "icon-help" },
+        { alias: "timeline", name: "Timeline Card", icon: "icon-time" }
+    ];
+});
+```
+
+#### Dynamic Type-Specific Fields
+
+```csharp
+public class ContentCardController : UmbracoApiController
+{
+    [HttpGet]
+    public object GetCardTypeFields(string cardType)
+    {
+        return cardType switch
+        {
+            "recipe" => new { compositions = new[] { "recipeComposition" } },
+            "product" => new { compositions = new[] { "productComposition" } },
+            "event" => new { compositions = new[] { "eventComposition" } },
+            "business" => new { compositions = new[] { "businessComposition" } },
+            _ => new { compositions = Array.Empty<string>() }
+        };
+    }
+}
+```
+
+### Data Transformation
+
+#### Service for Frontend JSON Generation
+
+```csharp
+public class ContentCardService
+{
+    public object GenerateCardData(ContentCard card)
+    {
+        var baseData = new
+        {
+            id = card.CardId ?? card.Key.ToString(),
+            type = card.CardType,
+            media = GenerateMediaData(card.Media, card.MediaCaption),
+            ribbon = card.Ribbon,
+            sticker = card.Sticker,
+            content = new
+            {
+                category = card.Category,
+                headline = card.Headline,
+                headlineTag = card.HeadlineTag ?? "h2",
+                subheadline = card.Subheadline,
+                summary = card.Summary,
+                text = card.Text?.ToString(),
+                published = GeneratePublishedData(card.Published),
+                modified = GeneratePublishedData(card.Modified),
+                readingTime = card.ReadingTime
+            },
+            authors = card.Authors?.Select(MapAuthor),
+            engagement = card.Engagement,
+            tags = card.Tags?.Select(MapTag),
+            links = card.Links?.Select(MapLink),
+            actions = card.Actions?.Select(MapAction)
+        };
+
+        // Add type-specific data based on card type
+        var typeSpecificData = GenerateTypeSpecificData(card);
+        
+        return MergeObjects(baseData, typeSpecificData);
+    }
+
+    private object GenerateTypeSpecificData(ContentCard card)
+    {
+        return card.CardType switch
+        {
+            "recipe" => GenerateRecipeData(card),
+            "product" => GenerateProductData(card),
+            "event" => GenerateEventData(card),
+            "business" => GenerateBusinessData(card),
+            "poll" => GeneratePollData(card),
+            _ => new { }
+        };
+    }
+
+    private object GenerateRecipeData(ContentCard card)
+    {
+        var recipe = card as RecipeComposition;
+        if (recipe == null) return new { };
+
+        return new
+        {
+            recipe = new
+            {
+                prepTime = recipe.PrepTime,
+                cookTime = recipe.CookTime,
+                servings = recipe.Servings,
+                instructions = recipe.Instructions
+            }
+        };
+    }
+}
+```
+
+### Block List/Grid Integration
+
+#### Card Collection Property
+
+```json
+{
+    "alias": "cardCollection",
+    "label": "Card Collection",
+    "propertyEditorAlias": "Umbraco.BlockList",
+    "config": {
+        "blocks": [
+            {
+                "contentElementTypeKey": "content-card-guid",
+                "label": "{{headline}} ({{cardType}})"
+            }
+        ],
+        "validationLimit": { "max": 50 }
+    }
+}
+```
+
+### API Endpoints
+
+#### REST API for Frontend Integration
+
+```csharp
+[Route("api/cards")]
+public class CardsApiController : UmbracoApiController
+{
+    private readonly ContentCardService _cardService;
+
+    [HttpGet]
+    public IActionResult GetCards(int page = 1, int pageSize = 12, string cardType = null)
+    {
+        var cards = _umbracoHelper.Content(1234) // Cards container node
+            .Children<ContentCard>()
+            .Where(c => cardType == null || c.CardType == cardType)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(_cardService.GenerateCardData);
+
+        return Ok(cards);
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetCard(string id)
+    {
+        var card = _umbracoHelper.Content(id) as ContentCard;
+        if (card == null) return NotFound();
+
+        var cardData = _cardService.GenerateCardData(card);
+        return Ok(cardData);
+    }
+}
+```
+
+### Benefits of This Approach
+
+1. **Consistency**: Matches frontend architecture
+2. **Flexibility**: Easy to add new card types without structural changes
+3. **Maintainability**: Single point of truth for common properties
+4. **Editor Experience**: Unified interface with type-specific customization
+5. **Performance**: Efficient queries and caching strategies
+6. **Schema Integration**: Automatic Schema.org markup generation
+7. **API Ready**: Clean JSON output for headless scenarios
+
+### Migration Strategy
+
+1. **Phase 1**: Create base ContentCard document type with core properties
+2. **Phase 2**: Implement compositions for existing card types
+3. **Phase 3**: Build custom property editors and validation
+4. **Phase 4**: Create API endpoints and frontend integration
+5. **Phase 5**: Add advanced features (search, filtering, personalization)
+
+This unified approach provides the flexibility of the frontend component system while leveraging Umbraco's composition and inheritance features for optimal content management.
 ````
