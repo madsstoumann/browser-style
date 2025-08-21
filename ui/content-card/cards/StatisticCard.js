@@ -61,7 +61,6 @@ export class StatisticCard extends BaseCard {
 		
 		return `
 			<div ${getStyle('cc-statistic-trend', settings)} ${getStyle(trendClass, settings)}>
-				<span class="material-icons">${icon}</span>
 				<div ${getStyle('cc-statistic-trend-info', settings)}>
 					${trendPercentage ? `<span ${getStyle('cc-statistic-trend-percent', settings)}>${trendPercentage > 0 ? '+' : ''}${trendPercentage}%</span>` : ''}
 					${comparisonPeriod ? `<span ${getStyle('cc-statistic-trend-period', settings)}>${comparisonPeriod}</span>` : ''}

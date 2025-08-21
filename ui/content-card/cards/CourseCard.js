@@ -53,7 +53,6 @@ export class CourseCard extends BaseCard {
 		if (courseData.duration) {
 			meta.push(`
 				<div ${getStyle('cc-course-meta-item', settings)}>
-					<span class="material-icons">schedule</span>
 					<span ${useSchema ? 'itemprop="timeRequired"' : ''}>${courseData.duration}</span>
 				</div>
 			`);
@@ -62,7 +61,6 @@ export class CourseCard extends BaseCard {
 		if (courseData.difficultyLevel) {
 			meta.push(`
 				<div ${getStyle('cc-course-meta-item', settings)}>
-					<span class="material-icons">signal_cellular_alt</span>
 					<span ${useSchema ? 'itemprop="educationalLevel"' : ''}>${courseData.difficultyLevel}</span>
 				</div>
 			`);
@@ -71,7 +69,6 @@ export class CourseCard extends BaseCard {
 		if (courseData.provider) {
 			meta.push(`
 				<div ${getStyle('cc-course-meta-item', settings)}>
-					<span class="material-icons">school</span>
 					<span ${useSchema ? 'itemprop="provider" itemscope itemtype="https://schema.org/Organization"' : ''}>
 						<span ${useSchema ? 'itemprop="name"' : ''}>${courseData.provider}</span>
 					</span>
@@ -124,7 +121,6 @@ export class CourseCard extends BaseCard {
 				
 				${content.readingTime ? `
 					<div ${getStyle('cc-course-duration', settings)}>
-						<span class="material-icons">play_circle</span>
 						<span>${content.readingTime}</span>
 					</div>
 				` : ''}

@@ -13,7 +13,6 @@ export class BookingCard extends BaseCard {
 		if (venue) {
 			info.push(`
 				<div ${getStyle('cc-booking-info-item', settings)} ${useSchema ? 'itemprop="provider" itemscope itemtype="https://schema.org/Organization"' : ''}>
-					<span class="material-icons">business</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${venue}</span>
 				</div>
 			`);
@@ -22,7 +21,6 @@ export class BookingCard extends BaseCard {
 		if (capacity) {
 			info.push(`
 				<div ${getStyle('cc-booking-info-item', settings)}>
-					<span class="material-icons">group</span>
 					<span>Capacity: ${capacity} people</span>
 				</div>
 			`);
@@ -31,7 +29,6 @@ export class BookingCard extends BaseCard {
 		if (serviceName && serviceName !== this.data.content?.headline) {
 			info.push(`
 				<div ${getStyle('cc-booking-info-item', settings)}>
-					<span class="material-icons">room_service</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${serviceName}</span>
 				</div>
 			`);
@@ -57,7 +54,6 @@ export class BookingCard extends BaseCard {
 				${useSchema ? `<meta itemprop="priceCurrency" content="${currency || 'USD'}">` : ''}
 				${useSchema ? `<meta itemprop="totalPrice" content="${hourlyRate}">` : ''}
 				<div ${getStyle('cc-booking-price', settings)}>
-					<span class="material-icons">attach_money</span>
 					<div ${getStyle('cc-booking-price-info', settings)}>
 						<span ${getStyle('cc-booking-rate', settings)}>
 							${currencySymbol}${hourlyRate}/hour
@@ -81,7 +77,6 @@ export class BookingCard extends BaseCard {
 						return `
 							<div ${getStyle('cc-booking-slot-group', settings)}>
 								<div ${getStyle('cc-booking-date', settings)}>
-									<span class="material-icons">event</span>
 									<span>${date.toLocaleDateString()}</span>
 								</div>
 								<div ${getStyle('cc-booking-times', settings)}>
@@ -108,7 +103,6 @@ export class BookingCard extends BaseCard {
 				<div ${getStyle('cc-booking-amenities-list', settings)}>
 					${amenities.map(amenity => `
 						<div ${getStyle('cc-booking-amenity', settings)}>
-							<span class="material-icons">check</span>
 							<span>${amenity}</span>
 						</div>
 					`).join('')}
@@ -123,7 +117,6 @@ export class BookingCard extends BaseCard {
 		if (bookingData.cancellationPolicy) {
 			policies.push(`
 				<div ${getStyle('cc-booking-policy', settings)}>
-					<span class="material-icons">policy</span>
 					<div ${getStyle('cc-booking-policy-info', settings)}>
 						<strong>Cancellation Policy</strong>
 						<p>${bookingData.cancellationPolicy}</p>
@@ -135,7 +128,6 @@ export class BookingCard extends BaseCard {
 		if (bookingData.specialRequests) {
 			policies.push(`
 				<div ${getStyle('cc-booking-policy', settings)}>
-					<span class="material-icons">support_agent</span>
 					<div ${getStyle('cc-booking-policy-info', settings)}>
 						<strong>Special Requests</strong>
 						<p>${bookingData.specialRequests}</p>

@@ -11,7 +11,6 @@ export class SoftwareCard extends BaseCard {
 		
 		return `
 			<div ${getStyle('cc-software-os', settings)}>
-				<span class="material-icons">devices</span>
 				<div ${getStyle('cc-software-os-list', settings)}>
 					${operatingSystems.map(os => `
 						<span ${getStyle('cc-software-os-item', settings)} ${useSchema ? 'itemprop="operatingSystem"' : ''}>${os}</span>
@@ -26,7 +25,6 @@ export class SoftwareCard extends BaseCard {
 		
 		return `
 			<div ${getStyle('cc-software-developer', settings)} ${useSchema ? 'itemprop="author" itemscope itemtype="https://schema.org/Organization"' : ''}>
-				<span class="material-icons">business</span>
 				<span ${useSchema ? 'itemprop="name"' : ''}>${developer.name}</span>
 				${developer.website && useSchema ? `<meta itemprop="url" content="${developer.website}">` : ''}
 			</div>
@@ -39,7 +37,6 @@ export class SoftwareCard extends BaseCard {
 		if (softwareData.applicationCategory) {
 			meta.push(`
 				<div ${getStyle('cc-software-meta-item', settings)}>
-					<span class="material-icons">category</span>
 					<span ${useSchema ? 'itemprop="applicationCategory"' : ''}>${softwareData.applicationCategory}</span>
 				</div>
 			`);
@@ -48,7 +45,6 @@ export class SoftwareCard extends BaseCard {
 		if (softwareData.version) {
 			meta.push(`
 				<div ${getStyle('cc-software-meta-item', settings)}>
-					<span class="material-icons">new_releases</span>
 					<span ${useSchema ? 'itemprop="softwareVersion"' : ''}>v${softwareData.version}</span>
 				</div>
 			`);
@@ -57,7 +53,6 @@ export class SoftwareCard extends BaseCard {
 		if (softwareData.fileSize) {
 			meta.push(`
 				<div ${getStyle('cc-software-meta-item', settings)}>
-					<span class="material-icons">storage</span>
 					<span ${useSchema ? 'itemprop="fileSize"' : ''}>${softwareData.fileSize}</span>
 				</div>
 			`);

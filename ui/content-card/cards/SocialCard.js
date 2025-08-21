@@ -25,7 +25,6 @@ export class SocialCard extends BaseCard {
 			const icon = this.getPlatformIcon(socialData.platform);
 			meta.push(`
 				<div ${getStyle('cc-social-meta-item', settings)}>
-					<span class="material-icons">${icon}</span>
 					<span ${useSchema ? 'itemprop="publisher" itemscope itemtype="https://schema.org/Organization"' : ''}>
 						<span ${useSchema ? 'itemprop="name"' : ''}>${socialData.platform}</span>
 					</span>
@@ -36,7 +35,6 @@ export class SocialCard extends BaseCard {
 		if (socialData.author) {
 			meta.push(`
 				<div ${getStyle('cc-social-meta-item', settings)}>
-					<span class="material-icons">person</span>
 					<span ${useSchema ? 'itemprop="author" itemscope itemtype="https://schema.org/Person"' : ''}>
 						<span ${useSchema ? 'itemprop="name"' : ''}>${socialData.author}</span>
 					</span>
@@ -61,7 +59,6 @@ export class SocialCard extends BaseCard {
 		if (engagement.likes) {
 			metrics.push(`
 				<div ${getStyle('cc-social-metric', settings)}>
-					<span class="material-icons">favorite</span>
 					<span>${engagement.likes.toLocaleString()}</span>
 				</div>
 			`);
@@ -70,7 +67,6 @@ export class SocialCard extends BaseCard {
 		if (engagement.shares) {
 			metrics.push(`
 				<div ${getStyle('cc-social-metric', settings)}>
-					<span class="material-icons">share</span>
 					<span>${engagement.shares.toLocaleString()}</span>
 				</div>
 			`);
@@ -79,7 +75,6 @@ export class SocialCard extends BaseCard {
 		if (engagement.comments) {
 			metrics.push(`
 				<div ${getStyle('cc-social-metric', settings)}>
-					<span class="material-icons">comment</span>
 					<span>${engagement.comments.toLocaleString()}</span>
 				</div>
 			`);
@@ -170,7 +165,6 @@ export class SocialCard extends BaseCard {
 				
 				${content.published?.formatted ? `
 					<div ${getStyle('cc-social-timestamp', settings)}>
-						<span class="material-icons">schedule</span>
 						<time>${content.published.formatted}</time>
 					</div>
 				` : ''}

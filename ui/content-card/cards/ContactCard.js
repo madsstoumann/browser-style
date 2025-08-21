@@ -33,9 +33,6 @@ export class ContactCard extends BaseCard {
 						
 						return `
 							<div ${getStyle('cc-contact-method', settings)}>
-								<div ${getStyle('cc-contact-method-icon', settings)} ${!isAvailable ? 'data-unavailable' : ''}>
-									<span class="material-icons">${icon}</span>
-								</div>
 								<div ${getStyle('cc-contact-method-info', settings)}>
 									<div ${getStyle('cc-contact-method-label', settings)}>${method.label}</div>
 									${method.type === 'chat' ? `
@@ -63,7 +60,6 @@ export class ContactCard extends BaseCard {
 		if (contactData.contactType) {
 			info.push(`
 				<div ${getStyle('cc-contact-info-item', settings)}>
-					<span class="material-icons">support_agent</span>
 					<span ${useSchema ? 'itemprop="contactType"' : ''}>${contactData.contactType}</span>
 				</div>
 			`);
@@ -72,7 +68,6 @@ export class ContactCard extends BaseCard {
 		if (contactData.availableHours) {
 			info.push(`
 				<div ${getStyle('cc-contact-info-item', settings)}>
-					<span class="material-icons">schedule</span>
 					<span ${useSchema ? 'itemprop="hoursAvailable"' : ''}>${contactData.availableHours}</span>
 				</div>
 			`);
@@ -81,7 +76,6 @@ export class ContactCard extends BaseCard {
 		if (contactData.responseTime) {
 			info.push(`
 				<div ${getStyle('cc-contact-info-item', settings)}>
-					<span class="material-icons">timer</span>
 					<span>Response time: ${contactData.responseTime}</span>
 				</div>
 			`);
@@ -90,7 +84,6 @@ export class ContactCard extends BaseCard {
 		if (contactData.department) {
 			info.push(`
 				<div ${getStyle('cc-contact-info-item', settings)}>
-					<span class="material-icons">business</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${contactData.department}</span>
 				</div>
 			`);

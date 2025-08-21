@@ -13,7 +13,6 @@ export class LocationCard extends BaseCard {
 		
 		return `
 			<div ${getStyle('cc-location-address', settings)} ${useSchema ? 'itemprop="address" itemscope itemtype="https://schema.org/PostalAddress"' : ''}>
-				<span class="material-icons">location_on</span>
 				<div ${getStyle('cc-location-address-text', settings)}>
 					${streetAddress ? `<div ${useSchema ? 'itemprop="streetAddress"' : ''}>${streetAddress}</div>` : ''}
 					<div>
@@ -42,7 +41,6 @@ export class LocationCard extends BaseCard {
 		if (locationData.contact) {
 			contacts.push(`
 				<div ${getStyle('cc-location-contact-item', settings)}>
-					<span class="material-icons">phone</span>
 					<a href="tel:${locationData.contact}">${locationData.contact}</a>
 				</div>
 			`);
@@ -51,7 +49,6 @@ export class LocationCard extends BaseCard {
 		if (locationData.hours) {
 			contacts.push(`
 				<div ${getStyle('cc-location-contact-item', settings)}>
-					<span class="material-icons">schedule</span>
 					<span>${locationData.hours}</span>
 				</div>
 			`);

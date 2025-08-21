@@ -53,7 +53,6 @@ export class ReviewCard extends BaseCard {
 			const reviewDate = new Date(reviewData.reviewDate);
 			meta.push(`
 				<div ${getStyle('cc-review-meta-item', settings)}>
-					<span class="material-icons">schedule</span>
 					<time ${useSchema ? `itemprop="datePublished" datetime="${reviewData.reviewDate}"` : ''}>${reviewDate.toLocaleDateString()}</time>
 				</div>
 			`);
@@ -63,7 +62,6 @@ export class ReviewCard extends BaseCard {
 			const itemType = reviewData.itemType || 'Thing';
 			meta.push(`
 				<div ${getStyle('cc-review-meta-item', settings)} ${useSchema ? `itemprop="itemReviewed" itemscope itemtype="https://schema.org/${itemType}"` : ''}>
-					<span class="material-icons">inventory</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${reviewData.productReviewed}</span>
 					${reviewData.productImage && useSchema ? `<meta itemprop="image" content="${reviewData.productImage}">` : ''}
 					${reviewData.aggregateRating && useSchema ? `
@@ -88,7 +86,6 @@ export class ReviewCard extends BaseCard {
 		if (reviewData.helpfulVotes && reviewData.helpfulVotes > 0) {
 			meta.push(`
 				<div ${getStyle('cc-review-meta-item', settings)}>
-					<span class="material-icons">thumb_up</span>
 					<span>${reviewData.helpfulVotes} people found this helpful</span>
 				</div>
 			`);
