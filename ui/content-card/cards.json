@@ -6,7 +6,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/profiles/sarah-chen.avif",
+          "src": "https://ui-avatars.com/api/?name=Sarah+Chen&background=6366f1&color=ffffff&size=300",
           "alt": "Sarah Chen, UX Engineer",
           "width": 300,
           "height": 300
@@ -58,7 +58,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/courses/web-fundamentals.avif",
+          "src": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&h=250&fit=crop&auto=format",
           "alt": "Modern Web Development Fundamentals course"
         }
       ]
@@ -172,7 +172,7 @@
       "helpfulVotes": 23,
       "productReviewed": "AuraSound Pro Headphones",
       "itemType": "Product",
-      "productImage": "assets/products/aurasound-pro-headphones.avif",
+      "productImage": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&auto=format",
       "aggregateRating": {
         "ratingValue": 4.6,
         "ratingCount": 1847,
@@ -217,7 +217,7 @@
       "helpfulVotes": 42,
       "productReviewed": "Golden Gate Bridge Photography Tour",
       "itemType": "Product",
-      "productImage": "assets/tours/golden-gate-photography-tour.avif",
+      "productImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop&auto=format",
       "aggregateRating": {
         "ratingValue": 4.8,
         "ratingCount": 156,
@@ -248,7 +248,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/locations/golden-gate-bridge.avif",
+          "src": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=500&h=300&fit=crop&auto=format",
           "alt": "Golden Gate Bridge at sunset"
         }
       ]
@@ -297,7 +297,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/software/code-editor-pro.avif",
+          "src": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=500&h=300&fit=crop&auto=format",
           "alt": "Code Editor Pro interface screenshot"
         }
       ]
@@ -318,8 +318,8 @@
         "website": "https://devtools.com"
       },
       "screenshots": [
-        "assets/software/code-editor-1.avif",
-        "assets/software/code-editor-2.avif"
+        "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=400&fit=crop&auto=format",
+        "https://images.unsplash.com/photo-1618477388954-7852f32655ec?w=600&h=400&fit=crop&auto=format"
       ],
       "systemRequirements": {
         "ram": "4GB minimum, 8GB recommended",
@@ -436,7 +436,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/badges/aws-certified.avif",
+          "src": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=400&h=300&fit=crop&auto=format",
           "alt": "AWS Solutions Architect certification badge"
         }
       ]
@@ -473,17 +473,17 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/gallery/portfolio-1.avif",
+          "src": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=300&fit=crop&auto=format",
           "alt": "Portfolio project showcase"
         },
         {
           "type": "image",
-          "src": "assets/gallery/portfolio-2.avif",
+          "src": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=500&h=300&fit=crop&auto=format",
           "alt": "Design system components"
         },
         {
           "type": "image",
-          "src": "assets/gallery/portfolio-3.avif",
+          "src": "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500&h=300&fit=crop&auto=format",
           "alt": "Mobile app interface"
         }
       ],
@@ -496,7 +496,7 @@
     },
     "gallery": {
       "totalCount": 24,
-      "featuredMedia": "assets/gallery/portfolio-1.avif",
+      "featuredMedia": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=300&fit=crop&auto=format",
       "albumName": "2024 Portfolio",
       "downloadOptions": ["High Resolution", "Web Optimized"],
       "slideshowEnabled": true,
@@ -609,7 +609,7 @@
         "comments": 18
       },
       "hashtags": ["#DesignSystems", "#UX", "#Accessibility"],
-      "mediaAttachments": ["assets/social/design-system-update.avif"]
+      "mediaAttachments": ["https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=500&h=300&fit=crop&auto=format"]
     },
     "actions": [
       {
@@ -636,12 +636,12 @@
         {
           "name": "AuraSound Premium",
           "price": "$199",
-          "image": "assets/products/aurasound-premium.avif"
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=200&fit=crop&auto=format"
         },
         {
           "name": "AuraSound Pro",
           "price": "$299",
-          "image": "assets/products/aurasound-pro.avif"
+          "image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=200&fit=crop&auto=format"
         }
       ],
       "criteria": [
@@ -687,7 +687,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "assets/venues/conference-room-a.avif",
+          "src": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&h=300&fit=crop&auto=format",
           "alt": "Modern conference room with large table"
         }
       ]
