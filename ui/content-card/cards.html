@@ -91,6 +91,12 @@
 	<h2>Reviews & Feedback</h2>
 	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap>
 		<review-card content="review-1"></review-card>
+		<review-card content="review-2"></review-card>
+	</lay-out>
+
+	<h2>Products & Shopping</h2>
+	<lay-out lg="columns(1)" col-gap="2" row-gap="2" gap>
+		<product-card content="product-1"></product-card>
 	</lay-out>
 
 	<h2>Places & Locations</h2>
@@ -145,6 +151,7 @@
 		import { ReviewCard } from './cards/ReviewCard.js';
 		import { LocationCard } from './cards/LocationCard.js';
 		import { SoftwareCard } from './cards/SoftwareCard.js';
+		import { ProductCard } from './cards/ProductCard.js';
 		import { AnnouncementCard } from './cards/AnnouncementCard.js';
 		import { MembershipCard } from './cards/MembershipCard.js';
 		import { AchievementCard } from './cards/AchievementCard.js';
@@ -251,7 +258,8 @@
 					customElements.whenDefined('statistic-card'),
 					customElements.whenDefined('social-card'),
 					customElements.whenDefined('comparison-card'),
-					customElements.whenDefined('booking-card')
+					customElements.whenDefined('booking-card'),
+					customElements.whenDefined('product-card')
 				]);
 				console.log('✅ All new custom elements defined');
 
@@ -271,7 +279,8 @@
 					'statistic-card[content]',
 					'social-card[content]',
 					'comparison-card[content]',
-					'booking-card[content]'
+					'booking-card[content]',
+					'product-card[content]'
 				];
 				
 				cardSelectors.forEach(selector => {
@@ -316,6 +325,7 @@
 						case 'social': tagName = 'social-card'; break;
 						case 'comparison': tagName = 'comparison-card'; break;
 						case 'booking': tagName = 'booking-card'; break;
+						case 'product': tagName = 'product-card'; break;
 						default:
 							console.warn(`❌ Unknown card type: ${item.type} for item: ${item.id}`);
 							return;

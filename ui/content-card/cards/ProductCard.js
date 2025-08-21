@@ -18,7 +18,7 @@ export class ProductCard extends BaseCard {
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
-				${this.data.sku && useSchema ? `<meta itemprop="sku" content="${this.data.sku}">` : ''}
+				${productData.sku && useSchema ? `<meta itemprop="sku" content="${productData.sku}">` : ''}
 				${content.category && useSchema ? `<meta itemprop="category" content="${content.category}">` : ''}
 				
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}${content.subheadline ? ` <span class="cc-subheadline">${content.subheadline}</span>` : ''}</${headlineTag}>` : ''}
@@ -43,6 +43,7 @@ export class ProductCard extends BaseCard {
 					<div ${getStyle('cc-product-rating', settings)} ${useSchema ? 'itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"' : ''}>
 						${useSchema ? `<meta itemprop="ratingValue" content="${rating.value}">` : ''}
 						${useSchema ? `<meta itemprop="ratingCount" content="${rating.count || 0}">` : ''}
+						${useSchema ? `<meta itemprop="reviewCount" content="${rating.count || 0}">` : ''}
 						${useSchema ? `<meta itemprop="bestRating" content="${rating.max || 5}">` : ''}
 						${useSchema ? `<meta itemprop="worstRating" content="${rating.min || 0}">` : ''}
 						<span>${'★'.repeat(Math.round(rating.value))}${'☆'.repeat((rating.max || 5) - Math.round(rating.value))}

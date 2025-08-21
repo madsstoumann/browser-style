@@ -169,7 +169,8 @@
       },
       "reviewDate": "2025-07-20",
       "helpfulVotes": 23,
-      "productReviewed": "AuraSound Pro Headphones"
+      "productReviewed": "AuraSound Pro Headphones",
+      "itemType": "Product"
     },
     "engagement": {
       "reactions": [
@@ -180,6 +181,90 @@
       {
         "text": "Helpful",
         "icon": "thumb_up"
+      }
+    ]
+  },
+  {
+    "id": "review-2",
+    "type": "review",
+    "content": {
+      "headline": "Breathtaking views and iconic architecture",
+      "summary": "Visited during sunset and the views were absolutely stunning. The bridge is a masterpiece of engineering and design. Highly recommend walking or biking across.",
+      "category": "Location Review"
+    },
+    "review": {
+      "rating": {
+        "value": 5,
+        "max": 5
+      },
+      "reviewer": {
+        "name": "Michael T.",
+        "verified": false
+      },
+      "reviewDate": "2025-08-15",
+      "helpfulVotes": 42,
+      "productReviewed": "Golden Gate Bridge Photography Tour",
+      "itemType": "Product"
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "helpful", "icon": "thumb_up", "count": 42, "ariaLabel": "Mark as helpful" }
+      ]
+    },
+    "actions": [
+      {
+        "text": "Helpful",
+        "icon": "thumb_up"
+      }
+    ]
+  },
+  {
+    "id": "product-1",
+    "type": "product", 
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "assets/products/aurasound-headphones.avif",
+          "alt": "AuraSound Pro Headphones"
+        }
+      ]
+    },
+    "content": {
+      "category": "Electronics",
+      "headline": "AuraSound Pro Headphones",
+      "summary": "Premium wireless headphones with active noise cancellation and superior sound quality.",
+      "published": {
+        "datetime": "2025-07-15T00:00:00Z",
+        "formatted": "July 15, 2025"
+      }
+    },
+    "product": {
+      "sku": "ASP-2025-BLK",
+      "price": {
+        "current": 299.99,
+        "original": 349.99,
+        "currency": "USD",
+        "discountText": "15% off"
+      },
+      "availability": "InStock",
+      "validUntil": "2025-12-31",
+      "rating": {
+        "value": 4.5,
+        "count": 1247,
+        "max": 5
+      }
+    },
+    "engagement": {
+      "reactions": [
+        { "type": "like", "icon": "favorite", "count": 89, "ariaLabel": "Like this product" }
+      ]
+    },
+    "actions": [
+      {
+        "text": "Buy Now",
+        "url": "#",
+        "icon": "shopping_cart"
       }
     ]
   },

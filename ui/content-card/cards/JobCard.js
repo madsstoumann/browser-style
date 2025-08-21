@@ -20,6 +20,7 @@ export class JobCard extends BaseCard {
 					<span ${useSchema ? `itemprop="value" itemscope itemtype="https://schema.org/QuantitativeValue"` : ''}>
 						${useSchema ? `<meta itemprop="minValue" content="${min}">` : ''}
 						${useSchema ? `<meta itemprop="maxValue" content="${max}">` : ''}
+						${useSchema ? `<meta itemprop="unitText" content="${period || 'YEAR'}">` : ''}
 						${currencySymbol}${min?.toLocaleString()} - ${currencySymbol}${max?.toLocaleString()}
 					</span>
 					${period ? ` ${period}` : ''}
@@ -71,6 +72,7 @@ export class JobCard extends BaseCard {
 				<div ${getStyle('cc-job-meta-item', settings)} ${useSchema ? 'itemprop="jobLocation" itemscope itemtype="https://schema.org/Place"' : ''}>
 					<span class="material-icons">location_on</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${jobData.location}</span>
+					${useSchema ? `<meta itemprop="address" content="${jobData.location}">` : ''}
 				</div>
 			`);
 		}

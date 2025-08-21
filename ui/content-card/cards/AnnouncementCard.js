@@ -42,10 +42,18 @@ export class AnnouncementCard extends BaseCard {
 		}
 		
 		if (announcementData.announcementType) {
+			const validCategories = {
+				'maintenance': 'https://en.wikipedia.org/wiki/Maintenance',
+				'feature': 'https://en.wikipedia.org/wiki/Software_feature', 
+				'security': 'https://en.wikipedia.org/wiki/Computer_security',
+				'covid': 'https://www.wikidata.org/wiki/Q81068910',
+				'covid-19': 'https://www.wikidata.org/wiki/Q81068910'
+			};
+			const categoryUrl = validCategories[announcementData.announcementType.toLowerCase()] || 'https://en.wikipedia.org/wiki/Maintenance';
 			meta.push(`
 				<div ${getStyle('cc-announcement-meta-item', settings)}>
 					<span class="material-icons">category</span>
-					<span ${useSchema ? 'itemprop="category"' : ''}>${announcementData.announcementType}</span>
+					<span ${useSchema ? `itemprop="category" content="${categoryUrl}"` : ''}>${announcementData.announcementType}</span>
 				</div>
 			`);
 		}
@@ -131,7 +139,8 @@ export class AnnouncementCard extends BaseCard {
 		return `
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)} ${getStyle(priorityClass, settings)}>
-				${content.category && useSchema ? `<meta itemprop="category" content="${content.category}">` : ''}
+				${useSchema ? `<meta itemprop="datePosted" content="${new Date().toISOString().split('T')[0]}">` : ''}
+				${useSchema ? `<meta itemprop="spatialCoverage" content="Global">` : ''}
 				${content.published?.datetime && useSchema ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
 				
 				<div ${getStyle('cc-announcement-header', settings)}>

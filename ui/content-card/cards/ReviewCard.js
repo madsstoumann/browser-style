@@ -60,8 +60,9 @@ export class ReviewCard extends BaseCard {
 		}
 		
 		if (reviewData.productReviewed) {
+			const itemType = reviewData.itemType || 'Thing';
 			meta.push(`
-				<div ${getStyle('cc-review-meta-item', settings)} ${useSchema ? 'itemprop="itemReviewed" itemscope itemtype="https://schema.org/Product"' : ''}>
+				<div ${getStyle('cc-review-meta-item', settings)} ${useSchema ? `itemprop="itemReviewed" itemscope itemtype="https://schema.org/${itemType}"` : ''}>
 					<span class="material-icons">inventory</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${reviewData.productReviewed}</span>
 				</div>

@@ -100,6 +100,7 @@ export class CourseCard extends BaseCard {
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="about" content="${content.category}">` : ''}
+				${useSchema ? `<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" style="display:none;"><meta itemprop="courseMode" content="Online"><meta itemprop="courseWorkload" content="PT6W"></div>` : ''}
 				
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : ''}
 				
@@ -110,6 +111,7 @@ export class CourseCard extends BaseCard {
 				${price.current ? `
 					<div ${getStyle('cc-course-price', settings)} ${useSchema ? 'itemprop="offers" itemscope itemtype="https://schema.org/Offer"' : ''}>
 						${useSchema ? `<meta itemprop="priceCurrency" content="${price.currency || 'USD'}">` : ''}
+						${useSchema ? `<meta itemprop="category" content="${content.category || 'Course'}">` : ''}
 						<span ${getStyle('cc-course-price-current', settings)} ${useSchema ? `itemprop="price" content="${price.current}"` : ''}>${price.currency || '$'}${price.current}</span>
 						${price.original && price.original > price.current ? `<del ${getStyle('cc-course-price-original', settings)}>${price.currency || '$'}${price.original}</del>` : ''}
 						${useSchema ? `<meta itemprop="availability" content="https://schema.org/InStock">` : ''}
