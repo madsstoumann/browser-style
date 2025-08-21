@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>New Content Cards - Extended Card Types</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Showcase of new content card types including profiles, courses, jobs, reviews, and more.">
+	<meta name="view-transition" content="same-origin">
+	
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../layout/index.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
+	<link rel="stylesheet" href="index.css" blocking="render">
+
+	<style>
+	html {
+		interpolate-size: allow-keywords;
+		--layout-primary-bg: hsl(220, 20%, 95%);
+		--layout-primary-c: hsl(220, 100%, 20%);
+		--layout-secondary-bg: hsl(120, 50%, 95%);
+		--layout-secondary-c: hsl(120, 50%, 20%);
+		--layout-tertiary-bg: #FFE7E0;
+		--layout-quaternary-bg: hsl(280, 30%, 95%);
+		--layout-quaternary-c: hsl(280, 50%, 20%);
+	}
+	body {
+		--layout-bleed-mw: 1024px;
+		--layout-mi: 1rem;
+		display: grid;
+		margin-block: 1rem;
+		margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+		row-gap: 2rem;
+	}
+		
+	main {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1rem;
+		padding: 1rem;
+	}
+
+	.primary { --cc-bg: var(--layout-primary-bg); }
+	.secondary { --cc-bg: var(--layout-secondary-bg); }
+	.tertiary { --cc-bg: var(--layout-tertiary-bg); }
+	.quaternary { --cc-bg: var(--layout-quaternary-bg); }
+
+	h1, h2 {
+		text-align: center;
+		color: var(--layout-primary-c);
+		margin: 2rem 0 1rem;
+	}
+
+	h2 {
+		font-size: 1.5rem;
+		border-bottom: 2px solid var(--layout-primary-bg);
+		padding-bottom: 0.5rem;
+	}
+
+	lay-out[overflow] { --layout-scrollbar-c: #0002 #0000; }
+
+	</style>
+</head>
+<body>
+
+	<h1>New Content Card Types</h1>
+	<p style="text-align: center; color: #666; max-width: 600px; margin: 0 auto;">
+		Showcasing the extended card collection with 15 new card types for profiles, courses, jobs, reviews, locations, software, announcements, memberships, achievements, galleries, contact info, statistics, social media, comparisons, and bookings.
+	</p>
+
+	<h2>Profile & People Cards</h2>
+	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap>
+		<profile-card content="profile-1" layout="rows(th-2 p:1)"></profile-card>
+	</lay-out>
+
+	<h2>Learning & Development</h2>
+	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap theme="secondary" pad-top="2" pad-bottom="2">
+		<course-card content="course-1" layout="rows(th-2 p:1)"></course-card>
+		<achievement-card content="achievement-1" layout="rows(th-2 p:1)"></achievement-card>
+	</lay-out>
+
+	<h2>Career & Employment</h2>
+	<lay-out lg="columns(1)" bleed col-gap="2" pad-bottom="2" pad-inline="1" pad-top="2" theme="tertiary">
+		<job-card content="job-1" layout="columns(21:9)" col-gap="2"></job-card>
+	</lay-out>
+
+	<h2>Reviews & Feedback</h2>
+	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap>
+		<review-card content="review-1"></review-card>
+	</lay-out>
+
+	<h2>Places & Locations</h2>
+	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap>
+		<location-card content="location-1" layout="rows(th-2 p:1)"></location-card>
+		<booking-card content="booking-1" layout="rows(th-2 p:1)"></booking-card>
+	</lay-out>
+
+	<h2>Software & Technology</h2>
+	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap theme="primary" pad-top="2" pad-bottom="2">
+		<software-card content="software-1" layout="rows(th-2 p:1)"></software-card>
+		<statistic-card content="statistic-1"></statistic-card>
+	</lay-out>
+
+	<h2>Announcements & Communications</h2>
+	<lay-out lg="columns(1)" bleed pad-bottom="2" pad-inline="1" pad-top="2" theme="quaternary">
+		<announcement-card content="announcement-1" layout="p:1.5"></announcement-card>
+	</lay-out>
+
+	<h2>Subscriptions & Memberships</h2>
+	<lay-out lg="columns(1)" col-gap="2" row-gap="2" gap>
+		<membership-card content="membership-1"></membership-card>
+	</lay-out>
+
+	<h2>Media & Content</h2>
+	<lay-out lg="columns(2)" col-gap="2" row-gap="2" gap theme="tertiary" pad-top="2" pad-bottom="2">
+		<gallery-card content="gallery-1" layout="rows(th-2 p:1)"></gallery-card>
+		<social-card content="social-1"></social-card>
+	</lay-out>
+
+	<h2>Comparisons & Analysis</h2>
+	<lay-out lg="columns(1)" bleed col-gap="2" pad-bottom="2" pad-inline="1" pad-top="2" theme="secondary">
+		<comparison-card content="comparison-1" layout="p:1.5"></comparison-card>
+	</lay-out>
+
+	<h2>Support & Contact</h2>
+	<lay-out lg="columns(1)" col-gap="2" row-gap="2" gap>
+		<contact-card content="contact-1"></contact-card>
+	</lay-out>
+
+	<main></main>
+
+	<script type="module">
+		// Import layout srcsets utilities
+		import { generateLayoutSrcsets, createLayoutsDataMap, getSrcset } from '@browser.style/layout';
+		
+		// Import individual new card components
+		import { setContentForElement } from './data-loader.js';
+		import { ProfileCard } from './cards/ProfileCard.js';
+		import { CourseCard } from './cards/CourseCard.js';
+		import { JobCard } from './cards/JobCard.js';
+		import { ReviewCard } from './cards/ReviewCard.js';
+		import { LocationCard } from './cards/LocationCard.js';
+		import { SoftwareCard } from './cards/SoftwareCard.js';
+		import { AnnouncementCard } from './cards/AnnouncementCard.js';
+		import { MembershipCard } from './cards/MembershipCard.js';
+		import { AchievementCard } from './cards/AchievementCard.js';
+		import { GalleryCard } from './cards/GalleryCard.js';
+		import { ContactCard } from './cards/ContactCard.js';
+		import { StatisticCard } from './cards/StatisticCard.js';
+		import { SocialCard } from './cards/SocialCard.js';
+		import { ComparisonCard } from './cards/ComparisonCard.js';
+		import { BookingCard } from './cards/BookingCard.js';
+
+		// Custom elements are auto-registered when modules are imported
+
+		async function initializeLayoutSrcsets() {
+			try {
+				console.log('🔧 Loading layout configuration...');
+				
+				// Load configuration and layout data
+				const [config, gridData, columnsData, bentoData, asymmetricalData, ratiosData] = await Promise.all([
+					fetch('../layout/config.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/grid.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/columns.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/bento.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/asymmetrical.json').then(r => r.json()),
+					fetch('../layout/systems/layouts/ratios.json').then(r => r.json())
+				]);
+
+				// Store globally for card system to use
+				window._layoutSrcsetData = {
+					config,
+					layoutsData: createLayoutsDataMap({
+						'grid.json': gridData,
+						'columns.json': columnsData,
+						'bento.json': bentoData,
+						'asymmetrical.json': asymmetricalData,
+						'ratios.json': ratiosData
+					})
+				};
+
+				// Set srcsets on all lay-out elements
+				console.log('📐 Setting layout srcsets...');
+				const layoutElements = document.querySelectorAll('lay-out');
+				console.log(`📊 Found ${layoutElements.length} lay-out elements`);
+
+				layoutElements.forEach((element, index) => {
+					try {
+						const srcsets = generateLayoutSrcsets(element, config, window._layoutSrcsetData.layoutsData);
+						
+						if (srcsets && srcsets !== 'default:100vw') {
+							element.setAttribute('srcsets', srcsets);
+							console.log(`✅ Set srcsets for lay-out ${index + 1}:`, srcsets);
+						} else {
+							element.setAttribute('srcsets', 'default:100vw');
+							console.log(`ℹ️  Set fallback srcsets for lay-out ${index + 1}`);
+						}
+						
+						// Set layout data on child elements
+						Array.from(element.children).forEach((child, childIndex) => {
+							child.setAttribute('data-layout-index', childIndex);
+							
+							// Set layout data in settings for BaseCard to use
+							child.settings; // Triggers _ensureSettingsInitialized()
+							child._settings.layoutIndex = childIndex;
+							child._settings.layoutSrcsets = srcsets || 'default:100vw';
+							child._settings.srcsetBreakpoints = [280, 480, 900];
+							
+							console.log(`📍 Set layout index ${childIndex}, srcsets "${srcsets}", and breakpoints [280, 480, 900] on child ${childIndex + 1} of lay-out ${index + 1}`);
+						});
+						
+					} catch (error) {
+						console.warn(`⚠️  Failed to generate srcsets for lay-out ${index + 1}:`, error);
+						element.setAttribute('srcsets', 'default:100vw');
+					}
+				});
+
+				console.log('🎉 Layout srcsets complete!');
+
+			} catch (error) {
+				console.error('💥 Failed to initialize layout srcsets:', error);
+			}
+		}
+
+		async function initializeCards() {
+			try {
+				console.log('🃏 Loading new card content data...');
+				const allData = await fetch('cards.json').then(r => r.json());
+				console.log(`📄 Loaded ${allData.length} new card content items`);
+				
+				// Store globally to avoid multiple loads
+				window._cardData = allData;
+
+				// Wait for custom elements to be defined
+				await Promise.all([
+					customElements.whenDefined('profile-card'),
+					customElements.whenDefined('course-card'),
+					customElements.whenDefined('job-card'),
+					customElements.whenDefined('review-card'),
+					customElements.whenDefined('location-card'),
+					customElements.whenDefined('software-card'),
+					customElements.whenDefined('announcement-card'),
+					customElements.whenDefined('membership-card'),
+					customElements.whenDefined('achievement-card'),
+					customElements.whenDefined('gallery-card'),
+					customElements.whenDefined('contact-card'),
+					customElements.whenDefined('statistic-card'),
+					customElements.whenDefined('social-card'),
+					customElements.whenDefined('comparison-card'),
+					customElements.whenDefined('booking-card')
+				]);
+				console.log('✅ All new custom elements defined');
+
+				// Load data for existing cards with content attributes
+				const cardSelectors = [
+					'profile-card[content]',
+					'course-card[content]',
+					'job-card[content]',
+					'review-card[content]',
+					'location-card[content]',
+					'software-card[content]',
+					'announcement-card[content]',
+					'membership-card[content]',
+					'achievement-card[content]',
+					'gallery-card[content]',
+					'contact-card[content]',
+					'statistic-card[content]',
+					'social-card[content]',
+					'comparison-card[content]',
+					'booking-card[content]'
+				];
+				
+				cardSelectors.forEach(selector => {
+					const cards = document.querySelectorAll(selector);
+					cards.forEach(card => {
+						const contentId = card.getAttribute('content');
+						
+						setContentForElement(card, contentId, allData);
+					});
+				});
+				
+				// Get main container for dynamic cards
+				const main = document.querySelector('main');
+				
+				// Collect all statically defined content IDs to avoid duplicates
+				const definedContent = new Set();
+				cardSelectors.forEach(selector => {
+					Array.from(document.querySelectorAll(selector))
+						.forEach(el => definedContent.add(el.getAttribute('content')));
+				});
+
+				// Create dynamic cards for remaining data
+				let dynamicCardsCreated = 0;
+				allData.forEach(item => {
+					if (definedContent.has(item.id)) return;
+					
+					// Map data type to custom element type
+					let tagName;
+					switch(item.type) {
+						case 'profile': tagName = 'profile-card'; break;
+						case 'course': tagName = 'course-card'; break;
+						case 'job': tagName = 'job-card'; break;
+						case 'review': tagName = 'review-card'; break;
+						case 'location': tagName = 'location-card'; break;
+						case 'software': tagName = 'software-card'; break;
+						case 'announcement': tagName = 'announcement-card'; break;
+						case 'membership': tagName = 'membership-card'; break;
+						case 'achievement': tagName = 'achievement-card'; break;
+						case 'gallery': tagName = 'gallery-card'; break;
+						case 'contact': tagName = 'contact-card'; break;
+						case 'statistic': tagName = 'statistic-card'; break;
+						case 'social': tagName = 'social-card'; break;
+						case 'comparison': tagName = 'comparison-card'; break;
+						case 'booking': tagName = 'booking-card'; break;
+						default:
+							console.warn(`❌ Unknown card type: ${item.type} for item: ${item.id}`);
+							return;
+					}
+					
+					// Create element using innerHTML (avoids createElement issues)
+					const wrapper = document.createElement('div');
+					wrapper.innerHTML = `<${tagName} content="${item.id}"></${tagName}>`;
+					const cardElement = wrapper.firstElementChild;
+					main.appendChild(cardElement);
+					
+					// Use setContentForElement - layout data already set during initialization
+					setContentForElement(cardElement, item.id, allData);
+					dynamicCardsCreated++;
+					console.log(`✅ Created ${tagName} for ${item.id}`);
+				});
+
+				console.log(`🎉 New cards initialized! ${dynamicCardsCreated} dynamic cards created`);
+
+				// Initialize smart popover toggle listeners
+				const { initializePopoverToggleListeners } = await import('./base/utils.js');
+				
+				// Add a small delay to ensure DOM is fully rendered
+				setTimeout(() => {
+					initializePopoverToggleListeners();
+				}, 100);
+
+			} catch (error) {
+				console.error('❌ Failed to initialize new cards:', error);
+			}
+		}
+
+		// Add global function to update srcsets for new layout elements
+		window.updateLayoutSrcsets = function(container = document) {
+			if (!window._layoutSrcsetData) return;
+			
+			const newLayoutElements = container.querySelectorAll('lay-out:not([srcsets])');
+			console.log(`🔄 Updating srcsets for ${newLayoutElements.length} new lay-out elements`);
+			
+			newLayoutElements.forEach((element, index) => {
+				try {
+					const srcsets = generateLayoutSrcsets(element, window._layoutSrcsetData.config, window._layoutSrcsetData.layoutsData);
+					if (srcsets && srcsets !== 'default:100vw') {
+						element.setAttribute('srcsets', srcsets);
+						console.log(`✅ Updated srcsets for new lay-out ${index + 1}:`, srcsets);
+					}
+					
+					// Set layout data on child elements
+					Array.from(element.children).forEach((child, childIndex) => {
+						child.setAttribute('data-layout-index', childIndex);
+						
+						// Set layout data in settings for BaseCard to use
+						child.settings; // Triggers _ensureSettingsInitialized()
+						child._settings.layoutIndex = childIndex;
+						child._settings.layoutSrcsets = srcsets || 'default:100vw';
+						child._settings.srcsetBreakpoints = [280, 480, 900];
+					});
+					
+				} catch (error) {
+					console.warn(`⚠️  Failed to update srcsets for new lay-out ${index + 1}:`, error);
+				}
+			});
+		};
+
+		// Start the app - layout srcsets first, then cards
+		async function startApp() {
+			await initializeLayoutSrcsets();
+			await initializeCards();
+		}
+		
+		startApp();
+	</script>
+
+</body>
+</html>
