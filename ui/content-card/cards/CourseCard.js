@@ -100,7 +100,7 @@ export class CourseCard extends BaseCard {
 			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="about" content="${content.category}">` : ''}
-				${useSchema ? `<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" style="display:none;"><meta itemprop="courseMode" content="Online"><meta itemprop="courseWorkload" content="PT6W"></div>` : ''}
+				${useSchema && courseData.courseWorkload ? `<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" style="display:none;"><meta itemprop="courseMode" content="Online"><meta itemprop="courseWorkload" content="${courseData.courseWorkload}"></div>` : ''}
 				
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : ''}
 				

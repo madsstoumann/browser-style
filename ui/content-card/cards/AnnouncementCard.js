@@ -42,18 +42,10 @@ export class AnnouncementCard extends BaseCard {
 		}
 		
 		if (announcementData.announcementType) {
-			const validCategories = {
-				'maintenance': 'https://en.wikipedia.org/wiki/Maintenance',
-				'feature': 'https://en.wikipedia.org/wiki/Software_feature', 
-				'security': 'https://en.wikipedia.org/wiki/Computer_security',
-				'covid': 'https://www.wikidata.org/wiki/Q81068910',
-				'covid-19': 'https://www.wikidata.org/wiki/Q81068910'
-			};
-			const categoryUrl = validCategories[announcementData.announcementType.toLowerCase()] || 'https://en.wikipedia.org/wiki/Maintenance';
 			meta.push(`
 				<div ${getStyle('cc-announcement-meta-item', settings)}>
 					<span class="material-icons">category</span>
-					<span ${useSchema ? `itemprop="category" content="${categoryUrl}"` : ''}>${announcementData.announcementType}</span>
+					<span>${announcementData.announcementType}</span>
 				</div>
 			`);
 		}

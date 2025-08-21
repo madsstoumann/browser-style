@@ -75,6 +75,7 @@
     },
     "course": {
       "duration": "6 weeks",
+      "courseWorkload": "PT40H",
       "difficultyLevel": "Beginner",
       "prerequisites": ["Basic computer skills", "Text editor familiarity"],
       "learningOutcomes": [
@@ -170,7 +171,18 @@
       "reviewDate": "2025-07-20",
       "helpfulVotes": 23,
       "productReviewed": "AuraSound Pro Headphones",
-      "itemType": "Product"
+      "itemType": "Product",
+      "productImage": "assets/products/aurasound-pro-headphones.avif",
+      "aggregateRating": {
+        "ratingValue": 4.6,
+        "ratingCount": 1847,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "productPrice": {
+        "amount": "299.00",
+        "currency": "USD"
+      }
     },
     "engagement": {
       "reactions": [
@@ -188,9 +200,9 @@
     "id": "review-2",
     "type": "review",
     "content": {
-      "headline": "Breathtaking views and iconic architecture",
-      "summary": "Visited during sunset and the views were absolutely stunning. The bridge is a masterpiece of engineering and design. Highly recommend walking or biking across.",
-      "category": "Location Review"
+      "headline": "Amazing Photography Tour Experience",
+      "summary": "The guided photography tour was exceptional! Our guide knew all the best spots and times for capturing the bridge. Professional equipment provided and great tips shared.",
+      "category": "Service Review"
     },
     "review": {
       "rating": {
@@ -204,7 +216,18 @@
       "reviewDate": "2025-08-15",
       "helpfulVotes": 42,
       "productReviewed": "Golden Gate Bridge Photography Tour",
-      "itemType": "Product"
+      "itemType": "Product",
+      "productImage": "assets/tours/golden-gate-photography-tour.avif",
+      "aggregateRating": {
+        "ratingValue": 4.8,
+        "ratingCount": 156,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "productPrice": {
+        "amount": "75.00",
+        "currency": "USD"
+      }
     },
     "engagement": {
       "reactions": [
@@ -215,56 +238,6 @@
       {
         "text": "Helpful",
         "icon": "thumb_up"
-      }
-    ]
-  },
-  {
-    "id": "product-1",
-    "type": "product", 
-    "media": {
-      "sources": [
-        {
-          "type": "image",
-          "src": "assets/products/aurasound-headphones.avif",
-          "alt": "AuraSound Pro Headphones"
-        }
-      ]
-    },
-    "content": {
-      "category": "Electronics",
-      "headline": "AuraSound Pro Headphones",
-      "summary": "Premium wireless headphones with active noise cancellation and superior sound quality.",
-      "published": {
-        "datetime": "2025-07-15T00:00:00Z",
-        "formatted": "July 15, 2025"
-      }
-    },
-    "product": {
-      "sku": "ASP-2025-BLK",
-      "price": {
-        "current": 299.99,
-        "original": 349.99,
-        "currency": "USD",
-        "discountText": "15% off"
-      },
-      "availability": "InStock",
-      "validUntil": "2025-12-31",
-      "rating": {
-        "value": 4.5,
-        "count": 1247,
-        "max": 5
-      }
-    },
-    "engagement": {
-      "reactions": [
-        { "type": "like", "icon": "favorite", "count": 89, "ariaLabel": "Like this product" }
-      ]
-    },
-    "actions": [
-      {
-        "text": "Buy Now",
-        "url": "#",
-        "icon": "shopping_cart"
       }
     ]
   },
@@ -386,7 +359,6 @@
       "position": "top-right"
     },
     "content": {
-      "category": "System Maintenance",
       "headline": "Scheduled Maintenance - August 25th",
       "summary": "Our services will be temporarily unavailable for scheduled maintenance. Please plan accordingly.",
       "published": {

@@ -65,6 +65,22 @@ export class ReviewCard extends BaseCard {
 				<div ${getStyle('cc-review-meta-item', settings)} ${useSchema ? `itemprop="itemReviewed" itemscope itemtype="https://schema.org/${itemType}"` : ''}>
 					<span class="material-icons">inventory</span>
 					<span ${useSchema ? 'itemprop="name"' : ''}>${reviewData.productReviewed}</span>
+					${reviewData.productImage && useSchema ? `<meta itemprop="image" content="${reviewData.productImage}">` : ''}
+					${reviewData.aggregateRating && useSchema ? `
+						<div itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating" style="display:none;">
+							<meta itemprop="ratingValue" content="${reviewData.aggregateRating.ratingValue}">
+							<meta itemprop="ratingCount" content="${reviewData.aggregateRating.ratingCount}">
+							<meta itemprop="bestRating" content="${reviewData.aggregateRating.bestRating}">
+							<meta itemprop="worstRating" content="${reviewData.aggregateRating.worstRating}">
+						</div>
+					` : ''}
+					${reviewData.productPrice && useSchema ? `
+						<div itemprop="offers" itemscope itemtype="https://schema.org/Offer" style="display:none;">
+							<meta itemprop="price" content="${reviewData.productPrice.amount}">
+							<meta itemprop="priceCurrency" content="${reviewData.productPrice.currency}">
+							<meta itemprop="availability" content="https://schema.org/InStock">
+						</div>
+					` : ''}
 				</div>
 			`);
 		}

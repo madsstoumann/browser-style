@@ -87,16 +87,12 @@ export class LocationCard extends BaseCard {
 		const emptyStars = max - filledStars;
 		
 		return `
-			<div ${getStyle('cc-location-rating', settings)} ${useSchema ? 'itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating"' : ''}>
-				${useSchema ? `<meta itemprop="ratingValue" content="${value}">` : ''}
-				${useSchema ? `<meta itemprop="ratingCount" content="${count}">` : ''}
-				${useSchema ? `<meta itemprop="bestRating" content="${max}">` : ''}
-				${useSchema ? `<meta itemprop="worstRating" content="1">` : ''}
+			<div ${getStyle('cc-location-rating', settings)}>
 				<div ${getStyle('cc-location-stars', settings)} role="img" aria-label="Rating: ${value} out of ${max} stars">
 					<span aria-hidden="true">
 						${'★'.repeat(filledStars)}${'☆'.repeat(emptyStars)}
 					</span>
-					<span ${getStyle('cc-location-rating-text', settings)}>${value} (${count?.toLocaleString()} reviews)</span>
+					<span ${getStyle('cc-location-rating-text', settings)}>${value} (${count?.toLocaleString()} ratings)</span>
 				</div>
 			</div>
 		`;
