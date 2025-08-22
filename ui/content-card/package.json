@@ -1,0 +1,10 @@
+{
+  "name": "content-card",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "cssnano": "^7.0.7",
+    "cssnano-preset-advanced": "^7.0.7",
+    "postcss": "^8.5.6"
+  }
+}
