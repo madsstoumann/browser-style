@@ -1,7 +1,53 @@
 {
-  "name": "content-card",
+  "name": "@browser.style/content-card",
   "version": "1.0.0",
+  "description": "Modular content card components for web applications with responsive layouts and flexible theming",
   "type": "module",
+  "main": "src/js/cards/index.js",
+  "style": "src/css/index.css",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node -e \"import('./src/js/cards/index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
+    "prepublishOnly": "npm test"
+  },
+  "exports": {
+    ".": "./src/js/cards/index.js",
+    "./css": "./src/css/index.css",
+    "./base/*": "./src/js/base/*",
+    "./cards/*": "./src/js/cards/*",
+    "./cards": "./src/js/cards/index.js"
+  },
+  "files": [
+    "src/",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "content-cards",
+    "cards",
+    "responsive-design",
+    "modular-css",
+    "web-components",
+    "custom-elements",
+    "ui-components",
+    "css-components"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/content-card"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/content-card",
   "devDependencies": {
     "cssnano": "^7.0.7",
     "cssnano-preset-advanced": "^7.0.7",
