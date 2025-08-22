@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderAuthors, renderEngagement, renderLinks, 
 export class RecipeCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-recipe');
 	}
 
 	render() {

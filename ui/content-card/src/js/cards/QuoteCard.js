@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderAuthors, renderLinks, renderMedia } from
 export class QuoteCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-quote');
 	}
 
 	render() {

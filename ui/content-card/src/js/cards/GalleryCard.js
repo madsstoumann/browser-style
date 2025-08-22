@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderLinks, renderMedia } f
 export class GalleryCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-gallery');
 	}
 
 	renderGalleryInfo(galleryData, settings) {

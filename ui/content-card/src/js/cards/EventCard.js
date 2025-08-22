@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderHeader, renderLinks, r
 export class EventCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-event');
 	}
 
 	render() {

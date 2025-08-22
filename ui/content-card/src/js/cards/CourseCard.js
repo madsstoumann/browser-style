@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderLinks, renderMedia, re
 export class CourseCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-course');
 	}
 
 	renderPrerequisites(prerequisites, settings) {

@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderAuthors, renderEngagement, renderHeader,
 export class ArticleCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-article');
 	}
 
 	render() {

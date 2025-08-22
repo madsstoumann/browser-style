@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderHeader, renderLinks, renderMedia } from 
 export class FaqCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-faq');
 	}
 
 	render() {

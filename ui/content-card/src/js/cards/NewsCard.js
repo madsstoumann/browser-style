@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderAuthors, renderEngagement, renderHeader,
 export class NewsCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-news');
 	}
 
 	render() {

@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class ContactCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-contact');
 	}
 
 	getContactIcon(type) {

@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderLinks, renderMedia } f
 export class ReviewCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-review');
 	}
 
 	renderRating(rating, useSchema, settings) {

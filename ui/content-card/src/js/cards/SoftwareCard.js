@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderLinks, renderMedia } f
 export class SoftwareCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-software');
 	}
 
 	renderOperatingSystems(operatingSystems, useSchema, settings) {

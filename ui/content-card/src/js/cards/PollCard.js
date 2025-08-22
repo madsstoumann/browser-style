@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderAuthors, renderEngagement, renderHeader,
 export class PollCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-poll');
 		this.pollResults = null;
 		this.userVote = null;
 		this.hasVoted = false;

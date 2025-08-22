@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderHeader, renderLinks, renderMedia } from 
 export class TimelineCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-timeline');
 	}
 
 	render() {

@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class JobCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-job');
 	}
 
 	renderSalaryRange(salaryRange, useSchema, settings) {

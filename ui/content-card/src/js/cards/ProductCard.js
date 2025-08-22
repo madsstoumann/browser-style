@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderEngagement, renderLinks, renderMedia, re
 export class ProductCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-product');
 	}
 
 	render() {

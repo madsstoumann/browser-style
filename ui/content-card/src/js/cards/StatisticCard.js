@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class StatisticCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-statistic');
 	}
 
 	getTrendIcon(trend) {

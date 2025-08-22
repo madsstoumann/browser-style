@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class BookingCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-booking');
 	}
 
 	renderVenueInfo(bookingData, useSchema, settings) {

@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class ProfileCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-profile');
 	}
 
 	renderContacts(contacts, useSchema, settings) {

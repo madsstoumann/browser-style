@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderLinks, renderMedia } from '../base/utils
 export class MembershipCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-membership');
 	}
 
 	renderPricing(price, useSchema, settings) {

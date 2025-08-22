@@ -4,6 +4,7 @@ import { getStyle, renderActions, renderHeader, renderLinks, renderMedia } from 
 export class BusinessCard extends BaseCard {
 	constructor() {
 		super();
+		this.classList.add('cc-business');
 	}
 
 	renderMap(geoData, businessName = 'business location') {
