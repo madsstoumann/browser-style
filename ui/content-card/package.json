@@ -7,6 +7,8 @@
   "style": "src/css/index.css",
   "scripts": {
     "build": "node build.js",
+    "serve": "node server.js",
+    "start": "npm run build && npm run serve",
     "test": "node -e \"import('./src/js/cards/index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
     "prepublishOnly": "npm test"
   },
@@ -51,7 +53,12 @@
   "devDependencies": {
     "cssnano": "^7.0.7",
     "cssnano-preset-advanced": "^7.0.7",
+    "html-minifier-terser": "^7.2.0",
     "postcss": "^8.5.6",
     "puppeteer": "^24.17.0"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "express": "^5.1.0"
   }
 }
