@@ -5,6 +5,7 @@
   "devDependencies": {
     "cssnano": "^7.0.7",
     "cssnano-preset-advanced": "^7.0.7",
-    "postcss": "^8.5.6"
+    "postcss": "^8.5.6",
+    "puppeteer": "^24.17.0"
   }
 }
