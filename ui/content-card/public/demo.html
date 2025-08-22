@@ -16,6 +16,7 @@
 	</script>
 	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
 	<link rel="stylesheet" href="../index.css" blocking="render">
+	<link rel="stylesheet" href="../demo.css" blocking="render">
 
 </head>
 <body>
@@ -128,7 +129,7 @@
 
 	<script type="module">
 		import { initContentCards } from '../build.js';
-		// The build script will auto-initialize, no need to call anything
+		initContentCards('data.json');
 	</script>
 
 </body>

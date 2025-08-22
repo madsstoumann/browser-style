@@ -9,7 +9,6 @@ import { generateLayoutSrcsets, createLayoutsDataMap } from '@browser.style/layo
 function getBasePath() {
 	// Use absolute path from server root to avoid relative path issues
 	const basePath = '/ui/content-card/';
-	console.log(`📁 Using absolute base path: ${basePath}`);
 	return basePath;
 }
 
@@ -18,60 +17,86 @@ async function importAllCards() {
 	try {
 		const basePath = getBasePath();
 		const allCards = await import(`${basePath}cards/index.js`);
-		const cardNames = Object.keys(allCards);
-		console.log(`📦 Imported ${cardNames.length} card components from cards/index.js`);
-		console.log(`✅ Available cards: ${cardNames.join(', ')}`);
 		return allCards;
 	} catch (error) {
-		console.error('💥 Failed to import cards from cards/index.js:', error);
 		return {};
 	}
 }
 
+// Extract unique layout types from config
+function extractLayoutTypes(config) {
+	const layoutTypes = new Set();
+	
+	if (config.systems?.[0]?.breakpoints) {
+		const breakpoints = config.systems[0].breakpoints;
+		
+		for (const breakpoint of Object.values(breakpoints)) {
+			if (breakpoint.layouts) {
+				for (const layout of breakpoint.layouts) {
+					if (typeof layout === 'string') {
+						layoutTypes.add(layout);
+					} else if (typeof layout === 'object') {
+						for (const layoutType of Object.keys(layout)) {
+							layoutTypes.add(layoutType);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return Array.from(layoutTypes);
+}
+
 async function initializeLayoutSrcsets() {
 	try {
-		console.log('🔧 Loading layout configuration...');
 		
-		// Load configuration and layout data
+		// Load optimized local configuration
 		const basePath = getBasePath();
-		const layoutPath = '/ui/layout/';
+		const config = await fetch(`${basePath}layout-config.json`).then(r => r.json());
+		const layoutPath = config.settings.layoutDataPath;
 		
-		const [config, gridData, columnsData, bentoData, asymmetricalData, ratiosData] = await Promise.all([
-			fetch(`${layoutPath}config.json`).then(r => r.json()),
-			fetch(`${layoutPath}systems/layouts/grid.json`).then(r => r.json()),
-			fetch(`${layoutPath}systems/layouts/columns.json`).then(r => r.json()),
-			fetch(`${layoutPath}systems/layouts/bento.json`).then(r => r.json()),
-			fetch(`${layoutPath}systems/layouts/asymmetrical.json`).then(r => r.json()),
-			fetch(`${layoutPath}systems/layouts/ratios.json`).then(r => r.json())
-		]);
+		// Extract unique layout types from the config
+		const layoutTypes = extractLayoutTypes(config);
+		
+		// Dynamically load only the layout data we need
+		const layoutPromises = layoutTypes.map(async (layoutType) => {
+			try {
+				const data = await fetch(`${layoutPath}${layoutType}.json`).then(r => r.json());
+				return [layoutType, data];
+			} catch (error) {
+				return [layoutType, null];
+			}
+		});
+		
+		const layoutResults = await Promise.all(layoutPromises);
+		const layoutData = {};
+		
+		// Build layoutData object from results
+		layoutResults.forEach(([layoutType, data]) => {
+			if (data) {
+				layoutData[`${layoutType}.json`] = data;
+			}
+		});
+		
 
 		// Store globally for card system to use
 		window._layoutSrcsetData = {
 			config,
-			layoutsData: createLayoutsDataMap({
-				'grid.json': gridData,
-				'columns.json': columnsData,
-				'bento.json': bentoData,
-				'asymmetrical.json': asymmetricalData,
-				'ratios.json': ratiosData
-			})
+			layoutsData: createLayoutsDataMap(layoutData)
 		};
 
 		// Set srcsets on all lay-out elements
-		console.log('📐 Setting layout srcsets...');
 		const layoutElements = document.querySelectorAll('lay-out');
-		console.log(`📊 Found ${layoutElements.length} lay-out elements`);
 
-		layoutElements.forEach((element, index) => {
+		layoutElements.forEach((element) => {
 			try {
 				const srcsets = generateLayoutSrcsets(element, config, window._layoutSrcsetData.layoutsData);
 				
-				if (srcsets && srcsets !== 'default:100vw') {
+				if (srcsets && srcsets !== config.settings.fallbackSrcset) {
 					element.setAttribute('srcsets', srcsets);
-					console.log(`✅ Set srcsets for lay-out ${index + 1}:`, srcsets);
 				} else {
-					element.setAttribute('srcsets', 'default:100vw');
-					console.log(`ℹ️  Set fallback srcsets for lay-out ${index + 1}`);
+					element.setAttribute('srcsets', config.settings.fallbackSrcset);
 				}
 				
 				// Set layout data on child elements
@@ -83,39 +108,33 @@ async function initializeLayoutSrcsets() {
 						child.settings; // Triggers _ensureSettingsInitialized()
 						if (child._settings) {
 							child._settings.layoutIndex = childIndex;
-							child._settings.layoutSrcsets = srcsets || 'default:100vw';
-							child._settings.srcsetBreakpoints = [280, 480, 900];
+							child._settings.layoutSrcsets = srcsets || window._layoutSrcsetData.config.settings.fallbackSrcset;
+							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
 							
-							console.log(`📍 Set layout index ${childIndex}, srcsets "${srcsets}", and breakpoints [280, 480, 900] on child ${childIndex + 1} of lay-out ${index + 1}`);
 						}
 					} catch (error) {
-						console.warn(`⚠️ Could not set layout data on child ${childIndex + 1} of lay-out ${index + 1}:`, error);
+						// Silently continue if settings can't be set
 					}
 				});
 				
 			} catch (error) {
-				console.warn(`⚠️  Failed to generate srcsets for lay-out ${index + 1}:`, error);
-				element.setAttribute('srcsets', 'default:100vw');
+				element.setAttribute('srcsets', config.settings.fallbackSrcset);
 			}
 		});
 
-		console.log('🎉 Layout srcsets complete!');
 
 	} catch (error) {
-		console.error('💥 Failed to initialize layout srcsets:', error);
+		// Silently fail and continue
 	}
 }
 
-async function initializeCards() {
+async function initializeCards(dataSrc = 'data.json', allCards = null) {
 	try {
-		console.log('🃏 Loading content data...');
 		const basePath = getBasePath();
-		const dataPath = `${basePath}data.json`;
+		const dataPath = `${basePath}${dataSrc}`;
 		const allData = await fetch(dataPath).then(r => r.json());
-		console.log(`📄 Loaded ${allData.length} content items`);
 		
 		// Import data loader with correct path and make it globally available
-		console.log(`🔍 Base path: "${basePath}", Data loader path: "${basePath}data-loader.js"`);
 		const dataLoaderModule = await import(`${basePath}data-loader.js`);
 		const { setContentForElement } = dataLoaderModule;
 		
@@ -123,15 +142,14 @@ async function initializeCards() {
 		window._cardData = allData;
 		window._setContentForElement = setContentForElement;
 
-		// Define all possible card types for waiting
-		const cardTypes = [
-			'news-card', 'article-card', 'product-card', 'recipe-card', 'quote-card',
-			'event-card', 'faq-card', 'timeline-card', 'business-card', 'poll-card',
-			'achievement-card', 'announcement-card', 'booking-card', 'comparison-card',
-			'contact-card', 'course-card', 'gallery-card', 'job-card', 'location-card',
-			'membership-card', 'profile-card', 'review-card', 'social-card',
-			'software-card', 'statistic-card'
-		];
+		// Get card types dynamically from imported cards (use passed allCards if available)
+		if (!allCards) {
+			allCards = await importAllCards();
+		}
+		const cardTypes = Object.keys(allCards).map(className => {
+			// Convert PascalCase to kebab-case (e.g., NewsCard -> news-card)
+			return className.replace(/Card$/, '').replace(/([A-Z])/g, '-$1').toLowerCase().slice(1) + '-card';
+		});
 
 		// Wait for custom elements to be defined (only wait for ones that exist)
 		const definedPromises = cardTypes.map(async (type) => {
@@ -143,8 +161,7 @@ async function initializeCards() {
 			}
 		});
 
-		const definedElements = (await Promise.all(definedPromises)).filter(Boolean);
-		console.log(`✅ ${definedElements.length} custom elements defined`);
+		await Promise.all(definedPromises);
 
 		// Load data for existing cards with content attributes
 		const cardSelectors = cardTypes.map(type => `${type}[content]`);
@@ -168,78 +185,41 @@ async function initializeCards() {
 					.forEach(el => definedContent.add(el.getAttribute('content')));
 			});
 
-			// Create dynamic cards for remaining data
-			let dynamicCardsCreated = 0;
 			allData.forEach(item => {
 				if (definedContent.has(item.id)) return;
 				
-				// Map data type to custom element type
-				let tagName;
-				switch(item.type) {
-					case 'news': tagName = 'news-card'; break;
-					case 'article':
-					case 'video':  // Map video to article-card
-						tagName = 'article-card'; break;
-					case 'poll': tagName = 'poll-card'; break;
-					case 'product': tagName = 'product-card'; break;
-					case 'recipe': tagName = 'recipe-card'; break;
-					case 'quote': tagName = 'quote-card'; break;
-					case 'event': tagName = 'event-card'; break;
-					case 'faq': tagName = 'faq-card'; break;
-					case 'timeline': tagName = 'timeline-card'; break;
-					case 'business': tagName = 'business-card'; break;
-					case 'achievement': tagName = 'achievement-card'; break;
-					case 'announcement': tagName = 'announcement-card'; break;
-					case 'booking': tagName = 'booking-card'; break;
-					case 'comparison': tagName = 'comparison-card'; break;
-					case 'contact': tagName = 'contact-card'; break;
-					case 'course': tagName = 'course-card'; break;
-					case 'gallery': tagName = 'gallery-card'; break;
-					case 'job': tagName = 'job-card'; break;
-					case 'location': tagName = 'location-card'; break;
-					case 'membership': tagName = 'membership-card'; break;
-					case 'profile': tagName = 'profile-card'; break;
-					case 'review': tagName = 'review-card'; break;
-					case 'social': tagName = 'social-card'; break;
-					case 'software': tagName = 'software-card'; break;
-					case 'statistic': tagName = 'statistic-card'; break;
-					default:
-						console.warn(`❌ Unknown card type: ${item.type} for item: ${item.id}`);
-						return;
+				let tagName = `${item.type}-card`;
+				
+				if (item.type === 'video') {
+					tagName = 'article-card';
 				}
 				
-				// Create element using innerHTML (avoids createElement issues)
+				if (!cardTypes.includes(tagName)) {
+					return;
+				}
+				
 				const wrapper = document.createElement('div');
 				wrapper.innerHTML = `<${tagName} content="${item.id}"></${tagName}>`;
 				const cardElement = wrapper.firstElementChild;
 				main.appendChild(cardElement);
 				
-				// Use setContentForElement - layout data already set during initialization
 				setContentForElement(cardElement, item.id, allData);
-				dynamicCardsCreated++;
-				console.log(`✅ Created ${tagName} for ${item.id}`);
 			});
-
-			console.log(`🎉 Cards initialized! ${dynamicCardsCreated} dynamic cards created`);
-		} else {
-			console.log('🎉 Cards initialized! (No main container for dynamic cards)');
 		}
 
-		// Initialize smart popover toggle listeners for YouTube lazy loading and video play/pause
 		try {
 			const basePath = getBasePath();
 			const { initializePopoverToggleListeners } = await import(`${basePath}base/utils.js`);
 			
-			// Add a small delay to ensure DOM is fully rendered
 			setTimeout(() => {
 				initializePopoverToggleListeners();
 			}, 100);
 		} catch (error) {
-			console.warn('⚠️  Failed to initialize popover toggle listeners:', error);
+			// Silently continue if popover listeners can't be initialized
 		}
 
 	} catch (error) {
-		console.error('❌ Failed to initialize cards:', error);
+		// Silently fail and continue
 	}
 }
 
@@ -249,14 +229,12 @@ function setupGlobalLayoutUpdater() {
 		if (!window._layoutSrcsetData) return;
 		
 		const newLayoutElements = container.querySelectorAll('lay-out:not([srcsets])');
-		console.log(`🔄 Updating srcsets for ${newLayoutElements.length} new lay-out elements`);
 		
-		newLayoutElements.forEach((element, index) => {
+		newLayoutElements.forEach((element) => {
 			try {
 				const srcsets = generateLayoutSrcsets(element, window._layoutSrcsetData.config, window._layoutSrcsetData.layoutsData);
-				if (srcsets && srcsets !== 'default:100vw') {
+				if (srcsets && srcsets !== window._layoutSrcsetData.config.settings.fallbackSrcset) {
 					element.setAttribute('srcsets', srcsets);
-					console.log(`✅ Updated srcsets for new lay-out ${index + 1}:`, srcsets);
 				}
 				
 				// Set layout data on child elements
@@ -268,36 +246,34 @@ function setupGlobalLayoutUpdater() {
 						child.settings; // Triggers _ensureSettingsInitialized()
 						if (child._settings) {
 							child._settings.layoutIndex = childIndex;
-							child._settings.layoutSrcsets = srcsets || 'default:100vw';
-							child._settings.srcsetBreakpoints = [280, 480, 900];
+							child._settings.layoutSrcsets = srcsets || window._layoutSrcsetData.config.settings.fallbackSrcset;
+							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
 						}
 					} catch (error) {
-						console.warn(`⚠️ Could not set layout data on updated child ${childIndex}:`, error);
+						// Silently continue if settings can't be set
 					}
 				});
 				
 			} catch (error) {
-				console.warn(`⚠️  Failed to update srcsets for new lay-out ${index + 1}:`, error);
+				element.setAttribute('srcsets', window._layoutSrcsetData.config.settings.fallbackSrcset);
 			}
 		});
 	};
 }
 
 // Main initialization function
-export async function initContentCards() {
-	console.log('🚀 Initializing content card system...');
+export async function initContentCards(dataSrc = 'data.json') {
 	
-	// Import all card components
-	await importAllCards();
+	// Import all card components once
+	const allCards = await importAllCards();
 	
 	// Setup global layout updater
 	setupGlobalLayoutUpdater();
 	
 	// Initialize layout srcsets first, then cards
 	await initializeLayoutSrcsets();
-	await initializeCards();
+	await initializeCards(dataSrc, allCards);
 	
-	console.log('✨ Content card system initialized successfully!');
 }
 
 // Auto-initialize when imported as a module script
