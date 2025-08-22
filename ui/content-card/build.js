@@ -1,22 +1,50 @@
 // Reusable build script for content cards
-// Import layout srcsets utilities
 import { generateLayoutSrcsets, createLayoutsDataMap } from '@browser.style/layout';
-
-// Import data loading utilities - this will be imported dynamically
-// import { setContentForElement } from './data-loader.js';
 
 // Determine the base path for content-card folder relative to current location
 function getBasePath() {
-	// Use absolute path from server root to avoid relative path issues
-	const basePath = '/ui/content-card/';
-	return basePath;
+	return '/ui/content-card/';
+}
+
+// Content loading function - consolidates data loading logic
+function setContentForElement(element, contentId, dataArray, additionalSettings = {}) {
+	try {
+		if (!dataArray) {
+			console.warn('No data array provided to setContentForElement');
+			element.innerHTML = `<div style="border: 2px dashed #ff6b6b; padding: 1rem; color: #d63031; background: #ffe0e0;">
+				❌ No data provided
+			</div>`;
+			return;
+		}
+
+		const data = dataArray.find(item => item.id === contentId);
+		
+		if (data) {
+			// Merge with existing settings (which may already contain layoutIndex/layoutSrcset)
+			const existingSettings = element.settings || {};
+			const mergedSettings = { useSchema: true, ...existingSettings, ...additionalSettings };
+			element.dataset = { data, settings: mergedSettings };
+		} else {
+			console.warn(`Content with id "${contentId}" not found`);
+			console.log('Available IDs:', dataArray.map(item => item.id).join(', '));
+			element.innerHTML = `<div style="border: 2px dashed #ff9500; padding: 1rem; color: #b7791f; background: #fff3e0;">
+				⚠️ Content not found: "${contentId}"
+			</div>`;
+		}
+	} catch (error) {
+		console.error('Failed to set content for element:', error);
+		element.innerHTML = `<div style="border: 2px dashed #ff6b6b; padding: 1rem; color: #d63031; background: #ffe0e0;">
+			❌ Error loading content<br>
+			<small>${error.message}</small>
+		</div>`;
+	}
 }
 
 // Import all card components from the centralized index
 async function importAllCards() {
 	try {
 		const basePath = getBasePath();
-		const allCards = await import(`${basePath}cards/index.js`);
+		const allCards = await import(`${basePath}src/js/cards/index.js`);
 		return allCards;
 	} catch (error) {
 		return {};
@@ -130,17 +158,12 @@ async function initializeLayoutSrcsets() {
 
 async function initializeCards(dataSrc = 'data.json', allCards = null) {
 	try {
-		const basePath = getBasePath();
-		const dataPath = `${basePath}${dataSrc}`;
+		// Use the provided path directly - supports both relative and absolute paths
+		const dataPath = dataSrc;
 		const allData = await fetch(dataPath).then(r => r.json());
-		
-		// Import data loader with correct path and make it globally available
-		const dataLoaderModule = await import(`${basePath}data-loader.js`);
-		const { setContentForElement } = dataLoaderModule;
 		
 		// Store globally to avoid multiple loads
 		window._cardData = allData;
-		window._setContentForElement = setContentForElement;
 
 		// Get card types dynamically from imported cards (use passed allCards if available)
 		if (!allCards) {
@@ -209,7 +232,7 @@ async function initializeCards(dataSrc = 'data.json', allCards = null) {
 
 		try {
 			const basePath = getBasePath();
-			const { initializePopoverToggleListeners } = await import(`${basePath}base/utils.js`);
+			const { initializePopoverToggleListeners } = await import(`${basePath}src/js/base/utils.js`);
 			
 			setTimeout(() => {
 				initializePopoverToggleListeners();
@@ -262,6 +285,7 @@ function setupGlobalLayoutUpdater() {
 }
 
 // Main initialization function
+// dataSrc can be a relative or absolute path (e.g., 'data/data.json', '/path/to/data.json')
 export async function initContentCards(dataSrc = 'data.json') {
 	
 	// Import all card components once
@@ -276,9 +300,4 @@ export async function initContentCards(dataSrc = 'data.json') {
 	
 }
 
-// Auto-initialize when imported as a module script
-if (document.readyState === 'loading') {
-	document.addEventListener('DOMContentLoaded', initContentCards);
-} else {
-	initContentCards();
-}
+// Note: No auto-initialization - must be called explicitly with desired data source

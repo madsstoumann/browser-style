@@ -10,13 +10,13 @@
 	<script type="importmap">
 	{
 		"imports": {
-			"@browser.style/layout": "../../layout/index.js"
+			"@browser.style/layout": "/ui/layout/index.js"
 		}
 	}
 	</script>
 	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
-	<link rel="stylesheet" href="../index.css" blocking="render">
-	<link rel="stylesheet" href="../demo.css" blocking="render">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
 
 </head>
 <body>
@@ -129,7 +129,7 @@
 
 	<script type="module">
 		import { initContentCards } from '../build.js';
-		initContentCards('data.json');
+		initContentCards('static/data/data.json');
 	</script>
 
 </body>
