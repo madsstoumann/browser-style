@@ -257,7 +257,7 @@ class SpeedTicket extends HTMLElement {
 			video-scrub {
 				--video-scrub-aspect-ratio: none;
 				--video-scrub-h: 100%;
-				--video-scrub-mask: radial-gradient(circle at 50% 50%, #000 50%, #0000 80%);
+				--video-scrub-mask: radial-gradient(circle at 50% 50%, #000 50%, #0000 90%);
 				--video-scrub-overlay: linear-gradient(to bottom, #0001, #0004 25%);
 				grid-area: 1 / 1 / 5 / 1;
 				pointer-events: none;
