@@ -303,14 +303,20 @@ class SpeedTicket extends HTMLElement {
 		const speedLimit = this.getSpeedLimit();
 		const results = this.calculateResults();
 
+		const currentVideo = roadTypes[this.state.roadType].video;
+		const prefetchVideos = [...new Set(Object.values(roadTypes).map(r => r.video))]
+			.filter(video => video !== currentVideo)
+			.join(',');
+
 		this.shadowRoot.innerHTML += `
 			<form>
 				<fieldset name="speed">
 					<legend part="header">${labels.yourSpeed}
 						<small>${labels.speedLimit}: <output name="limit">${speedLimit}</output> ${speedRange.unit}</small>
 					</legend>
-					<video-scrub src="${roadTypes[this.state.roadType].video}"
+					<video-scrub src="${currentVideo}"
 						${roadTypes[this.state.roadType].poster ? `poster="${roadTypes[this.state.roadType].poster}"` : ''} 
+						${prefetchVideos ? `prefetch="${prefetchVideos}"` : ''}
 						min="${speedRange.min}" max="${speedRange.max}" value="${this.state.speed}"></video-scrub>
 					<circular-range name="value" min="${speedRange.min}" max="${speedRange.max}" value="${this.state.speed}" 
 						start="${circularRange.start}" end="${circularRange.end}" indices="${circularRange.indices}" 
