@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/video-scrub",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Video scrub component",
   "type": "module",
   "module": "index.js",

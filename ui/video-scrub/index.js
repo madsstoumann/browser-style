@@ -1,20 +1,22 @@
 const styles = `
 :host {
+  aspect-ratio: var(--video-scrub-aspect-ratio, 16/9);
   display: block;
   position: relative;
   mask: var(--video-scrub-mask, none) no-repeat 50% 50% / 100% 100%;
 }
 
 video {
-  aspect-ratio: var(--video-scrub-aspect-ratio, none);
+  aspect-ratio: var(--video-scrub-aspect-ratio, 16/9);
   display: block;  
   height: var(--video-scrub-h, auto);
   object-fit: var(--video-scrub-object-fit, cover);
+  pointer-events: none;
   width: var(--video-scrub-w, 100%);
 }
 
 :host::after {
-  background: var(--video-scrub-overlay, linear-gradient(to bottom, #0004, #0008 25%));  
+  background: var(--video-scrub-overlay, none);  
   content: '';
   inset: 0;
   pointer-events: none;
@@ -24,13 +26,13 @@ video {
 
 /**
  * @module VideoScrub
- * @version 1.0.0
+ * @version 1.0.1
  * @author Mads Stoumann
  * @description A web component for scrubbing through video content with crossfade transitions.
  */
 class VideoScrub extends HTMLElement {
   static get observedAttributes() {
-    return ['min', 'max', 'src', 'value', 'poster'];
+    return ['min', 'max', 'src', 'value', 'poster', 'prefetch'];
   }
 
   constructor() {
@@ -54,35 +56,31 @@ class VideoScrub extends HTMLElement {
     this.shadowRoot.appendChild(this._videoA);
     this.shadowRoot.appendChild(this._videoB);
 
+    // Create hidden lazy-loading sensor
+    this._lazySensor = document.createElement('img');
+    this._lazySensor.loading = 'lazy';
+    this._lazySensor.src = 'data:image/svg+xml,<svg/>';
+    this._lazySensor.style.cssText = 'position:absolute;opacity:0;pointer-events:none;width:1px;height:1px';
+    this._lazySensor.onload = () => this._startPrefetch();
+    this.shadowRoot.appendChild(this._lazySensor);
+
     this._min = 0;
     this._max = 100;
     this._value = 0;
     this._isMetadataReady = false;
-    this._lastSyncTime = 0;
-    this._syncThreshold = 16; // ~60fps throttling
     this._currentAnimation = null;
-    this._crossfadeDuration = 1000; // Default 1 second
+    this._crossfadeDuration = 1000;
+    this._prefetchStarted = false;
+    this._prefetchedVideos = new Set();
 
     this._onMetadata = this._onMetadata.bind(this);
   }
 
   _createVideoElement() {
     const video = document.createElement('video');
-    Object.assign(video, {
-      playsInline: true,
-      muted: true,
-      preload: 'metadata',
-      disablePictureInPicture: true,
-      disableRemotePlayback: true,
-      controls: false,
-      tabIndex: -1
-    });
-    Object.assign(video.style, {
-      position: 'absolute',
-      inset: '0'
-    });
-    video.setAttribute('playsinline', '');
-    video.setAttribute('webkit-playsinline', '');
+    video.muted = video.playsInline = true;
+    video.preload = 'metadata';
+    video.style.cssText = 'position:absolute;inset:0';
     video.setAttribute('aria-hidden', 'true');
     return video;
   }
@@ -95,6 +93,7 @@ class VideoScrub extends HTMLElement {
     
     const src = this.getAttribute('src');
     const poster = this.getAttribute('poster');
+    const prefetch = this.getAttribute('prefetch');
     const crossorigin = this.getAttribute('crossorigin') || 'anonymous';
     const preload = this.getAttribute('preload') || 'metadata';
     const crossfadeAttr = this.getAttribute('crossfade');
@@ -104,10 +103,17 @@ class VideoScrub extends HTMLElement {
     if (poster) this._activeVideo.poster = poster;
     
     this._activeVideo.crossOrigin = this._inactiveVideo.crossOrigin = crossorigin;
-    this._activeVideo.preload = this._inactiveVideo.preload = preload;
     this._crossfadeDuration = (crossfade !== null && Number.isFinite(crossfade) && crossfade > 0) ? crossfade : 1000;
 
-    try { this._activeVideo.load(); } catch {}
+    // Set preload behavior based on prefetch attribute
+    if (prefetch) {
+      // If prefetch exists, only load metadata initially, full loading happens in viewport
+      this._activeVideo.preload = this._inactiveVideo.preload = 'metadata';
+    } else {
+      // No prefetch, use specified preload behavior
+      this._activeVideo.preload = this._inactiveVideo.preload = preload;
+      try { this._activeVideo.load(); } catch {}
+    }
 
     this._activeVideo.addEventListener('loadedmetadata', this._onMetadata);
     this._activeVideo.addEventListener('durationchange', this._onMetadata);
@@ -154,54 +160,68 @@ class VideoScrub extends HTMLElement {
       case 'value':
         this[`_${name}`] = Number(newValue);
         break;
+      case 'prefetch':
+        // If prefetch is added/changed after initialization, trigger prefetch if already in viewport
+        if (newValue && this._prefetchStarted) {
+          this._prefetchStarted = false; // Reset to allow re-running
+          this._startPrefetch();
+        }
+        break;
     }
 
     // Keep time in sync on any change
     this._syncCurrentTime();
   }
 
-  // Properties for convenient programmatic control
   get src() { return this.getAttribute('src') ?? ''; }
-  set src(v) {
-    if (v == null) this.removeAttribute('src');
-    else this.setAttribute('src', String(v));
-  }
+  set src(v) { v ? this.setAttribute('src', v) : this.removeAttribute('src'); }
 
   get poster() { return this.getAttribute('poster') ?? ''; }
-  set poster(v) {
-    if (v == null) this.removeAttribute('poster');
-    else this.setAttribute('poster', String(v));
-  }
+  set poster(v) { v ? this.setAttribute('poster', v) : this.removeAttribute('poster'); }
 
   get min() { return this._min; }
-  set min(v) {
-    const num = Number(v);
-    this._min = Number.isFinite(num) ? num : 0;
-    this.setAttribute('min', String(this._min));
-    this._syncCurrentTime();
-  }
+  set min(v) { this._min = Number(v) || 0; this.setAttribute('min', this._min); this._syncCurrentTime(); }
 
   get max() { return this._max; }
-  set max(v) {
-    const num = Number(v);
-    this._max = Number.isFinite(num) ? num : 100;
-    this.setAttribute('max', String(this._max));
-    this._syncCurrentTime();
-  }
+  set max(v) { this._max = Number(v) || 100; this.setAttribute('max', this._max); this._syncCurrentTime(); }
 
   get value() { return this._value; }
-  set value(v) {
-    const num = Number(v);
-    this._value = Number.isFinite(num) ? num : 0;
-    this.setAttribute('value', String(this._value));
-    this._syncCurrentTime();
-  }
+  set value(v) { this._value = Number(v) || 0; this.setAttribute('value', this._value); this._syncCurrentTime(); }
 
   get crossfade() { return this._crossfadeDuration; }
-  set crossfade(v) {
-    const num = Number(v);
-    this._crossfadeDuration = Number.isFinite(num) && num > 0 ? num : 1000;
-    this.setAttribute('crossfade', String(this._crossfadeDuration));
+  set crossfade(v) { this._crossfadeDuration = Number(v) || 1000; this.setAttribute('crossfade', this._crossfadeDuration); }
+
+  _startPrefetch() {
+    if (this._prefetchStarted) return;
+    this._prefetchStarted = true;
+
+    const prefetch = this.getAttribute('prefetch');
+    const currentSrc = this.getAttribute('src');
+    
+    if (!prefetch) return;
+    const prefetchUrls = prefetch.split(',').map(url => url.trim()).filter(Boolean);
+    if (currentSrc && this._activeVideo.preload === 'metadata') {
+      this._prefetchVideo(currentSrc);
+    }
+    prefetchUrls.forEach(url => this._prefetchVideo(url));
+  }
+
+  _prefetchVideo(url) {
+    if (this._prefetchedVideos.has(url)) return;
+    this._prefetchedVideos.add(url);
+
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.muted = true;
+    video.style.display = 'none';
+    video.src = url;
+    
+    video.onloadeddata = video.onerror = () => {
+      console.log(`${video.error ? '❌' : '✅'} Video ${video.error ? 'failed' : 'fetched'}: ${url}`);
+      video.remove();
+    };
+    
+    document.body.appendChild(video);
   }
 
   _onMetadata() {
@@ -214,27 +234,15 @@ class VideoScrub extends HTMLElement {
   _syncCurrentTime() {
     if (!this._isMetadataReady) return;
 
-    // Throttle updates to prevent excessive seeking
-    const now = performance.now();
-    if (now - this._lastSyncTime < this._syncThreshold) return;
-    this._lastSyncTime = now;
-
     const range = this._max - this._min;
     const duration = this._activeVideo.duration;
-    if (!Number.isFinite(duration) || duration <= 0 || !Number.isFinite(range) || range <= 0) {
-      return;
-    }
+    if (duration <= 0 || range <= 0) return;
 
-    const clamped = Math.min(this._max, Math.max(this._min, this._value));
-    const progress = (clamped - this._min) / range; // 0..1
+    const progress = (Math.min(this._max, Math.max(this._min, this._value)) - this._min) / range;
     const newTime = progress * duration;
 
-    if (Number.isFinite(newTime) && newTime >= 0 && newTime <= duration) {
-      // Only update if there's a meaningful difference to prevent micro-adjustments
-      const timeDiff = Math.abs(this._activeVideo.currentTime - newTime);
-      if (timeDiff > 0.1) { // 100ms threshold
-        this._activeVideo.currentTime = newTime;
-      }
+    if (Math.abs(this._activeVideo.currentTime - newTime) > 0.1) {
+      this._activeVideo.currentTime = newTime;
     }
   }
 
