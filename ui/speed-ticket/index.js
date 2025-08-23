@@ -91,6 +91,17 @@ class SpeedTicket extends HTMLElement {
 					font-size: small; 
 					font-weight: 300; 
 				}
+
+				@media (max-width: 600px) {
+					flex-wrap: nowrap;
+					overflow-x: auto;
+					scroll-snap-type: x mandatory;
+					justify-content: start;
+
+					> * {
+						scroll-snap-align: start;
+					}
+				}
 			}
 
 			[name="speed"] { 
@@ -334,7 +345,7 @@ class SpeedTicket extends HTMLElement {
 					</select>
 					<details name="factors">
 						<summary>${labels.factors}</summary>
-						${Object.values(factors).map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}
+						<div>${Object.values(factors).map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}</div>
 					</details>
 				</fieldset>
 				<fieldset name="result" class="${results.status}">
