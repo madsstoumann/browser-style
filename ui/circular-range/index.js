@@ -321,6 +321,10 @@ class CircularRange extends HTMLElement {
 		this.#setValue(normalizedValue);
 	}
 
+	get valueAsNumber() {
+		return Number(this.value);
+	}
+
 	get name() { return this.getAttribute('name') ?? ''; }
 
 	set name(newName) {

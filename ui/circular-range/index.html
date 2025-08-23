@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
 	<meta name="view-transition" content="same-origin">
-	<meta
+	<!-- <meta
 		http-equiv="Content-Security-Policy"
 		content="
 			default-src 'self';
@@ -24,7 +24,7 @@
 			worker-src 'self';
 			child-src 'self';
 			block-all-mixed-content;
-		">
+		"> -->
 	<link rel="stylesheet" href="/core.css">
 	<link rel="stylesheet" href="/ui/grid/ui-grid.css">
 	<script type="module" src="./index.js"></script>
@@ -62,12 +62,12 @@
 	<p>
 		A customizable, circular range slider web component. It can be used as a standalone element or as part of a form. It is highly styleable through CSS custom properties and parts, and supports keyboard navigation, labels, and indices.
 	</p>
-	<div class="ui-grid --xs-c-1 --md-c-2">
-		<label>Speedometer
+	<form class="ui-grid --xs-c-1 --md-c-2" id="app">
+		<label id="speedometer-label">Speedometer
 			<circular-range
 				active-label="90"
 				class="speedometer"
-				aria-label="Speedometer"
+				aria-labelledby="speedometer-label"
 				enable-min
 				end="500"
 				indices="50"
@@ -81,29 +81,37 @@
 			</circular-range>
 		</label>
 
-		<label><span>Full Circle — <code>step="5"</code></span>
+		<label id="full-circle-label">Full Circle
 			<circular-range
 				class="full-circle"
-				aria-label="Full Circle — step=5"
+				aria-labelledby="full-circle-label"
 				labels="0:0,5:5,10:10,15:15,20:20,25:25,30:30,35:35,40:40,45:45,50:50,55:55,60:60,65:65,70:70,75:75,80:80,85:85,90:90,95:95,100:0"
 				value="50" min="0" max="100" suffix="%" step="5" indices="21"></circular-range>
 		</label>
 
-		<label>Oven
-			<circular-range class="oven" aria-label="Oven" value="110" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
+		<label id="oven-label">Oven
+			<circular-range class="oven" aria-labelledby="oven-label" value="110" min="0" max="330" suffix="°C" step="5" start="20" end="340" indices="67" labels="0:0,20:20,40:40,60:60,80:80,100:100,120:120,140:140,160:160,180:180,200:200,220:220,240:240,260:260,280:280,300:300,320:320"></circular-range>
 		</label>
 
-		<label><span>Left Arc — With <code>reverse</code></span>
-			<circular-range class="left-arc" reverse aria-label="Left Arc" value="50" min="0" max="100" suffix="%" step="1" start="180" end="360" indices="11"></circular-range>
+		<label id="left-arc-label">Left Arc
+			<circular-range class="left-arc" reverse aria-labelledby="left-arc-label" value="50" min="0" max="100" suffix="%" step="1" start="180" end="360" indices="11"></circular-range>
 		</label>
 
-		<label>Top Arc
-			<circular-range class="top-arc" aria-label="Top Arc" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
+		<label id="top-arc-label">Top Arc
+			<circular-range class="top-arc" aria-labelledby="top-arc-label" value="50" min="0" max="100" suffix="$" step="1" start="270" end="450"></circular-range>
 		</label>
 
-		<label><span>Bottom Arc — With <code>reverse</code></span>
-			<circular-range class="bottom-arc" reverse aria-label="Bottom Arc" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
+		<label id="bottom-arc-label">Bottom Arc
+			<circular-range class="bottom-arc" reverse aria-labelledby="bottom-arc-label" value="50" min="0" max="100" suffix="dB" step="1" start="90" end="270"></circular-range>
 		</label>
-	</div>
+	</form>
+
+	<script>
+		app.addEventListener('input', (event) => {
+			const target = event.target;
+			const label = target.closest('label')?.childNodes[0]?.textContent?.trim() || 'Unknown';
+			console.log(`%c${label}:`, 'background: #0066cc; color: #fff;font-weight: bold; padding: .5ch 1ch;', target.valueAsNumber);
+		});
+	</script>
 </body>
 </html>
