@@ -100,6 +100,7 @@ class SpeedTicket extends HTMLElement {
 
 					> * {
 						scroll-snap-align: start;
+						scroll-margin: 0 1rem;
 					}
 				}
 			}
