@@ -243,15 +243,20 @@ class SpeedTicket extends HTMLElement {
 				justify-content: space-between;
 				min-width: 12rem;
 				padding: 1.25ch 2ch;
+				anchor-name: --anchor;
 			}
 
 			[popover] {
-				background: #FFF;
+				background-color: #0002;
 				border: 1px solid #8D8D8D;
 				border-radius: .33em;
-				color: #000;
+				color: #FFF;
 				max-width: 20rem;
 				padding: 1rem;
+				position-anchor: --anchor;
+				position-area: top span-right;
+				position-try-fallbacks: --bottom-span-right, --top-span-left, --bottom-span-left;
+				margin: 0;
 
 				label {
 					display: flex;
