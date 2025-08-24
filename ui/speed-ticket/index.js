@@ -101,6 +101,7 @@ class SpeedTicket extends HTMLElement {
 					> * {
 						scroll-snap-align: start;
 						scroll-margin: 0 1rem;
+						flex: 0 0 75vw;
 					}
 				}
 			}
@@ -223,7 +224,7 @@ class SpeedTicket extends HTMLElement {
 				}
 			}
 
-			select, summary {
+			select, summary, button[popovertarget] {
 				align-items: center;
 				align-self: start;
 				appearance: none;
@@ -238,9 +239,26 @@ class SpeedTicket extends HTMLElement {
 				border-radius: .33em;
 				cursor: pointer;
 				display: flex;
+				font: inherit;
 				justify-content: space-between;
 				min-width: 12rem;
 				padding: 1.25ch 2ch;
+			}
+
+			[popover] {
+				background: #FFF;
+				border: 1px solid #8D8D8D;
+				border-radius: .33em;
+				color: #000;
+				max-width: 20rem;
+				padding: 1rem;
+
+				label {
+					display: flex;
+					align-items: center;
+					gap: .5rem;
+					margin-bottom: .5rem;
+				}
 			}
 
 			select {
@@ -344,10 +362,10 @@ class SpeedTicket extends HTMLElement {
 					<select name="vehicle">
 						${Object.values(vehicles).map(v => `<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>${v.label}</option>`).join('')}
 					</select>
-					<details name="factors">
-						<summary>${labels.factors}</summary>
-						<div>${Object.values(factors).map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}</div>
-					</details>
+					<button type="button" popovertarget="factors-popover">${labels.factors}</button>
+					<div id="factors-popover" popover>
+						${Object.values(factors).map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}
+					</div>
 				</fieldset>
 				<fieldset name="result" class="${results.status}">
 					<output name="fine">${results.fine}</output>
