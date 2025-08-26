@@ -605,7 +605,7 @@ class DataChart extends HTMLElement {
 	connectedCallback() {
 		this.#root = this.attachShadow({ mode: 'open' });
 		this.#root.adoptedStyleSheets = [sheet];
-		if (!this.hasAttribute('data')) this.render();
+		if (this.hasAttribute('data')) this.load(this.getAttribute('data'));
 	}
 
 	async load(source) {
