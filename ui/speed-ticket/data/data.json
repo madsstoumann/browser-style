@@ -468,6 +468,56 @@
   },
   "speedLimitRules": [
     {
+      "id": "bus100_trailer_highway",
+      "description": "Bus100 with trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "bus100" },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 60 }
+    },
+    {
+      "id": "car_tempo100_trailer_country",
+      "description": "Car with tempo100 trailer on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" },
+        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
+    },
+    {
+      "id": "car_tempo100_trailer_highway",
+      "description": "Car with tempo100 trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+      ],
+      "limits": { "min": 50, "max": 100, "default": 100 }
+    },
+    {
+      "id": "car_mc_trailer_country",
+      "description": "Car/MC with trailer on country road",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "countryRoad" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 40, "max": 80, "default": 80 }
+    },
+    {
+      "id": "car_mc_trailer_highway",
+      "description": "Car/MC with trailer on highway",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "includes", "value": "trailer" }
+      ],
+      "limits": { "min": 50, "max": 80, "default": 80 }
+    },
+    {
       "id": "car_mc_city",
       "description": "Car/MC in city zone",
       "conditions": [
@@ -493,46 +543,6 @@
         { "field": "roadType", "operator": "=", "value": "highway" }
       ],
       "limits": { "min": 50, "max": 130, "default": 130 }
-    },
-    {
-      "id": "car_mc_trailer_country",
-      "description": "Car/MC with trailer on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
-      ],
-      "limits": { "min": 40, "max": 80, "default": 80 }
-    },
-    {
-      "id": "car_mc_trailer_highway",
-      "description": "Car/MC with trailer on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
-      ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
-    },
-    {
-      "id": "car_tempo100_trailer_country",
-      "description": "Car with tempo100 trailer on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "car" },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" },
-        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
-      ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
-    },
-    {
-      "id": "car_tempo100_trailer_highway",
-      "description": "Car with tempo100 trailer on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "car" },
-        { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
-      ],
-      "limits": { "min": 50, "max": 100, "default": 100 }
     },
     {
       "id": "bus_city",
@@ -578,16 +588,6 @@
         { "field": "roadType", "operator": "=", "value": "countryRoad" }
       ],
       "limits": { "min": 40, "max": 80, "default": 80 }
-    },
-    {
-      "id": "bus100_trailer_highway",
-      "description": "Bus100 with trailer on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "bus100" },
-        { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
-      ],
-      "limits": { "min": 50, "max": 80, "default": 60 }
     },
     {
       "id": "truck_highway",
