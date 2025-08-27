@@ -417,6 +417,33 @@
   },
   "speedLimitRules": [
     {
+      "id": "caravan_built_up",
+      "description": "Cars with caravans/trailers in built-up areas",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "=", "value": "builtUp" }
+      ],
+      "limits": { "min": 20, "max": 30, "default": 30 }
+    },
+    {
+      "id": "caravan_single_carriageway",
+      "description": "Cars with caravans/trailers on single carriageways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+      ],
+      "limits": { "min": 30, "max": 50, "default": 50 }
+    },
+    {
+      "id": "caravan_dual_motorway",
+      "description": "Cars with caravans/trailers on dual carriageways and motorways",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
+        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
+      ],
+      "limits": { "min": 40, "max": 60, "default": 60 }
+    },
+    {
       "id": "car_mc_built_up",
       "description": "Cars and motorcycles in built-up areas",
       "conditions": [
@@ -514,33 +541,6 @@
         { "field": "roadType", "operator": "in", "value": ["singleCarriageway", "dualCarriageway", "motorway"] }
       ],
       "limits": { "min": 30, "max": 60, "default": 60 }
-    },
-    {
-      "id": "caravan_built_up",
-      "description": "Cars with caravans/trailers in built-up areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
-      ],
-      "limits": { "min": 20, "max": 30, "default": 30 }
-    },
-    {
-      "id": "caravan_single_carriageway",
-      "description": "Cars with caravans/trailers on single carriageways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
-      ],
-      "limits": { "min": 30, "max": 50, "default": 50 }
-    },
-    {
-      "id": "caravan_dual_motorway",
-      "description": "Cars with caravans/trailers on dual carriageways and motorways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
-      ],
-      "limits": { "min": 40, "max": 60, "default": 60 }
     }
   ]
 }

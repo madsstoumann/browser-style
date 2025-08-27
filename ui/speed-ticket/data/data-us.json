@@ -466,6 +466,15 @@
   },
   "speedLimitRules": [
     {
+      "id": "passenger_towing",
+      "description": "Passenger vehicles towing trailers (all roads)",
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
+        { "field": "factors", "operator": "includes", "value": "towing" }
+      ],
+      "limits": { "min": 35, "max": 65, "default": 55 }
+    },
+    {
       "id": "passenger_urban",
       "description": "Passenger vehicles in urban areas",
       "conditions": [
@@ -500,15 +509,6 @@
         { "field": "roadType", "operator": "=", "value": "interstate" }
       ],
       "limits": { "min": 55, "max": 85, "default": 70 }
-    },
-    {
-      "id": "passenger_towing",
-      "description": "Passenger vehicles towing trailers (all roads)",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "factors", "operator": "includes", "value": "towing" }
-      ],
-      "limits": { "min": 35, "max": 65, "default": 55 }
     },
     {
       "id": "truck_urban_suburban",
