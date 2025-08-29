@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Content Card - New Custom Elements</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "/ui/layout/index.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+
+</head>
+<body>
+
+	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
+		<news-card content="news-11" layout="rows(th-1 21:9 p:1 flip)"></news-card>
+		<news-card content="news-2"></news-card>
+		<news-card content="news-3" layout="rows(th-2 p:1)"></news-card>
+	</lay-out>
+
+	<lay-out lg="columns(1)" bleed col-gap="2" pad-bottom="2" pad-inline="1" pad-top="2" theme="secondary">
+		<news-card content="news-4" layout="columns(21:9)" col-gap="2"></news-card>
+	</lay-out>
+
+	<news-card content="news-6" layout="columns(21:9 th-2 p:1.5)"></news-card>
+	<news-card content="news-7" layout="columns(21:9 th-2 p:1.5 flip)"></news-card>
+
+
+	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-bottom="2" pad-top="2" subgrid="5">
+		<news-card content="news-5"></news-card>
+		<news-card content="news-9"></news-card>
+		<news-card content="news-13"></news-card>
+	</lay-out>
+
+	<news-card content="news-12" layout="p:1.5" class="secondary"></news-card>
+
+
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/data.json');
+	</script>
+
+</body>
+</html>
