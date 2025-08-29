@@ -155,7 +155,7 @@ export class BookingCard extends BaseCard {
 		const { booking: bookingData = {} } = this.data;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="reservationFor" itemscope itemtype="https://schema.org/Service"' : ''}>${useSchema ? `<span itemprop="name">${content.headline}</span>` : content.headline}</${headlineTag}>` : ''}
 				

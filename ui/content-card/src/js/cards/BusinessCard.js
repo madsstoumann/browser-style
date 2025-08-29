@@ -54,7 +54,7 @@ export class BusinessCard extends BaseCard {
 		const { business: businessData = {} } = this.data;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : ''}

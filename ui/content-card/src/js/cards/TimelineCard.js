@@ -14,7 +14,7 @@ export class TimelineCard extends BaseCard {
 		const { settings, useSchema, content, headlineTag } = renderContext;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : (useSchema ? '<meta itemprop="name" content="Timeline">' : '')}

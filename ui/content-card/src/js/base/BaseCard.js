@@ -24,10 +24,16 @@ export class BaseCard extends HTMLElement {
 					console.error('Failed to parse settings attribute JSON during init:', e);
 				}
 			}
+			
+			// Get global config including image transforms
+			const globalConfig = window._layoutSrcsetData?.config;
+			
 			const defaultSettings = {
 				styles: {},
 				useSchema: true,
 				// srcsetBreakpoints: [280, 500, 720, 1080, 1440], // Optional override
+				srcsetBreakpoints: globalConfig?.settings?.defaultSrcsetBreakpoints || [280, 480, 900],
+				imageTransformConfig: globalConfig?.imageTransforms || null
 			};
 			this._settings = { ...defaultSettings, ...(parsedSettings || {}) };
 		}

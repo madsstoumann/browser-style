@@ -130,7 +130,7 @@ export class AnnouncementCard extends BaseCard {
 		const priorityClass = this.getPriorityClass(announcementData.priority);
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)} ${getStyle(priorityClass, settings)}>
 				${useSchema ? `<meta itemprop="datePosted" content="${new Date().toISOString().split('T')[0]}">` : ''}
 				${useSchema ? `<meta itemprop="spatialCoverage" content="Global">` : ''}

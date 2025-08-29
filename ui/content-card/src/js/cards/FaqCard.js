@@ -15,7 +15,7 @@ export class FaqCard extends BaseCard {
 		const faqName = `faq-${this.data.id || Math.random().toString(36).slice(2)}`;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${renderHeader(content, settings)}
 				${content.headline ? `<${headlineTag} ${getStyle('cc-headline', settings)} ${useSchema ? 'itemprop="name"' : ''}>${content.headline}</${headlineTag}>` : (useSchema ? '<meta itemprop="name" content="Frequently Asked Questions">' : '')}

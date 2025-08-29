@@ -6,7 +6,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/quantum.avif",
+          "src": "https://browser.style/assets/images/quantum.png",
           "alt": "Abstract technology background"
         }
       ],
@@ -68,7 +68,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/underdogs.avif",
+          "src": "https://browser.style/assets/images/underdogs.png",
           "alt": "Athlete crossing the finish line"
         }
       ]
@@ -96,7 +96,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/gastronomy.avif",
+          "src": "https://browser.style/assets/images/gastronomy.png",
           "alt": "Gourmet dish"
         }
       ]
@@ -142,7 +142,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/hubble.avif",
+          "src": "https://browser.style/assets/images/hubble.png",
           "alt": "Nebula in deep space"
         }
       ]
@@ -166,7 +166,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/mindfulness.avif",
+          "src": "https://browser.style/assets/images/mindfulness.png",
           "alt": "Person meditating outdoors"
         }
       ]
@@ -191,7 +191,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/finance.avif",
+          "src": "https://browser.style/assets/images/finance.png",
           "alt": "Stock market chart"
         }
       ]
@@ -234,7 +234,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/destinations.avif",
+          "src": "https://browser.style/assets/images/destinations.png",
           "alt": "Tropical beach"
         }
       ]
@@ -259,7 +259,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/government.avif",
+          "src": "https://browser.style/assets/images/government.png",
           "alt": "Government building"
         }
       ]
@@ -279,7 +279,7 @@
         "name": "Jane Smith",
         "role": "Chief Political Correspondent",
         "avatar": {
-          "src": "static/images/janesmith.avif",
+          "src": "https://browser.style/assets/images/janesmith.png",
           "alt": "Jane Smith",
           "width": 40,
           "height": 40
@@ -350,7 +350,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/carbonara.avif",
+          "src": "https://browser.style/assets/images/carbonara.png",
           "alt": "A delicious plate of Spaghetti Carbonara"
         }
       ]
@@ -422,7 +422,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/summersalad.avif",
+          "src": "https://browser.style/assets/images/summersalad.png",
           "alt": "A vibrant summer salad"
         }
       ]
@@ -460,7 +460,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/cookies.avif",
+          "src": "https://browser.style/assets/images/cookies.png",
           "alt": "Homemade chocolate chip cookies"
         }
       ]
@@ -498,7 +498,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/spicycurry.avif",
+          "src": "https://browser.style/assets/images/spicycurry.png",
           "alt": "A bowl of spicy chicken curry"
         }
       ]
@@ -532,7 +532,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/river.avif",
+          "src": "https://browser.style/assets/images/river.png",
           "alt": "Peaceful River Journey"
         }
       ]
@@ -555,7 +555,7 @@
             "name": "Peaceful River Journey",
             "description": "A serene video showcasing the peaceful flow of a river through nature",
             "uploadDate": "2024-12-15T10:30:00Z",
-            "thumbnailUrl": "static/images/river.avif",
+            "thumbnailUrl": "https://browser.style/assets/images/river.png",
             "options": { "controls": true, "autoplay": true, "playsinline": true }
           }
         }
@@ -569,7 +569,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/bunny.avif",
+          "src": "https://browser.style/assets/images/bunny.png",
           "alt": "Big Buck Bunny Adventures thumbnail"
         }
       ]
@@ -591,7 +591,7 @@
             "name": "Big Buck Bunny Adventures",
             "description": "An animated short film featuring the adventures of Big Buck Bunny",
             "uploadDate": "2025-03-22T14:45:00Z",
-            "thumbnailUrl": "static/images/bunny.avif",
+            "thumbnailUrl": "https://browser.style/assets/images/bunny.png",
             "options": { "controls": true, "muted": true, "autoplay": true, "playsinline": true }
           }
         }
@@ -605,7 +605,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/elephant.avif",
+          "src": "https://browser.style/assets/images/elephant.png",
           "alt": "Elephants Dream Documentary thumbnail"
         }
       ]
@@ -628,7 +628,7 @@
             "name": "Elephants Dream Documentary",
             "description": "A surreal computer-animated short film exploring dreams and imagination",
             "uploadDate": "2025-06-08T09:15:00Z",
-            "thumbnailUrl": "static/images/elephant.avif",
+            "thumbnailUrl": "https://browser.style/assets/images/elephant.png",
             "options": { "controls": true, "muted": true, "autoplay": false, "playsinline": true, "resetOnClose": true }
           }
         }
@@ -724,7 +724,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/aurasoundpro.avif", "alt": "Wireless Noise-Cancelling Headphones" }
+        { "type": "image", "src": "https://browser.style/assets/images/aurasoundpro.png", "alt": "Wireless Noise-Cancelling Headphones" }
       ]
     },
     "ribbon": {
@@ -759,7 +759,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/fittrackpro.avif", "alt": "Smartwatch with Fitness Tracker" }
+        { "type": "image", "src": "https://browser.style/assets/images/fittrackpro.png", "alt": "Smartwatch with Fitness Tracker" }
       ]
     },
     "content": {
@@ -786,7 +786,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/soundwavemini.avif", "alt": "Portable Bluetooth Speaker" }
+        { "type": "image", "src": "https://browser.style/assets/images/soundwavemini.png", "alt": "Portable Bluetooth Speaker" }
       ]
     },
     "content": {
@@ -813,7 +813,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/ergochair.avif", "alt": "Ergonomic Office Chair" }
+        { "type": "image", "src": "https://browser.style/assets/images/ergochair.png", "alt": "Ergonomic Office Chair" }
       ]
     },
     "content": {
@@ -840,7 +840,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/adventurecam.avif", "alt": "4K Action Camera" }
+        { "type": "image", "src": "https://browser.style/assets/images/adventurecam.png", "alt": "4K Action Camera" }
       ]
     },
     "content": {
@@ -859,7 +859,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/quickboil.avif", "alt": "Electric Kettle" }
+        { "type": "image", "src": "https://browser.style/assets/images/quickboil.png", "alt": "Electric Kettle" }
       ]
     },
     "content": {
@@ -878,7 +878,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/cutmaster.avif", "alt": "Professional Chef's Knife" }
+        { "type": "image", "src": "https://browser.style/assets/images/cutmaster.png", "alt": "Professional Chef's Knife" }
       ]
     },
     "content": {
@@ -898,7 +898,7 @@
     "type": "product",
     "media": {
       "sources": [
-        { "type": "image", "src": "static/images/slimfold.avif", "alt": "Leather Wallet" }
+        { "type": "image", "src": "https://browser.style/assets/images/slimfold.png", "alt": "Leather Wallet" }
       ]
     },
     "content": {
@@ -918,7 +918,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/popovers.avif",
+          "src": "https://browser.style/assets/images/popovers.png",
           "alt": "Interactive popover demonstration on a modern web interface"
         }
       ]
@@ -983,7 +983,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/websummit.avif",
+          "src": "https://browser.style/assets/images/websummit.png",
           "alt": "People networking at a tech conference"
         }
       ]
@@ -1077,7 +1077,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/quote.avif",
+          "src": "https://browser.style/assets/images/quote.png",
           "alt": "A serene landscape"
         }
       ]
@@ -1106,7 +1106,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/spring.avif",
+          "src": "https://browser.style/assets/images/spring.jpg",
           "alt": "Spring"
         }
       ]
@@ -1129,7 +1129,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/summer.avif",
+          "src": "https://browser.style/assets/images/summer.jpg",
           "alt": "Summer"
         }
       ]
@@ -1152,7 +1152,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/autumn.avif",
+          "src": "https://browser.style/assets/images/autumn.jpg",
           "alt": "Autumn"
         }
       ]
@@ -1175,7 +1175,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/winter.avif",
+          "src": "https://browser.style/assets/images/winter.jpg",
           "alt": "Winter"
         }
       ]
@@ -1223,7 +1223,7 @@
       "sources": [
         {
           "type": "image",
-          "src": "static/images/brewandbean.avif",
+          "src": "https://browser.style/assets/images/brewandbean.png",
           "alt": "Brew & Bean Coffee Shop Logo"
         }
       ]

@@ -95,7 +95,7 @@ export class CourseCard extends BaseCard {
 		const price = courseData.price || {};
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="about" content="${content.category}">` : ''}
 				${useSchema && courseData.courseWorkload ? `<div itemprop="hasCourseInstance" itemscope itemtype="https://schema.org/CourseInstance" style="display:none;"><meta itemprop="courseMode" content="Online"><meta itemprop="courseWorkload" content="${courseData.courseWorkload}"></div>` : ''}

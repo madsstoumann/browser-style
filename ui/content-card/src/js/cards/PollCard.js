@@ -120,7 +120,7 @@ export class PollCard extends BaseCard {
 		const showResults = this.hasVoted || (this.data.poll?.showResults === 'always');
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="about" content="${content.category}">` : ''}
 				

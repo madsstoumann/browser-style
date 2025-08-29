@@ -1,0 +1,130 @@
+{
+  "description": "Content card specific layout configuration - optimized subset of main layout system",
+  "systems": [
+    {
+      "fileName": "layout.css",
+      "path": "layouts",
+      "layer": "layout",
+      "element": "lay-out",
+      "generateHTML": true,
+      "core": ["base"],
+      "common": ["animations"],
+      "breakpoints": {
+        "xs": {
+          "type": "@media",
+          "min": "240px",
+          "max": null,
+          "layouts": ["autofit"]
+        },
+        "sm": {
+          "type": "@media",
+          "min": "380px",
+          "max": null,
+          "layouts": [
+            "autofit", 
+            {
+              "columns": ["columns(2)"],
+              "grid": ["grid(3a)"],
+              "mosaic": ["mosaic(photo)"]
+            }
+          ]
+        },
+        "md": {
+          "type": "@media",
+          "min": "540px",
+          "max": null,
+          "layouts": ["columns", 
+            "grid", 
+            {
+              "grid": ["grid(3a)"]
+            }
+          ]
+        },
+        "lg": {
+          "type": "@media",
+          "min": "720px",
+          "max": null,
+          "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
+        },
+        "xl": {
+          "type": "@media",
+          "min": "920px",
+          "max": null,
+          "layouts": [
+            {
+              "bento": ["bento(6a)"],
+              "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)", "mosaic(cornerstone)"]
+            }
+          ]
+        },
+        "xxl": {
+          "type": "@media",
+          "min": "1140px",
+          "max": null,
+          "layouts": [{ "bento": ["bento(6a)"] }]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "defaultSrcsetBreakpoints": [280, 480, 900],
+    "fallbackSrcset": "default:100vw",
+    "layoutDataPath": "/ui/layout/systems/layouts/"
+  },
+  "imageTransforms": {
+    "defaultProvider": "cloudflare",
+    "providers": {
+      "cloudflare": {
+        "provider": "cloudflare",
+        "urlPattern": {
+          "type": "path",
+          "pathConfig": {
+            "prefix": "/cdn-cgi/image/",
+            "separator": ",",
+            "assignment": "=",
+            "position": "before-path"
+          }
+        },
+        "paramMap": {
+          "width": "width",
+          "height": "height",
+          "quality": "quality",
+          "format": "format",
+          "fit": "fit",
+          "gravity": "gravity"
+        }
+      }
+    },
+    "aspectRatio": {
+      "enabled": true,
+      "source": "layout-attribute",
+      "fallback": "ar16x9",
+      "calculations": {
+        "ar1x1": { "ratio": 1, "calculate": "square" },
+        "ar16x9": { "ratio": 1.777777, "calculate": "height-from-width" },
+        "ar21x9": { "ratio": 2.333333, "calculate": "height-from-width" },
+        "ar4x3": { "ratio": 1.333333, "calculate": "height-from-width" },
+        "ar3x2": { "ratio": 1.5, "calculate": "height-from-width" },
+        "ar5x4": { "ratio": 1.25, "calculate": "height-from-width" },
+        "ar9x16": { "ratio": 0.5625, "calculate": "height-from-width" },
+        "ar3x4": { "ratio": 0.75, "calculate": "height-from-width" },
+        "ar2x3": { "ratio": 0.666667, "calculate": "height-from-width" },
+        "ar4x5": { "ratio": 0.8, "calculate": "height-from-width" },
+        "ar9x21": { "ratio": 0.428571, "calculate": "height-from-width" }
+      }
+    },
+    "defaultTransforms": {
+      "format": "avif",
+      "quality": 80,
+      "fit": "cover"
+    },
+    "responsive": {
+      "xs": { "quality": 70, "format": "webp" },
+      "sm": { "quality": 75 },
+      "md": { "quality": 80 },
+      "lg": { "quality": 80 },
+      "xl": { "quality": 85 },
+      "xxl": { "quality": 85 }
+    }
+  }
+}

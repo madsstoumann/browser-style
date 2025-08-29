@@ -14,7 +14,7 @@ export class QuoteCard extends BaseCard {
 		const { settings, useSchema, content } = renderContext;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.summary ? `
 					<blockquote ${getStyle('cc-quote', settings)}>

@@ -285,7 +285,7 @@
 [layout*="columns("] {
 	--cc-gtr: 1fr;
 	--cc-gtc: 1fr 1fr;
-	&[layout*="th-"] {
+	&[layout*="th"] {
 		--cc-colmg: 0;
 		--cc-media-bdrs: var(--cc-bdrs) 0 0 var(--cc-bdrs);
 		[dir="rtl"] & { --cc-media-bdrs: 0 var(--cc-bdrs) var(--cc-bdrs) 0; }
@@ -304,7 +304,7 @@
 		--cc-content-pbe: 0;
 		--cc-gtr: 1fr auto;
 	}
-	&[layout*="th-"] {
+	&[layout*="th"] {
 		--cc-content-pbs: 0;
 		--cc-media-bdrs: var(--cc-bdrs) var(--cc-bdrs) 0 0;
 		&[layout*="flip"] {
@@ -319,101 +319,102 @@
 	--cc-gtr: 1fr;
 	--cc-content-ga: 1 / 1;
 	--cc-media-ga: 1 / 1;
-	&[layout*="th-"] {
+	&[layout*="th"] {
 		--cc-content-bg: var(--cc-bg);
 		--cc-content-c: var(--cc-c);
 	}
 }
 
 	/* --- Alignment for Content Area --- */
-	[layout*="t-l"] { --cc-content-ps: start start; }
-	[layout*="t-l"] { --cc-content-ps: start start; --cc-media-overlay-deg: 135deg; }
-	[layout*="t-c"] { --cc-content-ps: start center; --cc-media-overlay-deg: 180deg; }
-	[layout*="t-r"] { --cc-content-ps: start end; --cc-media-overlay-deg: 225deg; }
-	[layout*="c-l"] { --cc-content-ps: center start; --cc-media-overlay-deg: 90deg; }
-	[layout*="c-c"] { --cc-content-ps: center center; --cc-media-overlay-deg: 180deg; }
-	[layout*="c-r"] { --cc-content-ps: center end; --cc-media-overlay-deg: 270deg; }
-	[layout*="b-l"] { --cc-content-ps: end start; --cc-media-overlay-deg: 45deg; }
-	[layout*="b-c"] { --cc-content-ps: end center; --cc-media-overlay-deg: 0deg; }
-	[layout*="b-r"] { --cc-content-ps: end end; --cc-media-overlay-deg: 315deg; }
+	[layout*="po-tl"] { --cc-content-ps: start start; }
+	[layout*="po-tl"] { --cc-content-ps: start start; --cc-media-overlay-deg: 135deg; }
+	[layout*="po-tc"] { --cc-content-ps: start center; --cc-media-overlay-deg: 180deg; }
+	[layout*="po-tr"] { --cc-content-ps: start end; --cc-media-overlay-deg: 225deg; }
+	[layout*="po-cl"] { --cc-content-ps: center start; --cc-media-overlay-deg: 90deg; }
+	[layout*="po-cc"] { --cc-content-ps: center center; --cc-media-overlay-deg: 180deg; }
+	[layout*="po-cr"] { --cc-content-ps: center end; --cc-media-overlay-deg: 270deg; }
+	[layout*="po-bl"] { --cc-content-ps: end start; --cc-media-overlay-deg: 45deg; }
+	[layout*="po-bc"] { --cc-content-ps: end center; --cc-media-overlay-deg: 0deg; }
+	[layout*="po-br"] { --cc-content-ps: end end; --cc-media-overlay-deg: 315deg; }
 	
 	[layout*="ta-l"] { --cc-content-ta: start; }
 	[layout*="ta-c"] { --cc-content-ta: center; }
 	[layout*="ta-r"] { --cc-content-ta: end; }
 
-	[layout*="1:1"] { --cc-media-ar: 1 / 1; }
-	[layout*="4:3"] { --cc-media-ar: 4 / 3; }
-	[layout*="3:4"] { --cc-media-ar: 3 / 4; }
-	[layout*="16:9"] { --cc-media-ar: 16 / 9; }
-	[layout*="9:16"] { --cc-media-ar: 9 / 16; }
-	[layout*="3:2"] { --cc-media-ar: 3 / 2; }
-	[layout*="2:3"] { --cc-media-ar: 2 / 3; }
-	[layout*="5:4"] { --cc-media-ar: 5 / 4; }
-	[layout*="4:5"] { --cc-media-ar: 4 / 5; }
-	[layout*="21:9"] { --cc-media-ar: 21 / 9; }
-	[layout*="9:21"] { --cc-media-ar: 9 / 21; }
+	/* Aspect Ratios for Media Area */
+	[layout*="ar1x1"] { --cc-media-ar: 1 / 1; }
+	[layout*="ar4x3"] { --cc-media-ar: 4 / 3; }
+	[layout*="ar3x4"] { --cc-media-ar: 3 / 4; }
+	[layout*="ar16x9"] { --cc-media-ar: 16 / 9; }
+	[layout*="ar9x16"] { --cc-media-ar: 9 / 16; }
+	[layout*="ar3x2"] { --cc-media-ar: 3 / 2; }
+	[layout*="ar2x3"] { --cc-media-ar: 2 / 3; }
+	[layout*="ar5x4"] { --cc-media-ar: 5 / 4; }
+	[layout*="ar4x5"] { --cc-media-ar: 4 / 5; }
+	[layout*="ar21x9"] { --cc-media-ar: 21 / 9; }
+	[layout*="ar9x21"] { --cc-media-ar: 9 / 21; }
 
 
 	/*---  Overlay for Media Area ---*/
-	[layout*="ovl"] { --cc-media-overlay-d: block; }
+	[layout*="ov1"] { --cc-media-overlay-d: block; }
 
 	/*--- Comprehensive Spacing System ---*/
 
 	/* All-sides padding (enhanced) */
-	[layout*="p:0"] { --cc-content-p: 0px; }
-	[layout*="p:0.5"] { --cc-content-p: calc(0.5 * var(--cc-space-unit)); }
-	[layout*="p:1"] { --cc-content-p: calc(1 * var(--cc-space-unit)); }
-	[layout*="p:1.5"] { --cc-content-p: calc(1.5 * var(--cc-space-unit)); }
-	[layout*="p:2"] { --cc-content-p: calc(2 * var(--cc-space-unit)); }
-	[layout*="p:2.5"] { --cc-content-p: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="p:3"] { --cc-content-p: calc(3 * var(--cc-space-unit)); }
+	[layout*="pa0"] { --cc-content-p: 0px; }
+	[layout*="pa0.5"] { --cc-content-p: calc(0.5 * var(--cc-space-unit)); }
+	[layout*="pa1"] { --cc-content-p: calc(1 * var(--cc-space-unit)); }
+	[layout*="pa1.5"] { --cc-content-p: calc(1.5 * var(--cc-space-unit)); }
+	[layout*="pa2"] { --cc-content-p: calc(2 * var(--cc-space-unit)); }
+	[layout*="pa2.5"] { --cc-content-p: calc(2.5 * var(--cc-space-unit)); }
+	[layout*="pa3"] { --cc-content-p: calc(3 * var(--cc-space-unit)); }
 
 	/* Padding Inline (left + right) */
-	[layout*="pi:0"] { --cc-content-pi: 0px; }
-	[layout*="pi:0.5"] { --cc-content-pi: calc(0.5 * var(--cc-space-unit)); }
-	[layout*="pi:1"] { --cc-content-pi: calc(1 * var(--cc-space-unit)); }
-	[layout*="pi:1.5"] { --cc-content-pi: calc(1.5 * var(--cc-space-unit)); }
-	[layout*="pi:2"] { --cc-content-pi: calc(2 * var(--cc-space-unit)); }
-	[layout*="pi:2.5"] { --cc-content-pi: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pi:3"] { --cc-content-pi: calc(3 * var(--cc-space-unit)); }
+	[layout*="pi0"] { --cc-content-pi: 0px; }
+	[layout*="pi0.5"] { --cc-content-pi: calc(0.5 * var(--cc-space-unit)); }
+	[layout*="pi1"] { --cc-content-pi: calc(1 * var(--cc-space-unit)); }
+	[layout*="pi1.5"] { --cc-content-pi: calc(1.5 * var(--cc-space-unit)); }
+	[layout*="pi2"] { --cc-content-pi: calc(2 * var(--cc-space-unit)); }
+	[layout*="pi2.5"] { --cc-content-pi: calc(2.5 * var(--cc-space-unit)); }
+	[layout*="pi3"] { --cc-content-pi: calc(3 * var(--cc-space-unit)); }
 
 	/* Padding Block (top + bottom) */
-	[layout*="pb:0"] { --cc-content-pb: 0px; }
-	[layout*="pb:0.5"] { --cc-content-pb: calc(0.5 * var(--cc-space-unit)); }
-	[layout*="pb:1"] { --cc-content-pb: calc(1 * var(--cc-space-unit)); }
-	[layout*="pb:1.5"] { --cc-content-pb: calc(1.5 * var(--cc-space-unit)); }
-	[layout*="pb:2"] { --cc-content-pb: calc(2 * var(--cc-space-unit)); }
-	[layout*="pb:2.5"] { --cc-content-pb: calc(2.5 * var(--cc-space-unit)); }
-	[layout*="pb:3"] { --cc-content-pb: calc(3 * var(--cc-space-unit)); }
+	[layout*="pb0"] { --cc-content-pb: 0px; }
+	[layout*="pb0.5"] { --cc-content-pb: calc(0.5 * var(--cc-space-unit)); }
+	[layout*="pb1"] { --cc-content-pb: calc(1 * var(--cc-space-unit)); }
+	[layout*="pb1.5"] { --cc-content-pb: calc(1.5 * var(--cc-space-unit)); }
+	[layout*="pb2"] { --cc-content-pb: calc(2 * var(--cc-space-unit)); }
+	[layout*="pb2.5"] { --cc-content-pb: calc(2.5 * var(--cc-space-unit)); }
+	[layout*="pb3"] { --cc-content-pb: calc(3 * var(--cc-space-unit)); }
 
 	/* Content row-gap using dedicated content space unit */
-	[layout*="rg:0"] { --cc-content-rg: 0; }
-	[layout*="rg:0.5"] { --cc-content-rg: 0.5; }
-	[layout*="rg:1"] { --cc-content-rg: 1; }
-	[layout*="rg:1.5"] { --cc-content-rg: 1.5; }
-	[layout*="rg:2"] { --cc-content-rg: 2; }
-	[layout*="rg:2.5"] { --cc-content-rg: 2.5; }
-	[layout*="rg:3"] { --cc-content-rg: 3; }
+	[layout*="rg0"] { --cc-content-rg: 0; }
+	[layout*="rg0.5"] { --cc-content-rg: 0.5; }
+	[layout*="rg1"] { --cc-content-rg: 1; }
+	[layout*="rg1.5"] { --cc-content-rg: 1.5; }
+	[layout*="rg2"] { --cc-content-rg: 2; }
+	[layout*="rg2.5"] { --cc-content-rg: 2.5; }
+	[layout*="rg3"] { --cc-content-rg: 3; }
 
 
 /* === Themes === */
-[layout*="th-1"] {
-	--cc-bg: var(--cc-theme1-bg, #2f2a2a);
-	--cc-c: var(--cc-theme1-c, #fff);
+[layout*="thd"] {
+	--cc-bg: var(--cc-theme-dark-bg, #2f2a2a);
+	--cc-c: var(--cc-theme-dark-c, #fff);
 	* { color: #fff; } /* todo */
 }
-[layout*="th-2"] {
-	--cc-bg: var(--cc-theme2-bg, #f0f0f0);
-	--cc-c: var(--cc-theme2-c, #333);
+[layout*="thl"] {
+	--cc-bg: var(--cc-theme-light-bg, #f0f0f0);
+	--cc-c: var(--cc-theme-light-c, #333);
 }
 
 /*--- Content Width when stacked ---*/
-[layout*="w:25"] { --cc-content-w: 25%; }
-[layout*="w:33"] { --cc-content-w: 33.333%; }
-[layout*="w:50"] { --cc-content-w: 50%; }
-[layout*="w:66"] { --cc-content-w: 66.666%; }
-[layout*="w:75"] { --cc-content-w: 75%; }
-[layout*="w:100"] { --cc-content-w: 100%; }
-[layout*="w:fc"] { --cc-content-w: fit-content; }
-[layout*="w:mc"] { --cc-content-w: min-content; }
+[layout*="w25"] { --cc-content-w: 25%; }
+[layout*="w33"] { --cc-content-w: 33.333%; }
+[layout*="w50"] { --cc-content-w: 50%; }
+[layout*="w66"] { --cc-content-w: 66.666%; }
+[layout*="w75"] { --cc-content-w: 75%; }
+[layout*="w100"] { --cc-content-w: 100%; }
+[layout*="wfc"] { --cc-content-w: fit-content; }
+[layout*="wmc"] { --cc-content-w: min-content; }
 

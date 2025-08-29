@@ -16,7 +16,7 @@ export class RecipeCard extends BaseCard {
 		const rating = this.data.engagement?.reactions?.[0]; // First reaction is "like" for rating
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="recipeCategory" content="${content.category}">` : ''}
 				${content.readingTime && useSchema ? `<meta itemprop="totalTime" content="${content.readingTime}">` : ''}

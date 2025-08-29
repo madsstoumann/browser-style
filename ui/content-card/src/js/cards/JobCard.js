@@ -114,7 +114,7 @@ export class JobCard extends BaseCard {
 		const { job: jobData = {} } = this.data;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="industry" content="${content.category}">` : ''}
 				${useSchema ? `<meta itemprop="datePosted" content="${new Date().toISOString().split('T')[0]}">` : ''}

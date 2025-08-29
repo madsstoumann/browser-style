@@ -22,27 +22,27 @@
 <body>
 
 	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
-		<news-card content="news-11" layout="rows(th-1 21:9 p:1 flip)"></news-card>
+		<news-card content="news-11" layout="rows(thd ar21x9 pa1 flip)"></news-card>
 		<news-card content="news-2"></news-card>
-		<news-card content="news-3" layout="rows(th-2 p:1)"></news-card>
+		<news-card content="news-3" layout="rows(thl pa1)"></news-card>
 	</lay-out>
 
 	<lay-out lg="columns(1)" bleed col-gap="2" pad-bottom="2" pad-inline="1" pad-top="2" theme="secondary">
-		<news-card content="news-4" layout="columns(21:9)" col-gap="2"></news-card>
+		<news-card content="news-4" layout="columns(ar21x9)" col-gap="2"></news-card>
 	</lay-out>
 
-	<news-card content="news-6" layout="columns(21:9 th-2 p:1.5)"></news-card>
-	<news-card content="news-7" layout="columns(21:9 th-2 p:1.5 flip)"></news-card>
+	<news-card content="news-6" layout="columns(ar21x9 thl pa1.5)"></news-card>
+	<news-card content="news-7" layout="columns(ar21x9 thl pa1.5 flip)"></news-card>
 
 	<lay-out lg="columns(4)" pad-top="2" pad-bottom="2">
-		<article-card content="spot-1" layout="stack(b-c ta-c p:1 3:4 ovl)"></article-card>
-		<article-card content="spot-2" layout="stack(c-l ta-c p:1 3:4 ovl)"></article-card>
-		<article-card content="spot-3" layout="stack(b-r ta-c p:1 3:4 ovl)"></article-card>
-		<article-card content="spot-4" layout="stack(t-c ta-c p:1 3:4 ovl)"></article-card>
+		<article-card content="spot-1" layout="stack(po-bc ta-c pa1 ar3x4 ov1)"></article-card>
+		<article-card content="spot-2" layout="stack(po-cl ta-c pa1 ar3x4 ov1)"></article-card>
+		<article-card content="spot-3" layout="stack(po-br ta-c pa1 ar3x4 ov1)"></article-card>
+		<article-card content="spot-4" layout="stack(po-tc ta-c pa1 ar3x4 ov1)"></article-card>
 	</lay-out>
 
 	<lay-out bleed pad-bottom="2" pad-inline="1" pad-top="2" theme="tertiary">
-		<news-card content="news-1" layout="stack(c-l th-2 p:1 w:50)"></news-card>
+		<news-card content="news-1" layout="stack(po-cl thl pa1 w50)"></news-card>
 	</lay-out>
 
 	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-bottom="2" pad-top="2" subgrid="5">
@@ -51,14 +51,14 @@
 		<news-card content="news-13"></news-card>
 	</lay-out>
 
-	<news-card content="news-12" layout="p:1.5" class="secondary"></news-card>
+	<news-card content="news-12" layout="pa1.5" class="secondary"></news-card>
 
 	<lay-out md="columns(2)" lg="ratio(66:33)" bleed theme="primary" pad-top="2" pad-bottom="2" col-gap="4">
 		<lay-out lg="bento(4a)">
-			<article-card content="spot-1" layout="stack(b-c ta-c p:1 1:1 ovl)"></article-card>
-			<article-card content="spot-2" layout="stack(t-l ta-c p:1 1:1 ovl)"></article-card>
-			<article-card content="spot-3" layout="stack(b-r ta-c p:1 1:1 ovl)"></article-card>
-			<article-card content="spot-4" layout="stack(t-c ta-c p:1 1:1 ovl)"></article-card>
+			<article-card content="spot-1" layout="stack(po-bc ta-c pa1 ar1x1 ov1)"></article-card>
+			<article-card content="spot-2" layout="stack(po-tl ta-c pa1 ar1x1 ov1)"></article-card>
+			<article-card content="spot-3" layout="stack(po-br ta-c pa1 ar1x1 ov1)"></article-card>
+			<article-card content="spot-4" layout="stack(po-tc ta-c pa1 ar1x1 ov1)"></article-card>
 		</lay-out>
 		<lay-out gap self="start" row-gap="2">
 			<news-card content="news-5"></news-card>
@@ -86,21 +86,21 @@
 
 	<lay-out lg="columns(3)" col-gap="2" row-gap="2" gap pad-bottom="2" pad-top="2">
 		<news-card content="news-8"></news-card>
-		<news-card content="news-10" layout="rows(p:1 th-2)"></news-card>
+		<news-card content="news-10" layout="rows(pa1 thl)"></news-card>
 		<event-card content="event-1"></event-card>
 	</lay-out>
 	
 	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
-		<article-card content="article-1" layout="rows(th-2 p:1)"></article-card>
+		<article-card content="article-1" layout="rows(thl pa1)"></article-card>
 		<poll-card content="poll-1"></poll-card>
 	</lay-out>
 
 	<lay-out lg="grid(6a)">
-		<article-card content="spot-1" layout="stack(b-c ta-c p:1 2:3 ovl)"></article-card>
-		<article-card content="spot-2" layout="stack(t-l ta-c p:1 1:1 ovl)"></article-card>
-		<article-card content="spot-3" layout="stack(b-r ta-c p:1 1:1 ovl)"></article-card>
-		<article-card content="spot-4" layout="stack(t-c ta-c p:1 1:1 ovl)"></article-card>
-		<article-card content="spot-1" layout="stack(t-c ta-c p:1 1:1 ovl)"></article-card>
+		<article-card content="spot-1" layout="stack(po-bc ta-c pa1 ar2x3 ov1)"></article-card>
+		<article-card content="spot-2" layout="stack(po-tl ta-c pa1 ar1x1 ov1)"></article-card>
+		<article-card content="spot-3" layout="stack(po-br ta-c pa1 ar1x1 ov1)"></article-card>
+		<article-card content="spot-4" layout="stack(po-tc ta-c pa1 ar1x1 ov1)"></article-card>
+		<article-card content="spot-1" layout="stack(po-tc ta-c pa1 ar1x1 ov1)"></article-card>
 	</lay-out>
 
 	<h2>Video Cards</h2>
@@ -118,12 +118,12 @@
 	</lay-out>
 
 	<quote-card content="quote-1"></quote-card>
-	<faq-card content="faq-1" layout="p:1 th-2"></faq-card>
-	<timeline-card content="timeline-1" layout="p:1 th-1"></timeline-card>
+	<faq-card content="faq-1" layout="pa1 thl"></faq-card>
+	<timeline-card content="timeline-1" layout="pa1 thd"></timeline-card>
 
 	<footer>
 		<lay-out lg="columns(3)">
-			<business-card content="business-1" layout="rows(p:1 th-2)"></business-card>
+			<business-card content="business-1" layout="rows(pa1 thl)"></business-card>
 		</lay-out>
 	</footer>
 

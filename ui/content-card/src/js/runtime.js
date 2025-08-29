@@ -81,7 +81,7 @@ async function initializeLayoutSrcsets() {
 		
 		// Load optimized local configuration
 		const basePath = getBasePath();
-		const config = await fetch(`${basePath}layout-config.json`).then(r => r.json());
+		const config = await fetch(`${basePath}config.json`).then(r => r.json());
 		const layoutPath = config.settings.layoutDataPath;
 		
 		// Extract unique layout types from the config

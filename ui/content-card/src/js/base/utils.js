@@ -30,12 +30,12 @@ export function renderSVG(name) {
 	return `<svg viewBox="0 -960 960 960" width="24" height="24"><path d="${ICONS[name]}"></path></svg>`;
 }
 
-export function renderImage(image, useSchema = false, settings = {}) {
+export function renderImage(image, useSchema = false, settings = {}, element = null) {
 	if (!image?.src) return '';
 	const schemaAttr = useSchema ? 'itemprop="image"' : '';
 	
-	// Generate responsive srcset and sizes
-	const { srcset, sizes } = _generateResponsiveSrcset(image.src, null, settings);
+	// Generate responsive srcset and sizes with aspect ratio calculation
+	const { srcset, sizes } = _generateResponsiveSrcset(image.src, element, settings);
 	
 	return `<img 
 		${getStyle('cc-media-image', settings)} 
@@ -178,13 +178,14 @@ export function renderSticker(sticker, settings = {}) {
 	return `<span ${getStyle('cc-sticker', settings)} role="status">${sticker.text}</span>`;
 }
 
-export function renderMedia(media, ribbon, sticker, useSchema = false, settings = {}) {
+export function renderMedia(element, useSchema = false, settings = {}) {
+	const { media, ribbon, sticker } = element.data || {};
 	if (!media?.sources?.length) return '';
 	return cleanHTML(`
 	<figure ${getStyle('cc-media', settings)}>
 		${media.sources
 			.map((entry) => {
-				if (entry.type === 'image') return renderImage(entry, useSchema, settings)
+				if (entry.type === 'image') return renderImage(entry, useSchema, settings, element)
 				if (entry.type === 'video') return renderVideo(entry, useSchema, settings)
 				if (entry.type === 'youtube') return renderYouTube(entry, useSchema, settings)
 			})
@@ -513,20 +514,130 @@ export function renderLinks(links, settings = {}, actions = null) {
 	return `<nav ${getStyle('cc-links', settings)}>${links.map(link => renderLink(link)).join('')}</nav>`;
 }
 
-function generateSrcsetString(imageSrc, breakpoints) {
+// Extract aspect ratio from layout attribute
+function extractAspectRatio(element, config) {
+	if (!element || !config?.aspectRatio?.enabled) return null;
+	
+	const layoutAttr = element.getAttribute?.('layout') || '';
+	const aspectRatioMatch = layoutAttr.match(/ar(\d+)x(\d+)/);
+	
+	if (aspectRatioMatch) {
+		const arKey = `ar${aspectRatioMatch[1]}x${aspectRatioMatch[2]}`;
+		return config.aspectRatio.calculations[arKey] || null;
+	}
+	
+	return null;
+}
+
+// Build transform URL based on provider configuration
+function buildTransformUrl(imageSrc, transforms, config) {
+	if (!config?.providers?.[config.defaultProvider]) return imageSrc;
+	
+	const provider = config.providers[config.defaultProvider];
+	const { urlPattern, paramMap } = provider;
+	
+	// Filter out null/undefined transforms and map parameter names
+	const validTransforms = Object.entries(transforms)
+		.filter(([key, value]) => value != null)
+		.map(([paramKey, value]) => {
+			const paramName = paramMap[paramKey] || paramKey;
+			return `${paramName}${urlPattern.pathConfig.assignment}${value}`;
+		});
+	
+	if (validTransforms.length === 0) return imageSrc;
+	
+	if (urlPattern.type === 'path') {
+		const { prefix, separator } = urlPattern.pathConfig;
+		const transformString = validTransforms.join(separator);
+		
+		// Parse URL to inject transforms before path
+		try {
+			const url = new URL(imageSrc);
+			const transformedPath = `${prefix}${transformString}${url.pathname}${url.search}`;
+			return `${url.protocol}//${url.host}${transformedPath}`;
+		} catch {
+			// Fallback for relative URLs
+			return `${prefix}${transformString}/${imageSrc}`;
+		}
+	}
+	
+	// Query-based transforms (future implementation if needed)
+	return imageSrc;
+}
+
+// Generate srcset with image transforms and aspect ratio calculations
+function generateSrcsetString(imageSrc, element, breakpoints, config) {
 	if (!imageSrc || !Array.isArray(breakpoints) || breakpoints.length === 0) {
 		return null;
 	}
 	
+	// Extract aspect ratio configuration
+	const aspectConfig = extractAspectRatio(element, config);
+	
 	return breakpoints
-		.map(width => `${imageSrc}?w=${width} ${width}w`)
+		.map(width => {
+			let transforms = {
+				...config?.defaultTransforms,
+				width
+			};
+			
+			// Calculate height based on aspect ratio
+			if (aspectConfig) {
+				let height;
+				switch (aspectConfig.calculate) {
+					case 'square':
+						height = width;
+						break;
+					case 'height-from-width':
+						height = Math.round(width / aspectConfig.ratio);
+						break;
+				}
+				
+				if (height) {
+					transforms.height = height;
+				}
+			}
+			
+			// Apply responsive overrides based on breakpoint
+			const responsiveOverride = config?.responsive?.[getBreakpointName(width)];
+			if (responsiveOverride) {
+				transforms = { ...transforms, ...responsiveOverride };
+			}
+			
+			// Build transform URL
+			const transformedUrl = buildTransformUrl(imageSrc, transforms, config);
+			return `${transformedUrl} ${width}w`;
+		})
 		.join(', ');
+}
+
+// Helper to determine breakpoint name from width
+function getBreakpointName(width) {
+	// Map width to breakpoint names based on config thresholds
+	if (width <= 380) return 'xs';
+	if (width <= 540) return 'sm';
+	if (width <= 720) return 'md';
+	if (width <= 920) return 'lg';
+	if (width <= 1140) return 'xl';
+	return 'xxl';
 }
 
 function _generateResponsiveSrcset(imageSrc, element, settings = {}) {
 	try {
 		const breakpoints = settings.srcsetBreakpoints || [];
-		const srcset = generateSrcsetString(imageSrc, breakpoints);
+		const config = settings.imageTransformConfig || null;
+		
+		let srcset;
+		if (config?.defaultProvider && config.providers?.[config.defaultProvider]) {
+			// Use new transform-based srcset generation
+			srcset = generateSrcsetString(imageSrc, element, breakpoints, config);
+		} else {
+			// Fallback to simple query parameter approach
+			srcset = breakpoints
+				.map(width => `${imageSrc}?w=${width} ${width}w`)
+				.join(', ');
+		}
+		
 		const sizes = settings.layoutSrcset || 'auto';
 		
 		return {
@@ -534,6 +645,7 @@ function _generateResponsiveSrcset(imageSrc, element, settings = {}) {
 			sizes
 		};
 	} catch (error) {
+		console.warn('Error generating responsive srcset:', error);
 		return { srcset: null, sizes: null };
 	}
 }

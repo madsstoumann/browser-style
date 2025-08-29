@@ -20,7 +20,7 @@ export class EventCard extends BaseCard {
 		}
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${eventData.status && useSchema ? `<meta itemprop="eventStatus" content="https://schema.org/EventStatus${eventData.status}">` : ''}
 				${eventData.attendanceMode && useSchema ? `<meta itemprop="eventAttendanceMode" content="https://schema.org/${eventData.attendanceMode}">` : ''}

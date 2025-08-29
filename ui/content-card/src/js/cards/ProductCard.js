@@ -17,7 +17,7 @@ export class ProductCard extends BaseCard {
 		const rating = productData.rating || {};
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${productData.sku && useSchema ? `<meta itemprop="sku" content="${productData.sku}">` : ''}
 				${content.category && useSchema ? `<meta itemprop="category" content="${content.category}">` : ''}

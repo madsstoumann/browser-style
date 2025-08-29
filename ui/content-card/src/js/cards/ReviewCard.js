@@ -109,7 +109,7 @@ export class ReviewCard extends BaseCard {
 		const { review: reviewData = {} } = this.data;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${this.renderRating(reviewData.rating, useSchema, settings)}
 				

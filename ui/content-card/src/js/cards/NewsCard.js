@@ -14,7 +14,7 @@ export class NewsCard extends BaseCard {
 		const { settings, useSchema, content, headlineTag } = renderContext;
 
 		return `
-			${this.data.media ? renderMedia(this.data.media, this.data.ribbon, this.data.sticker, useSchema, settings) : ''}
+			${this.data.media ? renderMedia(this, useSchema, settings) : ''}
 			<div ${getStyle('cc-content', settings)}>
 				${content.category && useSchema ? `<meta itemprop="articleSection" content="${content.category}">` : ''}
 				${content.published?.datetime && useSchema ? `<meta itemprop="datePublished" content="${content.published.datetime}">` : ''}
