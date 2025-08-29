@@ -67,7 +67,7 @@
     }
   ],
   "settings": {
-    "defaultSrcsetBreakpoints": [280, 480, 900],
+    "defaultSrcsetBreakpoints": [180, 280, 320, 380, 480, 640, 720],
     "fallbackSrcset": "default:100vw",
     "layoutDataPath": "/ui/layout/systems/layouts/"
   },
@@ -91,7 +91,8 @@
           "quality": "quality",
           "format": "format",
           "fit": "fit",
-          "gravity": "gravity"
+          "gravity": "gravity",
+          "dpr": "dpr"
         }
       }
     },
@@ -116,14 +117,15 @@
     "defaultTransforms": {
       "format": "avif",
       "quality": 80,
-      "fit": "cover"
+      "fit": "cover",
+      "dpr": 1
     },
     "responsive": {
-      "xs": { "quality": 70, "format": "webp" },
-      "sm": { "quality": 75 },
-      "md": { "quality": 80 },
+      "xs": { "quality": 65, "format": "webp" },
+      "sm": { "quality": 70 },
+      "md": { "quality": 75 },
       "lg": { "quality": 80 },
-      "xl": { "quality": 85 },
+      "xl": { "quality": 80 },
       "xxl": { "quality": 85 }
     }
   }

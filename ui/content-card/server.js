@@ -7,24 +7,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configure Brotli compression
+// Configure Brotli compression with explicit settings
 app.use(compression({
-  // Enable Brotli compression
+  // Prefer Brotli over gzip
+  brotli: {
+    enabled: true,
+    zlib: {},
+  },
   level: 6,
-  threshold: 1024,
+  threshold: 0, // Compress everything, no matter how small
   filter: (req, res) => {
-    // Compress all text-based content
+    // Skip if explicitly disabled
     if (req.headers['x-no-compression']) {
       return false;
     }
     
-    const contentType = res.getHeader('content-type');
-    if (contentType) {
-      // Compress HTML, CSS, JavaScript, JSON
-      return /text|javascript|json|css|html/.test(contentType);
-    }
+    // Always compress text-based content
+    const contentType = res.getHeader('content-type') || '';
+    const url = req.url || '';
     
-    return compression.filter(req, res);
+    // Compress by content type or file extension
+    return /text\/|application\/.*script|application\/json|application\/xml|\+json|\+xml/.test(contentType) ||
+           /\.(html|css|js|json|xml|svg|txt|md)$/.test(url);
   }
 }));
 
@@ -42,9 +46,13 @@ app.use(express.static(path.join(__dirname, 'dist'), {
     if (filePath.endsWith('.avif')) {
       res.setHeader('Content-Type', 'image/avif');
     } else if (filePath.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
+      res.setHeader('Content-Type', 'text/css; charset=utf-8');
     } else if (filePath.endsWith('.html')) {
-      res.setHeader('Content-Type', 'text/html');
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    } else if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+    } else if (filePath.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
     }
   }
 }));

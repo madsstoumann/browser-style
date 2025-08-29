@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer } from 'http';
 import { fileURLToPath } from 'url';
 import postcss from 'postcss';
+import postcssImport from 'postcss-import';
 import cssnano from 'cssnano';
 import preset from 'cssnano-preset-advanced';
 import puppeteer from 'puppeteer';
@@ -78,6 +79,7 @@ async function buildCSS() {
   const css = fs.readFileSync(cssPath, 'utf8');
   
   const result = await postcss([
+    postcssImport(),
     cssnano({
       preset: preset()
     })
