@@ -101,7 +101,9 @@
       "enabled": true,
       "source": "layout-attribute",
       "fallback": "ar16x9",
+      "default": "ar16x9",
       "calculations": {
+        "none": { "calculate": "none" },
         "ar1x1": { "ratio": 1, "calculate": "square" },
         "ar16x9": { "ratio": 1.777777, "calculate": "height-from-width" },
         "ar21x9": { "ratio": 2.333333, "calculate": "height-from-width" },

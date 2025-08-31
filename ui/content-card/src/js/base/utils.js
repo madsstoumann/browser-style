@@ -540,6 +540,12 @@ function extractAspectRatio(element, config) {
 		return config.aspectRatio.calculations[arKey] || null;
 	}
 	
+	// Use default aspect ratio if none found in layout attribute
+	const defaultAspectRatio = config.aspectRatio.default;
+	if (defaultAspectRatio && config.aspectRatio.calculations[defaultAspectRatio]) {
+		return config.aspectRatio.calculations[defaultAspectRatio];
+	}
+	
 	return null;
 }
 
@@ -597,18 +603,17 @@ function generateSrcsetString(imageSrc, element, breakpoints, config) {
 			
 			// Calculate height based on aspect ratio
 			if (aspectConfig) {
-				let height;
 				switch (aspectConfig.calculate) {
+					case 'none':
+						// Preserve original dimensions - remove fit parameter and don't set height
+						delete transforms.fit;
+						break;
 					case 'square':
-						height = width;
+						transforms.height = width;
 						break;
 					case 'height-from-width':
-						height = Math.round(width / aspectConfig.ratio);
+						transforms.height = Math.round(width / aspectConfig.ratio);
 						break;
-				}
-				
-				if (height) {
-					transforms.height = height;
 				}
 			}
 			
