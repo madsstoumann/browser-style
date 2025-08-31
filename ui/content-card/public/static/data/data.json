@@ -260,7 +260,9 @@
         {
           "type": "image",
           "src": "https://browser.style/assets/images/government.png",
-          "alt": "Government building"
+          "alt": "Government building",
+          "loading": "eager",
+          "fetchpriority": "high"
         }
       ]
     },

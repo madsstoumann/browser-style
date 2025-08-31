@@ -46,6 +46,7 @@ export function renderImage(image, useSchema = false, settings = {}, element = n
 		decoding="${image.decoding || 'async'}"
 		${image.width ? `width="${image.width}"` : ''}
 		${image.height ? `height="${image.height}"` : ''}
+		${image.fetchpriority ? `fetchpriority="${image.fetchpriority}"` : ''}
 		loading="${image.loading ? image.loading : 'lazy'}"
 		${schemaAttr}
 	>`;
