@@ -1,6 +1,6 @@
 .DS_Store
 node_modules/
-ui/content-card/dist/
+# ui/content-card/dist/
 _tmp/
 _v1/
 _v2/
