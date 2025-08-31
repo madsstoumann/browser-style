@@ -34,12 +34,31 @@ export function renderImage(image, useSchema = false, settings = {}, element = n
 	if (!image?.src) return '';
 	const schemaAttr = useSchema ? 'itemprop="image"' : '';
 	
-	// Generate responsive srcset and sizes with aspect ratio calculation
-	const { srcset, sizes } = _generateResponsiveSrcset(image.src, element, settings);
+	let imageSrc = image.src;
+	let srcset = '';
+	let sizes = '';
+	
+	// If image has fixed dimensions, create optimized single image
+	if (image.width && image.height) {
+		const config = settings.imageTransformConfig;
+		if (config?.defaultProvider && config.providers?.[config.defaultProvider]) {
+			const transforms = {
+				...config.defaultTransforms,
+				width: image.width,
+				height: image.height
+			};
+			imageSrc = buildTransformUrl(image.src, transforms, config);
+		}
+	} else {
+		// Generate responsive srcset for images without fixed dimensions
+		const responsive = _generateResponsiveSrcset(image.src, element, settings);
+		srcset = responsive.srcset;
+		sizes = responsive.sizes;
+	}
 	
 	return `<img 
 		${getStyle('cc-media-image', settings)} 
-		src="${image.src}" 
+		src="${imageSrc}" 
 		${srcset ? `srcset="${srcset}"` : ''}
 		${sizes ? `sizes="${sizes}"` : ''}
 		alt="${image.alt || ''}" 
@@ -396,14 +415,7 @@ export function renderAuthors(authors, includeSchema = false, settings = {}) {
 		<div ${getStyle('cc-authors', settings)}>
 			${authors.map(author => {
 				const avatar = author.avatar;
-				const avatarImg = avatar ?
-					`<img src="${avatar.src}" 
-						alt="${avatar.alt || author.name}" 
-						${avatar.width !== undefined ? `width="${avatar.width}"` : ''} 
-						${avatar.height !== undefined ? `height="${avatar.height}"` : ''} 
-						${includeSchema ? 'itemprop="image"' : ''}
-						${getStyle('cc-avatar', settings)}>`
-					: '';
+				const avatarImg = avatar ? renderImage(avatar, includeSchema, settings).replace('cc-media-image', 'cc-avatar') : '';
 
 				return `<address ${getStyle('cc-author', settings)} ${includeSchema ? 'itemprop="author" itemscope itemtype="https://schema.org/Person"' : ''}>
 					${avatarImg}
