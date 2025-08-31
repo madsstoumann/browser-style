@@ -156,6 +156,39 @@ async function initializeLayoutSrcsets() {
 	}
 }
 
+// Create layout position mapping for high priority image loading
+function createLayoutPositionMap() {
+	try {
+		window._layoutPositions = new Map();
+		
+		let layoutPosition = 0;
+		
+		// Get all top-level elements in document order
+		const bodyChildren = Array.from(document.body.children);
+		
+		bodyChildren.forEach((element) => {
+			if (element.tagName.toLowerCase() === 'lay-out') {
+				// Process all cards within this layout
+				Array.from(element.children).forEach((child) => {
+					if (child.hasAttribute('content')) {
+						child.setAttribute('data-position', layoutPosition);
+						window._layoutPositions.set(child, layoutPosition);
+					}
+				});
+				layoutPosition++;
+			} else if (element.hasAttribute('content')) {
+				// Individual card outside layout
+				element.setAttribute('data-position', layoutPosition);
+				window._layoutPositions.set(element, layoutPosition);
+				layoutPosition++;
+			}
+		});
+		
+	} catch (error) {
+		// Silently fail and continue
+	}
+}
+
 async function initializeCards(dataSrc = 'data.json', allCards = null) {
 	try {
 		// Use the provided path directly - supports both relative and absolute paths
@@ -294,8 +327,9 @@ export async function initContentCards(dataSrc = 'data.json') {
 	// Setup global layout updater
 	setupGlobalLayoutUpdater();
 	
-	// Initialize layout srcsets first, then cards
+	// Initialize layout srcsets first, then layout positions, then cards
 	await initializeLayoutSrcsets();
+	createLayoutPositionMap();
 	await initializeCards(dataSrc, allCards);
 	
 }

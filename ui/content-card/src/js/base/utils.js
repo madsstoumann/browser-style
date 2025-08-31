@@ -186,7 +186,20 @@ export function renderMedia(element, useSchema = false, settings = {}) {
 	<figure ${getStyle('cc-media', settings)}>
 		${media.sources
 			.map((entry) => {
-				if (entry.type === 'image') return renderImage(entry, useSchema, settings, element)
+				if (entry.type === 'image') {
+					// Get high priority layout positions from config
+					const config = window._layoutSrcsetData?.config;
+					const highPriorityPositions = config?.settings?.highPriority || [0, 1];
+					
+					// Optimize loading for images in high priority layout positions
+					const layoutPosition = parseInt(element.getAttribute?.('data-position') || '-1');
+					const optimizedEntry = highPriorityPositions.includes(layoutPosition) ? {
+						...entry,
+						loading: 'eager',
+						fetchpriority: 'high'
+					} : entry;
+					return renderImage(optimizedEntry, useSchema, settings, element);
+				}
 				if (entry.type === 'video') return renderVideo(entry, useSchema, settings)
 				if (entry.type === 'youtube') return renderYouTube(entry, useSchema, settings)
 			})

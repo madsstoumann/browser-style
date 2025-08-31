@@ -69,7 +69,8 @@
   "settings": {
     "defaultSrcsetBreakpoints": [180, 280, 320, 380, 480, 640, 720],
     "fallbackSrcset": "default:100vw",
-    "layoutDataPath": "/ui/layout/systems/layouts/"
+    "layoutDataPath": "/ui/layout/systems/layouts/",
+    "highPriority": [0, 1]
   },
   "imageTransforms": {
     "defaultProvider": "cloudflare",
