@@ -39,6 +39,16 @@ app.use('/static', (req, res, next) => {
   next();
 });
 
+// Serve CSS bundle from assets directory (for bundled CSS)
+app.use('/assets', express.static(path.join(__dirname, '../../assets'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
+
 // Serve static files from dist directory
 app.use(express.static(path.join(__dirname, 'dist'), {
   // Set proper MIME types
