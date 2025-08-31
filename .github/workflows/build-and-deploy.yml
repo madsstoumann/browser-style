@@ -23,14 +23,14 @@ jobs:
     - name: Install dependencies
       run: npm ci
       
-    - name: Build project
-      run: npm run build
+    - name: Build content-card
+      run: npm run build -w ui/content-card
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: dist-files
-        path: dist/
+        path: ui/content-card/dist/
         retention-days: 30
 
   deploy:
@@ -46,10 +46,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: dist-files
-        path: dist/
+        path: ui/content-card/dist/
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./ui/content-card/dist
