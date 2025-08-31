@@ -30,7 +30,7 @@ export function renderSVG(name) {
 	return `<svg viewBox="0 -960 960 960" width="24" height="24"><path d="${ICONS[name]}"></path></svg>`;
 }
 
-export function renderImage(image, useSchema = false, settings = {}, element = null) {
+export function renderImage(image, useSchema = false, settings = {}, element = null, context = null) {
 	if (!image?.src) return '';
 	const schemaAttr = useSchema ? 'itemprop="image"' : '';
 	
@@ -42,11 +42,17 @@ export function renderImage(image, useSchema = false, settings = {}, element = n
 	if (image.width && image.height) {
 		const config = settings.imageTransformConfig;
 		if (config?.defaultProvider && config.providers?.[config.defaultProvider]) {
-			const transforms = {
+			let transforms = {
 				...config.defaultTransforms,
 				width: image.width,
 				height: image.height
 			};
+			
+			// Apply context-specific transforms
+			if (context && config.contextTransforms?.[context]) {
+				transforms = { ...transforms, ...config.contextTransforms[context] };
+			}
+			
 			imageSrc = buildTransformUrl(image.src, transforms, config);
 		}
 	} else {
@@ -415,7 +421,7 @@ export function renderAuthors(authors, includeSchema = false, settings = {}) {
 		<div ${getStyle('cc-authors', settings)}>
 			${authors.map(author => {
 				const avatar = author.avatar;
-				const avatarImg = avatar ? renderImage(avatar, includeSchema, settings).replace('cc-media-image', 'cc-avatar') : '';
+				const avatarImg = avatar ? renderImage(avatar, includeSchema, settings, null, 'avatar').replace('cc-media-image', 'cc-avatar') : '';
 
 				return `<address ${getStyle('cc-author', settings)} ${includeSchema ? 'itemprop="author" itemscope itemtype="https://schema.org/Person"' : ''}>
 					${avatarImg}
