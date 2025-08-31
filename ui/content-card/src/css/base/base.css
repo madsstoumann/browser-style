@@ -342,6 +342,7 @@
 	[layout*="ta-r"] { --cc-content-ta: end; }
 
 	/* Aspect Ratios for Media Area */
+	[layout*="ara"] { --cc-media-ar: auto; }
 	[layout*="ar1x1"] { --cc-media-ar: 1 / 1; }
 	[layout*="ar4x3"] { --cc-media-ar: 4 / 3; }
 	[layout*="ar3x4"] { --cc-media-ar: 3 / 4; }
