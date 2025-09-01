@@ -1,5 +1,5 @@
 // Reusable build script for content cards
-import { generateLayoutSrcsets, createLayoutsDataMap, applyCSSDefaults } from '@browser.style/layout';
+import { generateLayoutSrcsets, createLayoutsDataMap, applyCSSDefaults, getLayoutConstraints, getSrcset } from '@browser.style/layout';
 
 // Determine the base path for content-card folder relative to current location
 function getBasePath() {
@@ -129,6 +129,9 @@ async function initializeLayoutSrcsets() {
 					element.setAttribute('srcsets', config.settings.fallbackSrcset);
 				}
 				
+				// Get layout constraints for this element
+				const constraints = getLayoutConstraints(element, config);
+				
 				// Set layout data on child elements
 				Array.from(element.children).forEach((child, childIndex) => {
 					child.setAttribute('data-layout-index', childIndex);
@@ -141,6 +144,10 @@ async function initializeLayoutSrcsets() {
 							child._settings.layoutSrcsets = srcsets || window._layoutSrcsetData.config.settings.fallbackSrcset;
 							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
 							
+							// Pre-calculate constraint-aware sizes
+							if (constraints?.hasMaxWidth) {
+								child._settings.layoutSrcset = getSrcset(child._settings.layoutSrcsets, childIndex, config, constraints);
+							}
 						}
 					} catch (error) {
 						// Silently continue if settings can't be set

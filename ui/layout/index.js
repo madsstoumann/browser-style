@@ -27,8 +27,9 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
   return srcsetParts.join(';');
 }
 
-export function getSrcset(layoutElementOrSrcsets, childIndex, config = null) {
+export function getSrcset(layoutElementOrSrcsets, childIndex, config = null, constraints = null) {
   let srcsets;
+  let layoutElement = null;
   
   if (typeof layoutElementOrSrcsets === 'string') {
     const match = layoutElementOrSrcsets.match(/srcsets="([^"]+)"/);
@@ -38,6 +39,7 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null) {
       srcsets = layoutElementOrSrcsets;
     }
   } else if (layoutElementOrSrcsets?.getAttribute) {
+    layoutElement = layoutElementOrSrcsets;
     srcsets = layoutElementOrSrcsets.getAttribute('srcsets');
   }
   
@@ -57,9 +59,16 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null) {
   for (const rule of sortedRules) {
     const width = getWidthForChild(rule.widths, childIndex);
     if (width) {
-      const processedWidth = (config && width.includes('%')) 
-        ? generateConstrainedSizes([width], layoutElementOrSrcsets, config)[0]
-        : width;
+      let processedWidth = width;
+      if (config && width.includes('%')) {
+        if (constraints) {
+          // Use provided constraints
+          processedWidth = generateConstrainedSizesFromConstraints([width], constraints, config)[0];
+        } else {
+          // Detect constraints from element
+          processedWidth = generateConstrainedSizes([width], layoutElement || layoutElementOrSrcsets, config)[0];
+        }
+      }
       cssRules.push(`${rule.mediaQuery} ${processedWidth}`);
     }
   }
@@ -68,9 +77,16 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null) {
   if (defaultRule) {
     const defaultWidth = getWidthForChild(defaultRule.widths, childIndex);
     if (defaultWidth) {
-      const processedWidth = (config && defaultWidth.includes('%')) 
-        ? generateConstrainedSizes([defaultWidth], layoutElementOrSrcsets, config)[0]
-        : defaultWidth;
+      let processedWidth = defaultWidth;
+      if (config && defaultWidth.includes('%')) {
+        if (constraints) {
+          // Use provided constraints
+          processedWidth = generateConstrainedSizesFromConstraints([defaultWidth], constraints, config)[0];
+        } else {
+          // Detect constraints from element
+          processedWidth = generateConstrainedSizes([defaultWidth], layoutElement || layoutElementOrSrcsets, config)[0];
+        }
+      }
       cssRules.push(processedWidth);
     }
   }
@@ -213,7 +229,19 @@ function generateConstrainedSizes(percentages, element, config) {
   });
 }
 
-function getLayoutConstraints(element, config) {
+function generateConstrainedSizesFromConstraints(percentages, constraints, config) {
+  return percentages.map(percentage => {
+    const percent = parseFloat(percentage);
+    
+    if (!constraints.hasMaxWidth) {
+      return `${percent}vw`;
+    }
+
+    return generateComplexSizes(percent, constraints, config);
+  });
+}
+
+export function getLayoutConstraints(element, config) {
   const layoutConfig = config.systems?.[0]?.layoutContainer;
   if (!layoutConfig) return { hasMaxWidth: false };
 
@@ -226,13 +254,25 @@ function getLayoutConstraints(element, config) {
     hasBleed: false
   };
 
-  if (element.hasAttribute && element.hasAttribute('bleed')) {
+  let hasBleed = false;
+  let widthAttribute = null;
+
+  if (typeof element === 'string') {
+    hasBleed = element.includes('bleed');
+    const widthMatch = element.match(/width="([^"]+)"/);
+    widthAttribute = widthMatch ? widthMatch[1] : null;
+  } else if (element?.hasAttribute) {
+    hasBleed = element.hasAttribute('bleed');
+    widthAttribute = element.getAttribute('width');
+  }
+
+  if (hasBleed) {
     constraints.hasBleed = true;
   }
 
-  if (element.hasAttribute && element.hasAttribute('width')) {
+  if (widthAttribute) {
     constraints.hasMaxWidth = true;
-    constraints.widthToken = element.getAttribute('width');
+    constraints.widthToken = widthAttribute;
     constraints.maxWidth = layoutConfig.widthTokens?.[constraints.widthToken]?.value;
   } else if (constraints.globalMaxWidth) {
     constraints.hasMaxWidth = true;
@@ -246,14 +286,15 @@ function generateComplexSizes(percentage, constraints, config) {
   const breakpoints = config.systems?.[0]?.breakpoints;
   if (!breakpoints) return `${percentage}vw`;
 
-  // If maxWidth contains viewport units, treat as unconstrained
   if (constraints.maxWidth && constraints.maxWidth.includes('vw')) {
     return `${percentage}vw`;
   }
 
-  const maxWidthValue = parseFloat(constraints.maxWidth);
-  const constrainedWidth = Math.round(maxWidthValue * (percentage / 100));
+  const maxWidthValue = constraints.maxWidth.includes('rem') 
+    ? parseFloat(constraints.maxWidth) * 16
+    : parseFloat(constraints.maxWidth);
 
+  const constrainedWidth = Math.round(maxWidthValue * (percentage / 100));
   return `min(${percentage}vw, ${constrainedWidth}px)`;
 }
 
