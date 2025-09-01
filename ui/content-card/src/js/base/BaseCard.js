@@ -60,7 +60,8 @@ export class BaseCard extends HTMLElement {
 		this._ensureSettingsInitialized();
 		if (typeof this._settings.layoutIndex === 'number' && this._settings.layoutSrcsets && !this._settings.layoutSrcset) {
 			try {
-				const sizes = getSrcset(this._settings.layoutSrcsets, this._settings.layoutIndex);
+				const config = window._layoutSrcsetData?.config;
+				const sizes = getSrcset(this._settings.layoutSrcsets, this._settings.layoutIndex, config);
 				this._settings.layoutSrcset = sizes;
 			} catch (error) {
 			}

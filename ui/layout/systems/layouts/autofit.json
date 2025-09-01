@@ -15,7 +15,7 @@
         { "w": 25, "h": 50, "x": 75, "y": 25, "class": "light" }
       ],
       "repeatable": true,
-      "srcset": "20vw",
+      "srcset": "20%",
       "breakpoints": {
         "sm": "auto(fit)"
       }
@@ -33,7 +33,7 @@
         { "w": 20, "h": 50, "x": 80, "y": 25, "class": "light" }
       ],
       "repeatable": true,
-      "srcset": "20vw",
+      "srcset": "20%",
       "breakpoints": {
         "sm": "auto(fill)"
       }

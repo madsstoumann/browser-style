@@ -8,6 +8,25 @@
       "generateHTML": true,
       "core": ["base"],
       "common": ["animations"],
+      "layoutContainer": {
+        "layoutRootElement": "body",
+        "maxLayoutWidth": {
+          "value": "1024px",
+          "cssProperty": "--layout-bleed-mw"
+        },
+        "layoutMargin": {
+          "value": "1rem", 
+          "cssProperty": "--layout-mi"
+        },
+        "widthTokens": {
+          "xs": { "value": "20rem", "cssProperty": "--layout-width-xs" },
+          "sm": { "value": "30rem", "cssProperty": "--layout-width-sm" },
+          "md": { "value": "48rem", "cssProperty": "--layout-width-md" },
+          "lg": { "value": "64rem", "cssProperty": "--layout-width-lg" },
+          "xl": { "value": "80rem", "cssProperty": "--layout-width-xl" },
+          "xxl": { "value": "96rem", "cssProperty": "--layout-width-xxl" }
+        }
+      },
       "breakpoints": {
         "xs": {
           "type": "@media",

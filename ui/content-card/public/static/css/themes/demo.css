@@ -7,8 +7,8 @@
 		--layout-tertiary-bg: #FFE7E0;
 	}
 	body {
-		--layout-bleed-mw: 1024px;
-		--layout-mi: 1rem;
+		/* --layout-bleed-mw: 1024px;
+		--layout-mi: 1rem; */
 		display: grid;
 		margin-block: 1rem;
 		margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);

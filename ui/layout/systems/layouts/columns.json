@@ -53,7 +53,7 @@
         { "w": 100, "h": 50, "x": 0, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "100vw",
+      "srcset": "100%",
       "breakpoints": {
         "md": "columns(1)"
       }
@@ -68,7 +68,7 @@
         { "w": 50, "h": 50, "x": 50, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "50vw",
+      "srcset": "50%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "columns(2)"
@@ -85,7 +85,7 @@
         { "w": 33.33, "h": 50, "x": 66.67, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw",
+      "srcset": "33.33%",
       "breakpoints": {
         "md": "grid(3a)",
         "lg": "columns(3)"
@@ -103,7 +103,7 @@
         { "w": 25, "h": 50, "x": 75, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "25vw",
+      "srcset": "25%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "columns(4)"
@@ -122,7 +122,7 @@
         { "w": 20, "h": 50, "x": 80, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "20vw",
+      "srcset": "20%",
       "breakpoints": {
         "md": "grid(5a)",
         "lg": "columns(5)"
@@ -142,7 +142,7 @@
         { "w": 16.67, "h": 50, "x": 83.33, "y": 25 }
       ],
       "repeatable": true,
-      "srcset": "16.67vw",
+      "srcset": "16.67%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "columns(6)"

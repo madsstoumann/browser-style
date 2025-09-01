@@ -14,7 +14,7 @@
         { "w": 100, "h": 50, "x": 0, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "50vw,50vw,100vw",
+      "srcset": "50%,50%,100%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(3a)"
@@ -34,7 +34,7 @@
         { "w": 50, "h": 50, "x": 50, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "100vw,50vw,50vw",
+      "srcset": "100%,50%,50%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(3b)"
@@ -54,7 +54,7 @@
         { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "66.67vw,33.33vw,33.33vw",
+      "srcset": "66.67%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(3c)"
@@ -74,7 +74,7 @@
         { "w": 33.33, "h": 50, "x": 0, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,66.67vw,66.67vw",
+      "srcset": "33.33%,66.67%,66.67%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(3d)"
@@ -95,7 +95,7 @@
         { "w": 33.33, "h": 33.33, "x": 66.67, "y": 66.67 }
       ],
       "repeatable": true,
-      "srcset": "66.67vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "66.67%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(4)",
         "lg": "grid(4a)"
@@ -116,7 +116,7 @@
         { "w": 33.33, "h": 33.33, "x": 0, "y": 66.67 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,66.67vw,33.33vw,33.33vw",
+      "srcset": "33.33%,66.67%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(4)",
         "lg": "grid(4b)"
@@ -137,7 +137,7 @@
         { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "66.67vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "66.67%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(4)",
         "lg": "grid(4c)"
@@ -159,7 +159,7 @@
         { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,66.67vw,33.33vw,33.33vw",
+      "srcset": "33.33%,66.67%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(4)",
         "lg": "grid(4d)"
@@ -182,7 +182,7 @@
         { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "33.33%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(4)",
         "lg": "grid(4e)"
@@ -205,7 +205,7 @@
         { "w": 50, "h": 33.33, "x": 50, "y": 66.67 }
       ],
       "repeatable": true,
-      "srcset": "100vw,50vw,50vw,50vw,50vw",
+      "srcset": "100%,50%,50%,50%,50%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5a)"
@@ -227,7 +227,7 @@
         { "w": 100, "h": 33.33, "x": 0, "y": 66.67 }
       ],
       "repeatable": true,
-      "srcset": "50vw,50vw,50vw,50vw,100vw",
+      "srcset": "50%,50%,50%,50%,100%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5b)"
@@ -249,7 +249,7 @@
         { "w": 33.33, "h": 25, "x": 66.67, "y": 75 }
       ],
       "repeatable": true,
-      "srcset": "66.67vw,33.33vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "66.67%,33.33%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5c)"
@@ -271,7 +271,7 @@
         { "w": 33.33, "h": 25, "x": 0, "y": 75 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,66.67vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "33.33%,66.67%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5d)"
@@ -293,7 +293,7 @@
         { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5e)"
@@ -315,7 +315,7 @@
         { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw",
+      "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5f)"
@@ -337,7 +337,7 @@
         { "w": 25, "h": 50, "x": 75, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "50vw,25vw,25vw,25vw,25vw",
+      "srcset": "50%,25%,25%,25%,25%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5g)"
@@ -359,7 +359,7 @@
         { "w": 25, "h": 50, "x": 25, "y": 50 }
       ],
       "repeatable": true,
-      "srcset": "25vw,25vw,50vw,25vw,25vw",
+      "srcset": "25%,25%,50%,25%,25%",
       "breakpoints": {
         "md": "columns(5)",
         "lg": "grid(5h)"
@@ -383,7 +383,7 @@
       ],
       "repeatable": true,
       "rows": "1fr 1fr 1fr",
-      "srcset": "50vw,25vw,25vw,25vw,25vw,50vw",
+      "srcset": "50%,25%,25%,25%,25%,50%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(6a)"
@@ -409,7 +409,7 @@
       ],
       "repeatable": true,
       "rows": "1fr 1fr 1fr",
-      "srcset": "25vw,25vw,25vw,25vw,50vw,50vw",
+      "srcset": "25%,25%,25%,25%,50%,50%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "grid(6b)"

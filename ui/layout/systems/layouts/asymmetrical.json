@@ -13,7 +13,7 @@
         { "w": 50, "h": 75, "x": 50, "y": 12.5, "class": "light" }
       ],
       "repeatable": false,
-      "srcset": "75vw,50vw",
+      "srcset": "75%,50%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(l-r)"
@@ -34,7 +34,7 @@
         { "w": 50, "h": 75, "x": 0, "y": 12.5, "class": "light" }
       ],
       "repeatable": false,
-      "srcset": "75vw,50vw",
+      "srcset": "75%,50%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(r-l)"
@@ -55,7 +55,7 @@
         { "w": 75, "h": 50, "x": 12.5, "y": 25, "class": "light" }
       ],
       "repeatable": false,
-      "srcset": "100vw,75vw",
+      "srcset": "100%,75%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(t-b)"
@@ -76,7 +76,7 @@
         { "w": 75, "h": 50, "x": 12.5, "y": 0, "class": "light" }
       ],
       "repeatable": false,
-      "srcset": "100vw,75vw",
+      "srcset": "100%,75%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "asym(b-t)"
@@ -98,7 +98,7 @@
         { "w": 40, "h": 50, "x": 60, "y": 50 }
       ],
       "repeatable": false,
-      "srcset": "42.86vw,42.86vw,42.86vw",
+      "srcset": "42.86%,42.86%,42.86%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "asym(tl-br)"
@@ -121,7 +121,7 @@
         { "w": 40, "h": 50, "x": 60, "y": 0 }
       ],
       "repeatable": false,
-      "srcset": "42.86vw,42.86vw,42.86vw",
+      "srcset": "42.86%,42.86%,42.86%",
       "breakpoints": {
         "md": "columns(3)",
         "lg": "asym(bl-tr)"
