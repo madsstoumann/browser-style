@@ -107,27 +107,22 @@ function getLayoutConstraints(element, config) {
     hasBleed: false
   };
 
-  // Check for width attribute
+  // Check for bleed attribute
+  if (element.hasAttribute && element.hasAttribute('bleed')) {
+    constraints.hasBleed = true;
+  }
+
+  // Check for width attribute - this is our main constraint mechanism
   if (element.hasAttribute && element.hasAttribute('width')) {
     constraints.hasMaxWidth = true;
     constraints.widthToken = element.getAttribute('width');
     constraints.maxWidth = layoutConfig.widthTokens[constraints.widthToken]?.value;
   }
 
-  // Check for max-width attribute (highest priority - overrides width tokens)
-  if (element.hasAttribute && element.hasAttribute('max-width')) {
+  // For bleed layouts without width token, use global constraint
+  if (constraints.hasBleed && !constraints.hasMaxWidth && constraints.globalMaxWidth) {
     constraints.hasMaxWidth = true;
-    constraints.maxWidth = element.getAttribute('max-width');
-  }
-
-  // Check for bleed attribute
-  if (element.hasAttribute && element.hasAttribute('bleed')) {
-    constraints.hasBleed = true;
-    // For bleed layouts, use global max-width if no specific constraint
-    if (!constraints.hasMaxWidth && constraints.globalMaxWidth) {
-      constraints.hasMaxWidth = true;
-      constraints.maxWidth = constraints.globalMaxWidth;
-    }
+    constraints.maxWidth = constraints.globalMaxWidth;
   }
   
   return constraints;
@@ -230,17 +225,17 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
 <img sizes="(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw" />
 ```
 
-**After (with constraints):**
+**After (with simplified constraints):**
 ```html
 <!-- Layout with width="lg" (64rem max) -->
 <img sizes="(max-width: 380px) 100vw, 
              (max-width: 720px) min(50vw, 512px), 
              min(33.33vw, 341px)" />
 
-<!-- Layout with direct max-width="800px" (highest priority) -->
+<!-- Layout with bleed and global 1200px constraint -->
 <img sizes="(max-width: 380px) 100vw,
-             (max-width: 720px) min(50vw, 400px),
-             min(33.33vw, 267px)" />
+             (max-width: 720px) min(50vw, 600px),
+             min(33.33vw, 400px)" />
 
 <!-- Layout without constraints -->
 <img sizes="(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw" />
@@ -285,22 +280,23 @@ function applyCSSDefaults(config) {
 }
 ```
 
-## Constraint Priority Order
+## Simplified Constraint System
 
-The system respects the following priority order for width constraints:
+To avoid complexity, we'll focus on just two constraint mechanisms:
 
-1. **`max-width` attribute** (highest priority) - Direct constraint on layout element
-2. **`width` attribute** - Width token from config (xs, sm, md, lg, xl, xxl)  
-3. **Global bleed constraint** - `maxLayoutWidth` from config for bleed layouts
-4. **No constraints** - Falls back to vw units
+1. **`width` attribute** - Width token from config (xs, sm, md, lg, xl, xxl)
+2. **`bleed` behavior** - Uses global `maxLayoutWidth` from config
+3. **No constraints** - Falls back to vw units
 
 ```html
-<!-- Priority examples -->
-<lay-out max-width="800px" width="lg">        <!-- 800px wins -->
-<lay-out width="md" bleed>                     <!-- 48rem + bleed constraint -->
-<lay-out bleed>                                <!-- Global maxLayoutWidth -->
-<lay-out>                                      <!-- No constraints, use vw -->
+<!-- Simplified examples -->
+<lay-out width="lg">                          <!-- lg (64rem) constraint -->
+<lay-out width="md" bleed>                    <!-- md + global maxLayoutWidth -->
+<lay-out bleed>                               <!-- Global maxLayoutWidth only -->
+<lay-out>                                     <!-- No constraints, use vw -->
 ```
+
+**Note**: `max-width` attribute is ignored in srcset calculations for simplicity, though it remains in CSS for other uses.
 
 ## Implementation Considerations
 
