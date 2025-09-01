@@ -2,37 +2,40 @@
  * Layout Srcsets Generator
  * 
  * This module provides utilities for generating responsive srcsets attributes
- * for lay-out web components based on layout configurations.
+ * for lay-out web components based on layout configurations with constraint-aware sizing.
  * 
  * @example
- * import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from './layout/index.js';
+ * import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap, applyCSSDefaults } from './layout/index.js';
  * 
  * // Load configuration and layout data
  * const config = await fetch('config.json').then(r => r.json());
  * const gridData = await fetch('systems/layouts/grid.json').then(r => r.json());
  * const columnsData = await fetch('systems/layouts/columns.json').then(r => r.json());
  * 
+ * // Apply CSS defaults (optional - only if layoutRootElement is specified in config)
+ * applyCSSDefaults(config);
+ * 
  * const layoutsData = createLayoutsDataMap({
  *   'grid.json': gridData,
  *   'columns.json': columnsData
  * });
  * 
- * // Generate srcsets for a layout element
- * const layoutElement = document.querySelector('lay-out');
+ * // Generate constraint-aware srcsets for a layout element
+ * const layoutElement = document.querySelector('lay-out[width="lg"]');
  * const srcsets = generateLayoutSrcsets(layoutElement, config, layoutsData);
- * // Returns: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
+ * // Returns: "default:100vw;540:(max-width: 380px) 33.33vw, min(33.33vw, 213px);720:(max-width: 380px) 50vw, min(50vw, 512px),(max-width: 380px) 50vw, min(50vw, 512px),(max-width: 380px) 100vw, min(100vw, 1024px)"
  * 
  * // Get srcset for a specific child element
  * const childSrcset = getSrcset(layoutElement, 0); // First child
- * // Returns: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
+ * // Returns: "(min-width: 720px) (max-width: 380px) 50vw, min(50vw, 512px), (min-width: 540px) (max-width: 380px) 33.33vw, min(33.33vw, 213px), 100vw"
  */
 
 /**
- * Generates srcsets attribute for lay-out elements
+ * Generates srcsets attribute for lay-out elements with constraint-aware sizing
  * @param {Element|string} element - DOM element or lay-out element string
  * @param {Object} config - Loaded config.json object
  * @param {Map} layoutsData - Map of layout type -> layout objects array
- * @returns {string} Formatted srcsets string (e.g., "default:100vw;540:50vw;720:33.33vw")
+ * @returns {string} Formatted srcsets string (e.g., "default:100vw;540:33.33%;720:50%,50%,100%")
  */
 export function generateLayoutSrcsets(element, config, layoutsData) {
   const breakpoints = parseBreakpointsFromElement(element);
@@ -44,7 +47,7 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
   const srcsetParts = ['default:100vw']; // Mobile-first fallback
   
   for (const [breakpointName, layoutPattern] of Object.entries(breakpoints)) {
-    const srcset = getSrcsetForPattern(layoutPattern, layoutsData);
+    const srcset = getSrcsetForPattern(layoutPattern, layoutsData, element, config);
     if (srcset) {
       const pixelKey = getPixelKeyForBreakpoint(breakpointName, config);
       if (pixelKey) {
@@ -60,9 +63,10 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
  * Generates CSS srcset string for a specific child element within a lay-out
  * @param {Element|string} layoutElementOrSrcsets - Layout DOM element, element string, or srcsets string directly
  * @param {number} childIndex - Zero-based index of the child element
+ * @param {Object} [config] - Optional config for constraint-aware generation
  * @returns {string} CSS srcset string (e.g., "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw")
  */
-export function getSrcset(layoutElementOrSrcsets, childIndex) {
+export function getSrcset(layoutElementOrSrcsets, childIndex, config = null) {
   // Get the srcsets string from various input types
   let srcsets;
   
@@ -103,7 +107,11 @@ export function getSrcset(layoutElementOrSrcsets, childIndex) {
   for (const rule of sortedRules) {
     const width = getWidthForChild(rule.widths, childIndex);
     if (width) {
-      cssRules.push(`${rule.mediaQuery} ${width}`);
+      // Apply constraint-aware processing if config provided and width contains %
+      const processedWidth = (config && width.includes('%')) 
+        ? generateConstrainedSizes([width], layoutElementOrSrcsets, config)[0]
+        : width;
+      cssRules.push(`${rule.mediaQuery} ${processedWidth}`);
     }
   }
   
@@ -112,7 +120,11 @@ export function getSrcset(layoutElementOrSrcsets, childIndex) {
   if (defaultRule) {
     const defaultWidth = getWidthForChild(defaultRule.widths, childIndex);
     if (defaultWidth) {
-      cssRules.push(defaultWidth);
+      // Apply constraint-aware processing if config provided and width contains %
+      const processedWidth = (config && defaultWidth.includes('%')) 
+        ? generateConstrainedSizes([defaultWidth], layoutElementOrSrcsets, config)[0]
+        : defaultWidth;
+      cssRules.push(processedWidth);
     }
   }
   
@@ -150,12 +162,14 @@ function parseBreakpointsFromElement(element) {
 }
 
 /**
- * Gets srcset string for a specific layout pattern
+ * Gets srcset string for a specific layout pattern with constraint-aware conversion
  * @param {string} pattern - Layout pattern like "grid(3a)" or "columns(3)"
  * @param {Map} layoutsData - Map of layout data
- * @returns {string|null} Srcset string or null if not found
+ * @param {Element|string} element - Layout element for constraint detection
+ * @param {Object} config - Config object
+ * @returns {string|null} Constraint-aware srcset string or null if not found
  */
-function getSrcsetForPattern(pattern, layoutsData) {
+function getSrcsetForPattern(pattern, layoutsData, element, config) {
   // Parse pattern like "grid(3a)" or "columns(3)"
   const match = pattern.match(/(\w+)\(([^)]+)\)/);
   if (!match) return null;
@@ -186,8 +200,12 @@ function getSrcsetForPattern(pattern, layoutsData) {
   if (!layout) {
     return null;
   }
-  
-  return layout.srcset || null;
+
+  const rawSrcset = layout.srcset;
+  if (!rawSrcset) return null;
+
+  // Return the raw srcset - constraint processing will happen in getSrcset()
+  return rawSrcset;
 }
 
 /**
@@ -308,4 +326,130 @@ function getWidthForChild(widths, childIndex) {
     // Fallback to last width if index exceeds available widths
     return widths[widths.length - 1];
   }
+}
+
+/**
+ * Generates constraint-aware sizes from percentage values
+ * @param {Array} percentages - Array of percentage strings like ["50%", "50%", "100%"]
+ * @param {Element|string} element - Layout element for constraint detection
+ * @param {Object} config - Config object
+ * @returns {Array} Array of constraint-aware size strings
+ */
+function generateConstrainedSizes(percentages, element, config) {
+  const constraints = getLayoutConstraints(element, config);
+  
+  return percentages.map(percentage => {
+    const percent = parseFloat(percentage);
+    
+    if (!constraints.hasMaxWidth) {
+      // No constraints: direct percentage to vw conversion
+      return `${percent}vw`;
+    }
+
+    // Generate complex sizes attribute for constrained layouts
+    return generateComplexSizes(percent, constraints, config);
+  });
+}
+
+/**
+ * Extracts layout constraints from element attributes and config
+ * @param {Element|string} element - Layout element
+ * @param {Object} config - Config object
+ * @returns {Object} Constraints object
+ */
+function getLayoutConstraints(element, config) {
+  const layoutConfig = config.systems?.[0]?.layoutContainer;
+  if (!layoutConfig) return { hasMaxWidth: false };
+
+  const constraints = {
+    hasMaxWidth: false,
+    maxWidth: null,
+    widthToken: null,
+    globalMaxWidth: layoutConfig.maxLayoutWidth?.value,
+    layoutMargin: layoutConfig.layoutMargin?.value,
+    hasBleed: false
+  };
+
+  // Check for bleed attribute
+  if (element.hasAttribute && element.hasAttribute('bleed')) {
+    constraints.hasBleed = true;
+  }
+
+  // Check for width attribute - this overrides global constraint
+  if (element.hasAttribute && element.hasAttribute('width')) {
+    constraints.hasMaxWidth = true;
+    constraints.widthToken = element.getAttribute('width');
+    constraints.maxWidth = layoutConfig.widthTokens?.[constraints.widthToken]?.value;
+  }
+  // If config has maxLayoutWidth, use it as global default constraint
+  else if (constraints.globalMaxWidth) {
+    constraints.hasMaxWidth = true;
+    constraints.maxWidth = constraints.globalMaxWidth;
+  }
+  
+  return constraints;
+}
+
+/**
+ * Generates complex sizes attribute for constrained layouts
+ * @param {number} percentage - Percentage value (e.g., 50 for 50%)
+ * @param {Object} constraints - Constraints object
+ * @param {Object} config - Config object  
+ * @returns {string} Complex sizes string
+ */
+function generateComplexSizes(percentage, constraints, config) {
+  // Use existing breakpoints from config
+  const breakpoints = config.systems?.[0]?.breakpoints;
+  if (!breakpoints) return `${percentage}vw`;
+
+  const maxWidthValue = parseFloat(constraints.maxWidth);
+  const constrainedWidth = Math.round(maxWidthValue * (percentage / 100));
+
+  // For constrained layouts, return the min() function
+  // The media query wrapping will be handled by getSrcset()
+  return `min(${percentage}vw, ${constrainedWidth}px)`;
+}
+
+/**
+ * Applies CSS custom properties from config to the specified root element
+ * @param {Object} config - Config object
+ * @param {Document} [doc=document] - Document object (for testing)
+ * @returns {boolean} True if properties were applied, false if no root element specified
+ */
+export function applyCSSDefaults(config, doc = document) {
+  const layoutConfig = config.systems?.[0]?.layoutContainer;
+  if (!layoutConfig?.layoutRootElement) {
+    return false; // No root element specified, don't apply properties
+  }
+
+  const rootElement = doc.querySelector(layoutConfig.layoutRootElement);
+  if (!rootElement) {
+    console.warn(`Layout root element "${layoutConfig.layoutRootElement}" not found`);
+    return false;
+  }
+
+  // Apply max layout width
+  if (layoutConfig.maxLayoutWidth) {
+    rootElement.style.setProperty(
+      layoutConfig.maxLayoutWidth.cssProperty,
+      layoutConfig.maxLayoutWidth.value
+    );
+  }
+  
+  // Apply layout margin
+  if (layoutConfig.layoutMargin) {
+    rootElement.style.setProperty(
+      layoutConfig.layoutMargin.cssProperty, 
+      layoutConfig.layoutMargin.value
+    );
+  }
+  
+  // Apply width tokens
+  if (layoutConfig.widthTokens) {
+    Object.entries(layoutConfig.widthTokens).forEach(([token, tokenConfig]) => {
+      rootElement.style.setProperty(tokenConfig.cssProperty, tokenConfig.value);
+    });
+  }
+
+  return true;
 }

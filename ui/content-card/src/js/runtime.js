@@ -1,5 +1,5 @@
 // Reusable build script for content cards
-import { generateLayoutSrcsets, createLayoutsDataMap } from '@browser.style/layout';
+import { generateLayoutSrcsets, createLayoutsDataMap, applyCSSDefaults } from '@browser.style/layout';
 
 // Determine the base path for content-card folder relative to current location
 function getBasePath() {
@@ -107,6 +107,8 @@ async function initializeLayoutSrcsets() {
 			}
 		});
 		
+		// Apply CSS custom properties if layoutRootElement is specified
+		applyCSSDefaults(config);
 
 		// Store globally for card system to use
 		window._layoutSrcsetData = {
