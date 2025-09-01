@@ -16,7 +16,7 @@
           "cssProperty": "--layout-bleed-mw"
         },
         "layoutMargin": {
-          "value": "0rem", 
+          "value": "1rem", 
           "cssProperty": "--layout-mi"
         },
         "widthTokens": {
