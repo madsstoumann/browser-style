@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/content-card",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Modular content card components for web applications with responsive layouts and flexible theming",
   "type": "module",
   "main": "src/js/cards/index.js",

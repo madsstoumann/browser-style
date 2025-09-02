@@ -1,3 +1,4 @@
+// Generate srcset strings from layout element attributes and layout data
 export function generateLayoutSrcsets(element, config, layoutsData) {
   const breakpoints = parseBreakpointsFromElement(element);
   
@@ -20,6 +21,7 @@ export function generateLayoutSrcsets(element, config, layoutsData) {
   return srcsetParts.join(';');
 }
 
+// Generate constraint-aware sizes attribute for responsive images
 export function getSrcset(layoutElementOrSrcsets, childIndex, config = null, constraints = null) {
   let srcsets;
   let layoutElement = null;
@@ -77,6 +79,7 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null, con
   return cssRules.join(', ') || '100vw';
 }
 
+// Extract breakpoint attributes from layout element
 function parseBreakpointsFromElement(element) {
   let elementString;
   
@@ -102,16 +105,16 @@ function parseBreakpointsFromElement(element) {
   return breakpoints;
 }
 
+// Look up srcset data for a specific layout pattern
 function getSrcsetForPattern(pattern, layoutsData) {
   const match = pattern.match(/(\w+)\(([^)]+)\)/);
   if (!match) return null;
   
   const [, layoutType, layoutId] = match;
   
-  let layouts = layoutsData.get(layoutType);
-  if (!layouts) {
-    layouts = layoutsData.get(layoutType + 's');
-  }
+  let layouts = layoutsData.get(layoutType) || 
+    layoutsData.get(layoutType + 's');
+  
   if (!layouts) {
     for (const [, value] of layoutsData.entries()) {
       if (Array.isArray(value) && value.length > 0 && value[0].id?.startsWith(layoutType + '(')) {
@@ -127,6 +130,7 @@ function getSrcsetForPattern(pattern, layoutsData) {
   return layout?.srcset || null;
 }
 
+// Convert breakpoint name to pixel range key (e.g., "lg" → "720")
 function getPixelKeyForBreakpoint(breakpointName, config) {
   let breakpointConfig = null;
   
@@ -151,6 +155,7 @@ function getPixelKeyForBreakpoint(breakpointName, config) {
   return null;
 }
 
+// Transform layout files into a searchable Map structure
 export function createLayoutsDataMap(layoutFiles) {
   const layoutsData = new Map();
   
@@ -173,6 +178,7 @@ export function createLayoutsDataMap(layoutFiles) {
   return layoutsData;
 }
 
+// Parse srcset string into structured rules with media queries
 function parseSrcsetRules(srcsets) {
   return srcsets.split(';').map(rule => {
     const [pixelKey, widthsString] = rule.split(':');
@@ -192,12 +198,14 @@ function parseSrcsetRules(srcsets) {
   });
 }
 
+// Get width value for specific child position in layout
 function getWidthForChild(widths, childIndex) {
   if (widths.length === 1) return widths[0];
   if (childIndex < widths.length) return widths[childIndex];
   return widths[widths.length - 1];
 }
 
+// Convert percentage widths to constrained sizes with min() functions
 function generateConstrainedSizes(percentages, elementOrConstraints, config) {
   const constraints = elementOrConstraints.hasMaxWidth !== undefined 
     ? elementOrConstraints 
@@ -214,6 +222,7 @@ function generateConstrainedSizes(percentages, elementOrConstraints, config) {
   });
 }
 
+// Extract layout constraints from element and config
 export function getLayoutConstraints(element, config) {
   const layoutConfig = config.systems?.[0]?.layoutContainer;
   if (!layoutConfig) return { hasMaxWidth: false };
@@ -258,6 +267,7 @@ export function getLayoutConstraints(element, config) {
   return constraints;
 }
 
+// Generate min() CSS function for constrained layouts
 function generateComplexSizes(percentage, constraints, config) {
   const breakpoints = config.systems?.[0]?.breakpoints;
   if (!breakpoints) return `${percentage}vw`;
@@ -274,6 +284,7 @@ function generateComplexSizes(percentage, constraints, config) {
   return `min(${percentage}vw, ${constrainedWidth}px)`;
 }
 
+// Apply layout CSS custom properties to the root element
 export function applyCSSDefaults(config, doc = document) {
   const layoutConfig = config.systems?.[0]?.layoutContainer;
   if (!layoutConfig?.layoutRootElement) return false;
@@ -307,14 +318,12 @@ export function applyCSSDefaults(config, doc = document) {
   return true;
 }
 
+// Generate CSS from config without overwriting layout system files
 export async function generateLayoutCSS(configPath, options = {}) {
   const path = await import('path');
   const { fileURLToPath } = await import('url');
-  
-  // Import LayoutBuilder dynamically to avoid loading build dependencies unless needed
   const { default: LayoutBuilder } = await import('./build.js');
   
-  // Default layouts path - when used as npm package, this will point to the installed package
   const defaultLayoutsPath = options.layoutsPath || 
     path.join(path.dirname(fileURLToPath(import.meta.url)), 'systems');
   
@@ -324,8 +333,7 @@ export async function generateLayoutCSS(configPath, options = {}) {
     options.outputPath || './generated-layout.css'
   );
   
-  // Generate CSS only (minified by default for production use)
   const results = await builder.buildSystems(options.minify !== false);
   
-  return results[0]; // Return { system, outputPath, size, rules }
+  return results[0];
 }
