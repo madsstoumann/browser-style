@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/layout",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Modern CSS layout system with responsive grid patterns, container queries, configurable builds, and responsive image srcsets generation",
   "type": "module",
   "main": "index.js",
@@ -30,7 +30,6 @@
     "config.json",
     "core/",
     "systems/",
-    "dist/",
     "icons.js"
   ],
   "publishConfig": {
