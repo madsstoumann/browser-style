@@ -145,7 +145,7 @@ async function initializeLayoutSrcsets() {
 							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
 							
 							// Pre-calculate constraint-aware sizes
-							if (constraints?.hasMaxWidth) {
+							if (constraints) {
 								child._settings.layoutSrcset = getSrcset(child._settings.layoutSrcsets, childIndex, config, constraints);
 							}
 						}

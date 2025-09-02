@@ -232,7 +232,6 @@ function generateConstrainedSizes(percentages, element, config) {
 function generateConstrainedSizesFromConstraints(percentages, constraints, config) {
   return percentages.map(percentage => {
     const percent = parseFloat(percentage);
-    
     if (!constraints.hasMaxWidth) {
       return `${percent}vw`;
     }
@@ -254,19 +253,24 @@ export function getLayoutConstraints(element, config) {
     hasBleed: false
   };
 
-  let hasBleed = false;
+  let bleedValue = null;
   let widthAttribute = null;
 
   if (typeof element === 'string') {
-    hasBleed = element.includes('bleed');
+    const bleedMatch = element.match(/bleed="([^"]*)"/);
+    bleedValue = bleedMatch ? bleedMatch[1] : null;
     const widthMatch = element.match(/width="([^"]+)"/);
     widthAttribute = widthMatch ? widthMatch[1] : null;
   } else if (element?.hasAttribute) {
-    hasBleed = element.hasAttribute('bleed');
+    bleedValue = element.hasAttribute('bleed') ? element.getAttribute('bleed') : null;
     widthAttribute = element.getAttribute('width');
   }
 
-  if (hasBleed) {
+  // bleed="0" means full width (disable constraints)
+  if (bleedValue === '0') {
+    console.log('Bleed=0 detected, returning unconstrained layout');
+    return { hasMaxWidth: false, hasBleed: true, isFullWidth: true };
+  } else if (bleedValue !== null) {
     constraints.hasBleed = true;
   }
 
