@@ -6,9 +6,9 @@
       "path": "layouts",
       "layer": "layout",
       "element": "lay-out",
-      "generateHTML": true,
+      "generateHTML": false,
       "core": ["base"],
-      "common": ["animations"],
+      "common": [],
       "layoutContainer": {
         "layoutRootElement": "body",
         "maxLayoutWidth": {
@@ -33,29 +33,21 @@
           "type": "@media",
           "min": "240px",
           "max": null,
-          "layouts": ["autofit"]
+          "layouts": []
         },
         "sm": {
           "type": "@media",
           "min": "380px",
           "max": null,
-          "layouts": [
-            "autofit", 
-            {
-              "columns": ["columns(2)"],
-              "grid": ["grid(3a)"],
-              "mosaic": ["mosaic(photo)"]
-            }
-          ]
+          "layouts": []
         },
         "md": {
           "type": "@media",
           "min": "540px",
           "max": null,
-          "layouts": ["columns", 
-            "grid", 
+          "layouts": [
             {
-              "grid": ["grid(3a)"]
+              "columns": ["columns(2)"]
             }
           ]
         },
@@ -63,24 +55,26 @@
           "type": "@media",
           "min": "720px",
           "max": null,
-          "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
+          "layouts": [
+            {
+              "columns": ["columns(3)", "columns(4)"],
+              "grid": ["grid(3c)", "grid(6a)"],
+              "bento": ["bento(4a)"],
+              "ratios": ["ratio(66:33)"]
+            }
+          ]
         },
         "xl": {
           "type": "@media",
           "min": "920px",
           "max": null,
-          "layouts": [
-            {
-              "bento": ["bento(6a)"],
-              "mosaic": ["mosaic(scatter)", "mosaic(hex)", "mosaic(pinwheel)", "mosaic(cornerstone)"]
-            }
-          ]
+          "layouts": []
         },
         "xxl": {
           "type": "@media",
           "min": "1140px",
           "max": null,
-          "layouts": [{ "bento": ["bento(6a)"] }]
+          "layouts": []
         }
       }
     }

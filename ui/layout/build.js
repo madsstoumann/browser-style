@@ -547,15 +547,30 @@ class LayoutBuilder {
       
       const css = await this.generateSystemCSS(minify, coreCSS, commonCSS, system);
       
-      const distDir = path.join(__dirname, 'dist');
-      if (!fs.existsSync(distDir)) {
-        fs.mkdirSync(distDir, { recursive: true });
+      // Use constructor outputPath if provided, otherwise default to dist directory
+      let outputPath;
+      if (this.outputPath && this.outputPath !== path.join(__dirname, 'dist.css')) {
+        // Custom output path provided (e.g., from generateLayoutCSS)
+        const outputDir = path.dirname(this.outputPath);
+        if (!fs.existsSync(outputDir)) {
+          fs.mkdirSync(outputDir, { recursive: true });
+        }
+        const baseName = path.basename(this.outputPath, path.extname(this.outputPath));
+        outputPath = minify 
+          ? path.join(outputDir, `${baseName}.min.css`)
+          : this.outputPath;
+      } else {
+        // Default behavior: use layout system's dist directory
+        const distDir = path.join(__dirname, 'dist');
+        if (!fs.existsSync(distDir)) {
+          fs.mkdirSync(distDir, { recursive: true });
+        }
+        
+        const fileName = system.fileName || 'output.css';
+        outputPath = minify 
+          ? path.join(distDir, fileName.replace('.css', '.min.css'))
+          : path.join(distDir, fileName);
       }
-      
-      const fileName = system.fileName || 'output.css';
-      const outputPath = minify 
-        ? path.join(distDir, fileName.replace('.css', '.min.css'))
-        : path.join(distDir, fileName);
       
       fs.writeFileSync(outputPath, css, 'utf8');
       

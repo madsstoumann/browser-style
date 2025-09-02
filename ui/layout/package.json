@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/layout",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Modern CSS layout system with responsive grid patterns, container queries, configurable builds, and responsive image srcsets generation",
   "type": "module",
   "main": "index.js",
@@ -20,40 +20,38 @@
     },
     "./css": "./dist/layout.css",
     "./css/min": "./dist/layout.min.css",
-    "./srcsets": "./index.js",
     "./config": "./config.json",
-    "./systems": "./systems/",
     "./systems/*": "./systems/*",
-    "./builder": "./build.js"
+    "./build": "./build.js"
   },
   "files": [
-    "dist/",
+    "index.js",
+    "build.js", 
+    "config.json",
     "core/",
     "systems/",
-    "config.json",
-    "build.js",
-    "index.js",
-    "README.md"
+    "dist/",
+    "icons.js"
   ],
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
-    "browser.style",
-    "web-components",
-    "layout",
     "css-grid",
-    "responsive-design",
+    "responsive-design", 
     "responsive-images",
     "srcsets",
     "sizes-attribute",
+    "layout-system",
+    "css-framework",
+    "web-components",
     "container-queries",
     "media-queries",
-    "css-framework",
     "grid-layouts",
-    "bento-grids",
-    "image-optimization"
+    "bento-grids", 
+    "image-optimization",
+    "browser.style"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",

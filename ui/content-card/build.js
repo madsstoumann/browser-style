@@ -139,6 +139,7 @@ async function minifyPublicCSS() {
 function extractCSSFromHTML() {
   const publicDir = 'public';
   const cssFiles = new Set();
+  const excludedFiles = new Set();
   
   // Read all HTML files and extract CSS hrefs
   const htmlFiles = fs.readdirSync(publicDir)
@@ -148,24 +149,70 @@ function extractCSSFromHTML() {
     const htmlContent = fs.readFileSync(path.join(publicDir, htmlFile), 'utf8');
     
     // Extract all CSS link hrefs
-    const cssMatches = htmlContent.match(/<link[^>]*rel=["']stylesheet["'][^>]*href=["']([^"']+)["'][^>]*>/gi);
+    const cssMatches = htmlContent.match(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi);
     if (cssMatches) {
       cssMatches.forEach(match => {
         const hrefMatch = match.match(/href=["']([^"']+)["']/);
         if (hrefMatch) {
-          cssFiles.add(hrefMatch[1]);
+          const href = hrefMatch[1];
+          
+          // Skip links marked for build exclusion
+          if (match.includes('data-build="exclude"')) {
+            excludedFiles.add(href);
+            console.log(`⏭️  Excluded from bundle: ${href}`);
+            return;
+          }
+          
+          cssFiles.add(href);
         }
       });
     }
   }
   
-  console.log(`Found ${cssFiles.size} unique CSS files:`, Array.from(cssFiles));
+  console.log(`Found ${cssFiles.size} CSS files for bundling:`, Array.from(cssFiles));
+  if (excludedFiles.size > 0) {
+    console.log(`Excluded ${excludedFiles.size} CSS files from bundling:`, Array.from(excludedFiles));
+  }
   return Array.from(cssFiles);
+}
+
+// Generate content-card specific layout CSS
+async function generateContentCardLayoutCSS() {
+  try {
+    console.log('🎨 Generating content-card layout CSS...');
+    
+    // Import from the layout package (simulated via import map)
+    const { generateLayoutCSS } = await import('@browser.style/layout');
+    
+    const result = await generateLayoutCSS('./config.json', {
+      layoutsPath: '../layout/systems',  // Local path for development
+      outputPath: './temp-layout.css',
+      minify: true
+    });
+    
+    console.log(`✓ Generated layout CSS: ${(result.size / 1024).toFixed(1)}KB, ${result.rules} rules`);
+    return result.outputPath;
+  } catch (error) {
+    console.error('❌ Failed to generate layout CSS:', error.message);
+    // Fallback to copying existing layout CSS
+    const fallbackPath = '../layout/dist/layout.min.css';
+    if (fs.existsSync(fallbackPath)) {
+      console.log('📋 Using fallback layout CSS');
+      return fallbackPath;
+    }
+    throw error;
+  }
 }
 
 // Bundle all CSS files into a single file
 async function bundleCSS(cssFiles) {
   const bundledCSS = [];
+  
+  // Generate layout CSS first
+  const layoutCssPath = await generateContentCardLayoutCSS();
+  const layoutCSS = fs.readFileSync(layoutCssPath, 'utf8');
+  bundledCSS.push('/* Generated Content-Card Layout CSS */');
+  bundledCSS.push(layoutCSS);
   
   for (const cssFile of cssFiles) {
     let cssPath;
@@ -174,9 +221,6 @@ async function bundleCSS(cssFiles) {
     if (cssFile.startsWith('../src/css/')) {
       // Source CSS files
       cssPath = cssFile.replace('../', '');
-    } else if (cssFile.startsWith('/ui/layout/')) {
-      // Layout system CSS
-      cssPath = cssFile.replace('/ui/layout/', '../layout/');
     } else if (cssFile.startsWith('static/css/')) {
       // Public CSS files
       cssPath = path.join('public', cssFile);
@@ -212,6 +256,15 @@ async function bundleCSS(cssFiles) {
   const bundlePath = path.join(assetsDir, 'content-card-bundle.css');
   fs.writeFileSync(bundlePath, bundledCSS.join('\n\n'));
   console.log(`✓ CSS bundle created: ${bundlePath}`);
+  
+  // Clean up temporary layout CSS file
+  try {
+    if (layoutCssPath.includes('temp-layout.css')) {
+      fs.unlinkSync(layoutCssPath);
+    }
+  } catch (error) {
+    // Ignore cleanup errors
+  }
   
   return bundlePath;
 }

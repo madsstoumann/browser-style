@@ -1,10 +1,3 @@
-/**
- * Layout Srcsets Generator
- * 
- * Utilities for generating responsive srcsets attributes for lay-out web components
- * with constraint-aware sizing based on layout configurations.
- */
-
 export function generateLayoutSrcsets(element, config, layoutsData) {
   const breakpoints = parseBreakpointsFromElement(element);
   
@@ -61,13 +54,8 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null, con
     if (width) {
       let processedWidth = width;
       if (config && width.includes('%')) {
-        if (constraints) {
-          // Use provided constraints
-          processedWidth = generateConstrainedSizesFromConstraints([width], constraints, config)[0];
-        } else {
-          // Detect constraints from element
-          processedWidth = generateConstrainedSizes([width], layoutElement || layoutElementOrSrcsets, config)[0];
-        }
+        const elementOrConstraints = constraints || layoutElement || layoutElementOrSrcsets;
+        processedWidth = generateConstrainedSizes([width], elementOrConstraints, config)[0];
       }
       cssRules.push(`${rule.mediaQuery} ${processedWidth}`);
     }
@@ -79,13 +67,8 @@ export function getSrcset(layoutElementOrSrcsets, childIndex, config = null, con
     if (defaultWidth) {
       let processedWidth = defaultWidth;
       if (config && defaultWidth.includes('%')) {
-        if (constraints) {
-          // Use provided constraints
-          processedWidth = generateConstrainedSizesFromConstraints([defaultWidth], constraints, config)[0];
-        } else {
-          // Detect constraints from element
-          processedWidth = generateConstrainedSizes([defaultWidth], layoutElement || layoutElementOrSrcsets, config)[0];
-        }
+        const elementOrConstraints = constraints || layoutElement || layoutElementOrSrcsets;
+        processedWidth = generateConstrainedSizes([defaultWidth], elementOrConstraints, config)[0];
       }
       cssRules.push(processedWidth);
     }
@@ -215,23 +198,14 @@ function getWidthForChild(widths, childIndex) {
   return widths[widths.length - 1];
 }
 
-function generateConstrainedSizes(percentages, element, config) {
-  const constraints = getLayoutConstraints(element, config);
+function generateConstrainedSizes(percentages, elementOrConstraints, config) {
+  const constraints = elementOrConstraints.hasMaxWidth !== undefined 
+    ? elementOrConstraints 
+    : getLayoutConstraints(elementOrConstraints, config);
   
   return percentages.map(percentage => {
     const percent = parseFloat(percentage);
     
-    if (!constraints.hasMaxWidth) {
-      return `${percent}vw`;
-    }
-
-    return generateComplexSizes(percent, constraints, config);
-  });
-}
-
-function generateConstrainedSizesFromConstraints(percentages, constraints, config) {
-  return percentages.map(percentage => {
-    const percent = parseFloat(percentage);
     if (!constraints.hasMaxWidth) {
       return `${percent}vw`;
     }
@@ -266,9 +240,7 @@ export function getLayoutConstraints(element, config) {
     widthAttribute = element.getAttribute('width');
   }
 
-  // bleed="0" means full width (disable constraints)
   if (bleedValue === '0') {
-    console.log('Bleed=0 detected, returning unconstrained layout');
     return { hasMaxWidth: false, hasBleed: true, isFullWidth: true };
   } else if (bleedValue !== null) {
     constraints.hasBleed = true;
@@ -333,4 +305,27 @@ export function applyCSSDefaults(config, doc = document) {
   }
 
   return true;
+}
+
+export async function generateLayoutCSS(configPath, options = {}) {
+  const path = await import('path');
+  const { fileURLToPath } = await import('url');
+  
+  // Import LayoutBuilder dynamically to avoid loading build dependencies unless needed
+  const { default: LayoutBuilder } = await import('./build.js');
+  
+  // Default layouts path - when used as npm package, this will point to the installed package
+  const defaultLayoutsPath = options.layoutsPath || 
+    path.join(path.dirname(fileURLToPath(import.meta.url)), 'systems');
+  
+  const builder = new LayoutBuilder(
+    configPath,
+    defaultLayoutsPath,
+    options.outputPath || './generated-layout.css'
+  );
+  
+  // Generate CSS only (minified by default for production use)
+  const results = await builder.buildSystems(options.minify !== false);
+  
+  return results[0]; // Return { system, outputPath, size, rules }
 }
