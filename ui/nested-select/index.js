@@ -1,106 +1,113 @@
+const styles = `
+:host {
+	--anchor-inset-block-start: anchor(bottom);
+	--anchor-inset-inline-start: anchor(left);
+	--anchor-inset-block-end: auto;
+	--anchor-inset-inline-end: auto;
+
+	position: relative;
+	display: inline-block;
+}
+
+:host([anchor*="top"]) {
+	--anchor-inset-block-start: auto;
+	--anchor-inset-block-end: anchor(top);
+}
+
+button {
+	cursor: pointer;
+	background: #fff;
+	border: 1px solid #ccc;
+	padding: 8px 12px;
+	border-radius: 4px;
+	min-width: 120px;
+	text-align: left;
+	anchor-name: var(--anchor-name);
+}
+
+fieldset:not(:popover-open) {
+	display: none;
+}
+fieldset:popover-open {
+	background: Canvas;
+	position: absolute;
+
+	border: 1px solid ButtonBorder;
+	border-radius: 4px;
+	display: block;
+	padding: 8px;
+	min-width: 200px;
+	max-width: 300px;
+	position-anchor: var(--anchor-name);
+
+	inset-block-start: var(--anchor-inset-block-start);
+	inset-inline-start: var(--anchor-inset-inline-start);
+	inset-block-end: var(--anchor-inset-block-end);
+	inset-inline-end: var(--anchor-inset-inline-end);
+	position-try-options: flip-block;
+}
+
+
+
+details.option-group {
+	margin: 0;
+}
+
+details.option-group summary {
+	cursor: pointer;
+	padding: 8px;
+	font-weight: 500;
+	user-select: none;
+}
+
+details.option-group summary:hover {
+	background: #f5f5f5;
+}
+
+fieldset {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+label {
+	display: block;
+	padding: 6px 8px;
+	cursor: pointer;
+	border-radius: 3px;
+	margin: 2px 0;
+}
+
+label:hover {
+	background: #f0f0f0;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+	margin-right: 8px;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+	accent-color: #007acc;
+}
+`;
+
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(styles);
+
 class NestedSelect extends HTMLElement {
 
-  static get styles() {
-    return `
-      nested-select {
-				--anchor-inset-block-start: anchor(bottom);
-				--anchor-inset-inline-start: anchor(left);
-				--anchor-inset-block-end: auto;
-				--anchor-inset-inline-end: auto;
-
-      	position: relative;
-        display: inline-block;
-				&[anchor*="top"] {
-					--anchor-inset-block-start: auto;
-					--anchor-inset-block-end: anchor(top);
-				}
-      }
-
-      button {
-        cursor: pointer;
-        background: #fff;
-        border: 1px solid #ccc;
-        padding: 8px 12px;
-        border-radius: 4px;
-        min-width: 120px;
-        text-align: left;
-        anchor-name: var(--anchor-name);
-      }
-
-	fieldset:not(:popover-open) {
-		display: none;
-	}
-		fieldset:popover-open {
-			background: Canvas;
-        position: absolute;
-
-				border: 1px solid ButtonBorder;
-        border-radius: 4px;
-        display: block;
-        padding: 8px;
-        min-width: 200px;
-        max-width: 300px;
-        position-anchor: var(--anchor-name);
-
-				inset-block-start: var(--anchor-inset-block-start);
-				inset-inline-start: var(--anchor-inset-inline-start);
-				inset-block-end: var(--anchor-inset-block-end);
-				inset-inline-end: var(--anchor-inset-inline-end);
-        position-try-options: flip-block;
-		}
-
-
-
-      details.option-group {
-        margin: 0;
-      }
-
-      details.option-group summary {
-        cursor: pointer;
-        padding: 8px;
-        font-weight: 500;
-        user-select: none;
-      }
-
-      details.option-group summary:hover {
-        background: #f5f5f5;
-      }
-
-      fieldset {
-        border: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      label {
-        display: block;
-        padding: 6px 8px;
-        cursor: pointer;
-        border-radius: 3px;
-        margin: 2px 0;
-      }
-
-      label:hover {
-        background: #f0f0f0;
-      }
-
-      input[type="radio"],
-      input[type="checkbox"] {
-        margin-right: 8px;
-      }
-
-      input[type="radio"]:checked,
-      input[type="checkbox"]:checked {
-        accent-color: #007acc;
-      }
-    `;
-  }
+	static formAssociated = true;
 
   #fieldset = null;
   #button = null;
 
   constructor() {
     super();
+		this.attachShadow({ mode: 'open' });
+		this.shadowRoot.adoptedStyleSheets = [sheet];
+    this._internals = this.attachInternals();
     this._data = null;
     this._value = '';
     this._name = '';
@@ -108,10 +115,16 @@ class NestedSelect extends HTMLElement {
     this._popoverId = `pi-${this._id}`;
     this._anchorName = `--anchor-${this._id}`;
     this._ariaLabel = '';
+  }
 
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(NestedSelect.styles);
-    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+	get value() {
+    return this._value;
+  }
+
+  set value(val) {
+    this._value = val;
+    this._internals.setFormValue(this._value);
+    this.updateCheckedState();
   }
 
   get data() {
@@ -125,7 +138,7 @@ class NestedSelect extends HTMLElement {
 
   connectedCallback() {
     this._name = this.getAttribute('name') || '';
-    this._value = this.getAttribute('value') || '';
+    this.value = this.getAttribute('value') || '';
     this._anchorPosition = this.getAttribute('anchor') || 'bottom left';
     this._ariaLabel = this.getAttribute('aria-label') || '';
     const dataAttr = this.getAttribute('data');
@@ -133,21 +146,15 @@ class NestedSelect extends HTMLElement {
     if (dataAttr) {
       this.loadData(dataAttr);
     }
-
-    this.render();
   }
 
-  async loadData(dataSource) {
+  async loadData(url) {
     try {
-      // Check if it's a URL (starts with http or relative path with .json)
-      if (dataSource.startsWith('http') || dataSource.includes('.json')) {
-        const response = await fetch(dataSource);
-        this._data = await response.json();
-      } else {
-        // Assume it's a stringified JSON object
-        this._data = JSON.parse(dataSource);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok for ${url}`);
       }
-      this.render();
+      this.data = await response.json();
     } catch (error) {
       console.error('Failed to load data:', error);
     }
@@ -164,9 +171,9 @@ class NestedSelect extends HTMLElement {
       </fieldset>
     `;
 
-    this.innerHTML = html;
-    this.#button = this.querySelector('button');
-    this.#fieldset = this.querySelector('fieldset');
+    this.shadowRoot.innerHTML = html;
+    this.#button = this.shadowRoot.querySelector('button');
+    this.#fieldset = this.shadowRoot.querySelector('fieldset');
     this.setupEventListeners();
     this.updateCheckedState();
     this.updateButtonText();
@@ -174,18 +181,36 @@ class NestedSelect extends HTMLElement {
 
   getSelectedLabel() {
     if (!this._value || !this._data || !this.#fieldset) return null;
-    const selectedInput = this.#fieldset.querySelector(`input[name="${this._data.name}"][value="${this._value}"]`);
-    if (selectedInput && selectedInput.checked) {
-      const label = selectedInput.closest('label');
-      return label ? label.textContent.trim() : null;
+
+    const radioGroup = this.#fieldset.elements[this._data.name];
+    if (!radioGroup) return null;
+
+    if (radioGroup.length !== undefined) {
+      for (const radio of radioGroup) {
+        if (radio.checked) {
+          return radio.parentNode.textContent.trim();
+        }
+      }
+    } else if (radioGroup.checked) {
+      return radioGroup.parentNode.textContent.trim();
     }
+
+    if (this._value) {
+      const allRadios = this.shadowRoot.querySelectorAll(`input[name="${this._data.name}"]`);
+      for (const radio of allRadios) {
+        if (radio.value === this._value) {
+          return radio.parentNode.textContent.trim();
+        }
+      }
+    }
+
 
     return null;
   }
 
-  renderGroups(groups) {
+  renderGroups(groups, isSubgroup = false) {
     return groups.map(group => `
-      <details>
+      <details ${!isSubgroup ? `name="name_${this._id}"` : ''}>
         <summary>${group.name}</summary>
         <div>
           ${group.options ? group.options.map(option => `
@@ -197,7 +222,7 @@ class NestedSelect extends HTMLElement {
               ${option.label}
             </label>
           `).join('') : ''}
-          ${group.subgroups ? this.renderGroups(group.subgroups) : ''}
+          ${group.subgroups ? this.renderGroups(group.subgroups, true) : ''}
         </div>
       </details>
     `).join('');
@@ -207,7 +232,7 @@ class NestedSelect extends HTMLElement {
     if (!this.#fieldset) return;
     this.#fieldset.addEventListener('change', (e) => {
       if (e.target.type === 'radio' || e.target.type === 'checkbox') {
-        this._value = e.target.value;
+        this.value = e.target.value;
         this.updateButtonText();
 				this.#fieldset.hidePopover();
       }
@@ -216,8 +241,6 @@ class NestedSelect extends HTMLElement {
 
   updateCheckedState() {
     if (!this._data || !this.#fieldset) return;
-
-    // For radio buttons, setting the value on the RadioNodeList checks the right radio
     const radioGroup = this.#fieldset.elements[this._data.name];
     if (radioGroup && radioGroup.length !== undefined) { // RadioNodeList
       radioGroup.value = this._value;
