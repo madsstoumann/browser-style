@@ -47,19 +47,12 @@ fieldset[data-open=true] {
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-details.option-group {
-	margin: 0;
+details:has(:checked) summary {
+  background: tomato;
 }
 
-details.option-group summary {
-	cursor: pointer;
-	padding: 8px;
-	font-weight: 500;
-	user-select: none;
-}
-
-details.option-group summary:hover {
-	background: #f5f5f5;
+details * > details {
+  margin-left: 8px;
 }
 
 fieldset {
