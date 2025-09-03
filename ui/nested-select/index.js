@@ -104,15 +104,15 @@ class NestedSelect extends HTMLElement {
     this._data = null;
     this._value = '';
     this._name = '';
-    this._popoverId = `ns-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
-    this._anchorName = `--nested-select-${this._popoverId}`;
+		this._id = crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    this._popoverId = `pi-${this._id}`;
+    this._anchorName = `--anchor-${this._id}`;
     this._ariaLabel = '';
 
     const sheet = new CSSStyleSheet();
     sheet.replaceSync(NestedSelect.styles);
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
   }
-
 
   get data() {
     return this._data;
@@ -185,7 +185,7 @@ class NestedSelect extends HTMLElement {
 
   renderGroups(groups) {
     return groups.map(group => `
-      <details class="option-group">
+      <details>
         <summary>${group.name}</summary>
         <div>
           ${group.options ? group.options.map(option => `
