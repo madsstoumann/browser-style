@@ -101,6 +101,7 @@ class NestedSelect extends HTMLElement {
   #fieldset = null;
   #button = null;
   #boundOutsideClickHandler = null;
+  #originalValue = null;
 
   constructor() {
     super();
@@ -233,7 +234,7 @@ class NestedSelect extends HTMLElement {
     this.#fieldset.addEventListener('change', (e) => {
       if (e.target.matches('input[type="radio"], input[type="checkbox"]')) {
         this.value = e.target.value;
-        this.setOpenState(false);
+        this.setOpenState(false, true);
       }
     });
 
@@ -245,7 +246,7 @@ class NestedSelect extends HTMLElement {
         this.setOpenState(false);
       } else if (e.key === 'Enter' && activeEl && activeEl.matches('input[type="radio"]')) {
         e.preventDefault();
-        this.setOpenState(false);
+        this.setOpenState(false, true);
       } else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && isOpen) {
         e.preventDefault();
         const currentDetails = activeEl.closest('details');
@@ -300,9 +301,13 @@ class NestedSelect extends HTMLElement {
     }
   }
 
-  setOpenState(isOpen) {
+  setOpenState(isOpen, commit = false) {
     const currentlyOpen = this.#fieldset.dataset.open === 'true';
     if (isOpen === currentlyOpen) return;
+
+    if (isOpen) {
+      this.#originalValue = this.value;
+    }
 
     this.#fieldset.dataset.open = isOpen;
     this.#button.setAttribute('aria-expanded', isOpen);
@@ -311,6 +316,9 @@ class NestedSelect extends HTMLElement {
       document.addEventListener('click', this.#boundOutsideClickHandler);
     } else {
       document.removeEventListener('click', this.#boundOutsideClickHandler);
+      if (!commit) {
+        this.value = this.#originalValue;
+      }
       if (this.shadowRoot.activeElement && this.#fieldset.contains(this.shadowRoot.activeElement)) {
         this.#button.focus();
       }
