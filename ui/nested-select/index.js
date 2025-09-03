@@ -108,6 +108,7 @@ class NestedSelect extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [sheet];
     this._internals = this.attachInternals();
+
     this._data = null;
     this._value = '';
     this._name = '';
@@ -115,6 +116,23 @@ class NestedSelect extends HTMLElement {
     this._popoverId = `pi-${this._id}`;
     this._anchorName = `--anchor-${this._id}`;
     this._ariaLabel = '';
+
+    this.shadowRoot.innerHTML = `
+      <button type="button" popovertarget="${this._popoverId}"></button>
+      <fieldset popover id="${this._popoverId}"></fieldset>
+    `;
+
+    this.#button = this.shadowRoot.querySelector('button');
+    this.#fieldset = this.shadowRoot.querySelector('fieldset');
+    this.setupEventListeners();
+  }
+
+	get name() {
+    return this.getAttribute('name');
+  }
+
+  set name(val) {
+    this.setAttribute('name', val);
   }
 
 	get value() {
@@ -125,6 +143,7 @@ class NestedSelect extends HTMLElement {
     this._value = val;
     this._internals.setFormValue(this._value);
     this.updateCheckedState();
+    this.updateButtonText();
   }
 
   get data() {
@@ -163,18 +182,8 @@ class NestedSelect extends HTMLElement {
   render() {
     if (!this._data) return;
     this.style.setProperty('--anchor-name', this._anchorName);
-
-    const html = `
-      <button type="button" popovertarget="${this._popoverId}" ${this._ariaLabel ? `aria-label="${this._ariaLabel}"` : ''}></button>
-      <fieldset popover id="${this._popoverId}">
-        ${this.renderGroups(this._data.groups)}
-      </fieldset>
-    `;
-
-    this.shadowRoot.innerHTML = html;
-    this.#button = this.shadowRoot.querySelector('button');
-    this.#fieldset = this.shadowRoot.querySelector('fieldset');
-    this.setupEventListeners();
+    this.#button.setAttribute('aria-label', this._ariaLabel || this._data.name);
+    this.#fieldset.innerHTML = this.renderGroups(this._data.groups);
     this.updateCheckedState();
     this.updateButtonText();
   }

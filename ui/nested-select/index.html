@@ -13,16 +13,25 @@
 </head>
 
 <body>
+    <form>
+        <h2>Bottom Opening (default)</h2>
+        <nested-select name="roadType" value="city.zone50" data="data.json"></nested-select>
 
-    <h2>Bottom Opening (default)</h2>
-    <nested-select name="roadType" value="city.zone50" data="data.json"></nested-select>
+        <br><br>
 
-    <br><br>
-
-    <h2>Vehicles</h2>
-    <nested-select name="vehicleType" value="passenger.hatchback" data="vehicles.json" anchor="bottom left"></nested-select>
+        <h2>Vehicles</h2>
+        <nested-select name="vehicleType" value="passenger.sedan" data="vehicles.json" anchor="bottom left"></nested-select>
+    </form>
 
     <script src="index.js"></script>
-
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('change', (e) => {
+            console.log('Form change event fired:', e.target.name, e.target.value);
+        });
+        form.addEventListener('input', (e) => {
+            console.log('Form input event fired:', e.target.name, e.target.value);
+        });
+    </script>
 </body>
 </html>
