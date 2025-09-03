@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+
+<head>
+	<title>Nested Select</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<!-- <link rel="stylesheet" href="ui-linenumber.css"> -->
+
+</head>
+
+<body>
+
+    <h2>Bottom Opening (default)</h2>
+    <nested-select name="roadType" value="city.zone50" data="data.json"></nested-select>
+
+    <br><br>
+
+    <h2>Top Opening</h2>
+    <nested-select name="roadType2" value="rural.gravel" data="data.json" anchor="top left"></nested-select>
+
+    <script src="index.js"></script>
+
+</body>
+</html>
