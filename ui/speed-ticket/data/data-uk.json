@@ -27,10 +27,10 @@
       "id": "builtUp",
       "label": "Built-up Areas",
       "description": "Urban roads with street lighting (20mph in Wales, 30mph elsewhere)",
-      "defaultSpeed": 30,
-      "minSpeed": 20,
-      "maxSpeed": 30,
-      "value": 30,
+      "allowedSpeeds": [
+        { "speed": 20, "label": "Built-up 20 mph" },
+        { "speed": 30, "label": "Built-up 30 mph", "default": true }
+      ],
       "video": "assets/byzone.mp4",
       "poster": "assets/byzone.avif"
     },
@@ -38,10 +38,12 @@
       "id": "singleCarriageway", 
       "label": "Single Carriageway",
       "description": "Single carriageway roads outside built-up areas",
-      "defaultSpeed": 60,
-      "minSpeed": 30,
-      "maxSpeed": 60,
-      "value": 60,
+      "allowedSpeeds": [
+        { "speed": 30, "label": "Single Carriageway 30 mph" },
+        { "speed": 40, "label": "Single Carriageway 40 mph" },
+        { "speed": 50, "label": "Single Carriageway 50 mph" },
+        { "speed": 60, "label": "Single Carriageway 60 mph", "default": true }
+      ],
       "video": "assets/landevej.mp4",
       "poster": "assets/landevej.avif"
     },
@@ -49,10 +51,11 @@
       "id": "dualCarriageway",
       "label": "Dual Carriageway", 
       "description": "Dual carriageway roads",
-      "defaultSpeed": 70,
-      "minSpeed": 50,
-      "maxSpeed": 70,
-      "value": 70,
+      "allowedSpeeds": [
+        { "speed": 50, "label": "Dual Carriageway 50 mph" },
+        { "speed": 60, "label": "Dual Carriageway 60 mph" },
+        { "speed": 70, "label": "Dual Carriageway 70 mph", "default": true }
+      ],
       "video": "assets/motorvej.mp4",
       "poster": "assets/motorvej.avif"
     },
@@ -60,10 +63,11 @@
       "id": "motorway",
       "label": "Motorway",
       "description": "Motorways (minimum 10mph in tunnels, maximum 70mph)",
-      "defaultSpeed": 70,
-      "minSpeed": 10,
-      "maxSpeed": 70,
-      "value": 70,
+      "allowedSpeeds": [
+        { "speed": 50, "label": "Motorway 50 mph (temporary)" },
+        { "speed": 60, "label": "Motorway 60 mph (temporary)" },
+        { "speed": 70, "label": "Motorway 70 mph", "default": true }
+      ],
       "video": "assets/motorvej.mp4",
       "poster": "assets/motorvej.avif"
     }

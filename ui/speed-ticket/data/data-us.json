@@ -27,40 +27,55 @@
       "id": "urban",
       "label": "Urban/City Streets",
       "description": "City streets and urban areas",
-      "defaultSpeed": 35,
-      "minSpeed": 25,
-      "maxSpeed": 45,
-      "value": 35,
+      "allowedSpeeds": [
+        { "speed": 25, "label": "Urban 25 mph" },
+        { "speed": 30, "label": "Urban 30 mph" },
+        { "speed": 35, "label": "Urban 35 mph", "default": true },
+        { "speed": 40, "label": "Urban 40 mph" },
+        { "speed": 45, "label": "Urban 45 mph" }
+      ],
       "video": "/assets/video/city.mp4"
     },
     "suburban": {
       "id": "suburban", 
       "label": "Suburban Roads",
       "description": "Suburban residential and arterial roads",
-      "defaultSpeed": 45,
-      "minSpeed": 35,
-      "maxSpeed": 55,
-      "value": 45,
+      "allowedSpeeds": [
+        { "speed": 35, "label": "Suburban 35 mph" },
+        { "speed": 40, "label": "Suburban 40 mph" },
+        { "speed": 45, "label": "Suburban 45 mph", "default": true },
+        { "speed": 50, "label": "Suburban 50 mph" },
+        { "speed": 55, "label": "Suburban 55 mph" }
+      ],
       "video": "/assets/video/suburban.mp4"
     },
     "rural": {
       "id": "rural",
       "label": "Rural Highways", 
       "description": "Rural state highways and country roads",
-      "defaultSpeed": 55,
-      "minSpeed": 45,
-      "maxSpeed": 70,
-      "value": 55,
+      "allowedSpeeds": [
+        { "speed": 45, "label": "Rural 45 mph" },
+        { "speed": 50, "label": "Rural 50 mph" },
+        { "speed": 55, "label": "Rural 55 mph", "default": true },
+        { "speed": 60, "label": "Rural 60 mph" },
+        { "speed": 65, "label": "Rural 65 mph" },
+        { "speed": 70, "label": "Rural 70 mph" }
+      ],
       "video": "/assets/video/rural.mp4"
     },
     "interstate": {
       "id": "interstate",
       "label": "Interstate Highways",
       "description": "Interstate highways and freeways",
-      "defaultSpeed": 70,
-      "minSpeed": 55,
-      "maxSpeed": 85,
-      "value": 70,
+      "allowedSpeeds": [
+        { "speed": 55, "label": "Interstate 55 mph" },
+        { "speed": 60, "label": "Interstate 60 mph" },
+        { "speed": 65, "label": "Interstate 65 mph" },
+        { "speed": 70, "label": "Interstate 70 mph", "default": true },
+        { "speed": 75, "label": "Interstate 75 mph" },
+        { "speed": 80, "label": "Interstate 80 mph" },
+        { "speed": 85, "label": "Interstate 85 mph" }
+      ],
       "video": "/assets/video/highway.mp4"
     }
   },
