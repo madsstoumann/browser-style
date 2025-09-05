@@ -413,9 +413,13 @@ class SpeedTicket extends HTMLElement {
 			case 'value': this.state.speed = parseInt(value, 10); break;
 			case 'roadtype': 
 				const [roadType, speedLimit] = value.split(':');
+				const previousRoadType = this.state.roadType;
 				this.state.roadType = roadType;
 				this.state.selectedSpeedLimit = parseInt(speedLimit, 10);
-				this.updateVideoSrc(); 
+				// Only update video if roadtype actually changed
+				if (previousRoadType !== roadType) {
+					this.updateVideoSrc(); 
+				}
 				break;
 			case 'vehicle': this.state.vehicle = value; break;
 			case 'factor': 
