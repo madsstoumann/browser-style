@@ -27,20 +27,23 @@
       "id": "cityZone",
       "label": "Byzone",
       "description": "Veje i byområder",
-      "defaultSpeed": 50,
-      "minSpeed": 30,
-      "maxSpeed": 80,
-      "value": 50,
+      "allowedSpeeds": [
+        { "speed": 30, "label": "Byzone 30" },
+        { "speed": 40, "label": "Byzone 40" },
+        { "speed": 50, "label": "Byzone 50", "default": true },
+        { "speed": 60, "label": "Byzone 60" }
+      ],
       "video": "/assets/video/byzone.mp4"
     },
     "countryRoad": {
       "id": "countryRoad", 
       "label": "Landevej",
       "description": "Almindelige landeveje",
-      "defaultSpeed": 80,
-      "minSpeed": 40,
-      "maxSpeed": 90,
-      "value": 80,
+      "allowedSpeeds": [
+        { "speed": 70, "label": "Landevej 70" },
+        { "speed": 80, "label": "Landevej 80", "default": true },
+        { "speed": 90, "label": "Landevej 90" }
+      ],
       "video": "/assets/video/landevej.mp4",
       "poster": "assets/landevej.avif"
     },
@@ -48,20 +51,22 @@
       "id": "expressway",
       "label": "Motortrafikvej", 
       "description": "Motortrafikveje uden for byzone",
-      "defaultSpeed": 90,
-      "minSpeed": 40,
-      "maxSpeed": 90,
-      "value": 90,
+      "allowedSpeeds": [
+        { "speed": 80, "label": "Motortrafikvej 80"},
+        { "speed": 90, "label": "Motortrafikvej 90", "default": true },
+        { "speed": 100, "label": "Motortrafikvej 100"}
+      ],
       "video": "/assets/video/motorvej.mp4"
     },
     "highway": {
       "id": "highway",
       "label": "Motorvej",
       "description": "Motorveje",
-      "defaultSpeed": 130,
-      "minSpeed": 40,
-      "maxSpeed": 130,
-      "value": 130,
+      "allowedSpeeds": [
+        { "speed": 90, "label": "Motorvej 90" },
+        { "speed": 110, "label": "Motorvej 110" },
+        { "speed": 130, "label": "Motorvej 130", "default": true }
+      ],
       "video": "/assets/video/motorvej.mp4"
     }
   },

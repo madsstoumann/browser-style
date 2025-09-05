@@ -6,7 +6,7 @@ class SpeedTicket extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.data = null;
-		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set() };
+		this.state = { speed: 0, roadType: '', vehicle: '', factors: new Set(), selectedSpeedLimit: null };
 		this.previousSummary = null;
 		this.setupStyles();
 	}
@@ -324,12 +324,26 @@ class SpeedTicket extends HTMLElement {
 		this.state.roadType = defaults?.roadType || Object.keys(roadTypes)[0];
 		this.state.vehicle = defaults?.vehicle || Object.keys(vehicles)[0];
 		this.state.factors = new Set(defaults?.factors || []);
-		this.state.speed = speedRange?.default || roadTypes[this.state.roadType]?.defaultSpeed || 0;
+		const defaultSpeedLimit = this.getDefaultSpeedForRoadType(this.state.roadType);
+		this.state.selectedSpeedLimit = defaultSpeedLimit;
+		this.state.speed = speedRange?.default || defaultSpeedLimit || 0;
+	}
+
+	getDefaultSpeedForRoadType(roadType) {
+		const roadTypeData = this.data.roadTypes[roadType];
+		if (!roadTypeData?.allowedSpeeds) return 0;
+		const defaultSpeed = roadTypeData.allowedSpeeds.find(speed => speed.default);
+		return defaultSpeed?.speed || roadTypeData.allowedSpeeds[0]?.speed || 0;
 	}
 
 	getSpeedLimit() {
+		// If user has manually selected a speed limit, use that instead of rules
+		if (this.state.selectedSpeedLimit !== null) {
+			return this.state.selectedSpeedLimit;
+		}
+		
 		const rule = this.data.speedLimitRules?.find(rule => this.evaluateConditions(rule.conditions, true));
-		return rule?.limits.default || this.data.roadTypes[this.state.roadType].defaultSpeed;
+		return rule?.limits.default || this.getDefaultSpeedForRoadType(this.state.roadType);
 	}
 
 	render() {
@@ -362,7 +376,16 @@ class SpeedTicket extends HTMLElement {
 				</fieldset>
 				<fieldset name="selection">
 					<select name="roadtype">
-						${Object.values(roadTypes).map(r => `<option value="${r.id}" ${r.id === this.state.roadType ? 'selected' : ''}>${r.label}</option>`).join('')}
+						${Object.values(roadTypes).map(roadType => 
+							`<optgroup label="${roadType.label}">
+								${roadType.allowedSpeeds.map(speedOption => {
+									const isSelected = roadType.id === this.state.roadType && 
+										(this.state.selectedSpeedLimit === speedOption.speed || 
+										 (this.state.selectedSpeedLimit === null && speedOption.default));
+									return `<option value="${roadType.id}:${speedOption.speed}" ${isSelected ? 'selected' : ''}>${speedOption.label}</option>`
+								}).join('')}
+							</optgroup>`
+						).join('')}
 					</select>
 					<select name="vehicle">
 						${Object.values(vehicles).map(v => `<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>${v.label}</option>`).join('')}
@@ -388,7 +411,12 @@ class SpeedTicket extends HTMLElement {
 
 		switch (name) {
 			case 'value': this.state.speed = parseInt(value, 10); break;
-			case 'roadtype': this.state.roadType = value; this.updateVideoSrc(); break;
+			case 'roadtype': 
+				const [roadType, speedLimit] = value.split(':');
+				this.state.roadType = roadType;
+				this.state.selectedSpeedLimit = parseInt(speedLimit, 10);
+				this.updateVideoSrc(); 
+				break;
 			case 'vehicle': this.state.vehicle = value; break;
 			case 'factor': 
 				if (checked) this.state.factors.add(value); 
@@ -574,6 +602,7 @@ class SpeedTicket extends HTMLElement {
 	setRoadType(id) {
 		if (this.data?.roadTypes[id] && this.state.roadType !== id) {
 			this.state.roadType = id;
+			this.state.selectedSpeedLimit = this.getDefaultSpeedForRoadType(id);
 			this.updateVideoSrc();
 			this.updateUI();
 		}
@@ -625,7 +654,7 @@ class SpeedTicket extends HTMLElement {
 
 	getFieldValue(field, useBasicSpeedLimit = false) {
 		const speedLimit = useBasicSpeedLimit ? 
-			this.data.roadTypes[this.state.roadType].defaultSpeed : 
+			this.getDefaultSpeedForRoadType(this.state.roadType) : 
 			this.getSpeedLimit();
 		const fields = {
 			'speed': this.state.speed,
