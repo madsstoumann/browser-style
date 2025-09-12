@@ -79,6 +79,17 @@
 			row-rule-outset: var(--layout-row-rule-outset, 0%);
 		}
 
+		/* header & description */
+		&[aria-label] {
+			&::before {
+				content: attr(aria-label);
+				font-size: var(--layout-header-fs, 2em);
+				font-weight: var(--layout-header-fw, 500);
+				grid-area: 1 / 1 / 1 / -1;
+				text-box: text;
+			}
+		}
+
 		/* overflow */
 		&[overflow] {
 			display: flex;
