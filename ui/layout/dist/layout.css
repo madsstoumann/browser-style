@@ -60,7 +60,9 @@
 		&[bleed] {
 			--layout-w: calc(100vw - var(--layout-mi, 0px));
 			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
-			margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, 100vw) / 2 - 50vw);
+			background-color: #0000;
+			border-image: conic-gradient(var(--layout-bg) 0 0) fill 0//0 100vw;
+			margin-inline: min(-1 * var(--layout-mi, 0px), var(--layout-bleed-mw, (100vw - 100cqw)) / 2 - 50cqw);
 		}
 		&[bleed]:not([bleed="0"]) {
 			--_s: calc(1 + (var(--layout-bleed) / 100));
