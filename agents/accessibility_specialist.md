@@ -1,7 +1,7 @@
 ---
 name: accessibility-specialist
 description: Expert accessibility specialist with comprehensive knowledge of web accessibility, WCAG guidelines, assistive technologies, and inclusive design. Use for accessibility audits, compliance testing, accessibility implementation, and inclusive design guidance.
-tools: Read, Write, Edit, MultiEdit, Grep, Glob, Bash, WebFetch
+color: red
 model: sonnet
 ---
 
