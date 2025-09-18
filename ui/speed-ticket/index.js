@@ -257,6 +257,7 @@ class SpeedTicket extends HTMLElement {
 				position-area: top span-right;
 				position-try-fallbacks: --bottom-span-right, --top-span-left, --bottom-span-left;
 				margin: 0;
+				min-width: 12rem;
 
 				label {
 					display: flex;
@@ -337,12 +338,10 @@ class SpeedTicket extends HTMLElement {
 	}
 
 	getAllowedSpeedsForCurrentConditions() {
-		// Find the highest priority rule that matches current conditions
 		const matchingRules = this.data.speedLimitRules?.filter(rule =>
 			this.evaluateConditions(rule.conditions, true)
 		) || [];
 
-		// Sort by priority (lower numbers = higher priority)
 		matchingRules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
 
 		const rule = matchingRules[0];
@@ -356,7 +355,6 @@ class SpeedTicket extends HTMLElement {
 			}));
 		}
 
-		// Fallback to road type default speeds
 		return this.data.roadTypes[this.state.roadType]?.allowedSpeeds || [];
 	}
 
@@ -365,27 +363,22 @@ class SpeedTicket extends HTMLElement {
 		const currentVehicleCategory = this.data.vehicles[currentVehicleId]?.category;
 
 		return Object.values(this.data.factors || {}).filter(factor => {
-			// If no visibleFor is specified, show for all vehicles (backward compatibility)
 			if (!factor.visibleFor) return true;
 
-			// Check if current vehicle ID or category is in the visibleFor array
 			return factor.visibleFor.includes(currentVehicleId) ||
 				   factor.visibleFor.includes(currentVehicleCategory);
 		});
 	}
 
 	getSpeedLimit() {
-		// If user has manually selected a speed limit, use that instead of rules
 		if (this.state.selectedSpeedLimit !== null) {
 			return this.state.selectedSpeedLimit;
 		}
 
-		// Find the highest priority rule that matches current conditions
 		const matchingRules = this.data.speedLimitRules?.filter(rule =>
 			this.evaluateConditions(rule.conditions, true)
 		) || [];
 
-		// Sort by priority (lower numbers = higher priority)
 		matchingRules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
 
 		const rule = matchingRules[0];
@@ -430,24 +423,7 @@ class SpeedTicket extends HTMLElement {
 						${Object.values(vehicles).map(v => `<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>${v.label}</option>`).join('')}
 					</select>
 					<select name="roadtype">
-						${Object.values(roadTypes).map(roadType => {
-							// Use current road type to get speeds, or fallback to road type defaults
-							let speedOptions;
-							if (roadType.id === this.state.roadType) {
-								speedOptions = this.getAllowedSpeedsForCurrentConditions();
-							} else {
-								speedOptions = roadType.allowedSpeeds;
-							}
-
-							return `<optgroup label="${roadType.label}">
-								${speedOptions.map(speedOption => {
-									const isSelected = roadType.id === this.state.roadType &&
-										(this.state.selectedSpeedLimit === speedOption.speed ||
-										 (this.state.selectedSpeedLimit === null && speedOption.default));
-									return `<option value="${roadType.id}:${speedOption.speed}" ${isSelected ? 'selected' : ''}>${speedOption.label}</option>`
-								}).join('')}
-							</optgroup>`
-						}).join('')}
+						${this.generateRoadTypeOptions()}
 					</select>
 					
 					<button type="button" popovertarget="factors-popover">${labels.factors}</button>
@@ -504,18 +480,12 @@ class SpeedTicket extends HTMLElement {
 		}
 	}
 
-	updateRoadTypeDropdown() {
-		const roadTypeSelect = this.shadowRoot.querySelector('select[name="roadtype"]');
-		if (!roadTypeSelect) return;
-
-		const { roadTypes } = this.data;
-		roadTypeSelect.innerHTML = Object.values(roadTypes).map(roadType => {
-			// Get appropriate speeds for this road type based on current conditions
+	generateRoadTypeOptions() {
+		return Object.values(this.data.roadTypes).map(roadType => {
 			let speedOptions;
 			if (roadType.id === this.state.roadType) {
 				speedOptions = this.getAllowedSpeedsForCurrentConditions();
 			} else {
-				// Temporarily change state to get speeds for this road type
 				const originalRoadType = this.state.roadType;
 				this.state.roadType = roadType.id;
 				speedOptions = this.getAllowedSpeedsForCurrentConditions();
@@ -533,13 +503,19 @@ class SpeedTicket extends HTMLElement {
 		}).join('');
 	}
 
+	updateRoadTypeDropdown() {
+		const roadTypeSelect = this.shadowRoot.querySelector('select[name="roadtype"]');
+		if (roadTypeSelect) {
+			roadTypeSelect.innerHTML = this.generateRoadTypeOptions();
+		}
+	}
+
 	updateFactorsPopover() {
 		const factorsPopover = this.shadowRoot.querySelector('#factors-popover');
 		if (!factorsPopover) return;
 
 		const visibleFactors = this.getVisibleFactorsForCurrentVehicle();
 
-		// Remove factors that are no longer visible for this vehicle
 		const visibleFactorIds = new Set(visibleFactors.map(f => f.id));
 		for (const factorId of this.state.factors) {
 			if (!visibleFactorIds.has(factorId)) {
@@ -547,7 +523,6 @@ class SpeedTicket extends HTMLElement {
 			}
 		}
 
-		// Update the popover content
 		factorsPopover.innerHTML = visibleFactors.map(f =>
 			`<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`
 		).join('');
@@ -593,7 +568,6 @@ class SpeedTicket extends HTMLElement {
 		const circularRange = this.shadowRoot.querySelector('circular-range');
 		if (!circularRange) return;
 
-		// Load colors either from data.statusColors or CSS custom properties fallback
 		const rootStyles = getComputedStyle(this);
 		const dataColors = this.data?.statusColors;
 		const resolveColor = (id, cssVar) => (dataColors?.[id]?.fill) || rootStyles.getPropertyValue(cssVar).trim();
@@ -607,7 +581,6 @@ class SpeedTicket extends HTMLElement {
 		let middleColor = speedColors.success.color;
 		let endColor = speedColors.success.color;
 
-		// Determine gradient colors based on status
 		if (status === 'success') {
 			currentStatus = speedColors.success;
 		} else if (status === 'danger') {
@@ -620,7 +593,6 @@ class SpeedTicket extends HTMLElement {
 			endColor = speedColors.warning.color;
 		}
 
-		// Update circular-range colors with gradient support
 		circularRange.style.setProperty('--circular-range-fill', speedColors.success.color);
 		circularRange.style.setProperty('--circular-range-fill-middle', middleColor);
 		circularRange.style.setProperty('--circular-range-fill-end', endColor);
@@ -662,25 +634,26 @@ class SpeedTicket extends HTMLElement {
 
 	calculateFine(speedLimit, percentageOver, penaltyRange) {
 		const speed = this.state.speed;
-		
-		if (!speed || speed <= speedLimit || speed > 300) return "";
-		
+		const maxRealisticSpeed = this.data.speedRange?.max || 300;
+
+		if (!speed || speed <= speedLimit || speed > maxRealisticSpeed) return "";
+
 		const consequenceType = this.getConsequence();
 		if (consequenceType && this.data.consequenceTypes[consequenceType]?.preventsFine) return "";
-		
+
 		if (!penaltyRange) return "";
-		
+
 		let fine = penaltyRange[this.getRate()];
 		fine += this.getPenalties();
-		
+
 		for (const factorId of this.state.factors) {
 			const factor = this.data.factors[factorId];
 			if (factor?.multiplier) fine *= factor.multiplier;
 		}
-		
-		return new Intl.NumberFormat(this.data.locale, { 
-			style: 'currency', 
-			currency: this.data.currency || 'DKK' 
+
+		return new Intl.NumberFormat(this.data.locale, {
+			style: 'currency',
+			currency: this.data.currency || 'DKK'
 		}).format(Math.round(fine));
 	}
 
@@ -692,7 +665,11 @@ class SpeedTicket extends HTMLElement {
 	getPenalties() {
 		return this.data.ruleEngine.penaltyRules.reduce((total, rule) => {
 			if (this.evaluateConditions(rule.conditions)) {
-				return total + (rule.penalty || this.evaluateFormula(rule.formula));
+				if (rule.penalty) {
+					return total + rule.penalty;
+				} else if (rule.formulaId) {
+					return total + this.executeFormula(rule.formulaId);
+				}
 			}
 			return total;
 		}, 0);
@@ -786,13 +763,32 @@ class SpeedTicket extends HTMLElement {
 		return fields[field] || null;
 	}
 
-	evaluateFormula(formula) {
-		if (formula?.type === 'calculation' && 
-			formula.expression === 'Math.floor((speed - 140) / 10) * 600 + 1200') {
-			return Math.floor((this.state.speed - 140) / 10) * 600 + 1200;
+	executeFormula(formulaId) {
+		const formula = this.data.formulas?.[formulaId];
+		if (!formula) {
+			console.warn(`Formula not found: ${formulaId}`);
+			return 0;
 		}
-		return 0;
+
+		switch (formula.type) {
+			case 'escalatingPenalty':
+				return this.calculateEscalatingPenalty(formula);
+			case 'fixedAmount':
+				return formula.amount || 0;
+			case 'percentage':
+				return Math.round(this.state.speed * (formula.percentage || 0) / 100);
+			default:
+				console.warn(`Unknown formula type: ${formula.type}`);
+				return 0;
+		}
 	}
+
+	calculateEscalatingPenalty(formula) {
+		const { baseSpeed, increment, multiplier, base } = formula;
+		if (this.state.speed <= baseSpeed) return 0;
+		return Math.floor((this.state.speed - baseSpeed) / increment) * multiplier + base;
+	}
+
 }
 
 customElements.define('speed-ticket', SpeedTicket);

@@ -76,37 +76,31 @@
     "car": {
       "id": "car",
       "label": "Car",
-      "value": 1,
       "category": "car"
     },
     "motorcycle": {
-      "id": "motorcycle", 
+      "id": "motorcycle",
       "label": "Motorcycle",
-      "value": 2,
       "category": "mc"
     },
     "van": {
       "id": "van",
-      "label": "Van (up to 3.5t)", 
-      "value": 3,
+      "label": "Van (up to 3.5t)",
       "category": "van"
     },
     "hgv": {
       "id": "hgv",
       "label": "HGV (over 3.5t)",
-      "value": 4,
       "category": "hgv"
     },
     "bus": {
       "id": "bus",
       "label": "Bus/Coach",
-      "value": 5,
       "category": "bus"
     },
     "caravan": {
       "id": "caravan",
       "label": "Car with Caravan/Trailer",
-      "value": 6,
       "category": "caravan"
     }
   },
@@ -115,7 +109,6 @@
       "id": "newDriver",
       "label": "New Driver (2 years or less)",
       "description": "Driver with full licence for 2 years or less (enhanced penalties)",
-      "value": 1,
       "multiplier": 1.0,
       "visibleFor": ["car", "mc", "van"]
     },
@@ -123,7 +116,6 @@
       "id": "schoolZone",
       "label": "School Zone",
       "description": "Speeding near schools during school hours",
-      "value": 2,
       "multiplier": 1.5,
       "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
@@ -131,7 +123,6 @@
       "id": "adverseWeather",
       "label": "Adverse Weather",
       "description": "Inappropriate speed for weather conditions",
-      "value": 3,
       "multiplier": 1.3,
       "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
@@ -139,7 +130,6 @@
       "id": "repeatOffender",
       "label": "Repeat Offender",
       "description": "Multiple speeding offences in recent period",
-      "value": 4,
       "multiplier": 1.5,
       "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
@@ -147,12 +137,10 @@
       "id": "commercialVehicle",
       "label": "Commercial Use",
       "description": "Vehicle being used for commercial purposes",
-      "value": 5,
       "multiplier": 1.2,
       "visibleFor": ["van", "hgv", "bus"]
     }
   },
-  "speedLimits": [20, 30, 40, 50, 60, 70],
   "penaltyRanges": [
     {
       "percentageOver": 0,

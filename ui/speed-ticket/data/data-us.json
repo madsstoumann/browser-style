@@ -83,31 +83,26 @@
     "car": {
       "id": "car",
       "label": "Passenger Vehicle",
-      "value": 1,
       "category": "car"
     },
     "motorcycle": {
-      "id": "motorcycle", 
+      "id": "motorcycle",
       "label": "Motorcycle",
-      "value": 2,
       "category": "mc"
     },
     "truck": {
       "id": "truck",
-      "label": "Truck/RV", 
-      "value": 3,
+      "label": "Truck/RV",
       "category": "truck"
     },
     "commercial": {
       "id": "commercial",
       "label": "Commercial Vehicle",
-      "value": 4,
       "category": "commercial"
     },
     "schoolBus": {
       "id": "schoolBus",
       "label": "School Bus",
-      "value": 5,
       "category": "bus"
     }
   },
@@ -116,7 +111,6 @@
       "id": "schoolZone",
       "label": "School Zone",
       "description": "Speeding in an active school zone (doubled fines)",
-      "value": 1,
       "multiplier": 2.0,
       "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     },
@@ -124,7 +118,6 @@
       "id": "workZone",
       "label": "Work/Construction Zone",
       "description": "Speeding in an active work zone with workers present (doubled fines)",
-      "value": 2,
       "multiplier": 2.0,
       "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     },
@@ -132,7 +125,6 @@
       "id": "recklessDriving",
       "label": "Reckless Driving",
       "description": "Excessive speeding with dangerous behavior",
-      "value": 3,
       "multiplier": 1.5,
       "visibleFor": ["car", "mc"]
     },
@@ -140,7 +132,6 @@
       "id": "youthfulDriver",
       "label": "Driver Under 21",
       "description": "Enhanced penalties for drivers under 21",
-      "value": 4,
       "multiplier": 1.2,
       "visibleFor": ["car", "mc"]
     },
@@ -148,7 +139,6 @@
       "id": "towing",
       "label": "Towing Trailer",
       "description": "Vehicle towing a trailer or mobile home",
-      "value": 5,
       "multiplier": 1.0,
       "visibleFor": ["car", "mc", "truck"]
     },
@@ -156,12 +146,10 @@
       "id": "priorOffenses",
       "label": "Repeat Offender",
       "description": "Multiple speeding violations in 18 months",
-      "value": 6,
       "multiplier": 1.5,
       "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     }
   },
-  "speedLimits": [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85],
   "penaltyRanges": [
     {
       "percentageOver": 0,
@@ -339,10 +327,7 @@
         "conditions": [
           { "field": "speed", "operator": ">=", "value": 100 }
         ],
-        "formula": {
-          "type": "calculation",
-          "expression": "Math.floor((speed - 100) / 5) * 100 + 300"
-        }
+        "formulaId": "extremeSpeedPenalty"
       },
       {
         "id": "urban_excessive_speed_penalty",
@@ -595,5 +580,16 @@
         }
       }
     }
-  ]
+  ],
+  "formulas": {
+    "extremeSpeedPenalty": {
+      "id": "extremeSpeedPenalty",
+      "type": "escalatingPenalty",
+      "description": "Escalating penalty for speeds over 100 mph",
+      "baseSpeed": 100,
+      "increment": 5,
+      "multiplier": 100,
+      "base": 300
+    }
+  }
 }

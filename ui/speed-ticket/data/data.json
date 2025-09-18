@@ -73,31 +73,26 @@
     "car": {
       "id": "car",
       "label": "Personbil",
-      "value": 1,
       "category": "car"
     },
     "motorcycle": {
-      "id": "motorcycle", 
+      "id": "motorcycle",
       "label": "Motorcykel",
-      "value": 2,
       "category": "mc"
     },
     "truck": {
       "id": "truck",
-      "label": "Lastbil", 
-      "value": 3,
+      "label": "Lastbil",
       "category": "truck"
     },
     "bus": {
       "id": "bus",
       "label": "Bus",
-      "value": 4,
       "category": "bus"
     },
     "busExpress": {
       "id": "busExpress",
       "label": "Bus Tempo 100",
-      "value": 5,
       "category": "bus100"
     }
   },
@@ -106,7 +101,6 @@
       "id": "roadwork",
       "label": "Vejarbejde",
       "description": "Fartoverskridelse ved vejarbejde",
-      "value": 2,
       "multiplier": 2.0,
       "visibleFor": ["car", "mc", "truck", "bus", "bus100"]
     },
@@ -114,7 +108,6 @@
       "id": "trailer",
       "label": "Anhænger",
       "description": "Køretøj med anhænger",
-      "value": 4,
       "multiplier": 1.0,
       "visibleFor": ["car", "mc", "truck"]
     },
@@ -122,12 +115,10 @@
       "id": "trailerTempo100",
       "label": "Anhænger (tempo 100)",
       "description": "Køretøj med anhænger godkendt til 100 km/t",
-      "value": 5,
       "multiplier": 1.0,
       "visibleFor": ["bus100"]
     }
   },
-  "speedLimits": [30, 40, 50, 60, 70, 80, 90, 100, 110, 130],
   "penaltyRanges": [
     {
       "percentageOver": 0,
@@ -265,6 +256,17 @@
       "preventsFine": false
     }
   },
+  "formulas": {
+    "extremeSpeedPenalty": {
+      "id": "extremeSpeedPenalty",
+      "type": "escalatingPenalty",
+      "description": "Escalating penalty for extreme speeds",
+      "baseSpeed": 140,
+      "increment": 10,
+      "multiplier": 600,
+      "base": 1200
+    }
+  },
   "ruleEngine": {
     "rateSelectionRules": [
       {
@@ -328,10 +330,7 @@
         "conditions": [
           { "field": "speed", "operator": ">=", "value": 140 }
         ],
-        "formula": {
-          "type": "calculation",
-          "expression": "Math.floor((speed - 140) / 10) * 600 + 1200"
-        }
+        "formulaId": "extremeSpeedPenalty"
       }
     ],
     "consequenceRules": [
