@@ -1,8 +1,7 @@
 ---
 name: seo-specialist
 description: Expert SEO analyst with comprehensive knowledge of technical SEO, schema.org markup, tracking implementation, and search performance optimization. Use for SEO audits, technical analysis, tracking setup, structured data implementation, and search performance optimization.
-tools: Read, Write, Edit, MultiEdit, Grep, Glob, Bash, web_search
-model: sonnet
+model: inherit
 color: yellow
 ---
 
