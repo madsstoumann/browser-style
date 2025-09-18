@@ -336,19 +336,70 @@ class SpeedTicket extends HTMLElement {
 		return defaultSpeed?.speed || roadTypeData.allowedSpeeds[0]?.speed || 0;
 	}
 
+	getAllowedSpeedsForCurrentConditions() {
+		// Find the highest priority rule that matches current conditions
+		const matchingRules = this.data.speedLimitRules?.filter(rule =>
+			this.evaluateConditions(rule.conditions, true)
+		) || [];
+
+		// Sort by priority (lower numbers = higher priority)
+		matchingRules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
+
+		const rule = matchingRules[0];
+		if (rule?.limits?.[this.state.roadType]) {
+			const speeds = rule.limits[this.state.roadType];
+			const defaultSpeed = rule.limits.default?.[this.state.roadType] || speeds[0];
+			return speeds.map(speed => ({
+				speed: speed,
+				label: `${this.data.roadTypes[this.state.roadType].label} ${speed}`,
+				default: speed === defaultSpeed
+			}));
+		}
+
+		// Fallback to road type default speeds
+		return this.data.roadTypes[this.state.roadType]?.allowedSpeeds || [];
+	}
+
+	getVisibleFactorsForCurrentVehicle() {
+		const currentVehicleId = this.state.vehicle;
+		const currentVehicleCategory = this.data.vehicles[currentVehicleId]?.category;
+
+		return Object.values(this.data.factors || {}).filter(factor => {
+			// If no visibleFor is specified, show for all vehicles (backward compatibility)
+			if (!factor.visibleFor) return true;
+
+			// Check if current vehicle ID or category is in the visibleFor array
+			return factor.visibleFor.includes(currentVehicleId) ||
+				   factor.visibleFor.includes(currentVehicleCategory);
+		});
+	}
+
 	getSpeedLimit() {
 		// If user has manually selected a speed limit, use that instead of rules
 		if (this.state.selectedSpeedLimit !== null) {
 			return this.state.selectedSpeedLimit;
 		}
-		
-		const rule = this.data.speedLimitRules?.find(rule => this.evaluateConditions(rule.conditions, true));
-		return rule?.limits.default || this.getDefaultSpeedForRoadType(this.state.roadType);
+
+		// Find the highest priority rule that matches current conditions
+		const matchingRules = this.data.speedLimitRules?.filter(rule =>
+			this.evaluateConditions(rule.conditions, true)
+		) || [];
+
+		// Sort by priority (lower numbers = higher priority)
+		matchingRules.sort((a, b) => (a.priority || 999) - (b.priority || 999));
+
+		const rule = matchingRules[0];
+		if (rule?.limits?.default?.[this.state.roadType]) {
+			return rule.limits.default[this.state.roadType];
+		}
+
+		return this.getDefaultSpeedForRoadType(this.state.roadType);
 	}
 
 	render() {
 		if (!this.data) return;
-		const { roadTypes, vehicles, factors, labels, speedRange, circularRange } = this.data;
+		const { roadTypes, vehicles, labels, speedRange, circularRange } = this.data;
+		const visibleFactors = this.getVisibleFactorsForCurrentVehicle();
 		const speedLimit = this.getSpeedLimit();
 		const results = this.calculateResults();
 
@@ -375,24 +426,33 @@ class SpeedTicket extends HTMLElement {
 					</circular-range>
 				</fieldset>
 				<fieldset name="selection">
+					<select name="vehicle">
+						${Object.values(vehicles).map(v => `<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>${v.label}</option>`).join('')}
+					</select>
 					<select name="roadtype">
-						${Object.values(roadTypes).map(roadType => 
-							`<optgroup label="${roadType.label}">
-								${roadType.allowedSpeeds.map(speedOption => {
-									const isSelected = roadType.id === this.state.roadType && 
-										(this.state.selectedSpeedLimit === speedOption.speed || 
+						${Object.values(roadTypes).map(roadType => {
+							// Use current road type to get speeds, or fallback to road type defaults
+							let speedOptions;
+							if (roadType.id === this.state.roadType) {
+								speedOptions = this.getAllowedSpeedsForCurrentConditions();
+							} else {
+								speedOptions = roadType.allowedSpeeds;
+							}
+
+							return `<optgroup label="${roadType.label}">
+								${speedOptions.map(speedOption => {
+									const isSelected = roadType.id === this.state.roadType &&
+										(this.state.selectedSpeedLimit === speedOption.speed ||
 										 (this.state.selectedSpeedLimit === null && speedOption.default));
 									return `<option value="${roadType.id}:${speedOption.speed}" ${isSelected ? 'selected' : ''}>${speedOption.label}</option>`
 								}).join('')}
 							</optgroup>`
-						).join('')}
+						}).join('')}
 					</select>
-					<select name="vehicle">
-						${Object.values(vehicles).map(v => `<option value="${v.id}" ${v.id === this.state.vehicle ? 'selected' : ''}>${v.label}</option>`).join('')}
-					</select>
+					
 					<button type="button" popovertarget="factors-popover">${labels.factors}</button>
 					<div id="factors-popover" popover>
-						${Object.values(factors).map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}
+						${visibleFactors.map(f => `<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`).join('')}
 					</div>
 				</fieldset>
 				<fieldset name="result" class="${results.status}">
@@ -421,10 +481,15 @@ class SpeedTicket extends HTMLElement {
 					this.updateVideoSrc(); 
 				}
 				break;
-			case 'vehicle': this.state.vehicle = value; break;
-			case 'factor': 
-				if (checked) this.state.factors.add(value); 
+			case 'vehicle':
+				this.state.vehicle = value;
+				this.updateRoadTypeDropdown();
+				this.updateFactorsPopover();
+				break;
+			case 'factor':
+				if (checked) this.state.factors.add(value);
 				else this.state.factors.delete(value);
+				this.updateRoadTypeDropdown();
 				break;
 		}
 		this.updateUI();
@@ -437,6 +502,55 @@ class SpeedTicket extends HTMLElement {
 			videoScrub.src = road.video;
 			videoScrub.poster = road.poster;
 		}
+	}
+
+	updateRoadTypeDropdown() {
+		const roadTypeSelect = this.shadowRoot.querySelector('select[name="roadtype"]');
+		if (!roadTypeSelect) return;
+
+		const { roadTypes } = this.data;
+		roadTypeSelect.innerHTML = Object.values(roadTypes).map(roadType => {
+			// Get appropriate speeds for this road type based on current conditions
+			let speedOptions;
+			if (roadType.id === this.state.roadType) {
+				speedOptions = this.getAllowedSpeedsForCurrentConditions();
+			} else {
+				// Temporarily change state to get speeds for this road type
+				const originalRoadType = this.state.roadType;
+				this.state.roadType = roadType.id;
+				speedOptions = this.getAllowedSpeedsForCurrentConditions();
+				this.state.roadType = originalRoadType;
+			}
+
+			return `<optgroup label="${roadType.label}">
+				${speedOptions.map(speedOption => {
+					const isSelected = roadType.id === this.state.roadType &&
+						(this.state.selectedSpeedLimit === speedOption.speed ||
+						 (this.state.selectedSpeedLimit === null && speedOption.default));
+					return `<option value="${roadType.id}:${speedOption.speed}" ${isSelected ? 'selected' : ''}>${speedOption.label}</option>`
+				}).join('')}
+			</optgroup>`
+		}).join('');
+	}
+
+	updateFactorsPopover() {
+		const factorsPopover = this.shadowRoot.querySelector('#factors-popover');
+		if (!factorsPopover) return;
+
+		const visibleFactors = this.getVisibleFactorsForCurrentVehicle();
+
+		// Remove factors that are no longer visible for this vehicle
+		const visibleFactorIds = new Set(visibleFactors.map(f => f.id));
+		for (const factorId of this.state.factors) {
+			if (!visibleFactorIds.has(factorId)) {
+				this.state.factors.delete(factorId);
+			}
+		}
+
+		// Update the popover content
+		factorsPopover.innerHTML = visibleFactors.map(f =>
+			`<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`
+		).join('');
 	}
 
 	updateUI() {
@@ -650,6 +764,7 @@ class SpeedTicket extends HTMLElement {
 			case '>': return value > target;
 			case '<': return value < target;
 			case 'in': return Array.isArray(target) && target.includes(value);
+			case 'not_in': return Array.isArray(target) && !target.includes(value);
 			case 'includes': return Array.isArray(value) && value.includes(target);
 			case 'not_includes': return Array.isArray(value) && !value.includes(target);
 			default: return false;

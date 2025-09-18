@@ -116,35 +116,40 @@
       "label": "New Driver (2 years or less)",
       "description": "Driver with full licence for 2 years or less (enhanced penalties)",
       "value": 1,
-      "multiplier": 1.0
+      "multiplier": 1.0,
+      "visibleFor": ["car", "mc", "van"]
     },
     "schoolZone": {
       "id": "schoolZone",
       "label": "School Zone",
       "description": "Speeding near schools during school hours",
       "value": 2,
-      "multiplier": 1.5
+      "multiplier": 1.5,
+      "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
     "adverseWeather": {
       "id": "adverseWeather",
       "label": "Adverse Weather",
       "description": "Inappropriate speed for weather conditions",
       "value": 3,
-      "multiplier": 1.3
+      "multiplier": 1.3,
+      "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
     "repeatOffender": {
       "id": "repeatOffender",
-      "label": "Repeat Offender", 
+      "label": "Repeat Offender",
       "description": "Multiple speeding offences in recent period",
       "value": 4,
-      "multiplier": 1.5
+      "multiplier": 1.5,
+      "visibleFor": ["car", "mc", "van", "hgv", "bus"]
     },
     "commercialVehicle": {
       "id": "commercialVehicle",
       "label": "Commercial Use",
       "description": "Vehicle being used for commercial purposes",
       "value": 5,
-      "multiplier": 1.2
+      "multiplier": 1.2,
+      "visibleFor": ["van", "hgv", "bus"]
     }
   },
   "speedLimits": [20, 30, 40, 50, 60, 70],
@@ -421,130 +426,104 @@
   },
   "speedLimitRules": [
     {
-      "id": "caravan_built_up",
-      "description": "Cars with caravans/trailers in built-up areas",
+      "id": "caravan_towing",
+      "description": "Cars with caravans/trailers - specific UK limits",
+      "priority": 1,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
+        { "field": "vehicle.category", "operator": "=", "value": "caravan" }
       ],
-      "limits": { "min": 20, "max": 30, "default": 30 }
+      "limits": {
+        "builtUp": [20, 30],
+        "singleCarriageway": [30, 40, 50],
+        "dualCarriageway": [50, 60],
+        "motorway": [50, 60],
+        "default": {
+          "builtUp": 30,
+          "singleCarriageway": 50,
+          "dualCarriageway": 60,
+          "motorway": 60
+        }
+      }
     },
     {
-      "id": "caravan_single_carriageway",
-      "description": "Cars with caravans/trailers on single carriageways",
+      "id": "hgv_over_7_5_tonnes",
+      "description": "HGVs over 7.5 tonnes - restricted speeds",
+      "priority": 2,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+        { "field": "vehicle.category", "operator": "=", "value": "hgv" }
       ],
-      "limits": { "min": 30, "max": 50, "default": 50 }
+      "limits": {
+        "builtUp": [20, 30],
+        "singleCarriageway": [40, 50],
+        "dualCarriageway": [50, 60],
+        "motorway": [50, 60],
+        "default": {
+          "builtUp": 30,
+          "singleCarriageway": 50,
+          "dualCarriageway": 60,
+          "motorway": 60
+        }
+      }
     },
     {
-      "id": "caravan_dual_motorway",
-      "description": "Cars with caravans/trailers on dual carriageways and motorways",
+      "id": "van_under_3_5_tonnes",
+      "description": "Vans under 3.5 tonnes - car-derived van limits",
+      "priority": 3,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "caravan" },
-        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
+        { "field": "vehicle.category", "operator": "=", "value": "van" }
       ],
-      "limits": { "min": 40, "max": 60, "default": 60 }
+      "limits": {
+        "builtUp": [20, 30],
+        "singleCarriageway": [40, 50, 60],
+        "dualCarriageway": [50, 60, 70],
+        "motorway": [60, 70],
+        "default": {
+          "builtUp": 30,
+          "singleCarriageway": 60,
+          "dualCarriageway": 70,
+          "motorway": 70
+        }
+      }
     },
     {
-      "id": "car_mc_built_up",
-      "description": "Cars and motorcycles in built-up areas",
+      "id": "bus_minibus",
+      "description": "Buses and minibuses - length-dependent limits",
+      "priority": 3,
       "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
+        { "field": "vehicle.category", "operator": "=", "value": "bus" }
       ],
-      "limits": { "min": 20, "max": 40, "default": 30 }
+      "limits": {
+        "builtUp": [20, 30],
+        "singleCarriageway": [40, 50, 60],
+        "dualCarriageway": [50, 60, 70],
+        "motorway": [60, 70],
+        "default": {
+          "builtUp": 30,
+          "singleCarriageway": 50,
+          "dualCarriageway": 60,
+          "motorway": 60
+        }
+      }
     },
     {
-      "id": "car_mc_single_carriageway",
-      "description": "Cars and motorcycles on single carriageways",
+      "id": "car_mc_default",
+      "description": "Cars and motorcycles - standard UK limits",
+      "priority": 10,
       "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] }
       ],
-      "limits": { "min": 30, "max": 60, "default": 60 }
-    },
-    {
-      "id": "car_mc_dual_carriageway",
-      "description": "Cars and motorcycles on dual carriageways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "dualCarriageway" }
-      ],
-      "limits": { "min": 40, "max": 70, "default": 70 }
-    },
-    {
-      "id": "car_mc_motorway",
-      "description": "Cars and motorcycles on motorways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "motorway" }
-      ],
-      "limits": { "min": 50, "max": 70, "default": 70 }
-    },
-    {
-      "id": "van_built_up",
-      "description": "Vans in built-up areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "van" },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
-      ],
-      "limits": { "min": 20, "max": 30, "default": 30 }
-    },
-    {
-      "id": "van_single_dual_motorway",
-      "description": "Vans on single carriageways, dual carriageways and motorways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "van" },
-        { "field": "roadType", "operator": "in", "value": ["singleCarriageway", "dualCarriageway", "motorway"] }
-      ],
-      "limits": { "min": 30, "max": 70, "default": 60 }
-    },
-    {
-      "id": "hgv_built_up",
-      "description": "HGVs in built-up areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
-      ],
-      "limits": { "min": 20, "max": 30, "default": 30 }
-    },
-    {
-      "id": "hgv_single_carriageway",
-      "description": "HGVs on single carriageways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
-        { "field": "roadType", "operator": "=", "value": "singleCarriageway" }
-      ],
-      "limits": { "min": 30, "max": 50, "default": 50 }
-    },
-    {
-      "id": "hgv_dual_motorway",
-      "description": "HGVs on dual carriageways and motorways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "hgv" },
-        { "field": "roadType", "operator": "in", "value": ["dualCarriageway", "motorway"] }
-      ],
-      "limits": { "min": 40, "max": 60, "default": 60 }
-    },
-    {
-      "id": "bus_built_up",
-      "description": "Buses in built-up areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "bus" },
-        { "field": "roadType", "operator": "=", "value": "builtUp" }
-      ],
-      "limits": { "min": 20, "max": 30, "default": 30 }
-    },
-    {
-      "id": "bus_other_roads",
-      "description": "Buses on other roads",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "bus" },
-        { "field": "roadType", "operator": "in", "value": ["singleCarriageway", "dualCarriageway", "motorway"] }
-      ],
-      "limits": { "min": 30, "max": 60, "default": 60 }
+      "limits": {
+        "builtUp": [20, 30],
+        "singleCarriageway": [30, 40, 50, 60],
+        "dualCarriageway": [40, 50, 60, 70],
+        "motorway": [50, 60, 70],
+        "default": {
+          "builtUp": 30,
+          "singleCarriageway": 60,
+          "dualCarriageway": 70,
+          "motorway": 70
+        }
+      }
     }
   ]
 }

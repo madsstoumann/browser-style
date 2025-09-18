@@ -31,39 +31,38 @@
         { "speed": 30, "label": "Byzone 30" },
         { "speed": 40, "label": "Byzone 40" },
         { "speed": 50, "label": "Byzone 50", "default": true },
-        { "speed": 60, "label": "Byzone 60" }
+        { "speed": 60, "label": "Byzone 60" },
+        { "speed": 70, "label": "Byzone 70" }
       ],
       "video": "/assets/video/byzone.mp4"
     },
     "countryRoad": {
-      "id": "countryRoad", 
-      "label": "Landevej",
-      "description": "Almindelige landeveje",
+      "id": "countryRoad",
+      "label": "Landevej/Motortrafikvej",
+      "description": "Landeveje og motortrafikveje",
       "allowedSpeeds": [
-        { "speed": 70, "label": "Landevej 70" },
-        { "speed": 80, "label": "Landevej 80", "default": true },
-        { "speed": 90, "label": "Landevej 90" }
+        { "speed": 40, "label": "Landevej/Motortrafikvej 40" },
+        { "speed": 50, "label": "Landevej/Motortrafikvej 50" },
+        { "speed": 60, "label": "Landevej/Motortrafikvej 60" },
+        { "speed": 70, "label": "Landevej/Motortrafikvej 70" },
+        { "speed": 80, "label": "Landevej/Motortrafikvej 80", "default": true },
+        { "speed": 90, "label": "Landevej/Motortrafikvej 90" },
+        { "speed": 100, "label": "Landevej/Motortrafikvej 100" }
       ],
       "video": "/assets/video/landevej.mp4",
       "poster": "assets/landevej.avif"
-    },
-    "expressway": {
-      "id": "expressway",
-      "label": "Motortrafikvej", 
-      "description": "Motortrafikveje uden for byzone",
-      "allowedSpeeds": [
-        { "speed": 80, "label": "Motortrafikvej 80"},
-        { "speed": 90, "label": "Motortrafikvej 90", "default": true },
-        { "speed": 100, "label": "Motortrafikvej 100"}
-      ],
-      "video": "/assets/video/motorvej.mp4"
     },
     "highway": {
       "id": "highway",
       "label": "Motorvej",
       "description": "Motorveje",
       "allowedSpeeds": [
+        { "speed": 50, "label": "Motorvej 50" },
+        { "speed": 60, "label": "Motorvej 60" },
+        { "speed": 70, "label": "Motorvej 70" },
+        { "speed": 80, "label": "Motorvej 80" },
         { "speed": 90, "label": "Motorvej 90" },
+        { "speed": 100, "label": "Motorvej 100" },
         { "speed": 110, "label": "Motorvej 110" },
         { "speed": 130, "label": "Motorvej 130", "default": true }
       ],
@@ -103,40 +102,29 @@
     }
   },
   "factors": {
-    "probationary": {
-      "id": "probationary",
-      "label": "Prøveperiode",
-      "description": "Du har haft kørekort i under 3 år",
-      "value": 1,
-      "multiplier": 1.0
-    },
     "roadwork": {
       "id": "roadwork",
-      "label": "Vejarbejde", 
+      "label": "Vejarbejde",
       "description": "Fartoverskridelse ved vejarbejde",
       "value": 2,
-      "multiplier": 2.0
-    },
-    "alcoholImpairment": {
-      "id": "alcoholImpairment",
-      "label": "Spirituskørsel",
-      "description": "Fartoverskridelse kombineret med spirituskørsel", 
-      "value": 3,
-      "multiplier": 1.5
+      "multiplier": 2.0,
+      "visibleFor": ["car", "mc", "truck", "bus", "bus100"]
     },
     "trailer": {
       "id": "trailer",
       "label": "Anhænger",
       "description": "Køretøj med anhænger",
       "value": 4,
-      "multiplier": 1.0
+      "multiplier": 1.0,
+      "visibleFor": ["car", "mc", "truck"]
     },
     "trailerTempo100": {
       "id": "trailerTempo100",
       "label": "Anhænger (tempo 100)",
       "description": "Køretøj med anhænger godkendt til 100 km/t",
       "value": 5,
-      "multiplier": 1.0
+      "multiplier": 1.0,
+      "visibleFor": ["bus100"]
     }
   },
   "speedLimits": [30, 40, 50, 60, 70, 80, 90, 100, 110, 130],
@@ -473,135 +461,123 @@
   },
   "speedLimitRules": [
     {
-      "id": "bus100_trailer_highway",
-      "description": "Bus100 with trailer on highway",
+      "id": "any_vehicle_trailer",
+      "description": "Any vehicle with trailer",
+      "priority": 1,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "bus100" },
-        { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
+        {
+          "type": "or",
+          "rules": [
+            { "field": "factors", "operator": "includes", "value": "trailer" },
+            { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+          ]
+        }
       ],
-      "limits": { "min": 50, "max": 80, "default": 60 }
+      "limits": {
+        "cityZone": [30, 40, 50, 60, 70],
+        "countryRoad": [40, 50, 60, 70, 80],
+        "highway": [50, 60, 70, 80],
+        "default": {
+          "cityZone": 50,
+          "countryRoad": 80,
+          "highway": 80
+        }
+      }
     },
     {
-      "id": "car_tempo100_trailer_country",
-      "description": "Car with tempo100 trailer on country road",
+      "id": "bus_expressBus_countryRoad",
+      "description": "Bus and express bus on country road/expressway",
+      "priority": 2,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
         { "field": "roadType", "operator": "=", "value": "countryRoad" },
-        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+        { "field": "factors", "operator": "not_includes", "value": "trailer" },
+        { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" }
       ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
+      "limits": {
+        "countryRoad": [40, 50, 60, 70, 80],
+        "default": {
+          "countryRoad": 80
+        }
+      }
     },
     {
-      "id": "car_tempo100_trailer_highway",
-      "description": "Car with tempo100 trailer on highway",
+      "id": "bus_expressBus_highway",
+      "description": "Bus and express bus on highway",
+      "priority": 2,
       "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "car" },
+        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
         { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailerTempo100" }
+        { "field": "factors", "operator": "not_includes", "value": "trailer" },
+        { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" }
       ],
-      "limits": { "min": 50, "max": 100, "default": 100 }
-    },
-    {
-      "id": "car_mc_trailer_country",
-      "description": "Car/MC with trailer on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
-      ],
-      "limits": { "min": 40, "max": 80, "default": 80 }
-    },
-    {
-      "id": "car_mc_trailer_highway",
-      "description": "Car/MC with trailer on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "highway" },
-        { "field": "factors", "operator": "includes", "value": "trailer" }
-      ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
-    },
-    {
-      "id": "car_mc_city",
-      "description": "Car/MC in city zone",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "cityZone" }
-      ],
-      "limits": { "min": 30, "max": 70, "default": 50 }
-    },
-    {
-      "id": "car_mc_country",
-      "description": "Car/MC on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" }
-      ],
-      "limits": { "min": 40, "max": 100, "default": 80 }
-    },
-    {
-      "id": "car_mc_highway",
-      "description": "Car/MC on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "highway" }
-      ],
-      "limits": { "min": 50, "max": 130, "default": 130 }
-    },
-    {
-      "id": "bus_city",
-      "description": "Bus in city zone",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
-        { "field": "roadType", "operator": "=", "value": "cityZone" }
-      ],
-      "limits": { "min": 30, "max": 70, "default": 50 }
-    },
-    {
-      "id": "bus_country",
-      "description": "Bus on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" }
-      ],
-      "limits": { "min": 40, "max": 80, "default": 80 }
-    },
-    {
-      "id": "bus_highway",
-      "description": "Bus on highway",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["bus", "bus100"] },
-        { "field": "roadType", "operator": "=", "value": "highway" }
-      ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
-    },
-    {
-      "id": "truck_city",
-      "description": "Truck in city zone",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "cityZone" }
-      ],
-      "limits": { "min": 30, "max": 70, "default": 50 }
-    },
-    {
-      "id": "truck_country",
-      "description": "Truck on country road",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "countryRoad" }
-      ],
-      "limits": { "min": 40, "max": 80, "default": 80 }
+      "limits": {
+        "highway": [50, 60, 70, 80],
+        "default": {
+          "highway": 80
+        }
+      }
     },
     {
       "id": "truck_highway",
       "description": "Truck on highway",
+      "priority": 2,
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "highway" }
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "factors", "operator": "not_includes", "value": "trailer" },
+        { "field": "factors", "operator": "not_includes", "value": "trailerTempo100" }
       ],
-      "limits": { "min": 50, "max": 80, "default": 80 }
+      "limits": {
+        "highway": [50, 60, 70, 80],
+        "default": {
+          "highway": 80
+        }
+      }
+    },
+    {
+      "id": "default_cityZone",
+      "description": "All vehicles in city zone (default)",
+      "priority": 10,
+      "conditions": [
+        { "field": "roadType", "operator": "=", "value": "cityZone" }
+      ],
+      "limits": {
+        "cityZone": [30, 40, 50, 60, 70],
+        "default": {
+          "cityZone": 50
+        }
+      }
+    },
+    {
+      "id": "default_countryRoad",
+      "description": "Default vehicles on country road/expressway",
+      "priority": 10,
+      "conditions": [
+        { "field": "roadType", "operator": "=", "value": "countryRoad" },
+        { "field": "vehicle.category", "operator": "not_in", "value": ["bus", "bus100"] }
+      ],
+      "limits": {
+        "countryRoad": [40, 50, 60, 70, 80, 90, 100],
+        "default": {
+          "countryRoad": 80
+        }
+      }
+    },
+    {
+      "id": "default_highway",
+      "description": "Default vehicles on highway",
+      "priority": 10,
+      "conditions": [
+        { "field": "roadType", "operator": "=", "value": "highway" },
+        { "field": "vehicle.category", "operator": "not_in", "value": ["truck", "bus", "bus100"] }
+      ],
+      "limits": {
+        "highway": [50, 60, 70, 80, 90, 100, 110, 130],
+        "default": {
+          "highway": 130
+        }
+      }
     }
   ]
 }

@@ -117,42 +117,48 @@
       "label": "School Zone",
       "description": "Speeding in an active school zone (doubled fines)",
       "value": 1,
-      "multiplier": 2.0
+      "multiplier": 2.0,
+      "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     },
     "workZone": {
       "id": "workZone",
-      "label": "Work/Construction Zone", 
+      "label": "Work/Construction Zone",
       "description": "Speeding in an active work zone with workers present (doubled fines)",
       "value": 2,
-      "multiplier": 2.0
+      "multiplier": 2.0,
+      "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     },
     "recklessDriving": {
       "id": "recklessDriving",
       "label": "Reckless Driving",
-      "description": "Excessive speeding with dangerous behavior", 
+      "description": "Excessive speeding with dangerous behavior",
       "value": 3,
-      "multiplier": 1.5
+      "multiplier": 1.5,
+      "visibleFor": ["car", "mc"]
     },
     "youthfulDriver": {
       "id": "youthfulDriver",
       "label": "Driver Under 21",
       "description": "Enhanced penalties for drivers under 21",
       "value": 4,
-      "multiplier": 1.2
+      "multiplier": 1.2,
+      "visibleFor": ["car", "mc"]
     },
     "towing": {
       "id": "towing",
       "label": "Towing Trailer",
       "description": "Vehicle towing a trailer or mobile home",
       "value": 5,
-      "multiplier": 1.0
+      "multiplier": 1.0,
+      "visibleFor": ["car", "mc", "truck"]
     },
     "priorOffenses": {
       "id": "priorOffenses",
       "label": "Repeat Offender",
       "description": "Multiple speeding violations in 18 months",
       "value": 6,
-      "multiplier": 1.5
+      "multiplier": 1.5,
+      "visibleFor": ["car", "mc", "truck", "commercial", "bus"]
     }
   },
   "speedLimits": [25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85],
@@ -481,102 +487,113 @@
   },
   "speedLimitRules": [
     {
-      "id": "passenger_towing",
-      "description": "Passenger vehicles towing trailers (all roads)",
+      "id": "towing_vehicles",
+      "description": "Vehicles towing trailers (all roads) - reduced limits",
+      "priority": 1,
       "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
         { "field": "factors", "operator": "includes", "value": "towing" }
       ],
-      "limits": { "min": 35, "max": 65, "default": 55 }
-    },
-    {
-      "id": "passenger_urban",
-      "description": "Passenger vehicles in urban areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "urban" }
-      ],
-      "limits": { "min": 25, "max": 45, "default": 35 }
-    },
-    {
-      "id": "passenger_suburban",
-      "description": "Passenger vehicles in suburban areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "suburban" }
-      ],
-      "limits": { "min": 35, "max": 55, "default": 45 }
-    },
-    {
-      "id": "passenger_rural",
-      "description": "Passenger vehicles on rural highways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "rural" }
-      ],
-      "limits": { "min": 45, "max": 70, "default": 55 }
-    },
-    {
-      "id": "passenger_interstate",
-      "description": "Passenger vehicles on interstate highways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] },
-        { "field": "roadType", "operator": "=", "value": "interstate" }
-      ],
-      "limits": { "min": 55, "max": 85, "default": 70 }
-    },
-    {
-      "id": "truck_urban_suburban",
-      "description": "Trucks in urban and suburban areas",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "in", "value": ["urban", "suburban"] }
-      ],
-      "limits": { "min": 25, "max": 45, "default": 35 }
-    },
-    {
-      "id": "truck_rural",
-      "description": "Trucks on rural highways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "rural" }
-      ],
-      "limits": { "min": 45, "max": 65, "default": 55 }
-    },
-    {
-      "id": "truck_interstate",
-      "description": "Trucks on interstate highways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "truck" },
-        { "field": "roadType", "operator": "=", "value": "interstate" }
-      ],
-      "limits": { "min": 55, "max": 75, "default": 65 }
-    },
-    {
-      "id": "commercial_local",
-      "description": "Commercial vehicles on local roads",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "commercial" },
-        { "field": "roadType", "operator": "in", "value": ["urban", "suburban"] }
-      ],
-      "limits": { "min": 25, "max": 45, "default": 35 }
-    },
-    {
-      "id": "commercial_highway",
-      "description": "Commercial vehicles on highways",
-      "conditions": [
-        { "field": "vehicle.category", "operator": "=", "value": "commercial" },
-        { "field": "roadType", "operator": "in", "value": ["rural", "interstate"] }
-      ],
-      "limits": { "min": 45, "max": 75, "default": 65 }
+      "limits": {
+        "urban": [25, 30, 35, 40],
+        "suburban": [35, 40, 45, 50],
+        "rural": [45, 50, 55, 60, 65],
+        "interstate": [55, 60, 65],
+        "default": {
+          "urban": 35,
+          "suburban": 45,
+          "rural": 55,
+          "interstate": 65
+        }
+      }
     },
     {
       "id": "school_bus_all",
-      "description": "School buses on all road types (enhanced safety)",
+      "description": "School buses - maximum 55 mph on highways, 60 mph on interstates",
+      "priority": 2,
       "conditions": [
         { "field": "vehicle.category", "operator": "=", "value": "bus" }
       ],
-      "limits": { "min": 25, "max": 55, "default": 45 }
+      "limits": {
+        "urban": [25, 30, 35, 40, 45],
+        "suburban": [35, 40, 45],
+        "rural": [45, 50, 55],
+        "interstate": [55, 60],
+        "default": {
+          "urban": 35,
+          "suburban": 40,
+          "rural": 45,
+          "interstate": 60
+        }
+      }
+    },
+    {
+      "id": "truck_interstate",
+      "description": "Trucks on interstate highways - varies by state, typically 65-75 mph max",
+      "priority": 2,
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "truck" },
+        { "field": "roadType", "operator": "=", "value": "interstate" }
+      ],
+      "limits": {
+        "interstate": [55, 60, 65, 70, 75],
+        "default": {
+          "interstate": 65
+        }
+      }
+    },
+    {
+      "id": "commercial_interstate",
+      "description": "Commercial vehicles on interstate highways",
+      "priority": 2,
+      "conditions": [
+        { "field": "vehicle.category", "operator": "=", "value": "commercial" },
+        { "field": "roadType", "operator": "=", "value": "interstate" }
+      ],
+      "limits": {
+        "interstate": [55, 60, 65, 70, 75],
+        "default": {
+          "interstate": 65
+        }
+      }
+    },
+    {
+      "id": "truck_commercial_local",
+      "description": "Trucks and commercial vehicles on local roads",
+      "priority": 5,
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["truck", "commercial"] },
+        { "field": "roadType", "operator": "in", "value": ["urban", "suburban", "rural"] }
+      ],
+      "limits": {
+        "urban": [25, 30, 35, 40, 45],
+        "suburban": [35, 40, 45, 50, 55],
+        "rural": [45, 50, 55, 60, 65, 70],
+        "default": {
+          "urban": 35,
+          "suburban": 45,
+          "rural": 55
+        }
+      }
+    },
+    {
+      "id": "passenger_default",
+      "description": "Passenger vehicles (cars, motorcycles) - standard limits",
+      "priority": 10,
+      "conditions": [
+        { "field": "vehicle.category", "operator": "in", "value": ["car", "mc"] }
+      ],
+      "limits": {
+        "urban": [25, 30, 35, 40, 45],
+        "suburban": [35, 40, 45, 50, 55],
+        "rural": [45, 50, 55, 60, 65, 70],
+        "interstate": [55, 60, 65, 70, 75, 80, 85],
+        "default": {
+          "urban": 35,
+          "suburban": 45,
+          "rural": 55,
+          "interstate": 70
+        }
+      }
     }
   ]
 }
