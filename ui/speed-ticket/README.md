@@ -8,8 +8,10 @@ A comprehensive, data-driven speed ticket fine calculator that supports multiple
 - **Realistic Speed Limits**: Accurate, research-based speed restrictions by vehicle type and road type
 - **Dynamic Speed Limits**: Speed limits adjust automatically based on vehicle type, road type, and special conditions
 - **Smart Factor Visibility**: Factors (like trailer options) only appear for relevant vehicle types
+- **Smart Speed Limit Adjustment**: Speed limits automatically adjust when factors are added/removed while maintaining the same road type
 - **Rule-Based Logic**: Flexible rule engine for determining fines, penalties, and consequences
 - **Real-Time Updates**: UI updates dynamically when vehicle type or conditions change
+- **Automatic Penalty Recalculation**: Penalties update immediately when factors change
 - **Legal Compliance**: Speed limits based on actual traffic laws for each country
 - **Extensible Architecture**: Easy to add new countries, vehicle types, and road types
 
@@ -79,9 +81,47 @@ The calculator uses JSON configuration files to define country-specific rules an
     "roadType": "countryRoad",
     "vehicle": "car",
     "factors": []
+  },
+  "thresholds": {
+    "dangerPercentageOver": 30
+  },
+  "circularRange": {
+    "start": "220",
+    "end": "500",
+    "indices": "50",
+    "labels": "0:0,30:30,40:40,50:50,60:60,70:70,80:80,90:90,100:100,110:110,130:130,200:200"
   }
 }
 ```
+
+#### Thresholds Configuration
+
+The `thresholds` section controls when violations change severity levels:
+
+```json
+"thresholds": {
+  "dangerPercentageOver": 30
+}
+```
+
+- **dangerPercentageOver**: Percentage over speed limit where status changes from "warning" to "danger"
+
+#### Circular Range Configuration
+
+The `circularRange` section configures the circular speed input component:
+
+```json
+"circularRange": {
+  "start": "220",
+  "end": "500",
+  "indices": "50",
+  "labels": "0:0,30:30,40:40,50:50,60:60,70:70,80:80,90:90,100:100,110:110,130:130,200:200"
+}
+```
+
+- **start/end**: Angular positions for the circular range
+- **indices**: Index spacing for markers
+- **labels**: Speed labels with their positions (speed:angle pairs)
 
 ### Road Types
 
@@ -254,6 +294,53 @@ This structure:
 - **Vehicle-specific**: Different vehicles get different speed options
 - **Realistic limits**: Based on actual traffic laws
 
+## Formulas System
+
+The calculator supports complex penalty calculations using formulas:
+
+```json
+"formulas": {
+  "extremeSpeedPenalty": {
+    "id": "extremeSpeedPenalty",
+    "type": "escalatingPenalty",
+    "description": "Escalating penalty for extreme speeds",
+    "baseSpeed": 140,
+    "increment": 10,
+    "multiplier": 600,
+    "base": 1200
+  }
+}
+```
+
+### Formula Types
+
+#### Escalating Penalty
+Calculates penalties that increase in steps:
+- **baseSpeed**: Speed where penalty starts
+- **increment**: Speed increment for each step
+- **multiplier**: Amount added per step
+- **base**: Base penalty amount
+
+**Formula**: `Math.floor((speed - baseSpeed) / increment) * multiplier + base`
+
+#### Fixed Amount
+Simple fixed penalty:
+```json
+{
+  "type": "fixedAmount",
+  "amount": 500
+}
+```
+
+#### Percentage
+Percentage of current speed:
+```json
+{
+  "type": "percentage",
+  "percentage": 10
+}
+```
+
 ## Rule Engine
 
 The rule engine determines fines and consequences based on configurable rules:
@@ -293,13 +380,35 @@ Add additional penalties based on conditions:
     "conditions": [
       { "field": "speed", "operator": ">=", "value": 140 }
     ],
-    "formula": {
-      "type": "calculation",
-      "expression": "Math.floor((speed - 140) / 10) * 600 + 1200"
-    }
+    "formulaId": "extremeSpeedPenalty"
+  },
+  {
+    "id": "high_speed_city_country",
+    "description": "Ekstra bøde ved høj hastighed i byzone eller på landevej",
+    "conditions": [
+      { "field": "percentageOver", "operator": ">=", "value": 30 },
+      {
+        "type": "or",
+        "rules": [
+          { "field": "roadType", "operator": "=", "value": "cityZone" },
+          {
+            "type": "and",
+            "rules": [
+              { "field": "roadType", "operator": "=", "value": "countryRoad" },
+              { "field": "speedLimit", "operator": "<=", "value": 90 }
+            ]
+          }
+        ]
+      }
+    ],
+    "penalty": 1200
   }
 ]
 ```
+
+Penalty rules can use either:
+- **formulaId**: Reference to a formula in the `formulas` section
+- **penalty**: Fixed penalty amount
 
 ### Consequence Rules
 
@@ -604,6 +713,17 @@ python3 -c "import json; json.load(open('data/data-new.json'))"
 - **Bus/Express Bus**: Restricted to 80 mph on country roads/expressways
 - **Vehicles with Trailers**: Limited to 80 mph regardless of vehicle type
 - **All Vehicles**: City zones allow 30-70 mph for all vehicle types
+
+### Smart Factor Adjustment Example
+
+When factors are added, the calculator intelligently maintains the same road type while adjusting to allowed speeds:
+
+**Scenario**: User selects "Highway 130 km/h" and then adds a "Trailer" factor
+- **Before**: Highway 130 km/h (car without trailer)
+- **After**: Highway 80 km/h (car with trailer - automatically selected)
+- **Logic**: Maintains "highway" road type, but selects the highest allowed speed (80 km/h) for vehicles with trailers
+
+This smart adjustment ensures users don't need to manually reselect road types when adding factors that affect speed limits.
 
 ### Real-World Scenarios
 
