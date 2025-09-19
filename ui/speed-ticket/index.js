@@ -466,6 +466,7 @@ class SpeedTicket extends HTMLElement {
 				if (checked) this.state.factors.add(value);
 				else this.state.factors.delete(value);
 				this.updateRoadTypeDropdown();
+				this.handleFactorSpeedLimitChange();
 				break;
 		}
 		this.updateUI();
@@ -507,6 +508,9 @@ class SpeedTicket extends HTMLElement {
 		const roadTypeSelect = this.shadowRoot.querySelector('select[name="roadtype"]');
 		if (roadTypeSelect) {
 			roadTypeSelect.innerHTML = this.generateRoadTypeOptions();
+			// Update the selected value to match current state
+			const currentValue = `${this.state.roadType}:${this.state.selectedSpeedLimit}`;
+			roadTypeSelect.value = currentValue;
 		}
 	}
 
@@ -526,6 +530,26 @@ class SpeedTicket extends HTMLElement {
 		factorsPopover.innerHTML = visibleFactors.map(f =>
 			`<label><input type="checkbox" name="factor" value="${f.id}" ${this.state.factors.has(f.id) ? 'checked' : ''}><span>${f.label}</span></label>`
 		).join('');
+	}
+
+	handleFactorSpeedLimitChange() {
+		const currentSpeedLimit = this.state.selectedSpeedLimit;
+
+		// Get allowed speeds for current conditions (with new factors)
+		const allowedSpeeds = this.getAllowedSpeedsForCurrentConditions();
+
+		// Check if the current speed limit is still valid for the current roadtype
+		const isCurrentSpeedValid = allowedSpeeds.some(speed => speed.speed === currentSpeedLimit);
+
+		if (!isCurrentSpeedValid) {
+			// Find the best matching speed limit for the SAME roadtype
+			const bestSpeedForCurrentRoad = allowedSpeeds.reduce((highest, current) =>
+				!highest || current.speed > highest.speed ? current : highest, null);
+
+			if (bestSpeedForCurrentRoad) {
+				this.state.selectedSpeedLimit = bestSpeedForCurrentRoad.speed;
+			}
+		}
 	}
 
 	updateUI() {
@@ -616,7 +640,7 @@ class SpeedTicket extends HTMLElement {
 			summary = penaltyRange.summary || '';
 		}
 		
-		const fine = this.calculateFine(speedLimit, percentageOver, penaltyRange);
+		const fine = this.calculateFine(speedLimit, penaltyRange);
 		return { description, fine, summary, status };
 	}
 
@@ -632,7 +656,7 @@ class SpeedTicket extends HTMLElement {
 		return percentageOver >= threshold ? 'danger' : 'warning';
 	}
 
-	calculateFine(speedLimit, percentageOver, penaltyRange) {
+	calculateFine(speedLimit, penaltyRange) {
 		const speed = this.state.speed;
 		const maxRealisticSpeed = this.data.speedRange?.max || 300;
 
