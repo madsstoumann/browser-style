@@ -116,7 +116,7 @@
       "label": "Anhænger (tempo 100)",
       "description": "Køretøj med anhænger godkendt til 100 km/t",
       "multiplier": 1.0,
-      "visibleFor": ["bus100"]
+      "visibleFor": ["car", "bus100"]
     }
   },
   "penaltyRanges": [
