@@ -538,6 +538,253 @@ calculator.addEventListener('state-change', (event) => {
 - **DOM Updates:** Only necessary elements are updated when state changes
 - **Memory Usage:** Each calculator instance maintains independent state
 
+## Putting It All Together
+
+Understanding how all the components work together helps you build effective configurations and debug issues.
+
+### The Complete Calculation Flow
+
+When a user interacts with the calculator, here's the exact sequence of operations:
+
+#### 1. State Change Detection
+```javascript
+// User changes speed, vehicle, road type, or factors
+this.state = { speed: 95, roadType: 'highway', vehicle: 'truck', factors: Set(['trailer']) }
+```
+
+#### 2. Speed Limit Determination
+The system evaluates `speedLimitRules` in priority order to find the effective speed limit:
+
+```javascript
+// Find matching rules
+const matchingRules = speedLimitRules.filter(rule =>
+  this.evaluateConditions(rule.conditions)
+);
+
+// Sort by priority (lower number = higher priority)
+matchingRules.sort((a, b) => a.priority - b.priority);
+
+// Use first matching rule
+const speedLimit = matchingRules[0]?.limits?.default?.[roadType] || defaultSpeed;
+```
+
+**Example:** Truck with trailer on highway
+- Rule priority 1: "any_vehicle_trailer" matches → speed limit becomes 80 km/h
+- Rule priority 10: "highway_default" would set 130 km/h, but is ignored due to lower priority
+
+#### 3. Violation Assessment
+```javascript
+const percentageOver = Math.round(((speed / speedLimit) * 100) - 100);
+// Speed 95, limit 80 → percentageOver = 19%
+
+const status = percentageOver >= dangerThreshold ? 'danger' :
+               speed > speedLimit ? 'warning' : 'success';
+```
+
+#### 4. Penalty Range Selection
+Find the appropriate penalty range based on percentage over limit:
+
+```javascript
+const penaltyRange = penaltyRanges
+  .filter(range => percentageOver >= range.percentageOver)
+  .sort((a, b) => b.percentageOver - a.percentageOver)[0];
+// 19% over → uses range with percentageOver: 0 (first range)
+```
+
+#### 5. Rate Determination
+Evaluate `rateSelectionRules` to determine which rate column to use:
+
+```javascript
+const rate = rateSelectionRules
+  .find(rule => this.evaluateConditions(rule.conditions))?.result || 'rate1';
+// Truck with trailer → matches "rate3_vehicles" rule → uses rate3
+```
+
+#### 6. Base Fine Calculation
+```javascript
+let fine = penaltyRange[rate]; // e.g., penaltyRange.rate3 = 1800
+```
+
+#### 7. Additional Penalties
+Process `penaltyRules` for extra charges:
+
+```javascript
+penaltyRules.forEach(rule => {
+  if (this.evaluateConditions(rule.conditions)) {
+    if (rule.penalty) {
+      fine += rule.penalty; // Fixed amount
+    } else if (rule.formulaId) {
+      fine += this.executeFormula(rule.formulaId); // Complex calculation
+    }
+  }
+});
+```
+
+#### 8. Factor Multipliers
+Apply factor multipliers:
+
+```javascript
+factors.forEach(factorId => {
+  const factor = factors[factorId];
+  if (factor?.multiplier) {
+    fine *= factor.multiplier; // e.g., roadwork factor = 2.0x
+  }
+});
+```
+
+#### 9. Consequence Evaluation
+Determine legal consequences:
+
+```javascript
+const consequences = consequenceRules
+  .filter(rule => this.evaluateConditions(rule.conditions))
+  .map(rule => rule.consequence)
+  .sort((a, b) => consequenceTypes[b].severity - consequenceTypes[a].severity);
+
+const finalConsequence = consequences[0]; // Highest severity wins
+```
+
+#### 10. Final Result Assembly
+```javascript
+return {
+  fine: new Intl.NumberFormat(locale, { style: 'currency', currency }).format(fine),
+  description: penaltyRange.description + " - " + penaltyRange.consequence,
+  summary: penaltyRange.summary,
+  status: status // 'success', 'warning', or 'danger'
+};
+```
+
+### Smart UI Updates
+
+The calculator automatically updates the interface when conditions change:
+
+#### Factor Visibility
+```javascript
+// When vehicle changes from 'car' to 'bus'
+const visibleFactors = factors.filter(factor =>
+  !factor.visibleFor ||
+  factor.visibleFor.includes(vehicleId) ||
+  factor.visibleFor.includes(vehicleCategory)
+);
+// Trailer factor disappears, bus-specific factors appear
+```
+
+#### Speed Limit Adjustment
+```javascript
+// When adding a trailer factor
+const allowedSpeeds = this.getAllowedSpeedsForCurrentConditions();
+const isCurrentSpeedValid = allowedSpeeds.some(speed => speed.speed === currentSpeedLimit);
+
+if (!isCurrentSpeedValid) {
+  // Auto-select highest available speed for same road type
+  const bestSpeed = allowedSpeeds.reduce((highest, current) =>
+    current.speed > highest.speed ? current : highest
+  );
+  this.state.selectedSpeedLimit = bestSpeed.speed;
+}
+```
+
+### Real-World Example: Complete Calculation
+
+**Scenario:** Truck driver doing 115 km/h on highway with trailer in construction zone
+
+#### Step-by-Step Calculation:
+
+1. **Initial State:**
+   ```javascript
+   state = {
+     speed: 115,
+     roadType: 'highway',
+     vehicle: 'truck',
+     factors: Set(['trailer', 'roadwork'])
+   }
+   ```
+
+2. **Speed Limit (Priority 1 rule wins):**
+   ```javascript
+   // Rule: "any_vehicle_trailer"
+   // Condition: factors includes 'trailer' ✓
+   // Result: highway limit = 80 km/h
+   speedLimit = 80;
+   ```
+
+3. **Violation Assessment:**
+   ```javascript
+   percentageOver = Math.round(((115 / 80) * 100) - 100) = 44%
+   status = 44 >= 30 ? 'danger' : 'warning' = 'danger'
+   ```
+
+4. **Penalty Range:**
+   ```javascript
+   // 44% over matches range with percentageOver: 30
+   penaltyRange = {
+     percentageOver: 30,
+     rate1: 1800,
+     rate2: 2400,
+     rate3: 2400,
+     description: "Betydelig fartoverskridelse",
+     consequence: "Bøde + klip i kørekortet"
+   }
+   ```
+
+5. **Rate Selection:**
+   ```javascript
+   // Rule: "rate3_vehicles"
+   // Condition: vehicle.category = 'truck' OR factors includes 'trailer' ✓
+   // Result: rate3
+   rate = 'rate3';
+   baseFine = 2400;
+   ```
+
+6. **Additional Penalties:**
+   ```javascript
+   // No additional penalty rules triggered in this example
+   additionalPenalties = 0;
+   ```
+
+7. **Factor Multipliers:**
+   ```javascript
+   // Trailer: multiplier = 1.0 (no change)
+   // Roadwork: multiplier = 2.0 (double fine)
+   finalFine = (2400 + 0) * 1.0 * 2.0 = 4800;
+   ```
+
+8. **Final Result:**
+   ```javascript
+   {
+     fine: "4.800 kr.",
+     description: "Betydelig fartoverskridelse - Bøde + klip i kørekortet",
+     summary: "Betydelig overskridelse",
+     status: "danger"
+   }
+   ```
+
+### Configuration Best Practices
+
+#### Rule Priority Strategy
+- **Priority 1-5:** Vehicle-specific restrictions (trailers, commercial vehicles)
+- **Priority 6-9:** Special conditions (construction zones, school zones)
+- **Priority 10+:** Default road type rules
+
+#### Testing Strategy
+```javascript
+// Test matrix: Vehicle × Road Type × Factor combinations
+const testCases = [
+  { vehicle: 'car', roadType: 'highway', factors: [], expectedLimit: 130 },
+  { vehicle: 'car', roadType: 'highway', factors: ['trailer'], expectedLimit: 80 },
+  { vehicle: 'truck', roadType: 'highway', factors: [], expectedLimit: 90 },
+  { vehicle: 'truck', roadType: 'cityZone', factors: ['roadwork'], expectedMultiplier: 2.0 }
+];
+```
+
+#### Common Pitfalls
+1. **Conflicting Rules:** Lower priority rules override higher priority
+2. **Missing Default Speeds:** Always provide default speeds in speed limit rules
+3. **Factor Visibility:** Forgetting to restrict factors to appropriate vehicles
+4. **Rate Selection:** Not accounting for all vehicle/factor combinations
+
+This system provides tremendous flexibility while maintaining predictable, rule-based behavior that can be thoroughly tested and validated.
+
 ## Browser Support
 
 - **Modern Browsers:** Chrome 91+, Firefox 89+, Safari 14+, Edge 91+
