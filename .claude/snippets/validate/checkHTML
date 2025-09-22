@@ -144,7 +144,7 @@ echo -e "${BOLD}📈 HTML Statistics${NC}"
 echo -e "${CYAN}==================${NC}"
 
 # Count various HTML elements
-DOCTYPE_COUNT=$(grep -c "<!DOCTYPE" "$HTML_FILE" 2>/dev/null || echo 0)
+DOCTYPE_COUNT=$(grep -ci "<!doctype" "$HTML_FILE" 2>/dev/null || echo 0)
 HTML_TAG_COUNT=$(grep -o "<[^/][^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
 HEADING_COUNT=$(grep -o "<h[1-6][^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
 IMG_COUNT=$(grep -o "<img[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
