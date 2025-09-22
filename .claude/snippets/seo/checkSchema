@@ -1,0 +1,240 @@
+#!/bin/bash
+
+# Schema.org Markup Testing Script with Color Output
+# Usage: ./checkSchema domain.com
+
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+URL="$1"
+
+if [ -z "$URL" ]; then
+    echo -e "${RED}Usage: checkSchema domain.com${NC}"
+    exit 1
+fi
+
+# Add https:// if no protocol specified
+if [[ ! "$URL" =~ ^https?:// ]]; then
+    URL="https://$URL"
+fi
+
+# Test connectivity with fallbacks
+test_url() {
+    if curl -s --head --max-time 10 "$1" > /dev/null 2>&1; then
+        echo "$1"
+        return 0
+    fi
+    return 1
+}
+
+echo -e "${BOLD}${BLUE}📄 Schema.org Markup Analysis${NC}"
+echo -e "${CYAN}=================================================${NC}"
+
+# Test connectivity
+FINAL_URL=""
+if FINAL_URL=$(test_url "$URL"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL${NC}"
+elif [[ ! "$URL" =~ ^https://www\. ]] && FINAL_URL=$(test_url "https://www.${URL#https://}"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL ${ORANGE}(with www prefix)${NC}"
+else
+    echo -e "${RED}❌ Error: Cannot reach $URL or www variant${NC}"
+    exit 1
+fi
+
+echo ""
+
+# Function to check if command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Function to install extruct if needed
+install_extruct() {
+    echo -e "${ORANGE}⚠️  Installing extruct (required for schema extraction)...${NC}"
+    if command_exists pip3; then
+        pip3 install extruct --user --quiet
+    elif command_exists pip; then
+        pip install extruct --user --quiet
+    else
+        echo -e "${RED}❌ Error: pip/pip3 not found. Please install Python and pip first.${NC}"
+        echo -e "${CYAN}Install with: brew install python (on macOS)${NC}"
+        exit 1
+    fi
+}
+
+# Update PATH to include user site-packages
+export PATH="$PATH:$(python3 -m site --user-base)/bin"
+
+# Check if extruct is available, install if needed
+if ! command_exists extruct; then
+    install_extruct
+    if ! command_exists extruct; then
+        echo -e "${RED}❌ Error: extruct installation failed or not in PATH${NC}"
+        echo -e "${CYAN}Try running: export PATH=\"\$PATH:\$(python3 -m site --user-base)/bin\"${NC}"
+        exit 1
+    fi
+fi
+
+# Fetch and parse schema.org markup
+echo -e "${BOLD}Extracting Schema.org Markup...${NC}"
+TEMP_FILE=$(mktemp)
+HTML_FILE=$(mktemp)
+
+# Get the HTML content
+curl -s "$FINAL_URL" > "$HTML_FILE"
+
+# Try extruct first
+extruct "$FINAL_URL" > "$TEMP_FILE" 2>/dev/null
+
+# Initialize all counters to 0
+JSON_LD_COUNT=0
+MICRODATA_COUNT=0
+
+# Check if we got valid JSON from extruct
+if jq . "$TEMP_FILE" >/dev/null 2>&1; then
+    # Parse the extracted data from extruct
+    JSON_LD_COUNT=$(jq -r '.["json-ld"] | length' "$TEMP_FILE" 2>/dev/null || echo 0)
+    MICRODATA_COUNT=$(jq -r '.microdata | length' "$TEMP_FILE" 2>/dev/null || echo 0)
+else
+    # Fallback to manual parsing if extruct fails
+    echo -e "${ORANGE}⚠️  Extruct failed, using manual parsing...${NC}"
+fi
+
+# Ensure we have numeric values
+JSON_LD_COUNT=${JSON_LD_COUNT:-0}
+MICRODATA_COUNT=${MICRODATA_COUNT:-0}
+
+# Enhanced manual parsing for microdata with schema type detection
+if [ "$MICRODATA_COUNT" -eq 0 ] || [ -z "$MICRODATA_COUNT" ]; then
+    ITEMSCOPE_COUNT=$(grep -o "itemscope" "$HTML_FILE" | wc -l | tr -d ' ')
+    ITEMSCOPE_COUNT=${ITEMSCOPE_COUNT:-0}
+    if [ "$ITEMSCOPE_COUNT" -gt 0 ]; then
+        MICRODATA_COUNT=$ITEMSCOPE_COUNT
+        echo -e "${CYAN}   Found $MICRODATA_COUNT microdata items via manual parsing${NC}"
+
+        # Extract and analyze schema types from microdata
+        echo -e "${BOLD}${PURPLE}📋 Detailed Schema.org Types Found${NC}"
+        echo -e "${CYAN}====================================${NC}"
+
+        # Extract itemtype values and count them
+        grep -o 'itemtype="[^"]*schema.org/[^"]*"' "$HTML_FILE" | \
+        sed 's/itemtype=".*schema\.org\///; s/"//' | \
+        sort | uniq -c | sort -nr | while read count type; do
+            if [ -n "$type" ] && [ "$count" -gt 0 ]; then
+                echo -e "${GREEN}✅ $type${NC} - ${BOLD}$count${NC} items"
+            fi
+        done
+        echo ""
+    fi
+fi
+
+# Manual fallback parsing for JSON-LD
+if [ "$JSON_LD_COUNT" -eq 0 ]; then
+    JSONLD_SCRIPTS=$(grep -c "application/ld+json" "$HTML_FILE" 2>/dev/null | head -1 || echo 0)
+    JSONLD_SCRIPTS=$(echo "$JSONLD_SCRIPTS" | tr -cd '0-9')
+    JSONLD_SCRIPTS=${JSONLD_SCRIPTS:-0}
+    if [ "$JSONLD_SCRIPTS" -gt 0 ] 2>/dev/null; then
+        JSON_LD_COUNT=$JSONLD_SCRIPTS
+        echo -e "${CYAN}   Found $JSON_LD_COUNT JSON-LD scripts via manual parsing${NC}"
+    fi
+fi
+
+TOTAL_SCHEMA=$((JSON_LD_COUNT + MICRODATA_COUNT))
+
+echo ""
+echo -e "${BOLD}${PURPLE}📊 Schema.org Markup Summary${NC}"
+echo -e "${CYAN}================================${NC}"
+
+# Overall score
+if [ "$TOTAL_SCHEMA" -gt 0 ]; then
+    echo -e "${GREEN}✅ Schema.org markup found: $TOTAL_SCHEMA items${NC}"
+else
+    echo -e "${RED}❌ No Schema.org markup detected${NC}"
+fi
+
+echo ""
+
+# JSON-LD Analysis
+echo -e "${BOLD}🏷️  JSON-LD Structured Data${NC}"
+if [ "$JSON_LD_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}✅ Found $JSON_LD_COUNT JSON-LD object(s)${NC}"
+
+    # Extract and display schema types with counts
+    if jq . "$TEMP_FILE" >/dev/null 2>&1; then
+        SCHEMA_TYPES=$(jq -r '.["json-ld"][] | .["@type"] // empty' "$TEMP_FILE" 2>/dev/null | sort | uniq -c | sort -nr)
+        if [ -n "$SCHEMA_TYPES" ]; then
+            echo -e "${CYAN}   Schema Types:${NC}"
+            while read -r count type; do
+                if [ -n "$type" ] && [ "$count" -gt 0 ]; then
+                    echo -e "   ${BLUE}• $type${NC} - ${BOLD}$count${NC} items"
+                fi
+            done <<< "$SCHEMA_TYPES"
+        fi
+    fi
+else
+    echo -e "${ORANGE}⚠️  No JSON-LD markup found${NC}"
+fi
+
+echo ""
+
+# Microdata Analysis (detailed breakdown already shown above if found via manual parsing)
+echo -e "${BOLD}🏷️  Microdata Structured Data${NC}"
+if [ "$MICRODATA_COUNT" -gt 0 ]; then
+    echo -e "${GREEN}✅ Found $MICRODATA_COUNT Microdata item(s)${NC}"
+
+    # Only show extruct-parsed types if we didn't already show manual parsing results
+    if jq . "$TEMP_FILE" >/dev/null 2>&1; then
+        MICRODATA_TYPES=$(jq -r '.microdata[] | .type[]? // empty' "$TEMP_FILE" 2>/dev/null | sort | uniq -c | sort -nr)
+        if [ -n "$MICRODATA_TYPES" ]; then
+            echo -e "${CYAN}   Schema Types from extruct:${NC}"
+            while read -r count type; do
+                if [ -n "$type" ] && [ "$count" -gt 0 ]; then
+                    echo -e "   ${BLUE}• $type${NC} - ${BOLD}$count${NC} items"
+                fi
+            done <<< "$MICRODATA_TYPES"
+        fi
+    fi
+else
+    echo -e "${ORANGE}⚠️  No Microdata markup found${NC}"
+fi
+
+echo ""
+
+# Basic validation and recommendations
+echo -e "${BOLD}${PURPLE}💡 Recommendations${NC}"
+echo -e "${CYAN}==================${NC}"
+
+if [ "$TOTAL_SCHEMA" -eq 0 ]; then
+    echo -e "${RED}• Add Schema.org markup to improve SEO and rich snippets${NC}"
+    echo -e "${CYAN}• Consider JSON-LD for easy implementation${NC}"
+    echo -e "${CYAN}• Use Google's Structured Data Markup Helper${NC}"
+elif [ "$JSON_LD_COUNT" -eq 0 ]; then
+    echo -e "${ORANGE}• Consider adding JSON-LD markup (easiest to implement)${NC}"
+fi
+
+# Schema type recommendations
+if [ "$TOTAL_SCHEMA" -gt 0 ]; then
+    echo -e "${GREEN}• Schema markup detected - validate with official tools:${NC}"
+    echo -e "${CYAN}• Schema.org Validator: https://validator.schema.org/${NC}"
+    echo -e "${CYAN}• Google Rich Results Test: https://search.google.com/test/rich-results${NC}"
+fi
+
+echo ""
+
+# Raw data option (commented out by default)
+# Uncomment the following lines to see raw extracted data
+# echo -e "${BOLD}🔍 Raw Extracted Data (debug)${NC}"
+# echo -e "${CYAN}================================${NC}"
+# cat "$TEMP_FILE" | jq . 2>/dev/null || cat "$TEMP_FILE"
+
+# Cleanup
+rm -f "$TEMP_FILE" "$HTML_FILE"
+
+echo -e "${BOLD}${GREEN}✅ Schema.org analysis complete!${NC}"
