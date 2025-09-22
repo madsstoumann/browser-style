@@ -1,0 +1,248 @@
+#!/bin/bash
+
+# HTML Validation Script using Nu HTML Checker
+# Usage: ./checkHTML domain.com
+
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+URL="$1"
+
+if [ -z "$URL" ]; then
+    echo -e "${RED}Usage: checkHTML domain.com${NC}"
+    exit 1
+fi
+
+# Add https:// if no protocol specified
+if [[ ! "$URL" =~ ^https?:// ]]; then
+    URL="https://$URL"
+fi
+
+# Test connectivity with fallbacks
+test_url() {
+    if curl -s --head --max-time 10 "$1" > /dev/null 2>&1; then
+        echo "$1"
+        return 0
+    fi
+    return 1
+}
+
+echo -e "${BOLD}${BLUE}📝 HTML Validation Analysis${NC}"
+echo -e "${CYAN}=================================================${NC}"
+
+# Test connectivity
+FINAL_URL=""
+if FINAL_URL=$(test_url "$URL"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL${NC}"
+elif [[ ! "$URL" =~ ^https://www\. ]] && FINAL_URL=$(test_url "https://www.${URL#https://}"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL ${ORANGE}(with www prefix)${NC}"
+else
+    echo -e "${RED}❌ Error: Cannot reach $URL or www variant${NC}"
+    exit 1
+fi
+
+echo ""
+
+# Fetch HTML content and validate
+echo -e "${BOLD}Fetching and validating HTML...${NC}"
+HTML_FILE=$(mktemp)
+RESULT_FILE=$(mktemp)
+
+# Get the HTML content
+curl -s -L "$FINAL_URL" > "$HTML_FILE"
+
+# Try to validate with W3C Nu HTML Checker
+echo -e "${CYAN}Sending to W3C Nu HTML Checker...${NC}"
+VALIDATION_RESPONSE=$(curl -s -X POST \
+    -H "Content-Type: text/html; charset=UTF-8" \
+    -H "User-Agent: checkHTML/1.0" \
+    --max-time 30 \
+    --data-binary "@$HTML_FILE" \
+    "https://validator.w3.org/nu/?out=json" 2>/dev/null)
+
+echo "$VALIDATION_RESPONSE" > "$RESULT_FILE"
+
+# Check if we got a valid JSON response
+VALIDATOR_AVAILABLE=true
+if ! echo "$VALIDATION_RESPONSE" | jq . >/dev/null 2>&1; then
+    echo -e "${ORANGE}⚠️  Nu HTML Checker unavailable, running local analysis only${NC}"
+    VALIDATOR_AVAILABLE=false
+    TOTAL_MESSAGES=0
+    ERROR_COUNT=0
+    WARNING_COUNT=0
+fi
+
+# Parse validation results if validator is available
+if [ "$VALIDATOR_AVAILABLE" = true ]; then
+    TOTAL_MESSAGES=$(echo "$VALIDATION_RESPONSE" | jq -r '.messages | length')
+    ERROR_COUNT=$(echo "$VALIDATION_RESPONSE" | jq -r '[.messages[] | select(.type == "error")] | length')
+    WARNING_COUNT=$(echo "$VALIDATION_RESPONSE" | jq -r '[.messages[] | select(.type == "info" or .type == "warning")] | length')
+fi
+
+echo ""
+echo -e "${BOLD}${PURPLE}📊 HTML Validation Summary${NC}"
+echo -e "${CYAN}============================${NC}"
+
+if [ "$VALIDATOR_AVAILABLE" = false ]; then
+    echo -e "${ORANGE}⚠️  W3C validator unavailable - showing local analysis only${NC}"
+    echo -e "${CYAN}   Use https://validator.w3.org/nu/ for complete validation${NC}"
+elif [ "$TOTAL_MESSAGES" -eq 0 ]; then
+    echo -e "${GREEN}✅ Perfect! No HTML validation issues found${NC}"
+    echo -e "${CYAN}   Your HTML is valid according to W3C standards${NC}"
+elif [ "$ERROR_COUNT" -eq 0 ]; then
+    echo -e "${GREEN}✅ Valid HTML with $WARNING_COUNT warning(s)${NC}"
+    echo -e "${CYAN}   No errors found, only minor suggestions${NC}"
+else
+    echo -e "${RED}❌ HTML validation failed${NC}"
+    echo -e "${RED}   Errors: $ERROR_COUNT${NC}"
+    echo -e "${ORANGE}   Warnings: $WARNING_COUNT${NC}"
+fi
+
+echo ""
+
+# Show errors if any (only if validator was available)
+if [ "$VALIDATOR_AVAILABLE" = true ] && [ "$ERROR_COUNT" -gt 0 ]; then
+    echo -e "${BOLD}🚨 HTML Errors${NC}"
+    echo -e "${CYAN}==============${NC}"
+
+    echo "$VALIDATION_RESPONSE" | jq -r '.messages[] | select(.type == "error") |
+        "Line " + (.lastLine // .firstLine | tostring) +
+        (if .lastColumn then " Column " + (.lastColumn | tostring) else "" end) +
+        ": " + .message' | while IFS= read -r line; do
+        echo -e "${RED}❌ $line${NC}"
+    done
+    echo ""
+fi
+
+# Show warnings if any (only if validator was available)
+if [ "$VALIDATOR_AVAILABLE" = true ] && [ "$WARNING_COUNT" -gt 0 ]; then
+    echo -e "${BOLD}⚠️  HTML Warnings & Info${NC}"
+    echo -e "${CYAN}========================${NC}"
+
+    echo "$VALIDATION_RESPONSE" | jq -r '.messages[] | select(.type == "info" or .type == "warning") |
+        "Line " + (.lastLine // .firstLine | tostring) +
+        (if .lastColumn then " Column " + (.lastColumn | tostring) else "" end) +
+        ": " + .message' | head -10 | while IFS= read -r line; do
+        echo -e "${ORANGE}⚠️  $line${NC}"
+    done
+
+    if [ "$WARNING_COUNT" -gt 10 ]; then
+        echo -e "${CYAN}   ... and $((WARNING_COUNT - 10)) more warnings${NC}"
+    fi
+    echo ""
+fi
+
+# Basic HTML statistics
+echo -e "${BOLD}📈 HTML Statistics${NC}"
+echo -e "${CYAN}==================${NC}"
+
+# Count various HTML elements
+DOCTYPE_COUNT=$(grep -c "<!DOCTYPE" "$HTML_FILE" 2>/dev/null || echo 0)
+HTML_TAG_COUNT=$(grep -o "<[^/][^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+HEADING_COUNT=$(grep -o "<h[1-6][^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+IMG_COUNT=$(grep -o "<img[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+LINK_COUNT=$(grep -o "<a[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+SCRIPT_COUNT=$(grep -o "<script[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+STYLE_COUNT=$(grep -o "<style[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+
+echo -e "${CYAN}Document Type: ${NC}$([ "$DOCTYPE_COUNT" -gt 0 ] && echo "✅ HTML5 DOCTYPE found" || echo "❌ No DOCTYPE found")"
+echo -e "${CYAN}Total HTML tags: ${NC}$HTML_TAG_COUNT"
+echo -e "${CYAN}Headings (h1-h6): ${NC}$HEADING_COUNT"
+echo -e "${CYAN}Images: ${NC}$IMG_COUNT"
+echo -e "${CYAN}Links: ${NC}$LINK_COUNT"
+echo -e "${CYAN}Script tags: ${NC}$SCRIPT_COUNT"
+echo -e "${CYAN}Style tags: ${NC}$STYLE_COUNT"
+
+# Check for common issues
+echo ""
+echo -e "${BOLD}🔍 Common Issues Check${NC}"
+echo -e "${CYAN}======================${NC}"
+
+# Check for HTML5 semantic elements
+SEMANTIC_ELEMENTS=$(grep -o "<\(article\|section\|nav\|aside\|header\|footer\|main\)[^>]*>" "$HTML_FILE" | wc -l | tr -d ' ')
+if [ "$SEMANTIC_ELEMENTS" -gt 0 ]; then
+    echo -e "${GREEN}✅ HTML5 semantic elements found ($SEMANTIC_ELEMENTS)${NC}"
+else
+    echo -e "${ORANGE}⚠️  No HTML5 semantic elements detected${NC}"
+fi
+
+# Check for meta viewport
+if grep -q "name=\"viewport\"" "$HTML_FILE"; then
+    echo -e "${GREEN}✅ Viewport meta tag found${NC}"
+else
+    echo -e "${RED}❌ Missing viewport meta tag (mobile-unfriendly)${NC}"
+fi
+
+# Check for lang attribute
+if grep -q "<html[^>]*lang=" "$HTML_FILE"; then
+    LANG_ATTR=$(grep -o "<html[^>]*lang=\"[^\"]*\"" "$HTML_FILE" | sed 's/.*lang="\([^"]*\)".*/\1/')
+    echo -e "${GREEN}✅ Language attribute found: $LANG_ATTR${NC}"
+else
+    echo -e "${RED}❌ Missing lang attribute on html element${NC}"
+fi
+
+# Check for alt attributes on images
+IMG_WITHOUT_ALT=$(grep -o "<img[^>]*>" "$HTML_FILE" | grep -v "alt=" | wc -l | tr -d ' ')
+if [ "$IMG_COUNT" -gt 0 ]; then
+    if [ "$IMG_WITHOUT_ALT" -eq 0 ]; then
+        echo -e "${GREEN}✅ All images have alt attributes${NC}"
+    else
+        echo -e "${RED}❌ $IMG_WITHOUT_ALT images missing alt attributes${NC}"
+    fi
+fi
+
+# Check for inline styles
+INLINE_STYLES=$(grep -o "style=\"[^\"]*\"" "$HTML_FILE" | wc -l | tr -d ' ')
+INLINE_STYLES=${INLINE_STYLES:-0}
+if [ "$INLINE_STYLES" -gt 0 ] 2>/dev/null; then
+    echo -e "${ORANGE}⚠️  $INLINE_STYLES inline style attributes found${NC}"
+else
+    echo -e "${GREEN}✅ No inline styles detected${NC}"
+fi
+
+echo ""
+
+# Recommendations
+echo -e "${BOLD}${PURPLE}💡 Recommendations${NC}"
+echo -e "${CYAN}==================${NC}"
+
+if [ "$ERROR_COUNT" -gt 0 ]; then
+    echo -e "${RED}• Fix HTML validation errors before deployment${NC}"
+    echo -e "${CYAN}• Use W3C validator for detailed error analysis${NC}"
+fi
+
+if [ "$DOCTYPE_COUNT" -eq 0 ]; then
+    echo -e "${RED}• Add HTML5 DOCTYPE: <!DOCTYPE html>${NC}"
+fi
+
+if [ "$SEMANTIC_ELEMENTS" -eq 0 ]; then
+    echo -e "${ORANGE}• Consider using HTML5 semantic elements (header, nav, main, section, article, footer)${NC}"
+fi
+
+if [ "$IMG_WITHOUT_ALT" -gt 0 ]; then
+    echo -e "${RED}• Add alt attributes to all images for accessibility${NC}"
+fi
+
+if [ "$INLINE_STYLES" -gt 0 ] 2>/dev/null; then
+    echo -e "${ORANGE}• Move inline styles to external CSS files${NC}"
+fi
+
+if [ "$TOTAL_MESSAGES" -gt 0 ]; then
+    echo -e "${GREEN}• Validate your HTML with these tools:${NC}"
+    echo -e "${CYAN}• W3C HTML Validator: https://validator.w3.org/${NC}"
+    echo -e "${CYAN}• Nu HTML Checker: https://validator.nu/${NC}"
+fi
+
+echo ""
+
+# Cleanup
+rm -f "$HTML_FILE" "$RESULT_FILE"
+
+echo -e "${BOLD}${GREEN}✅ HTML validation complete!${NC}"
