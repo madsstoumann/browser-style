@@ -1,0 +1,205 @@
+#!/bin/bash
+
+# Enhanced Security Headers Testing Script with Color Output
+# Usage: ./checkHeaders domain.com
+
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+URL="$1"
+
+if [ -z "$URL" ]; then
+    echo -e "${RED}Usage: checkHeaders domain.com${NC}"
+    exit 1
+fi
+
+# Add https:// if no protocol specified
+if [[ ! "$URL" =~ ^https?:// ]]; then
+    URL="https://$URL"
+fi
+
+# Test connectivity with fallbacks
+test_url() {
+    if curl -s --head --max-time 10 "$1" > /dev/null 2>&1; then
+        echo "$1"
+        return 0
+    fi
+    return 1
+}
+
+echo -e "${BOLD}${BLUE}🔒 Security Headers Analysis${NC}"
+echo -e "${CYAN}=================================================${NC}"
+
+# Test connectivity
+FINAL_URL=""
+if FINAL_URL=$(test_url "$URL"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL${NC}"
+elif [[ ! "$URL" =~ ^https://www\. ]] && FINAL_URL=$(test_url "https://www.${URL#https://}"); then
+    echo -e "${GREEN}✅ Connected to: $FINAL_URL ${ORANGE}(with www prefix)${NC}"
+else
+    echo -e "${RED}❌ Error: Cannot reach $URL or www variant${NC}"
+    exit 1
+fi
+
+echo ""
+
+# Get headers (follow redirects to get final destination)
+HEADERS=$(curl -s -L -I "$FINAL_URL")
+
+# Extract only the final response (last HTTP response in the chain)
+FINAL_HEADERS=$(echo "$HEADERS" | awk 'BEGIN{RS=""} END{print}')
+HEADERS="$FINAL_HEADERS"
+
+# Security headers to check with descriptions
+declare -a SECURITY_HEADERS=(
+    "Strict-Transport-Security:HSTS - Forces HTTPS connections"
+    "Content-Security-Policy:CSP - Prevents XSS and injection attacks"
+    "X-Frame-Options:Frame Protection - Prevents clickjacking"
+    "X-Content-Type-Options:MIME Protection - Prevents MIME sniffing"
+    "Referrer-Policy:Referrer Control - Controls referrer information"
+    "Permissions-Policy:Feature Control - Controls browser features"
+    "X-XSS-Protection:XSS Protection - Legacy XSS filter"
+)
+
+echo -e "${BOLD}🛡️  Security Headers Status:${NC}"
+echo ""
+
+FOUND=0
+TOTAL=${#SECURITY_HEADERS[@]}
+
+# Check each header
+for item in "${SECURITY_HEADERS[@]}"; do
+    header="${item%%:*}"
+    description="${item#*:}"
+
+    if echo "$HEADERS" | grep -qi "^$header:"; then
+        value=$(echo "$HEADERS" | grep -i "^$header:" | cut -d' ' -f2- | tr -d '\r\n')
+        echo -e "${GREEN}✅ $header${NC}"
+        echo -e "   ${CYAN}$description${NC}"
+        echo -e "   ${NC}Value: $value${NC}"
+        FOUND=$((FOUND + 1))
+    else
+        echo -e "${RED}❌ $header${NC}"
+        echo -e "   ${RED}$description${NC}"
+        echo -e "   ${RED}Status: Missing - Security risk${NC}"
+    fi
+    echo ""
+done
+
+# Additional security checks
+echo -e "${BOLD}🔍 Additional Security Analysis:${NC}"
+echo ""
+
+# Check for sensitive headers that shouldn't be exposed
+SENSITIVE_HEADERS="Server X-Powered-By X-AspNet-Version X-AspNetMvc-Version"
+SENSITIVE_FOUND=0
+
+for header in $SENSITIVE_HEADERS; do
+    if echo "$HEADERS" | grep -qi "^$header:"; then
+        value=$(echo "$HEADERS" | grep -i "^$header:" | cut -d' ' -f2- | tr -d '\r\n')
+        echo -e "${ORANGE}⚠️  $header: $value${NC}"
+        echo -e "   ${ORANGE}Warning: Server information exposed${NC}"
+        SENSITIVE_FOUND=$((SENSITIVE_FOUND + 1))
+        echo ""
+    fi
+done
+
+if [ $SENSITIVE_FOUND -eq 0 ]; then
+    echo -e "${GREEN}✅ No sensitive server information exposed${NC}"
+    echo ""
+fi
+
+# Check HTTPS redirect
+if [[ "$FINAL_URL" == "https://"* ]]; then
+    HTTP_URL="${FINAL_URL/https:/http:}"
+    if curl -s --head --max-time 5 "$HTTP_URL" | grep -qi "location.*https"; then
+        echo -e "${GREEN}✅ HTTP to HTTPS redirect active${NC}"
+    else
+        echo -e "${ORANGE}⚠️  HTTP to HTTPS redirect not detected${NC}"
+    fi
+else
+    echo -e "${RED}❌ Site not using HTTPS${NC}"
+fi
+
+echo ""
+
+# Show all headers for comparison
+echo -e "${BOLD}📋 All Response Headers (for comparison):${NC}"
+echo -e "${CYAN}=================================================${NC}"
+echo "$HEADERS" | while IFS= read -r line; do
+    if [[ "$line" =~ ^HTTP/ ]]; then
+        echo -e "${BLUE}$line${NC}"
+    elif [[ "$line" =~ ^[A-Za-z-]+:.*$ ]]; then
+        header_name=$(echo "$line" | cut -d':' -f1)
+        header_value=$(echo "$line" | cut -d':' -f2- | sed 's/^ *//')
+        echo -e "${PURPLE}$header_name:${NC} $header_value"
+    fi
+done
+echo ""
+
+# Check if CSP was found and offer detailed analysis
+CSP_HEADER=$(echo "$HEADERS" | grep -i "content-security-policy:" | cut -d' ' -f2- | tr -d '\r\n')
+if [ -n "$CSP_HEADER" ]; then
+    echo -e "${BOLD}🛡️ Content Security Policy Detected${NC}"
+    echo -e "${CYAN}=================================================${NC}"
+    echo -e "${BLUE}✅ CSP found - run detailed analysis with: ${ORANGE}./checkCSP $1${NC}"
+    echo -e "${CYAN}=================================================${NC}"
+    echo ""
+fi
+
+# Security scoring
+echo -e "${BOLD}📊 Security Assessment:${NC}"
+echo -e "${CYAN}=================================================${NC}"
+echo -e "${BOLD}Security Headers Score: $FOUND/$TOTAL${NC}"
+
+if [ $FOUND -eq 0 ]; then
+    echo -e "${RED}🚨 CRITICAL: No security headers implemented${NC}"
+    echo -e "${RED}   Site is highly vulnerable to attacks${NC}"
+elif [ $FOUND -lt 3 ]; then
+    echo -e "${RED}❌ POOR: Critical security headers missing${NC}"
+    echo -e "${RED}   Immediate security improvements needed${NC}"
+elif [ $FOUND -lt 5 ]; then
+    echo -e "${ORANGE}⚠️  FAIR: Some important headers missing${NC}"
+    echo -e "${ORANGE}   Security could be improved${NC}"
+elif [ $FOUND -lt 7 ]; then
+    echo -e "${GREEN}✅ GOOD: Most security headers implemented${NC}"
+    echo -e "${GREEN}   Minor improvements possible${NC}"
+else
+    echo -e "${GREEN}🎉 EXCELLENT: All security headers implemented${NC}"
+    echo -e "${GREEN}   Strong security posture${NC}"
+fi
+
+echo ""
+
+# Recommendations
+if [ $FOUND -lt 7 ]; then
+    echo -e "${BOLD}💡 Recommendations:${NC}"
+    echo ""
+
+    if ! echo "$HEADERS" | grep -qi "strict-transport-security"; then
+        echo -e "${ORANGE}• Add HSTS header: Strict-Transport-Security: max-age=31536000; includeSubDomains${NC}"
+    fi
+
+    if ! echo "$HEADERS" | grep -qi "content-security-policy"; then
+        echo -e "${ORANGE}• Implement CSP: Content-Security-Policy: default-src 'self'${NC}"
+    fi
+
+    if ! echo "$HEADERS" | grep -qi "x-frame-options"; then
+        echo -e "${ORANGE}• Add frame protection: X-Frame-Options: DENY${NC}"
+    fi
+
+    if ! echo "$HEADERS" | grep -qi "x-content-type-options"; then
+        echo -e "${ORANGE}• Add MIME protection: X-Content-Type-Options: nosniff${NC}"
+    fi
+
+    echo ""
+fi
+
+echo -e "${CYAN}=================================================${NC}"
