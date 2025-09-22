@@ -88,7 +88,7 @@ TEMP_FILE=$(mktemp)
 HTML_FILE=$(mktemp)
 
 # Get the HTML content
-curl -s "$FINAL_URL" > "$HTML_FILE"
+curl -s -L "$FINAL_URL" > "$HTML_FILE"
 
 # Try extruct first
 extruct "$FINAL_URL" > "$TEMP_FILE" 2>/dev/null
@@ -165,6 +165,10 @@ echo ""
 echo -e "${BOLD}🏷️  JSON-LD Structured Data${NC}"
 if [ "$JSON_LD_COUNT" -gt 0 ]; then
     echo -e "${GREEN}✅ Found $JSON_LD_COUNT JSON-LD object(s)${NC}"
+
+    # Create clickable link to test the structured data
+    ENCODED_URL=$(printf "%s" "$FINAL_URL" | sed 's/:/%3A/g; s#/#%2F#g')
+    echo -e "${CYAN}🔗 Test JSON-LD: ${NC}\033]8;;https://search.google.com/test/rich-results?url=$ENCODED_URL\033\\https://search.google.com/test/rich-results?url=$ENCODED_URL\033]8;;\033\\"
 
     # Extract and display schema types with counts
     if jq . "$TEMP_FILE" >/dev/null 2>&1; then
