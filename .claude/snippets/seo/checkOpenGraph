@@ -53,7 +53,7 @@ echo ""
 # Fetch HTML content
 echo -e "${BOLD}Extracting Open Graph Metadata...${NC}"
 HTML_FILE=$(mktemp)
-curl -s "$FINAL_URL" > "$HTML_FILE"
+curl -s -L -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" "$FINAL_URL" > "$HTML_FILE"
 
 # Initialize counters
 OG_TAG_COUNT=0
@@ -61,9 +61,9 @@ TWITTER_TAG_COUNT=0
 REQUIRED_OG_COUNT=0
 OPTIONAL_OG_COUNT=0
 
-# Extract Open Graph tags
-OG_TAGS=$(grep -o '<meta[^>]*property="og:[^"]*"[^>]*>' "$HTML_FILE" 2>/dev/null || echo "")
-TWITTER_TAGS=$(grep -o '<meta[^>]*name="twitter:[^"]*"[^>]*>' "$HTML_FILE" 2>/dev/null || echo "")
+# Extract Open Graph tags (case insensitive, flexible attribute order)
+OG_TAGS=$(grep -i 'property.*og:' "$HTML_FILE" 2>/dev/null || echo "")
+TWITTER_TAGS=$(grep -i 'name.*twitter:' "$HTML_FILE" 2>/dev/null || echo "")
 
 if [ -n "$OG_TAGS" ]; then
     OG_TAG_COUNT=$(echo "$OG_TAGS" | wc -l | tr -d ' ')
@@ -76,15 +76,13 @@ fi
 # Function to extract Open Graph property value
 get_og_property() {
     local property="$1"
-    grep -o "<meta[^>]*property=\"$property\"[^>]*content=\"[^\"]*\"" "$HTML_FILE" | \
-    sed 's/.*content="\([^"]*\)".*/\1/' | head -1
+    grep -o "<meta[^>]*property=\"$property\"[^>]*content=\"[^\"]*\"[^>]*>" "$HTML_FILE" | sed 's/.*content="\([^"]*\)".*/\1/' | head -1
 }
 
 # Function to extract Twitter Card property value
 get_twitter_property() {
     local property="$1"
-    grep -o "<meta[^>]*name=\"$property\"[^>]*content=\"[^\"]*\"" "$HTML_FILE" | \
-    sed 's/.*content="\([^"]*\)".*/\1/' | head -1
+    grep -o "<meta[^>]*name=\"$property\"[^>]*content=\"[^\"]*\"[^>]*>" "$HTML_FILE" | sed 's/.*content="\([^"]*\)".*/\1/' | head -1
 }
 
 # Check required Open Graph properties
