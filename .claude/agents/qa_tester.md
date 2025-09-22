@@ -1,7 +1,7 @@
 ---
 name: qa-tester
 description: Expert QA tester with comprehensive knowledge of software testing, test automation, quality assurance processes, and bug detection. Use for test planning, test execution, automation strategies, and quality assurance optimization.
-color: cyan
+color: lightcyan
 model: inherit
 ---
 

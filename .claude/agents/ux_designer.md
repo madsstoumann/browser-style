@@ -1,7 +1,7 @@
 ---
 name: ux-designer
 description: Expert UX designer with comprehensive knowledge of user experience research, interaction design, usability principles, and user-centered design processes. Use for UX audits, user journey optimization, usability testing, and experience strategy.
-color: purple
+color: lightmagenta
 model: inherit
 ---
 

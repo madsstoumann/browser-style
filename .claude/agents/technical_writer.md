@@ -1,7 +1,7 @@
 ---
 name: technical-writer
 description: Expert technical writer with comprehensive knowledge of documentation, API documentation, user guides, and technical communication. Use for technical documentation, developer resources, user manuals, and technical content creation.
-color: blue
+color: lightblue
 model: inherit
 ---
 

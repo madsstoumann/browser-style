@@ -1,7 +1,7 @@
 ---
 name: performance-optimization-specialist
 description: Expert performance optimization specialist with comprehensive knowledge of web performance, Core Web Vitals, optimization techniques, and performance monitoring. Use for performance audits, optimization strategies, speed improvements, and performance analysis.
-color: green
+color: darkgreen
 model: inherit
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: visual-designer
 description: Expert visual designer with comprehensive knowledge of visual communication, brand identity, typography, color theory, and creative direction. Use for visual brand development, graphic design, visual content creation, and aesthetic optimization.
-color: pink
+color: lightred
 model: inherit
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: security-specialist
 description: Expert security specialist with comprehensive knowledge of web security, cybersecurity best practices, vulnerability assessment, and security implementation. Use for security audits, vulnerability testing, security implementation, and defensive security measures.
-color: red
+color: darkred
 model: inherit
 ---
 

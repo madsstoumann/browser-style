@@ -1,7 +1,7 @@
 ---
 name: ui-designer
 description: Expert UI designer with comprehensive knowledge of user interface design, visual hierarchy, component systems, and modern design principles. Use for UI design reviews, interface optimization, design system creation, and visual design guidance.
-color: magenta
+color: brightmagenta
 model: inherit
 ---
 
