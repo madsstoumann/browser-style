@@ -26,6 +26,7 @@
     "svelte_developer": "darkyellow",
     "technical_writer": "lightblue",
     "ui_designer": "brightmagenta",
+    "umbraco_developer": "darkcyan",
     "ux_designer": "lightmagenta",
     "visual_designer": "lightred",
     "vue_developer": "lightgreen"
@@ -37,7 +38,6 @@
     "brightred",
     "brightwhite",
     "darkblue",
-    "darkcyan",
     "darkgray",
     "darkgreen",
     "darkmagenta",
