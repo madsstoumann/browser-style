@@ -1,0 +1,16 @@
+{
+  "name": "Variables Extractor",
+  "id": "variables-extractor",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "capabilities": ["inspect"],
+  "enableProposedApi": false,
+  "editorType": [
+    "figma",
+    "dev"
+  ],
+  "networkAccess": {
+    "allowedDomains": ["none"]
+  }
+}

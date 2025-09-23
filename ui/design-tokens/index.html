@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Tokens</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<link rel="stylesheet" href="//browser.style/base.css">
+	<link rel="stylesheet" href="//browser.style/ui/accordion/ui-accordion.css">
+	<link rel="stylesheet" href="tokens.css" />
+</head>
+<body>
+	<header>
+		<h1>Design Tokens</h1>
+	</header>
+
+	<main id="app"></main>
+	<input type="file" id="file" accept=".json, .tokens">
+
+	<script type="module">
+		import { go, processFiles, renderTokens } from './index.js';
+		const app = document.getElementById('app');
+		const file = document.getElementById('file');
+
+		// const data = await go('./tokens.json','json',{});
+		// app.innerHTML = renderTokens(data.tokens);
+		file.addEventListener('change', (event) => processFiles(event, app));
+	</script>
+</body>
+</html>
