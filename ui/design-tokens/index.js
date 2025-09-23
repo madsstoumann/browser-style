@@ -49,9 +49,9 @@ export function renderTokens(obj, level = 1) {
 				</details>`;
 			} else {
 			return `
-				<li data-type="${value.$type}" data-key="${key}" style="--_v:${value.$value};">
-					${getTypeContent(value.$type)}
-					${dl([...(value.$description ? [['name', value.$description]] : []), ['key', key], ['value', value.$value], ['type', value.$type]])}
+				<li data-type="${value.render || value.$type}" data-key="${key}" style="--_v:${value.$value};">
+					${getTypeContent(value.render || value.$type)}
+					${dl([...(value.$description ? [['name', value.$description]] : []), ['key', key], ['value', value.$value], ['type', value.$type], ...(value.render ? [['render', value.render]] : [])])}
 				</li>`;
 			}
 		})
