@@ -1,10 +1,10 @@
-export async function go(u, t, o, s = null) {
+export async function go(u, t, o = {}) {
 	try {
-		const r = await fetch(u, { ...o, signal: s });
+		const r = await fetch(u, o);
 		if (!r.ok) throw new Error(`HTTP error:${r.status}`);
 		return t === "json" ? await r.json() : t === "text" ? await r.text() : r;
 	} catch (e) {
-		throw e.name === "AbortError" ? new Error("Timeout") : e;
+		throw e;
 	}
 }
 
@@ -51,7 +51,7 @@ export function renderTokens(obj, level = 1) {
 			return `
 				<li data-type="${value.$type}" data-key="${key}" style="--_v:${value.$value};">
 					${getTypeContent(value.$type)}
-					${dl([['key', key], ['prop', value.$property], ['value', value.$value], ['type', value.$type]])}
+					${dl([...(value.$description ? [['name', value.$description]] : []), ['key', key], ['value', value.$value], ['type', value.$type]])}
 				</li>`;
 			}
 		})
