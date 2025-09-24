@@ -1,6 +1,6 @@
 {
-  "name": "Variables Extractor",
-  "id": "variables-extractor",
+  "name": "W3C Token Exporter (v2)",
+  "id": "variables-extractor-v2",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui.html",

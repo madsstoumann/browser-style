@@ -9,30 +9,22 @@
       margin: 0;
       padding: 16px;
       background-color: #f5f5f5;
-    }
-
-    .header {
-      margin-bottom: 16px;
-    }
-
-    .header h2 {
-      margin: 0 0 8px 0;
-      color: #333;
-    }
-
-    .controls {
-      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
     button {
       background-color: #18a0fb;
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 12px 24px;
       border-radius: 4px;
       cursor: pointer;
-      margin-right: 8px;
-      font-size: 12px;
+      font-size: 14px;
+      margin-bottom: 12px;
     }
 
     button:hover {
@@ -48,389 +40,55 @@
       background-color: #bbb;
     }
 
-    .content {
-      background-color: white;
-      border-radius: 4px;
-      padding: 12px;
-      max-height: 400px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-    }
-
-    .collection {
-      margin-bottom: 16px;
-      padding: 12px;
-      background-color: #f8f9fa;
-      border-radius: 4px;
-      border-left: 4px solid #18a0fb;
-    }
-
-    .collection-name {
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 8px;
-    }
-
-    .variable {
-      margin: 8px 0;
-      padding: 8px;
-      background-color: white;
-      border-radius: 3px;
-      border: 1px solid #eee;
-    }
-
-    .variable-name {
-      font-weight: 500;
-      color: #18a0fb;
-      margin-bottom: 4px;
-    }
-
-    .variable-details {
-      font-size: 11px;
+    .status {
       color: #666;
-    }
-
-    .variable-values {
-      margin-top: 4px;
-      font-size: 11px;
-    }
-
-    .mode-value {
-      background-color: #f0f0f0;
-      padding: 2px 6px;
-      border-radius: 2px;
-      margin: 2px 4px 2px 0;
-      display: inline-block;
-    }
-
-    .error {
-      color: #d73a49;
-      background-color: #ffeaea;
-      padding: 12px;
-      border-radius: 4px;
-      border: 1px solid #f1b9b9;
-    }
-
-    .empty {
-      text-align: center;
-      color: #666;
-      font-style: italic;
-      padding: 40px;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h2>Variables Extractor</h2>
-    <p style="margin: 0; color: #666; font-size: 12px;">Extract all variables from your Figma file</p>
-  </div>
-
-  <div class="controls">
-    <button onclick="refreshVariables()">Refresh Variables</button>
-    <button onclick="exportVariables()" class="secondary">Export JSON</button>
-    <button onclick="exportW3CTokens()" class="secondary">Export W3C Tokens</button>
-    <button onclick="closePlugin()" class="secondary">Close</button>
-  </div>
-
-  <div class="content" id="content">
-    <div class="empty">Loading variables...</div>
-  </div>
+  <button onclick="exportW3CTokens()">Export W3C Tokens</button>
+  <button onclick="closePlugin()" class="secondary">Close</button>
+  <div id="status" class="status">Ready to export.</div>
 
   <script>
-    let currentData = null;
+    let figmaData = null;
 
-    function refreshVariables() {
-      document.getElementById('content').innerHTML = '<div class="empty">Loading variables...</div>';
-      parent.postMessage({ pluginMessage: { type: 'get-variables' } }, '*');
-    }
-
-    function exportVariables() {
-      if (!currentData) {
-        alert('No variables data to export');
-        return;
+    window.onmessage = (event) => {
+      const { type, data } = event.data.pluginMessage;
+      if (type === 'variables-data') {
+        figmaData = data;
+        document.getElementById('status').textContent = 'Variable data loaded. Ready to export.';
       }
-
-      const dataStr = JSON.stringify(currentData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'figma-variables.json';
-      link.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function convertToW3CTokens(figmaData) {
-      if (!figmaData || !figmaData.collections || !figmaData.variables) {
-        return null;
+      if (type === 'export-ready') {
+          const dataStr = JSON.stringify(data, null, 2);
+          const dataBlob = new Blob([dataStr], { type: 'application/json' });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'design-tokens.json';
+          link.click();
+          URL.revokeObjectURL(url);
+          document.getElementById('status').textContent = 'Done! File exported successfully.';
       }
-
-      const w3cTokens = {
-        name: "Figma Design System",
-        version: "1.0.0",
-        description: "Design tokens extracted from Figma",
-        tokens: {}
-      };
-
-      // Group variables by type
-      const variablesByType = {};
-
-      figmaData.variables.forEach(variable => {
-        const type = mapFigmaTypeToW3C(variable.type, variable);
-        if (!variablesByType[type]) {
-          variablesByType[type] = [];
-        }
-        variablesByType[type].push(variable);
-      });
-
-      // Convert each type group
-      Object.entries(variablesByType).forEach(([type, variables]) => {
-        w3cTokens.tokens[type] = {};
-
-        variables.forEach(variable => {
-          const collection = figmaData.collections.find(c => c.id === variable.variableCollectionId);
-          const collectionName = collection ? collection.name.toLowerCase().replace(/\s+/g, '-') : 'default';
-
-          if (!w3cTokens.tokens[type][collectionName]) {
-            w3cTokens.tokens[type][collectionName] = {};
-          }
-
-          const tokenName = variable.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-
-          // Get the default mode value
-          const defaultModeId = collection ? collection.defaultModeId : Object.keys(variable.valuesByMode)[0];
-          const value = variable.valuesByMode[defaultModeId];
-
-          w3cTokens.tokens[type][collectionName][tokenName] = {
-            $type: type,
-            $value: formatW3CValue(value, type, variable)
-          };
-
-          if (variable.description) {
-            w3cTokens.tokens[type][collectionName][tokenName].description = variable.description;
-          }
-
-          // Add mode variations if multiple modes exist
-          if (Object.keys(variable.valuesByMode).length > 1) {
-            Object.entries(variable.valuesByMode).forEach(([modeId, modeValue]) => {
-              const mode = collection?.modes.find(m => m.modeId === modeId);
-              if (mode && modeId !== defaultModeId) {
-                const modeName = mode.name.toLowerCase().replace(/\s+/g, '-');
-                const modeTokenName = `${tokenName}-${modeName}`;
-
-                w3cTokens.tokens[type][collectionName][modeTokenName] = {
-                  $type: type,
-                  $value: formatW3CValue(modeValue, type, variable)
-                };
-              }
-            });
-          }
-        });
-      });
-
-      return w3cTokens;
-    }
-
-    function mapFigmaTypeToW3C(figmaType, variable) {
-      const typeMap = {
-        'COLOR': 'color',
-        'FLOAT': getDimensionOrNumber(variable),
-        'STRING': 'string',
-        'BOOLEAN': 'boolean'
-      };
-      return typeMap[figmaType] || 'string';
-    }
-
-    function getDimensionOrNumber(variable) {
-      if (!variable) return 'number';
-
-      const scopes = variable.scopes || [];
-      const name = variable.name.toLowerCase();
-
-      // These are typically dimensions (with units)
-      if (scopes.includes('CORNER_RADIUS') || scopes.includes('GAP') ||
-          scopes.includes('WIDTH_HEIGHT') || scopes.includes('STROKE_WIDTH') ||
-          name.includes('radius') || name.includes('spacing') || name.includes('size') ||
-          name.includes('width') || name.includes('height') || name.includes('margin') ||
-          name.includes('padding') || name.includes('border')) {
-        return 'dimension';
-      }
-
-      // These are typically unitless numbers
-      if (name.includes('opacity') || name.includes('scale') || name.includes('ratio') ||
-          name.includes('weight') || name.includes('index')) {
-        return 'number';
-      }
-
-      // Default to dimension for most design values
-      return 'dimension';
-    }
-
-    function formatW3CValue(value, type, variable) {
-      if (typeof value === 'object' && value !== null) {
-        if (value.type === 'VARIABLE_ALIAS') {
-          return `{${value.id}}`;
-        }
-        if (type === 'color' && value.r !== undefined) {
-          // Convert RGBA to hex
-          const r = Math.round(value.r * 255);
-          const g = Math.round(value.g * 255);
-          const b = Math.round(value.b * 255);
-          return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-        }
-        return JSON.stringify(value);
-      }
-
-      // Handle dimension values (with units)
-      if (type === 'dimension' && typeof value === 'number') {
-        const unit = inferUnit(variable);
-        return `${value}${unit}`;
-      }
-
-      // Handle pure numbers (unitless)
-      if (type === 'number' && typeof value === 'number') {
-        return value;
-      }
-
-      return value;
-    }
-
-    function inferUnit(variable) {
-      if (!variable) return '';
-
-      const name = variable.name.toLowerCase();
-      const scopes = variable.scopes || [];
-
-      // Check scopes first (more reliable)
-      if (scopes.includes('CORNER_RADIUS') || scopes.includes('GAP') ||
-          scopes.includes('WIDTH_HEIGHT') || scopes.includes('STROKE_WIDTH')) {
-        return 'px';
-      }
-
-      // Check variable name for common patterns
-      if (name.includes('radius') || name.includes('border') || name.includes('gap') ||
-          name.includes('spacing') || name.includes('size') || name.includes('width') ||
-          name.includes('height') || name.includes('margin') || name.includes('padding')) {
-        return 'px';
-      }
-
-      if (name.includes('duration') || name.includes('delay')) {
-        return 'ms';
-      }
-
-      if (name.includes('opacity') || name.includes('scale') || name.includes('ratio')) {
-        return ''; // unitless
-      }
-
-      // Default to px for most numeric design values
-      return 'px';
-    }
+    };
 
     function exportW3CTokens() {
-      if (!currentData) {
-        alert('No variables data to export');
+      if (!figmaData) {
+        document.getElementById('status').textContent = 'Variable data not loaded yet. Please wait.';
         return;
       }
-
-      const w3cTokens = convertToW3CTokens(currentData);
-      if (!w3cTokens) {
-        alert('Failed to convert to W3C format');
-        return;
-      }
-
-      const dataStr = JSON.stringify(w3cTokens, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'design-tokens-w3c.json';
-      link.click();
-      URL.revokeObjectURL(url);
+      document.getElementById('status').textContent = 'Exporting...';
+      parent.postMessage({ pluginMessage: { type: 'export-w3c-tokens', data: figmaData } }, '*');
     }
 
     function closePlugin() {
       parent.postMessage({ pluginMessage: { type: 'close-plugin' } }, '*');
     }
 
-    function formatValue(value) {
-      if (typeof value === 'object' && value !== null) {
-        if (value.type === 'VARIABLE_ALIAS') {
-          return `Alias: ${value.id}`;
-        }
-        return JSON.stringify(value);
-      }
-      return String(value);
-    }
-
-    function renderVariables(data) {
-      const content = document.getElementById('content');
-
-      if (data.error) {
-        content.innerHTML = `<div class="error">Error: ${data.error}</div>`;
-        return;
-      }
-
-      if (!data.collections || data.collections.length === 0) {
-        content.innerHTML = '<div class="empty">No variable collections found in this file</div>';
-        return;
-      }
-
-      let html = '';
-
-      data.collections.forEach(collection => {
-        const collectionVariables = data.variables.filter(v => v.variableCollectionId === collection.id);
-
-        html += `
-          <div class="collection">
-            <div class="collection-name">${collection.name}</div>
-            <div class="variable-details">
-              Collection ID: ${collection.id}<br>
-              Modes: ${collection.modes.map(m => m.name).join(', ')}<br>
-              Variables: ${collectionVariables.length}
-            </div>
-        `;
-
-        collectionVariables.forEach(variable => {
-          html += `
-            <div class="variable">
-              <div class="variable-name">${variable.name}</div>
-              <div class="variable-details">
-                Type: ${variable.type} | Scopes: ${variable.scopes.join(', ')}
-                ${variable.description ? `<br>Description: ${variable.description}` : ''}
-              </div>
-              <div class="variable-values">
-          `;
-
-          Object.entries(variable.valuesByMode).forEach(([modeId, value]) => {
-            const mode = collection.modes.find(m => m.modeId === modeId);
-            const modeName = mode ? mode.name : modeId;
-            html += `<span class="mode-value">${modeName}: ${formatValue(value)}</span>`;
-          });
-
-          html += '</div></div>';
-        });
-
-        html += '</div>';
-      });
-
-      content.innerHTML = html;
-    }
-
-    // Listen for messages from the plugin
-    window.onmessage = (event) => {
-      console.log('Received message:', event.data);
-      const { type, data } = event.data.pluginMessage;
-
-      if (type === 'variables-data') {
-        currentData = data;
-        renderVariables(data);
-      }
-    };
-
-    // Request variables immediately when UI loads
     window.addEventListener('load', () => {
-      console.log('UI loaded, sending ready signal...');
-      parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
+      document.getElementById('status').textContent = 'Loading variables...';
+      parent.postMessage({ pluginMessage: { type: 'get-variables' } }, '*');
     });
   </script>
 </body>
