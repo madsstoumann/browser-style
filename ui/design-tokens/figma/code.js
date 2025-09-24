@@ -120,6 +120,12 @@ function convertToW3C(figmaData) {
           var tokenObj = {
             $value: formatRawValue(value, variable.type),
             $type: mapFigmaTypeToW3C(variable.type),
+            $extensions: {
+              figma: {
+                variableId: variable.id,
+                collectionId: variable.variableCollectionId
+              }
+            }
           };
           if (variable.description) {
             tokenObj.$description = variable.description;
@@ -143,7 +149,13 @@ function convertToW3C(figmaData) {
       if (i === path.length - 1) {
         var tokenData = {
           $type: mapFigmaTypeToW3C(variable.type),
-          $extensions: { mode: {} }
+          $extensions: {
+            mode: {},
+            figma: {
+              variableId: variable.id,
+              collectionId: variable.variableCollectionId
+            }
+          }
         };
 
         if (variable.description) {
