@@ -5,157 +5,373 @@
         "gray": {
           "50": {
             "$value": "#f1f1f1",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3067",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "200": {
             "$value": "#d3d3d3",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3068",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "400": {
-            "$value": "#afafaf",
-            "$type": "color"
+            "$value": "#afaf00",
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3069",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "600": {
             "$value": "#7c7c7c",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3070",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "800": {
             "$value": "#343434",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3071",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "900": {
             "$value": "#202020",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3072",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         },
         "brand": {
           "watermelon": {
             "$value": "#7db8a9",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3073",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "cherry": {
             "$value": "#ff9eab",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3074",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "pear": {
             "$value": "#def358",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3075",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "mushroom": {
             "$value": "#f1d367",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3076",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "radish": {
             "$value": "#ffcbb7",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3077",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         }
       },
       "border-radius": {
         "sm": {
           "$value": 4,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:10",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "md": {
           "$value": 8,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:11",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "lg": {
           "$value": 16,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:12",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "xl": {
           "$value": 32,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:13",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "2xl": {
           "$value": 128,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:14",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "3xl": {
           "$value": 360,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:15",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         }
       },
       "spacing": {
         "1": {
           "$value": 8,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:17",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "2": {
           "$value": 16,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:18",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "3": {
           "$value": 24,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:19",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "4": {
           "$value": 32,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:20",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "5": {
           "$value": 40,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:21",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "6": {
           "$value": 48,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:22",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "7": {
           "$value": 56,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:23",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "8": {
           "$value": 64,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:24",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "9": {
           "$value": 72,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:25",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "10": {
           "$value": 80,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:26",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "11": {
           "$value": 88,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:27",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "12": {
           "$value": 96,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:28",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "13": {
           "$value": 104,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:29",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "half": {
           "$value": 4,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:16",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         }
       },
       "animation": {
         "duration": {
           "animdur-fast": {
             "$value": "100ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:10",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-immediate": {
             "$value": "200ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:11",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-normal": {
             "$value": "300ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:12",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-deliberate": {
             "$value": "400ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:13",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-slow": {
             "$value": "700ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:14",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         }
       },
@@ -163,16 +379,185 @@
         "family": {
           "ff-system-ui": {
             "$value": "system-ui, sans-serif",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:15",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            },
+            "$description": "System UI Font: SF Sans on Mac, Segoe UI on Windows"
           },
           "ff-serif": {
             "$value": "Georgia, Cambria, 'Times New Roman', Times, serif",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:16",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "ff-mono": {
             "$value": "Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:17",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
+        }
+      },
+      "aspect-ratio": {
+        "ar-square": {
+          "$value": "1/1",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:11",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "ar-portrait": {
+          "$value": "3/4",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:12",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "ar-landscape": {
+          "$value": "4/3",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:13",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "ar-panorama": {
+          "$value": "16/9",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:14",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "ar-wide": {
+          "$value": "21/9",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:15",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "ar-ultrawide": {
+          "$value": "32/9",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:16",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        }
+      },
+      "box-shadow": {
+        "bxsh-xs": {
+          "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:17",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "bxsh-sm": {
+          "$value": "0 2px 4px 0 rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:18",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "bxsh-md": {
+          "$value": "0 4px 8px 0 rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:19",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "bxsh-lg": {
+          "$value": "0 8px 16px 0 rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:20",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "bxsh-xl": {
+          "$value": "0 16px 32px 0 rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:21",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
+        },
+        "inset": {
+          "bxshi-xs": {
+            "$value": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1419:22",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
+          }
+        }
+      },
+      "text-shadow": {
+        "txsh-xs": {
+          "$value": "0 1px 2px rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:23",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          },
+          "$description": "Extra small text-shadow"
+        },
+        "txsh-sm": {
+          "$value": "0 2px 4px rgba(0, 0, 0, 0.05)",
+          "$type": "string",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:1419:24",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          },
+          "$description": "Small text-shadow"
         }
       }
     },
@@ -181,157 +566,373 @@
         "gray": {
           "50": {
             "$value": "#eedeff",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3067",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "200": {
             "$value": "#cfa0ff",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3068",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "400": {
             "$value": "#b874ff",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3069",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "600": {
             "$value": "#bc7cff",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3070",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "800": {
             "$value": "#a854ff",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3071",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "900": {
             "$value": "#33057e",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3072",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         },
         "brand": {
           "watermelon": {
             "$value": "#ffbe16",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3073",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "cherry": {
             "$value": "#ffbe16",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3074",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "pear": {
             "$value": "#ffbe16",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3075",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "mushroom": {
             "$value": "#ffbe16",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3076",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "radish": {
             "$value": "#ffbe16",
-            "$type": "color"
+            "$type": "color",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1:3077",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         }
       },
       "border-radius": {
         "sm": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:10",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "md": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:11",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "lg": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:12",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "xl": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:13",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "2xl": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:14",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "3xl": {
           "$value": 0,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:15",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         }
       },
       "spacing": {
         "1": {
           "$value": 8,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:17",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "2": {
           "$value": 16,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:18",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "3": {
           "$value": 24,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:19",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "4": {
           "$value": 32,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:20",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "5": {
           "$value": 40,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:21",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "6": {
           "$value": 48,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:22",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "7": {
           "$value": 56,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:23",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "8": {
           "$value": 64,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:24",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "9": {
           "$value": 72,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:25",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "10": {
           "$value": 80,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:26",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "11": {
           "$value": 88,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:27",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "12": {
           "$value": 96,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:28",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "13": {
           "$value": 104,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:29",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         },
         "half": {
           "$value": 4,
-          "$type": "number"
+          "$type": "number",
+          "$extensions": {
+            "figma": {
+              "variableId": "VariableID:164:16",
+              "collectionId": "VariableCollectionId:1:3047"
+            }
+          }
         }
       },
       "animation": {
         "duration": {
           "animdur-fast": {
             "$value": "100ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:10",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-immediate": {
             "$value": "200ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:11",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-normal": {
             "$value": "300ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:12",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-deliberate": {
             "$value": "400ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:13",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "animdur-slow": {
             "$value": "700ms",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:14",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         }
       },
@@ -339,15 +940,34 @@
         "family": {
           "ff-system-ui": {
             "$value": "system-ui, sans-serif",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:15",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            },
+            "$description": "System UI Font: SF Sans on Mac, Segoe UI on Windows"
           },
           "ff-serif": {
             "$value": "Georgia, Cambria, 'Times New Roman', Times, serif",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:16",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           },
           "ff-mono": {
             "$value": "Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-            "$type": "string"
+            "$type": "string",
+            "$extensions": {
+              "figma": {
+                "variableId": "VariableID:1402:17",
+                "collectionId": "VariableCollectionId:1:3047"
+              }
+            }
           }
         }
       }
@@ -361,6 +981,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.50}",
             "dark": "{themes.default_theme.color.gray.900}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3190",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.50}"
@@ -371,6 +995,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.900}",
             "dark": "{themes.default_theme.color.gray.50}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3191",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.900}"
@@ -381,6 +1009,10 @@
           "mode": {
             "light": "{themes.default_theme.color.brand.watermelon}",
             "dark": "{themes.default_theme.color.brand.watermelon}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3192",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.brand.watermelon}"
@@ -391,6 +1023,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.800}",
             "dark": "{themes.default_theme.color.gray.400}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3194",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.800}"
@@ -403,6 +1039,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.half}",
             "dark": "{themes.default_theme.spacing.half}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3193",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.half}"
@@ -413,6 +1053,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.1}",
             "dark": "{themes.default_theme.spacing.1}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3195",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.1}"
@@ -423,6 +1067,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.3}",
             "dark": "{themes.default_theme.spacing.3}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3196",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.3}"
@@ -433,6 +1081,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.4}",
             "dark": "{themes.default_theme.spacing.4}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3197",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.4}"
@@ -443,6 +1095,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.13}",
             "dark": "{themes.default_theme.spacing.13}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3198",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.13}"
@@ -453,6 +1109,10 @@
           "mode": {
             "light": "{themes.default_theme.spacing.6}",
             "dark": "{themes.default_theme.spacing.6}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3199",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.spacing.6}"
@@ -463,6 +1123,10 @@
           "mode": {
             "light": 0,
             "dark": 0
+          },
+          "figma": {
+            "variableId": "VariableID:1:3246",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": 0
@@ -475,6 +1139,10 @@
           "mode": {
             "light": "{themes.default_theme.border-radius.md}",
             "dark": "{themes.default_theme.border-radius.md}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3239",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.border-radius.md}"
@@ -485,6 +1153,10 @@
           "mode": {
             "light": "{themes.default_theme.border-radius.3xl}",
             "dark": "{themes.default_theme.border-radius.3xl}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3240",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.border-radius.3xl}"
@@ -495,6 +1167,10 @@
           "mode": {
             "light": "{themes.default_theme.border-radius.sm}",
             "dark": "{themes.default_theme.border-radius.sm}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3241",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.border-radius.sm}"
@@ -507,6 +1183,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.900}",
             "dark": "{themes.default_theme.color.gray.50}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3485",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.900}"
@@ -517,6 +1197,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.900}",
             "dark": "{themes.default_theme.color.gray.900}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3486",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.900}"
@@ -527,6 +1211,10 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.50}",
             "dark": "{themes.default_theme.color.gray.900}"
+          },
+          "figma": {
+            "variableId": "VariableID:1:3487",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.50}"
@@ -537,75 +1225,29 @@
           "mode": {
             "light": "{themes.default_theme.color.gray.600}",
             "dark": "{themes.default_theme.color.gray.200}"
+          },
+          "figma": {
+            "variableId": "VariableID:39:17",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.600}"
       }
     },
-    "border": {
+    "border-color": {
       "border-primary": {
         "$type": "color",
         "$extensions": {
           "mode": {
             "light": "{themes.default_theme.color.gray.900}",
             "dark": "{themes.default_theme.color.gray.50}"
+          },
+          "figma": {
+            "variableId": "VariableID:11:419",
+            "collectionId": "VariableCollectionId:1:3046"
           }
         },
         "$value": "{themes.default_theme.color.gray.900}"
-      }
-    },
-    "box-shadow": {
-      "bxsh-xs": {
-        "$type": "string",
-        "$extensions": {
-          "mode": {
-            "light": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
-            "dark": "0 1px 2px 0 rgba(240, 240, 240, .05)"
-          }
-        },
-        "$value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
-      },
-      "bxsh-lg": {
-        "$type": "string",
-        "$extensions": {
-          "mode": {
-            "light": "0 8px 16px 0 rgba(0, 0, 0, 0.05)",
-            "dark": "0 8px 16px 0 rgba(240, 240, 240, 0.05)"
-          }
-        },
-        "$value": "0 8px 16px 0 rgba(0, 0, 0, 0.05)"
-      }
-    },
-    "aspect-ratio": {
-      "ar-square": {
-        "$type": "string",
-        "$extensions": {
-          "mode": {
-            "light": "1/1",
-            "dark": "1/1"
-          }
-        },
-        "$value": "1/1"
-      },
-      "ar-portrait": {
-        "$type": "string",
-        "$extensions": {
-          "mode": {
-            "light": "3/4",
-            "dark": "3/4"
-          }
-        },
-        "$value": "3/4"
-      },
-      "ar-panorama": {
-        "$type": "string",
-        "$extensions": {
-          "mode": {
-            "light": "16/9",
-            "dark": "16/9"
-          }
-        },
-        "$value": "16/9"
       }
     }
   }

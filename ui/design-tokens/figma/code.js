@@ -74,6 +74,32 @@ function mapFigmaTypeToW3C(figmaType) {
   return typeMap[figmaType] || 'string';
 }
 
+function convertToFigmaValue(w3cValue, figmaType) {
+  if (figmaType === 'COLOR' && typeof w3cValue === 'string' && w3cValue.startsWith('#')) {
+    // Convert hex color to Figma RGB format
+    var hex = w3cValue.replace('#', '');
+    var r, g, b, a = 1;
+
+    if (hex.length === 6) {
+      r = parseInt(hex.substr(0, 2), 16) / 255;
+      g = parseInt(hex.substr(2, 2), 16) / 255;
+      b = parseInt(hex.substr(4, 2), 16) / 255;
+    } else if (hex.length === 8) {
+      r = parseInt(hex.substr(0, 2), 16) / 255;
+      g = parseInt(hex.substr(2, 2), 16) / 255;
+      b = parseInt(hex.substr(4, 2), 16) / 255;
+      a = parseInt(hex.substr(6, 2), 16) / 255;
+    } else {
+      throw new Error('Invalid hex color format: ' + w3cValue);
+    }
+
+    return { r: r, g: g, b: b, a: a };
+  }
+
+  // For other types, return as-is
+  return w3cValue;
+}
+
 figma.ui.onmessage = async function (msg) {
   if (msg.type === 'get-variables') {
     var variables = await getAllVariables();
@@ -83,6 +109,8 @@ figma.ui.onmessage = async function (msg) {
   } else if (msg.type === 'export-w3c-tokens') {
     var w3cTokens = convertToW3C(msg.data);
     figma.ui.postMessage({ type: 'export-ready', data: w3cTokens });
+  } else if (msg.type === 'import-w3c-tokens') {
+    await importW3CTokens(msg.data);
   } else if (msg.type === 'close-plugin') {
     figma.closePlugin();
   }
@@ -190,5 +218,162 @@ function convertToW3C(figmaData) {
 
   console.log('Conversion complete.');
   return w3cJson;
+}
+
+async function importW3CTokens(w3cData) {
+  console.log('Starting W3C Token Import...');
+
+  try {
+    var currentVariables = await getAllVariables();
+    if (!currentVariables) {
+      console.error('Could not fetch current variables');
+      figma.notify('Error: Could not fetch current variables', { error: true });
+      return;
+    }
+
+    var variablesById = new Map(currentVariables.variables.map(function (v) { return [v.id, v]; }));
+    var collectionsById = new Map(currentVariables.collections.map(function (c) { return [c.id, c]; }));
+    var changedTokens = [];
+
+    function compareTokens(tokenObj, path) {
+      if (tokenObj && tokenObj.$extensions && tokenObj.$extensions.figma) {
+        var figmaExt = tokenObj.$extensions.figma;
+        var variableId = figmaExt.variableId;
+        var collectionId = figmaExt.collectionId;
+
+        if (variableId && collectionId) {
+          var currentVariable = variablesById.get(variableId);
+          var currentCollection = collectionsById.get(collectionId);
+
+          if (currentVariable && currentCollection) {
+            var importedValue = tokenObj.$value;
+
+            // Extract theme name from path to find the correct mode
+            var pathParts = path.split('.');
+            var themeName = pathParts[1]; // themes.default_theme.color.gray.50 -> default_theme
+
+            // Find the mode that matches this theme
+            var targetMode = currentCollection.modes.find(function(mode) {
+              var modeName = mode.name.replace(/\s+/g, '_').toLowerCase();
+              return modeName === themeName;
+            });
+
+            if (targetMode) {
+              var currentValue = currentVariable.valuesByMode[targetMode.modeId];
+
+              // Format current value for comparison
+              var formattedCurrentValue = formatRawValue(currentValue, currentVariable.type);
+
+              // Debug logging for first few comparisons
+              if (changedTokens.length < 3) {
+                console.log('DEBUG - Comparing token at path: ' + path);
+                console.log('  Theme name:', themeName);
+                console.log('  Target mode:', targetMode.name);
+                console.log('  Current raw value:', currentValue);
+                console.log('  Formatted current:', formattedCurrentValue);
+                console.log('  Imported value:', importedValue);
+                console.log('  Types match:', typeof formattedCurrentValue === typeof importedValue);
+                console.log('  Values equal:', formattedCurrentValue === importedValue);
+              }
+
+              if (formattedCurrentValue !== importedValue) {
+                // Convert imported value back to Figma format
+                var figmaValue = convertToFigmaValue(importedValue, currentVariable.type);
+
+                try {
+                  // Get the actual variable object from Figma
+                  var figmaVariable = figma.variables.getVariableById(variableId);
+                  if (figmaVariable) {
+                    // Use the correct Figma API method
+                    figmaVariable.setValueForMode(targetMode.modeId, figmaValue);
+                  } else {
+                    throw new Error('Variable not found: ' + variableId);
+                  }
+
+                  changedTokens.push({
+                    path: path,
+                    variableId: variableId,
+                    variableName: currentVariable.name,
+                    collectionName: currentCollection.name,
+                    currentValue: formattedCurrentValue,
+                    importedValue: importedValue,
+                    type: currentVariable.type,
+                    status: 'updated'
+                  });
+                } catch (error) {
+                  console.error('Failed to update variable:', currentVariable.name, error);
+                  changedTokens.push({
+                    path: path,
+                    variableId: variableId,
+                    variableName: currentVariable.name,
+                    collectionName: currentCollection.name,
+                    currentValue: formattedCurrentValue,
+                    importedValue: importedValue,
+                    type: currentVariable.type,
+                    status: 'error',
+                    error: error.message
+                  });
+                }
+              }
+            } else {
+              console.warn('Could not find matching mode for theme:', themeName);
+            }
+          }
+        }
+      }
+
+      // Recursively check nested objects
+      for (var key in tokenObj) {
+        if (tokenObj.hasOwnProperty(key) && key !== '$value' && key !== '$type' && key !== '$extensions' && key !== '$description') {
+          if (typeof tokenObj[key] === 'object' && tokenObj[key] !== null) {
+            compareTokens(tokenObj[key], path ? path + '.' + key : key);
+          }
+        }
+      }
+    }
+
+    // Only check themes (primitives)
+    if (w3cData.themes) {
+      for (var themeName in w3cData.themes) {
+        compareTokens(w3cData.themes[themeName], 'themes.' + themeName);
+      }
+    }
+
+    // Log results
+    if (changedTokens.length === 0) {
+      console.log('✅ No changes detected. All tokens match current values.');
+      figma.notify('No changes detected in imported tokens', { timeout: 2000 });
+    } else {
+      var updatedCount = changedTokens.filter(function(token) { return token.status === 'updated'; }).length;
+      var errorCount = changedTokens.filter(function(token) { return token.status === 'error'; }).length;
+
+      console.log('🔄 Processing ' + changedTokens.length + ' changed token(s):');
+      changedTokens.forEach(function(token) {
+        if (token.status === 'updated') {
+          console.log('✅ Updated: ' + token.path);
+          console.log('  Variable: ' + token.variableName + ' (' + token.collectionName + ')');
+          console.log('  From: ' + token.currentValue);
+          console.log('  To:   ' + token.importedValue);
+        } else if (token.status === 'error') {
+          console.log('❌ Failed: ' + token.path);
+          console.log('  Variable: ' + token.variableName + ' (' + token.collectionName + ')');
+          console.log('  Error: ' + token.error);
+        }
+        console.log('---');
+      });
+
+      var message = updatedCount + ' variable(s) updated';
+      if (errorCount > 0) {
+        message += ', ' + errorCount + ' failed';
+      }
+      message += '. Check console for details.';
+
+      figma.notify(message, { timeout: 4000 });
+    }
+
+  } catch (error) {
+    console.error('Import error:', error);
+    figma.notify('Import failed. Check console for details.', { error: true });
+  }
 }
 

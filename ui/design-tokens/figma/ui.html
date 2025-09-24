@@ -48,8 +48,10 @@
 </head>
 <body>
   <button onclick="exportW3CTokens()">Export W3C Tokens</button>
+  <button onclick="document.getElementById('fileInput').click()" class="secondary">Import W3C Tokens</button>
+  <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
   <button onclick="closePlugin()" class="secondary">Close</button>
-  <div id="status" class="status">Ready to export.</div>
+  <div id="status" class="status">Ready to export or import.</div>
 
   <script>
     let figmaData = null;
@@ -84,6 +86,36 @@
 
     function closePlugin() {
       parent.postMessage({ pluginMessage: { type: 'close-plugin' } }, '*');
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Check file extension
+      if (!file.name.toLowerCase().endsWith('.json')) {
+        document.getElementById('status').textContent = 'Error: Only JSON files are allowed.';
+        return;
+      }
+
+      // Also check MIME type as additional validation
+      if (file.type && file.type !== 'application/json') {
+        document.getElementById('status').textContent = 'Error: Only JSON files are allowed.';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          document.getElementById('status').textContent = 'Comparing tokens...';
+          parent.postMessage({ pluginMessage: { type: 'import-w3c-tokens', data: importedData } }, '*');
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+          document.getElementById('status').textContent = 'Error: Invalid JSON file.';
+        }
+      };
+      reader.readAsText(file);
     }
 
     window.addEventListener('load', () => {

@@ -5,7 +5,7 @@
   "main": "code.js",
   "ui": "ui.html",
   "capabilities": ["inspect"],
-  "enableProposedApi": false,
+  "enableProposedApi": true,
   "editorType": [
     "figma",
     "dev"
