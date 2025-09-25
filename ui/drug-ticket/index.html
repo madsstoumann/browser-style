@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Drug Ticket</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
+	<!-- <link rel="stylesheet" href="/core.css"> -->
+	<style>
+		body {
+			font-family: system-ui;
+			margin-inline: auto;
+			max-width: 400px;
+		}
+		form {
+			display: grid;
+			gap: 1rem;
+			padding: 1rem;
+		}
+		label, output {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+
+	<form id="app">
+		<label for="income">Din månedlån før skat:</label>
+		<output for="income" name="income_output">25.000 kr.</output>
+		<input type="range" id="income" name="income" min="0" step="500" max="60000" value="25000">
+
+		<fieldset>
+			<legend>Vælg stof</legend>
+			<label><input type="radio" name="drug" value="cannabis" checked>Cannabis</label>
+			<label><input type="radio" name="drug" value="kokain">Kokain</label>
+			<label><input type="radio" name="drug" value="lsd">LSD</label>
+			<label><input type="radio" name="drug" value="ecstasy">Ecstasy (MDMA)</label>
+			<label><input type="radio" name="drug" value="amfetamin">Amfetamin</label>
+			<label><input type="radio" name="drug" value="opioider">Opioider</label>
+			<label><input type="radio" name="drug" value="lattergas">Lattergas</label>
+		</fieldset>
+
+		<fieldset name="info">
+			<label for="thc">THC-niveau</label>
+			<output for="thc" name="thc_output">0</output>
+			<input type="range" id="thc" name="thc" min="0" max="0.05" step="0.0001">
+			
+			<label>
+				Hvor lang tid har du haft kørekort?
+				<input type="checkbox" name="license_years" checked>
+				<span>Under 3 år</span>
+				<span>+3 år</span>
+			</label>
+		</fieldset>
+
+		<details>
+			<summary>
+				Ca. Total (kr) <output name="total">0</output>
+			</summary>
+			<dl>
+				<dt>Bødestørrelse</dt>
+				<dd><output name="fine">0</output> kr.</dd>
+				
+				<dt>Analyse af blodprøve</dt>
+				<dt>Udgift til læge</dt>				
+				<dt>Offerfonden</dt>
+				<dt>ANT-kursus</dt>
+				<dt>Ny teori- og køreprøve</dt>
+				<dt>Totale udgifter (ca.)</dt>
+			</dl>
+		</details>
+	</form>
+
+	<script>
+		const app = document.getElementById('app');
+		const elms = app.elements;
+		app.addEventListener('input', (event) => {
+			const elm = event.target;
+			if (elm.name === 'income') elms.income_output.value = elm.valueAsNumber.toLocaleString('da-DK', { style: 'currency', currency: 'DKK', maximumFractionDigits: 0 });
+			if (elm.name === 'thc') elms.thc_output.value = elm.valueAsNumber.toFixed(3);
+			
+		});
+
+	</script>
+</body>
+</html>
