@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
-	<!-- <link rel="stylesheet" href="/core.css"> -->
 	<style>
 		body {
 			font-family: system-ui;
@@ -19,6 +18,17 @@
 		}
 		label, output {
 			display: block;
+		}
+		fieldset[disabled] {
+			opacity: 0.25;
+		}
+		[name=breakdown] {
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			output {
+				font-variant-numeric: tabular-nums;
+				text-align: right;
+			}
 		}
 	</style>
 </head>
@@ -40,47 +50,57 @@
 			<label><input type="radio" name="drug" value="lattergas">Lattergas</label>
 		</fieldset>
 
-		<fieldset name="info">
-			<label for="thc">THC-niveau</label>
-			<output for="thc" name="thc_output">0</output>
-			<input type="range" id="thc" name="thc" min="0" max="0.05" step="0.0001">
-			
+		<fieldset name="extra_info">
+			<fieldset>
+				<legend>THC-niveau i blodet</legend>
+				<label><input type="radio" name="thc" value="0.002" checked>Lavt</label>
+				<label><input type="radio" name="thc" value="0.006">Mellem</label>
+				<label><input type="radio" name="thc" value="0.010">Højt</label>
+			</fieldset>	
 			<label>
 				Hvor lang tid har du haft kørekort?
-				<input type="checkbox" name="license_years" checked>
+				<input type="checkbox" name="license_years">
 				<span>Under 3 år</span>
 				<span>+3 år</span>
 			</label>
 		</fieldset>
 
-		<details>
+		<details open>
 			<summary>
-				Ca. Total (kr) <output name="total">0</output>
+				Ca. Total (kr) <output name="total">1500</output>
 			</summary>
-			<dl>
-				<dt>Bødestørrelse</dt>
-				<dd><output name="fine">0</output> kr.</dd>
-				
-				<dt>Analyse af blodprøve</dt>
-				<dt>Udgift til læge</dt>				
-				<dt>Offerfonden</dt>
-				<dt>ANT-kursus</dt>
-				<dt>Ny teori- og køreprøve</dt>
-				<dt>Totale udgifter (ca.)</dt>
-			</dl>
+
+			<fieldset name="breakdown">
+				<span>Bødestørrelse</span>
+				<output name="fine">1500</output>
+				<span>Analyse af blodprøve</span>
+				<output name="blood_analysis_output">2700</output>
+				<span>Udgift til læge</span>
+				<output name="doctor_fee_output">125</output>
+				<span>Offerfonden</span>
+				<output name="victim_fund_output">500</output>
+				<span>ANT-kursus</span>
+				<output name="ant_course_output">3200</output>
+				<span>Ny teori- og køreprøve</span>
+				<output name="license_test_output">1210</output>
+				<strong>Totale udgifter (ca.)</strong>
+				<output name="total_fine"></output>
+			</fieldset>
 		</details>
 	</form>
 
 	<script>
 		const app = document.getElementById('app');
-		const elms = app.elements;
-		app.addEventListener('input', (event) => {
-			const elm = event.target;
-			if (elm.name === 'income') elms.income_output.value = elm.valueAsNumber.toLocaleString('da-DK', { style: 'currency', currency: 'DKK', maximumFractionDigits: 0 });
-			if (elm.name === 'thc') elms.thc_output.value = elm.valueAsNumber.toFixed(3);
-			
-		});
 
+		function calculate(elements) {
+			elements.extra_info.disabled = elements.drug.value !== 'cannabis' && elements.drug.value !== 'lattergas';
+			const total = [...elements.breakdown.elements].reduce((sum, elm) => sum + parseInt(elm.value || 0), 0);
+			console.log(total);
+		
+		}
+
+		app.addEventListener('input', (event) => { calculate(app.elements) });
+		calculate(app.elements);
 	</script>
 </body>
 </html>
