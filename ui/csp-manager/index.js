@@ -115,9 +115,9 @@ class CspManager extends HTMLElement {
 			"media-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"object-src": { enabled: true, defaults: ["'none'"], added: [] },
 			"report-to": { enabled: false, defaults: [], added: [] },
-			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [] },
-			"require-trusted-types-for": { enabled: false, defaults: [], added: [] },
-			"sandbox": { enabled: false, defaults: [], added: [] },
+			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [], tokens: ["script", "style"] },
+			"require-trusted-types-for": { enabled: false, defaults: [], added: [], tokens: ["'script'"] },
+			"sandbox": { enabled: false, defaults: [], added: [], tokens: ["allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts", "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"] },
 			"script-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"script-src-elem": { enabled: false, defaults: [], added: [] },
 			"script-src-attr": { enabled: false, defaults: [], added: [] },
@@ -246,6 +246,13 @@ class CspManager extends HTMLElement {
 	render() {
 		this.shadowRoot.innerHTML = `
 			${Object.entries(this.state).map(([key, valueObj]) => {
+				const hasTokens = valueObj.tokens && valueObj.tokens.length > 0;
+				const dataListElement = hasTokens
+					? `<datalist id="${key}-tokens">
+							${valueObj.tokens.map(token => `<option value="${token}"></option>`).join('')}
+						</datalist>`
+					: '';
+
 				return `
 					<details>
 						<summary>${key}</summary>
@@ -258,9 +265,10 @@ class CspManager extends HTMLElement {
 										${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
 									</ul>
 									<fieldset>
-										<input type="text" data-directive="${key}" placeholder="Add new value">
+										<input type="text" data-directive="${key}" placeholder="Add new value"${hasTokens ? ` list="${key}-tokens"` : ''}>
 										<button data-add data-directive="${key}">Add</button>
 									</fieldset>
+									${dataListElement}
 								`
 							}
 							<label>
