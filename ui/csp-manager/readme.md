@@ -10,12 +10,20 @@ A web component to interactively build and manage a Content Security Policy (CSP
 - **Customizable**: Style the component to match your application's theme using CSS Custom Properties.
 - **Visual Indicators**: Directives with custom-added values are marked with an asterisk (*) for easy identification.
 
+## Installation
+
+Install the component from npm:
+
+```bash
+npm install @browser.style/csp-manager
+```
+
 ## How to Use
 
-1.  **Include the script**: Make sure the component's JavaScript file is loaded on your page.
+1.  **Import the component**:
 
-    ```html
-    <script src="index.js" type="module"></script>
+    ```javascript
+    import '@browser.style/csp-manager';
     ```
 
 2.  **Add the component to your HTML**:

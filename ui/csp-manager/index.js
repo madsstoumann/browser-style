@@ -32,7 +32,9 @@ styles.replaceSync(`
 			border-radius: var(--csp-manager-bdrs);
 			padding: var(--csp-manager-gap);
 			user-select: none;
+
 			&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
+			&:not(:has(:checked)) { background: var(--csp-manager-buttonface); opacity: .5; }
 		}
 
 		div {
@@ -99,25 +101,42 @@ class CspManager extends HTMLElement {
 		this.shadowRoot.adoptedStyleSheets = [styles];
 
 		this.state = {
-			"base-uri": { defaults: ["'self'"], added: [] },
-			"block-all-mixed-content": { defaults: [], added: [] },
-			"child-src": { defaults: [], added: ["stoumann.dk"] },
-			"connect-src": { defaults: ["'self'"], added: [] },
-			"default-src": { defaults: ["'self'"], added: [] },
-			"font-src": { defaults: ["'self'", "data:"], added: [] },
-			"form-action": { defaults: ["'self'"], added: [] },
-			"frame-ancestors": { defaults: ["'none'"], added: [] },
-			"img-src": { defaults: ["'self'", "data:"], added: [] },
-			"manifest-src": { defaults: ["'self'"], added: [] },
-			"media-src": { defaults: ["'self'"], added: [] },
-			"object-src": { defaults: ["'none'"], added: [] },
-			"plugin-types": { defaults: [], added: [] },
-			"report-to": { defaults: [], added: [] },
-			"report-uri": { defaults: [], added: [] },
-			sandbox: { defaults: [], added: [] },
-			"script-src": { defaults: ["'self'"], added: [] },
-			"style-src": { defaults: ["'self'", "'unsafe-inline'"], added: [] },
-			"upgrade-insecure-requests": { defaults: [], added: [] },
+			// Fetch directives
+			"child-src": { enabled: true, defaults: [], added: [] },
+			"connect-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"default-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"font-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
+			"frame-src": { enabled: true, defaults: [], added: [] },
+			"img-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
+			"manifest-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"media-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"object-src": { enabled: true, defaults: ["'none'"], added: [] },
+			"script-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"script-src-elem": { enabled: false, defaults: [], added: [] },
+			"script-src-attr": { enabled: false, defaults: [], added: [] },
+			"style-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"style-src-elem": { enabled: false, defaults: [], added: [] },
+			"style-src-attr": { enabled: false, defaults: [], added: [] },
+			"worker-src": { enabled: false, defaults: [], added: [] },
+
+			// Document directives
+			"base-uri": { enabled: true, defaults: ["'self'"], added: [] },
+			"plugin-types": { enabled: false, defaults: [], added: [] }, // Deprecated
+			"sandbox": { enabled: false, defaults: [], added: [] },
+
+			// Navigation directives
+			"form-action": { enabled: true, defaults: ["'self'"], added: [] },
+			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [] },
+
+			// Reporting directives
+			"report-to": { enabled: false, defaults: [], added: [] },
+			"report-uri": { enabled: false, defaults: [], added: [] }, // Deprecated
+
+			// Other directives
+			"block-all-mixed-content": { enabled: false, defaults: [], added: [] },
+			"require-sri-for": { enabled: false, defaults: [], added: [] },
+			"trusted-types": { enabled: false, defaults: [], added: [] },
+			"upgrade-insecure-requests": { enabled: true, defaults: [], added: [] },
 		};
 	}
 
@@ -228,6 +247,9 @@ class CspManager extends HTMLElement {
 						${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
 						${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
 					</ul>
+					<label>
+						<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> Enable ${key}
+					</label>
 					<fieldset>
 						<input type="text" data-directive="${key}" placeholder="Add new value">
 						<button data-add data-directive="${key}">Add</button>
