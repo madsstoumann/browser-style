@@ -94,9 +94,9 @@ styles.replaceSync(`
 		}
 
 		::details-content {
-			transition: height 0.5s ease, content-visibility 0.5s ease allow-discrete;
 			height: 0;
 			overflow: clip;
+			transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
 		}
 		[open]::details-content {
 			height: auto;
