@@ -194,11 +194,16 @@ class CspManager extends HTMLElement {
 	}
 
 	generateCspString() {
-		const policy = Object.entries(this.state).map(([key, valueObj]) => {
-			const allValues = [...valueObj.defaults, ...valueObj.added];
-			if (allValues.length === 0) return '';
-			return `\t\t${key} ${allValues.join(' ')}`;
-		}).filter(part => part.trim() !== '').join('; \n');
+		const policy = Object.entries(this.state)
+			.filter(([, valueObj]) => valueObj.enabled) // Only include enabled directives
+			.map(([key, valueObj]) => {
+				const allValues = [...valueObj.defaults, ...valueObj.added];
+				// Handle boolean directives that are enabled but have no values
+				if (allValues.length === 0) return `\t\t${key}`;
+				return `\t\t${key} ${allValues.join(' ')}`;
+			})
+			.filter(part => part.trim() !== '')
+			.join('; \n');
 
 		return `&lt;meta http-equiv="Content-Security-Policy" content="\n${policy}\n\t"&gt;`;
 	}
@@ -218,21 +223,32 @@ class CspManager extends HTMLElement {
 		}
 
 		this.shadowRoot.addEventListener('click', (e) => {
-			if (e.target.tagName !== 'BUTTON') return;
+			const target = e.target;
+			if (target.tagName !== 'BUTTON') return;
 
-			const button = e.target;
-			const directive = button.dataset.directive;
+			const directive = target.dataset.directive;
 
-			if (button.dataset.add !== undefined) {
-				const input = this.shadowRoot.querySelector(`input[data-directive="${directive}"]`);
+			if (target.dataset.add !== undefined) {
+				const input = this.shadowRoot.querySelector(`input[type="text"][data-directive="${directive}"]`);
 				if (input && input.value) {
 					this.addValue(directive, input.value);
 					input.value = '';
 				}
-			} else if (button.dataset.remove !== undefined) {
-				const index = parseInt(button.dataset.index, 10);
+			} else if (target.dataset.remove !== undefined) {
+				const index = parseInt(target.dataset.index, 10);
 				this.removeValue(directive, index);
-				button.closest('li').remove();
+				target.closest('li').remove();
+			}
+		});
+
+		this.shadowRoot.addEventListener('change', (e) => {
+			const target = e.target;
+			if (target.type === 'checkbox' && target.dataset.directive) {
+				const directive = target.dataset.directive;
+				if (this.state[directive]) {
+					this.state[directive].enabled = target.checked;
+					this.updateCspString();
+				}
 			}
 		});
 	}
