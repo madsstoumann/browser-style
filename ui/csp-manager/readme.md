@@ -5,9 +5,14 @@ A web component to interactively build and manage a Content Security Policy (CSP
 ## Features
 
 - **Interactive UI**: Easily add or remove values for all standard CSP directives.
+- **Enable/Disable Directives**: Toggle directives on or off with a simple checkbox. Only enabled directives are included in the output.
 - **Live Preview**: See the generated `<meta>` tag update in real-time.
+- **Smart UI for Different Directive Types**:
+    - **Boolean Directives**: Directives like `upgrade-insecure-requests` are correctly handled as simple toggles without value inputs.
+    - **Token-based Directives**: Directives like `sandbox` provide a dropdown of valid tokens for easy selection.
 - **State Management**: Programmatically get and set the CSP state.
 - **Customizable**: Style the component to match your application's theme using CSS Custom Properties.
+- **Informative**: Each directive includes a short description of its purpose.
 - **Visual Indicators**: Directives with custom-added values are marked with an asterisk (*) for easy identification.
 
 ## Installation
@@ -113,9 +118,29 @@ console.log(JSON.stringify(currentState));
 ```javascript
 const cspManager = document.querySelector('csp-manager');
 
+// This is an example of the data structure.
+// You only need to provide the 'added' and 'enabled' properties to update the state.
 const savedState = {
-  "script-src": { "defaults": ["'self'"], "added": ["https://example.com"] },
-  "style-src": { "defaults": ["'self'", "'unsafe-inline'"], "added": [] }
+  "script-src": {
+    "enabled": true,
+    "defaults": ["'self'"],
+    "added": ["https://example.com"],
+    "description": "Specifies valid sources for JavaScript."
+  },
+  "sandbox": {
+    "enabled": true,
+    "defaults": [],
+    "added": ["allow-forms", "allow-scripts"],
+    "tokens": ["allow-downloads", "allow-forms", "allow-modals", "..."],
+    "description": "Enables a sandbox for the requested resource..."
+  },
+  "upgrade-insecure-requests": {
+    "enabled": true,
+    "defaults": [],
+    "added": [],
+    "boolean": true,
+    "description": "Instructs user agents to treat all of a site's insecure URLs (HTTP) as though they have been replaced with secure URLs (HTTPS)."
+  }
   // ... other directives
 };
 
