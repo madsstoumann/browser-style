@@ -145,7 +145,7 @@ class CspManager extends HTMLElement {
 
 	updateCspString() {
 		const cspString = this.generateCspString();
-		this.shadowRoot.querySelector('pre code').textContent = cspString;
+		this.shadowRoot.querySelector('pre code').innerHTML = cspString;
 	}
 
 	addValue(directive, value) {
