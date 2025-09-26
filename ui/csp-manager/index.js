@@ -7,6 +7,7 @@ styles.replaceSync(`
 			--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 			--csp-manager-ff-system: system-ui, sans-serif;
 			--csp-manager-gap: 1rem;
+			--csp-manager-tab-width: 2;
 			
 			display: grid;
 			row-gap: var(--csp-manager-gap);
@@ -67,6 +68,7 @@ styles.replaceSync(`
 			background: var(--csp-manager-buttonface);
 			overflow-x: auto;
 			padding: 2ch;
+			tab-size: var(--csp-manager-tab-width);
 			white-space: pre-wrap;
 			word-wrap: break-word;
 		}
@@ -90,7 +92,7 @@ class CspManager extends HTMLElement {
 		this.shadowRoot.adoptedStyleSheets = [styles];
 
 		this.state = {
-			"base-uri": { defaults: ["'self'", "'stoumann.dk'"], added: [] },
+			"base-uri": { defaults: ["'self'"], added: [] },
 			"block-all-mixed-content": { defaults: [], added: [] },
 			"child-src": { defaults: [], added: [] },
 			"connect-src": { defaults: ["'self'"], added: [] },
@@ -127,12 +129,14 @@ class CspManager extends HTMLElement {
 	}
 
 	generateCspString() {
-		return Object.entries(this.state).map(([key, valueObj]) => {
+		const policy = Object.entries(this.state).map(([key, valueObj]) => {
 			const allValues = [...valueObj.defaults, ...valueObj.added];
 			if (allValues.length === 0) return '';
-			return `${key} ${allValues.join(' ')}`;
-		}).filter(part => part.trim() !== '').join('; ');
-		}
+			return `\t\t${key} ${allValues.join(' ')}`;
+		}).filter(part => part.trim() !== '').join('; \n');
+
+		return `&lt;meta http-equiv="Content-Security-Policy" content="\n${policy}\n\t"&gt;`;
+	}
 
 	connectedCallback() {
 		this.render();
