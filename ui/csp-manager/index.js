@@ -101,32 +101,32 @@ class CspManager extends HTMLElement {
 		this.shadowRoot.adoptedStyleSheets = [styles];
 
 		this.state = {
-			"base-uri": { enabled: true, defaults: ["'self'"], added: [] },
-			"child-src": { enabled: true, defaults: [], added: [] },
-			"connect-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"default-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"fenced-frame-src": { enabled: false, defaults: [], added: [] },
-			"font-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
-			"form-action": { enabled: true, defaults: ["'self'"], added: [] },
-			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [] },
-			"frame-src": { enabled: true, defaults: [], added: [] },
-			"img-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
-			"manifest-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"media-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"object-src": { enabled: true, defaults: ["'none'"], added: [] },
-			"report-to": { enabled: false, defaults: [], added: [] },
-			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [], tokens: ["script", "style"] },
-			"require-trusted-types-for": { enabled: false, defaults: [], added: [], tokens: ["'script'"] },
-			"sandbox": { enabled: false, defaults: [], added: [], tokens: ["allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts", "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"] },
-			"script-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"script-src-elem": { enabled: false, defaults: [], added: [] },
-			"script-src-attr": { enabled: false, defaults: [], added: [] },
-			"style-src": { enabled: true, defaults: ["'self'"], added: [] },
-			"style-src-elem": { enabled: false, defaults: [], added: [] },
-			"style-src-attr": { enabled: false, defaults: [], added: [] },
-			"trusted-types": { enabled: false, defaults: ["'none'"], added: [] },
-			"upgrade-insecure-requests": { enabled: false, defaults: [], added: [], boolean: true },
-			"worker-src": { enabled: false, defaults: [], added: [] }
+			"base-uri": { enabled: true, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be used in a document's &lt;base&gt; element." },
+			"child-src": { enabled: false, defaults: ["'self'"], added: [], description: "Defines valid sources for web workers and nested browsing contexts." },
+			"connect-src": { enabled: false, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be loaded using script interfaces (e.g., fetch, XHR)." },
+			"default-src": { enabled: true, defaults: ["'self'"], added: [], description: "Serves as a fallback for the other fetch directives." },
+			"fenced-frame-src": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for nested browsing contexts loaded into &lt;fencedframe&gt; elements." },
+			"font-src": { enabled: false, defaults: ["'self'", "data:"], added: [], description: "Specifies valid sources for fonts loaded using @font-face." },
+			"form-action": { enabled: false, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be used as the target of a form submissions." },
+			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [], description: "Specifies valid parents that may embed a page using &lt;frame&gt;, &lt;iframe&gt;, &lt;object&gt;, or &lt;embed&gt;." },
+			"frame-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources for frames and iframes." },
+			"img-src": { enabled: false, defaults: ["'self'", "data:"], added: [], description: "Specifies valid sources of images and favicons." },
+			"manifest-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources of application manifest files." },
+			"media-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources for loading media using &lt;audio&gt; and &lt;video&gt;." },
+			"object-src": { enabled: true, defaults: ["'none'"], added: [], description: "Specifies valid sources for the &lt;object&gt; and &lt;embed&gt; elements." },
+			"report-to": { enabled: false, defaults: [], added: [], description: "Provides a reporting endpoint for CSP violations." },
+			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [], tokens: ["script", "style"], description: "Enforces Subresource Integrity on scripts and/or stylesheets." },
+			"require-trusted-types-for": { enabled: false, defaults: [], added: [], tokens: ["'script'"], description: "Enforces Trusted Types for scripts that create HTML from strings." },
+			"sandbox": { enabled: false, defaults: [], added: [], tokens: ["allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts", "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"], description: "Enables a sandbox for the requested resource, similar to the &lt;iframe&gt; sandbox attribute." },
+			"script-src": { enabled: true, defaults: ["'self'"], added: [], description: "Specifies valid sources for JavaScript." },
+			"script-src-elem": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for JavaScript &lt;script&gt; elements." },
+			"script-src-attr": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for JavaScript inline event handlers." },
+			"style-src": { enabled: true, defaults: ["'self'"], added: [], description: "Specifies valid sources for stylesheets." },
+			"style-src-elem": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for stylesheets &lt;style&gt; elements and &lt;link&gt; elements with rel=\"stylesheet\"." },
+			"style-src-attr": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for inline styles applied to individual DOM elements." },
+			"trusted-types": { enabled: false, defaults: ["'none'"], added: [], description: "Specifies an allowlist of Trusted Types policies." },
+			"upgrade-insecure-requests": { enabled: false, defaults: [], added: [], boolean: true, description: "Instructs user agents to treat all of a site's insecure URLs (HTTP) as though they have been replaced with secure URLs (HTTPS)." },
+			"worker-src": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for Worker, SharedWorker, or ServiceWorker scripts." }
 		};
 	}
 
@@ -185,10 +185,9 @@ class CspManager extends HTMLElement {
 
 	generateCspString() {
 		const policy = Object.entries(this.state)
-			.filter(([, valueObj]) => valueObj.enabled) // Only include enabled directives
+			.filter(([, valueObj]) => valueObj.enabled)
 			.map(([key, valueObj]) => {
 				const allValues = [...valueObj.defaults, ...valueObj.added];
-				// Handle boolean directives that are enabled but have no values
 				if (allValues.length === 0) return `\t\t${key}`;
 				return `\t\t${key} ${allValues.join(' ')}`;
 			})
@@ -247,6 +246,7 @@ class CspManager extends HTMLElement {
 		this.shadowRoot.innerHTML = `
 			${Object.entries(this.state).map(([key, valueObj]) => {
 				const hasTokens = valueObj.tokens && valueObj.tokens.length > 0;
+				const inputListAttribute = hasTokens ? `list="${key}-tokens"` : '';
 				const dataListElement = hasTokens
 					? `<datalist id="${key}-tokens">
 							${valueObj.tokens.map(token => `<option value="${token}"></option>`).join('')}
@@ -257,6 +257,7 @@ class CspManager extends HTMLElement {
 					<details>
 						<summary>${key}</summary>
 						<div>
+							<small>${valueObj.description}</small>
 							${valueObj.boolean
 								? `<p>This is a boolean directive. It has no values.</p>`
 								: `
@@ -265,7 +266,7 @@ class CspManager extends HTMLElement {
 										${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
 									</ul>
 									<fieldset>
-										<input type="text" data-directive="${key}" placeholder="Add new value"${hasTokens ? ` list="${key}-tokens"` : ''}>
+										<input type="text" data-directive="${key}" placeholder="Add new value" ${inputListAttribute}>
 										<button data-add data-directive="${key}">Add</button>
 									</fieldset>
 									${dataListElement}
