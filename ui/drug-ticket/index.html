@@ -52,10 +52,10 @@
 
 		<fieldset name="extra_info">
 			<fieldset>
-				<legend>THC-niveau i blodet</legend>
-				<label><input type="radio" name="thc" value="0.002" checked>Lavt</label>
-				<label><input type="radio" name="thc" value="0.006">Mellem</label>
-				<label><input type="radio" name="thc" value="0.010">Højt</label>
+				<legend>THC-niveau i blodet / Lattergas i besiddelse</legend>
+				<label><input type="radio" name="amount" value="low" checked>Lavt</label>
+				<label><input type="radio" name="amount" value="medium">Mellem</label>
+				<label><input type="radio" name="amount" value="high">Højt</label>
 			</fieldset>	
 			<label>
 				Hvor lang tid har du haft kørekort?
@@ -93,9 +93,19 @@
 		const app = document.getElementById('app');
 
 		function calculate(elements) {
+
+			/*=== CHECK IF CANABIS OR LATTERGAS, set to boolean ===*/
+			
+			/* disable extra info for non-cannabis/lattergas */
 			elements.extra_info.disabled = elements.drug.value !== 'cannabis' && elements.drug.value !== 'lattergas';
-			const total = [...elements.breakdown.elements].reduce((sum, elm) => sum + parseInt(elm.value || 0), 0);
-			console.log(total);
+
+			/* set fine based on salary */
+			elements.fine.value = Math.round(((elements.income.value * 12) / 50) * (elements.drug.value === 'lattergas' ? 2 : 1));
+
+			/* set fine multiplier based on drug and amount */
+			const subtotal = [...elements.breakdown.elements].reduce((sum, elm) => sum + parseInt(elm.value || 0), 0);
+			
+			console.log(subtotal);
 		
 		}
 
