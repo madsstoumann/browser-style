@@ -185,7 +185,19 @@ class CspManager extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.render();
+		const initialPolicy = this.getAttribute('initial-policy');
+
+		if (initialPolicy) {
+			try {
+				this.policy = JSON.parse(initialPolicy);
+			} catch (e) {
+				console.error('Failed to parse initial-policy attribute:', e);
+				this.render();
+			}
+		} else {
+			this.render();
+		}
+
 		this.shadowRoot.addEventListener('click', (e) => {
 			if (e.target.tagName !== 'BUTTON') return;
 

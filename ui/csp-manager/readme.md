@@ -52,17 +52,45 @@ csp-manager {
 }
 ```
 
-## Programmatic Access (Getting and Setting State)
+## Programmatic Access & CMS Integration
 
-The component exposes properties that allow you to get the current state or load a new one. This is ideal for saving and loading configurations in a CMS or other system.
+The component is designed to be easily integrated into a Content Management System (CMS) like Sitecore. It provides several ways to get and set its state.
 
-### The `policy` Property (Get/Set)
+### Initializing with the `initial-policy` Attribute (Recommended)
+
+The easiest way to load data from a CMS is to pass it directly into the `initial-policy` attribute when the component is rendered. The component will automatically parse this data and initialize itself.
+
+The value of the attribute should be a **JSON string**.
+
+#### Example: Loading Data from a Sitecore Field
+
+A backend developer can render the component and pass the data from a Sitecore field directly into the `initial-policy` attribute.
+
+Here is a conceptual example using Razor syntax, common in .NET-based CMSs:
+
+```html
+@{
+  // Assume 'Model.CspJsonField' is a string field from a Sitecore item
+  // containing the saved JSON policy.
+  // Ensure the string is correctly formatted as a single-line JSON.
+  var initialPolicy = Model.CspJsonField;
+}
+
+<!-- The component will read this attribute on load -->
+<csp-manager initial-policy="@initialPolicy"></csp-manager>
+```
+
+This declarative approach is clean and requires no extra JavaScript from the integrating developer.
+
+### Manual Get/Set with Properties
+
+For more dynamic scenarios, you can use the component's JavaScript properties to get or set its state after it has loaded.
+
+#### The `policy` Property (Get/Set)
 
 You can get or set the entire CSP configuration as a JavaScript object.
 
-#### Getting the State
-
-To get the current CSP configuration from the component:
+**Getting the State**
 
 ```javascript
 const cspManager = document.querySelector('csp-manager');
@@ -72,9 +100,7 @@ const currentState = cspManager.policy;
 console.log(JSON.stringify(currentState));
 ```
 
-#### Setting the State
-
-To load a previously saved state into the component:
+**Setting the State**
 
 ```javascript
 const cspManager = document.querySelector('csp-manager');
@@ -87,9 +113,8 @@ const savedState = {
 
 cspManager.policy = savedState;
 ```
-The component will automatically update and re-render to reflect the new state.
 
-### The `cspString` Property (Get)
+#### The `cspString` Property (Get)
 
 To get the generated CSP `<meta>` tag as a string:
 
