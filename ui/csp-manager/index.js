@@ -125,7 +125,7 @@ class CspManager extends HTMLElement {
 			"media-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources for loading media using &lt;audio&gt; and &lt;video&gt;." },
 			"object-src": { enabled: true, defaults: ["'none'"], added: [], description: "Specifies valid sources for the &lt;object&gt; and &lt;embed&gt; elements." },
 			"report-to": { enabled: false, defaults: [], added: [], description: "Provides a reporting endpoint for CSP violations." },
-			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [], tokens: ["script", "style"], description: "Enforces Subresource Integrity on scripts and/or stylesheets." },
+			"require-sri-for": { enabled: false, defaults: [], added: [], tokens: ["script", "style"], description: "Enforces Subresource Integrity on scripts and/or stylesheets." },
 			"require-trusted-types-for": { enabled: false, defaults: [], added: [], tokens: ["'script'"], description: "Enforces Trusted Types for scripts that create HTML from strings." },
 			"sandbox": { enabled: false, defaults: [], added: [], tokens: ["allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts", "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"], description: "Enables a sandbox for the requested resource, similar to the &lt;iframe&gt; sandbox attribute." },
 			"script-src": { enabled: true, defaults: ["'self'"], added: [], description: "Specifies valid sources for JavaScript." },
