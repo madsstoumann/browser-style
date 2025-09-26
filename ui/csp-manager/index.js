@@ -10,6 +10,7 @@ styles.replaceSync(`
 			--csp-manager-tab-width: 2;
 			
 			display: grid;
+			font-size: var(--csp-manager-font-size, 16px);
 			row-gap: var(--csp-manager-gap);
 		}
 
@@ -65,7 +66,10 @@ styles.replaceSync(`
 		}
 
 		pre {
+			all: unset;
 			background: var(--csp-manager-buttonface);
+			border-radius: var(--csp-manager-bdrs);
+			font-size: small;
 			overflow-x: auto;
 			padding: 2ch;
 			tab-size: var(--csp-manager-tab-width);
@@ -172,7 +176,7 @@ class CspManager extends HTMLElement {
 					</ul>
 					<fieldset>
 						<input type="text" data-directive="${key}" placeholder="Add new value">
-						<button data-add data-directive="${key}">+</button>
+						<button data-add data-directive="${key}">Add</button>
 					</fieldset>
 				</div>
 			</details>`).join('')}
