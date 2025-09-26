@@ -27,7 +27,7 @@
 				const cspManager = document.querySelector('csp-manager');
 				const cspString = cspManager.cspString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 				navigator.clipboard.writeText(cspString).then(() => {
-					console.log('CSP String copied to clipboard:', cspString);
+					console.log(cspString);
 				}).catch(err => {
 					console.error('Failed to copy text: ', err);
 				});
