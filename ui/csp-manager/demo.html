@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSP Manager - Initial Policy Demo</title>
+	<link rel="stylesheet" href="/base.css">
+	<script src="index.js" type="module"></script>
+</head>
+<body>
+
+	<h1>CSP Manager: <code>initial-policy</code> Demo</h1>
+	<p>This example demonstrates how to initialize the component with a predefined state using the <code>initial-policy</code> attribute.</p>
+
+
+	<hr>
+
+	<h2>Component Output:</h2>
+	<div id="component-container"></div>
+
+	<script>
+		// 1. Define the initial policy object, as if it came from a CMS.
+		const initialPolicy = {
+			"base-uri": { "defaults": ["'self'"], "added": ["*.stoumann.dk"] },
+			"block-all-mixed-content": { "defaults": [], "added": [] },
+			"child-src": { "defaults": [], "added": [] },
+			"connect-src": { "defaults": ["'self'"], "added": ["api.example.com"] },
+			"default-src": { "defaults": ["'self'"], "added": [] },
+			"font-src": { "defaults": ["'self'", "data:"], "added": ["https://fonts.gstatic.com"] },
+			"form-action": { "defaults": ["'self'"], "added": [] },
+			"frame-ancestors": { "defaults": ["'none'"], "added": [] },
+			"img-src": { "defaults": ["'self'", "data:"], "added": ["https://images.unsplash.com"] },
+			"manifest-src": { "defaults": ["'self'"], "added": [] },
+			"media-src": { "defaults": ["'self'"], "added": [] },
+			"object-src": { "defaults": ["'none'"], "added": [] },
+			"plugin-types": { "defaults": [], "added": [] },
+			"report-to": { "defaults": [], "added": [] },
+			"report-uri": { "defaults": [], "added": [] },
+			"sandbox": { "defaults": [], "added": [] },
+			"script-src": { "defaults": ["'self'"], "added": ["'unsafe-inline'"] },
+			"style-src": { "defaults": ["'self'", "'unsafe-inline'"], "added": ["https://fonts.googleapis.com"] },
+			"upgrade-insecure-requests": { "defaults": [], "added": [] }
+		};
+
+		// 2. Stringify the policy to simulate how a backend would render it.
+		const policyString = JSON.stringify(initialPolicy);
+
+		// 3. Create the component and set the attribute.
+		// This simulates a backend rendering the tag with the attribute already populated.
+		const cspManager = document.createElement('csp-manager');
+		cspManager.setAttribute('initial-policy', policyString);
+
+		// 4. Add the component to the page.
+		document.getElementById('component-container').appendChild(cspManager);
+	</script>
+
+</body>
+</html>
