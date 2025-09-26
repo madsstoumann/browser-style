@@ -101,42 +101,32 @@ class CspManager extends HTMLElement {
 		this.shadowRoot.adoptedStyleSheets = [styles];
 
 		this.state = {
-			// Fetch directives
+			"base-uri": { enabled: true, defaults: ["'self'"], added: [] },
 			"child-src": { enabled: true, defaults: [], added: [] },
 			"connect-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"default-src": { enabled: true, defaults: ["'self'"], added: [] },
+			"fenced-frame-src": { enabled: false, defaults: [], added: [] },
 			"font-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
+			"form-action": { enabled: true, defaults: ["'self'"], added: [] },
+			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [] },
 			"frame-src": { enabled: true, defaults: [], added: [] },
 			"img-src": { enabled: true, defaults: ["'self'", "data:"], added: [] },
 			"manifest-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"media-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"object-src": { enabled: true, defaults: ["'none'"], added: [] },
+			"report-to": { enabled: false, defaults: [], added: [] },
+			"require-sri-for": { enabled: false, defaults: ["script", "style"], added: [] },
+			"require-trusted-types-for": { enabled: false, defaults: [], added: [] },
+			"sandbox": { enabled: false, defaults: [], added: [] },
 			"script-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"script-src-elem": { enabled: false, defaults: [], added: [] },
 			"script-src-attr": { enabled: false, defaults: [], added: [] },
 			"style-src": { enabled: true, defaults: ["'self'"], added: [] },
 			"style-src-elem": { enabled: false, defaults: [], added: [] },
 			"style-src-attr": { enabled: false, defaults: [], added: [] },
-			"worker-src": { enabled: false, defaults: [], added: [] },
-
-			// Document directives
-			"base-uri": { enabled: true, defaults: ["'self'"], added: [] },
-			"plugin-types": { enabled: false, defaults: [], added: [] }, // Deprecated
-			"sandbox": { enabled: false, defaults: [], added: [] },
-
-			// Navigation directives
-			"form-action": { enabled: true, defaults: ["'self'"], added: [] },
-			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [] },
-
-			// Reporting directives
-			"report-to": { enabled: false, defaults: [], added: [] },
-			"report-uri": { enabled: false, defaults: [], added: [] }, // Deprecated
-
-			// Other directives
-			"block-all-mixed-content": { enabled: false, defaults: [], added: [] },
-			"require-sri-for": { enabled: false, defaults: [], added: [] },
-			"trusted-types": { enabled: false, defaults: [], added: [] },
-			"upgrade-insecure-requests": { enabled: true, defaults: [], added: [] },
+			"trusted-types": { enabled: false, defaults: ["'none'"], added: [] },
+			"upgrade-insecure-requests": { enabled: false, defaults: [], added: [], boolean: true },
+			"worker-src": { enabled: false, defaults: [], added: [] }
 		};
 	}
 
@@ -255,23 +245,31 @@ class CspManager extends HTMLElement {
 
 	render() {
 		this.shadowRoot.innerHTML = `
-			${Object.entries(this.state).map(([key, valueObj]) => `
-			<details>
-				<summary>${key}</summary>
-				<div>
-					<ul data-ul-for="${key}">
-						${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
-						${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
-					</ul>
-					<label>
-						<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> Enable ${key}
-					</label>
-					<fieldset>
-						<input type="text" data-directive="${key}" placeholder="Add new value">
-						<button data-add data-directive="${key}">Add</button>
-					</fieldset>
-				</div>
-			</details>`).join('')}
+			${Object.entries(this.state).map(([key, valueObj]) => {
+				return `
+					<details>
+						<summary>${key}</summary>
+						<div>
+							${valueObj.boolean
+								? `<p>This is a boolean directive. It has no values.</p>`
+								: `
+									<ul data-ul-for="${key}">
+										${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
+										${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
+									</ul>
+									<fieldset>
+										<input type="text" data-directive="${key}" placeholder="Add new value">
+										<button data-add data-directive="${key}">Add</button>
+									</fieldset>
+								`
+							}
+							<label>
+								<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> Enable ${key}
+							</label>
+						</div>
+					</details>
+				`;
+			}).join('')}
 			<pre><code>${this.generateCspString()}</code></pre>`;
 	}
 }
