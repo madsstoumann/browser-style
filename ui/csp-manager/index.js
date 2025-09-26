@@ -92,6 +92,16 @@ styles.replaceSync(`
 		summary {
 			font-family: var(--csp-manager-ff-mono);
 		}
+
+		::details-content {
+			transition: height 0.5s ease, content-visibility 0.5s ease allow-discrete;
+			height: 0;
+			overflow: clip;
+		}
+		[open]::details-content {
+			height: auto;
+		}
+}
 `);
 
 class CspManager extends HTMLElement {
@@ -198,6 +208,7 @@ class CspManager extends HTMLElement {
 	}
 
 	connectedCallback() {
+		document.documentElement.style.setProperty('interpolate-size', 'allow-keywords');
 		const initialPolicy = this.getAttribute('initial-policy');
 
 		if (initialPolicy) {
@@ -254,7 +265,7 @@ class CspManager extends HTMLElement {
 					: '';
 
 				return `
-					<details>
+					<details name="csp-directive">
 						<summary>${key}</summary>
 						<div>
 							<small>${valueObj.description}</small>
