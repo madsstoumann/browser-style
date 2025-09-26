@@ -5,12 +5,33 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="CSP Manager">
-  <meta name="view-transition" content="same-origin">
+	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 </head>
 <body>
-    <h1>Content-Security-Policy Manager</h1>
-    <csp-manager></csp-manager>
+		<h1>Content-Security-Policy Manager</h1>
+		<csp-manager></csp-manager>
+		<p>
+			<button id="getPolicyBtn">Get Policy</button>
+			<button id="getCspStringBtn">Copy CSP String to clipboard</button>
+		</p>
 		<script type="module" src="./index.js"></script>
+		<script>
+			document.getElementById('getPolicyBtn').addEventListener('click', () => {
+				const cspManager = document.querySelector('csp-manager');
+				const currentPolicy = cspManager.policy;
+				console.log('Current CSP Policy:', JSON.stringify(currentPolicy, null, 2));
+			});
+
+		document.getElementById('getCspStringBtn').addEventListener('click', () => {
+				const cspManager = document.querySelector('csp-manager');
+				const cspString = cspManager.cspString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+				navigator.clipboard.writeText(cspString).then(() => {
+					console.log('CSP String copied to clipboard:', cspString);
+				}).catch(err => {
+					console.error('Failed to copy text: ', err);
+				});
+			});
+		</script>
 </body>
 </html>

@@ -2,6 +2,7 @@ const styles = new CSSStyleSheet();
 styles.replaceSync(`
 		:host {
 			--csp-manager-accent: hsl(211, 100%, 95%);
+			--csp-manager-accent-dark: hsl(211, 50%, 50%);
 			--csp-manager-buttonface: #efefef;
 			--csp-manager-bdrs: .5rem;
 			--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
@@ -30,6 +31,8 @@ styles.replaceSync(`
 			border: 1px solid var(--csp-manager-buttonface);
 			border-radius: var(--csp-manager-bdrs);
 			padding: var(--csp-manager-gap);
+			user-select: none;
+			&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
 		}
 
 		div {
@@ -98,7 +101,7 @@ class CspManager extends HTMLElement {
 		this.state = {
 			"base-uri": { defaults: ["'self'"], added: [] },
 			"block-all-mixed-content": { defaults: [], added: [] },
-			"child-src": { defaults: [], added: [] },
+			"child-src": { defaults: [], added: ["stoumann.dk"] },
 			"connect-src": { defaults: ["'self'"], added: [] },
 			"default-src": { defaults: ["'self'"], added: [] },
 			"font-src": { defaults: ["'self'", "data:"], added: [] },
@@ -118,17 +121,56 @@ class CspManager extends HTMLElement {
 		};
 	}
 
+	get policy() {
+		return this.state;
+	}
+
+	set policy(newState) {
+		if (typeof newState !== 'object' || newState === null) {
+			return;
+		}
+
+		Object.keys(newState).forEach(key => {
+			if (this.state[key] && newState[key] && Array.isArray(newState[key].added)) {
+				this.state[key].added = [...newState[key].added];
+			}
+		});
+
+		this.render();
+	}
+
+	get cspString() {
+		return this.generateCspString();
+	}
+
+	updateCspString() {
+		const cspString = this.generateCspString();
+		this.shadowRoot.querySelector('pre code').textContent = cspString;
+	}
+
 	addValue(directive, value) {
 		if (this.state[directive] && value) {
 			this.state[directive].added.push(value);
-			this.render();
+			const ul = this.shadowRoot.querySelector(`[data-ul-for="${directive}"]`);
+			if (ul) {
+				const li = document.createElement('li');
+				li.textContent = value;
+				const button = document.createElement('button');
+				button.dataset.remove = '';
+				button.dataset.directive = directive;
+				button.dataset.index = this.state[directive].added.length - 1;
+				button.textContent = '×';
+				li.append(button);
+				ul.append(li);
+			}
+			this.updateCspString();
 		}
 	}
 
 	removeValue(directive, index) {
 		if (this.state[directive] && this.state[directive].added[index] !== undefined) {
 			this.state[directive].added.splice(index, 1);
-			this.render();
+			this.updateCspString();
 		}
 	}
 
@@ -159,18 +201,18 @@ class CspManager extends HTMLElement {
 			} else if (button.dataset.remove !== undefined) {
 				const index = parseInt(button.dataset.index, 10);
 				this.removeValue(directive, index);
+				button.closest('li').remove();
 			}
 		});
 	}
 
 	render() {
-		const cspString = this.generateCspString();
 		this.shadowRoot.innerHTML = `
 			${Object.entries(this.state).map(([key, valueObj]) => `
 			<details>
 				<summary>${key}</summary>
 				<div>
-					<ul>
+					<ul data-ul-for="${key}">
 						${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
 						${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
 					</ul>
@@ -180,7 +222,7 @@ class CspManager extends HTMLElement {
 					</fieldset>
 				</div>
 			</details>`).join('')}
-			<pre><code>${cspString}</code></pre>`;
+			<pre><code>${this.generateCspString()}</code></pre>`;
 	}
 }
 
