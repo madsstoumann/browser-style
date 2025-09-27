@@ -7,9 +7,15 @@
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
 	<style>
 		body {
+			background: Canvas;
+			color: CanvasText;
+			color-schema: light dark;
 			font-family: system-ui;
 			margin-inline: auto;
 			max-width: 400px;
+			&:has([name="color-scheme"]:checked) {
+				color-scheme: dark;
+			}
 		}
 		dl {
 			all: unset;
@@ -94,7 +100,7 @@
 					<dd><output name="gas_possession">0</output> kr.</dd>
 				</dl>
 				<dl>
-					<dt>Lattergas mængde</dt>
+					<dt>Mængde i besiddelse</dt>
 					<dd><output name="gas_am_out">0</output> kr.</dd>
 				</dl>
 				<dl>
@@ -118,43 +124,35 @@
 		</details>
 	</form>
 
+	<label>
+		<input type="checkbox" name="color-scheme"> Skift mellem lyst og mørkt tema
+	</label>
+
 	<script>
 
 		function calculate(E) {
-			const isTHC = E.drug.value === '1';
-			const isGas = E.drug.value === '2';
-			const lowTHC = E.thc_am.value === 'low';
+			const isTHC = E.drug.value === '1', isGas = E.drug.value === '2', lowTHC = E.thc_am.value === 'low';
 			const locale = document.documentElement.lang || 'da-DK';
+			const F = (num) => parseInt(num).toLocaleString(locale);
 
-			// Set all values with locale formatting
-			E.income_out.value = parseInt(E.income.value).toLocaleString(locale);
-			E.income_year.value = (E.income.value * 12).toLocaleString(locale);
-			E.gas_am_out.value = (isGas ? parseInt(E.gas_am.value) : 0).toLocaleString(locale);
-			E.gas_possession.value = (isGas && E.gas_am.value !== '0' ? 10000 : 0).toLocaleString(locale);
-			E.fine.value = Math.round(((E.income.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1)).toLocaleString(locale);
+			E.income_out.value = F(E.income.value);
+			E.income_year.value = F(E.income.value * 12);
+			E.gas_am_out.value = F(isGas ? E.gas_am.value : 0);
+			E.gas_possession.value = F(isGas && E.gas_am.value !== '0' ? 10000 : 0);
+			E.fine.value = F(Math.round(((E.income.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1)));
 
-			// Set visibility
-			E.ant_course.hidden = (isTHC && lowTHC);
-			E.gas_am_out.hidden = !isGas;
-			E.gas_possession.hidden = !isGas;
-			E.gas.hidden = !isGas;
-			E.license_test.hidden = (isTHC && lowTHC);
-			E.license.hidden = !isTHC && !isGas;
 			E.thc.hidden = !isTHC;
-			E.victim_fund.hidden = (isTHC && lowTHC);
+			E.gas.hidden = E.gas_am_out.hidden = E.gas_possession.hidden = !isGas;
+			E.license.hidden = !isTHC && !isGas;
+			E.ant_course.hidden = E.license_test.hidden = E.victim_fund.hidden = (isTHC && lowTHC);
 
-			// Calculate subtotal - clean dots from locale-formatted numbers
-			const subtotal = [...E.breakdown.elements].reduce((sum, elm) => {
-				if (elm.hidden) return sum;
-				const cleanValue = parseInt((elm.value || '0').replace(/\./g, ''));
-				return sum + cleanValue;
-			}, 0);
+			const subtotal = [...E.breakdown.elements].reduce((sum, elm) => 
+				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
+			, 0);
 
-			E.total.value = subtotal.toLocaleString(locale);
-			E.total_fine.value = subtotal.toLocaleString(locale);
+			E.total.value = E.total_fine.value = subtotal.toLocaleString(locale);
 		}
 
-		// function calculate(e){const a="1"===e.drug.value,n="2"===e.drug.value,u="low"===e.thc_am.value;e.income_out.value=e.income.value,e.gas_am_out.value=n?e.gas_am.value:0,e.gas_possession.value=n&&"0"!==e.gas_am.value?1e4:0,e.ant_course.hidden=a&&u,e.gas_am_out.hidden=!n,e.gas_possession.hidden=!n,e.gas.hidden=!n,e.license_test.hidden=a&&u,e.license.hidden=!a&&!n,e.thc.hidden=!a,e.victim_fund.hidden=a&&u,e.fine.value=Math.round(12*e.income.value/25/(a&&u?2:1));const d=[...e.breakdown.elements].reduce(((e,a)=>a.hidden?e:e+parseInt(a.value||0)),0);e.total.value=d,e.total_fine.value=d}
 		const app = document.getElementById('app');
 		app.addEventListener('input', (event) => { calculate(app.elements) });
 		calculate(app.elements);
