@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="da-DK" dir="ltr">
 <head>
-	<title>Drug Ticket</title>
+	<title>Narkoberegner</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
@@ -11,33 +11,29 @@
 			margin-inline: auto;
 			max-width: 400px;
 		}
-		form {
-			display: grid;
-			gap: 1rem;
-			padding: 1rem;
-		}
-		label, output {
-			display: block;
-		}
 		dl {
 			all: unset;
 			display: grid;
 			grid-template-columns: 2fr 1fr;
 			dd { margin: 0; text-align: right; }
-			output {
-				display: inline;
-				font-variant-numeric: tabular-nums;
-			}
 			&:has([hidden]) { display: none; }
 		}
+		form {
+			display: grid;
+			gap: 1rem;
+			padding: 1rem;
+		}
+		label { display: block; }
+		output { font-variant-numeric: tabular-nums; }
 	</style>
 </head>
 <body>
 
 	<form id="app">
 		<label for="income">Din månedsløn før skat:</label>
-		<output for="income" name="income_output">25.000 kr.</output>
+		<output for="income" name="income_out">25.000 kr.</output>
 		<input type="range" id="income" name="income" min="0" step="500" max="60000" value="25000">
+		<small>Årsindkomst: <output name="income_year"></output></small>
 
 		<fieldset>
 			<legend>Vælg stof</legend>
@@ -50,21 +46,21 @@
 			<label><input type="radio" name="drug" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
 		</fieldset>
 		
-		<fieldset name="thc_info">
+		<fieldset name="thc">
 			<legend>THC-niveau i blodet</legend>
-			<label><input type="radio" name="thc_amount" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-			<label><input type="radio" name="thc_amount" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-			<label><input type="radio" name="thc_amount" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+			<label><input type="radio" name="thc_am" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+			<label><input type="radio" name="thc_am" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+			<label><input type="radio" name="thc_am" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
 		</fieldset>
-		<fieldset name="gas_info">
+		<fieldset name="gas">
 			<legend>Lattergas i besiddelse</legend>
-			<label><input type="radio" name="gas_amount" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
-			<label><input type="radio" name="gas_amount" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-			<label><input type="radio" name="gas_amount" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-			<label><input type="radio" name="gas_amount" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+			<label><input type="radio" name="gas_am" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
+			<label><input type="radio" name="gas_am" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+			<label><input type="radio" name="gas_am" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+			<label><input type="radio" name="gas_am" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
 		</fieldset>
 
-		<fieldset name="license_years_info">
+		<fieldset name="license">
 			<legend>Hvor lang tid har du haft kørekort?</legend>
 			<label>
 				<input type="radio" name="license_years">
@@ -80,19 +76,18 @@
 			<summary>
 				<strong>Ca. Total (kr) <output name="total">1500</output></strong>
 			</summary>
-
 			<fieldset name="breakdown">
 				<dl>
 					<dt>Bødestørrelse</dt>
-					<dd><output name="fine">1500</output> kr.</dd>
+					<dd><output name="fine">0</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>Analyse af blodprøve</dt>
-					<dd><output name="blood_analysis_output">2700</output> kr.</dd>
+					<dd><output name="blood_analysis" data-value="2700">2.700</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>Udgift til læge</dt>
-					<dd><output name="doctor_fee_output">125</output> kr.</dd>
+					<dd><output name="doctor_fee" data-value="125">125</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>Besiddelse af lattergas</dt>
@@ -100,56 +95,67 @@
 				</dl>
 				<dl>
 					<dt>Lattergas mængde</dt>
-					<dd><output name="gas_possession_amount">0</output> kr.</dd>
+					<dd><output name="gas_am_out">0</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>Offerfonden</dt>
-					<dd><output name="victim_fund_output">500</output> kr.</dd>
+					<dd><output name="victim_fund" data-value="500">500</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>ANT-kursus</dt>
-					<dd><output name="ant_course_output">3200</output> kr.</dd>
+					<dd><output name="ant_course" data-value="3200">3.200</output> kr.</dd>
 				</dl>
 				<dl>
 					<dt>Ny teori- og køreprøve</dt>
-					<dd><output name="license_test_output">1210</output> kr.</dd>
+					<dd><output name="license_test" data-value="1210">1.210</output> kr.</dd>
 				</dl>
-				<hr>
-				
-				<strong>Totale udgifter (ca.)</strong>
-				<output name="total_fine"></output>
 			</fieldset>
+			<dl>
+				<dt>Totale udgifter (ca.)</dt>
+				<dd><output name="total_fine"></output> kr.</dd>
+				</dl>
+			<dl>		
 		</details>
 	</form>
 
 	<script>
-		const app = document.getElementById('app');
 
 		function calculate(E) {
 			const isTHC = E.drug.value === '1';
 			const isGas = E.drug.value === '2';
-			const lowTHC = E.thc_amount.value === 'low';
+			const lowTHC = E.thc_am.value === 'low';
 
-			E.income_output.value = E.income.value;
+			const locale = document.documentElement.lang || 'da-DK';
+			E.income_out.value = parseInt(E.income.value).toLocaleString(locale);
+			E.income_year.value = (E.income.value * 12).toLocaleString(locale);
+			const gasAmountValue = isGas ? parseInt(E.gas_am.value) : 0;
+			const gasPossessionValue = isGas && E.gas_am.value !== '0' ? 10000 : 0;
 
-			E.thc_info.hidden = !isTHC;
-			E.gas_info.hidden = !isGas;
-			E.license_years_info.hidden = !isTHC && !isGas;
-
-			E.gas_possession.value = isGas && E.gas_amount.value !== '0' ? 10000 : 0;
-			E.gas_possession_amount.value = isGas ? E.gas_amount.value : 0;
+			E.gas_am_out.value = gasAmountValue.toLocaleString(locale);
+			E.gas_am_out.dataset.value = gasAmountValue;
+			E.gas_possession.value = gasPossessionValue.toLocaleString(locale);
+			E.gas_possession.dataset.value = gasPossessionValue;
+			
+			E.ant_course.hidden = (isTHC && lowTHC);
+			E.gas_am_out.hidden = !isGas;
 			E.gas_possession.hidden = !isGas;
-			E.gas_possession_amount.hidden = !isGas;
+			E.gas.hidden = !isGas;
+			E.license_test.hidden = (isTHC && lowTHC);
+			E.license.hidden = !isTHC && !isGas;
+			E.thc.hidden = !isTHC;
+			E.victim_fund.hidden = (isTHC && lowTHC);
 
-			E.victim_fund_output.hidden = (isTHC && lowTHC);
-			E.ant_course_output.hidden = (isTHC && lowTHC);
-			E.license_test_output.hidden = (isTHC && lowTHC);
+			const fineAmount = Math.round(((E.income.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1));
+			E.fine.value = fineAmount.toLocaleString(locale);
+			E.fine.dataset.value = fineAmount;
 
-			E.fine.value = Math.round(((E.income.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1));
-			const subtotal = [...E.breakdown.elements].reduce((sum, elm) => elm.hidden ? sum : sum + parseInt(elm.value || 0), 0);
-			E.total.value = subtotal;
+			const subtotal = [...E.breakdown.elements].reduce((sum, elm) => elm.hidden ? sum : sum + parseInt(elm.dataset.value || elm.value || 0), 0);
+			E.total.value = subtotal.toLocaleString(locale);
+			E.total_fine.value = subtotal.toLocaleString(locale);
 		}
 
+		// function calculate(e){const a="1"===e.drug.value,n="2"===e.drug.value,u="low"===e.thc_am.value;e.income_out.value=e.income.value,e.gas_am_out.value=n?e.gas_am.value:0,e.gas_possession.value=n&&"0"!==e.gas_am.value?1e4:0,e.ant_course.hidden=a&&u,e.gas_am_out.hidden=!n,e.gas_possession.hidden=!n,e.gas.hidden=!n,e.license_test.hidden=a&&u,e.license.hidden=!a&&!n,e.thc.hidden=!a,e.victim_fund.hidden=a&&u,e.fine.value=Math.round(12*e.income.value/25/(a&&u?2:1));const d=[...e.breakdown.elements].reduce(((e,a)=>a.hidden?e:e+parseInt(a.value||0)),0);e.total.value=d,e.total_fine.value=d}
+		const app = document.getElementById('app');
 		app.addEventListener('input', (event) => { calculate(app.elements) });
 		calculate(app.elements);
 	</script>
