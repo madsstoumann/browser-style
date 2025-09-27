@@ -5,12 +5,17 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
 	<style>
 		body {
 			background: Canvas;
 			color: CanvasText;
 			color-schema: light dark;
-			font-family: system-ui;
+			font-family: "DM Sans", sans-serif;
+  		font-optical-sizing: auto;
+			font-style: normal;
 			margin-inline: auto;
 			max-width: 400px;
 			&:has([name="color-scheme"]:checked) {
@@ -31,13 +36,19 @@
 		}
 		label { display: block; }
 		output { font-variant-numeric: tabular-nums; }
+
+		.headline {
+			font-size: 2.5rem;
+			font-weight: 600;
+			letter-spacing: -1.5px;
+		}
 	</style>
 </head>
 <body>
 
 	<form id="app">
 		<label for="income">Din månedsløn før skat:</label>
-		<output for="income" name="income_out">25.000 kr.</output>
+		<output for="income" name="income_out" class="headline">25.000 kr.</output>
 		<input type="range" id="income" name="income" min="0" step="500" max="60000" value="25000">
 		<small>Årsindkomst: <output name="income_year"></output></small>
 
@@ -119,8 +130,11 @@
 			<dl>
 				<dt>Totale udgifter (ca.)</dt>
 				<dd><output name="total_fine"></output> kr.</dd>
-				</dl>
-			<dl>		
+			<dl>
+			<p>
+				<small>For at generhverve førerretten, skal man gennemføre et ANT-kursus tidligst 3 måneder før frakendelsesperioden udløber.</small><br>
+				<small>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud eller betinget frakendelse.</small>
+			</p>
 		</details>
 	</form>
 
