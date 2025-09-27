@@ -19,16 +19,16 @@
 		label, output {
 			display: block;
 		}
-		fieldset[disabled] {
-			opacity: 0.25;
-		}
-		[name=breakdown] {
+		dl {
+			all: unset;
 			display: grid;
 			grid-template-columns: 2fr 1fr;
+			dd { margin: 0; text-align: right; }
 			output {
+				display: inline;
 				font-variant-numeric: tabular-nums;
-				text-align: right;
 			}
+			&:has([hidden]) { display: none; }
 		}
 	</style>
 </head>
@@ -49,47 +49,73 @@
 			<label><input type="radio" name="drug" value="0"><svg width="20" height="19"><use href="#opioider"></use></svg>Opioider</label>
 			<label><input type="radio" name="drug" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
 		</fieldset>
+		
+		<fieldset name="thc_info">
+			<legend>THC-niveau i blodet</legend>
+			<label><input type="radio" name="thc_amount" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+			<label><input type="radio" name="thc_amount" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+			<label><input type="radio" name="thc_amount" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+		</fieldset>
+		<fieldset name="gas_info">
+			<legend>Lattergas i besiddelse</legend>
+			<label><input type="radio" name="gas_amount" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
+			<label><input type="radio" name="gas_amount" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+			<label><input type="radio" name="gas_amount" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+			<label><input type="radio" name="gas_amount" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+		</fieldset>
 
-		<fieldset>
-			<fieldset name="thc_info" disabled>
-				<legend>THC-niveau i blodet</legend>
-				<label><input type="radio" name="thc" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-				<label><input type="radio" name="thc" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-				<label><input type="radio" name="thc" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
-			</fieldset>
-			<fieldset name="gas_info" disabled>
-				<legend>Lattergas i besiddelse</legend>
-				<label><input type="radio" name="gas" value="none" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
-				<label><input type="radio" name="amount" value="low"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-				<label><input type="radio" name="amount" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-				<label><input type="radio" name="amount" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
-			</fieldset>
-
+		<fieldset name="license_years_info">
+			<legend>Hvor lang tid har du haft kørekort?</legend>
 			<label>
-				Hvor lang tid har du haft kørekort?
-				<input type="checkbox" name="license_years">
+				<input type="radio" name="license_years">
 				<span>Under 3 år</span>
+			</label>
+			<label>
+				<input type="radio" name="license_years" checked>
 				<span>+3 år</span>
 			</label>
-
+		</fieldset>
+	
 		<details open>
 			<summary>
-				Ca. Total (kr) <output name="total">1500</output>
+				<strong>Ca. Total (kr) <output name="total">1500</output></strong>
 			</summary>
 
 			<fieldset name="breakdown">
-				<span>Bødestørrelse</span>
-				<output name="fine">1500</output>
-				<span>Analyse af blodprøve</span>
-				<output name="blood_analysis_output">2700</output>
-				<span>Udgift til læge</span>
-				<output name="doctor_fee_output">125</output>
-				<span>Offerfonden</span>
-				<output name="victim_fund_output">500</output>
-				<span>ANT-kursus</span>
-				<output name="ant_course_output">3200</output>
-				<span>Ny teori- og køreprøve</span>
-				<output name="license_test_output">1210</output>
+				<dl>
+					<dt>Bødestørrelse</dt>
+					<dd><output name="fine">1500</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Analyse af blodprøve</dt>
+					<dd><output name="blood_analysis_output">2700</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Udgift til læge</dt>
+					<dd><output name="doctor_fee_output">125</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Besiddelse af lattergas</dt>
+					<dd><output name="gas_possession">0</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Lattergas mængde</dt>
+					<dd><output name="gas_possession_amount">0</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Offerfonden</dt>
+					<dd><output name="victim_fund_output">500</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>ANT-kursus</dt>
+					<dd><output name="ant_course_output">3200</output> kr.</dd>
+				</dl>
+				<dl>
+					<dt>Ny teori- og køreprøve</dt>
+					<dd><output name="license_test_output">1210</output> kr.</dd>
+				</dl>
+				<hr>
+				
 				<strong>Totale udgifter (ca.)</strong>
 				<output name="total_fine"></output>
 			</fieldset>
@@ -99,17 +125,29 @@
 	<script>
 		const app = document.getElementById('app');
 
-		function calculate(elements) {
-			const isTHC = elements.drug.value === '1';
-			const isGas = elements.drug.value === '2';
-			elements.income_output.value = elements.income.value;
-			elements.thc_info.disabled = !isTHC;
-			elements.gas_info.disabled = !isGas;
-			elements.fine.value = Math.round(((elements.income.value * 12) / 50) * (isTHC || isGas ? 2 : 1));
-			/* set fine multiplier based on drug and amount */
-			const subtotal = [...elements.breakdown.elements].reduce((sum, elm) => sum + parseInt(elm.value || 0), 0);
-			elements.total.value = subtotal;
-		
+		function calculate(E) {
+			const isTHC = E.drug.value === '1';
+			const isGas = E.drug.value === '2';
+			const lowTHC = E.thc_amount.value === 'low';
+
+			E.income_output.value = E.income.value;
+
+			E.thc_info.hidden = !isTHC;
+			E.gas_info.hidden = !isGas;
+			E.license_years_info.hidden = !isTHC && !isGas;
+
+			E.gas_possession.value = isGas && E.gas_amount.value !== '0' ? 10000 : 0;
+			E.gas_possession_amount.value = isGas ? E.gas_amount.value : 0;
+			E.gas_possession.hidden = !isGas;
+			E.gas_possession_amount.hidden = !isGas;
+
+			E.victim_fund_output.hidden = (isTHC && lowTHC);
+			E.ant_course_output.hidden = (isTHC && lowTHC);
+			E.license_test_output.hidden = (isTHC && lowTHC);
+
+			E.fine.value = Math.round(((E.income.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1));
+			const subtotal = [...E.breakdown.elements].reduce((sum, elm) => elm.hidden ? sum : sum + parseInt(elm.value || 0), 0);
+			E.total.value = subtotal;
 		}
 
 		app.addEventListener('input', (event) => { calculate(app.elements) });
