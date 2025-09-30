@@ -41,16 +41,17 @@
 
 		}
 
+		
 		.app { display: grid; gap: 32px; }
 		.controls { display: grid; order: 2; reading-order: 2; row-gap: 18px; text-align: center; }
-		.controls-header { display: none; row-gap: 16px; }
+		.controls-header { display: none; margin-inline: auto; max-width: 50ch; row-gap: 16px; }
 		.label {
 			font-size: 11px;
 			letter-spacing: 0.33px;
 			margin-block-end: 10px;
 			text-transform: uppercase
 		}
-		.radio-group {
+		.radio-group:not([hidden]) {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 8px;
@@ -196,8 +197,7 @@
 			<div class="controls">
 				<header class="controls-header">
 					<h1>Narkokørsel koster kassen</h1>
-					En bane nu og dit kørekort + 25.000 i bøde senere?<br>
-					Se, hvad straffen for narkokørsel egentlig er.
+					En bane nu og dit kørekort + 25.000 i bøde senere? Se, hvad straffen for narkokørsel egentlig er.
 				</header>
 
 				<fieldset>
@@ -220,14 +220,14 @@
 					<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
 				</fieldset>
 				
-				<fieldset name="thc">
+				<fieldset name="thc" class="radio-group">
 					<legend class="label">THC-niveau i blodet</legend>
 					<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
 					<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
 					<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
 				</fieldset>
 
-				<fieldset name="gas">
+				<fieldset name="gas" class="radio-group">
 					<legend class="label">Lattergas i besiddelse</legend>
 					<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
 					<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
@@ -235,7 +235,7 @@
 					<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
 				</fieldset>
 
-				<fieldset name="lic">
+				<fieldset name="lic" class="radio-group">
 					<legend class="label">Hvor lang tid har du haft kørekort?</legend>
 					<label>
 						<input type="radio" name="lic_yrs">
@@ -259,9 +259,9 @@
 							<legend class="label">Derudover</legend>
 							<output name="ant_dsc">ANT-kursus</output>
 							<output name="lic_tst_dsc">Ny teori- og køreprøve</output>
-							<output name="lic_clp_dsc">+1 klip i kørekortet</output>
+							<output name="lic_clp_dsc">1 klip i kørekortet</output>
 							<output name="drv_ban_dsc">Kørselsforbud</output>
-							<output name="cnd_dsq_dsc">Betinget frakendelse af kørekort</output>
+							<output name="cnd_dsq_dsc">Betinget frakendelse af førerretten</output>
 							<output name="unc_dsq_3ys">Ubetinget frakendelse 3 år</output>
 						</fieldset>
 						<label class="result-toggle">
@@ -307,25 +307,12 @@
 						</fieldset>
 						<hr>
 						<label class="list">
-							<span>Totale øvrige udgifter</span>
-							<span><output name="tot"></output> kr.</span>
+							<strong>Totale øvrige udgifter</strong>
+							<strong><output name="tot"></output> kr.</strong>
 						</label>
-					
-					<!-- <output name="ant_dsc"><span><small><sup>1 </sup> For at generhverve førerretten, skal man gennemføre et ANT-kursus tidligst 3 måneder før frakendelsesperioden udløber.</small></span></output>
-					<output name="lic_tst_dsc"><span><small><sup>2</sup> Ny teori- og køreprøve skal bestås. Hvis man dumper en af prøverne, skal man aflevere kørekortet og får det først tilbage, når man har bestået begge prøver.</small></span></output> -->
-					<output name="gas_pos_dsc"><span><small><sup>3</sup> Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods.</small></span></output>
-					<output name="gas_amt_dsc">
-						
-							<small><sup>4</sup> Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med:<br>
-								&middot; Op til 1349 gram: <strong>3.000 kr.</strong><br>
-								&middot; 1350-2699 gram: <strong>5.000 kr.</strong><br>
-								&middot; Over 2699 gram: <strong>50.000 kr.</strong>
-							</small>
-						
-					</output>
-
+					<output name="gas_pos_dsc"><hr><small>Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods. Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med.<br>Op til 1349 gram: <strong>3.000 kr.</strong>, 1350-2699 gram: <strong>5.000 kr.</strong>, over 2699 gram: <strong>50.000 kr.</strong></small></output>
 					<output name="gas_inf_dsc">
-						<strong>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </strong>
+						<strong><hr>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </strong>
 					</output>
 					</div>
 				</article>
@@ -346,7 +333,8 @@
 	<script>
 
 		function calculate(E) {
-			const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', gasPos = E.gas_amt.value !== '0';
+			const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high', gasPos = E.gas_amt.value !== '0';
+			const licUnder3 = E.lic_yrs[0].checked;
 			const locale = document.documentElement.lang || 'da-DK';
 			const F = (num) => parseInt(num).toLocaleString(locale);
 
@@ -354,17 +342,21 @@
 			E.inc_yer.value = F(E.inc.value * 12);
 			E.gas_amt_out.value = F(isGas ? E.gas_amt.value : 0);
 			E.gas_pos.value = F(isGas && E.gas_amt.value !== '0' ? 10000 : 0);
-			E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1)))); 
+			E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
 
 			E.thc.hidden = !isTHC;
 			E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
-			E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = E.gas_amt_dsc.hidden = !isGas || !gasPos;
+			E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = !isGas || !gasPos;
 			E.lic.hidden = !isTHC && !isGas;
 			E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
+			E.lic_clp_dsc.hidden = !(isTHC && lowTHC);
+			E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && licUnder3);
+			E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && !licUnder3);
+			E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
 
 			const subtotal = [...E.brk.elements]
 				.filter(elm => elm.name !== 'fin')
-				.reduce((sum, elm) => 
+				.reduce((sum, elm) =>
 				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
 			, 0);
 
