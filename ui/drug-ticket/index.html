@@ -38,37 +38,134 @@
 			font-optical-sizing: auto;
 			font-size: 14px;
 			font-style: normal;
-
+			margin-inline: auto;
+			max-width: 1200px;
+			padding: 16px;
 		}
 
-		
-		.app { display: grid; gap: 32px; }
-		.controls { display: grid; order: 2; reading-order: 2; row-gap: 18px; text-align: center; }
-		.controls-header { display: none; margin-inline: auto; max-width: 50ch; row-gap: 16px; }
-		.label {
-			font-size: 11px;
-			letter-spacing: 0.33px;
-			margin-block-end: 10px;
-			text-transform: uppercase
-		}
-		.radio-group:not([hidden]) {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 8px;
-			justify-content: center;
-		}
-		.result-header {
+		/* Layout */
+		.app {
 			display: grid;
-			column-gap: 32px;
-			grid-template-columns: 1fr 1fr;
-			row-gap: 14px;
-			output { display: block; font-weight: 600; }
+			gap: 32px;
 		}
+
+		/* Base styles */
+		fieldset {
+			border: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+		label {
+			align-items: center;
+			display: grid;
+			gap: 4px;
+			grid-auto-flow: column;
+			justify-content: start;
+			user-select: none;
+		}
+
+		svg { fill: currentColor; }
+
+		/* Left side: form controls */
+		.controls {
+			display: grid;
+			order: 2;
+			reading-order: 2;
+			row-gap: 18px;
+			text-align: center;
+
+			h1 {
+				font-size: 48px;
+				font-weight: 500;
+				line-height: 1;
+				margin: 0;
+				text-box: cap alphabetic;
+			}
+
+			header {
+				display: none;
+				margin-inline: auto;
+				max-width: 50ch;
+				row-gap: 16px;
+			}
+
+			label:has([type=radio]) {
+				background: #e7e7e680;
+				border-radius: 2ch;
+				display: inline-grid;
+				font-size: 14px;
+				padding: .75ch 1.5ch;
+				&:has(:checked) { background: #0F0; }
+			}
+
+			label:has([type=range]) {
+				grid-template-columns: 1fr;
+			}
+
+			[name=inc_out] {
+				font-size: 2.5rem;
+				font-weight: 600;
+			}
+		}
+
+		/* Right side: results display */
+		.result {
+			article {
+				background: var(--green);
+				border-radius: 10px;
+				color: var(--gray-100);
+				padding: 16px 24px;
+			}
+
+			h2 {
+				display: block;
+				font-size: 40px;
+				font-weight: 600;
+				margin: 0;
+			}
+
+			header {
+				display: grid;
+				column-gap: 32px;
+				grid-template-columns: 1fr 1fr;
+				row-gap: 14px;
+				output:not([hidden]) {
+					display: block;
+					font-weight: 600;
+				}
+			}
+
+			&:has(:checked) .result-table { display: block; }
+		}
+
+		/* Expandable breakdown table */
 		.result-table {
 			display: none;
-			fieldset { display: grid; row-gap: 4px; }
+
+			fieldset {
+				display: grid;
+				row-gap: 4px;
+			}
+
+			label {
+				grid-template-columns: 2fr 1fr;
+				& > :nth-child(2) { justify-self: end; }
+				&:has([hidden]) { display: none; }
+			}
+
+			hr {
+				border: none;
+				border-top: 1px solid #0001;
+				margin-block: 24px;
+			}
+
+			output {
+				font-family: inherit;
+				font-variant-numeric: tabular-nums;
+			}
 		}
-		.result:has(:checked) .result-table { display: block; }
+	
 		.result-toggle {
 			background: var(--gray-100);
 			border-radius: 3px;
@@ -78,115 +175,46 @@
 			padding: 6px 16px;
 			text-wrap: nowrap;
 		}
-		.result-total { display: block; font-size: 40px; font-weight: 600; margin: 0; }
 
-			article {
-				background: var(--green);
-				border-radius: 10px;
-				color: var(--gray-100);
-				padding: 16px 24px;
-			}
-
-			article header label {
-				display: grid;
-				grid-template-columns: 2fr 3fr;
-				user-select: none;
-				cursor: pointer;
-			}
-
-			fieldset { margin: 0; padding: 0; }
-
-		h1 {
-			font-size: 48px;
-			font-weight: 500;
-			line-height: 1;
-			margin: 0;
-			text-box: cap alphabetic;
+		/* Utility classes */
+		.label {
+			font-size: 11px;
+			letter-spacing: 0.33px;
+			margin-block-end: 10px;
+			text-transform: uppercase
 		}
 
-		hr {
-			border: none;
-			border-top: 1px solid #0001;
-			margin-block: 24px;
+		.radio-group:not([hidden]) {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
 		}
 
-		[type=range] { width: 100%; }
+		/* Hidden inputs */
+		input:is([type="checkbox"],[type="radio"]) {
+			border: 0;
+			clip: rect(0 0 0 0);
+			clip-path: inset(50%);
+			height: 1px;
+			overflow: hidden;
+			position: absolute;
+			white-space: nowrap;
+			width: 1px;
+		}
 
-		label { 
-			align-items: center;
-			display: grid;
-			gap: 4px;
-    	grid-auto-flow: column;
-    	justify-content: start;
-			user-select: none;
-
-			&:has([type=radio]) {
-				background: #e7e7e680;
-				border-radius: 2ch;
-				display: inline-grid;
-				font-size: 14px;
-				padding: .75ch 1.5ch;
-				&:has(:checked) { background: #0F0; }
-			}
-			&:has([type=range]) {
-				grid-template-columns: 1fr;
-				/* & + small { color: var(--gray-50); } */
-			}
-			
-		 }
-
-			@container (min-width: 700px) {
-				.app { grid-template-columns: 1fr 1fr; }
-				.controls { order: unset; padding: 64px 48px; row-gap: var(--gap-desktop); }
-				.controls-header { display: grid; }
-				.result { background: var(--gray-100); padding: 64px 48px; }
-				.result-table { display: block; }
-				.result-toggle { display: none; }
-			}
+		/* Responsive layout */
+		@container (min-width: 700px) {
+			.app { grid-template-columns: 1fr 1fr; }
+			.controls { order: unset; padding: 64px 48px; row-gap: var(--gap-desktop); }
+			.controls header { display: grid; }
+			.result { background: var(--gray-100); padding: 64px 48px; }
+			.result-table { display: block; }
+			.result-toggle { display: none; }
+		}
 
 	}
 }
-
-
-		[name=brk] label, .list {
-			grid-template-columns: 2fr 1fr;
-			& > :nth-child(2) { justify-self: end; }
-			&:has([hidden]) { display: none; }
-		}
-		fieldset {
-			border: 0;
-			padding: 0;
-		}
-		form {
-			
-			display: grid;
-			gap: 1rem;
-			padding: 1rem;
-		}
-		input:is([type="checkbox"],[type="radio"]) { 
-
-	
-		border: 0;
-		clip: rect(0 0 0 0); 
-		clip-path: inset(50%);
-		height: 1px;
-		overflow: hidden;
-		position: absolute;
-		white-space: nowrap; 
-		width: 1px;
-	
-
-		 }
-
-		output { font-family: inherit; font-variant-numeric: tabular-nums; &[hidden] { display: none; } }
-		svg { fill: currentColor; }
-
-		.headline {
-			font-size: 2.5rem;
-			font-weight: 600;
-		}
-
-		.h1 { font-size: 3rem; font-weight: 500; letter-spacing: -1.4px; }
 	</style>
 </head>
 <body>
@@ -202,7 +230,7 @@
 
 				<fieldset>
 					<legend class="label">Din månedsløn før skat:</legend>
-					<output name="inc_out" class="headline">25.000 kr.</output>
+					<output name="inc_out">25.000 kr.</output>
 					<label aria-label="Vælg din månedsløn før skat">
 						<input type="range" name="inc" min="0" step="500" max="80000" value="25000">
 					</label>
@@ -306,7 +334,7 @@
 							</label>
 						</fieldset>
 						<hr>
-						<label class="list">
+						<label>
 							<strong>Totale øvrige udgifter</strong>
 							<strong><output name="tot"></output> kr.</strong>
 						</label>
