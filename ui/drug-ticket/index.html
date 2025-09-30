@@ -7,22 +7,146 @@
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 	<style>
 		body {
 			background: Canvas;
-			color: CanvasText;
 			color-scheme: light dark;
-			font-family: "DM Sans", sans-serif;
-  		font-optical-sizing: auto;
-			font-style: normal;
-			margin-inline: auto;
-			max-width: 400px;
+			margin: 0;
 			&:has([name="color-scheme"]:checked) {
 				@media (prefers-color-scheme: dark) { color-scheme: light; }
 				@media (prefers-color-scheme: light) { color-scheme: dark; }
 			}
 		}
+
+@layer components {
+	@scope (#app) {
+		:scope {
+			--green: #00FF00;
+			--gray-0: #FFFFFF;
+			--gray-10: #F1F1F1;
+			--gray-20: #e7e7e680;
+			--gray-50: #B4B6B9;
+			--gray-80: #373D46;
+			--gray-100: #28292C;
+
+			--gap-desktop: 48px;
+
+			color: light-dark(var(--gray-100), var(--gray-0));
+			container-type: inline-size;
+			font-family: "Rethink Sans", sans-serif;
+			font-optical-sizing: auto;
+			font-size: 14px;
+			font-style: normal;
+
+		}
+
+		.app { display: grid; gap: 32px; }
+		.controls { display: grid; order: 2; reading-order: 2; row-gap: 18px; text-align: center; }
+		.controls-header { display: none; row-gap: 16px; }
+		.label {
+			font-size: 11px;
+			letter-spacing: 0.33px;
+			margin-block-end: 10px;
+			text-transform: uppercase
+		}
+		.radio-group {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			justify-content: center;
+		}
+		.result-header {
+			display: grid;
+			column-gap: 32px;
+			grid-template-columns: 1fr 1fr;
+			row-gap: 14px;
+			output { display: block; font-weight: 600; }
+		}
+		.result-table {
+			display: none;
+			fieldset { display: grid; row-gap: 4px; }
+		}
+		.result:has(:checked) .result-table { display: block; }
+		.result-toggle {
+			background: var(--gray-100);
+			border-radius: 3px;
+			color: var(--gray-0);
+			grid-template-columns: 1fr;
+			justify-self: start;
+			padding: 6px 16px;
+			text-wrap: nowrap;
+		}
+		.result-total { display: block; font-size: 40px; font-weight: 600; margin: 0; }
+
+			article {
+				background: var(--green);
+				border-radius: 10px;
+				color: var(--gray-100);
+				padding: 16px 24px;
+			}
+
+			article header label {
+				display: grid;
+				grid-template-columns: 2fr 3fr;
+				user-select: none;
+				cursor: pointer;
+			}
+
+			fieldset { margin: 0; padding: 0; }
+
+		h1 {
+			font-size: 48px;
+			font-weight: 500;
+			line-height: 1;
+			margin: 0;
+			text-box: cap alphabetic;
+		}
+
+		hr {
+			border: none;
+			border-top: 1px solid #0001;
+			margin-block: 24px;
+		}
+
+		[type=range] { width: 100%; }
+
+		label { 
+			align-items: center;
+			display: grid;
+			gap: 4px;
+    	grid-auto-flow: column;
+    	justify-content: start;
+			user-select: none;
+
+			&:has([type=radio]) {
+				background: #e7e7e680;
+				border-radius: 2ch;
+				display: inline-grid;
+				font-size: 14px;
+				padding: .75ch 1.5ch;
+				&:has(:checked) { background: #0F0; }
+			}
+			&:has([type=range]) {
+				grid-template-columns: 1fr;
+				/* & + small { color: var(--gray-50); } */
+			}
+			
+		 }
+
+			@container (min-width: 700px) {
+				.app { grid-template-columns: 1fr 1fr; }
+				.controls { order: unset; padding: 64px 48px; row-gap: var(--gap-desktop); }
+				.controls-header { display: grid; }
+				.result { background: var(--gray-100); padding: 64px 48px; }
+				.result-table { display: block; }
+				.result-toggle { display: none; }
+			}
+
+	}
+}
+
+
 		[name=brk] label, .list {
 			grid-template-columns: 2fr 1fr;
 			& > :nth-child(2) { justify-self: end; }
@@ -33,143 +157,191 @@
 			padding: 0;
 		}
 		form {
+			
 			display: grid;
 			gap: 1rem;
 			padding: 1rem;
 		}
-		input[type="radio"] { height: 24px; width: 24px; }
-		label { 
-			align-items: center;
-			display: grid;
-			gap: 4px;
-    	grid-auto-flow: column;
-    	justify-content: start;
+		input:is([type="checkbox"],[type="radio"]) { 
+
+	
+		border: 0;
+		clip: rect(0 0 0 0); 
+		clip-path: inset(50%);
+		height: 1px;
+		overflow: hidden;
+		position: absolute;
+		white-space: nowrap; 
+		width: 1px;
+	
+
 		 }
-		output { font-variant-numeric: tabular-nums; }
+
+		output { font-family: inherit; font-variant-numeric: tabular-nums; &[hidden] { display: none; } }
 		svg { fill: currentColor; }
 
 		.headline {
 			font-size: 2.5rem;
 			font-weight: 600;
-			letter-spacing: -1.5px;
 		}
+
+		.h1 { font-size: 3rem; font-weight: 500; letter-spacing: -1.4px; }
 	</style>
 </head>
 <body>
 
 	<form id="app">
-		<label for="inc">Din månedsløn før skat:</label>
-		<output for="inc" name="inc_out" class="headline">25.000 kr.</output>
-		<input type="range" id="inc" name="inc" min="0" step="500" max="80000" value="25000">
-		<small>Årsindkomst: <output name="inc_yer"></output></small>
+		<div class="app">
 
-		<fieldset>
-			<legend>Vælg stof</legend>
-			<label><input type="radio" name="drg" value="1" checked><svg width="20" height="19"><use href="#cannabis"></use></svg>Cannabis</label>
-			<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#kokain"></use></svg>Kokain</label>
-			<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#lsd"></use></svg>LSD</label>
-			<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#andre"></use></svg>Ecstasy (MDMA)</label>
-			<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#amfetamin"></use></svg>Amfetamin</label>
-			<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#opioider"></use></svg>Opioider</label>
-			<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
-		</fieldset>
-		
-		<fieldset name="thc">
-			<legend>THC-niveau i blodet</legend>
-			<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-			<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-			<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
-		</fieldset>
+			<div class="controls">
+				<header class="controls-header">
+					<h1>Narkokørsel koster kassen</h1>
+					En bane nu og dit kørekort + 25.000 i bøde senere?<br>
+					Se, hvad straffen for narkokørsel egentlig er.
+				</header>
 
-		<fieldset name="gas">
-			<legend>Lattergas i besiddelse</legend>
-			<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
-			<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-			<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-			<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
-		</fieldset>
+				<fieldset>
+					<legend class="label">Din månedsløn før skat:</legend>
+					<output name="inc_out" class="headline">25.000 kr.</output>
+					<label aria-label="Vælg din månedsløn før skat">
+						<input type="range" name="inc" min="0" step="500" max="80000" value="25000">
+					</label>
+					<small>Årsindkomst før skat: <output name="inc_yer"></output></small>
+				</fieldset>
 
-		<fieldset name="lic">
-			<legend>Hvor lang tid har du haft kørekort?</legend>
-			<label>
-				<input type="radio" name="lic_yrs">
-				<span>Under 3 år</span>
-			</label>
-			<label>
-				<input type="radio" name="lic_yrs" checked>
-				<span>+3 år</span>
-			</label>
-		</fieldset>
-	
-		<details open>
-			<summary>
-				<strong>Ca. Total (kr) <output name="tot_fin">1500</output></strong>
-			</summary>
-			<p>
-				<fieldset name="brk">
+				<fieldset class="radio-group">
+					<legend class="label">Vælg stof</legend>
+					<label><input type="radio" name="drg" value="1" checked><svg width="20" height="19"><use href="#cannabis"></use></svg>Cannabis</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#kokain"></use></svg>Kokain</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#lsd"></use></svg>LSD</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#andre"></use></svg>Ecstasy (MDMA)</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#amfetamin"></use></svg>Amfetamin</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#opioider"></use></svg>Opioider</label>
+					<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
+				</fieldset>
+				
+				<fieldset name="thc">
+					<legend class="label">THC-niveau i blodet</legend>
+					<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+					<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+					<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+				</fieldset>
+
+				<fieldset name="gas">
+					<legend class="label">Lattergas i besiddelse</legend>
+					<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
+					<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+					<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+					<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+				</fieldset>
+
+				<fieldset name="lic">
+					<legend class="label">Hvor lang tid har du haft kørekort?</legend>
 					<label>
-						<span>Bødestørrelse</span>
-						<span><output name="fin">1500</output> kr.</span>
-					</label>
-					<hr>
-					<label>
-						<span>Analyse af blodprøve</span>
-						<span><output name="bld_ana" value="2700">2.700</output> kr.</span>
-					</label>
-					<label>
-						<span>Udgift til læge</span>
-						<span><output name="doc_fee" value="125">125</output> kr.</span>
-					</label>
-					<label>
-						<span>Offerfonden</span>
-						<span><output name="vic_fnd" value="500">500</output> kr.</span>
+						<input type="radio" name="lic_yrs">
+						<span>Under 3 år</span>
 					</label>
 					<label>
-						<span>ANT-kursus<sup>1</sup></span>
-						<span><output name="ant_crs" value="3200">3.200</output> kr.</span>
-					</label>
-					<label>
-						<span>Ny teori- og køreprøve<sup>2</sup></span>
-						<span><output name="lic_tst" value="1210">1.210</output> kr.</span>
-					</label>
-					<label>
-						<span>Besiddelse af lattergas<sup>3</sup></span>
-						<span><output name="gas_pos">0</output> kr.</span>
-					</label>
-					<label>
-						<span>Mængde i besiddelse<sup>4</sup></span>
-						<span><output name="gas_amt_out">0</output> kr.</span>
+						<input type="radio" name="lic_yrs" checked>
+						<span>+3 år</span>
 					</label>
 				</fieldset>
-				<hr>
-				<label class="list">
-					<span>Totale udgifter (ca.)</span>
-					<span><output name="tot"></output> kr.</span>
-				</label>
-			</p>
-			<output name="ant_dsc"><p><small><sup>1.</sup> For at generhverve førerretten, skal man gennemføre et ANT-kursus tidligst 3 måneder før frakendelsesperioden udløber.</small></p></output>
-			<output name="lic_tst_dsc"><p><small><sup>2</sup> Ny teori- og køreprøve skal bestås. Hvis man dumper en af prøverne, skal man aflevere kørekortet og får det først tilbage, når man har bestået begge prøver.</small></p></output>
-			<output name="gas_pos_dsc"><p><small><sup>3</sup> Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods.</small></p></output>
-			<output name="gas_amt_dsc">
-				<p>
-					<small><sup>4</sup> Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med:
-					<ul>
-						<li>Op til 1349 gram: <strong>3.000 kr.</strong></li>
-						<li>1350-2699 gram: <strong>5.000 kr.</strong></li>
-						<li>Over 2699 gram: <strong>50.000 kr.</strong></li>
-					</ul>
-					</small>
-				</p>
-			</output>
+			</div>
 
-			<output name="gas_inf_dsc"><strong>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </strong></output>
+			<div class="result">
+				<article>
+					<header class="result-header">
+						<hgroup>
+							<span class="label">Bødeestimat</span>
+							<h2 class="result-total"><output  name="tot_fin">1500</output></h2>
+						</hgroup>
+						<fieldset name="smr">
+							<legend class="label">Derudover</legend>
+							<output name="ant_dsc">ANT-kursus</output>
+							<output name="lic_tst_dsc">Ny teori- og køreprøve</output>
+							<output name="lic_clp_dsc">+1 klip i kørekortet</output>
+							<output name="drv_ban_dsc">Kørselsforbud</output>
+							<output name="cnd_dsq_dsc">Betinget frakendelse af kørekort</output>
+							<output name="unc_dsq_3ys">Ubetinget frakendelse 3 år</output>
+						</fieldset>
+						<label class="result-toggle">
+							<input type="checkbox">Se detaljer
+						</label>
+					</header>
 
-		</details>
+					<div class="result-table">
+						<hr>
+						<fieldset name="brk">
+							<label>
+								<span>Bødestørrelse</span>
+								<span><output name="fin">1500</output> kr.</span>
+							</label>
+							<label>
+								<span>Analyse af blodprøve</span>
+								<span><output name="bld_ana">2.700</output> kr.</span>
+							</label>
+							<label>
+								<span>Udgift til læge</span>
+								<span><output name="doc_fee">125</output> kr.</span>
+							</label>
+							<label>
+								<span>Offerfonden</span>
+								<span><output name="vic_fnd">500</output> kr.</span>
+							</label>
+							<label>
+								<span>ANT-kursus</span>
+								<span><output name="ant_crs">3.200</output> kr.</span>
+							</label>
+							<label>
+								<span>Ny teori- og køreprøve</span>
+								<span><output name="lic_tst">1.210</output> kr.</span>
+							</label>
+							<label>
+								<span>Besiddelse af lattergas</span>
+								<span><output name="gas_pos">0</output> kr.</span>
+							</label>
+							<label>
+								<span>Mængde i besiddelse</span>
+								<span><output name="gas_amt_out">0</output> kr.</span>
+							</label>
+						</fieldset>
+						<hr>
+						<label class="list">
+							<span>Totale øvrige udgifter</span>
+							<span><output name="tot"></output> kr.</span>
+						</label>
+					
+					<!-- <output name="ant_dsc"><span><small><sup>1 </sup> For at generhverve førerretten, skal man gennemføre et ANT-kursus tidligst 3 måneder før frakendelsesperioden udløber.</small></span></output>
+					<output name="lic_tst_dsc"><span><small><sup>2</sup> Ny teori- og køreprøve skal bestås. Hvis man dumper en af prøverne, skal man aflevere kørekortet og får det først tilbage, når man har bestået begge prøver.</small></span></output> -->
+					<output name="gas_pos_dsc"><span><small><sup>3</sup> Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods.</small></span></output>
+					<output name="gas_amt_dsc">
+						
+							<small><sup>4</sup> Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med:<br>
+								&middot; Op til 1349 gram: <strong>3.000 kr.</strong><br>
+								&middot; 1350-2699 gram: <strong>5.000 kr.</strong><br>
+								&middot; Over 2699 gram: <strong>50.000 kr.</strong>
+							</small>
+						
+					</output>
+
+					<output name="gas_inf_dsc">
+						<strong>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </strong>
+					</output>
+					</div>
+				</article>
+			</div>
+
+		</div>
 	</form>
 
-	<label>
+
+
+
+
+
+	<!-- <label>
 		<input type="checkbox" name="color-scheme"> Skift mellem lyst og mørkt tema
-	</label>
+	</label> -->
 
 	<script>
 
@@ -205,6 +377,9 @@
 		calculate(app.elements);
 	</script>
 
+
+
+	<!-- SVG icons -->
 	<svg xmlns="http://www.w3.org/2000/svg">
   <defs>
     <symbol id="amfetamin" viewBox="0 0 20 19">
