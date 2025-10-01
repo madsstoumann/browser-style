@@ -28,8 +28,7 @@ body {
 			/* Colors */
 			--green: #00FF00;
 			--gray-0: #FFFFFF;
-			/* --gray-20: #e7e7e680; */
-			--gray-20: #f1f1f1;
+			--gray-20: #F1F1F1;
 			--gray-80: #373D46;
 			--gray-100: #28292C;
 
@@ -423,9 +422,11 @@ body {
 		</div>
 	</form>
 
+	<!-- FOR CLIENT DEMO ONLY -->
 	<label style="display:block;margin:2rem auto;text-align:center;">
 		<input type="checkbox" name="color-scheme"> <small>Skift mellem lyst og mørkt tema</small>
 	</label>
+	<!-- END FOR CLIENT DEMO ONLY -->
 
 	<script>
 
@@ -434,6 +435,7 @@ body {
 			const licUnder3 = E.lic_yrs[0].checked;
 			const locale = document.documentElement.lang || 'da-DK';
 			const F = (num) => parseInt(num).toLocaleString(locale);
+
 			E.inc.style.setProperty('--_v', (E.inc.value - incMin) / incRange * 100 + '%');
 			E.inc_out.value = F(E.inc.value);
 			E.inc_yer.value = F(E.inc.value * 12);
