@@ -449,13 +449,12 @@ body {
 			E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && licUnder3);
 			E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
 
-			const subtotal = [...E.brk.elements]
-				.filter(elm => elm.name !== 'fin')
+			const total = [...E.brk.elements]
 				.reduce((sum, elm) =>
-				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
-			, 0);
+					sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
+				, 0);
 
-			E.tot.value = E.tot_fin.value = F(subtotal + parseInt((E.fin.value || '0').replace(/\./g, '')));
+			E.tot.value = E.tot_fin.value = F(total);
 		}
 
 		const app = document.getElementById('app');
