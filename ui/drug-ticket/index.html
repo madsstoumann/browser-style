@@ -407,7 +407,7 @@ body {
 						</fieldset>
 						<hr>
 						<label>
-							<strong>Totale øvrige udgifter</strong>
+							<strong>Totale udgifter (ca.)</strong>
 							<strong><output name="tot"></output> kr.</strong>
 						</label>
 					<output name="gas_pos_dsc"><hr><small>Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods. Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med. Op til 1349 gram: <strong>3.000 kr.</strong>, 1350-2699 gram: <strong>5.000 kr.</strong>, over 2699 gram: <strong>50.000 kr.</strong></small></output>
@@ -442,11 +442,11 @@ body {
 			E.thc.hidden = !isTHC;
 			E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
 			E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = !isGas || !gasPos;
-			E.lic.hidden = !isTHC && !isGas;
+			E.lic.hidden = !isGas && (!isTHC || (medTHC === false));
 			E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
 			E.lic_clp_dsc.hidden = !(isTHC && lowTHC);
-			E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && licUnder3);
-			E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && !licUnder3);
+			E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && !licUnder3);
+			E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && licUnder3);
 			E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
 
 			const subtotal = [...E.brk.elements]
@@ -455,8 +455,7 @@ body {
 				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
 			, 0);
 
-			E.tot.value = F(subtotal);
-			E.tot_fin.value = F(subtotal + parseInt((E.fin.value || '0').replace(/\./g, '')));
+			E.tot.value = E.tot_fin.value = F(subtotal + parseInt((E.fin.value || '0').replace(/\./g, '')));
 		}
 
 		const app = document.getElementById('app');
