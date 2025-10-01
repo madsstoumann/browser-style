@@ -28,7 +28,8 @@ body {
 			/* Colors */
 			--green: #00FF00;
 			--gray-0: #FFFFFF;
-			--gray-20: #e7e7e680;
+			/* --gray-20: #e7e7e680; */
+			--gray-20: #f1f1f1;
 			--gray-80: #373D46;
 			--gray-100: #28292C;
 
@@ -40,6 +41,7 @@ body {
 			--unit-3-5: 0.875rem;  /* 14px */
 			--unit-4: 1rem;        /* 16px */
 			--unit-4-5: 1.125rem;  /* 18px */
+			--unit-5: 1.25rem;     /* 20px */
 			--unit-6: 1.5rem;      /* 24px */
 			--unit-8: 2rem;        /* 32px */
 			--unit-12: 3rem;       /* 48px */
@@ -117,7 +119,7 @@ body {
 
 			label:has([type=radio]) {
 				background: light-dark(var(--gray-20), var(--gray-80));
-				border-radius: 2ch;
+				border-radius: var(--unit-5);
 				color: light-dark(var(--gray-100), var(--gray-0));
 				display: inline-grid;
 				font-size: var(--text-sm);
@@ -215,6 +217,18 @@ body {
 			text-transform: uppercase
 		}
 
+		.button-group:not([hidden]) div {
+			background: light-dark(var(--gray-20), var(--gray-80));
+			border-radius: var(--unit-5);
+			margin-inline: auto;
+			padding: var(--unit-1);
+			width: fit-content;
+			label {
+				justify-content: center;
+				min-width: var(--unit-8); 
+			}
+		}
+
 		.radio-group:not([hidden]) {
 			display: flex;
 			flex-wrap: wrap;
@@ -300,31 +314,37 @@ body {
 					<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#andre"></use></svg>Lattergas</label>
 				</fieldset>
 				
-				<fieldset name="thc" class="radio-group">
+				<fieldset name="thc" class="button-group">
 					<legend class="label">THC-niveau i blodet</legend>
-					<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-					<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-					<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+					<div>
+						<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+						<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+						<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+					</div>
 				</fieldset>
 
-				<fieldset name="gas" class="radio-group">
+				<fieldset name="gas" class="button-group">
 					<legend class="label">Lattergas i besiddelse</legend>
-					<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
-					<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
-					<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
-					<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+					<div>
+						<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
+						<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+						<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
+						<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
+					</div>
 				</fieldset>
 
-				<fieldset name="lic" class="radio-group">
+				<fieldset name="lic" class="button-group">
 					<legend class="label">Kørekort i over 3 år?</legend>
-					<label>
-						<input type="radio" name="lic_yrs">
-						<span>Ja</span>
-					</label>
-					<label>
-						<input type="radio" name="lic_yrs" checked>
-						<span>Nej</span>
-					</label>
+					<div>
+						<label>
+							<input type="radio" name="lic_yrs">
+							<span>Ja</span>
+						</label>
+						<label>
+							<input type="radio" name="lic_yrs" checked>
+							<span>Nej</span>
+						</label>
+					</div>
 				</fieldset>
 			</div>
 
