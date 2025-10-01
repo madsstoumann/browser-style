@@ -421,8 +421,8 @@ body {
 		</div>
 	</form>
 
-	<label>
-		<input type="checkbox" name="color-scheme"> Skift mellem lyst og mørkt tema
+	<label style="display:block;margin:2rem auto;text-align:center;">
+		<input type="checkbox" name="color-scheme"> <small>Skift mellem lyst og mørkt tema</small>
 	</label>
 
 	<script>
@@ -458,10 +458,12 @@ body {
 		}
 
 		const app = document.getElementById('app');
+
 		/* Fetch and cache the min/max values for the income range input */
 		const incMin = app.elements.inc.min;
 		const incMax = app.elements.inc.max;
 		const incRange = incMax - incMin;
+
 		/* Initial calculation and event listener */
 		app.addEventListener('input', (event) => { calculate(app.elements) });
 		calculate(app.elements);
