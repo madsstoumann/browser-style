@@ -28,6 +28,7 @@ body {
 			/* Colors */
 			--green: #00FF00;
 			--green-focus: #00CC00;
+			--green-focus-dark: #009900;
 			--gray-0: #FFFFFF;
 			--gray-20: #F1F1F1;
 			--gray-80: #373D46;
@@ -73,6 +74,7 @@ body {
 		.app {
 			display: grid;
 			gap: var(--unit-8);
+			* { box-sizing: border-box; }
 		}
 
 		/* Base styles */
@@ -131,7 +133,7 @@ body {
 					color: var(--gray-100);
 				}
 				&:has(:focus-visible) {
-					box-shadow: inset 0 0 0 2px var(--green-focus);
+					box-shadow: inset 0 0 0 2px light-dark(var(--green-focus), var(--green-focus-dark));
 				}
 			}
 
