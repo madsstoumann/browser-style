@@ -1,6 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 60">
+<svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 80 60">
   <rect x="0" y="15" width="4" height="30" fill="white"/>
   <rect x="20" y="15" width="4" height="30" fill="white"/>
   <rect x="40" y="15" width="4" height="30" fill="white"/>
   <rect x="60" y="0" width="4" height="60" fill="white"/>
+  <rect x="0" y="30" width="80" height="2" fill="white"/>
 </svg>
