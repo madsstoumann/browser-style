@@ -15,6 +15,7 @@ body {
 	color: CanvasText;
 	color-scheme: light dark;
 	font-family: system-ui, sans-serif;
+	interpolate-size: allow-keywords;
 	margin: 0;
 	&:has([name="color-scheme"]:checked) {
 		@media (prefers-color-scheme: dark) { color-scheme: light; }
@@ -178,12 +179,17 @@ body {
 				}
 			}
 
-			&:has(:checked) .result-table { display: block; }
+			&:has(:checked) .result-table {
+				height: max-content;
+				transition: height ease-in .2s;
+			}
 		}
 
 		/* Expandable breakdown table */
 		.result-table {
-			display: none;
+			height: 0;
+			overflow: hidden;
+			transition: height ease-out .2s;
 
 			fieldset {
 				display: grid;
@@ -328,12 +334,12 @@ body {
 				<fieldset class="radio-group">
 					<legend class="label">Vælg stof</legend>
 					<label><input type="radio" name="drg" value="1" checked><svg width="20" height="19"><use href="#cannabis"></use></svg>Cannabis</label>
-					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#kokain"></use></svg>Kokain</label>
-					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#lsd"></use></svg>LSD</label>
-					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#andre"></use></svg>Ecstasy (MDMA)</label>
-					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#amfetamin"></use></svg>Amfetamin</label>
 					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#opioider"></use></svg>Opioider</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#kokain"></use></svg>Kokain</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#amfetamin"></use></svg>Benzodiazepiner</label>
+					<!-- <label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#lsd"></use></svg>LSD</label> -->
 					<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#gas"></use></svg>Lattergas</label>
+					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#andre"></use></svg>Øvrige</label>
 				</fieldset>
 				
 				<fieldset name="thc" class="button-group">
