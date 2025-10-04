@@ -138,9 +138,65 @@ body {
 				}
 			}
 
+			/* Range with scroller */
 			label:has([type=range]) {
 				grid-template-columns: 1fr;
+				grid-template-rows: 1fr min-content;
 				margin-block: var(--unit-4);
+				position: relative;
+				row-gap: 6px;
+				&:has(:focus-visible) {
+					outline: 1px solid var(--gray-20);
+					outline-offset: 4px;
+				}
+				&::after {
+					background: var(--green);
+					border-radius: 3px;
+					content: "";
+					display: block;
+					grid-area: 1 / 1;
+					height: 32px;
+					place-self: center;
+					pointer-events: none;
+					width: 5px;
+					z-index: 1;
+				}
+				&::before {
+					background: #1C1B1F;
+					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+					content: "";
+					height: 5px;
+					place-self: center;
+					pointer-events: none;
+					width: 10px;
+				}
+				input { grid-area: 1 / 1; margin: 0; }
+				[data-scroll] {
+					cursor: grab;
+					display: block;
+					grid-area: 1 / 1;
+					inset: 0;
+					overflow: hidden;
+					position: absolute;
+					touch-action: none;
+					user-select: none;
+					z-index: 0;
+
+					[data-scroll-bg] {
+						display: grid;
+						grid-template-columns: 1fr 2fr 1fr;
+						height: 100%;
+						pointer-events: none;
+						width: 200%;
+						&::after {
+							background-image: url('range-bg.svg');
+							background-size: 50px 30px;
+							background-repeat: repeat-x;
+							content: "";
+							grid-column: 2;
+						}
+					}
+				}
 			}
 
 			[name=inc_out] {
@@ -228,6 +284,25 @@ body {
 			}
 		}
 
+		/* Color Scheme toggle */
+		.color-scheme {
+			grid-column: 1 / span 2;
+			place-content: center;
+			svg {
+				border-radius: 50%;
+				fill: unset;
+				transition: rotate 0.33s ease, filter 0.33s ease-out;
+			}
+			&:has(:checked) svg {
+  			filter: invert(1);
+  			rotate: 1turn;
+			}
+			&:has(:focus-visible) svg {
+				outline: 1px solid #808080;
+				outline-offset: 6px;
+			}
+		}
+
 		/* Utility classes */
 		.label {
 			font-size: var(--text-xs);
@@ -278,34 +353,11 @@ body {
 		}
 	}
 
-
-	/* Safari cannot use scoped styles on [type=range]. */
-	[type=range] {
-		--_fill: var(--green);
-		appearance: none;
-		background: linear-gradient(to right,
-			var(--_fill) 0 var(--_v, 0%), 
-			var(--gray-20) 0 var(--_v, 0%));
-		border-radius: var(--unit-2-5);
-		height: var(--unit-8);
-		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 60' preserveAspectRatio='none'%3E%3Crect x='0' y='15' width='4' height='30' fill='white'/%3E%3Crect x='20' y='15' width='4' height='30' fill='white'/%3E%3Crect x='40' y='15' width='4' height='30' fill='white'/%3E%3Crect x='60' y='0' width='4' height='60' fill='white'/%3E%3Crect x='0' y='30' width='80' height='2' fill='white'/%3E%3C/svg%3E");
-		/* The mask above is inlined, but it can also point to an external: */
-		/* mask-image: url('range-mask.svg'); */
-		mask-repeat: repeat-x;
-		mask-size: var(--unit-8) 100%;
-	
-	}
-	[type=range]:focus-visible {
-			--_fill: var(--green-focus);
-			outline: 0;
-		}
-	[type=range]::-webkit-slider-runnable-track { height: 100%; }
+	/* Safari cannot use scoped styles on [type=range] */
+	[type=range],
+	[type=range]::-webkit-slider-runnable-track,
 	[type=range]::-webkit-slider-thumb {
 		appearance: none;
-		background: var(--_fill);
-		cursor: ew-resize;
-		height: 100%;
-		width: var(--unit-4);
 	}
 }
 
@@ -327,6 +379,7 @@ body {
 					<output name="inc_out">25.000 kr.</output>
 					<label aria-label="Vælg din månedsløn før skat">
 						<input type="range" name="inc" min="0" step="500" max="80000" value="25000">
+						<span data-scroll><span data-scroll-bg></span></span>
 					</label>
 					<small>Årsindkomst før skat: <output name="inc_yer"></output></small>
 				</fieldset>
@@ -337,7 +390,6 @@ body {
 					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#opioider"></use></svg>Opioider</label>
 					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#kokain"></use></svg>Kokain</label>
 					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#amfetamin"></use></svg>Benzodiazepiner</label>
-					<!-- <label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#lsd"></use></svg>LSD</label> -->
 					<label><input type="radio" name="drg" value="2"><svg width="20" height="19"><use href="#gas"></use></svg>Lattergas</label>
 					<label><input type="radio" name="drg" value="0"><svg width="20" height="19"><use href="#andre"></use></svg>Øvrige</label>
 				</fieldset>
@@ -354,8 +406,7 @@ body {
 				<fieldset name="gas" class="button-group">
 					<legend class="label">Lattergas i besiddelse</legend>
 					<div>
-						<label><input type="radio" name="gas_amt" value="0" checked><svg width="13" height="10"><use href="#none"></use></svg>Intet</label>
-						<label><input type="radio" name="gas_amt" value="3000"><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
+						<label><input type="radio" name="gas_amt" value="3000" checked><svg width="13" height="10"><use href="#low"></use></svg>Lavt</label>
 						<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="#medium"></use></svg>Mellem</label>
 						<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="#high"></use></svg>Højt</label>
 					</div>
@@ -445,15 +496,18 @@ body {
 					</div>
 				</article>
 			</div>
-
+			<label class="color-scheme" aria-label="Skift mellem light og dark mode">
+				<svg viewBox="0 0 400 400" width="32" height="32">
+					<circle r="190" cx="200" cy="200" fill="white" stroke="#000" stroke-width="20" />
+					<path d=" M 200 365 A 165 165 0 0 1 200 35" />
+					<path d=" M 200 300 A 100 100 0 0 1 200 100" fill="#FFF" />
+					<path d=" M 200 100 A 100 100 180 0 1 200 300" />
+				</svg>
+				<input type="checkbox" name="color-scheme">
+			</label>
 		</div>
-	</form>
 
-	<!-- FOR CLIENT DEMO ONLY -->
-	<label style="display:block;margin:2rem auto;text-align:center;">
-		<input type="checkbox" name="color-scheme"> <small>Skift mellem lyst og mørkt tema</small>
-	</label>
-	<!-- END FOR CLIENT DEMO ONLY -->
+	</form>
 
 	<script>
 
@@ -462,10 +516,9 @@ body {
 			const licUnder3 = E.lic_yrs[0].checked;
 			const locale = document.documentElement.lang || 'da-DK';
 			const F = (num) => parseInt(num).toLocaleString(locale);
-
-			E.inc.style.setProperty('--_v', (E.inc.value - incMin) / incRange * 100 + '%');
 			E.inc_out.value = F(E.inc.value);
 			E.inc_yer.value = F(E.inc.value * 12);
+			scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
 			E.gas_amt_out.value = F(isGas ? E.gas_amt.value : 0);
 			E.gas_pos.value = F(isGas && E.gas_amt.value !== '0' ? 10000 : 0);
 			E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
@@ -494,10 +547,30 @@ body {
 		const incMin = app.elements.inc.min;
 		const incMax = app.elements.inc.max;
 		const incRange = incMax - incMin;
+		const scroller = app.querySelector('[data-scroll]');
+		const scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
 
 		/* Initial calculation and event listener */
 		app.addEventListener('input', (event) => { calculate(app.elements) });
 		calculate(app.elements);
+
+		/* Drag to scroll */
+		let isDragging = false, startX, scrollLeft;
+		scroller.addEventListener('pointerdown', (e) => {
+			isDragging = true;
+			startX = e.clientX;
+			scrollLeft = scroller.scrollLeft;
+		});
+		scroller.addEventListener('pointermove', (e) => {
+			if (!isDragging) return;
+			scroller.scrollLeft = scrollLeft - (e.clientX - startX);
+			app.elements.inc.value = Math.round(incMin + (scroller.scrollLeft / scrollRange) * incRange);
+			calculate(app.elements);
+		});
+		scroller.addEventListener('pointerup', () => isDragging = false);
+		scroller.addEventListener('pointercancel', () => isDragging = false);
+		scroller.addEventListener('pointerleave', () => isDragging = false);
+
 	</script>
 
 	<!-- SVG icons -->
@@ -523,13 +596,6 @@ body {
 				<g transform="translate(2, 1)">
 					<path d="M14.121 1H1.501v15.827H14.12V1Zm-.6 15.226H2.1V4.606h11.42v11.62Zm0-12.221H2.1v-.601h11.42v.6Zm0-1.202H2.1V1.6h11.42v1.202Z"/>
 					<path d="M3.003 15.625h9.616a.3.3 0 0 0 .3-.3v-4.508a.3.3 0 0 0-.3-.3c-1.695 0-2.627-.755-3.702-1.626-.298-.237-.601-.484-.932-.721-1.62-1.166-4.937-.087-5.075-.042a.303.303 0 0 0-.208.285v6.912c.001.166.135.3.301.3Z"/>
-				</g>
-			</symbol>
-
-			<symbol id="lsd" viewBox="0 0 20 19">
-				<g transform="translate(2, 1)">
-					<path d="M15.43 2.5h.285A.287.287 0 0 0 16 2.214V.786A.287.287 0 0 0 15.715.5h-1.429a.287.287 0 0 0-.285.286v.285a.286.286 0 1 1-.572 0V.786A.287.287 0 0 0 13.143.5H12a.287.287 0 0 0-.285.286v.285a.286.286 0 1 1-.572 0V.786A.287.287 0 0 0 10.858.5H9.715a.287.287 0 0 0-.286.286v.285a.286.286 0 1 1-.571 0V.786A.287.287 0 0 0 8.572.5H7.429a.287.287 0 0 0-.286.286v.285a.286.286 0 1 1-.571 0V.786A.287.287 0 0 0 6.286.5H5.143a.287.287 0 0 0-.285.286v.285a.286.286 0 1 1-.572 0V.786A.287.287 0 0 0 4 .5H2.858a.287.287 0 0 0-.286.286v.285a.286.286 0 1 1-.572 0V.786A.287.287 0 0 0 1.715.5H.286A.287.287 0 0 0 0 .786v1.428a.287.287 0 0 0 .286.286h.286a.286.286 0 1 1 0 .571H.286A.287.287 0 0 0 0 3.357V4.5a.287.287 0 0 0 .286.286h.286a.286.286 0 1 1 0 .571H.286A.287.287 0 0 0 0 5.643v1.143a.286.286 0 0 0 .286.285h.286a.286.286 0 1 1 0 .572H.286A.287.287 0 0 0 0 7.929V9.07a.287.287 0 0 0 .286.286h.286a.286.286 0 1 1 0 .572H.286a.287.287 0 0 0-.286.285v1.143a.287.287 0 0 0 .286.286h.286a.286.286 0 1 1 0 .571H.286A.287.287 0 0 0 0 12.5v1.143a.287.287 0 0 0 .286.286h.286a.286.286 0 1 1 0 .571H.286a.287.287 0 0 0-.286.286v1.428a.287.287 0 0 0 .286.286h1.429A.287.287 0 0 0 2 16.214v-.285a.286.286 0 1 1 .572 0v.285c0 .158.128.285.286.286H4a.287.287 0 0 0 .286-.286v-.285a.286.286 0 1 1 .572 0v.285c0 .158.127.285.285.286h1.143a.287.287 0 0 0 .286-.286v-.285a.286.286 0 1 1 .571 0v.285a.287.287 0 0 0 .286.286h1.143a.287.287 0 0 0 .286-.286v-.285a.286.286 0 1 1 .571 0v.285c0 .158.128.285.286.286h1.143a.287.287 0 0 0 .285-.286v-.285a.286.286 0 1 1 .572 0v.285c0 .158.128.285.286.286h1.142a.287.287 0 0 0 .286-.286v-.285a.286.286 0 1 1 .572 0v.285c0 .158.127.285.285.286h1.429a.287.287 0 0 0 .285-.286v-1.428a.287.287 0 0 0-.285-.286h-.286a.286.286 0 1 1 0-.571h.286a.287.287 0 0 0 .285-.286V12.5a.287.287 0 0 0-.285-.286h-.286a.286.286 0 1 1 0-.571h.286a.287.287 0 0 0 .285-.286v-1.143a.287.287 0 0 0-.285-.285h-.286a.286.286 0 1 1 0-.572h.286A.287.287 0 0 0 16 9.071V7.93a.287.287 0 0 0-.285-.286h-.286a.286.286 0 1 1 0-.572h.286A.287.287 0 0 0 16 6.786V5.643a.287.287 0 0 0-.285-.286h-.286a.286.286 0 1 1 0-.571h.286A.287.287 0 0 0 16 4.5V3.357a.287.287 0 0 0-.285-.286h-.286a.286.286 0 1 1 0-.571ZM8 13.929A5.429 5.429 0 1 1 8 3.07a5.429 5.429 0 0 1 0 10.86Z"/>
-					<path d="M8 3.643A4.855 4.855 0 0 0 3.144 8.5a4.854 4.854 0 0 0 4.858 4.857 4.855 4.855 0 0 0 3.432-8.29 4.868 4.868 0 0 0-3.432-1.424Zm1.226 2.774a.286.286 0 0 1 .203-.49c.076 0 .15.03.203.084l.369.372.368-.372a.286.286 0 0 1 .49.203c0 .076-.03.15-.084.203l-.372.369.372.368a.288.288 0 0 1 0 .406.29.29 0 0 1-.406 0l-.368-.371-.369.371a.29.29 0 0 1-.406 0 .288.288 0 0 1 0-.406l.372-.368-.372-.369Zm-4 0a.286.286 0 0 1 .203-.49c.076 0 .15.03.203.084L6 6.383l.368-.372a.286.286 0 0 1 .49.203c0 .076-.03.15-.084.203l-.372.369.372.368a.288.288 0 0 1 0 .406.29.29 0 0 1-.406 0L6 7.189l-.37.371a.29.29 0 0 1-.405 0 .288.288 0 0 1 0-.406l.372-.368-.372-.369Zm6.309 1.917c.11.044.18.153.177.272a3.714 3.714 0 0 1-7.423 0 .288.288 0 0 1 .494-.206 4.429 4.429 0 0 0 6.434 0 .286.286 0 0 1 .318-.066Z"/>
 				</g>
 			</symbol>
 
@@ -559,12 +625,6 @@ body {
 				<rect width="13" height="1.5" y=".75" fill="#888" rx=".75"/>
 				<path fill="#888" d="M0 5a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 5Z"/>
 				<rect width="13" height="1.5" y="7.75"  rx=".75"/>
-			</symbol>
-
-			<symbol id="none" viewBox="0 0 13 10">
-				<rect width="13" height="1.5" y=".75" fill="#888" rx=".75"/>
-				<path fill="#888" d="M0 5a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 5Z"/>
-				<rect width="13" height="1.5" y="7.75" fill="#888" rx=".75"/>
 			</symbol>
 		</defs>
 	</svg>
