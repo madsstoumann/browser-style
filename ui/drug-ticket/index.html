@@ -52,7 +52,7 @@ body {
 			/* Font size scale */
 			--text-xs: 0.6875rem; /* 11px */
 			--text-sm: 0.875rem;  /* 14px */
-			--text-md: 1rem;      /* 16px (base) */
+			--text-md: 1rem;      /* 16px (base), not used */
 			--text-xl: 2.5rem;    /* 40px */
 			--text-2xl: 3rem;     /* 48px */
 
@@ -142,12 +142,12 @@ body {
 				grid-template-rows: 1fr min-content;
 				margin-block: var(--unit-4);
 				position: relative;
-				row-gap: 6px;
+				row-gap: var(--unit-1-5);
 				&:has(:focus-visible) {
 					outline: 1px solid var(--gray-20);
 					outline-offset: 4px;
 				}
-				&::after {
+				&::after { /* GREEN SOLID LINE */
 					background: var(--green);
 					border-radius: 3px;
 					content: "";
@@ -159,8 +159,8 @@ body {
 					width: 5px;
 					z-index: 1;
 				}
-				&::before {
-					background: #1C1B1F;
+				&::before { /* TRIANGLE */
+					background: var(--gray-100);
 					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 					content: "";
 					height: 5px;
@@ -238,7 +238,7 @@ body {
 
 			&:has(:checked) .result-table {
 				height: max-content;
-				transition: height ease-in .2s;
+				transition: height ease-in 180ms;
 			}
 		}
 
@@ -246,7 +246,7 @@ body {
 		.result-table {
 			height: 0;
 			overflow: hidden;
-			transition: height ease-out .2s;
+			transition: height ease-out 180ms;
 
 			fieldset {
 				display: grid;
@@ -281,7 +281,7 @@ body {
 			text-wrap: nowrap;
 			transition: box-shadow 180ms cubic-bezier(.4,0,.2,1);
 			&:has(:focus-visible) {
-				box-shadow: inset 0 0 0 1px white;
+				box-shadow: inset 0 0 0 1px var(--gray-0);
 			}
 		}
 
@@ -291,7 +291,7 @@ body {
 			svg {
 				border-radius: 50%;
 				fill: unset;
-				transition: rotate 0.33s ease, filter 0.33s ease-out;
+				transition: rotate 360ms ease, filter 360ms ease-out;
 			}
 			&:has(:checked) svg {
   			filter: invert(1);
@@ -369,6 +369,7 @@ body {
 	<form id="app">
 		<div class="app">
 
+			<!-- CONTROLS -->
 			<div class="controls">
 				<header class="controls-header">
 					<h1>Narkokørsel koster kassen</h1>
@@ -428,6 +429,7 @@ body {
 				</fieldset>
 			</div>
 
+			<!-- RESULT -->
 			<div class="result">
 				<article>
 					<header>
@@ -497,6 +499,8 @@ body {
 					</div>
 				</article>
 			</div>
+
+			<!-- COLOR SCHEME TOGGLER -->
 			<label class="color-scheme" aria-label="Skift mellem light og dark mode">
 				<svg viewBox="0 0 400 400" width="32" height="32">
 					<circle r="190" cx="200" cy="200" fill="white" stroke="#000" stroke-width="20" />
@@ -511,67 +515,78 @@ body {
 	</form>
 
 	<script>
+		(function() {
+			// 1. INITIALIZATION & CACHING
+			const form = document.getElementById('app');
+			const E = form.elements; // Cache all form elements
+			const scroller = form.querySelector('[data-scroll]');
 
-		function calculate(E) {
-			const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high', gasPos = E.gas_amt.value !== '0';
-			const licUnder3 = E.lic_yrs[0].checked;
+			// Cache constants for the range slider
+			const incMin = parseFloat(E.inc.min);
+			const incMax = parseFloat(E.inc.max);
+			const incRange = incMax - incMin;
+			const scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
 			const locale = document.documentElement.lang || 'da-DK';
+
+			// Utility function
 			const F = (num) => parseInt(num).toLocaleString(locale);
-			E.inc_out.value = F(E.inc.value);
-			E.inc_yer.value = F(E.inc.value * 12);
-			scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
-			E.gas_amt_out.value = F(isGas ? E.gas_amt.value : 0);
-			E.gas_pos.value = F(isGas && E.gas_amt.value !== '0' ? 10000 : 0);
-			E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
 
-			E.thc.hidden = !isTHC;
-			E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
-			E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = !isGas || !gasPos;
-			E.lic.hidden = !isGas && (!isTHC || (medTHC === false));
-			E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
-			E.lic_clp_dsc.hidden = !(isTHC && lowTHC);
-			E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && !licUnder3);
-			E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && licUnder3);
-			E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
+			// 2. CORE LOGIC
+			function calculate() {
+				// --- Read inputs and define state ---
+				const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high', gasPos = E.gas_amt.value !== '0';
+				const hasLicenseOver3Years = E.lic_yrs[0].checked;
 
-			const total = [...E.brk.elements]
-				.reduce((sum, elm) =>
-					sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
-				, 0);
+				// --- Perform calculations and update UI ---
+				E.inc_out.value = F(E.inc.value);
+				E.inc_yer.value = F(E.inc.value * 12);
+				scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
+				E.gas_amt_out.value = F(isGas ? E.gas_amt.value : 0);
+				E.gas_pos.value = F(isGas && E.gas_amt.value !== '0' ? 10000 : 0);
+				E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
 
-			E.tot.value = E.tot_fin.value = F(total);
-		}
+				// --- Update visibility of sections ---
+				E.thc.hidden = !isTHC;
+				E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
+				E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = !isGas || !gasPos;
+				E.lic.hidden = !isGas && (!isTHC || !medTHC);
+				E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
+				E.lic_clp_dsc.hidden = !(isTHC && lowTHC);
+				E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && !hasLicenseOver3Years);
+				E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && hasLicenseOver3Years);
+				E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
 
-		const app = document.getElementById('app');
+				const total = [...E.brk.elements]
+					.reduce((sum, elm) =>
+						sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
+					, 0);
 
-		/* Fetch and cache the min/max values for the income range input */
-		const incMin = app.elements.inc.min;
-		const incMax = app.elements.inc.max;
-		const incRange = incMax - incMin;
-		const scroller = app.querySelector('[data-scroll]');
-		const scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+				E.tot.value = E.tot_fin.value = F(total);
+			}
 
-		/* Initial calculation and event listener */
-		app.addEventListener('input', (event) => { calculate(app.elements) });
-		calculate(app.elements);
+			// 3. EVENT HANDLING
+			form.addEventListener('input', calculate);
 
-		/* Drag to scroll */
-		let isDragging = false, startX, scrollLeft;
-		scroller.addEventListener('pointerdown', (e) => {
-			isDragging = true;
-			startX = e.clientX;
-			scrollLeft = scroller.scrollLeft;
-		});
-		scroller.addEventListener('pointermove', (e) => {
-			if (!isDragging) return;
-			scroller.scrollLeft = scrollLeft - (e.clientX - startX);
-			app.elements.inc.value = Math.round(incMin + (scroller.scrollLeft / scrollRange) * incRange);
-			calculate(app.elements);
-		});
-		scroller.addEventListener('pointerup', () => isDragging = false);
-		scroller.addEventListener('pointercancel', () => isDragging = false);
-		scroller.addEventListener('pointerleave', () => isDragging = false);
+			// --- Custom scroller logic ---
+			let isDragging = false, startX, scrollLeft;
+			scroller.addEventListener('pointerdown', (e) => {
+				isDragging = true;
+				startX = e.clientX;
+				scrollLeft = scroller.scrollLeft;
+			});
+			scroller.addEventListener('pointermove', (e) => {
+				if (!isDragging) return;
+				scroller.scrollLeft = scrollLeft - (e.clientX - startX);
+				E.inc.value = Math.round(incMin + (scroller.scrollLeft / scrollRange) * incRange);
+				calculate();
+			});
+			scroller.addEventListener('pointerup', () => isDragging = false);
+			scroller.addEventListener('pointercancel', () => isDragging = false);
+			scroller.addEventListener('pointerleave', () => isDragging = false);
 
+			// Initial calculation on page load
+			calculate();
+		})();
 	</script>
 
 	<!-- SVG icons -->
