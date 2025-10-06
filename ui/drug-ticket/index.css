@@ -381,7 +381,9 @@ body {
 			.color-scheme { grid-column: 1 / span 2; }
 			.controls { padding: var(--unit-16) var(--unit-12); row-gap: var(--unit-12); }
 			.controls header { display: grid; }
-			.result { background: var(--gray-100); order: unset; padding: var(--unit-16) var(--unit-12); }
+			.result {
+				/* background: var(--gray-100); */
+				order: unset; padding: var(--unit-16) var(--unit-12); }
 			.result header { grid-template-columns: 1fr; }
 			.result-table { height: max-content; }
 			.result-toggle { display: none; }
