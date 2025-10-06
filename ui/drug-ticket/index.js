@@ -10,9 +10,24 @@
 	const incRange = incMax - incMin;
 	let scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
 	const locale = document.documentElement.lang || 'da-DK';
+	const totFinOutput = E.tot_fin;
+	let previousTotalFormatted = null;
 
 	// Utility function
 	const F = (num) => parseInt(num).toLocaleString(locale);
+	const triggerTotalAnimation = () => {
+		if (!totFinOutput) return;
+		totFinOutput.classList.remove('is-animating');
+		// Force reflow to allow re-triggering the animation
+		void totFinOutput.offsetWidth;
+		totFinOutput.classList.add('is-animating');
+	};
+
+	if (totFinOutput) {
+		totFinOutput.addEventListener('animationend', () => {
+			totFinOutput.classList.remove('is-animating');
+		});
+	}
 
 	// 2. CORE LOGIC
 	function calculate() {
@@ -53,7 +68,12 @@
 				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
 			, 0);
 
-		E.tot.value = E.tot_fin.value = F(total);
+		const totalFormatted = F(total);
+		if (previousTotalFormatted !== null && totalFormatted !== previousTotalFormatted) {
+			triggerTotalAnimation();
+		}
+		previousTotalFormatted = totalFormatted;
+		E.tot.value = E.tot_fin.value = totalFormatted;
 	}
 
 	// 3. EVENT HANDLING
