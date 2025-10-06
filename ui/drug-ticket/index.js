@@ -8,7 +8,7 @@
 	const incMin = parseFloat(E.inc.min);
 	const incMax = parseFloat(E.inc.max);
 	const incRange = incMax - incMin;
-	const scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+	let scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
 	const locale = document.documentElement.lang || 'da-DK';
 
 	// Utility function
@@ -66,6 +66,18 @@
 	scroller.addEventListener('pointerup', () => isDragging = false);
 	scroller.addEventListener('pointercancel', () => isDragging = false);
 	scroller.addEventListener('pointerleave', () => isDragging = false);
+
+	// 4. BROWSER RESIZE HANDLING
+	let resizeTimer;
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(() => {
+			const currentValue = E.inc.value;
+			scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+			scroller.scrollLeft = (currentValue - incMin) / incRange * scrollRange;
+		}, 250);
+	});
+
 
 	// Initial calculation on page load
 	calculate();
