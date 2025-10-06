@@ -29,10 +29,42 @@
 		});
 	}
 
+	const debounce = (func, delay) => {
+		let timeout;
+		return function(...args) {
+			clearTimeout(timeout);
+			timeout = setTimeout(() => func.apply(this, args), delay);
+		};
+	};
+
+	const pushDataLayerEvent = debounce(() => {
+		const isTHC = E.drg.value === 'Cannabis';
+		const isGas = E.drg.value === 'Lattergas';
+		let other = '';
+		if (isTHC) {
+			other = `~thc_${E.thc_lvl.value}`;
+		} else if (isGas) {
+			other = `~gas_${E.gas_amt.value}`;
+		}
+
+		const eventData = {
+			'event': 'drug_fine_app',
+			'category': E.drg.value,
+			'label': E.lic_yrs[0].checked ? 'Ja' : 'Nej',
+			'expense': parseInt(E.tot_fin.value.replace(/\./g, '')),
+			'other': other
+		};
+
+		// console.log('dataLayer push:', eventData);
+		if (window.dataLayer) {
+			window.dataLayer.push(eventData);
+		}
+	}, 500);
+
 	// 2. CORE LOGIC
 	function calculate() {
 		// --- Read inputs and define state ---
-		const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
+		const isTHC = E.drg.value === 'Cannabis', isGas = E.drg.value === 'Lattergas', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
 		const hasLicenseOver3Years = E.lic_yrs[0].checked;
 		const gasAmount = E.gas_amt.value;
 
@@ -74,6 +106,7 @@
 		}
 		previousTotalFormatted = totalFormatted;
 		E.tot.value = E.tot_fin.value = totalFormatted;
+		pushDataLayerEvent();
 	}
 
 	// 3. EVENT HANDLING
