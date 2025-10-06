@@ -58,7 +58,7 @@
 	}, 500);
 
 	/* --- 4. CORE LOGIC --- */
-	function calculate() {
+	function calculate(init = false) {
 		// --- Read inputs and define state ---
 		const isTHC = E.drg.value === 'cannabis';
 		const isGas = E.drg.value === 'lattergas';
@@ -118,7 +118,7 @@
 		}
 		previousTotalFormatted = totalFormatted;
 		E.tot.value = E.tot_fin.value = totalFormatted;
-		pushDataLayerEvent();
+		if (!init) pushDataLayerEvent();
 	}
 
 	/* --- 5. EVENT HANDLING --- */
@@ -187,5 +187,5 @@
 	motionQuery.addEventListener('change', handleMotionChange);
 
 	// Initial calculation on page load
-	calculate();
+	calculate(true);
 })();
