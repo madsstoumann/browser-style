@@ -51,7 +51,7 @@
 			'other': other
 		};
 
-		console.log('dataLayer push:', eventData);
+		/* console.log('dataLayer push:', eventData); */
 		if (window.dataLayer) {
 			window.dataLayer.push(eventData);
 		}
