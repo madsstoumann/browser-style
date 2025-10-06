@@ -5,16 +5,29 @@ body {
 	font-family: system-ui, sans-serif;
 	interpolate-size: allow-keywords;
 	margin: 0;
+	/* overflow: hidden; */
 	&:has([name="color-scheme"]:checked) {
 		@media (prefers-color-scheme: dark) { color-scheme: light; }
 		@media (prefers-color-scheme: light) { color-scheme: dark; }
 	}
 }
 
+.video-bg {
+	left: 50%;
+	min-height: 100%;
+	min-width: 100%;
+	position: fixed;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+}
+
 @layer components {
 	@scope (#app) {
 		:scope {
 			/* Colors */
+			--border: #FFFFFF26;
+			--button-dark: #FFFFFF21;
 			--divider: #0001;
 			--green: #00FF00;
 			--green-focus: #00CC00;
@@ -108,12 +121,13 @@ body {
 			}
 
 			label:has([type=radio]) {
-				background: light-dark(var(--gray-20), var(--gray-80));
+				background: light-dark(var(--gray-20), var(--button-dark));
+				border: 1px solid light-dark(#0000, var(--border));
 				border-radius: var(--unit-5);
 				color: light-dark(var(--gray-100), var(--gray-0));
 				display: inline-grid;
 				font-size: var(--text-sm);
-				padding: .75ch 1.5ch;
+				padding: var(--unit-2) var(--unit-4);
 				transition: box-shadow 180ms cubic-bezier(.4,0,.2,1);
 
 				&:has(:checked) {
@@ -326,14 +340,19 @@ body {
 		}
 
 		.button-group:not([hidden]) div {
-			background: light-dark(var(--gray-20), var(--gray-80));
-			border-radius: var(--unit-5);
+			background: light-dark(var(--gray-20), var(--button-dark));
+			border: 1px solid light-dark(#0000, var(--border));
+			border-radius: var(--unit-6);
 			margin-inline: auto;
 			padding: var(--unit-1);
 			width: fit-content;
 			label {
 				justify-content: center;
 				min-width: var(--unit-8); 
+				&:not(:has(:checked)) {
+					background: #0000;
+					border-color: #0000;
+				}
 			}
 		}
 

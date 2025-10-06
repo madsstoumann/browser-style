@@ -110,4 +110,39 @@
 
 	// Initial calculation on page load
 	calculate();
+
+	// Conditionally load video background based on motion preferences
+	const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+	const handleMotionChange = (e) => {
+		const existingVideo = document.querySelector('.video-bg');
+		if (e.matches) {
+			// If user prefers reduced motion, remove video if it exists
+			if (existingVideo) {
+				existingVideo.remove();
+			}
+		} else {
+			// If user does not prefer reduced motion, add video if it doesn't exist
+			if (!existingVideo) {
+				const video = document.createElement('video');
+				video.className = 'video-bg';
+				video.autoplay = true;
+				video.loop = true;
+				video.muted = true;
+				video.playsInline = true;
+				video.loading = 'lazy';
+				const source = document.createElement('source');
+				source.src = 'video.mp4';
+				source.type = 'video/mp4';
+				video.appendChild(source);
+				document.body.prepend(video);
+			}
+		}
+	};
+
+	// Initial check
+	handleMotionChange(motionQuery);
+
+	// Listen for changes
+	motionQuery.addEventListener('change', handleMotionChange);
 })();
