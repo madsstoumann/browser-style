@@ -340,6 +340,8 @@ body {
 			.result-table { height: max-content; }
 			.result-toggle { display: none; }
 		}
+		@container (max-width: 999px) { .controls-sub { display: contents; } }
+		@container (min-width: 1000px) { .controls-sub { display: flex; justify-content: center; } }
 	}
 
 	/* Safari cannot use scoped styles on [type=range] */
