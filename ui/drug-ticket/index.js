@@ -17,21 +17,33 @@
 	// 2. CORE LOGIC
 	function calculate() {
 		// --- Read inputs and define state ---
-		const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high', gasPos = E.gas_amt.value !== '0';
+		const isTHC = E.drg.value === '1', isGas = E.drg.value === '2', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
 		const hasLicenseOver3Years = E.lic_yrs[0].checked;
+		const gasAmount = E.gas_amt.value;
 
 		// --- Perform calculations and update UI ---
 		E.inc_out.value = F(E.inc.value);
 		E.inc_yer.value = F(E.inc.value * 12);
 		scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
-		E.gas_amt_out.value = F(isGas ? E.gas_amt.value : 0);
-		E.gas_pos.value = F(isGas && E.gas_amt.value !== '0' ? 10000 : 0);
+
+		// Update all gas amount outputs with their respective values
+		E.gas_amt_low.value = F(isGas ? gasAmount : 0);
+		E.gas_amt_med.value = F(isGas ? gasAmount : 0);
+		E.gas_amt_high.value = F(isGas ? gasAmount : 0);
+
+		E.gas_pos.value = F(isGas ? 10000 : 0);
 		E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
 
 		// --- Update visibility of sections ---
 		E.thc.hidden = !isTHC;
 		E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
-		E.gas_amt_out.hidden = E.gas_pos.hidden = E.gas_pos_dsc.hidden = !isGas || !gasPos;
+
+		// Show only the output matching the selected gas amount
+		E.gas_amt_low.hidden = !isGas || gasAmount !== '3000';
+		E.gas_amt_med.hidden = !isGas || gasAmount !== '5000';
+		E.gas_amt_high.hidden = !isGas || gasAmount !== '50000';
+		E.gas_pos.hidden = !isGas;
+
 		E.lic.hidden = !isGas && (!isTHC || !medTHC);
 		E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
 		E.lic_clp_dsc.hidden = !(isTHC && lowTHC);

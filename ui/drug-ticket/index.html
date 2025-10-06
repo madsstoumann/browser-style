@@ -26,7 +26,7 @@
 					<legend class="label">Din månedsløn før skat:</legend>
 					<output name="inc_out">25.000 kr.</output>
 					<label aria-label="Vælg din månedsløn før skat">
-						<input type="range" name="inc" min="0" step="500" max="80000" value="25000">
+						<input type="range" name="inc" min="0" step="500" max="100000" value="25000">
 						<span data-scroll><span data-scroll-bg></span></span>
 					</label>
 					<small>Årsindkomst før skat: <output name="inc_yer"></output></small>
@@ -130,19 +130,26 @@
 								<span><output name="gas_pos">0</output> kr.</span>
 							</label>
 							<label>
-								<span>Mængde i besiddelse</span>
-								<span><output name="gas_amt_out">0</output> kr.</span>
+								<span>Mindre end 1349g i besiddelse</span>
+								<span><output name="gas_amt_low">0</output> kr.</span>
+							</label>
+								<label>
+								<span>1350-2699 i besiddelse</span>
+								<span><output name="gas_amt_med">0</output> kr.</span>
+							</label>
+							<label>
+								<span>Over 2699 gram i besiddelse</span>
+								<span><output name="gas_amt_high">0</output> kr.</span>
 							</label>
 						</fieldset>
-						<hr>
+						<br>
 						<label>
 							<strong>Totale udgifter (ca.)</strong>
 							<strong><output name="tot"></output> kr.</strong>
 						</label>
-					<output name="gas_pos_dsc"><hr><small>Kører man med lattergas i bilen, får man en bøde for at køre med farligt gods. Derudover får man bøde for besiddelse, og lattergassen bliver konfiskeret. Bødens størrelse afhænger af, hvor mange gram lattergas man kører med. Op til 1349 gram: <strong>3.000 kr.</strong>, 1350-2699 gram: <strong>5.000 kr.</strong>, over 2699 gram: <strong>50.000 kr.</strong></small></output>
-					<output name="gas_inf_dsc">
-						<strong><hr>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </strong>
-					</output>
+						<output name="gas_inf_dsc">
+							<small><hr>Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </small>
+						</output>
 					</div>
 				</article>
 			</div>
