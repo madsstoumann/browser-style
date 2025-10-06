@@ -15,6 +15,7 @@ body {
 	@scope (#app) {
 		:scope {
 			/* Colors */
+			--divider: #0001;
 			--green: #00FF00;
 			--green-focus: #00CC00;
 			--green-focus-dark: #009900;
@@ -247,13 +248,6 @@ body {
 				&:has([hidden]) { display: none; }
 			}
 
-			hr, .textblock {
-				border: none;
-				border-top: 1px solid #0001;
-				display: block;
-				margin-block: var(--unit-6);
-			}
-
 			output {
 				font-family: inherit;
 				font-variant-numeric: tabular-nums;
@@ -297,7 +291,15 @@ body {
 		}
 
 		/* Utility classes */
+		hr, .textblock {
+			border: none;
+			border-top: 1px solid var(--divider);
+			display: block;
+			margin-block: var(--unit-6);
+		}
+
 		.label {
+			display: block;
 			font-size: var(--text-xs);
 			letter-spacing: 0.33px;
 			margin-block-end: var(--unit-2-5);
@@ -342,8 +344,14 @@ body {
 			.controls { padding: var(--unit-16) var(--unit-12); row-gap: var(--unit-12); }
 			.controls header { display: grid; }
 			.result { background: var(--gray-100); order: unset; padding: var(--unit-16) var(--unit-12); }
+			.result header { grid-template-columns: 1fr; }
 			.result-table { height: max-content; }
 			.result-toggle { display: none; }
+			[name=smr] legend {
+				border-block-start: 1px solid var(--divider);
+				padding-block-start: var(--unit-6);
+				width: 100%; 
+			}
 		}
 		@container (max-width: 999px) { .controls-sub { display: contents; } }
 		@container (min-width: 1000px) { .controls-sub { display: flex; justify-content: center; } }
