@@ -64,7 +64,7 @@
 	// 2. CORE LOGIC
 	function calculate() {
 		// --- Read inputs and define state ---
-		const isTHC = E.drg.value === 'cnnabis', isGas = E.drg.value === 'lattergas', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
+		const isTHC = E.drg.value === 'cannabis', isGas = E.drg.value === 'lattergas', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
 		const hasLicenseOver3Years = E.lic_yrs[0].checked;
 		const gasAmount = E.gas_amt.value;
 
