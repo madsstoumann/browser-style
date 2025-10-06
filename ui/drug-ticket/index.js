@@ -1,5 +1,5 @@
 (function() {
-	// 1. INITIALIZATION & CACHING
+	/* --- 1. INITIALIZATION & CACHING --- */
 	const form = document.getElementById('app');
 	const E = form.elements; // Cache all form elements
 	const scroller = form.querySelector('[data-scroll]');
@@ -13,8 +13,9 @@
 	const totFinOutput = E.tot_fin;
 	let previousTotalFormatted = null;
 
-	// Utility function
+	/* --- 2. UTILITIES --- */
 	const F = (num) => parseInt(num).toLocaleString(locale);
+
 	const triggerTotalAnimation = () => {
 		if (!totFinOutput) return;
 		totFinOutput.classList.remove('is-animating');
@@ -22,12 +23,6 @@
 		void totFinOutput.offsetWidth;
 		totFinOutput.classList.add('is-animating');
 	};
-
-	if (totFinOutput) {
-		totFinOutput.addEventListener('animationend', () => {
-			totFinOutput.classList.remove('is-animating');
-		});
-	}
 
 	const debounce = (func, delay) => {
 		let timeout;
@@ -37,6 +32,7 @@
 		};
 	};
 
+	/* --- 3. TRACKING --- */
 	const pushDataLayerEvent = debounce(() => {
 		const isTHC = E.drg.value === 'cannabis';
 		const isGas = E.drg.value === 'lattergas';
@@ -61,10 +57,14 @@
 		}
 	}, 500);
 
-	// 2. CORE LOGIC
+	/* --- 4. CORE LOGIC --- */
 	function calculate() {
 		// --- Read inputs and define state ---
-		const isTHC = E.drg.value === 'cannabis', isGas = E.drg.value === 'lattergas', lowTHC = E.thc_lvl.value === 'low', medTHC = E.thc_lvl.value === 'medium', highTHC = E.thc_lvl.value === 'high';
+		const isTHC = E.drg.value === 'cannabis';
+		const isGas = E.drg.value === 'lattergas';
+		const lowTHC = E.thc_lvl.value === 'low';
+		const medTHC = E.thc_lvl.value === 'medium';
+		const highTHC = E.thc_lvl.value === 'high';
 		const hasLicenseOver3Years = E.lic_yrs[0].checked;
 		const gasAmount = E.gas_amt.value;
 
@@ -81,19 +81,31 @@
 		E.fin.value = F(Math.max(1500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
 
 		// --- Update visibility of sections ---
-		E.thc.hidden = !isTHC;
-		E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
-		E.gas_amt_low.hidden = !isGas || gasAmount !== '3000';
-		E.gas_amt_med.hidden = !isGas || gasAmount !== '5000';
-		E.gas_amt_high.hidden = !isGas || gasAmount !== '50000';
-		E.gas_pos.hidden = !isGas;
+		const visibilityMap = {
+			thc: isTHC,
+			gas: isGas,
+			gas_inf_dsc: isGas,
+			gas_pos: isGas,
+			gas_amt_low: isGas && gasAmount === '3000',
+			gas_amt_med: isGas && gasAmount === '5000',
+			gas_amt_high: isGas && gasAmount === '50000',
+			lic: isGas || (isTHC && medTHC),
+			ant_crs: !(isTHC && lowTHC),
+			lic_tst: !(isTHC && lowTHC),
+			vic_fnd: !(isTHC && lowTHC),
+			ant_dsc: !(isTHC && lowTHC),
+			lic_tst_dsc: !(isTHC && lowTHC),
+			lic_clp_dsc: isTHC && lowTHC,
+			drv_ban_dsc: (isTHC && medTHC || isGas) && !hasLicenseOver3Years,
+			cnd_dsq_dsc: (isTHC && medTHC || isGas) && hasLicenseOver3Years,
+			unc_dsq_3ys: (isTHC && highTHC) || (!isTHC && !isGas),
+		};
 
-		E.lic.hidden = !isGas && (!isTHC || !medTHC);
-		E.ant_crs.hidden = E.lic_tst.hidden = E.vic_fnd.hidden = E.ant_dsc.hidden = E.lic_tst_dsc.hidden  = (isTHC && lowTHC);
-		E.lic_clp_dsc.hidden = !(isTHC && lowTHC);
-		E.drv_ban_dsc.hidden = !((isTHC && medTHC || isGas) && !hasLicenseOver3Years);
-		E.cnd_dsq_dsc.hidden = !((isTHC && medTHC || isGas) && hasLicenseOver3Years);
-		E.unc_dsq_3ys.hidden = !((isTHC && highTHC) || (!isTHC && !isGas));
+		for (const key in visibilityMap) {
+			if (E[key]) {
+				E[key].hidden = !visibilityMap[key];
+			}
+		}
 
 		const total = [...E.brk.elements]
 			.reduce((sum, elm) =>
@@ -109,8 +121,14 @@
 		pushDataLayerEvent();
 	}
 
-	// 3. EVENT HANDLING
+	/* --- 5. EVENT HANDLING --- */
 	form.addEventListener('input', calculate);
+
+	if (totFinOutput) {
+		totFinOutput.addEventListener('animationend', () => {
+			totFinOutput.classList.remove('is-animating');
+		});
+	}
 
 	// --- Custom scroller logic ---
 	let isDragging = false, startX, scrollLeft;
@@ -129,7 +147,7 @@
 	scroller.addEventListener('pointercancel', () => isDragging = false);
 	scroller.addEventListener('pointerleave', () => isDragging = false);
 
-	// 4. BROWSER RESIZE HANDLING
+	/* --- 6. BROWSER RESIZE HANDLING --- */
 	let resizeTimer;
 	window.addEventListener('resize', () => {
 		clearTimeout(resizeTimer);
@@ -140,22 +158,15 @@
 		}, 250);
 	});
 
-
-	// Initial calculation on page load
-	calculate();
-
-	// Conditionally load video background based on motion preferences
+	/* --- 7. DYNAMIC VIDEO BACKGROUND --- */
 	const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
 	const handleMotionChange = (e) => {
 		const existingVideo = document.querySelector('.video-bg');
 		if (e.matches) {
-			// If user prefers reduced motion, remove video if it exists
 			if (existingVideo) {
 				existingVideo.remove();
 			}
 		} else {
-			// If user does not prefer reduced motion, add video if it doesn't exist
 			if (!existingVideo) {
 				const video = document.createElement('video');
 				video.className = 'video-bg';
@@ -172,10 +183,9 @@
 			}
 		}
 	};
-
-	// Initial check
 	handleMotionChange(motionQuery);
-
-	// Listen for changes
 	motionQuery.addEventListener('change', handleMotionChange);
+
+	// Initial calculation on page load
+	calculate();
 })();
