@@ -51,7 +51,7 @@
 			'other': other
 		};
 
-		// console.log('dataLayer push:', eventData);
+		console.log('dataLayer push:', eventData);
 		if (window.dataLayer) {
 			window.dataLayer.push(eventData);
 		}
@@ -171,7 +171,7 @@
 				const video = document.createElement('video');
 				video.className = 'video-bg';
 				video.autoplay = true;
-				video.loop = true;
+				// video.loop = true;
 				video.muted = true;
 				video.playsInline = true;
 				video.loading = 'lazy';
