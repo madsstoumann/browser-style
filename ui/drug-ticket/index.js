@@ -22,23 +22,20 @@
 		const gasAmount = E.gas_amt.value;
 
 		// --- Perform calculations and update UI ---
+		const yearlyIncome = E.inc.value * 12;
 		E.inc_out.value = F(E.inc.value);
-		E.inc_yer.value = F(E.inc.value * 12);
+		E.inc_yer.value = F(yearlyIncome);
 		scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
 
-		// Update all gas amount outputs with their respective values
-		E.gas_amt_low.value = F(isGas ? gasAmount : 0);
-		E.gas_amt_med.value = F(isGas ? gasAmount : 0);
-		E.gas_amt_high.value = F(isGas ? gasAmount : 0);
-
+		// Update gas outputs
+		const gasValue = F(gasAmount);
+		E.gas_amt_low.value = E.gas_amt_med.value = E.gas_amt_high.value = gasValue;
 		E.gas_pos.value = F(isGas ? 10000 : 0);
-		E.fin.value = F(Math.max(1500, Math.round(((E.inc.value * 12) / 25) / (isTHC && lowTHC ? 2 : 1))));
+		E.fin.value = F(Math.max(1500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
 
 		// --- Update visibility of sections ---
 		E.thc.hidden = !isTHC;
 		E.gas.hidden = E.gas_inf_dsc.hidden = !isGas;
-
-		// Show only the output matching the selected gas amount
 		E.gas_amt_low.hidden = !isGas || gasAmount !== '3000';
 		E.gas_amt_med.hidden = !isGas || gasAmount !== '5000';
 		E.gas_amt_high.hidden = !isGas || gasAmount !== '50000';
