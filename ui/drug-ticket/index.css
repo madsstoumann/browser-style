@@ -1,3 +1,25 @@
+/* fonts */
+@font-face {
+  font-display: swap;
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/rethink-sans-v7-latin-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('fonts/rethink-sans-v7-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Rethink Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts/rethink-sans-v7-latin-600.woff2') format('woff2');
+}
 body {
 	background: Canvas;
 	color: CanvasText;
