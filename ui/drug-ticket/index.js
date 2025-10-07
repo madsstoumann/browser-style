@@ -159,32 +159,16 @@
 	});
 
 	/* --- 7. DYNAMIC VIDEO BACKGROUND --- */
-	const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-	const handleMotionChange = (e) => {
-		const existingVideo = document.querySelector('.video-bg');
-		if (e.matches) {
-			if (existingVideo) {
-				existingVideo.remove();
-			}
-		} else {
-			if (!existingVideo) {
-				const video = document.createElement('video');
-				video.className = 'video-bg';
-				video.autoplay = true;
-				// video.loop = true;
-				video.muted = true;
-				video.playsInline = true;
-				video.loading = 'lazy';
-				const source = document.createElement('source');
-				source.src = 'video.mp4';
-				source.type = 'video/mp4';
-				video.appendChild(source);
-				document.body.prepend(video);
-			}
-		}
-	};
-	handleMotionChange(motionQuery);
-	motionQuery.addEventListener('change', handleMotionChange);
+	const videoElm = document.querySelector('.video-bg');
+	if (videoElm && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		videoElm.play();
+	}
+	videoElm.addEventListener('ended', () => {
+		setTimeout(() => {
+			videoElm.currentTime = 0;
+			videoElm.play();
+		}, 4000); // 4 seconds delay
+	});
 
 	// Initial calculation on page load
 	calculate(true);

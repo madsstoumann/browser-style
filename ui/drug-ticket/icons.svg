@@ -25,13 +25,13 @@
 			<rect width="13" height="1.5" y="7.75"  rx=".75"/>
 		</symbol>
 		<symbol id="medium" viewBox="0 0 13 10">
-			<rect width="13" height="1.5" y=".75" fill="#888" rx=".75"/>
+			<rect width="13" height="1.5" y=".75" fill="#E7E7E680" rx=".75"/>
 			<path d="M0 5a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 5Z"/>
 			<rect width="13" height="1.5" y="7.75"  rx=".75"/>
 		</symbol>
 		<symbol id="low" viewBox="0 0 13 10">
-			<rect width="13" height="1.5" y=".75" fill="#888" rx=".75"/>
-			<path fill="#888" d="M0 5a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 5Z"/>
+			<rect width="13" height="1.5" y=".75" fill="#E7E7E680" rx=".75"/>
+			<path fill="#E7E7E680" d="M0 5a.75.75 0 0 1 .75-.75h11.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 5Z"/>
 			<rect width="13" height="1.5" y="7.75"  rx=".75"/>
 		</symbol>
 	</defs>
