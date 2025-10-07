@@ -161,12 +161,12 @@
 	/* --- 7. DYNAMIC VIDEO BACKGROUND --- */
 	const videoElm = document.querySelector('.video-bg');
 	if (videoElm && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		videoElm.play();
+		videoElm.play().catch(() => {});
 	}
 	videoElm.addEventListener('ended', () => {
 		setTimeout(() => {
 			videoElm.currentTime = 0;
-			videoElm.play();
+			videoElm.play().catch(() => {});
 		}, 4000); // 4 seconds delay
 	});
 
