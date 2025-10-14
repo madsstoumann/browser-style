@@ -6,13 +6,6 @@
  * @description A custom element for displaying data in various chart formats, including bar, line, area, pie, and candlestick charts.
  */
 const styles = `
-/**
- * @module CircularRange
- * @version 1.0.3
- * @date 2025-07-08
- * @author Mads Stoumann
- * @description A circular range slider custom element with optional indices, labels, and haptic feedback.
- */
 :host {
 	--data-chart-bar-bdrs: clamp(0.125rem, -0.35rem + 1cqi, 0.33rem);
 	--data-chart-bar-c: currentColor;
