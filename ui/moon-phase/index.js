@@ -19,7 +19,8 @@ styles.replaceSync(`
 		rotate: var(--_r, 0deg);
 	}
 	:host::before {
-		background: var(--moon-phase-bgi, url('https://browser.style/ui/moon-phase/moon.png')) center / cover no-repeat;  
+		background: var(--moon-phase-bgi, url('moon.png')) center / cover no-repeat;
+		background-color: var(--moon-phase-bg, #0000); 
 		content: '';
 		filter: var(--moon-phase-filter, sepia(1) grayscale(.25));
 		inset: 0;
