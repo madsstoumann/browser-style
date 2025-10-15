@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="da-DK" dir="ltr">
+<head>
+	<title>Number Scroller</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="">
+	<style>
+		fieldset {
+			border: 0;
+			display: grid;
+			font-family: ui-sans-serif, system-ui;
+			
+			margin: 0;
+			padding: 0;
+			text-align: center;
+		}
+		/* Range with scroller */
+			label:has([type=range]) {
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr min-content;
+				margin-block: .25rem;
+				position: relative;
+				row-gap: 1rem;
+				&:has(:focus-visible) {
+					outline: 1px solid #CCC;
+					outline-offset: 4px;
+				}
+				&::after { /* GREEN SOLID LINE */
+					background: cornflowerblue;
+					border-radius: 3px;
+					content: "";
+					display: block;
+					grid-area: 1 / 1;
+					height: 32px;
+					place-self: center;
+					pointer-events: none;
+					width: 5px;
+					z-index: 1;
+				}
+				&::before { /* TRIANGLE */
+					background: tomato;
+					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+					content: "";
+					height: 5px;
+					place-self: center;
+					pointer-events: none;
+					width: 10px;
+				}
+				input { grid-area: 1 / 1; margin: 0; }
+				[data-scroll] {
+					cursor: grab;
+					display: block;
+					grid-area: 1 / 1;
+					inset: 0;
+					mask: linear-gradient(to right, #0000, #000 15%, #000 85%, #0000);
+					overflow: hidden;
+					position: absolute;
+					touch-action: none;
+					user-select: none;
+					z-index: 0;
+
+					[data-scroll-bg] {
+						display: grid;
+						grid-template-columns: 1fr 2fr 1fr;
+						height: 100%;
+						pointer-events: none;
+						width: 200%;
+						&::after {
+							background-image: url('range-bg.svg');
+							background-size: 50px 30px;
+							background-repeat: repeat-x;
+							content: "";
+							grid-column: 2;
+						}
+					}
+				}
+			}
+				[type=range],
+	[type=range]::-webkit-slider-runnable-track,
+	[type=range]::-webkit-slider-thumb {
+		appearance: none;
+	}
+	</style>
+</head>
+<body>
+
+	<fieldset>
+		<legend class="label">Din månedsløn før skat:</legend>
+		<output name="inc_out">25.000 kr.</output>
+		<label aria-label="Vælg din månedsløn før skat">
+			<input type="range" name="inc" min="0" step="500" max="100000" value="25000">
+			<span data-scroll><span data-scroll-bg></span></span>
+		</label>
+	</fieldset>
+
+	<script>
+	(function() {
+		/* --- INITIALIZATION & CACHING --- */
+		const fieldset = document.querySelector('fieldset');
+		const rangeInput = fieldset.querySelector('[name="inc"]');
+		const output = fieldset.querySelector('[name="inc_out"]');
+		const scroller = fieldset.querySelector('[data-scroll]');
+
+		// Cache constants for the range slider
+		const incMin = parseFloat(rangeInput.min);
+		const incMax = parseFloat(rangeInput.max);
+		const incStep = parseFloat(rangeInput.step);
+		const incRange = incMax - incMin;
+		let scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+		const locale = document.documentElement.lang || 'da-DK';
+
+		/* --- UTILITIES --- */
+		const formatNumber = (num) => parseInt(num).toLocaleString(locale);
+
+		/* --- UPDATE FUNCTION --- */
+		function updateOutput() {
+			const value = rangeInput.value;
+			output.value = formatNumber(value) + ' kr.';
+			scroller.scrollLeft = (value - incMin) / incRange * scrollRange;
+		}
+
+		/* --- EVENT HANDLING --- */
+		// Listen to input changes on the fieldset
+		fieldset.addEventListener('input', (e) => {
+			if (e.target === rangeInput) {
+				updateOutput();
+			}
+		});
+
+		/* --- DRAG/SCROLL FUNCTIONALITY --- */
+		let isDragging = false;
+		let startX;
+		let scrollLeft;
+
+		scroller.addEventListener('pointerdown', (e) => {
+			isDragging = true;
+			startX = e.clientX;
+			scrollLeft = scroller.scrollLeft;
+		});
+
+		scroller.addEventListener('pointermove', (e) => {
+			if (!isDragging) return;
+			scroller.scrollLeft = scrollLeft - (e.clientX - startX);
+			rangeInput.value = Math.round(incMin + (scroller.scrollLeft / scrollRange) * incRange);
+			updateOutput();
+		});
+
+		scroller.addEventListener('pointerup', () => isDragging = false);
+		scroller.addEventListener('pointercancel', () => isDragging = false);
+		scroller.addEventListener('pointerleave', () => isDragging = false);
+
+		/* --- RESIZE HANDLING --- */
+		let resizeTimer;
+		window.addEventListener('resize', () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => {
+				const currentValue = rangeInput.value;
+				scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+				scroller.scrollLeft = (currentValue - incMin) / incRange * scrollRange;
+			}, 250);
+		});
+
+		/* --- INITIAL UPDATE --- */
+		updateOutput();
+	})();
+	</script>
+
+</body>
+</html>
