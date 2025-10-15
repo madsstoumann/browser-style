@@ -7,6 +7,7 @@
 	<meta name="description" content="">
 	<style>
 		fieldset {
+			--scroller-width: 200%;
 			border: 0;
 			display: grid;
 			font-family: ui-sans-serif, system-ui;
@@ -54,26 +55,32 @@
 					grid-area: 1 / 1;
 					inset: 0;
 					mask: linear-gradient(to right, #0000, #000 15%, #000 85%, #0000);
-					overflow: hidden;
+					overflow-x: auto;
 					position: absolute;
-					touch-action: none;
-					user-select: none;
-					z-index: 0;
+					scrollbar-width: none; /* Firefox */
+					scroll-snap-type: x mandatory;
 
 					[data-scroll-bg] {
 						display: grid;
 						grid-template-columns: 1fr 2fr 1fr;
 						height: 100%;
 						pointer-events: none;
-						width: 200%;
-						&::after {
+						width: var(--scroller-width);
+						/* &::after {
 							background-image: url('range-bg.svg');
 							background-size: 50px 30px;
 							background-repeat: repeat-x;
 							content: "";
 							grid-column: 2;
-						}
+						} */
 					}
+					[data-scroll-snap] {
+						grid-column: 2;
+						background: lime;
+					}
+				}
+				[data-scroll]::-webkit-scrollbar {
+					display: none; /* Safari and Chrome */
 				}
 			}
 				[type=range],
@@ -85,12 +92,16 @@
 </head>
 <body>
 
-	<fieldset>
+	<fieldset data-snap-points="40">
 		<legend class="label">Din månedsløn før skat:</legend>
 		<output name="inc_out">25.000 kr.</output>
 		<label aria-label="Vælg din månedsløn før skat">
 			<input type="range" name="inc" min="0" step="500" max="100000" value="25000">
-			<span data-scroll><span data-scroll-bg></span></span>
+			<span data-scroll>
+				<span data-scroll-bg>
+					<span data-scroll-snap></span>
+				</span>
+			</span>
 		</label>
 	</fieldset>
 
@@ -107,62 +118,58 @@
 		const incMax = parseFloat(rangeInput.max);
 		const incStep = parseFloat(rangeInput.step);
 		const incRange = incMax - incMin;
-		let scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
+		let scrollRange = scroller.scrollWidth - scroller.clientWidth;
 		const locale = document.documentElement.lang || 'da-DK';
+
 
 		/* --- UTILITIES --- */
 		const formatNumber = (num) => parseInt(num).toLocaleString(locale);
 
 		/* --- UPDATE FUNCTION --- */
-		function updateOutput() {
+		function updateFromInput() {
 			const value = rangeInput.value;
 			output.value = formatNumber(value) + ' kr.';
-			scroller.scrollLeft = (value - incMin) / incRange * scrollRange;
+			const scrollPercentage = (value - incMin) / incRange;
+			scroller.scrollLeft = scrollPercentage * scrollRange;
+		}
+
+		function updateFromScroll() {
+			const scrollPercentage = scroller.scrollLeft / scrollRange;
+			const scrollValue = incMin + (scrollPercentage * incRange);
+			const steppedValue = Math.round(scrollValue / incStep) * incStep;
+			output.value = formatNumber(steppedValue) + ' kr.';
+		}
+		
+		function updateRangeFromScroll() {
+			const scrollPercentage = scroller.scrollLeft / scrollRange;
+			const scrollValue = incMin + (scrollPercentage * incRange);
+			const steppedValue = Math.round(scrollValue / incStep) * incStep;
+			rangeInput.value = steppedValue;
+			// Do not call updateFromInput here to avoid scroll loop
 		}
 
 		/* --- EVENT HANDLING --- */
-		// Listen to input changes on the fieldset
 		fieldset.addEventListener('input', (e) => {
 			if (e.target === rangeInput) {
-				updateOutput();
+				updateFromInput();
 			}
 		});
 
-		/* --- DRAG/SCROLL FUNCTIONALITY --- */
-		let isDragging = false;
-		let startX;
-		let scrollLeft;
-
-		scroller.addEventListener('pointerdown', (e) => {
-			isDragging = true;
-			startX = e.clientX;
-			scrollLeft = scroller.scrollLeft;
-		});
-
-		scroller.addEventListener('pointermove', (e) => {
-			if (!isDragging) return;
-			scroller.scrollLeft = scrollLeft - (e.clientX - startX);
-			rangeInput.value = Math.round(incMin + (scroller.scrollLeft / scrollRange) * incRange);
-			updateOutput();
-		});
-
-		scroller.addEventListener('pointerup', () => isDragging = false);
-		scroller.addEventListener('pointercancel', () => isDragging = false);
-		scroller.addEventListener('pointerleave', () => isDragging = false);
+		scroller.addEventListener('scroll', updateFromScroll);
+		scroller.addEventListener('scrollend', updateRangeFromScroll);
 
 		/* --- RESIZE HANDLING --- */
 		let resizeTimer;
 		window.addEventListener('resize', () => {
 			clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(() => {
-				const currentValue = rangeInput.value;
-				scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
-				scroller.scrollLeft = (currentValue - incMin) / incRange * scrollRange;
+				scrollRange = scroller.scrollWidth - scroller.clientWidth;
+				updateFromInput();
 			}, 250);
 		});
 
 		/* --- INITIAL UPDATE --- */
-		updateOutput();
+		updateFromInput();
 	})();
 	</script>
 
