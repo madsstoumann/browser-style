@@ -85,7 +85,8 @@
 						display: flex;
 						grid-column: 2;
 						justify-content: space-between;
-						background: lime;
+						scroll-snap-type: x mandatory;
+						/* background: lime; */
 					}
 				}
 				[data-scroll]::-webkit-scrollbar {
@@ -101,11 +102,11 @@
 </head>
 <body>
 
-	<fieldset data-snap-points="40">
+	<fieldset data-snap-points="50">
 		<legend class="label">Din månedsløn før skat:</legend>
 		<output name="inc_out">25.000 kr.</output>
 		<label aria-label="Vælg din månedsløn før skat">
-			<input type="range" name="inc" min="0" step="500" max="100000" value="25000">
+			<input type="range" name="inc" min="0" step="1000" max="100000" value="24000">
 			<span data-scroll>
 				<span data-scroll-bg>
 					<span data-scroll-snap></span>
