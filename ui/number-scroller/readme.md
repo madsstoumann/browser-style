@@ -23,7 +23,38 @@ To use the component, add the `<number-scroller>` tag to your HTML and configure
 </number-scroller>
 ```
 
-## Attributes
+
+## CSS Custom Properties
+
+You can customize the appearance of the number scroller using the following CSS custom properties:
+
+| Property | Description | Default |
+| --- | --- | --- |
+| `--number-spinner-snap-bg` | Snap point background color | `#CCC` |
+| `--number-scroller-snap-bdrs` | Snap point border radius | `1px` |
+| `--number-scroller-snap-h` | Snap point height | `70%` |
+| `--number-scroller-snap-w` | Snap point width | `1px` |
+| `--number-scroller-label-c` | Label color | `inherit` |
+| `--number-scroller-ff` | Font family | `ui-sans-serif, system-ui` |
+| `--number-scroller-fieldset-rg` | Fieldset row gap | `1rem` |
+| `--number-spinner-label-rg` | Label row gap | `.25rem` |
+| `--number-scroller-indicator-bg` | Indicator background color | `hsl(219, 79%, 66%)` |
+| `--number-scroller-indicator-bdrs` | Indicator border radius | `3px` |
+| `--number-scroller-indicator-h` | Indicator height | `2rem` |
+| `--number-scroller-indicator-w` | Indicator width | `5px` |
+| `--number-scroller-triangle-bg` | Triangle background color | `hsl(219, 79%, 6%)` |
+| `--number-scroller-triangle-h` | Triangle height | `5px` |
+| `--number-scroller-triangle-w` | Triangle width | `10px` |
+| `--number-scroller-focus-outline-c` | Focus outline color | `#CCC` |
+| `--number-scroller-legend-c` | Legend color | `inherit` |
+| `--number-scroller-legend-fw` | Legend font weight | `400` |
+| `--number-scroller-legend-fs` | Legend font size | `.75rem` |
+| `--number-scroller-out-c` | Output color | `inherit` |
+| `--number-scroller-out-fs` | Output font size | `2rem` |
+| `--number-scroller-out-fw` | Output font weight | `600` |
+| `--number-scroller-w` | Scroller width | `200%` |
+| `--number-scroller-mask` | Mask for scroll area | `linear-gradient(to right, #0000, #000 15%, #000 85%, #0000)` |
+
 
 | Attribute | Description | Default |
 | --- | --- | --- |

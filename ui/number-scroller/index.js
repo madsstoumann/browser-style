@@ -1,15 +1,22 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	b {
-		background: #CCC;
+		background: var(--number-spinner-snap-minor-bg, #CCC);
+		border-radius: var(--number-scroller-snap-minor-bdrs, 1px);
 		display: block;
-		height: 70%;
+		height: var(--number-scroller-snap-minor-h, 70%);
 		scroll-snap-align: center;
-		width: 1px;
-		&:nth-child(5n+1) {
-			height: 100%;
-			/* scroll-snap-align: center; */
-		}
+		width: var(--number-scroller-snap-minor-w, 1px);
+	}
+	:host([snap-interval="2"]) b:nth-of-type(2n+1),
+	:host([snap-interval="3"]) b:nth-of-type(3n+1),
+	:host([snap-interval="4"]) b:nth-of-type(4n+1),
+	:host([snap-interval="5"]) b:nth-of-type(5n+1),
+	:host([snap-interval="10"]) b:nth-of-type(10n+1) {
+		background: var(--number-spinner-snap-major-bg, pink);
+		border-radius: var(--number-scroller-snap-major-bdrs, 1px);
+		height: var(--number-scroller-snap-major-h, 100%);
+		width: var(--number-scroller-snap-major-w, 2px);
 	}
 	fieldset {
 		border: 0;
@@ -17,7 +24,7 @@ styles.replaceSync(`
 		font-family: var(--number-scroller-ff, ui-sans-serif, system-ui);
 		margin: 0;
 		padding: 0;
-		row-gap: 1ch;
+		row-gap: var(--number-scroller-fieldset-rg, 1rem);
 		text-align: center;
 	}
 	input {
@@ -30,46 +37,52 @@ styles.replaceSync(`
 		appearance: none;
 	}
 	label {
+		color: var(--number-scroller-label-c, inherit);
 		display: grid;
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr min-content;
 		position: relative;
-		row-gap: .25rem;
+		row-gap: var(--number-spinner-label-rg, .25rem);
 
 		&::after {
-			background: cornflowerblue;
-			border-radius: 3px;
+			background: var(--number-scroller-indicator-bg, hsl(219, 79%, 66%));
+			border-radius: var(--number-scroller-indicator-bdrs, 3px);
 			content: "";
 			display: block;
 			grid-area: 1 / 1;
-			height: 32px;
+			height: var(--number-scroller-indicator-h, 2rem);
+			isolation: isolate;
 			place-self: center;
 			pointer-events: none;
-			width: 5px;
+			width: var(--number-scroller-indicator-w, 5px);
 		}
 		&::before { 
-			background: tomato;
+			background: var(--number-scroller-triangle-bg, hsl(219, 79%, 6%));
 			clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 			content: "";
 			display: block;
-			height: 5px;
+			height: var(--number-scroller-triangle-h, 5px);
 			place-self: end center;
 			pointer-events: none;
-			width: 10px;
+			width: var(--number-scroller-triangle-w, 10px);
 		}
 		&:has(:focus-visible) {
-			outline: 1px solid #CCC;
+			outline: 1px solid var(--number-scroller-focus-outline-c, #CCC);
 			outline-offset: 4px;
 		}
 	}
 	legend {
+		color: var(--number-scroller-legend-c, inherit);
+		display: contents;
 		font-weight: var(--number-scroller-legend-fw, 400);
 		font-size: var(--number-scroller-legend-fs, .75rem);
 	}
 	output {
+		color: var(--number-scroller-out-c, inherit);
 		font-size: var(--number-scroller-out-fs, 2rem);
 		font-variant-numeric: tabular-nums;
 		font-weight: var(--number-scroller-out-fw, 600);
+		text-box: cap alphabetic;
 	}
 	span[part=scroll] {
 		cursor: col-resize;
@@ -81,7 +94,6 @@ styles.replaceSync(`
 		position: absolute;
 		scrollbar-width: none;
 		scroll-snap-type: x proximity;
-		&:focus-visible { outline: none; }
 	}
 	span[part=scroll].grabbing { cursor: grabbing; }
 	span[part=scroll]::-webkit-scrollbar { display: none; }
@@ -104,16 +116,16 @@ export default class NumberScroller extends HTMLElement {
 	#cfg = {};
 	#elm = {};
 	#isDown = false;
-	#root;
-	#scrollLeft;
-	#startX;
-	#scrollBgWidth = 0;
+	#isResizing = false;
 	#middleStart = 0;
 	#middleWidth = 0;
-	#viewportCenter = 0;
 	#resizeObserver;
-	#isResizing = false;
 	#resizeTimeout;
+	#root;
+	#scrollBgWidth = 0;
+	#scrollLeft;
+	#startX;
+	#viewportCenter = 0;
 
 	get #incRange() {
 		return this.#cfg.max - this.#cfg.min;
