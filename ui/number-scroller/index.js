@@ -13,7 +13,7 @@ styles.replaceSync(`
 	:host([snap-interval="4"]) b:nth-of-type(4n+1),
 	:host([snap-interval="5"]) b:nth-of-type(5n+1),
 	:host([snap-interval="10"]) b:nth-of-type(10n+1) {
-		background: var(--number-spinner-snap-major-bg, pink);
+		background: var(--number-spinner-snap-major-bg, #CCC);
 		border-radius: var(--number-scroller-snap-major-bdrs, 1px);
 		height: var(--number-scroller-snap-major-h, 100%);
 		width: var(--number-scroller-snap-major-w, 2px);
@@ -196,7 +196,6 @@ export default class NumberScroller extends HTMLElement {
 		});
 		this.#resizeObserver.observe(this.#elm.scroller);
 	}
-
 
 	disconnectedCallback() {
 		if (this.#resizeObserver) {
