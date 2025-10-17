@@ -128,6 +128,10 @@ export default class NumberScroller extends HTMLElement {
 			snapPoints: parseInt(this.getAttribute('snap-points') || '0', 10),
 			step: parseInt(this.getAttribute('step') || '1', 10),
 			value: parseInt(this.getAttribute('value') || '0', 10),
+			format: this.getAttribute('format') || 'currency',
+			currency: this.getAttribute('currency') || 'USD',
+			unit: this.getAttribute('unit'),
+			decimals: parseInt(this.getAttribute('decimals') || '0', 10),
 		}
 		this.#root.innerHTML = `
 			<fieldset>
@@ -170,7 +174,21 @@ export default class NumberScroller extends HTMLElement {
 		this.#elm.scroller.addEventListener('pointermove', this.onPointerMove.bind(this));
 	}
 
-	formatNumber(num) { return parseInt(num).toLocaleString(this.#cfg.lang) };
+	formatNumber(num) {
+		const options = {
+			style: this.#cfg.format,
+			minimumFractionDigits: this.#cfg.decimals,
+			maximumFractionDigits: this.#cfg.decimals,
+		};
+
+		if (this.#cfg.format === 'currency') {
+			options.currency = this.#cfg.currency;
+		} else if (this.#cfg.format === 'unit' && this.#cfg.unit) {
+			options.unit = this.#cfg.unit;
+		}
+
+		return new Intl.NumberFormat(this.#cfg.lang, options).format(num);
+	};
 
 	onPointerDown(e) {
 		this.#isDown = true;
@@ -199,7 +217,10 @@ export default class NumberScroller extends HTMLElement {
 
 	updateFromInput() {
 		const value = this.#elm.in.value;
-		this.#elm.out.value = this.formatNumber(value);
+		const formattedValue = this.formatNumber(value);
+		this.#elm.out.value = formattedValue;
+		this.#elm.in.setAttribute('aria-valuenow', value);
+		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
 		this.#cfg.incRange = this.#cfg.max - this.#cfg.min;
 		this.#cfg.scrollRange = this.#elm.scroller.scrollWidth - this.#elm.scroller.clientWidth;
 		const scrollPercentage = (value - this.#cfg.min) / this.#cfg.incRange;
@@ -210,7 +231,10 @@ export default class NumberScroller extends HTMLElement {
 		const scrollPercentage = this.#elm.scroller.scrollLeft / this.#cfg.scrollRange;
 		const scrollValue = this.#cfg.min + (scrollPercentage * this.#cfg.incRange);
 		const steppedValue = Math.round(scrollValue / this.#cfg.step) * this.#cfg.step;
-		this.#elm.out.value = this.formatNumber(steppedValue);
+		const formattedValue = this.formatNumber(steppedValue);
+		this.#elm.out.value = formattedValue;
+		this.#elm.in.setAttribute('aria-valuenow', steppedValue);
+		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
 	}
 
 	updateInputFromScroll() {
@@ -218,6 +242,10 @@ export default class NumberScroller extends HTMLElement {
 		const scrollValue = this.#cfg.min + (scrollPercentage * this.#cfg.incRange);
 		const steppedValue = Math.round(scrollValue / this.#cfg.step) * this.#cfg.step;
 		this.#elm.in.value = steppedValue;
+		// Programmatically setting value doesn't fire an input event, so we update manually
+		const formattedValue = this.formatNumber(steppedValue);
+		this.#elm.in.setAttribute('aria-valuenow', steppedValue);
+		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
 	}
 
 }
