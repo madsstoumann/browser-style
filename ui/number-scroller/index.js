@@ -107,6 +107,13 @@ export default class NumberScroller extends HTMLElement {
 	#root;
 	#scrollLeft;
 	#startX;
+	#scrollBgWidth = 0;
+	#middleStart = 0;
+	#middleWidth = 0;
+	#viewportCenter = 0;
+	#resizeObserver;
+	#isResizing = false;
+	#resizeTimeout;
 
 	constructor() {
 		super();
@@ -157,6 +164,37 @@ export default class NumberScroller extends HTMLElement {
 		this.style.setProperty('--number-scroller-w', `${this.#cfg.scrollWidth}%`);
 		this.addEvents();
 		this.updateFromInput();
+		this.#setupResizeObserver();
+	}
+
+	#setupResizeObserver() {
+		this.#resizeObserver = new ResizeObserver(() => {
+			const currentValue = this.#elm.in.value;
+			this.#isResizing = true;
+			this.#cfg.incRange = this.#cfg.max - this.#cfg.min;
+			this.#updateScrollDimensions();
+			this.#elm.scroller.scrollLeft = this.#valueToScrollLeft(currentValue);
+
+			clearTimeout(this.#resizeTimeout);
+			this.#resizeTimeout = setTimeout(() => {
+				this.#forceUpdateUI(currentValue);
+				this.#isResizing = false;
+			}, 100);
+		});
+		this.#resizeObserver.observe(this.#elm.scroller);
+	}
+
+	#forceUpdateUI(value) {
+		const formattedValue = this.formatNumber(value);
+		this.#elm.out.value = formattedValue;
+		this.#elm.in.setAttribute('aria-valuenow', value);
+		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
+	}
+
+	disconnectedCallback() {
+		if (this.#resizeObserver) {
+			this.#resizeObserver.disconnect();
+		}
 	}
 
 	addEvents() {
@@ -215,31 +253,50 @@ export default class NumberScroller extends HTMLElement {
 		this.#elm.scroller.scrollLeft = this.#scrollLeft - walk;
 	}
 
+	#updateScrollDimensions() {
+		this.#scrollBgWidth = this.#elm.scroller.scrollWidth;
+		const clientWidth = this.#elm.scroller.clientWidth;
+		this.#viewportCenter = clientWidth / 2;
+		this.#middleStart = this.#scrollBgWidth * 0.25;
+		this.#middleWidth = this.#scrollBgWidth * 0.5;
+	}
+
+	#valueToScrollLeft(value) {
+		const percentage = (value - this.#cfg.min) / this.#cfg.incRange;
+		const indicatorPos = this.#middleStart + (percentage * this.#middleWidth);
+		return indicatorPos - this.#viewportCenter;
+	}
+
+	#scrollLeftToValue() {
+		const indicatorPos = this.#elm.scroller.scrollLeft + this.#viewportCenter;
+		const percentage = (indicatorPos - this.#middleStart) / this.#middleWidth;
+		const value = this.#cfg.min + (percentage * this.#cfg.incRange);
+		return Math.round(value / this.#cfg.step) * this.#cfg.step;
+	}
+
 	updateFromInput() {
 		const value = this.#elm.in.value;
 		this.#updateUI(value);
 		this.#cfg.incRange = this.#cfg.max - this.#cfg.min;
-		this.#cfg.scrollRange = this.#elm.scroller.scrollWidth - this.#elm.scroller.clientWidth;
-		const scrollPercentage = (value - this.#cfg.min) / this.#cfg.incRange;
-		this.#elm.scroller.scrollLeft = scrollPercentage * this.#cfg.scrollRange;
+		this.#updateScrollDimensions();
+		this.#elm.scroller.scrollLeft = this.#valueToScrollLeft(value);
 	}
 
 	updateFromScroll() {
-		const scrollPercentage = this.#elm.scroller.scrollLeft / this.#cfg.scrollRange;
-		const scrollValue = this.#cfg.min + (scrollPercentage * this.#cfg.incRange);
-		const steppedValue = Math.round(scrollValue / this.#cfg.step) * this.#cfg.step;
+		if (this.#isResizing) return;
+		const steppedValue = this.#scrollLeftToValue();
 		this.#updateUI(steppedValue);
 	}
 
 	updateInputFromScroll() {
-		const scrollPercentage = this.#elm.scroller.scrollLeft / this.#cfg.scrollRange;
-		const scrollValue = this.#cfg.min + (scrollPercentage * this.#cfg.incRange);
-		const steppedValue = Math.round(scrollValue / this.#cfg.step) * this.#cfg.step;
+		if (this.#isResizing) return;
+		const steppedValue = this.#scrollLeftToValue();
 		this.#elm.in.value = steppedValue;
 		this.#updateUI(steppedValue);
 	}
 
 	#updateUI(value) {
+		if (this.#isResizing) return;
 		const formattedValue = this.formatNumber(value);
 		this.#elm.out.value = formattedValue;
 		this.#elm.in.setAttribute('aria-valuenow', value);
