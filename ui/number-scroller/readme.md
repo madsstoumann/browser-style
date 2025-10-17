@@ -18,6 +18,7 @@ To use the component, add the `<number-scroller>` tag to your HTML and configure
 	format="currency"
 	currency="USD"
 	decimals="0"
+	scroll-multiplier="1.5"
 >
 </number-scroller>
 ```
@@ -34,9 +35,10 @@ To use the component, add the `<number-scroller>` tag to your HTML and configure
 | `snap-points` | The number of visual snap points to render in the scroller UI. | `'0'` |
 | `lang` | The BCP 47 language tag for formatting (e.g., `en-US`, `da-DK`). | The document's language or `'en-US'`. |
 | `format` | The number formatting style. See options below. | `'currency'` |
-| `currency` | The 3-letter ISO 4217 currency code (e.g., `USD`, `EUR`, `DKK`). Required if `format` is `'currency'`. | `'DKK'` |
+| `currency` | The 3-letter ISO 4217 currency code (e.g., `USD`, `EUR`, `DKK`). Required if `format` is `'currency'`. | `'USD'` |
 | `unit` | The unit identifier to use when `format` is `'unit'`. See options below. | `null` |
 | `decimals` | The number of decimal places to display. | `'0'` |
+| `scroll-multiplier` | A multiplier to control the scroll speed when dragging. | `'2'` |
 
 ---
 
@@ -100,3 +102,4 @@ When `format="unit"`, you must provide a valid unit identifier. The following ar
 * `milliliter`
 
 > For a complete list of all sanctioned unit identifiers, please refer to the official [ECMAScript Internationalization API Specification](https://tc39.es/ecma402/#sec-issanctionedsimpleunitidentifier).
+
