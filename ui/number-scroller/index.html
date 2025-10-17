@@ -18,7 +18,7 @@
 				/* scroll-snap-align: center; */
 			}
 			&:nth-child(2n), &:nth-child(4n) {
-				background: #0000;
+				/* background: #0000; */
 			}
 		}
 		fieldset {
@@ -107,6 +107,9 @@
 	[type=range]::-webkit-slider-thumb {
 		appearance: none;
 	}
+	[data-scroll].grabbing {
+		cursor: grabbing;
+	}
 	</style>
 </head>
 <body>
@@ -123,6 +126,8 @@
 			</span>
 		</label>
 	</fieldset>
+
+
 
 	<script>
 	function setupNumberScroller(app) {
@@ -186,6 +191,35 @@
 
 		scroller.addEventListener('scroll', updateFromScroll);
 		scroller.addEventListener('scrollend', updateRangeFromScroll);
+
+		let isDown = false;
+		let startX;
+		let scrollLeft;
+
+		scroller.addEventListener('pointerdown', (e) => {
+			isDown = true;
+			scroller.classList.add('grabbing');
+			startX = e.pageX - scroller.offsetLeft;
+			scrollLeft = scroller.scrollLeft;
+		});
+
+		scroller.addEventListener('pointerleave', () => {
+			isDown = false;
+			scroller.classList.remove('grabbing');
+		});
+
+		scroller.addEventListener('pointerup', () => {
+			isDown = false;
+			scroller.classList.remove('grabbing');
+		});
+
+		scroller.addEventListener('pointermove', (e) => {
+			if (!isDown) return;
+			e.preventDefault();
+			const x = e.pageX - scroller.offsetLeft;
+			const walk = (x - startX) * 2; //scroll-fast
+			scroller.scrollLeft = scrollLeft - walk;
+		});
 
 		/* --- RESIZE HANDLING --- */
 		let resizeTimer;
