@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="da-DK" dir="ltr">
+<head>
+	<title>Number Scroller</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="">
+	<style>
+
+		b {
+			background: #CCC;
+			display: block;
+			height: 70%;
+			scroll-snap-align: center;
+			width: 1px;
+			&:nth-child(5n+1) {
+				height: 100%;
+				/* scroll-snap-align: center; */
+			}
+			&:nth-child(2n), &:nth-child(4n) {
+				/* background: #0000; */
+			}
+		}
+		fieldset {
+			--scroller-width: 200%;
+			border: 0;
+			display: grid;
+			font-family: ui-sans-serif, system-ui;
+			
+			margin: 0;
+			padding: 0;
+			row-gap: 1ch;
+			text-align: center;
+		}
+		/* Range with scroller */
+			label:has([type=range]) {
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr min-content;
+				position: relative;
+				row-gap: .25rem;
+				&:has(:focus-visible) {
+					outline: 1px solid #CCC;
+					outline-offset: 4px;
+				}
+				&::after {
+					background: cornflowerblue;
+					border-radius: 3px;
+					content: "";
+					display: block;
+					grid-area: 1 / 1;
+					height: 32px;
+					place-self: center;
+					pointer-events: none;
+					width: 5px;
+					z-index: 1;
+				}
+				&::before { 
+					background: tomato;
+					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+					content: "";
+					display: block;
+					height: 5px;
+					place-self: end center;
+					pointer-events: none;
+					width: 10px;
+					z-index: 1;
+				}
+				input { grid-area: 1 / 1; margin: 0;
+					&:focus-visible { outline: none; }
+				}
+		
+				[data-scroll] {
+					cursor: grab;
+					display: block;
+					grid-area: 1 / 1 / 1 / 1;
+					inset: 0;
+					mask: linear-gradient(to right, #0000, #000 15%, #000 85%, #0000);
+					overflow-x: auto;
+					position: absolute;
+					scrollbar-width: none; /* Firefox */
+					scroll-snap-type: x proximity;
+					&:focus-visible { outline: none; }
+
+					[data-scroll-bg] {
+						display: grid;
+						grid-template-columns: 1fr 2fr 1fr;
+						height: 100%;
+						pointer-events: none;
+						width: var(--scroller-width);
+
+					}
+					[data-scroll-snap] {
+						align-items: end;
+						display: flex;
+						grid-column: 2;
+						justify-content: space-between;
+						scroll-snap-type: x mandatory;
+					}
+				}
+				[data-scroll]::-webkit-scrollbar {
+					display: none;
+				}
+			}
+				[type=range],
+	[type=range]::-webkit-slider-runnable-track,
+	[type=range]::-webkit-slider-thumb {
+		appearance: none;
+	}
+	[data-scroll].grabbing {
+		cursor: grabbing;
+	}
+	</style>
+</head>
+<body>
+
+	<fieldset id="numberscroller" data-snap-points="100" data-output-suffix=" kr.">
+		<legend>Din månedsløn før skat:</legend>
+		<output name="inc_out"></output>
+		<label aria-label="Vælg din månedsløn før skat">
+			<input type="range" name="inc" min="0" step="1000" max="100000" value="25000">
+			<span data-scroll>
+				<span data-scroll-bg>
+					<span data-scroll-snap></span>
+				</span>
+			</span>
+		</label>
+	</fieldset>
+
+	<script>
+
+	function setupNumberScroller(app) {
+		/* --- INITIALIZATION & CACHING --- */
+		
+		const rangeInput = app.elements.inc;
+		const output = app.elements.inc_out;
+		const scroller = app.querySelector('[data-scroll]');
+		const snapContainer = app.querySelector('[data-scroll-snap]');
+		const snapPoints = parseInt(app.dataset.snapPoints, 10);
+		const suffix = app.dataset.outputSuffix || '';
+
+		if (snapContainer && snapPoints) {
+			for (let i = 0; i < snapPoints; i++) {
+				const b = document.createElement('b');
+				snapContainer.appendChild(b);
+			}
+		}
+
+		// Cache constants for the range slider
+		const incMin = parseFloat(rangeInput.min);
+		const incMax = parseFloat(rangeInput.max);
+		const incStep = parseFloat(rangeInput.step);
+		const incRange = incMax - incMin;
+		let scrollRange = scroller.scrollWidth - scroller.clientWidth;
+		const locale = document.documentElement.lang || 'da-DK';
+
+
+		/* --- UTILITIES --- */
+		const formatNumber = (num) => parseInt(num).toLocaleString(locale);
+
+		/* --- UPDATE FUNCTION --- */
+		function updateFromInput() {
+			const value = rangeInput.value;
+			output.value = formatNumber(value) + suffix;
+			const scrollPercentage = (value - incMin) / incRange;
+			scroller.scrollLeft = scrollPercentage * scrollRange;
+		}
+
+		function updateFromScroll() {
+			const scrollPercentage = scroller.scrollLeft / scrollRange;
+			const scrollValue = incMin + (scrollPercentage * incRange);
+			const steppedValue = Math.round(scrollValue / incStep) * incStep;
+			output.value = formatNumber(steppedValue) + suffix;
+		}
+		
+		function updateRangeFromScroll() {
+			const scrollPercentage = scroller.scrollLeft / scrollRange;
+			const scrollValue = incMin + (scrollPercentage * incRange);
+			const steppedValue = Math.round(scrollValue / incStep) * incStep;
+			rangeInput.value = steppedValue;
+			// Do not call updateFromInput here to avoid scroll loop
+		}
+
+		/* --- EVENT HANDLING --- */
+		app.addEventListener('input', (e) => {
+			if (e.target === rangeInput) {
+				updateFromInput();
+			}
+		});
+
+		scroller.addEventListener('scroll', updateFromScroll);
+		scroller.addEventListener('scrollend', updateRangeFromScroll);
+
+		let isDown = false;
+		let startX;
+		let scrollLeft;
+
+		scroller.addEventListener('pointerdown', (e) => {
+			isDown = true;
+			scroller.classList.add('grabbing');
+			startX = e.pageX - scroller.offsetLeft;
+			scrollLeft = scroller.scrollLeft;
+		});
+
+		scroller.addEventListener('pointerleave', () => {
+			isDown = false;
+			scroller.classList.remove('grabbing');
+		});
+
+		scroller.addEventListener('pointerup', () => {
+			isDown = false;
+			scroller.classList.remove('grabbing');
+		});
+
+		scroller.addEventListener('pointermove', (e) => {
+			if (!isDown) return;
+			e.preventDefault();
+			const x = e.pageX - scroller.offsetLeft;
+			const walk = (x - startX) * 2; //scroll-fast
+			scroller.scrollLeft = scrollLeft - walk;
+		});
+
+		/* --- RESIZE HANDLING --- */
+		let resizeTimer;
+		window.addEventListener('resize', () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(() => {
+				scrollRange = scroller.scrollWidth - scroller.clientWidth;
+				updateFromInput();
+			}, 250);
+		});
+
+		/* --- INITIAL UPDATE --- */
+		updateFromInput();
+	}
+
+	const app = document.getElementById('numberscroller');
+	setupNumberScroller(app);
+	</script>
+
+</body>
+</html>
