@@ -115,6 +115,10 @@ export default class NumberScroller extends HTMLElement {
 	#isResizing = false;
 	#resizeTimeout;
 
+	get #incRange() {
+		return this.#cfg.max - this.#cfg.min;
+	}
+
 	constructor() {
 		super();
 		this.#root = this.attachShadow({ mode: 'open' });
@@ -125,14 +129,12 @@ export default class NumberScroller extends HTMLElement {
 			currency: this.getAttribute('currency') || 'USD',
 			decimals: parseInt(this.getAttribute('decimals') || '0', 10),
 			format: this.getAttribute('format') || 'currency',
-			incRange: 0,
 			label: this.getAttribute('label') || 'Number Scroller',
 			lang: this.getAttribute('lang') || document.documentElement.lang || 'en-US',
 			max: parseInt(this.getAttribute('max') || '100', 10),
 			min: parseInt(this.getAttribute('min') || '0', 10),
 			scrollMultiplier: parseFloat(this.getAttribute('scroll-multiplier') || '1.5'),
-			scrollRange: 0,
-			scrollWidth: parseInt(this.getAttribute('scroll-width') || '200', 10),
+			scrollWidth: Math.max(200, parseInt(this.getAttribute('scroll-width') || '200', 10)),
 			snapPoints: parseInt(this.getAttribute('snap-points') || '0', 10),
 			step: parseInt(this.getAttribute('step') || '1', 10),
 			unit: this.getAttribute('unit'),
@@ -171,25 +173,18 @@ export default class NumberScroller extends HTMLElement {
 		this.#resizeObserver = new ResizeObserver(() => {
 			const currentValue = this.#elm.in.value;
 			this.#isResizing = true;
-			this.#cfg.incRange = this.#cfg.max - this.#cfg.min;
 			this.#updateScrollDimensions();
 			this.#elm.scroller.scrollLeft = this.#valueToScrollLeft(currentValue);
 
 			clearTimeout(this.#resizeTimeout);
 			this.#resizeTimeout = setTimeout(() => {
-				this.#forceUpdateUI(currentValue);
+				this.#updateUI(currentValue, true);
 				this.#isResizing = false;
 			}, 100);
 		});
 		this.#resizeObserver.observe(this.#elm.scroller);
 	}
 
-	#forceUpdateUI(value) {
-		const formattedValue = this.formatNumber(value);
-		this.#elm.out.value = formattedValue;
-		this.#elm.in.setAttribute('aria-valuenow', value);
-		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
-	}
 
 	disconnectedCallback() {
 		if (this.#resizeObserver) {
@@ -203,11 +198,11 @@ export default class NumberScroller extends HTMLElement {
 				this.updateFromInput();
 			}
 		});
-		this.#elm.scroller.addEventListener('scroll', this.updateFromScroll.bind(this));
-		this.#elm.scroller.addEventListener('scrollend', this.updateInputFromScroll.bind(this));
+		this.#elm.scroller.addEventListener('scroll', () => this.updateFromScroll());
+		this.#elm.scroller.addEventListener('scrollend', () => this.updateFromScroll(true));
 		this.#elm.scroller.addEventListener('pointerdown', this.onPointerDown.bind(this));
-		this.#elm.scroller.addEventListener('pointerleave', this.onPointerLeave.bind(this));
-		this.#elm.scroller.addEventListener('pointerup', this.onPointerUp.bind(this));
+		this.#elm.scroller.addEventListener('pointerleave', this.onPointerEnd.bind(this));
+		this.#elm.scroller.addEventListener('pointerup', this.onPointerEnd.bind(this));
 		this.#elm.scroller.addEventListener('pointermove', this.onPointerMove.bind(this));
 	}
 
@@ -235,12 +230,7 @@ export default class NumberScroller extends HTMLElement {
 		this.#scrollLeft = this.#elm.scroller.scrollLeft;
 	}
 
-	onPointerLeave() {
-		this.#isDown = false;
-		this.#elm.scroller.classList.remove('grabbing');
-	}
-
-	onPointerUp() {
+	onPointerEnd() {
 		this.#isDown = false;
 		this.#elm.scroller.classList.remove('grabbing');
 	}
@@ -262,7 +252,7 @@ export default class NumberScroller extends HTMLElement {
 	}
 
 	#valueToScrollLeft(value) {
-		const percentage = (value - this.#cfg.min) / this.#cfg.incRange;
+		const percentage = (value - this.#cfg.min) / this.#incRange;
 		const indicatorPos = this.#middleStart + (percentage * this.#middleWidth);
 		return indicatorPos - this.#viewportCenter;
 	}
@@ -270,33 +260,26 @@ export default class NumberScroller extends HTMLElement {
 	#scrollLeftToValue() {
 		const indicatorPos = this.#elm.scroller.scrollLeft + this.#viewportCenter;
 		const percentage = (indicatorPos - this.#middleStart) / this.#middleWidth;
-		const value = this.#cfg.min + (percentage * this.#cfg.incRange);
+		const value = this.#cfg.min + (percentage * this.#incRange);
 		return Math.round(value / this.#cfg.step) * this.#cfg.step;
 	}
 
 	updateFromInput() {
 		const value = this.#elm.in.value;
 		this.#updateUI(value);
-		this.#cfg.incRange = this.#cfg.max - this.#cfg.min;
 		this.#updateScrollDimensions();
 		this.#elm.scroller.scrollLeft = this.#valueToScrollLeft(value);
 	}
 
-	updateFromScroll() {
+	updateFromScroll(updateInput = false) {
 		if (this.#isResizing) return;
 		const steppedValue = this.#scrollLeftToValue();
+		if (updateInput) this.#elm.in.value = steppedValue;
 		this.#updateUI(steppedValue);
 	}
 
-	updateInputFromScroll() {
-		if (this.#isResizing) return;
-		const steppedValue = this.#scrollLeftToValue();
-		this.#elm.in.value = steppedValue;
-		this.#updateUI(steppedValue);
-	}
-
-	#updateUI(value) {
-		if (this.#isResizing) return;
+	#updateUI(value, force = false) {
+		if (this.#isResizing && !force) return;
 		const formattedValue = this.formatNumber(value);
 		this.#elm.out.value = formattedValue;
 		this.#elm.in.setAttribute('aria-valuenow', value);
