@@ -30,22 +30,22 @@ You can customize the appearance of the number scroller using the following CSS 
 
 | Property | Description | Default |
 | --- | --- | --- |
-| `--number-spinner-snap-minor-bg` | Minor snap line background color | `#CCC` |
+| `--number-scroller-snap-minor-bg` | Minor snap line background color | `#CCC` |
 | `--number-scroller-snap-minor-bdrs` | Minor snap line border radius | `1px` |
 | `--number-scroller-snap-minor-h` | Minor snap line height | `70%` |
 | `--number-scroller-snap-minor-w` | Minor snap line width | `1px` |
-| `--number-spinner-snap-major-bg` | Major snap line background color | `#CCC` |
+| `--number-scroller-snap-major-bg` | Major snap line background color | `#CCC` |
 | `--number-scroller-snap-major-bdrs` | Major snap line border radius | `1px` |
 | `--number-scroller-snap-major-h` | Major snap line height | `100%` |
 | `--number-scroller-snap-major-w` | Major snap line width | `2px` |
-| `--number-spinner-snap-bg` | Snap point background color | `#CCC` |
+| `--number-scroller-snap-bg` | Snap point background color | `#CCC` |
 | `--number-scroller-snap-bdrs` | Snap point border radius | `1px` |
 | `--number-scroller-snap-h` | Snap point height | `70%` |
 | `--number-scroller-snap-w` | Snap point width | `1px` |
 | `--number-scroller-label-c` | Label color | `inherit` |
 | `--number-scroller-ff` | Font family | `ui-sans-serif, system-ui` |
 | `--number-scroller-fieldset-rg` | Fieldset row gap | `1rem` |
-| `--number-spinner-label-rg` | Label row gap | `.25rem` |
+| `--number-scroller-label-rg` | Label row gap | `.25rem` |
 | `--number-scroller-indicator-bg` | Indicator background color | `hsl(219, 79%, 66%)` |
 | `--number-scroller-indicator-bdrs` | Indicator border radius | `3px` |
 | `--number-scroller-indicator-h` | Indicator height | `2rem` |
@@ -90,10 +90,10 @@ You can customize the appearance of the number scroller using the following CSS 
 | `--number-scroller-triangle-h` | Triangle height | `5px` |
 | `--number-scroller-triangle-w` | Triangle width | `10px` |
 | `--number-scroller-w` | Scroller width | `200%` |
-| `--number-spinner-label-rg` | Label row gap | `.25rem` |
-| `--number-spinner-snap-bg` | Snap point background color | `#CCC` |
-| `--number-spinner-snap-major-bg` | Major snap line background color | `#CCC` |
-| `--number-spinner-snap-minor-bg` | Minor snap line background color | `#CCC` |
+| `--number-scroller-label-rg` | Label row gap | `.25rem` |
+| `--number-scroller-snap-bg` | Snap point background color | `#CCC` |
+| `--number-scroller-snap-major-bg` | Major snap line background color | `#CCC` |
+| `--number-scroller-snap-minor-bg` | Minor snap line background color | `#CCC` |
 
 
 | Attribute | Description | Default |

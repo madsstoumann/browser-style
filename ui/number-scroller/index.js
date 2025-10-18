@@ -2,7 +2,7 @@ const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host { container-type: inline-size; }
 	b {
-		background: var(--number-spinner-snap-minor-bg, #CCC);
+		background: var(--number-scroller-snap-minor-bg, #CCC);
 		border-radius: var(--number-scroller-snap-minor-bdrs, 1px);
 		display: block;
 		height: var(--number-scroller-snap-minor-h, 70%);
@@ -15,7 +15,7 @@ styles.replaceSync(`
 	:host([snap-major-interval="4"]) b:nth-of-type(4n+1),
 	:host([snap-major-interval="5"]) b:nth-of-type(5n+1),
 	:host([snap-major-interval="10"]) b:nth-of-type(10n+1) {
-		background: var(--number-spinner-snap-major-bg, #CCC);
+		background: var(--number-scroller-snap-major-bg, #CCC);
 		border-radius: var(--number-scroller-snap-major-bdrs, 1px);
 		height: var(--number-scroller-snap-major-h, 100%);
 		width: var(--number-scroller-snap-major-w, 2px);
@@ -44,7 +44,7 @@ styles.replaceSync(`
 		grid-template-columns: 1fr;
 		grid-template-rows: 1fr min-content;
 		position: relative;
-		row-gap: var(--number-spinner-label-rg, .25rem);
+		row-gap: var(--number-scroller-label-rg, .25rem);
 
 		&::after {
 			background: var(--number-scroller-indicator-bg, hsl(219, 79%, 66%));
@@ -371,7 +371,10 @@ export default class NumberScroller extends HTMLElement {
 		// Dispatch event only if value actually changed
 		if (this.#currentValue !== value) {
 			this.#currentValue = value;
-			this.dispatchEvent(new Event('input', { bubbles: true }));
+			this.dispatchEvent(new CustomEvent('input', {
+				bubbles: true,
+				detail: { value: Number(value) }
+			}));
 		}
 	}
 }

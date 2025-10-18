@@ -9,8 +9,6 @@
 <body>
 
 <style>
-number-scroller::part(event-info),
-number-scroller ::slotted([slot="event"]),
 number-scroller ::slotted(div) {
 	display: block;
 	margin: 1rem auto;
@@ -21,6 +19,53 @@ number-scroller ::slotted(div) {
 	font-size: 1.1rem;
 	max-width: 400px;
 	box-shadow: 0 2px 8px #0001;
+}
+
+/* Timeline specific styling - vintage/historical theme */
+number-scroller.timeline {
+	--number-scroller-ff: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+
+	--number-scroller-indicator-bg: #8b4513;
+	--number-scroller-indicator-bdrs: 5px;
+	--number-scroller-indicator-w: 5px;
+	--number-scroller-indicator-h: 3rem;
+	
+	--number-scroller-triangle-bg: #2c1810;
+	--number-scroller-triangle-h: 8px;
+	--number-scroller-triangle-w: 14px;
+
+	--number-scroller-snap-major-bg: #8b4513;
+	--number-scroller-snap-major-bdrs: 5px;
+	--number-scroller-snap-major-w: 5px;
+
+
+	--number-scroller-snap-minor-bg: #d2b48c;
+	--number-scroller-snap-minor-bdrs: 2px;
+	--number-scroller-snap-minor-w: 2px;
+	--number-scroller-snap-minor-h: 50%;
+
+	--number-scroller-legend-c: #5d4037;
+	--number-scroller-legend-fw: 600;
+	--number-scroller-legend-fs: 0.875rem;
+
+	--number-scroller-out-c: #3e2723;
+	--number-scroller-out-fs: 2.5rem;
+	--number-scroller-out-fw: 700;
+
+	--number-scroller-focus-outline-c: #8b4513;
+	
+}
+
+number-scroller.timeline ::slotted(div) {
+	background: linear-gradient(135deg, #fef6e4 0%, #f3e5d1 100%);
+	border: 2px solid #8b4513;
+	border-radius: 4px;
+	color: #3e2723;
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size: 1.15rem;
+	font-style: italic;
+	box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+	min-height: 2rem;
 }
 </style>
 
@@ -37,8 +82,8 @@ number-scroller ::slotted(div) {
 
 <hr>
 
-<number-scroller id="timeline" min="1900" max="2000" step="1" value="1914"
-	snap-values="1914,1918,1939,1945,1969,1989,1990"
+<number-scroller id="timeline" class="timeline" min="1900" max="2000" step="1" value="1914"
+	snap-values="1900,1905,1910,1914,1915,1918,1920,1925,1929,1930,1935,1939,1940,1945,1950,1955,1960,1963,1965,1969,1970,1975,1980,1985,1989,1990,1991,1995,2000"
 	label="Timeline: 20th Century"
 	scroll-width="400"
 	snap-to="value"
@@ -50,29 +95,62 @@ number-scroller ::slotted(div) {
 	import './index.js';
 	const timeline = document.getElementById('timeline');
 	const events = {
+		1900: 'Turn of the century',
+		1903: 'Wright Brothers first flight',
+		1905: 'Einstein publishes Theory of Relativity',
+		1910: 'Mexican Revolution begins',
+		1912: 'Titanic sinks',
 		1914: 'Start of World War I',
+		1915: 'Armenian Genocide begins',
+		1917: 'Russian Revolution',
 		1918: 'End of World War I',
+		1920: 'Women gain right to vote in US',
+		1922: 'Discovery of King Tut\'s tomb',
+		1925: 'Scopes Monkey Trial',
+		1927: 'First transatlantic flight by Lindbergh',
+		1929: 'Wall Street Crash, Great Depression begins',
+		1930: 'Gandhi\'s Salt March',
+		1933: 'Hitler comes to power in Germany',
+		1935: 'Social Security Act in US',
+		1936: 'Spanish Civil War begins',
 		1939: 'Start of World War II',
-		1945: 'End of World War II',
+		1940: 'Battle of Britain',
+		1941: 'Attack on Pearl Harbor',
+		1945: 'End of World War II, Atomic bombs dropped',
+		1947: 'India gains independence',
+		1948: 'State of Israel founded',
+		1950: 'Korean War begins',
+		1953: 'DNA structure discovered',
+		1955: 'Montgomery Bus Boycott',
+		1957: 'Sputnik launches Space Age',
+		1960: 'African independence year',
+		1961: 'Berlin Wall erected',
+		1963: 'JFK assassination',
+		1964: 'Civil Rights Act passed',
+		1965: 'Vietnam War escalates',
+		1967: 'Six-Day War',
+		1968: 'Martin Luther King Jr. assassinated',
 		1969: 'Apollo 11 Moon Landing',
+		1970: 'Environmental movement grows',
+		1973: 'End of Vietnam War',
+		1975: 'Fall of Saigon',
+		1979: 'Iranian Revolution',
+		1980: 'Solidarity movement in Poland',
+		1985: 'Gorbachev introduces Glasnost',
+		1986: 'Chernobyl disaster',
 		1989: 'Fall of the Berlin Wall',
-		1990: 'German reunification'
+		1990: 'German reunification',
+		1991: 'Dissolution of Soviet Union',
+		1994: 'End of Apartheid in South Africa',
+		1995: 'World Wide Web becomes mainstream',
+		1997: 'Hong Kong returned to China',
+		1999: 'Euro currency introduced',
+		2000: 'Y2K, new millennium begins'
 	};
 	const info = document.getElementById('event-info');
-	function updateEvent(val) {
-		// Ensure val is a string or number matching the keys in events
-		const key = String(val).trim();
-		console.log('updateEvent', { val, key, event: events[key] });
-		info.textContent = events[key] || '';
-	}
 	timeline.addEventListener('input', e => {
-		const inputVal = timeline.shadowRoot.querySelector('input[name="in"]').value;
-		console.log('input[name=\'in\']', inputVal);
-		const val = Number(inputVal);
-		updateEvent(val);
+		info.textContent = events[e.detail.value] || '';
 	});
-	// Initial display
-	updateEvent(Number(timeline.shadowRoot.querySelector('input[name="in"]').value));
 </script>
 </body>
 </html>
