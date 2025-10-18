@@ -176,7 +176,7 @@ export default class NumberScroller extends HTMLElement {
 					<input type="range" name="in" min="${this.#cfg.min}" step="${this.#cfg.step}" max="${this.#cfg.max}" value="${this.#cfg.value}">
 					<span part="scroll">
 						<span part="scroll-bg">
-							<span part="scroll-snap">${Array.from({ length: this.#cfg.snapPoints }).map(() => `<b></b>`).join('')}</span>
+							<span part="scroll-snap">${Array.from({ length: this.#cfg.snapPoints + 1 }).map(() => `<b></b>`).join('')}</span>
 						</span>
 					</span>
 				</label>
@@ -225,6 +225,7 @@ export default class NumberScroller extends HTMLElement {
 				this.updateFromInput();
 			}
 		});
+
 		this.#elm.scroller.addEventListener('scroll', () => this.updateFromScroll());
 		this.#elm.scroller.addEventListener('scrollend', () => this.updateFromScroll(true));
 		this.#elm.scroller.addEventListener('pointerdown', this.onPointerDown.bind(this));
