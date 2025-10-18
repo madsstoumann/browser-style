@@ -8,11 +8,11 @@ styles.replaceSync(`
 		scroll-snap-align: center;
 		width: var(--number-scroller-snap-minor-w, 1px);
 	}
-	:host([snap-interval="2"]) b:nth-of-type(2n+1),
-	:host([snap-interval="3"]) b:nth-of-type(3n+1),
-	:host([snap-interval="4"]) b:nth-of-type(4n+1),
-	:host([snap-interval="5"]) b:nth-of-type(5n+1),
-	:host([snap-interval="10"]) b:nth-of-type(10n+1) {
+	:host([snap-major-interval="2"]) b:nth-of-type(2n+1),
+	:host([snap-major-interval="3"]) b:nth-of-type(3n+1),
+	:host([snap-major-interval="4"]) b:nth-of-type(4n+1),
+	:host([snap-major-interval="5"]) b:nth-of-type(5n+1),
+	:host([snap-major-interval="10"]) b:nth-of-type(10n+1) {
 		background: var(--number-spinner-snap-major-bg, #CCC);
 		border-radius: var(--number-scroller-snap-major-bdrs, 1px);
 		height: var(--number-scroller-snap-major-h, 100%);
@@ -91,6 +91,7 @@ styles.replaceSync(`
 		inset: 0;
 		mask: var(--number-scroller-mask, linear-gradient(to right, #0000, #000 15%, #000 85%, #0000));
 		overflow-x: auto;
+		overscroll-behavior: none;
 		position: absolute;
 		scrollbar-width: none;
 		scroll-snap-type: x proximity;
@@ -110,6 +111,18 @@ styles.replaceSync(`
 		grid-column: 2;
 		justify-content: space-between;
 		scroll-snap-type: x mandatory;
+	}
+	/* snap-to */
+	:host([snap-to=none]) span[part=scroll-snap] {
+		scroll-snap-type: none;
+		b { scroll-snap-align: none; }
+	}
+	:host([snap-major-interval="2"][snap-to=major]) b:not(:nth-of-type(2n+1)),
+	:host([snap-major-interval="3"][snap-to=major]) b:not(:nth-of-type(3n+1)),
+	:host([snap-major-interval="4"][snap-to=major]) b:not(:nth-of-type(4n+1)),
+	:host([snap-major-interval="5"][snap-to=major]) b:not(:nth-of-type(5n+1)),
+	:host([snap-major-interval="10"][snap-to=major]) b:not(:nth-of-type(10n+1)) {
+		scroll-snap-align: none;
 	}
 `);
 export default class NumberScroller extends HTMLElement {
@@ -147,11 +160,14 @@ export default class NumberScroller extends HTMLElement {
 			min: parseInt(this.getAttribute('min') || '0', 10),
 			scrollMultiplier: parseFloat(this.getAttribute('scroll-multiplier') || '1.5'),
 			scrollWidth: Math.max(200, parseInt(this.getAttribute('scroll-width') || '200', 10)),
-			snapPoints: parseInt(this.getAttribute('snap-points') || '0', 10),
 			step: parseInt(this.getAttribute('step') || '1', 10),
 			unit: this.getAttribute('unit'),
 			value: parseInt(this.getAttribute('value') || '0', 10),
-		}
+		};
+		const snapPointsAttr = this.getAttribute('snap-points');
+		this.#cfg.snapPoints = snapPointsAttr !== null
+			? parseInt(snapPointsAttr, 10)
+			: Math.floor((this.#cfg.max - this.#cfg.min) / this.#cfg.step);
 		this.#root.innerHTML = `
 			<fieldset>
 				<legend>${this.#cfg.label}</legend>
