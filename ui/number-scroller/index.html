@@ -8,17 +8,71 @@
 </head>
 <body>
 
+<style>
+number-scroller::part(event-info),
+number-scroller ::slotted([slot="event"]),
+number-scroller ::slotted(div) {
+	display: block;
+	margin: 1rem auto;
+	padding: 1rem;
+	background: #f8f9fa;
+	border-radius: 8px;
+	color: #222;
+	font-size: 1.1rem;
+	max-width: 400px;
+	box-shadow: 0 2px 8px #0001;
+}
+</style>
+
 	<number-scroller min="0" max="100000" step="1000" value="25000"
 		currency="DKK"
 		label="Din månedsløn før skat:"	
 		lang="da-DK"
-		
 		scroll-width="400"
 		snap-major-interval="5"
-		snap-to="all">
+		snap-to="major">
 	</number-scroller>
 
 	<script src="index.js" type="module"></script>
 
+<hr>
+
+<number-scroller id="timeline" min="1900" max="2000" step="1" value="1914"
+	snap-values="1914,1918,1939,1945,1969,1989,1990"
+	label="Timeline: 20th Century"
+	scroll-width="400"
+	snap-to="value"
+	format="integer">
+	<div id="event-info"></div>
+</number-scroller>
+
+<script type="module">
+	import './index.js';
+	const timeline = document.getElementById('timeline');
+	const events = {
+		1914: 'Start of World War I',
+		1918: 'End of World War I',
+		1939: 'Start of World War II',
+		1945: 'End of World War II',
+		1969: 'Apollo 11 Moon Landing',
+		1989: 'Fall of the Berlin Wall',
+		1990: 'German reunification'
+	};
+	const info = document.getElementById('event-info');
+	function updateEvent(val) {
+		// Ensure val is a string or number matching the keys in events
+		const key = String(val).trim();
+		console.log('updateEvent', { val, key, event: events[key] });
+		info.textContent = events[key] || '';
+	}
+	timeline.addEventListener('input', e => {
+		const inputVal = timeline.shadowRoot.querySelector('input[name="in"]').value;
+		console.log('input[name=\'in\']', inputVal);
+		const val = Number(inputVal);
+		updateEvent(val);
+	});
+	// Initial display
+	updateEvent(Number(timeline.shadowRoot.querySelector('input[name="in"]').value));
+</script>
 </body>
 </html>

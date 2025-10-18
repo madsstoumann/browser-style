@@ -109,7 +109,7 @@ You can customize the appearance of the number scroller using the following CSS 
 | `value` | The initial value of the component. | `'0'` |
 | `snap-points` | The number of visual snap points to render in the scroller UI. | `'0'` |
 | `lang` | The BCP 47 language tag for formatting (e.g., `en-US`, `da-DK`). | The document's language or `'en-US'`. |
-| `format` | The number formatting style. See options below. | `'currency'` |
+| `format` | The number formatting style. See options below. Now also supports `'integer'` for plain integer output. | `'currency'` |
 | `currency` | The 3-letter ISO 4217 currency code (e.g., `USD`, `EUR`, `DKK`). Required if `format` is `'currency'`. | `'USD'` |
 | `decimals` | The number of decimal places to display. | `'0'` |
 | `format` | The number formatting style. See options below. | `'currency'` |
@@ -146,6 +146,7 @@ This attribute controls the overall style of the number.
 | `decimal` | Formats as a plain number. | `1,234.56` |
 | `percent` | Formats the number as a percentage. | `12%` |
 | `unit` | Formats the number with a unit. Requires the `unit` attribute. | `12 km` |
+| `integer` | Formats the number as a plain integer (no separators, no decimals, no currency/unit). Useful for years, IDs, etc. | `1914` |
 
 ### `unit` Attribute
 

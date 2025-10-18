@@ -9,6 +9,7 @@ styles.replaceSync(`
 		scroll-snap-align: center;
 		width: var(--number-scroller-snap-minor-w, 1px);
 	}
+	:host([snap-to=value]) b[data-value],
 	:host([snap-major-interval="2"]) b:nth-of-type(2n+1),
 	:host([snap-major-interval="3"]) b:nth-of-type(3n+1),
 	:host([snap-major-interval="4"]) b:nth-of-type(4n+1),
@@ -118,6 +119,7 @@ styles.replaceSync(`
 		scroll-snap-type: none;
 		b { scroll-snap-align: none; }
 	}
+	:host([snap-to=value]) b:not([data-value]),
 	:host([snap-major-interval="2"][snap-to=major]) b:not(:nth-of-type(2n+1)),
 	:host([snap-major-interval="3"][snap-to=major]) b:not(:nth-of-type(3n+1)),
 	:host([snap-major-interval="4"][snap-to=major]) b:not(:nth-of-type(4n+1)),
@@ -128,6 +130,7 @@ styles.replaceSync(`
 `);
 export default class NumberScroller extends HTMLElement {
 	#cfg = {};
+	#currentValue = null;
 	#elm = {};
 	#isDown = false;
 	#isResizing = false;
@@ -138,6 +141,7 @@ export default class NumberScroller extends HTMLElement {
 	#root;
 	#scrollBgWidth = 0;
 	#scrollLeft;
+	#snapValues = null;
 	#startX;
 	#viewportCenter = 0;
 
@@ -165,10 +169,17 @@ export default class NumberScroller extends HTMLElement {
 			unit: this.getAttribute('unit'),
 			value: parseInt(this.getAttribute('value') || '0', 10),
 		};
+
+		const snapValuesAttr = this.getAttribute('snap-values');
+		if (snapValuesAttr) {
+			this.#snapValues = snapValuesAttr.split(',').map(v => parseInt(v.trim(), 10)).filter(v => !isNaN(v));
+		}
 		const snapPointsAttr = this.getAttribute('snap-points');
 		this.#cfg.snapPoints = snapPointsAttr !== null
 			? parseInt(snapPointsAttr, 10)
 			: Math.floor((this.#cfg.max - this.#cfg.min) / this.#cfg.step);
+
+		const snapMarkup = this.#buildSnapMarkup();
 		this.#root.innerHTML = `
 			<fieldset>
 				<legend>${this.#cfg.label}</legend>
@@ -177,13 +188,14 @@ export default class NumberScroller extends HTMLElement {
 					<input type="range" name="in" min="${this.#cfg.min}" step="${this.#cfg.step}" max="${this.#cfg.max}" value="${this.#cfg.value}">
 					<span part="scroll">
 						<span part="scroll-bg">
-							<span part="scroll-snap">${Array.from({ length: this.#cfg.snapPoints + 1 }).map(() => `<b></b>`).join('')}</span>
+							<span part="scroll-snap">${snapMarkup}</span>
 						</span>
 					</span>
 				</label>
 				<slot></slot>
 			</fieldset>
 		`;
+
 		this.#elm = {
 			app: this.#root.querySelector('fieldset'),
 			in: this.#root.querySelector('input[name="in"]'),
@@ -192,11 +204,42 @@ export default class NumberScroller extends HTMLElement {
 			snap: this.#root.querySelector('[part="scroll-snap"]'),
 		};
 
-	this.style.setProperty('--number-scroller-w', `${this.#cfg.scrollWidth}%`);
-	this.addEvents();
-	this.updateFromInput();
-	this.#setupResizeObserver();
-	this.#setSnapLinePadding();
+		this.style.setProperty('--number-scroller-w', `${this.#cfg.scrollWidth}%`);
+		this.addEvents();
+		this.updateFromInput();
+		this.#setupResizeObserver();
+		this.#setSnapLinePadding();
+	}
+
+	set snapValues(arr) {
+		if (Array.isArray(arr)) {
+			this.#snapValues = arr.map(v => parseInt(v, 10)).filter(v => !isNaN(v));
+			this.#updateSnapLines();
+		}
+	}
+	get snapValues() {
+		return this.#snapValues;
+	}
+
+	#buildSnapMarkup() {
+		if (this.#snapValues && this.#snapValues.length) {
+			const count = Math.floor((this.#cfg.max - this.#cfg.min) / this.#cfg.step);
+			return Array.from({ length: count + 1 }).map((_, i) => {
+				const val = this.#cfg.min + i * this.#cfg.step;
+				if (this.#snapValues.includes(val)) {
+					return `<b data-value="${val}"></b>`;
+				}
+				return `<b></b>`;
+			}).join('');
+		}
+		return Array.from({ length: this.#cfg.snapPoints + 1 }).map(() => `<b></b>`).join('');
+	}
+
+	#updateSnapLines() {
+		if (this.#elm.snap) {
+			this.#elm.snap.innerHTML = this.#buildSnapMarkup();
+			this.#setSnapLinePadding();
+		}
 	}
 
 	#setupResizeObserver() {
@@ -229,7 +272,7 @@ export default class NumberScroller extends HTMLElement {
 		});
 
 		this.#elm.scroller.addEventListener('scroll', () => this.updateFromScroll());
-		this.#elm.scroller.addEventListener('scrollend', () => this.updateFromScroll(true));
+		this.#elm.scroller.addEventListener('scrollend', () => this.updateFromScroll());
 		this.#elm.scroller.addEventListener('pointerdown', this.onPointerDown.bind(this));
 		this.#elm.scroller.addEventListener('pointerleave', this.onPointerEnd.bind(this));
 		this.#elm.scroller.addEventListener('pointerup', this.onPointerEnd.bind(this));
@@ -237,21 +280,22 @@ export default class NumberScroller extends HTMLElement {
 	}
 
 	formatNumber(num) {
+		if (this.#cfg.format === 'integer') {
+			return String(Math.round(num));
+		}
 		const options = {
 			style: this.#cfg.format,
 			minimumFractionDigits: this.#cfg.decimals,
 			maximumFractionDigits: this.#cfg.decimals,
 		};
-
 		if (this.#cfg.format === 'currency') {
 			options.currency = this.#cfg.currency;
 		} else if (this.#cfg.format === 'unit' && this.#cfg.unit) {
 			options.unit = this.#cfg.unit;
 		}
-
 		const formatted = new Intl.NumberFormat(this.#cfg.lang, options).format(num);
 		return formatted.replace(/\u00A0/g, ' ');
-	};
+	}
 
 	onPointerDown(e) {
 		this.#isDown = true;
@@ -284,9 +328,7 @@ export default class NumberScroller extends HTMLElement {
 
 	#setSnapLinePadding() {
 		if (this.#elm.snap) {
-			// Set snap-line container width to match the mapped value range
 			this.#elm.snap.style.width = `${this.#middleWidth}px`;
-			// Center the snap-line container within the scroll-bg
 			this.#elm.snap.style.marginLeft = `${this.#middleStart}px`;
 			this.#elm.snap.style.marginRight = `${this.#middleStart}px`;
 		}
@@ -312,10 +354,9 @@ export default class NumberScroller extends HTMLElement {
 		this.#elm.scroller.scrollLeft = this.#valueToScrollLeft(value);
 	}
 
-	updateFromScroll(updateInput = false) {
+	updateFromScroll() {
 		if (this.#isResizing) return;
 		const steppedValue = this.#scrollLeftToValue();
-		if (updateInput) this.#elm.in.value = steppedValue;
 		this.#updateUI(steppedValue);
 	}
 
@@ -323,8 +364,15 @@ export default class NumberScroller extends HTMLElement {
 		if (this.#isResizing && !force) return;
 		const formattedValue = this.formatNumber(value);
 		this.#elm.out.value = formattedValue;
+		this.#elm.in.value = value;
 		this.#elm.in.setAttribute('aria-valuenow', value);
 		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
+
+		// Dispatch event only if value actually changed
+		if (this.#currentValue !== value) {
+			this.#currentValue = value;
+			this.dispatchEvent(new Event('input', { bubbles: true }));
+		}
 	}
 }
 customElements.define('number-scroller', NumberScroller);
