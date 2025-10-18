@@ -196,7 +196,6 @@ export default class NumberScroller extends HTMLElement {
 	this.addEvents();
 	this.updateFromInput();
 	this.#setupResizeObserver();
-	// Set initial snap-line padding
 	this.#setSnapLinePadding();
 	}
 
@@ -278,7 +277,6 @@ export default class NumberScroller extends HTMLElement {
 		this.#scrollBgWidth = this.#elm.scroller.scrollWidth;
 		const clientWidth = this.#elm.scroller.clientWidth;
 		this.#viewportCenter = clientWidth / 2;
-		// Map value range to the visible scrollable area
 		this.#middleStart = this.#viewportCenter;
 		this.#middleWidth = this.#scrollBgWidth - clientWidth;
 		this.#setSnapLinePadding();
