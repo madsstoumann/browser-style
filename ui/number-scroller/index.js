@@ -1,5 +1,6 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
+	:host { container-type: inline-size; }
 	b {
 		background: var(--number-spinner-snap-minor-bg, #CCC);
 		border-radius: var(--number-scroller-snap-minor-bdrs, 1px);
@@ -191,10 +192,12 @@ export default class NumberScroller extends HTMLElement {
 			snap: this.#root.querySelector('[part="scroll-snap"]'),
 		};
 
-		this.style.setProperty('--number-scroller-w', `${this.#cfg.scrollWidth}%`);
-		this.addEvents();
-		this.updateFromInput();
-		this.#setupResizeObserver();
+	this.style.setProperty('--number-scroller-w', `${this.#cfg.scrollWidth}%`);
+	this.addEvents();
+	this.updateFromInput();
+	this.#setupResizeObserver();
+	// Set initial snap-line padding
+	this.#setSnapLinePadding();
 	}
 
 	#setupResizeObserver() {
@@ -275,8 +278,20 @@ export default class NumberScroller extends HTMLElement {
 		this.#scrollBgWidth = this.#elm.scroller.scrollWidth;
 		const clientWidth = this.#elm.scroller.clientWidth;
 		this.#viewportCenter = clientWidth / 2;
-		this.#middleStart = this.#scrollBgWidth * 0.25;
-		this.#middleWidth = this.#scrollBgWidth * 0.5;
+		// Map value range to the visible scrollable area
+		this.#middleStart = this.#viewportCenter;
+		this.#middleWidth = this.#scrollBgWidth - clientWidth;
+		this.#setSnapLinePadding();
+	}
+
+	#setSnapLinePadding() {
+		if (this.#elm.snap) {
+			// Set snap-line container width to match the mapped value range
+			this.#elm.snap.style.width = `${this.#middleWidth}px`;
+			// Center the snap-line container within the scroll-bg
+			this.#elm.snap.style.marginLeft = `${this.#middleStart}px`;
+			this.#elm.snap.style.marginRight = `${this.#middleStart}px`;
+		}
 	}
 
 	#valueToScrollLeft(value) {
