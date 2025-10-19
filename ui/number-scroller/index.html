@@ -17,6 +17,22 @@
 		#annual-salary {
 			color: light-dark(#666, #999);
 			font-size: 0.875rem;
+			margin: 0.5rem auto 0;
+			text-align: center;
+		}
+
+		#event-info {
+			color: light-dark(#3e2723, #d4b5a8);
+			display: block;
+			font-size: 1.15rem;
+			margin: 0 auto;
+			min-height: 3.5rem;
+		}
+
+		/* Ensure event-info doesn't collapse when empty */
+		#event-info:empty::before {
+			content: '\00a0';
+			visibility: hidden;
 		}
 
 		/* Temperature styling - thermometer-inspired theme with rainbow gradient */

@@ -338,11 +338,19 @@ export default class NumberScroller extends HTMLElement {
 	#valueToScrollLeft(value) {
 		const percentage = (value - this.#cfg.min) / this.#incRange;
 		const indicatorPos = this.#middleStart + (percentage * this.#middleWidth);
-		return indicatorPos - this.#viewportCenter;
+		const scrollLeft = indicatorPos - this.#viewportCenter;
+
+		// Handle RTL: scrollLeft is negative in RTL mode
+		const isRTL = getComputedStyle(this).direction === 'rtl';
+		return isRTL ? -scrollLeft : scrollLeft;
 	}
 
 	#scrollLeftToValue() {
-		const indicatorPos = this.#elm.scroller.scrollLeft + this.#viewportCenter;
+		// Handle RTL: scrollLeft is negative in RTL mode
+		const isRTL = getComputedStyle(this).direction === 'rtl';
+		const scrollLeft = isRTL ? -this.#elm.scroller.scrollLeft : this.#elm.scroller.scrollLeft;
+
+		const indicatorPos = scrollLeft + this.#viewportCenter;
 		const percentage = (indicatorPos - this.#middleStart) / this.#middleWidth;
 		const value = this.#cfg.min + (percentage * this.#incRange);
 		return Math.round(value / this.#cfg.step) * this.#cfg.step;
