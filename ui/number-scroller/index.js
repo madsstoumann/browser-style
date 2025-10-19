@@ -37,6 +37,7 @@ styles.replaceSync(`
 	[type=range]::-webkit-slider-runnable-track,
 	[type=range]::-webkit-slider-thumb {
 		appearance: none;
+		background: #0000;
 	}
 	label {
 		color: var(--number-scroller-label-c, inherit);
@@ -47,7 +48,7 @@ styles.replaceSync(`
 		row-gap: var(--number-scroller-label-rg, .25rem);
 
 		&::after {
-			background: var(--number-scroller-indicator-bg, hsl(219, 79%, 66%));
+			background: var(--number-scroller-indicator-bg, light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%)));
 			border-radius: var(--number-scroller-indicator-bdrs, 3px);
 			content: "";
 			display: block;
@@ -59,7 +60,7 @@ styles.replaceSync(`
 			width: var(--number-scroller-indicator-w, 5px);
 		}
 		&::before { 
-			background: var(--number-scroller-triangle-bg, hsl(219, 79%, 6%));
+			background: var(--number-scroller-triangle-bg, light-dark(#222, #EEE));
 			clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 			content: "";
 			display: block;
