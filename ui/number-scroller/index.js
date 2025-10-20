@@ -1,6 +1,9 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
-	:host { container-type: inline-size; }
+	:host {
+		container-type: inline-size;
+		user-select: none;
+	}
 	b {
 		background: var(--number-scroller-snap-minor-bg, #CCC);
 		border-radius: var(--number-scroller-snap-minor-bdrs, 1px);
