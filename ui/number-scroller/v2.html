@@ -134,17 +134,6 @@
 				<span data-scroll-bg>
 					<i></i>
 					<span data-scroll-snap>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
-						<b></b>
 					</span>
 					<i></i>
 				</span>
@@ -153,12 +142,12 @@
 	</fieldset>
 
 	<script>
-
 	function NumberScroller(A) {
 		const E = {
 			in: A.elements.in,
 			out: A.elements.out,
-			scroll: A.querySelector('[data-scroll]')
+			scroll: A.querySelector('[data-scroll]'),
+			snap: A.querySelector('[data-scroll-snap]')
 		};
 		const S = {
 			currency: A.dataset.currency || 'DKK',
@@ -167,86 +156,75 @@
 			lang: A.lang || 'da-DK',
 			min: parseInt(E.in.min, 10),
 			max: parseInt(E.in.max, 10),
-			pointer: null,
-			resize: false,
-			scroll: null,
+			points: parseInt(A.dataset.snapPoints, 10),
 			step: parseInt(E.in.step, 10),
 			unit: A.dataset.unit || null,
-			value: parseInt(E.in.value, 10),
 		};
 		S.range = S.max - S.min;
-		S.scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
-		const RO = new ResizeObserver(() => {
-			S.resize = true;
-			S.scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
-			setTimeout(() => { S.resize = false }, 200);
-		});
-		RO.observe(E.scroll);
-		const endDrag = () => {
-			S.pointer = null;
-			S.scroll = null;
-			E.scroll.classList.remove('grabbing');
-		};
+		E.snap.innerHTML = Array.from({ length: S.points + 1 }).map(() => `<b></b>`).join('');
 
-		/* Event Listeners */
-		A.addEventListener('input', () => update(false));
-		E.scroll.addEventListener('scroll', updateFromScroll);
-		E.scroll.addEventListener('pointerdown', (e) => {
-			S.pointer = e.clientX;
-			S.scroll = E.scroll.scrollLeft;
-			E.scroll.classList.add('grabbing');
-			E.scroll.setPointerCapture(e.pointerId);
-		});
-		E.scroll.addEventListener('pointermove', (e) => {
-			if (S.pointer === null) return;
-			E.scroll.scrollLeft = S.scroll + S.pointer - e.clientX;
-		});
-		E.scroll.addEventListener('pointerup', endDrag);
-		E.scroll.addEventListener('pointercancel', endDrag);
+		let isResizing = false;
+		let scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
 
-		/* Methods */
-		function formatNumber(num) {
-			if (S.format === 'integer') {
-				return String(Math.round(num));
-			}
+		new ResizeObserver(() => {
+			isResizing = true;
+			scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
+			setTimeout(() => { isResizing = false }, 200);
+		}).observe(E.scroll);
+
+		const format = (num) => {
 			const options = {
 				style: S.format,
 				minimumFractionDigits: S.decimals,
 				maximumFractionDigits: S.decimals,
+				...(S.format === 'currency' && { currency: S.currency }),
+				...(S.format === 'unit' && S.unit && { unit: S.unit }),
 			};
-			if (S.format === 'currency') {
-				options.currency = S.currency;
-			} else if (S.format === 'unit' && S.unit) {
-				options.unit = S.unit;
+			return new Intl.NumberFormat(S.lang, options).format(num).replace(/\u00A0/g, ' ');
+		};
+
+		const update = (fromScroll = false) => {
+			if (isResizing && fromScroll) return;
+			const val = fromScroll
+				? S.min + ((E.scroll.scrollLeft / scrollRange) * S.range)
+				: parseInt(E.in.value, 10);
+
+			const value = Math.round(val / S.step) * S.step;
+			E.out.value = format(value);
+
+			if (fromScroll) {
+				E.in.value = value;
+			} else {
+				E.scroll.scrollLeft = ((value - S.min) / S.range) * scrollRange;
 			}
-			const formatted = new Intl.NumberFormat(S.lang, options).format(num);
-			return formatted.replace(/\u00A0/g, ' ');
-		}
+		};
 
-		function update(scrolling = false) {
-			const value = parseInt(E.in.value);
-			E.out.value = formatNumber(value);
-			if (scrolling) return;
-			const scrollWidth = E.scroll.scrollWidth - E.scroll.clientWidth;
-			const scrollPos = ((value - S.min) / S.range) * scrollWidth;
-			E.scroll.scrollLeft = scrollPos;
-		}
+		const onMove = (e) => {
+			E.scroll.scrollLeft = E.scroll.dataset.scroll - (e.clientX - E.scroll.dataset.pointer);
+		};
+		const onEnd = (e) => {
+			E.scroll.classList.remove('grabbing');
+			document.removeEventListener('pointermove', onMove);
+			document.removeEventListener('pointerup', onEnd);
+			document.removeEventListener('pointercancel', onEnd);
+		};
+		E.scroll.addEventListener('pointerdown', (e) => {
+			E.scroll.dataset.pointer = e.clientX;
+			E.scroll.dataset.scroll = E.scroll.scrollLeft;
+			E.scroll.classList.add('grabbing');
+			E.scroll.setPointerCapture(e.pointerId);
+			document.addEventListener('pointermove', onMove);
+			document.addEventListener('pointerup', onEnd);
+			document.addEventListener('pointercancel', onEnd);
+		});
 
-		function updateFromScroll() {
-			if (S.resize) return;
-			const percentage = E.scroll.scrollLeft / S.scrollRange;
-			const scrollValue = S.min + (percentage * S.range);
-			const value = Math.round(scrollValue / S.step) * S.step;
-			E.in.value = value;
-			update(true);
-		}
+		A.addEventListener('input', () => update());
+		E.scroll.addEventListener('scroll', () => update(true));
+		update();
 	}
 
-	/* Init */
 	const app = document.querySelector('.number-scroller');
-	NumberScroller(app);
-	app.dispatchEvent(new Event('input'));
-
+	if (app) NumberScroller(app);
 	</script>
 
 
