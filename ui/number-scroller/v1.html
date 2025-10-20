@@ -6,6 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="">
 	<style>
+		body {
+			background: Canvas;
+			color: CanvasText;
+			color-scheme: light dark;
+		}
 		@scope (.number-scroller) {
   		:scope {
 				border: 0;
@@ -36,6 +41,7 @@
 				}
 			}
 			input {
+				background: #0000;
 				grid-area: 1 / 1;
 				margin: 0;
 				&:focus-visible { outline: none; }
@@ -119,9 +125,9 @@
 </head>
 <body>
 
-	<fieldset class="number-scroller" data-snap-points="100" data-major-interval="5">
+	<fieldset class="number-scroller" data-snap-points="100" data-major-interval="5" data-currency="DKK" lang="da-DK">
 		<legend>Din månedsløn før skat</legend>
-		<output name="out">25.000</output>
+		<output name="out"></output>
 		<label aria-label="Vælg din månedsløn før skat">
 			<input type="range" name="in" min="0" step="1000" max="100000" value="25000">
 			<span data-scroll tabindex="-1">
@@ -138,6 +144,7 @@
 						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
 						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
 						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b>
 					</span>
 					<i></i>
 				</span>
@@ -145,6 +152,102 @@
 		</label>
 	</fieldset>
 
+	<script>
+
+	function NumberScroller(A) {
+		const E = {
+			in: A.elements.in,
+			out: A.elements.out,
+			scroll: A.querySelector('[data-scroll]')
+		};
+		const S = {
+			currency: A.dataset.currency || 'DKK',
+			decimals: parseInt(A.dataset.decimals, 10) || 0,
+			format: A.dataset.format || 'currency',
+			lang: A.lang || 'da-DK',
+			min: parseInt(E.in.min, 10),
+			max: parseInt(E.in.max, 10),
+			pointer: null,
+			resize: false,
+			scroll: null,
+			step: parseInt(E.in.step, 10),
+			unit: A.dataset.unit || null,
+			value: parseInt(E.in.value, 10),
+		};
+		S.range = S.max - S.min;
+		S.scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
+		const RO = new ResizeObserver(() => {
+			S.resize = true;
+			S.scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
+			setTimeout(() => { S.resize = false }, 200);
+		});
+		RO.observe(E.scroll);
+		const endDrag = () => {
+			S.pointer = null;
+			S.scroll = null;
+			E.scroll.classList.remove('grabbing');
+		};
+
+		/* Event Listeners */
+		A.addEventListener('input', () => update(false));
+		E.scroll.addEventListener('scroll', updateFromScroll);
+		E.scroll.addEventListener('pointerdown', (e) => {
+			S.pointer = e.clientX;
+			S.scroll = E.scroll.scrollLeft;
+			E.scroll.classList.add('grabbing');
+			E.scroll.setPointerCapture(e.pointerId);
+		});
+		E.scroll.addEventListener('pointermove', (e) => {
+			if (S.pointer === null) return;
+			E.scroll.scrollLeft = S.scroll + S.pointer - e.clientX;
+		});
+		E.scroll.addEventListener('pointerup', endDrag);
+		E.scroll.addEventListener('pointercancel', endDrag);
+
+		/* Methods */
+		function formatNumber(num) {
+			if (S.format === 'integer') {
+				return String(Math.round(num));
+			}
+			const options = {
+				style: S.format,
+				minimumFractionDigits: S.decimals,
+				maximumFractionDigits: S.decimals,
+			};
+			if (S.format === 'currency') {
+				options.currency = S.currency;
+			} else if (S.format === 'unit' && S.unit) {
+				options.unit = S.unit;
+			}
+			const formatted = new Intl.NumberFormat(S.lang, options).format(num);
+			return formatted.replace(/\u00A0/g, ' ');
+		}
+
+		function update(scrolling = false) {
+			const value = parseInt(E.in.value);
+			E.out.value = formatNumber(value);
+			if (scrolling) return;
+			const scrollWidth = E.scroll.scrollWidth - E.scroll.clientWidth;
+			const scrollPos = ((value - S.min) / (S.max - S.min)) * scrollWidth;
+			E.scroll.scrollLeft = scrollPos;
+		}
+
+		function updateFromScroll() {
+			if (S.resize) return;
+			const percentage = E.scroll.scrollLeft / S.scrollRange;
+			const scrollValue = S.min + (percentage * S.range);
+			const value = Math.round(scrollValue / S.step) * S.step;
+			E.in.value = value;
+			update(true);
+		}
+	}
+
+	/* Init */
+	const app = document.querySelector('.number-scroller');
+	NumberScroller(app);
+	app.dispatchEvent(new Event('input'));
+
+	</script>
 
 
 </body>
