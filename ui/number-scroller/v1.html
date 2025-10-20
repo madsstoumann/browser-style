@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="da-DK" dir="ltr">
+<head>
+	<title>Number Scroller</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="">
+	<style>
+		@scope (.number-scroller) {
+  		:scope {
+				border: 0;
+				container-type: inline-size;
+				display: grid;
+				font-family: var(--number-scroller-ff, ui-sans-serif, system-ui);
+				margin: 0;
+				padding: 0;
+				row-gap: var(--number-scroller-rg, 0.75rem);
+				text-align: center;
+			}
+			b {
+				background: var(--number-scroller-snap-minor-bg, #CCC);
+				border-radius: var(--number-scroller-minor-bdrs, 1px);
+				height: var(--number-scroller-minor-h, 70%);
+				scroll-snap-align: center;
+				width: var(--number-scroller-minor-w, 1px);
+
+				[data-major-interval="2"] &:nth-of-type(2n+1),
+				[data-major-interval="3"] &:nth-of-type(3n+1),
+				[data-major-interval="4"] &:nth-of-type(4n+1),
+				[data-major-interval="5"] &:nth-of-type(5n+1),
+				[data-major-interval="10"] &:nth-of-type(10n+1) {
+					background: var(--number-scroller-snap-major-bg, #CCC);
+					border-radius: var(--number-scroller-snap-major-bdrs, 2px);
+					height: var(--number-scroller-snap-major-h, 100%);
+					width: var(--number-scroller-snap-major-w, 2px);
+				}
+			}
+			input {
+				grid-area: 1 / 1;
+				margin: 0;
+				&:focus-visible { outline: none; }
+			}
+			[type=range],
+			[type=range]::-webkit-slider-runnable-track,
+			[type=range]::-webkit-slider-thumb { appearance: none; }
+			label {
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr min-content;
+				position: relative;
+				row-gap: var(--number-scroller-label-rg, .25rem);
+				&:has(:focus-visible) {
+					outline: 1px var(--number-scroller-outline-style, solid) var(--number-scroller-outline-c, #CCC);
+					outline-offset: var(--number-scroller-outline-off, 4px);
+				}
+				&::after {
+					background: var(--number-scroller-indicator-bg, light-dark(#0008, #FFF8));
+					border-radius: var(--number-scroller-indicator-bdrs, 3px);
+					content: "";
+					display: block;
+					grid-area: 1 / 1;
+					height: var(--number-scroller-indicator-h, 32px);
+					isolation: isolate;
+					place-self: center;
+					pointer-events: none;
+					width: var(--number-scroller-indicator-w, 5px);
+				}
+				&::before { 
+					background: var(--number-scroller-triangle-bg, light-dark(#0008, #FFF8));
+					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+					content: "";
+					display: block;
+					height: var(--number-scroller-triangle-h, 5px);
+					place-self: end center;
+					pointer-events: none;
+					width: var(--number-scroller-triangle-w, 10px);
+				}
+			}
+			legend {
+				color: var(--number-scroller-legendf-c, light-dark(#222, #EEE));
+				display: contents;
+				font-size: var(--number-scroller-legend-fs, 0.875rem);
+				font-weight: var(--number-scroller-legend-fw, 400);
+			}
+			output {
+				color: var(--number-scroller-output-c, light-dark(#222, #EEE));
+				font-size: var(--number-scroller-output-fs, 2rem);
+				font-variant-numeric: tabular-nums;
+				font-weight: var(--number-scroller-output-fw, 600);
+				text-box: cap alphabetic;
+			}
+			[data-scroll] {
+				cursor: ew-resize;
+				display: block;
+				grid-area: 1 / 1 / 1 / 1;
+				inset: 0;
+				mask: var(--number-scroller-mask, linear-gradient(to right, #0000, #000 15%, #000 85%, #0000));
+				overflow-x: auto;
+				position: absolute;
+				scrollbar-width: none;
+				scroll-snap-type: x proximity;
+				&.grabbing { cursor: grabbing; }
+				[data-scroll-bg] {
+					display: grid;
+					grid-template-columns: 50cqi var(--number-scroller-w, 200cqi) 50cqi;
+					height: 100%;
+					pointer-events: none;
+				}
+				[data-scroll-snap] {
+					align-items: end;
+					display: flex;
+					justify-content: space-between;
+					scroll-snap-type: x mandatory;
+				}
+			}
+			[data-scroll]::-webkit-scrollbar { display: none; }
+		}
+	</style>
+</head>
+<body>
+
+	<fieldset class="number-scroller" data-snap-points="100" data-major-interval="5">
+		<legend>Din månedsløn før skat</legend>
+		<output name="out">25.000</output>
+		<label aria-label="Vælg din månedsløn før skat">
+			<input type="range" name="in" min="0" step="1000" max="100000" value="25000">
+			<span data-scroll tabindex="-1">
+				<span data-scroll-bg>
+					<i></i>
+					<span data-scroll-snap>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+						<b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b>
+					</span>
+					<i></i>
+				</span>
+			</span>
+		</label>
+	</fieldset>
+
+
+
+</body>
+</html>
