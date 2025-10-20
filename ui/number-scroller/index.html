@@ -227,7 +227,9 @@
 		}
 
 		salary.addEventListener('input', e => {
-			updateAnnualSalary(e.detail.value);
+			if (e.detail && e.detail.value !== undefined) {
+				updateAnnualSalary(e.detail.value);
+			}
 		});
 
 		// Define all historical events
@@ -293,7 +295,9 @@
 		// Update event info on input
 		const info = document.getElementById('event-info');
 		timeline.addEventListener('input', e => {
-			info.textContent = events[e.detail.value] || '';
+			if (e.detail && e.detail.value !== undefined) {
+				info.textContent = events[e.detail.value] || '';
+			}
 		});
 	</script>
 </body>

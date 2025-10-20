@@ -372,18 +372,19 @@ export default class NumberScroller extends HTMLElement {
 
 	#updateUI(value, force = false) {
 		if (this.#isResizing && !force) return;
-		const formattedValue = this.formatNumber(value);
+		const numValue = Number(value);
+		const formattedValue = this.formatNumber(numValue);
 		this.#elm.out.value = formattedValue;
-		this.#elm.in.value = value;
-		this.#elm.in.setAttribute('aria-valuenow', value);
+		this.#elm.in.value = numValue;
+		this.#elm.in.setAttribute('aria-valuenow', numValue);
 		this.#elm.in.setAttribute('aria-valuetext', formattedValue);
 
-		// Dispatch event only if value actually changed
-		if (this.#currentValue !== value) {
-			this.#currentValue = value;
+		// Dispatch event only if value actually changed (compare as numbers)
+		if (this.#currentValue !== numValue) {
+			this.#currentValue = numValue;
 			this.dispatchEvent(new CustomEvent('input', {
 				bubbles: true,
-				detail: { value: Number(value) }
+				detail: { value: numValue }
 			}));
 		}
 	}
