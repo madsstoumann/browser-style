@@ -30,14 +30,15 @@ styles.replaceSync(`
 		text-align: center;
 	}
 	input {
+		background: #0000;
 		grid-area: 1 / 1;
 		margin: 0;
+		&:focus-visible { outline: 0; }
 	}
 	[type=range],
 	[type=range]::-webkit-slider-runnable-track,
 	[type=range]::-webkit-slider-thumb {
 		appearance: none;
-		background: #0000;
 	}
 	label {
 		color: var(--number-scroller-label-c, inherit);
@@ -187,7 +188,7 @@ export default class NumberScroller extends HTMLElement {
 				<output name="out">${this.formatNumber(this.#cfg.value)}</output>
 				<label aria-label="${this.#cfg.label}">
 					<input type="range" name="in" min="${this.#cfg.min}" step="${this.#cfg.step}" max="${this.#cfg.max}" value="${this.#cfg.value}">
-					<span part="scroll">
+					<span part="scroll" tabindex="-1">
 						<span part="scroll-bg">
 							<span part="scroll-snap">${snapMarkup}</span>
 						</span>
