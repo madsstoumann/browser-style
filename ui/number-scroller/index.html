@@ -121,6 +121,46 @@
 			}
 		}
 
+		/* Storage styling - cyberpunk/tech theme */
+		number-scroller.storage {
+			--number-scroller-ff: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+
+			/* Neon purple indicator */
+			--number-scroller-indicator-bg: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
+			--number-scroller-indicator-w: 5px;
+			--number-scroller-indicator-h: 3rem;
+			--number-scroller-indicator-bdrs: 2px;
+
+			/* Sharp tech triangle */
+			--number-scroller-triangle-bg: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
+			--number-scroller-triangle-h: 8px;
+			--number-scroller-triangle-w: 16px;
+
+			/* Neon cyan snap lines */
+			--number-scroller-snap-major-bg: light-dark(hsl(280, 70%, 70%), hsl(280, 40%, 25%));
+			--number-scroller-snap-major-w: 3px;
+			--number-scroller-snap-major-h: 100%;
+			--number-scroller-snap-major-bdrs: 1px;
+
+			--number-scroller-snap-minor-bg: light-dark(
+				hsla(280, 100%, 60%, 0.4),
+				hsla(280, 80%, 70%, 0.5)
+			);
+			--number-scroller-snap-minor-w: 1px;
+			--number-scroller-snap-minor-h: 50%;
+			--number-scroller-snap-minor-bdrs: 0;
+
+			--number-scroller-legend-c: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
+			--number-scroller-legend-fw: 600;
+			--number-scroller-legend-fs: 0.75rem;
+			
+			--number-scroller-out-c: light-dark(hsl(280, 80%, 35%), hsl(280, 70%, 80%));
+			--number-scroller-out-fs: clamp(1.5rem, 6cqi, 3rem);
+			--number-scroller-out-fw: 700;
+
+			--number-scroller-focus-outline-c: light-dark(hsl(280, 100%, 50%), hsl(280, 90%, 70%));
+		}
+
 		/* Timeline specific styling - vintage/historical theme */
 		number-scroller.timeline {
 			--number-scroller-ff: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
@@ -194,6 +234,19 @@
 			format="integer">
 			<div id="event-info"></div>
 		</number-scroller>
+		
+		<h3>No snapping</h3>
+		<number-scroller class="storage" min="0" max="128" step="0.25" value="32"
+			format="unit"
+			unit="gigabyte"
+			label="Storage Capacity:"
+			lang="en-US"
+			decimals="1"
+			scroll-width="300"
+			snap-major-interval="5"
+			snap-points="128"
+			snap-to="none">
+		</number-scroller>
 
 		<h3>Right-to-Left</h3>
 		<number-scroller min="0" max="25000" step="500" value="6500"
@@ -211,28 +264,15 @@
 	<script type="module">
 		import './index.js';
 
-		// Monthly salary to annual salary calculator
-		const salary = document.getElementById('salary');
-		const annualSalaryDiv = document.getElementById('annual-salary');
+		// Salary: Annual calculator
+		const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+		const annualSalary = document.getElementById('annual-salary');
 
-		function updateAnnualSalary(monthlySalary) {
-			const annual = monthlySalary * 12;
-			const formatter = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD',
-				minimumFractionDigits: 0,
-				maximumFractionDigits: 0
-			});
-			annualSalaryDiv.textContent = `Annual: ${formatter.format(annual)}`;
-		}
-
-		salary.addEventListener('input', e => {
-			if (e.detail && e.detail.value !== undefined) {
-				updateAnnualSalary(e.detail.value);
-			}
+		document.getElementById('salary').addEventListener('input', e => {
+			e.detail?.value && (annualSalary.textContent = `Annual: ${formatter.format(e.detail.value * 12)}`);
 		});
 
-		// Define all historical events
+		// Timeline: Historical events
 		const events = {
 			1900: 'Turn of the century',
 			1903: 'Wright Brothers first flight',
@@ -287,18 +327,11 @@
 			2000: 'Y2K, new millennium begins'
 		};
 
-		// Get timeline element and set snap values from events
 		const timeline = document.getElementById('timeline');
-		const snapValues = Object.keys(events).map(Number).sort((a, b) => a - b);
-		timeline.snapValues = snapValues;
+		const eventInfo = document.getElementById('event-info');
 
-		// Update event info on input
-		const info = document.getElementById('event-info');
-		timeline.addEventListener('input', e => {
-			if (e.detail && e.detail.value !== undefined) {
-				info.textContent = events[e.detail.value] || '';
-			}
-		});
+		timeline.snapValues = Object.keys(events).map(Number).sort((a, b) => a - b);
+		timeline.addEventListener('input', e => e.detail?.value && (eventInfo.textContent = events[e.detail.value] || ''));
 	</script>
 </body>
 </html>

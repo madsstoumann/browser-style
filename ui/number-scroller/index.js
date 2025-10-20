@@ -163,13 +163,13 @@ export default class NumberScroller extends HTMLElement {
 			format: this.getAttribute('format') || 'currency',
 			label: this.getAttribute('label') || 'Number Scroller',
 			lang: this.getAttribute('lang') || document.documentElement.lang || 'en-US',
-			max: parseInt(this.getAttribute('max') || '100', 10),
-			min: parseInt(this.getAttribute('min') || '0', 10),
+			max: parseFloat(this.getAttribute('max') || '100'),
+			min: parseFloat(this.getAttribute('min') || '0'),
 			scrollMultiplier: parseFloat(this.getAttribute('scroll-multiplier') || '1.5'),
 			scrollWidth: Math.max(200, parseInt(this.getAttribute('scroll-width') || '200', 10)),
-			step: parseInt(this.getAttribute('step') || '1', 10),
+			step: parseFloat(this.getAttribute('step') || '1'),
 			unit: this.getAttribute('unit'),
-			value: parseInt(this.getAttribute('value') || '0', 10),
+			value: parseFloat(this.getAttribute('value') || '0'),
 		};
 
 		const snapValuesAttr = this.getAttribute('snap-values');
@@ -179,7 +179,7 @@ export default class NumberScroller extends HTMLElement {
 		const snapPointsAttr = this.getAttribute('snap-points');
 		this.#cfg.snapPoints = snapPointsAttr !== null
 			? parseInt(snapPointsAttr, 10)
-			: Math.floor((this.#cfg.max - this.#cfg.min) / this.#cfg.step);
+			: Math.min(1000, Math.floor((this.#cfg.max - this.#cfg.min) / this.#cfg.step));
 
 		const snapMarkup = this.#buildSnapMarkup();
 		this.#root.innerHTML = `
