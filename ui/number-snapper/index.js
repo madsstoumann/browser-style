@@ -60,12 +60,12 @@ legend {
 	font-weight: var(--number-snapper-legend-fw, 400);
 }
 li {
-	background: var(--number-snapper-snap-minor-bg, #CCC);
-	border-radius: var(--number-snapper-snap-minor-bdrs, 1px);
-	height: var(--number-snapper-snap-minor-h, 70%);
+	background: var(--number-snapper-minor-tick-bg, #CCC);
+	border-radius: var(--number-snapper-minor-tick-bdrs, 1px);
+	height: var(--number-snapper-minor-tick-h, 70%);
 	list-style: none;
 	scroll-snap-align: center;
-	width: var(--number-snapper-snap-minor-w, 1px);
+	width: var(--number-snapper-minor-tick-w, 1px);
 }
 li[title],
 :host([interval="2"]) li:nth-of-type(2n+1),
@@ -73,10 +73,10 @@ li[title],
 :host([interval="4"]) li:nth-of-type(4n+1),
 :host([interval="5"]) li:nth-of-type(5n+1),
 :host([interval="10"]) li:nth-of-type(10n+1) {
-	background: var(--number-snapper-snap-major-bg, #CCC);
-	border-radius: var(--number-snapper-snap-major-bdrs, 2px);
-	height: var(--number-snapper-snap-major-h, 100%);
-	width: var(--number-snapper-snap-major-w, 2px);
+	background: var(--number-snapper-major-tick-bg, #CCC);
+	border-radius: var(--number-snapper-major-tick-bdrs, 2px);
+	height: var(--number-snapper-major-tick-h, 100%);
+	width: var(--number-snapper-major-tick-w, 2px);
 }
 ol { all: unset; }
 output {

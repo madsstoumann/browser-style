@@ -1,0 +1,39 @@
+{
+  "name": "@browser.style/number-snapper",
+  "version": "1.0.0",
+  "description": "A customizable, accessible number snapper scroll web component with advanced formatting, snap points, and interactive scrolling.",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "number-input",
+    "range-input",
+    "scroll-snapper",
+    "number-formatter",
+    "currency",
+    "units"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/number-snapper"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/number-snapper"
+}
