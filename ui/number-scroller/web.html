@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="da-DK" dir="ltr">
+<head>
+	<title>Number Snapper</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="">
+</head>
+<body>
+
+	<!-- BASIC -->
+	 <number-snapper
+	 	currency="USD"
+		interval="5"
+	 	label="Your monthly salary"
+		lang="en-US"
+	 	max="25000"
+		min="0"
+	 	points="100"
+		snap="all"
+	 	step="500"
+	 	value="5000">
+		<small slot="info"></small>
+	</number-snapper>
+
+
+	<script type="module" src="./index.js"></script>
+
+	<script>
+		const snapper = document.querySelector('number-snapper');
+		const info = snapper.querySelector('[slot="info"]');
+
+		snapper.addEventListener('change', (e) => {
+			const annual = e.detail.value * 12;
+			info.textContent = `Annual salary: ${new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(annual)}`;
+		});
+	</script>
+</body>
+</html>

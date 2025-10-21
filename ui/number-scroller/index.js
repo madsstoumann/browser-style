@@ -51,7 +51,7 @@ label:has(:focus-visible) {
 	outline-offset: var(--number-snapper-outline-off, 4px);
 }
 label::after {
-	background: var(--number-snapper-indicator-bg, light-dark(#0008, #FFF8));
+	background: var(--number-snapper-indicator-bg, light-dark(#555, #EEE));
 	border-radius: var(--number-snapper-indicator-bdrs, 3px);
 	content: "";
 	display: block;
@@ -63,7 +63,7 @@ label::after {
 	width: var(--number-snapper-indicator-w, 5px);
 }
 label::before { 
-	background: var(--number-snapper-triangle-bg, light-dark(#0008, #FFF8));
+	background: var(--number-snapper-triangle-bg, light-dark(#555, #EEE));
 	clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 	content: "";
 	display: block;
@@ -137,26 +137,24 @@ output {
 `);
 
 class NumberSnapper extends HTMLElement {
-	#attr;
-  #root;
+	#A;
 	#E;
-	#isResizing = false;
-	#scrollRange;
-
+  #boundOnEnd;
 	#boundOnMove;
-	#boundOnEnd;
+	#isResizing = false;
+	#root;
+	#scrollRange;
 
   constructor() {
     super();
     this.#root = this.attachShadow({ mode: 'open' });
     this.#root.adoptedStyleSheets = [styles];
-
 		this.#boundOnMove = this.#onMove.bind(this);
 		this.#boundOnEnd = this.#onEnd.bind(this);
   }
 
   connectedCallback() {
-		this.#attr = {
+		this.#A = {
 			currency: this.getAttribute('currency') || 'USD',
 			decimals: this.hasAttribute('decimals') ? parseInt(this.getAttribute('decimals'), 10) : 0,
 			format: this.getAttribute('format') || 'currency',
@@ -170,22 +168,26 @@ class NumberSnapper extends HTMLElement {
 			unit: this.getAttribute('unit') || null,
 			value: this.hasAttribute('value') ? parseFloat(this.getAttribute('value')) : 0
 		};
-		this.#attr.range = this.#attr.max - this.#attr.min;
+		this.#A.range = this.#A.max - this.#A.min;
 
     this.#root.innerHTML = `
 		<fieldset>
-			<legend>${this.#attr.label}</legend>
+			<legend>${this.#A.label}</legend>
 			<output name="out"></output>
-			<label aria-label="${this.#attr.label}">
-				<input type="range" name="in" min="${this.#attr.min}" max="${this.#attr.max}" step="${this.#attr.step}" value="${this.#attr.value}">
+			
+			<label aria-label="${this.#A.label}">
+				<input type="range" name="in" min="${this.#A.min}" max="${this.#A.max}" step="${this.#A.step}" value="${this.#A.value}">
 				<span data-scroll tabindex="-1">
 					<span data-scroll-bg>
 						<i></i>
-						<span data-scroll-snap>${ Array.from({ length: this.#attr.points + 1 }).map(() => `<b></b>`).join('')}</span>
+						<span data-scroll-snap>
+							<slot name="ticks"></slot>
+						</span>
 						<i></i>
 					</span>
 				</span>
 			</label>
+			<slot name="info"></slot>
 		</fieldset>`;
 
 		this.#E = {
@@ -194,6 +196,11 @@ class NumberSnapper extends HTMLElement {
 			scroll: this.#root.querySelector('[data-scroll]'),
 			snap: this.#root.querySelector('[data-scroll-snap]')
 		};
+
+		const ticksSlot = this.#root.querySelector('slot[name="ticks"]');
+		if (ticksSlot.assignedNodes().length === 0) {
+			this.#E.snap.innerHTML = Array.from({ length: this.#A.points + 1 }).map(() => `<b></b>`).join('');
+		}
 
 		this.#scrollRange = this.#E.scroll.scrollWidth - this.#E.scroll.clientWidth;
 		new ResizeObserver(() => {
@@ -210,22 +217,22 @@ class NumberSnapper extends HTMLElement {
 
 	#format(num) {
 		const options = {
-			style: this.#attr.format,
-			minimumFractionDigits: this.#attr.decimals,
-			maximumFractionDigits: this.#attr.decimals,
-			...(this.#attr.format === 'currency' && { currency: this.#attr.currency }),
-			...(this.#attr.format === 'unit' && this.#attr.unit && { unit: this.#attr.unit }),
+			style: this.#A.format,
+			minimumFractionDigits: this.#A.decimals,
+			maximumFractionDigits: this.#A.decimals,
+			...(this.#A.format === 'currency' && { currency: this.#A.currency }),
+			...(this.#A.format === 'unit' && this.#A.unit && { unit: this.#A.unit }),
 		};
-		return new Intl.NumberFormat(this.#attr.lang, options).format(num).replace(/\u00A0/g, ' ');
+		return new Intl.NumberFormat(this.#A.lang, options).format(num).replace(/\u00A0/g, ' ');
 	}
 
 	#update(fromScroll = false) {
 		if (this.#isResizing && fromScroll) return;
 		const val = fromScroll
-			? this.#attr.min + ((this.#E.scroll.scrollLeft / this.#scrollRange) * this.#attr.range)
+			? this.#A.min + ((this.#E.scroll.scrollLeft / this.#scrollRange) * this.#A.range)
 			: parseInt(this.#E.in.value, 10);
 
-		const value = Math.round(val / this.#attr.step) * this.#attr.step;
+		const value = Math.round(val / this.#A.step) * this.#A.step;
 		const formattedValue = this.#format(value);
 		this.#E.out.value = formattedValue;
 		this.#E.in.ariaValueText = formattedValue;
@@ -233,8 +240,14 @@ class NumberSnapper extends HTMLElement {
 		if (fromScroll) {
 			this.#E.in.value = value;
 		} else {
-			this.#E.scroll.scrollLeft = ((value - this.#attr.min) / this.#attr.range) * this.#scrollRange;
+			this.#E.scroll.scrollLeft = ((value - this.#A.min) / this.#A.range) * this.#scrollRange;
 		}
+
+		this.dispatchEvent(new CustomEvent('change', {
+			detail: { value, formattedValue },
+			bubbles: true,
+			composed: true
+		}));
 	}
 
 	#onMove(e) {
