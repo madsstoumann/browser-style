@@ -19,9 +19,7 @@ input {
 	grid-area: 1 / 1;
 	margin: 0;
 }
-input:focus-visible { 
-	outline: none; 
-}
+input:focus-visible { outline: none; }
 label {
 	display: grid;
 	grid-template-columns: 1fr;
@@ -100,9 +98,7 @@ output {
 	scrollbar-width: none;
 	scroll-snap-type: x proximity;
 }
-[data-scroll].grabbing { 
-	cursor: grabbing; 
-}
+[data-scroll].grabbing { cursor: grabbing; }
 [data-scroll-bg] {
 	display: grid;
 	grid-template-columns: 50cqi var(--number-snapper-w, 200cqi) 50cqi;
@@ -115,10 +111,7 @@ output {
 	justify-content: space-between;
 	scroll-snap-type: x mandatory;
 }
-[data-scroll]::-webkit-scrollbar { 
-	display: none; 
-}
-
+[data-scroll]::-webkit-scrollbar { display: none; }
 /* snap-to */
 :host([data-snap=none]) [data-scroll-snap] {
 	scroll-snap-type: none;
@@ -137,7 +130,6 @@ output {
 [type=range],
 [type=range]::-webkit-slider-runnable-track,
 [type=range]::-webkit-slider-thumb { appearance: none; }
-
 @container (max-width: 400px) { fieldset { --number-snapper-w: var(--number-snapper-w-xs, 600cqi); } }
 @container (min-width: 401px) and (max-width: 768px) { fieldset { --number-snapper-w: var(--number-snapper-w-md, 400cqi); } }
 @container (min-width: 1400px) { fieldset { --number-snapper-w: var(--number-snapper-w-lg, 100cqi); } }
@@ -146,15 +138,15 @@ output {
 class NumberSnapper extends HTMLElement {
 	#A; #E; #boundOnEnd; #boundOnMove; #isResizing = false; #root; #scrollRange;
 
-  constructor() {
-    super();
-    this.#root = this.attachShadow({ mode: 'open' });
-    this.#root.adoptedStyleSheets = [styles];
+	constructor() {
+		super();
+		this.#root = this.attachShadow({ mode: 'open' });
+		this.#root.adoptedStyleSheets = [styles];
 		this.#boundOnMove = this.#onMove.bind(this);
 		this.#boundOnEnd = this.#onEnd.bind(this);
-  }
+	}
 
-  connectedCallback() {
+	connectedCallback() {
 		this.#A = {
 			currency: this.getAttribute('currency') || 'USD',
 			decimals: this.hasAttribute('decimals') ? parseInt(this.getAttribute('decimals'), 10) : 0,
@@ -170,8 +162,7 @@ class NumberSnapper extends HTMLElement {
 			value: this.hasAttribute('value') ? parseFloat(this.getAttribute('value')) : 0
 		};
 		this.#A.range = this.#A.max - this.#A.min;
-
-    this.#root.innerHTML = `
+		this.#root.innerHTML = `
 		<fieldset>
 			<legend>${this.#A.label}</legend>
 			<output name="out"></output>
@@ -209,7 +200,7 @@ class NumberSnapper extends HTMLElement {
 		this.#root.addEventListener('input', () => this.#update());
 		this.#E.scroll.addEventListener('scroll', () => this.#update(true));
 		this.#update();
-  }
+	}
 
 	#format(num) {
 		if (this.#A.format === 'integer') return num;
@@ -241,9 +232,7 @@ class NumberSnapper extends HTMLElement {
 		}
 
 		this.dispatchEvent(new CustomEvent('change', {
-			detail: { value, formattedValue },
-			bubbles: true,
-			composed: true
+			detail: { value, formattedValue }, bubbles: true, composed: true
 		}));
 	}
 
