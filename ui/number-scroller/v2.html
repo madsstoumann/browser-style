@@ -43,9 +43,6 @@
 				margin: 0;
 				&:focus-visible { outline: none; }
 			}
-			[type=range],
-			[type=range]::-webkit-slider-runnable-track,
-			[type=range]::-webkit-slider-thumb { appearance: none; }
 			label {
 				display: grid;
 				grid-template-columns: 1fr;
@@ -99,6 +96,7 @@
 				inset: 0;
 				mask: var(--number-scroller-mask, linear-gradient(to right, #0000, #000 15%, #000 85%, #0000));
 				overflow-x: auto;
+				overscroll-behavior: none;
 				position: absolute;
 				scrollbar-width: none;
 				scroll-snap-type: x proximity;
@@ -132,6 +130,10 @@
 				scroll-snap-align: none;
 			}
 		}
+		/* Safari cannot use @scope for ::-webkit prefixes */
+		[type=range],
+		[type=range]::-webkit-slider-runnable-track,
+		[type=range]::-webkit-slider-thumb { appearance: none; }
 
 		/* Demo Styles */
 		body {
@@ -140,6 +142,15 @@
 			color-scheme: light dark;
 			margin-inline: auto;
 			max-width: 700px;
+		}
+
+		/* Update the scroll width from a @container-query */
+		@container (max-width: 400px) {
+			.number-scroller [data-scroll] {
+				--number-scroller-snap-major-bg: tomato;
+				--number-scroller-snap-minor-bg: orange;
+				--number-scroller-w: 600cqi;
+			}
 		}
 	</style>
 </head>
@@ -178,7 +189,7 @@
 				max: parseInt(E.in.max, 10),
 				points: parseInt(A.dataset.points, 10),
 				step: parseInt(E.in.step, 10),
-				unit: A.dataset.unit || null,
+				unit: A.dataset.unit || null
 			};
 			S.range = S.max - S.min;
 			E.snap.innerHTML = Array.from({ length: S.points + 1 }).map(() => `<b></b>`).join('');
