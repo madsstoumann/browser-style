@@ -54,18 +54,18 @@ label::before {
 	width: var(--number-snapper-triangle-w, 10px);
 }
 legend {
-	color: var(--number-snapper-legendf-c, light-dark(#222, #EEE));
+	color: var(--number-snapper-legend-c, light-dark(#222, #EEE));
 	display: contents;
 	font-size: var(--number-snapper-legend-fs, 0.875rem);
 	font-weight: var(--number-snapper-legend-fw, 400);
 }
 li {
 	background: var(--number-snapper-snap-minor-bg, #CCC);
-	border-radius: var(--number-snapper-minor-bdrs, 1px);
-	height: var(--number-snapper-minor-h, 70%);
+	border-radius: var(--number-snapper-snap-minor-bdrs, 1px);
+	height: var(--number-snapper-snap-minor-h, 70%);
 	list-style: none;
 	scroll-snap-align: center;
-	width: var(--number-snapper-minor-w, 1px);
+	width: var(--number-snapper-snap-minor-w, 1px);
 }
 li[title],
 :host([interval="2"]) li:nth-of-type(2n+1),
@@ -171,7 +171,7 @@ class NumberSnapper extends HTMLElement {
 				<span data-scroll tabindex="-1">
 					<span data-scroll-bg>
 						<i></i>
-						<ol data-scroll-snap>${ Array.from({ length: this.#A.ticks + 1 }).map((_, i) => {
+						<ol data-scroll-snap part="scroll-snap">${ Array.from({ length: this.#A.ticks + 1 }).map((_, i) => {
 							const tickValue = Math.round(this.#A.min + (i * this.#A.range / this.#A.ticks));
 							return `<li value="${tickValue}"></li>`;
 						}).join('')}</ol>
