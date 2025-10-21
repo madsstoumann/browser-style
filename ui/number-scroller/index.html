@@ -1,337 +1,263 @@
 <!DOCTYPE html>
-<html lang="en-US" dir="ltr">
+<html lang="da-DK" dir="ltr">
 <head>
 	<title>Number Scroller</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="A customizable, accessible number scroller web component with advanced formatting, snap points, and interactive scrolling. Perfect for price selectors, timelines, and range inputs.">
-	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/base.css">
+	<meta name="description" content="">
 	<style>
-		main {
-			display: grid;
-			row-gap: 2rem;
-		}
+		/* Number Scroller Component */
+		@scope (.number-scroller) {
+  		:scope {
+				border: 0;
+				container-type: inline-size;
+				display: grid;
+				font-family: var(--number-scroller-ff, ui-sans-serif, system-ui);
+				margin: 0;
+				padding: 0;
+				row-gap: var(--number-scroller-rg, 0.875rem);
+				text-align: center;
+				user-select: none;
+			}
+			b {
+				background: var(--number-scroller-snap-minor-bg, #CCC);
+				border-radius: var(--number-scroller-minor-bdrs, 1px);
+				height: var(--number-scroller-minor-h, 70%);
+				scroll-snap-align: center;
+				width: var(--number-scroller-minor-w, 1px);
 
-		/* Slotted content - style directly in light DOM */
-		#annual-salary {
-			color: light-dark(#666, #999);
-			font-size: 0.875rem;
-			margin: 0.5rem auto 0;
-			text-align: center;
-		}
+				[data-interval="2"] &:nth-of-type(2n+1),
+				[data-interval="3"] &:nth-of-type(3n+1),
+				[data-interval="4"] &:nth-of-type(4n+1),
+				[data-interval="5"] &:nth-of-type(5n+1),
+				[data-interval="10"] &:nth-of-type(10n+1) {
+					background: var(--number-scroller-snap-major-bg, #CCC);
+					border-radius: var(--number-scroller-snap-major-bdrs, 2px);
+					height: var(--number-scroller-snap-major-h, 100%);
+					width: var(--number-scroller-snap-major-w, 2px);
+				}
+			}
+			input {
+				background: #0000;
+				grid-area: 1 / 1;
+				margin: 0;
+				&:focus-visible { outline: none; }
+			}
+			label {
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr min-content;
+				position: relative;
+				row-gap: var(--number-scroller-label-rg, .25rem);
+				&:has(:focus-visible) {
+					outline: 1px var(--number-scroller-outline-style, solid) var(--number-scroller-outline-c, #CCC);
+					outline-offset: var(--number-scroller-outline-off, 4px);
+				}
+				&::after {
+					background: var(--number-scroller-indicator-bg, light-dark(#0008, #FFF8));
+					border-radius: var(--number-scroller-indicator-bdrs, 3px);
+					content: "";
+					display: block;
+					grid-area: 1 / 1;
+					height: var(--number-scroller-indicator-h, 32px);
+					isolation: isolate;
+					place-self: center;
+					pointer-events: none;
+					width: var(--number-scroller-indicator-w, 5px);
+				}
+				&::before { 
+					background: var(--number-scroller-triangle-bg, light-dark(#0008, #FFF8));
+					clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+					content: "";
+					display: block;
+					height: var(--number-scroller-triangle-h, 5px);
+					place-self: end center;
+					pointer-events: none;
+					width: var(--number-scroller-triangle-w, 10px);
+				}
+			}
+			legend {
+				color: var(--number-scroller-legendf-c, light-dark(#222, #EEE));
+				display: contents;
+				font-size: var(--number-scroller-legend-fs, 0.875rem);
+				font-weight: var(--number-scroller-legend-fw, 400);
+			}
+			output {
+				color: var(--number-scroller-output-c, light-dark(#222, #EEE));
+				font-size: var(--number-scroller-output-fs, 2rem);
+				font-variant-numeric: tabular-nums;
+				font-weight: var(--number-scroller-output-fw, 600);
+				text-box: cap text;
+			}
+			[data-scroll] {
+				cursor: ew-resize;
+				display: block;
+				grid-area: 1 / 1 / 1 / 1;
+				inset: 0;
+				mask: var(--number-scroller-mask, linear-gradient(to right, #0000, #000 15%, #000 85%, #0000));
+				overflow-x: auto;
+				overscroll-behavior: none;
+				position: absolute;
+				scrollbar-width: none;
+				scroll-snap-type: x proximity;
+				&.grabbing { cursor: grabbing; }
+				[data-scroll-bg] {
+					display: grid;
+					grid-template-columns: 50cqi var(--number-scroller-w, 200cqi) 50cqi;
+					height: 100%;
+					pointer-events: none;
+				}
+				[data-scroll-snap] {
+					align-items: end;
+					display: flex;
+					justify-content: space-between;
+					scroll-snap-type: x mandatory;
+				}
+			}
+			[data-scroll]::-webkit-scrollbar { display: none; }
 
-		#event-info {
-			color: light-dark(#3e2723, #d4b5a8);
-			display: block;
-			font-size: 1.15rem;
-			margin: 0 auto;
-			min-height: 3.5rem;
-		}
-
-		/* Ensure event-info doesn't collapse when empty */
-		#event-info:empty::before {
-			content: '\00a0';
-			visibility: hidden;
-		}
-
-		/* Temperature styling - thermometer-inspired theme with rainbow gradient */
-		number-scroller.temperature {
-			--number-scroller-ff: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT Bold', Calibri, sans-serif;
-
-			/* Indicator - dark for contrast against rainbow gradient */
-			--number-scroller-indicator-bg: light-dark(hsl(200, 70%, 30%), hsl(200, 60%, 75%));
-			--number-scroller-indicator-w: 6px;
-			--number-scroller-indicator-h: 2.5rem;
-			--number-scroller-indicator-bdrs: 10px;
-
-			/* Rounded triangle pointer - dark for contrast */
-			--number-scroller-triangle-bg: light-dark(hsl(200, 70%, 30%), hsl(200, 60%, 75%));
-			--number-scroller-triangle-h: 7px;
-			--number-scroller-triangle-w: 14px;
-
-			/* Snap lines - solid colors */
-			--number-spinner-snap-major-bg: light-dark(hsl(200, 70%, 50%), hsl(200, 60%, 60%));
-			--number-scroller-snap-major-w: 4px;
-			--number-scroller-snap-major-h: 100%;
-			--number-scroller-snap-major-bdrs: 10px;
-
-			--number-spinner-snap-minor-bg: light-dark(hsl(200, 50%, 70%), hsl(200, 40%, 50%));
-			--number-scroller-snap-minor-w: 2px;
-			--number-scroller-snap-minor-h: 60%;
-			--number-scroller-snap-minor-bdrs: 5px;
-
-			--number-scroller-legend-c: light-dark(hsl(200, 60%, 35%), hsl(200, 50%, 70%));
-			--number-scroller-legend-fw: 600;
-			--number-scroller-legend-fs: 0.875rem;
-
-			--number-scroller-out-c: light-dark(hsl(200, 70%, 30%), hsl(200, 60%, 75%));
-			--number-scroller-out-fs: clamp(1.25rem, 5cqi, 2.75rem);
-			--number-scroller-out-fw: 700;
-
-			--number-scroller-focus-outline-c: light-dark(hsl(200, 85%, 55%), hsl(200, 75%, 65%));
-		}
-
-		/* Temperature thermometer strip - rainbow gradient below snap points */
-		number-scroller.temperature::part(scroll-snap) {
-			position: relative;
-			padding-bottom: 1rem;
-		}
-
-		number-scroller.temperature::part(scroll-snap)::after {
-			content: '';
-			position: absolute;
-			bottom: 8px;
-			left: 0;
-			right: 0;
-			height: 4px;
-			background: linear-gradient(to right,
-				hsl(240, 100%, 60%) 0%,    /* 0° - deep blue */
-				hsl(220, 100%, 65%) 10%,   /* 10° */
-				hsl(200, 100%, 60%) 20%,   /* 20° - cyan */
-				hsl(180, 80%, 55%) 30%,    /* 30° */
-				hsl(160, 70%, 50%) 40%,    /* 40° - teal */
-				hsl(140, 60%, 50%) 50%,    /* 50° - green */
-				hsl(80, 70%, 50%) 60%,     /* 60° */
-				hsl(40, 90%, 55%) 70%,     /* 70° - yellow */
-				hsl(20, 100%, 55%) 80%,    /* 80° - orange */
-				hsl(10, 100%, 55%) 90%,    /* 90° */
-				hsl(0, 100%, 55%) 100%     /* 100° - red hot */
-			);
-			border-radius: 4px;
-			/* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); */
-		}
-
-		@media (prefers-color-scheme: dark) {
-			number-scroller.temperature::part(scroll-snap)::after {
-				/* Lighter gradient for dark mode */
-				background: linear-gradient(to right,
-					hsl(240, 80%, 70%) 0%,
-					hsl(220, 80%, 75%) 10%,
-					hsl(200, 80%, 70%) 20%,
-					hsl(180, 70%, 65%) 30%,
-					hsl(160, 60%, 60%) 40%,
-					hsl(140, 50%, 60%) 50%,
-					hsl(80, 60%, 60%) 60%,
-					hsl(40, 80%, 65%) 70%,
-					hsl(20, 90%, 65%) 80%,
-					hsl(10, 90%, 65%) 90%,
-					hsl(0, 90%, 65%) 100%
-				);
+			/* snap-to */
+			&[data-snap=none] [data-scroll-snap] {
+				scroll-snap-type: none;
+				b { scroll-snap-align: none; }
+			}
+			&[data-snap=value] b:not([data-value]),
+			&[data-interval="2"][data-snap=major] b:not(:nth-of-type(2n+1)),
+			&[data-interval="3"][data-snap=major] b:not(:nth-of-type(3n+1)),
+			&[data-interval="4"][data-snap=major] b:not(:nth-of-type(4n+1)),
+			&[data-interval="5"][data-snap=major] b:not(:nth-of-type(5n+1)),
+			&[data-interval="10"][data-snap=major] b:not(:nth-of-type(10n+1)) {
+				scroll-snap-align: none;
 			}
 		}
+		/* Safari cannot use @scope for ::-webkit prefixes */
+		[type=range],
+		[type=range]::-webkit-slider-runnable-track,
+		[type=range]::-webkit-slider-thumb { appearance: none; }
 
-		/* Storage styling - cyberpunk/tech theme */
-		number-scroller.storage {
-			--number-scroller-ff: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
-
-			/* Neon purple indicator */
-			--number-scroller-indicator-bg: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
-			--number-scroller-indicator-w: 5px;
-			--number-scroller-indicator-h: 3rem;
-			--number-scroller-indicator-bdrs: 2px;
-
-			/* Sharp tech triangle */
-			--number-scroller-triangle-bg: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
-			--number-scroller-triangle-h: 8px;
-			--number-scroller-triangle-w: 16px;
-
-			/* Neon cyan snap lines */
-			--number-scroller-snap-major-bg: light-dark(hsl(280, 70%, 70%), hsl(280, 40%, 25%));
-			--number-scroller-snap-major-w: 3px;
-			--number-scroller-snap-major-h: 100%;
-			--number-scroller-snap-major-bdrs: 1px;
-
-			--number-scroller-snap-minor-bg: light-dark(
-				hsla(280, 100%, 60%, 0.4),
-				hsla(280, 80%, 70%, 0.5)
-			);
-			--number-scroller-snap-minor-w: 1px;
-			--number-scroller-snap-minor-h: 50%;
-			--number-scroller-snap-minor-bdrs: 0;
-
-			--number-scroller-legend-c: light-dark(hsl(280, 70%, 40%), hsl(280, 60%, 75%));
-			--number-scroller-legend-fw: 600;
-			--number-scroller-legend-fs: 0.75rem;
-			
-			--number-scroller-out-c: light-dark(hsl(280, 80%, 35%), hsl(280, 70%, 80%));
-			--number-scroller-out-fs: clamp(1.5rem, 6cqi, 3rem);
-			--number-scroller-out-fw: 700;
-
-			--number-scroller-focus-outline-c: light-dark(hsl(280, 100%, 50%), hsl(280, 90%, 70%));
+		/* === Demo Styles === */
+		body {
+			background: Canvas;
+			color: CanvasText;
+			color-scheme: light dark;
+			margin-inline: auto;
+			max-width: 700px;
 		}
 
-		/* Timeline specific styling - vintage/historical theme */
-		number-scroller.timeline {
-			--number-scroller-ff: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-
-			--number-scroller-indicator-bg: light-dark(#8b4513, #b8733f);
-			--number-scroller-indicator-bdrs: 5px;
-			--number-scroller-indicator-w: 5px;
-			--number-scroller-indicator-h: 3rem;
-
-			--number-scroller-triangle-bg: light-dark(#2c1810, #6b4423);
-			--number-scroller-triangle-h: 8px;
-			--number-scroller-triangle-w: 14px;
-
-			--number-scroller-snap-major-bg: light-dark(#8b4513, #b8733f);
-			--number-scroller-snap-major-bdrs: 5px;
-			--number-scroller-snap-major-w: 5px;
-
-			--number-scroller-snap-minor-bg: light-dark(#d2b48c, #c9a571);
-			--number-scroller-snap-minor-bdrs: 2px;
-			--number-scroller-snap-minor-w: 2px;
-			--number-scroller-snap-minor-h: 50%;
-
-			--number-scroller-legend-c: light-dark(#5d4037, #bc8a7e);
-			--number-scroller-legend-fw: 600;
-			--number-scroller-legend-fs: 0.875rem;
-
-			--number-scroller-out-c: light-dark(#3e2723, #d4b5a8);
-			--number-scroller-out-fs: 2.5rem;
-			--number-scroller-out-fw: 700;
-
-			--number-scroller-focus-outline-c: light-dark(#8b4513, #b8733f);
+		/* Update the scroll width from a @container-query */
+		@container (max-width: 400px) {
+			.number-scroller [data-scroll] {
+				--number-scroller-snap-major-bg: tomato;
+				--number-scroller-snap-minor-bg: orange;
+				--number-scroller-w: 600cqi;
+			}
 		}
 	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
 
-	<h2>Number Scroller</h2>
-	<p>
-		<strong>Number Scroller</strong> is a customizable, accessible web component that transforms the standard range input into an interactive scrolling interface. It supports advanced number formatting (currency, units, percentages), configurable snap points for precise value selection, and smooth scroll interaction.
-	</p>
+	<!-- BASIC -->
+	<fieldset class="number-scroller" data-points="100" data-interval="5" data-snap="all" data-currency="USD" lang="en-US">
+		<legend>Your monthly salary</legend>
+		<output name="out"></output>
+		<label aria-label="Your monthly salary">
+			<input type="range" name="in" min="0" step="500" max="25000" value="5000">
+			<span data-scroll tabindex="-1">
+				<span data-scroll-bg>
+					<i></i>
+					<span data-scroll-snap></span>
+					<i></i>
+				</span>
+			</span>
+		</label>
+	</fieldset>
 
-	<main>
-		<h3>Snaps to all indicators</h3>
-		<number-scroller id="salary" class="salary" min="0" max="25000" step="500" value="6500"
-			currency="USD"
-			label="Monthly Salary:"
-			lang="en-US"
-			scroll-width="400"
-			snap-major-interval="5">
-			<div id="annual-salary"></div>
-		</number-scroller>
+	<script>
+		function NumberScroller(A) {
+			const E = {
+				in: A.elements.in,
+				out: A.elements.out,
+				scroll: A.querySelector('[data-scroll]'),
+				snap: A.querySelector('[data-scroll-snap]')
+			};
+			const S = {
+				currency: A.dataset.currency || 'USD',
+				decimals: parseInt(A.dataset.decimals, 10) || 0,
+				format: A.dataset.format || 'currency',
+				lang: A.lang || 'en-US',
+				min: parseFloat(E.in.min),
+				max: parseFloat(E.in.max),
+				points: parseInt(A.dataset.points, 10),
+				step: parseFloat(E.in.step),
+				unit: A.dataset.unit || null
+			};
+			S.range = S.max - S.min;
+			E.snap.innerHTML = Array.from({ length: S.points + 1 }).map(() => `<b></b>`).join('');
 
-		<h3>Snaps to major indicators only</h3>
-		<number-scroller class="temperature" min="0" max="100" step="10" value="68"
-			format="unit"
-			label="Temperature:"
-			lang="en-US"
-			scroll-width="300"
-			snap-major-interval="10"
-			snap-points="100"
-			snap-to="major"
-			unit="celsius">
-		</number-scroller>
+			let isResizing = false;
+			let scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
 
-		<h3>Snaps to value indicators</h3>
-		<number-scroller id="timeline" class="timeline" min="1900" max="2000" step="1" value="1914"
-			label="Timeline: 20th Century"
-			scroll-width="400"
-			snap-to="value"
-			format="integer">
-			<div id="event-info"></div>
-		</number-scroller>
-		
-		<h3>No snapping</h3>
-		<number-scroller class="storage" min="0" max="128" step="0.25" value="32"
-			format="unit"
-			unit="gigabyte"
-			label="Storage Capacity:"
-			lang="en-US"
-			decimals="1"
-			scroll-width="300"
-			snap-major-interval="5"
-			snap-points="128"
-			snap-to="none">
-		</number-scroller>
+			new ResizeObserver(() => {
+				isResizing = true;
+				scrollRange = E.scroll.scrollWidth - E.scroll.clientWidth;
+				setTimeout(() => { isResizing = false }, 200);
+			}).observe(E.scroll);
 
-		<h3>Right-to-Left</h3>
-		<number-scroller min="0" max="25000" step="500" value="6500"
-			currency="USD"
-			dir="rtl"
-			label="Monthly Salary:"
-			lang="en-US"
-			scroll-width="400"
-			snap-major-interval="5">
-		</number-scroller>
+			const format = (num) => {
+				const options = {
+					style: S.format,
+					minimumFractionDigits: S.decimals,
+					maximumFractionDigits: S.decimals,
+					...(S.format === 'currency' && { currency: S.currency }),
+					...(S.format === 'unit' && S.unit && { unit: S.unit }),
+				};
+				return new Intl.NumberFormat(S.lang, options).format(num).replace(/\u00A0/g, ' ');
+			};
 
-		<p>&nbsp;</p>
-	</main>
+			const update = (fromScroll = false) => {
+				if (isResizing && fromScroll) return;
+				const val = fromScroll
+					? S.min + ((E.scroll.scrollLeft / scrollRange) * S.range)
+					: parseInt(E.in.value, 10);
 
-	<script type="module">
-		import './index.js';
+				const value = Math.round(val / S.step) * S.step;
+				const formattedValue = format(value);
+				E.out.value = formattedValue;
+				E.in.ariaValueText = formattedValue;
 
-		// Salary: Annual calculator
-		const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-		const annualSalary = document.getElementById('annual-salary');
+				if (fromScroll) {
+					E.in.value = value;
+				} else {
+					E.scroll.scrollLeft = ((value - S.min) / S.range) * scrollRange;
+				}
+			};
 
-		document.getElementById('salary').addEventListener('input', e => {
-			e.detail?.value && (annualSalary.textContent = `Annual: ${formatter.format(e.detail.value * 12)}`);
-		});
+			const onMove = (e) => {
+				E.scroll.scrollLeft = E.scroll.dataset.scroll - (e.clientX - E.scroll.dataset.pointer);
+			};
+			const onEnd = (e) => {
+				E.scroll.classList.remove('grabbing');
+				document.removeEventListener('pointermove', onMove);
+				document.removeEventListener('pointerup', onEnd);
+				document.removeEventListener('pointercancel', onEnd);
+			};
+			E.scroll.addEventListener('pointerdown', (e) => {
+				E.scroll.dataset.pointer = e.clientX;
+				E.scroll.dataset.scroll = E.scroll.scrollLeft;
+				E.scroll.classList.add('grabbing');
+				E.scroll.setPointerCapture(e.pointerId);
+				document.addEventListener('pointermove', onMove);
+				document.addEventListener('pointerup', onEnd);
+				document.addEventListener('pointercancel', onEnd);
+			});
 
-		// Timeline: Historical events
-		const events = {
-			1900: 'Turn of the century',
-			1903: 'Wright Brothers first flight',
-			1905: 'Einstein publishes Theory of Relativity',
-			1910: 'Mexican Revolution begins',
-			1912: 'Titanic sinks',
-			1914: 'Start of World War I',
-			1915: 'Armenian Genocide begins',
-			1917: 'Russian Revolution',
-			1918: 'End of World War I',
-			1920: 'Women gain right to vote in US',
-			1922: 'Discovery of King Tut\'s tomb',
-			1925: 'Scopes Monkey Trial',
-			1927: 'First transatlantic flight by Lindbergh',
-			1929: 'Wall Street Crash, Great Depression begins',
-			1930: 'Gandhi\'s Salt March',
-			1933: 'Hitler comes to power in Germany',
-			1935: 'Social Security Act in US',
-			1936: 'Spanish Civil War begins',
-			1939: 'Start of World War II',
-			1940: 'Battle of Britain',
-			1941: 'Attack on Pearl Harbor',
-			1945: 'End of World War II, Atomic bombs dropped',
-			1947: 'India gains independence',
-			1948: 'State of Israel founded',
-			1950: 'Korean War begins',
-			1953: 'DNA structure discovered',
-			1955: 'Montgomery Bus Boycott',
-			1957: 'Sputnik launches Space Age',
-			1960: 'African independence year',
-			1961: 'Berlin Wall erected',
-			1963: 'JFK assassination',
-			1964: 'Civil Rights Act passed',
-			1965: 'Vietnam War escalates',
-			1967: 'Six-Day War',
-			1968: 'Martin Luther King Jr. assassinated',
-			1969: 'Apollo 11 Moon Landing',
-			1970: 'Environmental movement grows',
-			1973: 'End of Vietnam War',
-			1975: 'Fall of Saigon',
-			1979: 'Iranian Revolution',
-			1980: 'Solidarity movement in Poland',
-			1985: 'Gorbachev introduces Glasnost',
-			1986: 'Chernobyl disaster',
-			1989: 'Fall of the Berlin Wall',
-			1990: 'German reunification',
-			1991: 'Dissolution of Soviet Union',
-			1994: 'End of Apartheid in South Africa',
-			1995: 'World Wide Web becomes mainstream',
-			1997: 'Hong Kong returned to China',
-			1999: 'Euro currency introduced',
-			2000: 'Y2K, new millennium begins'
-		};
+			A.addEventListener('input', () => update());
+			E.scroll.addEventListener('scroll', () => update(true));
+			update();
+		}
 
-		const timeline = document.getElementById('timeline');
-		const eventInfo = document.getElementById('event-info');
-
-		timeline.snapValues = Object.keys(events).map(Number).sort((a, b) => a - b);
-		timeline.addEventListener('input', e => e.detail?.value && (eventInfo.textContent = events[e.detail.value] || ''));
+		/* INIT */
+		document.querySelectorAll('.number-scroller').forEach(NumberScroller);
 	</script>
 </body>
 </html>
