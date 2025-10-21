@@ -5,7 +5,6 @@ styles.replaceSync(`
 }
 fieldset{
 	border: 0;
-	container-type: inline-size;
 	display: grid;
 	font-family: var(--number-snapper-ff, ui-sans-serif, system-ui);
 	margin: 0;
@@ -13,23 +12,6 @@ fieldset{
 	row-gap: var(--number-snapper-rg, 0.875rem);
 	text-align: center;
 	user-select: none;
-}
-b {
-	background: var(--number-snapper-snap-minor-bg, #CCC);
-	border-radius: var(--number-snapper-minor-bdrs, 1px);
-	height: var(--number-snapper-minor-h, 70%);
-	scroll-snap-align: center;
-	width: var(--number-snapper-minor-w, 1px);
-}
-:host([interval="2"]) b:nth-of-type(2n+1),
-:host([interval="3"]) b:nth-of-type(3n+1),
-:host([interval="4"]) b:nth-of-type(4n+1),
-:host([interval="5"]) b:nth-of-type(5n+1),
-:host([interval="10"]) b:nth-of-type(10n+1) {
-	background: var(--number-snapper-snap-major-bg, #CCC);
-	border-radius: var(--number-snapper-snap-major-bdrs, 2px);
-	height: var(--number-snapper-snap-major-h, 100%);
-	width: var(--number-snapper-snap-major-w, 2px);
 }
 input {
 	background: #0000;
@@ -78,6 +60,26 @@ legend {
 	font-size: var(--number-snapper-legend-fs, 0.875rem);
 	font-weight: var(--number-snapper-legend-fw, 400);
 }
+li {
+	background: var(--number-snapper-snap-minor-bg, #CCC);
+	border-radius: var(--number-snapper-minor-bdrs, 1px);
+	height: var(--number-snapper-minor-h, 70%);
+	list-style: none;
+	scroll-snap-align: center;
+	width: var(--number-snapper-minor-w, 1px);
+}
+li[title],
+:host([interval="2"]) li:nth-of-type(2n+1),
+:host([interval="3"]) li:nth-of-type(3n+1),
+:host([interval="4"]) li:nth-of-type(4n+1),
+:host([interval="5"]) li:nth-of-type(5n+1),
+:host([interval="10"]) li:nth-of-type(10n+1) {
+	background: var(--number-snapper-snap-major-bg, #CCC);
+	border-radius: var(--number-snapper-snap-major-bdrs, 2px);
+	height: var(--number-snapper-snap-major-h, 100%);
+	width: var(--number-snapper-snap-major-w, 2px);
+}
+ol { all: unset; }
 output {
 	color: var(--number-snapper-output-c, light-dark(#222, #EEE));
 	font-size: var(--number-snapper-output-fs, 2rem);
@@ -120,15 +122,15 @@ output {
 :host([data-snap=none]) [data-scroll-snap] {
 	scroll-snap-type: none;
 }
-:host([data-snap=none]) [data-scroll-snap] b { 
+:host([data-snap=none]) [data-scroll-snap] li { 
 	scroll-snap-align: none; 
 }
-:host([snap=value]) b:not([data-value]),
-:host([interval="2"][snap=major]) b:not(:nth-of-type(2n+1)),
-:host([interval="3"][snap=major]) b:not(:nth-of-type(3n+1)),
-:host([interval="4"][snap=major]) b:not(:nth-of-type(4n+1)),
-:host([interval="5"][snap=major]) b:not(:nth-of-type(5n+1)),
-:host([interval="10"][snap=major]) b:not(:nth-of-type(10n+1)) {
+:host([snap=value]) li:not([title]),
+:host([interval="2"][snap=major]) li:not(:nth-of-type(2n+1)),
+:host([interval="3"][snap=major]) li:not(:nth-of-type(3n+1)),
+:host([interval="4"][snap=major]) li:not(:nth-of-type(4n+1)),
+:host([interval="5"][snap=major]) li:not(:nth-of-type(5n+1)),
+:host([interval="10"][snap=major]) li:not(:nth-of-type(10n+1)) {
 	scroll-snap-align: none;
 }
 [type=range],
@@ -137,13 +139,7 @@ output {
 `);
 
 class NumberSnapper extends HTMLElement {
-	#A;
-	#E;
-  #boundOnEnd;
-	#boundOnMove;
-	#isResizing = false;
-	#root;
-	#scrollRange;
+	#A; #E; #boundOnEnd; #boundOnMove; #isResizing = false; #root; #scrollRange;
 
   constructor() {
     super();
@@ -157,32 +153,32 @@ class NumberSnapper extends HTMLElement {
 		this.#A = {
 			currency: this.getAttribute('currency') || 'USD',
 			decimals: this.hasAttribute('decimals') ? parseInt(this.getAttribute('decimals'), 10) : 0,
-			format: this.getAttribute('format') || 'currency',
+			format: this.getAttribute('format') || 'integer',
 			label: this.getAttribute('label') || '',
 			lang: this.getAttribute('lang') || 'en-US',
 			max: this.hasAttribute('max') ? parseFloat(this.getAttribute('max')) : 100,
 			min: this.hasAttribute('min') ? parseFloat(this.getAttribute('min')) : 0,
-			points: this.hasAttribute('points') ? parseInt(this.getAttribute('points'), 10) : 10,
 			snap: this.getAttribute('snap') || 'none',
 			step: this.hasAttribute('step') ? parseFloat(this.getAttribute('step')) : 1,
+			ticks: this.hasAttribute('ticks') ? parseInt(this.getAttribute('ticks'), 10) : 10,
 			unit: this.getAttribute('unit') || null,
 			value: this.hasAttribute('value') ? parseFloat(this.getAttribute('value')) : 0
 		};
 		this.#A.range = this.#A.max - this.#A.min;
 
     this.#root.innerHTML = `
-		<fieldset>
+		<fieldset part="fieldset">
 			<legend>${this.#A.label}</legend>
 			<output name="out"></output>
-			
 			<label aria-label="${this.#A.label}">
 				<input type="range" name="in" min="${this.#A.min}" max="${this.#A.max}" step="${this.#A.step}" value="${this.#A.value}">
 				<span data-scroll tabindex="-1">
 					<span data-scroll-bg>
 						<i></i>
-						<span data-scroll-snap>
-							<slot name="ticks"></slot>
-						</span>
+						<ol data-scroll-snap>${ Array.from({ length: this.#A.ticks + 1 }).map((_, i) => {
+							const tickValue = Math.round(this.#A.min + (i * this.#A.range / this.#A.ticks));
+							return `<li value="${tickValue}"></li>`;
+						}).join('')}</ol>
 						<i></i>
 					</span>
 				</span>
@@ -196,11 +192,6 @@ class NumberSnapper extends HTMLElement {
 			scroll: this.#root.querySelector('[data-scroll]'),
 			snap: this.#root.querySelector('[data-scroll-snap]')
 		};
-
-		const ticksSlot = this.#root.querySelector('slot[name="ticks"]');
-		if (ticksSlot.assignedNodes().length === 0) {
-			this.#E.snap.innerHTML = Array.from({ length: this.#A.points + 1 }).map(() => `<b></b>`).join('');
-		}
 
 		this.#scrollRange = this.#E.scroll.scrollWidth - this.#E.scroll.clientWidth;
 		new ResizeObserver(() => {
@@ -216,6 +207,7 @@ class NumberSnapper extends HTMLElement {
   }
 
 	#format(num) {
+		if (this.#A.format === 'integer') return num;
 		const options = {
 			style: this.#A.format,
 			minimumFractionDigits: this.#A.decimals,
