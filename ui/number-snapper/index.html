@@ -141,15 +141,19 @@
 		</number-snapper>
 
 		<h3>No snap</h3>
-		<number-snapper id="storage" max="128" step="0.25" value="32"
+		<number-snapper
+			id="storage"
+			decimals="1"
 			format="unit"
-			unit="gigabyte"
+			interval="4"
 			label="Storage Capacity:"
 			lang="en-US"
-			decimals="1"
-			interval="5"
+			max="128" 
+			snap="none"
+			step="0.25"
 			ticks="128"
-			snap="none">
+			unit="gigabyte"
+			value="32">
 		</number-snapper>
 
 	</main>

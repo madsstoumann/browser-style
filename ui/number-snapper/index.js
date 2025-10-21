@@ -116,9 +116,7 @@ output {
 :host([data-snap=none]) [data-scroll-snap] {
 	scroll-snap-type: none;
 }
-:host([data-snap=none]) [data-scroll-snap] li { 
-	scroll-snap-align: none; 
-}
+:host([snap=none]) li,
 :host([snap=value]) li:not([title]),
 :host([interval="2"][snap=major]) li:not(:nth-of-type(2n+1)),
 :host([interval="3"][snap=major]) li:not(:nth-of-type(3n+1)),
