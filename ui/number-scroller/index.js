@@ -1,7 +1,8 @@
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 :host {
-  container-type: inline-size;
+	container-type: inline-size;
+	display: block;
 }
 fieldset{
 	border: 0;
@@ -136,6 +137,10 @@ output {
 [type=range],
 [type=range]::-webkit-slider-runnable-track,
 [type=range]::-webkit-slider-thumb { appearance: none; }
+
+@container (max-width: 400px) { fieldset { --number-snapper-w: var(--number-snapper-w-xs, 600cqi); } }
+@container (min-width: 401px) and (max-width: 768px) { fieldset { --number-snapper-w: var(--number-snapper-w-md, 400cqi); } }
+@container (min-width: 1400px) { fieldset { --number-snapper-w: var(--number-snapper-w-lg, 100cqi); } }
 `);
 
 class NumberSnapper extends HTMLElement {
@@ -167,7 +172,7 @@ class NumberSnapper extends HTMLElement {
 		this.#A.range = this.#A.max - this.#A.min;
 
     this.#root.innerHTML = `
-		<fieldset part="fieldset">
+		<fieldset>
 			<legend>${this.#A.label}</legend>
 			<output name="out"></output>
 			<label aria-label="${this.#A.label}">
