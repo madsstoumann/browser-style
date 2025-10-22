@@ -5,33 +5,32 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
-	<link rel="stylesheet" href="index.css">
+	<link rel="stylesheet" href="../index.css">
 </head>
 <body>
 
-	<!-- <video muted playsinline class="video-bg" preload="metadata">
-		<source src="video.mp4" type="video/mp4">
-	</video> -->
+	<video muted playsinline class="video-bg" preload="metadata">
+		<source src="../video.mp4" type="video/mp4">
+	</video>
 
-	<form id="app" data-currency="DKK">
+	<form id="app">
 		<div class="app">
 
 			<!-- CONTROLS -->
 			<div class="controls">
 				<header class="controls-header">
-					<h1>Hvad koster det at køre med ulovlige stoffer i blodet?</h1>
+					<h1>Narkokørsel koster kassen</h1>
 					En bane nu og dit kørekort + 25.000 i bøde senere? Se, hvad straffen for narkokørsel egentlig er.
 				</header>
 
 				<fieldset>
-					<legend class="label">Årsindkomst før skat:</legend>
-					<output name="inc_out">400.000</output>
-					<label aria-label="Årsindkomstfør skat">
-						<input type="range" name="inc" min="0" step="10000" max="1200000" value="400000">
+					<legend class="label">Din månedsløn før skat:</legend>
+					<output name="inc_out">25.000 kr.</output>
+					<label aria-label="Vælg din månedsløn før skat">
+						<input type="range" name="inc" min="0" step="500" max="100000" value="25000">
 						<span data-scroll><span data-scroll-bg></span></span>
-						
 					</label>
-					<small>Din faktiske eller forventede indkomst for hele året før skat.</small>
+					<small>Årsindkomst før skat: <output name="inc_yer"></output></small>
 				</fieldset>
 
 				<fieldset class="radio-group">
@@ -39,8 +38,9 @@
 					<label><input type="radio" name="drg" value="cannabis" checked><svg width="20" height="19"><use href="icons.svg#cannabis"></use></svg>Cannabis</label>
 					<label><input type="radio" name="drg" value="opioider"><svg width="20" height="19"><use href="icons.svg#opioider"></use></svg>Opioider</label>
 					<label><input type="radio" name="drg" value="kokain"><svg width="20" height="19"><use href="icons.svg#kokain"></use></svg>Kokain</label>
+					<label><input type="radio" name="drg" value="benzodiazepiner"><svg width="20" height="19"><use href="icons.svg#amfetamin"></use></svg>Benzodiazepiner</label>
 					<label><input type="radio" name="drg" value="lattergas"><svg width="20" height="19"><use href="icons.svg#gas"></use></svg>Lattergas</label>
-					<label><input type="radio" name="drg" value="andre"><svg width="20" height="19"><use href="icons.svg#andre"></use></svg>Øvrige</label>
+					<label><input type="radio" name="drg" value="øvrige"><svg width="20" height="19"><use href="icons.svg#andre"></use></svg>Øvrige</label>
 				</fieldset>
 				<div class="controls-sub">
 					<fieldset name="thc" class="button-group">
@@ -53,16 +53,25 @@
 					</fieldset>
 
 					<fieldset name="lic" class="button-group">
-						<legend class="label">Hvor længe har du haft kørekort?</legend>
+						<legend class="label">Kørekort i over 3 år?</legend>
 						<div>
 							<label>
 								<input type="radio" name="lic_yrs">
-								<span>Over 3 år</span>
+								<span>Ja</span>
 							</label>
 							<label>
 								<input type="radio" name="lic_yrs" checked>
-								<span>Under 3 år</span>
+								<span>Nej</span>
 							</label>
+						</div>
+					</fieldset>
+
+					<fieldset name="gas" class="button-group">
+						<legend class="label">Lattergas i besiddelse</legend>
+						<div>
+							<label><input type="radio" name="gas_amt" value="3000" checked><svg width="13" height="10"><use href="icons.svg#low"></use></svg>Lavt</label>
+							<label><input type="radio" name="gas_amt" value="5000"><svg width="13" height="10"><use href="icons.svg#medium"></use></svg>Mellem</label>
+							<label><input type="radio" name="gas_amt" value="50000"><svg width="13" height="10"><use href="icons.svg#high"></use></svg>Højt</label>
 						</div>
 					</fieldset>
 				</div>
@@ -73,29 +82,26 @@
 				<article>
 					<header>
 						<div>
-							<span class="label"> Hvad koster det at køre med ulovlige stoffer i blodet?</span>
-							<h2 class="result-total"><output name="tot_fin">1500</output><small>(estimeret)</small></h2>
-							<output name="thc_info_low"><small>Lavt THC-niveau svarer til 0.001-0.003 mg/kg blod.</small></output>
-							<output name="thc_info_med"><small>Mellem THC-niveau svarer til 0.003-0.0009 mg/kg blod.</small></output>
-							<output name="thc_info_high"><small>Højt THC-niveau svarer til over 0.0009 mg/kg blod.</small></output>
-							<output name="other_info">Fx: amfetamin, ecstasy, benzodiazepiner, ketamin mv.</output>
+							<span class="label">Bødeestimat</span>
+							<h2><output name="tot_fin">1500</output></h2>
 						</div>
 						<fieldset name="smr">
-							<output name="unc_dsq_3ys">Kørekortet frakendes ubetinget i 3 år</output>
-							<output name="drv_ban_dsc">Kørselsforbud</output>
-							<output name="cnd_dsq_dsc">Kørekortet frakendes betinget</output>
-							<output name="ant_dsc">Alkohol, Narko- og Trafikkursus</output>
+							<legend class="label">Derudover</legend>
+							<output name="ant_dsc">ANT-kursus</output>
 							<output name="lic_tst_dsc">Ny teori- og køreprøve</output>
 							<output name="lic_clp_dsc">1 klip i kørekortet</output>
+							<output name="drv_ban_dsc">Kørselsforbud</output>
+							<output name="cnd_dsq_dsc">Betinget frakendelse af førerretten</output>
+							<output name="unc_dsq_3ys">Ubetinget frakendelse 3 år</output>
 						</fieldset>
-						<label class="button-link">
+						<label class="result-toggle">
 							<input type="checkbox">Se detaljer
 						</label>
 					</header>
 
 					<div class="result-table">
 						<hr>
-						<fieldset name="brk"><strong>Se detaljer:</strong>
+						<fieldset name="brk">
 							<label>
 								<span>Bødestørrelse</span>
 								<span><output name="fin">1500</output> kr.</span>
@@ -113,35 +119,53 @@
 								<span><output name="vic_fnd">500</output> kr.</span>
 							</label>
 							<label>
-								<span>Alkohol, Narko- og Trafikkursus</span>
+								<span>ANT-kursus</span>
 								<span><output name="ant_crs">3.200</output> kr.</span>
 							</label>
 							<label>
 								<span>Ny teori- og køreprøve</span>
 								<span><output name="lic_tst">1.210</output> kr.</span>
 							</label>
-
+							<label>
+								<span>Besiddelse af lattergas</span>
+								<span><output name="gas_pos">0</output> kr.</span>
+							</label>
+							<label>
+								<span>Mindre end 1349g i besiddelse</span>
+								<span><output name="gas_amt_low">0</output> kr.</span>
+							</label>
+								<label>
+								<span>1350-2699 i besiddelse</span>
+								<span><output name="gas_amt_med">0</output> kr.</span>
+							</label>
+							<label>
+								<span>Over 2699 gram i besiddelse</span>
+								<span><output name="gas_amt_high">0</output> kr.</span>
+							</label>
 						</fieldset>
 						<label class="result-total">
 							<strong>Totale udgifter (ca.)</strong>
 							<strong><output name="tot"></output> kr.</strong>
 						</label>
 						<output name="gas_inf_dsc">
-							<small class="textblock">Har du lattergas i bilen, kan du oveni få en bøde på 10.000 kr. for at køre med farligt gods og 3.000 – 50.000 kr. for besiddelse, afhængigt af mængden.</small>
+							<small class="textblock">Hvis man kører påvirket af lattergas, og det kan bevises, at man ikke kører på fuldt betryggende måde, får man enten kørselsforbud (kørekort under 3 år) eller betinget frakendelse (kørekort over 3 år). </small>
 						</output>
-						<hr>
-						<details>
-							<summary>Vigtigt at vide</summary>
-							<div>
-								<p>Beregningen af sanktionerne for kørsel med ulovlige stoffer er vejledende og kan afvige i konkrete sager, afhængigt af omstændighederne.</p>
-								<p>Det er altid rettens afgørelse, der gælder. Beregningerne gælder for førstegangstilfælde uden færdselsuheld. I gentagelsestilfælde eller ved færdselsuheld stiger straffen.</p>
-								<p><a href="https://www.sikkertrafik.dk/rad-og-viden/bil/medicin-og-stoffer/" class="button-link" target="_blank" rel="noopener noreferrer">Læs mere</a></p>
-							</div>
-						</details>
 					</div>
 				</article>
 			</div>
+
+			<!-- COLOR SCHEME TOGGLER -->
+			<!-- <label class="color-scheme" aria-label="Skift mellem light og dark mode">
+				<svg viewBox="0 0 400 400" width="32" height="32">
+					<circle r="190" cx="200" cy="200" fill="white" stroke="#000" stroke-width="20" />
+					<path d=" M 200 365 A 165 165 0 0 1 200 35" />
+					<path d=" M 200 300 A 100 100 0 0 1 200 100" fill="#FFF" />
+					<path d=" M 200 100 A 100 100 180 0 1 200 300" />
+				</svg>
+				<input type="checkbox" name="color-scheme">
+			</label> -->
 		</div>
+
 	</form>
 
 	<script src="index.js" defer></script>

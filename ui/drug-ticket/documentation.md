@@ -85,3 +85,6 @@ Hvis det kan bevises, at man ikke kører på fuldt betryggende måde:
 
 ---
 *12/9-25 PE*
+
+
+10000 steps / 120 ticks

@@ -1,24 +1,25 @@
 (function() {
 	/* --- 1. INITIALIZATION & CACHING --- */
 	const form = document.getElementById('app');
-	const E = form.elements;
+	const E = form.elements; // Cache all form elements
 	const scroller = form.querySelector('[data-scroll]');
+
+	// Cache constants for the range slider
 	const incMin = parseFloat(E.inc.min);
 	const incMax = parseFloat(E.inc.max);
 	const incRange = incMax - incMin;
 	let scrollRange = scroller.firstElementChild.scrollWidth - scroller.clientWidth;
 	const locale = document.documentElement.lang || 'da-DK';
-	const currency = form.dataset.currency || 'DKK';
 	const totFinOutput = E.tot_fin;
 	let previousTotalFormatted = null;
 
 	/* --- 2. UTILITIES --- */
 	const F = (num) => parseInt(num).toLocaleString(locale);
-	const FC = (num) => new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
 
 	const triggerTotalAnimation = () => {
 		if (!totFinOutput) return;
 		totFinOutput.classList.remove('is-animating');
+		// Force reflow to allow re-triggering the animation
 		void totFinOutput.offsetWidth;
 		totFinOutput.classList.add('is-animating');
 	};
@@ -38,6 +39,8 @@
 		let other = '';
 		if (isTHC) {
 			other = `~thc_${E.thc_lvl.value}`;
+		} else if (isGas) {
+			other = `~gas_${E.gas_amt.value}`;
 		}
 
 		const eventData = {
@@ -48,7 +51,7 @@
 			'other': other
 		};
 
-		// console.log('dataLayer push:', eventData);
+		/* console.log('dataLayer push:', eventData); */
 		if (window.dataLayer) {
 			window.dataLayer.push(eventData);
 		}
@@ -63,31 +66,39 @@
 		const medTHC = E.thc_lvl.value === 'medium';
 		const highTHC = E.thc_lvl.value === 'high';
 		const hasLicenseOver3Years = E.lic_yrs[0].checked;
+		const gasAmount = E.gas_amt.value;
 
 		// --- Perform calculations and update UI ---
-		const yearlyIncome = E.inc.value;
-		E.inc_out.value = FC(E.inc.value);
+		const yearlyIncome = E.inc.value * 12;
+		E.inc_out.value = F(E.inc.value);
+		E.inc_yer.value = F(yearlyIncome);
 		scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
+
+		// Update gas outputs
+		const gasValue = F(gasAmount);
+		E.gas_amt_low.value = E.gas_amt_med.value = E.gas_amt_high.value = gasValue;
+		E.gas_pos.value = F(isGas ? 10000 : 0);
 		E.fin.value = F(Math.max(1500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
 
 		// --- Update visibility of sections ---
 		const visibilityMap = {
 			thc: isTHC,
-			thc_info_low: isTHC && lowTHC,
-			thc_info_med: isTHC && medTHC,
-			thc_info_high: isTHC && highTHC,
+			gas: isGas,
 			gas_inf_dsc: isGas,
-			lic: (isTHC && medTHC),
-			other_info: E.drg.value === 'andre',
+			gas_pos: isGas,
+			gas_amt_low: isGas && gasAmount === '3000',
+			gas_amt_med: isGas && gasAmount === '5000',
+			gas_amt_high: isGas && gasAmount === '50000',
+			lic: isGas || (isTHC && medTHC),
 			ant_crs: !(isTHC && lowTHC),
 			lic_tst: !(isTHC && lowTHC),
 			vic_fnd: !(isTHC && lowTHC),
 			ant_dsc: !(isTHC && lowTHC),
 			lic_tst_dsc: !(isTHC && lowTHC),
 			lic_clp_dsc: isTHC && lowTHC,
-			drv_ban_dsc: (isTHC && medTHC) && !hasLicenseOver3Years,
-			cnd_dsq_dsc: (isTHC && medTHC) && hasLicenseOver3Years,
-			unc_dsq_3ys: (isTHC && highTHC) || !isTHC,
+			drv_ban_dsc: (isTHC && medTHC || isGas) && !hasLicenseOver3Years,
+			cnd_dsq_dsc: (isTHC && medTHC || isGas) && hasLicenseOver3Years,
+			unc_dsq_3ys: (isTHC && highTHC) || (!isTHC && !isGas),
 		};
 
 		for (const key in visibilityMap) {
@@ -106,8 +117,7 @@
 			triggerTotalAnimation();
 		}
 		previousTotalFormatted = totalFormatted;
-		E.tot.value = totalFormatted;
-		E.tot_fin.value = FC(total);
+		E.tot.value = E.tot_fin.value = totalFormatted;
 		if (!init) pushDataLayerEvent();
 	}
 
@@ -153,14 +163,12 @@
 	if (videoElm && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		videoElm.play().catch(() => {});
 	}
-	if (videoElm) {
-		videoElm.addEventListener('ended', () => {
-			setTimeout(() => {
-				videoElm.currentTime = 0;
-				videoElm.play().catch(() => {});
-			}, 4000);
-		});
-	}
+	videoElm.addEventListener('ended', () => {
+		setTimeout(() => {
+			videoElm.currentTime = 0;
+			videoElm.play().catch(() => {});
+		}, 4000); // 4 seconds delay
+	});
 
 	// Initial calculation on page load
 	calculate(true);

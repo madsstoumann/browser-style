@@ -238,10 +238,16 @@ body {
 			}
 
 			h2 {
-				display: block;
+				align-items: baseline;
+				column-gap: .5rem;
+				display: flex;
 				font-size: var(--text-xl);
 				font-weight: var(--weight-semibold);
 				margin: 0;
+				small {
+					font-size: var(--text-sm);
+					font-weight: var(--weight-medium);
+				}
 			}
 
 			output[name="tot_fin"] {
@@ -253,16 +259,20 @@ body {
 				animation: tot-fin-pop 420ms ease;
 			}
 
-
 			header {
 				display: grid;
 				column-gap: var(--unit-4);
-				grid-template-columns: 1fr 1fr;
+				grid-template-columns: 1fr; /* changed from 1fr 1fr */
 				row-gap: var(--unit-3-5);
 				output:not([hidden]) {
 					display: block;
 					font-weight: var(--weight-semibold);
 				}
+			}
+
+			summary {
+				cursor: pointer;
+				user-select: none;
 			}
 
 			&:has(:checked) .result-table {
@@ -298,13 +308,14 @@ body {
 			}
 		}
 
-		.result-toggle {
+		.button-link {
 			background: var(--gray-100);
 			border-radius: 3px;
 			color: var(--gray-0);
 			grid-template-columns: 1fr;
 			justify-self: start;
 			padding: var(--unit-1-5) var(--unit-4);
+			text-decoration: none;
 			text-wrap: nowrap;
 			transition: box-shadow 180ms cubic-bezier(.4,0,.2,1);
 			&:has(:focus-visible) {
@@ -360,6 +371,7 @@ body {
 			border-radius: var(--unit-6);
 			margin-inline: auto;
 			padding: var(--unit-1);
+			white-space: nowrap;
 			width: fit-content;
 			label {
 				justify-content: center;
