@@ -1,0 +1,225 @@
+{
+	"icon": "icon-text",
+	"id": "ob-text",
+	"name": "Text",
+	"values": [
+		{
+			"name": "background",
+			"open": false,
+			"presets": "generic-background-color",
+			"prop": "--ob-T-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "font",
+			"type": "subgroup",
+			"values": [
+				{
+					"editor": "editor-font",
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-T-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-T-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 1
+				},
+				{
+					"name": "font-style",
+					"open": false,
+					"prop": "--ob-T-fs",
+					"raw": false,
+					"type": "select",
+					"values": [
+						{ "value" : "normal" },
+						{ "value": "italic" }
+					]
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-T-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 400
+				},
+				{
+					"max": 0,
+					"min": -10,
+					"name": "font-variation: slnt",
+					"open": false,
+					"prop": "--ob-T-fsl",
+					"raw": false,
+					"step": 0.01,
+					"suffix": "", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 0.5,
+					"min": -0.5,
+					"name": "letter-spacing",
+					"open": false,
+					"prop": "--ob-T-lts",
+					"raw": false,
+					"step": 0.001,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 4,
+					"min": 0.125,
+					"name": "line-height",
+					"open": false,
+					"prop": "--ob-T-lh",
+					"raw": false,
+					"step": 0.01,
+					"suffix": "", 
+					"type": "range",
+					"value": 1.5
+				}
+			]
+		},
+		{
+			"max": 20,
+			"min": 0,
+			"name": "line-clamp",
+			"open": false,
+			"prop": "--ob-T-lc",
+			"raw": true,
+			"step": 1,
+			"suffix": "", 
+			"type": "range",
+			"value": 5
+		},
+		{
+			"name": "margin",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-block-end",
+					"open": false,
+					"prop": "--ob-T-mbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 1
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-block-start",
+					"open": false,
+					"prop": "--ob-T-mbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-inline-end",
+					"open": false,
+					"prop": "--ob-T-mie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-inline-start",
+					"open": false,
+					"prop": "--ob-T-mis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-T-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-T-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-T-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-T-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		}
+	]
+}

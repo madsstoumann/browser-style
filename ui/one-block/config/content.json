@@ -1,0 +1,269 @@
+{
+	"icon": "icon-content",
+	"id": "ob-content",
+	"name": "Content",
+	"values": [
+		{
+			"name": "background",
+			"open": false,
+			"presets": "generic-background-color",
+			"prop": "--ob-E-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "border-radius",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-start-start-radius",
+					"open": true,
+					"prop": "--ob-E-bdtlrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-start-end-radius",
+					"open": true,
+					"prop": "--ob-E-bdtrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-end-end-radius",
+					"open": true,
+					"prop": "--ob-E-bdbrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-end-start-radius",
+					"open": true,
+					"prop": "--ob-E-bdblrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "color",
+			"open": false,
+			"presets": "generic-color",
+			"prop": "--ob-E-c",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "display",
+			"open": true,
+			"presets": "display",
+			"prop": "--ob-E-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"max": 100,
+			"min": 0,
+			"name": "block-size",
+			"open": false,
+			"prop": "--ob-E-h",
+			"raw": false,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 0
+		},
+		{
+			"max": 100,
+			"min": 0,
+			"name": "inline-size",
+			"open": false,
+			"prop": "--ob-E-w",
+			"raw": false,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 100
+		},
+		{
+			"max": 100,
+			"min": 10,
+			"name": "opacity",
+			"open": false,
+			"prop": "--ob-E-op",
+			"raw": true,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 100
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-E-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-E-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-E-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-E-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				}
+			]
+		},
+		{
+			"name": "position",
+			"open": false,
+			"prop": "--ob-E-pos",
+			"raw": false,
+			"type": "select",
+			"values": [
+				{ "value" : "static" },
+				{ "value": "absolute" },
+				{ "value": "relative" }
+			]
+		},
+		{
+			"name": "text-align",
+			"open": false,
+			"prop": "--ob-E-tal",
+			"raw": false,
+			"type": "select",
+			"values": [
+				{ "value" : "center" },
+				{ "value": "end" },
+				{ "value": "start" }
+			]
+		},
+		{
+			"name": "transform",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 359,
+					"min": 0,
+					"name": "rotate",
+					"open": false,
+					"prop": "--ob-E-r",
+					"raw": true,
+					"step": 1,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 359,
+					"min": 0,
+					"name": "skew-y",
+					"open": false,
+					"prop": "--ob-E-sy",
+					"raw": true,
+					"step": 1,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 100,
+					"min": -100,
+					"name": "translate-x",
+					"open": false,
+					"prop": "--ob-E-tx",
+					"raw": true,
+					"step": 1,
+					"suffix": "%", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 100,
+					"min": -100,
+					"name": "translate-y",
+					"open": false,
+					"prop": "--ob-E-ty",
+					"raw": true,
+					"step": 1,
+					"suffix": "%", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "writing-mode",
+			"open": false,
+			"prop": "--ob-E-wm",
+			"raw": false,
+			"type": "select",
+			"values": [
+				{ "value" : "horizontal-tb" },
+				{ "value" : "vertical-rl" },
+				{ "value" : "vertical-lr" }
+			]
+		}
+	]
+}

@@ -1,0 +1,391 @@
+{
+	"icon": "icon-media",
+	"id": "ob-media",
+	"name": "Media",
+	"values": [	
+		{
+			"name": "animation",
+			"type": "subgroup",
+			"values": [
+				{
+					"animation": true,
+					"name": "animation-name",
+					"open": true,
+					"prop": "--ob-B-animn",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "value": "kenburns-bottom" },
+						{ "value": "kenburns-bottom-left" },
+						{ "value": "kenburns-bottom-right" },
+						{ "value": "kenburns-left" },
+						{ "value": "kenburns-right" },
+						{ "value": "kenburns-top" },
+						{ "value": "kenburns-top-left" },
+						{ "value": "kenburns-top-right" },
+						{ "value": "none" }
+					]
+				},
+				{
+					"name": "animation-direction",
+					"open": false,
+					"prop": "--ob-B-animdir",
+					"raw": true,
+					"suffix": "", 
+					"type": "select",
+					"values": [
+						{ "value": "alternate" },
+						{ "value": "alternate-reverse" },
+						{ "value": "reverse" }
+					]
+				},
+				{
+					"max": 15000,
+					"min": 10,
+					"name": "animation-duration",
+					"open": true,
+					"prop": "--ob-B-animdur",
+					"raw": true,
+					"step": 5,
+					"suffix": "ms", 
+					"type": "range",
+					"value": 300
+				},
+				{
+					"max": 50,
+					"min": 1,
+					"name": "animation-iteration-count",
+					"open": false,
+					"prop": "--ob-B-animic",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 1
+				},
+				{
+					"name": "animation-timing-function",
+					"open": false,
+					"prop": "--ob-B-animtf",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{	"value": "ease" },
+						{	"value": "ease-in" },
+						{	"value": "ease-out" },
+						{	"value": "ease-in-out" },
+						{	"value": "linear" }
+					]
+				}
+			]
+		},
+		{
+			"max": 200,
+			"min": 0,
+			"name": "aspect-ratio h/w",
+			"open": true,
+			"prop": "--ob-W-aspr",
+			"raw": true,
+			"step": 0.125,
+			"suffix": "", 
+			"type": "range",
+			"value": 56.25
+		},
+		{
+			"name": "background",
+			"open": false,
+			"presets": "media-background",
+			"prop": "--ob-W-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "border-radius",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 50,
+					"min": 0,
+					"name": "border-start-start-radius",
+					"open": true,
+					"prop": "--ob-W-bdtlrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 50,
+					"min": 0,
+					"name": "border-start-end-radius",
+					"open": true,
+					"prop": "--ob-W-bdtrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 50,
+					"min": 0,
+					"name": "border-end-end-radius",
+					"open": true,
+					"prop": "--ob-W-bdbrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 50,
+					"min": 0,
+					"name": "border-end-start-radius",
+					"open": true,
+					"prop": "--ob-W-bdblrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "clip-path",
+			"open": false,
+			"presets": "generic-clippath",
+			"prop": "--ob-B-clp",
+			"raw": true,
+			"type": "shape"
+		},
+		{
+			"name": "display",
+			"open": true,
+			"presets": "display",
+			"prop": "--ob-W-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"name": "filter",
+			"open": false,
+			"presets": "generic-filter",
+			"prop": "--ob-B-flt",
+			"raw": true,
+			"type": "select"
+		},
+		{
+			"name": "halftone",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 359,
+					"min": 0,
+					"name": "dots: angle",
+					"open": false,
+					"prop": "--ob-W-hfta",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 125
+				},
+				{
+					"max": 5,
+					"min": 0,
+					"name": "dots: size",
+					"open": false,
+					"prop": "--ob-W-hfts",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 1,
+					"name": "filter: contrast",
+					"open": false,
+					"prop": "--ob-W-fltc",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 1
+				}
+			]
+		},
+		{
+			"name": "mix-blend-mode",
+			"open": false,
+			"prop": "--ob-B-mbm",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "value" : "normal" },
+				{ "value" : "multiply" },
+				{ "value" : "screen" },
+				{ "value" : "overlay" },
+				{ "value" : "darken" },
+				{ "value" : "lighten" },
+				{ "value" : "color-dodge" },
+				{ "value" : "color-burn" },
+				{ "value" : "hard-light" },
+				{ "value" : "soft-light" },
+				{ "value" : "difference" },
+				{ "value" : "exclusion" },
+				{ "value" : "hue" },
+				{ "value" : "saturation" },
+				{ "value" : "color" },
+				{ "value" : "luminosity" }
+			]
+		},
+		{
+			"name": "object-fit",
+			"open": false,
+			"prop": "--ob-B-obf",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "value" : "contain" },
+				{ "value" : "cover", "selected": true },
+				{ "value" : "none" }
+			]
+		},
+		{
+			"name": "object-position",
+			"open": false,
+			"prop": "--ob-B-obp",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "name": "top left", "value" : "0% 0%" },
+				{ "name": "top center", "value" : "50% 0%" },
+				{ "name": "top right", "value" : "100% 5%" },
+				{ "name": "center left", "value" : "0% 50%" },
+				{ "name": "center center", "value" : "50% 50%", "selected": true },
+				{ "name": "center right", "value" : "100% 50%" },
+				{ "name": "bottom left", "value" : "0% 100%" },
+				{ "name": "bottom center", "value" : "50% 100%" },
+				{ "name": "bottom right", "value" : "100% 100%" }
+			]
+		},
+		{
+			"name": "order",
+			"open": false,
+			"prop": "--ob-W-ord",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "name": "before", "value": 0 },
+				{ "name": "after", "value": 1 }
+			]
+		},
+		{
+			"name": "overflow",
+			"open": false,
+			"prop": "--ob-W-ov",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "value": "clip" },
+				{ "value": "hidden" },
+				{ "value": "scroll" }
+			]
+		},
+		{
+			"name": "play overlay",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "cta background",
+					"open": false,
+					"presets": "generic-background-color",
+					"prop": "--ob-YC-bg",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "cta border-color",
+					"open": false,
+					"presets": "generic-background-color",
+					"prop": "--ob-YC-bdc",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"max": 50,
+					"min": 0,
+					"name": "cta border-radius",
+					"open": false,
+					"prop": "--ob-YC-bdrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "%", 
+					"type": "range",
+					"value": 50
+				},
+				{
+					"max": 1,
+					"min": 0,
+					"name": "cta border-width",
+					"open": false,
+					"prop": "--ob-YC-bdw",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.125
+				},
+				{
+					"max": 10,
+					"min": 3,
+					"name": "cta size",
+					"open": false,
+					"prop": "--ob-YC-sz",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 5
+				},
+				{
+					"name": "icon color",
+					"open": false,
+					"presets": "generic-background-color",
+					"prop": "--ob-YI-bg",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"max": 6,
+					"min": 1,
+					"name": "icon size",
+					"open": false,
+					"prop": "--ob-YI-sz",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				},
+				{
+					"name": "overlay background",
+					"open": false,
+					"presets": "overlay-background",
+					"prop": "--ob-Y-bg",
+					"raw": true,
+					"type": "color"
+				}
+			]
+		}
+	]
+}

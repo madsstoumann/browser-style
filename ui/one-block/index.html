@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <title>OneBlock 2.0</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<link href="assets/css/ob-editor.css" rel="stylesheet">
+	<link href="assets/css/ob-icons.css" rel="stylesheet">
+	<link href="assets/css/ob.css" rel="stylesheet">
+	<link href="assets/css/obmod.css" rel="stylesheet">
+</head>
+<body>
+	<form id="app" class="app"></form>
+	<form id="devices" hidden></form>
+
+	<script type="module">
+		import { appCreate } from './assets/js/app-create.mjs';
+		new appCreate({
+			app,
+			config: [
+				'config/layout.json',
+				'config/media.json',
+				'config/caption.json',
+				'config/image.json',
+				'config/splash.json',
+				'config/content.json',
+				'config/tagline.json',
+				'config/heading.json',
+				'config/text.json',
+				'config/offer.json',
+				'config/share.json',
+				'config/cta.json',
+				'config/link.json'
+			],
+			devices,
+			icons: 'assets/img/app-icons.svg',
+			labels: {
+				background: 'Background',
+				code: 'Code',
+				codeCSS: 'CSS Code',
+				codePreset: 'Preset Code',
+				colormode: 'Dark',
+				container: 'Container',
+				edit: 'Edit',
+				findPreset: 'Find Preset',
+				gridSize: 'Grid Size',
+				hide: 'Hide',
+				hideGrid: 'Hide Grid',
+				newPreset: 'new-preset',
+				opacity: 'Opacity',
+				reset: 'Reset',
+				rightToLeft: 'Right To Left',
+				select: 'Select',
+				settings: 'Settings',
+				zoom: 'Zoom'
+			},
+			model: 'data/model.json',
+			presets: 'data/presets.json',
+			props: 'data/properties.json'
+		});
+
+		// app.addEventListener('appPresetChange', (event) => console.log(event.detail));
+	</script>
+</body>
+</html>	

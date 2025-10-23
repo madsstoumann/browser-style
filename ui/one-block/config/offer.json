@@ -1,0 +1,305 @@
+{
+	"icon": "icon-offer",
+	"id": "ob-offer",
+	"name": "Offer",
+	"values": [
+		{
+			"name": "background",
+			"open": false,
+			"presets": "generic-background-color",
+			"prop": "--ob-P-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "display",
+			"open": true,
+			"presets": "display",
+			"prop": "--ob-P-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"max": 20,
+			"min": 0,
+			"name": "margin-block-end",
+			"open": false,
+			"prop": "--ob-P-mbe",
+			"raw": true,
+			"step": 0.125,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 0
+		},
+		{
+			"name": "offer base price",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "color",
+					"open": true,
+					"presets": "generic-color",
+					"prop": "--ob-P-base-c",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-P-base-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-P-base-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-P-base-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 400
+				},
+				{
+					"name": "text-decoration",
+					"open": false,
+					"prop": "--ob-P-base-td",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "value" : "blink" },
+						{ "value" : "line-through", "selected": true },
+						{ "value" : "underline" }
+					]
+				}
+			]
+		},
+		{
+			"name": "offer price",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "color",
+					"open": true,
+					"presets": "generic-color",
+					"prop": "--ob-P-price-c",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-P-price-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-P-price-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-P-price-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 700
+				}
+			]
+		},
+		{
+			"name": "offer price currency",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "color",
+					"open": true,
+					"presets": "generic-color",
+					"prop": "--ob-P-curr-c",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-P-curr-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-P-curr-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 1
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-P-curr-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 700
+				}
+			]
+		},
+		{
+			"name": "offer text",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "color",
+					"open": true,
+					"presets": "generic-color",
+					"prop": "--ob-P-text-c",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-P-text-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-P-text-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-P-text-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 400
+				}
+			]
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-P-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-P-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-P-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-P-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		}
+	]
+}

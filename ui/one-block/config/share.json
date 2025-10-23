@@ -1,0 +1,81 @@
+{
+	"icon": "icon-share",
+	"id": "ob-share",
+	"name": "Share",
+	"values": [
+		{
+			"name": "display",
+			"open": true,
+			"presets": "display",
+			"prop": "--ob-M-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"name": "icon-color",
+			"open": true,
+			"presets": "generic-background-color",
+			"prop": "--ob-M-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"max": 6,
+			"min": 1,
+			"name": "icon size",
+			"open": false,
+			"prop": "--ob-M-sz",
+			"raw": true,
+			"step": 0.0625,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 2
+		},
+		{
+			"name": "margin",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-block-end",
+					"open": false,
+					"prop": "--ob-M-mbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"max": 5,
+					"min": 0,
+					"name": "item margin-inline-end",
+					"open": true,
+					"prop": "--ob-M-mie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.25
+				}
+			]
+		},
+		{
+			"name": "text-align",
+			"open": false,
+			"prop": "--ob-M-tal",
+			"raw": false,
+			"type": "select",
+			"values": [
+				{ "value" : "center" },
+				{ "value": "end" },
+				{ "value": "start" }
+			]
+		}
+	]
+}

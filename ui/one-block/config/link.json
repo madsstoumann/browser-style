@@ -1,0 +1,131 @@
+{
+	"icon": "icon-link",
+	"id": "ob-link2",
+	"name": "Link",
+	"values": [
+		{
+			"editor": "editor-color",
+			"name": "background-color",
+			"open": false,
+			"presets": "color",
+			"prop": "--ob-K-bg",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"editor": "editor-color",
+			"name": "background-color:hover",
+			"open": false,
+			"presets": "color",
+			"prop": "--ob-K-bg-hover",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"editor": "editor-color",
+			"name": "boxshadow:hover",
+			"open": false,
+			"presets": "color",
+			"prop": "--ob-K-bxsh",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"editor": "editor-color",
+			"name": "border-color",
+			"open": false,
+			"presets": "color",
+			"prop": "--ob-K-bdc",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"editor": "editor-color",
+			"name": "color",
+			"open": false,
+			"prop": "--ob-K-c",
+			"raw": true,
+			"type": "color",
+			"values": [
+				{ "name": "currentColor", "value" : "currentColor" },
+				{ "value": "transparent" },
+				{ "value": "purple" },
+				{ "name": "black", "value" : "#000" },
+				{ "name": "white", "value" : "#FFF" }
+			]
+		},
+		{
+			"editor": "editor-color",
+			"name": "color:hover",
+			"open": false,
+			"prop": "--ob-K-c-hov",
+			"raw": true,
+			"type": "color",
+			"values": [
+				{ "name": "currentColor", "value" : "currentColor" },
+				{ "value": "transparent" },
+				{ "value": "purple" },
+				{ "name": "black", "value" : "#000" },
+				{ "name": "white", "value" : "#FFF" }
+			]
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-K-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.875
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-K-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.875
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-K-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-K-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				}
+			]
+		}
+	]
+}

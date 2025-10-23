@@ -1,0 +1,126 @@
+{
+	"icon": "icon-layout",
+	"id": "ob-layout",
+	"name": "Layout",
+	"values": [
+		{
+			"name": "background",
+			"open": false,
+			"presets": "generic-background-color",
+			"prop": "--ob-O-bg",
+			"raw": true,
+			"type": "color"
+		},
+		{
+			"name": "border-radius",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-start-start-radius",
+					"open": true,
+					"prop": "--ob-O-bdtlrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-start-end-radius",
+					"open": true,
+					"prop": "--ob-O-bdtrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-end-end-radius",
+					"open": true,
+					"prop": "--ob-O-bdbrrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 25,
+					"min": 0,
+					"name": "border-end-start-radius",
+					"open": true,
+					"prop": "--ob-O-bdblrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "box-shadow",
+			"open": false,
+			"presets": "generic-box-shadow",
+			"prop": "--ob-O-bxsh",
+			"raw": true,
+			"type": "select",
+			"values": []
+		},
+		{
+			"name": "font-family",
+			"open": false,
+			"prop": "--ob-O-ff",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "name": "Inter", "value": "Inter, sans-serif", "selected": true },
+				{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+				{ "value": "monospace" },
+				{ "name": "serif", "value": "Georgia, serif" }
+			]
+		},
+		{
+			"max": 10,
+			"min": 0,
+			"name": "global gap",
+			"open": false,
+			"prop": "--ob-gap",
+			"raw": true,
+			"step": 0.0625,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 0.75
+		},
+		{
+			"name": "grid-template-columns",
+			"open": true,
+			"prop": "--ob-O-gtc",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "one-column", "value": "1fr", "checked": true },
+				{ "icon": "two-columns", "value": "var(--ob-O-clw, 50%) calc(100% - var(--ob-O-clw, 50%))" }
+			]
+		},
+		{
+			"max": 100,
+			"min": 0,
+			"name": "grid-template-columns:width",
+			"open": true,
+			"prop": "--ob-O-clw",
+			"raw": true,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 50
+		}
+	]
+}

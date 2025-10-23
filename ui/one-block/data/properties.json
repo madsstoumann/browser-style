@@ -1,0 +1,434 @@
+{
+	"generic-background-color": [
+		{
+			"key": "bgc-transparent",
+			"name": "transparent",
+			"value": "transparent"
+		},
+		{
+			"key": "bgc-lightmode",
+			"value": "hsl(200, 0%, 98%)"
+		},
+		{
+			"key": "bgc-darkmode",
+			"value": "hsl(200, 0%, 13%)"
+		},
+		{
+			"key": "bgc-primary",
+			"value": "hsl(200, 50%, 50%)"
+		},
+		{
+			"key": "bgc-secondary",
+			"value": "hsl(200, 60%, 30%)"
+		}
+	],
+
+	"generic-box-shadow": [
+		{
+			"key": "bxsh-x-small",
+			"value": "0 0 0 1px rgba(0, 0, 0, 0.05)"
+		},
+		{
+			"key": "bxsh-small",
+			"value": "0px 1px 2px 0 rgba(0, 0, 0, 0.05)"
+		},
+		{
+			"key": "bxsh-base",
+			"value": "0px 1px 3px 0 rgba(0, 0, 0, 0.1), 0px 1px 2px 0 rgba(0, 0, 0, 0.06)"
+		},
+		{
+			"key": "bxsh-medium",
+			"value": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+		},
+		{
+			"key": "bxsh-large",
+			"value": "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
+		},
+		{
+			"key": "bxsh-x-large",
+			"value": "0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 10px 10px -5px rgba(0, 0, 0, 0.04)"
+		},
+		{
+			"key": "bxsh-2x-large",
+			"value": "0px 25px 50px -12px rgba(0, 0, 0, 0.25)"
+		},
+		{
+			"key": "bxsh-below",
+			"value": "0 10px 5px -5px rgba(0, 0, 0, 0.15)"
+		},
+		{
+			"key": "bxsh-inner",
+			"value": "inset 0 0 4px 2px rgba(0, 0, 0, 0.06)"
+		},
+		{
+			"key": "bxsh-stack",
+			"value": "8px 8px 0px rgba(110, 110, 110, 1), 16px 16px 0px rgba(145, 145, 145, 1), 24px 24px 0px rgba(205, 205, 205, 1)"
+		},
+		{
+			"key": "bxsh-blue-border",
+			"value": "0px 0px 0px 10px rgba(0, 213, 255, 1), 0px 0px 0px 20px rgba(0, 179, 214, 1), inset 0px 0px 0px 10px rgba(153, 238, 255, 1), inset 0px 0px 0px 20px rgba(204, 246, 255, 1)"
+		}
+	],
+
+	"generic-clippath": [
+		{
+			"key": "clp-point-down",
+			"value": "polygon(100% 0%, 100% 85%, 50% 100%, 0% 85%, 0% 0%)"
+		},
+		{
+			"key": "clp-point-up",
+			"value": "polygon(100% 0%, 100% 100%, 50% 85%, 0% 100%, 0% 0%)"
+		},
+		{
+			"key": "clp-cut-right",
+			"value": "polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%)"
+		},
+		{
+			"key": "clp-cut-left",
+			"value": "polygon(0% 0%, 100% 0%, 100% 100%, 0% 85%)"
+		},
+		{
+			"key": "clp-skew-right",
+			"value": "polygon(0% 15%, 100% 0%, 100% 85%, 0% 100%)"
+		},
+		{
+			"key": "clp-skew-left",
+			"value": "polygon(0% 0%, 100% 15%, 100% 100%, 0% 85%)"
+		},
+		{
+			"key": "clp-curve-down",
+			"value": "ellipse(80% 50% at 50% 39%)"
+		},
+		{
+			"key": "clp-curve-right",
+			"value": "ellipse(85% 80% at 25% 20%)"
+		},
+		{
+			"key": "clp-triangle",
+			"value": "polygon(50% 0%, 0% 100%, 100% 100%)"
+		},
+		{
+			"key": "clp-trapezoid",
+			"value": "polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%)"
+		},
+		{
+			"key": "clp-parallel",
+			"value": "polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)"
+		},
+		{
+			"key": "clp-rhombus",
+			"value": "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)"
+		},
+		{
+			"key": "clp-inset",
+			"value": "polygon(10% 10%,90% 10%,90% 90%,10% 90%)"
+		},
+		{
+			"key": "clp-pentagon",
+			"value": "polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%)"
+		},
+		{
+			"key": "clp-hexagon",
+			"value": "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)"
+		},
+		{
+			"key": "clp-left-arrow",
+			"value": "polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%)"
+		},
+		{
+			"key": "clp-right-arrow",
+			"value": "polygon(0% 20%, 60% 20%, 60% 0%, 100% 50%, 60% 100%, 60% 80%, 0% 80%)"
+		},
+		{
+			"key": "clp-left-point",
+			"value": "polygon(25% 0%, 100% 1%, 100% 100%, 25% 100%, 0% 50%)"
+		},
+		{
+			"key": "clp-right-point",
+			"value": "polygon(0% 0%, 75% 0%, 100% 50%, 75% 100%, 0% 100%)"
+		},
+		{
+			"key": "clp-left-chev",
+			"value": "polygon(100% 0%, 75% 50%, 100% 100%, 25% 100%, 0% 50%, 25% 0%)"
+		},
+		{
+			"key": "clp-right-chev",
+			"value": "polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%)"
+		},
+		{
+			"key": "clp-star",
+			"value": "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)"
+		},
+		{
+			"key": "clp-plus",
+			"value": "polygon(35% 0%,65% 0%,65% 35%,100% 35%,100% 60%,65% 60%,65% 100%,35% 100%,35% 60%,0% 60%,0% 35%,35% 35%)"
+		},
+		{
+			"key": "clp-minus",
+			"value": "polygon(100% 35%,100% 60%,0% 60%,0% 35%)"
+		},
+		{
+			"key": "clp-message",
+			"value": "polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%)"
+		},
+		{
+			"key": "clp-close",
+			"value": "polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%)"
+		},
+		{
+			"key": "clp-frame",
+			"value": "polygon(0% 0%, 0% 100%, 25% 100%, 25% 25%, 75% 25%, 75% 75%, 25% 75%, 25% 100%, 100% 100%, 100% 0%)"
+		},
+		{
+			"key": "clp-lightning",
+			"value": "polygon(25% 0%,70% 0%,40% 35%,95% 35%,20% 100%,40% 55%,0% 55%)"
+		},
+		{
+			"key": "clp-blinds",
+			"value": "polygon(0% 5%,100% 5%,100% 25%,0% 25%,0% 40%,100% 40%,100% 60%,0% 60%,0% 75%,100% 75%,100% 95%,0% 95%)"
+		},
+		{
+			"key": "clp-house",
+			"value": "polygon(50% 0%,70% 15%,70% 2%,90% 2%,90% 30%,100% 40%,100% 100%,65% 100%,65% 65%,35% 65%,35% 100%,0% 100%,0% 40%)"
+		},
+		{
+			"key": "clp-circle",
+			"value": "circle(50% at 50% 50%)"
+		},
+		{
+			"key": "clp-circle-45",
+			"value": "circle(45% at 50% 50%)"
+		},
+		{
+			"key": "clp-ellipse-vertical",
+			"value": "ellipse(25% 45% at 50% 50%)"
+		},
+		{
+			"key": "clp-ellipse-horizontal",
+			"value": "ellipse(50% 25% at 50% 50%)"
+		}
+	],
+
+	"generic-color": [
+		{
+			"key": "c-transparent",
+			"name": "transparent",
+			"value": "transparent"
+		},
+		{
+			"key": "c-light",
+			"value": "hsl(200, 5%, 98%)"
+		},
+		{
+			"key": "c-dark",
+			"value": "hsl(200, 5%, 2%)"
+		},
+		{
+			"key": "c-lightgrey",
+			"value": "hsl(200, 5%, 65%)"
+		},
+		{
+			"key": "c-darkgrey",
+			"value": "hsl(200, 5%, 35%)"
+		}
+	],
+
+	"generic-filter": [
+		{
+			"key": "flt-wavy",
+			"value": "url('/assets/img/filters.svg#dancing')"
+		},
+		{
+			"key": "flt-drops",
+			"value": "url('/assets/img/filters.svg#drops')"
+		},
+		{
+			"key": "flt-posterize",
+			"value": "url('/assets/img/filters.svg#posterize')"
+		},
+		{
+			"key": "flt-red-sunset",
+			"value": "url('/assets/img/filters.svg#red-sunset')"
+		},
+		{
+			"key": "flt-gray",
+			"value": "grayscale(1)"
+		},
+		{
+			"key": "flt-gray-sepia",
+			"value": "sepia(0.5) grayscale(0.5)"
+		},
+		{
+			"key": "flt-watercolor",
+			"value": "url('/assets/img/filters.svg#squiggly-1') brightness(1.3) invert(0.17) saturate(2.6) sepia(0.25)"
+		},
+		{
+			"key": "flt-faded-photo",
+			"value": "blur(0.2px) brightness(1.1) hue-rotate(5deg) opacity(0.9) saturate(1.3) sepia(0.4)"
+		},
+		{
+			"key": "flt-old-horror",
+			"value": "url('/assets/img/filters.svg#grain') grayscale(1) sepia(0.5) brightness(1.3) invert(0.8)"
+		},
+		{
+			"key": "flt-old-grainy",
+			"value": "url('/assets/img/filters.svg#grain') grayscale(0.6) sepia(0.5) brightness(1.5)"
+		},
+		{
+			"key": "flt-fade-out",
+			"value": "brightness(0.8) hue-rotate(350deg) saturate(3) blur(8px) contrast(0.6)"
+		},
+		{
+			"key": "flt-mist",
+			"value": "url('/assets/img/filters.svg#fluffy') brightness(0.8) saturate(0.8)"
+		}
+	],
+
+	"generic-icon": [
+		{
+			"key": "ico-arr-left",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M12.586 27.414l-10-10c-0.781-0.781-0.781-2.047 0-2.828l10-10c0.781-0.781 2.047-0.781 2.828 0s0.781 2.047 0 2.828l-6.586 6.586h19.172c1.105 0 2 0.895 2 2s-0.895 2-2 2h-19.172l6.586 6.586c0.39 0.39 0.586 0.902 0.586 1.414s-0.195 1.024-0.586 1.414c-0.781 0.781-2.047 0.781-2.828 0z\"></path></svg>');"
+		},
+		{
+			"key": "ico-arr-right",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z\"></path></svg>');"
+		},
+		{
+			"key": "ico-arr-up",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M7.414 27.414l16.586-16.586v7.172c0 1.105 0.895 2 2 2s2-0.895 2-2v-12c0-0.809-0.487-1.538-1.235-1.848-0.248-0.103-0.508-0.151-0.765-0.151v-0.001h-12c-1.105 0-2 0.895-2 2s0.895 2 2 2h7.172l-16.586 16.586c-0.391 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z\"></path></svg>');"
+		},
+		{
+			"key": "ico-cart",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M12 29c0 1.657-1.343 3-3 3s-3-1.343-3-3c0-1.657 1.343-3 3-3s3 1.343 3 3z\"></path><path d=\"M32 29c0 1.657-1.343 3-3 3s-3-1.343-3-3c0-1.657 1.343-3 3-3s3 1.343 3 3z\"></path><path d=\"M32 16v-12h-24c0-1.105-0.895-2-2-2h-6v2h4l1.502 12.877c-0.915 0.733-1.502 1.859-1.502 3.123 0 2.209 1.791 4 4 4h24v-2h-24c-1.105 0-2-0.895-2-2 0-0.007 0-0.014 0-0.020l26-3.98z\"></path></svg>');"
+		},
+		{
+			"key": "ico-chev-left",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M21 32l2-2-14-14 14-14-2-2-16 16 16 16z\"></path></svg>');"
+		},
+		{
+			"key": "ico-chev-right",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M11 0l-2 2 14 14-14 14 2 2 16-16-16-16z\"></path></svg>');"
+		},
+		{
+			"key": "ico-heart",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12 21.328l-1.453-1.313q-2.484-2.25-3.609-3.328t-2.508-2.672-1.898-2.883-0.516-2.648q0-2.297 1.57-3.891t3.914-1.594q2.719 0 4.5 2.109 1.781-2.109 4.5-2.109 2.344 0 3.914 1.594t1.57 3.891q0 1.828-1.219 3.797t-2.648 3.422-4.664 4.359z\"/></svg>');"
+		},
+		{
+			"key": "ico-play",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13zM12 9l12 7-12 7z\"/></svg>');"
+		},
+		{
+			"key": "ico-share",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 32 32\"><path d=\"M27 22c-1.411 0-2.685 0.586-3.594 1.526l-13.469-6.734c0.041-0.258 0.063-0.522 0.063-0.791s-0.022-0.534-0.063-0.791l13.469-6.734c0.909 0.94 2.183 1.526 3.594 1.526 2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5c0 0.269 0.022 0.534 0.063 0.791l-13.469 6.734c-0.909-0.94-2.183-1.526-3.594-1.526-2.761 0-5 2.239-5 5s2.239 5 5 5c1.411 0 2.685-0.586 3.594-1.526l13.469 6.734c-0.041 0.258-0.063 0.522-0.063 0.791 0 2.761 2.239 5 5 5s5-2.239 5-5c0-2.761-2.239-5-5-5z\"/></svg>');"
+		},
+		{
+			"key": "ico-star",
+			"value": "url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z\"/></svg>');"
+		}
+	],
+
+	"headline-fontsize": [
+		{
+			"key": "fz-xl-headline",
+			"name": "XL",
+			"value": "4rem"
+		},
+		{
+			"key": "fz-l-headline",
+			"name": "L",
+			"value": "2.5rem"
+		},
+		{
+			"key": "fz-m-headline",
+			"name": "M",
+			"value": "1.75rem"
+		}
+	],
+
+	"layout-clippath": [
+		{
+			"key": "clp-bot-rgt",
+			"value": "polygon(0 0, calc(100% - var(--ob-cut, 24px)) 0, 100% var(--ob-cut, 24px), 100% 100%, var(--ob-cut, 24px) 100%, 0 calc(100% - var(--ob-cut, 24px)))"
+		},
+		{
+			"key": "clp-top-rgt",
+			"value": "polygon(0 0, calc(100% - var(--ob-cut, 24px)) 0, 100% var(--ob-cut, 24px), 100% 100%, 0 100%, 0 0)"
+		}
+	],
+
+	"link-background-color": [
+		{
+			"key": "bgc-link-dark",
+			"value": "hsl(201, 79%, 26%)"
+		}
+	],
+
+	"media-background": [
+		{
+			"key": "bg-border-g2",
+			"value": "linear-gradient(to right, #9c20aa, #fb3570)"
+		},
+		{
+			"key": "bg-blue-grad",
+			"value": "linear-gradient(90deg,rgb(28, 182, 224),rgb(0, 8, 81))"
+		},
+		{
+			"key": "bg-pride",
+			"value": "linear-gradient(45deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%)"
+		},
+		{
+			"key": "bg-hypnotic",
+			"value": "repeating-radial-gradient(rgb(255, 0, 0) 0,#ff0000 10px,rgb(255, 255, 255) 10px,rgb(255, 255, 255) 20px)"
+		},
+		{
+			"key": "bg-lines",
+			"value": "repeating-linear-gradient(65deg,rgba(0, 0, 0, 0.8) 0,rgba(0, 0, 0, 0.8) 2px,rgb(255, 255, 255) 2px,rgb(255, 255, 255) 4px)"
+		},
+		{
+			"key": "bg-trivial-pursuit",
+			"value": "conic-gradient(rgb(215, 103, 176),rgb(215, 103, 176) 16%,rgb(26, 118, 89) 16%,rgb(26, 118, 89) 33%,rgb(122, 85, 64) 33%,rgb(122, 85, 64) 50%,rgb(49, 157, 215) 50%,rgb(49, 157, 215) 66%,rgb(246, 126, 51) 66%,rgb(246, 126, 51) 82%,rgb(246, 194, 51) 82%,rgb(246, 194, 51))"
+		},
+		{
+			"key": "bg-pac-man",
+			"value": "conic-gradient(rgb(255, 213, 0),rgb(255, 213, 0) 12.5%,rgb(0, 0, 0) 12.5%,rgb(0, 0, 0) 32.5%,rgb(255, 213, 0) 32.5%)"
+		}
+	],
+
+	"overlay-background": [
+		{
+			"key": "bg-trans-grad",
+			"value": "linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(100, 100, 100, 0.25))"
+		}
+	],
+
+	"splash-background": [
+		{
+			"key": "bg-border-g2",
+			"value": "linear-gradient(to right, #9c20aa, #fb3570)"
+		},
+		{
+			"key": "bg-blue-grad",
+			"value": "linear-gradient(90deg,rgb(28, 182, 224),rgb(0, 8, 81))"
+		},
+		{
+			"key": "bg-pride",
+			"value": "linear-gradient(45deg, #FE0000 16.66%, #FD8C00 16.66%, 33.32%, #FFE500 33.32%, 49.98%, #119F0B 49.98%, 66.64%, #0644B3 66.64%, 83.3%, #C22EDC 83.3%)"
+		},
+		{
+			"key": "bg-hypnotic",
+			"value": "repeating-radial-gradient(rgb(255, 0, 0) 0,#ff0000 10px,rgb(255, 255, 255) 10px,rgb(255, 255, 255) 20px)"
+		},
+		{
+			"key": "bg-lines",
+			"value": "repeating-linear-gradient(65deg,rgba(0, 0, 0, 0.8) 0,rgba(0, 0, 0, 0.8) 2px,rgb(255, 255, 255) 2px,rgb(255, 255, 255) 4px)"
+		},
+		{
+			"key": "bg-trivial-pursuit",
+			"value": "conic-gradient(rgb(215, 103, 176),rgb(215, 103, 176) 16%,rgb(26, 118, 89) 16%,rgb(26, 118, 89) 33%,rgb(122, 85, 64) 33%,rgb(122, 85, 64) 50%,rgb(49, 157, 215) 50%,rgb(49, 157, 215) 66%,rgb(246, 126, 51) 66%,rgb(246, 126, 51) 82%,rgb(246, 194, 51) 82%,rgb(246, 194, 51))"
+		},
+		{
+			"key": "bg-pac-man",
+			"value": "conic-gradient(rgb(255, 213, 0),rgb(255, 213, 0) 12.5%,rgb(0, 0, 0) 12.5%,rgb(0, 0, 0) 32.5%,rgb(255, 213, 0) 32.5%)"
+		}
+	]
+}

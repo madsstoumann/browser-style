@@ -1,0 +1,45 @@
+{
+	"bgImage": "demo/img/family.jpg",
+	"caption": "Best value",
+	"description": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut odio sit eum, laborum repudiandae temporibus perferendis id! ",
+	"headerTag": "h2",
+	"headline": "For the whole family",
+	"image": "demo/img/redphone.png",
+	"linkText": "Buy now",
+	"linkTextSecondary": "Read more",
+	"meta": [
+		{
+			"icon": "demo/svg/icons.svg#icon-facebook",
+			"link": "https://www.facebook.com/sharer/sharer.php",
+			"text": "Share on Facebook"
+		},
+		{
+			"icon": "demo/svg/icons.svg#icon-twitter",
+			"link": "https://www.facebook.com/sharer/sharer.php",
+			"text": "Share on Twitter"
+		},
+		{
+			"icon": "demo/svg/icons.svg#icon-comment",
+			"link": "https://www.facebook.com/sharer/sharer.php",
+			"text": "Share on Comment"
+		}
+	],
+	"offerBase": 19.95,
+	"offerCurrency": "$/mth",
+	"offerPrice": 17.95,
+	"offerText": "Minimum price 6 mth 899.95$",
+	"shortText": "Including 6GB of data",
+	"splash": ["Great", "discount", "99.95$"],
+	"tagline": "One Subscription",
+	"url": "#iphonexs",
+	"urlSecondary": "#second",
+	"video": {
+		"autoPlay": true,
+		"controls": false,
+		"loop": true,
+		"muted": true,
+		"overlay": false,
+		"src": "demo/video/video.mp4",
+		"type": 0
+	}
+}

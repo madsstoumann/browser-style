@@ -1,0 +1,369 @@
+{
+	"icon": "icon-cta",
+	"id": "ob-cta",
+	"name": "Cta",
+	"values": [
+		{
+			"name": "First",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "background-color",
+					"open": false,
+					"presets": "link-background-color",
+					"prop": "--ob-L-bg",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "border-color",
+					"open": false,
+					"presets": "generic-color",
+					"prop": "--ob-L-bdc",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"name": "color",
+					"open": false,
+					"presets": "generic-color",
+					"prop": "--ob-L-c",
+					"raw": true,
+					"type": "color"
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-L-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 400
+				},
+				{
+					"name": "hover",
+					"type": "subgroup",
+					"values": [
+						{
+							"name": "background-color:hover",
+							"open": false,
+							"presets": "background",
+							"prop": "--ob-L-bg-hover",
+							"raw": true,
+							"type": "color",
+							"values": []
+						},
+						{
+							"name": "boxshadow:hover",
+							"open": false,
+							"presets": "color",
+							"prop": "--ob-L-bxsh",
+							"raw": true,
+							"type": "color",
+							"values": []
+						},
+						{
+							"name": "color:hover",
+							"open": false,
+							"presets": "color",
+							"prop": "--ob-L-c-hov",
+							"raw": true,
+							"type": "color",
+							"values": []
+						}
+					]
+				},
+				{
+					"name": "icon",
+					"description": "First, select a `size`, then pick an icon from `mask-image`. You can add an icon before or after the link-text, using `direction`.",
+					"type": "subgroup",
+					"values": [
+						{
+							"help": "By default, the icon will inherit the text-color.",
+							"name": "background / color",
+							"open": false,
+							"presets": "background",
+							"prop": "--ob-Li-bg",
+							"raw": true,
+							"type": "color",
+							"values": []
+						},
+						{
+							"name": "direction",
+							"open": false,
+							"prop": "--ob-L-dir",
+							"type": "select",
+							"values": [
+								{ "name": "after", "value": "rtl"}
+							]
+						},
+						{
+							"max": 2,
+							"min": 0,
+							"name": "margin-inline-end",
+							"open": false,
+							"prop": "--ob-Li-mie",
+							"raw": true,
+							"step": 0.125,
+							"suffix": "rem", 
+							"type": "range",
+							"value": 0.25
+						},
+						{
+							"name": "mask-image",
+							"open": true,
+							"presets": "generic-icon",
+							"prop": "--ob-Li-mai",
+							"raw": true,
+							"type": "icon"
+						},
+						{
+							"max": 10,
+							"min": 0,
+							"name": "size",
+							"open": false,
+							"prop": "--ob-Li-w",
+							"raw": true,
+							"step": 0.125,
+							"suffix": "rem", 
+							"type": "range",
+							"value": 0
+						}
+					]
+				},
+				{
+					"name": "text-decoration",
+					"open": false,
+					"prop": "--ob-L-td",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "value" : "blink" },
+						{ "value" : "line-through" },
+						{ "value" : "underline" }
+					]
+				},
+				{
+					"name": "text-transform",
+					"open": false,
+					"prop": "--ob-L-tt",
+					"raw": false,
+					"type": "select",
+					"values": [
+						{ "value" : "capitalize" },
+						{ "value" : "lowercase" },
+						{ "value" : "none" },
+						{ "value" : "uppercase" }
+					]
+				}
+			]
+		},
+		{
+			"name": "border",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 10,
+					"min": 0,
+					"name": "border-radius",
+					"open": false,
+					"prop": "--ob-L-bdrs",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				},
+				{
+					"max": 10,
+					"min": 0,
+					"name": "border-width",
+					"open": false,
+					"prop": "--ob-L-bdw",
+					"raw": true,
+					"step": 0.0625,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.125
+				}
+			]
+		},
+		{
+			"name": "display",
+			"open": true,
+			"presets": "display",
+			"prop": "--ob-L-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"name": "font",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-L-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 5,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-L-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.875
+				},
+				{
+					"max": 0.5,
+					"min": -0.5,
+					"name": "letter-spacing",
+					"open": false,
+					"prop": "--ob-L-lts",
+					"raw": true,
+					"step": 0.001,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 4,
+					"min": 0.125,
+					"name": "line-height",
+					"open": false,
+					"prop": "--ob-L-lh",
+					"raw": true,
+					"step": 0.01,
+					"suffix": "", 
+					"type": "range",
+					"value": 1
+				}
+			]
+		},
+		{
+			"name": "justify-content",
+			"open": false,
+			"prop": "--ob-L-jc",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "value" : "center" },
+				{ "value" : "flex-end" },
+				{ "value" : "flex-start" }
+			]
+		},
+		{
+			"name": "margin-block",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-block-end",
+					"open": false,
+					"prop": "--ob-L-mbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "margin-block-start",
+					"open": false,
+					"prop": "--ob-L-mbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-L-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.875
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-L-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.875
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-L-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-L-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 2
+				}
+			]
+		},
+		{
+			"max": 20,
+			"min": 0,
+			"name": "width",
+			"open": false,
+			"prop": "--ob-L-w",
+			"raw": true,
+			"step": 0.125,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 0
+		}
+	]
+}

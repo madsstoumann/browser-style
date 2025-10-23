@@ -1,0 +1,12 @@
+/**
+ * obmod.css
+ * @version 1.0.2
+ * @summary 16-06-2021
+ * @author Mads Stoumann
+ * @description OneBlock Modifier Styles
+ */
+
+/* Modifier for Headline, Chrome bug: Bug in Chrome: https://stackoverflow.com/questions/56843922 */
+.ob-H--bgcp .ob__headline {
+	-webkit-background-clip: text;
+}

@@ -1,0 +1,217 @@
+{
+	"icon": "icon-tag",
+	"id": "ob-tagline",
+	"name": "Tagline",
+	"values": [
+		{
+			"name": "background",
+			"open": false,
+			"presets": "generic-background-color",
+			"prop": "--ob-N-bg",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"name": "color",
+			"open": false,
+			"presets": "generic-color",
+			"prop": "--ob-N-c",
+			"raw": true,
+			"type": "color",
+			"values": []
+		},
+		{
+			"name": "font",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "font-family",
+					"open": false,
+					"prop": "--ob-N-ff",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "Inter", "value": "Inter, sans-serif" },
+						{ "name": "ui-sans-serif", "value" : "ui-sans-serif, system-ui, sans-serif" },
+						{ "value": "monospace" }
+					]
+				},
+				{
+					"max": 15,
+					"min": 0.25,
+					"name": "font-size",
+					"open": true,
+					"prop": "--ob-N-fz",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.75
+				},
+				{
+					"name": "font-style",
+					"open": false,
+					"prop": "--ob-N-fs",
+					"raw": false,
+					"type": "select",
+					"values": [
+						{ "value" : "normal" },
+						{ "value": "italic" }
+					]
+				},
+				{
+					"max": 900,
+					"min": 100,
+					"name": "font-weight",
+					"open": false,
+					"prop": "--ob-N-fw",
+					"raw": true,
+					"step": 1,
+					"suffix": "", 
+					"type": "range",
+					"value": 400
+				},
+				{
+					"max": 0,
+					"min": -10,
+					"name": "font-variation: slnt",
+					"open": false,
+					"prop": "--ob-N-fsl",
+					"raw": false,
+					"step": 0.01,
+					"suffix": "", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 0.5,
+					"min": -0.5,
+					"name": "letter-spacing",
+					"open": false,
+					"prop": "--ob-N-lts",
+					"raw": false,
+					"step": 0.001,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0.05
+				},
+				{
+					"max": 4,
+					"min": 0.125,
+					"name": "line-height",
+					"open": false,
+					"prop": "--ob-N-lh",
+					"raw": false,
+					"step": 0.01,
+					"suffix": "", 
+					"type": "range",
+					"value": 1
+				},
+				{
+					"name": "text-transform",
+					"open": false,
+					"prop": "--ob-N-tt",
+					"raw": false,
+					"type": "select",
+					"values": [
+						{ "value" : "capitalize" },
+						{ "value" : "lowercase" },
+						{ "value" : "none" },
+						{ "value" : "uppercase" }
+					]
+				}
+			]
+		},
+		{
+			"max": 20,
+			"min": 0,
+			"name": "margin-block-end",
+			"open": false,
+			"prop": "--ob-N-mbe",
+			"raw": true,
+			"step": 0.125,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 0.75
+		},
+		{
+			"max": 20,
+			"min": 0,
+			"name": "margin-block-start",
+			"open": false,
+			"prop": "--ob-N-mbe",
+			"raw": true,
+			"step": 0.125,
+			"suffix": "rem", 
+			"type": "range",
+			"value": 0
+		},
+		{
+			"name": "padding",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-end",
+					"open": false,
+					"prop": "--ob-N-pbe",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-block-start",
+					"open": false,
+					"prop": "--ob-N-pbs",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-end",
+					"open": false,
+					"prop": "--ob-N-pie",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 20,
+					"min": 0,
+					"name": "padding-inline-start",
+					"open": false,
+					"prop": "--ob-N-pis",
+					"raw": true,
+					"step": 0.125,
+					"suffix": "rem", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"max": 100,
+			"min": 0,
+			"name": "width",
+			"open": false,
+			"prop": "--ob-N-w",
+			"raw": true,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 0
+		}
+	]
+}

@@ -1,0 +1,422 @@
+:root {
+  /* The values below should normally be placed under [data-css-icon], they're only at :root in this demo */
+  --icon-bdw: 1px;
+  --icon-size: 0.75rem;
+  --size: 1.5rem;
+}
+
+[data-css-icon] {
+  --animdur: .3s;
+  --loading-animdur: 0.8s;
+  --animtf: ease-in;
+  --bdrs: 2px;
+  --bgc: inherit;
+  --c: currentcolor;
+  --dots-bgc: silver;
+  --dots-size: calc(var(--size, 2.5rem) / 5);
+  --rgb: 0, 0, 0;
+
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+[data-css-icon] i {
+  --half: calc(var(--icon-size) / 2);
+  align-items: center;
+  background-color: var(--bgc);
+  border-radius: var(--bdrs);
+  box-sizing: content-box;
+  display: inline-flex;
+  height: var(--size);
+  justify-content: center;
+  position: relative;
+  transition: background-color var(--animdur) var(--animtf);
+  width: var(--size);
+}
+[data-css-icon] i b,
+[data-css-icon] i::after,
+[data-css-icon] i::before {
+  --bdc: transparent;
+  --bdrs: 0;
+  --bdw: 0;
+  --befc: unset;
+  --bgcl: transparent;
+  --cpa: none;
+  --h: var(--icon-size);
+  --l: initial;
+  --o: 1;
+  --pos: relative;
+  --r: initial;
+  --t: initial;
+  --trf: none;
+  --trfo: 50% 50%;
+  --w: var(--icon-size);
+  background-color: var(--bgcl);
+  border-color: var(--bdc);
+  border-radius: var(--bdrs);
+  border-style: solid;
+  border-width: var(--bdw);
+  box-sizing: border-box;
+  clip-path: var(--cpa);
+  content: "";
+  display: inline-block;
+  height: var(--h);
+  left: var(--l);
+  margin: 0;
+  opacity: var (--o);
+  position: var(--pos);
+  right: var(--r);
+  top: var(--t);
+  transform: var(--trf);
+  transform-origin: var(--trfo);
+  transition: all var(--animdur) var(--animtf);
+  width: var(--w);
+}
+[data-css-icon] i::before {
+  content: var(--befc);
+}
+
+/* ARROWS / CHEVRONS / TRIANGLES */
+[data-css-icon*="arr-"] i::after,
+[data-css-icon*="chv-"] i::after {
+  --bdc: var(--c);
+}
+[data-css-icon*="arr-"] i::after {
+  --bdw: 0 var(--icon-bdw) var(--icon-bdw) 0;
+  --trf: rotate(45deg);
+}
+[data-css-icon*="chv-"] i::after {
+  --bdw: 0 var(--icon-bdw) var(--icon-bdw) 0;
+  --trl: calc(0px - (var(--icon-size) / 6));
+  --trf: rotate(45deg) translate(var(--trl), var(--trl));
+}
+[data-css-icon*="arr-"] i::before {
+  --trf: rotate(90deg) translateX(calc(0px - var(--icon-bdw)));
+}
+[data-css-icon*="tri-"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(10% 20%,50% 90%,90% 20%);
+}
+[data-css-icon*="-left"] i { transform: rotate(90deg); }
+[data-css-icon*="-right"] i { transform: rotate(-90deg); }
+[data-css-icon*="-up"] i { transform: rotate(180deg); }
+
+/* LINES: MINUS, PLUS, EQUALS, MENU */
+[data-css-icon*="arr-"] i::before,
+[data-css-icon*="equals"] i::after,
+[data-css-icon*="equals"] i::before,
+[data-css-icon*="cross"] i::after,
+[data-css-icon*="cross"] i::before,
+[data-css-icon*="menu"] i b,
+[data-css-icon*="menu"] i::after,
+[data-css-icon*="menu"] i::before,
+[data-css-icon*="minus"] i::after,
+[data-css-icon*="plus"] i::after,
+[data-css-icon*="plus"] i::before {      
+  /* Width need to be the diagonal of the down-arrow side-length (--size): sqrt(2) * --size. */
+  --bgcl: var(--c);
+  --befc: '';
+  --h: var(--icon-bdw);
+  --pos: absolute;
+  --w: calc(var(--icon-size) * 1.4142135623730950488016887242097);
+}
+[data-css-icon*="cross"] i::after { --trf: rotate(45deg); }
+[data-css-icon*="cross"] i::before { --trf: rotate(135deg); }
+[data-css-icon*="cross-turn"] i::after { --trf: rotate(0deg); }
+[data-css-icon*="cross-turn"] i::before,
+[data-css-icon*="plus"] i::before { --trf: rotate(90deg); }
+[data-css-icon*="equals"] i { --dist: calc(var(--icon-size) / 4); }
+[data-css-icon*="equals"] i::after { --trf: translateY(var(--dist)); }
+[data-css-icon*="equals"] i::before { --trf: translateY(calc(0px - var(--dist))); }
+[data-css-icon*="menu"] i::after { --trf: translateY(var(--half)); }
+[data-css-icon*="menu"] i::before { --trf: translateY(calc(0px - var(--half))); }
+
+/* OTHER ICONS */
+[data-css-icon*="bag"] i::after {
+  --bdc: var(--c);
+  --bdrs: 0.25em;
+  --bdw: var(--icon-bdw);
+}
+[data-css-icon*="bag"] i::before {
+  --bdc: var(--c);
+  --bdrs: 50% 50% 0 0 / 100% 100% 0 0;
+  --bdw: var(--icon-bdw);
+  --befc: '';
+  --h: calc(var(--icon-size) / 3);
+  --pos: absolute;
+  --t: calc((var(--icon-size) / 2.5) + 2px);
+  --w: calc(var(--half) + var(--bdw));
+  border-bottom-width: 0;
+}
+[data-css-icon*="bookmark"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(90% 0%,90% 70%,50% 100%,10% 70%,10% 0%);
+}
+[data-css-icon*="cart"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(3% 10%,21% 10%,28% 30%,100% 30%,81% 66%,42% 66%,45% 74%,79% 74%,76% 81%,40% 81%,16% 17%,0% 17%);
+  --trf: scale(1.2);
+}
+[data-css-icon*="cart"] i::before {
+  --bdrs: 50%;
+  --befc: '';
+  --bgcl: transparent;
+  --pos: absolute;
+  --h: calc(var(--icon-size) / 8);
+  --w: var(--h);
+  box-shadow:
+    calc(var(--h) * -0.25) var(--half)  0 0 rgba(var(--rgb), 1),
+    calc(var(--h) * 1.25) var(--half)  0 0 rgba(var(--rgb), 1)
+}
+[data-css-icon*="check"] i::after {
+  --bdc: var(--c);
+  --bdw: 0 var(--icon-bdw) var(--icon-bdw) 0;
+  --t: calc(var(--icon-size) / -6);
+  --trf: rotate(45deg);
+  --w: var(--half);
+}
+[data-css-icon*="email"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(0% 85%,0% 15%,100% 15%,50% 60%,0% 15%,0% 25%,50% 70%,100% 25%,100% 85%);
+}
+[data-css-icon*="heart"] i::after,
+[data-css-icon*="heart"] i::before {
+  --bdrs: var(--w) var(--w) 0 0;
+  --befc: '';
+  --bgcl: var(--c);
+  --pos: absolute;
+  --r: var(--w);
+  --trf: rotate(-45deg);
+  --trfo: 0 100%;
+  --w: calc(var(--icon-size) / 1.6);
+}
+[data-css-icon*="heart"] i::after {
+  --r: calc(var(--w) * 2);
+  --trf: rotate(45deg);
+  --trfo: 100% 100%;
+}
+[data-css-icon*="home"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(50% 0%,100% 40%,100% 100%,65% 100%,65% 65%,35% 65%,35% 100%,0% 100%,0% 40%);
+}
+[data-css-icon*="lock"] i::after {
+  --bdc: var(--c);
+  --bdrs: calc(var(--icon-size) / 10);
+  --bdw: calc(var(--icon-size) / 5);
+  --h: calc(var(--icon-size) * 0.7);
+  --pos: absolute;
+  --t: var(--icon-size);
+  border-right-width: calc(var(--icon-size) / 2.5);
+  border-left-width: calc(var(--icon-size) / 2.5);
+}
+[data-css-icon*="lock"] i::before {
+  --bdc: var(--c);
+  --bdw: calc(var(--icon-size) * 0.175);
+  --befc: '';
+  --h: calc(var(--icon-size) * 0.4);
+  --pos: absolute;
+  --t: calc(var(--icon-size) * 0.6);
+  --w: calc(var(--icon-size) * 0.7);
+  border-bottom-width: 0;
+  border-top-left-radius: 50% 100%;
+  border-top-right-radius: 50% 100%;
+}
+[data-css-icon*="message"] i::after {
+  --bgcl: var(--c);
+  /* --cpa: polygon(0% 5%,100% 5%,100% 70%,70% 70%,40% 100%,40% 70%,0% 70%); */
+  --cpa: polygon(0% 0%,100% 0%,100% 75%,70% 75%,70% 30%,55% 30%,55% 45%,70% 45%,70% 75%,40% 100%,40% 75%,40% 30%,25% 30%,26% 46%,40% 45%,40% 75%,0% 75%);
+}
+[data-css-icon*="pause"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(40% 0%,0% 0%,0% 100%,40% 100%,40% 0%,60% 0%,100% 0%,100% 100%,60% 100%,60% 0%);
+}
+[data-css-icon*="map"] i::after {
+  --p60: calc(var(--w) * 0.6);
+  --bdrs: var(--p60) var(--p60) 0 var(--p60);
+  --bgcl: var(--c) ;
+  --trf: rotate(45deg);
+}
+[data-css-icon*="map"] i::before {
+  --bdrs: 50%;
+  --befc: '';
+  --h: calc(var(--icon-size) / 3);
+  --w: var(--h);
+  --pos: absolute;
+  --bgcl: var(--bgc, #FFF);
+  z-index: 1;
+}
+[data-css-icon*="phone"] i::after {
+  --bdrs: calc(var(--icon-size) / 10);
+  --bgcl: var(--c);
+  --cpa: polygon(0% 0%,100% 0%,100% 100%,85% 100%,85% 15%,15% 15%,15% 75%,85% 75%,85% 100%,60% 100%,60% 81%,40% 81%,40% 94%,61% 94%,60% 100%,0% 100%);
+  --w: calc(var(--icon-size) * 0.65);
+}
+[data-css-icon*="play"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(16% 0%,15% 100%,100% 50%);
+}
+[data-css-icon*="refresh"] i::before {
+  --befc: '';
+  --bgcl: var(--c);
+  --cpa: polygon(40% 35%,75% 50%,80% 15%);
+  --l: var(--icon-size);
+  --pos: absolute;
+}
+[data-css-icon*="refresh"] i::after {
+  --bdc: var(--c);
+  --bdw: var(--icon-bdw);
+  --bdrs: 50%;
+  --cpa: polygon(0% 0%,100% 0%,100% 25%,50% 50%,100% 70%,100% 100%,0% 100%);
+}
+[data-css-icon*="search"] i::after {
+  --pos: absolute;
+  --bgcl: var(--c);
+  --h: var(--icon-bdw);
+  --trf: rotate(37deg) translate(calc(var(--icon-size) * 0.75), 0px);
+  --w: var(--half);
+}
+[data-css-icon*="search"] i::before {
+  --bdc: var(--c);
+  --bdrs: 50%;
+  --bdw: var(--icon-bdw);
+  --befc: '';
+}
+[data-css-icon*="star"] i::after {
+  --bgcl: var(--c);
+  --cpa: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  --h: calc(var(--icon-size) * 1.25);
+  --w: calc(var(--icon-size) * 1.25);
+}
+[data-css-icon*="stop"] i::after {
+  --bgcl: var(--c);
+}
+[data-css-icon*="user"] i::after {
+  --bgcl: var(--c);
+  --h: var(--half);
+  --pos: absolute;
+  --t: calc(var(--icon-size) * 1.25);
+  border-top-left-radius: 50% 100%;
+  border-top-right-radius: 50% 100%;
+}
+[data-css-icon*="user"] i::before {
+  --bdrs: 50%;
+  --befc: '';
+  --bgcl: var(--c);
+  --h: var(--half);
+  --pos: absolute;
+  --t: calc(var(--icon-size) * 0.75);
+  --w: var(--half);
+}
+[data-css-icon*="video"] i::after {
+  --bdrs: 50% / 100%;
+  --bgcl: var(--c);
+  --cpa: polygon(70% 20%,70% 50%,100% 25%,100% 75%,70% 50%,70% 80%,0% 80%,0% 20%);
+}
+
+/* ANIMATED */
+[data-css-icon*="typing"] i b,
+[data-css-icon*="typing"] i::after,
+[data-css-icon*="typing"] i::before {
+  animation: typing var(--loading-animdur) infinite alternate;
+  --bdrs: 50%;
+  --bgcl: var(--c);
+  --h: var(--dots-size);
+  --w: var(--dots-size);
+}
+[data-css-icon*="typing"] i b {
+  animation-delay: var(--loading-animdur);
+}
+[data-css-icon*="typing"] i::after {
+  --l: calc(var(--dots-size) / 3);
+  animation-delay: calc(var(--loading-animdur) * 1.75);
+}
+[data-css-icon*="typing"] i::before {
+  --befc: '';
+  --l: calc(0px - (var(--dots-size) / 3));
+  animation-delay: 0;
+}
+[data-css-icon*="spin"] i::after {
+  --bdc: var(--dots-bgc);
+  --bdrs: 50%;
+  --bdw: var(--icon-bdw);
+  --h: calc(var(--icon-size) * 1.5);
+  --trf: translateZ(0);
+  --w: calc(var(--icon-size) * 1.5);
+  animation: spin var(--loading-animdur) infinite linear;
+  border-left: var(--icon-bdw) solid var(--c);
+}
+[data-css-icon*="dashed"] i::after {
+  --bdc: var(--dots-bgc);
+  --bdrs: 50%;
+  --bdw: var(--icon-bdw);
+  --h: calc(var(--icon-size) * 1.5);
+  --w: var(--h);
+  animation: spin var(--loading-animdur) infinite linear;
+  border-style: dashed;
+}
+[data-css-icon*="dotloader"] i::after {
+  --bdrs: 50%;
+  --h: calc(var(--icon-size) / 3);
+  --w: var(--h);
+  --dot: calc(var(--icon-size) - var(--h));
+  --num: 0.7; /* 45deg, 135deg, 225deg, 315deg (was 0.69231) */
+  animation: spin var(--loading-animdur) infinite steps(8);
+  box-shadow:
+    0 calc(var(--dot) * -1) 0 0 rgba(var(--rgb), 1), 
+    calc(var(--dot) * var(--num)) calc(var(--dot) * var(--num) * -1) 0 0 rgba(var(--rgb), 0.2), 
+    var(--dot) 0 0 0 rgba(var(--rgb), 0.2), 
+    calc(var(--dot) * var(--num)) calc(var(--dot) * var(--num)) 0 0 rgba(var(--rgb), 0.2), 
+    0 var(--dot) 0 0 rgba(var(--rgb), 0.2), 
+    calc(var(--dot) * var(--num) * -1) calc(var(--dot) * var(--num)) 0 0 rgba(var(--rgb), 0.2), 
+    calc(var(--dot) * -1) 0 0 0 rgba(var(--rgb), 0.5), 
+    calc(var(--dot) * var(--num) * -1) calc(var(--dot) * var(--num) * -1) 0 0 rgba(var(--rgb), 0.7);
+}
+
+/* ADDITIONAL MODIFIERS */
+[data-css-icon*="outline"] i {
+  border: var(--icon-bdw) solid var(--c);
+}
+[data-css-icon*="fill"] {
+  --bgc: hsl(195, 10%, 30%);
+  --c: hsl(195, 10%, 95%);
+  --rgb: 255, 255, 255;
+}
+[data-css-icon*="square"] {
+  --bdrs: 5px;
+}
+
+/* STATES: details[open] */
+[open] > summary > [data-css-icon*="chv-down"] i::after { --trl: calc(var(--icon-size) / 6); --trf: rotate(45deg) translate(var(--trl), var(--trl)) scale(-1);}
+[open] > summary > [data-css-icon*="chv-right"] i::after { --trf: rotate(135deg) translate(var(--trl), var(--trl)); }
+[open] > summary > [data-css-icon*="cross-turn"] i::after { --trf: rotate(45deg); }
+[open] > summary > [data-css-icon*="cross-turn"] i::before { --trf: rotate(135deg); }
+[open] > summary > [data-css-icon*="equals"] i::after,
+[open] > summary > [data-css-icon*="menu"] i::after { --trf: rotate(-45deg); }
+[open] > summary > [data-css-icon*="equals"] i::before,
+[open] > summary > [data-css-icon*="menu"] i::before { --trf: rotate(45deg); }
+[open] > summary > [data-css-icon*="menu"] i b { --o: 0; --trf: translateX(100px); }
+[open] > summary > [data-css-icon*="plus"] i::after { --trf: rotate(180deg); }
+[open] > summary > [data-css-icon*="plus"] i::before { --trf: rotate(-0deg); }
+[open] > summary > [data-css-icon*="tri-down"] i::after { --trf: scale(-1); }
+[open] > summary > [data-css-icon*="tri-right"] i::after { --trf: rotate(90deg); }
+
+/* ANIMATIONS */
+@keyframes typing {
+  0% {
+    background-color: var(--c);
+  }
+  50%,
+  100% {
+    background-color: var(--dots-bgc);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

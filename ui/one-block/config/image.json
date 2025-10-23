@@ -1,0 +1,219 @@
+{
+	"icon": "icon-image",
+	"id": "appImage",
+	"name": "Image",
+	"values": [
+		{
+			"name": "display",
+			"open": true,
+			"prop": "--ob-I-d",
+			"raw": true,
+			"type": "radio",
+			"values": [
+				{ "icon": "visible", "value": "reset", "checked": true },
+				{ "icon": "hidden", "value": "none" }
+			]
+		},
+		{
+			"name": "drop-shadow",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 100,
+					"min": 0,
+					"name": "filter-x",
+					"open": false,
+					"prop": "--ob-I-fx",
+					"raw": true,
+					"step": 1,
+					"suffix": "px", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 100,
+					"min": 0,
+					"name": "filter-y",
+					"open": false,
+					"prop": "--ob-I-fy",
+					"raw": true,
+					"step": 1,
+					"suffix": "px", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 100,
+					"min": 0,
+					"name": "filter-blur",
+					"open": false,
+					"prop": "--ob-I-fb",
+					"raw": true,
+					"step": 1,
+					"suffix": "px", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"name": "filter-color",
+					"open": true,
+					"presets": "generic-color",
+					"prop": "--ob-I-fc",
+					"raw": true,
+					"type": "color"
+				}
+			]
+		},
+		{
+			"name": "filter",
+			"open": false,
+			"presets": "generic-filter",
+			"prop": "--ob-I-flt",
+			"raw": true,
+			"type": "select"
+		},
+		{
+			"name": "inset",
+			"type": "subgroup",
+			"values": [
+				{
+					"name": "inset-block",
+					"open": true,
+					"prop": "--ob-I-inb",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "start", "value": "0 auto" },
+						{ "name": "end", "value": "auto 0", "selected": true }
+					]
+				},
+				{
+					"name": "inset-inline",
+					"open": true,
+					"prop": "--ob-I-ini",
+					"raw": true,
+					"type": "select",
+					"values": [
+						{ "name": "start", "value": "0 auto" },
+						{ "name": "end", "value": "auto 0", "selected": true }
+					]
+				}
+			]
+		},
+		{
+			"name": "transform",
+			"type": "subgroup",
+			"values": [
+				{
+					"max": 1000,
+					"min": 0,
+					"name": "perspective",
+					"open": false,
+					"prop": "--ob-I-pv",
+					"raw": true,
+					"step": 1,
+					"suffix": "px", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 359,
+					"min": 0,
+					"name": "rotate-x",
+					"open": false,
+					"prop": "--ob-I-rx",
+					"raw": true,
+					"step": 1,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 359,
+					"min": 0,
+					"name": "rotate-y",
+					"open": false,
+					"prop": "--ob-I-ry",
+					"raw": true,
+					"step": 1,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 359,
+					"min": 0,
+					"name": "rotate-z",
+					"open": false,
+					"prop": "--ob-I-rz",
+					"raw": true,
+					"step": 1,
+					"suffix": "deg", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 200,
+					"min": -200,
+					"name": "translate-x",
+					"open": false,
+					"prop": "--ob-I-tx",
+					"raw": false,
+					"step": 1,
+					"suffix": "%", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 200,
+					"min": -200,
+					"name": "translate-y",
+					"open": false,
+					"prop": "--ob-I-ty",
+					"raw": true,
+					"step": 1,
+					"suffix": "%", 
+					"type": "range",
+					"value": 0
+				},
+				{
+					"max": 100,
+					"min": 0,
+					"name": "translate-z",
+					"open": false,
+					"prop": "--ob-I-tz",
+					"raw": false,
+					"step": 1,
+					"suffix": "px", 
+					"type": "range",
+					"value": 0
+				}
+			]
+		},
+		{
+			"max": 100,
+			"min": 10,
+			"name": "width",
+			"open": false,
+			"prop": "--ob-I-w",
+			"raw": true,
+			"step": 1,
+			"suffix": "%", 
+			"type": "range",
+			"value": 30
+		},
+		{
+			"name": "z-index",
+			"open": false,
+			"prop": "--ob-I-z",
+			"raw": true,
+			"type": "select",
+			"values": [
+				{ "value": "0" },
+				{ "value": "1" },
+				{ "value": "2" }
+			]
+		}
+	]
+}
+		
