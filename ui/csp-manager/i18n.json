@@ -36,5 +36,43 @@
 			"booleanDirectiveInfo": "This is a boolean directive. It has no values.",
 			"remove": "Remove"
 		}
+	},
+	"da": {
+		"directives": {
+			"base-uri": "Begrænser de URL'er, der kan bruges i et dokuments &lt;base&gt;-element.",
+			"child-src": "Definerer gyldige kilder til web workers og indlejrede browsing-kontekster.",
+			"connect-src": "Begrænser de URL'er, der kan indlæses ved hjælp af script-grænseflader (f.eks. fetch, XHR).",
+			"default-src": "Fungerer som en fallback for de andre fetch-direktiver.",
+			"fenced-frame-src": "Angiver gyldige kilder til indlejrede browsing-kontekster indlæst i &lt;fencedframe&gt;-elementer.",
+			"font-src": "Angiver gyldige kilder til skrifttyper indlæst ved hjælp af @font-face.",
+			"form-action": "Begrænser de URL'er, der kan bruges som mål for formularindsendelser.",
+			"frame-ancestors": "Angiver gyldige forældre, der kan indlejre en side ved hjælp af &lt;frame&gt;, &lt;iframe&gt;, &lt;object&gt; eller &lt;embed&gt;.",
+			"frame-src": "Angiver gyldige kilder til frames og iframes.",
+			"img-src": "Angiver gyldige kilder til billeder og favicons.",
+			"manifest-src": "Angiver gyldige kilder til applikationsmanifestfiler.",
+			"media-src": "Angiver gyldige kilder til indlæsning af medier ved hjælp af &lt;audio&gt; og &lt;video&gt;.",
+			"object-src": "Angiver gyldige kilder til &lt;object&gt; og &lt;embed&gt;-elementer.",
+			"report-to": "Angiver et rapporteringsendpoint for CSP-overtrædelser.",
+			"require-sri-for": "Håndhæver Subresource Integrity på scripts og/eller stylesheets.",
+			"require-trusted-types-for": "Håndhæver Trusted Types for scripts, der opretter HTML fra strenge.",
+			"sandbox": "Aktiverer en sandkasse for den ønskede ressource, svarende til &lt;iframe&gt; sandbox-attributten.",
+			"script-src": "Angiver gyldige kilder til JavaScript.",
+			"script-src-elem": "Angiver gyldige kilder til JavaScript &lt;script&gt;-elementer.",
+			"script-src-attr": "Angiver gyldige kilder til inline JavaScript-event-handlers.",
+			"style-src": "Angiver gyldige kilder til stylesheets.",
+			"style-src-elem": "Angiver gyldige kilder til stylesheets &lt;style&gt;-elementer og &lt;link&gt;-elementer med rel=\"stylesheet\".",
+			"style-src-attr": "Angiver gyldige kilder til inline-styles anvendt på individuelle DOM-elementer.",
+			"trusted-types": "Angiver en tilladelsesliste over Trusted Types-politikker.",
+			"upgrade-insecure-requests": "Instruerer brugeragenter om at behandle alle usikre URL'er (HTTP) på et websted, som om de er blevet erstattet med sikre URL'er (HTTPS).",
+			"worker-src": "Angiver gyldige kilder til Worker, SharedWorker eller ServiceWorker scripts."
+		},
+		"ui": {
+			"add": "Tilføj",
+			"addDirective": "Tilføj direktiv",
+			"addNewValue": "Tilføj ny værdi",
+			"addDirectivePlaceholder": "Tilføj direktiv...",
+			"booleanDirectiveInfo": "Dette er et booleskt direktiv. Det har ingen værdier.",
+			"remove": "Fjern"
+		}
 	}
 }

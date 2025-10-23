@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,11 +19,6 @@
 	<div id="component-container"></div>
 
 	<script>
-		// NEW APPROACH: Client only specifies the directives they need!
-		// The component loads all CSP specs from external JSON, but only enables what's here.
-
-		// 1. Define ONLY the directives you want to enable and their custom values.
-		//    This could come from a CMS, database, or configuration file.
 		const clientPolicy = {
 			"script-src": {
 				"added": ["'unsafe-inline'", "cdn.example.com"]
@@ -42,16 +37,11 @@
 			}
 		};
 
-		// 2. Stringify the policy (simulating server-side rendering or API response)
 		const policyString = JSON.stringify(clientPolicy);
-
-		// 3. Create the component and set the attribute
 		const cspManager = document.createElement('csp-manager');
+		cspManager.setAttribute('lang', 'da');
 		cspManager.setAttribute('initial-policy', policyString);
-
-		// 4. Add the component to the page
 		document.getElementById('component-container').appendChild(cspManager);
-
 		// ALTERNATIVE: You can also set the policy programmatically:
 		// cspManager.policy = clientPolicy;
 	</script>

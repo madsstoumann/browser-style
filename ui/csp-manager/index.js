@@ -7,8 +7,6 @@ class CspManager extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [styles];
-		this.lang = 'en';
-		this.state = this.initializeState();
 	}
 
 	/**
@@ -189,6 +187,8 @@ class CspManager extends HTMLElement {
 
 	connectedCallback() {
 		document.documentElement.style.setProperty('interpolate-size', 'allow-keywords');
+		this.lang = this.getAttribute('lang') || 'en';
+		this.state = this.initializeState();
 		const initialPolicy = this.getAttribute('initial-policy');
 
 		if (initialPolicy) {
