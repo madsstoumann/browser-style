@@ -5,7 +5,8 @@ A web component to interactively build and manage a Content Security Policy (CSP
 ## Features
 
 - **Interactive UI**: Easily add or remove values for all standard CSP directives.
-- **Enable/Disable Directives**: Toggle directives on or off with a simple checkbox. Only enabled directives are included in the output.
+- **Clean Interface**: Only enabled directives are shown. Hidden directives can be added via dropdown.
+- **Add Directive Dropdown**: Add directives using a native HTML `<datalist>` with autocomplete for ease of use.
 - **Live Preview**: See the generated `<meta>` tag update in real-time.
 - **Smart UI for Different Directive Types**:
     - **Boolean Directives**: Directives like `upgrade-insecure-requests` are correctly handled as simple toggles without value inputs.
@@ -13,7 +14,9 @@ A web component to interactively build and manage a Content Security Policy (CSP
 - **State Management**: Programmatically get and set the CSP state.
 - **Customizable**: Style the component to match your application's theme using CSS Custom Properties.
 - **Informative**: Each directive includes a short description of its purpose.
-- **Visual Indicators**: Directives with custom-added values are marked with an asterisk (*) for easy identification.
+- **Internationalization Ready**: All UI text is externalized in `i18n.json` for easy translation.
+- **Modular Architecture**: CSP specifications and UI text are separated into external JSON files for maintainability.
+- **Accessible**: Screen-reader-only controls with proper ARIA patterns.
 
 ## Installation
 
@@ -37,7 +40,16 @@ npm install @browser.style/csp-manager
     <csp-manager></csp-manager>
     ```
 
-The component will render with a default set of CSP directives. You can then interact with the UI to add or remove values.
+The component will render with a default set of enabled CSP directives. Disabled directives are hidden but can be added using the "Add Directive" dropdown at the bottom of the component.
+
+## File Structure
+
+The component consists of modular files for better maintainability:
+
+- **`index.js`** - Main component logic
+- **`index.css`** - Component styles (loaded as adopted stylesheet)
+- **`csp-directives.json`** - CSP specification (defaults, types, tokens)
+- **`i18n.json`** - Internationalization strings (directive descriptions and UI text)
 
 ## Styling
 
@@ -75,6 +87,24 @@ The easiest way to load data from a CMS is to pass it directly into the `initial
 
 The value of the attribute should be a **JSON string**.
 
+#### Simplified Client Policy Format
+
+**New in v2.0:** Clients now only need to specify the directives they want to enable. The component loads the full CSP specification from `csp-directives.json` and only enables the directives present in the client's policy.
+
+```javascript
+// Client only specifies what they need!
+const clientPolicy = {
+  "script-src": {
+    "added": ["'unsafe-inline'", "cdn.example.com"]
+  },
+  "style-src": {
+    "added": ["https://fonts.googleapis.com"]
+  }
+};
+```
+
+All other directives remain available but disabled (hidden from view until added via the dropdown).
+
 #### Example: Loading Data from a Sitecore Field
 
 A backend developer can render the component and pass the data from a Sitecore field directly into the `initial-policy` attribute.
@@ -84,8 +114,7 @@ Here is a conceptual example using Razor syntax, common in .NET-based CMSs:
 ```html
 @{
   // Assume 'Model.CspJsonField' is a string field from a Sitecore item
-  // containing the saved JSON policy.
-  // Ensure the string is correctly formatted as a single-line JSON.
+  // containing the saved JSON policy (only enabled directives).
   var initialPolicy = Model.CspJsonField;
 }
 
@@ -118,34 +147,25 @@ console.log(JSON.stringify(currentState));
 ```javascript
 const cspManager = document.querySelector('csp-manager');
 
-// This is an example of the data structure.
-// You only need to provide the 'added' and 'enabled' properties to update the state.
-const savedState = {
+// Simplified format: Only specify directives you want to enable
+const clientPolicy = {
   "script-src": {
-    "enabled": true,
-    "defaults": ["'self'"],
-    "added": ["https://example.com"],
-    "description": "Specifies valid sources for JavaScript."
+    "added": ["https://example.com"]
   },
-  "sandbox": {
-    "enabled": true,
-    "defaults": [],
-    "added": ["allow-forms", "allow-scripts"],
-    "tokens": ["allow-downloads", "allow-forms", "allow-modals", "..."],
-    "description": "Enables a sandbox for the requested resource..."
-  },
-  "upgrade-insecure-requests": {
-    "enabled": true,
-    "defaults": [],
-    "added": [],
-    "boolean": true,
-    "description": "Instructs user agents to treat all of a site's insecure URLs (HTTP) as though they have been replaced with secure URLs (HTTPS)."
+  "style-src": {
+    "added": ["https://fonts.googleapis.com"]
   }
-  // ... other directives
+  // Only enabled directives need to be specified
 };
 
-cspManager.policy = savedState;
+cspManager.policy = clientPolicy;
 ```
+
+The component will:
+1. Disable all directives
+2. Enable only the directives present in `clientPolicy`
+3. Merge the `added` values with defaults from `csp-directives.json`
+4. Optionally allow overriding `defaults` if provided
 
 #### The `cspString` Property (Get)
 
@@ -160,4 +180,96 @@ const metaTagString = cspManager.cspString;
 const cleanString = metaTagString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
 console.log(cleanString);
+```
+
+## Internationalization
+
+All UI text is stored in `i18n.json` for easy translation. The component includes a `t()` method that retrieves translations with fallback to the key if not found.
+
+### Current Structure
+
+```json
+{
+  "en": {
+    "directives": {
+      "script-src": "Specifies valid sources for JavaScript.",
+      ...
+    },
+    "ui": {
+      "add": "Add",
+      "addDirective": "Add Directive",
+      "addNewValue": "Add new value",
+      "addDirectivePlaceholder": "Add directive...",
+      "booleanDirectiveInfo": "This is a boolean directive. It has no values.",
+      "enable": "Enable"
+    }
+  }
+}
+```
+
+### Adding a New Language
+
+To add a new language, simply add a new language object to `i18n.json`:
+
+```json
+{
+  "en": { ... },
+  "es": {
+    "directives": { ... },
+    "ui": {
+      "add": "Agregar",
+      "addDirective": "Agregar Directiva",
+      ...
+    }
+  }
+}
+```
+
+Then set the `lang` property on the component:
+
+```javascript
+const cspManager = document.querySelector('csp-manager');
+cspManager.lang = 'es';
+cspManager.render(); // Re-render with new language
+```
+
+## Component Methods
+
+The component exposes several public methods:
+
+### `t(key)`
+Get translated text from i18n file with dot notation support.
+
+```javascript
+cspManager.t('ui.add'); // Returns "Add"
+cspManager.t('ui.nonExistent'); // Returns "ui.nonExistent" (fallback)
+```
+
+### `getAvailableDirectives()`
+Returns an array of disabled directives that can be added.
+
+```javascript
+const available = cspManager.getAvailableDirectives();
+// Returns: [{key: "font-src", description: "Specifies..."}, ...]
+```
+
+### `enableDirective(directiveName)`
+Enables a directive by name and re-renders the component.
+
+```javascript
+cspManager.enableDirective('font-src');
+```
+
+### `addValue(directive, value)`
+Adds a value to a specific directive's `added` array.
+
+```javascript
+cspManager.addValue('script-src', 'https://cdn.example.com');
+```
+
+### `removeValue(directive, index)`
+Removes a value from a directive's `added` array by index.
+
+```javascript
+cspManager.removeValue('script-src', 0);
 ```

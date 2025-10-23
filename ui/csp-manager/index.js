@@ -65,7 +65,20 @@ class CspManager extends HTMLElement {
 	}
 
 	get policy() {
-		return this.state;
+		// Return client-format policy: only enabled directives with their added values
+		const clientPolicy = {};
+		Object.entries(this.state).forEach(([key, value]) => {
+			if (value.enabled) {
+				clientPolicy[key] = {
+					added: value.added || []
+				};
+				// Include defaults if present
+				if (value.defaults && value.defaults.length > 0) {
+					clientPolicy[key].defaults = value.defaults;
+				}
+			}
+		});
+		return clientPolicy;
 	}
 
 	set policy(clientPolicy) {
@@ -259,7 +272,7 @@ class CspManager extends HTMLElement {
 								`
 							}
 							<label>
-								<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> ${this.t('ui.enable')} ${key}
+								<input type="checkbox" data-directive="${key}" data-sr ${valueObj.enabled ? 'checked' : ''}> ${this.t('ui.remove')} ${key}
 							</label>
 						</div>
 					</details>

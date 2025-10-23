@@ -34,7 +34,7 @@
 			"addNewValue": "Add new value",
 			"addDirectivePlaceholder": "Add directive...",
 			"booleanDirectiveInfo": "This is a boolean directive. It has no values.",
-			"enable": "Enable"
+			"remove": "Remove"
 		}
 	}
 }
