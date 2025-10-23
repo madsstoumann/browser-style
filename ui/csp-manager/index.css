@@ -6,6 +6,7 @@
 	--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 	--csp-manager-ff-system: system-ui, sans-serif;
 	--csp-manager-gap: 1rem;
+	--csp-manager-focus-c: hsl(211, 5%, 60%);
 	--csp-manager-tab-width: 2;
 
 	display: grid;
@@ -35,6 +36,7 @@ button, input {
 	border-radius: var(--csp-manager-bdrs);
 	font-family: var(--csp-manager-ff-system);
 	font-size: inherit;
+	&:focus-visible { box-shadow: inset 0 0 0 2px var(--csp-manager-focus-c); outline: 0; }
 }
 
 details {
@@ -45,6 +47,7 @@ details {
 
 	&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
 	&:not(:has(:checked)) { display: none; }
+	&:focus-within { outline: 2px solid var(--csp-manager-focus-c); }
 }
 
 div {
@@ -73,6 +76,7 @@ label:has(input[data-directive]) {
 	font-size: small;
 	justify-self: start;
 	padding: .75ch 2.5ch;
+	&:focus-within { box-shadow: inset 0 0 0 2px var(--csp-manager-remove-bg, hsl(0, 85%, 30%)); outline: 0; }
 }
 
 li {
@@ -101,15 +105,9 @@ pre {
 	word-wrap: break-word;
 }
 
-ul {
-	all: unset;
-	display: flex;
-	gap: calc(var(--csp-manager-gap) / 2);
-	list-style: none;
-}
-
 summary {
 	font-family: var(--csp-manager-ff-mono);
+	outline: 0;
 }
 
 ::details-content {
@@ -119,4 +117,11 @@ summary {
 }
 [open]::details-content {
 	height: auto;
+}
+
+ul {
+	all: unset;
+	display: flex;
+	gap: calc(var(--csp-manager-gap) / 2);
+	list-style: none;
 }

@@ -12,7 +12,6 @@
 	<h1>CSP Manager: <code>initial-policy</code> Demo</h1>
 	<p>This example demonstrates how to initialize the component with a predefined state using the <code>initial-policy</code> attribute.</p>
 
-
 	<hr>
 
 	<h2>Component Output:</h2>
@@ -39,9 +38,9 @@
 
 		const policyString = JSON.stringify(clientPolicy);
 		const cspManager = document.createElement('csp-manager');
-		cspManager.setAttribute('lang', 'da');
 		cspManager.setAttribute('initial-policy', policyString);
 		document.getElementById('component-container').appendChild(cspManager);
+
 		// ALTERNATIVE: You can also set the policy programmatically:
 		// cspManager.policy = clientPolicy;
 	</script>
