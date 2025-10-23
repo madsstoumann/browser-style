@@ -1,0 +1,40 @@
+{
+	"en": {
+		"directives": {
+			"base-uri": "Restricts the URLs which can be used in a document's &lt;base&gt; element.",
+			"child-src": "Defines valid sources for web workers and nested browsing contexts.",
+			"connect-src": "Restricts the URLs which can be loaded using script interfaces (e.g., fetch, XHR).",
+			"default-src": "Serves as a fallback for the other fetch directives.",
+			"fenced-frame-src": "Specifies valid sources for nested browsing contexts loaded into &lt;fencedframe&gt; elements.",
+			"font-src": "Specifies valid sources for fonts loaded using @font-face.",
+			"form-action": "Restricts the URLs which can be used as the target of a form submissions.",
+			"frame-ancestors": "Specifies valid parents that may embed a page using &lt;frame&gt;, &lt;iframe&gt;, &lt;object&gt;, or &lt;embed&gt;.",
+			"frame-src": "Specifies valid sources for frames and iframes.",
+			"img-src": "Specifies valid sources of images and favicons.",
+			"manifest-src": "Specifies valid sources of application manifest files.",
+			"media-src": "Specifies valid sources for loading media using &lt;audio&gt; and &lt;video&gt;.",
+			"object-src": "Specifies valid sources for the &lt;object&gt; and &lt;embed&gt; elements.",
+			"report-to": "Provides a reporting endpoint for CSP violations.",
+			"require-sri-for": "Enforces Subresource Integrity on scripts and/or stylesheets.",
+			"require-trusted-types-for": "Enforces Trusted Types for scripts that create HTML from strings.",
+			"sandbox": "Enables a sandbox for the requested resource, similar to the &lt;iframe&gt; sandbox attribute.",
+			"script-src": "Specifies valid sources for JavaScript.",
+			"script-src-elem": "Specifies valid sources for JavaScript &lt;script&gt; elements.",
+			"script-src-attr": "Specifies valid sources for JavaScript inline event handlers.",
+			"style-src": "Specifies valid sources for stylesheets.",
+			"style-src-elem": "Specifies valid sources for stylesheets &lt;style&gt; elements and &lt;link&gt; elements with rel=\"stylesheet\".",
+			"style-src-attr": "Specifies valid sources for inline styles applied to individual DOM elements.",
+			"trusted-types": "Specifies an allowlist of Trusted Types policies.",
+			"upgrade-insecure-requests": "Instructs user agents to treat all of a site's insecure URLs (HTTP) as though they have been replaced with secure URLs (HTTPS).",
+			"worker-src": "Specifies valid sources for Worker, SharedWorker, or ServiceWorker scripts."
+		},
+		"ui": {
+			"add": "Add",
+			"addDirective": "Add Directive",
+			"addNewValue": "Add new value",
+			"addDirectivePlaceholder": "Add directive...",
+			"booleanDirectiveInfo": "This is a boolean directive. It has no values.",
+			"enable": "Enable"
+		}
+	}
+}

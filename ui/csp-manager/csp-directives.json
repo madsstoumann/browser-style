@@ -1,0 +1,123 @@
+{
+	"base-uri": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"child-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"connect-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"default-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"fenced-frame-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"font-src": {
+		"defaults": ["'self'", "data:"],
+		"type": "source-list"
+	},
+	"form-action": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"frame-ancestors": {
+		"defaults": ["'none'"],
+		"type": "source-list"
+	},
+	"frame-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"img-src": {
+		"defaults": ["'self'", "data:"],
+		"type": "source-list"
+	},
+	"manifest-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"media-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"object-src": {
+		"defaults": ["'none'"],
+		"type": "source-list"
+	},
+	"report-to": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"require-sri-for": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": ["script", "style"]
+	},
+	"require-trusted-types-for": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": ["'script'"]
+	},
+	"sandbox": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": [
+			"allow-downloads",
+			"allow-forms",
+			"allow-modals",
+			"allow-orientation-lock",
+			"allow-pointer-lock",
+			"allow-popups",
+			"allow-popups-to-escape-sandbox",
+			"allow-presentation",
+			"allow-same-origin",
+			"allow-scripts",
+			"allow-top-navigation",
+			"allow-top-navigation-by-user-activation",
+			"allow-top-navigation-to-custom-protocols"
+		]
+	},
+	"script-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"script-src-elem": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"script-src-attr": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"style-src": {
+		"defaults": ["'self'"],
+		"type": "source-list"
+	},
+	"style-src-elem": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"style-src-attr": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"trusted-types": {
+		"defaults": ["'none'"],
+		"type": "source-list"
+	},
+	"upgrade-insecure-requests": {
+		"defaults": [],
+		"type": "boolean"
+	},
+	"worker-src": {
+		"defaults": [],
+		"type": "source-list"
+	}
+}

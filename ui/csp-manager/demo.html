@@ -19,39 +19,41 @@
 	<div id="component-container"></div>
 
 	<script>
-		// 1. Define the initial policy object, as if it came from a CMS.
-		const initialPolicy = {
-			"base-uri": { "defaults": ["'self'"], "added": ["*.browser.style"] },
-			"block-all-mixed-content": { "defaults": [], "added": [] },
-			"child-src": { "defaults": [], "added": [] },
-			"connect-src": { "defaults": ["'self'"], "added": ["api.example.com"] },
-			"default-src": { "defaults": ["'self'"], "added": [] },
-			"font-src": { "defaults": ["'self'", "data:"], "added": ["https://fonts.gstatic.com"] },
-			"form-action": { "defaults": ["'self'"], "added": [] },
-			"frame-ancestors": { "defaults": ["'none'"], "added": [] },
-			"img-src": { "defaults": ["'self'", "data:"], "added": ["https://images.unsplash.com"] },
-			"manifest-src": { "defaults": ["'self'"], "added": [] },
-			"media-src": { "defaults": ["'self'"], "added": [] },
-			"object-src": { "defaults": ["'none'"], "added": [] },
-			"plugin-types": { "defaults": [], "added": [] },
-			"report-to": { "defaults": [], "added": [] },
-			"report-uri": { "defaults": [], "added": [] },
-			"sandbox": { "defaults": [], "added": [] },
-			"script-src": { "defaults": ["'self'"], "added": ["'unsafe-inline'"] },
-			"style-src": { "defaults": ["'self'", "'unsafe-inline'"], "added": ["https://fonts.googleapis.com"] },
-			"upgrade-insecure-requests": { "defaults": [], "added": [] }
+		// NEW APPROACH: Client only specifies the directives they need!
+		// The component loads all CSP specs from external JSON, but only enables what's here.
+
+		// 1. Define ONLY the directives you want to enable and their custom values.
+		//    This could come from a CMS, database, or configuration file.
+		const clientPolicy = {
+			"script-src": {
+				"added": ["'unsafe-inline'", "cdn.example.com"]
+			},
+			"style-src": {
+				"added": ["https://fonts.googleapis.com"]
+			},
+			"font-src": {
+				"added": ["https://fonts.gstatic.com"]
+			},
+			"img-src": {
+				"added": ["https://images.unsplash.com"]
+			},
+			"connect-src": {
+				"added": ["api.example.com", "wss://websocket.example.com"]
+			}
 		};
 
-		// 2. Stringify the policy to simulate how a backend would render it.
-		const policyString = JSON.stringify(initialPolicy);
+		// 2. Stringify the policy (simulating server-side rendering or API response)
+		const policyString = JSON.stringify(clientPolicy);
 
-		// 3. Create the component and set the attribute.
-		// This simulates a backend rendering the tag with the attribute already populated.
+		// 3. Create the component and set the attribute
 		const cspManager = document.createElement('csp-manager');
 		cspManager.setAttribute('initial-policy', policyString);
 
-		// 4. Add the component to the page.
+		// 4. Add the component to the page
 		document.getElementById('component-container').appendChild(cspManager);
+
+		// ALTERNATIVE: You can also set the policy programmatically:
+		// cspManager.policy = clientPolicy;
 	</script>
 
 </body>

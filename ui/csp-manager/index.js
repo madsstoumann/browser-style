@@ -1,157 +1,98 @@
-const styles = new CSSStyleSheet();
-styles.replaceSync(`
-		:host {
-			--csp-manager-accent: hsl(211, 100%, 95%);
-			--csp-manager-accent-dark: hsl(211, 50%, 50%);
-			--csp-manager-buttonface: #efefef;
-			--csp-manager-bdrs: .5rem;
-			--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-			--csp-manager-ff-system: system-ui, sans-serif;
-			--csp-manager-gap: 1rem;
-			--csp-manager-tab-width: 2;
-			
-			display: grid;
-			font-size: var(--csp-manager-font-size, 16px);
-			row-gap: var(--csp-manager-gap);
-		}
-
-		button {
-			background: var(--csp-manager-buttonface);
-			border: 0;
-			cursor: pointer;
-		}
-
-		button, input {
-			border-radius: var(--csp-manager-bdrs);
-			font-family: var(--csp-manager-ff-system);
-			font-size: inherit;
-		}
-
-		details {
-			border: 1px solid var(--csp-manager-buttonface);
-			border-radius: var(--csp-manager-bdrs);
-			padding: var(--csp-manager-gap);
-			user-select: none;
-
-			&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
-			&:not(:has(:checked)) { background: var(--csp-manager-buttonface); opacity: .5; }
-		}
-
-		div {
-			display: grid;
-			margin-block-start: var(--csp-manager-gap);
-			row-gap: var(--csp-manager-gap);
-		}
-
-		fieldset {
-			all: unset;
-			display: flex;
-			gap: var(--csp-manager-gap);
-			button { padding: 0 2ch; }
-		}
-
-		input {
-			border: 1px solid var(--csp-manager-buttonface);
-			flex: 1;
-			padding: 1ch 2ch;
-		}
-
-		li {
-			background: var(--csp-manager-buttonface);
-			border-radius: var(--csp-manager-bdrs);
-			display: grid;
-			font-family: var(--csp-manager-ff-mono);
-			font-size: small;
-			gap: 1ch;
-			grid-auto-flow: column;
-			padding: .75ch 1.5ch;
-			place-content: center;
-			&:has(button) { background: var(--csp-manager-accent); }
-			button { all: unset; display: inline-block; padding: 0 0.5ch; cursor: pointer; }
-		}
-
-		pre {
-			all: unset;
-			background: var(--csp-manager-buttonface);
-			border-radius: var(--csp-manager-bdrs);
-			font-size: small;
-			overflow-x: auto;
-			padding: 2ch;
-			tab-size: var(--csp-manager-tab-width);
-			white-space: pre-wrap;
-			word-wrap: break-word;
-		}
-		
-		ul {
-			all: unset;
-			display: flex;
-			gap: calc(var(--csp-manager-gap) / 2);
-			list-style: none;
-		}
-
-		summary {
-			font-family: var(--csp-manager-ff-mono);
-		}
-
-		::details-content {
-			height: 0;
-			overflow: clip;
-			transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
-		}
-		[open]::details-content {
-			height: auto;
-		}
-}
-`);
+import cspDirectives from './csp-directives.json' with { type: 'json' };
+import i18nData from './i18n.json' with { type: 'json' };
+import styles from './index.css' with { type: 'css' };
 
 class CspManager extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [styles];
+		this.lang = 'en';
+		this.state = this.initializeState();
+	}
 
-		this.state = {
-			"base-uri": { enabled: true, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be used in a document's &lt;base&gt; element." },
-			"child-src": { enabled: false, defaults: ["'self'"], added: [], description: "Defines valid sources for web workers and nested browsing contexts." },
-			"connect-src": { enabled: false, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be loaded using script interfaces (e.g., fetch, XHR)." },
-			"default-src": { enabled: true, defaults: ["'self'"], added: [], description: "Serves as a fallback for the other fetch directives." },
-			"fenced-frame-src": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for nested browsing contexts loaded into &lt;fencedframe&gt; elements." },
-			"font-src": { enabled: false, defaults: ["'self'", "data:"], added: [], description: "Specifies valid sources for fonts loaded using @font-face." },
-			"form-action": { enabled: false, defaults: ["'self'"], added: [], description: "Restricts the URLs which can be used as the target of a form submissions." },
-			"frame-ancestors": { enabled: true, defaults: ["'none'"], added: [], description: "Specifies valid parents that may embed a page using &lt;frame&gt;, &lt;iframe&gt;, &lt;object&gt;, or &lt;embed&gt;." },
-			"frame-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources for frames and iframes." },
-			"img-src": { enabled: false, defaults: ["'self'", "data:"], added: [], description: "Specifies valid sources of images and favicons." },
-			"manifest-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources of application manifest files." },
-			"media-src": { enabled: false, defaults: ["'self'"], added: [], description: "Specifies valid sources for loading media using &lt;audio&gt; and &lt;video&gt;." },
-			"object-src": { enabled: true, defaults: ["'none'"], added: [], description: "Specifies valid sources for the &lt;object&gt; and &lt;embed&gt; elements." },
-			"report-to": { enabled: false, defaults: [], added: [], description: "Provides a reporting endpoint for CSP violations." },
-			"require-sri-for": { enabled: false, defaults: [], added: [], tokens: ["script", "style"], description: "Enforces Subresource Integrity on scripts and/or stylesheets." },
-			"require-trusted-types-for": { enabled: false, defaults: [], added: [], tokens: ["'script'"], description: "Enforces Trusted Types for scripts that create HTML from strings." },
-			"sandbox": { enabled: false, defaults: [], added: [], tokens: ["allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock", "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts", "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"], description: "Enables a sandbox for the requested resource, similar to the &lt;iframe&gt; sandbox attribute." },
-			"script-src": { enabled: true, defaults: ["'self'"], added: [], description: "Specifies valid sources for JavaScript." },
-			"script-src-elem": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for JavaScript &lt;script&gt; elements." },
-			"script-src-attr": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for JavaScript inline event handlers." },
-			"style-src": { enabled: true, defaults: ["'self'"], added: [], description: "Specifies valid sources for stylesheets." },
-			"style-src-elem": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for stylesheets &lt;style&gt; elements and &lt;link&gt; elements with rel=\"stylesheet\"." },
-			"style-src-attr": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for inline styles applied to individual DOM elements." },
-			"trusted-types": { enabled: false, defaults: ["'none'"], added: [], description: "Specifies an allowlist of Trusted Types policies." },
-			"upgrade-insecure-requests": { enabled: false, defaults: [], added: [], boolean: true, description: "Instructs user agents to treat all of a site's insecure URLs (HTTP) as though they have been replaced with secure URLs (HTTPS)." },
-			"worker-src": { enabled: false, defaults: [], added: [], description: "Specifies valid sources for Worker, SharedWorker, or ServiceWorker scripts." }
-		};
+	/**
+	 * Get translated text from i18n file
+	 * @param {string} key - The translation key (supports dot notation for nested keys)
+	 * @returns {string} Translated text or the key if not found
+	 */
+	t(key) {
+		const keys = key.split('.');
+		let value = i18nData[this.lang];
+
+		for (const k of keys) {
+			if (value && typeof value === 'object' && k in value) {
+				value = value[k];
+			} else {
+				return key; // Fallback to key if not found
+			}
+		}
+
+		return typeof value === 'string' ? value : key;
+	}
+
+	/**
+	 * Initialize state from external JSON files
+	 * Merges CSP directives configuration with i18n descriptions
+	 */
+	initializeState() {
+		const state = {};
+		const descriptions = i18nData[this.lang]?.directives || {};
+
+		// Default enabled directives (matching original behavior)
+		const defaultEnabled = ['base-uri', 'default-src', 'frame-ancestors', 'object-src', 'script-src', 'style-src'];
+
+		Object.entries(cspDirectives).forEach(([key, config]) => {
+			state[key] = {
+				enabled: defaultEnabled.includes(key),
+				defaults: [...config.defaults],
+				added: [],
+				description: descriptions[key] || ''
+			};
+
+			// Add boolean flag if type is boolean
+			if (config.type === 'boolean') {
+				state[key].boolean = true;
+			}
+
+			// Add tokens if type is token-list
+			if (config.type === 'token-list' && config.tokens) {
+				state[key].tokens = [...config.tokens];
+			}
+		});
+
+		return state;
 	}
 
 	get policy() {
 		return this.state;
 	}
 
-	set policy(newState) {
-		if (typeof newState !== 'object' || newState === null) {
+	set policy(clientPolicy) {
+		if (typeof clientPolicy !== 'object' || clientPolicy === null) {
 			return;
 		}
 
-		Object.keys(newState).forEach(key => {
-			if (this.state[key] && newState[key] && Array.isArray(newState[key].added)) {
-				this.state[key].added = [...newState[key].added];
+		// Client policy approach: Only directives in clientPolicy are enabled
+		// All directives start disabled, then we enable only what client provides
+		Object.keys(this.state).forEach(key => {
+			this.state[key].enabled = false;
+		});
+
+		Object.keys(clientPolicy).forEach(key => {
+			if (this.state[key]) {
+				// Enable this directive
+				this.state[key].enabled = true;
+
+				// Merge the client's added values
+				if (clientPolicy[key] && Array.isArray(clientPolicy[key].added)) {
+					this.state[key].added = [...clientPolicy[key].added];
+				}
+
+				// Optionally allow client to override defaults
+				if (clientPolicy[key] && Array.isArray(clientPolicy[key].defaults)) {
+					this.state[key].defaults = [...clientPolicy[key].defaults];
+				}
 			}
 		});
 
@@ -160,6 +101,32 @@ class CspManager extends HTMLElement {
 
 	get cspString() {
 		return this.generateCspString();
+	}
+
+	/**
+	 * Get list of available (disabled) directives
+	 * @returns {Array<{key: string, description: string}>}
+	 */
+	getAvailableDirectives() {
+		return Object.entries(this.state)
+			.filter(([, valueObj]) => !valueObj.enabled)
+			.map(([key, valueObj]) => ({
+				key,
+				description: valueObj.description
+			}))
+			.sort((a, b) => a.key.localeCompare(b.key));
+	}
+
+	/**
+	 * Enable a directive by name
+	 * @param {string} directiveName - The directive to enable
+	 */
+	enableDirective(directiveName) {
+		if (this.state[directiveName] && !this.state[directiveName].enabled) {
+			this.state[directiveName].enabled = true;
+			this.render();
+			this.updateCspString();
+		}
 	}
 
 	updateCspString() {
@@ -238,6 +205,12 @@ class CspManager extends HTMLElement {
 				const index = parseInt(target.dataset.index, 10);
 				this.removeValue(directive, index);
 				target.closest('li').remove();
+			} else if (target.dataset.addDirective !== undefined) {
+				const input = this.shadowRoot.querySelector('#directive-selector');
+				if (input && input.value) {
+					this.enableDirective(input.value.trim());
+					input.value = '';
+				}
 			}
 		});
 
@@ -254,6 +227,8 @@ class CspManager extends HTMLElement {
 	}
 
 	render() {
+		const availableDirectives = this.getAvailableDirectives();
+
 		this.shadowRoot.innerHTML = `
 			${Object.entries(this.state).map(([key, valueObj]) => {
 				const hasTokens = valueObj.tokens && valueObj.tokens.length > 0;
@@ -270,27 +245,41 @@ class CspManager extends HTMLElement {
 						<div>
 							<small>${valueObj.description}</small>
 							${valueObj.boolean
-								? `<p>This is a boolean directive. It has no values.</p>`
+								? `<p>${this.t('ui.booleanDirectiveInfo')}</p>`
 								: `
 									<ul data-ul-for="${key}">
 										${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
 										${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
 									</ul>
 									<fieldset>
-										<input type="text" data-directive="${key}" placeholder="Add new value" ${inputListAttribute}>
-										<button data-add data-directive="${key}">Add</button>
+										<input type="text" data-directive="${key}" placeholder="${this.t('ui.addNewValue')}" ${inputListAttribute}>
+										<button data-add data-directive="${key}">${this.t('ui.add')}</button>
 									</fieldset>
 									${dataListElement}
 								`
 							}
 							<label>
-								<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> Enable ${key}
+								<input type="checkbox" data-directive="${key}" ${valueObj.enabled ? 'checked' : ''}> ${this.t('ui.enable')} ${key}
 							</label>
 						</div>
 					</details>
 				`;
 			}).join('')}
-			<pre><code>${this.generateCspString()}</code></pre>`;
+			<pre><code>${this.generateCspString()}</code></pre>
+			<fieldset class="add-directive">
+				<input
+					type="text"
+					list="available-directives"
+					id="directive-selector"
+					placeholder="${this.t('ui.addDirectivePlaceholder')}"
+					autocomplete="off">
+				<datalist id="available-directives">
+					${availableDirectives.map(({ key, description }) =>
+						`<option value="${key}">${description}</option>`
+					).join('')}
+				</datalist>
+				<button data-add-directive>${this.t('ui.addDirective')}</button>
+			</fieldset>`;
 	}
 }
 

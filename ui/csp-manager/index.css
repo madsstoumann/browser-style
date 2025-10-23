@@ -1,0 +1,101 @@
+:host {
+	--csp-manager-accent: hsl(211, 100%, 95%);
+	--csp-manager-accent-dark: hsl(211, 50%, 50%);
+	--csp-manager-buttonface: #efefef;
+	--csp-manager-bdrs: .5rem;
+	--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	--csp-manager-ff-system: system-ui, sans-serif;
+	--csp-manager-gap: 1rem;
+	--csp-manager-tab-width: 2;
+
+	display: grid;
+	font-size: var(--csp-manager-font-size, 16px);
+	row-gap: var(--csp-manager-gap);
+}
+
+button {
+	background: var(--csp-manager-buttonface);
+	border: 0;
+	cursor: pointer;
+}
+
+button, input {
+	border-radius: var(--csp-manager-bdrs);
+	font-family: var(--csp-manager-ff-system);
+	font-size: inherit;
+}
+
+details {
+	border: 1px solid var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	padding: var(--csp-manager-gap);
+	user-select: none;
+
+	&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
+	&:not(:has(:checked)) { display: none; } /* background: var(--csp-manager-buttonface); opacity: .5;  */
+}
+
+div {
+	display: grid;
+	margin-block-start: var(--csp-manager-gap);
+	row-gap: var(--csp-manager-gap);
+}
+
+fieldset {
+	all: unset;
+	display: flex;
+	gap: var(--csp-manager-gap);
+	button { padding: 0 2ch; }
+}
+
+input {
+	border: 1px solid var(--csp-manager-buttonface);
+	flex: 1;
+	padding: 1ch 2ch;
+}
+
+li {
+	background: var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	display: grid;
+	font-family: var(--csp-manager-ff-mono);
+	font-size: small;
+	gap: 1ch;
+	grid-auto-flow: column;
+	padding: .75ch 1.5ch;
+	place-content: center;
+	&:has(button) { background: var(--csp-manager-accent); }
+	button { all: unset; display: inline-block; padding: 0 0.5ch; cursor: pointer; }
+}
+
+pre {
+	all: unset;
+	background: var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	font-size: small;
+	overflow-x: auto;
+	padding: 2ch;
+	tab-size: var(--csp-manager-tab-width);
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+ul {
+	all: unset;
+	display: flex;
+	gap: calc(var(--csp-manager-gap) / 2);
+	list-style: none;
+}
+
+summary {
+	font-family: var(--csp-manager-ff-mono);
+}
+
+::details-content {
+	height: 0;
+	overflow: clip;
+	transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
+}
+[open]::details-content {
+	height: auto;
+}
