@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Grid Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Grid Layouts using CSS layout system">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+</head>
+<body>
+	<h1>Grid Layouts</h1>
+	<p>These layouts use <strong>grid patterns</strong> with mixed item sizes to create <strong>repeating patterns</strong>.<br>When you add more items, the pattern repeats automatically, indicated with gray elements.</p>
+
+	<h2>3 Items</h2>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="48" height="48" x="0" y="0" />
+        <text x="21" y="27%">1</text>
+        <rect rx="4" width="48" height="48" x="50" y="0" />
+        <text x="71" y="27%">2</text>
+        <rect rx="4" width="98" height="48" x="0" y="50" />
+        <text x="46" y="77%">3</text>
+    </svg>Grid 3a</h3>
+		<small>2 small items in top row and 1 large item spanning horizontally at bottom</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(3a)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(3a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="98" height="48" x="0" y="0" />
+        <text x="46" y="27%">1</text>
+        <rect rx="4" width="48" height="48" x="0" y="50" />
+        <text x="21" y="77%">2</text>
+        <rect rx="4" width="48" height="48" x="50" y="50" />
+        <text x="71" y="77%">3</text>
+    </svg>Grid 3b</h3>
+		<small>1 large item spanning horizontally at top and 2 small items at bottom</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(3b)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(3b)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="64.67" height="98" x="0" y="0" />
+        <text x="29.335" y="52%">1</text>
+        <rect rx="4" width="31.33" height="48" x="66.67" y="0" />
+        <text x="79.33500000000001" y="27%">2</text>
+        <rect rx="4" width="31.33" height="48" x="66.67" y="50" />
+        <text x="79.33500000000001" y="77%">3</text>
+    </svg>Grid 3c</h3>
+		<small>1 large item spanning vertically on the left and 2 small items on the right</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(3c)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(3c)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="48" x="0" y="0" />
+        <text x="12.665" y="27%">1</text>
+        <rect rx="4" width="64.67" height="98" x="33.33" y="0" />
+        <text x="62.66499999999999" y="52%">2</text>
+        <rect rx="4" width="31.33" height="48" x="0" y="50" />
+        <text x="12.665" y="77%">3</text>
+    </svg>Grid 3d</h3>
+		<small>2 small items on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(3d)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(3d)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>4 Items</h2>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="64.67" height="98" x="0" y="0" />
+        <text x="29.335" y="52%">1</text>
+        <rect rx="4" width="31.33" height="31.33" x="66.67" y="0" />
+        <text x="79.33500000000001" y="18.665%">2</text>
+        <rect rx="4" width="31.33" height="31.33" x="66.67" y="33.33" />
+        <text x="79.33500000000001" y="51.995%">3</text>
+        <rect rx="4" width="31.33" height="31.33" x="66.67" y="66.67" />
+        <text x="79.33500000000001" y="85.33500000000001%">4</text>
+    </svg>Grid 4a</h3>
+		<small>1 large item spanning vertically on the left and 3 small items stacked on the right</small>
+		<code>&lt;lay-out md="columns(4)" lg="grid(4a)"&gt;</code>
+		<lay-out md="columns(4)" lg="grid(4a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="31.33" x="0" y="0" />
+        <text x="12.665" y="18.665%">1</text>
+        <rect rx="4" width="64.67" height="98" x="33.33" y="0" />
+        <text x="62.66499999999999" y="52%">2</text>
+        <rect rx="4" width="31.33" height="31.33" x="0" y="33.33" />
+        <text x="12.665" y="51.995%">3</text>
+        <rect rx="4" width="31.33" height="31.33" x="0" y="66.67" />
+        <text x="12.665" y="85.33500000000001%">4</text>
+    </svg>Grid 4b</h3>
+		<small>3 small items stacked on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="columns(4)" lg="grid(4b)"&gt;</code>
+		<lay-out md="columns(4)" lg="grid(4b)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="64.67" height="48" x="0" y="0" />
+        <text x="29.335" y="27%">1</text>
+        <rect rx="4" width="31.33" height="98" x="66.67" y="0" />
+        <text x="79.33500000000001" y="52%">2</text>
+        <rect rx="4" width="31.33" height="48" x="0" y="50" />
+        <text x="12.665" y="77%">3</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="50" />
+        <text x="45.995" y="77%">4</text>
+    </svg>Grid 4c</h3>
+		<small>1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items</small>
+		<code>&lt;lay-out md="columns(4)" lg="grid(4c)"&gt;</code>
+		<lay-out md="columns(4)" lg="grid(4c)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="98" x="0" y="0" />
+        <text x="12.665" y="52%">1</text>
+        <rect rx="4" width="64.67" height="48" x="33.33" y="0" />
+        <text x="62.66499999999999" y="27%">2</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="50" />
+        <text x="45.995" y="77%">3</text>
+        <rect rx="4" width="31.33" height="48" x="66.67" y="50" />
+        <text x="79.33500000000001" y="77%">4</text>
+    </svg>Grid 4d</h3>
+		<small>1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items</small>
+		<code>&lt;lay-out md="columns(4)" lg="grid(4d)"&gt;</code>
+		<lay-out md="columns(4)" lg="grid(4d)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="98" x="0" y="0" />
+        <text x="12.665" y="52%">1</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="0" />
+        <text x="45.995" y="27%">2</text>
+        <rect rx="4" width="31.33" height="98" x="66.67" y="0" />
+        <text x="79.33500000000001" y="52%">3</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="50" />
+        <text x="45.995" y="77%">4</text>
+    </svg>Grid 4e</h3>
+		<small>1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically</small>
+		<code>&lt;lay-out md="columns(4)" lg="grid(4e)"&gt;</code>
+		<lay-out md="columns(4)" lg="grid(4e)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>5 Items</h2>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="98" height="31.33" x="0" y="0" />
+        <text x="46" y="18.665%">1</text>
+        <rect rx="4" width="48" height="31.33" x="0" y="33.33" />
+        <text x="21" y="51.995%">2</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="33.33" />
+        <text x="71" y="51.995%">3</text>
+        <rect rx="4" width="48" height="31.33" x="0" y="66.67" />
+        <text x="21" y="85.33500000000001%">4</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="66.67" />
+        <text x="71" y="85.33500000000001%">5</text>
+    </svg>Grid 5a</h3>
+		<small>1 large item spanning horizontally at top and 4 small items in a grid below</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5a)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="48" height="31.33" x="0" y="0" />
+        <text x="21" y="18.665%">1</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="0" />
+        <text x="71" y="18.665%">2</text>
+        <rect rx="4" width="48" height="31.33" x="0" y="33.33" />
+        <text x="21" y="51.995%">3</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="33.33" />
+        <text x="71" y="51.995%">4</text>
+        <rect rx="4" width="98" height="31.33" x="0" y="66.67" />
+        <text x="46" y="85.33500000000001%">5</text>
+    </svg>Grid 5b</h3>
+		<small>4 small items in a grid at top and 1 large item spanning horizontally at bottom</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5b)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5b)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="64.67" height="98" x="0" y="0" />
+        <text x="29.335" y="52%">1</text>
+        <rect rx="4" width="31.33" height="23" x="66.67" y="0" />
+        <text x="79.33500000000001" y="14.5%">2</text>
+        <rect rx="4" width="31.33" height="23" x="66.67" y="25" />
+        <text x="79.33500000000001" y="39.5%">3</text>
+        <rect rx="4" width="31.33" height="23" x="66.67" y="50" />
+        <text x="79.33500000000001" y="64.5%">4</text>
+        <rect rx="4" width="31.33" height="23" x="66.67" y="75" />
+        <text x="79.33500000000001" y="89.5%">5</text>
+    </svg>Grid 5c</h3>
+		<small>1 large item spanning vertically on the left and 4 small items in a grid on the right</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5c)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5c)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="23" x="0" y="0" />
+        <text x="12.665" y="14.5%">1</text>
+        <rect rx="4" width="64.67" height="98" x="33.33" y="0" />
+        <text x="62.66499999999999" y="52%">2</text>
+        <rect rx="4" width="31.33" height="23" x="0" y="25" />
+        <text x="12.665" y="39.5%">3</text>
+        <rect rx="4" width="31.33" height="23" x="0" y="50" />
+        <text x="12.665" y="64.5%">4</text>
+        <rect rx="4" width="31.33" height="23" x="0" y="75" />
+        <text x="12.665" y="89.5%">5</text>
+    </svg>Grid 5d</h3>
+		<small>4 small items in a grid on the left and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5d)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5d)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="48" x="0" y="0" />
+        <text x="12.665" y="27%">1</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="0" />
+        <text x="45.995" y="27%">2</text>
+        <rect rx="4" width="31.33" height="98" x="66.67" y="0" />
+        <text x="79.33500000000001" y="52%">3</text>
+        <rect rx="4" width="31.33" height="48" x="0" y="50" />
+        <text x="12.665" y="77%">4</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="50" />
+        <text x="45.995" y="77%">5</text>
+    </svg>Grid 5e</h3>
+		<small>2 small items, 1 large item spanning vertically, and 2 more small items</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5e)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5e)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="31.33" height="98" x="0" y="0" />
+        <text x="12.665" y="52%">1</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="0" />
+        <text x="45.995" y="27%">2</text>
+        <rect rx="4" width="31.33" height="48" x="66.67" y="0" />
+        <text x="79.33500000000001" y="27%">3</text>
+        <rect rx="4" width="31.33" height="48" x="33.33" y="50" />
+        <text x="45.995" y="77%">4</text>
+        <rect rx="4" width="31.33" height="48" x="66.67" y="50" />
+        <text x="79.33500000000001" y="77%">5</text>
+    </svg>Grid 5f</h3>
+		<small>1 large item spanning vertically on the left and 4 small items in a grid</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5f)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5f)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="48" height="98" x="0" y="0" />
+        <text x="21" y="52%">1</text>
+        <rect rx="4" width="23" height="48" x="50" y="0" />
+        <text x="58.5" y="27%">2</text>
+        <rect rx="4" width="23" height="48" x="75" y="0" />
+        <text x="83.5" y="27%">3</text>
+        <rect rx="4" width="23" height="48" x="50" y="50" />
+        <text x="58.5" y="77%">4</text>
+        <rect rx="4" width="23" height="48" x="75" y="50" />
+        <text x="83.5" y="77%">5</text>
+    </svg>Grid 5g</h3>
+		<small>1 large item spanning vertically on the left and 4 small items in a grid</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5g)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5g)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="23" height="48" x="0" y="0" />
+        <text x="8.5" y="27%">1</text>
+        <rect rx="4" width="23" height="48" x="25" y="0" />
+        <text x="33.5" y="27%">2</text>
+        <rect rx="4" width="48" height="98" x="50" y="0" />
+        <text x="71" y="52%">3</text>
+        <rect rx="4" width="23" height="48" x="0" y="50" />
+        <text x="8.5" y="77%">4</text>
+        <rect rx="4" width="23" height="48" x="25" y="50" />
+        <text x="33.5" y="77%">5</text>
+    </svg>Grid 5h</h3>
+		<small>4 small items and 1 large item spanning vertically on the right</small>
+		<code>&lt;lay-out md="columns(5)" lg="grid(5h)"&gt;</code>
+		<lay-out md="columns(5)" lg="grid(5h)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>6 Items</h2>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="48" height="98" x="0" y="0" />
+        <text x="21" y="52%">1</text>
+        <rect rx="4" width="23" height="31.33" x="50" y="0" />
+        <text x="58.5" y="18.665%">2</text>
+        <rect rx="4" width="23" height="31.33" x="75" y="0" />
+        <text x="83.5" y="18.665%">3</text>
+        <rect rx="4" width="23" height="31.33" x="50" y="33.33" />
+        <text x="58.5" y="51.995%">4</text>
+        <rect rx="4" width="23" height="31.33" x="75" y="33.33" />
+        <text x="83.5" y="51.995%">5</text>
+        <rect rx="4" width="48" height="31.33" x="50" y="66.67" />
+        <text x="71" y="85.33500000000001%">6</text>
+    </svg>Grid 6a</h3>
+		<small>1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(6a)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(6a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100">
+        <rect rx="4" width="23" height="31.33" x="0" y="0" />
+        <text x="8.5" y="18.665%">1</text>
+        <rect rx="4" width="23" height="31.33" x="25" y="0" />
+        <text x="33.5" y="18.665%">2</text>
+        <rect rx="4" width="48" height="98" x="50" y="0" />
+        <text x="71" y="52%">3</text>
+        <rect rx="4" width="23" height="31.33" x="0" y="33.33" />
+        <text x="8.5" y="51.995%">4</text>
+        <rect rx="4" width="23" height="31.33" x="25" y="33.33" />
+        <text x="33.5" y="51.995%">5</text>
+        <rect rx="4" width="48" height="31.33" x="0" y="66.67" />
+        <text x="21" y="85.33500000000001%">6</text>
+    </svg>Grid 6b</h3>
+		<small>1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right</small>
+		<code>&lt;lay-out md="columns(3)" lg="grid(6b)"&gt;</code>
+		<lay-out md="columns(3)" lg="grid(6b)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+</body>
+</html>
