@@ -1,0 +1,423 @@
+{
+  "name": "Grid Layouts",
+  "prefix": "grid",
+  "desc": "These layouts use <strong>grid patterns</strong> with mixed item sizes to create <strong>repeating patterns</strong>.<br>When you add more items, the pattern repeats automatically, indicated with gray elements.",
+  "layouts": [
+    {
+      "id": "3a",
+      "description": "2 small items in top row and 1 large item spanning horizontally at bottom",
+      "columns": "1fr 1fr",
+      "items": 3,
+      "icon": [
+        { "w": 50, "h": 50, "x": 0, "y": 0 },
+        { "w": 50, "h": 50, "x": 50, "y": 0 },
+        { "w": 100, "h": 50, "x": 0, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "50%,50%,100%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(3a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(3n+3)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "3b",
+      "description": "1 large item spanning horizontally at top and 2 small items at bottom",
+      "columns": "1fr 1fr",
+      "items": 3,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 0 },
+        { "w": 50, "h": 50, "x": 0, "y": 50 },
+        { "w": 50, "h": 50, "x": 50, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "100%,50%,50%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(3b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(3n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "3c",
+      "description": "1 large item spanning vertically on the left and 2 small items on the right",
+      "columns": "2fr 1fr",
+      "items": 3,
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "66.67%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(3c)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(3n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+        {
+      "id": "3d",
+      "description": "2 small items on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 3,
+      "icon": [
+        { "w": 33.33, "h": 50, "x": 0, "y": 0 },
+        { "w": 66.67, "h": 100, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 0, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,66.67%,66.67%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(3d)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(3n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "4a",
+      "description": "1 large item spanning vertically on the left and 3 small items stacked on the right",
+      "columns": "2fr 1fr",
+      "items": 4,
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 33.33, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 33.33, "x": 66.67, "y": 33.33 },
+        { "w": 33.33, "h": 33.33, "x": 66.67, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "srcset": "66.67%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "grid(4a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 3 / auto" } }
+      ]
+    },
+    {
+      "id": "4b",
+      "description": "3 small items stacked on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 4,
+      "icon": [
+        { "w": 33.33, "h": 33.33, "x": 0, "y": 0 },
+        { "w": 66.67, "h": 100, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 33.33, "x": 0, "y": 33.33 },
+        { "w": 33.33, "h": 33.33, "x": 0, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,66.67%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "grid(4b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "span 3 / auto" } }
+      ]
+    },
+    {
+      "id": "4c",
+      "description": "1 large item spanning horizontally, 1 large item spanning vertically, and 2 small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "icon": [
+        { "w": 66.67, "h": 50, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 100, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 0, "y": 50 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "66.67%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "grid(4c)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "auto / span 2" } },
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "4d",
+      "description": "1 large item spanning vertically, 1 large item spanning horizontally, and 2 small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "icon": [
+        { "w": 33.33, "h": 100, "x": 0, "y": 0 },
+        { "w": 66.67, "h": 50, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 50 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,66.67%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "grid(4d)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(4n+2)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    
+    {
+      "id": "4e",
+      "description": "1 large item spanning vertically, 2 small items stacked in middle, and 1 large item spanning vertically",
+      "columns": "1fr 1fr 1fr",
+      "items": 4,
+      "icon": [
+        { "w": 33.33, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 100, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(4)",
+        "lg": "grid(4e)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(4n+1)", "properties": { "--layout-ga": "span 2 / auto" } },
+        { "selector": "*:nth-child(4n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "5a",
+      "description": "1 large item spanning horizontally at top and 4 small items in a grid below",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 100, "h": 33.33, "x": 0, "y": 0 },
+        { "w": 50, "h": 33.33, "x": 0, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 50, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 0, "y": 66.67 },
+        { "w": 50, "h": 33.33, "x": 50, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "srcset": "100%,50%,50%,50%,50%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "5b",
+      "description": "4 small items in a grid at top and 1 large item spanning horizontally at bottom",
+      "columns": "1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 50, "h": 33.33, "x": 0, "y": 0 },
+        { "w": 50, "h": 33.33, "x": 50, "y": 0 },
+        { "w": 50, "h": 33.33, "x": 0, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 50, "y": 33.33 },
+        { "w": 100, "h": 33.33, "x": 0, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "srcset": "50%,50%,50%,50%,100%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+5)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+    {
+      "id": "5c",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid on the right",
+      "columns": "2fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 25, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 25, "x": 66.67, "y": 25 },
+        { "w": 33.33, "h": 25, "x": 66.67, "y": 50 },
+        { "w": 33.33, "h": 25, "x": 66.67, "y": 75 }
+      ],
+      "repeatable": true,
+      "srcset": "66.67%,33.33%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5c)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "5d",
+      "description": "4 small items in a grid on the left and 1 large item spanning vertically on the right",
+      "columns": "1fr 2fr",
+      "items": 5,
+      "icon": [
+        { "w": 33.33, "h": 25, "x": 0, "y": 0 },
+        { "w": 66.67, "h": 100, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 25, "x": 0, "y": 25 },
+        { "w": 33.33, "h": 25, "x": 0, "y": 50 },
+        { "w": 33.33, "h": 25, "x": 0, "y": 75 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,66.67%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5d)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+2)", "properties": { "--layout-ga": "span 4 / auto" } }
+      ]
+    },
+    {
+      "id": "5e",
+      "description": "2 small items, 1 large item spanning vertically, and 2 more small items",
+      "columns": "1fr 1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 33.33, "h": 50, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 100, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 0, "y": 50 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5e)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+3)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "5f",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+      "columns": "1fr 1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 33.33, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 0 },
+        { "w": 33.33, "h": 50, "x": 33.33, "y": 50 },
+        { "w": 33.33, "h": 50, "x": 66.67, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5f)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 2 / auto" } }
+      ]
+    },
+    {
+      "id": "5g",
+      "description": "1 large item spanning vertically on the left and 4 small items in a grid",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 50, "h": 100, "x": 0, "y": 0 },
+        { "w": 25, "h": 50, "x": 50, "y": 0 },
+        { "w": 25, "h": 50, "x": 75, "y": 0 },
+        { "w": 25, "h": 50, "x": 50, "y": 50 },
+        { "w": 25, "h": 50, "x": 75, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "50%,25%,25%,25%,25%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5g)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+1)", "properties": { "--layout-ga": "span 2 / span 2" } }
+      ]
+    },
+    {
+      "id": "5h",
+      "description": "4 small items and 1 large item spanning vertically on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 5,
+      "icon": [
+        { "w": 25, "h": 50, "x": 0, "y": 0 },
+        { "w": 25, "h": 50, "x": 25, "y": 0 },
+        { "w": 50, "h": 100, "x": 50, "y": 0 },
+        { "w": 25, "h": 50, "x": 0, "y": 50 },
+        { "w": 25, "h": 50, "x": 25, "y": 50 }
+      ],
+      "repeatable": true,
+      "srcset": "25%,25%,50%,25%,25%",
+      "breakpoints": {
+        "md": "columns(5)",
+        "lg": "grid(5h)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(5n+3)", "properties": { "--layout-ga": "span 2 / span 2" } }
+      ]
+    },
+    {
+      "id": "6a",
+      "description": "1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 6,
+      "icon": [
+        { "w": 50, "h": 100, "x": 0, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 50, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 75, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 50, "y": 33.33 },
+        { "w": 25, "h": 33.33, "x": 75, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 50, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "rows": "1fr 1fr 1fr",
+      "srcset": "50%,25%,25%,25%,25%,50%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(6a)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(6n+1)", "properties": { "--layout-ga": "span 3 / span 2" } },
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 2" } }
+      ]
+    },
+        {
+      "id": "6b",
+      "description": "1 large item spanning in both directions, 4 small items and 1 large item spanning horizontally on the right",
+      "columns": "1fr 1fr 1fr 1fr",
+      "items": 6,
+      "icon": [
+        
+        { "w": 25, "h": 33.33, "x": 0, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 25, "y": 0 },
+        { "w": 50, "h": 100, "x": 50, "y": 0 },
+        { "w": 25, "h": 33.33, "x": 0, "y": 33.33 },
+        { "w": 25, "h": 33.33, "x": 25, "y": 33.33 },
+        { "w": 50, "h": 33.33, "x": 0, "y": 66.67 }
+      ],
+      "repeatable": true,
+      "rows": "1fr 1fr 1fr",
+      "srcset": "25%,25%,25%,25%,50%,50%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "grid(6b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(6n+6)", "properties": { "--layout-ga": "auto / span 2" } },
+        { "selector": "*:nth-child(6n+3)", "properties": { "--layout-ga": "span 3 / span 2" } }
+      ]
+    }
+  ]
+}

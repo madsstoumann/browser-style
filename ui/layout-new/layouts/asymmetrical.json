@@ -1,0 +1,137 @@
+{
+  "name": "Asymmetrical Layouts",
+  "prefix": "asym",
+  "desc": "These layouts use the <strong>asym()</strong> layout mode to create various asymmetrical patterns.<br>The layouts display a specific/fixed number of items.",
+  "layouts": [
+    {
+      "id": "l-r",
+      "description": "Asymmetrical Left Right",
+      "columns": "repeat(8, 1fr)",
+      "items": 2,
+      "icon": [
+        { "w": 75, "h": 100, "x": 0, "y": 0 },
+        { "w": 50, "h": 75, "x": 50, "y": 12.5, "class": "light" }
+      ],
+      "repeatable": false,
+      "srcset": "75%,50%",
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "asym(l-r)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "1 / 1 / 7 / 7" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "3 / 5 / 5 / 9" } },
+        { "selector": "*:nth-child(n+3)", "properties": { "display": "none" } }
+      ]
+    },
+    {
+      "id": "r-l",
+      "description": "Asymmetrical Right Left",
+      "columns": "repeat(8, 1fr)",
+      "items": 2,
+      "icon": [
+        { "w": 75, "h": 100, "x": 25, "y": 0 },
+        { "w": 50, "h": 75, "x": 0, "y": 12.5, "class": "light" }
+      ],
+      "repeatable": false,
+      "srcset": "75%,50%",
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "asym(r-l)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "1 / 3 / 7 / 9" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "3 / 1 / 5 / 5" } },
+        { "selector": "*:nth-child(n+3)", "properties": { "display": "none" } }
+      ]
+    },
+    {
+      "id": "t-b",
+      "description": "Asymmetrical Top Bottom",
+      "columns": "repeat(8, 1fr)",
+      "items": 2,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 0 },
+        { "w": 75, "h": 50, "x": 12.5, "y": 25, "class": "light" }
+      ],
+      "repeatable": false,
+      "srcset": "100%,75%",
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "asym(t-b)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "1 / 1 / 5 / 9" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "2 / 2 / 6 / 8" } },
+        { "selector": "*:nth-child(n+3)", "properties": { "display": "none" } }
+      ]
+    },
+    {
+      "id": "b-t",
+      "description": "Asymmetrical Bottom Top",
+      "columns": "repeat(8, 1fr)",
+      "items": 2,
+      "icon": [
+        { "w": 100, "h": 50, "x": 0, "y": 25 },
+        { "w": 75, "h": 50, "x": 12.5, "y": 0, "class": "light" }
+      ],
+      "repeatable": false,
+      "srcset": "100%,75%",
+      "breakpoints": {
+        "md": "columns(2)",
+        "lg": "asym(b-t)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "2 / 1 / 6 / 9" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "1 / 2 / 5 / 8" } },
+        { "selector": "*:nth-child(n+3)", "properties": { "display": "none" } }
+      ]
+    },
+    {
+      "id": "tl-br",
+      "description": "Asymmetrical Top Left > Bottom Right",
+      "columns": "repeat(7, 1fr)",
+      "items": 3,
+        "icon": [
+        { "w": 40, "h": 50, "x": 0, "y": 0 },
+        { "w": 40, "h": 50, "x": 30, "y": 25, "class": "light" },
+        { "w": 40, "h": 50, "x": 60, "y": 50 }
+      ],
+      "repeatable": false,
+      "srcset": "42.86%,42.86%,42.86%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "asym(tl-br)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "1 / 1 / 3 / 4" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "2 / 3 / 4 / 6" } },
+        { "selector": "*:nth-child(3)", "properties": { "--layout-ga": "3 / 5 / 5 / 8" } },
+        { "selector": "*:nth-child(n+4)", "properties": { "display": "none" } }
+      ]
+    },
+    {
+      "id": "bl-tr",
+      "description": "Asymmetrical Bottom Left > Top Right",
+      "columns": "repeat(7, 1fr)",
+      "items": 3,
+      "icon": [
+        { "w": 40, "h": 50, "x": 0, "y": 50 },
+        { "w": 40, "h": 50, "x": 30, "y": 25, "class": "light" },
+        { "w": 40, "h": 50, "x": 60, "y": 0 }
+      ],
+      "repeatable": false,
+      "srcset": "42.86%,42.86%,42.86%",
+      "breakpoints": {
+        "md": "columns(3)",
+        "lg": "asym(bl-tr)"
+      },
+      "rules": [
+        { "selector": "*:nth-child(1)", "properties": { "--layout-ga": "3 / 1 / 5 / 4" } },
+        { "selector": "*:nth-child(2)", "properties": { "--layout-ga": "2 / 3 / 4 / 6" } },
+        { "selector": "*:nth-child(3)", "properties": { "--layout-ga": "1 / 5 / 3 / 8" } },
+        { "selector": "*:nth-child(n+4)", "properties": { "display": "none" } }
+      ]
+    }
+  ]
+}

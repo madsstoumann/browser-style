@@ -1,0 +1,80 @@
+{
+  "name": "@browser.style/layout",
+  "version": "2.0.0",
+  "description": "Modern CSS layout system with responsive grid patterns, React/Web components, presets, and responsive image srcsets",
+  "type": "module",
+  "main": "index.js",
+  "types": "src/types.ts",
+  "style": "dist/layout.css",
+  "scripts": {
+    "build": "node build.js",
+    "build:watch": "node build.js --watch",
+    "dev": "npm run build:watch",
+    "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/types.ts",
+      "import": "./index.js",
+      "style": "./dist/layout.css"
+    },
+    "./react": {
+      "types": "./src/types.ts",
+      "import": "./react.js"
+    },
+    "./css": "./dist/layout.css",
+    "./build": "./build.js",
+    "./preset": "./src/preset.js",
+    "./srcset": "./src/srcset.js"
+  },
+  "files": [
+    "index.js",
+    "build.js",
+    "layout.config",
+    "core/",
+    "layouts/",
+    "src/",
+    "dist/layout.css",
+    "README.md",
+    "BUILD.md",
+    "LICENSE"
+  ],
+  "bin": {
+    "browser-style-layout": "./build.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "css-grid",
+    "responsive-design",
+    "responsive-images",
+    "srcsets",
+    "sizes-attribute",
+    "layout-system",
+    "css-framework",
+    "web-components",
+    "react-component",
+    "container-queries",
+    "media-queries",
+    "grid-layouts",
+    "bento-grids",
+    "image-optimization",
+    "presets",
+    "typescript",
+    "browser.style"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/layout"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/layout"
+}
