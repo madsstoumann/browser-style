@@ -8,6 +8,27 @@
 // React Component
 export { Layout, LayoutWithContext, useLayoutSizes, getSizes } from './src/components/react/Layout.jsx'
 
+// Srcset utilities - Simple
+export {
+	parseSrcsetString,
+	normalizeSrcsets,
+	srcsetToSizes,
+	srcsetToString
+} from './src/components/react/srcset-utils.js'
+
+// Srcset utilities - Advanced (child-position aware)
+export {
+	getWidthForChild,
+	calculateConstrainedWidth,
+	buildSrcsets,
+	getSizesForChild,
+	autoGenerateSizes,
+	getLayoutSrcset
+} from './src/components/react/srcset-advanced.js'
+
+// Layouts map and config
+export { layoutsMap, layoutConfig } from './layouts-map.js'
+
 // Preset utilities (browser-safe)
 export {
 	createPreset,

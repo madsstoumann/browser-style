@@ -9,9 +9,10 @@
   "scripts": {
     "build": "node build.js",
     "build:watch": "node build.js --watch",
+    "generate:layouts-map": "node src/generate-layouts-map.js",
     "dev": "npm run build:watch",
     "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
-    "prepublishOnly": "npm run build && npm test"
+    "prepublishOnly": "npm run generate:layouts-map && npm run build && npm test"
   },
   "exports": {
     ".": {
@@ -30,8 +31,10 @@
   },
   "files": [
     "index.js",
+    "react.js",
     "build.js",
     "layout.config",
+    "layouts-map.js",
     "core/",
     "layouts/",
     "src/",

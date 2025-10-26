@@ -128,7 +128,7 @@ if (!result.valid) {
 }
 ```
 
-### Auto-generate Srcsets
+### Auto-generate Srcsets (Node.js)
 ```javascript
 import { autoGenerateSrcsets } from './src/srcset.js'
 import { readConfig } from './src/preset.js'
@@ -139,6 +139,22 @@ const preset = { /* your preset */ }
 const srcsets = autoGenerateSrcsets(preset, config)
 // { default: "100vw", 540: "50vw", 720: "33.33vw" }
 ```
+
+### Generate Layouts Map
+```bash
+npm run generate:layouts-map
+```
+
+Generates `layouts-map.js` containing:
+- Srcset data for all layouts
+- Configuration (breakpoints, maxLayoutWidth)
+- Helper functions for browser usage
+
+**When to run:**
+- After adding custom layout JSON files
+- After modifying srcset values in layouts
+- After changing maxLayoutWidth in config
+- Automatically runs during `npm run prepublishOnly`
 
 ## Testing & Verification
 
@@ -257,4 +273,250 @@ cat layouts/columns.json | grep -A5 '"icon"'
 
 # Manually trigger icon generation
 node -e "import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))"
+```
+
+---
+
+## Responsive Images with Srcsets
+
+**New in v2.0**: Advanced srcset utilities for responsive images with child-position awareness.
+
+### Overview
+
+The layout system provides automatic srcset generation for responsive images. Each layout knows how wide its children are at each breakpoint, enabling precise `sizes` attributes for `<img>` and Next.js `<Image>` components.
+
+### Browser Usage (React)
+
+#### Simple Usage - All Children Same Size
+
+```javascript
+import { Layout } from '@browser.style/layout/react'
+import Image from 'next/image'
+
+// Simple srcsets (all children same size)
+const sizes = Layout.getSizes("default:100vw;720:50%")
+// → "(min-width: 720px) min(50vw, 512px), 100vw"
+
+<Layout lg="columns(2)">
+  <Image src="/photo1.jpg" sizes={sizes} />
+  <Image src="/photo2.jpg" sizes={sizes} />
+</Layout>
+```
+
+#### Advanced Usage - Per-Child Sizes
+
+```javascript
+import { Layout } from '@browser.style/layout/react'
+
+// Different sizes for each child
+const srcsets = "default:100vw;720:66.67%,33.33%,33.33%"
+
+// Child 0 gets 66.67% at lg breakpoint
+const sizes0 = Layout.getSizesForChild(srcsets, 0)
+// → "(min-width: 720px) min(66.67vw, 683px), 100vw"
+
+// Child 1 gets 33.33% at lg breakpoint
+const sizes1 = Layout.getSizesForChild(srcsets, 1)
+// → "(min-width: 720px) min(33.33vw, 341px), 100vw"
+
+<Layout lg="grid(3c)">
+  <Image src="/photo1.jpg" sizes={sizes0} />
+  <Image src="/photo2.jpg" sizes={sizes1} />
+  <Image src="/photo3.jpg" sizes={sizes1} />
+</Layout>
+```
+
+#### Auto-Generate from Layout Patterns
+
+```javascript
+import { Layout } from '@browser.style/layout/react'
+
+// Auto-generate srcsets from breakpoint definitions
+const breakpoints = { md: 'columns(2)', lg: 'grid(3c)' }
+
+// Automatically looks up srcsets from layouts-map.js
+const sizes0 = Layout.autoGenerateSizes(breakpoints, 0)
+// → "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
+
+const sizes1 = Layout.autoGenerateSizes(breakpoints, 1)
+// → "(min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw"
+
+<Layout md="columns(2)" lg="grid(3c)">
+  <Image src="/photo1.jpg" sizes={sizes0} />
+  <Image src="/photo2.jpg" sizes={sizes1} />
+</Layout>
+```
+
+### How It Works
+
+1. **Layout JSON** defines srcset for each layout:
+   ```json
+   {
+     "id": "3c",
+     "srcset": "66.67%,33.33%,33.33%"
+   }
+   ```
+
+2. **Layouts Map** is generated containing all srcset data:
+   ```javascript
+   layoutsMap["grid(3c)"] = { srcset: "66.67%,33.33%,33.33%" }
+   ```
+
+3. **buildSrcsets()** merges breakpoints:
+   ```javascript
+   buildSrcsets({ md: 'columns(2)', lg: 'grid(3c)' })
+   // → "default:100vw;540:50%;720:66.67%,33.33%,33.33%"
+   ```
+
+4. **getSizesForChild()** extracts child-specific width:
+   ```javascript
+   getSizesForChild(srcsets, 0)  // Gets first value: 66.67%
+   getSizesForChild(srcsets, 1)  // Gets second value: 33.33%
+   ```
+
+5. **Constraint calculation** with maxLayoutWidth (1024px):
+   ```javascript
+   // 66.67% of 1024px = 683px
+   "min(66.67vw, 683px)"
+
+   // 33.33% of 1024px = 341px
+   "min(33.33vw, 341px)"
+   ```
+
+### Srcset Format
+
+#### String Format
+```javascript
+"default:100vw;540:50%;720:66.67%,33.33%,33.33%"
+//       ↑        ↑          ↑
+//    mobile   tablet   desktop (per-child)
+```
+
+#### Object Format
+```javascript
+{
+  default: '100vw',
+  540: '50%',                      // All children same
+  720: '66.67%,33.33%,33.33%'      // Per-child
+}
+```
+
+### API Reference
+
+#### Layout.getSizes(srcsets)
+Simple conversion (all children same size):
+```javascript
+Layout.getSizes("default:100vw;720:50%")
+// → "(min-width: 720px) min(50vw, 512px), 100vw"
+```
+
+#### Layout.getSizesForChild(srcsets, childIndex, options)
+Child-position aware conversion:
+```javascript
+Layout.getSizesForChild("default:100vw;720:66.67%,33.33%", 0)
+// → "(min-width: 720px) min(66.67vw, 683px), 100vw"
+
+Layout.getSizesForChild("default:100vw;720:66.67%,33.33%", 1, {
+  maxLayoutWidth: '1200px'  // Override default
+})
+// → "(min-width: 720px) min(33.33vw, 400px), 100vw"
+```
+
+#### Layout.buildSrcsets(breakpoints)
+Auto-generate srcsets from layout patterns:
+```javascript
+Layout.buildSrcsets({ md: 'columns(2)', lg: 'grid(3c)' })
+// → "default:100vw;540:50%;720:66.67%,33.33%,33.33%"
+```
+
+#### Layout.autoGenerateSizes(breakpoints, childIndex, options)
+Complete auto-generation:
+```javascript
+Layout.autoGenerateSizes({ md: 'columns(2)', lg: 'grid(3c)' }, 0)
+// → "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
+```
+
+### Examples
+
+#### Bento Layout with 6 Images
+```javascript
+<Layout lg="bento(6a)">
+  {[0, 1, 2, 3, 4, 5].map(index => (
+    <Image
+      key={index}
+      src={`/photo${index}.jpg`}
+      sizes={Layout.autoGenerateSizes({ lg: 'bento(6a)' }, index)}
+    />
+  ))}
+</Layout>
+
+// Each image gets different sizes:
+// Child 0: min(30vw, 307px)
+// Child 1: min(40vw, 410px)
+// Child 2: min(30vw, 307px)
+// etc.
+```
+
+#### Multi-Breakpoint Hero
+```javascript
+const heroBreakpoints = {
+  sm: 'columns(1)',
+  md: 'columns(2)',
+  lg: 'grid(3c)'
+}
+
+<Layout {...heroBreakpoints}>
+  <Image
+    src="/hero.jpg"
+    sizes={Layout.autoGenerateSizes(heroBreakpoints, 0)}
+  />
+  {/* Sizes: "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw" */}
+</Layout>
+```
+
+### Testing Srcsets
+
+```bash
+# Check what srcsets are available
+node -e "import('./layouts-map.js').then(m => console.log(Object.keys(m.layoutsMap)))"
+
+# Check specific layout srcset
+node -e "import('./layouts-map.js').then(m => console.log(m.layoutsMap['grid(3c)']))"
+
+# Test size calculation
+node -e "
+import { getSizesForChild } from './src/components/react/srcset-advanced.js';
+console.log(getSizesForChild('default:100vw;720:66.67%,33.33%', 0));
+"
+```
+
+### Custom Layouts with Srcsets
+
+When creating custom layouts, always include srcset data:
+
+```json
+{
+  "name": "Custom Layouts",
+  "prefix": "custom",
+  "layouts": [{
+    "id": "hero",
+    "columns": "3fr 1fr",
+    "srcset": "75%,25%",
+    "items": 2,
+    "breakpoints": {
+      "lg": "custom(hero)"
+    }
+  }]
+}
+```
+
+Then regenerate the layouts map:
+```bash
+npm run generate:layouts-map
+```
+
+Now use in your app:
+```javascript
+Layout.autoGenerateSizes({ lg: 'custom(hero)' }, 0)
+// → Automatically uses your custom srcset
 ```

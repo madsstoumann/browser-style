@@ -541,8 +541,138 @@ A: Yes. The CSS is static, tested, and has no runtime dependencies.
 
 ---
 
+## Layouts Map Generation
+
+**New in v2.0**: The system generates a JavaScript module containing layout srcset data for responsive images.
+
+### What is layouts-map.js?
+
+`layouts-map.js` is an auto-generated file containing:
+- Srcset data for all 57 layouts
+- Configuration (breakpoints, maxLayoutWidth)
+- Helper functions for srcset lookups
+
+**Location**: `layouts-map.js` (package root, NOT in `src/`)
+
+**Size**: ~7 KB (uncompressed)
+
+### How to Generate
+
+The layouts map is automatically generated during `npm run prepublishOnly`, but you can also generate it manually:
+
+```bash
+npm run generate:layouts-map
+```
+
+Or directly:
+
+```bash
+node src/generate-layouts-map.js
+```
+
+### When to Regenerate
+
+Regenerate `layouts-map.js` when:
+1. **Adding custom layouts**: After creating new layout JSON files
+2. **Modifying srcsets**: After changing srcset values in existing layouts
+3. **Changing config**: After modifying `maxLayoutWidth` or breakpoints in `layout.config`
+
+### What It Contains
+
+```javascript
+// Example structure
+export const layoutsMap = {
+  "grid(3c)": {
+    "srcset": "66.67%,33.33%,33.33%",
+    "items": 3,
+    "repeatable": true
+  },
+  "columns(2)": {
+    "srcset": "50%",
+    "items": 2,
+    "repeatable": true
+  },
+  // ... all 57 layouts
+}
+
+export const layoutConfig = {
+  "maxLayoutWidth": "1024px",
+  "breakpoints": {
+    "xs": 240,
+    "sm": 380,
+    "md": 540,
+    "lg": 720,
+    "xl": 920,
+    "xxl": 1140
+  }
+}
+```
+
+### Usage with React
+
+The layouts map enables advanced srcset features for responsive images:
+
+```jsx
+import { Layout, layoutsMap } from '@browser.style/layout/react'
+import Image from 'next/image'
+
+// Auto-generate sizes for specific child
+const sizes = Layout.autoGenerateSizes(
+  { md: 'columns(2)', lg: 'grid(3c)' },
+  0  // child index
+)
+
+// Result: "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
+
+<Layout md="columns(2)" lg="grid(3c)">
+  <Image src="/photo.jpg" sizes={sizes} />
+</Layout>
+```
+
+See [RUN.md](RUN.md) for complete srcset usage documentation.
+
+### Custom Layouts
+
+If you add custom layout JSON files, regenerate the map to include them:
+
+```bash
+# 1. Create custom layout
+echo '{
+  "name": "My Layouts",
+  "prefix": "custom",
+  "layouts": [{
+    "id": "1",
+    "srcset": "75%,25%",
+    "items": 2
+  }]
+}' > layouts/custom.json
+
+# 2. Regenerate map
+npm run generate:layouts-map
+
+# 3. Use in your app
+import { layoutsMap } from '@browser.style/layout/react'
+console.log(layoutsMap['custom(1)'])  // { srcset: "75%,25%", ... }
+```
+
+### Build Integration
+
+For CI/CD pipelines, ensure the map is generated:
+
+```json
+{
+  "scripts": {
+    "build": "npm run generate:layouts-map && npm run build:css",
+    "prepublishOnly": "npm run generate:layouts-map && npm run build && npm test"
+  }
+}
+```
+
+---
+
 ## Next Steps
 
 - See [README.md](README.md) for component usage
+- See [RUN.md](RUN.md) for srcset and responsive image documentation
 - See [todo.md](todo.md) for implementation roadmap
 - See [TEST-RESULTS.md](TEST-RESULTS.md) for test documentation

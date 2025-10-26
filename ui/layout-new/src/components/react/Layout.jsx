@@ -3,6 +3,8 @@
 import React from 'react'
 import { presetToAttributes } from '../../preset.js'
 import { getSizes, normalizeSrcsets } from './srcset-utils.js'
+import { buildSrcsets, getSizesForChild, autoGenerateSizes } from './srcset-advanced.js'
+import { layoutConfig } from '../../../layouts-map.js'
 
 /**
  * Layout Component - React wrapper for <lay-out> element
@@ -111,12 +113,18 @@ export function Layout({
   ])
 
   // Normalize srcsets (string or object format)
+  // Auto-generate from preset if not provided
   const srcsets = React.useMemo(() => {
     if (srcsetsProp) {
       return normalizeSrcsets(srcsetsProp)
     }
+    // Auto-generate from preset breakpoints if available
+    if (finalPreset.breakpoints && Object.keys(finalPreset.breakpoints).length > 0) {
+      const generated = buildSrcsets(finalPreset.breakpoints)
+      return normalizeSrcsets(generated)
+    }
     return {}
-  }, [srcsetsProp])
+  }, [srcsetsProp, finalPreset.breakpoints])
 
   // Convert preset to HTML attributes
   const layoutAttrs = React.useMemo(() => {
@@ -152,20 +160,78 @@ Layout.displayName = 'Layout'
 Layout.getSizes = getSizes
 
 /**
- * React hook to get sizes from Layout context
- * Use this inside components that are children of <Layout>
+ * Advanced: Get sizes for specific child with min() constraints
+ * @param {string|Object} srcsets - Srcsets string or object
+ * @param {number} childIndex - Child index (0-based)
+ * @param {Object} [options] - Options
+ * @returns {string} CSS sizes attribute
  *
  * @example
+ * // Per-child sizes with constraints
+ * const sizes = Layout.getSizesForChild("default:100vw;720:66.67%,33.33%,33.33%", 0)
+ * // → "(min-width: 720px) min(66.67vw, 683px), 100vw"
+ */
+Layout.getSizesForChild = getSizesForChild
+
+/**
+ * Auto-generate srcsets from layout breakpoints
+ * @param {Object} breakpoints - Layout breakpoints
+ * @returns {string} Srcsets string
+ *
+ * @example
+ * const srcsets = Layout.buildSrcsets({ md: 'columns(2)', lg: 'grid(3c)' })
+ * // → "default:100vw;540:50%;720:66.67%,33.33%,33.33%"
+ */
+Layout.buildSrcsets = buildSrcsets
+
+/**
+ * Auto-generate sizes for a child from breakpoints
+ * @param {Object} breakpoints - Layout breakpoints
+ * @param {number} childIndex - Child index (0-based)
+ * @param {Object} [options] - Options
+ * @returns {string} CSS sizes attribute
+ *
+ * @example
+ * const sizes = Layout.autoGenerateSizes({ md: 'columns(2)', lg: 'grid(3c)' }, 0)
+ * // → "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
+ */
+Layout.autoGenerateSizes = autoGenerateSizes
+
+/**
+ * React hook to get sizes from Layout context with child-position awareness
+ * Use this inside components that are children of <Layout>
+ *
+ * @param {number} [childIndex] - Child index (0-based). If not provided, returns simple sizes
+ * @returns {string} CSS sizes attribute
+ *
+ * @example
+ * // Simple usage (all children same size)
  * function MyCard() {
  *   const sizes = useLayoutSizes()
  *   return <Image src="/photo.jpg" sizes={sizes} />
  * }
+ *
+ * @example
+ * // With child index (for per-child sizes)
+ * function MyCard({ index }) {
+ *   const sizes = useLayoutSizes(index)
+ *   return <Image src="/photo.jpg" sizes={sizes} />
+ * }
  */
-export function useLayoutSizes() {
+export function useLayoutSizes(childIndex) {
   const context = React.useContext(LayoutContext)
   if (!context) {
     return '100vw'
   }
+
+  // If child index provided, use advanced calculation
+  if (childIndex !== undefined && context.srcsets) {
+    return getSizesForChild(context.srcsets, childIndex, {
+      maxLayoutWidth: context.maxLayoutWidth
+    })
+  }
+
+  // Otherwise return simple sizes
   return getSizes(context.srcsets)
 }
 
@@ -211,10 +277,20 @@ const LayoutWithContext = React.forwardRef(function LayoutWithContext(props, ref
     if (srcsetsProp) {
       return normalizeSrcsets(srcsetsProp)
     }
+    // Auto-generate from preset breakpoints if available
+    if (finalPreset.breakpoints && Object.keys(finalPreset.breakpoints).length > 0) {
+      const generated = buildSrcsets(finalPreset.breakpoints)
+      return normalizeSrcsets(generated)
+    }
     return {}
-  }, [srcsetsProp])
+  }, [srcsetsProp, finalPreset.breakpoints])
 
-  const contextValue = React.useMemo(() => ({ srcsets }), [srcsets])
+  const maxLayoutWidth = props.maxWidth || layoutConfig.maxLayoutWidth
+
+  const contextValue = React.useMemo(() => ({
+    srcsets,
+    maxLayoutWidth
+  }), [srcsets, maxLayoutWidth])
 
   return (
     <LayoutContext.Provider value={contextValue}>
