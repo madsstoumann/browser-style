@@ -421,7 +421,7 @@ body {
 			}
 		}
 		@container (max-width: 1199px) { .controls-sub { display: contents; } }
-		@container (min-width: 1200px) { .controls-sub { column-gap: var(--unit-12); display: flex; justify-content: center; } }
+		@container (min-width: 1200px) { .controls-sub { align-items: end; column-gap: var(--unit-12); display: flex; justify-content: center; } }
 	}
 
 	@keyframes tot-fin-pop {
