@@ -21,7 +21,7 @@
         { "w": 40, "h": 20, "x": 40, "y": 80 }
       ],
       "repeatable": false,
-      "srcset": "40vw,20vw,20vw,40vw,20vw,20vw,40vw,20vw,20vw,40vw,20%",
+      "srcset": "40%,20%,20%,40%,20%,20%,40%,20%,20%,40%,20%",
       "breakpoints": {
         "sm": "mosaic(photo)"
       },
@@ -59,7 +59,7 @@
         { "w": 20, "h": 20, "x": 35, "y": 8 }
       ],
       "repeatable": false,
-      "srcset": "50vw,50vw,33.33vw,33.33vw,25vw,16.67vw,25vw,16.67%",
+      "srcset": "50%,50%,33.33%,33.33%,25%,16.67%,25%,16.67%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "grid(4c)",
@@ -91,7 +91,7 @@
         { "w": 20, "h": 20, "x": 40, "y": 32.5 }
       ],
       "repeatable": false,
-      "srcset": "33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33vw,33.33%",
+      "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%,33.33%,33.33%,33.33%",
       "breakpoints": {
         "md": "columns(2)",
         "lg": "grid(4d)",
@@ -128,7 +128,7 @@
         { "w": 40, "h": 40, "x": 30, "y": 30 }
       ],
       "repeatable": false,
-      "srcset": "50vw,20vw,30vw,30vw,50vw,20vw,30vw,30vw,40%",
+      "srcset": "50%,20%,30%,30%,50%,20%,30%,30%,40%",
       "breakpoints": {
         "lg": "columns(3)",        
         "xl": "mosaic(pinwheel)"
@@ -160,7 +160,7 @@
         { "w": 20, "h": 20, "x": 40, "y": 40 }
       ],
       "repeatable": false,
-      "srcset": "60vw,40vw,60vw,40vw,20%",
+      "srcset": "60%,40%,60%,40%,20%",
       "breakpoints": {
         "lg": "grid(3a)",
         "xl": "mosaic(cornerstone)"
