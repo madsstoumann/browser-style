@@ -110,6 +110,30 @@ class CspManager extends HTMLElement {
 		this.render();
 	}
 
+	fromString(cspString) {
+		if (typeof cspString !== 'string' || !cspString.trim()) {
+			return;
+		}
+
+		const newPolicy = {};
+		const directives = cspString.trim().split(';').filter(d => d.trim());
+
+		directives.forEach(directive => {
+			const parts = directive.trim().split(/\s+/);
+			const key = parts.shift();
+
+			if (this.state[key]) {
+				const defaults = this.state[key].defaults || [];
+				const added = parts.filter(p => !defaults.includes(p));
+				newPolicy[key] = {
+					added: added
+				};
+			}
+		});
+
+		this.policy = newPolicy;
+	}
+
 	get cspString() {
 		return this.generateCspString();
 	}

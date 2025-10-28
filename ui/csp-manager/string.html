@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSP Manager - From String Demo</title>
+	<link rel="stylesheet" href="/base.css">
+	<script src="index.js" type="module"></script>
+</head>
+<body>
+
+	<h1>CSP Manager: <code>fromString()</code> Demo</h1>
+	<p>This example demonstrates how to initialize the component with a predefined state from a string.</p>
+
+	<hr>
+
+	<h2>Component Output:</h2>
+	<div id="component-container"></div>
+
+	<script>
+		const cspString = `
+			base-uri 'self';
+			default-src 'self';
+			frame-ancestors 'none';
+			object-src 'none';
+			script-src 'self' 'unsafe-inline' https://example.com;
+			style-src 'self';
+		`;
+
+		const cspManager = document.createElement('csp-manager');
+		document.getElementById('component-container').appendChild(cspManager);
+
+		// Wait for the component to be ready, then set the policy from the string
+		customElements.whenDefined('csp-manager').then(() => {
+			cspManager.fromString(cspString);
+		});
+	</script>
+
+</body>
+</html>
