@@ -20,7 +20,7 @@
 		"type": "source-list"
 	},
 	"font-src": {
-		"defaults": ["'self'", "data:"],
+		"defaults": ["'self'"],
 		"type": "source-list"
 	},
 	"form-action": {
@@ -36,7 +36,7 @@
 		"type": "source-list"
 	},
 	"img-src": {
-		"defaults": ["'self'", "data:"],
+		"defaults": ["'self'"],
 		"type": "source-list"
 	},
 	"manifest-src": {
