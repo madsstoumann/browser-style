@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/csp-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A web component to interactively build and manage a Content Security Policy (CSP).",
   "type": "module",
   "main": "index.js",
@@ -12,6 +12,7 @@
     "index.js",
     "index.css",
     "csp-directives.json",
+    "evaluate.js",
     "i18n.json"
   ],
   "publishConfig": {

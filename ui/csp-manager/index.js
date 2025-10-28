@@ -115,6 +115,9 @@ class CspManager extends HTMLElement {
 		if (this.hasAttribute('evaluate')) {
 			this.runEvaluation();
 		}
+
+		// Dispatch change event after policy is set
+		this.dispatchChangeEvent();
 	}
 
 	fromString(cspString) {
@@ -168,6 +171,7 @@ class CspManager extends HTMLElement {
 			this.state[directiveName].enabled = true;
 			this.render();
 			this.updateCspString();
+			this.dispatchChangeEvent();
 		}
 	}
 
@@ -189,6 +193,27 @@ class CspManager extends HTMLElement {
 		this.render();
 	}
 
+	/**
+	 * Dispatch csp-change event with current policy data
+	 */
+	dispatchChangeEvent() {
+		const detail = {
+			policy: this.policy,
+			cspString: this.cspString
+		};
+
+		// Include evaluations if evaluate attribute is present
+		if (this.hasAttribute('evaluate') && this.evaluations) {
+			detail.evaluations = this.evaluations;
+		}
+
+		this.dispatchEvent(new CustomEvent('csp-change', {
+			bubbles: true,
+			composed: true,
+			detail
+		}));
+	}
+
 	addValue(directive, value) {
 		if (this.state[directive] && value) {
 			this.state[directive].added.push(value);
@@ -205,6 +230,7 @@ class CspManager extends HTMLElement {
 				ul.append(li);
 			}
 			this.updateCspString();
+			this.dispatchChangeEvent();
 		}
 	}
 
@@ -212,6 +238,7 @@ class CspManager extends HTMLElement {
 		if (this.state[directive] && this.state[directive].added[index] !== undefined) {
 			this.state[directive].added.splice(index, 1);
 			this.updateCspString();
+			this.dispatchChangeEvent();
 		}
 	}
 
@@ -283,6 +310,7 @@ class CspManager extends HTMLElement {
 				if (this.state[directive]) {
 					this.state[directive].enabled = target.checked;
 					this.updateCspString();
+					this.dispatchChangeEvent();
 				}
 			}
 		});
