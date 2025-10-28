@@ -40,7 +40,7 @@ Host your CSP Manager files and load them in the plugin:
 // In your plugin's mounted() hook
 const script = document.createElement('script');
 script.type = 'module';
-script.src = 'https://your-cdn.com/csp-manager/index.js';
+script.src = 'https://your-cdn.com/csp-manager/src/index.js';
 document.head.appendChild(script);
 ```
 
@@ -134,7 +134,7 @@ export default {
       if (!customElements.get('csp-manager')) {
         const script = document.createElement('script');
         script.type = 'module';
-        script.src = 'https://your-cdn.com/csp-manager/index.js';
+        script.src = 'https://your-cdn.com/csp-manager/src/index.js';
         document.head.appendChild(script);
       }
     },

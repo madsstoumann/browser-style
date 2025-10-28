@@ -43,16 +43,17 @@ Host the web component files on your own infrastructure:
 ```
 your-cdn.com/
   └── csp-manager/
-      ├── index.js
-      ├── evaluate.js
-      ├── index.css
-      ├── csp-directives.json
-      └── i18n.json
+      └── src/
+          ├── index.js
+          ├── evaluate.js
+          ├── index.css
+          ├── csp-directives.json
+          └── i18n.json
 ```
 
 **In Contentful Extension:**
 ```html
-<script type="module" src="https://your-cdn.com/csp-manager/index.js"></script>
+<script type="module" src="https://your-cdn.com/csp-manager/src/index.js"></script>
 ```
 
 **Hosting Options:**
@@ -255,7 +256,7 @@ npm install csp-manager-component
 <html>
 <head>
   <script src="https://unpkg.com/contentful-ui-extensions-sdk@3"></script>
-  <script type="module" src="https://your-github-pages.io/csp-manager/index.js"></script>
+  <script type="module" src="https://your-github-pages.io/csp-manager/src/index.js"></script>
 </head>
 <body>
   <csp-manager id="csp-editor" evaluate></csp-manager>
