@@ -150,14 +150,16 @@ details[data-severity="secure"] {
 .eval-findings {
 	display: grid;
 	gap: calc(var(--csp-manager-gap) / 2);
-	margin-block-start: var(--csp-manager-gap);
+	margin-block: var(--csp-manager-gap);
 }
 
 .eval-finding {
 	border-inline-start: 3px solid;
-	padding: 0.5ch 1.5ch;
+	display: block;
+	padding: 1ch 2ch;
 	font-size: small;
 	border-radius: calc(var(--csp-manager-bdrs) / 2);
+	margin: unset;
 }
 
 .eval-finding[data-severity="high"] {

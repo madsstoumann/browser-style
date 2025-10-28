@@ -1,0 +1,20 @@
+{
+  "ariaLabel": "",
+  "bleed": 0,
+  "colGap": 1,
+  "columns": "1fr",
+  "decorations": false,
+  "maxWidth": "100vw",
+  "overflow": "",
+  "padBottom": 0,
+  "padInline": 0,
+  "padTop": 0,
+  "rowGap": 1,
+  "rows": "auto",
+  "self": "auto",
+  "size": "",
+  "spaceBottom": 0,
+  "spaceTop": 0,
+  "theme": "",
+  "width": ""
+}
