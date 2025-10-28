@@ -35,6 +35,29 @@
 			"addDirectivePlaceholder": "Add directive...",
 			"booleanDirectiveInfo": "This is a boolean directive. It has no values.",
 			"remove": "Remove"
+		},
+		"eval": {
+			"unsafeInline": "Using 'unsafe-inline' allows inline scripts/styles, vulnerable to XSS attacks",
+			"unsafeInlineRec": "Use nonces or hashes instead of 'unsafe-inline'",
+			"unsafeEval": "Using 'unsafe-eval' allows string-to-code conversion, vulnerable to injection attacks",
+			"unsafeEvalRec": "Remove 'unsafe-eval' and refactor code to avoid eval(), new Function(), setTimeout(string), etc.",
+			"unsafeHashes": "Using 'unsafe-hashes' allows inline event handlers",
+			"unsafeHashesRec": "Use external event handlers instead of inline attributes",
+			"wildcardAll": "Using wildcard '*' allows resources from any origin",
+			"wildcardAllRec": "Specify explicit origins instead of using '*'",
+			"wildcardHttp": "Using 'http:' allows unencrypted resources from any HTTP origin",
+			"wildcardHttpRec": "Use 'https:' or specific HTTPS origins",
+			"wildcardHttps": "Using 'https:' allows resources from any HTTPS origin",
+			"wildcardHttpsRec": "Specify explicit trusted origins",
+			"dataUri": "Using 'data:' URIs can be exploited for XSS",
+			"dataUriRec": "Avoid 'data:' in script-src; use external files with hashes/nonces",
+			"missingBaseUri": "Missing 'base-uri' directive allows base tag injection",
+			"missingBaseUriRec": "Add 'base-uri' directive with 'self' or 'none'",
+			"missingObjectSrc": "Missing 'object-src' directive allows plugin-based attacks",
+			"missingObjectSrcRec": "Add 'object-src' directive with 'none'",
+			"secure": "Secure configuration",
+			"hasNonceOrHash": "Using nonces or hashes for inline content",
+			"noIssues": "No security issues detected"
 		}
 	},
 	"da": {
@@ -73,6 +96,29 @@
 			"addDirectivePlaceholder": "Tilføj direktiv...",
 			"booleanDirectiveInfo": "Dette er et booleskt direktiv. Det har ingen værdier.",
 			"remove": "Fjern"
+		},
+		"eval": {
+			"unsafeInline": "Brug af 'unsafe-inline' tillader inline scripts/styles, sårbar over for XSS-angreb",
+			"unsafeInlineRec": "Brug nonces eller hashes i stedet for 'unsafe-inline'",
+			"unsafeEval": "Brug af 'unsafe-eval' tillader string-til-kode konvertering, sårbar over for injektionsangreb",
+			"unsafeEvalRec": "Fjern 'unsafe-eval' og omskriv kode for at undgå eval(), new Function(), setTimeout(string), etc.",
+			"unsafeHashes": "Brug af 'unsafe-hashes' tillader inline event handlers",
+			"unsafeHashesRec": "Brug eksterne event handlers i stedet for inline attributter",
+			"wildcardAll": "Brug af wildcard '*' tillader ressourcer fra enhver origin",
+			"wildcardAllRec": "Angiv eksplicitte origins i stedet for at bruge '*'",
+			"wildcardHttp": "Brug af 'http:' tillader ukrypterede ressourcer fra enhver HTTP-origin",
+			"wildcardHttpRec": "Brug 'https:' eller specifikke HTTPS-origins",
+			"wildcardHttps": "Brug af 'https:' tillader ressourcer fra enhver HTTPS-origin",
+			"wildcardHttpsRec": "Angiv eksplicitte betroede origins",
+			"dataUri": "Brug af 'data:' URI'er kan udnyttes til XSS",
+			"dataUriRec": "Undgå 'data:' i script-src; brug eksterne filer med hashes/nonces",
+			"missingBaseUri": "Manglende 'base-uri' direktiv tillader base tag injection",
+			"missingBaseUriRec": "Tilføj 'base-uri' direktiv med 'self' eller 'none'",
+			"missingObjectSrc": "Manglende 'object-src' direktiv tillader plugin-baserede angreb",
+			"missingObjectSrcRec": "Tilføj 'object-src' direktiv med 'none'",
+			"secure": "Sikker konfiguration",
+			"hasNonceOrHash": "Bruger nonces eller hashes til inline indhold",
+			"noIssues": "Ingen sikkerhedsproblemer fundet"
 		}
 	}
 }

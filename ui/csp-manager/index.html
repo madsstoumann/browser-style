@@ -9,30 +9,14 @@
 	<link rel="stylesheet" href="/base.css">
 </head>
 <body>
-		<h1>Content-Security-Policy Manager</h1>
-		<csp-manager></csp-manager>
-		<p>
-			<h2>Demo of <code>policy</code> and <code>cspString</code> getters <small>(see <code>console</code>)</small></h2>
-			<button id="getPolicyBtn">Get Policy</button>
-			<button id="getCspStringBtn">Copy CSP String to clipboard</button>
-		</p>
-		<script type="module" src="./index.js"></script>
-		<script>
-			document.getElementById('getPolicyBtn').addEventListener('click', () => {
-				const cspManager = document.querySelector('csp-manager');
-				const currentPolicy = cspManager.policy;
-				console.log('Current CSP Policy:', JSON.stringify(currentPolicy, null, 2));
-			});
+	<h1>Content-Security-Policy Manager</h1>
+	<p>A visual editor for Content Security Policy directives with optional security evaluation.</p>
+	<p><a href="demo.html">View all demos →</a></p>
 
-		document.getElementById('getCspStringBtn').addEventListener('click', () => {
-				const cspManager = document.querySelector('csp-manager');
-				const cspString = cspManager.cspString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-				navigator.clipboard.writeText(cspString).then(() => {
-					console.log(cspString);
-				}).catch(err => {
-					console.error('Failed to copy text: ', err);
-				});
-			});
-		</script>
+	<hr>
+
+	<csp-manager evaluate></csp-manager>
+
+	<script type="module" src="./index.js"></script>
 </body>
 </html>

@@ -1,12 +1,14 @@
 import cspDirectives from './csp-directives.json' with { type: 'json' };
 import i18nData from './i18n.json' with { type: 'json' };
 import styles from './index.css' with { type: 'css' };
+import { evaluatePolicy } from './evaluate.js';
 
 class CspManager extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this.shadowRoot.adoptedStyleSheets = [styles];
+		this.evaluations = null;
 	}
 
 	/**
@@ -108,6 +110,11 @@ class CspManager extends HTMLElement {
 		});
 
 		this.render();
+
+		// Re-run evaluation after policy changes if evaluate attribute is present
+		if (this.hasAttribute('evaluate')) {
+			this.runEvaluation();
+		}
 	}
 
 	fromString(cspString) {
@@ -167,6 +174,19 @@ class CspManager extends HTMLElement {
 	updateCspString() {
 		const cspString = this.generateCspString();
 		this.shadowRoot.querySelector('pre code').innerHTML = cspString;
+
+		// Run evaluation if enabled
+		if (this.hasAttribute('evaluate')) {
+			this.runEvaluation();
+		}
+	}
+
+	/**
+	 * Run CSP evaluation on current policy
+	 */
+	runEvaluation() {
+		this.evaluations = evaluatePolicy(this.state, this.t.bind(this));
+		this.render();
 	}
 
 	addValue(directive, value) {
@@ -218,12 +238,17 @@ class CspManager extends HTMLElement {
 		if (initialPolicy) {
 			try {
 				this.policy = JSON.parse(initialPolicy);
+				// Evaluation will run automatically in the policy setter if evaluate attribute is present
 			} catch (e) {
 				console.error('Failed to parse initial-policy attribute:', e);
 				this.render();
 			}
 		} else {
 			this.render();
+			// Run initial evaluation for default state if evaluate attribute is present
+			if (this.hasAttribute('evaluate')) {
+				this.runEvaluation();
+			}
 		}
 
 		this.shadowRoot.addEventListener('click', (e) => {
@@ -265,6 +290,7 @@ class CspManager extends HTMLElement {
 
 	render() {
 		const availableDirectives = this.getAvailableDirectives();
+		const hasEvaluations = this.evaluations && this.hasAttribute('evaluate');
 
 		this.shadowRoot.innerHTML = `
 			${Object.entries(this.state).map(([key, valueObj]) => {
@@ -276,8 +302,24 @@ class CspManager extends HTMLElement {
 						</datalist>`
 					: '';
 
+				// Get evaluation for this directive
+				const evaluation = hasEvaluations && valueObj.enabled ? this.evaluations[key] : null;
+				const severityAttr = evaluation ? `data-severity="${evaluation.severity}"` : '';
+
+				// Build findings HTML
+				const findingsHtml = evaluation && evaluation.findings.length > 0
+					? `<div class="eval-findings">
+							${evaluation.findings.map(finding => `
+								<div class="eval-finding" data-severity="${finding.severity}">
+									<strong>${finding.message}</strong>
+									${finding.recommendation ? `<em>${finding.recommendation}</em>` : ''}
+								</div>
+							`).join('')}
+						</div>`
+					: '';
+
 				return `
-					<details name="csp-directive">
+					<details name="csp-directive" ${severityAttr}>
 						<summary>${key}</summary>
 						<div>
 							<small>${valueObj.description}</small>
@@ -295,6 +337,7 @@ class CspManager extends HTMLElement {
 									${dataListElement}
 								`
 							}
+							${findingsHtml}
 							<label>
 								<input type="checkbox" data-directive="${key}" data-sr ${valueObj.enabled ? 'checked' : ''}> ${this.t('ui.remove')} ${key}
 							</label>
