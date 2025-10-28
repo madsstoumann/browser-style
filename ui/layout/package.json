@@ -1,5 +1,5 @@
 {
-  "name": "@browser.style/layout",
+  "name": "@browser.style/layout-old",
   "version": "1.1.2",
   "description": "Modern CSS layout system with responsive grid patterns, container queries, configurable builds, and responsive image srcsets generation",
   "type": "module",

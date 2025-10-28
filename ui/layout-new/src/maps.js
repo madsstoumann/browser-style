@@ -14,7 +14,7 @@ const __dirname = dirname(__filename)
 
 const layoutsDir = join(__dirname, '../layouts')
 const outputPath = join(__dirname, '../layouts-map.js')
-const configPath = join(__dirname, '../layout.config')
+const configPath = join(__dirname, '../layout.config.json')
 
 /**
  * Extract only the essential data needed for srcset calculations
@@ -36,7 +36,7 @@ function loadConfig() {
     const config = JSON.parse(configContent)
 
     return {
-        maxLayoutWidth: config.layoutContainer?.maxLayoutWidth?.value || '1024px',
+        maxLayoutWidth: config.layoutContainer?.maxLayoutWidth?.value || 1024,
         breakpoints: Object.entries(config.breakpoints || {}).reduce((acc, [name, bp]) => {
             if (bp.min) {
                 acc[name] = parseInt(bp.min.replace('px', ''))

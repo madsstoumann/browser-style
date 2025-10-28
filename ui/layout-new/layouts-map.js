@@ -73,7 +73,7 @@ export const srcsetMap = {
  * Configuration from layout.config
  */
 export const layoutConfig = {
-  "maxLayoutWidth": "1024px",
+  "maxLayoutWidth": 1024,
   "breakpoints": {
     "xs": 240,
     "sm": 380,

@@ -18,7 +18,7 @@ const minify = args.includes('--minify')
 const watch = args.includes('--watch')
 
 const configIndex = args.indexOf('--config')
-const configPath = configIndex !== -1 ? args[configIndex + 1] : path.join(__dirname, 'layout.config')
+const configPath = configIndex !== -1 ? args[configIndex + 1] : path.join(__dirname, 'layout.config.json')
 
 const outputIndex = args.indexOf('--output')
 const outputPath = outputIndex !== -1 ? args[outputIndex + 1] : path.join(__dirname, 'dist', 'layout.css')

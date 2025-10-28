@@ -1,95 +1,219 @@
-# Terminal Commands
+# Terminal Commands Reference
 
 All commands you can run from the terminal in the `@browser.style/layout` package.
 
+---
+
+## Quick Reference
+
+```bash
+npm run build         # Build CSS only
+npm run build:watch   # Build CSS in watch mode
+npm run build:maps    # Generate layouts-map.js
+npm run build:demo    # Generate HTML demos
+npm run build:icons   # Generate SVG icons
+npm run build:all     # Build everything
+npm test              # Test package exports
+```
+
+---
+
 ## Build Commands
 
-### Build CSS (Development)
-```bash
-node build.js
-```
-Generates unminified CSS to `dist/layout.css` for development and debugging.
+### Build CSS
 
-### Build CSS (Production)
-```bash
-node build.js --minify
-```
-Generates minified CSS to `dist/layout.css` for production use.
-
-### Watch Mode
-```bash
-node build.js --watch
-```
-Watches for changes to `layout.config` and `layouts/*.json` files and automatically rebuilds CSS.
-
-### Custom Config
-```bash
-node build.js --config path/to/layout.config
-```
-Build CSS using a custom config file location.
-
-### Custom Output
-```bash
-node build.js --output path/to/output.css
-```
-Build CSS to a custom output location.
-
-### Combined Options
-```bash
-node build.js --config custom.config --output dist/custom.css --minify
-```
-All options can be combined as needed.
-
-## Package Scripts
-
-### Install Dependencies
-```bash
-npm install
-```
-Installs all development dependencies.
-
-### Build CSS via npm
+#### Development Build
 ```bash
 npm run build
 ```
-Runs the default build command (defined in package.json).
-
-### Clean Build
+or
 ```bash
-rm -rf dist && node build.js
+node build.js
 ```
-Remove existing dist folder and perform fresh build.
 
-## Demo Generation
+**Output:** `dist/layout.css` (unminified, ~33 KB)
 
-### Generate Demo Files (Node.js)
+**What it does:**
+- Reads `layout.config.json`
+- Loads layout JSON files from `layouts/`
+- Generates CSS with attribute selectors
+- Writes to `dist/layout.css`
+
+#### Production Build
+```bash
+node build.js --minify
+```
+
+**Output:** `dist/layout.css` (minified, ~15 KB)
+
+#### Watch Mode
+```bash
+npm run build:watch
+```
+or
+```bash
+node build.js --watch
+```
+
+**What it does:**
+- Watches `layout.config.json` and `layouts/*.json`
+- Automatically rebuilds on changes
+- Useful during development
+
+#### Custom Config Path
+```bash
+node build.js --config path/to/custom.config.json
+```
+
+Use a different configuration file.
+
+#### Custom Output Path
+```bash
+node build.js --output path/to/custom.css
+```
+
+Write CSS to a custom location.
+
+#### Combined Options
+```bash
+node build.js --config custom.config.json --output dist/custom.css --minify
+```
+
+All options can be combined.
+
+---
+
+### Build Layouts Map
+
+#### Generate layouts-map.js
+```bash
+npm run build:maps
+```
+or
+```bash
+node src/maps.js
+```
+
+**Output:** `layouts-map.js` (~7 KB)
+
+**What it includes:**
 ```javascript
-import { buildDemoFiles } from './src/demofiles.js'
+export const srcsetMap = {
+  "columns(2)": "50%",
+  "grid(3a)": "50%,50%,100%",
+  // ... all 57 layouts
+}
 
-buildDemoFiles('./layouts', './dist')
+export const layoutConfig = {
+  "maxLayoutWidth": 1024,
+  "breakpoints": {
+    "xs": 240,
+    "sm": 380,
+    "md": 540,
+    "lg": 720,
+    "xl": 920,
+    "xxl": 1140
+  }
+}
 ```
 
-This generates:
-- All HTML demo files (asymmetrical.html, autofit.html, etc.)
-- Icon gallery (icons.html)
-- Main index (index.html)
-- All SVG icons in dist/icons/
+**When to regenerate:**
+- After adding/modifying layout JSON files
+- After changing `maxLayoutWidth` in config
+- After changing breakpoints in config
 
-### Generate Icons Only (Node.js)
-```javascript
-import { buildIcons } from './src/icons.js'
+---
 
-buildIcons('./layouts', './dist/icons')
+### Build Demo Files
+
+#### Generate HTML Demos
+```bash
+npm run build:demo
 ```
+
+**Output:** 9 HTML files + 63 SVG icons
+
+**Generated files:**
+- `dist/asymmetrical.html`
+- `dist/autofit.html`
+- `dist/bento.html`
+- `dist/columns.html`
+- `dist/grid.html`
+- `dist/mosaic.html`
+- `dist/ratios.html`
+- `dist/icons.html` (icon gallery)
+- `dist/index.html` (main index)
+- `dist/icons/*.svg` (63 icon files)
+
+**What it does:**
+- Reads all layout JSON files
+- Generates HTML demonstrations for each layout type
+- Creates SVG icons from icon data
+- Builds index page with links to all demos
+
+---
+
+### Build Icons
+
+#### Generate SVG Icons
+```bash
+npm run build:icons
+```
+
+**Output:** 63 SVG files in `dist/icons/`
+
+**Generated icons:**
+- One icon per layout variant
+- Named by layout pattern (e.g., `grid-3a.svg`)
+- Used in demo files and documentation
+
+**Icon format:**
+```svg
+<svg viewBox="0 0 100 100">
+  <rect width="48" height="48" x="0" y="0" rx="4"/>
+  <text x="20" y="26">1</text>
+  <rect width="48" height="48" x="50" y="0" rx="4"/>
+  <text x="70" y="26">2</text>
+</svg>
+```
+
+---
+
+### Build Everything
+
+#### Complete Build
+```bash
+npm run build:all
+```
+
+**Runs in sequence:**
+1. `npm run build:maps` → Generate layouts-map.js
+2. `npm run build` → Generate CSS
+3. `npm run build:demo` → Generate demos
+4. `npm run build:icons` → Generate icons
+
+**Total outputs:**
+- `layouts-map.js` (srcset data)
+- `dist/layout.css` (CSS bundle)
+- 9 HTML demo files
+- 63 SVG icon files
+
+**When to use:**
+- Before publishing to npm
+- After making changes to layout files
+- To regenerate all build artifacts
+
+---
 
 ## Programmatic Usage
 
 ### Build CSS from JavaScript
+
 ```javascript
 import { LayoutBuilder } from './src/builder.js'
 
 const builder = new LayoutBuilder(
-  './layout.config',
+  './layout.config.json',
   './layouts',
   './dist/layout.css'
 )
@@ -97,128 +221,197 @@ const builder = new LayoutBuilder(
 // Development build
 await builder.build(false)
 
-// Production build
-await builder.buildAll()
+// Production build (minified)
+await builder.build(true)
 ```
 
-### Work with Presets
-```javascript
-import { createPreset, presetToHTML, validatePreset } from './src/preset.js'
+### Using buildLayout Function
 
-// Create a preset
-const preset = createPreset({
-  id: 'hero',
-  name: 'Hero Section',
-  breakpoints: {
-    md: 'columns(1)',
-    lg: 'grid(3a)'
-  },
-  spaceTop: 3,
-  spaceBottom: 3
+```javascript
+import { buildLayout } from './build.js'
+
+const result = await buildLayout({
+  configPath: './layout.config.json',
+  layoutsPath: './layouts',
+  outputPath: './dist/layout.css',
+  minify: false
 })
 
-// Convert to HTML
-const html = presetToHTML(preset)
-// <lay-out md="columns(1)" lg="grid(3a)" space-top="3" space-bottom="3">
-
-// Validate
-const result = validatePreset(preset)
-if (!result.valid) {
-  console.error(result.errors)
-}
+console.log(result.css)      // Generated CSS string
+console.log(result.layouts)  // Map of layouts
+console.log(result.config)   // Parsed configuration
 ```
 
-### Auto-generate Srcsets (Node.js)
+### Generate Demo Files
+
 ```javascript
-import { autoGenerateSrcsets } from './src/srcset.js'
-import { readConfig } from './src/preset.js'
+import { buildDemoFiles } from './src/demo.js'
 
-const config = await readConfig('./layout.config')
-const preset = { /* your preset */ }
-
-const srcsets = autoGenerateSrcsets(preset, config)
-// { default: "100vw", 540: "50vw", 720: "33.33vw" }
+buildDemoFiles('./layouts', './dist')
 ```
+
+**Generates:**
+- All HTML demo files
+- Icon gallery (icons.html)
+- Main index (index.html)
+- All SVG icons in dist/icons/
+
+### Generate Icons Only
+
+```javascript
+import { buildIcons } from './src/icons.js'
+
+buildIcons('./layouts', './dist/icons')
+```
+
+**Generates:** 63 SVG icon files
 
 ### Generate Layouts Map
-```bash
-npm run generate:layouts-map
+
+```javascript
+import { generateLayoutsMap } from './src/maps.js'
+
+generateLayoutsMap()
 ```
 
-Generates `layouts-map.js` containing:
-- Srcset data for all layouts
-- Configuration (breakpoints, maxLayoutWidth)
-- Helper functions for browser usage
+**Generates:** `layouts-map.js` with srcset data
 
-**When to run:**
-- After adding custom layout JSON files
-- After modifying srcset values in layouts
-- After changing maxLayoutWidth in config
-- Automatically runs during `npm run prepublishOnly`
+---
 
-## Testing & Verification
+## Package Scripts
 
-### Check Output Size
+### Install Dependencies
 ```bash
-ls -lh dist/layout.css
+npm install
 ```
-View generated CSS file size.
 
-### Compare with Original
+Installs all development dependencies.
+
+### Test Package
 ```bash
-diff dist/layout.css ../layout/dist/layout.css
+npm test
 ```
-Compare new CSS with original (from ui/layout).
 
-### View Build Stats
-The build command outputs:
-- Number of breakpoints processed
-- Layouts included per breakpoint
-- Final CSS file size
-- Build time
+Verifies that package exports are working correctly.
+
+### Clean Build
+```bash
+rm -rf dist && npm run build:all
+```
+
+Remove existing dist folder and perform fresh build.
+
+---
 
 ## Development Workflow
 
 ### Typical Development Cycle
+
 ```bash
 # 1. Clean build
 rm -rf dist
 
-# 2. Build CSS
-node build.js
+# 2. Build everything
+npm run build:all
 
-# 3. Generate demos (optional)
-node -e "import('./src/demofiles.js').then(m => m.buildDemoFiles('./layouts', './dist'))"
-
-# 4. Check output
+# 3. Check output
 ls -lh dist/
 ```
 
 ### Watch Mode Development
-```bash
-# Start watch mode
-node build.js --watch
 
-# In another terminal, edit files
-# Build automatically triggers on save
+```bash
+# Terminal 1: Start watch mode
+npm run build:watch
+
+# Terminal 2: Edit files
+# Changes to layout.config.json or layouts/*.json trigger rebuild
 ```
 
 ### Quick Test Build
+
 ```bash
-# Single command: clean, build, check
-rm -rf dist && node build.js && ls -lh dist/layout.css
+npm run build:all && npm test
 ```
+
+Builds everything and verifies package integrity.
+
+---
+
+## Build Tool Integration
+
+### Vite
+
+```javascript
+// vite.config.js
+import { buildLayout } from '@browser.style/layout/build'
+
+export default {
+  plugins: [{
+    name: 'layout-css',
+    async buildStart() {
+      await buildLayout({
+        configPath: './layout.config.json',
+        outputPath: './src/styles/layout.css'
+      })
+    }
+  }]
+}
+```
+
+### Next.js
+
+```javascript
+// next.config.js
+import { buildLayout } from '@browser.style/layout/build'
+
+// Run before Next.js starts
+await buildLayout({
+  configPath: './layout.config.json',
+  outputPath: './styles/layout.css'
+})
+
+export default {
+  // ... your Next.js config
+}
+```
+
+### Webpack
+
+```javascript
+// webpack.config.js
+import { buildLayout } from '@browser.style/layout/build'
+
+export default {
+  plugins: [
+    {
+      apply: (compiler) => {
+        compiler.hooks.beforeCompile.tapPromise('LayoutCSS', async () => {
+          await buildLayout({
+            configPath: './layout.config.json',
+            outputPath: './src/styles/layout.css'
+          })
+        })
+      }
+    }
+  ]
+}
+```
+
+---
 
 ## Package Installation
 
-### Install from npm (when published)
+### Install from npm
+
 ```bash
 npm install @browser.style/layout
 ```
 
 ### Install Locally for Testing
+
 ```bash
-# From this directory
+# From package directory
 npm link
 
 # In another project
@@ -226,297 +419,202 @@ npm link @browser.style/layout
 ```
 
 ### Use in Project
+
+#### Import CSS
 ```javascript
-// Import CSS in your entry file
-import '@browser.style/layout/css'
-
-// Or use preset utilities
-import { createPreset, presetToHTML } from '@browser.style/layout/preset'
+// Import pre-built CSS
+import '@browser.style/layout/dist/layout.css'
 ```
 
-## CLI Tool (when installed globally)
-
-### Install CLI
-```bash
-npm install -g @browser.style/layout
-```
-
-### Run from Anywhere
-```bash
-browser-style-layout --config my-project/layout.config --output dist/layout.css
-```
-
-## Troubleshooting
-
-### Build Fails
-```bash
-# Check Node.js version (requires Node.js 16+)
-node --version
-
-# Verify config file exists
-cat layout.config
-
-# Check layouts directory
-ls -la layouts/
-```
-
-### CSS Size Too Large
-Check your `layout.config` breakpoints:
-- Use object syntax for specific variants: `{"grid": ["grid(3a)"]}`
-- Remove unused layout types from breakpoints
-- Consider splitting into multiple builds for different pages
-
-### Icons Not Generating
-```bash
-# Verify layout JSON files have icon data
-cat layouts/columns.json | grep -A5 '"icon"'
-
-# Manually trigger icon generation
-node -e "import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))"
+#### Import Layouts Map
+```javascript
+// Import srcset data
+import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
 ```
 
 ---
 
-## Responsive Images with Srcsets
+## Troubleshooting
 
-**New in v2.0**: Advanced srcset utilities for responsive images with child-position awareness.
+### Build Fails
 
-### Overview
-
-The layout system provides automatic srcset generation for responsive images. Each layout knows how wide its children are at each breakpoint, enabling precise `sizes` attributes for `<img>` and Next.js `<Image>` components.
-
-### Browser Usage (React)
-
-#### Simple Usage - All Children Same Size
-
-```javascript
-import { Layout } from '@browser.style/layout/react'
-import Image from 'next/image'
-
-// Simple srcsets (all children same size)
-const sizes = Layout.getSizes("default:100vw;720:50%")
-// → "(min-width: 720px) min(50vw, 512px), 100vw"
-
-<Layout lg="columns(2)">
-  <Image src="/photo1.jpg" sizes={sizes} />
-  <Image src="/photo2.jpg" sizes={sizes} />
-</Layout>
-```
-
-#### Advanced Usage - Per-Child Sizes
-
-```javascript
-import { Layout } from '@browser.style/layout/react'
-
-// Different sizes for each child
-const srcsets = "default:100vw;720:66.67%,33.33%,33.33%"
-
-// Child 0 gets 66.67% at lg breakpoint
-const sizes0 = Layout.getSizesForChild(srcsets, 0)
-// → "(min-width: 720px) min(66.67vw, 683px), 100vw"
-
-// Child 1 gets 33.33% at lg breakpoint
-const sizes1 = Layout.getSizesForChild(srcsets, 1)
-// → "(min-width: 720px) min(33.33vw, 341px), 100vw"
-
-<Layout lg="grid(3c)">
-  <Image src="/photo1.jpg" sizes={sizes0} />
-  <Image src="/photo2.jpg" sizes={sizes1} />
-  <Image src="/photo3.jpg" sizes={sizes1} />
-</Layout>
-```
-
-#### Auto-Generate from Layout Patterns
-
-```javascript
-import { Layout } from '@browser.style/layout/react'
-
-// Auto-generate srcsets from breakpoint definitions
-const breakpoints = { md: 'columns(2)', lg: 'grid(3c)' }
-
-// Automatically looks up srcsets from layouts-map.js
-const sizes0 = Layout.autoGenerateSizes(breakpoints, 0)
-// → "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
-
-const sizes1 = Layout.autoGenerateSizes(breakpoints, 1)
-// → "(min-width: 720px) min(33.33vw, 341px), (min-width: 540px) min(50vw, 512px), 100vw"
-
-<Layout md="columns(2)" lg="grid(3c)">
-  <Image src="/photo1.jpg" sizes={sizes0} />
-  <Image src="/photo2.jpg" sizes={sizes1} />
-</Layout>
-```
-
-### How It Works
-
-1. **Layout JSON** defines srcset for each layout:
-   ```json
-   {
-     "id": "3c",
-     "srcset": "66.67%,33.33%,33.33%"
-   }
-   ```
-
-2. **Layouts Map** is generated containing all srcset data:
-   ```javascript
-   layoutsMap["grid(3c)"] = { srcset: "66.67%,33.33%,33.33%" }
-   ```
-
-3. **buildSrcsets()** merges breakpoints:
-   ```javascript
-   buildSrcsets({ md: 'columns(2)', lg: 'grid(3c)' })
-   // → "default:100vw;540:50%;720:66.67%,33.33%,33.33%"
-   ```
-
-4. **getSizesForChild()** extracts child-specific width:
-   ```javascript
-   getSizesForChild(srcsets, 0)  // Gets first value: 66.67%
-   getSizesForChild(srcsets, 1)  // Gets second value: 33.33%
-   ```
-
-5. **Constraint calculation** with maxLayoutWidth (1024px):
-   ```javascript
-   // 66.67% of 1024px = 683px
-   "min(66.67vw, 683px)"
-
-   // 33.33% of 1024px = 341px
-   "min(33.33vw, 341px)"
-   ```
-
-### Srcset Format
-
-#### String Format
-```javascript
-"default:100vw;540:50%;720:66.67%,33.33%,33.33%"
-//       ↑        ↑          ↑
-//    mobile   tablet   desktop (per-child)
-```
-
-#### Object Format
-```javascript
-{
-  default: '100vw',
-  540: '50%',                      // All children same
-  720: '66.67%,33.33%,33.33%'      // Per-child
-}
-```
-
-### API Reference
-
-#### Layout.getSizes(srcsets)
-Simple conversion (all children same size):
-```javascript
-Layout.getSizes("default:100vw;720:50%")
-// → "(min-width: 720px) min(50vw, 512px), 100vw"
-```
-
-#### Layout.getSizesForChild(srcsets, childIndex, options)
-Child-position aware conversion:
-```javascript
-Layout.getSizesForChild("default:100vw;720:66.67%,33.33%", 0)
-// → "(min-width: 720px) min(66.67vw, 683px), 100vw"
-
-Layout.getSizesForChild("default:100vw;720:66.67%,33.33%", 1, {
-  maxLayoutWidth: '1200px'  // Override default
-})
-// → "(min-width: 720px) min(33.33vw, 400px), 100vw"
-```
-
-#### Layout.buildSrcsets(breakpoints)
-Auto-generate srcsets from layout patterns:
-```javascript
-Layout.buildSrcsets({ md: 'columns(2)', lg: 'grid(3c)' })
-// → "default:100vw;540:50%;720:66.67%,33.33%,33.33%"
-```
-
-#### Layout.autoGenerateSizes(breakpoints, childIndex, options)
-Complete auto-generation:
-```javascript
-Layout.autoGenerateSizes({ md: 'columns(2)', lg: 'grid(3c)' }, 0)
-// → "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw"
-```
-
-### Examples
-
-#### Bento Layout with 6 Images
-```javascript
-<Layout lg="bento(6a)">
-  {[0, 1, 2, 3, 4, 5].map(index => (
-    <Image
-      key={index}
-      src={`/photo${index}.jpg`}
-      sizes={Layout.autoGenerateSizes({ lg: 'bento(6a)' }, index)}
-    />
-  ))}
-</Layout>
-
-// Each image gets different sizes:
-// Child 0: min(30vw, 307px)
-// Child 1: min(40vw, 410px)
-// Child 2: min(30vw, 307px)
-// etc.
-```
-
-#### Multi-Breakpoint Hero
-```javascript
-const heroBreakpoints = {
-  sm: 'columns(1)',
-  md: 'columns(2)',
-  lg: 'grid(3c)'
-}
-
-<Layout {...heroBreakpoints}>
-  <Image
-    src="/hero.jpg"
-    sizes={Layout.autoGenerateSizes(heroBreakpoints, 0)}
-  />
-  {/* Sizes: "(min-width: 720px) min(66.67vw, 683px), (min-width: 540px) min(50vw, 512px), 100vw" */}
-</Layout>
-```
-
-### Testing Srcsets
-
+**Check Node.js version:**
 ```bash
-# Check what srcsets are available
-node -e "import('./layouts-map.js').then(m => console.log(Object.keys(m.layoutsMap)))"
-
-# Check specific layout srcset
-node -e "import('./layouts-map.js').then(m => console.log(m.layoutsMap['grid(3c)']))"
-
-# Test size calculation
-node -e "
-import { getSizesForChild } from './src/components/react/srcset-advanced.js';
-console.log(getSizesForChild('default:100vw;720:66.67%,33.33%', 0));
-"
+node --version  # Requires Node.js 16+
 ```
 
-### Custom Layouts with Srcsets
+**Verify config file exists:**
+```bash
+cat layout.config.json
+```
 
-When creating custom layouts, always include srcset data:
+**Check layouts directory:**
+```bash
+ls -la layouts/
+```
 
+### CSS Size Too Large
+
+Check your `layout.config.json` breakpoints:
 ```json
 {
+  "breakpoints": {
+    "lg": {
+      "layouts": [
+        // Use object syntax for specific variants only
+        { "grid": ["grid(3a)", "grid(3c)"] }
+      ]
+    }
+  }
+}
+```
+
+**Optimization tips:**
+- Only include layouts you actually use
+- Use object syntax to include specific variants only
+- Remove unused breakpoints
+- Consider code-splitting for different pages
+
+### Icons Not Generating
+
+**Verify layout JSON files have icon data:**
+```bash
+cat layouts/columns.json | grep -A5 '"icon"'
+```
+
+**Manually trigger icon generation:**
+```bash
+npm run build:icons
+```
+
+### Demos Not Working
+
+**Check that CSS is built:**
+```bash
+ls -lh dist/layout.css
+```
+
+**Rebuild everything:**
+```bash
+npm run build:all
+```
+
+---
+
+## Performance Notes
+
+### Build Times
+
+| Command | Time |
+|---------|------|
+| `npm run build` | ~500ms |
+| `npm run build:maps` | ~100ms |
+| `npm run build:demo` | ~1-2s |
+| `npm run build:icons` | ~200ms |
+| **`npm run build:all`** | **~3s** |
+
+### Output Sizes
+
+| File | Size |
+|------|------|
+| `dist/layout.css` (unminified) | ~33 KB |
+| `dist/layout.css` (minified) | ~15 KB |
+| `dist/layout.css` (gzipped) | ~12 KB |
+| `layouts-map.js` | ~7 KB |
+| All demo HTML | ~100 KB |
+| All icons SVG | ~50 KB |
+
+---
+
+## CI/CD Integration
+
+### GitHub Actions Example
+
+```yaml
+name: Build and Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install
+      - run: npm run build:all
+      - run: npm test
+```
+
+### Pre-commit Hook
+
+```json
+// package.json
+{
+  "scripts": {
+    "precommit": "npm run build:all && npm test"
+  }
+}
+```
+
+Or use husky:
+```bash
+npx husky add .husky/pre-commit "npm run build:all"
+```
+
+---
+
+## Advanced Usage
+
+### Custom Layouts Workflow
+
+```bash
+# 1. Create custom layout
+echo '{
   "name": "Custom Layouts",
   "prefix": "custom",
   "layouts": [{
-    "id": "hero",
-    "columns": "3fr 1fr",
-    "srcset": "75%,25%",
+    "id": "1",
+    "columns": "2fr 1fr",
+    "srcset": "66.67%,33.33%",
     "items": 2,
-    "breakpoints": {
-      "lg": "custom(hero)"
-    }
+    "icon": [
+      {"w": 66.67, "h": 100, "x": 0, "y": 0},
+      {"w": 33.33, "h": 100, "x": 66.67, "y": 0}
+    ]
   }]
-}
+}' > layouts/custom.json
+
+# 2. Add to config
+# Edit layout.config.json to include custom layouts
+
+# 3. Rebuild everything
+npm run build:all
+
+# 4. Verify it's included
+grep "custom" layouts-map.js
+grep "custom" dist/layout.css
 ```
 
-Then regenerate the layouts map:
+### Testing Specific Layouts
+
 ```bash
-npm run generate:layouts-map
+# Check available layouts
+node -e "import('./layouts-map.js').then(m => console.log(Object.keys(m.srcsetMap)))"
+
+# Check specific layout srcset
+node -e "import('./layouts-map.js').then(m => console.log(m.srcsetMap['grid(3c)']))"
+
+# Check configuration
+node -e "import('./layouts-map.js').then(m => console.log(m.layoutConfig))"
 ```
 
-Now use in your app:
-```javascript
-Layout.autoGenerateSizes({ lg: 'custom(hero)' }, 0)
-// → Automatically uses your custom srcset
-```
+---
+
+## Next Steps
+
+- See [build.md](build.md) for build system documentation
+- See [README.md](../README.md) for usage examples
+- See layout JSON files in `layouts/` for structure reference

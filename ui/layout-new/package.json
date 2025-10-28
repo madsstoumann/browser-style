@@ -1,46 +1,40 @@
 {
   "name": "@browser.style/layout",
-  "version": "2.0.0",
-  "description": "Modern CSS layout system with responsive grid patterns, React/Web components, presets, and responsive image srcsets",
+  "version": "1.5.0",
+  "description": "Modern CSS layout system with responsive grid patterns and responsive image srcsets",
   "type": "module",
   "main": "index.js",
-  "types": "src/types.ts",
   "style": "dist/layout.css",
   "scripts": {
     "build": "node build.js",
     "build:watch": "node build.js --watch",
-    "generate:layouts-map": "node src/generate-layouts-map.js",
+    "build:maps": "node src/maps.js",
+    "build:demo": "node -e \"import('./src/demo.js').then(m => m.buildDemoFiles('./layouts', './dist'))\"",
+    "build:icons": "node -e \"import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))\"",
+    "build:all": "npm run build:maps && npm run build && npm run build:demo && npm run build:icons",
     "dev": "npm run build:watch",
     "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
-    "prepublishOnly": "npm run generate:layouts-map && npm run build && npm test"
+    "prepublishOnly": "npm run build:all && npm test"
   },
   "exports": {
     ".": {
-      "types": "./src/types.ts",
       "import": "./index.js",
       "style": "./dist/layout.css"
     },
-    "./react": {
-      "types": "./src/types.ts",
-      "import": "./react.js"
-    },
     "./css": "./dist/layout.css",
     "./build": "./build.js",
-    "./preset": "./src/preset.js",
-    "./srcset": "./src/srcset.js"
+    "./maps": "./layouts-map.js"
   },
   "files": [
     "index.js",
-    "react.js",
     "build.js",
-    "layout.config",
+    "layout.config.json",
     "layouts-map.js",
     "core/",
     "layouts/",
     "src/",
     "dist/layout.css",
     "README.md",
-    "BUILD.md",
     "LICENSE"
   ],
   "bin": {
@@ -58,15 +52,11 @@
     "sizes-attribute",
     "layout-system",
     "css-framework",
-    "web-components",
-    "react-component",
     "container-queries",
     "media-queries",
     "grid-layouts",
     "bento-grids",
     "image-optimization",
-    "presets",
-    "typescript",
     "browser.style"
   ],
   "author": "Mads Stoumann",

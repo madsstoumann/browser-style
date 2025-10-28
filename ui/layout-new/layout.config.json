@@ -10,7 +10,7 @@
   "layoutContainer": {
     "layoutRootElement": "body",
     "maxLayoutWidth": {
-      "value": "1024px",
+      "value": 1024,
       "cssProperty": "--layout-bleed-mw"
     },
     "layoutMargin": {

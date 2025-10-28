@@ -445,7 +445,7 @@ export class LayoutBuilder {
  * @returns {Promise<Object>} Build result
  */
 export async function buildLayout(options = {}) {
-	const configPath = options.configPath || path.join(process.cwd(), 'layout.config')
+	const configPath = options.configPath || path.join(process.cwd(), 'layout.config.json')
 	const layoutsPath = options.layoutsPath || path.join(path.dirname(configPath), 'layouts')
 	const outputPath = options.outputPath || path.join(process.cwd(), 'dist', 'layout.css')
 
