@@ -186,8 +186,9 @@ npm install @browser.style/layout
 
 #### Step 1: Create your config
 
+Create `layout.config.json` at the root of your project:
+
 ```json
-// layout.config.json in your project
 {
   "breakpoints": {
     "md": {
@@ -199,25 +200,50 @@ npm install @browser.style/layout
 }
 ```
 
-#### Step 2: Add build script
+#### Step 2: Build CSS
 
+The CLI automatically finds `layout.config.json` in your project directory!
+
+**Option A - Using npx (one command):**
+```bash
+npx browser-style-layout build
+```
+
+**Option B - Add npm script (recommended):**
 ```json
 // package.json
 {
   "scripts": {
-    "build:layout": "node node_modules/@browser.style/layout/build.js"
+    "build:layout": "browser-style-layout build"
   }
 }
 ```
 
-#### Step 3: Build and use
-
+Then run:
 ```bash
-npm run build:layout  # Generates dist/layout.css
+npm run build:layout
 ```
+
+**What happens:**
+- ✅ CLI finds `layout.config.json` in your project root automatically
+- ✅ Uses layouts from `node_modules/@browser.style/layout/layouts/`
+- ✅ Generates `dist/layout.css` in your project directory
+- ✅ CSS includes only layouts you specified (smaller bundle!)
+
+**Custom output location:**
+```bash
+npx browser-style-layout build --output src/styles/layout.css
+```
+
+#### Step 3: Use your custom CSS
 
 ```html
 <link rel="stylesheet" href="dist/layout.css">
+```
+
+Or in your JavaScript:
+```javascript
+import './dist/layout.css'
 ```
 
 ### Option 3: Custom Layouts
@@ -269,23 +295,72 @@ npm run build:all
 
 ## CLI Usage
 
+### How Config Discovery Works
+
+The CLI is smart about finding your configuration:
+
+**Priority order:**
+1. **`--config` flag** - If you specify a path, it uses that
+2. **Project directory** - Checks for `layout.config.json` in `process.cwd()`
+3. **Package directory** - Falls back to the package's default config
+
+**Example:**
+```bash
+# CLI automatically finds ./layout.config.json
+npx browser-style-layout build
+# Output: ✓ Found layout.config.json in project directory
+# Output: ✓ Generated: ./dist/layout.css
+```
+
+**Layout sources:**
+- If you have a `layouts/` folder next to your config, it uses that
+- Otherwise, it uses layouts from `node_modules/@browser.style/layout/layouts/`
+
+**Output location:**
+- If config is in your project, outputs to `./dist/layout.css`
+- Can be overridden with `--output` flag
+
 ### Direct Build Commands
 
 ```bash
-# Build with custom config
-node build.js --config path/to/layout.config.json
+# Simple build (auto-finds config in your project)
+npx browser-style-layout build
+
+# Build with custom config path
+npx browser-style-layout build --config path/to/layout.config.json
 
 # Build to custom output
-node build.js --output path/to/custom.css
+npx browser-style-layout build --output path/to/custom.css
 
 # Build minified
-node build.js --minify
+npx browser-style-layout build --minify
 
 # Watch mode
-node build.js --watch
+npx browser-style-layout build --watch
 
-# Combined
-node build.js --config custom.json --output dist/layout.css --minify
+# Combined options
+npx browser-style-layout build --config custom.json --output dist/layout.css --minify
+```
+
+### Recommended Workflow
+
+Add to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "build:layout": "browser-style-layout build",
+    "build:layout:watch": "browser-style-layout build --watch",
+    "build:layout:prod": "browser-style-layout build --minify"
+  }
+}
+```
+
+Then use:
+```bash
+npm run build:layout        # Development build
+npm run build:layout:watch  # Watch mode
+npm run build:layout:prod   # Production build
 ```
 
 ### Programmatic API

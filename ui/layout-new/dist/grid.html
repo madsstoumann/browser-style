@@ -508,5 +508,16 @@
 		</lay-out>
 	</section>
 
+	<!-- Layout Web Component -->
+	<script type="module">
+		// Load layouts map data
+		import { srcsetMap, layoutConfig } from '../layouts-map.js'
+
+		// Load web component and initialize with data
+		import { LayOut } from '../src/components/web/index.js'
+
+		// Initialize the component with layout data (no window globals needed!)
+		LayOut.initialize(srcsetMap, layoutConfig)
+	</script>
 </body>
 </html>

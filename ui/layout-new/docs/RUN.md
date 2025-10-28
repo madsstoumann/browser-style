@@ -22,64 +22,97 @@ npm test              # Test package exports
 
 ### Build CSS
 
-#### Development Build
-```bash
-npm run build
-```
-or
-```bash
-node build.js
-```
+#### For Package Development
+These commands are used when developing the package itself:
 
-**Output:** `dist/layout.css` (unminified, ~33 KB)
-
-**What it does:**
-- Reads `layout.config.json`
-- Loads layout JSON files from `layouts/`
-- Generates CSS with attribute selectors
-- Writes to `dist/layout.css`
-
-#### Production Build
 ```bash
-node build.js --minify
+npm run build        # Development build
+npm run build:watch  # Watch mode
+node build.js        # Direct build
 ```
 
-**Output:** `dist/layout.css` (minified, ~15 KB)
+#### For Users (After npm install)
 
-#### Watch Mode
+**Simple build** - Automatically finds your config:
 ```bash
-npm run build:watch
-```
-or
-```bash
-node build.js --watch
+npx browser-style-layout build
 ```
 
 **What it does:**
-- Watches `layout.config.json` and `layouts/*.json`
-- Automatically rebuilds on changes
-- Useful during development
+1. Looks for `layout.config.json` in your project directory
+2. Uses layouts from `node_modules/@browser.style/layout/layouts/`
+3. Generates `dist/layout.css` in your project
 
-#### Custom Config Path
-```bash
-node build.js --config path/to/custom.config.json
+**Example output:**
+```
+✓ Found layout.config.json in project directory
+✓ Generated: ./dist/layout.css
+  Size: 0.56 KB
 ```
 
-Use a different configuration file.
+#### Config Discovery
 
-#### Custom Output Path
+The CLI automatically finds your config with this priority:
+
+1. **`--config` flag** (if specified)
+2. **Your project directory** (`./layout.config.json`)
+3. **Package directory** (fallback)
+
+#### Build Options
+
+**Development build:**
 ```bash
-node build.js --output path/to/custom.css
+npx browser-style-layout build
+```
+Output: Unminified CSS (~33 KB with all layouts)
+
+**Production build:**
+```bash
+npx browser-style-layout build --minify
+```
+Output: Minified CSS (~15 KB)
+
+**Watch mode:**
+```bash
+npx browser-style-layout build --watch
+```
+Watches config and layouts, rebuilds on changes
+
+**Custom config path:**
+```bash
+npx browser-style-layout build --config path/to/custom.config.json
 ```
 
-Write CSS to a custom location.
-
-#### Combined Options
+**Custom output path:**
 ```bash
-node build.js --config custom.config.json --output dist/custom.css --minify
+npx browser-style-layout build --output path/to/custom.css
 ```
 
-All options can be combined.
+**Combined options:**
+```bash
+npx browser-style-layout build --config custom.json --output dist/custom.css --minify
+```
+
+#### Recommended npm Scripts
+
+Add to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "build:layout": "browser-style-layout build",
+    "build:layout:watch": "browser-style-layout build --watch",
+    "build:layout:prod": "browser-style-layout build --minify"
+  }
+}
+```
+
+Then use:
+```bash
+npm run build:layout        # Development
+npm run build:layout:watch  # Watch mode
+npm run build:layout:prod   # Production
+```
 
 ---
 

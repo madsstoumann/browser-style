@@ -8,6 +8,7 @@
 import { LayoutBuilder } from './src/builder.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { existsSync } from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -17,13 +18,74 @@ const args = process.argv.slice(2)
 const minify = args.includes('--minify')
 const watch = args.includes('--watch')
 
-const configIndex = args.indexOf('--config')
-const configPath = configIndex !== -1 ? args[configIndex + 1] : path.join(__dirname, 'layout.config.json')
+/**
+ * Find config file
+ * 1. Check if --config flag is provided
+ * 2. Check user's project directory (process.cwd())
+ * 3. Fall back to package directory (__dirname)
+ */
+function findConfigPath() {
+	const configIndex = args.indexOf('--config')
 
-const outputIndex = args.indexOf('--output')
-const outputPath = outputIndex !== -1 ? args[outputIndex + 1] : path.join(__dirname, 'dist', 'layout.css')
+	if (configIndex !== -1) {
+		// User specified config path
+		return args[configIndex + 1]
+	}
 
-const layoutsDir = path.join(path.dirname(configPath), 'layouts')
+	// Check user's project directory first
+	const userConfigPath = path.join(process.cwd(), 'layout.config.json')
+	if (existsSync(userConfigPath)) {
+		console.log('✓ Found layout.config.json in project directory')
+		return userConfigPath
+	}
+
+	// Fall back to package directory
+	return path.join(__dirname, 'layout.config.json')
+}
+
+/**
+ * Find output path
+ * 1. Check if --output flag is provided
+ * 2. If config is in user's project, output to ./dist/layout.css
+ * 3. Otherwise output to package dist
+ */
+function findOutputPath(configPath) {
+	const outputIndex = args.indexOf('--output')
+
+	if (outputIndex !== -1) {
+		// User specified output path
+		return args[outputIndex + 1]
+	}
+
+	// If config is in user's project, output there too
+	if (configPath.startsWith(process.cwd())) {
+		return path.join(process.cwd(), 'dist', 'layout.css')
+	}
+
+	// Fall back to package directory
+	return path.join(__dirname, 'dist', 'layout.css')
+}
+
+const configPath = findConfigPath()
+const outputPath = findOutputPath(configPath)
+
+/**
+ * Find layouts directory
+ * 1. Check next to config file
+ * 2. Fall back to package layouts directory
+ */
+function findLayoutsDir(configPath) {
+	// Check next to config file first
+	const localLayoutsDir = path.join(path.dirname(configPath), 'layouts')
+	if (existsSync(localLayoutsDir)) {
+		return localLayoutsDir
+	}
+
+	// Fall back to package layouts
+	return path.join(__dirname, 'layouts')
+}
+
+const layoutsDir = findLayoutsDir(configPath)
 
 /**
  * Build CSS
