@@ -22,7 +22,7 @@
     </svg>Ratio 25:75</h3>
 		<small>Narrow sidebar with wide main content area</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(25:75)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(25:75)">
+		<lay-out md="columns(2)" lg="ratio(25:75)" srcsets="540:50%;720:25%,75%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -38,7 +38,7 @@
     </svg>Ratio 33:66</h3>
 		<small>Common sidebar and main content layout (1:2 ratio)</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(33:66)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(33:66)">
+		<lay-out md="columns(2)" lg="ratio(33:66)" srcsets="540:50%;720:33.33%,66.67%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -54,7 +54,7 @@
     </svg>Ratio 40:60</h3>
 		<small>40:60 ratio layout</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(40:60)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(40:60)">
+		<lay-out md="columns(2)" lg="ratio(40:60)" srcsets="540:50%;720:40%,60%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -70,7 +70,7 @@
     </svg>Ratio 60:40</h3>
 		<small>60:40 ratio layout</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(60:40)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(60:40)">
+		<lay-out md="columns(2)" lg="ratio(60:40)" srcsets="540:50%;720:60%,40%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -86,7 +86,7 @@
     </svg>Ratio 66:33</h3>
 		<small>Main content with sidebar (2:1 ratio)</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(66:33)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(66:33)">
+		<lay-out md="columns(2)" lg="ratio(66:33)" srcsets="540:50%;720:66.67%,33.33%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -102,7 +102,7 @@
     </svg>Ratio 75:25</h3>
 		<small>Wide main content with narrow sidebar</small>
 		<code>&lt;lay-out md="columns(2)" lg="ratio(75:25)"&gt;</code>
-		<lay-out md="columns(2)" lg="ratio(75:25)">
+		<lay-out md="columns(2)" lg="ratio(75:25)" srcsets="540:50%;720:75%,25%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -122,7 +122,7 @@
     </svg>Ratio 25:25:50</h3>
 		<small>25:25:50 ratio layout</small>
 		<code>&lt;lay-out md="columns(3)" lg="ratio(25:25:50)"&gt;</code>
-		<lay-out md="columns(3)" lg="ratio(25:25:50)">
+		<lay-out md="columns(3)" lg="ratio(25:25:50)" srcsets="540:33.33%;720:25%,25%,50%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -142,7 +142,7 @@
     </svg>Ratio 25:50:25</h3>
 		<small>Centered main content with equal sidebars</small>
 		<code>&lt;lay-out md="columns(3)" lg="ratio(25:50:25)"&gt;</code>
-		<lay-out md="columns(3)" lg="ratio(25:50:25)">
+		<lay-out md="columns(3)" lg="ratio(25:50:25)" srcsets="540:33.33%;720:25%,50%,25%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -162,7 +162,7 @@
     </svg>Ratio 50:25:25</h3>
 		<small>50:25:25 ratio layout</small>
 		<code>&lt;lay-out md="columns(3)" lg="ratio(50:25:25)"&gt;</code>
-		<lay-out md="columns(3)" lg="ratio(50:25:25)">
+		<lay-out md="columns(3)" lg="ratio(50:25:25)" srcsets="540:33.33%;720:50%,25%,25%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -171,17 +171,5 @@
 			<item-card repeat></item-card>
 		</lay-out>
 	</section>
-
-	<!-- Layout Web Component -->
-	<script type="module">
-		// Load layouts map data
-		import { srcsetMap, layoutConfig } from '../layouts-map.js'
-
-		// Load web component and initialize with data
-		import { LayOut } from '../src/components/web/index.js'
-
-		// Initialize the component with layout data (no window globals needed!)
-		LayOut.initialize(srcsetMap, layoutConfig)
-	</script>
 </body>
 </html>

@@ -20,7 +20,7 @@
     </svg>Columns 1</h3>
 		<small>1-column layout (default)</small>
 		<code>&lt;lay-out md="columns(1)"&gt;</code>
-		<lay-out md="columns(1)">
+		<lay-out md="columns(1)" srcsets="540:100%@1024">
 			<item-card></item-card>
 			<item-card repeat></item-card>
 		</lay-out>
@@ -36,7 +36,7 @@
     </svg>Columns 2</h3>
 		<small>2-column layout with equal width columns</small>
 		<code>&lt;lay-out md="columns(2)" lg="columns(2)"&gt;</code>
-		<lay-out md="columns(2)" lg="columns(2)">
+		<lay-out md="columns(2)" lg="columns(2)" srcsets="540:50%;720:50%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card repeat></item-card>
@@ -56,7 +56,7 @@
     </svg>Columns 3</h3>
 		<small>3-column layout with equal width columns</small>
 		<code>&lt;lay-out md="grid(3a)" lg="columns(3)"&gt;</code>
-		<lay-out md="grid(3a)" lg="columns(3)">
+		<lay-out md="grid(3a)" lg="columns(3)" srcsets="540:50%,50%,100%;720:33.33%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -80,7 +80,7 @@
     </svg>Columns 4</h3>
 		<small>4-column layout with equal width columns</small>
 		<code>&lt;lay-out md="columns(2)" lg="columns(4)"&gt;</code>
-		<lay-out md="columns(2)" lg="columns(4)">
+		<lay-out md="columns(2)" lg="columns(4)" srcsets="540:50%;720:25%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -108,7 +108,7 @@
     </svg>Columns 5</h3>
 		<small>5-column layout with equal width columns</small>
 		<code>&lt;lay-out md="grid(5a)" lg="columns(5)"&gt;</code>
-		<lay-out md="grid(5a)" lg="columns(5)">
+		<lay-out md="grid(5a)" lg="columns(5)" srcsets="540:100%,50%,50%,50%,50%;720:20%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -140,7 +140,7 @@
     </svg>Columns 6</h3>
 		<small>6-column layout with equal width columns</small>
 		<code>&lt;lay-out md="columns(3)" lg="columns(6)"&gt;</code>
-		<lay-out md="columns(3)" lg="columns(6)">
+		<lay-out md="columns(3)" lg="columns(6)" srcsets="540:33.33%;720:16.67%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -155,17 +155,5 @@
 			<item-card repeat></item-card>
 		</lay-out>
 	</section>
-
-	<!-- Layout Web Component -->
-	<script type="module">
-		// Load layouts map data
-		import { srcsetMap, layoutConfig } from '../layouts-map.js'
-
-		// Load web component and initialize with data
-		import { LayOut } from '../src/components/web/index.js'
-
-		// Initialize the component with layout data (no window globals needed!)
-		LayOut.initialize(srcsetMap, layoutConfig)
-	</script>
 </body>
 </html>

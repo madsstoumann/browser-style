@@ -23,7 +23,8 @@
     },
     "./css": "./dist/layout.css",
     "./build": "./build.js",
-    "./maps": "./layouts-map.js"
+    "./maps": "./layouts-map.js",
+    "./srcsets": "./src/srcsets.js"
   },
   "files": [
     "index.js",

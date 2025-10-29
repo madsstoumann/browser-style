@@ -28,7 +28,7 @@
     </svg>Auto fill</h3>
 		<small>Auto-fill grid that creates columns to fill available space, including empty ones</small>
 		<code>&lt;lay-out sm="auto(fill)"&gt;</code>
-		<lay-out sm="auto(fill)">
+		<lay-out sm="auto(fill)" srcsets="380:20%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -52,7 +52,7 @@
     </svg>Auto fit</h3>
 		<small>Auto-fit grid that creates columns as needed, preserving empty ones</small>
 		<code>&lt;lay-out sm="auto(fit)"&gt;</code>
-		<lay-out sm="auto(fit)">
+		<lay-out sm="auto(fit)" srcsets="380:20%@1024">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -63,17 +63,5 @@
 			<item-card repeat></item-card>
 		</lay-out>
 	</section>
-
-	<!-- Layout Web Component -->
-	<script type="module">
-		// Load layouts map data
-		import { srcsetMap, layoutConfig } from '../layouts-map.js'
-
-		// Load web component and initialize with data
-		import { LayOut } from '../src/components/web/index.js'
-
-		// Initialize the component with layout data (no window globals needed!)
-		LayOut.initialize(srcsetMap, layoutConfig)
-	</script>
 </body>
 </html>

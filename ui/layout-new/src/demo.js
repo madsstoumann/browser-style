@@ -6,6 +6,8 @@
 import fs from 'fs'
 import path from 'path'
 import { buildIcons } from './icons.js'
+import { generateSrcsets } from './srcsets.js'
+import { srcsetMap, layoutConfig } from '../layouts-map.js'
 
 /**
  * Generate HTML demo file for a layout type
@@ -55,18 +57,25 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 
 			let breakpointAttrs = ''
 			let codeExample = ''
+			let breakpointsObj = {}
 
 			if (layout.breakpoints) {
 				const breakpointPairs = []
 				for (const [breakpoint, value] of Object.entries(layout.breakpoints)) {
 					breakpointAttrs += ` ${breakpoint}="${value}"`
 					breakpointPairs.push(`${breakpoint}="${value}"`)
+					breakpointsObj[breakpoint] = value
 				}
 				codeExample = `&lt;lay-out${breakpointAttrs}&gt;`
 			} else {
 				breakpointAttrs = ` md="columns(${itemCount})" lg="${prefix}(${layoutId})"`
 				codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"&gt;`
+				breakpointsObj = { md: `columns(${itemCount})`, lg: `${prefix}(${layoutId})` }
 			}
+
+			// Generate srcsets attribute
+			const srcsets = generateSrcsets(breakpointsObj, srcsetMap, layoutConfig)
+			const srcsetsAttr = srcsets ? ` srcsets="${srcsets}"` : ''
 
 			// Check if SVG icon exists
 			const iconPath = path.join(iconsDir, `${prefix}(${layoutId}).svg`)
@@ -85,7 +94,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>${codeExample}</code>
-		<lay-out${breakpointAttrs}>`
+		<lay-out${breakpointAttrs}${srcsetsAttr}>`
 
 			for (let i = 0; i < itemCount; i++) {
 				html += `
@@ -107,18 +116,6 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	}
 
 	html += `
-
-	<!-- Layout Web Component -->
-	<script type="module">
-		// Load layouts map data
-		import { srcsetMap, layoutConfig } from '../layouts-map.js'
-
-		// Load web component and initialize with data
-		import { LayOut } from '../src/components/web/index.js'
-
-		// Initialize the component with layout data (no window globals needed!)
-		LayOut.initialize(srcsetMap, layoutConfig)
-	</script>
 </body>
 </html>`
 
