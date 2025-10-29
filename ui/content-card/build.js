@@ -180,26 +180,22 @@ function extractCSSFromHTML() {
 async function generateContentCardLayoutCSS() {
   try {
     console.log('🎨 Generating content-card layout CSS...');
-    
-    // Import from the layout package (simulated via import map)
-    const { generateLayoutCSS } = await import('@browser.style/layout');
-    
-    const result = await generateLayoutCSS('./config.json', {
-      layoutsPath: '../layout/systems',  // Local path for development
-      outputPath: './temp-layout.css',
-      minify: true
+
+    // Use the layout system's builder with content-card's config
+    const { buildLayout } = await import('../layout/src/builder.js');
+
+    const result = await buildLayout({
+      configPath: path.join(__dirname, 'layout.config.json'),
+      layoutsPath: path.join(__dirname, '../layout/layouts'),
+      outputPath: path.join(__dirname, 'temp-layout.css'),
+      coreDir: path.join(__dirname, '../layout/core')
     });
-    
-    console.log(`✓ Generated layout CSS: ${(result.size / 1024).toFixed(1)}KB, ${result.rules} rules`);
-    return result.outputPath;
+
+    console.log(`✓ Generated layout CSS: ${(result.css.length / 1024).toFixed(1)}KB`);
+    return path.join(__dirname, 'temp-layout.css');
   } catch (error) {
     console.error('❌ Failed to generate layout CSS:', error.message);
-    // Fallback to copying existing layout CSS
-    const fallbackPath = '../layout/dist/layout.min.css';
-    if (fs.existsSync(fallbackPath)) {
-      console.log('📋 Using fallback layout CSS');
-      return fallbackPath;
-    }
+    console.error(error);
     throw error;
   }
 }
@@ -208,11 +204,19 @@ async function generateContentCardLayoutCSS() {
 async function bundleCSS(cssFiles) {
   const bundledCSS = [];
   
-  // Generate layout CSS first
+  // Generate and minify layout CSS first
   const layoutCssPath = await generateContentCardLayoutCSS();
   const layoutCSS = fs.readFileSync(layoutCssPath, 'utf8');
+
+  // Minify layout CSS
+  const layoutResult = await postcss([
+    cssnano({
+      preset: preset()
+    })
+  ]).process(layoutCSS, { from: layoutCssPath });
+
   bundledCSS.push('/* Generated Content-Card Layout CSS */');
-  bundledCSS.push(layoutCSS);
+  bundledCSS.push(layoutResult.css);
   
   for (const cssFile of cssFiles) {
     let cssPath;

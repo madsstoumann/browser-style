@@ -6,10 +6,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export class LayoutBuilder {
-	constructor(configPath, layoutsDir, outputPath) {
+	constructor(configPath, layoutsDir, outputPath, coreDir = null) {
 		this.configPath = configPath
 		this.layoutsDir = layoutsDir
 		this.outputPath = outputPath
+		this.coreDir = coreDir || path.join(path.dirname(configPath), 'core')
 		this.config = null
 		this.layouts = new Map()
 		this.cssRules = new Map()
@@ -60,7 +61,7 @@ export class LayoutBuilder {
 		let css = ''
 
 		for (const fileName of files) {
-			const filePath = path.join(path.dirname(this.configPath), 'core', `${fileName}.css`)
+			const filePath = path.join(this.coreDir, `${fileName}.css`)
 
 			try {
 				if (fs.existsSync(filePath)) {
@@ -318,8 +319,9 @@ export async function buildLayout(options = {}) {
 	const configPath = options.configPath || path.join(process.cwd(), 'layout.config.json')
 	const layoutsPath = options.layoutsPath || path.join(path.dirname(configPath), 'layouts')
 	const outputPath = options.outputPath || path.join(process.cwd(), 'dist', 'layout.css')
+	const coreDir = options.coreDir || path.join(path.dirname(configPath), 'core')
 
-	const builder = new LayoutBuilder(configPath, layoutsPath, outputPath)
+	const builder = new LayoutBuilder(configPath, layoutsPath, outputPath, coreDir)
 	return await builder.build(false)
 }
 
