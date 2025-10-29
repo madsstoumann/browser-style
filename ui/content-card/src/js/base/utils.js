@@ -1,4 +1,5 @@
 import { ICONS } from './icons.js';
+import { calculateSizes } from '@browser.style/layout/src/srcsets.js';
 
 // Helper function to clean up template whitespace
 export function cleanHTML(html) {
@@ -663,24 +664,28 @@ function _generateResponsiveSrcset(imageSrc, element, settings = {}) {
 	try {
 		const breakpoints = settings.srcsetBreakpoints || [];
 		const config = settings.imageTransformConfig || null;
-		
+
 		let srcset;
 		if (config?.defaultProvider && config.providers?.[config.defaultProvider]) {
-			// Use new transform-based srcset generation
 			srcset = generateSrcsetString(imageSrc, element, breakpoints, config);
 		} else {
-			// Fallback to simple query parameter approach
 			srcset = breakpoints
 				.map(width => `${imageSrc}?w=${width} ${width}w`)
 				.join(', ');
 		}
-		
-		const sizes = settings.layoutSrcset || 'auto';
-		
-		return {
-			srcset,
-			sizes
-		};
+
+		let sizes = 'auto';
+		if (settings.layoutIndex !== undefined) {
+			const parent = element.closest?.('lay-out');
+			if (parent) {
+				const srcsets = parent.getAttribute('srcsets');
+				if (srcsets) {
+					sizes = calculateSizes(srcsets, settings.layoutIndex);
+				}
+			}
+		}
+
+		return { srcset, sizes };
 	} catch (error) {
 		console.warn('Error generating responsive srcset:', error);
 		return { srcset: null, sizes: null };

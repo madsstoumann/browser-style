@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+
+import { readFileSync, readdirSync, writeFileSync, mkdirSync } from 'fs'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const layoutsDir = join(__dirname, '../layout/layouts')
+const outputPath = join(__dirname, 'public/static/js/layouts-map.js')
+const configPath = join(__dirname, 'layout.config.json')
+
+function extractLayoutData(layoutFile) {
+	const layouts = {}
+	for (const layout of layoutFile.layouts) {
+		const key = `${layoutFile.prefix}(${layout.id})`
+		layouts[key] = layout.srcset
+	}
+	return layouts
+}
+
+function loadConfig() {
+	const configContent = readFileSync(configPath, 'utf-8')
+	const config = JSON.parse(configContent)
+
+	return {
+		maxLayoutWidth: config.layoutContainer?.maxWidth || 1024,
+		breakpoints: Object.entries(config.breakpoints || {}).reduce((acc, [name, bp]) => {
+			if (bp.min) {
+				acc[name] = parseInt(bp.min.replace('px', ''))
+			}
+			return acc
+		}, {})
+	}
+}
+
+function generateLayoutsMap() {
+	const srcsetMap = {}
+	const files = readdirSync(layoutsDir).filter(f => f.endsWith('.json'))
+
+	for (const file of files) {
+		const filePath = join(layoutsDir, file)
+		const content = readFileSync(filePath, 'utf-8')
+		const layoutFile = JSON.parse(content)
+
+		if (layoutFile.layouts && Array.isArray(layoutFile.layouts)) {
+			const extracted = extractLayoutData(layoutFile)
+			Object.assign(srcsetMap, extracted)
+		}
+	}
+
+	const config = loadConfig()
+
+	const jsContent = `export const srcsetMap = ${JSON.stringify(srcsetMap, null, 2)}
+
+export const layoutConfig = ${JSON.stringify(config, null, 2)}
+
+export function getLayoutSrcset(pattern) {
+	return srcsetMap[pattern] || null
+}
+`
+
+	mkdirSync(dirname(outputPath), { recursive: true })
+	writeFileSync(outputPath, jsContent, 'utf-8')
+
+	console.log('✅ Layouts map generated:', outputPath)
+	console.log('  Layouts:', Object.keys(srcsetMap).length)
+	console.log('  Max width:', config.maxLayoutWidth)
+}
+
+generateLayoutsMap()

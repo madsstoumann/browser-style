@@ -24,6 +24,10 @@ function createStaticServer(port = 3000) {
         // Proxy layout system requests to actual location
         const layoutPath = req.url.replace('/ui/layout/', '');
         filePath = path.join(__dirname, '../layout/', layoutPath);
+      } else if (req.url.startsWith('/layout/')) {
+        // Handle layout system requests (when resolved from public/ directory)
+        const layoutPath = req.url.replace('/layout/', '');
+        filePath = path.join(__dirname, '../layout/', layoutPath);
       } else if (req.url.startsWith('/ui/content-card/')) {
         // Handle content-card internal paths (remove the prefix)
         const localPath = req.url.replace('/ui/content-card/', '');

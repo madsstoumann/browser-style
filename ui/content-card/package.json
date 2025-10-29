@@ -7,7 +7,9 @@
   "style": "src/css/index.css",
   "scripts": {
     "build": "node build.js",
-    "build:layout": "node -e \"import { buildLayout } from '../layout/src/builder.js'; import path from 'path'; import { fileURLToPath } from 'url'; const __dirname = path.dirname(fileURLToPath(import.meta.url)); buildLayout({ configPath: path.join(__dirname, 'layout.config.json'), layoutsPath: path.join(__dirname, '../layout/layouts'), outputPath: path.join(__dirname, 'public/static/css/layout.css'), coreDir: path.join(__dirname, '../layout/core') }).then(() => console.log('✅ Layout CSS generated')).catch(console.error);\"",
+    "build:layout": "npm run build:layout:css && npm run build:layout:maps",
+    "build:layout:css": "node -e \"import { buildLayout } from '../layout/src/builder.js'; import path from 'path'; import { fileURLToPath } from 'url'; const __dirname = path.dirname(fileURLToPath(import.meta.url)); buildLayout({ configPath: path.join(__dirname, 'layout.config.json'), layoutsPath: path.join(__dirname, '../layout/layouts'), outputPath: path.join(__dirname, 'public/static/css/layout.css'), coreDir: path.join(__dirname, '../layout/core') }).then(() => console.log('✅ Layout CSS generated')).catch(console.error);\"",
+    "build:layout:maps": "cd ../layout && node src/maps.js --config ../content-card/layout.config.json --output ../content-card/public/static/js/layouts-map.js",
     "serve": "node server.js",
     "start": "npm run build && npm run serve",
     "test": "node -e \"import('fs').then(fs => { if (fs.existsSync('src/js/cards/index.js') && fs.existsSync('src/css/index.css')) console.log('✅ Package structure valid'); else throw new Error('Missing required files'); })\"",
