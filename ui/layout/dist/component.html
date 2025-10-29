@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>LayOut Web Component Test</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Testing the LayOut web component with auto-loaded data">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<style>
+		.test-section {
+			margin-bottom: 3rem;
+			padding: 2rem;
+			border: 2px dashed #ccc;
+			border-radius: 8px;
+		}
+		.test-section h2 {
+			margin-top: 0;
+		}
+		.info {
+			background: #f0f0f0;
+			padding: 1rem;
+			border-radius: 4px;
+			margin-bottom: 1rem;
+			font-family: monospace;
+			font-size: 0.875rem;
+		}
+		.success {
+			color: green;
+		}
+		.warning {
+			color: orange;
+		}
+	</style>
+</head>
+<body>
+	<h1>LayOut Web Component Test</h1>
+	<p>This page tests the <code>&lt;lay-out&gt;</code> web component with auto-loaded layout data from the package.</p>
+
+	<!-- Test 1: Basic usage -->
+	<section class="test-section">
+		<h2>Test 1: Auto-loaded Data (Zero Config)</h2>
+		<div class="info">
+			<strong>Usage:</strong> Just import the component - no initialization needed!<br>
+			<code>import '@browser.style/layout/component'</code>
+		</div>
+		<p>The component should automatically generate srcsets using the package's layouts-map.js</p>
+
+		<h3>Columns Layout</h3>
+		<lay-out md="columns(2)" lg="columns(4)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+
+		<h3>Grid Layout</h3>
+		<lay-out md="columns(3)" lg="grid(3c)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+
+		<h3>Bento Layout</h3>
+		<lay-out md="grid(4a)" lg="bento(6a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<!-- Test 2: Dynamically added elements -->
+	<section class="test-section">
+		<h2>Test 2: Dynamically Added Elements</h2>
+		<div class="info">
+			Elements added after page load should also auto-generate srcsets
+		</div>
+		<div id="dynamic-container"></div>
+		<button onclick="addDynamicLayout()">Add Dynamic Layout</button>
+	</section>
+
+	<!-- Test 3: Srcsets verification -->
+	<section class="test-section">
+		<h2>Test 3: Srcsets Verification</h2>
+		<div class="info">
+			Click the button to check if srcsets were correctly generated
+		</div>
+		<button onclick="verifySrcsets()">Verify Srcsets</button>
+		<pre id="verification-output"></pre>
+	</section>
+
+	<!-- Import the web component -->
+	<script type="module">
+		// Import using the new barrel export
+		import { LayOut } from '../src/components/index.js'
+
+		// Make LayOut available globally for the test functions
+		window.LayOut = LayOut
+
+		// Log the loaded data
+		console.log('LayOut component loaded')
+		console.log('srcsetMap:', LayOut.srcsetMap)
+		console.log('layoutConfig:', LayOut.layoutConfig)
+
+		// Check if data was loaded
+		const hasData = Object.keys(LayOut.srcsetMap).length > 0
+		if (hasData) {
+			console.log('✅ Layout data auto-loaded successfully!')
+		} else {
+			console.warn('⚠️ Layout data not loaded - check imports')
+		}
+	</script>
+
+	<script>
+		// Test function: Add dynamic layout
+		function addDynamicLayout() {
+			const container = document.getElementById('dynamic-container')
+			const layout = document.createElement('lay-out')
+			layout.setAttribute('md', 'columns(2)')
+			layout.setAttribute('lg', 'ratio(60:40)')
+
+			for (let i = 1; i <= 2; i++) {
+				const card = document.createElement('item-card')
+				layout.appendChild(card)
+			}
+
+			container.appendChild(layout)
+		}
+
+		// Test function: Verify srcsets
+		function verifySrcsets() {
+			const output = document.getElementById('verification-output')
+			const layouts = document.querySelectorAll('lay-out')
+			let results = `Found ${layouts.length} lay-out elements:\n\n`
+
+			layouts.forEach((layout, index) => {
+				const srcsets = layout.getAttribute('srcsets')
+				const md = layout.getAttribute('md')
+				const lg = layout.getAttribute('lg')
+
+				results += `Layout ${index + 1}:\n`
+				results += `  md="${md}" lg="${lg}"\n`
+				if (srcsets) {
+					results += `  ✅ srcsets="${srcsets}"\n\n`
+				} else {
+					results += `  ❌ srcsets attribute missing!\n\n`
+				}
+			})
+
+			// Check if LayOut has data
+			if (window.LayOut) {
+				results += '\nLayOut static data:\n'
+				results += `  srcsetMap entries: ${Object.keys(window.LayOut.srcsetMap).length}\n`
+				results += `  breakpoints: ${Object.keys(window.LayOut.layoutConfig.breakpoints || {}).join(', ')}\n`
+				results += `  maxLayoutWidth: ${window.LayOut.layoutConfig.maxLayoutWidth}\n`
+			}
+
+			output.textContent = results
+		}
+
+		// Auto-verify on page load
+		// window.addEventListener('load', () => {
+		// 	setTimeout(verifySrcsets, 500)
+		// })
+	</script>
+</body>
+</html>

@@ -1,18 +1,17 @@
 {
-  "name": "@browser.style/layout",
-  "version": "1.5.0",
-  "description": "Modern CSS layout system with responsive grid patterns and responsive image srcsets",
+  "name": "@browser.style/layout-old",
+  "version": "1.1.2",
+  "description": "Modern CSS layout system with responsive grid patterns, container queries, configurable builds, and responsive image srcsets generation",
   "type": "module",
   "main": "index.js",
   "style": "dist/layout.css",
   "scripts": {
     "build": "node build.js",
-    "build:maps": "node src/maps.js",
-    "build:demo": "node -e \"import('./src/demo.js').then(m => m.buildDemoFiles('./layouts', './dist'))\"",
-    "build:icons": "node -e \"import('./src/icons.js').then(m => m.buildIcons('./layouts', './dist/icons'))\"",
-    "build:all": "npm run build:maps && npm run build && npm run build:demo && npm run build:icons",
+    "build:min": "node build.js --minify",
+    "build:watch": "node build.js --watch",
+    "dev": "npm run build:watch",
     "test": "node -e \"import('./index.js').then(m => console.log('✅ Module exports working:', Object.keys(m)))\"",
-    "prepublishOnly": "npm run build:all && npm test"
+    "prepublishOnly": "npm run build && npm test"
   },
   "exports": {
     ".": {
@@ -20,42 +19,36 @@
       "style": "./dist/layout.css"
     },
     "./css": "./dist/layout.css",
-    "./build": "./build.js",
-    "./maps": "./layouts-map.js",
-    "./srcsets": "./src/srcsets.js",
-    "./components": "./src/components/index.js"
+    "./css/min": "./dist/layout.min.css",
+    "./config": "./config.json",
+    "./systems/*": "./systems/*",
+    "./build": "./build.js"
   },
   "files": [
     "index.js",
-    "build.js",
-    "layout.config.json",
-    "layouts-map.js",
+    "build.js", 
+    "config.json",
     "core/",
-    "layouts/",
-    "src/",
-    "dist/layout.css",
-    "README.md",
-    "LICENSE"
+    "systems/",
+    "icons.js"
   ],
-  "bin": {
-    "browser-style-layout": "./build.js"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "keywords": [
     "css-grid",
-    "responsive-design",
+    "responsive-design", 
     "responsive-images",
     "srcsets",
     "sizes-attribute",
     "layout-system",
     "css-framework",
+    "web-components",
     "container-queries",
     "media-queries",
     "grid-layouts",
-    "bento-grids",
+    "bento-grids", 
     "image-optimization",
     "browser.style"
   ],
@@ -69,5 +62,10 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/layout"
+  "homepage": "https://browser.style/ui/layout",
+  "devDependencies": {
+    "cssnano": "^7.0.7",
+    "cssnano-preset-advanced": "^7.0.7",
+    "postcss": "^8.5.6"
+  }
 }
