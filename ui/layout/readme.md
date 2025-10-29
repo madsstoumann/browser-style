@@ -276,17 +276,19 @@ Properties:
 - `element` (optional, default: `"body"`): HTML element to apply container styles to
 - `maxWidth` (required): Maximum container width in pixels (generates `--layout-bleed-mw` CSS custom property)
 - `margin` (required): Inline margin value (generates `--layout-mi` CSS custom property)
+- `setRoot` (optional, default: `true`): Whether to apply the `margin-inline` calculation to the element
 
-Example:
+**With `setRoot: true` (default):**
 ```json
 {
   "element": "body",
   "maxWidth": 1024,
-  "margin": "1rem"
+  "margin": "1rem",
+  "setRoot": true
 }
 ```
 
-This generates CSS:
+Generates:
 ```css
 body {
   --layout-bleed-mw: 1024px;
@@ -294,6 +296,9 @@ body {
   margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
 }
 ```
+
+**With `setRoot: false`:**
+Only sets CSS variables without the margin calculation, giving you full control via the `[data-layout-root]` attribute in base.css.
 
 #### `breakpoints` (required)
 Define your breakpoints and which layouts to include.

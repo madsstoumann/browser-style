@@ -236,15 +236,20 @@ export class LayoutBuilder {
 		const element = container.element || 'body'
 		const maxWidth = container.maxWidth || 1024
 		const margin = container.margin || '1rem'
+		const setRoot = container.setRoot !== false
 
 		const maxWidthPx = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth
-		const marginValue = margin
 
-		return `\n${element} {
+		let css = `\n${element} {
   --layout-bleed-mw: ${maxWidthPx};
-  --layout-mi: ${marginValue};
-  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
-}\n`
+  --layout-mi: ${margin};`
+
+		if (setRoot) {
+			css += `\n  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);`
+		}
+
+		css += `\n}\n`
+		return css
 	}
 
 	async generateCSS(coreCSS = '', commonCSS = '') {

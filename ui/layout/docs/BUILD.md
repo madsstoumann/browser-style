@@ -126,17 +126,19 @@ Properties:
 - `element` (optional, default: `"body"`): HTML element to apply container styles to
 - `maxWidth` (required): Maximum container width in pixels (used for CSS custom property `--layout-bleed-mw` and responsive image calculations)
 - `margin` (required): Inline margin value (used for CSS custom property `--layout-mi`)
+- `setRoot` (optional, default: `true`): Whether to apply the `margin-inline` calculation to the element
 
-**Example:**
+**Example with `setRoot: true` (default):**
 ```json
 {
   "element": "body",
   "maxWidth": 1024,
-  "margin": "1rem"
+  "margin": "1rem",
+  "setRoot": true
 }
 ```
 
-This generates CSS:
+Generates CSS:
 ```css
 body {
   --layout-bleed-mw: 1024px;
@@ -144,6 +146,26 @@ body {
   margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
 }
 ```
+
+**Example with `setRoot: false`:**
+```json
+{
+  "element": "body",
+  "maxWidth": 1024,
+  "margin": "1rem",
+  "setRoot": false
+}
+```
+
+Generates CSS (variables only):
+```css
+body {
+  --layout-bleed-mw: 1024px;
+  --layout-mi: 1rem;
+}
+```
+
+The `[data-layout-root]` attribute selector in base.css can then be used to manually apply the margin calculation where needed.
 - **Used in:** Srcset calculations for `sizes` attribute
 
 #### `breakpoints` (required)

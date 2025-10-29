@@ -3,7 +3,8 @@
   "layoutContainer": {
     "element": "body",
     "maxWidth": 1200,
-    "margin": "1rem"
+    "margin": "1rem",
+    "setRoot": true
   },
   "core": ["base"],
   "common": [],
