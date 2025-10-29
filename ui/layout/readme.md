@@ -1,218 +1,478 @@
-# Layout Srcsets Generator
+# @browser.style/layout
 
-This module provides utilities for generating responsive `srcsets` attributes for `lay-out` web components based on layout configurations.
+Modern CSS layout system with responsive grid patterns and responsive image srcsets.
 
-## Features
+---
 
-- ✅ **Self-contained**: No file system dependencies
-- ✅ **Flexible input**: Accepts both DOM elements and HTML strings
-- ✅ **Pixel-based output**: Generates media query-ready pixel values
-- ✅ **Range support**: Handles min-width, max-width, and ranges (e.g., `540-920`)
+## Quick Start
 
-## Installation
-
-### From npm
+### Install
 
 ```bash
 npm install @browser.style/layout
 ```
 
-```javascript
-// Import the srcsets utilities
-import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from '@browser.style/layout';
+### Use Pre-built CSS
 
-// Or import specific functions
-import { getSrcset } from '@browser.style/layout/srcsets';
-
-// Import CSS (optional)
-import '@browser.style/layout/css';
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="node_modules/@browser.style/layout/dist/layout.css">
+</head>
+<body>
+  <lay-out md="columns(2)" lg="grid(3a)">
+    <div>Item 1</div>
+    <div>Item 2</div>
+    <div>Item 3</div>
+  </lay-out>
+</body>
+</html>
 ```
 
-### Local Development
+Or import in JavaScript:
 
 ```javascript
-import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from './layout/index.js';
+import '@browser.style/layout/dist/layout.css'
 ```
+
+That's it! No JavaScript required for layouts.
+
+---
+
+## Features
+
+- **Pure CSS** - No JavaScript runtime needed
+- **Responsive** - Breakpoint-based layouts with `@media` or `@container` queries
+- **57 Layout Patterns** - Columns, grids, bento boxes, mosaics, and more
+- **Responsive Images** - Automatic srcset generation for optimal image loading
+- **Customizable** - Create custom layouts and breakpoints
+- **Small Bundle** - ~33 KB uncompressed, ~12 KB gzipped
+- **Zero Config** - Works out of the box with sensible defaults
+
+---
 
 ## Usage
 
-### Basic Example
+### Basic Layouts
 
-```javascript
-// Load configuration and layout data
-const config = await fetch('config.json').then(r => r.json());
-const gridData = await fetch('systems/layouts/grid.json').then(r => r.json());
-const columnsData = await fetch('systems/layouts/columns.json').then(r => r.json());
+Use the `lay-out` element with breakpoint attributes:
 
-// Create layouts data map
-const layoutsData = createLayoutsDataMap({
-  'grid.json': gridData,
-  'columns.json': columnsData
-});
-
-// Generate srcsets for an element
-const element = document.querySelector('lay-out');
-const srcsets = generateLayoutSrcsets(element, config, layoutsData);
-
-// Apply to element
-element.setAttribute('srcsets', srcsets);
+```html
+<!-- 1 column on mobile, 2 columns on tablet, 3 columns on desktop -->
+<lay-out md="columns(2)" lg="columns(3)">
+  <article>Content 1</article>
+  <article>Content 2</article>
+  <article>Content 3</article>
+</lay-out>
 ```
 
-### String Input Example
+### Available Breakpoints
+
+Default breakpoints (customizable):
+
+- `xs` - 240px
+- `sm` - 380px
+- `md` - 540px
+- `lg` - 720px
+- `xl` - 920px
+- `xxl` - 1140px
+
+### Layout Types
+
+**Columns:**
+```html
+<lay-out lg="columns(3)">...</lay-out>
+```
+Equal-width columns (1-6 columns available)
+
+**Grid:**
+```html
+<lay-out lg="grid(3a)">...</lay-out>
+```
+Advanced grid patterns (19 variants available)
+
+**Bento:**
+```html
+<lay-out lg="bento(6a)">...</lay-out>
+```
+Bento box layouts (10 variants available)
+
+**Mosaic:**
+```html
+<lay-out lg="mosaic(hex)">...</lay-out>
+```
+Mosaic patterns (5 variants available)
+
+**Asymmetrical:**
+```html
+<lay-out lg="asym(l-r)">...</lay-out>
+```
+Asymmetric layouts (6 variants available)
+
+**Ratios:**
+```html
+<lay-out lg="ratios(2:1)">...</lay-out>
+```
+Aspect ratio layouts (9 variants available)
+
+**Autofit:**
+```html
+<lay-out xs="auto(fit)">...</lay-out>
+```
+Auto-fitting layouts (2 variants available)
+
+See [demos](dist/index.html) for visual examples of all layouts.
+
+---
+
+## Responsive Images
+
+### Automatic Srcset Generation
+
+Import the srcset utilities:
 
 ```javascript
-const elementString = '<lay-out md="grid(3a)" lg="columns(3)">';
-const srcsets = generateLayoutSrcsets(elementString, config, layoutsData);
-// Returns: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
+import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
+import { generateSrcsets } from '@browser.style/layout/src/srcsets.js'
+
+// Generate srcsets for a layout
+const srcsets = generateSrcsets(
+  { md: "columns(2)", lg: "grid(3a)" },
+  srcsetMap,
+  layoutConfig
+)
+// Returns: "540:50%;720:50%,50%,100%@1024"
 ```
 
-### Child Component Srcset Generation
+### Apply to Existing Elements
 
 ```javascript
-// Get CSS srcset for specific child elements
-const layoutElement = document.querySelector('lay-out');
+import { applySrcsets } from '@browser.style/layout/src/srcsets.js'
+import { srcsetMap, layoutConfig } from '@browser.style/layout/maps'
 
-// Generate srcsets for different children
-const firstChildSrcset = getSrcset(layoutElement, 0);  // First child
-const secondChildSrcset = getSrcset(layoutElement, 1); // Second child
-
-// Apply to image elements
-document.querySelector('img:nth-child(1)').setAttribute('sizes', firstChildSrcset);
-document.querySelector('img:nth-child(2)').setAttribute('sizes', secondChildSrcset);
+// After adding lay-out elements to DOM
+applySrcsets('lay-out', srcsetMap, layoutConfig)
 ```
 
-### Complete Example
+### Manual Srcsets
 
-```javascript
-// 1. Load layout configuration
-const config = await fetch('config.json').then(r => r.json());
-const layoutFiles = {
-  'grid.json': await fetch('systems/layouts/grid.json').then(r => r.json()),
-  'columns.json': await fetch('systems/layouts/columns.json').then(r => r.json())
-};
-const layoutsData = createLayoutsDataMap(layoutFiles);
-
-// 2. Generate and apply srcsets to layout element
-const layoutElement = document.querySelector('lay-out');
-const srcsets = generateLayoutSrcsets(layoutElement, config, layoutsData);
-layoutElement.setAttribute('srcsets', srcsets);
-
-// 3. Generate individual srcsets for child images
-const images = layoutElement.querySelectorAll('img');
-images.forEach((img, index) => {
-  const imgSizes = getSrcset(layoutElement, index);
-  img.setAttribute('sizes', imgSizes);
-});
-
-// Example output:
-// Layout srcsets: "default:100vw;540:50vw,50vw,100vw;720:33.33vw"
-// Child 0 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
-// Child 1 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
-// Child 2 sizes: "(min-width: 720px) 33.33vw, (min-width: 540px) 100vw, 100vw"
+```html
+<lay-out md="columns(2)" lg="grid(3a)" srcsets="540:50%;720:50%,50%,100%@1024">
+  <img src="image.jpg">
+  <img src="image.jpg">
+  <img src="image.jpg">
+</lay-out>
 ```
 
-## Output Format
+The `srcsets` attribute tells the browser what percentage of the layout width each item occupies at different breakpoints.
 
-The generated srcsets use a pixel-based format that child components can easily parse:
+---
 
-- **`default:100vw`** - Mobile-first fallback (no media query)
-- **`540:50vw`** - `min-width: 540px` (simple number for min-width only)
-- **`540-920:50vw`** - `min-width: 540px AND max-width: 920px` (range format)
+## Web Component (Optional)
 
-## Child Component Usage
-
-Child components can parse the srcsets attribute to generate proper media queries:
+For enhanced functionality with automatic srcset generation:
 
 ```javascript
-function parseSrcsets(srcsets) {
-  const rules = srcsets.split(';');
-  return rules.map(rule => {
-    const [key, value] = rule.split(':');
-    
-    if (key === 'default') {
-      return { value, mediaQuery: null }; // No media query
+import '@browser.style/layout/src/components/layout/index.js'
+```
+
+This registers a `<lay-out>` web component that:
+- Automatically generates `srcsets` from breakpoint attributes
+- Adds `sizes` attributes to child images
+- Works with responsive image loading
+
+**Example:**
+
+```html
+<lay-out md="columns(2)" lg="grid(3a)">
+  <img src="image.jpg" alt="Photo">
+  <img src="image.jpg" alt="Photo">
+  <img src="image.jpg" alt="Photo">
+</lay-out>
+
+<script type="module">
+  import '@browser.style/layout/src/components/layout/index.js'
+</script>
+```
+
+The component automatically:
+1. Generates `srcsets="540:50%;720:50%,50%,100%@1024"`
+2. Adds `sizes` to all child `<img>` elements
+3. Optimizes image loading based on layout
+
+---
+
+## Custom Configuration
+
+### Create Custom Build
+
+If you need different layouts or breakpoints:
+
+**1. Create `layout.config.json` in your project:**
+
+```json
+{
+  "element": "lay-out",
+  "core": ["base"],
+  "common": ["animations"],
+
+  "layoutContainer": {
+    "maxLayoutWidth": {
+      "value": 1024
     }
-    
-    if (key.includes('-')) {
-      // Range: "540-920" -> "(min-width: 540px) and (max-width: 920px)"
-      const [min, max] = key.split('-');
-      return { 
-        value, 
-        mediaQuery: `(min-width: ${min}px) and (max-width: ${max}px)` 
-      };
-    } else {
-      // Min-width only: "540" -> "(min-width: 540px)"
-      return { 
-        value, 
-        mediaQuery: `(min-width: ${key}px)` 
-      };
+  },
+
+  "breakpoints": {
+    "md": {
+      "type": "@media",
+      "min": "768px",
+      "layouts": ["columns"]
+    },
+    "lg": {
+      "type": "@media",
+      "min": "1024px",
+      "layouts": [
+        "columns",
+        { "grid": ["grid(3a)", "grid(3c)"] }
+      ]
     }
-  });
+  }
 }
 ```
 
-## API Reference
+**2. Build CSS:**
 
-### `generateLayoutSrcsets(element, config, layoutsData)`
-
-Generates srcsets attribute for lay-out elements.
-
-**Parameters:**
-- `element` (Element|string) - DOM element or lay-out element string
-- `config` (Object) - Loaded config.json object
-- `layoutsData` (Map) - Map of layout type → layout objects array
-
-**Returns:**
-- `string` - Formatted srcsets string
-
-### `getSrcset(layoutElement, childIndex)`
-
-Generates CSS srcset string for a specific child element within a lay-out.
-
-**Parameters:**
-- `layoutElement` (Element|string) - Layout DOM element or element string with srcsets attribute
-- `childIndex` (number) - Zero-based index of the child element
-
-**Returns:**
-- `string` - CSS srcset string ready for img elements (e.g., "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw")
-
-**Example:**
-```javascript
-const layoutEl = document.querySelector('lay-out[srcsets]');
-const imgSrcset = getSrcset(layoutEl, 0); // First child
-// Returns: "(min-width: 720px) 33.33vw, (min-width: 540px) 50vw, 100vw"
+```bash
+node node_modules/@browser.style/layout/build.js
 ```
 
-## NPM Package Structure
+This generates `dist/layout.css` with only your specified layouts.
 
-The package provides multiple export paths for different use cases:
+**3. Include your custom CSS:**
 
-```javascript
-// Main exports (srcsets utilities)
-import { generateLayoutSrcsets, getSrcset, createLayoutsDataMap } from '@browser.style/layout';
-
-// CSS imports
-import '@browser.style/layout/css';           // Full CSS
-import '@browser.style/layout/css/min';       // Minified CSS
-
-// Configuration and layout data
-import config from '@browser.style/layout/config';
-import gridLayouts from '@browser.style/layout/systems/layouts/grid.json';
-
-// Build system
-import builder from '@browser.style/layout/builder';
+```html
+<link rel="stylesheet" href="dist/layout.css">
 ```
 
-### `createLayoutsDataMap(layoutFiles)`
+### Configuration Options
 
-Helper function to create layoutsData Map from JSON files.
+#### `element` (required)
+The HTML element name for layout containers.
+- Default: `"lay-out"`
 
-**Parameters:**
-- `layoutFiles` (Object) - Object where keys are filenames and values are loaded JSON data
+#### `core` (required)
+Core CSS files to include from `/core` folder.
+- Example: `["base"]`
 
-**Returns:**
-- `Map` - Map suitable for use with generateLayoutSrcsets
+#### `common` (required)
+Common CSS files to include from `/core` folder.
+- Example: `["animations"]`
 
-## Integration with Build System
+#### `layoutContainer.maxLayoutWidth.value` (required)
+Maximum container width for responsive image calculations.
+- Type: `number`
+- Example: `1024`
 
-This module works alongside the existing build system in `build.js`. The build system automatically generates srcsets during the build process, while this module provides runtime generation for dynamic scenarios.
+#### `breakpoints` (required)
+Define your breakpoints and which layouts to include.
+
+**Include all variants:**
+```json
+"layouts": ["columns"]
+```
+This includes all 6 column layouts: `columns(1)` through `columns(6)`
+
+**Include specific variants only:**
+```json
+"layouts": [
+  { "grid": ["grid(3a)", "grid(3c)"] }
+]
+```
+This includes only those 2 specific grid layouts, keeping your CSS small.
+
+---
+
+## Create Custom Layouts
+
+### 1. Create Layout JSON
+
+Create a JSON file in your project's `layouts/` folder:
+
+```json
+{
+  "name": "Hero Layouts",
+  "prefix": "hero",
+  "layouts": [
+    {
+      "id": "1",
+      "columns": "2fr 1fr",
+      "items": 2,
+      "srcset": "66.67%,33.33%",
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 100, "x": 66.67, "y": 0 }
+      ],
+      "rules": []
+    }
+  ]
+}
+```
+
+### 2. Reference in Config
+
+```json
+{
+  "breakpoints": {
+    "lg": {
+      "layouts": [
+        { "hero": ["hero(1)"] }
+      ]
+    }
+  }
+}
+```
+
+### 3. Build
+
+```bash
+npm run build:all
+```
+
+### 4. Use Your Layout
+
+```html
+<lay-out lg="hero(1)">
+  <div>Main content</div>
+  <aside>Sidebar</aside>
+</lay-out>
+```
+
+### Layout JSON Properties
+
+- **`id`** - Unique identifier (e.g., "1", "3a")
+- **`columns`** - CSS grid-template-columns value
+- **`rows`** - (Optional) CSS grid-template-rows value
+- **`items`** - Number of items this layout expects
+- **`srcset`** - Comma-separated percentages for each item
+- **`icon`** - Array of rectangles for visual icon
+- **`rules`** - (Optional) Array of CSS rules for specific children
+
+See `layouts/` folder for examples.
+
+---
+
+## Build Commands
+
+```bash
+npm run build         # Build CSS
+npm run build:maps    # Generate layouts-map.js
+npm run build:demo    # Generate HTML demos
+npm run build:icons   # Generate SVG icons
+npm run build:all     # Build everything
+```
+
+For detailed build documentation, see [docs/BUILD.md](docs/BUILD.md)
+
+---
+
+## Examples
+
+### Gallery
+
+```html
+<lay-out lg="grid(3a)" xl="grid(4a)">
+  <img src="photo1.jpg" alt="Photo 1">
+  <img src="photo2.jpg" alt="Photo 2">
+  <img src="photo3.jpg" alt="Photo 3">
+  <img src="photo4.jpg" alt="Photo 4">
+  <img src="photo5.jpg" alt="Photo 5">
+</lay-out>
+```
+
+### Blog Layout
+
+```html
+<lay-out md="columns(2)" lg="asym(l-r)">
+  <article>
+    <h2>Main Article</h2>
+    <p>Content...</p>
+  </article>
+  <aside>
+    <h3>Sidebar</h3>
+    <p>Related content...</p>
+  </aside>
+</lay-out>
+```
+
+### Card Grid
+
+```html
+<lay-out sm="columns(2)" md="columns(3)" lg="grid(4a)">
+  <article class="card">Card 1</article>
+  <article class="card">Card 2</article>
+  <article class="card">Card 3</article>
+  <article class="card">Card 4</article>
+</lay-out>
+```
+
+### Bento Box
+
+```html
+<lay-out lg="bento(6a)">
+  <div>Feature 1</div>
+  <div>Feature 2</div>
+  <div>Feature 3</div>
+  <div>Feature 4</div>
+  <div>Feature 5</div>
+  <div>Feature 6</div>
+</lay-out>
+```
+
+---
+
+## Browser Support
+
+- Chrome/Edge 89+
+- Firefox 88+
+- Safari 14.1+
+
+Requires CSS Grid and CSS Custom Properties support.
+
+---
+
+## Performance
+
+- **Zero JavaScript** - Pure CSS, no runtime overhead
+- **Lazy Loading** - Use with native `loading="lazy"` on images
+- **Cacheable** - Static CSS, fully cacheable
+- **No Layout Shift** - Grid-based, prevents CLS
+- **Small Bundle** - ~12 KB gzipped
+
+---
+
+## Documentation
+
+- [BUILD.md](docs/BUILD.md) - Build system documentation
+- [RUN.md](docs/RUN.md) - Command reference
+- [demos/](dist/index.html) - Visual examples
+
+---
+
+## License
+
+ISC
+
+---
+
+## Links
+
+- [npm package](https://www.npmjs.com/package/@browser.style/layout)
+- [GitHub repository](https://github.com/madsstoumann/browser-style)
+- [Website](https://browser.style/ui/layout)
+
+---
+
+## Contributing
+
+Issues and pull requests welcome at [GitHub](https://github.com/madsstoumann/browser-style/issues)

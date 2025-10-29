@@ -5,33 +5,8 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="Testing the LayOut web component with auto-loaded data">
-	<link rel="stylesheet" href="layout.css">
-	<link rel="stylesheet" href="/ui/layout/demo.css">
-	<style>
-		.test-section {
-			margin-bottom: 3rem;
-			padding: 2rem;
-			border: 2px dashed #ccc;
-			border-radius: 8px;
-		}
-		.test-section h2 {
-			margin-top: 0;
-		}
-		.info {
-			background: #f0f0f0;
-			padding: 1rem;
-			border-radius: 4px;
-			margin-bottom: 1rem;
-			font-family: monospace;
-			font-size: 0.875rem;
-		}
-		.success {
-			color: green;
-		}
-		.warning {
-			color: orange;
-		}
-	</style>
+	<link rel="stylesheet" href="../dist/layout.css">
+	<link rel="stylesheet" href="../demo.css">
 </head>
 <body>
 	<h1>LayOut Web Component Test</h1>
@@ -160,11 +135,6 @@
 
 			output.textContent = results
 		}
-
-		// Auto-verify on page load
-		// window.addEventListener('load', () => {
-		// 	setTimeout(verifySrcsets, 500)
-		// })
 	</script>
 </body>
 </html>

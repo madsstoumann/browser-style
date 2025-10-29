@@ -1,29 +1,11 @@
 {
-  "fileName": "layout.css",
   "element": "lay-out",
-  "layer": "layout",
-  "generateHTML": false,
-
   "core": ["base"],
   "common": ["animations"],
 
   "layoutContainer": {
-    "layoutRootElement": "body",
     "maxLayoutWidth": {
-      "value": 1024,
-      "cssProperty": "--layout-bleed-mw"
-    },
-    "layoutMargin": {
-      "value": "1rem",
-      "cssProperty": "--layout-mi"
-    },
-    "widthTokens": {
-      "xs": { "value": "20rem", "cssProperty": "--layout-width-xs" },
-      "sm": { "value": "30rem", "cssProperty": "--layout-width-sm" },
-      "md": { "value": "48rem", "cssProperty": "--layout-width-md" },
-      "lg": { "value": "64rem", "cssProperty": "--layout-width-lg" },
-      "xl": { "value": "80rem", "cssProperty": "--layout-width-xl" },
-      "xxl": { "value": "96rem", "cssProperty": "--layout-width-xxl" }
+      "value": 1024
     }
   },
 
@@ -31,13 +13,11 @@
     "xs": {
       "type": "@media",
       "min": "240px",
-      "max": null,
       "layouts": ["autofit"]
     },
     "sm": {
       "type": "@media",
       "min": "380px",
-      "max": null,
       "layouts": [
         "autofit",
         {
@@ -50,7 +30,6 @@
     "md": {
       "type": "@media",
       "min": "540px",
-      "max": null,
       "layouts": [
         "columns",
         {
@@ -61,13 +40,11 @@
     "lg": {
       "type": "@media",
       "min": "720px",
-      "max": null,
       "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
     },
     "xl": {
       "type": "@media",
       "min": "920px",
-      "max": null,
       "layouts": [
         {
           "bento": ["bento(6a)"],
@@ -78,27 +55,11 @@
     "xxl": {
       "type": "@media",
       "min": "1140px",
-      "max": null,
       "layouts": [
         {
           "bento": ["bento(6a)"]
         }
       ]
-    }
-  },
-
-  "themes": {
-    "primary": {
-      "bg": "#f0f0f0",
-      "color": "#333"
-    },
-    "secondary": {
-      "bg": "#e0e0e0",
-      "color": "#222"
-    },
-    "tertiary": {
-      "bg": "#d0d0d0",
-      "color": "#111"
     }
   }
 }

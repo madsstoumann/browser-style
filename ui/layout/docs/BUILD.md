@@ -72,17 +72,13 @@ The configuration file controls what gets built:
 
 ```json
 {
-  "fileName": "layout.css",
   "element": "lay-out",
-  "layer": "layout",
-
   "core": ["base"],
   "common": ["animations"],
 
   "layoutContainer": {
     "maxLayoutWidth": {
-      "value": 1024,
-      "cssProperty": "--layout-bleed-mw"
+      "value": 1024
     }
   },
 
@@ -104,18 +100,34 @@ The configuration file controls what gets built:
 }
 ```
 
-### Key Configuration Options
+### Configuration Properties
 
-#### `maxLayoutWidth.value`
+#### `element` (required)
+- **Type:** `string`
+- **Purpose:** HTML element name for layout containers
+- **Default:** `"lay-out"`
+- **Used in:** CSS selector generation
+
+#### `core` (required)
+- **Type:** `string[]`
+- **Purpose:** Core CSS files to include from `/core` folder
+- **Example:** `["base"]` loads `core/base.css`
+
+#### `common` (required)
+- **Type:** `string[]`
+- **Purpose:** Common CSS files to include from `/core` folder
+- **Example:** `["animations"]` loads `core/animations.css`
+
+#### `layoutContainer.maxLayoutWidth.value` (required)
 - **Type:** `number`
 - **Purpose:** Maximum container width for responsive image calculations
 - **Example:** `1024` means 1024 pixels
 - **Used in:** Srcset calculations for `sizes` attribute
 
-#### `breakpoints`
+#### `breakpoints` (required)
 Each breakpoint specifies:
-- `min`: Minimum viewport width (e.g., "720px")
 - `type`: Either `@media` or `@container`
+- `min`: Minimum viewport width (e.g., "720px")
 - `layouts`: Array of layout types to include
 
 **Layout inclusion syntax:**
