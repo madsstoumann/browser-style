@@ -1,0 +1,32 @@
+{
+  "element": "lay-out",
+  "core": ["base"],
+  "common": [],
+  "layoutContainer": {
+    "maxLayoutWidth": {
+      "value": 1024
+    }
+  },
+  "breakpoints": {
+    "md": {
+      "type": "@media",
+      "min": "540px",
+      "layouts": [
+        {
+          "columns": ["columns(2)"]
+        }
+      ]
+    },
+    "lg": {
+      "type": "@media",
+      "min": "720px",
+      "layouts": [
+        {
+          "columns": ["columns(3)", "columns(4)"],
+          "grid": ["grid(3c)", "grid(6a)"],
+          "bento": ["bento(4a)", "bento(7c)"]
+        }
+      ]
+    }
+  }
+}

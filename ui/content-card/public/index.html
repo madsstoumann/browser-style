@@ -10,11 +10,14 @@
 	<script type="importmap">
 	{
 		"imports": {
-			"@browser.style/layout": "/ui/layout/index.js"
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "../../layout/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js"
 		}
 	}
 	</script>
-	<link rel="stylesheet" href="/ui/layout/dist/layout.min.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../../layout/dist/layout.css" blocking="render" data-build="exclude">
 	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
 	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
 

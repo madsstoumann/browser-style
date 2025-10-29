@@ -1,5 +1,6 @@
 // Reusable build script for content cards
-import { generateLayoutSrcsets, createLayoutsDataMap, applyCSSDefaults, getLayoutConstraints, getSrcset } from '@browser.style/layout';
+import { applySrcsets } from '@browser.style/layout/src/srcsets.js';
+import { srcsetMap, layoutConfig } from '@browser.style/layout/maps';
 
 // Determine the base path for content-card folder relative to current location
 function getBasePath() {
@@ -51,115 +52,33 @@ async function importAllCards() {
 	}
 }
 
-// Extract unique layout types from config
-function extractLayoutTypes(config) {
-	const layoutTypes = new Set();
-	
-	if (config.systems?.[0]?.breakpoints) {
-		const breakpoints = config.systems[0].breakpoints;
-		
-		for (const breakpoint of Object.values(breakpoints)) {
-			if (breakpoint.layouts) {
-				for (const layout of breakpoint.layouts) {
-					if (typeof layout === 'string') {
-						layoutTypes.add(layout);
-					} else if (typeof layout === 'object') {
-						for (const layoutType of Object.keys(layout)) {
-							layoutTypes.add(layoutType);
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	return Array.from(layoutTypes);
-}
-
 async function initializeLayoutSrcsets() {
 	try {
-		
-		// Load optimized local configuration
+		// Use layout system's applySrcsets utility
+		applySrcsets('lay-out', srcsetMap, layoutConfig);
+
+		// Load config for additional settings
 		const basePath = getBasePath();
 		const config = await fetch(`${basePath}config.json`).then(r => r.json());
-		const layoutPath = config.settings.layoutDataPath;
-		
-		// Extract unique layout types from the config
-		const layoutTypes = extractLayoutTypes(config);
-		
-		// Dynamically load only the layout data we need
-		const layoutPromises = layoutTypes.map(async (layoutType) => {
-			try {
-				const data = await fetch(`${layoutPath}${layoutType}.json`).then(r => r.json());
-				return [layoutType, data];
-			} catch (error) {
-				return [layoutType, null];
-			}
-		});
-		
-		const layoutResults = await Promise.all(layoutPromises);
-		const layoutData = {};
-		
-		// Build layoutData object from results
-		layoutResults.forEach(([layoutType, data]) => {
-			if (data) {
-				layoutData[`${layoutType}.json`] = data;
-			}
-		});
-		
-		// Apply CSS custom properties if layoutRootElement is specified
-		applyCSSDefaults(config);
 
-		// Store globally for card system to use
-		window._layoutSrcsetData = {
-			config,
-			layoutsData: createLayoutsDataMap(layoutData)
-		};
-
-		// Set srcsets on all lay-out elements
+		// Set layout data on child elements for image priority
 		const layoutElements = document.querySelectorAll('lay-out');
-
 		layoutElements.forEach((element) => {
-			try {
-				const srcsets = generateLayoutSrcsets(element, config, window._layoutSrcsetData.layoutsData);
-				
-				if (srcsets && srcsets !== config.settings.fallbackSrcset) {
-					element.setAttribute('srcsets', srcsets);
-				} else {
-					element.setAttribute('srcsets', config.settings.fallbackSrcset);
-				}
-				
-				// Get layout constraints for this element
-				const constraints = getLayoutConstraints(element, config);
-				
-				// Set layout data on child elements
-				Array.from(element.children).forEach((child, childIndex) => {
-					child.setAttribute('data-layout-index', childIndex);
-					
-					// Set layout data in settings for BaseCard to use
-					try {
-						child.settings; // Triggers _ensureSettingsInitialized()
-						if (child._settings) {
-							child._settings.layoutIndex = childIndex;
-							child._settings.layoutSrcsets = srcsets || window._layoutSrcsetData.config.settings.fallbackSrcset;
-							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
-							
-							// Pre-calculate constraint-aware sizes
-							if (constraints) {
-								child._settings.layoutSrcset = getSrcset(child._settings.layoutSrcsets, childIndex, config, constraints);
-							}
-						}
-					} catch (error) {
-						// Silently continue if settings can't be set
+			Array.from(element.children).forEach((child, childIndex) => {
+				child.setAttribute('data-layout-index', childIndex);
+
+				// Set layout data in settings for BaseCard to use
+				try {
+					child.settings; // Triggers _ensureSettingsInitialized()
+					if (child._settings) {
+						child._settings.layoutIndex = childIndex;
+						child._settings.srcsetBreakpoints = config.settings?.defaultSrcsetBreakpoints || [240, 320, 480, 720, 1200];
 					}
-				});
-				
-			} catch (error) {
-				element.setAttribute('srcsets', config.settings.fallbackSrcset);
-			}
+				} catch (error) {
+					// Silently continue if settings can't be set
+				}
+			});
 		});
-
-
 	} catch (error) {
 		// Silently fail and continue
 	}
@@ -291,37 +210,25 @@ async function initializeCards(dataSrc = 'data.json', allCards = null) {
 // Add global function to update srcsets for new layout elements
 function setupGlobalLayoutUpdater() {
 	window.updateLayoutSrcsets = function(container = document) {
-		if (!window._layoutSrcsetData) return;
-		
-		const newLayoutElements = container.querySelectorAll('lay-out:not([srcsets])');
-		
+		// Use layout system's applySrcsets for dynamically added elements
+		applySrcsets('lay-out:not([srcsets])', srcsetMap, layoutConfig);
+
+		// Set layout data on child elements for image priority
+		const newLayoutElements = container.querySelectorAll('lay-out');
 		newLayoutElements.forEach((element) => {
-			try {
-				const srcsets = generateLayoutSrcsets(element, window._layoutSrcsetData.config, window._layoutSrcsetData.layoutsData);
-				if (srcsets && srcsets !== window._layoutSrcsetData.config.settings.fallbackSrcset) {
-					element.setAttribute('srcsets', srcsets);
-				}
-				
-				// Set layout data on child elements
-				Array.from(element.children).forEach((child, childIndex) => {
-					child.setAttribute('data-layout-index', childIndex);
-					
-					// Set layout data in settings for BaseCard to use
-					try {
-						child.settings; // Triggers _ensureSettingsInitialized()
-						if (child._settings) {
-							child._settings.layoutIndex = childIndex;
-							child._settings.layoutSrcsets = srcsets || window._layoutSrcsetData.config.settings.fallbackSrcset;
-							child._settings.srcsetBreakpoints = window._layoutSrcsetData.config.settings.defaultSrcsetBreakpoints;
-						}
-					} catch (error) {
-						// Silently continue if settings can't be set
+			Array.from(element.children).forEach((child, childIndex) => {
+				child.setAttribute('data-layout-index', childIndex);
+
+				// Set layout data in settings for BaseCard to use
+				try {
+					child.settings; // Triggers _ensureSettingsInitialized()
+					if (child._settings) {
+						child._settings.layoutIndex = childIndex;
 					}
-				});
-				
-			} catch (error) {
-				element.setAttribute('srcsets', window._layoutSrcsetData.config.settings.fallbackSrcset);
-			}
+				} catch (error) {
+					// Silently continue if settings can't be set
+				}
+			});
 		});
 	};
 }

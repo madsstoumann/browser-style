@@ -1,4 +1,3 @@
-import { getSrcset } from '@browser.style/layout';
 import { getStyle } from './utils.js';
 
 export class BaseCard extends HTMLElement {
@@ -25,15 +24,11 @@ export class BaseCard extends HTMLElement {
 				}
 			}
 			
-			// Get global config including image transforms
-			const globalConfig = window._layoutSrcsetData?.config;
-			
 			const defaultSettings = {
 				styles: {},
 				useSchema: true,
-				// srcsetBreakpoints: [280, 500, 720, 1080, 1440], // Optional override
-				srcsetBreakpoints: globalConfig?.settings?.defaultSrcsetBreakpoints || [280, 480, 900],
-				imageTransformConfig: globalConfig?.imageTransforms || null
+				srcsetBreakpoints: [280, 480, 900],
+				imageTransformConfig: null
 			};
 			this._settings = { ...defaultSettings, ...(parsedSettings || {}) };
 		}
@@ -58,15 +53,6 @@ export class BaseCard extends HTMLElement {
 
 	get settings() {
 		this._ensureSettingsInitialized();
-		if (typeof this._settings.layoutIndex === 'number' && this._settings.layoutSrcsets && !this._settings.layoutSrcset) {
-			try {
-				const config = window._layoutSrcsetData?.config;
-				const sizes = getSrcset(this._settings.layoutSrcsets, this._settings.layoutIndex, config);
-				this._settings.layoutSrcset = sizes;
-			} catch (error) {
-			}
-		}
-		
 		return this._settings;
 	}
 
