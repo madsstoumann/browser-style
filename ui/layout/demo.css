@@ -52,12 +52,9 @@
 		--layout-tertiary-c: hsl(30, 80%, 20%);
 	}
 	body {
-		--layout-bleed-mw: 1024px;
-		--layout-mi: 1rem;
 		display: grid;
 		font-family: system-ui;
 		line-height: 1.6;
-		margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
 		row-gap: 1rem;
 	}
 	code {

@@ -25,7 +25,7 @@ function loadConfig() {
     const config = JSON.parse(configContent)
 
     return {
-        maxLayoutWidth: config.layoutContainer?.maxLayoutWidth?.value || 1024,
+        maxLayoutWidth: config.layoutContainer?.maxWidth || 1024,
         breakpoints: Object.entries(config.breakpoints || {}).reduce((acc, [name, bp]) => {
             if (bp.min) {
                 acc[name] = parseInt(bp.min.replace('px', ''))

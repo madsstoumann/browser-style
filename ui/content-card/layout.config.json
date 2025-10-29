@@ -1,12 +1,12 @@
 {
   "element": "lay-out",
+  "layoutContainer": {
+    "element": "body",
+    "maxWidth": 1200,
+    "margin": "1rem"
+  },
   "core": ["base"],
   "common": [],
-  "layoutContainer": {
-    "maxLayoutWidth": {
-      "value": 1024
-    }
-  },
   "breakpoints": {
     "md": {
       "type": "@media",

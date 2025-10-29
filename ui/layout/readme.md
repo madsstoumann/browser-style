@@ -218,9 +218,9 @@ If you need different layouts or breakpoints:
   "common": ["animations"],
 
   "layoutContainer": {
-    "maxLayoutWidth": {
-      "value": 1024
-    }
+    "element": "body",
+    "maxWidth": 1024,
+    "margin": "1rem"
   },
 
   "breakpoints": {
@@ -269,10 +269,31 @@ Core CSS files to include from `/core` folder.
 Common CSS files to include from `/core` folder.
 - Example: `["animations"]`
 
-#### `layoutContainer.maxLayoutWidth.value` (required)
-Maximum container width for responsive image calculations.
-- Type: `number`
-- Example: `1024`
+#### `layoutContainer` (required)
+Configuration for the layout container element and CSS custom properties.
+
+Properties:
+- `element` (optional, default: `"body"`): HTML element to apply container styles to
+- `maxWidth` (required): Maximum container width in pixels (generates `--layout-bleed-mw` CSS custom property)
+- `margin` (required): Inline margin value (generates `--layout-mi` CSS custom property)
+
+Example:
+```json
+{
+  "element": "body",
+  "maxWidth": 1024,
+  "margin": "1rem"
+}
+```
+
+This generates CSS:
+```css
+body {
+  --layout-bleed-mw: 1024px;
+  --layout-mi: 1rem;
+  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+}
+```
 
 #### `breakpoints` (required)
 Define your breakpoints and which layouts to include.

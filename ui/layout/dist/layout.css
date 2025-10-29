@@ -1519,3 +1519,9 @@ lay-out[xxl="bento(6a)"] > *:nth-child(n+7) {
   display: none;
 }
 }
+
+body {
+  --layout-bleed-mw: 1024px;
+  --layout-mi: 1rem;
+  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+}

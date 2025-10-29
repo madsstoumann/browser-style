@@ -77,9 +77,9 @@ The configuration file controls what gets built:
   "common": ["animations"],
 
   "layoutContainer": {
-    "maxLayoutWidth": {
-      "value": 1024
-    }
+    "element": "body",
+    "maxWidth": 1024,
+    "margin": "1rem"
   },
 
   "breakpoints": {
@@ -118,10 +118,32 @@ The configuration file controls what gets built:
 - **Purpose:** Common CSS files to include from `/core` folder
 - **Example:** `["animations"]` loads `core/animations.css`
 
-#### `layoutContainer.maxLayoutWidth.value` (required)
-- **Type:** `number`
-- **Purpose:** Maximum container width for responsive image calculations
-- **Example:** `1024` means 1024 pixels
+#### `layoutContainer` (required)
+- **Type:** `object`
+- **Purpose:** Configuration for the layout container element and CSS custom properties
+
+Properties:
+- `element` (optional, default: `"body"`): HTML element to apply container styles to
+- `maxWidth` (required): Maximum container width in pixels (used for CSS custom property `--layout-bleed-mw` and responsive image calculations)
+- `margin` (required): Inline margin value (used for CSS custom property `--layout-mi`)
+
+**Example:**
+```json
+{
+  "element": "body",
+  "maxWidth": 1024,
+  "margin": "1rem"
+}
+```
+
+This generates CSS:
+```css
+body {
+  --layout-bleed-mw: 1024px;
+  --layout-mi: 1rem;
+  margin-inline: max(var(--layout-mi), 50cqw - var(--layout-bleed-mw) / 2);
+}
+```
 - **Used in:** Srcset calculations for `sizes` attribute
 
 #### `breakpoints` (required)

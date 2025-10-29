@@ -78,7 +78,7 @@ export const layoutConfig = {
 
 **When to regenerate:**
 - After adding/modifying layout JSON files
-- After changing `maxLayoutWidth` in config
+- After changing `layoutContainer.maxWidth` in config
 - After changing breakpoints in config
 
 ---
