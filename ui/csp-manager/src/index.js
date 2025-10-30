@@ -1,14 +1,24 @@
 import cspDirectives from './csp-directives.json' with { type: 'json' };
 import i18nData from './i18n.json' with { type: 'json' };
-import styles from './index.css' with { type: 'css' };
 import { evaluatePolicy } from './evaluate.js';
 
 class CspManager extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		this.shadowRoot.adoptedStyleSheets = [styles];
+		this.#loadStyles();
 		this.evaluations = null;
+	}
+
+	async #loadStyles() {
+		try {
+			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
+			const sheet = new CSSStyleSheet();
+			await sheet.replace(cssText);
+			this.shadowRoot.adoptedStyleSheets = [sheet];
+		} catch (error) {
+			console.error('Failed to load styles:', error);
+		}
 	}
 
 	/**
