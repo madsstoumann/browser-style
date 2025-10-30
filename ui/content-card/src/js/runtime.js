@@ -73,6 +73,7 @@ async function initializeLayoutSrcsets() {
 					if (child._settings) {
 						child._settings.layoutIndex = childIndex;
 						child._settings.srcsetBreakpoints = config.settings?.defaultSrcsetBreakpoints || [240, 320, 480, 720, 1200];
+						child._settings.imageTransformConfig = config.imageTransforms;
 					}
 				} catch (error) {
 					// Silently continue if settings can't be set
