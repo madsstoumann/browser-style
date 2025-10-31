@@ -23,7 +23,9 @@
     "./build": "./build.js",
     "./maps": "./layouts-map.js",
     "./srcsets": "./src/srcsets.js",
-    "./components": "./src/components/index.js"
+    "./components": "./src/components/index.js",
+    "./polyfills/attr-fallback": "./polyfills/attr-fallback.js",
+    "./polyfills/attr-fallback.css": "./polyfills/attr-fallback.css"
   },
   "files": [
     "index.js",
@@ -33,6 +35,7 @@
     "core/",
     "layouts/",
     "src/",
+    "polyfills/",
     "dist/layout.css",
     "README.md",
     "LICENSE"

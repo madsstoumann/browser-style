@@ -465,6 +465,26 @@ For detailed build documentation, see [docs/BUILD.md](docs/BUILD.md)
 
 Requires CSS Grid and CSS Custom Properties support.
 
+### Safari/Firefox Polyfill
+
+This layout system uses the enhanced `attr()` CSS function with type support, which is currently only supported in Chrome/Edge. For Safari and Firefox, include the polyfill:
+
+**In HTML:**
+```html
+<script type="module" src="node_modules/@browser.style/layout/polyfills/attr-fallback.js"></script>
+```
+
+**Or in JavaScript:**
+```javascript
+import '@browser.style/layout/polyfills/attr-fallback'
+```
+
+The polyfill:
+- Auto-detects browser support and only runs when needed
+- Automatically processes existing and new `<lay-out>` elements
+- Watches for attribute changes dynamically
+- Has zero overhead in browsers with native support
+
 ---
 
 ## Performance

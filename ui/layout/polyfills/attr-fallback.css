@@ -1,0 +1,35 @@
+@layer layout.base {
+	lay-out {
+		--layout-bleed: 0;
+		--layout-colmg: 1;
+		--layout-gtc: 1fr;
+		--layout-gtr: auto;
+		--layout-mbe: 0;
+		--layout-mbs: 0;
+		--layout-mw: 100vw;
+		--layout-pbe: 0;
+		--layout-pbs: 0;
+		--layout-pi: 0;
+		--layout-ps: auto;
+		--layout-rg: 1;
+	}
+
+	lay-out[size] {
+		--_sz: auto;
+	}
+}
+
+@layer layout.animations {
+	[animation] {
+		--_dg: 100deg;
+		--_tx: 55px;
+		--_ty: 110px;
+		--_txv: 100vw;
+		--_tyv: 100vh;
+		--_zi: 0.6;
+		--_zo: 1.2;
+		--_animr: entry 0% entry 75%;
+		--_animrs: entry 0%;
+		--_animre: entry 75%;
+	}
+}

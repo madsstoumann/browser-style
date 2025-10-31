@@ -17,6 +17,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<meta name="description" content="${title} using CSS layout system">
 	<link rel="stylesheet" href="layout.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
 </head>
 <body>
 	<h1>${title}</h1>`
@@ -123,6 +124,7 @@ function generateIconsHTML(iconsDir) {
 	<meta name="description" content="All layout system icons">
 	<link rel="stylesheet" href="layout.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
 		.icon-list {
 			display: grid;

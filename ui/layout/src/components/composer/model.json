@@ -1,6 +1,18 @@
 {
+    "animation": {
+    "name": "",
+    "range": ""
+  },
   "ariaLabel": "",
   "bleed": 0,
+    "breakpoints": {
+    "xs": "",
+    "sm": "",
+    "md": "",
+    "lg": "",
+    "xl": "",
+    "xxl": ""
+  },
   "colGap": 1,
   "columns": "1fr",
   "decorations": false,
