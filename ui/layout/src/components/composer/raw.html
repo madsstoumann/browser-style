@@ -8,43 +8,42 @@
 	<link rel="stylesheet" href="../../../demo.css">
 </head>
 <body>
-	<layout-composer>
+<layout-composer>
 
-		<form id="app">
-			<fieldset name="breakpoints">
-				<legend>Breakpoints</legend>
-				<img src="../../../dist/icons/grid(3a).svg" />
-				<img src="../../../dist/icons/grid(3b).svg" />
-				<img src="../../../dist/icons/grid(3c).svg" />
-			</fieldset>
+	<form id="app">
+		<fieldset name="breakpoints">
+			<legend>Breakpoints</legend>
+			<img src="../../../dist/icons/grid(3a).svg" />
+			<img src="../../../dist/icons/grid(3b).svg" />
+			<img src="../../../dist/icons/grid(3c).svg" />
+		</fieldset>
 
-			<fieldset name="spacing">
-				<legend>Spacing</legend>
-				<label>
-					Space Top
-					<input type="number" name="space-top" value="0" min="0">
-				</label>
-				<label>
-					Space Bottom
-					<input type="number" name="space-bottom" value="0" min="0">
-				</label>
-				<label>
-					Pad Top
-					<input type="number" name="pad-top" value="0" min="0">
-				</label>
-				<label>
-					Pad Bottom
-					<input type="number" name="pad-bottom" value="0" min="0">
-				</label>
-				<label>
-					Pad Inline
-					<input type="number" name="pad-inline" value="0" min="0">
-				</label>
-			</fieldset>
+		<fieldset name="spacing">
+			<legend>Spacing</legend>
+			<label>
+				Space Top
+				<input type="number" name="space-top" value="0" min="0">
+			</label>
+			<label>
+				Space Bottom
+				<input type="number" name="space-bottom" value="0" min="0">
+			</label>
+			<label>
+				Pad Top
+				<input type="number" name="pad-top" value="0" min="0">
+			</label>
+			<label>
+				Pad Bottom
+				<input type="number" name="pad-bottom" value="0" min="0">
+			</label>
+			<label>
+				Pad Inline
+				<input type="number" name="pad-inline" value="0" min="0">
+			</label>
+		</fieldset>
 
-			<fieldset name="gaps">
-				<legend>Gaps</legend>
-								
+		<fieldset name="gaps">
+			<legend>Gaps</legend>
 			<label>
 				Column Gap
 				<input type="number" name="col-gap" value="1" min="0" step="0.5">
@@ -53,24 +52,10 @@
 				Row Gap
 				<input type="number" name="row-gap" value="1" min="0" step="0.5">
 			</label>
-		
-							</fieldset>
+		</fieldset>
 
-<fieldset name="layout">
-								<legend>Layout</legend>
-								
-			<!-- <label>
-				Columns
-				<input type="text" name="columns" value="1fr">
-			</label>
-			<label>
-				Rows
-				<input type="text" name="rows" value="auto">
-			</label>
-			<label>
-				Max Width
-				<input type="text" name="maxWidth" value="100vw">
-			</label> -->
+		<fieldset name="layout">
+			<legend>Layout</legend>
 			<label>
 				Width Preset
 				<select name="width">
@@ -103,12 +88,10 @@
 				<input type="checkbox" name="decorations">
 				Decorations
 			</label>
-		
-							</fieldset>
+		</fieldset>
 
-	<fieldset name="animations">
-								<legend>Animation</legend>
-								
+		<fieldset name="animations">
+			<legend>Animation</legend>
 			<label>
 				Animation Name
 				<select name="animationName">
@@ -153,12 +136,10 @@
 					<option value="exit">Exit</option>
 				</select>
 			</label>
-		
-							</fieldset>
+		</fieldset>
 
-							<fieldset name="advanced">
-								<legend>Advanced</legend>
-								
+		<fieldset name="advanced">
+			<legend>Advanced</legend>
 			<label>
 				ARIA Label
 				<input type="text" name="aria-label" value="">
@@ -201,23 +182,16 @@
 					<option value="100vh">100vh</option>
 				</select>
 			</label>
-		
-							</fieldset>
-		</form>
-
-
+		</fieldset>
+	</form>
 
 		<lay-out id="layout" md="grid(3a)" bleed="">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
-		<!-- <lay-out md="grid(3a)" bleed="40" pad-bottom="4" pad-inline="1" pad-top="2" theme="primary"space-top="2" space-bottom="2" aria-label="Another Sample Layout">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-		</lay-out> -->
 	</layout-composer>
+
 	<!-- <script type="module" src="./index.js"></script> -->
 
 	<script>
