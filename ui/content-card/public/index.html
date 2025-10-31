@@ -13,13 +13,17 @@
 			"@browser.style/layout": "../../layout/index.js",
 			"@browser.style/layout/": "../../layout/",
 			"@browser.style/layout/maps": "./static/js/layouts-map.js",
-			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js"
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback": "../../layout/polyfills/attr-fallback.js"
 		}
 	}
 	</script>
 	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
 	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
 	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module">
+		import '@browser.style/layout/polyfills/attr-fallback';
+	</script>
 
 </head>
 <body>
