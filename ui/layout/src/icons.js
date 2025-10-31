@@ -5,7 +5,7 @@ export function renderIcons(layouts, gap = 2, borderRadius = 4) {
 	return layouts.map(layout => {
 		if (!layout.icon) return null
 
-		return `<svg viewBox="0 0 100 100">${
+		return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">${
 			layout.icon.map((rect, index) => {
 				const tX = rect.x + (rect.w / 2) - 4
 				const tY = rect.y + (rect.h / 2) + 2

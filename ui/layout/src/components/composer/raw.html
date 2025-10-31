@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Layout Composer</title>
+	<link rel="stylesheet" href="../../../dist/layout.css">
+	<link rel="stylesheet" href="../../../demo.css">
+</head>
+<body>
+	<layout-composer>
+		
+		<form>
+			<fieldset name="breakpoints">
+				<legend>Breakpoints</legend>
+				<img src="../../../dist/icons/grid(3a).svg" />
+				<img src="../../../dist/icons/grid(3b).svg" />
+				<img src="../../../dist/icons/grid(3c).svg" />
+			</fieldset>
+
+			<fieldset name="spacing">
+				<legend>Spacing</legend>
+			</fieldset>
+
+			<fieldset name="layout">
+				<legend>Layout</legend>
+			</fieldset>
+
+			<fieldset name="animations">
+				<legend>Animations</legend>
+			</fieldset>
+		</form>
+
+
+
+		<lay-out md="grid(3a)" bleed="0" pad-bottom="2" pad-inline="1" pad-top="2" theme="secondary"space-top="2" space-bottom="2" aria-label="Sample Layout">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</layout-composer>
+	<!-- <script type="module" src="./index.js"></script> -->
+</body>
+</html>

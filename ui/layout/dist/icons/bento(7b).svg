@@ -1,4 +1,4 @@
-<svg viewBox="0 0 100 100">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
         <rect rx="4" width="38" height="64.67" x="0" y="0" />
         <text x="16" y="35.335%">1</text>
         <rect rx="4" width="58" height="31.33" x="40" y="0" />
