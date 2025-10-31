@@ -58,7 +58,8 @@
 
 		/* bleed */
 		&[bleed] {
-			--layout-w: calc(100vw - var(--layout-mi, 0px));
+			/* --layout-w: calc(100vw - var(--layout-mi, 0px)); */
+			--layout-w: 100vw;
 			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
 			background-color: #0000;
 			border-image: conic-gradient(var(--layout-bg) 0 0) fill 0//0 100vw;
