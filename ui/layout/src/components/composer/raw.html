@@ -9,8 +9,8 @@
 </head>
 <body>
 	<layout-composer>
-		
-		<form>
+
+		<form id="app">
 			<fieldset name="breakpoints">
 				<legend>Breakpoints</legend>
 				<img src="../../../dist/icons/grid(3a).svg" />
@@ -20,30 +20,219 @@
 
 			<fieldset name="spacing">
 				<legend>Spacing</legend>
+				<label>
+					Space Top
+					<input type="number" name="space-top" value="0" min="0">
+				</label>
+				<label>
+					Space Bottom
+					<input type="number" name="space-bottom" value="0" min="0">
+				</label>
+				<label>
+					Pad Top
+					<input type="number" name="pad-top" value="0" min="0">
+				</label>
+				<label>
+					Pad Bottom
+					<input type="number" name="pad-bottom" value="0" min="0">
+				</label>
+				<label>
+					Pad Inline
+					<input type="number" name="pad-inline" value="0" min="0">
+				</label>
 			</fieldset>
 
-			<fieldset name="layout">
-				<legend>Layout</legend>
-			</fieldset>
+			<fieldset name="gaps">
+				<legend>Gaps</legend>
+								
+			<label>
+				Column Gap
+				<input type="number" name="col-gap" value="1" min="0" step="0.5">
+			</label>
+			<label>
+				Row Gap
+				<input type="number" name="row-gap" value="1" min="0" step="0.5">
+			</label>
+		
+							</fieldset>
 
-			<fieldset name="animations">
-				<legend>Animations</legend>
-			</fieldset>
+<fieldset name="layout">
+								<legend>Layout</legend>
+								
+			<!-- <label>
+				Columns
+				<input type="text" name="columns" value="1fr">
+			</label>
+			<label>
+				Rows
+				<input type="text" name="rows" value="auto">
+			</label>
+			<label>
+				Max Width
+				<input type="text" name="maxWidth" value="100vw">
+			</label> -->
+			<label>
+				Width Preset
+				<select name="width">
+					<option value="">None</option>
+					<option value="xs">XS (20rem)</option>
+					<option value="sm">SM (30rem)</option>
+					<option value="md">MD (48rem)</option>
+					<option value="lg">LG (64rem)</option>
+					<option value="xl">XL (80rem)</option>
+					<option value="xxl">XXL (96rem)</option>
+				</select>
+			</label>
+			<label>
+				Bleed
+				<label>
+					<input type="number" name="bleed" value="0" min="-100" max="100">
+					<button type="button" onclick="const input = this.previousElementSibling; input.value = ''; input.dispatchEvent(new Event('input', {bubbles: true}))" style="padding: 0.5rem; cursor: pointer;" title="Clear">×</button>
+				</label>
+			</label>
+			<label>
+				Overflow
+				<select name="overflow">
+					<option value="unset">None</option>
+					<option value="none">Hidden</option>
+					<option value="preview">Preview</option>
+					<option value="dynamic">Dynamic</option>
+				</select>
+			</label>
+			<label>
+				<input type="checkbox" name="decorations">
+				Decorations
+			</label>
+		
+							</fieldset>
+
+	<fieldset name="animations">
+								<legend>Animation</legend>
+								
+			<label>
+				Animation Name
+				<select name="animationName">
+					<option value="">None</option>
+					
+						<optgroup label="Fade">
+							<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
+						</optgroup>
+					
+						<optgroup label="Bounce">
+							<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
+						</optgroup>
+					
+						<optgroup label="Zoom">
+							<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
+						</optgroup>
+					
+						<optgroup label="Slide">
+							<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
+						</optgroup>
+					
+						<optgroup label="Flip">
+							<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
+						</optgroup>
+					
+						<optgroup label="Reveal">
+							<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
+						</optgroup>
+					
+						<optgroup label="Other">
+							<option value="opacity">opacity</option>
+						</optgroup>
+					
+				</select>
+			</label>
+			<label>
+				Animation Range
+				<select name="animationRange">
+					<option value="">Default</option>
+					<option value="contain">Contain</option>
+					<option value="cover">Cover</option>
+					<option value="exit">Exit</option>
+				</select>
+			</label>
+		
+							</fieldset>
+
+							<fieldset name="advanced">
+								<legend>Advanced</legend>
+								
+			<label>
+				ARIA Label
+				<input type="text" name="aria-label" value="">
+			</label>
+			<label>
+				Theme
+				<select name="theme">
+					<option value="unset">None</option>
+					<option value="primary">Primary</option>
+					<option value="secondary">Secondary</option>
+					<option value="tertiary">Tertiary</option>
+				</select>
+			</label>
+			<label>
+				Self Alignment
+				<select name="self">
+					<option value="unset">None</option>
+					<option value="auto">auto</option>
+					<option value="start">start</option>
+					<option value="end">end</option>
+					<option value="center">center</option>
+					<option value="stretch">stretch</option>
+					<option value="baseline">baseline</option>
+					<option value="self-start">self-start</option>
+					<option value="self-end">self-end</option>
+				</select>
+			</label>
+			<label>
+				Intrinsic Size
+				<select name="size">
+					<option value="auto">auto</option>
+					<option value="unset">None</option>
+					<option value="200px">200px</option>
+					<option value="300px">300px</option>
+					<option value="400px">400px</option>
+					<option value="500px">500px</option>
+					<option value="600px">600px</option>
+					<option value="50vh">50vh</option>
+					<option value="75vh">75vh</option>
+					<option value="100vh">100vh</option>
+				</select>
+			</label>
+		
+							</fieldset>
 		</form>
 
 
 
-		<lay-out md="grid(3a)" bleed="" pad-bottom="4" pad-inline="1" pad-top="2" theme="secondary"space-top="2" space-bottom="2" aria-label="Sample Layout">
+		<lay-out id="layout" md="grid(3a)" bleed="">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
-		<lay-out md="grid(3a)" bleed="40" pad-bottom="4" pad-inline="1" pad-top="2" theme="primary"space-top="2" space-bottom="2" aria-label="Another Sample Layout">
+		<!-- <lay-out md="grid(3a)" bleed="40" pad-bottom="4" pad-inline="1" pad-top="2" theme="primary"space-top="2" space-bottom="2" aria-label="Another Sample Layout">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
-		</lay-out>
+		</lay-out> -->
 	</layout-composer>
 	<!-- <script type="module" src="./index.js"></script> -->
+
+	<script>
+		const app = document.getElementById('app');
+		const layout = document.getElementById('layout');
+
+		app.addEventListener('input', (event) => {
+			const [name, value] = [event.target.name, event.target.value];
+			if (value === 'unset' || value === '' || value === false) {
+				layout.removeAttribute(name);
+				return;
+			}
+			layout.setAttribute(name, value);
+		});
+		
+	</script>
 </body>
 </html>
