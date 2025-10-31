@@ -68,12 +68,15 @@
 					<option value="xxl">XXL (96rem)</option>
 				</select>
 			</label>
-			<label>
-				Bleed
-				<label>
-					<input type="number" name="bleed" value="0" min="-100" max="100">
-					<button type="button" onclick="const input = this.previousElementSibling; input.value = ''; input.dispatchEvent(new Event('input', {bubbles: true}))" style="padding: 0.5rem; cursor: pointer;" title="Clear">×</button>
-				</label>
+			<label>Bleed
+				<input type="number" name="bleed" value="0" min="-100" max="100">
+			</label>
+			<label>Bleed mode
+				<select name="bleed-mode">
+					<option value="none">None</option>
+					<option value="full">Full</option>
+					<option value="number" selected>Numeric</option>
+				</select>
 			</label>
 			<label>
 				Overflow
@@ -84,9 +87,13 @@
 					<option value="dynamic">Dynamic</option>
 				</select>
 			</label>
-			<label>
-				<input type="checkbox" name="decorations">
-				Decorations
+			<label>Gap Decorations
+				<select name="gap-decorations">
+					<option value="unset">None</option>
+					<option value="cols">Columns</option>
+					<option value="rows">Rows</option>
+					<option value="cols rows">Both</option>
+				</select>
 			</label>
 		</fieldset>
 
@@ -185,7 +192,7 @@
 		</fieldset>
 	</form>
 
-		<lay-out id="layout" md="grid(3a)" bleed="">
+		<lay-out id="layout" md="grid(3a)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -200,6 +207,17 @@
 
 		app.addEventListener('input', (event) => {
 			const [name, value] = [event.target.name, event.target.value];
+
+			if (name === 'bleed-mode') {
+				app.elements.bleed.value = 0;
+				if (value === 'full') {
+					layout.setAttribute('bleed', '');
+				} else {
+					layout.removeAttribute('bleed');
+				}
+				if (value !== 'number') return;
+			}
+
 			if (value === 'unset' || value === '' || value === false) {
 				layout.removeAttribute(name);
 				return;

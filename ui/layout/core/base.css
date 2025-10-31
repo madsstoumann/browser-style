@@ -74,12 +74,27 @@
 		}
 		&[bleed][width] { --_pi: calc((100vw - var(--_mi)) / 2); }
 
-		/* gap decorations */
-		&[decorations] {
-			column-rule: var(--layout-col-rule-w, 1px) var(--layout-col-rule-style, solid) var(--layout-col-rule-c);
-			column-rule-outset: var(--layout-col-rule-outset, 0%);
-			row-rule: var(--layout-row-rule-w, 1px) var(--layout-row-rule-style, solid) var(--layout-row-rule-c, var(--layout-col-rule-c));
-			row-rule-outset: var(--layout-row-rule-outset, 0%);
+		/* gap-decorations */
+		&[gap-decorations] {
+				/* Default variables for all rules */
+				--_rule-w: var(--layout-rule-w, 1px);
+				--_rule-s: var(--layout-rule-s, solid);
+				--_rule-c: var(--layout-rule-c, #CCC);
+				--_rule-o: var(--layout-rule-o, 0%);
+		}
+		&[gap-decorations*="cols"] {
+				column-rule: 
+						var(--layout-col-rule-w, var(--_rule-w)) 
+						var(--layout-col-rule-s, var(--_rule-s)) 
+						var(--layout-col-rule-c, var(--_rule-c));
+				column-rule-outset: var(--layout-col-rule-o, var(--_rule-o));
+		}
+		&[gap-decorations*="rows"] {
+				row-rule: 
+						var(--layout-row-rule-w, var(--_rule-w)) 
+						var(--layout-row-rule-s, var(--_rule-s)) 
+						var(--layout-row-rule-c, var(--_rule-c));
+				row-rule-outset: var(--layout-row-rule-o, var(--_rule-o));
 		}
 
 		/* header & description */
