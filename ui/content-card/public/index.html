@@ -38,8 +38,10 @@
 		<news-card content="news-4" layout="columns(ar21x9)" col-gap="2"></news-card>
 	</lay-out>
 
-	<news-card content="news-6" layout="columns(ar21x9 thl pa1.5)"></news-card>
-	<news-card content="news-7" layout="columns(ar21x9 thl pa1.5 flip)"></news-card>
+	<lay-out>
+		<news-card content="news-6" layout="columns(ar21x9 thl pa1.5)"></news-card>
+		<news-card content="news-7" layout="columns(ar21x9 thl pa1.5 flip)"></news-card>
+	</lay-out>
 
 	<lay-out md="columns(2)" lg="columns(4)" pad-top="2" pad-bottom="2" width="md">
 		<article-card content="spot-1" layout="stack(po-bc ta-c pa1 ar3x4 ov1)"></article-card>
@@ -58,7 +60,9 @@
 		<news-card content="news-13"></news-card>
 	</lay-out>
 
-	<news-card content="news-12" layout="pa1.5" class="secondary"></news-card>
+	<lay-out>
+		<news-card content="news-12" layout="pa1.5" class="secondary"></news-card>
+	</lay-out>
 
 	<lay-out md="columns(3)" lg="bento(7c)" bleed theme="primary" pad-top="2" pad-bottom="2" col-gap="1">
 		<article-card content="spot-1" layout="stack(po-bc ta-c pa1 ar1x1 ov1)"></article-card>
@@ -120,9 +124,11 @@
 		<article-card content="video-6"></article-card>
 	</lay-out>
 
-	<quote-card content="quote-1"></quote-card>
-	<faq-card content="faq-1" layout="pa1 thl"></faq-card>
-	<timeline-card content="timeline-1" layout="pa1 thd"></timeline-card>
+	<lay-out md="columns(2)">
+		<quote-card content="quote-1"></quote-card>
+		<faq-card content="faq-1" layout="pa1 thl"></faq-card>
+		<timeline-card content="timeline-1" layout="pa1 thd"></timeline-card>
+	</lay-out>
 
 	<footer>
 		<lay-out lg="columns(3)">
