@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Product Taxonomy</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Product Taxonomy Component - Search Google and Facebook product categories">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<style>
+		.demo-section {
+			margin-block: 2rem;
+			padding: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 0.5rem;
+		}
+		.status {
+			padding: 0.5rem;
+			margin-block: 0.5rem;
+			background: #f0f0f0;
+			border-radius: 0.25rem;
+			font-family: monospace;
+			font-size: 0.875rem;
+		}
+		.selected-info {
+			margin-block: 1rem;
+			padding: 1rem;
+			background: #e8f5e9;
+			border-radius: 0.25rem;
+		}
+		.selected-info h4 {
+			margin-block-start: 0;
+		}
+		.category-path {
+			font-family: monospace;
+			font-size: 0.875rem;
+			color: #666;
+		}
+	</style>
+</head>
+<body>
+	<h1>UI: Product Taxonomy</h1>
+
+	<p>
+		The <code>&lt;product-taxonomy&gt;</code> component integrates with <code>&lt;auto-suggest&gt;</code>
+		to provide searchable product category selection from Google or Facebook taxonomies.
+	</p>
+
+	<h2>Examples</h2>
+
+	<section class="demo-section">
+		<h3>Google Product Taxonomy (Default)</h3>
+		<p>Search for product categories like "headphones", "shoes", "furniture", etc.</p>
+
+		<product-taxonomy
+			id="google-taxonomy"
+			mode="google"
+			label="Google Product Category"
+			list-mode="ul"
+			placeholder="e.g., headphones, coffee, toys"
+			noshadow
+		></product-taxonomy>
+
+		<div id="google-status" class="status">Ready to search...</div>
+		<div id="google-selected" class="selected-info" style="display: none;">
+			<h4>Selected Category:</h4>
+			<p><strong>ID:</strong> <span class="category-id"></span></p>
+			<p><strong>Name:</strong> <span class="category-name"></span></p>
+			<p><strong>Full Path:</strong><br><span class="category-path"></span></p>
+		</div>
+	</section>
+
+	<section class="demo-section">
+		<h3>Facebook Product Taxonomy</h3>
+		<p>Search Facebook's product categories. Try "beverages", "toys", "furniture".</p>
+
+		<product-taxonomy
+			id="facebook-taxonomy"
+			mode="facebook"
+			label="Facebook Product Category"
+			placeholder="e.g., food, games, clothing"
+			list-mode="ul"
+			noshadow
+		></product-taxonomy>
+
+		<div id="facebook-status" class="status">Ready to search...</div>
+		<div id="facebook-selected" class="selected-info" style="display: none;">
+			<h4>Selected Category:</h4>
+			<p><strong>ID:</strong> <span class="category-id"></span></p>
+			<p><strong>Name:</strong> <span class="category-name"></span></p>
+			<p><strong>Full Path:</strong><br><span class="category-path"></span></p>
+		</div>
+	</section>
+
+	<section class="demo-section">
+		<h3>Custom Data Source</h3>
+		<p>You can also specify a custom data file using the <code>data</code> attribute:</p>
+		<pre><code>&lt;product-taxonomy
+  data="path/to/taxonomy.txt"
+  mode="google"
+  label="Custom Taxonomy"&gt;
+&lt;/product-taxonomy&gt;</code></pre>
+	</section>
+
+	<h2>Attributes</h2>
+	<ul>
+		<li><code>mode</code> or <code>type</code>: Either "google" or "facebook" (default: "google")</li>
+		<li><code>data</code>: Custom path to taxonomy file (overrides mode default)</li>
+		<li><code>label</code>: Label text for the input field</li>
+		<li><code>placeholder</code>: Placeholder text</li>
+		<li><code>minlength</code>: Minimum characters before search (default: 2)</li>
+		<li><code>max-results</code>: Maximum number of results to show (default: 50)</li>
+		<li><code>list-mode</code>: Either "datalist" or "ul" (default: "datalist")</li>
+		<li><code>noshadow</code>: Render without shadow DOM</li>
+		<li><code>required</code>: Make the field required</li>
+	</ul>
+
+	<h2>Events</h2>
+	<ul>
+		<li><code>taxonomyLoadStart</code>: Fired when taxonomy data loading begins</li>
+		<li><code>taxonomyLoadEnd</code>: Fired when loading completes (detail: {count})</li>
+		<li><code>taxonomyLoadError</code>: Fired on loading error</li>
+		<li><code>taxonomySearchStart</code>: Fired when search begins</li>
+		<li><code>taxonomySearchEnd</code>: Fired when search completes (detail: {count})</li>
+		<li><code>taxonomySelect</code>: Fired when a category is selected (detail: taxonomy item)</li>
+		<li><code>taxonomyClear</code>: Fired when selection is cleared</li>
+	</ul>
+
+	<h2>API</h2>
+	<ul>
+		<li><code>selectedItem</code>: Get currently selected taxonomy item</li>
+		<li><code>setValue(id, display)</code>: Set value programmatically</li>
+		<li><code>search(query)</code>: Search taxonomy data</li>
+	</ul>
+
+	<script type="module">
+		import { ProductTaxonomy } from './index.js';
+		import { AutoSuggest } from '../auto-suggest/index.js';
+
+		// Setup Google taxonomy listeners
+		const googleTaxonomy = document.getElementById('google-taxonomy');
+		const googleStatus = document.getElementById('google-status');
+		const googleSelected = document.getElementById('google-selected');
+
+		googleTaxonomy.addEventListener('taxonomyLoadStart', () => {
+			googleStatus.textContent = 'Loading Google taxonomy data...';
+		});
+
+		googleTaxonomy.addEventListener('taxonomyLoadEnd', (e) => {
+			googleStatus.textContent = `Loaded ${e.detail.count} categories. Ready to search!`;
+		});
+
+		googleTaxonomy.addEventListener('taxonomyLoadError', (e) => {
+			googleStatus.textContent = `Error: ${e.detail.message}`;
+			googleStatus.style.background = '#ffebee';
+		});
+
+		googleTaxonomy.addEventListener('taxonomySearchEnd', (e) => {
+			googleStatus.textContent = `Found ${e.detail.count} matching categories`;
+		});
+
+		googleTaxonomy.addEventListener('taxonomySelect', (e) => {
+			console.log('Google taxonomy selected:', e.detail);
+			const item = googleTaxonomy.selectedItem;
+			if (item) {
+				googleSelected.style.display = 'block';
+				googleSelected.querySelector('.category-id').textContent = item.id;
+				googleSelected.querySelector('.category-name').textContent = item.name;
+				googleSelected.querySelector('.category-path').textContent = item.path;
+			}
+		});
+
+		googleTaxonomy.addEventListener('taxonomyClear', () => {
+			googleSelected.style.display = 'none';
+			googleStatus.textContent = 'Selection cleared. Ready to search...';
+		});
+
+		// Setup Facebook taxonomy listeners
+		const facebookTaxonomy = document.getElementById('facebook-taxonomy');
+		const facebookStatus = document.getElementById('facebook-status');
+		const facebookSelected = document.getElementById('facebook-selected');
+
+		facebookTaxonomy.addEventListener('taxonomyLoadStart', () => {
+			facebookStatus.textContent = 'Loading Facebook taxonomy data...';
+		});
+
+		facebookTaxonomy.addEventListener('taxonomyLoadEnd', (e) => {
+			facebookStatus.textContent = `Loaded ${e.detail.count} categories. Ready to search!`;
+		});
+
+		facebookTaxonomy.addEventListener('taxonomyLoadError', (e) => {
+			facebookStatus.textContent = `Error: ${e.detail.message}`;
+			facebookStatus.style.background = '#ffebee';
+		});
+
+		facebookTaxonomy.addEventListener('taxonomySearchEnd', (e) => {
+			facebookStatus.textContent = `Found ${e.detail.count} matching categories`;
+		});
+
+		facebookTaxonomy.addEventListener('taxonomySelect', (e) => {
+			console.log('Facebook taxonomy selected:', e.detail);
+			const item = facebookTaxonomy.selectedItem;
+			if (item) {
+				facebookSelected.style.display = 'block';
+				facebookSelected.querySelector('.category-id').textContent = item.id;
+				facebookSelected.querySelector('.category-name').textContent = item.name;
+				facebookSelected.querySelector('.category-path').textContent = item.path;
+			}
+		});
+
+		facebookTaxonomy.addEventListener('taxonomyClear', () => {
+			facebookSelected.style.display = 'none';
+			facebookStatus.textContent = 'Selection cleared. Ready to search...';
+		});
+	</script>
+</body>
+</html>
