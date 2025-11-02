@@ -1,0 +1,44 @@
+{
+  "name": "@browser.style/product-taxonomy",
+  "version": "1.0.0",
+  "description": "Product taxonomy component for searching Google and Facebook product categories",
+  "type": "module",
+  "module": "index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "google.txt",
+    "facebook.txt"
+  ],
+  "dependencies": {
+    "@browser.style/auto-suggest": "^1.0.16",
+    "@browser.style/common": "^1.0.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "product-taxonomy",
+    "google-taxonomy",
+    "facebook-taxonomy",
+    "auto-suggest"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/product-taxonomy"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/product-taxonomy"
+}

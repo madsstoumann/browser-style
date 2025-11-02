@@ -67,6 +67,12 @@
 			<p><strong>ID:</strong> <span class="category-id"></span></p>
 			<p><strong>Name:</strong> <span class="category-name"></span></p>
 			<p><strong>Full Path:</strong><br><span class="category-path"></span></p>
+
+			<h4>Schema.org Microdata:</h4>
+			<pre class="schema-microdata" style="background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem;"></pre>
+
+			<h4>Schema.org JSON-LD:</h4>
+			<pre class="schema-jsonld" style="background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem;"></pre>
 		</div>
 	</section>
 
@@ -89,6 +95,12 @@
 			<p><strong>ID:</strong> <span class="category-id"></span></p>
 			<p><strong>Name:</strong> <span class="category-name"></span></p>
 			<p><strong>Full Path:</strong><br><span class="category-path"></span></p>
+
+			<h4>Schema.org Microdata:</h4>
+			<pre class="schema-microdata" style="background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem;"></pre>
+
+			<h4>Schema.org JSON-LD:</h4>
+			<pre class="schema-jsonld" style="background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem;"></pre>
 		</div>
 	</section>
 
@@ -137,6 +149,63 @@
 		import { ProductTaxonomy } from './index.js';
 		import { AutoSuggest } from '../auto-suggest/index.js';
 
+		/**
+		 * Generates Schema.org Microdata for a product category
+		 * Uses the DefinedTerm schema for product categories
+		 */
+		function generateMicrodata(item) {
+			const categories = item.categories;
+			let html = '<div itemscope itemtype="https://schema.org/Product">\n';
+			html += '  <meta itemprop="name" content="Example Product">\n';
+			html += '  <div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">\n';
+			html += '    <meta itemprop="termCode" content="' + item.id + '">\n';
+			html += '    <meta itemprop="name" content="' + item.name + '">\n';
+
+			// Add hierarchical categories using inDefinedTermSet
+			if (categories.length > 1) {
+				html += '    <div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">\n';
+				html += '      <meta itemprop="name" content="' + categories.slice(0, -1).join(' > ') + '">\n';
+				html += '    </div>\n';
+			}
+
+			html += '  </div>\n';
+			html += '</div>';
+			return html;
+		}
+
+		/**
+		 * Generates Schema.org JSON-LD for a product category
+		 */
+		function generateJsonLd(item) {
+			const jsonld = {
+				"@context": "https://schema.org",
+				"@type": "Product",
+				"name": "Example Product",
+				"category": {
+					"@type": "DefinedTerm",
+					"termCode": item.id,
+					"name": item.name
+				}
+			};
+
+			// Add hierarchical categories
+			if (item.categories.length > 1) {
+				jsonld.category.inDefinedTermSet = {
+					"@type": "DefinedTermSet",
+					"name": item.categories.slice(0, -1).join(' > ')
+				};
+			}
+
+			// Add full category path as additional property
+			jsonld.category.additionalProperty = {
+				"@type": "PropertyValue",
+				"name": "categoryPath",
+				"value": item.path
+			};
+
+			return JSON.stringify(jsonld, null, 2);
+		}
+
 		// Setup Google taxonomy listeners
 		const googleTaxonomy = document.getElementById('google-taxonomy');
 		const googleStatus = document.getElementById('google-status');
@@ -167,6 +236,14 @@
 				googleSelected.querySelector('.category-id').textContent = item.id;
 				googleSelected.querySelector('.category-name').textContent = item.name;
 				googleSelected.querySelector('.category-path').textContent = item.path;
+
+				// Generate Schema.org Microdata
+				const microdata = generateMicrodata(item);
+				googleSelected.querySelector('.schema-microdata').textContent = microdata;
+
+				// Generate Schema.org JSON-LD
+				const jsonld = generateJsonLd(item);
+				googleSelected.querySelector('.schema-jsonld').textContent = jsonld;
 			}
 		});
 
@@ -205,6 +282,14 @@
 				facebookSelected.querySelector('.category-id').textContent = item.id;
 				facebookSelected.querySelector('.category-name').textContent = item.name;
 				facebookSelected.querySelector('.category-path').textContent = item.path;
+
+				// Generate Schema.org Microdata
+				const microdata = generateMicrodata(item);
+				facebookSelected.querySelector('.schema-microdata').textContent = microdata;
+
+				// Generate Schema.org JSON-LD
+				const jsonld = generateJsonLd(item);
+				facebookSelected.querySelector('.schema-jsonld').textContent = jsonld;
 			}
 		});
 

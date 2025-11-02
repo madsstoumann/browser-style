@@ -38,8 +38,8 @@ export class ProductTaxonomy extends FormElement {
 	 */
 	getDefaultDataSource() {
 		const sources = {
-			google: `${this.basePath}taxonomy-with-ids.en-US.txt`,
-			facebook: `${this.basePath}fb_product_categories_en_US.txt`
+			google: `${this.basePath}google.txt`,
+			facebook: `${this.basePath}facebook.txt`
 		};
 		return sources[this.mode] || sources.google;
 	}
