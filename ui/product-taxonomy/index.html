@@ -36,6 +36,9 @@
 			font-size: 0.875rem;
 			color: #666;
 		}
+		.schema-boilerplate {
+			color: #CCC;
+		}
 	</style>
 </head>
 <body>
@@ -157,22 +160,27 @@
 		 */
 		function generateMicrodata(item) {
 			const categories = item.categories;
-			let html = '<div itemscope itemtype="https://schema.org/Product">\n';
-			html += '  <meta itemprop="name" content="Example Product">\n';
-			html += '  <div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">\n';
-			html += `    <meta itemprop="termCode" content="${item.id}">\n`;
-			html += `    <meta itemprop="name" content="${item.name}">\n`;
+			// Helper to escape HTML entities
+			const escape = (str) => str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+			let boilerplate = `<span class="schema-boilerplate">${escape('<div itemscope itemtype="https://schema.org/Product">')}\n`;
+			boilerplate += `  ${escape('<meta itemprop="name" content="Example Product">')}</span>\n`;
+
+			let taxonomyHtml = `  ${escape('<div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">')}\n`;
+			taxonomyHtml += `    ${escape(`<meta itemprop="termCode" content="${item.id}">`)}\n`;
+			taxonomyHtml += `    ${escape(`<meta itemprop="name" content="${item.name}">`)}\n`;
 
 			// Add hierarchical categories using inDefinedTermSet
 			if (categories.length > 1) {
-				html += '    <div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">\n';
-				html += `      <meta itemprop="name" content="${categories.slice(0, -1).join(' > ')}">\n`;
-				html += '    </div>\n';
+				taxonomyHtml += `    ${escape('<div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">')}\n`;
+				taxonomyHtml += `      ${escape(`<meta itemprop="name" content="${categories.slice(0, -1).join(' > ')}">`)}\n`;
+				taxonomyHtml += `    ${escape('</div>')}\n`;
 			}
 
-			html += '  </div>\n';
-			html += '</div>';
-			return html;
+			taxonomyHtml += `  ${escape('</div>')}\n`;
+			taxonomyHtml += `<span class="schema-boilerplate">${escape('</div>')}</span>`;
+
+			return boilerplate + taxonomyHtml;
 		}
 
 		/**
@@ -253,7 +261,7 @@
 					elements.categoryId.textContent = item.id;
 					elements.categoryName.textContent = item.name;
 					elements.categoryPath.textContent = item.path;
-					elements.schemaMicrodata.textContent = generateMicrodata(item);
+					elements.schemaMicrodata.innerHTML = generateMicrodata(item);
 					elements.schemaJsonld.textContent = generateJsonLd(item);
 				}
 			});
