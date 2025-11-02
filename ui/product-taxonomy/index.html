@@ -19,12 +19,11 @@
 	<h2>Examples</h2>
 
 	<section>
-		<h3>Google Product Taxonomy (Default)</h3>
+		<h3>Google Product Taxonomy</h3>
 		<p>Search for product categories like "headphones", "shoes", "furniture", etc.</p>
 
 		<product-taxonomy
 			id="google-taxonomy"
-			mode="google"
 			data="google.txt"
 			schema="microdata json"
 			label="Google Product Category"
@@ -42,7 +41,6 @@
 
 		<product-taxonomy
 			id="facebook-taxonomy"
-			mode="facebook"
 			data="facebook.txt"
 			schema="json"
 			label="Facebook Product Category"
@@ -56,7 +54,6 @@
 
 	<h2>Attributes</h2>
 	<ul>
-		<li><code>mode</code> or <code>type</code>: Either "google" or "facebook" (default: "google"). Determines parsing format.</li>
 		<li><code>data</code>: (Required) Path to the taxonomy text file.</li>
 		<li><code>schema</code>: Space-separated values. Include "microdata" or "json" to show schema previews.</li>
 		<li><code>label</code>: Label text for the input field.</li>
@@ -66,6 +63,11 @@
 		<li><code>list-mode</code>: Either "datalist" or "ul" (default: "datalist").</li>
 		<li><code>noshadow</code>: Render without shadow DOM.</li>
 		<li><code>required</code>: Make the field required.</li>
+	</ul>
+
+	<h2>Properties</h2>
+	<ul>
+		<li><code>parser</code>: A JavaScript function that takes a string (a line from the data file) and returns a structured object: <code>{ id, name, path, categories }</code>. Defaults to <code>googleTaxonomyParser</code>.</li>
 	</ul>
 
 	<h2>Events</h2>
@@ -87,21 +89,29 @@
 	</ul>
 
 	<script type="module">
-		import { ProductTaxonomy } from './index.js';
+		import {
+			ProductTaxonomy,
+			googleTaxonomyParser,
+			facebookTaxonomyParser,
+		} from './index.js';
 
 		/**
 		 * Sets up event listeners and UI updates for a product-taxonomy instance.
 		 * @param {string} id - The ID of the product-taxonomy element.
+		 * @param {function} parser - The parser function to use for this instance.
 		 */
-		function setupTaxonomyComponent(id) {
+		function setupTaxonomyComponent(id, parser) {
 			const taxonomyEl = document.getElementById(id);
 			if (!taxonomyEl) return;
+
+			// Assign the parser
+			taxonomyEl.parser = parser;
 
 			const prefix = id.replace('-taxonomy', '');
 			const statusEl = document.getElementById(`${prefix}-status`);
 
 			taxonomyEl.addEventListener('taxonomyLoadStart', () => {
-				statusEl.textContent = `Loading ${taxonomyEl.mode} taxonomy data...`;
+				statusEl.textContent = `Loading taxonomy data...`;
 			});
 
 			taxonomyEl.addEventListener('taxonomyLoadEnd', (e) => {
@@ -127,9 +137,9 @@
 			});
 		}
 
-		// Setup both taxonomy components
-		setupTaxonomyComponent('google-taxonomy');
-		setupTaxonomyComponent('facebook-taxonomy');
+		// Setup both taxonomy components with their respective parsers
+		setupTaxonomyComponent('google-taxonomy', googleTaxonomyParser);
+		setupTaxonomyComponent('facebook-taxonomy', facebookTaxonomyParser);
 	</script>
 </body>
 </html>

@@ -2,10 +2,37 @@ import { FormElement } from '../common/form.element.js';
 import { AutoSuggest } from '../auto-suggest/index.js';
 
 /**
+ * Parses a line from a Google-formatted taxonomy file.
+ * @param {string} line - A single line from the taxonomy file.
+ * @returns {object|null} A structured taxonomy item or null.
+ */
+export const googleTaxonomyParser = (line) => {
+	const match = line.match(/^(\d+)\s*-\s*(.+)$/);
+	if (!match) return null;
+	const [, id, path] = match;
+	const categories = path.split('>').map(c => c.trim());
+	return { id, name: categories[categories.length - 1], path, categories };
+};
+
+/**
+ * Parses a line from a Facebook-formatted taxonomy file.
+ * @param {string} line - A single line from the taxonomy file.
+ * @returns {object|null} A structured taxonomy item or null.
+ */
+export const facebookTaxonomyParser = (line) => {
+	const firstComma = line.indexOf(',');
+	if (firstComma === -1) return null;
+	const id = line.substring(0, firstComma).trim();
+	const path = line.substring(firstComma + 1).trim();
+	const categories = path.split('>').map(c => c.trim());
+	return { id, name: categories[categories.length - 1], path, categories };
+};
+
+/**
  * ProductTaxonomy
- * @description Web component that loads and searches product taxonomies, with built-in Schema.org preview.
+ * @description A generic web component for searching product taxonomies, with a pluggable parser system and built-in Schema.org preview.
  * @author Mads Stoumann
- * @version 1.2.0
+ * @version 1.3.0
  * @summary 02-11-2025
  * @class ProductTaxonomy
  * @extends {FormElement}
@@ -15,6 +42,13 @@ export class ProductTaxonomy extends FormElement {
 	#parsedData = [];
 	#config = {};
 	#elements = {};
+
+	/**
+	 * The parser function to process each line of the taxonomy file.
+	 * Defaults to `googleTaxonomyParser`.
+	 * @type {function(string): object|null}
+	 */
+	parser = googleTaxonomyParser;
 
 	get basePath() {
 		return new URL('.', import.meta.url).href;
@@ -26,7 +60,6 @@ export class ProductTaxonomy extends FormElement {
 
 	initializeComponent() {
 		this.#config = {
-			mode: this.getAttribute('mode') || this.getAttribute('type') || 'google',
 			data: this.getAttribute('data'),
 			schema: this.getAttribute('schema') || '',
 			label: this.getAttribute('label') || 'Product Taxonomy',
@@ -48,6 +81,13 @@ export class ProductTaxonomy extends FormElement {
 	}
 
 	async #loadTaxonomyData() {
+		if (!this.parser || typeof this.parser !== 'function') {
+			const error = new Error('A valid parser function has not been set.');
+			console.error(error.message, this);
+			this.dispatchEvent(new CustomEvent('taxonomyLoadError', { detail: error, bubbles: true }));
+			return;
+		}
+
 		this.dispatchEvent(new CustomEvent('taxonomyLoadStart', { bubbles: true }));
 		try {
 			const response = await fetch(new URL(this.#config.data, this.basePath));
@@ -57,9 +97,13 @@ export class ProductTaxonomy extends FormElement {
 			const text = await response.text();
 			const lines = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
 
-			this.#parsedData = this.#config.mode === 'facebook' ?
-				this.#parseFacebookFormat(lines) :
-				this.#parseGoogleFormat(lines);
+			this.#parsedData = lines.map(line => {
+				const item = this.parser(line);
+				if (item) {
+					item.searchText = item.path.toLowerCase();
+				}
+				return item;
+			}).filter(Boolean);
 
 			this.dispatchEvent(new CustomEvent('taxonomyLoadEnd', {
 				detail: { count: this.#parsedData.length },
@@ -74,47 +118,14 @@ export class ProductTaxonomy extends FormElement {
 		}
 	}
 
-	#parseGoogleFormat(lines) {
-		return lines.map(line => {
-			const match = line.match(/^(\d+)\s*-\s*(.+)$/);
-			if (!match) return null;
-			const [, id, path] = match;
-			const categories = path.split('>').map(c => c.trim());
-			return {
-				id,
-				name: categories[categories.length - 1],
-				path,
-				categories,
-				searchText: path.toLowerCase()
-			};
-		}).filter(Boolean);
-	}
-
-	#parseFacebookFormat(lines) {
-		return lines.map(line => {
-			const firstComma = line.indexOf(',');
-			if (firstComma === -1) return null;
-			const id = line.substring(0, firstComma).trim();
-			const path = line.substring(firstComma + 1).trim();
-			const categories = path.split('>').map(c => c.trim());
-			return {
-				id,
-				name: categories[categories.length - 1],
-				path,
-				categories,
-				searchText: path.toLowerCase()
-			};
-		}).filter(Boolean);
-	}
-
 	search(query) {
 		if (!query || query.length < this.#config.minLength) {
 			return [];
 		}
-		const searchTerm = query.toLowerCase();
-		const results = this.#parsedData.filter(item =>
-			item.searchText.includes(searchTerm)
-		);
+		const searchTerms = query.toLowerCase().split(' ').filter(Boolean);
+		const results = this.#parsedData.filter(item => {
+			return searchTerms.every(term => item.searchText.includes(term));
+		});
 		return results.slice(0, this.#config.maxResults);
 	}
 
@@ -157,7 +168,7 @@ export class ProductTaxonomy extends FormElement {
 				"name": item.name,
 				"inDefinedTermSet": {
 					"@type": "DefinedTermSet",
-					"name": this.#config.mode === 'google' ? "Google Product Taxonomy" : "Facebook Product Taxonomy"
+					"name": "Product Taxonomy"
 				},
 				"additionalProperty": {
 					"@type": "PropertyValue",
