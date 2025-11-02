@@ -2,14 +2,17 @@ import { FormElement } from '../common/form.element.js';
 
 /**
  * ProductTaxonomy
- * @description Web component that loads and searches product taxonomies (Google or Facebook)
+ * @description Web component that loads and searches product taxonomies (Google or Facebook).
  * @author Mads Stoumann
- * @version 1.0.0
+ * @version 1.1.0
  * @summary 02-11-2025
  * @class ProductTaxonomy
  * @extends {FormElement}
  */
 export class ProductTaxonomy extends FormElement {
+	#autoSuggest;
+	#parsedData = [];
+	#config = {};
 
 	get basePath() {
 		return new URL('.', import.meta.url).href;
@@ -17,60 +20,51 @@ export class ProductTaxonomy extends FormElement {
 
 	constructor() {
 		super();
-		this.taxonomyData = [];
-		this.parsedData = [];
 	}
 
 	initializeComponent() {
-		// Get configuration from attributes
-		this.mode = this.getAttribute('mode') || this.getAttribute('type') || 'google';
-		this.dataSource = this.getAttribute('data') || this.getDefaultDataSource();
-		this.label = this.getAttribute('label') || 'Product Taxonomy';
-		this.placeholder = this.getAttribute('placeholder') || 'Search for a product category...';
-		this.minLength = parseInt(this.getAttribute('minlength')) || 2;
+		this.#config = {
+			mode: this.getAttribute('mode') || this.getAttribute('type') || 'google',
+			label: this.getAttribute('label') || 'Product Taxonomy',
+			placeholder: this.getAttribute('placeholder') || 'Search for a product category...',
+			minLength: parseInt(this.getAttribute('minlength')) || 2,
+			maxResults: parseInt(this.getAttribute('max-results')) || 50,
+			listMode: this.getAttribute('list-mode') || 'datalist',
+			noshadow: this.hasAttribute('noshadow'),
+			required: this.hasAttribute('required'),
+		};
+		this.#config.dataSource = this.getAttribute('data') || this.#getDefaultDataSource();
 
-		// Load and parse the taxonomy data
-		this.loadTaxonomyData();
+		this.render();
+		this.#loadTaxonomyData();
 	}
 
-	/**
-	 * Gets the default data source based on mode
-	 */
-	getDefaultDataSource() {
+	#getDefaultDataSource() {
 		const sources = {
 			google: `${this.basePath}google.txt`,
 			facebook: `${this.basePath}facebook.txt`
 		};
-		return sources[this.mode] || sources.google;
+		return sources[this.#config.mode] || sources.google;
 	}
 
-	/**
-	 * Loads taxonomy data from the specified source
-	 */
-	async loadTaxonomyData() {
+	async #loadTaxonomyData() {
+		this.dispatchEvent(new CustomEvent('taxonomyLoadStart', { bubbles: true }));
 		try {
-			this.dispatchEvent(new CustomEvent('taxonomyLoadStart', { bubbles: true }));
-
-			const response = await fetch(this.dataSource);
+			const response = await fetch(this.#config.dataSource);
 			if (!response.ok) {
 				throw new Error(`Failed to load taxonomy data: ${response.statusText}`);
 			}
-
 			const text = await response.text();
-			this.taxonomyData = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+			const lines = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
 
-			// Parse the data based on mode
-			this.parsedData = this.mode === 'facebook' ?
-				this.parseFacebookFormat() :
-				this.parseGoogleFormat();
+			this.#parsedData = this.#config.mode === 'facebook' ?
+				this.#parseFacebookFormat(lines) :
+				this.#parseGoogleFormat(lines);
 
 			this.dispatchEvent(new CustomEvent('taxonomyLoadEnd', {
-				detail: { count: this.parsedData.length },
+				detail: { count: this.#parsedData.length },
 				bubbles: true
 			}));
-
-			// Render the component after data is loaded
-			this.render();
 		} catch (error) {
 			console.error('Error loading taxonomy data:', error);
 			this.dispatchEvent(new CustomEvent('taxonomyLoadError', {
@@ -80,22 +74,15 @@ export class ProductTaxonomy extends FormElement {
 		}
 	}
 
-	/**
-	 * Parses Google taxonomy format
-	 * Format: "ID - Category > Subcategory > ..."
-	 */
-	parseGoogleFormat() {
-		return this.taxonomyData.map(line => {
+	#parseGoogleFormat(lines) {
+		return lines.map(line => {
 			const match = line.match(/^(\d+)\s*-\s*(.+)$/);
 			if (!match) return null;
-
 			const [, id, path] = match;
 			const categories = path.split('>').map(c => c.trim());
-			const name = categories[categories.length - 1];
-
 			return {
 				id,
-				name,
+				name: categories[categories.length - 1],
 				path,
 				categories,
 				searchText: path.toLowerCase()
@@ -103,23 +90,16 @@ export class ProductTaxonomy extends FormElement {
 		}).filter(Boolean);
 	}
 
-	/**
-	 * Parses Facebook taxonomy format
-	 * Format: "ID,category > subcategory > ..."
-	 */
-	parseFacebookFormat() {
-		return this.taxonomyData.map(line => {
+	#parseFacebookFormat(lines) {
+		return lines.map(line => {
 			const firstComma = line.indexOf(',');
 			if (firstComma === -1) return null;
-
 			const id = line.substring(0, firstComma).trim();
 			const path = line.substring(firstComma + 1).trim();
 			const categories = path.split('>').map(c => c.trim());
-			const name = categories[categories.length - 1];
-
 			return {
 				id,
-				name,
+				name: categories[categories.length - 1],
 				path,
 				categories,
 				searchText: path.toLowerCase()
@@ -127,95 +107,76 @@ export class ProductTaxonomy extends FormElement {
 		}).filter(Boolean);
 	}
 
-	/**
-	 * Searches taxonomy data based on query
-	 */
 	search(query) {
-		if (!query || query.length < this.minLength) {
+		if (!query || query.length < this.#config.minLength) {
 			return [];
 		}
-
 		const searchTerm = query.toLowerCase();
-		const results = this.parsedData.filter(item =>
+		const results = this.#parsedData.filter(item =>
 			item.searchText.includes(searchTerm)
 		);
-
-		// Limit results to prevent overwhelming the UI
-		const maxResults = parseInt(this.getAttribute('max-results')) || 50;
-		return results.slice(0, maxResults);
+		return results.slice(0, this.#config.maxResults);
 	}
 
-	/**
-	 * Formats search results for auto-suggest
-	 */
-	formatResults(results) {
+	#formatResults(results) {
 		return results.map(item => ({
-			id: item.id,
-			name: item.name,
-			path: item.path,
-			categories: item.categories,
+			...item,
 			display: item.path,
 			value: item.id
 		}));
 	}
 
-	/**
-	 * Renders the component
-	 */
 	render() {
-		// Use a dummy API that won't be called (we'll override fetchData)
 		this.root.innerHTML = `
 			<auto-suggest
 				api="#"
 				api-value-path="id"
 				api-display-path="display"
 				api-text-path="path"
-				label="${this.label}"
-				list-mode="${this.getAttribute('list-mode') || 'datalist'}"
-				minlength="${this.minLength}"
-				${this.hasAttribute('noshadow') ? 'noshadow' : ''}
-				placeholder="${this.placeholder}"
-				${this.hasAttribute('required') ? 'required="true"' : ''}
+				label="${this.#config.label}"
+				list-mode="${this.#config.listMode}"
+				minlength="${this.#config.minLength}"
+				${this.#config.noshadow ? 'noshadow' : ''}
+				placeholder="${this.#config.placeholder}"
+				${this.#config.required ? 'required="true"' : ''}
 			></auto-suggest>
 		`;
-
-		// Get the auto-suggest element
-		this.autoSuggest = this.root.querySelector('auto-suggest');
-
-		// Override the auto-suggest's fetchData method to use our search
-		this.setupAutoSuggest();
+		this.#autoSuggest = this.root.querySelector('auto-suggest');
+		this.#setupAutoSuggest();
 	}
 
-	/**
-	 * Sets up the auto-suggest integration
-	 */
-	setupAutoSuggest() {
-		if (!this.autoSuggest) return;
+	#setupAutoSuggest() {
+		if (!this.#autoSuggest) return;
 
-		// Wait for auto-suggest to mount
-		if (!this.autoSuggest.initialized) {
-			setTimeout(() => this.setupAutoSuggest(), 50);
-			return;
-		}
+		// The auto-suggest component might not be fully initialized yet.
+		// We'll wait for it by checking for one of its methods.
+		const checkInterval = setInterval(() => {
+			if (typeof this.#autoSuggest.fetchData === 'function') {
+				clearInterval(checkInterval);
+				this.#overrideAutoSuggestFetch();
+				this.#forwardAutoSuggestEvents();
+			}
+		}, 50);
+	}
 
-		// Override the fetchData method before it gets called
-		this.autoSuggest.fetchData = (value) => {
-			// Use our local search instead of API call
+	#overrideAutoSuggestFetch() {
+		// Override the fetchData method to use our local search
+		this.#autoSuggest.fetchData = (value) => {
 			this.dispatchEvent(new CustomEvent('taxonomySearchStart', { bubbles: true }));
 
 			const results = this.search(value);
-			const formattedResults = this.formatResults(results);
+			const formattedResults = this.#formatResults(results);
 
-			this.autoSuggest.data = formattedResults;
-			this.autoSuggest.list.innerHTML = this.autoSuggest.render(formattedResults);
+			this.#autoSuggest.data = formattedResults;
+			this.#autoSuggest.list.innerHTML = this.#autoSuggest.render(formattedResults);
 
-			if (this.autoSuggest.settings.listMode === 'ul' && formattedResults.length) {
-				this.autoSuggest.list.togglePopover(true);
-				this.autoSuggest.setAttribute('open', '');
+			if (this.#autoSuggest.settings.listMode === 'ul' && formattedResults.length) {
+				this.#autoSuggest.list.togglePopover(true);
+				this.#autoSuggest.setAttribute('open', '');
 			}
 
 			if (!formattedResults.length) {
-				this.autoSuggest.dispatchEvent(new CustomEvent('autoSuggestNoResults', { bubbles: true }));
+				this.#autoSuggest.dispatchEvent(new CustomEvent('autoSuggestNoResults', { bubbles: true }));
 			}
 
 			this.dispatchEvent(new CustomEvent('taxonomySearchEnd', {
@@ -225,14 +186,15 @@ export class ProductTaxonomy extends FormElement {
 		};
 
 		// Also override the debounced version
-		this.autoSuggest.debouncedFetch = this.autoSuggest.debounced(
-			this.autoSuggest.settings.debounceTime,
-			this.autoSuggest.fetchData.bind(this.autoSuggest)
+		this.#autoSuggest.debouncedFetch = this.#autoSuggest.debounced(
+			this.#autoSuggest.settings.debounceTime,
+			this.#autoSuggest.fetchData.bind(this.#autoSuggest)
 		);
+	}
 
-		// Forward auto-suggest events
+	#forwardAutoSuggestEvents() {
 		['autoSuggestSelect', 'autoSuggestClear', 'autoSuggestNoResults'].forEach(eventName => {
-			this.autoSuggest.addEventListener(eventName, (e) => {
+			this.#autoSuggest.addEventListener(eventName, (e) => {
 				const newEventName = eventName.replace('autoSuggest', 'taxonomy');
 				this.dispatchEvent(new CustomEvent(newEventName, {
 					detail: e.detail,
@@ -242,22 +204,16 @@ export class ProductTaxonomy extends FormElement {
 		});
 	}
 
-	/**
-	 * Gets the currently selected taxonomy item
-	 */
 	get selectedItem() {
-		if (!this.autoSuggest) return null;
-		const value = this.autoSuggest.value;
-		return this.parsedData.find(item => item.id === value) || null;
+		if (!this.#autoSuggest) return null;
+		const selectedValue = this.#autoSuggest.value;
+		return this.#parsedData.find(item => item.id === selectedValue) || null;
 	}
 
-	/**
-	 * Sets the value programmatically
-	 */
 	setValue(id, display) {
-		if (!this.autoSuggest) return;
-		this.autoSuggest.value = id;
-		this.autoSuggest.displayValue = display;
+		if (!this.#autoSuggest) return;
+		this.#autoSuggest.value = id;
+		this.#autoSuggest.displayValue = display;
 	}
 }
 

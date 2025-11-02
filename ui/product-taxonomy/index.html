@@ -150,21 +150,23 @@
 		import { AutoSuggest } from '../auto-suggest/index.js';
 
 		/**
-		 * Generates Schema.org Microdata for a product category
-		 * Uses the DefinedTerm schema for product categories
+		 * Generates Schema.org Microdata for a product category.
+		 * Uses the DefinedTerm schema for product categories.
+		 * @param {object} item - The selected taxonomy item.
+		 * @returns {string} HTML string for the microdata.
 		 */
 		function generateMicrodata(item) {
 			const categories = item.categories;
 			let html = '<div itemscope itemtype="https://schema.org/Product">\n';
 			html += '  <meta itemprop="name" content="Example Product">\n';
 			html += '  <div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">\n';
-			html += '    <meta itemprop="termCode" content="' + item.id + '">\n';
-			html += '    <meta itemprop="name" content="' + item.name + '">\n';
+			html += `    <meta itemprop="termCode" content="${item.id}">\n`;
+			html += `    <meta itemprop="name" content="${item.name}">\n`;
 
 			// Add hierarchical categories using inDefinedTermSet
 			if (categories.length > 1) {
 				html += '    <div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">\n';
-				html += '      <meta itemprop="name" content="' + categories.slice(0, -1).join(' > ') + '">\n';
+				html += `      <meta itemprop="name" content="${categories.slice(0, -1).join(' > ')}">\n`;
 				html += '    </div>\n';
 			}
 
@@ -174,7 +176,9 @@
 		}
 
 		/**
-		 * Generates Schema.org JSON-LD for a product category
+		 * Generates Schema.org JSON-LD for a product category.
+		 * @param {object} item - The selected taxonomy item.
+		 * @returns {string} JSON-LD string.
 		 */
 		function generateJsonLd(item) {
 			const jsonld = {
@@ -184,119 +188,85 @@
 				"category": {
 					"@type": "DefinedTerm",
 					"termCode": item.id,
-					"name": item.name
+					"name": item.name,
+					"inDefinedTermSet": {
+						"@type": "DefinedTermSet",
+						"name": "Google Product Taxonomy" // Assuming a default, can be adapted
+					},
+					"additionalProperty": {
+						"@type": "PropertyValue",
+						"name": "categoryPath",
+						"value": item.path
+					}
 				}
 			};
 
 			// Add hierarchical categories
 			if (item.categories.length > 1) {
-				jsonld.category.inDefinedTermSet = {
-					"@type": "DefinedTermSet",
-					"name": item.categories.slice(0, -1).join(' > ')
-				};
+				jsonld.category.inDefinedTermSet.name = item.categories.slice(0, -1).join(' > ');
 			}
-
-			// Add full category path as additional property
-			jsonld.category.additionalProperty = {
-				"@type": "PropertyValue",
-				"name": "categoryPath",
-				"value": item.path
-			};
 
 			return JSON.stringify(jsonld, null, 2);
 		}
 
-		// Setup Google taxonomy listeners
-		const googleTaxonomy = document.getElementById('google-taxonomy');
-		const googleStatus = document.getElementById('google-status');
-		const googleSelected = document.getElementById('google-selected');
+		/**
+		 * Sets up event listeners and UI updates for a product-taxonomy instance.
+		 * @param {string} id - The ID of the product-taxonomy element.
+		 */
+		function setupTaxonomyComponent(id) {
+			const taxonomyEl = document.getElementById(id);
+			if (!taxonomyEl) return;
 
-		googleTaxonomy.addEventListener('taxonomyLoadStart', () => {
-			googleStatus.textContent = 'Loading Google taxonomy data...';
-		});
+			const prefix = id.replace('-taxonomy', '');
+			const elements = {
+				status: document.getElementById(`${prefix}-status`),
+				selected: document.getElementById(`${prefix}-selected`),
+				categoryId: document.querySelector(`#${prefix}-selected .category-id`),
+				categoryName: document.querySelector(`#${prefix}-selected .category-name`),
+				categoryPath: document.querySelector(`#${prefix}-selected .category-path`),
+				schemaMicrodata: document.querySelector(`#${prefix}-selected .schema-microdata`),
+				schemaJsonld: document.querySelector(`#${prefix}-selected .schema-jsonld`),
+			};
 
-		googleTaxonomy.addEventListener('taxonomyLoadEnd', (e) => {
-			googleStatus.textContent = `Loaded ${e.detail.count} categories. Ready to search!`;
-		});
+			taxonomyEl.addEventListener('taxonomyLoadStart', () => {
+				elements.status.textContent = `Loading ${taxonomyEl.mode} taxonomy data...`;
+				elements.status.style.background = '#f0f0f0';
+			});
 
-		googleTaxonomy.addEventListener('taxonomyLoadError', (e) => {
-			googleStatus.textContent = `Error: ${e.detail.message}`;
-			googleStatus.style.background = '#ffebee';
-		});
+			taxonomyEl.addEventListener('taxonomyLoadEnd', (e) => {
+				elements.status.textContent = `Loaded ${e.detail.count} categories. Ready to search!`;
+			});
 
-		googleTaxonomy.addEventListener('taxonomySearchEnd', (e) => {
-			googleStatus.textContent = `Found ${e.detail.count} matching categories`;
-		});
+			taxonomyEl.addEventListener('taxonomyLoadError', (e) => {
+				elements.status.textContent = `Error: ${e.detail.message}`;
+				elements.status.style.background = '#ffebee';
+			});
 
-		googleTaxonomy.addEventListener('taxonomySelect', (e) => {
-			console.log('Google taxonomy selected:', e.detail);
-			const item = googleTaxonomy.selectedItem;
-			if (item) {
-				googleSelected.style.display = 'block';
-				googleSelected.querySelector('.category-id').textContent = item.id;
-				googleSelected.querySelector('.category-name').textContent = item.name;
-				googleSelected.querySelector('.category-path').textContent = item.path;
+			taxonomyEl.addEventListener('taxonomySearchEnd', (e) => {
+				elements.status.textContent = `Found ${e.detail.count} matching categories`;
+			});
 
-				// Generate Schema.org Microdata
-				const microdata = generateMicrodata(item);
-				googleSelected.querySelector('.schema-microdata').textContent = microdata;
+			taxonomyEl.addEventListener('taxonomySelect', () => {
+				const item = taxonomyEl.selectedItem;
+				if (item) {
+					elements.selected.style.display = 'block';
+					elements.categoryId.textContent = item.id;
+					elements.categoryName.textContent = item.name;
+					elements.categoryPath.textContent = item.path;
+					elements.schemaMicrodata.textContent = generateMicrodata(item);
+					elements.schemaJsonld.textContent = generateJsonLd(item);
+				}
+			});
 
-				// Generate Schema.org JSON-LD
-				const jsonld = generateJsonLd(item);
-				googleSelected.querySelector('.schema-jsonld').textContent = jsonld;
-			}
-		});
+			taxonomyEl.addEventListener('taxonomyClear', () => {
+				elements.selected.style.display = 'none';
+				elements.status.textContent = 'Selection cleared. Ready to search...';
+			});
+		}
 
-		googleTaxonomy.addEventListener('taxonomyClear', () => {
-			googleSelected.style.display = 'none';
-			googleStatus.textContent = 'Selection cleared. Ready to search...';
-		});
-
-		// Setup Facebook taxonomy listeners
-		const facebookTaxonomy = document.getElementById('facebook-taxonomy');
-		const facebookStatus = document.getElementById('facebook-status');
-		const facebookSelected = document.getElementById('facebook-selected');
-
-		facebookTaxonomy.addEventListener('taxonomyLoadStart', () => {
-			facebookStatus.textContent = 'Loading Facebook taxonomy data...';
-		});
-
-		facebookTaxonomy.addEventListener('taxonomyLoadEnd', (e) => {
-			facebookStatus.textContent = `Loaded ${e.detail.count} categories. Ready to search!`;
-		});
-
-		facebookTaxonomy.addEventListener('taxonomyLoadError', (e) => {
-			facebookStatus.textContent = `Error: ${e.detail.message}`;
-			facebookStatus.style.background = '#ffebee';
-		});
-
-		facebookTaxonomy.addEventListener('taxonomySearchEnd', (e) => {
-			facebookStatus.textContent = `Found ${e.detail.count} matching categories`;
-		});
-
-		facebookTaxonomy.addEventListener('taxonomySelect', (e) => {
-			console.log('Facebook taxonomy selected:', e.detail);
-			const item = facebookTaxonomy.selectedItem;
-			if (item) {
-				facebookSelected.style.display = 'block';
-				facebookSelected.querySelector('.category-id').textContent = item.id;
-				facebookSelected.querySelector('.category-name').textContent = item.name;
-				facebookSelected.querySelector('.category-path').textContent = item.path;
-
-				// Generate Schema.org Microdata
-				const microdata = generateMicrodata(item);
-				facebookSelected.querySelector('.schema-microdata').textContent = microdata;
-
-				// Generate Schema.org JSON-LD
-				const jsonld = generateJsonLd(item);
-				facebookSelected.querySelector('.schema-jsonld').textContent = jsonld;
-			}
-		});
-
-		facebookTaxonomy.addEventListener('taxonomyClear', () => {
-			facebookSelected.style.display = 'none';
-			facebookStatus.textContent = 'Selection cleared. Ready to search...';
-		});
+		// Setup both taxonomy components
+		setupTaxonomyComponent('google-taxonomy');
+		setupTaxonomyComponent('facebook-taxonomy');
 	</script>
 </body>
 </html>
