@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Launchpad</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<!-- <link rel="stylesheet" href="/base.css"> -->
+	<!-- <link rel="stylesheet" href="ui-launchpad.css"> -->
+	<!-- Dependencies for this demo -->
+	
+	<!-- <link rel="stylesheet" href="../icon/ui-icon-svg.css"> -->
+	
+	<style>
+
+.ui-circular-nav{ 
+	anchor-name: --circular-nav;
+	border: 0;
+	display: flex;
+	gap: 2ch;
+	justify-content: center;
+	inline-size: fit-content;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;	
+}
+
+button {
+	aspect-ratio: 1;
+	border-radius: 50%;
+	width: 5rem;
+}
+[popover] {
+	background: #EEE;
+	border: 0;
+	border-radius: 2ch;
+	margin: 1rem 0;
+	position-area: center bottom;
+	width: anchor-size(--circular-nav width);
+}
+	</style>
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Circular Nav</h2>
+	<p>
+	</p>
+
+<fieldset class="ui-circular-nav">
+	<button popovertarget="n1">N1</button>
+	<button popovertarget="n2">N2</button>
+	<button popovertarget="n3">N3</button>
+	<fieldset id="n1" popover>
+		<button type="button">A</button>
+		<button type="button">B</button>
+		<button type="button">C</button>
+	</fieldset>
+	<fieldset id="n2" popover>
+		<button type="button">D</button>
+		<button type="button">E</button>
+		<button type="button">F</button>
+	</fieldset>
+	<fieldset id="n3" popover>
+		<button type="button">G</button>
+		<button type="button">H</button>
+		<button type="button">I</button>
+	</fieldset>
+</fieldset>
+
+
+</body>
+</html>
