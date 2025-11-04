@@ -13,7 +13,7 @@
 	<!-- <link rel="stylesheet" href="../icon/ui-icon-svg.css"> -->
 	
 	<style>
-
+/* body { background: #222; } */
 .ui-circular-nav{ 
 	anchor-name: --circular-nav;
 	border: 0;
@@ -27,17 +27,34 @@
 	position: relative;	
 }
 
-button {
+button, label {
 	all: unset;
 	display: grid;
 	row-gap: 3px;
 	text-align: center;
 }
 
-button svg {
+:is(button, label) svg {
 	display: block;
 	inline-size: 100px;
 	block-size: 100px;
+	transition: all ease-in-out 0.2s;
+}
+
+label:hover svg {
+	scale: 1.1;
+}
+
+[type="radio"] {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
 }
 [popover] {
 	background: #EEE;
@@ -55,38 +72,41 @@ button svg {
 	}
 }
 	</style>
+
 </head>
 <body>
-	<!-- <h1>UI: Components</h1>
 
-	<h2>Circular Nav</h2>
-	<p>
-	</p> -->
+<fieldset class="ui-circular-nav" id="app">
+	<button popovertarget="n1" name="vehicle-trigger"><svg><use href="icons.svg#bil"></use></svg></button>
+	<button popovertarget="n2" name="roadtype-trigger"><svg><use href="icons.svg#landevej"></use></svg></button>
+	<button popovertarget="n3" name="speed-trigger"><svg><use href="icons.svg#80"></use></svg></button>
 
-<fieldset class="ui-circular-nav">
-	<button popovertarget="n1"><svg><use href="icons.svg#bil"></use></svg></button>
-	<button popovertarget="n2"><svg><use href="icons.svg#landevej"></use></svg></button>
-	<button popovertarget="n3"><svg><use href="icons.svg#80"></use></svg></button>
 	<fieldset id="n1" popover>
-		<button type="button"><svg><use href="icons.svg#bil"></use></svg><small>Personbil</small></button>
-		<button type="button"><svg><use href="icons.svg#motorcykel"></use></svg><small>Motorcykel</small></button>
-		<button type="button"><svg><use href="icons.svg#lastbil"></use></svg><small>Lastbil</small></button>
-		<button type="button"><svg><use href="icons.svg#bus"></use></svg><small>Bus</small></button>
-		<button type="button"><svg><use href="icons.svg#bus"></use></svg><small>Bus 100</small></button>
+		<label><input type="radio" name="vehicle" value="bil"><svg><use href="icons.svg#bil"></use></svg><small>Personbil</small></label>
+		<label><input type="radio" name="vehicle" value="motorcykel"><svg><use href="icons.svg#motorcykel"></use></svg><small>Motorcykel</small></label>
+		<label><input type="radio" name="vehicle" value="lastbil"><svg><use href="icons.svg#lastbil"></use></svg><small>Lastbil</small></label>
+		<label><input type="radio" name="vehicle" value="bus"><svg><use href="icons.svg#bus"></use></svg><small>Bus</small></label>
+		<label><input type="radio" name="vehicle" value="bus100"><svg><use href="icons.svg#bus"></use></svg><small>Bus 100</small></label>
 	</fieldset>
 	<fieldset id="n2" popover>
-		<button type="button"><svg><use href="icons.svg#byzone"></use></svg><small>Byzone</small></button>
-		<button type="button"><svg><use href="icons.svg#landevej"></use></svg><small>Landevej</small></button>
-		<button type="button"><svg><use href="icons.svg#motorvej"></use></svg><small>Motorvej</small></button>
+		<label><input type="radio" name="roadtype" value="byzone"><svg><use href="icons.svg#byzone"></use></svg><small>Byzone</small></label>
+		<label><input type="radio" name="roadtype" value="landevej"><svg><use href="icons.svg#landevej"></use></svg><small>Landevej</small></label>
+		<label><input type="radio" name="roadtype" value="motorvej"><svg><use href="icons.svg#motorvej"></use></svg><small>Motorvej</small></label>
 	</fieldset>
 	<fieldset id="n3" popover>
-		<button type="button"><svg><use href="icons.svg#30"></use></svg></button>
-		<button type="button"><svg><use href="icons.svg#40"></use></svg></button>
-		<button type="button"><svg><use href="icons.svg#50"></use></svg></button>
-		<button type="button"><svg><use href="icons.svg#60"></use></svg></button>
+		<label><input type="radio" name="speed" value="30"><svg><use href="icons.svg#30"></use></svg></label>
+		<label><input type="radio" name="speed" value="40"><svg><use href="icons.svg#40"></use></svg></label>
+		<label><input type="radio" name="speed" value="50"><svg><use href="icons.svg#50"></use></svg></label>
+		<label><input type="radio" name="speed" value="60"><svg><use href="icons.svg#60"></use></svg></label>
 	</fieldset>
 </fieldset>
 
+	<script>
+app.addEventListener('change', e => {
+	app.elements[`${e.target.name}-trigger`].querySelector('use')
+		.setAttribute('href', `icons.svg#${e.target.value}`);
+});
+	</script>
 
 </body>
 </html>
