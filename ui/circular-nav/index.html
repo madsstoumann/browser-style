@@ -18,6 +18,7 @@
 	anchor-name: --circular-nav;
 	border: 0;
 	display: flex;
+	font-family: system-ui;
 	gap: 2ch;
 	justify-content: center;
 	inline-size: fit-content;
@@ -27,45 +28,62 @@
 }
 
 button {
-	aspect-ratio: 1;
-	border-radius: 50%;
-	width: 5rem;
+	all: unset;
+	display: grid;
+	row-gap: 3px;
+	text-align: center;
+}
+
+button svg {
+	display: block;
+	inline-size: 100px;
+	block-size: 100px;
 }
 [popover] {
 	background: #EEE;
 	border: 0;
 	border-radius: 2ch;
+	flex-wrap: wrap;
+	gap: 2ch;
+	justify-content: center;
 	margin: 1rem 0;
+	padding: 2ch;
 	position-area: center bottom;
 	width: anchor-size(--circular-nav width);
+	&:popover-open {
+		display: flex; 
+	}
 }
 	</style>
 </head>
 <body>
-	<h1>UI: Components</h1>
+	<!-- <h1>UI: Components</h1>
 
 	<h2>Circular Nav</h2>
 	<p>
-	</p>
+	</p> -->
 
 <fieldset class="ui-circular-nav">
-	<button popovertarget="n1">N1</button>
-	<button popovertarget="n2">N2</button>
-	<button popovertarget="n3">N3</button>
+	<button popovertarget="n1"><svg><use href="icons.svg#bil"></use></svg></button>
+	<button popovertarget="n2"><svg><use href="icons.svg#landevej"></use></svg></button>
+	<button popovertarget="n3"><svg><use href="icons.svg#80"></use></svg></button>
 	<fieldset id="n1" popover>
-		<button type="button">A</button>
-		<button type="button">B</button>
-		<button type="button">C</button>
+		<button type="button"><svg><use href="icons.svg#bil"></use></svg><small>Personbil</small></button>
+		<button type="button"><svg><use href="icons.svg#motorcykel"></use></svg><small>Motorcykel</small></button>
+		<button type="button"><svg><use href="icons.svg#lastbil"></use></svg><small>Lastbil</small></button>
+		<button type="button"><svg><use href="icons.svg#bus"></use></svg><small>Bus</small></button>
+		<button type="button"><svg><use href="icons.svg#bus"></use></svg><small>Bus 100</small></button>
 	</fieldset>
 	<fieldset id="n2" popover>
-		<button type="button">D</button>
-		<button type="button">E</button>
-		<button type="button">F</button>
+		<button type="button"><svg><use href="icons.svg#byzone"></use></svg><small>Byzone</small></button>
+		<button type="button"><svg><use href="icons.svg#landevej"></use></svg><small>Landevej</small></button>
+		<button type="button"><svg><use href="icons.svg#motorvej"></use></svg><small>Motorvej</small></button>
 	</fieldset>
 	<fieldset id="n3" popover>
-		<button type="button">G</button>
-		<button type="button">H</button>
-		<button type="button">I</button>
+		<button type="button"><svg><use href="icons.svg#30"></use></svg></button>
+		<button type="button"><svg><use href="icons.svg#40"></use></svg></button>
+		<button type="button"><svg><use href="icons.svg#50"></use></svg></button>
+		<button type="button"><svg><use href="icons.svg#60"></use></svg></button>
 	</fieldset>
 </fieldset>
 
