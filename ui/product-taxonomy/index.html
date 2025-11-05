@@ -7,13 +7,20 @@
 	<meta name="description" content="Product Taxonomy Component - Search Google and Facebook product categories">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/ui/base/index.css">
+	<style>
+		.schema-preview { margin-block-start: 1rem; }
+		.schema-preview h4 { margin-block: 0.5rem 0.25rem; }
+		.schema-preview pre { background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem; border-radius: 0.25rem; }
+		.schema-boilerplate { color: #999; }
+	</style>
 </head>
 <body>
-	<h1>UI: Product Taxonomy</h1>
+	<h1>UI: Product Taxonomy (using Auto-Suggest)</h1>
 
 	<p>
-		The <code>&lt;product-taxonomy&gt;</code> component integrates with <code>&lt;auto-suggest&gt;</code>
+		This page demonstrates how to use the <code>&lt;auto-suggest&gt;</code> component
 		to provide searchable product category selection from Google or Facebook taxonomies.
+		The <code>createTaxonomySelector</code> factory function handles the data loading and parsing.
 	</p>
 
 	<h2>Examples</h2>
@@ -22,34 +29,52 @@
 		<h3>Google Product Taxonomy</h3>
 		<p>Search for product categories like "headphones", "shoes", "furniture", etc.</p>
 
-		<product-taxonomy
+		<auto-suggest
 			id="google-taxonomy"
-			data="google.txt"
-			schema="microdata json"
+			search-mode="local-keywords"
+			search-fields="path"
+			api-value-path="id"
+			api-display-path="path"
+			info-template="Loaded {count} categories"
+			status-template="Selected: {display}"
 			label="Google Product Category"
 			list-mode="ul"
+			minlength="2"
 			placeholder="e.g., headphones, coffee, toys"
-			noshadow>
+			noshadow
+			required>
 			<small slot="info"></small>
 			<small slot="status"></small>
-		</product-taxonomy>
+		</auto-suggest>
+		<div class="schema-preview" id="google-schema-preview" hidden>
+			<h4>Schema.org Microdata</h4><pre class="schema-microdata"></pre>
+			<h4>Schema.org JSON-LD</h4><pre class="schema-jsonld"></pre>
+		</div>
 	</section>
 
 	<section>
 		<h3>Facebook Product Taxonomy</h3>
 		<p>Search Facebook's product categories. Try "beverages", "toys", "furniture".</p>
 
-		<product-taxonomy
+		<auto-suggest
 			id="facebook-taxonomy"
-			data="facebook.txt"
-			schema="json"
+			search-mode="local-keywords"
+			search-fields="path"
+			api-value-path="id"
+			api-display-path="path"
+			info-template="Loaded {count} categories"
+			status-template="Selected: {display}"
 			label="Facebook Product Category"
-			placeholder="e.g., food, games, clothing"
 			list-mode="ul"
+			minlength="2"
+			placeholder="e.g., food, games, clothing"
 			noshadow>
 			<small slot="info"></small>
 			<small slot="status"></small>
-		</product-taxonomy>
+		</auto-suggest>
+		<div class="schema-preview" id="facebook-schema-preview" hidden>
+			<h4>Schema.org JSON-LD</h4><pre class="schema-jsonld"></pre>
+		</div>
 	</section>
 
 	<section>
@@ -59,7 +84,6 @@
 
 		<auto-suggest
 			id="fuzzy-taxonomy"
-			api="google.txt"
 			search-mode="local-fuzzy"
 			search-fields="path"
 			min-score="0.5"
@@ -71,78 +95,106 @@
 			list-mode="ul"
 			minlength="3"
 			placeholder="e.g., coffe, hphone, furnitur"
-			noshadow
-		>
+			status-template="Selected: {display}"
+			noshadow>
 			<small slot="info"></small>
 			<small slot="status"></small>
 		</auto-suggest>
 	</section>
 
 	<h2>Documentation</h2>
-	<p>For full documentation including attributes, properties, events, slots, and API methods, see the <a href="https://github.com/madsstoumann/browser-style/tree/main/ui/product-taxonomy">README</a>.</p>
+	<p>For full documentation, see the <a href="https://github.com/madsstoumann/browser-style/tree/main/ui/product-taxonomy">README</a>.</p>
 
 	<script type="module">
-		import {
-			ProductTaxonomy,
-			googleTaxonomyParser,
-			facebookTaxonomyParser,
-		} from './index.js';
+		import { createTaxonomySelector } from './factory.js';
+		import { googleTaxonomyParser, facebookTaxonomyParser } from './parsers.js';
 		import { AutoSuggest } from '../auto-suggest/index.js';
 
-		/**
-		 * Sets up event listeners for a product-taxonomy instance.
-		 * @param {string} id - The ID of the product-taxonomy element.
-		 * @param {function} parser - The parser function to use for this instance.
-		 */
-		function setupTaxonomyComponent(id, parser) {
-			const taxonomyEl = document.getElementById(id);
-			if (!taxonomyEl) return;
+		// --- Helper functions for Schema.org preview ---
+		function escapeHtml(str) {
+			return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		}
 
-			// Assign the parser
-			taxonomyEl.parser = parser;
+		function generateMicrodata(item) {
+			const categories = item.categories;
+			const boilerplate = `<span class="schema-boilerplate">${escapeHtml('<div itemscope itemtype="https://schema.org/Product">')}\n  ${escapeHtml('<meta itemprop="name" content="Example Product">')}</span>\n`;
+			let taxonomyHtml = `  ${escapeHtml('<div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">')}\n`;
+			taxonomyHtml += `    ${escapeHtml(`<meta itemprop="termCode" content="${item.id}">`)}\n`;
+			taxonomyHtml += `    ${escapeHtml(`<meta itemprop="name" content="${item.name}">`)}\n`;
+			if (categories.length > 1) {
+				taxonomyHtml += `    ${escapeHtml('<div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">')}\n`;
+				taxonomyHtml += `      ${escapeHtml(`<meta itemprop="name" content="${categories.slice(0, -1).join(' > ')}">`)}\n`;
+				taxonomyHtml += `    ${escapeHtml('</div>')}\n`;
+			}
+			taxonomyHtml += `  ${escapeHtml('</div>')}\n`;
+			taxonomyHtml += `<span class="schema-boilerplate">${escapeHtml('</div>')}</span>`;
+			return boilerplate + taxonomyHtml;
+		}
 
-			// Log selection events for debugging
-			taxonomyEl.addEventListener('taxonomySelect', (e) => {
+		function generateJsonLd(item) {
+			const jsonld = {
+				"@context": "https://schema.org",
+				"@type": "Product",
+				"name": "Example Product",
+				"category": {
+					"@type": "DefinedTerm",
+					"termCode": item.id,
+					"name": item.name,
+					"inDefinedTermSet": {
+						"@type": "DefinedTermSet",
+						"name": "Product Taxonomy"
+					},
+					"additionalProperty": {
+						"@type": "PropertyValue",
+						"name": "categoryPath",
+						"value": item.path
+					}
+				}
+			};
+			if (item.categories.length > 1) {
+				jsonld.category.inDefinedTermSet.name = item.categories.slice(0, -1).join(' > ');
+			}
+			return JSON.stringify(jsonld, null, 2);
+		}
+
+		function updateSchemaPreview(previewEl, item) {
+			if (!previewEl || !item) {
+				if(previewEl) previewEl.hidden = true;
+				return;
+			}
+			previewEl.hidden = false;
+			const microdataEl = previewEl.querySelector('.schema-microdata');
+			const jsonldEl = previewEl.querySelector('.schema-jsonld');
+
+			if (microdataEl) microdataEl.innerHTML = generateMicrodata(item);
+			if (jsonldEl) jsonldEl.textContent = generateJsonLd(item);
+		}
+
+		// --- Setup for each taxonomy instance ---
+		async function setupTaxonomyComponent(id, dataUrl, parser, schemaPreviewId) {
+			const autoSuggestEl = document.getElementById(id);
+			if (!autoSuggestEl) return;
+
+			await createTaxonomySelector(autoSuggestEl, { dataUrl, parser });
+
+			const schemaPreviewEl = document.getElementById(schemaPreviewId);
+
+			autoSuggestEl.addEventListener('autoSuggestSelect', (e) => {
 				console.log(`${id} selected:`, e.detail);
+				updateSchemaPreview(schemaPreviewEl, e.detail);
 			});
 
-			taxonomyEl.addEventListener('taxonomyClear', () => {
+			autoSuggestEl.addEventListener('autoSuggestClear', () => {
 				console.log(`${id} cleared`);
+				if (schemaPreviewEl) schemaPreviewEl.hidden = true;
 			});
 		}
 
-		// Setup both taxonomy components with their respective parsers
-		setupTaxonomyComponent('google-taxonomy', googleTaxonomyParser);
-		setupTaxonomyComponent('facebook-taxonomy', facebookTaxonomyParser);
+		// Initialize all taxonomy components
+		setupTaxonomyComponent('google-taxonomy', 'google.txt', googleTaxonomyParser, 'google-schema-preview');
+		setupTaxonomyComponent('facebook-taxonomy', 'facebook.txt', facebookTaxonomyParser, 'facebook-schema-preview');
+		setupTaxonomyComponent('fuzzy-taxonomy', 'google.txt', googleTaxonomyParser);
 
-		// Setup fuzzy search demo
-		const fuzzyEl = document.getElementById('fuzzy-taxonomy');
-
-		if (fuzzyEl) {
-			// Parse Google taxonomy data for fuzzy search
-			fetch(new URL('google.txt', import.meta.url))
-				.then(response => response.text())
-				.then(text => {
-					const lines = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
-					const parsed = lines.map(line => {
-						const item = googleTaxonomyParser(line);
-						if (item) {
-							return {
-								id: item.id,
-								path: item.path,
-								_searchText: item.path.toLowerCase()
-							};
-						}
-						return null;
-					}).filter(Boolean);
-
-					fuzzyEl.fullDataset = parsed;
-				});
-
-			fuzzyEl.addEventListener('autoSuggestSelect', (e) => {
-				console.log('Fuzzy search selected:', e.detail);
-			});
-		}
 	</script>
 </body>
 </html>
