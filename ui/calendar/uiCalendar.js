@@ -45,7 +45,7 @@ export default function uiCalendar(node, args = {}) {
 	}
 
 	const date = config.date ? new Date(config.date) : today;
-	if (!config.info) config.info = new Intl.Locale(config.locale).weekInfo || { firstDay: 7, weekend: [6, 7] };
+	if (!config.info) config.info = new Intl.Locale(config.locale).getWeekInfo() || { firstDay: 7, weekend: [6, 7] };
 	node.innerHTML = config.year ? [...Array(12).keys()].map(i => render(new Date(date.getFullYear(), i, date.getDate()), config.locale, date.getMonth())).join('') : render(date, config.locale)
 }
 
