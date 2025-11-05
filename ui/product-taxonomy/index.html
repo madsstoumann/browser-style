@@ -20,7 +20,7 @@
 	<p>
 		This page demonstrates how to use the <code>&lt;auto-suggest&gt;</code> component
 		to provide searchable product category selection from Google or Facebook taxonomies.
-		The <code>createTaxonomySelector</code> factory function handles the data loading and parsing.
+		The <code>createTaxonomySelector</code> factory function handles the data loading and parsing from local copies of the <a href="https://www.google.com/basepages/producttype/taxonomy.en-US.txt" target="_blank">Google</a> and <a href="https://www.facebook.com/products/categories/en_US.txt" target="_blank">Facebook</a> feeds.
 	</p>
 
 	<h2>Examples</h2>
@@ -41,8 +41,7 @@
 			list-mode="ul"
 			minlength="2"
 			placeholder="e.g., headphones, coffee, toys"
-			noshadow
-			required>
+			noshadow>
 			<small slot="info"></small>
 			<small slot="status"></small>
 		</auto-suggest>
@@ -101,9 +100,6 @@
 			<small slot="status"></small>
 		</auto-suggest>
 	</section>
-
-	<h2>Documentation</h2>
-	<p>For full documentation, see the <a href="https://github.com/madsstoumann/browser-style/tree/main/ui/product-taxonomy">README</a>.</p>
 
 	<script type="module">
 		import { createTaxonomySelector } from './factory.js';

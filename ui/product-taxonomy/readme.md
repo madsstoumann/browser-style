@@ -1,42 +1,67 @@
 # @browser.style/product-taxonomy
 
-A flexible, zero-dependency web component for searching product taxonomies from any text-based data source. It features a pluggable parser system, an intelligent keyword-based search, and an optional, built-in preview for Schema.org microdata and JSON-LD.
+A factory for configuring the [`@browser.style/auto-suggest`](https://github.com/madsstoumann/browser-style/tree/main/ui/auto-suggest) component to search product taxonomies. It includes ready-to-use parsers for Google and Facebook product feeds and can automatically render Schema.org previews for selected categories.
 
-It is a wrapper around the [`@browser.style/auto-suggest`](https://github.com/madsstoumann/browser-style/tree/main/ui/auto-suggest) component.
+This package has been refactored to a factory-based approach. It no longer provides a `<product-taxonomy>` web component.
 
 ## Installation
 
 ```bash
-npm install @browser.style/product-taxonomy
+npm install @browser.style/product-taxonomy @browser.style/auto-suggest
 ```
+
+> **Note**: This package is a configuration layer and requires `@browser.style/auto-suggest` as a `peerDependency`. You must have both installed.
 
 ## Usage
 
-The component is designed to be generic. You provide a data file and a parser function to tell the component how to read your taxonomy format. Default parsers for Google and Facebook formats are included for convenience.
+The factory enhances a standard `<auto-suggest>` element, handling the data fetching, parsing, and setup.
 
 ### Basic Example (Google Taxonomy)
 
-1.  **HTML**: Place the component in your HTML and provide a path to your taxonomy data file.
+1.  **HTML**: Place an `<auto-suggest>` component in your HTML.
 
     ```html
-    <product-taxonomy id="google-tax" data="google.txt"></product-taxonomy>
+    <auto-suggest
+      id="google-taxonomy"
+      label="Google Product Category"
+      placeholder="e.g., headphones, coffee, toys"
+      noshadow
+    ></auto-suggest>
     ```
 
-2.  **JavaScript**: Import the component and one of the default parsers. Then, assign the parser to the component's `parser` property.
+2.  **JavaScript**: Import the factory and a parser. Then, call the factory with the element and your options.
 
     ```javascript
-    import {
-    	ProductTaxonomy,
-    	googleTaxonomyParser,
-    } from '@browser.style/product-taxonomy';
+    import { createTaxonomySelector, googleTaxonomyParser } from '@browser.style/product-taxonomy';
+    import '@browser.style/auto-suggest';
 
-    const taxonomyEl = document.getElementById('google-tax');
-    taxonomyEl.parser = googleTaxonomyParser;
+    const autoSuggestEl = document.getElementById('google-taxonomy');
+
+    createTaxonomySelector(autoSuggestEl, {
+      dataUrl: 'google.txt', // Path to the local taxonomy file
+      parser: googleTaxonomyParser
+    });
     ```
+
+### Displaying Schema.org Previews
+
+The factory can automatically render a preview of the generated Schema.org markup. To enable this, add the `schema` attribute to your `<auto-suggest>` element. The factory will detect it and inject the preview elements into the DOM.
+
+-   `schema="microdata"`: Shows Microdata preview.
+-   `schema="jsonld"`: Shows JSON-LD preview.
+-   `schema="microdata jsonld"`: Shows both.
+
+```html
+<auto-suggest
+  id="google-taxonomy"
+  label="Google Product Category"
+  schema="microdata jsonld"
+></auto-suggest>
+```
 
 ### Advanced Example (Custom Parser)
 
-If you have a custom taxonomy format, you can easily support it by writing your own parser function.
+You can support any taxonomy format by writing a custom parser function.
 
 **Data file (`custom.txt`)**:
 
@@ -48,56 +73,49 @@ SKU-456 :: Home & Garden | Kitchen | Appliances
 **HTML & JS**:
 
 ```html
-<product-taxonomy id="custom-tax" data="custom.txt"></product-taxonomy>
+<auto-suggest id="custom-taxonomy" label="Custom Category"></auto-suggest>
 
 <script type="module">
-	import { ProductTaxonomy } from '@browser.style/product-taxonomy';
+  import { createTaxonomySelector } from '@browser.style/product-taxonomy';
+  import '@browser.style/auto-suggest';
 
-	const customTaxonomyEl = document.getElementById('custom-tax');
+  const autoSuggestEl = document.getElementById('custom-taxonomy');
 
-	// Define a function that processes one line of your file
-	const myCustomParser = (line) => {
-		const [id, path] = line.split(' :: ');
-		if (!id || !path) return null;
-		const categories = path.split(' | ').map((c) => c.trim());
-		return {
-			id,
-			name: categories[categories.length - 1],
-			path,
-			categories,
-		};
-	};
+  // Define a function that processes one line of your file
+  const myCustomParser = (line) => {
+    const [id, path] = line.split(' :: ');
+    if (!id || !path) return null;
+    const categories = path.split(' | ').map((c) => c.trim());
+    return {
+      id,
+      name: categories[categories.length - 1],
+      path,
+      categories,
+    };
+  };
 
-	// Assign your custom parser
-	customTaxonomyEl.parser = myCustomParser;
+  // Use your custom parser in the factory
+  createTaxonomySelector(autoSuggestEl, {
+    dataUrl: 'custom.txt',
+    parser: myCustomParser
+  });
 </script>
 ```
 
-> **Note on Schema Generation**: The component's ability to generate Schema.org microdata and JSON-LD depends on the object structure returned by your parser. For the schema generation to work correctly, your parser **must** return an object containing these four properties:
-> - `id`: The unique category ID.
-> - `name`: The final category name.
-> - `path`: The full, human-readable category path.
-> - `categories`: An array of the individual category names.
+> **Note on Schema Generation**: For the schema preview to work correctly, your parser **must** return an object containing these four properties: `id`, `name`, `path`, and `categories`.
 
-### Displaying Schema.org Previews
+## Factory API
 
-To help with debugging and verification, you can have the component render a preview of the generated Schema.org markup.
+### `createTaxonomySelector(autoSuggestElement, options)`
 
-Use the `schema` attribute with space-separated values:
+-   **`autoSuggestElement`**: The `<auto-suggest>` DOM element to enhance.
+-   **`options`**: An object with the following properties:
+    -   `dataUrl` (required): The URL or local path to the taxonomy data file.
+    -   `parser` (required): A function that takes a line of text from the data file and returns a structured object.
 
--   `schema="microdata"`: Shows Microdata preview.
--   `schema="json"`: Shows JSON-LD preview.
--   `schema="microdata json"`: Shows both.
+## Component API
 
-```html
-<product-taxonomy
-	id="google-tax"
-	data="google.txt"
-	schema="microdata json"
-></product-taxonomy>
-```
-
-## Attributes
+For attributes, properties, events, and slots, please refer to the documentation for the [`@browser.style/auto-suggest`](https://github.com/madsstoumann/browser-style/tree/main/ui/auto-suggest) component. The factory configures the `auto-suggest` component, which then behaves according to its own API.
 
 -   `data` **(Required)**: Path to the taxonomy text file.
 -   `schema`: Space-separated values. Include "microdata" or "json" to show schema previews.

@@ -1,9 +1,84 @@
 /**
- * @file A factory function to enhance an <auto-suggest> element with taxonomy data.
+ * @file A factory function to enhance an <auto-suggest> element with taxonomy data and schema rendering.
  * @author Mads Stoumann
- * @version 1.4.0
+ * @version 2.0.0
  * @summary 05-11-2025
  */
+
+// --- Helper functions for Schema.org preview ---
+function escapeHtml(str) {
+	return str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function generateMicrodata(item) {
+	const categories = item.categories;
+	const boilerplate = `<span class="schema-boilerplate">${escapeHtml('<div itemscope itemtype="https://schema.org/Product">')}\n  ${escapeHtml('<meta itemprop="name" content="Example Product">')}</span>\n`;
+	let taxonomyHtml = `  ${escapeHtml('<div itemprop="category" itemscope itemtype="https://schema.org/DefinedTerm">')}\n`;
+	taxonomyHtml += `    ${escapeHtml(`<meta itemprop="termCode" content="${item.id}">`)}\n`;
+	taxonomyHtml += `    ${escapeHtml(`<meta itemprop="name" content="${item.name}">`)}\n`;
+	if (categories.length > 1) {
+		taxonomyHtml += `    ${escapeHtml('<div itemprop="inDefinedTermSet" itemscope itemtype="https://schema.org/DefinedTermSet">')}\n`;
+		taxonomyHtml += `      ${escapeHtml(`<meta itemprop="name" content="${categories.slice(0, -1).join(' > ')}">`)}\n`;
+		taxonomyHtml += `    ${escapeHtml('</div>')}\n`;
+	}
+	taxonomyHtml += `  ${escapeHtml('</div>')}\n`;
+	taxonomyHtml += `<span class="schema-boilerplate">${escapeHtml('</div>')}</span>`;
+	return boilerplate + taxonomyHtml;
+}
+
+function generateJsonLd(item) {
+	const jsonld = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		"name": "Example Product",
+		"category": {
+			"@type": "DefinedTerm",
+			"termCode": item.id,
+			"name": item.name,
+			"inDefinedTermSet": {
+				"@type": "DefinedTermSet",
+				"name": "Product Taxonomy"
+			},
+			"additionalProperty": {
+				"@type": "PropertyValue",
+				"name": "categoryPath",
+				"value": item.path
+			}
+		}
+	};
+	if (item.categories.length > 1) {
+		jsonld.category.inDefinedTermSet.name = item.categories.slice(0, -1).join(' > ');
+	}
+	return JSON.stringify(jsonld, null, 2);
+}
+
+function createSchemaPreviewElement(schemaTypes) {
+	const container = document.createElement('div');
+	container.className = 'schema-preview';
+	container.hidden = true;
+
+	if (schemaTypes.includes('microdata')) {
+		container.innerHTML += `<h4>Schema.org Microdata</h4><pre class="schema-microdata"></pre>`;
+	}
+	if (schemaTypes.includes('jsonld')) {
+		container.innerHTML += `<h4>Schema.org JSON-LD</h4><pre class="schema-jsonld"></pre>`;
+	}
+	return container;
+}
+
+function updateSchemaPreview(previewEl, item) {
+	if (!previewEl || !item) {
+		if (previewEl) previewEl.hidden = true;
+		return;
+	}
+	previewEl.hidden = false;
+	const microdataEl = previewEl.querySelector('.schema-microdata');
+	const jsonldEl = previewEl.querySelector('.schema-jsonld');
+
+	if (microdataEl) microdataEl.innerHTML = generateMicrodata(item);
+	if (jsonldEl) jsonldEl.textContent = generateJsonLd(item);
+}
+
 
 /**
  * Fetches and parses taxonomy data from a given URL.
@@ -63,6 +138,22 @@ export async function createTaxonomySelector(autoSuggestElement, { dataUrl, pars
 			detail: { count: parsedData.length },
 			bubbles: true
 		}));
+
+		// Handle schema rendering if requested
+		const schemaAttr = autoSuggestElement.getAttribute('schema');
+		if (schemaAttr) {
+			const schemaTypes = schemaAttr.split(' ').filter(Boolean);
+			const schemaPreviewEl = createSchemaPreviewElement(schemaTypes);
+			autoSuggestElement.insertAdjacentElement('afterend', schemaPreviewEl);
+
+			autoSuggestElement.addEventListener('autoSuggestSelect', (e) => {
+				updateSchemaPreview(schemaPreviewEl, e.detail);
+			});
+
+			autoSuggestElement.addEventListener('autoSuggestClear', () => {
+				if (schemaPreviewEl) schemaPreviewEl.hidden = true;
+			});
+		}
 
 	} catch (error) {
 		console.error('Error setting up taxonomy selector:', error);
