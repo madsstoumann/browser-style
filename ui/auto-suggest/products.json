@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1",
+    "name": "MacBook Pro",
+    "category": "Electronics > Computers > Laptops",
+    "brand": "Apple",
+    "description": "High-performance laptop for professionals",
+    "price": 2499,
+    "sku": "MBP-16-2024"
+  },
+  {
+    "id": "2",
+    "name": "iPhone 15 Pro",
+    "category": "Electronics > Mobile Phones > Smartphones",
+    "brand": "Apple",
+    "description": "Latest flagship smartphone with advanced camera",
+    "price": 1199,
+    "sku": "IPH-15-PRO"
+  },
+  {
+    "id": "3",
+    "name": "Sony WH-1000XM5",
+    "category": "Electronics > Audio > Headphones",
+    "brand": "Sony",
+    "description": "Premium noise-cancelling wireless headphones",
+    "price": 399,
+    "sku": "SONY-WH-1000XM5"
+  },
+  {
+    "id": "4",
+    "name": "Samsung Galaxy S24",
+    "category": "Electronics > Mobile Phones > Smartphones",
+    "brand": "Samsung",
+    "description": "Flagship Android smartphone with AI features",
+    "price": 999,
+    "sku": "SAMS-S24-ULTRA"
+  },
+  {
+    "id": "5",
+    "name": "Dell XPS 15",
+    "category": "Electronics > Computers > Laptops",
+    "brand": "Dell",
+    "description": "Premium Windows laptop with stunning display",
+    "price": 1799,
+    "sku": "DELL-XPS-15"
+  },
+  {
+    "id": "6",
+    "name": "AirPods Pro",
+    "category": "Electronics > Audio > Earbuds",
+    "brand": "Apple",
+    "description": "Wireless earbuds with active noise cancellation",
+    "price": 249,
+    "sku": "APP-PRO-2"
+  },
+  {
+    "id": "7",
+    "name": "LG OLED TV 65\"",
+    "category": "Electronics > Home Entertainment > Televisions",
+    "brand": "LG",
+    "description": "Premium OLED smart TV with 4K resolution",
+    "price": 2299,
+    "sku": "LG-OLED65"
+  },
+  {
+    "id": "8",
+    "name": "Coffee Maker Deluxe",
+    "category": "Home & Kitchen > Appliances > Coffee Makers",
+    "brand": "Breville",
+    "description": "Programmable coffee maker with thermal carafe",
+    "price": 199,
+    "sku": "BREV-CM-DLX"
+  },
+  {
+    "id": "9",
+    "name": "Running Shoes Pro",
+    "category": "Sports & Outdoors > Athletic Shoes > Running",
+    "brand": "Nike",
+    "description": "Lightweight running shoes with responsive cushioning",
+    "price": 159,
+    "sku": "NIKE-RUN-PRO"
+  },
+  {
+    "id": "10",
+    "name": "Yoga Mat Premium",
+    "category": "Sports & Outdoors > Fitness > Yoga Equipment",
+    "brand": "Lululemon",
+    "description": "Extra-thick yoga mat with superior grip",
+    "price": 89,
+    "sku": "LULU-YOGA-MAT"
+  },
+  {
+    "id": "11",
+    "name": "Gaming Mouse RGB",
+    "category": "Electronics > Computers > Accessories > Mice",
+    "brand": "Logitech",
+    "description": "High-precision gaming mouse with customizable RGB",
+    "price": 79,
+    "sku": "LOG-G502"
+  },
+  {
+    "id": "12",
+    "name": "Mechanical Keyboard",
+    "category": "Electronics > Computers > Accessories > Keyboards",
+    "brand": "Corsair",
+    "description": "RGB mechanical gaming keyboard with Cherry MX switches",
+    "price": 149,
+    "sku": "CORS-K70-RGB"
+  },
+  {
+    "id": "13",
+    "name": "Espresso Machine",
+    "category": "Home & Kitchen > Appliances > Coffee > Espresso Makers",
+    "brand": "DeLonghi",
+    "description": "Professional espresso and cappuccino machine",
+    "price": 699,
+    "sku": "DELONG-ESP-PRO"
+  },
+  {
+    "id": "14",
+    "name": "Smart Watch Ultra",
+    "category": "Electronics > Wearables > Smartwatches",
+    "brand": "Apple",
+    "description": "Rugged smartwatch with advanced health tracking",
+    "price": 799,
+    "sku": "APW-ULTRA-2"
+  },
+  {
+    "id": "15",
+    "name": "Portable SSD 2TB",
+    "category": "Electronics > Computers > Storage > External Drives",
+    "brand": "Samsung",
+    "description": "Ultra-fast portable solid state drive",
+    "price": 199,
+    "sku": "SAMS-T7-2TB"
+  },
+  {
+    "id": "16",
+    "name": "Wireless Charger Pad",
+    "category": "Electronics > Accessories > Chargers > Wireless",
+    "brand": "Anker",
+    "description": "Fast wireless charging pad for smartphones",
+    "price": 29,
+    "sku": "ANK-WC-15W"
+  },
+  {
+    "id": "17",
+    "name": "Bluetooth Speaker",
+    "category": "Electronics > Audio > Portable Speakers",
+    "brand": "JBL",
+    "description": "Waterproof portable Bluetooth speaker",
+    "price": 129,
+    "sku": "JBL-FLIP-6"
+  },
+  {
+    "id": "18",
+    "name": "Office Chair Ergonomic",
+    "category": "Furniture > Office > Chairs",
+    "brand": "Herman Miller",
+    "description": "Premium ergonomic office chair with lumbar support",
+    "price": 1295,
+    "sku": "HM-AERON-B"
+  },
+  {
+    "id": "19",
+    "name": "Standing Desk Electric",
+    "category": "Furniture > Office > Desks",
+    "brand": "Uplift",
+    "description": "Height-adjustable electric standing desk",
+    "price": 799,
+    "sku": "UPL-V2-60"
+  },
+  {
+    "id": "20",
+    "name": "Camera Mirrorless",
+    "category": "Electronics > Cameras > Mirrorless Cameras",
+    "brand": "Sony",
+    "description": "Full-frame mirrorless camera with 4K video",
+    "price": 2499,
+    "sku": "SONY-A7IV"
+  }
+]

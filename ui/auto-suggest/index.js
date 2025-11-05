@@ -4,8 +4,8 @@ import { FormElement } from '../common/form.element.js';
  * AutoSuggest
  * @description <auto-suggest> is a custom element that provides a search input field with auto-suggest functionality.
  * @author Mads Stoumann
- * @version 1.0.24
- * @summary 10-01-2025
+ * @version 1.0.25
+ * @summary 05-11-2025
  * @class AutoSuggest
  * @extends {FormElement}
  */
@@ -18,11 +18,12 @@ export class AutoSuggest extends FormElement {
 	constructor() {
 		super();
 		this.data = [];
+		this.fullDataset = null;
 	}
 
 	initializeComponent() {
 		this.displayValue = this.getAttribute('display') || '';
-		
+
 		this.defaultValues = {
 			input: this.getAttribute('display') || '',
 			value: this.getAttribute('value') || ''
@@ -31,7 +32,7 @@ export class AutoSuggest extends FormElement {
 		this.initialObject = JSON.parse(this.getAttribute('initial-object') || 'null');
 		this.listId = `list${this.uuid()}`;
 
-		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'debounce', 'invalid', 'label', 'list-mode'].reduce((s, attr) => {
+		this.settings = ['api', 'api-array-path', 'api-display-path', 'api-text-path', 'api-value-path', 'cache', 'debounce', 'info-template', 'status-template', 'invalid', 'label', 'list-mode', 'search-mode', 'search-fields', 'search-operator', 'search-transform'].reduce((s, attr) => {
 			s[attr.replace(/-([a-z])/g, (_, l) => l.toUpperCase())] = this.getAttribute(attr) ?? null;
 			return s;
 		}, {});
@@ -46,9 +47,39 @@ export class AutoSuggest extends FormElement {
 		this.settings.nolimit = this.hasAttribute('nolimit');
 		this.settings.debounceTime = parseInt(this.settings.debounce) || 300;
 
+		// Search mode settings
+		this.settings.searchMode = this.settings.searchMode || 'api';
+		this.settings.searchFields = this.settings.searchFields ?
+			this.settings.searchFields.split(',').map(f => f.trim()) :
+			[this.settings.apiDisplayPath || 'name'];
+		this.settings.searchOperator = (this.settings.searchOperator || 'AND').toUpperCase();
+		this.settings.searchTransform = this.settings.searchTransform || 'lowercase';
+
+		// Preserve slot elements before replacing innerHTML (for noshadow mode)
+		// Use array to maintain original DOM order
+		const preservedSlots = this.hasAttribute('noshadow') ?
+			Array.from(this.querySelectorAll('[slot="info"], [slot="status"]'))
+			: null;
+
 		this.root.innerHTML = this.template();
 		this.input = this.root.querySelector('input');
 		this.list = this.root.querySelector(`#${this.listId}`);
+
+		// Restore or get slot references for status updates
+		if (preservedSlots) {
+			// Re-append preserved slots to the nav element in original order
+			const nav = this.root.querySelector('nav[part="slots"]');
+			if (nav) {
+				preservedSlots.forEach(slot => nav.appendChild(slot));
+			}
+			// Set references based on slot name
+			this.infoSlot = preservedSlots.find(el => el.getAttribute('slot') === 'info');
+			this.statusSlot = preservedSlots.find(el => el.getAttribute('slot') === 'status');
+		} else {
+			// Shadow DOM: get slot references
+			this.infoSlot = this.querySelector('[slot="info"]');
+			this.statusSlot = this.querySelector('[slot="status"]');
+		}
 
 		if (this.isFormElement) {
 			this.input.value = this.displayValue;
@@ -58,6 +89,13 @@ export class AutoSuggest extends FormElement {
 
 		this.debouncedFetch = this.debounced(this.settings.debounceTime, this.fetchData.bind(this));
 		this.addEvents();
+
+		// Pre-load data for local search modes
+		if (this.settings.searchMode.startsWith('local')) {
+			this.fetchLocalData('').catch(err => {
+				console.error('Failed to pre-load data:', err);
+			});
+		}
 	}
 
 	get displayValue() {
@@ -112,7 +150,7 @@ export class AutoSuggest extends FormElement {
 		});
 
 		this.input.addEventListener('search', () => {
-			if (this.input.value.length === 0) this.reset(false);
+			if (this.input.value.length === 0) this.reset(true);
 			else if (!this.settings.nolimit) {
 				const option = selected();
 				this.input.setCustomValidity(option ? '' : this.settings.invalid);
@@ -136,10 +174,21 @@ export class AutoSuggest extends FormElement {
 
 	formReset() {
 		this.resetToDefault();
+		this.updateStatus('');
 		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
 	}
 
 	async fetchData(value) {
+		// Handle different search modes
+		if (this.settings.searchMode.startsWith('local')) {
+			await this.fetchLocalData(value);
+		} else {
+			// Default API mode
+			await this.fetchApiData(value);
+		}
+	}
+
+	async fetchApiData(value) {
 		if (!this.settings.cache || !this.data.length) {
 			this.dispatchEvent(new CustomEvent('autoSuggestFetchStart', { bubbles: true }));
 			try {
@@ -147,7 +196,7 @@ export class AutoSuggest extends FormElement {
 				const data = await response.json();
 				this.dispatchEvent(new CustomEvent('autoSuggestFetchEnd', { bubbles: true }));
 
-				this.data = this.settings.apiArrayPath ? 
+				this.data = this.settings.apiArrayPath ?
 					this.getNestedValue(data, this.settings.apiArrayPath) || [] :
 					Array.isArray(data) ? data : [];
 
@@ -165,6 +214,203 @@ export class AutoSuggest extends FormElement {
 				this.dispatchEvent(new CustomEvent('autoSuggestFetchError', { detail: error, bubbles: true }));
 			}
 		}
+	}
+
+	async fetchLocalData(value) {
+		// Load data once if not already loaded (or if it was externally injected)
+		if (!this.fullDataset || !this.fullDataset.length) {
+			this.dispatchEvent(new CustomEvent('autoSuggestFetchStart', { bubbles: true }));
+			try {
+				const response = await fetch(this.settings.api);
+				const data = await response.json();
+				this.dispatchEvent(new CustomEvent('autoSuggestFetchEnd', { bubbles: true }));
+
+				this.fullDataset = this.settings.apiArrayPath ?
+					this.getNestedValue(data, this.settings.apiArrayPath) || [] :
+					Array.isArray(data) ? data : [];
+
+				// Pre-process data for search optimization (only if not already pre-processed)
+				if (this.fullDataset.length > 0 && !this.fullDataset[0]._searchText) {
+					this.fullDataset = this.fullDataset.map(item => {
+						const searchText = this.settings.searchFields
+							.map(field => this.getNestedValue(item, field))
+							.filter(Boolean)
+							.join(' ');
+						return {
+							...item,
+							_searchText: this.transformSearchText(searchText)
+						};
+					});
+				}
+
+				// Update info slot with dataset size (only once on load)
+				if (this.infoSlot) {
+					const template = this.settings.infoTemplate || '{count} items loaded';
+					this.updateInfo(template.replace('{count}', this.fullDataset.length));
+				}
+			} catch (error) {
+				this.dispatchEvent(new CustomEvent('autoSuggestFetchError', { detail: error, bubbles: true }));
+				return;
+			}
+		}
+
+		// Skip filtering if no search query (pre-loading scenario)
+		if (!value || value.length < this.settings.minLength) {
+			return;
+		}
+
+		// Filter data locally
+		const filtered = this.filterLocalData(value);
+		this.data = filtered;
+
+		if (!filtered.length) {
+			this.dispatchEvent(new CustomEvent('autoSuggestNoResults', { bubbles: true }));
+		}
+
+		this.list.innerHTML = this.render(filtered);
+
+		if (this.settings.listMode === 'ul' && filtered.length) {
+			this.list.togglePopover(true);
+			this.setAttribute('open', '');
+		}
+	}
+
+	transformSearchText(text) {
+		if (this.settings.searchTransform === 'lowercase') {
+			return text.toLowerCase();
+		} else if (this.settings.searchTransform === 'uppercase') {
+			return text.toUpperCase();
+		}
+		return text;
+	}
+
+	filterLocalData(query) {
+		const transformedQuery = this.transformSearchText(query);
+
+		if (this.settings.searchMode === 'local-keywords') {
+			return this.filterByKeywords(transformedQuery);
+		} else if (this.settings.searchMode === 'local-fuzzy') {
+			return this.filterByFuzzy(transformedQuery);
+		} else {
+			// Default local mode - simple includes
+			return this.fullDataset.filter(item =>
+				item._searchText.includes(transformedQuery)
+			);
+		}
+	}
+
+	filterByKeywords(query) {
+		const searchTerms = query.split(' ').filter(Boolean);
+
+		return this.fullDataset.filter(item => {
+			if (this.settings.searchOperator === 'AND') {
+				// All terms must match
+				return searchTerms.every(term => item._searchText.includes(term));
+			} else {
+				// Any term can match (OR)
+				return searchTerms.some(term => item._searchText.includes(term));
+			}
+		});
+	}
+
+	/**
+	 * Calculates Levenshtein distance between two strings
+	 * @param {string} a - First string
+	 * @param {string} b - Second string
+	 * @returns {number} - Edit distance between strings
+	 */
+	levenshteinDistance(a, b) {
+		const matrix = [];
+
+		// Initialize first column
+		for (let i = 0; i <= b.length; i++) {
+			matrix[i] = [i];
+		}
+
+		// Initialize first row
+		for (let j = 0; j <= a.length; j++) {
+			matrix[0][j] = j;
+		}
+
+		// Fill in the rest of the matrix
+		for (let i = 1; i <= b.length; i++) {
+			for (let j = 1; j <= a.length; j++) {
+				if (b.charAt(i - 1) === a.charAt(j - 1)) {
+					matrix[i][j] = matrix[i - 1][j - 1];
+				} else {
+					matrix[i][j] = Math.min(
+						matrix[i - 1][j - 1] + 1, // substitution
+						matrix[i][j - 1] + 1,     // insertion
+						matrix[i - 1][j] + 1      // deletion
+					);
+				}
+			}
+		}
+
+		return matrix[b.length][a.length];
+	}
+
+	/**
+	 * Calculates similarity score between two strings (0-1)
+	 * @param {string} query - Search query
+	 * @param {string} target - Target string
+	 * @returns {number} - Similarity score (0 = no match, 1 = exact match)
+	 */
+	calculateSimilarity(query, target) {
+		const distance = this.levenshteinDistance(query, target);
+		const maxLength = Math.max(query.length, target.length);
+		return 1 - (distance / maxLength);
+	}
+
+	/**
+	 * Fuzzy search implementation
+	 * @param {string} query - Search query
+	 * @returns {Array} - Filtered and scored results
+	 */
+	filterByFuzzy(query) {
+		const searchTerms = query.split(' ').filter(Boolean);
+		const minScore = parseFloat(this.getAttribute('min-score') || '0.6');
+		const maxResults = parseInt(this.getAttribute('max-results') || '50');
+
+		// Score each item
+		const scoredResults = this.fullDataset.map(item => {
+			let totalScore = 0;
+
+			// Check each search term
+			for (const term of searchTerms) {
+				let bestScore = 0;
+
+				// Split the target text into words
+				const targetWords = item._searchText.split(/\s+/);
+
+				// Find best matching word for this term
+				for (const word of targetWords) {
+					// Exact substring match gets highest score
+					if (word.includes(term)) {
+						bestScore = Math.max(bestScore, 1.0);
+					}
+					// Otherwise use fuzzy matching
+					else {
+						const similarity = this.calculateSimilarity(term, word);
+						bestScore = Math.max(bestScore, similarity);
+					}
+				}
+
+				totalScore += bestScore;
+			}
+
+			// Average score across all terms
+			const avgScore = totalScore / searchTerms.length;
+
+			return { item, score: avgScore };
+		});
+
+		// Filter by minimum score and sort by relevance
+		return scoredResults
+			.filter(result => result.score >= minScore)
+			.sort((a, b) => b.score - a.score)
+			.slice(0, maxResults)
+			.map(result => result.item);
 	}
 
 	getNestedValue(obj, key) {
@@ -185,16 +431,19 @@ export class AutoSuggest extends FormElement {
 	}
 
 	reset(fullReset = true) {
-		if (fullReset) this.resetToDefault();
+		if (fullReset) {
+			this.resetToDefault();
+			this.updateStatus('');
+		}
 		this.data = [];
 		this.list.innerHTML = this.settings.listMode === 'ul' ? '' : '<option value="">';
-		
+
 		if (this.settings.listMode === 'ul') {
 			this.list.scrollTo(0, 0);
 			this.list.togglePopover(false);
 			this.removeAttribute('open');
 		}
-		
+
 		this.input.setCustomValidity('');
 		this.dispatchEvent(new CustomEvent('autoSuggestClear', { bubbles: true }));
 	}
@@ -231,6 +480,14 @@ export class AutoSuggest extends FormElement {
 			this.input.value = displayText;
 		}
 
+		// Update status slot with template if provided
+		if (this.statusSlot && this.settings.statusTemplate) {
+			const statusText = this.settings.statusTemplate
+				.replace('{display}', displayText)
+				.replace('{value}', value);
+			this.updateStatus(statusText);
+		}
+
 		this.reset(false);
 		this.dispatch(obj);
 		setTimeout(() => this.input.focus(), 0);
@@ -263,8 +520,20 @@ export class AutoSuggest extends FormElement {
 		});
 	}
 
+	updateInfo(message) {
+		if (this.infoSlot) {
+			this.infoSlot.textContent = message;
+		}
+	}
+
+	updateStatus(message) {
+		if (this.statusSlot) {
+			this.statusSlot.textContent = message;
+		}
+	}
+
 	template() {
-		const list = this.settings.listMode === 'ul' 
+		const list = this.settings.listMode === 'ul'
 			? `<ul popover id="${this.listId}" part="list" role="listbox" style="position-anchor:--${this.listId}"></ul>`
 			: `<datalist id="${this.listId}" part="list"></datalist>`;
 		return `
@@ -283,7 +552,11 @@ export class AutoSuggest extends FormElement {
 					type="${this.getAttribute('type') || 'search'}"
 					value="${this.defaultValues.input}">
 			${this.settings.label ? '</label>' : ''}
-			${list}`;
+			${list}
+			<nav part="slots">
+				<slot name="info" part="info"></slot>
+				<slot name="status" part="status"></slot>
+			</nav>`;
 	}
 }
 

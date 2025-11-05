@@ -108,10 +108,35 @@ Use the `schema` attribute with space-separated values:
 -   `list-mode`: Either "datalist" or "ul" (default: "datalist").
 -   `noshadow`: Render the underlying `auto-suggest` without a shadow DOM.
 -   `required`: Make the field required.
+-   `info-template`: Template for info slot text (use `{count}` placeholder, default: 'Loaded {count} categories')
 
 ## Properties
 
 -   `parser`: A JavaScript function that takes a string (a line from the data file) and returns a structured object: `{ id, name, path, categories }`. Defaults to `googleTaxonomyParser`.
+
+## Slots
+
+The component supports two named slots inherited from the underlying `auto-suggest` component:
+
+### `slot="info"`
+Static, persistent information that remains visible. Automatically updated once when data loads using the `info-template` attribute.
+- **Use for:** Data counts, helpful hints, keyboard shortcuts
+- **Example:** "5,600 categories loaded", "Use arrow keys to navigate"
+- **Template:** Use `info-template="Loaded {count} categories"` to customize the message
+
+### `slot="status"`
+Dynamic status updates based on component events. Automatically managed.
+- **Updates on:** Loading, searching, results count, errors, selection
+- **Example:** "Loading...", "Found 23 results", "No results found"
+
+```html
+<product-taxonomy data="google.txt">
+  <small slot="info"></small>    <!-- Persistent info -->
+  <small slot="status"></small>  <!-- Dynamic status -->
+</product-taxonomy>
+```
+
+Both slots are optional. If provided, they will be automatically updated by the component.
 
 ## Events
 

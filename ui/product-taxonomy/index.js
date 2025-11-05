@@ -1,5 +1,5 @@
-import { FormElement } from '../common/form.element.js';
 import { AutoSuggest } from '../auto-suggest/index.js';
+import { FormElement } from '../common/form.element.js';
 
 /**
  * Parses a line from a Google-formatted taxonomy file.
@@ -54,10 +54,6 @@ export class ProductTaxonomy extends FormElement {
 		return new URL('.', import.meta.url).href;
 	}
 
-	constructor() {
-		super();
-	}
-
 	initializeComponent() {
 		this.#config = {
 			data: this.getAttribute('data'),
@@ -67,6 +63,7 @@ export class ProductTaxonomy extends FormElement {
 			minLength: parseInt(this.getAttribute('minlength')) || 2,
 			maxResults: parseInt(this.getAttribute('max-results')) || 50,
 			listMode: this.getAttribute('list-mode') || 'datalist',
+			infoTemplate: this.getAttribute('info-template') || 'Loaded {count} categories',
 			noshadow: this.hasAttribute('noshadow'),
 			required: this.hasAttribute('required'),
 		};
@@ -118,6 +115,8 @@ export class ProductTaxonomy extends FormElement {
 		}
 	}
 
+	// Deprecated: search functionality is now handled by auto-suggest with search-mode="local-keywords"
+	// Kept for backward compatibility if called directly
 	search(query) {
 		if (!query || query.length < this.#config.minLength) {
 			return [];
@@ -195,17 +194,24 @@ export class ProductTaxonomy extends FormElement {
 				.schema-boilerplate { color: #999; }
 			</style>
 			<auto-suggest
-				api="#"
+				api="data:text/plain,"
+				search-mode="local-keywords"
+				search-fields="searchText"
 				api-value-path="id"
 				api-display-path="display"
 				api-text-path="path"
+				info-template="${this.#config.infoTemplate}"
+				status-template="Selected: {display}"
 				label="${this.#config.label}"
 				list-mode="${this.#config.listMode}"
 				minlength="${this.#config.minLength}"
 				${this.#config.noshadow ? 'noshadow' : ''}
 				placeholder="${this.#config.placeholder}"
 				${this.#config.required ? 'required="true"' : ''}
-			></auto-suggest>
+			>
+				<small slot="info"></small>
+				<small slot="status"></small>
+			</auto-suggest>
 			${(showMicrodata || showJson) ? '<div class="schema-preview" hidden>' : ''}
 				${showMicrodata ? '<h4>Schema.org Microdata</h4><pre class="schema-microdata"></pre>' : ''}
 				${showJson ? '<h4>Schema.org JSON-LD</h4><pre class="schema-jsonld"></pre>' : ''}
@@ -233,29 +239,43 @@ export class ProductTaxonomy extends FormElement {
 	}
 
 	#overrideAutoSuggestFetch() {
-		this.#autoSuggest.fetchData = (value) => {
-			this.dispatchEvent(new CustomEvent('taxonomySearchStart', { bubbles: true }));
-			const results = this.search(value);
-			const formattedResults = this.#formatResults(results);
-			this.#autoSuggest.data = formattedResults;
-			this.#autoSuggest.list.innerHTML = this.#autoSuggest.render(formattedResults);
-			if (this.#autoSuggest.settings.listMode === 'ul' && formattedResults.length) {
-				this.#autoSuggest.list.togglePopover(true);
-				this.#autoSuggest.setAttribute('open', '');
-			}
-			if (!formattedResults.length) {
-				this.#autoSuggest.dispatchEvent(new CustomEvent('autoSuggestNoResults', { bubbles: true }));
-			}
-			this.dispatchEvent(new CustomEvent('taxonomySearchEnd', {
-				detail: { count: results.length },
-				bubbles: true
-			}));
-		};
+		// Instead of overriding fetchData, we inject our parsed data into auto-suggest's fullDataset
+		// and let auto-suggest handle the keyword searching with search-mode="local-keywords"
+		const formattedData = this.#formatResults(this.#parsedData).map(item => ({
+			...item,
+			_searchText: item.searchText // Already lowercased in #loadTaxonomyData
+		}));
+		this.#autoSuggest.fullDataset = formattedData;
 
-		this.#autoSuggest.debouncedFetch = this.#autoSuggest.debounced(
-			this.#autoSuggest.settings.debounceTime,
-			this.#autoSuggest.fetchData.bind(this.#autoSuggest)
-		);
+		// Manually update info slot since we're bypassing fetchLocalData
+		if (this.#autoSuggest.infoSlot) {
+			const template = this.#config.infoTemplate;
+			const message = template.replace('{count}', formattedData.length);
+			this.#autoSuggest.updateInfo(message);
+		}
+
+		// Track search events
+		let searchInProgress = false;
+
+		this.#autoSuggest.input.addEventListener('input', () => {
+			if (!searchInProgress && this.#autoSuggest.input.value.length >= this.#config.minLength) {
+				searchInProgress = true;
+				this.dispatchEvent(new CustomEvent('taxonomySearchStart', { bubbles: true }));
+			}
+		});
+
+		// Use MutationObserver to detect when results are rendered
+		const observer = new MutationObserver(() => {
+			if (searchInProgress) {
+				searchInProgress = false;
+				this.dispatchEvent(new CustomEvent('taxonomySearchEnd', {
+					detail: { count: this.#autoSuggest.data?.length || 0 },
+					bubbles: true
+				}));
+			}
+		});
+
+		observer.observe(this.#autoSuggest.list, { childList: true });
 	}
 
 	#forwardAutoSuggestEvents() {
@@ -307,4 +327,6 @@ export class ProductTaxonomy extends FormElement {
 	}
 }
 
-ProductTaxonomy.register();
+if (!customElements.get('product-taxonomy')) {
+	customElements.define('product-taxonomy', ProductTaxonomy);
+}

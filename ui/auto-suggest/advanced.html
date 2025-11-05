@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <title>AutoSuggest - Advanced Examples</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Advanced examples of AutoSuggest web component with various search modes">
+  <meta name="view-transition" content="same-origin">
+  <link rel="stylesheet" href="/ui/base/index.css">
+  <style>
+    .demo { border-radius: .33rem; }
+    section { margin-block: 2rem; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; }
+    /* For noshadow mode, use regular selectors */
+    auto-suggest nav[part="slots"] {
+      display: flex;
+      justify-content: space-between;
+      margin-block-start: .5ch;
+    }
+    /* For shadow DOM mode, use ::part() */
+    auto-suggest::part(slots) {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <h1>UI: AutoSuggest - Advanced Examples</h1>
+  <p><a href="index.html">← Back to basic examples</a></p>
+
+  <p>These examples demonstrate all search modes using a local <code>products.json</code> file with 20 sample products.</p>
+
+  <section>
+    <h3>1. Local Mode - Simple Substring Search</h3>
+    <p>Loads data once, searches with simple <code>includes()</code> matching.</p>
+    <p><strong>Try:</strong> "apple", "headphones", "camera"</p>
+
+    <auto-suggest
+      id="local-simple"
+      api="products.json"
+      search-mode="local"
+      search-fields="name"
+      api-value-path="id"
+      api-display-path="name"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Local Simple Search"
+      list-mode="ul"
+      minlength="2"
+      placeholder="Search products..."
+      noshadow>
+      <small slot="status"></small>  
+      <small slot="info"></small>  
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>2. Local Keywords Mode - Multi-Column Search (AND)</h3>
+    <p>Searches across multiple fields: name, brand, category, and description.</p>
+    <p>All terms must match (AND logic): "apple laptop" finds MacBook Pro</p>
+    <p><strong>Try:</strong> "apple laptop", "sony headphones", "wireless charging"</p>
+
+    <auto-suggest
+      id="local-keywords-and"
+      api="products.json"
+      search-mode="local-keywords"
+      search-fields="name,brand,category,description"
+      search-operator="AND"
+      api-value-path="id"
+      api-display-path="name"
+      api-text-path="category"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Multi-Column Keyword Search (AND)"
+      list-mode="ul"
+      minlength="2"
+      placeholder="e.g., apple laptop, sony audio"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>3. Local Keywords Mode - Multi-Column Search (OR)</h3>
+    <p>Searches across name, brand, and category.</p>
+    <p>Any term can match (OR logic): "apple sony" finds all Apple OR Sony products</p>
+    <p><strong>Try:</strong> "apple sony", "laptop phone", "nike lululemon"</p>
+
+    <auto-suggest
+      id="local-keywords-or"
+      api="products.json"
+      search-mode="local-keywords"
+      search-fields="name,brand,category"
+      search-operator="OR"
+      api-value-path="id"
+      api-display-path="name"
+      api-text-path="brand"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Multi-Column Keyword Search (OR)"
+      list-mode="ul"
+      minlength="2"
+      placeholder="e.g., apple sony, furniture electronics"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>4. Local Fuzzy Mode - Typo Tolerant (Strict)</h3>
+    <p>Fuzzy matching with high threshold (min-score: 0.7) - requires close similarity</p>
+    <p><strong>Try typos:</strong> "mackbook" → MacBook, "hedphones" → headphones, "camra" → camera</p>
+
+    <auto-suggest
+      id="local-fuzzy-strict"
+      api="products.json"
+      search-mode="local-fuzzy"
+      search-fields="name,brand,category"
+      min-score="0.7"
+      max-results="10"
+      api-value-path="id"
+      api-display-path="name"
+      api-text-path="category"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Fuzzy Search (Strict - 0.7)"
+      list-mode="ul"
+      minlength="3"
+      placeholder="Try: mackbook, hedphones, camra"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>5. Local Fuzzy Mode - Typo Tolerant (Lenient)</h3>
+    <p>Fuzzy matching with low threshold (min-score: 0.5) - very forgiving</p>
+    <p><strong>Try worse typos:</strong> "mcbok" → MacBook, "hdfone" → headphones, "ofice chair" → office chair</p>
+
+    <auto-suggest
+      id="local-fuzzy-lenient"
+      api="products.json"
+      search-mode="local-fuzzy"
+      search-fields="name,description,category"
+      min-score="0.5"
+      max-results="15"
+      api-value-path="id"
+      api-display-path="name"
+      api-text-path="description"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Fuzzy Search (Lenient - 0.5)"
+      list-mode="ul"
+      minlength="3"
+      placeholder="Try: mcbok, hdfone, ofice chair"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>6. Local Fuzzy Mode - Multi-Word with Typos</h3>
+    <p>Fuzzy matching on multiple words with typos tolerated</p>
+    <p><strong>Try:</strong> "wireles charger", "gamin mouse", "espreso machine"</p>
+
+    <auto-suggest
+      id="local-fuzzy-multiword"
+      api="products.json"
+      search-mode="local-fuzzy"
+      search-fields="name,category,description"
+      min-score="0.6"
+      max-results="10"
+      api-value-path="id"
+      api-display-path="name"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Fuzzy Multi-Word Search"
+      list-mode="ul"
+      minlength="3"
+      placeholder="Try: wireles charger, gamin mouse"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>7. Category-Based Keyword Search</h3>
+    <p>Hierarchical category search: "electronics computers laptops" finds all laptops</p>
+    <p><strong>Try:</strong> "home kitchen coffee", "sports outdoors fitness", "electronics audio headphones"</p>
+
+    <auto-suggest
+      id="local-category"
+      api="products.json"
+      search-mode="local-keywords"
+      search-fields="category"
+      search-operator="AND"
+      api-value-path="id"
+      api-display-path="name"
+      api-text-path="category"
+      info-template="{count} products loaded"
+      status-template="Selected: {display}"
+      label="Category Hierarchy Search"
+      list-mode="ul"
+      minlength="3"
+      placeholder="e.g., electronics audio, home kitchen"
+      noshadow>
+      <small slot="info"></small>
+      <small slot="status"></small>
+    </auto-suggest>
+  </section>
+
+  <section>
+    <h3>8. Manual Mount Example with Shadow DOM</h3>
+    <p>This example demonstrates:</p>
+    <ul>
+      <li>Manual mounting with <code>nomount</code> attribute</li>
+      <li>Shadow DOM rendering (no <code>noshadow</code>)</li>
+      <li>Custom styles with <code>styles</code> attribute</li>
+      <li>Form integration with <code>name</code> attribute</li>
+    </ul>
+
+    <form id="manual-form">
+      <auto-suggest
+        api="products.json"
+        search-mode="local-keywords"
+        search-fields="name,brand"
+        api-value-path="id"
+        api-display-path="name"
+        debounce="500"
+        label="Product Search (Form Integration)"
+        name="product"
+        nomount
+        placeholder="Search for products..."
+        styles>
+      </auto-suggest>
+      <br>
+      <button type="reset">Reset Form</button>
+    </form>
+
+    <p><small>After selecting, access in console: <code>document.getElementById('manual-form').elements.product.value</code></small></p>
+  </section>
+
+  <h2>Data Structure</h2>
+  <p>All examples use <code>products.json</code> with this structure:</p>
+  <pre><code>{
+  "id": "1",
+  "name": "MacBook Pro",
+  "category": "Electronics > Computers > Laptops",
+  "brand": "Apple",
+  "description": "High-performance laptop for professionals",
+  "price": 2499,
+  "sku": "MBP-16-2024"
+}</code></pre>
+
+  <script type="module">
+    import { AutoSuggest } from './index.js';
+
+    // Manual mount example
+    const manualForm = document.getElementById('manual-form');
+    const manualSuggest = manualForm.querySelector('auto-suggest');
+
+    if (manualSuggest && manualSuggest.hasAttribute('nomount')) {
+      manualSuggest.mount();
+
+      manualSuggest.addEventListener('autoSuggestSelect', (e) => {
+        console.log('Manual mount selected:', e.detail);
+        console.log('Form value:', manualForm.elements.product.value);
+        console.log('Form displayValue:', manualForm.elements.product.displayValue);
+      });
+    }
+
+    // Log all events for debugging (optional)
+    document.querySelectorAll('auto-suggest').forEach(node => {
+      ['autoSuggestClear', 'autoSuggestFetchStart', 'autoSuggestFetchEnd', 'autoSuggestFetchError', 'autoSuggestNoResults', 'autoSuggestSelect'].forEach(event => {
+        node.addEventListener(event, (e) => {
+          console.log(`[${node.id || 'unknown'}] ${e.type}`, e.detail || '');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

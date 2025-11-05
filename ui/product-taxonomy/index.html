@@ -29,10 +29,10 @@
 			label="Google Product Category"
 			list-mode="ul"
 			placeholder="e.g., headphones, coffee, toys"
-			noshadow
-		></product-taxonomy>
-
-		<small id="google-status"></small>
+			noshadow>
+			<small slot="info"></small>
+			<small slot="status"></small>
+		</product-taxonomy>
 	</section>
 
 	<section>
@@ -46,47 +46,40 @@
 			label="Facebook Product Category"
 			placeholder="e.g., food, games, clothing"
 			list-mode="ul"
-			noshadow
-		></product-taxonomy>
-
-		<small id="facebook-status"></small>
+			noshadow>
+			<small slot="info"></small>
+			<small slot="status"></small>
+		</product-taxonomy>
 	</section>
 
-	<h2>Attributes</h2>
-	<ul>
-		<li><code>data</code>: (Required) Path to the taxonomy text file.</li>
-		<li><code>schema</code>: Space-separated values. Include "microdata" or "json" to show schema previews.</li>
-		<li><code>label</code>: Label text for the input field.</li>
-		<li><code>placeholder</code>: Placeholder text.</li>
-		<li><code>minlength</code>: Minimum characters before search (default: 2).</li>
-		<li><code>max-results</code>: Maximum number of results to show (default: 50).</li>
-		<li><code>list-mode</code>: Either "datalist" or "ul" (default: "datalist").</li>
-		<li><code>noshadow</code>: Render without shadow DOM.</li>
-		<li><code>required</code>: Make the field required.</li>
-	</ul>
+	<section>
+		<h3>Google Product Taxonomy with Fuzzy Search</h3>
+		<p>Fuzzy search with typo tolerance. Try typos like "coffe cups", "headphnes", "furnitur".</p>
+		<p><strong>Features:</strong> Tolerates spelling mistakes, finds similar words, ranks by relevance.</p>
 
-	<h2>Properties</h2>
-	<ul>
-		<li><code>parser</code>: A JavaScript function that takes a string (a line from the data file) and returns a structured object: <code>{ id, name, path, categories }</code>. Defaults to <code>googleTaxonomyParser</code>.</li>
-	</ul>
+		<auto-suggest
+			id="fuzzy-taxonomy"
+			api="google.txt"
+			search-mode="local-fuzzy"
+			search-fields="path"
+			min-score="0.5"
+			max-results="20"
+			api-value-path="id"
+			api-display-path="path"
+			info-template="Loaded {count} categories"
+			label="Fuzzy Product Search"
+			list-mode="ul"
+			minlength="3"
+			placeholder="e.g., coffe, hphone, furnitur"
+			noshadow
+		>
+			<small slot="info"></small>
+			<small slot="status"></small>
+		</auto-suggest>
+	</section>
 
-	<h2>Events</h2>
-	<ul>
-		<li><code>taxonomyLoadStart</code>: Fired when taxonomy data loading begins.</li>
-		<li><code>taxonomyLoadEnd</code>: Fired when loading completes (detail: {count}).</li>
-		<li><code>taxonomyLoadError</code>: Fired on loading error.</li>
-		<li><code>taxonomySearchStart</code>: Fired when search begins.</li>
-		<li><code>taxonomySearchEnd</code>: Fired when search completes (detail: {count}).</li>
-		<li><code>taxonomySelect</code>: Fired when a category is selected (detail: taxonomy item).</li>
-		<li><code>taxonomyClear</code>: Fired when selection is cleared.</li>
-	</ul>
-
-	<h2>API</h2>
-	<ul>
-		<li><code>selectedItem</code>: Get currently selected taxonomy item.</li>
-		<li><code>setValue(id, display)</code>: Set value programmatically.</li>
-		<li><code>search(query)</code>: Search taxonomy data.</li>
-	</ul>
+	<h2>Documentation</h2>
+	<p>For full documentation including attributes, properties, events, slots, and API methods, see the <a href="https://github.com/madsstoumann/browser-style/tree/main/ui/product-taxonomy">README</a>.</p>
 
 	<script type="module">
 		import {
@@ -94,9 +87,10 @@
 			googleTaxonomyParser,
 			facebookTaxonomyParser,
 		} from './index.js';
+		import { AutoSuggest } from '../auto-suggest/index.js';
 
 		/**
-		 * Sets up event listeners and UI updates for a product-taxonomy instance.
+		 * Sets up event listeners for a product-taxonomy instance.
 		 * @param {string} id - The ID of the product-taxonomy element.
 		 * @param {function} parser - The parser function to use for this instance.
 		 */
@@ -107,39 +101,48 @@
 			// Assign the parser
 			taxonomyEl.parser = parser;
 
-			const prefix = id.replace('-taxonomy', '');
-			const statusEl = document.getElementById(`${prefix}-status`);
-
-			taxonomyEl.addEventListener('taxonomyLoadStart', () => {
-				statusEl.textContent = `Loading taxonomy data...`;
-			});
-
-			taxonomyEl.addEventListener('taxonomyLoadEnd', (e) => {
-				statusEl.textContent = `Loaded ${e.detail.count} categories.`;
-			});
-
-			taxonomyEl.addEventListener('taxonomyLoadError', (e) => {
-				statusEl.textContent = `Error: ${e.detail.message}`;
-				statusEl.style.background = '#ffebee';
-			});
-
-			taxonomyEl.addEventListener('taxonomySearchEnd', (e) => {
-				statusEl.textContent = `Found ${e.detail.count} matching categories`;
-			});
-
+			// Log selection events for debugging
 			taxonomyEl.addEventListener('taxonomySelect', (e) => {
-				console.log(`${prefix} taxonomy selected:`, e.detail);
-				statusEl.textContent = 'Category selected.';
+				console.log(`${id} selected:`, e.detail);
 			});
 
 			taxonomyEl.addEventListener('taxonomyClear', () => {
-				statusEl.textContent = 'Selection cleared. Ready to search...';
+				console.log(`${id} cleared`);
 			});
 		}
 
 		// Setup both taxonomy components with their respective parsers
 		setupTaxonomyComponent('google-taxonomy', googleTaxonomyParser);
 		setupTaxonomyComponent('facebook-taxonomy', facebookTaxonomyParser);
+
+		// Setup fuzzy search demo
+		const fuzzyEl = document.getElementById('fuzzy-taxonomy');
+
+		if (fuzzyEl) {
+			// Parse Google taxonomy data for fuzzy search
+			fetch(new URL('google.txt', import.meta.url))
+				.then(response => response.text())
+				.then(text => {
+					const lines = text.split('\n').filter(line => line.trim() && !line.startsWith('#'));
+					const parsed = lines.map(line => {
+						const item = googleTaxonomyParser(line);
+						if (item) {
+							return {
+								id: item.id,
+								path: item.path,
+								_searchText: item.path.toLowerCase()
+							};
+						}
+						return null;
+					}).filter(Boolean);
+
+					fuzzyEl.fullDataset = parsed;
+				});
+
+			fuzzyEl.addEventListener('autoSuggestSelect', (e) => {
+				console.log('Fuzzy search selected:', e.detail);
+			});
+		}
 	</script>
 </body>
 </html>

@@ -70,42 +70,16 @@
     placeholder="thomas">
   </auto-suggest>
 
-  <h3>Advanced, Manual Example</h3>
-  <ol>
-    <li>In this example, the component is manually mounted, because it has a <code>nomount</code>-attribute.<br>Use <code>Autosuggest.mount()</code> to mount it.</li>
-    <li>The <code>noshadow</code> attribute has been removed, so it renders in the shadow DOM.</li>
-    <li>The <code>styles</code> attribute is added. It defaults to <code>index.css</code> in the same folder as the component, but can be any path.</li>
-    <li>Finally, the <code>name</code>-attribute makes the component accessible via the form's <code>elements</code>-collection.</li>
-  </ol>
-
-<pre><small>&lt;auto-suggest
-  debounce="500"
-  name="suggest"
-  nomount
-  styles&gt;
-&lt;/auto-suggest&gt;
-</small></pre>
-
-
-  <form>
-    <auto-suggest
-      api="https://dawa.aws.dk/adresser/autocomplete?side=1&per_side=10&q="
-      api-value-path="adresse.id"
-      api-display-path="tekst"
-      debounce="500"
-      label="Dawa search, using datalist"
-      name="suggest"
-      nomount
-      placeholder="park"
-      styles>
-    </auto-suggest>
-    <br>
-    <button type="reset">Reset</button>
-  </form>
-
-  <p>After making a selection, highlight the parent form in devtools, and in the console, access the control via:<code>$0.elements.suggest</code></p>
-  <p>Now you can see both <code>suggest.value</code> and <code>suggest.displayValue</code></p>
-  <p>To <strong>exclude</strong> an autosuggest-control from populating <code>value</code> and <code>displayValue</code> to it's associated form, add a <code>noform</code>-attribute.</p>
+  <h2>Advanced Examples</h2>
+  <p>For comprehensive examples including:</p>
+  <ul>
+    <li>All search modes (local, keywords, fuzzy)</li>
+    <li>Multi-column search</li>
+    <li>Typo-tolerant fuzzy matching</li>
+    <li>Manual mounting with Shadow DOM</li>
+    <li>Form integration</li>
+  </ul>
+  <p><strong><a href="advanced.html">→ View Advanced Examples</a></strong></p>
 
   <!-- <script type="module" src="./index.js"></script> -->
 
