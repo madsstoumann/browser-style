@@ -71,9 +71,6 @@
 							 -webkit-text-stroke: 0.5px currentColor;
 							paint-order: stroke fill;
 						}
-						&::details-content {
-							padding-block: var(--layout-composer-gap);
-						}
 					}
 					&:first-of-type summary {
 						border-radius: var(--layout-composer-tabs-bdrs) 0 0 var(--layout-composer-tabs-bdrs);
@@ -100,14 +97,16 @@
 					position: relative;
 					text-align: center;
 					text-box: cap alphabetic;
-					transition: color .2s ease-in;
+					transition: color .2s ease;
 					user-select: none;
 				}
 				fieldset {
 					border: none;
 					display: grid;
+					padding-block: var(--layout-composer-gap);
+					position: relative;
 					row-gap: var(--layout-composer-gap);
-					padding: 0;
+					z-index: 1;
 				}
 			}
 		}
