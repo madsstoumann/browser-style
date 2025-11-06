@@ -5,191 +5,310 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Layout Composer</title>
 	<link rel="stylesheet" href="../../../dist/layout.css">
-	<link rel="stylesheet" href="../../../demo.css">
+	<!-- <link rel="stylesheet" href="../../../demo.css"> -->
+	 <style>
+		@layer layout.demo {
+			item-card:empty {
+				background: var(--bg, #DDD);
+				max-inline-size: 100%;
+				min-block-size: 14rem;
+				&:nth-of-type(12n+1) { --bg: cornflowerblue; }
+				&:nth-of-type(12n+2) { --bg: lightcoral; }
+				&:nth-of-type(12n+3) { --bg: lightgreen; }
+				&:nth-of-type(12n+4) { --bg: lightgoldenrodyellow; }
+				&:nth-of-type(12n+5) { --bg: lightpink; }
+				&:nth-of-type(12n+6) { --bg: lightseagreen; }
+				&:nth-of-type(12n+7) { --bg: lightsteelblue; }
+				&:nth-of-type(12n+8) { --bg: lightsalmon; }
+				&:nth-of-type(12n+9) { --bg: lightyellow; }
+				&:nth-of-type(12n+10) { --bg: lightcyan; }
+				&:nth-of-type(12n+11) { --bg: lightgray; }
+				&:nth-of-type(12n+12) { --bg: lightblue; }
+				&[repeat] {
+					filter: grayscale(95%) brightness(.9);
+				}
+			}
+		}
+
+		/* === Layout Composer === */
+		@layer layout.composer {
+
+			@property --i {
+				syntax: "<integer>";
+				inherits: true;
+				initial-value: 1;
+			}
+			@property --t {
+				syntax: "<integer>";
+				inherits: true;
+				initial-value: 6;
+			}
+
+			layout-composer {
+				--layout-composer-accent: hsl(210, 100%, 45%);
+				--layout-composer-tabs-bdrs: 3rem;
+				--layout-composer-gap: 2ch;
+				font-family: system-ui;
+
+				form {
+					display: grid;
+					grid-template-columns: repeat(var(--t), 1fr);
+					grid-template-rows: auto 1fr;
+					padding-block-end: var(--layout-composer-gap);
+				}
+				details {
+					--i: sibling-index();
+					--t: sibling-count();
+					display: grid;
+					grid-column: 1 / -1;
+					grid-row: 1 / span 2;
+					grid-template-columns: subgrid;
+					grid-template-rows: subgrid;
+					
+					&[open] {
+						summary {
+							color: var(--layout-composer-accent);
+							 -webkit-text-stroke: 0.5px currentColor;
+							paint-order: stroke fill;
+						}
+						&::details-content {
+							padding-block: var(--layout-composer-gap);
+						}
+					}
+					&:first-of-type summary {
+						border-radius: var(--layout-composer-tabs-bdrs) 0 0 var(--layout-composer-tabs-bdrs);
+					}
+					&:last-of-type summary {
+						border-radius: 0 var(--layout-composer-tabs-bdrs) var(--layout-composer-tabs-bdrs) 0;
+					}
+				}
+				details::details-content {
+					grid-column: 1 / -1;
+					grid-row: 2;
+				}
+				summary {
+					background: var(--layout-composer-tabs-bg, #EEE);
+					corner-shape: superellipse(1.25);
+					cursor: pointer;
+					display: grid;
+					font-size: clamp(.75rem, 2.5vw, 1rem);
+					grid-column: var(--i);
+					grid-row: 1;
+					isolation: isolate;
+					list-style: none;
+					padding: 1.5ch;
+					position: relative;
+					text-align: center;
+					text-box: cap alphabetic;
+					transition: color .2s ease-in;
+					user-select: none;
+				}
+				fieldset {
+					border: none;
+					display: grid;
+					row-gap: var(--layout-composer-gap);
+					padding: 0;
+				}
+			}
+		}
+	 </style>
 </head>
 <body>
+
 <layout-composer>
-
 	<form id="app">
-		<fieldset name="breakpoints">
-			<legend>Breakpoints</legend>
-			<img src="../../../dist/icons/grid(3a).svg" />
-			<img src="../../../dist/icons/grid(3b).svg" />
-			<img src="../../../dist/icons/grid(3c).svg" />
-		</fieldset>
 
-		<fieldset name="spacing">
-			<legend>Spacing</legend>
-			<label>
-				Space Top
-				<input type="number" name="space-top" value="0" min="0">
-			</label>
-			<label>
-				Space Bottom
-				<input type="number" name="space-bottom" value="0" min="0">
-			</label>
-			<label>
-				Pad Top
-				<input type="number" name="pad-top" value="0" min="0">
-			</label>
-			<label>
-				Pad Bottom
-				<input type="number" name="pad-bottom" value="0" min="0">
-			</label>
-			<label>
-				Pad Inline
-				<input type="number" name="pad-inline" value="0" min="0">
-			</label>
-		</fieldset>
+		<details name="tabs" >
+			<summary>Breakpoints</summary>
+			<fieldset name="breakpoints">
+				<img src="../../../dist/icons/grid(3a).svg" />
+				<img src="../../../dist/icons/grid(3b).svg" />
+				<img src="../../../dist/icons/grid(3c).svg" />
+			</fieldset>
+		</details>
 
-		<fieldset name="gaps">
-			<legend>Gaps</legend>
-			<label>
-				Column Gap
-				<input type="number" name="col-gap" value="1" min="0" step="0.5">
-			</label>
-			<label>
-				Row Gap
-				<input type="number" name="row-gap" value="1" min="0" step="0.5">
-			</label>
-		</fieldset>
+		<details name="tabs" open>
+			<summary>Spacing</summary>
+			<fieldset name="spacing">
+				<label>
+					Space Top
+					<input type="number" name="space-top" value="0" min="0">
+				</label>
+				<label>
+					Space Bottom
+					<input type="number" name="space-bottom" value="0" min="0">
+				</label>
+				<label>
+					Pad Top
+					<input type="number" name="pad-top" value="0" min="0">
+				</label>
+				<label>
+					Pad Bottom
+					<input type="number" name="pad-bottom" value="0" min="0">
+				</label>
+				<label>
+					Pad Inline
+					<input type="number" name="pad-inline" value="0" min="0">
+				</label>
+			</fieldset>
+		</details>
 
-		<fieldset name="layout">
-			<legend>Layout</legend>
-			<label>
-				Width Preset
-				<select name="width">
-					<option value="">None</option>
-					<option value="xs">XS (20rem)</option>
-					<option value="sm">SM (30rem)</option>
-					<option value="md">MD (48rem)</option>
-					<option value="lg">LG (64rem)</option>
-					<option value="xl">XL (80rem)</option>
-					<option value="xxl">XXL (96rem)</option>
-				</select>
-			</label>
-			<label>Bleed
-				<input type="number" name="bleed" value="0" min="-100" max="100">
-			</label>
-			<label>Bleed mode
-				<select name="bleed-mode">
-					<option value="none">None</option>
-					<option value="full">Full</option>
-					<option value="number" selected>Numeric</option>
-				</select>
-			</label>
-			<label>
-				Overflow
-				<select name="overflow">
-					<option value="unset">None</option>
-					<option value="none">Hidden</option>
-					<option value="preview">Preview</option>
-					<option value="dynamic">Dynamic</option>
-				</select>
-			</label>
-			<label>Gap Decorations
-				<select name="gap-decorations">
-					<option value="unset">None</option>
-					<option value="cols">Columns</option>
-					<option value="rows">Rows</option>
-					<option value="cols rows">Both</option>
-				</select>
-			</label>
-		</fieldset>
+		<details name="tabs" >
+			<summary>Gaps</summary>
+			<fieldset name="gaps">
+				<label>
+					Column Gap
+					<input type="number" name="col-gap" value="1" min="0" step="0.5">
+				</label>
+				<label>
+					Row Gap
+					<input type="number" name="row-gap" value="1" min="0" step="0.5">
+				</label>
+			</fieldset>
+		</details>
 
-		<fieldset name="animations">
-			<legend>Animation</legend>
-			<label>
-				Animation Name
-				<select name="animationName">
-					<option value="">None</option>
-					
-						<optgroup label="Fade">
-							<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
-						</optgroup>
-					
-						<optgroup label="Bounce">
-							<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
-						</optgroup>
-					
-						<optgroup label="Zoom">
-							<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
-						</optgroup>
-					
-						<optgroup label="Slide">
-							<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
-						</optgroup>
-					
-						<optgroup label="Flip">
-							<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
-						</optgroup>
-					
-						<optgroup label="Reveal">
-							<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
-						</optgroup>
-					
-						<optgroup label="Other">
-							<option value="opacity">opacity</option>
-						</optgroup>
-					
-				</select>
-			</label>
-			<label>
-				Animation Range
-				<select name="animationRange">
-					<option value="">Default</option>
-					<option value="contain">Contain</option>
-					<option value="cover">Cover</option>
-					<option value="exit">Exit</option>
-				</select>
-			</label>
-		</fieldset>
+		<details name="tabs">
+			<summary>Layout</summary>
+			<fieldset name="layout">
+				<label>
+					Width Preset
+					<select name="width">
+						<option value="">None</option>
+						<option value="xs">XS (20rem)</option>
+						<option value="sm">SM (30rem)</option>
+						<option value="md">MD (48rem)</option>
+						<option value="lg">LG (64rem)</option>
+						<option value="xl">XL (80rem)</option>
+						<option value="xxl">XXL (96rem)</option>
+					</select>
+				</label>
+				<label>Bleed
+					<input type="number" name="bleed" value="0" min="-100" max="100">
+				</label>
+				<label>Bleed mode
+					<select name="bleed-mode">
+						<option value="none">None</option>
+						<option value="full">Full</option>
+						<option value="number" selected>Numeric</option>
+					</select>
+				</label>
+				<label>
+					Overflow
+					<select name="overflow">
+						<option value="unset">None</option>
+						<option value="none">Hidden</option>
+						<option value="preview">Preview</option>
+						<option value="dynamic">Dynamic</option>
+					</select>
+				</label>
+				<label>Gap Decorations
+					<select name="gap-decorations">
+						<option value="unset">None</option>
+						<option value="cols">Columns</option>
+						<option value="rows">Rows</option>
+						<option value="cols rows">Both</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
 
-		<fieldset name="advanced">
-			<legend>Advanced</legend>
-			<label>
-				ARIA Label
-				<input type="text" name="aria-label" value="">
-			</label>
-			<label>
-				Theme
-				<select name="theme">
-					<option value="unset">None</option>
-					<option value="primary">Primary</option>
-					<option value="secondary">Secondary</option>
-					<option value="tertiary">Tertiary</option>
-				</select>
-			</label>
-			<label>
-				Self Alignment
-				<select name="self">
-					<option value="unset">None</option>
-					<option value="auto">auto</option>
-					<option value="start">start</option>
-					<option value="end">end</option>
-					<option value="center">center</option>
-					<option value="stretch">stretch</option>
-					<option value="baseline">baseline</option>
-					<option value="self-start">self-start</option>
-					<option value="self-end">self-end</option>
-				</select>
-			</label>
-			<label>
-				Intrinsic Size
-				<select name="size">
-					<option value="auto">auto</option>
-					<option value="unset">None</option>
-					<option value="200px">200px</option>
-					<option value="300px">300px</option>
-					<option value="400px">400px</option>
-					<option value="500px">500px</option>
-					<option value="600px">600px</option>
-					<option value="50vh">50vh</option>
-					<option value="75vh">75vh</option>
-					<option value="100vh">100vh</option>
-				</select>
-			</label>
-		</fieldset>
+		<details name="tabs">
+			<summary>Animation</summary>
+			<fieldset name="animations">
+				<label>
+					Animation Name
+					<select name="animationName">
+						<option value="">None</option>
+
+							<optgroup label="Fade">
+								<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
+							</optgroup>
+
+							<optgroup label="Bounce">
+								<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
+							</optgroup>
+
+							<optgroup label="Zoom">
+								<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
+							</optgroup>
+
+							<optgroup label="Slide">
+								<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
+							</optgroup>
+
+							<optgroup label="Flip">
+								<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
+							</optgroup>
+
+							<optgroup label="Reveal">
+								<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
+							</optgroup>
+
+							<optgroup label="Other">
+								<option value="opacity">opacity</option>
+							</optgroup>
+
+					</select>
+				</label>
+				<label>
+					Animation Range
+					<select name="animationRange">
+						<option value="">Default</option>
+						<option value="contain">Contain</option>
+						<option value="cover">Cover</option>
+						<option value="exit">Exit</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
+
+		<details name="tabs">
+			<summary>Advanced</summary>
+			<fieldset name="advanced">
+				<label>
+					ARIA Label
+					<input type="text" name="aria-label" value="">
+				</label>
+				<label>
+					Theme
+					<select name="theme">
+						<option value="unset">None</option>
+						<option value="primary">Primary</option>
+						<option value="secondary">Secondary</option>
+						<option value="tertiary">Tertiary</option>
+					</select>
+				</label>
+				<label>
+					Self Alignment
+					<select name="self">
+						<option value="unset">None</option>
+						<option value="auto">auto</option>
+						<option value="start">start</option>
+						<option value="end">end</option>
+						<option value="center">center</option>
+						<option value="stretch">stretch</option>
+						<option value="baseline">baseline</option>
+						<option value="self-start">self-start</option>
+						<option value="self-end">self-end</option>
+					</select>
+				</label>
+				<label>
+					Intrinsic Size
+					<select name="size">
+						<option value="auto">auto</option>
+						<option value="unset">None</option>
+						<option value="200px">200px</option>
+						<option value="300px">300px</option>
+						<option value="400px">400px</option>
+						<option value="500px">500px</option>
+						<option value="600px">600px</option>
+						<option value="50vh">50vh</option>
+						<option value="75vh">75vh</option>
+						<option value="100vh">100vh</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
 	</form>
 
 		<lay-out id="layout" md="grid(3a)">
