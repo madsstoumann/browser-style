@@ -49,12 +49,9 @@ class CspManager extends HTMLElement {
 		const state = {};
 		const descriptions = i18nData[this.lang]?.directives || {};
 
-		// Default enabled directives (matching original behavior)
-		const defaultEnabled = ['base-uri', 'default-src', 'frame-ancestors', 'object-src', 'script-src', 'style-src'];
-
 		Object.entries(cspDirectives).forEach(([key, config]) => {
 			state[key] = {
-				enabled: defaultEnabled.includes(key),
+				enabled: !!config.enabled,
 				defaults: [...config.defaults],
 				added: [],
 				description: descriptions[key] || ''
