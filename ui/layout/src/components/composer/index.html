@@ -20,7 +20,7 @@
 		initial-value: 1;
 	}
 	:scope {
-		--tab-group-accent:light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+		--tab-group-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
 		--tab-group-bdrs: 3rem;
 		--tab-group-gap: 1ch;
 		container-type: inline-size;
@@ -94,6 +94,7 @@
 /* === Layout Composer === */
 @layer layout.composer {
 	layout-composer {
+		--layout-composer-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
 		--layout-composer-gap: 1ch;
 
 		font-family: var(--layout-composer-ff, system-ui, sans-serif);
@@ -124,6 +125,17 @@
 			font-size: inherit;
 			padding: .75ch;
 		}
+		input[type="radio"] {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border-width: 0;
+		}
 		label {
 			display: grid;
 			flex: 1;
@@ -131,6 +143,21 @@
 			font-weight: 500;
 			row-gap: .5ch;
 			text-wrap: nowrap;
+			&:has(:checked):has(svg) {
+				color: var(--layout-composer-accent);
+			}
+		}
+		svg {
+			fill: none;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 1.5;
+			stroke: currentColor;
+			width: 2em;
+		}
+		[name="iframe-width"] {
+			place-self: center;
+			label { text-align: center; }
 		}
 	}
 }
@@ -372,35 +399,41 @@
 			</tab-container>
 		</tab-group>
 
-		<fieldset name="iframe-controls">
-			<legend>Preview Width</legend>
+		<fieldset name="iframe-width">
 			<label>
 				<input type="radio" name="iframe" value="100%" checked>
-				Full
+				<svg viewBox="0 0 24 24"><path d="M13 9a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1v8m-1 3h-6a1 1 0 0 1 -1 -1v-6"/><path d="M18 8v-3a1 1 0 0 0 -1 -1h-9m-4 0a1 1 0 0 0 -1 1v12a1 1 0 0 0 1 1h9"/><path d="M16 9h2"/><path d="M3 3l18 18"/></svg>
+				<small>Full</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="240">
-				XS (240px)
+				<svg viewBox="0 0 24 24"><path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14z"/><path d="M11 4h2"/><path d="M12 17v.01"/></svg>
+				<small>XS</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="380">
-				SM (380px)
+				<svg viewBox="0 0 24 24"><path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14z"/><path d="M11 4h2"/><path d="M12 17v.01"/></svg>
+				<small>SM</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="540">
-				MD (540px)
+				<svg viewBox="0 0 24 24"><path d="M5 4a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-16z"/><path d="M11 17a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+				<small>MD</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="720">
-				LG (720px)
+				<svg viewBox="0 0 24 24"><path d="M5 4a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1v-16z"/><path d="M11 17a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+				<small>LG</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="920">
-				XL (920px)
+				<svg viewBox="0 0 24 24"><path d="M3 4a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-12z"/><path d="M3 13h18"/><path d="M8 21h8"/><path d="M10 17l-.5 4"/><path d="M14 17l.5 4"/></svg>
+				<small>XL</small>
 			</label>
 			<label>
 				<input type="radio" name="iframe" value="1140">
-				XXL (1140px)
+				<svg viewBox="0 0 24 24"><path d="M11.5 17h-7.5a1 1 0 0 1 -1 -1v-12a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v9"/><path d="M3 13h18"/><path d="M8 21h3.5"/><path d="M10 17l-.5 4"/><path d="M20 21l2 -2l-2 -2"/><path d="M17 17l-2 2l2 2"/></svg>
+				<small>XXL</small>
 			</label>
 		</fieldset>
 	</form>
