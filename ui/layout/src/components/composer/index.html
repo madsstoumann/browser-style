@@ -5,206 +5,430 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Layout Composer</title>
 	<link rel="stylesheet" href="../../../dist/layout.css">
-	<!-- <link rel="stylesheet" href="../../../core/animations.css"> -->
-	<link rel="stylesheet" href="../../../demo.css">
-	<style>
-		body {
-			font-family: system-ui, -apple-system, sans-serif;
-			margin: 0;
-			padding: 2rem;
+	<!-- <link rel="stylesheet" href="../../../demo.css"> -->
+	 <style>
+		@layer layout.demo {
+
+			body {
+				background: Canvas;
+				color: CanvasText;
+				color-scheme: light dark;
+				margin-block: 0;
+			}
+			html {
+				interpolate-size: allow-keywords;
+				--layout-primary-bg: hsl(220, 100%, 95%);
+				--layout-primary-c: hsl(220, 100%, 20%);
+				--layout-secondary-bg: hsl(120, 50%, 95%);
+				--layout-secondary-c: hsl(120, 50%, 20%);
+				--layout-tertiary-bg: hsl(30, 10%, 95%);
+				--layout-tertiary-c: hsl(30, 80%, 20%);
+			}
+			item-card:empty {
+				background: var(--bg, #DDD);
+				max-inline-size: 100%;
+				min-block-size: 14rem;
+				&:nth-of-type(12n+1) { --bg: cornflowerblue; }
+				&:nth-of-type(12n+2) { --bg: lightcoral; }
+				&:nth-of-type(12n+3) { --bg: lightgreen; }
+				&:nth-of-type(12n+4) { --bg: lightgoldenrodyellow; }
+				&:nth-of-type(12n+5) { --bg: lightpink; }
+				&:nth-of-type(12n+6) { --bg: lightseagreen; }
+				&:nth-of-type(12n+7) { --bg: lightsteelblue; }
+				&:nth-of-type(12n+8) { --bg: lightsalmon; }
+				&:nth-of-type(12n+9) { --bg: lightyellow; }
+				&:nth-of-type(12n+10) { --bg: lightcyan; }
+				&:nth-of-type(12n+11) { --bg: lightgray; }
+				&:nth-of-type(12n+12) { --bg: lightblue; }
+				&[repeat] {
+					filter: grayscale(95%) brightness(.9);
+				}
+			}
 		}
 
-		h1 {
-			margin-block-end: 0.5rem;
-		}
+/* === Layout Composer === */
+@layer layout.composer {
 
-		p {
-			margin-block-end: 2rem;
-			color: #666;
-		}
+	@property --i {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 1;
+	}
+	@property --t {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 6;
+	}
 
-		.composer-container {
-			display: grid;
-			grid-template-columns: 400px 1fr;
-			gap: 2rem;
-			min-block-size: 600px;
-		}
+	layout-composer {
+		--layout-composer-accent:light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+		--layout-composer-tabs-bdrs: 3rem;
+		--layout-composer-gap: 1ch;
 
-		.editor-section {
-			border: 1px solid #ddd;
-			border-radius: 0.5rem;
-			overflow: hidden;
-			background: #fafafa;
-		}
-
-		.preview-section {
-			border: 1px solid #ddd;
-			border-radius: 0.5rem;
-			padding: 1.5rem;
-			background: white;
-			overflow: auto;
-		}
-
-		.tabs {
-			display: flex;
-			background: #e9e9e9;
-			border-block-end: 1px solid #ddd;
-			margin: 0;
-			padding: 0;
-			gap: 0;
-		}
-
-		.tabs button {
-			flex: 1;
-			padding: 0.75rem 1rem;
-			border: none;
-			background: transparent;
-			cursor: pointer;
-			font-size: 0.875rem;
-			font-weight: 500;
-			color: #666;
-			border-block-end: 2px solid transparent;
-			transition: all 0.2s;
-		}
-
-		.tabs button:hover {
-			background: #f5f5f5;
-			color: #333;
-		}
-
-		.tabs button.active {
-			background: white;
-			color: #000;
-			border-block-end-color: #0066cc;
-		}
+		container-type: inline-size;
+		display: block;
+		font-family: system-ui;
 
 		form {
-			padding: 1.5rem;
-			background: white;
+			display: grid;
+			padding-block: var(--layout-composer-gap);
+			row-gap: var(--layout-composer-gap);
 		}
-
+		details {
+			--i: sibling-index();
+			--t: sibling-count();
+			&[open] summary {
+				color: var(--layout-composer-accent);
+				-webkit-text-stroke: 0.5px currentColor;
+				paint-order: stroke fill;
+			}
+		}
+		summary {
+			background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222));
+			border-radius: var(--layout-composer-tabs-bdrs);
+			corner-shape: superellipse(1.25);
+			cursor: pointer;
+			display: grid;
+			font-size: clamp(.75rem, 2.5vw, 1rem);
+			grid-column: var(--i);
+			grid-row: 1;
+			isolation: isolate;
+			list-style: none;
+			padding: 1.5ch;
+			position: relative;
+			text-align: center;
+			text-box: cap alphabetic;
+			transition: color .2s ease;
+			user-select: none;
+			&:focus-visible {
+				outline-color: var(--layout-composer-accent);
+				outline-offset: -4px;
+			}
+		}
 		fieldset {
 			border: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		legend {
-			font-weight: bold;
-			margin-block-end: 1rem;
-			font-size: 1.125rem;
-		}
-
-		label {
-			display: block;
-			margin-block-end: 1rem;
-			font-size: 0.875rem;
-		}
-
-		label strong {
-			display: block;
-			margin-block-end: 0.25rem;
-			font-size: 0.75rem;
-			text-transform: uppercase;
-			color: #666;
-			letter-spacing: 0.05em;
-		}
-
-		input, select {
-			display: block;
-			width: 100%;
-			padding: 0.5rem;
-			margin-block-start: 0.25rem;
-			border: 1px solid #ccc;
-			border-radius: 0.25rem;
-			font-size: 0.875rem;
-		}
-
-		input:focus, select:focus {
-			outline: 2px solid #0066cc;
-			outline-offset: 2px;
-		}
-
-		input[type="checkbox"] {
-			width: auto;
-			display: inline-block;
-		}
-
-		.breakpoint-group {
-			margin-block-end: 1.5rem;
-			padding-block-end: 1.5rem;
-			border-block-end: 1px solid #eee;
-		}
-
-		.breakpoint-group:last-child {
-			border-block-end: none;
-		}
-
-		.layout-icon {
-			margin-block-start: 0.5rem;
-			min-block-size: 80px;
-			border: 1px dashed #ddd;
-			border-radius: 0.25rem;
 			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 0.5rem;
-			background: white;
+			flex-wrap: wrap;
+			gap: var(--layout-composer-gap);
+			margin: 0;
+			padding: var(--layout-composer-gap);
+			position: relative;
+			z-index: 1;
 		}
-
-		.layout-icon:empty {
-			display: none;
+		input, select {
+			border: 1px solid #CCC;
+			font-size: inherit;
+			padding: .75ch;
 		}
-
-		.layout-icon svg {
-			max-inline-size: 100%;
-			max-block-size: 120px;
-		}
-
-		.preview-container h3 {
-			margin-block-start: 0;
-			margin-block-end: 1rem;
-		}
-
-		.preview-container lay-out {
-			margin-block-end: 1rem;
-		}
-
-		details {
-			margin-block-start: 1rem;
-			padding: 1rem;
-			background: #f5f5f5;
-			border-radius: 0.25rem;
-		}
-
-		summary {
-			cursor: pointer;
+		label {
+			display: grid;
+			flex: 1;
+			font-size: small;
 			font-weight: 500;
-			user-select: none;
+			row-gap: .5ch;
+			text-wrap: nowrap;
 		}
 
-		pre {
-			margin-block-start: 1rem;
-			padding: 1rem;
-			background: #1e1e1e;
-			color: #d4d4d4;
-			border-radius: 0.25rem;
-			overflow-x: auto;
-			font-size: 0.875rem;
+		@container (width > 700px) {
+			form {
+				--layout-composer-gap: 2ch;
+				grid-template-columns: repeat(var(--t), 1fr);
+				grid-template-rows: auto 1fr;
+				row-gap: 0;
+			}
+			details {
+				--i: sibling-index();
+				--t: sibling-count();
+				display: grid;
+				grid-column: 1 / -1;
+				grid-row: 1 / span 2;
+				grid-template-columns: subgrid;
+				grid-template-rows: subgrid;
+				&:not(:first-of-type):not(:last-of-type) summary {
+					border-radius: 0;
+				}
+				&:first-of-type summary {
+					border-radius: var(--layout-composer-tabs-bdrs) 0 0 var(--layout-composer-tabs-bdrs);
+				}
+				&:last-of-type summary {
+					border-radius: 0 var(--layout-composer-tabs-bdrs) var(--layout-composer-tabs-bdrs) 0;
+				}
+			}
+			details::details-content {
+				grid-column: 1 / -1;
+				grid-row: 2;
+			}
 		}
-
-		code {
-			font-family: 'Monaco', 'Courier New', monospace;
-		}
-	</style>
+	}
+}
+	 </style>
 </head>
 <body>
-	<h1>Layout Composer</h1>
-	<p>Configure your layout settings and preview the result in real-time.</p>
 
-	<layout-composer></layout-composer>
+	<layout-composer>
+		<form id="app">
 
-	<script type="module" src="../../../dist/lay-out.js"></script>
-	<script type="module" src="./index.js"></script>
+			<details name="tabs" >
+				<summary>Breakpoints</summary>
+				<fieldset name="breakpoints">
+					<label>Small
+						<select name="sm">
+							<option value="unset">None</option>
+							<optgroup label="Columns"></optgroup>
+							<option value="columns(2)">columns(2)</option>
+							</select>
+					</label>
+
+					<label>Medium
+						<select name="md">
+							<option value="unset">None</option>
+							<optgroup label="Columns"></optgroup>
+							<option value="columns(2)">columns(2)</option>
+							<option value="columns(3)">columns(3)</option>
+							<option value="columns(4)">columns(4)</option>
+							
+							<optgroup label="Grid"></optgroup>
+							
+							<option value="grid(3a)" data-items="3">grid(3a)</option>
+							<option value="grid(3b)">grid(3b)</option>
+							<option value="grid(3c)">grid(3c)</option>
+							<option value="grid(3d)" >grid(3d)</option>
+						</select>
+					</label>
+					<label>Large
+						<select name="lg">
+							<optgroup label="Grid"></optgroup>
+							<option value="unset">None</option>
+							<option value="grid(3a)" data-items="3">grid(3a)</option>
+							<option value="grid(3b)">grid(3b)</option>
+							<option value="grid(3c)">grid(3c)</option>
+							<option value="grid(3d)" selected>grid(3d)</option>
+						</select>
+					</label>
+					<!-- <img src="../../../dist/icons/grid(3a).svg" />
+					<img src="../../../dist/icons/grid(3b).svg" />
+					<img src="../../../dist/icons/grid(3c).svg" /> -->
+				</fieldset>
+			</details>
+
+			<details name="tabs" open>
+				<summary>Spacing</summary>
+				<fieldset name="spacing">
+					<label>
+						Space Top
+						<input type="number" name="space-top" value="0" min="0">
+					</label>
+					<label>
+						Space Bottom
+						<input type="number" name="space-bottom" value="0" min="0">
+					</label>
+					<label>
+						Padding Top
+						<input type="number" name="pad-top" value="0" min="0">
+					</label>
+					<label>
+						Padding Bottom
+						<input type="number" name="pad-bottom" value="0" min="0">
+					</label>
+					<label>
+						Padding Inline
+						<input type="number" name="pad-inline" value="0" min="0">
+					</label>
+				</fieldset>
+			</details>
+
+			<details name="tabs" >
+				<summary>Gaps</summary>
+				<fieldset name="gaps">
+					<label>
+						Column Gap
+						<input type="number" name="col-gap" value="1" min="0" step="0.5">
+					</label>
+					<label>
+						Row Gap
+						<input type="number" name="row-gap" value="1" min="0" step="0.5">
+					</label>
+				</fieldset>
+			</details>
+
+			<details name="tabs">
+				<summary>Layout</summary>
+				<fieldset name="layout">
+					<label>Bleed
+						<input type="number" name="bleed" value="0" min="-100" max="100">
+					</label>
+					<label>Bleed mode
+						<select name="bleed-mode">
+							<option value="none">None</option>
+							<option value="full">Full</option>
+							<option value="number" selected>Numeric</option>
+						</select>
+					</label>
+
+					<label>
+						Overflow
+						<select name="overflow">
+							<option value="unset">None</option>
+							<option value="none">Hidden</option>
+							<option value="preview">Preview</option>
+							<option value="dynamic">Dynamic</option>
+						</select>
+					</label>
+					<label>
+						Theme
+						<select name="theme">
+							<option value="unset">None</option>
+							<option value="primary">Primary</option>
+							<option value="secondary">Secondary</option>
+							<option value="tertiary">Tertiary</option>
+						</select>
+					</label>
+					<label>
+						Width Preset
+						<select name="width">
+							<option value="">None</option>
+							<option value="xs">XS (20rem)</option>
+							<option value="sm">SM (30rem)</option>
+							<option value="md">MD (48rem)</option>
+							<option value="lg">LG (64rem)</option>
+							<option value="xl">XL (80rem)</option>
+							<option value="xxl">XXL (96rem)</option>
+						</select>
+					</label>
+				</fieldset>
+			</details>
+
+			<details name="tabs">
+				<summary>Animation</summary>
+				<fieldset name="animations">
+					<label>
+						Animation Name
+						<select name="animationName">
+							<option value="">None</option>
+
+								<optgroup label="Fade">
+									<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
+								</optgroup>
+
+								<optgroup label="Bounce">
+									<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
+								</optgroup>
+
+								<optgroup label="Zoom">
+									<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
+								</optgroup>
+
+								<optgroup label="Slide">
+									<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
+								</optgroup>
+
+								<optgroup label="Flip">
+									<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
+								</optgroup>
+
+								<optgroup label="Reveal">
+									<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
+								</optgroup>
+
+								<optgroup label="Other">
+									<option value="opacity">opacity</option>
+								</optgroup>
+
+						</select>
+					</label>
+					<label>
+						Animation Range
+						<select name="animationRange">
+							<option value="">Default</option>
+							<option value="contain">Contain</option>
+							<option value="cover">Cover</option>
+							<option value="exit">Exit</option>
+						</select>
+					</label>
+				</fieldset>
+			</details>
+
+			<details name="tabs">
+				<summary>Advanced</summary>
+				<fieldset name="advanced">
+					<label>
+						ARIA Label
+						<input type="text" name="aria-label" value="">
+					</label>
+					<label>Gap Decorations
+						<select name="gap-decorations">
+							<option value="unset">None</option>
+							<option value="cols">Columns</option>
+							<option value="rows">Rows</option>
+							<option value="cols rows">Both</option>
+						</select>
+					</label>
+					<label>
+						Intrinsic Size
+						<select name="size">
+							<option value="auto">auto</option>
+							<option value="unset">None</option>
+							<option value="200px">200px</option>
+							<option value="300px">300px</option>
+							<option value="400px">400px</option>
+							<option value="500px">500px</option>
+							<option value="600px">600px</option>
+							<option value="50vh">50vh</option>
+							<option value="75vh">75vh</option>
+							<option value="100vh">100vh</option>
+						</select>
+					</label>
+					<label>
+						Self Alignment
+						<select name="self">
+							<option value="unset">None</option>
+							<option value="auto">auto</option>
+							<option value="start">start</option>
+							<option value="end">end</option>
+							<option value="center">center</option>
+							<option value="stretch">stretch</option>
+							<option value="baseline">baseline</option>
+							<option value="self-start">self-start</option>
+							<option value="self-end">self-end</option>
+						</select>
+					</label>
+				</fieldset>
+			</details>
+		</form>
+
+		<lay-out id="layout" lg="grid(3d)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</layout-composer>
+
+	<!-- <script type="module" src="./index.js"></script> -->
+
+	<script>
+		const app = document.getElementById('app');
+		const layout = document.getElementById('layout');
+
+		app.addEventListener('input', (event) => {
+			const [name, value] = [event.target.name, event.target.value];
+
+			if (name === 'bleed-mode') {
+				app.elements.bleed.value = 0;
+				if (value === 'full') {
+					layout.setAttribute('bleed', '');
+				} else {
+					layout.removeAttribute('bleed');
+				}
+				if (value !== 'number') return;
+			}
+
+			if (value === 'unset' || value === '' || value === false) {
+				layout.removeAttribute(name);
+				return;
+			}
+			layout.setAttribute(name, value);
+		});
+		
+	</script>
 </body>
 </html>
