@@ -46,65 +46,102 @@
 			}
 		}
 
-/* === Layout Composer === */
-@layer layout.composer {
 
-	@property --i {
+/* === Tab Group === */
+@scope (tab-group) {
+	@property --tab-group-index {
 		syntax: "<integer>";
 		inherits: true;
 		initial-value: 1;
 	}
-	@property --t {
+	@property --tab-group-total {
 		syntax: "<integer>";
 		inherits: true;
 		initial-value: 6;
 	}
-
-	layout-composer {
-		--layout-composer-accent:light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
-		--layout-composer-tabs-bdrs: 3rem;
-		--layout-composer-gap: 1ch;
+	:scope {
+		--tab-group-accent:light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+		--tab-group-bdrs: 3rem;
+		--tab-group-gap: 1ch;
 
 		container-type: inline-size;
 		display: block;
-		font-family: system-ui;
+		font-family: var(--tab-group-ff, system-ui);
 
-		form {
+		tab-container {
 			display: grid;
-			padding-block: var(--layout-composer-gap);
-			row-gap: var(--layout-composer-gap);
+			padding-block: var(--tab-group-gap);
+			row-gap: var(--tab-group-gap);
 		}
+
 		details {
-			--i: sibling-index();
-			--t: sibling-count();
+			--tab-group-index: sibling-index();
+			--tab-group-total: sibling-count();
 			&[open] summary {
-				color: var(--layout-composer-accent);
+				color: var(--tab-group-accent);
 				-webkit-text-stroke: 0.5px currentColor;
 				paint-order: stroke fill;
 			}
 		}
 		summary {
 			background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222));
-			border-radius: var(--layout-composer-tabs-bdrs);
+			border-radius: var(--tab-group-bdrs);
 			corner-shape: superellipse(1.25);
 			cursor: pointer;
 			display: grid;
 			font-size: clamp(.75rem, 2.5vw, 1rem);
-			grid-column: var(--i);
+			grid-column: var(--tab-group-index);
 			grid-row: 1;
 			isolation: isolate;
 			list-style: none;
-			padding: 1.5ch;
+			padding: 1.25ch;
 			position: relative;
 			text-align: center;
 			text-box: cap alphabetic;
 			transition: color .2s ease;
 			user-select: none;
 			&:focus-visible {
-				outline-color: var(--layout-composer-accent);
+				outline-color: var(--tab-group-accent);
 				outline-offset: -4px;
 			}
 		}
+
+		@container (width > 700px) {
+			tab-container {
+				--tab-group-gap: 2ch;
+				grid-template-columns: repeat(var(--tab-group-total), 1fr);
+				grid-template-rows: auto 1fr;
+				row-gap: 0;
+			}
+			details {
+				display: grid;
+				grid-column: 1 / -1;
+				grid-row: 1 / span 2;
+				grid-template-columns: subgrid;
+				grid-template-rows: subgrid;
+				&:not(:first-of-type):not(:last-of-type) summary {
+					border-radius: 0;
+				}
+				&:first-of-type summary {
+					border-radius: var(--tab-group-bdrs) 0 0 var(--tab-group-bdrs);
+				}
+				&:last-of-type summary {
+					border-radius: 0 var(--tab-group-bdrs) var(--tab-group-bdrs) 0;
+				}
+			}
+			details::details-content {
+				grid-column: 1 / -1;
+				grid-row: 2;
+			}
+		}
+	}
+}
+
+/* === Layout Composer === */
+@layer layout.composer {
+	layout-composer {
+		--layout-composer-gap: 1ch;
+
 		fieldset {
 			border: none;
 			display: flex;
@@ -128,280 +165,253 @@
 			row-gap: .5ch;
 			text-wrap: nowrap;
 		}
-
-		@container (width > 700px) {
-			form {
-				--layout-composer-gap: 2ch;
-				grid-template-columns: repeat(var(--t), 1fr);
-				grid-template-rows: auto 1fr;
-				row-gap: 0;
-			}
-			details {
-				--i: sibling-index();
-				--t: sibling-count();
-				display: grid;
-				grid-column: 1 / -1;
-				grid-row: 1 / span 2;
-				grid-template-columns: subgrid;
-				grid-template-rows: subgrid;
-				&:not(:first-of-type):not(:last-of-type) summary {
-					border-radius: 0;
-				}
-				&:first-of-type summary {
-					border-radius: var(--layout-composer-tabs-bdrs) 0 0 var(--layout-composer-tabs-bdrs);
-				}
-				&:last-of-type summary {
-					border-radius: 0 var(--layout-composer-tabs-bdrs) var(--layout-composer-tabs-bdrs) 0;
-				}
-			}
-			details::details-content {
-				grid-column: 1 / -1;
-				grid-row: 2;
-			}
-		}
 	}
 }
 	 </style>
 </head>
 <body>
+<!-- <img src="../../../dist/icons/grid(3a).svg" />
+<img src="../../../dist/icons/grid(3b).svg" />
+<img src="../../../dist/icons/grid(3c).svg" /> -->
 
-	<layout-composer>
-		<form id="app">
+<layout-composer>
+	<form id="app">
+		<tab-group>
+			<tab-container>
+				<details name="tabs" open>
+					<summary>Breakpoints</summary>
+					<fieldset name="breakpoints">
+						<label>Small
+							<select name="sm">
+								<option value="unset">None</option>
+								<optgroup label="Columns"></optgroup>
+								<option value="columns(2)">columns(2)</option>
+								</select>
+						</label>
 
-			<details name="tabs" >
-				<summary>Breakpoints</summary>
-				<fieldset name="breakpoints">
-					<label>Small
-						<select name="sm">
-							<option value="unset">None</option>
-							<optgroup label="Columns"></optgroup>
-							<option value="columns(2)">columns(2)</option>
+						<label>Medium
+							<select name="md">
+								<option value="unset">None</option>
+								<optgroup label="Columns"></optgroup>
+								<option value="columns(2)">columns(2)</option>
+								<option value="columns(3)">columns(3)</option>
+								<option value="columns(4)">columns(4)</option>
+								
+								<optgroup label="Grid"></optgroup>
+								
+								<option value="grid(3a)" data-items="3">grid(3a)</option>
+								<option value="grid(3b)">grid(3b)</option>
+								<option value="grid(3c)">grid(3c)</option>
+								<option value="grid(3d)" >grid(3d)</option>
 							</select>
-					</label>
+						</label>
+						<label>Large
+							<select name="lg">
+								<optgroup label="Grid"></optgroup>
+								<option value="unset">None</option>
+								<option value="grid(3a)" data-items="3">grid(3a)</option>
+								<option value="grid(3b)">grid(3b)</option>
+								<option value="grid(3c)">grid(3c)</option>
+								<option value="grid(3d)" selected>grid(3d)</option>
+							</select>
+						</label>
 
-					<label>Medium
-						<select name="md">
-							<option value="unset">None</option>
-							<optgroup label="Columns"></optgroup>
-							<option value="columns(2)">columns(2)</option>
-							<option value="columns(3)">columns(3)</option>
-							<option value="columns(4)">columns(4)</option>
-							
-							<optgroup label="Grid"></optgroup>
-							
-							<option value="grid(3a)" data-items="3">grid(3a)</option>
-							<option value="grid(3b)">grid(3b)</option>
-							<option value="grid(3c)">grid(3c)</option>
-							<option value="grid(3d)" >grid(3d)</option>
-						</select>
-					</label>
-					<label>Large
-						<select name="lg">
-							<optgroup label="Grid"></optgroup>
-							<option value="unset">None</option>
-							<option value="grid(3a)" data-items="3">grid(3a)</option>
-							<option value="grid(3b)">grid(3b)</option>
-							<option value="grid(3c)">grid(3c)</option>
-							<option value="grid(3d)" selected>grid(3d)</option>
-						</select>
-					</label>
-					<!-- <img src="../../../dist/icons/grid(3a).svg" />
-					<img src="../../../dist/icons/grid(3b).svg" />
-					<img src="../../../dist/icons/grid(3c).svg" /> -->
-				</fieldset>
-			</details>
+					</fieldset>
+				</details>
 
-			<details name="tabs" open>
-				<summary>Spacing</summary>
-				<fieldset name="spacing">
-					<label>
-						Space Top
-						<input type="number" name="space-top" value="0" min="0">
-					</label>
-					<label>
-						Space Bottom
-						<input type="number" name="space-bottom" value="0" min="0">
-					</label>
-					<label>
-						Padding Top
-						<input type="number" name="pad-top" value="0" min="0">
-					</label>
-					<label>
-						Padding Bottom
-						<input type="number" name="pad-bottom" value="0" min="0">
-					</label>
-					<label>
-						Padding Inline
-						<input type="number" name="pad-inline" value="0" min="0">
-					</label>
-				</fieldset>
-			</details>
+				<details name="tabs">
+					<summary>Spacing</summary>
+					<fieldset name="spacing">
+						<label>
+							Space Top
+							<input type="number" name="space-top" value="0" min="0">
+						</label>
+						<label>
+							Space Bottom
+							<input type="number" name="space-bottom" value="0" min="0">
+						</label>
+						<label>
+							Padding Top
+							<input type="number" name="pad-top" value="0" min="0">
+						</label>
+						<label>
+							Padding Bottom
+							<input type="number" name="pad-bottom" value="0" min="0">
+						</label>
+						<label>
+							Padding Inline
+							<input type="number" name="pad-inline" value="0" min="0">
+						</label>
+					</fieldset>
+				</details>
 
-			<details name="tabs" >
-				<summary>Gaps</summary>
-				<fieldset name="gaps">
-					<label>
-						Column Gap
-						<input type="number" name="col-gap" value="1" min="0" step="0.5">
-					</label>
-					<label>
-						Row Gap
-						<input type="number" name="row-gap" value="1" min="0" step="0.5">
-					</label>
-				</fieldset>
-			</details>
+				<details name="tabs" >
+					<summary>Gaps</summary>
+					<fieldset name="gaps">
+						<label>
+							Column Gap
+							<input type="number" name="col-gap" value="1" min="0" step="0.5">
+						</label>
+						<label>
+							Row Gap
+							<input type="number" name="row-gap" value="1" min="0" step="0.5">
+						</label>
+					</fieldset>
+				</details>
 
-			<details name="tabs">
-				<summary>Layout</summary>
-				<fieldset name="layout">
-					<label>Bleed
-						<input type="number" name="bleed" value="0" min="-100" max="100">
-					</label>
-					<label>Bleed mode
-						<select name="bleed-mode">
-							<option value="none">None</option>
-							<option value="full">Full</option>
-							<option value="number" selected>Numeric</option>
-						</select>
-					</label>
+				<details name="tabs">
+					<summary>Layout</summary>
+					<fieldset name="layout">
+						<label>Bleed
+							<input type="number" name="bleed" value="0" min="-100" max="100">
+						</label>
+						<label>Bleed mode
+							<select name="bleed-mode">
+								<option value="none">None</option>
+								<option value="full">Full</option>
+								<option value="number" selected>Numeric</option>
+							</select>
+						</label>
 
-					<label>
-						Overflow
-						<select name="overflow">
-							<option value="unset">None</option>
-							<option value="none">Hidden</option>
-							<option value="preview">Preview</option>
-							<option value="dynamic">Dynamic</option>
-						</select>
-					</label>
-					<label>
-						Theme
-						<select name="theme">
-							<option value="unset">None</option>
-							<option value="primary">Primary</option>
-							<option value="secondary">Secondary</option>
-							<option value="tertiary">Tertiary</option>
-						</select>
-					</label>
-					<label>
-						Width Preset
-						<select name="width">
-							<option value="">None</option>
-							<option value="xs">XS (20rem)</option>
-							<option value="sm">SM (30rem)</option>
-							<option value="md">MD (48rem)</option>
-							<option value="lg">LG (64rem)</option>
-							<option value="xl">XL (80rem)</option>
-							<option value="xxl">XXL (96rem)</option>
-						</select>
-					</label>
-				</fieldset>
-			</details>
+						<label>
+							Overflow
+							<select name="overflow">
+								<option value="unset">None</option>
+								<option value="none">Hidden</option>
+								<option value="preview">Preview</option>
+								<option value="dynamic">Dynamic</option>
+							</select>
+						</label>
+						<label>
+							Theme
+							<select name="theme">
+								<option value="unset">None</option>
+								<option value="primary">Primary</option>
+								<option value="secondary">Secondary</option>
+								<option value="tertiary">Tertiary</option>
+							</select>
+						</label>
+						<label>
+							Width Preset
+							<select name="width">
+								<option value="">None</option>
+								<option value="xs">XS (20rem)</option>
+								<option value="sm">SM (30rem)</option>
+								<option value="md">MD (48rem)</option>
+								<option value="lg">LG (64rem)</option>
+								<option value="xl">XL (80rem)</option>
+								<option value="xxl">XXL (96rem)</option>
+							</select>
+						</label>
+					</fieldset>
+				</details>
 
-			<details name="tabs">
-				<summary>Animation</summary>
-				<fieldset name="animations">
-					<label>
-						Animation Name
-						<select name="animationName">
-							<option value="">None</option>
+				<details name="tabs">
+					<summary>Animation</summary>
+					<fieldset name="animations">
+						<label>
+							Animation Name
+							<select name="animationName">
+								<option value="">None</option>
 
-								<optgroup label="Fade">
-									<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
-								</optgroup>
+									<optgroup label="Fade">
+										<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
+									</optgroup>
 
-								<optgroup label="Bounce">
-									<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
-								</optgroup>
+									<optgroup label="Bounce">
+										<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
+									</optgroup>
 
-								<optgroup label="Zoom">
-									<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
-								</optgroup>
+									<optgroup label="Zoom">
+										<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
+									</optgroup>
 
-								<optgroup label="Slide">
-									<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
-								</optgroup>
+									<optgroup label="Slide">
+										<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
+									</optgroup>
 
-								<optgroup label="Flip">
-									<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
-								</optgroup>
+									<optgroup label="Flip">
+										<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
+									</optgroup>
 
-								<optgroup label="Reveal">
-									<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
-								</optgroup>
+									<optgroup label="Reveal">
+										<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
+									</optgroup>
 
-								<optgroup label="Other">
-									<option value="opacity">opacity</option>
-								</optgroup>
+									<optgroup label="Other">
+										<option value="opacity">opacity</option>
+									</optgroup>
 
-						</select>
-					</label>
-					<label>
-						Animation Range
-						<select name="animationRange">
-							<option value="">Default</option>
-							<option value="contain">Contain</option>
-							<option value="cover">Cover</option>
-							<option value="exit">Exit</option>
-						</select>
-					</label>
-				</fieldset>
-			</details>
+							</select>
+						</label>
+						<label>
+							Animation Range
+							<select name="animationRange">
+								<option value="">Default</option>
+								<option value="contain">Contain</option>
+								<option value="cover">Cover</option>
+								<option value="exit">Exit</option>
+							</select>
+						</label>
+					</fieldset>
+				</details>
 
-			<details name="tabs">
-				<summary>Advanced</summary>
-				<fieldset name="advanced">
-					<label>
-						ARIA Label
-						<input type="text" name="aria-label" value="">
-					</label>
-					<label>Gap Decorations
-						<select name="gap-decorations">
-							<option value="unset">None</option>
-							<option value="cols">Columns</option>
-							<option value="rows">Rows</option>
-							<option value="cols rows">Both</option>
-						</select>
-					</label>
-					<label>
-						Intrinsic Size
-						<select name="size">
-							<option value="auto">auto</option>
-							<option value="unset">None</option>
-							<option value="200px">200px</option>
-							<option value="300px">300px</option>
-							<option value="400px">400px</option>
-							<option value="500px">500px</option>
-							<option value="600px">600px</option>
-							<option value="50vh">50vh</option>
-							<option value="75vh">75vh</option>
-							<option value="100vh">100vh</option>
-						</select>
-					</label>
-					<label>
-						Self Alignment
-						<select name="self">
-							<option value="unset">None</option>
-							<option value="auto">auto</option>
-							<option value="start">start</option>
-							<option value="end">end</option>
-							<option value="center">center</option>
-							<option value="stretch">stretch</option>
-							<option value="baseline">baseline</option>
-							<option value="self-start">self-start</option>
-							<option value="self-end">self-end</option>
-						</select>
-					</label>
-				</fieldset>
-			</details>
-		</form>
+				<details name="tabs">
+					<summary>Advanced</summary>
+					<fieldset name="advanced">
+						<label>
+							ARIA Label
+							<input type="text" name="aria-label" value="">
+						</label>
+						<label>Gap Decorations
+							<select name="gap-decorations">
+								<option value="unset">None</option>
+								<option value="cols">Columns</option>
+								<option value="rows">Rows</option>
+								<option value="cols rows">Both</option>
+							</select>
+						</label>
+						<label>
+							Intrinsic Size
+							<select name="size">
+								<option value="auto">auto</option>
+								<option value="unset">None</option>
+								<option value="200px">200px</option>
+								<option value="300px">300px</option>
+								<option value="400px">400px</option>
+								<option value="500px">500px</option>
+								<option value="600px">600px</option>
+								<option value="50vh">50vh</option>
+								<option value="75vh">75vh</option>
+								<option value="100vh">100vh</option>
+							</select>
+						</label>
+						<label>
+							Self Alignment
+							<select name="self">
+								<option value="unset">None</option>
+								<option value="auto">auto</option>
+								<option value="start">start</option>
+								<option value="end">end</option>
+								<option value="center">center</option>
+								<option value="stretch">stretch</option>
+								<option value="baseline">baseline</option>
+								<option value="self-start">self-start</option>
+								<option value="self-end">self-end</option>
+							</select>
+						</label>
+					</fieldset>
+				</details>
+			</tab-container>
+		</tab-group>
+	</form>
 
-		<lay-out id="layout" lg="grid(3d)">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-		</lay-out>
-	</layout-composer>
+	<lay-out id="layout" lg="grid(3d)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+</layout-composer>
 
 	<!-- <script type="module" src="./index.js"></script> -->
 
