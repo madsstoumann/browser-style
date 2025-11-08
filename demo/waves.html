@@ -7,29 +7,26 @@
 	<style>
 
 body {
-	--h: 220deg;
-	--s: 60%;
-	--l: 40%;
-	--wh: 50dvh;
-	--wv: 3.5cqb;
-	background: hsl(var(--h) 95% 90%);
-	display: grid;
-	margin: 0;
-	min-height: 100dvh;
+	margin:0;
+	overflow: hidden;
 }
 ul {
+	--h: 220deg;
+	--s: 60%;
+	--l: 90%;
+	--wh: 50dvh;
+	--wv: 3.5cqb;
 	all: unset;
-	align-items: end;
+	align-items: start;
+	background: hsl(var(--h) 75% 85%);
 	container-type: inline-size;
 	display: grid;
-	height: var(--wh);
-	overflow: hidden;
-	place-self: end;
-	width: 100%;
+	height: 100dvh;
+	width: 100vw;
 }
 li {
 	all: unset;
-	background: hsl(var(--h) var(--s) calc(var(--l) + (sibling-index() * 5%)));
+	background: hsl(var(--h) var(--s) calc(var(--l) - (var(--i)* 3.75%)));
 	clip-path: shape(from 0% var(--y1, 20%),
 		arc to var(--x2, 50%) var(--y2, 20%) of var(--r1h, 75%) var(--r1v, 100%) cw,
 		arc to 100% var(--y1, 20%) of var(--r2h, 100%) var(--r2v, 150%) ccw,
@@ -39,11 +36,23 @@ li {
 	);
 	display: block;
 	grid-area: 1 / 1;
-	height: 100%;
+	height: 33%;
 	justify-content: end;
-	translate: 0 calc(0cqb + (sibling-index() * var(--wv)) - var(--wv));
+	translate: 0 calc(0cqb + (var(--i) * var(--wv)) - var(--wv));
+
+	&:nth-child(1) {
+		--i: 1;
+		--x2: 50%;
+		--y1: 20%;
+		--y2: 20%;
+		--r1h: 75%;
+		--r1v: 100%;
+		--r2h: 100%;
+		--r2v: 150%;
+	}
 
 	&:nth-child(2) {
+		--i: 2;
 		--x2: 55%;
 		--y1: 20%;
 		--y2: 22%;
@@ -54,6 +63,7 @@ li {
 	}
 
 	&:nth-child(3) {
+		--i: 3;
 		--x2: 48%;
 		--y1: 19%;
 		--y2: 19%;
@@ -64,6 +74,7 @@ li {
 	}
 
 	&:nth-child(4) {
+		--i: 4;
 		--x2: 58%;
 		--y1: 21%;
 		--y2: 23%;
@@ -74,6 +85,7 @@ li {
 	}
 
 	&:nth-child(5) {
+		--i: 5;
 		--x2: 42%;
 		--y1: 20%;
 		--y2: 21%;
@@ -84,6 +96,7 @@ li {
 	}
 
 	&:nth-child(6) {
+		--i: 6;
 		--x2: 52%;
 		--y1: 19%;
 		--y2: 21%;
@@ -92,12 +105,180 @@ li {
 		--r2h: 95%;
 		--r2v: 148%;
 	}
+
+	&:nth-child(7) {
+		--i: 7;
+		--x2: 46%;
+		--y1: 20%;
+		--y2: 20%;
+		--r1h: 72%;
+		--r1v: 98%;
+		--r2h: 97%;
+		--r2v: 145%;
+	}
+
+	&:nth-child(8) {
+		--i: 8;
+		--x2: 54%;
+		--y1: 21%;
+		--y2: 22%;
+		--r1h: 78%;
+		--r1v: 103%;
+		--r2h: 102%;
+		--r2v: 152%;
+	}
+
+	&:nth-child(9) {
+		--i: 9;
+		--x2: 49%;
+		--y1: 19%;
+		--y2: 20%;
+		--r1h: 70%;
+		--r1v: 96%;
+		--r2h: 94%;
+		--r2v: 144%;
+	}
+
+	&:nth-child(10) {
+		--i: 10;
+		--x2: 56%;
+		--y1: 20%;
+		--y2: 21%;
+		--r1h: 82%;
+		--r1v: 107%;
+		--r2h: 103%;
+		--r2v: 153%;
+	}
+
+	&:nth-child(11) {
+		--i: 11;
+		--x2: 44%;
+		--y1: 21%;
+		--y2: 22%;
+		--r1h: 67%;
+		--r1v: 92%;
+		--r2h: 90%;
+		--r2v: 140%;
+	}
+
+	&:nth-child(12) {
+		--i: 12;
+		--x2: 53%;
+		--y1: 19%;
+		--y2: 21%;
+		--r1h: 76%;
+		--r1v: 101%;
+		--r2h: 98%;
+		--r2v: 149%;
+	}
+
+	&:nth-child(13) {
+		--i: 13;
+		--x2: 47%;
+		--y1: 20%;
+		--y2: 20%;
+		--r1h: 71%;
+		--r1v: 97%;
+		--r2h: 93%;
+		--r2v: 143%;
+	}
+
+	&:nth-child(14) {
+		--i: 14;
+		--x2: 57%;
+		--y1: 21%;
+		--y2: 23%;
+		--r1h: 83%;
+		--r1v: 108%;
+		--r2h: 104%;
+		--r2v: 154%;
+	}
+
+	&:nth-child(15) {
+		--i: 15;
+		--x2: 45%;
+		--y1: 19%;
+		--y2: 21%;
+		--r1h: 69%;
+		--r1v: 94%;
+		--r2h: 91%;
+		--r2v: 141%;
+	}
+
+	&:nth-child(16) {
+		--i: 16;
+		--x2: 51%;
+		--y1: 20%;
+		--y2: 22%;
+		--r1h: 74%;
+		--r1v: 99%;
+		--r2h: 96%;
+		--r2v: 147%;
+	}
+
+	&:nth-child(17) {
+		--i: 17;
+		--x2: 48%;
+		--y1: 21%;
+		--y2: 21%;
+		--r1h: 73%;
+		--r1v: 98%;
+		--r2h: 95%;
+		--r2v: 146%;
+	}
+
+	&:nth-child(18) {
+		--i: 18;
+		--x2: 55%;
+		--y1: 19%;
+		--y2: 22%;
+		--r1h: 79%;
+		--r1v: 104%;
+		--r2h: 101%;
+		--r2v: 151%;
+	}
+
+	&:nth-child(19) {
+		--i: 19;
+		--x2: 43%;
+		--y1: 20%;
+		--y2: 21%;
+		--r1h: 66%;
+		--r1v: 90%;
+		--r2h: 89%;
+		--r2v: 139%;
+	}
+
+	&:nth-child(20) {
+		--i: 20;
+		--x2: 52%;
+		--y1: 20%;
+		--y2: 21%;
+		--r1h: 77%;
+		--r1v: 102%;
+		--r2h: 99%;
+		--r2v: 150%;
+	}
 }
 	</style>
 </head>
 <body>
 
 <ul>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
 	<li></li>
 	<li></li>
 	<li></li>
