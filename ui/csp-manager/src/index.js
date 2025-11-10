@@ -1,6 +1,7 @@
 import cspDirectives from './csp-directives.json' with { type: 'json' };
 import i18nData from './i18n.json' with { type: 'json' };
 import { evaluatePolicy } from './evaluate.js';
+import { loadAndMergeConfigs } from './config-utils.js';
 
 class CspManager extends HTMLElement {
 	constructor() {
@@ -8,6 +9,16 @@ class CspManager extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this.#loadStyles();
 		this.evaluations = null;
+
+		// Store configurations (will be loaded in connectedCallback)
+		this.directivesConfig = cspDirectives;
+		this.i18nConfig = i18nData;
+		this.rulesConfig = null;
+
+		// Create a promise that resolves when the component is ready
+		this.ready = new Promise(resolve => {
+			this._resolveReady = resolve;
+		});
 	}
 
 	async #loadStyles() {
@@ -28,7 +39,7 @@ class CspManager extends HTMLElement {
 	 */
 	t(key) {
 		const keys = key.split('.');
-		let value = i18nData[this.lang];
+		let value = this.i18nConfig[this.lang];
 
 		for (const k of keys) {
 			if (value && typeof value === 'object' && k in value) {
@@ -42,14 +53,14 @@ class CspManager extends HTMLElement {
 	}
 
 	/**
-	 * Initialize state from external JSON files
+	 * Initialize state from configuration
 	 * Merges CSP directives configuration with i18n descriptions
 	 */
 	initializeState() {
 		const state = {};
-		const descriptions = i18nData[this.lang]?.directives || {};
+		const descriptions = this.i18nConfig[this.lang]?.directives || {};
 
-		Object.entries(cspDirectives).forEach(([key, config]) => {
+		Object.entries(this.directivesConfig).forEach(([key, config]) => {
 			state[key] = {
 				enabled: !!config.enabled,
 				defaults: [...config.defaults],
@@ -127,10 +138,13 @@ class CspManager extends HTMLElement {
 		this.dispatchChangeEvent();
 	}
 
-	fromString(cspString) {
+	async fromString(cspString) {
 		if (typeof cspString !== 'string' || !cspString.trim()) {
 			return;
 		}
+
+		// Wait for component to be ready
+		await this.ready;
 
 		const newPolicy = {};
 		const directives = cspString.trim().split(';').filter(d => d.trim());
@@ -153,6 +167,153 @@ class CspManager extends HTMLElement {
 
 	get cspString() {
 		return this.generateCspString();
+	}
+
+	/**
+	 * Set custom directives configuration
+	 * Merges with existing configuration and re-initializes state
+	 * @param {Object} config - Directives configuration object
+	 * @example
+	 * manager.setDirectivesConfig({
+	 *   'new-directive': {
+	 *     defaults: [],
+	 *     type: 'source-list',
+	 *     enabled: false
+	 *   }
+	 * });
+	 */
+	setDirectivesConfig(config) {
+		if (!config || typeof config !== 'object') {
+			console.warn('Invalid directives config: must be an object');
+			return;
+		}
+
+		// Merge with existing config
+		this.directivesConfig = { ...this.directivesConfig, ...config };
+
+		// Re-initialize state with new directives
+		const newState = this.initializeState();
+
+		// Preserve existing enabled states and added values where possible
+		Object.keys(newState).forEach(key => {
+			if (this.state && this.state[key]) {
+				newState[key].enabled = this.state[key].enabled;
+				newState[key].added = [...this.state[key].added];
+			}
+		});
+
+		this.state = newState;
+		this.render();
+
+		// Re-run evaluation if enabled
+		if (this.hasAttribute('evaluate')) {
+			this.runEvaluation();
+		}
+
+		this.dispatchChangeEvent();
+	}
+
+	/**
+	 * Set custom i18n configuration
+	 * Merges with existing i18n data and re-renders
+	 * @param {Object} config - i18n configuration object
+	 * @example
+	 * manager.setI18nConfig({
+	 *   en: {
+	 *     directives: {
+	 *       'new-directive': 'Description of new directive'
+	 *     }
+	 *   }
+	 * });
+	 */
+	setI18nConfig(config) {
+		if (!config || typeof config !== 'object') {
+			console.warn('Invalid i18n config: must be an object');
+			return;
+		}
+
+		// Deep merge i18n configs
+		const mergeI18n = (target, source) => {
+			const result = { ...target };
+			for (const lang in source) {
+				if (source[lang] && typeof source[lang] === 'object') {
+					result[lang] = { ...target[lang], ...source[lang] };
+					// Merge nested directives
+					if (source[lang].directives) {
+						result[lang].directives = {
+							...(target[lang]?.directives || {}),
+							...source[lang].directives
+						};
+					}
+					// Merge nested ui
+					if (source[lang].ui) {
+						result[lang].ui = {
+							...(target[lang]?.ui || {}),
+							...source[lang].ui
+						};
+					}
+					// Merge nested eval
+					if (source[lang].eval) {
+						result[lang].eval = {
+							...(target[lang]?.eval || {}),
+							...source[lang].eval
+						};
+					}
+				} else {
+					result[lang] = source[lang];
+				}
+			}
+			return result;
+		};
+
+		this.i18nConfig = mergeI18n(this.i18nConfig, config);
+
+		// Update state descriptions
+		const descriptions = this.i18nConfig[this.lang]?.directives || {};
+		Object.keys(this.state).forEach(key => {
+			if (descriptions[key]) {
+				this.state[key].description = descriptions[key];
+			}
+		});
+
+		this.render();
+	}
+
+	/**
+	 * Set custom evaluation rules configuration
+	 * Replaces existing custom rules and re-runs evaluation
+	 * @param {Object} config - Rules configuration object
+	 * @example
+	 * manager.setRulesConfig({
+	 *   unsafeKeywords: {
+	 *     "'unsafe-new-thing'": {
+	 *       severity: 'high',
+	 *       messageKey: 'eval.unsafeNewThing',
+	 *       recommendationKey: 'eval.unsafeNewThingRec'
+	 *     }
+	 *   },
+	 *   criticalDirectives: {
+	 *     'new-critical-directive': {
+	 *       messageKey: 'eval.missingNewCritical',
+	 *       recommendationKey: 'eval.missingNewCriticalRec'
+	 *     }
+	 *   }
+	 * });
+	 */
+	setRulesConfig(config) {
+		if (!config || typeof config !== 'object') {
+			console.warn('Invalid rules config: must be an object');
+			return;
+		}
+
+		this.rulesConfig = config;
+
+		// Re-run evaluation if enabled
+		if (this.hasAttribute('evaluate')) {
+			this.runEvaluation();
+		} else {
+			this.render();
+		}
 	}
 
 	/**
@@ -196,7 +357,7 @@ class CspManager extends HTMLElement {
 	 * Run CSP evaluation on current policy
 	 */
 	runEvaluation() {
-		this.evaluations = evaluatePolicy(this.state, this.t.bind(this));
+		this.evaluations = evaluatePolicy(this.state, this.t.bind(this), this.rulesConfig);
 		this.render();
 	}
 
@@ -263,9 +424,30 @@ class CspManager extends HTMLElement {
 		return `&lt;meta http-equiv="Content-Security-Policy" content="\n${policy}\n\t"&gt;`;
 	}
 
-	connectedCallback() {
+	/**
+	 * Load and merge custom configurations from HTML attributes
+	 * Attributes are read only once during mount (connectedCallback)
+	 * @private
+	 */
+	async #loadConfigsFromAttributes() {
+		const mergedConfigs = await loadAndMergeConfigs(
+			{ cspDirectives, i18nData },
+			this
+		);
+
+		this.directivesConfig = mergedConfigs.directives;
+		this.i18nConfig = mergedConfigs.i18n;
+		this.rulesConfig = mergedConfigs.rules;
+	}
+
+	async connectedCallback() {
 		document.documentElement.style.setProperty('interpolate-size', 'allow-keywords');
 		this.lang = this.getAttribute('lang') || 'en';
+
+		// Load and merge custom configurations from attributes
+		await this.#loadConfigsFromAttributes();
+
+		// Initialize state with merged configurations
 		this.state = this.initializeState();
 		const initialPolicy = this.getAttribute('initial-policy');
 
@@ -284,6 +466,9 @@ class CspManager extends HTMLElement {
 				this.runEvaluation();
 			}
 		}
+
+		// Resolve the ready promise
+		this._resolveReady();
 
 		this.shadowRoot.addEventListener('click', (e) => {
 			const target = e.target;

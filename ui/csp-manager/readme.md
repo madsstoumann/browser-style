@@ -82,6 +82,7 @@ Enable real-time security checks:
 ## 📚 Documentation
 
 - **[Live Demo](https://browser.style/ui/csp-manager/demo.html)** - See all features in action
+- **[Custom Configuration](https://browser.style/ui/csp-manager/config.html)** - Add custom directives and rules
 - **[Contentful Integration](./docs/contentful.md)** - Complete guide for Contentful CMS
 - **[Storyblok Integration](./docs/storyblok.md)** - Complete guide for Storyblok CMS
 
@@ -170,6 +171,9 @@ cspManager.fromString(existingCSP);
 | `evaluate` | Boolean | Enable security evaluation |
 | `lang` | String | Language code (e.g., `"en"`, `"da"`) |
 | `initial-policy` | String | JSON string of initial policy |
+| `directives` | String | JSON string or URL for custom directives config |
+| `i18n` | String | JSON string or URL for custom translations |
+| `rules` | String | JSON string or URL for custom evaluation rules |
 
 ### Properties
 
@@ -267,6 +271,180 @@ Manually trigger security evaluation (if `evaluate` attribute is set):
 ```javascript
 cspManager.runEvaluation();
 ```
+
+#### `setDirectivesConfig(config)`
+
+Add or override directive definitions. Merges with existing configuration:
+
+```javascript
+cspManager.setDirectivesConfig({
+  'navigate-to': {
+    defaults: ["'self'"],
+    type: 'source-list',
+    enabled: false
+  }
+});
+```
+
+#### `setI18nConfig(config)`
+
+Add or override translations. Deep merges with existing i18n data:
+
+```javascript
+cspManager.setI18nConfig({
+  en: {
+    directives: {
+      'navigate-to': 'Restricts navigation URLs'
+    }
+  }
+});
+```
+
+#### `setRulesConfig(config)`
+
+Replace evaluation rules. Merges with default rules:
+
+```javascript
+cspManager.setRulesConfig({
+  unsafeKeywords: {
+    "'wasm-unsafe-eval'": {
+      severity: 'medium',
+      messageKey: 'eval.wasmWarning',
+      recommendationKey: 'eval.wasmWarningRec'
+    }
+  }
+});
+```
+
+---
+
+## 🛠️ Custom Configuration
+
+The CSP Manager supports custom directives, translations, and evaluation rules, allowing you to extend the component as new CSP directives are added or when you need custom security policies.
+
+### Why Custom Configuration?
+
+- **Future-proof**: Add new CSP directives as they're added to the specification
+- **Organization-specific**: Define custom security rules for your company
+- **Experimental features**: Test browser-specific or experimental directives
+- **Multi-language**: Add translations for additional languages
+
+### Quick Start
+
+#### HTML Attributes (Static)
+
+Load custom configurations via attributes (read once on mount):
+
+```html
+<!-- Inline JSON -->
+<csp-manager
+  directives='{"navigate-to": {"defaults": [], "type": "source-list"}}'
+  i18n='{"en": {"directives": {"navigate-to": "Navigation directive"}}}'
+></csp-manager>
+
+<!-- External Files -->
+<csp-manager
+  directives="./custom-directives.json"
+  i18n="./custom-i18n.json"
+  rules="./custom-rules.json"
+></csp-manager>
+```
+
+#### JavaScript Setters (Dynamic)
+
+Configure programmatically after mount:
+
+```javascript
+const manager = document.querySelector('csp-manager');
+
+// Add custom directive
+manager.setDirectivesConfig({
+  'prefetch-src': {
+    defaults: ["'self'"],
+    type: 'source-list',
+    enabled: false
+  }
+});
+
+// Add translation
+manager.setI18nConfig({
+  en: {
+    directives: {
+      'prefetch-src': 'Valid sources for prefetch and prerendering'
+    }
+  }
+});
+
+// Add evaluation rule
+manager.setRulesConfig({
+  criticalDirectives: {
+    'form-action': {
+      messageKey: 'eval.missingFormAction',
+      recommendationKey: 'eval.missingFormActionRec'
+    }
+  }
+});
+```
+
+### Configuration Formats
+
+#### Directives Configuration
+
+```json
+{
+  "directive-name": {
+    "defaults": ["'self'"],
+    "type": "source-list",
+    "enabled": false,
+    "tokens": []
+  }
+}
+```
+
+**Types:**
+- `source-list` - URL sources (e.g., `script-src`, `style-src`)
+- `token-list` - Predefined tokens (e.g., `sandbox`)
+- `boolean` - Flag directives (e.g., `upgrade-insecure-requests`)
+
+#### i18n Configuration
+
+```json
+{
+  "en": {
+    "directives": {
+      "directive-name": "Description"
+    },
+    "eval": {
+      "messageKey": "Evaluation message",
+      "recommendationKey": "Recommendation"
+    }
+  }
+}
+```
+
+#### Rules Configuration
+
+```json
+{
+  "unsafeKeywords": {
+    "'keyword'": {
+      "severity": "high",
+      "messageKey": "eval.message",
+      "recommendationKey": "eval.recommendation"
+    }
+  },
+  "criticalDirectives": {
+    "directive": {
+      "messageKey": "eval.missing",
+      "recommendationKey": "eval.missingRec"
+    }
+  }
+}
+```
+
+### Examples
+
+See [config.html](./config.html) for interactive examples and the [examples/](./examples/) folder for sample JSON files.
 
 ---
 
@@ -406,16 +584,22 @@ csp-manager/
 ├── src/
 │   ├── index.js              # Main component
 │   ├── evaluate.js           # Security evaluator
+│   ├── config-utils.js       # Configuration utilities
 │   ├── index.css             # Component styles
 │   ├── csp-directives.json   # CSP specification
 │   └── i18n.json             # Translations
+├── examples/
+│   ├── custom-directives.json # Example custom directives
+│   ├── custom-i18n.json       # Example translations
+│   └── custom-rules.json      # Example evaluation rules
 ├── docs/
 │   ├── contentful.md         # Contentful guide
 │   └── storyblok.md          # Storyblok guide
 ├── demo.html                 # Interactive demos
+├── config.html               # Custom configuration demo
 ├── index.html                # Basic example
 ├── package.json
-└── readme.md
+└── README.md
 ```
 
 ---

@@ -1,0 +1,19 @@
+{
+	"unsafeKeywords": {
+		"'wasm-unsafe-eval'": {
+			"severity": "medium",
+			"messageKey": "eval.wasmUnsafeEval",
+			"recommendationKey": "eval.wasmUnsafeEvalRec"
+		}
+	},
+	"criticalDirectives": {
+		"form-action": {
+			"messageKey": "eval.missingFormAction",
+			"recommendationKey": "eval.missingFormActionRec"
+		}
+	},
+	"scriptStyleDirectives": [
+		"prefetch-src",
+		"navigate-to"
+	]
+}

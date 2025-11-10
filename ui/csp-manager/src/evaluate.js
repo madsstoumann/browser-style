@@ -29,7 +29,7 @@ export const SEVERITY = {
 /**
  * Check if a value is an unsafe keyword
  */
-const UNSAFE_KEYWORDS = {
+export const UNSAFE_KEYWORDS = {
 	"'unsafe-inline'": {
 		severity: SEVERITY.HIGH,
 		messageKey: 'eval.unsafeInline',
@@ -50,7 +50,7 @@ const UNSAFE_KEYWORDS = {
 /**
  * Check if a value is a risky wildcard
  */
-const WILDCARDS = {
+export const WILDCARDS = {
 	'*': {
 		severity: SEVERITY.HIGH,
 		messageKey: 'eval.wildcardAll',
@@ -76,7 +76,7 @@ const WILDCARDS = {
 /**
  * Secure patterns to look for (positive indicators)
  */
-const SECURE_PATTERNS = {
+export const SECURE_PATTERNS = {
 	nonce: /^'nonce-[A-Za-z0-9+/=]+'$/,
 	hash: /^'(sha256|sha384|sha512)-[A-Za-z0-9+/=]+'$/,
 	strictDynamic: "'strict-dynamic'"
@@ -85,7 +85,7 @@ const SECURE_PATTERNS = {
 /**
  * Directives that are critical for security
  */
-const CRITICAL_DIRECTIVES = {
+export const CRITICAL_DIRECTIVES = {
 	'base-uri': {
 		messageKey: 'eval.missingBaseUri',
 		recommendationKey: 'eval.missingBaseUriRec'
@@ -99,25 +99,43 @@ const CRITICAL_DIRECTIVES = {
 /**
  * Script/style related directives that need stricter evaluation
  */
-const SCRIPT_STYLE_DIRECTIVES = ['script-src', 'script-src-elem', 'script-src-attr', 'style-src', 'style-src-elem', 'style-src-attr', 'default-src'];
+export const SCRIPT_STYLE_DIRECTIVES = ['script-src', 'script-src-elem', 'script-src-attr', 'style-src', 'style-src-elem', 'style-src-attr', 'default-src'];
 
 /**
  * Evaluate a single directive's values
  * @param {string} directive - Directive name
  * @param {string[]} values - Array of directive values
  * @param {Function} t - Translation function
+ * @param {Object} [customRules] - Custom evaluation rules
  * @returns {DirectiveEvaluation}
  */
-export function evaluateDirective(directive, values, t) {
+export function evaluateDirective(directive, values, t, customRules = null) {
 	const findings = [];
 	let overallSeverity = SEVERITY.SECURE;
 
+	// Merge custom rules with defaults
+	const unsafeKeywords = customRules?.unsafeKeywords
+		? { ...UNSAFE_KEYWORDS, ...customRules.unsafeKeywords }
+		: UNSAFE_KEYWORDS;
+
+	const wildcards = customRules?.wildcards
+		? { ...WILDCARDS, ...customRules.wildcards }
+		: WILDCARDS;
+
+	const securePatterns = customRules?.securePatterns
+		? { ...SECURE_PATTERNS, ...customRules.securePatterns }
+		: SECURE_PATTERNS;
+
+	const scriptStyleDirectives = customRules?.scriptStyleDirectives
+		? [...SCRIPT_STYLE_DIRECTIVES, ...customRules.scriptStyleDirectives]
+		: SCRIPT_STYLE_DIRECTIVES;
+
 	// Check for unsafe keywords
 	for (const value of values) {
-		if (UNSAFE_KEYWORDS[value]) {
-			const config = UNSAFE_KEYWORDS[value];
+		if (unsafeKeywords[value]) {
+			const config = unsafeKeywords[value];
 			// unsafe-inline in script/style directives is HIGH, elsewhere MEDIUM
-			const severity = SCRIPT_STYLE_DIRECTIVES.includes(directive) && value === "'unsafe-inline'"
+			const severity = scriptStyleDirectives.includes(directive) && value === "'unsafe-inline'"
 				? SEVERITY.HIGH
 				: config.severity;
 
@@ -137,10 +155,10 @@ export function evaluateDirective(directive, values, t) {
 
 	// Check for wildcards (especially dangerous in script-src)
 	for (const value of values) {
-		if (WILDCARDS[value]) {
-			const config = WILDCARDS[value];
+		if (wildcards[value]) {
+			const config = wildcards[value];
 			// Wildcards in script-src are more dangerous
-			const severity = SCRIPT_STYLE_DIRECTIVES.includes(directive) && (value === '*' || value === 'data:')
+			const severity = scriptStyleDirectives.includes(directive) && (value === '*' || value === 'data:')
 				? SEVERITY.HIGH
 				: config.severity;
 
@@ -160,9 +178,9 @@ export function evaluateDirective(directive, values, t) {
 
 	// Check for secure patterns (nonces, hashes)
 	const hasSecurePattern = values.some(value =>
-		SECURE_PATTERNS.nonce.test(value) ||
-		SECURE_PATTERNS.hash.test(value) ||
-		value === SECURE_PATTERNS.strictDynamic
+		securePatterns.nonce.test(value) ||
+		securePatterns.hash.test(value) ||
+		value === securePatterns.strictDynamic
 	);
 
 	// Special handling for 'none'
@@ -182,7 +200,7 @@ export function evaluateDirective(directive, values, t) {
 	// Only add positive messages if there are no security issues
 	if (overallSeverity === SEVERITY.SECURE) {
 		// If script-src has secure patterns, note it positively
-		if (hasSecurePattern && SCRIPT_STYLE_DIRECTIVES.includes(directive)) {
+		if (hasSecurePattern && scriptStyleDirectives.includes(directive)) {
 			findings.push({
 				severity: SEVERITY.SECURE,
 				message: t('eval.hasNonceOrHash'),
@@ -209,21 +227,27 @@ export function evaluateDirective(directive, values, t) {
  * Evaluate entire CSP policy
  * @param {Object} state - CSP state object from CspManager
  * @param {Function} t - Translation function
+ * @param {Object} [customRules] - Custom evaluation rules
  * @returns {Object<string, DirectiveEvaluation>}
  */
-export function evaluatePolicy(state, t) {
+export function evaluatePolicy(state, t, customRules = null) {
 	const evaluations = {};
+
+	// Merge custom critical directives with defaults
+	const criticalDirectives = customRules?.criticalDirectives
+		? { ...CRITICAL_DIRECTIVES, ...customRules.criticalDirectives }
+		: CRITICAL_DIRECTIVES;
 
 	// Evaluate each enabled directive
 	for (const [directive, config] of Object.entries(state)) {
 		if (config.enabled) {
 			const allValues = [...config.defaults, ...config.added];
-			evaluations[directive] = evaluateDirective(directive, allValues, t);
+			evaluations[directive] = evaluateDirective(directive, allValues, t, customRules);
 		}
 	}
 
 	// Check for missing critical directives
-	for (const [criticalDirective, config] of Object.entries(CRITICAL_DIRECTIVES)) {
+	for (const [criticalDirective, config] of Object.entries(criticalDirectives)) {
 		if (!state[criticalDirective]?.enabled) {
 			// Store as a warning on default-src or create a global warning
 			if (!evaluations._missing) {

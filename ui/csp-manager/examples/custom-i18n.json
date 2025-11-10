@@ -1,0 +1,30 @@
+{
+	"en": {
+		"directives": {
+			"report-uri": "Deprecated. Specifies a URI to send CSP violation reports. Use report-to instead.",
+			"navigate-to": "Restricts the URLs to which a document can initiate navigation by any means.",
+			"prefetch-src": "Specifies valid sources for request prefetch and prerendering.",
+			"webrtc": "Defines whether WebRTC connections are allowed."
+		},
+		"eval": {
+			"wasmUnsafeEval": "Using 'wasm-unsafe-eval' allows WebAssembly compilation from strings",
+			"wasmUnsafeEvalRec": "Only use if WebAssembly is required and all sources are trusted",
+			"missingFormAction": "Missing 'form-action' directive allows form submissions to any URL",
+			"missingFormActionRec": "Add 'form-action' directive to restrict where forms can be submitted"
+		}
+	},
+	"da": {
+		"directives": {
+			"report-uri": "Forældet. Angiver en URI til at sende CSP-overtrædelsesrapporter. Brug report-to i stedet.",
+			"navigate-to": "Begrænser de URL'er, som et dokument kan starte navigation til på nogen måde.",
+			"prefetch-src": "Angiver gyldige kilder til anmodningsprefetch og prærendering.",
+			"webrtc": "Definerer om WebRTC-forbindelser er tilladt."
+		},
+		"eval": {
+			"wasmUnsafeEval": "Brug af 'wasm-unsafe-eval' tillader WebAssembly-kompilering fra strenge",
+			"wasmUnsafeEvalRec": "Brug kun hvis WebAssembly er påkrævet og alle kilder er betroede",
+			"missingFormAction": "Manglende 'form-action' direktiv tillader formularindsendelser til enhver URL",
+			"missingFormActionRec": "Tilføj 'form-action' direktiv for at begrænse hvor formularer kan indsendes"
+		}
+	}
+}

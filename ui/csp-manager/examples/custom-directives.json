@@ -1,0 +1,23 @@
+{
+	"report-uri": {
+		"defaults": [],
+		"type": "source-list",
+		"enabled": false
+	},
+	"navigate-to": {
+		"defaults": ["'self'"],
+		"type": "source-list",
+		"enabled": false
+	},
+	"prefetch-src": {
+		"defaults": ["'self'"],
+		"type": "source-list",
+		"enabled": false
+	},
+	"webrtc": {
+		"defaults": [],
+		"type": "token-list",
+		"enabled": false,
+		"tokens": ["'allow'", "'block'"]
+	}
+}

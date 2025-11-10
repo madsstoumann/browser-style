@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSP Manager - Custom Configuration</title>
+	<link rel="stylesheet" href="/base.css">
+	<script src="./src/index.js" type="module"></script>
+	<style>
+		section {
+			margin-block: 3rem;
+			padding-block-end: 2rem;
+			border-bottom: 1px solid #ccc;
+		}
+		section:last-of-type {
+			border-bottom: none;
+		}
+		.demo-controls {
+			display: flex;
+			gap: 1rem;
+			margin-block: 1rem;
+		}
+		pre#output {
+			background: #f5f5f5;
+			padding: 1rem;
+			border-radius: 0.5rem;
+			min-height: 3rem;
+			font-size: 0.875rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>CSP Manager - Custom Configuration</h1>
+	<p>Examples demonstrating how to customize directives, translations, and evaluation rules.</p>
+
+	<hr>
+
+	<!-- Demo 1: Using HTML Attributes with Inline JSON -->
+	<section>
+		<h2>1. HTML Attributes (Inline JSON)</h2>
+		<p>Custom directive added via inline JSON in the <code>directives</code> attribute.</p>
+
+		<csp-manager
+			id="demo1"
+			lang="en"
+			directives='{"report-uri": {"defaults": [], "type": "source-list", "enabled": false}}'
+			i18n='{"en": {"directives": {"report-uri": "Deprecated. Use report-to instead."}}}'
+			evaluate
+		></csp-manager>
+	</section>
+
+	<!-- Demo 2: Using JavaScript Setters -->
+	<section>
+		<h2>2. JavaScript Setters</h2>
+		<p>Click the buttons below to dynamically add custom configurations:</p>
+
+		<p>
+			<button id="addDirective">Add Custom Directive</button>
+			<button id="addTranslation">Add Translation</button>
+			<button id="addRule">Add Evaluation Rule</button>
+			<button id="enableCustom">Enable Custom Directive</button>
+		</p>
+
+		<csp-manager id="demo2" lang="en" evaluate></csp-manager>
+
+		<pre id="output"></pre>
+	</section>
+
+	<!-- Demo 3: Complete Example -->
+	<section>
+		<h2>3. Complete Custom Configuration</h2>
+		<p>Shows a complete setup with a new directive, translation, and evaluation rule.</p>
+
+		<p><button id="setupComplete">Setup Complete Configuration</button></p>
+
+		<csp-manager id="demo3" lang="en" evaluate></csp-manager>
+	</section>
+
+	<script type="module">
+		// Wait for custom elements to be defined
+		await customElements.whenDefined('csp-manager');
+
+		const demo2 = document.getElementById('demo2');
+		const demo3 = document.getElementById('demo3');
+		const output = document.getElementById('output');
+
+		// Demo 2: Individual setter examples
+		document.getElementById('addDirective').addEventListener('click', () => {
+			demo2.setDirectivesConfig({
+				'navigate-to': {
+					defaults: ["'self'"],
+					type: 'source-list',
+					enabled: false
+				}
+			});
+			output.textContent = 'Added "navigate-to" directive to the configuration.';
+		});
+
+		document.getElementById('addTranslation').addEventListener('click', () => {
+			demo2.setI18nConfig({
+				en: {
+					directives: {
+						'navigate-to': 'Restricts the URLs to which a document can initiate navigation (experimental).'
+					}
+				}
+			});
+			output.textContent = 'Added translation for "navigate-to" directive.';
+		});
+
+		document.getElementById('addRule').addEventListener('click', () => {
+			demo2.setRulesConfig({
+				unsafeKeywords: {
+					"'wasm-unsafe-eval'": {
+						severity: 'medium',
+						messageKey: 'eval.wasmWarning',
+						recommendationKey: 'eval.wasmWarningRec'
+					}
+				}
+			});
+
+			// Also add the i18n for the rule
+			demo2.setI18nConfig({
+				en: {
+					eval: {
+						wasmWarning: 'Using wasm-unsafe-eval allows WebAssembly compilation',
+						wasmWarningRec: 'Only use if WebAssembly is required and sources are trusted'
+					}
+				}
+			});
+
+			output.textContent = 'Added custom evaluation rule for "wasm-unsafe-eval".';
+		});
+
+		document.getElementById('enableCustom').addEventListener('click', () => {
+			demo2.enableDirective('navigate-to');
+			output.textContent = 'Enabled "navigate-to" directive in the UI.';
+		});
+
+		// Demo 3: Complete setup
+		document.getElementById('setupComplete').addEventListener('click', () => {
+			// Add a new directive
+			demo3.setDirectivesConfig({
+				'prefetch-src': {
+					defaults: ["'self'"],
+					type: 'source-list',
+					enabled: true
+				},
+				'navigate-to': {
+					defaults: ["'self'"],
+					type: 'source-list',
+					enabled: false
+				}
+			});
+
+			// Add translations
+			demo3.setI18nConfig({
+				en: {
+					directives: {
+						'prefetch-src': 'Specifies valid sources for request prefetch and prerendering.',
+						'navigate-to': 'Restricts the URLs to which a document can initiate navigation.'
+					},
+					eval: {
+						prefetchWildcard: 'Using wildcard in prefetch-src allows prefetch from any origin',
+						prefetchWildcardRec: 'Specify explicit trusted origins for prefetch operations'
+					}
+				}
+			});
+
+			// Add evaluation rules
+			demo3.setRulesConfig({
+				scriptStyleDirectives: ['prefetch-src'],
+				criticalDirectives: {
+					'form-action': {
+						messageKey: 'eval.missingFormAction',
+						recommendationKey: 'eval.missingFormActionRec'
+					}
+				}
+			});
+
+			// Add i18n for critical directives warning
+			demo3.setI18nConfig({
+				en: {
+					eval: {
+						missingFormAction: 'Missing form-action directive allows forms to submit anywhere',
+						missingFormActionRec: 'Add form-action directive to restrict form submissions'
+					}
+				}
+			});
+
+			console.log('Complete configuration applied!');
+			console.log('Current policy:', demo3.policy);
+			console.log('CSP String:', demo3.cspString);
+		});
+
+		// Listen to changes
+		demo2.addEventListener('csp-change', (e) => {
+			console.log('Demo 2 - Policy changed:', e.detail);
+		});
+
+		demo3.addEventListener('csp-change', (e) => {
+			console.log('Demo 3 - Policy changed:', e.detail);
+		});
+	</script>
+</body>
+</html>
