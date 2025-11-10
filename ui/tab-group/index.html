@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Layout Composer</title>
+	<link rel="stylesheet" href="../icon/index.css">
+	<title>Tab Group</title>
 	<style>
 		body {
 			background: Canvas;
@@ -14,7 +15,9 @@
 		}
 
 /* === Tab Group === */
+	/* @import "../icon/index.css"; */
 @scope (tab-group) {
+
 	@property --tab-group-index {
 		syntax: "<integer>";
 		inherits: true;
@@ -25,10 +28,10 @@
 
 		--tab-group-bdrs: 1rem;
 		--tab-group-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
-		--tab-group-bdw: 2px;
+		--tab-group-bdw: 1px;
 		
 		--tab-group-bdc-open: light-dark(black,white);
-		--tab-group-bdw-open: 2px;
+		--tab-group-bdw-open: 1px;
 
 		--tab-group-gap: 1ch;
 
@@ -37,8 +40,8 @@
 		margin-block: 1rem;
 	}
 	details {
-		  --bounce: linear(0 0%, 0.5571 7.53%, 0.8252 11.98%, 0.9337 14.38%, 1.0166 16.8%, 1.0765 19.31%, 1.1146 21.97%, 1.1263 23.47%, 1.1325 25.06%, 1.133 26.76%, 1.128 28.62%, 1.1094 31.9%, 1.0484 39.77%, 1.0218 43.85%, 1.0011 48.42%, 0.9895 53.23%, 0.9861 59.8%, 1 81.27% 100%);
-  --ease: linear(0 0%, 0.2688 9.91%, 0.3859 15%, 0.4917 20.19%, 0.5865 25.5%, 0.6705 30.93%, 0.7441 36.51%, 0.8075 42.26%, 0.8593 47.98%, 0.9022 53.93%, 0.9366 60.13%, 0.963 66.67%, 0.9812 73.4%, 0.9929 80.76%, 0.9986 88.89%, 1 100%);
+		  /* --bounce: linear(0 0%, 0.5571 7.53%, 0.8252 11.98%, 0.9337 14.38%, 1.0166 16.8%, 1.0765 19.31%, 1.1146 21.97%, 1.1263 23.47%, 1.1325 25.06%, 1.133 26.76%, 1.128 28.62%, 1.1094 31.9%, 1.0484 39.77%, 1.0218 43.85%, 1.0011 48.42%, 0.9895 53.23%, 0.9861 59.8%, 1 81.27% 100%); */
+  	--ease: linear(0 0%, 0.2688 9.91%, 0.3859 15%, 0.4917 20.19%, 0.5865 25.5%, 0.6705 30.93%, 0.7441 36.51%, 0.8075 42.26%, 0.8593 47.98%, 0.9022 53.93%, 0.9366 60.13%, 0.963 66.67%, 0.9812 73.4%, 0.9929 80.76%, 0.9986 88.89%, 1 100%);
 		--tab-group-index: sibling-index();
 
 		border-block-end: var(--tab-group-bdw) solid var(--tab-group-bdc);
@@ -62,12 +65,14 @@
 			border-radius: var(--tab-group-bdrs);
 		}
 /* transform-style: preserve-3d;
-    perspective: 120px;
+    perspective: 120px; */
   
-		transition-property: border-radius, margin, background-color, border-color, border-width, transform, translate, opacity, color;
+		/* transition-property: border-radius, margin, background-color, border-color, border-width, transform, translate, opacity, color; */
 		transition-duration: 0.3s;
-		  transition-timing-function: var(--ease);
-  transform: translateZ(0); */
+		transition-property: translate;
+		  /* transition-timing-function: var(--ease); */
+			transition-timing-function: ease;
+  /* transform: translateZ(0); */
 
 	}
 
@@ -88,12 +93,13 @@
 		color: var(--tabs-group-c, inherit);
 		corner-shape: superellipse(1.25);
 		cursor: pointer;
-		display: grid;
+		display: flex;
 		font-family: var(--tab-group-ff, inherit);
 		/* font-size: var(--tab-group-fs, clamp(.75rem, 2.5vw, 1rem)); */
 		grid-column: var(--tab-group-index);
 		grid-row: 1;
 		/* isolation: isolate; */
+		justify-content: space-between;
 		list-style: none;
 		padding: var(--tab-group-p, 1.5ch);
 		position: relative;
@@ -140,16 +146,23 @@
 }
 
 
-fieldset { background: orangered; border: 0; }
+fieldset { border: 0; }
 	 </style>
 </head>
 <body>
 
+	<!--
+	type="seamless" - No visible borders/lines between items (minimal, clean)
+type="divided" - Horizontal lines between each item (classic accordion)
+type="bordered" - Each item has a full border (card-like)
+type="elevated" - Items have subtle elevation/shadow (material design)
+type="breakout" - Your current implementation (expanded item breaks out visually)
+		-->
 
-<tab-group>
+<tab-group variant="">
 	<tab-container>
 		<details name="tabs">
-			<summary>Breakpoints</summary>
+			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="breakpoints">
 				<label>Small
 					<select name="sm">
@@ -190,7 +203,7 @@ fieldset { background: orangered; border: 0; }
 		</details>
 
 		<details name="tabs">
-			<summary>Spacing</summary>
+			<summary>Spacing<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="spacing">
 				<label>
 					Space Top
@@ -216,7 +229,7 @@ fieldset { background: orangered; border: 0; }
 		</details>
 
 		<details name="tabs" >
-			<summary>Gaps</summary>
+			<summary>Gaps<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="gaps">
 				<label>
 					Column Gap
@@ -230,7 +243,7 @@ fieldset { background: orangered; border: 0; }
 		</details>
 
 		<details name="tabs">
-			<summary>Layout</summary>
+			<summary>Layout<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="layout">
 				<label>Bleed
 					<input type="number" name="bleed" value="0" min="-100" max="100">
@@ -277,7 +290,7 @@ fieldset { background: orangered; border: 0; }
 		</details>
 
 		<details name="tabs">
-			<summary>Animation</summary>
+			<summary>Animation<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="animations">
 				<label>
 					Animation Name
@@ -327,7 +340,7 @@ fieldset { background: orangered; border: 0; }
 		</details>
 
 		<details name="tabs">
-			<summary>Advanced</summary>
+			<summary>Advanced<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="advanced">
 				<label>
 					ARIA Label
