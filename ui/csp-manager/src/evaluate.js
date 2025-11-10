@@ -3,258 +3,177 @@
  * Based on simplified logic from Google's CSP Evaluator
  */
 
-/**
- * Severity levels for findings
- */
 export const SEVERITY = {
 	HIGH: 'high',
 	MEDIUM: 'medium',
 	SECURE: 'secure'
 };
 
-/**
- * Evaluation result structure
- * @typedef {Object} Finding
- * @property {string} severity - 'high', 'medium', or 'secure'
- * @property {string} message - Description of the issue
- * @property {string} [recommendation] - Suggested fix
- */
-
-/**
- * @typedef {Object} DirectiveEvaluation
- * @property {string} severity - Overall severity for the directive
- * @property {Finding[]} findings - Array of findings
- */
-
-/**
- * Check if a value is an unsafe keyword
- */
-export const UNSAFE_KEYWORDS = {
-	"'unsafe-inline'": {
-		severity: SEVERITY.HIGH,
-		messageKey: 'eval.unsafeInline',
-		recommendationKey: 'eval.unsafeInlineRec'
-	},
-	"'unsafe-eval'": {
-		severity: SEVERITY.HIGH,
-		messageKey: 'eval.unsafeEval',
-		recommendationKey: 'eval.unsafeEvalRec'
-	},
-	"'unsafe-hashes'": {
-		severity: SEVERITY.MEDIUM,
-		messageKey: 'eval.unsafeHashes',
-		recommendationKey: 'eval.unsafeHashesRec'
-	}
+const UNSAFE_KEYWORDS_CONFIG = {
+	"'unsafe-inline'": { severity: SEVERITY.HIGH, messageKey: 'eval.unsafeInline', recommendationKey: 'eval.unsafeInlineRec' },
+	"'unsafe-eval'": { severity: SEVERITY.HIGH, messageKey: 'eval.unsafeEval', recommendationKey: 'eval.unsafeEvalRec' },
+	"'unsafe-hashes'": { severity: SEVERITY.MEDIUM, messageKey: 'eval.unsafeHashes', recommendationKey: 'eval.unsafeHashesRec' }
 };
 
-/**
- * Check if a value is a risky wildcard
- */
-export const WILDCARDS = {
-	'*': {
-		severity: SEVERITY.HIGH,
-		messageKey: 'eval.wildcardAll',
-		recommendationKey: 'eval.wildcardAllRec'
-	},
-	'http:': {
-		severity: SEVERITY.MEDIUM,
-		messageKey: 'eval.wildcardHttp',
-		recommendationKey: 'eval.wildcardHttpRec'
-	},
-	'https:': {
-		severity: SEVERITY.MEDIUM,
-		messageKey: 'eval.wildcardHttps',
-		recommendationKey: 'eval.wildcardHttpsRec'
-	},
-	'data:': {
-		severity: SEVERITY.MEDIUM,
-		messageKey: 'eval.dataUri',
-		recommendationKey: 'eval.dataUriRec'
-	}
+const WILDCARDS_CONFIG = {
+	'*': { severity: SEVERITY.HIGH, messageKey: 'eval.wildcardAll', recommendationKey: 'eval.wildcardAllRec' },
+	'http:': { severity: SEVERITY.MEDIUM, messageKey: 'eval.wildcardHttp', recommendationKey: 'eval.wildcardHttpRec' },
+	'https:': { severity: SEVERITY.MEDIUM, messageKey: 'eval.wildcardHttps', recommendationKey: 'eval.wildcardHttpsRec' },
+	'data:': { severity: SEVERITY.MEDIUM, messageKey: 'eval.dataUri', recommendationKey: 'eval.dataUriRec' }
 };
 
-/**
- * Secure patterns to look for (positive indicators)
- */
-export const SECURE_PATTERNS = {
+const SECURE_PATTERNS = {
 	nonce: /^'nonce-[A-Za-z0-9+/=]+'$/,
 	hash: /^'(sha256|sha384|sha512)-[A-Za-z0-9+/=]+'$/,
 	strictDynamic: "'strict-dynamic'"
 };
 
-/**
- * Directives that are critical for security
- */
-export const CRITICAL_DIRECTIVES = {
-	'base-uri': {
-		messageKey: 'eval.missingBaseUri',
-		recommendationKey: 'eval.missingBaseUriRec'
-	},
-	'object-src': {
-		messageKey: 'eval.missingObjectSrc',
-		recommendationKey: 'eval.missingObjectSrcRec'
-	}
+const CRITICAL_DIRECTIVES_CONFIG = {
+	'base-uri': { messageKey: 'eval.missingBaseUri', recommendationKey: 'eval.missingBaseUriRec' },
+	'object-src': { messageKey: 'eval.missingObjectSrc', recommendationKey: 'eval.missingObjectSrcRec' }
 };
 
-/**
- * Script/style related directives that need stricter evaluation
- */
-export const SCRIPT_STYLE_DIRECTIVES = ['script-src', 'script-src-elem', 'script-src-attr', 'style-src', 'style-src-elem', 'style-src-attr', 'default-src'];
+const SCRIPT_STYLE_DIRECTIVES = ['script-src', 'script-src-elem', 'script-src-attr', 'style-src', 'style-src-elem', 'style-src-attr', 'default-src'];
 
 /**
- * Evaluate a single directive's values
- * @param {string} directive - Directive name
- * @param {string[]} values - Array of directive values
- * @param {Function} t - Translation function
- * @param {Object} [customRules] - Custom evaluation rules
- * @returns {DirectiveEvaluation}
+ * Checks for unsafe keywords in a directive's values.
+ * @param {string} directive - The directive name.
+ * @param {string[]} values - The directive's values.
+ * @param {Object} rules - The evaluation rules.
+ * @param {Function} t - The translation function.
+ * @returns {{findings: Array, severity: string}}
  */
-export function evaluateDirective(directive, values, t, customRules = null) {
+function _checkUnsafeKeywords(directive, values, rules, t) {
 	const findings = [];
-	let overallSeverity = SEVERITY.SECURE;
+	let severity = SEVERITY.SECURE;
 
-	// Merge custom rules with defaults
-	const unsafeKeywords = customRules?.unsafeKeywords
-		? { ...UNSAFE_KEYWORDS, ...customRules.unsafeKeywords }
-		: UNSAFE_KEYWORDS;
-
-	const wildcards = customRules?.wildcards
-		? { ...WILDCARDS, ...customRules.wildcards }
-		: WILDCARDS;
-
-	const securePatterns = customRules?.securePatterns
-		? { ...SECURE_PATTERNS, ...customRules.securePatterns }
-		: SECURE_PATTERNS;
-
-	const scriptStyleDirectives = customRules?.scriptStyleDirectives
-		? [...SCRIPT_STYLE_DIRECTIVES, ...customRules.scriptStyleDirectives]
-		: SCRIPT_STYLE_DIRECTIVES;
-
-	// Check for unsafe keywords
 	for (const value of values) {
-		if (unsafeKeywords[value]) {
-			const config = unsafeKeywords[value];
-			// unsafe-inline in script/style directives is HIGH, elsewhere MEDIUM
-			const severity = scriptStyleDirectives.includes(directive) && value === "'unsafe-inline'"
+		if (rules.unsafeKeywords[value]) {
+			const config = rules.unsafeKeywords[value];
+			const currentSeverity = rules.scriptStyleDirectives.includes(directive) && value === "'unsafe-inline'"
 				? SEVERITY.HIGH
 				: config.severity;
 
 			findings.push({
-				severity,
+				severity: currentSeverity,
 				message: t(config.messageKey),
 				recommendation: t(config.recommendationKey)
 			});
 
-			if (severity === SEVERITY.HIGH) {
-				overallSeverity = SEVERITY.HIGH;
-			} else if (severity === SEVERITY.MEDIUM && overallSeverity !== SEVERITY.HIGH) {
-				overallSeverity = SEVERITY.MEDIUM;
-			}
+			if (currentSeverity === SEVERITY.HIGH) severity = SEVERITY.HIGH;
+			else if (currentSeverity === SEVERITY.MEDIUM && severity !== SEVERITY.HIGH) severity = SEVERITY.MEDIUM;
 		}
 	}
+	return { findings, severity };
+}
 
-	// Check for wildcards (especially dangerous in script-src)
+/**
+ * Checks for wildcards in a directive's values.
+ * @param {string} directive - The directive name.
+ * @param {string[]} values - The directive's values.
+ * @param {Object} rules - The evaluation rules.
+ * @param {Function} t - The translation function.
+ * @returns {{findings: Array, severity: string}}
+ */
+function _checkWildcards(directive, values, rules, t) {
+	const findings = [];
+	let severity = SEVERITY.SECURE;
+
 	for (const value of values) {
-		if (wildcards[value]) {
-			const config = wildcards[value];
-			// Wildcards in script-src are more dangerous
-			const severity = scriptStyleDirectives.includes(directive) && (value === '*' || value === 'data:')
+		if (rules.wildcards[value]) {
+			const config = rules.wildcards[value];
+			const currentSeverity = rules.scriptStyleDirectives.includes(directive) && (value === '*' || value === 'data:')
 				? SEVERITY.HIGH
 				: config.severity;
 
 			findings.push({
-				severity,
+				severity: currentSeverity,
 				message: t(config.messageKey),
 				recommendation: t(config.recommendationKey)
 			});
 
-			if (severity === SEVERITY.HIGH && overallSeverity !== SEVERITY.HIGH) {
-				overallSeverity = SEVERITY.HIGH;
-			} else if (severity === SEVERITY.MEDIUM && overallSeverity === SEVERITY.SECURE) {
-				overallSeverity = SEVERITY.MEDIUM;
-			}
+			if (currentSeverity === SEVERITY.HIGH) severity = SEVERITY.HIGH;
+			else if (currentSeverity === SEVERITY.MEDIUM && severity === SEVERITY.SECURE) severity = SEVERITY.MEDIUM;
 		}
 	}
+	return { findings, severity };
+}
 
-	// Check for secure patterns (nonces, hashes)
+/**
+ * Evaluates a single directive's values.
+ * @param {string} directive - The directive name.
+ * @param {string[]} values - Array of directive values.
+ * @param {Function} t - The translation function.
+ * @param {Object} rules - The merged evaluation rules.
+ * @returns {Object} DirectiveEvaluation
+ */
+export function evaluateDirective(directive, values, t, rules) {
+	const unsafeResult = _checkUnsafeKeywords(directive, values, rules, t);
+	const wildcardResult = _checkWildcards(directive, values, rules, t);
+
+	const findings = [...unsafeResult.findings, ...wildcardResult.findings];
+	let overallSeverity = unsafeResult.severity === SEVERITY.HIGH || wildcardResult.severity === SEVERITY.HIGH ? SEVERITY.HIGH : (unsafeResult.severity === SEVERITY.MEDIUM || wildcardResult.severity === SEVERITY.MEDIUM ? SEVERITY.MEDIUM : SEVERITY.SECURE);
+
 	const hasSecurePattern = values.some(value =>
-		securePatterns.nonce.test(value) ||
-		securePatterns.hash.test(value) ||
-		value === securePatterns.strictDynamic
+		rules.securePatterns.nonce.test(value) ||
+		rules.securePatterns.hash.test(value) ||
+		value === rules.securePatterns.strictDynamic
 	);
 
-	// Special handling for 'none'
-	const hasNone = values.includes("'none'");
-
-	// If directive has 'none' and it's appropriate (like object-src), it's secure
-	if (hasNone && ['object-src', 'base-uri'].includes(directive)) {
+	if (values.includes("'none'") && ['object-src', 'base-uri'].includes(directive)) {
 		if (findings.length === 0) {
-			findings.push({
-				severity: SEVERITY.SECURE,
-				message: t('eval.secure'),
-				recommendation: ''
-			});
+			findings.push({ severity: SEVERITY.SECURE, message: t('eval.secure'), recommendation: '' });
 		}
 	}
 
-	// Only add positive messages if there are no security issues
 	if (overallSeverity === SEVERITY.SECURE) {
-		// If script-src has secure patterns, note it positively
-		if (hasSecurePattern && scriptStyleDirectives.includes(directive)) {
-			findings.push({
-				severity: SEVERITY.SECURE,
-				message: t('eval.hasNonceOrHash'),
-				recommendation: ''
-			});
-		}
-		// If no findings at all, it's generally secure
-		else if (findings.length === 0) {
-			findings.push({
-				severity: SEVERITY.SECURE,
-				message: t('eval.noIssues'),
-				recommendation: ''
-			});
+		if (hasSecurePattern && rules.scriptStyleDirectives.includes(directive)) {
+			findings.push({ severity: SEVERITY.SECURE, message: t('eval.hasNonceOrHash'), recommendation: '' });
+		} else if (findings.length === 0) {
+			findings.push({ severity: SEVERITY.SECURE, message: t('eval.noIssues'), recommendation: '' });
 		}
 	}
 
+	return { severity: overallSeverity, findings };
+}
+
+/**
+ * Merges default and custom evaluation rules.
+ * @param {Object} customRules - Custom evaluation rules.
+ * @returns {Object} Merged rules.
+ */
+function _mergeRules(customRules) {
 	return {
-		severity: overallSeverity,
-		findings
+		unsafeKeywords: { ...UNSAFE_KEYWORDS_CONFIG, ...(customRules?.unsafeKeywords || {}) },
+		wildcards: { ...WILDCARDS_CONFIG, ...(customRules?.wildcards || {}) },
+		securePatterns: { ...SECURE_PATTERNS, ...(customRules?.securePatterns || {}) },
+		criticalDirectives: { ...CRITICAL_DIRECTIVES_CONFIG, ...(customRules?.criticalDirectives || {}) },
+		scriptStyleDirectives: [...SCRIPT_STYLE_DIRECTIVES, ...(customRules?.scriptStyleDirectives || [])]
 	};
 }
 
 /**
- * Evaluate entire CSP policy
- * @param {Object} state - CSP state object from CspManager
- * @param {Function} t - Translation function
- * @param {Object} [customRules] - Custom evaluation rules
- * @returns {Object<string, DirectiveEvaluation>}
+ * Evaluates the entire CSP policy.
+ * @param {Object} state - CSP state object from CspManager.
+ * @param {Function} t - The translation function.
+ * @param {Object} [customRules] - Custom evaluation rules.
+ * @returns {Object} Evaluations object.
  */
 export function evaluatePolicy(state, t, customRules = null) {
 	const evaluations = {};
+	const rules = _mergeRules(customRules);
 
-	// Merge custom critical directives with defaults
-	const criticalDirectives = customRules?.criticalDirectives
-		? { ...CRITICAL_DIRECTIVES, ...customRules.criticalDirectives }
-		: CRITICAL_DIRECTIVES;
-
-	// Evaluate each enabled directive
 	for (const [directive, config] of Object.entries(state)) {
 		if (config.enabled) {
 			const allValues = [...config.defaults, ...config.added];
-			evaluations[directive] = evaluateDirective(directive, allValues, t, customRules);
+			evaluations[directive] = evaluateDirective(directive, allValues, t, rules);
 		}
 	}
 
-	// Check for missing critical directives
-	for (const [criticalDirective, config] of Object.entries(criticalDirectives)) {
+	for (const [criticalDirective, config] of Object.entries(rules.criticalDirectives)) {
 		if (!state[criticalDirective]?.enabled) {
-			// Store as a warning on default-src or create a global warning
 			if (!evaluations._missing) {
-				evaluations._missing = {
-					severity: SEVERITY.MEDIUM,
-					findings: []
-				};
+				evaluations._missing = { severity: SEVERITY.MEDIUM, findings: [] };
 			}
 			evaluations._missing.findings.push({
 				severity: SEVERITY.MEDIUM,
@@ -268,9 +187,9 @@ export function evaluatePolicy(state, t, customRules = null) {
 }
 
 /**
- * Get overall policy score (0-100, higher is better)
- * @param {Object<string, DirectiveEvaluation>} evaluations
- * @returns {number}
+ * Calculates an overall policy score (0-100, higher is better).
+ * @param {Object} evaluations - The evaluations object.
+ * @returns {number} The policy score.
  */
 export function getPolicyScore(evaluations) {
 	let score = 100;
@@ -279,15 +198,11 @@ export function getPolicyScore(evaluations) {
 
 	for (const evaluation of Object.values(evaluations)) {
 		for (const finding of evaluation.findings) {
-			if (finding.severity === SEVERITY.HIGH) {
-				highCount++;
-			} else if (finding.severity === SEVERITY.MEDIUM) {
-				mediumCount++;
-			}
+			if (finding.severity === SEVERITY.HIGH) highCount++;
+			else if (finding.severity === SEVERITY.MEDIUM) mediumCount++;
 		}
 	}
 
-	// Deduct points for issues
 	score -= highCount * 20;
 	score -= mediumCount * 10;
 

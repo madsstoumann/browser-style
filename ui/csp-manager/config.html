@@ -54,7 +54,7 @@
 		<h2>2. JavaScript Setters</h2>
 		<p>Click the buttons below to dynamically add custom configurations:</p>
 
-		<p>
+		<p id="demo2-controls">
 			<button id="addDirective">Add Custom Directive</button>
 			<button id="addTranslation">Add Translation</button>
 			<button id="addRule">Add Evaluation Rule</button>
@@ -84,122 +84,83 @@
 		const demo3 = document.getElementById('demo3');
 		const output = document.getElementById('output');
 
-		// Demo 2: Individual setter examples
-		document.getElementById('addDirective').addEventListener('click', () => {
-			demo2.setDirectivesConfig({
-				'navigate-to': {
-					defaults: ["'self'"],
-					type: 'source-list',
-					enabled: false
-				}
-			});
-			output.textContent = 'Added "navigate-to" directive to the configuration.';
-		});
+		// Use event delegation for demo 2 buttons
+		document.querySelector('#demo2-controls').addEventListener('click', (e) => {
+			if (e.target.tagName !== 'BUTTON') return;
 
-		document.getElementById('addTranslation').addEventListener('click', () => {
-			demo2.setI18nConfig({
-				en: {
-					directives: {
-						'navigate-to': 'Restricts the URLs to which a document can initiate navigation (experimental).'
-					}
-				}
-			});
-			output.textContent = 'Added translation for "navigate-to" directive.';
-		});
+			const action = e.target.id;
+			let message = '';
 
-		document.getElementById('addRule').addEventListener('click', () => {
-			demo2.setRulesConfig({
-				unsafeKeywords: {
-					"'wasm-unsafe-eval'": {
-						severity: 'medium',
-						messageKey: 'eval.wasmWarning',
-						recommendationKey: 'eval.wasmWarningRec'
-					}
-				}
-			});
-
-			// Also add the i18n for the rule
-			demo2.setI18nConfig({
-				en: {
-					eval: {
-						wasmWarning: 'Using wasm-unsafe-eval allows WebAssembly compilation',
-						wasmWarningRec: 'Only use if WebAssembly is required and sources are trusted'
-					}
-				}
-			});
-
-			output.textContent = 'Added custom evaluation rule for "wasm-unsafe-eval".';
-		});
-
-		document.getElementById('enableCustom').addEventListener('click', () => {
-			demo2.enableDirective('navigate-to');
-			output.textContent = 'Enabled "navigate-to" directive in the UI.';
+			switch (action) {
+				case 'addDirective':
+					demo2.setDirectivesConfig({
+						'navigate-to': { defaults: ["'self'"], type: 'source-list', enabled: false }
+					});
+					message = 'Added "navigate-to" directive to the configuration.';
+					break;
+				case 'addTranslation':
+					demo2.setI18nConfig({
+						en: { directives: { 'navigate-to': 'Restricts URLs for navigation (experimental).' } }
+					});
+					message = 'Added translation for "navigate-to" directive.';
+					break;
+				case 'addRule':
+					demo2.setRulesConfig({
+						unsafeKeywords: {
+							"'wasm-unsafe-eval'": { severity: 'medium', messageKey: 'eval.wasmWarning', recommendationKey: 'eval.wasmWarningRec' }
+						}
+					});
+					demo2.setI18nConfig({
+						en: { eval: { wasmWarning: 'Wasm-unsafe-eval allows WebAssembly compilation', wasmWarningRec: 'Only use if WebAssembly is required' } }
+					});
+					message = 'Added custom evaluation rule for "wasm-unsafe-eval".';
+					break;
+				case 'enableCustom':
+					demo2.enableDirective('navigate-to');
+					message = 'Enabled "navigate-to" directive in the UI.';
+					break;
+			}
+			output.textContent = message;
 		});
 
 		// Demo 3: Complete setup
 		document.getElementById('setupComplete').addEventListener('click', () => {
-			// Add a new directive
 			demo3.setDirectivesConfig({
-				'prefetch-src': {
-					defaults: ["'self'"],
-					type: 'source-list',
-					enabled: true
-				},
-				'navigate-to': {
-					defaults: ["'self'"],
-					type: 'source-list',
-					enabled: false
-				}
+				'prefetch-src': { defaults: ["'self'"], type: 'source-list', enabled: true },
+				'navigate-to': { defaults: ["'self'"], type: 'source-list', enabled: false }
 			});
-
-			// Add translations
 			demo3.setI18nConfig({
 				en: {
 					directives: {
-						'prefetch-src': 'Specifies valid sources for request prefetch and prerendering.',
-						'navigate-to': 'Restricts the URLs to which a document can initiate navigation.'
+						'prefetch-src': 'Specifies valid sources for prefetch and prerendering.',
+						'navigate-to': 'Restricts URLs for navigation.'
 					},
 					eval: {
-						prefetchWildcard: 'Using wildcard in prefetch-src allows prefetch from any origin',
-						prefetchWildcardRec: 'Specify explicit trusted origins for prefetch operations'
+						prefetchWildcard: 'Wildcard in prefetch-src is risky',
+						prefetchWildcardRec: 'Specify trusted origins for prefetch'
 					}
 				}
 			});
-
-			// Add evaluation rules
 			demo3.setRulesConfig({
 				scriptStyleDirectives: ['prefetch-src'],
 				criticalDirectives: {
-					'form-action': {
-						messageKey: 'eval.missingFormAction',
-						recommendationKey: 'eval.missingFormActionRec'
-					}
+					'form-action': { messageKey: 'eval.missingFormAction', recommendationKey: 'eval.missingFormActionRec' }
 				}
 			});
-
-			// Add i18n for critical directives warning
 			demo3.setI18nConfig({
 				en: {
 					eval: {
-						missingFormAction: 'Missing form-action directive allows forms to submit anywhere',
-						missingFormActionRec: 'Add form-action directive to restrict form submissions'
+						missingFormAction: 'Missing form-action allows form submissions to any URL',
+						missingFormActionRec: 'Add form-action to restrict submissions'
 					}
 				}
 			});
-
 			console.log('Complete configuration applied!');
-			console.log('Current policy:', demo3.policy);
-			console.log('CSP String:', demo3.cspString);
 		});
 
 		// Listen to changes
-		demo2.addEventListener('csp-change', (e) => {
-			console.log('Demo 2 - Policy changed:', e.detail);
-		});
-
-		demo3.addEventListener('csp-change', (e) => {
-			console.log('Demo 3 - Policy changed:', e.detail);
-		});
+		demo2.addEventListener('csp-change', (e) => console.log('Demo 2 - Policy changed:', e.detail));
+		demo3.addEventListener('csp-change', (e) => console.log('Demo 3 - Policy changed:', e.detail));
 	</script>
 </body>
 </html>

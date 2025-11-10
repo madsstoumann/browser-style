@@ -78,136 +78,93 @@
 		</details>
 	</section>
 
-	<script>
-		// Demo 1: Initial Policy with Evaluation
-		const clientPolicy = {
-			"script-src": {
-				"added": ["'unsafe-inline'", "cdn.example.com"]
-			},
-			"style-src": {
-				"added": ["https://fonts.googleapis.com"]
-			},
-			"font-src": {
-				"added": ["https://fonts.gstatic.com"]
-			},
-			"img-src": {
-				"added": ["https://images.unsplash.com"]
-			},
-			"connect-src": {
-				"added": ["api.example.com", "wss://websocket.example.com"]
-			}
-		};
+	<script type="module">
+		// Helper function to create and configure a CSP Manager instance
+		function createDemoManager(containerId, options) {
+			const container = document.getElementById(containerId);
+			if (!container) return;
 
-		const policyString = JSON.stringify(clientPolicy);
-		const demo1Manager = document.createElement('csp-manager');
-		demo1Manager.setAttribute('initial-policy', policyString);
-		demo1Manager.setAttribute('evaluate', '');
-		document.getElementById('demo1-container').appendChild(demo1Manager);
+			const manager = document.createElement('csp-manager');
+			if (options.lang) manager.setAttribute('lang', options.lang);
+			if (options.evaluate) manager.setAttribute('evaluate', '');
+			if (options.initialPolicy) manager.setAttribute('initial-policy', JSON.stringify(options.initialPolicy));
+			if (options.cspString) {
+				customElements.whenDefined('csp-manager').then(() => {
+					manager.fromString(options.cspString);
+				});
+			}
+
+			container.appendChild(manager);
+			return manager;
+		}
+
+		// Demo 1: Initial Policy with Evaluation
+		createDemoManager('demo1-container', {
+			evaluate: true,
+			initialPolicy: {
+				"script-src": { "added": ["'unsafe-inline'", "cdn.example.com"] },
+				"style-src": { "added": ["https://fonts.googleapis.com"] },
+				"font-src": { "added": ["https://fonts.gstatic.com"] },
+				"img-src": { "added": ["https://images.unsplash.com"] },
+				"connect-src": { "added": ["api.example.com", "wss://websocket.example.com"] }
+			}
+		});
 
 		// Demo 2: From String with Evaluation
-		const cspString = `
-			base-uri 'self';
-			default-src 'self';
-			frame-ancestors 'none';
-			object-src 'none';
-			script-src 'self' 'unsafe-inline' 'unsafe-eval' https://example.com;
-			style-src 'self' 'unsafe-inline';
-		`;
-
-		const demo2Manager = document.createElement('csp-manager');
-		demo2Manager.setAttribute('evaluate', '');
-		document.getElementById('demo2-container').appendChild(demo2Manager);
-
-		customElements.whenDefined('csp-manager').then(() => {
-			demo2Manager.fromString(cspString);
+		createDemoManager('demo2-container', {
+			evaluate: true,
+			cspString: `
+				base-uri 'self';
+				default-src 'self';
+				frame-ancestors 'none';
+				object-src 'none';
+				script-src 'self' 'unsafe-inline' 'unsafe-eval' https://example.com;
+				style-src 'self' 'unsafe-inline';
+			`
 		});
 
 		// Demo 3: Policy and CSP String Getters
+		const demo3Manager = document.getElementById('demo3-manager');
 		document.getElementById('getPolicyBtn').addEventListener('click', () => {
-			const cspManager = document.getElementById('demo3-manager');
-			const currentPolicy = cspManager.policy;
-			console.log('Current CSP Policy:', JSON.stringify(currentPolicy, null, 2));
+			console.log('Current CSP Policy:', JSON.stringify(demo3Manager.policy, null, 2));
 		});
-
 		document.getElementById('getCspStringBtn').addEventListener('click', () => {
-			const cspManager = document.getElementById('demo3-manager');
-			const cspString = cspManager.cspString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+			const cspString = demo3Manager.cspString.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 			navigator.clipboard.writeText(cspString).then(() => {
-				console.log('Copied to clipboard:', cspString);
 				alert('CSP string copied to clipboard!');
-			}).catch(err => {
-				console.error('Failed to copy text: ', err);
-			});
+			}).catch(err => console.error('Failed to copy text: ', err));
 		});
 
 		// Demo 4: Danish with Multiple Severity Levels
-		const danishPolicy = {
-			"base-uri": {
-				"added": []  // Secure - will show green
-			},
-			"object-src": {
-				"added": []  // Secure - 'none' by default, will show green
-			},
-			"script-src": {
-				"added": ["'unsafe-inline'", "'unsafe-eval'", "https://cdn.example.com"]  // HIGH - will show red
-			},
-			"style-src": {
-				"added": ["https:", "'unsafe-inline'"]  // HIGH - unsafe-inline + wildcard, will show red
-			},
-			"default-src": {
-				"added": ["https:"]  // MEDIUM - wildcard, will show orange
-			},
-			"img-src": {
-				"added": ["data:"]  // MEDIUM - data: URIs, will show orange
+		createDemoManager('demo4-container', {
+			lang: 'da',
+			evaluate: true,
+			initialPolicy: {
+				"base-uri": { "added": [] },
+				"object-src": { "added": [] },
+				"script-src": { "added": ["'unsafe-inline'", "'unsafe-eval'", "https://cdn.example.com"] },
+				"style-src": { "added": ["https:", "'unsafe-inline'"] },
+				"default-src": { "added": ["https:"] },
+				"img-src": { "added": ["data:"] }
 			}
-		};
-
-		const demo4Manager = document.createElement('csp-manager');
-		demo4Manager.setAttribute('lang', 'da');
-		demo4Manager.setAttribute('evaluate', '');
-		demo4Manager.setAttribute('initial-policy', JSON.stringify(danishPolicy));
-		document.getElementById('demo4-container').appendChild(demo4Manager);
+		});
 
 		// Demo 5: Event Listener
 		const demo5Manager = document.getElementById('demo5-manager');
 		const eventLog = document.getElementById('event-log');
 		const events = [];
-
 		demo5Manager.addEventListener('csp-change', (e) => {
 			const timestamp = new Date().toLocaleTimeString();
-
-			// Log to console
-			console.group(`🔔 csp-change event at ${timestamp}`);
-			console.log('Policy Object:', e.detail.policy);
-			console.log('CSP String:', e.detail.cspString);
-			if (e.detail.evaluations) {
-				console.log('Evaluations:', e.detail.evaluations);
-			}
-			console.log('Full Event Detail:', e.detail);
-			console.groupEnd();
-
 			const eventData = {
 				timestamp,
 				policy: e.detail.policy,
-				cspString: e.detail.cspString,
 				hasEvaluations: !!e.detail.evaluations
 			};
-
-			// Add to beginning of array and keep only last 5
 			events.unshift(eventData);
 			if (events.length > 5) events.pop();
-
-			// Display in log
 			eventLog.textContent = events.map((evt, idx) =>
-				`[${evt.timestamp}] Event #${events.length - idx}
-Policy: ${JSON.stringify(evt.policy, null, 2)}
-Has Evaluations: ${evt.hasEvaluations}
----`
+				`[${evt.timestamp}] Event #${events.length - idx}\nPolicy: ${JSON.stringify(evt.policy, null, 2)}\nHas Evaluations: ${evt.hasEvaluations}\n---`
 			).join('\n\n');
-
-			// Example: Send to CMS
-			// cms.updateField('csp_policy', e.detail.policy);
-			// cms.updateField('csp_header', e.detail.cspString);
 		});
 	</script>
 

@@ -7,21 +7,21 @@ class CspManager extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		this.#loadStyles();
+		this._loadStyles();
 		this.evaluations = null;
+		this.state = {};
 
-		// Store configurations (will be loaded in connectedCallback)
-		this.directivesConfig = cspDirectives;
-		this.i18nConfig = i18nData;
-		this.rulesConfig = null;
+		// Create templates for reuse
+		this._templates = {
+			directive: document.createElement('template'),
+			value: document.createElement('template'),
+		};
+		this._templates.value.innerHTML = `<li><button data-remove>×</button></li>`;
 
-		// Create a promise that resolves when the component is ready
-		this.ready = new Promise(resolve => {
-			this._resolveReady = resolve;
-		});
+		this.ready = new Promise(resolve => this._resolveReady = resolve);
 	}
 
-	async #loadStyles() {
+	async _loadStyles() {
 		try {
 			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
 			const sheet = new CSSStyleSheet();
@@ -32,136 +32,95 @@ class CspManager extends HTMLElement {
 		}
 	}
 
-	/**
-	 * Get translated text from i18n file
-	 * @param {string} key - The translation key (supports dot notation for nested keys)
-	 * @returns {string} Translated text or the key if not found
-	 */
 	t(key) {
 		const keys = key.split('.');
 		let value = this.i18nConfig[this.lang];
-
 		for (const k of keys) {
-			if (value && typeof value === 'object' && k in value) {
-				value = value[k];
-			} else {
-				return key; // Fallback to key if not found
-			}
+			value = value?.[k];
 		}
-
 		return typeof value === 'string' ? value : key;
 	}
 
-	/**
-	 * Initialize state from configuration
-	 * Merges CSP directives configuration with i18n descriptions
-	 */
-	initializeState() {
+	_initializeState(directivesConfig) {
 		const state = {};
 		const descriptions = this.i18nConfig[this.lang]?.directives || {};
-
-		Object.entries(this.directivesConfig).forEach(([key, config]) => {
+		for (const [key, config] of Object.entries(directivesConfig)) {
 			state[key] = {
 				enabled: !!config.enabled,
 				defaults: [...config.defaults],
 				added: [],
-				description: descriptions[key] || ''
+				description: descriptions[key] || '',
+				boolean: config.type === 'boolean',
+				tokens: config.type === 'token-list' ? [...(config.tokens || [])] : undefined,
 			};
-
-			// Add boolean flag if type is boolean
-			if (config.type === 'boolean') {
-				state[key].boolean = true;
-			}
-
-			// Add tokens if type is token-list
-			if (config.type === 'token-list' && config.tokens) {
-				state[key].tokens = [...config.tokens];
-			}
-		});
-
+		}
 		return state;
 	}
 
+	_updateState(partialState) {
+		let stateChanged = false;
+		for (const key in partialState) {
+			if (JSON.stringify(this.state[key]) !== JSON.stringify(partialState[key])) {
+				this.state[key] = partialState[key];
+				stateChanged = true;
+			}
+		}
+
+		if (stateChanged) {
+			this.render();
+			if (this.hasAttribute('evaluate')) {
+				this.runEvaluation();
+			}
+			this.dispatchChangeEvent();
+		}
+	}
+
 	get policy() {
-		// Return client-format policy: only enabled directives with their added values
 		const clientPolicy = {};
-		Object.entries(this.state).forEach(([key, value]) => {
+		for (const [key, value] of Object.entries(this.state)) {
 			if (value.enabled) {
-				clientPolicy[key] = {
-					added: value.added || []
-				};
-				// Include defaults if present
-				if (value.defaults && value.defaults.length > 0) {
+				clientPolicy[key] = { added: value.added || [] };
+				if (value.defaults?.length > 0) {
 					clientPolicy[key].defaults = value.defaults;
 				}
 			}
-		});
+		}
 		return clientPolicy;
 	}
 
 	set policy(clientPolicy) {
-		if (typeof clientPolicy !== 'object' || clientPolicy === null) {
-			return;
-		}
+		if (typeof clientPolicy !== 'object' || clientPolicy === null) return;
 
-		// Client policy approach: Only directives in clientPolicy are enabled
-		// All directives start disabled, then we enable only what client provides
-		Object.keys(this.state).forEach(key => {
-			this.state[key].enabled = false;
-		});
-
-		Object.keys(clientPolicy).forEach(key => {
-			if (this.state[key]) {
-				// Enable this directive
-				this.state[key].enabled = true;
-
-				// Merge the client's added values
-				if (clientPolicy[key] && Array.isArray(clientPolicy[key].added)) {
-					this.state[key].added = [...clientPolicy[key].added];
-				}
-
-				// Optionally allow client to override defaults
-				if (clientPolicy[key] && Array.isArray(clientPolicy[key].defaults)) {
-					this.state[key].defaults = [...clientPolicy[key].defaults];
+		const newState = this._initializeState(this.directivesConfig);
+		for (const key in clientPolicy) {
+			if (newState[key]) {
+				newState[key].enabled = true;
+				newState[key].added = [...(clientPolicy[key].added || [])];
+				if (clientPolicy[key].defaults) {
+					newState[key].defaults = [...clientPolicy[key].defaults];
 				}
 			}
-		});
-
-		this.render();
-
-		// Re-run evaluation after policy changes if evaluate attribute is present
-		if (this.hasAttribute('evaluate')) {
-			this.runEvaluation();
 		}
-
-		// Dispatch change event after policy is set
+		this.state = newState; // Directly set state without triggering update cycle yet
+		this.render();
+		if (this.hasAttribute('evaluate')) this.runEvaluation();
 		this.dispatchChangeEvent();
 	}
 
 	async fromString(cspString) {
-		if (typeof cspString !== 'string' || !cspString.trim()) {
-			return;
-		}
-
-		// Wait for component to be ready
+		if (typeof cspString !== 'string' || !cspString.trim()) return;
 		await this.ready;
 
 		const newPolicy = {};
 		const directives = cspString.trim().split(';').filter(d => d.trim());
-
 		directives.forEach(directive => {
 			const parts = directive.trim().split(/\s+/);
 			const key = parts.shift();
-
 			if (this.state[key]) {
 				const defaults = this.state[key].defaults || [];
-				const added = parts.filter(p => !defaults.includes(p));
-				newPolicy[key] = {
-					added: added
-				};
+				newPolicy[key] = { added: parts.filter(p => !defaults.includes(p)) };
 			}
 		});
-
 		this.policy = newPolicy;
 	}
 
@@ -169,326 +128,148 @@ class CspManager extends HTMLElement {
 		return this.generateCspString();
 	}
 
-	/**
-	 * Set custom directives configuration
-	 * Merges with existing configuration and re-initializes state
-	 * @param {Object} config - Directives configuration object
-	 * @example
-	 * manager.setDirectivesConfig({
-	 *   'new-directive': {
-	 *     defaults: [],
-	 *     type: 'source-list',
-	 *     enabled: false
-	 *   }
-	 * });
-	 */
-	setDirectivesConfig(config) {
-		if (!config || typeof config !== 'object') {
-			console.warn('Invalid directives config: must be an object');
-			return;
+	async _loadConfiguration(newConfig = {}) {
+		const { directives: customDirectives, i18n: customI18n, rules: customRules } = newConfig;
+
+		// Load from attributes only on first load
+		if (Object.keys(newConfig).length === 0) {
+			const merged = await loadAndMergeConfigs({ cspDirectives, i18nData }, this);
+			this.directivesConfig = merged.directives;
+			this.i18nConfig = merged.i18n;
+			this.rulesConfig = merged.rules;
+		} else {
+			// Merge provided configs
+			if (customDirectives) this.directivesConfig = { ...this.directivesConfig, ...customDirectives };
+			if (customI18n) {
+				const mergedI18n = { ...this.i18nConfig };
+				for (const lang in customI18n) {
+					mergedI18n[lang] = { ...(this.i18nConfig[lang] || {}), ...customI18n[lang] };
+					if (customI18n[lang].directives) mergedI18n[lang].directives = { ...(this.i18nConfig[lang]?.directives || {}), ...customI18n[lang].directives };
+					if (customI18n[lang].ui) mergedI18n[lang].ui = { ...(this.i18nConfig[lang]?.ui || {}), ...customI18n[lang].ui };
+					if (customI18n[lang].eval) mergedI18n[lang].eval = { ...(this.i18nConfig[lang]?.eval || {}), ...customI18n[lang].eval };
+				}
+				this.i18nConfig = mergedI18n;
+			}
+			if (customRules) this.rulesConfig = customRules;
 		}
 
-		// Merge with existing config
-		this.directivesConfig = { ...this.directivesConfig, ...config };
-
-		// Re-initialize state with new directives
-		const newState = this.initializeState();
-
-		// Preserve existing enabled states and added values where possible
-		Object.keys(newState).forEach(key => {
-			if (this.state && this.state[key]) {
+		const newState = this._initializeState(this.directivesConfig);
+		// Preserve existing state
+		for (const key in newState) {
+			if (this.state[key]) {
 				newState[key].enabled = this.state[key].enabled;
 				newState[key].added = [...this.state[key].added];
 			}
-		});
-
+		}
 		this.state = newState;
 		this.render();
-
-		// Re-run evaluation if enabled
-		if (this.hasAttribute('evaluate')) {
-			this.runEvaluation();
-		}
-
+		if (this.hasAttribute('evaluate')) this.runEvaluation();
 		this.dispatchChangeEvent();
 	}
 
-	/**
-	 * Set custom i18n configuration
-	 * Merges with existing i18n data and re-renders
-	 * @param {Object} config - i18n configuration object
-	 * @example
-	 * manager.setI18nConfig({
-	 *   en: {
-	 *     directives: {
-	 *       'new-directive': 'Description of new directive'
-	 *     }
-	 *   }
-	 * });
-	 */
-	setI18nConfig(config) {
-		if (!config || typeof config !== 'object') {
-			console.warn('Invalid i18n config: must be an object');
-			return;
-		}
+	setDirectivesConfig(config) { this._loadConfiguration({ directives: config }); }
+	setI18nConfig(config) { this._loadConfiguration({ i18n: config }); }
+	setRulesConfig(config) { this._loadConfiguration({ rules: config }); }
 
-		// Deep merge i18n configs
-		const mergeI18n = (target, source) => {
-			const result = { ...target };
-			for (const lang in source) {
-				if (source[lang] && typeof source[lang] === 'object') {
-					result[lang] = { ...target[lang], ...source[lang] };
-					// Merge nested directives
-					if (source[lang].directives) {
-						result[lang].directives = {
-							...(target[lang]?.directives || {}),
-							...source[lang].directives
-						};
-					}
-					// Merge nested ui
-					if (source[lang].ui) {
-						result[lang].ui = {
-							...(target[lang]?.ui || {}),
-							...source[lang].ui
-						};
-					}
-					// Merge nested eval
-					if (source[lang].eval) {
-						result[lang].eval = {
-							...(target[lang]?.eval || {}),
-							...source[lang].eval
-						};
-					}
-				} else {
-					result[lang] = source[lang];
-				}
-			}
-			return result;
-		};
-
-		this.i18nConfig = mergeI18n(this.i18nConfig, config);
-
-		// Update state descriptions
-		const descriptions = this.i18nConfig[this.lang]?.directives || {};
-		Object.keys(this.state).forEach(key => {
-			if (descriptions[key]) {
-				this.state[key].description = descriptions[key];
-			}
-		});
-
-		this.render();
-	}
-
-	/**
-	 * Set custom evaluation rules configuration
-	 * Replaces existing custom rules and re-runs evaluation
-	 * @param {Object} config - Rules configuration object
-	 * @example
-	 * manager.setRulesConfig({
-	 *   unsafeKeywords: {
-	 *     "'unsafe-new-thing'": {
-	 *       severity: 'high',
-	 *       messageKey: 'eval.unsafeNewThing',
-	 *       recommendationKey: 'eval.unsafeNewThingRec'
-	 *     }
-	 *   },
-	 *   criticalDirectives: {
-	 *     'new-critical-directive': {
-	 *       messageKey: 'eval.missingNewCritical',
-	 *       recommendationKey: 'eval.missingNewCriticalRec'
-	 *     }
-	 *   }
-	 * });
-	 */
-	setRulesConfig(config) {
-		if (!config || typeof config !== 'object') {
-			console.warn('Invalid rules config: must be an object');
-			return;
-		}
-
-		this.rulesConfig = config;
-
-		// Re-run evaluation if enabled
-		if (this.hasAttribute('evaluate')) {
-			this.runEvaluation();
-		} else {
-			this.render();
-		}
-	}
-
-	/**
-	 * Get list of available (disabled) directives
-	 * @returns {Array<{key: string, description: string}>}
-	 */
 	getAvailableDirectives() {
 		return Object.entries(this.state)
-			.filter(([, valueObj]) => !valueObj.enabled)
-			.map(([key, valueObj]) => ({
-				key,
-				description: valueObj.description
-			}))
+			.filter(([, value]) => !value.enabled)
+			.map(([key, value]) => ({ key, description: value.description }))
 			.sort((a, b) => a.key.localeCompare(b.key));
 	}
 
-	/**
-	 * Enable a directive by name
-	 * @param {string} directiveName - The directive to enable
-	 */
 	enableDirective(directiveName) {
 		if (this.state[directiveName] && !this.state[directiveName].enabled) {
-			this.state[directiveName].enabled = true;
-			this.render();
-			this.updateCspString();
-			this.dispatchChangeEvent();
+			const updatedDirective = { ...this.state[directiveName], enabled: true };
+			this._updateState({ [directiveName]: updatedDirective });
 		}
 	}
 
-	updateCspString() {
-		const cspString = this.generateCspString();
-		this.shadowRoot.querySelector('pre code').innerHTML = cspString;
-
-		// Run evaluation if enabled
-		if (this.hasAttribute('evaluate')) {
-			this.runEvaluation();
-		}
-	}
-
-	/**
-	 * Run CSP evaluation on current policy
-	 */
 	runEvaluation() {
 		this.evaluations = evaluatePolicy(this.state, this.t.bind(this), this.rulesConfig);
-		this.render();
+		this.render(); // Re-render to show evaluation results
 	}
 
-	/**
-	 * Dispatch csp-change event with current policy data
-	 */
 	dispatchChangeEvent() {
-		const detail = {
-			policy: this.policy,
-			cspString: this.cspString
-		};
-
-		// Include evaluations if evaluate attribute is present
+		const detail = { policy: this.policy, cspString: this.cspString };
 		if (this.hasAttribute('evaluate') && this.evaluations) {
 			detail.evaluations = this.evaluations;
 		}
-
-		this.dispatchEvent(new CustomEvent('csp-change', {
-			bubbles: true,
-			composed: true,
-			detail
-		}));
+		this.dispatchEvent(new CustomEvent('csp-change', { bubbles: true, composed: true, detail }));
 	}
 
-	addValue(directive, value) {
+	_addValue(directive, value) {
 		if (this.state[directive] && value) {
-			this.state[directive].added.push(value);
-			const ul = this.shadowRoot.querySelector(`[data-ul-for="${directive}"]`);
-			if (ul) {
-				const li = document.createElement('li');
-				li.textContent = value;
-				const button = document.createElement('button');
-				button.dataset.remove = '';
-				button.dataset.directive = directive;
-				button.dataset.index = this.state[directive].added.length - 1;
-				button.textContent = '×';
-				li.append(button);
-				ul.append(li);
-			}
-			this.updateCspString();
-			this.dispatchChangeEvent();
+			const updatedDirective = { ...this.state[directive], added: [...this.state[directive].added, value] };
+			this._updateState({ [directive]: updatedDirective });
 		}
 	}
 
-	removeValue(directive, index) {
-		if (this.state[directive] && this.state[directive].added[index] !== undefined) {
-			this.state[directive].added.splice(index, 1);
-			this.updateCspString();
-			this.dispatchChangeEvent();
+	_removeValue(directive, index) {
+		if (this.state[directive]?.added[index] !== undefined) {
+			const newAdded = [...this.state[directive].added];
+			newAdded.splice(index, 1);
+			const updatedDirective = { ...this.state[directive], added: newAdded };
+			this._updateState({ [directive]: updatedDirective });
+		}
+	}
+
+	_toggleDirective(directive, isEnabled) {
+		if (this.state[directive]) {
+			const updatedDirective = { ...this.state[directive], enabled: isEnabled };
+			this._updateState({ [directive]: updatedDirective });
 		}
 	}
 
 	generateCspString() {
 		const policy = Object.entries(this.state)
-			.filter(([, valueObj]) => valueObj.enabled)
-			.map(([key, valueObj]) => {
-				const allValues = [...valueObj.defaults, ...valueObj.added];
-				if (allValues.length === 0) return `\t\t${key}`;
-				return `\t\t${key} ${allValues.join(' ')}`;
+			.filter(([, value]) => value.enabled)
+			.map(([key, value]) => {
+				const allValues = [...value.defaults, ...value.added];
+				return allValues.length === 0 ? `\t\t${key}` : `\t\t${key} ${allValues.join(' ')}`;
 			})
-			.filter(part => part.trim() !== '')
 			.join('; \n');
-
 		return `&lt;meta http-equiv="Content-Security-Policy" content="\n${policy}\n\t"&gt;`;
 	}
 
-	/**
-	 * Load and merge custom configurations from HTML attributes
-	 * Attributes are read only once during mount (connectedCallback)
-	 * @private
-	 */
-	async #loadConfigsFromAttributes() {
-		const mergedConfigs = await loadAndMergeConfigs(
-			{ cspDirectives, i18nData },
-			this
-		);
-
-		this.directivesConfig = mergedConfigs.directives;
-		this.i18nConfig = mergedConfigs.i18n;
-		this.rulesConfig = mergedConfigs.rules;
-	}
-
 	async connectedCallback() {
-		document.documentElement.style.setProperty('interpolate-size', 'allow-keywords');
 		this.lang = this.getAttribute('lang') || 'en';
+		await this._loadConfiguration();
 
-		// Load and merge custom configurations from attributes
-		await this.#loadConfigsFromAttributes();
-
-		// Initialize state with merged configurations
-		this.state = this.initializeState();
 		const initialPolicy = this.getAttribute('initial-policy');
-
 		if (initialPolicy) {
 			try {
 				this.policy = JSON.parse(initialPolicy);
-				// Evaluation will run automatically in the policy setter if evaluate attribute is present
 			} catch (e) {
 				console.error('Failed to parse initial-policy attribute:', e);
 				this.render();
 			}
 		} else {
 			this.render();
-			// Run initial evaluation for default state if evaluate attribute is present
-			if (this.hasAttribute('evaluate')) {
-				this.runEvaluation();
-			}
+			if (this.hasAttribute('evaluate')) this.runEvaluation();
 		}
 
-		// Resolve the ready promise
 		this._resolveReady();
+		this._attachEventListeners();
+	}
 
+	_attachEventListeners() {
 		this.shadowRoot.addEventListener('click', (e) => {
-			const target = e.target;
-			if (target.tagName !== 'BUTTON') return;
+			const target = e.target.closest('button');
+			if (!target) return;
 
 			const directive = target.dataset.directive;
-
 			if (target.dataset.add !== undefined) {
-				const input = this.shadowRoot.querySelector(`input[type="text"][data-directive="${directive}"]`);
-				if (input && input.value) {
-					this.addValue(directive, input.value);
+				const input = this.shadowRoot.querySelector(`input[data-directive="${directive}"]`);
+				if (input?.value) {
+					this._addValue(directive, input.value);
 					input.value = '';
 				}
 			} else if (target.dataset.remove !== undefined) {
-				const index = parseInt(target.dataset.index, 10);
-				this.removeValue(directive, index);
-				target.closest('li').remove();
+				this._removeValue(directive, parseInt(target.dataset.index, 10));
 			} else if (target.dataset.addDirective !== undefined) {
 				const input = this.shadowRoot.querySelector('#directive-selector');
-				if (input && input.value) {
+				if (input?.value) {
 					this.enableDirective(input.value.trim());
 					input.value = '';
 				}
@@ -496,87 +277,60 @@ class CspManager extends HTMLElement {
 		});
 
 		this.shadowRoot.addEventListener('change', (e) => {
-			const target = e.target;
-			if (target.type === 'checkbox' && target.dataset.directive) {
-				const directive = target.dataset.directive;
-				if (this.state[directive]) {
-					this.state[directive].enabled = target.checked;
-					this.updateCspString();
-					this.dispatchChangeEvent();
-				}
+			if (e.target.type === 'checkbox' && e.target.dataset.directive) {
+				this._toggleDirective(e.target.dataset.directive, e.target.checked);
 			}
 		});
 	}
 
+	_renderDirective(key, valueObj) {
+		const { description, boolean, tokens, defaults, added, enabled } = valueObj;
+		const evaluation = this.hasAttribute('evaluate') && enabled ? this.evaluations?.[key] : null;
+		const severityAttr = evaluation ? `data-severity="${evaluation.severity}"` : '';
+
+		const findingsHtml = evaluation?.findings.map(finding => `
+			<div class="eval-finding" data-severity="${finding.severity}">
+				<strong>${finding.message}</strong>
+				${finding.recommendation ? `<em>${finding.recommendation}</em>` : ''}
+			</div>`).join('') || '';
+
+		const valuesHtml = boolean ? `<p>${this.t('ui.booleanDirectiveInfo')}</p>` : `
+			<ul data-ul-for="${key}">
+				${defaults.map(v => `<li>${v}</li>`).join('')}
+				${added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join('')}
+			</ul>
+			<fieldset>
+				<input type="text" data-directive="${key}" placeholder="${this.t('ui.addNewValue')}" ${tokens ? `list="${key}-tokens"` : ''}>
+				<button data-add data-directive="${key}">${this.t('ui.add')}</button>
+			</fieldset>
+			${tokens ? `<datalist id="${key}-tokens">${tokens.map(token => `<option value="${token}"></option>`).join('')}</datalist>` : ''}
+		`;
+
+		return `
+			<details name="csp-directive" ${severityAttr} ${enabled ? '' : 'style="display:none;"'}>
+				<summary>${key}</summary>
+				<div>
+					<small>${description}</small>
+					${valuesHtml}
+					<div class="eval-findings">${findingsHtml}</div>
+					<label>
+						<input type="checkbox" data-directive="${key}" data-sr ${enabled ? 'checked' : ''}> ${this.t('ui.remove')} ${key}
+					</label>
+				</div>
+			</details>`;
+	}
+
 	render() {
 		const availableDirectives = this.getAvailableDirectives();
-		const hasEvaluations = this.evaluations && this.hasAttribute('evaluate');
+		const directivesHtml = Object.entries(this.state).map(([key, value]) => this._renderDirective(key, value)).join('');
 
 		this.shadowRoot.innerHTML = `
-			${Object.entries(this.state).map(([key, valueObj]) => {
-				const hasTokens = valueObj.tokens && valueObj.tokens.length > 0;
-				const inputListAttribute = hasTokens ? `list="${key}-tokens"` : '';
-				const dataListElement = hasTokens
-					? `<datalist id="${key}-tokens">
-							${valueObj.tokens.map(token => `<option value="${token}"></option>`).join('')}
-						</datalist>`
-					: '';
-
-				// Get evaluation for this directive
-				const evaluation = hasEvaluations && valueObj.enabled ? this.evaluations[key] : null;
-				const severityAttr = evaluation ? `data-severity="${evaluation.severity}"` : '';
-
-				// Build findings HTML
-				const findingsHtml = evaluation && evaluation.findings.length > 0
-					? `<div class="eval-findings">
-							${evaluation.findings.map(finding => `
-								<div class="eval-finding" data-severity="${finding.severity}">
-									<strong>${finding.message}</strong>
-									${finding.recommendation ? `<em>${finding.recommendation}</em>` : ''}
-								</div>
-							`).join('')}
-						</div>`
-					: '';
-
-				return `
-					<details name="csp-directive" ${severityAttr}>
-						<summary>${key}</summary>
-						<div>
-							<small>${valueObj.description}</small>
-							${valueObj.boolean
-								? `<p>${this.t('ui.booleanDirectiveInfo')}</p>`
-								: `
-									<ul data-ul-for="${key}">
-										${valueObj.defaults.map(v => `<li>${v}</li>`).join(' ')}
-										${valueObj.added.map((v, i) => `<li>${v}<button data-remove data-directive="${key}" data-index="${i}">×</button></li>`).join(' ')}
-									</ul>
-									<fieldset>
-										<input type="text" data-directive="${key}" placeholder="${this.t('ui.addNewValue')}" ${inputListAttribute}>
-										<button data-add data-directive="${key}">${this.t('ui.add')}</button>
-									</fieldset>
-									${dataListElement}
-								`
-							}
-							${findingsHtml}
-							<label>
-								<input type="checkbox" data-directive="${key}" data-sr ${valueObj.enabled ? 'checked' : ''}> ${this.t('ui.remove')} ${key}
-							</label>
-						</div>
-					</details>
-				`;
-			}).join('')}
+			${directivesHtml}
 			<pre><code>${this.generateCspString()}</code></pre>
 			<fieldset class="add-directive">
-				<input
-					type="text"
-					list="available-directives"
-					id="directive-selector"
-					placeholder="${this.t('ui.addDirectivePlaceholder')}"
-					autocomplete="off">
+				<input type="text" list="available-directives" id="directive-selector" placeholder="${this.t('ui.addDirectivePlaceholder')}" autocomplete="off">
 				<datalist id="available-directives">
-					${availableDirectives.map(({ key, description }) =>
-						`<option value="${key}">${description}</option>`
-					).join('')}
+					${availableDirectives.map(({ key, description }) => `<option value="${key}">${description}</option>`).join('')}
 				</datalist>
 				<button data-add-directive>${this.t('ui.addDirective')}</button>
 			</fieldset>`;
