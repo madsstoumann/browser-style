@@ -69,13 +69,9 @@
 	<!-- Demo 5: Event Listener -->
 	<section>
 		<h2>5. <code>csp-change</code> Event Listener</h2>
-		<p>Listen to changes and display the current policy in real-time (for CMS integration).</p>
-		<p>Try adding or removing directives and values below - watch the event log update (you can see the full event in the <code>console</code>):</p>
+		<p>Listen to changes and see the `csp-change` event details in the browser's developer console.</p>
+		<p>Try adding or removing directives and values below, then check the console to see the event payload.</p>
 		<csp-manager id="demo5-manager" evaluate></csp-manager>
-		<details style="margin-block-start: 1rem;">
-			<summary><strong>Event Log</strong> (last 5 events)</summary>
-			<pre id="event-log" style="background: #f5f5f5; padding: 1rem; border-radius: 0.5rem; max-height: 300px; overflow-y: auto; font-size: 0.875rem;"></pre>
-		</details>
 	</section>
 
 	<script type="module">
@@ -151,20 +147,16 @@
 
 		// Demo 5: Event Listener
 		const demo5Manager = document.getElementById('demo5-manager');
-		const eventLog = document.getElementById('event-log');
-		const events = [];
 		demo5Manager.addEventListener('csp-change', (e) => {
 			const timestamp = new Date().toLocaleTimeString();
-			const eventData = {
-				timestamp,
-				policy: e.detail.policy,
-				hasEvaluations: !!e.detail.evaluations
-			};
-			events.unshift(eventData);
-			if (events.length > 5) events.pop();
-			eventLog.textContent = events.map((evt, idx) =>
-				`[${evt.timestamp}] Event #${events.length - idx}\nPolicy: ${JSON.stringify(evt.policy, null, 2)}\nHas Evaluations: ${evt.hasEvaluations}\n---`
-			).join('\n\n');
+			console.group(`[CSP Manager] csp-change event at ${timestamp}`);
+			console.log('Policy Object:', e.detail.policy);
+			console.log('CSP String:', e.detail.cspString);
+			if (e.detail.evaluations) {
+				console.log('Evaluations:', e.detail.evaluations);
+			}
+			console.log('Full Event Detail:', e.detail);
+			console.groupEnd();
 		});
 	</script>
 
