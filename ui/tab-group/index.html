@@ -39,12 +39,20 @@
 		container-type: inline-size;
 		display: block;
 		margin-block: 1rem;
+		/* padding-block: 1rem; */
 
-		&[view="breakout"] {
+		/* ACCORDION STYLES */
+		&[accordion~="breakout"] {
+			[open]:not(:first-of-type),
+			[open]:first-of-type ~ details { --y: 1; }
+			[open] ~ details { --y: 2; }
+		}
+
+		&[accordion~="rounded"] {
 			--tab-group-bdrs: 1em;
-			
 		}
 	}
+
 	details {
 		--tab-group-index: sibling-index();
 
@@ -101,8 +109,8 @@
 		}
 	}
 
-	details:has(~[open]) { --y: -1; }
-	[open] ~ details { --y: 1; }
+
+
 	
 	[open]::details-content {
 		border-radius: inherit;
@@ -184,7 +192,7 @@ type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
 	-->
 
-<tab-group view="breakout">
+<tab-group accordion="breakout rounded">
 	<tab-container>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
