@@ -11,6 +11,7 @@
 			color: CanvasText;
 			color-scheme: light dark;
 			font-family: system-ui;
+			interpolate-size: allow-keywords;
 			margin: 0 2ch;
 		}
 
@@ -26,7 +27,7 @@
 	:scope {
 		--tab-group-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
 
-		--tab-group-bdrs: 1rem;
+		--tab-group-bdrs: 0px;
 		--tab-group-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
 		--tab-group-bdw: 1px;
 		
@@ -38,33 +39,50 @@
 		container-type: inline-size;
 		display: block;
 		margin-block: 1rem;
+
+		&[view="breakout"] {
+			--tab-group-bdrs: 1em;
+			
+		}
 	}
 	details {
-		  /* --bounce: linear(0 0%, 0.5571 7.53%, 0.8252 11.98%, 0.9337 14.38%, 1.0166 16.8%, 1.0765 19.31%, 1.1146 21.97%, 1.1263 23.47%, 1.1325 25.06%, 1.133 26.76%, 1.128 28.62%, 1.1094 31.9%, 1.0484 39.77%, 1.0218 43.85%, 1.0011 48.42%, 0.9895 53.23%, 0.9861 59.8%, 1 81.27% 100%); */
-  	--ease: linear(0 0%, 0.2688 9.91%, 0.3859 15%, 0.4917 20.19%, 0.5865 25.5%, 0.6705 30.93%, 0.7441 36.51%, 0.8075 42.26%, 0.8593 47.98%, 0.9022 53.93%, 0.9366 60.13%, 0.963 66.67%, 0.9812 73.4%, 0.9929 80.76%, 0.9986 88.89%, 1 100%);
 		--tab-group-index: sibling-index();
 
 		border-block-end: var(--tab-group-bdw) solid var(--tab-group-bdc);
+
 		border-inline: var(--tab-group-bdw) solid var(--tab-group-bdc);
+		
+    
+
 		interpolate-size: allow-keywords;
 		translate: 0 calc(var(--y) * 1rem);
 
 		&:first-of-type, 
 		&[open] + details {
 			border-block-start: var(--tab-group-bdw) solid var(--tab-group-bdc);
+		}
+		&:first-of-type, 
+		&[open] + details,
+		&[open] + details summary {
 			border-top-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
 			border-top-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
 		}
 		&:last-of-type,
-		&:has(+ details[open])   {
+		&:has(+ details[open]),
+		&:has(+ details[open]) summary {
 			border-bottom-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
 			border-bottom-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
 		}
 		&[open] {
-			border: var(--tab-group-bdw-open) solid var(--tab-group-bdc-open);
+			border: var(--tab-group-bdw) solid var(--tab-group-bdc-open, inherit);
 			border-radius: var(--tab-group-bdrs);
+			/* box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); */
+			/* box-shadow: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2); */
+    
+    
 		}
-/* transform-style: preserve-3d;
+
+		/* transform-style: preserve-3d;
     perspective: 120px; */
   
 		/* transition-property: border-radius, margin, background-color, border-color, border-width, transform, translate, opacity, color; */
@@ -76,13 +94,19 @@
 
 	}
 
+
+	@media (hover: hover) {
+		details:hover:not([open]) {
+			background: var(--tab-group-hover-bg, #EEE);
+		}
+	}
+
 	details:has(~[open]) { --y: -1; }
 	[open] ~ details { --y: 1; }
 	
 	[open]::details-content {
 		border-radius: inherit;
 		height: fit-content;
-		/* background: yellow; */
 		padding-block: 2ch;
 	}
 
@@ -90,6 +114,7 @@
 		/* background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222)); */
 		/* border-block-end: 2px solid var(--tab-group-bdc); */
 		/* border-radius: var(--tab-group-bdrs); */
+		
 		color: var(--tabs-group-c, inherit);
 		corner-shape: superellipse(1.25);
 		cursor: pointer;
@@ -157,9 +182,9 @@ type="divided" - Horizontal lines between each item (classic accordion)
 type="bordered" - Each item has a full border (card-like)
 type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
-		-->
+	-->
 
-<tab-group variant="">
+<tab-group view="breakout">
 	<tab-container>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
