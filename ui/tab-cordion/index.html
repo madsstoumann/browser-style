@@ -39,6 +39,7 @@
 		--tab-cordion-bdw-open: 1px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
+		
 
 		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
 
@@ -276,11 +277,11 @@
 	}
 
 
-	/* @media (hover: hover) {
+	@media (hover: hover) {
 		details:hover:not([open]) {
-			background: var(--tab-cordion-hover-bg, rgb(216, 236, 242));
+			background: var(--tab-cordion-hover-bg, light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%)));
 		}
-	} */
+	}
 
 
 	[open]::details-content {
@@ -290,10 +291,6 @@
 	}
 
 	summary {
-		/* background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222)); */
-		/* border-block-end: 2px solid var(--tab-cordion-bdc); */
-		/* border-radius: var(--tab-cordion-bdrs); */
-		
 		color: var(--tabs-group-c, inherit);
 		corner-shape: superellipse(1.25);
 		cursor: pointer;
@@ -302,24 +299,26 @@
 		/* font-size: var(--tab-cordion-fs, clamp(.75rem, 2.5vw, 1rem)); */
 		grid-column: var(--tab-cordion-index);
 		grid-row: 1;
-		/* isolation: isolate; */
 		justify-content: space-between;
 		list-style: none;
 		padding: var(--tab-cordion-p, 1.5ch);
 		position: relative;
 		text-align: var(--tabl-group-tal, center);
 		text-box: cap alphabetic;
-	 	/* */
 		transition: all .2s ease;
 		user-select: none;
-		&:focus-visible {
+		/* &:focus-visible {
 			outline-color: var(--tab-cordion-accent);
 			outline-offset: -4px;
-		}
+		} */
 	}
 	cq-box {
 		display: grid;
 		/* padding-block: var(--tab-cordion-gap); */
+	}
+
+	ui-icon {
+		color: var(--tab-cordion-ui-icon-c, light-dark(#5a5a5a, #b0b0b0));
 	}
 	
 	
@@ -361,19 +360,25 @@
 			}
 			summary {
 				justify-self: center;
-				text-underline-offset: 100%;
+				text-underline-offset: calc(100% - 3px);
 				/* text-decoration: underline;
     		text-decoration-thickness: var(--tab-cordion-tdt, 3px);
     		text-underline-offset: 1rem; */
 				& + * {  position: relative;  z-index: 1; }
 			}
 			ui-icon { display: none; } /* TODO! */
+
+			@media (hover: hover) {
+				summary:hover {
+					/* background: var(--tab-cordion-tabs-hover-bg, light-dark(hsl(210, 100%, 90%), hsl(210, 50%, 20%))); */
+				}
+			}
 		}
 	}
 }
 
 
-fieldset { border: 0;}
+
 	 </style>
 </head>
 <body>
