@@ -14,6 +14,11 @@
 			interpolate-size: allow-keywords;
 			margin: 1rem 2ch;
 		}
+		.content {
+			color: light-dark(#6b6b6b, #a0a0a0);
+			line-height: 1.6;
+			padding: 0 1.5ch;
+		}
 
 /* === Tab Cordion === */
 	/* @import "../icon/index.css"; */
@@ -30,7 +35,7 @@
 		--tab-cordion-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
 		--tab-cordion-bdw: 1px;
 		--tab-cordion-bxsh: 0 0 1px 0 rgba(0, 0, 0, .07), 0 1px 1px 0 rgba(0, 0, 0, .06), 0 1px 2px 0 rgba(0, 0, 0, .1);
-		--tab-cordion-bdc-open: tomato;
+		--tab-cordion-bdc-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
 		--tab-cordion-bdw-open: 1px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
@@ -385,227 +390,44 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="breakpoints">
-				<label>Small
-					<select name="sm">
-						<option value="unset">None</option>
-						<optgroup label="Columns"></optgroup>
-						<option value="columns(2)">columns(2)</option>
-						</select>
-				</label>
-
-				<label>Medium
-					<select name="md">
-						<option value="unset">None</option>
-						<optgroup label="Columns"></optgroup>
-						<option value="columns(2)">columns(2)</option>
-						<option value="columns(3)">columns(3)</option>
-						<option value="columns(4)">columns(4)</option>
-						
-						<optgroup label="Grid"></optgroup>
-						
-						<option value="grid(3a)" data-items="3">grid(3a)</option>
-						<option value="grid(3b)">grid(3b)</option>
-						<option value="grid(3c)">grid(3c)</option>
-						<option value="grid(3d)" >grid(3d)</option>
-					</select>
-				</label>
-				<label>Large
-					<select name="lg">
-						<optgroup label="Grid"></optgroup>
-						<option value="unset">None</option>
-						<option value="grid(3a)" data-items="3">grid(3a)</option>
-						<option value="grid(3b)">grid(3b)</option>
-						<option value="grid(3c)">grid(3c)</option>
-						<option value="grid(3d)">grid(3d)</option>
-					</select>
-				</label>
-
-			</fieldset>
+			<div class="content">
+				Configure responsive breakpoints for different screen sizes. Set layout behavior for small, medium, and large viewports using columns or grid systems to ensure optimal display across devices.
+			</div>
 		</details>
 
 		<details name="tabs">
 			<summary>Spacing<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="spacing">
-				<label>
-					Space Top
-					<input type="number" name="space-top" value="0" min="0">
-				</label>
-				<label>
-					Space Bottom
-					<input type="number" name="space-bottom" value="0" min="0">
-				</label>
-				<label>
-					Padding Top
-					<input type="number" name="pad-top" value="0" min="0">
-				</label>
-				<label>
-					Padding Bottom
-					<input type="number" name="pad-bottom" value="0" min="0">
-				</label>
-				<label>
-					Padding Inline
-					<input type="number" name="pad-inline" value="0" min="0">
-				</label>
-			</fieldset>
+			<div class="content">
+				Control the outer margins and inner padding around your content. Adjust space top and bottom to control external spacing, while padding settings manage the internal spacing within the component boundaries.
+			</div>
 		</details>
 
 		<details name="tabs" >
 			<summary>Gaps<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="gaps">
-				<label>
-					Column Gap
-					<input type="number" name="col-gap" value="1" min="0" step="0.5">
-				</label>
-				<label>
-					Row Gap
-					<input type="number" name="row-gap" value="1" min="0" step="0.5">
-				</label>
-			</fieldset>
+			<div class="content">
+				Define the spacing between columns and rows in grid or flex layouts. Fine-tune the visual separation between elements to create balanced, readable layouts with appropriate breathing room.
+			</div>
 		</details>
 
 		<details name="tabs">
 			<summary>Layout<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="layout">
-				<label>Bleed
-					<input type="number" name="bleed" value="0" min="-100" max="100">
-				</label>
-				<label>Bleed mode
-					<select name="bleed-mode">
-						<option value="none">None</option>
-						<option value="full">Full</option>
-						<option value="number" selected>Numeric</option>
-					</select>
-				</label>
-
-				<label>
-					Overflow
-					<select name="overflow">
-						<option value="unset">None</option>
-						<option value="none">Hidden</option>
-						<option value="preview">Preview</option>
-						<option value="dynamic">Dynamic</option>
-					</select>
-				</label>
-				<label>
-					Theme
-					<select name="theme">
-						<option value="unset">None</option>
-						<option value="primary">Primary</option>
-						<option value="secondary">Secondary</option>
-						<option value="tertiary">Tertiary</option>
-					</select>
-				</label>
-				<label>
-					Width Preset
-					<select name="width">
-						<option value="">None</option>
-						<option value="xs">XS (20rem)</option>
-						<option value="sm">SM (30rem)</option>
-						<option value="md">MD (48rem)</option>
-						<option value="lg">LG (64rem)</option>
-						<option value="xl">XL (80rem)</option>
-						<option value="xxl">XXL (96rem)</option>
-					</select>
-				</label>
-			</fieldset>
+			<div class="content">
+				Manage layout properties including bleed effects for edge-to-edge designs, overflow behavior for content handling, theme selection for styling consistency, and width presets to control maximum component dimensions.
+			</div>
 		</details>
 
 		<details name="tabs">
 			<summary>Animation<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="animations">
-				<label>
-					Animation Name
-					<select name="animationName">
-						<option value="">None</option>
-
-							<optgroup label="Fade">
-								<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
-							</optgroup>
-
-							<optgroup label="Bounce">
-								<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
-							</optgroup>
-
-							<optgroup label="Zoom">
-								<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
-							</optgroup>
-
-							<optgroup label="Slide">
-								<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
-							</optgroup>
-
-							<optgroup label="Flip">
-								<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
-							</optgroup>
-
-							<optgroup label="Reveal">
-								<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
-							</optgroup>
-
-							<optgroup label="Other">
-								<option value="opacity">opacity</option>
-							</optgroup>
-
-					</select>
-				</label>
-				<label>
-					Animation Range
-					<select name="animationRange">
-						<option value="">Default</option>
-						<option value="contain">Contain</option>
-						<option value="cover">Cover</option>
-						<option value="exit">Exit</option>
-					</select>
-				</label>
-			</fieldset>
+			<div class="content">
+				Add motion and visual interest with entrance and exit animations. Choose from various animation styles including fades, bounces, zooms, slides, flips, and reveals, with customizable animation ranges for scroll-based triggers.
+			</div>
 		</details>
 
 		<details name="tabs">
 			<summary>Advanced<ui-icon type="plus-cross"></ui-icon></summary>
-			<fieldset name="advanced">
-				<label>
-					ARIA Label
-					<input type="text" name="aria-label" value="">
-				</label>
-				<label>Gap Decorations
-					<select name="gap-decorations">
-						<option value="unset">None</option>
-						<option value="cols">Columns</option>
-						<option value="rows">Rows</option>
-						<option value="cols rows">Both</option>
-					</select>
-				</label>
-				<label>
-					Intrinsic Size
-					<select name="size">
-						<option value="auto">auto</option>
-						<option value="unset">None</option>
-						<option value="200px">200px</option>
-						<option value="300px">300px</option>
-						<option value="400px">400px</option>
-						<option value="500px">500px</option>
-						<option value="600px">600px</option>
-						<option value="50vh">50vh</option>
-						<option value="75vh">75vh</option>
-						<option value="100vh">100vh</option>
-					</select>
-				</label>
-				<label>
-					Self Alignment
-					<select name="self">
-						<option value="unset">None</option>
-						<option value="auto">auto</option>
-						<option value="start">start</option>
-						<option value="end">end</option>
-						<option value="center">center</option>
-						<option value="stretch">stretch</option>
-						<option value="baseline">baseline</option>
-						<option value="self-start">self-start</option>
-						<option value="self-end">self-end</option>
-					</select>
-				</label>
-			</fieldset>
+			<div class="content">
+				Configure advanced features including accessibility labels for screen readers, decorative elements in gaps between content, intrinsic sizing constraints, and self-alignment properties for precise positioning control.
+			</div>
 		</details>
 	</cq-box>
 </tab-cordion>
