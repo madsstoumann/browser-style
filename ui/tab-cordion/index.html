@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../icon/index.css">
-	<title>Tab Group</title>
+	<title>Tab Cordion</title>
 	<style>
 		body {
 			background: Canvas;
@@ -15,9 +15,9 @@
 			margin: 0 2ch;
 		}
 
-/* === Tab Group === */
+/* === Tab Cordion === */
 	/* @import "../icon/index.css"; */
-@scope (tab-group) {
+@scope (tab-cordion) {
 
 	@property --tab-group-index {
 		syntax: "<integer>";
@@ -42,13 +42,13 @@
 		/* padding-block: 1rem; */
 
 		/* ACCORDION STYLES */
-		&[accordion~="breakout"] {
+		&[from~="breakout"] {
 			[open]:not(:first-of-type),
 			[open]:first-of-type ~ details { --y: 1; }
 			[open] ~ details { --y: 2; }
 		}
 
-		&[accordion~="rounded"] {
+		&[from~="rounded"] {
 			--tab-group-bdrs: 1em;
 		}
 	}
@@ -148,7 +148,7 @@
 			outline-offset: -4px;
 		}
 	}
-	tab-container {
+	cq-box {
 		display: grid;
 		padding-block: var(--tab-group-gap);
 		/* row-gap: var(--tab-group-gap); */
@@ -169,7 +169,7 @@
 			grid-column: 1 / -1;
 			grid-row: 2;
 		}
-		tab-container {
+		cq-box {
 			--tab-group-gap: var(--tab-group-desktop-gap, 2ch);
 			grid-template-columns: repeat(var(--tab-group-tabs, 6), 1fr);
 			grid-template-rows: auto 1fr;
@@ -192,8 +192,8 @@ type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
 	-->
 
-<tab-group accordion="breakout rounded">
-	<tab-container>
+<tab-cordion from="breakout rounded" to="">
+	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
 			<fieldset name="breakpoints">
@@ -418,8 +418,8 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 				</label>
 			</fieldset>
 		</details>
-	</tab-container>
-</tab-group>
+	</cq-box>
+</tab-cordion>
 
 		
 
