@@ -39,15 +39,14 @@
 		--tab-cordion-bdw-open: 2px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
+		 --tab-cordion-trsdu: 300ms;
 		
-	--tab-cordion-bg: light-dark(#EEE, #222);
+		--tab-cordion-bg: light-dark(#EEE, #222);
 		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
 
-		background: var(--tab-cordion-bg, #0000);
 		container-type: inline-size;
 		padding: var(--tab-cordion-p, 0px);
 		display: block;
-
 
 		/* --- breakout --- */
 		&[from~="breakout"] {
@@ -268,9 +267,7 @@
 		background: var(--tab-cordion-item-bg, Canvas);
 		interpolate-size: allow-keywords;
 		translate: 0 calc(var(--_y) * 1rem);
-		transition-duration: 0.3s;
-		transition-property: translate;
-		transition-timing-function: ease;
+		transition: translate var(--tab-cordion-trsdu) ease;
 	}
 
 	@media (hover: hover) {
@@ -279,10 +276,18 @@
 		}
 	}
 
+	details::details-content {
+		block-size: 0;
+		content-visibility: hidden;
+		overflow: hidden;
+		transition: block-size var(--tab-cordion-trsdu), content-visibility var(--tab-cordion-trsdu);
+		transition-behavior: allow-discrete;
+	}
 
-	[open]::details-content {
-		border-radius: inherit;
-		height: fit-content;
+	/* --- Open State --- */
+	details[open]::details-content {
+		block-size: auto;
+		content-visibility: visible;
 	}
 
 	summary {
@@ -309,7 +314,6 @@
 	}
 	cq-box {
 		display: grid;
-		/* padding-block: var(--tab-cordion-gap); */
 	}
 
 	/* --- background (mobile/accordion) --- */
@@ -393,15 +397,7 @@
 </head>
 <body>
 
-	<!--
-	type="seamless" - No visible borders/lines between items (minimal, clean)
-type="divided" - Horizontal lines between each item (classic accordion)
-type="bordered" - Each item has a full border (card-like)
-type="elevated" - Items have subtle elevation/shadow (material design)
-type="breakout" - Your current implementation (expanded item breaks out visually)
-	-->
-
-<tab-cordion from="divided" to=" ">
+<tab-cordion from="divided" to="background">
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
@@ -448,6 +444,7 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 </tab-cordion>
 
 
+<!-- CONTROLS -->
 <form id="controls" style="margin-top:5rem">
 	<fieldset name="from">
 		<legend>Accordion</legend>
@@ -464,7 +461,7 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 			<input type="checkbox" value="divided" checked> Divided
 		</label><br>
 		<label>
-			<input type="checkbox" value="elevated" > Elevated (requires <code>breakout</code>)
+			<input type="checkbox" value="elevated" > Elevated
 		</label><br>
 		<label>
 			<input type="checkbox" value="rounded" > Rounded
