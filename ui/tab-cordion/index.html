@@ -19,6 +19,9 @@
 			line-height: 1.6;
 			padding: 2ch 1.5ch;
 		}
+		.controls {
+			margin-top: 5rem;
+		}
 
 /* === Tab Cordion === */
 	/* @import "../icon/index.css"; */
@@ -397,7 +400,7 @@
 </head>
 <body>
 
-<tab-cordion from="divided" to="background">
+<tab-cordion from="divided" to="">
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
@@ -445,7 +448,7 @@
 
 
 <!-- CONTROLS -->
-<form id="controls" style="margin-top:5rem">
+<form class="controls" id="app">
 	<fieldset name="from">
 		<legend>Accordion</legend>
 		<label>
@@ -469,62 +472,29 @@
 		<label>
 			<input type="checkbox" value="separate" > Separate
 		</label>
+	</fieldset><br>
+	<fieldset name="to">
+		<legend>Tabs</legend>
+		<label>
+			<input type="checkbox" value="background" > Background
+		</label><br>
+		<label>
 	</fieldset>
 </form>
 
 <script>
-const tabCordion = document.querySelector('tab-cordion');
-const controls = document.getElementById('controls');
+	const tab = document.querySelector('tab-cordion');
+	app.addEventListener('change', (e) => {
+		const fieldset = e.target.parentElement?.closest('fieldset');
+		if (!tab || !fieldset.name) return;
 
-controls.addEventListener('change', (e) => {
-	if (e.target.type === 'checkbox') {
-		const value = e.target.value;
-		const currentFrom = tabCordion.getAttribute('from') || '';
-		const fromValues = currentFrom.split(' ').filter(v => v.trim());
+		const values = Array.from(fieldset.elements)
+			.filter(el => el.type === 'checkbox' && el.checked)
+			.map(el => el.value)
+			.join(' ');
 
-		if (e.target.checked) {
-			// Elevated can only be checked if breakout is checked
-			if (value === 'elevated' && !fromValues.includes('breakout')) {
-				e.target.checked = false;
-				return;
-			}
-
-			// Add value if not already present
-			if (!fromValues.includes(value)) {
-				fromValues.push(value);
-			}
-
-			// If breakout is selected, contain must be checked too
-			if (value === 'breakout' && !fromValues.includes('contain')) {
-				fromValues.push('contain');
-				const containCheckbox = controls.querySelector('input[value="contain"]');
-				if (containCheckbox) {
-					containCheckbox.checked = true;
-				}
-			}
-		} else {
-			// Prevent unchecking contain if breakout is still checked
-			if (value === 'contain' && fromValues.includes('breakout')) {
-				e.target.checked = true;
-				return;
-			}
-
-			// Prevent unchecking breakout if elevated is still checked
-			if (value === 'breakout' && fromValues.includes('elevated')) {
-				e.target.checked = true;
-				return;
-			}
-
-			// Remove value
-			const index = fromValues.indexOf(value);
-			if (index > -1) {
-				fromValues.splice(index, 1);
-			}
-		}
-
-		tabCordion.setAttribute('from', fromValues.join(' '));
-	}
-});
+		tab.setAttribute(fieldset.name, values);
+	});
 </script>
 
 
