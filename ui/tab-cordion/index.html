@@ -17,7 +17,7 @@
 		.content {
 			color: light-dark(#6b6b6b, #a0a0a0);
 			line-height: 1.6;
-			padding: 0 1.5ch;
+			padding: 2ch 1.5ch;
 		}
 
 /* === Tab Cordion === */
@@ -36,11 +36,11 @@
 		--tab-cordion-bdw: 1px;
 		--tab-cordion-bxsh: 0 0 1px 0 rgba(0, 0, 0, .07), 0 1px 1px 0 rgba(0, 0, 0, .06), 0 1px 2px 0 rgba(0, 0, 0, .1);
 		--tab-cordion-bdc-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
-		--tab-cordion-bdw-open: 1px;
+		--tab-cordion-bdw-open: 2px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
 		
-
+	--tab-cordion-bg: light-dark(#EEE, #222);
 		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
 
 		background: var(--tab-cordion-bg, #0000);
@@ -265,17 +265,13 @@
 
 	details {
 		--tab-cordion-index: sibling-index();
-		/* --_y: 1; */
-    
 		background: var(--tab-cordion-item-bg, Canvas);
 		interpolate-size: allow-keywords;
 		translate: 0 calc(var(--_y) * 1rem);
-
 		transition-duration: 0.3s;
 		transition-property: translate;
 		transition-timing-function: ease;
 	}
-
 
 	@media (hover: hover) {
 		details:hover:not([open]) {
@@ -287,7 +283,6 @@
 	[open]::details-content {
 		border-radius: inherit;
 		height: fit-content;
-		padding-block: 2ch;
 	}
 
 	summary {
@@ -317,22 +312,36 @@
 		/* padding-block: var(--tab-cordion-gap); */
 	}
 
+	/* --- background (mobile/accordion) --- */
+	&[from~="background"] {
+		cq-box {
+			background: var(--tab-cordion-bg);
+			padding: var(--tab-cordion-p, 1.5ch);
+		}
+	}
+
 	ui-icon {
 		color: var(--tab-cordion-ui-icon-c, light-dark(#5a5a5a, #b0b0b0));
 	}
-	
-	
+
+
 	@container (width > 700px) {
 		&[to] {
+			/* Unset from background properties when switching to desktop mode */
+			&[from~="background"] cq-box {
+				background: unset;
+				padding: unset;
+			}
+
 			&[to~="background"] {
-				cq-box::before { 
+				cq-box::before {
 					background: var(--tab-cordion-tabs-bg);
 					border-radius: 2ch;
 					content: "";
 					grid-column: 1 / -1;
 					grid-row: 1;
 				}
-				details { background: unset;}
+				details { background: unset; }
 			}
 			cq-box {
 				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
@@ -369,7 +378,8 @@
 			ui-icon { display: none; } /* TODO! */
 
 			@media (hover: hover) {
-				summary:hover {
+				details:hover {
+					background: #0000;
 					/* background: var(--tab-cordion-tabs-hover-bg, light-dark(hsl(210, 100%, 90%), hsl(210, 50%, 20%))); */
 				}
 			}
@@ -391,7 +401,7 @@ type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
 	-->
 
-<tab-cordion from="divided" to="background ">
+<tab-cordion from="divided" to=" ">
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
@@ -439,8 +449,11 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 
 
 <form id="controls" style="margin-top:5rem">
-	<fieldset>
-		<legend>from</legend>
+	<fieldset name="from">
+		<legend>Accordion</legend>
+		<label>
+			<input type="checkbox" value="background" > Background
+		</label><br>
 		<label>
 			<input type="checkbox" value="breakout" > Breakout
 		</label><br>
@@ -473,11 +486,38 @@ controls.addEventListener('change', (e) => {
 		const fromValues = currentFrom.split(' ').filter(v => v.trim());
 
 		if (e.target.checked) {
+			// Elevated can only be checked if breakout is checked
+			if (value === 'elevated' && !fromValues.includes('breakout')) {
+				e.target.checked = false;
+				return;
+			}
+
 			// Add value if not already present
 			if (!fromValues.includes(value)) {
 				fromValues.push(value);
 			}
+
+			// If breakout is selected, contain must be checked too
+			if (value === 'breakout' && !fromValues.includes('contain')) {
+				fromValues.push('contain');
+				const containCheckbox = controls.querySelector('input[value="contain"]');
+				if (containCheckbox) {
+					containCheckbox.checked = true;
+				}
+			}
 		} else {
+			// Prevent unchecking contain if breakout is still checked
+			if (value === 'contain' && fromValues.includes('breakout')) {
+				e.target.checked = true;
+				return;
+			}
+
+			// Prevent unchecking breakout if elevated is still checked
+			if (value === 'breakout' && fromValues.includes('elevated')) {
+				e.target.checked = true;
+				return;
+			}
+
 			// Remove value
 			const index = fromValues.indexOf(value);
 			if (index > -1) {
