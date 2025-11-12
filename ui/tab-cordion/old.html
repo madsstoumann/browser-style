@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Layout Composer</title>
+	<style>
+		body {
+			background: Canvas;
+			color: CanvasText;
+			color-scheme: light dark;
+			font-family: system-ui;
+			margin: 0 2ch;
+		}
+
+/* === Tab Group === */
+@scope (tab-group) {
+	@property --tab-group-index {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 1;
+	}
+	:scope {
+		--tab-group-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+
+		--tab-group-bdrs: 1rem;
+		--tab-group-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
+		--tab-group-bdw: 2px;
+		
+		--tab-group-bdc-open: light-dark(black,white);
+		--tab-group-bdw-open: 2px;
+
+		--tab-group-gap: 1ch;
+
+		container-type: inline-size;
+		display: block;
+		margin-block: 1rem;
+	}
+	details {
+		  --bounce: linear(0 0%, 0.5571 7.53%, 0.8252 11.98%, 0.9337 14.38%, 1.0166 16.8%, 1.0765 19.31%, 1.1146 21.97%, 1.1263 23.47%, 1.1325 25.06%, 1.133 26.76%, 1.128 28.62%, 1.1094 31.9%, 1.0484 39.77%, 1.0218 43.85%, 1.0011 48.42%, 0.9895 53.23%, 0.9861 59.8%, 1 81.27% 100%);
+  --ease: linear(0 0%, 0.2688 9.91%, 0.3859 15%, 0.4917 20.19%, 0.5865 25.5%, 0.6705 30.93%, 0.7441 36.51%, 0.8075 42.26%, 0.8593 47.98%, 0.9022 53.93%, 0.9366 60.13%, 0.963 66.67%, 0.9812 73.4%, 0.9929 80.76%, 0.9986 88.89%, 1 100%);
+		--tab-group-index: sibling-index();
+
+		border-block-end: var(--tab-group-bdw) solid var(--tab-group-bdc);
+		border-inline: var(--tab-group-bdw) solid var(--tab-group-bdc);
+		interpolate-size: allow-keywords;
+		translate: 0 calc(var(--y) * 1rem);
+
+		&:first-of-type, 
+		&[open] + details {
+			border-block-start: var(--tab-group-bdw) solid var(--tab-group-bdc);
+			border-top-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
+			border-top-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
+		}
+		&:last-of-type,
+		&:has(+ details[open])   {
+			border-bottom-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
+			border-bottom-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
+		}
+		&[open] {
+			border: var(--tab-group-bdw-open) solid var(--tab-group-bdc-open);
+			border-radius: var(--tab-group-bdrs);
+		}
+/* transform-style: preserve-3d;
+    perspective: 120px;
+  
+		transition-property: border-radius, margin, background-color, border-color, border-width, transform, translate, opacity, color;
+		transition-duration: 0.3s;
+		  transition-timing-function: var(--ease);
+  transform: translateZ(0); */
+
+	}
+
+	details:has(~[open]) { --y: -1; }
+	[open] ~ details { --y: 1; }
+	
+	[open]::details-content {
+		border-radius: inherit;
+		height: fit-content;
+		/* background: yellow; */
+		padding-block: 2ch;
+	}
+
+	summary {
+		/* background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222)); */
+		/* border-block-end: 2px solid var(--tab-group-bdc); */
+		/* border-radius: var(--tab-group-bdrs); */
+		color: var(--tabs-group-c, inherit);
+		corner-shape: superellipse(1.25);
+		cursor: pointer;
+		display: grid;
+		font-family: var(--tab-group-ff, inherit);
+		/* font-size: var(--tab-group-fs, clamp(.75rem, 2.5vw, 1rem)); */
+		grid-column: var(--tab-group-index);
+		grid-row: 1;
+		/* isolation: isolate; */
+		list-style: none;
+		padding: var(--tab-group-p, 1.5ch);
+		position: relative;
+		text-align: var(--tabl-group-tal, center);
+		text-box: cap alphabetic;
+	 	/* text-decoration: underline; */
+    /* text-decoration-thickness: var(--tab-group-tdt, 3px);
+    text-underline-offset: 1rem; */
+		transition: all .2s ease;
+		user-select: none;
+		&:focus-visible {
+			outline-color: var(--tab-group-accent);
+			outline-offset: -4px;
+		}
+	}
+	tab-container {
+		display: grid;
+		padding-block: var(--tab-group-gap);
+		/* row-gap: var(--tab-group-gap); */
+	}
+
+	@container (width > 700px) {
+		details {
+			display: grid;
+			grid-column: 1 / -1;
+			grid-row: 1 / span 2;
+			grid-template-columns: subgrid;
+			grid-template-rows: subgrid;
+			&:not(:first-of-type):not(:last-of-type) summary { border-radius: 0; }
+			&:first-of-type summary { border-radius: var(--tab-group-bdrs) 0 0 var(--tab-group-bdrs); }
+			&:last-of-type summary { border-radius: 0 var(--tab-group-bdrs) var(--tab-group-bdrs) 0; }
+		}
+		details::details-content {
+			grid-column: 1 / -1;
+			grid-row: 2;
+		}
+		tab-container {
+			--tab-group-gap: var(--tab-group-desktop-gap, 2ch);
+			grid-template-columns: repeat(var(--tab-group-tabs, 6), 1fr);
+			grid-template-rows: auto 1fr;
+			row-gap: 0;
+		}
+	}
+}
+
+
+fieldset { background: orangered; border: 0; }
+	 </style>
+</head>
+<body>
+
+
+<tab-group>
+	<tab-container>
+		<details name="tabs">
+			<summary>Breakpoints</summary>
+			<fieldset name="breakpoints">
+				<label>Small
+					<select name="sm">
+						<option value="unset">None</option>
+						<optgroup label="Columns"></optgroup>
+						<option value="columns(2)">columns(2)</option>
+						</select>
+				</label>
+
+				<label>Medium
+					<select name="md">
+						<option value="unset">None</option>
+						<optgroup label="Columns"></optgroup>
+						<option value="columns(2)">columns(2)</option>
+						<option value="columns(3)">columns(3)</option>
+						<option value="columns(4)">columns(4)</option>
+						
+						<optgroup label="Grid"></optgroup>
+						
+						<option value="grid(3a)" data-items="3">grid(3a)</option>
+						<option value="grid(3b)">grid(3b)</option>
+						<option value="grid(3c)">grid(3c)</option>
+						<option value="grid(3d)" >grid(3d)</option>
+					</select>
+				</label>
+				<label>Large
+					<select name="lg">
+						<optgroup label="Grid"></optgroup>
+						<option value="unset">None</option>
+						<option value="grid(3a)" data-items="3">grid(3a)</option>
+						<option value="grid(3b)">grid(3b)</option>
+						<option value="grid(3c)">grid(3c)</option>
+						<option value="grid(3d)">grid(3d)</option>
+					</select>
+				</label>
+
+			</fieldset>
+		</details>
+
+		<details name="tabs">
+			<summary>Spacing</summary>
+			<fieldset name="spacing">
+				<label>
+					Space Top
+					<input type="number" name="space-top" value="0" min="0">
+				</label>
+				<label>
+					Space Bottom
+					<input type="number" name="space-bottom" value="0" min="0">
+				</label>
+				<label>
+					Padding Top
+					<input type="number" name="pad-top" value="0" min="0">
+				</label>
+				<label>
+					Padding Bottom
+					<input type="number" name="pad-bottom" value="0" min="0">
+				</label>
+				<label>
+					Padding Inline
+					<input type="number" name="pad-inline" value="0" min="0">
+				</label>
+			</fieldset>
+		</details>
+
+		<details name="tabs" >
+			<summary>Gaps</summary>
+			<fieldset name="gaps">
+				<label>
+					Column Gap
+					<input type="number" name="col-gap" value="1" min="0" step="0.5">
+				</label>
+				<label>
+					Row Gap
+					<input type="number" name="row-gap" value="1" min="0" step="0.5">
+				</label>
+			</fieldset>
+		</details>
+
+		<details name="tabs">
+			<summary>Layout</summary>
+			<fieldset name="layout">
+				<label>Bleed
+					<input type="number" name="bleed" value="0" min="-100" max="100">
+				</label>
+				<label>Bleed mode
+					<select name="bleed-mode">
+						<option value="none">None</option>
+						<option value="full">Full</option>
+						<option value="number" selected>Numeric</option>
+					</select>
+				</label>
+
+				<label>
+					Overflow
+					<select name="overflow">
+						<option value="unset">None</option>
+						<option value="none">Hidden</option>
+						<option value="preview">Preview</option>
+						<option value="dynamic">Dynamic</option>
+					</select>
+				</label>
+				<label>
+					Theme
+					<select name="theme">
+						<option value="unset">None</option>
+						<option value="primary">Primary</option>
+						<option value="secondary">Secondary</option>
+						<option value="tertiary">Tertiary</option>
+					</select>
+				</label>
+				<label>
+					Width Preset
+					<select name="width">
+						<option value="">None</option>
+						<option value="xs">XS (20rem)</option>
+						<option value="sm">SM (30rem)</option>
+						<option value="md">MD (48rem)</option>
+						<option value="lg">LG (64rem)</option>
+						<option value="xl">XL (80rem)</option>
+						<option value="xxl">XXL (96rem)</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
+
+		<details name="tabs">
+			<summary>Animation</summary>
+			<fieldset name="animations">
+				<label>
+					Animation Name
+					<select name="animationName">
+						<option value="">None</option>
+
+							<optgroup label="Fade">
+								<option value="fade-in">fade-in</option><option value="fade-up">fade-up</option><option value="fade-down">fade-down</option><option value="fade-left">fade-left</option><option value="fade-right">fade-right</option><option value="fade-in-scale">fade-in-scale</option><option value="fade-out">fade-out</option><option value="fade-out-scale">fade-out-scale</option>
+							</optgroup>
+
+							<optgroup label="Bounce">
+								<option value="bounce">bounce</option><option value="bounce-in-up">bounce-in-up</option><option value="bounce-in-down">bounce-in-down</option><option value="bounce-in-left">bounce-in-left</option><option value="bounce-in-right">bounce-in-right</option>
+							</optgroup>
+
+							<optgroup label="Zoom">
+								<option value="zoom-in">zoom-in</option><option value="zoom-out">zoom-out</option><option value="zoom-in-rotate">zoom-in-rotate</option><option value="zoom-out-rotate">zoom-out-rotate</option>
+							</optgroup>
+
+							<optgroup label="Slide">
+								<option value="slide-in">slide-in</option><option value="slide-out">slide-out</option><option value="slide-up">slide-up</option><option value="slide-down">slide-down</option>
+							</optgroup>
+
+							<optgroup label="Flip">
+								<option value="flip-up">flip-up</option><option value="flip-down">flip-down</option><option value="flip-left">flip-left</option><option value="flip-right">flip-right</option><option value="flip-diagonal">flip-diagonal</option>
+							</optgroup>
+
+							<optgroup label="Reveal">
+								<option value="reveal">reveal</option><option value="reveal-circle">reveal-circle</option><option value="reveal-polygon">reveal-polygon</option>
+							</optgroup>
+
+							<optgroup label="Other">
+								<option value="opacity">opacity</option>
+							</optgroup>
+
+					</select>
+				</label>
+				<label>
+					Animation Range
+					<select name="animationRange">
+						<option value="">Default</option>
+						<option value="contain">Contain</option>
+						<option value="cover">Cover</option>
+						<option value="exit">Exit</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
+
+		<details name="tabs">
+			<summary>Advanced</summary>
+			<fieldset name="advanced">
+				<label>
+					ARIA Label
+					<input type="text" name="aria-label" value="">
+				</label>
+				<label>Gap Decorations
+					<select name="gap-decorations">
+						<option value="unset">None</option>
+						<option value="cols">Columns</option>
+						<option value="rows">Rows</option>
+						<option value="cols rows">Both</option>
+					</select>
+				</label>
+				<label>
+					Intrinsic Size
+					<select name="size">
+						<option value="auto">auto</option>
+						<option value="unset">None</option>
+						<option value="200px">200px</option>
+						<option value="300px">300px</option>
+						<option value="400px">400px</option>
+						<option value="500px">500px</option>
+						<option value="600px">600px</option>
+						<option value="50vh">50vh</option>
+						<option value="75vh">75vh</option>
+						<option value="100vh">100vh</option>
+					</select>
+				</label>
+				<label>
+					Self Alignment
+					<select name="self">
+						<option value="unset">None</option>
+						<option value="auto">auto</option>
+						<option value="start">start</option>
+						<option value="end">end</option>
+						<option value="center">center</option>
+						<option value="stretch">stretch</option>
+						<option value="baseline">baseline</option>
+						<option value="self-start">self-start</option>
+						<option value="self-end">self-end</option>
+					</select>
+				</label>
+			</fieldset>
+		</details>
+	</tab-container>
+</tab-group>
+
+		
+
+
+
+</body>
+</html>

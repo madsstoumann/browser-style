@@ -70,6 +70,24 @@
 			}
 		}
 
+		/* --- separate --- */
+		&[from~="separate"] {
+			cq-box {
+				row-gap: var(--tab-cordion-gap);
+			}
+			details {
+				--_y: 0;
+				border: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+			}
+			&[from~="breakout"] {
+				[open],
+				[open]:first-of-type ~ details,
+				[open] ~ details {
+					--_y: 0;
+				}
+			}
+		}
+
 		/* --- contain --- */
 		&[from~="contain"] {
 			details {
@@ -144,6 +162,13 @@
 					border-radius: var(--tab-cordion-bdrs);
 				}
 			}
+
+			&[from~="separate"] {
+				details,
+				details summary {
+					border-radius: var(--tab-cordion-bdrs);
+				}
+			}
 		}
 
 
@@ -154,7 +179,7 @@
 						&[open] + details {
 							border-block-start: 0;
 						}
-						--_y: 0;
+						--_y: unset;
 					}
 					[open] {
 						border: 0;
@@ -162,7 +187,7 @@
 					[open]:not(:first-of-type),
 					[open]:first-of-type ~ details,
 					[open] ~ details {
-						--_y: 0;
+						--_y: unset;
 					}
 				}
 				&[from~="breakout"][from~="elevated"] {
@@ -216,6 +241,15 @@
 						border-radius: 0;
 					}
 				}
+				&[from~="separate"] {
+					cq-box {
+						row-gap: 0;
+					}
+					details {
+						--_y: unset;
+						border: 0;
+					}
+				}
 			}
 		}
 
@@ -235,11 +269,11 @@
 	}
 
 
-	@media (hover: hover) {
+	/* @media (hover: hover) {
 		details:hover:not([open]) {
 			background: var(--tab-cordion-hover-bg, rgb(216, 236, 242));
 		}
-	}
+	} */
 
 
 	[open]::details-content {
@@ -280,14 +314,14 @@
 		display: grid;
 		/* padding-block: var(--tab-cordion-gap); */
 	}
-
+	
+	
 	@container (width > 700px) {
 		&[to] {
 			cq-box {
 				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
 				grid-template-rows: auto 1fr;
-				
 				row-gap: 0;
 			}
 			details {
@@ -310,11 +344,11 @@
 			}
 			summary {
 				justify-self: center;
-				
 				text-underline-offset: 100%;
 				/* text-decoration: underline;
     		text-decoration-thickness: var(--tab-cordion-tdt, 3px);
     		text-underline-offset: 1rem; */
+				& + * {  position: relative;  z-index: 1; }
 			}
 			ui-icon { display: none; } /* TODO! */
 		}
@@ -322,7 +356,7 @@
 }
 
 
-fieldset { border: 0; }
+fieldset { border: 0;}
 	 </style>
 </head>
 <body>
@@ -582,6 +616,9 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 		</label><br>
 		<label>
 			<input type="checkbox" value="rounded" > Rounded
+		</label><br>
+		<label>
+			<input type="checkbox" value="separate" > Separate
 		</label>
 	</fieldset>
 </form>
