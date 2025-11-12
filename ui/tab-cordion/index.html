@@ -35,6 +35,8 @@
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
 
+		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
+
 		background: var(--tab-cordion-bg, #0000);
 		container-type: inline-size;
 		padding: var(--tab-cordion-p, 0px);
@@ -318,6 +320,16 @@
 	
 	@container (width > 700px) {
 		&[to] {
+			&[to~="background"] {
+				cq-box::before { 
+					background: var(--tab-cordion-tabs-bg);
+					border-radius: 2ch;
+					content: "";
+					grid-column: 1 / -1;
+					grid-row: 1;
+				}
+				details { background: unset;}
+			}
 			cq-box {
 				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
@@ -369,7 +381,7 @@ type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
 	-->
 
-<tab-cordion from="divided" to="">
+<tab-cordion from="divided" to="background ">
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
