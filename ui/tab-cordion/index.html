@@ -12,106 +12,276 @@
 			color-scheme: light dark;
 			font-family: system-ui;
 			interpolate-size: allow-keywords;
-			margin: 0 2ch;
+			margin: 1rem 2ch;
 		}
 
 /* === Tab Cordion === */
 	/* @import "../icon/index.css"; */
 @scope (tab-cordion) {
 
-	@property --tab-group-index {
+	@property --tab-cordion-index {
 		syntax: "<integer>";
 		inherits: true;
 		initial-value: 1;
 	}
 	:scope {
-		--tab-group-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+		--tab-cordion-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+		--tab-cordion-bdrs: 0px;
+		--tab-cordion-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
+		--tab-cordion-bdw: 1px;
+		--tab-cordion-bxsh: 0 0 1px 0 rgba(0, 0, 0, .07), 0 1px 1px 0 rgba(0, 0, 0, .06), 0 1px 2px 0 rgba(0, 0, 0, .1);
+		--tab-cordion-bdc-open: tomato;
+		--tab-cordion-bdw-open: 1px;
+		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
+		--tab-cordion-gap: 1ch;
 
-		--tab-group-bdrs: 0px;
-		--tab-group-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
-		--tab-group-bdw: 1px;
-		
-		--tab-group-bdc-open: light-dark(black,white);
-		--tab-group-bdw-open: 1px;
-
-		--tab-group-gap: 1ch;
-
+		background: var(--tab-cordion-bg, #EEE);
 		container-type: inline-size;
+		padding: var(--tab-cordion-p, 1rem);
 		display: block;
-		margin-block: 1rem;
-		/* padding-block: 1rem; */
 
-		/* ACCORDION STYLES */
+
+		/* --- breakout --- */
 		&[from~="breakout"] {
-			[open]:not(:first-of-type),
-			[open]:first-of-type ~ details { --y: 1; }
-			[open] ~ details { --y: 2; }
+			&:not([to]) {
+				details {
+					&[open] + details {
+						border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+					}
+				}
+				[open] {
+					border: var(--tab-cordion-bdw-open, inherit) solid var(--tab-cordion-bdc-open, inherit);
+				}
+				[open]:not(:first-of-type),
+				[open]:first-of-type ~ details { --_y: 1; }
+				[open] ~ details { --_y: 2; }
+			}
+			&[to] {
+				@container (width < 700px) {
+					details {
+						&[open] + details {
+							border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+						}
+					}
+					[open] {
+						border: var(--tab-cordion-bdw-open, inherit) solid var(--tab-cordion-bdc-open, inherit);
+					}
+					[open]:not(:first-of-type),
+					[open]:first-of-type ~ details { --_y: 1; }
+					[open] ~ details { --_y: 2; }
+				}
+			}
+
+			/* --- elevated --- */
+			&[from~="elevated"] {
+				--tab-cordion-bdw-open: 0px;
+				&:not([to]) {
+					[open] {
+						box-shadow: var(--tab-cordion-bxsh-open);
+					}
+					details {
+						&:last-of-type:not([open]),
+						&:has(+ details[open]) {
+							box-shadow: var(--tab-cordion-bxsh);
+						}
+					}
+				}
+				&[to] {
+					@container (width < 700px) {
+						[open] {
+							box-shadow: var(--tab-cordion-bxsh-open);
+						}
+						details {
+							&:last-of-type:not([open]),
+							&:has(+ details[open]) {
+								box-shadow: var(--tab-cordion-bxsh);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/* --- contain --- */
+		&[from~="contain"] {
+			&:not([to]) {
+				details {
+					border-inline: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+				}
+				&:not([from~="breakout"]) {
+					details {
+						&:first-of-type {
+							border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+						}
+					}
+				}
+				&[from~="breakout"] {
+					details {
+						&:first-of-type:not([open]) {
+							border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+						}
+					}
+				}
+				&:not([from~="divided"]) {
+					details {
+						&:last-of-type {
+							border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+						}
+					}
+				}
+			}
+			&[to] {
+				@container (width < 700px) {
+					details {
+						border-inline: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+					}
+					&:not([from~="breakout"]) {
+						details {
+							&:first-of-type {
+								border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+							}
+						}
+					}
+					&[from~="breakout"] {
+						details {
+							&:first-of-type:not([open]) {
+								border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+							}
+						}
+					}
+					&:not([from~="divided"]) {
+						details {
+							&:last-of-type {
+								border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		/* --- divided --- */
+		&[from~="divided"] {
+			&:not([to]) {
+				details {
+					border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+				}
+			}
+			&[to] {
+				@container (width < 700px) {
+					details {
+						border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+					}
+				}
+			}
 		}
 
 		&[from~="rounded"] {
-			--tab-group-bdrs: 1em;
+			--tab-cordion-bdrs: 1em;
+
+			/* Without breakout: simple first/last border-radius */
+			&:not([from~="breakout"]) {
+				&:not([to]) {
+					details {
+						&:first-of-type,
+						&:first-of-type summary {
+							border-top-left-radius: var(--tab-cordion-bdrs);
+							border-top-right-radius: var(--tab-cordion-bdrs);
+						}
+						&:last-of-type,
+						&:last-of-type summary {
+							border-bottom-left-radius: var(--tab-cordion-bdrs);
+							border-bottom-right-radius: var(--tab-cordion-bdrs);
+						}
+					}
+				}
+				&[to] {
+					@container (width < 700px) {
+						details {
+							&:first-of-type,
+							&:first-of-type summary {
+								border-top-left-radius: var(--tab-cordion-bdrs);
+								border-top-right-radius: var(--tab-cordion-bdrs);
+							}
+							&:last-of-type,
+							&:last-of-type summary {
+								border-bottom-left-radius: var(--tab-cordion-bdrs);
+								border-bottom-right-radius: var(--tab-cordion-bdrs);
+							}
+						}
+					}
+				}
+			}
+
+			/* With breakout: dynamic border-radius based on open state */
+			&[from~="breakout"] {
+				&:not([to]) {
+					details {
+						&:first-of-type,
+						&[open] + details,
+						&[open] + details summary {
+							border-top-left-radius: var(--tab-cordion-bdrs);
+							border-top-right-radius: var(--tab-cordion-bdrs);
+						}
+						&:last-of-type,
+						&:has(+ details[open]),
+						&:has(+ details[open]) summary {
+							border-bottom-left-radius: var(--tab-cordion-bdrs);
+							border-bottom-right-radius: var(--tab-cordion-bdrs);
+						}
+					}
+					[open] {
+						border-radius: var(--tab-cordion-bdrs);
+					}
+				}
+				&[to] {
+					@container (width < 700px) {
+						details {
+							&:first-of-type,
+							&[open] + details,
+							&[open] + details summary {
+								border-top-left-radius: var(--tab-cordion-bdrs);
+								border-top-right-radius: var(--tab-cordion-bdrs);
+							}
+							&:last-of-type,
+							&:has(+ details[open]),
+							&:has(+ details[open]) summary {
+								border-bottom-left-radius: var(--tab-cordion-bdrs);
+								border-bottom-right-radius: var(--tab-cordion-bdrs);
+							}
+						}
+						[open] {
+							border-radius: var(--tab-cordion-bdrs);
+						}
+					}
+				}
+			}
 		}
+
+
 	}
 
 	details {
-		--tab-group-index: sibling-index();
-
-		border-block-end: var(--tab-group-bdw) solid var(--tab-group-bdc);
-
-		border-inline: var(--tab-group-bdw) solid var(--tab-group-bdc);
-		
+		--tab-cordion-index: sibling-index();
+		/* --_y: 1; */
     
-
+		background: var(--tab-cordion-item-bg, Canvas);
 		interpolate-size: allow-keywords;
-		translate: 0 calc(var(--y) * 1rem);
+		translate: 0 calc(var(--_y) * 1rem);
 
-		&:first-of-type, 
-		&[open] + details {
-			border-block-start: var(--tab-group-bdw) solid var(--tab-group-bdc);
-		}
-		&:first-of-type, 
-		&[open] + details,
-		&[open] + details summary {
-			border-top-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
-			border-top-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
-		}
-		&:last-of-type,
-		&:has(+ details[open]),
-		&:has(+ details[open]) summary {
-			border-bottom-left-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
-			border-bottom-right-radius: var(--tab-group-bdrs) var(--tab-group-bdrs);
-		}
-		&[open] {
-			border: var(--tab-group-bdw) solid var(--tab-group-bdc-open, inherit);
-			border-radius: var(--tab-group-bdrs);
-			/* box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12); */
-			/* box-shadow: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2); */
-    
-    
-		}
-
-		/* transform-style: preserve-3d;
-    perspective: 120px; */
-  
-		/* transition-property: border-radius, margin, background-color, border-color, border-width, transform, translate, opacity, color; */
 		transition-duration: 0.3s;
 		transition-property: translate;
-		  /* transition-timing-function: var(--ease); */
-			transition-timing-function: ease;
-  /* transform: translateZ(0); */
-
+		transition-timing-function: ease;
 	}
 
 
 	@media (hover: hover) {
 		details:hover:not([open]) {
-			background: var(--tab-group-hover-bg, #EEE);
+			background: var(--tab-cordion-hover-bg, rgb(216, 236, 242));
 		}
 	}
 
 
-
-	
 	[open]::details-content {
 		border-radius: inherit;
 		height: fit-content;
@@ -120,60 +290,73 @@
 
 	summary {
 		/* background: var(--layout-composer-tabs-bg, light-dark(#EEE, #222)); */
-		/* border-block-end: 2px solid var(--tab-group-bdc); */
-		/* border-radius: var(--tab-group-bdrs); */
+		/* border-block-end: 2px solid var(--tab-cordion-bdc); */
+		/* border-radius: var(--tab-cordion-bdrs); */
 		
 		color: var(--tabs-group-c, inherit);
 		corner-shape: superellipse(1.25);
 		cursor: pointer;
 		display: flex;
-		font-family: var(--tab-group-ff, inherit);
-		/* font-size: var(--tab-group-fs, clamp(.75rem, 2.5vw, 1rem)); */
-		grid-column: var(--tab-group-index);
+		font-family: var(--tab-cordion-ff, inherit);
+		/* font-size: var(--tab-cordion-fs, clamp(.75rem, 2.5vw, 1rem)); */
+		grid-column: var(--tab-cordion-index);
 		grid-row: 1;
 		/* isolation: isolate; */
 		justify-content: space-between;
 		list-style: none;
-		padding: var(--tab-group-p, 1.5ch);
+		padding: var(--tab-cordion-p, 1.5ch);
 		position: relative;
 		text-align: var(--tabl-group-tal, center);
 		text-box: cap alphabetic;
-	 	/* text-decoration: underline; */
-    /* text-decoration-thickness: var(--tab-group-tdt, 3px);
-    text-underline-offset: 1rem; */
+	 	/* */
 		transition: all .2s ease;
 		user-select: none;
 		&:focus-visible {
-			outline-color: var(--tab-group-accent);
+			outline-color: var(--tab-cordion-accent);
 			outline-offset: -4px;
 		}
 	}
 	cq-box {
 		display: grid;
-		padding-block: var(--tab-group-gap);
-		/* row-gap: var(--tab-group-gap); */
+		/* padding-block: var(--tab-cordion-gap); */
 	}
 
 	@container (width > 700px) {
-		details {
-			display: grid;
-			grid-column: 1 / -1;
-			grid-row: 1 / span 2;
-			grid-template-columns: subgrid;
-			grid-template-rows: subgrid;
-			&:not(:first-of-type):not(:last-of-type) summary { border-radius: 0; }
-			&:first-of-type summary { border-radius: var(--tab-group-bdrs) 0 0 var(--tab-group-bdrs); }
-			&:last-of-type summary { border-radius: 0 var(--tab-group-bdrs) var(--tab-group-bdrs) 0; }
-		}
-		details::details-content {
-			grid-column: 1 / -1;
-			grid-row: 2;
-		}
-		cq-box {
-			--tab-group-gap: var(--tab-group-desktop-gap, 2ch);
-			grid-template-columns: repeat(var(--tab-group-tabs, 6), 1fr);
-			grid-template-rows: auto 1fr;
-			row-gap: 0;
+		&[to] {
+			cq-box {
+				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
+				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
+				grid-template-rows: auto 1fr;
+				
+				row-gap: 0;
+			}
+			details {
+				border: unset;
+				/* border-block-end: 3px solid #EEE; */
+				border-radius: 0;
+				display: grid;
+				grid-column: 1 / -1;
+				grid-row: 1 / span 2;
+				grid-template-columns: subgrid;
+				grid-template-rows: subgrid;
+				/* &:not(:first-of-type):not(:last-of-type) summary { border-radius: 0; }
+				&:first-of-type summary { border-radius: var(--tab-cordion-bdrs) 0 0 var(--tab-cordion-bdrs); }
+				&:last-of-type summary { border-radius: 0 var(--tab-cordion-bdrs) var(--tab-cordion-bdrs) 0; } */
+				&[open] summary { text-decoration: 3px underline var(--tab-cordion-accent); }
+			}
+			details::details-content {
+				grid-column: 1 / -1;
+				grid-row: 2;
+			}
+			summary {
+				justify-self: center;
+				
+				text-underline-offset: 100%;
+				/* text-decoration: underline;
+    		text-decoration-thickness: var(--tab-cordion-tdt, 3px);
+    		text-underline-offset: 1rem; */
+			}
+			ui-icon { display: none; } /* TODO! */
 		}
 	}
 }
@@ -192,7 +375,7 @@ type="elevated" - Items have subtle elevation/shadow (material design)
 type="breakout" - Your current implementation (expanded item breaks out visually)
 	-->
 
-<tab-cordion from="breakout rounded" to="">
+<tab-cordion from="divided" to="">
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
@@ -421,7 +604,55 @@ type="breakout" - Your current implementation (expanded item breaks out visually
 	</cq-box>
 </tab-cordion>
 
-		
+
+<form id="controls" style="margin-top:5rem">
+	<fieldset>
+		<legend>from</legend>
+		<label>
+			<input type="checkbox" value="breakout" > Breakout
+		</label><br>
+		<label>
+			<input type="checkbox" value="contain" > Contain
+		</label><br>
+		<label>
+			<input type="checkbox" value="divided" checked> Divided
+		</label><br>
+		<label>
+			<input type="checkbox" value="elevated" > Elevated (requires <code>breakout</code>)
+		</label><br>
+		<label>
+			<input type="checkbox" value="rounded" > Rounded
+		</label>
+	</fieldset>
+</form>
+
+<script>
+const tabCordion = document.querySelector('tab-cordion');
+const controls = document.getElementById('controls');
+
+controls.addEventListener('change', (e) => {
+	if (e.target.type === 'checkbox') {
+		const value = e.target.value;
+		const currentFrom = tabCordion.getAttribute('from') || '';
+		const fromValues = currentFrom.split(' ').filter(v => v.trim());
+
+		if (e.target.checked) {
+			// Add value if not already present
+			if (!fromValues.includes(value)) {
+				fromValues.push(value);
+			}
+		} else {
+			// Remove value
+			const index = fromValues.indexOf(value);
+			if (index > -1) {
+				fromValues.splice(index, 1);
+			}
+		}
+
+		tabCordion.setAttribute('from', fromValues.join(' '));
+	}
+});
+</script>
 
 
 
