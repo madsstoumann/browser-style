@@ -6,6 +6,11 @@
 		inherits: true;
 		initial-value: 1;
 	}
+	@property --tab-cordion-checked {
+		syntax: "<integer>";
+		inherits: true;
+		initial-value: 0;
+	}
 	:scope {
 		--tab-cordion-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
 		--tab-cordion-bdrs: 0px;
@@ -16,7 +21,9 @@
 		--tab-cordion-bdw-open: 2px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tab-cordion-gap: 1ch;
-		 --tab-cordion-trsdu: 300ms;
+		--tab-cordion-trsdu: 300ms;
+
+		--tab-cordion-trstf: linear(0, 0.1641 3.52%, 0.311 7.18%, 0.4413 10.99%, 0.5553 14.96%, 0.6539 19.12%, 0.738 23.5%, 0.8086 28.15%, 0.8662 33.12%, 0.9078 37.92%, 0.9405 43.12%, 0.965 48.84%, 0.9821 55.28%, 0.992 61.97%, 0.9976 70.09%, 1);
 		
 		--tab-cordion-bg: light-dark(#EEE, #222);
 		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
@@ -245,6 +252,9 @@
 		interpolate-size: allow-keywords;
 		translate: 0 calc(var(--_y) * 1rem);
 		transition: translate var(--tab-cordion-trsdu) ease;
+		&[open] {
+			--tab-cordion-checked: var(--tab-cordion-index);
+		}
 	}
 
 	@media (hover: hover) {
@@ -293,6 +303,36 @@
 		display: grid;
 	}
 
+	/*
+	 * Set the --tab-cordion-checked property on the parent <cq-box>
+	 * by checking which of its children is open.
+	*/
+	cq-box:has(> details:nth-child(1)[open]) { --tab-cordion-checked: 1; }
+	cq-box:has(> details:nth-child(2)[open]) { --tab-cordion-checked: 2; }
+	cq-box:has(> details:nth-child(3)[open]) { --tab-cordion-checked: 3; }
+	cq-box:has(> details:nth-child(4)[open]) { --tab-cordion-checked: 4; }
+	cq-box:has(> details:nth-child(5)[open]) { --tab-cordion-checked: 5; }
+	cq-box:has(> details:nth-child(6)[open]) { --tab-cordion-checked: 6; }
+	cq-box:has(> details:nth-child(7)[open]) { --tab-cordion-checked: 7; }
+	cq-box:has(> details:nth-child(8)[open]) { --tab-cordion-checked: 8; }
+	cq-box:has(> details:nth-child(9)[open]) { --tab-cordion-checked: 9; }
+	cq-box:has(> details:nth-child(10)[open]) { --tab-cordion-checked: 10; }
+
+	/*
+	 * Set the --tab-cordion-tabs property on the parent <cq-box>
+	 * by counting the number of children.
+	*/
+	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
+	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
+	cq-box:has(> details:nth-child(3):last-child) { --tab-cordion-tabs: 3; }
+	cq-box:has(> details:nth-child(4):last-child) { --tab-cordion-tabs: 4; }
+	cq-box:has(> details:nth-child(5):last-child) { --tab-cordion-tabs: 5; }
+	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
+	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
+	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
+	cq-box:has(> details:nth-child(9):last-child) { --tab-cordion-tabs: 9; }
+	cq-box:has(> details:nth-child(10):last-child) { --tab-cordion-tabs: 10; }
+
 	/* --- background (mobile/accordion) --- */
 	&[from~="background"] {
 		cq-box {
@@ -328,7 +368,22 @@
 				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
 				grid-template-rows: auto 1fr;
+				isolation: isolate;
+				position: relative;
 				row-gap: 0;
+				&::after {
+					background: #EEE;
+					content: "";
+					display: block;
+					grid-row: 1;
+					position: absolute;
+					inset-block-start: 0;
+					inset-inline-start: anchor(--tab-active left);
+					inline-size: anchor-size(--tab-active width);
+					block-size: anchor-size(--tab-active height);
+					transition: inset-inline-start .3s ease, inline-size .3s ease;
+					/* z-index: -1; */
+				}
 			}
 			details {
 				border: unset;
@@ -339,10 +394,10 @@
 				grid-row: 1 / span 2;
 				grid-template-columns: subgrid;
 				grid-template-rows: subgrid;
-				/* &:not(:first-of-type):not(:last-of-type) summary { border-radius: 0; }
-				&:first-of-type summary { border-radius: var(--tab-cordion-bdrs) 0 0 var(--tab-cordion-bdrs); }
-				&:last-of-type summary { border-radius: 0 var(--tab-cordion-bdrs) var(--tab-cordion-bdrs) 0; } */
-				&[open] summary { text-decoration: 3px underline var(--tab-cordion-accent); }
+				&[open] summary {
+					anchor-name: --tab-active;
+					text-decoration: 3px underline var(--tab-cordion-accent);
+				}
 			}
 			details::details-content {
 				grid-column: 1 / -1;
@@ -350,10 +405,8 @@
 			}
 			summary {
 				justify-self: center;
+				z-index: 1;
 				text-underline-offset: calc(100% - 3px);
-				/* text-decoration: underline;
-    		text-decoration-thickness: var(--tab-cordion-tdt, 3px);
-    		text-underline-offset: 1rem; */
 				& + * {  position: relative;  z-index: 1; }
 			}
 			ui-icon { display: none; } /* TODO! */
