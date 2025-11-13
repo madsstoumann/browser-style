@@ -485,6 +485,7 @@
 
 <script>
 	const tab = document.querySelector('tab-cordion');
+	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 	app.addEventListener('change', (e) => {
 		const fieldset = e.target.parentElement?.closest('fieldset');
 		if (!tab || !fieldset.name) return;
@@ -495,6 +496,13 @@
 			.join(' ');
 
 		tab.setAttribute(fieldset.name, values);
+
+		if (isSafari) {
+			const display = tab.style.display;
+			tab.style.display = 'none';
+			void tab.offsetHeight;
+			tab.style.display = display;
+		}
 	});
 </script>
 
