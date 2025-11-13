@@ -26,7 +26,7 @@
 		--tab-cordion-trstf: linear(0, 0.1641 3.52%, 0.311 7.18%, 0.4413 10.99%, 0.5553 14.96%, 0.6539 19.12%, 0.738 23.5%, 0.8086 28.15%, 0.8662 33.12%, 0.9078 37.92%, 0.9405 43.12%, 0.965 48.84%, 0.9821 55.28%, 0.992 61.97%, 0.9976 70.09%, 1);
 		
 		--tab-cordion-bg: light-dark(#EEE, #222);
-		--tab-cordion-tabs-bg: light-dark(#EEE, #222);
+		--tab-cordion-tabs-bg: light-dark(lightblue, #222);
 
 		container-type: inline-size;
 		padding: var(--tab-cordion-p, 0px);
