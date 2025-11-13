@@ -70,6 +70,7 @@
 		scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
 		E.fin.value = F(Math.max(1500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
 
+		E.bld_ana.value = F(isTHC ? 2079 : 2899);
 		// --- Update visibility of sections ---
 		const visibilityMap = {
 			thc: isTHC,
@@ -101,13 +102,14 @@
 				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
 			, 0);
 
-		const totalFormatted = F(total);
+		const totalRounded = Math.round(total / 500) * 500;
+	const totalFormatted = F(total);
 		if (previousTotalFormatted !== null && totalFormatted !== previousTotalFormatted) {
 			triggerTotalAnimation();
 		}
 		previousTotalFormatted = totalFormatted;
 		E.tot.value = totalFormatted;
-		E.tot_fin.value = FC(total);
+		E.tot_fin.value = FC(totalRounded);
 		if (!init) pushDataLayerEvent();
 	}
 
