@@ -1,6 +1,28 @@
+/*
+ ************************************
+ * T A B - C O R D I O N
+ ************************************
+ *
+ * This component is a hybrid of an accordion and a tabs component.
+ * - It functions as an accordion by default.
+ * - It can be styled in various ways using the `from` attribute with different "tokens".
+ * - If a `to` attribute is present, it transforms into a tabs component on wider viewports (>= 700px).
+ *
+ * It is built using the <details> and <summary> elements for accessibility and semantics.
+ *
+ */
 @import "../icon/index.css";
 @scope (tab-cordion) {
 
+	/*
+	 ************************************
+	 * 1. COMPONENT INITIALIZATION & CUSTOM PROPERTIES
+	 ************************************
+	 *
+	 * We register custom properties for type-safe animations and transitions,
+	 * and define all configurable aspects of the component for easy theming.
+	 *
+	 */
 	@property --tab-cordion-index {
 		syntax: "<integer>";
 		inherits: true;
@@ -11,8 +33,12 @@
 		inherits: true;
 		initial-value: 0;
 	}
-	:scope {
+
+		:scope {
+		/* Accent Color */
 		--tab-cordion-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
+
+		/* Borders and Shadows */
 		--tab-cordion-bdrs: 0px;
 		--tab-cordion-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 20%));
 		--tab-cordion-bdw: 1px;
@@ -20,241 +46,255 @@
 		--tab-cordion-bdc-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
 		--tab-cordion-bdw-open: 2px;
 		--tab-cordion-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
+
+		/* Spacing and Transitions */
 		--tab-cordion-gap: 1ch;
 		--tab-cordion-trsdu: 300ms;
-
 		--tab-cordion-trstf: linear(0, 0.1641 3.52%, 0.311 7.18%, 0.4413 10.99%, 0.5553 14.96%, 0.6539 19.12%, 0.738 23.5%, 0.8086 28.15%, 0.8662 33.12%, 0.9078 37.92%, 0.9405 43.12%, 0.965 48.84%, 0.9821 55.28%, 0.992 61.97%, 0.9976 70.09%, 1);
-		
+
+		/* Background Colors */
 		--tab-cordion-bg: light-dark(#EEE, #222);
 		--tab-cordion-tabs-bg: light-dark(lightblue, #222);
+		--tab-cordion-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
 
+		/* Base Styles */
 		container-type: inline-size;
+		interpolate-size: allow-keywords;
 		padding: var(--tab-cordion-p, 0px);
 		display: block;
+	}
 
-		/* --- breakout --- */
-		&[from~="breakout"] {
-			details {
-				&[open] + details {
-					border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-				}
-			}
-			[open] {
-				border: var(--tab-cordion-bdw-open, inherit) solid var(--tab-cordion-bdc-open, inherit);
-			}
-			[open]:not(:first-of-type),
-			[open]:first-of-type ~ details { --_y: 1; }
-			[open] ~ details { --_y: 2; }
+		/*
+	 ************************************
+	 * 2. CORE LAYOUT & BASE STYLES
+	 ************************************
+	 *
+	 * These are the fundamental styles for the component's building blocks.
+	 *
+	 */
 
-			/* --- elevated --- */
-			&[from~="elevated"] {
-				--tab-cordion-bdw-open: 0px;
-				[open] {
-					box-shadow: var(--tab-cordion-bxsh-open);
-				}
-				details {
-					&:last-of-type:not([open]),
-					&:has(+ details[open]) {
-						box-shadow: var(--tab-cordion-bxsh);
-					}
-				}
-			}
-		}
-
-		/* --- separate --- */
-		&[from~="separate"] {
-			cq-box {
-				row-gap: var(--tab-cordion-gap);
-			}
-			details {
-				--_y: 0;
-				border: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-			}
-			&[from~="breakout"] {
-				[open],
-				[open]:first-of-type ~ details,
-				[open] ~ details {
-					--_y: 0;
-				}
-			}
-		}
-
-		/* --- contain --- */
-		&[from~="contain"] {
-			details {
-				border-inline: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-			}
-			&:not([from~="breakout"]) {
-				details {
-					&:first-of-type {
-						border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-					}
-				}
-			}
-			&[from~="breakout"] {
-				details {
-					&:first-of-type:not([open]) {
-						border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-					}
-				}
-			}
-			&:not([from~="divided"]) {
-				details {
-					&:last-of-type {
-						border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-					}
-				}
-			}
-		}
-
-		/* --- divided --- */
-		&[from~="divided"] {
-			details {
-				border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
-			}
-		}
-
-		&[from~="rounded"] {
-			--tab-cordion-bdrs: 1em;
-
-			/* Without breakout: simple first/last border-radius */
-			&:not([from~="breakout"]) {
-				details {
-					&:first-of-type,
-					&:first-of-type summary {
-						border-top-left-radius: var(--tab-cordion-bdrs);
-						border-top-right-radius: var(--tab-cordion-bdrs);
-					}
-					&:last-of-type,
-					&:last-of-type summary {
-						border-bottom-left-radius: var(--tab-cordion-bdrs);
-						border-bottom-right-radius: var(--tab-cordion-bdrs);
-					}
-				}
-			}
-
-			/* With breakout: dynamic border-radius based on open state */
-			&[from~="breakout"] {
-				details {
-					&:first-of-type,
-					&[open] + details,
-					&[open] + details summary {
-						border-top-left-radius: var(--tab-cordion-bdrs);
-						border-top-right-radius: var(--tab-cordion-bdrs);
-					}
-					&:last-of-type,
-					&:has(+ details[open]),
-					&:has(+ details[open]) summary {
-						border-bottom-left-radius: var(--tab-cordion-bdrs);
-						border-bottom-right-radius: var(--tab-cordion-bdrs);
-					}
-				}
-				[open] {
-					border-radius: var(--tab-cordion-bdrs);
-				}
-			}
-
-			&[from~="separate"] {
-				details,
-				details summary {
-					border-radius: var(--tab-cordion-bdrs);
-				}
-			}
-		}
-
-		&[to] {
-			@container (width >= 700px) {
-				&[from~="breakout"] {
-					details {
-						&[open] + details {
-							border-block-start: 0;
-						}
-						--_y: unset;
-					}
-					[open] {
-						border: 0;
-					}
-					[open]:not(:first-of-type),
-					[open]:first-of-type ~ details,
-					[open] ~ details {
-						--_y: unset;
-					}
-				}
-				&[from~="breakout"][from~="elevated"] {
-					[open] {
-						box-shadow: none;
-					}
-					details {
-						&:last-of-type:not([open]),
-						&:has(+ details[open]) {
-							box-shadow: none;
-						}
-					}
-				}
-				&[from~="contain"] {
-					details {
-						border-inline: 0;
-						&:first-of-type {
-							border-block-start: 0;
-						}
-						&:first-of-type:not([open]) {
-							border-block-start: 0;
-						}
-						&:last-of-type {
-							border-block-end: 0;
-						}
-					}
-				}
-				&[from~="divided"] {
-					details {
-						border-block-end: 0;
-					}
-				}
-				&[from~="rounded"] {
-					details {
-						border-radius: 0;
-						&:first-of-type,
-						&:first-of-type summary,
-						&:last-of-type,
-						&:last-of-type summary,
-						&[open] + details,
-						&[open] + details summary,
-						&:has(+ details[open]),
-						&:has(+ details[open]) summary {
-							border-top-left-radius: 0;
-							border-top-right-radius: 0;
-							border-bottom-left-radius: 0;
-							border-bottom-right-radius: 0;
-						}
-					}
-					[open] {
-						border-radius: 0;
-					}
-				}
-				&[from~="separate"] {
-					cq-box {
-						row-gap: 0;
-					}
-					details {
-						--_y: unset;
-						border: 0;
-					}
-				}
-			}
-		}
-
+	cq-box {
+		corner-shape: superellipse(1.25);
+		display: grid;
 	}
 
 	details {
 		--tab-cordion-index: sibling-index();
 		background: var(--tab-cordion-item-bg, Canvas);
-		interpolate-size: allow-keywords;
 		translate: 0 calc(var(--_y) * 1rem);
 		transition: translate var(--tab-cordion-trsdu) ease;
-		&[open] {
-			--tab-cordion-checked: var(--tab-cordion-index);
+		/* --- Open State --- */
+		&[open]::details-content {
+			block-size: auto;
+			content-visibility: visible;
 		}
 	}
+
+	summary {
+		color: var(--tabs-group-c, inherit);
+		cursor: pointer;
+		display: flex;
+		font-family: var(--tab-cordion-ff, inherit);
+		font-size: var(--tab-cordion-fs, inherit);
+		grid-column: var(--tab-cordion-index);
+		grid-row: 1;
+		justify-content: space-between;
+		list-style: none;
+		padding: var(--tab-cordion-p, 1.5ch);
+		position: relative;
+		user-select: none;
+		text-box: cap alphabetic;
+		transition: background-color .2s ease;
+	}
+
+	summary::marker,
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	ui-icon {
+		color: var(--tab-cordion-ui-icon-c, light-dark(#5a5a5a, #b0b0b0));
+	}
+
+	/*
+	 ************************************
+	 * 3. ACCORDION VARIANTS (`from` attribute)
+	 ************************************
+	 *
+	 * These styles are applied based on the "tokens" in the `from` attribute,
+	 * allowing for different visual presentations of the accordion.
+	 *
+	 */
+
+	/* --- background (mobile/accordion) --- */
+	:scope[from~="background"] {
+		cq-box {
+			background: var(--tab-cordion-bg);
+			padding: var(--tab-cordion-p, 1.5ch);
+		}
+	}
+
+	/* --- `breakout` variant --- */
+	/* The open item visually "breaks out" from the stack by translating
+	 * subsequent items downwards. The `--_y` custom property controls the vertical translation amount. */
+	:scope[from~="breakout"] {
+		details {
+			/* Adds a border between the open item and the one immediately following it. */
+			&[open] + details {
+				border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+			}
+		}
+		/* The open item gets a distinct border. */
+		[open] {
+			border: var(--tab-cordion-bdw-open, inherit) solid var(--tab-cordion-bdc-open, inherit);
+		}
+		/* The item immediately after the open one is pushed down by 1 unit. */
+		[open]:not(:first-of-type),
+		[open]:first-of-type ~ details { --_y: 1; }
+		/* All items after that are pushed down by 2 units. */
+		[open] ~ details { --_y: 2; }
+
+		/* --- `elevated` sub-variant (used with `breakout`) --- */
+		/* This replaces the `breakout` border with a box-shadow for a "floating" effect. */
+		&[from~="elevated"] {
+			--tab-cordion-bdw-open: 0px; /* Remove the border from the open item */
+			[open] {
+				box-shadow: var(--tab-cordion-bxsh-open);
+			}
+			/* Apply a smaller shadow to the last item or the item just before an open one. */
+			details {
+				&:last-of-type:not([open]),
+				&:has(+ details[open]) {
+					box-shadow: var(--tab-cordion-bxsh);
+				}
+			}
+		}
+	}
+
+	/* --- `separate` variant --- */
+	/* Adds vertical space and a border around each individual accordion item,
+	 * making them appear as distinct cards. */
+	:scope[from~="separate"] {
+		cq-box {
+			row-gap: var(--tab-cordion-gap);
+		}
+		details {
+			--_y: 0; /* Resets the breakout translation */
+			border: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+		}
+		/* Explicitly disable the breakout translation effect when `separate` is also used. */
+		&[from~="breakout"] {
+			[open],
+			[open]:first-of-type ~ details,
+			[open] ~ details {
+				--_y: 0;
+			}
+		}
+	}
+
+	/* --- `contain` variant --- */
+	/* Wraps the entire accordion group in a single continuous border, making it look like a unified block. */
+	:scope[from~="contain"] {
+		details {
+			border-inline: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+		}
+		/* Apply top border to the first item. */
+		&:not([from~="breakout"]) {
+			details {
+				&:first-of-type {
+					border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+				}
+			}
+		}
+		/* In breakout mode, only apply top border if the first item is closed. */
+		&[from~="breakout"] {
+			details {
+				&:first-of-type:not([open]) {
+					border-block-start: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+				}
+			}
+		}
+		/* Apply bottom border to the last item, but only if items are not already divided. */
+		&:not([from~="divided"]) {
+			details {
+				&:last-of-type {
+					border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+				}
+			}
+		}
+	}
+
+	/* --- `divided` variant --- */
+	/* Adds a border line between each accordion item. */
+	:scope[from~="divided"] {
+		details {
+			border-block-end: var(--tab-cordion-bdw) solid var(--tab-cordion-bdc);
+		}
+	}
+
+	/* --- `rounded` variant --- */
+	/* Applies border-radius to the accordion items for a softer look. */
+	:scope[from~="rounded"] {
+		--tab-cordion-bdrs: 1em;
+
+		/* Default rounding for non-breakout layout: rounds the top of the first item and bottom of the last. */
+		&:not([from~="breakout"]) {
+			details {
+				&:first-of-type,
+				&:first-of-type summary {
+					border-top-left-radius: var(--tab-cordion-bdrs);
+					border-top-right-radius: var(--tab-cordion-bdrs);
+				}
+				&:last-of-type,
+				&:last-of-type summary {
+					border-bottom-left-radius: var(--tab-cordion-bdrs);
+					border-bottom-right-radius: var(--tab-cordion-bdrs);
+				}
+			}
+		}
+
+		/* With breakout: border-radius is applied dynamically based on which item is open. */
+		&[from~="breakout"] {
+			details {
+				/* Round the top corners of the first item and the item after an open one. */
+				&:first-of-type,
+				&[open] + details,
+				&[open] + details summary {
+					border-top-left-radius: var(--tab-cordion-bdrs);
+					border-top-right-radius: var(--tab-cordion-bdrs);
+				}
+				/* Round the bottom corners of the last item and the item before an open one. */
+				&:last-of-type,
+				&:has(+ details[open]),
+				&:has(+ details[open]) summary {
+					border-bottom-left-radius: var(--tab-cordion-bdrs);
+					border-bottom-right-radius: var(--tab-cordion-bdrs);
+				}
+			}
+			/* The open item itself is fully rounded. */
+			[open] {
+				border-radius: var(--tab-cordion-bdrs);
+			}
+		}
+
+		/* When separate, each item is fully rounded, like individual cards. */
+		&[from~="separate"] {
+			details,
+			details summary {
+				border-radius: var(--tab-cordion-bdrs);
+			}
+		}
+	}
+
+	/*
+	 ************************************
+	 * 4. STATE, CONTENT & TRANSITIONS
+	 ************************************
+	 *
+	 * Manages the open/closed state of the accordion items, their hover
+	 * effects, and the visibility transitions for their content.
+	 *
+	 */
 
 	@media (hover: hover) {
 		details:hover:not([open]) {
@@ -280,99 +320,20 @@
 		}
 	}
 
-	/* --- Open State --- */
-	details[open]::details-content {
-		block-size: auto;
-		content-visibility: visible;
-	}
-
-	summary {
-		color: var(--tabs-group-c, inherit);
-		corner-shape: superellipse(1.25);
-		cursor: pointer;
-		display: flex;
-		font-family: var(--tab-cordion-ff, inherit);
-		font-size: var(--tab-cordion-fs, inherit);
-		grid-column: var(--tab-cordion-index);
-		grid-row: 1;
-		justify-content: space-between;
-		list-style: none;
-		padding: var(--tab-cordion-p, 1.5ch);
-		position: relative;
-		text-align: var(--tabl-group-tal, center);
-		text-box: cap alphabetic;
-		transition: all .2s ease;
-		user-select: none;
-		/* &:focus-visible {
-			outline-color: var(--tab-cordion-accent);
-			outline-offset: -4px;
-		} */
-	}
-	cq-box {
-		display: grid;
-	}
-
 	/*
-	 * Set the --tab-cordion-checked property on the parent <cq-box>
-	 * by checking which of its children is open.
-	*/
-	cq-box:has(> details:nth-child(1)[open]) { --tab-cordion-checked: 1; }
-	cq-box:has(> details:nth-child(2)[open]) { --tab-cordion-checked: 2; }
-	cq-box:has(> details:nth-child(3)[open]) { --tab-cordion-checked: 3; }
-	cq-box:has(> details:nth-child(4)[open]) { --tab-cordion-checked: 4; }
-	cq-box:has(> details:nth-child(5)[open]) { --tab-cordion-checked: 5; }
-	cq-box:has(> details:nth-child(6)[open]) { --tab-cordion-checked: 6; }
-	cq-box:has(> details:nth-child(7)[open]) { --tab-cordion-checked: 7; }
-	cq-box:has(> details:nth-child(8)[open]) { --tab-cordion-checked: 8; }
-	cq-box:has(> details:nth-child(9)[open]) { --tab-cordion-checked: 9; }
-	cq-box:has(> details:nth-child(10)[open]) { --tab-cordion-checked: 10; }
+	 ************************************
+	 * 5. TABS TRANSFORMATION (`to` attribute)
+	 ************************************
+	 *
+	 * When the `to` attribute is present and the container is wide enough (>= 700px),
+	 * the component transforms into a tabbed interface. This section primarily handles
+	 * resetting the accordion styles from the `from` variants to a neutral state
+	 * before the main tab styles are applied.
+	 *
+	 */
+	:scope[to] {
+		@container (width >= 700px) {
 
-	/*
-	 * Set the --tab-cordion-tabs property on the parent <cq-box>
-	 * by counting the number of children.
-	*/
-	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
-	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
-	cq-box:has(> details:nth-child(3):last-child) { --tab-cordion-tabs: 3; }
-	cq-box:has(> details:nth-child(4):last-child) { --tab-cordion-tabs: 4; }
-	cq-box:has(> details:nth-child(5):last-child) { --tab-cordion-tabs: 5; }
-	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
-	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
-	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
-	cq-box:has(> details:nth-child(9):last-child) { --tab-cordion-tabs: 9; }
-	cq-box:has(> details:nth-child(10):last-child) { --tab-cordion-tabs: 10; }
-
-	/* --- background (mobile/accordion) --- */
-	&[from~="background"] {
-		cq-box {
-			background: var(--tab-cordion-bg);
-			padding: var(--tab-cordion-p, 1.5ch);
-		}
-	}
-
-	ui-icon {
-		color: var(--tab-cordion-ui-icon-c, light-dark(#5a5a5a, #b0b0b0));
-	}
-
-
-	@container (width > 700px) {
-		&[to] {
-			/* Unset from background properties when switching to desktop mode */
-			&[from~="background"] cq-box {
-				background: unset;
-				padding: unset;
-			}
-
-			&[to~="background"] {
-				cq-box::before {
-					background: var(--tab-cordion-tabs-bg);
-					border-radius: 2ch;
-					content: "";
-					grid-column: 1 / -1;
-					grid-row: 1;
-				}
-				details { background: unset; }
-			}
 			cq-box {
 				--tab-cordion-gap: var(--tab-cordion-desktop-gap, 2ch);
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
@@ -381,7 +342,7 @@
 				position: relative;
 				row-gap: 0;
 				&::after {
-					background: #EEE;
+					background: var(--tab-cordion-item-bg-active, light-dark(#EEE, #333));
 					content: "";
 					display: block;
 					grid-row: 1;
@@ -393,6 +354,7 @@
 					transition: inset-inline-start .3s ease, inline-size .3s ease;
 				}
 			}
+
 			details {
 				border: unset;
 				border-radius: 0;
@@ -406,24 +368,153 @@
 					text-decoration: 3px underline var(--tab-cordion-accent);
 				}
 			}
+
 			details::details-content {
 				grid-column: 1 / -1;
 				grid-row: 2;
 			}
+
 			summary {
 				justify-self: center;
 				z-index: 1;
 				text-underline-offset: calc(100% - 3px);
 				& + * {  position: relative;  z-index: 1; }
 			}
-			ui-icon { display: none; } /* TODO! */
 
-			@media (hover: hover) {
+			ui-icon { display: none; } /* TODO ? */
+
+			@media (hover: hover) { /* TODO ? */
 				details:hover {
 					background: #0000;
-					/* background: var(--tab-cordion-tabs-hover-bg, light-dark(hsl(210, 100%, 90%), hsl(210, 50%, 20%))); */
+				}
+			}
+
+			/* Unset from background properties when switching to desktop mode */
+			&[from~="background"] cq-box {
+				background: unset;
+				padding: unset;
+			}
+
+			/* --- Add main background and reset background properties for tabs --- */
+			&[to~="background"] {
+				cq-box::before {
+					background: var(--tab-cordion-tabs-bg);
+					border-radius: 2ch;
+					content: "";
+					grid-column: 1 / -1;
+					grid-row: 1;
+				}
+				details { background: unset; }
+			}
+
+			/* --- Reset `breakout` variant --- */
+			&[from~="breakout"] {
+				details {
+					&[open] + details {
+						border-block-start: 0;
+					}
+					--_y: unset;
+				}
+				[open] {
+					border: 0;
+				}
+				[open]:not(:first-of-type),
+				[open]:first-of-type ~ details,
+				[open] ~ details {
+					--_y: unset;
+				}
+			}
+
+			/* --- Reset `elevated` sub-variant --- */
+			&[from~="breakout"][from~="elevated"] {
+				[open] {
+					box-shadow: none;
+				}
+				details {
+					&:last-of-type:not([open]),
+					&:has(+ details[open]) {
+						box-shadow: none;
+					}
+				}
+			}
+
+			/* --- Reset `contain` variant --- */
+			&[from~="contain"] {
+				details {
+					border-inline: 0;
+					&:first-of-type {
+						border-block-start: 0;
+					}
+					&:first-of-type:not([open]) {
+						border-block-start: 0;
+					}
+					&:last-of-type {
+						border-block-end: 0;
+					}
+				}
+			}
+
+			/* --- Reset `divided` variant --- */
+			&[from~="divided"] {
+				details {
+					border-block-end: 0;
+				}
+			}
+
+			/* --- Reset `rounded` variant --- */
+			&[from~="rounded"] {
+				details {
+					border-radius: 0;
+					&:first-of-type,
+					&:first-of-type summary,
+					&:last-of-type,
+					&:last-of-type summary,
+					&[open] + details,
+					&[open] + details summary,
+					&:has(+ details[open]),
+					&:has(+ details[open]) summary {
+						border-top-left-radius: 0;
+						border-top-right-radius: 0;
+						border-bottom-left-radius: 0;
+						border-bottom-right-radius: 0;
+					}
+				}
+				[open] {
+					border-radius: 0;
+				}
+			}
+
+			/* --- Reset `separate` variant --- */
+			&[from~="separate"] {
+				cq-box {
+					row-gap: 0;
+				}
+				details {
+					--_y: unset;
+					border: 0;
 				}
 			}
 		}
 	}
+
+	/*
+	 ************************************
+	 * 6. STATE PROPAGATION
+	 ************************************
+	 *
+	 * Set `--tab-cordion-tabs` on the `cq-box` parent.
+	 * This "bubbles up" state from children to a parent for use in other selectors.
+	 * This is limited to 10 items but can be extended.
+	*/
+
+	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
+	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
+	cq-box:has(> details:nth-child(3):last-child) { --tab-cordion-tabs: 3; }
+	cq-box:has(> details:nth-child(4):last-child) { --tab-cordion-tabs: 4; }
+	cq-box:has(> details:nth-child(5):last-child) { --tab-cordion-tabs: 5; }
+	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
+	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
+	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
+	cq-box:has(> details:nth-child(9):last-child) { --tab-cordion-tabs: 9; }
+	cq-box:has(> details:nth-child(10):last-child) { --tab-cordion-tabs: 10; }
 }
