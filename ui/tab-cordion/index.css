@@ -262,12 +262,22 @@
 		}
 	}
 
-	details::details-content {
+	&:not([to]) details::details-content {
 		block-size: 0;
 		content-visibility: hidden;
 		overflow: hidden;
 		transition: block-size var(--tab-cordion-trsdu), content-visibility var(--tab-cordion-trsdu);
 		transition-behavior: allow-discrete;
+	}
+
+	@container (width <= 700px) {
+		details::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			overflow: hidden;
+			transition: block-size var(--tab-cordion-trsdu), content-visibility var(--tab-cordion-trsdu);
+			transition-behavior: allow-discrete;
+		}
 	}
 
 	/* --- Open State --- */
