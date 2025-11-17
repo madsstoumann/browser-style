@@ -62,6 +62,7 @@
 		--tc-tabs-item-bdc: #FFF;
 		--tc-tabs-item-bdw: 1px;
 		--tc-tabs-line-bdw: 3px;
+		--tc-tabs-panel-bxsh: 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2);
 	
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
@@ -506,7 +507,6 @@
 			&[to~="background"] {
 				cq-box::before {
 					background: var(--tc-tabs-bg);
-					border-radius: var(--tc-tabs-bdrs);
 					content: "";
 					grid-column: 1 / -1;
 					grid-row: 1;
@@ -528,7 +528,6 @@
 				cq-box::after {
 					background: var(--tc-item-bg-active);
 					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
-					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
 				}
 			}
 
@@ -540,6 +539,31 @@
 				summary {
 					justify-self: center;
 					padding-inline: 0;
+				}
+			}
+
+			&[to~="panel-bg"] {
+				summary + * {
+					background: var(--tc-tabs-panel-bg, #f7f7f7);
+				}
+			}
+
+
+			&[to~="rounded"] {
+				cq-box::before {
+					border-radius: var(--tc-tabs-bdrs);
+				}
+				cq-box::after {
+					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+				}
+				summary {
+					border-radius: var(--tc-tabs-bdrs);
+				}
+			}
+
+			&[to~="shadow"] {
+				summary + * {
+					box-shadow: var(--tc-tabs-panel-bxsh, 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2));
 				}
 			}
 		}
