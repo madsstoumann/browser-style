@@ -55,10 +55,16 @@
 		--tc-item-p-separate: 1.5ch 2.5ch;
 		--tc-item-p-tabs: 1.5ch;
 		--tc-item-trsdu: 300ms;
+
+		--tc-tabs-bdrs: 3em;
+		--tc-tabs-bdw: 4px;
+		--tc-tabs-item-bdc: #FFF;
+		--tc-tabs-item-bdw: 1px;
 	
 		/* Background Colors */
-		--tab-cordion-bg: light-dark(#EEE, #222);
-		--tc-tabs-bg: light-dark(lightblue, #222);
+		--tc-bg: light-dark(#EEE, #222);
+		--tc-tabs-bg: light-dark(#EAEAEA, #222);
+		--tc-item-bg-active: rgba(255, 255, 255, .5);
 		--tab-cordion-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
 
 		/* Base Styles */
@@ -77,7 +83,7 @@
 	 */
 
 	cq-box {
-		corner-shape: superellipse(1.25);
+		/* corner-shape: superellipse(1.25); */
 		display: grid;
 	}
 
@@ -134,7 +140,7 @@
 	/* --- background (mobile/accordion) --- */
 	:scope[from~="background"] {
 		cq-box {
-			background: var(--tab-cordion-bg);
+			background: var(--tc-bg);
 			padding: var(--tab-cordion-p, 1.5ch);
 		}
 	}
@@ -348,15 +354,18 @@
 				position: relative;
 				row-gap: 0;
 				&::after {
+					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
+					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+					box-sizing: border-box;
 					content: "";
 					display: block;
 					grid-row: 1;
 					position: absolute;
-					inset-block-start: 0;
+					inset-block-start: var(--tc-tabs-bdw);
 					inset-inline-start: anchor(--tab-active left);
 					/* Sliding highlight tracks the anchored active summary. */
 					inline-size: anchor-size(--tab-active width);
-					block-size: anchor-size(--tab-active height);
+					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 					transition: inset-inline-start var(--tc-item-trsdu) ease, inline-size var(--tc-item-trsdu) ease;
 					
 				}
@@ -496,7 +505,7 @@
 			&[to~="background"] {
 				cq-box::before {
 					background: var(--tc-tabs-bg);
-					border-radius: 2ch;
+					border-radius: var(--tc-tabs-bdrs);
 					content: "";
 					grid-column: 1 / -1;
 					grid-row: 1;
@@ -506,7 +515,7 @@
 
 			&[to~="highlight"] {
 				cq-box::after {
-					background: var(--tc-item-bg-active, light-dark(#EEE, #333));
+					background: var(--tc-item-bg-active);
 				}
 			}
 
