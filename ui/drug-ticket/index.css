@@ -308,6 +308,10 @@ body {
 			}
 		}
 
+		.result-toggle input { display: none; }
+		.result-toggle::after { content: "Se detaljer"; }
+		.result-toggle:has(:checked)::after { content: "Skjul detaljer"; }
+
 		.button-link {
 			background: var(--gray-100);
 			border-radius: 3px;
