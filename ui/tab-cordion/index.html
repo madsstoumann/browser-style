@@ -22,14 +22,10 @@
 				padding: 1.5ch 3ch;
 			}
 		}
-		.controls {
-			margin-top: 5rem;
-			fieldset, label { display: block;  margin-bottom: 0.5rem; user-select: none; }
-		}
 	 </style>
 </head>
 <body>
-<!-- https://codepen.io/jh3y/pen/XWGNONP -->
+
 <tab-cordion>
 	<cq-box>
 		<details name="tabs">
@@ -109,10 +105,10 @@
 			(innerUl) => GUI.addColor('Color', '#EEEEEE', '--tc-bg', { 'data-action': 'color' }, innerUl)
 		], ul),
 		(ul) => GUI.addCheckbox('Breakout', 'breakout', '', { 'data-action': 'from' }, ul),
-		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Divided', 'divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Elevated', 'elevated', '', { 'data-action': 'from' }, ul),
-		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Separate', 'separate', '', { 'data-action': 'from' }, ul)
 	]);
 
@@ -129,7 +125,7 @@
 			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
 		], ul),
 		(ul) => GUI.addCheckbox('Compact', 'compact', '', { 'data-action': 'to' }, ul),
-		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Panel BG', 'panel-bg', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Shadow', 'shadow', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Line', 'line', '', { 'data-action': 'to' }, ul)
@@ -152,16 +148,8 @@
 
 	// Initialize tab-cordion with gui-control defaults
 	const initializeDefaults = () => {
-		// Set initial attributes from state
 		updateAttribute('from');
 		updateAttribute('to');
-
-		// Set initial color properties from all color inputs
-		// GUI.form.querySelectorAll('[type="color"]').forEach(input => {
-		// 	if (input.dataset.property) {
-		// 		tab.style.setProperty(input.dataset.property, input.value);
-		// 	}
-		// });
 	};
 
 	initializeDefaults();
