@@ -410,7 +410,9 @@
 					background: #0000;
 				}
 				summary:hover {
-					text-decoration: #CCC wavy underline; /* TODO ? */
+					 /* TODO ? */
+					 color: light-dark(#333, #CCC);
+					/* text-decoration: #CCC wavy underline; */
 				}
 			}
 
