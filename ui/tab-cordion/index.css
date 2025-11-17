@@ -55,11 +55,13 @@
 		--tc-item-p-separate: 1.5ch 2.5ch;
 		--tc-item-p-tabs: 1.5ch;
 		--tc-item-trsdu: 300ms;
+		--tc-tabs-gap: 2ch;
 
 		--tc-tabs-bdrs: 3em;
 		--tc-tabs-bdw: 4px;
 		--tc-tabs-item-bdc: #FFF;
 		--tc-tabs-item-bdw: 1px;
+		--tc-tabs-line-bdw: 3px;
 	
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
@@ -354,17 +356,15 @@
 				position: relative;
 				row-gap: 0;
 				&::after {
-					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
-					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
 					box-sizing: border-box;
 					content: "";
 					display: block;
 					grid-row: 1;
 					position: absolute;
 					inset-block-start: var(--tc-tabs-bdw);
-					inset-inline-start: anchor(--tab-active left);
+					inset-inline-start: calc(anchor(--tab-active left) + var(--tc-tabs-bdw));
 					/* Sliding highlight tracks the anchored active summary. */
-					inline-size: anchor-size(--tab-active width);
+					inline-size: calc(anchor-size(--tab-active width) - (2 * var(--tc-tabs-bdw)));
 					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 					transition: inset-inline-start var(--tc-item-trsdu) ease, inline-size var(--tc-item-trsdu) ease;
 					
@@ -392,7 +392,8 @@
 
 			summary {
 				--tc-item-p: var(--tc-item-p-tabs);
-				justify-self: center;
+				display: block;
+				text-align: center;
 				z-index: 1;
 				& + * {  position: relative;  z-index: 1; }
 			}
@@ -513,17 +514,31 @@
 				details { background: unset; }
 			}
 
+			&[to~="compact"] {
+				cq-box {
+					column-gap: var(--tc-tabs-gap, 2ch);
+					grid-template-columns: repeat(calc(var(--tab-cordion-tabs, 6) - 1), min-content) auto;
+				}
+				details:last-of-type summary {
+					justify-self: start;
+				}
+			}
+
 			&[to~="highlight"] {
 				cq-box::after {
 					background: var(--tc-item-bg-active);
+					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
+					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
 				}
 			}
 
 			&[to~="line"] {
 				cq-box::after {
-					border-block-end: 3px solid var(--tab-cordion-accent);
+					--tc-tabs-bdw: 0px;
+					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tab-cordion-accent);
 				}
 				summary {
+					justify-self: center;
 					padding-inline: 0;
 				}
 			}
