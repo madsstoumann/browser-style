@@ -75,7 +75,7 @@ export default class GuiControl extends HTMLElement {
 		list.appendChild(datalist);
 	}
 
-	addGroup(label, content) {
+	addGroup(label, content, list = this.list) {
 		const details = document.createElement('details');
 		details.innerHTML = `<summary>${label}</summary><ul part="ul"></ul>`;
 		const ul = details.querySelector('ul');
@@ -88,7 +88,7 @@ export default class GuiControl extends HTMLElement {
 		}
 		const li = document.createElement('li');
 		li.appendChild(details);
-		this.list.appendChild(li);
+		list.appendChild(li);
 	}
 
 	addInput(type, label, value, property, attributes = {}, list = this.list) {

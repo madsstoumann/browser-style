@@ -30,7 +30,7 @@
 </head>
 <body>
 <!-- https://codepen.io/jh3y/pen/XWGNONP -->
-<tab-cordion from="divided" to="line">
+<tab-cordion>
 	<cq-box>
 		<details name="tabs">
 			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
@@ -78,70 +78,21 @@
 
 
 <!-- CONTROLS -->
-<form class="controls" id="app">
-	<fieldset name="from">
-		<legend>Accordion</legend>
-		<label>
-			<input type="checkbox" value="background" > Background
-		</label>
-		<label>
-			<input type="checkbox" value="breakout" > Breakout
-		</label>
-		<label>
-			<input type="checkbox" value="contain" > Contain
-		</label>
-		<label>
-			<input type="checkbox" value="divided" checked> Divided
-		</label>
-		<label>
-			<input type="checkbox" value="elevated" > Elevated
-		</label>
-		<label>
-			<input type="checkbox" value="rounded" > Rounded
-		</label>
-		<label>
-			<input type="checkbox" value="separate" > Separate
-		</label>
-	</fieldset>
-	<fieldset name="to">
-		<legend>Tabs</legend>
-		<label>
-			<input type="checkbox" value="background" > Background
-		</label>
-		<label>
-			<input type="checkbox" value="compact" > Compact
-		</label>
-		<label>
-			<input type="checkbox" value="highlight" > Highlight
-		</label>
-		<label>
-			<input type="checkbox" value="rounded" > Rounded
-		</label>
-		<label>
-			<input type="checkbox" value="panel-bg" > Panel Background
-		</label>
-		<label>
-			<input type="checkbox" value="shadow" > Shadow
-		</label>
-		<label>
-			<input type="checkbox" value="line"> Line
-		</label>
-	</fieldset>
-</form>
+<gui-control label="Tab Cordion Controls" position="bottom right"></gui-control>
 
-<script>
+<script type="module">
+	import GuiControl from '../gui-control/index.js';
+
 	const tab = document.querySelector('tab-cordion');
+	const GUI = document.querySelector('gui-control');
 	const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-	app.addEventListener('change', (e) => {
-		const fieldset = e.target.parentElement?.closest('fieldset');
-		if (!tab || !fieldset.name) return;
 
-		const values = Array.from(fieldset.elements)
-			.filter(el => el.type === 'checkbox' && el.checked)
+	// Helper to update tab-cordion attribute from GUI checkboxes
+	const updateAttribute = (attr) => {
+		const values = Array.from(GUI.form.querySelectorAll(`[data-action="${attr}"][type="checkbox"]:checked`))
 			.map(el => el.value)
 			.join(' ');
-
-		tab.setAttribute(fieldset.name, values);
+		tab.setAttribute(attr, values);
 
 		if (isSafari) {
 			const display = tab.style.display;
@@ -149,7 +100,71 @@
 			void tab.offsetHeight;
 			tab.style.display = display;
 		}
+	};
+
+	// Add Accordion (from) controls
+	GUI.addGroup('Accordion', [
+		(ul) => GUI.addGroup('Background', [
+			(innerUl) => GUI.addCheckbox('Enable', 'background', '', { 'data-action': 'from' }, innerUl),
+			(innerUl) => GUI.addColor('Color', '#EEEEEE', '--tc-bg', { 'data-action': 'color' }, innerUl)
+		], ul),
+		(ul) => GUI.addCheckbox('Breakout', 'breakout', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Divided', 'divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
+		(ul) => GUI.addCheckbox('Elevated', 'elevated', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Separate', 'separate', '', { 'data-action': 'from' }, ul)
+	]);
+
+	// Add Tabs (to) controls
+	GUI.addGroup('Tabs', [
+		(ul) => GUI.addGroup('Background', [
+			(innerUl) => GUI.addCheckbox('Enable', 'background', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
+			(innerUl) => GUI.addColor('Color', '#EAEAEA', '--tc-tabs-bg', { 'data-action': 'color' }, innerUl)
+		], ul),
+		
+		(ul) => GUI.addGroup('Highlight', [
+			(innerUl) => GUI.addCheckbox('Enable', 'highlight', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
+			(innerUl) => GUI.addColor('Background', '#FFFFFF', '--tc-item-bg-active', { 'data-action': 'color' }, innerUl),
+			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
+		], ul),
+		(ul) => GUI.addCheckbox('Compact', 'compact', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Panel BG', 'panel-bg', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Shadow', 'shadow', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Line', 'line', '', { 'data-action': 'to' }, ul)
+	]);
+
+	// Handle input changes
+	GUI.addEventListener('gui-input', (e) => {
+		const { input, action } = e.detail;
+
+		// Handle color inputs - set property directly on tab-cordion
+		if (action === 'color' && input.dataset.property) {
+			tab.style.setProperty(input.dataset.property, input.value);
+			return;
+		}
+
+		if (action === 'from' || action === 'to') {
+			updateAttribute(action);
+		}
 	});
+
+	// Initialize tab-cordion with gui-control defaults
+	const initializeDefaults = () => {
+		// Set initial attributes from state
+		updateAttribute('from');
+		updateAttribute('to');
+
+		// Set initial color properties from all color inputs
+		// GUI.form.querySelectorAll('[type="color"]').forEach(input => {
+		// 	if (input.dataset.property) {
+		// 		tab.style.setProperty(input.dataset.property, input.value);
+		// 	}
+		// });
+	};
+
+	initializeDefaults();
 </script>
 
 
