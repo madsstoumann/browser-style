@@ -514,6 +514,7 @@
 				details { background: unset; }
 			}
 
+			/* --- Compact view, auto-width of tab-items --- */
 			&[to~="compact"] {
 				cq-box {
 					column-gap: var(--tc-tabs-gap, 2ch);
@@ -524,6 +525,7 @@
 				}
 			}
 
+			/* --- Highlight selected/open item --- */
 			&[to~="highlight"] {
 				cq-box::after {
 					background: var(--tc-item-bg-active);
@@ -531,6 +533,7 @@
 				}
 			}
 
+			/* --- Add line below selected/open item --- */
 			&[to~="line"] {
 				cq-box::after {
 					--tc-tabs-bdw: 0px;
@@ -542,13 +545,14 @@
 				}
 			}
 
+			/* --- Panel background color --- */
 			&[to~="panel-bg"] {
 				summary + * {
 					background: var(--tc-tabs-panel-bg, #f7f7f7);
 				}
 			}
 
-
+			/* --- Rounded tabs --- */
 			&[to~="rounded"] {
 				cq-box::before {
 					border-radius: var(--tc-tabs-bdrs);
@@ -561,6 +565,7 @@
 				}
 			}
 
+			/* --- Shadow below panel --- */
 			&[to~="shadow"] {
 				summary + * {
 					box-shadow: var(--tc-tabs-panel-bxsh, 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2));
