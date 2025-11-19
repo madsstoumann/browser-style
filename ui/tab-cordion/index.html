@@ -115,7 +115,7 @@
 	// Add Accordion Hover (from-hover) controls
 	GUI.addGroup('Accordion Hover', [
 		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'from-hover' }, ul),
-		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'from-hover' }, ul)
+		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'from-hover', checked: 'checked' }, ul)
 	]);
 
 	// Add Tabs (to) controls
@@ -141,7 +141,7 @@
 	// Add Tabs Hover (to-hover) controls
 	GUI.addGroup('Tabs Hover', [
 		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'to-hover' }, ul),
-		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'to-hover' }, ul)
+		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'to-hover', checked: 'checked' }, ul)
 	]);
 
 	// Handle input changes
