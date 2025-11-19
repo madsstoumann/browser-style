@@ -80,7 +80,7 @@
 		display: grid;
 	}
 
-	details {
+	details, details:not([to]) {
 		/* The translate offset is driven by breakout-specific tokens that update --_y. */
 		background: var(--tab-cordion-item-bg, Canvas);
 		translate: 0 calc(var(--_y) * var(--tc-breakout-unit, 1rem));

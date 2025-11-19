@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./index.css">
+	<title>Tab Cordion</title>
+	<style>
+		body {
+			background: Canvas;
+			color: CanvasText;
+			color-scheme: light dark;
+			font-family: system-ui;
+			interpolate-size: allow-keywords;
+			margin: 1rem 2ch;
+		}
+		.content {
+			color: light-dark(#6b6b6b, #a0a0a0);
+			line-height: 1.6;
+			padding: 2ch 1.5ch;
+			[from~="rounded"][from~="separate"] & {
+				padding: 1.5ch 3ch;
+			}
+		}
+	 </style>
+</head>
+<body>
+
+<tab-cordion from="background contain divided" to="compact line noicons">
+	<cq-box>
+		<details name="tabs">
+			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Configure responsive breakpoints for different screen sizes. Set layout behavior for small, medium, and large viewports using columns or grid systems to ensure optimal display across devices.
+			</div>
+		</details>
+
+		<details name="tabs">
+			<summary>Spacing<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Control the outer margins and inner padding around your content. Adjust space top and bottom to control external spacing, while padding settings manage the internal spacing within the component boundaries.
+			</div>
+		</details>
+
+		<details name="tabs" >
+			<summary>Gaps<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Define the spacing between columns and rows in grid or flex layouts. Fine-tune the visual separation between elements to create balanced, readable layouts with appropriate breathing room.
+			</div>
+		</details>
+
+		<details name="tabs">
+			<summary>Layout<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Manage layout properties including bleed effects for edge-to-edge designs, overflow behavior for content handling, theme selection for styling consistency, and width presets to control maximum component dimensions.
+			</div>
+		</details>
+
+		<details name="tabs">
+			<summary>Animation<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Add motion and visual interest with entrance and exit animations. Choose from various animation styles including fades, bounces, zooms, slides, flips, and reveals, with customizable animation ranges for scroll-based triggers.
+			</div>
+		</details>
+
+		<details name="tabs">
+			<summary>Advanced<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Configure advanced features including accessibility labels for screen readers, decorative elements in gaps between content, intrinsic sizing constraints, and self-alignment properties for precise positioning control.
+			</div>
+		</details>
+	</cq-box>
+</tab-cordion>
+
+</body>
+</html>
