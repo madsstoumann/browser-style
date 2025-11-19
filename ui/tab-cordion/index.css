@@ -93,7 +93,7 @@
 	}
 
 	details {
-		--tab-cordion-index: sibling-index();
+		/* --tab-cordion-index: sibling-index(); */
 		/* The translate offset is driven by breakout-specific tokens that update --_y. */
 		background: var(--tab-cordion-item-bg, Canvas);
 		translate: 0 calc(var(--_y) * var(--tc-breakout-unit, 1rem));
@@ -510,12 +510,23 @@
 	 * 6. STATE PROPAGATION
 	 ************************************
 	 *
-	 * Set `--tab-cordion-tabs` on the `cq-box` parent.
+	 * 1. Assigns an index to each item (fallback for sibling-index()).
+	 * 2. Counts the total number of items and sets it on the parent.
+	 *
 	 * This "bubbles up" state from children to a parent for use in other selectors.
-	 * This is limited to 10 items but can be extended.
+	 * This is limited to 8 items but can be extended.
 	*/
 
-	/* Each of these locators counts tab items. Extend beyond 10 if needed. */
+	details:nth-child(1) { --tab-cordion-index: 1; }
+	details:nth-child(2) { --tab-cordion-index: 2; }
+	details:nth-child(3) { --tab-cordion-index: 3; }
+	details:nth-child(4) { --tab-cordion-index: 4; }
+	details:nth-child(5) { --tab-cordion-index: 5; }
+	details:nth-child(6) { --tab-cordion-index: 6; }
+	details:nth-child(7) { --tab-cordion-index: 7; }
+	details:nth-child(8) { --tab-cordion-index: 8; }
+
+
 	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
 	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
 	cq-box:has(> details:nth-child(3):last-child) { --tab-cordion-tabs: 3; }
@@ -524,6 +535,4 @@
 	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
 	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
 	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
-	cq-box:has(> details:nth-child(9):last-child) { --tab-cordion-tabs: 9; }
-	cq-box:has(> details:nth-child(10):last-child) { --tab-cordion-tabs: 10; }
 }
