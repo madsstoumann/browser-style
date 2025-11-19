@@ -377,7 +377,6 @@
 					inline-size: calc(anchor-size(--tab-active width) - (2 * var(--tc-tabs-bdw)));
 					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 					transition: inset-inline-start var(--tc-item-trsdu) ease, inline-size var(--tc-item-trsdu) ease;
-					
 				}
 			}
 

@@ -1,81 +1,90 @@
-That's an excellent and very flexible approach. Using attributes as a "bag of tokens" or keywords is a powerful pattern, similar to how utility-CSS frameworks work. It allows you to compose different styles together to create a custom look.
+# Tab Cordion
 
-Here is a proposal for the tokens you could use within the `accordion` and `tabs` attributes.
+A hybrid UI component that functions as an **Accordion** on small screens and transforms into **Tabs** on larger screens (>= 700px). It is built using standard `<details>` and `<summary>` elements for accessibility and semantics, enhanced with modern CSS features like Container Queries, Anchor Positioning, and Scope.
 
-### `accordion` Attribute Tokens
+## Usage
 
-You can mix and match these tokens in the `accordion` attribute string.
+```html
+<tab-cordion from="breakout elevated" to="highlight shadow rounded">
+  <cq-box>
+    <details name="my-group" open>
+      <summary>Tab 1<ui-icon type="user"></ui-icon></summary>
+      <div class="content">Content for tab 1</div>
+    </details>
+    <details name="my-group">
+      <summary>Tab 2<ui-icon type="settings"></ui-icon></summary>
+      <div class="content">Content for tab 2</div>
+    </details>
+  </cq-box>
+</tab-cordion>
+```
 
-#### **Layout Tokens (Choose One)**
-These define the fundamental structure and behavior of the accordion.
+## Attributes
 
-| Token | Description |
-| :--- | :--- |
-| **`breakout`** | (Default) The active item expands, pushing others away. |
-| **`classic`** | Traditional full-width items that expand in place. |
-| **`separated`** | Each item is a distinct "card" with its own background and spacing. |
+The component uses two main attributes to control its appearance in different states. These attributes accept a space-separated list of "tokens".
 
-#### **Decoration Tokens (Combine as Needed)**
-These add visual styling to the component.
-
-| Token | Description |
-| :--- | :--- |
-| **`contained`** | Wraps the entire accordion in a single containing box or border. |
-| **`lined`** | Adds separator lines between each accordion item. |
-| **`shadow`** | Applies a box-shadow to create a "material" or elevated effect. Can apply to the container or individual items depending on the layout. |
-| **`rounded`** | Applies rounded corners to the main container or individual items. |
-| **`clean`** | A minimalist look with no borders or lines, relying only on spacing. |
-
----
-
-### `tabs` Attribute Tokens
-
-Similarly, these tokens can be combined in the `tabs` attribute for the wide view.
-
-#### **Layout Tokens (Choose One)**
-These define the primary style of the tabs themselves.
+### `from` (Accordion Mode)
+Controls the appearance when in the "Accordion" state (default, or width < 700px).
 
 | Token | Description |
 | :--- | :--- |
-| **`underline`** | (Default) The active tab is indicated by a sliding or fading underline. |
-| **`pills`** | Each tab is a distinct, button-like "pill." |
-| **`segmented`** | Tabs are joined together into a single, segmented control. |
-| **`vertical`** | Arranges the tab list vertically on one side. |
+| **`background`** | Adds a background color and padding to the container. |
+| **`breakout`** | The open item visually "breaks out" by pushing subsequent items down. |
+| **`contain`** | Wraps the entire group in a border. |
+| **`divided`** | Adds separator lines between items. |
+| **`elevated`** | (Requires `breakout`) Adds a shadow to the open item instead of a border. |
+| **`rounded`** | Rounds the corners of items. |
+| **`separate`** | Separates items into distinct cards with spacing between them. |
 
-#### **Decoration Tokens (Combine as Needed)**
+### `to` (Tabs Mode)
+Controls the appearance when in the "Tabs" state (width >= 700px).
 
 | Token | Description |
 | :--- | :--- |
-| **`contained`** | Wraps the tabs and content panel in a single bordered container. |
-| **`lined`** | Adds a full-width separator line below the tab list. |
-| **`rounded`** | Applies rounded corners to the pills or the tab container. |
-| **`shadow`** | Adds a subtle shadow to the tab container or active pill. |
-| **`clean`** | Minimalist style, often just changing text color/weight for the active tab. |
+| **`background`** | Adds a background color to the tab header area. |
+| **`compact`** | Compresses tab headers to their intrinsic width instead of equal width. |
+| **`highlight`** | Adds a sliding "pill" background behind the active tab. |
+| **`line`** | Adds a sliding underline indicator instead of a pill. |
+| **`noicons`** | Hides `ui-icon` elements within the tab summaries. |
+| **`panel-bg`** | Applies a shared background color to the tab headers and the content panel. |
+| **`rounded`** | Rounds the tab headers/pill. |
+| **`shadow`** | Adds a drop shadow to the content panel. |
 
----
+## Custom Properties
 
-### Examples in Practice
+The component exposes several CSS custom properties for theming.
 
-This system makes it very easy to describe the style you want:
+### Colors & Basics
+| Property | Default | Description |
+| :--- | :--- | :--- |
+| `--tc-accent` | `hsl(210, 100%, 45%)` | Main accent color. |
+| `--tc-bg` | `#EEE` / `#222` | Background color for accordion items. |
+| `--tc-tabs-bg` | `#EAEAEA` / `#222` | Background for tab header area. |
+| `--tc-tabs-panel-bg` | `#f7f7f7` / `#1c1c1c` | Background for content panel. |
 
-*   **Your "Material" Accordion:**
-    ```html
-    <tab-group accordion="breakout shadow rounded"></tab-group>
-    ```
+### Hover States (Tabs Mode)
+| Property | Default | Description |
+| :--- | :--- | :--- |
+| `--tc-tab-hover-c` | `var(--tc-accent)` | Text color on hover. |
+| `--tc-tab-hover-bg` | `rgba(0,0,0,0.05)` | Background color on hover (inactive tabs only). |
+| `--tc-tab-hover-td` | `none` | Text decoration on hover. |
+| `--tc-tab-hover-trs` | `200ms` | Transition duration for hover effects. |
 
-*   **A Classic, Lined Accordion Inside a Box:**
-    ```html
-    <tab-group accordion="classic contained lined rounded"></tab-group>
-    ```
+### Dimensions
+| Property | Default | Description |
+| :--- | :--- | :--- |
+| `--tc-item-bdrs` | `1em` | Border radius for accordion items. |
+| `--tc-tabs-bdrs` | `3em` | Border radius for tabs. |
+| `--tc-item-trsdu` | `300ms` | Global transition duration. |
 
-*   **Responsive: Breakout Accordion -> Underlined Tabs:**
-    ```html
-    <tab-group accordion="breakout" tabs="underline lined"></tab-group>
-    ```
+## Browser Support
 
-*   **Responsive: Separated Cards -> Rounded Pills:**
-    ```html
-    <tab-group accordion="separated rounded" tabs="pills rounded"></tab-group>
-    ```
+This component relies on cutting-edge CSS features:
+*   **CSS Container Queries** (`@container`)
+*   **CSS Anchor Positioning** (`anchor()`, `anchor-size()`)
+*   **CSS Scope** (`@scope`)
+*   **CSS Nesting**
+*   **CSS `:has()`**
+*   **CSS `:where()`**
 
-This token-based approach gives you maximum flexibility to create a wide variety of designs with clear, readable HTML.
+Ensure your target browsers support these features.
