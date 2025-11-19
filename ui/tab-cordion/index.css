@@ -259,13 +259,13 @@
 		/* Default rounding for non-breakout layout: rounds the top of the first item and bottom of the last. */
 		&:where(:not([from~="breakout"])) {
 			details {
-				&:where(:first-of-type),
-				&:where(:first-of-type summary) {
+				&:first-of-type,
+				&:first-of-type summary {
 					border-top-left-radius: var(--tc-item-bdrs);
 					border-top-right-radius: var(--tc-item-bdrs);
 				}
-				&:where(:last-of-type),
-				&:where(:last-of-type summary) {
+				&:last-of-type,
+				&:last-of-type summary {
 					border-bottom-left-radius: var(--tc-item-bdrs);
 					border-bottom-right-radius: var(--tc-item-bdrs);
 				}
@@ -276,30 +276,30 @@
 		&:where([from~="breakout"]) {
 			details {
 				/* Round the top corners of the first item and the item after an open one. */
-				&:where(:first-of-type),
-				&:where([open] + details),
-				&:where([open] + details summary) {
+				&:first-of-type,
+				&[open] + details,
+				&[open] + details summary {
 					border-top-left-radius: var(--tc-item-bdrs);
 					border-top-right-radius: var(--tc-item-bdrs);
 				}
 				/* Round the bottom corners of the last item and the item before an open one. */
-				&:where(:last-of-type),
-				&:where(:has(+ details[open])),
-				&:where(:has(+ details[open]) summary) {
+				&:last-of-type,
+				&:has(+ details[open]),
+				&:has(+ details[open]) summary {
 					border-bottom-left-radius: var(--tc-item-bdrs);
 					border-bottom-right-radius: var(--tc-item-bdrs);
 				}
 			}
 			/* The open item itself is fully rounded. */
-			:where([open]) {
+			[open] {
 				border-radius: var(--tc-item-bdrs);
 			}
 		}
 
 		/* When separate, each item is fully rounded, like individual cards. */
 		&:where([from~="separate"]) {
-			:where(details),
-			:where(details summary) {
+			details,
+			details summary {
 				--tc-item-bdrs: var(--tc-item-bdrs-separate);
 				border-radius: var(--tc-item-bdrs-separate);
 			}
@@ -516,7 +516,6 @@
 				--tc-tabs-panel-bxsh: var(--tc-tabs-panel-bxsh-dark);
 			}
 		}
-
 	}
 
 	/*
