@@ -108,6 +108,7 @@
 		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Divided', 'divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Elevated', 'elevated', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('No Hover', 'nohover', '', { 'data-action': 'from' }, ul),
 		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Separate', 'separate', '', { 'data-action': 'from' }, ul)
 	]);
@@ -125,6 +126,7 @@
 			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
 		], ul),
 		(ul) => GUI.addCheckbox('Compact', 'compact', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('No Hover', 'nohover', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('No Icons', 'noicons', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Panel BG', 'panel-bg', '', { 'data-action': 'to' }, ul),

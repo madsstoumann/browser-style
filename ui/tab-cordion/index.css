@@ -123,6 +123,7 @@
 		list-style: none;
 		padding: var(--tc-item-p);
 		position: relative;
+		-webkit-user-select: none;
 		user-select: none;
 		text-box: cap alphabetic;
 		transition: background-color .2s ease;
@@ -320,7 +321,7 @@
 	 */
 
 	@media (hover: hover) {
-		details:hover:not([open]) {
+		:scope:not([from~="nohover"]) details:hover:not([open]) {
 			background: var(--tc-hover-bg, light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%)));
 		}
 	}
@@ -426,17 +427,20 @@
 
 			@media (hover: hover) {
 				/* Disable additional hover growth so the highlight remains visible. */
-				details:hover {
+				details:hover,
+				&:not([from~="nohover"]) details:hover:not([open]) {
 					background: #0000;
 				}
-				summary:hover {
-					color: var(--tc-tab-hover-c);
-					cursor: pointer;
-					text-decoration: var(--tc-tab-hover-td);
-				}
-				details:not([open]) summary:hover {
-					background: var(--tc-tab-hover-bg);
-					/* Background shape follows the summary's border-radius (square by default, rounded if [to~="rounded"]) */
+				&:not([to~="nohover"]) {
+					summary:hover {
+						color: var(--tc-tab-hover-c);
+						cursor: pointer;
+						text-decoration: var(--tc-tab-hover-td);
+					}
+					details:not([open]) summary:hover {
+						background: var(--tc-tab-hover-bg);
+						/* Background shape follows the summary's border-radius (square by default, rounded if [to~="rounded"]) */
+					}
 				}
 			}
 
