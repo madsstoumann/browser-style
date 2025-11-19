@@ -143,7 +143,7 @@
 	 */
 
 	/* --- background (mobile/accordion) --- */
-	:scope[from~="background"] {
+	:scope:where([from~="background"]) {
 		cq-box {
 			background: var(--tc-bg);
 			padding: var(--tab-cordion-p, 1.5ch);
@@ -153,34 +153,34 @@
 	/* --- `breakout` variant --- */
 	/* The open item visually "breaks out" from the stack by translating
 	 * subsequent items downwards. The `--_y` custom property controls the vertical translation amount. */
-	:scope[from~="breakout"] {
+	:scope:where([from~="breakout"]) {
 		details {
 			/* Adds a border between the open item and the one immediately following it. */
-			&[open] + details {
+			&:where([open] + details) {
 				border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
 			}
 		}
 		/* The open item gets a distinct border. */
-		[open] {
+		:where([open]) {
 			border: var(--tc-item-bdw-open, inherit) solid var(--tc-item-bdc-open, inherit);
 		}
 		/* The item immediately after the open one is pushed down by 1 unit. */
-		[open]:not(:first-of-type),
-		[open]:first-of-type ~ details { --_y: 1; }
+		:where([open]:not(:first-of-type)),
+		:where([open]:first-of-type ~ details) { --_y: 1; }
 		/* All items after that are pushed down by 2 units. */
-		[open] ~ details { --_y: 2; }
+		:where([open] ~ details) { --_y: 2; }
 
 		/* --- `elevated` sub-variant (used with `breakout`) --- */
 		/* This replaces the `breakout` border with a box-shadow for a "floating" effect. */
-		&[from~="elevated"] {
+		&:where([from~="elevated"]) {
 			--tc-item-bdw-open: 0px; /* Remove the border from the open item */
-			[open] {
+			:where([open]) {
 				box-shadow: var(--tc-item-bxsh-open);
 			}
 			/* Apply a smaller shadow to the last item or the item just before an open one. */
 			details {
-				&:last-of-type:not([open]),
-				&:has(+ details[open]) {
+				&:where(:last-of-type:not([open])),
+				&:where(:has(+ details[open])) {
 					box-shadow: var(--tc-item-bxsh);
 				}
 			}
@@ -189,7 +189,7 @@
 
 	/* --- `separate` variant --- */
 	/* Adds vertical space and a border around each individual accordion item, making them appear as distinct cards. */
-	:scope[from~="separate"] {
+	:scope:where([from~="separate"]) {
 		cq-box {
 			row-gap: var(--tc-group-rg);
 		}
@@ -198,10 +198,10 @@
 			border: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
 		/* Explicitly disable the breakout translation effect when `separate` is also used. */
-		&[from~="breakout"] {
-			[open],
-			[open]:first-of-type ~ details,
-			[open] ~ details {
+		&:where([from~="breakout"]) {
+			:where([open]),
+			:where([open]:first-of-type ~ details),
+			:where([open] ~ details) {
 				--_y: 0;
 			}
 		}
@@ -209,12 +209,12 @@
 
 	/* --- `contain` variant --- */
 	/* Wraps the entire accordion group in a single continuous border, making it look like a unified block. */
-	:scope[from~="contain"] {
+	:scope:where([from~="contain"]) {
 		details {
 			border-inline: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
 		/* Apply top border to the first item. */
-		&:not([from~="breakout"]) {
+		&:where(:not([from~="breakout"])) {
 			details {
 				&:first-of-type {
 					border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -222,7 +222,7 @@
 			}
 		}
 		/* In breakout mode, only apply top border if the first item is closed. */
-		&[from~="breakout"] {
+		&:where([from~="breakout"]) {
 			details {
 				&:first-of-type:not([open]) {
 					border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -230,7 +230,7 @@
 			}
 		}
 		/* Apply bottom border to the last item, but only if items are not already divided. */
-		&:not([from~="divided"]) {
+		&:where(:not([from~="divided"])) {
 			details {
 				&:last-of-type {
 					border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -241,7 +241,7 @@
 
 	/* --- `divided` variant --- */
 	/* Adds a border line between each accordion item. */
-	:scope[from~="divided"] {
+	:scope:where([from~="divided"]) {
 		details {
 			border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
@@ -249,10 +249,10 @@
 
 	/* --- `rounded` variant --- */
 	/* Applies border-radius to the accordion items for a softer look. */
-	:scope[from~="rounded"] {
+	:scope:where([from~="rounded"]) {
 
 		/* Default rounding for non-breakout layout: rounds the top of the first item and bottom of the last. */
-		&:not([from~="breakout"]) {
+		&:where(:not([from~="breakout"])) {
 			details {
 				&:first-of-type,
 				&:first-of-type summary {
@@ -268,7 +268,7 @@
 		}
 
 		/* With breakout: border-radius is applied dynamically based on which item is open. */
-		&[from~="breakout"] {
+		&:where([from~="breakout"]) {
 			details {
 				/* Round the top corners of the first item and the item after an open one. */
 				&:first-of-type,
@@ -292,7 +292,7 @@
 		}
 
 		/* When separate, each item is fully rounded, like individual cards. */
-		&[from~="separate"] {
+		&:where([from~="separate"]) {
 			details,
 			details summary {
 				--tc-item-bdrs: var(--tc-item-bdrs-separate);
@@ -353,9 +353,11 @@
 		@container (width >= 700px) {
 
 			cq-box {
+				background: unset;
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
 				grid-template-rows: auto 1fr;
 				isolation: isolate;
+				padding: 0;
 				position: relative;
 				row-gap: 0;
 				&::after {
@@ -375,13 +377,17 @@
 			}
 
 			details {
-				border: unset;
+				border: 0;
+				border-block-start: 0;
 				border-radius: 0;
+				box-shadow: none;
 				display: grid;
 				grid-column: 1 / -1;
 				grid-row: 1 / span 2;
 				grid-template-columns: subgrid;
 				grid-template-rows: subgrid;
+				pointer-events: none;
+				translate: none;
 				&[open] summary {
 					anchor-name: --tab-active;
 				}
@@ -390,15 +396,18 @@
 			details::details-content {
 				grid-column: 1 / -1;
 				grid-row: 2;
+				pointer-events: auto;
 				/* Ensures the body spans the full tab row beneath the summaries. */
 			}
 
 			summary {
 				--tc-item-p: var(--tc-item-p-tabs);
+				border-radius: 0;
 				display: block;
+				pointer-events: auto;
 				text-align: center;
 				z-index: 1;
-				& + * {  position: relative;  z-index: 1; }
+				& + * {  pointer-events: auto; position: relative;  z-index: 1; }
 			}
 
 			ui-icon { display: none; } /* TODO ? */
@@ -416,99 +425,7 @@
 				}
 			}
 
-			/* Unset from background properties when switching to desktop mode */
-			&[from~="background"] cq-box {
-				background: unset;
-				padding: unset;
-			}
 
-			/* --- Reset `breakout` variant --- */
-			&[from~="breakout"] {
-				details {
-					&[open] + details {
-						border-block-start: 0;
-					}
-					--_y: unset;
-				}
-				[open] {
-					border: 0;
-				}
-				[open]:not(:first-of-type),
-				[open]:first-of-type ~ details,
-				[open] ~ details {
-					--_y: unset;
-				}
-			}
-
-			/* --- Reset `elevated` sub-variant --- */
-			&[from~="breakout"][from~="elevated"] {
-				[open] {
-					box-shadow: none;
-				}
-				details {
-					&:last-of-type:not([open]),
-					&:has(+ details[open]) {
-						box-shadow: none;
-					}
-				}
-			}
-
-			/* --- Reset `contain` variant --- */
-			&[from~="contain"] {
-				details {
-					border-inline: 0;
-					&:first-of-type {
-						border-block-start: 0;
-					}
-					&:first-of-type:not([open]) {
-						border-block-start: 0;
-					}
-					&:last-of-type {
-						border-block-end: 0;
-					}
-				}
-			}
-
-			/* --- Reset `divided` variant --- */
-			&[from~="divided"] {
-				details {
-					border-block-end: 0;
-				}
-			}
-
-			/* --- Reset `rounded` variant --- */
-			&[from~="rounded"] {
-				details {
-					border-radius: 0;
-					&:first-of-type,
-					&:first-of-type summary,
-					&:last-of-type,
-					&:last-of-type summary,
-					&[open] + details,
-					&[open] + details summary,
-					&:has(+ details[open]),
-					&:has(+ details[open]) summary {
-						border-top-left-radius: 0;
-						border-top-right-radius: 0;
-						border-bottom-left-radius: 0;
-						border-bottom-right-radius: 0;
-					}
-				}
-				[open] {
-					border-radius: 0;
-				}
-			}
-
-			/* --- Reset `separate` variant --- */
-			&[from~="separate"] {
-				cq-box {
-					row-gap: 0;
-				}
-				details {
-					--_y: unset;
-					border: 0;
-				}
-			}
 
 			/* --- Add main background and reset background properties for tabs --- */
 			&[to~="background"] {
