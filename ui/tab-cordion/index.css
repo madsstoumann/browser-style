@@ -12,28 +12,12 @@
  *
  */
 @import "../icon/index.css";
-
 @scope (tab-cordion) {
-
 	/*
 	 ************************************
 	 * 1. COMPONENT INITIALIZATION & CUSTOM PROPERTIES
 	 ************************************
-	 *
-	 * We register custom properties for type-safe animations and transitions,
-	 * and define all configurable aspects of the component for easy theming.
-	 *
 	 */
-	@property --tab-cordion-index {
-		syntax: "<integer>";
-		inherits: true;
-		initial-value: 1;
-	}
-	@property --tab-cordion-checked {
-		syntax: "<integer>";
-		inherits: true;
-		initial-value: 0;
-	}
 
 		:scope {
 		/* Accent Color */
@@ -57,20 +41,20 @@
 		--tc-tabs-panel-bxsh-dark: 0 8px 18px -12px rgba(255, 255, 255, .35), 0 6px 12px -14px rgba(255, 255, 255, .35);
 
 		/* Spacing and Transitions */
+		--tc-breakout-unit: 1rem;
 		--tc-group-rg: 1em;
-		--tc-item-p: 1.5ch;
 		--tc-item-p-separate: 1.5ch 2.5ch;
 		--tc-item-p-tabs: 1.5ch;
+		--tc-item-p: 1.5ch;
 		--tc-item-trsdu: 300ms;
 		--tc-tabs-gap: 2ch;
-		--tc-breakout-unit: 1rem;
 	
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
+		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
+		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(255, 255, 255, .15));
 		--tc-tabs-bg: light-dark(#EAEAEA, #222);
 		--tc-tabs-panel-bg: light-dark(#f7f7f7, #1c1c1c);
-		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(255, 255, 255, .15));
-		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
 
 		/* Tab Hover States */
 		--tc-tab-hover-c: var(--tc-accent);
@@ -79,8 +63,8 @@
 
 		/* Base Styles */
 		container-type: inline-size;
-		interpolate-size: allow-keywords;
 		display: block;
+		interpolate-size: allow-keywords;
 	}
 
 		/*
@@ -93,17 +77,14 @@
 	 */
 
 	cq-box {
-		/* corner-shape: superellipse(1.25); */
 		display: grid;
 	}
 
 	details {
-		/* --tab-cordion-index: sibling-index(); */
 		/* The translate offset is driven by breakout-specific tokens that update --_y. */
 		background: var(--tab-cordion-item-bg, Canvas);
 		translate: 0 calc(var(--_y) * var(--tc-breakout-unit, 1rem));
 		transition: translate var(--tc-item-trsdu) ease;
-		/* --- Open State --- */
 		&[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
@@ -116,9 +97,8 @@
 		display: flex;
 		font-family: var(--tab-cordion-ff, inherit);
 		font-size: var(--tab-cordion-fs, inherit);
-		grid-column: var(--tab-cordion-index);
+		grid-column: var(--tab-cordion-index); /* Pin each summary to its index column so tabs align when converted. */
 		grid-row: 1;
-		/* Pin each summary to its index column so tabs align when converted. */
 		justify-content: space-between;
 		list-style: none;
 		padding: var(--tc-item-p);
@@ -357,7 +337,6 @@
 	 */
 	:scope[to] {
 		@container (width >= 700px) {
-
 			cq-box {
 				background: unset;
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
@@ -543,7 +522,6 @@
 	 * This "bubbles up" state from children to a parent for use in other selectors.
 	 * This is limited to 8 items but can be extended.
 	*/
-
 	details:nth-child(1) { --tab-cordion-index: 1; }
 	details:nth-child(2) { --tab-cordion-index: 2; }
 	details:nth-child(3) { --tab-cordion-index: 3; }
