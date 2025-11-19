@@ -167,20 +167,20 @@
 			}
 		}
 		/* The open item gets a distinct border. */
-		:where([open]) {
+		details[open] {
 			border: var(--tc-item-bdw-open, inherit) solid var(--tc-item-bdc-open, inherit);
 		}
 		/* The item immediately after the open one is pushed down by 1 unit. */
-		:where([open]:not(:first-of-type)),
-		:where([open]:first-of-type ~ details) { --_y: 1; }
+		details[open]:not(:first-of-type),
+		details[open]:first-of-type ~ details { --_y: 1; }
 		/* All items after that are pushed down by 2 units. */
-		:where([open] ~ details) { --_y: 2; }
+		details[open] ~ details { --_y: 2; }
 
 		/* --- `elevated` sub-variant (used with `breakout`) --- */
 		/* This replaces the `breakout` border with a box-shadow for a "floating" effect. */
 		&:where([from~="elevated"]) {
 			--tc-item-bdw-open: 0px; /* Remove the border from the open item */
-			:where([open]) {
+			details[open] {
 				box-shadow: var(--tc-item-bxsh-open);
 			}
 			/* Apply a smaller shadow to the last item or the item just before an open one. */
@@ -205,9 +205,9 @@
 		}
 		/* Explicitly disable the breakout translation effect when `separate` is also used. */
 		&:where([from~="breakout"]) {
-			:where([open]),
-			:where([open]:first-of-type ~ details),
-			:where([open] ~ details) {
+			details[open],
+			details[open]:first-of-type ~ details,
+			details[open] ~ details {
 				--_y: 0;
 			}
 		}
@@ -568,7 +568,7 @@
  * 7. FIXES FOR DETAILS CONTENT GRID ISSUES
  ************************************
  *
- * Workarounds for current limitations in how <details> content is handled in grid layouts.
+ * Workarounds for current limitations in some browsers.
  *
  */
 @supports (background: -webkit-named-image(i)) {
