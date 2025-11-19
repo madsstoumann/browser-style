@@ -56,10 +56,13 @@
 		--tc-tabs-bg: light-dark(#EAEAEA, #222);
 		--tc-tabs-panel-bg: light-dark(#f7f7f7, #1c1c1c);
 
-		/* Tab Hover States */
-		--tc-tab-hover-c: var(--tc-accent);
-		--tc-tab-hover-bg: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.1));
-		--tc-tab-hover-td: none;
+		/* Accordion Hover States (from-hover) */
+		--tc-from-hover-bg: var(--tc-hover-bg);
+		--tc-from-hover-accent: var(--tc-accent);
+
+		/* Tab Hover States (to-hover) */
+		--tc-to-hover-bg: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.1));
+		--tc-to-hover-accent: var(--tc-accent);
 
 		/* Base Styles */
 		container-type: inline-size;
@@ -300,9 +303,26 @@
 	 *
 	 */
 
+	/* --- Accordion hover (from-hover) --- */
+	/* Only apply when there's no `to` attribute (pure accordion) */
 	@media (hover: hover) {
-		:scope:not([from~="nohover"]) details:hover:not([open]) {
-			background: var(--tc-hover-bg, light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%)));
+		:scope:not([to])[from-hover~="bg"] details:hover:not([open]) {
+			background: var(--tc-from-hover-bg);
+		}
+		:scope:not([to])[from-hover~="accent"] details:hover:not([open]) {
+			color: var(--tc-from-hover-accent);
+		}
+	}
+
+	/* Or when in narrow viewport (accordion mode) with `to` attribute */
+	@container (width <= 700px) {
+		@media (hover: hover) {
+			:scope[from-hover~="bg"] details:hover:not([open]) {
+				background: var(--tc-from-hover-bg);
+			}
+			:scope[from-hover~="accent"] details:hover:not([open]) {
+				color: var(--tc-from-hover-accent);
+			}
 		}
 	}
 
@@ -321,6 +341,29 @@
 			overflow: hidden;
 			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu);
 			transition-behavior: allow-discrete;
+		}
+	}
+
+	/* --- Tabs hover (to-hover) --- */
+	@container (width >= 700px) {
+		@media (hover: hover) {
+			/* Reset accordion hover background when in tabs mode */
+			:scope[to] details:hover {
+				background: #0000;
+			}
+
+			/* Apply tab hover effects based on to-hover tokens */
+			:scope[to-hover~="bg"] {
+				details:not([open]) summary:hover {
+					background: var(--tc-to-hover-bg);
+				}
+			}
+			:scope[to-hover~="accent"] {
+				summary:hover {
+					color: var(--tc-to-hover-accent);
+					cursor: pointer;
+				}
+			}
 		}
 	}
 
@@ -402,25 +445,6 @@
 				transition: color var(--tc-item-trsdu), background-color var(--tc-item-trsdu);
 				z-index: 1;
 				& + * {  pointer-events: auto; position: relative; z-index: 1; }
-			}
-
-			@media (hover: hover) {
-				/* Disable additional hover growth so the highlight remains visible. */
-				details:hover,
-				&:not([from~="nohover"]) details:hover:not([open]) {
-					background: #0000;
-				}
-				&:not([to~="nohover"]) {
-					summary:hover {
-						color: var(--tc-tab-hover-c);
-						cursor: pointer;
-						text-decoration: var(--tc-tab-hover-td);
-					}
-					details:not([open]) summary:hover {
-						background: var(--tc-tab-hover-bg);
-						/* Background shape follows the summary's border-radius (square by default, rounded if [to~="rounded"]) */
-					}
-				}
 			}
 
 			/* --- Add main background and reset background properties for tabs --- */

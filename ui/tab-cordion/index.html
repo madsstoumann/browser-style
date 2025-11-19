@@ -108,9 +108,14 @@
 		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Divided', 'divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Elevated', 'elevated', '', { 'data-action': 'from' }, ul),
-		(ul) => GUI.addCheckbox('No Hover', 'nohover', '', { 'data-action': 'from' }, ul),
 		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Separate', 'separate', '', { 'data-action': 'from' }, ul)
+	]);
+
+	// Add Accordion Hover (from-hover) controls
+	GUI.addGroup('Accordion Hover', [
+		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'from-hover' }, ul),
+		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'from-hover' }, ul)
 	]);
 
 	// Add Tabs (to) controls
@@ -126,12 +131,17 @@
 			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
 		], ul),
 		(ul) => GUI.addCheckbox('Compact', 'compact', '', { 'data-action': 'to' }, ul),
-		(ul) => GUI.addCheckbox('No Hover', 'nohover', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('No Icons', 'noicons', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Panel BG', 'panel-bg', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Shadow', 'shadow', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Line', 'line', '', { 'data-action': 'to' }, ul)
+	]);
+
+	// Add Tabs Hover (to-hover) controls
+	GUI.addGroup('Tabs Hover', [
+		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'to-hover' }, ul),
+		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'to-hover' }, ul)
 	]);
 
 	// Handle input changes
@@ -144,7 +154,7 @@
 			return;
 		}
 
-		if (action === 'from' || action === 'to') {
+		if (action === 'from' || action === 'to' || action === 'from-hover' || action === 'to-hover') {
 			updateAttribute(action);
 		}
 	});
@@ -153,6 +163,8 @@
 	const initializeDefaults = () => {
 		updateAttribute('from');
 		updateAttribute('to');
+		updateAttribute('from-hover');
+		updateAttribute('to-hover');
 	};
 
 	initializeDefaults();
