@@ -72,6 +72,11 @@
 		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(255, 255, 255, .15));
 		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
 
+		/* Tab Hover States */
+		--tc-tab-hover-c: var(--tc-accent);
+		--tc-tab-hover-bg: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.1));
+		--tc-tab-hover-td: none;
+
 		/* Base Styles */
 		container-type: inline-size;
 		interpolate-size: allow-keywords;
@@ -254,13 +259,13 @@
 		/* Default rounding for non-breakout layout: rounds the top of the first item and bottom of the last. */
 		&:where(:not([from~="breakout"])) {
 			details {
-				&:first-of-type,
-				&:first-of-type summary {
+				&:where(:first-of-type),
+				&:where(:first-of-type summary) {
 					border-top-left-radius: var(--tc-item-bdrs);
 					border-top-right-radius: var(--tc-item-bdrs);
 				}
-				&:last-of-type,
-				&:last-of-type summary {
+				&:where(:last-of-type),
+				&:where(:last-of-type summary) {
 					border-bottom-left-radius: var(--tc-item-bdrs);
 					border-bottom-right-radius: var(--tc-item-bdrs);
 				}
@@ -271,30 +276,30 @@
 		&:where([from~="breakout"]) {
 			details {
 				/* Round the top corners of the first item and the item after an open one. */
-				&:first-of-type,
-				&[open] + details,
-				&[open] + details summary {
+				&:where(:first-of-type),
+				&:where([open] + details),
+				&:where([open] + details summary) {
 					border-top-left-radius: var(--tc-item-bdrs);
 					border-top-right-radius: var(--tc-item-bdrs);
 				}
 				/* Round the bottom corners of the last item and the item before an open one. */
-				&:last-of-type,
-				&:has(+ details[open]),
-				&:has(+ details[open]) summary {
+				&:where(:last-of-type),
+				&:where(:has(+ details[open])),
+				&:where(:has(+ details[open]) summary) {
 					border-bottom-left-radius: var(--tc-item-bdrs);
 					border-bottom-right-radius: var(--tc-item-bdrs);
 				}
 			}
 			/* The open item itself is fully rounded. */
-			[open] {
+			:where([open]) {
 				border-radius: var(--tc-item-bdrs);
 			}
 		}
 
 		/* When separate, each item is fully rounded, like individual cards. */
 		&:where([from~="separate"]) {
-			details,
-			details summary {
+			:where(details),
+			:where(details summary) {
 				--tc-item-bdrs: var(--tc-item-bdrs-separate);
 				border-radius: var(--tc-item-bdrs-separate);
 			}
@@ -409,12 +414,10 @@
 				justify-content: center;
 				pointer-events: auto;
 				text-align: center;
+				transition: color var(--tc-item-trsdu), background-color var(--tc-item-trsdu);
 				z-index: 1;
 				& + * {  pointer-events: auto; position: relative; z-index: 1; }
 			}
-
-			/* ui-icon { display: none; } */
-			/* Hide icons on desktop tabs where space is limited. */
 
 			@media (hover: hover) {
 				/* Disable additional hover growth so the highlight remains visible. */
@@ -422,13 +425,15 @@
 					background: #0000;
 				}
 				summary:hover {
-					 /* TODO ? */
-					 color: light-dark(#333, #CCC);
-					/* text-decoration: #CCC wavy underline; */
+					color: var(--tc-tab-hover-c);
+					cursor: pointer;
+					text-decoration: var(--tc-tab-hover-td);
+				}
+				details:not([open]) summary:hover {
+					background: var(--tc-tab-hover-bg);
+					/* Background shape follows the summary's border-radius (square by default, rounded if [to~="rounded"]) */
 				}
 			}
-
-
 
 			/* --- Add main background and reset background properties for tabs --- */
 			&[to~="background"] {
@@ -535,7 +540,6 @@
 	details:nth-child(6) { --tab-cordion-index: 6; }
 	details:nth-child(7) { --tab-cordion-index: 7; }
 	details:nth-child(8) { --tab-cordion-index: 8; }
-
 
 	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
 	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
