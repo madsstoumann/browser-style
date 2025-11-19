@@ -380,7 +380,9 @@
 				}
 			}
 
-			details {
+			details,
+			details:first-of-type,
+			details:last-of-type {
 				border: 0;
 				border-block-start: 0;
 				border-radius: 0;
@@ -404,7 +406,11 @@
 				/* Ensures the body spans the full tab row beneath the summaries. */
 			}
 
-			summary {
+			summary,
+			details:first-of-type summary,
+			details:last-of-type summary,
+			details[open] + details summary,
+			details:has(+ details[open]) summary {
 				--tc-item-p: var(--tc-item-p-tabs);
 				align-items: center;
 				border-radius: 0;
@@ -498,7 +504,11 @@
 				cq-box::after {
 					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
 				}
-				summary {
+				summary,
+				details:first-of-type summary,
+				details:last-of-type summary,
+				details[open] + details summary,
+				details:has(+ details[open]) summary {
 					border-radius: var(--tc-tabs-bdrs);
 				}
 			}
@@ -547,4 +557,23 @@
 	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
 	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
 	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
+}
+
+/*
+ ************************************
+ * 7. FIXES FOR DETAILS CONTENT GRID ISSUES
+ ************************************
+ *
+ * Workarounds for current limitations in how <details> content is handled in grid layouts.
+ *
+ */
+@supports (background: -webkit-named-image(i)) {
+	details[open]::details-content {
+		display: contents;
+	}
+	details > summary + * {
+		grid-column: 1 / -1;
+		grid-row: 2;
+		pointer-events: auto;
+	}
 }
