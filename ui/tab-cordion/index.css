@@ -402,15 +402,18 @@
 
 			summary {
 				--tc-item-p: var(--tc-item-p-tabs);
+				align-items: center;
 				border-radius: 0;
-				display: block;
+				display: flex;
+				gap: 1ch;
+				justify-content: center;
 				pointer-events: auto;
 				text-align: center;
 				z-index: 1;
-				& + * {  pointer-events: auto; position: relative;  z-index: 1; }
+				& + * {  pointer-events: auto; position: relative; z-index: 1; }
 			}
 
-			ui-icon { display: none; } /* TODO ? */
+			/* ui-icon { display: none; } */
 			/* Hide icons on desktop tabs where space is limited. */
 
 			@media (hover: hover) {
@@ -466,6 +469,13 @@
 				summary {
 					justify-self: center;
 					padding-inline: 0;
+				}
+			}
+
+			/* --- `noicons` hides icons in summaries --- */
+			&[to~="noicons"] {
+				summary ui-icon {
+					display: none;
 				}
 			}
 
