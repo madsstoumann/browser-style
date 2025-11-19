@@ -10,9 +10,11 @@
 			background: Canvas;
 			color: CanvasText;
 			color-scheme: light dark;
+			display: grid;
 			font-family: system-ui;
 			interpolate-size: allow-keywords;
 			margin: 1rem 2ch;
+			row-gap: 2rem;
 		}
 		.content {
 			color: light-dark(#6b6b6b, #a0a0a0);
@@ -26,47 +28,79 @@
 </head>
 <body>
 
-<tab-cordion from="background contain divided" to="compact line noicons">
+<tab-cordion from="contain divided rounded" from-hover="bg accent" to="background highlight noicons rounded" to-hover="bg">
 	<cq-box>
-		<details name="tabs">
-			<summary>Breakpoints<ui-icon type="plus-cross"></ui-icon></summary>
+		<details name="tabs" open>
+			<summary>TabCordion<ui-icon type="plus-cross"></ui-icon></summary>
 			<div class="content">
-				Configure responsive breakpoints for different screen sizes. Set layout behavior for small, medium, and large viewports using columns or grid systems to ensure optimal display across devices.
+				A hybrid UI component that functions as an accordion on small screens and transforms into tabs on larger viewports (≥700px). Built with semantic <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> elements, enhanced with Container Queries and Anchor Positioning.
 			</div>
 		</details>
 
 		<details name="tabs">
-			<summary>Spacing<ui-icon type="plus-cross"></ui-icon></summary>
+			<summary>Accordion<ui-icon type="plus-cross"></ui-icon></summary>
 			<div class="content">
-				Control the outer margins and inner padding around your content. Adjust space top and bottom to control external spacing, while padding settings manage the internal spacing within the component boundaries.
-			</div>
-		</details>
-
-		<details name="tabs" >
-			<summary>Gaps<ui-icon type="plus-cross"></ui-icon></summary>
-			<div class="content">
-				Define the spacing between columns and rows in grid or flex layouts. Fine-tune the visual separation between elements to create balanced, readable layouts with appropriate breathing room.
+				The default state on narrow viewports. Items stack vertically with expandable content. Use the <code>from</code> attribute to control styling with tokens like <code>background</code>, <code>divided</code>, <code>rounded</code>, or <code>breakout</code> for visual effects.
 			</div>
 		</details>
 
 		<details name="tabs">
-			<summary>Layout<ui-icon type="plus-cross"></ui-icon></summary>
+			<summary>Tabs<ui-icon type="plus-cross"></ui-icon></summary>
 			<div class="content">
-				Manage layout properties including bleed effects for edge-to-edge designs, overflow behavior for content handling, theme selection for styling consistency, and width presets to control maximum component dimensions.
+				Activated by adding a <code>to</code> attribute on viewports ≥700px. Transforms the accordion into a horizontal tabbed interface. Style with tokens like <code>highlight</code>, <code>line</code>, <code>compact</code>, or <code>shadow</code> for different visual treatments.
 			</div>
 		</details>
 
 		<details name="tabs">
-			<summary>Animation<ui-icon type="plus-cross"></ui-icon></summary>
+			<summary>From Tokens<ui-icon type="plus-cross"></ui-icon></summary>
 			<div class="content">
-				Add motion and visual interest with entrance and exit animations. Choose from various animation styles including fades, bounces, zooms, slides, flips, and reveals, with customizable animation ranges for scroll-based triggers.
+				Control accordion appearance: <code>background</code> adds padding and color, <code>contain</code> wraps items in a border, <code>divided</code> adds separators, <code>separate</code> creates cards, <code>breakout</code> lifts open items, <code>elevated</code> adds shadows.
 			</div>
 		</details>
 
 		<details name="tabs">
-			<summary>Advanced<ui-icon type="plus-cross"></ui-icon></summary>
+			<summary>To Tokens<ui-icon type="plus-cross"></ui-icon></summary>
 			<div class="content">
-				Configure advanced features including accessibility labels for screen readers, decorative elements in gaps between content, intrinsic sizing constraints, and self-alignment properties for precise positioning control.
+				Control tabs appearance: <code>highlight</code> adds a sliding pill, <code>line</code> shows an underline indicator, <code>compact</code> sizes tabs to content, <code>rounded</code> curves edges, <code>panel-bg</code> adds panel background, <code>noicons</code> hides icons.
+			</div>
+		</details>
+
+		<details name="tabs">
+			<summary>Hover States<ui-icon type="plus-cross"></ui-icon></summary>
+			<div class="content">
+				Use <code>from-hover</code> for accordion hover effects and <code>to-hover</code> for tabs hover. Both support <code>bg</code> (background color) and <code>accent</code> (text color) tokens. Mix multiple tokens for rich interactions.
+			</div>
+		</details>
+	</cq-box>
+</tab-cordion>
+
+<tab-cordion from="background contain divided" from-hover="bg" to="compact line noicons">
+	<cq-box>
+		<details name="features" open>
+			<summary>Features<ui-icon type="chevron right"></ui-icon></summary>
+			<div class="content">
+				Responsive transformation, semantic HTML with details/summary elements, Container Queries for viewport-aware styling, and Anchor Positioning for the sliding tab indicator.
+			</div>
+		</details>
+
+		<details name="features">
+			<summary>Styling<ui-icon type="chevron right"></ui-icon></summary>
+			<div class="content">
+				Highly customizable with token-based attributes. Apply multiple tokens to achieve different visual styles. All colors adapt to light and dark color schemes automatically.
+			</div>
+		</details>
+
+		<details name="features">
+			<summary>Accessibility<ui-icon type="chevron right"></ui-icon></summary>
+			<div class="content">
+				Built on native details/summary elements for keyboard navigation and screen reader support. Focus management and ARIA states are handled natively by the browser.
+			</div>
+		</details>
+
+		<details name="features">
+			<summary>Browser Support<ui-icon type="chevron right"></ui-icon></summary>
+			<div class="content">
+				Requires modern CSS features: Container Queries, Anchor Positioning, CSS Scope, Nesting, :has(), and :where() selectors. Check browser compatibility before use.
 			</div>
 		</details>
 	</cq-box>

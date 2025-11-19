@@ -109,6 +109,7 @@
 		-webkit-user-select: none;
 		user-select: none;
 		text-box: cap alphabetic;
+		text-wrap: var(--tc-item-txw, nowrap);
 		transition: background-color .2s ease;
 	}
 
