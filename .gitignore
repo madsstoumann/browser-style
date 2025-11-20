@@ -12,6 +12,7 @@ _v2/
 # Editor directories and files
 .idea
 .vscode
+.gemini-clipboard
 *.suo
 *.ntvs*
 *.njsproj
