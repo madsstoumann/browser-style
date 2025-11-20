@@ -1,6 +1,6 @@
 # Tab Cordion
 
-A hybrid UI component that functions as an **Accordion** on small screens and transforms into **Tabs** on larger screens (>= 700px). It is built using standard `<details>` and `<summary>` elements for accessibility and semantics, enhanced with modern CSS features like Container Queries, Anchor Positioning, and Scope.
+A hybrid UI component that functions as an **Accordion** when narrow and transforms into **Tabs** when its container width is >= 700px. It is built using standard `<details>` and `<summary>` elements for accessibility and semantics, enhanced with modern CSS features like Container Queries, Anchor Positioning, and Scope.
 
 ## Usage
 
@@ -24,7 +24,7 @@ A hybrid UI component that functions as an **Accordion** on small screens and tr
 The component uses two main attributes to control its appearance in different states. These attributes accept a space-separated list of "tokens".
 
 ### `from` (Accordion Mode)
-Controls the appearance when in the "Accordion" state (default, or width < 700px).
+Controls the appearance when in the "Accordion" state (default, or when container width < 700px).
 
 | Token | Description |
 | :--- | :--- |
@@ -37,7 +37,7 @@ Controls the appearance when in the "Accordion" state (default, or width < 700px
 | **`separate`** | Separates items into distinct cards with spacing between them. |
 
 ### `to` (Tabs Mode)
-Controls the appearance when in the "Tabs" state (width >= 700px).
+Controls the appearance when in the "Tabs" state (container width >= 700px).
 
 | Token | Description |
 | :--- | :--- |
