@@ -52,6 +52,7 @@
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
 		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
+		--tc-hover-line: light-dark(#CCC, #888);
 		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(0, 0, 0, .5));
 		--tc-tabs-bg: light-dark(#EAEAEA, #222);
 		--tc-tabs-panel-bg: light-dark(#f7f7f7, #1c1c1c);
@@ -363,6 +364,16 @@
 				summary:hover {
 					color: var(--tc-to-hover-accent);
 					cursor: pointer;
+				}
+			}
+
+			:scope[to-hover~="line"] {
+				details:not([open]) summary:hover::after {
+					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tc-hover-line);
+					content: "";
+					inset-block-end: 0;
+					inset-inline: 0;
+					position: absolute;
 				}
 			}
 		}
