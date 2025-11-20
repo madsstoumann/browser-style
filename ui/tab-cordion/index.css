@@ -52,7 +52,6 @@
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
 		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
-		--tc-hover-line: light-dark(#CCC, #888);
 		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(0, 0, 0, .5));
 		--tc-tabs-bg: light-dark(#EAEAEA, #222);
 		--tc-tabs-panel-bg: light-dark(#f7f7f7, #1c1c1c);
@@ -64,6 +63,7 @@
 		/* Tab Hover States (to-hover) */
 		--tc-to-hover-bg: light-dark(rgba(0,0,0,0.05), rgba(255,255,255,0.1));
 		--tc-to-hover-accent: var(--tc-accent);
+		--tc-to-hover-line: light-dark(#CCC, #888);
 
 		/* Base Styles */
 		container-type: inline-size;
@@ -368,12 +368,17 @@
 			}
 
 			:scope[to-hover~="line"] {
-				details:not([open]) summary:hover::after {
-					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tc-hover-line);
+				details:not([open]) summary::after {
+					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tc-to-hover-line);
 					content: "";
 					inset-block-end: 0;
 					inset-inline: 0;
+					opacity: 0;
 					position: absolute;
+					transition: opacity var(--tc-item-trsdu) ease;
+				}
+				details:not([open]) summary:hover::after {
+					opacity: 1;
 				}
 			}
 		}
