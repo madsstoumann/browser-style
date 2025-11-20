@@ -11,9 +11,9 @@ body {
 	overflow: hidden;
 }
 ul {
-	--h: 220deg;
+	/* --h: 220deg;
 	--s: 60%;
-	--l: 90%;
+	--l: 90%; */
 	--wh: 50dvh;
 	--wv: 3.5cqb;
 	all: unset;
@@ -36,7 +36,7 @@ li {
 	);
 	display: block;
 	grid-area: 1 / 1;
-	height: 33%;
+	height: var(--h, 33%);
 	justify-content: end;
 	translate: 0 calc(0cqb + (var(--i) * var(--wv)) - var(--wv));
 
@@ -258,6 +258,7 @@ li {
 
 	&:nth-child(19) {
 		--bg: hsl(353.68deg 93.12% 37.57%);
+		--h: 70%;
 		--i: 19;
 		--x2: 43%;
 		--y1: 20%;
@@ -270,6 +271,7 @@ li {
 
 	&:nth-child(20) {
 		--bg: hsl(358.21deg 56.23% 46.76%);
+		--h: 100%;
 		--i: 20;
 		--x2: 52%;
 		--y1: 20%;
