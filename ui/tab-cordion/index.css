@@ -34,7 +34,7 @@
 		--tc-item-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tc-tabs-bdrs: 3em;
 		--tc-tabs-bdw: 4px;
-		--tc-tabs-item-bdc: light-dark(#FFF, #000);
+		--tc-tabs-item-bdc: light-dark(#FFF, #555);
 		--tc-tabs-item-bdw: 1px;
 		--tc-tabs-line-bdw: 3px;
 		--tc-tabs-panel-bxsh: 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2);
@@ -52,7 +52,7 @@
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222);
 		--tc-hover-bg: light-dark(hsl(210, 100%, 95%), hsl(210, 50%, 15%));
-		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(255, 255, 255, .15));
+		--tc-item-bg-active: light-dark(rgba(255, 255, 255, .5), rgba(0, 0, 0, .5));
 		--tc-tabs-bg: light-dark(#EAEAEA, #222);
 		--tc-tabs-panel-bg: light-dark(#f7f7f7, #1c1c1c);
 
