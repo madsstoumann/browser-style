@@ -369,7 +369,7 @@
 
 			:scope[to-hover~="line"] {
 				details:not([open]) summary::after {
-					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tc-to-hover-line);
+					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-to-hover-line);
 					content: "";
 					inset-block-end: 0;
 					inset-inline: 0;
@@ -498,7 +498,7 @@
 			&[to~="line"] {
 				cq-box::after {
 					--tc-tabs-bdw: 0px;
-					border-block-end: var(--tc-tabs-line-bdw, 3px) solid var(--tc-accent);
+					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-accent);
 				}
 				summary {
 					justify-self: center;
