@@ -44,9 +44,9 @@
 		/* Spacing and Transitions */
 		--tc-breakout-unit: 1rem;
 		--tc-group-rg: 1em;
-		--tc-item-p: 1.5ch;
+		--tc-item-p: 1.25ch 1.5ch;
 		--tc-item-p-separate: 1.5ch 2.5ch;
-		--tc-item-p-tabs: 1.5ch;
+		--tc-item-p-tabs: 1.25ch;
 		--tc-item-trsdu: 300ms;
 		
 		/* Panel/Content */
@@ -465,12 +465,11 @@
 				grid-column: 1 / -1;
 				grid-row: 2;
 				pointer-events: auto;
-				padding-inline: var(--tc-tabs-panel-pi);
-				/* Ensures the body spans the full tab row beneath the summaries. */
 			}
-
-			details[open]::details-content {
+			/* TODO? Control padding does not work on ::details-content */
+			details[open] summary + * {
 				padding-block: var(--tc-tabs-panel-pb);
+				padding-inline: var(--tc-tabs-panel-pi);
 			}
 
 			summary,
