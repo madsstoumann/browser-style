@@ -39,6 +39,7 @@
 		--tc-tabs-line-bdw: 3px;
 		--tc-tabs-panel-bxsh: 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2);
 		--tc-tabs-panel-bxsh-dark: 0 8px 18px -12px rgba(255, 255, 255, .35), 0 6px 12px -14px rgba(255, 255, 255, .35);
+		--tc-tabs-container-bdrs: 1em;
 
 		/* Spacing and Transitions */
 		--tc-breakout-unit: 1rem;
@@ -48,8 +49,11 @@
 		--tc-item-p: 1.5ch;
 		--tc-item-trsdu: 300ms;
 		
-		/* Content Gaps */
-		--tc-tabs-gap: 1rem;
+		/* Panel/Content Padding */
+		--tc-panel-pb: 0 2ch;
+		--tc-panel-pi: 1.5ch;
+		--tc-tabs-panel-pb: 2ch;
+		--tc-tabs-panel-pi: 1.5ch;
 	
 		/* Background Colors */
 		--tc-bg: light-dark(#EEE, #222527);
@@ -334,8 +338,14 @@
 		block-size: 0;
 		content-visibility: hidden;
 		overflow: hidden;
-		transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu);
+		padding-block: 0;
+		padding-inline: var(--tc-panel-pi);
+		transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
 		transition-behavior: allow-discrete;
+	}
+
+	&:not([to]) details[open]::details-content {
+		padding-block: var(--tc-panel-pb);
 	}
 
 	@container (width <= 700px) {
@@ -343,8 +353,14 @@
 			block-size: 0;
 			content-visibility: hidden;
 			overflow: hidden;
-			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu);
+			padding-block: 0;
+			padding-inline: var(--tc-panel-pi);
+			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
 			transition-behavior: allow-discrete;
+		}
+
+		details[open]::details-content {
+			padding-block: var(--tc-panel-pb);
 		}
 	}
 
@@ -445,7 +461,12 @@
 				grid-column: 1 / -1;
 				grid-row: 2;
 				pointer-events: auto;
+				padding-inline: var(--tc-tabs-panel-pi);
 				/* Ensures the body spans the full tab row beneath the summaries. */
+			}
+
+			details[open]::details-content {
+				padding-block: var(--tc-tabs-panel-pb);
 			}
 
 			summary,
@@ -547,10 +568,34 @@
 			}
 
 			/* --- `contain` wraps the entire tabs component in a border --- */
-			&[to~="contain"] cq-box {
-				border: var(--tc-item-bdw) solid var(--tc-item-bdc);
+			&[to~="contain"] {
+				cq-box {
+					border: var(--tc-item-bdw) solid var(--tc-item-bdc);
+				}
+				details {
+					padding-inline-start: var(--tc-tabs-panel-pi);
+					&::details-content {
+						padding-inline: 0 var(--tc-tabs-panel-pi);
+					}
+				}
+
+				/* --- `rounded` with `contain` rounds the container --- */
+				&[to~="rounded"] {
+					cq-box {
+						border-radius: var(--tc-tabs-container-bdrs);
+					}
+					&[to~="background"] cq-box::before {
+						border-start-start-radius: var(--tc-tabs-container-bdrs);
+						border-start-end-radius: var(--tc-tabs-container-bdrs);
+						border-end-start-radius: 0;
+						border-end-end-radius: 0;
+					}
+					/* Remove border-radius from line indicator when using contain+rounded+line */
+					&[to~="line"] cq-box::after {
+						border-radius: 0;
+					}
+				}
 			}
-		}
 
 		@media (prefers-color-scheme: dark) {
 			summary + * {
