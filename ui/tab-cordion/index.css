@@ -24,32 +24,33 @@
 		--tc-accent: light-dark(hsl(210, 100%, 45%), hsl(210, 100%, 75%));
 
 		/* Borders and Shadows */
+		--tc-item-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 30%));
+		--tc-item-bdc-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
 		--tc-item-bdrs: 1em;
 		--tc-item-bdrs-separate: 2em;
-		--tc-item-bdc: light-dark(hsl(0 0% 80%), hsl(0 0% 30%));
 		--tc-item-bdw: 1px;
-		--tc-item-bxsh: 0 0 1px 0 rgba(0, 0, 0, .07), 0 1px 1px 0 rgba(0, 0, 0, .06), 0 1px 2px 0 rgba(0, 0, 0, .1);
-		--tc-item-bdc-open: light-dark(hsl(0 0% 60%), hsl(0 0% 40%));
 		--tc-item-bdw-open: 2px;
+		--tc-item-bxsh: 0 0 1px 0 rgba(0, 0, 0, .07), 0 1px 1px 0 rgba(0, 0, 0, .06), 0 1px 2px 0 rgba(0, 0, 0, .1);
 		--tc-item-bxsh-open: 0 0 2px 0 rgba(0, 0, 0, .14), 0 2px 2px 0 rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
 		--tc-tabs-bdrs: 3em;
 		--tc-tabs-bdw: 4px;
+		--tc-tabs-container-bdrs: 1em;
 		--tc-tabs-item-bdc: light-dark(#FFF, rgba(255, 255, 255, .30));
 		--tc-tabs-item-bdw: 1px;
 		--tc-tabs-line-bdw: 3px;
 		--tc-tabs-panel-bxsh: 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2);
 		--tc-tabs-panel-bxsh-dark: 0 8px 18px -12px rgba(255, 255, 255, .35), 0 6px 12px -14px rgba(255, 255, 255, .35);
-		--tc-tabs-container-bdrs: 1em;
 
 		/* Spacing and Transitions */
 		--tc-breakout-unit: 1rem;
 		--tc-group-rg: 1em;
+		--tc-item-p: 1.5ch;
 		--tc-item-p-separate: 1.5ch 2.5ch;
 		--tc-item-p-tabs: 1.5ch;
-		--tc-item-p: 1.5ch;
 		--tc-item-trsdu: 300ms;
 		
-		/* Panel/Content Padding */
+		/* Panel/Content */
+		--tc-panel-fs: inherit;
 		--tc-panel-pb: 0 2ch;
 		--tc-panel-pi: 1.5ch;
 		--tc-tabs-panel-pb: 2ch;
@@ -92,8 +93,8 @@
 
 	details, details:not([to]) {
 		/* The translate offset is driven by breakout-specific tokens that update --_y. */
-		background: var(--tab-cordion-item-bg, Canvas);
-		translate: 0 calc(var(--_y) * var(--tc-breakout-unit, 1rem));
+		background: var(--tc-item-bg, Canvas);
+		translate: 0 calc(var(--_y) * var(--tc-breakout-unit));
 		transition: translate var(--tc-item-trsdu) ease;
 		&[open]::details-content {
 			block-size: auto;
@@ -105,8 +106,8 @@
 		color: var(--tabs-group-c, inherit);
 		cursor: pointer;
 		display: flex;
-		font-family: var(--tab-cordion-ff, inherit);
-		font-size: var(--tab-cordion-fs, inherit);
+		font-family: var(--tc-item-ff, inherit);
+		font-size: var(--tc-item-fs, inherit);
 		grid-column: var(--tab-cordion-index); /* Pin each summary to its index column so tabs align when converted. */
 		grid-row: 1;
 		justify-content: space-between;
@@ -126,7 +127,7 @@
 	}
 
 	ui-icon {
-		color: var(--tab-cordion-ui-icon-c, light-dark(#5a5a5a, #b0b0b0));
+		color: var(--tc-icon-c, light-dark(#5a5a5a, #b0b0b0));
 	}
 
 	/*
@@ -143,7 +144,7 @@
 	:scope:where([from~="background"]) {
 		cq-box {
 			background: var(--tc-bg);
-			padding: var(--tab-cordion-p, 1.5ch);
+			padding: var(--tc-bg-p, 1.5ch);
 		}
 	}
 
@@ -159,7 +160,7 @@
 		}
 		/* The open item gets a distinct border. */
 		details[open] {
-			border: var(--tc-item-bdw-open, inherit) solid var(--tc-item-bdc-open, inherit);
+			border: var(--tc-item-bdw-open) solid var(--tc-item-bdc-open);
 		}
 		/* The item immediately after the open one is pushed down by 1 unit. */
 		details[open]:not(:first-of-type),
@@ -337,6 +338,7 @@
 	&:not([to]) details::details-content {
 		block-size: 0;
 		content-visibility: hidden;
+		font-size: var(--tc-panel-fs);
 		overflow: hidden;
 		padding-block: 0;
 		padding-inline: var(--tc-panel-pi);
@@ -352,6 +354,7 @@
 		details::details-content {
 			block-size: 0;
 			content-visibility: hidden;
+			font-size: var(--tc-panel-fs);
 			overflow: hidden;
 			padding-block: 0;
 			padding-inline: var(--tc-panel-pi);
@@ -458,6 +461,7 @@
 			}
 
 			details::details-content {
+				font-size: var(--tc-panel-fs);
 				grid-column: 1 / -1;
 				grid-row: 2;
 				pointer-events: auto;
@@ -539,7 +543,7 @@
 			/* --- `panel-bg` applies a shared surface color to tab header + panel --- */
 			&[to~="panel-bg"] {
 				summary + * {
-					background: var(--tc-tabs-panel-bg, #f7f7f7);
+					background: var(--tc-tabs-panel-bg);
 				}
 			}
 
@@ -563,7 +567,7 @@
 			/* --- `shadow` adds an elevated drop shadow under the active panel --- */
 			&[to~="shadow"] {
 				summary + * {
-					box-shadow: var(--tc-tabs-panel-bxsh, 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2));
+					box-shadow: var(--tc-tabs-panel-bxsh);
 				}
 			}
 
@@ -603,10 +607,11 @@
 			}
 		}
 	}
+}
 
-	/*
-	 ************************************
-	 * 6. STATE PROPAGATION
+/*
+ ************************************
+ * 6. STATE PROPAGATION
 	 ************************************
 	 *
 	 * 1. Assigns an index to each item (fallback for sibling-index()).
