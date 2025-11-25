@@ -1,0 +1,168 @@
+/*
+ ****************************************
+ * ACCORDION VARIANTS (`from` attribute)
+ ****************************************
+ *
+ * These styles are applied based on the "tokens" in the `from` attribute,
+ * allowing for different visual presentations of the accordion.
+ *
+ */
+
+tab-cordion {
+
+	/* --- background (mobile/accordion) --- */
+	&:where([from~="cnt-bg"]) {
+		cq-box {
+			background: var(--tc-bg);
+			padding: var(--tc-bg-p, 1.5ch);
+		}
+	}
+
+	/* --- `breakout` variant --- */
+	&:where([from~="itm-breakout"]) {
+		details {
+			&:where([open] + details) {
+				border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
+			}
+		}
+
+		details[open] {
+			border: var(--tc-item-bdw-open) solid var(--tc-item-bdc-open);
+		}
+
+		details[open]:not(:first-of-type),
+		details[open]:first-of-type~details {
+			--_y: 1;
+		}
+
+		details[open]~details {
+			--_y: 2;
+		}
+
+		/* --- `elevated` sub-variant --- */
+		&:where([from~="itm-elevated"]) {
+			--tc-item-bdw-open: 0px;
+
+			details[open] {
+				box-shadow: var(--tc-item-bxsh-open);
+			}
+
+			details {
+
+				&:where(:last-of-type:not([open])),
+				&:where(:has(+ details[open])) {
+					box-shadow: var(--tc-item-bxsh);
+				}
+			}
+		}
+	}
+
+	/* --- `separate` variant --- */
+	&:where([from~="itm-separate"]) {
+		cq-box {
+			row-gap: var(--tc-group-rg);
+		}
+
+		details {
+			--_y: 0;
+			border: var(--tc-item-bdw) solid var(--tc-item-bdc);
+		}
+
+		&:where([from~="itm-breakout"]) {
+
+			details[open],
+			details[open]:first-of-type~details,
+			details[open]~details {
+				--_y: 0;
+			}
+		}
+	}
+
+	/* --- `contain` variant --- */
+	&:where([from~="cnt-border"]) {
+		details {
+			border-inline: var(--tc-item-bdw) solid var(--tc-item-bdc);
+		}
+
+		&:where(:not([from~="itm-breakout"])) {
+			details:first-of-type {
+				border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
+			}
+		}
+
+		&:where([from~="itm-breakout"]) {
+			details:first-of-type:not([open]) {
+				border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
+			}
+		}
+
+		&:where(:not([from~="itm-divided"])) {
+			details:last-of-type {
+				border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
+			}
+		}
+	}
+
+	/* --- `divided` variant --- */
+	&:where([from~="itm-divided"]) {
+		details {
+			border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
+		}
+	}
+
+	/* --- `rounded` variant --- */
+	&:where([from~="rounded"]) {
+		&:where(:not([from~="itm-breakout"])) {
+			details {
+
+				&:first-of-type,
+				&:first-of-type summary {
+					border-top-left-radius: var(--tc-item-bdrs);
+					border-top-right-radius: var(--tc-item-bdrs);
+				}
+
+				&:last-of-type,
+				&:last-of-type summary {
+					border-bottom-left-radius: var(--tc-item-bdrs);
+					border-bottom-right-radius: var(--tc-item-bdrs);
+				}
+			}
+		}
+
+		&:where([from~="itm-breakout"]) {
+			details {
+
+				&:first-of-type,
+				&[open]+details,
+				&[open]+details summary {
+					border-top-left-radius: var(--tc-item-bdrs);
+					border-top-right-radius: var(--tc-item-bdrs);
+				}
+
+				&:last-of-type,
+				&:has(+ details[open]),
+				&:has(+ details[open]) summary {
+					border-bottom-left-radius: var(--tc-item-bdrs);
+					border-bottom-right-radius: var(--tc-item-bdrs);
+				}
+			}
+
+			[open] {
+				border-radius: var(--tc-item-bdrs);
+			}
+		}
+
+		&:where([from~="itm-separate"]) {
+
+			details,
+			details summary {
+				--tc-item-bdrs: var(--tc-item-bdrs-separate);
+				border-radius: var(--tc-item-bdrs-separate);
+			}
+
+			details {
+				--tc-item-p: var(--tc-item-p-separate);
+			}
+		}
+	}
+}

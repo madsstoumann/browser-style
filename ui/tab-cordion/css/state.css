@@ -1,0 +1,30 @@
+/*
+ ********************
+ * STATE PROPAGATION
+ ********************
+ *
+ * 1. Assigns an index to each item (fallback for sibling-index()).
+ * 2. Counts the total number of items and sets it on the parent.
+ *
+ * Limited to 8 items but can be extended.
+ */
+
+tab-cordion {
+	details:nth-child(1) { --tab-cordion-index: 1; }
+	details:nth-child(2) { --tab-cordion-index: 2; }
+	details:nth-child(3) { --tab-cordion-index: 3; }
+	details:nth-child(4) { --tab-cordion-index: 4; }
+	details:nth-child(5) { --tab-cordion-index: 5; }
+	details:nth-child(6) { --tab-cordion-index: 6; }
+	details:nth-child(7) { --tab-cordion-index: 7; }
+	details:nth-child(8) { --tab-cordion-index: 8; }
+
+	cq-box:has(> details:nth-child(1):last-child) { --tab-cordion-tabs: 1; }
+	cq-box:has(> details:nth-child(2):last-child) { --tab-cordion-tabs: 2; }
+	cq-box:has(> details:nth-child(3):last-child) { --tab-cordion-tabs: 3; }
+	cq-box:has(> details:nth-child(4):last-child) { --tab-cordion-tabs: 4; }
+	cq-box:has(> details:nth-child(5):last-child) { --tab-cordion-tabs: 5; }
+	cq-box:has(> details:nth-child(6):last-child) { --tab-cordion-tabs: 6; }
+	cq-box:has(> details:nth-child(7):last-child) { --tab-cordion-tabs: 7; }
+	cq-box:has(> details:nth-child(8):last-child) { --tab-cordion-tabs: 8; }
+}

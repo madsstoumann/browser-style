@@ -102,15 +102,15 @@
 	// Add Accordion (from) controls
 	GUI.addGroup('Accordion', [
 		(ul) => GUI.addGroup('Background', [
-			(innerUl) => GUI.addCheckbox('Enable', 'background', '', { 'data-action': 'from' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Enable', 'cnt-bg', '', { 'data-action': 'from' }, innerUl),
 			(innerUl) => GUI.addColor('Color', '#EEEEEE', '--tc-bg', { 'data-action': 'color' }, innerUl)
 		], ul),
-		(ul) => GUI.addCheckbox('Breakout', 'breakout', '', { 'data-action': 'from' }, ul),
-		(ul) => GUI.addCheckbox('Contain', 'contain', '', { 'data-action': 'from', checked: 'checked' }, ul),
-		(ul) => GUI.addCheckbox('Divided', 'divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
-		(ul) => GUI.addCheckbox('Elevated', 'elevated', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Breakout', 'itm-breakout', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Border', 'cnt-border', '', { 'data-action': 'from', checked: 'checked' }, ul),
+		(ul) => GUI.addCheckbox('Divided', 'itm-divided', '', { 'data-action': 'from', checked: 'checked' }, ul),
+		(ul) => GUI.addCheckbox('Elevated', 'itm-elevated', '', { 'data-action': 'from' }, ul),
 		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'from', checked: 'checked' }, ul),
-		(ul) => GUI.addCheckbox('Separate', 'separate', '', { 'data-action': 'from' }, ul)
+		(ul) => GUI.addCheckbox('Separate', 'itm-separate', '', { 'data-action': 'from' }, ul)
 	]);
 
 	// Add Accordion Hover (from-hover) controls

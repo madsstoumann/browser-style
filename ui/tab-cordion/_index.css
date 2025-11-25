@@ -1,0 +1,23 @@
+/*
+ ************************************
+ * T A B - C O R D I O N
+ ************************************
+ *
+ * This component is a hybrid of an accordion and a tabs component.
+ * - It functions as an accordion by default.
+ * - It can be styled in various ways using the `from` attribute with different "tokens".
+ * - If a `to` attribute is present, it transforms into a tabs component on wider viewports (>= 700px).
+ *
+ * It is built using the <details> and <summary> elements for accessibility and semantics.
+ *
+ */
+@layer components.tab-cordion {
+    @layer base, state, accordion, tabs, transitions, fixes;
+}
+
+@import url("css/base.css") layer(components.tab-cordion.base);
+@import url("css/state.css") layer(components.tab-cordion.state);
+@import url("css/accordion.css") layer(components.tab-cordion.accordion);
+@import url("css/tabs.css") layer(components.tab-cordion.tabs);
+@import url("css/transitions.css") layer(components.tab-cordion.transitions);
+@import url("css/fixes.css") layer(components.tab-cordion.fixes);

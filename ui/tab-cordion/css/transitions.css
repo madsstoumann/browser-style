@@ -1,0 +1,98 @@
+/*
+ **************************************
+ * HOVER EFFECTS & CONTENT TRANSITIONS
+ **************************************
+ */
+
+tab-cordion {
+
+	/* --- Accordion hover (from-hover) --- */
+	@media (hover: hover) {
+		&:not([to])[from-hover~="bg"] details:hover:not([open]) {
+			background: var(--tc-from-hover-bg);
+		}
+
+		&:not([to])[from-hover~="accent"] details:hover:not([open]) {
+			color: var(--tc-from-hover-accent);
+		}
+	}
+
+	@container (width <=700px) {
+		@media (hover: hover) {
+			&[from-hover~="bg"] details:hover:not([open]) {
+				background: var(--tc-from-hover-bg);
+			}
+
+			&[from-hover~="accent"] details:hover:not([open]) {
+				color: var(--tc-from-hover-accent);
+			}
+		}
+	}
+
+	/* --- Accordion content transitions --- */
+	&:not([to]) details::details-content {
+		block-size: 0;
+		content-visibility: hidden;
+		font-size: var(--tc-panel-fs);
+		overflow: hidden;
+		padding-block: 0;
+		padding-inline: var(--tc-panel-pi);
+		transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
+		transition-behavior: allow-discrete;
+	}
+
+	&:not([to]) details[open]::details-content {
+		padding-block: var(--tc-panel-pb);
+	}
+
+	@container (width <=700px) {
+		details::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			font-size: var(--tc-panel-fs);
+			overflow: hidden;
+			padding-block: 0;
+			padding-inline: var(--tc-panel-pi);
+			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
+			transition-behavior: allow-discrete;
+		}
+
+		details[open]::details-content {
+			padding-block: var(--tc-panel-pb);
+		}
+	}
+
+	/* --- Tabs hover (to-hover) --- */
+	@container (width >=700px) {
+		@media (hover: hover) {
+			&[to] details:hover {
+				background: #0000;
+			}
+
+			&[to-hover~="bg"] details:not([open]) summary:hover {
+				background: var(--tc-to-hover-bg);
+			}
+
+			&[to-hover~="accent"] summary:hover {
+				color: var(--tc-to-hover-accent);
+				cursor: pointer;
+			}
+
+			&[to-hover~="line"] {
+				details:not([open]) summary::after {
+					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-to-hover-line);
+					content: "";
+					inset-block-end: 0;
+					inset-inline: 0;
+					opacity: 0;
+					position: absolute;
+					transition: opacity var(--tc-item-trsdu) ease;
+				}
+
+				details:not([open]) summary:hover::after {
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

@@ -141,7 +141,7 @@
 	 */
 
 	/* --- background (mobile/accordion) --- */
-	:scope:where([from~="background"]) {
+	:scope:where([from~="cnt-bg"]) {
 		cq-box {
 			background: var(--tc-bg);
 			padding: var(--tc-bg-p, 1.5ch);
@@ -151,7 +151,7 @@
 	/* --- `breakout` variant --- */
 	/* The open item visually "breaks out" from the stack by translating
 	 * subsequent items downwards. The `--_y` custom property controls the vertical translation amount. */
-	:scope:where([from~="breakout"]) {
+	:scope:where([from~="itm-breakout"]) {
 		details {
 			/* Adds a border between the open item and the one immediately following it. */
 			&:where([open] + details) {
@@ -170,7 +170,7 @@
 
 		/* --- `elevated` sub-variant (used with `breakout`) --- */
 		/* This replaces the `breakout` border with a box-shadow for a "floating" effect. */
-		&:where([from~="elevated"]) {
+		&:where([from~="itm-elevated"]) {
 			--tc-item-bdw-open: 0px; /* Remove the border from the open item */
 			details[open] {
 				box-shadow: var(--tc-item-bxsh-open);
@@ -187,7 +187,7 @@
 
 	/* --- `separate` variant --- */
 	/* Adds vertical space and a border around each individual accordion item, making them appear as distinct cards. */
-	:scope:where([from~="separate"]) {
+	:scope:where([from~="itm-separate"]) {
 		cq-box {
 			row-gap: var(--tc-group-rg);
 		}
@@ -196,7 +196,7 @@
 			border: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
 		/* Explicitly disable the breakout translation effect when `separate` is also used. */
-		&:where([from~="breakout"]) {
+		&:where([from~="itm-breakout"]) {
 			details[open],
 			details[open]:first-of-type ~ details,
 			details[open] ~ details {
@@ -207,12 +207,12 @@
 
 	/* --- `contain` variant --- */
 	/* Wraps the entire accordion group in a single continuous border, making it look like a unified block. */
-	:scope:where([from~="contain"]) {
+	:scope:where([from~="cnt-border"]) {
 		details {
 			border-inline: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
 		/* Apply top border to the first item. */
-		&:where(:not([from~="breakout"])) {
+		&:where(:not([from~="itm-breakout"])) {
 			details {
 				&:first-of-type {
 					border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -220,7 +220,7 @@
 			}
 		}
 		/* In breakout mode, only apply top border if the first item is closed. */
-		&:where([from~="breakout"]) {
+		&:where([from~="itm-breakout"]) {
 			details {
 				&:first-of-type:not([open]) {
 					border-block-start: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -228,7 +228,7 @@
 			}
 		}
 		/* Apply bottom border to the last item, but only if items are not already divided. */
-		&:where(:not([from~="divided"])) {
+		&:where(:not([from~="itm-divided"])) {
 			details {
 				&:last-of-type {
 					border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
@@ -239,7 +239,7 @@
 
 	/* --- `divided` variant --- */
 	/* Adds a border line between each accordion item. */
-	:scope:where([from~="divided"]) {
+	:scope:where([from~="itm-divided"]) {
 		details {
 			border-block-end: var(--tc-item-bdw) solid var(--tc-item-bdc);
 		}
@@ -250,7 +250,7 @@
 	:scope:where([from~="rounded"]) {
 
 		/* Default rounding for non-breakout layout: rounds the top of the first item and bottom of the last. */
-		&:where(:not([from~="breakout"])) {
+		&:where(:not([from~="itm-breakout"])) {
 			details {
 				&:first-of-type,
 				&:first-of-type summary {
@@ -266,7 +266,7 @@
 		}
 
 		/* With breakout: border-radius is applied dynamically based on which item is open. */
-		&:where([from~="breakout"]) {
+		&:where([from~="itm-breakout"]) {
 			details {
 				/* Round the top corners of the first item and the item after an open one. */
 				&:first-of-type,
@@ -290,7 +290,7 @@
 		}
 
 		/* When separate, each item is fully rounded, like individual cards. */
-		&:where([from~="separate"]) {
+		&:where([from~="itm-separate"]) {
 			details,
 			details summary {
 				--tc-item-bdrs: var(--tc-item-bdrs-separate);
