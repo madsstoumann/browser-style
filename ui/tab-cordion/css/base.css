@@ -25,6 +25,7 @@ tab-cordion {
 	--tc-tabs-item-bdc: light-dark(#FFF, rgba(255, 255, 255, .30));
 	--tc-tabs-item-bdw: 1px;
 	--tc-tabs-line-bdw: 3px;
+	--tc-tabs-line-bdc: light-dark(#EEE, #555);
 	--tc-tabs-panel-bxsh: 0 8px 18px -12px rgba(0, 0, 0, .35), 0 6px 12px -14px rgba(0, 0, 0, .2);
 	--tc-tabs-panel-bxsh-dark: 0 8px 18px -12px rgba(255, 255, 255, .35), 0 6px 12px -14px rgba(255, 255, 255, .35);
 
@@ -68,19 +69,29 @@ tab-cordion {
 		display: grid;
 	}
 
-	details,
-	details:not([to]) {
-		background: var(--tc-item-bg, Canvas);
+	details {
+		background: var(--tc-item-bg, Canvas); /* TODO! */
 		translate: 0 calc(var(--_y) * var(--tc-breakout-unit));
 		transition: translate var(--tc-item-trsdu) ease;
+		&::details-content {
+			block-size: 0;
+			content-visibility: hidden;
+			font-size: var(--tc-panel-fs);
+			overflow: hidden;
+			padding-block: 0;
+			/* padding-inline: var(--tc-panel-pi); */
+			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
+			transition-behavior: allow-discrete;
+		}
 
 		&[open]::details-content {
 			block-size: auto;
 			content-visibility: visible;
+			/* padding-block: var(--tc-panel-pb); */
 		}
 	}
 
-	summary {
+		summary {
 		color: var(--tabs-group-c, inherit);
 		cursor: pointer;
 		display: flex;

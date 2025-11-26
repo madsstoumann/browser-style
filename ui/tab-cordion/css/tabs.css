@@ -34,11 +34,14 @@ tab-cordion {
 					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 					transition: inset-inline-start var(--tc-item-trsdu) ease, inline-size var(--tc-item-trsdu) ease;
 				}
+				&::before {
+					content: "";
+					grid-column: 1 / -1;
+					grid-row: 1;
+				}
 			}
 
-			details,
-			details:first-of-type,
-			details:last-of-type {
+			details {
 				border: 0;
 				border-block-start: 0;
 				border-radius: 0;
@@ -63,16 +66,7 @@ tab-cordion {
 				pointer-events: auto;
 			}
 
-			details[open] summary + * {
-				padding-block: var(--tc-tabs-panel-pb);
-				padding-inline: var(--tc-tabs-panel-pi);
-			}
-
-			summary,
-			details:first-of-type summary,
-			details:last-of-type summary,
-			details[open] + details summary,
-			details:has(+ details[open]) summary {
+			summary {
 				--tc-item-p: var(--tc-item-p-tabs);
 				align-items: center;
 				border-radius: 0;
@@ -85,6 +79,8 @@ tab-cordion {
 				z-index: 1;
 
 				& + * {
+					padding-block: var(--tc-tabs-panel-pb);
+					padding-inline: var(--tc-tabs-panel-pi);
 					pointer-events: auto;
 					position: relative;
 					z-index: 1;
@@ -95,9 +91,6 @@ tab-cordion {
 			&[to~="tab-bg"] {
 				cq-box::before {
 					background: var(--tc-tabs-bg);
-					content: "";
-					grid-column: 1 / -1;
-					grid-row: 1;
 				}
 				details {
 					background: unset;
@@ -112,6 +105,29 @@ tab-cordion {
 				}
 				details:last-of-type summary {
 					justify-self: start;
+				}
+				&[to~="ind-line"] {
+					summary {
+						justify-self: center;
+						padding-inline: 0;
+					}
+				}
+			}
+
+			/* --- `tab line` --- */
+			&[to~="tab-line"] {
+				cq-box::before {
+					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-tabs-line-bdc);
+				}
+				&:not([to~="tab-bg"]) details {
+					background: unset;
+				}
+			}
+
+			/* --- `tab no-icons` --- */
+			&[to~="tab-no-icons"] {
+				summary ui-icon {
+					display: none;
 				}
 			}
 
@@ -142,13 +158,6 @@ tab-cordion {
 				}
 			}
 
-			/* --- `tab no-icons` --- */
-			&[to~="tab-no-icons"] {
-				summary ui-icon {
-					display: none;
-				}
-			}
-
 			/* --- `indicator accent` --- */
 			&[to~="ind-accent"] {
 				details[open] summary {
@@ -171,10 +180,6 @@ tab-cordion {
 					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-accent);
 					border-radius: 0;
 				}
-				summary {
-					justify-self: center;
-					padding-inline: 0;
-				}
 			}
 
 			/* --- `indicator rounded` --- */
@@ -192,7 +197,7 @@ tab-cordion {
 			}
 
 			/* --- `panel background` --- */
-			&[to~="panel-bg"] {
+			&[to~="pnl-bg"] {
 				summary + * {
 					background: var(--tc-tabs-panel-bg);
 				}
@@ -211,11 +216,7 @@ tab-cordion {
 					border: var(--tc-item-bdw) solid var(--tc-item-bdc);
 				}
 				details {
-					padding-inline-start: var(--tc-tabs-panel-pi);
-
-					&::details-content {
-						padding-inline: 0 var(--tc-tabs-panel-pi);
-					}
+					/* padding-inline-start: var(--tc-tabs-panel-pi); */
 				}
 
 				&[to~="tab-rounded"] {

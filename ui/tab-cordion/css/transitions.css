@@ -29,43 +29,6 @@ tab-cordion {
 		}
 	}
 
-	/* --- Accordion content transitions --- */
-	&:not([to]) details::details-content {
-		block-size: 0;
-		content-visibility: hidden;
-		font-size: var(--tc-panel-fs);
-		overflow: hidden;
-		padding-block: 0;
-		padding-inline: var(--tc-panel-pi);
-		transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
-		transition-behavior: allow-discrete;
-	}
-
-	&:not([to]) details[open]::details-content {
-		block-size: auto;
-		content-visibility: visible;
-		padding-block: var(--tc-panel-pb);
-	}
-
-	@container (width <=700px) {
-		details::details-content {
-			block-size: 0;
-			content-visibility: hidden;
-			font-size: var(--tc-panel-fs);
-			overflow: hidden;
-			padding-block: 0;
-			padding-inline: var(--tc-panel-pi);
-			transition: block-size var(--tc-item-trsdu), content-visibility var(--tc-item-trsdu), padding-block var(--tc-item-trsdu);
-			transition-behavior: allow-discrete;
-		}
-
-		details[open]::details-content {
-			block-size: auto;
-			content-visibility: visible;
-			padding-block: var(--tc-panel-pb);
-		}
-	}
-
 	/* --- Tabs hover --- */
 	@container (width >=700px) {
 		@media (hover: hover) {
@@ -99,4 +62,7 @@ tab-cordion {
 			}
 		}
 	}
+
+	/* --- Tabs panel slide transition --- */
+
 }

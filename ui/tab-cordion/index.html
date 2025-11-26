@@ -134,11 +134,15 @@
 			(innerUl) => GUI.addColor('Background Color', '#FFFFFF', '--tc-item-bg-active', { 'data-action': 'color' }, innerUl),
 			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
 		], ul),
+
+		(ul) => GUI.addCheckbox('Border', 'cnt-border', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Line', 'tab-line', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Compact', 'tab-compact', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('No Icons', 'tab-no-icons', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		
 			(innerUl) => GUI.addCheckbox('Rounded', 'tab-rounded', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
 		(ul) => GUI.addCheckbox('Panel BG', 'pnl-bg', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Pnl Slide', 'pnl-slide', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Shadow', 'pnl-elevated', '', { 'data-action': 'to' }, ul)
 	]);
 
