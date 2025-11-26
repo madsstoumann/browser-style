@@ -1,0 +1,20 @@
+/*
+ ****************************************
+ * FIXES FOR DETAILS CONTENT GRID ISSUES
+ ****************************************
+ *
+ * Workarounds for Safari/WebKit limitations.
+ */
+
+@supports (background: -webkit-named-image(i)) {
+	tab-cordion {
+		details[open]::details-content {
+			display: contents;
+		}
+		details > summary + * {
+			grid-column: 1 / -1;
+			grid-row: 2;
+			pointer-events: auto;
+		}
+	}
+}

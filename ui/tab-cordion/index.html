@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="./index.css">
+	<link rel="stylesheet" href="./_index.css">
 	<title>Tab Cordion</title>
 	<style>
 		body {
@@ -19,9 +19,9 @@
 		.content {
 			color: light-dark(#6b6b6b, #a0a0a0);
 			line-height: 1.6;
-			[from~="rounded"][from~="separate"] & {
+			/* [from~="rounded"][from~="separate"] & { */
 				/* padding: 1.5ch 3ch; */
-			}
+			/* } */
 		}
 	 </style>
 </head>
@@ -113,36 +113,40 @@
 		(ul) => GUI.addCheckbox('Separate', 'itm-separate', '', { 'data-action': 'from' }, ul)
 	]);
 
-	// Add Accordion Hover (from-hover) controls
+	// Add Accordion Hover controls
 	GUI.addGroup('Accordion Hover', [
-		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'from-hover' }, ul),
-		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'from-hover', checked: 'checked' }, ul)
+		(ul) => GUI.addCheckbox('Accent', 'hvr-accent', '', { 'data-action': 'from' }, ul),
+		(ul) => GUI.addCheckbox('Background', 'hvr-bg', '', { 'data-action': 'from', checked: 'checked' }, ul)
 	]);
 
 	// Add Tabs (to) controls
 	GUI.addGroup('Tabs', [
 		(ul) => GUI.addGroup('Background', [
-			(innerUl) => GUI.addCheckbox('Enable', 'background', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Enable', 'tab-bg', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
 			(innerUl) => GUI.addColor('Color', '#EAEAEA', '--tc-tabs-bg', { 'data-action': 'color' }, innerUl)
 		], ul),
 		
-		(ul) => GUI.addGroup('Highlight', [
-			(innerUl) => GUI.addCheckbox('Enable', 'highlight', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
-			(innerUl) => GUI.addColor('Background', '#FFFFFF', '--tc-item-bg-active', { 'data-action': 'color' }, innerUl),
+		(ul) => GUI.addGroup('Indicator', [
+			(innerUl) => GUI.addCheckbox('Background', 'ind-bg', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Accent', 'ind-accent', '', { 'data-action': 'to' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Rounded', 'ind-rounded', '', { 'data-action': 'to' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Line', 'ind-line', '', { 'data-action': 'to' }, innerUl),
+			(innerUl) => GUI.addColor('Background Color', '#FFFFFF', '--tc-item-bg-active', { 'data-action': 'color' }, innerUl),
 			(innerUl) => GUI.addColor('Border Color', '#CCCCCC', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl)
 		], ul),
-		(ul) => GUI.addCheckbox('Compact', 'compact', '', { 'data-action': 'to' }, ul),
-		(ul) => GUI.addCheckbox('No Icons', 'noicons', '', { 'data-action': 'to', checked: 'checked' }, ul),
-		(ul) => GUI.addCheckbox('Rounded', 'rounded', '', { 'data-action': 'to', checked: 'checked' }, ul),
-		(ul) => GUI.addCheckbox('Panel BG', 'panel-bg', '', { 'data-action': 'to' }, ul),
-		(ul) => GUI.addCheckbox('Shadow', 'shadow', '', { 'data-action': 'to' }, ul),
-		(ul) => GUI.addCheckbox('Line', 'line', '', { 'data-action': 'to' }, ul)
+		(ul) => GUI.addCheckbox('Compact', 'tab-compact', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('No Icons', 'tab-no-icons', '', { 'data-action': 'to', checked: 'checked' }, ul),
+		
+			(innerUl) => GUI.addCheckbox('Rounded', 'tab-rounded', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
+		(ul) => GUI.addCheckbox('Panel BG', 'pnl-bg', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Shadow', 'pnl-elevated', '', { 'data-action': 'to' }, ul)
 	]);
 
-	// Add Tabs Hover (to-hover) controls
+	// Add Tabs Hover controls
 	GUI.addGroup('Tabs Hover', [
-		(ul) => GUI.addCheckbox('Accent', 'accent', '', { 'data-action': 'to-hover' }, ul),
-		(ul) => GUI.addCheckbox('Background', 'bg', '', { 'data-action': 'to-hover', checked: 'checked' }, ul)
+		(ul) => GUI.addCheckbox('Accent', 'hvr-accent', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Background', 'hvr-bg', '', { 'data-action': 'to', checked: 'checked' }, ul),
+		(ul) => GUI.addCheckbox('Line', 'hvr-line', '', { 'data-action': 'to' }, ul)
 	]);
 
 	// Handle input changes
@@ -155,7 +159,7 @@
 			return;
 		}
 
-		if (action === 'from' || action === 'to' || action === 'from-hover' || action === 'to-hover') {
+		if (action === 'from' || action === 'to') {
 			updateAttribute(action);
 		}
 	});
@@ -164,8 +168,6 @@
 	const initializeDefaults = () => {
 		updateAttribute('from');
 		updateAttribute('to');
-		updateAttribute('from-hover');
-		updateAttribute('to-hover');
 	};
 
 	initializeDefaults();

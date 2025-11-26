@@ -91,8 +91,8 @@ tab-cordion {
 				}
 			}
 
-			/* --- `background` --- */
-			&[to~="background"] {
+			/* --- `tab background` --- */
+			&[to~="tab-bg"] {
 				cq-box::before {
 					background: var(--tc-tabs-bg);
 					content: "";
@@ -104,8 +104,8 @@ tab-cordion {
 				}
 			}
 
-			/* --- `compact` --- */
-			&[to~="compact"] {
+			/* --- `tab compact` --- */
+			&[to~="tab-compact"] {
 				cq-box {
 					column-gap: var(--tc-tabs-compact-cg, 2ch);
 					grid-template-columns: repeat(calc(var(--tab-cordion-tabs, 6) - 1), min-content) auto;
@@ -115,19 +115,61 @@ tab-cordion {
 				}
 			}
 
-			/* --- `highlight` --- */
-			&[to~="highlight"] {
+			/* --- `tab rounded` --- */
+			&[to~="tab-rounded"] {
+				cq-box::before {
+					border-radius: var(--tc-tabs-bdrs);
+				}
+
+				/* When tab-rounded exists but ind-rounded doesn't, round first/last items */
+				&:not([to~="ind-rounded"]) {
+					details:first-of-type summary {
+						border-start-start-radius: var(--tc-tabs-bdrs);
+						border-end-start-radius: var(--tc-tabs-bdrs);
+					}
+					details:last-of-type summary {
+						border-start-end-radius: var(--tc-tabs-bdrs);
+						border-end-end-radius: var(--tc-tabs-bdrs);
+					}
+					cq-box:has(details:first-of-type[open])::after {
+						border-start-start-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+						border-end-start-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+					}
+					cq-box:has(details:last-of-type[open])::after {
+						border-start-end-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+						border-end-end-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+					}
+				}
+			}
+
+			/* --- `tab no-icons` --- */
+			&[to~="tab-no-icons"] {
+				summary ui-icon {
+					display: none;
+				}
+			}
+
+			/* --- `indicator accent` --- */
+			&[to~="ind-accent"] {
+				details[open] summary {
+					color: var(--tc-accent);
+				}
+			}
+
+			/* --- `indicator background` --- */
+			&[to~="ind-bg"] {
 				cq-box::after {
 					background: var(--tc-item-bg-active);
 					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
 				}
 			}
 
-			/* --- `line` --- */
-			&[to~="line"] {
+			/* --- `indicator line` --- */
+			&[to~="ind-line"] {
 				cq-box::after {
 					--tc-tabs-bdw: 0px;
 					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-accent);
+					border-radius: 0;
 				}
 				summary {
 					justify-self: center;
@@ -135,28 +177,8 @@ tab-cordion {
 				}
 			}
 
-			/* --- `noicons` --- */
-			&[to~="noicons"] {
-				summary ui-icon {
-					display: none;
-				}
-			}
-
-			/* --- `panel-bg` --- */
-			&[to~="panel-bg"] {
-				summary + * {
-					background: var(--tc-tabs-panel-bg);
-				}
-			}
-
-			/* --- `rounded` --- */
-			&[to~="rounded"] {
-				cq-box::before {
-					border-radius: var(--tc-tabs-bdrs);
-				}
-				cq-box::after {
-					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
-				}
+			/* --- `indicator rounded` --- */
+			&[to~="ind-rounded"] {
 				summary,
 				details:first-of-type summary,
 				details:last-of-type summary,
@@ -164,17 +186,27 @@ tab-cordion {
 				details:has(+ details[open]) summary {
 					border-radius: var(--tc-tabs-bdrs);
 				}
+				cq-box::after {
+					border-radius: calc(var(--tc-tabs-bdrs) - var(--tc-tabs-bdw));
+				}
 			}
 
-			/* --- `shadow` --- */
-			&[to~="shadow"] {
+			/* --- `panel background` --- */
+			&[to~="panel-bg"] {
+				summary + * {
+					background: var(--tc-tabs-panel-bg);
+				}
+			}
+
+			/* --- `panel elevated` --- */
+			&[to~="pnl-elevated"] {
 				summary + * {
 					box-shadow: var(--tc-tabs-panel-bxsh);
 				}
 			}
 
-			/* --- `contain` --- */
-			&[to~="contain"] {
+			/* --- `container border` --- */
+			&[to~="cnt-border"] {
 				cq-box {
 					border: var(--tc-item-bdw) solid var(--tc-item-bdc);
 				}
@@ -186,19 +218,19 @@ tab-cordion {
 					}
 				}
 
-				&[to~="rounded"] {
+				&[to~="tab-rounded"] {
 					cq-box {
 						border-radius: var(--tc-tabs-container-bdrs);
 					}
-					&[to~="background"] cq-box::before {
+					&[to~="tab-bg"] cq-box::before {
 						border-start-start-radius: var(--tc-tabs-container-bdrs);
 						border-start-end-radius: var(--tc-tabs-container-bdrs);
 						border-end-start-radius: 0;
 						border-end-end-radius: 0;
 					}
-					&[to~="line"] cq-box::after {
-						border-radius: 0;
-					}
+				}
+				&[to~="ind-rounded"][to~="ind-line"] cq-box::after {
+					border-radius: 0;
 				}
 			}
 

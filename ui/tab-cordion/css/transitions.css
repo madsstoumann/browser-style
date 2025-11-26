@@ -6,24 +6,24 @@
 
 tab-cordion {
 
-	/* --- Accordion hover (from-hover) --- */
+	/* --- Accordion hover --- */
 	@media (hover: hover) {
-		&:not([to])[from-hover~="bg"] details:hover:not([open]) {
+		&:not([to])[from~="hvr-bg"] details:hover:not([open]) {
 			background: var(--tc-from-hover-bg);
 		}
 
-		&:not([to])[from-hover~="accent"] details:hover:not([open]) {
+		&:not([to])[from~="hvr-accent"] details:hover:not([open]) {
 			color: var(--tc-from-hover-accent);
 		}
 	}
 
 	@container (width <=700px) {
 		@media (hover: hover) {
-			&[from-hover~="bg"] details:hover:not([open]) {
+			&[from~="hvr-bg"] details:hover:not([open]) {
 				background: var(--tc-from-hover-bg);
 			}
 
-			&[from-hover~="accent"] details:hover:not([open]) {
+			&[from~="hvr-accent"] details:hover:not([open]) {
 				color: var(--tc-from-hover-accent);
 			}
 		}
@@ -42,6 +42,8 @@ tab-cordion {
 	}
 
 	&:not([to]) details[open]::details-content {
+		block-size: auto;
+		content-visibility: visible;
 		padding-block: var(--tc-panel-pb);
 	}
 
@@ -58,27 +60,29 @@ tab-cordion {
 		}
 
 		details[open]::details-content {
+			block-size: auto;
+			content-visibility: visible;
 			padding-block: var(--tc-panel-pb);
 		}
 	}
 
-	/* --- Tabs hover (to-hover) --- */
+	/* --- Tabs hover --- */
 	@container (width >=700px) {
 		@media (hover: hover) {
 			&[to] details:hover {
 				background: #0000;
 			}
 
-			&[to-hover~="bg"] details:not([open]) summary:hover {
+			&[to~="hvr-bg"] details:not([open]) summary:hover {
 				background: var(--tc-to-hover-bg);
 			}
 
-			&[to-hover~="accent"] summary:hover {
+			&[to~="hvr-accent"] summary:hover {
 				color: var(--tc-to-hover-accent);
 				cursor: pointer;
 			}
 
-			&[to-hover~="line"] {
+			&[to~="hvr-line"] {
 				details:not([open]) summary::after {
 					border-block-end: var(--tc-tabs-line-bdw) solid var(--tc-to-hover-line);
 					content: "";
