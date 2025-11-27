@@ -1,6 +1,6 @@
 {
   "name": "@browser.style/circular-range",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Circular Range component for browser.style",
   "type": "module",
   "module": "index.js",

@@ -149,6 +149,7 @@ class CircularRange extends HTMLElement {
 				box-shadow: var(--circular-range-thumb-bxsh);
 				content: '';
 				display: block;
+				scale: var(--circular-range-thumb-scale, 1);
 				transition: all 0.2s ease-in-out;
 				width: 100%;
 			}
