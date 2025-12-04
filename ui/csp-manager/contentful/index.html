@@ -14,59 +14,63 @@
     import 'https://browser.style/ui/csp-manager/src/index.js';
 
     // Initialize Contentful App SDK
-    window.contentfulExtension.init(async (api) => {
-      const app = document.getElementById('app');
+    if (window.contentfulExtension) {
+      window.contentfulExtension.init(async (api) => {
+        const app = document.getElementById('app');
 
-      // Create the CSP Manager component
-      const cspManager = document.createElement('csp-manager');
-      cspManager.setAttribute('evaluate', '');
+        // Create the CSP Manager component
+        const cspManager = document.createElement('csp-manager');
+        cspManager.setAttribute('evaluate', '');
 
-      // Wait for component to be ready
-      if (cspManager.ready) {
-        await cspManager.ready;
-      }
-
-      // Load initial value from Contentful
-      const currentValue = api.field.getValue();
-      if (currentValue && typeof currentValue === 'object') {
-        cspManager.policy = currentValue;
-      }
-
-      // Listen for changes from the component
-      cspManager.addEventListener('csp-change', (event) => {
-        const { policy, evaluations } = event.detail;
-
-        // Save to Contentful
-        api.field.setValue(policy);
-
-        // Validation: block publishing if high-severity issues exist
-        if (evaluations) {
-          const highSeverityIssues = Object.entries(evaluations)
-            .filter(([_, evaluation]) => evaluation.severity === 'high');
-
-          if (highSeverityIssues.length > 0) {
-            const totalFindings = highSeverityIssues.reduce(
-              (sum, [_, evaluation]) => sum + evaluation.findings.length, 0
-            );
-            api.field.setInvalid(`${totalFindings} high-severity security issue(s) detected`);
-          } else {
-            api.field.removeInvalid();
-          }
+        // Wait for component to be ready
+        if (cspManager.ready) {
+          await cspManager.ready;
         }
+
+        // Load initial value from Contentful
+        const currentValue = api.field.getValue();
+        if (currentValue && typeof currentValue === 'object') {
+          cspManager.policy = currentValue;
+        }
+
+        // Listen for changes from the component
+        cspManager.addEventListener('csp-change', (event) => {
+          const { policy, evaluations } = event.detail;
+
+          // Save to Contentful
+          api.field.setValue(policy);
+
+          // Validation: block publishing if high-severity issues exist
+          if (evaluations) {
+            const highSeverityIssues = Object.entries(evaluations)
+              .filter(([_, evaluation]) => evaluation.severity === 'high');
+
+            if (highSeverityIssues.length > 0) {
+              const totalFindings = highSeverityIssues.reduce(
+                (sum, [_, evaluation]) => sum + evaluation.findings.length, 0
+              );
+              api.field.setInvalid(`${totalFindings} high-severity security issue(s) detected`);
+            } else {
+              api.field.removeInvalid();
+            }
+          }
+        });
+
+        // Add component to page
+        app.appendChild(cspManager);
+
+        // Auto-resize iframe to fit content
+        api.window.startAutoResizer();
+      }).catch((error) => {
+        console.error('Contentful SDK error:', error);
       });
-
-      // Add component to page
-      app.appendChild(cspManager);
-
-      // Auto-resize iframe to fit content
-      api.window.startAutoResizer();
-    }).catch(() => {
-      // If SDK init fails (not in Contentful), show component in standalone mode
+    } else {
+      // If SDK not available (not in Contentful), show component in standalone mode
       const app = document.getElementById('app');
       const cspManager = document.createElement('csp-manager');
       cspManager.setAttribute('evaluate', '');
       app.appendChild(cspManager);
-    });
+    }
   </script>
 </body>
 </html>
