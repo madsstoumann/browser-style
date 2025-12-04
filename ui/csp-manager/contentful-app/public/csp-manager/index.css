@@ -1,0 +1,194 @@
+:host {
+	--csp-manager-accent: hsl(211, 100%, 95%);
+	--csp-manager-accent-dark: hsl(211, 50%, 50%);
+	--csp-manager-buttonface: #efefef;
+	--csp-manager-bdrs: .5rem;
+	--csp-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	--csp-manager-ff-system: system-ui, sans-serif;
+	--csp-manager-gap: 1rem;
+	--csp-manager-focus-c: hsl(211, 5%, 60%);
+	--csp-manager-tab-width: 2;
+
+	/* Evaluation colors */
+	--csp-eval-high: hsl(0, 80%, 50%);
+	--csp-eval-high-bg: hsl(0, 80%, 95%);
+	--csp-eval-medium: hsl(35, 90%, 50%);
+	--csp-eval-medium-bg: hsl(35, 90%, 95%);
+	--csp-eval-secure: hsl(120, 50%, 45%);
+	--csp-eval-secure-bg: hsl(120, 50%, 95%);
+
+	display: grid;
+	font-size: var(--csp-manager-font-size, 16px);
+	row-gap: var(--csp-manager-gap);
+}
+
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	white-space: nowrap;
+}
+
+button {
+	background: var(--csp-manager-buttonface);
+	border: 0;
+	cursor: pointer;
+}
+
+button, input {
+	border-radius: var(--csp-manager-bdrs);
+	font-family: var(--csp-manager-ff-system);
+	font-size: inherit;
+	&:focus-visible { box-shadow: inset 0 0 0 2px var(--csp-manager-focus-c); outline: 0; }
+}
+
+details {
+	border: 1px solid var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	padding: var(--csp-manager-gap);
+	user-select: none;
+
+	&:has([data-remove]) summary::after { content: ' *'; color: var(--csp-manager-accent-dark); }
+	&:not(:has(:checked)) { display: none; }
+	&:has(:focus-visible) { outline: 2px solid var(--csp-manager-focus-c); outline-offset: 3px; }
+}
+
+div {
+	display: grid;
+	margin-block-start: var(--csp-manager-gap);
+	row-gap: var(--csp-manager-gap);
+}
+
+fieldset {
+	all: unset;
+	display: flex;
+	gap: var(--csp-manager-gap);
+	button { padding: 0 2ch; }
+}
+
+input {
+	border: 1px solid var(--csp-manager-buttonface);
+	flex: 1;
+	padding: 1ch 2ch;
+}
+
+label:has(input[data-directive]) {
+	background: var(--csp-manager-remove-bg, hsl(0, 85%, 40%));
+	border-radius: 10ch;
+	color: var(--csp-manager-remove-c, hsl(0, 85%, 950%));
+	font-size: small;
+	justify-self: start;
+	padding: .75ch 2.5ch;
+	&:focus-within { box-shadow: inset 0 0 0 2px var(--csp-manager-remove-bg, hsl(0, 85%, 30%)); outline: 0; }
+}
+
+li {
+	background: var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	display: grid;
+	font-family: var(--csp-manager-ff-mono);
+	font-size: small;
+	gap: 1ch;
+	grid-auto-flow: column;
+	padding: .75ch 1.5ch;
+	place-content: center;
+	&:has(button) { background: var(--csp-manager-accent); }
+	button { all: unset; display: inline-block; padding: 0 0.5ch; cursor: pointer; }
+}
+
+pre {
+	all: unset;
+	background: var(--csp-manager-buttonface);
+	border-radius: var(--csp-manager-bdrs);
+	font-size: small;
+	overflow-x: auto;
+	padding: 2ch;
+	tab-size: var(--csp-manager-tab-width);
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+summary {
+	font-family: var(--csp-manager-ff-mono);
+	outline: 0;
+}
+
+::details-content {
+	height: 0;
+	overflow: clip;
+	transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
+}
+[open]::details-content {
+	height: auto;
+}
+
+ul {
+	all: unset;
+	display: flex;
+	gap: calc(var(--csp-manager-gap) / 2);
+	list-style: none;
+}
+
+/* Evaluation styles */
+details[data-severity="high"] {
+	border-color: var(--csp-eval-high);
+}
+
+details[data-severity="medium"] {
+	border-color: var(--csp-eval-medium);
+}
+
+details[data-severity="secure"] {
+	border-color: var(--csp-eval-secure);
+}
+
+.eval-findings {
+	display: grid;
+	gap: calc(var(--csp-manager-gap) / 2);
+	margin-block: var(--csp-manager-gap);
+}
+
+.eval-finding {
+	border-inline-start: 3px solid;
+	display: block;
+	padding: 1ch 2ch;
+	font-size: small;
+	border-radius: calc(var(--csp-manager-bdrs) / 2);
+	margin: unset;
+}
+
+.eval-finding[data-severity="high"] {
+	background: var(--csp-eval-high-bg);
+	border-color: var(--csp-eval-high);
+	color: var(--csp-eval-high);
+}
+
+.eval-finding[data-severity="medium"] {
+	background: var(--csp-eval-medium-bg);
+	border-color: var(--csp-eval-medium);
+	color: var(--csp-eval-medium);
+}
+
+.eval-finding[data-severity="secure"] {
+	background: var(--csp-eval-secure-bg);
+	border-color: var(--csp-eval-secure);
+	color: var(--csp-eval-secure);
+}
+
+.eval-finding strong {
+	display: block;
+	margin-block-end: 0.5ch;
+	color: inherit;
+}
+
+.eval-finding em {
+	display: block;
+	font-style: normal;
+	color: color-mix(in srgb, currentColor 70%, black);
+	margin-block-start: 0.5ch;
+}

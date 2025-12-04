@@ -1,0 +1,127 @@
+{
+	"base-uri": {
+		"defaults": ["'self'"],
+		"type": "source-list",
+		"enabled": true
+	},
+	"child-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"connect-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"default-src": {
+		"defaults": ["'self'"],
+		"type": "source-list",
+		"enabled": true
+	},
+	"fenced-frame-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"font-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"form-action": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"frame-ancestors": {
+		"defaults": ["'none'"],
+		"type": "source-list",
+		"enabled": true
+	},
+	"frame-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"img-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"manifest-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"media-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"object-src": {
+		"defaults": ["'none'"],
+		"type": "source-list",
+		"enabled": true
+	},
+	"report-to": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"require-sri-for": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": ["script", "style"]
+	},
+	"require-trusted-types-for": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": ["'script'"]
+	},
+	"sandbox": {
+		"defaults": [],
+		"type": "token-list",
+		"tokens": [
+			"allow-downloads",
+			"allow-forms",
+			"allow-modals",
+			"allow-orientation-lock",
+			"allow-pointer-lock",
+			"allow-popups",
+			"allow-popups-to-escape-sandbox",
+			"allow-presentation",
+			"allow-same-origin",
+			"allow-scripts",
+			"allow-top-navigation",
+			"allow-top-navigation-by-user-activation",
+			"allow-top-navigation-to-custom-protocols"
+		]
+	},
+	"script-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"script-src-elem": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"script-src-attr": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"style-src": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"style-src-elem": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"style-src-attr": {
+		"defaults": [],
+		"type": "source-list"
+	},
+	"trusted-types": {
+		"defaults": ["'none'"],
+		"type": "source-list"
+	},
+	"upgrade-insecure-requests": {
+		"defaults": [],
+		"type": "boolean"
+	},
+	"worker-src": {
+		"defaults": [],
+		"type": "source-list"
+	}
+}

@@ -17,3 +17,5 @@ _v2/
 *.ntvs*
 *.njsproj
 *.sln
+# CMS Configuration Files
+.cmsconfig
