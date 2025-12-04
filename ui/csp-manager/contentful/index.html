@@ -29,9 +29,18 @@
           cspManager.setAttribute('evaluate', '');
           console.log('CSP Manager component created:', cspManager);
 
-          // Wait for component to be ready
+          // Wait for component to be ready (with timeout)
           if (cspManager.ready) {
-            await cspManager.ready;
+            console.log('Waiting for component to be ready...');
+            try {
+              await Promise.race([
+                cspManager.ready,
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Component ready timeout')), 5000))
+              ]);
+              console.log('Component is ready');
+            } catch (error) {
+              console.warn('Component ready timeout, continuing anyway:', error);
+            }
           }
 
           // Load initial value from Contentful
