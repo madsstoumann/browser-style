@@ -16,11 +16,13 @@
     // Initialize Contentful App SDK
     if (window.contentfulExtension) {
       window.contentfulExtension.init(async (api) => {
+        console.log('Contentful SDK initialized');
         const app = document.getElementById('app');
 
         // Create the CSP Manager component
         const cspManager = document.createElement('csp-manager');
         cspManager.setAttribute('evaluate', '');
+        console.log('CSP Manager component created:', cspManager);
 
         // Wait for component to be ready
         if (cspManager.ready) {
@@ -58,9 +60,11 @@
 
         // Add component to page
         app.appendChild(cspManager);
+        console.log('Component appended to DOM');
 
         // Auto-resize iframe to fit content
         api.window.startAutoResizer();
+        console.log('Auto-resizer started');
       }).catch((error) => {
         console.error('Contentful SDK error:', error);
       });
