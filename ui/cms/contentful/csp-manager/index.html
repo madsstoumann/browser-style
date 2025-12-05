@@ -33,24 +33,31 @@
           app.appendChild(cspManager);
           console.log('Component appended to DOM');
 
-          // Wait for component to be ready (with timeout)
-          if (cspManager.ready) {
-            console.log('Waiting for component to be ready...');
-            try {
-              await Promise.race([
-                cspManager.ready,
-                new Promise((_, reject) => setTimeout(() => reject(new Error('Component ready timeout')), 5000))
-              ]);
-              console.log('Component is ready');
-            } catch (error) {
-              console.warn('Component ready timeout, continuing anyway:', error);
-            }
+          // Wait for component to be ready (with longer timeout)
+          console.log('Waiting for component to be ready...');
+          let componentReady = false;
+          try {
+            await Promise.race([
+              cspManager.ready.then(() => { componentReady = true; }),
+              new Promise((_, reject) => setTimeout(() => reject(new Error('Component ready timeout')), 10000))
+            ]);
+            console.log('Component is ready');
+          } catch (error) {
+            console.warn('Component ready timeout - will try without initial policy:', error);
           }
 
-          // Load initial value from Contentful AFTER component is ready
-          const currentValue = api.field.getValue();
-          if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
-            cspManager.policy = currentValue;
+          // Only set initial policy if component successfully initialized
+          if (componentReady) {
+            const currentValue = api.field.getValue();
+            console.log('Current value from Contentful:', currentValue);
+            if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
+              try {
+                console.log('Setting policy to:', currentValue);
+                cspManager.policy = currentValue;
+              } catch (err) {
+                console.error('Failed to set initial policy:', err);
+              }
+            }
           }
 
           // Listen for changes from the component
