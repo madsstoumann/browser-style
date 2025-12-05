@@ -29,6 +29,10 @@
           cspManager.setAttribute('evaluate', '');
           console.log('CSP Manager component created:', cspManager);
 
+          // Add component to page FIRST (so it can initialize)
+          app.appendChild(cspManager);
+          console.log('Component appended to DOM');
+
           // Wait for component to be ready (with timeout)
           if (cspManager.ready) {
             console.log('Waiting for component to be ready...');
@@ -43,10 +47,11 @@
             }
           }
 
-          // Load initial value from Contentful
-          // Always set policy: use saved value or start with blank slate
+          // Load initial value from Contentful AFTER component is ready
           const currentValue = api.field.getValue();
-          cspManager.policy = (currentValue && typeof currentValue === 'object') ? currentValue : {};
+          if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
+            cspManager.policy = currentValue;
+          }
 
           // Listen for changes from the component
           cspManager.addEventListener('csp-change', (event) => {
@@ -71,10 +76,6 @@
               }
             }
           });
-
-          // Add component to page
-          app.appendChild(cspManager);
-          console.log('Component appended to DOM');
 
           // Auto-resize iframe to fit content
           api.window.startAutoResizer();
