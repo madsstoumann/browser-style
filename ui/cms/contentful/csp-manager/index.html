@@ -44,10 +44,9 @@
           }
 
           // Load initial value from Contentful
+          // Always set policy: use saved value or start with blank slate
           const currentValue = api.field.getValue();
-          if (currentValue && typeof currentValue === 'object') {
-            cspManager.policy = currentValue;
-          }
+          cspManager.policy = (currentValue && typeof currentValue === 'object') ? currentValue : {};
 
           // Listen for changes from the component
           cspManager.addEventListener('csp-change', (event) => {
