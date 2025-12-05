@@ -24,39 +24,43 @@
           console.log('Contentful SDK initialized');
           const app = document.getElementById('app');
 
+          // Wait for the custom element to be defined
+          console.log('Waiting for csp-manager to be defined...');
+          await customElements.whenDefined('csp-manager');
+          console.log('csp-manager is defined');
+
           // Create the CSP Manager component
           const cspManager = document.createElement('csp-manager');
           cspManager.setAttribute('evaluate', '');
           console.log('CSP Manager component created:', cspManager);
 
-          // Add component to page FIRST (so it can initialize)
+          // Add component to page (triggers connectedCallback)
           app.appendChild(cspManager);
           console.log('Component appended to DOM');
 
-          // Wait for component to be ready (with longer timeout)
-          console.log('Waiting for component to be ready...');
-          let componentReady = false;
-          try {
-            await Promise.race([
-              cspManager.ready.then(() => { componentReady = true; }),
-              new Promise((_, reject) => setTimeout(() => reject(new Error('Component ready timeout')), 10000))
-            ]);
-            console.log('Component is ready');
-          } catch (error) {
-            console.warn('Component ready timeout - will try without initial policy:', error);
+          // Wait for the component's internal ready promise
+          if (cspManager.ready) {
+            console.log('Waiting for component ready promise...');
+            try {
+              await Promise.race([
+                cspManager.ready,
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Component ready timeout')), 10000))
+              ]);
+              console.log('Component is ready');
+            } catch (error) {
+              console.warn('Component ready timeout:', error);
+            }
           }
 
-          // Only set initial policy if component successfully initialized
-          if (componentReady) {
-            const currentValue = api.field.getValue();
-            console.log('Current value from Contentful:', currentValue);
-            if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
-              try {
-                console.log('Setting policy to:', currentValue);
-                cspManager.policy = currentValue;
-              } catch (err) {
-                console.error('Failed to set initial policy:', err);
-              }
+          // Load initial value from Contentful
+          const currentValue = api.field.getValue();
+          console.log('Current value from Contentful:', currentValue);
+          if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
+            try {
+              console.log('Setting policy to:', currentValue);
+              cspManager.policy = currentValue;
+            } catch (err) {
+              console.error('Failed to set initial policy:', err);
             }
           }
 
