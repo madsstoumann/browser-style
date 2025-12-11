@@ -18,20 +18,23 @@ tab-cordion {
 				grid-template-columns: repeat(var(--tab-cordion-tabs, 6), 1fr);
 				grid-template-rows: auto 1fr;
 				isolation: isolate;
+				margin-inline: auto;
+				max-width: var(--tc-tabs-mw);
 				padding: 0;
 				position: relative;
 				row-gap: 0;
 
-				&::after {
+				/* --- tab indicator --- */
+				&::after { 
+					block-size: anchor-size(--tab-active height);
 					box-sizing: border-box;
 					content: "";
 					display: block;
 					grid-row: 1;
+					inline-size: anchor-size(--tab-active width);
+					inset-block-start: 0;
+					inset-inline-start: anchor(--tab-active left);
 					position: absolute;
-					inset-block-start: var(--tc-tabs-bdw);
-					inset-inline-start: calc(anchor(--tab-active left) + var(--tc-tabs-bdw));
-					inline-size: calc(anchor-size(--tab-active width) - (2 * var(--tc-tabs-bdw)));
-					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 					transition: inset-inline-start var(--tc-item-trsdu) ease, inline-size var(--tc-item-trsdu) ease;
 				}
 				&::before {
@@ -94,6 +97,24 @@ tab-cordion {
 				}
 				details {
 					background: unset;
+				}
+			}
+
+			&[to~="tab-bleed"] {
+				cq-box {
+					--_pi: max(0px, calc((100vw - var(--tc-tabs-mw, 100vw)) / 2));
+					max-width: unset;
+					padding-inline: var(--_pi);
+					&::before {
+						margin-inline: calc(-1 * var(--_pi));
+					}
+				}
+				details[open]::details-content {
+					overflow: visible;
+				}
+				summary + * {
+					margin-inline: calc(-1 * var(--_pi));
+					padding-inline: calc(var(--_pi) + var(--tc-tabs-panel-pi));
 				}
 			}
 
@@ -169,7 +190,23 @@ tab-cordion {
 			&[to~="ind-bg"] {
 				cq-box::after {
 					background: var(--tc-item-bg-active);
+				}
+			}
+
+			/* --- `indicator border` --- */
+			&[to~="ind-bd"] {
+				cq-box::after {
 					border: var(--tc-tabs-item-bdw) solid var(--tc-tabs-item-bdc);
+				}
+			}
+
+			/* --- `indicator gap` --- */
+			&[to~="ind-gap"] {
+				cq-box::after {
+					inset-block-start: var(--tc-tabs-bdw);
+					inset-inline-start: calc(anchor(--tab-active left) + var(--tc-tabs-bdw));
+					inline-size: calc(anchor-size(--tab-active width) - (2 * var(--tc-tabs-bdw)));
+					block-size: calc(anchor-size(--tab-active height) - (2 * var(--tc-tabs-bdw)));
 				}
 			}
 

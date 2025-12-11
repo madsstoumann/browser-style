@@ -10,6 +10,12 @@
 
 tab-cordion {
 
+	/* --- Panel padding for accordion mode --- */
+	summary + * {
+		padding-block: var(--tc-panel-pb);
+		padding-inline: var(--tc-panel-pi);
+	}
+
 	/* --- background (mobile/accordion) --- */
 	&:where([from~="cnt-bg"]) {
 		cq-box {

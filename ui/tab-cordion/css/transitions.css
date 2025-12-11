@@ -38,6 +38,10 @@ tab-cordion {
 
 			&[to~="hvr-bg"] details:not([open]) summary:hover {
 				background: var(--tc-to-hover-bg);
+				/* [to~="ind-gap"] & {
+					padding-block: var(--tc-tabs-bdw);
+					border-block: var(--tc-tabs-bdw) solid var(--tc-tabs-bg);
+				} */
 			}
 
 			&[to~="hvr-accent"] summary:hover {
@@ -62,7 +66,4 @@ tab-cordion {
 			}
 		}
 	}
-
-	/* --- Tabs panel slide transition --- */
-
 }

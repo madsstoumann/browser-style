@@ -12,10 +12,12 @@
 			color-scheme: light dark;
 			font-family: system-ui;
 			interpolate-size: allow-keywords;
-			margin: 1rem auto;
-			max-inline-size: 1024px;
-			padding: 0 1rem;
+			margin: 1rem;
+			@media (width >= 700px) {
+				margin: 1rem auto;
+			}
 		}
+
 		.content {
 			color: light-dark(#6b6b6b, #a0a0a0);
 			line-height: 1.6;
@@ -129,6 +131,9 @@
 		(ul) => GUI.addGroup('Indicator', [
 			(innerUl) => GUI.addCheckbox('Background', 'ind-bg', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
 			(innerUl) => GUI.addCheckbox('Accent', 'ind-accent', '', { 'data-action': 'to' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Border', 'ind-bd', '', { 'data-action': 'to' }, innerUl),
+			(innerUl) => GUI.addColor('Bd Color', '#FFFFFF', '--tc-tabs-item-bdc', { 'data-action': 'color' }, innerUl),
+			(innerUl) => GUI.addCheckbox('Gap', 'ind-gap', '', { 'data-action': 'to' }, innerUl),
 			(innerUl) => GUI.addCheckbox('Rounded', 'ind-rounded', '', { 'data-action': 'to' }, innerUl),
 			(innerUl) => GUI.addCheckbox('Line', 'ind-line', '', { 'data-action': 'to' }, innerUl),
 			(innerUl) => GUI.addColor('Background Color', '#FFFFFF', '--tc-item-bg-active', { 'data-action': 'color' }, innerUl),
@@ -136,12 +141,13 @@
 		], ul),
 
 		(ul) => GUI.addCheckbox('Border', 'cnt-border', '', { 'data-action': 'to' }, ul),
+		(ul) => GUI.addCheckbox('Bleed', 'tab-bleed', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Line', 'tab-line', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Compact', 'tab-compact', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('No Icons', 'tab-no-icons', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		
-			(innerUl) => GUI.addCheckbox('Rounded', 'tab-rounded', '', { 'data-action': 'to', checked: 'checked' }, innerUl),
-		(ul) => GUI.addCheckbox('Panel BG', 'pnl-bg', '', { 'data-action': 'to' }, ul),
+			(innerUl) => GUI.addCheckbox('Rounded', 'tab-rounded', '', { 'data-action': 'to' }, innerUl),
+		(ul) => GUI.addCheckbox('Panel BG', 'pnl-bg', '', { 'data-action': 'to', checked: 'checked' }, ul),
 		(ul) => GUI.addCheckbox('Pnl Slide', 'pnl-slide', '', { 'data-action': 'to' }, ul),
 		(ul) => GUI.addCheckbox('Shadow', 'pnl-elevated', '', { 'data-action': 'to' }, ul)
 	]);
