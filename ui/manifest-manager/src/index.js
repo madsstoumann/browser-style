@@ -1,0 +1,190 @@
+import i18n from './i18n.json' with { type: 'json' };
+
+class ManifestManager extends HTMLElement {
+	static formAssociated = true;
+	static observedAttributes = ['lang', 'value'];
+
+	constructor() {
+		super();
+		this.attachShadow({ mode: 'open' });
+		this._loadStyles();
+		this._internals = this.attachInternals();
+		
+		this.state = {
+			name: '',
+			short_name: '',
+			description: '',
+			display: 'standalone',
+			orientation: 'any',
+			theme_color: '#ffffff',
+			background_color: '#ffffff',
+			start_url: '/',
+			scope: '/',
+			icons: []
+		};
+	}
+
+	async _loadStyles() {
+		try {
+			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
+			const sheet = new CSSStyleSheet();
+			await sheet.replace(cssText);
+			this.shadowRoot.adoptedStyleSheets = [sheet];
+		} catch (error) {
+			console.error('Failed to load styles:', error);
+		}
+	}
+
+	connectedCallback() {
+		this.render();
+	}
+
+	attributeChangedCallback(name, oldValue, newValue) {
+		if (oldValue === newValue) return;
+		if (name === 'lang') this.render();
+		if (name === 'value') {
+			try {
+				const parsed = JSON.parse(newValue);
+				this.state = { ...this.state, ...parsed };
+				this.render();
+			} catch (e) {
+				// Invalid JSON, ignore or handle error
+			}
+		}
+	}
+
+	get value() {
+		return JSON.stringify(this.state, null, 2);
+	}
+
+	set value(val) {
+		this.setAttribute('value', val);
+	}
+
+	get t() {
+		const lang = this.getAttribute('lang') || 'en';
+		return i18n[lang] || i18n['en'];
+	}
+
+	updateState(key, value) {
+		this.state[key] = value;
+		this.updateOutput();
+		this.dispatchEvent(new CustomEvent('manifest-change', { 
+			detail: this.state,
+			bubbles: true,
+			composed: true 
+		}));
+		this._internals.setFormValue(this.value);
+	}
+
+	updateOutput() {
+		const code = this.shadowRoot.querySelector('code');
+		if (code) {
+			code.textContent = this.value;
+		}
+	}
+
+	render() {
+		const t = this.t;
+		const s = this.state;
+
+		this.shadowRoot.innerHTML = `
+			<!-- Identity -->
+			<details name="manifest-accordion" open>
+				<summary>${t.ui.identity}</summary>
+				<div class="content">
+					<label>
+						${t.ui.name}
+						<input type="text" value="${s.name}" data-key="name" placeholder="${t.ui.nameHint}">
+					</label>
+					<label>
+						${t.ui.shortName}
+						<input type="text" value="${s.short_name}" data-key="short_name" placeholder="${t.ui.shortNameHint}">
+					</label>
+					<label>
+						${t.ui.description}
+						<textarea data-key="description" placeholder="${t.ui.descriptionHint}">${s.description}</textarea>
+					</label>
+				</div>
+			</details>
+
+			<!-- Presentation -->
+			<details name="manifest-accordion">
+				<summary>${t.ui.presentation}</summary>
+				<div class="content">
+					<label>
+						${t.ui.display}
+						<select data-key="display">
+							${Object.entries(t.options.display).map(([k, v]) => 
+								`<option value="${k}" ${s.display === k ? 'selected' : ''}>${v}</option>`
+							).join('')}
+						</select>
+					</label>
+					<label>
+						${t.ui.orientation}
+						<select data-key="orientation">
+							${Object.entries(t.options.orientation).map(([k, v]) => 
+								`<option value="${k}" ${s.orientation === k ? 'selected' : ''}>${v}</option>`
+							).join('')}
+						</select>
+					</label>
+					<label>
+						${t.ui.themeColor}
+						<div class="color-input-wrapper">
+							<input type="color" value="${s.theme_color}" data-key="theme_color">
+							<input type="text" value="${s.theme_color}" data-key="theme_color">
+						</div>
+					</label>
+					<label>
+						${t.ui.backgroundColor}
+						<div class="color-input-wrapper">
+							<input type="color" value="${s.background_color}" data-key="background_color">
+							<input type="text" value="${s.background_color}" data-key="background_color">
+						</div>
+					</label>
+				</div>
+			</details>
+
+			<!-- Navigation -->
+			<details name="manifest-accordion">
+				<summary>${t.ui.navigation}</summary>
+				<div class="content">
+					<label>
+						${t.ui.startUrl}
+						<input type="text" value="${s.start_url}" data-key="start_url" placeholder="${t.ui.startUrlHint}">
+					</label>
+					<label>
+						${t.ui.scope}
+						<input type="text" value="${s.scope}" data-key="scope" placeholder="${t.ui.scopeHint}">
+					</label>
+				</div>
+			</details>
+
+			<!-- Output -->
+			<pre class="full-width"><code>${this.value}</code></pre>
+		`;
+
+		this.addEventListeners();
+	}
+
+	addEventListeners() {
+		this.shadowRoot.querySelectorAll('input, select, textarea').forEach(el => {
+			el.addEventListener('input', (e) => {
+				const key = e.target.dataset.key;
+				if (key) {
+					this.updateState(key, e.target.value);
+					
+					// Sync color inputs (text <-> color picker)
+					if (key === 'theme_color' || key === 'background_color') {
+						const siblings = this.shadowRoot.querySelectorAll(`[data-key="${key}"]`);
+						siblings.forEach(sib => {
+							if (sib !== e.target) sib.value = e.target.value;
+						});
+					}
+				}
+			});
+		});
+	}
+}
+
+customElements.define('manifest-manager', ManifestManager);

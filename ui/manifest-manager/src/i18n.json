@@ -1,0 +1,90 @@
+{
+	"en": {
+		"ui": {
+			"identity": "Identity",
+			"presentation": "Presentation",
+			"navigation": "Navigation",
+			"icons": "Icons",
+			"output": "manifest.json Output",
+			"add": "Add",
+			"remove": "Remove",
+			"name": "Name",
+			"nameHint": "Full name of the application",
+			"shortName": "Short Name",
+			"shortNameHint": "Name displayed on home screen",
+			"description": "Description",
+			"descriptionHint": "Description of the application",
+			"display": "Display Mode",
+			"orientation": "Orientation",
+			"themeColor": "Theme Color",
+			"backgroundColor": "Background Color",
+			"startUrl": "Start URL",
+			"startUrlHint": "URL to launch (e.g. / or /app)",
+			"scope": "Scope",
+			"scopeHint": "Navigation scope (e.g. /)",
+			"addIcon": "Add Icon",
+			"iconSrc": "Source URL",
+			"iconSizes": "Sizes (e.g. 192x192)",
+			"iconType": "Type (e.g. image/png)",
+			"noOutput": "// No manifest configuration defined"
+		},
+		"options": {
+			"display": {
+				"fullscreen": "Fullscreen",
+				"standalone": "Standalone",
+				"minimal-ui": "Minimal UI",
+				"browser": "Browser"
+			},
+			"orientation": {
+				"any": "Any",
+				"natural": "Natural",
+				"landscape": "Landscape",
+				"portrait": "Portrait"
+			}
+		}
+	},
+	"da": {
+		"ui": {
+			"identity": "Identitet",
+			"presentation": "Præsentation",
+			"navigation": "Navigation",
+			"icons": "Ikoner",
+			"output": "manifest.json Output",
+			"add": "Tilføj",
+			"remove": "Fjern",
+			"name": "Navn",
+			"nameHint": "Applikationens fulde navn",
+			"shortName": "Kort Navn",
+			"shortNameHint": "Navn vist på hjemmeskærm",
+			"description": "Beskrivelse",
+			"descriptionHint": "Beskrivelse af applikationen",
+			"display": "Visningstilstand",
+			"orientation": "Orientering",
+			"themeColor": "Temafarve",
+			"backgroundColor": "Baggrundsfarve",
+			"startUrl": "Start URL",
+			"startUrlHint": "URL ved start (f.eks. / eller /app)",
+			"scope": "Scope",
+			"scopeHint": "Navigations-scope (f.eks. /)",
+			"addIcon": "Tilføj Ikon",
+			"iconSrc": "Kilde URL",
+			"iconSizes": "Størrelser (f.eks. 192x192)",
+			"iconType": "Type (f.eks. image/png)",
+			"noOutput": "// Ingen manifest konfiguration defineret"
+		},
+		"options": {
+			"display": {
+				"fullscreen": "Fuldskærm",
+				"standalone": "Selvstændig (Standalone)",
+				"minimal-ui": "Minimal UI",
+				"browser": "Browser"
+			},
+			"orientation": {
+				"any": "Vilkårlig",
+				"natural": "Naturlig",
+				"landscape": "Liggende",
+				"portrait": "Stående"
+			}
+		}
+	}
+}
