@@ -17,6 +17,13 @@ Disallow: /
 User-agent: *
 Crawl-delay: 5
 
+# Other global settings
+Host: www.example.com
+Clean-param: ref /articles/
+Clean-param: sid /session/
+Request-rate: 1/5
+Visit-time: 0600-0845
+
 # Sitemaps
 Sitemap: https://example.com/sitemap.xml
 Sitemap: https://example.com/sitemap-products.xml

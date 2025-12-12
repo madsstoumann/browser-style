@@ -1,8 +1,18 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
+const RE_USER_AGENT = /^User-agent:\s*(.+)$/i;
+const RE_SITEMAP = /^Sitemap:\s*(.+)$/i;
+const RE_CRAWL_DELAY = /^Crawl-delay:\s*(\d+)$/i;
+const RE_HOST = /^Host:\s*(.+)$/i;
+const RE_CLEAN_PARAM = /^Clean-param:\s*(.+)$/i;
+const RE_REQUEST_RATE = /^Request-rate:\s*(.+)$/i;
+const RE_VISIT_TIME = /^Visit-time:\s*(.+)$/i;
+const RE_ALLOW = /^Allow:\s*(.*)$/i;
+const RE_DISALLOW = /^Disallow:\s*(.*)$/i;
+
 class RobtxtManager extends HTMLElement {
 	static get observedAttributes() {
-		return ['allow', 'disallow', 'src'];
+		return ['allow', 'disallow', 'src', 'value'];
 	}
 
 	constructor() {
@@ -16,6 +26,10 @@ class RobtxtManager extends HTMLElement {
 			botRules: {},
 			sitemaps: [],
 			crawlDelay: null,
+			host: null,
+			cleanParam: [],
+			requestRate: null,
+			visitTime: null,
 			availableBots: []
 		};
 
@@ -79,9 +93,7 @@ class RobtxtManager extends HTMLElement {
 		const lines = text.split('\n');
 
 		for (const line of lines) {
-			const trimmed = line.trim();
-			// Match "User-agent: BotName" lines
-			const match = trimmed.match(/^User-agent:\s*(.+)$/i);
+			const match = line.trim().match(RE_USER_AGENT);
 			if (match && match[1] !== '*') {
 				bots.add(match[1].trim());
 			}
@@ -96,18 +108,14 @@ class RobtxtManager extends HTMLElement {
 		let updateSitemaps = false;
 		let updateSettings = false;
 
-		for (const key in partialState) {
-			if (JSON.stringify(this.state[key]) !== JSON.stringify(partialState[key])) {
-				this.state[key] = partialState[key];
+		for (const [key, newValue] of Object.entries(partialState)) {
+			if (this.state[key] !== newValue) {
+				this.state[key] = newValue;
 				stateChanged = true;
-				// Determine what needs updating
-				if (key === 'allow' || key === 'disallow') {
-					needsFullRender = true;
-				} else if (key === 'sitemaps') {
-					updateSitemaps = true;
-				} else if (key === 'crawlDelay') {
-					updateSettings = true;
-				}
+
+				if (key === 'allow' || key === 'disallow') needsFullRender = true;
+				else if (key === 'sitemaps') updateSitemaps = true;
+				else if (['crawlDelay', 'host', 'cleanParam', 'requestRate', 'visitTime'].includes(key)) updateSettings = true;
 			}
 		}
 
@@ -143,10 +151,20 @@ class RobtxtManager extends HTMLElement {
 	_updateSettingsSection() {
 		const settingsDetails = this.shadowRoot.querySelector('details[name="robtxt-settings"]');
 		if (settingsDetails) {
-			const input = settingsDetails.querySelector('#crawl-delay-input');
-			if (input) {
-				input.value = this.state.crawlDelay || '';
-			}
+			const crawlDelayInput = settingsDetails.querySelector('#crawl-delay-input');
+			if (crawlDelayInput) crawlDelayInput.value = this.state.crawlDelay || '';
+
+			const hostInput = settingsDetails.querySelector('#host-input');
+			if (hostInput) hostInput.value = this.state.host || '';
+
+			const cleanParamInput = settingsDetails.querySelector('#clean-param-input');
+			if (cleanParamInput) cleanParamInput.value = this.state.cleanParam.join('\n') || '';
+
+			const requestRateInput = settingsDetails.querySelector('#request-rate-input');
+			if (requestRateInput) requestRateInput.value = this.state.requestRate || '';
+
+			const visitTimeInput = settingsDetails.querySelector('#visit-time-input');
+			if (visitTimeInput) visitTimeInput.value = this.state.visitTime || '';
 		}
 	}
 
@@ -156,7 +174,11 @@ class RobtxtManager extends HTMLElement {
 			disallow: [...this.state.disallow],
 			botRules: JSON.parse(JSON.stringify(this.state.botRules)),
 			sitemaps: [...this.state.sitemaps],
-			crawlDelay: this.state.crawlDelay
+			crawlDelay: this.state.crawlDelay,
+			host: this.state.host,
+			cleanParam: [...this.state.cleanParam],
+			requestRate: this.state.requestRate,
+			visitTime: this.state.visitTime
 		};
 	}
 
@@ -169,11 +191,23 @@ class RobtxtManager extends HTMLElement {
 			disallow: [...(data.disallow || [])],
 			botRules: data.botRules ? JSON.parse(JSON.stringify(data.botRules)) : {},
 			sitemaps: [...(data.sitemaps || [])],
-			crawlDelay: data.crawlDelay || null
+			crawlDelay: data.crawlDelay || null,
+			host: data.host || null,
+			cleanParam: [...(data.cleanParam || [])],
+			requestRate: data.requestRate || null,
+			visitTime: data.visitTime || null
 		};
 		this.state = newState;
 		this.render();
 		this.dispatchChangeEvent();
+	}
+
+	get value() {
+		return this.generateRobotsTxt();
+	}
+
+	set value(val) {
+		this.fromString(val);
 	}
 
 	get robotsTxt() {
@@ -189,6 +223,11 @@ class RobtxtManager extends HTMLElement {
 		const botRules = {};
 		const sitemaps = [];
 		let crawlDelay = null;
+		let host = null;
+		const cleanParam = [];
+		let requestRate = null;
+		let visitTime = null;
+
 		const lines = robotsTxtString.split('\n');
 		let currentBot = null;
 		let currentRules = null;
@@ -198,7 +237,7 @@ class RobtxtManager extends HTMLElement {
 			if (!trimmed || trimmed.startsWith('#')) continue;
 
 			// Match User-agent
-			const agentMatch = trimmed.match(/^User-agent:\s*(.+)$/i);
+			const agentMatch = trimmed.match(RE_USER_AGENT);
 			if (agentMatch) {
 				currentBot = agentMatch[1].trim();
 				if (!botRules[currentBot]) {
@@ -209,7 +248,7 @@ class RobtxtManager extends HTMLElement {
 			}
 
 			// Match Sitemap
-			const sitemapMatch = trimmed.match(/^Sitemap:\s*(.+)$/i);
+			const sitemapMatch = trimmed.match(RE_SITEMAP);
 			if (sitemapMatch) {
 				const sitemapUrl = sitemapMatch[1].trim();
 				if (!sitemaps.includes(sitemapUrl)) {
@@ -218,8 +257,36 @@ class RobtxtManager extends HTMLElement {
 				continue;
 			}
 
+			// Match Host
+			const hostMatch = trimmed.match(RE_HOST);
+			if (hostMatch) {
+				host = hostMatch[1].trim();
+				continue;
+			}
+
+			// Match Clean-param
+			const cleanParamMatch = trimmed.match(RE_CLEAN_PARAM);
+			if (cleanParamMatch) {
+				cleanParam.push(cleanParamMatch[1].trim());
+				continue;
+			}
+
+			// Match Request-rate
+			const requestRateMatch = trimmed.match(RE_REQUEST_RATE);
+			if (requestRateMatch) {
+				requestRate = requestRateMatch[1].trim();
+				continue;
+			}
+
+			// Match Visit-time
+			const visitTimeMatch = trimmed.match(RE_VISIT_TIME);
+			if (visitTimeMatch) {
+				visitTime = visitTimeMatch[1].trim();
+				continue;
+			}
+
 			// Match Crawl-delay
-			const crawlDelayMatch = trimmed.match(/^Crawl-delay:\s*(\d+)$/i);
+			const crawlDelayMatch = trimmed.match(RE_CRAWL_DELAY);
 			if (crawlDelayMatch && currentBot) {
 				const delay = parseInt(crawlDelayMatch[1], 10);
 				if (currentBot === '*') {
@@ -231,8 +298,8 @@ class RobtxtManager extends HTMLElement {
 			}
 
 			// Match Allow/Disallow rules
-			const allowMatch = trimmed.match(/^Allow:\s*(.*)$/i);
-			const disallowMatch = trimmed.match(/^Disallow:\s*(.*)$/i);
+			const allowMatch = trimmed.match(RE_ALLOW);
+			const disallowMatch = trimmed.match(RE_DISALLOW);
 
 			if (currentBot && currentRules) {
 				if (allowMatch) {
@@ -272,7 +339,7 @@ class RobtxtManager extends HTMLElement {
 			}
 		}
 
-		this.config = { allow, disallow, botRules: cleanedBotRules, sitemaps, crawlDelay };
+		this.config = { allow, disallow, botRules: cleanedBotRules, sitemaps, crawlDelay, host, cleanParam, requestRate, visitTime };
 	}
 
 	dispatchChangeEvent() {
@@ -338,35 +405,6 @@ class RobtxtManager extends HTMLElement {
 		this._updateState({ crawlDelay: seconds > 0 ? seconds : null });
 	}
 
-	// Bot-specific rules management
-	setBotRule(bot, ruleType, paths) {
-		const rules = this.state.botRules[bot] || { allow: [], disallow: [], crawlDelay: null };
-		rules[ruleType] = Array.isArray(paths) ? [...paths] : paths;
-		this._updateState({ botRules: { ...this.state.botRules, [bot]: rules } });
-	}
-
-	addBotPath(bot, ruleType, path) {
-		const rules = this.state.botRules[bot] || { allow: [], disallow: [], crawlDelay: null };
-		if (!rules[ruleType]) rules[ruleType] = [];
-		if (!rules[ruleType].includes(path)) {
-			rules[ruleType] = [...rules[ruleType], path];
-		}
-		this._updateState({ botRules: { ...this.state.botRules, [bot]: rules } });
-	}
-
-	removeBotPath(bot, ruleType, path) {
-		const rules = this.state.botRules[bot];
-		if (!rules || !rules[ruleType]) return;
-		rules[ruleType] = rules[ruleType].filter(p => p !== path);
-		this._updateState({ botRules: { ...this.state.botRules, [bot]: rules } });
-	}
-
-	removeBotRule(bot) {
-		const newRules = { ...this.state.botRules };
-		delete newRules[bot];
-		this._updateState({ botRules: newRules });
-	}
-
 	generateRobotsTxt() {
 		let output = '';
 
@@ -419,6 +457,17 @@ class RobtxtManager extends HTMLElement {
 			output += `Crawl-delay: ${this.state.crawlDelay}\n\n`;
 		}
 
+		// Other global settings
+		if (this.state.host) output += `Host: ${this.state.host}\n`;
+		if (this.state.requestRate) output += `Request-rate: ${this.state.requestRate}\n`;
+		if (this.state.visitTime) output += `Visit-time: ${this.state.visitTime}\n`;
+		if (this.state.cleanParam.length > 0) {
+			this.state.cleanParam.forEach(param => {
+				output += `Clean-param: ${param}\n`;
+			});
+		}
+		if (this.state.host || this.state.requestRate || this.state.visitTime || this.state.cleanParam.length > 0) output += '\n';
+
 		// Sitemaps
 		if (this.state.sitemaps.length > 0) {
 			output += '# Sitemaps\n';
@@ -432,12 +481,17 @@ class RobtxtManager extends HTMLElement {
 
 	async connectedCallback() {
 		this.lang = this.getAttribute('lang') || 'en';
+		this._resolveReady();
 
 		// Load existing robots.txt file if src attribute is present
 		const srcUrl = this.getAttribute('src');
+		const value = this.getAttribute('value');
+
 		if (srcUrl) {
 			this._loadedUrls.src = srcUrl;
 			await this._loadFromRobotsTxt(srcUrl);
+		} else if (value) {
+			await this.fromString(value);
 		}
 
 		// Load initial allow/disallow lists from URLs
@@ -462,11 +516,10 @@ class RobtxtManager extends HTMLElement {
 				console.error('Failed to parse initial-config attribute:', e);
 				this.render();
 			}
-		} else {
+		} else if (!srcUrl && !value) {
 			this.render();
 		}
 
-		this._resolveReady();
 		this._attachEventListeners();
 	}
 
@@ -476,6 +529,8 @@ class RobtxtManager extends HTMLElement {
 				this._loadedUrls.src = newValue;
 				await this._loadFromRobotsTxt(newValue);
 			}
+		} else if (name === 'value' && oldValue !== newValue) {
+			await this.fromString(newValue);
 		} else if ((name === 'allow' || name === 'disallow') && oldValue !== newValue) {
 			if (newValue && this._loadedUrls[name] !== newValue) {
 				this._loadedUrls[name] = newValue;
@@ -521,6 +576,15 @@ class RobtxtManager extends HTMLElement {
 			if (e.target.id === 'crawl-delay-input') {
 				const value = parseInt(e.target.value, 10);
 				this.setCrawlDelay(value || null);
+			} else if (e.target.id === 'host-input') {
+				this._updateState({ host: e.target.value.trim() || null });
+			} else if (e.target.id === 'clean-param-input') {
+				const params = e.target.value.split('\n').map(p => p.trim()).filter(p => p);
+				this._updateState({ cleanParam: params });
+			} else if (e.target.id === 'request-rate-input') {
+				this._updateState({ requestRate: e.target.value.trim() || null });
+			} else if (e.target.id === 'visit-time-input') {
+				this._updateState({ visitTime: e.target.value.trim() || null });
 			}
 		});
 	}
@@ -538,9 +602,8 @@ class RobtxtManager extends HTMLElement {
 		`;
 	}
 
-	_renderSection(section, title) {
+	_renderSection(section, title, unusedBots) {
 		const bots = this.state[section];
-		const unusedBots = this._getUnusedBots();
 
 		return `
 			<details name="robtxt-section" open>
@@ -586,8 +649,9 @@ class RobtxtManager extends HTMLElement {
 	}
 
 	render() {
-		const allowSection = this._renderSection('allow', this.t('ui.allow'));
-		const disallowSection = this._renderSection('disallow', this.t('ui.disallow'));
+		const unusedBots = this._getUnusedBots();
+		const allowSection = this._renderSection('allow', this.t('ui.allow'), unusedBots);
+		const disallowSection = this._renderSection('disallow', this.t('ui.disallow'), unusedBots);
 		const settingsSection = this._renderSettings();
 		const sitemapSection = this._renderSitemaps();
 
@@ -623,7 +687,53 @@ class RobtxtManager extends HTMLElement {
 							value="${this.state.crawlDelay || ''}"
 						>
 					</fieldset>
-					<small class="muted">${this.t('ui.crawlDelayHint')}</small>
+
+					<fieldset>
+						<label for="host-input">
+							<small>${this.t('ui.host')}</small>
+						</label>
+						<input
+							type="text"
+							id="host-input"
+							placeholder="${this.t('ui.hostHint')}"
+							value="${this.state.host || ''}"
+						>
+					</fieldset>
+
+					<fieldset>
+						<label for="clean-param-input">
+							<small>${this.t('ui.cleanParam')}</small>
+						</label>
+						<textarea
+							id="clean-param-input"
+							placeholder="${this.t('ui.cleanParamHint')}"
+							rows="3"
+						>${this.state.cleanParam.join('\n')}</textarea>
+					</fieldset>
+
+					<fieldset>
+						<label for="request-rate-input">
+							<small>${this.t('ui.requestRate')}</small>
+						</label>
+						<input
+							type="text"
+							id="request-rate-input"
+							placeholder="${this.t('ui.requestRateHint')}"
+							value="${this.state.requestRate || ''}"
+						>
+					</fieldset>
+
+					<fieldset>
+						<label for="visit-time-input">
+							<small>${this.t('ui.visitTime')}</small>
+						</label>
+						<input
+							type="text"
+							id="visit-time-input"
+							placeholder="${this.t('ui.visitTimeHint')}"
+							value="${this.state.visitTime || ''}"
+						>
+					</fieldset>
 				</div>
 			</details>
 		`;

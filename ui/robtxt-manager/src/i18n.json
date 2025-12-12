@@ -10,7 +10,6 @@
 			"addCustomBot": "Add custom bot name",
 			"addSitemap": "Add Sitemap",
 			"crawlDelay": "Crawl Delay (seconds)",
-			"crawlDelayHint": "Sets crawl-delay for all bots (User-agent: *)",
 			"noCrawlDelay": "No delay",
 			"quickAddBots": "Quick add from available bots:",
 			"andMore": "...and",
@@ -20,7 +19,15 @@
 			"noRules": "# No rules defined yet",
 			"moveToAllow": "Move to Allow",
 			"moveToDisallow": "Move to Disallow",
-			"sitemapPlaceholder": "https://example.com/sitemap.xml"
+			"sitemapPlaceholder": "https://example.com/sitemap.xml",
+			"host": "Host",
+			"hostHint": "Preferred domain (e.g. www.example.com)",
+			"cleanParam": "Clean-param",
+			"cleanParamHint": "Parameters to ignore (e.g. 'ref /articles/')",
+			"requestRate": "Request-rate",
+			"requestRateHint": "Crawl rate limit (e.g. '1/5')",
+			"visitTime": "Visit-time",
+			"visitTimeHint": "Allowed crawl time (e.g. '0600-0845')"
 		}
 	},
 	"da": {
@@ -34,7 +41,6 @@
 			"addCustomBot": "Tilføj brugerdefineret bot-navn",
 			"addSitemap": "Tilføj Sitemap",
 			"crawlDelay": "Crawl-forsinkelse (sekunder)",
-			"crawlDelayHint": "Indstiller crawl-delay for alle bots (User-agent: *)",
 			"noCrawlDelay": "Ingen forsinkelse",
 			"quickAddBots": "Hurtig tilføjelse fra tilgængelige bots:",
 			"andMore": "...og",
@@ -44,7 +50,15 @@
 			"noRules": "# Ingen regler defineret endnu",
 			"moveToAllow": "Flyt til Tillad",
 			"moveToDisallow": "Flyt til Forbyd",
-			"sitemapPlaceholder": "https://eksempel.dk/sitemap.xml"
+			"sitemapPlaceholder": "https://eksempel.dk/sitemap.xml",
+			"host": "Vært (Host)",
+			"hostHint": "Foretrukket domæne (f.eks. www.eksempel.dk)",
+			"cleanParam": "Clean-param",
+			"cleanParamHint": "Parametre der skal ignoreres (f.eks. 'ref /artikler/')",
+			"requestRate": "Request-rate",
+			"requestRateHint": "Crawl-hastighedsgrænse (f.eks. '1/5')",
+			"visitTime": "Visit-time",
+			"visitTimeHint": "Tilladt crawl-tidspunkt (f.eks. '0600-0845')"
 		}
 	}
 }

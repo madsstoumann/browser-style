@@ -5,6 +5,7 @@ A visual web component for managing `robots.txt` files. Built with the same look
 ## Features
 
 - 📋 **Visual Management**: Organize bots into Allow and Disallow sections
+- ⚙️ **Advanced Settings**: Support for Host, Clean-param, Request-rate, and Visit-time
 - 🔍 **Search & Filter**: Quickly find bots from long lists
 - 🌐 **External Bot Lists**: Load bot lists from URLs (like the AI robots.txt repository)
 - ⚡ **Quick Actions**: Move bots between sections, add custom entries
@@ -81,9 +82,16 @@ JSON string to set initial configuration.
 Example:
 ```html
 <robtxt-manager
-  initial-config='{"allow":["Googlebot","Bingbot"],"disallow":["GPTBot"]}'>
+  initial-config='{"allow":["Googlebot","Bingbot"],"disallow":["GPTBot"],"cleanParam":["ref /articles/", "sid /session/"]}'>
 </robtxt-manager>
 ```
+
+> **Note on Clean-param:** The `Clean-param` directive tells crawlers to ignore specific URL parameters.
+> In the example `ref /articles/`:
+> - `ref` is the parameter to ignore.
+> - `/articles/` is the path prefix where this rule applies.
+> This means `/articles/some-page?ref=twitter` will be treated as `/articles/some-page`.
+> You can add multiple `Clean-param` directives (one per line in the UI).
 
 ### `lang`
 Set the language for the UI. Supported languages: `en` (English), `da` (Danish). Defaults to `en`.
