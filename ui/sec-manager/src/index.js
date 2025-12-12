@@ -287,7 +287,7 @@ class SecManager extends HTMLElement {
 
 	render() {
 		this.shadowRoot.innerHTML = `
-			<details name="sec-required" open>
+			<details name="sec-manager" class="sec-required" open>
 				<summary>${this.t('ui.required')}</summary>
 				<div>
 					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'), this.t('ui.addContact'))}
@@ -295,7 +295,7 @@ class SecManager extends HTMLElement {
 				</div>
 			</details>
 
-			<details name="sec-optional" open>
+			<details name="sec-manager" class="sec-optional">
 				<summary>${this.t('ui.optional')}</summary>
 				<div>
 					${this._renderMultiField('encryption', this.t('ui.encryption'), this.t('ui.encryptionHint'), this.t('ui.addEncryption'))}
@@ -307,12 +307,7 @@ class SecManager extends HTMLElement {
 				</div>
 			</details>
 
-			<details name="sec-output" open>
-				<summary>${this.t('ui.output')}</summary>
-				<div>
-					<pre><code>${this.generateSecurityTxt() || this.t('ui.noOutput')}</code></pre>
-				</div>
-			</details>
+			<pre><code>${this.generateSecurityTxt() || this.t('ui.noOutput')}</code></pre>
 		`;
 	}
 }

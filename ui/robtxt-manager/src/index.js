@@ -132,7 +132,7 @@ class RobtxtManager extends HTMLElement {
 	}
 
 	_updateOutput() {
-		const outputElement = this.shadowRoot.querySelector('details[name="robtxt-output"] code');
+		const outputElement = this.shadowRoot.querySelector('pre code');
 		if (outputElement) {
 			outputElement.textContent = this.generateRobotsTxt() || '# No rules defined yet';
 		}
@@ -185,8 +185,15 @@ class RobtxtManager extends HTMLElement {
 	set config(data) {
 		if (typeof data !== 'object' || data === null) return;
 
+		// Ensure all bots in the new config are added to availableBots
+		const bots = new Set(this.state.availableBots);
+		if (data.allow) data.allow.forEach(b => bots.add(b));
+		if (data.disallow) data.disallow.forEach(b => bots.add(b));
+		if (data.botRules) Object.keys(data.botRules).forEach(b => bots.add(b));
+
 		const newState = {
 			...this.state,
+			availableBots: Array.from(bots).sort(),
 			allow: [...(data.allow || [])],
 			disallow: [...(data.disallow || [])],
 			botRules: data.botRules ? JSON.parse(JSON.stringify(data.botRules)) : {},
@@ -240,6 +247,9 @@ class RobtxtManager extends HTMLElement {
 			const agentMatch = trimmed.match(RE_USER_AGENT);
 			if (agentMatch) {
 				currentBot = agentMatch[1].trim();
+				if (currentBot !== '*' && !this.state.availableBots.includes(currentBot)) {
+					this.state.availableBots = [...this.state.availableBots, currentBot].sort();
+				}
 				if (!botRules[currentBot]) {
 					botRules[currentBot] = { allow: [], disallow: [], crawlDelay: null };
 				}
@@ -356,6 +366,11 @@ class RobtxtManager extends HTMLElement {
 
 	_addBot(section, bot) {
 		if (!bot || this.state[section].includes(bot)) return;
+
+		// Add to availableBots if not already there
+		if (!this.state.availableBots.includes(bot)) {
+			this.state.availableBots = [...this.state.availableBots, bot].sort();
+		}
 
 		// Remove from other section if present
 		const otherSection = section === 'allow' ? 'disallow' : 'allow';
@@ -606,7 +621,7 @@ class RobtxtManager extends HTMLElement {
 		const bots = this.state[section];
 
 		return `
-			<details name="robtxt-section" open>
+			<details name="robtxt-manager" class="robtxt-${section}" open>
 				<summary>${title} (${bots.length})</summary>
 				<div>
 					<ul data-ul-for="${section}">
@@ -660,18 +675,13 @@ class RobtxtManager extends HTMLElement {
 			${disallowSection}
 			${settingsSection}
 			${sitemapSection}
-			<details name="robtxt-output" open>
-				<summary>${this.t('ui.output')}</summary>
-				<div>
-					<pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre>
-				</div>
-			</details>
+			<pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre>
 		`;
 	}
 
 	_renderSettings() {
 		return `
-			<details name="robtxt-settings">
+			<details name="robtxt-manager" class="robtxt-settings">
 				<summary>${this.t('ui.globalSettings')}</summary>
 				<div>
 					<fieldset>
@@ -741,7 +751,7 @@ class RobtxtManager extends HTMLElement {
 
 	_renderSitemaps() {
 		return `
-			<details name="robtxt-sitemaps">
+			<details name="robtxt-manager" class="robtxt-sitemaps">
 				<summary>${this.t('ui.sitemaps')} (${this.state.sitemaps.length})</summary>
 				<div>
 					${this.state.sitemaps.length > 0 ? `

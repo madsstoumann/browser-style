@@ -54,26 +54,17 @@ details {
 	&:has(:focus-visible) { outline: 2px solid var(--robtxt-manager-focus-c); outline-offset: 3px; }
 }
 
-details[name="robtxt-section"] {
-	&:first-of-type {
-		border-left-color: var(--robtxt-allow-color);
-		border-left-width: 3px;
-	}
-
-	&:nth-of-type(2) {
-		border-left-color: var(--robtxt-disallow-color);
-		border-left-width: 3px;
-	}
+details.robtxt-allow {
+	border-color: var(--robtxt-allow-color);
 }
 
-details[name="robtxt-output"] {
+details.robtxt-disallow {
+	border-color: var(--robtxt-disallow-color);
+}
+
+details.robtxt-settings,
+details.robtxt-sitemaps {
 	border-color: var(--robtxt-manager-accent-dark);
-}
-
-details[name="robtxt-settings"],
-details[name="robtxt-sitemaps"] {
-	border-left-color: var(--robtxt-manager-accent-dark);
-	border-left-width: 3px;
 }
 
 div {

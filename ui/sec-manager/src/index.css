@@ -54,18 +54,12 @@ details {
 	&:has(:focus-visible) { outline: 2px solid var(--sec-manager-focus-c); outline-offset: 3px; }
 }
 
-details[name="sec-required"] {
-	border-left-color: var(--sec-required-color);
-	border-left-width: 3px;
+details.sec-required {
+	border-color: var(--sec-required-color);
 }
 
-details[name="sec-optional"] {
-	border-left-color: var(--sec-optional-color);
-	border-left-width: 3px;
-}
-
-details[name="sec-output"] {
-	border-color: var(--sec-manager-accent-dark);
+details.sec-optional {
+	border-color: var(--sec-optional-color);
 }
 
 div {
