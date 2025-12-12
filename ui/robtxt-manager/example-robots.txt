@@ -1,0 +1,23 @@
+# Example robots.txt file
+
+# Allowed Bots
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: DuckDuckBot
+Allow: /
+
+# Disallowed Bots
+User-agent: GPTBot
+User-agent: CCBot
+User-agent: ChatGPT-User
+User-agent: Google-Extended
+Disallow: /
+
+# Global crawl delay
+User-agent: *
+Crawl-delay: 5
+
+# Sitemaps
+Sitemap: https://example.com/sitemap.xml
+Sitemap: https://example.com/sitemap-products.xml
+Sitemap: https://example.com/sitemap-blog.xml

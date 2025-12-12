@@ -1,0 +1,50 @@
+{
+	"en": {
+		"ui": {
+			"allow": "Allow",
+			"disallow": "Disallow",
+			"globalSettings": "Global Settings",
+			"sitemaps": "Sitemaps",
+			"output": "robots.txt Output",
+			"add": "Add",
+			"addCustomBot": "Add custom bot name",
+			"addSitemap": "Add Sitemap",
+			"crawlDelay": "Crawl Delay (seconds)",
+			"crawlDelayHint": "Sets crawl-delay for all bots (User-agent: *)",
+			"noCrawlDelay": "No delay",
+			"quickAddBots": "Quick add from available bots:",
+			"andMore": "...and",
+			"more": "more",
+			"noBotsInSection": "No bots in this section",
+			"noSitemaps": "No sitemaps added",
+			"noRules": "# No rules defined yet",
+			"moveToAllow": "Move to Allow",
+			"moveToDisallow": "Move to Disallow",
+			"sitemapPlaceholder": "https://example.com/sitemap.xml"
+		}
+	},
+	"da": {
+		"ui": {
+			"allow": "Tillad",
+			"disallow": "Forbyd",
+			"globalSettings": "Globale indstillinger",
+			"sitemaps": "Sitemaps",
+			"output": "robots.txt Output",
+			"add": "Tilføj",
+			"addCustomBot": "Tilføj brugerdefineret bot-navn",
+			"addSitemap": "Tilføj Sitemap",
+			"crawlDelay": "Crawl-forsinkelse (sekunder)",
+			"crawlDelayHint": "Indstiller crawl-delay for alle bots (User-agent: *)",
+			"noCrawlDelay": "Ingen forsinkelse",
+			"quickAddBots": "Hurtig tilføjelse fra tilgængelige bots:",
+			"andMore": "...og",
+			"more": "flere",
+			"noBotsInSection": "Ingen bots i denne sektion",
+			"noSitemaps": "Ingen sitemaps tilføjet",
+			"noRules": "# Ingen regler defineret endnu",
+			"moveToAllow": "Flyt til Tillad",
+			"moveToDisallow": "Flyt til Forbyd",
+			"sitemapPlaceholder": "https://eksempel.dk/sitemap.xml"
+		}
+	}
+}

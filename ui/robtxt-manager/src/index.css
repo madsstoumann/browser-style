@@ -1,0 +1,223 @@
+:host {
+	--robtxt-manager-accent: hsl(211, 100%, 95%);
+	--robtxt-manager-accent-dark: hsl(211, 50%, 50%);
+	--robtxt-manager-buttonface: #efefef;
+	--robtxt-manager-bdrs: .5rem;
+	--robtxt-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	--robtxt-manager-ff-system: system-ui, sans-serif;
+	--robtxt-manager-gap: 1rem;
+	--robtxt-manager-focus-c: hsl(211, 5%, 60%);
+	--robtxt-manager-tab-width: 2;
+
+	/* Section colors */
+	--robtxt-allow-color: hsl(120, 50%, 45%);
+	--robtxt-allow-bg: hsl(120, 50%, 95%);
+	--robtxt-disallow-color: hsl(0, 80%, 50%);
+	--robtxt-disallow-bg: hsl(0, 80%, 95%);
+
+	display: grid;
+	font-size: var(--robtxt-manager-font-size, 16px);
+	row-gap: var(--robtxt-manager-gap);
+}
+
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	white-space: nowrap;
+}
+
+button {
+	background: var(--robtxt-manager-buttonface);
+	border: 0;
+	cursor: pointer;
+}
+
+button, input {
+	border-radius: var(--robtxt-manager-bdrs);
+	font-family: var(--robtxt-manager-ff-system);
+	font-size: inherit;
+	&:focus-visible { box-shadow: inset 0 0 0 2px var(--robtxt-manager-focus-c); outline: 0; }
+}
+
+details {
+	border: 1px solid var(--robtxt-manager-buttonface);
+	border-radius: var(--robtxt-manager-bdrs);
+	padding: var(--robtxt-manager-gap);
+	user-select: none;
+
+	&:has(:focus-visible) { outline: 2px solid var(--robtxt-manager-focus-c); outline-offset: 3px; }
+}
+
+details[name="robtxt-section"] {
+	&:first-of-type {
+		border-left-color: var(--robtxt-allow-color);
+		border-left-width: 3px;
+	}
+
+	&:nth-of-type(2) {
+		border-left-color: var(--robtxt-disallow-color);
+		border-left-width: 3px;
+	}
+}
+
+details[name="robtxt-output"] {
+	border-color: var(--robtxt-manager-accent-dark);
+}
+
+details[name="robtxt-settings"],
+details[name="robtxt-sitemaps"] {
+	border-left-color: var(--robtxt-manager-accent-dark);
+	border-left-width: 3px;
+}
+
+div {
+	display: grid;
+	margin-block-start: var(--robtxt-manager-gap);
+	row-gap: var(--robtxt-manager-gap);
+}
+
+fieldset {
+	all: unset;
+	display: flex;
+	gap: var(--robtxt-manager-gap);
+	button { padding: 0 2ch; }
+}
+
+input {
+	border: 1px solid var(--robtxt-manager-buttonface);
+	flex: 1;
+	padding: 1ch 2ch;
+}
+
+input[type="number"] {
+	min-width: 100px;
+}
+
+input[type="url"] {
+	flex: 1;
+}
+
+label {
+	display: grid;
+	gap: calc(var(--robtxt-manager-gap) / 2);
+}
+
+p.empty {
+	font-style: italic;
+	color: var(--robtxt-manager-focus-c);
+	margin: 0;
+}
+
+li {
+	background: var(--robtxt-manager-buttonface);
+	border-radius: var(--robtxt-manager-bdrs);
+	display: grid;
+	font-family: var(--robtxt-manager-ff-mono);
+	font-size: small;
+	gap: 1ch;
+	grid-auto-flow: column;
+	padding: .75ch 1.5ch;
+	place-content: center;
+
+	&:has(button) { background: var(--robtxt-manager-accent); }
+	&.empty {
+		background: transparent;
+		font-style: italic;
+		color: var(--robtxt-manager-focus-c);
+		justify-content: start;
+	}
+
+	button {
+		all: unset;
+		display: inline-block;
+		padding: 0 0.5ch;
+		cursor: pointer;
+		font-size: 1em;
+
+		&:hover {
+			transform: scale(1.2);
+		}
+	}
+}
+
+pre {
+	all: unset;
+	background: var(--robtxt-manager-buttonface);
+	border-radius: var(--robtxt-manager-bdrs);
+	font-size: small;
+	overflow-x: auto;
+	padding: 2ch;
+	tab-size: var(--robtxt-manager-tab-width);
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+summary {
+	font-family: var(--robtxt-manager-ff-mono);
+	outline: 0;
+	font-weight: 600;
+}
+
+::details-content {
+	height: 0;
+	overflow: clip;
+	transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
+}
+
+[open]::details-content {
+	height: auto;
+}
+
+ul {
+	all: unset;
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--robtxt-manager-gap) / 2);
+	list-style: none;
+}
+
+.bot-suggestions {
+	display: grid;
+	gap: calc(var(--robtxt-manager-gap) / 2);
+	margin-block-start: var(--robtxt-manager-gap);
+}
+
+.bot-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: calc(var(--robtxt-manager-gap) / 2);
+}
+
+.bot-chip {
+	padding: .75ch 1.5ch;
+	font-size: small;
+	font-family: var(--robtxt-manager-ff-mono);
+	text-align: left;
+	background: var(--robtxt-manager-buttonface);
+	transition: background 0.2s ease;
+
+	&:hover {
+		background: var(--robtxt-manager-accent);
+	}
+}
+
+small {
+	color: var(--robtxt-manager-focus-c);
+	font-size: 0.875em;
+
+	&.muted {
+		opacity: 0.7;
+		font-style: italic;
+	}
+}
+
+code {
+	font-family: var(--robtxt-manager-ff-mono);
+	white-space: pre;
+}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Robots.txt Manager</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Robots.txt Manager - Visual editor for robots.txt files">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<style>
+		body {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 2rem;
+		}
+		.intro {
+			margin-bottom: 2rem;
+		}
+		.links {
+			margin-bottom: 2rem;
+		}
+	</style>
+</head>
+<body>
+	<h1>Robots.txt Manager</h1>
+	<div class="intro">
+		<p>A visual editor for managing robots.txt files with support for allow/disallow rules.</p>
+		<div class="links">
+			<a href="demo.html">View interactive demo</a> |
+			<a href="https://github.com/ai-robots-txt/ai.robots.txt" target="_blank">AI Robots.txt List</a>
+		</div>
+	</div>
+
+	<robtxt-manager
+		disallow="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt"
+	></robtxt-manager>
+
+	<script type="module" src="./src/index.js"></script>
+	<script>
+		// Example: Listen for changes
+		const manager = document.querySelector('robtxt-manager');
+		manager.addEventListener('robtxt-change', (e) => {
+			console.log('Configuration:', e.detail.config);
+			console.log('Robots.txt output:', e.detail.robotsTxt);
+		});
+	</script>
+</body>
+</html>
