@@ -1,0 +1,46 @@
+:host {
+	/* Section colors */
+	--manifest-identity-color: #4caf50;
+	--manifest-presentation-color: #2196f3;
+	--manifest-navigation-color: #9c27b0;
+	--manifest-icons-color: #ff9800;
+}
+
+/* Section Colors */
+details:nth-of-type(1) { border-color: var(--manifest-identity-color); }
+details:nth-of-type(2) { border-color: var(--manifest-presentation-color); }
+details:nth-of-type(3) { border-color: var(--manifest-navigation-color); }
+details:nth-of-type(4) { border-color: var(--manifest-icons-color); }
+
+/* Form Elements */
+label {
+	display: block;
+	font-weight: 500;
+}
+
+input, select, textarea {
+	margin-top: 0.25rem;
+}
+
+textarea {
+	min-height: 80px;
+	resize: vertical;
+}
+
+/* Color Inputs */
+.color-input-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 0.25rem;
+}
+
+input[type="color"] {
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border: none;
+	cursor: pointer;
+	background: none;
+	margin: 0;
+}

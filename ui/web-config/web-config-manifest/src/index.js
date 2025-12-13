@@ -1,6 +1,6 @@
 import i18n from './i18n.json' with { type: 'json' };
 
-class ManifestManager extends HTMLElement {
+class WebConfigManifest extends HTMLElement {
 	static formAssociated = true;
 	static observedAttributes = ['lang', 'value'];
 
@@ -26,10 +26,18 @@ class ManifestManager extends HTMLElement {
 
 	async _loadStyles() {
 		try {
-			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
-			const sheet = new CSSStyleSheet();
-			await sheet.replace(cssText);
-			this.shadowRoot.adoptedStyleSheets = [sheet];
+			const [shared, local] = await Promise.all([
+				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
+				fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
+			]);
+			
+			const sharedSheet = new CSSStyleSheet();
+			await sharedSheet.replace(shared);
+			
+			const localSheet = new CSSStyleSheet();
+			await localSheet.replace(local);
+			
+			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -187,4 +195,4 @@ class ManifestManager extends HTMLElement {
 	}
 }
 
-customElements.define('manifest-manager', ManifestManager);
+customElements.define('web-config-manifest', WebConfigManifest);

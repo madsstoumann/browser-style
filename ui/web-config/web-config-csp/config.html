@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>CSP Manager - Custom Configuration</title>
+	<title>Web Config CSP - Custom Configuration</title>
 	<link rel="stylesheet" href="/base.css">
 	<script src="./src/index.js" type="module"></script>
 	<style>
@@ -30,7 +30,7 @@
 	</style>
 </head>
 <body>
-	<h1>CSP Manager - Custom Configuration</h1>
+	<h1>Web Config CSP - Custom Configuration</h1>
 	<p>Examples demonstrating how to customize directives, translations, and evaluation rules.</p>
 
 	<hr>
@@ -40,13 +40,13 @@
 		<h2>1. HTML Attributes (Inline JSON)</h2>
 		<p>Custom directive added via inline JSON in the <code>directives</code> attribute.</p>
 
-		<csp-manager
+		<web-config-csp
 			id="demo1"
 			lang="en"
 			directives='{"report-uri": {"defaults": [], "type": "source-list", "enabled": false}}'
 			i18n='{"en": {"directives": {"report-uri": "Deprecated. Use report-to instead."}}}'
 			evaluate
-		></csp-manager>
+		></web-config-csp>
 	</section>
 
 	<!-- Demo 2: Using JavaScript Setters -->
@@ -61,7 +61,7 @@
 			<button id="enableCustom">Enable Custom Directive</button>
 		</p>
 
-		<csp-manager id="demo2" lang="en" evaluate></csp-manager>
+		<web-config-csp id="demo2" lang="en" evaluate></web-config-csp>
 
 		<pre id="output"></pre>
 	</section>
@@ -73,12 +73,12 @@
 
 		<p><button id="setupComplete">Setup Complete Configuration</button></p>
 
-		<csp-manager id="demo3" lang="en" evaluate></csp-manager>
+		<web-config-csp id="demo3" lang="en" evaluate></web-config-csp>
 	</section>
 
 	<script type="module">
 		// Wait for custom elements to be defined
-		await customElements.whenDefined('csp-manager');
+		await customElements.whenDefined('web-config-csp');
 
 		const demo2 = document.getElementById('demo2');
 		const demo3 = document.getElementById('demo3');

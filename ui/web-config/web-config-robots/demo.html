@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Robots.txt Manager Demo</title>
+	<title>Web Config Robots Demo</title>
 	<style>
 		* {
 			box-sizing: border-box;
@@ -164,7 +164,7 @@
 			<button onclick="switchLanguage('da')">Danish</button>
 		</div>
 
-		<robtxt-manager id="manager" lang="en"></robtxt-manager>
+		<web-config-robots id="manager" lang="en"></web-config-robots>
 	</div>
 
 	<div class="demo-section">
@@ -203,7 +203,7 @@
 		<div class="info-box">
 			<h3>JavaScript API</h3>
 			<pre><code>// Get the component
-const manager = document.querySelector('robtxt-manager');
+const manager = document.querySelector('web-config-robots');
 
 // Set configuration
 manager.config = {

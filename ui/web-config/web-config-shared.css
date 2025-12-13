@@ -1,0 +1,127 @@
+:host {
+	--ui-manager-accent: hsl(211, 100%, 95%);
+	--ui-manager-accent-dark: hsl(211, 50%, 50%);
+	--ui-manager-buttonface: #efefef;
+	--ui-manager-bdrs: .5rem;
+	--ui-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	--ui-manager-ff-system: system-ui, sans-serif;
+	--ui-manager-gap: 1rem;
+	--ui-manager-focus-c: hsl(211, 5%, 60%);
+	--ui-manager-tab-width: 2;
+
+	display: grid;
+	font-size: var(--ui-manager-font-size, 16px);
+	row-gap: var(--ui-manager-gap);
+}
+
+[data-sr] {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	white-space: nowrap;
+}
+
+button {
+	background: var(--ui-manager-buttonface);
+	border: 0;
+	cursor: pointer;
+}
+
+button, input, textarea, select {
+	border-radius: var(--ui-manager-bdrs);
+	font-family: var(--ui-manager-ff-system);
+	font-size: inherit;
+	&:focus-visible { box-shadow: inset 0 0 0 2px var(--ui-manager-focus-c); outline: 0; }
+}
+
+details {
+	border: 1px solid var(--ui-manager-buttonface);
+	border-radius: var(--ui-manager-bdrs);
+	padding: var(--ui-manager-gap);
+	user-select: none;
+
+	&:has(:focus-visible) { outline: 2px solid var(--ui-manager-focus-c); outline-offset: 3px; }
+}
+
+summary {
+	font-family: var(--ui-manager-ff-mono);
+	outline: 0;
+	cursor: pointer;
+}
+
+div {
+	display: grid;
+	margin-block-start: var(--ui-manager-gap);
+	row-gap: var(--ui-manager-gap);
+}
+
+fieldset {
+	all: unset;
+	display: flex;
+	gap: var(--ui-manager-gap);
+	button { padding: 0 2ch; }
+}
+
+input, textarea, select {
+	border: 1px solid var(--ui-manager-buttonface);
+	flex: 1;
+	padding: 1ch 2ch;
+	box-sizing: border-box;
+}
+
+pre {
+	all: unset;
+	background: var(--ui-manager-buttonface);
+	border-radius: var(--ui-manager-bdrs);
+	font-size: small;
+	overflow-x: auto;
+	padding: 2ch;
+	tab-size: var(--ui-manager-tab-width);
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	display: block;
+	font-family: var(--ui-manager-ff-mono);
+}
+
+::details-content {
+	height: 0;
+	overflow: clip;
+	transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
+}
+[open]::details-content {
+	height: auto;
+}
+
+ul {
+	all: unset;
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--ui-manager-gap) / 2);
+	list-style: none;
+}
+
+li {
+	background: var(--ui-manager-buttonface);
+	border-radius: var(--ui-manager-bdrs);
+	display: grid;
+	font-family: var(--ui-manager-ff-mono);
+	font-size: small;
+	gap: 1ch;
+	grid-auto-flow: column;
+	padding: .75ch 1.5ch;
+	place-content: center;
+
+	&:has(button) { background: var(--ui-manager-accent); }
+	
+	button {
+		all: unset;
+		display: inline-block;
+		padding: 0 0.5ch;
+		cursor: pointer;
+	}
+}

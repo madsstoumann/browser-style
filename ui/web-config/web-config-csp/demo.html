@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>CSP Manager - Demos</title>
+	<title>Web Config CSP - Demos</title>
 	<link rel="stylesheet" href="/base.css">
 	<script src="./src/index.js" type="module"></script>
 	<style>
@@ -24,8 +24,8 @@
 </head>
 <body>
 
-	<h1>CSP Manager Demos</h1>
-	<p>Various examples demonstrating the CSP Manager web component features.</p>
+	<h1>Web Config CSP Demos</h1>
+	<p>Various examples demonstrating the Web Config CSP web component features.</p>
 
 	<hr>
 
@@ -46,8 +46,8 @@
 	<!-- Demo 3: Get Policy and CSP String -->
 	<section>
 		<h2>3. <code>policy</code> and <code>cspString</code> Getters</h2>
-		<p>Interact with the CSP manager below, then use the buttons to retrieve the current policy or copy the CSP string.</p>
-		<csp-manager id="demo3-manager" evaluate></csp-manager>
+		<p>Interact with the Web Config CSP below, then use the buttons to retrieve the current policy or copy the CSP string.</p>
+		<web-config-csp id="demo3-manager" evaluate></web-config-csp>
 		<div class="demo-controls">
 			<button id="getPolicyBtn">Get Policy (Console)</button>
 			<button id="getCspStringBtn">Copy CSP String to Clipboard</button>
@@ -71,21 +71,21 @@
 		<h2>5. <code>csp-change</code> Event Listener</h2>
 		<p>Listen to changes and see the `csp-change` event details in the browser's developer console.</p>
 		<p>Try adding or removing directives and values below, then check the console to see the event payload.</p>
-		<csp-manager id="demo5-manager" evaluate></csp-manager>
+		<web-config-csp id="demo5-manager" evaluate></web-config-csp>
 	</section>
 
 	<script type="module">
-		// Helper function to create and configure a CSP Manager instance
+		// Helper function to create and configure a Web Config CSP instance
 		function createDemoManager(containerId, options) {
 			const container = document.getElementById(containerId);
 			if (!container) return;
 
-			const manager = document.createElement('csp-manager');
+			const manager = document.createElement('web-config-csp');
 			if (options.lang) manager.setAttribute('lang', options.lang);
 			if (options.evaluate) manager.setAttribute('evaluate', '');
 			if (options.initialPolicy) manager.setAttribute('initial-policy', JSON.stringify(options.initialPolicy));
 			if (options.cspString) {
-				customElements.whenDefined('csp-manager').then(() => {
+				customElements.whenDefined('web-config-csp').then(() => {
 					manager.fromString(options.cspString);
 				});
 			}
@@ -149,7 +149,7 @@
 		const demo5Manager = document.getElementById('demo5-manager');
 		demo5Manager.addEventListener('csp-change', (e) => {
 			const timestamp = new Date().toLocaleTimeString();
-			console.group(`[CSP Manager] csp-change event at ${timestamp}`);
+			console.group(`[Web Config CSP] csp-change event at ${timestamp}`);
 			console.log('Policy Object:', e.detail.policy);
 			console.log('CSP String:', e.detail.cspString);
 			if (e.detail.evaluations) {

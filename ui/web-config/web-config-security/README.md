@@ -1,6 +1,6 @@
-# Security.txt Manager Web Component
+# Web Config Security Web Component
 
-A visual web component for managing `security.txt` files (RFC 9116). Built with the same look and feel as the CSP Manager and Robots.txt Manager components.
+A visual web component for managing `security.txt` files (RFC 9116). Built with the same look and feel as the Web Config CSP and Web Config Robots components.
 
 ## Features
 
@@ -15,7 +15,7 @@ A visual web component for managing `security.txt` files (RFC 9116). Built with 
 ## Installation
 
 ```html
-<script type="module" src="./ui/sec-manager/src/index.js"></script>
+<script type="module" src="./ui/web-config/web-config-security/src/index.js"></script>
 ```
 
 ## Basic Usage

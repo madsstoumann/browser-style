@@ -1,8 +1,8 @@
-# CSP Manager Web Component
+# Web Config CSP Web Component
 
 A powerful, interactive web component for building and managing Content Security Policy (CSP) directives with built-in security evaluation.
 
-[![npm version](https://img.shields.io/npm/v/@browser.style/csp-manager.svg)](https://www.npmjs.com/package/@browser.style/csp-manager)
+[![npm version](https://img.shields.io/npm/v/@browser.style/web-config-csp.svg)](https://www.npmjs.com/package/@browser.style/web-config-csp)
 
 ## Features
 
@@ -19,13 +19,13 @@ A powerful, interactive web component for building and managing Content Security
 ## Installation
 
 ```bash
-npm install @browser.style/csp-manager
+npm install @browser.style/web-config-csp
 ```
 
 Or include it directly in your HTML:
 
 ```html
-<script type="module" src="https://unpkg.com/@browser.style/csp-manager/src/index.js"></script>
+<script type="module" src="https://unpkg.com/@browser.style/web-config-csp/src/index.js"></script>
 ```
 
 ---
@@ -33,7 +33,7 @@ Or include it directly in your HTML:
 ## Quick Start
 
 ```html
-<csp-manager evaluate></csp-manager>
+<web-config-csp evaluate></web-config-csp>
 ```
 
 - `evaluate`: Enables the security evaluation feature.
@@ -75,7 +75,7 @@ Or include it directly in your HTML:
 
 The component is highly customizable through CSS custom properties for styling and through configuration files for functionality. You can define custom directives, add new languages, and create your own security evaluation rules.
 
-See the [Custom Configuration Demo](https://browser.style/ui/csp-manager/config.html) for live examples.
+See the [Custom Configuration Demo](https://browser.style/ui/web-config/web-config-csp/config.html) for live examples.
 
 ---
 
@@ -84,7 +84,7 @@ See the [Custom Configuration Demo](https://browser.style/ui/csp-manager/config.
 To run the project locally, simply start a web server in the component's directory.
 
 ```bash
-# In ui/csp-manager/
+# In ui/web-config/web-config-csp/
 npx serve
 ```
 

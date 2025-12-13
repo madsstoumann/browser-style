@@ -9,7 +9,7 @@ const RE_CANONICAL = /^Canonical:\s*(.+)$/i;
 const RE_POLICY = /^Policy:\s*(.+)$/i;
 const RE_HIRING = /^Hiring:\s*(.+)$/i;
 
-class SecManager extends HTMLElement {
+class WebConfigSecurity extends HTMLElement {
 	static get observedAttributes() {
 		return ['src', 'lang', 'value'];
 	}
@@ -45,10 +45,18 @@ class SecManager extends HTMLElement {
 
 	async _loadStyles() {
 		try {
-			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
-			const sheet = new CSSStyleSheet();
-			await sheet.replace(cssText);
-			this.shadowRoot.adoptedStyleSheets = [sheet];
+			const [shared, local] = await Promise.all([
+				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
+				fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
+			]);
+			
+			const sharedSheet = new CSSStyleSheet();
+			await sharedSheet.replace(shared);
+			
+			const localSheet = new CSSStyleSheet();
+			await localSheet.replace(local);
+			
+			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -312,4 +320,4 @@ class SecManager extends HTMLElement {
 	}
 }
 
-customElements.define('sec-manager', SecManager);
+customElements.define('web-config-security', WebConfigSecurity);

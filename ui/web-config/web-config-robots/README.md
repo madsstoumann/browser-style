@@ -1,6 +1,6 @@
-# Robots.txt Manager Web Component
+# Web Config Robots Web Component
 
-A visual web component for managing `robots.txt` files. Built with the same look and feel as the CSP Manager component.
+A visual web component for managing `robots.txt` files. Built with the same look and feel as the Web Config CSP component.
 
 ## Features
 
@@ -9,14 +9,14 @@ A visual web component for managing `robots.txt` files. Built with the same look
 - 🔍 **Search & Filter**: Quickly find bots from long lists
 - 🌐 **External Bot Lists**: Load bot lists from URLs (like the AI robots.txt repository)
 - ⚡ **Quick Actions**: Move bots between sections, add custom entries
-- 🎨 **Clean UI**: Matching design with CSP Manager
+- 🎨 **Clean UI**: Matching design with Web Config CSP
 - 🔔 **Event-Driven**: Listen for changes with `robtxt-change` events
 - 💾 **Import/Export**: Parse and generate robots.txt files
 
 ## Installation
 
 ```html
-<script type="module" src="./ui/robtxt-manager/src/index.js"></script>
+<script type="module" src="./ui/web-config/web-config-robots/src/index.js"></script>
 ```
 
 ## Basic Usage
@@ -28,20 +28,20 @@ A visual web component for managing `robots.txt` files. Built with the same look
 ></robtxt-manager>
 
 <!-- Preload AI bots into disallow section -->
-<robtxt-manager
-  disallow="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt"
-></robtxt-manager>
+<web-config-robots
+	disallow="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt"
+></web-config-robots>
 
 <!-- Preload search engines into allow section -->
-<robtxt-manager
+<web-config-robots
   allow="https://example.com/search-engines.txt"
-></robtxt-manager>
+></web-config-robots>
 
 <!-- Load both allow and disallow lists -->
-<robtxt-manager
+<web-config-robots
   allow="https://example.com/search-engines.txt"
   disallow="https://example.com/ai-bots.txt"
-></robtxt-manager>
+></web-config-robots>
 ```
 
 ## Attributes
@@ -51,9 +51,9 @@ URL to load a complete robots.txt file. The component will parse the file and po
 
 Example:
 ```html
-<robtxt-manager
+<web-config-robots
   src="https://example.com/robots.txt">
-</robtxt-manager>
+</web-config-robots>
 ```
 
 ### `allow`
@@ -61,9 +61,9 @@ URL to load a list of bots to **allow**. The component will parse a robots.txt f
 
 Example:
 ```html
-<robtxt-manager
+<web-config-robots
   allow="https://example.com/search-engines.txt">
-</robtxt-manager>
+</web-config-robots>
 ```
 
 ### `disallow`
@@ -71,9 +71,9 @@ URL to load a list of bots to **disallow**. The component will parse a robots.tx
 
 Example:
 ```html
-<robtxt-manager
-  disallow="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt">
-</robtxt-manager>
+<web-config-robots
+	allow="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt"
+></web-config-robots>
 ```
 
 ### `initial-config`

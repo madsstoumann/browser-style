@@ -10,7 +10,7 @@ const RE_VISIT_TIME = /^Visit-time:\s*(.+)$/i;
 const RE_ALLOW = /^Allow:\s*(.*)$/i;
 const RE_DISALLOW = /^Disallow:\s*(.*)$/i;
 
-class RobtxtManager extends HTMLElement {
+class WebConfigRobots extends HTMLElement {
 	static get observedAttributes() {
 		return ['allow', 'disallow', 'src', 'value'];
 	}
@@ -48,10 +48,18 @@ class RobtxtManager extends HTMLElement {
 
 	async _loadStyles() {
 		try {
-			const cssText = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
-			const sheet = new CSSStyleSheet();
-			await sheet.replace(cssText);
-			this.shadowRoot.adoptedStyleSheets = [sheet];
+			const [shared, local] = await Promise.all([
+				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
+				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
+			]);
+			
+			const sharedSheet = new CSSStyleSheet();
+			await sharedSheet.replace(shared);
+			
+			const localSheet = new CSSStyleSheet();
+			await localSheet.replace(local);
+			
+			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -778,4 +786,4 @@ class RobtxtManager extends HTMLElement {
 	}
 }
 
-customElements.define('robtxt-manager', RobtxtManager);
+customElements.define('web-config-robots', WebConfigRobots);
