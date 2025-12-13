@@ -9,6 +9,24 @@
 	--web-config-focus-c: hsl(211, 5%, 60%);
 	--web-config-tab-width: 2;
 
+	/* Evaluation colors */
+	--web-config-status-danger: hsl(0, 80%, 50%);
+	--web-config-status-danger-bg: hsl(0, 80%, 95%);
+	--web-config-status-warn: hsl(35, 90%, 50%);
+	--web-config-status-warn-bg: hsl(35, 90%, 95%);
+	--web-config-status-ok: hsl(120, 50%, 45%);
+	--web-config-status-ok-bg: hsl(120, 50%, 95%);
+	--web-config-status-info: var(--web-config-accent-dark);
+	--web-config-status-info-bg: var(--web-config-accent);
+
+	/* Legacy aliases (prefer --web-config-status-*) */
+	--web-config-high: var(--web-config-status-danger);
+	--web-config-high-bg: var(--web-config-status-danger-bg);
+	--web-config-medium: var(--web-config-status-warn);
+	--web-config-medium-bg: var(--web-config-status-warn-bg);
+	--web-config-secure: var(--web-config-status-ok);
+	--web-config-secure-bg: var(--web-config-status-ok-bg);
+
 	display: grid;
 	font-family: var(--web-config-ff, system-ui);
 	font-size: var(--web-config-font-size, 16px);
@@ -46,6 +64,17 @@ details {
 	padding: var(--web-config-gap);
 	user-select: none;
 	&:has(:focus-visible) { outline: 2px solid var(--web-config-focus-c); outline-offset: 3px; }
+
+	/* Status styles (preferred) */
+	&[data-status="danger"] { border-color: var(--web-config-status-danger); }
+	&[data-status="warn"] { border-color: var(--web-config-status-warn); }
+	&[data-status="ok"] { border-color: var(--web-config-status-ok); }
+	&[data-status="info"] { border-color: var(--web-config-status-info); }
+
+	/* Compatibility (older components) */
+	&[data-severity="high"] { border-color: var(--web-config-status-danger); }
+	&[data-severity="medium"] { border-color: var(--web-config-status-warn); }
+	&[data-severity="secure"] { border-color: var(--web-config-status-ok); }
 }
 
 summary {
@@ -116,6 +145,7 @@ ul {
 
 li {
 	background: var(--web-config-buttonface);
+	border: 1px solid transparent;
 	border-radius: var(--web-config-bdrs);
 	display: grid;
 	font-family: var(--web-config-ff-mono);
@@ -125,7 +155,31 @@ li {
 	padding: .75ch 1.5ch;
 	place-content: center;
 
-	&:has(button) { background: var(--web-config-accent); }
+	&[data-status="danger"] {
+		background: var(--web-config-status-danger-bg);
+		border-color: var(--web-config-status-danger);
+		color: var(--web-config-status-danger);
+	}
+
+	&[data-status="warn"] {
+		background: var(--web-config-status-warn-bg);
+		border-color: var(--web-config-status-warn);
+		color: var(--web-config-status-warn);
+	}
+
+	&[data-status="ok"] {
+		background: var(--web-config-status-ok-bg);
+		border-color: var(--web-config-status-ok);
+		color: var(--web-config-status-ok);
+	}
+
+	&[data-status="info"] {
+		background: var(--web-config-status-info-bg);
+		border-color: var(--web-config-status-info);
+		color: var(--web-config-status-info);
+	}
+
+	&:has(button):not([data-status]) { background: var(--web-config-accent); }
 	
 	button {
 		all: unset;

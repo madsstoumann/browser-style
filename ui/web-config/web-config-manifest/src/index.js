@@ -142,7 +142,7 @@ class WebConfigManifest extends HTMLElement {
 
 		this.shadowRoot.innerHTML = `
 			<!-- Identity -->
-			<details name="manifest-accordion" open>
+				<details name="manifest-accordion" open data-status="ok">
 				<summary>${t.ui.identity}</summary>
 				<div>
 					<label>

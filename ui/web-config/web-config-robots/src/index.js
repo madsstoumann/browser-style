@@ -586,9 +586,12 @@ class WebConfigRobots extends HTMLElement {
 	_renderBotChip(bot, section) {
 		const otherSection = section === 'allow' ? 'disallow' : 'allow';
 		const moveTitle = section === 'allow' ? this.t('ui.moveToDisallow') : this.t('ui.moveToAllow');
+		const statusAttr = section === 'allow'
+			? ' data-status="ok"'
+			: (section === 'disallow' ? ' data-status="danger"' : '');
 
 		return `
-			<li>
+			<li${statusAttr}>
 				${bot}
 				<button data-move="${otherSection}" data-section="${section}" data-bot="${bot}" title="${moveTitle}">⇄</button>
 				<button data-remove data-section="${section}" data-bot="${bot}">×</button>
@@ -598,9 +601,12 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSection(section, title, unusedBots) {
 		const bots = this.state[section];
+		const statusAttr = section === 'allow'
+			? ' data-status="ok"'
+			: (section === 'disallow' ? ' data-status="danger"' : '');
 
 		return `
-			<details name="robtxt-manager" open>
+			<details name="robtxt-manager" open${statusAttr}>
 				<summary>${title} (${bots.length})</summary>
 				<div>
 					<ul data-ul-for="${section}">
@@ -648,8 +654,8 @@ class WebConfigRobots extends HTMLElement {
 		this.shadowRoot.innerHTML = `
 			${allowSection}
 			${disallowSection}
-			${settingsSection}
 			${sitemapSection}
+			${settingsSection}
 			<pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre>
 		`;
 	}
@@ -712,7 +718,7 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSitemaps() {
 		return `
-			<details name="robtxt-sitemaps">
+			<details name="robtxt-sitemaps" data-status="warn">
 				<summary>${this.t('ui.sitemaps')} (${this.state.sitemaps.length})</summary>
 				<div>
 					${this.state.sitemaps.length > 0 ? `

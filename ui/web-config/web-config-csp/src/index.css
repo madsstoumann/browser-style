@@ -1,15 +1,5 @@
-:host {
-	/* Evaluation colors */
-	--csp-eval-high: hsl(0, 80%, 50%);
-	--csp-eval-high-bg: hsl(0, 80%, 95%);
-	--csp-eval-medium: hsl(35, 90%, 50%);
-	--csp-eval-medium-bg: hsl(35, 90%, 95%);
-	--csp-eval-secure: hsl(120, 50%, 45%);
-	--csp-eval-secure-bg: hsl(120, 50%, 95%);
-}
-
 details {
-	&:has([data-remove]) summary::after { content: ' *'; color: var(--ui-manager-accent-dark); }
+	&:has([data-remove]) summary::after { content: ' *'; color: var(--web-config-accent-dark); }
 	&:not(:has(:checked)) { display: none; }
 }
 
@@ -24,22 +14,14 @@ label:has(input[data-directive]) {
 }
 
 /* Evaluation styles */
-details[data-severity="high"] {
-	border-color: var(--csp-eval-high);
-}
-
-details[data-severity="medium"] {
-	border-color: var(--csp-eval-medium);
-}
-
-details[data-severity="secure"] {
-	border-color: var(--csp-eval-secure);
-}
+details[data-status="danger"] { border-color: var(--web-config-status-danger); }
+details[data-status="warn"] { border-color: var(--web-config-status-warn); }
+details[data-status="ok"] { border-color: var(--web-config-status-ok); }
 
 .eval-findings {
 	display: grid;
-	gap: calc(var(--ui-manager-gap) / 2);
-	margin-block: var(--ui-manager-gap);
+	gap: calc(var(--web-config-gap) / 2);
+	margin-block: var(--web-config-gap);
 }
 
 .eval-finding {
@@ -47,26 +29,27 @@ details[data-severity="secure"] {
 	display: block;
 	padding: 1ch 2ch;
 	font-size: small;
-	border-radius: calc(var(--ui-manager-bdrs) / 2);
+	border-radius: calc(var(--web-config-bdrs) / 2);
 	margin: unset;
 }
 
-.eval-finding[data-severity="high"] {
-	background: var(--csp-eval-high-bg);
-	border-color: var(--csp-eval-high);
-	color: var(--csp-eval-high);
+
+.eval-finding[data-status="danger"] {
+	background: var(--web-config-status-danger-bg);
+	border-color: var(--web-config-status-danger);
+	color: var(--web-config-status-danger);
 }
 
-.eval-finding[data-severity="medium"] {
-	background: var(--csp-eval-medium-bg);
-	border-color: var(--csp-eval-medium);
-	color: var(--csp-eval-medium);
+.eval-finding[data-status="warn"] {
+	background: var(--web-config-status-warn-bg);
+	border-color: var(--web-config-status-warn);
+	color: var(--web-config-status-warn);
 }
 
-.eval-finding[data-severity="secure"] {
-	background: var(--csp-eval-secure-bg);
-	border-color: var(--csp-eval-secure);
-	color: var(--csp-eval-secure);
+.eval-finding[data-status="ok"] {
+	background: var(--web-config-status-ok-bg);
+	border-color: var(--web-config-status-ok);
+	color: var(--web-config-status-ok);
 }
 
 .eval-finding strong {

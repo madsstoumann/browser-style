@@ -3,6 +3,18 @@ import i18nData from './i18n.json' with { type: 'json' };
 import { evaluatePolicy } from './evaluate.js';
 import { loadAndMergeConfigs } from './config-utils.js';
 
+import { adoptSharedStyles } from '../../web-config-shared.js';
+
+const localStylesheetPromise = fetch(new URL('./index.css', import.meta.url))
+	.then(r => r.text())
+	.then(async css => {
+		const sheet = new CSSStyleSheet();
+		await sheet.replace(css);
+		return sheet;
+	});
+
+const severityToStatus = (severity) => ({ high: 'danger', medium: 'warn', secure: 'ok' }[severity] || '');
+
 class WebConfigCsp extends HTMLElement {
 	constructor() {
 		super();
@@ -11,30 +23,14 @@ class WebConfigCsp extends HTMLElement {
 		this.evaluations = null;
 		this.state = {};
 
-		// Create templates for reuse
-		this._templates = {
-			directive: document.createElement('template'),
-			value: document.createElement('template'),
-		};
-		this._templates.value.innerHTML = `<li><button data-remove>×</button></li>`;
-
 		this.ready = new Promise(resolve => this._resolveReady = resolve);
 	}
 
 	async _loadStyles() {
 		try {
-			const [shared, local] = await Promise.all([
-				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
-			]);
-			
-			const sharedSheet = new CSSStyleSheet();
-			await sharedSheet.replace(shared);
-			
-			const localSheet = new CSSStyleSheet();
-			await localSheet.replace(local);
-			
-			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
+			await adoptSharedStyles(this.shadowRoot);
+			const localSheet = await localStylesheetPromise;
+			this.shadowRoot.adoptedStyleSheets = [...this.shadowRoot.adoptedStyleSheets, localSheet];
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -67,20 +63,17 @@ class WebConfigCsp extends HTMLElement {
 
 	_updateState(partialState) {
 		let stateChanged = false;
-		for (const key in partialState) {
-			if (JSON.stringify(this.state[key]) !== JSON.stringify(partialState[key])) {
-				this.state[key] = partialState[key];
+		for (const [key, nextValue] of Object.entries(partialState)) {
+			if (this.state[key] !== nextValue) {
+				this.state[key] = nextValue;
 				stateChanged = true;
 			}
 		}
 
-		if (stateChanged) {
-			this.render();
-			if (this.hasAttribute('evaluate')) {
-				this.runEvaluation();
-			}
-			this.dispatchChangeEvent();
-		}
+		if (!stateChanged) return;
+		this.render();
+		if (this.hasAttribute('evaluate')) this.runEvaluation();
+		this.dispatchChangeEvent();
 	}
 
 	get policy() {
@@ -150,11 +143,13 @@ class WebConfigCsp extends HTMLElement {
 			if (customDirectives) this.directivesConfig = { ...this.directivesConfig, ...customDirectives };
 			if (customI18n) {
 				const mergedI18n = { ...this.i18nConfig };
-				for (const lang in customI18n) {
-					mergedI18n[lang] = { ...(this.i18nConfig[lang] || {}), ...customI18n[lang] };
-					if (customI18n[lang].directives) mergedI18n[lang].directives = { ...(this.i18nConfig[lang]?.directives || {}), ...customI18n[lang].directives };
-					if (customI18n[lang].ui) mergedI18n[lang].ui = { ...(this.i18nConfig[lang]?.ui || {}), ...customI18n[lang].ui };
-					if (customI18n[lang].eval) mergedI18n[lang].eval = { ...(this.i18nConfig[lang]?.eval || {}), ...customI18n[lang].eval };
+				for (const [lang, patch] of Object.entries(customI18n)) {
+					const base = this.i18nConfig[lang] || {};
+					const next = { ...base, ...patch };
+					for (const section of ['directives', 'ui', 'eval']) {
+						if (patch?.[section]) next[section] = { ...(base?.[section] || {}), ...patch[section] };
+					}
+					mergedI18n[lang] = next;
 				}
 				this.i18nConfig = mergedI18n;
 			}
@@ -294,10 +289,11 @@ class WebConfigCsp extends HTMLElement {
 	_renderDirective(key, valueObj) {
 		const { description, boolean, tokens, defaults, added, enabled } = valueObj;
 		const evaluation = this.hasAttribute('evaluate') && enabled ? this.evaluations?.[key] : null;
-		const severityAttr = evaluation ? `data-severity="${evaluation.severity}"` : '';
+		const status = evaluation ? severityToStatus(evaluation.severity) : '';
+		const statusAttr = status ? `data-status="${status}"` : '';
 
 		const findingsHtml = evaluation?.findings.map(finding => `
-			<div class="eval-finding" data-severity="${finding.severity}">
+			<div class="eval-finding" data-status="${severityToStatus(finding.severity)}">
 				<strong>${finding.message}</strong>
 				${finding.recommendation ? `<em>${finding.recommendation}</em>` : ''}
 			</div>`).join('') || '';
@@ -315,7 +311,7 @@ class WebConfigCsp extends HTMLElement {
 		`;
 
 		return `
-			<details name="csp-directive" ${severityAttr} ${enabled ? '' : 'style="display:none;"'}>
+			<details name="csp-directive" ${statusAttr} ${enabled ? '' : 'style="display:none;"'}>
 				<summary>${key}</summary>
 				<div>
 					<small>${description}</small>
@@ -334,14 +330,14 @@ class WebConfigCsp extends HTMLElement {
 
 		this.shadowRoot.innerHTML = `
 			${directivesHtml}
-			<pre><code>${this.generateCspString()}</code></pre>
 			<fieldset class="add-directive">
 				<input type="text" list="available-directives" id="directive-selector" placeholder="${this.t('ui.addDirectivePlaceholder')}" autocomplete="off">
 				<datalist id="available-directives">
 					${availableDirectives.map(({ key, description }) => `<option value="${key}">${description}</option>`).join('')}
 				</datalist>
 				<button data-add-directive>${this.t('ui.addDirective')}</button>
-			</fieldset>`;
+			</fieldset>
+			<pre><code>${this.generateCspString()}</code></pre>`;
 	}
 }
 

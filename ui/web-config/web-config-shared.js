@@ -15,27 +15,16 @@ export async function adoptSharedStyles(shadowRoot) {
 }
 
 export function createTranslator(i18nData, getLang, fallbackLang = 'en') {
+	const lookup = (lang, key) => {
+		let value = i18nData?.[lang];
+		for (const part of String(key).split('.')) value = value?.[part];
+		return typeof value === 'string' ? value : undefined;
+	};
+
 	return function t(key) {
 		const lang = (typeof getLang === 'function' ? getLang() : getLang) || fallbackLang;
-		const keys = String(key).split('.');
-		let value = i18nData?.[lang];
-		for (const k of keys) value = value?.[k];
-		if (typeof value === 'string') return value;
-
-		// fallback language
-		value = i18nData?.[fallbackLang];
-		for (const k of keys) value = value?.[k];
-		return typeof value === 'string' ? value : key;
+		return lookup(lang, key) ?? lookup(fallbackLang, key) ?? key;
 	};
-}
-
-export function jsonEqual(a, b) {
-	if (a === b) return true;
-	try {
-		return JSON.stringify(a) === JSON.stringify(b);
-	} catch {
-		return false;
-	}
 }
 
 /**
@@ -44,7 +33,7 @@ export function jsonEqual(a, b) {
 export function setState(instance, partialState, { equals = Object.is, equalsByKey } = {}) {
 	if (!instance || typeof instance !== 'object') return [];
 	if (!partialState || typeof partialState !== 'object') return [];
-	if (!instance.state || typeof instance.state !== 'object') instance.state = {};
+	instance.state ??= {};
 
 	const changedKeys = [];
 	for (const [key, nextValue] of Object.entries(partialState)) {

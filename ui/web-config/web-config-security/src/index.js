@@ -1,6 +1,6 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles, createTranslator, jsonEqual, setState } from '../../web-config-shared.js';
+import { adoptSharedStyles, createTranslator, setState } from '../../web-config-shared.js';
 
 const RE_CONTACT = /^Contact:\s*(.+)$/i;
 const RE_EXPIRES = /^Expires:\s*(.+)$/i;
@@ -10,6 +10,15 @@ const RE_PREFERRED_LANGUAGES = /^Preferred-Languages:\s*(.+)$/i;
 const RE_CANONICAL = /^Canonical:\s*(.+)$/i;
 const RE_POLICY = /^Policy:\s*(.+)$/i;
 const RE_HIRING = /^Hiring:\s*(.+)$/i;
+
+function jsonEqual(a, b) {
+	if (a === b) return true;
+	try {
+		return JSON.stringify(a) === JSON.stringify(b);
+	} catch {
+		return false;
+	}
+}
 
 function toDatetimeLocalValue(dateOrIsoString) {
 	if (!dateOrIsoString) return '';
@@ -295,7 +304,7 @@ class WebConfigSecurity extends HTMLElement {
 
 	render() {
 		this.shadowRoot.innerHTML = `
-			<details name="sec-manager" open>
+			<details name="sec-manager" open data-status="ok">
 				<summary>${this.t('ui.required')}</summary>
 				<div>
 					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'))}
