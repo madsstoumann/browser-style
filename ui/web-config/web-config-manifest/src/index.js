@@ -1,14 +1,17 @@
 import i18n from './i18n.json' with { type: 'json' };
 
+import { adoptSharedStyles } from '../../web-config-shared.js';
+
 class WebConfigManifest extends HTMLElement {
 	static formAssociated = true;
-	static observedAttributes = ['lang', 'value'];
+	static observedAttributes = ['lang', 'value', 'src'];
 
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this._loadStyles();
 		this._internals = this.attachInternals();
+		this._loadedUrls = { src: null };
 		
 		this.state = {
 			name: '',
@@ -24,39 +27,80 @@ class WebConfigManifest extends HTMLElement {
 		};
 	}
 
+	_applyManifestData(data) {
+		if (typeof data !== 'object' || data === null) return;
+
+		const nextState = { ...this.state };
+		const stringKeys = ['name', 'short_name', 'description', 'display', 'orientation', 'theme_color', 'background_color', 'start_url', 'scope'];
+		for (const key of stringKeys) {
+			if (key in data) nextState[key] = String(data[key] ?? '');
+		}
+		if (Array.isArray(data.icons)) nextState.icons = data.icons;
+
+		this.state = nextState;
+		this.render();
+		this._internals.setFormValue(this.value);
+	}
+
+	async _loadFromManifestJson(url) {
+		try {
+			const response = await fetch(url);
+			const text = await response.text();
+			const parsed = JSON.parse(text);
+			this._applyManifestData(parsed);
+		} catch (error) {
+			console.error(`Failed to load manifest.json from ${url}:`, error);
+			this.render();
+			this._internals.setFormValue(this.value);
+		}
+	}
+
 	async _loadStyles() {
 		try {
-			const [shared, local] = await Promise.all([
-				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
-			]);
-			
-			const sharedSheet = new CSSStyleSheet();
-			await sharedSheet.replace(shared);
-			
-			const localSheet = new CSSStyleSheet();
-			await localSheet.replace(local);
-			
-			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
+			await adoptSharedStyles(this.shadowRoot);
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
 	}
 
-	connectedCallback() {
+	async connectedCallback() {
+		const srcUrl = this.getAttribute('src');
+		const value = this.getAttribute('value');
+
+		if (srcUrl) {
+			this._loadedUrls.src = srcUrl;
+			await this._loadFromManifestJson(srcUrl);
+			return;
+		}
+
+		if (value) {
+			try {
+				this._applyManifestData(JSON.parse(value));
+				return;
+			} catch (e) {
+				// ignore invalid JSON
+			}
+		}
+
 		this.render();
+		this._internals.setFormValue(this.value);
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
 		if (name === 'lang') this.render();
+		if (name === 'src') {
+			if (newValue && this._loadedUrls.src !== newValue) {
+				this._loadedUrls.src = newValue;
+				this._loadFromManifestJson(newValue);
+			}
+			return;
+		}
 		if (name === 'value') {
 			try {
-				const parsed = JSON.parse(newValue);
-				this.state = { ...this.state, ...parsed };
-				this.render();
+				this._applyManifestData(JSON.parse(newValue));
 			} catch (e) {
-				// Invalid JSON, ignore or handle error
+				// Invalid JSON, ignore
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
+import { adoptSharedStyles, createTranslator, setState } from '../../web-config-shared.js';
+
 const RE_USER_AGENT = /^User-agent:\s*(.+)$/i;
 const RE_SITEMAP = /^Sitemap:\s*(.+)$/i;
 const RE_CRAWL_DELAY = /^Crawl-delay:\s*(\d+)$/i;
@@ -19,7 +21,7 @@ class WebConfigRobots extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this._loadStyles();
-		this.i18nConfig = i18nData;
+		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
 		this.state = {
 			allow: [],
 			disallow: [],
@@ -37,29 +39,9 @@ class WebConfigRobots extends HTMLElement {
 		this._loadedUrls = { allow: null, disallow: null, src: null };
 	}
 
-	t(key) {
-		const keys = key.split('.');
-		let value = this.i18nConfig[this.lang];
-		for (const k of keys) {
-			value = value?.[k];
-		}
-		return typeof value === 'string' ? value : key;
-	}
-
 	async _loadStyles() {
 		try {
-			const [shared, local] = await Promise.all([
-				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
-			]);
-			
-			const sharedSheet = new CSSStyleSheet();
-			await sharedSheet.replace(shared);
-			
-			const localSheet = new CSSStyleSheet();
-			await localSheet.replace(local);
-			
-			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
+			await adoptSharedStyles(this.shadowRoot);
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -111,32 +93,21 @@ class WebConfigRobots extends HTMLElement {
 	}
 
 	_updateState(partialState) {
-		let stateChanged = false;
-		let needsFullRender = false;
-		let updateSitemaps = false;
-		let updateSettings = false;
+		const changedKeys = setState(this, partialState);
+		if (changedKeys.length === 0) return;
 
-		for (const [key, newValue] of Object.entries(partialState)) {
-			if (this.state[key] !== newValue) {
-				this.state[key] = newValue;
-				stateChanged = true;
+		const needsFullRender = changedKeys.some(k => k === 'allow' || k === 'disallow');
+		const updateSitemaps = changedKeys.includes('sitemaps');
+		const updateSettings = changedKeys.some(k => ['crawlDelay', 'host', 'cleanParam', 'requestRate', 'visitTime'].includes(k));
 
-				if (key === 'allow' || key === 'disallow') needsFullRender = true;
-				else if (key === 'sitemaps') updateSitemaps = true;
-				else if (['crawlDelay', 'host', 'cleanParam', 'requestRate', 'visitTime'].includes(key)) updateSettings = true;
-			}
+		if (needsFullRender) {
+			this.render();
+		} else {
+			if (updateSitemaps) this._updateSitemapsSection();
+			if (updateSettings) this._updateSettingsSection();
+			this._updateOutput();
 		}
-
-		if (stateChanged) {
-			if (needsFullRender) {
-				this.render();
-			} else {
-				if (updateSitemaps) this._updateSitemapsSection();
-				if (updateSettings) this._updateSettingsSection();
-				this._updateOutput();
-			}
-			this.dispatchChangeEvent();
-		}
+		this.dispatchChangeEvent();
 	}
 
 	_updateOutput() {
@@ -685,7 +656,7 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSettings() {
 		return `
-			<details name="robtxt-manager">
+			<details name="robtxt-settings">
 				<summary>${this.t('ui.globalSettings')}</summary>
 				<div>
 					<label for="crawl-delay-input">
@@ -741,7 +712,7 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSitemaps() {
 		return `
-			<details name="robtxt-manager">
+			<details name="robtxt-sitemaps">
 				<summary>${this.t('ui.sitemaps')} (${this.state.sitemaps.length})</summary>
 				<div>
 					${this.state.sitemaps.length > 0 ? `

@@ -1,5 +1,7 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
+import { adoptSharedStyles, createTranslator, jsonEqual, setState } from '../../web-config-shared.js';
+
 const RE_CONTACT = /^Contact:\s*(.+)$/i;
 const RE_EXPIRES = /^Expires:\s*(.+)$/i;
 const RE_ENCRYPTION = /^Encryption:\s*(.+)$/i;
@@ -8,6 +10,27 @@ const RE_PREFERRED_LANGUAGES = /^Preferred-Languages:\s*(.+)$/i;
 const RE_CANONICAL = /^Canonical:\s*(.+)$/i;
 const RE_POLICY = /^Policy:\s*(.+)$/i;
 const RE_HIRING = /^Hiring:\s*(.+)$/i;
+
+function toDatetimeLocalValue(dateOrIsoString) {
+	if (!dateOrIsoString) return '';
+	const date = dateOrIsoString instanceof Date ? dateOrIsoString : new Date(dateOrIsoString);
+	if (Number.isNaN(date.getTime())) return '';
+	const local = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+	return local.toISOString().slice(0, 16);
+}
+
+function fromDatetimeLocalValue(value) {
+	if (!value) return '';
+	const [datePart, timePart] = value.split('T');
+	if (!datePart || !timePart) return '';
+	const [year, month, day] = datePart.split('-').map(n => parseInt(n, 10));
+	const [hour, minute, secondPart] = timePart.split(':');
+	const second = secondPart ? parseInt(secondPart, 10) : 0;
+	const date = new Date(year, month - 1, day, parseInt(hour, 10), parseInt(minute, 10), Number.isFinite(second) ? second : 0, 0);
+	if (Number.isNaN(date.getTime())) return '';
+	// security.txt expects an RFC3339 datetime; omit milliseconds for a more typical value.
+	return date.toISOString().replace(/\.\d{3}Z$/, 'Z');
+}
 
 class WebConfigSecurity extends HTMLElement {
 	static get observedAttributes() {
@@ -18,7 +41,7 @@ class WebConfigSecurity extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 		this._loadStyles();
-		this.i18nConfig = i18nData;
+		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
 		this.state = {
 			contact: [],
 			expires: '',
@@ -34,29 +57,9 @@ class WebConfigSecurity extends HTMLElement {
 		this._loadedUrls = { src: null };
 	}
 
-	t(key) {
-		const keys = key.split('.');
-		let value = this.i18nConfig[this.lang];
-		for (const k of keys) {
-			value = value?.[k];
-		}
-		return typeof value === 'string' ? value : key;
-	}
-
 	async _loadStyles() {
 		try {
-			const [shared, local] = await Promise.all([
-				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
-			]);
-			
-			const sharedSheet = new CSSStyleSheet();
-			await sharedSheet.replace(shared);
-			
-			const localSheet = new CSSStyleSheet();
-			await localSheet.replace(local);
-			
-			this.shadowRoot.adoptedStyleSheets = [sharedSheet, localSheet];
+			await adoptSharedStyles(this.shadowRoot);
 		} catch (error) {
 			console.error('Failed to load styles:', error);
 		}
@@ -73,29 +76,29 @@ class WebConfigSecurity extends HTMLElement {
 	}
 
 	_updateState(partialState) {
-		let stateChanged = false;
-		for (const [key, newValue] of Object.entries(partialState)) {
-			if (JSON.stringify(this.state[key]) !== JSON.stringify(newValue)) {
-				this.state[key] = newValue;
-				stateChanged = true;
+		const changedKeys = setState(this, partialState, {
+			equalsByKey: {
+				contact: jsonEqual,
+				encryption: jsonEqual,
+				acknowledgments: jsonEqual,
+				canonical: jsonEqual,
+				policy: jsonEqual,
+				hiring: jsonEqual
 			}
-		}
+		});
 
-		if (stateChanged) {
-			this.render();
-			this.dispatchChangeEvent();
-		}
+		if (changedKeys.length === 0) return;
+		this.render();
+		this.dispatchChangeEvent();
 	}
 
 	get config() {
-		return JSON.parse(JSON.stringify(this.state));
+		return structuredClone(this.state);
 	}
 
 	set config(data) {
 		if (typeof data !== 'object' || data === null) return;
-		this.state = { ...this.state, ...data };
-		this.render();
-		this.dispatchChangeEvent();
+		this._updateState(data);
 	}
 
 	get value() {
@@ -247,13 +250,15 @@ class WebConfigSecurity extends HTMLElement {
 			const field = e.target.dataset.field;
 			if (!field) return;
 
-			if (field === 'expires' || field === 'preferredLanguages') {
-				this._updateState({ [field]: e.target.value });
+			if (field === 'expires') {
+				this._updateState({ expires: fromDatetimeLocalValue(e.target.value) });
+			} else if (field === 'preferredLanguages') {
+				this._updateState({ preferredLanguages: e.target.value });
 			}
 		});
 	}
 
-	_renderMultiField(field, label, hint, addLabel) {
+	_renderMultiField(field, label, hint) {
 		const values = this.state[field];
 		return `
 			<small>${label}</small>
@@ -273,13 +278,16 @@ class WebConfigSecurity extends HTMLElement {
 	}
 
 	_renderSingleField(field, label, hint, type = 'text') {
+		const value = type === 'datetime-local'
+			? toDatetimeLocalValue(this.state[field])
+			: (this.state[field] || '');
 		return `
 			<label for="${field}-input"><small>${label}</small>
 				<input
 					type="${type}"
 					id="${field}-input"
 					data-field="${field}"
-					value="${this.state[field] || ''}"
+					value="${value}"
 					placeholder="${hint}"
 				>
 			</label>`;
@@ -290,7 +298,7 @@ class WebConfigSecurity extends HTMLElement {
 			<details name="sec-manager" open>
 				<summary>${this.t('ui.required')}</summary>
 				<div>
-					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'), this.t('ui.addContact'))}
+					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'))}
 					${this._renderSingleField('expires', this.t('ui.expires'), this.t('ui.expiresHint'), 'datetime-local')}
 				</div>
 			</details>
@@ -298,12 +306,12 @@ class WebConfigSecurity extends HTMLElement {
 			<details name="sec-manager">
 				<summary>${this.t('ui.optional')}</summary>
 				<div>
-					${this._renderMultiField('encryption', this.t('ui.encryption'), this.t('ui.encryptionHint'), this.t('ui.addEncryption'))}
-					${this._renderMultiField('acknowledgments', this.t('ui.acknowledgments'), this.t('ui.acknowledgmentsHint'), this.t('ui.addAcknowledgment'))}
+					${this._renderMultiField('encryption', this.t('ui.encryption'), this.t('ui.encryptionHint'))}
+					${this._renderMultiField('acknowledgments', this.t('ui.acknowledgments'), this.t('ui.acknowledgmentsHint'))}
 					${this._renderSingleField('preferredLanguages', this.t('ui.preferredLanguages'), this.t('ui.preferredLanguagesHint'))}
-					${this._renderMultiField('canonical', this.t('ui.canonical'), this.t('ui.canonicalHint'), this.t('ui.add'))}
-					${this._renderMultiField('policy', this.t('ui.policy'), this.t('ui.policyHint'), this.t('ui.addPolicy'))}
-					${this._renderMultiField('hiring', this.t('ui.hiring'), this.t('ui.hiringHint'), this.t('ui.addHiring'))}
+					${this._renderMultiField('canonical', this.t('ui.canonical'), this.t('ui.canonicalHint'))}
+					${this._renderMultiField('policy', this.t('ui.policy'), this.t('ui.policyHint'))}
+					${this._renderMultiField('hiring', this.t('ui.hiring'), this.t('ui.hiringHint'))}
 				</div>
 			</details>
 

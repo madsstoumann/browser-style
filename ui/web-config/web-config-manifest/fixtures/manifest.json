@@ -1,0 +1,23 @@
+{
+	"name": "browser.style",
+	"short_name": "browser.style",
+	"description": "Cross-Browser Default Styles",
+	"display": "standalone",
+	"orientation": "any",
+	"theme_color": "#2255ff",
+	"background_color": "#f2f4ff",
+	"start_url": "/",
+	"scope": "/",
+	"icons": [
+		{
+			"src": "/assets/images/government.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "/assets/images/finance.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}
