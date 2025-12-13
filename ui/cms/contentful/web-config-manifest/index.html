@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Config Manifest - Contentful App</title>
+  <script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
+  <style>
+    body { margin: 0; padding: 16px; min-height: 400px; }
+    #app { min-height: 400px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import 'https://browser.style/ui/web-config-manifest/src/index.js';
+
+    const mount = async (api) => {
+      const app = document.getElementById('app');
+
+      await customElements.whenDefined('web-config-manifest');
+
+      const editor = document.createElement('web-config-manifest');
+      app.appendChild(editor);
+
+      if (api) {
+        const currentValue = api.field.getValue();
+        if (currentValue && typeof currentValue === 'object' && Object.keys(currentValue).length > 0) {
+          try {
+            editor.value = JSON.stringify(currentValue);
+          } catch (err) {
+            console.error('Failed to set initial value:', err);
+          }
+        } else if (typeof currentValue === 'string' && currentValue.trim()) {
+          try {
+            editor.value = currentValue;
+          } catch (err) {
+            console.error('Failed to set initial value:', err);
+          }
+        }
+
+        editor.addEventListener('manifest-change', (event) => {
+          api.field.setValue(event.detail ?? null);
+        });
+
+        api.window.startAutoResizer();
+      }
+    };
+
+    if (window.contentfulExtension) {
+      try {
+        const initResult = window.contentfulExtension.init(async (api) => mount(api));
+        if (initResult && typeof initResult.catch === 'function') {
+          initResult.catch((error) => console.error('Contentful SDK error:', error));
+        }
+      } catch (error) {
+        console.error('Failed to initialize Contentful SDK:', error);
+      }
+    } else {
+      mount(null);
+    }
+  </script>
+</body>
+</html>

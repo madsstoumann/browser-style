@@ -4,7 +4,10 @@ This directory contains Contentful app wrappers for browser.style UI components.
 
 ## Available Components
 
-- **csp-manager** - Content Security Policy visual editor with security evaluation
+- **web-config-csp** - Content Security Policy visual editor with security evaluation
+- **web-config-robots** - robots.txt editor (structured config + output)
+- **web-config-security** - security.txt editor (structured config + output)
+- **web-config-manifest** - web app manifest editor
 
 ## Setup Instructions
 
@@ -14,9 +17,9 @@ This directory contains Contentful app wrappers for browser.style UI components.
 2. Navigate to **Apps** → **Manage apps** → **Create app**
 3. Choose **Create a custom app**
 4. Fill in the app details:
-   - **App name**: `CSP Manager` (or component name)
+   - **App name**: `Web Config CSP` (or component name)
    - **Short description**: Brief description of what the app does
-   - **App URL**: `https://browser.style/ui/cms/contentful/csp-manager/`
+   - **App URL**: `https://browser.style/ui/cms/contentful/web-config-csp/`
 
 ### 2. Configure App Locations
 
@@ -24,7 +27,10 @@ In the app configuration, enable the **Entry field** location:
 
 1. Under **Locations**, check **Entry field**
 2. Configure field types that the app supports:
-   - For **csp-manager**: Select **JSON object** as the field type
+   - For **web-config-csp**: Select **JSON object** as the field type
+   - For **web-config-robots**: Select **Long text** as the field type
+   - For **web-config-security**: Select **Long text** as the field type
+   - For **web-config-manifest**: Select **JSON object** as the field type
 3. Save the configuration
 
 ### 3. Install App to Space
@@ -40,12 +46,15 @@ In the app configuration, enable the **Entry field** location:
 2. Select the content type where you want to use the component
 3. Click **Add field**
 4. Choose the appropriate field type:
-   - For **csp-manager**: Select **JSON object**
+   - For **web-config-csp**: Select **JSON object**
+   - For **web-config-robots**: Select **Long text**
+   - For **web-config-security**: Select **Long text**
+   - For **web-config-manifest**: Select **JSON object**
 5. Configure the field:
    - **Name**: e.g., "Content Security Policy"
    - **Field ID**: e.g., `contentSecurityPolicy`
 6. In the **Appearance** tab:
-   - Select your custom app (e.g., "CSP Manager")
+   - Select your custom app (e.g., "Web Config CSP")
 7. Save the content type
 
 ## Field Type Requirements
@@ -54,11 +63,14 @@ Each component requires a specific Contentful field type:
 
 | Component | Field Type | Description |
 |-----------|------------|-------------|
-| csp-manager | JSON object | Stores CSP policy configuration as structured JSON |
+| web-config-csp | JSON object | Stores CSP policy configuration as structured JSON |
+| web-config-robots | Long text | Stores robots.txt as plain text |
+| web-config-security | Long text | Stores security.txt as plain text |
+| web-config-manifest | JSON object | Stores manifest.json as structured JSON |
 
 ## Using the Components
 
-### CSP Manager
+### Web Config CSP
 
 **Initial State:**
 - If the field is **empty**, the component starts with a blank slate (no directives enabled)
@@ -105,13 +117,40 @@ This is handled automatically via Cloudflare Rules.
 
 ### Data not saving
 
-1. **Check field type**: Must be JSON object (not Text or Object)
+1. **Check field type**: Must match the component requirements (CSP/manifest: JSON object; robots/security: Long text)
 2. **Check browser console**: Look for Contentful SDK errors
 3. **Verify API keys**: Ensure Contentful space has proper permissions
 
 ### Validation errors
 
-For **csp-manager**, high-severity security issues will block publishing. This is intentional. Review and fix the security findings before publishing.
+For **web-config-csp**, high-severity security issues will block publishing. This is intentional. Review and fix the security findings before publishing.
+
+### Web Config Robots
+
+**Initial State:**
+- If the field is **empty**, the component starts blank
+- If the field has **existing data**, it loads that saved config
+
+**Data Format:**
+The field stores the component's `config` object.
+
+### Web Config Security
+
+**Initial State:**
+- If the field is **empty**, the component starts blank
+- If the field has **existing data**, it loads that saved config
+
+**Data Format:**
+The field stores the component's `config` object.
+
+### Web Config Manifest
+
+**Initial State:**
+- If the field is **empty**, the component starts with defaults
+- If the field has **existing data**, it loads that saved manifest
+
+**Data Format:**
+The field stores the manifest JSON object.
 
 ## Adding New Components
 

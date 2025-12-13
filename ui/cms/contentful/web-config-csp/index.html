@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSP Manager - Contentful App</title>
+  <title>Web Config CSP - Contentful App</title>
   <script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
   <style>
     body { margin: 0; padding: 16px; min-height: 400px; }
@@ -14,8 +14,8 @@
   <div id="app"></div>
 
   <script type="module">
-    // Import the CSP Manager web component from your own domain
-    import 'https://browser.style/ui/csp-manager/src/index.js';
+    // Import the CSP web component from browser.style
+    import 'https://browser.style/ui/web-config-csp/src/index.js';
 
     // Initialize Contentful App SDK
     if (window.contentfulExtension) {
@@ -25,12 +25,12 @@
           const app = document.getElementById('app');
 
           // Wait for the custom element to be defined
-          console.log('Waiting for csp-manager to be defined...');
-          await customElements.whenDefined('csp-manager');
-          console.log('csp-manager is defined');
+          console.log('Waiting for web-config-csp to be defined...');
+          await customElements.whenDefined('web-config-csp');
+          console.log('web-config-csp is defined');
 
           // Create the CSP Manager component
-          const cspManager = document.createElement('csp-manager');
+          const cspManager = document.createElement('web-config-csp');
           cspManager.setAttribute('evaluate', '');
           console.log('CSP Manager component created:', cspManager);
 
@@ -105,7 +105,7 @@
     } else {
       // If SDK not available (not in Contentful), show component in standalone mode
       const app = document.getElementById('app');
-      const cspManager = document.createElement('csp-manager');
+      const cspManager = document.createElement('web-config-csp');
       cspManager.setAttribute('evaluate', '');
       app.appendChild(cspManager);
     }
