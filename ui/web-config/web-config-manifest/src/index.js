@@ -16,8 +16,8 @@ class WebConfigManifest extends HTMLElement {
 			description: '',
 			display: 'standalone',
 			orientation: 'any',
-			theme_color: '#ffffff',
-			background_color: '#ffffff',
+			theme_color: '#222222',
+			background_color: '#eeeeee',
 			start_url: '/',
 			scope: '/',
 			icons: []
@@ -28,7 +28,7 @@ class WebConfigManifest extends HTMLElement {
 		try {
 			const [shared, local] = await Promise.all([
 				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
+				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
 			]);
 			
 			const sharedSheet = new CSSStyleSheet();
@@ -100,17 +100,17 @@ class WebConfigManifest extends HTMLElement {
 			<!-- Identity -->
 			<details name="manifest-accordion" open>
 				<summary>${t.ui.identity}</summary>
-				<div class="content">
+				<div>
 					<label>
-						${t.ui.name}
+						<small>${t.ui.name}</small>
 						<input type="text" value="${s.name}" data-key="name" placeholder="${t.ui.nameHint}">
 					</label>
 					<label>
-						${t.ui.shortName}
+						<small>${t.ui.shortName}</small>
 						<input type="text" value="${s.short_name}" data-key="short_name" placeholder="${t.ui.shortNameHint}">
 					</label>
 					<label>
-						${t.ui.description}
+						<small>${t.ui.description}</small>
 						<textarea data-key="description" placeholder="${t.ui.descriptionHint}">${s.description}</textarea>
 					</label>
 				</div>
@@ -119,9 +119,9 @@ class WebConfigManifest extends HTMLElement {
 			<!-- Presentation -->
 			<details name="manifest-accordion">
 				<summary>${t.ui.presentation}</summary>
-				<div class="content">
+				<div>
 					<label>
-						${t.ui.display}
+						<small>${t.ui.display}</small>
 						<select data-key="display">
 							${Object.entries(t.options.display).map(([k, v]) => 
 								`<option value="${k}" ${s.display === k ? 'selected' : ''}>${v}</option>`
@@ -129,47 +129,47 @@ class WebConfigManifest extends HTMLElement {
 						</select>
 					</label>
 					<label>
-						${t.ui.orientation}
+						<small>${t.ui.orientation}</small>
 						<select data-key="orientation">
 							${Object.entries(t.options.orientation).map(([k, v]) => 
 								`<option value="${k}" ${s.orientation === k ? 'selected' : ''}>${v}</option>`
 							).join('')}
 						</select>
 					</label>
-					<label>
-						${t.ui.themeColor}
-						<div class="color-input-wrapper">
+					
+						<small>${t.ui.themeColor}</small>
+						<fieldset>
 							<input type="color" value="${s.theme_color}" data-key="theme_color">
 							<input type="text" value="${s.theme_color}" data-key="theme_color">
-						</div>
-					</label>
-					<label>
-						${t.ui.backgroundColor}
-						<div class="color-input-wrapper">
+						</fieldset>
+					
+					
+						<small>${t.ui.backgroundColor}</small>
+						<fieldset>
 							<input type="color" value="${s.background_color}" data-key="background_color">
 							<input type="text" value="${s.background_color}" data-key="background_color">
-						</div>
-					</label>
+						</fieldset>
+					
 				</div>
 			</details>
 
 			<!-- Navigation -->
 			<details name="manifest-accordion">
 				<summary>${t.ui.navigation}</summary>
-				<div class="content">
+				<div>
 					<label>
-						${t.ui.startUrl}
+						<small>${t.ui.startUrl}</small>
 						<input type="text" value="${s.start_url}" data-key="start_url" placeholder="${t.ui.startUrlHint}">
 					</label>
 					<label>
-						${t.ui.scope}
+						<small>${t.ui.scope}</small>
 						<input type="text" value="${s.scope}" data-key="scope" placeholder="${t.ui.scopeHint}">
 					</label>
 				</div>
 			</details>
 
 			<!-- Output -->
-			<pre class="full-width"><code>${this.value}</code></pre>
+			<pre><code>${this.value}</code></pre>
 		`;
 
 		this.addEventListeners();

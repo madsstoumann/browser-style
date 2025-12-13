@@ -1,17 +1,18 @@
 :host {
-	--ui-manager-accent: hsl(211, 100%, 95%);
-	--ui-manager-accent-dark: hsl(211, 50%, 50%);
-	--ui-manager-buttonface: #efefef;
-	--ui-manager-bdrs: .5rem;
-	--ui-manager-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
-	--ui-manager-ff-system: system-ui, sans-serif;
-	--ui-manager-gap: 1rem;
-	--ui-manager-focus-c: hsl(211, 5%, 60%);
-	--ui-manager-tab-width: 2;
+	--web-config-accent: hsl(211, 100%, 95%);
+	--web-config-accent-dark: hsl(211, 50%, 50%);
+	--web-config-buttonface: #efefef;
+	--web-config-bdrs: .5rem;
+	--web-config-ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	--web-config-ff-system: system-ui, sans-serif;
+	--web-config-gap: 1rem;
+	--web-config-focus-c: hsl(211, 5%, 60%);
+	--web-config-tab-width: 2;
 
 	display: grid;
-	font-size: var(--ui-manager-font-size, 16px);
-	row-gap: var(--ui-manager-gap);
+	font-family: var(--web-config-ff, system-ui);
+	font-size: var(--web-config-font-size, 16px);
+	row-gap: var(--web-config-gap);
 }
 
 [data-sr] {
@@ -27,96 +28,104 @@
 }
 
 button {
-	background: var(--ui-manager-buttonface);
+	background: var(--web-config-buttonface);
 	border: 0;
 	cursor: pointer;
 }
 
 button, input, textarea, select {
-	border-radius: var(--ui-manager-bdrs);
-	font-family: var(--ui-manager-ff-system);
+	border-radius: var(--web-config-bdrs);
+	font-family: var(--web-config-ff);
 	font-size: inherit;
-	&:focus-visible { box-shadow: inset 0 0 0 2px var(--ui-manager-focus-c); outline: 0; }
+	&:focus-visible { box-shadow: inset 0 0 0 2px var(--web-config-focus-c); outline: 0; }
 }
 
 details {
-	border: 1px solid var(--ui-manager-buttonface);
-	border-radius: var(--ui-manager-bdrs);
-	padding: var(--ui-manager-gap);
+	border: 1px solid var(--web-config-buttonface);
+	border-radius: var(--web-config-bdrs);
+	padding: var(--web-config-gap);
 	user-select: none;
-
-	&:has(:focus-visible) { outline: 2px solid var(--ui-manager-focus-c); outline-offset: 3px; }
+	&:has(:focus-visible) { outline: 2px solid var(--web-config-focus-c); outline-offset: 3px; }
 }
 
 summary {
-	font-family: var(--ui-manager-ff-mono);
+	font-family: var(--web-config-ff-mono);
 	outline: 0;
 	cursor: pointer;
 }
 
 div {
 	display: grid;
-	margin-block-start: var(--ui-manager-gap);
-	row-gap: var(--ui-manager-gap);
+	margin-block-start: var(--web-config-gap);
+	row-gap: var(--web-config-gap);
 }
 
 fieldset {
 	all: unset;
 	display: flex;
-	gap: var(--ui-manager-gap);
+	gap: var(--web-config-gap);
 	button { padding: 0 2ch; }
 }
 
 input, textarea, select {
-	border: 1px solid var(--ui-manager-buttonface);
+	border: 1px solid var(--web-config-buttonface);
 	flex: 1;
-	padding: 1ch 2ch;
+	padding: 1ch 1.5ch;
 	box-sizing: border-box;
+}
+
+[type=color] {
+	block-size: unset;
+	padding: 0;
+	width: 100%;
+	&::-webkit-color-swatch,
+	&::-webkit-color-swatch-wrapper {
+		border: 0;
+		border-radius: 3px;
+		padding: 0;
+		width: 100%;
+	}
+}
+
+label {
+	display: grid;
+	row-gap: 0.5ch;
 }
 
 pre {
 	all: unset;
-	background: var(--ui-manager-buttonface);
-	border-radius: var(--ui-manager-bdrs);
+	background: var(--web-config-buttonface);
+	border-radius: var(--web-config-bdrs);
 	font-size: small;
 	overflow-x: auto;
 	padding: 2ch;
-	tab-size: var(--ui-manager-tab-width);
+	tab-size: var(--web-config-tab-width);
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	display: block;
-	font-family: var(--ui-manager-ff-mono);
-}
-
-::details-content {
-	height: 0;
-	overflow: clip;
-	transition: height 0.5s ease, content-visibility 0.4s ease allow-discrete;
-}
-[open]::details-content {
-	height: auto;
+	font-family: var(--web-config-ff-mono);
 }
 
 ul {
 	all: unset;
 	display: flex;
 	flex-wrap: wrap;
-	gap: calc(var(--ui-manager-gap) / 2);
+	gap: calc(var(--web-config-gap) / 2);
 	list-style: none;
 }
 
 li {
-	background: var(--ui-manager-buttonface);
-	border-radius: var(--ui-manager-bdrs);
+	background: var(--web-config-buttonface);
+	border-radius: var(--web-config-bdrs);
 	display: grid;
-	font-family: var(--ui-manager-ff-mono);
+	font-family: var(--web-config-ff-mono);
 	font-size: small;
 	gap: 1ch;
 	grid-auto-flow: column;
 	padding: .75ch 1.5ch;
 	place-content: center;
 
-	&:has(button) { background: var(--ui-manager-accent); }
+	&:has(button) { background: var(--web-config-accent); }
 	
 	button {
 		all: unset;

@@ -47,7 +47,7 @@ class WebConfigSecurity extends HTMLElement {
 		try {
 			const [shared, local] = await Promise.all([
 				fetch(new URL('../../web-config-shared.css', import.meta.url)).then(r => r.text()),
-				fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
+				// fetch(new URL('./index.css', import.meta.url)).then(r => r.text())
 			]);
 			
 			const sharedSheet = new CSSStyleSheet();
@@ -256,32 +256,25 @@ class WebConfigSecurity extends HTMLElement {
 	_renderMultiField(field, label, hint, addLabel) {
 		const values = this.state[field];
 		return `
+			<small>${label}</small>
+				${values.length > 0 ? `
+				<ul>
+					${values.map((val, idx) => `
+					<li>${val}
+						<button data-action="remove" data-field="${field}" data-index="${idx}" title="${this.t('ui.remove')}">×</button>
+					</li>
+				`).join('')}
+				</ul>
+			` : ''}
 			<fieldset>
-				<label>${label}</label>
-				<div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
-					${values.length > 0 ? `
-						<ul>
-							${values.map((val, idx) => `
-								<li>
-									<input type="text" value="${val}" readonly>
-									<button data-action="remove" data-field="${field}" data-index="${idx}" title="${this.t('ui.remove')}">×</button>
-								</li>
-							`).join('')}
-						</ul>
-					` : ''}
-					<div style="display: flex; gap: 0.5rem;">
-						<input type="text" data-new="${field}" placeholder="${hint}">
-						<button data-action="add" data-field="${field}">${this.t('ui.add')}</button>
-					</div>
-				</div>
-			</fieldset>
-		`;
+				<input type="text" data-new="${field}" placeholder="${hint}">
+				<button data-action="add" data-field="${field}">${this.t('ui.add')}</button>
+			</fieldset>`;
 	}
 
 	_renderSingleField(field, label, hint, type = 'text') {
 		return `
-			<fieldset>
-				<label for="${field}-input">${label}</label>
+			<label for="${field}-input"><small>${label}</small>
 				<input
 					type="${type}"
 					id="${field}-input"
@@ -289,13 +282,12 @@ class WebConfigSecurity extends HTMLElement {
 					value="${this.state[field] || ''}"
 					placeholder="${hint}"
 				>
-			</fieldset>
-		`;
+			</label>`;
 	}
 
 	render() {
 		this.shadowRoot.innerHTML = `
-			<details name="sec-manager" class="sec-required" open>
+			<details name="sec-manager" open>
 				<summary>${this.t('ui.required')}</summary>
 				<div>
 					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'), this.t('ui.addContact'))}
@@ -303,7 +295,7 @@ class WebConfigSecurity extends HTMLElement {
 				</div>
 			</details>
 
-			<details name="sec-manager" class="sec-optional">
+			<details name="sec-manager">
 				<summary>${this.t('ui.optional')}</summary>
 				<div>
 					${this._renderMultiField('encryption', this.t('ui.encryption'), this.t('ui.encryptionHint'), this.t('ui.addEncryption'))}

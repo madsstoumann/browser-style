@@ -629,13 +629,13 @@ class WebConfigRobots extends HTMLElement {
 		const bots = this.state[section];
 
 		return `
-			<details name="robtxt-manager" class="robtxt-${section}" open>
+			<details name="robtxt-manager" open>
 				<summary>${title} (${bots.length})</summary>
 				<div>
 					<ul data-ul-for="${section}">
 						${bots.length > 0
 							? bots.map(bot => this._renderBotChip(bot, section)).join('')
-							: `<li class="empty">${this.t('ui.noBotsInSection')}</li>`
+							: `<li>${this.t('ui.noBotsInSection')}</li>`
 						}
 					</ul>
 					<fieldset>
@@ -651,21 +651,17 @@ class WebConfigRobots extends HTMLElement {
 						<datalist id="${section}-bots">
 							${unusedBots.slice(0, 100).map(bot => `<option value="${bot}"></option>`).join('')}
 						</datalist>
-						<div class="bot-suggestions">
-							<small>${this.t('ui.quickAddBots')}</small>
-							<div class="bot-grid">
-								${unusedBots.slice(0, 20).map(bot => `
-									<button
-										data-add-from-list
-										data-section="${section}"
-										data-bot="${bot}"
-										class="bot-chip"
-									>${bot}</button>
-								`).join('')}
-							</div>
-							${unusedBots.length > 20 ? `<small class="muted">${this.t('ui.andMore')} ${unusedBots.length - 20} ${this.t('ui.more')}</small>` : ''}
-						</div>
-					` : ''}
+						<small>${this.t('ui.quickAddBots')}</small>
+						<ul>
+							${unusedBots.slice(0, 20).map(bot => `
+							<li>
+								<button
+									data-add-from-list
+									data-section="${section}"
+									data-bot="${bot}"
+								>${bot}</button>
+							</li>`).join('')}
+						</ul>` : ''}
 				</div>
 			</details>
 		`;
@@ -689,13 +685,11 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSettings() {
 		return `
-			<details name="robtxt-manager" class="robtxt-settings">
+			<details name="robtxt-manager">
 				<summary>${this.t('ui.globalSettings')}</summary>
 				<div>
-					<fieldset>
-						<label for="crawl-delay-input">
-							<small>${this.t('ui.crawlDelay')}</small>
-						</label>
+					<label for="crawl-delay-input">
+						<small>${this.t('ui.crawlDelay')}</small>
 						<input
 							type="number"
 							id="crawl-delay-input"
@@ -704,54 +698,42 @@ class WebConfigRobots extends HTMLElement {
 							placeholder="${this.t('ui.noCrawlDelay')}"
 							value="${this.state.crawlDelay || ''}"
 						>
-					</fieldset>
-
-					<fieldset>
-						<label for="host-input">
-							<small>${this.t('ui.host')}</small>
-						</label>
+					</label>
+					<label for="host-input">
+						<small>${this.t('ui.host')}</small>
 						<input
 							type="text"
 							id="host-input"
 							placeholder="${this.t('ui.hostHint')}"
 							value="${this.state.host || ''}"
 						>
-					</fieldset>
-
-					<fieldset>
-						<label for="clean-param-input">
-							<small>${this.t('ui.cleanParam')}</small>
-						</label>
+					</label>
+					<label for="clean-param-input">
+						<small>${this.t('ui.cleanParam')}</small>
 						<textarea
 							id="clean-param-input"
 							placeholder="${this.t('ui.cleanParamHint')}"
 							rows="3"
 						>${this.state.cleanParam.join('\n')}</textarea>
-					</fieldset>
-
-					<fieldset>
-						<label for="request-rate-input">
-							<small>${this.t('ui.requestRate')}</small>
-						</label>
+					</label>
+					<label for="request-rate-input">
+						<small>${this.t('ui.requestRate')}</small>
 						<input
 							type="text"
 							id="request-rate-input"
 							placeholder="${this.t('ui.requestRateHint')}"
 							value="${this.state.requestRate || ''}"
 						>
-					</fieldset>
-
-					<fieldset>
-						<label for="visit-time-input">
-							<small>${this.t('ui.visitTime')}</small>
-						</label>
+					</label>
+					<label for="visit-time-input">
+						<small>${this.t('ui.visitTime')}</small>
 						<input
 							type="text"
 							id="visit-time-input"
 							placeholder="${this.t('ui.visitTimeHint')}"
 							value="${this.state.visitTime || ''}"
 						>
-					</fieldset>
+					</label>
 				</div>
 			</details>
 		`;
@@ -759,7 +741,7 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSitemaps() {
 		return `
-			<details name="robtxt-manager" class="robtxt-sitemaps">
+			<details name="robtxt-manager">
 				<summary>${this.t('ui.sitemaps')} (${this.state.sitemaps.length})</summary>
 				<div>
 					${this.state.sitemaps.length > 0 ? `
@@ -771,7 +753,7 @@ class WebConfigRobots extends HTMLElement {
 								</li>
 							`).join('')}
 						</ul>
-					` : `<p class="empty">${this.t('ui.noSitemaps')}</p>`}
+					` : `<p>${this.t('ui.noSitemaps')}</p>`}
 					<fieldset>
 						<input
 							type="url"

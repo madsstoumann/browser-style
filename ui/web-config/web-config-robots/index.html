@@ -7,42 +7,14 @@
 	<meta name="description" content="Web Config Robots - Visual editor for robots.txt files">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
-	<style>
-		body {
-			max-width: 1200px;
-			margin: 0 auto;
-			padding: 2rem;
-		}
-		.intro {
-			margin-bottom: 2rem;
-		}
-		.links {
-			margin-bottom: 2rem;
-		}
-	</style>
 </head>
 <body>
 	<h1>Web Config Robots</h1>
-	<div class="intro">
-		<p>A visual editor for managing robots.txt files with support for allow/disallow rules.</p>
-		<div class="links">
-			<a href="demo.html">View interactive demo</a> |
-			<a href="https://github.com/ai-robots-txt/ai.robots.txt" target="_blank">AI Robots.txt List</a>
-		</div>
-	</div>
-
-	<web-config-robots
-		disallowTMP="https://raw.githubusercontent.com/ai-robots-txt/ai.robots.txt/main/robots.txt"
-	></web-config-robots>
-
+	<p>
+		A visual editor for managing <code>robots.txt</code> files with support for allow/disallow rules, crawl-delay and more.<br>
+		<a href="demo.html">View demos</a>
+	</p>
+	<web-config-robots disallow="./examples/bots.txt"></web-config-robots>
 	<script type="module" src="./src/index.js"></script>
-	<script>
-		// Example: Listen for changes
-		// const manager = document.querySelector('web-config-robots');
-		// manager.addEventListener('robtxt-change', (e) => {
-		// 	console.log('Configuration:', e.detail.config);
-		// 	console.log('Robots.txt output:', e.detail.robotsTxt);
-		// });
-	</script>
 </body>
 </html>
