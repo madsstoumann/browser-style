@@ -3,7 +3,7 @@ import i18nData from './i18n.json' with { type: 'json' };
 import { evaluatePolicy } from './evaluate.js';
 import { loadAndMergeConfigs } from './config-utils.js';
 
-import { adoptSharedStyles } from '../../web-config-shared.js';
+import { adoptSharedStyles } from '@browser.style/web-config-shared';
 
 const localStylesheetPromise = fetch(new URL('./index.css', import.meta.url))
 	.then(r => r.text())

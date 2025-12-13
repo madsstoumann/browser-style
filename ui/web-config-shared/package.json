@@ -1,0 +1,42 @@
+{
+  "name": "@browser.style/web-config-shared",
+  "version": "1.0.0",
+  "description": "Shared styles and utilities for browser.style web-config editors.",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "style": "./index.css"
+    },
+    "./style": "./index.css"
+  },
+  "files": [
+    "index.js",
+    "index.css",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "web-config",
+    "css",
+    "shared"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/web-config-shared"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/web-config-shared"
+}

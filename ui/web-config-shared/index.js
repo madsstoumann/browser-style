@@ -3,7 +3,7 @@ let _sharedStylesheetPromise;
 export async function adoptSharedStyles(shadowRoot) {
 	if (!_sharedStylesheetPromise) {
 		_sharedStylesheetPromise = (async () => {
-			const sharedCss = await fetch(new URL('./web-config-shared.css', import.meta.url)).then(r => r.text());
+			const sharedCss = await fetch(new URL('./index.css', import.meta.url)).then(r => r.text());
 			const sheet = new CSSStyleSheet();
 			await sheet.replace(sharedCss);
 			return sheet;

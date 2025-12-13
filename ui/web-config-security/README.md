@@ -15,7 +15,7 @@ A visual web component for managing `security.txt` files (RFC 9116). Built with 
 ## Installation
 
 ```html
-<script type="module" src="./ui/web-config/web-config-security/src/index.js"></script>
+<script type="module" src="./ui/web-config-security/src/index.js"></script>
 ```
 
 ## Basic Usage

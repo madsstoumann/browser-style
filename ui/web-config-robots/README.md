@@ -16,7 +16,7 @@ A visual web component for managing `robots.txt` files. Built with the same look
 ## Installation
 
 ```html
-<script type="module" src="./ui/web-config/web-config-robots/src/index.js"></script>
+<script type="module" src="./ui/web-config-robots/src/index.js"></script>
 ```
 
 ## Basic Usage

@@ -1,18 +1,21 @@
 {
-  "name": "@browser.style/csp-manager",
-  "version": "1.1.0",
-  "description": "A web component to interactively build and manage a Content Security Policy (CSP).",
+  "name": "@browser.style/web-config-robots",
+  "version": "1.0.0",
+  "description": "A web component to interactively build and manage a robots.txt file.",
   "type": "module",
   "main": "./src/index.js",
   "module": "./src/index.js",
+  "dependencies": {
+    "@browser.style/web-config-shared": "^1.0.0"
+  },
   "exports": {
-    ".": "./src/index.js",
-    "./evaluate": "./src/evaluate.js",
-    "./style": "./src/index.css"
+    ".": "./src/index.js"
   },
   "files": [
     "src",
-    "docs"
+    "fixtures",
+    "index.html",
+    "README.md"
   ],
   "publishConfig": {
     "access": "public",
@@ -21,19 +24,20 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "csp",
-    "content-security-policy",
-    "security"
+    "robots.txt",
+    "robots",
+    "seo",
+    "web-config"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/csp-manager"
+    "directory": "ui/web-config-robots"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/csp-manager"
+  "homepage": "https://browser.style/ui/web-config-robots"
 }

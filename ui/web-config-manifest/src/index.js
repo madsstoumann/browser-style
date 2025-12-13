@@ -1,6 +1,6 @@
 import i18n from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles } from '../../web-config-shared.js';
+import { adoptSharedStyles } from '@browser.style/web-config-shared';
 
 class WebConfigManifest extends HTMLElement {
 	static formAssociated = true;

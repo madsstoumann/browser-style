@@ -22,19 +22,11 @@ A powerful, interactive web component for building and managing Content Security
 npm install @browser.style/web-config-csp
 ```
 
-Or include it directly in your HTML:
-
 ```html
 <script type="module" src="https://unpkg.com/@browser.style/web-config-csp/src/index.js"></script>
 ```
 
----
-
-## Quick Start
-
-```html
-<web-config-csp evaluate></web-config-csp>
-```
+Visit https://browser.style/ui/web-config-csp/config.html to see a demo.
 
 - `evaluate`: Enables the security evaluation feature.
 - `lang="da"`: Sets the language to Danish.
@@ -75,7 +67,7 @@ Or include it directly in your HTML:
 
 The component is highly customizable through CSS custom properties for styling and through configuration files for functionality. You can define custom directives, add new languages, and create your own security evaluation rules.
 
-See the [Custom Configuration Demo](https://browser.style/ui/web-config/web-config-csp/config.html) for live examples.
+See the [Custom Configuration Demo](https://browser.style/ui/web-config-csp/config.html) for live examples.
 
 ---
 
@@ -84,7 +76,7 @@ See the [Custom Configuration Demo](https://browser.style/ui/web-config/web-conf
 To run the project locally, simply start a web server in the component's directory.
 
 ```bash
-# In ui/web-config/web-config-csp/
+# In ui/web-config-csp/
 npx serve
 ```
 

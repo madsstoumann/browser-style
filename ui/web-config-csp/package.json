@@ -1,0 +1,46 @@
+{
+  "name": "@browser.style/web-config-csp",
+  "version": "1.0.0",
+  "description": "A web component to interactively build and manage a Content Security Policy (CSP).",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "dependencies": {
+    "@browser.style/web-config-shared": "^1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.js",
+    "./evaluate": "./src/evaluate.js",
+    "./style": "./src/index.css"
+  },
+  "files": [
+    "src",
+    "examples",
+    "index.html",
+    "demo.html",
+    "config.html",
+    "readme.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "csp",
+    "content-security-policy",
+    "security"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/web-config-csp"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/web-config-csp"
+}

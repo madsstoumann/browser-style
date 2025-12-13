@@ -1,6 +1,6 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles, createTranslator, setState } from '../../web-config-shared.js';
+import { adoptSharedStyles, createTranslator, setState } from '@browser.style/web-config-shared';
 
 const RE_CONTACT = /^Contact:\s*(.+)$/i;
 const RE_EXPIRES = /^Expires:\s*(.+)$/i;
