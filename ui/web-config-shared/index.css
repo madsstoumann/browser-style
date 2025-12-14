@@ -154,6 +154,7 @@ ul {
 }
 
 li {
+	align-items: center;
 	background: var(--web-config-buttonface);
 	border: 1px solid transparent;
 	border-radius: var(--web-config-bdrs);
@@ -162,7 +163,7 @@ li {
 	font-size: small;
 	gap: 1ch;
 	grid-auto-flow: column;
-	padding: .75ch 1.5ch;
+	padding: .5ch 1ch;
 	place-content: center;
 
 	&[data-status="danger"] {
@@ -197,4 +198,19 @@ li {
 		padding: 0 0.5ch;
 		cursor: pointer;
 	}
+}
+
+[data-move],
+[data-remove] {
+	border-radius: 50%;
+	border: 1px solid;
+	display: inline-grid;
+	height: 1.25em;
+	padding: 0;
+	place-content: center;
+	width: 1.25em;
+}
+[data-remove] {
+	background-color: currentColor;
+	-webkit-text-fill-color: #FFF;
 }

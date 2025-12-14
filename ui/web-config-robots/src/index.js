@@ -193,46 +193,31 @@ class WebConfigRobots extends HTMLElement {
 
 			// Per robots.txt grouping rules: multiple consecutive User-agent lines form a group.
 			// Allow/Disallow lines apply to the whole group, not just the last User-agent.
-			if (groupBots.length > 0) {
-				if (allowMatch) {
-					const path = allowMatch[1].trim();
-					for (const bot of groupBots) {
-						const rules = botRules[bot] || (botRules[bot] = { allow: [], disallow: [], crawlDelay: null });
-						// Special-case '*' (RFC fallback group): always model Allow/Disallow as path rules.
-						if (bot === '*') {
-							if (!rules.allow.includes(path)) rules.allow.push(path);
-							continue;
-						}
+			if (groupBots.length > 0 && (allowMatch || disallowMatch)) {
+				const isAllow = !!allowMatch;
+				const path = (allowMatch || disallowMatch)[1].trim();
+				const listKey = isAllow ? 'allow' : 'disallow';
 
-						if (path === '/' || path === '') {
-							if (!allow.includes(bot)) allow.push(bot);
-						} else if (!rules.allow.includes(path)) {
-							rules.allow.push(path);
-						}
+				for (const bot of groupBots) {
+					const rules = botRules[bot] || (botRules[bot] = { allow: [], disallow: [], crawlDelay: null });
+					// Special-case '*' (RFC fallback group): always model Allow/Disallow as path rules.
+					if (bot === '*') {
+						if (!rules[listKey].includes(path)) rules[listKey].push(path);
+						continue;
 					}
-					groupHasDirectives = true;
-					continue;
-				}
 
-				if (disallowMatch) {
-					const path = disallowMatch[1].trim();
-					for (const bot of groupBots) {
-						const rules = botRules[bot] || (botRules[bot] = { allow: [], disallow: [], crawlDelay: null });
-						// Special-case '*' (RFC fallback group): always model Allow/Disallow as path rules.
-						if (bot === '*') {
-							if (!rules.disallow.includes(path)) rules.disallow.push(path);
-							continue;
-						}
-
-						if (path === '/' || path === '') {
-							if (!disallow.includes(bot)) disallow.push(bot);
-						} else if (!rules.disallow.includes(path)) {
-							rules.disallow.push(path);
-						}
+					if (path === '/') {
+						const targetList = isAllow ? allow : disallow;
+						if (!targetList.includes(bot)) targetList.push(bot);
+					} else if (path === '') {
+						// Disallow: (empty) means Allow everything.
+						if (!isAllow && !allow.includes(bot)) allow.push(bot);
+					} else if (!rules[listKey].includes(path)) {
+						rules[listKey].push(path);
 					}
-					groupHasDirectives = true;
-					continue;
 				}
+				groupHasDirectives = true;
+				continue;
 			}
 		}
 
