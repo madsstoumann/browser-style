@@ -49,6 +49,10 @@ button {
 	background: var(--web-config-buttonface);
 	border: 0;
 	cursor: pointer;
+	&[data-import-list] {
+		padding: 1ch 1.5ch;
+		width: fit-content;
+	}
 }
 
 button, input, textarea, select {
@@ -94,6 +98,12 @@ fieldset {
 	display: flex;
 	gap: var(--web-config-gap);
 	button { padding: 0 2ch; }
+}
+
+hr {
+	border: 0;
+	border-block-start: 1px solid var(--web-config-buttonface);
+	margin: var(--web-config-gap) 0;
 }
 
 input, textarea, select {

@@ -1,6 +1,6 @@
 import i18n from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, restoreOpenDetailsState } from '@browser.style/web-config-shared';
 
 class WebConfigManifest extends HTMLElement {
 	static formAssociated = true;
@@ -139,10 +139,11 @@ class WebConfigManifest extends HTMLElement {
 	render() {
 		const t = this.t;
 		const s = this.state;
+		const openState = captureOpenDetailsState(this.shadowRoot);
 
 		this.shadowRoot.innerHTML = `
 			<!-- Identity -->
-				<details name="manifest-accordion" open data-status="ok">
+				<details name="manifest-accordion" data-panel="identity" open data-status="ok">
 				<summary>${t.ui.identity}</summary>
 				<div>
 					<label>
@@ -161,7 +162,7 @@ class WebConfigManifest extends HTMLElement {
 			</details>
 
 			<!-- Presentation -->
-			<details name="manifest-accordion">
+			<details name="manifest-accordion" data-panel="presentation">
 				<summary>${t.ui.presentation}</summary>
 				<div>
 					<label>
@@ -198,7 +199,7 @@ class WebConfigManifest extends HTMLElement {
 			</details>
 
 			<!-- Navigation -->
-			<details name="manifest-accordion">
+			<details name="manifest-accordion" data-panel="navigation">
 				<summary>${t.ui.navigation}</summary>
 				<div>
 					<label>
@@ -215,6 +216,8 @@ class WebConfigManifest extends HTMLElement {
 			<!-- Output -->
 			<pre><code>${this.value}</code></pre>
 		`;
+
+		restoreOpenDetailsState(this.shadowRoot, openState);
 
 		this.addEventListeners();
 	}

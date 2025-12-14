@@ -3,7 +3,7 @@ import i18nData from './i18n.json' with { type: 'json' };
 import { evaluatePolicy } from './evaluate.js';
 import { loadAndMergeConfigs } from './config-utils.js';
 
-import { adoptSharedStyles } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, restoreOpenDetailsState } from '@browser.style/web-config-shared';
 
 const localStylesheetPromise = fetch(new URL('./index.css', import.meta.url))
 	.then(r => r.text())
@@ -311,7 +311,7 @@ class WebConfigCsp extends HTMLElement {
 		`;
 
 		return `
-			<details name="csp-directive" ${statusAttr} ${enabled ? '' : 'style="display:none;"'}>
+			<details name="csp-directive" data-directive="${key}" ${statusAttr} ${enabled ? '' : 'style="display:none;"'}>
 				<summary>${key}</summary>
 				<div>
 					<small>${description}</small>
@@ -325,6 +325,7 @@ class WebConfigCsp extends HTMLElement {
 	}
 
 	render() {
+		const openState = captureOpenDetailsState(this.shadowRoot);
 		const availableDirectives = this.getAvailableDirectives();
 		const directivesHtml = Object.entries(this.state).map(([key, value]) => this._renderDirective(key, value)).join('');
 
@@ -338,6 +339,8 @@ class WebConfigCsp extends HTMLElement {
 				<button data-add-directive>${this.t('ui.addDirective')}</button>
 			</fieldset>
 			<pre><code>${this.generateCspString()}</code></pre>`;
+
+		restoreOpenDetailsState(this.shadowRoot, openState);
 	}
 }
 

@@ -1,6 +1,6 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles, createTranslator, setState } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, createTranslator, restoreOpenDetailsState, setState } from '@browser.style/web-config-shared';
 
 const RE_USER_AGENT = /^User-agent:\s*(.+)$/i;
 const RE_SITEMAP = /^Sitemap:\s*(.+)$/i;
@@ -14,7 +14,7 @@ const RE_DISALLOW = /^Disallow:\s*(.*)$/i;
 
 class WebConfigRobots extends HTMLElement {
 	static get observedAttributes() {
-		return ['allow', 'disallow', 'src', 'value'];
+		return ['allow', 'disallow', 'src', 'value', 'lists'];
 	}
 
 	constructor() {
@@ -22,6 +22,7 @@ class WebConfigRobots extends HTMLElement {
 		this.attachShadow({ mode: 'open' });
 		this._loadStyles();
 		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
+		this.listUrls = [];
 		this.state = {
 			allow: [],
 			disallow: [],
@@ -39,6 +40,341 @@ class WebConfigRobots extends HTMLElement {
 		this._loadedUrls = { allow: null, disallow: null, src: null };
 	}
 
+	_parseListUrls(value) {
+		if (typeof value !== 'string') return [];
+		// Accept both comma and semicolon separators.
+		const urls = value
+			.split(/[;,]/)
+			.map(s => s.trim())
+			.filter(Boolean);
+		return [...new Set(urls)];
+	}
+
+	_normalizeImportUrl(url) {
+		try {
+			const u = new URL(url);
+			if (u.hostname === 'github.com') {
+				// Convert GitHub blob URLs to raw URLs.
+				// /owner/repo/blob/branch/path -> raw.githubusercontent.com/owner/repo/branch/path
+				const parts = u.pathname.split('/').filter(Boolean);
+				const blobIndex = parts.indexOf('blob');
+				if (parts.length >= 5 && blobIndex === 2) {
+					const owner = parts[0];
+					const repo = parts[1];
+					const branch = parts[3];
+					const path = parts.slice(4).join('/');
+					return `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`;
+				}
+			}
+		} catch {
+			// ignore
+		}
+		return url;
+	}
+
+	_labelForImportUrl(url) {
+		try {
+			const u = new URL(url);
+			const file = u.pathname.split('/').filter(Boolean).pop();
+			return file || u.hostname;
+		} catch {
+			return url;
+		}
+	}
+
+	_escapeAttr(value) {
+		return String(value)
+			.replaceAll('&', '&amp;')
+			.replaceAll('"', '&quot;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;');
+	}
+
+	_parseRobotsTxtToConfig(robotsTxtString) {
+		const allow = [];
+		const disallow = [];
+		const botRules = {};
+		const sitemaps = [];
+		let crawlDelay = null;
+		let host = null;
+		const cleanParam = [];
+		let requestRate = null;
+		let visitTime = null;
+		const foundBots = new Set();
+
+		const lines = String(robotsTxtString || '').split('\n');
+		let currentBot = null;
+		let currentRules = null;
+		let groupBots = [];
+		let groupHasDirectives = false;
+
+		for (const line of lines) {
+			// RFC 9309: end-of-line may have optional trailing comment.
+			// Treat inline '#' as comment start for all records.
+			const commentIndex = line.indexOf('#');
+			const withoutComment = commentIndex === -1 ? line : line.slice(0, commentIndex);
+			const trimmed = withoutComment.trim();
+			if (!trimmed) {
+				// Blank line terminates the current group.
+				currentBot = null;
+				currentRules = null;
+				groupBots = [];
+				groupHasDirectives = false;
+				continue;
+			}
+			// Comment-only lines are already handled by trimming.
+
+			const agentMatch = trimmed.match(RE_USER_AGENT);
+			if (agentMatch) {
+				// New group starts when we see User-agent after any directive line.
+				if (groupHasDirectives) {
+					groupBots = [];
+					groupHasDirectives = false;
+				}
+
+				currentBot = agentMatch[1].trim();
+				if (currentBot && currentBot !== '*') foundBots.add(currentBot);
+				groupBots.push(currentBot);
+				if (!botRules[currentBot]) {
+					botRules[currentBot] = { allow: [], disallow: [], crawlDelay: null };
+				}
+				currentRules = botRules[currentBot];
+				continue;
+			}
+
+			const sitemapMatch = trimmed.match(RE_SITEMAP);
+			if (sitemapMatch) {
+				const sitemapUrl = sitemapMatch[1].trim();
+				if (sitemapUrl && !sitemaps.includes(sitemapUrl)) sitemaps.push(sitemapUrl);
+				// Sitemap is not a per-bot directive in this component's model; treat as global.
+				groupHasDirectives = groupBots.length > 0 ? true : groupHasDirectives;
+				continue;
+			}
+
+			const hostMatch = trimmed.match(RE_HOST);
+			if (hostMatch) {
+				host = hostMatch[1].trim();
+				groupHasDirectives = groupBots.length > 0 ? true : groupHasDirectives;
+				continue;
+			}
+
+			const cleanParamMatch = trimmed.match(RE_CLEAN_PARAM);
+			if (cleanParamMatch) {
+				cleanParam.push(cleanParamMatch[1].trim());
+				groupHasDirectives = groupBots.length > 0 ? true : groupHasDirectives;
+				continue;
+			}
+
+			const requestRateMatch = trimmed.match(RE_REQUEST_RATE);
+			if (requestRateMatch) {
+				requestRate = requestRateMatch[1].trim();
+				groupHasDirectives = groupBots.length > 0 ? true : groupHasDirectives;
+				continue;
+			}
+
+			const visitTimeMatch = trimmed.match(RE_VISIT_TIME);
+			if (visitTimeMatch) {
+				visitTime = visitTimeMatch[1].trim();
+				groupHasDirectives = groupBots.length > 0 ? true : groupHasDirectives;
+				continue;
+			}
+
+			const crawlDelayMatch = trimmed.match(RE_CRAWL_DELAY);
+			if (crawlDelayMatch && currentBot) {
+				const delay = parseInt(crawlDelayMatch[1], 10);
+				if (currentBot === '*') crawlDelay = delay;
+				else if (currentRules) currentRules.crawlDelay = delay;
+				groupHasDirectives = true;
+				continue;
+			}
+
+			const allowMatch = trimmed.match(RE_ALLOW);
+			const disallowMatch = trimmed.match(RE_DISALLOW);
+
+			// Per robots.txt grouping rules: multiple consecutive User-agent lines form a group.
+			// Allow/Disallow lines apply to the whole group, not just the last User-agent.
+			if (groupBots.length > 0) {
+				if (allowMatch) {
+					const path = allowMatch[1].trim();
+					for (const bot of groupBots) {
+						const rules = botRules[bot] || (botRules[bot] = { allow: [], disallow: [], crawlDelay: null });
+						// Special-case '*' (RFC fallback group): always model Allow/Disallow as path rules.
+						if (bot === '*') {
+							if (!rules.allow.includes(path)) rules.allow.push(path);
+							continue;
+						}
+
+						if (path === '/' || path === '') {
+							if (!allow.includes(bot)) allow.push(bot);
+						} else if (!rules.allow.includes(path)) {
+							rules.allow.push(path);
+						}
+					}
+					groupHasDirectives = true;
+					continue;
+				}
+
+				if (disallowMatch) {
+					const path = disallowMatch[1].trim();
+					for (const bot of groupBots) {
+						const rules = botRules[bot] || (botRules[bot] = { allow: [], disallow: [], crawlDelay: null });
+						// Special-case '*' (RFC fallback group): always model Allow/Disallow as path rules.
+						if (bot === '*') {
+							if (!rules.disallow.includes(path)) rules.disallow.push(path);
+							continue;
+						}
+
+						if (path === '/' || path === '') {
+							if (!disallow.includes(bot)) disallow.push(bot);
+						} else if (!rules.disallow.includes(path)) {
+							rules.disallow.push(path);
+						}
+					}
+					groupHasDirectives = true;
+					continue;
+				}
+			}
+		}
+
+		const cleanedBotRules = {};
+		for (const [bot, rules] of Object.entries(botRules)) {
+			if (rules.allow.length > 0 || rules.disallow.length > 0 || rules.crawlDelay) {
+				if (!allow.includes(bot) && !disallow.includes(bot)) cleanedBotRules[bot] = rules;
+			}
+		}
+
+		return {
+			allow,
+			disallow,
+			botRules: cleanedBotRules,
+			sitemaps,
+			crawlDelay,
+			host,
+			cleanParam,
+			requestRate,
+			visitTime,
+			bots: Array.from(foundBots)
+		};
+	}
+
+	_getGlobalPathRules() {
+		const rules = this.state.botRules?.['*'];
+		return {
+			allow: Array.isArray(rules?.allow) ? rules.allow : [],
+			disallow: Array.isArray(rules?.disallow) ? rules.disallow : []
+		};
+	}
+
+	_addGlobalPathRule(type, pattern) {
+		const directive = String(type || '').toLowerCase() === 'allow' ? 'allow' : 'disallow';
+		const value = String(pattern ?? '').trim();
+		if (!value) return;
+
+		const nextBotRules = this.state.botRules ? JSON.parse(JSON.stringify(this.state.botRules)) : {};
+		const rules = nextBotRules['*'] || { allow: [], disallow: [], crawlDelay: null };
+		rules.allow = Array.isArray(rules.allow) ? rules.allow : [];
+		rules.disallow = Array.isArray(rules.disallow) ? rules.disallow : [];
+
+		if (directive === 'allow') {
+			if (!rules.allow.includes(value)) rules.allow.push(value);
+			// RFC 9309 suggests Allow wins when equivalent; keep this invariant in UI.
+			rules.disallow = rules.disallow.filter(p => p !== value);
+		} else {
+			if (rules.allow.includes(value)) {
+				// If Allow already exists for the same pattern, keep Allow (most implementations treat it as winner).
+				// No-op.
+			} else if (!rules.disallow.includes(value)) {
+				rules.disallow.push(value);
+			}
+		}
+
+		nextBotRules['*'] = rules;
+		this._updateState({ botRules: nextBotRules });
+	}
+
+	_removeGlobalPathRule(type, pattern) {
+		const directive = String(type || '').toLowerCase() === 'allow' ? 'allow' : 'disallow';
+		const value = String(pattern ?? '').trim();
+		if (!value) return;
+
+		const current = this.state.botRules?.['*'];
+		if (!current) return;
+		const nextBotRules = this.state.botRules ? JSON.parse(JSON.stringify(this.state.botRules)) : {};
+		const rules = nextBotRules['*'] || { allow: [], disallow: [], crawlDelay: null };
+		rules.allow = Array.isArray(rules.allow) ? rules.allow : [];
+		rules.disallow = Array.isArray(rules.disallow) ? rules.disallow : [];
+
+		if (directive === 'allow') rules.allow = rules.allow.filter(p => p !== value);
+		else rules.disallow = rules.disallow.filter(p => p !== value);
+
+		// Keep '*' rule container even if empty; it avoids destructive behavior and keeps parsing round-trips stable.
+		nextBotRules['*'] = rules;
+		this._updateState({ botRules: nextBotRules });
+	}
+
+	_mergeImportedConfig(parsed) {
+		// Non-destructive merge: if the user has already placed a bot in one
+		// section, do not re-add it to the opposite section on subsequent imports.
+		const currentAllowSet = new Set(this.state.allow || []);
+		const currentDisallowSet = new Set(this.state.disallow || []);
+
+		const importedAllow = (parsed.allow || []).filter(bot => !currentDisallowSet.has(bot));
+		const importedDisallow = (parsed.disallow || []).filter(bot => !currentAllowSet.has(bot));
+
+		const mergedAllow = [...new Set([...(this.state.allow || []), ...importedAllow])];
+		const mergedDisallow = [...new Set([...(this.state.disallow || []), ...importedDisallow])];
+
+		const mergedBotRules = this.state.botRules
+			? JSON.parse(JSON.stringify(this.state.botRules))
+			: {};
+		for (const [bot, rules] of Object.entries(parsed.botRules || {})) {
+			const existing = mergedBotRules[bot];
+			if (!existing) {
+				mergedBotRules[bot] = {
+					allow: [...(rules.allow || [])],
+					disallow: [...(rules.disallow || [])],
+					crawlDelay: rules.crawlDelay ?? null
+				};
+				continue;
+			}
+			existing.allow = [...new Set([...(existing.allow || []), ...(rules.allow || [])])];
+			existing.disallow = [...new Set([...(existing.disallow || []), ...(rules.disallow || [])])];
+			if (existing.crawlDelay == null && rules.crawlDelay != null) existing.crawlDelay = rules.crawlDelay;
+		}
+
+		const disallowSet = new Set(mergedDisallow);
+		const allowSet = new Set(mergedAllow);
+		for (const bot of Object.keys(mergedBotRules)) {
+			if (disallowSet.has(bot) || allowSet.has(bot)) delete mergedBotRules[bot];
+		}
+
+		const bots = new Set(this.state.availableBots || []);
+		(parsed.bots || []).forEach(b => bots.add(b));
+		mergedAllow.forEach(b => bots.add(b));
+		mergedDisallow.forEach(b => bots.add(b));
+		Object.keys(mergedBotRules).forEach(b => bots.add(b));
+
+		this._updateState({
+			availableBots: Array.from(bots).sort(),
+			allow: mergedAllow,
+			disallow: mergedDisallow,
+			botRules: mergedBotRules
+		});
+	}
+
+	async importFromUrl(url) {
+		if (!url) return;
+		const normalizedUrl = this._normalizeImportUrl(url);
+		try {
+			const response = await fetch(normalizedUrl);
+			const text = await response.text();
+			const parsed = this._parseRobotsTxtToConfig(text);
+			this._mergeImportedConfig(parsed);
+		} catch (error) {
+			console.error(`Failed to import robots.txt from ${normalizedUrl}:`, error);
+		}
+	}
+
 	async _loadStyles() {
 		try {
 			await adoptSharedStyles(this.shadowRoot);
@@ -53,12 +389,17 @@ class WebConfigRobots extends HTMLElement {
 			const text = await response.text();
 			const bots = this._parseRobotsTxt(text);
 
+			const otherSection = section === 'allow' ? 'disallow' : 'allow';
+			const otherSet = new Set(this.state[otherSection] || []);
+			const botsForSection = bots.filter(bot => !otherSet.has(bot));
+
 			// Add to availableBots if not already there
 			const newBots = bots.filter(bot => !this.state.availableBots.includes(bot));
 			this.state.availableBots = [...this.state.availableBots, ...newBots].sort();
 
-			// Add to the specified section (allow or disallow)
-			const uniqueBots = [...new Set([...this.state[section], ...bots])];
+			// Add to the specified section (allow or disallow) without overriding
+			// user moves (i.e. don't re-add to the opposite section).
+			const uniqueBots = [...new Set([...this.state[section], ...botsForSection])];
 			this._updateState({ [section]: uniqueBots });
 
 			return bots;
@@ -92,11 +433,42 @@ class WebConfigRobots extends HTMLElement {
 		return Array.from(bots).sort();
 	}
 
+	_normalizeAllowDisallow(partialState) {
+		const normalizeList = (list) => {
+			if (!Array.isArray(list)) return [];
+			const out = [];
+			const seen = new Set();
+			for (const item of list) {
+				const bot = String(item ?? '').trim();
+				if (!bot) continue;
+				if (seen.has(bot)) continue;
+				seen.add(bot);
+				out.push(bot);
+			}
+			return out;
+		};
+
+		const nextAllow = normalizeList(partialState.allow ?? this.state.allow);
+		const nextDisallow = normalizeList(partialState.disallow ?? this.state.disallow);
+		const disallowSet = new Set(nextDisallow);
+		const filteredAllow = nextAllow.filter(bot => !disallowSet.has(bot));
+
+		return {
+			...partialState,
+			allow: filteredAllow,
+			disallow: nextDisallow
+		};
+	}
+
 	_updateState(partialState) {
-		const changedKeys = setState(this, partialState);
+		const nextPartialState = (partialState && (Object.hasOwn(partialState, 'allow') || Object.hasOwn(partialState, 'disallow')))
+			? this._normalizeAllowDisallow(partialState)
+			: partialState;
+
+		const changedKeys = setState(this, nextPartialState);
 		if (changedKeys.length === 0) return;
 
-		const needsFullRender = changedKeys.some(k => k === 'allow' || k === 'disallow');
+		const needsFullRender = changedKeys.some(k => k === 'allow' || k === 'disallow' || k === 'availableBots' || k === 'botRules');
 		const updateSitemaps = changedKeys.includes('sitemaps');
 		const updateSettings = changedKeys.some(k => ['crawlDelay', 'host', 'cleanParam', 'requestRate', 'visitTime'].includes(k));
 
@@ -113,7 +485,7 @@ class WebConfigRobots extends HTMLElement {
 	_updateOutput() {
 		const outputElement = this.shadowRoot.querySelector('pre code');
 		if (outputElement) {
-			outputElement.textContent = this.generateRobotsTxt() || '# No rules defined yet';
+			outputElement.textContent = this.generateRobotsTxt() || this.t('ui.noRules');
 		}
 	}
 
@@ -183,6 +555,12 @@ class WebConfigRobots extends HTMLElement {
 			requestRate: data.requestRate || null,
 			visitTime: data.visitTime || null
 		};
+
+		// Disallow wins over allow.
+		const normalized = this._normalizeAllowDisallow({ allow: newState.allow, disallow: newState.disallow });
+		newState.allow = normalized.allow;
+		newState.disallow = normalized.disallow;
+
 		this.state = newState;
 		this.render();
 		this.dispatchChangeEvent();
@@ -204,131 +582,25 @@ class WebConfigRobots extends HTMLElement {
 		if (typeof robotsTxtString !== 'string' || !robotsTxtString.trim()) return;
 		await this.ready;
 
-		const allow = [];
-		const disallow = [];
-		const botRules = {};
-		const sitemaps = [];
-		let crawlDelay = null;
-		let host = null;
-		const cleanParam = [];
-		let requestRate = null;
-		let visitTime = null;
+		const parsed = this._parseRobotsTxtToConfig(robotsTxtString);
+		const bots = new Set(this.state.availableBots);
+		parsed.bots.forEach(b => bots.add(b));
+		parsed.allow.forEach(b => bots.add(b));
+		parsed.disallow.forEach(b => bots.add(b));
+		Object.keys(parsed.botRules).forEach(b => bots.add(b));
+		this.state.availableBots = Array.from(bots).sort();
 
-		const lines = robotsTxtString.split('\n');
-		let currentBot = null;
-		let currentRules = null;
-
-		for (const line of lines) {
-			const trimmed = line.trim();
-			if (!trimmed || trimmed.startsWith('#')) continue;
-
-			// Match User-agent
-			const agentMatch = trimmed.match(RE_USER_AGENT);
-			if (agentMatch) {
-				currentBot = agentMatch[1].trim();
-				if (currentBot !== '*' && !this.state.availableBots.includes(currentBot)) {
-					this.state.availableBots = [...this.state.availableBots, currentBot].sort();
-				}
-				if (!botRules[currentBot]) {
-					botRules[currentBot] = { allow: [], disallow: [], crawlDelay: null };
-				}
-				currentRules = botRules[currentBot];
-				continue;
-			}
-
-			// Match Sitemap
-			const sitemapMatch = trimmed.match(RE_SITEMAP);
-			if (sitemapMatch) {
-				const sitemapUrl = sitemapMatch[1].trim();
-				if (!sitemaps.includes(sitemapUrl)) {
-					sitemaps.push(sitemapUrl);
-				}
-				continue;
-			}
-
-			// Match Host
-			const hostMatch = trimmed.match(RE_HOST);
-			if (hostMatch) {
-				host = hostMatch[1].trim();
-				continue;
-			}
-
-			// Match Clean-param
-			const cleanParamMatch = trimmed.match(RE_CLEAN_PARAM);
-			if (cleanParamMatch) {
-				cleanParam.push(cleanParamMatch[1].trim());
-				continue;
-			}
-
-			// Match Request-rate
-			const requestRateMatch = trimmed.match(RE_REQUEST_RATE);
-			if (requestRateMatch) {
-				requestRate = requestRateMatch[1].trim();
-				continue;
-			}
-
-			// Match Visit-time
-			const visitTimeMatch = trimmed.match(RE_VISIT_TIME);
-			if (visitTimeMatch) {
-				visitTime = visitTimeMatch[1].trim();
-				continue;
-			}
-
-			// Match Crawl-delay
-			const crawlDelayMatch = trimmed.match(RE_CRAWL_DELAY);
-			if (crawlDelayMatch && currentBot) {
-				const delay = parseInt(crawlDelayMatch[1], 10);
-				if (currentBot === '*') {
-					crawlDelay = delay;
-				} else if (currentRules) {
-					currentRules.crawlDelay = delay;
-				}
-				continue;
-			}
-
-			// Match Allow/Disallow rules
-			const allowMatch = trimmed.match(RE_ALLOW);
-			const disallowMatch = trimmed.match(RE_DISALLOW);
-
-			if (currentBot && currentRules) {
-				if (allowMatch) {
-					const path = allowMatch[1].trim();
-					if (path === '/' || path === '') {
-						// Simple allow - add to main allow list
-						if (!allow.includes(currentBot)) allow.push(currentBot);
-					} else {
-						// Path-specific allow
-						if (!currentRules.allow.includes(path)) {
-							currentRules.allow.push(path);
-						}
-					}
-				} else if (disallowMatch) {
-					const path = disallowMatch[1].trim();
-					if (path === '/' || path === '') {
-						// Simple disallow - add to main disallow list
-						if (!disallow.includes(currentBot)) disallow.push(currentBot);
-					} else {
-						// Path-specific disallow
-						if (!currentRules.disallow.includes(path)) {
-							currentRules.disallow.push(path);
-						}
-					}
-				}
-			}
-		}
-
-		// Clean up botRules - only keep bots with actual custom rules
-		const cleanedBotRules = {};
-		for (const [bot, rules] of Object.entries(botRules)) {
-			if (rules.allow.length > 0 || rules.disallow.length > 0 || rules.crawlDelay) {
-				// Don't add if bot is in simple allow/disallow
-				if (!allow.includes(bot) && !disallow.includes(bot)) {
-					cleanedBotRules[bot] = rules;
-				}
-			}
-		}
-
-		this.config = { allow, disallow, botRules: cleanedBotRules, sitemaps, crawlDelay, host, cleanParam, requestRate, visitTime };
+		this.config = {
+			allow: parsed.allow,
+			disallow: parsed.disallow,
+			botRules: parsed.botRules,
+			sitemaps: parsed.sitemaps,
+			crawlDelay: parsed.crawlDelay,
+			host: parsed.host,
+			cleanParam: parsed.cleanParam,
+			requestRate: parsed.requestRate,
+			visitTime: parsed.visitTime
+		};
 	}
 
 	dispatchChangeEvent() {
@@ -404,7 +676,7 @@ class WebConfigRobots extends HTMLElement {
 
 		// Simple Allow section (entire site)
 		if (this.state.allow.length > 0) {
-			output += '# Allowed Bots\n';
+			output += `# ${this.t('output.allowedBots')}\n`;
 			this.state.allow.forEach(bot => {
 				output += `User-agent: ${bot}\n`;
 			});
@@ -413,17 +685,24 @@ class WebConfigRobots extends HTMLElement {
 
 		// Simple Disallow section (entire site)
 		if (this.state.disallow.length > 0) {
-			output += '# Disallowed Bots\n';
+			output += `# ${this.t('output.disallowedBots')}\n`;
 			this.state.disallow.forEach(bot => {
 				output += `User-agent: ${bot}\n`;
 			});
 			output += `Disallow: /\n\n`;
 		}
 
+		const hasGlobalPathRules = Boolean(this.state.botRules?.['*']);
+
 		// Per-bot custom rules
 		for (const [bot, rules] of Object.entries(this.state.botRules)) {
-			output += `# Custom rules for ${bot}\n`;
+			output += `# ${this.t('output.customRulesFor')} ${bot}\n`;
 			output += `User-agent: ${bot}\n`;
+
+			// If we have path rules for '*', prefer emitting the global crawl-delay here to avoid duplicate UA:* blocks.
+			if (bot === '*' && this.state.crawlDelay && !rules.crawlDelay) {
+				output += `Crawl-delay: ${this.state.crawlDelay}\n`;
+			}
 
 			if (rules.crawlDelay) {
 				output += `Crawl-delay: ${rules.crawlDelay}\n`;
@@ -445,8 +724,8 @@ class WebConfigRobots extends HTMLElement {
 		}
 
 		// Global crawl-delay for all bots
-		if (this.state.crawlDelay) {
-			output += `# Global crawl delay\n`;
+		if (this.state.crawlDelay && !hasGlobalPathRules) {
+			output += `# ${this.t('output.globalCrawlDelay')}\n`;
 			output += `User-agent: *\n`;
 			output += `Crawl-delay: ${this.state.crawlDelay}\n\n`;
 		}
@@ -464,7 +743,7 @@ class WebConfigRobots extends HTMLElement {
 
 		// Sitemaps
 		if (this.state.sitemaps.length > 0) {
-			output += '# Sitemaps\n';
+			output += `# ${this.t('output.sitemaps')}\n`;
 			this.state.sitemaps.forEach(sitemap => {
 				output += `Sitemap: ${sitemap}\n`;
 			});
@@ -476,6 +755,7 @@ class WebConfigRobots extends HTMLElement {
 	async connectedCallback() {
 		this.lang = this.getAttribute('lang') || 'en';
 		this._resolveReady();
+		this.listUrls = this._parseListUrls(this.getAttribute('lists'));
 
 		// Load existing robots.txt file if src attribute is present
 		const srcUrl = this.getAttribute('src');
@@ -525,6 +805,9 @@ class WebConfigRobots extends HTMLElement {
 			}
 		} else if (name === 'value' && oldValue !== newValue) {
 			await this.fromString(newValue);
+		} else if (name === 'lists' && oldValue !== newValue) {
+			this.listUrls = this._parseListUrls(newValue);
+			this.render();
 		} else if ((name === 'allow' || name === 'disallow') && oldValue !== newValue) {
 			if (newValue && this._loadedUrls[name] !== newValue) {
 				this._loadedUrls[name] = newValue;
@@ -537,6 +820,28 @@ class WebConfigRobots extends HTMLElement {
 		this.shadowRoot.addEventListener('click', (e) => {
 			const target = e.target.closest('button');
 			if (!target) return;
+
+			if (target.dataset.importList !== undefined) {
+				const url = target.dataset.url;
+				this.importFromUrl(url);
+				return;
+			}
+
+			if (target.dataset.addGlobalRule !== undefined) {
+				const type = this.shadowRoot.querySelector('#global-rule-type')?.value;
+				const input = this.shadowRoot.querySelector('#global-rule-pattern');
+				const pattern = input?.value;
+				this._addGlobalPathRule(type, pattern);
+				if (input) input.value = '';
+				return;
+			}
+
+			if (target.dataset.removeGlobalRule !== undefined) {
+				const type = target.dataset.type;
+				const pattern = target.dataset.pattern;
+				this._removeGlobalPathRule(type, pattern);
+				return;
+			}
 
 			const section = target.dataset.section;
 			const bot = target.dataset.bot;
@@ -606,7 +911,7 @@ class WebConfigRobots extends HTMLElement {
 			: (section === 'disallow' ? ' data-status="danger"' : '');
 
 		return `
-			<details name="robtxt-manager" open${statusAttr}>
+			<details name="robtxt-manager" data-panel="${section}"${section === 'allow' ? ' open' : ''}${statusAttr}>
 				<summary>${title} (${bots.length})</summary>
 				<div>
 					<ul data-ul-for="${section}">
@@ -645,6 +950,8 @@ class WebConfigRobots extends HTMLElement {
 	}
 
 	render() {
+		const openState = captureOpenDetailsState(this.shadowRoot);
+
 		const unusedBots = this._getUnusedBots();
 		const allowSection = this._renderSection('allow', this.t('ui.allow'), unusedBots);
 		const disallowSection = this._renderSection('disallow', this.t('ui.disallow'), unusedBots);
@@ -658,13 +965,67 @@ class WebConfigRobots extends HTMLElement {
 			${settingsSection}
 			<pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre>
 		`;
+
+		restoreOpenDetailsState(this.shadowRoot, openState);
 	}
 
 	_renderSettings() {
+		const globalRules = this._getGlobalPathRules();
+		const importText = this.t('ui.import');
+		const globalRulesMarkup = (globalRules.allow.length > 0 || globalRules.disallow.length > 0)
+			? `
+				<ul>
+					${globalRules.allow.map(p => `
+						<li data-status="ok">
+							${this._escapeAttr(this.t('ui.allow'))}: ${this._escapeAttr(p)}
+							<button type="button" data-remove-global-rule data-type="allow" data-pattern="${this._escapeAttr(p)}">×</button>
+						</li>
+					`).join('')}
+					${globalRules.disallow.map(p => `
+						<li data-status="danger">
+							${this._escapeAttr(this.t('ui.disallow'))}: ${this._escapeAttr(p)}
+							<button type="button" data-remove-global-rule data-type="disallow" data-pattern="${this._escapeAttr(p)}">×</button>
+						</li>
+					`).join('')}
+				</ul>
+			`
+			: '';
+
+		const listButtons = this.listUrls.length > 0
+			? `
+				<div>
+					<small>${this.t('ui.importBotLists')}</small>
+					${this.listUrls.map(rawUrl => {
+						const normalized = this._normalizeImportUrl(rawUrl);
+						const label = this._labelForImportUrl(rawUrl);
+						return `<button data-import-list data-url="${this._escapeAttr(normalized)}" type="button">${this._escapeAttr(importText)} ${this._escapeAttr(label)}</button>`;
+					}).join('')}
+				</div>
+			`
+			: '';
+
 		return `
-			<details name="robtxt-settings">
+			<details name="robtxt-settings" data-panel="settings">
 				<summary>${this.t('ui.globalSettings')}</summary>
 				<div>
+					${listButtons}
+					<hr>
+					${globalRulesMarkup}
+					<label>
+						<small>${this.t('ui.pathRulesStar')}</small>
+						<select id="global-rule-type">
+							<option value="disallow">${this.t('ui.disallow')}</option>
+							<option value="allow">${this.t('ui.allow')}</option>
+						</select>
+					</label>
+					<fieldset>
+						<input
+							type="text"
+							id="global-rule-pattern"
+							placeholder="${this.t('ui.pathRulePlaceholder')}"
+						>
+						<button type="button" data-add-global-rule>${this.t('ui.add')}</button>
+					</fieldset>
 					<label for="crawl-delay-input">
 						<small>${this.t('ui.crawlDelay')}</small>
 						<input
@@ -718,7 +1079,7 @@ class WebConfigRobots extends HTMLElement {
 
 	_renderSitemaps() {
 		return `
-			<details name="robtxt-sitemaps" data-status="warn">
+			<details name="robtxt-sitemaps" data-panel="sitemaps" data-status="info">
 				<summary>${this.t('ui.sitemaps')} (${this.state.sitemaps.length})</summary>
 				<div>
 					${this.state.sitemaps.length > 0 ? `

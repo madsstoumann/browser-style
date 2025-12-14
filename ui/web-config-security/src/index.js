@@ -1,6 +1,6 @@
 import i18nData from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles, createTranslator, setState } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, createTranslator, restoreOpenDetailsState, setState } from '@browser.style/web-config-shared';
 
 const RE_CONTACT = /^Contact:\s*(.+)$/i;
 const RE_EXPIRES = /^Expires:\s*(.+)$/i;
@@ -303,8 +303,10 @@ class WebConfigSecurity extends HTMLElement {
 	}
 
 	render() {
+		const openState = captureOpenDetailsState(this.shadowRoot);
+
 		this.shadowRoot.innerHTML = `
-			<details name="sec-manager" open data-status="ok">
+			<details name="sec-manager" data-panel="required" open data-status="ok">
 				<summary>${this.t('ui.required')}</summary>
 				<div>
 					${this._renderMultiField('contact', this.t('ui.contact'), this.t('ui.contactHint'))}
@@ -312,7 +314,7 @@ class WebConfigSecurity extends HTMLElement {
 				</div>
 			</details>
 
-			<details name="sec-manager">
+			<details name="sec-manager" data-panel="optional">
 				<summary>${this.t('ui.optional')}</summary>
 				<div>
 					${this._renderMultiField('encryption', this.t('ui.encryption'), this.t('ui.encryptionHint'))}
@@ -326,6 +328,8 @@ class WebConfigSecurity extends HTMLElement {
 
 			<pre><code>${this.generateSecurityTxt() || this.t('ui.noOutput')}</code></pre>
 		`;
+
+		restoreOpenDetailsState(this.shadowRoot, openState);
 	}
 }
 

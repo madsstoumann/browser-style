@@ -46,3 +46,48 @@ export function setState(instance, partialState, { equals = Object.is, equalsByK
 	}
 	return changedKeys;
 }
+
+function getDetailsKey(detailsEl) {
+	return detailsEl?.dataset?.panel
+		|| detailsEl?.dataset?.directive
+		|| detailsEl?.dataset?.section
+		|| detailsEl?.id
+		|| null;
+}
+
+/**
+ * Captures the currently open <details> panels so a full re-render can restore them.
+ *
+ * Intended for accordions that use the `name` attribute for grouping.
+ */
+export function captureOpenDetailsState(shadowRoot) {
+	if (!shadowRoot) return [];
+	const open = [];
+	shadowRoot.querySelectorAll('details[open]').forEach(detailsEl => {
+		const group = detailsEl.getAttribute('name');
+		const key = getDetailsKey(detailsEl);
+		if (!group || !key) return;
+		open.push({ group, key });
+	});
+	return open;
+}
+
+/**
+ * Restores open <details> panels captured by `captureOpenDetailsState`.
+ */
+export function restoreOpenDetailsState(shadowRoot, openState) {
+	if (!shadowRoot || !Array.isArray(openState) || openState.length === 0) return;
+
+	const openTokens = new Set(openState.map(({ group, key }) => `${group}::${key}`));
+	const groups = new Set(openState.map(({ group }) => group));
+
+	shadowRoot.querySelectorAll('details').forEach(detailsEl => {
+		const group = detailsEl.getAttribute('name');
+		if (!group || !groups.has(group)) return;
+		const key = getDetailsKey(detailsEl);
+		if (!key) return;
+		const token = `${group}::${key}`;
+		if (openTokens.has(token)) detailsEl.setAttribute('open', '');
+		else detailsEl.removeAttribute('open');
+	});
+}

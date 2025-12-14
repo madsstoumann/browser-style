@@ -26,7 +26,18 @@
 			"requestRate": "Request-rate",
 			"requestRateHint": "Crawl rate limit (e.g. '1/5')",
 			"visitTime": "Visit-time",
-			"visitTimeHint": "Allowed crawl time (e.g. '0600-0845')"
+			"visitTimeHint": "Allowed crawl time (e.g. '0600-0845')",
+			"import": "Import",
+			"importBotLists": "Import bot lists",
+			"pathRulesStar": "Path rules (User-agent: *)",
+			"pathRulePlaceholder": "/secret/admin-interface"
+		},
+		"output": {
+			"allowedBots": "Allowed Bots",
+			"disallowedBots": "Disallowed Bots",
+			"customRulesFor": "Custom rules for",
+			"globalCrawlDelay": "Global crawl delay",
+			"sitemaps": "Sitemaps"
 		}
 	},
 	"da": {
@@ -56,7 +67,18 @@
 			"requestRate": "Request-rate",
 			"requestRateHint": "Crawl-hastighedsgrænse (f.eks. '1/5')",
 			"visitTime": "Visit-time",
-			"visitTimeHint": "Tilladt crawl-tidspunkt (f.eks. '0600-0845')"
+			"visitTimeHint": "Tilladt crawl-tidspunkt (f.eks. '0600-0845')",
+			"import": "Importer",
+			"importBotLists": "Importer botlister",
+			"pathRulesStar": "Sti-regler (User-agent: *)",
+			"pathRulePlaceholder": "/secret/admin-interface"
+		},
+		"output": {
+			"allowedBots": "Tilladte bots",
+			"disallowedBots": "Forbudte bots",
+			"customRulesFor": "Brugerdefinerede regler for",
+			"globalCrawlDelay": "Global crawl-forsinkelse",
+			"sitemaps": "Sitemaps"
 		}
 	}
 }
