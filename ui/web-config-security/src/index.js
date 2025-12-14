@@ -237,11 +237,10 @@ class WebConfigSecurity extends HTMLElement {
 			const target = e.target.closest('button');
 			if (!target) return;
 
-			const action = target.dataset.action;
 			const field = target.dataset.field;
 			const index = parseInt(target.dataset.index, 10);
 
-			if (action === 'add') {
+			if (target.dataset.action === 'add') {
 				const input = this.shadowRoot.querySelector(`input[data-new="${field}"]`);
 				if (input?.value) {
 					const newValue = input.value.trim();
@@ -249,7 +248,7 @@ class WebConfigSecurity extends HTMLElement {
 					input.value = '';
 					input.focus();
 				}
-			} else if (action === 'remove') {
+			} else if (target.dataset.remove !== undefined) {
 				const newList = this.state[field].filter((_, i) => i !== index);
 				this._updateState({ [field]: newList });
 			}
@@ -275,7 +274,7 @@ class WebConfigSecurity extends HTMLElement {
 				<ul>
 					${values.map((val, idx) => `
 					<li>${val}
-						<button data-action="remove" data-field="${field}" data-index="${idx}" title="${this.t('ui.remove')}">×</button>
+						<button data-remove data-field="${field}" data-index="${idx}" title="${this.t('ui.remove')}">×</button>
 					</li>
 				`).join('')}
 				</ul>
