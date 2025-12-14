@@ -3,7 +3,7 @@ import i18nData from './i18n.json' with { type: 'json' };
 import { evaluatePolicy } from './evaluate.js';
 import { loadAndMergeConfigs } from './config-utils.js';
 
-import { adoptSharedStyles, captureOpenDetailsState, restoreOpenDetailsState } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, createTranslator, restoreOpenDetailsState, setState } from '@browser.style/web-config-shared';
 
 const localStylesheetPromise = fetch(new URL('./index.css', import.meta.url))
 	.then(r => r.text())
@@ -22,6 +22,7 @@ class WebConfigCsp extends HTMLElement {
 		this._loadStyles();
 		this.evaluations = null;
 		this.state = {};
+		this.t = createTranslator(() => this.i18nConfig, () => this.lang || this.getAttribute('lang') || 'en');
 
 		this.ready = new Promise(resolve => this._resolveReady = resolve);
 	}
@@ -36,18 +37,9 @@ class WebConfigCsp extends HTMLElement {
 		}
 	}
 
-	t(key) {
-		const keys = key.split('.');
-		let value = this.i18nConfig[this.lang];
-		for (const k of keys) {
-			value = value?.[k];
-		}
-		return typeof value === 'string' ? value : key;
-	}
-
 	_initializeState(directivesConfig) {
 		const state = {};
-		const descriptions = this.i18nConfig[this.lang]?.directives || {};
+		const descriptions = this.i18nConfig?.[this.lang]?.directives || {};
 		for (const [key, config] of Object.entries(directivesConfig)) {
 			state[key] = {
 				enabled: !!config.enabled,
@@ -62,15 +54,9 @@ class WebConfigCsp extends HTMLElement {
 	}
 
 	_updateState(partialState) {
-		let stateChanged = false;
-		for (const [key, nextValue] of Object.entries(partialState)) {
-			if (this.state[key] !== nextValue) {
-				this.state[key] = nextValue;
-				stateChanged = true;
-			}
-		}
+		const changedKeys = setState(this, partialState);
+		if (changedKeys.length === 0) return;
 
-		if (!stateChanged) return;
 		this.render();
 		if (this.hasAttribute('evaluate')) this.runEvaluation();
 		this.dispatchChangeEvent();

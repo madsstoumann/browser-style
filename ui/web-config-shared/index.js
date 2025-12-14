@@ -14,9 +14,10 @@ export async function adoptSharedStyles(shadowRoot) {
 	shadowRoot.adoptedStyleSheets = [sharedSheet];
 }
 
-export function createTranslator(i18nData, getLang, fallbackLang = 'en') {
+export function createTranslator(i18nDataOrGetter, getLang, fallbackLang = 'en') {
+	const getData = () => typeof i18nDataOrGetter === 'function' ? i18nDataOrGetter() : i18nDataOrGetter;
 	const lookup = (lang, key) => {
-		let value = i18nData?.[lang];
+		let value = getData()?.[lang];
 		for (const part of String(key).split('.')) value = value?.[part];
 		return typeof value === 'string' ? value : undefined;
 	};

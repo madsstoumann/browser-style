@@ -1,6 +1,6 @@
-import i18n from './i18n.json' with { type: 'json' };
+import i18nData from './i18n.json' with { type: 'json' };
 
-import { adoptSharedStyles, captureOpenDetailsState, restoreOpenDetailsState } from '@browser.style/web-config-shared';
+import { adoptSharedStyles, captureOpenDetailsState, createTranslator, restoreOpenDetailsState, setState } from '@browser.style/web-config-shared';
 
 class WebConfigManifest extends HTMLElement {
 	static formAssociated = true;
@@ -12,6 +12,7 @@ class WebConfigManifest extends HTMLElement {
 		this._loadStyles();
 		this._internals = this.attachInternals();
 		this._loadedUrls = { src: null };
+		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
 		
 		this.state = {
 			name: '',
@@ -37,9 +38,7 @@ class WebConfigManifest extends HTMLElement {
 		}
 		if (Array.isArray(data.icons)) nextState.icons = data.icons;
 
-		this.state = nextState;
-		this.render();
-		this._internals.setFormValue(this.value);
+		this._updateState(nextState);
 	}
 
 	async _loadFromManifestJson(url) {
@@ -113,20 +112,21 @@ class WebConfigManifest extends HTMLElement {
 		this.setAttribute('value', val);
 	}
 
-	get t() {
-		const lang = this.getAttribute('lang') || 'en';
-		return i18n[lang] || i18n['en'];
+	_updateState(partialState, skipRender = false) {
+		const changedKeys = setState(this, partialState);
+		if (changedKeys.length === 0) return;
+		if (!skipRender) this.render();
+		else this.updateOutput();
+		this.dispatchChangeEvent();
+		this._internals.setFormValue(this.value);
 	}
 
-	updateState(key, value) {
-		this.state[key] = value;
-		this.updateOutput();
+	dispatchChangeEvent() {
 		this.dispatchEvent(new CustomEvent('manifest-change', { 
 			detail: this.state,
 			bubbles: true,
 			composed: true 
 		}));
-		this._internals.setFormValue(this.value);
 	}
 
 	updateOutput() {
@@ -137,59 +137,58 @@ class WebConfigManifest extends HTMLElement {
 	}
 
 	render() {
-		const t = this.t;
 		const s = this.state;
 		const openState = captureOpenDetailsState(this.shadowRoot);
 
 		this.shadowRoot.innerHTML = `
 			<!-- Identity -->
 				<details name="manifest-accordion" data-panel="identity" open data-status="ok">
-				<summary>${t.ui.identity}</summary>
+				<summary>${this.t('ui.identity')}</summary>
 				<div>
 					<label>
-						<small>${t.ui.name}</small>
-						<input type="text" value="${s.name}" data-key="name" placeholder="${t.ui.nameHint}">
+						<small>${this.t('ui.name')}</small>
+						<input type="text" value="${s.name}" data-key="name" placeholder="${this.t('ui.nameHint')}">
 					</label>
 					<label>
-						<small>${t.ui.shortName}</small>
-						<input type="text" value="${s.short_name}" data-key="short_name" placeholder="${t.ui.shortNameHint}">
+						<small>${this.t('ui.shortName')}</small>
+						<input type="text" value="${s.short_name}" data-key="short_name" placeholder="${this.t('ui.shortNameHint')}">
 					</label>
 					<label>
-						<small>${t.ui.description}</small>
-						<textarea data-key="description" placeholder="${t.ui.descriptionHint}">${s.description}</textarea>
+						<small>${this.t('ui.description')}</small>
+						<textarea data-key="description" placeholder="${this.t('ui.descriptionHint')}">${s.description}</textarea>
 					</label>
 				</div>
 			</details>
 
 			<!-- Presentation -->
 			<details name="manifest-accordion" data-panel="presentation">
-				<summary>${t.ui.presentation}</summary>
+				<summary>${this.t('ui.presentation')}</summary>
 				<div>
 					<label>
-						<small>${t.ui.display}</small>
+						<small>${this.t('ui.display')}</small>
 						<select data-key="display">
-							${Object.entries(t.options.display).map(([k, v]) => 
-								`<option value="${k}" ${s.display === k ? 'selected' : ''}>${v}</option>`
+							${['fullscreen', 'standalone', 'minimal-ui', 'browser'].map(k => 
+								`<option value="${k}" ${s.display === k ? 'selected' : ''}>${this.t(`options.display.${k}`)}</option>`
 							).join('')}
 						</select>
 					</label>
 					<label>
-						<small>${t.ui.orientation}</small>
+						<small>${this.t('ui.orientation')}</small>
 						<select data-key="orientation">
-							${Object.entries(t.options.orientation).map(([k, v]) => 
-								`<option value="${k}" ${s.orientation === k ? 'selected' : ''}>${v}</option>`
+							${['any', 'natural', 'landscape', 'portrait'].map(k => 
+								`<option value="${k}" ${s.orientation === k ? 'selected' : ''}>${this.t(`options.orientation.${k}`)}</option>`
 							).join('')}
 						</select>
 					</label>
 					
-						<small>${t.ui.themeColor}</small>
+						<small>${this.t('ui.themeColor')}</small>
 						<fieldset>
 							<input type="color" value="${s.theme_color}" data-key="theme_color">
 							<input type="text" value="${s.theme_color}" data-key="theme_color">
 						</fieldset>
 					
 					
-						<small>${t.ui.backgroundColor}</small>
+						<small>${this.t('ui.backgroundColor')}</small>
 						<fieldset>
 							<input type="color" value="${s.background_color}" data-key="background_color">
 							<input type="text" value="${s.background_color}" data-key="background_color">
@@ -200,15 +199,15 @@ class WebConfigManifest extends HTMLElement {
 
 			<!-- Navigation -->
 			<details name="manifest-accordion" data-panel="navigation">
-				<summary>${t.ui.navigation}</summary>
+				<summary>${this.t('ui.navigation')}</summary>
 				<div>
 					<label>
-						<small>${t.ui.startUrl}</small>
-						<input type="text" value="${s.start_url}" data-key="start_url" placeholder="${t.ui.startUrlHint}">
+						<small>${this.t('ui.startUrl')}</small>
+						<input type="text" value="${s.start_url}" data-key="start_url" placeholder="${this.t('ui.startUrlHint')}">
 					</label>
 					<label>
-						<small>${t.ui.scope}</small>
-						<input type="text" value="${s.scope}" data-key="scope" placeholder="${t.ui.scopeHint}">
+						<small>${this.t('ui.scope')}</small>
+						<input type="text" value="${s.scope}" data-key="scope" placeholder="${this.t('ui.scopeHint')}">
 					</label>
 				</div>
 			</details>
@@ -227,7 +226,7 @@ class WebConfigManifest extends HTMLElement {
 			el.addEventListener('input', (e) => {
 				const key = e.target.dataset.key;
 				if (key) {
-					this.updateState(key, e.target.value);
+					this._updateState({ [key]: e.target.value }, true);
 					
 					// Sync color inputs (text <-> color picker)
 					if (key === 'theme_color' || key === 'background_color') {

@@ -6,26 +6,32 @@ A visual web component for managing `robots.txt` files. Built with the same look
 
 - 📋 **Visual Management**: Organize bots into Allow and Disallow sections
 - ⚙️ **Advanced Settings**: Support for Host, Clean-param, Request-rate, and Visit-time
+- 🌍 **Global Path Rules**: Manage `User-agent: *` Allow/Disallow rules separately
 - 🔍 **Search & Filter**: Quickly find bots from long lists
 - 🌐 **External Bot Lists**: Load bot lists from URLs (like the AI robots.txt repository)
 - ⚡ **Quick Actions**: Move bots between sections, add custom entries
 - 🎨 **Clean UI**: Matching design with Web Config CSP
 - 🔔 **Event-Driven**: Listen for changes with `robtxt-change` events
 - 💾 **Import/Export**: Parse and generate robots.txt files
+- 🇩🇰 **Localization**: Built-in support for English (`en`) and Danish (`da`)
 
 ## Installation
 
+```bash
+npm install @browser.style/web-config-robots
+```
+
 ```html
-<script type="module" src="./ui/web-config-robots/src/index.js"></script>
+<script type="module" src="https://unpkg.com/@browser.style/web-config-robots/src/index.js"></script>
 ```
 
 ## Basic Usage
 
 ```html
 <!-- Load existing robots.txt file -->
-<robtxt-manager
+<web-config-robots
   src="https://example.com/robots.txt"
-></robtxt-manager>
+></web-config-robots>
 
 <!-- Preload AI bots into disallow section -->
 <web-config-robots
@@ -76,14 +82,24 @@ Example:
 ></web-config-robots>
 ```
 
+### `lists`
+A comma or semicolon separated list of URLs to offer as "Quick Import" buttons in the UI.
+
+Example:
+```html
+<web-config-robots
+  lists="https://example.com/good-bots.txt, https://example.com/bad-bots.txt">
+</web-config-robots>
+```
+
 ### `initial-config`
 JSON string to set initial configuration.
 
 Example:
 ```html
-<robtxt-manager
+<web-config-robots
   initial-config='{"allow":["Googlebot","Bingbot"],"disallow":["GPTBot"],"cleanParam":["ref /articles/", "sid /session/"]}'>
-</robtxt-manager>
+</web-config-robots>
 ```
 
 > **Note on Clean-param:** The `Clean-param` directive tells crawlers to ignore specific URL parameters.
@@ -98,6 +114,20 @@ Set the language for the UI. Supported languages: `en` (English), `da` (Danish).
 
 Example:
 ```html
+<web-config-robots lang="da"></web-config-robots>
+```
+
+## Events
+
+### `robtxt-change`
+Dispatched whenever the configuration changes.
+
+```javascript
+document.querySelector('web-config-robots').addEventListener('robtxt-change', (event) => {
+  console.log('Config:', event.detail.config);
+  console.log('Robots.txt:', event.detail.robotsTxt);
+});
+```
 <robtxt-manager lang="da"></robtxt-manager>
 ```
 

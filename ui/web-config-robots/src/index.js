@@ -872,13 +872,17 @@ class WebConfigRobots extends HTMLElement {
 				this.setCrawlDelay(value || null);
 			} else if (e.target.id === 'host-input') {
 				this._updateState({ host: e.target.value.trim() || null });
-			} else if (e.target.id === 'clean-param-input') {
-				const params = e.target.value.split('\n').map(p => p.trim()).filter(p => p);
-				this._updateState({ cleanParam: params });
 			} else if (e.target.id === 'request-rate-input') {
 				this._updateState({ requestRate: e.target.value.trim() || null });
 			} else if (e.target.id === 'visit-time-input') {
 				this._updateState({ visitTime: e.target.value.trim() || null });
+			}
+		});
+
+		this.shadowRoot.addEventListener('change', (e) => {
+			if (e.target.id === 'clean-param-input') {
+				const params = e.target.value.split('\n').map(p => p.trim()).filter(p => p);
+				this._updateState({ cleanParam: params });
 			}
 		});
 	}

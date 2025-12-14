@@ -126,6 +126,12 @@ input, textarea, select {
 	}
 }
 
+textarea {
+	field-sizing: content;
+	min-block-size: 6ch;
+	resize: vertical;
+}
+
 label {
 	display: grid;
 	row-gap: 0.5ch;

@@ -14,14 +14,18 @@ A visual web component for managing `security.txt` files (RFC 9116). Built with 
 
 ## Installation
 
+```bash
+npm install @browser.style/web-config-security
+```
+
 ```html
-<script type="module" src="./ui/web-config-security/src/index.js"></script>
+<script type="module" src="https://unpkg.com/@browser.style/web-config-security/src/index.js"></script>
 ```
 
 ## Basic Usage
 
 ```html
-<sec-manager></sec-manager>
+<web-config-security></web-config-security>
 ```
 
 ## Attributes
@@ -30,23 +34,23 @@ A visual web component for managing `security.txt` files (RFC 9116). Built with 
 URL to load a complete `security.txt` file.
 
 ```html
-<sec-manager src="https://example.com/.well-known/security.txt"></sec-manager>
+<web-config-security src="https://example.com/.well-known/security.txt"></web-config-security>
 ```
 
 ### `initial-config`
 JSON string to set initial configuration.
 
 ```html
-<sec-manager
+<web-config-security
   initial-config='{"contact":["mailto:security@example.com"],"expires":"2025-12-31T23:59:00.000Z"}'>
-</sec-manager>
+</web-config-security>
 ```
 
 ### `lang`
 Set the language for the UI. Supported languages: `en` (English), `da` (Danish). Defaults to `en`.
 
 ```html
-<sec-manager lang="da"></sec-manager>
+<web-config-security lang="da"></web-config-security>
 ```
 
 ## JavaScript API
@@ -57,7 +61,7 @@ Set the language for the UI. Supported languages: `en` (English), `da` (Danish).
 Get or set the current configuration object.
 
 ```javascript
-const manager = document.querySelector('sec-manager');
+const manager = document.querySelector('web-config-security');
 manager.config = {
   contact: ['mailto:security@example.com'],
   expires: '2026-01-01T00:00:00.000Z'
