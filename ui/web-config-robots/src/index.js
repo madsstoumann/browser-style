@@ -307,8 +307,12 @@ class WebConfigRobots extends HTMLElement {
 		if (directive === 'allow') rules.allow = rules.allow.filter(p => p !== value);
 		else rules.disallow = rules.disallow.filter(p => p !== value);
 
-		// Keep '*' rule container even if empty; it avoids destructive behavior and keeps parsing round-trips stable.
-		nextBotRules['*'] = rules;
+		// Remove empty '*' group so we don't emit an empty "User-agent: *" block.
+		if (rules.allow.length === 0 && rules.disallow.length === 0 && !rules.crawlDelay) {
+			delete nextBotRules['*'];
+		} else {
+			nextBotRules['*'] = rules;
+		}
 		this._updateState({ botRules: nextBotRules });
 	}
 
@@ -696,29 +700,35 @@ class WebConfigRobots extends HTMLElement {
 
 		// Per-bot custom rules
 		for (const [bot, rules] of Object.entries(this.state.botRules)) {
+			const allowPaths = Array.isArray(rules?.allow) ? rules.allow : [];
+			const disallowPaths = Array.isArray(rules?.disallow) ? rules.disallow : [];
+			const crawl = rules?.crawlDelay;
+
+			// Skip empty groups to reduce noise.
+			const hasInlineCrawlDelay = Boolean(crawl);
+			const shouldInlineGlobalCrawlDelay = bot === '*' && this.state.crawlDelay && !hasInlineCrawlDelay;
+			const hasAnyRule = hasInlineCrawlDelay || shouldInlineGlobalCrawlDelay || allowPaths.length > 0 || disallowPaths.length > 0;
+			if (!hasAnyRule) continue;
+
 			output += `# ${this.t('output.customRulesFor')} ${bot}\n`;
 			output += `User-agent: ${bot}\n`;
 
 			// If we have path rules for '*', prefer emitting the global crawl-delay here to avoid duplicate UA:* blocks.
-			if (bot === '*' && this.state.crawlDelay && !rules.crawlDelay) {
+			if (shouldInlineGlobalCrawlDelay) {
 				output += `Crawl-delay: ${this.state.crawlDelay}\n`;
 			}
 
-			if (rules.crawlDelay) {
-				output += `Crawl-delay: ${rules.crawlDelay}\n`;
+			if (hasInlineCrawlDelay) {
+				output += `Crawl-delay: ${crawl}\n`;
 			}
 
-			if (rules.allow && rules.allow.length > 0) {
-				rules.allow.forEach(path => {
-					output += `Allow: ${path}\n`;
-				});
-			}
+			allowPaths.forEach(path => {
+				output += `Allow: ${path}\n`;
+			});
 
-			if (rules.disallow && rules.disallow.length > 0) {
-				rules.disallow.forEach(path => {
-					output += `Disallow: ${path}\n`;
-				});
-			}
+			disallowPaths.forEach(path => {
+				output += `Disallow: ${path}\n`;
+			});
 
 			output += '\n';
 		}
