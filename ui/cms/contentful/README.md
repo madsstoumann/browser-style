@@ -106,7 +106,58 @@ These apps are served from `/ui/cms/contentful/*` with special security headers 
 
 This is handled automatically via Cloudflare Rules.
 
+## Import Map Requirement
+
+⚠️ **CRITICAL**: All Contentful app HTML files must include an import map to resolve the shared module dependency.
+
+Each component imports from `@browser.style/web-config-shared`, which is a **bare module specifier**. When loading from the CDN (browser.style), browsers cannot resolve this without an import map.
+
+**Required import map** (must be in `<head>` before module scripts):
+
+```html
+<script type="importmap">
+  {
+    "imports": {
+      "@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+    }
+  }
+</script>
+```
+
+### Why is this needed?
+
+The web-config components use imports like:
+```javascript
+import { adoptSharedStyles } from '@browser.style/web-config-shared';
+```
+
+Without the import map, the browser sees this error:
+```
+Uncaught TypeError: Failed to resolve module specifier "@browser.style/web-config-shared".
+Relative references must start with either "/", "./", or "../".
+```
+
+The import map tells the browser to fetch the module from the full CDN URL.
+
+### Alternative Solutions (Not Implemented)
+
+1. **Publish to npm + use ESM CDN** (esm.sh, jspm.io, skypack.dev)
+   - Would auto-resolve dependencies
+   - No import map needed
+   - Requires npm publishing
+
+2. **Use relative imports in source**
+   - Change to: `import { ... } from '../../../web-config-shared/index.js'`
+   - No import map needed
+   - Makes code harder to maintain
+
 ## Troubleshooting
+
+### Error: "Failed to resolve module specifier @browser.style/web-config-shared"
+
+**Cause**: Missing or incorrect import map
+
+**Solution**: Ensure the import map is present in the `<head>` section **before** any module scripts. See "Import Map Requirement" section above.
 
 ### App doesn't load in Contentful
 
@@ -114,6 +165,7 @@ This is handled automatically via Cloudflare Rules.
 2. **Verify field type**: Must match the component requirements
 3. **Check browser console**: Look for CSP or iframe errors
 4. **Verify Cloudflare rules**: Ensure `/ui/cms/*` has correct headers
+5. **Check import map**: Ensure the import map is present (see above)
 
 ### Data not saving
 
