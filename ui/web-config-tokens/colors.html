@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Config Tokens - Color Spaces Demo</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<script type="module" src="web-config-tokens.js"></script>
+	<style>
+		body {
+			font-family: system-ui, -apple-system, sans-serif;
+			padding: 2rem;
+			background: var(--canvas);
+			color: var(--text);
+			color-scheme: light dark;
+		}
+
+		h1 {
+			margin-bottom: 0.5rem;
+		}
+
+		.subtitle {
+			color: var(--text-muted);
+			margin-bottom: 2rem;
+		}
+
+		.color-grid {
+			display: grid;
+			gap: 1rem;
+			margin-bottom: 3rem;
+		}
+
+		.color-section {
+			background: var(--surface);
+			padding: 1.5rem;
+			border-radius: 8px;
+			border: 1px solid var(--border);
+		}
+
+		.color-section h2 {
+			margin: 0 0 1rem 0;
+			font-size: 1rem;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		.color-swatches {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+			gap: 0.5rem;
+		}
+
+		.swatch {
+			aspect-ratio: 1;
+			border-radius: 6px;
+			display: flex;
+			align-items: flex-end;
+			justify-content: center;
+			padding: 0.5rem;
+			font-size: 0.75rem;
+			font-weight: 600;
+			border: 1px solid var(--border-subtle);
+		}
+
+		.swatch-label {
+			background: rgba(0, 0, 0, 0.7);
+			color: white;
+			padding: 0.25rem 0.5rem;
+			border-radius: 4px;
+		}
+
+		.info-box {
+			background: var(--info-bg);
+			color: var(--info);
+			padding: 1rem;
+			border-radius: 6px;
+			margin-bottom: 2rem;
+			border: 1px solid var(--info);
+		}
+
+		.success-box {
+			background: var(--success-bg);
+			color: var(--success);
+			padding: 1rem;
+			border-radius: 6px;
+			border: 1px solid var(--success);
+		}
+
+		code {
+			background: var(--color-raw-neutral-200);
+			padding: 0.125rem 0.375rem;
+			border-radius: 3px;
+			font-size: 0.9em;
+		}
+	</style>
+</head>
+<body>
+	<web-config-tokens src="data/colors.json"></web-config-tokens>
+
+	<h1>Design Tokens - Color Spaces Demo</h1>
+	<p class="subtitle">Demonstrating multiple CSS color spaces: sRGB, OKLCH, Display P3, and HSL</p>
+
+	<div class="info-box">
+		<strong>Note:</strong> Open DevTools Console to see the generated CSS variables. This page demonstrates colors using different color spaces to show how the token system handles them.
+	</div>
+
+	<div class="color-grid">
+		<div class="color-section">
+			<h2>Neutrals (sRGB with hex)</h2>
+			<div class="color-swatches">
+				<div class="swatch" style="background: var(--color-raw-neutral-50)">
+					<span class="swatch-label">50</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-neutral-100)">
+					<span class="swatch-label">100</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-neutral-200)">
+					<span class="swatch-label">200</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-neutral-500)">
+					<span class="swatch-label">500</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-neutral-900)">
+					<span class="swatch-label">900</span>
+				</div>
+			</div>
+			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+				Uses <code>colorSpace: "srgb"</code> with hex values
+			</p>
+		</div>
+
+		<div class="color-section">
+			<h2>Blues (OKLCH)</h2>
+			<div class="color-swatches">
+				<div class="swatch" style="background: var(--color-raw-blue-50)">
+					<span class="swatch-label">50</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-blue-100)">
+					<span class="swatch-label">100</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-blue-200)">
+					<span class="swatch-label">200</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-blue-500)">
+					<span class="swatch-label">500</span>
+				</div>
+			</div>
+			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+				Uses <code>colorSpace: "oklch"</code> - Modern perceptually uniform color space
+			</p>
+		</div>
+
+		<div class="color-section">
+			<h2>Greens (Display P3)</h2>
+			<div class="color-swatches">
+				<div class="swatch" style="background: var(--color-raw-green-50)">
+					<span class="swatch-label">50</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-green-100)">
+					<span class="swatch-label">100</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-green-200)">
+					<span class="swatch-label">200</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-green-500)">
+					<span class="swatch-label">500</span>
+				</div>
+			</div>
+			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+				Uses <code>colorSpace: "display-p3"</code> - Wider gamut for modern displays
+			</p>
+		</div>
+
+		<div class="color-section">
+			<h2>Purples (HSL)</h2>
+			<div class="color-swatches">
+				<div class="swatch" style="background: var(--color-raw-purple-50)">
+					<span class="swatch-label">50</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-purple-100)">
+					<span class="swatch-label">100</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-purple-200)">
+					<span class="swatch-label">200</span>
+				</div>
+				<div class="swatch" style="background: var(--color-raw-purple-500)">
+					<span class="swatch-label">500</span>
+				</div>
+			</div>
+			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
+				Uses <code>colorSpace: "hsl"</code> - Traditional hue/saturation/lightness
+			</p>
+		</div>
+	</div>
+
+	<div class="color-section">
+		<h2>Semantic Colors with light-dark() Function</h2>
+		<p style="margin-bottom: 1rem; color: var(--text-muted);">
+			These use the <code>cssFunc</code> extension with <code>light-dark()</code> to automatically adapt to color scheme.
+		</p>
+		<div class="color-swatches">
+			<div class="swatch" style="background: var(--canvas); color: var(--text);">
+				<span class="swatch-label">Canvas</span>
+			</div>
+			<div class="swatch" style="background: var(--surface); color: var(--text);">
+				<span class="swatch-label">Surface</span>
+			</div>
+			<div class="swatch" style="background: var(--brand); color: white;">
+				<span class="swatch-label">Brand</span>
+			</div>
+			<div class="swatch" style="background: var(--success); color: white;">
+				<span class="swatch-label">Success</span>
+			</div>
+			<div class="swatch" style="background: var(--error); color: white;">
+				<span class="swatch-label">Error</span>
+			</div>
+			<div class="swatch" style="background: var(--warning); color: black;">
+				<span class="swatch-label">Warning</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="success-box" style="margin-top: 2rem;">
+		<strong>Try switching color schemes!</strong> Use your browser's DevTools to toggle between light and dark mode to see the <code>light-dark()</code> function in action.
+	</div>
+</body>
+</html>
