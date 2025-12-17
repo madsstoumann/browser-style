@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Color Input</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="HTML is the foundation of the World Wide Web, and it is still the most popular markup language in use today.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+</head>
+<body>
+	<h1>UI: Components</h1>
+
+	<h2>Color Input</h2>
+
+	<color-input>
+		<form id="app"></form>
+	</color-input>
+
+	<script type="module">
+		import { spaces } from './spaces.js';
+		const app = document.getElementById('app');
+
+		/* Generate UI */
+		let options = '', fieldsets = '';
+
+		for (const [id, config] of Object.entries(spaces)) {
+			const variants = config.spaces || [id];
+			for (const v of variants) {
+				const isObj = typeof v === 'object';
+				const name = isObj ? v.name : v;
+				const format = isObj ? v.format : (name === 'hex' ? 'hex' : 'function');
+				const mode = format !== 'function' ? ` data-mode="${format}"` : '';
+				options += `<option value="${name}" data-fieldset="${id}"${mode}>${name}</option>`;
+			}
+
+			const inputs = Object.values(config).filter(v => v.label).map(props => {
+				const attrs = Object.entries(props)
+					.filter(([k]) => ['min', 'max', 'step', 'value'].includes(k))
+					.map(([k, v]) => `${k}="${v}"`).join(' ');
+				return `<fieldset><input type="range" name="output" ${attrs}><label>${props.label}<input type="number" name="value" ${attrs}></label></fieldset>`;
+			}).join('');
+
+			fieldsets += `<fieldset name="${id}" hidden><legend>${id.toUpperCase()}</legend>${inputs}</fieldset>`;
+		}
+
+		app.innerHTML = `<fieldset name="controls"><label><select name="colorspace">${options}</select></label><label><output name="format"></output></label></fieldset>${fieldsets}`;
+
+		/* Logic */
+		const update = () => {
+			const { value: mode, selectedOptions: [opt] } = app.elements.colorspace;
+			const id = opt.dataset.fieldset;
+			const config = spaces[id];
+			
+			for (const fs of app.children) {
+				if (fs.name && fs.name !== 'controls') fs.hidden = fs.name !== id;
+			}
+
+			const inputs = app.elements[id].querySelectorAll('[name=value]');
+			const args = Object.values(config)
+				.filter(v => v.label)
+				.map((v, i) => (v.prefix || '') + inputs[i].value + (v.suffix || ''))
+				.join(' ');
+			
+			const val = opt.dataset.mode === 'color' ? `color(${mode} ${args})` : `${mode}(${args})`;
+			app.elements.format.value = val;
+			app.elements.controls.style.backgroundColor = val;
+		}
+
+		app.addEventListener('input', ({ target: t }) => {
+			if (t.name === 'colorspace') {
+				const id = convert(getComputedStyle(app.elements.controls).backgroundColor, t.value, spaces);
+				return update();
+			}
+			const g = t.closest('fieldset');
+			if (g && g.elements.output && g.elements.value) {
+				const { output, value } = g.elements;
+				if (t === output) value.value = output.value;
+				else output.value = value.value;
+			}
+			update();
+		});
+
+		function convert(rgba, colorspace, spaces) {
+			const [r, g, b, a = 1] = rgba.match(/-?[\d.]+/g).map(Number);
+			let id = colorspace;
+			console.log(id, r, g, b, a);
+			for (const [key, config] of Object.entries(spaces)) {
+				const variants = config.spaces || [key];
+				if (variants.some(v => (typeof v === 'string' ? v : v.name) === colorspace)) {
+					id = key;
+					break;
+				}
+			}
+			return id;
+		}
+
+		update();
+	</script>
+
+</body>
+</html>
