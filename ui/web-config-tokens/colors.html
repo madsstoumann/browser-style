@@ -51,15 +51,22 @@
 		}
 
 		.swatch {
-			aspect-ratio: 1;
 			border-radius: 6px;
 			display: flex;
-			align-items: flex-end;
-			justify-content: center;
+			flex-direction: column;
+			gap: 0.5rem;
 			padding: 0.5rem;
 			font-size: 0.75rem;
 			font-weight: 600;
 			border: 1px solid var(--border-subtle);
+		}
+
+		.swatch-color {
+			aspect-ratio: 1;
+			border-radius: 4px;
+			display: flex;
+			align-items: flex-end;
+			justify-content: center;
 		}
 
 		.swatch-label {
@@ -67,6 +74,14 @@
 			color: white;
 			padding: 0.25rem 0.5rem;
 			border-radius: 4px;
+		}
+
+		.swatch input[type="color"] {
+			width: 100%;
+			height: 2rem;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			cursor: pointer;
 		}
 
 		.info-box {
@@ -108,20 +123,35 @@
 		<div class="color-section">
 			<h2>Neutrals (sRGB with hex)</h2>
 			<div class="color-swatches">
-				<div class="swatch" style="background: var(--color-raw-neutral-50)">
-					<span class="swatch-label">50</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-neutral-50)">
+						<span class="swatch-label">50</span>
+					</div>
+					<input type="color" value="#FAFAFA" readonly>
 				</div>
-				<div class="swatch" style="background: var(--color-raw-neutral-100)">
-					<span class="swatch-label">100</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-neutral-100)">
+						<span class="swatch-label">100</span>
+					</div>
+					<input type="color" value="#F5F5F5" readonly>
 				</div>
-				<div class="swatch" style="background: var(--color-raw-neutral-200)">
-					<span class="swatch-label">200</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-neutral-200)">
+						<span class="swatch-label">200</span>
+					</div>
+					<input type="color" value="#EEEEEE" readonly>
 				</div>
-				<div class="swatch" style="background: var(--color-raw-neutral-500)">
-					<span class="swatch-label">500</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-neutral-500)">
+						<span class="swatch-label">500</span>
+					</div>
+					<input type="color" value="#9E9E9E" readonly>
 				</div>
-				<div class="swatch" style="background: var(--color-raw-neutral-900)">
-					<span class="swatch-label">900</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-neutral-900)">
+						<span class="swatch-label">900</span>
+					</div>
+					<input type="color" value="#212121" readonly>
 				</div>
 			</div>
 			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
@@ -132,63 +162,99 @@
 		<div class="color-section">
 			<h2>Blues (OKLCH)</h2>
 			<div class="color-swatches">
-				<div class="swatch" style="background: var(--color-raw-blue-50)">
-					<span class="swatch-label">50</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-blue-50)">
+						<span class="swatch-label">50</span>
+					</div>
+					<input type="color" value="#E5F1FD" readonly title="Approximate hex for OKLCH color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-blue-100)">
-					<span class="swatch-label">100</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-blue-100)">
+						<span class="swatch-label">100</span>
+					</div>
+					<input type="color" value="#C0DFFB" readonly title="Approximate hex for OKLCH color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-blue-200)">
-					<span class="swatch-label">200</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-blue-200)">
+						<span class="swatch-label">200</span>
+					</div>
+					<input type="color" value="#95CCF9" readonly title="Approximate hex for OKLCH color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-blue-500)">
-					<span class="swatch-label">500</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-blue-500)">
+						<span class="swatch-label">500</span>
+					</div>
+					<input type="color" value="#2A9CF4" readonly title="Approximate hex for OKLCH color">
 				</div>
 			</div>
 			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
-				Uses <code>colorSpace: "oklch"</code> - Modern perceptually uniform color space
+				Uses <code>colorSpace: "oklch"</code> - Modern perceptually uniform color space (hex values are approximate)
 			</p>
 		</div>
 
 		<div class="color-section">
 			<h2>Greens (Display P3)</h2>
 			<div class="color-swatches">
-				<div class="swatch" style="background: var(--color-raw-green-50)">
-					<span class="swatch-label">50</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-green-50)">
+						<span class="swatch-label">50</span>
+					</div>
+					<input type="color" value="#E6F7E6" readonly title="Approximate hex for Display P3 color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-green-100)">
-					<span class="swatch-label">100</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-green-100)">
+						<span class="swatch-label">100</span>
+					</div>
+					<input type="color" value="#C5E4C7" readonly title="Approximate hex for Display P3 color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-green-200)">
-					<span class="swatch-label">200</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-green-200)">
+						<span class="swatch-label">200</span>
+					</div>
+					<input type="color" value="#A3D1A6" readonly title="Approximate hex for Display P3 color">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-green-500)">
-					<span class="swatch-label">500</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-green-500)">
+						<span class="swatch-label">500</span>
+					</div>
+					<input type="color" value="#4AAB4D" readonly title="Approximate hex for Display P3 color">
 				</div>
 			</div>
 			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
-				Uses <code>colorSpace: "display-p3"</code> - Wider gamut for modern displays
+				Uses <code>colorSpace: "display-p3"</code> - Wider gamut for modern displays (hex values are approximate)
 			</p>
 		</div>
 
 		<div class="color-section">
 			<h2>Purples (HSL)</h2>
 			<div class="color-swatches">
-				<div class="swatch" style="background: var(--color-raw-purple-50)">
-					<span class="swatch-label">50</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-purple-50)">
+						<span class="swatch-label">50</span>
+					</div>
+					<input type="color" value="#F3E5F5" readonly title="Hex value from HSL">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-purple-100)">
-					<span class="swatch-label">100</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-purple-100)">
+						<span class="swatch-label">100</span>
+					</div>
+					<input type="color" value="#E1BEE7" readonly title="Hex value from HSL">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-purple-200)">
-					<span class="swatch-label">200</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-purple-200)">
+						<span class="swatch-label">200</span>
+					</div>
+					<input type="color" value="#CE93D8" readonly title="Hex value from HSL">
 				</div>
-				<div class="swatch" style="background: var(--color-raw-purple-500)">
-					<span class="swatch-label">500</span>
+				<div class="swatch">
+					<div class="swatch-color" style="background: var(--color-raw-purple-500)">
+						<span class="swatch-label">500</span>
+					</div>
+					<input type="color" value="#9C27B0" readonly title="Hex value from HSL">
 				</div>
 			</div>
 			<p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-muted);">
-				Uses <code>colorSpace: "hsl"</code> - Traditional hue/saturation/lightness
+				Uses <code>colorSpace: "hsl"</code> - Traditional hue/saturation/lightness (hex values converted)
 			</p>
 		</div>
 	</div>
@@ -199,23 +265,41 @@
 			These use the <code>cssFunc</code> extension with <code>light-dark()</code> to automatically adapt to color scheme.
 		</p>
 		<div class="color-swatches">
-			<div class="swatch" style="background: var(--canvas); color: var(--text);">
-				<span class="swatch-label">Canvas</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--canvas); color: var(--text);">
+					<span class="swatch-label">Canvas</span>
+				</div>
+				<input type="color" value="#FAFAFA" readonly title="Light mode color">
 			</div>
-			<div class="swatch" style="background: var(--surface); color: var(--text);">
-				<span class="swatch-label">Surface</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--surface); color: var(--text);">
+					<span class="swatch-label">Surface</span>
+				</div>
+				<input type="color" value="#FFFFFF" readonly title="Light mode color">
 			</div>
-			<div class="swatch" style="background: var(--brand); color: white;">
-				<span class="swatch-label">Brand</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--brand); color: white;">
+					<span class="swatch-label">Brand</span>
+				</div>
+				<input type="color" value="#2A9CF4" readonly title="OKLCH - approximate hex">
 			</div>
-			<div class="swatch" style="background: var(--success); color: white;">
-				<span class="swatch-label">Success</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--success); color: white;">
+					<span class="swatch-label">Success</span>
+				</div>
+				<input type="color" value="#4AAB4D" readonly title="Display P3 - approximate hex">
 			</div>
-			<div class="swatch" style="background: var(--error); color: white;">
-				<span class="swatch-label">Error</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--error); color: white;">
+					<span class="swatch-label">Error</span>
+				</div>
+				<input type="color" value="#F44336" readonly title="sRGB hex value">
 			</div>
-			<div class="swatch" style="background: var(--warning); color: black;">
-				<span class="swatch-label">Warning</span>
+			<div class="swatch">
+				<div class="swatch-color" style="background: var(--warning); color: black;">
+					<span class="swatch-label">Warning</span>
+				</div>
+				<input type="color" value="#FFEB3B" readonly title="sRGB hex value">
 			</div>
 		</div>
 	</div>
