@@ -1,3 +1,19 @@
+Read these official W3C Design Tokens Community Group reports for detailed information on design tokens:
+
+https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/
+https://www.w3.org/community/reports/design-tokens/CG-FINAL-color-20251028/
+https://www.w3.org/community/reports/design-tokens/CG-FINAL-resolver-20251028/
+
+Next, explore these resources for a deeper understanding of CSS properties:
+https://dev.to/madsstoumann/extending-emmet-and-vs-code-and-discovering-415-css-properties-1dfo
+https://github.com/mdn/data/blob/main/css/properties.json
+
+To start with, I'd like a complete list of all design token *types*.
+
+Next, I'd like a complete list of CSS properties mapped to deisgn tokens types.
+
+A lot of properties can probably be omitted because they don't relate to design tokens. Focus on the most relevant ones.
+
 In ui/web-config-tokens I've played around with various ways of displaying design tokens.
 
 The official specs are here:

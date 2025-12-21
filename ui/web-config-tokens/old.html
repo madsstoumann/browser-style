@@ -4,9 +4,9 @@
 	<title>Tokens</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<link rel="stylesheet" href="//browser.style/base.css">
+	<!-- <link rel="stylesheet" href="//browser.style/base.css">
 	<link rel="stylesheet" href="//browser.style/ui/accordion/ui-accordion.css">
-	<link rel="stylesheet" href="tokens.css" />
+	<link rel="stylesheet" href="tokens.css" /> -->
 </head>
 <body>
 	<header>
@@ -20,7 +20,7 @@
 	 <input type="file" id="file" accept=".json, .tokens">
 
 	<script type="module">
-		import { go, processFiles, renderTokens } from './index.js';
+		import { go, processFiles, renderTokens } from './old.js';
 		const app = document.getElementById('app');
 		const file = document.getElementById('file');
 

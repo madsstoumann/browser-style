@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Web Config Tokens Demo</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 2rem;
+			/* font-family: system-ui, sans-serif; */
+		}
+
+
+		[data-token-group] {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+		}
+		design-token {
+			border: 2px solid mediumvioletred;
+		}
+	</style>
+</head>
+<body>
+
+
+	<web-config-tokens src="design.tokens.json"></web-config-tokens>
+
+	<script type="module" src="index.js"></script>
+</body>
+</html>
