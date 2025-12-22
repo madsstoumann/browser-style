@@ -405,6 +405,38 @@
         { "color": "{color.primitive.brand.900}", "position": 1 }
       ],
       "$extensions": { "css": { "var": "--gradient-brand" } }
+    },
+    "surface": {
+      "$type": "gradient",
+      "$value": [
+        { "color": "{color.primitive.neutral.0}", "position": 0 },
+        { "color": "{color.primitive.neutral.100}", "position": 1 }
+      ],
+      "$extensions": {
+        "css": {
+          "var": "--gradient-surface",
+          "gradientType": "radial",
+          "shape": "circle",
+          "position": "top left"
+        }
+      }
+    },
+    "glow": {
+      "$type": "gradient",
+      "$value": [
+        { "color": "{color.primitive.brand.500}", "position": 0 },
+        { "color": "{color.primitive.vivid.purple}", "position": 0.33 },
+        { "color": "{color.primitive.vivid.lime}", "position": 0.66 },
+        { "color": "{color.primitive.brand.500}", "position": 1 }
+      ],
+      "$extensions": {
+        "css": {
+          "var": "--gradient-glow",
+          "gradientType": "conic",
+          "angle": "0deg",
+          "position": "center"
+        }
+      }
     }
   }
 },

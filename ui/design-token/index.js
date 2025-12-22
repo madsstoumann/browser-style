@@ -1,63 +1,136 @@
 const styles = `
 	:host {
 		display: inline-block;
-		vertical-align: middle;
+		--_v: initial;
 	}
 	button {
 		appearance: none;
-		background: transparent;
-		border: 1px solid color-mix(in srgb, currentColor, transparent 80%);
-		border-radius: 0.25rem;
+		border: 1px solid #ccc;
+		background: #fff;
+		padding: 0.5rem;
+		border-radius: 4px;
 		cursor: pointer;
-		padding: 0.25rem;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+		width: 100%;
+		text-align: left;
 		font-family: inherit;
-		font-size: 0.875rem;
-		color: inherit;
-		min-width: 0;
-		max-width: 100%;
 	}
-	button:hover {
-		background: color-mix(in srgb, currentColor, transparent 95%);
-		border-color: color-mix(in srgb, currentColor, transparent 60%);
-	}
-	.preview {
+	/* Preview Box */
+	button::before {
+		content: '';
+		display: block;
 		width: 1.5rem;
 		height: 1.5rem;
-		border-radius: 0.125rem;
-		background-color: #eee;
-		background-image:
-			linear-gradient(45deg, #ccc 25%, transparent 25%),
-			linear-gradient(-45deg, #ccc 25%, transparent 25%),
-			linear-gradient(45deg, transparent 75%, #ccc 75%),
-			linear-gradient(-45deg, transparent 75%, #ccc 75%);
-		background-size: 8px 8px;
-		background-position: 0 0, 0 4px, 4px -4px, -4px 0px;
-		overflow: hidden;
-		position: relative;
+		border: 1px solid #eee;
+		border-radius: 4px;
+		background: #eee; /* Fallback */
 		flex-shrink: 0;
 	}
-	.preview-content {
-		width: 100%;
-		height: 100%;
+	
+	/* Type-specific previews */
+	:host([type="color"]) button::before {
+		background: var(--_v);
 	}
-	.label {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+	:host([type="border"]) button::before {
+		background: transparent;
+		border: var(--_v);
 	}
-	[popover] {
-		padding: 1rem;
-		border: 1px solid #ccc;
-		border-radius: 0.5rem;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-		min-width: 200px;
+	:host([type="shadow"]) button::before {
+		background: #fff;
+		box-shadow: var(--_v);
 	}
-	h3 { margin: 0 0 1rem 0; font-size: 1rem; }
-	pre { background: #f5f5f5; padding: 0.5rem; border-radius: 4px; overflow: auto; max-width: 400px; }
+	:host([type="gradient"]) button::before {
+		background: var(--_v);
+	}
+	:host([type="aspectRatio"]) button::before {
+		width: 2rem;
+		height: auto;
+		aspect-ratio: var(--_v);
+		background: #ccc;
+	}
+
+	dialog {
+		border: none;
+		border-radius: 1rem;
+
+		form {
+			display: grid;
+			gap: .75rem;
+		}
+
+		h2 {
+			font-weight: 500;
+			margin: 0;
+			text-box: cap alphabetic;
+		}
+
+		input, select, textarea {
+			border: 1px solid #EEE;
+			border-radius: .25rem;
+			font-family: inherit;
+			font-size: .75rem;
+			padding: .25rem .5rem;
+		}
+
+		label {
+			display: inline-grid;
+			font-size: 12px;
+			gap: .125rem;
+		}
+
+		textarea {
+			field-sizing: content;
+			resize: vertical;
+		}
+	}
 `;
+
+function toCssValue(token) {
+	const { $type, $value } = token;
+	if (typeof $value === 'string') return $value;
+	
+	if ($type === 'color' && typeof $value === 'object') {
+		const { colorSpace, components, alpha } = $value;
+		const a = alpha ?? 1;
+		// Map common spaces to CSS color functions
+		if (colorSpace === 'oklab') return `oklab(${components[0]} ${components[1]} ${components[2]} / ${a})`;
+		if (colorSpace === 'oklch') return `oklch(${components[0]} ${components[1]} ${components[2]} / ${a})`;
+		if (colorSpace === 'srgb' || colorSpace === 'rgb') return `color(srgb ${components[0]} ${components[1]} ${components[2]} / ${a})`;
+		if (colorSpace === 'display-p3' || colorSpace === 'p3') return `color(display-p3 ${components[0]} ${components[1]} ${components[2]} / ${a})`;
+		return 'transparent';
+	}
+	
+	if ($type === 'shadow' && typeof $value === 'object') {
+		const shadows = Array.isArray($value) ? $value : [$value];
+		return shadows.map(s => `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`).join(', ');
+	}
+	
+	if ($type === 'border' && typeof $value === 'object') {
+		return `${$value.width} ${$value.style} ${$value.color}`;
+	}
+	
+	if ($type === 'gradient') {
+		const stops = Array.isArray($value) ? $value : [];
+		if (!stops.length) return '';
+
+		const stopList = stops.map(s => `${s.color} ${s.position * 100}%`).join(', ');
+		const ext = token.$extensions?.css || {};
+		const type = ext.gradientType || 'linear';
+		const angle = ext.angle || 'to bottom';
+		const shape = ext.shape || 'circle';
+		const position = ext.position || 'center';
+
+		if (type === 'linear') return `linear-gradient(${angle}, ${stopList})`;
+		if (type === 'radial') return `radial-gradient(${shape} at ${position}, ${stopList})`;
+		if (type === 'conic') return `conic-gradient(from ${angle} at ${position}, ${stopList})`;
+		
+		return `linear-gradient(${angle}, ${stopList})`;
+	}
+
+	return '';
+}
 
 export default class DesignToken extends HTMLElement {
 	#token = {
@@ -66,9 +139,10 @@ export default class DesignToken extends HTMLElement {
 		$value: '#000000',
 		$description: ''
 	};
+	#renderId = 0;
 
 	static get observedAttributes() {
-		return ['name', 'type', 'value', 'description', 'render', 'property', 'src'];
+		return ['src'];
 	}
 
 	constructor() {
@@ -84,33 +158,13 @@ export default class DesignToken extends HTMLElement {
 	}
 
 	attributeChangedCallback(name, oldValue, newValue) {
-		if (oldValue === newValue) return;
-		if (name === 'src') {
-			try {
-				this.src = JSON.parse(newValue);
-			} catch (e) {
-				console.warn('Invalid JSON in src attribute', e);
-			}
-			return;
+		if (name === 'name' && oldValue !== newValue) {
+			this.render();
 		}
-		this.#updateStateFromAttribute(name, newValue);
-		this.render();
 	}
 
-	set src(data) {
-		if (!data) return;
-		// If data is a full token object (has $value), use it directly
-		if (data.$value) {
-			this.#token = { ...data };
-		} else {
-			// Heuristic: if it's a wrapper { "token-name": { $value: ... } }
-			const keys = Object.keys(data);
-			if (keys.length === 1 && data[keys[0]]?.$value) {
-				this.#token = { ...data[keys[0]], name: keys[0] };
-			} else {
-				this.#token = { ...data };
-			}
-		}
+	set src(val) {
+		this.#token = val;
 		this.render();
 	}
 
@@ -118,57 +172,226 @@ export default class DesignToken extends HTMLElement {
 		return this.#token;
 	}
 
-	#updateStateFromAttribute(name, value) {
-		switch (name) {
-			case 'name':
-				this.#token.name = value;
-				break;
-			case 'type':
-				this.#token.$type = value;
-				break;
-			case 'value':
-				try {
-					this.#token.$value = JSON.parse(value);
-				} catch {
-					this.#token.$value = value;
-				}
-				break;
-			case 'description':
-				this.#token.$description = value;
-				break;
-			case 'render':
-				this.#token.render = value;
-				break;
-			case 'property':
-				if (!this.#token.$extensions) this.#token.$extensions = {};
-				this.#token.$extensions.cssProp = value;
-				break;
-		}
-	}
-
-	render() {
-		const { name, $value, $type, $description, render } = this.#token;
-		const displayType = render || $type || 'unknown';
-		const displayName = name || 'Token';
+	async render() {
+		const renderId = ++this.#renderId;
+		const token = this.#token;
+		const { $type, $value, $description, $extensions } = token;
+		const name = this.getAttribute('name') || token.name || 'Token';
+		token.name = name;
 		
-		// Basic preview logic
-		let previewStyle = '';
-		if (displayType === 'color' && typeof $value === 'string') {
-			previewStyle = `background-color: ${$value}`;
+		const cssVar = $extensions?.css?.var || '';
+
+		// Set host attributes for styling
+		if ($type) {
+			this.setAttribute('type', $type);
 		}
+		
+		this.style.setProperty('--_v', toCssValue(token));
+
+		let displayValue = $value;
+		const supportedEditors = ['color'];
+
+		if (typeof $value === 'object') {
+			if (supportedEditors.includes($type)) {
+				try {
+					const module = await import(`./editors/${$type}.js`);
+					if (this.#renderId !== renderId) return;
+					if (module.formatValue) {
+						displayValue = module.formatValue($value);
+					} else {
+						displayValue = JSON.stringify($value);
+					}
+				} catch (e) {
+					displayValue = JSON.stringify($value);
+				}
+			} else {
+				displayValue = JSON.stringify($value);
+			}
+		}
+
+		let editorContent = null;
+		let pendingValue = null;
+		
+		if ($type && supportedEditors.includes($type)) {
+			try {
+				const module = await import(`./editors/${$type}.js`);
+				if (this.#renderId !== renderId) return;
+				if (module.default) {
+					editorContent = module.default(token);
+				}
+			} catch (e) {
+				if (this.#renderId !== renderId) return;
+				console.debug(`No editor for type: ${$type}`, e);
+			}
+		}
+
+		if (this.#renderId !== renderId) return;
 
 		this.shadowRoot.innerHTML = `
-			<button type="button" popovertarget="editor" title="${$description || ''}">
-				<div class="preview">
-					<div class="preview-content" style="${previewStyle}"></div>
-				</div>
-				<span class="label">${displayName}</span>
+			<button type="button" command="show-modal" commandfor="dialog">
+				${token.name}
 			</button>
-			<div id="editor" popover>
-				<h3>Edit ${displayName}</h3>
-				<pre>${JSON.stringify(this.#token, null, 2)}</pre>
-			</div>
+			<dialog id="dialog" closedby="any">
+				<form method="dialog">
+					<h2>${token.name}</h2>
+					
+					<label>
+						Name
+						<input name="name" value="${token.name}">
+					</label>
+
+					<label>
+						Description
+						<textarea name="description">${$description || ''}</textarea>
+					</label>
+
+					<label>
+						CSS Variable
+						<input name="property" value="${cssVar}">
+					</label>
+
+					<label>
+						Value
+						<input name="value" value="${displayValue}">
+					</label>
+
+					<details open ${!editorContent ? 'hidden' : ''}>
+						<summary>Advanced Editor</summary>
+						<fieldset name="advanced" id="advanced-editor"></fieldset>
+					</details>
+
+					<details>
+						<summary>JSON Source</summary>
+						<pre>${JSON.stringify(token, null, 2)}</pre>
+					</details>
+
+					<button value="save">Save</button>
+				</form>
+			</dialog>
 		`;
+
+		const dialog = this.shadowRoot.getElementById('dialog');
+		const form = dialog.querySelector('form');
+		const valueInput = form.querySelector('input[name="value"]');
+
+		// Live preview and value tracking
+		valueInput.addEventListener('input', (e) => {
+			const val = e.target.value;
+			this.style.setProperty('--_v', val);
+			pendingValue = { css: val };
+			
+			// Notify advanced editor if it exists
+			const editorContainer = this.shadowRoot.getElementById('advanced-editor');
+			if (editorContainer && editorContent) {
+				const editor = editorContainer.firstElementChild;
+				if (editor) {
+					editor.dispatchEvent(new CustomEvent('update-from-input', {
+						detail: { value: val }
+					}));
+				}
+			}
+		});
+
+		dialog.addEventListener('close', async () => {
+			if (dialog.returnValue === 'save') {
+				const newName = form.elements.name.value;
+				const newDesc = form.elements.description.value;
+				const newCssVar = form.elements.property.value;
+				const newValueStr = form.elements.value.value;
+
+				// Update Name
+				if (newName && newName !== name) {
+					if (!token.$extensions) token.$extensions = {};
+					if (!token.$extensions.ui) token.$extensions.ui = {};
+					token.$extensions.ui.name = newName;
+					this.setAttribute('name', newName);
+				}
+
+				// Update Description
+				if (newDesc !== $description) {
+					token.$description = newDesc;
+				}
+
+				// Update CSS Variable
+				if (newCssVar !== cssVar) {
+					if (!token.$extensions) token.$extensions = {};
+					if (!token.$extensions.css) token.$extensions.css = {};
+					token.$extensions.css.var = newCssVar;
+				}
+
+				// Update Value
+				if (token.$type === 'color' && pendingValue?.components) {
+					token.$value = {
+						colorSpace: pendingValue.space === 'hex' ? 'srgb' : pendingValue.space,
+						components: pendingValue.components,
+						alpha: pendingValue.alpha
+					};
+				} else {
+					let finalValue = newValueStr;
+					
+					// Try to interpret color string via editor module
+					if (supportedEditors.includes(token.$type)) {
+						try {
+							const module = await import(`./editors/${token.$type}.js`);
+							if (module.parseValue) {
+								const parsed = module.parseValue(finalValue);
+								if (typeof parsed === 'object') {
+									token.$value = parsed;
+								} else {
+									token.$value = finalValue;
+								}
+							} else {
+								// Fallback for other types
+								try {
+									if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
+										token.$value = JSON.parse(finalValue);
+									} else {
+										token.$value = finalValue;
+									}
+								} catch {
+									token.$value = finalValue;
+								}
+							}
+						} catch (e) {
+							token.$value = finalValue;
+						}
+					} else {
+						// Try to parse JSON for other types
+						try {
+							if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
+								token.$value = JSON.parse(finalValue);
+							} else {
+								token.$value = finalValue;
+							}
+						} catch {
+							token.$value = finalValue;
+						}
+					}
+				}
+				
+				this.render();
+			} else {
+				this.render();
+			}
+		});
+
+		if (editorContent) {
+			const container = this.shadowRoot.getElementById('advanced-editor');
+			if (typeof editorContent === 'string') {
+				container.innerHTML = editorContent;
+			} else {
+				container.replaceChildren(editorContent);
+			}
+
+			container.addEventListener('editor-change', (e) => {
+				pendingValue = e.detail;
+				const { css } = e.detail;
+				if (valueInput) {
+					valueInput.value = css;
+					this.style.setProperty('--_v', css);
+				}
+			});
+		}
 	}
 }
 

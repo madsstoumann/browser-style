@@ -362,6 +362,36 @@ Quick reference examples following the specification.
 }
 ```
 
+### Gradients (Extended)
+While the W3C spec defines gradients as an array of stops, we support extended configuration via `$extensions.css`.
+
+**Supported Extension Properties:**
+- `gradientType`: `linear` (default), `radial`, `conic`
+- `angle`: CSS angle (e.g., `45deg`, `to bottom right`) - for linear/conic
+- `shape`: `circle` or `ellipse` - for radial
+- `position`: CSS position (e.g., `center`, `top left`) - for radial/conic
+
+```json
+{
+  "gradient": {
+    "radial-example": {
+      "$type": "gradient",
+      "$value": [
+        { "color": "#fff", "position": 0 },
+        { "color": "#000", "position": 1 }
+      ],
+      "$extensions": {
+        "css": {
+          "gradientType": "radial",
+          "shape": "circle",
+          "position": "center"
+        }
+      }
+    }
+  }
+}
+```
+
 ---
 
 ## 9. Validation Rules

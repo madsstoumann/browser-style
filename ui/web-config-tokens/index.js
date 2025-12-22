@@ -1,23 +1,52 @@
+import '../design-token/index.js';
+
+const styles = new CSSStyleSheet();
+styles.replaceSync(`
+	:host {
+		--web-config-tokens-gap: .75rem;
+		display: block;
+		font-family: system-ui, sans-serif;
+	}
+	details { padding-inline-start: calc(attr(data-level type(<number>)) * 1rem); }
+	[data-token-group] {
+		display: grid;
+		gap: var(--web-config-tokens-gap);
+		grid-template-columns: repeat(4, 1fr);
+	}
+	[data-level="0"] {
+		border-block-end: 1px dotted;
+		padding-block: 1ch;
+		& > summary {
+			font-size: 1.5rem;
+			font-weight: 500;
+		}
+	}
+`);
+
 export default class WebConfigTokens extends HTMLElement {
+	constructor() {
+		super();
+		this.attachShadow({ mode: 'open' });
+		this.shadowRoot.adoptedStyleSheets = [styles];
+	}
+
 	async connectedCallback() {
 		const src = this.getAttribute('src');
 		if (!src) return;
 		try {
 			const data = await (await fetch(src)).json();
-			this.replaceChildren(this.render(data));
+			this.shadowRoot.replaceChildren(this.render(data));
 		} catch (e) {
-			this.innerHTML = `<p>Error loading tokens: ${e.message}</p>`;
+			this.shadowRoot.innerHTML = `<p>Error loading tokens: ${e.message}</p>`;
 		}
 	}
 
 	render(data, path = []) {
 		if (data.$value !== undefined) {
 			const el = document.createElement('design-token');
-			const name = data.$extensions?.css?.name || path.join('-');
+			const name = data.$extensions?.ui?.name || data.$extensions?.css?.name || path.join('-');
 			el.setAttribute('name', name);
-			el.textContent = name;
 			el.src = data;
-			console.log(el.src);
 			return el;
 		}
 
@@ -25,25 +54,44 @@ export default class WebConfigTokens extends HTMLElement {
 
 		if (!path.length) {
 			const frag = document.createDocumentFragment();
-			entries.forEach(([k, v]) => frag.append(this.render(v, [k])));
+			let first = true;
+			entries.forEach(([k, v]) => {
+				const node = this.render(v, [k]);
+				if (first && node.tagName === 'DETAILS') {
+					node.setAttribute('open', '');
+					first = false;
+				}
+				frag.append(node);
+			});
 			return frag;
 		}
 
 		const details = document.createElement('details');
-		if (path.length === 1) details.setAttribute('name', 'token-group');
+		const level = path.length - 1;
+		details.setAttribute('data-level', level);
+		details.setAttribute('name', level === 0 ? 'token-group' : path.slice(0, -1).join('-'));
 
 		const summary = document.createElement('summary');
-		summary.textContent = data.$extensions?.ui?.title || path.at(-1);
+		summary.textContent = data.$extensions?.ui?.title || path.join('-');
 		details.append(summary);
 
 		const tokens = document.createElement('div');
-		tokens.toggleAttribute('data-token-group', true);
+		tokens.setAttribute('data-token-group', '');
 
 		const groups = document.createDocumentFragment();
+		let firstGroup = true;
 
 		for (const [k, v] of entries) {
 			const node = this.render(v, [...path, k]);
-			(v.$value !== undefined ? tokens : groups).append(node);
+			if (v.$value !== undefined) {
+				tokens.append(node);
+			} else {
+				if (firstGroup) {
+					node.setAttribute('open', '');
+					firstGroup = false;
+				}
+				groups.append(node);
+			}
 		}
 
 		if (tokens.hasChildNodes()) details.append(tokens);
