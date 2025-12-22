@@ -1,34 +1,7 @@
 const styles = `
 	:host {
-		display: inline-block;
 		--_v: initial;
 	}
-	button {
-		appearance: none;
-		border: 1px solid #ccc;
-		background: #fff;
-		padding: 0.5rem;
-		border-radius: 4px;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		width: 100%;
-		text-align: left;
-		font-family: inherit;
-	}
-	/* Preview Box */
-	button::before {
-		content: '';
-		display: block;
-		width: 1.5rem;
-		height: 1.5rem;
-		border: 1px solid #eee;
-		border-radius: 4px;
-		background: #eee; /* Fallback */
-		flex-shrink: 0;
-	}
-	
 	/* Type-specific previews */
 	:host([type="color"]) button::before {
 		background: var(--_v);
@@ -51,40 +24,6 @@ const styles = `
 		background: #ccc;
 	}
 
-	dialog {
-		border: none;
-		border-radius: 1rem;
-
-		form {
-			display: grid;
-			gap: .75rem;
-		}
-
-		h2 {
-			font-weight: 500;
-			margin: 0;
-			text-box: cap alphabetic;
-		}
-
-		input, select, textarea {
-			border: 1px solid #EEE;
-			border-radius: .25rem;
-			font-family: inherit;
-			font-size: .75rem;
-			padding: .25rem .5rem;
-		}
-
-		label {
-			display: inline-grid;
-			font-size: 12px;
-			gap: .125rem;
-		}
-
-		textarea {
-			field-sizing: content;
-			resize: vertical;
-		}
-	}
 `;
 
 function toCssValue(token) {
@@ -148,12 +87,19 @@ export default class DesignToken extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' });
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(styles);
-		this.shadowRoot.adoptedStyleSheets = [sheet];
 	}
 
-	connectedCallback() {
+	async connectedCallback() {
+		const cssUrl = new URL('./index.css', import.meta.url).href;
+		const response = await fetch(cssUrl);
+		const text = await response.text();
+		const sheet = new CSSStyleSheet();
+		sheet.replaceSync(text);
+		
+		const inlineSheet = new CSSStyleSheet();
+		inlineSheet.replaceSync(styles);
+		
+		this.shadowRoot.adoptedStyleSheets = [inlineSheet, sheet];
 		this.render();
 	}
 
@@ -189,108 +135,80 @@ export default class DesignToken extends HTMLElement {
 		this.style.setProperty('--_v', toCssValue(token));
 
 		let displayValue = $value;
-		const supportedEditors = ['color'];
 
 		if (typeof $value === 'object') {
-			if (supportedEditors.includes($type)) {
-				try {
-					const module = await import(`./editors/${$type}.js`);
-					if (this.#renderId !== renderId) return;
-					if (module.formatValue) {
-						displayValue = module.formatValue($value);
-					} else {
-						displayValue = JSON.stringify($value);
-					}
-				} catch (e) {
-					displayValue = JSON.stringify($value);
-				}
-			} else {
-				displayValue = JSON.stringify($value);
-			}
+			displayValue = JSON.stringify($value);
 		}
 
 		let editorContent = null;
 		let pendingValue = null;
 		
-		if ($type && supportedEditors.includes($type)) {
+		const isAlias = typeof $value === 'string' && $value.startsWith('{') && $value.endsWith('}');
+
+		if ($type === 'color' && !isAlias) {
 			try {
-				const module = await import(`./editors/${$type}.js`);
-				if (this.#renderId !== renderId) return;
-				if (module.default) {
-					editorContent = module.default(token);
-				}
+				await import('../edit-color/index.js');
+				const editor = document.createElement('edit-color');
+				editor.value = $value;
+				editorContent = editor;
 			} catch (e) {
-				if (this.#renderId !== renderId) return;
-				console.debug(`No editor for type: ${$type}`, e);
+				console.debug('Failed to load color editor:', e);
 			}
 		}
 
 		if (this.#renderId !== renderId) return;
 
 		this.shadowRoot.innerHTML = `
-			<button type="button" command="show-modal" commandfor="dialog">
+			<button type="button" command="show-modal" commandfor="dialog" part="design-token-button">
 				${token.name}
 			</button>
-			<dialog id="dialog" closedby="any">
+
+			<dialog id="dialog" closedby="any" part="design-token-dialog">
 				<form method="dialog">
-					<h2>${token.name}</h2>
+				<h2>${token.name}</h2>
+					<cq-box>
 					
-					<label>
-						Name
-						<input name="name" value="${token.name}">
-					</label>
+					<details name="token" open>
+						<summary>Basic Info</summary>
+						<fieldset>
+							<label>
+								Name
+								<input name="name" value="${token.name}">
+							</label>
+							<label>
+								Description
+								<textarea name="description">${$description || ''}</textarea>
+							</label>
+							<label>
+								CSS Variable
+								<input name="property" value="${cssVar}">
+							</label>
+							<label>
+								Value
+								<input name="value" value="${displayValue}">
+							</label>
+						<fieldset>
+					</details>
 
-					<label>
-						Description
-						<textarea name="description">${$description || ''}</textarea>
-					</label>
-
-					<label>
-						CSS Variable
-						<input name="property" value="${cssVar}">
-					</label>
-
-					<label>
-						Value
-						<input name="value" value="${displayValue}">
-					</label>
-
-					<details open ${!editorContent ? 'hidden' : ''}>
+					<details name="token">
 						<summary>Advanced Editor</summary>
 						<fieldset name="advanced" id="advanced-editor"></fieldset>
 					</details>
 
-					<details>
+					<details name="token">
 						<summary>JSON Source</summary>
 						<pre>${JSON.stringify(token, null, 2)}</pre>
 					</details>
-
-					<button value="save">Save</button>
+				</cq-box>
+				<button value="save">Save</button>	
 				</form>
+				
 			</dialog>
 		`;
 
 		const dialog = this.shadowRoot.getElementById('dialog');
 		const form = dialog.querySelector('form');
 		const valueInput = form.querySelector('input[name="value"]');
-
-		// Live preview and value tracking
-		valueInput.addEventListener('input', (e) => {
-			const val = e.target.value;
-			this.style.setProperty('--_v', val);
-			pendingValue = { css: val };
-			
-			// Notify advanced editor if it exists
-			const editorContainer = this.shadowRoot.getElementById('advanced-editor');
-			if (editorContainer && editorContent) {
-				const editor = editorContainer.firstElementChild;
-				if (editor) {
-					editor.dispatchEvent(new CustomEvent('update-from-input', {
-						detail: { value: val }
-					}));
-				}
-			}
-		});
 
 		dialog.addEventListener('close', async () => {
 			if (dialog.returnValue === 'save') {
@@ -329,43 +247,15 @@ export default class DesignToken extends HTMLElement {
 				} else {
 					let finalValue = newValueStr;
 					
-					// Try to interpret color string via editor module
-					if (supportedEditors.includes(token.$type)) {
-						try {
-							const module = await import(`./editors/${token.$type}.js`);
-							if (module.parseValue) {
-								const parsed = module.parseValue(finalValue);
-								if (typeof parsed === 'object') {
-									token.$value = parsed;
-								} else {
-									token.$value = finalValue;
-								}
-							} else {
-								// Fallback for other types
-								try {
-									if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
-										token.$value = JSON.parse(finalValue);
-									} else {
-										token.$value = finalValue;
-									}
-								} catch {
-									token.$value = finalValue;
-								}
-							}
-						} catch (e) {
+					// Try to parse JSON for other types
+					try {
+						if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
+							token.$value = JSON.parse(finalValue);
+						} else {
 							token.$value = finalValue;
 						}
-					} else {
-						// Try to parse JSON for other types
-						try {
-							if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
-								token.$value = JSON.parse(finalValue);
-							} else {
-								token.$value = finalValue;
-							}
-						} catch {
-							token.$value = finalValue;
-						}
+					} catch {
+						token.$value = finalValue;
 					}
 				}
 				
@@ -383,7 +273,7 @@ export default class DesignToken extends HTMLElement {
 				container.replaceChildren(editorContent);
 			}
 
-			container.addEventListener('editor-change', (e) => {
+			editorContent.addEventListener('change', (e) => {
 				pendingValue = e.detail;
 				const { css } = e.detail;
 				if (valueInput) {

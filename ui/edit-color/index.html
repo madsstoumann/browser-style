@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Color Component Demo</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .demo-section {
+            margin-bottom: 3rem;
+            border: 1px solid #ddd;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .demo-section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .color-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .color-example {
+            border: 1px solid #eee;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .color-example h3 {
+            margin-top: 0;
+            font-size: 1rem;
+            color: #666;
+        }
+        edit-color {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Color Component Demo</h1>
+    <p>This page demonstrates the <code>&lt;edit-color&gt;</code> custom element with various color spaces and input formats.</p>
+
+    <section class="demo-section">
+        <h2>Named Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>Red</h3>
+                <edit-color value="red"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>Blue</h3>
+                <edit-color value="blue"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>Green</h3>
+                <edit-color value="green"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Hex Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>#FF5733</h3>
+                <edit-color value="#FF5733"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>#3366FF</h3>
+                <edit-color value="#3366FF"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>#33FF66</h3>
+                <edit-color value="#33FF66"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>RGB Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>rgb(255 87 51)</h3>
+                <edit-color value="rgb(255 87 51)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>rgb(51 102 255)</h3>
+                <edit-color value="rgb(51 102 255)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>rgb(51 255 102)</h3>
+                <edit-color value="rgb(51 255 102)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>HSL Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>hsl(15 100% 60%)</h3>
+                <edit-color value="hsl(15 100% 60%)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>hsl(220 100% 50%)</h3>
+                <edit-color value="hsl(220 100% 50%)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>hsl(120 100% 40%)</h3>
+                <edit-color value="hsl(120 100% 40%)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>HWB Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>hwb(15 20% 20%)</h3>
+                <edit-color value="hwb(15 20% 20%)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>hwb(220 10% 30%)</h3>
+                <edit-color value="hwb(220 10% 30%)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>hwb(120 0% 40%)</h3>
+                <edit-color value="hwb(120 0% 40%)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Lab Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>lab(50 40 30)</h3>
+                <edit-color value="lab(50 40 30)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>lab(70 -20 50)</h3>
+                <edit-color value="lab(70 -20 50)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>lab(30 60 -40)</h3>
+                <edit-color value="lab(30 60 -40)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>LCH Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>lch(50 40 15)</h3>
+                <edit-color value="lch(50 40 15)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>lch(70 50 220)</h3>
+                <edit-color value="lch(70 50 220)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>lch(30 60 120)</h3>
+                <edit-color value="lch(30 60 120)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Oklab Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>oklab(0.5 0.2 0.1)</h3>
+                <edit-color value="oklab(0.5 0.2 0.1)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>oklab(0.7 -0.1 0.15)</h3>
+                <edit-color value="oklab(0.7 -0.1 0.15)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>oklab(0.3 0.3 -0.2)</h3>
+                <edit-color value="oklab(0.3 0.3 -0.2)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Oklch Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>oklch(0.5 0.2 15)</h3>
+                <edit-color value="oklch(0.5 0.2 15)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>oklch(0.7 0.15 220)</h3>
+                <edit-color value="oklch(0.7 0.15 220)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>oklch(0.3 0.3 120)</h3>
+                <edit-color value="oklch(0.3 0.3 120)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>Wide Gamut RGB Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>Display P3</h3>
+                <edit-color value="color(display-p3 1 0 0)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>A98 RGB</h3>
+                <edit-color value="color(a98-rgb 1 0 0)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>ProPhoto RGB</h3>
+                <edit-color value="color(prophoto-rgb 1 0 0)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>Rec. 2020</h3>
+                <edit-color value="color(rec2020 1 0 0)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>sRGB Linear</h3>
+                <edit-color value="color(srgb-linear 1 0 0)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-section">
+        <h2>XYZ Colors</h2>
+        <div class="color-examples">
+            <div class="color-example">
+                <h3>XYZ D65</h3>
+                <edit-color value="color(xyz-d65 0.5 0.3 0.2)"></edit-color>
+            </div>
+            <div class="color-example">
+                <h3>XYZ D50</h3>
+                <edit-color value="color(xyz-d50 0.4 0.3 0.3)"></edit-color>
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="./index.js"></script>
+</body>
+</html>
