@@ -62,6 +62,8 @@ const spaces = {
 	'xyz-d65': { ...xyzSliders }
 };
 
+let sharedSheet;
+
 export default class EditColor extends HTMLElement {
 	#color;
 	#elements = {};
@@ -76,12 +78,14 @@ export default class EditColor extends HTMLElement {
 	}
 
 	async connectedCallback() {
-		const cssUrl = new URL('../design-token/index.css', import.meta.url).href;
-		const response = await fetch(cssUrl);
-		const text = await response.text();
-		const sheet = new CSSStyleSheet();
-		sheet.replaceSync(text);
-		this.shadowRoot.adoptedStyleSheets = [sheet];
+		if (!sharedSheet) {
+			const cssUrl = new URL('../design-token/index.css', import.meta.url).href;
+			const response = await fetch(cssUrl);
+			const text = await response.text();
+			sharedSheet = new CSSStyleSheet();
+			sharedSheet.replaceSync(text);
+		}
+		this.shadowRoot.adoptedStyleSheets = [sharedSheet];
 
 		this.render();
 		this.addEventListener('update-from-input', (e) => {
@@ -133,13 +137,11 @@ export default class EditColor extends HTMLElement {
 				</label>
 				<label>Color Space:
 					<select>
-						<option value="hex">hex</option>
-						${spaceOptions}
+						<option value="hex">hex</option>${spaceOptions}
 					</select>
 				</label>
 			</fieldset>
-			<div></div>
-		`;
+			<div></div>`;
 
 		this.#elements = {
 			preview: this.shadowRoot.querySelector('[part="edit-color-preview"]'),

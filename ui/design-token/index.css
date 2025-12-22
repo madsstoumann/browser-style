@@ -3,6 +3,7 @@
 	display: grid;
 	font-family: system-ui, sans-serif;
 	row-gap: 1rem;
+	--_v: initial;
 }
 
 /* === GLOBAL === */
@@ -49,6 +50,33 @@ textarea {
 		background: #eee; /* Fallback */
 		flex-shrink: 0;
 	}
+}
+
+/* === TYPE SPECIFIC PREVIEWS === */
+:host([type="color"]) [part="design-token-button"]::before {
+	background-color: #fff;
+	background-image: 
+		linear-gradient(var(--_v), var(--_v)),
+		conic-gradient(#eee 0.25turn, #fff 0.25turn 0.5turn, #eee 0.5turn 0.75turn, #fff 0.75turn);
+	background-size: 100% 100%, 0.5rem 0.5rem;
+	background-repeat: no-repeat, repeat;
+}
+:host([type="border"]) [part="design-token-button"]::before {
+	background: transparent;
+	border: var(--_v);
+}
+:host([type="shadow"]) [part="design-token-button"]::before {
+	background: #fff;
+	box-shadow: var(--_v);
+}
+:host([type="gradient"]) [part="design-token-button"]::before {
+	background: var(--_v);
+}
+:host([type="aspectRatio"]) [part="design-token-button"]::before {
+	width: 2rem;
+	height: auto;
+	aspect-ratio: var(--_v);
+	background: #ccc;
 }
 
 /* === DESIGN TOKEN DIALOG === */
