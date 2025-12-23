@@ -55,6 +55,60 @@ const renderIcon = (icon) => {
 	return `<svg viewBox="0 0 24 24" class="${className}">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
 };
 
+// Convert camelCase to Title Case
+const toTitleCase = (str) => {
+	return str
+		.replace(/([A-Z])/g, ' $1')
+		.replace(/^./, (s) => s.toUpperCase())
+		.trim();
+};
+
+// W3C Design Token Types (standard + custom)
+const TOKEN_TYPES = [
+	// Standard Basic Types
+	'color',
+	'dimension',
+	'fontFamily',
+	'fontWeight',
+	'fontStyle',
+	'duration',
+	'cubicBezier',
+	'number',
+	// Composite Types
+	'border',
+	'shadow',
+	'gradient',
+	'typography',
+	'transition',
+	// Custom Types
+	'aspectRatio',
+	'cornerShape',
+	'customPath'
+];
+
+// Get default value for token type
+const getDefaultValue = (type) => {
+	switch (type) {
+		case 'color': return '#000000';
+		case 'dimension': return '1rem';
+		case 'fontFamily': return ['system-ui', 'sans-serif'];
+		case 'fontWeight': return 400;
+		case 'fontStyle': return 'normal';
+		case 'duration': return '200ms';
+		case 'cubicBezier': return [0.4, 0, 0.2, 1];
+		case 'number': return 1;
+		case 'aspectRatio': return '16/9';
+		case 'border': return { color: '#000000', width: '1px', style: 'solid' };
+		case 'shadow': return { color: '#00000033', offsetX: '0px', offsetY: '2px', blur: '4px', spread: '0px' };
+		case 'gradient': return [{ color: '#000000', position: 0 }, { color: '#ffffff', position: 1 }];
+		case 'typography': return { fontFamily: ['system-ui', 'sans-serif'], fontSize: '1rem', fontWeight: 400, lineHeight: 1.5 };
+		case 'transition': return { duration: '200ms', delay: '0ms', timingFunction: [0.4, 0, 0.2, 1] };
+		case 'cornerShape': return 'round';
+		case 'customPath': return '';
+		default: return '';
+	}
+};
+
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
@@ -77,17 +131,20 @@ styles.replaceSync(`
 			font-weight: 500;
 		}
 	}
-
-	
-
 	fieldset { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+	.token-wrapper { position: relative; }
+	.token-delete-btn { position: absolute; top: 0; right: 0; z-index: 1; }
+	.hidden { display: none; }
+	.dialog-actions { margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
+	.add-actions { margin-top: 0.5rem; }
 	summary {
 	border-block-end: 1px solid #CCC;
 	padding-block: var(--web-config-tokens-gap);
 	display: flex; align-items: center; gap: 0.5rem; justify-content: space-between; cursor: pointer; }
 	summary input { font: inherit; border: 1px solid transparent; background: transparent; }
 	summary input:focus { border-color: currentColor; background: white; }
-	.actions { display: none; gap: 0.25rem; opacity: 0.5; transition: opacity 0.2s; }
+	summary > span { font-weight: 500; }
+	.actions { display: none; gap: 0.25rem; opacity: 0.4; transition: opacity 0.2s; }
 	details[open] > summary .actions { display: flex; }
 	summary:hover .actions, .actions:focus-within { opacity: 1; }
 	button { cursor: pointer; padding: 0.25rem 0.5rem; border: 1px solid #ccc; background: #eee; border-radius: 3px; font-size: 0.8em; }
@@ -116,6 +173,7 @@ export default class WebConfigTokens extends HTMLElement {
 	#registry = null;
 	#tokenStyles = null;
 	#form = null;
+	#dialogElements = null;
 
 	constructor() {
 		super();
@@ -150,18 +208,8 @@ export default class WebConfigTokens extends HTMLElement {
 
 			this.#form = document.createElement('form');
 			this.#form.id = 'token-editor';
-			this.#form.addEventListener('click', this.handleInteraction.bind(this));
-			this.#form.addEventListener('input', this.handleInput.bind(this));
-			
-			// Add datalist for group types
-			const datalist = document.createElement('datalist');
-			datalist.id = 'group-types';
-			['color', 'typography', 'spacing', 'shadow', 'border', 'transition', 'z-index', 'breakpoint'].forEach(type => {
-				const option = document.createElement('option');
-				option.value = type;
-				datalist.append(option);
-			});
-			this.#form.append(datalist);
+			// Optimized event delegation with early exit for better performance
+			this.#form.addEventListener('click', this.handleClick.bind(this));
 
 			// Add dialog for creating groups/tokens
 			const dialog = document.createElement('dialog');
@@ -177,26 +225,28 @@ export default class WebConfigTokens extends HTMLElement {
 						Title (Display Name):
 						<input name="title">
 					</label>
-					<label id="type-field" style="display:none">
+					<label id="type-field" class="hidden">
 						Type:
 						<select name="type">
-							<option value="color">Color</option>
-							<option value="dimension">Dimension</option>
-							<option value="fontFamily">Font Family</option>
-							<option value="fontWeight">Font Weight</option>
-							<option value="duration">Duration</option>
-							<option value="shadow">Shadow</option>
-							<option value="border">Border</option>
-							<option value="number">Number</option>
+							${TOKEN_TYPES.map(type => `<option value="${type}">${toTitleCase(type)}</option>`).join('')}
 						</select>
 					</label>
-					<div style="margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end;">
+					<div class="dialog-actions">
 						<button value="cancel" formnovalidate>Cancel</button>
 						<button value="confirm">Create</button>
 					</div>
 				</form>
 			`;
 			this.shadowRoot.append(dialog);
+
+			// Cache dialog elements to avoid repeated queries
+			this.#dialogElements = {
+				dialog,
+				form: dialog.querySelector('form'),
+				typeField: dialog.querySelector('#type-field'),
+				titleEl: dialog.querySelector('h3'),
+				confirmBtn: dialog.querySelector('button[value="confirm"]')
+			};
 
 			this.#form.append(this.render(data));
 			this.shadowRoot.replaceChildren(this.#form, dialog);
@@ -208,27 +258,21 @@ export default class WebConfigTokens extends HTMLElement {
 	render(data, path = []) {
 		// Leaf node (Token)
 		if (data.$value !== undefined) {
-			const el = document.createElement('design-token');
 			const name = path.join('.');
-			el.setAttribute('name', name);
-			el.dataset.path = name;
-			el.registry = this.#registry; // Set registry first before src
-			el.src = data;
-			
-			// Wrap in a container to add delete button
 			const container = document.createElement('div');
 			container.className = 'token-wrapper';
-			container.style.position = 'relative';
-			container.append(el);
-			
-			const deleteBtn = document.createElement('button');
-			deleteBtn.innerHTML = renderIcon(ICONS.deleteToken);
-			deleteBtn.name = 'action';
-			deleteBtn.value = 'delete';
-			deleteBtn.title = 'Delete Token';
-			deleteBtn.style.cssText = 'position: absolute; top: 0; right: 0; z-index: 1;';
-			container.append(deleteBtn);
-			
+			container.innerHTML = `
+				<design-token name="${name}" data-path="${name}"></design-token>
+				<button name="action" value="delete" title="Delete Token" class="token-delete-btn">
+					${renderIcon(ICONS.deleteToken)}
+				</button>
+			`;
+
+			// Set token data and registry programmatically (can't do via HTML)
+			const el = container.querySelector('design-token');
+			el.registry = this.#registry;
+			el.src = data;
+
 			return container;
 		}
 
@@ -239,16 +283,18 @@ export default class WebConfigTokens extends HTMLElement {
 		if (isRoot) {
 			const fieldset = document.createElement('fieldset');
 			entries.forEach(([k, v]) => {
-				fieldset.append(this.render(v, [k]));
+				path.push(k);
+				fieldset.append(this.render(v, path));
+				path.pop();
 			});
-			
+
 			const addBtn = document.createElement('button');
+			addBtn.innerHTML = `${renderIcon(ICONS.groupAdd)} Add Group`;
 			addBtn.name = 'action';
 			addBtn.value = 'add-group';
-			addBtn.innerHTML = renderIcon(ICONS.groupAdd) + ' Add Group';
 			addBtn.dataset.path = '';
 			fieldset.append(addBtn);
-			
+
 			return fieldset;
 		}
 
@@ -268,50 +314,38 @@ export default class WebConfigTokens extends HTMLElement {
 		// Only open the first one by default if needed, or let the browser handle it
 		// details.open = true; // Removed to allow accordion behavior
 
-		const summary = document.createElement('summary');
-		
-		// Title (Visual Name or Key)
 		const titleText = data.$extensions?.ui?.title || path[path.length - 1];
-		const titleSpan = document.createElement('span');
-		titleSpan.textContent = titleText;
-		titleSpan.style.fontWeight = '500';
-		
-		// Hidden inputs to store state
-		const keyInput = document.createElement('input');
-		keyInput.type = 'hidden';
-		keyInput.name = 'key';
-		keyInput.value = path[path.length - 1];
-		keyInput.dataset.path = currentPath;
-		
-		const titleInput = document.createElement('input');
-		titleInput.type = 'hidden';
-		titleInput.name = 'title';
-		titleInput.value = data.$extensions?.ui?.title || '';
+		const key = path[path.length - 1];
+		const title = data.$extensions?.ui?.title || '';
 
-		// Actions
-		const actions = document.createElement('fieldset');
-		actions.className = 'actions';
-		actions.innerHTML = `
-			<button name="action" value="edit-group" title="Edit Group" data-path="${currentPath}">${renderIcon(ICONS.edit)}</button>
-			<button name="action" value="move-up" title="Move Up">${renderIcon(ICONS.up)}</button>
-			<button name="action" value="move-down" title="Move Down">${renderIcon(ICONS.down)}</button>
-			<button name="action" value="delete" title="Delete Group">${renderIcon(ICONS.groupRemove)}</button>
+		const summary = document.createElement('summary');
+		summary.innerHTML = `
+			<span>${titleText}</span>
+			<input type="hidden" name="key" value="${key}" data-path="${currentPath}">
+			<input type="hidden" name="title" value="${title}">
+			<fieldset class="actions">
+				<button name="action" value="edit-group" title="Edit Group" data-path="${currentPath}">${renderIcon(ICONS.edit)}</button>
+				<button name="action" value="move-up" title="Move Up">${renderIcon(ICONS.up)}</button>
+				<button name="action" value="move-down" title="Move Down">${renderIcon(ICONS.down)}</button>
+				<button name="action" value="delete" title="Delete Group">${renderIcon(ICONS.groupRemove)}</button>
+			</fieldset>
 		`;
 
-		summary.append(titleSpan, keyInput, titleInput, actions);
 		details.append(summary);
 
 		const fieldset = document.createElement('fieldset');
-		
+
 		// Separate tokens and groups for visual organization
 		const tokensDiv = document.createElement('div');
 		tokensDiv.setAttribute('data-token-group', '');
-		
+
 		const groupsDiv = document.createElement('div');
 
 		let firstGroup = true;
 		for (const [k, v] of entries) {
-			const node = this.render(v, [...path, k]);
+			path.push(k);
+			const node = this.render(v, path);
+			path.pop();
 			if (v.$value !== undefined) {
 				tokensDiv.append(node);
 			} else {
@@ -325,10 +359,10 @@ export default class WebConfigTokens extends HTMLElement {
 
 		if (tokensDiv.hasChildNodes()) fieldset.append(tokensDiv);
 		fieldset.append(groupsDiv);
-		
+
 		// Add buttons
 		const addActions = document.createElement('div');
-		addActions.style.marginTop = '0.5rem';
+		addActions.className = 'add-actions';
 		addActions.innerHTML = `
 			<button name="action" value="add-token" data-path="${currentPath}">${renderIcon(ICONS.tokenAdd)} Token</button>
 			<button name="action" value="add-group" data-path="${currentPath}">${renderIcon(ICONS.groupAdd)} Group</button>
@@ -340,137 +374,141 @@ export default class WebConfigTokens extends HTMLElement {
 		return details;
 	}
 
-	handleInteraction(e) {
+	handleClick(e) {
+		// Early exit for non-button clicks - major performance improvement
+		if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')) return;
+
 		const btn = e.target.closest('button');
 		if (!btn || btn.name !== 'action') return;
-		
+
 		e.preventDefault();
 		const action = btn.value;
 		const container = btn.closest('.token-wrapper') || btn.closest('details');
 		const path = btn.dataset.path;
 
-		if (action === 'delete') {
-			if (confirm('Are you sure you want to delete this item?')) {
-				container.remove();
-			}
-		} else if (action === 'move-up') {
-			const prev = container.previousElementSibling;
-			if (prev) prev.before(container);
-		} else if (action === 'move-down') {
-			const next = container.nextElementSibling;
-			if (next) next.after(container);
-		} else if (action === 'add-group' || action === 'add-token' || action === 'edit-group') {
-			const dialog = this.shadowRoot.getElementById('create-dialog');
-			const form = dialog.querySelector('form');
-			const typeField = dialog.querySelector('#type-field');
-			const titleEl = dialog.querySelector('h3');
-			const confirmBtn = form.querySelector('button[value="confirm"]');
-			
-			// Reset form
-			form.reset();
-			
-			// Configure dialog based on action
-			if (action === 'add-token') {
-				typeField.style.display = 'block';
-				titleEl.textContent = 'Add New Token';
-				confirmBtn.textContent = 'Create';
-			} else if (action === 'add-group') {
-				typeField.style.display = 'none';
-				titleEl.textContent = 'Add New Group';
-				confirmBtn.textContent = 'Create';
-			} else if (action === 'edit-group') {
-				typeField.style.display = 'none';
-				titleEl.textContent = 'Edit Group';
-				confirmBtn.textContent = 'Save';
-				
-				// Pre-fill values
-				const summary = container.querySelector('summary');
-				const currentKey = summary.querySelector('input[name="key"]').value;
-				const currentTitle = summary.querySelector('input[name="title"]').value;
-				
-				form.querySelector('input[name="key"]').value = currentKey;
-				form.querySelector('input[name="title"]').value = currentTitle;
-			}
-			
-			// Handle close
-			dialog.onclose = () => {
-				if (dialog.returnValue === 'confirm') {
-					const formData = new FormData(form);
-					const key = formData.get('key');
-					const title = formData.get('title');
-					const type = formData.get('type');
-					
-					if (key) {
-						if (action === 'edit-group') {
-							// Handle Edit
-							const summary = container.querySelector('summary');
-							const keyInput = summary.querySelector('input[name="key"]');
-							const titleInput = summary.querySelector('input[name="title"]');
-							const titleSpan = summary.querySelector('span');
-							const oldKey = keyInput.value;
-							
-							// Update visual title
-							titleSpan.textContent = title || key;
-							titleInput.value = title;
-							
-							// Handle key change (renaming)
-							if (oldKey !== key) {
-								const parts = path.split('.');
-								parts.pop(); // remove old key
-								parts.push(key); // add new key
-								const newPath = parts.join('.');
-								
-								keyInput.value = key;
-								keyInput.dataset.path = newPath;
-								container.dataset.path = newPath;
-								
-								// Update all children paths
-								this.updateChildPaths(container, path, newPath);
-							}
-						} else {
-							// Handle Add (Group or Token)
-							const parentPath = path ? path.split('.') : [];
-							const newPath = [...parentPath, key];
-							let node;
-							
-							if (action === 'add-group') {
-								const newGroup = { $extensions: { ui: { title: title || key } } };
-								node = this.render(newGroup, newPath);
-								// Insert before the add buttons
-								btn.parentElement.before(node);
-							} else {
-								// Default values based on type
-								let value = '#000000';
-								if (type === 'dimension') value = '1rem';
-								if (type === 'number') value = 1;
-								
-								const newToken = { 
-									$type: type, 
-									$value: value,
-									$extensions: { ui: { title: title || key } }
-								};
-								node = this.render(newToken, newPath);
-								
-								// Find or create token container
-								let tokenGroup = container.querySelector('[data-token-group]');
-								if (!tokenGroup) {
-									tokenGroup = document.createElement('div');
-									tokenGroup.setAttribute('data-token-group', '');
-									container.querySelector('fieldset').prepend(tokenGroup);
+		let sibling;
+		// Use switch for better performance and readability
+		switch (action) {
+			case 'delete':
+				if (confirm('Are you sure you want to delete this item?')) {
+					container.remove();
+				}
+				break;
+
+			case 'move-up':
+				sibling = container.previousElementSibling;
+				if (sibling) sibling.before(container);
+				break;
+
+			case 'move-down':
+				sibling = container.nextElementSibling;
+				if (sibling) sibling.after(container);
+				break;
+
+			case 'add-group':
+			case 'add-token':
+			case 'edit-group':
+				// Use cached dialog elements
+				const { dialog, form, typeField, titleEl, confirmBtn } = this.#dialogElements;
+
+				// Reset form
+				form.reset();
+
+				// Configure dialog based on action
+				if (action === 'add-token') {
+					typeField.classList.remove('hidden');
+					titleEl.textContent = 'Add New Token';
+					confirmBtn.textContent = 'Create';
+				} else if (action === 'add-group') {
+					typeField.classList.add('hidden');
+					titleEl.textContent = 'Add New Group';
+					confirmBtn.textContent = 'Create';
+				} else if (action === 'edit-group') {
+					typeField.classList.add('hidden');
+					titleEl.textContent = 'Edit Group';
+					confirmBtn.textContent = 'Save';
+
+					// Pre-fill values
+					const summary = container.querySelector('summary');
+					const currentKey = summary.querySelector('input[name="key"]').value;
+					const currentTitle = summary.querySelector('input[name="title"]').value;
+
+					form.querySelector('input[name="key"]').value = currentKey;
+					form.querySelector('input[name="title"]').value = currentTitle;
+				}
+
+				// Handle close
+				dialog.onclose = () => {
+					if (dialog.returnValue === 'confirm') {
+						const formData = new FormData(form);
+						const key = formData.get('key');
+						const title = formData.get('title');
+						const type = formData.get('type');
+
+						if (key) {
+								if (action === 'edit-group') {
+									// Handle Edit
+									const summary = container.querySelector('summary');
+									const keyInput = summary.querySelector('input[name="key"]');
+									const titleInput = summary.querySelector('input[name="title"]');
+									const titleSpan = summary.querySelector('span');
+									const oldKey = keyInput.value;
+
+									// Update visual title
+									titleSpan.textContent = title || key;
+									titleInput.value = title;
+
+									// Handle key change (renaming)
+									if (oldKey !== key) {
+										const parts = path.split('.');
+										parts.pop(); // remove old key
+										parts.push(key); // add new key
+										const newPath = parts.join('.');
+
+										keyInput.value = key;
+										keyInput.dataset.path = newPath;
+										container.dataset.path = newPath;
+
+										// Update all children paths
+										this.updateChildPaths(container, path, newPath);
+									}
+								} else {
+									// Handle Add (Group or Token)
+									const parentPath = path ? path.split('.') : [];
+									const newPath = [...parentPath, key];
+									let node;
+
+									if (action === 'add-group') {
+										const newGroup = { $extensions: { ui: { title: title || key } } };
+										node = this.render(newGroup, newPath);
+										// Insert before the add buttons
+										btn.parentElement.before(node);
+									} else {
+										// Create new token with default value based on type
+										const newToken = {
+											$type: type,
+											$value: getDefaultValue(type),
+											$extensions: { ui: { title: title || key } }
+										};
+										node = this.render(newToken, newPath);
+
+										// Find or create token container
+										let tokenGroup = container.querySelector('[data-token-group]');
+										if (!tokenGroup) {
+											tokenGroup = document.createElement('div');
+											tokenGroup.setAttribute('data-token-group', '');
+											container.querySelector('fieldset').prepend(tokenGroup);
+										}
+										tokenGroup.append(node);
+									}
 								}
-								tokenGroup.append(node);
 							}
 						}
-					}
-				}
-			};
-			
-			dialog.showModal();
-		}
-	}
+					};
 
-	handleInput(e) {
-		// No longer used for renaming, but kept for future input handling if needed
+					dialog.showModal();
+					break;
+		}
 	}
 
 	updateChildPaths(element, oldPathPrefix, newPathPrefix) {

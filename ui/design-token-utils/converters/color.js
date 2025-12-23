@@ -20,12 +20,36 @@ export function generateColorValue(value, registry = new Map()) {
   // Handle color object with colorSpace
   if (value.colorSpace && value.components) {
     const { colorSpace, components, alpha } = value;
+    const space = colorSpace.toLowerCase();
+
+    // Special handling for legacy rgb/hsl which use different value ranges
+    if (space === 'rgb' || space === 'hsl') {
+      // RGB: convert 0-1 to 0-255, HSL: convert to degrees/percentages
+      if (space === 'rgb') {
+        const [r, g, b] = components.map(c => c === 'none' ? 'none' : Math.round(c * 255));
+        if (alpha !== undefined && alpha !== 1) {
+          return `rgb(${r} ${g} ${b} / ${alpha})`;
+        }
+        return `rgb(${r} ${g} ${b})`;
+      } else {
+        // HSL
+        const [h, s, l] = components;
+        const hue = h === 'none' ? 'none' : h;
+        const sat = s === 'none' ? 'none' : `${s * 100}%`;
+        const light = l === 'none' ? 'none' : `${l * 100}%`;
+        if (alpha !== undefined && alpha !== 1) {
+          return `hsl(${hue} ${sat} ${light} / ${alpha})`;
+        }
+        return `hsl(${hue} ${sat} ${light})`;
+      }
+    }
+
     const componentStr = components.map(c => c === 'none' ? 'none' : c).join(' ');
 
     // RGB-like color spaces (display-p3, srgb, rec2020, etc.) need the color() function wrapper
     // Perceptual color spaces (oklab, oklch, lab, lch, etc.) are direct functions
     const rgbLikeSpaces = ['display-p3', 'srgb', 'srgb-linear', 'rec2020', 'a98-rgb', 'prophoto-rgb', 'xyz', 'xyz-d50', 'xyz-d65'];
-    const needsColorWrapper = rgbLikeSpaces.includes(colorSpace.toLowerCase());
+    const needsColorWrapper = rgbLikeSpaces.includes(space);
 
     // Format the color value
     if (needsColorWrapper) {
