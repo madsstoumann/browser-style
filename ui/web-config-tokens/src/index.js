@@ -1,5 +1,5 @@
-import '../design-token/index.js';
-import { buildRegistry, exportTokensToCSS, toCssValue } from '../design-token-utils/index.js';
+import '/ui/design-token/index.js';
+import { buildRegistry, exportTokensToCSS, toCssValue } from '/ui/design-token-utils/index.js';
 
 const styles = new CSSStyleSheet();
 styles.replaceSync(`

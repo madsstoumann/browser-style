@@ -75,10 +75,19 @@ export async function exportFromFile(jsonPath, options = {}) {
   const css = exportTokensToCSS(tokens, options);
 
   const config = tokens.$extensions?.export || {};
-  const fileName = options.fileName || config.fileName;
+  let outputPath = null;
 
-  if (fileName) {
-    const outputPath = path.resolve(fileName);
+  if (options.fileName) {
+    // If provided in options, resolve relative to CWD
+    outputPath = path.resolve(options.fileName);
+  } else if (config.fileName) {
+    // If provided in JSON, resolve relative to the JSON file itself
+    const absoluteJsonPath = path.resolve(jsonPath);
+    const jsonDir = path.dirname(absoluteJsonPath);
+    outputPath = path.resolve(jsonDir, config.fileName);
+  }
+
+  if (outputPath) {
     await fs.writeFile(outputPath, css, 'utf-8');
     console.log(`CSS exported to: ${outputPath}`);
   }

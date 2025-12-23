@@ -1,26 +1,39 @@
 {
-  "name": "@browser-style/design-tokens-exporter",
+  "name": "@browser.style/web-config-tokens",
   "version": "1.0.0",
-  "description": "W3C-compliant design token to CSS custom properties exporter",
+  "description": "A web component to render W3C Design Tokens",
   "type": "module",
-  "main": "exportTokensToCSS.js",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
   "exports": {
-    ".": "./exportTokensToCSS.js"
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "index.html",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "test": "node test-export.js",
-    "export": "node -e \"import { exportFromFile } from './exportTokensToCSS.js'; await exportFromFile('./design.tokens.json', { fileName: './design.tokens.css', layer: 'design-tokens', selector: ':root' });\"",
-    "preview": "echo 'Open tokens-preview.html in your browser to see the tokens in action'"
+    "export": "node export-css.js"
   },
   "keywords": [
-    "design-tokens",
-    "css",
-    "custom-properties",
-    "w3c",
-    "design-system",
-    "tokens",
-    "theme"
+    "browser.style",
+    "web-components",
+    "design-tokens"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/web-config-tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/web-config-tokens"
 }
