@@ -1,0 +1,25 @@
+{
+  "name": "@browser-style/design-token-styles",
+  "version": "1.0.0",
+  "description": "Shared CSS styles for design token editor components",
+  "type": "module",
+  "main": "index.css",
+  "exports": {
+    ".": "./index.css",
+    "./index.css": "./index.css"
+  },
+  "keywords": [
+    "design-tokens",
+    "css",
+    "styles",
+    "web-components",
+    "editor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/browser-style",
+    "directory": "ui/design-token-styles"
+  }
+}

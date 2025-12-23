@@ -1,3 +1,8 @@
+/**
+ * Shared styles for design token editors
+ * Used by design-token, edit-color, and all edit-* components
+ */
+
 :host {
 	color-scheme: inherit;
 	display: grid;
@@ -6,7 +11,7 @@
 	--_v: initial;
 }
 
-/* === GLOBAL === */
+/* === GLOBAL FORM ELEMENTS === */
 input, select, textarea {
 	border: 1px solid #EEE;
 	border-radius: .25rem;
@@ -20,6 +25,7 @@ label {
 	font-size: 12px;
 	gap: .125rem;
 }
+
 textarea {
 	field-sizing: content;
 	resize: vertical;
@@ -39,7 +45,7 @@ textarea {
 	width: 100%;
 	text-align: left;
 	font-family: inherit;
-	
+
 	&::before {
 		content: '';
 		display: block;
@@ -55,23 +61,27 @@ textarea {
 /* === TYPE SPECIFIC PREVIEWS === */
 :host([type="color"]) [part="design-token-button"]::before {
 	background-color: #fff;
-	background-image: 
+	background-image:
 		linear-gradient(var(--_v), var(--_v)),
 		conic-gradient(#eee 0.25turn, #fff 0.25turn 0.5turn, #eee 0.5turn 0.75turn, #fff 0.75turn);
 	background-size: 100% 100%, 0.5rem 0.5rem;
 	background-repeat: no-repeat, repeat;
 }
+
 :host([type="border"]) [part="design-token-button"]::before {
 	background: transparent;
 	border: var(--_v);
 }
+
 :host([type="shadow"]) [part="design-token-button"]::before {
 	background: #fff;
 	box-shadow: var(--_v);
 }
+
 :host([type="gradient"]) [part="design-token-button"]::before {
 	background: var(--_v);
 }
+
 :host([type="aspectRatio"]) [part="design-token-button"]::before {
 	width: 2rem;
 	height: auto;
@@ -98,19 +108,23 @@ textarea {
 		&:nth-of-type(3) > summary { grid-column: 3; justify-self: start; }
 		&[open] > summary { border-color: cornflowerblue; }
 	}
+
 	details::details-content {
 		grid-column: 1 / -1;
 		grid-row: 2;
 	}
+
 	fieldset {
 		all: unset;
 		display: grid;
 		gap: .75rem;
 	}
+
 	form {
 		display: grid;
 		row-gap: 1.5rem;
-		}
+	}
+
 	cq-box {
 		column-gap: 1.5rem;
 		display: grid;
@@ -140,7 +154,20 @@ textarea {
 	}
 }
 
-/* === Edit Color === */
+/* === EDIT COLOR PREVIEW === */
+[part="edit-color-preview"] {
+	height: 3rem;
+	border-radius: 4px;
+	border: 1px solid #EEE;
+	background-color: #fff;
+	background-image:
+		linear-gradient(var(--preview-color, transparent), var(--preview-color, transparent)),
+		conic-gradient(#eee 0.25turn, #fff 0.25turn 0.5turn, #eee 0.5turn 0.75turn, #fff 0.75turn);
+	background-size: 100% 100%, 1rem 1rem;
+	background-repeat: no-repeat, repeat;
+}
+
+/* === EDIT COLOR ROW === */
 [part="edit-color-row"] {
 	all: unset;
 	align-items: start;
@@ -148,18 +175,8 @@ textarea {
 	grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 	gap: 0.5rem;
 }
+
 [part="edit-color-row"]:has([type="range"]) {
 	align-items: center;
 	grid-template-columns: 1ch 1fr 7ch;
-}
-[part="edit-color-preview"] {
-	height: 3rem;
-	border-radius: 4px;
-	border: 1px solid #EEE;
-	background-color: #fff;
-	background-image: 
-		linear-gradient(var(--preview-color, transparent), var(--preview-color, transparent)),
-		conic-gradient(#eee 0.25turn, #fff 0.25turn 0.5turn, #eee 0.5turn 0.75turn, #fff 0.75turn);
-	background-size: 100% 100%, 1rem 1rem;
-	background-repeat: no-repeat, repeat;
 }

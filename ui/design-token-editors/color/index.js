@@ -79,7 +79,7 @@ export default class EditColor extends HTMLElement {
 
 	async connectedCallback() {
 		if (!sharedSheet) {
-			const cssUrl = new URL('../design-token/index.css', import.meta.url).href;
+			const cssUrl = new URL('../../design-token-styles/index.css', import.meta.url).href;
 			const response = await fetch(cssUrl);
 			const text = await response.text();
 			sharedSheet = new CSSStyleSheet();

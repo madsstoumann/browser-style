@@ -1,274 +1,292 @@
-# Design Tokens
+# Web Config Tokens
+
+A web component for visualizing and editing W3C design tokens with live preview and CSS generation.
 
 ## Overview
 
-This design tokens system provides a W3C-compliant, CSS-based approach to managing design consistency across projects. Tokens are organized into logical groups that mirror CSS properties and design concepts, making them intuitive for developers and designers.
+The `<web-config-tokens>` component provides a complete interface for managing design token systems. It loads W3C-compliant design tokens from JSON, generates CSS custom properties, and provides interactive editing capabilities through nested `<design-token>` components.
 
-## Token Groups
+## Features
 
-Design tokens are organized into logical groups based on CSS properties and design concepts. Each group contains related tokens that work together to create consistent design systems.
+- ✅ **W3C Compliant**: Supports W3C Design Tokens Format Module (2025)
+- ✅ **Live CSS Generation**: Automatically generates CSS custom properties from tokens
+- ✅ **Reference Resolution**: Resolves `{path.to.token}` references to CSS variables
+- ✅ **Interactive Editing**: Click any token to edit with specialized editors
+- ✅ **Real-time Preview**: Token changes update CSS variables immediately
+- ✅ **Hierarchical Display**: Organized token groups with collapsible sections
+- ✅ **Type-Specific Rendering**: Visual previews for colors, gradients, shadows, borders
+- ✅ **Advanced Color Editor**: Full color space support (sRGB, display-p3, OKLAB, OKLCH, etc.)
 
-### Core Visual Properties
+## Quick Start
 
-#### color
-Color values for all visual elements (backgrounds, text, borders, etc.)
+```html
+<web-config-tokens src="design.tokens.json"></web-config-tokens>
 
-#### dimension / sizes
-Measurements with units (px, rem, em, %, vw, vh) for spacing, sizing, and layout
-
-#### number
-Pure numeric values without units (opacity, z-index, flex values)
-
-#### ratio
-Aspect ratio values for consistent proportions (16:9, 4:3, 1:1)
-
-### Typography
-
-#### typography
-Text-related properties for consistent typography systems
-- font-family (string) - Font stack definitions
-- font-size / font-size-fluid (dimension / function) - Text size values
-- font-weight (number, 100-950) - Font weight values
-- letter-spacing (dimension) - Character spacing
-- line-height (dimension) - Line spacing
-- hyphenation and overflow - Text flow controls
-
-### Layout & Structure
-
-#### border
-CSS border properties for element outlines and boundaries
-- color (color) - Border color values
-- size (dimension) - Border width measurements
-- radius (dimension / ratio) - Corner rounding values
-- style (string: none, hidden, dotted, dashed, solid, double, groove, ridge, inset, outset) - Border line styles
-
-#### shadow
-CSS shadow effects for depth and elevation
-- box-shadow (inner, outer) - Element shadows
-- drop-shadow - Filter-based shadows
-- text-shadow - Text shadow effects
-
-#### shape
-CSS shape properties for non-rectangular layouts
-- clip-path definitions and shape functions
-
-### Motion & Effects
-
-#### animation
-CSS animation properties for controlling motion and transitions
-- delay (dimension) - Animation start delay
-- direction (string: normal, reverse, alternate, alternate-reverse) - Animation direction
-- duration (dimension) - Animation timing duration
-- fill-mode (string: none, forwards, backwards, both) - Animation fill behavior
-- iteration-count (number) - Number of animation repetitions
-- name (string) - Animation keyframe name
-- play-state (string: running, paused) - Animation execution state
-- timing-function (easing) - Animation acceleration curve
-
-#### easing
-Animation timing functions for smooth motion curves
-- built-in (string: ease, ease-in etc.) - CSS predefined easing
-- cubic-bezier (string) - Custom bezier curve definitions
-
-#### transform
-CSS transform functions for element positioning and effects
-- Individual transform properties and composite functions
-
-### Visual Effects
-
-#### gradient
-CSS gradient functions for background and fill effects
-- linear-gradient, radial-gradient, conic-gradient definitions
-
-#### filter
-CSS filter functions for visual effects
-- Functions like blur(), brightness(), contrast(), etc.
-
-### Advanced Types
-
-#### function
-CSS function values for dynamic calculations
-- calc - Mathematical calculations
-- clamp - Value clamping with min/max
-- min - Minimum value selection
-- max - Maximum value selection
-- etc.
-
-#### url
-File references and external resource links
-
-## W3C Standard Types
-
-### Basic Types
-- **color**: Hex, rgb(), hsl(), named colors
-- **dimension**: Number with unit (px, rem, em, %, etc.)
-- **duration**: Time values for animations
-- **number**: Plain numeric values
-- **url**: File references
-
-### Typography Types
-- **font-family**: Font stack (string or array)
-- **font-weight**: 1-1000 or keywords
-
-### Advanced Types
-- **cubic-bezier**: Animation easing (4-number array)
-- **shadow**: Complex shadow objects
-
-## Code Examples
-
-### Basic Token Structure
-
-```json
-{
-  "name": "My Design System",
-  "version": "1.0.0",
-  "$description": "Optional description of the design system",
-  "tokens": {
-    "colors": {
-      "--primary-blue": {
-        "$value": "#3399ff",
-        "$type": "color",
-        "$description": "Primary brand blue color"
-      }
-    }
-  }
-}
+<script type="module" src="./web-config-tokens/index.js"></script>
 ```
 
-### Token References
+## Architecture
 
-```json
-{
-  "tokens": {
-    "colors": {
-      "--primary": {
-        "$value": "#3399ff",
-        "$type": "color"
-      },
-      "--button-bg": {
-        "$value": "{colors.--primary}",
-        "$type": "color"
-      }
-    }
-  }
-}
+The component is part of a modular design token system:
+
+```
+web-config-tokens
+  ├─ Loads tokens from JSON
+  ├─ Builds token registry (design-token-utils)
+  ├─ Generates CSS custom properties (design-token-utils)
+  ├─ Injects CSS into shadow DOM
+  └─ Renders design-token components
+      ├─ Uses CSS variables for previews
+      ├─ Loads specialized editors (design-token-editors)
+      └─ Dispatches token-changed events
 ```
 
-### Group Organization
+### Package Dependencies
+
+- **design-token-utils** - Token conversion, CSS export, reference resolution
+- **design-token-styles** - Shared CSS for token editors
+- **design-token** - Individual token display/edit component
+- **design-token-editors** - Specialized editors (color, gradient, etc.)
+
+## Usage
+
+### Basic Implementation
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Design Tokens</title>
+</head>
+<body>
+  <web-config-tokens src="design.tokens.json"></web-config-tokens>
+  <script type="module" src="./web-config-tokens/index.js"></script>
+</body>
+</html>
+```
+
+### Token File Format
+
+Your `design.tokens.json` should follow the W3C specification:
 
 ```json
 {
-  "tokens": {
-    "colors": {
-      "brand": {
-        "--primary": { "$value": "#3399ff", "$type": "color" },
-        "--secondary": { "$value": "#ff6b35", "$type": "color" }
-      },
-      "semantic": {
-        "--error": { "$value": "#d32f2f", "$type": "color" },
-        "--success": { "$value": "#4caf50", "$type": "color" }
+  "color": {
+    "primitive": {
+      "blue": {
+        "500": {
+          "$type": "color",
+          "$value": "#1976D2",
+          "$extensions": { "css": { "var": "--blue-500" } }
+        }
       }
     },
-    "spacing": {
-      "--xs": { "$value": "4px", "$type": "dimension" },
-      "--sm": { "$value": "8px", "$type": "dimension" },
-      "--md": { "$value": "16px", "$type": "dimension" }
-    }
-  }
-}
-```
-
-### Complex Shadow Token
-
-```json
-{
-  "shadow": {
-    "--bxsh-medium": {
-      "$type": "shadow",
-      "$description": "A composite token where some sub-values are references to tokens that have the correct type and others are explicit values",
-      "$value": {
-        "color": "{color.shadow-050}",
-        "offsetX": "{space.small}",
-        "offsetY": "{space.small}",
-        "blur": "1.5rem",
-        "spread": "0rem"
+    "semantic": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.primitive.blue.500}",
+        "$extensions": { "css": { "var": "--color-primary" } }
       }
     }
   }
 }
 ```
 
-### Shadow Property Structure
+## Features in Detail
 
-```css
-box-shadow: {
-  inset, /* boolean keyword */
-  offset-x,
-  offset-y,
-  blur-radius,
-  spread-radius,
-  color
-}
+### Automatic CSS Generation
 
-text-shadow: {
-  color,
-  offset-x,
-  offset-y,
-  blur-radius
+The component generates CSS custom properties from all tokens:
+
+```javascript
+// Generated CSS is injected into shadow DOM
+@layer design-tokens {
+  :host {
+    --blue-500: #1976D2;
+    --color-primary: var(--blue-500);
+  }
 }
 ```
+
+### Reference Resolution
+
+Token references like `{path.to.token}` are automatically resolved:
+
+```json
+{
+  "spacing": {
+    "base": { "$value": "1rem" },
+    "large": { "$value": "{spacing.base}" }  // Resolves to var(--spacing-base)
+  }
+}
+```
+
+### Live Token Editing
+
+Click any token to open an editor dialog:
+
+1. **Basic editing** - Name, description, CSS variable name, value
+2. **Advanced editor** - Type-specific editors (color picker, etc.)
+3. **JSON source** - View/edit raw token JSON
+4. **Real-time preview** - Changes update immediately
+
+### Event System
+
+Listen for token changes to sync with your data source:
+
+```javascript
+const tokenViewer = document.querySelector('web-config-tokens');
+
+tokenViewer.addEventListener('token-changed', (e) => {
+  const { token, cssVar } = e.detail;
+  console.log('Token updated:', token);
+  console.log('CSS variable:', cssVar);
+
+  // Sync to database, localStorage, etc.
+  saveToken(token);
+});
+```
+
+## Supported Token Types
+
+### Basic Types
+- **color** - Hex, RGB, HSL, wide gamut (display-p3, OKLAB, OKLCH)
+- **dimension** - Sizes with units (px, rem, em, %, vw, vh)
+- **number** - Unitless values (opacity, z-index, line-height)
+- **duration** - Time values (ms, s)
+- **fontFamily** - Font stacks
+- **fontWeight** - Font weights (100-900)
+- **fontStyle** - italic, normal, oblique
+
+### Composite Types
+- **gradient** - Linear, radial, conic gradients
+- **shadow** - Box shadows, text shadows (single or multiple)
+- **border** - Border definitions (width, style, color)
+- **typography** - Complete typography tokens
+- **transition** - Transition definitions
+
+### Advanced Features
+- **CSS Functions** - light-dark(), clamp(), calc()
+- **Color Spaces** - sRGB, display-p3, OKLAB, OKLCH, LAB, LCH
+- **Token References** - `{path.to.token}` syntax
+- **Aliases** - Reference tokens that inherit from other tokens
+
+## Advanced Color Support
+
+The integrated color editor supports all modern color spaces:
+
+- **sRGB** - Standard web colors
+- **display-p3** - Wide gamut for modern displays
+- **OKLAB** - Perceptually uniform color space
+- **OKLCH** - OKLAB in cylindrical coordinates
+- **LAB** - CIE LAB color space
+- **LCH** - CIE LCH color space
+- **HSL** - Hue, Saturation, Lightness
+- **HWB** - Hue, Whiteness, Blackness
+
+## Token Organization
+
+Tokens are organized hierarchically with collapsible groups:
+
+```
+Color
+  ├─ Primitive
+  │   ├─ Neutral
+  │   │   ├─ 0 (white)
+  │   │   └─ 950 (black)
+  │   └─ Brand
+  │       └─ 500 (primary)
+  └─ Semantic
+      ├─ primary
+      └─ surface
+```
+
+## CSS Layer Support
+
+Generated CSS uses CSS layers for cascade control:
+
+```css
+@layer design-tokens {
+  :host {
+    /* All token variables */
+  }
+}
+```
+
+Configure the layer name via the component's internal options.
+
+## Browser Support
+
+- Modern browsers with Shadow DOM support
+- CSS Custom Properties
+- Constructable Stylesheets
+- CSS Layers (optional, gracefully degrades)
+
+## Development
+
+### File Structure
+
+```
+web-config-tokens/
+├── index.js              # Main component
+├── demo.html             # Live demo
+├── design.tokens.json    # Example tokens
+├── design.tokens.md      # Token specification
+├── package.json          # Package config
+├── readme.md             # This file
+└── data/                 # Additional token examples
+```
+
+### Testing
+
+Open `demo.html` in a browser to see the component in action with example tokens.
+
+## API Reference
+
+### Attributes
+
+#### `src` (required)
+URL to the design tokens JSON file.
+
+```html
+<web-config-tokens src="tokens.json"></web-config-tokens>
+```
+
+### Events
+
+#### `token-changed`
+Fired when any token is modified and saved.
+
+```javascript
+{
+  detail: {
+    token: {/* full token object */},
+    cssVar: '--variable-name'
+  }
+}
+```
+
+## Related Packages
+
+- **@browser-style/design-token-utils** - Token conversion and CSS export utilities
+- **@browser-style/design-token-styles** - Shared CSS for token editors
+- **@browser-style/design-token-editors** - Specialized token editors (color, gradient, etc.)
 
 ## W3C Compliance
 
-This project follows the [W3C Design Tokens Format](https://deploy-preview-298--designtokensorg.netlify.app/tr/drafts/format/) and [Resolver](https://deploy-preview-289--designtokensorg.netlify.app/tr/drafts/resolver/) specifications.
+This component follows:
+- **W3C Design Tokens Format Module (2025)**: Token structure and types
+- **W3C Design Tokens Resolver**: Reference resolution
+- **W3C Color Module**: Wide gamut color support
 
-### Required Properties
-- `$value`: The actual token value
-- `$type`: The type of token (recommended but optional)
+## Resources
 
-### Optional Properties
-- `$description`: Human-readable description
-- `$extensions`: Vendor-specific metadata
+- [W3C Design Tokens Format](https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/)
+- [W3C Design Tokens Color](https://www.w3.org/community/reports/design-tokens/CG-FINAL-color-20251028/)
+- [W3C Design Tokens Resolver](https://www.w3.org/community/reports/design-tokens/CG-FINAL-resolver-20251028/)
+- [design.tokens.md](./design.tokens.md) - Full token specification
 
-### Validation Rules
+## License
 
-1. **Required Properties**: All tokens must have `$value`
-2. **Reserved Names**: Token names cannot start with `$`
-3. **Type Validation**: Values must match their declared type
-4. **No Circular References**: Token references must not create loops
-5. **Valid Units**: Dimensions must use valid CSS units
-6. **Font Weight Range**: Must be 1-1000 or valid keywords
-
-### Best Practices
-
-1. **Use Semantic Names**: Prefer `--primary-blue` over `--color-1`
-2. **Consistent Grouping**: Organize by purpose (colors, spacing, typography)
-3. **CSS Custom Property Keys**: Use CSS custom property names as token keys
-4. **Descriptive Documentation**: Include `$description` for complex tokens
-5. **Type Specification**: Always specify `$type` for clarity
-6. **Reference Patterns**: Use references to maintain consistency
-
-### Non-W3C Extensions
-
-This system supports additional custom properties:
-- Custom types like `ratio`, `gradient` (with `render` property for visualization)
-- CSS custom property mapping through token key names
-- Extended metadata in root-level properties
-
-## Resources & Documentation
-
-### Official W3C Specifications
-- **W3C Design Tokens Format**: https://deploy-preview-298--designtokensorg.netlify.app/tr/drafts/format/
-  - Comprehensive specification for token structure, types, and validation rules
-- **W3C Design Tokens Resolver**: https://deploy-preview-289--designtokensorg.netlify.app/tr/drafts/resolver/
-  - Guidelines for token resolution, references, and alias handling
-- **W3C Community Group**: https://design-tokens.github.io/community-group/format/
-  - Community-driven development and discussions
-
-### Inspiration & Tools
-- **Open Props**: https://github.com/argyleink/open-props
-  - CSS custom properties framework that inspired this token organization approach
-  - Provides excellent examples of CSS-based design token patterns
-
-### Development Tools
-- **Figma Plugin**: Integration tools for design-to-token workflows (configuration needed)
+MIT

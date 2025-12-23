@@ -1,0 +1,33 @@
+{
+  "name": "@browser-style/design-token-utils",
+  "version": "1.0.0",
+  "description": "Complete toolkit for working with W3C design tokens",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./converters": "./converters/index.js",
+    "./exporters": "./exporters/index.js",
+    "./validators": "./validators/index.js",
+    "./resolvers": "./resolvers/index.js"
+  },
+  "keywords": [
+    "design-tokens",
+    "w3c",
+    "css",
+    "custom-properties",
+    "converters",
+    "exporters",
+    "color",
+    "gradient",
+    "shadow",
+    "typography"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/browser-style",
+    "directory": "ui/design-token-utils"
+  }
+}

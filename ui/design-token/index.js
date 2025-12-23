@@ -1,47 +1,4 @@
-function toCssValue(token) {
-	const { $type, $value } = token;
-	if (typeof $value === 'string') return $value;
-	
-	if ($type === 'color' && typeof $value === 'object') {
-		const { colorSpace, components, alpha } = $value;
-		const a = alpha ?? 1;
-		// Map common spaces to CSS color functions
-		if (colorSpace === 'oklab') return `oklab(${components[0]} ${components[1]} ${components[2]} / ${a})`;
-		if (colorSpace === 'oklch') return `oklch(${components[0]} ${components[1]} ${components[2]} / ${a})`;
-		if (colorSpace === 'srgb' || colorSpace === 'rgb') return `color(srgb ${components[0]} ${components[1]} ${components[2]} / ${a})`;
-		if (colorSpace === 'display-p3' || colorSpace === 'p3') return `color(display-p3 ${components[0]} ${components[1]} ${components[2]} / ${a})`;
-		return 'transparent';
-	}
-	
-	if ($type === 'shadow' && typeof $value === 'object') {
-		const shadows = Array.isArray($value) ? $value : [$value];
-		return shadows.map(s => `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`).join(', ');
-	}
-	
-	if ($type === 'border' && typeof $value === 'object') {
-		return `${$value.width} ${$value.style} ${$value.color}`;
-	}
-	
-	if ($type === 'gradient') {
-		const stops = Array.isArray($value) ? $value : [];
-		if (!stops.length) return '';
-
-		const stopList = stops.map(s => `${s.color} ${s.position * 100}%`).join(', ');
-		const ext = token.$extensions?.css || {};
-		const type = ext.gradientType || 'linear';
-		const angle = ext.angle || 'to bottom';
-		const shape = ext.shape || 'circle';
-		const position = ext.position || 'center';
-
-		if (type === 'linear') return `linear-gradient(${angle}, ${stopList})`;
-		if (type === 'radial') return `radial-gradient(${shape} at ${position}, ${stopList})`;
-		if (type === 'conic') return `conic-gradient(from ${angle} at ${position}, ${stopList})`;
-		
-		return `linear-gradient(${angle}, ${stopList})`;
-	}
-
-	return '';
-}
+import { toCssValue } from '../design-token-utils/index.js';
 
 let sharedSheet;
 
@@ -55,6 +12,7 @@ export default class DesignToken extends HTMLElement {
 	#elements = {};
 	#renderId = 0;
 	#pendingValue = null;
+	#registry = null;
 
 	static get observedAttributes() {
 		return ['src'];
@@ -67,13 +25,13 @@ export default class DesignToken extends HTMLElement {
 
 	async connectedCallback() {
 		if (!sharedSheet) {
-			const cssUrl = new URL('./index.css', import.meta.url).href;
+			const cssUrl = new URL('../design-token-styles/index.css', import.meta.url).href;
 			const response = await fetch(cssUrl);
 			const text = await response.text();
 			sharedSheet = new CSSStyleSheet();
 			sharedSheet.replaceSync(text);
 		}
-		
+
 		this.shadowRoot.adoptedStyleSheets = [sharedSheet];
 		this.render();
 	}
@@ -91,6 +49,18 @@ export default class DesignToken extends HTMLElement {
 
 	get src() {
 		return this.#token;
+	}
+
+	set registry(val) {
+		this.#registry = val;
+		// Only render if we already have a token
+		if (this.#token && this.#token.$value !== undefined) {
+			this.render();
+		}
+	}
+
+	get registry() {
+		return this.#registry;
 	}
 
 	ensureStructure() {
@@ -210,7 +180,7 @@ export default class DesignToken extends HTMLElement {
 			};
 		} else {
 			let finalValue = newValueStr;
-			
+
 			// Try to parse JSON for other types
 			try {
 				if (finalValue.trim().startsWith('[') || finalValue.trim().startsWith('{')) {
@@ -222,7 +192,14 @@ export default class DesignToken extends HTMLElement {
 				token.$value = finalValue;
 			}
 		}
-		
+
+		// Dispatch event to notify parent that token changed
+		this.dispatchEvent(new CustomEvent('token-changed', {
+			bubbles: true,
+			composed: true,
+			detail: { token, cssVar }
+		}));
+
 		this.render();
 	}
 
@@ -239,8 +216,13 @@ export default class DesignToken extends HTMLElement {
 		if ($type) {
 			this.setAttribute('type', $type);
 		}
-		
-		this.style.setProperty('--_v', toCssValue(token));
+
+		// Use the CSS variable if available, otherwise compute the value
+		if (cssVar) {
+			this.style.setProperty('--_v', `var(${cssVar})`);
+		} else {
+			this.style.setProperty('--_v', toCssValue(token, this.#registry));
+		}
 
 		this.ensureStructure();
 
@@ -267,7 +249,7 @@ export default class DesignToken extends HTMLElement {
 
 		if ($type === 'color' && !isAlias) {
 			try {
-				await import('../edit-color/index.js');
+				await import('../design-token-editors/color/index.js');
 				const editor = document.createElement('edit-color');
 				editor.value = $value;
 				editorContent = editor;

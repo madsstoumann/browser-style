@@ -1,0 +1,26 @@
+{
+  "name": "@browser-style/design-tokens-exporter",
+  "version": "1.0.0",
+  "description": "W3C-compliant design token to CSS custom properties exporter",
+  "type": "module",
+  "main": "exportTokensToCSS.js",
+  "exports": {
+    ".": "./exportTokensToCSS.js"
+  },
+  "scripts": {
+    "test": "node test-export.js",
+    "export": "node -e \"import { exportFromFile } from './exportTokensToCSS.js'; await exportFromFile('./design.tokens.json', { fileName: './design.tokens.css', layer: 'design-tokens', selector: ':root' });\"",
+    "preview": "echo 'Open tokens-preview.html in your browser to see the tokens in action'"
+  },
+  "keywords": [
+    "design-tokens",
+    "css",
+    "custom-properties",
+    "w3c",
+    "design-system",
+    "tokens",
+    "theme"
+  ],
+  "author": "",
+  "license": "MIT"
+}

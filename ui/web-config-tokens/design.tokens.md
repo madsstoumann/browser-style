@@ -3,6 +3,11 @@
 **Standard:** W3C Design Tokens Format Module (2025 Final)
 **Filename:** `design.tokens.json`
 
+## References
+- https://www.w3.org/community/reports/design-tokens/CG-FINAL-format-20251028/
+- https://www.w3.org/community/reports/design-tokens/CG-FINAL-color-20251028/
+- https://www.w3.org/community/reports/design-tokens/CG-FINAL-resolver-20251028/
+
 ---
 
 ## 1. Overview

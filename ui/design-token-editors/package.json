@@ -1,0 +1,28 @@
+{
+  "name": "@browser-style/design-token-editors",
+  "version": "1.0.0",
+  "description": "Web component editors for design tokens",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./color": "./color/index.js"
+  },
+  "dependencies": {
+    "@browser-style/design-token-styles": "^1.0.0"
+  },
+  "keywords": [
+    "design-tokens",
+    "web-components",
+    "editors",
+    "color-picker",
+    "color-editor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/browser-style",
+    "directory": "ui/design-token-editors"
+  }
+}
