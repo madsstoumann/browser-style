@@ -49,9 +49,10 @@ export default class WebConfigTokens extends HTMLElement {
 			this.#registry = buildRegistry(data);
 
 			// Generate CSS custom properties from all tokens
+			const config = data.$extensions?.export || {};
 			const tokenCSS = exportTokensToCSS(data, {
-				layer: 'design-tokens',
-				selector: ':host'
+				layer: config.layer ?? 'design-tokens',
+				selector: config.selector ?? ':host'
 			});
 
 			// Create and adopt stylesheet with token CSS

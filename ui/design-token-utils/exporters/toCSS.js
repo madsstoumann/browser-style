@@ -16,10 +16,11 @@ import { buildRegistry } from '../resolvers/index.js';
  * @returns {string} Generated CSS string
  */
 export function exportTokensToCSS(tokens, options = {}) {
+  const config = tokens.$extensions?.export || {};
   const {
-    fileName = null,
-    layer = 'base',
-    selector = ':root'
+    fileName = config.fileName || null,
+    layer = config.layer ?? 'base',
+    selector = config.selector ?? ':root'
   } = options;
 
   // Build token registry
@@ -73,8 +74,11 @@ export async function exportFromFile(jsonPath, options = {}) {
 
   const css = exportTokensToCSS(tokens, options);
 
-  if (options.fileName) {
-    const outputPath = path.resolve(options.fileName);
+  const config = tokens.$extensions?.export || {};
+  const fileName = options.fileName || config.fileName;
+
+  if (fileName) {
+    const outputPath = path.resolve(fileName);
     await fs.writeFile(outputPath, css, 'utf-8');
     console.log(`CSS exported to: ${outputPath}`);
   }

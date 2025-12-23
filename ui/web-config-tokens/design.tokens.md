@@ -207,6 +207,25 @@ Used for transforming JSON into CSS Custom Properties.
 | `fn` | Wraps value in CSS function | No |
 | `args` | Arguments passed to function | No |
 
+#### `export` Namespace
+Used for configuring the CSS export process (Root level only).
+
+| Property | Description | Default |
+|----------|-------------|---------|
+| `fileName` | Output filename for CSS generation | `null` |
+| `layer` | CSS layer name | `design-tokens` |
+| `selector` | CSS selector for scoping variables | `:host` |
+
+```json
+"$extensions": {
+  "export": {
+    "fileName": "design.tokens.css",
+    "layer": "design-tokens",
+    "selector": ":host"
+  }
+}
+```
+
 ### Extension Examples
 
 #### CSS `light-dark()` Function

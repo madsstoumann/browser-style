@@ -1,6 +1,13 @@
 {
 "$name": "Gemini 3 Pro Design System",
 "$description": "Comprehensive design tokens following W3C 2025 Draft Standards.",
+"$extensions": {
+  "export": {
+    "fileName": "design.tokens.css",
+    "layer": "design-tokens",
+    "selector": ":host"
+  }
+},
 "color": {
   "$description": "Color system with primitive scales and semantic aliases.",
   "$extensions": { "ui": { "title": "Colors" } },

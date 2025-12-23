@@ -60,7 +60,7 @@ web-config-tokens
   <title>Design Tokens</title>
 </head>
 <body>
-  <web-config-tokens src="design.tokens.json"></web-config-tokens>
+  <web-config-tokens src="data/design.tokens.json"></web-config-tokens>
   <script type="module" src="./web-config-tokens/index.js"></script>
 </body>
 </html>
