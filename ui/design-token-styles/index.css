@@ -168,16 +168,27 @@ textarea {
 	background-repeat: no-repeat, repeat;
 }
 
+[part~="edit-color-warning"] {
+	color: #b45309;
+}
+[part~="edit-color-warning-fallback"] {
+	background: var(--_bg, #fff);
+	height: 2rem;
+}
+
 /* === EDIT COLOR ROW === */
-[part="edit-color-row"] {
-	all: unset;
+[part~="edit-color-row"] {
+	/* all: unset; */
 	align-items: start;
+	border:0;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
 }
 
-[part="edit-color-row"]:has([type="range"]) {
+[part~="edit-color-row"]:has([type="range"]) {
 	align-items: center;
 	grid-template-columns: 1ch 1fr 7ch;
 }

@@ -141,13 +141,19 @@ export default class EditColor extends HTMLElement {
 					</select>
 				</label>
 			</fieldset>
-			<div></div>`;
+			<div></div>
+			<div hidden part="edit-color-warning edit-color-row">
+				<small>Not in SRGB gamut</small>
+				<div part="edit-color-warning-fallback"></div>
+			</div>`;
 
 		this.#elements = {
 			preview: this.shadowRoot.querySelector('[part="edit-color-preview"]'),
 			spaceSelect: this.shadowRoot.querySelector('select'),
-			slidersContainer: this.shadowRoot.lastElementChild,
-			valueInput: this.shadowRoot.querySelector('input[type="text"]')
+			slidersContainer: this.shadowRoot.querySelector('div:not([part])'),
+			valueInput: this.shadowRoot.querySelector('input[type="text"]'),
+			warning: this.shadowRoot.querySelector('[part~="edit-color-warning"]'),
+			fallback: this.shadowRoot.querySelector('[part="edit-color-warning-fallback"]')
 		};
 
 		this.#elements.spaceSelect.addEventListener('change', () => {
@@ -198,6 +204,7 @@ export default class EditColor extends HTMLElement {
 		this.#elements.spaceSelect.value = initialSpace;
 
 		this.renderSliders();
+		this.updateWarning();
 	}
 
 	renderSliders() {
@@ -294,6 +301,20 @@ export default class EditColor extends HTMLElement {
 				css: cssString
 			} 
 		}));
+
+		this.updateWarning();
+	}
+
+	updateWarning() {
+		if (!this.#color || !this.#elements.warning) return;
+		const isInGamut = this.#color.inGamut('srgb');
+		if (isInGamut) {
+			this.#elements.warning.hidden = true;
+		} else {
+			const clamped = this.#color.toGamut('srgb');
+			this.#elements.fallback.style.setProperty('--_bg', clamped.toString({ format: 'hex' }));
+			this.#elements.warning.hidden = false;
+		}
 	}
 }
 
