@@ -51,7 +51,7 @@ const ICONS = {
 
 const renderIcon = (icon) => {
 	const { paths, filled } = icon;
-	const className = filled ? 'icon-filled' : 'icon-outline';
+	const className = filled ? 'filled' : '';
 	return `<svg viewBox="0 0 24 24" class="${className}">${paths.map(d => `<path d="${d}" />`).join('')}</svg>`;
 };
 
@@ -112,7 +112,7 @@ const getDefaultValue = (type) => {
 const styles = new CSSStyleSheet();
 styles.replaceSync(`
 	:host {
-		--web-config-tokens-gap: .75rem;
+		--web-config-tokens-gap: clamp(0.375rem, 0.125rem + 1vw, 0.75rem);
 		display: block;
 		font-family: system-ui, sans-serif;
 	}
@@ -127,36 +127,61 @@ styles.replaceSync(`
 	}
 	[data-level="0"] {
 		& > summary {
-			font-size: 1.5rem;
+			color: #555;
+			font-size: clamp(1rem, 0.6667rem + 1.3333vw, 1.5rem);
 			font-weight: 500;
+			padding-inline: var(--web-config-tokens-gap);
+			@media (hover: hover) {
+				&:hover { background: hsla(0, 0%, 96%, 1.00); }
+			}
 		}
 	}
 	fieldset { border: 0; margin: 0; padding: 0; min-inline-size: 0; }
+	
 	.token-wrapper { position: relative; }
 	.token-delete-btn { position: absolute; top: 0; right: 0; z-index: 1; }
-	.hidden { display: none; }
+	
 	.dialog-actions { margin-top: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; }
 	.add-actions { margin-top: 0.5rem; }
+	
 	summary {
-	border-block-end: 1px solid #CCC;
-	padding-block: var(--web-config-tokens-gap);
-	display: flex; align-items: center; gap: 0.5rem; justify-content: space-between; cursor: pointer; }
+		border-block-end: 1px solid #CCC;
+		padding-block: var(--web-config-tokens-gap);
+		display: flex; align-items: center; gap: 0.5rem; justify-content: space-between; cursor: pointer;
+		}
+	
 	summary input { font: inherit; border: 1px solid transparent; background: transparent; }
 	summary input:focus { border-color: currentColor; background: white; }
 	summary > span { font-weight: 500; }
+	
 	.actions { display: none; gap: 0.25rem; opacity: 0.4; transition: opacity 0.2s; }
 	details[open] > summary .actions { display: flex; }
 	summary:hover .actions, .actions:focus-within { opacity: 1; }
-	button { cursor: pointer; padding: 0.25rem 0.5rem; border: 1px solid #ccc; background: #eee; border-radius: 3px; font-size: 0.8em; }
-	button:hover { background: #ddd; }
 	
-	button svg {
-		width: 1.25rem;
-		height: 1.25rem;
-		vertical-align: middle;
+
+	button:hover { background: #ddd; }
+
+	button {
+		background: #eee;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		box-sizing: border-box;
+		display: inline-grid;
+		font-size: 0.8em;
+		padding: .25rem;
+		place-content: center;
+		svg {
+			aspect-ratio: 1;
+			fill: none;
+			stroke: currentColor;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			stroke-width: 2;
+			width: 1.25rem;
+			&.filled { fill: currentColor; stroke: none; }
+		}
 	}
-	button svg.icon-filled { fill: currentColor; stroke: none; }
-	button svg.icon-outline { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+	
 	
 	input[name="key"] { font-weight: bold; color: #333; }
 	design-token { display: block; margin-block: 0.25rem; }
