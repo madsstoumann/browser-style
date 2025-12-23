@@ -35,21 +35,22 @@ textarea {
 [part="design-token-button"] {
 	appearance: none;
 	border: 1px solid #ccc;
-	background: #fff;
+	background: Canvas;
 	padding: 0.5rem;
 	border-radius: 4px;
 	cursor: pointer;
-	display: flex;
+	display: inline-grid;
 	align-items: center;
 	gap: 0.5rem;
 	width: 100%;
-	text-align: left;
+	word-break: break-all;
+	/* text-align: left; */
 	font-family: inherit;
 
 	&::before {
 		content: '';
 		display: block;
-		width: 1.5rem;
+		/* width: 1.5rem; */
 		height: 1.5rem;
 		border: 1px solid #eee;
 		border-radius: 4px;
