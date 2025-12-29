@@ -80,9 +80,3 @@ Presentations
 - is-website-safe
 - security-headers
 - ?
-
----
-
-Re-create write-as-mads with 12 most read articles
-Ask about digraph/subgraph in this skill:
-https://github.com/obra/superpowers/blob/main/skills/subagent-driven-development/SKILL.md
