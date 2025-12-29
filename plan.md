@@ -48,6 +48,12 @@ Cloudflare Cache Investigation for Umbraco Cloud
 Security Testing — more clients
 Add AI-based search to your site brochure (look into raffle ai)
 
+Presentations
+- Quality
+- Full Speed Ahead
+- Why we need a Layout System
+- Skills
+
 ---
 
 - asset-handler
@@ -60,8 +66,17 @@ Add AI-based search to your site brochure (look into raffle ai)
 - layout
 - product-taxonomy
 - tab-cordion
+- wen-config-csp
 - web-config-manifest
 - web-config-robots
 - web-config-security
 - web-config-shared
 - web-config-tokens
+
+---
+
+## Skills
+
+- is-website-safe
+- security-headers
+- ?
