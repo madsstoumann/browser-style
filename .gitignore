@@ -13,8 +13,7 @@ _v2/
 .idea
 .vscode
 .gemini-clipboard
-.claude/
-settings.local.json
+.claude/settings.local.json
 *.suo
 *.ntvs*
 *.njsproj
