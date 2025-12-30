@@ -1,23 +1,15 @@
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Get all ui/* folders
-const uiPath = path.join(process.cwd(), 'ui');
-const folders = fs.readdirSync(uiPath).filter(item => {
-  const fullPath = path.join(uiPath, item);
-  return fs.statSync(fullPath).isDirectory() && !item.startsWith('_');
-});
-
-console.log(`Found ${folders.length} UI component folders`);
-
-// Get changed files in the current push
-let changedFiles = [];
-try {
-  const output = execSync('git diff --name-only HEAD~1 HEAD', { encoding: 'utf-8' });
-  changedFiles = output.split('\n').filter(f => f.length > 0);
+con changedFiles = output.split('\n').filter(f => f.length > 0);
 } catch (error) {
   console.log('Could not get previous commit, generating for all folders with no CHANGELOG.md');
   changedFiles = [];
