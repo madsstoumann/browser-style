@@ -196,7 +196,7 @@
 				--ui-table-td-bg: var(--Highlight);
 			}
 			& tr[aria-selected].--row-active td {
-				--ui-table-td-hover: var(--AccentColor);
+				/* --ui-table-td-hover: var(--AccentColor); */
 				--ui-table-td-bg: var(--AccentColor);
 			}
 
