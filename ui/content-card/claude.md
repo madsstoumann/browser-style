@@ -1,650 +1,870 @@
-# Content Card Component
+# Content Card Component Library - Internal Architecture
 
 ## Overview
 
-Content Card is a **comprehensive card component system** for rendering various content types with optional Schema.org structured data markup. It provides **25 specialized card types**, each as a custom element extending a shared `BaseCard` class.
+`content-card` is a comprehensive **custom element component library** with 25 specialized card types for rendering rich, semantic content with Schema.org structured data. Each card type extends a common `BaseCard` class and uses shared rendering utilities.
 
-## Architecture
+**Version:** 1.0.0
 
-### Files Structure
+**Component Type:** Autonomous custom elements extending HTMLElement
+
+**Total Source:** ~3,768 lines across 28 JavaScript files + 25 CSS component files
+
+**Key architectural decisions:**
+- **Inheritance pattern**: All cards extend `BaseCard` for shared lifecycle and settings
+- **Render utilities**: Centralized `utils.js` provides 20+ render helper functions
+- **Schema.org integration**: Conditional microdata markup via `useSchema` setting
+- **Responsive images**: Integration with `@browser.style/layout` srcset system
+- **No Shadow DOM**: Cards render to light DOM innerHTML for easier styling
+
+## Architecture Overview
+
+### Component Lifecycle
+
+```
+constructor()
+  ↓
+  Add 'cc' class to element
+  ↓
+connectedCallback()
+  ↓
+  _ensureSettingsInitialized()
+  ↓
+  Check if _data exists
+  ↓
+  _prepareAndRender()
+      ↓
+      Validate data presence
+      ↓
+      _setSchema(schemaType)  // if useSchema=true
+      ↓
+      render()  // Card-specific HTML generation
+      ↓
+      innerHTML = rendered HTML
+  ↓
+  initializePopoverToggleListeners()  // if has popovers
+```
+
+### Data Flow Pipeline
+
+```
+1. HTML: <article-card content="article-1"></article-card>
+
+2. runtime.js loads JSON from dataSrc
+       ↓
+3. initializeCards() finds matching data by ID
+       ↓
+4. Sets element._data = { ...cardData }
+       ↓
+5. BaseCard._prepareAndRender() validates data
+       ↓
+6. Card.render() generates HTML string with:
+   - Schema.org microdata (conditional)
+   - Media rendering (images/videos/YouTube)
+   - Content sections
+   - Interactive elements
+       ↓
+7. innerHTML replaced with generated markup
+       ↓
+8. initializePopoverToggleListeners() attaches handlers
+       ↓
+9. Card ready for user interaction
+```
+
+## File Structure
 
 ```
 content-card/
-├── readme.md                    # User documentation
-├── build.js                     # Build script
-├── build-layouts-map.js         # Layout mappings generator
-├── config.json                  # Build configuration
-├── package.json                 # NPM package configuration
 ├── src/
 │   ├── js/
 │   │   ├── base/
-│   │   │   ├── BaseCard.js      # Abstract base class (~112 lines)
-│   │   │   ├── utils.js         # Shared render utilities (~693 lines)
-│   │   │   └── icons.js         # SVG icon definitions
+│   │   │   ├── BaseCard.js         # Abstract base class (111 lines)
+│   │   │   ├── utils.js            # Shared render utilities (692 lines)
+│   │   │   └── icons.js            # SVG icon paths (14 lines)
 │   │   ├── cards/
-│   │   │   ├── index.js         # Central exports
-│   │   │   └── [25 card types]  # Individual card implementations
-│   │   └── runtime.js           # Runtime utilities
+│   │   │   ├── index.js            # Central export hub (27 lines)
+│   │   │   ├── ArticleCard.js      # Article schema (39 lines)
+│   │   │   ├── NewsCard.js         # NewsArticle schema (39 lines)
+│   │   │   ├── ProductCard.js      # Product + Offer (63 lines)
+│   │   │   ├── EventCard.js        # Event schema (71 lines)
+│   │   │   ├── RecipeCard.js       # Recipe + HowToStep (81 lines)
+│   │   │   ├── ReviewCard.js       # Review + Rating (135 lines)
+│   │   │   ├── JobCard.js          # JobPosting (140 lines)
+│   │   │   ├── CourseCard.js       # Course + Offer (137 lines)
+│   │   │   ├── BookingCard.js      # Reservation (205 lines)
+│   │   │   ├── PollCard.js         # Question + Answer (159 lines)
+│   │   │   ├── ProfileCard.js      # Person (111 lines)
+│   │   │   ├── StatisticCard.js    # Observation (144 lines)
+│   │   │   ├── GalleryCard.js      # ImageGallery (131 lines)
+│   │   │   ├── FaqCard.js          # FAQPage (38 lines)
+│   │   │   ├── QuoteCard.js        # Quotation (35 lines)
+│   │   │   ├── TimelineCard.js     # EventSeries (38 lines)
+│   │   │   ├── AchievementCard.js  # EducationalOccupationalCredential (134 lines)
+│   │   │   ├── AnnouncementCard.js # SpecialAnnouncement (157 lines)
+│   │   │   ├── BusinessCard.js     # LocalBusiness (127 lines)
+│   │   │   ├── ComparisonCard.js   # ItemList (188 lines)
+│   │   │   ├── ContactCard.js      # ContactPage (141 lines)
+│   │   │   ├── LocationCard.js     # Place (127 lines)
+│   │   │   ├── MembershipCard.js   # Offer (136 lines)
+│   │   │   ├── SocialCard.js       # SocialMediaPosting (179 lines)
+│   │   │   └── SoftwareCard.js     # SoftwareApplication (169 lines)
+│   │   └── runtime.js              # Dynamic initialization (254 lines)
 │   └── css/
-│       ├── index.css            # Main CSS entry
-│       ├── modifiers.md         # Layout modifier documentation
-│       ├── base/                # Base styles
-│       └── components/          # Card-specific CSS (25 files)
-└── dist/                        # Built output
+│       ├── base/
+│       │   └── base.css            # Base card styles
+│       └── components/
+│           └── [25 CSS files]      # Per-card styles
+├── package.json
+└── claude.md
 ```
 
-### Component Hierarchy
+## BaseCard Class Deep Dive
 
-```
-BaseCard (HTMLElement)
-├── AchievementCard   → Schema: EducationalOccupationalCredential
-├── AnnouncementCard  → Schema: SpecialAnnouncement
-├── ArticleCard       → Schema: Article
-├── BookingCard       → Schema: Reservation
-├── BusinessCard      → Schema: LocalBusiness
-├── ComparisonCard    → Schema: ItemList
-├── ContactCard       → Schema: ContactPage
-├── CourseCard        → Schema: Course
-├── EventCard         → Schema: Event
-├── FaqCard           → Schema: FAQPage
-├── GalleryCard       → Schema: ImageGallery
-├── JobCard           → Schema: JobPosting
-├── LocationCard      → Schema: Place
-├── MembershipCard    → Schema: Offer
-├── NewsCard          → Schema: NewsArticle
-├── PollCard          → Schema: Question
-├── ProductCard       → Schema: Product
-├── ProfileCard       → Schema: Person
-├── QuoteCard         → Schema: Quotation
-├── RecipeCard        → Schema: Recipe
-├── ReviewCard        → Schema: Review
-├── SocialCard        → Schema: SocialMediaPosting
-├── SoftwareCard      → Schema: SoftwareApplication
-├── StatisticCard     → Schema: StatisticalPopulation
-└── TimelineCard      → Schema: EventSeries
-```
-
-### Custom Elements
-
-Each card registers as a custom element:
-
-| Component | Element Tag |
-|-----------|-------------|
-| AchievementCard | `<achievement-card>` |
-| AnnouncementCard | `<announcement-card>` |
-| ArticleCard | `<article-card>` |
-| BookingCard | `<booking-card>` |
-| BusinessCard | `<business-card>` |
-| ComparisonCard | `<comparison-card>` |
-| ContactCard | `<contact-card>` |
-| CourseCard | `<course-card>` |
-| EventCard | `<event-card>` |
-| FaqCard | `<faq-card>` |
-| GalleryCard | `<gallery-card>` |
-| JobCard | `<job-card>` |
-| LocationCard | `<location-card>` |
-| MembershipCard | `<membership-card>` |
-| NewsCard | `<news-card>` |
-| PollCard | `<poll-card>` |
-| ProductCard | `<product-card>` |
-| ProfileCard | `<profile-card>` |
-| QuoteCard | `<quote-card>` |
-| RecipeCard | `<recipe-card>` |
-| ReviewCard | `<review-card>` |
-| SocialCard | `<social-card>` |
-| SoftwareCard | `<software-card>` |
-| StatisticCard | `<statistic-card>` |
-| TimelineCard | `<timeline-card>` |
-
-## BaseCard Class
-
-### Properties
+### Class Definition (base/BaseCard.js:1-111)
 
 ```javascript
-class BaseCard extends HTMLElement {
-  _data;      // Card data object
-  _settings;  // Configuration settings
-  _root;      // Shadow root (if used)
+export class BaseCard extends HTMLElement {
+  static get observedAttributes() { return ['settings']; }
+
+  _data = null;           // Card data object
+  _settings = undefined;  // Configuration (lazy initialized)
+  _root = null;           // Reserved for future Shadow DOM
 }
 ```
 
-### Settings Object
+### Constructor (lines 8-10)
 
 ```javascript
-{
-  styles: {},                           // CSS class overrides
-  useSchema: true,                      // Enable Schema.org markup
-  srcsetBreakpoints: [280, 480, 900],   // Responsive image breakpoints
-  imageTransformConfig: null            // Image transform provider config
+constructor() {
+  super();
+  this.classList.add('cc');  // All cards get 'cc' class
 }
 ```
 
-### Methods
+**Why 'cc' class?** Provides common CSS hook without requiring specific card type.
 
-| Method | Description |
-|--------|-------------|
-| `_setupRender()` | Extracts common render variables |
-| `_setSchema(type)` | Sets Schema.org itemscope/itemtype |
-| `render()` | Abstract - must be implemented by subclass |
-| `getStyle(name)` | Gets CSS class string for component |
-
-## Shared Utilities (utils.js)
-
-### Render Functions
-
-| Function | Description |
-|----------|-------------|
-| `renderMedia(element, useSchema, settings)` | Renders media area (images, videos, YouTube) |
-| `renderImage(image, useSchema, settings, element, context)` | Renders responsive image with srcset |
-| `renderVideo(video, useSchema, settings)` | Renders native video element |
-| `renderYouTube(video, useSchema, settings)` | Renders YouTube embed/thumbnail |
-| `renderRibbon(ribbon, settings)` | Renders ribbon overlay |
-| `renderSticker(sticker, settings)` | Renders sticker badge |
-| `renderActions(actions, useSchema, settings)` | Renders action buttons with popover support |
-| `renderTags(tags, settings)` | Renders tag chips |
-| `renderAuthors(authors, includeSchema, settings)` | Renders author information |
-| `renderEngagement(engagement, useSchema, settings)` | Renders likes/views/comments |
-| `renderHeader(content, settings)` | Renders category/date/reading time |
-| `renderLinks(links, settings, actions)` | Renders navigation links |
-| `renderSVG(name)` | Renders SVG icon by name |
-| `getStyle(componentName, settings)` | Gets CSS class string |
-| `cleanHTML(html)` | Removes whitespace from HTML |
-
-### YouTube Helpers
+### Settings Initialization (lines 12-32)
 
 ```javascript
-isYouTubeUrl(url)      // Detect YouTube URLs
-extractYouTubeId(url)  // Extract video ID from URL
-```
+_ensureSettingsInitialized() {
+  if (this._settings !== undefined) return;
 
-### Popover Video Support
-
-```javascript
-initializePopoverToggleListeners(container)  // Sets up video popover behavior
-```
-
-## Data Structure
-
-### Common Properties (all card types)
-
-```javascript
-{
-  "id": "unique-id",
-  "type": "article",                    // Card type identifier
-  "media": {
-    "sources": [
-      { "type": "image", "src": "...", "alt": "..." },
-      { "type": "video", "src": "...", "poster": "..." },
-      { "type": "youtube", "src": "...", "playsinline": true }
-    ],
-    "caption": "Optional caption"
-  },
-  "ribbon": { "text": "FEATURED", "style": "featured", "icon": "star" },
-  "sticker": { "text": "NEW", "position": "top-right" },
-  "content": {
-    "category": "Technology",
-    "headline": "Main Title",
-    "headlineTag": "h2",               // h2-h6
-    "subheadline": "Secondary Title",
-    "summary": "Brief description",
-    "text": "Detailed content",
-    "published": { "datetime": "2025-07-16T10:00:00Z", "formatted": "July 16, 2025" },
-    "modified": { "datetime": "...", "formatted": "..." },
-    "readingTime": "5 min read"
-  },
-  "authors": [
-    { "name": "John Doe", "avatar": { "src": "..." }, "role": "Author" }
-  ],
-  "engagement": {
-    "viewCount": 1500,
-    "likeCount": 150,
-    "shareCount": 25,
-    "commentCount": 10
-  },
-  "tags": [
-    { "name": "CSS", "url": "/tags/css" }
-  ],
-  "links": [
-    { "text": "Read More", "url": "...", "icon": "arrow_forward" }
-  ],
-  "actions": [
-    {
-      "text": "Watch",
-      "icon": "play_arrow",
-      "attributes": { "type": "button" },
-      "popover": { "type": "auto", "video": { "src": "..." } }
+  // Try attribute first
+  const settingsAttr = this.getAttribute('settings');
+  if (settingsAttr) {
+    try {
+      this._settings = JSON.parse(settingsAttr);
+    } catch (e) {
+      console.error('Invalid settings JSON:', e);
+      this._settings = {};
     }
-  ]
+  }
+  // Then try dataset
+  else if (this.dataset.settings) {
+    this._settings = this.dataset.settings;
+  }
+  // Default
+  else {
+    this._settings = {};
+  }
+
+  // Merge with defaults
+  this._settings = {
+    srcsetBreakpoints: [280, 480, 900],
+    imageTransformConfig: null,
+    ...this._settings
+  };
 }
 ```
 
-### Type-Specific Data Properties
+**Gotcha:** Settings attribute must be valid JSON or it falls back to empty object silently.
 
-**Achievement (`achievement`):**
+### Render Setup (lines 34-48)
+
+```javascript
+_setupRender() {
+  this._ensureSettingsInitialized();
+
+  const settings = this._settings;
+  const useSchema = settings.useSchema !== false;  // Default true
+  const content = this._data?.content || {};
+  const headlineTag = content.headlineTag || 'h2';
+
+  return { settings, useSchema, content, headlineTag };
+}
+```
+
+**Critical:** `useSchema` defaults to `true` if not explicitly `false`.
+
+### Schema Setup (lines 50-56)
+
+```javascript
+_setSchema(schemaType) {
+  this.setAttribute('itemscope', '');
+  this.setAttribute('itemtype', `https://schema.org/${schemaType}`);
+}
+```
+
+### Abstract Render Method (lines 58-60)
+
+```javascript
+render() {
+  throw new Error('render() must be implemented by subclass');
+}
+```
+
+**Subclasses must override** - no default implementation provided.
+
+### Lifecycle Hooks (lines 62-86)
+
+```javascript
+connectedCallback() {
+  if (this._data) {
+    this._prepareAndRender();
+  }
+}
+
+attributeChangedCallback(name, oldValue, newValue) {
+  if (name === 'settings') {
+    this._settings = undefined;  // Force re-initialization
+    if (this._data) {
+      this._prepareAndRender();
+    }
+  }
+}
+
+_prepareAndRender() {
+  if (!this._data) return;
+
+  // Subclass sets schema type
+  // this._setSchema('Article');
+
+  const html = this.render();
+  if (html) {
+    this.innerHTML = html;
+  }
+}
+```
+
+**Gotcha:** Settings change resets `_settings` to `undefined`, not `null`. This triggers lazy re-initialization on next access.
+
+## Render Utilities Deep Dive (base/utils.js - 692 lines)
+
+### renderMedia() (lines 15-89)
+
+Main dispatcher for media content.
+
+```javascript
+export function renderMedia(element, useSchema, settings) {
+  const media = element.media;
+  if (!media?.sources?.length) return '';
+
+  const { ribbon, sticker, caption } = media;
+
+  // Render each source (image, video, youtube)
+  const mediaContent = media.sources.map(source => {
+    switch (source.type) {
+      case 'image':
+        return renderImage(source, useSchema, settings, element);
+      case 'video':
+        return renderVideo(source, useSchema, settings);
+      case 'youtube':
+        return renderYouTube(source, useSchema, settings);
+      default:
+        return '';
+    }
+  }).join('');
+
+  return `
+    <figure class="${getStyle('cc-media', settings)}">
+      ${ribbon ? renderRibbon(ribbon, settings) : ''}
+      ${sticker ? renderSticker(sticker, settings) : ''}
+      ${mediaContent}
+      ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+    </figure>
+  `;
+}
+```
+
+### renderImage() (lines 91-180)
+
+Responsive image with srcset generation.
+
+```javascript
+export function renderImage(image, useSchema, settings, element, context = {}) {
+  const { srcsetBreakpoints, imageTransformConfig } = settings;
+  const { src, alt = '', loading = 'lazy', fetchpriority } = image;
+
+  // Generate responsive srcset
+  const { srcset, sizes } = _generateResponsiveSrcset(src, element, settings);
+
+  // Build image attributes
+  const attrs = [
+    `src="${src}"`,
+    `alt="${alt}"`,
+    `loading="${loading}"`,
+    srcset ? `srcset="${srcset}"` : '',
+    sizes ? `sizes="${sizes}"` : '',
+    fetchpriority ? `fetchpriority="${fetchpriority}"` : ''
+  ].filter(Boolean).join(' ');
+
+  // Schema.org ImageObject markup
+  const schemaAttrs = useSchema
+    ? 'itemprop="image" itemscope itemtype="https://schema.org/ImageObject"'
+    : '';
+
+  return `
+    <div class="${getStyle('cc-media-image', settings)}" ${schemaAttrs}>
+      <img ${attrs}>
+      ${useSchema ? `<meta itemprop="url" content="${src}">` : ''}
+    </div>
+  `;
+}
+```
+
+**Srcset Generation Integration:**
+
+```javascript
+function _generateResponsiveSrcset(imageSrc, element, settings) {
+  const { srcsetBreakpoints = [280, 480, 900], imageTransformConfig } = settings;
+
+  // If no transform config, return null
+  if (!imageTransformConfig) {
+    return { srcset: null, sizes: null };
+  }
+
+  // Generate srcset for each breakpoint
+  const srcsetParts = srcsetBreakpoints.map(width => {
+    const transformedUrl = buildTransformUrl(imageSrc, { width }, imageTransformConfig);
+    return `${transformedUrl} ${width}w`;
+  });
+
+  return {
+    srcset: srcsetParts.join(', '),
+    sizes: calculateSizes(/* from layout system */)
+  };
+}
+```
+
+### renderYouTube() (lines 220-285)
+
+Two rendering modes for YouTube content.
+
+```javascript
+export function renderYouTube(video, useSchema, settings) {
+  const videoId = extractYouTubeId(video.src);
+  if (!videoId) return '';
+
+  const { playsinline } = video;
+
+  // Mode 1: Thumbnail (default)
+  if (!playsinline) {
+    return `
+      <div class="${getStyle('cc-media-youtube', settings)}" data-video-id="${videoId}">
+        <img src="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg"
+             alt="${video.alt || ''}"
+             loading="lazy">
+        ${useSchema ? `
+          <meta itemprop="embedUrl" content="https://www.youtube.com/embed/${videoId}">
+          <meta itemprop="thumbnailUrl" content="https://img.youtube.com/vi/${videoId}/maxresdefault.jpg">
+        ` : ''}
+      </div>
+    `;
+  }
+
+  // Mode 2: Embedded iframe
+  return `
+    <div class="${getStyle('cc-media-youtube', settings)}"
+         ${useSchema ? 'itemprop="video" itemscope itemtype="https://schema.org/VideoObject"' : ''}>
+      <iframe src="https://www.youtube.com/embed/${videoId}"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+      ${useSchema ? `
+        <meta itemprop="embedUrl" content="https://www.youtube.com/embed/${videoId}">
+        <meta itemprop="name" content="${video.alt || ''}">
+      ` : ''}
+    </div>
+  `;
+}
+```
+
+### YouTube URL Extraction (lines 580-610)
+
+Triple fallback mechanism:
+
+```javascript
+export function extractYouTubeId(url) {
+  if (!url) return null;
+
+  // Try 1: Standard URL parsing
+  try {
+    const urlObj = new URL(url);
+
+    // youtube.com/watch?v=ID
+    if (urlObj.hostname.includes('youtube.com')) {
+      return urlObj.searchParams.get('v');
+    }
+
+    // youtu.be/ID
+    if (urlObj.hostname === 'youtu.be') {
+      return urlObj.pathname.slice(1);
+    }
+  } catch (e) {
+    // Invalid URL, try string parsing
+  }
+
+  // Try 2: String splitting for embed URLs
+  const embedMatch = url.match(/embed\/([^?&]+)/);
+  if (embedMatch) return embedMatch[1];
+
+  // Try 3: Query param parsing
+  const vMatch = url.match(/[?&]v=([^&]+)/);
+  if (vMatch) return vMatch[1];
+
+  return null;
+}
+```
+
+**Gotcha:** Will fail silently on malformed URLs, returning null.
+
+### renderActions() with Popover Support (lines 400-480)
+
+```javascript
+export function renderActions(actions, useSchema, settings) {
+  if (!actions?.length) return '';
+
+  return `
+    <div class="${getStyle('cc-actions', settings)}">
+      ${actions.map((action, index) => {
+        const { text, icon, attributes = {}, popover } = action;
+        const buttonId = `action-${Date.now()}-${index}`;
+
+        // Build button
+        let buttonHtml = `
+          <button class="${getStyle('cc-action', settings)}"
+                  ${popover ? `popovertarget="${buttonId}-popover"` : ''}
+                  ${Object.entries(attributes).map(([k, v]) => `${k}="${v}"`).join(' ')}>
+            ${icon ? renderSVG(icon) : ''}
+            ${text}
+          </button>
+        `;
+
+        // Add popover if specified
+        if (popover) {
+          buttonHtml += `
+            <div id="${buttonId}-popover" popover="${popover.type || 'auto'}"
+                 class="${getStyle('cc-popover', settings)}">
+              ${popover.video ? renderPopoverVideo(popover.video, useSchema, settings) : ''}
+              ${popover.content || ''}
+            </div>
+          `;
+        }
+
+        return buttonHtml;
+      }).join('')}
+    </div>
+  `;
+}
+```
+
+### Popover Toggle Listeners (lines 640-692)
+
+```javascript
+export function initializePopoverToggleListeners(container) {
+  container.querySelectorAll('[popover]').forEach(popover => {
+    popover.addEventListener('toggle', (event) => {
+      const isOpen = event.newState === 'open';
+
+      if (isOpen) {
+        // YouTube: set src from data-src (lazy load)
+        const youtube = popover.querySelector('iframe[data-src*="youtube.com"]');
+        if (youtube) {
+          youtube.src = youtube.dataset.src;
+        }
+
+        // Video: autoplay if flagged
+        const video = popover.querySelector('video[data-autoplay]');
+        if (video) {
+          video.play();
+        }
+      } else {
+        // YouTube: reset to about:blank
+        const youtube = popover.querySelector('iframe[src*="youtube.com"]');
+        if (youtube) {
+          youtube.src = 'about:blank';
+        }
+
+        // Video: pause
+        const video = popover.querySelector('video');
+        if (video) {
+          video.pause();
+          if (video.dataset.reset) {
+            video.currentTime = 0;
+          }
+        }
+      }
+    });
+  });
+}
+```
+
+## Interactive Card Implementations
+
+### BookingCard (205 lines) - Time Slot Selection
+
+**Custom Event:**
+```javascript
+connectedCallback() {
+  super.connectedCallback();
+
+  // Add click listener for time slots
+  this.addEventListener('click', (event) => {
+    const slot = event.target.closest('.cc-booking-time-slot');
+    if (!slot) return;
+
+    // Remove active from all slots
+    this.querySelectorAll('.cc-booking-time-slot').forEach(s =>
+      s.classList.remove('cc-booking-time-slot-active')
+    );
+
+    // Add active to clicked slot
+    slot.classList.add('cc-booking-time-slot-active');
+
+    // Dispatch custom event
+    this.dispatchEvent(new CustomEvent('booking-slot-selected', {
+      detail: {
+        date: slot.dataset.date,
+        time: slot.dataset.time
+      },
+      bubbles: true
+    }));
+  });
+}
+```
+
+**Data Structure:**
 ```javascript
 {
-  "achievementName": "...",
-  "issuingOrganization": "...",
-  "dateEarned": "2025-01-15",
-  "expirationDate": "2026-01-15",
-  "credentialId": "ABC-123",
-  "skillLevel": "Advanced",
-  "verificationUrl": "..."
+  booking: {
+    serviceName: string,
+    venue: string,
+    capacity: number,
+    price: { hourlyRate: number, currency: string },
+    duration: string,
+    availableSlots: [
+      { date: 'YYYY-MM-DD', times: ['HH:MM', ...] }
+    ],
+    amenities: [string],
+    cancellationPolicy: string,
+    specialRequests: string
+  }
 }
 ```
 
-**Booking (`booking`):**
+### PollCard (159 lines) - Voting System
+
+**State Management:**
 ```javascript
-{
-  "serviceName": "...",
-  "venue": "...",
-  "capacity": 50,
-  "price": { "hourlyRate": 100, "currency": "USD" },
-  "duration": "2 hours",
-  "availableSlots": [{ "date": "2025-07-20", "times": ["10:00", "14:00"] }],
-  "amenities": ["WiFi", "Projector"],
-  "cancellationPolicy": "...",
-  "specialRequests": "..."
+constructor() {
+  super();
+  this.pollResults = null;   // Results from API
+  this.userVote = null;      // User's selected option(s)
+  this.hasVoted = false;     // Prevents re-voting
 }
 ```
 
-**Business (`business`):**
+**Form Submission:**
 ```javascript
-{
-  "address": { "streetAddress": "...", "addressLocality": "...", "postalCode": "..." },
-  "geo": { "latitude": 40.7128, "longitude": -74.0060 },
-  "telephone": "+1-234-567-8900",
-  "openingHours": ["Mo-Fr 09:00-17:00"]
+handleFormSubmit(event) {
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const selectedOptions = formData.getAll(`poll-${this._data.id}`);
+
+  if (selectedOptions.length === 0) return;
+
+  this.userVote = selectedOptions;
+  this.submitVote();
+}
+
+async submitVote() {
+  const { poll } = this._data;
+
+  if (poll.endpoint) {
+    try {
+      const response = await fetch(poll.endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vote: this.userVote })
+      });
+      this.pollResults = await response.json();
+    } catch (e) {
+      console.error('Vote submission failed:', e);
+    }
+  }
+
+  this.hasVoted = true;
+  this._prepareAndRender();  // Re-render with results
 }
 ```
 
-**Course (`course`):**
+**Results Display:**
 ```javascript
-{
-  "provider": { "name": "...", "url": "..." },
-  "duration": "8 weeks",
-  "level": "Intermediate",
-  "format": "Online",
-  "price": { "current": 199, "currency": "USD" },
-  "enrollment": { "startDate": "...", "spots": 20 },
-  "syllabus": ["Module 1", "Module 2"],
-  "instructor": { "name": "...", "avatar": {...} }
+renderPollResults() {
+  const { poll } = this._data;
+  const { options } = poll;
+  const totalVotes = options.reduce((sum, opt) => sum + opt.votes, 0);
+
+  return options.map(option => {
+    const percentage = totalVotes > 0
+      ? Math.round((option.votes / totalVotes) * 100)
+      : 0;
+    const isUserChoice = this.userVote?.includes(option.id);
+
+    return `
+      <div class="${getStyle('cc-poll-result', this._settings)}"
+           data-user-choice="${isUserChoice}">
+        <div>${option.headline} ${isUserChoice ? '✓' : ''}</div>
+        <div>${percentage}% (${option.votes} votes)</div>
+        <progress max="100" value="${percentage}"></progress>
+      </div>
+    `;
+  }).join('');
 }
 ```
 
-**Event (`event`):**
+## Runtime System (runtime.js - 254 lines)
+
+### Main Initialization
+
 ```javascript
-{
-  "startDate": "2025-08-15T19:00:00Z",
-  "endDate": "2025-08-15T22:00:00Z",
-  "location": { "name": "...", "address": {...} },
-  "offers": [{ "price": 50, "currency": "USD", "availability": "InStock" }],
-  "performer": [{ "name": "..." }]
+export async function initContentCards(dataSrc = 'data.json') {
+  // 1. Import all card components
+  const allCards = await importAllCards();
+
+  // 2. Setup global layout updater
+  window.updateLayoutSrcsets = () => initializeLayoutSrcsets();
+
+  // 3. Initialize layout srcsets
+  await initializeLayoutSrcsets();
+
+  // 4. Create layout position map
+  createLayoutPositionMap();
+
+  // 5. Load and bind card data
+  await initializeCards(dataSrc, allCards);
 }
 ```
 
-**Job (`job`):**
+### Card Registration
+
 ```javascript
-{
-  "company": { "name": "...", "logo": "..." },
-  "employmentType": "Full-time",
-  "location": { "addressLocality": "...", "remote": true },
-  "salary": { "minValue": 80000, "maxValue": 120000, "currency": "USD" },
-  "datePosted": "2025-07-01",
-  "validThrough": "2025-08-01",
-  "qualifications": ["5+ years experience"],
-  "responsibilities": ["Lead team"]
+async function initializeCards(dataSrc, allCards) {
+  // Fetch data
+  const response = await fetch(dataSrc);
+  const data = await response.json();
+  window._cardData = data;
+
+  // Register all card custom elements
+  for (const [name, CardClass] of Object.entries(allCards)) {
+    const tagName = name.replace(/Card$/, '-card').toLowerCase();
+    if (!customElements.get(tagName)) {
+      customElements.define(tagName, CardClass);
+    }
+  }
+
+  // Wait for all definitions
+  await Promise.all(
+    Object.keys(allCards).map(name => {
+      const tagName = name.replace(/Card$/, '-card').toLowerCase();
+      return customElements.whenDefined(tagName);
+    })
+  );
+
+  // Bind data to cards with [content] attribute
+  document.querySelectorAll('[content]').forEach(element => {
+    const contentId = element.getAttribute('content');
+    const cardData = data.find(item => item.id === contentId);
+
+    if (cardData) {
+      element._data = cardData;
+      element._settings = element._settings || {};
+    }
+  });
+
+  // Initialize popover listeners
+  initializePopoverToggleListeners(document);
 }
 ```
 
-**Membership (`membership`):**
+### Global State
+
 ```javascript
-{
-  "tier": "Premium",
-  "price": { "amount": 9.99, "currency": "USD", "period": "month" },
-  "benefits": ["Unlimited access", "Priority support"],
-  "limitations": ["Fair use policy"],
-  "trialPeriod": "14 days"
-}
+window._cardData           // Loaded JSON array
+window._layoutPositions    // Map<Element, { x, y, index }>
+window._layoutSrcsetData   // { srcsetBreakpoints, imageTransformConfig }
+window.updateLayoutSrcsets // Function to refresh layouts
 ```
 
-**Poll (`poll`):**
+## Schema.org Types Reference
+
+| Card Type | Schema.org Type | Nested Schemas |
+|-----------|-----------------|----------------|
+| ArticleCard | Article | Person, InteractionCounter |
+| NewsCard | NewsArticle | Person, InteractionCounter |
+| ProductCard | Product | Offer, AggregateRating |
+| EventCard | Event | Place, Organization, Offer |
+| RecipeCard | Recipe | HowToStep, ItemList |
+| ReviewCard | Review | Rating, Person, Product/Thing |
+| JobCard | JobPosting | MonetaryAmount, Organization, Place |
+| CourseCard | Course | CourseInstance, Offer, Person |
+| BookingCard | Reservation | Service, Organization |
+| PollCard | Question | Answer |
+| ProfileCard | Person | ContactPoint |
+| FaqCard | FAQPage | Question, Answer |
+| QuoteCard | Quotation | Person |
+| TimelineCard | EventSeries | — |
+| GalleryCard | ImageGallery | ImageObject |
+| StatisticCard | Observation | QuantitativeValue |
+| AchievementCard | EducationalOccupationalCredential | — |
+| AnnouncementCard | SpecialAnnouncement | — |
+| BusinessCard | LocalBusiness | PostalAddress, OpeningHoursSpecification |
+| ComparisonCard | ItemList | ListItem |
+| ContactCard | ContactPage | ContactPoint |
+| LocationCard | Place | GeoCoordinates, OpeningHoursSpecification |
+| MembershipCard | Offer | PriceSpecification |
+| SocialCard | SocialMediaPosting | InteractionCounter |
+| SoftwareCard | SoftwareApplication | Offer |
+
+## Gotchas & Edge Cases
+
+### 1. YouTube URL Extraction (utils.js:580-610)
+
+Triple fallback can still fail on malformed URLs:
 ```javascript
-{
-  "options": [
-    { "id": "opt1", "text": "Option A", "votes": 150 },
-    { "id": "opt2", "text": "Option B", "votes": 100 }
-  ],
-  "totalVotes": 250,
-  "endDate": "2025-07-30T00:00:00Z",
-  "allowMultiple": false
-}
+extractYouTubeId("not-a-url")  // Returns null
 ```
 
-**Product (`product`):**
+### 2. HTML Cleaning (utils.js:550)
+
+Removes ALL whitespace between tags - can break inline content:
 ```javascript
-{
-  "price": { "current": 49.99, "original": 69.99, "currency": "USD" },
-  "availability": "InStock",
-  "sku": "PROD-123",
-  "brand": "BrandName",
-  "rating": { "value": 4.5, "count": 120 }
-}
+cleanHTML("<span>Hello</span> <span>World</span>")
+// Returns: "<span>Hello</span><span>World</span>" (space lost)
 ```
 
-**Recipe (`recipe`):**
+### 3. Search Term Highlighting (utils.js - in renderTBody)
+
+RegEx special chars in search term will crash:
 ```javascript
-{
-  "prepTime": "PT15M",
-  "cookTime": "PT30M",
-  "totalTime": "PT45M",
-  "servings": "4",
-  "calories": 350,
-  "ingredients": ["1 cup flour", "2 eggs"],
-  "instructions": ["Step 1...", "Step 2..."],
-  "nutrition": { "calories": 350, "protein": "12g" }
-}
+searchterm = "user@example.com";
+cellValue.replace(new RegExp(`(${searchterm})`, 'gi'), '<mark>$1</mark>');
+// RegExp error: @ is special char
 ```
 
-**Review (`review`):**
+### 4. Formatter Security (utils.js:520)
+
+Formatters receive entire row, not just cell:
 ```javascript
-{
-  "itemReviewed": { "name": "...", "type": "Product" },
-  "rating": { "value": 4, "best": 5 },
-  "pros": ["Great quality"],
-  "cons": ["Expensive"],
-  "verified": true
-}
+const formatter = (value, row) => {
+  // Full row data exposed - security consideration
+};
 ```
 
-**Social (`social`):**
+### 5. Rating Precision (ProductCard.js, ReviewCard.js)
+
+Uses Math.round() which loses fractional precision:
 ```javascript
-{
-  "platform": "twitter",
-  "originalUrl": "https://twitter.com/...",
-  "replyTo": { "author": "...", "content": "..." },
-  "thread": [{ "content": "..." }]
-}
+const filledStars = Math.round(4.7);  // Returns 5, not 4.7
 ```
 
-**Software (`software`):**
+### 6. Currency Symbol Hardcoding (multiple cards)
+
+Only USD is handled specially:
 ```javascript
-{
-  "applicationCategory": "Productivity",
-  "version": "2.5.0",
-  "fileSize": "45 MB",
-  "operatingSystem": ["Windows", "macOS", "Linux"],
-  "developer": { "name": "...", "website": "..." },
-  "price": { "current": 29.99, "currency": "USD", "type": "one-time" },
-  "systemRequirements": { "ram": "4GB", "storage": "500MB", "processor": "..." },
-  "screenshots": ["url1.jpg", "url2.jpg"]
-}
+currency === 'USD' ? '$' : currency  // EUR shows as "EUR", not "€"
 ```
 
-**Statistic (`statistic`):**
+### 7. Availability Detection (ProductCard.js)
+
+Fragile string matching:
 ```javascript
-{
-  "value": 1234567,
-  "unit": "users",
-  "trend": { "direction": "up", "percentage": 15, "period": "month" },
-  "comparison": { "previous": 1073972, "baseline": "last month" },
-  "breakdown": [{ "label": "Mobile", "value": 60 }]
-}
+price.availability.toLowerCase().includes('out of stock')
+// Fails for "Sold Out", "Unavailable", etc.
 ```
 
-## Layout Modifiers
+### 8. Details State (RecipeCard.js)
 
-Apply via `layout` attribute:
+Ingredients details state not preserved across re-renders.
 
-```html
-<article-card layout="stack(po-bc ta-c pa1 ar16x9 ov1)"></article-card>
+### 9. Date Parsing (JobCard.js, EventCard.js)
+
+Uses `new Date(string)` without timezone handling:
+```javascript
+new Date("2025-07-15")  // May shift by timezone
 ```
 
-### Layout Types
+### 10. Poll Duplicate Submission (PollCard.js)
 
-| Modifier | Description |
-|----------|-------------|
-| `stack` | Stack content over media |
-| `columns(` | Side-by-side layout |
-| `rows(` | Vertical layout |
-| `flip` | Reverse element order |
+No debouncing on form submit - rapid clicks can submit multiple times.
 
-### Position Alignment
-
-| Modifier | Position |
-|----------|----------|
-| `po-tl` | Top left |
-| `po-tc` | Top center |
-| `po-tr` | Top right |
-| `po-cl` | Center left |
-| `po-cc` | Center center |
-| `po-cr` | Center right |
-| `po-bl` | Bottom left |
-| `po-bc` | Bottom center |
-| `po-br` | Bottom right |
-
-### Text Alignment
-
-| Modifier | Alignment |
-|----------|-----------|
-| `ta-l` | Left |
-| `ta-c` | Center |
-| `ta-r` | Right |
-
-### Aspect Ratios
-
-| Modifier | Ratio |
-|----------|-------|
-| `ar1x1` | Square (1:1) |
-| `ar4x3` | Standard (4:3) |
-| `ar3x4` | Portrait (3:4) |
-| `ar16x9` | Widescreen (16:9) |
-| `ar9x16` | Vertical video (9:16) |
-| `ar3x2` | Classic photo (3:2) |
-| `ar2x3` | Portrait photo (2:3) |
-| `ar5x4` | Large format (5:4) |
-| `ar4x5` | Portrait large (4:5) |
-| `ar21x9` | Ultrawide (21:9) |
-
-### Padding
-
-| Modifier | Value |
-|----------|-------|
-| `pa0` - `pa3` | All sides (0 to 3 units) |
-| `pi0` - `pi3` | Inline/horizontal |
-| `pb0` - `pb3` | Block/vertical |
-
-### Row Gap
-
-| Modifier | Value |
-|----------|-------|
-| `rg0` - `rg3` | Gap between rows |
-
-### Width
-
-| Modifier | Value |
-|----------|-------|
-| `w25`, `w33`, `w50`, `w66`, `w75`, `w100` | Percentage width |
-| `wfc` | Fit content |
-| `wmc` | Min content |
-
-### Theme & Effects
-
-| Modifier | Effect |
-|----------|--------|
-| `thd` | Dark theme |
-| `thl` | Light theme |
-| `ov1` | Enable media overlay |
-
-## CSS Class Convention
-
-All CSS classes use `cc-` prefix:
+## CSS Class Naming Convention
 
 ```css
-.cc                     /* Base card container */
-.cc-content             /* Content area wrapper */
-.cc-media               /* Media area wrapper */
-.cc-media-image         /* Image element */
-.cc-media-video         /* Video element */
-.cc-media-caption       /* Figure caption */
-.cc-headline            /* Primary heading */
+.cc                     /* Base card container (added by BaseCard) */
+.cc-{card-type}         /* Type-specific container */
+.cc-content             /* Content wrapper */
+.cc-media               /* Media container */
+.cc-media-image         /* Image wrapper */
+.cc-media-video         /* Video wrapper */
+.cc-media-youtube       /* YouTube wrapper */
+.cc-headline            /* Main heading */
 .cc-subheadline         /* Secondary heading */
-.cc-summary             /* Brief description */
+.cc-summary             /* Description paragraph */
 .cc-header              /* Category/date header */
-.cc-category            /* Category label */
-.cc-published           /* Publication date */
-.cc-reading-time        /* Reading time */
 .cc-authors             /* Authors container */
-.cc-author              /* Individual author */
-.cc-avatar              /* Author avatar */
-.cc-engagement          /* Engagement metrics */
-.cc-metric              /* Individual metric */
+.cc-engagement          /* Metrics container */
 .cc-tags                /* Tags container */
-.cc-tag                 /* Individual tag */
 .cc-actions             /* Actions container */
-.cc-action              /* Action button */
 .cc-links               /* Links container */
-.cc-link                /* Individual link */
 .cc-ribbon              /* Ribbon overlay */
 .cc-sticker             /* Sticker badge */
 .cc-popover             /* Popover container */
-
-/* Card-specific prefixes */
-.cc-achievement-*       /* Achievement card */
-.cc-announcement-*      /* Announcement card */
-.cc-booking-*           /* Booking card */
-.cc-business-*          /* Business card */
-.cc-comparison-*        /* Comparison card */
-.cc-contact-*           /* Contact card */
-.cc-course-*            /* Course card */
-.cc-event-*             /* Event card */
-.cc-faq-*               /* FAQ card */
-.cc-gallery-*           /* Gallery card */
-.cc-job-*               /* Job card */
-.cc-location-*          /* Location card */
-.cc-membership-*        /* Membership card */
-.cc-poll-*              /* Poll card */
-.cc-product-*           /* Product card */
-.cc-profile-*           /* Profile card */
-.cc-quote-*             /* Quote card */
-.cc-recipe-*            /* Recipe card */
-.cc-review-*            /* Review card */
-.cc-social-*            /* Social card */
-.cc-software-*          /* Software card */
-.cc-statistic-*         /* Statistic card */
-.cc-timeline-*          /* Timeline card */
+.cc-{type}-{element}    /* Type-specific elements */
 ```
 
-## Usage
+## Integration Points
 
-### Basic
-
-```html
-<article-card id="my-article"></article-card>
-
-<script type="module">
-  import { ArticleCard } from '@browser.style/content-card';
-
-  const card = document.getElementById('my-article');
-  card.dataset = {
-    data: {
-      type: 'article',
-      content: { headline: 'My Article', summary: '...' },
-      media: { sources: [{ type: 'image', src: '...', alt: '...' }] }
-    },
-    settings: { useSchema: true }
-  };
-</script>
-```
-
-### Dynamic Creation
+### Layout System Integration
 
 ```javascript
-import { ProductCard } from '@browser.style/content-card';
-
-const card = document.createElement('product-card');
-card.dataset = { data: productData, settings: { useSchema: true } };
-document.body.appendChild(card);
+import { calculateSizes } from '@browser.style/layout/src/srcsets.js';
 ```
 
-### Style Customization
+Uses `window._layoutSrcsetData` for responsive image optimization.
 
-```javascript
-const settings = {
-  styles: {
-    'cc-headline': 'text-xl font-bold',
-    'cc-summary': ['text-gray-600', 'leading-relaxed'],
-    'cc-action': { class: 'btn btn-primary', style: 'margin-top: 1rem' }
-  }
-};
-```
+### External Dependencies
 
-### Disable Schema.org
+- `@browser.style/layout` for srcset generation
+- No other external runtime dependencies
+- All card logic is self-contained
 
-```javascript
-card.dataset = {
-  data: {...},
-  settings: { useSchema: false }
-};
-```
+## Performance Considerations
 
-## Responsive Images
-
-Cards integrate with layout-aware srcset generation:
-
-```javascript
-const settings = {
-  srcsetBreakpoints: [280, 500, 720, 1080, 1440],
-  layoutIndex: 0,
-  imageTransformConfig: {
-    defaultProvider: 'cloudinary',
-    providers: {
-      cloudinary: {
-        urlPattern: { type: 'path', pathConfig: { prefix: '/c_', separator: ',', assignment: '_' } },
-        paramMap: { width: 'w', height: 'h', fit: 'c' }
-      }
-    },
-    defaultTransforms: { fit: 'fill', quality: 80 }
-  }
-};
-```
-
-## Events
-
-### BookingCard
-
-```javascript
-card.addEventListener('booking-slot-selected', (e) => {
-  console.log('Selected:', e.detail.date, e.detail.time);
-});
-```
-
-### PollCard
-
-```javascript
-card.addEventListener('poll-vote', (e) => {
-  console.log('Voted:', e.detail.optionId);
-});
-```
-
-## Schema.org Benefits
-
-- **Rich Snippets**: Enhanced search result displays
-- **SEO**: Better content understanding by search engines
-- **Voice Search**: Compatibility with voice assistants
-- **Social Sharing**: Better preview cards
+- **Zero JavaScript for display**: Cards are static HTML after render
+- **Lazy image loading**: Default `loading="lazy"` attribute
+- **No re-renders**: Static HTML after initial render (except interactive cards)
+- **Event delegation**: Single listener for popovers
+- **Dynamic imports**: Cards loaded on-demand via runtime.js
+- **Srcset generation**: Happens once at render, not on resize
 
 ## Debugging Tips
 
-1. **Card not rendering?** Check `type` matches registered custom element
-2. **Schema not appearing?** Verify `useSchema: true` in settings
-3. **Styles not applying?** Check `getStyle()` and settings.styles
-4. **Images broken?** Verify media.sources structure
-5. **Layout not working?** Check `layout` attribute syntax
-6. **Custom element not defined?** Ensure card JS is imported
-
-## Browser Support
-
-- Modern browsers with Custom Elements v1
-- ES Modules support
-- CSS Grid and Custom Properties
+1. **Card not rendering?** Check `_data` is set before `connectedCallback`
+2. **Schema not appearing?** Verify `useSchema !== false` in settings
+3. **Styles not applying?** Check `getStyle()` output and CSS specificity
+4. **Images broken?** Verify `media.sources` structure has `src` and `type`
+5. **YouTube not loading?** Check `extractYouTubeId()` returns valid ID
+6. **Popover not working?** Verify `initializePopoverToggleListeners()` was called
+7. **Custom element not defined?** Ensure card module is imported before use

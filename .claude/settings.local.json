@@ -3,7 +3,14 @@
     "allow": [
       "Skill(superpowers:brainstorming)",
       "Skill(superpowers:brainstorming:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(while read f)",
+      "Bash(do wc -l \"$f\")",
+      "Bash(done)"
     ]
   }
 }
