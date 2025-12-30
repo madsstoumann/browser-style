@@ -30,9 +30,66 @@ export function attachCustomEventHandlers(context) {
 		const selected = [...context.state.selected].map(key => {
 			const tempNode = { parentNode: { dataset: { keys: key } } };
 			return getObj(context.state, tempNode);
-		});
+		}).filter(item => item !== null);
+		context.dispatch('dg:selected', selected);
+	});
+
+	// Remove rows based on keys
+	context.addEventListener('dg:remove', (event) => {
+		const { detail } = event;
 		
-		context.dispatch('dg:selected', { detail: selected.filter(item => item !== null) });
+		// Check if component has keys defined in thead
+		const hasKeys = context.state.thead.some(col => col.key);
+		if (!hasKeys) {
+			context.log('Cannot remove rows: no "key" field defined in thead', '#F00');
+			return;
+		}
+
+		// detail should contain keys (array of composite key strings)
+		const keysToRemove = Array.isArray(detail) ? detail : (detail.keys || []);
+		
+		if (!keysToRemove.length) {
+			context.log('No keys provided for removal', '#F00');
+			return;
+		}
+
+		// Capture deleted rows before filtering
+		const deletedRows = [];
+		const initialLength = context.state.tbody.length;
+
+		// Filter out rows matching the keys
+		context.state.tbody = context.state.tbody.filter(row => {
+			const keyFields = context.state.thead.filter(col => col.key).map(col => col.field);
+			const rowKey = keyFields.map(field => row[field]).join(',');
+			const shouldRemove = keysToRemove.includes(rowKey);
+			if (shouldRemove) {
+				deletedRows.push(row);
+			}
+			return !shouldRemove;
+		});
+
+		// Remove from selection set
+		keysToRemove.forEach(key => context.state.selected.delete(key));
+
+		// Update state
+		context.state.rows = context.state.tbody.length;
+		context.state.items = context.state.tbody.length;
+		context.state.pages = Math.ceil(context.state.rows / context.state.itemsPerPage);
+		context.form.elements.selected.value = context.state.selected.size;
+
+		// If current page is beyond available pages, go to last page
+		if (context.state.page >= context.state.pages && context.state.pages > 0) {
+			context.state.page = context.state.pages - 1;
+		}
+
+		renderTBody(context);
+
+		const removedCount = initialLength - context.state.tbody.length;
+		context.dispatch('dg:removed', { 
+			count: removedCount, 
+			rows: deletedRows,
+			remaining: context.state.rows 
+		});
 	});
 }
 
@@ -127,6 +184,28 @@ function handleTableClick(event, context) {
 		if (state.rowIndex === 0 && node.nodeName === 'TH') {
 			const index = node.dataset.sortIndex;
 			handleSorting(context, index);
+		}
+
+		// Dispatch dg:rowclick on tbody row click
+		if (node.nodeName === 'TD') {
+			const row = node.closest('tr');
+			if (row && row.parentNode.nodeName === 'TBODY') {
+				const { row: rowData, rowIndex } = getObj(state, node) || {};
+				const keyValueObject = getKeyValueObject(state, node);
+				
+				if (rowData && rowIndex !== undefined) {
+					const eventData = {
+						rowIndex,
+						row: rowData,
+						pageIndex: state.page
+					};
+					// Add keys if they exist
+					if (keyValueObject && Object.keys(keyValueObject).length > 0) {
+						eventData.keys = keyValueObject;
+					}
+					context.dispatch('dg:rowclick', eventData);
+				}
+			}
 		}
 
 		// Handle cell-specific events

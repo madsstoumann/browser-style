@@ -8,6 +8,8 @@
 		--ui-table-tr-hover: var(--ButtonFace);
 		--ui-table-outline-bdc: var(--ButtonText);
 		--ui-table-outline-bdw: 2px;
+		--ui-table-tr-active-bg: var(--AccentColor);
+		--ui-table-tr-active-color: var(--AccentColorText);
 
 		border-collapse: separate;
 		border-spacing: var(--ui-table-bdsp-x, 0) var(--ui-table-bdsp-y, 0);
@@ -95,6 +97,14 @@
 		&.--zebrarow-odd tr:nth-of-type(odd) td { --ui-table-td-bg: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
 		&:is(.--th-light, .--zebrarow-even) th { --ui-table-th-bg: var(--ui-table-zebra-bgc, var(--CanvasGray)); }
 
+		/* Row modifiers */
+		tr {
+			&.--row-active {
+				--ui-table-td-bg: var(--ui-table-tr-active-bg);
+				color: var(--ui-table-tr-active-color);
+			}
+		}
+
 		/* Hover */
 		@media (hover: hover) {
 			&.--hover-all,
@@ -172,6 +182,10 @@
 				tr:has(td:is(:focus-visible,:hover)) {
 					--ui-table-td-bg: var(--ui-table-tr-hover);
 					&.--hover-td & td:not(:is(:focus-visible,:hover)) { --ui-table-td-bg: var(--ui-table-td-hover); }
+				}
+				/* Prevent hover from overriding active row */
+				tr.--row-active:has(td:is(:focus-visible,:hover)) {
+					--ui-table-td-bg: var(--ui-table-tr-active-bg);
 				}
 			}
 			&.--hover-tr-outline {

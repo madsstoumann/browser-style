@@ -1,4 +1,5 @@
 import { handleSorting } from './data.js';
+import { getKeyValueObject, getObj } from './utility.js';
 
 export default function handleKeyboardEvents(event, context) {
 	const { key, ctrlKey, metaKey, shiftKey } = event;
@@ -149,9 +150,21 @@ export default function handleKeyboardEvents(event, context) {
 
 		if (shiftKey) {
 			// Trigger dg:rowclick when Shift + Enter is pressed
-			if (row && row.dataset.uid) {
-				event.preventDefault();
-				context.dispatch('dg:rowclick', { detail: { id: row.dataset.uid } });
+			event.preventDefault();
+			const { row: rowData, rowIndex } = getObj(context.state, node) || {};
+			
+			if (rowData && rowIndex !== undefined) {
+				const keyValueObject = getKeyValueObject(context.state, node);
+				const eventData = {
+					rowIndex,
+					row: rowData,
+					pageIndex: context.state.page
+				};
+				// Add keys if they exist
+				if (keyValueObject && Object.keys(keyValueObject).length > 0) {
+					eventData.keys = keyValueObject;
+				}
+				context.dispatch('dg:rowclick', eventData);
 			}
 		} else if (ctrlKey || metaKey) {
 			// Trigger the popover when Ctrl + Enter (or Cmd + Enter) is pressed

@@ -1289,7 +1289,9 @@ dispatch(name, detail) {
 |-------|------|--------|---------|
 | `dg:loaded` | After `connectedCallback` completes | `{ message: 'DataGrid is ready' }` | Yes |
 | `dg:selection` | After selection changes | `Set<string>` of keys | No |
-| `dg:selected` | After `dg:getselected` received | `{ detail: Array }` of row objects | No |
+| `dg:selected` | After `dg:getselected` received | Array of `{ row, rowIndex }` objects | No |
+| `dg:rowclick` | Row clicked or Shift+Enter pressed | `{ rowIndex, row, pageIndex, keys? }` | No |
+| `dg:removed` | After rows deleted via `dg:remove` | `{ count, rows, remaining }` | No |
 | `dg:cellchange` | After editable cell updated | `{ field, newValue, oldValue, row, rowIndex }` | No |
 | `dg:itemsperpage` | After items per page changes | `state` object | No |
 | `dg:requestpagechange` | In external nav mode, user navigates | `{ page, direction }` | No |
@@ -1302,7 +1304,63 @@ dispatch(name, detail) {
 |-------|--------|---------|
 | `dg:append` | Append rows to tbody | `attachCustomEventHandlers` (events.js:8-14) |
 | `dg:clearselected` | Clear all selections | `attachCustomEventHandlers` (events.js:17-26) |
-| `dg:getselected` | Retrieve selected rows | `attachCustomEventHandlers` (events.js:29-36) |
+| `dg:getselected` | Retrieve selected rows | `attachCustomEventHandlers` (events.js:29-37) |
+| `dg:remove` | Remove rows by keys | `attachCustomEventHandlers` (events.js:40-87) |
+
+**Recent Changes (2025-12-30):**
+
+**1. dg:rowclick Enhancement**
+- **What changed:** Now triggers on both click AND Shift+Enter
+- **Before:** Only Shift+Enter, required `data-uid` attribute (broken)
+- **After:** Works with any tbody row click or Shift+Enter, uses `data-keys` attribute
+- **Event detail:**
+  ```javascript
+  {
+    rowIndex: 7,           // Position in state.tbody
+    row: { ...rowData },   // Full row object
+    pageIndex: 2,          // Current page
+    keys: { firstname: "John" }  // Only if keys defined in thead
+  }
+  ```
+- **Changed files:** events.js (handleTableClick), events.keyboard.js (handleEnterKey, added imports)
+- **Key benefit:** No configuration needed, works without keys defined
+
+**2. dg:remove Implementation**
+- **What:** New event to delete rows from state.tbody
+- **Requires:** At least one column with `key: true` in thead
+- **Usage:**
+  ```javascript
+  grid.dispatchEvent(new CustomEvent('dg:remove', { 
+    detail: ['compositeKey1', 'compositeKey2'] 
+  }));
+  ```
+- **Process:**
+  1. Validates keys exist in thead
+  2. Filters matching rows from state.tbody
+  3. Updates state.rows, state.items, state.pages
+  4. Removes keys from state.selected
+  5. Handles pagination edge case (adjusts page if needed)
+  6. Re-renders table
+  7. Dispatches `dg:removed` event
+- **Event detail (dg:removed):**
+  ```javascript
+  {
+    count: 3,                    // Number deleted
+    rows: [{...}, {...}],        // Actual deleted row objects
+    remaining: 4207              // Rows left in table
+  }
+  ```
+- **Changed files:** events.js (attachCustomEventHandlers)
+
+**3. dg:selected Fix**
+- **What changed:** Fixed double-wrapped event detail
+- **Before:** `context.dispatch('dg:selected', { detail: [...] })`
+- **After:** `context.dispatch('dg:selected', [...])`
+- **Why:** `dispatch()` method already wraps second parameter as `detail`
+- **Impact:** `event.detail` now correctly returns array of `{ row, rowIndex }` objects
+- **Changed files:** events.js (dg:getselected handler)
+
+**Events listened FOR by component:**
 
 **Gotcha: Event timing**
 ```javascript

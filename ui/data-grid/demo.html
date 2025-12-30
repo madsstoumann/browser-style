@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Data Grid - Event Testing</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Data Grid Event Testing Demo">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<link rel="stylesheet" href="./../table/index.css">
+	<link rel="stylesheet" href="./../table-expand/index.css">
+	<link rel="stylesheet" href="./index.css">
+	<style>
+		/* Demo */
+		data-grid b { font-weight: 500; }
+		data-grid .c-gray { color: var(--GrayText); }
+	</style>
+</head>
+<body>
+	<h1>UI: Data Grid - Event Testing</h1>
+
+	<h2>Event Playground</h2>
+	<p>Test all events. Click on rows or cells to trigger events. Check the <code>console</code>.</p>
+
+	<data-grid
+		debug
+		id="grid"
+		itemsperpage="10"
+		data="./data/temp.json"
+		selectable
+		stickycols="0,2,4"
+		layoutfixed="false">
+	</data-grid>
+
+	<br>
+	<h2>Test Actions</h2>
+	
+	<button id="getselected" type="button">dg:getselected</button>
+	<button id="clearselected" type="button">dg:clearselected</button>
+	<button id="append" type="button">dg:append</button>
+	<button id="removeselected" type="button" style="color: #c00;">dg:remove selected</button>
+	<button id="copycsv" type="button">Copy selected as CSV</button>
+
+	<script type="module" src="index.js"></script>
+
+	<script>
+		const grid = document.getElementById('grid');
+		const getSelected = document.getElementById('getselected');
+		const clearSelected = document.getElementById('clearselected');
+		const append = document.getElementById('append');
+		const removeSelected = document.getElementById('removeselected');
+		const copyCSV = document.getElementById('copycsv');
+
+		// Test button actions
+		getSelected.addEventListener('click', () => {
+			grid.dispatchEvent(new CustomEvent('dg:getselected'));
+		});
+
+		clearSelected.addEventListener('click', () => {
+			grid.dispatchEvent(new CustomEvent('dg:clearselected'));
+		});
+
+		// Data to append
+		const dataToAppend = [
+			{
+				firstname: "Ugo",
+				lastname: "Quaisse",
+				email: "ugo@quaisse.fr",
+				gender: "Male",
+				city: "Paris",
+				country: "France"
+			},
+			{
+				firstname: "Steven",
+				lastname: "Singh",
+				email: "steven@singh.dk",
+				gender: "Male",
+				city: "Copenhagen",
+				country: "Denmark"
+			}
+		];
+
+		append.addEventListener('click', () => {
+			grid.dispatchEvent(new CustomEvent('dg:append', { detail: dataToAppend }));
+		});
+
+		// Remove selected rows
+		removeSelected.addEventListener('click', () => {
+			const keysToRemove = [...grid.state.selected];
+			if (keysToRemove.length === 0) {
+				console.log('No rows selected to remove');
+				return;
+			}
+			grid.dispatchEvent(new CustomEvent('dg:remove', { detail: keysToRemove }));
+		});
+
+		// Copy selected rows as CSV
+		copyCSV.addEventListener('click', () => {
+			if (grid.state.selected.size === 0) {
+				console.log('No rows selected');
+				return;
+			}
+			console.log('Getting selected rows, keys:', [...grid.state.selected]);
+
+			// Get selected rows
+			grid.dispatchEvent(new CustomEvent('dg:getselected'));
+		});
+
+		// Convert rows to CSV and copy to clipboard
+		grid.addEventListener('dg:selected', (event) => {
+			const selectedItems = event.detail;
+			console.log('dg:selected event received, items:', selectedItems);
+			
+			if (selectedItems.length === 0) {
+				console.log('No rows in selected event');
+				return;
+			}
+
+			// Extract just the row objects
+			const selectedRows = selectedItems.map(item => item.row);
+
+			// Get all visible column headers
+			const headers = grid.state.thead
+				.filter(col => !col.hidden)
+				.map(col => col.label || col.field);
+
+			// Helper to escape CSV values
+			const escapeCSV = (value) => {
+				if (value === null || value === undefined) return '';
+				const str = String(value);
+				if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+					return `"${str.replace(/"/g, '""')}"`;
+				}
+				return str;
+			};
+
+			// Build CSV
+			const csvLines = [
+				headers.map(escapeCSV).join(','),
+				...selectedRows.map(row =>
+					grid.state.thead
+						.filter(col => !col.hidden)
+						.map(col => escapeCSV(row[col.field]))
+						.join(',')
+				)
+			];
+
+			const csv = csvLines.join('\n');
+
+			// Copy to clipboard
+			navigator.clipboard.writeText(csv).then(() => {
+				console.log('CSV copied to clipboard:', csv);
+				console.log(`${selectedRows.length} rows copied`);
+			}).catch(err => {
+				console.error('Failed to copy CSV:', err);
+			});
+		});
+
+		// Log rowclick event
+		grid.addEventListener('dg:rowclick', (event) => {
+			console.log('dg:rowclick', event.detail);
+
+			// Toggle --row-active on the clicked row
+			const table = grid.querySelector('table');
+			const { rowIndex } = event.detail;
+
+			// Clear previous active rows
+			table.querySelectorAll('tr.--row-active').forEach(row => {
+				row.classList.remove('--row-active');
+			});
+
+			// Set new active row
+			const row = table.querySelector(`tbody tr:nth-child(${rowIndex + 1})`);
+			if (row) {
+				row.classList.add('--row-active');
+			}
+		});
+
+		// Log removed event
+		grid.addEventListener('dg:removed', (event) => {
+			console.log('dg:removed - Deleted rows:', event.detail.rows);
+			console.log('dg:removed - Summary:', {
+				deletedCount: event.detail.count,
+				remainingRows: event.detail.remaining,
+				rows: event.detail.rows
+			});
+		});
+
+	</script>
+</body>
+</html>

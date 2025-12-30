@@ -9,8 +9,8 @@ import { printTable } from './modules/print.js';
  * Data Grid
  * Wraps a HTML table element and adds functionality for sorting, pagination, searching and selection.
  * @author Mads Stoumann
- * @version 1.0.35
- * @summary 18-02-2025
+ * @version 1.0.36
+ * @summary 30-12-2025
  * @class
  * @extends {HTMLElement}
  */

@@ -57,7 +57,6 @@ tab-cordion/
 │   ├── tabs.css     282 lines   Tabs transformation
 │   ├── transitions.css 69 lines Hover effects
 │   └── fixes.css    21 lines    Safari/WebKit fixes
-├── index_v0.css     ---         Legacy version
 ├── demo.html        ---         Live examples
 └── claude.md        ---         This file
 ```
