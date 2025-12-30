@@ -24,7 +24,7 @@ The grid can be navigated by keyboard, using the [W3C standard for grids](https:
 
 | Key Combination   | Action                                 |
 |-------------------|----------------------------------------|
-| `Cmd/Ctrl + p`    | If `printable` is set, printing can be triggered with this. |
+| `Cmd/Ctrl + p`    | Triggers print preview/dialog if there is data to print. |
 
 ## Header Cells Only
 

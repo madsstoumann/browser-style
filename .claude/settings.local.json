@@ -10,7 +10,8 @@
       "Bash(cat:*)",
       "Bash(while read f)",
       "Bash(do wc -l \"$f\")",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(git -C /Users/madsstoumann/Library/CloudStorage/Dropbox/Projects/browser-style status --short ui/*/claude.md)"
     ]
   }
 }

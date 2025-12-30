@@ -2,6 +2,8 @@
 
 A web component for print preview and page layout control with template support.
 
+> **Note**: Only one `<print-preview>` element is allowed per page, and it must be a direct child of `<body>`.
+
 ## Installation
 
 ```bash

@@ -1,0 +1,66 @@
+site_name: DataGrid Documentation
+site_description: Comprehensive documentation for @browser.style/data-grid component
+site_author: Mads Stoumann
+repo_url: https://github.com/madsstoumann/browser-style
+repo_name: madsstoumann/browser-style
+edit_uri: edit/main/ui/data-grid/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - tables
+
+nav:
+  - Home:
+    - Overview: index.md
+    - Getting Started: getting-started.md
+    - Architecture: architecture.md
+  
+  - Usage:
+    - Attributes: attributes.md
+    - Methods: methods.md
+    - Configuration: configuration.md
+  
+  - Interaction:
+    - Events: events.md
+    - Keyboard Shortcuts: keyboard-shortcuts.md
+  
+  - Advanced:
+    - State Management: state-management.md
+    - Debugging: debugging.md
+  
+  - Reference:
+    - Browser Support: browser-support.md

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Documentation
+- **Added comprehensive MkDocs documentation system** (2025-12-31)
+  - Created `mkdocs.yml` with complete navigation structure
+  - Added detailed `index.md` with features, installation, and architecture overview
+  - Created `getting-started.md` with setup instructions and examples
+  - Added `architecture.md` documenting 8 core modules and design principles
+  - Created `state-management.md` explaining state structure and composite keys
+  - Expanded `events.md` with all events, lifecycle, and integration patterns
+  - Added `configuration.md` for formatters, i18n, and advanced settings
+  - Created `methods.md` documenting all public API methods
+  - Added `debugging.md` with troubleshooting and debugging strategies
+  - Created `browser-support.md` with compatibility details and polyfills
+  - All documentation includes practical examples and usage patterns
+
 ### Changed
 - Style fixes in `index.css` (2025-12-30) - [6945b10](https://github.com/madsstoumann/browser-style/commit/6945b105b0b7aef53ccc3a597c9d9b800bf732f9)
 
@@ -32,4 +46,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-_Note: This changelog was last updated on 2025-12-30 based on commits from the repository._
+_Note: This changelog was last updated on 2025-12-31 based on commits from the repository._
+

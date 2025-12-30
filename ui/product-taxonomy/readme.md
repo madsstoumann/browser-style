@@ -148,10 +148,10 @@ Dynamic status updates based on component events. Automatically managed.
 - **Example:** "Loading...", "Found 23 results", "No results found"
 
 ```html
-<product-taxonomy data="google.txt">
+<auto-suggest id="my-taxonomy">
   <small slot="info"></small>    <!-- Persistent info -->
   <small slot="status"></small>  <!-- Dynamic status -->
-</product-taxonomy>
+</auto-suggest>
 ```
 
 Both slots are optional. If provided, they will be automatically updated by the component.

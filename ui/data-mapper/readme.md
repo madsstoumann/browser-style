@@ -55,8 +55,7 @@ import '@browser.style/data-mapper';
 
 ## Events
 
-- `dm:processed`: Fired when file processing is complete. The `detail` property contains the processed data array.
-- `dm:imported`: Fired after successful import operation. The `detail` property contains the processed data.
+- `dm:imported`: Fired after successful import operation. The `detail` property contains the processed data array.
 - `dm:error`: Fired when an error occurs. The `detail` property contains the error message.
 - `dm:close`: Can be dispatched to close the mapping interface.
 
