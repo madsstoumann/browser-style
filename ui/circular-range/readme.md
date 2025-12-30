@@ -108,14 +108,62 @@ You can create partial sliders, or arcs, by setting the `start` and `end` angles
 | `min`        | The minimum value of the slider.                                                                           | `0`       |
 | `max`        | The maximum value of the slider.                                                                           | `100`     |
 | `step`       | The stepping interval for the value.                                                                       | `1`       |
-| `shift-step` | The stepping interval when using arrow keys with the Shift key.                                            | `step * 10` |
+| `shift-step` | The stepping interval when using arrow keys with the Shift key.                                            | `step`    |
 | `active-label` | The value of the label to be styled as active.                                                             | `null`    |
 | `start`      | The start angle of the circular range in degrees.                                                          | `0`       |
 | `end`        | The end angle of the circular range in degrees.                                                            | `360`     |
+| `reverse`    | When present, reverses the value direction (fill grows counter-clockwise).                                 | `false`   |
 | `labels`     | Comma-separated value-label pairs to display around the slider. Example: `0:Low,50:Mid,100:High`.           | `null`    |
 | `indices`    | The number of tick marks (indices) to display along the track. To get an indice for each step, you can calculate it as `(max - min) / step + 1`. For example, with `min="0"`, `max="100"`, and `step="5"`, you would need `(100 - 0) / 5 + 1 = 21` indices. | `0`       |
 | `suffix`     | A string to append to the displayed value.                                                                 | `""`      |
 | `enable-min` | A boolean attribute that, when present, applies a different style to the thumb when the value is at minimum. | `false`   |
+| `name`       | Form field name for form association.                                                                      | `""`      |
+
+## Properties
+
+| Property       | Type   | Description                                      |
+|----------------|--------|--------------------------------------------------|
+| `value`        | Number | Get/set the current value.                       |
+| `valueAsNumber`| Number | Get the current value as a number (read-only).   |
+| `name`         | String | Get/set the form field name.                     |
+
+## Events
+
+| Event   | Bubbles | Description                          |
+|---------|---------|--------------------------------------|
+| `input` | Yes     | Fired whenever the value changes.    |
+
+## Form Association
+
+The component is form-associated and can be used within forms:
+
+```html
+<form>
+  <circular-range name="temperature" min="0" max="100" value="50"></circular-range>
+  <button type="submit">Submit</button>
+</form>
+```
+
+```javascript
+const form = document.querySelector('form');
+const formData = new FormData(form);
+console.log(formData.get('temperature')); // "50"
+```
+
+## Keyboard Navigation
+
+| Key                | Action                              |
+|--------------------|-------------------------------------|
+| `ArrowUp` / `ArrowRight`   | Increase value by step      |
+| `ArrowDown` / `ArrowLeft`  | Decrease value by step      |
+| `Shift` + Arrow    | Increase/decrease by shift-step     |
+
+## Accessibility
+
+- Uses `role="slider"` for screen reader compatibility
+- Supports `aria-valuemin`, `aria-valuemax`, and `aria-valuenow`
+- Fully keyboard navigable
+- Focus indicator on the thumb when focused
 
 ## Styling
 
@@ -123,21 +171,24 @@ You can create partial sliders, or arcs, by setting the `start` and `end` angles
 
 You can style the component's internal elements using the `::part()` pseudo-element.
 
-| Part          | Description                  |
-|---------------|------------------------------|
-| `track`       | The background track.        |
-| `fill`        | The value fill indicator.    |
-| `thumb`       | The draggable thumb element. |
-| `indices`     | The container for the indices. |
-| `labels`      | The container for the labels.  |
-| `first-label` | The first label element.     |
-| `last-label`  | The last label element.      |
-| `active-label`| The currently active label.  |
+| Part            | Description                              |
+|-----------------|------------------------------------------|
+| `track`         | The background track.                    |
+| `fill`          | The value fill indicator.                |
+| `thumb`         | The draggable thumb element.             |
+| `indices`       | The container for the indices.           |
+| `labels`        | The container for the labels.            |
+| `label-{value}` | Individual label by value (e.g., `label-50`). |
+| `active-label`  | The currently active label.              |
 
 Example:
 ```css
 circular-range::part(thumb) {
   background-color: red;
+}
+
+circular-range::part(label-100) {
+  font-weight: bold;
 }
 ```
 
@@ -155,7 +206,7 @@ Customize the component's appearance using these CSS custom properties.
 | `--circular-range-fill-middle`     | The middle color of the fill gradient.       | `var(--circular-range-fill)` |
 | `--circular-range-fill-start`      | The start color of the fill gradient.        | `var(--circular-range-fill)` |
 | `--circular-range-indice-bdrs`     | The border-radius of the indices.            | `0`         |
-| `--circular-range-indice-c`        | The color of the indices.                    | `#d9d9d9`   |
+| `--circular-range-indice-c`        | The color of the indices.                    | `#999`      |
 | `--circular-range-indice-h`        | The height of the indices.                   | `5px`       |
 | `--circular-range-indice-w`        | The width of the indices.                    | `1px`       |
 | `--circular-range-indices-w`       | The width of the indices container.          | `80%`       |
@@ -175,11 +226,5 @@ Customize the component's appearance using these CSS custom properties.
 | `--circular-range-thumb-min`       | The color of the thumb when at the minimum value and `enable-min` is set. | `#e0e0e0`   |
 | `--circular-range-track`           | The color of the track.                      | `#f0f0f0`   |
 | `--circular-range-track-sz`        | The size (thickness) of the track.           | `1.5rem`    |
-| `--circular-range-w`               | The width of the component.                  | `320px`     |
-
-## Parts
-
-- `label-[value]` - The label for a specific value.
-- `active-label` - The currently active label.
-- `first-label` - The first label.
-- `last-label` - The last label.
+| `--circular-range-w`               | The width of the component.                  | `100%`      |
+| `--circular-range-maw`             | The maximum width of the component.          | `320px`     |

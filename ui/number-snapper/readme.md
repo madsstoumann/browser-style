@@ -4,7 +4,17 @@ A customizable, accessible web component that transforms the standard range inpu
 
 ## Installation
 
+```bash
+npm install @browser.style/number-snapper
+```
+
 ### Load the Component
+
+```javascript
+import '@browser.style/number-snapper';
+```
+
+Or via script tag:
 
 ```html
 <script type="module" src="./index.js"></script>
