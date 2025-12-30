@@ -48,20 +48,12 @@ Additionally, the `render` object can include settings for advanced controls lik
 
 ## Built-in Render Methods
 
+DataEntry provides the following built-in render methods for different field types:
 
-input
-select
-richtext
-array-details
-autosuggest
-array-units
-array-link
-media
-barcode
+### Basic Input Methods
 
-
-### 1. **Input**
-Renders a basic input field (e.g., text, number, date, etc.).
+#### 1. **input**
+Renders a basic input field (text, number, date, etc.).
 
 ```json
 {
@@ -75,35 +67,35 @@ Renders a basic input field (e.g., text, number, date, etc.).
 }
 ```
 
-- **Attributes**: Specify standard HTML attributes like `type`, `placeholder`, `disabled`, etc.
+**Attributes**: Supports all standard HTML input attributes like `type`, `placeholder`, `disabled`, `min`, `max`, `pattern`, etc.
 
-## Select Fields
-
-Select fields are versatile and can be configured in multiple ways to suit your data source and requirements. When you use the `select` method in your render object, you can define options in several ways:
-
-### 1. **Static Options**
-
-Provide a static array of options directly in the schema.
-
-### 1. Basic Select with Instance Lookup
+**Formatter Support**: Use `formatter` property to transform display values:
 ```json
 {
   "render": {
-    "method": "select",
-    "options": "condition",
+    "method": "input",
+    "formatter": "${d:formatCurrency ${value} USD}"
+  }
+}
+```
+
+#### 2. **textarea**
+Renders a multi-line text input.
+
+```json
+{
+  "render": {
+    "method": "textarea",
     "attributes": [
-      { "name": "condition" }
+      { "rows": "5" },
+      { "placeholder": "Enter description" }
     ]
   }
 }
 ```
 
-- **Options**: The `options` field defines where the options will be pulled from (e.g., from a data source).
-
-> TODO!
-  
-### 2. **Richtext**
-Renders a rich text editor with various formatting options.
+#### 3. **richtext**
+Renders a WYSIWYG rich text editor with formatting options.
 
 ```json
 {
@@ -116,7 +108,150 @@ Renders a rich text editor with various formatting options.
 }
 ```
 
-### 3. **Array-Details**
+**Note**: Requires the `@browser.style/rich-text` component.
+
+#### 4. **link**
+Renders a clickable hyperlink.
+
+```json
+{
+  "render": {
+    "method": "link",
+    "attributes": [
+      { "target": "_blank" }
+    ]
+  }
+}
+```
+
+#### 5. **media**
+The `media` method is used to render media elements such as images or videos with preview. This method is useful for managing media content with specific properties.
+
+#### Example:
+```json
+{
+  "render": {
+    "method": "media",
+    "attributes": [
+      { "alt": "Product image" }
+    ]
+  }
+}
+```
+
+#### Breakdown:
+- Renders media elements (images, videos) with appropriate HTML tags
+- **attributes**: Standard HTML attributes like `alt`, `width`, `height`, etc.
+- Automatically detects media type based on file extension or MIME type
+
+### Selection Methods
+
+#### 6. **select**
+Renders a dropdown select field with options from lookup data or schema.
+
+```json
+{
+  "render": {
+    "method": "select",
+    "options": "condition",
+    "attributes": [
+      { "name": "condition" }
+    ]
+  }
+}
+```
+
+**Option Sources**:
+- `options`: Reference to lookup data key
+- Static array in schema
+- Dynamic options via `selectedOption` property
+
+**Advanced Features**:
+- `selectedOption`: Add a default option (e.g., "Select...")
+- `selectedOptionDisabled`: Make default option unselectable
+- `action`: Add action button next to select
+- `label`: Template for option display text
+- `value`: Field to use for option values
+
+### Component-Based Methods
+
+#### 7. **autosuggest**
+The `autosuggest` control is a more complex render method that allows you to enter text and receive suggestions based on data from an external API. This method is useful for fields like address lookup or selecting from a large dataset.
+
+#### Example:
+```json
+{
+  "render": {
+    "method": "autosuggest",
+    "autosuggest": {
+      "api": "https://api.example.com/search?q=",
+      "apiArrayPath": "results",
+      "apiValuePath": "id",
+      "apiDisplayPath": "name",
+      "label": "Search Products",
+      "mapping": {
+        "product_id": "id",
+        "product_name": "name"
+      },
+      "syncInstance": true
+    }
+  }
+}
+```
+
+#### Breakdown:
+- **api**: The URL of the API that returns suggestions.
+- **apiArrayPath**: The path to the array in the API response that contains the suggestion data.
+- **apiValuePath**: The path to the specific value to be stored (e.g., the ID of the product).
+- **apiDisplayPath**: The path to the display value to be shown in the dropdown (e.g., the product name).
+- **mapping**: Defines how values from the API response map to the fields in the form (e.g., product ID and name).
+- **syncInstance**: A boolean that indicates whether the form instance should be synchronized with the selected value from the suggestions.
+
+**Note**: Requires the `@browser.style/auto-suggest` component.
+
+#### 8. **barcode**
+The `barcode` method enables barcode scanning functionality within your forms. It is typically used in combination with array render methods like `array-units` to add items based on scanned barcodes.
+
+#### Example:
+```json
+{
+  "render": {
+    "method": "barcode",
+    "barcode": {
+      "api": "https://api.example.com/products/",
+      "apiArrayPath": "data",
+      "mapping": {
+        "sku": "sku",
+        "name": "name"
+      }
+    }
+  }
+}
+```
+
+#### Breakdown:
+- **api**: The URL of the API that returns product information based on the scanned barcode.
+- **apiArrayPath**: The path to the array in the API response that contains the product data.
+- **mapping**: Defines how values from the API response map to the fields in the form (e.g., product SKU and name).
+
+**Note**: Requires the `@browser.style/barcode-scanner` component.
+
+#### 9. **datamapper**
+Renders a file upload interface for CSV/Excel import.
+
+```json
+{
+  "render": {
+    "method": "datamapper"
+  }
+}
+```
+
+**Note**: Requires the `@browser.style/data-mapper` component.
+
+### Array Rendering Methods
+
+#### 10. **array-details**
 The `array-details` method is used to render arrays of data where each item can be expanded or collapsed using a `<details>` element. This method requires additional `label` and `value` properties to define the summary and display for each entry.
 
 #### Example:
@@ -143,48 +278,15 @@ The `array-details` method is used to render arrays of data where each item can 
 
 #### Breakdown:
 - **label**: This defines the text displayed in the `<summary>` element, which is used as the clickable area of the `<details>` toggle.
-- **value**: The `value` defines the content displayed inside the expanded `<details>` section.
+- **value**: The `value` defines the content displayed inside the expanded `<details>` section. Supports `|` separator for columns.
 - **add**: A boolean that indicates if you can add new entries to the array.
 - **delete**: A boolean that indicates if you can delete entries from the array.
+- **arrayControl**: Control type for deletion (default: "mark-remove")
 
 The `array-details` method is particularly useful for managing complex arrays of data where each item may have multiple fields, and you need to toggle the visibility of those fields for better organization.
 
-### 4. **Autosuggest**
-The `autosuggest` control is a more complex render method that allows you to enter text and receive suggestions based on data from an external API. This method is useful for fields like address lookup or selecting from a large dataset.
-
-#### Example:
-```json
-{
-  "type": "object",
-  "title": "Vendor",
-  "render": {
-    "method": "autosuggest",
-    "autosuggest": {
-      "api": "https://example.com/api/vendors?q=",
-      "apiArrayPath": "results",
-      "apiValuePath": "vendor.id",
-      "apiDisplayPath": "vendor.name",
-      "label": "Vendor Name",
-      "mapping": {
-        "vendor_id": "vendor.id",
-        "vendor_name": "vendor.name"
-      },
-      "syncInstance": true
-    }
-  }
-}
-```
-
-#### Breakdown:
-- **api**: The URL of the API that returns suggestions.
-- **apiArrayPath**: The path to the array in the API response that contains the suggestion data.
-- **apiValuePath**: The path to the specific value to be stored (e.g., the ID of the vendor).
-- **apiDisplayPath**: The path to the display value to be shown in the dropdown (e.g., the vendor name).
-- **mapping**: Defines how values from the API response map to the fields in the form (e.g., vendor ID and name).
-- **syncInstance**: A boolean that indicates whether the form instance should be synchronized with the selected value from the suggestions.
-
-### 5. **Array Units**
-The `array-units` method is used to render arrays of data where each item represents a unit with specific properties. This method is useful for managing lists of items with detailed information.
+#### 11. **array-units**
+The `array-units` method is used to render arrays of data where each item represents a unit with specific properties. This method renders arrays as compact single-line units with one visible field and hidden fields for the rest.
 
 #### Example:
 ```json
@@ -193,8 +295,7 @@ The `array-units` method is used to render arrays of data where each item repres
   "title": "Units",
   "render": {
     "method": "array-units",
-    "unitLabel": "${unitName}",
-    "unitValue": "${unitDescription}",
+    "label": "${unitName}",
     "add": true,
     "delete": true
   },
@@ -209,12 +310,45 @@ The `array-units` method is used to render arrays of data where each item repres
 ```
 
 #### Breakdown:
-- **unitLabel**: This defines the text displayed for each unit in the array.
-- **unitValue**: The `unitValue` defines the content displayed for each unit.
+- **label**: This defines the text displayed for each unit in the array.
 - **add**: A boolean that indicates if you can add new units to the array.
 - **delete**: A boolean that indicates if you can delete units from the array.
 
-### 6. **Array Link**
+**Use case**: Compact lists where only one field needs to be visible (e.g., tags, simple lists).
+
+#### 12. **array-grid**
+Renders arrays as a grid of editable fieldsets.
+
+```json
+{
+  "type": "array",
+  "render": {
+    "method": "array-grid",
+    "add": true,
+    "delete": true
+  }
+}
+```
+
+**Use case**: Tabular data where all fields are visible and editable inline.
+
+#### 13. **array-checkbox**
+Renders arrays as a list of checkboxes for multi-select scenarios.
+
+```json
+{
+  "type": "array",
+  "render": {
+    "method": "array-checkbox",
+    "label": "name",
+    "value": "enabled"
+  }
+}
+```
+
+**Use case**: Permission lists, feature toggles, multi-select from predefined options.
+
+#### 14. **array-link**
 The `array-link` method is used to render arrays of data where each item is a link. This method is useful for managing lists of links with specific properties.
 
 #### Example:
@@ -224,8 +358,8 @@ The `array-link` method is used to render arrays of data where each item is a li
   "title": "Links",
   "render": {
     "method": "array-link",
-    "linkLabel": "${linkText}",
-    "linkUrl": "${linkUrl}",
+    "label": "${linkText}",
+    "value": "${url}",
     "add": true,
     "delete": true
   },
@@ -240,73 +374,60 @@ The `array-link` method is used to render arrays of data where each item is a li
 ```
 
 #### Breakdown:
-- **linkLabel**: This defines the text displayed for each link in the array.
-- **linkUrl**: The `linkUrl` defines the URL for each link.
+- **label**: This defines the text displayed for each link in the array.
+- **value**: The URL for each link.
 - **add**: A boolean that indicates if you can add new links to the array.
 - **delete**: A boolean that indicates if you can delete links from the array.
 
-### 7. **Media**
-The `media` method is used to render media elements such as images or videos. This method is useful for managing media content with specific properties.
+**Use case**: Managing lists of URLs, related resources, or navigation links.
 
-#### Example:
+### Container Methods
+
+#### 15. **fieldset**
+Groups related fields within a fieldset element.
+
 ```json
 {
-  "type": "object",
-  "title": "Media",
   "render": {
-    "method": "media",
-    "mediaType": "image",
-    "mediaUrl": "${mediaUrl}",
-    "mediaAlt": "${mediaAlt}"
-  },
-  "properties": {
-    "mediaUrl": { "type": "string", "title": "Media URL" },
-    "mediaAlt": { "type": "string", "title": "Alt Text" }
+    "method": "fieldset",
+    "label": "Contact Information"
   }
 }
 ```
 
-#### Breakdown:
-- **mediaType**: This defines the type of media (e.g., image, video).
-- **mediaUrl**: The `mediaUrl` defines the URL for the media.
-- **mediaAlt**: The `mediaAlt` defines the alternative text for the media.
+#### 16. **entry**
+Creates a popover form for adding new array items.
 
-### 8. **Barcode**
+**Note**: This is typically generated automatically when arrays have `add: true`. The entry method creates:
+- A popover with form fields
+- Add, reset, and close buttons
+- Optional autosuggest and barcode scanner integration
 
-The `barcode` method enables barcode scanning functionality within your forms. It is typically used in combination with array render methods like `array-units` to add items based on scanned barcodes.
-
-#### Example:
 ```json
 {
-  "type": "object",
-  "title": "Product",
+  "type": "array",
   "render": {
-    "method": "barcode",
-    "barcode": {
-      "api": "https://example.com/api/products?barcode=",
-      "apiArrayPath": "results",
-      "apiValuePath": "product.id",
-      "apiDisplayPath": "product.name",
-      "label": "Product Name",
-      "mapping": {
-        "product_id": "product.id",
-        "product_name": "product.name"
-      },
-      "syncInstance": true
-    }
+    "method": "array-details",
+    "add": true,
+    "addMethod": "arrayUnit",
+    "autosuggest": { /* config */ },
+    "barcode": { /* config */ }
   }
 }
 ```
 
-#### Breakdown:
-- **api**: The URL of the API that returns product information based on the scanned barcode.
-- **apiArrayPath**: The path to the array in the API response that contains the product data.
-- **apiValuePath**: The path to the specific value to be stored (e.g., the ID of the product).
-- **apiDisplayPath**: The path to the display value to be shown in the form (e.g., the product name).
-- **mapping**: Defines how values from the API response map to the fields in the form (e.g., product ID and name).
-- **syncInstance**: A boolean that indicates whether the form instance should be synchronized with the scanned barcode data.
+## Customizing Render Objects
+
+You can customize various aspects of the render object by adding:
+
+- **method**: The method defines the type of input or display element (e.g., `input`, `select`, `richtext`, etc.). You can define your own methods with `extendRenderMethod`.
+- **attributes**: This array defines additional HTML attributes for the rendered element (e.g., `placeholder`, `type`, `disabled`, etc.).
+  
+Additionally, the `render` object can include settings for advanced controls like `autosuggest` and `array-details`, allowing more complex behaviors and structures.
 
 ## Key Takeaways
 - You can customize how data fields are rendered using the `render` object within the schema.
-- Render methods like `array-details`, `autosuggest`, `array-units`, `array-link`, `media`, and `barcode` allow for more advanced UI elements that can handle arrays of data, external data sources, and media content.
+- Render methods like `array-details`, `autosuggest`, `array-units`, `array-link`, `media`, and `barcode` allow for advanced UI elements that can handle arrays of data, external data sources, and media content.
 - Each render method supports additional attributes and settings to further tailor the behavior and appearance of the rendered elements.
+- Use the `formatter` property with input fields to transform display values using dynamic functions.
+

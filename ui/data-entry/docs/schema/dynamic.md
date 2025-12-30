@@ -159,3 +159,56 @@ Then, in your schema, add this:
   "copyright": "${d:currentYear} ${company_name}"
 }
 ```
+
+## Available Dynamic Functions
+
+DataEntry provides the following built-in dynamic functions:
+
+| Function | Signature | Description |
+|----------|-----------|-------------|
+| `dateDifference` | `(startDate, endDate)` | Calculate days between two dates |
+| `now` | `(format?)` | Current date/time. Formats: `date`, `time`, `datetime-local`, `iso` |
+| `today` | `()` | Today's date in YYYY-MM-DD format |
+| `formatCurrency` | `(value, code?, locale?)` | Format number as currency (e.g., USD, EUR) |
+| `formatDate` | `(value, locale?, options?)` | Format date with locale options |
+| `formatDateTimeLocal` | `(value)` | Truncate to datetime-local format (YYYY-MM-DDTHH:mm) |
+| `formatNumber` | `(value, decimals?)` | Format number with fixed decimals (default: 2) |
+| `multiply` | `(value, multiplier, decimals?)` | Multiply and format with decimals |
+| `randomNumber` | `(min?, max?)` | Generate random integer (default: 0-100) |
+| `uuid` | `()` | Generate crypto random UUID |
+| `capitalizeFirst` | `(value)` | Capitalize first letter of string |
+| `lowercase` | `(value)` | Convert string to lowercase |
+| `slugify` | `(value)` | Convert string to URL-safe slug |
+| `titleCase` | `(value)` | Convert To Title Case |
+| `uppercase` | `(value)` | Convert string to UPPERCASE |
+| `getLocale` | `()` | Get document language or default to 'en-US' |
+| `mapOptionLabel` | `(value, options)` | Find label for a given value in options array |
+
+### Usage Examples
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "value": "${d:uuid}"
+    },
+    "created_at": {
+      "type": "string",
+      "value": "${d:now datetime-local}"
+    },
+    "price": {
+      "type": "number",
+      "render": {
+        "method": "input",
+        "formatter": "${d:formatCurrency ${value} USD}"
+      }
+    },
+    "slug": {
+      "type": "string",
+      "value": "${d:slugify ${title}}"
+    }
+  }
+}
+```

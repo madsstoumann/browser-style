@@ -24,17 +24,33 @@ The **RichText** component is a WYSIWYG (What You See Is What You Get) editor fo
 <rich-text name="description"></rich-text>
 ```
 
-### 3. **UiToast (`<ui-toast>`)**
-The **UiToast** component is used for displaying toast notifications, such as success or error messages. It is automatically triggered when certain events occur (e.g., form submission) but can also be manually triggered via the `showToast` method.
+### 3. **SnackBar (`<snack-bar>`)**
+The **SnackBar** component is used for displaying toast notifications, such as success or error messages. It is automatically triggered when certain events occur (e.g., form submission) but can also be manually triggered via the `showMsg` method.
 
 #### Example:
 ```html
-<ui-toast></ui-toast>
+<snack-bar></snack-bar>
+```
+
+### 4. **BarcodeScanner (`<barcode-scanner>`)**
+The **BarcodeScanner** component enables barcode scanning functionality. It automatically populates form fields when a barcode is successfully scanned.
+
+#### Example:
+```html
+<barcode-scanner></barcode-scanner>
+```
+
+### 5. **DataMapper (`<data-mapper>`)**
+The **DataMapper** component provides functionality for importing and mapping external data (CSV/TSV files) into the form. It allows users to map imported columns to form fields.
+
+#### Example:
+```html
+<data-mapper></data-mapper>
 ```
 
 ## How Components are Loaded
 
-In DataEntry, components are dynamically loaded based on the HTML content of the form. The `mountComponents` function is responsible for checking if the HTML contains certain tags (like `<auto-suggest>` or `<ui-toast>`) and then loading the corresponding JavaScript modules.
+In DataEntry, components are dynamically loaded based on the HTML content of the form. The `mountComponents` function is responsible for checking if the HTML contains certain tags (like `<auto-suggest>` or `<snack-bar>`) and then loading the corresponding JavaScript modules.
 
 Here’s how components are loaded:
 
@@ -91,28 +107,28 @@ const componentsInfo = {
 ```
 
 ### 3. Adding a custom bindMethod
-You can easily add a custom bindMethod to your custom component. Here's an example for the `<ui-toast>`-component:
+You can easily add a custom bindMethod to your custom component. Here's an example for the `<snack-bar>`-component:
 
 ```js
-UiToast: {
-  bindFunction: bindUiToast,
-  path: '/ui/toast/index.js',
-  tagName: 'ui-toast',
+SnackBar: {
+  bindFunction: bindSnackBar,
+  path: '@browser.style/snack-bar',
+  tagName: 'snack-bar',
 }
 ```
 
 Then, we add the custom `bindFunction`:
 
 ```js
-function bindUiToast(dataEntry) {
-  const toastElement = dataEntry.form.querySelector('ui-toast');
-  if (toastElement) {
-    dataEntry.showToast = (message, type = 'success', duration = 3000) => {
-      toastElement.showToast(message, type, duration);
+function bindSnackBar(dataEntry) {
+  const snackBar = dataEntry.form.querySelector('snack-bar');
+  if (snackBar) {
+    dataEntry.showMsg = (message, type = 'success', duration = 3000) => {
+      snackBar.add(message, type, duration);
     };
   } else {
-    // Fallback if ui-toast is not available
-    dataEntry.showToast = (message, type = 'info', duration = 3000) => {
+    // Fallback if snack-bar is not available
+    dataEntry.showMsg = (message, type = 'info', duration = 3000) => {
       dataEntry.debugLog(`Toast fallback: ${message} (Type: ${type})`);
     };
   }

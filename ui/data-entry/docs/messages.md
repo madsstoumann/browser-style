@@ -88,9 +88,9 @@ Messages are primarily displayed in two ways:
 1. **Toast Notifications**: Messages are shown as toasts in the UI for a short duration.
 2. **Console Logging (Debug Mode)**: When the `debug` flag is set on **DataEntry**, any message that would normally appear as a toast is also logged in the console.
 
-The built-in `<ui-toast>`-component exposes `::part`´s and can thus be custom styled. 
+The built-in `<snack-bar>`-component exposes `::part`´s and can thus be custom styled. 
 
-For more information, see [browser.style/ui/toast](https://browser.style/ui/toast)
+For more information, see [browser.style/ui/snack-bar](https://browser.style/ui/snack-bar)
 
 ---
 
