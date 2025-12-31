@@ -8,8 +8,16 @@
 		--ui-table-tr-hover: var(--ButtonFace);
 		--ui-table-outline-bdc: var(--ButtonText);
 		--ui-table-outline-bdw: 2px;
+
+		/* row-based modifiers */
 		--ui-table-tr-active-bg: var(--AccentColor);
 		--ui-table-tr-active-color: var(--AccentColorText);
+		--ui-table-tr-active-hover: var(--AccentColorDark);
+		--ui-table-tr-active-c-hover: var(--ui-table-tr-active-color);
+		--ui-table-tr-selected-bg: var(--Highlight);
+		--ui-table-tr-selected-color: var(--HighlightText);
+		--ui-table-tr-selected-hover: var(--AccentColor);
+		--ui-table-tr-selected-c-hover: var(--AccentColorText);
 
 		border-collapse: separate;
 		border-spacing: var(--ui-table-bdsp-x, 0) var(--ui-table-bdsp-y, 0);
@@ -103,6 +111,10 @@
 				--ui-table-td-bg: var(--ui-table-tr-active-bg);
 				color: var(--ui-table-tr-active-color);
 			}
+			&.--row-selected {
+				--ui-table-td-bg: var(--ui-table-tr-selected-bg);
+				color: var(--ui-table-tr-selected-color);
+			}
 		}
 
 		/* Hover */
@@ -157,6 +169,14 @@
 					color: var(--Canvas);
 					outline: 0;
 				}
+				tr.--row-active td:is(:focus-visible,:hover) {
+					--ui-table-td-bg: var(--ui-table-tr-active-hover);
+					color: var(--ui-table-tr-active-c-hover);
+				}
+				tr.--row-selected td:is(:focus-visible,:hover) {
+					--ui-table-td-bg: var(--ui-table-tr-selected-hover);
+					color: var(--ui-table-tr-selected-c-hover);
+				}
 			}
 			&.--hover-td-outline {
 				& td:is(:focus-visible,:hover) {
@@ -183,9 +203,11 @@
 					--ui-table-td-bg: var(--ui-table-tr-hover);
 					&.--hover-td & td:not(:is(:focus-visible,:hover)) { --ui-table-td-bg: var(--ui-table-td-hover); }
 				}
-				/* Prevent hover from overriding active row */
 				tr.--row-active:has(td:is(:focus-visible,:hover)) {
 					--ui-table-td-bg: var(--ui-table-tr-active-bg);
+				}
+				tr.--row-selected:has(td:is(:focus-visible,:hover)) {
+					--ui-table-td-bg: var(--ui-table-tr-selected-bg);
 				}
 			}
 			&.--hover-tr-outline {

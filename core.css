@@ -1,6 +1,7 @@
 @layer bs-core {
 	:root {
 		--AccentColor: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+		--AccentColorDark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
 		--AccentColorText: hsl(211, 100%, 95%);
 		--ButtonBorder: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
 		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
