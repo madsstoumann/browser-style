@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0] - 2025-12-01
 
 ### Changed
-- Added calude.md to analog-clock and data-chart, fixed a minor issue in dev-to
+- Added claude.md to analog-clock and data-chart, fixed a minor issue in dev-to
 - docs: auto-generate CHANGELOG.md for changed components
 - docs: update CHANGELOG.md with recent fixes and improvements to CSS loading
 
