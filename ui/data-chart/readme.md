@@ -57,18 +57,20 @@ Example `temperature.json`:
 
 ### Inline Data
 
-You can also provide the data directly as a JSON string in the `data` attribute.
+You can also provide the data directly as a JSON string in the `data` attribute. The JSON should include a `settings` object (optional) and a `data` array.
 
 ```html
 <data-chart
-  options="x-labels y-labels y-grid"
+  options="x-labels y-labels y-grid groups"
   type="column"
-  legend='["January", "February", "March"]'
-  data='[
-    {"label": "2022", "value": [10, 20, 30]},
-    {"label": "2023", "value": [15, 25, 35]},
-    {"label": "2024", "value": [20, 30, 40]}
-  ]'
+  data='{
+    "settings": {"legend": ["January", "February", "March"]},
+    "data": [
+      {"label": "2022", "value": [10, 20, 30]},
+      {"label": "2023", "value": [15, 25, 35]},
+      {"label": "2024", "value": [20, 30, 40]}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -76,14 +78,16 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 
 ```html
 <data-chart
-  options="x-labels y-labels y-grid"
+  options="x-labels y-labels y-grid groups"
   type="column"
-  legend='["January", "February", "March"]'
-  data='[
-    {"label": "2022", "value": [10, 20, 30]},
-    {"label": "2023", "value": [15, 25, 35]},
-    {"label": "2024", "value": [20, 30, 40]}
-  ]'
+  data='{
+    "settings": {"legend": ["January", "February", "March"]},
+    "data": [
+      {"label": "2022", "value": [10, 20, 30]},
+      {"label": "2023", "value": [15, 25, 35]},
+      {"label": "2024", "value": [20, 30, 40]}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -93,11 +97,13 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 <data-chart
   options="x-labels"
   type="bar"
-  data='[
-    {"label": "Apples", "value": 40},
-    {"label": "Oranges", "value": 60},
-    {"label": "Bananas", "value": 80}
-  ]'
+  data='{
+    "data": [
+      {"label": "Apples", "value": 40},
+      {"label": "Oranges", "value": 60},
+      {"label": "Bananas", "value": 80}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -106,12 +112,14 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 ```html
 <data-chart
   type="donut"
-  legend='["Red", "Green", "Blue"]'
-  data='[
-    {"value": 20},
-    {"value": 30},
-    {"value": 50}
-  ]'
+  data='{
+    "settings": {"legend": ["Red", "Green", "Blue"]},
+    "data": [
+      {"value": 20},
+      {"value": 30},
+      {"value": 50}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -120,12 +128,14 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 ```html
 <data-chart
   type="pie"
-  legend='["Red", "Green", "Blue"]'
-  data='[
-    {"value": 20},
-    {"value": 30},
-    {"value": 50}
-  ]'
+  data='{
+    "settings": {"legend": ["Red", "Green", "Blue"]},
+    "data": [
+      {"value": 20},
+      {"value": 30},
+      {"value": 50}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -135,26 +145,33 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 <data-chart
   type="candlestick"
   options="caption x-labels y-grid y-labels"
-  data='[
-    {
-      "label": "W1",
-      "value": 108.5,
-      "displayValue": "$108.50",
-      "open": 105.2,
-      "high": 110.8,
-      "low": 104.1,
-      "close": 108.5
+  data='{
+    "settings": {
+      "min": 100,
+      "max": 120,
+      "caption": "Stock Price"
     },
-    {
-      "label": "W2", 
-      "value": 112.3,
-      "displayValue": "$112.30",
-      "open": 108.5,
-      "high": 114.2,
-      "low": 107.9,
-      "close": 112.3
-    }
-  ]'
+    "data": [
+      {
+        "label": "W1",
+        "value": 108.5,
+        "displayValue": "$108.50",
+        "open": 105.2,
+        "high": 110.8,
+        "low": 104.1,
+        "close": 108.5
+      },
+      {
+        "label": "W2",
+        "value": 112.3,
+        "displayValue": "$112.30",
+        "open": 108.5,
+        "high": 114.2,
+        "low": 107.9,
+        "close": 112.3
+      }
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -163,12 +180,14 @@ You can also provide the data directly as a JSON string in the `data` attribute.
 ```html
 <data-chart
   type="poll"
-  options="caption"
-  data='[
-    {"label": "Option A", "value": 950, "displayValue": "950 votes / 5%"},
-    {"label": "Option B", "value": 2191, "displayValue": "2191 votes / 13%"},
-    {"label": "Option C", "value": 1857, "displayValue": "1857 votes / 11%"}
-  ]'
+  options="x-labels"
+  data='{
+    "data": [
+      {"label": "Option A", "value": 950, "displayValue": "950 votes / 5%"},
+      {"label": "Option B", "value": 2191, "displayValue": "2191 votes / 13%"},
+      {"label": "Option C", "value": 1857, "displayValue": "1857 votes / 11%"}
+    ]
+  }'
 ></data-chart>
 ```
 
@@ -192,6 +211,22 @@ In this example, the chart will show 5 items on screens smaller than 400px and 1
   items-sm="10"
 ></data-chart>
 ```
+
+## Attributes
+
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `data` | String | — | JSON string or URL to JSON file |
+| `type` | String | `"column"` | Chart type (see below) |
+| `options` | String | — | Space-separated display options |
+| `min` | Number | `0` | Scale minimum (auto-set from settings) |
+| `max` | Number | `100` | Scale maximum (auto-set from settings) |
+| `reverse` | Boolean | — | Reverse y-axis label order |
+| `items-xs` | Number | — | Max items at <400px width |
+| `items-sm` | Number | — | Max items at 400-700px width |
+| `items-md` | Number | — | Max items at medium width |
+| `items-lg` | Number | — | Max items at large width |
+| `items-xl` | Number | — | Max items at extra-large width |
 
 ## Data Structure
 
@@ -349,3 +384,42 @@ The component includes built-in validation and will display error messages for:
 
 > Note: Color variables like `--c1`, `--c2`, ... `--c10` are used for series coloring and can be set per chart instance.
 
+## JavaScript API
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `dataset` | Object | Get/set full dataset object (triggers re-render) |
+| `settings` | Object | Get settings portion of dataset (read-only) |
+| `data` | Array | Get data array portion of dataset (read-only) |
+
+### Methods
+
+| Method | Parameters | Description |
+|--------|------------|-------------|
+| `load(source)` | `source`: String | Load data from JSON string or URL |
+| `render()` | — | Re-render the chart with current dataset |
+
+### Example
+
+```javascript
+const chart = document.querySelector('data-chart');
+
+// Load data from URL
+chart.load('/api/sales-data.json');
+
+// Or set data directly
+chart.dataset = {
+  settings: { min: 0, max: 100, caption: 'Sales' },
+  data: [
+    { label: 'Q1', value: 25 },
+    { label: 'Q2', value: 45 },
+    { label: 'Q3', value: 35 }
+  ]
+};
+
+// Access current data
+console.log(chart.settings.caption); // "Sales"
+console.log(chart.data.length); // 3
+```

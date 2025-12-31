@@ -44,22 +44,17 @@ console.log(`Changed UI folders: ${Array.from(changedFolders).join(', ') || 'non
 folders.forEach(folder => {
   const folderPath = path.join(uiPath, folder);
   const changelogPath = path.join(folderPath, 'CHANGELOG.md');
-  
-  // Skip if CHANGELOG.md already exists
-  if (fs.existsSync(changelogPath)) {
-    console.log(`✓ ${folder}: CHANGELOG.md already exists, skipping`);
-    return;
-  }
-  
-  // Only generate if folder was changed (or if we couldn't detect changes)
+
+  // Only generate/update if folder was changed (or if we couldn't detect changes)
   if (changedFolders.size === 0 || changedFolders.has(folder)) {
     try {
-      console.log(`Generating CHANGELOG.md for ${folder}...`);
+      const exists = fs.existsSync(changelogPath);
+      console.log(`${exists ? 'Updating' : 'Generating'} CHANGELOG.md for ${folder}...`);
       const changelog = generateChangelog(folder);
-      
+
       if (changelog) {
         fs.writeFileSync(changelogPath, changelog);
-        console.log(`✓ ${folder}: CHANGELOG.md created`);
+        console.log(`✓ ${folder}: CHANGELOG.md ${exists ? 'updated' : 'created'}`);
       } else {
         console.log(`✗ ${folder}: No commits found`);
       }

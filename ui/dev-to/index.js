@@ -44,18 +44,30 @@ export default class DevTo extends HTMLElement {
 
 	async #loadStyles() {
 		try {
+			const cssPath = new URL('./index.css', import.meta.url).href;
+			// Try CSS module import first (modern browsers)
 			const styleSheet = await import('./index.css', { with: { type: 'css' } })
 				.catch(() => null);
 
-			if (styleSheet) {
+			if (styleSheet?.default instanceof CSSStyleSheet) {
 				this.#root.adoptedStyleSheets = [styleSheet.default];
 				return;
 			}
-			const response = await fetch('./index.css');
+
+			// Fallback: fetch and construct CSSStyleSheet
+			const response = await fetch(cssPath);
 			const css = await response.text();
-			const sheet = new CSSStyleSheet();
-			sheet.replaceSync(css);
-			this.#root.adoptedStyleSheets = [sheet];
+			
+			if ('adoptedStyleSheets' in this.#root && typeof CSSStyleSheet !== 'undefined') {
+				const sheet = new CSSStyleSheet();
+				sheet.replaceSync(css);
+				this.#root.adoptedStyleSheets = [sheet];
+			} else {
+				// Final fallback: inject style tag directly (older browsers)
+				const style = document.createElement('style');
+				style.textContent = css;
+				this.#root.appendChild(style);
+			}
 		} catch (error) {
 			console.warn('Could not load styles:', error);
 		}
