@@ -190,4 +190,4 @@ stylesheet.replaceSync(`
 	border-color: var(--AccentColor);
 }
 `)
-customElements.define('ui-xy', xyController);
+customElements.define('x-y', xyController);

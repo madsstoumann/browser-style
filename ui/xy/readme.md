@@ -1,87 +1,164 @@
-# xyController Class Documentation
+# XY Controller
 
-## Overview
-`xyController` is a custom web component designed for 2D navigation within a specified grid, useful in graphical applications or interfaces requiring spatial control.
+A 2D coordinate picker/controller custom element for selecting a point within a bounded area. Supports mouse, touch, and keyboard navigation with optional grid snapping.
 
-## Attributes
-- Inherits from `HTMLElement`.
-- Monitors changes to `x` and `y` attributes.
-- Registered under the HTML tag `<ui-xy>`.
+## Installation
 
-## Constructor
-Initializes the shadow DOM and sets up the component.
+```bash
+npm install @browser.style/xy
+```
 
-## Lifecycle Methods
+For required dependencies and basic setup, see the [main documentation](../readme.md).
 
-### connectedCallback
-- Attaches a shadow DOM.
-- Creates and configures a button element as the navigation point, making it inert to avoid standard button behaviors.
-- Parses attributes to set up initial configurations and applies styles.
-- Adds event listeners for keyboard and pointer interactions.
-- Initializes a `ResizeObserver` for dynamic adjustments based on element resizing.
+## Usage
 
-### attributeChangedCallback
-- Updates `x` or `y` properties when their attributes change.
+Import the component:
 
-## Methods
+```javascript
+import '@browser.style/xy';
+```
 
-### keymove
-Handles keyboard navigation using arrow keys, with support for shift and alt modifications to adjust movement increments.
-
-### customEvent
-Dispatches custom events like `xydown`, `xyup`, and `xymove`.
-
-### down
-Activates the component and triggers the `xydown` event.
-
-### move
-Updates the navigation point's position if the component is active.
-
-### up
-Deactivates the component and triggers the `xyup` event.
-
-### refresh
-Recalculates ratios and boundaries based on the component's dimensions.
-
-### update
-Applies new positions based on either user interaction or programmatic changes.
-
-### updateXY
-Converts logical position into visual adjustments using CSS variables.
-
-### xyset
-Sets the logical position based on external inputs.
-
-## HTML Implementation Example
+Or include via script tag:
 
 ```html
-<ui-xy grid-x="6" grid-y="6" min-x="0" max-x="100" min-y="0" max-y="100"></ui-xy>
+<script type="module" src="node_modules/@browser.style/xy/index.js"></script>
 ```
 
-This snippet creates a ui-xy element with a 6x6 grid, and logical x and y boundaries from 0 to 100.
+## Basic Example
 
-## Event Listening
-
-To interact with `xyController` in JavaScript, add event listeners to handle custom events:
-
-```js
-document.querySelector('ui-xy').addEventListener('xymove', function(event) {
-  console.log(`Moved to X: ${event.detail.x}, Y: ${event.detail.y}`);
-});
-
-document.querySelector('ui-xy').addEventListener('xydown', function() {
-  console.log('Interaction started');
-});
-
-document.querySelector('ui-xy').addEventListener('xyup', function() {
-  console.log('Interaction ended');
-});
-
-document.querySelector('ui-xy').addEventListener('xytoggle', function() {
-  console.log('Toggle on/off');
-});
+```html
+<x-y x="50" y="50"></x-y>
 ```
 
-This JavaScript code listens to `xymove`, `xydown`, and `xyup` events, providing feedback in the console about the interactions with the component.
+## Attributes
 
-`xytoggle` is triggered through keyboard-navigation with `spacebar`. It's a boolean event, switching betwen `on` and `off`. 
+| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `x` | Number | `0` | Initial X value |
+| `y` | Number | `100` | Initial Y value |
+| `min-x` | Number | `0` | Minimum X value |
+| `max-x` | Number | `100` | Maximum X value |
+| `min-y` | Number | `0` | Minimum Y value |
+| `max-y` | Number | `100` | Maximum Y value |
+| `grid-x` | Number | `0` | Grid divisions on X axis (0 = no grid) |
+| `grid-y` | Number | `0` | Grid divisions on Y axis (0 = no grid) |
+| `shift` | Number | `10` | Movement multiplier when Shift is held |
+| `leave` | Boolean | `true` | Trigger `xyup` on pointer leave |
+
+## Events
+
+| Event | Description | Detail |
+|-------|-------------|--------|
+| `xydown` | Pointer down on element | — |
+| `xyup` | Pointer up or leave | — |
+| `xymove` | Position changed | `{ x, y, tx, ty, gx, gy }` |
+| `xytoggle` | Spacebar pressed | — |
+
+### Event Detail Properties
+
+| Property | Description |
+|----------|-------------|
+| `x` | Logical X value (within min-x to max-x) |
+| `y` | Logical Y value (within min-y to max-y) |
+| `tx` | Pixel X translation |
+| `ty` | Pixel Y translation |
+| `gx` | Grid X position (1-based, if grid enabled) |
+| `gy` | Grid Y position (1-based, if grid enabled) |
+
+## Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| Arrow keys | Move by single step |
+| Shift + Arrow | Move by `shift` amount (default: 10x) |
+| Shift + Alt + Arrow | Move by 1 pixel |
+| Home | Move to min-x |
+| End | Move to max-x |
+| Ctrl + Home | Move to min-y |
+| Ctrl + End | Move to max-y |
+| Space | Dispatch `xytoggle` event |
+
+## CSS Custom Properties
+
+### Host Styling
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--ui-xy-bg` | `var(--CanvasGray)` | Background color |
+
+### Point Styling
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--ui-xy-point-bg` | `var(--ButtonFace)` | Point background |
+| `--ui-xy-point-bdc` | `var(--ButtonBorder)` | Point border color |
+| `--ui-xy-point-bdw` | `0.5rem` | Point border width |
+| `--ui-xy-point-bdrs` | `50%` | Point border radius |
+| `--ui-xy-point-sz` | `4rem` | Point size |
+| `--ui-xy-point--focus` | `var(--Highlight)` | Point focus background |
+
+### Grid Styling
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--ui-xy-grid-bdw` | `2px` | Grid line width |
+
+## CSS Parts
+
+| Part | Description |
+|------|-------------|
+| `xypoint` | The draggable point indicator |
+
+## Examples
+
+### Custom Range
+
+```html
+<x-y min-x="0" max-x="360" min-y="0" max-y="100" x="180" y="50"></x-y>
+```
+
+### Grid Mode
+
+```html
+<x-y grid-x="6" grid-y="6"></x-y>
+```
+
+When grid is enabled, the point snaps to grid intersections and resizes to fill one cell.
+
+### Custom Styling
+
+```html
+<x-y style="
+  --ui-xy-bg: #333;
+  --ui-xy-point-bg: transparent;
+  --ui-xy-point-bdc: white;
+  --ui-xy-point-bdw: 2px;
+  --ui-xy-point-sz: 24px;
+"></x-y>
+```
+
+### JavaScript Integration
+
+```javascript
+const xy = document.querySelector('x-y');
+
+// Listen for movement
+xy.addEventListener('xymove', (e) => {
+  console.log(`X: ${e.detail.x}, Y: ${e.detail.y}`);
+});
+
+// Listen for interaction
+xy.addEventListener('xydown', () => console.log('Started'));
+xy.addEventListener('xyup', () => console.log('Ended'));
+
+// Programmatic positioning
+xy.setAttribute('x', '75');
+xy.setAttribute('y', '25');
+```
+
+## Notes
+
+- **Y-axis inversion**: Visual Y increases downward, but logical Y increases upward (like a standard coordinate system).
+- **Grid sizing**: In grid mode, point size is automatically set to `100% / grid-x`.
+- **Leave behavior**: Default `leave="true"` triggers `xyup` when pointer leaves. Set to `false` for continuous tracking outside bounds.
+- **Focus**: The element is focusable (`tabIndex=0`) to enable keyboard navigation.

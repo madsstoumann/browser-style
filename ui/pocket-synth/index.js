@@ -19,7 +19,7 @@ class PocketSynth extends HTMLElement {
 
 	setupTemplate() {
 		this.shadowRoot.innerHTML = `
-		<ui-xy x="50" y="220" min-y="27.5" max-y="440" part="xy" leave="false"></ui-xy>
+		<x-y x="50" y="220" min-y="27.5" max-y="440" part="xy" leave="false"></x-y>
 		<form part="controls">
 			<fieldset>
 				<label aria-label="sine wave">

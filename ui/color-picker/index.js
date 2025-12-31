@@ -11,7 +11,7 @@ class colorPicker extends HTMLElement {
 	constructor() {
 		super();
 		this.attachShadow({ mode: 'open' }).innerHTML = `
-		<ui-xy x="100" part="xy"></ui-xy>
+		<x-y x="100" part="xy"></x-y>
 		<input type="range" max="360" value="0" part="hue">
 		<input type="range" max="1" step="0.01" value="1" part="alpha">
 		<button type="button" part="output"></div>`;
