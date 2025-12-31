@@ -5,10 +5,18 @@ All notable changes to the Load articles from dev.to component will be documente
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- Improved CSS loading with robust fallback pattern for Netlify and production deployments
+- Added `import.meta.url` for proper CSS path resolution across different hosting environments
+- Implemented three-tier fallback: CSS module import → CSSStyleSheet constructor → style tag injection
+- Added browser compatibility checks for `adoptedStyleSheets` and `CSSStyleSheet`
+
 ## [1.0] - 2025-12-01
 
 ### Changed
-- Added calude.md to analog-clock and data-chart, fixed a minor issue in dev-to
+- Added claude.md to analog-clock and data-chart, fixed a minor issue in dev-to
 
 ## [1.1] - 2025-02-01
 
