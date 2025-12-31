@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added claude.md to analog-clock and data-chart, fixed a minor issue in dev-to
 - docs: auto-generate CHANGELOG.md for changed components
 - docs: update CHANGELOG.md with recent fixes and improvements to CSS loading
+- docs: auto-generate CHANGELOG.md for changed components
+- chore: bump version to 1.0.5 in package.json
+- Merge branch 'main' of https://github.com/madsstoumann/browser-style
 
 ## [1.1] - 2025-02-01
 
