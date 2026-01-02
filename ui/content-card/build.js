@@ -277,8 +277,25 @@ async function bundleCSS(cssFiles) {
   return bundlePath;
 }
 
+// Card types that should include base.css
+const CARD_TYPE_FILES = new Set([
+  'achievement', 'announcement', 'article', 'booking', 'business', 'comparison',
+  'contact', 'course', 'event', 'faq', 'gallery', 'job', 'location', 'membership',
+  'news', 'poll', 'product', 'profile', 'quote', 'recipe', 'review', 'social',
+  'software', 'statistic', 'timeline'
+]);
+
 // Clean and minify HTML for production
-async function cleanHTML(html) {
+async function cleanHTML(html, filename) {
+  // Check if this is a card-specific demo file
+  const baseName = filename.replace('.html', '');
+  const includeBaseCSS = CARD_TYPE_FILES.has(baseName);
+
+  // Build CSS links based on file type
+  const cssLinks = includeBaseCSS
+    ? '\t<link rel="stylesheet" href="/base.css">\n\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n'
+    : '\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n';
+
   // First, clean up development-specific content and replace all CSS with bundle
   let cleanedHtml = html
     // Remove runtime script tag
@@ -289,8 +306,8 @@ async function cleanHTML(html) {
     .replace(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi, '')
     // Add CSS preload hint early in head (for parallel downloading)
     .replace('<meta name="view-transition"', '<link rel="preload" href="/assets/css/content-card-bundle.css" as="style">\n\t<meta name="view-transition"')
-    // Add single CSS bundle link in head
-    .replace('</head>', '\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n</head>')
+    // Add appropriate CSS links in head
+    .replace('</head>', cssLinks + '</head>')
     // Update static asset paths to be relative
     .replace(/src="static\//g, 'src="static/');
 
@@ -346,13 +363,14 @@ async function renderPage(url, outputPath) {
     
     // Get the final HTML
     let html = await page.content();
-    
+
     // Clean up and minify for production
-    html = await cleanHTML(html);
-    
+    const filename = path.basename(outputPath);
+    html = await cleanHTML(html, filename);
+
     // Save to dist
     fs.writeFileSync(outputPath, html);
-    console.log(`✓ Rendered and minified ${path.basename(outputPath)}`);
+    console.log(`✓ Rendered and minified ${filename}`);
     
   } finally {
     await browser.close();

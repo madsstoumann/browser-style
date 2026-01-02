@@ -14,50 +14,6 @@
   },
   "type": "object",
   "properties": {
-    "internal_name": {
-      "type": "string",
-      "title": "Internal Name",
-      "description": "Internal name for the card",
-      "validation": {
-        "required": true
-      }
-    },
-    "card_type": {
-      "type": "string",
-      "title": "Card Type",
-      "description": "Type of card",
-      "default": "article",
-      "enum": [
-        "achievement",
-        "announcement",
-        "article",
-        "booking",
-        "business",
-        "comparison",
-        "contact",
-        "course",
-        "event",
-        "faq",
-        "gallery",
-        "job",
-        "location",
-        "membership",
-        "news",
-        "poll",
-        "product",
-        "profile",
-        "quote",
-        "recipe",
-        "review",
-        "social",
-        "software",
-        "statistic",
-        "timeline"
-      ],
-      "validation": {
-        "required": true
-      }
-    },
     "headline": {
       "type": "string",
       "title": "Headline",
@@ -86,6 +42,26 @@
         "type": "string"
       }
     },
+    "media": {
+      "type": "object",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "cmsType": "media",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "src": { "type": "string" },
+              "alt": { "type": "string" }
+            }
+          }
+        },
+        "caption": { "type": "string" }
+      }
+    },
     "data": {
       "type": "json",
       "title": "Card Data",
@@ -98,9 +74,5 @@
       }
     }
   },
-  "required": [
-    "internal_name",
-    "card_type",
-    "data"
-  ]
+  "required": []
 }

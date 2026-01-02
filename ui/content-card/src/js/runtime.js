@@ -7,6 +7,55 @@ function getBasePath() {
 	return '/ui/content-card/';
 }
 
+/**
+ * Normalize card data from Contentful structure to flat rendering structure
+ *
+ * Contentful structure:
+ * { internal_name, headline, subheadline, summary, category, tags, data: { type, media, ... } }
+ *
+ * Flat rendering structure:
+ * { id, type, media, content: { headline, subheadline, summary, category, ... }, tags, ... }
+ */
+function normalizeCardData(item) {
+	// If item has 'data' property with 'type', it's Contentful format
+	if (item.data && item.data.type) {
+		const { id, headline, subheadline, summary, category, tags, media, data } = item;
+		const { type, content: dataContent, ...restData } = data;
+
+		// Merge top-level CMS fields into content object
+		const content = {
+			...(dataContent || {}),
+			...(headline && { headline }),
+			...(subheadline && { subheadline }),
+			...(summary && { summary }),
+			...(category && { category })
+		};
+
+		// Use data.tags if they have URLs, otherwise use top-level tags
+		const normalizedTags = (data.tags && Array.isArray(data.tags)) ? data.tags : tags;
+
+		return {
+			id,
+			type,
+			content,
+			// Media from root level (common across all card types)
+			...(media && { media }),
+			...(normalizedTags?.length > 0 && { tags: normalizedTags }),
+			...restData
+		};
+	}
+
+	// Already in flat format
+	return item;
+}
+
+/**
+ * Normalize an array of card data
+ */
+function normalizeCardDataArray(dataArray) {
+	return dataArray.map(normalizeCardData);
+}
+
 // Content loading function - consolidates data loading logic
 function setContentForElement(element, contentId, dataArray, additionalSettings = {}) {
 	try {
@@ -122,8 +171,11 @@ async function initializeCards(dataSrc = 'data.json', allCards = null) {
 	try {
 		// Use the provided path directly - supports both relative and absolute paths
 		const dataPath = dataSrc;
-		const allData = await fetch(dataPath).then(r => r.json());
-		
+		const rawData = await fetch(dataPath).then(r => r.json());
+
+		// Normalize data from Contentful format to flat rendering format
+		const allData = normalizeCardDataArray(rawData);
+
 		// Store globally to avoid multiple loads
 		window._cardData = allData;
 
