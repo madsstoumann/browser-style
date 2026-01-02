@@ -14,7 +14,7 @@ const RE_DISALLOW = /^Disallow:\s*(.*)$/i;
 
 class WebConfigRobots extends HTMLElement {
 	static get observedAttributes() {
-		return ['allow', 'disallow', 'src', 'value', 'lists'];
+		return ['allow', 'disallow', 'src', 'value', 'lists', 'list-labels'];
 	}
 
 	constructor() {
@@ -23,6 +23,7 @@ class WebConfigRobots extends HTMLElement {
 		this._loadStyles();
 		this.t = createTranslator(i18nData, () => this.lang || this.getAttribute('lang') || 'en');
 		this.listUrls = [];
+		this.listLabels = [];
 		this.state = {
 			allow: [],
 			disallow: [],
@@ -751,6 +752,7 @@ class WebConfigRobots extends HTMLElement {
 		this.lang = this.getAttribute('lang') || 'en';
 		this._resolveReady();
 		this.listUrls = this._parseListUrls(this.getAttribute('lists'));
+		this.listLabels = this._parseListUrls(this.getAttribute('list-labels'));
 
 		// Load existing robots.txt file if src attribute is present
 		const srcUrl = this.getAttribute('src');
@@ -803,6 +805,9 @@ class WebConfigRobots extends HTMLElement {
 		} else if (name === 'lists' && oldValue !== newValue) {
 			this.listUrls = this._parseListUrls(newValue);
 			this.render();
+		} else if (name === 'list-labels' && oldValue !== newValue) {
+			this.listLabels = this._parseListUrls(newValue);
+			this.render();
 		} else if ((name === 'allow' || name === 'disallow') && oldValue !== newValue) {
 			if (newValue && this._loadedUrls[name] !== newValue) {
 				this._loadedUrls[name] = newValue;
@@ -816,7 +821,7 @@ class WebConfigRobots extends HTMLElement {
 			const target = e.target.closest('button');
 			if (!target) return;
 
-			if (target.dataset.importList !== undefined) {
+			if (target.dataset.action !== undefined && target.dataset.url) {
 				const url = target.dataset.url;
 				this.importFromUrl(url);
 				return;
@@ -994,10 +999,11 @@ class WebConfigRobots extends HTMLElement {
 			? `
 				<div>
 					<small>${this.t('ui.importBotLists')}</small>
-					${this.listUrls.map(rawUrl => {
+					${this.listUrls.map((rawUrl, index) => {
 						const normalized = this._normalizeImportUrl(rawUrl);
-						const label = this._labelForImportUrl(rawUrl);
-						return `<button data-import-list data-url="${this._escapeAttr(normalized)}" type="button">${this._escapeAttr(importText)} ${this._escapeAttr(label)}</button>`;
+						const customLabel = this.listLabels[index];
+						const label = customLabel || `${importText} ${this._labelForImportUrl(rawUrl)}`;
+						return `<button data-action data-url="${this._escapeAttr(normalized)}" type="button">${this._escapeAttr(label)}</button>`;
 					}).join('')}
 				</div>
 			`

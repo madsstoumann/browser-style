@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "navigation-item",
+  "title": "Navigation Item",
+  "description": "Recursive navigation items (links, groups, dividers)",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-04",
+    "displayField": "label"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Navigation"
+  },
+  "type": "object",
+  "properties": {
+    "navigation_id": {
+      "type": "reference",
+      "title": "Navigation",
+      "description": "Parent navigation (links to navigation table)",
+      "options": {
+        "referenceType": "navigation",
+        "multiple": false
+      }
+    },
+    "parent_id": {
+      "type": "reference",
+      "title": "Parent Item",
+      "description": "Parent item (null = root level)",
+      "options": {
+        "referenceType": "navigation-item",
+        "multiple": false
+      }
+    },
+    "type": {
+      "type": "string",
+      "title": "Item Type",
+      "description": "Item type (\"link\", \"group\", \"divider\")"
+    },
+    "label": {
+      "type": "string",
+      "title": "Label",
+      "description": "Display text"
+    },
+    "url": {
+      "type": "string",
+      "title": "URL",
+      "description": "Link destination (for type=\"link\")"
+    },
+    "icon": {
+      "type": "media",
+      "title": "Icon",
+      "description": "Icon image/SVG"
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Optional description/subtitle"
+    },
+    "image": {
+      "type": "media",
+      "title": "Featured Image",
+      "description": "Featured image (for mega menus)"
+    },
+    "badge": {
+      "type": "string",
+      "title": "Badge",
+      "description": "Badge text (\"New\", \"Sale\", \"50%\")"
+    },
+    "target": {
+      "type": "string",
+      "title": "Link Target",
+      "description": "Link target (\"_blank\", \"_self\")"
+    },
+    "order": {
+      "type": "number",
+      "title": "Sort Order",
+      "description": "Sort order within parent"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured",
+      "description": "Highlight this item"
+    }
+  },
+  "required": [
+    "navigation_id",
+    "type",
+    "label",
+    "order"
+  ]
+}

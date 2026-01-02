@@ -1,0 +1,45 @@
+{
+  "name": "@browser.style/web-config-card",
+  "version": "1.0.0",
+  "description": "A web component for visually editing Content Card data models with schema-driven forms.",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "dependencies": {
+    "@browser.style/web-config-shared": "^1.0.0"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "index.html",
+    "demo.html",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "browser.style",
+    "web-components",
+    "content-card",
+    "schema",
+    "form-builder",
+    "cms",
+    "contentful",
+    "web-config"
+  ],
+  "author": "Mads Stoumann",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/madsstoumann/browser-style.git",
+    "directory": "ui/web-config-card"
+  },
+  "bugs": {
+    "url": "https://github.com/madsstoumann/browser-style/issues"
+  },
+  "homepage": "https://browser.style/ui/web-config-card"
+}

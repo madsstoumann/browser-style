@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "layout",
+  "title": "Layout",
+  "description": "Reusable layout configurations that can be shared across pages",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-04",
+    "displayField": "title"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "allowedChildContentTypes": [
+      "card-achievement",
+      "card-announcement",
+      "card-article",
+      "card-booking",
+      "card-business",
+      "card-comparison",
+      "card-contact",
+      "card-course",
+      "card-event",
+      "card-faq",
+      "card-gallery",
+      "card-job",
+      "card-location",
+      "card-membership",
+      "card-news",
+      "card-poll",
+      "card-product",
+      "card-profile",
+      "card-quote",
+      "card-recipe",
+      "card-review",
+      "card-social",
+      "card-software",
+      "card-statistic",
+      "card-timeline"
+    ],
+    "folder": "Layouts"
+  },
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Layout Name",
+      "description": "Layout name (\"Hero Section\", \"Two Column\")",
+      "validation": {
+        "unique": true
+      }
+    },
+    "config_id": {
+      "type": "reference",
+      "title": "Layout Configuration",
+      "description": "Reference to layout_config table",
+      "options": {
+        "referenceType": "layout-config",
+        "multiple": false
+      }
+    },
+    "content": {
+      "type": "reference",
+      "title": "Content",
+      "description": "Polymorphic references to ANY content model",
+      "options": {
+        "multiple": true
+      }
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

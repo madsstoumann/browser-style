@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "content-card",
+  "title": "Content Card",
+  "description": "A polymorphic card component supporting 25 different content types.",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-02",
+    "displayField": "internal_name"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "internal_name": {
+      "type": "string",
+      "title": "Internal Name",
+      "description": "Internal name for the card",
+      "validation": {
+        "required": true
+      }
+    },
+    "card_type": {
+      "type": "string",
+      "title": "Card Type",
+      "description": "Type of card",
+      "default": "article",
+      "enum": [
+        "achievement",
+        "announcement",
+        "article",
+        "booking",
+        "business",
+        "comparison",
+        "contact",
+        "course",
+        "event",
+        "faq",
+        "gallery",
+        "job",
+        "location",
+        "membership",
+        "news",
+        "poll",
+        "product",
+        "profile",
+        "quote",
+        "recipe",
+        "review",
+        "social",
+        "software",
+        "statistic",
+        "timeline"
+      ],
+      "validation": {
+        "required": true
+      }
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "data": {
+      "type": "json",
+      "title": "Card Data",
+      "description": "Stores complex common data (media, actions) and type-specific content. Managed by the custom editor.",
+      "validation": {
+        "required": true
+      },
+      "ui": {
+        "widgetId": "web-config-card"
+      }
+    }
+  },
+  "required": [
+    "internal_name",
+    "card_type",
+    "data"
+  ]
+}

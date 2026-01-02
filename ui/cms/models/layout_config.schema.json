@@ -1,0 +1,219 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "layout-config",
+  "title": "Layout Configuration",
+  "description": "Layout configuration presets",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-03"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Layouts",
+    "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Spacing",
+        "description": "Manage margins and padding",
+        "collapse": true,
+        "fields": ["space_top", "space_bottom", "pad_top", "pad_bottom", "pad_inline"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Breakpoints",
+        "collapse": true,
+        "fields": ["xs", "sm", "md", "lg", "xl", "xxl"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Layout",
+        "collapse": true,
+        "fields": ["columns", "rows", "col_gap", "row_gap", "bleed", "max_width", "width", "overflow", "self", "size"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Advanced",
+        "collapse": true,
+        "fields": ["aria_label", "animation_name", "animation_range", "decorations", "theme"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Config Name",
+      "description": "Config name (\"Hero Full Width\", \"Card Grid Narrow\")",
+      "validation": {
+        "unique": true
+      }
+    },
+    "aria_label": {
+      "type": "string",
+      "title": "ARIA Label",
+      "description": "Accessibility label for the layout"
+    },
+    "animation_name": {
+      "type": "string",
+      "title": "Animation Name",
+      "description": "Animation name (e.g., \"fade-in\")"
+    },
+    "animation_range": {
+      "type": "string",
+      "title": "Animation Range",
+      "description": "Animation range (e.g., \"entry 0% cover 50%\")"
+    },
+    "columns": {
+      "type": "string",
+      "title": "Grid Columns",
+      "description": "CSS grid-template-columns value (default: \"1fr\")"
+    },
+    "rows": {
+      "type": "string",
+      "title": "Grid Rows",
+      "description": "CSS grid-template-rows value (default: \"auto\")"
+    },
+    "col_gap": {
+      "type": "number",
+      "title": "Column Gap",
+      "description": "Column gap (0-4, maps to spacing scale)"
+    },
+    "row_gap": {
+      "type": "number",
+      "title": "Row Gap",
+      "description": "Row gap (0-4, maps to spacing scale)"
+    },
+    "pad_top": {
+      "type": "number",
+      "title": "Padding Top",
+      "description": "Padding top (0-4)"
+    },
+    "pad_bottom": {
+      "type": "number",
+      "title": "Padding Bottom",
+      "description": "Padding bottom (0-4)"
+    },
+    "pad_inline": {
+      "type": "number",
+      "title": "Padding Inline",
+      "description": "Padding inline/left-right (0-4)"
+    },
+    "space_top": {
+      "type": "number",
+      "title": "Space Top",
+      "description": "Margin top (0-4)"
+    },
+    "space_bottom": {
+      "type": "number",
+      "title": "Space Bottom",
+      "description": "Margin bottom (0-4)"
+    },
+    "bleed": {
+      "type": "number",
+      "title": "Bleed",
+      "description": "Full-bleed layout (0 = contained, 1 = full bleed)"
+    },
+    "decorations": {
+      "type": "boolean",
+      "title": "Decorations",
+      "description": "Enable decorative elements"
+    },
+    "max_width": {
+      "type": "string",
+      "title": "Max Width",
+      "description": "Maximum width (CSS value, e.g., \"1200px\")"
+    },
+    "width": {
+      "type": "string",
+      "title": "Width",
+      "description": "Width (CSS value, e.g., \"100%\")"
+    },
+    "overflow": {
+      "type": "string",
+      "title": "Overflow",
+      "description": "CSS overflow property"
+    },
+    "self": {
+      "type": "string",
+      "title": "Self Alignment",
+      "description": "CSS align-self/justify-self value"
+    },
+    "size": {
+      "type": "string",
+      "title": "Size",
+      "description": "Size preset (\"small\", \"medium\", \"large\")"
+    },
+    "theme": {
+      "type": "string",
+      "title": "Theme Variant",
+      "description": "Theme variant"
+    },
+    "xs": {
+      "type": "select",
+      "title": "Extra Small Breakpoint",
+      "description": "Extra small layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    },
+    "sm": {
+      "type": "select",
+      "title": "Small Breakpoint",
+      "description": "Small layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    },
+    "md": {
+      "type": "select",
+      "title": "Medium Breakpoint",
+      "description": "Medium layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    },
+    "lg": {
+      "type": "select",
+      "title": "Large Breakpoint",
+      "description": "Large layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    },
+    "xl": {
+      "type": "select",
+      "title": "Extra Large Breakpoint",
+      "description": "Extra large layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    },
+    "xxl": {
+      "type": "select",
+      "title": "2X Large Breakpoint",
+      "description": "2X large layout",
+      "options": [
+        { "value": "columns(1)", "label": "1 Column" },
+        { "value": "columns(2)", "label": "2 Columns" },
+        { "value": "grid(3a)", "label": "Grid 3A" }
+      ]
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

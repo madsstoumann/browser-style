@@ -765,7 +765,7 @@ this.shadowRoot.addEventListener('change', (e) => {
     <!-- Import buttons -->
     <div>
       <small>Import bot lists:</small>
-      <button data-import-list data-url="...">Import filename.txt</button>
+      <button data-action data-url="...">Import filename.txt</button>
     </div>
 
     <!-- Global path rules for User-agent: * -->

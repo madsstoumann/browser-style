@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "social-link",
+  "title": "Social Link",
+  "description": "A social media profile link",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-16",
+    "displayField": "platform"
+  },
+  "type": "object",
+  "properties": {
+    "platform": {
+      "type": "string",
+      "title": "Platform",
+      "description": "Social media platform name (e.g., LinkedIn, Twitter, Facebook)"
+    },
+    "url": {
+      "type": "url",
+      "title": "Profile URL",
+      "description": "Full URL to the social media profile"
+    }
+  },
+  "required": [
+    "platform",
+    "url"
+  ]
+}

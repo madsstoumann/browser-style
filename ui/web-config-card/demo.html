@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Config Card - Demo</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web Config Card - Demo with pre-loaded data">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+		{
+			"imports": {
+				"@browser.style/web-config-shared": "../web-config-shared/index.js"
+			}
+		}
+	</script>
+	<style>
+		.demo-grid {
+			display: grid;
+			gap: 2rem;
+		}
+		.demo-grid > section {
+			border: 1px solid #ddd;
+			border-radius: 0.5rem;
+			padding: 1rem;
+		}
+		.demo-grid h2 {
+			margin-block: 0 1rem;
+			text-transform: capitalize;
+		}
+	</style>
+</head>
+<body>
+	<h1>Web Config Card: Demo</h1>
+	<p>Examples with pre-loaded data and locked card types.</p>
+
+	<div class="demo-grid">
+		<section>
+			<h2>Article</h2>
+			<web-config-card value='{
+				"type": "article",
+				"article": {
+					"authors": [
+						{ "name": "John Smith", "role": "Senior Editor" },
+						{ "name": "Jane Doe", "role": "Contributing Writer" }
+					]
+				}
+			}'></web-config-card>
+		</section>
+
+		<section>
+			<h2>Recipe</h2>
+			<web-config-card value='{
+				"type": "recipe",
+				"recipe": {
+					"content": {
+						"text": ["2 cups flour", "1 cup sugar", "3 eggs"]
+					},
+					"recipe": {
+						"prepTime": "15 minutes",
+						"cookTime": "30 minutes",
+						"servings": "8 servings",
+						"instructions": ["Preheat oven to 350°F", "Mix dry ingredients", "Add wet ingredients"]
+					},
+					"authors": [
+						{ "name": "Chef Maria", "role": "Pastry Chef" }
+					]
+				}
+			}'></web-config-card>
+		</section>
+
+		<section>
+			<h2>Product</h2>
+			<web-config-card value='{
+				"type": "product",
+				"product": {
+					"sku": "PROD-001234",
+					"product": {
+						"availability": "In Stock",
+						"price": {
+							"current": "299.00",
+							"original": "399.00",
+							"currency": "USD",
+							"discountText": "25% off"
+						}
+					}
+				}
+			}'></web-config-card>
+		</section>
+
+		<section>
+			<h2>Event</h2>
+			<web-config-card value='{
+				"type": "event",
+				"event": {
+					"event": {
+						"startDate": "2025-03-15T09:00",
+						"endDate": "2025-03-15T17:00",
+						"status": "Scheduled",
+						"location": {
+							"name": "Tech Convention Center",
+							"address": "123 Innovation Blvd, San Francisco, CA"
+						},
+						"organizer": {
+							"name": "TechConf Inc."
+						}
+					}
+				}
+			}'></web-config-card>
+		</section>
+
+		<section>
+			<h2>FAQ</h2>
+			<web-config-card value='{
+				"type": "faq",
+				"faq": {
+					"content": {
+						"text": [
+							{ "headline": "How do I reset my password?", "text": "Click Forgot Password on the login page and follow the instructions." },
+							{ "headline": "What payment methods do you accept?", "text": "We accept Visa, MasterCard, PayPal, and Apple Pay." }
+						]
+					}
+				}
+			}'></web-config-card>
+		</section>
+
+		<section>
+			<h2>Job</h2>
+			<web-config-card value='{
+				"type": "job",
+				"job": {
+					"company": "InnovateTech",
+					"location": "Remote (US Timezone)",
+					"employmentType": "Full-time",
+					"salaryRange": {
+						"min": 120000,
+						"max": 150000,
+						"currency": "USD",
+						"period": "annually"
+					},
+					"qualifications": ["5+ years React experience", "TypeScript proficiency"],
+					"benefits": ["Health Insurance", "401k matching", "Unlimited PTO"]
+				}
+			}'></web-config-card>
+		</section>
+	</div>
+
+	<script type="module" src="./src/index.js"></script>
+</body>
+</html>

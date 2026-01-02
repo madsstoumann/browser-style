@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Card Editor - Contentful App</title>
+  <script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+      }
+    }
+  </script>
+  <style>
+    body { margin: 0; padding: 0; min-height: 400px; }
+    #app { min-height: 400px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    import 'https://browser.style/ui/web-config-card/src/index.js';
+
+    const mount = async (api) => {
+      const app = document.getElementById('app');
+
+      await customElements.whenDefined('web-config-card');
+
+      const editor = document.createElement('web-config-card');
+      app.appendChild(editor);
+
+      if (api) {
+        // 1. Get initial values
+        const dataField = api.field;
+        const entry = api.entry;
+        // We no longer rely on the external type field for the editor's internal state,
+        // but we might want to sync back to it if it exists.
+        const typeField = entry.fields['cardType'] || entry.fields['card_type'] || entry.fields['type'];
+
+        // Set initial data
+        const currentData = dataField.getValue();
+        if (currentData) {
+            editor.value = currentData;
+        }
+
+        // 2. Handle editor changes
+        editor.addEventListener('change', (event) => {
+          const newData = event.detail ?? null;
+          dataField.setValue(newData);
+          
+          // Sync type back to the sibling field if it exists
+          if (typeField && newData && newData.type) {
+             typeField.setValue(newData.type);
+          }
+        });
+
+        // 3. Auto-resize
+        api.window.startAutoResizer();
+      }
+    };
+
+    if (window.contentfulExtension) {
+      try {
+        window.contentfulExtension.init(async (api) => mount(api));
+      } catch (error) {
+        console.error('Failed to initialize Contentful SDK:', error);
+      }
+    } else {
+      // Fallback for local testing without SDK
+      mount(null);
+    }
+  </script>
+</body>
+</html>

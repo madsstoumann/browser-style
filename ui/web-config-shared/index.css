@@ -49,9 +49,13 @@ button {
 	background: var(--web-config-buttonface);
 	border: 0;
 	cursor: pointer;
-	&[data-import-list] {
+	&[data-action] {
 		padding: 1ch 1.5ch;
 		width: fit-content;
+	}
+	&[data-action="remove"] {
+		background-color: var(--web-config-status-danger);
+		color: #FFF;
 	}
 }
 
@@ -98,6 +102,12 @@ fieldset {
 	display: flex;
 	gap: var(--web-config-gap);
 	button { padding: 0 2ch; }
+}
+
+h2, h3 {
+	font-weight: 500;
+	margin: 0;
+	text-transform: capitalize;
 }
 
 hr {

@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "site",
+  "title": "Site",
+  "description": "Site-wide singleton configuration (only one record)",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-04",
+    "displayField": "site_name"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+     "layout": [
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Identity & Business",
+        "description": "Basic site configuration",
+        "collapse": false,
+        "fields": ["site_name", "site_url", "site_language", "legal_name", "contact_email", "contact_phone", "address", "privacy_policy_id", "terms_service_id", "social_links"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Analytics",
+        "description": "Traffic analysis and tracking",
+        "collapse": true,
+        "fields": ["analytics_provider", "analytics_id", "analytics_url"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Consent Management",
+        "description": "Cookie banner and consent settings",
+        "collapse": true,
+        "fields": ["cmp_provider", "cmp_id", "cmp_url", "cmp_integrity"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Icons",
+        "description": "Favicon and touch icons",
+        "collapse": true,
+        "fields": ["favicon", "favicon_svg", "apple_touch_icon"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Progressive Web App",
+        "description": "Web App Manifest and app icons",
+        "collapse": true,
+        "fields": ["manifest", "app_icon_small", "app_icon_medium", "app_icon_large"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "SEO & Social", 
+        "description": "Default SEO and social media settings",
+        "collapse": true,
+        "fields": ["site_description", "og_image", "twitter_card", "twitter_site"]
+      },
+      {
+        "area": "main", 
+        "type": "group",
+        "name": "Security & Configuration",
+        "description": "Security policies and technical site configuration",
+        "collapse": true,
+        "fields": ["robots_txt", "security_txt", "csp"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Design Tokens",
+        "description": "Design system tokens (colors, typography, spacing, etc.)",
+        "collapse": true,
+        "fields": ["design_tokens"]
+      },
+      {
+        "area": "main",
+        "type": "group",
+        "name": "Navigation",
+        "description": "Default site navigation settings",
+        "collapse": true,
+        "fields": ["header_nav_id", "footer_nav_id"]
+      }
+    ]
+  },
+  "type": "object",
+  "properties": {
+    "site_name": {
+      "type": "string",
+      "title": "Site Name",
+      "description": "Site name"
+    },
+    "site_url": {
+      "type": "string",
+      "title": "Site URL",
+      "description": "Site base URL (e.g., \"https://example.com\")"
+    },
+    "site_description": {
+      "type": "string",
+      "title": "Site Description",
+      "description": "Default meta description for the site"
+    },
+    "site_language": {
+      "type": "string",
+      "title": "Site Language",
+      "description": "ISO language code (e.g. 'en-US', 'da')",
+      "default": "en"
+    },
+    "analytics_provider": {
+      "type": "string",
+      "title": "Analytics Provider",
+      "description": "Service provider (e.g. 'gtm', 'ga4', 'matomo', 'plausible')"
+    },
+    "analytics_id": {
+      "type": "string",
+      "title": "Analytics ID",
+      "description": "Google Analytics (G-*) or Tag Manager (GTM-*) ID"
+    },
+    "analytics_url": {
+      "type": "string",
+      "title": "Analytics URL",
+      "description": "Custom script URL (for proxies or self-hosted instances)"
+    },
+    "cmp_provider": {
+      "type": "string",
+      "title": "CMP Provider",
+      "description": "Provider name (e.g. 'cookiebot', 'onetrust')"
+    },
+    "cmp_id": {
+      "type": "string",
+      "title": "CMP ID",
+      "description": "The ID/Key for the consent platform"
+    },
+    "cmp_url": {
+      "type": "string",
+      "title": "CMP Script URL",
+      "description": "Full URL to the CMP script"
+    },
+    "cmp_integrity": {
+      "type": "string",
+      "title": "CMP Script Integrity",
+      "description": "SRI hash (sha384-...) for the script"
+    },
+    "legal_name": {
+      "type": "string",
+      "title": "Legal Name",
+      "description": "Official business name (e.g. 'Browser Style Ltd.')"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Contact Email",
+      "description": "Public contact email address"
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "Contact Phone",
+      "description": "Public phone number"
+    },
+    "address": {
+      "type": "text",
+      "title": "Address",
+      "description": "Physical business address"
+    },
+    "privacy_policy_id": {
+      "type": "reference",
+      "title": "Privacy Policy",
+      "description": "Link to the Privacy Policy page",
+      "options": {
+        "referenceType": "page",
+        "multiple": false
+      }
+    },
+    "terms_service_id": {
+      "type": "reference",
+      "title": "Terms of Service",
+      "description": "Link to the Terms of Service page",
+      "options": {
+        "referenceType": "page",
+        "multiple": false
+      }
+    },
+    "social_links": {
+      "type": "reference",
+      "title": "Social Profiles",
+      "description": "Social media profile links",
+      "options": {
+        "referenceType": "social-link",
+        "multiple": true
+      }
+    },
+    "favicon": {
+      "type": "media",
+      "title": "Favicon",
+      "description": "Favicon (favicon.ico, 32x32)"
+    },
+    "favicon_svg": {
+      "type": "media",
+      "title": "Favicon SVG",
+      "description": "SVG favicon (scalable, modern browsers)"
+    },
+    "apple_touch_icon": {
+      "type": "media",
+      "title": "Apple Touch Icon",
+      "description": "Apple touch icon (180x180 recommended)"
+    },
+    "app_icon_small": {
+      "type": "media",
+      "title": "App Icon Small",
+      "description": "Small app icon (192x192 recommended)"
+    },
+    "app_icon_medium": {
+      "type": "media",
+      "title": "App Icon Medium",
+      "description": "Medium app icon (384x384 recommended)"
+    },
+    "app_icon_large": {
+      "type": "media",
+      "title": "App Icon Large",
+      "description": "Large app icon (512x512 recommended)"
+    },
+    "og_image": {
+      "type": "media",
+      "title": "Open Graph Image",
+      "description": "Fallback Open Graph image"
+    },
+    "twitter_card": {
+      "type": "string",
+      "title": "Twitter Card",
+      "description": "Twitter card type (\"summary\", \"summary_large_image\")"
+    },
+    "twitter_site": {
+      "type": "string",
+      "title": "Twitter Site Handle",
+      "description": "Twitter handle of the site (e.g. @username)"
+    },
+    "robots_txt": {
+      "type": "text",
+      "title": "robots.txt",
+      "description": "robots.txt content"
+    },
+    "security_txt": {
+      "type": "text",
+      "title": "security.txt",
+      "description": "security.txt content"
+    },
+    "manifest": {
+      "type": "object",
+      "title": "Web App Manifest",
+      "description": "manifest.json configuration"
+    },
+    "csp": {
+      "type": "object",
+      "title": "Content Security Policy",
+      "description": "Global Content Security Policy (CSP) configuration"
+    },
+    "design_tokens": {
+      "type": "object",
+      "title": "Design Tokens",
+      "description": "Design system tokens (colors, typography, spacing, shadows, etc.) - use custom component to edit"
+    },
+    "header_nav_id": {
+      "type": "reference",
+      "title": "Default Header Navigation",
+      "description": "Default header navigation reference",
+      "options": {
+        "referenceType": "navigation",
+        "multiple": false
+      }
+    },
+    "footer_nav_id": {
+      "type": "reference",
+      "title": "Default Footer Navigation",
+      "description": "Default footer navigation reference",
+      "options": {
+        "referenceType": "navigation",
+        "multiple": false
+      }
+    }
+  },
+  "required": [
+    "site_name",
+    "site_url"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "theme",
+  "title": "Theme",
+  "description": "Theme/branding configuration using design tokens",
+    "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2025-12-02"
+  },
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Theme Name",
+      "description": "Theme name (\"Default\", \"Dark Mode\", \"High Contrast\")"
+    },
+    "description": {
+      "type": "text",
+      "title": "Description",
+      "description": "Theme description"
+    },
+    "tokens": {
+      "type": "text",
+      "title": "Design Tokens",
+      "description": "Design tokens as JSON string"
+    }
+  },
+  "required": [
+    "name",
+    "tokens"
+  ]
+}
