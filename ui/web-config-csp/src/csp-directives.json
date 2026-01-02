@@ -26,13 +26,13 @@
 		"type": "source-list"
 	},
 	"form-action": {
-		"defaults": [],
-		"type": "source-list"
+		"defaults": ["'self'"],
+		"type": "source-list",
+		"enabled": true
 	},
 	"frame-ancestors": {
 		"defaults": ["'none'"],
-		"type": "source-list",
-		"enabled": true
+		"type": "source-list"
 	},
 	"frame-src": {
 		"defaults": [],

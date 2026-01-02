@@ -81,6 +81,47 @@
 		<web-config-csp id="demo5-manager" evaluate></web-config-csp>
 	</section>
 
+	<!-- Demo 6: Using HTML Attributes with Inline JSON -->
+	<section>
+		<h2>6. HTML Attributes (Inline JSON)</h2>
+		<p>Custom directive added via inline JSON in the <code>directives</code> attribute.</p>
+
+		<web-config-csp
+			id="demo6"
+			lang="en"
+			directives='{"report-uri": {"defaults": [], "type": "source-list", "enabled": false}}'
+			i18n='{"en": {"directives": {"report-uri": "Deprecated. Use report-to instead."}}}'
+			evaluate
+		></web-config-csp>
+	</section>
+
+	<!-- Demo 7: Using JavaScript Setters -->
+	<section>
+		<h2>7. JavaScript Setters</h2>
+		<p>Click the buttons below to dynamically add custom configurations:</p>
+
+		<p id="demo7-controls" class="demo-controls">
+			<button id="addDirective">Add Custom Directive</button>
+			<button id="addTranslation">Add Translation</button>
+			<button id="addRule">Add Evaluation Rule</button>
+			<button id="enableCustom">Enable Custom Directive</button>
+		</p>
+
+		<web-config-csp id="demo7" lang="en" evaluate></web-config-csp>
+
+		<pre id="output"></pre>
+	</section>
+
+	<!-- Demo 8: Complete Custom Configuration -->
+	<section>
+		<h2>8. Complete Custom Configuration</h2>
+		<p>Shows a complete setup with a new directive, translation, and evaluation rule.</p>
+
+		<p class="demo-controls"><button id="setupComplete">Setup Complete Configuration</button></p>
+
+		<web-config-csp id="demo8" lang="en" evaluate></web-config-csp>
+	</section>
+
 	<script type="module">
 		// Helper function to create and configure a Web Config CSP instance
 		function createDemoManager(containerId, options) {
@@ -165,6 +206,99 @@
 			console.log('Full Event Detail:', e.detail);
 			console.groupEnd();
 		});
+
+		// --- Merged from config.html ---
+
+		// Wait for custom elements to be defined for the following demos
+		await customElements.whenDefined('web-config-csp');
+
+		const demo7 = document.getElementById('demo7');
+		const demo8 = document.getElementById('demo8');
+		const output = document.getElementById('output');
+
+		// Use event delegation for demo 7 buttons
+		const demo7Controls = document.getElementById('demo7-controls');
+		if (demo7Controls) {
+			demo7Controls.addEventListener('click', (e) => {
+				if (e.target.tagName !== 'BUTTON') return;
+
+				const action = e.target.id;
+				let message = '';
+
+				switch (action) {
+					case 'addDirective':
+						demo7.setDirectivesConfig({
+							'navigate-to': { defaults: ["'self'"], type: 'source-list', enabled: false }
+						});
+						message = 'Added "navigate-to" directive to the configuration.';
+						break;
+					case 'addTranslation':
+						demo7.setI18nConfig({
+							en: { directives: { 'navigate-to': 'Restricts URLs for navigation (experimental).' } }
+						});
+						message = 'Added translation for "navigate-to" directive.';
+						break;
+					case 'addRule':
+						demo7.setRulesConfig({
+							unsafeKeywords: {
+								"'wasm-unsafe-eval'": { severity: 'medium', messageKey: 'eval.wasmWarning', recommendationKey: 'eval.wasmWarningRec' }
+							}
+						});
+						demo7.setI18nConfig({
+							en: { eval: { wasmWarning: 'Wasm-unsafe-eval allows WebAssembly compilation', wasmWarningRec: 'Only use if WebAssembly is required' } }
+						});
+						message = 'Added custom evaluation rule for "wasm-unsafe-eval".';
+						break;
+					case 'enableCustom':
+						demo7.enableDirective('navigate-to');
+						message = 'Enabled "navigate-to" directive in the UI.';
+						break;
+				}
+				output.textContent = message;
+			});
+		}
+
+		// Demo 8: Complete setup
+		const setupCompleteBtn = document.getElementById('setupComplete');
+		if (setupCompleteBtn) {
+			setupCompleteBtn.addEventListener('click', () => {
+				demo8.setDirectivesConfig({
+					'prefetch-src': { defaults: ["'self'"], type: 'source-list', enabled: true },
+					'navigate-to': { defaults: ["'self'"], type: 'source-list', enabled: false }
+				});
+				demo8.setI18nConfig({
+					en: {
+						directives: {
+							'prefetch-src': 'Specifies valid sources for prefetch and prerendering.',
+							'navigate-to': 'Restricts URLs for navigation.'
+						},
+						eval: {
+							prefetchWildcard: 'Wildcard in prefetch-src is risky',
+							prefetchWildcardRec: 'Specify trusted origins for prefetch'
+						}
+					}
+				});
+				demo8.setRulesConfig({
+					scriptStyleDirectives: ['prefetch-src'],
+					criticalDirectives: {
+						'form-action': { messageKey: 'eval.missingFormAction', recommendationKey: 'eval.missingFormActionRec' }
+					}
+				});
+				demo8.setI18nConfig({
+					en: {
+						eval: {
+							missingFormAction: 'Missing form-action allows form submissions to any URL',
+							missingFormActionRec: 'Add form-action to restrict submissions'
+						}
+					}
+				});
+				console.log('Complete configuration applied!');
+			});
+		}
+
+		// Listen to changes
+		if (demo7) demo7.addEventListener('csp-change', (e) => console.log('Demo 7 - Policy changed:', e.detail));
+		if (demo8) demo8.addEventListener('csp-change', (e) => console.log('Demo 8 - Policy changed:', e.detail));
 	</script>
 
 </body>

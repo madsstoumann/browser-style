@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-	<title>Web Config CSP</title>
+	<title>Web Config Manifest</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Web Config CSP">
+	<meta name="description" content="Web Config Manifest - Visual editor for manifest.json files">
 	<meta name="view-transition" content="same-origin">
 	<link rel="stylesheet" href="/base.css">
 	<script type="importmap">
@@ -16,12 +16,8 @@
 	</script>
 </head>
 <body>
-	<h1>Web Config CSP</h1>
-	<p>
-		A visual editor for <code>Content Security Policy</code> directives with optional security evaluation. 
-		See the <a href="./demo.html">Demos & Configuration</a> page for examples.
-	</p>
-	<web-config-csp evaluate></web-config-csp>
+	<h1>Web Config: manifest.json</h1>
+	<web-config-manifest src="./fixtures/manifest.json"></web-config-manifest>
 	<script type="module" src="./src/index.js"></script>
 </body>
 </html>
