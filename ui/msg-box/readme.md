@@ -45,7 +45,31 @@ console.log(value); // Entered value or false if cancelled
 - `--msgbox-backdrop`: Background color of dialog backdrop
 - `--msgbox-bdrs`: Border radius of dialog
 - `--msgbox-bxsh`: Box shadow of dialog
+- `--msgbox-ff`: Font family of dialog
 - `--msgbox-p`: Padding of dialog
+
+## CSS Parts
+
+Style internal elements using `::part()`:
+
+- `dialog`: Main dialog container
+- `form`: Form wrapper
+- `headline`: Dialog title (h2)
+- `message`: Message text (span)
+- `input`: Prompt text input
+- `footer`: Button container
+- `cancel`: Cancel button
+- `ok`: OK/Submit button
+
+```css
+msg-box::part(dialog) {
+  max-width: 400px;
+}
+
+msg-box::part(headline) {
+  color: #e91e63;
+}
+```
 
 ## Internationalization
 
@@ -75,3 +99,10 @@ All methods return Promises that resolve when the dialog is closed:
 - Alert: No return value
 - Confirm: Returns `true` (OK) or `false` (Cancel/Escape)
 - Prompt: Returns input value (OK) or `false` (Cancel/Escape)
+
+## Features
+
+- **Light/Dark Mode**: Automatically adapts to system color scheme using `light-dark()` CSS function
+- **Shadow DOM**: Fully encapsulated styling that won't conflict with your page
+- **Accessible**: Uses native `<dialog>` element with proper modal behavior
+- **Lightweight**: No dependencies, pure vanilla Web Component

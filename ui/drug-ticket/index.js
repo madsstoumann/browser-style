@@ -44,7 +44,7 @@
 			'event': 'drug_fine_app',
 			'category': E.drg.value,
 			'label': E.lic_yrs[0].checked ? 'Ja' : 'Nej',
-			'expense': parseInt(E.tot_fin.value.replace(/\./g, '')),
+			'expense': parseInt(E.tot_fin.value.replace(/[^0-9]/g, '')),
 			'other': other
 		};
 
@@ -68,9 +68,9 @@
 		const yearlyIncome = E.inc.value;
 		E.inc_out.value = FC(E.inc.value);
 		scroller.scrollLeft = (E.inc.value - incMin) / incRange * scrollRange;
-		E.fin.value = F(Math.max(1500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
+		E.fin.value = F(Math.max(500, Math.round((yearlyIncome / 25) / (isTHC && lowTHC ? 2 : 1))));
 
-		E.bld_ana.value = F(isTHC ? 2079 : 2899);
+		E.bld_ana.value = F(isTHC ? 300 : 400);
 		// --- Update visibility of sections ---
 		const visibilityMap = {
 			thc: isTHC,
@@ -99,10 +99,10 @@
 
 		const total = [...E.brk.elements]
 			.reduce((sum, elm) =>
-				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/\./g, '')))
+				sum + (elm.hidden ? 0 : parseInt((elm.value || '0').replace(/[^0-9]/g, '')))
 			, 0);
 
-		const totalRounded = Math.round(total / 500) * 500;
+		const totalRounded = Math.round(total / 10) * 10;
 	const totalFormatted = F(total);
 		if (previousTotalFormatted !== null && totalFormatted !== previousTotalFormatted) {
 			triggerTotalAnimation();

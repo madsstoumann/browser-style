@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="da-DK" dir="ltr">
+<html lang="en-US" dir="ltr">
 <head>
-	<title>Narkoberegner</title>
+	<title>DUI Fine Calculator</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-	<meta name="description" content="Beregn din bøde for kørsel under påvirkning af stoffer">
+	<meta name="description" content="Calculate your fine for driving under the influence of drugs">
 	<link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -13,54 +13,54 @@
 		<source src="video.mp4" type="video/mp4">
 	</video>
 
-	<form id="app" data-currency="DKK">
+	<form id="app" data-currency="USD">
 		<div class="app">
 
 			<!-- CONTROLS -->
 			<div class="controls">
 				<header class="controls-header">
-					<h1>Hvad koster det at køre med ulovlige stoffer i blodet?</h1>
+					<h1>What does it cost to drive with illegal drugs in your blood?</h1>
 				</header>
 
 				<fieldset>
-					<legend class="label">Årsindkomst før skat:</legend>
-					<output name="inc_out">400.000</output>
-					<label aria-label="Årsindkomstfør skat">
-						<input type="range" name="inc" min="0" step="10000" max="1200000" value="200000">
+					<legend class="label">Annual income before tax:</legend>
+					<output name="inc_out">50,000</output>
+					<label aria-label="Annual income before tax">
+						<input type="range" name="inc" min="0" step="1000" max="200000" value="50000">
 						<span data-scroll><span data-scroll-bg></span></span>
 						
 					</label>
-					<small>Din faktiske eller forventede indkomst for hele året før skat.</small>
+					<small>Your actual or expected annual income before tax.</small>
 				</fieldset>
 
 				<fieldset class="radio-group">
-					<legend class="label">Vælg stof</legend>
+					<legend class="label">Select drug</legend>
 					<label><input type="radio" name="drg" value="cannabis" checked><svg width="20" height="19"><use href="icons.svg#cannabis"></use></svg>Cannabis</label>
-					<label><input type="radio" name="drg" value="opioider"><svg width="20" height="19"><use href="icons.svg#opioider"></use></svg>Opioider</label>
-					<label><input type="radio" name="drg" value="kokain"><svg width="20" height="19"><use href="icons.svg#kokain"></use></svg>Kokain</label>
-					<label><input type="radio" name="drg" value="lattergas"><svg width="20" height="19"><use href="icons.svg#gas"></use></svg>Lattergas</label>
-					<label><input type="radio" name="drg" value="andre"><svg width="20" height="19"><use href="icons.svg#andre"></use></svg>Øvrige</label>
+					<label><input type="radio" name="drg" value="opioider"><svg width="20" height="19"><use href="icons.svg#opioider"></use></svg>Opioids</label>
+					<label><input type="radio" name="drg" value="kokain"><svg width="20" height="19"><use href="icons.svg#kokain"></use></svg>Cocaine</label>
+					<label><input type="radio" name="drg" value="lattergas"><svg width="20" height="19"><use href="icons.svg#gas"></use></svg>Nitrous oxide</label>
+					<label><input type="radio" name="drg" value="andre"><svg width="20" height="19"><use href="icons.svg#andre"></use></svg>Other</label>
 				</fieldset>
 				<div class="controls-sub">
 					<fieldset name="thc" class="button-group">
-						<legend class="label">THC-niveau i blodet</legend>
+						<legend class="label">THC level in blood</legend>
 						<div>
-							<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="icons.svg#low"></use></svg>Lavt</label>
-							<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="icons.svg#medium"></use></svg>Mellem</label>
-							<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="icons.svg#high"></use></svg>Højt</label>
+							<label><input type="radio" name="thc_lvl" value="low" checked><svg width="13" height="10"><use href="icons.svg#low"></use></svg>Low</label>
+							<label><input type="radio" name="thc_lvl" value="medium"><svg width="13" height="10"><use href="icons.svg#medium"></use></svg>Medium</label>
+							<label><input type="radio" name="thc_lvl" value="high"><svg width="13" height="10"><use href="icons.svg#high"></use></svg>High</label>
 						</div>
 					</fieldset>
 
 					<fieldset name="lic" class="button-group">
-						<legend class="label">Hvor længe har du haft kørekort?</legend>
+						<legend class="label">How long have you had your driver's license?</legend>
 						<div>
 							<label>
 								<input type="radio" name="lic_yrs">
-								<span>Over 3 år</span>
+								<span>Over 3 years</span>
 							</label>
 							<label>
 								<input type="radio" name="lic_yrs" checked>
-								<span>Under 3 år</span>
+								<span>Under 3 years</span>
 							</label>
 						</div>
 					</fieldset>
@@ -72,20 +72,20 @@
 				<article>
 					<header>
 						<div>
-							<span class="label"> Hvad koster det at køre med ulovlige stoffer i blodet?</span>
-							<h2 class="result-total"><output name="tot_fin">1500</output><small>(afrundet)</small></h2>
-							<output name="thc_info_low"><small>Lavt THC-niveau svarer til 0.001-0.003 mg/kg blod.</small></output>
-							<output name="thc_info_med"><small>Mellem THC-niveau svarer til 0.003-0.0009 mg/kg blod.</small></output>
-							<output name="thc_info_high"><small>Højt THC-niveau svarer til over 0.0009 mg/kg blod.</small></output>
-							<output name="other_info">Fx: amfetamin, ecstasy, benzodiazepiner, ketamin mv.</output>
+							<span class="label"> What does it cost to drive with illegal drugs in your blood?</span>
+							<h2 class="result-total"><output name="tot_fin">2000</output><small>(rounded)</small></h2>
+							<output name="thc_info_low"><small>Low THC level corresponds to 0.001-0.003 mg/kg blood.</small></output>
+							<output name="thc_info_med"><small>Medium THC level corresponds to 0.003-0.009 mg/kg blood.</small></output>
+							<output name="thc_info_high"><small>High THC level corresponds to over 0.009 mg/kg blood.</small></output>
+							<output name="other_info">E.g.: amphetamine, ecstasy, benzodiazepines, ketamine etc.</output>
 						</div>
 						<fieldset name="smr">
-							<output name="unc_dsq_3ys">Kørekortet frakendes ubetinget i 3 år</output>
-							<output name="drv_ban_dsc">Kørselsforbud</output>
-							<output name="cnd_dsq_dsc">Kørekortet frakendes betinget</output>
-							<output name="ant_dsc">Alkohol, Narko- og Trafikkursus</output>
-							<output name="lic_tst_dsc">Ny teori- og køreprøve</output>
-							<output name="lic_clp_dsc">1 klip i kørekortet</output>
+							<output name="unc_dsq_3ys">License revoked unconditionally for 3 years</output>
+							<output name="drv_ban_dsc">Driving ban</output>
+							<output name="cnd_dsq_dsc">License revoked conditionally</output>
+							<output name="ant_dsc">Alcohol, Drug and Traffic Course</output>
+							<output name="lic_tst_dsc">New theory and driving test</output>
+							<output name="lic_clp_dsc">1 penalty point on license</output>
 						</fieldset>
 						<label class="button-link result-toggle">
 							<input type="checkbox">
@@ -94,47 +94,47 @@
 
 					<div class="result-table">
 						<hr>
-						<fieldset name="brk"><strong>Se detaljer:</strong>
+						<fieldset name="brk"><strong>See details:</strong>
 							<label>
-								<span>Bødestørrelse</span>
-								<span><output name="fin">1500</output> kr.</span>
+								<span>Fine amount</span>
+								<span><output name="fin">2000</output> $</span>
 							</label>
 							<label>
-								<span>Blodprøvetagning</span>
-								<span><output name="doc_fee">125</output> kr.</span>
+								<span>Blood sample collection</span>
+								<span><output name="doc_fee">20</output> $</span>
 							</label>
 							<label>
-								<span>Analyse af blodprøve</span>
-								<span><output name="bld_ana">2.079</output> kr.</span>
+								<span>Blood sample analysis</span>
+								<span><output name="bld_ana">300</output> $</span>
 							</label>
 							<label>
-								<span>Offerfonden</span>
-								<span><output name="vic_fnd">500</output> kr.</span>
+								<span>Victim Fund</span>
+								<span><output name="vic_fnd">80</output> $</span>
 							</label>
 							<label>
-								<span>Alkohol, Narko- og Trafikkursus</span>
-								<span><output name="ant_crs">3.200</output> kr.</span>
+								<span>DUI Course</span>
+								<span><output name="ant_crs">500</output> $</span>
 							</label>
 							<label>
-								<span>Ny teori- og køreprøve</span>
-								<span><output name="lic_tst">1.210</output> kr.</span>
+								<span>New theory and driving test</span>
+								<span><output name="lic_tst">200</output> $</span>
 							</label>
 
 						</fieldset>
 						<label class="result-total">
-							<strong>Totale udgifter (ca.)</strong>
-							<strong><output name="tot"></output> kr.</strong>
+							<strong>Total expenses (approx.)</strong>
+							<strong><output name="tot"></output> $</strong>
 						</label>
 						<output name="gas_inf_dsc">
-							<small class="textblock">Har du lattergas i bilen, kan du oveni få en bøde på 10.000 kr. for at køre med farligt gods og 3.000 – 50.000 kr. for besiddelse, afhængigt af mængden.</small>
+							<small class="textblock">If you have nitrous oxide in the car, you can additionally be fined $1,500 for transporting dangerous goods and $500 – $7,500 for possession, depending on the amount.</small>
 						</output>
 						<hr>
 						<details>
-							<summary>Vigtigt at vide</summary>
+							<summary>Important to know</summary>
 							<div>
-								<p>Beregningen af sanktionerne for kørsel med ulovlige stoffer er vejledende og kan afvige i konkrete sager, afhængigt af omstændighederne.</p>
-								<p>Det er altid rettens afgørelse, der gælder. Beregningerne gælder for førstegangstilfælde uden færdselsuheld. I gentagelsestilfælde eller ved færdselsuheld stiger straffen.</p>
-								<p><a href="https://www.sikkertrafik.dk/rad-og-viden/bil/medicin-og-stoffer/" class="button-link" target="_blank" rel="noopener noreferrer">Læs mere</a></p>
+								<p>The calculation of sanctions for driving with illegal drugs is indicative and may differ in specific cases, depending on the circumstances.</p>
+								<p>It is always the court's decision that applies. The calculations apply to first-time offenses without traffic accidents. In case of recurrence or traffic accidents, the penalty increases.</p>
+								<p><a href="https://www.nhtsa.gov/risky-driving/drug-impaired-driving" class="button-link" target="_blank" rel="noopener noreferrer">Read more</a></p>
 							</div>
 						</details>
 					</div>
