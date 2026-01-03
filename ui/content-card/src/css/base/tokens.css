@@ -1,0 +1,317 @@
+/**
+ * Content Card Design Tokens
+ *
+ * A comprehensive design token system for the content-card component library.
+ * Tokens are organized into layers:
+ *
+ * 1. Primitive tokens (raw values)
+ * 2. Semantic tokens (purpose-based)
+ * 3. Component tokens (element-specific)
+ *
+ * Override hierarchy:
+ * tokens.css (defaults) → base.css (structure) → components/*.css (type-specific)
+ */
+
+/* =============================================================================
+   PRIMITIVE TOKENS
+   Raw values that form the foundation of the design system
+   ============================================================================= */
+
+:root {
+	/* --- Color Palette --- */
+	/* Neutrals */
+	--cc-gray-50: #f9fafb;
+	--cc-gray-100: #f3f4f6;
+	--cc-gray-200: #e5e7eb;
+	--cc-gray-300: #d1d5db;
+	--cc-gray-400: #9ca3af;
+	--cc-gray-500: #6b7280;
+	--cc-gray-600: #4b5563;
+	--cc-gray-700: #374151;
+	--cc-gray-800: #1f2937;
+	--cc-gray-900: #111827;
+	--cc-gray-950: #030712;
+
+	/* Primary (Blue) */
+	--cc-primary-50: #eff6ff;
+	--cc-primary-100: #dbeafe;
+	--cc-primary-200: #bfdbfe;
+	--cc-primary-300: #93c5fd;
+	--cc-primary-400: #60a5fa;
+	--cc-primary-500: #3b82f6;
+	--cc-primary-600: #2563eb;
+	--cc-primary-700: #1d4ed8;
+	--cc-primary-800: #1e40af;
+	--cc-primary-900: #1e3a8a;
+
+	/* Success (Green) */
+	--cc-success-50: #f0fdf4;
+	--cc-success-500: #22c55e;
+	--cc-success-600: #16a34a;
+	--cc-success-700: #15803d;
+
+	/* Warning (Amber) */
+	--cc-warning-50: #fffbeb;
+	--cc-warning-500: #f59e0b;
+	--cc-warning-600: #d97706;
+
+	/* Error (Red) */
+	--cc-error-50: #fef2f2;
+	--cc-error-500: #ef4444;
+	--cc-error-600: #dc2626;
+	--cc-error-700: #b91c1c;
+
+	/* --- Typography Scale --- */
+	--cc-font-size-2xs: clamp(0.625rem, 0.6rem + 0.125vw, 0.6875rem);
+	--cc-font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem);
+	--cc-font-size-sm: clamp(0.8125rem, 0.775rem + 0.1875vw, 0.875rem);
+	--cc-font-size-base: clamp(0.875rem, 0.85rem + 0.125vw, 1rem);
+	--cc-font-size-lg: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+	--cc-font-size-xl: clamp(1.125rem, 1rem + 0.625vw, 1.375rem);
+	--cc-font-size-2xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.625rem);
+	--cc-font-size-3xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+	--cc-font-size-4xl: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem);
+
+	/* --- Font Weights --- */
+	--cc-font-weight-normal: 400;
+	--cc-font-weight-medium: 500;
+	--cc-font-weight-semibold: 600;
+	--cc-font-weight-bold: 700;
+
+	/* --- Line Heights --- */
+	--cc-line-height-tight: 1.2;
+	--cc-line-height-snug: 1.375;
+	--cc-line-height-normal: 1.5;
+	--cc-line-height-relaxed: 1.625;
+
+	/* --- Spacing Scale --- */
+	--cc-space-unit: 0.25rem;
+	--cc-space-0: 0;
+	--cc-space-0-5: calc(0.5 * var(--cc-space-unit));
+	--cc-space-1: calc(1 * var(--cc-space-unit));
+	--cc-space-1-5: calc(1.5 * var(--cc-space-unit));
+	--cc-space-2: calc(2 * var(--cc-space-unit));
+	--cc-space-2-5: calc(2.5 * var(--cc-space-unit));
+	--cc-space-3: calc(3 * var(--cc-space-unit));
+	--cc-space-4: calc(4 * var(--cc-space-unit));
+	--cc-space-5: calc(5 * var(--cc-space-unit));
+	--cc-space-6: calc(6 * var(--cc-space-unit));
+	--cc-space-8: calc(8 * var(--cc-space-unit));
+	--cc-space-10: calc(10 * var(--cc-space-unit));
+	--cc-space-12: calc(12 * var(--cc-space-unit));
+	--cc-space-16: calc(16 * var(--cc-space-unit));
+
+	/* --- Border Radius --- */
+	--cc-radius-none: 0;
+	--cc-radius-sm: 0.25rem;
+	--cc-radius-md: 0.375rem;
+	--cc-radius-lg: 0.5rem;
+	--cc-radius-xl: 0.75rem;
+	--cc-radius-2xl: 1rem;
+	--cc-radius-full: 9999px;
+
+	/* --- Shadows --- */
+	--cc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	--cc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+	--cc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	--cc-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+	/* --- Transitions --- */
+	--cc-duration-fast: 150ms;
+	--cc-duration-normal: 250ms;
+	--cc-duration-slow: 350ms;
+	--cc-ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+	--cc-ease-in: cubic-bezier(0.4, 0, 1, 1);
+	--cc-ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+	/* --- Font Stacks --- */
+	--cc-font-sans: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+	--cc-font-heading: Inter, Roboto, 'Helvetica Neue', 'Arial Nova', 'Nimbus Sans', Arial, sans-serif;
+	--cc-font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+}
+
+
+/* =============================================================================
+   SEMANTIC TOKENS
+   Purpose-based tokens using light-dark() for automatic theme switching
+   ============================================================================= */
+
+:root {
+	/* --- Surface Colors --- */
+	--cc-color-surface: light-dark(#ffffff, var(--cc-gray-900));
+	--cc-color-surface-raised: light-dark(var(--cc-gray-50), var(--cc-gray-800));
+	--cc-color-surface-sunken: light-dark(var(--cc-gray-100), var(--cc-gray-950));
+	--cc-color-surface-overlay: light-dark(rgb(255 255 255 / 0.9), rgb(17 24 39 / 0.95));
+
+	/* --- Text Colors --- */
+	--cc-color-text: light-dark(var(--cc-gray-900), var(--cc-gray-50));
+	--cc-color-text-secondary: light-dark(var(--cc-gray-600), var(--cc-gray-400));
+	--cc-color-text-muted: light-dark(var(--cc-gray-500), var(--cc-gray-500));
+	--cc-color-text-inverted: light-dark(#ffffff, var(--cc-gray-900));
+
+	/* --- Accent Colors --- */
+	--cc-color-accent: light-dark(var(--cc-primary-600), var(--cc-primary-400));
+	--cc-color-accent-hover: light-dark(var(--cc-primary-700), var(--cc-primary-300));
+	--cc-color-accent-muted: light-dark(var(--cc-primary-100), var(--cc-primary-900));
+
+	/* --- Border Colors --- */
+	--cc-color-border: light-dark(var(--cc-gray-200), var(--cc-gray-700));
+	--cc-color-border-muted: light-dark(var(--cc-gray-100), var(--cc-gray-800));
+	--cc-color-border-emphasis: light-dark(var(--cc-gray-300), var(--cc-gray-600));
+
+	/* --- Status Colors --- */
+	--cc-color-success: light-dark(var(--cc-success-600), var(--cc-success-500));
+	--cc-color-warning: light-dark(var(--cc-warning-600), var(--cc-warning-500));
+	--cc-color-error: light-dark(var(--cc-error-600), var(--cc-error-500));
+
+	/* --- Overlay --- */
+	--cc-color-overlay-dark: rgb(0 0 0 / 0.6);
+	--cc-color-overlay-darker: rgb(0 0 0 / 0.8);
+}
+
+
+/* =============================================================================
+   COMPONENT TOKENS
+   Element-specific tokens that reference semantic tokens
+   ============================================================================= */
+
+:root {
+	/* --- Card Container --- */
+	--cc-card-bg: var(--cc-color-surface);
+	--cc-card-border-radius: var(--cc-radius-lg);
+	--cc-card-shadow: var(--cc-shadow-sm);
+	--cc-card-shadow-hover: var(--cc-shadow-md);
+	--cc-card-padding: var(--cc-space-4);
+	--cc-card-gap: var(--cc-space-4);
+
+	/* --- Headlines --- */
+	--cc-headline-font: var(--cc-font-heading);
+	--cc-headline-size: var(--cc-font-size-xl);
+	--cc-headline-weight: var(--cc-font-weight-semibold);
+	--cc-headline-line-height: var(--cc-line-height-tight);
+	--cc-headline-color: var(--cc-color-text);
+
+	/* --- Subheadlines --- */
+	--cc-subheadline-size: var(--cc-font-size-base);
+	--cc-subheadline-weight: var(--cc-font-weight-normal);
+	--cc-subheadline-color: var(--cc-color-text-secondary);
+
+	/* --- Summary / Body Text --- */
+	--cc-summary-size: var(--cc-font-size-sm);
+	--cc-summary-color: var(--cc-color-text);
+	--cc-summary-line-height: var(--cc-line-height-relaxed);
+	--cc-summary-line-clamp: 3;
+
+	/* --- Category / Meta --- */
+	--cc-category-size: var(--cc-font-size-xs);
+	--cc-category-weight: var(--cc-font-weight-medium);
+	--cc-category-color: var(--cc-color-accent);
+	--cc-category-text-transform: uppercase;
+	--cc-category-letter-spacing: 0.025em;
+
+	/* --- Published / Reading Time --- */
+	--cc-meta-size: var(--cc-font-size-xs);
+	--cc-meta-color: var(--cc-color-text-muted);
+	--cc-meta-weight: var(--cc-font-weight-normal);
+
+	/* --- Tags --- */
+	--cc-tag-bg: var(--cc-color-surface-raised);
+	--cc-tag-color: var(--cc-color-text-secondary);
+	--cc-tag-size: var(--cc-font-size-xs);
+	--cc-tag-padding: var(--cc-space-1) var(--cc-space-2-5);
+	--cc-tag-radius: var(--cc-radius-full);
+	--cc-tag-gap: var(--cc-space-2);
+
+	/* --- Actions (Buttons) --- */
+	--cc-action-bg: var(--cc-color-accent);
+	--cc-action-color: var(--cc-color-text-inverted);
+	--cc-action-size: var(--cc-font-size-sm);
+	--cc-action-weight: var(--cc-font-weight-medium);
+	--cc-action-padding: var(--cc-space-2) var(--cc-space-4);
+	--cc-action-radius: var(--cc-radius-md);
+	--cc-action-gap: var(--cc-space-2);
+
+	/* --- Links --- */
+	--cc-link-color: var(--cc-color-accent);
+	--cc-link-color-hover: var(--cc-color-accent-hover);
+	--cc-link-decoration: none;
+	--cc-link-decoration-hover: underline;
+
+	/* --- Media --- */
+	--cc-media-radius: var(--cc-card-border-radius);
+	--cc-media-aspect-ratio: 16 / 9;
+	--cc-media-object-fit: cover;
+	--cc-media-overlay-gradient: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.7) 100%);
+
+	/* --- Ribbon --- */
+	--cc-ribbon-bg: var(--cc-error-600);
+	--cc-ribbon-color: #ffffff;
+	--cc-ribbon-size: var(--cc-font-size-xs);
+	--cc-ribbon-weight: var(--cc-font-weight-semibold);
+	--cc-ribbon-padding: var(--cc-space-1) var(--cc-space-2);
+	--cc-ribbon-radius: var(--cc-radius-sm);
+
+	/* --- Sticker --- */
+	--cc-sticker-bg: var(--cc-color-accent);
+	--cc-sticker-color: #ffffff;
+	--cc-sticker-size: var(--cc-font-size-2xs);
+	--cc-sticker-weight: var(--cc-font-weight-bold);
+	--cc-sticker-padding: var(--cc-space-0-5) var(--cc-space-2);
+	--cc-sticker-radius: var(--cc-radius-sm);
+
+	/* --- Authors --- */
+	--cc-author-size: var(--cc-font-size-sm);
+	--cc-author-name-weight: var(--cc-font-weight-medium);
+	--cc-author-name-color: var(--cc-color-text);
+	--cc-author-role-color: var(--cc-color-text-muted);
+
+	/* --- Avatar --- */
+	--cc-avatar-size: 2.5rem;
+	--cc-avatar-radius: var(--cc-radius-full);
+	--cc-avatar-border: 2px solid var(--cc-color-border);
+
+	/* --- Engagement (likes, comments, shares) --- */
+	--cc-engagement-size: var(--cc-font-size-xs);
+	--cc-engagement-color: var(--cc-color-text-muted);
+	--cc-engagement-gap: var(--cc-space-4);
+	--cc-engagement-icon-size: 1rem;
+
+	/* --- Rating --- */
+	--cc-rating-color: var(--cc-warning-500);
+	--cc-rating-empty-color: var(--cc-gray-300);
+	--cc-rating-size: 1rem;
+
+	/* --- Price --- */
+	--cc-price-size: var(--cc-font-size-xl);
+	--cc-price-weight: var(--cc-font-weight-bold);
+	--cc-price-color: var(--cc-color-text);
+	--cc-price-original-size: var(--cc-font-size-sm);
+	--cc-price-original-color: var(--cc-color-text-muted);
+	--cc-price-sale-color: var(--cc-error-600);
+}
+
+
+/* =============================================================================
+   THEME VARIANTS
+   Override tokens for specific themes
+   ============================================================================= */
+
+/* Dark theme applied via layout attribute */
+[layout*="thd"] {
+	--cc-card-bg: var(--cc-gray-800);
+	--cc-color-surface: var(--cc-gray-900);
+	--cc-color-surface-raised: var(--cc-gray-700);
+	--cc-color-text: var(--cc-gray-50);
+	--cc-color-text-secondary: var(--cc-gray-300);
+	--cc-color-text-muted: var(--cc-gray-400);
+	--cc-color-border: var(--cc-gray-600);
+	--cc-tag-bg: var(--cc-gray-700);
+	--cc-tag-color: var(--cc-gray-200);
+}
+
+/* Light theme applied via layout attribute */
+[layout*="thl"] {
+	--cc-card-bg: var(--cc-gray-100);
+	--cc-color-surface: var(--cc-gray-50);
+	--cc-color-surface-raised: #ffffff;
+}
