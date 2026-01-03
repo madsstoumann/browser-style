@@ -8,18 +8,21 @@ function getBasePath() {
 }
 
 /**
- * Normalize card data from Contentful structure to flat rendering structure
+ * Normalize card data from CMS structure to flat rendering structure
  *
- * Contentful structure:
- * { internal_name, headline, subheadline, summary, category, tags, data: { type, media, ... } }
+ * CMS structure (with type-specific data):
+ * { id, headline, subheadline, summary, category, tags, media, actions, links, data: { type, product: {...}, ... } }
+ *
+ * CMS structure (generic content, no data property):
+ * { id, headline, subheadline, summary, category, tags, media, actions, links }
  *
  * Flat rendering structure:
- * { id, type, media, content: { headline, subheadline, summary, category, ... }, tags, ... }
+ * { id, type, media, actions, links, content: { headline, subheadline, summary, category, ... }, tags, ... }
  */
 function normalizeCardData(item) {
-	// If item has 'data' property with 'type', it's Contentful format
+	// If item has 'data' property with 'type', it's CMS format with type-specific data
 	if (item.data && item.data.type) {
-		const { id, headline, subheadline, summary, category, tags, media, data } = item;
+		const { id, headline, subheadline, summary, category, tags, media, actions, links, data } = item;
 		const { type, content: dataContent, ...restData } = data;
 
 		// Merge top-level CMS fields into content object
@@ -38,14 +41,40 @@ function normalizeCardData(item) {
 			id,
 			type,
 			content,
-			// Media from root level (common across all card types)
+			// Common fields from root level
 			...(media && { media }),
+			...(actions?.length > 0 && { actions }),
+			...(links?.length > 0 && { links }),
 			...(normalizedTags?.length > 0 && { tags: normalizedTags }),
 			...restData
 		};
 	}
 
-	// Already in flat format
+	// If item has root-level CMS fields but no data property, it's a generic content card
+	if (item.headline || item.summary || item.subheadline) {
+		const { id, headline, subheadline, summary, category, tags, media, actions, links, ...rest } = item;
+
+		// Build content object from root-level fields
+		const content = {
+			...(headline && { headline }),
+			...(subheadline && { subheadline }),
+			...(summary && { summary }),
+			...(category && { category })
+		};
+
+		return {
+			id,
+			// No type = generic content card
+			content,
+			...(media && { media }),
+			...(actions?.length > 0 && { actions }),
+			...(links?.length > 0 && { links }),
+			...(tags?.length > 0 && { tags }),
+			...rest
+		};
+	}
+
+	// Already in flat format (legacy)
 	return item;
 }
 
@@ -224,22 +253,29 @@ async function initializeCards(dataSrc = 'data.json', allCards = null) {
 
 			allData.forEach(item => {
 				if (definedContent.has(item.id)) return;
-				
-				let tagName = `${item.type}-card`;
-				
-				if (item.type === 'video') {
-					tagName = 'article-card';
+
+				// Determine tag name: use type if present, otherwise fallback to content-card
+				let tagName;
+				if (item.type) {
+					tagName = `${item.type}-card`;
+					if (item.type === 'video') {
+						tagName = 'article-card';
+					}
+				} else {
+					// No type means generic content card
+					tagName = 'content-card';
 				}
-				
+
 				if (!cardTypes.includes(tagName)) {
-					return;
+					// Fallback to content-card for unknown types
+					tagName = 'content-card';
 				}
-				
+
 				const wrapper = document.createElement('div');
 				wrapper.innerHTML = `<${tagName} content="${item.id}"></${tagName}>`;
 				const cardElement = wrapper.firstElementChild;
 				main.appendChild(cardElement);
-				
+
 				setContentForElement(cardElement, item.id, allData);
 			});
 		}

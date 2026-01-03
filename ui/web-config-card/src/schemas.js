@@ -620,6 +620,8 @@ export const schemas = {
 	}
 };
 
+// Note: 'actions' and 'links' are now root-level CMS fields (not in commonSchema)
+// They are edited directly via the CMS interface, not through web-config-card
 export const commonSchema = {
 	media: {
 		title: 'Media',
@@ -638,20 +640,6 @@ export const commonSchema = {
 						type: { type: 'string', title: 'Type', enum: ['image', 'video'], default: 'image' }
 					}
 				}
-			}
-		}
-	},
-	actions: {
-		title: 'Actions',
-		type: 'array',
-		itemTitle: 'Action',
-		items: {
-			type: 'object',
-			properties: {
-				text: { type: 'string', title: 'Label', placeholder: 'Learn More' },
-				url: { type: 'string', title: 'URL', placeholder: 'https://...' },
-				icon: { type: 'string', title: 'Icon', placeholder: 'arrow_forward' },
-				type: { type: 'string', title: 'Button Type', enum: ['primary', 'secondary', 'tertiary'] }
 			}
 		}
 	},

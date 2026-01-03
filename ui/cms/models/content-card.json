@@ -62,6 +62,34 @@
         "caption": { "type": "string" }
       }
     },
+    "actions": {
+      "type": "array",
+      "title": "Actions",
+      "description": "Call-to-action buttons",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "url": { "type": "string" },
+          "icon": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      }
+    },
+    "links": {
+      "type": "array",
+      "title": "Links",
+      "description": "Navigation links",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "url": { "type": "string" },
+          "icon": { "type": "string" },
+          "hideText": { "type": "boolean" }
+        }
+      }
+    },
     "data": {
       "type": "json",
       "title": "Card Data",
