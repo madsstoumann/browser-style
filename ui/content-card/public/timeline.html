@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Timeline Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Timeline Card - Display chronological events, history, and milestones in a vertical timeline format using Schema.org EventSeries markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Timeline Card</h2>
+	<p>The Timeline Card displays chronological events, company history, project milestones, and sequential content in a vertical timeline format. Each event features a date, title, and description with visual connecting lines. Uses <code>Schema.org/EventSeries</code> markup.</p>
+
+	<lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap>
+		<timeline-card content="timeline-1" layout="rows(thd pa1)"></timeline-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

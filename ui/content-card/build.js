@@ -342,7 +342,7 @@ async function renderPage(url, outputPath) {
   
   try {
     console.log(`Loading ${url}...`);
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
     
     // Check what's available
     const debug = await page.evaluate(() => {

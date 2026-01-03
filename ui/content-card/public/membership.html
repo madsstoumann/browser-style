@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Membership Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Membership Card - Display subscription plans and membership tiers with pricing, features, limitations, and trial periods using Schema.org Offer markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Membership Card</h2>
+	<p>The Membership Card displays subscription plans, membership tiers, and pricing tables. Features plan name, monthly/yearly pricing, included features, limitations, trial period, popular/recommended badge, and signup link. Uses <code>Schema.org/Offer</code> markup for pricing information.</p>
+
+	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
+		<membership-card content="membership-1" layout="rows(thd pa1)"></membership-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

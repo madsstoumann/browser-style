@@ -1,5 +1,1535 @@
 [
   {
+    "id": "news-1",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/quantum.png",
+          "alt": "Abstract technology background"
+        }
+      ],
+      "caption": "Quantum computing advances."
+    },
+    "sticker": {
+      "text": "New",
+      "style": "badge",
+      "position": "top-right"
+    },
+    "content": {
+      "category": "Technology",
+      "headline": "The Future of Quantum Computing is:",
+      "headlineTag": "h3",
+      "subheadline": "A Major Leap Forward",
+      "summary": "Scientists have made a breakthrough in quantum computing that could change everything we know about processing power.",
+      "published": {
+        "datetime": "2025-07-16T10:00:00Z",
+        "formatted": "July 16, 2025"
+      },
+      "modified": {
+        "datetime": "2025-07-16T12:00:00Z",
+        "formatted": "(Updated July 16, 2025)"
+      },
+      "readingTime": "4 min read"
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Read More",
+        "hideText": true
+      }
+    ]
+  },
+  {
+    "id": "news-2",
+    "type": "news",
+    "content": {
+      "category": "World News",
+      "headline": "Global Summit Addresses Climate Change",
+      "headlineTag": "h3",
+      "summary": "Leaders from around the world gather to discuss new initiatives to combat the escalating climate crisis."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Learn More"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Europe",
+        "url": "#"
+      },
+      {
+        "name": "Politics",
+        "url": "#"
+      }
+    ]
+  },
+  {
+    "id": "news-3",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/underdogs.png",
+          "alt": "Athlete crossing the finish line"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "LIVE",
+      "style": "live"
+    },
+    "content": {
+      "category": "Sport",
+      "headline": "Underdogs Clinch Championship Title"
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Watch Highlights",
+        "icon": "play"
+      }
+    ]
+  },
+  {
+    "id": "news-4",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/gastronomy.png",
+          "alt": "Gourmet dish"
+        }
+      ]
+    },
+    "content": {
+      "category": "Lifestyle",
+      "headline": "The Rise of Sustainable Gastronomy",
+      "summary": "How chefs are embracing local, seasonal, and zero-waste cooking to create a more sustainable food culture."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Discover Recipes",
+        "icon": "recipe"
+      }
+    ]
+  },
+  {
+    "id": "news-5",
+    "type": "news",
+    "content": {
+      "category": "Domestic",
+      "headline": "New Infrastructure Bill Passed",
+      "summary": "The new bill promises to upgrade roads, bridges, and public transport systems across the nation over the next decade.",
+      "published": {
+        "datetime": "2025-07-15T18:30:00Z",
+        "formatted": "July 15, 2025"
+      },
+      "readingTime": "6 min read"
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "See the Plan",
+        "icon": "map"
+      }
+    ]
+  },
+  {
+    "id": "news-6",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/hubble.png",
+          "alt": "Nebula in deep space"
+        }
+      ]
+    },
+    "content": {
+      "category": "Science",
+      "headline": "Hubble Successor Telescope Reveals Stunning Images"
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "View Gallery",
+        "icon": "photo_library"
+      }
+    ]
+  },
+  {
+    "id": "news-7",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/mindfulness.png",
+          "alt": "Person meditating outdoors"
+        }
+      ]
+    },
+    "content": {
+      "category": "Health",
+      "headline": "Mindfulness and its Impact on Mental Well-being",
+      "summary": "A new study confirms the long-term benefits of daily mindfulness practice for stress reduction and improved focus."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Read the Study",
+        "icon": "self_improvement"
+      }
+    ]
+  },
+  {
+    "id": "news-8",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/finance.png",
+          "alt": "Stock market chart"
+        }
+      ]
+    },
+    "sticker": {
+      "text": "LIVE"
+    },
+    "content": {
+      "category": "Finance",
+      "headline": "Market Hits Record High Amidst Volatility"
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Analyze the Data",
+        "icon": "analytics"
+      }
+    ]
+  },
+  {
+    "id": "news-9",
+    "type": "news",
+    "content": {
+      "category": "Culture",
+      "headline": "Revival of Classic Cinema in Theaters",
+      "summary": "Independent theaters are seeing a resurgence in popularity by screening timeless classic films for a new generation."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Find a Screening",
+        "icon": "movie"
+      }
+    ]
+  },
+  {
+    "id": "news-10",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/destinations.png",
+          "alt": "Tropical beach"
+        }
+      ]
+    },
+    "content": {
+      "category": "Travel",
+      "headline": "Top 10 Hidden Gems to Visit This Summer",
+      "summary": "Escape the crowds and discover breathtaking destinations that are still off the beaten path."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Explore Destinations",
+        "icon": "flight"
+      }
+    ]
+  },
+  {
+    "id": "news-11",
+    "type": "news",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/government.png",
+          "alt": "Government building"
+        }
+      ]
+    },
+    "content": {
+      "category": "Politics",
+      "headline": "In-depth Analysis of the New International Trade Agreement",
+      "summary": "The recently signed trade agreement is set to reshape global commerce, affecting everything from local businesses to multinational corporations. This article provides a comprehensive look into the key clauses, potential impacts on various sectors, and expert opinions on what the future holds for international trade relations.",
+      "published": {
+        "datetime": "2025-07-16T14:00:00Z",
+        "formatted": "July 16, 2025"
+      },
+      "readingTime": "12 min read"
+    },
+    "authors": [
+      {
+        "name": "Jane Smith",
+        "role": "Chief Political Correspondent",
+        "avatar": {
+          "src": "https://browser.style/assets/images/janesmith.png",
+          "alt": "Jane Smith",
+          "width": 40,
+          "height": 40
+        },
+        "contacts": [
+          {
+            "type": "email",
+            "value": "jane.smith@example.com",
+            "label": "Email"
+          },
+          {
+            "type": "twitter",
+            "value": "https://twitter.com/janesmith",
+            "label": "Twitter"
+          }
+        ],
+        "url": "/authors/jane-smith"
+      }
+    ],
+    "links": [
+      {
+        "url": "#",
+        "text": "Read Full Analysis",
+        "icon": "analytics"
+      }
+    ]
+  },
+  {
+    "id": "news-12",
+    "type": "news",
+    "content": {
+      "category": "Short news",
+      "headline": "Police still looking for mysterious beaver",
+      "published": {
+        "datetime": "2025-07-16T14:00:00Z",
+        "formatted": "July 16, 2025"
+      }
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Read Story",
+        "hideText": true
+      }
+    ]
+  },
+  {
+    "id": "news-13",
+    "type": "news",
+    "content": {
+      "category": "Inspiration",
+      "headline": "Creativity Sparks Change",
+      "summary": "Discover how creative minds are driving innovation."
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "Read the Story",
+        "icon": "lightbulb"
+      }
+    ]
+  },
+  {
+    "id": "recipe-1",
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/carbonara.png",
+          "alt": "A delicious plate of Spaghetti Carbonara"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Popular",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Italian",
+      "headline": "Classic Spaghetti Carbonara",
+      "summary": "A creamy and delicious pasta dish made with eggs, cheese, pancetta, and pepper. Ready in just 20 minutes.",
+      "readingTime": "20 min",
+      "text": [
+        "400g spaghetti",
+        "200g pancetta or guanciale, diced",
+        "4 large eggs",
+        "100g Pecorino Romano cheese, grated",
+        "50g Parmesan cheese, grated",
+        "2 cloves garlic, minced",
+        "Fresh black pepper",
+        "Salt for pasta water"
+      ]
+    },
+    "recipe": {
+      "prepTime": "10 min",
+      "cookTime": "15 min",
+      "servings": "4",
+      "instructions": [
+        "Bring a large pot of salted water to boil and cook spaghetti according to package directions.",
+        "While pasta cooks, heat a large skillet over medium heat and cook pancetta until crispy.",
+        "In a bowl, whisk together eggs, grated cheeses, and black pepper.",
+        "Drain pasta, reserving 1 cup of pasta water.",
+        "Add hot pasta to the skillet with pancetta and remove from heat.",
+        "Quickly stir in the egg mixture, adding pasta water gradually to create a creamy sauce.",
+        "Serve immediately with extra cheese and black pepper."
+      ]
+    },
+    "authors": [
+      {
+        "name": "Chef Mario Rossi",
+        "role": "Italian Cuisine Expert"
+      }
+    ],
+    "engagement": {
+      "reactions": [
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 250,
+          "value": 4.5,
+          "max": 5,
+          "min": 0,
+          "ariaLabel": "Like this recipe"
+        }
+      ],
+      "commentCount": 45,
+      "shareCount": 120,
+      "viewCount": 12000
+    },
+    "actions": [
+      {
+        "text": "Save Recipe",
+        "icon": "bookmark"
+      },
+      {
+        "text": "Share",
+        "icon": "share"
+      }
+    ],
+    "tags": [
+      "Italian",
+      "Pasta",
+      "Quick Meal"
+    ]
+  },
+  {
+    "id": "recipe-2",
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/summersalad.png",
+          "alt": "A vibrant summer salad"
+        }
+      ]
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Vibrant Summer Salad",
+      "summary": "A refreshing and healthy salad with mixed greens, berries, goat cheese, and a light vinaigrette dressing.",
+      "readingTime": "Prep time: 10 min"
+    },
+    "engagement": {
+      "reactions": [
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 120,
+          "ariaLabel": "Like this recipe"
+        }
+      ],
+      "commentCount": 15,
+      "shareCount": 30,
+      "viewCount": 8500
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "recipe"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Vegan",
+        "url": "#"
+      },
+      {
+        "name": "Healthy",
+        "url": "#"
+      }
+    ]
+  },
+  {
+    "id": "recipe-3",
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/cookies.png",
+          "alt": "Homemade chocolate chip cookies"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Popular",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Perfect Chocolate Chip Cookies",
+      "summary": "The ultimate guide to baking soft, chewy, and delicious chocolate chip cookies from scratch.",
+      "readingTime": "Prep time: 45 min"
+    },
+    "engagement": {
+      "reactions": [
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 530,
+          "ariaLabel": "Like this recipe"
+        }
+      ],
+      "commentCount": 95,
+      "shareCount": 250,
+      "viewCount": 35000
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "recipe"
+      }
+    ]
+  },
+  {
+    "id": "recipe-4",
+    "type": "recipe",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/spicycurry.png",
+          "alt": "A bowl of spicy chicken curry"
+        }
+      ]
+    },
+    "content": {
+      "category": "Recipe",
+      "headline": "Spicy Chicken Curry",
+      "summary": "A fragrant and flavorful chicken curry with a rich blend of spices that will warm you up.",
+      "readingTime": "Prep time: 35 min"
+    },
+    "engagement": {
+      "reactions": [
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 180,
+          "ariaLabel": "Like this recipe"
+        }
+      ],
+      "commentCount": 30,
+      "shareCount": 75,
+      "viewCount": 15000
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "View Recipe",
+        "icon": "recipe"
+      }
+    ]
+  },
+  {
+    "id": "video-1",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/river.png",
+          "alt": "Peaceful River Journey"
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Peaceful River Journey",
+      "published": {
+        "datetime": "2024-12-15T10:30:00Z",
+        "formatted": "Dec 15, 2024"
+      }
+    },
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": {
+          "video": {
+            "src": "https://assets.stoumann.dk/video/river.mp4",
+            "name": "Peaceful River Journey",
+            "description": "A serene video showcasing the peaceful flow of a river through nature",
+            "uploadDate": "2024-12-15T10:30:00Z",
+            "thumbnailUrl": "https://browser.style/assets/images/river.png",
+            "options": {
+              "controls": true,
+              "autoplay": true,
+              "playsinline": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "video-2",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/bunny.png",
+          "alt": "Big Buck Bunny Adventures thumbnail"
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Big Buck Bunny Adventures",
+      "published": {
+        "datetime": "2025-03-22T14:45:00Z",
+        "formatted": "Mar 22, 2025"
+      }
+    },
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": {
+          "video": {
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "name": "Big Buck Bunny Adventures",
+            "description": "An animated short film featuring the adventures of Big Buck Bunny",
+            "uploadDate": "2025-03-22T14:45:00Z",
+            "thumbnailUrl": "https://browser.style/assets/images/bunny.png",
+            "options": {
+              "controls": true,
+              "muted": true,
+              "autoplay": true,
+              "playsinline": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "video-3",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/elephant.png",
+          "alt": "Elephants Dream Documentary thumbnail"
+        }
+      ]
+    },
+    "content": {
+      "category": "Video",
+      "headline": "Elephants Dream Documentary",
+      "published": {
+        "datetime": "2025-06-08T09:15:00Z",
+        "formatted": "Jun 8, 2025"
+      }
+    },
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": {
+          "video": {
+            "src": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "name": "Elephants Dream Documentary",
+            "description": "A surreal computer-animated short film exploring dreams and imagination",
+            "uploadDate": "2025-06-08T09:15:00Z",
+            "thumbnailUrl": "https://browser.style/assets/images/elephant.png",
+            "options": {
+              "controls": true,
+              "muted": true,
+              "autoplay": false,
+              "playsinline": true,
+              "resetOnClose": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "video-4",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://youtu.be/VTCIStB6y8s",
+          "alt": "What's new in Web UI",
+          "playsinline": false,
+          "uploadDate": "2023-05-10T09:00:00Z"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web UI",
+      "headline": "What's new in Web UI",
+      "summary": "A look at the latest updates in Web UI, including new features in CSS and HTML for building modern user interfaces."
+    },
+    "links": [
+      {
+        "url": "https://youtu.be/VTCIStB6y8s",
+        "text": "Watch on YouTube",
+        "icon": "smart_display"
+      }
+    ]
+  },
+  {
+    "id": "video-5",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://youtu.be/beYbnNT_02U",
+          "alt": "What's new in the web",
+          "uploadDate": "2023-04-15T14:30:00Z"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web Platform",
+      "headline": "What's new in the web",
+      "summary": "Discover the latest features landing in stable and beta web browsers, from new CSS functions to powerful web platform APIs."
+    },
+    "links": [
+      {
+        "url": "https://youtu.be/beYbnNT_02U",
+        "text": "Watch on YouTube",
+        "icon": "smart_display"
+      }
+    ]
+  },
+  {
+    "id": "video-6",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "youtube",
+          "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
+          "alt": "Building a UI component library",
+          "uploadDate": "2023-03-22T11:15:00Z"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "text": "Watch Video",
+        "popover": {
+          "video": {
+            "type": "youtube",
+            "src": "https://www.youtube.com/watch?v=5b4YcLB4DVI",
+            "alt": "Building a UI component library",
+            "description": "Learn how to build a comprehensive UI component library for modern web development",
+            "uploadDate": "2023-03-22T11:15:00Z",
+            "thumbnailUrl": "https://i.ytimg.com/vi/5b4YcLB4DVI/hqdefault.jpg",
+            "options": {
+              "controls": true,
+              "muted": true,
+              "autoplay": true,
+              "playsinline": true
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "product-1",
+    "sku": "ASP-WH-001",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/aurasoundpro.png",
+          "alt": "Wireless Noise-Cancelling Headphones"
+        }
+      ]
+    },
+    "ribbon": {
+      "text": "Best Seller",
+      "style": "popular"
+    },
+    "content": {
+      "category": "Electronics",
+      "headline": "AuraSound Pro",
+      "summary": "Premium wireless noise-cancelling headphones with 30-hour battery life and crystal-clear audio quality.",
+      "text": "Experience superior sound quality with our advanced noise-cancelling technology. Perfect for travel, work, or relaxation."
+    },
+    "product": {
+      "price": {
+        "current": "199.99",
+        "original": "249.99",
+        "currency": "USD",
+        "discountText": "20% off"
+      },
+      "availability": "In Stock",
+      "validUntil": "2025-12-31",
+      "rating": {
+        "value": 4.7,
+        "count": 1250,
+        "max": 5,
+        "min": 0
+      }
+    },
+    "engagement": {
+      "reactions": [
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 89,
+          "ariaLabel": "Like this product"
+        }
+      ],
+      "viewCount": 15420,
+      "shareCount": 245
+    },
+    "tags": [
+      "Wireless",
+      "Noise-Cancelling",
+      "Premium"
+    ],
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-2",
+    "sku": "FT5-BLK-002",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/fittrackpro.png",
+          "alt": "Smartwatch with Fitness Tracker"
+        }
+      ]
+    },
+    "content": {
+      "category": "Wearables",
+      "headline": "FitTrack 5",
+      "summary": "Advanced fitness tracker with heart rate monitoring, GPS, and 7-day battery life.",
+      "text": "Track your fitness goals with precision. Monitor workouts, sleep patterns, and health metrics all day long."
+    },
+    "product": {
+      "price": {
+        "current": "149.95",
+        "currency": "USD"
+      },
+      "availability": "In Stock",
+      "rating": {
+        "value": 4.5,
+        "count": 890,
+        "max": 5,
+        "min": 0
+      }
+    },
+    "engagement": {
+      "viewCount": 8350,
+      "shareCount": 120
+    },
+    "tags": [
+      "Fitness",
+      "GPS",
+      "Health"
+    ],
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-3",
+    "sku": "SWM-BLU-003",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/soundwavemini.png",
+          "alt": "Portable Bluetooth Speaker"
+        }
+      ]
+    },
+    "content": {
+      "category": "Audio",
+      "headline": "SoundWave Mini",
+      "summary": "Compact portable Bluetooth speaker with surprising sound quality and 12-hour battery life.",
+      "text": "Perfect for outdoor adventures or small gatherings. Waterproof design with deep bass and crisp highs."
+    },
+    "product": {
+      "price": {
+        "current": "39.99",
+        "original": "49.99",
+        "currency": "USD",
+        "discountText": "Sale"
+      },
+      "availability": "In Stock",
+      "rating": {
+        "value": 2.8,
+        "count": 450,
+        "max": 5,
+        "min": 0
+      }
+    },
+    "engagement": {
+      "viewCount": 3240,
+      "shareCount": 45
+    },
+    "tags": [
+      "Bluetooth",
+      "Portable",
+      "Waterproof"
+    ],
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-4",
+    "sku": "ECP-GRY-004",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/ergochair.png",
+          "alt": "Ergonomic Office Chair"
+        }
+      ]
+    },
+    "content": {
+      "category": "Furniture",
+      "headline": "ErgoComfort Pro",
+      "summary": "Professional ergonomic office chair with lumbar support and adjustable height settings.",
+      "text": "Designed for long work sessions. Features breathable mesh back, memory foam seat, and full adjustability for maximum comfort."
+    },
+    "product": {
+      "price": {
+        "current": "350.00",
+        "currency": "USD"
+      },
+      "availability": "Ships in 2-3 days",
+      "rating": {
+        "value": 1.9,
+        "count": 120,
+        "max": 5,
+        "min": 0
+      }
+    },
+    "engagement": {
+      "viewCount": 1890,
+      "shareCount": 12
+    },
+    "tags": [
+      "Ergonomic",
+      "Office",
+      "Adjustable"
+    ],
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-5",
+    "sku": "AC4K-RED-005",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/adventurecam.png",
+          "alt": "4K Action Camera"
+        }
+      ]
+    },
+    "content": {
+      "category": "Cameras",
+      "headline": "AdventureCam 4K"
+    },
+    "product": {
+      "price": {
+        "current": "179.50",
+        "original": "219.50",
+        "currency": "USD"
+      },
+      "availability": "In Stock"
+    },
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-6",
+    "sku": "QB-WHT-006",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/quickboil.png",
+          "alt": "Electric Kettle"
+        }
+      ]
+    },
+    "content": {
+      "category": "Home Goods",
+      "headline": "QuickBoil Plus"
+    },
+    "product": {
+      "price": {
+        "current": "29.99",
+        "currency": "USD"
+      },
+      "availability": "Out of Stock"
+    },
+    "actions": [
+      {
+        "type": "button",
+        "text": "Notify Me"
+      }
+    ]
+  },
+  {
+    "id": "product-7",
+    "sku": "SG-SLV-007",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/cutmaster.png",
+          "alt": "Professional Chef's Knife"
+        }
+      ]
+    },
+    "content": {
+      "category": "Kitchenware",
+      "headline": "CutMaster Pro 8-inch"
+    },
+    "product": {
+      "price": {
+        "current": "79.00",
+        "original": "99.00",
+        "currency": "USD",
+        "discountText": "Limited Time"
+      },
+      "availability": "In Stock",
+      "rating": {
+        "value": 4.9,
+        "count": 2500
+      }
+    },
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "product-8",
+    "sku": "UP-BLK-008",
+    "type": "product",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/slimfold.png",
+          "alt": "Leather Wallet"
+        }
+      ]
+    },
+    "content": {
+      "category": "Accessories",
+      "headline": "SlimFold Wallet"
+    },
+    "product": {
+      "price": {
+        "current": "45.00",
+        "currency": "USD"
+      },
+      "availability": "In Stock"
+    },
+    "actions": [
+      {
+        "text": "Add to Cart",
+        "icon": "add_to_basket"
+      }
+    ]
+  },
+  {
+    "id": "article-1",
+    "type": "article",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/popovers.png",
+          "alt": "Interactive popover demonstration on a modern web interface"
+        }
+      ]
+    },
+    "content": {
+      "category": "Web Development",
+      "headline": "Mastering Interactive Popovers in Modern Web Design",
+      "subheadline": "A comprehensive guide to creating accessible and engaging popover experiences",
+      "summary": "Learn how to implement interactive popovers that enhance user experience without compromising accessibility. This guide covers best practices, implementation patterns, and real-world examples.",
+      "text": "<p>Interactive popovers have become a cornerstone of modern web design, providing contextual information and actions without disrupting the user's flow. In this comprehensive guide, we'll explore the principles behind effective popover design and implementation.</p><p>From accessibility considerations to performance optimization, we'll cover everything you need to know to create popovers that delight users and meet modern web standards.</p>",
+      "published": {
+        "datetime": "2024-12-15T09:00:00Z",
+        "formatted": "December 15, 2024"
+      },
+      "modified": {
+        "datetime": "2024-12-16T14:30:00Z",
+        "formatted": "December 16, 2024"
+      },
+      "readingTime": "8 min read"
+    },
+    "authors": [
+      {
+        "name": "Sarah Chen",
+        "role": "UX Engineer",
+        "email": "sarah.chen@example.com",
+        "sameAs": [
+          "https://twitter.com/sarahuxchen",
+          "https://github.com/sarahchen"
+        ]
+      }
+    ],
+    "engagement": {
+      "viewCount": 2840,
+      "likeCount": 156,
+      "shareCount": 42,
+      "commentCount": 23
+    },
+    "tags": [
+      "UX Design",
+      "JavaScript",
+      "Accessibility",
+      "Frontend"
+    ],
+    "links": [
+      {
+        "url": "https://developer.mozilla.org/en-US/docs/Web/API/Popover_API",
+        "text": "MDN Popover API"
+      },
+      {
+        "url": "https://web.dev/popover-api/",
+        "text": "web.dev Guide"
+      }
+    ],
+    "actions": [
+      {
+        "text": "Read More in Popover",
+        "popover": {
+          "content": "<h3>More Details</h3><p>This is a small article inside a popover.</p><p>It can contain any HTML content.</p><p>This demonstrates the flexibility of the popover component.</p><p>Click the close button to dismiss.</p>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "event-1",
+    "type": "event",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/websummit.png",
+          "alt": "People networking at a tech conference"
+        }
+      ]
+    },
+    "content": {
+      "category": "BusinessEvent",
+      "headline": "Web Innovators Summit 2025",
+      "summary": "Join us for a two-day summit exploring the future of web development, design, and technology.",
+      "published": {
+        "formatted": "October 25-26, 2025"
+      }
+    },
+    "event": {
+      "startDate": "2025-10-25T09:00:00",
+      "endDate": "2025-10-26T17:00:00",
+      "location": {
+        "name": "San Francisco Convention Center",
+        "address": "747 Howard St, San Francisco, CA 94103"
+      },
+      "organizer": {
+        "name": "Web Innovators Association"
+      },
+      "offers": [
+        {
+          "name": "Early Bird Ticket",
+          "price": "299",
+          "currency": "USD"
+        }
+      ],
+      "status": "Scheduled",
+      "attendanceMode": "OfflineEventAttendanceMode"
+    },
+    "actions": [
+      {
+        "text": "View Agenda",
+        "popover": {
+          "content": "<h3>Agenda</h3><p>Day 1: Keynotes & Workshops</p><p>Day 2: Deep Dives & Networking</p>"
+        }
+      }
+    ]
+  },
+  {
+    "id": "poll-1",
+    "type": "poll",
+    "content": {
+      "category": "Community Poll",
+      "headline": "What's your favorite front-end framework?",
+      "summary": "Help us understand what the community loves to build with.",
+      "text": [
+        {
+          "id": "react",
+          "headline": "React",
+          "text": "A JavaScript library for building user interfaces"
+        },
+        {
+          "id": "vue",
+          "headline": "Vue.js",
+          "text": "The progressive JavaScript framework"
+        },
+        {
+          "id": "svelte",
+          "headline": "Svelte",
+          "text": "Cybernetically enhanced web apps"
+        },
+        {
+          "id": "angular",
+          "headline": "Angular",
+          "text": "Platform for building mobile and desktop web applications"
+        },
+        {
+          "id": "other",
+          "headline": "Other",
+          "text": "Something else entirely"
+        }
+      ]
+    },
+    "poll": {
+      "endpoint": "./api/polls/poll-1.json",
+      "allowMultiple": false,
+      "showResults": "afterVote",
+      "totalVotes": 5420,
+      "labels": {
+        "vote": "Vote",
+        "submitVote": "Submit Vote",
+        "results": "Results",
+        "totalVotes": "Total votes:",
+        "votes": "votes",
+        "fallbackTitle": "Poll"
+      }
+    },
+    "actions": [
+      {
+        "text": "Vote",
+        "attributes": {
+          "type": "submit",
+          "itemscope": true,
+          "itemtype": "https://schema.org/VoteAction",
+          "data-target": "#poll-1",
+          "data-object": "Which JavaScript framework do you prefer?"
+        }
+      }
+    ],
+    "engagement": {
+      "viewCount": 5420
+    }
+  },
+  {
+    "id": "quote-1",
+    "type": "quote",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/quote.png",
+          "alt": "A serene landscape"
+        }
+      ]
+    },
+    "content": {
+      "summary": "The best way to predict the future is to invent it.",
+      "category": "Quote of the Day"
+    },
+    "authors": [
+      {
+        "name": "Alan Kay",
+        "role": "Computer Scientist"
+      }
+    ],
+    "actions": [
+      {
+        "text": "Share",
+        "icon": "share"
+      }
+    ]
+  },
+  {
+    "id": "spot-1",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/spring.jpg",
+          "alt": "Spring"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Spring"
+    },
+    "links": [
+      {
+        "hideText": true,
+        "url": "#spring",
+        "text": "Read more"
+      }
+    ]
+  },
+  {
+    "id": "spot-2",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/summer.jpg",
+          "alt": "Summer"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Summer"
+    },
+    "links": [
+      {
+        "hideText": true,
+        "url": "#summer",
+        "text": "Read more"
+      }
+    ]
+  },
+  {
+    "id": "spot-3",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/autumn.jpg",
+          "alt": "Autumn"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Autumn"
+    },
+    "links": [
+      {
+        "hideText": true,
+        "url": "#autumn",
+        "text": "Read more"
+      }
+    ]
+  },
+  {
+    "id": "spot-4",
+    "type": "spot",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/winter.jpg",
+          "alt": "Winter"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Winter"
+    },
+    "links": [
+      {
+        "hideText": true,
+        "url": "#winter",
+        "text": "Read more"
+      }
+    ]
+  },
+  {
+    "id": "faq-1",
+    "type": "faq",
+    "content": {
+      "category": "FAQ",
+      "headline": "Frequently Asked Questions",
+      "text": [
+        {
+          "headline": "What is Quantum Computing?",
+          "text": "Quantum computing uses quantum bits to perform computations much faster than classical computers for certain problems."
+        },
+        {
+          "headline": "When will it be mainstream?",
+          "text": "Experts predict quantum computers will become more widely available within the next decade."
+        }
+      ]
+    }
+  },
+  {
+    "id": "timeline-1",
+    "type": "timeline",
+    "content": {
+      "category": "History",
+      "headline": "Milestones in Quantum Computing",
+      "text": [
+        {
+          "headline": "1980s",
+          "text": "Theoretical foundations of quantum computing are established."
+        },
+        {
+          "headline": "1994",
+          "text": "Peter Shor develops Shor's algorithm, showing quantum computers can factor large numbers efficiently."
+        },
+        {
+          "headline": "2020s",
+          "text": "Quantum computers achieve quantum supremacy on specific tasks."
+        }
+      ]
+    }
+  },
+  {
+    "id": "business-1",
+    "type": "business",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/brewandbean.png",
+          "alt": "Brew & Bean Coffee Shop Logo"
+        }
+      ]
+    },
+    "content": {
+      "headline": "Brew & Bean Coffee Shop",
+      "summary": "Artisan coffee roastery and café serving locally sourced, ethically traded coffee beans with handcrafted pastries."
+    },
+    "business": {
+      "address": {
+        "streetAddress": "123 Main Street",
+        "addressLocality": "San Francisco",
+        "addressRegion": "CA",
+        "postalCode": "94105",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "latitude": "37.7749",
+        "longitude": "-122.4194",
+        "mapProvider": {
+          "type": "openstreetmap",
+          "name": "OpenStreetMap",
+          "url": "https://www.openstreetmap.org/export/embed.html?bbox={lng1},{lat1},{lng2},{lat2}&layer=mapnik&marker={lat},{lng}",
+          "latOffset": 0.003,
+          "lngOffset": 0.005
+        }
+      },
+      "telephone": "+1-415-555-0123",
+      "email": "hello@brewandbean.com",
+      "website": "https://brewandbean.com",
+      "sameAs": [
+        "https://facebook.com/brewandbean",
+        "https://instagram.com/brewandbean",
+        "https://twitter.com/brewandbean"
+      ],
+      "foundingDate": "2018-03-15",
+      "openingHours": [
+        {
+          "schema": "Mo-Fr 06:00-20:00",
+          "display": "Monday - Friday: 6:00 AM - 8:00 PM"
+        },
+        {
+          "schema": "Sa 07:00-21:00",
+          "display": "Saturday: 7:00 AM - 9:00 PM"
+        },
+        {
+          "schema": "Su 07:00-19:00",
+          "display": "Sunday: 7:00 AM - 7:00 PM"
+        }
+      ]
+    },
+    "links": [
+      {
+        "text": "Visit Website",
+        "url": "https://brewandbean.com"
+      },
+      {
+        "text": "Call Now",
+        "url": "tel:+14155550123"
+      }
+    ]
+  },
+  {
     "id": "profile-1",
     "type": "profile",
     "media": {
@@ -24,7 +1554,12 @@
       "organization": "TechCorp Solutions",
       "bio": "Sarah specializes in accessibility-first design and has led the redesign of multiple award-winning web applications. She's a frequent speaker at design conferences and mentors junior developers.",
       "location": "San Francisco, CA",
-      "skills": ["React", "Accessibility", "Design Systems", "User Research"],
+      "skills": [
+        "React",
+        "Accessibility",
+        "Design Systems",
+        "User Research"
+      ],
       "contacts": [
         {
           "type": "email",
@@ -77,7 +1612,10 @@
       "duration": "6 weeks",
       "courseWorkload": "PT40H",
       "difficultyLevel": "Beginner",
-      "prerequisites": ["Basic computer skills", "Text editor familiarity"],
+      "prerequisites": [
+        "Basic computer skills",
+        "Text editor familiarity"
+      ],
       "learningOutcomes": [
         "Build responsive websites using modern HTML and CSS",
         "Create interactive features with JavaScript",
@@ -98,7 +1636,14 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "thumbs_up", "count": 1250, "value": 4.8, "max": 5, "ariaLabel": "Rate this course" }
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 1250,
+          "value": 4.8,
+          "max": 5,
+          "ariaLabel": "Rate this course"
+        }
       ],
       "viewCount": 15420,
       "shareCount": 340
@@ -109,7 +1654,12 @@
         "icon": "school"
       }
     ],
-    "tags": ["HTML", "CSS", "JavaScript", "Responsive Design"]
+    "tags": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Responsive Design"
+    ]
   },
   {
     "id": "job-1",
@@ -137,7 +1687,12 @@
         "Excellent communication skills"
       ],
       "applicationDeadline": "2025-09-15",
-      "benefits": ["Health Insurance", "401k Match", "Flexible PTO", "Home Office Stipend"]
+      "benefits": [
+        "Health Insurance",
+        "401k Match",
+        "Flexible PTO",
+        "Home Office Stipend"
+      ]
     },
     "actions": [
       {
@@ -186,7 +1741,12 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "helpful", "icon": "thumb_up", "count": 23, "ariaLabel": "Mark as helpful" }
+        {
+          "type": "helpful",
+          "icon": "thumb_up",
+          "count": 23,
+          "ariaLabel": "Mark as helpful"
+        }
       ]
     },
     "actions": [
@@ -231,7 +1791,12 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "helpful", "icon": "thumb_up", "count": 42, "ariaLabel": "Mark as helpful" }
+        {
+          "type": "helpful",
+          "icon": "thumb_up",
+          "count": 42,
+          "ariaLabel": "Mark as helpful"
+        }
       ]
     },
     "actions": [
@@ -271,7 +1836,13 @@
       },
       "hours": "Always open",
       "contact": "+1-415-921-5858",
-      "amenities": ["Visitor Center", "Gift Shop", "Parking", "Bike Rental", "Guided Tours"],
+      "amenities": [
+        "Visitor Center",
+        "Gift Shop",
+        "Parking",
+        "Bike Rental",
+        "Guided Tours"
+      ],
       "rating": {
         "value": 4.7,
         "count": 95000,
@@ -310,7 +1881,11 @@
     },
     "software": {
       "applicationCategory": "Development Environment",
-      "operatingSystem": ["Windows", "macOS", "Linux"],
+      "operatingSystem": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "version": "3.2.1",
       "fileSize": "125 MB",
       "developer": {
@@ -334,7 +1909,13 @@
     },
     "engagement": {
       "reactions": [
-        { "type": "like", "icon": "thumbs_up", "count": 2100, "value": 4.6, "max": 5 }
+        {
+          "type": "like",
+          "icon": "thumbs_up",
+          "count": 2100,
+          "value": 4.6,
+          "max": 5
+        }
       ],
       "viewCount": 45000,
       "shareCount": 890
@@ -414,7 +1995,10 @@
         "Team collaboration (up to 10 users)",
         "99.9% uptime SLA"
       ],
-      "limitations": ["10 team members max", "50GB storage"],
+      "limitations": [
+        "10 team members max",
+        "50GB storage"
+      ],
       "trialPeriod": "14 days free",
       "isPopular": true
     },
@@ -498,9 +2082,16 @@
       "totalCount": 24,
       "featuredMedia": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=300&fit=crop&auto=format",
       "albumName": "2024 Portfolio",
-      "downloadOptions": ["High Resolution", "Web Optimized"],
+      "downloadOptions": [
+        "High Resolution",
+        "Web Optimized"
+      ],
       "slideshowEnabled": true,
-      "categories": ["Web Design", "Mobile Apps", "Branding"]
+      "categories": [
+        "Web Design",
+        "Mobile Apps",
+        "Branding"
+      ]
     },
     "engagement": {
       "viewCount": 3250,
@@ -547,7 +2138,11 @@
           "available": true
         }
       ],
-      "languagesSupported": ["English", "Spanish", "French"],
+      "languagesSupported": [
+        "English",
+        "Spanish",
+        "French"
+      ],
       "department": "Technical Support Team"
     },
     "actions": [
@@ -578,7 +2173,12 @@
       "trendPercentage": 23.5,
       "comparisonPeriod": "vs. last month",
       "targetValue": 150000,
-      "chartData": [98000, 105000, 112000, 125340],
+      "chartData": [
+        98000,
+        105000,
+        112000,
+        125340
+      ],
       "period": "Last 4 months"
     },
     "actions": [
@@ -608,8 +2208,14 @@
         "shares": 42,
         "comments": 18
       },
-      "hashtags": ["#DesignSystems", "#UX", "#Accessibility"],
-      "mediaAttachments": ["https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=500&h=300&fit=crop&auto=format"]
+      "hashtags": [
+        "#DesignSystems",
+        "#UX",
+        "#Accessibility"
+      ],
+      "mediaAttachments": [
+        "https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=500&h=300&fit=crop&auto=format"
+      ]
     },
     "actions": [
       {
@@ -705,18 +2311,31 @@
       "availableSlots": [
         {
           "date": "2025-08-25",
-          "times": ["9:00 AM", "2:00 PM", "4:00 PM"]
+          "times": [
+            "9:00 AM",
+            "2:00 PM",
+            "4:00 PM"
+          ]
         },
         {
           "date": "2025-08-26",
-          "times": ["10:00 AM", "1:00 PM", "3:00 PM"]
+          "times": [
+            "10:00 AM",
+            "1:00 PM",
+            "3:00 PM"
+          ]
         }
       ],
       "price": {
         "hourlyRate": 45,
         "currency": "USD"
       },
-      "amenities": ["Projector", "Whiteboard", "Video Conferencing", "Coffee Service"],
+      "amenities": [
+        "Projector",
+        "Whiteboard",
+        "Video Conferencing",
+        "Coffee Service"
+      ],
       "cancellationPolicy": "Free cancellation up to 24 hours before booking",
       "specialRequests": "Available upon request"
     },

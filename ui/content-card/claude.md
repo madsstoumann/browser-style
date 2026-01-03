@@ -71,6 +71,76 @@ connectedCallback()
 9. Card ready for user interaction
 ```
 
+## Unified Data Model
+
+All card data is stored in a single JSON file: `public/static/data/all-cards.json`. This unified format is compatible with the `web-config-card` component for visual editing.
+
+### Card Data Structure
+
+Each card follows this common structure:
+
+```javascript
+{
+  "id": "unique-id",           // Required: Unique identifier for the card
+  "type": "product",           // Required: Card type (25 types available)
+  "media": {                   // Optional: Common media structure
+    "sources": [
+      { "type": "image", "src": "...", "alt": "..." }
+    ],
+    "caption": "...",
+    "ribbon": { "text": "...", "style": "..." },
+    "sticker": { "text": "...", "style": "...", "position": "..." }
+  },
+  "content": {                 // Common content fields
+    "category": "...",
+    "headline": "...",
+    "subheadline": "...",
+    "summary": "...",
+    "published": { "datetime": "...", "formatted": "..." },
+    "readingTime": "..."
+  },
+  "authors": [...],            // Optional: Author information
+  "tags": [...],               // Optional: Tags (string[] or {name, url}[])
+  "actions": [...],            // Optional: Action buttons
+  "links": [...],              // Optional: Related links
+  "engagement": {...},         // Optional: Engagement metrics
+
+  // Type-specific data in named property:
+  "product": {...},            // For type="product"
+  "recipe": {...},             // For type="recipe"
+  "profile": {...},            // etc.
+}
+```
+
+### Type-Specific Properties
+
+The differences between card types are contained in a property matching the type name:
+
+| Card Type | Type Property | Key Fields |
+|-----------|---------------|------------|
+| product | `product` | price, availability, rating |
+| recipe | `recipe` | prepTime, cookTime, servings, instructions |
+| event | `event` | startDate, endDate, location, organizer |
+| job | `job` | company, salaryRange, qualifications, benefits |
+| course | `course` | duration, difficultyLevel, instructor, price |
+| profile | `profile` | jobTitle, organization, skills, contacts |
+| booking | `booking` | serviceName, venue, capacity, availableSlots |
+| review | `review` | rating, reviewer, productReviewed |
+| business | `business` | address, telephone, openingHours |
+| location | `location` | address, geo, hours, amenities |
+| membership | `membership` | planName, price, features, limitations |
+| announcement | `announcement` | priority, effectiveDate, targetAudience |
+| achievement | `achievement` | achievementName, issuingOrganization, dateEarned |
+| software | `software` | version, operatingSystem, developer, price |
+| statistic | `statistic` | metricName, currentValue, trend |
+| social | `social` | platform, author, postContent, hashtags |
+| comparison | `comparison` | items, criteria, recommendation |
+| gallery | `gallery` | totalCount, albumName, categories |
+| contact | `contact` | contactType, contactMethods, availableHours |
+| poll | `poll` | endpoint, allowMultiple, showResults |
+
+Cards without type-specific data (article, news, quote, faq, timeline) use only the common `content` structure.
+
 ## File Structure
 
 ```
@@ -114,6 +184,14 @@ content-card/
 │       │   └── base.css            # Base card styles
 │       └── components/
 │           └── [25 CSS files]      # Per-card styles
+├── public/
+│   ├── static/
+│   │   └── data/
+│   │       └── all-cards.json      # Unified card data (all 25 card types)
+│   └── *.html                      # Demo pages
+├── build.js                        # Puppeteer-based static build
+├── build-layouts-map.js            # Layout system integration
+├── server.js                       # Development server
 ├── package.json
 └── claude.md
 ```
@@ -639,7 +717,7 @@ renderPollResults() {
 ### Main Initialization
 
 ```javascript
-export async function initContentCards(dataSrc = 'data.json') {
+export async function initContentCards(dataSrc = 'static/data/all-cards.json') {
   // 1. Import all card components
   const allCards = await importAllCards();
 

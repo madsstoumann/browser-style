@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Software Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Software Card - Display software applications and tools with version, OS compatibility, developer info, screenshots, and download links using Schema.org SoftwareApplication markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Software Card</h2>
+	<p>The Software Card displays software applications, tools, and app listings. Features application category, operating system compatibility, version, file size, developer information, screenshots, download links, and system requirements. Uses <code>Schema.org/SoftwareApplication</code> markup.</p>
+
+	<!-- <lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap> -->
+		<software-card content="software-1" layout="rows(thd ar21x9 pa1)"></software-card>
+	<!-- </lay-out> -->
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Review Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Review Card - Display customer reviews and testimonials with star ratings, reviewer info, verified purchase status, and helpful votes using Schema.org Review markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Review Card</h2>
+	<p>The Review Card displays customer reviews, testimonials, and ratings. Features star rating (1-5), review text, reviewer information, review date, verified purchase status, helpful votes, and the product/service being reviewed. Uses <code>Schema.org/Review</code> markup for rich snippets.</p>
+
+	<lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap>
+		<review-card content="review-1" layout="rows(thd ar21x9 pa1)"></review-card>
+		<review-card content="review-2" layout="rows(thd ar21x9 pa1)"></review-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Product Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Product Card - Display e-commerce products with pricing, availability, ratings, and add-to-cart actions using Schema.org Product and Offer markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Product Card</h2>
+	<p>The Product Card displays e-commerce products with current and original pricing, discount badges, star ratings, availability status, and add-to-cart actions. Uses <code>Schema.org/Product</code> and <code>Offer</code> markup for rich search results.</p>
+
+	<lay-out lg="grid(4c)" col-gap="2" row-gap="2" gap>
+		<product-card content="product-1" layout="rows(thd ar21x9 pa1)"></product-card>
+		<product-card content="product-2" layout="rows(thd ar21x9 pa1)"></product-card>
+		<product-card content="product-3" layout="rows(thd ar21x9 pa1)"></product-card>
+		<product-card content="product-6" layout="rows(thd ar21x9 pa1)"></product-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

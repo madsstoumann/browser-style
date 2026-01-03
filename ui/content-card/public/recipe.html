@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Recipe Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Recipe Card - Display cooking recipes with prep time, cook time, servings, ingredients, and step-by-step instructions using Schema.org Recipe markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Recipe Card</h2>
+	<p>The Recipe Card displays cooking recipes with prep time, cook time, servings, expandable ingredients list, and step-by-step instructions. Includes chef/author attribution and ratings. Uses <code>Schema.org/Recipe</code> markup for rich search snippets.</p>
+
+	<lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap>
+		<recipe-card content="recipe-1" layout="rows(thd ar21x9 pa1)"></recipe-card>
+		<recipe-card content="recipe-2" layout="rows(thd ar21x9 pa1)"></recipe-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>
