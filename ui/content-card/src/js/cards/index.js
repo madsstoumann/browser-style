@@ -5,6 +5,7 @@ export { AchievementCard } from './AchievementCard.js';
 export { AnnouncementCard } from './AnnouncementCard.js';
 export { ArticleCard } from './ArticleCard.js';
 export { BookingCard } from './BookingCard.js';
+export { ContentCard } from './ContentCard.js';
 export { BusinessCard } from './BusinessCard.js';
 export { ComparisonCard } from './ComparisonCard.js';
 export { ContactCard } from './ContactCard.js';

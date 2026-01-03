@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Content Card | Content Card</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Content Card - A generic, flexible card component for displaying content without type-specific schemas. Renders common fields like media, headlines, authors, and actions using Schema.org CreativeWork markup.">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/base.css">
+	<script type="importmap">
+	{
+		"imports": {
+			"@browser.style/layout": "../../layout/index.js",
+			"@browser.style/layout/": "../../layout/",
+			"@browser.style/layout/maps": "./static/js/layouts-map.js",
+			"@browser.style/layout/src/srcsets.js": "../../layout/src/srcsets.js",
+			"@browser.style/layout/polyfills/attr-fallback.js": "../../layout/polyfills/attr-fallback.js"
+		}
+	}
+	</script>
+	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
+	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
+	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
+	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>UI: Content Card</h1>
+
+	<h2>Content Card</h2>
+	<p>The Content Card is a generic, flexible component for displaying content without type-specific data properties. It renders all common card fields: media (images, videos), headlines, subheadlines, summary, body text, authors, engagement metrics, tags, links, and actions. Uses <code>Schema.org/CreativeWork</code> markup as a generic content type.</p>
+
+	<h3>Full Example</h3>
+	<lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap>
+		<content-card content="content-1" layout="rows(thd ar21x9 pa1)"></content-card>
+		<content-card content="content-2" layout="rows(thl ar21x9 pa1)"></content-card>
+	</lay-out>
+
+	<h3>Text-Only Example</h3>
+	<lay-out lg="grid(2c)" col-gap="2" row-gap="2" gap>
+		<content-card content="content-3" layout="rows(thd pa1)"></content-card>
+	</lay-out>
+
+	<script type="module">
+		import { initContentCards } from '../src/js/runtime.js';
+		initContentCards('static/data/cards.json');
+	</script>
+</body>
+</html>

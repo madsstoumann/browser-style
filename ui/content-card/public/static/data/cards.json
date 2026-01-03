@@ -2349,5 +2349,103 @@
         "icon": "schedule"
       }
     ]
+  },
+  {
+    "id": "content-1",
+    "type": "content",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/placeholder.jpg",
+          "alt": "Generic content placeholder"
+        }
+      ],
+      "caption": "A simple content card example"
+    },
+    "content": {
+      "category": "General",
+      "headline": "Generic Content Card",
+      "subheadline": "For flexible content display",
+      "summary": "The Content Card is a versatile component that renders all common fields without type-specific data. Use it for simple content that doesn't fit a specific card type.",
+      "text": "<p>This card demonstrates the base content structure shared by all card types. It includes media, headlines, summary text, author attribution, engagement metrics, tags, and action buttons.</p>",
+      "published": {
+        "datetime": "2025-01-03T10:00:00Z",
+        "formatted": "January 3, 2025"
+      },
+      "readingTime": "1 min read"
+    },
+    "authors": [
+      {
+        "name": "Content Team",
+        "role": "Editorial",
+        "avatar": "https://browser.style/assets/images/avatars/team.jpg"
+      }
+    ],
+    "tags": ["content", "generic", "flexible"],
+    "engagement": {
+      "viewCount": 1250,
+      "commentCount": 8
+    },
+    "actions": [
+      {
+        "text": "Learn More",
+        "url": "#",
+        "icon": "arrow_forward"
+      }
+    ]
+  },
+  {
+    "id": "content-2",
+    "type": "content",
+    "media": {
+      "sources": [
+        {
+          "type": "image",
+          "src": "https://browser.style/assets/images/abstract.jpg",
+          "alt": "Abstract design pattern"
+        }
+      ],
+      "ribbon": {
+        "text": "Featured",
+        "style": "featured"
+      }
+    },
+    "content": {
+      "category": "Showcase",
+      "headline": "Minimal Content Display",
+      "summary": "Sometimes you just need a simple card without the complexity of specialized schemas. The content card provides exactly that.",
+      "published": {
+        "datetime": "2025-01-02T14:30:00Z",
+        "formatted": "January 2, 2025"
+      }
+    },
+    "links": [
+      {
+        "url": "#",
+        "text": "View Details",
+        "isWrapper": true
+      }
+    ]
+  },
+  {
+    "id": "content-3",
+    "type": "content",
+    "content": {
+      "headline": "Text-Only Content Card",
+      "summary": "This example shows a content card with no media - just pure text content. Perfect for quotes, announcements, or simple text blocks.",
+      "text": "<p>The content card adapts gracefully when media is not provided. It focuses on the textual content while maintaining proper semantic structure and optional Schema.org markup.</p><p>Use this approach when visuals aren't necessary or when you want to draw attention to the written content.</p>"
+    },
+    "tags": ["text-only", "minimal"],
+    "actions": [
+      {
+        "text": "Read More",
+        "icon": "article"
+      },
+      {
+        "text": "Share",
+        "icon": "share"
+      }
+    ]
   }
 ]
