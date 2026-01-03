@@ -18,7 +18,6 @@
 		}
 	}
 	</script>
-	<link rel="stylesheet" href="static/css/layout.css" blocking="render" data-build="exclude">
 	<link rel="stylesheet" href="../src/css/index.css" blocking="render">
 	<link rel="stylesheet" href="static/css/themes/demo.css" blocking="render">
 	<script type="module" src="../../layout/polyfills/attr-fallback.js"></script>
@@ -29,11 +28,9 @@
 	<h2>Article Card</h2>
 	<p>The Article Card displays blog posts, news articles, and editorial content. It supports rich media (images, videos, YouTube embeds), author information, publication dates, reading time, and engagement metrics. Uses <code>Schema.org/Article</code> markup for SEO.</p>
 
-	<lay-out lg="grid(3c)" col-gap="2" row-gap="2" gap>
-		<article-card content="article-1" layout="rows(thd ar21x9 pa1)"></article-card>
-		<article-card content="video-1" layout="rows(thd ar21x9 pa1)"></article-card>
-		<article-card content="video-4" layout="rows(thd ar21x9 pa1)"></article-card>
-	</lay-out>
+	<article-card content="article-1" layout="rows(thd ar21x9 pa1)"></article-card>
+	<article-card content="video-1" layout="rows(thd ar21x9 pa1)"></article-card>
+	<article-card content="video-4" layout="rows(thd ar21x9 pa1)"></article-card>
 
 	<script type="module">
 		import { initContentCards } from '../src/js/runtime.js';
