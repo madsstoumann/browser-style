@@ -1,7 +1,7 @@
 ---
 name: validate-schema
 description: Validates schema.org structured data (JSON-LD, Microdata) for a URL or local HTML file using validator.schema.org. Use when checking structured data, JSON-LD markup, schema.org validation, or SEO structured data issues.
-allowed-tools: Bash(curl:*), Read
+allowed-tools: Bash(curl:*), Bash(/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome:*), Read
 ---
 
 # Schema.org Validator
@@ -35,21 +35,37 @@ Use this skill when:
 
 ### 1. Determine Input Type
 
-**For live URLs:**
+**For live public URLs:**
 ```bash
 curl -s -X POST 'https://validator.schema.org/validate?url=[URL]&output=json' | tail -c +5 | jq
 ```
 
-**For local HTML files:**
+**For local HTML files (static, no JS rendering needed):**
 ```bash
 curl -s -X POST 'https://validator.schema.org/validate?output=json' --data-urlencode "html@[filepath]" | tail -c +5 | jq
 ```
 
-**For localhost/dev servers:** First fetch the HTML, save to temp file, then validate:
+**For localhost/dev servers (static HTML only):** Pipe HTML directly to the validator:
 ```bash
-curl -s "http://localhost:3000/page" > /tmp/schema-check.html
-curl -s -X POST 'https://validator.schema.org/validate?output=json' --data-urlencode "html@/tmp/schema-check.html" | tail -c +5 | jq
+curl -s "http://localhost:3000/page" | curl -s -X POST 'https://validator.schema.org/validate?output=json' --data-urlencode "html@-" | tail -c +5 | jq
 ```
+
+**For localhost/dev servers with JavaScript-rendered content (RECOMMENDED for SPAs and dynamic sites):**
+
+Use Chrome headless to render the page fully, then pipe directly to the validator:
+```bash
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+  --headless --dump-dom "http://127.0.0.1:5500/page" 2>/dev/null | \
+  curl -s -X POST 'https://validator.schema.org/validate?output=json' \
+  --data-urlencode "html@-" | tail -c +5 | jq
+```
+
+This executes JavaScript and captures the fully-rendered DOM, ensuring all dynamically-generated schema.org markup is included in the validation. The `@-` tells curl to read from stdin, avoiding temp files.
+
+**Note:** If Chrome is not at the default macOS path, check common locations:
+- macOS: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`
+- Linux: `google-chrome` or `chromium-browser`
+- Windows: `C:\Program Files\Google\Chrome\Application\chrome.exe`
 
 ### 2. Parse Response
 
