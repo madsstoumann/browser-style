@@ -1,0 +1,472 @@
+# Layout Component
+
+## Overview
+
+Layout is a **modern CSS layout system** with responsive grid patterns and automatic responsive image srcset generation. It works as pure CSS (no JavaScript required) with an optional web component for enhanced functionality.
+
+## Architecture
+
+### Package Structure
+
+```
+layout/
+├── build.js              # Main CSS build script
+├── layouts-map.js        # Generated layout definitions
+├── layout.config.json    # Build configuration
+├── readme.md             # User documentation
+├── package.json          # NPM package configuration
+├── core/                 # Core CSS files
+│   ├── base.css          # Base styles
+│   └── animations.css    # Animation utilities
+├── layouts/              # Layout JSON definitions
+│   ├── columns.json      # Equal column layouts
+│   ├── grid.json         # Advanced grid patterns
+│   ├── bento.json        # Bento box layouts
+│   ├── mosaic.json       # Mosaic patterns
+│   ├── asym.json         # Asymmetric layouts
+│   └── ratios.json       # Aspect ratio layouts
+├── dist/                 # Built output
+│   ├── layout.css        # Complete CSS bundle
+│   └── index.html        # Visual demos
+├── src/
+│   ├── components/
+│   │   └── layout/       # Optional web component
+│   └── srcsets.js        # Srcset generation utilities
+├── polyfills/
+│   └── attr-fallback.js  # Safari/Firefox polyfill
+└── docs/
+    ├── BUILD.md          # Build documentation
+    └── RUN.md            # Command reference
+```
+
+## Usage
+
+### Basic (CSS Only)
+
+```html
+<link rel="stylesheet" href="@browser.style/layout/dist/layout.css">
+
+<lay-out md="columns(2)" lg="grid(3a)">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+</lay-out>
+```
+
+### Breakpoint Attributes
+
+| Attribute | Breakpoint |
+|-----------|------------|
+| `xs` | 240px |
+| `sm` | 380px |
+| `md` | 540px |
+| `lg` | 720px |
+| `xl` | 920px |
+| `xxl` | 1140px |
+
+### Layout Types
+
+#### Columns (Equal Width)
+```html
+<lay-out lg="columns(3)">...</lay-out>
+```
+Available: `columns(1)` through `columns(6)`
+
+#### Grid (Advanced Patterns)
+```html
+<lay-out lg="grid(3a)">...</lay-out>
+```
+19 variants with different item arrangements
+
+#### Bento (Box Layouts)
+```html
+<lay-out lg="bento(6a)">...</lay-out>
+```
+10 variants for dashboard-style layouts
+
+#### Mosaic (Patterns)
+```html
+<lay-out lg="mosaic(hex)">...</lay-out>
+```
+5 variants including hexagonal patterns
+
+#### Asymmetric
+```html
+<lay-out lg="asym(l-r)">...</lay-out>
+```
+6 variants for sidebar/content layouts
+
+#### Ratios
+```html
+<lay-out lg="ratios(2:1)">...</lay-out>
+```
+9 variants for aspect ratio-based layouts
+
+#### Autofit
+```html
+<lay-out xs="auto(fit)">...</lay-out>
+```
+2 variants for auto-fitting grids
+
+## Responsive Images
+
+### Automatic Srcset Generation
+
+```javascript
+import { srcsetMap, layoutConfig } from '@browser.style/layout/maps';
+import { generateSrcsets } from '@browser.style/layout/src/srcsets.js';
+
+const srcsets = generateSrcsets(
+  { md: "columns(2)", lg: "grid(3a)" },
+  srcsetMap,
+  layoutConfig
+);
+// Returns: "540:50%;720:50%,50%,100%@1024"
+```
+
+### Apply to Existing Elements
+
+```javascript
+import { applySrcsets } from '@browser.style/layout/src/srcsets.js';
+
+applySrcsets('lay-out', srcsetMap, layoutConfig);
+```
+
+### Manual Srcsets
+
+```html
+<lay-out srcsets="540:50%;720:50%,50%,100%@1024">
+  <img src="image.jpg">
+</lay-out>
+```
+
+## Web Component (Optional)
+
+```javascript
+import '@browser.style/layout/src/components/layout/index.js';
+```
+
+Provides:
+- Automatic srcset generation from breakpoint attributes
+- Adds `sizes` attributes to child images
+- Works with responsive image loading
+
+## Custom Configuration
+
+### layout.config.json
+
+```json
+{
+  "element": "lay-out",
+  "core": ["base"],
+  "common": ["animations"],
+  "layoutContainer": {
+    "element": "body",
+    "maxWidth": 1024,
+    "margin": "1rem",
+    "setRoot": true
+  },
+  "breakpoints": {
+    "md": {
+      "type": "@media",
+      "min": "768px",
+      "layouts": ["columns"]
+    },
+    "lg": {
+      "type": "@media",
+      "min": "1024px",
+      "layouts": [
+        "columns",
+        { "grid": ["grid(3a)", "grid(3c)"] }
+      ]
+    }
+  }
+}
+```
+
+### Configuration Options
+
+| Option | Description |
+|--------|-------------|
+| `element` | HTML element name for layout containers |
+| `core` | Core CSS files to include |
+| `common` | Common CSS files to include |
+| `layoutContainer.maxWidth` | Max container width (generates `--layout-bleed-mw`) |
+| `layoutContainer.margin` | Inline margin (generates `--layout-mi`) |
+| `layoutContainer.setRoot` | Apply margin calculation to element |
+| `breakpoints` | Define breakpoints and included layouts |
+
+## Creating Custom Layouts
+
+### 1. Create Layout JSON
+
+```json
+{
+  "name": "Hero Layouts",
+  "prefix": "hero",
+  "layouts": [
+    {
+      "id": "1",
+      "columns": "2fr 1fr",
+      "items": 2,
+      "srcset": "66.67%,33.33%",
+      "icon": [
+        { "w": 66.67, "h": 100, "x": 0, "y": 0 },
+        { "w": 33.33, "h": 100, "x": 66.67, "y": 0 }
+      ]
+    }
+  ]
+}
+```
+
+### 2. Reference in Config
+
+```json
+"breakpoints": {
+  "lg": {
+    "layouts": [{ "hero": ["hero(1)"] }]
+  }
+}
+```
+
+### 3. Use
+
+```html
+<lay-out lg="hero(1)">
+  <div>Main content</div>
+  <aside>Sidebar</aside>
+</lay-out>
+```
+
+## Build Commands
+
+```bash
+npm run build         # Build CSS
+npm run build:maps    # Generate layouts-map.js
+npm run build:demo    # Generate HTML demos
+npm run build:icons   # Generate SVG icons
+npm run build:all     # Build everything
+```
+
+## Browser Support
+
+- Chrome/Edge 89+
+- Firefox 88+
+- Safari 14.1+
+
+### Safari/Firefox Polyfill
+
+For enhanced `attr()` CSS function support:
+
+```html
+<script type="module" src="@browser.style/layout/polyfills/attr-fallback.js"></script>
+```
+
+## CSS Custom Properties
+
+```css
+:root {
+  --layout-bleed-mw: 1024px;  /* Max container width */
+  --layout-mi: 1rem;          /* Inline margin */
+}
+```
+
+## Performance
+
+- **Zero JavaScript**: Pure CSS, no runtime overhead
+- **Small Bundle**: ~12 KB gzipped
+- **No Layout Shift**: Grid-based, prevents CLS
+- **Cacheable**: Static CSS, fully cacheable
+
+## LayoutBuilder Class
+
+The build system is powered by the `LayoutBuilder` class:
+
+```javascript
+class LayoutBuilder {
+  constructor(configPath, layoutsDir, outputPath, coreDir)
+
+  // Main methods
+  async build()           // Full build process
+  async loadConfig()      // Load layout.config.json
+  async loadLayouts()     // Load layout JSON files
+  async loadCSSFiles()    // Load core/common CSS
+  async processBreakpoints()  // Generate breakpoint CSS
+  async generateCSS()     // Output final CSS
+
+  // Internal methods
+  generateMediaQuery(breakpointConfig)
+  processLayout(layoutName, breakpointName, mediaQuery, ...)
+  generateLayoutCSS(layout, prefix, layoutId, breakpointName, mediaQuery, ...)
+  addRule(mediaQuery, selector, properties)
+  generateLayoutContainerCSS()
+}
+```
+
+### Build Pipeline
+
+1. Load `layout.config.json`
+2. Load all JSON files from `/layouts/` directory
+3. Load core CSS files (base.css)
+4. Load common CSS files (animations.css)
+5. Process each breakpoint configuration
+6. Generate CSS rules for each layout pattern
+7. Output to `dist/layout.css`
+
+## Srcset Utilities
+
+### `generateSrcsets(breakpoints, srcsetMap, layoutConfig)`
+
+Generates srcset string from breakpoint attributes:
+
+```javascript
+generateSrcsets(
+  { md: "columns(2)", lg: "grid(3a)" },
+  srcsetMap,
+  layoutConfig
+);
+// Returns: "540:50%;720:50%,50%,100%@1024"
+```
+
+### `applySrcsets(selector, srcsetMap, layoutConfig)`
+
+Applies srcsets attribute to existing elements:
+
+```javascript
+applySrcsets('lay-out', srcsetMap, layoutConfig);
+// Adds srcsets="..." to all <lay-out> elements
+```
+
+### `calculateSizes(srcsets, childIndex)`
+
+Calculates `sizes` attribute for a specific child:
+
+```javascript
+calculateSizes("540:50%;720:50%,50%,100%@1024", 0);
+// Returns: "(min-width: 720px) min(50vw, 512px), ..."
+```
+
+## Layout JSON Structure
+
+Each layout file follows this structure:
+
+```json
+{
+  "name": "Grid Layouts",
+  "prefix": "grid",
+  "layouts": [
+    {
+      "id": "3a",
+      "columns": "1fr 1fr",
+      "items": 3,
+      "srcset": "50%,50%,100%",
+      "icon": [
+        { "w": 50, "h": 50, "x": 0, "y": 0 },
+        { "w": 50, "h": 50, "x": 50, "y": 0 },
+        { "w": 100, "h": 50, "x": 0, "y": 50 }
+      ],
+      "rules": [
+        {
+          "selector": ":nth-child(3)",
+          "properties": { "--layout-ga": "1 / -1" }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Layout Properties
+
+| Property | Description |
+|----------|-------------|
+| `id` | Layout identifier (used as `grid(3a)`) |
+| `columns` | CSS `grid-template-columns` value |
+| `rows` | CSS `grid-template-rows` value |
+| `items` | Expected number of child items |
+| `srcset` | Image width percentages for each item |
+| `icon` | SVG preview rectangles for builder UI |
+| `rules` | Additional CSS rules for items |
+
+## Available Layouts (Complete)
+
+### Columns (6 variants)
+`columns(1)` through `columns(6)`
+
+### Grid (19 variants)
+`grid(3a)`, `grid(3b)`, `grid(3c)`, `grid(3d)`,
+`grid(4a)` through `grid(4e)`,
+`grid(5a)` through `grid(5h)`,
+`grid(6a)`, `grid(6b)`
+
+### Bento (10 variants)
+`bento(4a)`,
+`bento(6a)`, `bento(6b)`,
+`bento(7a)`, `bento(7b)`, `bento(7c)`,
+`bento(8a)`, `bento(8b)`,
+`bento(9a)`, `bento(9b)`
+
+### Mosaic (5 variants)
+`mosaic(photo)`, `mosaic(scatter)`, `mosaic(hex)`,
+`mosaic(pinwheel)`, `mosaic(cornerstone)`
+
+### Asymmetric (6 variants)
+`asym(l-r)`, `asym(r-l)`, `asym(t-b)`, `asym(b-t)`,
+`asym(tl-br)`, `asym(bl-tr)`
+
+### Ratios (9 variants)
+`ratio(25:75)`, `ratio(33:66)`, `ratio(40:60)`,
+`ratio(60:40)`, `ratio(66:33)`, `ratio(75:25)`,
+`ratio(25:25:50)`, `ratio(25:50:25)`, `ratio(50:25:25)`
+
+### Autofit (2 variants)
+`auto(fit)`, `auto(fill)`
+
+## File Structure (Detailed)
+
+```
+layout/
+├── build.js              # CLI entry point (~56 lines)
+├── layouts-map.js        # Generated srcset/config export (~76 lines)
+├── layout.config.json    # Build configuration
+├── core/
+│   ├── base.css          # Base grid styles
+│   ├── base.md           # Base documentation
+│   └── animations.css    # Animation utilities
+├── layouts/
+│   ├── columns.json      # Equal columns (1-6)
+│   ├── grid.json         # Grid patterns (19 variants)
+│   ├── bento.json        # Bento boxes (10 variants)
+│   ├── mosaic.json       # Mosaic patterns (5 variants)
+│   ├── asymmetrical.json # Asymmetric (6 variants)
+│   ├── ratios.json       # Ratio-based (9 variants)
+│   ├── autofit.json      # Auto-fit/fill (2 variants)
+│   └── overflow.json     # Overflow handling
+├── src/
+│   ├── builder.js        # LayoutBuilder class (~329 lines)
+│   ├── srcsets.js        # Srcset utilities (~79 lines)
+│   ├── demo.js           # Demo page script
+│   ├── maps.js           # Layout maps helper
+│   ├── icons.js          # Icon generation
+│   └── components/
+│       ├── layout/index.js   # Optional web component
+│       └── composer/         # Visual layout composer
+├── polyfills/
+│   ├── attr-fallback.js  # Safari/Firefox polyfill
+│   └── attr-fallback.css # Polyfill styles
+├── dist/
+│   ├── layout.css        # Built CSS bundle
+│   └── *.html            # Demo pages
+└── docs/
+    ├── BUILD.md          # Build documentation
+    └── RUN.md            # Run commands
+```
+
+## Debugging Tips
+
+1. **Layout not applying?** Check breakpoint attribute matches viewport
+2. **Items not fitting?** Verify layout expects correct number of items
+3. **Safari/Firefox issues?** Include the polyfill
+4. **Images not sized correctly?** Check srcsets attribute format
+5. **Build failing?** Check layout.config.json is valid JSON
+6. **Missing layout?** Ensure layout is referenced in config breakpoints
