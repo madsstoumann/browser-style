@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Card Editor - Umbraco Property Editor</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "@browser.style/web-config-shared": "https://browser.style/ui/web-config-shared/index.js"
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: transparent;
+    }
+    #app { min-height: 200px; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    // Import the Card web component from browser.style
+    import 'https://browser.style/ui/web-config-card/src/index.js';
+
+    /**
+     * Umbraco Property Editor Integration
+     *
+     * Communication with Umbraco is done via postMessage:
+     * - Parent (Umbraco) sends: { type: 'init', value: {...} }
+     * - Parent (Umbraco) sends: { type: 'setValue', value: {...} }
+     * - Child (this) sends: { type: 'valueChanged', value: {...} }
+     * - Child (this) sends: { type: 'ready' }
+     * - Child (this) sends: { type: 'resize', height: number }
+     */
+
+    const app = document.getElementById('app');
+    let editor = null;
+    let umbracoOrigin = '*'; // Will be set from init message
+
+    // Wait for ready helper
+    const waitForReady = async (el, timeout = 10000) => {
+      if (!el?.ready) return;
+      try {
+        await Promise.race([
+          el.ready,
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Component ready timeout')), timeout))
+        ]);
+      } catch (error) {
+        console.warn('Component ready timeout:', error);
+      }
+    };
+
+    // Send message to parent (Umbraco)
+    const sendToUmbraco = (type, data = {}) => {
+      window.parent.postMessage({ type, ...data }, umbracoOrigin);
+    };
+
+    // Auto-resize iframe
+    const updateHeight = () => {
+      const height = document.body.scrollHeight;
+      sendToUmbraco('resize', { height });
+    };
+
+    // Initialize component
+    const initComponent = async (initialValue) => {
+      // Wait for custom element to be defined
+      await customElements.whenDefined('web-config-card');
+
+      // Create the Card Editor component
+      editor = document.createElement('web-config-card');
+      app.appendChild(editor);
+
+      // Wait for component ready
+      await waitForReady(editor);
+
+      // Set initial value if provided
+      if (initialValue) {
+        try {
+          editor.value = initialValue;
+        } catch (err) {
+          console.error('Failed to set initial value:', err);
+        }
+      }
+
+      // Listen for changes from the component
+      editor.addEventListener('change', (event) => {
+        const newData = event.detail ?? null;
+
+        // Send value to Umbraco
+        sendToUmbraco('valueChanged', { value: newData });
+
+        // Update iframe height
+        requestAnimationFrame(updateHeight);
+      });
+
+      // Notify Umbraco that we're ready
+      sendToUmbraco('ready');
+
+      // Initial height update
+      requestAnimationFrame(updateHeight);
+
+      // Watch for resize
+      const resizeObserver = new ResizeObserver(() => {
+        requestAnimationFrame(updateHeight);
+      });
+      resizeObserver.observe(app);
+    };
+
+    // Listen for messages from Umbraco
+    window.addEventListener('message', async (event) => {
+      const { type, value, origin: senderOrigin } = event.data || {};
+
+      switch (type) {
+        case 'init':
+          // Store origin for secure communication
+          if (senderOrigin) {
+            umbracoOrigin = senderOrigin;
+          }
+          await initComponent(value);
+          break;
+
+        case 'setValue':
+          // Update component value
+          if (editor && value !== undefined) {
+            try {
+              editor.value = value;
+            } catch (err) {
+              console.error('Failed to update value:', err);
+            }
+          }
+          break;
+
+        case 'getState':
+          // Return current state
+          if (editor) {
+            sendToUmbraco('state', { value: editor.value });
+          }
+          break;
+      }
+    });
+
+    // Fallback: If not in iframe (standalone mode), auto-initialize
+    if (window === window.parent) {
+      console.log('Running in standalone mode');
+      initComponent(null);
+    } else {
+      // Notify parent we're loaded and waiting for init
+      sendToUmbraco('loaded');
+    }
+  </script>
+</body>
+</html>
