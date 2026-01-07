@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Web Config Taxonomy</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Web Config Taxonomy Component - Search Google and Facebook product categories">
+	<meta name="view-transition" content="same-origin">
+	<link rel="stylesheet" href="/ui/base/index.css">
+	<style>
+		.schema-preview { margin-block-start: 1rem; }
+		.schema-preview h4 { margin-block: 0.5rem 0.25rem; font-size: 0.875rem; }
+		.schema-preview pre { background: #f5f5f5; padding: 0.5rem; overflow-x: auto; font-size: 0.75rem; border-radius: 0.25rem; }
+		.schema-boilerplate { color: #999; }
+		web-config-taxonomy { display: block; margin-block-end: 2rem; }
+	</style>
+</head>
+<body>
+	<h1>UI: Web Config Taxonomy</h1>
+
+	<p>
+		This page demonstrates the <code>&lt;web-config-taxonomy&gt;</code> component,
+		which provides searchable product category selection from Google or Facebook taxonomies.
+		The component wraps the <code>&lt;auto-suggest&gt;</code> component and handles all data loading and parsing automatically.
+	</p>
+
+	<p>
+		When a category is selected, the component displays Schema.org markup in both <strong>Microdata</strong> and <strong>JSON-LD</strong> formats.
+		You can control which formats are shown using the <code>schema</code> attribute.
+	</p>
+
+	<h2>Web Component Examples</h2>
+
+	<section>
+		<h3>Google Product Taxonomy</h3>
+		<p>Search for product categories like "headphones", "shoes", "furniture", etc.</p>
+		<p><code>&lt;web-config-taxonomy type="google"&gt;&lt;/web-config-taxonomy&gt;</code></p>
+
+		<web-config-taxonomy id="wc-google" type="google"></web-config-taxonomy>
+	</section>
+
+	<section>
+		<h3>Meta/Facebook Product Taxonomy</h3>
+		<p>Search Facebook's product categories. Try "beverages", "toys", "furniture".</p>
+		<p><code>&lt;web-config-taxonomy type="facebook"&gt;&lt;/web-config-taxonomy&gt;</code></p>
+
+		<web-config-taxonomy id="wc-facebook" type="facebook"></web-config-taxonomy>
+	</section>
+
+	<section>
+		<h3>Google Product Taxonomy with Fuzzy Search</h3>
+		<p>Fuzzy search with typo tolerance. Try typos like "coffe cups", "headphnes", "furnitur".</p>
+		<p><code>&lt;web-config-taxonomy type="google-fuzzy"&gt;&lt;/web-config-taxonomy&gt;</code></p>
+
+		<web-config-taxonomy id="wc-fuzzy" type="google-fuzzy"></web-config-taxonomy>
+	</section>
+
+	<section>
+		<h3>JSON-LD Only</h3>
+		<p>Show only JSON-LD output using the <code>schema</code> attribute.</p>
+		<p><code>&lt;web-config-taxonomy type="google" schema="jsonld"&gt;&lt;/web-config-taxonomy&gt;</code></p>
+
+		<web-config-taxonomy id="wc-jsonld-only" type="google" schema="jsonld"></web-config-taxonomy>
+	</section>
+
+	<hr>
+
+	<h2>Factory Function Examples (Advanced)</h2>
+
+	<p>
+		For more control, you can use the <code>createTaxonomySelector</code> factory function directly with an <code>&lt;auto-suggest&gt;</code> element.
+		This approach is useful when you need custom rendering or integration with existing components.
+	</p>
+
+	<section>
+		<h3>Google Taxonomy with Factory Function</h3>
+		<p>This example uses the factory function directly. Add <code>schema="microdata jsonld"</code> to the auto-suggest element for schema preview.</p>
+
+		<auto-suggest
+			id="google-taxonomy"
+			search-mode="local-keywords"
+			search-fields="path"
+			api-value-path="id"
+			api-display-path="path"
+			info-template="Loaded {count} categories"
+			status-template="Selected: {display}"
+			label="Google Product Category"
+			list-mode="ul"
+			minlength="2"
+			placeholder="e.g., headphones, coffee, toys"
+			schema="microdata jsonld"
+			noshadow>
+			<small slot="info"></small>
+			<small slot="status"></small>
+		</auto-suggest>
+	</section>
+
+	<script type="module">
+		// Import the component (registers <web-config-taxonomy>)
+		import { WebConfigTaxonomy } from './src/index.js';
+		// Also import factory for advanced examples
+		import { createTaxonomySelector } from './factory.js';
+		import { googleTaxonomyParser } from './parsers.js';
+		// Auto-suggest is imported by the component, but we need it for factory examples
+		import { AutoSuggest } from '../auto-suggest/index.js';
+
+		// Setup factory example
+		async function setupFactoryExample() {
+			const autoSuggestEl = document.getElementById('google-taxonomy');
+			if (!autoSuggestEl) return;
+
+			await createTaxonomySelector(autoSuggestEl, {
+				dataUrl: 'google.txt',
+				parser: googleTaxonomyParser
+			});
+
+			autoSuggestEl.addEventListener('autoSuggestSelect', (e) => {
+				console.log('Factory example selected:', e.detail);
+			});
+		}
+
+		setupFactoryExample();
+	</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "social",
+  "title": "Social Card",
+  "description": "Social card for social media posts",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "title": "Author Name",
+      "description": "Post author"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "comments": {
+      "type": "number",
+      "title": "Comments",
+      "description": "Number of comments"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Featured post image"
+    },
+    "hashtags": {
+      "type": "tags",
+      "title": "Hashtags",
+      "description": "Post hashtags"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "likes": {
+      "type": "number",
+      "title": "Likes",
+      "description": "Number of likes"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "media_attachments": {
+      "type": "array",
+      "title": "Media Attachments",
+      "description": "Attached media URLs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "platform": {
+      "type": "select",
+      "title": "Platform",
+      "description": "Social media platform",
+      "options": {
+        "choices": [
+          {
+            "value": "Twitter",
+            "label": "Twitter"
+          },
+          {
+            "value": "LinkedIn",
+            "label": "LinkedIn"
+          },
+          {
+            "value": "Facebook",
+            "label": "Facebook"
+          },
+          {
+            "value": "Instagram",
+            "label": "Instagram"
+          },
+          {
+            "value": "YouTube",
+            "label": "YouTube"
+          },
+          {
+            "value": "TikTok",
+            "label": "TikTok"
+          }
+        ]
+      }
+    },
+    "post_content": {
+      "type": "text",
+      "title": "Post Content",
+      "description": "Social media post text"
+    },
+    "published_date": {
+      "type": "datetime",
+      "title": "Published Date",
+      "description": "Post publication date"
+    },
+    "shares": {
+      "type": "number",
+      "title": "Shares",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

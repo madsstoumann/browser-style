@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Config Taxonomy - Contentful App</title>
+  <script src="https://unpkg.com/contentful-ui-extensions-sdk@4"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "@browser.style/auto-suggest": "https://browser.style/ui/auto-suggest/index.js",
+        "@browser.style/common": "https://browser.style/ui/common/index.js"
+      }
+    }
+  </script>
+  <style>
+    body { margin: 0; padding: 16px; min-height: 200px; }
+    #app { min-height: 200px; }
+    web-config-taxonomy { display: block; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script type="module">
+    // Import auto-suggest first (required by web-config-taxonomy)
+    import 'https://browser.style/ui/auto-suggest/index.js';
+    // Import the web component
+    import 'https://browser.style/ui/web-config-taxonomy/src/index.js';
+
+    const mount = async (api) => {
+      const app = document.getElementById('app');
+
+      await customElements.whenDefined('web-config-taxonomy');
+
+      const editor = document.createElement('web-config-taxonomy');
+
+      // Get taxonomy type from instance parameters (configured per-field in Contentful)
+      // Defaults to 'google' if not specified
+      const taxonomyType = api?.parameters?.instance?.taxonomyType || 'google';
+      editor.setAttribute('type', taxonomyType);
+
+      // Optional: Get custom label from instance parameters
+      const customLabel = api?.parameters?.instance?.label;
+      if (customLabel) {
+        editor.setAttribute('label', customLabel);
+      }
+
+      app.appendChild(editor);
+
+      if (api) {
+        // Set initial value from Contentful field
+        const currentValue = api.field.getValue();
+        if (currentValue) {
+          // Handle both string (JSON) and object values
+          if (typeof currentValue === 'string') {
+            editor.value = currentValue;
+          } else if (typeof currentValue === 'object') {
+            editor.value = currentValue;
+          }
+        }
+
+        // Listen for changes and update Contentful field
+        editor.addEventListener('change', (event) => {
+          const detail = event.detail;
+          // Store the full taxonomy object (includes id, name, path, categories)
+          api.field.setValue(detail);
+        });
+
+        // Start auto-resizer
+        api.window.startAutoResizer();
+      }
+    };
+
+    // Initialize with Contentful SDK or standalone
+    if (window.contentfulExtension) {
+      try {
+        const initResult = window.contentfulExtension.init(async (api) => mount(api));
+        if (initResult && typeof initResult.catch === 'function') {
+          initResult.catch((error) => console.error('Contentful SDK error:', error));
+        }
+      } catch (error) {
+        console.error('Failed to initialize Contentful SDK:', error);
+      }
+    } else {
+      // Fallback for local testing without SDK
+      mount(null);
+    }
+  </script>
+</body>
+</html>

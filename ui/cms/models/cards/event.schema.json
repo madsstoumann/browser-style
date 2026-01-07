@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "event",
+  "title": "Event Card",
+  "description": "Event card with date, location, and organizer information",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "attendance_mode": {
+      "type": "select",
+      "title": "Attendance Mode",
+      "description": "Attendance mode",
+      "options": {
+        "choices": [
+          {
+            "value": "OfflineEventAttendanceMode",
+            "label": "Offline"
+          },
+          {
+            "value": "OnlineEventAttendanceMode",
+            "label": "Online"
+          },
+          {
+            "value": "MixedEventAttendanceMode",
+            "label": "Mixed"
+          }
+        ]
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "description": {
+      "type": "richtext",
+      "title": "Description",
+      "description": "Detailed event description"
+    },
+    "end_date": {
+      "type": "datetime",
+      "title": "End Date",
+      "description": "Event end date and time"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Event image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "location_address": {
+      "type": "string",
+      "title": "Location Address",
+      "description": "Venue address"
+    },
+    "location_name": {
+      "type": "string",
+      "title": "Location Name",
+      "description": "Venue or location name"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "offer_currency": {
+      "type": "string",
+      "title": "Offer Currency",
+      "description": "Price currency",
+      "default": "USD"
+    },
+    "offer_name": {
+      "type": "string",
+      "title": "Offer Name",
+      "description": "Ticket/offer name"
+    },
+    "offer_price": {
+      "type": "number",
+      "title": "Offer Price",
+      "description": "Ticket price"
+    },
+    "organizer_name": {
+      "type": "string",
+      "title": "Organizer Name",
+      "description": "Event organizer name"
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "start_date": {
+      "type": "datetime",
+      "title": "Start Date",
+      "description": "Event start date and time"
+    },
+    "status": {
+      "type": "select",
+      "title": "Event Status",
+      "description": "Event status",
+      "options": {
+        "choices": [
+          {
+            "value": "Scheduled",
+            "label": "Scheduled"
+          },
+          {
+            "value": "Cancelled",
+            "label": "Cancelled"
+          },
+          {
+            "value": "Postponed",
+            "label": "Postponed"
+          },
+          {
+            "value": "Rescheduled",
+            "label": "Rescheduled"
+          }
+        ]
+      }
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

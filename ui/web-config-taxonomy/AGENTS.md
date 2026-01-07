@@ -1,8 +1,8 @@
-# Product Taxonomy - Internal Architecture
+# Web Config Taxonomy - Internal Architecture
 
 ## Overview
 
-Product Taxonomy is a **factory function library** that enhances the `<auto-suggest>` component to work with product taxonomy data (Google, Facebook, or custom formats). It includes parsers for standard formats and generates Schema.org previews.
+Web Config Taxonomy is a **factory function library** that enhances the `<auto-suggest>` component to work with product taxonomy data (Google, Facebook, or custom formats). It includes parsers for standard formats and generates Schema.org previews.
 
 **Package Type:** JavaScript Factory Library (no web component)
 
@@ -59,7 +59,7 @@ Display in preview element
 ## File Structure
 
 ```
-product-taxonomy/
+web-config-taxonomy/
 ├── index.js        9 lines     Re-exports from factory and parsers
 ├── factory.js      166 lines   Main factory implementation
 ├── parsers.js      39 lines    Taxonomy file parsers
@@ -68,7 +68,7 @@ product-taxonomy/
 ├── package.json    ---         NPM configuration
 ├── google.txt      ---         Google product taxonomy data
 ├── facebook.txt    ---         Facebook product taxonomy data
-└── claude.md       ---         This file
+└── AGENTS.md       ---         This file
 ```
 
 ## API Reference
@@ -401,7 +401,7 @@ The factory adds:
 ></auto-suggest>
 
 <script type="module">
-  import { createTaxonomySelector, googleTaxonomyParser } from '@browser.style/product-taxonomy';
+  import { createTaxonomySelector, googleTaxonomyParser } from '@browser.style/web-config-taxonomy';
   import '@browser.style/auto-suggest';
 
   createTaxonomySelector(document.getElementById('taxonomy'), {
@@ -421,7 +421,7 @@ The factory adds:
 ></auto-suggest>
 
 <script type="module">
-  import { createTaxonomySelector, facebookTaxonomyParser } from '@browser.style/product-taxonomy';
+  import { createTaxonomySelector, facebookTaxonomyParser } from '@browser.style/web-config-taxonomy';
 
   createTaxonomySelector(document.getElementById('fb-taxonomy'), {
     dataUrl: 'facebook.txt',

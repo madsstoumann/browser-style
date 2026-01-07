@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "job",
+  "title": "Job Card",
+  "description": "Job posting card with company, location, salary, and requirements",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "application_deadline": {
+      "type": "date",
+      "title": "Application Deadline",
+      "description": "Deadline for applications"
+    },
+    "benefits": {
+      "type": "array",
+      "title": "Benefits",
+      "description": "Job benefits",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name",
+      "description": "Hiring company name"
+    },
+    "employment_type": {
+      "type": "select",
+      "title": "Employment Type",
+      "description": "Type of employment",
+      "options": {
+        "choices": [
+          {
+            "value": "FULL_TIME",
+            "label": "Full-time"
+          },
+          {
+            "value": "PART_TIME",
+            "label": "Part-time"
+          },
+          {
+            "value": "CONTRACT",
+            "label": "Contract"
+          },
+          {
+            "value": "TEMPORARY",
+            "label": "Temporary"
+          },
+          {
+            "value": "INTERN",
+            "label": "Intern"
+          }
+        ]
+      }
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Company logo or image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location",
+      "description": "Job location"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "qualifications": {
+      "type": "array",
+      "title": "Qualifications",
+      "description": "Required qualifications",
+      "items": {
+        "type": "string"
+      }
+    },
+    "salary_currency": {
+      "type": "string",
+      "title": "Salary Currency",
+      "description": "Salary currency",
+      "default": "USD"
+    },
+    "salary_max": {
+      "type": "number",
+      "title": "Salary Maximum",
+      "description": "Maximum salary"
+    },
+    "salary_min": {
+      "type": "number",
+      "title": "Salary Minimum",
+      "description": "Minimum salary"
+    },
+    "salary_period": {
+      "type": "string",
+      "title": "Salary Period",
+      "description": "Salary period (YEAR, MONTH, HOUR)"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

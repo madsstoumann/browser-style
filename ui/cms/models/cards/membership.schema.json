@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "membership",
+  "title": "Membership Card",
+  "description": "Membership card for subscription plans and membership tiers",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Plan image or badge"
+    },
+    "features": {
+      "type": "array",
+      "title": "Features",
+      "description": "Included features",
+      "items": {
+        "type": "string"
+      }
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "is_popular": {
+      "type": "boolean",
+      "title": "Is Popular",
+      "description": "Mark as most popular plan"
+    },
+    "limitations": {
+      "type": "array",
+      "title": "Limitations",
+      "description": "Plan limitations",
+      "items": {
+        "type": "string"
+      }
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "plan_name": {
+      "type": "string",
+      "title": "Plan Name",
+      "description": "Detailed plan name"
+    },
+    "price_currency": {
+      "type": "string",
+      "title": "Currency",
+      "description": "Price currency",
+      "default": "USD"
+    },
+    "price_monthly": {
+      "type": "number",
+      "title": "Monthly Price",
+      "description": "Monthly subscription price"
+    },
+    "price_yearly": {
+      "type": "number",
+      "title": "Yearly Price",
+      "description": "Yearly subscription price"
+    },
+    "savings": {
+      "type": "string",
+      "title": "Savings",
+      "description": "Savings text (e.g., 'Save 20%')"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "trial_period": {
+      "type": "string",
+      "title": "Trial Period",
+      "description": "Free trial period duration"
+    }
+  },
+  "required": []
+}

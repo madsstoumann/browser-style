@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "software",
+  "title": "Software Card",
+  "description": "Software card for applications and software products",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "application_category": {
+      "type": "string",
+      "title": "Application Category",
+      "description": "Software category"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "description": {
+      "type": "richtext",
+      "title": "Description",
+      "description": "Detailed software description"
+    },
+    "developer_name": {
+      "type": "string",
+      "title": "Developer Name",
+      "description": "Developer or company name"
+    },
+    "developer_website": {
+      "type": "url",
+      "title": "Developer Website",
+      "description": "Developer website URL"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Software icon or image"
+    },
+    "file_size": {
+      "type": "string",
+      "title": "File Size",
+      "description": "Download file size"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "operating_systems": {
+      "type": "array",
+      "title": "Operating Systems",
+      "description": "Supported operating systems",
+      "items": {
+        "type": "string"
+      }
+    },
+    "price_currency": {
+      "type": "string",
+      "title": "Currency",
+      "description": "Price currency",
+      "default": "USD"
+    },
+    "price_current": {
+      "type": "number",
+      "title": "Current Price",
+      "description": "Software price"
+    },
+    "price_type": {
+      "type": "string",
+      "title": "Price Type",
+      "description": "Pricing model (one-time, subscription)"
+    },
+    "requirements_processor": {
+      "type": "string",
+      "title": "Processor Requirement",
+      "description": "Minimum processor required"
+    },
+    "requirements_ram": {
+      "type": "string",
+      "title": "RAM Requirement",
+      "description": "Minimum RAM required"
+    },
+    "requirements_storage": {
+      "type": "string",
+      "title": "Storage Requirement",
+      "description": "Minimum storage required"
+    },
+    "screenshots": {
+      "type": "array",
+      "title": "Screenshots",
+      "description": "Software screenshot URLs",
+      "items": {
+        "type": "string"
+      }
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "string",
+      "title": "Version",
+      "description": "Software version"
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

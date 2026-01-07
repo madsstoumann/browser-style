@@ -1,18 +1,21 @@
 {
-  "name": "@browser.style/product-taxonomy",
-  "version": "2.0.0",
-  "description": "A factory for adding Google and Facebook product taxonomy search to the browser.style auto-suggest component.",
+  "name": "@browser.style/web-config-taxonomy",
+  "version": "2.1.0",
+  "description": "A web component and factory for adding Google and Facebook product taxonomy search to the browser.style auto-suggest component.",
   "type": "module",
-  "module": "index.js",
+  "main": "./src/index.js",
+  "module": "./index.js",
   "exports": {
-    ".": {
-      "import": "./index.js"
-    }
+    ".": "./index.js",
+    "./component": "./src/index.js",
+    "./factory": "./factory.js",
+    "./parsers": "./parsers.js"
   },
   "files": [
     "index.js",
     "factory.js",
     "parsers.js",
+    "src",
     "google.txt",
     "facebook.txt"
   ],
@@ -26,20 +29,24 @@
   "keywords": [
     "browser.style",
     "web-components",
-    "product-taxonomy",
+    "web-config-taxonomy",
     "google-taxonomy",
     "facebook-taxonomy",
-    "auto-suggest"
+    "meta-taxonomy",
+    "product-taxonomy",
+    "auto-suggest",
+    "cms",
+    "contentful"
   ],
   "author": "Mads Stoumann",
   "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/madsstoumann/browser-style.git",
-    "directory": "ui/product-taxonomy"
+    "directory": "ui/web-config-taxonomy"
   },
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/product-taxonomy"
+  "homepage": "https://browser.style/ui/web-config-taxonomy"
 }

@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "course",
+  "title": "Course Card",
+  "description": "Course card for educational courses and training programs",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "course_workload": {
+      "type": "string",
+      "title": "Course Workload",
+      "description": "Expected workload (ISO 8601 duration)"
+    },
+    "difficulty_level": {
+      "type": "select",
+      "title": "Difficulty Level",
+      "description": "Course difficulty",
+      "options": {
+        "choices": [
+          {
+            "value": "Beginner",
+            "label": "Beginner"
+          },
+          {
+            "value": "Intermediate",
+            "label": "Intermediate"
+          },
+          {
+            "value": "Advanced",
+            "label": "Advanced"
+          }
+        ]
+      }
+    },
+    "duration": {
+      "type": "string",
+      "title": "Duration",
+      "description": "Course duration"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Course image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "instructor_experience": {
+      "type": "string",
+      "title": "Instructor Experience",
+      "description": "Instructor's experience"
+    },
+    "instructor_name": {
+      "type": "string",
+      "title": "Instructor Name",
+      "description": "Instructor's name"
+    },
+    "instructor_title": {
+      "type": "string",
+      "title": "Instructor Title",
+      "description": "Instructor's title"
+    },
+    "learning_outcomes": {
+      "type": "array",
+      "title": "Learning Outcomes",
+      "description": "What students will learn",
+      "items": {
+        "type": "string"
+      }
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "title": "Prerequisites",
+      "description": "Course prerequisites",
+      "items": {
+        "type": "string"
+      }
+    },
+    "price_currency": {
+      "type": "string",
+      "title": "Currency",
+      "description": "Price currency",
+      "default": "USD"
+    },
+    "price_current": {
+      "type": "number",
+      "title": "Current Price",
+      "description": "Current course price"
+    },
+    "price_original": {
+      "type": "number",
+      "title": "Original Price",
+      "description": "Original price"
+    },
+    "provider": {
+      "type": "string",
+      "title": "Provider",
+      "description": "Course provider or institution"
+    },
+    "reading_time": {
+      "type": "string",
+      "title": "Reading Time",
+      "description": "Estimated reading time"
+    },
+    "share_count": {
+      "type": "number",
+      "title": "Share Count",
+      "description": "Number of shares"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "view_count": {
+      "type": "number",
+      "title": "View Count",
+      "description": "Number of views"
+    }
+  },
+  "required": []
+}

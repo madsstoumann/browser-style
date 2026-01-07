@@ -1,13 +1,13 @@
-# @browser.style/product-taxonomy
+# @browser.style/web-config-taxonomy
 
 A factory for configuring the [`@browser.style/auto-suggest`](https://github.com/madsstoumann/browser-style/tree/main/ui/auto-suggest) component to search product taxonomies. It includes ready-to-use parsers for Google and Facebook product feeds and can automatically render Schema.org previews for selected categories.
 
-This package has been refactored to a factory-based approach. It no longer provides a `<product-taxonomy>` web component.
+This package has been refactored to a factory-based approach. It no longer provides a `<web-config-taxonomy>` web component.
 
 ## Installation
 
 ```bash
-npm install @browser.style/product-taxonomy @browser.style/auto-suggest
+npm install @browser.style/web-config-taxonomy @browser.style/auto-suggest
 ```
 
 > **Note**: This package is a configuration layer and requires `@browser.style/auto-suggest` as a `peerDependency`. You must have both installed.
@@ -32,7 +32,7 @@ The factory enhances a standard `<auto-suggest>` element, handling the data fetc
 2.  **JavaScript**: Import the factory and a parser. Then, call the factory with the element and your options.
 
     ```javascript
-    import { createTaxonomySelector, googleTaxonomyParser } from '@browser.style/product-taxonomy';
+    import { createTaxonomySelector, googleTaxonomyParser } from '@browser.style/web-config-taxonomy';
     import '@browser.style/auto-suggest';
 
     const autoSuggestEl = document.getElementById('google-taxonomy');
@@ -76,7 +76,7 @@ SKU-456 :: Home & Garden | Kitchen | Appliances
 <auto-suggest id="custom-taxonomy" label="Custom Category"></auto-suggest>
 
 <script type="module">
-  import { createTaxonomySelector } from '@browser.style/product-taxonomy';
+  import { createTaxonomySelector } from '@browser.style/web-config-taxonomy';
   import '@browser.style/auto-suggest';
 
   const autoSuggestEl = document.getElementById('custom-taxonomy');

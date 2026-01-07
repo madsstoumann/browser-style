@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "business",
+  "title": "Business Card",
+  "description": "Business card for local businesses with location and contact information",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "address_country": {
+      "type": "string",
+      "title": "Country",
+      "description": "Country code"
+    },
+    "address_locality": {
+      "type": "string",
+      "title": "City",
+      "description": "City or locality"
+    },
+    "address_region": {
+      "type": "string",
+      "title": "State/Region",
+      "description": "State or region"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email",
+      "description": "Business email address",
+      "format": "email"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Featured Media",
+      "description": "Business logo or storefront image"
+    },
+    "founding_date": {
+      "type": "date",
+      "title": "Founding Date",
+      "description": "Date business was founded"
+    },
+    "geo_latitude": {
+      "type": "number",
+      "title": "Latitude",
+      "description": "Geographic latitude"
+    },
+    "geo_longitude": {
+      "type": "number",
+      "title": "Longitude",
+      "description": "Geographic longitude"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "opening_hours": {
+      "type": "array",
+      "title": "Opening Hours",
+      "description": "Business opening hours",
+      "items": {
+        "type": "string"
+      }
+    },
+    "postal_code": {
+      "type": "string",
+      "title": "Postal Code",
+      "description": "ZIP or postal code"
+    },
+    "street_address": {
+      "type": "string",
+      "title": "Street Address",
+      "description": "Street address"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "telephone": {
+      "type": "string",
+      "title": "Telephone",
+      "description": "Business phone number"
+    },
+    "website": {
+      "type": "url",
+      "title": "Website",
+      "description": "Business website URL"
+    }
+  },
+  "required": []
+}

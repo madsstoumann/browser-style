@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "achievement",
+  "title": "Achievement Card",
+  "description": "Achievement card for credentials, certifications, and awards",
+  "metadata": {
+    "version": "1.0.0",
+    "lastModified": "2026-01-07",
+    "displayField": "headline"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Cards"
+  },
+  "type": "object",
+  "properties": {
+    "achievement_name": {
+      "type": "string",
+      "title": "Achievement Name",
+      "description": "Full achievement name"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "description": "Content category"
+    },
+    "credential_id": {
+      "type": "string",
+      "title": "Credential ID",
+      "description": "Unique credential identifier"
+    },
+    "date_earned": {
+      "type": "date",
+      "title": "Date Earned",
+      "description": "Date the achievement was earned"
+    },
+    "expiration_date": {
+      "type": "date",
+      "title": "Expiration Date",
+      "description": "Expiration date (if applicable)"
+    },
+    "featured_media": {
+      "type": "media",
+      "title": "Badge Image",
+      "description": "Achievement badge or certificate image"
+    },
+    "headline": {
+      "type": "string",
+      "title": "Headline",
+      "description": "Primary headline"
+    },
+    "issuing_organization": {
+      "type": "string",
+      "title": "Issuing Organization",
+      "description": "Organization that issued the credential"
+    },
+    "media": {
+      "type": "media",
+      "title": "Media",
+      "description": "Primary media asset (image, video, etc.)",
+      "options": {
+        "accept": [
+          "image/*",
+          "video/*"
+        ]
+      }
+    },
+    "skill_level": {
+      "type": "string",
+      "title": "Skill Level",
+      "description": "Skill or proficiency level"
+    },
+    "subheadline": {
+      "type": "string",
+      "title": "Subheadline",
+      "description": "Secondary headline"
+    },
+    "summary": {
+      "type": "text",
+      "title": "Summary",
+      "description": "Brief summary or description"
+    },
+    "tags": {
+      "type": "array",
+      "title": "Tags",
+      "description": "Keywords or tags",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification_url": {
+      "type": "url",
+      "title": "Verification URL",
+      "description": "URL to verify the credential"
+    }
+  },
+  "required": []
+}
