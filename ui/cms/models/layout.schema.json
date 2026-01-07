@@ -11,31 +11,7 @@
   "structure": {
     "allowedAsRoot": true,
     "allowedChildContentTypes": [
-      "card-achievement",
-      "card-announcement",
-      "card-article",
-      "card-booking",
-      "card-business",
-      "card-comparison",
-      "card-contact",
-      "card-course",
-      "card-event",
-      "card-faq",
-      "card-gallery",
-      "card-job",
-      "card-location",
-      "card-membership",
-      "card-news",
-      "card-poll",
-      "card-product",
-      "card-profile",
-      "card-quote",
-      "card-recipe",
-      "card-review",
-      "card-social",
-      "card-software",
-      "card-statistic",
-      "card-timeline"
+      "content-card"
     ],
     "folder": "Layouts"
   },

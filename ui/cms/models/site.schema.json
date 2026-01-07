@@ -238,22 +238,34 @@
     "robots_txt": {
       "type": "text",
       "title": "robots.txt",
-      "description": "robots.txt content"
+      "description": "robots.txt content",
+      "ui": {
+        "widget": "web-config-robots"
+      }
     },
     "security_txt": {
       "type": "text",
       "title": "security.txt",
-      "description": "security.txt content"
+      "description": "security.txt content",
+      "ui": {
+        "widget": "web-config-security"
+      }
     },
     "manifest": {
       "type": "object",
       "title": "Web App Manifest",
-      "description": "manifest.json configuration"
+      "description": "manifest.json configuration",
+      "ui": {
+        "widget": "web-config-manifest"
+      }
     },
     "csp": {
       "type": "object",
       "title": "Content Security Policy",
-      "description": "Global Content Security Policy (CSP) configuration"
+      "description": "Global Content Security Policy (CSP) configuration",
+      "ui": {
+        "widget": "web-config-csp"
+      }
     },
     "design_tokens": {
       "type": "object",

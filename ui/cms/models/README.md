@@ -1,15 +1,24 @@
-# Schema Examples
+# Content Type Schemas
 
-This folder contains example schemas demonstrating the Universal Data Model format.
+This folder contains the Universal Content Model schema definitions.
 
-## Example Schemas
+## Current Schemas
 
-- **[blog-post.schema.json](blog-post.schema.json)** - Complete blog post content type with all standard fields
-- **[author.schema.json](author.schema.json)** - Author profile referenced by blog posts
+| Schema | Description |
+|--------|-------------|
+| [page.schema.json](page.schema.json) | Top-level page with URL, SEO, and layout references |
+| [layout.schema.json](layout.schema.json) | Layout container that holds content cards |
+| [layout-config.schema.json](layout-config.schema.json) | Layout configuration options |
+| [content-card.schema.json](content-card.schema.json) | Polymorphic card supporting 25 content types |
+| [site.schema.json](site.schema.json) | Global singleton configuration (analytics, icons, CSP, etc.) |
+| [navigation.schema.json](navigation.schema.json) | Navigation menu structure |
+| [navigation-item.schema.json](navigation-item.schema.json) | Individual navigation items |
+| [social-link.schema.json](social-link.schema.json) | Social media profile links |
+| [theme.schema.json](theme.schema.json) | Theme/design settings |
 
 ## Schema Structure
 
-All schemas follow the JSON Schema Draft 7 specification with Universal Data Model extensions:
+All schemas follow JSON Schema Draft 7 with Universal Content Model extensions:
 
 ```json
 {
@@ -17,6 +26,15 @@ All schemas follow the JSON Schema Draft 7 specification with Universal Data Mod
   "id": "content-type-id",
   "title": "Display Name",
   "description": "Description of this content type",
+  "metadata": {
+    "version": "1.0.0",
+    "displayField": "title"
+  },
+  "structure": {
+    "allowedAsRoot": true,
+    "folder": "Content",
+    "layout": [...]
+  },
   "type": "object",
   "properties": {
     "fieldName": {
@@ -24,65 +42,51 @@ All schemas follow the JSON Schema Draft 7 specification with Universal Data Mod
       "title": "Field Label",
       "description": "Field description",
       "validation": { ... },
-      "options": { ... }
+      "options": { ... },
+      "ui": { "widget": "custom-widget-id" }
     }
   },
-  "required": ["field1", "field2"],
-  "metadata": { ... }
+  "required": ["field1", "field2"]
 }
 ```
-
-## Field Structure
-
-Each field in `properties` contains:
-
-- **type** - Universal type (string, text, number, boolean, date, datetime, richtext, media, reference, array, select, url, slug, tags, color, geopoint)
-- **title** - Human-readable label for the field
-- **description** - Help text explaining the field's purpose
-- **validation** - Validation rules
-  - `required` - Whether the field is mandatory
-  - `pattern` - Regular expression for validation
-  - `minLength` / `maxLength` - String length constraints
-  - `minimum` / `maximum` - Number range constraints
-- **options** - Type-specific configuration
-- **default** - Default value for the field
 
 ## Universal Types Reference
 
 ### Core Types
 
-| Type | Description | CMS Mapping |
-|------|-------------|-------------|
-| `string` | Single-line text | Symbol, Text (single), String |
-| `text` | Multi-line text | Text, Textarea, Multi-line Text |
-| `number` | Integer or decimal | Number, Integer, Numeric |
-| `boolean` | True/false | Boolean, Checkbox, True/False |
-| `date` | Date without time | Date, Date Picker |
-| `datetime` | Date with time | DateTime, Date/Time |
+| Type | Description |
+|------|-------------|
+| `string` | Single-line text |
+| `text` | Multi-line text |
+| `number` | Integer or decimal |
+| `boolean` | True/false |
+| `date` | Date without time |
+| `datetime` | Date with time |
 
 ### Structural Types
 
-| Type | Description | CMS Mapping |
-|------|-------------|-------------|
-| `richtext` | Formatted content | RichText, XhtmlString, Rich Text Editor |
-| `media` | File references | Link (Asset), Image, File, Media Picker |
-| `reference` | Content references | Link (Entry), Reference, Content Picker |
-| `array` | Lists of items | Array, Block List, ContentArea |
-| `select` | Dropdown/checkboxes | Option/Options, Dropdown, SelectOne |
-| `url` | Web addresses | Url, Link, Multilink |
+| Type | Description |
+|------|-------------|
+| `richtext` | Formatted content (HTML/JSON) |
+| `media` | File references (images, videos, documents) |
+| `reference` | Links to other content items |
+| `array` | Lists of items |
+| `select` | Dropdown with predefined options |
+| `url` | Web addresses |
+| `object` | Arbitrary JSON data |
 
 ### Special Types
 
-| Type | Description | CMS Mapping |
-|------|-------------|-------------|
-| `slug` | URL-safe identifier | Slug (Sanity), Symbol with validation |
-| `tags` | Tag collections | Tags, Array of strings |
-| `color` | Color values | Color Picker, String with validation |
-| `geopoint` | Geographic coordinates | Location, Geopoint |
+| Type | Description |
+|------|-------------|
+| `slug` | URL-safe identifier |
+| `tags` | Tag collections |
+| `color` | Color values |
+| `geopoint` | Geographic coordinates |
 
-## Validation Rules
+## Field Properties
 
-Common validation properties:
+### Validation
 
 ```json
 "validation": {
@@ -91,22 +95,15 @@ Common validation properties:
   "maxLength": 100,
   "pattern": "^[a-z0-9-]+$",
   "minimum": 0,
-  "maximum": 100
+  "maximum": 100,
+  "minItems": 1,
+  "maxItems": 10
 }
 ```
 
-## Field Options
+### Options (Type-specific)
 
-Type-specific configuration:
-
-### String/Text Options
-```json
-"options": {
-  "maxLength": 200
-}
-```
-
-### Media Options
+**Media:**
 ```json
 "options": {
   "accept": ["image/jpeg", "image/png"],
@@ -114,16 +111,16 @@ Type-specific configuration:
 }
 ```
 
-### Reference Options
+**Reference:**
 ```json
 "options": {
-  "referenceType": "author",
-  "multiple": false,
-  "maxItems": 3
+  "referenceType": "page",
+  "multiple": true,
+  "maxItems": 5
 }
 ```
 
-### Select Options
+**Select:**
 ```json
 "options": {
   "choices": [
@@ -134,59 +131,93 @@ Type-specific configuration:
 }
 ```
 
-### Array Options
-```json
-"options": {
-  "minItems": 1,
-  "maxItems": 10
-}
-```
-
-### Slug Options
+**Slug:**
 ```json
 "options": {
   "source": "title"
 }
 ```
 
-## Metadata
+### UI (Custom Widgets)
 
-Content type metadata for CMS configuration:
+For fields that use custom property editors:
 
 ```json
-"metadata": {
-  "icon": "📝",
-  "displayField": "title",
-  "previewUrl": "/blog/{slug}",
-  "description": "Additional context"
+"ui": {
+  "widget": "web-config-card"
+}
+```
+
+Available widgets:
+- `web-config-card` - Content Card editor
+- `web-config-csp` - CSP policy editor
+- `web-config-manifest` - PWA manifest editor
+- `web-config-robots` - robots.txt editor
+- `web-config-security` - security.txt editor
+
+## Structure Configuration
+
+### Editor Layout
+
+Organize fields into groups/tabs:
+
+```json
+"structure": {
+  "layout": [
+    {
+      "type": "group",
+      "name": "Content",
+      "description": "Main content fields",
+      "collapse": false,
+      "fields": ["title", "body", "image"]
+    },
+    {
+      "type": "group",
+      "name": "SEO",
+      "collapse": true,
+      "fields": ["meta_title", "meta_description"]
+    }
+  ]
+}
+```
+
+### Content Tree
+
+Control where content appears:
+
+```json
+"structure": {
+  "allowedAsRoot": true,
+  "folder": "Pages",
+  "allowedChildContentTypes": ["content-card"]
 }
 ```
 
 ## Using the Schemas
 
-With the CLI tool:
-
 ```bash
-# Create content types from schema
-udm create blog-post.schema.json
+# Validate all schemas
+npm run validate
 
-# Update existing content type
-udm update blog-post.schema.json
+# Sync to CMS (uses CMS_PLATFORM from .cmsconfig)
+npm run sync
 
-# Delete content type
-udm delete blog-post
+# Sync single schema
+npm run sync:umbraco -- --file=models/page.schema.json
 
-# Sync multiple schemas
-udm sync *.schema.json
+# Pull existing content types from CMS
+npm run pull:contentful
+
+# Compare local vs CMS
+npm run diff
 ```
 
 ## Best Practices
 
-1. **Use meaningful IDs** - The `id` field should match your filename (without .schema.json)
+1. **Use meaningful IDs** - The `id` field should be lowercase with hyphens (e.g., `blog-post`)
 2. **Provide descriptions** - Help editors understand each field's purpose
-3. **Set appropriate validation** - Balance user freedom with data quality
-4. **Consider relationships** - Use references for related content
-5. **Plan for localization** - Consider which fields need translation
-6. **Use slug fields** - For URL-friendly identifiers
-7. **Set required fields** - Only require truly essential fields
-8. **Provide defaults** - Help editors with sensible default values
+3. **Set appropriate validation** - Balance flexibility with data quality
+4. **Use references** - Link related content types
+5. **Organize with layout** - Group related fields together
+6. **Set required fields** - Only require truly essential fields
+7. **Use custom widgets** - For complex data like CSP, manifests, etc.

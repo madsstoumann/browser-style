@@ -35,12 +35,9 @@
       "description": "Content category"
     },
     "tags": {
-      "type": "array",
+      "type": "tags",
       "title": "Tags",
-      "description": "Keywords or tags",
-      "items": {
-        "type": "string"
-      }
+      "description": "Keywords or tags"
     },
     "media": {
       "type": "media",
@@ -56,6 +53,9 @@
       "description": "Stores complex common data (media, actions) and type-specific content.",
       "validation": {
         "required": true
+      },
+      "ui": {
+        "widget": "web-config-card"
       }
     }
   },
