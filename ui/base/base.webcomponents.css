@@ -1,0 +1,65 @@
+/*
+-----------------
+ Web Components
+-----------------
+*/
+@layer bs-core {
+
+	/* === Auto-Suggest ===
+	  Only required when using `<auto-suggest list-mode="ul">` 
+	*/
+	:where(auto-suggest) {
+		&[open] input {
+			border-end-end-radius: 0;
+			border-end-start-radius: 0;
+		}
+		ul[part="list"] {
+			block-size: var(--auto-suggest-list-bs, calc(var(--input-bs, 2em) * 5));
+			border-color: var(--ButtonBorder);
+			border-style: solid;
+			border-block-width: 0 var(--input-bdw);
+			border-inline-width: var(--input-bdw);
+			border-end-end-radius: var(--input-bdrs);
+			border-end-start-radius: var(--input-bdrs);
+			box-shadow: 0px 10px 20px -5px color-mix(in srgb, CanvasText 25%, transparent);
+			inset-block: anchor(bottom);
+			inset-inline: anchor(start);
+			margin: 0;
+			overflow: clip scroll;
+			padding: 0;
+			width: anchor-size(width);
+			li {
+				align-items: center;
+				display: flex;
+				gap: 1ch;
+				overflow-x: clip;
+				padding: calc(var(--input-pb) / 2) var(--input-pi);
+				text-overflow: ellipsis;
+				&:focus-visible {
+					background-color: var(--CanvasGray);
+					outline: none;
+				}
+				@media (hover: hover) {
+					&:hover {
+						background-color: var(--CanvasGray);
+						cursor: pointer;
+					}
+				}
+				& > * { pointer-events: none; }
+			}
+		}
+
+		@supports not (position-anchor: --anchor) {
+			& {
+				display: block;
+				position: relative;
+				[popover]:popover-open {
+					inset: unset;
+					position: absolute;
+					width: auto;
+					z-index: 1;
+				}
+			}
+		}
+	}
+}
