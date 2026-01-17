@@ -3,9 +3,14 @@ export default class DevTo extends HTMLElement {
 		LANG: 'en',
 		ITEMS_PER_PAGE: 30,
 		ENDPOINTS: {
-			USER_ARTICLES: (username, page, perPage) => 
-				`https://dev.to/api/articles?username=${username}&page=${page}&per_page=${perPage}`,
-			SINGLE_ARTICLE: (id) => `https://dev.to/api/articles/${id}`
+			USER_ARTICLES: (username, page, perPage, baseUrl) =>
+				baseUrl
+					? `${baseUrl}/articles.json`
+					: `https://dev.to/api/articles?username=${username}&page=${page}&per_page=${perPage}`,
+			SINGLE_ARTICLE: (id, baseUrl) =>
+				baseUrl
+					? `${baseUrl}/articles/${id}.json`
+					: `https://dev.to/api/articles/${id}`
 		},
 		I18N: {
 			en: {
@@ -15,7 +20,7 @@ export default class DevTo extends HTMLElement {
 		}
 	};
 
-	static observedAttributes = ['author', 'article', 'theme', 'itemsperpage', 'lang', 'i18n'];
+	static observedAttributes = ['author', 'article', 'theme', 'itemsperpage', 'lang', 'i18n', 'baseurl'];
 
 	#articles = [];
 	#currentPage = 1;
@@ -97,12 +102,12 @@ export default class DevTo extends HTMLElement {
 	async attributeChangedCallback(name, oldValue, newValue) {
 		if (oldValue === newValue) return;
 		
-		if (name === 'author') {
+		if (name === 'author' || name === 'baseurl') {
 			this.#currentPage = 1;
 			this.#articles = [];
 		}
-		
-		if (['author', 'article', 'lang', 'i18n'].includes(name) && (name !== 'article' || newValue !== null)) {
+
+		if (['author', 'article', 'lang', 'i18n', 'baseurl'].includes(name) && (name !== 'article' || newValue !== null)) {
 			clearTimeout(this.#updateTimeout);
 			this.#updateTimeout = setTimeout(() => this.updateContent(), 100);
 		}
@@ -142,17 +147,50 @@ export default class DevTo extends HTMLElement {
 	}
 
 	async #fetchArticles(author) {
+		const baseUrl = this.getAttribute('baseurl');
+
+		// When using baseurl and we have cached articles, paginate locally
+		if (baseUrl && this.#articles.length > 0 && this.#currentPage > 1) {
+			const start = (this.#currentPage - 1) * this.itemsPerPage;
+			const end = start + this.itemsPerPage;
+			const articles = this.#articles.slice(start, end);
+			this.renderArticlesList(articles, false);
+
+			const moreButton = this.#root.querySelector('[part~="more"]');
+			const hasMore = (this.#currentPage * this.itemsPerPage) < this.#articles.length;
+			if (hasMore) {
+				moreButton?.removeAttribute('disabled');
+			} else {
+				moreButton?.remove();
+			}
+			return;
+		}
+
 		try {
 			const response = await fetch(
-				DevTo.CONFIG.ENDPOINTS.USER_ARTICLES(author, this.#currentPage, this.itemsPerPage),
+				DevTo.CONFIG.ENDPOINTS.USER_ARTICLES(author, this.#currentPage, this.itemsPerPage, baseUrl),
 				{ signal: this.#abortController.signal }
 			);
-			const articles = await response.json();
-			this.#articles = this.#currentPage === 1 ? articles : [...this.#articles, ...articles];
+			let articles = await response.json();
+
+			// When using baseurl, handle client-side pagination
+			if (baseUrl) {
+				this.#articles = articles;
+				const start = (this.#currentPage - 1) * this.itemsPerPage;
+				const end = start + this.itemsPerPage;
+				articles = this.#articles.slice(start, end);
+			} else {
+				this.#articles = this.#currentPage === 1 ? articles : [...this.#articles, ...articles];
+			}
+
 			this.renderArticlesList(articles, this.#currentPage === 1);
-			
+
 			const moreButton = this.#root.querySelector('[part~="more"]');
-			if (articles.length >= this.itemsPerPage) {
+			const hasMore = baseUrl
+				? (this.#currentPage * this.itemsPerPage) < this.#articles.length
+				: articles.length >= this.itemsPerPage;
+
+			if (hasMore) {
 				if (!moreButton) {
 					const btn = document.createElement('button');
 					btn.part = 'more';
@@ -174,9 +212,10 @@ export default class DevTo extends HTMLElement {
 	}
 
 	async #fetchArticle(id) {
+		const baseUrl = this.getAttribute('baseurl');
 		try {
 			const response = await fetch(
-				DevTo.CONFIG.ENDPOINTS.SINGLE_ARTICLE(id),
+				DevTo.CONFIG.ENDPOINTS.SINGLE_ARTICLE(id, baseUrl),
 				{ signal: this.#abortController.signal }
 			);
 			const article = await response.json();
