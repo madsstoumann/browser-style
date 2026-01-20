@@ -31,5 +31,6 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/asset-handler"
+  "homepage": "https://browser.style/ui/asset-handler",
+  "customElements": "custom-elements.json"
 }

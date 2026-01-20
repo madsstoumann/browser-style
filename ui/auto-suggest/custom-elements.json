@@ -1,0 +1,366 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AutoSuggest",
+          "members": [
+            {
+              "kind": "field",
+              "name": "basePath",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#initializeSlots",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "preservedSlots"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "initializeComponent"
+            },
+            {
+              "kind": "method",
+              "name": "#setupSettings",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "displayValue"
+            },
+            {
+              "kind": "method",
+              "name": "#addEventListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleKeydown",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "e"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleSearch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "dispatch",
+              "parameters": [
+                {
+                  "name": "dataObj",
+                  "default": "null"
+                },
+                {
+                  "name": "isInitial",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "formReset"
+            },
+            {
+              "kind": "method",
+              "name": "fetchData",
+              "parameters": [
+                {
+                  "name": "value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fetchApiData",
+              "parameters": [
+                {
+                  "name": "value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fetchLocalData",
+              "parameters": [
+                {
+                  "name": "value"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderResults",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "results"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "transformSearchText",
+              "parameters": [
+                {
+                  "name": "text"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "filterLocalData",
+              "parameters": [
+                {
+                  "name": "query"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "filterByKeywords",
+              "parameters": [
+                {
+                  "name": "query"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "levenshteinDistance",
+              "parameters": [
+                {
+                  "name": "a"
+                },
+                {
+                  "name": "b"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "calculateSimilarity",
+              "parameters": [
+                {
+                  "name": "query"
+                },
+                {
+                  "name": "target"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "filterByFuzzy",
+              "parameters": [
+                {
+                  "name": "query"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "getNestedValue",
+              "parameters": [
+                {
+                  "name": "obj"
+                },
+                {
+                  "name": "key"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "render",
+              "parameters": [
+                {
+                  "name": "data"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "reset",
+              "parameters": [
+                {
+                  "name": "fullReset",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resetToDefault"
+            },
+            {
+              "kind": "method",
+              "name": "selectItem",
+              "parameters": [
+                {
+                  "name": "target"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setupULListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "updateInfo",
+              "parameters": [
+                {
+                  "name": "message"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "updateStatus",
+              "parameters": [
+                {
+                  "name": "message"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "template"
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "fullDataset",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            }
+          ],
+          "events": [
+            {
+              "name": "autoSuggestNoSelection",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestSelect",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestClear",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestFetchStart",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestFetchEnd",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestFetchError",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "autoSuggestNoResults",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "FormElement",
+            "module": "/common/form.element.js"
+          },
+          "summary": "05-11-2025"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "AutoSuggest",
+          "declaration": {
+            "name": "AutoSuggest",
+            "module": "index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "basic/uiAutoSuggest.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "uiAutoSuggest",
+          "parameters": [
+            {
+              "name": "input"
+            },
+            {
+              "name": "args"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "uiAutoSuggest",
+            "module": "basic/uiAutoSuggest.js"
+          }
+        }
+      ]
+    }
+  ]
+}

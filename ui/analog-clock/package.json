@@ -34,5 +34,6 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/analog-clock"
+  "homepage": "https://browser.style/ui/analog-clock",
+  "customElements": "custom-elements.json"
 }

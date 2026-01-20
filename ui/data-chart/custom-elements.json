@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "DataChart",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#dataset",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#resizeObserver",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#isAdvancedAttrSupported",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "dataset"
+            },
+            {
+              "kind": "field",
+              "name": "settings",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "load",
+              "parameters": [
+                {
+                  "name": "source"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "render"
+            },
+            {
+              "kind": "method",
+              "name": "#applyAdvancedAttrPolyfill",
+              "privacy": "private"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "data"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "data-chart",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "data-chart",
+          "declaration": {
+            "name": "DataChart",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}

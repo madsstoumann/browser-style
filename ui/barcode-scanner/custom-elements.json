@@ -1,0 +1,180 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "BarcodeScanner",
+          "name": "BarcodeScanner",
+          "members": [
+            {
+              "kind": "field",
+              "name": "ICONS",
+              "type": {
+                "text": "object"
+              },
+              "static": true,
+              "default": "{ on: 'M4 7v-1a2 2 0 0 1 2 -2h2,M4 17v1a2 2 0 0 0 2 2h2,M16 4h2a2 2 0 0 1 2 2v1,M16 20h2a2 2 0 0 0 2 -2v-1,M5 11h1v2h-1z,M10 11l0 2,M14 11h1v2h-1z,M19 11l0 2', off: 'M4 7v-1c0 -.552 .224 -1.052 .586 -1.414,M4 17v1a2 2 0 0 0 2 2h2,M16 4h2a2 2 0 0 1 2 2v1,M16 20h2c.551 0 1.05 -.223 1.412 -.584,M5 11h1v2h-1z,M10 11v2,M15 11v.01,M19 11v2,M3 3l18 18', scanning: 'M4 7v-1a2 2 0 0 1 2 -2h2,M4 17v1a2 2 0 0 0 2 2h2,M16 4h2a2 2 0 0 1 2 2v1,M16 20h2a2 2 0 0 0 2 -2v-1,M5 12l14 0' }"
+            },
+            {
+              "kind": "field",
+              "name": "basePath",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#state",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ auto: false, clear: 2000, clearTimeout: null, debug: false, debugData: [], icons: {}, lastKeyTime: 0, maxLength: 14, minLength: 8, showInput: false, terminateChar: '\\n', uid: '' }"
+            },
+            {
+              "kind": "method",
+              "name": "initializeComponent"
+            },
+            {
+              "kind": "method",
+              "name": "addEvents"
+            },
+            {
+              "kind": "method",
+              "name": "addRefs"
+            },
+            {
+              "kind": "method",
+              "name": "template"
+            },
+            {
+              "kind": "method",
+              "name": "#handleToggle",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "{ newState }"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setIcons",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "scanning",
+                  "default": "false"
+                },
+                {
+                  "name": "isOpen",
+                  "default": "true"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#checkValidRange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "min",
+                  "default": "this.#state.minLength"
+                },
+                {
+                  "name": "max",
+                  "default": "this.#state.maxLength"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#handleInput",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#outputDebug",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#handleClear",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "formReset"
+            },
+            {
+              "kind": "field",
+              "name": "auto"
+            },
+            {
+              "kind": "field",
+              "name": "clear"
+            },
+            {
+              "kind": "field",
+              "name": "debug"
+            },
+            {
+              "kind": "field",
+              "name": "maxLength"
+            },
+            {
+              "kind": "field",
+              "name": "minLength"
+            },
+            {
+              "kind": "field",
+              "name": "showInput"
+            },
+            {
+              "kind": "field",
+              "name": "terminateChar"
+            },
+            {
+              "kind": "field",
+              "name": "uid"
+            }
+          ],
+          "events": [
+            {
+              "name": "bs:entry",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "FormElement",
+            "module": "/common/form.element.js"
+          },
+          "summary": "10-01-2025"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "BarcodeScanner",
+          "declaration": {
+            "name": "BarcodeScanner",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}

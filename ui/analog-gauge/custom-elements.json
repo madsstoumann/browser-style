@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AnalogGauge",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#units",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ defaultMark: 90, defaultNeedle: 270, max: parseInt(this.getAttribute('max') || 100), min: parseInt(this.getAttribute('min') || 0), range: parseFloat(computedStyle.getPropertyValue(\"--analog-gauge-range\")) || 250, suffix: this.getAttribute('suffix') || '', start: parseFloat(computedStyle.getPropertyValue(\"--analog-gauge-start-angle\")) || 235, value: parseFloat(this.getAttribute('value') || 0) }"
+            },
+            {
+              "kind": "field",
+              "name": "#value",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#generateValueMarks",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#update",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[styles]"
+            },
+            {
+              "kind": "field",
+              "name": "minDegree"
+            },
+            {
+              "kind": "field",
+              "name": "totalRange"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <div part=\"gauge\"></div> ${this.#generateValueMarks()} <div part=\"needle\"></div> <div part=\"value\"></div> <div part=\"label\">${this.getAttribute('label')||''}</div> <div part=\"label-min\">${this.getAttribute('min-label')||''}</div> <div part=\"label-max\">${this.getAttribute('max-label')||''}</div>`"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "value"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "analog-gauge",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AnalogGauge",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "analog-gauge",
+          "declaration": {
+            "name": "AnalogGauge",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}

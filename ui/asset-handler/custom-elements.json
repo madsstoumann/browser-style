@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AssetHandler",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#api",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#assetId",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#elements",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#url",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#demoMode",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "connectionError"
+            },
+            {
+              "kind": "method",
+              "name": "fetch",
+              "parameters": [
+                {
+                  "name": "url"
+                },
+                {
+                  "name": "options",
+                  "default": "{}"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "initialize"
+            },
+            {
+              "kind": "method",
+              "name": "renderAssets",
+              "parameters": [
+                {
+                  "name": "node"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderTags",
+              "parameters": [
+                {
+                  "name": "tags"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "handleFile",
+              "parameters": [
+                {
+                  "name": "event"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "uploadFile",
+              "parameters": [
+                {
+                  "name": "event"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "config",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "shadow"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[sheet]"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "asset-id"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "asset-handler",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AssetHandler",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "asset-handler",
+          "declaration": {
+            "name": "AssetHandler",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}

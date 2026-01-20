@@ -1,0 +1,158 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AnalogClock",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#date",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#numberFormatter",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#romanNumerals",
+              "privacy": "private",
+              "type": {
+                "text": "array"
+              },
+              "default": "['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']"
+            },
+            {
+              "kind": "method",
+              "name": "#formatDate",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "tzTime"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#formatNumber",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "num"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#generateIndices",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#generateNumerals",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "count"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#roundTzOffset",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "offset"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#updateClock",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[styles]"
+            },
+            {
+              "kind": "field",
+              "name": "innerHTML",
+              "default": "` <ul part=\"indices\">${this.#generateIndices()}</ul> <ol part=\"numerals\">${this.#generateNumerals(this.getAttribute('numerals'))}</ol> <nav part=\"hands\"> <b part=\"seconds\"></b> <b part=\"minutes\"></b> <b part=\"hours\"></b> <time part=\"date\"></time> </nav> <span part=\"label\"></span>`"
+            },
+            {
+              "kind": "field",
+              "name": "textContent"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "analog-clock",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AnalogClock",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "analog-clock",
+          "declaration": {
+            "name": "AnalogClock",
+            "module": "index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "basic/uiAnalogClock.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "uiAnalogClock",
+          "parameters": [
+            {
+              "name": "node"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "uiAnalogClock",
+            "module": "basic/uiAnalogClock.js"
+          }
+        }
+      ]
+    }
+  ]
+}

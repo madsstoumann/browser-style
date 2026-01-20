@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "AsyncLoader",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#elements",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "#root",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#timeoutId",
+              "privacy": "private",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "#loading",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "isInline",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "startLoading"
+            },
+            {
+              "kind": "field",
+              "name": "stopLoading"
+            },
+            {
+              "kind": "field",
+              "name": "handleTimeout"
+            },
+            {
+              "kind": "field",
+              "name": "handleError"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[styles]"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "tagName": "async-loader",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "AsyncLoader",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "async-loader",
+          "declaration": {
+            "name": "AsyncLoader",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}

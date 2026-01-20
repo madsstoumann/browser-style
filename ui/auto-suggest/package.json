@@ -37,5 +37,6 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/auto-suggest"
+  "homepage": "https://browser.style/ui/auto-suggest",
+  "customElements": "custom-elements.json"
 }

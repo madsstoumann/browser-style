@@ -1,0 +1,1708 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "DataEntry is a custom HTML element that provides a comprehensive data entry form with various functionalities, based on a provided JSON schema and data.\nIt supports schema validation, internationalization, dynamic form rendering, and auto-save mechanisms.",
+          "name": "DataEntry",
+          "members": [
+            {
+              "kind": "field",
+              "name": "data",
+              "type": {
+                "text": "Object"
+              },
+              "description": "The data object associated with the form."
+            },
+            {
+              "kind": "field",
+              "name": "schema",
+              "type": {
+                "text": "Object"
+              },
+              "description": "The JSON schema defining the structure of the form data."
+            },
+            {
+              "kind": "field",
+              "name": "lookup",
+              "type": {
+                "text": "Object"
+              },
+              "description": "The lookup object for reference data."
+            },
+            {
+              "kind": "field",
+              "name": "i18n",
+              "type": {
+                "text": "Object"
+              },
+              "description": "The internationalization object containing translations."
+            },
+            {
+              "kind": "field",
+              "name": "constants"
+            },
+            {
+              "kind": "field",
+              "name": "validateMethod",
+              "type": {
+                "text": "Function"
+              },
+              "description": "Custom validation method for the form data."
+            },
+            {
+              "kind": "method",
+              "name": "addArrayEntry",
+              "parameters": [
+                {
+                  "name": "element",
+                  "description": "The form element that triggered the addition.",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "path",
+                  "description": "The path to the array within the form data.",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "insertBeforeSelector",
+                  "default": "`[part=\"nav\"]`",
+                  "description": "The CSS selector to determine where to insert the new entry in the DOM.",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds a new entry to an array within the form data.",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "addArrayEntries",
+              "parameters": [
+                {
+                  "name": "path",
+                  "description": "The path to the array in the form data",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "entries",
+                  "description": "Array of objects to add",
+                  "type": {
+                    "text": "Array"
+                  }
+                },
+                {
+                  "name": "renderMethod",
+                  "default": "'arrayDetail'",
+                  "description": "The render method to use (e.g., 'arrayDetail')",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds multiple entries to an array in the form data"
+            },
+            {
+              "kind": "method",
+              "name": "bindCustomButtons",
+              "description": "Binds custom buttons within the form to dispatch a custom event when clicked.\n\nThis method selects all buttons within the form that have a `data-method=\"custom\"` attribute\nand attaches a click event listener to each of them. When a button is clicked, it prevents\nthe default action and dispatches a `de:custom` event with the instance data and the button\nthat was clicked as the event detail."
+            },
+            {
+              "kind": "method",
+              "name": "bindCustomEvents",
+              "parameters": [
+                {
+                  "name": "elementContainer",
+                  "description": "The container element that holds the elements to bind events to.",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                },
+                {
+                  "name": "componentInstance",
+                  "description": "The instance of the component that contains custom functions.",
+                  "type": {
+                    "text": "Object"
+                  }
+                }
+              ],
+              "description": "Binds custom events to elements within a given container.\n\nThis function searches for elements with the `data-custom` attribute within the specified\ncontainer and binds click event listeners to them. When an element is clicked, it invokes\nthe corresponding custom function defined in the `componentInstance`."
+            },
+            {
+              "kind": "method",
+              "name": "cleanupBeforeRender",
+              "description": "Cleans up the form before rendering by performing the following actions:\n- Unbinds custom buttons by replacing them with their clones.\n- Unbinds custom events by replacing elements with the `data-custom` attribute with their clones.\n- Clears the innerHTML of the form to remove all elements."
+            },
+            {
+              "kind": "method",
+              "name": "debugLog",
+              "parameters": [
+                {
+                  "name": "args",
+                  "description": "The messages or objects to log.",
+                  "type": {
+                    "text": "...any"
+                  }
+                }
+              ],
+              "description": "Logs debug messages to the console if the 'debug' attribute is present."
+            },
+            {
+              "kind": "method",
+              "name": "fetchResource",
+              "parameters": [
+                {
+                  "name": "attribute",
+                  "description": "The name of the attribute containing the URL to fetch.",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Fetches a resource from a URL specified by an attribute.",
+              "return": {
+                "type": {
+                  "text": "Promise<Object|null>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "filterRemovedEntries",
+              "parameters": [
+                {
+                  "name": "data",
+                  "description": "The data structure to filter, which can be an object or an array.",
+                  "type": {
+                    "text": "Object|Array"
+                  }
+                },
+                {
+                  "name": "keys",
+                  "default": "['_remove']",
+                  "description": "The keys to filter out from the data structure. Defaults to ['_remove'].",
+                  "optional": true,
+                  "type": {
+                    "text": "Array<string>"
+                  }
+                }
+              ],
+              "description": "Recursively filters out entries from the provided data structure based on specified keys.",
+              "return": {
+                "type": {
+                  "text": "Object|Array"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getErrorMessage",
+              "parameters": [
+                {
+                  "name": "code",
+                  "description": "The error code to search for in the messages array.",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Retrieves the error message and type based on the provided error code.",
+              "return": {
+                "type": {
+                  "text": "{ message: string, type: string }"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleDataSubmission",
+              "parameters": [
+                {
+                  "name": "action",
+                  "description": "The action URL to which the form data will be submitted.",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "method",
+                  "description": "The HTTP method to be used for the form submission (e.g., 'POST', 'GET').",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "enctype",
+                  "description": "The encoding type of the form data (e.g., 'application/json', 'multipart/form-data').",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Handles the submission of form data.",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "handleNavigation",
+              "parameters": [
+                {
+                  "name": "selector",
+                  "default": "'a[part=\"link\"]'",
+                  "description": "The CSS selector for the links to handle navigation.",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "visibleClass",
+                  "default": "'visible'"
+                },
+                {
+                  "name": "activeClass",
+                  "default": "'active'",
+                  "description": "The class to add to the clicked link to indicate it is active.",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Handles navigation by adding click event listeners to links matching the specified selector.\nWhen a link is clicked, it prevents the default action, scrolls smoothly to the target element,\nand toggles the active class on the clicked link. Accounts for sticky parent element height."
+            },
+            {
+              "kind": "method",
+              "name": "loadResources",
+              "description": "Asynchronously loads various resources required for data entry.\n\nThis method fetches the following resources in parallel:\n- data\n- schema\n- lookup\n- i18n (internationalization)\n- messages\n\nOnce fetched, the resources are assigned to the corresponding properties of the instance.\nIf the lookup resource is not available, it defaults to an empty array.\nIf the i18n resource is not available, it defaults to an empty object.\nIf the messages resource is not available, it defaults to null.",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "notify",
+              "parameters": [
+                {
+                  "name": "code",
+                  "description": "The error code. If greater than 0 and this.messages exists, retrieves message from error codes",
+                  "type": {
+                    "text": "number"
+                  }
+                },
+                {
+                  "name": "customMessage",
+                  "default": "''",
+                  "description": "Optional custom message to display if no error code message exists",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "notificationType",
+                  "default": "'info'",
+                  "description": "Optional notification type ('info', 'error', etc.)",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Displays a notification message based on error code or custom message",
+              "return": {
+                "type": {
+                  "text": "void"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "prepareFormData",
+              "description": "Prepares form data by iterating over the form elements and appending their values to a FormData object.",
+              "return": {
+                "type": {
+                  "text": "FormData"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "processData",
+              "parameters": [
+                {
+                  "name": "node"
+                }
+              ],
+              "description": "Processes the form data based on the form's enctype attribute.\nIf the enctype includes 'json', it uses the instance's data.\nOtherwise, it prepares the form data.\nLogs the processed data for debugging and dispatches a 'dataEntry' event with the data."
+            },
+            {
+              "kind": "method",
+              "name": "renderAll",
+              "description": "Asynchronously renders all components based on the instance's data and schema.\n\nThis method performs the following steps:\n1. Checks if the instance's data or schema is empty and skips rendering if true.\n2. Calls the `all` method on the instance's methods with the instance's data, schema, and other parameters.\n3. Mounts components using the inner HTML of the form.\n4. Binds custom buttons and events to the form.\n5. Handles navigation.\n6. Sets up auto-save functionality if the form's dataset specifies an auto-save interval.",
+              "return": {
+                "type": {
+                  "text": "Promise<void>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "resetFields",
+              "parameters": [
+                {
+                  "name": "fields",
+                  "description": "An array of field names to be reset.",
+                  "type": {
+                    "text": "string[]"
+                  }
+                },
+                {
+                  "name": "resetValue",
+                  "default": "''",
+                  "description": "The value to reset the fields to. Defaults to an empty string.",
+                  "optional": true,
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Resets the specified fields in the form and the instance data to a given value."
+            },
+            {
+              "kind": "method",
+              "name": "setupAutoSave",
+              "parameters": [
+                {
+                  "name": "intervalInSeconds",
+                  "description": "The interval in seconds at which data should be auto-saved.",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Sets up an auto-save mechanism that triggers data submission at specified intervals."
+            },
+            {
+              "kind": "method",
+              "name": "syncInstanceData",
+              "parameters": [
+                {
+                  "name": "event",
+                  "description": "The event object from the form input.",
+                  "type": {
+                    "text": "Event"
+                  }
+                },
+                {
+                  "description": "The form element that triggered the event.",
+                  "name": "event.target.form",
+                  "type": {
+                    "text": "HTMLFormElement"
+                  }
+                },
+                {
+                  "description": "The name attribute of the form input.",
+                  "name": "event.target.name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "description": "The value of the form input.",
+                  "name": "event.target.value",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "description": "The type of the form input (e.g., \"checkbox\", \"text\").",
+                  "name": "event.target.type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "description": "The checked state of the form input (for checkboxes).",
+                  "name": "event.target.checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                },
+                {
+                  "description": "The dataset of the form input, containing custom data attributes.",
+                  "name": "event.target.dataset",
+                  "type": {
+                    "text": "DOMStringMap"
+                  }
+                }
+              ],
+              "description": "Synchronizes instance data based on the event from a form input."
+            },
+            {
+              "kind": "method",
+              "name": "validateData",
+              "description": "Validates the data against the schema.\nUses a custom validation function if provided, otherwise defaults to `defaultValidateData`.",
+              "return": {
+                "type": {
+                  "text": "Promise<Object>"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "validateJSON",
+              "description": "Checks if JSON schema validation is enabled.",
+              "return": {
+                "type": {
+                  "text": "boolean"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "getUniqueProperties",
+              "parameters": [
+                {
+                  "name": "schema",
+                  "description": "Schema section for array",
+                  "type": {
+                    "text": "Object"
+                  }
+                }
+              ],
+              "description": "Gets unique identifier properties from schema",
+              "return": {
+                "type": {
+                  "text": "Array"
+                }
+              }
+            },
+            {
+              "kind": "field",
+              "name": "_data",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_schema",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "_lookup",
+              "type": {
+                "text": "array"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "_i18n",
+              "type": {
+                "text": "object"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "_constants",
+              "type": {
+                "text": "object"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "_customValidateData",
+              "type": {
+                "text": "null"
+              },
+              "default": "null"
+            },
+            {
+              "kind": "field",
+              "name": "form"
+            },
+            {
+              "kind": "field",
+              "name": "part",
+              "type": {
+                "text": "string"
+              },
+              "default": "'form'"
+            },
+            {
+              "kind": "field",
+              "name": "lang"
+            },
+            {
+              "kind": "field",
+              "name": "instance"
+            }
+          ],
+          "events": [
+            {
+              "name": "de:custom",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "de:record-deleted",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "de:record-created",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "de:record-upserted",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "de:entry",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "de:array-control",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "description": "Dispatched when a custom button is clicked.",
+              "name": "CustomEvent#de:custom"
+            },
+            {
+              "description": "Dispatched when form data is processed.",
+              "name": "CustomEvent#de:entry"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "summary": "05-12-2024",
+          "tagName": "data-entry",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "data-entry",
+          "declaration": {
+            "name": "DataEntry",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "module": "index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/components.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "mountComponents",
+          "parameters": [
+            {
+              "name": "HTML",
+              "description": "The HTML content to scan for component tags.",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "dataEntry",
+              "description": "The data entry object to bind functions to, if specified.",
+              "type": {
+                "text": "Object"
+              }
+            }
+          ],
+          "description": "Mounts components dynamically based on the provided HTML content and data entry object.\n\nThis function scans the HTML content for specific tags defined in the `componentsInfo` object.\nIf a tag is found, it dynamically imports the corresponding module, mounts the component,\nand optionally binds a function to the data entry object.",
+          "return": {
+            "type": {
+              "text": "Promise<void>"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "mountComponents",
+          "declaration": {
+            "name": "mountComponents",
+            "module": "modules/components.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/custom.js",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/dynamic.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dynamicFunctions",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ /* === Date and Time Functions === */ dateDifference: (startDate, endDate) => { const start = new Date(startDate); const end = new Date(endDate); const diffTime = Math.abs(end - start); return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Difference in days }, now: (format = 'datetime-local') => { const now = new Date(); const year = now.getFullYear(); const month = String(now.getMonth() + 1).padStart(2, '0'); const day = String(now.getDate()).padStart(2, '0'); const hours = String(now.getHours()).padStart(2, '0'); const minutes = String(now.getMinutes()).padStart(2, '0'); const seconds = String(now.getSeconds()).padStart(2, '0'); switch (format) { case 'date': return `${year}-${month}-${day}`; case 'time': return `${hours}:${minutes}:${seconds}`; case 'datetime-local': return `${year}-${month}-${day}T${hours}:${minutes}`; case 'iso': return now.toISOString(); default: return `${year}-${month}-${day}T${hours}:${minutes}`; } }, today: () => new Date().toISOString().split('T')[0], // Returns today's date /* === Formatters === */ formatCurrency: (value, currencyCode = 'USD', locale = dynamicFunctions.getLocale()) => { return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode.toUpperCase() }).format(value); }, formatDate: (value, locale = 'en-US', options) => { const date = new Date(value); return date.toLocaleDateString(locale, options || {}); }, formatDateTimeLocal: (value) => { return value ? value.substring(0, 16) : ''; }, formatNumber: (value, decimals = 2) => { const num = parseFloat(value); return isNaN(num) ? '0.00' : num.toFixed(decimals); }, multiply: (value, multiplier, decimals = 2) => { return (value * multiplier).toFixed(decimals); }, /* === Random Generators === */ randomNumber: (min = 0, max = 100) => { return Math.floor(Math.random() * (max - min + 1)) + min; }, uuid: () => crypto.randomUUID(), // Generates a unique UUID /* === String Formatters === */ capitalizeFirst: (value) => { return value.charAt(0).toUpperCase() + value.slice(1); }, lowercase: (value) => String(value).toLowerCase(), slugify: (value) => { return value .toString() .toLowerCase() .trim() .replace(/\\s+/g, '-') .replace(/[^\\w\\-]+/g, '') .replace(/\\-\\-+/g, '-'); }, titleCase: (value) => { return value.replace(/\\w\\S*/g, (txt) => { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); }); }, uppercase: (value) => String(value).toUpperCase(), /* === Locale Functions === */ getLocale: () => { return document.documentElement.lang || 'en-US'; }, /* === Mapping Functions === */ mapOptionLabel: (value, options) => { const option = options.find(opt => String(opt.value) === String(value)); return option ? option.label : value; } }"
+        },
+        {
+          "kind": "function",
+          "name": "extendDynamicFunction",
+          "parameters": [
+            {
+              "name": "name"
+            },
+            {
+              "name": "func"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dynamicFunctions",
+          "declaration": {
+            "name": "dynamicFunctions",
+            "module": "modules/dynamic.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "extendDynamicFunction",
+          "declaration": {
+            "name": "extendDynamicFunction",
+            "module": "modules/dynamic.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/factory.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "createDataEntryInstance",
+          "parameters": [
+            {
+              "name": "parent",
+              "description": "The parent object to which this instance belongs.",
+              "type": {
+                "text": "Object"
+              }
+            }
+          ],
+          "description": "Creates a new data entry instance with methods for rendering, custom actions, and dynamic functions.",
+          "return": {
+            "type": {
+              "text": "Object"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "createDataEntryInstance",
+          "declaration": {
+            "name": "createDataEntryInstance",
+            "module": "modules/factory.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/render.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "all",
+          "parameters": [
+            {
+              "name": "data"
+            },
+            {
+              "name": "schema"
+            },
+            {
+              "name": "instance"
+            },
+            {
+              "name": "root",
+              "default": "false"
+            },
+            {
+              "name": "pathPrefix",
+              "default": "''"
+            },
+            {
+              "name": "form",
+              "default": "null"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayCheckbox",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayDetail",
+          "parameters": [
+            {
+              "name": "{ value, config, path, instance, attributes = [], name = '', index }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayDetails",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayGrid",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayLink",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayUnit",
+          "parameters": [
+            {
+              "name": "{ value, config, path, instance, attributes = '', name = '', index }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "arrayUnits",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "autosuggest",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "barcode",
+          "parameters": [
+            {
+              "name": "{ path }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "entry",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "fieldset",
+          "parameters": [
+            {
+              "name": "{ attributes, content, label, path }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "input",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "link",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "media",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderArray",
+          "parameters": [
+            {
+              "name": "{ value, config, path, instance, renderItem, attributes = [], label = '', entry }"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "richtext",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "select",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "textarea",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "datamapper",
+          "parameters": [
+            {
+              "name": "params"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "all",
+          "declaration": {
+            "name": "all",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayCheckbox",
+          "declaration": {
+            "name": "arrayCheckbox",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayDetail",
+          "declaration": {
+            "name": "arrayDetail",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayDetails",
+          "declaration": {
+            "name": "arrayDetails",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayGrid",
+          "declaration": {
+            "name": "arrayGrid",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayLink",
+          "declaration": {
+            "name": "arrayLink",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayUnit",
+          "declaration": {
+            "name": "arrayUnit",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "arrayUnits",
+          "declaration": {
+            "name": "arrayUnits",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "autosuggest",
+          "declaration": {
+            "name": "autosuggest",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "barcode",
+          "declaration": {
+            "name": "barcode",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "entry",
+          "declaration": {
+            "name": "entry",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fieldset",
+          "declaration": {
+            "name": "fieldset",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "input",
+          "declaration": {
+            "name": "input",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "link",
+          "declaration": {
+            "name": "link",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "media",
+          "declaration": {
+            "name": "media",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderArray",
+          "declaration": {
+            "name": "renderArray",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "richtext",
+          "declaration": {
+            "name": "richtext",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "select",
+          "declaration": {
+            "name": "select",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "textarea",
+          "declaration": {
+            "name": "textarea",
+            "module": "modules/render.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "datamapper",
+          "declaration": {
+            "name": "datamapper",
+            "module": "modules/render.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/schema.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "generateRenderMethod",
+          "parameters": [
+            {
+              "name": "type"
+            },
+            {
+              "name": "key"
+            },
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "generateSchemaFromData",
+          "parameters": [
+            {
+              "name": "data"
+            },
+            {
+              "name": "disabledKeys",
+              "default": "[]"
+            },
+            {
+              "name": "toolbar",
+              "default": "null"
+            },
+            {
+              "name": "schemaId",
+              "default": "'https://json-schema.org/draft/2020-12/output/schema'"
+            },
+            {
+              "name": "schemaUri",
+              "default": "'https://json-schema.org/draft/2020-12/schema'"
+            }
+          ]
+        },
+        {
+          "kind": "variable",
+          "name": "render"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "generateRenderMethod",
+          "declaration": {
+            "name": "generateRenderMethod",
+            "module": "modules/schema.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "generateSchemaFromData",
+          "declaration": {
+            "name": "generateSchemaFromData",
+            "module": "modules/schema.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/utility.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "attrs",
+          "parameters": [
+            {
+              "name": "attributes"
+            },
+            {
+              "name": "path",
+              "default": "''"
+            },
+            {
+              "name": "additionalAttributes",
+              "default": "[]"
+            },
+            {
+              "name": "attributesToRemove",
+              "default": "[]"
+            },
+            {
+              "name": "attributesToInclude",
+              "default": "[]"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "buttonAttrs",
+          "parameters": [
+            {
+              "name": "entry"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "convertValue",
+          "parameters": [
+            {
+              "name": "value"
+            },
+            {
+              "name": "dataType"
+            },
+            {
+              "name": "inputType"
+            },
+            {
+              "name": "checked"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "deepMerge",
+          "parameters": [
+            {
+              "name": "target"
+            },
+            {
+              "name": "source"
+            },
+            {
+              "name": "key",
+              "default": "null"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "fetchOptions",
+          "parameters": [
+            {
+              "name": "config"
+            },
+            {
+              "name": "instance"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getKey",
+          "parameters": [
+            {
+              "name": "item"
+            },
+            {
+              "name": "key"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getObjectByPath",
+          "parameters": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getValueWithFallback",
+          "parameters": [
+            {
+              "name": "data"
+            },
+            {
+              "name": "key"
+            },
+            {
+              "name": "config"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "isEmpty",
+          "parameters": [
+            {
+              "name": "obj"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "isObject",
+          "parameters": [
+            {
+              "name": "item"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "itemExists",
+          "parameters": [
+            {
+              "name": "array"
+            },
+            {
+              "name": "newItem"
+            },
+            {
+              "name": "properties"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "mapObject",
+          "parameters": [
+            {
+              "name": "sourceObj"
+            },
+            {
+              "name": "mapping"
+            },
+            {
+              "name": "basePath",
+              "default": "''"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "processAttributes",
+          "parameters": [
+            {
+              "name": "attributes"
+            },
+            {
+              "name": "data"
+            },
+            {
+              "name": "instance"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "processRenderConfig",
+          "parameters": [
+            {
+              "name": "config"
+            },
+            {
+              "name": "data"
+            },
+            {
+              "name": "instance"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "resolveTemplateString",
+          "parameters": [
+            {
+              "name": "template"
+            },
+            {
+              "name": "data"
+            },
+            {
+              "name": "instance",
+              "default": "{}"
+            },
+            {
+              "name": "fallback",
+              "default": "''"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "safeRender",
+          "parameters": [
+            {
+              "name": "renderMethod"
+            },
+            {
+              "name": "params"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "setObjectByPath",
+          "parameters": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "t",
+          "parameters": [
+            {
+              "name": "key"
+            },
+            {
+              "name": "lang"
+            },
+            {
+              "name": "i18n"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "toCamelCase",
+          "parameters": [
+            {
+              "name": "str"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "toPascalCase",
+          "parameters": [
+            {
+              "name": "str"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "uuid"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "attrs",
+          "declaration": {
+            "name": "attrs",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "buttonAttrs",
+          "declaration": {
+            "name": "buttonAttrs",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "convertValue",
+          "declaration": {
+            "name": "convertValue",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "deepMerge",
+          "declaration": {
+            "name": "deepMerge",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "fetchOptions",
+          "declaration": {
+            "name": "fetchOptions",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getKey",
+          "declaration": {
+            "name": "getKey",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getObjectByPath",
+          "declaration": {
+            "name": "getObjectByPath",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getValueWithFallback",
+          "declaration": {
+            "name": "getValueWithFallback",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isEmpty",
+          "declaration": {
+            "name": "isEmpty",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "isObject",
+          "declaration": {
+            "name": "isObject",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "itemExists",
+          "declaration": {
+            "name": "itemExists",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mapObject",
+          "declaration": {
+            "name": "mapObject",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "processAttributes",
+          "declaration": {
+            "name": "processAttributes",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "processRenderConfig",
+          "declaration": {
+            "name": "processRenderConfig",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "resolveTemplateString",
+          "declaration": {
+            "name": "resolveTemplateString",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "safeRender",
+          "declaration": {
+            "name": "safeRender",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "setObjectByPath",
+          "declaration": {
+            "name": "setObjectByPath",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "t",
+          "declaration": {
+            "name": "t",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toCamelCase",
+          "declaration": {
+            "name": "toCamelCase",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "toPascalCase",
+          "declaration": {
+            "name": "toPascalCase",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "uuid",
+          "declaration": {
+            "name": "uuid",
+            "module": "modules/utility.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/validate.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "validateData",
+          "parameters": [
+            {
+              "name": "schema",
+              "description": "The schema object describing the expected structure of the data.",
+              "type": {
+                "text": "object"
+              }
+            },
+            {
+              "name": "data",
+              "description": "The data object to be validated.",
+              "type": {
+                "text": "object"
+              }
+            }
+          ],
+          "description": "Validates the given data against the provided schema.",
+          "return": {
+            "type": {
+              "text": "object"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "validateData",
+          "declaration": {
+            "name": "validateData",
+            "module": "modules/validate.js"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,485 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "dataformats.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "dataFormats",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ csv: (data, options = {}) => { const { delimiter = ',', headers = true, quotes = true, replaceNewlines = true } = options; if (!data?.length) return ''; const keys = Object.keys(data[0]); const escapeField = value => { if (value === null || value === undefined) return ''; let str = String(value); // Replace newlines with spaces if option is enabled if (replaceNewlines) { str = str.replace(/\\n/g, ' '); } const needsQuoting = str.includes(delimiter) || str.includes('\\n') || str.includes('\"'); if (!needsQuoting && !quotes) return str; return `\"${str.replace(/\"/g, '\"\"')}\"`; }; const rows = [ headers ? keys.map(escapeField).join(delimiter) : '', ...data.map(row => keys.map(key => escapeField(row[key])).join(delimiter) ) ].filter(Boolean); return rows.join('\\n'); }, json: (data, options = {}) => { const { pretty = true, space = 2 } = options; return pretty ? JSON.stringify(data, null, space) : JSON.stringify(data); }, ndjson: data => data.map(row => JSON.stringify(row)).join('\\n'), tsv: (data, options = {}) => { return dataFormats.csv(data, { ...options, delimiter: '\\t', quotes: true }); }, yaml: (data, options = {}) => { const { flowStyle = false, indent = 2 } = options; const makeIndent = level => ' '.repeat(level * indent); const convertValue = (value, level = 0) => { if (Array.isArray(value)) { if (flowStyle) { return `[${value.map(v => convertValue(v)).join(', ')}]`; } return value.map(v => `\\n${makeIndent(level)}- ${convertValue(v, level + 1)}` ).join(''); } if (typeof value === 'object' && value !== null) { if (flowStyle) { return `{ ${Object.entries(value) .map(([k, v]) => `${k}: ${convertValue(v)}`) .join(', ')} }`; } return Object.entries(value) .map(([k, v]) => `\\n${makeIndent(level)}${k}: ${convertValue(v, level + 1)}`) .join(''); } return String(value ?? ''); }; return convertValue(data); }, xml: (data, options = {}) => { const { root = 'root', item = 'item', pretty = true, indent = 2 } = options; const makeIndent = level => pretty ? '\\n' + ' '.repeat(level * indent) : ''; const convertValue = (value, key, level = 0) => { if (Array.isArray(value)) { return value.map(v => `${makeIndent(level)}<${item}>${convertValue(v, item, level + 1)}${makeIndent(level)}</${item}>` ).join(''); } if (typeof value === 'object' && value !== null) { return Object.entries(value) .map(([k, v]) => `${makeIndent(level)}<${k}>${convertValue(v, k, level + 1)}${makeIndent(level)}</${k}>`) .join(''); } return String(value ?? ''); }; return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>${makeIndent(0)}<${root}>${ convertValue(data, root, 1) }${makeIndent(0)}</${root}>`; } }",
+          "description": "Data format converters for DataMapper\nInput: Array of objects\nOutput: String in specified format"
+        },
+        {
+          "kind": "variable",
+          "name": "mimeTypes",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ csv: 'text/csv', json: 'application/json', ndjson: 'application/x-ndjson', tsv: 'text/tab-separated-values', yaml: 'application/x-yaml', xml: 'application/xml' }"
+        },
+        {
+          "kind": "variable",
+          "name": "inputParsers",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ csv: (text, options = {}) => { const { delimiter = ',', headers = true, trim = true } = options; const lines = text.trim().split('\\n'); if (!lines.length) return []; const headerRow = headers ? lines.shift() : null; const fields = headerRow ? headerRow.split(delimiter).map(h => trim ? h.trim() : h) : Array.from({ length: lines[0].split(delimiter).length }, (_, i) => `field${i + 1}`); return lines.map(line => { const values = line.split(delimiter); return fields.reduce((obj, field, i) => { obj[field] = trim ? values[i]?.trim() : values[i]; return obj; }, {}); }); }, yaml: (text) => { const parseValue = (value) => { if (!value || value === '~') return null; if (value === 'true') return true; if (value === 'false') return false; if (/^-?\\d+$/.test(value)) return parseInt(value, 10); if (/^-?\\d*\\.\\d+$/.test(value)) return parseFloat(value); // Remove quotes if present return value.replace(/^[\"']|[\"']$/g, ''); }; const parseYamlObject = (lines, level = 0) => { const result = Array.isArray(level) ? [] : {}; const baseIndent = lines[0]?.match(/^\\s*/)[0].length || 0; let i = 0; while (i < lines.length) { const line = lines[i]; const indent = line.match(/^\\s*/)[0].length; // Skip empty lines and comments if (!line.trim() || line.trim().startsWith('#')) { i++; continue; } // Break if we're back to a lower indentation level if (indent < baseIndent) break; const match = line.trim().match(/^(-\\s*)?([^:]+):\\s*(.*)$/); if (match) { const [, isList, key, value] = match; const trimmedValue = value.trim(); if (!trimmedValue) { // Nested object or array const nested = []; i++; while (i < lines.length && lines[i].match(/^\\s*/)[0].length > indent) { nested.push(lines[i]); i++; } if (nested.length) { result[key.trim()] = parseYamlObject(nested, []); continue; } } if (Array.isArray(result)) { const obj = {}; obj[key.trim()] = parseValue(trimmedValue); result.push(obj); } else { result[key.trim()] = parseValue(trimmedValue); } } else if (line.trim().startsWith('-')) { // Array item if (Array.isArray(result)) { const value = line.trim().slice(1).trim(); result.push(parseValue(value)); } } i++; } return result; }; const parsed = parseYamlObject(text.split('\\n')); // If parsed result is an array, return it if (Array.isArray(parsed)) return parsed; // If it's an object with a single key containing an array, return that array const values = Object.values(parsed); if (values.length === 1 && Array.isArray(values[0])) return values[0]; // If it's a plain object, wrap it in an array return [parsed]; }, xml: (text) => { const parser = new DOMParser(); const xmlDoc = parser.parseFromString(text, 'text/xml'); const parseNode = (node) => { // Skip comments, processing instructions, etc. if (node.nodeType !== 1) return null; // Handle text-only nodes if (node.childNodes.length === 1 && node.childNodes[0].nodeType === 3) { const value = node.textContent.trim(); // Try to convert to appropriate type if (value === 'true') return true; if (value === 'false') return false; if (/^\\d+$/.test(value)) return parseInt(value, 10); if (/^\\d*\\.\\d+$/.test(value)) return parseFloat(value); return value; } const result = {}; const children = Array.from(node.children); // Group similar tags as arrays children.forEach(child => { const name = child.tagName; const value = parseNode(child); if (name in result) { if (!Array.isArray(result[name])) { result[name] = [result[name]]; } result[name].push(value); } else { result[name] = value; } }); // Handle attributes Array.from(node.attributes).forEach(attr => { result[`@${attr.name}`] = attr.value; }); return Object.keys(result).length ? result : node.textContent.trim(); }; // Get root element and parse its children const root = xmlDoc.documentElement; const rootName = root.tagName; // Handle single root with array of similar children const children = Array.from(root.children); if (children.length && children.every(child => child.tagName === children[0].tagName)) { return children.map(child => parseNode(child)); } // Handle regular XML structure return { [rootName]: parseNode(root) }; } }"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dataFormats",
+          "declaration": {
+            "name": "dataFormats",
+            "module": "dataformats.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "mimeTypes",
+          "declaration": {
+            "name": "mimeTypes",
+            "module": "dataformats.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "inputParsers",
+          "declaration": {
+            "name": "inputParsers",
+            "module": "dataformats.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "",
+          "name": "DataMapper",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#icons",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ arrowright: 'M7 12l14 0, M18 15l3 -3l-3 -3, M3 10h4v4h-4z', clipboard: 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2, M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 0 0 1 -2 -2z', download: 'M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2, M7 11l5 5l5 -5, M12 4l0 12', import: 'M3.32 12.774l7.906 7.905c.427 .428 1.12 .428 1.548 0l7.905 -7.905a1.095 1.095 0 0 0 0 -1.548l-7.905 -7.905a1.095 1.095 0 0 0 -1.548 0l-7.905 7.905a1.095 1.095 0 0 0 0 1.548z, M8 12h7.5, M12 8.5l3.5 3.5l-3.5 3.5' }"
+            },
+            {
+              "kind": "field",
+              "name": "#SLUGIFY_PATTERN",
+              "privacy": "private",
+              "static": true,
+              "default": "/[^a-z0-9]+/g"
+            },
+            {
+              "kind": "field",
+              "name": "#TRIM_PATTERN",
+              "privacy": "private",
+              "static": true,
+              "default": "/^-+|-+$/g"
+            },
+            {
+              "kind": "field",
+              "name": "#WORD_PATTERN",
+              "privacy": "private",
+              "static": true,
+              "default": "/\\b\\w+/g"
+            },
+            {
+              "kind": "field",
+              "name": "#initialized",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#shadow",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#converters",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ boolean: value => { const truthyValues = ['true', '1', 'yes', 'y']; const falsyValues = ['false', '0', 'no', 'n']; value = value.toLowerCase().trim(); return truthyValues.includes(value) ? true : falsyValues.includes(value) ? false : null; }, date: value => { const [month, day, year] = value.split('/'); return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`; }, float: value => parseFloat(value) || null, int: value => parseInt(value, 10) || null, number: value => { const num = Number(value); return !isNaN(num) ? num : null; } }"
+            },
+            {
+              "kind": "field",
+              "name": "#formatters",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ capitalize: str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase(), currency: str => { const num = parseFloat(str); return !isNaN(num) ? num.toFixed(2) : null; }, lowercase: str => str.toLowerCase(), percentage: str => { const num = parseFloat(str); return !isNaN(num) ? `${num}%` : null; }, removeSpaces: str => str.replace(/\\s+/g, ''), slugify: str => str.toLowerCase() .replace(DataMapper.#SLUGIFY_PATTERN, '-') .replace(DataMapper.#TRIM_PATTERN, ''), titleCase: str => str.toLowerCase().replace( DataMapper.#WORD_PATTERN, word => word[0].toUpperCase() + word.slice(1) ), trim: str => str.trim(), truncate: str => str.length > 100 ? str.substring(0, 97) + '...' : str, uppercase: str => str.toUpperCase(), }"
+            },
+            {
+              "kind": "field",
+              "name": "#i18n",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ en: { download: 'Download', import: 'Import', formatter: 'Formatter', numObjects: 'Number of objects: ', prefix: 'Prefix', source: 'Source', suffix: 'Suffix', target: 'Target', type: 'Type', updateTargets: 'Use Source Names as Targets' } }"
+            },
+            {
+              "kind": "field",
+              "name": "#lang",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "'en'"
+            },
+            {
+              "kind": "field",
+              "name": "#state",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ concatenator: '\\n', content: '', elements: { close: null, import: null, input: null, mapping: null, numObjects: null, output: null, updateTarget: null }, firstrow: true, mapping: null, outputData: null, separator: null }"
+            },
+            {
+              "kind": "field",
+              "name": "defaultAccept",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'.csv,.json,.ndjson,.tsv,,txt,.xml,.yaml,.yml'"
+            },
+            {
+              "kind": "field",
+              "name": "defaultLabel",
+              "type": {
+                "text": "string"
+              },
+              "static": true,
+              "default": "'Select file'"
+            },
+            {
+              "kind": "field",
+              "name": "#updateLivePreview",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "converters"
+            },
+            {
+              "kind": "field",
+              "name": "customMapping"
+            },
+            {
+              "kind": "field",
+              "name": "formatters"
+            },
+            {
+              "kind": "field",
+              "name": "initialized",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "content"
+            },
+            {
+              "kind": "field",
+              "name": "outputData"
+            },
+            {
+              "kind": "method",
+              "name": "initializeComponent"
+            },
+            {
+              "kind": "method",
+              "name": "mount"
+            },
+            {
+              "kind": "method",
+              "name": "register",
+              "static": true
+            },
+            {
+              "kind": "method",
+              "name": "import"
+            },
+            {
+              "kind": "method",
+              "name": "output",
+              "parameters": [
+                {
+                  "name": "format",
+                  "default": "null"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "download",
+              "parameters": [
+                {
+                  "name": "format",
+                  "default": "'json'"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#applyCustomMapping",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#convertField",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value"
+                },
+                {
+                  "name": "mapping"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#downloadFile",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "content"
+                },
+                {
+                  "name": "filename"
+                },
+                {
+                  "name": "mimeType",
+                  "default": "'text/csv;charset=utf-8;'"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getCurrentMappings",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#getFieldIndex",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "sourceName"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getHeaders",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "lines"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#getTemplate",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#icon",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "paths"
+                },
+                {
+                  "name": "part"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#initialize",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#processFile",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "file"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#detectFormat",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "file"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#parseInputFormat",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "text"
+                },
+                {
+                  "name": "format"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#objectsToCsv",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "data"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#processMapping",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mappings"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#processTargetField",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mappings"
+                },
+                {
+                  "name": "values"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderMapping",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "headers"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#setupEventListeners",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#t",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#updateDataLists",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "concatenator"
+            },
+            {
+              "kind": "field",
+              "name": "adoptedStyleSheets",
+              "type": {
+                "text": "array"
+              },
+              "default": "[sheet]"
+            }
+          ],
+          "events": [
+            {
+              "name": "dm:error",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "dm:imported",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "customElement": true
+        },
+        {
+          "kind": "variable",
+          "name": "name"
+        },
+        {
+          "kind": "variable",
+          "name": "order"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "DataMapper",
+          "declaration": {
+            "name": "DataMapper",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "name",
+          "declaration": {
+            "name": "anonymous_0",
+            "module": "index.js"
+          }
+        }
+      ]
+    }
+  ]
+}
