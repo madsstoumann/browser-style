@@ -46,5 +46,6 @@
   "bugs": {
     "url": "https://github.com/madsstoumann/browser-style/issues"
   },
-  "homepage": "https://browser.style/ui/data-grid"
+  "homepage": "https://browser.style/ui/data-grid",
+  "customElements": "custom-elements.json"
 }

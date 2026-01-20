@@ -1,0 +1,961 @@
+{
+  "schemaVersion": "1.0.0",
+  "readme": "",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "index.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Data Grid\nWraps a HTML table element and adds functionality for sorting, pagination, searching and selection.",
+          "name": "DataGrid",
+          "members": [
+            {
+              "kind": "method",
+              "name": "checkAndSetInitialPage"
+            },
+            {
+              "kind": "method",
+              "name": "createColgroup"
+            },
+            {
+              "kind": "method",
+              "name": "createForm"
+            },
+            {
+              "kind": "method",
+              "name": "createSettings"
+            },
+            {
+              "kind": "method",
+              "name": "createState"
+            },
+            {
+              "kind": "method",
+              "name": "createTable"
+            },
+            {
+              "kind": "method",
+              "name": "dispatch",
+              "parameters": [
+                {
+                  "name": "name"
+                },
+                {
+                  "name": "detail"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "fetchResource",
+              "parameters": [
+                {
+                  "name": "url"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "isValidUrl",
+              "parameters": [
+                {
+                  "name": "str"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "loadResources"
+            },
+            {
+              "kind": "method",
+              "name": "navigatePage",
+              "parameters": [
+                {
+                  "name": "page",
+                  "default": "null"
+                },
+                {
+                  "name": "direction",
+                  "default": "null"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "parseStickyCols",
+              "parameters": [
+                {
+                  "name": "stickycolsAttr"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "print",
+              "parameters": [
+                {
+                  "name": "directPrint",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "renderIcon",
+              "parameters": [
+                {
+                  "name": "paths"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "resizeColumn",
+              "parameters": [
+                {
+                  "name": "index"
+                },
+                {
+                  "name": "value"
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "selectRows"
+            },
+            {
+              "kind": "field",
+              "name": "setActive"
+            },
+            {
+              "kind": "method",
+              "name": "setInitialWidths"
+            },
+            {
+              "kind": "method",
+              "name": "setItemsPerPage",
+              "parameters": [
+                {
+                  "name": "itemsPerPage"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setTotalItems",
+              "parameters": [
+                {
+                  "name": "totalItems"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setPage",
+              "parameters": [
+                {
+                  "name": "page"
+                },
+                {
+                  "name": "forceRender",
+                  "default": "false"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setupElements"
+            },
+            {
+              "kind": "method",
+              "name": "setupOverflowListener",
+              "parameters": [
+                {
+                  "name": "wrapper"
+                },
+                {
+                  "name": "table"
+                },
+                {
+                  "name": "callback"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "setStickyCols",
+              "parameters": [
+                {
+                  "name": "isOverflowing"
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "settingsWatcher",
+              "description": "Watches for changes in the settings and updates the UI elements accordingly."
+            },
+            {
+              "kind": "method",
+              "name": "toggleSelection",
+              "parameters": [
+                {
+                  "name": "select",
+                  "default": "true",
+                  "description": "Determines if all rows should be selected (true) or deselected (false).",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Toggles selection for all rows in the current tbody based on the specified toggle parameter.\nThis method is only called if Shift is held down during a select-all action."
+            },
+            {
+              "kind": "field",
+              "name": "data",
+              "parameters": [
+                {
+                  "name": "newData",
+                  "type": {
+                    "text": "string | any[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "i18n"
+            },
+            {
+              "kind": "field",
+              "name": "settings"
+            },
+            {
+              "kind": "field",
+              "name": "log"
+            },
+            {
+              "kind": "field",
+              "name": "_settings"
+            },
+            {
+              "kind": "field",
+              "name": "state"
+            },
+            {
+              "kind": "field",
+              "name": "dataInitialized",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "lang"
+            },
+            {
+              "kind": "field",
+              "name": "manualTableData",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "_i18n",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ en: { all: \"All\", densityLarge: \"Large density\", densityMedium: \"Medium density\", densitySmall: \"Small density\", endsWith: \"Ends with\", equals: \"Equals\", filter: 'Column filter', first: \"First\", includes: \"Includes\", last: \"Last\", layoutFixed: \"Fixed layout\", next: \"Next\", noResult: \"No results\", of: \"of\", page: \"Page\", prev: \"Previous\", print: \"Print\", printAll: \"Print All\", printCurrentPage: \"Print Current Page\", printOptions: \"Print Options\", printPreview: \"Print Preview\", printSearch: \"Print Search Results\", printSelected: \"Print Selected\", rowsPerPage: \"Rows\", search: \"Search\", selected: \"selected\", selectAll: \"Select all across pages\", startsWith: \"Starts with\", textWrap: \"Text wrap\", } }"
+            }
+          ],
+          "events": [
+            {
+              "name": "dg:loaded",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "name",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "name": "items"
+            },
+            {
+              "name": "itemsperpage"
+            },
+            {
+              "name": "page"
+            },
+            {
+              "name": "searchterm"
+            },
+            {
+              "name": "sortindex"
+            },
+            {
+              "name": "sortorder"
+            }
+          ],
+          "superclass": {
+            "name": "HTMLElement"
+          },
+          "summary": "30-12-2025",
+          "tagName": "data-grid",
+          "customElement": true
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "DataGrid",
+            "module": "index.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "data-grid",
+          "declaration": {
+            "name": "DataGrid",
+            "module": "index.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/data.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "dataFromTable",
+          "parameters": [
+            {
+              "name": "table"
+            },
+            {
+              "name": "itemsPerPage",
+              "default": "5"
+            },
+            {
+              "name": "selectable",
+              "default": "0"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "handleSorting",
+          "parameters": [
+            {
+              "name": "context"
+            },
+            {
+              "name": "index"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "parseData",
+          "parameters": [
+            {
+              "name": "data",
+              "description": "The data to be parsed, which can either be an object containing thead and tbody, or just an array representing tbody.",
+              "type": {
+                "text": "Object|Array"
+              }
+            },
+            {
+              "name": "context",
+              "description": "The context object containing state, settings, and config.",
+              "type": {
+                "text": "@param {Object} context.config - Configuration object that can provide additional thead information.\n * @param {Array} context.config.thead - Array of column definitions from the config.\n * @param {Object} context.settings - Settings object, including table settings like 'selectable'.\n * @param {boolean} context.settings.selectable - Whether the table allows row selection.\n * @param {Object} context.state - State object that contains table information.\n * @param {number} context.state.itemsPerPage - Number of items displayed per page.\n * @param {Function} context.log - Function to log messages for debugging.\n *\n * "
+              }
+            }
+          ],
+          "description": "Parses the provided data and updates the context's table structure.\nIf thead or tbody are not provided, they will be generated based on the data.\nThead can also be merged with a provided config.",
+          "return": {
+            "type": {
+              "text": "Object"
+            }
+          }
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "dataFromTable",
+          "declaration": {
+            "name": "dataFromTable",
+            "module": "modules/data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "handleSorting",
+          "declaration": {
+            "name": "handleSorting",
+            "module": "modules/data.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseData",
+          "declaration": {
+            "name": "parseData",
+            "module": "modules/data.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/events.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "attachCustomEventHandlers",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "attachEventListeners",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "attachCustomEventHandlers",
+          "declaration": {
+            "name": "attachCustomEventHandlers",
+            "module": "modules/events.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "attachEventListeners",
+          "declaration": {
+            "name": "attachEventListeners",
+            "module": "modules/events.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/events.keyboard.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "handleKeyboardEvents",
+          "parameters": [
+            {
+              "name": "event"
+            },
+            {
+              "name": "context"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "default",
+          "declaration": {
+            "name": "handleKeyboardEvents",
+            "module": "modules/events.keyboard.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/icons.js",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "icons",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ chevronLeft: 'M15 6l-6 6l6 6', chevronLeftPipe: 'M7 6v12, M18 6l-6 6l6 6', chevronRight: 'M9 6l6 6l-6 6', chevronRightPipe: 'M7 6l6 6l-6 6,M18 6v12', close: 'M18 6l-12 12,M6 6l12 12', columns: 'M4 6l5.5 0, M4 10l5.5 0, M4 14l5.5 0, M4 18l5.5 0, M14.5 6l5.5 0, M14.5 10l5.5 0, M14.5 14l5.5 0, M14.5 18l5.5 0', densityMedium: 'M4 6h16, M4 12h16, M4 18h16', densityLarge: 'M4 6h16, M4 18h16', densitySmall: 'M4 6h16, M4 10h16,M4 14h16, M4 18h16', dots: 'M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0, M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0, M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0', layoutFixed: 'M3 3m0 1a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v16a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1zm6 -1v18m6 -18v18', listCheck: 'M3.5 5.5l1.5 1.5l2.5 -2.5, M3.5 11.5l1.5 1.5l2.5 -2.5, M3.5 17.5l1.5 1.5l2.5 -2.5, M11 6l9 0, M11 12l9 0, M11 18l9 0', preview: 'M4 8v-2a2 2 0 0 1 2 -2h2, M4 16v2a2 2 0 0 0 2 2h2, M16 4h2a2 2 0 0 1 2 2v2, M16 20h2a2 2 0 0 0 2 -2v-2, M7 12c3.333 -4.667 6.667 -4.667 10 0, M7 12c3.333 4.667 6.667 4.667 10 0, M12 12h-.01', printer: 'M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2,M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4,M7 13m0 2a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2z', settings: 'M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z, M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0', textWrap: 'M4 6l16 0,M4 18l5 0,M4 12h13a3 3 0 0 1 0 6h-4l2 -2m0 4l-2 -2' }",
+          "description": "An object containing SVG path data for various icons."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "icons",
+          "declaration": {
+            "name": "icons",
+            "module": "modules/icons.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/print.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "setupPrint",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "printTable",
+          "parameters": [
+            {
+              "name": "context"
+            },
+            {
+              "name": "directPrint",
+              "default": "false"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "setupPrint",
+          "declaration": {
+            "name": "setupPrint",
+            "module": "modules/print.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "printTable",
+          "declaration": {
+            "name": "printTable",
+            "module": "modules/print.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/render.form.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "renderForm",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderNavigation",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderSearch",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "renderForm",
+          "declaration": {
+            "name": "renderForm",
+            "module": "modules/render.form.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderNavigation",
+          "declaration": {
+            "name": "renderNavigation",
+            "module": "modules/render.form.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderSearch",
+          "declaration": {
+            "name": "renderSearch",
+            "module": "modules/render.form.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/render.table.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "applySorting",
+          "parameters": [
+            {
+              "name": "context"
+            },
+            {
+              "name": "data"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "filterData",
+          "parameters": [
+            {
+              "name": "context"
+            },
+            {
+              "name": "data"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderColGroup",
+          "parameters": [
+            {
+              "name": "colgroup"
+            },
+            {
+              "name": "cols"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderColumnFilter",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderTable",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderTBody",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "renderTHead",
+          "parameters": [
+            {
+              "name": "context"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "updateNavigation",
+          "parameters": [
+            {
+              "name": "context"
+            },
+            {
+              "name": "noData",
+              "default": "false"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "applySorting",
+          "declaration": {
+            "name": "applySorting",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "filterData",
+          "declaration": {
+            "name": "filterData",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderColGroup",
+          "declaration": {
+            "name": "renderColGroup",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderColumnFilter",
+          "declaration": {
+            "name": "renderColumnFilter",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderTable",
+          "declaration": {
+            "name": "renderTable",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderTBody",
+          "declaration": {
+            "name": "renderTBody",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "renderTHead",
+          "declaration": {
+            "name": "renderTHead",
+            "module": "modules/render.table.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "updateNavigation",
+          "declaration": {
+            "name": "updateNavigation",
+            "module": "modules/render.table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "modules/utility.js",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "addEventListeners",
+          "parameters": [
+            {
+              "name": "element"
+            },
+            {
+              "name": "events"
+            },
+            {
+              "name": "handler"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "calculatePages",
+          "parameters": [
+            {
+              "name": "items"
+            },
+            {
+              "name": "itemsPerPage"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "camelCase",
+          "parameters": [
+            {
+              "name": "str"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "capitalize",
+          "parameters": [
+            {
+              "name": "str"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "consoleLog",
+          "parameters": [
+            {
+              "name": "message"
+            },
+            {
+              "name": "bg",
+              "default": "'#000'"
+            },
+            {
+              "name": "debug",
+              "default": "false"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getKeyValueObject",
+          "parameters": [
+            {
+              "name": "state"
+            },
+            {
+              "name": "node"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "getObj",
+          "parameters": [
+            {
+              "name": "state"
+            },
+            {
+              "name": "node"
+            },
+            {
+              "name": "typeCheck",
+              "default": "false"
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "t",
+          "parameters": [
+            {
+              "name": "key"
+            },
+            {
+              "name": "lang"
+            },
+            {
+              "name": "i18n"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "addEventListeners",
+          "declaration": {
+            "name": "addEventListeners",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "calculatePages",
+          "declaration": {
+            "name": "calculatePages",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "camelCase",
+          "declaration": {
+            "name": "camelCase",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "capitalize",
+          "declaration": {
+            "name": "capitalize",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "consoleLog",
+          "declaration": {
+            "name": "consoleLog",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getKeyValueObject",
+          "declaration": {
+            "name": "getKeyValueObject",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "getObj",
+          "declaration": {
+            "name": "getObj",
+            "module": "modules/utility.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "t",
+          "declaration": {
+            "name": "t",
+            "module": "modules/utility.js"
+          }
+        }
+      ]
+    }
+  ]
+}
