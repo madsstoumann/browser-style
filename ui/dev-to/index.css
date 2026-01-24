@@ -173,7 +173,7 @@ pre {
 	}
 
 	article {
-		p:first-of-type::first-letter {
+		p:first-of-type:not(:is(li, blockquote) p)::first-letter {
 			font-family: var(--ff-didone);
 			initial-letter: 3;
 			-webkit-initial-letter: 3;
