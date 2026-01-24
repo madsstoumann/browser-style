@@ -36,13 +36,38 @@ export default class DevTo extends HTMLElement {
 		super();
 		this.#root = this.hasAttribute('noshadow') ? this : this.attachShadow({ mode: 'open' });
 		this.#loadStyles();
-		window.addEventListener('popstate', ({ state }) => {
-			const articleId = state?.articleId;
+		window.addEventListener('popstate', () => {
+			const url = new URL(window.location.href);
+			const articleId = url.searchParams.get('article');
+			const pageNum = url.searchParams.get('page');
+
 			if (articleId) {
 				this.setAttribute('article', articleId);
 			} else {
 				this.removeAttribute('article');
-				this.renderArticlesList([], true);
+				const savedPage = pageNum ? parseInt(pageNum, 10) : 1;
+				if (this.#articles.length > 0) {
+					// We have cached articles, re-render up to the saved page
+					this.#currentPage = savedPage;
+					const end = this.#currentPage * this.itemsPerPage;
+					const articlesToShow = this.#articles.slice(0, end);
+					this.renderArticlesList(articlesToShow, true);
+					// Re-add More button if there are more articles
+					if (end < this.#articles.length) {
+						const btn = document.createElement('button');
+						btn.part = 'more';
+						btn.innerHTML = this.t('more');
+						btn.addEventListener('click', async () => {
+							btn.disabled = true;
+							this.#currentPage++;
+							await this.#fetchArticles(this.getAttribute('author'));
+						});
+						this.#root.appendChild(btn);
+					}
+				} else {
+					this.#currentPage = savedPage;
+					this.updateContent();
+				}
 			}
 		});
 	}
@@ -92,6 +117,17 @@ export default class DevTo extends HTMLElement {
 			month: 'long',
 			day: 'numeric'
 		});
+
+		// Check URL for article or page parameter on initial load
+		const url = new URL(window.location.href);
+		const articleId = url.searchParams.get('article');
+		const pageNum = url.searchParams.get('page');
+		if (articleId) {
+			this.setAttribute('article', articleId);
+		} else if (pageNum) {
+			this.#currentPage = parseInt(pageNum, 10) || 1;
+		}
+
 		await this.updateContent();
 	}
 
@@ -163,6 +199,16 @@ export default class DevTo extends HTMLElement {
 			} else {
 				moreButton?.remove();
 			}
+
+			// Save current page to URL so refresh loads all pages
+			const url = new URL(window.location.href);
+			url.searchParams.delete('article');
+			if (this.#currentPage > 1) {
+				url.searchParams.set('page', this.#currentPage);
+			} else {
+				url.searchParams.delete('page');
+			}
+			history.replaceState({ currentPage: this.#currentPage }, '', url);
 			return;
 		}
 
@@ -176,14 +222,14 @@ export default class DevTo extends HTMLElement {
 			// When using baseurl, handle client-side pagination
 			if (baseUrl) {
 				this.#articles = articles;
-				const start = (this.#currentPage - 1) * this.itemsPerPage;
-				const end = start + this.itemsPerPage;
-				articles = this.#articles.slice(start, end);
+				// On initial load, show all pages up to currentPage
+				const end = this.#currentPage * this.itemsPerPage;
+				articles = this.#articles.slice(0, end);
 			} else {
 				this.#articles = this.#currentPage === 1 ? articles : [...this.#articles, ...articles];
 			}
 
-			this.renderArticlesList(articles, this.#currentPage === 1);
+			this.renderArticlesList(articles, true);
 
 			const moreButton = this.#root.querySelector('[part~="more"]');
 			const hasMore = baseUrl
@@ -206,6 +252,16 @@ export default class DevTo extends HTMLElement {
 			} else {
 				moreButton?.remove();
 			}
+
+			// Save current page to URL so refresh loads all pages
+			const url = new URL(window.location.href);
+			url.searchParams.delete('article');
+			if (this.#currentPage > 1) {
+				url.searchParams.set('page', this.#currentPage);
+			} else {
+				url.searchParams.delete('page');
+			}
+			history.replaceState({ currentPage: this.#currentPage }, '', url);
 		} catch (error) {
 			if (error.name !== 'AbortError') console.error('Error fetching articles:', error);
 		}
@@ -229,8 +285,10 @@ export default class DevTo extends HTMLElement {
 		const articlesToRender = articles.length === 0 ? this.#articles : articles;
 		const list = articlesToRender.map(article => `
 			<li>
-				<img src="${article.cover_image}" alt="${DevTo.#encode(article.title)}">
-				<a href="${article.url}" target="_blank" data-id="${article.id}">
+				<a href="${article.url}" data-id="${article.id}">
+					<img src="${article.cover_image}" alt="${DevTo.#encode(article.title)}">
+				</a>
+				<a href="${article.url}" data-id="${article.id}">
 					${DevTo.#encode(article.title)}
 					<time datetime="${article.published_timestamp}">${this.#dateFormatter.format(new Date(article.published_timestamp))}</time>
 				</a>
@@ -238,7 +296,12 @@ export default class DevTo extends HTMLElement {
 		`).join('');
 
 		if (isFirstPage) {
-			this.#root.innerHTML = `<ul part="list">${list}</ul>`;
+			this.#root.innerHTML = `
+				<header part="list-header">
+					<slot name="headline"></slot>
+					<slot name="description"></slot>
+				</header>
+				<ul part="list">${list}</ul>`;
 			this.#root.querySelector('ul').addEventListener('click', e => {
 				const link = e.target.closest('a');
 				if (link && this.getAttribute('links') !== 'external') {
@@ -283,8 +346,9 @@ export default class DevTo extends HTMLElement {
 		`;
 
 		const url = new URL(window.location.href);
+		url.searchParams.delete('page');
 		url.searchParams.set('article', article.id);
-		history.pushState({ articleId: article.id }, article.title, url);
+		history.pushState({ articleId: article.id, previousPage: this.#currentPage }, article.title, url);
 	}
 }
 
