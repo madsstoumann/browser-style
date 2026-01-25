@@ -5,6 +5,30 @@ All notable changes to the Load articles from dev.to component will be documente
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2] - 2026-01-24
+
+### Added
+- URL parameter `?page=X` for pagination state - refreshing the page loads all articles up to that page
+- URL parameter `?article=ID` for deep linking to specific articles
+- Clickable cover images in list view - images now navigate to the article detail view
+- Back button support with proper pagination restoration from URL
+
+### Changed
+- Popstate handler now reads state from URL parameters instead of history state
+- Initial page load checks for both `?article` and `?page` URL parameters
+- When viewing an article, `?page` is removed from URL and replaced with `?article=ID`
+- URL only shows `?page=X` when X > 1 to keep URLs clean
+
+### Fixed
+- Refreshing page with `?article=ID` now correctly loads the article instead of the list
+- Back button now correctly restores pagination state (shows all pages up to the saved page)
+- Cover images in list view now have `cursor: pointer` style
+
+### Styles
+- Added `::slotted(*) { margin: 0; }` to list-header for cleaner slotted content
+- Added `a:has(img) { display: contents; }` for clickable image wrappers
+- Added `cursor: pointer` to list images
+
 ## [1.0] - 2025-12-01
 
 ### Changed
