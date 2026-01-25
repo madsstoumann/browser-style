@@ -329,7 +329,7 @@ class WebConfigCard extends HTMLElement {
 					</div>
 				` : ''}
 			</form>
-			<pre><code>${outputJson}</code></pre>`;
+			<details><summary>Value</summary><pre><code>${outputJson}</code></pre></details>`;
 
 		this._addEventListeners();
 	}

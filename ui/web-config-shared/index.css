@@ -35,7 +35,7 @@
 	color-scheme: light;
 	display: grid;
 	font-family: var(--web-config-ff, system-ui);
-	font-size: var(--web-config-font-size, 16px);
+	font-size: var(--web-config-font-size, 14px);
 	padding: var(--web-config-gap);
 	row-gap: var(--web-config-gap);
 }
@@ -65,10 +65,8 @@ button {
 		color: #FFF;
 	}
 }
-select {
-	appearance: none;
-}
 button, input, textarea, select {
+	appearance: none;
 	border-radius: var(--web-config-bdrs);
 	font-family: var(--web-config-ff);
 	font-size: inherit;
@@ -83,15 +81,22 @@ details {
 	&:has(:focus-visible) { outline: 2px solid var(--web-config-focus-c); outline-offset: 3px; }
 
 	/* Status styles (preferred) */
-	&[data-status="danger"] { border-color: var(--web-config-status-danger); }
-	&[data-status="warn"] { border-color: var(--web-config-status-warn); }
-	&[data-status="ok"] { border-color: var(--web-config-status-ok); }
-	&[data-status="info"] { border-color: var(--web-config-status-info); }
+	&[data-status] {
+		border-inline-start-width: 8px;
+	}
+	&[data-status="danger"] { border-inline-start-color: var(--web-config-status-danger); }
+	&[data-status="warn"] { border-inline-start-color: var(--web-config-status-warn); }
+	&[data-status="ok"] { border-inline-start-color: var(--web-config-status-ok); }
+	&[data-status="info"] { border-inline-start-color: var(--web-config-status-info); }
 
 	/* Compatibility (older components) */
-	&[data-severity="high"] { border-color: var(--web-config-status-danger); }
+	/* &[data-severity="high"] { border-color: var(--web-config-status-danger); }
 	&[data-severity="medium"] { border-color: var(--web-config-status-warn); }
-	&[data-severity="secure"] { border-color: var(--web-config-status-ok); }
+	&[data-severity="secure"] { border-color: var(--web-config-status-ok); } */
+	&:has(pre) {
+		background: var(--web-config-buttonface);
+		font-family: var(--web-config-ff-mono);
+	}
 }
 
 summary {
@@ -105,6 +110,9 @@ div {
 	display: grid;
 	margin-block-start: var(--web-config-gap);
 	row-gap: var(--web-config-gap);
+	& div {
+		margin-block-start: 0;
+	}
 }
 
 fieldset {
@@ -114,7 +122,7 @@ fieldset {
 	button { padding: 0 2ch; }
 }
 
-h2, h3 {
+h2, h3, h4 {
 	font-weight: 500;
 	margin: 0;
 	text-transform: capitalize;
@@ -174,6 +182,9 @@ pre {
 	word-wrap: break-word;
 	display: block;
 	font-family: var(--web-config-ff-mono);
+	summary + & {
+		margin-block-start: var(--web-config-gap);
+	}
 }
 
 ul {
@@ -197,7 +208,7 @@ li {
 	padding: .5ch 1ch;
 	place-content: center;
 
-	&[data-status="danger"] {
+	/* &[data-status="danger"] {
 		background: var(--web-config-status-danger-bg);
 		border-color: var(--web-config-status-danger);
 		color: var(--web-config-status-danger);
@@ -219,7 +230,7 @@ li {
 		background: var(--web-config-status-info-bg);
 		border-color: var(--web-config-status-info);
 		color: var(--web-config-status-info);
-	}
+	} */
 
 	&:has(button):not([data-status]) { background: var(--web-config-accent); }
 	

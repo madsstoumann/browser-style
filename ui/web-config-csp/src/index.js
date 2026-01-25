@@ -324,7 +324,7 @@ class WebConfigCsp extends HTMLElement {
 				</datalist>
 				<button data-add-directive>${this.t('ui.addDirective')}</button>
 			</fieldset>
-			<pre><code>${this.generateCspString()}</code></pre>`;
+			<details><summary>Value</summary><pre><code>${this.generateCspString()}</code></pre></details>`;
 
 		restoreOpenDetailsState(this.shadowRoot, openState);
 	}

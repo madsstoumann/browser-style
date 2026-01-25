@@ -967,7 +967,7 @@ class WebConfigRobots extends HTMLElement {
 			${disallowSection}
 			${sitemapSection}
 			${settingsSection}
-			<pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre>
+			<details><summary>Value</summary><pre><code>${this.generateRobotsTxt() || this.t('ui.noRules')}</code></pre></details>
 		`;
 
 		restoreOpenDetailsState(this.shadowRoot, openState);

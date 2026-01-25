@@ -1,6 +1,6 @@
 details {
 	&:has([data-remove]) summary::after { content: ' *'; color: var(--web-config-accent-dark); }
-	&:not(:has(:checked)) { display: none; }
+	&:not(:has(:checked)):not(:has(pre)) { display: none; }
 }
 
 label:has(input[data-directive]) {
@@ -14,9 +14,9 @@ label:has(input[data-directive]) {
 }
 
 /* Evaluation styles */
-details[data-status="danger"] { border-color: var(--web-config-status-danger); }
+/* details[data-status="danger"] { border-color: var(--web-config-status-danger); }
 details[data-status="warn"] { border-color: var(--web-config-status-warn); }
-details[data-status="ok"] { border-color: var(--web-config-status-ok); }
+details[data-status="ok"] { border-color: var(--web-config-status-ok); } */
 
 .eval-findings {
 	display: grid;
