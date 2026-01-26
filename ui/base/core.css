@@ -1,6 +1,7 @@
 @layer bs-core {
 	:root {
 		--AccentColor: light-dark(hsl(211, 100%, 50%), hsl(211, 60%, 50%));
+		--AccentColorDark: light-dark(hsl(211, 80%, 30%), hsl(211, 30%, 20%));
 		--AccentColorText: hsl(211, 100%, 95%);
 		--ButtonBorder: light-dark(hsl(0, 0%, 80%), hsl(0, 0%, 20%));
 		--ButtonFace: light-dark(hsl(0, 0%, 90%), hsl(0, 0%, 40%));
@@ -11,10 +12,10 @@
 		--Field: light-dark(hsl(0, 0%, 97.5%), hsl(0, 0%, 2.5%));
 		--GrayText: light-dark(hsl(0, 0%, 60%), hsl(0, 0%, 40%));
 		--Highlight: light-dark(hsl(211, 100%, 95%), hsl(211, 30%, 20%));
-		--LinkText: color-mix(in oklab, #0000EE 50%, #FFF 50%);
-		--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
-		--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
-		--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
+		--LinkText: light-dark(hsl(221, 100%, 73%), hsl(221, 70%, 70%));
+		--Mark: light-dark(hsl(61, 100%, 80%), hsl(61, 50%, 80%));
+		--MarkText: light-dark(hsl(60, 100%, 2%), hsl(60, 50%, 10%));
+		--VisitedText: light-dark(hsl(264, 33%, 61%), hsl(264, 25%, 70%));
 		--ColorInfo: light-dark(hsl(210, 60%, 46%), hsl(210, 30%, 46%));
 		--ColorError: light-dark(hsl(360, 60%, 46%), hsl(360, 40%, 56%));
 		--ColorSuccess: light-dark(hsl(136, 41%, 41%), hsl(136, 21%, 51%));
@@ -26,6 +27,9 @@
 		--ff-headers: inherit;
 		--ff-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 		--ff-serif:  'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+
+		interpolate-size: allow-keywords;
+		text-size-adjust: 100%;
 	}
 
 	/* Global */
@@ -100,6 +104,7 @@
 	:where(h1, h2, h3, h4) {
 		font-family: var(--ff-headers);
 		line-height: 1.3;
+		overflow-wrap: break-word;
 		text-wrap: balance;
 	}
 	:where(h2) { margin-block: .75rlh; }
@@ -123,7 +128,8 @@
 		background-color: var(--Mark);
 		color: var(--MarkText);
 	}
-	:where(pre) { overflow: auto; }
+	:where(p) { text-wrap: pretty; }
+	:where(pre) { font-size: smaller; overflow: auto; }
 	:where(pre, tr:nth-of-type(even)) {
 		background-color: var(--CanvasGray);
 	}
@@ -155,29 +161,5 @@
 		font-size: smaller;
 		padding: 1ch;
 	}
-
-	/* TMP: DELETE AFTER IOS 17.5 */
-	@supports not (color: light-dark(#000, #FFF)) {
-		:root {
-			--AccentColor: hsl(211, 100%, 50%);
-			--AccentColorText: hsl(211, 100%, 95%);
-			--ButtonBorder: hsl(0, 0%, 80%);
-			--ButtonFace: hsl(0, 0%, 90%);
-			--ButtonText: hsl(0, 0%, 40%);
-			--Canvas: hsl(0, 0%, 100%);
-			--CanvasGray: hsl(0, 0%, 95%);
-			--CanvasText: hsl(0, 0%, 15%);
-			--Field: hsl(0, 0%, 97.5%);
-			--GrayText: hsl(0, 0%, 60%);
-			--Highlight: hsl(211, 100%, 95%);
-			--LinkText: color-mix(in oklab, #0000EE 50%, #FFF 50%);
-			--Mark: color-mix(in oklab, #FFFF00 60%, #FFF 40%);
-			--MarkText: color-mix(in oklab, #000 85%, #FFFF00 15%);
-			--VisitedText: color-mix(in oklab, #551A8B 60%, #FFF 40%);
-			--ColorInfo: hsl(210, 60%, 46%);
-			--ColorError: hsl(360, 60%, 46%);
-			--ColorSuccess: hsl(136, 41%, 41%);
-			--ColorWarning: hsl(33, 99%, 59%);
-		}
-	}
+	:where(video) { max-width: 100%; }
 }

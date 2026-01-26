@@ -96,6 +96,7 @@
 	}
 	:where(input:not([type=checkbox],[type=file],[type=radio],[type=range]), option, select:not([size]), textarea) {
 		block-size: var(--input-bs);
+		/* field-sizing: content; */
 		padding: var(--input-pb) var(--input-pi);
 	}
 	:where(input:not([type=checkbox],[type=color],[type=radio],[type=range]), option:checked, select, textarea) {
@@ -320,7 +321,6 @@
 		text-overflow: ellipsis;
 	}
 	:where(textarea) {
-		/* field-sizing: content; */
 		min-block-size: var(--input-bs);
 		resize: vertical;
 	}

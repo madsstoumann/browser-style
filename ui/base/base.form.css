@@ -109,7 +109,7 @@
 
 	/* CHECKBOX / RADIO V.2.0 */
 	:where([type=checkbox], [type=radio]) {
-		--icon: url('/assets/svg/check.svg');
+		--icon: url('./assets/svg/check.svg');
 		--input-bdw: calc(1em * (4/3) / 13.333333);
 		appearance: none;
 		background: var(--input-check-bg, var(--Canvas));
@@ -133,13 +133,13 @@
 			--input-check-bga: var(--input-check-bga--checked, #FFF);
 		}
 		&:indeterminate {
-			--icon: url('/assets/svg/minus-white.svg');
+			--icon: url('./assets/svg/minus-white.svg');
 			--input-check-bga: var(--input-check-bdc, var(--ButtonBorder));
 			/* --input-check-mask-size: 75%; */
 		}
 
 		/* Modifiers */
-		&.--cross { --icon: url('/assets/svg/cross.svg'); }
+		&.--cross { --icon: url('./assets/svg/cross.svg'); }
 		&.--round {
 			--input-check-bdrs: 50%;
 			--input-check-mask-size: 85%;
@@ -240,9 +240,9 @@
 	}
 	:where([type=range], option, select) { appearance: none; }
 	:where([type=search]) {
-		background-color: inherit;
+		/* background-color: inherit; */
 		&::-webkit-search-cancel-button {
-			--icon: url('/assets/svg/reset.svg');
+			--icon: url('./assets/svg/reset.svg');
 			background-color: currentColor;
 			display: block;
 			height: 1em;
@@ -301,7 +301,7 @@
 	:where(legend) { white-space: nowrap; }
 	:where(option) {
 		&:is(:checked, [selected]) {
-			--icon: url('/assets/svg/check.svg');
+			--icon: url('./assets/svg/check.svg');
 			background-color: var(--CanvasGray);
 		}
 		&:not(:last-of-type) {
@@ -309,13 +309,13 @@
 		}
 	}
 	:where(select) {
-		background-color: transparent;
+		/* background-color: transparent; */
 		color: inherit;
 		overflow: hidden;
 		&[multiple] { min-block-size: var(--input-bs); }
 	}
 	:where(select:not([multiple],[size])) {
-		--icon: url('/assets/svg/chevron-down.svg');
+		--icon: url('./assets/svg/chevron-down.svg');
 		padding-inline-end: calc((2 * var(--input-pi)) + 1.25ch);
 		text-overflow: ellipsis;
 	}
@@ -331,7 +331,7 @@
 	& [type=month],
 	& [type=time] {
 		appearance: none;
-		background-color: inherit;
+		/* background-color: inherit; */
 		&::-webkit-calendar-picker-indicator {
 			background: none;
 			border-radius: 50%;
@@ -344,18 +344,18 @@
 			background: var(--AccentColor);
 		}
 	}
-	& [type=email] { --icon: url('/assets/svg/email.svg'); }
+	& [type=email] { --icon: url('./assets/svg/email.svg'); }
 	& [type=date],
-	& [type=datetime-local] { --icon: url('/assets/svg/calendar.svg'); }
-	& [type=month] { --icon: url('/assets/svg/week.svg'); }
-	& [type=number] { --icon: url('/assets/svg/numbers.svg'); }
-	& [type=password] { --icon: url('/assets/svg/lock.svg'); }
+	& [type=datetime-local] { --icon: url('./assets/svg/calendar.svg'); }
+	& [type=month] { --icon: url('./assets/svg/week.svg'); }
+	& [type=number] { --icon: url('./assets/svg/numbers.svg'); }
+	& [type=password] { --icon: url('./assets/svg/lock.svg'); }
 	& [type=search] {
-		--icon: url('/assets/svg/search.svg');
+		--icon: url('./assets/svg/search.svg');
 		&:not(:placeholder-shown),
 		&:focus-visible { --icon: none; }
 	}
-	& [type=tel] {  --icon: url('/assets/svg/phone.svg'); }
-	& [type=time] { --icon: url('/assets/svg/time.svg'); }
-	& [type=url] { --icon: url('/assets/svg/link.svg'); }
+	& [type=tel] {  --icon: url('./assets/svg/phone.svg'); }
+	& [type=time] { --icon: url('./assets/svg/time.svg'); }
+	& [type=url] { --icon: url('./assets/svg/link.svg'); }
 }
