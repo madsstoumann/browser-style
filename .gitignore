@@ -20,3 +20,4 @@ _v2/
 *.sln
 # CMS Configuration Files
 .cmsconfig
+.claude/settings.local.json
