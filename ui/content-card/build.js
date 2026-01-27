@@ -293,7 +293,7 @@ async function cleanHTML(html, filename) {
 
   // Build CSS links based on file type
   const cssLinks = includeBaseCSS
-    ? '\t<link rel="stylesheet" href="/ui/base/base.css">\n\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n'
+    ? '\t<link rel="stylesheet" href="/ui/base/index.css">\n\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n'
     : '\t<link rel="stylesheet" href="/assets/css/content-card-bundle.css">\n';
 
   // First, clean up development-specific content and replace all CSS with bundle

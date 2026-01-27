@@ -200,7 +200,7 @@ function generateMainIndexHTML(generatedFiles) {
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="A collection of layout system demos">
 	<meta name="view-transition" content="same-origin">
-	<link rel="stylesheet" href="/ui/base/base.css">
+	<link rel="stylesheet" href="/ui/base/index.css">
 </head>
 <body>
 	<h1>UI: Components</h1>
