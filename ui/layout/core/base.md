@@ -101,6 +101,18 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 - Description: Convenience size tokens that map to configured max-width variables (e.g., `--layout-width-md`). When `width` is present and `bleed` is not set, `max-inline-size` is limited to the selected value.
 - Example: `width="md"`
 
+### lanes-min
+- Type: <length> | <custom-ident>
+- Default: `10rem`
+- Description: Minimum column width for `lanes(auto)` layouts. Used with CSS `display: grid-lanes` (masonry) to create responsive auto-fill columns. Sets `--layout-lanes-min`.
+- Examples: `lanes-min="12rem"`, `lanes-min="200px"`
+
+### lanes-max
+- Type: <length> | <custom-ident>
+- Default: `1fr`
+- Description: Maximum column width for `lanes(auto)` layouts. Used with CSS `display: grid-lanes` (masonry). Sets `--layout-lanes-max`.
+- Examples: `lanes-max="1fr"`, `lanes-max="300px"`
+
 ---
 
 ### Example usage (HTML)
@@ -120,10 +132,29 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 </lay-out>
 ```
 
+### Example usage (Lanes/Masonry)
+
+```html
+<!-- Fixed 4-column masonry layout -->
+<lay-out sm="lanes(2)" lg="lanes(4)">
+  <img src="photo1.jpg" alt="Photo">
+  <img src="photo2.jpg" alt="Photo">
+  <!-- ... more items -->
+</lay-out>
+
+<!-- Auto-fill masonry with custom min-width -->
+<lay-out sm="lanes(2)" lg="lanes(auto)" lanes-min="12rem" lanes-max="1fr">
+  <img src="photo1.jpg" alt="Photo">
+  <img src="photo2.jpg" alt="Photo">
+  <!-- ... more items -->
+</lay-out>
+```
+
 ### Notes and hints
 - Numeric attributes documented here (e.g., `col-gap`, `pad-inline`, `row-gap`, `space-top`) are multiplied by the component's `--layout-space-unit` CSS variable. Provide numbers (unitless) not lengths.
 - Attributes typed as `<length>` should include units (px, rem, vw, etc.) unless using percentage where allowed.
 - `overflow` is parsed as a token list (space-separated). Use `~=` matching in CSS selectors (e.g., `[overflow~="none"]`).
 - The implementation relies on `attr()` to copy attribute values into CSS custom properties. Keep attribute names and value syntax compatible with the types listed above.
+- **Lanes/Masonry**: Uses CSS `display: grid-lanes` when supported. For browsers without support, falls back to CSS multi-column layout (`column-count`). The `lanes-min` and `lanes-max` attributes only affect `lanes(auto)` - numbered lanes (`lanes(2)` through `lanes(6)`) use fixed column counts.
 
 If you'd like, I can add examples for each attribute in the `ui/` examples folder or generate a small cheatsheet image.

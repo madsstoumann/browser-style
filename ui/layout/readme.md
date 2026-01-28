@@ -44,7 +44,7 @@ That's it! No JavaScript required for layouts.
 
 - **Pure CSS** - No JavaScript runtime needed
 - **Responsive** - Breakpoint-based layouts with `@media` or `@container` queries
-- **57 Layout Patterns** - Columns, grids, bento boxes, mosaics, and more
+- **63 Layout Patterns** - Columns, grids, bento boxes, mosaics, lanes (masonry), and more
 - **Responsive Images** - Automatic srcset generation for optimal image loading
 - **Customizable** - Create custom layouts and breakpoints
 - **Small Bundle** - ~33 KB uncompressed, ~12 KB gzipped
@@ -121,6 +121,13 @@ Aspect ratio layouts (9 variants available)
 <lay-out xs="auto(fit)">...</lay-out>
 ```
 Auto-fitting layouts (2 variants available)
+
+**Lanes (Masonry):**
+```html
+<lay-out sm="lanes(2)" lg="lanes(4)">...</lay-out>
+<lay-out sm="lanes(2)" lg="lanes(auto)" lanes-min="12rem">...</lay-out>
+```
+Masonry-style layouts using CSS `display: grid-lanes` (6 variants available). Falls back to CSS columns for browsers without grid-lanes support. Use `lanes-min` and `lanes-max` attributes to configure column sizing for `lanes(auto)`.
 
 See [demos](dist/index.html) for visual examples of all layouts.
 

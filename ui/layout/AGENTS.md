@@ -24,7 +24,8 @@ layout/
 │   ├── bento.json        # Bento box layouts
 │   ├── mosaic.json       # Mosaic patterns
 │   ├── asym.json         # Asymmetric layouts
-│   └── ratios.json       # Aspect ratio layouts
+│   ├── ratios.json       # Aspect ratio layouts
+│   └── lanes.json        # Masonry/lanes layouts (CSS grid-lanes)
 ├── dist/                 # Built output
 │   ├── layout.css        # Complete CSS bundle
 │   └── index.html        # Visual demos
@@ -107,6 +108,13 @@ Available: `columns(1)` through `columns(6)`
 <lay-out xs="auto(fit)">...</lay-out>
 ```
 2 variants for auto-fitting grids
+
+#### Lanes (Masonry)
+```html
+<lay-out sm="lanes(2)" lg="lanes(4)">...</lay-out>
+<lay-out sm="lanes(2)" lg="lanes(auto)" lanes-min="12rem">...</lay-out>
+```
+6 variants for CSS `display: grid-lanes` masonry layouts. Uses CSS columns fallback for browsers without grid-lanes support. Supports `lanes-min` and `lanes-max` attributes for configurable column sizing.
 
 ## Responsive Images
 
@@ -422,6 +430,9 @@ Each layout file follows this structure:
 ### Autofit (2 variants)
 `auto(fit)`, `auto(fill)`
 
+### Lanes (6 variants)
+`lanes(2)`, `lanes(3)`, `lanes(4)`, `lanes(5)`, `lanes(6)`, `lanes(auto)`
+
 ## File Structure (Detailed)
 
 ```
@@ -441,7 +452,7 @@ layout/
 │   ├── asymmetrical.json # Asymmetric (6 variants)
 │   ├── ratios.json       # Ratio-based (9 variants)
 │   ├── autofit.json      # Auto-fit/fill (2 variants)
-│   └── overflow.json     # Overflow handling
+│   └── lanes.json        # Masonry/lanes (6 variants)
 ├── src/
 │   ├── builder.js        # LayoutBuilder class (~329 lines)
 │   ├── srcsets.js        # Srcset utilities (~79 lines)
