@@ -185,7 +185,14 @@ export class LayoutBuilder {
 		const containerProps = {}
 		if (layout.columns) containerProps['--layout-gtc'] = layout.columns
 		if (layout.rows) containerProps['--layout-gtr'] = layout.rows
-		if ((layoutPrefix === 'columns' || layoutPrefix === 'lanes') && layout.items) containerProps['--_ci'] = layout.items
+		if (layoutPrefix === 'columns' && layout.items) containerProps['--_ci'] = layout.items
+		if (layoutPrefix === 'lanes' && !isNaN(parseInt(layoutId))) {
+			const cols = parseInt(layoutId)
+			containerProps['--_ci'] = cols
+			// Use auto-fill with calculated min-width accounting for gaps
+			const gaps = cols - 1
+			containerProps['--layout-gtc'] = `repeat(auto-fill, minmax(min(calc((100% - ${gaps} * var(--layout-colmg) * var(--layout-space-unit)) / ${cols}), 100%), 1fr))`
+		}
 
 		const globalRuleKey = `${mediaQuery}::${layoutPrefix}`
 		if (!processedGlobalRules.has(globalRuleKey)) {

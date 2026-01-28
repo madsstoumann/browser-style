@@ -41,7 +41,10 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	})
 
 	for (const [itemCount, layouts] of Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)) {
-		html += `\n\n	<h2>${itemCount} Item${itemCount !== 1 ? 's' : ''}</h2>`
+		// Skip item count heading for lanes layouts
+		if (prefix !== 'lanes') {
+			html += `\n\n	<h2>${itemCount} Item${itemCount !== 1 ? 's' : ''}</h2>`
+		}
 
 		for (const layout of layouts) {
 			const layoutId = layout.originalId || layout.id.replace(`${prefix}(`, '').replace(')', '')

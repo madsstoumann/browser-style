@@ -117,17 +117,17 @@
 		@supports (display: grid-lanes) {
 			&:where([xs*="lanes("], [sm*="lanes("], [md*="lanes("], [lg*="lanes("], [xl*="lanes("], [xxl*="lanes("]) {
 				display: grid-lanes;
+				grid-template-columns: var(--layout-gtc, repeat(var(--_ci, 4), 1fr));
 			}
 		}
 		@supports not (display: grid-lanes) {
 			&:where([xs*="lanes("], [sm*="lanes("], [md*="lanes("], [lg*="lanes("], [xl*="lanes("], [xxl*="lanes("]) {
-				column-count: 5;
+				column-count: var(--_ci, 4);
 				display: block;
-				row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
 				& > *:not(lay-out) {
 					break-inside: avoid;
 					display: block;
-					margin-block-end: 1rem;
+					margin-block-end:  calc(var(--layout-rg) * var(--layout-space-unit));;
 				}
 			}
 		}
@@ -457,9 +457,33 @@ lay-out[sm*="lanes("] > * {
   --layout-ga: auto;
 }
 
+lay-out[sm="lanes(2)"] {
+  --_ci: 2;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 1 * var(--layout-colmg) * var(--layout-space-unit)) / 2), 100%), 1fr));
+}
+
+lay-out[sm="lanes(3)"] {
+  --_ci: 3;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 2 * var(--layout-colmg) * var(--layout-space-unit)) / 3), 100%), 1fr));
+}
+
+lay-out[sm="lanes(4)"] {
+  --_ci: 4;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 3 * var(--layout-colmg) * var(--layout-space-unit)) / 4), 100%), 1fr));
+}
+
+lay-out[sm="lanes(5)"] {
+  --_ci: 5;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 4 * var(--layout-colmg) * var(--layout-space-unit)) / 5), 100%), 1fr));
+}
+
+lay-out[sm="lanes(6)"] {
+  --_ci: 6;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 5 * var(--layout-colmg) * var(--layout-space-unit)) / 6), 100%), 1fr));
+}
+
 lay-out[sm="lanes(auto)"] {
   --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
-  --_ci: 15;
 }
 
 lay-out[sm*="columns("] {
@@ -578,9 +602,33 @@ lay-out[md*="lanes("] > * {
   --layout-ga: auto;
 }
 
+lay-out[md="lanes(2)"] {
+  --_ci: 2;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 1 * var(--layout-colmg) * var(--layout-space-unit)) / 2), 100%), 1fr));
+}
+
+lay-out[md="lanes(3)"] {
+  --_ci: 3;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 2 * var(--layout-colmg) * var(--layout-space-unit)) / 3), 100%), 1fr));
+}
+
+lay-out[md="lanes(4)"] {
+  --_ci: 4;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 3 * var(--layout-colmg) * var(--layout-space-unit)) / 4), 100%), 1fr));
+}
+
+lay-out[md="lanes(5)"] {
+  --_ci: 5;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 4 * var(--layout-colmg) * var(--layout-space-unit)) / 5), 100%), 1fr));
+}
+
+lay-out[md="lanes(6)"] {
+  --_ci: 6;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 5 * var(--layout-colmg) * var(--layout-space-unit)) / 6), 100%), 1fr));
+}
+
 lay-out[md="lanes(auto)"] {
   --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
-  --_ci: 15;
 }
 
 lay-out[md*="grid("] {
@@ -1297,9 +1345,33 @@ lay-out[lg*="lanes("] > * {
   --layout-ga: auto;
 }
 
+lay-out[lg="lanes(2)"] {
+  --_ci: 2;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 1 * var(--layout-colmg) * var(--layout-space-unit)) / 2), 100%), 1fr));
+}
+
+lay-out[lg="lanes(3)"] {
+  --_ci: 3;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 2 * var(--layout-colmg) * var(--layout-space-unit)) / 3), 100%), 1fr));
+}
+
+lay-out[lg="lanes(4)"] {
+  --_ci: 4;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 3 * var(--layout-colmg) * var(--layout-space-unit)) / 4), 100%), 1fr));
+}
+
+lay-out[lg="lanes(5)"] {
+  --_ci: 5;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 4 * var(--layout-colmg) * var(--layout-space-unit)) / 5), 100%), 1fr));
+}
+
+lay-out[lg="lanes(6)"] {
+  --_ci: 6;
+  --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 5 * var(--layout-colmg) * var(--layout-space-unit)) / 6), 100%), 1fr));
+}
+
 lay-out[lg="lanes(auto)"] {
   --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
-  --_ci: 15;
 }
 
 lay-out[lg*="ratio("] {
