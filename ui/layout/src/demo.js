@@ -58,15 +58,22 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 					breakpointPairs.push(`${breakpoint}="${value}"`)
 					breakpointsObj[breakpoint] = value
 				}
-				codeExample = `&lt;lay-out${breakpointAttrs}&gt;`
+				codeExample = `&lt;lay-out${breakpointAttrs}`
 			} else {
 				breakpointAttrs = ` md="columns(${itemCount})" lg="${prefix}(${layoutId})"`
-				codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"&gt;`
+				codeExample = `&lt;lay-out lg="${prefix}(${layoutId})"`
 				breakpointsObj = { md: `columns(${itemCount})`, lg: `${prefix}(${layoutId})` }
 			}
 
 			const srcsets = generateSrcsets(breakpointsObj, srcsetMap, layoutConfig)
 			const srcsetsAttr = srcsets ? ` srcsets="${srcsets}"` : ''
+			const overflowAttr = layout.overflow ? ` overflow="${layout.overflow}"` : ''
+
+			// Add overflow to code example if present
+			if (layout.overflow) {
+				codeExample += ` overflow="${layout.overflow}"`
+			}
+			codeExample += `&gt;`
 
 			const iconPath = path.join(iconsDir, `${prefix}(${layoutId}).svg`)
 			let iconSvg = ''
@@ -84,11 +91,20 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
 		${description ? `<small>${description}</small>` : ''}
 		<code>${codeExample}</code>
-		<lay-out${breakpointAttrs}${srcsetsAttr}>`
+		<lay-out${breakpointAttrs}${srcsetsAttr}${overflowAttr}>`
+
+			// Aspect ratios for lanes demo
+			const aspectRatios = ['1', '1 / 2', '1 / .5', '1 / 3', '1 / .75', '1 / 1.5', '1 / .33', '1', '1 / 2.5', '1 / .6', '1 / 1.25', '1 / .4', '1 / 2', '1 / .8', '1']
 
 			for (let i = 0; i < itemCount; i++) {
-				html += `
+				if (layout.aspectRatios) {
+					const ratio = aspectRatios[i % aspectRatios.length]
+					html += `
+			<item-card style="aspect-ratio: ${ratio};"></item-card>`
+				} else {
+					html += `
 			<item-card></item-card>`
+				}
 			}
 
 			if (layout.repeatable) {
@@ -243,7 +259,6 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 
 	for (const file of layoutFiles) {
 		const layoutName = path.basename(file, '.json')
-		if (layoutName === 'overflow') continue
 
 		const layoutPath = path.join(layoutsDir, file)
 

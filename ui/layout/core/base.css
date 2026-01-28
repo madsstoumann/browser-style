@@ -107,6 +107,31 @@
 			}
 		}
 
+		/* lanes - attribute-based sizing */
+		&[lanes-min] {
+			--layout-lanes-min: attr(lanes-min type(<length> | <custom-ident>), 10rem);
+		}
+		&[lanes-max] {
+			--layout-lanes-max: attr(lanes-max type(<length> | <custom-ident>), 1fr);
+		}
+		@supports (display: grid-lanes) {
+			&:where([xs*="lanes("], [sm*="lanes("], [md*="lanes("], [lg*="lanes("], [xl*="lanes("], [xxl*="lanes("]) {
+				display: grid-lanes;
+			}
+		}
+		@supports not (display: grid-lanes) {
+			&:where([xs*="lanes("], [sm*="lanes("], [md*="lanes("], [lg*="lanes("], [xl*="lanes("], [xxl*="lanes("]) {
+				column-count: 5;
+				display: block;
+				row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
+				& > *:not(lay-out) {
+					break-inside: avoid;
+					display: block;
+					margin-block-end: 1rem;
+				}
+			}
+		}
+
 		/* overflow */
 		&[overflow] {
 			display: flex;

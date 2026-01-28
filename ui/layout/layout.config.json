@@ -19,6 +19,7 @@
       "min": "380px",
       "layouts": [
         "autofit",
+        "lanes",
         {
           "columns": ["columns(2)"],
           "grid": ["grid(3a)"],
@@ -31,6 +32,7 @@
       "min": "540px",
       "layouts": [
         "columns",
+        "lanes",
         {
           "grid": ["grid(3a)"]
         }
@@ -39,7 +41,7 @@
     "lg": {
       "type": "@media",
       "min": "720px",
-      "layouts": ["asymmetrical", "bento", "columns", "grid", "ratios"]
+      "layouts": ["asymmetrical", "bento", "columns", "grid", "lanes", "ratios"]
     },
     "xl": {
       "type": "@media",

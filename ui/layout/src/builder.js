@@ -185,7 +185,7 @@ export class LayoutBuilder {
 		const containerProps = {}
 		if (layout.columns) containerProps['--layout-gtc'] = layout.columns
 		if (layout.rows) containerProps['--layout-gtr'] = layout.rows
-		if (layoutPrefix === 'columns' && layout.items) containerProps['--_ci'] = layout.items
+		if ((layoutPrefix === 'columns' || layoutPrefix === 'lanes') && layout.items) containerProps['--_ci'] = layout.items
 
 		const globalRuleKey = `${mediaQuery}::${layoutPrefix}`
 		if (!processedGlobalRules.has(globalRuleKey)) {
