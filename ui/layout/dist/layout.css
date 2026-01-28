@@ -10,7 +10,7 @@
 		--layout-gtr: attr(rows type(<length> | <custom-ident>), auto);
 		--layout-mbe: attr(space-bottom type(<number>), 0);
 		--layout-mbs: attr(space-top type(<number>), 0);
-		--layout-mw: attr(max-width type(<length> | <percentage>), 100vw);
+		--layout-mw: attr(max-width type(<length> | <percentage>), 100%);
 		--layout-pbe: attr(pad-bottom type(<number>), 0);
 		--layout-pbs: attr(pad-top type(<number>), 0);
 		--layout-pi: attr(pad-inline type(<number>), 0);
@@ -59,6 +59,7 @@
 		/* === bleed === */
 		&[bleed] {
 			/* --layout-w: calc(100vw - var(--layout-mi, 0px)); */
+			--layout-mw: 100dvi;
 			--layout-w: 100vw;
 			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
 			background-color: #0000;
