@@ -131,6 +131,98 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	return html
 }
 
+function generateOverflowHTML(columnsData, iconsDir) {
+	const title = 'Overflow Layouts'
+	const prefix = 'columns'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<script src="../polyfills/overflow-drag.js"></script>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
+		The <code>overflow="preview"</code> shows a partial preview of the next item.</p>`
+
+	const overflowType = 'preview'
+
+	for (const layout of columnsData.layouts) {
+		const layoutId = layout.id
+		const itemCount = layout.items || 1
+		const description = layout.description || ''
+
+		let breakpointAttrs = ''
+		let breakpointsObj = {}
+
+		if (layout.breakpoints) {
+			for (const [breakpoint, value] of Object.entries(layout.breakpoints)) {
+				breakpointAttrs += ` ${breakpoint}="${value}"`
+				breakpointsObj[breakpoint] = value
+			}
+		} else {
+			breakpointAttrs = ` md="columns(${itemCount})" lg="${prefix}(${layoutId})"`
+			breakpointsObj = { md: `columns(${itemCount})`, lg: `${prefix}(${layoutId})` }
+		}
+
+		const codeExample = `&lt;lay-out${breakpointAttrs} overflow="${overflowType}"&gt;`
+
+		// Use preview icon if available
+		const iconPath = path.join(iconsDir, `${prefix}(${layoutId})-preview.svg`)
+		const fallbackIconPath = path.join(iconsDir, `${prefix}(${layoutId}).svg`)
+		let iconSvg = ''
+
+		if (fs.existsSync(iconPath)) {
+			try {
+				iconSvg = fs.readFileSync(iconPath, 'utf8')
+			} catch (error) {
+				console.warn(`⚠ Failed to read icon ${iconPath}: ${error.message}`)
+			}
+		} else if (fs.existsSync(fallbackIconPath)) {
+			try {
+				iconSvg = fs.readFileSync(fallbackIconPath, 'utf8')
+			} catch (error) {
+				console.warn(`⚠ Failed to read icon ${fallbackIconPath}: ${error.message}`)
+			}
+		}
+
+		html += `
+	<section>
+		<h3>${iconSvg}${prefix.charAt(0).toUpperCase() + prefix.slice(1)} ${layoutId}</h3>
+		${description ? `<small>${description}</small>` : ''}
+		<code>${codeExample}</code>
+		<lay-out${breakpointAttrs} overflow="${overflowType}">`
+
+		for (let i = 0; i < itemCount; i++) {
+			html += `
+			<item-card></item-card>`
+		}
+
+		// Add extra items to show overflow
+		for (let i = 0; i < 3; i++) {
+			html += `
+			<item-card repeat></item-card>`
+		}
+
+		html += `
+		</lay-out>
+	</section>`
+	}
+
+	html += `
+</body>
+</html>`
+
+	return html
+}
+
 function generateIconsHTML(iconsDir) {
 	const title = 'Layout Icons'
 
@@ -290,6 +382,26 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 			}
 		} catch (error) {
 			console.warn(`⚠ Failed to generate demo for ${file}: ${error.message}`)
+		}
+	}
+
+	// Generate overflow.html from columns.json
+	const columnsPath = path.join(layoutsDir, 'columns.json')
+	if (fs.existsSync(columnsPath)) {
+		try {
+			const columnsContent = fs.readFileSync(columnsPath, 'utf8')
+			const columnsData = JSON.parse(columnsContent)
+
+			if (columnsData.layouts && columnsData.overflowIcons) {
+				const overflowHTML = generateOverflowHTML(columnsData, iconsDir)
+				const overflowPath = path.join(outputDir, 'overflow.html')
+				fs.writeFileSync(overflowPath, overflowHTML)
+				generatedFiles.add('overflow.html')
+				demoCount++
+				console.log(`✓ Generated overflow.html`)
+			}
+		} catch (error) {
+			console.warn(`⚠ Failed to generate overflow.html: ${error.message}`)
 		}
 	}
 

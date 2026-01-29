@@ -81,12 +81,11 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ### overflow
 - Type: token list (space-separated tokens)
-- Accepted tokens: `none`, `preview`, `dynamic` (also acts as boolean presence)
+- Accepted tokens: `none`, `preview` (also acts as boolean presence)
 - Default: not present
 - Description: Enables an overflow behavior; when present the layout switches to a horizontal scroller. Use tokens to select variants:
   - `overflow="none"` — hides overflow (no scroll)
-  - `overflow="preview"` — shows a preview item size (reserve preview width)
-  - `overflow="dynamic"` — dynamic variant that subtracts the preview size from item width
+  - `overflow="preview"` — shows a partial preview of the next item (reserves preview width)
 - Example: `overflow="preview"` or `overflow="none"`
 
 ### theme
