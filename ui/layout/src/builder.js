@@ -195,12 +195,12 @@ export class LayoutBuilder {
 			containerProps['--layout-gtc'] = `repeat(auto-fill, minmax(min(calc((100% - ${gaps} * var(--layout-colmg) * var(--layout-space-unit)) / ${cols}), 100%), 1fr))`
 		}
 
-		const globalRuleKey = `${mediaQuery}::${layoutPrefix}`
-		if (!processedGlobalRules.has(globalRuleKey)) {
-			processedGlobalRules.add(globalRuleKey)
-			const globalContainerSelector = `${elementSelector}[${breakpointName}*="${layoutPrefix}("]`
-			this.addRule(mediaQuery, globalContainerSelector, { '--_ga': 'initial' }, breakpointName)
-			this.addRule(mediaQuery, `${globalContainerSelector} > *`, { '--layout-ga': 'auto' }, breakpointName)
+		const breakpointResetKey = `${mediaQuery}::${breakpointName}`
+		if (!processedGlobalRules.has(breakpointResetKey)) {
+			processedGlobalRules.add(breakpointResetKey)
+			const resetSelector = `${elementSelector}[${breakpointName}]`
+			this.addRule(mediaQuery, resetSelector, { '--_ga': 'initial' }, breakpointName)
+			this.addRule(mediaQuery, `${resetSelector} > *`, { '--layout-ga': 'auto' }, breakpointName)
 		}
 
 		if (Object.keys(containerProps).length > 0) {

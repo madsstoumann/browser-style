@@ -414,11 +414,11 @@
 
 @media (min-width: 240px) {
 @layer layout.xs {
-  lay-out[xs*="auto("] {
+  lay-out[xs] {
     --_ga: initial;
   }
 
-  lay-out[xs*="auto("] > * {
+  lay-out[xs] > * {
     --layout-ga: auto;
   }
 
@@ -434,11 +434,11 @@
 
 @media (min-width: 380px) {
 @layer layout.sm {
-  lay-out[sm*="auto("] {
+  lay-out[sm] {
     --_ga: initial;
   }
 
-  lay-out[sm*="auto("] > * {
+  lay-out[sm] > * {
     --layout-ga: auto;
   }
 
@@ -448,14 +448,6 @@
 
   lay-out[sm="auto(fill)"] {
     --layout-gtc: repeat(auto-fill, minmax(min(7.5rem, 100%), 1fr));
-  }
-
-  lay-out[sm*="lanes("] {
-    --_ga: initial;
-  }
-
-  lay-out[sm*="lanes("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[sm="lanes(2)"] {
@@ -487,25 +479,9 @@
     --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
   }
 
-  lay-out[sm*="columns("] {
-    --_ga: initial;
-  }
-
-  lay-out[sm*="columns("] > * {
-    --layout-ga: auto;
-  }
-
   lay-out[sm="columns(2)"] {
     --layout-gtc: 1fr 1fr;
     --_ci: 2;
-  }
-
-  lay-out[sm*="grid("] {
-    --_ga: initial;
-  }
-
-  lay-out[sm*="grid("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[sm="grid(3a)"] {
@@ -514,14 +490,6 @@
 
   lay-out[sm="grid(3a)"] > *:nth-child(3n+3) {
     --layout-ga: auto / span 2;
-  }
-
-  lay-out[sm*="mosaic("] {
-    --_ga: initial;
-  }
-
-  lay-out[sm*="mosaic("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[sm="mosaic(photo)"] {
@@ -559,11 +527,11 @@
 
 @media (min-width: 540px) {
 @layer layout.md {
-  lay-out[md*="columns("] {
+  lay-out[md] {
     --_ga: initial;
   }
 
-  lay-out[md*="columns("] > * {
+  lay-out[md] > * {
     --layout-ga: auto;
   }
 
@@ -597,14 +565,6 @@
     --_ci: 6;
   }
 
-  lay-out[md*="lanes("] {
-    --_ga: initial;
-  }
-
-  lay-out[md*="lanes("] > * {
-    --layout-ga: auto;
-  }
-
   lay-out[md="lanes(2)"] {
     --_ci: 2;
     --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 1 * var(--layout-colmg) * var(--layout-space-unit)) / 2), 100%), 1fr));
@@ -634,14 +594,6 @@
     --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
   }
 
-  lay-out[md*="grid("] {
-    --_ga: initial;
-  }
-
-  lay-out[md*="grid("] > * {
-    --layout-ga: auto;
-  }
-
   lay-out[md="grid(3a)"] {
     --layout-gtc: 1fr 1fr;
   }
@@ -654,11 +606,11 @@
 
 @media (min-width: 720px) {
 @layer layout.lg {
-  lay-out[lg*="asym("] {
+  lay-out[lg] {
     --_ga: initial;
   }
 
-  lay-out[lg*="asym("] > * {
+  lay-out[lg] > * {
     --layout-ga: auto;
   }
 
@@ -764,14 +716,6 @@
 
   lay-out[lg="asym(bl-tr)"] > *:nth-child(n+4) {
     display: none;
-  }
-
-  lay-out[lg*="bento("] {
-    --_ga: initial;
-  }
-
-  lay-out[lg*="bento("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[lg="bento(4a)"] {
@@ -1122,14 +1066,6 @@
     display: none;
   }
 
-  lay-out[lg*="columns("] {
-    --_ga: initial;
-  }
-
-  lay-out[lg*="columns("] > * {
-    --layout-ga: auto;
-  }
-
   lay-out[lg="columns(1)"] {
     --layout-gtc: 1fr;
     --_ci: 1;
@@ -1158,14 +1094,6 @@
   lay-out[lg="columns(6)"] {
     --layout-gtc: 1fr 1fr 1fr 1fr 1fr 1fr;
     --_ci: 6;
-  }
-
-  lay-out[lg*="grid("] {
-    --_ga: initial;
-  }
-
-  lay-out[lg*="grid("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[lg="grid(3a)"] {
@@ -1342,14 +1270,6 @@
     --layout-ga: span 3 / span 2;
   }
 
-  lay-out[lg*="lanes("] {
-    --_ga: initial;
-  }
-
-  lay-out[lg*="lanes("] > * {
-    --layout-ga: auto;
-  }
-
   lay-out[lg="lanes(2)"] {
     --_ci: 2;
     --layout-gtc: repeat(auto-fill, minmax(min(calc((100% - 1 * var(--layout-colmg) * var(--layout-space-unit)) / 2), 100%), 1fr));
@@ -1377,14 +1297,6 @@
 
   lay-out[lg="lanes(auto)"] {
     --layout-gtc: repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)));
-  }
-
-  lay-out[lg*="ratio("] {
-    --_ga: initial;
-  }
-
-  lay-out[lg*="ratio("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[lg="ratio(25:75)"] {
@@ -1427,11 +1339,11 @@
 
 @media (min-width: 920px) {
 @layer layout.xl {
-  lay-out[xl*="bento("] {
+  lay-out[xl] {
     --_ga: initial;
   }
 
-  lay-out[xl*="bento("] > * {
+  lay-out[xl] > * {
     --layout-ga: auto;
   }
 
@@ -1466,14 +1378,6 @@
 
   lay-out[xl="bento(6a)"] > *:nth-child(n+7) {
     display: none;
-  }
-
-  lay-out[xl*="mosaic("] {
-    --_ga: initial;
-  }
-
-  lay-out[xl*="mosaic("] > * {
-    --layout-ga: auto;
   }
 
   lay-out[xl="mosaic(scatter)"] {
@@ -1638,11 +1542,11 @@
 
 @media (min-width: 1140px) {
 @layer layout.xxl {
-  lay-out[xxl*="bento("] {
+  lay-out[xxl] {
     --_ga: initial;
   }
 
-  lay-out[xxl*="bento("] > * {
+  lay-out[xxl] > * {
     --layout-ga: auto;
   }
 
