@@ -1,7 +1,7 @@
 {
   "name": "Lane Layouts",
   "prefix": "lanes",
-  "desc": "Auto-fill grids with <code>lanes-min</code>/<code>lanes-max</code> attributes for column sizing.<br>Use <code>lanes-min=\"10rem\"</code> to set minimum column width.",
+  "desc": "Auto-fill grids with <strong>lanes-min</strong>/<strong>lanes-max</strong> attributes for column sizing.<br>Use <strong>lanes-min=\"10rem\"</strong> to set minimum column width.",
   "layouts": [
     {
       "id": "2",
