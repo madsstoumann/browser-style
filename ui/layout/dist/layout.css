@@ -147,14 +147,15 @@
 		}
 		&[overflow~="none"] { overflow: hidden; }
 		&[overflow~="preview"] {
+			--_fade: calc(var(--layout-preview-size) - 2px);
 			animation: mask-start both linear, mask-end both linear;
 			animation-duration: 1s;
 			animation-timeline: scroll(inline self);
-			animation-range: 0 1rem, calc(100% - 1rem) 100%;
+			animation-range: entry 1rem, exit 2rem;
 			mask:
 				linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
 				linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
-				linear-gradient(90deg, #0000, #FFF) 100% 50% / var(--layout-preview-size) 100% no-repeat;
+				linear-gradient(90deg, #0000, #FFF) 100% 50% / var(--_fade) 100% no-repeat;
 			mask-composite: exclude;
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
@@ -173,10 +174,10 @@
 }
 
 @keyframes mask-start {
-	to { mask-size: var(--layout-preview-size) 100%, 100% 100%, var(--layout-preview-size) 100%; }
+	to { mask-size: var(--_fade) 100%, 100% 100%, var(--_fade) 100%; }
 }
 @keyframes mask-end {
-	to { mask-size: var(--layout-preview-size) 100%, 100% 100%, 0 100%; }
+	to { mask-size: var(--_fade) 100%, 100% 100%, 0 100%; }
 }
 
 @layer layout.reset {

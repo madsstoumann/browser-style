@@ -148,7 +148,7 @@
 			animation: mask-start both linear, mask-end both linear;
 			animation-duration: 1s;
 			animation-timeline: scroll(inline self);
-			animation-range: 0 1rem, calc(100% - 1rem) 100%;
+			animation-range: entry 1rem, exit 2rem;
 			mask:
 				linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
 				linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
