@@ -15,7 +15,7 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
-	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 </head>
@@ -142,7 +142,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="${title} using CSS layout system">
-	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<script src="../polyfills/overflow-drag.js"></script>
@@ -233,7 +233,7 @@ function generateIconsHTML(iconsDir) {
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<meta name="description" content="All layout system icons">
-	<link rel="stylesheet" href="layout.css">
+	<link rel="stylesheet" href="layout.min.css">
 	<link rel="stylesheet" href="/ui/layout/demo.css">
 	<script type="module" src="../polyfills/attr-fallback.js"></script>
 	<style>
