@@ -149,4 +149,44 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 - The implementation relies on `attr()` to copy attribute values into CSS custom properties. Keep attribute names and value syntax compatible with the types listed above.
 - **Lanes/Masonry**: Uses CSS `display: grid-lanes` when supported. For browsers without support, falls back to CSS multi-column layout (`column-count`). The `lanes-min` and `lanes-max` attributes only affect `lanes(auto)` - numbered lanes (`lanes(2)` through `lanes(6)`) use fixed column counts.
 
-If you'd like, I can add examples for each attribute in the `ui/` examples folder or generate a small cheatsheet image.
+---
+
+## CSS Custom Properties (Styling Hooks)
+
+These properties allow styling layouts without writing custom selectors. Set them on `lay-out` or a parent element.
+
+### --layout-bg
+- Default: `transparent`
+- Description: Background color of the layout.
+- Example: `--layout-bg: hsl(220 100% 95%);`
+
+### --layout-bdrs
+- Default: `0`
+- Description: Border radius of the layout.
+- Example: `--layout-bdrs: 8px;`
+
+### --layout-c
+- Default: `inherit`
+- Description: Text color within the layout.
+- Example: `--layout-c: #333;`
+
+### --layout-space-unit
+- Default: `1rem`
+- Description: Base unit for all spacing calculations (gaps, padding, margins).
+- Example: `--layout-space-unit: 0.5rem;`
+
+### Example (custom styling)
+
+```css
+/* Style all layouts */
+lay-out {
+  --layout-bg: #f5f5f5;
+  --layout-bdrs: 8px;
+  --layout-c: #333;
+}
+
+/* Style specific layouts */
+lay-out[lg="bento(6a)"] {
+  --layout-bg: hsl(220 100% 95%);
+}
+```
