@@ -180,10 +180,8 @@ export class LayoutComposer extends HTMLElement {
 			}
 		}
 		if (formData.get('decorations')) attributes.push('decorations')
-		if (formData.get('theme')) attributes.push(`theme="${formData.get('theme')}"`)
 		if (formData.get('self')) attributes.push(`self="${formData.get('self')}"`)
 		if (formData.get('size')) attributes.push(`size="${formData.get('size')}"`)
-		if (formData.get('ariaLabel')) attributes.push(`aria-label="${formData.get('ariaLabel')}"`)
 
 		const itemCount = this.currentLayout?.items || 4
 		const children = Array.from({ length: itemCount }, () => '<item-card></item-card>').join('\n\t\t\t')
@@ -416,19 +414,6 @@ export class LayoutComposer extends HTMLElement {
 
 	renderAdvanced() {
 		return `
-			<label>
-				ARIA Label
-				<input type="text" name="ariaLabel" value="${this.model.ariaLabel}">
-			</label>
-			<label>
-				Theme
-				<select name="theme">
-					<option value="">None</option>
-					<option value="primary">Primary</option>
-					<option value="secondary">Secondary</option>
-					<option value="tertiary">Tertiary</option>
-				</select>
-			</label>
 			<label>
 				Self Alignment
 				<input type="text" name="self" value="${this.model.self}">

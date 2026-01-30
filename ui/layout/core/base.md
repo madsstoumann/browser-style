@@ -88,12 +88,6 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
   - `overflow="preview"` — shows a partial preview of the next item (reserves preview width)
 - Example: `overflow="preview"` or `overflow="none"`
 
-### theme
-- Type: specific id
-- Accepted values: `primary`, `secondary`, `tertiary`
-- Description: Applies theme-specific color variables (background and color) defined in CSS.
-- Example: `theme="primary"`
-
 ### width
 - Type: specific id
 - Accepted values: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`
@@ -123,7 +117,6 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
   pad-inline="1"
   gap
   overflow="preview"
-  theme="primary"
   width="md"
   bleed="10"
 >

@@ -97,6 +97,17 @@
 			row-rule-outset: var(--layout-row-rule-o, var(--_rule-o));
 		}
 
+		/* header & description */
+		&[aria-label] {
+			&::before {
+				content: attr(aria-label);
+				font-size: var(--layout-header-fs, 2em);
+				font-weight: var(--layout-header-fw, 500);
+				grid-area: 1 / 1 / 1 / -1;
+				text-box: text;
+			}
+		}
+
 		/* lanes - attribute-based sizing */
 		&[lanes-min] {
 			--layout-lanes-min: attr(lanes-min type(<length> | <custom-ident>), 10rem);
@@ -148,6 +159,20 @@
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
 			}
+		}
+
+		/* themes */
+		&[theme="primary"] {
+			--layout-bg: var(--layout-primary-bg, #0000);
+			--layout-c: var(--layout-primary-c, inherit);
+		}
+		&[theme="secondary"] {
+			--layout-bg: var(--layout-secondary-bg, #0000);
+			--layout-c: var(--layout-secondary-c, inherit);
+		}
+		&[theme="tertiary"] {
+			--layout-bg: var(--layout-tertiary-bg, #0000);
+			--layout-c: var(--layout-tertiary-c, inherit);
 		}
 
 		/* width */
