@@ -356,6 +356,264 @@ function generateIconsHTML(iconsDir) {
 	return html
 }
 
+function generateBleedHTML() {
+	const title = 'Bleed Layouts'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		body { --layout-mi: 1rem; --layout-bleed-mw: 900px; }
+		lay-out[bleed] { --layout-bg: hsl(220 60% 95%); }
+	</style>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>The <strong>bleed</strong> attribute allows layouts to extend beyond their container to full viewport width.<br>
+		Useful for hero sections, banners, and full-width content within constrained containers.</p>
+
+	<h2>Basic Bleed</h2>
+	<p>Full-width layout that bleeds to viewport edges.</p>
+	<section>
+		<h3>Full Bleed</h3>
+		<small>Layout extends to full viewport width</small>
+		<code>&lt;lay-out md="columns(1)" bleed&gt;</code>
+		<lay-out md="columns(1)" bleed="0">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed with Columns</h3>
+		<small>Multi-column layout at full width</small>
+		<code>&lt;lay-out md="columns(2)" bleed&gt;</code>
+		<lay-out md="columns(2)" bleed>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Bleed with Width Constraint</h2>
+	<p>Bleed layouts can have a max-width while still using full-width background.</p>
+	<section>
+		<h3>Bleed + Width MD</h3>
+		<small>Content constrained to md width, background bleeds</small>
+		<code>&lt;lay-out md="columns(2)" bleed width="md"&gt;</code>
+		<lay-out md="columns(2)" bleed width="md">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed + Width LG</h3>
+		<small>Content constrained to lg width, background bleeds</small>
+		<code>&lt;lay-out md="columns(2)" bleed width="lg"&gt;</code>
+		<lay-out md="columns(2)" bleed width="lg">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Asymmetric Bleed</h2>
+	<p>Use a percentage value to offset the content asymmetrically.</p>
+	<section>
+		<h3>Bleed 10%</h3>
+		<small>Content shifted 10% toward start</small>
+		<code>&lt;lay-out md="columns(1)" bleed="10"&gt;</code>
+		<lay-out md="columns(1)" bleed="10">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed 25%</h3>
+		<small>Content shifted 25% toward start</small>
+		<code>&lt;lay-out md="columns(1)" bleed="25"&gt;</code>
+		<lay-out md="columns(1)" bleed="25">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed -15% (negative)</h3>
+		<small>Content shifted toward end</small>
+		<code>&lt;lay-out md="columns(1)" bleed="-15"&gt;</code>
+		<lay-out md="columns(1)" bleed="-15">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Bleed with Padding</h2>
+	<p>Add inline padding to bleed layouts.</p>
+	<section>
+		<h3>Bleed + Padding</h3>
+		<small>Full bleed with internal padding</small>
+		<code>&lt;lay-out md="columns(2)" bleed pad-inline="2"&gt;</code>
+		<lay-out md="columns(2)" bleed pad-inline="2">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>`
+
+	return html
+}
+
+function generateGapdecoHTML() {
+	const title = 'Gap Decorations'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		lay-out[gap-decorations] {
+			--layout-rule-w: 1px;
+			--layout-rule-c: #999;
+		}
+	</style>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>The <strong>gap-decorations</strong> attribute adds visual separators (rules) between grid items.<br>
+		Use <strong>cols</strong>, <strong>rows</strong>, or both for different effects.</p>
+
+	<h2>Column Rules</h2>
+	<p>Vertical lines between columns.</p>
+	<section>
+		<h3>Grid 3a with Column Rules</h3>
+		<small>Vertical separators between columns</small>
+		<code>&lt;lay-out lg="columns(2)" gap-decorations="cols"&gt;</code>
+		<lay-out lg="columns(2)" gap-decorations="cols">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Row Rules</h2>
+	<p>Horizontal lines between rows.</p>
+	<section>
+		<h3>Grid 3a with Row Rules</h3>
+		<small>Horizontal separators between rows</small>
+		<code>&lt;lay-out lg="grid(3a)" gap-decorations="rows"&gt;</code>
+		<lay-out lg="grid(3a)" gap-decorations="rows">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	
+	<h2>Both Column and Row Rules</h2>
+	<p>Full grid decoration with both directions.</p>
+	<section>
+		<h3>Grid 3a with Both</h3>
+		<small>Complete grid decoration</small>
+		<code>&lt;lay-out lg="grid(3a)" gap-decorations="cols rows"&gt;</code>
+		<lay-out lg="grid(3a)" gap-decorations="cols rows">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>`
+
+	return html
+}
+
+function generateWidthsHTML() {
+	const title = 'Width Tokens'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="${title} using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		lay-out[width] { --layout-bg: hsl(220 60% 95%); }
+	</style>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>The <strong>width</strong> attribute constrains the layout to predefined max-widths.<br>
+		Available tokens: <code>xs</code>, <code>sm</code>, <code>md</code>, <code>lg</code>, <code>xl</code>, <code>xxl</code>.</p>
+
+	<h2>Width Tokens</h2>
+	<p>Each token maps to a CSS custom property for consistent sizing.</p>
+	<section>
+		<h3>Width XS (20rem)</h3>
+		<small>Extra small container - 320px</small>
+		<code>&lt;lay-out md="columns(1)" width="xs"&gt;</code>
+		<lay-out md="columns(1)" width="xs">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width SM (30rem)</h3>
+		<small>Small container - 480px</small>
+		<code>&lt;lay-out md="columns(1)" width="sm"&gt;</code>
+		<lay-out md="columns(1)" width="sm">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width MD (48rem)</h3>
+		<small>Medium container - 768px</small>
+		<code>&lt;lay-out md="columns(2)" width="md"&gt;</code>
+		<lay-out md="columns(2)" width="md">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width LG (64rem)</h3>
+		<small>Large container - 1024px</small>
+		<code>&lt;lay-out md="columns(2)" width="lg"&gt;</code>
+		<lay-out md="columns(2)" width="lg">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width XL (80rem)</h3>
+		<small>Extra large container - 1280px</small>
+		<code>&lt;lay-out md="columns(2)" width="xl"&gt;</code>
+		<lay-out md="columns(2)" width="xl">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Width XXL (96rem)</h3>
+		<small>Extra extra large container - 1536px</small>
+		<code>&lt;lay-out md="columns(2)" width="xxl"&gt;</code>
+		<lay-out md="columns(2)" width="xxl">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>`
+
+	return html
+}
+
 function generateMainIndexHTML(generatedFiles) {
 	const title = 'Layout System Demos'
 
@@ -460,6 +718,27 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 			console.warn(`⚠ Failed to generate overflow.html: ${error.message}`)
 		}
 	}
+
+	// Generate bleed.html
+	const bleedHTML = generateBleedHTML()
+	fs.writeFileSync(path.join(outputDir, 'bleed.html'), bleedHTML)
+	generatedFiles.add('bleed.html')
+	demoCount++
+	console.log(`✓ Generated bleed.html`)
+
+	// Generate gapdeco.html
+	const gapdecoHTML = generateGapdecoHTML()
+	fs.writeFileSync(path.join(outputDir, 'gapdeco.html'), gapdecoHTML)
+	generatedFiles.add('gapdeco.html')
+	demoCount++
+	console.log(`✓ Generated gapdeco.html`)
+
+	// Generate widths.html
+	const widthsHTML = generateWidthsHTML()
+	fs.writeFileSync(path.join(outputDir, 'widths.html'), widthsHTML)
+	generatedFiles.add('widths.html')
+	demoCount++
+	console.log(`✓ Generated widths.html`)
 
 	const iconsHTML = generateIconsHTML(iconsDir)
 	const iconsPath = path.join(outputDir, 'icons.html')

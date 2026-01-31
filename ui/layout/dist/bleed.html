@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Bleed Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Bleed Layouts using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+	<style>
+		body { --layout-mi: 1rem; --layout-bleed-mw: 900px; }
+		lay-out[bleed] { --layout-bg: hsl(220 60% 95%); }
+	</style>
+</head>
+<body>
+	<h1>Bleed Layouts</h1>
+	<p>The <strong>bleed</strong> attribute allows layouts to extend beyond their container to full viewport width.<br>
+		Useful for hero sections, banners, and full-width content within constrained containers.</p>
+
+	<h2>Basic Bleed</h2>
+	<p>Full-width layout that bleeds to viewport edges.</p>
+	<section>
+		<h3>Full Bleed</h3>
+		<small>Layout extends to full viewport width</small>
+		<code>&lt;lay-out md="columns(1)" bleed&gt;</code>
+		<lay-out md="columns(1)" bleed="0">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed with Columns</h3>
+		<small>Multi-column layout at full width</small>
+		<code>&lt;lay-out md="columns(2)" bleed&gt;</code>
+		<lay-out md="columns(2)" bleed>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Bleed with Width Constraint</h2>
+	<p>Bleed layouts can have a max-width while still using full-width background.</p>
+	<section>
+		<h3>Bleed + Width MD</h3>
+		<small>Content constrained to md width, background bleeds</small>
+		<code>&lt;lay-out md="columns(2)" bleed width="md"&gt;</code>
+		<lay-out md="columns(2)" bleed width="md">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed + Width LG</h3>
+		<small>Content constrained to lg width, background bleeds</small>
+		<code>&lt;lay-out md="columns(2)" bleed width="lg"&gt;</code>
+		<lay-out md="columns(2)" bleed width="lg">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Asymmetric Bleed</h2>
+	<p>Use a percentage value to offset the content asymmetrically.</p>
+	<section>
+		<h3>Bleed 10%</h3>
+		<small>Content shifted 10% toward start</small>
+		<code>&lt;lay-out md="columns(1)" bleed="10"&gt;</code>
+		<lay-out md="columns(1)" bleed="10">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed 25%</h3>
+		<small>Content shifted 25% toward start</small>
+		<code>&lt;lay-out md="columns(1)" bleed="25"&gt;</code>
+		<lay-out md="columns(1)" bleed="25">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Bleed -15% (negative)</h3>
+		<small>Content shifted toward end</small>
+		<code>&lt;lay-out md="columns(1)" bleed="-15"&gt;</code>
+		<lay-out md="columns(1)" bleed="-15">
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Bleed with Padding</h2>
+	<p>Add inline padding to bleed layouts.</p>
+	<section>
+		<h3>Bleed + Padding</h3>
+		<small>Full bleed with internal padding</small>
+		<code>&lt;lay-out md="columns(2)" bleed pad-inline="2"&gt;</code>
+		<lay-out md="columns(2)" bleed pad-inline="2">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>
