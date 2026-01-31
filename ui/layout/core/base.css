@@ -1,7 +1,11 @@
 @layer layout.base {
 	lay-out {
 		--layout-col-rule-c: #CCC;
-		--layout-preview-size: 100px; /* preview when overflow is set to preview */
+		--layout-preview-size: 100px; /* Medium preview when overflow is set to preview */
+		--layout-preview-xs-size: 40px;
+		--layout-preview-sm-size: 60px;
+		--layout-preview-lg-size: 150px;
+		--layout-preview-xl-size: 200px;
 		--layout-space-unit: 1rem;
 
 		--layout-bleed: attr(bleed type(<number>), 0);
@@ -144,12 +148,12 @@
 			}
 		}
 		&[overflow~="none"] { overflow: hidden; }
-		&[overflow~="preview"] {
-			
+		&[overflow*="preview"] {
 			overflow-x: scroll;
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
 			}
+			/* fade masks */
 			&[overflow*="fade"] { 
 				--_fade-end: var(--layout-preview-size);
 				--_fade-start: var(--layout-preview-size);
@@ -171,6 +175,11 @@
 				--_fade-end: 0px;
 				--_fade-start: var(--layout-preview-size);
 			}
+			/* preview sizes */
+			&[overflow*="preview-xs"] { --layout-preview-size: var(--layout-preview-xs-size); }
+			&[overflow*="preview-sm"] { --layout-preview-size: var(--layout-preview-sm-size); }
+			&[overflow*="preview-lg"] { --layout-preview-size: var(--layout-preview-lg-size); }
+			&[overflow*="preview-xl"] { --layout-preview-size: var(--layout-preview-xl-size); }
 		}
 
 		/* width */

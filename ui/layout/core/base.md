@@ -81,12 +81,19 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ### overflow
 - Type: token list (space-separated tokens)
-- Accepted tokens: `none`, `preview` (also acts as boolean presence)
+- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `fade`, `fade-start`, `fade-end`
 - Default: not present
 - Description: Enables an overflow behavior; when present the layout switches to a horizontal scroller. Use tokens to select variants:
   - `overflow="none"` — hides overflow (no scroll)
-  - `overflow="preview"` — shows a partial preview of the next item (reserves preview width)
-- Example: `overflow="preview"` or `overflow="none"`
+  - `overflow="preview"` — shows a partial preview of the next item (reserves 100px preview width)
+  - `overflow="preview-xs"` — extra small preview (25px)
+  - `overflow="preview-sm"` — small preview (50px)
+  - `overflow="preview-lg"` — large preview (150px)
+  - `overflow="preview-xl"` — extra large preview (200px)
+  - `overflow="preview fade"` — adds fade masks to both edges (animated on scroll)
+  - `overflow="preview fade-start"` — adds fade mask to start edge only
+  - `overflow="preview fade-end"` — adds fade mask to end edge only
+- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`
 
 ### width
 - Type: specific id
@@ -142,6 +149,25 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 </lay-out>
 ```
 
+### Example usage (Overflow with Fade Masks)
+
+```html
+<!-- Horizontal scroller with large preview and fade on both edges -->
+<lay-out md="columns(3)" overflow="preview-lg fade">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <!-- ... more items -->
+</lay-out>
+
+<!-- Scroller with fade only at the end -->
+<lay-out md="columns(4)" overflow="preview fade-end">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <!-- ... more items -->
+</lay-out>
+```
+
 ### Notes and hints
 - Numeric attributes documented here (e.g., `col-gap`, `pad-inline`, `row-gap`, `space-top`) are multiplied by the component's `--layout-space-unit` CSS variable. Provide numbers (unitless) not lengths.
 - Attributes typed as `<length>` should include units (px, rem, vw, etc.) unless using percentage where allowed.
@@ -174,6 +200,27 @@ These properties allow styling layouts without writing custom selectors. Set the
 - Default: `1rem`
 - Description: Base unit for all spacing calculations (gaps, padding, margins).
 - Example: `--layout-space-unit: 0.5rem;`
+
+### --layout-preview-size
+- Default: `100px`
+- Description: Width of the preview area when `overflow="preview"` is set.
+- Example: `--layout-preview-size: 80px;`
+
+### --layout-preview-xs-size
+- Default: `25px`
+- Description: Extra small preview size (used with `overflow="preview-xs"`).
+
+### --layout-preview-sm-size
+- Default: `50px`
+- Description: Small preview size (used with `overflow="preview-sm"`).
+
+### --layout-preview-lg-size
+- Default: `150px`
+- Description: Large preview size (used with `overflow="preview-lg"`).
+
+### --layout-preview-xl-size
+- Default: `200px`
+- Description: Extra large preview size (used with `overflow="preview-xl"`).
 
 ### Example (custom styling)
 

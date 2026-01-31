@@ -150,7 +150,7 @@ function generateOverflowHTML(columnsData, iconsDir) {
 <body>
 	<h1>${title}</h1>
 	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
-		The <code>overflow="preview"</code> shows a partial preview of the next item.</p>`
+		The <strong>overflow="preview"</strong> shows a partial preview of the next item.</p>`
 
 	const overflowType = 'preview'
 
@@ -212,6 +212,62 @@ function generateOverflowHTML(columnsData, iconsDir) {
 		}
 
 		html += `
+		</lay-out>
+	</section>`
+	}
+
+	// Preview Sizes section
+	html += `
+
+	<h2>Preview Sizes</h2>
+	<p>Control the preview width with size modifiers. All examples use <strong>columns(1)</strong>.</p>`
+
+	const previewSizes = [
+		{ size: 'preview-xs', label: 'Extra Small', desc: '40px preview width' },
+		{ size: 'preview-sm', label: 'Small', desc: '60px preview width' },
+		{ size: 'preview', label: 'Medium (default)', desc: '100px preview width' },
+		{ size: 'preview-lg', label: 'Large', desc: '150px preview width' },
+		{ size: 'preview-xl', label: 'Extra Large', desc: '200px preview width' }
+	]
+
+	for (const { size, label, desc } of previewSizes) {
+		html += `
+	<section>
+		<h3>${label}</h3>
+		<small>${desc}</small>
+		<code>&lt;lay-out md="columns(1)" overflow="${size}"&gt;</code>
+		<lay-out md="columns(1)" overflow="${size}">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>`
+	}
+
+	// Fade Masks section
+	html += `
+
+	<h2>Fade Masks</h2>
+	<p>Add fade effects to the overflow edges. Masks animate based on scroll position. All examples use <strong>columns(1)</strong>.</p>`
+
+	const fadeMasks = [
+		{ overflow: 'preview fade', label: 'Fade Both', desc: 'Fade masks on both start and end edges' },
+		{ overflow: 'preview fade-start', label: 'Fade Start', desc: 'Fade mask on start edge only' },
+		{ overflow: 'preview fade-end', label: 'Fade End', desc: 'Fade mask on end edge only' }
+	]
+
+	for (const { overflow, label, desc } of fadeMasks) {
+		html += `
+	<section>
+		<h3>${label}</h3>
+		<small>${desc}</small>
+		<code>&lt;lay-out md="columns(1)" overflow="${overflow}"&gt;</code>
+		<lay-out md="columns(1)" overflow="${overflow}">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
 		</lay-out>
 	</section>`
 	}

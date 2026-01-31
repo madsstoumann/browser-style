@@ -13,7 +13,7 @@
 <body>
 	<h1>Overflow Layouts</h1>
 	<p>These layouts demonstrate the <strong>overflow</strong> attribute with column layouts.<br>
-		The <code>overflow="preview"</code> shows a partial preview of the next item.</p>
+		The <strong>overflow="preview"</strong> shows a partial preview of the next item.</p>
 	<section>
 		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
         <rect rx="4" width="83" height="48" x="0" y="25" />
@@ -149,6 +149,100 @@
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Preview Sizes</h2>
+	<p>Control the preview width with size modifiers. All examples use <strong>columns(1)</strong>.</p>
+	<section>
+		<h3>Extra Small</h3>
+		<small>40px preview width</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-xs"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-xs">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Small</h3>
+		<small>60px preview width</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-sm"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-sm">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Medium (default)</h3>
+		<small>100px preview width</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Large</h3>
+		<small>150px preview width</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-lg"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-lg">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Extra Large</h3>
+		<small>200px preview width</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview-xl"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview-xl">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Fade Masks</h2>
+	<p>Add fade effects to the overflow edges. Masks animate based on scroll position. All examples use <strong>columns(1)</strong>.</p>
+	<section>
+		<h3>Fade Both</h3>
+		<small>Fade masks on both start and end edges</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview fade"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview fade">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Fade Start</h3>
+		<small>Fade mask on start edge only</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview fade-start"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview fade-start">
+			<item-card></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+			<item-card repeat></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Fade End</h3>
+		<small>Fade mask on end edge only</small>
+		<code>&lt;lay-out md="columns(1)" overflow="preview fade-end"&gt;</code>
+		<lay-out md="columns(1)" overflow="preview fade-end">
 			<item-card></item-card>
 			<item-card repeat></item-card>
 			<item-card repeat></item-card>
