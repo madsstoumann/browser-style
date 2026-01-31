@@ -37,8 +37,8 @@
 		place-self: var(--layout-ps, auto);
 		row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
 		scroll-behavior: var(--layout-sb, smooth);
-		/* scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
-		scrollbar-width: var(--layout-scroll-w, thin); */
+		scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
+		scrollbar-width: var(--layout-scroll-w, thin);
 		width: var(--layout-w, 100%);
 
 		&:focus-visible {
@@ -160,7 +160,7 @@
 				mask:
 					linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
 					linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
-					linear-gradient(90deg, #0000, #FFF) 100% 50% / var(--_fade-end) 100% no-repeat;
+					linear-gradient(90deg, #0000, #FFF) calc(100% + 2px) 50% / var(--_fade-end) 100% no-repeat;
 				mask-composite: exclude;
 			}
 			&[overflow~="fade-end"] { 
