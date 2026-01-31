@@ -62,8 +62,7 @@
 
 		/* === bleed === */
 		&[bleed] {
-			/* --layout-w: calc(100vw - var(--layout-mi, 0px)); */
-			--layout-mw: 100dvi;
+			--layout-mw: 100vw;
 			--layout-w: 100vw;
 			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
 			background-color: #0000;

@@ -382,18 +382,26 @@ function generateBleedHTML() {
 	<h2>Basic Bleed</h2>
 	<p>Full-width layout that bleeds to viewport edges.</p>
 	<section>
-		<h3>Full Bleed</h3>
+		<h3>Full Bleed (no padding)</h3>
 		<small>Layout extends to full viewport width</small>
-		<code>&lt;lay-out md="columns(1)" bleed&gt;</code>
+		<code>&lt;lay-out md="columns(1)" bleed="0"&gt;</code>
 		<lay-out md="columns(1)" bleed="0">
+			<item-card style="clip-path:none;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3>Full Bleed (with padding)</h3>
+		<small>Full bleed with block and inline padding</small>
+		<code>&lt;lay-out md="columns(1)" bleed="0" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(1)" bleed="0" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 		</lay-out>
 	</section>
 	<section>
 		<h3>Bleed with Columns</h3>
 		<small>Multi-column layout at full width</small>
-		<code>&lt;lay-out md="columns(2)" bleed&gt;</code>
-		<lay-out md="columns(2)" bleed>
+		<code>&lt;lay-out md="columns(2)" bleed pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(2)" bleed pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
@@ -404,8 +412,8 @@ function generateBleedHTML() {
 	<section>
 		<h3>Bleed + Width MD</h3>
 		<small>Content constrained to md width, background bleeds</small>
-		<code>&lt;lay-out md="columns(2)" bleed width="md"&gt;</code>
-		<lay-out md="columns(2)" bleed width="md">
+		<code>&lt;lay-out md="columns(2)" bleed width="md" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(2)" bleed width="md" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
@@ -413,8 +421,8 @@ function generateBleedHTML() {
 	<section>
 		<h3>Bleed + Width LG</h3>
 		<small>Content constrained to lg width, background bleeds</small>
-		<code>&lt;lay-out md="columns(2)" bleed width="lg"&gt;</code>
-		<lay-out md="columns(2)" bleed width="lg">
+		<code>&lt;lay-out md="columns(2)" bleed width="lg" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(2)" bleed width="lg" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
@@ -425,35 +433,35 @@ function generateBleedHTML() {
 	<section>
 		<h3>Bleed 10%</h3>
 		<small>Content shifted 10% toward start</small>
-		<code>&lt;lay-out md="columns(1)" bleed="10"&gt;</code>
-		<lay-out md="columns(1)" bleed="10">
+		<code>&lt;lay-out md="columns(1)" bleed="10" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(1)" bleed="10" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 		</lay-out>
 	</section>
 	<section>
 		<h3>Bleed 25%</h3>
 		<small>Content shifted 25% toward start</small>
-		<code>&lt;lay-out md="columns(1)" bleed="25"&gt;</code>
-		<lay-out md="columns(1)" bleed="25">
+		<code>&lt;lay-out md="columns(1)" bleed="25" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(1)" bleed="25" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 		</lay-out>
 	</section>
 	<section>
 		<h3>Bleed -15% (negative)</h3>
 		<small>Content shifted toward end</small>
-		<code>&lt;lay-out md="columns(1)" bleed="-15"&gt;</code>
-		<lay-out md="columns(1)" bleed="-15">
+		<code>&lt;lay-out md="columns(1)" bleed="-15" pad-top="1" pad-bottom="1" pad-inline="1"&gt;</code>
+		<lay-out md="columns(1)" bleed="-15" pad-top="1" pad-bottom="1" pad-inline="1">
 			<item-card></item-card>
 		</lay-out>
 	</section>
 
-	<h2>Bleed with Padding</h2>
+	<h2>Bleed with Inline Padding</h2>
 	<p>Add inline padding to bleed layouts.</p>
 	<section>
-		<h3>Bleed + Padding</h3>
+		<h3>Bleed + Inline Padding</h3>
 		<small>Full bleed with internal padding</small>
-		<code>&lt;lay-out md="columns(2)" bleed pad-inline="2"&gt;</code>
-		<lay-out md="columns(2)" bleed pad-inline="2">
+		<code>&lt;lay-out md="columns(2)" bleed pad-inline="2" pad-top="1" pad-bottom="1"&gt;</code>
+		<lay-out md="columns(2)" bleed pad-inline="2" pad-top="1" pad-bottom="1">
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>

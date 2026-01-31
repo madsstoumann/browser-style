@@ -5,7 +5,7 @@
 		--layout-col-rule-c: #CCC;
 		--layout-preview-size: 100px; /* Medium preview when overflow is set to preview */
 		--layout-preview-xs-size: 40px;
-		--layout-preview-sm-size: 70px;
+		--layout-preview-sm-size: 60px;
 		--layout-preview-lg-size: 150px;
 		--layout-preview-xl-size: 200px;
 		--layout-space-unit: 1rem;
@@ -64,8 +64,7 @@
 
 		/* === bleed === */
 		&[bleed] {
-			/* --layout-w: calc(100vw - var(--layout-mi, 0px)); */
-			--layout-mw: 100dvi;
+			--layout-mw: 100vw;
 			--layout-w: 100vw;
 			--_pi: calc((100vw - var(--layout-bleed-mw, 100vw)) / 2);
 			background-color: #0000;
