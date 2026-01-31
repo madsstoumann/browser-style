@@ -39,8 +39,8 @@
 		place-self: var(--layout-ps, auto);
 		row-gap: calc(var(--layout-rg) * var(--layout-space-unit));
 		scroll-behavior: var(--layout-sb, smooth);
-		scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
-		scrollbar-width: var(--layout-scroll-w, thin);
+		/* scrollbar-color: var(--layout-scrollbar-c, #0000 #0000);
+		scrollbar-width: var(--layout-scroll-w, thin); */
 		width: var(--layout-w, 100%);
 
 		&:focus-visible {
@@ -147,51 +147,32 @@
 		}
 		&[overflow~="none"] { overflow: hidden; }
 		&[overflow~="preview"] {
-			--_fade-start: 0;
-			--_fade-end: 0;
-			--_fade-anim: none;
-			--_fade-range: initial;
-			animation: none;
-			animation-duration: 0s;
-			animation-timeline: none;
-			mask: none;
-			mask-composite: exclude;
+			
+			overflow-x: scroll;
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
 			}
-		}
-
-		&[overflow~="preview"][overflow~="fade"] {
-			--_fade-start: var(--layout-preview-size);
-			--_fade-end: var(--layout-preview-size);
-			--_fade-anim: fade-start both linear, fade-end both linear;
-			--_fade-range: entry 1rem, exit 2rem;
-		}
-
-		&[overflow~="preview"][overflow~="fade-start"]:not([overflow~="fade"]) {
-			--_fade-start: var(--layout-preview-size);
-			--_fade-end: 0;
-			--_fade-anim: fade-start both linear;
-			--_fade-range: entry 1rem;
-		}
-
-		&[overflow~="preview"][overflow~="fade-end"]:not([overflow~="fade"]) {
-			--_fade-start: 0;
-			--_fade-end: var(--layout-preview-size);
-			--_fade-anim: fade-end both linear;
-			--_fade-range: exit 2rem;
-		}
-
-		&[overflow~="preview"]:is([overflow~="fade"], [overflow~="fade-start"], [overflow~="fade-end"]) {
-			animation: var(--_fade-anim);
-			animation-duration: 1s;
-			animation-timeline: scroll(inline self);
-			animation-range: var(--_fade-range);
-			mask:
-				linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
-				linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
-				linear-gradient(90deg, #0000, #FFF) 100% 50% / var(--_fade-end) 100% no-repeat;
-			mask-composite: exclude;
+			&[overflow*="fade"] { 
+				--_fade-end: var(--layout-preview-size);
+				--_fade-start: var(--layout-preview-size);
+				animation: fade-start both linear, fade-end both linear;
+				animation-duration: 1s;
+				animation-timeline: scroll(inline self);
+				animation-range: entry 1rem, exit 2rem;
+				mask:
+					linear-gradient(90deg, #FFF, #0000) 0 50% / 0 100% no-repeat,
+					linear-gradient(90deg, #FFF, #FFF) 50% 50% / 100% 100% no-repeat,
+					linear-gradient(90deg, #0000, #FFF) 100% 50% / var(--_fade-end) 100% no-repeat;
+				mask-composite: exclude;
+			}
+			&[overflow~="fade-end"] { 
+				--_fade-end: var(--layout-preview-size);
+				--_fade-start: 0px;
+			}
+			&[overflow~="fade-start"] { 
+				--_fade-end: 0px;
+				--_fade-start: var(--layout-preview-size);
+			}
 		}
 
 		/* width */
