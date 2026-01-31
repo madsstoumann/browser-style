@@ -1,7 +1,7 @@
 @layer layout.base {
 	lay-out {
 		--layout-col-rule-c: #CCC;
-		--layout-preview-size: 100px; /* Medium preview when overflow is set to preview */
+		--layout-preview-size: 100px;
 		--layout-preview-xs-size: 40px;
 		--layout-preview-sm-size: 60px;
 		--layout-preview-lg-size: 150px;
@@ -63,7 +63,7 @@
 		/* === bleed === */
 		&[bleed] {
 			--layout-mw: 100dvi;
-			--layout-w: 100dvi;
+			--layout-w: calc(100dvi - var(--layout-mi, 0px)); 
 			--_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
 			background-color: #0000;
 			border-image: conic-gradient(var(--layout-bg) 0 0) fill 0//0 100dvi;
@@ -190,13 +190,13 @@
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
 	}
-}
 
-@keyframes fade-start {
-	to { mask-size: var(--_fade-start) 100%, 100% 100%, var(--_fade-end) 100%; }
-}
-@keyframes fade-end {
-	to { mask-size: var(--_fade-start) 100%, 100% 100%, 0 100%; }
+	@keyframes fade-start {
+		to { mask-size: var(--_fade-start) 100%, 100% 100%, var(--_fade-end) 100%; }
+	}
+	@keyframes fade-end {
+		to { mask-size: var(--_fade-start) 100%, 100% 100%, 0 100%; }
+	}
 }
 
 @layer layout.reset {

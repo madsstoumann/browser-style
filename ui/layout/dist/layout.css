@@ -3,7 +3,7 @@
 @layer layout.base {
 	lay-out {
 		--layout-col-rule-c: #CCC;
-		--layout-preview-size: 100px; /* Medium preview when overflow is set to preview */
+		--layout-preview-size: 100px;
 		--layout-preview-xs-size: 40px;
 		--layout-preview-sm-size: 60px;
 		--layout-preview-lg-size: 150px;
@@ -65,7 +65,7 @@
 		/* === bleed === */
 		&[bleed] {
 			--layout-mw: 100dvi;
-			--layout-w: 100dvi;
+			--layout-w: calc(100dvi - var(--layout-mi, 0px)); 
 			--_pi: calc((100dvi - var(--layout-bleed-mw, 100dvi)) / 2);
 			background-color: #0000;
 			border-image: conic-gradient(var(--layout-bg) 0 0) fill 0//0 100dvi;
@@ -102,7 +102,7 @@
 			row-rule-outset: var(--layout-row-rule-o, var(--_rule-o));
 		}
 
-		/* lanes - attribute-based sizing */
+		/* === lanes === */
 		&[lanes-min] {
 			--layout-lanes-min: attr(lanes-min type(<length> | <custom-ident>), 10rem);
 		}
@@ -127,7 +127,7 @@
 			}
 		}
 
-		/* overflow */
+		/* === overflow === */
 		&[overflow] {
 			display: flex;
 			flex-wrap: nowrap;
@@ -154,7 +154,7 @@
 			& > *:not(lay-out) {
 				flex: 0 0 calc((100% - var(--layout-preview-size) - (var(--_ci, 1) - 1) * calc(var(--layout-colmg) * var(--layout-space-unit))) / var(--_ci, 1));
 			}
-			/* fade masks */
+			/* === fade masks === */
 			&[overflow*="fade"] { 
 				--_fade-end: var(--layout-preview-size);
 				--_fade-start: var(--layout-preview-size);
@@ -176,14 +176,14 @@
 				--_fade-end: 0px;
 				--_fade-start: var(--layout-preview-size);
 			}
-			/* preview sizes */
+			/* === preview sizes === */
 			&[overflow*="preview-xs"] { --layout-preview-size: var(--layout-preview-xs-size); }
 			&[overflow*="preview-sm"] { --layout-preview-size: var(--layout-preview-sm-size); }
 			&[overflow*="preview-lg"] { --layout-preview-size: var(--layout-preview-lg-size); }
 			&[overflow*="preview-xl"] { --layout-preview-size: var(--layout-preview-xl-size); }
 		}
 
-		/* width */
+		/* === width === */
 		&[width]:not([bleed]) { max-inline-size: var(--_mi); }
 		&[width="xs"]  { --_mi: var(--layout-width-xs,  20rem); }
 		&[width="sm"]  { --_mi: var(--layout-width-sm,  30rem); }
@@ -192,13 +192,13 @@
 		&[width="xl"]  { --_mi: var(--layout-width-xl,  80rem); }
 		&[width="xxl"] { --_mi: var(--layout-width-xxl, 96rem); }
 	}
-}
 
-@keyframes fade-start {
-	to { mask-size: var(--_fade-start) 100%, 100% 100%, var(--_fade-end) 100%; }
-}
-@keyframes fade-end {
-	to { mask-size: var(--_fade-start) 100%, 100% 100%, 0 100%; }
+	@keyframes fade-start {
+		to { mask-size: var(--_fade-start) 100%, 100% 100%, var(--_fade-end) 100%; }
+	}
+	@keyframes fade-end {
+		to { mask-size: var(--_fade-start) 100%, 100% 100%, 0 100%; }
+	}
 }
 
 @layer layout.reset {
