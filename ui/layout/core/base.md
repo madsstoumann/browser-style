@@ -81,25 +81,37 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ### overflow
 - Type: token list (space-separated tokens)
-- Accepted tokens: `none`, `preview`, `dynamic` (also acts as boolean presence)
+- Accepted tokens: `none`, `preview`, `preview-xs`, `preview-sm`, `preview-lg`, `preview-xl`, `fade`, `fade-start`, `fade-end`
 - Default: not present
 - Description: Enables an overflow behavior; when present the layout switches to a horizontal scroller. Use tokens to select variants:
   - `overflow="none"` — hides overflow (no scroll)
-  - `overflow="preview"` — shows a preview item size (reserve preview width)
-  - `overflow="dynamic"` — dynamic variant that subtracts the preview size from item width
-- Example: `overflow="preview"` or `overflow="none"`
-
-### theme
-- Type: specific id
-- Accepted values: `primary`, `secondary`, `tertiary`
-- Description: Applies theme-specific color variables (background and color) defined in CSS.
-- Example: `theme="primary"`
+  - `overflow="preview"` — shows a partial preview of the next item (reserves 100px preview width)
+  - `overflow="preview-xs"` — extra small preview (25px)
+  - `overflow="preview-sm"` — small preview (50px)
+  - `overflow="preview-lg"` — large preview (150px)
+  - `overflow="preview-xl"` — extra large preview (200px)
+  - `overflow="preview fade"` — adds fade masks to both edges (animated on scroll)
+  - `overflow="preview fade-start"` — adds fade mask to start edge only
+  - `overflow="preview fade-end"` — adds fade mask to end edge only
+- Examples: `overflow="preview"`, `overflow="preview-lg fade"`, `overflow="preview fade-end"`
 
 ### width
 - Type: specific id
 - Accepted values: `xs`, `sm`, `md`, `lg`, `xl`, `xxl`
 - Description: Convenience size tokens that map to configured max-width variables (e.g., `--layout-width-md`). When `width` is present and `bleed` is not set, `max-inline-size` is limited to the selected value.
 - Example: `width="md"`
+
+### lanes-min
+- Type: <length> | <custom-ident>
+- Default: `10rem`
+- Description: Minimum column width for `lanes(auto)` layouts. Used with CSS `display: grid-lanes` (masonry) to create responsive auto-fill columns. Sets `--layout-lanes-min`.
+- Examples: `lanes-min="12rem"`, `lanes-min="200px"`
+
+### lanes-max
+- Type: <length> | <custom-ident>
+- Default: `1fr`
+- Description: Maximum column width for `lanes(auto)` layouts. Used with CSS `display: grid-lanes` (masonry). Sets `--layout-lanes-max`.
+- Examples: `lanes-max="1fr"`, `lanes-max="300px"`
 
 ---
 
@@ -112,11 +124,47 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
   pad-inline="1"
   gap
   overflow="preview"
-  theme="primary"
   width="md"
   bleed="10"
 >
   <!-- children -->
+</lay-out>
+```
+
+### Example usage (Lanes/Masonry)
+
+```html
+<!-- Fixed 4-column masonry layout -->
+<lay-out sm="lanes(2)" lg="lanes(4)">
+  <img src="photo1.jpg" alt="Photo">
+  <img src="photo2.jpg" alt="Photo">
+  <!-- ... more items -->
+</lay-out>
+
+<!-- Auto-fill masonry with custom min-width -->
+<lay-out sm="lanes(2)" lg="lanes(auto)" lanes-min="12rem" lanes-max="1fr">
+  <img src="photo1.jpg" alt="Photo">
+  <img src="photo2.jpg" alt="Photo">
+  <!-- ... more items -->
+</lay-out>
+```
+
+### Example usage (Overflow with Fade Masks)
+
+```html
+<!-- Horizontal scroller with large preview and fade on both edges -->
+<lay-out md="columns(3)" overflow="preview-lg fade">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <!-- ... more items -->
+</lay-out>
+
+<!-- Scroller with fade only at the end -->
+<lay-out md="columns(4)" overflow="preview fade-end">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <!-- ... more items -->
 </lay-out>
 ```
 
@@ -125,5 +173,67 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 - Attributes typed as `<length>` should include units (px, rem, vw, etc.) unless using percentage where allowed.
 - `overflow` is parsed as a token list (space-separated). Use `~=` matching in CSS selectors (e.g., `[overflow~="none"]`).
 - The implementation relies on `attr()` to copy attribute values into CSS custom properties. Keep attribute names and value syntax compatible with the types listed above.
+- **Lanes/Masonry**: Uses CSS `display: grid-lanes` when supported. For browsers without support, falls back to CSS multi-column layout (`column-count`). The `lanes-min` and `lanes-max` attributes only affect `lanes(auto)` - numbered lanes (`lanes(2)` through `lanes(6)`) use fixed column counts.
 
-If you'd like, I can add examples for each attribute in the `ui/` examples folder or generate a small cheatsheet image.
+---
+
+## CSS Custom Properties (Styling Hooks)
+
+These properties allow styling layouts without writing custom selectors. Set them on `lay-out` or a parent element.
+
+### --layout-bg
+- Default: `transparent`
+- Description: Background color of the layout.
+- Example: `--layout-bg: hsl(220 100% 95%);`
+
+### --layout-bdrs
+- Default: `0`
+- Description: Border radius of the layout.
+- Example: `--layout-bdrs: 8px;`
+
+### --layout-c
+- Default: `inherit`
+- Description: Text color within the layout.
+- Example: `--layout-c: #333;`
+
+### --layout-space-unit
+- Default: `1rem`
+- Description: Base unit for all spacing calculations (gaps, padding, margins).
+- Example: `--layout-space-unit: 0.5rem;`
+
+### --layout-preview-size
+- Default: `100px`
+- Description: Width of the preview area when `overflow="preview"` is set.
+- Example: `--layout-preview-size: 80px;`
+
+### --layout-preview-xs-size
+- Default: `25px`
+- Description: Extra small preview size (used with `overflow="preview-xs"`).
+
+### --layout-preview-sm-size
+- Default: `50px`
+- Description: Small preview size (used with `overflow="preview-sm"`).
+
+### --layout-preview-lg-size
+- Default: `150px`
+- Description: Large preview size (used with `overflow="preview-lg"`).
+
+### --layout-preview-xl-size
+- Default: `200px`
+- Description: Extra large preview size (used with `overflow="preview-xl"`).
+
+### Example (custom styling)
+
+```css
+/* Style all layouts */
+lay-out {
+  --layout-bg: #f5f5f5;
+  --layout-bdrs: 8px;
+  --layout-c: #333;
+}
+
+/* Style specific layouts */
+lay-out[lg="bento(6a)"] {
+  --layout-bg: hsl(220 100% 95%);
+}
+```

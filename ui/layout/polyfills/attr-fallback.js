@@ -46,7 +46,9 @@
 		'zoom-out': '--_zo',
 		'range': '--_animr',
 		'range-start': '--_animrs',
-		'range-end': '--_animre'
+		'range-end': '--_animre',
+		'lanes-min': '--layout-lanes-min',
+		'lanes-max': '--layout-lanes-max'
 	};
 
 	function applyAttrFallback(element) {

@@ -4,11 +4,6 @@ This document describes the data model for the `lay-out` component.
 
 ## Properties
 
-### ariaLabel
-- **Type:** `string`
-- **Default:** `""`
-- **Description:** Accessible label for the layout. When set, displays as a header before the content.
-
 ### bleed
 - **Type:** `number`
 - **Default:** `0`
@@ -88,16 +83,6 @@ This document describes the data model for the `lay-out` component.
 - **Type:** `number`
 - **Default:** `0`
 - **Description:** Margin at the top (block-start), multiplied by the space unit.
-
-### theme
-- **Type:** `string`
-- **Default:** `""`
-- **Possible values:**
-  - `""` - No theme (default)
-  - `"primary"` - Primary theme colors
-  - `"secondary"` - Secondary theme colors
-  - `"tertiary"` - Tertiary theme colors
-- **Description:** Applies predefined color theme to background and text color.
 
 ### width
 - **Type:** `string`

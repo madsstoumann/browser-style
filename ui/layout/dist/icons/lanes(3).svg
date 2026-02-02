@@ -1,0 +1,8 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="28" height="38" x="0" y="25" />
+        <text x="11" y="47%">1</text>
+        <rect rx="4" width="28" height="58" x="35" y="25" />
+        <text x="46" y="57%">2</text>
+        <rect rx="4" width="28" height="48" x="70" y="25" class="light" />
+        <text x="81" y="52%">3</text>
+    </svg>

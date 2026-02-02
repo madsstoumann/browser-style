@@ -44,12 +44,6 @@
 
 	html {
 		interpolate-size: allow-keywords;
-		--layout-primary-bg: hsl(220, 100%, 95%);
-		--layout-primary-c: hsl(220, 100%, 20%);
-		--layout-secondary-bg: hsl(120, 50%, 95%);
-		--layout-secondary-c: hsl(120, 50%, 20%);
-		--layout-tertiary-bg: hsl(30, 10%, 95%);
-		--layout-tertiary-c: hsl(30, 80%, 20%);
 	}
 	body {
 		display: grid;

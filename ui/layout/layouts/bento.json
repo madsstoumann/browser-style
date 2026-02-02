@@ -208,7 +208,7 @@
       "repeatable": false,
       "srcset": "33.33%,33.33%,33.33%,33.33%,33.33%,33.33%,33.33%,66.67%",
       "breakpoints": {
-        "md": "columns(8)",
+        "md": "columns(2)",
         "lg": "bento(8a)"
       },
       "rules": [

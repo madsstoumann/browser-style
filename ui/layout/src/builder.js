@@ -14,6 +14,7 @@ export class LayoutBuilder {
 		this.config = null
 		this.layouts = new Map()
 		this.cssRules = new Map()
+		this.ruleBreakpoints = new Map()
 	}
 
 	async loadConfig() {
@@ -186,17 +187,24 @@ export class LayoutBuilder {
 		if (layout.columns) containerProps['--layout-gtc'] = layout.columns
 		if (layout.rows) containerProps['--layout-gtr'] = layout.rows
 		if (layoutPrefix === 'columns' && layout.items) containerProps['--_ci'] = layout.items
+		if (layoutPrefix === 'lanes' && !isNaN(parseInt(layoutId))) {
+			const cols = parseInt(layoutId)
+			containerProps['--_ci'] = cols
+			// Use auto-fill with calculated min-width accounting for gaps
+			const gaps = cols - 1
+			containerProps['--layout-gtc'] = `repeat(auto-fill, minmax(min(calc((100% - ${gaps} * var(--layout-colmg) * var(--layout-space-unit)) / ${cols}), 100%), 1fr))`
+		}
 
-		const globalRuleKey = `${mediaQuery}::${layoutPrefix}`
-		if (!processedGlobalRules.has(globalRuleKey)) {
-			processedGlobalRules.add(globalRuleKey)
-			const globalContainerSelector = `${elementSelector}[${breakpointName}*="${layoutPrefix}("]`
-			this.addRule(mediaQuery, globalContainerSelector, { '--_ga': 'initial' })
-			this.addRule(mediaQuery, `${globalContainerSelector} > *`, { '--layout-ga': 'auto' })
+		const breakpointResetKey = `${mediaQuery}::${breakpointName}`
+		if (!processedGlobalRules.has(breakpointResetKey)) {
+			processedGlobalRules.add(breakpointResetKey)
+			const resetSelector = `${elementSelector}[${breakpointName}]`
+			this.addRule(mediaQuery, resetSelector, { '--_ga': 'initial' }, breakpointName)
+			this.addRule(mediaQuery, `${resetSelector} > *`, { '--layout-ga': 'auto' }, breakpointName)
 		}
 
 		if (Object.keys(containerProps).length > 0) {
-			this.addRule(mediaQuery, baseSelector, containerProps)
+			this.addRule(mediaQuery, baseSelector, containerProps, breakpointName)
 		}
 
 		if (layout.rules && Array.isArray(layout.rules)) {
@@ -213,12 +221,12 @@ export class LayoutBuilder {
 					selector = `${baseSelector} > ${rule.selector}`
 				}
 
-				this.addRule(mediaQuery, selector, rule.properties)
+				this.addRule(mediaQuery, selector, rule.properties, breakpointName)
 			}
 		}
 	}
 
-	addRule(mediaQuery, selector, properties) {
+	addRule(mediaQuery, selector, properties, breakpointName = null) {
 		const key = `${mediaQuery}::${selector}`
 
 		if (!this.cssRules.has(key)) {
@@ -229,7 +237,18 @@ export class LayoutBuilder {
 		for (const [prop, value] of Object.entries(properties)) {
 			ruleProps.set(prop, value)
 		}
+
+		if (breakpointName) {
+			this.ruleBreakpoints.set(key, breakpointName)
+		}
 	}
+	generateLayerDeclaration() {
+		const baseLayers = ['layout.base', 'layout.reset', 'layout.animations']
+		const breakpointNames = Object.keys(this.config.breakpoints || {})
+		const breakpointLayers = breakpointNames.map(name => `layout.${name}`)
+		return `@layer ${[...baseLayers, ...breakpointLayers].join(', ')};`
+	}
+
 	generateLayoutContainerCSS() {
 		const container = this.config.layoutContainer
 		if (!container) return ''
@@ -256,29 +275,41 @@ export class LayoutBuilder {
 	async generateCSS(coreCSS = '', commonCSS = '') {
 		let css = ''
 
+		// Output layer declaration at the top
+		css += this.generateLayerDeclaration() + '\n\n'
+
 		if (coreCSS) css += coreCSS
 		if (commonCSS) css += commonCSS
 
+		// Group rules by media query, tracking breakpoint for each
 		const rulesByMediaQuery = new Map()
 
 		for (const [key, properties] of this.cssRules) {
 			const [mediaQuery, selector] = key.split('::', 2)
+			const breakpointName = this.ruleBreakpoints.get(key)
 
 			if (!rulesByMediaQuery.has(mediaQuery)) {
-				rulesByMediaQuery.set(mediaQuery, [])
+				rulesByMediaQuery.set(mediaQuery, { rules: [], breakpointName })
 			}
 
 			const props = Array.from(properties.entries())
-				.map(([prop, value]) => `  ${prop}: ${value};`)
+				.map(([prop, value]) => `    ${prop}: ${value};`)
 				.join('\n')
 
-			rulesByMediaQuery.get(mediaQuery).push(`${selector} {\n${props}\n}`)
+			rulesByMediaQuery.get(mediaQuery).rules.push(`  ${selector} {\n${props}\n  }`)
 		}
 
-		for (const [mediaQuery, rules] of rulesByMediaQuery) {
+		// Output media queries with layer wrappers
+		for (const [mediaQuery, { rules, breakpointName }] of rulesByMediaQuery) {
 			css += `\n${mediaQuery} {\n`
+			if (breakpointName) {
+				css += `@layer layout.${breakpointName} {\n`
+			}
 			css += rules.join('\n\n')
-			css += `\n}\n`
+			if (breakpointName) {
+				css += `\n}\n`
+			}
+			css += `}\n`
 		}
 
 		css += this.generateLayoutContainerCSS()

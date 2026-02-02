@@ -1,9 +1,8 @@
 {
-    "animation": {
+  "animation": {
     "name": "",
     "range": ""
   },
-  "ariaLabel": "",
   "bleed": 0,
     "breakpoints": {
     "xs": "",
@@ -27,6 +26,5 @@
   "size": "",
   "spaceBottom": 0,
   "spaceTop": 0,
-  "theme": "",
   "width": ""
 }

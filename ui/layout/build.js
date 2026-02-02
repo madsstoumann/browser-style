@@ -3,7 +3,10 @@
 import { LayoutBuilder } from './src/builder.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { existsSync } from 'fs'
+import { existsSync, writeFileSync, readFileSync } from 'fs'
+import postcss from 'postcss'
+import cssnano from 'cssnano'
+import preset from 'cssnano-preset-advanced'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -46,6 +49,17 @@ async function build() {
 	try {
 		const builder = new LayoutBuilder(configPath, layoutsDir, outputPath)
 		await builder.build(false)
+
+		// Generate minified version
+		const css = readFileSync(outputPath, 'utf8')
+		const result = await postcss([
+			cssnano({ preset: preset() })
+		]).process(css, { from: outputPath })
+
+		const minPath = outputPath.replace(/\.css$/, '.min.css')
+		writeFileSync(minPath, result.css, 'utf8')
+		console.log(`✓ Generated: ${minPath}`)
+		console.log(`  Size: ${(result.css.length / 1024).toFixed(2)} KB\n`)
 	} catch (error) {
 		console.error('❌ Build failed:', error.message)
 		process.exit(1)

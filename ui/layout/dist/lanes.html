@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Lane Layouts</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Lane Layouts using CSS layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>Lane Layouts</h1>
+	<p>Auto-fill grids with <strong>lanes-min</strong>/<strong>lanes-max</strong> attributes for column sizing.<br>Use <strong>lanes-min="10rem"</strong> to set minimum column width.</p>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="46" height="38" x="0" y="25" />
+        <text x="20" y="47%">1</text>
+        <rect rx="4" width="46" height="58" x="52" y="25" class="light" />
+        <text x="72" y="57%">2</text>
+    </svg>Lanes 2</h3>
+		<small>2-column lanes layout</small>
+		<code>&lt;lay-out sm="lanes(2)"&gt;</code>
+		<lay-out sm="lanes(2)" srcsets="380:50%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="28" height="38" x="0" y="25" />
+        <text x="11" y="47%">1</text>
+        <rect rx="4" width="28" height="58" x="35" y="25" />
+        <text x="46" y="57%">2</text>
+        <rect rx="4" width="28" height="48" x="70" y="25" class="light" />
+        <text x="81" y="52%">3</text>
+    </svg>Lanes 3</h3>
+		<small>3-column lanes layout</small>
+		<code>&lt;lay-out sm="lanes(2)" lg="lanes(3)"&gt;</code>
+		<lay-out sm="lanes(2)" lg="lanes(3)" srcsets="380:50%;720:33.33%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .33;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2.5;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="20" height="38" x="0" y="25" />
+        <text x="7" y="47%">1</text>
+        <rect rx="4" width="20" height="58" x="26" y="25" />
+        <text x="33" y="57%">2</text>
+        <rect rx="4" width="20" height="33" x="52" y="25" />
+        <text x="59" y="44.5%">3</text>
+        <rect rx="4" width="20" height="53" x="78" y="25" class="light" />
+        <text x="85" y="54.5%">4</text>
+    </svg>Lanes 4</h3>
+		<small>4-column lanes layout</small>
+		<code>&lt;lay-out sm="lanes(2)" lg="lanes(4)"&gt;</code>
+		<lay-out sm="lanes(2)" lg="lanes(4)" srcsets="380:50%;720:25%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .33;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .6;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.25;"></item-card>
+			<item-card style="aspect-ratio: 1 / .4;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .8;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="15" height="38" x="0" y="25" />
+        <text x="4.5" y="47%">1</text>
+        <rect rx="4" width="15" height="53" x="21" y="25" />
+        <text x="25.5" y="54.5%">2</text>
+        <rect rx="4" width="15" height="33" x="42" y="25" />
+        <text x="46.5" y="44.5%">3</text>
+        <rect rx="4" width="15" height="48" x="63" y="25" />
+        <text x="67.5" y="52%">4</text>
+        <rect rx="4" width="15" height="43" x="84" y="25" class="light" />
+        <text x="88.5" y="49.5%">5</text>
+    </svg>Lanes 5</h3>
+		<small>5-column lanes layout</small>
+		<code>&lt;lay-out sm="lanes(2)" lg="lanes(5)"&gt;</code>
+		<lay-out sm="lanes(2)" lg="lanes(5)" srcsets="380:50%;720:20%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .33;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .6;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.25;"></item-card>
+			<item-card style="aspect-ratio: 1 / .4;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .8;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="11" height="38" x="0" y="25" />
+        <text x="2.5" y="47%">1</text>
+        <rect rx="4" width="11" height="53" x="17" y="25" />
+        <text x="19.5" y="54.5%">2</text>
+        <rect rx="4" width="11" height="33" x="34" y="25" />
+        <text x="36.5" y="44.5%">3</text>
+        <rect rx="4" width="11" height="48" x="51" y="25" />
+        <text x="53.5" y="52%">4</text>
+        <rect rx="4" width="11" height="43" x="68" y="25" />
+        <text x="70.5" y="49.5%">5</text>
+        <rect rx="4" width="11" height="36" x="85" y="25" class="light" />
+        <text x="87.5" y="46%">6</text>
+    </svg>Lanes 6</h3>
+		<small>6-column lanes layout</small>
+		<code>&lt;lay-out sm="lanes(2)" lg="lanes(6)"&gt;</code>
+		<lay-out sm="lanes(2)" lg="lanes(6)" srcsets="380:50%;720:16.67%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .33;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .6;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.25;"></item-card>
+			<item-card style="aspect-ratio: 1 / .4;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .8;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<h3><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor">
+        <rect rx="4" width="23" height="38" x="0" y="25" />
+        <text x="8.5" y="47%">1</text>
+        <rect rx="4" width="23" height="58" x="25" y="25" />
+        <text x="33.5" y="57%">2</text>
+        <rect rx="4" width="23" height="28" x="50" y="25" />
+        <text x="58.5" y="42%">3</text>
+        <rect rx="4" width="23" height="68" x="75" y="25" class="light" />
+        <text x="83.5" y="62%">4</text>
+    </svg>Lanes auto</h3>
+		<small>Auto-fill lanes with configurable sizing via lanes-min/lanes-max attributes</small>
+		<code>&lt;lay-out sm="lanes(2)" lg="lanes(auto)"&gt;</code>
+		<lay-out sm="lanes(2)" lg="lanes(auto)" srcsets="380:50%;720:25%@1024">
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .5;"></item-card>
+			<item-card style="aspect-ratio: 1 / 3;"></item-card>
+			<item-card style="aspect-ratio: 1 / .75;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .33;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2.5;"></item-card>
+			<item-card style="aspect-ratio: 1 / .6;"></item-card>
+			<item-card style="aspect-ratio: 1 / 1.25;"></item-card>
+			<item-card style="aspect-ratio: 1 / .4;"></item-card>
+			<item-card style="aspect-ratio: 1 / 2;"></item-card>
+			<item-card style="aspect-ratio: 1 / .8;"></item-card>
+			<item-card style="aspect-ratio: 1;"></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>
