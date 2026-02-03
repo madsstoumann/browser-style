@@ -116,6 +116,26 @@ Available: `columns(1)` through `columns(6)`
 ```
 6 variants for CSS `display: grid-lanes` masonry layouts. Uses CSS columns fallback for browsers without grid-lanes support. Supports `lanes-min` and `lanes-max` attributes for configurable column sizing.
 
+### Breakpoint Spacing Tokens
+
+Spacing tokens are embedded alongside layout tokens in breakpoint attributes. They use a multiplier (0–4) applied to `--layout-space-unit`, overriding the same CSS custom properties that global attributes (`pad-inline`, `col-gap`, etc.) set.
+
+| Token | CSS Custom Property | CSS Property |
+|-------|-------------------|--------------|
+| `pbe(N)` | `--layout-pbe` | `padding-block-end` |
+| `pbs(N)` | `--layout-pbs` | `padding-block-start` |
+| `pi(N)` | `--layout-pi` | `padding-inline` |
+| `mbe(N)` | `--layout-mbe` | `margin-block-end` |
+| `mbs(N)` | `--layout-mbs` | `margin-block-start` |
+| `cg(N)` | `--layout-colmg` | `column-gap` |
+| `rg(N)` | `--layout-rg` | `row-gap` |
+
+```html
+<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+```
+
+Global attributes provide defaults at all breakpoints; tokens override at specific breakpoints. Values persist until a larger breakpoint overrides them. The build system generates selectors using `*=` (contains match) to support multiple tokens in a single attribute value.
+
 ## Responsive Images
 
 ### Automatic Srcset Generation

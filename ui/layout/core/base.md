@@ -177,6 +177,52 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 
 ---
 
+## Breakpoint Spacing Tokens
+
+Spacing tokens can be embedded in breakpoint attributes alongside layout tokens. They use a **multiplier** (0–4) applied to `--layout-space-unit`, overriding the same CSS custom properties that the global attributes set.
+
+### Available tokens
+
+| Token | CSS Custom Property | CSS Property | Default |
+|-------|-------------------|--------------|---------|
+| `pbe(N)` | `--layout-pbe` | `padding-block-end` | 0 |
+| `pbs(N)` | `--layout-pbs` | `padding-block-start` | 0 |
+| `pi(N)` | `--layout-pi` | `padding-inline` | 0 |
+| `mbe(N)` | `--layout-mbe` | `margin-block-end` | 0 |
+| `mbs(N)` | `--layout-mbs` | `margin-block-start` | 0 |
+| `cg(N)` | `--layout-colmg` | `column-gap` | 1 |
+| `rg(N)` | `--layout-rg` | `row-gap` | 1 |
+
+**N** = 0, 1, 2, 3, or 4.
+
+### Coexistence with global attributes
+
+Global HTML attributes (`pad-inline`, `col-gap`, etc.) set the default multiplier via `attr()` at all breakpoints. Breakpoint tokens override the same CSS custom property at specific breakpoints. Values persist through larger breakpoints until explicitly overridden.
+
+### Example usage (Breakpoint Spacing)
+
+```html
+<!-- Responsive padding and gaps -->
+<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <div>Item 4</div>
+</lay-out>
+
+<!-- Global attribute with breakpoint override -->
+<lay-out pad-inline="1" lg="columns(3) pi(3)">
+  <!-- pad-inline=1 is the default; at lg, pi overrides to 3 -->
+</lay-out>
+
+<!-- Gap control -->
+<lay-out md="columns(2) cg(1) rg(2)" lg="columns(4) cg(2) rg(1)">
+  ...
+</lay-out>
+```
+
+---
+
 ## CSS Custom Properties (Styling Hooks)
 
 These properties allow styling layouts without writing custom selectors. Set them on `lay-out` or a parent element.

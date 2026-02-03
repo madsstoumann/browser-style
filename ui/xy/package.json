@@ -5,11 +5,14 @@
   "type": "module",
   "main": "./index.js",
   "module": "./index.js",
+  "style": "./index.css",
   "exports": {
-    ".": "./index.js"
+    ".": "./index.js",
+    "./style": "./index.css"
   },
   "files": [
     "index.js",
+    "index.css",
     "readme.md"
   ],
   "publishConfig": {

@@ -627,6 +627,143 @@ function generateWidthsHTML() {
 	return html
 }
 
+function generateSpacingHTML() {
+	const title = 'Spacing Demos'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Breakpoint-controlled spacing demos for the layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>These demos show <strong>breakpoint-controlled spacing tokens</strong> embedded in layout attributes.<br>
+	Tokens use a multiplier (0–4) applied to <strong>--layout-space-unit</strong>. Resize the viewport to see changes.</p>
+
+	<h2>Responsive Padding Inline</h2>
+	<section>
+		<small>Padding-inline increases from 1 at <strong>md</strong> to 4 at <strong>lg</strong>. Background color makes padding visible.</small>
+		<code>&lt;lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)"&gt;</code>
+		<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)" style="--layout-bg: #e8e8e8;">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Padding Block (Top &amp; Bottom)</h2>
+	<section>
+		<small>Block padding with <strong>pbs</strong> (top) and <strong>pbe</strong> (bottom) increasing at larger breakpoints.</small>
+		<code>&lt;lay-out md="columns(2) pbs(1) pbe(1)" lg="columns(3) pbs(3) pbe(2)"&gt;</code>
+		<lay-out md="columns(2) pbs(1) pbe(1)" lg="columns(3) pbs(3) pbe(2)" style="--layout-bg: hsl(220 60% 92%);">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Margin Spacing (Top &amp; Bottom)</h2>
+	<section>
+		<small>Vertical separation between layouts using <strong>mbs</strong> and <strong>mbe</strong>. The gap between the two grids grows at larger breakpoints.</small>
+		<code>&lt;lay-out md="columns(2) pbs(1) pbe(1) mbe(2)" lg="columns(2) pbs(2) pbe(2) mbe(4)"&gt;</code>
+		<lay-out md="columns(2) pbs(1) pbe(1) mbe(2)" lg="columns(2) pbs(2) pbe(2) mbe(4)" style="--layout-bg: hsl(140 40% 90%);">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+		<code>&lt;lay-out md="columns(2) pbs(1) pbe(1) mbs(0)" lg="columns(2) pbs(2) pbe(2) mbs(0)"&gt;</code>
+		<lay-out md="columns(2) pbs(1) pbe(1) mbs(0)" lg="columns(2) pbs(2) pbe(2) mbs(0)" style="--layout-bg: hsl(340 40% 90%);">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Gap Control</h2>
+	<section>
+		<small>Column gap and row gap controlled independently. At <strong>md</strong>, minimal gaps. At <strong>lg</strong>, column-gap doubles and row-gap triples.</small>
+		<code>&lt;lay-out md="columns(2) cg(1) rg(1)" lg="columns(3) cg(2) rg(3)"&gt;</code>
+		<lay-out md="columns(2) cg(1) rg(1)" lg="columns(3) cg(2) rg(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<section>
+		<small>Zero gaps — removing all spacing between items.</small>
+		<code>&lt;lay-out md="columns(3) cg(0) rg(0)" lg="columns(4) cg(0) rg(0)"&gt;</code>
+		<lay-out md="columns(3) cg(0) rg(0)" lg="columns(4) cg(0) rg(0)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Combined Tokens</h2>
+	<section>
+		<small>Multiple spacing tokens in a single attribute — padding, gaps, and margins all controlled per breakpoint.</small>
+		<code>&lt;lay-out md="columns(2) pi(1) pbs(1) pbe(1) cg(1) rg(1)" lg="columns(3) pi(3) pbs(2) pbe(2) cg(2) rg(2)"&gt;</code>
+		<lay-out md="columns(2) pi(1) pbs(1) pbe(1) cg(1) rg(1)" lg="columns(3) pi(3) pbs(2) pbe(2) cg(2) rg(2)" style="--layout-bg: hsl(30 60% 92%);">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Global Attribute + Breakpoint Override</h2>
+	<section>
+		<small>The global <strong>pad-inline="1"</strong> attribute applies at all sizes. At <strong>lg</strong>, the <strong>pi(3)</strong> token overrides it.</small>
+		<code>&lt;lay-out pad-inline="1" md="columns(2) pbs(1) pbe(1)" lg="columns(3) pi(3) pbs(2) pbe(2)"&gt;</code>
+		<lay-out pad-inline="1" md="columns(2) pbs(1) pbe(1)" lg="columns(3) pi(3) pbs(2) pbe(2)" style="--layout-bg: hsl(270 40% 92%);">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Grid Layout with Spacing</h2>
+	<section>
+		<small>A grid layout pattern with responsive spacing — compact at <strong>md</strong>, spacious at <strong>lg</strong>.</small>
+		<code>&lt;lay-out md="grid(3a) pi(1) pbs(1) pbe(1) cg(1)" lg="grid(3a) pi(3) pbs(2) pbe(2) cg(2) rg(2)"&gt;</code>
+		<lay-out md="grid(3a) pi(1) pbs(1) pbe(1) cg(1)" lg="grid(3a) pi(3) pbs(2) pbe(2) cg(2) rg(2)" style="--layout-bg: hsl(180 30% 90%);">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Asymmetric Layout with Spacing</h2>
+	<section>
+		<small>Sidebar layout with padding and gap control across breakpoints.</small>
+		<code>&lt;lay-out md="columns(1) pi(2) pbs(1) pbe(1)" lg="asym(l-r) pi(2) pbs(2) pbe(2) cg(3)"&gt;</code>
+		<lay-out md="columns(1) pi(2) pbs(1) pbe(1)" lg="asym(l-r) pi(2) pbs(2) pbe(2) cg(3)" style="--layout-bg: hsl(50 50% 90%);">
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>`
+
+	return html
+}
+
 function generateMainIndexHTML(generatedFiles) {
 	const title = 'Layout System Demos'
 
@@ -752,6 +889,13 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 	generatedFiles.add('widths.html')
 	demoCount++
 	console.log(`✓ Generated widths.html`)
+
+	// Generate spacing.html
+	const spacingHTML = generateSpacingHTML()
+	fs.writeFileSync(path.join(outputDir, 'spacing.html'), spacingHTML)
+	generatedFiles.add('spacing.html')
+	demoCount++
+	console.log(`✓ Generated spacing.html`)
 
 	const iconsHTML = generateIconsHTML(iconsDir)
 	const iconsPath = path.join(outputDir, 'icons.html')

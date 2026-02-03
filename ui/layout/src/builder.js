@@ -124,6 +124,27 @@ export class LayoutBuilder {
 				}
 			}
 		}
+
+		this.generateSpacingCSS(breakpointName, mediaQuery)
+	}
+
+	generateSpacingCSS(breakpointName, mediaQuery) {
+		const elementSelector = this.config.element || 'lay-out'
+		const spacingTokens = {
+			'pbe': '--layout-pbe',
+			'pbs': '--layout-pbs',
+			'pi':  '--layout-pi',
+			'mbe': '--layout-mbe',
+			'mbs': '--layout-mbs',
+			'cg':  '--layout-colmg',
+			'rg':  '--layout-rg',
+		}
+		for (const [token, property] of Object.entries(spacingTokens)) {
+			for (const value of [0, 1, 2, 3, 4]) {
+				const selector = `${elementSelector}[${breakpointName}*="${token}(${value})"]`
+				this.addRule(mediaQuery, selector, { [property]: value }, breakpointName)
+			}
+		}
 	}
 
 	processLayout(layoutName, breakpointName, mediaQuery, processedLayouts, processedGlobalRules) {
@@ -181,7 +202,7 @@ export class LayoutBuilder {
 	generateLayoutCSS(layout, layoutPrefix, layoutId, breakpointName, mediaQuery, processedGlobalRules) {
 		const elementSelector = this.config.element || 'lay-out'
 		const selectorValue = `${layoutPrefix}(${layoutId})`
-		const baseSelector = `${elementSelector}[${breakpointName}="${selectorValue}"]`
+		const baseSelector = `${elementSelector}[${breakpointName}*="${selectorValue}"]`
 
 		const containerProps = {}
 		if (layout.columns) containerProps['--layout-gtc'] = layout.columns

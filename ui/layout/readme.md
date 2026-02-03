@@ -131,6 +131,34 @@ Masonry-style layouts using CSS `display: grid-lanes` (6 variants available). Fa
 
 See [demos](dist/index.html) for visual examples of all layouts.
 
+### Breakpoint Spacing Tokens
+
+Spacing tokens can be embedded alongside layout tokens in breakpoint attributes. They use a multiplier (0–4) applied to `--layout-space-unit`.
+
+| Token | Property | Default |
+|-------|----------|---------|
+| `pi(N)` | `padding-inline` | 0 |
+| `pbs(N)` | `padding-block-start` | 0 |
+| `pbe(N)` | `padding-block-end` | 0 |
+| `mbs(N)` | `margin-block-start` | 0 |
+| `mbe(N)` | `margin-block-end` | 0 |
+| `cg(N)` | `column-gap` | 1 |
+| `rg(N)` | `row-gap` | 1 |
+
+```html
+<!-- Responsive padding and gaps -->
+<lay-out md="columns(2) pi(1) pbs(1) pbe(1)" lg="columns(4) pi(4) pbs(2) pbe(2)">
+  <div>Item 1</div>
+  <div>Item 2</div>
+  <div>Item 3</div>
+  <div>Item 4</div>
+</lay-out>
+```
+
+Global HTML attributes (`pad-inline`, `col-gap`, etc.) still work and provide defaults at all breakpoints. Breakpoint tokens override at specific breakpoints. Values persist until a larger breakpoint overrides them.
+
+See [spacing demos](dist/spacing.html) for visual examples.
+
 ---
 
 ## Responsive Images
