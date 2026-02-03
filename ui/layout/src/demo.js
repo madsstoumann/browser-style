@@ -764,6 +764,149 @@ function generateSpacingHTML() {
 	return html
 }
 
+function generateAnimationsHTML() {
+	const title = 'Animation Demos'
+
+	let html = `<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>${title}</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Scroll-driven animation demos for the layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>${title}</h1>
+	<p>These demos show <strong>scroll-driven animations</strong> on containers and individual items.<br>
+	Scroll down to see elements animate as they enter the viewport.</p>
+
+	<div style="height: 60vh; display: grid; place-items: center;">
+		<p style="opacity: 0.5;">↓ Scroll down to see animations ↓</p>
+	</div>
+
+	<h2>Container Animation</h2>
+	<section>
+		<small>The entire <strong>lay-out</strong> container animates as it enters the viewport using the existing <strong>animation</strong> attribute.</small>
+		<code>&lt;lay-out animation="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Fade Up</h2>
+	<section>
+		<small>Each child animates independently based on the container's scroll position using <strong>animation-items</strong>.</small>
+		<code>&lt;lay-out animation-items="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Container + Item Animation</h2>
+	<section>
+		<small>Both <strong>animation</strong> (container) and <strong>animation-items</strong> (children) combined. The container fades in while items fade up.</small>
+		<code>&lt;lay-out animation="fade-in" animation-items="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-in" animation-items="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Fade Down</h2>
+	<section>
+		<small>Items animate downward as the container scrolls into view.</small>
+		<code>&lt;lay-out animation-items="fade-down" lg="columns(4)"&gt;</code>
+		<lay-out animation-items="fade-down" lg="columns(4)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Fade Left</h2>
+	<section>
+		<small>Items slide in from the right as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-left" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-left" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Fade Right</h2>
+	<section>
+		<small>Items slide in from the left as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-right" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-right" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Zoom In</h2>
+	<section>
+		<small>Items scale up from a smaller size as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="zoom-in" lg="columns(4)"&gt;</code>
+		<lay-out animation-items="zoom-in" lg="columns(4)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Item Animation — Flip Up</h2>
+	<section>
+		<small>Items flip into view as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="flip-up" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="flip-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Grid Layout with Item Animation</h2>
+	<section>
+		<small>A grid pattern with item animations — items fade up as the grid enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-up" lg="grid(3a)"&gt;</code>
+		<lay-out animation-items="fade-up" lg="grid(3a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Bento Layout with Item Animation</h2>
+	<section>
+		<small>A bento box layout with zoom-in item animations.</small>
+		<code>&lt;lay-out animation-items="zoom-in" lg="bento(6a)"&gt;</code>
+		<lay-out animation-items="zoom-in" lg="bento(6a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+</body>
+</html>`
+
+	return html
+}
+
 function generateMainIndexHTML(generatedFiles) {
 	const title = 'Layout System Demos'
 
@@ -896,6 +1039,13 @@ export function buildDemoFiles(layoutsDir, outputDir) {
 	generatedFiles.add('spacing.html')
 	demoCount++
 	console.log(`✓ Generated spacing.html`)
+
+	// Generate animations.html
+	const animationsHTML = generateAnimationsHTML()
+	fs.writeFileSync(path.join(outputDir, 'animations.html'), animationsHTML)
+	generatedFiles.add('animations.html')
+	demoCount++
+	console.log(`✓ Generated animations.html`)
 
 	const iconsHTML = generateIconsHTML(iconsDir)
 	const iconsPath = path.join(outputDir, 'icons.html')

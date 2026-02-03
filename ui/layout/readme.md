@@ -159,6 +159,24 @@ Global HTML attributes (`pad-inline`, `col-gap`, etc.) still work and provide de
 
 See [spacing demos](dist/spacing.html) for visual examples.
 
+### Item Animations
+
+Scroll-driven animations for individual items within a layout. Items animate based on the container's scroll visibility using a named `view-timeline`.
+
+```html
+<!-- Item animation only -->
+<lay-out animation-items="fade-up" lg="grid(3a)">
+
+<!-- Container + item animation -->
+<lay-out animation="fade-right" animation-items="fade-up" lg="grid(3a)">
+```
+
+Available presets: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`
+
+Items stagger automatically via nth-child `animation-range` offsets (up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children.
+
+See [animation demos](dist/animations.html) for visual examples.
+
 ---
 
 ## Responsive Images

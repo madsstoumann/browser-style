@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Animation Demos</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Scroll-driven animation demos for the layout system">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>Animation Demos</h1>
+	<p>These demos show <strong>scroll-driven animations</strong> on layout containers.<br>
+	Scroll down to see elements animate as they enter the viewport. <strong>Chrome only</strong> for now.</p>
+
+	<div style="height: 80vh; display: grid; place-items: center;">
+		<p style="opacity: 0.5;">↓ Scroll down to see animations ↓</p>
+	</div>
+
+	<h2>fade-up</h2>
+	<lay-out animation="fade-up" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>fade-down</h2>
+	<lay-out animation="fade-down" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>fade-left</h2>
+	<lay-out animation="fade-left" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>fade-right</h2>
+	<lay-out animation="fade-right" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>fade-in</h2>
+	<lay-out animation="fade-in" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>fade-in-scale</h2>
+	<lay-out animation="fade-in-scale" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>zoom-in</h2>
+	<lay-out animation="zoom-in" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>zoom-out</h2>
+	<lay-out animation="zoom-out" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>flip-up</h2>
+	<lay-out animation="flip-up" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>flip-down</h2>
+	<lay-out animation="flip-down" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>reveal</h2>
+	<lay-out animation="reveal" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>reveal-circle</h2>
+	<lay-out animation="reveal-circle" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>slide-in</h2>
+	<lay-out animation="slide-in" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>bounce</h2>
+	<lay-out animation="bounce" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h2>Item Animations</h2>
+	<p>Children animate individually using the container's scroll timeline.</p>
+
+	<h3>animation-items="fade-up"</h3>
+	<lay-out animation-items="fade-up" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="fade-down"</h3>
+	<lay-out animation-items="fade-down" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="fade-left"</h3>
+	<lay-out animation-items="fade-left" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="fade-right"</h3>
+	<lay-out animation-items="fade-right" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="fade-in"</h3>
+	<lay-out animation-items="fade-in" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="zoom-in"</h3>
+	<lay-out animation-items="zoom-in" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>animation-items="flip-up"</h3>
+	<lay-out animation-items="flip-up" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<h3>Container + Items combined</h3>
+	<lay-out animation="fade-right" animation-items="fade-up" lg="columns(3)">
+		<item-card></item-card>
+		<item-card></item-card>
+		<item-card></item-card>
+	</lay-out>
+
+	<div style="height: 50vh;"></div>
+</body>
+</html>
