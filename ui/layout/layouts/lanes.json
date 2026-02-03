@@ -4,6 +4,24 @@
   "desc": "Auto-fill grids with <strong>lanes-min</strong>/<strong>lanes-max</strong> attributes for column sizing.<br>Use <strong>lanes-min=\"10rem\"</strong> to set minimum column width.",
   "layouts": [
     {
+      "id": "auto",
+      "description": "Auto-fill lanes with configurable sizing via lanes-min/lanes-max attributes",
+      "columns": "repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)))",
+      "items": 15,
+      "icon": [
+        { "w": 25, "h": 40, "x": 0, "y": 25 },
+        { "w": 25, "h": 60, "x": 25, "y": 25 },
+        { "w": 25, "h": 30, "x": 50, "y": 25 },
+        { "w": 25, "h": 70, "x": 75, "y": 25, "class": "light" }
+      ],
+      "repeatable": false,
+      "srcset": "25%",
+      "aspectRatios": true,
+      "breakpoints": {
+        "sm": "lanes(auto)"
+      }
+    },
+    {
       "id": "2",
       "description": "2-column lanes layout",
       "items": 6,
@@ -90,24 +108,6 @@
       "breakpoints": {
         "sm": "lanes(2)",
         "lg": "lanes(6)"
-      }
-    },
-    {
-      "id": "auto",
-      "description": "Auto-fill lanes with configurable sizing via lanes-min/lanes-max attributes",
-      "columns": "repeat(auto-fill, minmax(min(var(--layout-lanes-min, 10rem), 100%), var(--layout-lanes-max, 1fr)))",
-      "items": 15,
-      "icon": [
-        { "w": 25, "h": 40, "x": 0, "y": 25 },
-        { "w": 25, "h": 60, "x": 25, "y": 25 },
-        { "w": 25, "h": 30, "x": 50, "y": 25 },
-        { "w": 25, "h": 70, "x": 75, "y": 25, "class": "light" }
-      ],
-      "repeatable": false,
-      "srcset": "25%",
-      "aspectRatios": true,
-      "breakpoints": {
-        "sm": "lanes(auto)"
       }
     }
   ]

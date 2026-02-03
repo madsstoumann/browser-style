@@ -31,17 +31,21 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 		${layoutData.some(l => l.repeatable) ? 'When you add more items, repeatable patterns continue automatically.' : 'Fixed layouts display a specific number of items.'}</p>`
 	}
 
-	const layoutsByItems = new Map()
-	layoutData.forEach(layout => {
-		const items = layout.items || 1
-		if (!layoutsByItems.has(items)) {
-			layoutsByItems.set(items, [])
-		}
-		layoutsByItems.get(items).push(layout)
-	})
+	const groupedEntries = prefix === 'lanes'
+		? [[0, layoutData]]
+		: (() => {
+			const layoutsByItems = new Map()
+			layoutData.forEach(layout => {
+				const items = layout.items || 1
+				if (!layoutsByItems.has(items)) {
+					layoutsByItems.set(items, [])
+				}
+				layoutsByItems.get(items).push(layout)
+			})
+			return Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)
+		})()
 
-	for (const [itemCount, layouts] of Array.from(layoutsByItems.entries()).sort(([a], [b]) => a - b)) {
-		// Skip item count heading for lanes layouts
+	for (const [itemCount, layouts] of groupedEntries) {
 		if (prefix !== 'lanes') {
 			html += `\n\n	<h2>${itemCount} Item${itemCount !== 1 ? 's' : ''}</h2>`
 		}
@@ -99,7 +103,8 @@ function generateLayoutHTML(layoutName, layoutData, layoutType, iconsDir) {
 			// Aspect ratios for lanes demo
 			const aspectRatios = ['1', '1 / 2', '1 / .5', '1 / 3', '1 / .75', '1 / 1.5', '1 / .33', '1', '1 / 2.5', '1 / .6', '1 / 1.25', '1 / .4', '1 / 2', '1 / .8', '1']
 
-			for (let i = 0; i < itemCount; i++) {
+			const count = layout.items || itemCount
+			for (let i = 0; i < count; i++) {
 				if (layout.aspectRatios) {
 					const ratio = aspectRatios[i % aspectRatios.length]
 					html += `
