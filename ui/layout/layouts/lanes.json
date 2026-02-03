@@ -107,8 +107,7 @@
       "srcset": "25%",
       "aspectRatios": true,
       "breakpoints": {
-        "sm": "lanes(2)",
-        "lg": "lanes(auto)"
+        "sm": "lanes(auto)"
       }
     }
   ]

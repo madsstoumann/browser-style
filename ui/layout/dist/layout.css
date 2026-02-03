@@ -125,6 +125,9 @@
 					margin-block-end:  calc(var(--layout-rg) * var(--layout-space-unit));;
 				}
 			}
+			&:where([xs~="lanes(auto)"], [sm~="lanes(auto)"], [md~="lanes(auto)"], [lg~="lanes(auto)"], [xl~="lanes(auto)"], [xxl~="lanes(auto)"]) {
+				column-count: round(down, min(var(--layout-bleed-mw, 1024px), 100cqi - 2 * var(--layout-mi, 1rem)) / var(--layout-lanes-min, 15rem), 1);
+			}
 		}
 
 		/* === overflow === */
