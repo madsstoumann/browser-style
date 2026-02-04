@@ -9,6 +9,7 @@
 		--layout-anim-zi: 0.6;
 		--layout-anim-zo: 1.2;
 		--layout-anim-mult: 1;
+		--layout-anim-delay: 0.005s;
 
 		/* Computed internal — consumed by keyframes */
 		--_dg: calc(var(--layout-anim-dg) * var(--layout-anim-mult));
@@ -107,23 +108,23 @@
 		[animation-items] > :nth-child(5) { animation-range: entry 60% entry 100%; }
 		[animation-items] > :nth-child(6) { animation-range: entry 70% entry 100%; }
 
-		/* Deep: animate grandchildren relative to card position */
+		/* Deep: animate grandchildren relative to item position */
 		[animation-items~="deep"] > * > * {
 			animation-name: var(--_item-animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
 			animation-range:
-				entry calc((var(--_card-offset, 0) + var(--_child-offset, 0)) * 1%)
-				entry calc((75 + var(--_card-offset, 0) + var(--_child-offset, 0)) * 1%);
+				entry calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%)
+				entry calc((75 + var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%);
 		}
 
-		/* Deep stagger: card offset via nth-child */
-		[animation-items~="deep"] > :nth-child(2) > * { --_card-offset: 20; }
-		[animation-items~="deep"] > :nth-child(3) > * { --_card-offset: 40; }
-		[animation-items~="deep"] > :nth-child(4) > * { --_card-offset: 50; }
-		[animation-items~="deep"] > :nth-child(5) > * { --_card-offset: 60; }
-		[animation-items~="deep"] > :nth-child(6) > * { --_card-offset: 70; }
+		/* Deep stagger: item offset via nth-child */
+		[animation-items~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
+		[animation-items~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
+		[animation-items~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
+		[animation-items~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
+		[animation-items~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
 
 		/* Deep stagger: child offset within each card */
 		[animation-items~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
@@ -139,14 +140,36 @@
 				entry calc(75% + (sibling-index() - 1) * 20%);
 		}
 
-		/* Deep: card offset + child stagger using sibling-index() */
+		/* Deep: item offset + child stagger using sibling-index() */
 		[animation-items~="deep"] > * {
-			--_card-offset: calc((sibling-index() - 1) * 20);
+			--_item-offset: calc((sibling-index() - 1) * 20);
 		}
 		[animation-items~="deep"] > * > * {
 			animation-range:
-				entry calc((var(--_card-offset) + (sibling-index() - 1) * 10) * 1%)
-				entry calc((75 + var(--_card-offset) + (sibling-index() - 1) * 10) * 1%);
+				entry calc((var(--_item-offset) + (sibling-index() - 1) * 10) * 1%)
+				entry calc((75 + var(--_item-offset) + (sibling-index() - 1) * 10) * 1%);
+		}
+	}
+
+	/* Scroll-triggered animations (Chrome 145+): time-based delays triggered by scroll position */
+	@supports (timeline-trigger-name: --t) {
+		[animation-items~="deep"] {
+			timeline-trigger:
+				--layout-trigger
+				view()
+				entry 25% exit 0%;
+			trigger-scope: --layout-trigger;
+		}
+
+		[animation-items~="deep"] > * > * {
+			animation-name: var(--_item-animn);
+			animation-timing-function: var(--layout-item-timing, ease-out);
+			animation-fill-mode: both;
+			animation-duration: 0.5s;
+			animation-trigger: --layout-trigger play-forwards play-backwards;
+			animation-timeline: auto;
+			animation-range: normal;
+			animation-delay: calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * var(--layout-anim-delay));
 		}
 	}
 
@@ -200,7 +223,7 @@
 
 	/* Fade */
 	@keyframes fade-down {
-		0% { opacity: 0; translate: 0px calc(-1 * var(--_ty)); }
+		0% { opacity: 0; translate: 0 calc(-1 * var(--_ty)); }
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-down-left {
@@ -212,15 +235,15 @@
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) 0px; }
+		0% { opacity: 0; translate: calc(-1 * var(--_tx)) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-right {
-		0% { opacity: 0; translate: var(--_tx) 0px; }
+		0% { opacity: 0; translate: var(--_tx) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-up {
-		0% { opacity: 0; translate: 0px var(--_ty); }
+		0% { opacity: 0; translate: 0 var(--_ty); }
 		100% { opacity: 1; translate: 0; }
 	}
 	@keyframes fade-up-left {
@@ -232,7 +255,7 @@
 		100% { opacity: 1; translate: 0; }
 	}
 
-	/* Fade / Scale */
+	/* Fade / Scale — same keyframes as zoom-in/zoom-out, but selectors set --layout-anim-zi: 0.8 */
 	@keyframes fade-in-scale {
 		0% { opacity: 0; scale: var(--_zi); }
 		100% { opacity: 1; scale: 1; }
@@ -244,7 +267,7 @@
 
 	/* Flip */
 	@keyframes flip-diagonal {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))) rotateY(calc(0deg - var(--_dg))); }
+		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
 		100% { transform: perspective(2500px) rotateX(0) rotateY(0); }
 	}
 	@keyframes flip-down {
@@ -252,7 +275,7 @@
 		100% { transform: perspective(2500px) rotateX(0); }
 	}
 	@keyframes flip-left {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(0deg - var(--_dg))); }
+		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
 		100% { transform: perspective(2500px) rotateY(0); }
 	}
 	@keyframes flip-right {
@@ -260,7 +283,7 @@
 		100% { transform: perspective(2500px) rotateY(0); }
 	}
 	@keyframes flip-up {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(0deg - var(--_dg))); }
+		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
 		100% { transform: perspective(2500px) rotateX(0); }
 	}
 
@@ -310,7 +333,7 @@
 		100% { opacity: 1; scale: 1; }
 	}
 	@keyframes zoom-out-rotate {
-		0% { opacity: 1; scale: 1; transform: rotate(0deg); }
-		100% { opacity: 0; scale: var(--_zo); transform: rotate(-180deg); }
+		0% { opacity: 1; scale: 1; rotate: 0deg; }
+		100% { opacity: 0; scale: var(--_zo); rotate: -180deg; }
 	}
 }
