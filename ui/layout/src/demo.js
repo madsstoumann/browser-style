@@ -901,6 +901,147 @@ function generateAnimationsHTML() {
 			<item-card></item-card>
 		</lay-out>
 	</section>
+
+	<h2>Animation Multipliers</h2>
+	<p>Use a multiplier <strong>(1–3)</strong> to control animation intensity. Default is 1×.</p>
+
+	<h3>fade-up — Default vs 2× vs 3×</h3>
+	<section>
+		<small>Default intensity (110px translation).</small>
+		<code>&lt;lay-out animation="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× intensity (220px translation).</small>
+		<code>&lt;lay-out animation="fade-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>3× intensity (330px translation).</small>
+		<code>&lt;lay-out animation="fade-up(3)" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up(3)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>zoom-in — Default vs 2× vs 3×</h3>
+	<section>
+		<small>Default zoom (starts at 0.6 scale).</small>
+		<code>&lt;lay-out animation="zoom-in" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× zoom (starts at 0.3 scale).</small>
+		<code>&lt;lay-out animation="zoom-in(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>3× zoom (starts at 0.2 scale).</small>
+		<code>&lt;lay-out animation="zoom-in(3)" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in(3)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>flip-up — Default vs 2×</h3>
+	<section>
+		<small>Default rotation (100deg).</small>
+		<code>&lt;lay-out animation="flip-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="flip-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× rotation (200deg).</small>
+		<code>&lt;lay-out animation="flip-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="flip-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>Item Animation with Multiplier</h3>
+	<section>
+		<small>Item animations also support multipliers — each child fades up with 2× intensity.</small>
+		<code>&lt;lay-out animation-items="fade-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Deep Animations</h2>
+	<p>The <strong>deep</strong> modifier animates grandchildren (elements inside each item) with stagger relative to card position.</p>
+
+	<h3>fade-up deep</h3>
+	<section>
+		<small>Each card's inner elements (img, h4, p) stagger their fade-up based on card position + element order.</small>
+		<code>&lt;lay-out animation-items="fade-up deep" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up deep" lg="columns(3)">
+			<item-card>
+				<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Mountain Lake</h4>
+				<p style="margin:.25rem 0;color:gray;">A serene mountain lake surrounded by pine trees.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/17/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Coastal View</h4>
+				<p style="margin:.25rem 0;color:gray;">Dramatic coastline with waves crashing on rocks.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/28/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Forest Path</h4>
+				<p style="margin:.25rem 0;color:gray;">A winding trail through an ancient forest.</p>
+			</item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up(2) deep</h3>
+	<section>
+		<small>Deep animation combined with 2× multiplier — inner elements travel further.</small>
+		<code>&lt;lay-out animation-items="fade-up(2) deep" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up(2) deep" lg="columns(3)">
+			<item-card>
+				<img src="https://picsum.photos/id/36/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Desert Sunset</h4>
+				<p style="margin:.25rem 0;color:gray;">Golden light painting the desert landscape.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/42/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">City Lights</h4>
+				<p style="margin:.25rem 0;color:gray;">Urban skyline glowing at twilight.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/49/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Open Fields</h4>
+				<p style="margin:.25rem 0;color:gray;">Rolling hills stretching to the horizon.</p>
+			</item-card>
+		</lay-out>
+	</section>
 </body>
 </html>`
 

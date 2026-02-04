@@ -215,49 +215,65 @@
 
 @layer layout.animations {
 	[animation], [animation-items] {
-		--_dg: 100deg;
-		--_tx: 55px;
-		--_ty: 110px;
-		--_txv: 100vw;
-		--_tyv: 100vh;
-		--_zi: 0.6;
-		--_zo: 1.2;
+		/* Public API — user-facing, overridable */
+		--layout-anim-dg: 100deg;
+		--layout-anim-tx: 55px;
+		--layout-anim-ty: 110px;
+		--layout-anim-txv: 100vw;
+		--layout-anim-tyv: 100vh;
+		--layout-anim-zi: 0.6;
+		--layout-anim-zo: 1.2;
+		--layout-anim-mult: 1;
+
+		/* Computed internal — consumed by keyframes */
+		--_dg: calc(var(--layout-anim-dg) * var(--layout-anim-mult));
+		--_tx: calc(var(--layout-anim-tx) * var(--layout-anim-mult));
+		--_ty: calc(var(--layout-anim-ty) * var(--layout-anim-mult));
+		--_txv: calc(var(--layout-anim-txv) * var(--layout-anim-mult));
+		--_tyv: calc(var(--layout-anim-tyv) * var(--layout-anim-mult));
+		--_zi: calc(var(--layout-anim-zi) / var(--layout-anim-mult));
+		--_zo: calc(1 + (var(--layout-anim-zo) - 1) * var(--layout-anim-mult));
 	}
 
-	[animation~="bounce"] { --_animn: bounce-in; }
-	[animation~="bounce-in-left"] { --_animn: bounce-in-left; }
-	[animation~="bounce-in-right"] { --_animn: bounce-in-right; }
-	[animation~="bounce-in-up"] { --_animn: bounce-in-up; }
-	[animation~="bounce-in-down"] { --_animn: bounce-in-down; }
-	[animation~="fade-down"] { --_animn: fade-down; }
-	[animation~="fade-down-left"] { --_animn: fade-down-left; }
-	[animation~="fade-down-right"] { --_animn: fade-down-right; }
+	/* Multiplier support: animation="fade-up(2)" or animation-items="fade-up(2)" */
+	[animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; }
+	[animation*="(2)"], [animation-items*="(2)"] { --layout-anim-mult: 2; }
+	[animation*="(3)"], [animation-items*="(3)"] { --layout-anim-mult: 3; }
+
+	[animation~="bounce"], [animation*="bounce("] { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animation~="bounce-in-left"], [animation*="bounce-in-left("] { --_animn: bounce-in-left; }
+	[animation~="bounce-in-right"], [animation*="bounce-in-right("] { --_animn: bounce-in-right; }
+	[animation~="bounce-in-up"], [animation*="bounce-in-up("] { --_animn: bounce-in-up; }
+	[animation~="bounce-in-down"], [animation*="bounce-in-down("] { --_animn: bounce-in-down; }
+	[animation~="fade-down"], [animation*="fade-down("] { --_animn: fade-down; }
+	[animation~="fade-down-left"], [animation*="fade-down-left("] { --_animn: fade-down-left; }
+	[animation~="fade-down-right"], [animation*="fade-down-right("] { --_animn: fade-down-right; }
 	[animation~="fade-in"] { --_animn: fade-in; }
-	[animation~="fade-in-scale"] { --_animn: fade-in-scale; }
-	[animation~="fade-left"] { --_animn: fade-left; }
+	[animation~="fade-in-scale"], [animation*="fade-in-scale("] { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
+	[animation~="fade-left"], [animation*="fade-left("] { --_animn: fade-left; }
 	[animation~="fade-out"] { --_animn: fade-out; }
-	[animation~="fade-out-scale"] { --_animn: fade-out-scale; }
-	[animation~="fade-right"] { --_animn: fade-right; }
-	[animation~="fade-up"] { --_animn: fade-up; }
-	[animation~="fade-up-left"] { --_animn: fade-up-left; }
-	[animation~="fade-up-right"] { --_animn: fade-up-right; }
-	[animation~="flip-diagonal"] { --_animn: flip-diagonal; }
-	[animation~="flip-down"] { --_animn: flip-down; }
-	[animation~="flip-left"] { --_animn: flip-left; }
-	[animation~="flip-right"] { --_animn: flip-right; }
-	[animation~="flip-up"] { --_animn: flip-up; }
+	[animation~="fade-out-scale"], [animation*="fade-out-scale("] { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
+	[animation~="fade-right"], [animation*="fade-right("] { --_animn: fade-right; }
+	[animation~="fade-up"], [animation*="fade-up("] { --_animn: fade-up; }
+	[animation~="fade-up-left"], [animation*="fade-up-left("] { --_animn: fade-up-left; }
+	[animation~="fade-up-right"], [animation*="fade-up-right("] { --_animn: fade-up-right; }
+	[animation~="flip-diagonal"], [animation*="flip-diagonal("] { --_animn: flip-diagonal; }
+	[animation~="flip-down"], [animation*="flip-down("] { --_animn: flip-down; }
+	[animation~="flip-left"], [animation*="flip-left("] { --_animn: flip-left; }
+	[animation~="flip-right"], [animation*="flip-right("] { --_animn: flip-right; }
+	[animation~="flip-up"], [animation*="flip-up("] { --_animn: flip-up; }
 	[animation~="opacity"] { --_animn: opacity; }
 	[animation~="reveal"] { --_animn: reveal; }
 	[animation~="reveal-circle"] { --_animn: reveal-circle; }
 	[animation~="reveal-polygon"] { --_animn: reveal-polygon; }
-	[animation~="slide-down"] { --_animn: slide-down; }
-	[animation~="slide-in"] { --_animn: slide-in; }
-	[animation~="slide-out"] { --_animn: slide-out; }
-	[animation~="slide-up"] { --_animn: slide-up; }
-	[animation~="zoom-in"] { --_animn: zoom-in; }
-	[animation~="zoom-in-rotate"] { --_animn: zoom-in-rotate; }
-	[animation~="zoom-out"] { --_animn: zoom-out; }
-	[animation~="zoom-out-rotate"] { --_animn: zoom-out-rotate; }
+	[animation~="slide-down"], [animation*="slide-down("] { --_animn: slide-down; }
+	[animation~="slide-in"], [animation*="slide-in("] { --_animn: slide-in; }
+	[animation~="slide-out"], [animation*="slide-out("] { --_animn: slide-out; }
+	[animation~="slide-up"], [animation*="slide-up("] { --_animn: slide-up; }
+	[animation~="zoom-in"], [animation*="zoom-in("] { --_animn: zoom-in; }
+	[animation~="zoom-in-rotate"], [animation*="zoom-in-rotate("] { --_animn: zoom-in-rotate; }
+	[animation~="zoom-out"], [animation*="zoom-out("] { --_animn: zoom-out; }
+	[animation~="zoom-out-rotate"], [animation*="zoom-out-rotate("] { --_animn: zoom-out-rotate; }
 
 	/* === RANGES === */
 	[range="contain"] { --_animrs: entry 0%; --_animre: contain 50%; }
@@ -282,13 +298,13 @@
 		}
 
 		/* Item animation presets */
-		[animation-items~="fade-up"] > * { --_item-animn: fade-up; }
-		[animation-items~="fade-down"] > * { --_item-animn: fade-down; }
-		[animation-items~="fade-left"] > * { --_item-animn: fade-left; }
-		[animation-items~="fade-right"] > * { --_item-animn: fade-right; }
+		[animation-items~="fade-up"] > *, [animation-items*="fade-up("] > * { --_item-animn: fade-up; }
+		[animation-items~="fade-down"] > *, [animation-items*="fade-down("] > * { --_item-animn: fade-down; }
+		[animation-items~="fade-left"] > *, [animation-items*="fade-left("] > * { --_item-animn: fade-left; }
+		[animation-items~="fade-right"] > *, [animation-items*="fade-right("] > * { --_item-animn: fade-right; }
 		[animation-items~="fade-in"] > * { --_item-animn: fade-in; }
-		[animation-items~="zoom-in"] > * { --_item-animn: zoom-in; }
-		[animation-items~="flip-up"] > * { --_item-animn: flip-up; }
+		[animation-items~="zoom-in"] > *, [animation-items*="zoom-in("] > * { --_item-animn: zoom-in; }
+		[animation-items~="flip-up"] > *, [animation-items*="flip-up("] > * { --_item-animn: flip-up; }
 
 		/* Base item animation (scroll-driven via container timeline) */
 		[animation-items] > * {
@@ -305,6 +321,29 @@
 		[animation-items] > :nth-child(4) { animation-range: entry 50% entry 100%; }
 		[animation-items] > :nth-child(5) { animation-range: entry 60% entry 100%; }
 		[animation-items] > :nth-child(6) { animation-range: entry 70% entry 100%; }
+
+		/* Deep: animate grandchildren relative to card position */
+		[animation-items~="deep"] > * > * {
+			animation-name: var(--_item-animn);
+			animation-timing-function: var(--layout-item-timing, ease-out);
+			animation-fill-mode: backwards;
+			animation-timeline: --layout-tl;
+			animation-range:
+				entry calc((var(--_card-offset, 0) + var(--_child-offset, 0)) * 1%)
+				entry calc((75 + var(--_card-offset, 0) + var(--_child-offset, 0)) * 1%);
+		}
+
+		/* Deep stagger: card offset via nth-child */
+		[animation-items~="deep"] > :nth-child(2) > * { --_card-offset: 20; }
+		[animation-items~="deep"] > :nth-child(3) > * { --_card-offset: 40; }
+		[animation-items~="deep"] > :nth-child(4) > * { --_card-offset: 50; }
+		[animation-items~="deep"] > :nth-child(5) > * { --_card-offset: 60; }
+		[animation-items~="deep"] > :nth-child(6) > * { --_card-offset: 70; }
+
+		/* Deep stagger: child offset within each card */
+		[animation-items~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
+		[animation-items~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
+		[animation-items~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
 	}
 
 	/* Stagger: sibling-index() enhancement (scales to any child count) */
@@ -313,6 +352,16 @@
 			animation-range:
 				entry calc((sibling-index() - 1) * 20%)
 				entry calc(75% + (sibling-index() - 1) * 20%);
+		}
+
+		/* Deep: card offset + child stagger using sibling-index() */
+		[animation-items~="deep"] > * {
+			--_card-offset: calc((sibling-index() - 1) * 20);
+		}
+		[animation-items~="deep"] > * > * {
+			animation-range:
+				entry calc((var(--_card-offset) + (sibling-index() - 1) * 10) * 1%)
+				entry calc((75 + var(--_card-offset) + (sibling-index() - 1) * 10) * 1%);
 		}
 	}
 
@@ -334,7 +383,7 @@
 
 	/* Bounce */
 	@keyframes bounce-in {
-		0% { opacity: 0; scale: 0.3; }
+		0% { opacity: 0; scale: var(--_zi); }
 		50% { scale: 1.05; }
 		70% { scale: 0.9; }
 		100% { opacity: 1; scale: 1; }
@@ -400,12 +449,12 @@
 
 	/* Fade / Scale */
 	@keyframes fade-in-scale {
-		0% { opacity: 0; transform: scale(0.8); }
-		100% { opacity: 1; transform: scale(1); }
+		0% { opacity: 0; scale: var(--_zi); }
+		100% { opacity: 1; scale: 1; }
 	}
 	@keyframes fade-out-scale {
-		0% { opacity: 1; transform: scale(1); }
-		100% { opacity: 0; transform: scale(0.8); }
+		0% { opacity: 1; scale: 1; }
+		100% { opacity: 0; scale: var(--_zi); }
 	}
 
 	/* Flip */

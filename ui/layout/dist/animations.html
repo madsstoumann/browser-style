@@ -11,170 +11,267 @@
 </head>
 <body>
 	<h1>Animation Demos</h1>
-	<p>These demos show <strong>scroll-driven animations</strong> on layout containers.<br>
-	Scroll down to see elements animate as they enter the viewport. <strong>Chrome only</strong> for now.</p>
+	<p>These demos show <strong>scroll-driven animations</strong> on containers and individual items.<br>
+	Scroll down to see elements animate as they enter the viewport.</p>
 
-	<div style="height: 80vh; display: grid; place-items: center;">
+	<div style="height: 60vh; display: grid; place-items: center;">
 		<p style="opacity: 0.5;">↓ Scroll down to see animations ↓</p>
 	</div>
 
-	<h2>fade-up</h2>
-	<lay-out animation="fade-up" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Container Animation</h2>
+	<section>
+		<small>The entire <strong>lay-out</strong> container animates as it enters the viewport using the existing <strong>animation</strong> attribute.</small>
+		<code>&lt;lay-out animation="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>fade-down</h2>
-	<lay-out animation="fade-down" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Fade Up</h2>
+	<section>
+		<small>Each child animates independently based on the container's scroll position using <strong>animation-items</strong>.</small>
+		<code>&lt;lay-out animation-items="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>fade-left</h2>
-	<lay-out animation="fade-left" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Container + Item Animation</h2>
+	<section>
+		<small>Both <strong>animation</strong> (container) and <strong>animation-items</strong> (children) combined. The container fades in while items fade up.</small>
+		<code>&lt;lay-out animation="fade-in" animation-items="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-in" animation-items="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>fade-right</h2>
-	<lay-out animation="fade-right" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Fade Down</h2>
+	<section>
+		<small>Items animate downward as the container scrolls into view.</small>
+		<code>&lt;lay-out animation-items="fade-down" lg="columns(4)"&gt;</code>
+		<lay-out animation-items="fade-down" lg="columns(4)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>fade-in</h2>
-	<lay-out animation="fade-in" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Fade Left</h2>
+	<section>
+		<small>Items slide in from the right as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-left" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-left" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>fade-in-scale</h2>
-	<lay-out animation="fade-in-scale" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Fade Right</h2>
+	<section>
+		<small>Items slide in from the left as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-right" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-right" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>zoom-in</h2>
-	<lay-out animation="zoom-in" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Zoom In</h2>
+	<section>
+		<small>Items scale up from a smaller size as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="zoom-in" lg="columns(4)"&gt;</code>
+		<lay-out animation-items="zoom-in" lg="columns(4)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>zoom-out</h2>
-	<lay-out animation="zoom-out" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Item Animation — Flip Up</h2>
+	<section>
+		<small>Items flip into view as the container enters the viewport.</small>
+		<code>&lt;lay-out animation-items="flip-up" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="flip-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>flip-up</h2>
-	<lay-out animation="flip-up" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Grid Layout with Item Animation</h2>
+	<section>
+		<small>A grid pattern with item animations — items fade up as the grid enters the viewport.</small>
+		<code>&lt;lay-out animation-items="fade-up" lg="grid(3a)"&gt;</code>
+		<lay-out animation-items="fade-up" lg="grid(3a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>flip-down</h2>
-	<lay-out animation="flip-down" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Bento Layout with Item Animation</h2>
+	<section>
+		<small>A bento box layout with zoom-in item animations.</small>
+		<code>&lt;lay-out animation-items="zoom-in" lg="bento(6a)"&gt;</code>
+		<lay-out animation-items="zoom-in" lg="bento(6a)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>reveal</h2>
-	<lay-out animation="reveal" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Animation Multipliers</h2>
+	<p>Use a multiplier <strong>(1–3)</strong> to control animation intensity. Default is 1×.</p>
 
-	<h2>reveal-circle</h2>
-	<lay-out animation="reveal-circle" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h3>fade-up — Default vs 2× vs 3×</h3>
+	<section>
+		<small>Default intensity (110px translation).</small>
+		<code>&lt;lay-out animation="fade-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× intensity (220px translation).</small>
+		<code>&lt;lay-out animation="fade-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>3× intensity (330px translation).</small>
+		<code>&lt;lay-out animation="fade-up(3)" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up(3)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>slide-in</h2>
-	<lay-out animation="slide-in" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h3>zoom-in — Default vs 2× vs 3×</h3>
+	<section>
+		<small>Default zoom (starts at 0.6 scale).</small>
+		<code>&lt;lay-out animation="zoom-in" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× zoom (starts at 0.3 scale).</small>
+		<code>&lt;lay-out animation="zoom-in(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>3× zoom (starts at 0.2 scale).</small>
+		<code>&lt;lay-out animation="zoom-in(3)" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in(3)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>bounce</h2>
-	<lay-out animation="bounce" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h3>flip-up — Default vs 2×</h3>
+	<section>
+		<small>Default rotation (100deg).</small>
+		<code>&lt;lay-out animation="flip-up" lg="columns(3)"&gt;</code>
+		<lay-out animation="flip-up" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>2× rotation (200deg).</small>
+		<code>&lt;lay-out animation="flip-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation="flip-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h2>Item Animations</h2>
-	<p>Children animate individually using the container's scroll timeline.</p>
+	<h3>Item Animation with Multiplier</h3>
+	<section>
+		<small>Item animations also support multipliers — each child fades up with 2× intensity.</small>
+		<code>&lt;lay-out animation-items="fade-up(2)" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up(2)" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
 
-	<h3>animation-items="fade-up"</h3>
-	<lay-out animation-items="fade-up" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h2>Deep Animations</h2>
+	<p>The <strong>deep</strong> modifier animates grandchildren (elements inside each item) with stagger relative to card position.</p>
 
-	<h3>animation-items="fade-down"</h3>
-	<lay-out animation-items="fade-down" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
+	<h3>fade-up deep</h3>
+	<section>
+		<small>Each card's inner elements (img, h4, p) stagger their fade-up based on card position + element order.</small>
+		<code>&lt;lay-out animation-items="fade-up deep" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up deep" lg="columns(3)">
+			<item-card>
+				<img src="https://picsum.photos/id/10/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Mountain Lake</h4>
+				<p style="margin:.25rem 0;color:gray;">A serene mountain lake surrounded by pine trees.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/17/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Coastal View</h4>
+				<p style="margin:.25rem 0;color:gray;">Dramatic coastline with waves crashing on rocks.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/28/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Forest Path</h4>
+				<p style="margin:.25rem 0;color:gray;">A winding trail through an ancient forest.</p>
+			</item-card>
+		</lay-out>
+	</section>
 
-	<h3>animation-items="fade-left"</h3>
-	<lay-out animation-items="fade-left" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<h3>animation-items="fade-right"</h3>
-	<lay-out animation-items="fade-right" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<h3>animation-items="fade-in"</h3>
-	<lay-out animation-items="fade-in" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<h3>animation-items="zoom-in"</h3>
-	<lay-out animation-items="zoom-in" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<h3>animation-items="flip-up"</h3>
-	<lay-out animation-items="flip-up" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<h3>Container + Items combined</h3>
-	<lay-out animation="fade-right" animation-items="fade-up" lg="columns(3)">
-		<item-card></item-card>
-		<item-card></item-card>
-		<item-card></item-card>
-	</lay-out>
-
-	<div style="height: 50vh;"></div>
+	<h3>fade-up(2) deep</h3>
+	<section>
+		<small>Deep animation combined with 2× multiplier — inner elements travel further.</small>
+		<code>&lt;lay-out animation-items="fade-up(2) deep" lg="columns(3)"&gt;</code>
+		<lay-out animation-items="fade-up(2) deep" lg="columns(3)">
+			<item-card>
+				<img src="https://picsum.photos/id/36/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Desert Sunset</h4>
+				<p style="margin:.25rem 0;color:gray;">Golden light painting the desert landscape.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/42/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">City Lights</h4>
+				<p style="margin:.25rem 0;color:gray;">Urban skyline glowing at twilight.</p>
+			</item-card>
+			<item-card>
+				<img src="https://picsum.photos/id/49/320/180" alt="Random image" width="320" height="180" style="width:100%;height:auto;display:block;">
+				<h4 style="margin:.5rem 0 0">Open Fields</h4>
+				<p style="margin:.25rem 0;color:gray;">Rolling hills stretching to the horizon.</p>
+			</item-card>
+		</lay-out>
+	</section>
 </body>
 </html>
