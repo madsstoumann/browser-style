@@ -294,3 +294,103 @@ Slot 2 (exit):   animation-name: var(--_anim-exit, none) direction: reverse
 The exit slot defaults to `none` (inactive). When a `pace` exit token is set, `--_anim-exit` resolves to the same keyframe as entry, played in reverse. For items, exit stagger is reversed — the last child exits first.
 
 Easing values are sourced from `easings.css` (imported at the top of `animations.css`). The `[easing]` attribute maps the attribute value to `--animtm` (for container animations) and `--layout-item-timing` (for item animations).
+
+---
+
+## Proposal: Scroll-Triggered Item Animations
+
+### Problem
+
+Scroll-driven animations (`animation-timeline: view()`) tie animation progress directly to scroll position. This means animation speed depends entirely on how fast the user scrolls — fast scrolling produces fast animations, slow scrolling produces slow ones. The `pace` attribute helps by widening or narrowing the scroll range, but cannot guarantee consistent timing.
+
+### Solution: `triggered` Token
+
+A `triggered` token in the `animate` attribute opts into scroll-triggered animations (Chrome 145+), where scroll position *starts* the animation but doesn't control its progress. The animation plays at a fixed duration once triggered.
+
+```html
+<!-- Scroll-driven (current default) -->
+<lay-out animate="fade-up()" lg="columns(3)">
+
+<!-- Scroll-triggered (consistent timing) -->
+<lay-out animate="fade-up() triggered" lg="columns(3)">
+```
+
+Browsers without `timeline-trigger-name` support ignore the `@supports` block and fall back to the current scroll-driven approach automatically.
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────────┐
+│  @supports (timeline-trigger-name: --t)             │
+│                                                     │
+│  [animate~="triggered"]                             │
+│    → timeline-trigger: --layout-trigger view()      │
+│       entry 25% exit 0%                             │
+│    → trigger-scope: --layout-trigger                │
+│                                                     │
+│  [animate~="triggered"] > *                         │
+│    → animation-timeline: auto  (time-based)         │
+│    → animation-trigger: --layout-trigger            │
+│       play-forwards play-backwards                  │
+│    → animation-duration: var(--layout-anim-dur)     │
+│    → animation-delay: sibling-index() * delay       │
+│                                                     │
+│  Fallback (no support):                             │
+│    Scroll-driven via animation-timeline: --layout-tl│
+│    (everything we have today)                       │
+└─────────────────────────────────────────────────────┘
+```
+
+The container defines a `timeline-trigger` that fires when it enters the viewport. Children switch from scroll-driven to time-based animations, using `animation-trigger` to link to the container's trigger. Stagger uses `animation-delay` with `sibling-index()` instead of scroll-range offsets.
+
+### Advantages Over Scroll-Driven
+
+| Aspect | Scroll-driven | Scroll-triggered |
+|--------|--------------|-----------------|
+| Speed consistency | Varies with scroll speed | Fixed duration |
+| Stagger mechanism | Scroll-range offsets | `animation-delay` (smoother) |
+| Exit behavior | Second animation slot (reverse) | `play-backwards` on trigger |
+| Easing fidelity | Limited by scroll granularity | Full CSS easing curves |
+
+### Exit Handling
+
+`play-backwards` on the `animation-trigger` reverses the animation when scrolling back past the trigger zone. This may replace the two-slot entry/exit pattern entirely in triggered mode — a single animation slot handles both directions.
+
+### New Custom Properties
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--layout-anim-dur` | `0.5s` | Animation duration in triggered mode |
+| `--layout-anim-delay` | `0.005s` | Time factor per stagger unit (already exists) |
+
+### Pace Mapping
+
+In scroll-driven mode, `pace` tokens set `animation-range` values. In triggered mode, the same tokens would map differently:
+
+| Token | Scroll-driven effect | Triggered equivalent |
+|-------|---------------------|---------------------|
+| `fast` | Narrow scroll range | Shorter `--layout-anim-dur` |
+| `slow` | Wide scroll range | Longer `--layout-anim-dur` |
+| `exit` | Second animation slot | `play-backwards` (automatic) |
+
+Whether `pace` should control the trigger's entry point, the duration, or both is an open question.
+
+### Interaction With `deep`
+
+Deep animations already use `timeline-trigger` in the `@supports` block. The `triggered` token would extend this pattern to regular item animations. When both `triggered` and `deep` are present, the existing deep stagger logic (item offset + child offset) applies to `animation-delay`.
+
+### Usage
+
+```html
+<!-- Triggered with stagger -->
+<lay-out animate="fade-up() triggered" lg="columns(3)">
+
+<!-- Triggered + deep -->
+<lay-out animate="fade-up() triggered deep" lg="columns(3)">
+
+<!-- Triggered + clip for slides -->
+<lay-out animate="slide-down() triggered clip" lg="columns(3)">
+
+<!-- Custom duration -->
+<lay-out animate="zoom-in() triggered" style="--layout-anim-dur: 0.8s" lg="columns(3)">
+```
