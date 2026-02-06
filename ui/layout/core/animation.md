@@ -9,7 +9,7 @@ Scroll-driven animations for the `lay-out` component. Elements animate as they e
 | `animation` | Container | Animates the entire `lay-out` element |
 | `animation-items` | Children | Animates each direct child independently |
 | `easing` | Container | Applies a custom easing from `easings.css` |
-| `range` | Container | Controls the scroll range (`contain`, `cover`, `exit`) |
+| `pace` | Container | Controls animation speed and entry/exit behavior (space-separated tokens) |
 
 ## Syntax
 
@@ -29,7 +29,6 @@ Animations use a function-call syntax with an optional multiplier:
 ### Fade
 `fade-in()` `fade-out()` `fade-up()` `fade-down()` `fade-left()` `fade-right()`
 `fade-up-left()` `fade-up-right()` `fade-down-left()` `fade-down-right()`
-`fade-in-scale()` `fade-out-scale()`
 
 ### Flip
 `flip-up()` `flip-down()` `flip-left()` `flip-right()` `flip-diagonal()`
@@ -174,22 +173,55 @@ Example — custom translation distance with multiplier:
 <!-- Result: 200px * 2 = 400px translation -->
 ```
 
-## Scroll Ranges
+## Pace
 
-Control when the animation plays relative to the viewport:
+Controls animation speed and when the animation plays relative to the viewport. Tokens are space-separated, so entry and exit can be combined.
+
+### Entry Speed
+
+| Token | Start | End | Description |
+|-------|-------|-----|-------------|
+| *(default)* | `entry 0%` | `entry 75%` | Normal speed — no attribute needed |
+| `fast` | `entry 25%` | `entry 60%` | Narrow range, snappy |
+| `slow` | `entry 0%` | `entry 100%` | Full entry phase |
+| `slower` | `entry 0%` | `contain 25%` | Spills into contain |
+
+### Entry Phase
+
+| Token | Start | End | Description |
+|-------|-------|-----|-------------|
+| `contain` | `entry 0%` | `contain 50%` | Plays while element is fully visible |
+| `cover` | `entry 25%` | `cover 50%` | Plays while element covers viewport |
+| `full` | `entry 0%` | `exit 0%` | Entire visibility span |
+
+### Exit
+
+Exit tokens activate a second animation slot that plays the same keyframe in reverse as the element scrolls out.
+
+| Token | Start | End | Description |
+|-------|-------|-----|-------------|
+| `exit` | `exit 0%` | `exit 100%` | Default exit speed |
+| `exit-fast` | `exit 40%` | `exit 100%` | Narrow range, snappy |
+| `exit-slow` | `contain 50%` | `exit 100%` | Starts before exit phase |
+
+### Combining Tokens
 
 ```html
-<lay-out animation="fade-up()" range="contain">
-<lay-out animation="fade-up()" range="cover">
-<lay-out animation="fade-up()" range="exit">
-```
+<!-- Entry only, slow -->
+<lay-out animation="fade-up()" pace="slow">
 
-| Range | Start | End |
-|-------|-------|-----|
-| *(default)* | `entry 0%` | `entry 75%` |
-| `contain` | `entry 0%` | `contain 50%` |
-| `cover` | `entry 25%` | `cover 50%` |
-| `exit` | `exit 0%` | `exit 100%` |
+<!-- Entry + exit, default speeds -->
+<lay-out animation="fade-up()" pace="exit">
+
+<!-- Slow entry, fast exit -->
+<lay-out animation="fade-up()" pace="slow exit-fast">
+
+<!-- Fast entry, slow exit -->
+<lay-out animation="zoom-in()" pace="fast exit-slow">
+
+<!-- Phase + exit -->
+<lay-out animation="flip-up()" pace="contain exit">
+```
 
 ## Progressive Enhancement
 

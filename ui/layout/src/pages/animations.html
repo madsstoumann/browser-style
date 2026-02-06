@@ -178,17 +178,6 @@
 		</lay-out>
 	</section>
 
-    <h3>fade-in-scale()</h3>
-	<section>
-		<small>Container fades in and scales up slightly.</small>
-		<code>&lt;lay-out animation="fade-in-scale()" lg="columns(3)"&gt;</code>
-		<lay-out animation="fade-in-scale()" lg="columns(3)">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-		</lay-out>
-	</section>
-
 	<h2>Flip Animations</h2>
 
 	<h3>flip-up()</h3>
@@ -413,6 +402,139 @@
 		<small>Gravity-like bounce effect.</small>
 		<code>&lt;lay-out animation="zoom-in()" easing="ease-bounce-1" lg="columns(3)"&gt;</code>
 		<lay-out animation="zoom-in()" easing="ease-bounce-1" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace — Entry Speed</h2>
+	<p>Control how quickly the animation completes during entry. Default is <code>entry 0%</code> to <code>entry 75%</code>.</p>
+
+	<h3>fade-up() pace="fast"</h3>
+	<section>
+		<small>Narrow scroll range — snappy animation.</small>
+		<code>&lt;lay-out animation="fade-up()" pace="fast" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up()" pace="fast" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() pace="slow"</h3>
+	<section>
+		<small>Full entry phase — gentle animation.</small>
+		<code>&lt;lay-out animation="fade-up()" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up()" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() pace="slower"</h3>
+	<section>
+		<small>Spills into contain phase — very gradual.</small>
+		<code>&lt;lay-out animation="fade-up()" pace="slower" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up()" pace="slower" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace — Entry Phase</h2>
+	<p>Control <em>when</em> the animation plays relative to the element's visibility.</p>
+
+	<h3>zoom-in() pace="contain"</h3>
+	<section>
+		<small>Plays while element is fully visible in viewport.</small>
+		<code>&lt;lay-out animation="zoom-in()" pace="contain" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in()" pace="contain" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal-circle() pace="cover"</h3>
+	<section>
+		<small>Plays while element covers the viewport.</small>
+		<code>&lt;lay-out animation="reveal-circle()" pace="cover" lg="columns(3)"&gt;</code>
+		<lay-out animation="reveal-circle()" pace="cover" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace — Exit</h2>
+	<p>Add an <code>exit</code> token to play the animation in reverse as the element scrolls out.</p>
+
+	<h3>fade-up() pace="exit"</h3>
+	<section>
+		<small>Fades up on entry, reverses on exit.</small>
+		<code>&lt;lay-out animation="fade-up()" pace="exit" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up()" pace="exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>zoom-in() pace="exit-fast"</h3>
+	<section>
+		<small>Zooms in on entry, snappy reverse on exit.</small>
+		<code>&lt;lay-out animation="zoom-in()" pace="exit-fast" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in()" pace="exit-fast" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>flip-up() pace="exit-slow"</h3>
+	<section>
+		<small>Flips up on entry, slow reverse starting in contain phase.</small>
+		<code>&lt;lay-out animation="flip-up()" pace="exit-slow" lg="columns(3)"&gt;</code>
+		<lay-out animation="flip-up()" pace="exit-slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Pace — Combined Entry + Exit</h2>
+	<p>Mix entry speed and exit tokens for independent control.</p>
+
+	<h3>fade-up() pace="slow exit-fast"</h3>
+	<section>
+		<small>Slow entry, snappy exit.</small>
+		<code>&lt;lay-out animation="fade-up()" pace="slow exit-fast" lg="columns(3)"&gt;</code>
+		<lay-out animation="fade-up()" pace="slow exit-fast" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>zoom-in() pace="fast exit-slow"</h3>
+	<section>
+		<small>Fast entry, gradual exit.</small>
+		<code>&lt;lay-out animation="zoom-in()" pace="fast exit-slow" lg="columns(3)"&gt;</code>
+		<lay-out animation="zoom-in()" pace="fast exit-slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>reveal() pace="contain exit"</h3>
+	<section>
+		<small>Reveal during contain phase, reverse on exit.</small>
+		<code>&lt;lay-out animation="reveal()" pace="contain exit" lg="columns(3)"&gt;</code>
+		<lay-out animation="reveal()" pace="contain exit" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>

@@ -1,8 +1,13 @@
 @import 'easings.css';
 
 @layer layout.animations {
+
+	/* ==========================================================================
+	   Custom Properties
+	   ========================================================================== */
+
 	[animation], [animation-items] {
-		/* Public API — user-facing, overridable */
+		/* Public API */
 		--layout-anim-dg: 100deg;
 		--layout-anim-tx: 55px;
 		--layout-anim-ty: 110px;
@@ -13,7 +18,7 @@
 		--layout-anim-mult: 1;
 		--layout-anim-delay: 0.005s;
 
-		/* Computed internal — consumed by keyframes */
+		/* Internal (consumed by keyframes) */
 		--_dg: calc(var(--layout-anim-dg) * var(--layout-anim-mult));
 		--_tx: calc(var(--layout-anim-tx) * var(--layout-anim-mult));
 		--_ty: calc(var(--layout-anim-ty) * var(--layout-anim-mult));
@@ -23,200 +28,259 @@
 		--_zo: calc(1 + (var(--layout-anim-zo) - 1) * var(--layout-anim-mult));
 	}
 
-	/* Multiplier support: animation="fade-up(2)" or animation-items="fade-up(2)" */
-	/* [animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; } */
+	/* ==========================================================================
+	   Multiplier: animation="fade-up(2)" or animation-items="fade-up(2)"
+	   ========================================================================== */
+
 	[animation*="(2)"], [animation-items*="(2)"] { --layout-anim-mult: 2; }
 	[animation*="(3)"], [animation-items*="(3)"] { --layout-anim-mult: 3; }
 
-	/* Easing support — values from easings.css */
+	/* ==========================================================================
+	   Easing: maps [easing] attribute to --animtm custom property.
+	   Item animations inherit --animtm via the fallback chain:
+	   var(--layout-item-timing, var(--animtm, ease-out))
+	   Set --layout-item-timing directly to override item timing independently.
+	   ========================================================================== */
 
 	/* Ease */
-	[easing="ease-1"] { --animtm: var(--ease-1); --layout-item-timing: var(--ease-1); }
-	[easing="ease-2"] { --animtm: var(--ease-2); --layout-item-timing: var(--ease-2); }
-	[easing="ease-3"] { --animtm: var(--ease-3); --layout-item-timing: var(--ease-3); }
-	[easing="ease-4"] { --animtm: var(--ease-4); --layout-item-timing: var(--ease-4); }
-	[easing="ease-5"] { --animtm: var(--ease-5); --layout-item-timing: var(--ease-5); }
+	[easing="ease-1"] { --animtm: var(--ease-1); }
+	[easing="ease-2"] { --animtm: var(--ease-2); }
+	[easing="ease-3"] { --animtm: var(--ease-3); }
+	[easing="ease-4"] { --animtm: var(--ease-4); }
+	[easing="ease-5"] { --animtm: var(--ease-5); }
 
 	/* Ease In */
-	[easing="ease-in-1"] { --animtm: var(--ease-in-1); --layout-item-timing: var(--ease-in-1); }
-	[easing="ease-in-2"] { --animtm: var(--ease-in-2); --layout-item-timing: var(--ease-in-2); }
-	[easing="ease-in-3"] { --animtm: var(--ease-in-3); --layout-item-timing: var(--ease-in-3); }
-	[easing="ease-in-4"] { --animtm: var(--ease-in-4); --layout-item-timing: var(--ease-in-4); }
-	[easing="ease-in-5"] { --animtm: var(--ease-in-5); --layout-item-timing: var(--ease-in-5); }
+	[easing="ease-in-1"] { --animtm: var(--ease-in-1); }
+	[easing="ease-in-2"] { --animtm: var(--ease-in-2); }
+	[easing="ease-in-3"] { --animtm: var(--ease-in-3); }
+	[easing="ease-in-4"] { --animtm: var(--ease-in-4); }
+	[easing="ease-in-5"] { --animtm: var(--ease-in-5); }
 
 	/* Ease Out */
-	[easing="ease-out-1"] { --animtm: var(--ease-out-1); --layout-item-timing: var(--ease-out-1); }
-	[easing="ease-out-2"] { --animtm: var(--ease-out-2); --layout-item-timing: var(--ease-out-2); }
-	[easing="ease-out-3"] { --animtm: var(--ease-out-3); --layout-item-timing: var(--ease-out-3); }
-	[easing="ease-out-4"] { --animtm: var(--ease-out-4); --layout-item-timing: var(--ease-out-4); }
-	[easing="ease-out-5"] { --animtm: var(--ease-out-5); --layout-item-timing: var(--ease-out-5); }
+	[easing="ease-out-1"] { --animtm: var(--ease-out-1); }
+	[easing="ease-out-2"] { --animtm: var(--ease-out-2); }
+	[easing="ease-out-3"] { --animtm: var(--ease-out-3); }
+	[easing="ease-out-4"] { --animtm: var(--ease-out-4); }
+	[easing="ease-out-5"] { --animtm: var(--ease-out-5); }
 
 	/* Ease In-Out */
-	[easing="ease-in-out-1"] { --animtm: var(--ease-in-out-1); --layout-item-timing: var(--ease-in-out-1); }
-	[easing="ease-in-out-2"] { --animtm: var(--ease-in-out-2); --layout-item-timing: var(--ease-in-out-2); }
-	[easing="ease-in-out-3"] { --animtm: var(--ease-in-out-3); --layout-item-timing: var(--ease-in-out-3); }
-	[easing="ease-in-out-4"] { --animtm: var(--ease-in-out-4); --layout-item-timing: var(--ease-in-out-4); }
-	[easing="ease-in-out-5"] { --animtm: var(--ease-in-out-5); --layout-item-timing: var(--ease-in-out-5); }
+	[easing="ease-in-out-1"] { --animtm: var(--ease-in-out-1); }
+	[easing="ease-in-out-2"] { --animtm: var(--ease-in-out-2); }
+	[easing="ease-in-out-3"] { --animtm: var(--ease-in-out-3); }
+	[easing="ease-in-out-4"] { --animtm: var(--ease-in-out-4); }
+	[easing="ease-in-out-5"] { --animtm: var(--ease-in-out-5); }
 
 	/* Spring */
-	[easing="ease-spring-1"] { --animtm: var(--ease-spring-1); --layout-item-timing: var(--ease-spring-1); }
-	[easing="ease-spring-2"] { --animtm: var(--ease-spring-2); --layout-item-timing: var(--ease-spring-2); }
-	[easing="ease-spring-3"] { --animtm: var(--ease-spring-3); --layout-item-timing: var(--ease-spring-3); }
-	[easing="ease-spring-4"] { --animtm: var(--ease-spring-4); --layout-item-timing: var(--ease-spring-4); }
-	[easing="ease-spring-5"] { --animtm: var(--ease-spring-5); --layout-item-timing: var(--ease-spring-5); }
+	[easing="ease-spring-1"] { --animtm: var(--ease-spring-1); }
+	[easing="ease-spring-2"] { --animtm: var(--ease-spring-2); }
+	[easing="ease-spring-3"] { --animtm: var(--ease-spring-3); }
+	[easing="ease-spring-4"] { --animtm: var(--ease-spring-4); }
+	[easing="ease-spring-5"] { --animtm: var(--ease-spring-5); }
 
 	/* Bounce */
-	[easing="ease-bounce-1"] { --animtm: var(--ease-bounce-1); --layout-item-timing: var(--ease-bounce-1); }
-	[easing="ease-bounce-2"] { --animtm: var(--ease-bounce-2); --layout-item-timing: var(--ease-bounce-2); }
-	[easing="ease-bounce-3"] { --animtm: var(--ease-bounce-3); --layout-item-timing: var(--ease-bounce-3); }
-	[easing="ease-bounce-4"] { --animtm: var(--ease-bounce-4); --layout-item-timing: var(--ease-bounce-4); }
-	[easing="ease-bounce-5"] { --animtm: var(--ease-bounce-5); --layout-item-timing: var(--ease-bounce-5); }
+	[easing="ease-bounce-1"] { --animtm: var(--ease-bounce-1); }
+	[easing="ease-bounce-2"] { --animtm: var(--ease-bounce-2); }
+	[easing="ease-bounce-3"] { --animtm: var(--ease-bounce-3); }
+	[easing="ease-bounce-4"] { --animtm: var(--ease-bounce-4); }
+	[easing="ease-bounce-5"] { --animtm: var(--ease-bounce-5); }
 
 	/* Elastic */
-	[easing="ease-elastic-1"] { --animtm: var(--ease-elastic-1); --layout-item-timing: var(--ease-elastic-1); }
-	[easing="ease-elastic-2"] { --animtm: var(--ease-elastic-2); --layout-item-timing: var(--ease-elastic-2); }
-	[easing="ease-elastic-3"] { --animtm: var(--ease-elastic-3); --layout-item-timing: var(--ease-elastic-3); }
-	[easing="ease-elastic-4"] { --animtm: var(--ease-elastic-4); --layout-item-timing: var(--ease-elastic-4); }
-	[easing="ease-elastic-5"] { --animtm: var(--ease-elastic-5); --layout-item-timing: var(--ease-elastic-5); }
+	[easing="ease-elastic-1"] { --animtm: var(--ease-elastic-1); }
+	[easing="ease-elastic-2"] { --animtm: var(--ease-elastic-2); }
+	[easing="ease-elastic-3"] { --animtm: var(--ease-elastic-3); }
+	[easing="ease-elastic-4"] { --animtm: var(--ease-elastic-4); }
+	[easing="ease-elastic-5"] { --animtm: var(--ease-elastic-5); }
 
 	/* Elastic Out */
-	[easing="ease-elastic-out-1"] { --animtm: var(--ease-elastic-out-1); --layout-item-timing: var(--ease-elastic-out-1); }
-	[easing="ease-elastic-out-2"] { --animtm: var(--ease-elastic-out-2); --layout-item-timing: var(--ease-elastic-out-2); }
-	[easing="ease-elastic-out-3"] { --animtm: var(--ease-elastic-out-3); --layout-item-timing: var(--ease-elastic-out-3); }
-	[easing="ease-elastic-out-4"] { --animtm: var(--ease-elastic-out-4); --layout-item-timing: var(--ease-elastic-out-4); }
-	[easing="ease-elastic-out-5"] { --animtm: var(--ease-elastic-out-5); --layout-item-timing: var(--ease-elastic-out-5); }
+	[easing="ease-elastic-out-1"] { --animtm: var(--ease-elastic-out-1); }
+	[easing="ease-elastic-out-2"] { --animtm: var(--ease-elastic-out-2); }
+	[easing="ease-elastic-out-3"] { --animtm: var(--ease-elastic-out-3); }
+	[easing="ease-elastic-out-4"] { --animtm: var(--ease-elastic-out-4); }
+	[easing="ease-elastic-out-5"] { --animtm: var(--ease-elastic-out-5); }
 
 	/* Elastic In */
-	[easing="ease-elastic-in-1"] { --animtm: var(--ease-elastic-in-1); --layout-item-timing: var(--ease-elastic-in-1); }
-	[easing="ease-elastic-in-2"] { --animtm: var(--ease-elastic-in-2); --layout-item-timing: var(--ease-elastic-in-2); }
-	[easing="ease-elastic-in-3"] { --animtm: var(--ease-elastic-in-3); --layout-item-timing: var(--ease-elastic-in-3); }
-	[easing="ease-elastic-in-4"] { --animtm: var(--ease-elastic-in-4); --layout-item-timing: var(--ease-elastic-in-4); }
-	[easing="ease-elastic-in-5"] { --animtm: var(--ease-elastic-in-5); --layout-item-timing: var(--ease-elastic-in-5); }
+	[easing="ease-elastic-in-1"] { --animtm: var(--ease-elastic-in-1); }
+	[easing="ease-elastic-in-2"] { --animtm: var(--ease-elastic-in-2); }
+	[easing="ease-elastic-in-3"] { --animtm: var(--ease-elastic-in-3); }
+	[easing="ease-elastic-in-4"] { --animtm: var(--ease-elastic-in-4); }
+	[easing="ease-elastic-in-5"] { --animtm: var(--ease-elastic-in-5); }
 
 	/* Elastic In-Out */
-	[easing="ease-elastic-in-out-1"] { --animtm: var(--ease-elastic-in-out-1); --layout-item-timing: var(--ease-elastic-in-out-1); }
-	[easing="ease-elastic-in-out-2"] { --animtm: var(--ease-elastic-in-out-2); --layout-item-timing: var(--ease-elastic-in-out-2); }
-	[easing="ease-elastic-in-out-3"] { --animtm: var(--ease-elastic-in-out-3); --layout-item-timing: var(--ease-elastic-in-out-3); }
-	[easing="ease-elastic-in-out-4"] { --animtm: var(--ease-elastic-in-out-4); --layout-item-timing: var(--ease-elastic-in-out-4); }
-	[easing="ease-elastic-in-out-5"] { --animtm: var(--ease-elastic-in-out-5); --layout-item-timing: var(--ease-elastic-in-out-5); }
+	[easing="ease-elastic-in-out-1"] { --animtm: var(--ease-elastic-in-out-1); }
+	[easing="ease-elastic-in-out-2"] { --animtm: var(--ease-elastic-in-out-2); }
+	[easing="ease-elastic-in-out-3"] { --animtm: var(--ease-elastic-in-out-3); }
+	[easing="ease-elastic-in-out-4"] { --animtm: var(--ease-elastic-in-out-4); }
+	[easing="ease-elastic-in-out-5"] { --animtm: var(--ease-elastic-in-out-5); }
 
 	/* Squish */
-	[easing="ease-squish-1"] { --animtm: var(--ease-squish-1); --layout-item-timing: var(--ease-squish-1); }
-	[easing="ease-squish-2"] { --animtm: var(--ease-squish-2); --layout-item-timing: var(--ease-squish-2); }
-	[easing="ease-squish-3"] { --animtm: var(--ease-squish-3); --layout-item-timing: var(--ease-squish-3); }
-	[easing="ease-squish-4"] { --animtm: var(--ease-squish-4); --layout-item-timing: var(--ease-squish-4); }
-	[easing="ease-squish-5"] { --animtm: var(--ease-squish-5); --layout-item-timing: var(--ease-squish-5); }
+	[easing="ease-squish-1"] { --animtm: var(--ease-squish-1); }
+	[easing="ease-squish-2"] { --animtm: var(--ease-squish-2); }
+	[easing="ease-squish-3"] { --animtm: var(--ease-squish-3); }
+	[easing="ease-squish-4"] { --animtm: var(--ease-squish-4); }
+	[easing="ease-squish-5"] { --animtm: var(--ease-squish-5); }
 
 	/* Step */
-	[easing="ease-step-1"] { --animtm: var(--ease-step-1); --layout-item-timing: var(--ease-step-1); }
-	[easing="ease-step-2"] { --animtm: var(--ease-step-2); --layout-item-timing: var(--ease-step-2); }
-	[easing="ease-step-3"] { --animtm: var(--ease-step-3); --layout-item-timing: var(--ease-step-3); }
-	[easing="ease-step-4"] { --animtm: var(--ease-step-4); --layout-item-timing: var(--ease-step-4); }
-	[easing="ease-step-5"] { --animtm: var(--ease-step-5); --layout-item-timing: var(--ease-step-5); }
+	[easing="ease-step-1"] { --animtm: var(--ease-step-1); }
+	[easing="ease-step-2"] { --animtm: var(--ease-step-2); }
+	[easing="ease-step-3"] { --animtm: var(--ease-step-3); }
+	[easing="ease-step-4"] { --animtm: var(--ease-step-4); }
+	[easing="ease-step-5"] { --animtm: var(--ease-step-5); }
 
 	/* Named curves */
-	[easing="ease-circ-in"] { --animtm: var(--ease-circ-in); --layout-item-timing: var(--ease-circ-in); }
-	[easing="ease-circ-in-out"] { --animtm: var(--ease-circ-in-out); --layout-item-timing: var(--ease-circ-in-out); }
-	[easing="ease-circ-out"] { --animtm: var(--ease-circ-out); --layout-item-timing: var(--ease-circ-out); }
-	[easing="ease-cubic-in"] { --animtm: var(--ease-cubic-in); --layout-item-timing: var(--ease-cubic-in); }
-	[easing="ease-cubic-in-out"] { --animtm: var(--ease-cubic-in-out); --layout-item-timing: var(--ease-cubic-in-out); }
-	[easing="ease-cubic-out"] { --animtm: var(--ease-cubic-out); --layout-item-timing: var(--ease-cubic-out); }
-	[easing="ease-expo-in"] { --animtm: var(--ease-expo-in); --layout-item-timing: var(--ease-expo-in); }
-	[easing="ease-expo-in-out"] { --animtm: var(--ease-expo-in-out); --layout-item-timing: var(--ease-expo-in-out); }
-	[easing="ease-expo-out"] { --animtm: var(--ease-expo-out); --layout-item-timing: var(--ease-expo-out); }
-	[easing="ease-quad-in"] { --animtm: var(--ease-quad-in); --layout-item-timing: var(--ease-quad-in); }
-	[easing="ease-quad-in-out"] { --animtm: var(--ease-quad-in-out); --layout-item-timing: var(--ease-quad-in-out); }
-	[easing="ease-quad-out"] { --animtm: var(--ease-quad-out); --layout-item-timing: var(--ease-quad-out); }
-	[easing="ease-quart-in"] { --animtm: var(--ease-quart-in); --layout-item-timing: var(--ease-quart-in); }
-	[easing="ease-quart-in-out"] { --animtm: var(--ease-quart-in-out); --layout-item-timing: var(--ease-quart-in-out); }
-	[easing="ease-quart-out"] { --animtm: var(--ease-quart-out); --layout-item-timing: var(--ease-quart-out); }
-	[easing="ease-quint-in"] { --animtm: var(--ease-quint-in); --layout-item-timing: var(--ease-quint-in); }
-	[easing="ease-quint-in-out"] { --animtm: var(--ease-quint-in-out); --layout-item-timing: var(--ease-quint-in-out); }
-	[easing="ease-quint-out"] { --animtm: var(--ease-quint-out); --layout-item-timing: var(--ease-quint-out); }
-	[easing="ease-sine-in"] { --animtm: var(--ease-sine-in); --layout-item-timing: var(--ease-sine-in); }
-	[easing="ease-sine-in-out"] { --animtm: var(--ease-sine-in-out); --layout-item-timing: var(--ease-sine-in-out); }
-	[easing="ease-sine-out"] { --animtm: var(--ease-sine-out); --layout-item-timing: var(--ease-sine-out); }
+	[easing="ease-circ-in"]      { --animtm: var(--ease-circ-in); }
+	[easing="ease-circ-in-out"]  { --animtm: var(--ease-circ-in-out); }
+	[easing="ease-circ-out"]     { --animtm: var(--ease-circ-out); }
+	[easing="ease-cubic-in"]     { --animtm: var(--ease-cubic-in); }
+	[easing="ease-cubic-in-out"] { --animtm: var(--ease-cubic-in-out); }
+	[easing="ease-cubic-out"]    { --animtm: var(--ease-cubic-out); }
+	[easing="ease-expo-in"]      { --animtm: var(--ease-expo-in); }
+	[easing="ease-expo-in-out"]  { --animtm: var(--ease-expo-in-out); }
+	[easing="ease-expo-out"]     { --animtm: var(--ease-expo-out); }
+	[easing="ease-quad-in"]      { --animtm: var(--ease-quad-in); }
+	[easing="ease-quad-in-out"]  { --animtm: var(--ease-quad-in-out); }
+	[easing="ease-quad-out"]     { --animtm: var(--ease-quad-out); }
+	[easing="ease-quart-in"]     { --animtm: var(--ease-quart-in); }
+	[easing="ease-quart-in-out"] { --animtm: var(--ease-quart-in-out); }
+	[easing="ease-quart-out"]    { --animtm: var(--ease-quart-out); }
+	[easing="ease-quint-in"]     { --animtm: var(--ease-quint-in); }
+	[easing="ease-quint-in-out"] { --animtm: var(--ease-quint-in-out); }
+	[easing="ease-quint-out"]    { --animtm: var(--ease-quint-out); }
+	[easing="ease-sine-in"]      { --animtm: var(--ease-sine-in); }
+	[easing="ease-sine-in-out"]  { --animtm: var(--ease-sine-in-out); }
+	[easing="ease-sine-out"]     { --animtm: var(--ease-sine-out); }
 
-	[animation*="bounce("], [animation-items*="bounce("] > * { --_animn: bounce-in; --layout-anim-zi: 0.3; }
-	[animation*="bounce-in-left("], [animation-items*="bounce-in-left("] > * { --_animn: bounce-in-left; }
+	/* ==========================================================================
+	   Animation Name Selectors
+	   ========================================================================== */
+
+	/* Bounce */
+	[animation*="bounce("],          [animation-items*="bounce("] > *          { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animation*="bounce-in-down("],  [animation-items*="bounce-in-down("] > *  { --_animn: bounce-in-down; }
+	[animation*="bounce-in-left("],  [animation-items*="bounce-in-left("] > *  { --_animn: bounce-in-left; }
 	[animation*="bounce-in-right("], [animation-items*="bounce-in-right("] > * { --_animn: bounce-in-right; }
-	[animation*="bounce-in-up("], [animation-items*="bounce-in-up("] > * { --_animn: bounce-in-up; }
-	[animation*="bounce-in-down("], [animation-items*="bounce-in-down("] > * { --_animn: bounce-in-down; }
-	[animation*="fade-down("], [animation-items*="fade-down("] > * { --_animn: fade-down; }
-	[animation*="fade-down-left("], [animation-items*="fade-down-left("] > * { --_animn: fade-down-left; }
+	[animation*="bounce-in-up("],    [animation-items*="bounce-in-up("] > *    { --_animn: bounce-in-up; }
+
+	/* Fade */
+	[animation*="fade-down("],       [animation-items*="fade-down("] > *       { --_animn: fade-down; }
+	[animation*="fade-down-left("],  [animation-items*="fade-down-left("] > *  { --_animn: fade-down-left; }
 	[animation*="fade-down-right("], [animation-items*="fade-down-right("] > * { --_animn: fade-down-right; }
-	[animation*="fade-in("], [animation-items*="fade-in("] > * { --_animn: fade-in; }
-	[animation*="fade-in-scale("], [animation-items*="fade-in-scale("] > * { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
-	[animation*="fade-left("], [animation-items*="fade-left("] > * { --_animn: fade-left; }
-	[animation*="fade-out("], [animation-items*="fade-out("] > * { --_animn: fade-out; }
-	[animation*="fade-out-scale("], [animation-items*="fade-out-scale("] > * { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
-	[animation*="fade-right("], [animation-items*="fade-right("] > * { --_animn: fade-right; }
-	[animation*="fade-up("], [animation-items*="fade-up("] > * { --_animn: fade-up; }
-	[animation*="fade-up-left("], [animation-items*="fade-up-left("] > * { --_animn: fade-up-left; }
-	[animation*="fade-up-right("], [animation-items*="fade-up-right("] > * { --_animn: fade-up-right; }
-	[animation*="flip-diagonal("], [animation-items*="flip-diagonal("] > * { --_animn: flip-diagonal; }
-	[animation*="flip-down("], [animation-items*="flip-down("] > * { --_animn: flip-down; }
-	[animation*="flip-left("], [animation-items*="flip-left("] > * { --_animn: flip-left; }
-	[animation*="flip-right("], [animation-items*="flip-right("] > * { --_animn: flip-right; }
-	[animation*="flip-up("], [animation-items*="flip-up("] > * { --_animn: flip-up; }
-	[animation*="opacity("], [animation-items*="opacity("] > * { --_animn: opacity; }
-	[animation*="reveal("], [animation-items*="reveal("] > * { --_animn: reveal; }
-	[animation*="reveal-circle("], [animation-items*="reveal-circle("] > * { --_animn: reveal-circle; }
-	[animation*="reveal-polygon("], [animation-items*="reveal-polygon("] > * { --_animn: reveal-polygon; }
-	[animation*="slide-down("], [animation-items*="slide-down("] > * { --_animn: slide-down; }
-	[animation*="slide-in("], [animation-items*="slide-in("] > * { --_animn: slide-in; }
-	[animation*="slide-out("], [animation-items*="slide-out("] > * { --_animn: slide-out; }
-	[animation*="slide-up("], [animation-items*="slide-up("] > * { --_animn: slide-up; }
-	[animation*="zoom-in("], [animation-items*="zoom-in("] > * { --_animn: zoom-in; }
-	[animation*="zoom-in-rotate("], [animation-items*="zoom-in-rotate("] > * { --_animn: zoom-in-rotate; }
-	[animation*="zoom-out("], [animation-items*="zoom-out("] > * { --_animn: zoom-out; }
+	[animation*="fade-in("],         [animation-items*="fade-in("] > *         { --_animn: fade-in; }
+	[animation*="fade-left("],       [animation-items*="fade-left("] > *       { --_animn: fade-left; }
+	[animation*="fade-out("],        [animation-items*="fade-out("] > *        { --_animn: fade-out; }
+	[animation*="fade-right("],      [animation-items*="fade-right("] > *      { --_animn: fade-right; }
+	[animation*="fade-up("],         [animation-items*="fade-up("] > *         { --_animn: fade-up; }
+	[animation*="fade-up-left("],    [animation-items*="fade-up-left("] > *    { --_animn: fade-up-left; }
+	[animation*="fade-up-right("],   [animation-items*="fade-up-right("] > *   { --_animn: fade-up-right; }
+
+	/* Flip */
+	[animation*="flip-diagonal("],   [animation-items*="flip-diagonal("] > *   { --_animn: flip-diagonal; }
+	[animation*="flip-down("],       [animation-items*="flip-down("] > *       { --_animn: flip-down; }
+	[animation*="flip-left("],       [animation-items*="flip-left("] > *       { --_animn: flip-left; }
+	[animation*="flip-right("],      [animation-items*="flip-right("] > *      { --_animn: flip-right; }
+	[animation*="flip-up("],         [animation-items*="flip-up("] > *         { --_animn: flip-up; }
+
+	/* Opacity */
+	[animation*="opacity("],         [animation-items*="opacity("] > *         { --_animn: opacity; }
+
+	/* Reveal */
+	[animation*="reveal("],          [animation-items*="reveal("] > *          { --_animn: reveal; }
+	[animation*="reveal-circle("],   [animation-items*="reveal-circle("] > *   { --_animn: reveal-circle; }
+	[animation*="reveal-polygon("],  [animation-items*="reveal-polygon("] > *  { --_animn: reveal-polygon; }
+
+	/* Slide */
+	[animation*="slide-down("],      [animation-items*="slide-down("] > *      { --_animn: slide-down; }
+	[animation*="slide-in("],        [animation-items*="slide-in("] > *        { --_animn: slide-in; }
+	[animation*="slide-out("],       [animation-items*="slide-out("] > *       { --_animn: slide-out; }
+	[animation*="slide-up("],        [animation-items*="slide-up("] > *        { --_animn: slide-up; }
+
+	/* Zoom */
+	[animation*="zoom-in("],         [animation-items*="zoom-in("] > *         { --_animn: zoom-in; }
+	[animation*="zoom-in-rotate("],  [animation-items*="zoom-in-rotate("] > *  { --_animn: zoom-in-rotate; }
+	[animation*="zoom-out("],        [animation-items*="zoom-out("] > *        { --_animn: zoom-out; }
 	[animation*="zoom-out-rotate("], [animation-items*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
 
-	/* === RANGES === */
-	[range="contain"] { --_animrs: entry 0%; --_animre: contain 50%; }
-	[range="cover"] { --_animrs: entry 25%; --_animre: cover 50%; }
-	[range="exit"] { --_animrs: exit 0%; --_animre: exit 100%; }
+	/* ==========================================================================
+	   Pace: entry speed
+	   ========================================================================== */
+
+	[pace~="fast"]     { --_animrs: entry 25%; --_animre: entry 60%; }
+	[pace~="slow"]     { --_animrs: entry 0%;  --_animre: entry 100%; }
+	[pace~="slower"]   { --_animrs: entry 0%;  --_animre: contain 25%; }
+
+	/* ==========================================================================
+	   Pace: entry phase
+	   ========================================================================== */
+
+	[pace~="contain"]  { --_animrs: entry 0%;  --_animre: contain 50%; }
+	[pace~="cover"]    { --_animrs: entry 25%; --_animre: cover 50%; }
+	[pace~="full"]     { --_animrs: entry 0%;  --_animre: exit 0%; }
+
+	/* ==========================================================================
+	   Pace: exit (activates second animation slot + sets range)
+	   ========================================================================== */
+
+	[pace~="exit"]      { --_anim-exit: var(--_animn); --_exit-rs: exit 0%;      --_exit-re: exit 100%; }
+	[pace~="exit-fast"] { --_anim-exit: var(--_animn); --_exit-rs: exit 40%;     --_exit-re: exit 100%; }
+	[pace~="exit-slow"] { --_anim-exit: var(--_animn); --_exit-rs: contain 50%;  --_exit-re: exit 100%; }
+
+	/* Item exit: --_animn is on children, not the container, so set --_anim-exit there */
+	:where([pace~="exit"], [pace~="exit-fast"], [pace~="exit-slow"]) > * {
+		--_anim-exit: var(--_animn);
+	}
+
+	/* ==========================================================================
+	   Container Animation (scroll-driven via view())
+	   ========================================================================== */
 
 	@supports (view-transition-name: none) {
 		:where([animation]) {
-			animation:
-				var(--_animn)
-				var(--animtm, linear)
-				var(--animfm, forwards);
-			animation-timeline: view();
-			animation-range: var(--_animrs, entry 0%) var(--_animre, entry 75%);
+			animation-name: var(--_animn), var(--_anim-exit, none);
+			animation-direction: normal, reverse;
+			animation-timeline: view(), view();
+			animation-timing-function: var(--animtm, linear), var(--animtm, linear);
+			animation-fill-mode: var(--animfm, forwards), var(--animfm, forwards);
+			animation-range:
+				var(--_animrs, entry 0%) var(--_animre, entry 75%),
+				var(--_exit-rs, exit 0%) var(--_exit-re, exit 100%);
 		}
 
-		/* === ITEM ANIMATIONS === */
+		/* === Item Animations (scroll-driven via container timeline) === */
 
-		/* Named container timeline for item animations */
 		[animation-items] {
 			view-timeline: --layout-tl;
 		}
 
-		/* Prevent inheritance from parent's animation attribute */
-		:where([animation-items]) > * { --_animn: initial; }
-
-		/* Base item animation (scroll-driven via container timeline) */
-		[animation-items] > * {
-			animation-name: var(--_animn);
-			animation-timing-function: var(--layout-item-timing, ease-out);
-			animation-fill-mode: backwards;
-			animation-timeline: --layout-tl;
-			animation-range: entry 0% entry 75%;
+		[animation-items~="clip"] {
+			overflow: clip;
 		}
 
-		/* Stagger: offset animation-range per child */
-		[animation-items] > :nth-child(2) { animation-range: entry 20% entry 95%; }
-		[animation-items] > :nth-child(3) { animation-range: entry 40% entry 100%; }
-		[animation-items] > :nth-child(4) { animation-range: entry 50% entry 100%; }
-		[animation-items] > :nth-child(5) { animation-range: entry 60% entry 100%; }
-		[animation-items] > :nth-child(6) { animation-range: entry 70% entry 100%; }
+		:where([animation-items]) > * { --_animn: initial; }
 
-		/* Deep: animate grandchildren relative to item position */
+		[animation-items] > * {
+			animation-name: var(--_animn), var(--_anim-exit, none);
+			animation-direction: normal, reverse;
+			animation-timing-function:
+				var(--layout-item-timing, var(--animtm, ease-out)),
+				var(--layout-item-timing, var(--animtm, ease-out));
+			animation-fill-mode: backwards, forwards;
+			animation-timeline: --layout-tl, --layout-tl;
+			animation-range:
+				var(--_animrs, entry 0%) var(--_animre, entry 75%),
+				exit 25% exit 100%;
+		}
+
+		/* Stagger: offset animation-range per child (exit is reversed) */
+		[animation-items] > :nth-child(2) { animation-range: entry 20% entry 95%, exit 5% exit 80%; }
+		[animation-items] > :nth-child(3) { animation-range: entry 40% entry 100%, exit 0% exit 60%; }
+		[animation-items] > :nth-child(4) { animation-range: entry 50% entry 100%, exit 0% exit 50%; }
+		[animation-items] > :nth-child(5) { animation-range: entry 60% entry 100%, exit 0% exit 40%; }
+		[animation-items] > :nth-child(6) { animation-range: entry 70% entry 100%, exit 0% exit 30%; }
+
+		/* === Deep: animate grandchildren relative to item position === */
+
 		[animation-items~="deep"] > * > * {
 			animation-name: var(--_animn);
-			animation-timing-function: var(--layout-item-timing, ease-out);
+			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
 			animation-range:
@@ -224,31 +288,36 @@
 				entry calc((75 + var(--_item-offset, 0) + var(--_child-offset, 0)) * 1%);
 		}
 
-		/* Deep stagger: item offset via nth-child */
+		/* Deep stagger: item offset */
 		[animation-items~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
 		[animation-items~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
 		[animation-items~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
 		[animation-items~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
 		[animation-items~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
 
-		/* Deep stagger: child offset within each card */
+		/* Deep stagger: child offset within each item */
 		[animation-items~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
 		[animation-items~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
 		[animation-items~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
 	}
 
-	/* Stagger: sibling-index() enhancement (scales to any child count) */
+	/* ==========================================================================
+	   Stagger Enhancement: sibling-index() (scales to any child count)
+	   ========================================================================== */
+
 	@supports (width: calc(sibling-index() * 1px)) {
 		[animation-items] > * {
 			animation-range:
 				entry calc((sibling-index() - 1) * 20%)
-				entry calc(75% + (sibling-index() - 1) * 20%);
+				entry calc(75% + (sibling-index() - 1) * 20%),
+				exit max(0%, calc(25% - (sibling-index() - 1) * 20%))
+				exit calc(100% - (sibling-index() - 1) * 20%);
 		}
 
-		/* Deep: item offset + child stagger using sibling-index() */
 		[animation-items~="deep"] > * {
 			--_item-offset: calc((sibling-index() - 1) * 20);
 		}
+
 		[animation-items~="deep"] > * > * {
 			animation-range:
 				entry calc((var(--_item-offset) + (sibling-index() - 1) * 10) * 1%)
@@ -256,7 +325,11 @@
 		}
 	}
 
-	/* Scroll-triggered animations (Chrome 145+): time-based delays triggered by scroll position */
+	/* ==========================================================================
+	   Scroll-Triggered Animations (Chrome 145+)
+	   Time-based delays triggered by scroll position
+	   ========================================================================== */
+
 	@supports (timeline-trigger-name: --t) {
 		[animation-items~="deep"] {
 			timeline-trigger:
@@ -268,7 +341,7 @@
 
 		[animation-items~="deep"] > * > * {
 			animation-name: var(--_animn);
-			animation-timing-function: var(--layout-item-timing, ease-out);
+			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: both;
 			animation-duration: 0.5s;
 			animation-trigger: --layout-trigger play-forwards play-backwards;
@@ -278,167 +351,191 @@
 		}
 	}
 
-	/* === KEYFRAMES === */
+	/* ==========================================================================
+	   Keyframes
+	   ========================================================================== */
 
-	/* Opacity */
+	/* --- Opacity --- */
+
 	@keyframes opacity {
-		0% { opacity: 0; }
+		0%   { opacity: 0; }
 		100% { opacity: 1; }
 	}
+
 	@keyframes fade-in {
 		0%, 20% { opacity: 0; }
-		100% { opacity: 1; }
+		100%    { opacity: 1; }
 	}
+
 	@keyframes fade-out {
-		0% { opacity: 1; }
+		0%   { opacity: 1; }
 		100% { opacity: 0; }
 	}
 
-	/* Bounce */
+	/* --- Bounce --- */
+
 	@keyframes bounce-in {
-		0% { opacity: 0; scale: var(--_zi); }
-		50% { scale: 1.05; }
-		70% { scale: 0.9; }
+		0%   { opacity: 0; scale: var(--_zi); }
+		50%  { scale: 1.05; }
+		70%  { scale: 0.9; }
 		100% { opacity: 1; scale: 1; }
 	}
+
 	@keyframes bounce-in-down {
-		0% { opacity: 0; translate: 0 calc(-1 * var(--_tyv)); }
-		60% { translate: 0 calc(var(--_tyv) * 0.1); }
-		80% { translate: 0 calc(var(--_tyv) * -0.05); }
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_tyv)); }
+		60%  { translate: 0 calc(var(--_tyv) * 0.1); }
+		80%  { translate: 0 calc(var(--_tyv) * -0.05); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes bounce-in-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_txv)) 0; }
-		60% { translate: calc(var(--_txv) * 0.05) 0; }
-		80% { translate: calc(var(--_txv) * -0.025) 0; }
+		0%   { opacity: 0; translate: calc(-1 * var(--_txv)) 0; }
+		60%  { translate: calc(var(--_txv) * 0.05) 0; }
+		80%  { translate: calc(var(--_txv) * -0.025) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
-	@keyframes bounce-in-up {
-		0% { opacity: 0; translate: 0 var(--_tyv); }
-		60% { translate: 0 calc(var(--_tyv) * -0.1); }
-		80% { translate: 0 calc(var(--_tyv) * 0.05); }
-		100% { opacity: 1; translate: 0; }
-	}
+
 	@keyframes bounce-in-right {
-		0% { opacity: 0; translate: var(--_txv) 0; }
-		60% { translate: calc(var(--_txv) * -0.05) 0; }
-		80% { translate: calc(var(--_txv) * 0.025) 0; }
+		0%   { opacity: 0; translate: var(--_txv) 0; }
+		60%  { translate: calc(var(--_txv) * -0.05) 0; }
+		80%  { translate: calc(var(--_txv) * 0.025) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
 
-	/* Fade */
+	@keyframes bounce-in-up {
+		0%   { opacity: 0; translate: 0 var(--_tyv); }
+		60%  { translate: 0 calc(var(--_tyv) * -0.1); }
+		80%  { translate: 0 calc(var(--_tyv) * 0.05); }
+		100% { opacity: 1; translate: 0; }
+	}
+
+	/* --- Fade --- */
+
 	@keyframes fade-down {
-		0% { opacity: 0; translate: 0 calc(-1 * var(--_ty)); }
+		0%   { opacity: 0; translate: 0 calc(-1 * var(--_ty)); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-down-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty)); }
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) calc(-1 * var(--_ty)); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-down-right {
-		0% { opacity: 0; translate: var(--_tx) calc(-1 * var(--_ty)); }
+		0%   { opacity: 0; translate: var(--_tx) calc(-1 * var(--_ty)); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) 0; }
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-right {
-		0% { opacity: 0; translate: var(--_tx) 0; }
+		0%   { opacity: 0; translate: var(--_tx) 0; }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-up {
-		0% { opacity: 0; translate: 0 var(--_ty); }
+		0%   { opacity: 0; translate: 0 var(--_ty); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-up-left {
-		0% { opacity: 0; translate: calc(-1 * var(--_tx)) var(--_ty); }
+		0%   { opacity: 0; translate: calc(-1 * var(--_tx)) var(--_ty); }
 		100% { opacity: 1; translate: 0; }
 	}
+
 	@keyframes fade-up-right {
-		0% { opacity: 0; translate: var(--_tx) var(--_ty); }
+		0%   { opacity: 0; translate: var(--_tx) var(--_ty); }
 		100% { opacity: 1; translate: 0; }
 	}
 
-	/* Fade / Scale — same keyframes as zoom-in/zoom-out, but selectors set --layout-anim-zi: 0.8 */
-	@keyframes fade-in-scale {
-		0% { opacity: 0; scale: var(--_zi); }
-		100% { opacity: 1; scale: 1; }
-	}
-	@keyframes fade-out-scale {
-		0% { opacity: 1; scale: 1; }
-		100% { opacity: 0; scale: var(--_zi); }
-	}
+	/* --- Flip --- */
 
-	/* Flip */
 	@keyframes flip-diagonal {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
+		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))) rotateY(calc(-1 * var(--_dg))); }
 		100% { transform: perspective(2500px) rotateX(0) rotateY(0); }
 	}
+
 	@keyframes flip-down {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateX(0); }
-	}
-	@keyframes flip-left {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
-		100% { transform: perspective(2500px) rotateY(0); }
-	}
-	@keyframes flip-right {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateY(var(--_dg)); }
-		100% { transform: perspective(2500px) rotateY(0); }
-	}
-	@keyframes flip-up {
-		0% { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
+		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(var(--_dg)); }
 		100% { transform: perspective(2500px) rotateX(0); }
 	}
 
-	/* Reveal */
+	@keyframes flip-left {
+		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateY(calc(-1 * var(--_dg))); }
+		100% { transform: perspective(2500px) rotateY(0); }
+	}
+
+	@keyframes flip-right {
+		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateY(var(--_dg)); }
+		100% { transform: perspective(2500px) rotateY(0); }
+	}
+
+	@keyframes flip-up {
+		0%   { backface-visibility: hidden; transform: perspective(2500px) rotateX(calc(-1 * var(--_dg))); }
+		100% { transform: perspective(2500px) rotateX(0); }
+	}
+
+	/* --- Reveal --- */
+
 	@keyframes reveal {
-		0% { opacity: 0; clip-path: inset(45% 20% 45% 20%); }
+		0%   { opacity: 0; clip-path: inset(45% 20% 45% 20%); }
 		100% { opacity: 1; clip-path: inset(0% 0% 0% 0%); }
 	}
+
 	@keyframes reveal-circle {
-		0% { opacity: 0; clip-path: circle(0% at 50% 50%); }
+		0%   { opacity: 0; clip-path: circle(0% at 50% 50%); }
 		100% { opacity: 1; clip-path: circle(100% at 50% 50%); }
 	}
+
 	@keyframes reveal-polygon {
-		0% { opacity: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+		0%   { opacity: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 		100% { opacity: 1; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
 	}
 
-	/* Slide */
+	/* --- Slide --- */
+
 	@keyframes slide-down {
-		0% { translate: 0 calc(-1 * var(--_tyv)); }
-		100% { translate: 0; }
-	}
-	@keyframes slide-in {
-		0% { translate: calc(-1 * var(--_txv)) 0; }
-		100% { translate: 0; }
-	}
-	@keyframes slide-out {
-		0% { translate: 0; }
-		100% { translate: var(--_txv) 0; }
-	}
-	@keyframes slide-up {
-		0% { translate: 0 var(--_tyv); }
+		0%   { translate: 0 calc(-1 * var(--_tyv)); }
 		100% { translate: 0; }
 	}
 
-	/* Zoom */
+	@keyframes slide-in {
+		0%   { translate: calc(-1 * var(--_txv)) 0; }
+		100% { translate: 0; }
+	}
+
+	@keyframes slide-out {
+		0%   { translate: 0; }
+		100% { translate: var(--_txv) 0; }
+	}
+
+	@keyframes slide-up {
+		0%   { translate: 0 var(--_tyv); }
+		100% { translate: 0; }
+	}
+
+	/* --- Zoom --- */
+
 	@keyframes zoom-in {
-		0% { opacity: 0; scale: var(--_zi); }
+		0%   { opacity: 0; scale: var(--_zi); }
 		100% { opacity: 1; scale: 1; }
 	}
+
 	@keyframes zoom-in-rotate {
-		0% { opacity: 0; scale: var(--_zi); rotate: -180deg; }
+		0%   { opacity: 0; scale: var(--_zi); rotate: -180deg; }
 		100% { opacity: 1; scale: 1; rotate: 0deg; }
 	}
+
 	@keyframes zoom-out {
-		0% { opacity: 0; scale: var(--_zo); }
+		0%   { opacity: 0; scale: var(--_zo); }
 		100% { opacity: 1; scale: 1; }
 	}
+
 	@keyframes zoom-out-rotate {
-		0% { opacity: 1; scale: 1; rotate: 0deg; }
+		0%   { opacity: 1; scale: 1; rotate: 0deg; }
 		100% { opacity: 0; scale: var(--_zo); rotate: -180deg; }
 	}
 }
