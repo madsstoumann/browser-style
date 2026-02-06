@@ -6,7 +6,7 @@
 	   Custom Properties
 	   ========================================================================== */
 
-	[animation], [animation-items] {
+	[animate-self], [animate] {
 		/* Public API */
 		--layout-anim-dg: 100deg;
 		--layout-anim-tx: 55px;
@@ -29,11 +29,11 @@
 	}
 
 	/* ==========================================================================
-	   Multiplier: animation="fade-up(2)" or animation-items="fade-up(2)"
+	   Multiplier: animate-self="fade-up(2)" or animate="fade-up(2)"
 	   ========================================================================== */
 
-	[animation*="(2)"], [animation-items*="(2)"] { --layout-anim-mult: 2; }
-	[animation*="(3)"], [animation-items*="(3)"] { --layout-anim-mult: 3; }
+	[animate-self*="(2)"], [animate*="(2)"] { --layout-anim-mult: 2; }
+	[animate-self*="(3)"], [animate*="(3)"] { --layout-anim-mult: 3; }
 
 	/* ==========================================================================
 	   Easing: maps [easing] attribute to --animtm custom property.
@@ -154,50 +154,50 @@
 	   ========================================================================== */
 
 	/* Bounce */
-	[animation*="bounce("],          [animation-items*="bounce("] > *          { --_animn: bounce-in; --layout-anim-zi: 0.3; }
-	[animation*="bounce-in-down("],  [animation-items*="bounce-in-down("] > *  { --_animn: bounce-in-down; }
-	[animation*="bounce-in-left("],  [animation-items*="bounce-in-left("] > *  { --_animn: bounce-in-left; }
-	[animation*="bounce-in-right("], [animation-items*="bounce-in-right("] > * { --_animn: bounce-in-right; }
-	[animation*="bounce-in-up("],    [animation-items*="bounce-in-up("] > *    { --_animn: bounce-in-up; }
+	[animate-self*="bounce("],          [animate*="bounce("] > *          { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animate-self*="bounce-in-down("],  [animate*="bounce-in-down("] > *  { --_animn: bounce-in-down; }
+	[animate-self*="bounce-in-left("],  [animate*="bounce-in-left("] > *  { --_animn: bounce-in-left; }
+	[animate-self*="bounce-in-right("], [animate*="bounce-in-right("] > * { --_animn: bounce-in-right; }
+	[animate-self*="bounce-in-up("],    [animate*="bounce-in-up("] > *    { --_animn: bounce-in-up; }
 
 	/* Fade */
-	[animation*="fade-down("],       [animation-items*="fade-down("] > *       { --_animn: fade-down; }
-	[animation*="fade-down-left("],  [animation-items*="fade-down-left("] > *  { --_animn: fade-down-left; }
-	[animation*="fade-down-right("], [animation-items*="fade-down-right("] > * { --_animn: fade-down-right; }
-	[animation*="fade-in("],         [animation-items*="fade-in("] > *         { --_animn: fade-in; }
-	[animation*="fade-left("],       [animation-items*="fade-left("] > *       { --_animn: fade-left; }
-	[animation*="fade-out("],        [animation-items*="fade-out("] > *        { --_animn: fade-out; }
-	[animation*="fade-right("],      [animation-items*="fade-right("] > *      { --_animn: fade-right; }
-	[animation*="fade-up("],         [animation-items*="fade-up("] > *         { --_animn: fade-up; }
-	[animation*="fade-up-left("],    [animation-items*="fade-up-left("] > *    { --_animn: fade-up-left; }
-	[animation*="fade-up-right("],   [animation-items*="fade-up-right("] > *   { --_animn: fade-up-right; }
+	[animate-self*="fade-down("],       [animate*="fade-down("] > *       { --_animn: fade-down; }
+	[animate-self*="fade-down-left("],  [animate*="fade-down-left("] > *  { --_animn: fade-down-left; }
+	[animate-self*="fade-down-right("], [animate*="fade-down-right("] > * { --_animn: fade-down-right; }
+	[animate-self*="fade-in("],         [animate*="fade-in("] > *         { --_animn: fade-in; }
+	[animate-self*="fade-left("],       [animate*="fade-left("] > *       { --_animn: fade-left; }
+	[animate-self*="fade-out("],        [animate*="fade-out("] > *        { --_animn: fade-out; }
+	[animate-self*="fade-right("],      [animate*="fade-right("] > *      { --_animn: fade-right; }
+	[animate-self*="fade-up("],         [animate*="fade-up("] > *         { --_animn: fade-up; }
+	[animate-self*="fade-up-left("],    [animate*="fade-up-left("] > *    { --_animn: fade-up-left; }
+	[animate-self*="fade-up-right("],   [animate*="fade-up-right("] > *   { --_animn: fade-up-right; }
 
 	/* Flip */
-	[animation*="flip-diagonal("],   [animation-items*="flip-diagonal("] > *   { --_animn: flip-diagonal; }
-	[animation*="flip-down("],       [animation-items*="flip-down("] > *       { --_animn: flip-down; }
-	[animation*="flip-left("],       [animation-items*="flip-left("] > *       { --_animn: flip-left; }
-	[animation*="flip-right("],      [animation-items*="flip-right("] > *      { --_animn: flip-right; }
-	[animation*="flip-up("],         [animation-items*="flip-up("] > *         { --_animn: flip-up; }
+	[animate-self*="flip-diagonal("],   [animate*="flip-diagonal("] > *   { --_animn: flip-diagonal; }
+	[animate-self*="flip-down("],       [animate*="flip-down("] > *       { --_animn: flip-down; }
+	[animate-self*="flip-left("],       [animate*="flip-left("] > *       { --_animn: flip-left; }
+	[animate-self*="flip-right("],      [animate*="flip-right("] > *      { --_animn: flip-right; }
+	[animate-self*="flip-up("],         [animate*="flip-up("] > *         { --_animn: flip-up; }
 
 	/* Opacity */
-	[animation*="opacity("],         [animation-items*="opacity("] > *         { --_animn: opacity; }
+	[animate-self*="opacity("],         [animate*="opacity("] > *         { --_animn: opacity; }
 
 	/* Reveal */
-	[animation*="reveal("],          [animation-items*="reveal("] > *          { --_animn: reveal; }
-	[animation*="reveal-circle("],   [animation-items*="reveal-circle("] > *   { --_animn: reveal-circle; }
-	[animation*="reveal-polygon("],  [animation-items*="reveal-polygon("] > *  { --_animn: reveal-polygon; }
+	[animate-self*="reveal("],          [animate*="reveal("] > *          { --_animn: reveal; }
+	[animate-self*="reveal-circle("],   [animate*="reveal-circle("] > *   { --_animn: reveal-circle; }
+	[animate-self*="reveal-polygon("],  [animate*="reveal-polygon("] > *  { --_animn: reveal-polygon; }
 
 	/* Slide */
-	[animation*="slide-down("],      [animation-items*="slide-down("] > *      { --_animn: slide-down; }
-	[animation*="slide-in("],        [animation-items*="slide-in("] > *        { --_animn: slide-in; }
-	[animation*="slide-out("],       [animation-items*="slide-out("] > *       { --_animn: slide-out; }
-	[animation*="slide-up("],        [animation-items*="slide-up("] > *        { --_animn: slide-up; }
+	[animate-self*="slide-down("],      [animate*="slide-down("] > *      { --_animn: slide-down; }
+	[animate-self*="slide-in("],        [animate*="slide-in("] > *        { --_animn: slide-in; }
+	[animate-self*="slide-out("],       [animate*="slide-out("] > *       { --_animn: slide-out; }
+	[animate-self*="slide-up("],        [animate*="slide-up("] > *        { --_animn: slide-up; }
 
 	/* Zoom */
-	[animation*="zoom-in("],         [animation-items*="zoom-in("] > *         { --_animn: zoom-in; }
-	[animation*="zoom-in-rotate("],  [animation-items*="zoom-in-rotate("] > *  { --_animn: zoom-in-rotate; }
-	[animation*="zoom-out("],        [animation-items*="zoom-out("] > *        { --_animn: zoom-out; }
-	[animation*="zoom-out-rotate("], [animation-items*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
+	[animate-self*="zoom-in("],         [animate*="zoom-in("] > *         { --_animn: zoom-in; }
+	[animate-self*="zoom-in-rotate("],  [animate*="zoom-in-rotate("] > *  { --_animn: zoom-in-rotate; }
+	[animate-self*="zoom-out("],        [animate*="zoom-out("] > *        { --_animn: zoom-out; }
+	[animate-self*="zoom-out-rotate("], [animate*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
 
 	/* ==========================================================================
 	   Pace: entry speed
@@ -233,7 +233,7 @@
 	   ========================================================================== */
 
 	@supports (view-transition-name: none) {
-		:where([animation]) {
+		:where([animate-self]) {
 			animation-name: var(--_animn), var(--_anim-exit, none);
 			animation-direction: normal, reverse;
 			animation-timeline: view(), view();
@@ -246,17 +246,17 @@
 
 		/* === Item Animations (scroll-driven via container timeline) === */
 
-		[animation-items] {
+		[animate] {
 			view-timeline: --layout-tl;
 		}
 
-		[animation-items~="clip"] {
+		[animate~="clip"] {
 			overflow: clip;
 		}
 
-		:where([animation-items]) > * { --_animn: initial; }
+		:where([animate]) > * { --_animn: initial; }
 
-		[animation-items] > * {
+		[animate] > * {
 			animation-name: var(--_animn), var(--_anim-exit, none);
 			animation-direction: normal, reverse;
 			animation-timing-function:
@@ -270,15 +270,15 @@
 		}
 
 		/* Stagger: offset animation-range per child (exit is reversed) */
-		[animation-items] > :nth-child(2) { animation-range: entry 20% entry 95%, exit 5% exit 80%; }
-		[animation-items] > :nth-child(3) { animation-range: entry 40% entry 100%, exit 0% exit 60%; }
-		[animation-items] > :nth-child(4) { animation-range: entry 50% entry 100%, exit 0% exit 50%; }
-		[animation-items] > :nth-child(5) { animation-range: entry 60% entry 100%, exit 0% exit 40%; }
-		[animation-items] > :nth-child(6) { animation-range: entry 70% entry 100%, exit 0% exit 30%; }
+		[animate] > :nth-child(2) { animation-range: entry 20% entry 95%, exit 5% exit 80%; }
+		[animate] > :nth-child(3) { animation-range: entry 40% entry 100%, exit 0% exit 60%; }
+		[animate] > :nth-child(4) { animation-range: entry 50% entry 100%, exit 0% exit 50%; }
+		[animate] > :nth-child(5) { animation-range: entry 60% entry 100%, exit 0% exit 40%; }
+		[animate] > :nth-child(6) { animation-range: entry 70% entry 100%, exit 0% exit 30%; }
 
 		/* === Deep: animate grandchildren relative to item position === */
 
-		[animation-items~="deep"] > * > * {
+		[animate~="deep"] > * > * {
 			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: backwards;
@@ -289,16 +289,16 @@
 		}
 
 		/* Deep stagger: item offset */
-		[animation-items~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
-		[animation-items~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
-		[animation-items~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
-		[animation-items~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
-		[animation-items~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
+		[animate~="deep"] > :nth-child(2) > * { --_item-offset: 20; }
+		[animate~="deep"] > :nth-child(3) > * { --_item-offset: 40; }
+		[animate~="deep"] > :nth-child(4) > * { --_item-offset: 50; }
+		[animate~="deep"] > :nth-child(5) > * { --_item-offset: 60; }
+		[animate~="deep"] > :nth-child(6) > * { --_item-offset: 70; }
 
 		/* Deep stagger: child offset within each item */
-		[animation-items~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
-		[animation-items~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
-		[animation-items~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
+		[animate~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
+		[animate~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
+		[animate~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
 	}
 
 	/* ==========================================================================
@@ -306,7 +306,7 @@
 	   ========================================================================== */
 
 	@supports (width: calc(sibling-index() * 1px)) {
-		[animation-items] > * {
+		[animate] > * {
 			animation-range:
 				entry calc((sibling-index() - 1) * 20%)
 				entry calc(75% + (sibling-index() - 1) * 20%),
@@ -314,11 +314,11 @@
 				exit calc(100% - (sibling-index() - 1) * 20%);
 		}
 
-		[animation-items~="deep"] > * {
+		[animate~="deep"] > * {
 			--_item-offset: calc((sibling-index() - 1) * 20);
 		}
 
-		[animation-items~="deep"] > * > * {
+		[animate~="deep"] > * > * {
 			animation-range:
 				entry calc((var(--_item-offset) + (sibling-index() - 1) * 10) * 1%)
 				entry calc((75 + var(--_item-offset) + (sibling-index() - 1) * 10) * 1%);
@@ -331,7 +331,7 @@
 	   ========================================================================== */
 
 	@supports (timeline-trigger-name: --t) {
-		[animation-items~="deep"] {
+		[animate~="deep"] {
 			timeline-trigger:
 				--layout-trigger
 				view()
@@ -339,7 +339,7 @@
 			trigger-scope: --layout-trigger;
 		}
 
-		[animation-items~="deep"] > * > * {
+		[animate~="deep"] > * > * {
 			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: both;

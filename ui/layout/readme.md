@@ -165,10 +165,10 @@ Scroll-driven animations for individual items within a layout. Items animate bas
 
 ```html
 <!-- Item animation only -->
-<lay-out animation-items="fade-up" lg="grid(3a)">
+<lay-out animate="fade-up" lg="grid(3a)">
 
 <!-- Container + item animation -->
-<lay-out animation="fade-right" animation-items="fade-up" lg="grid(3a)">
+<lay-out animate-self="fade-right" animate="fade-up" lg="grid(3a)">
 ```
 
 Available presets: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`

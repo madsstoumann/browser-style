@@ -113,12 +113,12 @@ Each entry lists the attribute name, accepted type(s), default (where applicable
 - Description: Maximum column width for `lanes(auto)` layouts. Used with CSS `display: grid-lanes` (masonry). Sets `--layout-lanes-max`.
 - Examples: `lanes-max="1fr"`, `lanes-max="300px"`
 
-### animation-items
+### animate
 - Type: token list (space-separated tokens)
-- Accepted tokens: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`
+- Accepted tokens: `fade-up`, `fade-down`, `fade-left`, `fade-right`, `fade-in`, `zoom-in`, `flip-up`, `deep`, `clip`
 - Default: not present
 - Description: Enables scroll-driven item animations. Creates a named `view-timeline` on the container; all direct children animate using that timeline as they enter the viewport. Children stagger via nth-child `animation-range` offsets (20% per child, up to 6 children). In browsers supporting `sibling-index()`, stagger scales to any number of children automatically.
-- Examples: `animation-items="fade-up"`, `animation-items="zoom-in"`
+- Examples: `animate="fade-up()"`, `animate="zoom-in() deep"`, `animate="slide-down() clip"`
 
 ---
 
