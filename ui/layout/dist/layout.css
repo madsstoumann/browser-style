@@ -237,44 +237,44 @@
 	}
 
 	/* Multiplier support: animation="fade-up(2)" or animation-items="fade-up(2)" */
-	[animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; }
+	/* [animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; } */
 	[animation*="(2)"], [animation-items*="(2)"] { --layout-anim-mult: 2; }
 	[animation*="(3)"], [animation-items*="(3)"] { --layout-anim-mult: 3; }
 
-	[animation~="bounce"], [animation*="bounce("] { --_animn: bounce-in; --layout-anim-zi: 0.3; }
-	[animation~="bounce-in-left"], [animation*="bounce-in-left("] { --_animn: bounce-in-left; }
-	[animation~="bounce-in-right"], [animation*="bounce-in-right("] { --_animn: bounce-in-right; }
-	[animation~="bounce-in-up"], [animation*="bounce-in-up("] { --_animn: bounce-in-up; }
-	[animation~="bounce-in-down"], [animation*="bounce-in-down("] { --_animn: bounce-in-down; }
-	[animation~="fade-down"], [animation*="fade-down("] { --_animn: fade-down; }
-	[animation~="fade-down-left"], [animation*="fade-down-left("] { --_animn: fade-down-left; }
-	[animation~="fade-down-right"], [animation*="fade-down-right("] { --_animn: fade-down-right; }
-	[animation~="fade-in"] { --_animn: fade-in; }
-	[animation~="fade-in-scale"], [animation*="fade-in-scale("] { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
-	[animation~="fade-left"], [animation*="fade-left("] { --_animn: fade-left; }
-	[animation~="fade-out"] { --_animn: fade-out; }
-	[animation~="fade-out-scale"], [animation*="fade-out-scale("] { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
-	[animation~="fade-right"], [animation*="fade-right("] { --_animn: fade-right; }
-	[animation~="fade-up"], [animation*="fade-up("] { --_animn: fade-up; }
-	[animation~="fade-up-left"], [animation*="fade-up-left("] { --_animn: fade-up-left; }
-	[animation~="fade-up-right"], [animation*="fade-up-right("] { --_animn: fade-up-right; }
-	[animation~="flip-diagonal"], [animation*="flip-diagonal("] { --_animn: flip-diagonal; }
-	[animation~="flip-down"], [animation*="flip-down("] { --_animn: flip-down; }
-	[animation~="flip-left"], [animation*="flip-left("] { --_animn: flip-left; }
-	[animation~="flip-right"], [animation*="flip-right("] { --_animn: flip-right; }
-	[animation~="flip-up"], [animation*="flip-up("] { --_animn: flip-up; }
-	[animation~="opacity"] { --_animn: opacity; }
-	[animation~="reveal"] { --_animn: reveal; }
-	[animation~="reveal-circle"] { --_animn: reveal-circle; }
-	[animation~="reveal-polygon"] { --_animn: reveal-polygon; }
-	[animation~="slide-down"], [animation*="slide-down("] { --_animn: slide-down; }
-	[animation~="slide-in"], [animation*="slide-in("] { --_animn: slide-in; }
-	[animation~="slide-out"], [animation*="slide-out("] { --_animn: slide-out; }
-	[animation~="slide-up"], [animation*="slide-up("] { --_animn: slide-up; }
-	[animation~="zoom-in"], [animation*="zoom-in("] { --_animn: zoom-in; }
-	[animation~="zoom-in-rotate"], [animation*="zoom-in-rotate("] { --_animn: zoom-in-rotate; }
-	[animation~="zoom-out"], [animation*="zoom-out("] { --_animn: zoom-out; }
-	[animation~="zoom-out-rotate"], [animation*="zoom-out-rotate("] { --_animn: zoom-out-rotate; }
+	[animation*="bounce("], [animation-items*="bounce("] > * { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animation*="bounce-in-left("], [animation-items*="bounce-in-left("] > * { --_animn: bounce-in-left; }
+	[animation*="bounce-in-right("], [animation-items*="bounce-in-right("] > * { --_animn: bounce-in-right; }
+	[animation*="bounce-in-up("], [animation-items*="bounce-in-up("] > * { --_animn: bounce-in-up; }
+	[animation*="bounce-in-down("], [animation-items*="bounce-in-down("] > * { --_animn: bounce-in-down; }
+	[animation*="fade-down("], [animation-items*="fade-down("] > * { --_animn: fade-down; }
+	[animation*="fade-down-left("], [animation-items*="fade-down-left("] > * { --_animn: fade-down-left; }
+	[animation*="fade-down-right("], [animation-items*="fade-down-right("] > * { --_animn: fade-down-right; }
+	[animation*="fade-in("], [animation-items*="fade-in("] > * { --_animn: fade-in; }
+	[animation*="fade-in-scale("], [animation-items*="fade-in-scale("] > * { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
+	[animation*="fade-left("], [animation-items*="fade-left("] > * { --_animn: fade-left; }
+	[animation*="fade-out("], [animation-items*="fade-out("] > * { --_animn: fade-out; }
+	[animation*="fade-out-scale("], [animation-items*="fade-out-scale("] > * { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
+	[animation*="fade-right("], [animation-items*="fade-right("] > * { --_animn: fade-right; }
+	[animation*="fade-up("], [animation-items*="fade-up("] > * { --_animn: fade-up; }
+	[animation*="fade-up-left("], [animation-items*="fade-up-left("] > * { --_animn: fade-up-left; }
+	[animation*="fade-up-right("], [animation-items*="fade-up-right("] > * { --_animn: fade-up-right; }
+	[animation*="flip-diagonal("], [animation-items*="flip-diagonal("] > * { --_animn: flip-diagonal; }
+	[animation*="flip-down("], [animation-items*="flip-down("] > * { --_animn: flip-down; }
+	[animation*="flip-left("], [animation-items*="flip-left("] > * { --_animn: flip-left; }
+	[animation*="flip-right("], [animation-items*="flip-right("] > * { --_animn: flip-right; }
+	[animation*="flip-up("], [animation-items*="flip-up("] > * { --_animn: flip-up; }
+	[animation*="opacity("], [animation-items*="opacity("] > * { --_animn: opacity; }
+	[animation*="reveal("], [animation-items*="reveal("] > * { --_animn: reveal; }
+	[animation*="reveal-circle("], [animation-items*="reveal-circle("] > * { --_animn: reveal-circle; }
+	[animation*="reveal-polygon("], [animation-items*="reveal-polygon("] > * { --_animn: reveal-polygon; }
+	[animation*="slide-down("], [animation-items*="slide-down("] > * { --_animn: slide-down; }
+	[animation*="slide-in("], [animation-items*="slide-in("] > * { --_animn: slide-in; }
+	[animation*="slide-out("], [animation-items*="slide-out("] > * { --_animn: slide-out; }
+	[animation*="slide-up("], [animation-items*="slide-up("] > * { --_animn: slide-up; }
+	[animation*="zoom-in("], [animation-items*="zoom-in("] > * { --_animn: zoom-in; }
+	[animation*="zoom-in-rotate("], [animation-items*="zoom-in-rotate("] > * { --_animn: zoom-in-rotate; }
+	[animation*="zoom-out("], [animation-items*="zoom-out("] > * { --_animn: zoom-out; }
+	[animation*="zoom-out-rotate("], [animation-items*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
 
 	/* === RANGES === */
 	[range="contain"] { --_animrs: entry 0%; --_animre: contain 50%; }
@@ -298,18 +298,12 @@
 			view-timeline: --layout-tl;
 		}
 
-		/* Item animation presets */
-		[animation-items~="fade-up"] > *, [animation-items*="fade-up("] > * { --_item-animn: fade-up; }
-		[animation-items~="fade-down"] > *, [animation-items*="fade-down("] > * { --_item-animn: fade-down; }
-		[animation-items~="fade-left"] > *, [animation-items*="fade-left("] > * { --_item-animn: fade-left; }
-		[animation-items~="fade-right"] > *, [animation-items*="fade-right("] > * { --_item-animn: fade-right; }
-		[animation-items~="fade-in"] > * { --_item-animn: fade-in; }
-		[animation-items~="zoom-in"] > *, [animation-items*="zoom-in("] > * { --_item-animn: zoom-in; }
-		[animation-items~="flip-up"] > *, [animation-items*="flip-up("] > * { --_item-animn: flip-up; }
+		/* Prevent inheritance from parent's animation attribute */
+		:where([animation-items]) > * { --_animn: initial; }
 
 		/* Base item animation (scroll-driven via container timeline) */
 		[animation-items] > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
@@ -325,7 +319,7 @@
 
 		/* Deep: animate grandchildren relative to item position */
 		[animation-items~="deep"] > * > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
@@ -377,7 +371,7 @@
 		}
 
 		[animation-items~="deep"] > * > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: both;
 			animation-duration: 0.5s;

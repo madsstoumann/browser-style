@@ -1,3 +1,5 @@
+@import 'easings.css';
+
 @layer layout.animations {
 	[animation], [animation-items] {
 		/* Public API — user-facing, overridable */
@@ -22,44 +24,153 @@
 	}
 
 	/* Multiplier support: animation="fade-up(2)" or animation-items="fade-up(2)" */
-	[animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; }
+	/* [animation*="(1)"], [animation-items*="(1)"] { --layout-anim-mult: 1; } */
 	[animation*="(2)"], [animation-items*="(2)"] { --layout-anim-mult: 2; }
 	[animation*="(3)"], [animation-items*="(3)"] { --layout-anim-mult: 3; }
 
-	[animation~="bounce"], [animation*="bounce("] { --_animn: bounce-in; --layout-anim-zi: 0.3; }
-	[animation~="bounce-in-left"], [animation*="bounce-in-left("] { --_animn: bounce-in-left; }
-	[animation~="bounce-in-right"], [animation*="bounce-in-right("] { --_animn: bounce-in-right; }
-	[animation~="bounce-in-up"], [animation*="bounce-in-up("] { --_animn: bounce-in-up; }
-	[animation~="bounce-in-down"], [animation*="bounce-in-down("] { --_animn: bounce-in-down; }
-	[animation~="fade-down"], [animation*="fade-down("] { --_animn: fade-down; }
-	[animation~="fade-down-left"], [animation*="fade-down-left("] { --_animn: fade-down-left; }
-	[animation~="fade-down-right"], [animation*="fade-down-right("] { --_animn: fade-down-right; }
-	[animation~="fade-in"] { --_animn: fade-in; }
-	[animation~="fade-in-scale"], [animation*="fade-in-scale("] { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
-	[animation~="fade-left"], [animation*="fade-left("] { --_animn: fade-left; }
-	[animation~="fade-out"] { --_animn: fade-out; }
-	[animation~="fade-out-scale"], [animation*="fade-out-scale("] { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
-	[animation~="fade-right"], [animation*="fade-right("] { --_animn: fade-right; }
-	[animation~="fade-up"], [animation*="fade-up("] { --_animn: fade-up; }
-	[animation~="fade-up-left"], [animation*="fade-up-left("] { --_animn: fade-up-left; }
-	[animation~="fade-up-right"], [animation*="fade-up-right("] { --_animn: fade-up-right; }
-	[animation~="flip-diagonal"], [animation*="flip-diagonal("] { --_animn: flip-diagonal; }
-	[animation~="flip-down"], [animation*="flip-down("] { --_animn: flip-down; }
-	[animation~="flip-left"], [animation*="flip-left("] { --_animn: flip-left; }
-	[animation~="flip-right"], [animation*="flip-right("] { --_animn: flip-right; }
-	[animation~="flip-up"], [animation*="flip-up("] { --_animn: flip-up; }
-	[animation~="opacity"] { --_animn: opacity; }
-	[animation~="reveal"] { --_animn: reveal; }
-	[animation~="reveal-circle"] { --_animn: reveal-circle; }
-	[animation~="reveal-polygon"] { --_animn: reveal-polygon; }
-	[animation~="slide-down"], [animation*="slide-down("] { --_animn: slide-down; }
-	[animation~="slide-in"], [animation*="slide-in("] { --_animn: slide-in; }
-	[animation~="slide-out"], [animation*="slide-out("] { --_animn: slide-out; }
-	[animation~="slide-up"], [animation*="slide-up("] { --_animn: slide-up; }
-	[animation~="zoom-in"], [animation*="zoom-in("] { --_animn: zoom-in; }
-	[animation~="zoom-in-rotate"], [animation*="zoom-in-rotate("] { --_animn: zoom-in-rotate; }
-	[animation~="zoom-out"], [animation*="zoom-out("] { --_animn: zoom-out; }
-	[animation~="zoom-out-rotate"], [animation*="zoom-out-rotate("] { --_animn: zoom-out-rotate; }
+	/* Easing support — values from easings.css */
+
+	/* Ease */
+	[easing="ease-1"] { --animtm: var(--ease-1); --layout-item-timing: var(--ease-1); }
+	[easing="ease-2"] { --animtm: var(--ease-2); --layout-item-timing: var(--ease-2); }
+	[easing="ease-3"] { --animtm: var(--ease-3); --layout-item-timing: var(--ease-3); }
+	[easing="ease-4"] { --animtm: var(--ease-4); --layout-item-timing: var(--ease-4); }
+	[easing="ease-5"] { --animtm: var(--ease-5); --layout-item-timing: var(--ease-5); }
+
+	/* Ease In */
+	[easing="ease-in-1"] { --animtm: var(--ease-in-1); --layout-item-timing: var(--ease-in-1); }
+	[easing="ease-in-2"] { --animtm: var(--ease-in-2); --layout-item-timing: var(--ease-in-2); }
+	[easing="ease-in-3"] { --animtm: var(--ease-in-3); --layout-item-timing: var(--ease-in-3); }
+	[easing="ease-in-4"] { --animtm: var(--ease-in-4); --layout-item-timing: var(--ease-in-4); }
+	[easing="ease-in-5"] { --animtm: var(--ease-in-5); --layout-item-timing: var(--ease-in-5); }
+
+	/* Ease Out */
+	[easing="ease-out-1"] { --animtm: var(--ease-out-1); --layout-item-timing: var(--ease-out-1); }
+	[easing="ease-out-2"] { --animtm: var(--ease-out-2); --layout-item-timing: var(--ease-out-2); }
+	[easing="ease-out-3"] { --animtm: var(--ease-out-3); --layout-item-timing: var(--ease-out-3); }
+	[easing="ease-out-4"] { --animtm: var(--ease-out-4); --layout-item-timing: var(--ease-out-4); }
+	[easing="ease-out-5"] { --animtm: var(--ease-out-5); --layout-item-timing: var(--ease-out-5); }
+
+	/* Ease In-Out */
+	[easing="ease-in-out-1"] { --animtm: var(--ease-in-out-1); --layout-item-timing: var(--ease-in-out-1); }
+	[easing="ease-in-out-2"] { --animtm: var(--ease-in-out-2); --layout-item-timing: var(--ease-in-out-2); }
+	[easing="ease-in-out-3"] { --animtm: var(--ease-in-out-3); --layout-item-timing: var(--ease-in-out-3); }
+	[easing="ease-in-out-4"] { --animtm: var(--ease-in-out-4); --layout-item-timing: var(--ease-in-out-4); }
+	[easing="ease-in-out-5"] { --animtm: var(--ease-in-out-5); --layout-item-timing: var(--ease-in-out-5); }
+
+	/* Spring */
+	[easing="ease-spring-1"] { --animtm: var(--ease-spring-1); --layout-item-timing: var(--ease-spring-1); }
+	[easing="ease-spring-2"] { --animtm: var(--ease-spring-2); --layout-item-timing: var(--ease-spring-2); }
+	[easing="ease-spring-3"] { --animtm: var(--ease-spring-3); --layout-item-timing: var(--ease-spring-3); }
+	[easing="ease-spring-4"] { --animtm: var(--ease-spring-4); --layout-item-timing: var(--ease-spring-4); }
+	[easing="ease-spring-5"] { --animtm: var(--ease-spring-5); --layout-item-timing: var(--ease-spring-5); }
+
+	/* Bounce */
+	[easing="ease-bounce-1"] { --animtm: var(--ease-bounce-1); --layout-item-timing: var(--ease-bounce-1); }
+	[easing="ease-bounce-2"] { --animtm: var(--ease-bounce-2); --layout-item-timing: var(--ease-bounce-2); }
+	[easing="ease-bounce-3"] { --animtm: var(--ease-bounce-3); --layout-item-timing: var(--ease-bounce-3); }
+	[easing="ease-bounce-4"] { --animtm: var(--ease-bounce-4); --layout-item-timing: var(--ease-bounce-4); }
+	[easing="ease-bounce-5"] { --animtm: var(--ease-bounce-5); --layout-item-timing: var(--ease-bounce-5); }
+
+	/* Elastic */
+	[easing="ease-elastic-1"] { --animtm: var(--ease-elastic-1); --layout-item-timing: var(--ease-elastic-1); }
+	[easing="ease-elastic-2"] { --animtm: var(--ease-elastic-2); --layout-item-timing: var(--ease-elastic-2); }
+	[easing="ease-elastic-3"] { --animtm: var(--ease-elastic-3); --layout-item-timing: var(--ease-elastic-3); }
+	[easing="ease-elastic-4"] { --animtm: var(--ease-elastic-4); --layout-item-timing: var(--ease-elastic-4); }
+	[easing="ease-elastic-5"] { --animtm: var(--ease-elastic-5); --layout-item-timing: var(--ease-elastic-5); }
+
+	/* Elastic Out */
+	[easing="ease-elastic-out-1"] { --animtm: var(--ease-elastic-out-1); --layout-item-timing: var(--ease-elastic-out-1); }
+	[easing="ease-elastic-out-2"] { --animtm: var(--ease-elastic-out-2); --layout-item-timing: var(--ease-elastic-out-2); }
+	[easing="ease-elastic-out-3"] { --animtm: var(--ease-elastic-out-3); --layout-item-timing: var(--ease-elastic-out-3); }
+	[easing="ease-elastic-out-4"] { --animtm: var(--ease-elastic-out-4); --layout-item-timing: var(--ease-elastic-out-4); }
+	[easing="ease-elastic-out-5"] { --animtm: var(--ease-elastic-out-5); --layout-item-timing: var(--ease-elastic-out-5); }
+
+	/* Elastic In */
+	[easing="ease-elastic-in-1"] { --animtm: var(--ease-elastic-in-1); --layout-item-timing: var(--ease-elastic-in-1); }
+	[easing="ease-elastic-in-2"] { --animtm: var(--ease-elastic-in-2); --layout-item-timing: var(--ease-elastic-in-2); }
+	[easing="ease-elastic-in-3"] { --animtm: var(--ease-elastic-in-3); --layout-item-timing: var(--ease-elastic-in-3); }
+	[easing="ease-elastic-in-4"] { --animtm: var(--ease-elastic-in-4); --layout-item-timing: var(--ease-elastic-in-4); }
+	[easing="ease-elastic-in-5"] { --animtm: var(--ease-elastic-in-5); --layout-item-timing: var(--ease-elastic-in-5); }
+
+	/* Elastic In-Out */
+	[easing="ease-elastic-in-out-1"] { --animtm: var(--ease-elastic-in-out-1); --layout-item-timing: var(--ease-elastic-in-out-1); }
+	[easing="ease-elastic-in-out-2"] { --animtm: var(--ease-elastic-in-out-2); --layout-item-timing: var(--ease-elastic-in-out-2); }
+	[easing="ease-elastic-in-out-3"] { --animtm: var(--ease-elastic-in-out-3); --layout-item-timing: var(--ease-elastic-in-out-3); }
+	[easing="ease-elastic-in-out-4"] { --animtm: var(--ease-elastic-in-out-4); --layout-item-timing: var(--ease-elastic-in-out-4); }
+	[easing="ease-elastic-in-out-5"] { --animtm: var(--ease-elastic-in-out-5); --layout-item-timing: var(--ease-elastic-in-out-5); }
+
+	/* Squish */
+	[easing="ease-squish-1"] { --animtm: var(--ease-squish-1); --layout-item-timing: var(--ease-squish-1); }
+	[easing="ease-squish-2"] { --animtm: var(--ease-squish-2); --layout-item-timing: var(--ease-squish-2); }
+	[easing="ease-squish-3"] { --animtm: var(--ease-squish-3); --layout-item-timing: var(--ease-squish-3); }
+	[easing="ease-squish-4"] { --animtm: var(--ease-squish-4); --layout-item-timing: var(--ease-squish-4); }
+	[easing="ease-squish-5"] { --animtm: var(--ease-squish-5); --layout-item-timing: var(--ease-squish-5); }
+
+	/* Step */
+	[easing="ease-step-1"] { --animtm: var(--ease-step-1); --layout-item-timing: var(--ease-step-1); }
+	[easing="ease-step-2"] { --animtm: var(--ease-step-2); --layout-item-timing: var(--ease-step-2); }
+	[easing="ease-step-3"] { --animtm: var(--ease-step-3); --layout-item-timing: var(--ease-step-3); }
+	[easing="ease-step-4"] { --animtm: var(--ease-step-4); --layout-item-timing: var(--ease-step-4); }
+	[easing="ease-step-5"] { --animtm: var(--ease-step-5); --layout-item-timing: var(--ease-step-5); }
+
+	/* Named curves */
+	[easing="ease-circ-in"] { --animtm: var(--ease-circ-in); --layout-item-timing: var(--ease-circ-in); }
+	[easing="ease-circ-in-out"] { --animtm: var(--ease-circ-in-out); --layout-item-timing: var(--ease-circ-in-out); }
+	[easing="ease-circ-out"] { --animtm: var(--ease-circ-out); --layout-item-timing: var(--ease-circ-out); }
+	[easing="ease-cubic-in"] { --animtm: var(--ease-cubic-in); --layout-item-timing: var(--ease-cubic-in); }
+	[easing="ease-cubic-in-out"] { --animtm: var(--ease-cubic-in-out); --layout-item-timing: var(--ease-cubic-in-out); }
+	[easing="ease-cubic-out"] { --animtm: var(--ease-cubic-out); --layout-item-timing: var(--ease-cubic-out); }
+	[easing="ease-expo-in"] { --animtm: var(--ease-expo-in); --layout-item-timing: var(--ease-expo-in); }
+	[easing="ease-expo-in-out"] { --animtm: var(--ease-expo-in-out); --layout-item-timing: var(--ease-expo-in-out); }
+	[easing="ease-expo-out"] { --animtm: var(--ease-expo-out); --layout-item-timing: var(--ease-expo-out); }
+	[easing="ease-quad-in"] { --animtm: var(--ease-quad-in); --layout-item-timing: var(--ease-quad-in); }
+	[easing="ease-quad-in-out"] { --animtm: var(--ease-quad-in-out); --layout-item-timing: var(--ease-quad-in-out); }
+	[easing="ease-quad-out"] { --animtm: var(--ease-quad-out); --layout-item-timing: var(--ease-quad-out); }
+	[easing="ease-quart-in"] { --animtm: var(--ease-quart-in); --layout-item-timing: var(--ease-quart-in); }
+	[easing="ease-quart-in-out"] { --animtm: var(--ease-quart-in-out); --layout-item-timing: var(--ease-quart-in-out); }
+	[easing="ease-quart-out"] { --animtm: var(--ease-quart-out); --layout-item-timing: var(--ease-quart-out); }
+	[easing="ease-quint-in"] { --animtm: var(--ease-quint-in); --layout-item-timing: var(--ease-quint-in); }
+	[easing="ease-quint-in-out"] { --animtm: var(--ease-quint-in-out); --layout-item-timing: var(--ease-quint-in-out); }
+	[easing="ease-quint-out"] { --animtm: var(--ease-quint-out); --layout-item-timing: var(--ease-quint-out); }
+	[easing="ease-sine-in"] { --animtm: var(--ease-sine-in); --layout-item-timing: var(--ease-sine-in); }
+	[easing="ease-sine-in-out"] { --animtm: var(--ease-sine-in-out); --layout-item-timing: var(--ease-sine-in-out); }
+	[easing="ease-sine-out"] { --animtm: var(--ease-sine-out); --layout-item-timing: var(--ease-sine-out); }
+
+	[animation*="bounce("], [animation-items*="bounce("] > * { --_animn: bounce-in; --layout-anim-zi: 0.3; }
+	[animation*="bounce-in-left("], [animation-items*="bounce-in-left("] > * { --_animn: bounce-in-left; }
+	[animation*="bounce-in-right("], [animation-items*="bounce-in-right("] > * { --_animn: bounce-in-right; }
+	[animation*="bounce-in-up("], [animation-items*="bounce-in-up("] > * { --_animn: bounce-in-up; }
+	[animation*="bounce-in-down("], [animation-items*="bounce-in-down("] > * { --_animn: bounce-in-down; }
+	[animation*="fade-down("], [animation-items*="fade-down("] > * { --_animn: fade-down; }
+	[animation*="fade-down-left("], [animation-items*="fade-down-left("] > * { --_animn: fade-down-left; }
+	[animation*="fade-down-right("], [animation-items*="fade-down-right("] > * { --_animn: fade-down-right; }
+	[animation*="fade-in("], [animation-items*="fade-in("] > * { --_animn: fade-in; }
+	[animation*="fade-in-scale("], [animation-items*="fade-in-scale("] > * { --_animn: fade-in-scale; --layout-anim-zi: 0.8; }
+	[animation*="fade-left("], [animation-items*="fade-left("] > * { --_animn: fade-left; }
+	[animation*="fade-out("], [animation-items*="fade-out("] > * { --_animn: fade-out; }
+	[animation*="fade-out-scale("], [animation-items*="fade-out-scale("] > * { --_animn: fade-out-scale; --layout-anim-zi: 0.8; }
+	[animation*="fade-right("], [animation-items*="fade-right("] > * { --_animn: fade-right; }
+	[animation*="fade-up("], [animation-items*="fade-up("] > * { --_animn: fade-up; }
+	[animation*="fade-up-left("], [animation-items*="fade-up-left("] > * { --_animn: fade-up-left; }
+	[animation*="fade-up-right("], [animation-items*="fade-up-right("] > * { --_animn: fade-up-right; }
+	[animation*="flip-diagonal("], [animation-items*="flip-diagonal("] > * { --_animn: flip-diagonal; }
+	[animation*="flip-down("], [animation-items*="flip-down("] > * { --_animn: flip-down; }
+	[animation*="flip-left("], [animation-items*="flip-left("] > * { --_animn: flip-left; }
+	[animation*="flip-right("], [animation-items*="flip-right("] > * { --_animn: flip-right; }
+	[animation*="flip-up("], [animation-items*="flip-up("] > * { --_animn: flip-up; }
+	[animation*="opacity("], [animation-items*="opacity("] > * { --_animn: opacity; }
+	[animation*="reveal("], [animation-items*="reveal("] > * { --_animn: reveal; }
+	[animation*="reveal-circle("], [animation-items*="reveal-circle("] > * { --_animn: reveal-circle; }
+	[animation*="reveal-polygon("], [animation-items*="reveal-polygon("] > * { --_animn: reveal-polygon; }
+	[animation*="slide-down("], [animation-items*="slide-down("] > * { --_animn: slide-down; }
+	[animation*="slide-in("], [animation-items*="slide-in("] > * { --_animn: slide-in; }
+	[animation*="slide-out("], [animation-items*="slide-out("] > * { --_animn: slide-out; }
+	[animation*="slide-up("], [animation-items*="slide-up("] > * { --_animn: slide-up; }
+	[animation*="zoom-in("], [animation-items*="zoom-in("] > * { --_animn: zoom-in; }
+	[animation*="zoom-in-rotate("], [animation-items*="zoom-in-rotate("] > * { --_animn: zoom-in-rotate; }
+	[animation*="zoom-out("], [animation-items*="zoom-out("] > * { --_animn: zoom-out; }
+	[animation*="zoom-out-rotate("], [animation-items*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
 
 	/* === RANGES === */
 	[range="contain"] { --_animrs: entry 0%; --_animre: contain 50%; }
@@ -83,18 +194,12 @@
 			view-timeline: --layout-tl;
 		}
 
-		/* Item animation presets */
-		[animation-items~="fade-up"] > *, [animation-items*="fade-up("] > * { --_item-animn: fade-up; }
-		[animation-items~="fade-down"] > *, [animation-items*="fade-down("] > * { --_item-animn: fade-down; }
-		[animation-items~="fade-left"] > *, [animation-items*="fade-left("] > * { --_item-animn: fade-left; }
-		[animation-items~="fade-right"] > *, [animation-items*="fade-right("] > * { --_item-animn: fade-right; }
-		[animation-items~="fade-in"] > * { --_item-animn: fade-in; }
-		[animation-items~="zoom-in"] > *, [animation-items*="zoom-in("] > * { --_item-animn: zoom-in; }
-		[animation-items~="flip-up"] > *, [animation-items*="flip-up("] > * { --_item-animn: flip-up; }
+		/* Prevent inheritance from parent's animation attribute */
+		:where([animation-items]) > * { --_animn: initial; }
 
 		/* Base item animation (scroll-driven via container timeline) */
 		[animation-items] > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
@@ -110,7 +215,7 @@
 
 		/* Deep: animate grandchildren relative to item position */
 		[animation-items~="deep"] > * > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: backwards;
 			animation-timeline: --layout-tl;
@@ -162,7 +267,7 @@
 		}
 
 		[animation-items~="deep"] > * > * {
-			animation-name: var(--_item-animn);
+			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, ease-out);
 			animation-fill-mode: both;
 			animation-duration: 0.5s;
