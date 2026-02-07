@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Animation Items Demos</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="description" content="Scroll-driven animation demos for layout items">
+	<link rel="stylesheet" href="layout.min.css">
+	<link rel="stylesheet" href="/ui/layout/demo.css">
+	<script type="module" src="../polyfills/attr-fallback.js"></script>
+</head>
+<body>
+	<h1>Animation Items Demos</h1>
+	<p>These demos show <strong>scroll-driven animations</strong> on individual items using the <strong>animate</strong> attribute.<br>
+	Scroll down to see elements animate as they enter the viewport.</p>
+
+	<div style="height: 60vh; display: grid; place-items: center;">
+		<p style="opacity: 0.5;">↓ Scroll down to see animations ↓</p>
+	</div>
+
+	<h2>Bounce Animations</h2>
+	
+	<h3>bounce() trigger, pace="slow"</h3>
+	<section>
+		<small>Items bounce in sequentially.</small>
+		<code>&lt;lay-out animate="bounce() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="bounce() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>bounce-in-up() trigger, pace="slow"</h3>
+	<section>
+		<small>Items bounce in from below.</small>
+		<code>&lt;lay-out animate="bounce-in-up() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="bounce-in-up() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>bounce-in-down() trigger, pace="slow"</h3>
+	<section>
+		<small>Items bounce in from above.</small>
+		<code>&lt;lay-out animate="bounce-in-down() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="bounce-in-down() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>bounce-in-left() trigger, pace="slow"</h3>
+	<section>
+		<small>Items bounce in from left.</small>
+		<code>&lt;lay-out animate="bounce-in-left() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="bounce-in-left() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>bounce-in-right() trigger, pace="slow"</h3>
+	<section>
+		<small>Items bounce in from right.</small>
+		<code>&lt;lay-out animate="bounce-in-right() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="bounce-in-right() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Fade Animations</h2>
+
+	<h3>fade-up() trigger</h3>
+	<section>
+		<small>Items fade in and move up.</small>
+		<code>&lt;lay-out animate="fade-up() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>fade-up-left() trigger-enter</h3>
+	<section>
+		<small>Items fade in and move up-left. Entry only — no reverse on exit.</small>
+		<code>&lt;lay-out animate="fade-up-left() trigger-enter" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up-left() trigger-enter" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>fade-up-right() trigger-exit</h3>
+	<section>
+		<small>Items fade out and move up-right. Exit only — no animation on entry.</small>
+		<code>&lt;lay-out animate="fade-up-right() trigger-exit" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up-right() trigger-exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+    
+    <h3>fade-down() trigger</h3>
+	<section>
+		<small>Items fade in and move down.</small>
+		<code>&lt;lay-out animate="fade-down() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-down() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>fade-down-left() trigger</h3>
+	<section>
+		<small>Items fade in and move down-left.</small>
+		<code>&lt;lay-out animate="fade-down-left() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-down-left() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>fade-down-right() trigger</h3>
+	<section>
+		<small>Items fade in and move down-right.</small>
+		<code>&lt;lay-out animate="fade-down-right() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-down-right() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-left() trigger</h3>
+	<section>
+		<small>Items fade in and move left.</small>
+		<code>&lt;lay-out animate="fade-left() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-left() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-right() trigger</h3>
+	<section>
+		<small>Items fade in and move right.</small>
+		<code>&lt;lay-out animate="fade-right() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-right() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>fade-in() trigger</h3>
+	<section>
+		<small>Items fade in (opacity only).</small>
+		<code>&lt;lay-out animate="fade-in() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-in() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Flip Animations</h2>
+
+	<h3>flip-up() trigger</h3>
+	<section>
+		<small>Items flip up.</small>
+		<code>&lt;lay-out animate="flip-up() trigger" lg="columns(3)" style="transform-style: preserve-3d;"&gt;</code>
+		<lay-out animate="flip-up() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>flip-down() trigger</h3>
+	<section>
+		<small>Items flip down.</small>
+		<code>&lt;lay-out animate="flip-down() trigger" lg="columns(3)" style="transform-style: preserve-3d;"&gt;</code>
+		<lay-out animate="flip-down() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>flip-left() trigger</h3>
+	<section>
+		<small>Items flip left.</small>
+		<code>&lt;lay-out animate="flip-left() trigger" lg="columns(3)" style="transform-style: preserve-3d;"&gt;</code>
+		<lay-out animate="flip-left() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>flip-right() trigger-exit</h3>
+	<section>
+		<small>Items flip right. Exit only.</small>
+		<code>&lt;lay-out animate="flip-right() trigger-exit" lg="columns(3)" style="transform-style: preserve-3d;"&gt;</code>
+		<lay-out animate="flip-right() trigger-exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>flip-diagonal() trigger</h3>
+	<section>
+		<small>Items flip diagonally.</small>
+		<code>&lt;lay-out animate="flip-diagonal() trigger" lg="columns(3)" style="transform-style: preserve-3d;"&gt;</code>
+		<lay-out animate="flip-diagonal() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Reveal Animations</h2>
+
+	<h3>reveal() trigger</h3>
+	<section>
+		<small>Items reveal via clip-path inset.</small>
+		<code>&lt;lay-out animate="reveal() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="reveal() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>reveal-circle() trigger</h3>
+	<section>
+		<small>Items reveal via circular clip-path.</small>
+		<code>&lt;lay-out animate="reveal-circle() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="reveal-circle() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>reveal-polygon() trigger</h3>
+	<section>
+		<small>Items reveal via polygon clip-path.</small>
+		<code>&lt;lay-out animate="reveal-polygon() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="reveal-polygon() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Slide Animations</h2>
+
+	<h3>slide-up() trigger, pace="slow"</h3>
+	<section>
+		<small>Items slide up.</small>
+		<code>&lt;lay-out animate="slide-up() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="slide-up() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>slide-down() trigger clip, pace="slow"</h3>
+	<section>
+		<small>Items slide down. Clipped to prevent overflow.</small>
+		<code>&lt;lay-out animate="slide-down() trigger clip" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="slide-down() trigger clip" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>slide-in() trigger, pace="slow"</h3>
+	<section>
+		<small>Items slide in (from left).</small>
+		<code>&lt;lay-out animate="slide-in() trigger" pace="slow" lg="columns(3)"&gt;</code>
+		<lay-out animate="slide-in() trigger" pace="slow" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Zoom Animations</h2>
+
+	<h3>zoom-in() trigger</h3>
+	<section>
+		<small>Items zoom in.</small>
+		<code>&lt;lay-out animate="zoom-in() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-in() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>zoom-in-rotate() trigger</h3>
+	<section>
+		<small>Items zoom in and rotate.</small>
+		<code>&lt;lay-out animate="zoom-in-rotate() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-in-rotate() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>zoom-out-rotate() trigger</h3>
+	<section>
+		<small>Items zoom out and rotate.</small>
+		<code>&lt;lay-out animate="zoom-out-rotate() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-out-rotate() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+    <h3>zoom-out() trigger-enter</h3>
+	<section>
+		<small>Items zoom out (from large to normal). Entry only.</small>
+		<code>&lt;lay-out animate="zoom-out() trigger-enter" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-out() trigger-enter" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Deep Animations</h2>
+	
+	<h3>fade-up() trigger deep</h3>
+	<section>
+		<small>Animation propagates to children of items.</small>
+		<code>&lt;lay-out animate="fade-up() trigger deep" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger deep" lg="columns(3)">
+			<item-card>
+				<p>Item 1</p>
+				<p>A</p>
+				<p>B</p>
+			</item-card>
+			<item-card>
+				<p>Item 2</p>
+				<p>A</p>
+				<p>B</p>
+			</item-card>
+			<item-card>
+				<p>Item 3</p>
+				<p>A</p>
+				<p>B</p>
+			</item-card>
+		</lay-out>
+	</section>
+
+	<h2>Animation Multipliers</h2>
+	<p>Use a multiplier <strong>(1–3)</strong> to control animation intensity. Default is 1×.</p>
+
+	<h3>fade-up — Default vs 2× vs 3×</h3>
+	<section>
+		<small>2× intensity (220px translation).</small>
+		<code>&lt;lay-out animate="fade-up(2) trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up(2) trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+	<section>
+		<small>3× intensity (330px translation).</small>
+		<code>&lt;lay-out animate="fade-up(3) trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up(3) trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Custom Easings</h2>
+	<p>Apply custom easings to item animations with the <strong>easing</strong> attribute.</p>
+
+	<h3>slide-in() trigger with easing="ease-elastic-1"</h3>
+	<section>
+		<small>Items slide in with elastic overshoot.</small>
+		<code>&lt;lay-out animate="slide-in() trigger" easing="ease-elastic-1" lg="columns(3)"&gt;</code>
+		<lay-out animate="slide-in() trigger" easing="ease-elastic-1" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() trigger with easing="ease-spring-1"</h3>
+	<section>
+		<small>Items spring up gently.</small>
+		<code>&lt;lay-out animate="fade-up() trigger" easing="ease-spring-1" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger" easing="ease-spring-1" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h2>Trigger Direction</h2>
+	<p>Control whether triggered animations play on entry, exit, or both. Uses <code>trigger</code> (both), <code>trigger-enter</code> (entry only), or <code>trigger-exit</code> (exit only).</p>
+
+	<h3>fade-up() trigger (both)</h3>
+	<section>
+		<small>Items fade up on entry, reverse on exit.</small>
+		<code>&lt;lay-out animate="fade-up() trigger" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() trigger-enter</h3>
+	<section>
+		<small>Items fade up on entry only — stay visible on exit.</small>
+		<code>&lt;lay-out animate="fade-up() trigger-enter" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger-enter" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>fade-up() trigger-exit</h3>
+	<section>
+		<small>Items animate only when scrolling out of view.</small>
+		<code>&lt;lay-out animate="fade-up() trigger-exit" lg="columns(3)"&gt;</code>
+		<lay-out animate="fade-up() trigger-exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>zoom-in() trigger-enter</h3>
+	<section>
+		<small>Items zoom in on entry only.</small>
+		<code>&lt;lay-out animate="zoom-in() trigger-enter" lg="columns(3)"&gt;</code>
+		<lay-out animate="zoom-in() trigger-enter" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+	<h3>flip-up() trigger-exit</h3>
+	<section>
+		<small>Items flip only when scrolling out of view.</small>
+		<code>&lt;lay-out animate="flip-up() trigger-exit" lg="columns(3)"&gt;</code>
+		<lay-out animate="flip-up() trigger-exit" lg="columns(3)">
+			<item-card></item-card>
+			<item-card></item-card>
+			<item-card></item-card>
+		</lay-out>
+	</section>
+
+</body>
+</html>

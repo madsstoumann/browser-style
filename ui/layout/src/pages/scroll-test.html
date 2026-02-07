@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+	<title>Scroll Test</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<style>
+		@keyframes expand {
+  from {
+    corner-shape: superellipse(-6);
+  }
+
+  to {
+    corner-shape: superellipse(6);
+  }
+}
+
+html {
+  overflow-x: hidden;
+  /* scrollbar-width: none; */
+  overscroll-behavior: none;
+
+  body {
+    margin: 0;
+    background: #b7245c;
+
+    h1 {
+      color: white;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: 900 5rem figtree;
+
+      &:not(:first-child) {
+        border-top: 3px solid rgb(0 0 0 / 30%);
+      }
+    }
+
+    div {
+      position: fixed;
+      inset: -1rem;
+      background: white;
+      mix-blend-mode: difference;
+      animation: expand;
+      animation-timeline: scroll();
+      border-bottom-left-radius: 100%;
+      pointer-events: none;
+    }
+  }
+}
+
+	</style>
+</head>
+
+
+<body>
+	<h1>HEY BIG SCROLLER</h1>
+<h1>ANIMATE A DIV FOR ME</h1>
+<div></div>
+</body>
+</html>

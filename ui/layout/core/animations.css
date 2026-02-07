@@ -17,6 +17,12 @@
 		--layout-anim-zo: 1.2;
 		--layout-anim-mult: 1;
 		--layout-anim-delay: 0.005s;
+		--layout-anim-stagger: 10;
+		--layout-anim-dur: 0.5s;
+		--layout-anim-dur-very-slow: 1.5s;
+		--layout-anim-dur-slow: 1s;
+		--layout-anim-dur-fast: 0.3s;
+		--layout-anim-dur-very-fast: 0.15s;
 
 		/* Internal (consumed by keyframes) */
 		--_dg: calc(var(--layout-anim-dg) * var(--layout-anim-mult));
@@ -203,17 +209,11 @@
 	   Pace: entry speed
 	   ========================================================================== */
 
-	[pace~="fast"]     { --_animrs: entry 25%; --_animre: entry 60%; }
-	[pace~="slow"]     { --_animrs: entry 0%;  --_animre: entry 100%; }
-	[pace~="slower"]   { --_animrs: entry 0%;  --_animre: contain 25%; }
-
-	/* ==========================================================================
-	   Pace: entry phase
-	   ========================================================================== */
-
-	[pace~="contain"]  { --_animrs: entry 0%;  --_animre: contain 50%; }
-	[pace~="cover"]    { --_animrs: entry 25%; --_animre: cover 50%; }
-	[pace~="full"]     { --_animrs: entry 0%;  --_animre: exit 0%; }
+	[pace~="very-slow"]  { --_animrs: entry 0%;  --_animre: contain 50%; }
+	[pace~="slow"]       { --_animrs: entry 0%;  --_animre: entry 100%; }
+	/* (normal/default):   entry 0% → entry 75% — no attribute needed */
+	[pace~="fast"]       { --_animrs: entry 25%; --_animre: entry 60%; }
+	[pace~="very-fast"]  { --_animrs: entry 35%; --_animre: entry 55%; }
 
 	/* ==========================================================================
 	   Pace: exit (activates second animation slot + sets range)
@@ -331,24 +331,46 @@
 	   ========================================================================== */
 
 	@supports (timeline-trigger-name: --t) {
-		[animate~="deep"] {
-			timeline-trigger:
-				--layout-trigger
-				view()
-				entry 25% exit 0%;
+		/* trigger on container (items + deep) */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) {
+			timeline-trigger: --layout-trigger view() entry 25% exit 0%;
 			trigger-scope: --layout-trigger;
 		}
 
-		[animate~="deep"] > * > * {
+		/* trigger: shared item properties */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]) > * {
+			animation-timeline: auto;
+			animation-duration: var(--layout-anim-dur);
+			animation-range: normal;
+			animation-delay: calc((sibling-index() - 1) * var(--layout-anim-stagger) * var(--layout-anim-delay));
+		}
+
+		/* trigger direction per variant */
+		[animate~="trigger"] > *      { animation-trigger: --layout-trigger play-forwards; }
+		[animate~="trigger-exit"] > * { animation-trigger: --layout-trigger play-backwards; }
+		[animate~="trigger-both"] > * { animation-trigger: --layout-trigger play-forwards play-backwards; }
+
+		/* trigger: deep shared properties */
+		:is([animate~="trigger"], [animate~="trigger-exit"], [animate~="trigger-both"]):is([animate~="deep"]) > * > * {
 			animation-name: var(--_animn);
 			animation-timing-function: var(--layout-item-timing, var(--animtm, ease-out));
 			animation-fill-mode: both;
-			animation-duration: 0.5s;
-			animation-trigger: --layout-trigger play-forwards play-backwards;
+			animation-duration: var(--layout-anim-dur);
 			animation-timeline: auto;
 			animation-range: normal;
 			animation-delay: calc((var(--_item-offset, 0) + var(--_child-offset, 0)) * var(--layout-anim-delay));
 		}
+
+		/* trigger direction per variant (deep) */
+		[animate~="trigger"][animate~="deep"] > * > *      { animation-trigger: --layout-trigger play-forwards; }
+		[animate~="trigger-exit"][animate~="deep"] > * > *  { animation-trigger: --layout-trigger play-backwards; }
+		[animate~="trigger-both"][animate~="deep"] > * > *  { animation-trigger: --layout-trigger play-forwards play-backwards; }
+
+		/* Pace → duration mapping (triggered mode) */
+		[pace~="very-slow"] { --layout-anim-dur: var(--layout-anim-dur-very-slow); }
+		[pace~="slow"]      { --layout-anim-dur: var(--layout-anim-dur-slow); }
+		[pace~="fast"]      { --layout-anim-dur: var(--layout-anim-dur-fast); }
+		[pace~="very-fast"] { --layout-anim-dur: var(--layout-anim-dur-very-fast); }
 	}
 
 	/* ==========================================================================

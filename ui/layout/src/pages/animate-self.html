@@ -433,36 +433,22 @@
 		</lay-out>
 	</section>
 
-	<h3>fade-up() pace="slower"</h3>
+	<h3>fade-up() pace="very-slow"</h3>
 	<section>
-		<small>Spills into contain phase — very gradual.</small>
-		<code>&lt;lay-out animate-self="fade-up()" pace="slower" lg="columns(3)"&gt;</code>
-		<lay-out animate-self="fade-up()" pace="slower" lg="columns(3)">
+		<small>Widest range — very gradual animation.</small>
+		<code>&lt;lay-out animate-self="fade-up()" pace="very-slow" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="fade-up()" pace="very-slow" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
 		</lay-out>
 	</section>
 
-	<h2>Pace — Entry Phase</h2>
-	<p>Control <em>when</em> the animation plays relative to the element's visibility.</p>
-
-	<h3>zoom-in() pace="contain"</h3>
+	<h3>zoom-in() pace="very-fast"</h3>
 	<section>
-		<small>Plays while element is fully visible in viewport.</small>
-		<code>&lt;lay-out animate-self="zoom-in()" pace="contain" lg="columns(3)"&gt;</code>
-		<lay-out animate-self="zoom-in()" pace="contain" lg="columns(3)">
-			<item-card></item-card>
-			<item-card></item-card>
-			<item-card></item-card>
-		</lay-out>
-	</section>
-
-	<h3>reveal-circle() pace="cover"</h3>
-	<section>
-		<small>Plays while element covers the viewport.</small>
-		<code>&lt;lay-out animate-self="reveal-circle()" pace="cover" lg="columns(3)"&gt;</code>
-		<lay-out animate-self="reveal-circle()" pace="cover" lg="columns(3)">
+		<small>Narrowest range — instant feel.</small>
+		<code>&lt;lay-out animate-self="zoom-in()" pace="very-fast" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="zoom-in()" pace="very-fast" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
@@ -530,11 +516,11 @@
 		</lay-out>
 	</section>
 
-	<h3>reveal() pace="contain exit"</h3>
+	<h3>reveal() pace="very-slow exit"</h3>
 	<section>
-		<small>Reveal during contain phase, reverse on exit.</small>
-		<code>&lt;lay-out animate-self="reveal()" pace="contain exit" lg="columns(3)"&gt;</code>
-		<lay-out animate-self="reveal()" pace="contain exit" lg="columns(3)">
+		<small>Very slow entry, reverse on exit.</small>
+		<code>&lt;lay-out animate-self="reveal()" pace="very-slow exit" lg="columns(3)"&gt;</code>
+		<lay-out animate-self="reveal()" pace="very-slow exit" lg="columns(3)">
 			<item-card></item-card>
 			<item-card></item-card>
 			<item-card></item-card>
