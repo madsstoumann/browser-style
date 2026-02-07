@@ -195,6 +195,7 @@ Override these on any `[animate-self]` or `[animate]` element:
 | `--layout-anim-dur-fast` | `0.3s` | Duration for `fast` pace (triggered mode) |
 | `--layout-anim-dur-very-fast` | `0.15s` | Duration for `very-fast` pace (triggered mode) |
 | `--layout-item-timing` | `ease-out` | Timing function for item/deep animations |
+| `--layout-morph-bg` | `var(--layout-bg, black)` | Overlay color for `morph` attribute |
 
 Example — custom translation distance with multiplier:
 
@@ -413,4 +414,94 @@ When a trigger token and `deep` are combined, the existing deep stagger logic (i
 
 <!-- Custom stagger -->
 <lay-out animate="fade-up() trigger" style="--layout-anim-stagger: 20" lg="columns(3)">
+```
+
+---
+
+## Morph Overlay
+
+A solid-color `::after` pseudo-element covers the `lay-out` and morphs away via `clip-path` as the element scrolls into view, revealing the content underneath.
+
+### How It Differs From `reveal-*`
+
+The existing `reveal-*` animations (`reveal()`, `reveal-circle()`, `reveal-polygon()`) animate the element itself — the element starts invisible and clips open. Morph overlays work the opposite way: the element and its content are always present, but a solid overlay sits on top and morphs away. This creates seamless section-to-section transitions when the overlay color matches the previous section's background.
+
+| | `reveal-*` animations | `morph` overlay |
+|---|---|---|
+| Target | The element itself | `::after` pseudo-element |
+| Start state | Element clipped / invisible | Overlay covers content |
+| End state | Element fully visible | Overlay clipped away |
+| Keyframes | `clip-path` + `opacity` | `clip-path` only (no opacity) |
+
+### Attribute
+
+| Attribute | Target | Description |
+|-----------|--------|-------------|
+| `morph` | Container | Adds a solid-color `::after` overlay that morphs away on scroll |
+
+### Morph Types
+
+| Value | Shape | Description |
+|-------|-------|-------------|
+| `circle` | Circle | Overlay shrinks from full coverage to a point |
+| `inset` | Rectangle | Overlay contracts from all edges |
+| `polygon` | Diamond | Overlay morphs from rectangle to diamond |
+
+### Custom Properties
+
+| Property | Default | Description |
+|----------|---------|-------------|
+| `--layout-morph-bg` | `var(--layout-bg, black)` | Overlay color — set to match the previous section |
+
+### Integration With Existing System
+
+Morph reuses the animation system's custom properties via inheritance on `::after`:
+
+- **`pace`** entry tokens control `animation-range` (via `--_animrs` / `--_animre`)
+- **`pace`** exit tokens activate a second animation slot that reverses the morph
+- **`easing`** sets `animation-timing-function` (via `--animtm`)
+- **`animate-self`** can be combined — the element animates while the overlay morphs
+
+### Usage
+
+```html
+<!-- Circle morph — overlay matches previous section -->
+<lay-out bleed="0" morph="circle"
+         style="--layout-bg: #e2e8f0; --layout-morph-bg: #0f172a;">
+
+<!-- Inset morph with slow pace -->
+<lay-out bleed="0" morph="inset" pace="slow"
+         style="--layout-bg: #1e293b; --layout-morph-bg: #e2e8f0;">
+
+<!-- Polygon morph with exit (overlay returns on scroll-back) -->
+<lay-out bleed="0" morph="polygon" pace="exit"
+         style="--layout-bg: #7c3aed; --layout-morph-bg: #0d9488;">
+
+<!-- Combined: content fades up while overlay morphs away -->
+<lay-out bleed="0" morph="polygon" animate-self="fade-up()"
+         style="--layout-bg: #0f172a; --layout-morph-bg: #ea580c;">
+
+<!-- Custom easing -->
+<lay-out bleed="0" morph="circle" easing="ease-spring-3"
+         style="--layout-bg: #ea580c; --layout-morph-bg: #7c3aed;">
+```
+
+### Section Transition Pattern
+
+For seamless transitions between full-screen sections, set `--layout-morph-bg` on each section to match the `--layout-bg` of the section above:
+
+```html
+<lay-out bleed="0" style="--layout-bg: navy; min-height: 100vh;">
+  <!-- Section 1 -->
+</lay-out>
+
+<lay-out bleed="0" morph="circle"
+         style="--layout-bg: white; --layout-morph-bg: navy; min-height: 100vh;">
+  <!-- Section 2: navy overlay morphs away to reveal white -->
+</lay-out>
+
+<lay-out bleed="0" morph="inset"
+         style="--layout-bg: darkgreen; --layout-morph-bg: white; min-height: 100vh;">
+  <!-- Section 3: white overlay morphs away to reveal green -->
+</lay-out>
 ```

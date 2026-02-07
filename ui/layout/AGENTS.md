@@ -209,6 +209,23 @@ Stagger uses `animation-delay` with `sibling-index()` multiplied by `--layout-an
 2. **`sibling-index()`** (`@supports (width: calc(sibling-index() * 1px))`) — dynamic stagger
 3. **Scroll-triggered** (`@supports (timeline-trigger-name: --t)`) — time-based with trigger tokens
 
+#### Morph Overlay
+
+The `morph` attribute adds a solid-color `::after` pseudo-element that covers the `lay-out` and morphs away via `clip-path` on scroll, revealing content underneath. Differs from `reveal-*` animations (which clip the element itself with opacity) — morph overlays are opaque pseudo-elements with clip-path only.
+
+| Value | Shape |
+|-------|-------|
+| `circle` | Circle shrinks to point |
+| `inset` | Rectangle contracts from edges |
+| `polygon` | Rectangle morphs to diamond |
+
+Set `--layout-morph-bg` to match the previous section's background for seamless transitions. Reuses `pace`, `easing`, and exit tokens via inherited custom properties. Can combine with `animate-self`.
+
+```html
+<lay-out bleed="0" morph="circle" pace="slow"
+         style="--layout-bg: white; --layout-morph-bg: navy;">
+```
+
 ## Responsive Images
 
 ### Automatic Srcset Generation

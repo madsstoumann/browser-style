@@ -206,6 +206,14 @@
 	[animate-self*="zoom-out-rotate("], [animate*="zoom-out-rotate("] > * { --_animn: zoom-out-rotate; }
 
 	/* ==========================================================================
+	   Morph Overlay: solid-color ::after that morphs away via clip-path
+	   ========================================================================== */
+
+	[morph="circle"]   { --_morphn: morph-circle; }
+	[morph="inset"]    { --_morphn: morph-inset; }
+	[morph="polygon"]  { --_morphn: morph-polygon; }
+
+	/* ==========================================================================
 	   Pace: entry speed
 	   ========================================================================== */
 
@@ -299,6 +307,29 @@
 		[animate~="deep"] > * > :nth-child(2) { --_child-offset: 10; }
 		[animate~="deep"] > * > :nth-child(3) { --_child-offset: 20; }
 		[animate~="deep"] > * > :nth-child(4) { --_child-offset: 30; }
+
+		/* === Morph Overlay (::after morphs away to reveal content) === */
+
+		[morph]::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: var(--layout-morph-bg, var(--layout-bg, black));
+			pointer-events: none;
+			z-index: 1;
+			animation-name: var(--_morphn), var(--_morph-exit, none);
+			animation-direction: normal, reverse;
+			animation-timeline: view(), view();
+			animation-timing-function: var(--animtm, linear), var(--animtm, linear);
+			animation-fill-mode: forwards, forwards;
+			animation-range:
+				var(--_animrs, entry 0%) var(--_animre, entry 75%),
+				var(--_exit-rs, exit 0%) var(--_exit-re, exit 100%);
+		}
+
+		:where([pace~="exit"], [pace~="exit-fast"], [pace~="exit-slow"])[morph]::after {
+			--_morph-exit: var(--_morphn);
+		}
 	}
 
 	/* ==========================================================================
@@ -515,6 +546,23 @@
 	@keyframes reveal-polygon {
 		0%   { opacity: 0; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 		100% { opacity: 1; clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+	}
+
+	/* --- Morph (overlay clip-path, no opacity — mirrors reveal shapes) --- */
+
+	@keyframes morph-circle {
+		0%   { clip-path: circle(100% at 50% 50%); }
+		100% { clip-path: circle(0% at 50% 50%); }
+	}
+
+	@keyframes morph-inset {
+		0%   { clip-path: inset(0% 0% 0% 0%); }
+		100% { clip-path: inset(45% 20% 45% 20%); }
+	}
+
+	@keyframes morph-polygon {
+		0%   { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%); }
+		100% { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
 	}
 
 	/* --- Slide --- */
