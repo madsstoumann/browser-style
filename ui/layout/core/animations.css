@@ -311,6 +311,8 @@
 		/* === Morph Overlay (::after morphs away to reveal content) === */
 
 		[morph] {
+			min-height: 100dvh;
+			padding-block-end: var(--layout-morph-pad, 100dvh);
 			position: sticky;
 			top: 0;
 		}
@@ -318,7 +320,7 @@
 		[morph]::after {
 			content: '';
 			position: absolute;
-			inset: 0;
+			inset: 0 0 var(--layout-morph-pad, 100dvh);
 			background: var(--layout-morph-bg, var(--layout-bg, black));
 			pointer-events: none;
 			z-index: 1;
